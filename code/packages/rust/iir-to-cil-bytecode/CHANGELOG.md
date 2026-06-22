@@ -1,5 +1,49 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.25.0] — 2026-06-22 — void functions & void calls in the textual emitter (LANG-FULL O3)
+
+The textual `il_text` path (the one the cross-backend matrix assembles with `ilasm`)
+gained support for **void functions** — a latent gap surfaced by Oct's O3 `static`-global
+proof, whose `bump()` is the first void *user* function to reach the CLR column (every
+prior matrix program returned a value, and `main`'s `ret_void` is rewritten to `ret i32`).
+
+- **`ret_void`** now lowers to a bare `ret` (was an `UnsupportedOp` rejection).
+- **`cil_ret_type`** maps a `void` return type to the CIL `void` signature (it used to
+  fall through `cil_local_type` to `int32` — wrong for a value-less method).
+- **`call` to a void method** (IIR `dest == None`) emits `call void …` and performs **no**
+  trailing `store` (previously the arm hard-required a `dest` and always stored a result,
+  so a dest-less void call panicked). Value-returning calls are unchanged.
+- Proven by **running**: the Oct `static counter` program (`bump()` mutates a shared
+  global twice) assembles with `ilasm` and runs under `dotnet` → `42`, alongside the other
+  six backends in `lang_matrix.rs`. Unit test: `void_function_and_void_call_lower`.
+
+## [0.24.0] — 2026-06-22 — typed module globals → static fields (LANG-FULL E6 layer 1)
+
+`global_load` / `global_store` were a `LANG32b`-deferred `UnsupportedOp`
+rejection. They now lower (in the textual `il_text` path the matrix assembles) to
+CLR **static-field** access, so a function can read/write a module-level global.
+
+### Added
+- **`global_load` / `global_store`** lowering in `il_text`:
+  - `collect_global_fields` collects every distinct global name (first-seen
+    order) → a `public static int64 G_N` field of the generated class. Field
+    names are index-based (`G_0`, `G_1`, …) so an arbitrary source identifier can
+    never form an invalid or colliding CIL field name. CLR zero-initialises
+    static fields (the never-written-global-reads-0 convention).
+  - `global_load "g" -> %d` → `ldsfld int64 <asm>Program::G_N` (+ `conv.i4` if the
+    dest is a 32-bit local — the field is always 64-bit, like the JVM `J` /
+    native 8-byte slot).
+  - `global_store "g", %v` → `ld<v>` (+ `conv.i8` if `v` is 32-bit) → `stsfld
+    int64 <asm>Program::G_N`.
+  - The name is an `Operand::Str` literal (never a register); a non-string /
+    uncollected name is an `InvalidOperand` error.
+
+### Verified
+- `tests/test_backend.rs`: the emitted `.il` declares `.field public static
+  int64 G_0` and carries `ldsfld`/`stsfld`; and **end-to-end on real `ilasm` +
+  `dotnet`** a cross-function global program (`compute` seeds `g`; a separate
+  `bump` reads/increments/writes it) prints **42**.
+
 ## [0.23.0] — 2026-06-21 — arrays → native CIL `int32[]`/`float64[]` (LANG-FULL E5 PR-3b)
 
 The four E5 array opcodes now lower to **real single-dimensional CIL arrays** in

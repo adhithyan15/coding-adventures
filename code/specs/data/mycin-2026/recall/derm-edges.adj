@@ -91,4 +91,47 @@ rulebook derm_facts {
         source "In most cases, however, patients develop symptoms of Lyme disease, with erythema migrans being the most common initial manifestation."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK431066/"
         trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH: high-yield dermatology skin findings, each grounded to a self-
+    % contained verbatim NCBI Bookshelf span naming both the finding and disease.
+    % (Declined — no single NBK self-contained span: dewdrop-on-rose-petal->
+    % varicella [disease not in-sentence], honey-colored crust->impetigo [only a
+    % negating sentence co-occurs], Wickham striae->lichen planus [split], malar
+    % rash->SLE [verbatim not reproducible], port-wine stain->Sturge-Weber [the
+    % NBK span is a shared-GNAQ-mutation statement, not "finding in disease"].)
+    % ------------------------------------------------------------------------
+
+    % Dermatomyositis triad — one StatPearls sentence names heliotrope rash,
+    % Gottron papules, AND the shawl sign together (NBK562290).
+    relate skin_finding_in(heliotrope_rash, dermatomyositis)
+        source "Dermatomyositis is associated with other symptoms mainly skin manifestations including a purple rash on the eyelids called heliotrope rash, an erythematous scaly rash appears on the dorsum of the fingers called Gottron's papules, a reddish rash appears on the shoulder and the back known as Shawl sign, besides interstitial lung disease, Gastrointestinal vasculitis, and paraneoplastic syndrome underlying malignancy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562290/"
+        trust authoritative
+    relate skin_finding_in(gottron_papules, dermatomyositis)
+        source "Dermatomyositis is associated with other symptoms mainly skin manifestations including a purple rash on the eyelids called heliotrope rash, an erythematous scaly rash appears on the dorsum of the fingers called Gottron's papules, a reddish rash appears on the shoulder and the back known as Shawl sign, besides interstitial lung disease, Gastrointestinal vasculitis, and paraneoplastic syndrome underlying malignancy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562290/"
+        trust authoritative
+    relate skin_finding_in(shawl_sign, dermatomyositis)
+        source "Dermatomyositis is associated with other symptoms mainly skin manifestations including a purple rash on the eyelids called heliotrope rash, an erythematous scaly rash appears on the dorsum of the fingers called Gottron's papules, a reddish rash appears on the shoulder and the back known as Shawl sign, besides interstitial lung disease, Gastrointestinal vasculitis, and paraneoplastic syndrome underlying malignancy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562290/"
+        trust authoritative
+
+    % Café-au-lait macules — neurofibromatosis type 1.
+    relate skin_finding_in(cafe_au_lait_macules, neurofibromatosis_type_1)
+        source "Cafe-au-lait macules and neurofibromas are the distinguishing features of NF1."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459358/"
+        trust authoritative
+
+    % Ash-leaf spots — tuberous sclerosis.
+    relate skin_finding_in(ash_leaf_spots, tuberous_sclerosis)
+        source "The presence of three or more ash leaf spots should raise suspicion of tuberous sclerosis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563245/"
+        trust authoritative
+
+    % Koplik spots — pathognomonic of measles (buccal mucosa).
+    relate skin_finding_in(koplik_spots, measles)
+        source "Koplik spots are the peculiar spots present on the buccal mucosa and are considered a diagnostic/pathognomic feature of measles/rubeola in the pre-eruptive stage."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549793/"
+        trust authoritative
 }

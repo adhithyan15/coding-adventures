@@ -75,6 +75,50 @@ final class WindowedModelTests: XCTestCase {
         XCTAssertEqual(m.rowCells(1)[8], "20") // I1 source untouched
     }
 
+    /// Structural edits (the + Row / − Row / + Col / − Col buttons drive
+    /// insertRow/deleteRow/insertCol/deleteCol): inserting and deleting
+    /// rows/columns shifts every formula reference across the band, and deleting a
+    /// referenced band turns that reference into #REF!.
+    func testStructuralInsertDeleteShiftsReferences() {
+        let m = WindowedSheetModel()
+        // The engine parenthesizes binary ops on re-emit ("=(H1+H3)"), so strip
+        // parens before comparing the source the formula bar shows.
+        func bare(_ s: String) -> String { s.replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "") }
+        m.setCell("H1", "10")
+        m.setCell("H2", "20")
+        m.setCell("H3", "=H1+H2") // 30
+        XCTAssertEqual(m.rowCells(3)[7], "30")
+
+        // Insert a row at row 2: H2/H3 shift down to H3/H4, row 2 is blank, and
+        // the formula's refs shift with their cells (=H1+H2 → =H1+H3).
+        m.select(row: 2, col: 8); m.insertRow()
+        XCTAssertEqual(m.rowCells(2)[7], "")    // inserted row blank
+        XCTAssertEqual(m.rowCells(4)[7], "30")  // formula at H4
+        m.select(row: 4, col: 8)
+        XCTAssertEqual(bare(m.formulaText), "=H1+H3")
+
+        // Delete that inserted row: everything shifts back.
+        m.select(row: 2, col: 8); m.deleteRow()
+        XCTAssertEqual(m.rowCells(3)[7], "30")
+        m.select(row: 3, col: 8)
+        XCTAssertEqual(bare(m.formulaText), "=H1+H2")
+
+        // Delete row 1 (referenced by the formula): H2 shifts up to H1, the formula
+        // shifts up to H2, and its destroyed H1 reference becomes #REF!.
+        m.select(row: 1, col: 8); m.deleteRow()
+        XCTAssertEqual(m.rowCells(2)[7], "#REF!")
+
+        // Columns shift the same way: K1=5, L1 = K1*3 = 15; insert a column at K
+        // and the formula (now at M1) keeps pointing at its precedent (now L1).
+        let c = WindowedSheetModel()
+        c.setCell("K1", "5")
+        c.setCell("L1", "=K1*3")
+        c.select(row: 1, col: 11); c.insertCol() // col 11 = K
+        XCTAssertEqual(c.rowCells(1)[12], "15")  // M1 (col 13 → index 12)
+        c.select(row: 1, col: 13)
+        XCTAssertEqual(bare(c.formulaText), "=L1*3")
+    }
+
     /// Clipboard copy/cut/paste shifts a formula and moves a cut.
     func testClipboardCopyCutPaste() {
         let m = WindowedSheetModel()
@@ -152,5 +196,57 @@ final class WindowedModelTests: XCTestCase {
         XCTAssertTrue(m.canRedo())
         m.setCell("A1", "7")
         XCTAssertFalse(m.canRedo())
+    }
+
+    /// Number format applies to the selected cell's DISPLAY only — the stored
+    /// value is untouched, so `getRaw` still returns the source and the
+    /// display window renders the cell through the format code. The SwiftUI
+    /// proof of the cross-backend "Format" toolbar group.
+    func testApplyFormatChangesDisplayNotValue() {
+        let m = WindowedSheetModel()
+        // Put a plain number in a clear cell (H1, col 8). Unformatted it reads "1234".
+        m.select(row: 1, col: 8)
+        m.formulaText = "1234"
+        m.commitFormula()
+        XCTAssertEqual(m.rowCells(1)[7], "1234")
+
+        // Thousands + 2 decimals.
+        m.select(row: 1, col: 8); m.applyFormat("#,##0.00")
+        XCTAssertEqual(m.rowCells(1)[7], "1,234.00")
+        // Percent (1234 → 123400.0%).
+        m.applyFormat("0.0%")
+        XCTAssertEqual(m.rowCells(1)[7], "123400.0%")
+        // Currency.
+        m.applyFormat("$#,##0.00")
+        XCTAssertEqual(m.rowCells(1)[7], "$1,234.00")
+        // The raw stored value is never mutated by formatting: re-selecting H1
+        // loads its source (not its formatted display) into the formula bar.
+        m.select(row: 1, col: 8)
+        XCTAssertEqual(m.formulaText, "1234")
+        // Clearing the format (empty code) returns to General.
+        m.applyFormat("")
+        XCTAssertEqual(m.rowCells(1)[7], "1234")
+    }
+
+    /// Range sort (the ▲/▼ Sort buttons drive sortBlock): reorder the seeded
+    /// budget block A1:E4 by the selected column. The default seed has column A =
+    /// 15,8,12,4 (rows 1..4, unformatted) and each E cell = SUM(row) formatted
+    /// "#,##0.00". Sorting by column A ascending moves each row as a record — col
+    /// A becomes 4,8,12,15 and every E total travels with its row (the engine
+    /// shifts the moved SUM formulas' refs). Descending reverses it.
+    func testSortRangeReordersRowsByKeyColumn() {
+        let m = WindowedSheetModel()
+        // Pre-sort: column A rows 1..4 = 15,8,12,4 (selection defaults to A1).
+        XCTAssertEqual(m.window(rows: 1...4, cols: 1...1).map { $0[0] }, ["15", "8", "12", "4"])
+        // Ascending by column A → 4,8,12,15.
+        XCTAssertTrue(m.sortBlock(true))
+        XCTAssertEqual(m.window(rows: 1...4, cols: 1...1).map { $0[0] }, ["4", "8", "12", "15"])
+        // Each row's E total tracked its row (formatted "#,##0.00").
+        XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "35.00")  // 4+11+3+17
+        XCTAssertEqual(m.window(rows: 4...4, cols: 5...5)[0][0], "38.00")  // 15+3+12+8
+        // Descending reverses the key order.
+        XCTAssertTrue(m.sortBlock(false))
+        XCTAssertEqual(m.window(rows: 1...1, cols: 1...1)[0][0], "15")
+        XCTAssertEqual(m.window(rows: 4...4, cols: 1...1)[0][0], "4")
     }
 }

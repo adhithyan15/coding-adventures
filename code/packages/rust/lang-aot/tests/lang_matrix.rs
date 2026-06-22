@@ -466,6 +466,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("44"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Oct — `static` module GLOBAL, shared across functions (LANG-FULL O3). Until now
+    // Oct's top-level `static` was silently dropped at IIR-gen; `oct-iir-compiler` 0.8.0
+    // lowers it to the IIR module-global ops (`global_load`/`global_store`, LANG32 — the
+    // same path ALGOL's enclosing-block scalars use for E6). `counter` is initialised to
+    // 40 once at the top of `main`, then `bump()` — a SEPARATE function — increments the
+    // shared global twice, and `main` prints it: `42`. This proves three things at once,
+    // observably: (1) the initialiser ran, (2) a write in one function is visible in
+    // another (it's ONE global, not a per-function register — a register model would
+    // print 40), and (3) the global survives across the two `bump` calls. Runs on all 7
+    // backends, each materialising the global natively (LLVM `@__twig_global_N`, a JVM/CLR
+    // `static` field, a WASM module global, the native `_twig_globals` slot, the VM/JIT
+    // name-keyed map, the BEAM process dict) — no backend learned anything Oct-specific.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "static counter: u8 = 40; \
+               fn bump() { counter = counter + 1; } \
+               fn main() { bump(); bump(); out(1, counter); }",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
         lang: Language::Algol60,
@@ -492,6 +513,61 @@ const PROGRAMS: &[Prog] = &[
         src: "begin integer result; integer procedure sq(x); value x; integer x; \
                sq := x * x; result := sq(7) end",
         expect: Expect::Exit(49),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a procedure that *reads and writes a variable from the enclosing
+    // block* (LANG-FULL enabler **E6**, layer 1 — typed module globals).
+    // `counter` is declared in the outer block and accessed by both `incr` and the
+    // block, so `algol-iir-compiler`'s E6 capture analysis materialises it as a
+    // typed module **global**: `incr` reads it (`global_load "counter"`), adds its
+    // value parameter, writes it back (`global_store "counter"`), and returns it;
+    // the block seeds `counter := 40` (another `global_store`) then `result :=
+    // incr(2)` ⇒ 42.  The global is a value a register frame couldn't carry — it
+    // outlives `incr`'s call and is shared across the two `IIRFunction`s — which
+    // is the whole point of E6.  (The procedure is named `incr`, not `add`: `add`
+    // is a CIL opcode, so an unquoted `call …::add(int32)` won't assemble — a
+    // pre-existing CLR identifier-quoting limitation, orthogonal to E6.)
+    //
+    // **This is the E6-layer-1 completion proof: it RUNS on all 7 backends**, each
+    // realising the shared global in its own native idiom — VM/JIT a name-keyed
+    // map; LLVM a `@__twig_global_N = internal global i64`; the JVM/CLR a `static
+    // long`/`int64` field (`getstatic`/`putstatic`, `ldsfld`/`stsfld`); BEAM the
+    // process dictionary; WASM a module mutable `global`; native a `_twig_globals`
+    // data slot.  No backend learned anything ALGOL-specific — `global_load`/
+    // `global_store` are shared IIR ops every backend grew (this PR is the last
+    // brick: the producer that finally emits them from real typed source).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer counter, result; \
+               integer procedure incr(x); value x; integer x; \
+                  incr := counter := counter + x; \
+               counter := 40; \
+               result := incr(2) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an `own` variable: static lifetime (LANG-FULL **AL6**). `bump`
+    // declares `own integer n` inside its body; ALGOL 60 §5.2.5 says an `own`
+    // variable is allocated once and *retains its value across calls*. The
+    // frontend lowers it to a module **global** (the E6 substrate —
+    // `global_load`/`global_store`), keyed by a per-procedure-unique slot, and
+    // crucially does NOT re-`const`-zero it on entry (that would destroy
+    // persistence). Three calls accumulate on the one cell: `bump(1)` ⇒ 1,
+    // `bump(1)` ⇒ 2, `bump(1)` ⇒ 3, so `result := 1 + 2 + 3 = 6`. A non-`own`
+    // local would reset to 0 each call → `1 + 1 + 1 = 3`, so **6 is positive
+    // proof of static lifetime**. Runs on all 7 backends, each persisting the
+    // global in its native idiom (same realisations as the E6 proof above); the
+    // JVM/CLR store the i32-concretized `integer` in a 64-bit field and narrow
+    // on load (the `l2i`/`conv.i4` path the E6 matrix proof established).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure bump(d); value d; integer d; \
+                  begin own integer n; n := n + d; bump := n end; \
+               result := bump(1) + bump(1) + bump(1) end",
+        expect: Expect::Exit(6),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a *switch* (computed goto) + the integer comparison that drives
@@ -802,6 +878,24 @@ const PROGRAMS: &[Prog] = &[
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 DIM A(3)\n20 LET A(1) = 40\n30 LET A(2) = 2\n40 PRINT A(1) + A(2)\n50 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — *`READ` / `DATA` / `RESTORE`* (LANG-FULL BA6). The `DATA`
+    // pool is materialised once at the top of `main` as an `array<i64>` (the same
+    // E5 array ops BA3 uses) plus an `__basic_data_ptr` register seeded to 0;
+    // `READ` does `array_get pool, ptr` then `ptr := ptr + 1`, and `RESTORE` resets
+    // `ptr := 0`. Here `DATA 21` is a one-value pool: `READ A` takes 21 and advances
+    // the pointer; `RESTORE` rewinds it; `READ B` therefore takes 21 *again* — so
+    // `PRINT A + B` ⇒ 42, observably proving sequential consumption AND the rewind
+    // in one program. Straight-line (no loop), so it runs on all 7 backends exactly
+    // like the BA3 array cell — no new IIR op (pure frontend lowering onto the E5
+    // array substrate). A non-rewinding READ would read past the 1-element pool and
+    // trap, so 42 also proves the pointer/RESTORE arithmetic is correct.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DATA 21\n20 READ A\n30 RESTORE\n40 READ B\n50 PRINT A + B\n60 END\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },

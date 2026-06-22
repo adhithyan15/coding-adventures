@@ -34,6 +34,12 @@
 // into method bodies (out of scope for the backend).  See
 // `code/specs/sir-runtime.md`.
 
+// Block-taking catalog methods (each/map/select/…) invoke a Ruby block.  A block
+// reaches us as a trailing `Closure` from sir-runtime-core; `apply` calls it with
+// proc-lenient arity, and `truthy` applies SIR truthiness (only `false`/`nil` are
+// falsy) to predicate results.
+import { apply, Closure, intern, isSymbol, truthy } from "@coding-adventures/sir-runtime-core";
+
 /**
  * The SIR universal value type at this package's boundary.  Kept as `unknown`'s
  * permissive sibling so emitted code can pass `@coding-adventures/sir-runtime-core`
@@ -220,6 +226,10 @@ export function defineMethod(name: string, fn: (recv: Val, args: Val[]) => Val):
 // from a catalog method that legitimately returns `null` (Ruby `nil`).
 const MISS: unique symbol = Symbol("sir-oop-miss");
 
+// `to_s`/`inspect` render Ruby display forms (see `rubyToS`/`rubyInspect`); they
+// live here so `null`/`true`/`false` need no catalog of their own
+// (`nil.to_s == ""`, `true.to_s == "true"`, `nil.inspect == "nil"`), with
+// `nil.to_a == []` handled below.
 const OBJECT_METHODS = new Set<string>([
   "nil?",
   "==",
@@ -232,6 +242,8 @@ const OBJECT_METHODS = new Set<string>([
   "clone",
   "itself",
   "to_a",
+  "to_s",
+  "inspect",
 ]);
 
 // Non-block `Array` methods (M1a); block methods land in a later PR, kept absent
@@ -261,6 +273,141 @@ const ARRAY_METHODS = new Set<string>([
   "compact",
   "empty?",
   "to_a",
+  "join",
+]);
+
+// Block-taking `Array`/`Enumerable` methods (M1b); each invokes a trailing
+// `Closure` block via `apply`. Listed so `respond_to?` reports them.
+const ARRAY_BLOCK_METHODS = new Set<string>([
+  "each",
+  "each_with_index",
+  "map",
+  "collect",
+  "select",
+  "filter",
+  "reject",
+  "reduce",
+  "inject",
+  "find",
+  "detect",
+  "flat_map",
+  "any?",
+  "all?",
+  "none?",
+]);
+
+// Non-block `Hash` methods (M1c). Hash is a JS `Map`.
+const HASH_METHODS = new Set<string>([
+  "keys",
+  "values",
+  "has_key?",
+  "key?",
+  "include?",
+  "member?",
+  "has_value?",
+  "value?",
+  "fetch",
+  "size",
+  "length",
+  "empty?",
+  "to_a",
+  "dig",
+  "store",
+  "[]=",
+  "merge",
+  "delete",
+  "clear",
+  "invert",
+]);
+
+// Block-taking `Hash` methods (M1c); the block receives `[key, value]`.
+const HASH_BLOCK_METHODS = new Set<string>([
+  "each",
+  "each_pair",
+  "map",
+  "select",
+  "filter",
+  "reject",
+  "each_key",
+  "each_value",
+]);
+
+// Non-block `String` methods (M1c).  A Ruby `String` is a JS `string`, which is
+// **immutable** — so every method here is non-mutating and returns a fresh value
+// (the in-place `upcase!` family is out of v0 scope).  `sub`/`gsub` here are the
+// *literal* forms: the pattern is matched as a plain substring (never a regex)
+// and the replacement is inserted verbatim — crucially side-stepping JS's
+// `String.prototype.replace` special-replacement parsing (`$&`, `$1`, `$$`).
+const STRING_METHODS = new Set<string>([
+  "length",
+  "size",
+  "upcase",
+  "downcase",
+  "capitalize",
+  "reverse",
+  "strip",
+  "lstrip",
+  "rstrip",
+  "chomp",
+  "chars",
+  "bytes",
+  "split",
+  "include?",
+  "start_with?",
+  "end_with?",
+  "index",
+  "replace",
+  "sub",
+  "gsub",
+  "to_i",
+  "to_f",
+  "to_sym",
+  "empty?",
+  "*",
+  "+",
+]);
+
+// Block-taking `String` methods (M1c); `each_char` yields one character.
+const STRING_BLOCK_METHODS = new Set<string>(["each_char"]);
+
+// Non-block `Integer`/`Float` methods (M1c).  Both are JS `number`; `boolean` is
+// a *separate* `typeof`, so `callMethod` routes `true`/`false` to the universal
+// `Object` methods (`true.to_s == "true"`) and never into this catalog.
+const NUMERIC_METHODS = new Set<string>([
+  "abs",
+  "to_i",
+  "to_f",
+  "even?",
+  "odd?",
+  "zero?",
+  "positive?",
+  "negative?",
+  "succ",
+  "next",
+  "pred",
+  "floor",
+  "ceil",
+  "round",
+  "gcd",
+  "pow",
+  "**",
+  "digits",
+]);
+
+// Block-taking `Integer` methods (M1c): each invokes the block N times.
+const NUMERIC_BLOCK_METHODS = new Set<string>(["times", "upto", "downto", "step"]);
+
+// `Symbol` methods (M1c). A Ruby `Symbol` is a sir-runtime-core `Sym`;
+// `upcase`/`downcase` return a *new* interned symbol.
+const SYMBOL_METHODS = new Set<string>([
+  "to_s",
+  "to_sym",
+  "length",
+  "size",
+  "upcase",
+  "downcase",
+  "inspect",
+  "empty?",
 ]);
 
 /** SIR value equality used by `include?`/`index`/`==` — `===` for primitives,
@@ -297,7 +444,23 @@ function respondsTo(recv: Val, name: string): boolean {
   }
   if (methods.has(name)) return true;
   if (OBJECT_METHODS.has(name)) return true;
-  if (Array.isArray(recv) && ARRAY_METHODS.has(name)) return true;
+  if (typeof recv === "string" && (STRING_METHODS.has(name) || STRING_BLOCK_METHODS.has(name))) {
+    return true;
+  }
+  if (isSymbol(recv) && SYMBOL_METHODS.has(name)) return true;
+  // `boolean` is a distinct typeof — bools resolve only the Object methods above.
+  if (
+    typeof recv === "number" &&
+    (NUMERIC_METHODS.has(name) || NUMERIC_BLOCK_METHODS.has(name))
+  ) {
+    return true;
+  }
+  if (Array.isArray(recv) && (ARRAY_METHODS.has(name) || ARRAY_BLOCK_METHODS.has(name))) {
+    return true;
+  }
+  if (recv instanceof Map && (HASH_METHODS.has(name) || HASH_BLOCK_METHODS.has(name))) {
+    return true;
+  }
   return false;
 }
 
@@ -353,6 +516,10 @@ function objectMethod(recv: Val, name: string, args: Val[]): Val | typeof MISS {
       if (recv === null || recv === undefined) return [];
       if (Array.isArray(recv)) return recv;
       return MISS;
+    case "to_s":
+      return rubyToS(recv);
+    case "inspect":
+      return rubyInspect(recv);
     default:
       return MISS;
   }
@@ -417,6 +584,477 @@ function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS 
       return recv.length === 0;
     case "to_a":
       return recv;
+    case "join": {
+      // Ruby `Array#join`: elements rendered with `to_s` (default sep "").
+      const sep = args.length > 0 ? args[0] : "";
+      return recv.map((item: Val) => rubyToS(item)).join(sep);
+    }
+    default:
+      return MISS;
+  }
+}
+
+/** Block-taking `Array`/`Enumerable` methods.  `block` is applied via `apply`
+ * (proc-lenient); predicate results route through SIR `truthy`.  Returns `MISS`
+ * if `name` is not a block method. */
+function arrayBlockMethod(
+  recv: Val[],
+  name: string,
+  args: Val[],
+  block: Closure,
+): Val | typeof MISS {
+  switch (name) {
+    case "each":
+      for (const item of recv) apply(block, [item]);
+      return recv;
+    case "each_with_index":
+      recv.forEach((item: Val, index: number) => apply(block, [item, index]));
+      return recv;
+    case "map":
+    case "collect":
+      return recv.map((item: Val) => apply(block, [item]));
+    case "select":
+    case "filter":
+      return recv.filter((item: Val) => truthy(apply(block, [item])));
+    case "reject":
+      return recv.filter((item: Val) => !truthy(apply(block, [item])));
+    case "reduce":
+    case "inject": {
+      let acc: Val;
+      let rest: Val[];
+      if (args.length > 0) {
+        acc = args[0];
+        rest = recv;
+      } else if (recv.length > 0) {
+        acc = recv[0];
+        rest = recv.slice(1);
+      } else {
+        return null;
+      }
+      for (const item of rest) acc = apply(block, [acc, item]);
+      return acc;
+    }
+    case "find":
+    case "detect":
+      for (const item of recv) {
+        if (truthy(apply(block, [item]))) return item;
+      }
+      return null;
+    case "flat_map": {
+      const out: Val[] = [];
+      for (const item of recv) {
+        const mapped = apply(block, [item]);
+        if (Array.isArray(mapped)) out.push(...mapped);
+        else out.push(mapped);
+      }
+      return out;
+    }
+    case "any?":
+      return recv.some((item: Val) => truthy(apply(block, [item])));
+    case "all?":
+      return recv.every((item: Val) => truthy(apply(block, [item])));
+    case "none?":
+      return !recv.some((item: Val) => truthy(apply(block, [item])));
+    default:
+      return MISS;
+  }
+}
+
+/** Non-block `Hash` methods (Hash is a `Map`). Returns `MISS` if not catalogued. */
+function hashMethod(recv: Map<Val, Val>, name: string, args: Val[]): Val | typeof MISS {
+  switch (name) {
+    case "keys":
+      return [...recv.keys()];
+    case "values":
+      return [...recv.values()];
+    case "has_key?":
+    case "key?":
+    case "include?":
+    case "member?":
+      return recv.has(args[0]);
+    case "has_value?":
+    case "value?":
+      return [...recv.values()].some((v: Val) => valEq(v, args[0]));
+    case "fetch":
+      if (recv.has(args[0])) return recv.get(args[0]);
+      return args.length > 1 ? args[1] : null;
+    case "size":
+    case "length":
+      return recv.size;
+    case "empty?":
+      return recv.size === 0;
+    case "to_a":
+      return [...recv.entries()].map(([k, v]: [Val, Val]) => [k, v]);
+    case "dig":
+      // v0: single-level dig.
+      return recv.has(args[0]) ? recv.get(args[0]) : null;
+    case "store":
+    case "[]=":
+      recv.set(args[0], args[1]);
+      return args[1];
+    case "merge":
+      return new Map<Val, Val>([...recv, ...(args[0] as Map<Val, Val>)]);
+    case "delete": {
+      if (!recv.has(args[0])) return null;
+      const v = recv.get(args[0]);
+      recv.delete(args[0]);
+      return v;
+    }
+    case "clear":
+      recv.clear();
+      return recv;
+    case "invert":
+      return new Map<Val, Val>([...recv].map(([k, v]: [Val, Val]) => [v, k]));
+    default:
+      return MISS;
+  }
+}
+
+/** Block-taking `Hash` methods; the block receives `[key, value]` (or a single
+ * key/value for `each_key`/`each_value`). Returns `MISS` if not a block method. */
+function hashBlockMethod(recv: Map<Val, Val>, name: string, block: Closure): Val | typeof MISS {
+  switch (name) {
+    case "each":
+    case "each_pair":
+      for (const [k, v] of [...recv]) apply(block, [k, v]);
+      return recv;
+    case "each_key":
+      for (const k of [...recv.keys()]) apply(block, [k]);
+      return recv;
+    case "each_value":
+      for (const v of [...recv.values()]) apply(block, [v]);
+      return recv;
+    case "map":
+      return [...recv].map(([k, v]: [Val, Val]) => apply(block, [k, v]));
+    case "select":
+    case "filter":
+      return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => truthy(apply(block, [k, v]))));
+    case "reject":
+      return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => !truthy(apply(block, [k, v]))));
+    default:
+      return MISS;
+  }
+}
+
+// Leading-numeric extractors for `String#to_i` / `String#to_f`.  Ruby parses an
+// optional sign and the longest leading numeric run, ignoring surrounding
+// whitespace, and yields `0` / `0.0` when nothing numeric leads — never an error
+// (unlike JS `Number(...)`, which yields `NaN`).
+const INT_PREFIX = /^[+-]?\d+/;
+const FLOAT_PREFIX = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/;
+
+function strToI(s: string): number {
+  const match = INT_PREFIX.exec(s.trim());
+  return match ? parseInt(match[0], 10) : 0;
+}
+
+function strToF(s: string): number {
+  const match = FLOAT_PREFIX.exec(s.trim());
+  return match ? parseFloat(match[0]) : 0.0;
+}
+
+// Upper bound on the character count `String#*` will produce.  A repeat count
+// can come from untrusted input (e.g. `gets.to_i`); without a cap, `repeat`
+// throws `RangeError: Invalid string length` (a host-implementation leak) or
+// attempts a huge allocation.  Past the cap we yield `""` rather than throw —
+// honouring the runtime's "never crash on the OO surface" invariant.
+const MAX_REPEAT_LEN = 100_000_000;
+
+function strRepeat(s: string, count: Val): string {
+  const n = typeof count === "number" ? Math.trunc(count) : 0;
+  if (n <= 0 || s.length === 0) return "";
+  const capped = s.length * n > MAX_REPEAT_LEN ? Math.floor(MAX_REPEAT_LEN / s.length) : n;
+  return s.repeat(capped);
+}
+
+/** Ruby `String#chomp`: drop a trailing record separator.  With an explicit
+ * `sep`, drop exactly that suffix; with none, drop one trailing `\r\n`, `\n`, or
+ * `\r` (Ruby's default line-ending handling). */
+function chompStr(s: string, sep: Val): string {
+  if (sep !== null && sep !== undefined) {
+    return sep && s.endsWith(sep) ? s.slice(0, -(sep as string).length) : s;
+  }
+  if (s.endsWith("\r\n")) return s.slice(0, -2);
+  if (s.endsWith("\n") || s.endsWith("\r")) return s.slice(0, -1);
+  return s;
+}
+
+/** Non-block `String` methods.  Returns `MISS` if `name` is not catalogued.
+ * Every result is a fresh value — JS strings are immutable, so nothing mutates
+ * `recv` in place. */
+function stringMethod(recv: string, name: string, args: Val[]): Val | typeof MISS {
+  switch (name) {
+    case "length":
+    case "size":
+      return recv.length;
+    case "upcase":
+      return recv.toUpperCase();
+    case "downcase":
+      return recv.toLowerCase();
+    case "capitalize":
+      // Ruby: first char upcased, the rest downcased.
+      return recv.length === 0 ? recv : recv.charAt(0).toUpperCase() + recv.slice(1).toLowerCase();
+    case "reverse":
+      return [...recv].reverse().join("");
+    case "strip":
+      return recv.trim();
+    case "lstrip":
+      return recv.trimStart();
+    case "rstrip":
+      return recv.trimEnd();
+    case "chomp":
+      return chompStr(recv, args.length > 0 ? args[0] : null);
+    case "chars":
+      return [...recv];
+    case "bytes":
+      return [...new TextEncoder().encode(recv)];
+    case "split": {
+      // No argument ⇒ split on runs of whitespace (Ruby's awk-style default,
+      // dropping leading/trailing empties); with a separator ⇒ literal split.
+      if (args.length === 0) {
+        const trimmed = recv.trim();
+        return trimmed === "" ? [] : trimmed.split(/\s+/);
+      }
+      return recv.split(args[0]);
+    }
+    case "include?":
+      return recv.includes(args[0]);
+    case "start_with?":
+      return recv.startsWith(args[0]);
+    case "end_with?":
+      return recv.endsWith(args[0]);
+    case "index": {
+      const i = recv.indexOf(args[0]);
+      return i === -1 ? null : i;
+    }
+    case "replace":
+      // Ruby `String#replace` overwrites the whole content; for an immutable
+      // string that is just the replacement value.
+      return args[0];
+    case "sub": {
+      // Literal first-occurrence replacement — done by index, so the
+      // replacement is inserted verbatim (no `$&`/`$1` expansion).
+      const search = args[0] as string;
+      const idx = recv.indexOf(search);
+      return idx === -1 ? recv : recv.slice(0, idx) + args[1] + recv.slice(idx + search.length);
+    }
+    case "gsub":
+      // Literal global replacement via split/join — immune to special-replacement
+      // parsing that `String.prototype.replaceAll` would apply to a string arg.
+      return recv.split(args[0]).join(args[1]);
+    case "to_i":
+      return strToI(recv);
+    case "to_f":
+      return strToF(recv);
+    case "to_sym":
+      return intern(recv);
+    case "empty?":
+      return recv.length === 0;
+    case "*":
+      return strRepeat(recv, args[0]);
+    case "+":
+      return recv + args[0];
+    default:
+      return MISS;
+  }
+}
+
+/** Block-taking `String` methods.  Returns `MISS` if `name` is not a string
+ * block method. */
+function stringBlockMethod(recv: string, name: string, block: Closure): Val | typeof MISS {
+  switch (name) {
+    case "each_char":
+      for (const ch of recv) apply(block, [ch]);
+      return recv;
+    default:
+      return MISS;
+  }
+}
+
+// ── Ruby display forms (to_s / inspect) ──────────────────────────────────────
+//
+// sir-runtime-core's `toDisplay` renders *Lisp* forms (`nil`, `#t`, `#f`), so it
+// is wrong for Ruby's `to_s`/`inspect`.  These helpers implement Ruby's surface:
+// `nil.to_s == ""` but `nil.inspect == "nil"`; booleans print `true`/`false`; a
+// symbol's `to_s` is its bare name and `inspect` prefixes `:`; an Array's `to_s`
+// equals its `inspect` (`"[1, 2]"`); a Hash (Map) renders `{:k=>v}`.  String
+// escaping in `inspect` is the v0 naive form (wrap in quotes; no escaping yet).
+//
+// NB: JS cannot distinguish `3.0` from `3` (both `number`, `Number.isInteger`),
+// so a whole-valued Float prints as an integer — a documented v0 limitation.
+
+function rubyToS(v: Val): string {
+  if (v === null || v === undefined) return "";
+  if (typeof v === "boolean") return v ? "true" : "false";
+  if (isSymbol(v)) return v.name as string;
+  if (typeof v === "string") return v;
+  if (Array.isArray(v) || v instanceof Map) return rubyInspect(v);
+  return String(v);
+}
+
+/** `seen` (a set of container references) and `depth` make this safe on
+ * self-referential or deeply-nested structures: a cycle renders `[...]` /
+ * `{...}` (matching Ruby) instead of recursing forever, and depth is capped at
+ * `MAX_DISPLAY_DEPTH` so a deep acyclic structure cannot overflow the stack. */
+function rubyInspect(v: Val, seen: Set<object> = new Set<object>(), depth = 0): string {
+  if (v === null || v === undefined) return "nil";
+  if (typeof v === "boolean") return v ? "true" : "false";
+  if (isSymbol(v)) return ":" + (v.name as string);
+  if (typeof v === "string") return '"' + v + '"';
+  if (Array.isArray(v)) {
+    if (seen.has(v) || depth > MAX_DISPLAY_DEPTH) return "[...]";
+    seen.add(v);
+    const body = v.map((item: Val) => rubyInspect(item, seen, depth + 1)).join(", ");
+    seen.delete(v);
+    return "[" + body + "]";
+  }
+  if (v instanceof Map) {
+    if (seen.has(v) || depth > MAX_DISPLAY_DEPTH) return "{...}";
+    seen.add(v);
+    const body = [...v]
+      .map(([k, val]: [Val, Val]) =>
+        `${rubyInspect(k, seen, depth + 1)}=>${rubyInspect(val, seen, depth + 1)}`,
+      )
+      .join(", ");
+    seen.delete(v);
+    return "{" + body + "}";
+  }
+  return String(v);
+}
+
+// ── Numeric (Integer / Float) catalog ────────────────────────────────────────
+
+function gcdInt(a: number, b: number): number {
+  let x = Math.abs(Math.trunc(a));
+  let y = Math.abs(Math.trunc(b));
+  while (y !== 0) {
+    [x, y] = [y, x % y];
+  }
+  return x;
+}
+
+// Recursion bound for `to_s`/`inspect`/`join` on nested containers (cycles are
+// caught separately by identity tracking); past it, render a placeholder rather
+// than overflowing the stack — honouring the never-crash invariant.
+const MAX_DISPLAY_DEPTH = 100;
+
+function digitsOf(n: number): number[] {
+  // `2 ** 1e9` saturates to `Infinity` in IEEE-754; guard so the loop below
+  // (which never reaches 0 for a non-finite value) cannot spin forever.
+  if (!Number.isFinite(n)) return [0];
+  let m = Math.abs(Math.trunc(n));
+  if (m === 0) return [0];
+  const out: number[] = [];
+  while (m > 0) {
+    out.push(m % 10);
+    m = Math.floor(m / 10);
+  }
+  return out;
+}
+
+/** Ruby round: half **away from zero** (`2.5 -> 3`, `-2.5 -> -3`), unlike JS
+ * `Math.round` which rounds half toward +Infinity. */
+function rubyRound(x: number): number {
+  return x >= 0 ? Math.floor(x + 0.5) : Math.ceil(x - 0.5);
+}
+
+/** Non-block `Integer`/`Float` methods.  Returns `MISS` if not catalogued. */
+function numericMethod(recv: number, name: string, args: Val[]): Val | typeof MISS {
+  switch (name) {
+    case "abs":
+      return Math.abs(recv);
+    case "to_i":
+      return Math.trunc(recv);
+    case "to_f":
+      return recv;
+    case "even?":
+      return recv % 2 === 0;
+    case "odd?":
+      return recv % 2 !== 0;
+    case "zero?":
+      return recv === 0;
+    case "positive?":
+      return recv > 0;
+    case "negative?":
+      return recv < 0;
+    case "succ":
+    case "next":
+      return recv + 1;
+    case "pred":
+      return recv - 1;
+    case "floor":
+      return Math.floor(recv);
+    case "ceil":
+      return Math.ceil(recv);
+    case "round":
+      return Number.isInteger(recv) ? recv : rubyRound(recv);
+    case "gcd":
+      return gcdInt(recv, args[0]);
+    case "pow":
+    case "**":
+      return recv ** args[0];
+    case "digits":
+      return digitsOf(recv);
+    default:
+      return MISS;
+  }
+}
+
+/** Block-taking `Integer` methods (`times`/`upto`/`downto`/`step`); each returns
+ * the receiver.  Returns `MISS` otherwise. */
+function numericBlockMethod(
+  recv: number,
+  name: string,
+  args: Val[],
+  block: Closure,
+): Val | typeof MISS {
+  switch (name) {
+    case "times":
+      for (let i = 0; i < Math.trunc(recv); i++) apply(block, [i]);
+      return recv;
+    case "upto":
+      for (let i = recv; i <= args[0]; i++) apply(block, [i]);
+      return recv;
+    case "downto":
+      for (let i = recv; i >= args[0]; i--) apply(block, [i]);
+      return recv;
+    case "step": {
+      const limit = args[0];
+      const stride = args.length > 1 ? args[1] : 1;
+      if (stride > 0) {
+        for (let i = recv; i <= limit; i += stride) apply(block, [i]);
+      } else if (stride < 0) {
+        for (let i = recv; i >= limit; i += stride) apply(block, [i]);
+      }
+      return recv;
+    }
+    default:
+      return MISS;
+  }
+}
+
+// ── Symbol catalog ───────────────────────────────────────────────────────────
+
+/** `Symbol` methods. `upcase`/`downcase` return a *new* interned symbol (Ruby
+ * semantics). Returns `MISS` if not catalogued. */
+function symbolMethod(recv: Val, name: string): Val | typeof MISS {
+  const sym = recv.name as string;
+  switch (name) {
+    case "to_s":
+      return sym;
+    case "to_sym":
+      return recv;
+    case "length":
+    case "size":
+      return sym.length;
+    case "upcase":
+      return intern(sym.toUpperCase());
+    case "downcase":
+      return intern(sym.toLowerCase());
+    case "inspect":
+      return ":" + sym;
+    case "empty?":
+      return sym.length === 0;
     default:
       return MISS;
   }
@@ -451,9 +1089,44 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
   const m = methods.get(name);
   if (m) return m(recv, args);
 
-  if (Array.isArray(recv)) {
+  if (typeof recv === "string") {
+    // A block method (each_char) dispatches only with a trailing Closure.
+    const last = args[args.length - 1];
+    if (STRING_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
+      const blkResult = stringBlockMethod(recv, name, last);
+      if (blkResult !== MISS) return blkResult;
+    }
+    const strResult = stringMethod(recv, name, args);
+    if (strResult !== MISS) return strResult;
+  } else if (isSymbol(recv)) {
+    const symResult = symbolMethod(recv, name);
+    if (symResult !== MISS) return symResult;
+  } else if (typeof recv === "number") {
+    const last = args[args.length - 1];
+    if (NUMERIC_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
+      const blkResult = numericBlockMethod(recv, name, args.slice(0, -1), last);
+      if (blkResult !== MISS) return blkResult;
+    }
+    const numResult = numericMethod(recv, name, args);
+    if (numResult !== MISS) return numResult;
+  } else if (Array.isArray(recv)) {
+    // A block method (each/map/…) is dispatched only when an actual trailing
+    // Closure block is present; the block is split off the positional args.
+    const last = args[args.length - 1];
+    if (ARRAY_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
+      const blkResult = arrayBlockMethod(recv, name, args.slice(0, -1), last);
+      if (blkResult !== MISS) return blkResult;
+    }
     const arrResult = arrayMethod(recv, name, args);
     if (arrResult !== MISS) return arrResult;
+  } else if (recv instanceof Map) {
+    const last = args[args.length - 1];
+    if (HASH_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
+      const blkResult = hashBlockMethod(recv, name, last);
+      if (blkResult !== MISS) return blkResult;
+    }
+    const hashResult = hashMethod(recv, name, args);
+    if (hashResult !== MISS) return hashResult;
   }
   const objResult = objectMethod(recv, name, args);
   if (objResult !== MISS) return objResult;
@@ -463,6 +1136,27 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
 
 function classNameArg(arg: Val): string {
   return typeof arg === "string" ? arg : classOf(arg);
+}
+
+// --- Symbol#to_proc (&:sym) ------------------------------------------------
+//
+// Ruby's `&:sym` block argument converts a `Symbol` into a block via
+// `Symbol#to_proc`: the resulting proc calls the named method on its first
+// argument, forwarding any remaining arguments. So `[1, 2, 3].map(&:to_s)` is
+// `[1, 2, 3].map { |x| x.to_s }` and `[1, 2].inject(&:+)` is
+// `inject { |acc, x| acc + x }`.
+//
+// The Ruby→SIR frontend lowers `&:sym` to `block_pass(SymLit("sym"))`; the
+// backend emits the surviving `block_pass` envelope as a call to this helper
+// (`__SirOop.symToProc(intern("sym"))`), which yields a `Closure` the
+// block-taking catalog methods (`map`/`select`/…) drive through `apply`
+// exactly like a `{ }` block. `apply` forwards arguments unadjusted, so the
+// first becomes the receiver and the rest are forwarded as method arguments —
+// faithful to `&:sym`'s arity (one required receiver plus a rest), correct for
+// both the one-arg (`map`) and two-arg (`inject`) shapes.
+export function symToProc(sym: Val): Closure {
+  const method = isSymbol(sym) ? (sym as { name: string }).name : String(sym);
+  return new Closure((recv: Val, ...rest: Val[]): Val => callMethod(recv, method, ...rest));
 }
 
 /**

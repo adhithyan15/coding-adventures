@@ -23,6 +23,7 @@ from coding_adventures_sir_runtime_oop import (
     cvar_get as _sir_oop_cvar_get,
     cvar_set as _sir_oop_cvar_set,
     call_method as _sir_oop_call_method,
+    sym_to_proc as _sir_oop_sym_to_proc,
 )
 "##;
 

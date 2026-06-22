@@ -184,6 +184,25 @@
         <button id="loadBook" title="Reload the workbook from the last saved snapshot">Load</button>
       </div>
       <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Structure">
+        <button id="insRow" title="Insert a row above the selected cell (references shift down)">+ Row</button>
+        <button id="delRow" title="Delete the selected cell's row (references shift up; refs into it become #REF!)">− Row</button>
+        <button id="insCol" title="Insert a column left of the selected cell (references shift right)">+ Col</button>
+        <button id="delCol" title="Delete the selected cell's column (references shift left; refs into it become #REF!)">− Col</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Format">
+        <button id="fmtDecimal" title="Format the selected cell with thousands separators + 2 decimals (#,##0.00)">.00</button>
+        <button id="fmtPercent" title="Format the selected cell as a percent (0.0%)">%</button>
+        <button id="fmtCurrency" title="Format the selected cell as currency ($#,##0.00)">$</button>
+        <button id="fmtGeneral" title="Clear the selected cell's format (General)">Gen</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Sort">
+        <button id="sortAsc" title="Sort the budget block A1:E4 by the selected column, ascending (rows move as records; formulas track)">▲ Sort</button>
+        <button id="sortDesc" title="Sort the budget block A1:E4 by the selected column, descending">▼ Sort</button>
+      </div>
+      <span class="sep"></span>
       <div class="grp" role="group" aria-label="History">
         <button id="undoBtn" title="Undo the last edit">↶ Undo</button>
         <button id="redoBtn" title="Redo the last undone edit">↷ Redo</button>
@@ -373,6 +392,67 @@
       render();
       statusEl.innerHTML += " &nbsp;·&nbsp; pasted at " + esc(dst) + " → " + esc(note);
     });
+
+    // Structural edits: insert / delete the selected cell's row or column. The
+    // engine shifts every formula reference at or after the band and recomputes;
+    // a reference whose entire band is deleted becomes #REF!. We operate on a
+    // single row/column at the cursor (the engine handles any count).
+    document.getElementById("insRow").addEventListener("click", function () {
+      workbook.insertRows(selRow, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; inserted a row at " + selRow;
+    });
+    document.getElementById("delRow").addEventListener("click", function () {
+      workbook.deleteRows(selRow, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; deleted row " + selRow;
+    });
+    document.getElementById("insCol").addEventListener("click", function () {
+      workbook.insertCols(selCol, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; inserted a column at " + esc(workbook.columnLetters(selCol));
+    });
+    document.getElementById("delCol").addEventListener("click", function () {
+      workbook.deleteCols(selCol, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; deleted column " + esc(workbook.columnLetters(selCol));
+    });
+
+    // Number formatting: attach an Excel-style format code to the selected cell.
+    // The code is display-only — the stored value is unchanged, the engine just
+    // renders it differently (getDisplayWindow applies the code). "" clears it.
+    function applyFormat(code, label) {
+      var a = a1(selRow, selCol);
+      workbook.setFormat(a, code);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; formatted " + esc(a) + " as " + esc(label);
+    }
+    document.getElementById("fmtDecimal").addEventListener("click", function () { applyFormat("#,##0.00", "#,##0.00"); });
+    document.getElementById("fmtPercent").addEventListener("click", function () { applyFormat("0.0%", "0.0%"); });
+    document.getElementById("fmtCurrency").addEventListener("click", function () { applyFormat("$#,##0.00", "$#,##0.00"); });
+    document.getElementById("fmtGeneral").addEventListener("click", function () { applyFormat("", "General"); });
+
+    // Range sort: reorder the rows of the seeded budget block A1:E4 by the
+    // SELECTED column (clamped into the block's columns A..E; defaults to A).
+    // Each row moves as a record — the E-column SUM formulas travel with their
+    // row and have their relative refs shifted, so every total stays correct.
+    // The stored values are unchanged; only the row order (and the dependent
+    // recompute) changes. sortRange returns false for a no-op (already sorted /
+    // bad range), which we surface in the status line.
+    function sortBlock(asc) {
+      var keyCol = Math.min(5, Math.max(1, selCol)); // clamp into A..E
+      var rev = workbook.currentRevision();
+      var ok = workbook.sortRange("A1", "E4", keyCol, asc);
+      var diff = workbook.changedSince(rev);
+      var note = diff.stale ? "(stale — full refresh)" :
+        diff.changed.length + " cell(s) moved";
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; sorted A1:E4 by column " +
+        esc(workbook.columnLetters(keyCol)) + (asc ? " ▲" : " ▼") +
+        (ok ? " → " + esc(note) : " (no-op)");
+    }
+    document.getElementById("sortAsc").addEventListener("click", function () { sortBlock(true); });
+    document.getElementById("sortDesc").addEventListener("click", function () { sortBlock(false); });
 
     // Save / load: serialize the whole workbook to a single JSON document and
     // stash it in the browser's localStorage; Load deserializes it back. The

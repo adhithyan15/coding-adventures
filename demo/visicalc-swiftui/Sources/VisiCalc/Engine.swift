@@ -48,6 +48,27 @@ final class SpreadsheetSession {
         sc_fill(handle, src, dstStart, dstEnd)
     }
 
+    /// Range sort: reorder the rows of the rectangle `start`..`end` by the
+    /// computed values in `keyCol` (1-based, inside the rectangle), ascending or
+    /// descending. Each row moves as a record; the engine shifts moved formulas'
+    /// references with their row and carries formats. Returns true when a sort was
+    /// applied (or the range was already sorted), false for a no-op (malformed
+    /// address / out-of-range key / oversized range). Reaches `sc_sort_range` —
+    /// the same path every backend drives.
+    func sortRange(_ start: String, _ end: String, _ keyCol: UInt32, _ ascending: Bool) -> Bool {
+        sc_sort_range(handle, start, end, keyCol, ascending ? 1 : 0) != 0
+    }
+
+    /// Structural edits: insert / delete `count` rows or columns at the 1-based
+    /// position `at`. The engine shifts every formula reference at or after the
+    /// band (a reference whose whole band is deleted becomes `#REF!`), then
+    /// recomputes. `at`/`count` are clamped to ≥ 0 before the UInt32 conversion
+    /// so a negative can't trap / wrap into a huge unsigned band.
+    func insertRows(_ at: Int, _ count: Int) { sc_insert_rows(handle, UInt32(max(0, at)), UInt32(max(0, count))) }
+    func deleteRows(_ at: Int, _ count: Int) { sc_delete_rows(handle, UInt32(max(0, at)), UInt32(max(0, count))) }
+    func insertCols(_ at: Int, _ count: Int) { sc_insert_cols(handle, UInt32(max(0, at)), UInt32(max(0, count))) }
+    func deleteCols(_ at: Int, _ count: Int) { sc_delete_cols(handle, UInt32(max(0, at)), UInt32(max(0, count))) }
+
     /// Copy the inclusive rectangle `start`..`end` into the clipboard — a
     /// whole-block copy that pastes as a unit. The source is untouched; the
     /// buffer survives any number of pastes. Reaches `sc_copy`.

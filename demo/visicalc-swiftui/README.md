@@ -103,6 +103,19 @@ The **Undo / Redo** buttons walk the engine's snapshot history
 they disable at the history ends via `canUndo`/`canRedo` (re-evaluated whenever
 `revision`, a `@Published`, bumps). Every edit is reversible and a restored
 formula recomputes live.
+The **+ Row / − Row / + Col / − Col** buttons are **structural edits**
+(`WindowedSheetModel.insertRow`/`deleteRow`/`insertCol`/`deleteCol` over the C
+ABI's `sc_insert_rows`/`sc_delete_rows`/`sc_insert_cols`/`sc_delete_cols`): insert
+or delete the selected cell's row/column, and the engine shifts every formula
+reference at or after the band so dependents keep pointing at their precedents
+(`=A1+A2` with a row inserted above becomes `=A1+A3`); a reference whose whole band
+is deleted becomes `#REF!`.
+The **Format** buttons (`.00` · `%` · `$` · `Gen`) apply an Excel-style
+number-format code to the selected cell's *display only*
+(`WindowedSheetModel.applyFormat` over the C ABI's `sc_set_format`): `.00` →
+`#,##0.00` (`1234` → `1,234.00`), `%` → `0.0%`, `$` → `$#,##0.00`, and `Gen` →
+`""` (clears, back to General). The stored value is untouched — `getRaw` still
+returns the source and dependent formulas keep computing on the real number.
 
 ### Visual design
 

@@ -253,6 +253,18 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_runtime_maintenance_window_summary` over the D23 runtime read
   facade so Chief of Staff jobs can group supervision remediation work into
   schedulable maintenance windows without owning platform mutation logic.
+- Added `smart_home.list_runtime_maintenance_actions` and
+  `smart_home.get_runtime_maintenance_action_summary` over the D23 runtime read
+  facade so Chief of Staff jobs can inspect execution-ordered maintenance
+  actions without owning platform mutation logic.
+- Added `smart_home.list_runtime_maintenance_plans` and
+  `smart_home.get_runtime_maintenance_plan_summary` over the D23 runtime read
+  facade so Chief of Staff jobs can group execution actions into schedulable
+  maintenance plans without owning platform mutation logic.
+- Added `smart_home.list_runtime_maintenance_tickets` and
+  `smart_home.get_runtime_maintenance_ticket_summary` over the D23 runtime read
+  facade so Chief of Staff jobs can inspect ticket-ready maintenance queues
+  without owning platform mutation logic.
 - Added `smart_home.list_workers` and
   `smart_home.get_worker_heartbeat_schedule` over the D23 runtime read facade
   so Chief of Staff jobs can inspect supervised bridge workers and heartbeat

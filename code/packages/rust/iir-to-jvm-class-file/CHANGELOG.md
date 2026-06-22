@@ -3,6 +3,45 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.1] — 2026-06-22 (fix: `global_load` into an i32 dest narrows with `l2i`)
+
+The E6 `global_load` always read the 64-bit static field (`getstatic …:J`, a
+long) and stored it with `emit_typed_store` — correct only for an `i64`/Long
+dest. An `integer` ALGOL program concretised to **i32** has an `int` dest slot,
+so `istore` of a long is a verifier type error (hidden in 0.17.0's e2e test by
+`-Xverify:none`). The **E6 matrix proof** — which runs the real verifier — caught
+it. Now `global_load` emits `l2i` before `istore` when the dest is narrower than
+`long`, the mirror of the existing `i2l` widen on `global_store`. Regression
+test `e6_global_load_into_i32_dest_narrows_with_l2i`.
+
+## [0.17.0] — 2026-06-22 (typed module globals → static fields — LANG-FULL E6 layer 1)
+
+`global_load` / `global_store` were a `LANG32b`-deferred `UnsupportedOp`
+rejection. They now lower to JVM **static-field** access, so a function can
+read/write a module-level global.
+
+### Added
+- **`global_load` / `global_store`** lowering:
+  - `collect_global_fields` collects every distinct global name (read or written,
+    first-seen order) → a `public static long G_N` field of the generated class.
+    Field names are index-based (`G_0`, `G_1`, …) so an arbitrary source
+    identifier can never form an invalid or colliding JVM field name. The fields
+    are emitted in the class file's new `fields[]` table (`jvm-class-file` 0.2.0).
+  - `global_load "g" -> %d` → `getstatic <this>.G_N:J ; lstore`.
+  - `global_store "g", %v` → `lload (+ i2l if narrow) ; putstatic <this>.G_N:J`.
+  - The name is an `Operand::Str` literal (never a register); a non-string /
+    uncollected name is an `InvalidOperand` error.
+  - Adds the `PUTSTATIC` (0xB3) opcode (GETSTATIC already existed for the BF tape).
+- The class-file **serializer now emits the `fields[]` table** (`fields_count` +
+  each `field_info`, with name/descriptor resolved to their CP Utf8 indices that
+  `add_fieldref` already registers).
+
+### Verified
+- `tests/test_backend.rs`: the lowered class declares `static long G_0` and
+  `bump` carries `getstatic`/`putstatic`; and **end-to-end on real `java`** a
+  cross-function global program (`compute` seeds `g`; a separate `bump`
+  reads/increments/writes it) prints **42**.
+
 ## [0.16.0] — 2026-06-21 (arrays → native JVM `int[]`/`long[]`/`double[]` — LANG-FULL E5 PR-3)
 
 The four E5 array opcodes now lower to **real JVM primitive arrays**, so ALGOL

@@ -39,13 +39,26 @@ it through a C ABI.)
 > (`workbook.undo`/`redo`, gated by `canUndo`/`canRedo`): every edit is
 > reversible, a restored formula recomputes live, and a fresh edit forks history
 > (drops the redo branch).
+> The **+ Row / − Row / + Col / − Col** buttons are **structural edits**
+> (`workbook.insertRows`/`deleteRows`/`insertCols`/`deleteCols`): insert or
+> delete the selected cell's row/column, and the engine shifts every formula
+> reference at or after the band so dependents keep pointing at their precedents
+> (`=A1+A2` with a row inserted above becomes `=A1+A3`); a reference whose whole
+> band is deleted becomes `#REF!`.
+> The **.00 / % / $ / Gen** buttons apply a number **format** to the selected cell
+> (`workbook.setFormat` with an Excel-style code: `#,##0.00`, `0.0%`,
+> `$#,##0.00`, or `""` to clear). The format is display-only — the engine renders
+> the stored value through the code (`getDisplayWindow`), so `15` shows as
+> `15.00` / `1500.0%` / `$15.00` without changing the underlying number.
 > Headless proof: `node scripts/verify-infinite.mjs` replays the exact windowing
 > math against the committed WASM bundle and asserts the render stays bounded,
 > the formatted display strings are correct, a formula 1000 rows down is
 > reachable, the gaps are empty (sparse), an edit's diff reaches the far cell
 > that depends on it, a save → mutate → load round trip restores the
-> workbook (formulas recompute live; garbage input is rejected), and an
-> undo/redo walk reverses two edits then replays them with the formula live.
+> workbook (formulas recompute live; garbage input is rejected), an
+> undo/redo walk reverses two edits then replays them with the formula live, and
+> an insert/delete row & column round trip shifts a formula's references (and
+> turns a reference into `#REF!` when its row is deleted).
 
 ## Design language
 
@@ -60,8 +73,8 @@ page's `:root` so the whole surface reads as one considered panel:
   formula field use the mono font.
 - **Toolbar** — an address **pill**, an `fx` marker, then a grown formula field
   with an accent **focus ring**; actions are **segmented button groups**
-  (drag-fill · clipboard · file · history) separated by thin rules, each with
-  hover/active/disabled states.
+  (drag-fill · clipboard · file · structure · format · history) separated by thin rules,
+  each with hover/active/disabled states.
 - **Grid** — subtle **zebra** row banding, a 2-px **accent selection ring**, and
   the selected cell's **row + column headers tint to the accent** so the
   cursor's position reads at a glance.

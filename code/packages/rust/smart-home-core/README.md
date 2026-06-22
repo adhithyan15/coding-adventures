@@ -174,6 +174,12 @@ Current scope:
 - D18D supervision planning tool descriptor for non-mutating due-work previews
 - D18D runtime maintenance-window descriptors for Chief-visible grouped
   supervision work
+- D18D runtime maintenance-action descriptors for Chief-visible execution
+  planning over supervision work
+- D18D runtime maintenance-plan descriptors for Chief-visible grouped execution
+  plans over supervision work
+- D18D runtime maintenance-ticket descriptors for Chief-visible ticket queues
+  over grouped supervision work
 - D18D supervision execution tool descriptors for authorized desired-state
   reconciliation and runtime supervision ticks
 - compact smart-home tool catalog summaries for read-side inspection

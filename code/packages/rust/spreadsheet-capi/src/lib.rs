@@ -357,6 +357,38 @@ pub unsafe extern "C" fn sc_paste(s: *mut ScSession, dst_start: *const c_char) -
     }
 }
 
+/// `sort_range(start, end, key_col, ascending)` — reorder the rows of the
+/// inclusive rectangle `start`..`end` by the computed values in `key_col` (a
+/// 1-based absolute column index inside the rectangle). `ascending` is a flag
+/// (`0` = descending, anything else ascending). Each row moves as a record;
+/// moved formulas have their relative references shifted with their row, and
+/// formats ride along. Returns `1` when a valid sort is applied (or the range was
+/// already sorted), `0` for a malformed address, an out-of-range `key_col`, an
+/// empty/single-row range, or an oversized rectangle. See
+/// [`SpreadsheetSession::sort_range`].
+///
+/// # Safety
+/// `s` must be a valid session; the A1 args must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn sc_sort_range(
+    s: *mut ScSession,
+    start: *const c_char,
+    end: *const c_char,
+    key_col: u32,
+    ascending: c_int,
+) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    let start = read_cstr(start);
+    let end = read_cstr(end);
+    if (*s).inner.sort_range(&start, &end, key_col, ascending != 0) {
+        1
+    } else {
+        0
+    }
+}
+
 /// `serialize()` → a self-contained JSON document capturing the workbook's
 /// source (formula text + typed literals) and per-cell formats — everything
 /// needed to reconstruct the sheet, but not the computed values (those recompute

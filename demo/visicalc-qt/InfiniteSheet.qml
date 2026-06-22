@@ -228,6 +228,81 @@ Item {
                 }
                 Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
 
+                // ── Structure (insert / delete the selected row or column) ──
+                // The engine shifts every formula reference across the band; a
+                // reference whose whole band is deleted becomes #REF!.
+                ToolButton {
+                    text: "+ Row"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Insert a row above the selected cell (references shift down)"
+                    onClicked: if (doc) doc.insertRows(doc.infRow, 1)
+                }
+                ToolButton {
+                    text: "− Row"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Delete the selected cell's row (references shift up; refs into it become #REF!)"
+                    onClicked: if (doc) doc.deleteRows(doc.infRow, 1)
+                }
+                ToolButton {
+                    text: "+ Col"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Insert a column left of the selected cell (references shift right)"
+                    onClicked: if (doc) doc.insertCols(doc.infCol, 1)
+                }
+                ToolButton {
+                    text: "− Col"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Delete the selected cell's column (references shift left; refs into it become #REF!)"
+                    onClicked: if (doc) doc.deleteCols(doc.infCol, 1)
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
+                // ── Format (apply a number format to the selected cell) ──
+                // Display-only: the engine renders the stored value through the code.
+                ToolButton {
+                    text: ".00"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Format the selected cell with thousands separators + 2 decimals (#,##0.00)"
+                    onClicked: if (doc) doc.setFormatInf("#,##0.00")
+                }
+                ToolButton {
+                    text: "%"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Format the selected cell as a percent (0.0%)"
+                    onClicked: if (doc) doc.setFormatInf("0.0%")
+                }
+                ToolButton {
+                    text: "$"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Format the selected cell as currency ($#,##0.00)"
+                    onClicked: if (doc) doc.setFormatInf("$#,##0.00")
+                }
+                ToolButton {
+                    text: "Gen"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Clear the selected cell's format (General)"
+                    onClicked: if (doc) doc.setFormatInf("")
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
+                // ── Sort (reorder the budget block A1:E4 by the selected column) ──
+                // Each row moves as a record; the E-column SUM formulas travel with
+                // their row (refs shift), so every total stays correct. The key
+                // column is the selection clamped into the block's columns A..E.
+                ToolButton {
+                    text: "▲ Sort"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Sort the budget block A1:E4 by the selected column, ascending (rows move as records; formulas track)"
+                    onClicked: if (doc) doc.sortRange("A1", "E4", Math.min(5, Math.max(1, doc.infCol)), true)
+                }
+                ToolButton {
+                    text: "▼ Sort"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Sort the budget block A1:E4 by the selected column, descending"
+                    onClicked: if (doc) doc.sortRange("A1", "E4", Math.min(5, Math.max(1, doc.infCol)), false)
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
                 // ── History (undo / redo) ──
                 ToolButton {
                     text: "↶ Undo"

@@ -1434,6 +1434,130 @@ mod tests {
             vec![1.0]
         );
     }
+
+    // --- R-44: base R Date support (through S syntax) -------------------------
+
+    /// The character elements of a (possibly classed) result, NA → "NA".
+    fn date_strs(src: &str) -> Vec<String> {
+        eval_s(src)
+            .unwrap()
+            .as_character()
+            .into_iter()
+            .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+            .collect()
+    }
+
+    #[test]
+    fn date_class_is_date() {
+        assert_eq!(date_strs("class(as.Date(\"2021-03-14\"))\n"), vec!["Date"]);
+    }
+
+    #[test]
+    fn date_as_numeric_is_days_since_epoch() {
+        assert_eq!(nums("as.numeric(as.Date(\"1970-01-01\"))\n"), vec![0.0]);
+        assert_eq!(nums("as.numeric(as.Date(\"1970-01-02\"))\n"), vec![1.0]);
+        assert_eq!(nums("as.numeric(as.Date(\"1969-12-31\"))\n"), vec![-1.0]);
+    }
+
+    #[test]
+    fn date_format_round_trips() {
+        assert_eq!(show("format(as.Date(\"2021-03-14\"))\n"), "[1] \"2021-03-14\"");
+        // Leap day survives the parse → format round-trip.
+        assert_eq!(show("format(as.Date(\"2000-02-29\"))\n"), "[1] \"2000-02-29\"");
+    }
+
+    #[test]
+    fn date_numeric_origin_is_epoch() {
+        // as.Date(0) is 1970-01-01; as.Date(1) is the next day.
+        assert_eq!(show("format(as.Date(0))\n"), "[1] \"1970-01-01\"");
+        assert_eq!(show("format(as.Date(1))\n"), "[1] \"1970-01-02\"");
+    }
+
+    #[test]
+    fn date_slash_format_parses() {
+        assert_eq!(
+            nums("as.numeric(as.Date(\"2021/03/14\", format = \"%Y/%m/%d\"))\n"),
+            nums("as.numeric(as.Date(\"2021-03-14\"))\n")
+        );
+    }
+
+    #[test]
+    fn date_malformed_is_na() {
+        // An unparseable string becomes NA — never an error/panic.
+        assert_eq!(show("as.numeric(as.Date(\"not-a-date\"))\n"), "[1] NA");
+        assert_eq!(show("as.numeric(as.Date(\"2021-02-30\"))\n"), "[1] NA");
+    }
+
+    #[test]
+    fn date_subtraction_is_day_count() {
+        assert_eq!(
+            nums("as.Date(\"2021-03-20\") - as.Date(\"2021-03-14\")\n"),
+            vec![6.0]
+        );
+        // difftime() is the named form, same result in days.
+        assert_eq!(
+            nums("difftime(as.Date(\"2021-03-20\"), as.Date(\"2021-03-14\"))\n"),
+            vec![6.0]
+        );
+    }
+
+    #[test]
+    fn weekdays_anchor_and_names() {
+        // 1970-01-01 was a Thursday (the anchor).
+        assert_eq!(date_strs("weekdays(as.Date(\"1970-01-01\"))\n"), vec!["Thursday"]);
+        assert_eq!(date_strs("weekdays(as.Date(\"2021-03-14\"))\n"), vec!["Sunday"]);
+        // Pre-epoch (negative day count) must not panic.
+        assert_eq!(
+            date_strs("weekdays(as.Date(\"1969-12-31\"))\n"),
+            vec!["Wednesday"]
+        );
+    }
+
+    #[test]
+    fn date_format_day_of_year() {
+        assert_eq!(
+            show("format(as.Date(\"2021-03-14\"), \"%j\")\n"),
+            "[1] \"073\""
+        );
+    }
+
+    #[test]
+    fn date_is_vectorized() {
+        assert_eq!(
+            nums("as.numeric(as.Date(c(\"1970-01-01\", \"1970-01-03\")))\n"),
+            vec![0.0, 2.0]
+        );
+        assert_eq!(
+            date_strs("weekdays(as.Date(c(\"1970-01-01\", \"1970-01-02\")))\n"),
+            vec!["Thursday", "Friday"]
+        );
+    }
+
+    #[test]
+    fn date_extreme_numeric_is_na_not_overflow() {
+        // A huge / non-finite day count must become NA (the numeric counterpart to
+        // the string digit cap) — never an i64-overflow panic in the civil kernel.
+        assert_eq!(show("as.numeric(as.Date(1e300))\n"), "[1] NA");
+        assert_eq!(show("format(as.Date(1e300))\n"), "[1] NA");
+        assert_eq!(show("weekdays(as.Date(1e300))\n"), "[1] NA");
+        assert_eq!(show("format(as.Date(-1e300), \"%j\")\n"), "[1] NA");
+        // A hand-built classed "Date" with an out-of-range raw count is also safe.
+        assert_eq!(
+            show("weekdays(structure(1e300, class = \"Date\"))\n"),
+            "[1] NA"
+        );
+    }
+
+    #[test]
+    fn sys_date_structure_only() {
+        // Non-deterministic value: assert only its class and that it is a single
+        // finite numeric — never an exact day.
+        assert_eq!(date_strs("class(Sys.Date())\n"), vec!["Date"]);
+        assert_eq!(nums("length(Sys.Date())\n"), vec![1.0]);
+        let day = nums("as.numeric(Sys.Date())\n");
+        assert_eq!(day.len(), 1);
+        assert!(day[0].is_finite());
+    }
 }
 
 #[cfg(test)]

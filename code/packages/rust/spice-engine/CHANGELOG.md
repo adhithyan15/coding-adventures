@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Group policy-blocked `.control` command artifacts from selected
+  `run_deck_analysis` execution results by category as
+  `control_policy_summary_artifacts` with stable counts, line lists, command
+  lists, code lists, severity lists, and table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and TypeScript.
+- Expose policy-blocked `.control` commands from selected `run_deck_analysis`
+  execution results as `control_policy_artifacts` with stable line, category,
+  command, code, severity, and message metadata plus table, CSV, compact JSON,
+  and header-keyed record exports, matching Python and TypeScript.
 - Carry matched and unmatched `write <rawfile> <probes...>` probe inventories
   through rawfile artifact `MatchedProbes` / `MatchedProbeList` and
   `UnmatchedProbes` / `UnmatchedProbeList` summary columns, and keep only

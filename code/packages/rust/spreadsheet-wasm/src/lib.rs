@@ -346,6 +346,36 @@ pub unsafe extern "C" fn paste(dst_start_ptr: *const u8, dst_start_len: usize) -
     }
 }
 
+/// `sort_range(start, end, key_col, ascending)` — reorder the rows of the
+/// inclusive A1 rectangle `start`..`end` by the computed values in `key_col` (a
+/// 1-based absolute column index inside the rectangle); `ascending` is a flag
+/// (`0` = descending, non-zero = ascending). Each row moves as a record; moved
+/// formulas have their relative references shifted with their row, formats ride
+/// along. Returns `1` when a valid sort is applied (or the range was already
+/// sorted), `0` for a malformed address / out-of-range `key_col` /
+/// empty-single-row / oversized range. The JS host re-reads via `get_window`
+/// afterwards. See [`SpreadsheetSession::sort_range`].
+///
+/// # Safety
+/// Both `(ptr, len)` pairs must describe readable byte ranges (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn sort_range(
+    start_ptr: *const u8,
+    start_len: usize,
+    end_ptr: *const u8,
+    end_len: usize,
+    key_col: u32,
+    ascending: i32,
+) -> i32 {
+    let start = read_input(start_ptr, start_len);
+    let end = read_input(end_ptr, end_len);
+    if SESSION.with(|s| s.borrow_mut().sort_range(&start, &end, key_col, ascending != 0)) {
+        1
+    } else {
+        0
+    }
+}
+
 // ── Save / load (serialize) ──────────────────────────────────────────
 
 /// `serialize()` → a packed JSON document holding the workbook's SOURCE (formula

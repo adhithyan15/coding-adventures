@@ -19,12 +19,39 @@
 //! the x86_64 bytes* rather than the host's aarch64 bytes — a genuine retro-
 //! verification of E5 native arrays and E3 native floats on the x86_64 backend.
 
+use std::collections::HashMap;
+
 use aot_core::infer::infer_types;
 use aot_core::specialise::aot_specialise;
 use jit_core::backend::FunctionContext;
 use lang_aot::{compile_source_to_iir, Language};
-use x86_64_backend::{compile_function_with_relocs, X86_64Abi};
+use x86_64_backend::{compile_function_with_globals, X86_64Abi};
 use x86_simulator::harness::{MachineCodeHarness, Reloc};
+
+/// Assign each distinct module-global name (as it appears in a `global_load` /
+/// `global_store`) a stable 8-byte slot index, in first-seen order. This mirrors
+/// `twig-aot::collect_global_slots` — the x86_64 backend turns slot `i` into the
+/// byte offset `i*8` from the `_twig_globals` base, and the harness reserves a
+/// zeroed `_twig_globals` region the same `lea`/`mov` then addresses. Replicated
+/// here (a few lines) rather than taking a `twig-aot` dependency just for tests.
+fn collect_global_slots(module: &interpreter_ir::IIRModule) -> HashMap<String, usize> {
+    let mut slots = HashMap::new();
+    let mut next = 0usize;
+    for f in &module.functions {
+        for instr in &f.instructions {
+            if instr.op == "global_load" || instr.op == "global_store" {
+                if let Some(name) = instr.srcs.first().and_then(|o| o.as_str_lit()) {
+                    slots.entry(name.to_string()).or_insert_with(|| {
+                        let s = next;
+                        next += 1;
+                        s
+                    });
+                }
+            }
+        }
+    }
+    slots
+}
 
 /// A compiled function: its name, x86_64 machine-code bytes, and the external
 /// relocations (cross-function `call`s and runtime-symbol calls) the harness
@@ -57,6 +84,13 @@ fn compile_to_x86_functions(lang: Language, src: &str) -> (Vec<X86Function>, Str
     let module = compile_source_to_iir(lang, src, "matrix_x86")
         .expect("frontend should lower the matrix program to IIR");
 
+    // Module globals (E6/O3/AL6): each `global_load`/`global_store` name gets a
+    // slot; the backend lowers an access to `lea rax,[rip+_twig_globals]` + a
+    // `mov` at `[rax + slot*8]`, recorded as a `PcRel32` reloc the harness
+    // resolves to its zeroed `_twig_globals` region. Empty map ⇒ no global ops
+    // ⇒ no such reloc (the pre-globals programs are unchanged).
+    let global_slots = collect_global_slots(&module);
+
     let mut funcs = Vec::with_capacity(module.functions.len());
     for fn_ in &module.functions {
         let ctx = FunctionContext {
@@ -66,7 +100,7 @@ fn compile_to_x86_functions(lang: Language, src: &str) -> (Vec<X86Function>, Str
         };
         let inferred = infer_types(fn_);
         let cir = aot_specialise(fn_, Some(&inferred));
-        let (bytes, relocs) = compile_function_with_relocs(&ctx, &cir, X86_64Abi::SysV)
+        let (bytes, relocs) = compile_function_with_globals(&ctx, &cir, X86_64Abi::SysV, &global_slots)
             .expect("x86_64-backend should compile the specialised CIR");
         funcs.push(X86Function {
             name: fn_.name.clone(),
@@ -152,6 +186,28 @@ fn algol_procedure_call_runs_on_x86_sim() {
                sq := x * x; result := sq(7) end";
     assert_eq!(run_on_x86_sim(Language::Algol60, src), 49);
 }
+
+/// ALGOL 60 — a **module global** shared between a procedure and its enclosing
+/// block (LANG-FULL enabler **E6**).  `counter` is read+written by `incr` and
+/// seeded by the block, so the frontend materialises it as a `_twig_globals`
+/// slot: `incr` does `lea rax,[rip+_twig_globals]` + `mov`s at `[rax+0]`, the
+/// block likewise.  This is the FIRST x86-sim cell to exercise a `PcRel32`
+/// relocation against the globals data symbol — the harness resolves it to its
+/// zeroed `_twig_globals` region.  `counter := 40; result := incr(2)` ⇒ 42,
+/// run on the real x86_64 bytes locally (the same exit code the matrix's
+/// NativeAot column asserts for this E6 program).
+#[test]
+fn algol_module_global_runs_on_x86_sim() {
+    let src = "begin integer counter, result; \
+               integer procedure incr(x); value x; integer x; \
+                  incr := counter := counter + x; \
+               counter := 40; \
+               result := incr(2) end";
+    assert_eq!(run_on_x86_sim(Language::Algol60, src), 42);
+}
+// (An Oct `static` (O3) and ALGOL `own` (AL6) cell can be added once their
+// frontend PRs land on main; both reuse the exact same `_twig_globals` path
+// this E6 cell exercises, so the harness support added here already covers them.)
 
 /// ALGOL 60 — **E3 real arithmetic + equality** (`r := 2.5 * 2.0; if r = 5.0`
 /// ⇒ 42).  Runs the x86_64 backend's **SSE2** output (`movabs`/`movsd`/`mulsd`/
@@ -251,6 +307,22 @@ fn basic_for_loop_runs_on_x86_sim() {
     assert_eq!(out, "15");
 }
 
+/// Dartmouth BASIC — a **`DIM` array** (LANG-FULL BA3) on the x86_64 backend.
+/// `DIM A(3)` reserves a 4-element (0..3 inclusive) integer array; each
+/// `LET A(i) = e` is an `array_set` and each `A(i)` read is a bounds-checked
+/// `array_get` — the *same* shared array ops `algol_static_array_…` exercises,
+/// but reached through the **BASIC** frontend's lowering rather than ALGOL's.
+/// `A(1)+A(2)+A(3)` = 10 + 20 + 12 ⇒ stdout `42`, proving the BASIC array path
+/// produces correct native machine code (not just the ALGOL one already
+/// covered by `algol_static_array` / `algol_for_loop_array`).
+#[test]
+fn basic_array_runs_on_x86_sim() {
+    let src = "10 DIM A(3)\n20 LET A(1) = 10\n30 LET A(2) = 20\n\
+               40 LET A(3) = 12\n50 PRINT A(1) + A(2) + A(3)\n60 END\n";
+    let (_code, out) = run_capturing_stdout(Language::DartmouthBasic, src);
+    assert_eq!(out, "42");
+}
+
 /// Oct — bitwise complement (the `not` op → x86 `0xF7 /2`) printed via `out`
 /// (`fn main() { out(1, ~0); }` ⇒ stdout `255`, the u8-masked `-1`).  This is
 /// the cell that surfaced the missing group-3 `0xF7` opcode in the simulator.
@@ -258,6 +330,40 @@ fn basic_for_loop_runs_on_x86_sim() {
 fn oct_complement_runs_on_x86_sim() {
     let (_code, out) = run_capturing_stdout(Language::Oct, "fn main() { out(1, ~0); }");
     assert_eq!(out, "255");
+}
+
+/// Oct — a **`static` module global** (LANG-FULL O3) on the x86_64 backend.
+/// `counter` is a top-level `static` shared across functions: it lives in the
+/// `_twig_globals` data region (S8), `bump()` — a *separate* function —
+/// increments it twice, and `main` prints it (`out` → stdout) ⇒ `42`. This is
+/// the Oct counterpart to `algol_module_global_runs_on_x86_sim`: the same
+/// `lea [rip+_twig_globals]` + `mov [rax+slot*8]` lowering, exercised from a
+/// real Oct frontend's output on the simulator. A per-function register would
+/// print `40`; `42` proves the global persisted across the two `bump` calls.
+#[test]
+fn oct_static_global_runs_on_x86_sim() {
+    let src = "static counter: u8 = 40; \
+               fn bump() { counter = counter + 1; } \
+               fn main() { bump(); bump(); out(1, counter); }";
+    let (_code, out) = run_capturing_stdout(Language::Oct, src);
+    assert_eq!(out, "42");
+}
+
+/// ALGOL 60 — an **`own` static-lifetime variable** (LANG-FULL AL6) on the
+/// x86_64 backend.  `bump`'s `own integer n` is a module global (the same
+/// `_twig_globals` slot mechanism, S8) that persists across calls:
+/// `bump(1) + bump(1) + bump(1)` accumulates 1 + 2 + 3 = 6 on the one cell.  A
+/// non-`own` local (a register) would give 3 — so 6 proves the global survived
+/// the three real x86_64 `call`s, executed on the simulator.  Together with
+/// `algol_module_global_runs_on_x86_sim` (E6) and `oct_static_global_…` (O3)
+/// this exercises all three module-global frontends locally.
+#[test]
+fn algol_own_variable_runs_on_x86_sim() {
+    let src = "begin integer result; \
+               integer procedure bump(d); value d; integer d; \
+                  begin own integer n; n := n + d; bump := n end; \
+               result := bump(1) + bump(1) + bump(1) end";
+    assert_eq!(run_on_x86_sim(Language::Algol60, src), 6);
 }
 
 /// Nib — **unsigned division** (`84 / 2` ⇒ exit 42).  The `div` op lowers to the

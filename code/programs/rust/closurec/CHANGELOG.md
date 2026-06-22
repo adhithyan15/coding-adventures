@@ -2,6 +2,145 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.171.0] - 2026-06-22
+
+### Added — string `indexOf` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.22.0, which folds the
+single-argument `String#indexOf` on two string literals to a numeric literal:
+`"abcabc".indexOf("b")` → `1` (the UTF-16 code-unit index of the first
+occurrence), an absent needle → `-1`, the empty needle → `0`. Only the
+one-argument form folds; the `fromIndex` overload and a non-literal receiver
+pass through.
+
+New e2e fixture `tests/diff/simple-fold-indexof` (and integration test
+`diff_simple_fold_indexof.rs`): `var i = "abcabc".indexOf("b"); report(i);` →
+`var i=1;report(i);`, with a whitespace-fallback guard proving the fold comes
+from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.171.0 to sit above the concurrently-developed ASI
+> Phase-3 branch (closurec 0.170.0) and the merged charat fold (0.169.0), so the
+> parallel branches never collide on the version line.
+## [0.170.0] - 2026-06-22
+
+### Added — ASI Phase 3: restricted productions (Rule 3) end-to-end
+
+Pulls in `coding-adventures-javascript-parser` 0.19.0, whose new
+`force_restricted_semicolons` pre-pass forces an automatic semicolon after a
+restricted keyword (`return`/`throw`/`break`/`continue`/`yield`) whose argument
+is pushed to the next line — the ECMAScript §12.10.1 "no LineTerminator here"
+rule. Because closurec's grammar is newline-blind, `return` ⏎ `42` previously
+parsed (and re-emitted) as `return 42`, a silent **miscompile**; it is now
+correctly `return; 42` (the `42` becoming a dead statement the SIMPLE pipeline
+drops).
+
+New e2e fixture `tests/diff/simple-asi-restricted` (and integration test
+`diff_simple_asi_restricted.rs`): `function f(){return` ⏎ `42}` ⏎ `report(f())`
+→ `function f(){return};report(f());`. The absence of `42` is the double proof —
+the restricted production was honored *and* the SIMPLE typed pipeline ran (the
+`WHITESPACE_ONLY` re-stitcher would emit `function f(){return 42}`). The full
+existing fixture suite remains byte-for-byte unchanged.
+
+Context guards keep a `return` that is really a property name (`a.return`,
+`{return: 1}`) from being mis-split; postfix `++`/`--` restricted productions
+are a documented follow-up.
+
+> Version note: bumped to 0.170.0 to sit above the concurrently-developed
+> `simple-fold-charat` branch (0.169.0) and the merged ASI Rule-1 release
+> (0.168.0), so the parallel branches never collide on the version line.
+
+## [0.169.0] - 2026-06-22
+
+### Added — string indexing folds (`charCodeAt`/`charAt`) at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.21.0, which folds the
+single-integer-index string methods on a string literal: `"abc".charCodeAt(0)`
+→ `97`, `"abc".charAt(1)` → `"b"`, `"abc".charAt(9)` → `""` (UTF-16 code-unit
+indexing). Non-negative integer-literal index only; out-of-range `charCodeAt`
+(JS `NaN`) and lone-surrogate `charAt` results are left unfolded; identifier
+receivers and the computed form pass through.
+
+New e2e fixture `tests/diff/simple-fold-charat` (and integration test
+`diff_simple_fold_charat.rs`) is the end-to-end oracle, with a
+whitespace-fallback guard proving the fold comes from the SIMPLE typed pipeline.
+
+> Version note: bumped to 0.169.0 (skipping 0.168.0, reserved by the
+> concurrently-developed ASI Rule-1 string-newline branch) so the parallel
+> branches don't collide on the version line.
+## [0.168.0] - 2026-06-22
+
+### Changed — ASI Rule 1 now handles string/template-ending statements
+
+The Phase-2 limitation is gone: a semicolon-free statement that ends in a
+string/template/regex literal immediately before a newline now parses and gets
+optimized at SIMPLE/ADVANCED, where it previously degraded to WHITESPACE_ONLY.
+This rides on the `lexer` crate populating `TOKEN_PRECEDED_BY_NEWLINE` (0.6.0)
+and `javascript-parser` reading it (0.18.0).
+
+New end-to-end fixture `simple-asi-string-newline`:
+`var label = "total"` ⏎ `var n = 1 + 2` ⏎ `show(label, n)` →
+`var label="total";var n=3;show(label,n);` (`1 + 2` folds). The full existing
+fixture suite remains byte-for-byte unchanged.
+
+> Version note: bumped to 0.168.0 to sit above the three concurrently-developed
+> constant-fold releases that merged first — `simple-fold-bitnot` (0.163.0),
+> `simple-fold-strlen` (0.165.0), and `simple-fold-strcase` (0.167.0) — so the
+> parallel branches never collide on the version line.
+
+## [0.167.0] - 2026-06-22
+
+### Added — ASCII string-casing folds at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.20.0, which folds the
+no-argument string-casing methods on a string literal: `"abc".toUpperCase()` →
+`"ABC"`, `"ABC".toLowerCase()` → `"abc"`. ASCII-only (locale-independent,
+byte-for-byte equal to JS); non-ASCII strings, identifier receivers, the
+computed form, and any-argument calls are all left alone.
+
+New e2e fixture `tests/diff/simple-fold-strcase` (and integration test
+`diff_simple_fold_strcase.rs`) is the end-to-end oracle, with a
+whitespace-fallback guard proving the fold comes from the SIMPLE typed pipeline.
+
+> Version note: bumped to 0.167.0 (skipping 0.166.0, reserved by the
+> concurrently-developed ASI Rule-1 string-newline branch) so the parallel
+> branches don't collide on the version line.
+
+## [0.165.0] - 2026-06-22
+
+### Added — string-literal `.length` folding at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.19.0, which folds the
+`.length` of a string literal to a number: `"hello".length` → `5`, `"".length`
+→ `0`, `"💩".length` → `2` (UTF-16 code-unit count, matching JS `String#length`).
+Only the dotted non-computed form on a string literal folds; `s.length` on an
+identifier and `"abc"["length"]` are left alone.
+
+New e2e fixture `tests/diff/simple-fold-strlen` (and integration test
+`diff_simple_fold_strlen.rs`) is the end-to-end oracle, with a
+whitespace-fallback guard proving the fold comes from the SIMPLE typed pipeline.
+
+> Version note: bumped to 0.165.0 (skipping 0.164.0, which is reserved by the
+> concurrently-developed ASI Rule-1 string-newline release) so the two parallel
+> branches don't collide on the version line.
+
+## [0.163.0] - 2026-06-22
+
+### Added — unary bitwise NOT folding (`~5` → `-6`) at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.18.0, which folds the
+unary `~` operator on a numeric literal under ES `ToInt32` semantics: `~5` →
+`-6`, `~-1` → `0`, `~5.9` → `-6`, `~~9` → `9`. This reuses the same `to_int32`
+coercion the binary bitwise operators already use, so the two stay bit-for-bit
+consistent.
+
+New e2e fixture `tests/diff/simple-fold-bitnot` (and integration test
+`diff_simple_fold_bitnot.rs`) is the end-to-end oracle, with a
+whitespace-fallback guard proving the fold comes from the SIMPLE typed pipeline.
+
+The `--help_markdown` golden fixture was regenerated for the version bump
+(`Version: 0.163.0`).
+
 ## [0.162.0] - 2026-06-21
 
 ### Added — negation push (`!(a == b)` → `a != b`) at SIMPLE/ADVANCED

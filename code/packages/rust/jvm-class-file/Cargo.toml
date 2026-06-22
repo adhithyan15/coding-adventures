@@ -1,6 +1,6 @@
 [package]
 name = "jvm-class-file"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Conservative JVM class-file parser and minimal builder for coding-adventures"
 

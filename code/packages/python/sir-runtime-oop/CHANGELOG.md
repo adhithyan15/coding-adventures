@@ -2,6 +2,138 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.6] - 2026-06-22
+
+### Added
+
+**`Symbol#to_proc` (`&:sym`) — `sym_to_proc`** (per `code/specs/sir-method-dispatch.md`,
+item M2). New `sym_to_proc(sym) -> Closure`: builds a `sir-runtime-core`
+`Closure` equivalent to Ruby's `sym.to_proc`, so a `&:sym` block argument on a
+dispatched call works — `[1, 2, 3].map(&:to_s)` now evaluates to
+`["1", "2", "3"]`.
+
+- The Ruby→SIR frontend lowers `&:sym` to `block_pass(SymLit("sym"))`; the
+  backend emits the surviving envelope as `_sir_oop_sym_to_proc(intern("sym"))`,
+  and the resulting `Closure` is driven by the block-taking catalog methods
+  (`map`/`select`/`each`/…) through `apply` exactly like a `{ }` block.
+- The closure's `arity` is `None` (variadic), so `apply` forwards a block
+  method's arguments unadjusted: the first becomes the **receiver**, the rest
+  are forwarded as method arguments. This matches `&:sym`'s Ruby arity (one
+  required receiver plus a rest) — correct for the one-arg (`map`) and two-arg
+  (`include?`-style) shapes alike.
+- The proc body dispatches through `call_method`, so an **out-of-catalog method
+  bottoms out at `nil`** rather than raising — the never-raise-on-the-OO-surface
+  invariant holds for the proc body too. A bare string name is accepted
+  defensively in addition to a `Symbol`.
+
+### Known v0 limitation
+
+Arithmetic/comparison operators (`&:+`, `&:<`) are emitted as **native**
+operations, not routed through the dispatch catalog, so `inject(&:+)` is not yet
+supported (the proc would resolve `+` to `nil`). Operator dispatch is tracked in
+the later numeric-fidelity item.
+
+## [0.1.5] - 2026-06-22
+
+### Added
+
+Built-in method dispatch, part 5 — the **`Integer`/`Float`**, **`Symbol`**, and
+**`nil`/`true`/`false`** catalogs (per `code/specs/sir-method-dispatch.md`, item
+M1c), completing the M1c primitive surface:
+
+- **Numeric** (`int`/`float`): `abs`, `to_i`, `to_f`, `even?`, `odd?`, `zero?`,
+  `positive?`, `negative?`, `succ`/`next`, `pred`, `floor`, `ceil`, `round`
+  (half **away from zero**, unlike Python's banker's rounding), `gcd`, `pow`/`**`,
+  `digits`; block forms `times`, `upto`, `downto`, `step`.
+- **Symbol** (`sir-runtime-core` `Symbol`): `to_s`, `to_sym`, `length`/`size`,
+  `upcase`/`downcase` (return a new interned symbol), `inspect`, `empty?`.
+- **`to_s`/`inspect` are now universal `Object` methods** (Ruby display forms):
+  `nil.to_s == ""` / `nil.inspect == "nil"`, `true.to_s == "true"`, numbers and
+  symbols print faithfully, and an `Array`/`Hash` renders `"[1, 2]"` / `"{:k=>v}"`.
+  This means **`nil`/`true`/`false` need no catalog of their own** (`nil.to_a`
+  already returns `[]`). Added **`Array#join`** (elements via `to_s`, default sep
+  `""`).
+- Dispatch orders the `bool` check **before** `int` (a Python `bool` is an `int`
+  subclass) so `True`/`False` resolve only the `Object` methods, never the numeric
+  catalog.
+
+`respond_to?` reports each new catalog honestly; out-of-catalog stays `nil`.
+
+### Security / robustness
+
+- **`**`/`pow` and `digits` bound hostile bignums.** A repeat/exponent count can
+  come from untrusted input; Python ints are arbitrary precision, so
+  `2 ** (10 ** 9)` would allocate ~125 MB. `**` now refuses an integer result
+  past a ~1M-bit budget (returns `0`); `digits` refuses an over-budget bignum;
+  float overflow returns `inf` instead of raising.
+- **`to_s`/`inspect`/`join` are cycle- and depth-safe.** A self-referential
+  `Array`/`Hash` renders `[...]`/`{...}` (Ruby's behaviour) and depth is capped,
+  so a cyclic or deeply-nested structure can no longer raise `RecursionError`.
+- **Numeric methods never raise on `inf`/`nan`.** `to_i`/`even?`/`odd?`/`gcd`/
+  `floor`/`ceil`/`round`/`digits` degrade gracefully rather than raising
+  `OverflowError`, upholding the never-raise-on-the-OO-surface invariant.
+
+## [0.1.4] - 2026-06-22
+
+### Added
+
+Built-in method dispatch, part 4 — the **`String`** catalog (per
+`code/specs/sir-method-dispatch.md`, item M1c; a Ruby `String` is a Python `str`,
+which is **immutable**, so every method is non-mutating and returns a fresh
+value):
+
+- Non-block: `length`/`size`, `upcase`, `downcase`, `capitalize`, `reverse`,
+  `strip`/`lstrip`/`rstrip`, `chomp` (default line-ending or explicit suffix),
+  `chars`, `bytes` (UTF-8), `split` (whitespace default or literal separator),
+  `include?`, `start_with?`, `end_with?`, `index` (nil when absent), `replace`,
+  `sub`/`gsub` (**literal** — pattern matched as a plain substring, replacement
+  inserted verbatim with no `\1`/`&` back-reference expansion), `to_i`/`to_f`
+  (leading-numeric, `0`/`0.0` when none — never raising), `to_sym` (interns a
+  `sir-runtime-core` `Symbol`), `empty?`, `*` (repeat), `+` (concat).
+- Block: `each_char` — applied via `sir-runtime-core` `apply`.
+
+`respond_to?` reports the String methods; out-of-catalog stays `nil`. Universal
+`Object` methods still resolve on a String receiver.
+
+## [0.1.3] - 2026-06-22
+
+### Added
+
+Built-in method dispatch, part 3 — the **`Hash`** catalog (per
+`code/specs/sir-method-dispatch.md`, item M1c; Hash is a Python `dict`):
+
+- Non-block: `keys`, `values`, `has_key?`/`key?`/`include?`/`member?`,
+  `has_value?`/`value?`, `fetch` (with optional default), `size`/`length`,
+  `empty?`, `to_a` (`[[k, v], …]`), `dig` (single-level v0), `store`/`[]=`,
+  `merge` (new dict), `delete`, `clear`, `invert`.
+- Block (block receives `[key, value]`): `each`/`each_pair`, `each_key`,
+  `each_value`, `map`, `select`/`filter`, `reject` — applied via
+  `sir-runtime-core` `apply`, predicates through SIR `truthy`.
+
+`respond_to?` reports the Hash methods; out-of-catalog stays `nil`. Universal
+`Object` methods still resolve on a Hash receiver.
+
+## [0.1.2] - 2026-06-22
+
+### Added
+
+Built-in method dispatch, part 2 — **block-taking `Array`/`Enumerable` methods**
+(per `code/specs/sir-method-dispatch.md`, item M1b):
+`each`, `each_with_index`, `map`/`collect`, `select`/`filter`, `reject`,
+`reduce`/`inject` (with/without initial), `find`/`detect`, `flat_map`,
+`any?`/`all?`/`none?`. A trailing `Closure` block is applied via
+`sir-runtime-core`'s `apply` (proc-lenient arity); predicate results route
+through SIR `truthy` (only `false`/`nil` are falsy, so `0`/`""` are kept).
+`respond_to?` now reports these method names.
+
+### Changed
+
+- Adds a dependency on **`coding-adventures-sir-runtime-core`** (for `apply`,
+  `Closure`, `truthy`); wired via `[tool.uv.sources]` + leaf-to-root BUILD
+  install (pairs → core → self).
+- A block method invoked **without** a block still bottoms out at `nil` (Ruby
+  returns an `Enumerator`; v0 floor, documented).
+
 ## [0.1.1] - 2026-06-22
 
 ### Added

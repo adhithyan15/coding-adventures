@@ -50,9 +50,33 @@ the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
 `include?`, `index`, `push`/`<<`/`pop`/`shift`/`unshift`, `reverse`, `sort`,
 `min`/`max`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a` — and the
 **universal `Object`** methods `nil?`, `==`, `!=`, `equal?`, `respond_to?`,
-`freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a`. Block-taking methods
-(`each`/`map`/`select`/…) and the Hash/String/Numeric/Symbol catalogs land in
-follow-up releases.
+`freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a`; and (item **M1b**)
+**block-taking `Array`/`Enumerable`** methods `each`, `each_with_index`,
+`map`/`collect`, `select`/`filter`, `reject`, `reduce`/`inject`, `find`/`detect`,
+`flat_map`, `any?`/`all?`/`none?` — a trailing `Closure` block is applied via
+`sir-runtime-core`'s `apply` (proc-lenient), predicates routed through SIR
+`truthy`; (item **M1c**) the **`Hash`** catalog
+(`keys`/`values`/`has_key?`/`fetch`/`merge`/`each`/`map`/`select`/…); and (item
+**M1c**) the **`String`** catalog (`length`, `upcase`/`downcase`/`capitalize`,
+`reverse`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`/`bytes`, `split`,
+`include?`/`start_with?`/`end_with?`/`index`, `replace`, `sub`/`gsub` *literal*,
+`to_i`/`to_f`/`to_sym`, `empty?`, `*`/`+`, `each_char`); and (item **M1c**) the
+**`Integer`/`Float`** catalog (`abs`, `to_i`/`to_f`, `even?`/`odd?`/`zero?`/
+`positive?`/`negative?`, `succ`/`pred`, `floor`/`ceil`/`round`, `gcd`, `pow`/`**`,
+`digits`, and block `times`/`upto`/`downto`/`step`), the **`Symbol`** catalog
+(`to_s`/`to_sym`/`length`/`upcase`/`downcase`/`inspect`), and universal
+**`to_s`/`inspect`** Ruby display forms (so `nil`/`true`/`false` need no catalog)
+plus **`Array#join`**.
+
+### `&:sym` symbol-to-proc (item **M2**)
+
+`sym_to_proc(sym)` builds the `Closure` Ruby's `Symbol#to_proc` returns, so a
+`&:sym` block argument works — `[1, 2, 3].map(&:to_s)` → `["1", "2", "3"]`. The
+backend emits a `&:sym` block-pass on a dispatched call as
+`_sir_oop_sym_to_proc(intern("sym"))`; applying the closure dispatches the named
+method on its first argument (the rest forwarded), through `call_method`, so an
+unknown method still bottoms out at `nil`. Operator symbols (`&:+`) are native
+arithmetic, not in the dispatch catalog — a documented v0 boundary.
 
 ## Honest v0 limitation
 

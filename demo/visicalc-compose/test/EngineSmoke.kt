@@ -196,6 +196,70 @@ fun main() {
     check("fresh edit clears redo", ur.canRedo().toString(), "false")
     ur.close()
 
+    // Structural edits (the + Row / − Row / + Col / − Col buttons drive
+    // insertRows/deleteRows/insertCols/deleteCols): inserting and deleting
+    // rows/columns shifts every formula reference across the band, and deleting a
+    // referenced band turns that reference into #REF!. The engine parenthesizes
+    // binary ops on re-emit ("=(A1+A3)"), so compare with parens stripped.
+    val st = SpreadsheetSession()
+    st.setCell("A1", "10"); st.setCell("A2", "20"); st.setCell("A3", "=A1+A2") // 30
+    check("struct A3 before", st.window(3, 1, 3, 1)[0][0], "30")
+    st.insertRows(2, 1)
+    check("struct inserted row blank", st.window(2, 1, 2, 1)[0][0], "")
+    check("struct formula at A4", st.window(4, 1, 4, 1)[0][0], "30")
+    check("struct insert shifted refs", st.getRaw("A4").replace("(", "").replace(")", ""), "=A1+A3")
+    st.deleteRows(2, 1)
+    check("struct delete shifted back", st.getRaw("A3").replace("(", "").replace(")", ""), "=A1+A2")
+    st.deleteRows(1, 1) // delete the referenced row 1 → A1 ref destroyed
+    check("struct deleted ref is #REF!", st.window(2, 1, 2, 1)[0][0], "#REF!")
+    st.close()
+    // Columns shift the same way: K1=5, L1 = K1*3 = 15; insert a col at K → M1.
+    val sc = SpreadsheetSession()
+    sc.setCell("K1", "5"); sc.setCell("L1", "=K1*3")
+    sc.insertCols(11, 1) // col 11 = K
+    check("struct insertCol value", sc.window(1, 13, 1, 13)[0][0], "15") // M1
+    check("struct insertCol shifted refs", sc.getRaw("M1").replace("(", "").replace(")", ""), "=L1*3")
+    sc.close()
+
+    // Number formatting (the .00 / % / $ / Gen buttons drive setFormat): applying
+    // a format code changes only how the cell DISPLAYS; the stored value is
+    // unchanged. An empty code clears the format back to General.
+    val fmt = SpreadsheetSession()
+    fmt.setCell("A1", "1234")
+    check("fmt unformatted", fmt.window(1, 1, 1, 1)[0][0], "1234")
+    fmt.setFormat("A1", "#,##0.00")
+    check("fmt #,##0.00", fmt.window(1, 1, 1, 1)[0][0], "1,234.00")
+    fmt.setFormat("A1", "0.0%")
+    check("fmt 0.0%", fmt.window(1, 1, 1, 1)[0][0], "123400.0%")
+    fmt.setFormat("A1", "\$#,##0.00")
+    check("fmt $", fmt.window(1, 1, 1, 1)[0][0], "\$1,234.00")
+    fmt.setFormat("A1", "")
+    check("fmt cleared", fmt.window(1, 1, 1, 1)[0][0], "1234")
+    check("fmt raw untouched", fmt.getRaw("A1"), "1234") // display-only
+    fmt.close()
+
+    // Range sort (the ▲/▼ Sort buttons drive sortRange): reorder the budget block
+    // A1:E4 by a key column. Each row moves as a record — the E-column SUM formulas
+    // travel with their row (the engine shifts the refs), so totals stay correct.
+    val so = SpreadsheetSession()
+    for ((a, v) in listOf(
+        "A1" to "15", "B1" to "3", "C1" to "12", "D1" to "8", "E1" to "=SUM(A1:D1)",
+        "A2" to "8", "B2" to "14", "C2" to "7", "D2" to "22", "E2" to "=SUM(A2:D2)",
+        "A3" to "12", "B3" to "9", "C3" to "18", "D3" to "6", "E3" to "=SUM(A3:D3)",
+        "A4" to "4", "B4" to "11", "C4" to "3", "D4" to "17", "E4" to "=SUM(A4:D4)",
+    )) so.setCell(a, v)
+    check("sort pre A1", so.window(1, 1, 1, 1)[0][0], "15")
+    check("sort applied asc", so.sortRange("A1", "E4", 1, true).toString(), "true")
+    check("sort A1 asc", so.window(1, 1, 1, 1)[0][0], "4")    // col A → 4,8,12,15
+    check("sort A4 asc", so.window(4, 1, 4, 1)[0][0], "15")
+    check("sort E1 asc", so.window(1, 5, 1, 5)[0][0], "35")   // E tracks row: 4+11+3+17
+    check("sort E4 asc", so.window(4, 5, 4, 5)[0][0], "38")   // 15+3+12+8
+    check("sort applied desc", so.sortRange("A1", "E4", 1, false).toString(), "true")
+    check("sort A1 desc", so.window(1, 1, 1, 1)[0][0], "15")
+    check("sort single-row no-op", so.sortRange("A1", "A1", 1, true).toString(), "false")
+    check("sort bad key no-op", so.sortRange("A1", "E4", 9, true).toString(), "false")
+    so.close()
+
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)
 }

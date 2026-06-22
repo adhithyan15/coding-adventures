@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.35.0] - 2026-06-21
+## [0.36.0] - 2026-06-22
 
 ### Added
 
@@ -34,6 +34,56 @@ All notable changes to this project will be documented in this file.
   - **Deferred to R-41:** `pivot=TRUE` (pivoted Cholesky for positive-*semi*-
     definite matrices), the `chol2inv()` companion, and complex (Hermitian)
     matrices. This release ships the real-SPD dense core only.
+
+## [0.35.0] - 2026-06-22
+
+### Added
+
+- **Base R Date support (R-44)** — the first calendar type, reused verbatim by
+  the R frontend through the shared tree-walker. A **`Date`** is **not** a new
+  value kind: it is an ordinary numeric vector of **days since the Unix epoch
+  1970-01-01** carrying the S3 class `"Date"`, modelled with the existing
+  transparent `SValue::Classed { inner: Double, class: ["Date"] }` wrapper. No new
+  `SValue` variant is introduced, so every coercion (`as_double`/`as_character`)
+  and the `arithmetic` kernel already see straight through to the day count.
+  - **`as.Date(x, format = "%Y-%m-%d")`** — parse a character vector (default ISO
+    `"%Y-%m-%d"`, or `"%Y/%m/%d"` and similar via `format =`; recognised fields
+    `%Y`/`%m`/`%d` plus literal separators), or wrap a numeric vector directly as
+    days-since-epoch (`as.Date(0)` → 1970-01-01). Unparseable / out-of-range
+    strings (e.g. `"not-a-date"`, `"2021-02-30"`) become `NA`, never a panic.
+    Vectorised.
+  - **`format.Date(d, format = "%Y-%m-%d")` and the `format()` generic** —
+    render a Date back to a string with `%Y`/`%m`/`%d`/`%j` (day-of-year);
+    `format()` detects the `"Date"` class and dispatches to the Date renderer.
+    `format(as.Date("2000-02-29"))` → `"2000-02-29"`.
+  - **`Sys.Date()`** — today's date as a length-1 Date, read from
+    `SystemTime::now()` (days since `UNIX_EPOCH`; a pre-epoch clock is handled
+    without panic). Non-deterministic, so tested for structure only.
+  - **`difftime(d1, d2)` and `d1 - d2`** — the difference in **days** (numeric).
+    Subtraction needs no special case (the wrapper is transparent to
+    `arithmetic`); `difftime` is the named builtin form (days unit only).
+  - **`weekdays(d)`** — the English weekday name (`"Monday"`..`"Sunday"`),
+    anchored on the historical fact that 1970-01-01 was a Thursday, with
+    `(days + 4).rem_euclid(7)` so pre-epoch (negative) day counts never panic.
+  - **`as.numeric` / `as.double`** — added as base coercions (drop a class to a
+    plain numeric; a factor coerces by its codes), so `as.numeric(date)` returns
+    the raw days-since-epoch.
+  - **Civil-date kernel** — two pure, dependency-free helpers,
+    `days_from_civil(y, m, d)` and its exact inverse `civil_from_days(z)`,
+    implement the proleptic Gregorian calendar with Howard Hinnant's
+    era/year-of-era/day-of-era algorithms (leap years and negative dates handled).
+  - **Security**: untrusted date strings parse with **bounded `i64`** digit
+    accumulation (a digit cap rejects absurd years before the day arithmetic can
+    overflow); a directly-supplied numeric day count is clamped to ±1e11 days
+    (→ `NA` if out of range), so `as.Date(1e300)` cannot saturate to `i64::MAX`
+    and overflow the civil kernel — `format`/`weekdays` defend the same bound, so
+    a hand-built `structure(1e300, class="Date")` is also safe. Impossible days
+    are rejected via a civil round-trip; malformed input → `NA`. All weekday /
+    day-of-year modulo uses `rem_euclid` (Rust `%` can go negative on pre-epoch
+    counts).
+  - **Deferred to R-45**: full `strptime`/`strftime` fields (`%B`/`%A`/`%H`/…);
+    `POSIXct`/`POSIXlt` date-times and timezones; `seq.Date`;
+    `months()`/`quarters()`; `difftime` units other than days.
 
 ## [0.34.0] - 2026-06-21
 

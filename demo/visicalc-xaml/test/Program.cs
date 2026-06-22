@@ -198,5 +198,76 @@ using (var ur = new SpreadsheetSession())
     Check("fresh edit clears redo", ur.CanRedo().ToString(), "False");
 }
 
+// ── Structural edits (the + Row / − Row / + Col / − Col buttons drive
+// InsertRows/DeleteRows/InsertCols/DeleteCols): inserting and deleting
+// rows/columns shifts every formula reference across the band, and deleting a
+// referenced band turns that reference into #REF!. The engine parenthesizes
+// binary ops on re-emit ("=(A1+A3)"), so compare with parens stripped.
+static string Bare(string s) => s.Replace("(", "").Replace(")", "");
+using (var st = new SpreadsheetSession())
+{
+    st.SetCell("A1", "10"); st.SetCell("A2", "20"); st.SetCell("A3", "=A1+A2"); // 30
+    Check("struct A3 before", st.Window(3, 1, 3, 1)[0][0], "30");
+    st.InsertRows(2, 1);
+    Check("struct inserted row blank", st.Window(2, 1, 2, 1)[0][0], "");
+    Check("struct formula at A4", st.Window(4, 1, 4, 1)[0][0], "30");
+    Check("struct insert shifted refs", Bare(st.GetRaw("A4")), "=A1+A3");
+    st.DeleteRows(2, 1);
+    Check("struct delete shifted back", Bare(st.GetRaw("A3")), "=A1+A2");
+    st.DeleteRows(1, 1); // delete the referenced row 1 → A1 ref destroyed
+    Check("struct deleted ref is #REF!", st.Window(2, 1, 2, 1)[0][0], "#REF!");
+}
+using (var sc = new SpreadsheetSession())
+{
+    sc.SetCell("K1", "5"); sc.SetCell("L1", "=K1*3");
+    sc.InsertCols(11, 1); // col 11 = K → formula moves to M1, refs shift
+    Check("struct insertCol value", sc.Window(1, 13, 1, 13)[0][0], "15"); // M1
+    Check("struct insertCol shifted refs", Bare(sc.GetRaw("M1")), "=L1*3");
+}
+
+// ── Number formatting (the .00 / % / $ / Gen buttons drive SetFormat): applying
+// a format code changes only how the cell DISPLAYS; the stored value is
+// unchanged. An empty code clears the format back to General.
+using (var fmt = new SpreadsheetSession())
+{
+    fmt.SetCell("A1", "1234");
+    string Disp() => fmt.Window(1, 1, 1, 1)[0][0];
+    Check("fmt unformatted", Disp(), "1234");
+    fmt.SetFormat("A1", "#,##0.00");
+    Check("fmt #,##0.00", Disp(), "1,234.00");
+    fmt.SetFormat("A1", "0.0%");
+    Check("fmt 0.0%", Disp(), "123400.0%");
+    fmt.SetFormat("A1", "$#,##0.00");
+    Check("fmt $", Disp(), "$1,234.00");
+    fmt.SetFormat("A1", "");
+    Check("fmt cleared", Disp(), "1234");
+    Check("fmt raw untouched", fmt.GetRaw("A1"), "1234"); // display-only
+}
+
+// ── Range sort (the ▲/▼ Sort buttons drive SortRange): reorder the budget block
+// A1:E4 by a key column. Each row moves as a record — the E-column SUM formulas
+// travel with their row (the engine shifts the refs), so every total stays
+// correct after the reorder.
+using (var so = new SpreadsheetSession())
+{
+    foreach (var (a, v) in new[]
+    {
+        ("A1", "15"), ("B1", "3"), ("C1", "12"), ("D1", "8"), ("E1", "=SUM(A1:D1)"),
+        ("A2", "8"), ("B2", "14"), ("C2", "7"), ("D2", "22"), ("E2", "=SUM(A2:D2)"),
+        ("A3", "12"), ("B3", "9"), ("C3", "18"), ("D3", "6"), ("E3", "=SUM(A3:D3)"),
+        ("A4", "4"), ("B4", "11"), ("C4", "3"), ("D4", "17"), ("E4", "=SUM(A4:D4)"),
+    }) so.SetCell(a, v);
+    Check("sort pre A1", so.Window(1, 1, 1, 1)[0][0], "15");
+    Check("sort applied asc", so.SortRange("A1", "E4", 1, true).ToString(), "True");
+    Check("sort A1 asc", so.Window(1, 1, 1, 1)[0][0], "4");    // col A → 4,8,12,15
+    Check("sort A4 asc", so.Window(4, 1, 4, 1)[0][0], "15");
+    Check("sort E1 asc", so.Window(1, 5, 1, 5)[0][0], "35");   // E tracks row: 4+11+3+17
+    Check("sort E4 asc", so.Window(4, 5, 4, 5)[0][0], "38");   // 15+3+12+8
+    Check("sort applied desc", so.SortRange("A1", "E4", 1, false).ToString(), "True");
+    Check("sort A1 desc", so.Window(1, 1, 1, 1)[0][0], "15");
+    Check("sort single-row no-op", so.SortRange("A1", "A1", 1, true).ToString(), "False");
+    Check("sort bad key no-op", so.SortRange("A1", "E4", 9, true).ToString(), "False");
+}
+
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;

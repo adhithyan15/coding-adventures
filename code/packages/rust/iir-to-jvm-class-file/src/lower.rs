@@ -79,8 +79,8 @@ use std::collections::HashMap;
 use interpreter_ir::opcodes::{array_elem_type, is_array_type};
 use interpreter_ir::{IIRFunction, IIRModule, Operand};
 use jvm_class_file::{
-    JvmClassFile, JvmClassVersion, JvmCodeAttribute, JvmConstantPoolEntry, JvmMethodAttribute,
-    JvmMethodInfo, ACC_PUBLIC, ACC_STATIC, ACC_SUPER,
+    JvmClassFile, JvmClassVersion, JvmCodeAttribute, JvmConstantPoolEntry, JvmFieldInfo,
+    JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC, ACC_STATIC, ACC_SUPER,
 };
 
 use crate::validate::validate_for_jvm;
@@ -183,6 +183,7 @@ const INSTANCEOF: u8 = 0xC1;     // instanceof (2-byte CP class index) → push 
 
 // ── Field access ────────────────────────────────────────────────────────────
 const GETSTATIC: u8 = 0xB2; // get value of static field (2-byte CP index)
+const PUTSTATIC: u8 = 0xB3; // set value of static field (2-byte CP index)
 
 // JVM byte-array access opcodes — used by Brainfuck `load_mem` / `store_mem`.
 // BALOAD pops [arrayref, index] and pushes the byte at that index, sign-extended
@@ -1774,6 +1775,7 @@ fn lower_function(
     module: &IIRModule,
     cp: &mut ConstantPoolBuilder,
     closure_dispatch: &HashMap<String, ClosureDispatchEntry>,
+    globals: &HashMap<String, String>,
 ) -> Result<JvmMethodInfo, IIRJvmError> {
     let fname = &func.name;
 
@@ -3590,25 +3592,70 @@ fn lower_function(
                 emit_istore(&mut code, dest_slot);
             }
 
-            // ── global_load → UnsupportedOp (LANG32b) ───────────────────────
+            // ── global_load → getstatic <this>.G_N:J ; lstore (LANG-FULL E6) ─
             //
-            // Full JVM static-field globals require extending JvmClassFile with a
-            // `fields` table and emitting `getstatic`/`putstatic` bytecodes.
-            // That is implemented in LANG32b.  For now, return a descriptive error
-            // so the pipeline produces a clear message rather than a silent failure.
+            // A module global is a `public static long G_N` field of this class
+            // (collected in `globals`). `getstatic` pushes its value, `lstore`
+            // writes it into the dest's long slot.
             "global_load" => {
-                return Err(IIRJvmError::UnsupportedOp {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
-                    op: "global_load: JVM static-field globals not yet implemented — LANG32b".to_string(),
-                });
+                    detail: "global_load has no dest".to_string(),
+                })?;
+                let gname = match instr.srcs.first() {
+                    Some(Operand::Str(s)) => s,
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "global_load expects a string global name at srcs[0]".to_string(),
+                    }),
+                };
+                let field_name = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: format!("global_load: global {gname:?} was not collected (internal error)"),
+                })?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                let fref = cp.add_fieldref(class_name, field_name, "J");
+                code.push(GETSTATIC);
+                code.extend_from_slice(&fref.to_be_bytes());
+                // `getstatic J` pushes a long.  The field is always 64-bit, but the
+                // dest local may be a narrower `int` (an `integer` program
+                // concretised to i32) — narrow the long with `l2i` before `istore`,
+                // the mirror of the `i2l` widen on `global_store`.
+                if dest_type != JvmType::Long {
+                    code.push(L2I);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
             }
 
-            // ── global_store → UnsupportedOp (LANG32b) ──────────────────────
+            // ── global_store → lload ; putstatic <this>.G_N:J (LANG-FULL E6) ──
             "global_store" => {
-                return Err(IIRJvmError::UnsupportedOp {
+                let gname = match instr.srcs.first() {
+                    Some(Operand::Str(s)) => s,
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "global_store expects a string global name at srcs[0]".to_string(),
+                    }),
+                };
+                let val_src = match instr.srcs.get(1) {
+                    Some(Operand::Var(v)) => v.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "global_store expects a Var value at srcs[1]".to_string(),
+                    }),
+                };
+                let field_name = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
-                    op: "global_store: JVM static-field globals not yet implemented — LANG32b".to_string(),
-                });
+                    detail: format!("global_store: global {gname:?} was not collected (internal error)"),
+                })?;
+                let (val_slot, val_type) = lookup_var(&val_src)?;
+                emit_typed_load(&mut code, val_slot, val_type);
+                // The field is `J` (long); widen an i32 value to long first.
+                if val_type != JvmType::Long {
+                    code.push(I2L);
+                }
+                let fref = cp.add_fieldref(class_name, field_name, "J");
+                code.push(PUTSTATIC);
+                code.extend_from_slice(&fref.to_be_bytes());
             }
 
             // ── io_out → System.out.println(long) ───────────────────────────
@@ -4085,9 +4132,20 @@ pub fn serialize_jvm_class_file(class: &JvmClassFile) -> Vec<u8> {
     out.extend_from_slice(&this_idx.to_be_bytes());
     out.extend_from_slice(&super_idx.to_be_bytes());
 
-    // Interfaces and fields: both empty.
+    // Interfaces: none.
     out.extend_from_slice(&0u16.to_be_bytes()); // interfaces_count
-    out.extend_from_slice(&0u16.to_be_bytes()); // fields_count
+
+    // Fields (LANG-FULL E6 — module static globals). Each `field_info` is
+    // access_flags, name_index, descriptor_index, attributes_count=0. The name
+    // and descriptor Utf8 entries are already in the CP (added by the
+    // `add_fieldref` calls during lowering).
+    out.extend_from_slice(&(class.fields.len() as u16).to_be_bytes());
+    for field in &class.fields {
+        out.extend_from_slice(&field.access_flags.to_be_bytes());
+        out.extend_from_slice(&find_utf8_cp_index(&class.constant_pool, &field.name).to_be_bytes());
+        out.extend_from_slice(&find_utf8_cp_index(&class.constant_pool, &field.descriptor).to_be_bytes());
+        out.extend_from_slice(&0u16.to_be_bytes()); // attributes_count
+    }
 
     // Methods.
     out.extend_from_slice(&(class.methods.len() as u16).to_be_bytes());
@@ -4357,10 +4415,20 @@ pub fn lower_iir_to_jvm(
         cp.add_methodref(&config.class_name, "__callClosure", "([J[J)J");
     }
 
+    // ── Step 2b: collect module globals (LANG-FULL E6 layer 1) ────────────────
+    //
+    // Every distinct name read/written by `global_load`/`global_store` becomes a
+    // `public static long G_N` field of this class (first-seen order). The map
+    // (global name → JVM field name) is threaded into lowering so a
+    // `global_load`/`global_store` emits `getstatic`/`putstatic` of the right
+    // `Fieldref`. Field name is index-based (`G_0`, `G_1`, …) so an arbitrary
+    // source identifier can never form an invalid or colliding JVM field name.
+    let (globals, global_fields) = collect_global_fields(module);
+
     // ── Step 3: lower each function ───────────────────────────────────────────
     let mut methods: Vec<JvmMethodInfo> = Vec::new();
     for func in &module.functions {
-        let method = lower_function(func, &config.class_name, module, &mut cp, &closure_dispatch)?;
+        let method = lower_function(func, &config.class_name, module, &mut cp, &closure_dispatch, &globals)?;
         methods.push(method);
     }
 
@@ -4393,8 +4461,37 @@ pub fn lower_iir_to_jvm(
         this_class_name: config.class_name.clone(),
         super_class_name: "java/lang/Object".to_string(),
         constant_pool: cp.build(),
+        fields: global_fields,
         methods,
     })
+}
+
+/// Collect every distinct module-global name (read or written) into
+/// `(name → "G_N", [JvmFieldInfo])`, numbered in first-seen order across all
+/// functions (LANG-FULL E6 layer 1). Each global is a `public static long`
+/// field; the field name is index-based so an arbitrary source identifier can
+/// never form an invalid or colliding JVM field name.
+fn collect_global_fields(module: &IIRModule) -> (HashMap<String, String>, Vec<JvmFieldInfo>) {
+    let mut map: HashMap<String, String> = HashMap::new();
+    let mut fields: Vec<JvmFieldInfo> = Vec::new();
+    for f in &module.functions {
+        for i in &f.instructions {
+            if i.op == "global_load" || i.op == "global_store" {
+                if let Some(Operand::Str(name)) = i.srcs.first() {
+                    if !map.contains_key(name) {
+                        let field_name = format!("G_{}", fields.len());
+                        map.insert(name.clone(), field_name.clone());
+                        fields.push(JvmFieldInfo {
+                            access_flags: ACC_PUBLIC | ACC_STATIC,
+                            name: field_name,
+                            descriptor: "J".to_string(), // long
+                        });
+                    }
+                }
+            }
+        }
+    }
+    (map, fields)
 }
 
 // ---------------------------------------------------------------------------

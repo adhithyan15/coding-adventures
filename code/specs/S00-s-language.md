@@ -642,6 +642,45 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
      prefix — `0x`/`0X` → hex, a leading `0` followed by another digit → octal (so
      `"08"` → `NA`), a lone `"0"` → zero, otherwise decimal. `strtoi("0x1F", 0L)` →
      `31`; `strtoi("010", 0L)` → `8`; `strtoi("12", 0L)` → `12`.
+11. **Base R Date support (R-44, shared builtins).** `s-runtime` gains the base R
+   calendar type and its builtins, which R (R-44) reuses verbatim through the
+   shared tree-walker. A **`Date`** introduces **no new `SValue` variant**: it is a
+   numeric vector of **days since the Unix epoch `1970-01-01`** wrapped in the
+   existing transparent `SValue::Classed { inner: Double, class: ["Date"] }`
+   (the same wrapper explicit S3 classes already use). Because `Classed` is
+   see-through, every coercion (`as_double`/`as_character`/`as_logical`) and the
+   `arithmetic` kernel already reach the day count with no special case.
+   - **The civil-date kernel.** Two pure, dependency-free helpers implement the
+     proleptic Gregorian calendar with Howard Hinnant's algorithms:
+     `days_from_civil(y, m, d)` → days since the epoch (era / year-of-era /
+     day-of-era decomposition; handles leap years and negative/pre-epoch dates)
+     and its exact inverse `civil_from_days(z)` → `(y, m, d)`. Round-trips are
+     unit-tested across leap days (`2000-02-29`, `2020-02-29`) and pre-epoch dates
+     (`1969-12-31` → `-1`).
+   - **`as.Date(x, format =)`** — parse a character vector (default `"%Y-%m-%d"`,
+     or `"%Y/%m/%d"` etc. via `format =`, recognising `%Y`/`%m`/`%d` + literals),
+     or wrap a numeric vector as days-since-epoch directly. Malformed / out-of-range
+     input → `NA`. Vectorised.
+   - **`format.Date(d, format =)` / `format(d, fmt)`** — render a `Date` to a
+     string; default `"%Y-%m-%d"`, fields `%Y`/`%m`/`%d`/`%j` (day-of-year). The
+     shared `format` builtin detects the `"Date"` class and dispatches here.
+   - **`Sys.Date()`** — today as a length-1 `Date`. There is no pre-existing
+     deterministic clock in the runtime, so this reads `SystemTime::now()` and
+     converts to whole days since `UNIX_EPOCH` (pre-epoch handled without panic).
+     Non-deterministic, so tested only for structure (class + single numeric).
+   - **`difftime(d1, d2)` / `d1 - d2`** — difference in **days** (numeric).
+     Subtraction needs no special case (the `Classed` wrapper is transparent to
+     `arithmetic`). `as.numeric(d)` returns the raw day count; **`as.numeric`** is
+     added as a base coercion (drops the class, reusing `as_double`).
+   - **`weekdays(d)`** — English weekday name; anchored on `1970-01-01 = Thursday`
+     with `(days + 3).rem_euclid(7)` so pre-epoch (negative) counts never panic.
+   - **Security.** Untrusted date strings parse with **bounded `i64`** digit
+     accumulation (a digit cap rejects absurd years before the day arithmetic can
+     overflow); malformed/over-range input → `NA`, never a panic. All weekday /
+     day-of-year modulo uses `rem_euclid` (Rust `%` can go negative).
+   - **Deferred to R-45.** Full `strptime`/`strftime` fields (`%B`/`%A`/`%H`/…);
+     `POSIXct`/`POSIXlt` date-times & timezones; `seq.Date`; `months()`/`quarters()`;
+     `difftime` units other than days.
 
 ## §10 References
 

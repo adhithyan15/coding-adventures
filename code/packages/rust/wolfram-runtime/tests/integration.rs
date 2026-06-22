@@ -87,6 +87,75 @@ fn replace_all() {
     assert_eq!(eval("h[5] /. h[n_] -> n + 1\n").unwrap(), "Out[1]= 6\n");
 }
 
+/// W-19 named patterns & replacement — the brief's acceptance examples, end to
+/// end through the public `eval` surface (MA04 §21).
+#[test]
+fn w19_named_patterns_and_replacement() {
+    // A named blank matches anything (was `False` under W-18's matcher).
+    assert_eq!(eval("MatchQ[2, x_]\n").unwrap(), "Out[1]= True\n");
+    // Bind x = 2, substitute into the RHS.
+    assert_eq!(eval("f[2] /. f[x_] -> x\n").unwrap(), "Out[1]= 2\n");
+    // A literal rule applied to each part of a list.
+    assert_eq!(
+        eval("{1, 2, 3} /. 2 -> 99\n").unwrap(),
+        "Out[1]= {1, 99, 3}\n"
+    );
+    // Whole-expression literal match.
+    assert_eq!(eval("x /. x -> 5\n").unwrap(), "Out[1]= 5\n");
+    // Two named captures; the RHS evaluates after substitution (`->` immediate).
+    assert_eq!(eval("g[1, 2] /. g[a_, b_] -> a + b\n").unwrap(), "Out[1]= 3\n");
+    // Typed named pattern, applied per element — the single-pass fix: this used
+    // to loop forever (re-matching the Integer result of x^2) and error.
+    assert_eq!(
+        eval("ReplaceAll[{1, 2, 3}, x_Integer -> x^2]\n").unwrap(),
+        "Out[1]= {1, 4, 9}\n"
+    );
+}
+
+/// W-19 `Replace` (whole-expression only) and the `RuleDelayed` (`:>`) held RHS.
+#[test]
+fn w19_replace_whole_and_rule_delayed() {
+    // `Replace` matches the WHOLE expr — `Replace[5, x_ -> x+1]` → 6.
+    assert_eq!(eval("Replace[5, x_ -> x + 1]\n").unwrap(), "Out[1]= 6\n");
+    // The whole list matches an unconstrained `x_`, so the elements are not
+    // touched — result is the substituted RHS for the WHOLE list.
+    assert_eq!(eval("Replace[{1, 2, 3}, x_ -> 0]\n").unwrap(), "Out[1]= 0\n");
+    // A head-constrained pattern does not match the List head, and `Replace` does
+    // not descend → the list is returned unchanged.
+    assert_eq!(
+        eval("Replace[{1, 2, 3}, x_Integer -> 0]\n").unwrap(),
+        "Out[1]= {1, 2, 3}\n"
+    );
+    // `RuleDelayed` (`:>`): the RHS is held until the capture is substituted, then
+    // evaluated. `h[3] /. h[n_] :> n + 1` → 4.
+    assert_eq!(eval("h[3] /. h[n_] :> n + 1\n").unwrap(), "Out[1]= 4\n");
+    // A `/.` with a head-typed pattern DOES descend (List head ≠ Integer), so each
+    // element is replaced once: contrast with `Replace` above.
+    assert_eq!(
+        eval("{1, 2, 3} /. x_Integer -> 0\n").unwrap(),
+        "Out[1]= {0, 0, 0}\n"
+    );
+}
+
+/// A crafted *malformed* `Pattern[…]` (an ordinary symbol the lowerer passes
+/// through with no arity check) must NOT panic / tear down the session — the
+/// well-formedness gate makes it a clean non-match, leaving the form unchanged
+/// (W-19 security hardening).
+#[test]
+fn w19_malformed_pattern_does_not_crash_the_session() {
+    let mut s = WolframSession::new();
+    // Define a function so we can prove the session survives intact afterwards.
+    s.feed("k = 41\n").unwrap();
+    // Malformed Pattern in a rule LHS and RHS — neither should reset the session.
+    // `Pattern[]` has too few args; the rule simply does not fire.
+    let out = s.feed("3 /. Pattern[] -> 0\n").unwrap();
+    assert!(out.contains("3"), "expected the subject unchanged, got {out:?}");
+    let out = s.feed("Replace[3, x_ -> Pattern[5]]\n").unwrap();
+    assert!(out.contains("3"), "expected the subject unchanged, got {out:?}");
+    // The earlier binding still exists — the session was never rebuilt.
+    assert!(s.feed("k + 1\n").unwrap().contains("42"));
+}
+
 /// Comparisons and logic fold when fully numeric, stay symbolic otherwise.
 #[test]
 fn comparisons_and_logic() {

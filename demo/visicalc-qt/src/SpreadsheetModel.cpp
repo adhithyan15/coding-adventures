@@ -321,6 +321,39 @@ void SpreadsheetModel::fill(const QString &src, const QString &dstStart, const Q
     emit revisionChanged();
 }
 
+// Number formatting: attach an Excel-style format code to the selected cell. The
+// code is display-only — the stored value is unchanged; the engine renders it
+// through the code (sc_get_display_window). An empty code clears the format. The
+// QByteArray locals are NAMED so the UTF-8 buffers outlive the C call.
+void SpreadsheetModel::setFormatInf(const QString &code) {
+    const QByteArray a1 = infAddress().toUtf8();
+    const QByteArray c = code.toUtf8();
+    sc_set_format(session_, a1.constData(), c.constData());
+    recompute();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+}
+
+// Range sort: the engine reorders the rows of the rectangle by the computed
+// values in `keyCol`, moving each row as a record (moved formulas' relative refs
+// shift with their row; absolute pin; formats ride along) — sc_sort_range
+// returns 1 when applied (or already sorted), 0 for a no-op. The QByteArray
+// locals are NAMED so the UTF-8 buffers outlive the C call, and `keyCol` is
+// clamped to >= 0 before the unsigned cast (same guard the structural edits use).
+bool SpreadsheetModel::sortRange(const QString &start, const QString &end, int keyCol, bool ascending) {
+    const QByteArray s = start.toUtf8();
+    const QByteArray e = end.toUtf8();
+    const uint32_t key = static_cast<uint32_t>(keyCol < 0 ? 0 : keyCol);
+    const int ok = sc_sort_range(session_, s.constData(), e.constData(), key, ascending ? 1 : 0);
+    recompute();        // keep the 5×5 parity grid in sync too
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+    return ok != 0;
+}
+
 // Clipboard: copy/cut capture the inclusive rectangle into the engine's
 // clipboard; paste places it (the whole block's references shift by the
 // destination's offset). The QByteArray locals are NAMED so the UTF-8 buffers
@@ -351,6 +384,52 @@ bool SpreadsheetModel::paste(const QString &dstStart) {
         emit revisionChanged();
     }
     return applied;
+}
+
+// Structural edits: insert / delete rows or columns at a 1-based position. The
+// engine shifts every formula reference at or after the band (a reference whose
+// whole band is deleted becomes #REF!) and recomputes; we then rebuild the grid,
+// regrow the extent, and bump `revision` so the visible rows re-fetch. `at`/`count`
+// arrive as int from QML — clamp the count to ≥ 0 before the u32 cast so a stray
+// negative can't wrap to a huge unsigned band.
+void SpreadsheetModel::insertRows(int at, int count) {
+    sc_insert_rows(session_, static_cast<uint32_t>(at < 0 ? 0 : at),
+                   static_cast<uint32_t>(count < 0 ? 0 : count));
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+}
+
+void SpreadsheetModel::deleteRows(int at, int count) {
+    sc_delete_rows(session_, static_cast<uint32_t>(at < 0 ? 0 : at),
+                   static_cast<uint32_t>(count < 0 ? 0 : count));
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+}
+
+void SpreadsheetModel::insertCols(int at, int count) {
+    sc_insert_cols(session_, static_cast<uint32_t>(at < 0 ? 0 : at),
+                   static_cast<uint32_t>(count < 0 ? 0 : count));
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+}
+
+void SpreadsheetModel::deleteCols(int at, int count) {
+    sc_delete_cols(session_, static_cast<uint32_t>(at < 0 ? 0 : at),
+                   static_cast<uint32_t>(count < 0 ? 0 : count));
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
 }
 
 // Save: serialize the whole workbook (source + formats) to a JSON document. The

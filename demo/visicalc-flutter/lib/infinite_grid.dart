@@ -167,6 +167,36 @@ class _InfiniteGridState extends State<InfiniteGrid> {
     setState(() => _formulaCtrl.text = _model.formula);
   }
 
+  // Structural edits: insert / delete the selected cell's row or column. The
+  // engine shifts every formula reference across the band and recomputes; a
+  // reference whose whole band is deleted becomes #REF!. The grid re-reads and
+  // the formula bar re-syncs (the moved/destroyed source may differ).
+  void _insertRow() => setState(() {
+        _model.insertRow();
+        _formulaCtrl.text = _model.formula;
+      });
+  void _deleteRow() => setState(() {
+        _model.deleteRow();
+        _formulaCtrl.text = _model.formula;
+      });
+  void _insertCol() => setState(() {
+        _model.insertCol();
+        _formulaCtrl.text = _model.formula;
+      });
+  void _deleteCol() => setState(() {
+        _model.deleteCol();
+        _formulaCtrl.text = _model.formula;
+      });
+
+  // Number formatting: apply an Excel-style format code to the selected cell.
+  // Display-only — the engine renders the stored value through the code, so a
+  // setState rebuild re-reads the row and shows the formatted string.
+  void _applyFormat(String code) => setState(() => _model.applyFormat(code));
+
+  // Range sort: reorder the budget block A1:E4 by the selected column,
+  // ascending/descending. A setState rebuild re-reads the reordered rows.
+  void _sortBlock(bool ascending) => setState(() => _model.sortBlock(ascending));
+
   // A compact, modern toolbar button (rounded chip with hover/down/disabled
   // states) — the Flutter analog of the web demo's segmented controls and the
   // Qt port's `component ToolButton`. `enabled: null` disables it (Undo/Redo/
@@ -218,7 +248,11 @@ class _InfiniteGridState extends State<InfiniteGrid> {
         border: Border.all(color: _cLine),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Row(
+      // The toolbar holds many controls; let it scroll horizontally so it never
+      // overflows on a narrow window.
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
         children: [
           // Address pill.
           Container(
@@ -247,8 +281,10 @@ class _InfiniteGridState extends State<InfiniteGrid> {
                   fontStyle: FontStyle.italic,
                   fontFamily: _mono)),
           const SizedBox(width: 6),
-          // Formula field — accent focus ring on edit.
-          Expanded(
+          // Formula field — accent focus ring on edit. A fixed width (rather than
+          // Expanded) so it composes inside the horizontally-scrolling toolbar.
+          SizedBox(
+            width: 280,
             child: Container(
               height: 30,
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -294,6 +330,44 @@ class _InfiniteGridState extends State<InfiniteGrid> {
           _toolButton('Load', 'Restore the workbook from the last save', _load,
               enabled: _savedSnapshot.isNotEmpty),
           _toolSep(),
+          // ── Structure (insert / delete the selected row or column) ──
+          _toolButton('+ Row',
+              'Insert a row above the selected cell (references shift down)', _insertRow),
+          const SizedBox(width: 6),
+          _toolButton('− Row',
+              "Delete the selected cell's row (references shift up; refs into it become #REF!)",
+              _deleteRow),
+          const SizedBox(width: 6),
+          _toolButton('+ Col',
+              'Insert a column left of the selected cell (references shift right)', _insertCol),
+          const SizedBox(width: 6),
+          _toolButton('− Col',
+              "Delete the selected cell's column (references shift left; refs into it become #REF!)",
+              _deleteCol),
+          _toolSep(),
+          // ── Format (apply a number format to the selected cell) ──
+          _toolButton('.00',
+              'Format the selected cell with thousands separators + 2 decimals (#,##0.00)',
+              () => _applyFormat('#,##0.00')),
+          const SizedBox(width: 6),
+          _toolButton('%', 'Format the selected cell as a percent (0.0%)',
+              () => _applyFormat('0.0%')),
+          const SizedBox(width: 6),
+          _toolButton('\$', 'Format the selected cell as currency (\$#,##0.00)',
+              () => _applyFormat('\$#,##0.00')),
+          const SizedBox(width: 6),
+          _toolButton('Gen', "Clear the selected cell's format (General)",
+              () => _applyFormat('')),
+          _toolSep(),
+          // ── Sort (reorder the budget block A1:E4 by the selected column) ──
+          _toolButton('▲ Sort',
+              'Sort the budget block A1:E4 by the selected column, ascending (rows move as records; formulas track)',
+              () => _sortBlock(true)),
+          const SizedBox(width: 6),
+          _toolButton('▼ Sort',
+              'Sort the budget block A1:E4 by the selected column, descending',
+              () => _sortBlock(false)),
+          _toolSep(),
           // ── History (undo / redo) ──
           _toolButton('↶ Undo', 'Undo the last edit', _undo,
               enabled: _model.canUndo),
@@ -301,6 +375,7 @@ class _InfiniteGridState extends State<InfiniteGrid> {
           _toolButton('↷ Redo', 'Redo the last undone edit', _redo,
               enabled: _model.canRedo),
         ],
+        ),
       ),
     );
   }

@@ -50,11 +50,21 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     private val scSetFormat = handle("sc_set_format", FunctionDescriptor.ofVoid(ptr, ptr, ptr))
     // sc_fill(session, src, dst_start, dst_end) -> void (drag-fill; three A1 strings).
     private val scFill = handle("sc_fill", FunctionDescriptor.ofVoid(ptr, ptr, ptr, ptr))
+    // sc_sort_range(session, start, end, key_col, ascending) -> int (1 applied /
+    // already sorted, 0 no-op). Two A1 strings + a 1-based key column + a flag.
+    private val scSortRange = handle("sc_sort_range", FunctionDescriptor.of(i32, ptr, ptr, ptr, i32, i32))
     // sc_copy / sc_cut(session, start, end) -> void (clipboard capture; two A1 strings).
     private val scCopy = handle("sc_copy", FunctionDescriptor.ofVoid(ptr, ptr, ptr))
     private val scCut = handle("sc_cut", FunctionDescriptor.ofVoid(ptr, ptr, ptr))
     // sc_paste(session, dst_start) -> int (1 applied, 0 no-op).
     private val scPaste = handle("sc_paste", FunctionDescriptor.of(i32, ptr, ptr))
+    // sc_insert_rows / sc_delete_rows / sc_insert_cols / sc_delete_cols(session,
+    // at, count) -> void. Structural edits at a 1-based position; the engine
+    // shifts every formula reference across the band.
+    private val scInsertRows = handle("sc_insert_rows", FunctionDescriptor.ofVoid(ptr, i32, i32))
+    private val scDeleteRows = handle("sc_delete_rows", FunctionDescriptor.ofVoid(ptr, i32, i32))
+    private val scInsertCols = handle("sc_insert_cols", FunctionDescriptor.ofVoid(ptr, i32, i32))
+    private val scDeleteCols = handle("sc_delete_cols", FunctionDescriptor.ofVoid(ptr, i32, i32))
     // sc_serialize(session) -> char* (workbook source + formats as JSON);
     // sc_deserialize(session, data) -> int (1 loaded, 0 malformed/unsupported).
     private val scSerialize = handle("sc_serialize", FunctionDescriptor.of(ptr, ptr))
@@ -144,6 +154,35 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
             a.allocateUtf8String(dstEnd),
         )
     }
+
+    /// Range sort: reorder the rows of the rectangle [start]..[end] by the
+    /// computed values in [keyCol] (1-based, inside the rectangle), ascending or
+    /// descending. Each row moves as a record; the engine shifts moved formulas'
+    /// references with their row and carries formats. Returns true when a sort was
+    /// applied (or the range was already sorted), false for a no-op. [keyCol] is
+    /// clamped to ≥ 0 before the call (Kotlin Int maxes below u32, so no high-end
+    /// truncation); the engine validates it lies inside the rectangle.
+    fun sortRange(start: String, end: String, keyCol: Int, ascending: Boolean): Boolean =
+        Arena.ofConfined().use { a ->
+            (scSortRange.invoke(
+                session,
+                a.allocateUtf8String(start),
+                a.allocateUtf8String(end),
+                maxOf(0, keyCol),
+                if (ascending) 1 else 0,
+            ) as Int) != 0
+        }
+
+    /// Structural edits: insert / delete [count] rows or columns at the 1-based
+    /// position [at]. The engine shifts every formula reference at or after the
+    /// band (a reference whose whole band is deleted becomes `#REF!`), then
+    /// recomputes. [at]/[count] are clamped to ≥ 0 before the call so a negative
+    /// can't reach the u32 C ABI as a huge unsigned band (Kotlin Int maxes below
+    /// u32, so no high-end truncation).
+    fun insertRows(at: Int, count: Int) = scInsertRows.invoke(session, maxOf(0, at), maxOf(0, count))
+    fun deleteRows(at: Int, count: Int) = scDeleteRows.invoke(session, maxOf(0, at), maxOf(0, count))
+    fun insertCols(at: Int, count: Int) = scInsertCols.invoke(session, maxOf(0, at), maxOf(0, count))
+    fun deleteCols(at: Int, count: Int) = scDeleteCols.invoke(session, maxOf(0, at), maxOf(0, count))
 
     /// Copy the inclusive rectangle [start]..[end] into the clipboard — a
     /// whole-block copy that pastes as a unit. The source is untouched; the
@@ -446,6 +485,33 @@ class InfiniteSheetModel(
         val last = "$col${selRow + rows}"
         session.fill(infAddress(), first, last)
         computeExtent()
+    }
+
+    /// Structural edits: insert / delete the selected cell's row or column. The
+    /// engine shifts every formula reference at or after the band (a reference
+    /// whose whole band is deleted becomes `#REF!`) and recomputes; regrow the
+    /// extent so the view re-reads. Operate on a single row/column at the cursor.
+    fun insertRow() { session.insertRows(selRow, 1); computeExtent() }
+    fun deleteRow() { session.deleteRows(selRow, 1); computeExtent() }
+    fun insertCol() { session.insertCols(selCol, 1); computeExtent() }
+    fun deleteCol() { session.deleteCols(selCol, 1); computeExtent() }
+
+    /// Number formatting: attach an Excel-style format code to the selected cell
+    /// ("#,##0.00", "0.0%", "$#,##0.00", or "" to clear). Display-only — the
+    /// stored value is unchanged; the engine renders it through the code, so a
+    /// fresh rowCells read shows the formatted string.
+    fun applyFormat(code: String) = session.setFormat(infAddress(), code)
+
+    /// Range sort: reorder the rows of the seeded budget block A1:E4 by the
+    /// SELECTED column (clamped into the block's columns A..E = 1..5), ascending
+    /// or descending. Each row moves as a record; the E-column SUM formulas travel
+    /// with their row (the engine shifts their refs), so every total stays correct.
+    /// Returns false for a no-op (already sorted / bad args). Regrows the extent.
+    fun sortBlock(ascending: Boolean): Boolean {
+        val keyCol = selCol.coerceIn(1, 5)
+        val ok = session.sortRange("A1", "E4", keyCol, ascending)
+        computeExtent()
+        return ok
     }
 
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The

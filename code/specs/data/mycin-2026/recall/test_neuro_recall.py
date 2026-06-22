@@ -37,6 +37,16 @@ EXPECTED = {
     "caudate_nucleus": "huntington_disease",
     "midline_cerebellum": "imbalance",              # expand (NBK562317)
     "cerebellar_hemisphere": "incoordination",      # expand (NBK562317)
+    # --- BATCH: high-yield neuroanatomy localizations ---
+    "mammillary_bodies": "wernicke_korsakoff_syndrome",   # expand (NBK430729)
+    "amygdala": "kluver_bucy_syndrome",                   # expand (NBK544221)
+    "hippocampus": "anterograde_amnesia",                 # expand (NBK537247)
+    "medial_longitudinal_fasciculus": "internuclear_ophthalmoplegia",  # expand (NBK441970)
+    "internal_capsule": "pure_motor_hemiparesis",         # expand (NBK563216)
+    "dominant_parietal_lobe": "gerstmann_syndrome",       # expand (NBK519528)
+    "nondominant_parietal_lobe": "hemispatial_neglect",   # expand (NBK537247)
+    "frontal_lobe": "personality_change",                 # expand (NBK532981)
+    "posterior_columns": "loss_of_proprioception",        # expand (NBK507888)
 }
 REL = "lesion_causes"
 VAR = "Deficit"
@@ -100,8 +110,8 @@ def test_unknown_site_abstains() -> None:
     fd, path = tempfile.mkstemp(suffix=".adj", prefix=".neuro_q_", dir=HERE)
     try:
         with os.fdopen(fd, "w") as fh:
-            # hippocampus is not in the library → must abstain
-            fh.write(f'import "neuro-edges.adj"\n? {REL}(hippocampus, ${VAR})\n')
+            # pineal_gland is not in the library → must abstain
+            fh.write(f'import "neuro-edges.adj"\n? {REL}(pineal_gland, ${VAR})\n')
         res = _run(Path(path))
         r = res["recall"][0] if res["recall"] else None
         assert r is not None and r["abstained"], "an ungrounded lesion site must abstain"

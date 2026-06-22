@@ -26,6 +26,9 @@ private slots:
     void clipboardCopyCutPaste();
     void saveLoadRoundTrips();
     void undoRedoWalksHistory();
+    void structuralInsertDeleteShiftsReferences();
+    void numberFormatAppliesToSelectedCell();
+    void sortRangeReordersRowsByKeyColumn();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -235,6 +238,107 @@ void TstWindow::undoRedoWalksHistory() {
     QVERIFY(m.canRedo());
     m.setCell("A1", "7");
     QVERIFY(!m.canRedo());
+}
+
+// Structural edits (the + Row / − Row / + Col / − Col controls drive
+// model.insertRows/deleteRows/insertCols/deleteCols): inserting and deleting
+// rows/columns shifts every formula reference across the band, and deleting a
+// referenced band turns that reference into #REF!.
+void TstWindow::structuralInsertDeleteShiftsReferences() {
+    SpreadsheetModel m;
+    // A fresh column away from the seeded budget: H1=10, H2=20, H3 = H1+H2 = 30.
+    m.setCell("H1", "10");
+    m.setCell("H2", "20");
+    m.setCell("H3", "=H1+H2");
+    QCOMPARE(m.window(3, 8, 3, 8).at(0).toList().at(0).toString(), QStringLiteral("30"));
+
+    // The engine's formula printer parenthesizes binary ops ("=(H1+H3)"), so
+    // compare the selected cell's source with the parens stripped.
+    auto bareFormula = [&m]() { return QString(m.infFormula()).remove('(').remove(')'); };
+
+    // Insert a row at row 2: H2/H3 shift down to H3/H4, row 2 is blank, and the
+    // formula's refs shift with their cells (=H1+H2 → =H1+H3).
+    m.insertRows(2, 1);
+    QCOMPARE(m.window(2, 8, 2, 8).at(0).toList().at(0).toString(), QString());          // inserted row blank
+    QCOMPARE(m.window(4, 8, 4, 8).at(0).toList().at(0).toString(), QStringLiteral("30")); // formula at H4
+    m.selectInf(4, 8);
+    QCOMPARE(bareFormula(), QStringLiteral("=H1+H3"));
+
+    // Delete that inserted row: everything shifts back.
+    m.deleteRows(2, 1);
+    QCOMPARE(m.window(3, 8, 3, 8).at(0).toList().at(0).toString(), QStringLiteral("30"));
+    m.selectInf(3, 8);
+    QCOMPARE(bareFormula(), QStringLiteral("=H1+H2"));
+
+    // Delete row 1 (referenced by the formula): H2 shifts up to H1, the formula
+    // shifts up to H2, and its destroyed H1 reference becomes #REF!.
+    m.deleteRows(1, 1);
+    QCOMPARE(m.window(2, 8, 2, 8).at(0).toList().at(0).toString(), QStringLiteral("#REF!"));
+
+    // Columns shift the same way: K1=5, L1 = K1*3 = 15. Insert a column at K and
+    // the formula (now at M1) keeps pointing at its precedent (now L1).
+    SpreadsheetModel m2;
+    m2.setCell("K1", "5");
+    m2.setCell("L1", "=K1*3");
+    m2.insertCols(11, 1); // col 11 = K
+    QCOMPARE(m2.window(1, 13, 1, 13).at(0).toList().at(0).toString(), QStringLiteral("15")); // M1
+    m2.selectInf(1, 13);
+    QCOMPARE(QString(m2.infFormula()).remove('(').remove(')'), QStringLiteral("=L1*3"));
+}
+
+// Number formatting (the .00 / % / $ / Gen controls drive model.setFormatInf):
+// applying a format code changes only how the selected cell DISPLAYS; the stored
+// value is unchanged. An empty code clears the format.
+void TstWindow::numberFormatAppliesToSelectedCell() {
+    SpreadsheetModel m;
+    m.setCell("H1", "1234"); // col 8, away from the budget
+    m.selectInf(1, 8);
+    auto disp = [&m]() { return m.window(1, 8, 1, 8).at(0).toList().at(0).toString(); };
+    QCOMPARE(disp(), QStringLiteral("1234")); // unformatted
+    m.setFormatInf(QStringLiteral("#,##0.00"));
+    QCOMPARE(disp(), QStringLiteral("1,234.00"));
+    m.setFormatInf(QStringLiteral("0.0%"));
+    QCOMPARE(disp(), QStringLiteral("123400.0%"));
+    m.setFormatInf(QStringLiteral("$#,##0.00"));
+    QCOMPARE(disp(), QStringLiteral("$1,234.00"));
+    m.setFormatInf(QString()); // clear → General
+    QCOMPARE(disp(), QStringLiteral("1234"));
+    // The format is display-only: the stored source never changed.
+    m.selectInf(1, 8);
+    QCOMPARE(m.infFormula(), QStringLiteral("1234"));
+}
+
+// Range sort (the ▲/▼ Sort buttons): reorder the budget block A1:E4 by a key
+// column. The default seed has column A = 15,8,12,4 (rows 1..4) and each E cell
+// is =SUM(A:D) for its row. Sorting by column A ascending moves each row as a
+// record — column A becomes 4,8,12,15 and every E total travels with its row
+// (the engine shifts the moved SUM formulas' refs). Descending reverses it.
+void TstWindow::sortRangeReordersRowsByKeyColumn() {
+    SpreadsheetModel m;
+    auto colA = [&m](int row) { return m.window(row, 1, row, 1).at(0).toList().at(0).toString(); };
+    auto colE = [&m](int row) { return m.window(row, 5, row, 5).at(0).toList().at(0).toString(); };
+    // Pre-sort seed order.
+    QCOMPARE(colA(1), QStringLiteral("15"));
+    QCOMPARE(colA(4), QStringLiteral("4"));
+
+    // Ascending by column A (keyCol = 1): rows reorder to 4,8,12,15.
+    QVERIFY(m.sortRange("A1", "E4", 1, true));
+    QCOMPARE(colA(1), QStringLiteral("4"));
+    QCOMPARE(colA(2), QStringLiteral("8"));
+    QCOMPARE(colA(3), QStringLiteral("12"));
+    QCOMPARE(colA(4), QStringLiteral("15"));
+    // Each row's E total tracked its row (E = SUM of that row's A..D), formatted.
+    QCOMPARE(colE(1), QStringLiteral("35.00"));  // 4+11+3+17
+    QCOMPARE(colE(4), QStringLiteral("38.00"));  // 15+3+12+8
+
+    // Descending reverses the key order.
+    QVERIFY(m.sortRange("A1", "E4", 1, false));
+    QCOMPARE(colA(1), QStringLiteral("15"));
+    QCOMPARE(colA(4), QStringLiteral("4"));
+
+    // Bad args are a no-op returning false (no crash).
+    QVERIFY(!m.sortRange("A1", "A1", 1, true));   // single-row range
+    QVERIFY(!m.sortRange("A1", "E4", 9, true));   // key column outside the range
 }
 
 QTEST_MAIN(TstWindow)

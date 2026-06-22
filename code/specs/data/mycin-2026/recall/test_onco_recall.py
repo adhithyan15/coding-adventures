@@ -36,6 +36,13 @@ EXPECTED = {
     "colorectal_cancer": {"cea"},                        # expand (NBK578172)
     "prostate_cancer": {"psa"},                          # expand (NBK470550)
     "choriocarcinoma": {"hcg"},                           # expand (NBK532950)
+    # --- BATCH: high-yield tumor markers ---
+    "pancreatic_cancer": {"ca_19_9", "cea"},              # expand (NBK518996)
+    "small_cell_lung_cancer": {"neuron_specific_enolase"},  # expand (NBK153280)
+    "neuroendocrine_tumor": {"chromogranin_a"},           # expand (NBK537344)
+    "melanoma": {"s100"},                                 # expand (NBK459367)
+    "yolk_sac_tumor": {"alpha_fetoprotein"},              # expand (NBK563163)
+    "gastrointestinal_stromal_tumor": {"cd117"},          # expand (NBK554541)
 }
 REL = "tumor_marker"
 VAR = "Marker"
@@ -99,8 +106,8 @@ def test_unknown_neoplasm_abstains() -> None:
     fd, path = tempfile.mkstemp(suffix=".adj", prefix=".onco_q_", dir=HERE)
     try:
         with os.fdopen(fd, "w") as fh:
-            # pancreatic_cancer is not in the library → must abstain
-            fh.write(f'import "onco-edges.adj"\n? {REL}(pancreatic_cancer, ${VAR})\n')
+            # glioblastoma is not in the library → must abstain
+            fh.write(f'import "onco-edges.adj"\n? {REL}(glioblastoma, ${VAR})\n')
         res = _run(Path(path))
         r = res["recall"][0] if res["recall"] else None
         assert r is not None and r["abstained"], "an ungrounded neoplasm must abstain"

@@ -1,0 +1,1 @@
+var label="total";var n=3;show(label,n);

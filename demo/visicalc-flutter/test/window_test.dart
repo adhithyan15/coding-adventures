@@ -97,6 +97,59 @@ void main() {
       s.setCell('C1', '9');
       expect(s.canRedo(), isFalse);
     });
+
+    test('insert / delete rows & columns shift formula references', () {
+      final s = SpreadsheetSession();
+      s.setCell('A1', '10');
+      s.setCell('A2', '20');
+      s.setCell('A3', '=A1+A2'); // 30
+      expect(s.window(3, 1, 3, 1)[0][0], '30');
+
+      // Insert a row at 2: A2/A3 shift down to A3/A4, row 2 blank, and the
+      // formula's refs shift with their cells (=A1+A2 → =A1+A3). The engine
+      // parenthesizes binary ops on re-emit, so strip parens to compare.
+      String bare(String a1) => s.getRaw(a1).replaceAll(RegExp(r'[()]'), '');
+      s.insertRows(2, 1);
+      expect(s.window(2, 1, 2, 1)[0][0], ''); // inserted row blank
+      expect(s.window(4, 1, 4, 1)[0][0], '30'); // formula at A4
+      expect(bare('A4'), '=A1+A3');
+
+      // Delete that inserted row: everything shifts back.
+      s.deleteRows(2, 1);
+      expect(s.window(3, 1, 3, 1)[0][0], '30');
+      expect(bare('A3'), '=A1+A2');
+
+      // Delete row 1 (referenced by the formula): its A1 reference is destroyed
+      // (→ #REF!) while the survivor shifts up.
+      s.deleteRows(1, 1);
+      expect(s.window(2, 1, 2, 1)[0][0], '#REF!');
+
+      // Columns shift the same way: K1=5, L1 = K1*3 = 15. Insert a column at K
+      // and the formula (now at M1) keeps pointing at its precedent (now L1).
+      final c = SpreadsheetSession();
+      c.setCell('K1', '5');
+      c.setCell('L1', '=K1*3');
+      c.insertCols(11, 1); // col 11 = K
+      expect(c.window(1, 13, 1, 13)[0][0], '15'); // M1
+      expect(c.getRaw('M1').replaceAll(RegExp(r'[()]'), ''), '=L1*3');
+    });
+
+    test('setFormat changes only the display, not the stored value', () {
+      final s = SpreadsheetSession();
+      s.setCell('A1', '1234');
+      String disp() => s.window(1, 1, 1, 1)[0][0];
+      expect(disp(), '1234'); // unformatted
+      s.setFormat('A1', '#,##0.00');
+      expect(disp(), '1,234.00');
+      s.setFormat('A1', '0.0%');
+      expect(disp(), '123400.0%');
+      s.setFormat('A1', '\$#,##0.00');
+      expect(disp(), '\$1,234.00');
+      s.setFormat('A1', ''); // clear → General
+      expect(disp(), '1234');
+      // The format is display-only: the raw stored value never changed.
+      expect(s.getRaw('A1'), '1234');
+    });
   });
 
   // The infinite-view binding layer (InfiniteGrid drives these): one engine read
@@ -220,6 +273,38 @@ void main() {
       expect(m.canRedo, isTrue);
       expect(m.redoEdit(), isTrue);
       expect(m.rowCells(1)[7], '16');
+    });
+
+    // Range sort (the ▲/▼ Sort buttons drive the model's sortBlock →
+    // session.sortRange): reorder the budget block A1:E4 by a key column. Each
+    // row moves as a record — the E-column SUM formulas travel with their row
+    // (the engine shifts the refs), so every total stays correct.
+    test('sortRange reorders the budget rows by a key column', () {
+      final s = SpreadsheetSession();
+      addTearDown(s.dispose);
+      // Budget block A1:E4: column A = 15,8,12,4; each E cell totals its row.
+      const cells = {
+        'A1': '15', 'B1': '3', 'C1': '12', 'D1': '8', 'E1': '=SUM(A1:D1)',
+        'A2': '8', 'B2': '14', 'C2': '7', 'D2': '22', 'E2': '=SUM(A2:D2)',
+        'A3': '12', 'B3': '9', 'C3': '18', 'D3': '6', 'E3': '=SUM(A3:D3)',
+        'A4': '4', 'B4': '11', 'C4': '3', 'D4': '17', 'E4': '=SUM(A4:D4)',
+      };
+      cells.forEach(s.setCell);
+      // Pre-sort: column A rows 1..4 = 15,8,12,4.
+      expect(s.window(1, 1, 4, 1).map((r) => r[0]).toList(), ['15', '8', '12', '4']);
+      // Sort A1:E4 by column A ascending → 4,8,12,15.
+      expect(s.sortRange('A1', 'E4', 1, true), isTrue);
+      expect(s.window(1, 1, 4, 1).map((r) => r[0]).toList(), ['4', '8', '12', '15']);
+      // Each row's E total tracked its row (E = SUM of that row's A..D).
+      expect(s.window(1, 5, 1, 5)[0][0], '35'); // 4+11+3+17
+      expect(s.window(4, 5, 4, 5)[0][0], '38'); // 15+3+12+8
+      // Descending reverses the key order.
+      expect(s.sortRange('A1', 'E4', 1, false), isTrue);
+      expect(s.window(1, 1, 1, 1)[0][0], '15');
+      expect(s.window(4, 1, 4, 1)[0][0], '4');
+      // Bad args are a no-op returning false (no crash).
+      expect(s.sortRange('A1', 'A1', 1, true), isFalse); // single-row range
+      expect(s.sortRange('A1', 'E4', 9, true), isFalse); // key column outside range
     });
   });
 }

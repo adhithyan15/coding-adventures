@@ -39,8 +39,20 @@ like any other function. A `switch` is a named jump table: `goto s[i]` selects
 the i-th (1-based) target by a portable `index == k ? jmp Lk` chain; an
 out-of-range subscript falls through. Conditional designators
 (`goto if b then L1 else L2`) are also supported. Procedures may be called
-before they are textually declared and may recurse; procedure bodies see their
-own value parameters but not enclosing-block variables (lexically flat for now).
+before they are textually declared and may recurse. A procedure body sees its
+own value parameters and, since **LANG-FULL E6**, may also **read and write a
+scalar declared in an enclosing block**: such a shared scalar is materialised as
+a typed module **global** (`global_load`/`global_store`) so the procedure and
+the block share one cell — e.g. `integer procedure add(x); … add := counter :=
+counter + x` over an enclosing `integer counter` runs across every backend.
+
+Since **LANG-FULL AL6** a variable may be declared **`own`** (`own integer n`),
+giving it *static lifetime*: it is allocated once and retains its value across
+every call of the enclosing block/procedure (ALGOL 60 §5.2.5). It reuses the
+same module-global storage — keyed by a per-procedure-unique slot so two
+procedures' `own n` stay independent — and is **not** re-zeroed on entry, so it
+accumulates: `own integer n; n := n + d` called three times with `d = 1` yields
+`1`, `2`, `3`. Runs on all 7 backends.
 
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real
@@ -61,6 +73,8 @@ the array ops yet; see the `E5-*` follow-ups in
 
 Unsupported ALGOL 60 features — **multidimensional** and non-numeric arrays,
 arrays as procedure parameters, strings, `own` variables, proper (void)
-procedures, by-name (non-`value`) parameters, non-local access from a procedure
-body, and conditional/nested switch-list elements — return explicit compiler
+procedures, by-name (non-`value`) parameters, parameterless-procedure calls (a
+bare name parses as a variable), enclosing-block **array** capture (only scalars
+are globalised so far), and conditional/nested switch-list elements — return
+explicit compiler
 errors.

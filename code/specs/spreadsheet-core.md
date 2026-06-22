@@ -270,6 +270,61 @@ run past the u32 grid edge.
 > the engine keeps cut a thin layer over the copy machinery and does not (yet)
 > track those inbound references.
 
+### Range sort
+
+`Workbook::sort_range(sheet, range, key_col, ascending) -> bool` reorders the
+**rows** of a rectangular `range` by the values in one **key column**, the way
+a spreadsheet's *Data ▸ Sort* does. It is the third member of the range-operation
+family, built on the same `FormulaAst::shift` machinery as fill and clipboard.
+
+Each row of `range` is treated as a record spanning the range's columns
+(`range.start.col ..= range.end.col`); the rows are permuted into key order while
+every record's cells stay together. `key_col` is an **absolute** column index and
+must lie inside the range, else the call is a no-op returning `false`. The sort
+key for a row is the cell's **computed value** at `(row, key_col)` — a formula
+sorts by what it evaluates to, not its text.
+
+**Total order over values** (so any mix of types has a deterministic order):
+
+| Rank | Kind | Within-kind order |
+|------|------|-------------------|
+| 0 | Number | numeric (ascending f64) |
+| 1 | Text | case-insensitive, then case-sensitive as a tiebreak |
+| 2 | Boolean | `FALSE` < `TRUE` |
+| 3 | Error | by a fixed sentinel order (`#REF!`, `#NAME?`, …) |
+| — | Empty | **always last**, in *both* directions (Excel's rule) |
+
+`ascending = false` reverses the comparison of the *non-empty* keys only — blanks
+still sink to the bottom. The sort is **stable**: rows with equal keys keep their
+original relative order.
+
+Because the rows physically move, a moved cell's formula has its references
+**shifted by that row's displacement** (`Δrow = dest − src`, `Δcol = 0`) through
+`FormulaAst::shift` — relative refs track, absolute (`$`) refs pin, an off-grid
+ref collapses to `#REF!` — exactly as if each row were cut and pasted to its new
+position. Display **formats** ride with their cells. Cells in the sorted rows but
+*outside* the column band are untouched, as are all cells outside the range.
+
+After permuting, the engine rebuilds the dependency graph and recalcs the whole
+workbook in one transaction (one revision bump), logging every cell in the range
+so a viewport `changed_since` snapshot taken before the sort sees the moves. The
+range is capped at `MAX_RANGE_CELLS` (the shared DoS guard).
+
+`sort_range` returns the **permutation** it applied — `Some(order)` where
+`order[new_row_offset] = old_row_offset` (0-based from `range.start.row`). This
+lets a caller that keeps its own per-cell side-table (the wasm facade's
+raw-source echo map) replay the exact row move with `rewrite_raw_for_fill`,
+rather than re-deriving the comparator. `None` is the no-op rejection (unknown
+sheet, out-of-range `key_col`, or an empty/inverted/single-row range); an
+already-sorted range returns `Some(identity)` and is left untouched.
+
+> Divergence from Excel: like `cut`, a sort shifts each moved formula's *own*
+> references by its row displacement and does **not** rewrite references that
+> pointed into the range from outside (or between two rows that both moved). A
+> column of plain data — the overwhelmingly common case — sorts exactly as
+> expected; a range thick with intra-range relative formulas inherits the same
+> documented limitation as `cut`.
+
 ---
 
 ## §5 The Dependency Graph

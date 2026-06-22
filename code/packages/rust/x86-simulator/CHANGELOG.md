@@ -1,5 +1,59 @@
 # Changelog — x86-simulator
 
+## 0.7.3 — 2026-06-22 — Dartmouth BASIC `DIM` array cell (LANG-FULL BA3 follow-up)
+
+Adds an executed matrix cell `basic_array_runs_on_x86_sim`: a Dartmouth BASIC
+`DIM A(3)` array (LANG-FULL BA3, merged) filled by `LET A(i) = …` and summed
+back via `A(i)` reads ⇒ stdout `42`. Runs the real BASIC frontend's x86_64
+output on the simulator, exercising the shared `alloc_array`/`array_set`/
+`array_get` ops (E5) through the **BASIC** lowering path — the BASIC counterpart
+to `algol_static_array_runs_on_x86_sim`. Test-only; no library change.
+
+## 0.7.2 — 2026-06-22 — ALGOL `own` global cell (LANG-FULL AL6 follow-up)
+
+Adds the executed matrix cell `algol_own_variable_runs_on_x86_sim`: an ALGOL
+`own integer n` (LANG-FULL AL6, merged) inside `bump` persists across calls —
+`bump(1)+bump(1)+bump(1)` accumulates 1+2+3 = 6 on the one `_twig_globals` slot
+(a non-`own` local gives 3) ⇒ exit `6`, run on the real x86_64 bytes. With the
+E6 (`algol_module_global_…`) and O3 (`oct_static_global_…`, 0.7.1) cells, all
+three module-global frontends now execute locally on the x86_64 backend via the
+S8 `_twig_globals` path. Test-only; no library change.
+
+## 0.7.1 — 2026-06-22 — Oct `static` global cell (LANG-FULL O3 follow-up)
+
+Adds an executed matrix cell `oct_static_global_runs_on_x86_sim`: an Oct
+top-level `static counter` (LANG-FULL O3, merged) shared across functions —
+`bump()` increments it twice, `main` prints it via `out` ⇒ stdout `42`. Runs
+the real Oct frontend's x86_64 output on the simulator, exercising the
+`_twig_globals` data-region support added in 0.7.0 (S8) from a second frontend
+(the Oct counterpart to the ALGOL E6 cell). Test-only; no library change.
+
+## 0.7.0 — 2026-06-22 — module globals (`_twig_globals`) run locally (x86-sim PR-S8)
+
+The harness now resolves the **`_twig_globals` data symbol**, so an x86_64
+program that reads/writes a module global runs on the simulator — closing the
+last gap before the `_twig_globals`-using programs (E6 captured scalars, O3 Oct
+`static`, AL6 ALGOL `own`) could only be executed on real Intel hardware / CI.
+
+- The x86_64 backend lowers `global_load`/`global_store` to `lea rax, [rip +
+  _twig_globals]` + a `mov` at `[rax + slot*8]`, recorded as a `PcRel32`
+  relocation against `_twig_globals`. The harness reserves a zeroed
+  **`_twig_globals` region** (512 × 8-byte slots) between the code and the heap
+  and patches that `PcRel32` to its base — the same PC-relative fixup the real
+  linker applies (`R_X86_64_PC32`), mirroring `code-packager`'s `.data` section.
+  Globals zero-init at load (the whole address space starts zeroed), which is
+  exactly the unwritten-global / `own` / `static` semantics.
+- The matrix harness (`lang_matrix_x86.rs`) now compiles each function with
+  `compile_function_with_globals` over a slot map collected from the module
+  (`collect_global_slots`, replicating `twig-aot`'s), instead of the
+  empty-global-map `compile_function_with_relocs`. Programs with no globals emit
+  no such reloc, so the pre-globals cells are unchanged.
+- **Executed proof:** the LANG-FULL **E6** program — a procedure `incr` sharing
+  an enclosing-block `counter` (`counter := 40; result := incr(2)`) — runs on
+  the **real x86_64 bytes** locally ⇒ exit **42**, the same value the matrix's
+  NativeAot column asserts. (Oct `static`/ALGOL `own` cells reuse this exact
+  path and can be added once their frontend PRs land on main.)
+
 ## 0.6.0 — 2026-06-21 — stdin (`getchar`) + Brainfuck cat runs locally (x86-sim PR-S6)
 
 Completes the Brainfuck story: the stdin-driven `,` programs now run on the

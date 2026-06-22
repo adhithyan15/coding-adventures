@@ -18,6 +18,7 @@
 //! 7 % 3              →  1
 //! 2 ** 8             →  256
 //! -3                 →  -3                      (UnaryExpression on NumericLiteral)
+//! ~5                 →  -6                      (bitwise NOT, ES ToInt32)
 //! !true              →  false
 //! 1 < 2              →  true                    (numeric comparison)
 //! "a" === "a"        →  true                    (strict equality, same type)
@@ -29,6 +30,10 @@
 //! null  ?? expr      →  expr
 //! 0     ?? expr      →  0                       (zero is not nullish)
 //! true  ? a : b      →  a                       (ConditionalExpression with literal test)
+//! "hi".length        →  2                       (string-literal .length, UTF-16 units)
+//! "ab".toUpperCase() →  "AB"                     (ASCII string casing methods)
+//! "abc".charCodeAt(0)→  97                        (string-literal indexing methods)
+//! "abc".charAt(1)    →  "b"
 //! ```
 //!
 //! And recurses through every child node, so `1 + (2 * 3) → 1 + 6 → 7`
@@ -41,10 +46,12 @@
 //!   Phase 1.x.
 //! - `void` — produces ES `undefined`, same gap as above.
 //! - `delete` — has observable side effects.
-//! - Bitwise (`&`, `|`, `^`, `<<`, `>>`, `>>>`) — NOW FOLDED on two numeric
-//!   literals (CLOC15.D) via ES `ToInt32`/`ToUint32` 32-bit semantics. See
-//!   [`to_int32`] / [`to_uint32`]; `>>>` yields an unsigned result that can
-//!   exceed `i32::MAX`.
+//! - Bitwise binary (`&`, `|`, `^`, `<<`, `>>`, `>>>`) — NOW FOLDED on two
+//!   numeric literals (CLOC15.D) via ES `ToInt32`/`ToUint32` 32-bit
+//!   semantics. See [`to_int32`] / [`to_uint32`]; `>>>` yields an unsigned
+//!   result that can exceed `i32::MAX`. The unary bitwise NOT (`~`) is also
+//!   folded on a numeric literal, reusing [`to_int32`] so it stays
+//!   bit-for-bit consistent with the binary operators.
 //! - Equality between non-matching literal types (`1 == "1"` is `true`
 //!   but `1 === "1"` is `false`). The pass folds equality only when
 //!   both literals are the *same* JS type; mixed-type comparisons are
@@ -464,17 +471,8 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 right: Box::new(fold_expression(&a.right, st)),
             })
         }
-        Expression::CallExpression(c) => Expression::CallExpression(CallExpression {
-            cv: c.cv.clone(),
-            callee: Box::new(fold_expression(&c.callee, st)),
-            arguments: c.arguments.iter().map(|a| fold_expression(a, st)).collect(),
-        }),
-        Expression::MemberExpression(m) => Expression::MemberExpression(MemberExpression {
-            cv: m.cv.clone(),
-            object: Box::new(fold_expression(&m.object, st)),
-            property: Box::new(fold_expression(&m.property, st)),
-            computed: m.computed,
-        }),
+        Expression::CallExpression(c) => fold_call(c, st),
+        Expression::MemberExpression(m) => fold_member(m, st),
         Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
             cv: a.cv.clone(),
             elements: a
@@ -508,6 +506,215 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 .collect(),
         }),
     }
+}
+
+// ---------------------------------------------------------------------
+// Method calls
+// ---------------------------------------------------------------------
+
+/// Folds the no-argument string-casing methods on a string literal:
+///
+/// ```text
+///   "abc".toUpperCase()   →  "ABC"
+///   "ABC".toLowerCase()   →  "abc"
+///   "".toUpperCase()      →  ""
+/// ```
+///
+/// **ASCII-only.** We fold only when the literal `is_ascii()`, using Rust's
+/// `to_ascii_uppercase`/`to_ascii_lowercase`. ASCII case mapping is
+/// locale-independent and byte-for-byte identical between Rust and JavaScript,
+/// so the fold is exactly sound. Non-ASCII strings are deliberately left
+/// alone: JS `toUpperCase`/`toLowerCase` use full Unicode default case
+/// mapping with context-sensitive special cases (final sigma `ς`, German `ß`
+/// → `SS`, locale-independent but length-changing) that a conservative
+/// fold-set shouldn't try to reproduce here — `"é".toUpperCase()` stays a call.
+///
+/// Only the dotted, zero-argument form on a string literal folds. An argument
+/// (`"x".toUpperCase(1)` — ignored by the runtime but we stay conservative),
+/// the computed form `"x"["toUpperCase"]()`, and a method on a non-literal
+/// (`s.toUpperCase()`) all pass through unchanged. We still recurse into the
+/// callee and arguments so nested constants inside them fold.
+fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
+    let callee = fold_expression(&c.callee, st);
+    let arguments: Vec<Expression> = c.arguments.iter().map(|a| fold_expression(a, st)).collect();
+
+    if let Expression::MemberExpression(m) = &callee {
+        if !m.computed {
+            if let (Expression::StringLiteral(s), Expression::Identifier(id)) =
+                (m.object.as_ref(), m.property.as_ref())
+            {
+                // ---- zero-argument casing methods (ASCII-only) ----
+                if arguments.is_empty() {
+                    let cased = match id.name.as_str() {
+                        "toUpperCase" if s.value.is_ascii() => Some(s.value.to_ascii_uppercase()),
+                        "toLowerCase" if s.value.is_ascii() => Some(s.value.to_ascii_lowercase()),
+                        _ => None,
+                    };
+                    if let Some(result) = cased {
+                        let parent = c.cv.clone();
+                        let before = format!("\"{}\".{}()", s.value, id.name);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
+                // ---- single-argument string methods ----
+                //
+                // Two shapes share the one-argument arm, dispatched on the
+                // argument's literal kind:
+                //
+                //   * a NUMERIC index   → `charCodeAt` / `charAt` (below);
+                //   * a STRING needle   → `indexOf` (the `else if` further down).
+                //
+                // JS indexes a string by UTF-16 *code unit*, so we index into
+                // `encode_utf16()` (an astral char occupies two units). The
+                // index argument must be a non-negative integer literal; a
+                // fractional, negative, or non-literal index is left for the
+                // runtime (we stay conservative rather than model `ToInteger`
+                // coercion and the NaN/"" out-of-range edge cases for those).
+                else if arguments.len() == 1 {
+                    if let Expression::NumericLiteral(n) = &arguments[0] {
+                        if n.value.is_finite() && n.value >= 0.0 && n.value.fract() == 0.0 {
+                            let units: Vec<u16> = s.value.encode_utf16().collect();
+                            let i = n.value as usize;
+                            match id.name.as_str() {
+                                // `"abc".charCodeAt(i)` → the code unit at `i`.
+                                // Out of range is JS `NaN`, for which there is
+                                // no literal — so we simply don't fold it.
+                                "charCodeAt" if i < units.len() => {
+                                    let value = units[i] as f64;
+                                    let parent = c.cv.clone();
+                                    let before = format!("\"{}\".charCodeAt({})", s.value, i);
+                                    let after = format_js_number(value);
+                                    let new_cv = st.fork_cv(&parent, &before, &after);
+                                    return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
+                                }
+                                // `"abc".charAt(i)` → the 1-code-unit string at
+                                // `i`, or `""` when out of range. A lone
+                                // surrogate (e.g. `"💩".charAt(0)`) is a valid
+                                // length-1 JS string but cannot be a Rust
+                                // `String`, so `from_utf16` fails and we leave
+                                // that call unfolded (conservative, still sound).
+                                "charAt" => {
+                                    let result = if i < units.len() {
+                                        String::from_utf16(&units[i..i + 1]).ok()
+                                    } else {
+                                        Some(String::new())
+                                    };
+                                    if let Some(result) = result {
+                                        let parent = c.cv.clone();
+                                        let before = format!("\"{}\".charAt({})", s.value, i);
+                                        let after = format!("\"{}\"", result);
+                                        let new_cv = st.fork_cv(&parent, &before, &after);
+                                        return stamp_literal_cv(
+                                            FoldedLiteral::String(result),
+                                            new_cv,
+                                        );
+                                    }
+                                }
+                                _ => {}
+                            }
+                        }
+                    }
+                    // ---- substring search: indexOf ----
+                    //
+                    // `"haystack".indexOf("needle")` → the UTF-16 code-unit
+                    // index of the first occurrence, or `-1` when absent
+                    // (ECMAScript §22.1.3.8, the one-argument form). Both
+                    // receiver and needle must be string literals.
+                    //
+                    // Rust's `str::find` returns a *byte* offset into the UTF-8
+                    // haystack; JS reports the index in *UTF-16 code units*, so
+                    // we re-measure the matched prefix with `encode_utf16()`
+                    // (an astral char before the hit counts as two units). For
+                    // ASCII the two indices coincide; the conversion keeps
+                    // `"💩x".indexOf("x")` → `2`, matching V8. An empty needle
+                    // yields `0` (`"abc".indexOf("")` is `0`), exactly as
+                    // `str::find("")` returns `Some(0)`.
+                    //
+                    // Only the single-argument form folds; the `fromIndex`
+                    // overload (`"abc".indexOf("b", 1)`) lands in the 2-arg
+                    // arm and passes through unchanged.
+                    else if let Expression::StringLiteral(needle) = &arguments[0] {
+                        if id.name == "indexOf" {
+                            let value = match s.value.find(&needle.value) {
+                                Some(byte) => s.value[..byte].encode_utf16().count() as f64,
+                                None => -1.0,
+                            };
+                            let parent = c.cv.clone();
+                            let before =
+                                format!("\"{}\".indexOf(\"{}\")", s.value, needle.value);
+                            let after = format_js_number(value);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Expression::CallExpression(CallExpression {
+        cv: c.cv.clone(),
+        callee: Box::new(callee),
+        arguments,
+    })
+}
+
+// ---------------------------------------------------------------------
+// Member access
+// ---------------------------------------------------------------------
+
+/// Folds the one member-access form whose value is known at compile time:
+/// the `.length` of a string literal.
+///
+/// ```text
+///   "hello".length   →  5
+///   "".length        →  0
+///   "💩".length      →  2     (one astral char = two UTF-16 code units)
+/// ```
+///
+/// JavaScript's `String#length` is the number of **UTF-16 code units**, NOT
+/// Unicode scalar values or bytes (ECMAScript §22.1.3.1 / String exotic
+/// objects). Rust's [`str::encode_utf16`] yields exactly those code units —
+/// astral-plane characters (U+10000…U+10FFFF) expand to a surrogate pair, so
+/// `"💩".length` is `2`, matching V8/SpiderMonkey. `.count()` is total and
+/// allocation-free; it cannot panic.
+///
+/// We fold **only** the dotted, non-computed form `"...".length`:
+/// - The object must fold to a `StringLiteral` (so the value is known).
+/// - The access must be non-`computed` and the property an `Identifier`
+///   named `length`. We deliberately leave the computed form `"..."["length"]`
+///   alone — it is vanishingly rare in real code and folding it would mean
+///   reasoning about arbitrary computed keys (`s[k]`), which needs the runtime
+///   value of `k`. Keeping the surface narrow keeps the fold obviously sound.
+/// - Anything else (identifier objects like `s.length`, other properties like
+///   `"x".charCodeAt`) falls through unchanged; we still recurse into the
+///   object and property so nested constants inside them fold.
+fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
+    // Recurse first, so e.g. `("a" + "b").length` sees the folded `"ab"`.
+    let object = fold_expression(&m.object, st);
+    let property = fold_expression(&m.property, st);
+
+    if !m.computed {
+        if let (Expression::StringLiteral(s), Expression::Identifier(id)) = (&object, &property) {
+            if id.name == "length" {
+                let len = s.value.encode_utf16().count() as f64;
+                let parent = m.cv.clone();
+                let before = format!("\"{}\".length", s.value);
+                let after = format_js_number(len);
+                let new_cv = st.fork_cv(&parent, &before, &after);
+                return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
+            }
+        }
+    }
+
+    Expression::MemberExpression(MemberExpression {
+        cv: m.cv.clone(),
+        object: Box::new(object),
+        property: Box::new(property),
+        computed: m.computed,
+    })
 }
 
 // ---------------------------------------------------------------------
@@ -1245,7 +1452,32 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
                 _ => None,
             }
         }
-        // Skipped: BitNot (int32 coercion), Delete (side effects).
+        UnaryOperator::BitNot => {
+            // `~<numeric literal>` → bitwise complement under ES `ToInt32`
+            // semantics (ECMAScript §13.5.6 `BitwiseNOT`):
+            //
+            //   ~5      →  -6        (~ToInt32(5)  = ~5  = -6)
+            //   ~-1     →   0        (~ToInt32(-1) = ~-1 =  0)
+            //   ~5.9    →  -6        (truncate toward zero first → ~5)
+            //   ~NaN    →  -1        (ToInt32(NaN) = 0, ~0 = -1)
+            //   ~2.5e10 →  fold of the 32-bit-wrapped operand
+            //
+            // The binary bitwise operators (`&`, `|`, `^`) already fold via
+            // [`to_int32`] (see `fold_binary`); the unary `~` was the lone
+            // bitwise gap and reuses the very same coercion so the two stay
+            // bit-for-bit consistent. Rust's prefix `!` on `i32` *is* the
+            // two's-complement bitwise NOT, matching JS exactly. We fold only
+            // a `NumericLiteral` argument — `~x` for an identifier or call
+            // needs the runtime value, and `~"5"`/`~true` would require
+            // string/boolean ToNumber coercion that the conservative fold-set
+            // deliberately leaves to a later phase.
+            if let Expression::NumericLiteral(n) = &arg {
+                Some(FoldedLiteral::Number((!to_int32(n.value)) as f64))
+            } else {
+                None
+            }
+        }
+        // Skipped: Delete (side effects).
         _ => None,
     };
 
@@ -2254,6 +2486,434 @@ mod tests {
             Expression::NumericLiteral(n) => assert_eq!(n.value, 1.0),
             other => panic!("expected 1; got {:?}", other),
         }
+    }
+
+    #[test]
+    fn fold_bitwise_not_on_numeric_literal() {
+        // ~5 → -6  (~ToInt32(5) = ~5 = -6)
+        let bn = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("u.bn".to_string()),
+            operator: UnaryOperator::BitNot,
+            prefix: true,
+            argument: Box::new(num(5.0, None)),
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(bn, true));
+        assert!(changed, "~5 should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, -6.0),
+            other => panic!("expected -6; got {:?}", other),
+        }
+
+        // ~5.9 → -6  (ToInt32 truncates toward zero first → ~5)
+        let bn_frac = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("u.bnf".to_string()),
+            operator: UnaryOperator::BitNot,
+            prefix: true,
+            argument: Box::new(num(5.9, None)),
+        });
+        let (out, _, _, _) = run_pass(program_with_expr(bn_frac, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, -6.0),
+            other => panic!("expected -6; got {:?}", other),
+        }
+
+        // ~(-1) → 0. The inner `-1` is itself a Negate unary that folds to a
+        // NumericLiteral first, then the outer `~` folds bottom-up in one walk.
+        let inner_neg = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("u.bn.inner".to_string()),
+            operator: UnaryOperator::Negate,
+            prefix: true,
+            argument: Box::new(num(1.0, None)),
+        });
+        let bn_neg = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("u.bn.neg".to_string()),
+            operator: UnaryOperator::BitNot,
+            prefix: true,
+            argument: Box::new(inner_neg),
+        });
+        let (out, _, _, _) = run_pass(program_with_expr(bn_neg, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
+            other => panic!("expected 0; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bitwise_not_on_identifier_does_not_fold() {
+        // `~x` needs the runtime value of `x`, so the unary stays put.
+        let bn = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("u.bnx".to_string()),
+            operator: UnaryOperator::BitNot,
+            prefix: true,
+            argument: Box::new(ident("x")),
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(bn, true));
+        assert!(!changed, "~x must not fold");
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::UnaryExpression(_)
+        ));
+    }
+
+    // ------------------- member access (`.length`) -------------------
+
+    /// Build a non-computed `<object>.<name>` member expression.
+    fn member(object: Expression, name: &str) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(object),
+            property: Box::new(ident(name)),
+            computed: false,
+        })
+    }
+
+    #[test]
+    fn fold_string_literal_length() {
+        // "abc".length → 3
+        let m = member(string("abc", None), "length");
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(changed, "\"abc\".length should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.0),
+            other => panic!("expected 3; got {:?}", other),
+        }
+
+        // "".length → 0
+        let m0 = member(string("", None), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(m0, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
+            other => panic!("expected 0; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_string_length_counts_utf16_code_units_not_scalars() {
+        // "💩" (U+1F4A9, an astral-plane char) is ONE Unicode scalar but TWO
+        // UTF-16 code units, so JS `"💩".length` is 2 — not 1. This guards the
+        // encode_utf16() choice against a naive `.chars().count()`.
+        let m = member(string("💩", None), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(m, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2 (UTF-16 units); got {:?}", other),
+        }
+
+        // A BMP combining sequence "é" written as e + U+0301 is two code units.
+        let m2 = member(string("e\u{0301}", None), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(m2, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn length_on_identifier_does_not_fold() {
+        // `s.length` needs the runtime value of `s`, so it stays a member expr.
+        let m = member(ident("s"), "length");
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(!changed, "s.length must not fold");
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::MemberExpression(_)
+        ));
+    }
+
+    #[test]
+    fn non_length_property_on_string_does_not_fold() {
+        // `"abc".charCodeAt` is not `.length`; it must pass through untouched.
+        let m = member(string("abc", None), "charCodeAt");
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(!changed, "\"abc\".charCodeAt must not fold");
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::MemberExpression(_)
+        ));
+    }
+
+    #[test]
+    fn computed_string_length_does_not_fold() {
+        // `"abc"["length"]` is the computed form — deliberately left alone.
+        let m = Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(string("abc", None)),
+            property: Box::new(string("length", None)),
+            computed: true,
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(!changed, "computed \"abc\"[\"length\"] must not fold");
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::MemberExpression(_)
+        ));
+    }
+
+    // ------------------- string casing methods -----------------------
+
+    /// Build a zero-argument method call `<object>.<name>()`.
+    fn call0(object: Expression, name: &str) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(object, name)),
+            arguments: vec![],
+        })
+    }
+
+    #[test]
+    fn fold_ascii_string_to_upper_and_lower_case() {
+        // "abc".toUpperCase() → "ABC"
+        let up = call0(string("abc", None), "toUpperCase");
+        let (out, _, changed, _) = run_pass(program_with_expr(up, true));
+        assert!(changed, "\"abc\".toUpperCase() should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "ABC"),
+            other => panic!("expected \"ABC\"; got {:?}", other),
+        }
+
+        // "ABC".toLowerCase() → "abc"
+        let lo = call0(string("ABC", None), "toLowerCase");
+        let (out, _, _, _) = run_pass(program_with_expr(lo, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "abc"),
+            other => panic!("expected \"abc\"; got {:?}", other),
+        }
+
+        // "".toUpperCase() → ""
+        let empty = call0(string("", None), "toUpperCase");
+        let (out, _, _, _) = run_pass(program_with_expr(empty, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, ""),
+            other => panic!("expected empty string; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn non_ascii_string_casing_does_not_fold() {
+        // JS toUpperCase on non-ASCII uses full Unicode case mapping (e.g.
+        // "é" → "É", "ß" → "SS"); we conservatively leave non-ASCII to a later
+        // phase, so the call must survive untouched.
+        let up = call0(string("é", None), "toUpperCase");
+        let (out, _, changed, _) = run_pass(program_with_expr(up, true));
+        assert!(!changed, "non-ASCII \"é\".toUpperCase() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn string_casing_on_identifier_does_not_fold() {
+        // `s.toUpperCase()` needs the runtime value of `s`.
+        let up = call0(ident("s"), "toUpperCase");
+        let (out, _, changed, _) = run_pass(program_with_expr(up, true));
+        assert!(!changed, "s.toUpperCase() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn string_casing_with_argument_does_not_fold() {
+        // An argument makes us stay conservative (the runtime ignores it, but
+        // we don't model that): `"abc".toUpperCase(1)` survives.
+        let up = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("abc", None), "toUpperCase")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(up, true));
+        assert!(!changed, "\"abc\".toUpperCase(1) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn computed_string_casing_does_not_fold() {
+        // `"abc"["toUpperCase"]()` is the computed form — left alone.
+        let callee = Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(string("abc", None)),
+            property: Box::new(string("toUpperCase", None)),
+            computed: true,
+        });
+        let up = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(callee),
+            arguments: vec![],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(up, true));
+        assert!(!changed, "computed casing call must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn unknown_string_method_does_not_fold() {
+        // `"abc".trim()` is not a casing method we model — pass through.
+        let t = call0(string("  abc  ", None), "trim");
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(!changed, "\"...\".trim() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- string indexing (charCodeAt / charAt) -------
+
+    /// Build a one-argument method call `<object>.<name>(<arg>)`.
+    fn call1(object: Expression, name: &str, arg: Expression) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(object, name)),
+            arguments: vec![arg],
+        })
+    }
+
+    #[test]
+    fn fold_char_code_at_in_range() {
+        // "abc".charCodeAt(0) → 97, .charCodeAt(2) → 99
+        for (idx, expect) in [(0.0, 97.0), (2.0, 99.0)] {
+            let c = call1(string("abc", None), "charCodeAt", num(idx, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"abc\".charCodeAt({idx}) should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, expect),
+                other => panic!("expected {expect}; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn char_code_at_out_of_range_does_not_fold() {
+        // JS `"abc".charCodeAt(5)` is NaN — no literal, so don't fold.
+        let c = call1(string("abc", None), "charCodeAt", num(5.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "out-of-range charCodeAt must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn fold_char_code_at_counts_utf16_units() {
+        // "💩" is the surrogate pair [0xD83D, 0xDCA9]; charCodeAt(0) is the
+        // high surrogate 55357, proving we index UTF-16 code units (not scalars).
+        let c = call1(string("💩", None), "charCodeAt", num(0.0, None));
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 55357.0),
+            other => panic!("expected 55357 (high surrogate); got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_char_at_in_and_out_of_range() {
+        // "abc".charAt(1) → "b"
+        let c = call1(string("abc", None), "charAt", num(1.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "\"abc\".charAt(1) should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "b"),
+            other => panic!("expected \"b\"; got {:?}", other),
+        }
+
+        // out of range → "" (JS semantics)
+        let c = call1(string("abc", None), "charAt", num(9.0, None));
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, ""),
+            other => panic!("expected empty string; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn char_at_on_lone_surrogate_does_not_fold() {
+        // "💩".charAt(0) is a length-1 JS string holding a lone high surrogate,
+        // which a Rust `String` can't represent — so we leave the call alone.
+        let c = call1(string("💩", None), "charAt", num(0.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "charAt yielding a lone surrogate must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn non_integer_or_negative_index_does_not_fold() {
+        // Fractional index: leave for the runtime (ToInteger coercion).
+        let frac = call1(string("abc", None), "charCodeAt", num(0.5, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(frac, true));
+        assert!(!changed, "fractional index must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+
+        // Negative index: charCodeAt(-1) is NaN, charAt(-1) is "" — stay
+        // conservative and don't fold either.
+        let neg = call1(string("abc", None), "charCodeAt", num(-1.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(neg, true));
+        assert!(!changed, "negative index must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn char_index_on_identifier_does_not_fold() {
+        // `s.charCodeAt(0)` needs the runtime value of `s`.
+        let c = call1(ident("s"), "charCodeAt", num(0.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.charCodeAt(0) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- indexOf (substring search) ------------------
+
+    #[test]
+    fn fold_index_of_found_and_not_found() {
+        // `"abcabc".indexOf("b")` → 1 (first occurrence); absent needle → -1.
+        for (hay, needle, expect) in [("abcabc", "b", 1.0), ("abc", "z", -1.0)] {
+            let c = call1(string(hay, None), "indexOf", string(needle, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{hay}\".indexOf(\"{needle}\") should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, expect),
+                other => panic!("expected {expect}; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_index_of_empty_needle_is_zero() {
+        // JS `"abc".indexOf("")` is 0, matching Rust `str::find("")` → Some(0).
+        let c = call1(string("abc", None), "indexOf", string("", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "indexOf of the empty string should fold to 0");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
+            other => panic!("expected 0; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_index_of_counts_utf16_units_not_bytes() {
+        // "💩" is one astral char = two UTF-16 code units (and four UTF-8
+        // bytes). `"💩x".indexOf("x")` must be 2 (UTF-16 index), NOT 1 (char
+        // index) or 4 (byte index) — proving we re-measure the prefix in
+        // UTF-16, exactly like V8.
+        let c = call1(string("💩x", None), "indexOf", string("x", None));
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2 (UTF-16 index); got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn index_of_with_from_index_arg_does_not_fold() {
+        // The two-argument `fromIndex` overload lands in the 2-arg arm and is
+        // left for the runtime (we only fold the single-argument form).
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("abcabc", None), "indexOf")),
+            arguments: vec![string("b", None), num(2.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "two-arg indexOf(needle, fromIndex) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn index_of_on_identifier_receiver_does_not_fold() {
+        // `s.indexOf("x")` needs the runtime value of `s`.
+        let c = call1(ident("s"), "indexOf", string("x", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.indexOf(\"x\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
     // ------------------- logical (short-circuit) ---------------------

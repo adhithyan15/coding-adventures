@@ -48,9 +48,43 @@
 //! The cost is re-parsing once per inserted semicolon (O(insertions × n)). For a
 //! build-time minifier this is acceptable; a batched single-pass insertion is a
 //! possible future optimization, but correctness-by-construction comes first.
+//!
+//! # Phase 3: restricted productions (Rule 3) — why retry-on-error is not enough
+//!
+//! Rules 1 and 2 only ever fire on a *parse failure*, which is what makes them
+//! safe (a program that already parses is untouched). The **restricted
+//! productions** are different and more dangerous, because the offending program
+//! parses *successfully into the wrong tree*:
+//!
+//! ```text
+//!   return
+//!     a + b
+//! ```
+//!
+//! ECMAScript §12.10.1 forbids a line terminator between `return` and its
+//! argument, so this is `return; a + b;` (an empty return followed by an
+//! expression statement) — **not** `return a + b;`. closurec's grammar spells
+//! `return` as `RETURN expr? SEMICOLON` and is *blind to newlines* (the lexer
+//! discards them as trivia), so it greedily parses `return a + b` and would
+//! re-emit exactly that: a silent **miscompile** that changes what the program
+//! returns.
+//!
+//! Because the bad parse *succeeds*, the retry-on-error loop never sees it. So
+//! Rule 3 must run as a **proactive pre-pass** ([`force_restricted_semicolons`])
+//! that scans the stream *before* the first parse and inserts a `;` immediately
+//! after a restricted keyword whose argument is pushed onto the next line. The
+//! five restricted keywords are `return`, `throw`, `break`, `continue`, `yield`.
+//!
+//! Safety still holds by the same lever as Rules 1/2 — **we only insert when a
+//! line terminator actually follows the keyword** ([`TOKEN_PRECEDED_BY_NEWLINE`]
+//! on the *next* token). A valid `return x;` keeps its argument on the same line,
+//! so the flag is clear and we never touch it; the only streams whose parse we
+//! change are exactly the ones JS semantics say we *must* change. Context guards
+//! (below) keep a `return` that is really a *property name* (`a.return`,
+//! `{return: 1}`) from being mistaken for the statement keyword.
 
 use coding_adventures_javascript_tokens::EsVersion;
-use lexer::token::{Token, TokenType};
+use lexer::token::{Token, TokenType, TOKEN_PRECEDED_BY_NEWLINE};
 use parser::grammar_parser::{GrammarASTNode, GrammarParseError, GrammarParser};
 
 /// Parse `tokens` with Phase-1 ASI applied.
@@ -65,7 +99,10 @@ pub fn parse_with_asi(
     let grammar = crate::_grammar::parser_grammar(version.as_str())
         .expect("compiled JavaScript parser grammar missing supported version");
 
-    let mut tokens = tokens;
+    // Phase 3 (restricted productions) runs FIRST, as a proactive pre-pass: the
+    // offending streams parse successfully into the wrong tree, so the
+    // retry-on-error loop below would never see them. See the module docs.
+    let mut tokens = force_restricted_semicolons(tokens);
     // Each insertion adds exactly one token and (when it helps) lets the parser
     // advance past one more `}`/EOF, so the number of useful insertions is
     // bounded by the token count. The `+ 1` covers the final EOF position.
@@ -115,20 +152,113 @@ pub fn parse_with_asi(
     GrammarParser::new(tokens, grammar).parse()
 }
 
+/// The five ECMAScript "restricted production" keywords (§12.10.1): a line
+/// terminator is **not allowed** between the keyword and what follows it, so a
+/// newline there forces ASI. `break`/`continue` take an optional label;
+/// `return`/`throw`/`yield` take an optional (for `throw`, required) argument —
+/// but the rule is identical for our purposes: a newline immediately after the
+/// keyword ends the statement right there.
+const RESTRICTED_KEYWORDS: [&str; 5] = ["return", "throw", "break", "continue", "yield"];
+
+/// **Phase 3 — restricted productions.** Scan `tokens` and insert a `;`
+/// immediately after any restricted keyword (`return`/`throw`/`break`/
+/// `continue`/`yield`) whose *following* token begins on a new line
+/// ([`TOKEN_PRECEDED_BY_NEWLINE`]). Runs as a pre-pass because the offending
+/// stream parses *successfully into the wrong tree* (see module docs), so the
+/// retry-on-error loop never gets a chance to fix it.
+///
+/// This is the one ASI rule that changes a parse the grammar already accepts, so
+/// it is deliberately conservative. An insertion is made only when **all** hold:
+///
+/// 1. the token is genuinely the restricted *keyword* — matched on the lexer's
+///    keyword classification (`type_name`/`type_`), not merely the text, so a
+///    same-spelled identifier never qualifies;
+/// 2. it is **not a property access** — the previous significant token is not
+///    `.` or `?.` (`a.return`, `a?.return` name a property, not a statement);
+/// 3. there *is* a next token and it carries `TOKEN_PRECEDED_BY_NEWLINE`; and
+/// 4. that next token is not already a statement terminator / non-argument —
+///    `;`, `}`, or `:` (a `:` means we are looking at a property key or label
+///    such as `{return: 1}`, never a restricted statement, so we leave it).
+///
+/// Because (3) requires a real newline after the keyword, every valid
+/// single-line `return x;` / `throw e;` is untouched: the lever that keeps
+/// Rules 1/2 byte-identical keeps Rule 3 byte-identical too.
+fn force_restricted_semicolons(tokens: Vec<Token>) -> Vec<Token> {
+    // Fast path: a stream with no restricted keyword at all (the common case for
+    // expression-heavy minifier input) is returned untouched, allocation-free.
+    if !tokens.iter().any(is_restricted_keyword_token) {
+        return tokens;
+    }
+
+    let mut out: Vec<Token> = Vec::with_capacity(tokens.len() + 2);
+    for (i, tok) in tokens.iter().enumerate() {
+        out.push(tok.clone());
+
+        if !is_restricted_keyword_token(tok) {
+            continue;
+        }
+        // Guard (2): a property name after `.`/`?.` is not the keyword.
+        if i > 0 && is_member_access_dot(&tokens[i - 1]) {
+            continue;
+        }
+        // Guards (3)+(4): need a next token, on a new line, that actually starts
+        // an argument/statement (not `;` / `}` / `:`).
+        match tokens.get(i + 1) {
+            Some(next)
+                if next.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0
+                    && !ends_or_keys_statement(next) =>
+            {
+                out.push(synthetic_semicolon(next));
+            }
+            _ => {}
+        }
+    }
+    out
+}
+
+/// Is `tok` one of the restricted keywords, *classified as a keyword by the
+/// lexer* (`TokenType::Keyword`) — not a same-spelled identifier, string, or
+/// number? The JavaScript lexer tags every reserved word with
+/// `TokenType::Keyword`, so a precise type check is enough and is what keeps a
+/// variable or property literally named `return` from ever qualifying.
+///
+/// Note `yield` is only a reserved word inside a generator; where the lexer
+/// classifies it as an ordinary `Name` (identifier) this returns `false` and we
+/// do nothing — which is correct, because there the retry-on-error loop already
+/// splits `yield`⏎`x` as two identifier statements via Rule 1. We only force the
+/// split when `yield` is a genuine keyword.
+fn is_restricted_keyword_token(tok: &Token) -> bool {
+    tok.type_ == TokenType::Keyword && RESTRICTED_KEYWORDS.contains(&tok.value.as_str())
+}
+
+/// A member-access dot (`.`) or optional-chaining (`?.`) — the token that, when
+/// it *precedes* a restricted keyword, demotes it to an ordinary property name.
+fn is_member_access_dot(tok: &Token) -> bool {
+    tok.value == "." || tok.value == "?." || matches!(tok.type_, TokenType::Dot)
+}
+
+/// Does `tok` already terminate the statement (`;`, `}`) or mark the keyword as a
+/// property key / label (`:`)? In any of these cases the restricted-production
+/// insertion is unnecessary or wrong, so we decline it.
+fn ends_or_keys_statement(tok: &Token) -> bool {
+    matches!(tok.type_, TokenType::Semicolon | TokenType::RBrace | TokenType::Colon)
+        || tok.value == ";"
+        || tok.value == "}"
+        || tok.value == ":"
+}
+
 /// Does an ASI insertion apply *before the token at `idx`* (which the parser
 /// rejected while expecting a `SEMICOLON`)? Two ECMAScript §12.10 rules:
 ///
 /// * **Rule 2** — the offending token is a `}` or end-of-input. A statement may
 ///   always be terminated there; no line terminator is required.
-/// * **Rule 1** — the offending token is **preceded by a line terminator**.
-///   The lexer discards newlines as trivia, but every token still records the
-///   `line` it starts on, so a line terminator sits between `tokens[idx-1]` and
-///   `tokens[idx]` exactly when the offending token starts on a *later line*
-///   than its predecessor. We only trust that comparison when the predecessor
-///   is **single-line** (its own text contains no newline); a multi-line
-///   predecessor — e.g. a template literal spanning lines — makes the
-///   start-line comparison ambiguous, so we conservatively decline (a missed
-///   optimization, never a miscompile).
+/// * **Rule 1** — the offending token is **preceded by a line terminator**. The
+///   lexer records this precisely on the token's `flags`
+///   ([`TOKEN_PRECEDED_BY_NEWLINE`]) — set only when a line terminator was
+///   consumed as *trivia* before the token, so it is correct even after a
+///   multi-line string/template (a newline *inside* a token does not count).
+///   This supersedes the earlier start-line-arithmetic heuristic and its
+///   multi-line caveats.
 ///
 /// Soundness: this is only ever consulted on a genuine parse *failure*, so a
 /// program that already parses is untouched. Requiring an actual line
@@ -146,41 +276,8 @@ fn asi_applies_at(tokens: &[Token], idx: usize) -> bool {
         return true;
     }
 
-    // Rule 1: a line terminator between the predecessor and this token.
-    if idx == 0 {
-        return false;
-    }
-    let prev = &tokens[idx - 1];
-    off.line > prev.line && !token_may_span_lines(prev)
-}
-
-/// Could this token's lexeme cross source lines *without that being visible in
-/// its `value`* — making the start-line comparison in [`asi_applies_at`]
-/// unreliable?
-///
-/// The lexer stores the **cooked** text in `value` (escapes resolved), so a
-/// token can span multiple source lines while `value` contains no raw newline:
-///
-/// * a **string** can use a backslash line-continuation (`"a\<LF>b"` → `"ab"`),
-/// * **template literals** and **regex** can embed or escape newlines.
-///
-/// For any such kind we cannot conclude from `off.line > prev.line` that a real
-/// line terminator separates the two tokens (the higher line may just be the
-/// predecessor's own continuation), so we treat it as line-spanning and decline
-/// Rule 1 — a missed optimization, never a miscompile. (A token whose `value`
-/// already contains a raw newline is obviously multi-line and likewise
-/// declined.) Identifiers, numbers, punctuators, and keywords are always
-/// single-line, so the start-line comparison is exact for them.
-///
-/// MAINTENANCE: this enumerates the lexer's only multi-line-capable token
-/// kinds. If a future grammar adds another (e.g. a token-preserving multi-line
-/// comment, or a heredoc/raw-string variant), it MUST be added here or Rule 1
-/// could wrongly fire across it.
-fn token_may_span_lines(t: &Token) -> bool {
-    matches!(t.type_, TokenType::String)
-        || matches!(t.type_name.as_deref(), Some("STRING") | Some("REGEX"))
-        || t.type_name.as_deref().is_some_and(|n| n.starts_with("TEMPLATE"))
-        || t.value.contains('\n')
+    // Rule 1: the offending token is preceded by a line terminator.
+    off.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0
 }
 
 /// A synthesized `;` token positioned at the offending token. The parser matches
@@ -341,19 +438,102 @@ mod tests {
     }
 
     #[test]
-    fn statement_ending_in_a_string_before_a_newline_is_declined() {
-        // Documented Phase-2 limitation: when the token before the newline is a
-        // STRING (a kind that *could* span source lines while its cooked value
-        // hides it), `asi_applies_at` conservatively declines Rule 1 rather than
-        // trust the start-line comparison. So this does NOT recover — a missed
-        // optimization, never a miscompile. (Recoverable later with token
-        // end-position tracking.) `token_may_span_lines` is what makes the
-        // line-terminator heuristic sound regardless of lexer escape handling.
+    fn statement_ending_in_a_string_before_a_newline_is_recovered() {
+        // Previously a documented limitation (the start-line heuristic could not
+        // trust a string predecessor). Now that the lexer flags the offending
+        // token directly, a statement ending in a string literal before a
+        // newline recovers correctly — the limitation is gone.
         let src = "var s = \"x\"\nlog(s)";
         assert!(!parses_without_asi(src), "precondition: should fail raw");
         assert!(
-            !parses_with_asi(src),
-            "string predecessor is conservatively declined for Rule 1"
+            parses_with_asi(src),
+            "string-ending statement before a newline now recovers via the flag"
         );
+    }
+
+    // --- Phase 3: restricted productions (Rule 3) ------------------------
+    //
+    // These are the dangerous cases: the offending stream parses *successfully
+    // into the wrong tree*, so we assert on the inserted-token stream directly
+    // (not just "does it parse"), and we count synthetic semicolons.
+
+    /// How many `;` does the Phase-3 pre-pass force into `src`?
+    fn forced_semis(src: &str) -> usize {
+        let before = tokenize(src);
+        let after = force_restricted_semicolons(before.clone());
+        after.len() - before.len()
+    }
+
+    #[test]
+    fn return_then_newline_argument_is_split() {
+        // `return ⏎ a + b` is `return; a + b` in JS, NOT `return a + b`. The
+        // grammar is newline-blind and would mis-merge it, so Phase 3 must force
+        // a `;` right after `return`.
+        let src = "function f(){return\na + b}";
+        assert_eq!(forced_semis(src), 1, "exactly one `;` forced after return");
+        // And the split makes the (otherwise mis-parsing-into-wrong-tree) input
+        // parse as two statements.
+        assert!(parses_with_asi(src));
+    }
+
+    #[test]
+    fn return_with_same_line_argument_is_untouched() {
+        // The byte-identity lever: a valid single-line `return a + b;` has no
+        // newline after `return`, so Phase 3 forces nothing.
+        let src = "function f(){return a + b;}";
+        assert_eq!(forced_semis(src), 0, "valid same-line return is untouched");
+        assert!(parses_without_asi(src), "precondition: already valid");
+    }
+
+    #[test]
+    fn throw_break_continue_after_newline_are_split() {
+        // All five restricted keywords behave alike: a newline immediately after
+        // ends the statement. (`throw;` is itself illegal, but forcing the split
+        // is still correct — closurec then declines to mis-merge and the illegal
+        // input degrades to a byte-identical passthrough.)
+        assert_eq!(forced_semis("throw\ne"), 1, "throw split");
+        assert_eq!(forced_semis("for(;;){break\nx}"), 1, "break split");
+        assert_eq!(forced_semis("for(;;){continue\nx}"), 1, "continue split");
+    }
+
+    #[test]
+    fn member_access_named_return_is_not_split() {
+        // `a.return` names a *property*; the `.` demotes the keyword. Even with a
+        // newline after it, Phase 3 must not insert.
+        assert_eq!(forced_semis("a.return\nb"), 0, "property access, not a keyword");
+        assert_eq!(forced_semis("a?.return\nb"), 0, "optional-chained property");
+    }
+
+    #[test]
+    fn property_key_named_return_is_not_split() {
+        // `{return: 1}` uses `return` as an object key — the following `:` marks
+        // it, so Phase 3 declines (guard 4).
+        assert_eq!(forced_semis("x = {return:\n1}"), 0, "object key, not a keyword");
+    }
+
+    #[test]
+    fn return_then_close_brace_is_not_double_inserted() {
+        // `return ⏎ }` already terminates at the `}` (Rule 2 covers it); Phase 3
+        // must not also force a `;`, which would be redundant.
+        assert_eq!(forced_semis("function f(){return\n}"), 0, "close brace already terminates");
+        // Still parses (empty return via Rule 2 on the `}`).
+        assert!(parses_with_asi("function f(){return\n}"));
+    }
+
+    #[test]
+    fn restricted_split_is_idempotent() {
+        // Running the pre-pass twice inserts no more than running it once: after
+        // the first `;`, the keyword's next token is the synthetic `;` (which
+        // `ends_or_keys_statement` declines), so the second pass is a no-op.
+        let once = force_restricted_semicolons(tokenize("function f(){return\na}"));
+        let twice = force_restricted_semicolons(once.clone());
+        assert_eq!(once.len(), twice.len(), "Phase 3 pre-pass is idempotent");
+    }
+
+    #[test]
+    fn no_restricted_keyword_is_an_allocation_free_passthrough() {
+        // The fast path: a stream with no restricted keyword returns unchanged.
+        let src = "var a = 1\nvar b = 2";
+        assert_eq!(forced_semis(src), 0);
     }
 }

@@ -67,6 +67,19 @@ const STACK_BOTTOM: u64 = 0x8_0000; // heap may grow up to here
 const RETURN_SENTINEL: u64 = 0xDEAD_0000_0000_0000;
 const STEP_LIMIT: u64 = 10_000_000;
 
+/// The data symbol the x86_64 backend emits for module globals (LANG-FULL E6 /
+/// O3 / AL6). `global_load`/`global_store` lower to `lea rax, [rip +
+/// _twig_globals]` + `mov` at `[rax + slot*8]`, recorded as a `PcRel32`
+/// relocation against this symbol. On a real target the linker points it at a
+/// zeroed `.data`/`.bss` block (`code-packager`); the harness does the same.
+const GLOBALS_SYMBOL: &str = "_twig_globals";
+
+/// Size of the zeroed `_twig_globals` data region the harness reserves between
+/// the code and the heap — 512 eight-byte slots, far more than any matrix
+/// program declares. Globals zero-init at load (the whole address space starts
+/// zeroed), which is exactly the `own`/`static`/unwritten-global semantics.
+const GLOBALS_SIZE: u64 = 512 * 8;
+
 impl MachineCodeHarness {
     /// A fresh, empty harness.
     pub fn new() -> Self {
@@ -113,9 +126,18 @@ impl MachineCodeHarness {
 
         let entry_off = *fn_offset.get(entry).ok_or_else(|| BuildError::NoSuchEntry(entry.to_string()))?;
 
-        // 2. Resolve relocations: an internal call (symbol is a function in this
-        //    module) is patched so its decoded target lands on the callee; an
-        //    external call stays in the `externals` map for a host shim.
+        // The `_twig_globals` data region sits just past the code (16-aligned),
+        // and the heap starts past it. Its runtime address is needed to patch
+        // the RIP-relative `lea` that loads the globals base.
+        let globals_base = ((CODE_BASE + code.len() as u64) + 15) & !15;
+
+        // 2. Resolve relocations. Three dispositions, by symbol:
+        //    - a function in this module → an internal `call`, patch the rel32
+        //      so the decoded target lands on the callee;
+        //    - `_twig_globals` → a RIP-relative `lea` to the data region, patch
+        //      the disp32 to point at `globals_base`;
+        //    - anything else → an external runtime call, kept in `externals`
+        //      for a host shim.
         let mut externals: HashMap<usize, String> = HashMap::new();
         for (patch_off, symbol) in relocs {
             if let Some(&target) = fn_offset.get(&symbol) {
@@ -123,15 +145,24 @@ impl MachineCodeHarness {
                 let rel = (target as i64) - (patch_off as i64 + 4);
                 let bytes = (rel as i32).to_le_bytes();
                 code[patch_off..patch_off + 4].copy_from_slice(&bytes);
+            } else if symbol == GLOBALS_SYMBOL {
+                // disp32 = globals_base - next_ip, where next_ip is the runtime
+                // address just past the disp32 field: CODE_BASE + patch_off + 4.
+                // So `lea` loads `globals_base` into the register. Same PC-relative
+                // formula the linker applies for an `R_X86_64_PC32` against the
+                // `_twig_globals` data symbol.
+                let disp = (globals_base as i64) - (CODE_BASE as i64 + patch_off as i64 + 4);
+                let bytes = (disp as i32).to_le_bytes();
+                code[patch_off..patch_off + 4].copy_from_slice(&bytes);
             } else {
                 externals.insert(patch_off, symbol);
             }
         }
 
-        // 3. Lay out memory: code at CODE_BASE, then the bump heap up to
-        //    STACK_BOTTOM, then the stack from STACK_BOTTOM..STACK_TOP. The code
-        //    must fit below the heap window, else the layout is invalid.
-        let heap_base = ((CODE_BASE + code.len() as u64) + 15) & !15;
+        // 3. Lay out memory: code at CODE_BASE, then the zeroed `_twig_globals`
+        //    region, then the bump heap up to STACK_BOTTOM, then the stack from
+        //    STACK_BOTTOM..STACK_TOP. Everything must fit below the heap window.
+        let heap_base = ((globals_base + GLOBALS_SIZE) + 15) & !15;
         if heap_base >= STACK_BOTTOM {
             return Err(BuildError::CodeTooLarge { code_len: code.len(), capacity: STACK_BOTTOM - CODE_BASE });
         }

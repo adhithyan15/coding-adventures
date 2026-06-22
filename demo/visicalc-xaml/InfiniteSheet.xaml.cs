@@ -219,6 +219,53 @@ public sealed partial class InfiniteSheet : UserControl
         RepaintRealizedRows();
     }
 
+    /// Structural edits: insert / delete the selected cell's row or column. The
+    /// engine shifts every formula reference across the band and recomputes; a
+    /// reference whose whole band is deleted becomes #REF!. Re-sync the formula
+    /// bar (the selected cell's content may have moved) and repaint the rows.
+    private void InsRowButton_Click(object sender, RoutedEventArgs e)
+    {
+        _model.InsertRow();
+        RefreshFormulaBar();
+        RepaintRealizedRows();
+    }
+
+    private void DelRowButton_Click(object sender, RoutedEventArgs e)
+    {
+        _model.DeleteRow();
+        RefreshFormulaBar();
+        RepaintRealizedRows();
+    }
+
+    private void InsColButton_Click(object sender, RoutedEventArgs e)
+    {
+        _model.InsertCol();
+        RefreshFormulaBar();
+        RepaintRealizedRows();
+    }
+
+    private void DelColButton_Click(object sender, RoutedEventArgs e)
+    {
+        _model.DeleteCol();
+        RefreshFormulaBar();
+        RepaintRealizedRows();
+    }
+
+    /// Number formatting: apply an Excel-style code to the selected cell. The
+    /// format is display-only — the stored value is unchanged; repaint the
+    /// realized rows so the formatted string shows.
+    private void FmtDecimalButton_Click(object sender, RoutedEventArgs e) { _model.ApplyFormat("#,##0.00"); RepaintRealizedRows(); }
+    private void FmtPercentButton_Click(object sender, RoutedEventArgs e) { _model.ApplyFormat("0.0%"); RepaintRealizedRows(); }
+    private void FmtCurrencyButton_Click(object sender, RoutedEventArgs e) { _model.ApplyFormat("$#,##0.00"); RepaintRealizedRows(); }
+    private void FmtGeneralButton_Click(object sender, RoutedEventArgs e) { _model.ApplyFormat(""); RepaintRealizedRows(); }
+
+    /// Range sort: reorder the budget block A1:E4 by the selected column,
+    /// ascending/descending. Each row moves as a record — the E-column SUM
+    /// formulas travel with their row and the engine shifts their refs, so every
+    /// total stays correct. Repaint the realized rows to show the new order.
+    private void SortAscButton_Click(object sender, RoutedEventArgs e) { _model.SortBlock(true); RepaintRealizedRows(); }
+    private void SortDescButton_Click(object sender, RoutedEventArgs e) { _model.SortBlock(false); RepaintRealizedRows(); }
+
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
     /// engine shifts the pasted formula's relative refs by the destination's
     /// offset, pins absolute ($) refs, carries the format; a cut clears the source

@@ -1548,3 +1548,84 @@ fn array_type_hint_validates() {
     assert!(validate_for_llvm(&module_with(f)).is_empty(),
         "array<T> ops must validate clean");
 }
+
+// ===========================================================================
+// LANG-FULL E6 (layer 1) — typed module globals
+// ===========================================================================
+
+/// `bump`: `g := g + 1; return g`. Reads + writes the global `g`.
+fn e6_bump() -> IIRFunction {
+    IIRFunction::new(
+        "bump",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("global_load", Some("cur".into()), vec![Operand::Str("g".into())], "i64"),
+            IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("add", Some("nxt".into()), vec![Operand::Var("cur".into()), Operand::Var("one".into())], "i64"),
+            IIRInstr::new("global_store", None, vec![Operand::Str("g".into()), Operand::Var("nxt".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("nxt".into())], "i64"),
+        ],
+    )
+}
+
+/// `main`: `g := 41; return bump()` ⇒ 42.
+fn e6_main() -> IIRFunction {
+    IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("seed".into()), vec![Operand::Int(41)], "i64"),
+            IIRInstr::new("global_store", None, vec![Operand::Str("g".into()), Operand::Var("seed".into())], "void"),
+            IIRInstr::new("call", Some("res".into()), vec![Operand::Var("bump".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "i64"),
+        ],
+    )
+}
+
+fn e6_module() -> IIRModule {
+    let mut m = IIRModule::new("e6", "e6");
+    m.add_or_replace(e6_main());
+    m.add_or_replace(e6_bump());
+    m
+}
+
+#[test]
+fn e6_global_emits_internal_global_and_load_store() {
+    let ll = lower_iir_to_llvm(&e6_module(), &IIRLlvmConfig::default()).expect("lower");
+    // One module-level zero-initialised global for `g`.
+    assert!(ll.contains("@__twig_global_0 = internal global i64 0"), "missing global def:\n{ll}");
+    // `bump` reads it and writes it back.
+    assert!(ll.contains("load i64, ptr @__twig_global_0"), "missing load:\n{ll}");
+    assert!(ll.contains("store i64"), "missing store:\n{ll}");
+    assert!(ll.contains("ptr @__twig_global_0"), "store/load should target the global:\n{ll}");
+    // And the op is now accepted by the validator (no rejection messages).
+    assert!(validate_for_llvm(&e6_module()).is_empty(), "global ops should validate");
+}
+
+/// End-to-end: compile the global program with real `clang` and run it — the
+/// cross-function global must yield exit code 42. Skipped if clang is absent.
+#[test]
+fn e6_global_runs_on_real_clang() {
+    use std::process::Command;
+    if Command::new("clang").arg("--version").output().map(|o| !o.status.success()).unwrap_or(true) {
+        eprintln!("clang not available — skipping e6_global_runs_on_real_clang");
+        return;
+    }
+    let ll = lower_iir_to_llvm(&e6_module(), &IIRLlvmConfig::default()).expect("lower");
+    let dir = std::env::temp_dir().join(format!("e6_llvm_{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let ll_path = dir.join("prog.ll");
+    let exe = dir.join("prog");
+    std::fs::write(&ll_path, &ll).expect("write .ll");
+    let built = Command::new("clang")
+        .arg("-x").arg("ir").arg(&ll_path)
+        .arg("-o").arg(&exe)
+        .output().expect("run clang");
+    assert!(built.status.success(),
+        "clang failed:\n{}\n--- .ll ---\n{ll}", String::from_utf8_lossy(&built.stderr));
+    let run = Command::new(&exe).status().expect("run exe");
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(run.code(), Some(42), "global program should exit 42");
+}

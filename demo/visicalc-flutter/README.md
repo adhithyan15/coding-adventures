@@ -135,7 +135,18 @@ engine recomputes on load, so a loaded formula stays live. The **Undo / Redo**
 buttons walk the engine's snapshot history (`InfiniteSheetModel.undoEdit`/
 `redoEdit` over the C ABI's `sc_undo`/`sc_redo`); they disable at the history
 ends via `canUndo`/`canRedo`. Every edit is reversible and a restored formula
-recomputes live. `InfiniteSheetModel`
+recomputes live. The **+ Row / − Row / + Col / − Col** buttons are **structural
+edits** (`InfiniteSheetModel.insertRow`/`deleteRow`/`insertCol`/`deleteCol` over
+the C ABI's `sc_insert_rows`/`sc_delete_rows`/`sc_insert_cols`/`sc_delete_cols`):
+insert or delete the selected cell's row/column, and the engine shifts every
+formula reference at or after the band so dependents keep pointing at their
+precedents (`=A1+A2` with a row inserted above becomes `=A1+A3`); a reference
+whose whole band is deleted becomes `#REF!`.
+The **.00 / % / $ / Gen** buttons apply a number **format** to the selected cell
+(`InfiniteSheetModel.applyFormat` over the C ABI's `sc_set_format`, with the code
+`#,##0.00`, `0.0%`, `$#,##0.00`, or `""` to clear). The format is display-only —
+the engine renders the stored value through the code, so the underlying number is
+unchanged. `InfiniteSheetModel`
 (in `lib/engine.dart`) seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) so
 there's something to scroll to, and derives the extent from `usedRange()` + a
 margin.
@@ -151,8 +162,9 @@ echoing the web demo's CSS custom properties rather than scattering ARGB values.
 From those it builds: a panel-wrapped **toolbar** with an address **pill**, an
 italic `fx` marker, then a grown formula field with an accent **focus ring**
 (driven by a `FocusNode`); the actions are **segmented button groups** (drag-fill
-· clipboard · file · history) — a reusable `_ToolButton` chip with hover/pressed/
-disabled states — separated by thin rules. The grid gets subtle **zebra** row
+· clipboard · file · structure · history) — a reusable `_ToolButton` chip with
+hover/pressed/disabled states — separated by thin rules; the bar scrolls
+horizontally so the controls never overflow a narrow window. The grid gets subtle **zebra** row
 banding, a 2-px **accent selection ring**, and the selected cell's **row + column
 headers tint to the accent**; a hairline-separated **status footer** echoes the
 live virtual-grid size and revision.

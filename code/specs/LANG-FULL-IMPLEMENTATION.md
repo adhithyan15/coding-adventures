@@ -12,9 +12,9 @@ program per language**, and each frontend is a **deliberate subset**:
 | Twig | `42` | rich Lisp frontend, but only typed int-arith/`if` clears the backend validators; lists/lambdas/strings/`print`/symbols need the VM only |
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
-| Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `READ`/`DATA`, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3) — all run on every backend |
-| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2); intrinsics + `static` remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, and 1-D arrays (arrays + reals run on VM/JIT only so far); no call-by-name, strings, multidim arrays, `own` |
+| Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3), `READ`/`DATA`/`RESTORE` (BA6) — all run on every backend |
+| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -202,9 +202,16 @@ multiple languages; close an enabler before the features that depend on it.
     opcode change. **Executed proof on real `ilasm` + `dotnet`**: both ALGOL real programs run
     on the CLR matrix column. (The structured **bytecode** emitter keeps its own f64 guard — a
     later follow-up; the real-CLR path is textual.)
-- **E4 — Strings.** ⚠ An IIR string value model + core ops (length, concat, index,
-  compare, print) with backend support (heap/host). Unlocks BASIC strings, Twig strings,
-  ALGOL strings/I-O. **Architectural fork — needs a design pass before implementation.**
+- **E4 — Strings.** ◑ *Design pass complete — see
+  **[`lang-full-e4-strings.md`](lang-full-e4-strings.md)**; implementation gated on
+  sign-off.* An IIR string value model (six ops: `str_const`, `str_len`, `str_index`,
+  `str_concat`, `str_eq`, `print_str`) + per-backend support, lowered to all 7 backends and
+  verified by RUNNING (observable via **stdout**). A v1 string is an **immutable,
+  length-counted byte buffer** — it reuses the E5 array substrate (length-prefixed flat
+  buffer on the static backends; native `String` / managed `(array i8)` on the managed
+  backends), so E4 is the *byte-aggregate sibling of E5*, not a new allocator. The one new
+  host primitive is `__print_str`/`printStr` (the string sibling of `print_i64`). Unlocks
+  BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR
   array model (`alloc_array`/`array_len`/`array_get`/`array_set`, `array<T>` type hint,
@@ -218,6 +225,13 @@ multiple languages; close an enabler before the features that depend on it.
   Today the IIR-to-{wasm,jvm,clr,llvm} validators reject `call_builtin`/`type_hint="any"`,
   which is why most of Twig only runs on the VM. Closing this is the biggest single unlock
   for Twig (and McCarthy cons/symbols). **Architectural fork — design pass first.**
+  - **E6 layer 1 (typed module globals) — spec [`lang-full-e6-globals.md`](lang-full-e6-globals.md).**
+    The tractable, run-verifiable first slice: a typed `i64` module global a *function*
+    can read/write, on all 7 backends. `global_load`/`global_store` already work on
+    BEAM/WASM/native; the work is LLVM/JVM/CLR (the `LANG32b` rejections) + an ALGOL
+    enclosing-scope-variable frontend + a matrix proof. Unblocks AL6 (`own`), O3 (Oct
+    globals); foundation for closures. The general `any`-dispatch / closure layers
+    stack on top.
 - **E7 — Subroutine / return-stack.** `GOSUB`/`RETURN` and procedure call/return —
   likely expressible with existing `call`/`ret`; confirm and add if needed.
 
@@ -294,7 +308,15 @@ backend immediately) come before the enabler-dependent items.
   a narrow op had `long` operands — `iir-to-jvm-class-file` 0.14.0 now masks those with
   `i2l; land` (the int `iand` was unverifiable over longs → empty output). (Logical `!` still
   deferred — a separate item; only `~` is in O2.)
-- ☐ **O3** — `static` globals (currently silently dropped) — now verifiable via `out`.
+- ✅ **O3** — `static` module globals (LANG-FULL O3). Top-level `static` was silently
+  dropped at IIR-gen; `oct-iir-compiler` 0.8.0 lowers it to the IIR module-global ops
+  (`global_load`/`global_store`, the E6 substrate). A `static counter: u8 = 40` shared
+  across functions — `bump()` (a separate fn) increments it twice, `main` prints it —
+  runs on **all 7 backends** → `42` (a per-function register would print `40`). Surfaced
+  + fixed two latent *void-function* gaps the proof's void `bump()` exposed: the Oct
+  frontend now emits a dest-less IIR `call` for a void callee (a named void call is
+  malformed LLVM), and `iir-to-cil-bytecode` 0.25.0's textual emitter lowers `ret_void`
+  → bare `ret`, a `void` return signature, and a `call void …` with no trailing store.
 - ☐ **O4** — ⚠ Intel-8008 intrinsics (`in`/`out`/`adc`/`sbb`/`rlc`/`rrc`/`ral`/`rar`/`carry`/`parity`).
   These are hardware-specific; on general backends they need a host/IIR-builtin model or a
   defined semantics. **Decision point — surface to the user before implementing.**
@@ -363,7 +385,15 @@ backend immediately) come before the enabler-dependent items.
   i64), keeping cross-function call signatures consistent (lang-aot 0.94.0). **Limits:** one
   numeric parameter; body references its parameter only (globals need **E6**); built-in
   maths fns (`SIN`/`ABS`/…) need **E3**.
-- ☐ **BA6** — `READ` / `DATA` / `RESTORE`.
+- ✅ **BA6** — `READ` / `DATA` / `RESTORE` (`dartmouth-basic-iir-compiler` 0.8.0).
+  Lowers onto the **E5 array** substrate — no new IIR op, no enabler: a pre-pass
+  gathers all `DATA` integer literals (line order) into a pool materialised once at
+  the top of `main` as an `array<i64>` + a `__basic_data_ptr` register (a register,
+  not a global, since the program is one `main` function). `READ` does `array_get
+  pool, ptr` + `ptr := ptr + 1`; `RESTORE` resets `ptr := 0`; out-of-DATA traps via
+  the bounds-checked `array_get`. **Runs on all 7 backends**: `DATA 21 / READ A /
+  RESTORE / READ B / PRINT A+B` ⇒ 42 (proves sequential consumption + rewind).
+  Integer DATA only (real DATA = follow-up).
 - ☐ **BA7** — floating-point (needs **E3**).
 
 ### ALGOL 60
@@ -403,7 +433,14 @@ backend immediately) come before the enabler-dependent items.
   the first ALGOL comparison ever exercised on a code-gen backend. **Limits:** switch-list
   elements must be plain labels (no conditional/nested elements); switches aren't
   block-scope-shadowable.
-- ☐ **AL6** — `own` variables (static lifetime).
+- ✅ **AL6** — `own` variables (static lifetime). `coding-adventures-algol-parser`
+  0.2.0 adds the `[ "own" ] type ident_list` rule; `algol-iir-compiler` 0.7.0 lowers
+  an `own` scalar to a module **global** (the E6 substrate), keyed by its unique
+  per-procedure slot, and crucially drops the per-declaration `const` zero-init for
+  globals so the value is not re-zeroed each call. `bump(1) + bump(1) + bump(1)`
+  accumulates `1 + 2 + 3 = 6` (a non-`own` local gives `3`) on **all 7 backends**.
+  (Grammar was patched surgically, not full-regen — the checked-in `algol.grammar`
+  has drifted ahead of the compiled grammar in other rules; resync is follow-up.)
 - ☐ **AL7** — ⚠ call-by-name (Jensen-style expression thunks). **Hardest item in the
   campaign — design pass + user check before implementing.**
 - ☐ **AL8** — standard functions (`abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/… — needs **E3**).

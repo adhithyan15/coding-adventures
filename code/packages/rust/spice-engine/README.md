@@ -215,7 +215,11 @@ summaries keep matched and unmatched probe inventories in stable table, CSV,
 JSON, and record exports.
 Existing `.control` body policy diagnostics flow into those selected-run artifact `Diagnostics` /
 `DiagnosticCodeList` fields and through the same run-artifact table, CSV, JSON,
-and `table_artifacts` records. `format_deck_table_csv` also converts any stable
+and `table_artifacts` records. Policy-blocked `source` / `shell`, `cd`,
+control-flow, and variable/state commands also populate
+`control_policy_artifacts` with stable line, category, command, code, severity,
+and message fields plus table, CSV, compact JSON, and header-keyed record
+exports. `format_deck_table_csv` also converts any stable
 tab-separated deck table to CSV, `format_deck_table_json` converts the same
 tables to compact JSON records, and `deck_table_records` returns header-keyed
 native records for host integrations.
