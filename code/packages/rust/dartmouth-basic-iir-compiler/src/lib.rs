@@ -223,6 +223,16 @@ struct Compiler {
     /// expression paths whether a subscripted `A(I)` is a real array
     /// access (→ `array_set`/`array_get`) or an undeclared use (an error).
     arrays: std::collections::HashSet<String>,
+    /// The `DATA` pool (BA6): every numeric literal from every `DATA`
+    /// statement, gathered in line-number order by a pre-pass.  `READ`
+    /// consumes these sequentially through a run-time pointer; `RESTORE`
+    /// rewinds the pointer.  Because the BASIC program is a single `main`
+    /// function (no `GOSUB` yet), the pool is materialised once at the top of
+    /// `main` as an `array<i64>` ([[E5]] arrays) plus an `i64` pointer
+    /// register — no module global is needed.  Integer literals only in v1;
+    /// a real (`f64`) DATA value is a follow-up (the i64 value model, like
+    /// integer `DIM` arrays).
+    data_pool: Vec<i64>,
 }
 
 impl Default for Compiler {
@@ -238,6 +248,7 @@ impl Default for Compiler {
             defined_fns: std::collections::HashSet::new(),
             current_fn_param: None,
             arrays: std::collections::HashSet::new(),
+            data_pool: Vec::new(),
         }
     }
 }
@@ -308,6 +319,22 @@ impl Compiler {
                 }
             }
         }
+
+        // Pre-pass — gather the `DATA` pool (BA6).  Every `DATA` statement's
+        // numeric literals are collected across the whole program in
+        // line-number order (the children are already in source order), so a
+        // `READ` on an earlier line can consume a value from a `DATA` on a
+        // later line — exactly the BASIC semantics.
+        for child in &ast.children {
+            if let ASTNodeOrToken::Node(line) = child {
+                if line.rule_name == "line" {
+                    self.collect_data(line)?;
+                }
+            }
+        }
+        // Materialise the pool once at the top of `main`: an `array<i64>` of
+        // the literals plus the `__basic_data_ptr` register initialised to 0.
+        self.emit_data_pool_init();
 
         // Walk every `line` child, in order.
         for child in &ast.children {
@@ -383,9 +410,12 @@ impl Compiler {
             // Explicitly-deferred V1 statements.
             "gosub_stmt"   => Err(CompileError::UnsupportedStatement("GOSUB".into())),
             "return_stmt"  => Err(CompileError::UnsupportedStatement("RETURN".into())),
-            "read_stmt"    => Err(CompileError::UnsupportedStatement("READ".into())),
-            "data_stmt"    => Err(CompileError::UnsupportedStatement("DATA".into())),
-            "restore_stmt" => Err(CompileError::UnsupportedStatement("RESTORE".into())),
+            "read_stmt"    => self.emit_read(stmt),
+            // A `DATA` statement emits nothing at its position — its values
+            // were gathered into the pool by the `collect_data` pre-pass and
+            // materialised once at the top of `main` (BA6).
+            "data_stmt"    => Ok(()),
+            "restore_stmt" => self.emit_restore(),
             "dim_stmt"     => self.emit_dim(stmt),
             "def_stmt"     => self.emit_def(stmt),
             other => Err(CompileError::Malformed(
@@ -474,6 +504,135 @@ impl Compiler {
                 vec![Operand::Var(len)], "array<i64>");
             self.arrays.insert(name);
         }
+        Ok(())
+    }
+
+    /// BA6 pre-pass: append a `DATA` statement's numeric literals to
+    /// [`data_pool`].  Called once per line before any statement is lowered,
+    /// so the pool ends up in line-number (source) order.  Integer literals
+    /// only — a non-integer `DATA` value is a clean `Unsupported` error (real
+    /// DATA is a follow-up, like integer-only `DIM` arrays).
+    fn collect_data(&mut self, line: &GrammarASTNode) -> Result<(), CompileError> {
+        let Some(stmt) = child_nodes(line).into_iter()
+            .find(|n| n.rule_name == "statement")
+        else { return Ok(()); };
+        let Some(inner) = child_nodes(stmt).into_iter().next() else { return Ok(()); };
+        if inner.rule_name != "data_stmt" { return Ok(()); }
+        // `data_stmt = "DATA" NUMBER { COMMA NUMBER }` — collect every NUMBER
+        // token (the `DATA` keyword and `,` separators are not NUMBERs).
+        for c in &inner.children {
+            if let ASTNodeOrToken::Token(t) = c {
+                if t.effective_type_name() != "NUMBER" { continue; }
+                let raw = t.value.trim();
+                let f = raw.parse::<f64>().map_err(|_| CompileError::Malformed(
+                    format!("DATA value `{raw}` is not a number")))?;
+                if !f.is_finite() || f.fract() != 0.0 {
+                    return Err(CompileError::Unsupported(format!(
+                        "non-integer DATA value `{raw}` — only integer DATA is \
+                         supported so far (real DATA is a follow-up)")));
+                }
+                // `f.fract() == 0.0` and finite, so the cast is exact for any
+                // value an `f64` can represent; guard the i64 range explicitly.
+                if f < i64::MIN as f64 || f > i64::MAX as f64 {
+                    return Err(CompileError::Unsupported(format!(
+                        "DATA value `{raw}` is out of the i64 range")));
+                }
+                self.data_pool.push(f as i64);
+            }
+        }
+        Ok(())
+    }
+
+    /// BA6: materialise the gathered `DATA` pool at the top of `main`.  Emits
+    /// nothing when there is no `DATA`.  Otherwise allocates an `array<i64>`
+    /// of the literals (one `array_set` per value) and seeds the read pointer
+    /// `__basic_data_ptr` to 0.  Both live in `main`'s register file — the
+    /// program is a single function, so no module global is needed for the
+    /// pointer to persist across `READ`s.
+    fn emit_data_pool_init(&mut self) {
+        if self.data_pool.is_empty() {
+            return;
+        }
+        let count = self.data_pool.len() as i64;
+        let len = self.fresh_temp();
+        self.emit("const", Some(&len), vec![Operand::Int(count)], "i64");
+        self.emit("alloc_array", Some(BASIC_DATA_ARRAY),
+            vec![Operand::Var(len.clone())], "array<i64>");
+        // Fill the pool.  `self.data_pool` is cloned to a local first so the
+        // immutable borrow doesn't clash with the `&mut self` emits.
+        let values: Vec<i64> = self.data_pool.clone();
+        for (i, value) in values.into_iter().enumerate() {
+            let idx = self.fresh_temp();
+            self.emit("const", Some(&idx), vec![Operand::Int(i as i64)], "i64");
+            let val = self.fresh_temp();
+            self.emit("const", Some(&val), vec![Operand::Int(value)], "i64");
+            self.emit("array_set", None,
+                vec![Operand::Var(BASIC_DATA_ARRAY.into()),
+                     Operand::Var(idx), Operand::Var(val)], "i64");
+        }
+        // Read pointer starts at the first value.
+        let zero = self.fresh_temp();
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+        self.emit("mov", Some(BASIC_DATA_PTR),
+            vec![Operand::Var(zero)], "i64");
+    }
+
+    /// BA6: `READ var { , var }` — consume the next `DATA` value(s) through
+    /// the run-time pointer.  Each variable gets `array_get __basic_data,
+    /// __basic_data_ptr`, then the pointer is advanced by 1.  Reading past the
+    /// end of the pool traps (the bounds-checked `array_get`), which is the
+    /// "out of DATA" run-time error.  A scalar target is a `mov`; an array
+    /// element `READ A(I)` is an `array_set` (BA3).
+    fn emit_read(&mut self, stmt: &GrammarASTNode) -> Result<(), CompileError> {
+        if self.data_pool.is_empty() {
+            return Err(CompileError::Unsupported(
+                "READ with no DATA statement in the program".into()));
+        }
+        for var_node in child_nodes(stmt).into_iter()
+            .filter(|n| n.rule_name == "variable")
+        {
+            // Fetch `__basic_data[__basic_data_ptr]`.
+            let value = self.fresh_temp();
+            self.emit("array_get", Some(&value),
+                vec![Operand::Var(BASIC_DATA_ARRAY.into()),
+                     Operand::Var(BASIC_DATA_PTR.into())], "i64");
+            // Store it into the target — array element or scalar.
+            if let Some(index_expr) = array_subscript_index(var_node) {
+                let name = array_target_name(var_node)?;
+                if !self.arrays.contains(&name) {
+                    return Err(CompileError::Unsupported(format!(
+                        "READ into `{name}(...)` but `{name}` was never DIMmed")));
+                }
+                let idx = self.emit_expr(index_expr)?;
+                self.emit("array_set", None,
+                    vec![Operand::Var(name), Operand::Var(idx),
+                         Operand::Var(value)], "i64");
+            } else {
+                let target = scalar_variable_name(var_node)?;
+                self.emit("mov", Some(&target),
+                    vec![Operand::Var(value)], "i64");
+            }
+            // Advance the pointer: `__basic_data_ptr = __basic_data_ptr + 1`.
+            let one = self.fresh_temp();
+            self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+            self.emit("add", Some(BASIC_DATA_PTR),
+                vec![Operand::Var(BASIC_DATA_PTR.into()), Operand::Var(one)],
+                "i64");
+        }
+        Ok(())
+    }
+
+    /// BA6: `RESTORE` — rewind the `DATA` read pointer to the first value.
+    fn emit_restore(&mut self) -> Result<(), CompileError> {
+        if self.data_pool.is_empty() {
+            // RESTORE with no DATA is harmless in BASIC (nothing to rewind);
+            // keep it a clean error so a typo'd program isn't silently a no-op.
+            return Err(CompileError::Unsupported(
+                "RESTORE with no DATA statement in the program".into()));
+        }
+        let zero = self.fresh_temp();
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+        self.emit("mov", Some(BASIC_DATA_PTR), vec![Operand::Var(zero)], "i64");
         Ok(())
     }
 
@@ -1003,6 +1162,13 @@ fn array_target_name(var: &GrammarASTNode) -> Result<String, CompileError> {
 /// bound above this is a clean `Unsupported` error, never a panic.
 const MAX_DIM_BOUND: i64 = 16_777_216; // 2^24 elements — generous for BASIC
 
+/// The IIR register holding the `DATA` pool array handle (BA6).  Underscore-
+/// and lowercase-bearing, so it can never collide with a BASIC variable (which
+/// is an uppercase letter + optional digit, e.g. `A`, `X7`).
+const BASIC_DATA_ARRAY: &str = "__basic_data";
+/// The IIR register holding the `READ`/`RESTORE` pointer into the pool (BA6).
+const BASIC_DATA_PTR: &str = "__basic_data_ptr";
+
 /// The integer bound `n` in a `dim_decl = NAME LPAREN NUMBER RPAREN`.  The
 /// grammar pins the bound to a `NUMBER` literal (not an arbitrary expression),
 /// so we read it straight from the token rather than emitting code to compute
@@ -1446,6 +1612,60 @@ mod tests {
             i.op == "call_builtin" && i.srcs.first().and_then(|s| match s {
                 Operand::Var(n) => Some(n.as_str()), _ => None,
             }) == Some("print_i64")));
+    }
+
+    // -----------------------------------------------------------------------
+    // BA6 — READ / DATA / RESTORE (data pool over E5 arrays)
+    // -----------------------------------------------------------------------
+
+    /// `DATA` + `READ` lowers to: an `alloc_array` for the pool, `array_set`s
+    /// filling it, an `array_get` per `READ`, and the pointer advance (`add`).
+    #[test]
+    fn read_data_lowers_to_pool_array_and_get() {
+        let m = compile("10 DATA 7, 8\n20 READ X\n30 PRINT X\n40 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "alloc_array"),
+            "DATA must materialise a pool array; got {:?}",
+            body.iter().map(|i| &i.op).collect::<Vec<_>>());
+        // Two DATA values ⇒ two array_set fills.
+        assert_eq!(body.iter().filter(|i| i.op == "array_set").count(), 2,
+            "two DATA values should produce two array_set fills");
+        // READ reads through the pointer (array_get) and advances it (add).
+        assert!(body.iter().any(|i| i.op == "array_get"), "READ must array_get");
+        assert!(body.iter().any(|i| i.op == "add"
+            && i.dest.as_deref() == Some("__basic_data_ptr")),
+            "READ must advance __basic_data_ptr with an add");
+    }
+
+    /// `RESTORE` resets the pointer to 0 with a `mov` of a `const 0`.
+    #[test]
+    fn restore_resets_pointer_to_zero() {
+        let m = compile("10 DATA 1\n20 READ X\n30 RESTORE\n40 READ Y\n50 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        // The RESTORE `mov __basic_data_ptr = <const 0 reg>` exists; find a mov
+        // into the pointer whose source const is 0 (the init also does this, so
+        // there are at least two — one init + one RESTORE).
+        let ptr_movs = body.iter().filter(|i| i.op == "mov"
+            && i.dest.as_deref() == Some("__basic_data_ptr")).count();
+        assert!(ptr_movs >= 2,
+            "expected the init mov plus a RESTORE mov into the pointer; got {ptr_movs}");
+    }
+
+    /// `READ`/`RESTORE` with no `DATA` in the program is a clean error, not a
+    /// miscompile that reads an uninitialised pointer.
+    #[test]
+    fn read_without_data_errors() {
+        let err = compile("10 READ X\n20 END\n").unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)),
+            "READ with no DATA should be Unsupported, got {err:?}");
+    }
+
+    /// A non-integer `DATA` value is rejected (real DATA is a follow-up).
+    #[test]
+    fn non_integer_data_errors() {
+        let err = compile("10 DATA 3.5\n20 READ X\n30 END\n").unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)),
+            "non-integer DATA should be Unsupported, got {err:?}");
     }
 
     // -----------------------------------------------------------------------

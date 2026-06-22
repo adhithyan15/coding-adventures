@@ -1,5 +1,30 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.8.0 — 2026-06-22 — `READ` / `DATA` / `RESTORE` (LANG-FULL BA6)
+
+`READ`, `DATA`, and `RESTORE` were `UnsupportedStatement` rejections; they now
+lower onto the **E5 array** substrate (no new IIR op, no enabler needed):
+
+- A pre-pass gathers every `DATA` numeric literal across the whole program in
+  line-number order into a pool. The pool is materialised **once at the top of
+  `main`** as an `array<i64>` (`alloc_array` + one `array_set` per value) plus
+  an `__basic_data_ptr` register seeded to 0. Because the program is a single
+  `main` function (no `GOSUB`), the pointer lives in a register and persists
+  across `READ`s — no module global needed.
+- `READ var {, var}` fetches `array_get pool, __basic_data_ptr` into each target
+  (a scalar `mov`, or an `array_set` for `READ A(I)`) and advances the pointer
+  (`__basic_data_ptr := __basic_data_ptr + 1`). Reading past the pool traps via
+  the bounds-checked `array_get` — the "out of DATA" runtime error.
+- `RESTORE` rewinds the pointer to 0; `DATA` itself emits nothing at its line.
+- **Limitations:** integer `DATA` only (a real/`f64` value is a clean
+  `Unsupported` error — a follow-up, like integer-only `DIM` arrays); `READ`/
+  `RESTORE` with no `DATA` in the program is a clean error.
+
+Verified by **running**: a `lang_matrix.rs` cell (`DATA 21 / READ A / RESTORE /
+READ B / PRINT A+B` ⇒ `42`, proving sequential consumption *and* the rewind)
+runs on **all 7 backends**; plus JIT-run tests (`READ X` ⇒ 42; `READ A,B` +
+`RESTORE` + `READ C` ⇒ 10,20,10) and four structural unit tests.
+
 ## 0.7.0 — 2026-06-21 — `DIM` arrays (LANG-FULL BA3, enabler E5)
 
 ### Added — one-dimensional integer arrays (`DIM A(n)` + subscripted `A(i)`)
