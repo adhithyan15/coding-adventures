@@ -55,8 +55,9 @@ deep value equality); and (item **M1b**) **block-taking `Array`/`Enumerable`**
 methods `each`, `each_with_index`, `map`/`collect`, `select`/`filter`, `reject`,
 `reduce`/`inject`, `find`/`detect`, `flat_map`, `any?`/`all?`/`none?` — a trailing
 `Closure` block is applied via `@coding-adventures/sir-runtime-core`'s `apply`
-(proc-lenient), predicates routed through SIR `truthy`. The
-Hash/String/Numeric/Symbol catalogs land in follow-up releases.
+(proc-lenient), predicates routed through SIR `truthy`; and (item **M1c**) the
+**`Hash`** catalog (`keys`/`values`/`has_key?`/`fetch`/`merge`/`each`/`map`/
+`select`/…). The String/Numeric/Symbol catalogs land in follow-up releases.
 
 ## Honest v0 limitation
 
