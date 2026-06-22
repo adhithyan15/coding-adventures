@@ -14,6 +14,9 @@ All notable changes to this package will be documented in this file.
 - First-party seed catalog entries for Hue, Zigbee, Z-Wave, Thread, MQTT,
   Matter, HomeKit Controller, ESPHome, Tasmota, Shelly, TP-Link/Tapo, WLED,
   LIFX, cameras/media, energy/climate, and cloud hubs.
+- Mesh release ticket handoff disposition-action slot clearance readiness
+  summaries that combine slot readiness with clearance-row counts and next
+  clearance pointers.
 - Virtual alias entries for product lines supported by another integration or
   standard.
 - Read-only D18D tool descriptors for listing/describing integrations and
