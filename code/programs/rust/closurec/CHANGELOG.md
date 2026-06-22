@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.165.0] - 2026-06-22
+
+### Added — string-literal `.length` folding at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.19.0, which folds the
+`.length` of a string literal to a number: `"hello".length` → `5`, `"".length`
+→ `0`, `"💩".length` → `2` (UTF-16 code-unit count, matching JS `String#length`).
+Only the dotted non-computed form on a string literal folds; `s.length` on an
+identifier and `"abc"["length"]` are left alone.
+
+New e2e fixture `tests/diff/simple-fold-strlen` (and integration test
+`diff_simple_fold_strlen.rs`) is the end-to-end oracle, with a
+whitespace-fallback guard proving the fold comes from the SIMPLE typed pipeline.
+
+> Version note: bumped to 0.165.0 (skipping 0.164.0, which is reserved by the
+> concurrently-developed ASI Rule-1 string-newline release) so the two parallel
+> branches don't collide on the version line.
+
 ## [0.163.0] - 2026-06-22
 
 ### Added — unary bitwise NOT folding (`~5` → `-6`) at SIMPLE/ADVANCED

@@ -30,6 +30,7 @@
 //! null  ?? expr      →  expr
 //! 0     ?? expr      →  0                       (zero is not nullish)
 //! true  ? a : b      →  a                       (ConditionalExpression with literal test)
+//! "hi".length        →  2                       (string-literal .length, UTF-16 units)
 //! ```
 //!
 //! And recurses through every child node, so `1 + (2 * 3) → 1 + 6 → 7`
@@ -472,12 +473,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             callee: Box::new(fold_expression(&c.callee, st)),
             arguments: c.arguments.iter().map(|a| fold_expression(a, st)).collect(),
         }),
-        Expression::MemberExpression(m) => Expression::MemberExpression(MemberExpression {
-            cv: m.cv.clone(),
-            object: Box::new(fold_expression(&m.object, st)),
-            property: Box::new(fold_expression(&m.property, st)),
-            computed: m.computed,
-        }),
+        Expression::MemberExpression(m) => fold_member(m, st),
         Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
             cv: a.cv.clone(),
             elements: a
@@ -511,6 +507,62 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 .collect(),
         }),
     }
+}
+
+// ---------------------------------------------------------------------
+// Member access
+// ---------------------------------------------------------------------
+
+/// Folds the one member-access form whose value is known at compile time:
+/// the `.length` of a string literal.
+///
+/// ```text
+///   "hello".length   →  5
+///   "".length        →  0
+///   "💩".length      →  2     (one astral char = two UTF-16 code units)
+/// ```
+///
+/// JavaScript's `String#length` is the number of **UTF-16 code units**, NOT
+/// Unicode scalar values or bytes (ECMAScript §22.1.3.1 / String exotic
+/// objects). Rust's [`str::encode_utf16`] yields exactly those code units —
+/// astral-plane characters (U+10000…U+10FFFF) expand to a surrogate pair, so
+/// `"💩".length` is `2`, matching V8/SpiderMonkey. `.count()` is total and
+/// allocation-free; it cannot panic.
+///
+/// We fold **only** the dotted, non-computed form `"...".length`:
+/// - The object must fold to a `StringLiteral` (so the value is known).
+/// - The access must be non-`computed` and the property an `Identifier`
+///   named `length`. We deliberately leave the computed form `"..."["length"]`
+///   alone — it is vanishingly rare in real code and folding it would mean
+///   reasoning about arbitrary computed keys (`s[k]`), which needs the runtime
+///   value of `k`. Keeping the surface narrow keeps the fold obviously sound.
+/// - Anything else (identifier objects like `s.length`, other properties like
+///   `"x".charCodeAt`) falls through unchanged; we still recurse into the
+///   object and property so nested constants inside them fold.
+fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
+    // Recurse first, so e.g. `("a" + "b").length` sees the folded `"ab"`.
+    let object = fold_expression(&m.object, st);
+    let property = fold_expression(&m.property, st);
+
+    if !m.computed {
+        if let (Expression::StringLiteral(s), Expression::Identifier(id)) = (&object, &property) {
+            if id.name == "length" {
+                let len = s.value.encode_utf16().count() as f64;
+                let parent = m.cv.clone();
+                let before = format!("\"{}\".length", s.value);
+                let after = format_js_number(len);
+                let new_cv = st.fork_cv(&parent, &before, &after);
+                return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
+            }
+        }
+    }
+
+    Expression::MemberExpression(MemberExpression {
+        cv: m.cv.clone(),
+        object: Box::new(object),
+        property: Box::new(property),
+        computed: m.computed,
+    })
 }
 
 // ---------------------------------------------------------------------
@@ -2348,6 +2400,100 @@ mod tests {
         assert!(matches!(
             extract_expr(&out),
             Expression::UnaryExpression(_)
+        ));
+    }
+
+    // ------------------- member access (`.length`) -------------------
+
+    /// Build a non-computed `<object>.<name>` member expression.
+    fn member(object: Expression, name: &str) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(object),
+            property: Box::new(ident(name)),
+            computed: false,
+        })
+    }
+
+    #[test]
+    fn fold_string_literal_length() {
+        // "abc".length → 3
+        let m = member(string("abc", None), "length");
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(changed, "\"abc\".length should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.0),
+            other => panic!("expected 3; got {:?}", other),
+        }
+
+        // "".length → 0
+        let m0 = member(string("", None), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(m0, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
+            other => panic!("expected 0; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_string_length_counts_utf16_code_units_not_scalars() {
+        // "💩" (U+1F4A9, an astral-plane char) is ONE Unicode scalar but TWO
+        // UTF-16 code units, so JS `"💩".length` is 2 — not 1. This guards the
+        // encode_utf16() choice against a naive `.chars().count()`.
+        let m = member(string("💩", None), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(m, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2 (UTF-16 units); got {:?}", other),
+        }
+
+        // A BMP combining sequence "é" written as e + U+0301 is two code units.
+        let m2 = member(string("e\u{0301}", None), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(m2, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn length_on_identifier_does_not_fold() {
+        // `s.length` needs the runtime value of `s`, so it stays a member expr.
+        let m = member(ident("s"), "length");
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(!changed, "s.length must not fold");
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::MemberExpression(_)
+        ));
+    }
+
+    #[test]
+    fn non_length_property_on_string_does_not_fold() {
+        // `"abc".charCodeAt` is not `.length`; it must pass through untouched.
+        let m = member(string("abc", None), "charCodeAt");
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(!changed, "\"abc\".charCodeAt must not fold");
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::MemberExpression(_)
+        ));
+    }
+
+    #[test]
+    fn computed_string_length_does_not_fold() {
+        // `"abc"["length"]` is the computed form — deliberately left alone.
+        let m = Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(string("abc", None)),
+            property: Box::new(string("length", None)),
+            computed: true,
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(!changed, "computed \"abc\"[\"length\"] must not fold");
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::MemberExpression(_)
         ));
     }
 
