@@ -543,8 +543,34 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
             if let (Expression::StringLiteral(s), Expression::Identifier(id)) =
                 (m.object.as_ref(), m.property.as_ref())
             {
+                // ---- slice(start[, end]) → substring ----
+                //
+                // `"abcd".slice(1, 3)` → `"bc"`, `"abcd".slice(1)` → `"bcd"`,
+                // `"abcd".slice(-2)` → `"cd"`, `"abc".slice()` → `"abc"`
+                // (ECMAScript §22.1.3.22). Indices are UTF-16 code units;
+                // negatives count from the end. Computed by `fold_string_slice`
+                // below, which returns `None` (leaving the call) for a
+                // non-integer-literal argument, more than two arguments, or a
+                // cut that would split a surrogate pair into a lone surrogate.
+                if id.name == "slice" {
+                    if let Some(result) = fold_string_slice(&s.value, &arguments) {
+                        let parent = c.cv.clone();
+                        let args_src = arguments
+                            .iter()
+                            .map(|a| match a {
+                                Expression::NumericLiteral(n) => format_js_number(n.value),
+                                _ => "?".to_string(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(",");
+                        let before = format!("\"{}\".slice({})", s.value, args_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
                 // ---- zero-argument casing methods (ASCII-only) ----
-                if arguments.is_empty() {
+                else if arguments.is_empty() {
                     let cased = match id.name.as_str() {
                         "toUpperCase" if s.value.is_ascii() => Some(s.value.to_ascii_uppercase()),
                         "toLowerCase" if s.value.is_ascii() => Some(s.value.to_ascii_lowercase()),
@@ -659,6 +685,71 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         callee: Box::new(callee),
         arguments,
     })
+}
+
+/// Compute `value.slice(args…)` at compile time, or `None` when it cannot be
+/// folded soundly (ECMAScript §22.1.3.22, `String.prototype.slice`).
+///
+/// `slice` works in **UTF-16 code units**, so we index into `encode_utf16()`
+/// (an astral char is two units). The algorithm, matching the spec:
+///
+/// 1. `start` (default `0`) and `end` (default the length) are each clamped:
+///    a negative index counts from the end (`len + idx`, floored at `0`); a
+///    non-negative one is capped at `len`.
+/// 2. the result is the half-open range `[start, max(start, end))` — empty when
+///    `start >= end`.
+///
+/// We decline (return `None`, leaving the call for the runtime) when:
+/// - there are more than two arguments;
+/// - any *given* argument is not a finite integer literal (we don't model
+///   `ToInteger` coercion of arbitrary values); or
+/// - the cut would split a surrogate pair, yielding a lone surrogate that a
+///   Rust `String` cannot hold (`String::from_utf16` fails) — the same
+///   conservative guard `charAt` uses.
+fn fold_string_slice(value: &str, args: &[Expression]) -> Option<String> {
+    if args.len() > 2 {
+        return None;
+    }
+    // A provided argument must be a finite integer literal (any sign).
+    let to_int = |e: &Expression| -> Option<i64> {
+        match e {
+            Expression::NumericLiteral(n)
+                if n.value.is_finite()
+                    && n.value.fract() == 0.0
+                    && n.value.abs() < 9_007_199_254_740_992.0 =>
+            {
+                Some(n.value as i64)
+            }
+            _ => None,
+        }
+    };
+
+    let units: Vec<u16> = value.encode_utf16().collect();
+    let len = units.len() as i64;
+    let clamp = |idx: i64| -> i64 {
+        if idx < 0 {
+            (len + idx).max(0)
+        } else {
+            idx.min(len)
+        }
+    };
+
+    let start = match args.first() {
+        None => 0,
+        Some(e) => clamp(to_int(e)?),
+    };
+    let end = match args.get(1) {
+        None => len,
+        Some(e) => clamp(to_int(e)?),
+    };
+
+    let lo = start as usize;
+    let hi = end.max(start) as usize; // empty range when end < start
+    if lo >= hi {
+        return Some(String::new());
+    }
+    // A lone surrogate (split pair) can't be a Rust String — decline.
+    String::from_utf16(&units[lo..hi]).ok()
 }
 
 // ---------------------------------------------------------------------
@@ -2913,6 +3004,106 @@ mod tests {
         let c = call1(ident("s"), "indexOf", string("x", None));
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.indexOf(\"x\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- slice (substring) ---------------------------
+
+    /// Build `"<recv>".slice(<args…>)` from numeric literal arguments.
+    fn slice_call(recv: &str, args: &[f64]) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(recv, None), "slice")),
+            arguments: args.iter().map(|&a| num(a, None)).collect(),
+        })
+    }
+
+    #[test]
+    fn fold_string_slice_two_args() {
+        // Positive, negative, and end-before-start (→ empty).
+        for (recv, args, expect) in [
+            ("abcd", vec![1.0, 3.0], "bc"),
+            ("abcd", vec![0.0, -1.0], "abc"),
+            ("abcd", vec![-2.0], "cd"),
+            ("abcd", vec![1.0], "bcd"),
+            ("abcd", vec![2.0, 1.0], ""),
+            ("abcd", vec![10.0], ""),
+        ] {
+            let c = slice_call(recv, &args);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{recv}\".slice({args:?}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => {
+                    assert_eq!(s.value, expect, "\"{recv}\".slice({args:?})")
+                }
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_string_slice_no_args_is_identity() {
+        // `"abc".slice()` → "abc" (whole string).
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("abc", None), "slice")),
+            arguments: vec![],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "\"abc\".slice() should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "abc"),
+            other => panic!("expected \"abc\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn slice_counts_utf16_units() {
+        // "💩" is two UTF-16 units; "💩ab".slice(2) drops the astral char and
+        // keeps "ab" — proving UTF-16 (not scalar) indexing.
+        let c = slice_call("💩ab", &[2.0]);
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "ab"),
+            other => panic!("expected \"ab\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn slice_splitting_a_surrogate_pair_does_not_fold() {
+        // "💩".slice(0, 1) would be a lone high surrogate — a valid JS string
+        // but not a Rust `String`, so we decline (conservative, like charAt).
+        let c = slice_call("💩", &[0.0, 1.0]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "slice splitting a surrogate pair must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn slice_non_integer_or_too_many_args_does_not_fold() {
+        // Fractional argument: don't model ToInteger coercion.
+        let frac = slice_call("abcd", &[1.5]);
+        let (out, _, changed, _) = run_pass(program_with_expr(frac, true));
+        assert!(!changed, "fractional slice index must not fold");
+
+        // Three arguments: not the slice signature we model.
+        let three = slice_call("abcd", &[0.0, 1.0, 2.0]);
+        let (out2, _, changed2, _) = run_pass(program_with_expr(three, true));
+        assert!(!changed2, "three-arg slice must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        assert!(matches!(extract_expr(&out2), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn slice_on_identifier_receiver_does_not_fold() {
+        // `s.slice(1)` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "slice")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.slice(1) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
