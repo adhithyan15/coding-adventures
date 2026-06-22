@@ -1863,6 +1863,115 @@ wrapper, the `Replace` handler, the single-pass `ReplaceAll` pre-pass) and reuse
 and compiled grammar are untouched.
 
 
+## §22 W-20 advanced pattern constructs — `Alternatives`, `Condition`, `PatternTest`, `ReplaceRepeated` (implemented)
+
+W-20 grows the pattern algebra of §21 with four richer constructs. Like W-19, it
+is **runtime-only**: the matcher wrapper [`pattern_match_bindings`] learns three
+new pattern *heads*, and a new fixed-point replacement pre-pass handles the
+fourth. The lexer, parser, and compiled grammar are **untouched** — see §22.6.
+
+### §22.1 What W-20 adds
+
+| construct           | head form (parseable today)        | meaning |
+| ------------------- | ---------------------------------- | ------- |
+| **Alternatives** `a\|b\|c` | `Alternatives[a, b, c]`     | matches iff the subject matches **any** alternative |
+| **Condition** `patt /; test` | `Condition[patt, test]`   | matches iff `patt` matches **and** `test` (with the match's named bindings substituted) evaluates to `True` |
+| **PatternTest** `patt ? fn` | `PatternTest[patt, fn]`    | matches iff `patt` matches **and** `fn[subject]` evaluates to `True` |
+| **ReplaceRepeated** `expr //. rules` | `ReplaceRepeated[expr, rules]` | apply `ReplaceAll` repeatedly to a **fixed point**, capped at `REPLACE_REPEATED_MAX_ITERATIONS` |
+
+Worked examples (the W-20 acceptance tests):
+
+```
+MatchQ[2, Alternatives[1, 2, 3]]                              (* True  *)
+MatchQ[5, Alternatives[1, 2, 3]]                              (* False *)
+Cases[{1,2,3,4}, Condition[Pattern[x, Blank[]], x > 2]]       (* {3, 4} *)
+MatchQ[4, PatternTest[Blank[], EvenQ]]                        (* True  *)
+MatchQ[3, PatternTest[Blank[], EvenQ]]                        (* False *)
+ReplaceRepeated[{1, 2, 3}, Rule[2, 99]]                       (* {1, 99, 3} *)
+ReplaceRepeated[1, Rule[Pattern[x,Blank[Integer]], 99]]       (* terminates at the cap, returns last form — never hangs *)
+```
+
+### §22.2 Alternatives — first-match-wins, zero new evaluation
+
+`Alternatives[a, b, …]` matches the subject against each alternative **in order**,
+returning the bindings of the first that matches (or `None` if none do). It calls
+the same `pattern_match_bindings` recursively, so each alternative may itself be a
+named pattern, a blank, a literal, or another advanced construct. No test is
+evaluated, so it needs no VM. Backtracking is bounded: each alternative is tried
+once, left to right — there is no cross-alternative combinatorial expansion.
+
+### §22.3 Condition / PatternTest — bounded test evaluation through a fresh VM
+
+Both evaluate a *test expression* and accept the match only when it yields the
+`True` symbol:
+
+* **Condition** first matches `patt`, then substitutes the captured **named**
+  bindings (bare `Symbol("x")` occurrences, not `Pattern[…]` nodes) into `test`
+  and evaluates it. `Cases[{1,2,3,4}, Condition[x_, x > 2]]` keeps `{3,4}`.
+* **PatternTest** first matches `patt`, then evaluates `fn[subject]` — the
+  *original* subject, not a binding. `MatchQ[4, PatternTest[_, EvenQ]]` is `True`
+  via the W-9 `EvenQ` predicate.
+
+The test runs through a **fresh, stateless** `WolframBackend`-backed VM
+(constructed per evaluation), because these tests are pure (`x > 2`, `EvenQ[4]`)
+and must not see or mutate session state. Evaluation goes through the normal
+bounded VM, which carries the existing recursion/stack guards, so a crafted test
+cannot recurse unboundedly. A test that does not reduce to `True` (anything
+else — `False`, an unresolved relation, a free symbol) makes the match **fail**.
+
+### §22.4 ReplaceRepeated — fixed point with a hard iteration cap
+
+`ReplaceRepeated[expr, rules]` applies the §21.3 single-pass `replace_all_once`
+**repeatedly**, evaluating between passes, until either (a) a pass produces a
+result **identical** to its input (the fixed point — convergence) or (b) the
+iteration count reaches `REPLACE_REPEATED_MAX_ITERATIONS`. The cap is the hard
+DoS bound: a self-recursive rule like `ReplaceRepeated[x, x -> f[x]]` rewrites
+forever, so without the cap it would never terminate / exhaust memory. At the cap
+we **stop and return the last form** — no panic, no unbounded growth. Each
+individual pass is still depth-guarded by `REPLACE_MAX_DEPTH` (§21.6), so both the
+inner (per-pass tree depth) and outer (number of passes) loops are bounded.
+
+### §22.5 Safety — bounded backtracking, bounded iteration, no panics
+
+* **Bounded backtracking.** Alternatives tries each branch once, left to right;
+  there is no exponential cross-product. The recursive matcher calls reuse the
+  same depth discipline as §21.
+* **Bounded test evaluation.** Condition/PatternTest evaluate through the standard
+  VM with its existing guards; the fresh VM has no session state to corrupt.
+* **Hard iteration cap.** `ReplaceRepeated` cannot loop forever — it stops at
+  `REPLACE_REPEATED_MAX_ITERATIONS` and returns the last form.
+* **No panic on malformed nodes.** The `pattern_tree_well_formed` guard (§21.2)
+  still rejects malformed `Pattern[…]` before any indexing; a malformed
+  `Alternatives`/`Condition`/`PatternTest` (wrong arity) simply fails to match
+  rather than panicking.
+
+### §22.6 No grammar change — the operator sugar is deferred to W-21
+
+The four constructs ship as **ordinary head applications** (`Alternatives[…]`,
+`Condition[…]`, `PatternTest[…]`, `ReplaceRepeated[…]`), which the existing parser
+already accepts as `NAME[args]`. The surface **operator sugar** — `a | b`
+(`Alternatives`), `patt /; test` (`Condition`), `patt ? fn` (`PatternTest`), and
+`expr //. rules` (`ReplaceRepeated`) — would require new lexer tokens (`|`, `/;`,
+`?`, `//.`), parser precedence rules, lowering, and a regenerated compiled
+grammar. To keep W-20 bounded and runtime-only (the W-19 precedent), that grammar
+work is **deferred to W-21** along with the sequence patterns below.
+
+### §22.7 Deferred to W-21 (explicitly out of scope)
+
+W-20 ships the core matching algebra (`Alternatives`/`Condition`/`PatternTest`)
+plus fixed-point `ReplaceRepeated`, and defers:
+
+* **operator sugar** for all four constructs (`|`, `/;`, `?`, `//.`) — needs a
+  grammar change (new tokens + precedence + lowering + regenerated grammar);
+* **sequence patterns** `__` (`BlankSequence`) / `___` (`BlankNullSequence`) — the
+  big one: variable-arity sequence matching is not yet supported by the shared
+  `cas-pattern-matching` matcher, so the §22 `ReplaceRepeated` acceptance tests use
+  non-sequence rules (e.g. `{1,2,3} //. 2 -> 99`); sequence support is W-21;
+* **`Repeated`** `patt..` and **`Except`** `Except[p]`;
+* **`Longest` / `Shortest`** sequence disambiguators;
+* **level specifications** for `Replace` (the third argument).
+
+
 ### §6 References
 
 Internal: [`HML00`](HML00-historical-math-languages-roadmap.md),
