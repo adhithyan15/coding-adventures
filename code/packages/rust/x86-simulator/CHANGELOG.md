@@ -1,5 +1,29 @@
 # Changelog — x86-simulator
 
+## 0.5.0 — 2026-06-21 — byte-tape store + Brainfuck runs locally (x86-sim PR-S5)
+
+Continues the coverage-mining pattern (S4): running a **Brainfuck** program
+through the simulator surfaced two more gaps, now closed.
+
+### Added
+- **`mov r/m8, r8` (`0x88`)** — the 8-bit `store_byte` the byte-tape ops emit
+  (`mov [base], src8`), which S1–S4 never decoded (a Brainfuck `.` trapped with
+  `DecodeError { opcode: 0x88 }`). A register destination keeps its upper bytes;
+  a memory destination is a single-byte store.
+- **`__twig_putchar` / `__twig_getchar` host-shim aliases** — the backend emits
+  the runtime-prefixed symbols; the shims previously matched only the bare
+  `putchar`/`getchar` (so Brainfuck output trapped `UnresolvedExternal`).
+- **Brainfuck matrix cell** — `++++++++[>++++++++<-]>+.` ⇒ stdout `A`, run on the
+  x86_64 column locally. Exercises the byte-tape surface the arithmetic programs
+  never touched: `__twig_alloc_bytes` for the tape, the `[...]` loop, the 8-bit
+  store, and `putchar`. (Stdin-driven Brainfuck — `,[.,]` cat — still pends an
+  input-buffer in the harness; `getchar` returns EOF for now.)
+
+### Verified
+- Brainfuck runs end-to-end; `0x88` gets direct decode + execute unit tests
+  (register masked-write keeps upper bytes; memory single-byte store leaves the
+  neighbour untouched). 50 tests (28 unit + 18 matrix + 4 lib/harness).
+
 ## 0.4.0 — 2026-06-21 — group-3 (`not`/`neg`/`div`/`idiv`) + broader matrix coverage (x86-sim PR-S4)
 
 Broadens the **local** LANG-FULL x86_64 coverage from S3's 7 cells to 17 by

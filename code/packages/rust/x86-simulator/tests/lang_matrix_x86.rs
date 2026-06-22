@@ -277,3 +277,13 @@ fn algol_signed_division_runs_on_x86_sim() {
     let src = "begin integer result; result := 85 div 2 end";
     assert_eq!(run_on_x86_sim(Language::Algol60, src), 42);
 }
+
+/// Brainfuck — build 65 on the tape and `putchar` it (`++++++++[>++++++++<-]>+.`
+/// ⇒ stdout `A`).  Exercises the **byte-tape** opcode surface the arithmetic
+/// programs never touch: `__twig_alloc_bytes` for the tape, 8-bit load/store
+/// (`load_byte`/`store_byte`), a `[...]` loop, and the `putchar` host shim.
+#[test]
+fn brainfuck_putchar_runs_on_x86_sim() {
+    let (_code, out) = run_capturing_stdout(Language::Brainfuck, "++++++++[>++++++++<-]>+.");
+    assert_eq!(out, "A");
+}

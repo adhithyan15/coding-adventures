@@ -116,6 +116,17 @@ pub fn exec_one(
             st.set(*dst, v & 0xFF);
             Ok(Flow::Next)
         }
+        Instr::MovByteStore { dst, src } => {
+            // Store the low byte of `src` into `dst`.  For a register `dst` only
+            // the low 8 bits change (the rest are preserved); for memory it is a
+            // single-byte store.
+            let b = st.get(*src) & 0xFF;
+            match dst {
+                Operand::Reg(r) => { let v = (st.get(*r) & !0xFF) | b; st.set(*r, v); }
+                Operand::Mem { .. } => write_op(st, mem, dst, next_ip, 1, b)?,
+            }
+            Ok(Flow::Next)
+        }
         Instr::Lea { dst, src } => {
             let a = effective_addr(st, src, next_ip);
             st.set(*dst, a);
@@ -409,5 +420,28 @@ mod tests {
         st.set(Reg::Rcx, (-1i64) as u64);
         let err = exec(&mut st, &Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: true }).unwrap_err();
         assert!(matches!(err, Trap::DivideError(_)));
+    }
+
+    #[test]
+    fn byte_store_to_register_keeps_upper_bytes() {
+        // `mov r/m8, r8` into a register touches only the low byte.
+        let mut st = CpuState::default();
+        st.set(Reg::Rax, 0xDEAD_BEEF_0000_00FF);
+        st.set(Reg::Rcx, 0x42);
+        exec(&mut st, &Instr::MovByteStore { dst: Operand::Reg(Reg::Rax), src: Reg::Rcx }).unwrap();
+        assert_eq!(st.get(Reg::Rax), 0xDEAD_BEEF_0000_0042); // only low byte changed
+    }
+
+    #[test]
+    fn byte_store_to_memory_writes_one_byte() {
+        let mut st = CpuState::default();
+        let mut mem = Memory::new(64, 0, 0);
+        st.set(Reg::Rax, 8); // address
+        st.set(Reg::Rcx, 0x1_2345); // only 0x45 should land
+        mem.store(8, 8, 0xFFFF_FFFF_FFFF_FFFF).unwrap(); // pre-fill the word
+        let dst = Operand::Mem { base: Some(Reg::Rax), index: None, scale: 1, disp: 0, rip: false };
+        exec_one(&mut st, &mut mem, &Instr::MovByteStore { dst, src: Reg::Rcx }, 0, 0, 0).unwrap();
+        assert_eq!(mem.load(8, 1).unwrap(), 0x45); // single byte written
+        assert_eq!(mem.load(9, 1).unwrap(), 0xFF); // neighbour untouched
     }
 }

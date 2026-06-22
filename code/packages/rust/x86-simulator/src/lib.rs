@@ -127,14 +127,16 @@ impl Simulator {
                 let ptr = self.mem.alloc(n)?;
                 self.state.set(Reg::Rax, ptr);
             }
-            // `int putchar(int c)` — capture the byte.
-            "putchar" => {
+            // `int putchar(int c)` — capture the byte.  The backend emits the
+            // runtime-prefixed `__twig_putchar`; libc-style `putchar` is accepted
+            // too (same shim, like the `print_i64` aliases below).
+            "__twig_putchar" | "putchar" => {
                 let c = self.state.get(Reg::Rdi) as u8;
                 self.stdout.push(c);
                 self.state.set(Reg::Rax, c as u64);
             }
             // `int getchar()` — no stdin in v1; returns EOF (-1).
-            "getchar" => { self.state.set(Reg::Rax, u64::MAX); }
+            "__twig_getchar" | "getchar" => { self.state.set(Reg::Rax, u64::MAX); }
             // `void __twig_print_i64(i64)` — print the decimal value.
             "__twig_print_i64" | "__print_i64" | "print_i64" => {
                 let v = self.state.get(Reg::Rdi) as i64;
