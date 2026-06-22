@@ -1329,6 +1329,61 @@ unchanged.
     (`sort`, `max`, `min`, `range` honouring the level order) — none of which
     blocks the comparison/constructor core delivered here.
 
+- **R-34 — string utilities** *(this PR)*. An **independent string-utility family**
+  (not part of the in-flight cut/set-ops chain): five base-R string builtins that
+  reuse the existing string machinery shipped in R-5/R-7/R-27 — the `as_character`
+  coercion, the `Option<String>` NA convention (`None` = `NA`), and the
+  `SValue::Character`/`SValue::Logical(Vec<Option<bool>>)` constructors. Everything
+  operates on **Unicode `char`s**, never raw byte indices, so multibyte UTF-8 input
+  can never split a code point or panic.
+  - **`startsWith(x, prefix)`** — a **logical** vector, `TRUE` where `x[i]` begins
+    with `prefix[i]`. Vectorized and **recycled** over *both* arguments to the
+    longer length (R recycles `x` and `prefix` independently). `NA` in either
+    position yields `NA`. `startsWith(c("apple","banana"), "a")` → `c(TRUE, FALSE)`;
+    `startsWith(c("ab","cd","ae"), "a")` → `c(TRUE, FALSE, TRUE)`;
+    `startsWith(NA, "a")` → `NA`.
+  - **`endsWith(x, suffix)`** — the trailing-edge analogue, same recycling and NA
+    rules. `endsWith(c("file.txt","file.csv"), ".txt")` → `c(TRUE, FALSE)`.
+  - **`trimws(x, which = "both")`** — strip leading and/or trailing whitespace from
+    each element. `which ∈ {"both","left","right"}` (read as the second positional
+    or the `which =` named arg); any other value is a clean error. Whitespace is
+    R's default class `[ \t\r\n]`. `trimws("  hi  ")` → `"hi"`;
+    `trimws("  hi  ", "left")` → `"hi  "`; `trimws("  hi  ", "right")` → `"  hi"`;
+    `trimws(NA)` → `NA`. Char-based, UTF-8 safe.
+  - **`chartr(old, new, x)`** — translate characters: each char of `x` that appears
+    at position *i* of `old` becomes the char at position *i* of `new`. `old` and
+    `new` are **length-one** character scalars and must have **equal `nchar`**, else
+    an error (R: *"'old' and 'new' must be of the same length"*). Translation is by
+    Unicode `char`, so multibyte `old`/`new`/`x` work and never panic.
+    `chartr("abc", "xyz", "cab")` → `"zxy"`. Vectorized over `x`; `NA` element → `NA`.
+  - **`strtoi(x, base = 10L)`** — parse each string as an integer in the given
+    `base` (an integer in **2..36**, read as the second positional or `base =`),
+    returning a **double** vector (this subset has no distinct integer type), with
+    `NA` for anything unparseable. Semantics follow C `strtol` as R does:
+    - Leading ASCII whitespace is skipped; an optional `+`/`-` sign is honored.
+    - For **base 16**, an optional `0x`/`0X` prefix is accepted (e.g.
+      `strtoi("0xFF", 16L)` → `255`); for other bases the digits are taken literally.
+    - The **whole remaining string must be consumed** — trailing non-digit garbage
+      (including trailing whitespace) yields `NA`. An empty string yields `NA`.
+    - A digit outside the base's range makes the element `NA`
+      (`strtoi(c("7","8"), 8L)` → `c(7, NA)`; `strtoi("z", 16L)` → `NA`).
+    - A `base` outside **2..36** makes **every** element `NA` (matching base R's
+      `strtol`-driven behavior — it does *not* error).
+    Examples: `strtoi("FF", 16L)` → `255`; `strtoi("10", 2L)` → `2`;
+    `strtoi(c("7","8"), 8L)` → `c(7, NA)`.
+  - **Safety.** No raw byte indexing anywhere — `startsWith`/`endsWith` use
+    `str::starts_with`/`ends_with` (code-point safe), `trimws`/`chartr` iterate
+    `char`s. `strtoi` parses with checked `i64` accumulation bounded by base ≤ 36 and
+    a fixed length cap, so a long all-digits string cannot overflow or hang
+    (overflow → `NA`, never a panic). Recycling length is the max of the (bounded)
+    input lengths; an empty input recycles to length 0.
+  - **Scope outcome / deferred to R-36.** `startsWith`, `endsWith`, `trimws`,
+    `chartr`, and `strtoi` (explicit bases **2..36**) ship **solidly**. **Deferred to
+    R-36:** `strtoi`'s `base = 0L` auto-detection (C `strtol`'s convention where a
+    `0x` prefix selects base 16 and a leading `0` selects base 8) — a self-contained
+    extension of the same parser. `trimws`'s custom `whitespace =` regex argument
+    (R ≥ 3.6) is likewise deferred; the default class covers the common case.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -1367,7 +1422,10 @@ tie method) land in **R-31**; the binning & cross-product utilities (`findInterv
 `cut` returning a factor) land in **R-32** — a pivot away from `incomparables=`/`fromLast=`
 on the binary set ops (`union`/`intersect`/`setdiff`), which base R does not accept there,
 making them non-faithful; `cut`'s `labels=`/`right=FALSE`/`include.lowest=` and integer
-`breaks` are deferred to **R-33**; namespaces and `library()`
+`breaks` are deferred to **R-33**; the independent string-utility family
+(`startsWith`, `endsWith`, `trimws`, `chartr`, `strtoi` over explicit bases 2..36)
+lands in **R-34**, with `strtoi`'s `base = 0L` auto-detection and `trimws`'s custom
+`whitespace=` argument deferred to **R-36**; namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.

@@ -248,6 +248,22 @@ integer codes only (out-of-range / NA → NA, never a panic), and `dig.lab` is c
 to `1..=22` before formatting. (`sort`/`max`/`min`/`range` on ordered factors and
 `Ops.ordered` dispatch are deferred to R-39.)
 
+**String utilities (R-34)** — an independent string-utility family reached through
+ordinary R syntax (not part of the cut/set-ops chain). All five reuse the existing
+string machinery and operate on Unicode `char`s, never raw byte indices, so
+multibyte UTF-8 input is always safe. `startsWith(x, prefix)` / `endsWith(x, suffix)`
+are logical, recycled over *both* args with `NA` → `NA`
+(`startsWith(c("apple","banana"), "a")` → `c(TRUE, FALSE)`). `trimws(x, which="both")`
+strips leading/trailing whitespace (`[ \t\r\n]`); `which ∈ {both,left,right}`, any
+other value an error. `chartr(old, new, x)` translates characters, requiring
+`old`/`new` of equal `nchar` (`chartr("é","e","café")` → `"cafe"`). `strtoi(x,
+base=10L)` parses integers in bases 2..36 the way C `strtol` does — leading
+whitespace and a sign, a `0x` prefix for base 16, the whole string consumed, and
+`NA` for an empty string, garbage, an out-of-range digit, or a base outside 2..36
+(`strtoi("FF", 16L)` → `255`; `strtoi(c("7","8"), 8L)` → `c(7, NA)`). Parsing uses
+checked `i64` arithmetic, so overflow yields `NA` rather than a panic. (`strtoi`'s
+`base=0L` auto-detection and a custom `trimws(whitespace=)` are deferred to R-36.)
+
 **R-36 — matrix cross products** add `crossprod` and `tcrossprod`, again through the
 shared `s-runtime`. An independent matrix-algebra item, defined entirely in terms of
 the existing R-11 `t()` transpose and `%*%` matrix product (no new linear algebra).
