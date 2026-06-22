@@ -1023,9 +1023,11 @@ impl Compiler {
     /// it is not a standard function (so the caller raises the usual
     /// "undeclared procedure" error).
     ///
-    /// AL8 PR-1 implements only `abs`.  `sign`/`entier`/`sqrt`/`sin`/`cos`/…
-    /// land in later slices (the transcendentals need a runtime math library on
-    /// every backend; `abs`/`sign`/`entier` are pure IIR and come first).
+    /// Implemented so far: `abs` (PR-1) and `sign` (PR-2) — both pure IIR
+    /// (compare + branch + move/const).  `entier` (floor of a real → integer)
+    /// needs a float-floor+convert that is not a portable IIR op, and
+    /// `sqrt`/`sin`/`cos`/… need a runtime math library on every backend; those
+    /// land in later slices.
     fn try_emit_standard_function(
         &mut self,
         name: &str,
@@ -1033,6 +1035,7 @@ impl Compiler {
     ) -> Result<Option<ExprValue>, CompileError> {
         match name {
             "abs" => Ok(Some(self.emit_abs(node)?)),
+            "sign" => Ok(Some(self.emit_sign(node)?)),
             _ => Ok(None),
         }
     }
@@ -1138,6 +1141,133 @@ impl Compiler {
         self.emit_label(&end_label);
 
         Ok(ExprValue { slot: dest, ty })
+    }
+
+    /// `sign(E)` — the *signum*: `+1` if `E > 0`, `-1` if `E < 0`, `0` if
+    /// `E = 0` (ALGOL 60 §3.2.4).  Unlike `abs`, the **result is always
+    /// `integer`** regardless of the operand's type — `sign(-2.5)` is the
+    /// integer `-1`.  The operand may be `integer` or `real`; the comparisons
+    /// run at the operand width (the `0` we compare against is typed to match),
+    /// but every value `dest` receives is an `i64` constant.
+    ///
+    /// It lowers to the nested conditional `if E > 0 then 1 else if E < 0 then
+    /// -1 else 0`, written with the same store-per-branch `dest` discipline as
+    /// `abs` (one `mov`/`const` into `dest` per path, no SSA phi), so it runs
+    /// identically on all seven backends.  `E` is evaluated once.
+    ///
+    /// ```text
+    ///        t := E                  ; evaluate the operand once
+    ///        gt := t > 0             ; cmp_gt at the operand width
+    ///        jmp_if_false gt, neg?   ; not positive → test the sign
+    ///        dest := 1
+    ///        jmp end
+    ///   neg?: lt := t < 0
+    ///        jmp_if_false lt, zero   ; not negative (and not positive) → 0
+    ///        dest := -1
+    ///        jmp end
+    ///   zero: dest := 0
+    ///   end:  (dest holds sign E, an integer)
+    /// ```
+    fn emit_sign(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return Err(CompileError::Type(format!(
+                "standard function sign expects 1 argument, got {}",
+                actuals.len()
+            )));
+        }
+        let value = self.emit_expr(actuals[0])?;
+        let operand_ty = match value.ty {
+            ScalarType::Integer | ScalarType::Real => value.ty,
+            ScalarType::Boolean => {
+                return Err(CompileError::Type(
+                    "standard function sign requires a numeric argument".into(),
+                ))
+            }
+        };
+
+        // The result is always an integer; the three outcomes are i64 consts.
+        let dest = self.fresh_temp();
+        let neg_label = self.fresh_label("sign_neg");
+        let zero_label = self.fresh_label("sign_zero");
+        let end_label = self.fresh_label("sign_end");
+
+        // gt := (value > 0), compared at the operand width.
+        let zero_operand = self.emit_const(operand_ty, operand_ty.default_operand());
+        let gt = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_gt",
+            Some(gt.clone()),
+            vec![Operand::Var(value.slot.clone()), Operand::Var(zero_operand)],
+            operand_ty.iir(),
+        ));
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(gt), Operand::Var(neg_label.clone())],
+            "void",
+        ));
+        // positive ⇒ dest := 1
+        let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(one)],
+            "i64",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+
+        // neg?: lt := (value < 0)
+        self.emit_label(&neg_label);
+        let zero_operand2 = self.emit_const(operand_ty, operand_ty.default_operand());
+        let lt = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_lt",
+            Some(lt.clone()),
+            vec![Operand::Var(value.slot), Operand::Var(zero_operand2)],
+            operand_ty.iir(),
+        ));
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(lt), Operand::Var(zero_label.clone())],
+            "void",
+        ));
+        // negative ⇒ dest := -1
+        let minus_one = self.emit_const(ScalarType::Integer, Operand::Int(-1));
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(minus_one)],
+            "i64",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+
+        // zero ⇒ dest := 0
+        self.emit_label(&zero_label);
+        let zero_result = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(zero_result)],
+            "i64",
+        ));
+        self.emit_label(&end_label);
+
+        Ok(ExprValue {
+            slot: dest,
+            ty: ScalarType::Integer,
+        })
     }
 
     fn emit_statement(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
@@ -3025,6 +3155,68 @@ mod tests {
         let err = compile_source("begin integer result; result := abs(1, 2) end", "test")
             .expect_err("two-argument abs is a type error");
         assert!(format!("{err:?}").contains("abs expects 1 argument"));
+    }
+
+    #[test]
+    fn sign_of_positive_is_one() {
+        assert_eq!(run_i64("begin integer result; result := sign(7) end"), 1);
+    }
+
+    #[test]
+    fn sign_of_negative_is_minus_one() {
+        // `sign` returns -1, which as an exit code wraps to 255, so we test via
+        // arithmetic: 43 + sign(0 - 9) = 43 + (-1) = 42.
+        assert_eq!(
+            run_i64("begin integer result; result := 43 + sign(0 - 9) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn sign_of_zero_is_zero() {
+        assert_eq!(run_i64("begin integer result; result := sign(0) end"), 0);
+    }
+
+    #[test]
+    fn sign_of_real_is_an_integer() {
+        // The operand is `real`, but `sign` yields the *integer* 1 — usable in
+        // an integer context with no real→integer coercion needed.
+        assert_eq!(
+            run_i64("begin integer result; result := sign(2.5) end"),
+            1
+        );
+    }
+
+    #[test]
+    fn sign_of_negative_real_is_minus_one() {
+        assert_eq!(
+            run_i64("begin integer result; result := 43 + sign(0.0 - 2.5) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn sign_composes_with_abs() {
+        // |sign(-4)| = |-1| = 1 — two standard functions nested.
+        assert_eq!(
+            run_i64("begin integer result; result := 41 + abs(sign(0 - 4)) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn user_declared_sign_overrides_the_builtin() {
+        let src = "begin integer result; \
+                   integer procedure sign(x); value x; integer x; sign := x + 1; \
+                   result := sign(41) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn sign_rejects_wrong_arity() {
+        let err = compile_source("begin integer result; result := sign(1, 2) end", "test")
+            .expect_err("two-argument sign is a type error");
+        assert!(format!("{err:?}").contains("sign expects 1 argument"));
     }
 
     #[test]
