@@ -1,6 +1,6 @@
 [package]
 name = "x86-simulator"
-version = "0.6.0"
+version = "0.7.1"
 edition = "2021"
 description = "x86/x86-64 runtime simulator — decode + execute machine code, and run the x86_64-backend's emitted code locally (host-arch-independent)"
 
@@ -15,3 +15,5 @@ jit-core = { path = "../jit-core" }
 # for the LANG-FULL matrix's `NativeAot` x86_64 column.
 lang-aot = { path = "../lang-aot" }
 aot-core = { path = "../aot-core" }
+# For walking an `IIRModule` to assign module-global slots (E6/O3/AL6 globals).
+interpreter-ir = { path = "../interpreter-ir" }

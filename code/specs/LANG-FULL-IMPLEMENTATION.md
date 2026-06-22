@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `READ`/`DATA`, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3) — all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, and 1-D arrays (arrays + reals run on VM/JIT only so far); no call-by-name, strings, multidim arrays, `own` |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -425,7 +425,14 @@ backend immediately) come before the enabler-dependent items.
   the first ALGOL comparison ever exercised on a code-gen backend. **Limits:** switch-list
   elements must be plain labels (no conditional/nested elements); switches aren't
   block-scope-shadowable.
-- ☐ **AL6** — `own` variables (static lifetime).
+- ✅ **AL6** — `own` variables (static lifetime). `coding-adventures-algol-parser`
+  0.2.0 adds the `[ "own" ] type ident_list` rule; `algol-iir-compiler` 0.7.0 lowers
+  an `own` scalar to a module **global** (the E6 substrate), keyed by its unique
+  per-procedure slot, and crucially drops the per-declaration `const` zero-init for
+  globals so the value is not re-zeroed each call. `bump(1) + bump(1) + bump(1)`
+  accumulates `1 + 2 + 3 = 6` (a non-`own` local gives `3`) on **all 7 backends**.
+  (Grammar was patched surgically, not full-regen — the checked-in `algol.grammar`
+  has drifted ahead of the compiled grammar in other rules; resync is follow-up.)
 - ☐ **AL7** — ⚠ call-by-name (Jensen-style expression thunks). **Hardest item in the
   campaign — design pass + user check before implementing.**
 - ☐ **AL8** — standard functions (`abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/… — needs **E3**).

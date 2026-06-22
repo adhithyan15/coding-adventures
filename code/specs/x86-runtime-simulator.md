@@ -179,7 +179,16 @@ This harness is what `lang_matrix.rs` calls to run the x86_64 column locally.
    Brainfuck IIR's negative-clamp halts a `,[.,]` cat at end-of-input. Three
    stdin Brainfuck cells (`,+.`/`,.,.`/`,[.,]`) run on the x86_64 column locally.
    No new opcode needed. (x86-simulator 0.6.0.)
-7. **S7 — 32-bit x86 (i386)**: operand/address-size handling + 32-bit decode, as
+7. **S8 — module globals (`_twig_globals`)**: ✅ done. The harness resolves the
+   `_twig_globals` data symbol — it reserves a zeroed 512-slot region between the
+   code and heap and patches the backend's `PcRel32` reloc (`lea rax, [rip +
+   _twig_globals]`) to its base, the same fixup the real linker applies. The
+   matrix harness now compiles with `compile_function_with_globals` over a slot
+   map collected from the module. Proof: the E6 program (`incr` sharing an
+   enclosing `counter`, `result := incr(2)`) runs on the x86_64 bytes locally ⇒
+   42. Unblocks running every `_twig_globals`-using program (E6/O3/AL6) locally.
+   (x86-simulator 0.7.0.)
+8. **S7 — 32-bit x86 (i386)**: operand/address-size handling + 32-bit decode, as
    educational coverage (not on the run-our-codegen critical path — no matrix
    program emits 32-bit x86, so it's unit-tested against hand-assembled bytes).
 

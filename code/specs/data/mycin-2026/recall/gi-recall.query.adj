@@ -20,3 +20,8 @@ import "gi-edges.adj"
 ? biopsy_finding_in(eosinophils_15_per_hpf, $Disease)     % expect eosinophilic_esophagitis
 ? biopsy_finding_in(crypt_abscesses, $Disease)            % expect ulcerative_colitis (backfill)
 ? biopsy_finding_in(onion_skin_fibrosis, $Disease)        % expect primary_sclerosing_cholangitis
+% --- BATCH: high-yield GI/hepatobiliary biopsy findings ---
+? biopsy_finding_in(signet_ring_cells, $Disease)          % expect gastric_cancer (expand)
+? biopsy_finding_in(florid_duct_lesion, $Disease)         % expect primary_biliary_cholangitis (expand)
+? biopsy_finding_in(cowdry_a_inclusions, $Disease)        % expect herpes_esophagitis (expand)
+? biopsy_finding_in(pseudomembranes, $Disease)            % expect pseudomembranous_colitis (expand)

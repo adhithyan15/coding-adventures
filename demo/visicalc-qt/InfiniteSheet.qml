@@ -285,6 +285,24 @@ Item {
                 }
                 Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
 
+                // ── Sort (reorder the budget block A1:E4 by the selected column) ──
+                // Each row moves as a record; the E-column SUM formulas travel with
+                // their row (refs shift), so every total stays correct. The key
+                // column is the selection clamped into the block's columns A..E.
+                ToolButton {
+                    text: "▲ Sort"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Sort the budget block A1:E4 by the selected column, ascending (rows move as records; formulas track)"
+                    onClicked: if (doc) doc.sortRange("A1", "E4", Math.min(5, Math.max(1, doc.infCol)), true)
+                }
+                ToolButton {
+                    text: "▼ Sort"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Sort the budget block A1:E4 by the selected column, descending"
+                    onClicked: if (doc) doc.sortRange("A1", "E4", Math.min(5, Math.max(1, doc.infCol)), false)
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
                 // ── History (undo / redo) ──
                 ToolButton {
                     text: "↶ Undo"

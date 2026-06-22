@@ -27,6 +27,9 @@ All notable changes to this package will be documented in this file.
   rows that capture clearance-action evidence lineage for repair, review,
   lineage, and release handoff work.
 - Mesh release ticket handoff disposition-action slot clearance action evidence
+  review rows that classify clearance-action evidence into blocker, operator,
+  review, lineage, and release-ready review outcomes.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
   readiness summaries that combine action readiness with evidence counts and
   next evidence pointers.
 - Virtual alias entries for product lines supported by another integration or

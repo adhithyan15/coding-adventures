@@ -30,6 +30,24 @@ are a documented follow-up.
 > `simple-fold-charat` branch (0.169.0) and the merged ASI Rule-1 release
 > (0.168.0), so the parallel branches never collide on the version line.
 
+## [0.169.0] - 2026-06-22
+
+### Added — string indexing folds (`charCodeAt`/`charAt`) at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.21.0, which folds the
+single-integer-index string methods on a string literal: `"abc".charCodeAt(0)`
+→ `97`, `"abc".charAt(1)` → `"b"`, `"abc".charAt(9)` → `""` (UTF-16 code-unit
+indexing). Non-negative integer-literal index only; out-of-range `charCodeAt`
+(JS `NaN`) and lone-surrogate `charAt` results are left unfolded; identifier
+receivers and the computed form pass through.
+
+New e2e fixture `tests/diff/simple-fold-charat` (and integration test
+`diff_simple_fold_charat.rs`) is the end-to-end oracle, with a
+whitespace-fallback guard proving the fold comes from the SIMPLE typed pipeline.
+
+> Version note: bumped to 0.169.0 (skipping 0.168.0, reserved by the
+> concurrently-developed ASI Rule-1 string-newline branch) so the parallel
+> branches don't collide on the version line.
 ## [0.168.0] - 2026-06-22
 
 ### Changed — ASI Rule 1 now handles string/template-ending statements

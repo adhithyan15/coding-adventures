@@ -619,3 +619,51 @@ def test_inspect_handles_cycles_without_raising() -> None:
     h: dict[Val, Val] = {}
     h["self"] = h
     assert oop.call_method(h, "inspect") == '{"self"=>{...}}'
+
+
+# ── Symbol#to_proc (&:sym) — M2 ───────────────────────────────────────────────
+
+
+def test_sym_to_proc_maps_over_array_via_apply() -> None:
+    from coding_adventures_sir_runtime_core import apply, intern
+
+    proc = oop.sym_to_proc(intern("to_s"))
+    assert isinstance(proc, Closure)
+    # [1, 2, 3].map(&:to_s) — map drives the proc through apply with one arg.
+    assert [apply(proc, [x]) for x in [1, 2, 3]] == ["1", "2", "3"]
+
+
+def test_sym_to_proc_forwards_extra_args_to_method() -> None:
+    from coding_adventures_sir_runtime_core import apply, intern
+
+    # A two-arg apply binds the first as receiver and forwards the rest as
+    # method arguments: ["hello", "ell"] → "hello".include?("ell").  (This is
+    # the arity shape `inject`/`each_with_index` blocks rely on; arithmetic
+    # operators like `&:+` are native, not in the dispatch catalog — out of
+    # scope for M2.)
+    proc = oop.sym_to_proc(intern("include?"))
+    assert apply(proc, ["hello", "ell"]) is True
+    assert apply(proc, ["hello", "xyz"]) is False
+
+
+def test_sym_to_proc_accepts_bare_string_name() -> None:
+    from coding_adventures_sir_runtime_core import apply
+
+    proc = oop.sym_to_proc("upcase")
+    assert apply(proc, ["hi"]) == "HI"
+
+
+def test_sym_to_proc_out_of_catalog_method_returns_nil() -> None:
+    from coding_adventures_sir_runtime_core import apply, intern
+
+    # An unknown method bottoms out at nil (never-raise OO surface).
+    proc = oop.sym_to_proc(intern("no_such_method"))
+    assert apply(proc, [42]) is None
+
+
+def test_sym_to_proc_drives_array_block_method_dispatch() -> None:
+    from coding_adventures_sir_runtime_core import intern
+
+    # End-to-end through call_method: [1, 2, 3].map(&:to_s).
+    proc = oop.sym_to_proc(intern("to_s"))
+    assert oop.call_method([1, 2, 3], "map", proc) == ["1", "2", "3"]

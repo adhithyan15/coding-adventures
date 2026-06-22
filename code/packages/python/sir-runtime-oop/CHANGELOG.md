@@ -2,6 +2,37 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.6] - 2026-06-22
+
+### Added
+
+**`Symbol#to_proc` (`&:sym`) — `sym_to_proc`** (per `code/specs/sir-method-dispatch.md`,
+item M2). New `sym_to_proc(sym) -> Closure`: builds a `sir-runtime-core`
+`Closure` equivalent to Ruby's `sym.to_proc`, so a `&:sym` block argument on a
+dispatched call works — `[1, 2, 3].map(&:to_s)` now evaluates to
+`["1", "2", "3"]`.
+
+- The Ruby→SIR frontend lowers `&:sym` to `block_pass(SymLit("sym"))`; the
+  backend emits the surviving envelope as `_sir_oop_sym_to_proc(intern("sym"))`,
+  and the resulting `Closure` is driven by the block-taking catalog methods
+  (`map`/`select`/`each`/…) through `apply` exactly like a `{ }` block.
+- The closure's `arity` is `None` (variadic), so `apply` forwards a block
+  method's arguments unadjusted: the first becomes the **receiver**, the rest
+  are forwarded as method arguments. This matches `&:sym`'s Ruby arity (one
+  required receiver plus a rest) — correct for the one-arg (`map`) and two-arg
+  (`include?`-style) shapes alike.
+- The proc body dispatches through `call_method`, so an **out-of-catalog method
+  bottoms out at `nil`** rather than raising — the never-raise-on-the-OO-surface
+  invariant holds for the proc body too. A bare string name is accepted
+  defensively in addition to a `Symbol`.
+
+### Known v0 limitation
+
+Arithmetic/comparison operators (`&:+`, `&:<`) are emitted as **native**
+operations, not routed through the dispatch catalog, so `inject(&:+)` is not yet
+supported (the proc would resolve `+` to `nil`). Operator dispatch is tracked in
+the later numeric-fidelity item.
+
 ## [0.1.5] - 2026-06-22
 
 ### Added

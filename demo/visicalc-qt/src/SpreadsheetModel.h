@@ -131,6 +131,13 @@ public:
     // the stored value is unchanged; the engine renders it through the code.
     // Recomputes the grid + bumps `revision` so the visible rows re-fetch.
     Q_INVOKABLE void setFormatInf(const QString &code);
+    // Range sort: reorder the ROWS of the rectangle `start`..`end` by the
+    // computed values in `keyCol` (1-based, inside the rectangle), ascending or
+    // descending. Each row moves as a record; the engine shifts moved formulas'
+    // references with their row and carries formats. Returns true when a sort was
+    // applied (or the range was already sorted), false for a no-op (malformed
+    // address / out-of-range key / oversized range). Recomputes + bumps revision.
+    Q_INVOKABLE bool sortRange(const QString &start, const QString &end, int keyCol, bool ascending);
     // Clipboard: copy/cut capture the inclusive rectangle `start`..`end` (a
     // whole-block copy that pastes as a unit); paste places the block so its
     // top-left lands at `dstStart`, shifting the block's references by the

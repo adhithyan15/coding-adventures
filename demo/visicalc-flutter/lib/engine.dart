@@ -73,6 +73,13 @@ typedef _FillC = Void Function(
 typedef _FillD = void Function(
     Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Pointer<Uint8>);
 
+// sc_sort_range(session, start, end, key_col, ascending) → int (1 applied / was
+// already sorted, 0 no-op). Two A1 strings + a 1-based key column + a flag.
+typedef _SortRangeC = Int32 Function(
+    Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Uint32, Int32);
+typedef _SortRangeD = int Function(
+    Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, int, int);
+
 // sc_insert_rows / sc_delete_rows / sc_insert_cols / sc_delete_cols(session, at,
 // count) → void. Structural edits at a 1-based position; the engine shifts
 // formula references across the band.
@@ -102,6 +109,7 @@ class SpreadsheetSession {
   late final _WindowD _getDisplayWindow;
   late final _SetFormatD _setFormatFn;
   late final _FillD _fillFn;
+  late final _SortRangeD _sortRangeFn;
   late final _ClipD _copyFn;
   late final _ClipD _cutFn;
   late final _PasteD _pasteFn;
@@ -138,6 +146,7 @@ class SpreadsheetSession {
     _getDisplayWindow = _lib.lookupFunction<_WindowC, _WindowD>('sc_get_display_window');
     _setFormatFn = _lib.lookupFunction<_SetFormatC, _SetFormatD>('sc_set_format');
     _fillFn = _lib.lookupFunction<_FillC, _FillD>('sc_fill');
+    _sortRangeFn = _lib.lookupFunction<_SortRangeC, _SortRangeD>('sc_sort_range');
     _copyFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_copy');
     _cutFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_cut');
     _pasteFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_paste');
@@ -311,6 +320,24 @@ class SpreadsheetSession {
       _fillFn(_handle, srcPtr, startPtr, endPtr);
     } finally {
       _freeCString(srcPtr);
+      _freeCString(startPtr);
+      _freeCString(endPtr);
+    }
+  }
+
+  /// Sort the rows of the inclusive rectangle [start]..[end] by the computed
+  /// values in [keyCol] (1-based, inside the rectangle), ascending/descending.
+  /// Each row moves as a record; the engine shifts moved formulas' references
+  /// with their row and carries formats. Returns true when a sort was applied
+  /// (or the range was already sorted), false for a no-op (malformed address /
+  /// out-of-range key / oversized range). [keyCol] is clamped into the u32 range
+  /// before crossing the C ABI (Dart `int` is 64-bit; the C param is `Uint32`).
+  bool sortRange(String start, String end, int keyCol, bool ascending) {
+    final startPtr = _toCString(start);
+    final endPtr = _toCString(end);
+    try {
+      return _sortRangeFn(_handle, startPtr, endPtr, _u32(keyCol), ascending ? 1 : 0) == 1;
+    } finally {
       _freeCString(startPtr);
       _freeCString(endPtr);
     }
@@ -644,6 +671,18 @@ class InfiniteSheetModel {
   /// stored value is unchanged; the engine renders it through the code, so a
   /// fresh rowCells read shows the formatted string.
   void applyFormat(String code) => _session.setFormat(infAddress, code);
+
+  /// Range sort: reorder the rows of the seeded budget block A1:E4 by the
+  /// SELECTED column (clamped into the block's columns A..E = 1..5), ascending
+  /// or descending. Each row moves as a record; the E-column SUM formulas travel
+  /// with their row (the engine shifts their refs), so every total stays correct.
+  /// Returns false for a no-op (already sorted / bad args). Regrows the extent.
+  bool sortBlock(bool ascending) {
+    final keyCol = selCol < 1 ? 1 : (selCol > 5 ? 5 : selCol);
+    final ok = _session.sortRange('A1', 'E4', keyCol, ascending);
+    computeExtent();
+    return ok;
+  }
 
   /// Structural edits: insert / delete the selected cell's row or column. The
   /// engine shifts every formula reference at or after the band (a reference

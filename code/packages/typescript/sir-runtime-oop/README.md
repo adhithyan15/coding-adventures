@@ -69,6 +69,16 @@ and (item **M1c**) the **`Integer`/`Float`** catalog (`abs`, `to_i`/`to_f`,
 **`to_s`/`inspect`** Ruby display forms (so `null`/`true`/`false` need no catalog)
 plus **`Array#join`**.
 
+### `&:sym` symbol-to-proc (item **M2**)
+
+`symToProc(sym)` builds the `Closure` Ruby's `Symbol#to_proc` returns, so a
+`&:sym` block argument works — `[1, 2, 3].map(&:to_s)` → `["1", "2", "3"]`. The
+backend emits a `&:sym` block-pass on a dispatched call as
+`__SirOop.symToProc(intern("sym"))`; applying the closure dispatches the named
+method on its first argument (the rest forwarded), through `callMethod`, so an
+unknown method still bottoms out at `null`. Operator symbols (`&:+`) are native
+arithmetic, not in the dispatch catalog — a documented v0 boundary.
+
 ## Honest v0 limitation
 
 Because the frontend does not thread receivers into method bodies, the *current

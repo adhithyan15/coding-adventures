@@ -46,7 +46,17 @@ pub fn parser_grammar() -> ParserGrammar {
         },
         GrammarRule {
             name: r#"type_decl"#.to_string(),
+            // LANG-FULL AL6: optional leading `own` (static lifetime). Patched
+            // in by hand to match the `[ "own" ] type ident_list` rule in
+            // `code/grammars/algol.grammar`. A full `grammar-tools
+            // compile-grammar` regen is NOT used here because the checked-in
+            // `algol.grammar` has drifted ahead of this compiled grammar in
+            // other rules (e.g. `for_stmt` loop targets, optional
+            // `actual_params`, labels) the frontend does not yet handle, so
+            // regenerating wholesale would pull those in and break parsing.
+            // Resyncing the full grammar is separate follow-up work.
             body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"own"#.to_string() }) },
                 GrammarElement::RuleReference { name: r#"type"#.to_string() },
                 GrammarElement::RuleReference { name: r#"ident_list"#.to_string() },
             ] },

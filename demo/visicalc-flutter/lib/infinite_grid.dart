@@ -193,6 +193,10 @@ class _InfiniteGridState extends State<InfiniteGrid> {
   // setState rebuild re-reads the row and shows the formatted string.
   void _applyFormat(String code) => setState(() => _model.applyFormat(code));
 
+  // Range sort: reorder the budget block A1:E4 by the selected column,
+  // ascending/descending. A setState rebuild re-reads the reordered rows.
+  void _sortBlock(bool ascending) => setState(() => _model.sortBlock(ascending));
+
   // A compact, modern toolbar button (rounded chip with hover/down/disabled
   // states) — the Flutter analog of the web demo's segmented controls and the
   // Qt port's `component ToolButton`. `enabled: null` disables it (Undo/Redo/
@@ -354,6 +358,15 @@ class _InfiniteGridState extends State<InfiniteGrid> {
           const SizedBox(width: 6),
           _toolButton('Gen', "Clear the selected cell's format (General)",
               () => _applyFormat('')),
+          _toolSep(),
+          // ── Sort (reorder the budget block A1:E4 by the selected column) ──
+          _toolButton('▲ Sort',
+              'Sort the budget block A1:E4 by the selected column, ascending (rows move as records; formulas track)',
+              () => _sortBlock(true)),
+          const SizedBox(width: 6),
+          _toolButton('▼ Sort',
+              'Sort the budget block A1:E4 by the selected column, descending',
+              () => _sortBlock(false)),
           _toolSep(),
           // ── History (undo / redo) ──
           _toolButton('↶ Undo', 'Undo the last edit', _undo,

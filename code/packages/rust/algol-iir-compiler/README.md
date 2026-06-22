@@ -46,6 +46,14 @@ a typed module **global** (`global_load`/`global_store`) so the procedure and
 the block share one cell — e.g. `integer procedure add(x); … add := counter :=
 counter + x` over an enclosing `integer counter` runs across every backend.
 
+Since **LANG-FULL AL6** a variable may be declared **`own`** (`own integer n`),
+giving it *static lifetime*: it is allocated once and retains its value across
+every call of the enclosing block/procedure (ALGOL 60 §5.2.5). It reuses the
+same module-global storage — keyed by a per-procedure-unique slot so two
+procedures' `own n` stay independent — and is **not** re-zeroed on entry, so it
+accumulates: `own integer n; n := n + d` called three times with `d = 1` yields
+`1`, `2`, `3`. Runs on all 7 backends.
+
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real
 comparisons execute as IEEE-754 doubles. There is no implicit `integer`→`real`

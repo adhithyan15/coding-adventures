@@ -335,6 +335,25 @@ void SpreadsheetModel::setFormatInf(const QString &code) {
     emit revisionChanged();
 }
 
+// Range sort: the engine reorders the rows of the rectangle by the computed
+// values in `keyCol`, moving each row as a record (moved formulas' relative refs
+// shift with their row; absolute pin; formats ride along) — sc_sort_range
+// returns 1 when applied (or already sorted), 0 for a no-op. The QByteArray
+// locals are NAMED so the UTF-8 buffers outlive the C call, and `keyCol` is
+// clamped to >= 0 before the unsigned cast (same guard the structural edits use).
+bool SpreadsheetModel::sortRange(const QString &start, const QString &end, int keyCol, bool ascending) {
+    const QByteArray s = start.toUtf8();
+    const QByteArray e = end.toUtf8();
+    const uint32_t key = static_cast<uint32_t>(keyCol < 0 ? 0 : keyCol);
+    const int ok = sc_sort_range(session_, s.constData(), e.constData(), key, ascending ? 1 : 0);
+    recompute();        // keep the 5×5 parity grid in sync too
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+    return ok != 0;
+}
+
 // Clipboard: copy/cut capture the inclusive rectangle into the engine's
 // clipboard; paste places it (the whole block's references shift by the
 // destination's offset). The QByteArray locals are NAMED so the UTF-8 buffers

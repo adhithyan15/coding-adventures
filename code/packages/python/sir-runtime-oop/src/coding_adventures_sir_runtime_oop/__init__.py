@@ -38,6 +38,7 @@ from .oop import (
     push_self,
     reset_oop,
     superclass_of,
+    sym_to_proc,
 )
 
 __all__ = [
@@ -57,4 +58,5 @@ __all__ = [
     "push_self",
     "reset_oop",
     "superclass_of",
+    "sym_to_proc",
 ]

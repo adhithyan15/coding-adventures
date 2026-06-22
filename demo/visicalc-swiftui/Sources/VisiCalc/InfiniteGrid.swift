@@ -174,6 +174,21 @@ final class WindowedSheetModel: ObservableObject {
         revision += 1
     }
 
+    /// Range sort: reorder the rows of the seeded budget block A1:E4 by the
+    /// SELECTED column (clamped into the block's columns A..E = 1...5), ascending
+    /// or descending. Each row moves as a record; the E-column SUM formulas travel
+    /// with their row (the engine shifts their refs), so every total stays correct.
+    /// Returns false for a no-op (already sorted / bad args). Bumps `revision` so
+    /// the visible rows re-fetch. The SwiftUI sibling of the web/Qt/Flutter/Compose/
+    /// XAML "Sort" group.
+    @discardableResult
+    func sortBlock(_ ascending: Bool) -> Bool {
+        let keyCol = UInt32(min(5, max(1, selectedCol)))
+        let ok = session.sortRange("A1", "E4", keyCol, ascending)
+        revision += 1
+        return ok
+    }
+
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
     /// engine shifts the pasted formula's relative references by the
     /// destination's offset, pins absolute (`$`) refs, carries the format; a cut
@@ -400,6 +415,12 @@ struct InfiniteGridView: View {
                 .help("Format the selected cell as currency (display only)")
             Button("Gen") { model.applyFormat("") }
                 .help("Clear the number format (back to General)")
+            toolSep
+            // ── Sort (reorder the budget block A1:E4 by the selected column) ──
+            Button("▲ Sort") { model.sortBlock(true) }
+                .help("Sort the budget block A1:E4 by the selected column, ascending (rows move as records; formulas track)")
+            Button("▼ Sort") { model.sortBlock(false) }
+                .help("Sort the budget block A1:E4 by the selected column, descending")
             toolSep
             // ── History (undo / redo). The buttons gate off canUndo/canRedo,
             // re-evaluated whenever `revision` (a @Published) bumps after an edit.

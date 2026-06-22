@@ -547,6 +547,29 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an `own` variable: static lifetime (LANG-FULL **AL6**). `bump`
+    // declares `own integer n` inside its body; ALGOL 60 §5.2.5 says an `own`
+    // variable is allocated once and *retains its value across calls*. The
+    // frontend lowers it to a module **global** (the E6 substrate —
+    // `global_load`/`global_store`), keyed by a per-procedure-unique slot, and
+    // crucially does NOT re-`const`-zero it on entry (that would destroy
+    // persistence). Three calls accumulate on the one cell: `bump(1)` ⇒ 1,
+    // `bump(1)` ⇒ 2, `bump(1)` ⇒ 3, so `result := 1 + 2 + 3 = 6`. A non-`own`
+    // local would reset to 0 each call → `1 + 1 + 1 = 3`, so **6 is positive
+    // proof of static lifetime**. Runs on all 7 backends, each persisting the
+    // global in its native idiom (same realisations as the E6 proof above); the
+    // JVM/CLR store the i32-concretized `integer` in a 64-bit field and narrow
+    // on load (the `l2i`/`conv.i4` path the E6 matrix proof established).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure bump(d); value d; integer d; \
+                  begin own integer n; n := n + d; bump := n end; \
+               result := bump(1) + bump(1) + bump(1) end",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *switch* (computed goto) + the integer comparison that drives
     // it.  `switch s := a1, a2, a3; … goto s[i]` selects the i-th label by a
     // 1-based linear `index == k ? jmp Lk` chain (portable jmp/jmp_if_false/label
