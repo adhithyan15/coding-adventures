@@ -54,6 +54,15 @@ procedures' `own n` stay independent — and is **not** re-zeroed on entry, so i
 accumulates: `own integer n; n := n + d` called three times with `d = 1` yields
 `1`, `2`, `3`. Runs on all 7 backends.
 
+Since **LANG-FULL AL8** the **standard function `abs`** (ALGOL 60 §3.2.4) is
+built in: `abs(E)` is the absolute value of `E`, keeping its type
+(`integer`→`integer`, `real`→`real`). It is resolved by name — a program may
+still redeclare its own `procedure abs`, which then wins — and lowers inline to
+`if E < 0 then -E else E` (a compare against zero, then a negated or
+pass-through move into one result slot), so it **runs on all 7 backends**;
+`abs(0 - 42)` ⇒ `42`. The other standard functions (`sign`, `entier`, then
+`sqrt`/`sin`/`cos`/…) are not implemented yet.
+
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real
 comparisons execute as IEEE-754 doubles. There is no implicit `integer`→`real`

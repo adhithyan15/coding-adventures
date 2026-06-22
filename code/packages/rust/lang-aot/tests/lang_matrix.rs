@@ -495,6 +495,22 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the `abs` **standard function** (§3.2.4, LANG-FULL AL8). `abs`
+    // is built into the language, not a user procedure, so `algol-iir-compiler`
+    // resolves it by name and lowers `abs(0 - 42)` inline to the value of
+    // `if (0-42) < 0 then -(0-42) else (0-42)` — a `cmp_lt` against zero, then a
+    // `jmp_if_false` choosing between a negated and a pass-through `mov` into one
+    // result slot (the store-per-branch shape the conditional-expression lowering
+    // already runs on every backend). No backend learns anything about `abs`: it
+    // is compare + branch + subtract in the shared IIR, so |−42| = 42 ⇒ exit 42
+    // on native-AOT / LLVM / WASM / JVM / CLR / VM / JIT alike.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; result := abs(0 - 42) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *typed procedure with a value parameter* (`integer procedure
     // sq(x); value x; integer x; sq := x*x`) called from the main block:
     // `result := sq(7)` ⇒ exit 49.  `algol-iir-compiler` lowers the procedure

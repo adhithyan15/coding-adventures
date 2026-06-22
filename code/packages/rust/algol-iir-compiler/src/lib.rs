@@ -956,11 +956,23 @@ impl Compiler {
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("call has no procedure name".into()))?;
 
-        let sig = self
-            .proc_sigs
-            .get(&name)
-            .cloned()
-            .ok_or_else(|| CompileError::Type(format!("call to undeclared procedure {name:?}")))?;
+        // ALGOL 60 §3.2.4 *standard functions* (`abs`, `sign`, `entier`, …) are
+        // built into the language, not user-declared procedures, so they have no
+        // `proc_sigs` entry.  A program may still legally *redeclare* one as its
+        // own procedure — so we only fall back to the built-in when the name is
+        // not a user-declared procedure.  This keeps the override semantics the
+        // Report grants while making `abs(x)` work out of the box.
+        let sig = match self.proc_sigs.get(&name).cloned() {
+            Some(sig) => sig,
+            None => {
+                if let Some(result) = self.try_emit_standard_function(&name, node)? {
+                    return Ok(result);
+                }
+                return Err(CompileError::Type(format!(
+                    "call to undeclared procedure {name:?}"
+                )));
+            }
+        };
 
         let actuals: Vec<&GrammarASTNode> = match first_direct_node(node, "actual_params") {
             Some(ap) => direct_nodes(ap)
@@ -1004,6 +1016,128 @@ impl Compiler {
             slot: dest,
             ty: sig.ret,
         })
+    }
+
+    /// Resolve a *standard function* call (ALGOL 60 §3.2.4) by name.  Returns
+    /// `Ok(Some(value))` if `name` is a built-in we lower inline, `Ok(None)` if
+    /// it is not a standard function (so the caller raises the usual
+    /// "undeclared procedure" error).
+    ///
+    /// AL8 PR-1 implements only `abs`.  `sign`/`entier`/`sqrt`/`sin`/`cos`/…
+    /// land in later slices (the transcendentals need a runtime math library on
+    /// every backend; `abs`/`sign`/`entier` are pure IIR and come first).
+    fn try_emit_standard_function(
+        &mut self,
+        name: &str,
+        node: &GrammarASTNode,
+    ) -> Result<Option<ExprValue>, CompileError> {
+        match name {
+            "abs" => Ok(Some(self.emit_abs(node)?)),
+            _ => Ok(None),
+        }
+    }
+
+    /// Extract the actual-parameter expressions of a standard-function call —
+    /// the same `actual_params → expression*` shape `emit_call_common` reads.
+    fn standard_fn_actuals<'n>(&self, node: &'n GrammarASTNode) -> Vec<&'n GrammarASTNode> {
+        match first_direct_node(node, "actual_params") {
+            Some(ap) => direct_nodes(ap)
+                .into_iter()
+                .filter(|n| n.rule_name == "expression")
+                .collect(),
+            None => Vec::new(),
+        }
+    }
+
+    /// `abs(E)` — absolute value, preserving `E`'s numeric type
+    /// (`integer`→`integer`, `real`→`real`).  We lower it to the value of the
+    /// conditional expression `if E < 0 then -E else E`, using the *exact*
+    /// `jmp_if_false` / `mov`-into-`dest` shape `emit_conditional_branches`
+    /// uses.  Writing `dest` once per branch (store-per-branch, never an SSA
+    /// phi) is what lets the result merge identically on all seven backends —
+    /// the VM/JIT and the stack machines treat `dest` as a slot, and the LLVM
+    /// backend promotes a twice-assigned temp to an `alloca` (the same
+    /// reassigned-value path E-LLVM-1 hardened).  `E` is evaluated **once**
+    /// (its slot is read by the test, the negation, and the else branch), so
+    /// `abs` has no double-evaluation surprise even if `E` has side effects.
+    ///
+    /// ```text
+    ///        t := E                 ; evaluate the operand once
+    ///        cond := t < 0          ; cmp_lt at the operand width
+    ///        jmp_if_false cond, else
+    ///        neg := 0 - t           ; -t  (i64 sub / f64 fsub)
+    ///        dest := neg
+    ///        jmp end
+    ///   else: dest := t
+    ///   end:  (dest holds |E|)
+    /// ```
+    fn emit_abs(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return Err(CompileError::Type(format!(
+                "standard function abs expects 1 argument, got {}",
+                actuals.len()
+            )));
+        }
+        let value = self.emit_expr(actuals[0])?;
+        let ty = match value.ty {
+            ScalarType::Integer | ScalarType::Real => value.ty,
+            ScalarType::Boolean => {
+                return Err(CompileError::Type(
+                    "standard function abs requires a numeric argument".into(),
+                ))
+            }
+        };
+
+        // cond := (value < 0), compared at the operand width (see the relational
+        // lowering in `emit_binary`: the hint is the operand type, not `bool`).
+        let zero = self.emit_const(ty, ty.default_operand());
+        let cond = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_lt",
+            Some(cond.clone()),
+            vec![Operand::Var(value.slot.clone()), Operand::Var(zero)],
+            ty.iir(),
+        ));
+
+        let else_label = self.fresh_label("abs_else");
+        let end_label = self.fresh_label("abs_end");
+        let dest = self.fresh_temp();
+
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(cond), Operand::Var(else_label.clone())],
+            "void",
+        ));
+        // then: dest := -value
+        let neg = self.emit_unary_minus(ExprValue {
+            slot: value.slot.clone(),
+            ty,
+        })?;
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(neg.slot)],
+            ty.iir(),
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+        // else: dest := value
+        self.emit_label(&else_label);
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot)],
+            ty.iir(),
+        ));
+        self.emit_label(&end_label);
+
+        Ok(ExprValue { slot: dest, ty })
     }
 
     fn emit_statement(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
@@ -2806,6 +2940,91 @@ mod tests {
     fn compiles_and_runs_boolean_conditional_expression() {
         let src = "begin boolean flag; integer result; flag := true; if if flag then true else false then result := 42 else result := 1 end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    // ── AL8 — standard functions (§3.2.4) ───────────────────────────────────
+
+    #[test]
+    fn abs_of_negative_integer_runs() {
+        // |0 - 42| = 42, preserving `integer`.
+        assert_eq!(run_i64("begin integer result; result := abs(0 - 42) end"), 42);
+    }
+
+    #[test]
+    fn abs_of_positive_integer_is_identity() {
+        // The else branch: a non-negative argument passes through unchanged.
+        assert_eq!(run_i64("begin integer result; result := abs(42) end"), 42);
+    }
+
+    #[test]
+    fn abs_of_zero_is_zero() {
+        // Boundary: `0 < 0` is false ⇒ else branch ⇒ 0 (not `-0`).
+        assert_eq!(run_i64("begin integer result; result := abs(0) end"), 0);
+    }
+
+    #[test]
+    fn abs_composes_in_an_expression() {
+        // `abs` is a value expression like any other — usable mid-arithmetic.
+        assert_eq!(
+            run_i64("begin integer result; result := 40 + abs(0 - 2) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn abs_of_negative_real_runs() {
+        // Real `abs` lowers the negation to `fsub` and compares at `f64` width.
+        assert_eq!(
+            run_f64("begin real result; result := abs(0.0 - 3.5) end"),
+            3.5
+        );
+    }
+
+    #[test]
+    fn abs_of_positive_real_is_identity() {
+        assert_eq!(run_f64("begin real result; result := abs(3.5) end"), 3.5);
+    }
+
+    #[test]
+    fn abs_lowers_to_branches_not_a_call() {
+        // The built-in must NOT emit a `call abs` (there is no such procedure):
+        // it lowers inline to a compare + conditional negate.
+        let module = compile_source("begin integer result; result := abs(0 - 1) end", "test")
+            .expect("abs compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        assert!(
+            main.instructions.iter().any(|i| i.op == "cmp_lt"),
+            "abs should compare the operand against zero"
+        );
+        assert!(
+            !main
+                .instructions
+                .iter()
+                .any(|i| i.op == "call" && i.srcs.first().and_then(|o| o.as_str_lit()) == Some("abs")),
+            "abs must not lower to a procedure call"
+        );
+    }
+
+    #[test]
+    fn user_declared_abs_overrides_the_builtin() {
+        // The Report lets a program redeclare a standard function.  A user
+        // `procedure abs` returning `x + 1` must win over the built-in, so
+        // `abs(41)` ⇒ 42 (the built-in would give 41).
+        let src = "begin integer result; \
+                   integer procedure abs(x); value x; integer x; abs := x + 1; \
+                   result := abs(41) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn abs_rejects_wrong_arity() {
+        let err = compile_source("begin integer result; result := abs(1, 2) end", "test")
+            .expect_err("two-argument abs is a type error");
+        assert!(format!("{err:?}").contains("abs expects 1 argument"));
     }
 
     #[test]
