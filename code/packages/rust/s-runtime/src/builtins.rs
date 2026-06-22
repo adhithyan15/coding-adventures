@@ -4339,23 +4339,36 @@ fn second_arg<'a>(args: &'a [Arg], name: &str, what: &str) -> SResult<&'a SValue
 ///
 /// A right-continuous (left-closed) step: an `x` exactly equal to `vec[i]` lands
 /// in the bucket that *starts* at `vec[i]`. `NA`/non-finite `x` returns `None`
-/// (the caller maps it to `NA`). Because `vec` is sorted we could binary-search,
-/// but breakpoint vectors are short, so a clear linear scan is preferred.
-fn find_interval_index(x: f64, vec: &[f64]) -> Option<usize> {
+/// (the caller maps it to `NA`).
+///
+/// `prefix` is the **leading non-NA run** of the breakpoint vector (everything up
+/// to, but not including, the first `NA` element) — computed once per call by
+/// [`break_prefix_len`]. Within that run the breaks are assumed sorted, so we use
+/// `partition_point` (a binary search) rather than a linear scan: this turns the
+/// whole `findInterval(x, vec)` / `cut` cost from `O(len(x) · len(vec))` into
+/// `O(len(x) · log(len(vec)))`, which matters because both lengths can reach
+/// `MAX_SEQ_LEN` (≈ 16.7M) — a quadratic scan there would be a CPU-amplification
+/// hazard for untrusted programs. Trimming to the non-NA prefix preserves the
+/// "first `NA` breakpoint stops the count" behaviour of the original linear form.
+fn find_interval_index(x: f64, prefix: &[f64]) -> Option<usize> {
     if is_na_real(x) || !x.is_finite() {
         return None;
     }
-    // Count breakpoints `<= x`. The first NA/non-finite breakpoint (or one that
-    // breaks monotonicity) simply stops the count — we never index out of bounds.
-    let mut idx = 0usize;
-    for &b in vec {
-        if !is_na_real(b) && b <= x {
-            idx += 1;
-        } else {
-            break;
-        }
-    }
-    Some(idx)
+    // The number of breaks `<= x` — equivalently the first index whose break is
+    // strictly greater than `x`. `partition_point` requires the predicate to be
+    // partitioned (all-true then all-false), which holds for a sorted prefix.
+    Some(prefix.partition_point(|&b| b <= x))
+}
+
+/// The length of the leading non-`NA` run of a breakpoint vector. `find_interval`
+/// and `cut` only ever consider breaks before the first `NA` (an `NA` break acts
+/// as a hard stop, matching the original linear scan), so the binary search runs
+/// over `&breaks[..break_prefix_len(breaks)]`.
+fn break_prefix_len(breaks: &[f64]) -> usize {
+    breaks
+        .iter()
+        .position(|&b| is_na_real(b))
+        .unwrap_or(breaks.len())
 }
 
 /// `findInterval(x, vec)` — for each element of `x`, the index of the last
@@ -4373,10 +4386,13 @@ fn b_find_interval(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .as_double()?
         .iter()
         .collect();
+    // The binary search runs over the leading non-NA run only (an NA break stops
+    // the count). Computed once, reused for every element of `x`.
+    let prefix = &vec[..break_prefix_len(&vec)];
 
     let out: Vec<f64> = x
         .iter()
-        .map(|xi| match find_interval_index(xi, &vec) {
+        .map(|xi| match find_interval_index(xi, prefix) {
             Some(i) => i as f64,
             None => na_real(),
         })
@@ -4440,12 +4456,14 @@ fn b_cut(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         })
         .collect();
 
-    // Each value's 1-based interval index (via the shared kernel) is its factor
-    // code when it lands in `1..=n_intervals`; otherwise (below the first break,
-    // at/above the last, or NA) the code is `None` → a `<NA>` factor element.
+    // Each value's 1-based interval index (via the shared kernel, binary-searching
+    // the leading non-NA run of `breaks`) is its factor code when it lands in
+    // `1..=n_intervals`; otherwise (below the first break, at/above the last, or
+    // NA) the code is `None` → a `<NA>` factor element.
+    let prefix = &breaks[..break_prefix_len(&breaks)];
     let codes: Vec<Option<u32>> = x
         .iter()
-        .map(|xi| match find_interval_index(xi, &breaks) {
+        .map(|xi| match find_interval_index(xi, prefix) {
             Some(i) if i >= 1 && i <= n_intervals => Some(i as u32),
             _ => None,
         })
