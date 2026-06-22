@@ -5,6 +5,7 @@
 //! cells, dependency tracking, automatic-recalc-on-edit (the user
 //! can also call `recalc_all` for a full sweep).
 
+use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet, VecDeque};
 
 use crate::address::{CellAddress, CellRange, SheetId, MAX_RANGE_CELLS};
@@ -891,6 +892,226 @@ impl Workbook {
     /// Whether the clipboard currently holds a copied/cut block.
     pub fn has_clipboard(&self) -> bool {
         self.clipboard.is_some()
+    }
+
+    // ----------------------------------------------------------------
+    // Range sort (Data ▸ Sort)
+    // ----------------------------------------------------------------
+
+    /// Reorder the **rows** of `range` by the computed values in one **key
+    /// column** — the engine side of a spreadsheet's *Data ▸ Sort*, and the third
+    /// member of the range-operation family (after [`fill`] and the clipboard).
+    ///
+    /// Each row of `range` is a record spanning the range's columns; the rows are
+    /// permuted into key order while every record's cells stay together. The sort
+    /// key is the **computed value** at `(row, key_col)` (a formula sorts by what
+    /// it evaluates to, not its text), compared under a fixed total order: blanks
+    /// always sort last (both directions), otherwise by type — Number < Text <
+    /// Boolean < Error — then within a type (numeric, case-insensitive text,
+    /// `FALSE`<`TRUE`, fixed error order). `ascending = false` reverses only the
+    /// non-empty comparison. The sort is **stable** (equal keys keep their order).
+    ///
+    /// Because the rows physically move, a moved cell's formula has its references
+    /// shifted by that row's displacement (`Δrow`, `Δcol = 0`) via
+    /// [`FormulaAst::shift`] — relative refs track, absolute (`$`) refs pin, an
+    /// off-grid ref collapses to `#REF!` — exactly as if each row were cut and
+    /// pasted to its new position. Display **formats** ride with their cells.
+    /// Cells in the sorted rows but *outside* the column band are untouched.
+    ///
+    /// Returns the **permutation** it applied: `Some(order)` where
+    /// `order[new_row_offset] = old_row_offset` (offsets are 0-based from
+    /// `range.start.row`), so a caller that keeps its own per-cell side-table —
+    /// like the wasm facade's raw-source echo map — can replay the exact same row
+    /// move with `rewrite_raw_for_fill` instead of re-deriving the comparator.
+    /// `None` is the no-op rejection (unknown `sheet`, `key_col` outside the
+    /// range, an empty/inverted/single-row range, or a range over
+    /// [`MAX_RANGE_CELLS`] — the shared DoS guard). An already-sorted range
+    /// returns `Some(identity)` and is left untouched (no revision bump). One
+    /// recalc transaction.
+    ///
+    /// [`fill`]: Workbook::fill
+    /// [`FormulaAst::shift`]: crate::ast::FormulaAst::shift
+    pub fn sort_range(
+        &mut self,
+        sheet: SheetId,
+        range: CellRange,
+        key_col: u32,
+        ascending: bool,
+    ) -> Option<Vec<u32>> {
+        // Guards: unknown sheet, oversized range (DoS), key column outside the
+        // range, or nothing to reorder (empty/inverted/single row).
+        if self.sheets.get(sheet.0 as usize).is_none() {
+            return None;
+        }
+        if range.cell_count() > MAX_RANGE_CELLS {
+            return None;
+        }
+        if key_col < range.start.col || key_col > range.end.col {
+            return None;
+        }
+        if range.end.row <= range.start.row {
+            return None;
+        }
+
+        let first = range.start.row;
+        let last = range.end.row;
+        let nrows = (last - first + 1) as usize;
+
+        // 1. Read each row's sort key (the computed value at the key column) and
+        //    stable-sort the row offsets by it under the documented total order.
+        let keys: Vec<CellValue> = (0..nrows)
+            .map(|i| self.cell_value(sheet, CellAddress::new(first + i as u32, key_col)))
+            .collect();
+        let mut order: Vec<usize> = (0..nrows).collect();
+        order.sort_by(|&a, &b| Self::compare_sort_keys(&keys[a], &keys[b], ascending));
+
+        // 2. Already in order → don't bump the revision for a no-op, but still
+        //    report the (identity) permutation so callers branch uniformly.
+        if order.iter().enumerate().all(|(new_i, &old_i)| new_i == old_i) {
+            return Some(order.iter().map(|&i| i as u32).collect());
+        }
+
+        // 3. Snapshot the whole block before writing — a permutation overwrites
+        //    cells in place, so every source must be read up front. Keyed by
+        //    (row offset, col), storing the optional content + optional format.
+        let s = &self.sheets[sheet.0 as usize];
+        let mut snap_content: HashMap<(usize, u32), CellContent> = HashMap::new();
+        let mut snap_format: HashMap<(usize, u32), String> = HashMap::new();
+        for i in 0..nrows {
+            let row = first + i as u32;
+            for col in range.start.col..=range.end.col {
+                let addr = CellAddress::new(row, col);
+                if let Some(cell) = s.cells.get(&addr) {
+                    snap_content.insert((i, col), cell.content.clone());
+                }
+                if let Some(code) = s.formats.get(&addr) {
+                    snap_format.insert((i, col), code.clone());
+                }
+            }
+        }
+
+        // 4. Rewrite each destination row from its source row, shifting moved
+        //    formulas by the row displacement (Δcol = 0). i64-then-clamp keeps the
+        //    subtraction exact for high-coordinate rows (the same guard fill uses).
+        for (new_i, &old_i) in order.iter().enumerate() {
+            let dest_row = first + new_i as u32;
+            let src_row = first + old_i as u32;
+            let d_row =
+                (dest_row as i64 - src_row as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+
+            for col in range.start.col..=range.end.col {
+                let dest = CellAddress::new(dest_row, col);
+                let new_content = match snap_content.get(&(old_i, col)) {
+                    None | Some(CellContent::Empty) => CellContent::Empty,
+                    Some(CellContent::Value(v)) => CellContent::Value(v.clone()),
+                    Some(CellContent::Formula { ast, .. }) => {
+                        let shifted = ast.shift(d_row, 0);
+                        CellContent::Formula {
+                            text: shifted.to_formula_string(),
+                            ast: shifted,
+                            cached: None, // recomputed by recalc_all
+                        }
+                    }
+                };
+                let s = &mut self.sheets[sheet.0 as usize];
+                match new_content {
+                    CellContent::Empty => {
+                        s.cells.remove(&dest);
+                    }
+                    content => {
+                        s.cells.insert(dest, Cell { content });
+                    }
+                }
+                // The format rides with the cell: copy it, or clear the
+                // destination's format when the source row had none.
+                match snap_format.get(&(old_i, col)) {
+                    Some(code) => {
+                        s.formats.insert(dest, code.clone());
+                    }
+                    None => {
+                        s.formats.remove(&dest);
+                    }
+                }
+            }
+        }
+
+        // 5. References moved en masse; rebuild edges, recalc the whole workbook
+        //    (one revision bump), and log every cell in the range so a viewport
+        //    `changed_since` snapshot taken before the sort sees the moves.
+        self.rebuild_dependency_graph();
+        self.recalc_all();
+        for i in 0..nrows {
+            let row = first + i as u32;
+            for col in range.start.col..=range.end.col {
+                self.log_change(sheet, CellAddress::new(row, col));
+            }
+        }
+        Some(order.iter().map(|&i| i as u32).collect())
+    }
+
+    /// Total order over cell values for [`sort_range`](Workbook::sort_range):
+    /// empties always sort last (both directions); otherwise by type rank
+    /// (Number < Text < Boolean < Error), then within a type. `ascending = false`
+    /// reverses only the non-empty comparison so blanks still sink to the bottom.
+    fn compare_sort_keys(a: &CellValue, b: &CellValue, ascending: bool) -> Ordering {
+        // Blanks sink to the bottom regardless of direction (Excel's rule), so
+        // this is decided *before* the ascending flip at the end.
+        match (a.is_empty(), b.is_empty()) {
+            (true, true) => return Ordering::Equal,
+            (true, false) => return Ordering::Greater,
+            (false, true) => return Ordering::Less,
+            (false, false) => {}
+        }
+        let ord = match (a, b) {
+            (CellValue::Number(x), CellValue::Number(y)) => {
+                x.partial_cmp(y).unwrap_or(Ordering::Equal)
+            }
+            // Case-insensitive primary, case-sensitive tiebreak — so "A" and "a"
+            // have a stable, deterministic order rather than comparing equal.
+            (CellValue::Text(x), CellValue::Text(y)) => {
+                x.to_lowercase().cmp(&y.to_lowercase()).then_with(|| x.cmp(y))
+            }
+            (CellValue::Boolean(x), CellValue::Boolean(y)) => x.cmp(y),
+            (CellValue::Error(x), CellValue::Error(y)) => {
+                Self::error_rank(*x).cmp(&Self::error_rank(*y))
+            }
+            // Different types: order by their type rank.
+            _ => Self::type_rank(a).cmp(&Self::type_rank(b)),
+        };
+        if ascending {
+            ord
+        } else {
+            ord.reverse()
+        }
+    }
+
+    /// Type ordinal for the cross-type sort order (Number < Text < Boolean <
+    /// Error). `Empty` is handled separately (always last) and never reaches here.
+    fn type_rank(v: &CellValue) -> u8 {
+        match v {
+            CellValue::Number(_) => 0,
+            CellValue::Text(_) => 1,
+            CellValue::Boolean(_) => 2,
+            CellValue::Error(_) => 3,
+            CellValue::Empty => 4,
+        }
+    }
+
+    /// A fixed ordinal per error sentinel, so a column of mixed errors sorts
+    /// deterministically rather than by hash order.
+    fn error_rank(e: SpreadsheetError) -> u8 {
+        match e {
+            SpreadsheetError::Ref => 0,
+            SpreadsheetError::Name => 1,
+            SpreadsheetError::DivZero => 2,
+            SpreadsheetError::Value => 3,
+            SpreadsheetError::NotAvailable => 4,
+            SpreadsheetError::Num => 5,
+            SpreadsheetError::Null => 6,
+            SpreadsheetError::Calc => 7,
+            SpreadsheetError::Spill => 8,
+            SpreadsheetError::GettingData => 9,
+        }
     }
 
     // ----------------------------------------------------------------
@@ -2133,5 +2354,227 @@ mod tests {
             wb.get_value(s, cell(1, 1)),
             Some(CellValue::Text("=THIS IS NOT A FORMULA".into()))
         );
+    }
+
+    // ── Range sort (Data ▸ Sort) ────────────────────────────────────
+
+    fn rng(r0: u32, c0: u32, r1: u32, c1: u32) -> CellRange {
+        CellRange::new(cell(r0, c0), cell(r1, c1))
+    }
+
+    #[test]
+    fn sort_numbers_ascending_reorders_a_single_column() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        for (r, v) in [(1, 30.0), (2, 10.0), (3, 20.0)] {
+            wb.set_value(s, cell(r, 1), CellValue::Number(v));
+        }
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true).is_some());
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(10.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(20.0)));
+        assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(30.0)));
+    }
+
+    #[test]
+    fn sort_descending_reverses_the_order() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        for (r, v) in [(1, 1.0), (2, 3.0), (3, 2.0)] {
+            wb.set_value(s, cell(r, 1), CellValue::Number(v));
+        }
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, false).is_some());
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(3.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(2.0)));
+        assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(1.0)));
+    }
+
+    #[test]
+    fn sort_carries_the_whole_record_and_its_format() {
+        // Two columns: a key column (A) and a payload column (B) with a format.
+        // Sorting by A must drag B's value AND format along with each row.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(2.0)); // A1 key
+        wb.set_value(s, cell(2, 1), CellValue::Number(1.0)); // A2 key
+        wb.set_value(s, cell(1, 2), CellValue::Number(200.0)); // B1 payload
+        wb.set_value(s, cell(2, 2), CellValue::Number(100.0)); // B2 payload
+        wb.set_format(s, cell(1, 2), "#,##0.00"); // format rides with B1's record
+
+        assert!(wb.sort_range(s, rng(1, 1, 2, 2), 1, true).is_some());
+        // Row that had key 1 (originally row 2) is now first.
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
+        assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Number(100.0)));
+        // The key-2 record moved to row 2, taking its B-column format with it.
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(2.0)));
+        assert_eq!(wb.get_value(s, cell(2, 2)), Some(CellValue::Number(200.0)));
+        assert_eq!(wb.get_format(s, cell(2, 2)), Some("#,##0.00"));
+        assert_eq!(wb.get_format(s, cell(1, 2)), None); // the format moved away
+    }
+
+    #[test]
+    fn sort_shifts_relative_refs_in_moved_formulas() {
+        // B holds =A*10 in each row; sorting by A (so the rows move) must shift
+        // each moved formula's relative ref by its row displacement, exactly like
+        // a per-row cut/paste — every B still equals its own row's A times ten.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        for (r, v) in [(1, 3.0), (2, 1.0), (3, 2.0)] {
+            wb.set_value(s, cell(r, 1), CellValue::Number(v));
+            wb.set_formula(s, cell(r, 2), &format!("=A{r}*10")).unwrap();
+        }
+        assert!(wb.sort_range(s, rng(1, 1, 3, 2), 1, true).is_some());
+        // Keys sorted to 1,2,3; each B is its row's A*10.
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
+        assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Number(10.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(2.0)));
+        assert_eq!(wb.get_value(s, cell(2, 2)), Some(CellValue::Number(20.0)));
+        assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(3.0)));
+        assert_eq!(wb.get_value(s, cell(3, 2)), Some(CellValue::Number(30.0)));
+        // The formula at the new row 1 was shifted to point at A1.
+        assert_eq!(wb.get_value(s, cell(1, 2)).unwrap(), CellValue::Number(10.0));
+        let raw = match &wb.sheets[s.0 as usize].cells[&cell(1, 2)].content {
+            CellContent::Formula { text, .. } => text.clone(),
+            _ => panic!("expected a formula at B1"),
+        };
+        assert!(raw.contains("A1"), "moved formula should reference A1, got {raw}");
+    }
+
+    #[test]
+    fn sort_is_stable_for_equal_keys() {
+        // Two rows share key 1; a stable sort keeps their original B order.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        wb.set_value(s, cell(1, 2), CellValue::Text("first".into()));
+        wb.set_value(s, cell(2, 1), CellValue::Number(1.0));
+        wb.set_value(s, cell(2, 2), CellValue::Text("second".into()));
+        wb.set_value(s, cell(3, 1), CellValue::Number(0.0));
+        wb.set_value(s, cell(3, 2), CellValue::Text("zero".into()));
+        assert!(wb.sort_range(s, rng(1, 1, 3, 2), 1, true).is_some());
+        // key 0 first, then the two key-1 rows in their original order.
+        assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Text("zero".into())));
+        assert_eq!(wb.get_value(s, cell(2, 2)), Some(CellValue::Text("first".into())));
+        assert_eq!(wb.get_value(s, cell(3, 2)), Some(CellValue::Text("second".into())));
+    }
+
+    #[test]
+    fn sort_text_is_case_insensitive() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        for (r, t) in [(1, "banana"), (2, "Apple"), (3, "cherry")] {
+            wb.set_value(s, cell(r, 1), CellValue::Text(t.into()));
+        }
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true).is_some());
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Text("Apple".into())));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Text("banana".into())));
+        assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Text("cherry".into())));
+    }
+
+    #[test]
+    fn sort_blanks_sink_last_in_both_directions() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(5.0));
+        // row 2 left blank
+        wb.set_value(s, cell(3, 1), CellValue::Number(1.0));
+        // Ascending: 1, 5, blank.
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true).is_some());
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(5.0)));
+        assert_eq!(wb.cell_value(s, cell(3, 1)), CellValue::Empty);
+        // Descending: 5, 1, blank — the blank STILL sinks last.
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, false).is_some());
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(5.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(1.0)));
+        assert_eq!(wb.cell_value(s, cell(3, 1)), CellValue::Empty);
+    }
+
+    #[test]
+    fn sort_cross_type_order_number_before_text() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Text("zzz".into()));
+        wb.set_value(s, cell(2, 1), CellValue::Number(99.0));
+        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true).is_some());
+        // Numbers (rank 0) sort before text (rank 1).
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(99.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Text("zzz".into())));
+    }
+
+    #[test]
+    fn sort_leaves_cells_outside_the_column_band_untouched() {
+        // The range is A:A; a value in B must not move when A is sorted.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(2.0));
+        wb.set_value(s, cell(2, 1), CellValue::Number(1.0));
+        wb.set_value(s, cell(1, 2), CellValue::Text("stay".into())); // B1, outside range
+        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true).is_some());
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(2.0)));
+        // B1 did not move.
+        assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Text("stay".into())));
+        assert_eq!(wb.get_value(s, cell(2, 2)), None);
+    }
+
+    #[test]
+    fn sort_rejects_bad_arguments() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        // key_col outside the range → false (no-op).
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 5, true).is_none());
+        // Single-row range → false (nothing to reorder).
+        assert!(wb.sort_range(s, rng(1, 1, 1, 1), 1, true).is_none());
+        // Unknown sheet → false.
+        assert!(wb.sort_range(SheetId(99), rng(1, 1, 3, 1), 1, true).is_none());
+    }
+
+    #[test]
+    fn sort_already_sorted_is_a_noop_true_without_revision_bump() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        wb.set_value(s, cell(2, 1), CellValue::Number(2.0));
+        let before = wb.current_revision();
+        // Already ascending → returns true, but makes no change / no revision bump.
+        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true).is_some());
+        assert_eq!(wb.current_revision(), before);
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(2.0)));
+    }
+
+    #[test]
+    fn sort_logs_moved_cells_for_changed_since() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(2.0));
+        wb.set_value(s, cell(2, 1), CellValue::Number(1.0));
+        let rev = wb.current_revision();
+        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true).is_some());
+        match wb.changed_since(s, rev) {
+            ChangeSet::Delta { changed, .. } => {
+                assert!(changed.contains(&cell(1, 1)), "A1 moved");
+                assert!(changed.contains(&cell(2, 1)), "A2 moved");
+            }
+            ChangeSet::Stale { .. } => panic!("should be a Delta"),
+        }
+    }
+
+    #[test]
+    fn sort_returns_the_applied_permutation() {
+        // Keys 30,10,20 → ascending order is the rows originally at offsets 1,2,0
+        // (values 10,20,30). The returned permutation lets a caller replay the
+        // exact move on its own side-table (the wasm facade's raw echo map).
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        for (r, v) in [(1, 30.0), (2, 10.0), (3, 20.0)] {
+            wb.set_value(s, cell(r, 1), CellValue::Number(v));
+        }
+        assert_eq!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true), Some(vec![1, 2, 0]));
+        // An already-sorted range reports the identity permutation (no change).
+        assert_eq!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true), Some(vec![0, 1, 2]));
+        // A rejected sort reports None.
+        assert_eq!(wb.sort_range(s, rng(1, 1, 3, 1), 9, true), None);
     }
 }
