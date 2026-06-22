@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.173.0] - 2026-06-22
+
+### Added — string `slice` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.24.0, which folds
+`String#slice` on a string literal with integer-literal arguments to a string
+literal: `"abcd".slice(1, 3)` → `"bc"`. JS `slice` indexes by UTF-16 code unit
+over the half-open range `[start, end)`; negative arguments count from the end
+and both ends clamp to `[0, length]`. Zero, one, or two integer-literal
+arguments fold; a non-integer argument, more than two arguments, an identifier
+receiver, or a cut that would split a surrogate pair (yielding a lone
+surrogate) all pass through unfolded — matching `charAt`'s conservative stance.
+
+New e2e fixture `tests/diff/simple-fold-slice` (and integration test
+`diff_simple_fold_slice.rs`): `var s = "abcd".slice(1, 3); report(s);` →
+`var s="bc";report(s);`, with a whitespace-fallback guard proving the fold
+comes from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.173.0 to sit above main (closurec 0.171.0) and the
+> concurrently-open numeric `toString([radix])` fold branch (closurec 0.172.0,
+> PR #6560), so the parallel branches never collide on the version line.
+
 ## [0.171.0] - 2026-06-22
 
 ### Added — string `indexOf` fold at SIMPLE/ADVANCED
