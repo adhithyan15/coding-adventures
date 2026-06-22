@@ -11,7 +11,7 @@ use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_cil_bytecode::{
     IIRClrConfig, IIRClrError,
     lower_iir_to_cil, validate_iir_for_clr, IIRClrCodeGenerator,
-    CILProgramArtifact,
+    CILProgramArtifact, emit_il,
 };
 use codegen_core::codegen::CodeGenerator;
 
@@ -1621,4 +1621,85 @@ fn g4_lowers_print_i64_to_call_with_basic_token() {
          in print_42 body; got: {:02X?}",
         expected, body
     );
+}
+
+// ===========================================================================
+// LANG-FULL E6 (layer 1) — typed module globals (static fields)
+// ===========================================================================
+
+/// E6 proof module (i32 program, int64 global): `compute` seeds the global, a
+/// *separate* `bump` reads/increments/writes it ⇒ 42. The program is i32-typed
+/// so the emit_il launcher's `Console.WriteLine(int32)` prints it directly.
+fn e6_globals_module() -> IIRModule {
+    let mut m = IIRModule::new("Main", "Main");
+    m.entry_point = Some("compute".into());
+    m.add_or_replace(IIRFunction::new("compute", vec![], "i32", vec![
+        IIRInstr::new("const", Some("seed".into()), vec![Operand::Int(41)], "i32"),
+        IIRInstr::new("global_store", None, vec![Operand::Str("g".into()), Operand::Var("seed".into())], "void"),
+        IIRInstr::new("call", Some("res".into()), vec![Operand::Var("bump".into())], "i32"),
+        IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "i32"),
+    ]));
+    m.add_or_replace(IIRFunction::new("bump", vec![], "i32", vec![
+        IIRInstr::new("global_load", Some("cur".into()), vec![Operand::Str("g".into())], "i32"),
+        IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("add", Some("nxt".into()), vec![Operand::Var("cur".into()), Operand::Var("one".into())], "i32"),
+        IIRInstr::new("global_store", None, vec![Operand::Str("g".into()), Operand::Var("nxt".into())], "void"),
+        IIRInstr::new("ret", None, vec![Operand::Var("nxt".into())], "i32"),
+    ]));
+    m
+}
+
+#[test]
+fn e6_global_emits_static_field_and_ldsfld_stsfld() {
+    let il = emit_il(&e6_globals_module(), &default_cfg()).expect("emit_il");
+    assert!(il.contains(".field public static int64 G_0"), "missing field def:\n{il}");
+    assert!(il.contains("ldsfld int64 ") && il.contains("Program::G_0"), "missing ldsfld:\n{il}");
+    assert!(il.contains("stsfld int64 ") && il.contains("Program::G_0"), "missing stsfld:\n{il}");
+}
+
+fn find_ilasm() -> Option<std::path::PathBuf> {
+    let home = std::env::var("HOME").ok()?;
+    let base = std::path::Path::new(&home).join(".nuget/packages");
+    for pkg in ["runtime.osx-arm64.microsoft.netcore.ilasm", "runtime.linux-x64.microsoft.netcore.ilasm"] {
+        let dir = base.join(pkg);
+        if let Ok(versions) = std::fs::read_dir(&dir) {
+            for v in versions.flatten() {
+                for cand in ["runtimes/osx-arm64/native/ilasm", "runtimes/linux-x64/native/ilasm"] {
+                    let p = v.path().join(cand);
+                    if p.exists() { return Some(p); }
+                }
+            }
+        }
+    }
+    None
+}
+
+/// End-to-end on real `ilasm` + `dotnet`: the cross-function global program
+/// prints 42. Skipped if the CLR toolchain is unavailable.
+#[test]
+fn e6_global_runs_on_real_clr() {
+    use std::process::Command;
+    let Some(ilasm) = find_ilasm() else { eprintln!("no ilasm — skipping"); return; };
+    if Command::new("dotnet").arg("--version").output().map(|o| !o.status.success()).unwrap_or(true) {
+        eprintln!("no dotnet — skipping"); return;
+    }
+    let il = emit_il(&e6_globals_module(), &default_cfg()).expect("emit_il");
+    let dir = std::env::temp_dir().join(format!("e6_clr_{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let il_path = dir.join("Main.il");
+    let dll = dir.join("Main.dll");
+    std::fs::write(&il_path, &il).expect("write .il");
+    let asm = Command::new(&ilasm)
+        .arg("-dll=false").arg("-exe")
+        .arg(format!("-output={}", dll.display()))
+        .arg(&il_path).output().expect("run ilasm");
+    assert!(asm.status.success() && dll.exists(),
+        "ilasm failed:\n{}\n--- .il ---\n{il}", String::from_utf8_lossy(&asm.stdout));
+    std::fs::write(dir.join("Main.runtimeconfig.json"),
+        r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#)
+        .expect("write runtimeconfig");
+    let out = Command::new("dotnet").arg(&dll).output().expect("run dotnet");
+    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(stdout, "42", "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
 }
