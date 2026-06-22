@@ -1157,6 +1157,45 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
     return None
 
 
+# --- Symbol#to_proc (&:sym) ------------------------------------------------
+#
+# Ruby's ``&:sym`` block argument converts a ``Symbol`` into a block via
+# ``Symbol#to_proc``: the resulting proc calls the named method on its first
+# argument, forwarding any remaining arguments.  So ``[1, 2, 3].map(&:to_s)``
+# is ``[1, 2, 3].map { |x| x.to_s }`` and ``[1, 2].inject(&:+)`` is
+# ``inject { |acc, x| acc + x }``.
+#
+# The Ruby→SIR frontend lowers ``&:sym`` to ``block_pass(SymLit("sym"))``;
+# the backend emits the surviving ``block_pass`` envelope as a call to this
+# helper (``_sir_oop_sym_to_proc(intern("sym"))``), which yields a
+# :class:`Closure` the block-taking catalog methods (``map``/``select``/…)
+# drive through :func:`apply` exactly like a ``{ }`` block.
+#
+# The closure's ``arity`` is ``None`` (variadic): ``apply`` then passes a
+# block method's arguments through unadjusted, so the *first* becomes the
+# receiver and the rest are forwarded as method arguments.  That matches
+# Ruby's ``&:sym`` arity (one required receiver plus a rest) and makes the
+# one-arg (``map``) and two-arg (``inject``) shapes both correct.
+
+
+def sym_to_proc(sym: Val) -> Closure:
+    """Build a :class:`Closure` equivalent to Ruby's ``sym.to_proc``.
+
+    ``sym`` is normally a ``sir-runtime-core`` :class:`Symbol` (the emitted
+    ``intern("name")``); a bare string is accepted defensively.  Applying the
+    returned closure to ``[recv, *rest]`` dispatches ``recv.name(*rest)``
+    through :func:`call_method`, so an out-of-catalog method bottoms out at
+    ``nil`` rather than raising — upholding the never-raise-on-the-OO-surface
+    invariant for the proc body too.
+    """
+    method = sym.name if isinstance(sym, Symbol) else str(sym)
+
+    def _invoke(recv: Val, *rest: Val) -> Val:
+        return call_method(recv, method, *rest)
+
+    return Closure(_invoke, arity=None)
+
+
 def reset_oop() -> None:
     """Reset all OOP runtime state — class registry, self stack, instance/class
     variable stores, and the method table.  Primarily for test isolation.

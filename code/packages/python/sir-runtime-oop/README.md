@@ -68,6 +68,16 @@ the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
 **`to_s`/`inspect`** Ruby display forms (so `nil`/`true`/`false` need no catalog)
 plus **`Array#join`**.
 
+### `&:sym` symbol-to-proc (item **M2**)
+
+`sym_to_proc(sym)` builds the `Closure` Ruby's `Symbol#to_proc` returns, so a
+`&:sym` block argument works — `[1, 2, 3].map(&:to_s)` → `["1", "2", "3"]`. The
+backend emits a `&:sym` block-pass on a dispatched call as
+`_sir_oop_sym_to_proc(intern("sym"))`; applying the closure dispatches the named
+method on its first argument (the rest forwarded), through `call_method`, so an
+unknown method still bottoms out at `nil`. Operator symbols (`&:+`) are native
+arithmetic, not in the dispatch catalog — a documented v0 boundary.
+
 ## Honest v0 limitation
 
 Because the frontend does not thread receivers into method bodies, the *current

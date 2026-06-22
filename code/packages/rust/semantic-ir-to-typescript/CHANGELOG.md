@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.1.19 — `&:sym` symbol-to-proc on dispatched calls (M2)
+
+A `&:sym` block argument on a method-dispatch call (`recv.map(&:to_s)`) now
+emits working code. The Ruby→SIR frontend lowers `&:sym` to
+`block_pass(SymLit("sym"))`; the Q9f normalization unwraps `block_pass` only at
+*user-method* `DirectCall` sites, so a block-pass to a `__method__` dispatch
+call reached the backend intact and previously rendered as a broken
+`callBuiltin("block_pass", …)`. `emit_arg` and the `__method__` argument loop
+now recognize the surviving envelope:
+
+- `block_pass(SymLit("m"))` → `__SirOop.symToProc(__Sir.intern("m"))` — the
+  `Symbol#to_proc` runtime helper returns a `Closure` that calls `recv.m(...rest)`;
+- `block_pass(<other>)` → the inner operand, unwrapped (the proc *is* the block).
+
+The `__SirOop` namespace import already covers the new helper (no header
+change). New tests `sym_block_pass_on_dispatch_emits_sym_to_proc`,
+`proc_block_pass_on_dispatch_unwraps_to_value`,
+`sym_block_pass_as_plain_arg_emits_sym_to_proc`. Requires
+`@coding-adventures/sir-runtime-oop` ≥ 0.1.6. Operator symbols (`&:+`) remain a
+documented v0 boundary (native arithmetic, not dispatched).
+
 ## 0.1.18 — `defined?(recv.meth)` → "method" (Q10h)
 
 `defined?` over a method-call operand `recv.meth` — the `__method__` dispatch

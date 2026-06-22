@@ -1138,6 +1138,27 @@ function classNameArg(arg: Val): string {
   return typeof arg === "string" ? arg : classOf(arg);
 }
 
+// --- Symbol#to_proc (&:sym) ------------------------------------------------
+//
+// Ruby's `&:sym` block argument converts a `Symbol` into a block via
+// `Symbol#to_proc`: the resulting proc calls the named method on its first
+// argument, forwarding any remaining arguments. So `[1, 2, 3].map(&:to_s)` is
+// `[1, 2, 3].map { |x| x.to_s }` and `[1, 2].inject(&:+)` is
+// `inject { |acc, x| acc + x }`.
+//
+// The Ruby→SIR frontend lowers `&:sym` to `block_pass(SymLit("sym"))`; the
+// backend emits the surviving `block_pass` envelope as a call to this helper
+// (`__SirOop.symToProc(intern("sym"))`), which yields a `Closure` the
+// block-taking catalog methods (`map`/`select`/…) drive through `apply`
+// exactly like a `{ }` block. `apply` forwards arguments unadjusted, so the
+// first becomes the receiver and the rest are forwarded as method arguments —
+// faithful to `&:sym`'s arity (one required receiver plus a rest), correct for
+// both the one-arg (`map`) and two-arg (`inject`) shapes.
+export function symToProc(sym: Val): Closure {
+  const method = isSymbol(sym) ? (sym as { name: string }).name : String(sym);
+  return new Closure((recv: Val, ...rest: Val[]): Val => callMethod(recv, method, ...rest));
+}
+
 /**
  * Reset all OOP runtime state — class registry, self stack, instance/class
  * variable stores, and the method table.  Primarily for test isolation.
