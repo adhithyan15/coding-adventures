@@ -52,6 +52,8 @@ EXPECTED = [
     ("friedreich_ataxia", "trinucleotide_repeat", "gaa"),            # expand (NBK563199)
     ("wilson_disease", "inheritance", "autosomal_recessive"),        # expand (NBK441990)
     ("wilson_disease", "gene_defect", "atp7b"),                      # expand (NBK441990)
+    ("hereditary_hemochromatosis", "inheritance", "autosomal_recessive"),  # expand (NBK430862)
+    ("hereditary_hemochromatosis", "gene_defect", "hfe"),            # expand (NBK430862)
 ]
 VAR = {"inheritance": "Pattern", "gene_defect": "Gene",
        "trinucleotide_repeat": "Repeat", "imprinting": "Parent"}

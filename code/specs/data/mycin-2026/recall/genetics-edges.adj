@@ -148,4 +148,14 @@ rulebook genetics_facts {
         source "Wilson disease is an autosomal recessive condition caused by 1 of several mutations in ATP7B gene which encodes the ATP7B protein transporter on the long arm of chromosome 13 (13q) responsible for excreting excess copper into bile and out of the body."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK441990/"
         trust authoritative
+
+    % --- EXPAND: hereditary hemochromatosis (autosomal recessive; HFE gene) -----------
+    relate inheritance(hereditary_hemochromatosis, autosomal_recessive)
+        source "This is considered the classic form of hereditary hemochromatosis, is inherited in an autosomal recessive fashion, and disproportionately affects males."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430862/"
+        trust authoritative
+    relate gene_defect(hereditary_hemochromatosis, hfe)
+        source "Type 1 hereditary hemochromatosis occurs in patients who are typically homozygous for loss-of-function mutations in HFE."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430862/"
+        trust authoritative
 }
