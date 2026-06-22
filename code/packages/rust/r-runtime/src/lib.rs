@@ -3376,4 +3376,67 @@ mod tests {
             "[1]  \"(0,3.1]\" \"(3.1,10]\""
         );
     }
+
+    // --- R-44: base R Date support (through R syntax) ------------------------
+
+    #[test]
+    fn date_class_through_r_syntax() {
+        assert_eq!(show("class(as.Date(\"2021-03-14\"))\n"), "[1] \"Date\"");
+    }
+
+    #[test]
+    fn date_as_numeric_through_r_syntax() {
+        assert_eq!(nums("as.numeric(as.Date(\"1970-01-01\"))\n"), vec![0.0]);
+        assert_eq!(nums("as.numeric(as.Date(\"1970-01-02\"))\n"), vec![1.0]);
+        assert_eq!(nums("as.numeric(as.Date(\"1969-12-31\"))\n"), vec![-1.0]);
+    }
+
+    #[test]
+    fn date_format_round_trip_through_r_syntax() {
+        assert_eq!(
+            show("format(as.Date(\"2021-03-14\"))\n"),
+            "[1] \"2021-03-14\""
+        );
+        assert_eq!(
+            show("format(as.Date(\"2000-02-29\"))\n"),
+            "[1] \"2000-02-29\""
+        );
+    }
+
+    #[test]
+    fn date_slash_format_through_r_syntax() {
+        assert_eq!(
+            nums("as.numeric(as.Date(\"2021/03/14\", format = \"%Y/%m/%d\"))\n"),
+            nums("as.numeric(as.Date(\"2021-03-14\"))\n")
+        );
+    }
+
+    #[test]
+    fn date_malformed_is_na_through_r_syntax() {
+        assert_eq!(show("as.numeric(as.Date(\"not-a-date\"))\n"), "[1] NA");
+    }
+
+    #[test]
+    fn date_subtraction_through_r_syntax() {
+        assert_eq!(
+            nums("as.Date(\"2021-03-20\") - as.Date(\"2021-03-14\")\n"),
+            vec![6.0]
+        );
+    }
+
+    #[test]
+    fn weekdays_through_r_syntax() {
+        assert_eq!(
+            show("weekdays(as.Date(\"1970-01-01\"))\n"),
+            "[1] \"Thursday\""
+        );
+        assert_eq!(show("weekdays(as.Date(\"2021-03-14\"))\n"), "[1] \"Sunday\"");
+    }
+
+    #[test]
+    fn sys_date_structure_through_r_syntax() {
+        // Non-deterministic: assert only class + single numeric.
+        assert_eq!(show("class(Sys.Date())\n"), "[1] \"Date\"");
+        assert_eq!(nums("length(Sys.Date())\n"), vec![1.0]);
+    }
 }
