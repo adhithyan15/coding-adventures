@@ -37,7 +37,9 @@ use symbolic_vm::SymbolicBackend;
 
 use symbolic_ir::{apply, IRApply, IRNode, ADD, AND, MUL, OR};
 
-use crate::builtins::{build_wolfram_builtins, CONDITIONAL_HEADS, ITERATION_HEADS, SCOPING_HEADS};
+use crate::builtins::{
+    build_wolfram_builtins, CONDITIONAL_HEADS, ITERATION_HEADS, PATTERN_HEADS, SCOPING_HEADS,
+};
 use crate::lower::{FUNCTION_HEAD, SLOT_HEAD, SLOT_SEQUENCE_HEAD};
 
 /// The Wolfram evaluation backend: a [`SymbolicBackend`] plus the W-5 built-in
@@ -89,6 +91,13 @@ impl WolframBackend {
         // have a side effect) must never run. `If` is already in the inner held
         // set, so it is not added here.
         for head in CONDITIONAL_HEADS {
+            held.insert(head.to_string());
+        }
+        // W-18 pattern-matching heads (`MatchQ`, `Cases`, `FreeQ`) must be held
+        // so the PATTERN argument arrives literal — a pattern is a form, not a
+        // value (`MatchQ[2, 1+1]` matches `Plus[1,1]`, not `2`). Each handler
+        // evaluates only its subject. (MA04 §19.4.)
+        for head in PATTERN_HEADS {
             held.insert(head.to_string());
         }
         // W-11: the inner backend's rules followed by the pure-function
