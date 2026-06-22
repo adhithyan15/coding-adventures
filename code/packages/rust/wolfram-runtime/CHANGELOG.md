@@ -4,6 +4,76 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.15.0] — 2026-06-21
+
+The **W-19** deliverable (MA04 §21): Wolfram's **named patterns** and
+**replacement rules**, built directly on W-18's matcher and the existing
+`cas-pattern-matching` crate. **No grammar change** — `->`/`:>`/`/.`/`_` were
+already tokenised and lowered (`x_` → `Pattern[x, Blank[]]`, `a -> b` →
+`Rule[a, b]`, `a :> b` → `RuleDelayed[a, b]`, `e /. r` → `ReplaceAll[e, r]`).
+W-19 is entirely in `wolfram-runtime`: it upgrades the matcher to bind named
+captures, adds the `Replace` handler, and replaces the `/.` pre-pass's rewrite
+engine with a correct single top-down pass.
+
+### Added (named patterns & replacement)
+
+- **Named-pattern binding.** `pattern_matches` now delegates to
+  `cas_pattern_matching::match_pattern`, the shared matcher that records
+  `name → subexpr` captures. So a named blank `x_` (`Pattern[x, Blank[]]`) and a
+  typed named blank `x_Integer` (`Pattern[x, Blank[Integer]]`) match **and bind**.
+  `MatchQ`, `Cases`, and `FreeQ` are upgraded in place: `MatchQ[2, x_]` → `True`
+  (was `False` under the binding-free W-18 matcher), `Cases[{1, 2, 3}, x_Integer]`
+  → `{1, 2, 3}`. All W-18 results (literals, `_`, `_h`) are preserved — the new
+  matcher is a strict superset, and `IRNode`'s `PartialEq` keeps `2 ≠ 2.0` exactly
+  as `same_element` did.
+- **`ReplaceAll[expr, rules]` / `expr /. rules`** — a single **top-down
+  leftmost-outermost** pass: at each node the rules are tried in order; the first
+  whose LHS matches the **whole** node wins, its RHS (with captures substituted)
+  replaces the node, and the pass does **not** re-descend into the result. No
+  match → recurse into the head and arguments. `f[2] /. f[x_] -> x` → `2`;
+  `g[1, 2] /. g[a_, b_] -> a + b` → `3`; `{1, 2, 3} /. 2 -> 99` → `{1, 99, 3}`;
+  `ReplaceAll[{1, 2, 3}, x_Integer -> x^2]` → `{1, 4, 9}`. `rules` may be a single
+  rule or a `List` of rules (first match per node wins).
+- **`Replace[expr, rules]`** — like `ReplaceAll` but matches **only the whole
+  `expr`** (no descent into parts). `Replace[5, x_ -> x + 1]` → `6`;
+  `Replace[{1, 2, 3}, x_Integer -> 0]` → `{1, 2, 3}` (the list's head is `List`,
+  not `Integer`, and `Replace` does not descend). Held (joins `PATTERN_HEADS`);
+  evaluates only its subject; a non-two-argument call — including the deferred
+  three-argument *level-spec* form — stays unevaluated.
+- **`Rule` (`->`) / `RuleDelayed` (`:>`)** — both carry a pattern LHS and a
+  template RHS. Because replacement runs as an IR-level pre-pass *before*
+  evaluation, the RHS of both is held until its captures are substituted, then
+  evaluated once; `h[3] /. h[n_] :> n + 1` → `4`.
+
+### Fixed
+
+- **`ReplaceAll` no longer loops to non-convergence.** The prior `/.` pre-pass
+  used `cas_pattern_matching::rewrite`, a **bottom-up fixed-point** rewriter that
+  re-walks each replacement; `{1, 2, 3} /. x_Integer -> x^2` looped forever
+  (`1` → `1^2` → folds to `1`, an `Integer`, re-matching `x_Integer` …) and
+  errored "did not converge". The W-19 single-pass `replace_all_once` visits each
+  node at most once, yielding `{1, 4, 9}` and stopping.
+
+### Safety
+
+- **Bounded recursion.** `replace_all_once` is depth-guarded by `REPLACE_MAX_DEPTH`
+  (512, mirroring `FREEQ_MAX_DEPTH`): past the cap a sub-node is returned unchanged
+  rather than recursed, turning a crafted pathologically nested input into a safe
+  bounded answer instead of a stack overflow. The whole pre-pass still runs inside
+  the bounded-stack `catch_unwind` worker thread.
+- **No loops, no panics.** A single non-re-descending pass cannot expand
+  unboundedly (the old `MAX_REWRITE_ITERATIONS` cap is gone with the fixed-point
+  rewriter). An unbound RHS capture is left in place by `substitute` (no panic); a
+  non-rule operand yields an empty rule set, returning the subject unchanged;
+  heterogeneous compares go through total `PartialEq`.
+
+### Deferred to W-20
+
+Alternatives (`a | b`, `Alternatives`), conditions (`patt /; test`, `Condition`),
+`PatternTest` (`patt ? fn`), sequences (`__`/`___`, `BlankSequence`/
+`BlankNullSequence`), `Repeated`, **level specifications** for `Replace`, and
+**`ReplaceRepeated`** (`//.`, the fixed-point form). See MA04 §21.7.
+
 ## [0.14.0] — 2026-06-21
 
 The **W-18** deliverable (MA04 §19): Wolfram's **pattern-matching predicates**
