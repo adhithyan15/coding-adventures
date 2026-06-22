@@ -183,10 +183,18 @@ pub fn exec_one(
                 // The 128-bit `rdx:rax` pattern interpreted as a signed integer.
                 let n = dividend as i128;
                 let divisor_i = d as i64 as i128;
-                let q = n / divisor_i;
-                let r = n % divisor_i;
-                // x86 raises `#DE` when the quotient doesn't fit the 64-bit dest
-                // (e.g. `i64::MIN / -1` ⇒ +2^63).  Model that as a divide error.
+                // `checked_div`/`checked_rem` return `None` exactly on the one
+                // overflowing case `i128::MIN / -1` (divide-by-zero is already
+                // excluded above).  That case is unreachable from real backend
+                // output (it always `cqo`s, so `rdx:rax` sign-extends a 64-bit
+                // value), but a crafted register state could hit it — so trap
+                // rather than panic, keeping the sandbox fail-closed.
+                let (q, r) = match (n.checked_div(divisor_i), n.checked_rem(divisor_i)) {
+                    (Some(q), Some(r)) => (q, r),
+                    _ => return Err(Trap::DivideError(instr_off as u64)),
+                };
+                // x86 also raises `#DE` when the quotient doesn't fit the 64-bit
+                // dest (e.g. `i64::MIN / -1` ⇒ +2^63).
                 if q < i64::MIN as i128 || q > i64::MAX as i128 {
                     return Err(Trap::DivideError(instr_off as u64));
                 }
@@ -384,6 +392,20 @@ mod tests {
         let mut st = CpuState::default();
         st.set(Reg::Rax, i64::MIN as u64);
         exec(&mut st, &Instr::Cqo).unwrap();
+        st.set(Reg::Rcx, (-1i64) as u64);
+        let err = exec(&mut st, &Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: true }).unwrap_err();
+        assert!(matches!(err, Trap::DivideError(_)));
+    }
+
+    #[test]
+    fn i128_min_dividend_div_neg1_traps_not_panics() {
+        // A *crafted* rdx:rax = i128::MIN (rdx top bit set, rax = 0) divided by
+        // -1 overflows the i128 division itself — must trap, never panic. (Real
+        // backend output can't reach this because it always `cqo`s first; this
+        // guards the sandbox against arbitrary register state.)
+        let mut st = CpuState::default();
+        st.set(Reg::Rdx, 0x8000_0000_0000_0000);
+        st.set(Reg::Rax, 0);
         st.set(Reg::Rcx, (-1i64) as u64);
         let err = exec(&mut st, &Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: true }).unwrap_err();
         assert!(matches!(err, Trap::DivideError(_)));
