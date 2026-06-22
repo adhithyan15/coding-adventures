@@ -37,3 +37,4 @@ import "genetics-edges.adj"
 ? gene_defect(hereditary_hemochromatosis, $Gene)       % expect hfe (expand)
 ? inheritance(tay_sachs_disease, $Pattern)             % expect autosomal_recessive (expand)
 ? gene_defect(tay_sachs_disease, $Gene)                % expect hexa (expand)
+? gene_defect(phenylketonuria, $Gene)                  % expect pah (expand)
