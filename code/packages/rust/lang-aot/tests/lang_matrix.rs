@@ -494,6 +494,38 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(49),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a procedure that *reads and writes a variable from the enclosing
+    // block* (LANG-FULL enabler **E6**, layer 1 — typed module globals).
+    // `counter` is declared in the outer block and accessed by both `incr` and the
+    // block, so `algol-iir-compiler`'s E6 capture analysis materialises it as a
+    // typed module **global**: `incr` reads it (`global_load "counter"`), adds its
+    // value parameter, writes it back (`global_store "counter"`), and returns it;
+    // the block seeds `counter := 40` (another `global_store`) then `result :=
+    // incr(2)` ⇒ 42.  The global is a value a register frame couldn't carry — it
+    // outlives `incr`'s call and is shared across the two `IIRFunction`s — which
+    // is the whole point of E6.  (The procedure is named `incr`, not `add`: `add`
+    // is a CIL opcode, so an unquoted `call …::add(int32)` won't assemble — a
+    // pre-existing CLR identifier-quoting limitation, orthogonal to E6.)
+    //
+    // **This is the E6-layer-1 completion proof: it RUNS on all 7 backends**, each
+    // realising the shared global in its own native idiom — VM/JIT a name-keyed
+    // map; LLVM a `@__twig_global_N = internal global i64`; the JVM/CLR a `static
+    // long`/`int64` field (`getstatic`/`putstatic`, `ldsfld`/`stsfld`); BEAM the
+    // process dictionary; WASM a module mutable `global`; native a `_twig_globals`
+    // data slot.  No backend learned anything ALGOL-specific — `global_load`/
+    // `global_store` are shared IIR ops every backend grew (this PR is the last
+    // brick: the producer that finally emits them from real typed source).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer counter, result; \
+               integer procedure incr(x); value x; integer x; \
+                  incr := counter := counter + x; \
+               counter := 40; \
+               result := incr(2) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *switch* (computed goto) + the integer comparison that drives
     // it.  `switch s := a1, a2, a3; … goto s[i]` selects the i-th label by a
     // 1-based linear `index == k ? jmp Lk` chain (portable jmp/jmp_if_false/label

@@ -721,6 +721,15 @@ export interface DeckControlPolicyArtifact {
   readonly message: string;
 }
 
+export interface DeckControlPolicySummaryArtifact {
+  readonly category: DeckControlPolicyArtifact["category"];
+  readonly artifactCount: number;
+  readonly lineNumbers: readonly number[];
+  readonly commands: readonly string[];
+  readonly codes: readonly string[];
+  readonly severities: readonly string[];
+}
+
 export interface DeckRawfileArtifact {
   readonly target: string;
   readonly marker: string;
@@ -768,6 +777,12 @@ export interface DeckAnalysisExecution {
   readonly controlPolicyArtifactCsv: string;
   readonly controlPolicyArtifactJson: string;
   readonly controlPolicyArtifactRecords: ReadonlyArray<Record<string, string>>;
+  readonly controlPolicySummaryArtifactCount: number;
+  readonly controlPolicySummaryArtifacts: readonly DeckControlPolicySummaryArtifact[];
+  readonly controlPolicySummaryArtifactTable: string;
+  readonly controlPolicySummaryArtifactCsv: string;
+  readonly controlPolicySummaryArtifactJson: string;
+  readonly controlPolicySummaryArtifactRecords: ReadonlyArray<Record<string, string>>;
   readonly rawfileArtifactCount: number;
   readonly rawfileArtifacts: readonly DeckRawfileArtifact[];
   readonly rawfileArtifactTable: string;
@@ -8506,6 +8521,107 @@ export function formatDeckControlPolicyArtifactJson(
   return `${JSON.stringify(deckControlPolicyArtifactRecords(artifacts))}\n`;
 }
 
+function pushUniqueString(values: string[], value: string): void {
+  if (!values.includes(value)) {
+    values.push(value);
+  }
+}
+
+function deckControlPolicySummaryArtifacts(
+  artifacts: readonly DeckControlPolicyArtifact[],
+): DeckControlPolicySummaryArtifact[] {
+  const summaries: Array<{
+    category: DeckControlPolicyArtifact["category"];
+    artifactCount: number;
+    lineNumbers: number[];
+    commands: string[];
+    codes: string[];
+    severities: string[];
+  }> = [];
+  for (const artifact of artifacts) {
+    const summary = summaries.find((candidate) => candidate.category === artifact.category);
+    if (summary === undefined) {
+      summaries.push({
+        category: artifact.category,
+        artifactCount: 1,
+        lineNumbers: [artifact.lineNumber],
+        commands: [artifact.command],
+        codes: [artifact.code],
+        severities: [artifact.severity],
+      });
+      continue;
+    }
+    summary.lineNumbers.push(artifact.lineNumber);
+    summary.commands.push(artifact.command);
+    pushUniqueString(summary.codes, artifact.code);
+    pushUniqueString(summary.severities, artifact.severity);
+    summary.artifactCount += 1;
+  }
+  return summaries;
+}
+
+const DECK_CONTROL_POLICY_SUMMARY_ARTIFACT_COLUMNS = [
+  "Category",
+  "Artifacts",
+  "LineList",
+  "CommandList",
+  "CodeList",
+  "SeverityList",
+] as const;
+
+function deckControlPolicySummaryArtifactCells(
+  artifact: DeckControlPolicySummaryArtifact,
+): string[] {
+  return [
+    artifact.category,
+    String(artifact.artifactCount),
+    artifact.lineNumbers.join(";"),
+    artifact.commands.join(";"),
+    artifact.codes.join(";"),
+    artifact.severities.join(";"),
+  ];
+}
+
+export function deckControlPolicySummaryArtifactRecords(
+  artifacts: readonly DeckControlPolicySummaryArtifact[],
+): Array<Record<string, string>> {
+  return artifacts.map((artifact) => {
+    const cells = deckControlPolicySummaryArtifactCells(artifact);
+    return Object.fromEntries(
+      DECK_CONTROL_POLICY_SUMMARY_ARTIFACT_COLUMNS.map((column, index) => [
+        column,
+        cells[index] ?? "",
+      ]),
+    );
+  });
+}
+
+export function formatDeckControlPolicySummaryArtifactTable(
+  artifacts: readonly DeckControlPolicySummaryArtifact[],
+): string {
+  const rows = [DECK_CONTROL_POLICY_SUMMARY_ARTIFACT_COLUMNS.join("\t")];
+  for (const artifact of artifacts) {
+    rows.push(deckControlPolicySummaryArtifactCells(artifact).join("\t"));
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+export function formatDeckControlPolicySummaryArtifactCsv(
+  artifacts: readonly DeckControlPolicySummaryArtifact[],
+): string {
+  const rows = [DECK_CONTROL_POLICY_SUMMARY_ARTIFACT_COLUMNS.join(",")];
+  for (const artifact of artifacts) {
+    rows.push(deckControlPolicySummaryArtifactCells(artifact).map(formatCsvCell).join(","));
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+export function formatDeckControlPolicySummaryArtifactJson(
+  artifacts: readonly DeckControlPolicySummaryArtifact[],
+): string {
+  return `${JSON.stringify(deckControlPolicySummaryArtifactRecords(artifacts))}\n`;
+}
+
 function deckRawfileArtifacts(
   plan: DeckAnalysisPlan,
   table: string,
@@ -8849,6 +8965,19 @@ export function runDeckAnalysis(
   const controlPolicyArtifactCsv = formatDeckControlPolicyArtifactCsv(controlPolicyArtifacts);
   const controlPolicyArtifactJson = formatDeckControlPolicyArtifactJson(controlPolicyArtifacts);
   const controlPolicyArtifactRecords = deckControlPolicyArtifactRecords(controlPolicyArtifacts);
+  const controlPolicySummaryArtifacts = deckControlPolicySummaryArtifacts(controlPolicyArtifacts);
+  const controlPolicySummaryArtifactTable = formatDeckControlPolicySummaryArtifactTable(
+    controlPolicySummaryArtifacts,
+  );
+  const controlPolicySummaryArtifactCsv = formatDeckControlPolicySummaryArtifactCsv(
+    controlPolicySummaryArtifacts,
+  );
+  const controlPolicySummaryArtifactJson = formatDeckControlPolicySummaryArtifactJson(
+    controlPolicySummaryArtifacts,
+  );
+  const controlPolicySummaryArtifactRecords = deckControlPolicySummaryArtifactRecords(
+    controlPolicySummaryArtifacts,
+  );
   const analysisDirectives = deckAnalysisDirectives(plan);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
@@ -8913,6 +9042,12 @@ export function runDeckAnalysis(
       controlPolicyArtifactCsv,
       controlPolicyArtifactJson,
       controlPolicyArtifactRecords,
+      controlPolicySummaryArtifactCount: controlPolicySummaryArtifacts.length,
+      controlPolicySummaryArtifacts,
+      controlPolicySummaryArtifactTable,
+      controlPolicySummaryArtifactCsv,
+      controlPolicySummaryArtifactJson,
+      controlPolicySummaryArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -9007,6 +9142,12 @@ export function runDeckAnalysis(
       controlPolicyArtifactCsv,
       controlPolicyArtifactJson,
       controlPolicyArtifactRecords,
+      controlPolicySummaryArtifactCount: controlPolicySummaryArtifacts.length,
+      controlPolicySummaryArtifacts,
+      controlPolicySummaryArtifactTable,
+      controlPolicySummaryArtifactCsv,
+      controlPolicySummaryArtifactJson,
+      controlPolicySummaryArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -9112,6 +9253,12 @@ export function runDeckAnalysis(
       controlPolicyArtifactCsv,
       controlPolicyArtifactJson,
       controlPolicyArtifactRecords,
+      controlPolicySummaryArtifactCount: controlPolicySummaryArtifacts.length,
+      controlPolicySummaryArtifacts,
+      controlPolicySummaryArtifactTable,
+      controlPolicySummaryArtifactCsv,
+      controlPolicySummaryArtifactJson,
+      controlPolicySummaryArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -9212,6 +9359,12 @@ export function runDeckAnalysis(
       controlPolicyArtifactCsv,
       controlPolicyArtifactJson,
       controlPolicyArtifactRecords,
+      controlPolicySummaryArtifactCount: controlPolicySummaryArtifacts.length,
+      controlPolicySummaryArtifacts,
+      controlPolicySummaryArtifactTable,
+      controlPolicySummaryArtifactCsv,
+      controlPolicySummaryArtifactJson,
+      controlPolicySummaryArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -9302,6 +9455,12 @@ export function runDeckAnalysis(
       controlPolicyArtifactCsv,
       controlPolicyArtifactJson,
       controlPolicyArtifactRecords,
+      controlPolicySummaryArtifactCount: controlPolicySummaryArtifacts.length,
+      controlPolicySummaryArtifacts,
+      controlPolicySummaryArtifactTable,
+      controlPolicySummaryArtifactCsv,
+      controlPolicySummaryArtifactJson,
+      controlPolicySummaryArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -9391,6 +9550,12 @@ export function runDeckAnalysis(
       controlPolicyArtifactCsv,
       controlPolicyArtifactJson,
       controlPolicyArtifactRecords,
+      controlPolicySummaryArtifactCount: controlPolicySummaryArtifacts.length,
+      controlPolicySummaryArtifacts,
+      controlPolicySummaryArtifactTable,
+      controlPolicySummaryArtifactCsv,
+      controlPolicySummaryArtifactJson,
+      controlPolicySummaryArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -9490,6 +9655,12 @@ export function runDeckAnalysis(
       controlPolicyArtifactCsv,
       controlPolicyArtifactJson,
       controlPolicyArtifactRecords,
+      controlPolicySummaryArtifactCount: controlPolicySummaryArtifacts.length,
+      controlPolicySummaryArtifacts,
+      controlPolicySummaryArtifactTable,
+      controlPolicySummaryArtifactCsv,
+      controlPolicySummaryArtifactJson,
+      controlPolicySummaryArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,

@@ -42,6 +42,9 @@ import {
   formatDeckControlPolicyArtifactCsv,
   formatDeckControlPolicyArtifactJson,
   formatDeckControlPolicyArtifactTable,
+  formatDeckControlPolicySummaryArtifactCsv,
+  formatDeckControlPolicySummaryArtifactJson,
+  formatDeckControlPolicySummaryArtifactTable,
   formatDeckNoiseTable,
   formatDeckOpTable,
   formatDeckRawfileArtifactCsv,
@@ -2257,6 +2260,41 @@ let gain = 2
     const policyJson = JSON.parse(execution.controlPolicyArtifactJson);
     expect(policyJson[2].Category).toBe("control-flow");
     expect(policyJson[3].Command).toBe("let gain = 2");
+    expect(execution.controlPolicySummaryArtifactCount).toBe(expectedPolicyCategories.length);
+    expect(execution.controlPolicySummaryArtifacts.map((artifact) => artifact.category)).toEqual(
+      expectedPolicyCategories,
+    );
+    expect(execution.controlPolicySummaryArtifacts.map((artifact) => artifact.artifactCount)).toEqual(
+      [1, 1, 1, 1],
+    );
+    expect(execution.controlPolicySummaryArtifacts.map((artifact) => artifact.lineNumbers)).toEqual(
+      expectedPolicyLines.map((lineNumber) => [lineNumber]),
+    );
+    expect(execution.controlPolicySummaryArtifacts.map((artifact) => artifact.commands)).toEqual(
+      expectedPolicyCommands.map((command) => [command]),
+    );
+    expect(execution.controlPolicySummaryArtifacts.map((artifact) => artifact.codes)).toEqual(
+      expectedCodes.map((code) => [code]),
+    );
+    const summaryRecord = execution.controlPolicySummaryArtifactRecords[0]!;
+    expect(summaryRecord["Category"]).toBe("script");
+    expect(summaryRecord["Artifacts"]).toBe("1");
+    expect(summaryRecord["LineList"]).toBe("13");
+    expect(summaryRecord["CommandList"]).toBe("source other.cir");
+    expect(summaryRecord["CodeList"]).toBe("SPICE_DECK_CONTROL_SCRIPT_COMMAND");
+    expect(summaryRecord["SeverityList"]).toBe("error");
+    expect(execution.controlPolicySummaryArtifactTable).toBe(
+      formatDeckControlPolicySummaryArtifactTable(execution.controlPolicySummaryArtifacts),
+    );
+    expect(execution.controlPolicySummaryArtifactCsv).toBe(
+      formatDeckControlPolicySummaryArtifactCsv(execution.controlPolicySummaryArtifacts),
+    );
+    expect(execution.controlPolicySummaryArtifactJson).toBe(
+      formatDeckControlPolicySummaryArtifactJson(execution.controlPolicySummaryArtifacts),
+    );
+    const summaryJson = JSON.parse(execution.controlPolicySummaryArtifactJson);
+    expect(summaryJson[2].Category).toBe("control-flow");
+    expect(summaryJson[3].CommandList).toBe("let gain = 2");
     expect(execution.diagnosticCount).toBe(expectedCodes.length);
     expect(execution.diagnosticCodes).toEqual(expectedCodes);
     expect(execution.runArtifacts[0]?.controlLineCount).toBe(expectedControlLines.length);

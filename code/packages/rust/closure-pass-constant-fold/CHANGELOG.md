@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.20.0] - 2026-06-22
+
+### Added — ASCII string-casing folds (`"abc".toUpperCase()` → `"ABC"`)
+
+`fold_expression` now folds the no-argument string-casing methods on a string
+literal, via the new `fold_call` helper:
+
+| before                | after   |
+|-----------------------|---------|
+| `"abc".toUpperCase()` | `"ABC"` |
+| `"ABC".toLowerCase()` | `"abc"` |
+| `"".toUpperCase()`    | `""`    |
+
+**ASCII-only.** The fold fires only when the literal `is_ascii()`, using Rust's
+`to_ascii_uppercase`/`to_ascii_lowercase`. ASCII case mapping is
+locale-independent and byte-for-byte identical between Rust and JavaScript, so
+the fold is exactly sound. Non-ASCII strings are deliberately left alone — JS
+`toUpperCase`/`toLowerCase` use full Unicode default case mapping with
+length-changing special cases (`ß` → `SS`, final sigma `ς`) that a conservative
+fold-set shouldn't reproduce here, so `"é".toUpperCase()` stays a call.
+
+Narrow surface: only the dotted, zero-argument form on a string literal folds.
+`s.toUpperCase()` on an identifier, an argument (`"x".toUpperCase(1)`), the
+computed form `"x"["toUpperCase"]()`, and unmodelled methods (`"x".trim()`) all
+pass through unchanged. The fold emits a correlation-vector contribution.
+
+Six new unit tests (`fold_ascii_string_to_upper_and_lower_case`,
+`non_ascii_string_casing_does_not_fold`, `string_casing_on_identifier_does_not_fold`,
+`string_casing_with_argument_does_not_fold`, `computed_string_casing_does_not_fold`,
+`unknown_string_method_does_not_fold`).
+
 ## [0.19.0] - 2026-06-22
 
 ### Added — string-literal `.length` folding (`"hello".length` → `5`)

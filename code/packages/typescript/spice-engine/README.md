@@ -136,10 +136,12 @@ and `tableArtifacts` records. Policy-blocked `source` / `shell`, `cd`,
 control-flow, and variable/state commands also populate
 `controlPolicyArtifacts` with stable line, category, command, code, severity,
 and message fields plus table, CSV, compact JSON, and header-keyed record
-exports. `formatDeckTableCsv` also converts any stable tab-separated deck table to
-CSV, `formatDeckTableJson` converts the same tables to compact JSON records,
-and `deckTableRecords` returns header-keyed native records for browser and host
-integrations.
+exports. `controlPolicySummaryArtifacts` groups the same policy artifacts by
+category with stable count, line-list, command-list, code-list, and severity-list
+table, CSV, compact JSON, and record exports. `formatDeckTableCsv` also converts
+any stable tab-separated deck table to CSV, `formatDeckTableJson` converts the
+same tables to compact JSON records, and `deckTableRecords` returns header-keyed
+native records for browser and host integrations.
 `resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save`, scoped or
 global `.probe`, scoped `.print <analysis> ...`, and scoped
 `.plot <analysis> ...` cards before `.end`, normalize and deduplicate output

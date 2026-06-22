@@ -1103,6 +1103,15 @@ downstream tools to compare.
       `source` / `shell`, `cd`, control-flow, and variable/state policy
       diagnostics auditable while preserving explicit non-execution behavior.
 
+101. Deck control policy summary artifacts.
+    - Status: completed in this deck control policy summary artifact slice.
+    - Python, Rust, and TypeScript selected executions now group
+      policy-blocked `.control` command artifacts by category with stable
+      counts, line lists, command lists, code lists, and severity lists.
+    - Matching table, CSV, compact JSON, and host-native record exports make the
+      policy surface easier to inventory without parsing row-level diagnostic
+      artifacts.
+
 ## Backlog
 
 1. Deck execution layer.

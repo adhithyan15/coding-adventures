@@ -255,7 +255,9 @@ def test_unknown_method_returns_nil_not_raise() -> None:
     # A block method called WITHOUT a block bottoms out at nil (Ruby returns an
     # Enumerator; v0 floor is nil — see spec).
     assert oop.call_method([1, 2, 3], "map") is None
-    assert oop.call_method("hi", "upcase") is None
+    # An out-of-catalog String method (scan needs a regex engine — later PR).
+    assert oop.call_method("hi", "scan") is None
+    # Numeric has no catalog yet (M1c-Numeric), so every method is the nil floor.
     assert oop.call_method(5, "times") is None
 
 
@@ -390,3 +392,86 @@ def test_hash_respond_to_and_nil_floor() -> None:
     assert oop.call_method({"a": 1}, "transform_keys") is None
     # Universal Object methods still resolve on a Hash receiver.
     assert oop.call_method({"a": 1}, "nil?") is False
+
+
+# ── built-in method catalog: String (M1c) ─────────────────────────────────────
+
+
+def test_string_length_case_reverse() -> None:
+    assert oop.call_method("hello", "length") == 5
+    assert oop.call_method("hello", "size") == 5
+    assert oop.call_method("hello", "upcase") == "HELLO"
+    assert oop.call_method("HELLO", "downcase") == "hello"
+    assert oop.call_method("hello world", "capitalize") == "Hello world"
+    assert oop.call_method("abc", "reverse") == "cba"
+
+
+def test_string_strip_family_and_chomp() -> None:
+    assert oop.call_method("  hi  ", "strip") == "hi"
+    assert oop.call_method("  hi  ", "lstrip") == "hi  "
+    assert oop.call_method("  hi  ", "rstrip") == "  hi"
+    assert oop.call_method("line\n", "chomp") == "line"
+    assert oop.call_method("line\r\n", "chomp") == "line"
+    assert oop.call_method("hello", "chomp", "lo") == "hel"
+    assert oop.call_method("hello", "chomp") == "hello"
+
+
+def test_string_chars_bytes_split() -> None:
+    assert oop.call_method("abc", "chars") == ["a", "b", "c"]
+    assert oop.call_method("AB", "bytes") == [65, 66]
+    assert oop.call_method("a,b,c", "split", ",") == ["a", "b", "c"]
+    assert oop.call_method("a  b\tc", "split") == ["a", "b", "c"]
+
+
+def test_string_predicates_and_index() -> None:
+    assert oop.call_method("hello", "include?", "ell") is True
+    assert oop.call_method("hello", "start_with?", "he") is True
+    assert oop.call_method("hello", "end_with?", "lo") is True
+    assert oop.call_method("hello", "index", "l") == 2
+    assert oop.call_method("hello", "index", "z") is None
+    assert oop.call_method("", "empty?") is True
+    assert oop.call_method("x", "empty?") is False
+
+
+def test_string_replace_sub_gsub_are_literal() -> None:
+    assert oop.call_method("old", "replace", "new") == "new"
+    assert oop.call_method("a.a.a", "sub", "a", "X") == "X.a.a"
+    assert oop.call_method("a.a.a", "gsub", "a", "X") == "X.X.X"
+    # Literal — a replacement containing regex/backref syntax is inserted verbatim.
+    assert oop.call_method("ab", "gsub", "a", "$&") == "$&b"
+
+
+def test_string_to_i_to_f_to_sym() -> None:
+    assert oop.call_method("42abc", "to_i") == 42
+    assert oop.call_method("  -7", "to_i") == -7
+    assert oop.call_method("nope", "to_i") == 0
+    assert oop.call_method("3.14xyz", "to_f") == 3.14
+    assert oop.call_method("nope", "to_f") == 0.0
+    sym = oop.call_method("name", "to_sym")
+    assert getattr(sym, "name", None) == "name"
+
+
+def test_string_repeat_and_concat() -> None:
+    assert oop.call_method("ab", "*", 3) == "ababab"
+    assert oop.call_method("foo", "+", "bar") == "foobar"
+    # Non-positive counts yield "" (never raise); a hostile count is capped.
+    assert oop.call_method("ab", "*", 0) == ""
+    assert oop.call_method("ab", "*", -5) == ""
+    assert len(oop.call_method("ab", "*", 10**9)) <= 100_000_000
+
+
+def test_string_each_char_block() -> None:
+    seen: list[Val] = []
+    result = oop.call_method("abc", "each_char", Closure(seen.append))
+    assert seen == ["a", "b", "c"]
+    assert result == "abc"
+
+
+def test_string_respond_to_and_nil_floor() -> None:
+    assert oop.call_method("x", "respond_to?", "upcase") is True
+    assert oop.call_method("x", "respond_to?", "each_char") is True
+    assert oop.call_method("x", "respond_to?", "scan") is False
+    assert oop.call_method("x", "scan") is None
+    # Universal Object methods still resolve on a String receiver.
+    assert oop.call_method("x", "nil?") is False
+    assert oop.call_method("x", "class") == "String"

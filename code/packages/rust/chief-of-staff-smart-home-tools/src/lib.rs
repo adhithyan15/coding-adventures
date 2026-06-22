@@ -332,6 +332,10 @@ pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_PLANS_TOOL_ID: &str =
     "smart_home.list_runtime_maintenance_plans";
 pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_PLAN_SUMMARY_TOOL_ID: &str =
     "smart_home.get_runtime_maintenance_plan_summary";
+pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_TICKETS_TOOL_ID: &str =
+    "smart_home.list_runtime_maintenance_tickets";
+pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_TICKET_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_runtime_maintenance_ticket_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2443,6 +2447,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_PLAN_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_plan_query(&arguments)?;
                     get_runtime_maintenance_plan_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_TICKETS_TOOL_ID => {
+                    let query = runtime_maintenance_ticket_query(&arguments)?;
+                    list_runtime_maintenance_tickets_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_TICKET_SUMMARY_TOOL_ID => {
+                    let query = runtime_maintenance_ticket_query(&arguments)?;
+                    get_runtime_maintenance_ticket_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6182,6 +6204,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_maintenance_action_summary_definition(),
         list_runtime_maintenance_plans_definition(),
         get_runtime_maintenance_plan_summary_definition(),
+        list_runtime_maintenance_tickets_definition(),
+        get_runtime_maintenance_ticket_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -7307,6 +7331,72 @@ fn get_runtime_maintenance_plan_summary_definition() -> ToolDefinition {
         "Summarize grouped Chief maintenance plans derived from D23 runtime supervision remediation action rows.",
         runtime_maintenance_plan_query_schema(),
         runtime_maintenance_plan_summary_output_schema(),
+    )
+}
+
+fn runtime_maintenance_ticket_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("window_kind", JsonSchema::String),
+            SchemaProperty::new("window_kinds", string_array_schema()),
+            SchemaProperty::new("remediation_kind", JsonSchema::String),
+            SchemaProperty::new("remediation_kinds", string_array_schema()),
+            SchemaProperty::new("ticket_status", JsonSchema::String),
+            SchemaProperty::new("ticket_statuses", string_array_schema()),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("recommended_tool", JsonSchema::String),
+            SchemaProperty::new("max_priority", JsonSchema::Integer),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn runtime_maintenance_ticket_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "runtime_maintenance_tickets",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["runtime_maintenance_tickets", "summary", "count"],
+        false,
+    )
+}
+
+fn runtime_maintenance_ticket_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_runtime_maintenance_tickets_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_TICKETS_TOOL_ID,
+        "List smart-home runtime maintenance tickets",
+        "List Chief maintenance ticket records derived from grouped D23 runtime supervision remediation plans without mutating the runtime.",
+        runtime_maintenance_ticket_query_schema(),
+        runtime_maintenance_ticket_list_output_schema(),
+    )
+}
+
+fn get_runtime_maintenance_ticket_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_RUNTIME_MAINTENANCE_TICKET_SUMMARY_TOOL_ID,
+        "Summarize smart-home runtime maintenance tickets",
+        "Summarize Chief-visible maintenance tickets grouped from D23 runtime remediation plans.",
+        runtime_maintenance_ticket_query_schema(),
+        runtime_maintenance_ticket_summary_output_schema(),
     )
 }
 
@@ -8733,6 +8823,65 @@ fn runtime_maintenance_plan_query(
         .into_iter()
         .map(|kind| parse_supervision_remediation_kind(&kind))
         .collect::<Result<Vec<_>, _>>()?,
+        risk_lane: optional_string(arguments, "risk_lane")?,
+        recommended_tool: optional_string(arguments, "recommended_tool")?,
+        max_priority: optional_u64(arguments, "max_priority")?.map(|value| value as u8),
+        blocked_only: optional_bool(arguments, "blocked_only")?.unwrap_or(false),
+        requires_attention_only: optional_bool(arguments, "requires_attention_only")?
+            .unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RuntimeMaintenanceTicketQuery {
+    window_kinds: Vec<RuntimeMaintenanceWindowKind>,
+    remediation_kinds: Vec<SupervisionRemediationKind>,
+    ticket_statuses: Vec<&'static str>,
+    risk_lane: Option<String>,
+    recommended_tool: Option<String>,
+    max_priority: Option<u8>,
+    blocked_only: bool,
+    requires_attention_only: bool,
+    limit: Option<usize>,
+}
+
+impl RuntimeMaintenanceTicketQuery {
+    fn plan_query(&self) -> RuntimeMaintenancePlanQuery {
+        RuntimeMaintenancePlanQuery {
+            window_kinds: self.window_kinds.clone(),
+            remediation_kinds: self.remediation_kinds.clone(),
+            risk_lane: self.risk_lane.clone(),
+            recommended_tool: self.recommended_tool.clone(),
+            max_priority: self.max_priority,
+            blocked_only: self.blocked_only,
+            requires_attention_only: self.requires_attention_only,
+            limit: None,
+        }
+    }
+}
+
+fn runtime_maintenance_ticket_query(
+    arguments: &JsonValue,
+) -> Result<RuntimeMaintenanceTicketQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(RuntimeMaintenanceTicketQuery {
+        window_kinds: optional_string_list(arguments, "window_kind", "window_kinds")?
+            .into_iter()
+            .map(|kind| parse_runtime_maintenance_window_kind(&kind))
+            .collect::<Result<Vec<_>, _>>()?,
+        remediation_kinds: optional_string_list(
+            arguments,
+            "remediation_kind",
+            "remediation_kinds",
+        )?
+        .into_iter()
+        .map(|kind| parse_supervision_remediation_kind(&kind))
+        .collect::<Result<Vec<_>, _>>()?,
+        ticket_statuses: optional_string_list(arguments, "ticket_status", "ticket_statuses")?
+            .into_iter()
+            .map(|status| parse_runtime_maintenance_ticket_status(&status))
+            .collect::<Result<Vec<_>, _>>()?,
         risk_lane: optional_string(arguments, "risk_lane")?,
         recommended_tool: optional_string(arguments, "recommended_tool")?,
         max_priority: optional_u64(arguments, "max_priority")?.map(|value| value as u8),
@@ -36641,6 +36790,302 @@ fn runtime_maintenance_plan_status(
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct RuntimeMaintenanceTicketRow {
+    ticket_id: String,
+    plan_id: String,
+    window_id: String,
+    window_kind: RuntimeMaintenanceWindowKind,
+    priority: u8,
+    execution_order: usize,
+    ticket_status: &'static str,
+    ticket_title: &'static str,
+    assignment_lane: &'static str,
+    risk_lane: &'static str,
+    recommended_tool: &'static str,
+    recommended_action: &'static str,
+    action_count: usize,
+    blocked_action_count: usize,
+    requires_attention_count: usize,
+    overdue_action_count: usize,
+    bridge_ids: Vec<String>,
+    entity_ids: Vec<String>,
+    worker_ids: Vec<String>,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    next_action_ids: Vec<String>,
+    remediation_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct RuntimeMaintenanceTicketSummary {
+    total_tickets: usize,
+    critical_recovery_tickets: usize,
+    state_refresh_tickets: usize,
+    desired_state_reconciliation_tickets: usize,
+    discovery_worker_run_tickets: usize,
+    blocked_tickets: usize,
+    requires_attention_tickets: usize,
+    overdue_tickets: usize,
+    total_actions: usize,
+    blocked_actions: usize,
+    requires_attention_actions: usize,
+    overdue_actions: usize,
+    bridge_count: usize,
+    entity_count: usize,
+    worker_count: usize,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    highest_priority: Option<u8>,
+}
+
+impl RuntimeMaintenanceTicketSummary {
+    fn from_rows(rows: &[RuntimeMaintenanceTicketRow]) -> Self {
+        let mut summary = Self::default();
+        let mut bridge_ids = BTreeSet::new();
+        let mut entity_ids = BTreeSet::new();
+        let mut worker_ids = BTreeSet::new();
+
+        for row in rows {
+            summary.total_tickets += 1;
+            summary.total_actions += row.action_count;
+            summary.blocked_actions += row.blocked_action_count;
+            summary.requires_attention_actions += row.requires_attention_count;
+            summary.overdue_actions += row.overdue_action_count;
+            if row.has_blockers() {
+                summary.blocked_tickets += 1;
+            }
+            if row.requires_attention() {
+                summary.requires_attention_tickets += 1;
+            }
+            if row.has_overdue_actions() {
+                summary.overdue_tickets += 1;
+            }
+            for bridge_id in &row.bridge_ids {
+                bridge_ids.insert(bridge_id.clone());
+            }
+            for entity_id in &row.entity_ids {
+                entity_ids.insert(entity_id.clone());
+            }
+            for worker_id in &row.worker_ids {
+                worker_ids.insert(worker_id.clone());
+            }
+            summary.first_due_at_ms =
+                min_optional_u64(summary.first_due_at_ms, row.first_due_at_ms);
+            summary.max_overdue_by_ms =
+                max_optional_u64(summary.max_overdue_by_ms, row.max_overdue_by_ms);
+            summary.highest_priority =
+                min_optional_u8(summary.highest_priority, Some(row.priority));
+
+            match row.window_kind {
+                RuntimeMaintenanceWindowKind::CriticalRecovery => {
+                    summary.critical_recovery_tickets += 1;
+                }
+                RuntimeMaintenanceWindowKind::StateRefresh => {
+                    summary.state_refresh_tickets += 1;
+                }
+                RuntimeMaintenanceWindowKind::DesiredStateReconciliation => {
+                    summary.desired_state_reconciliation_tickets += 1;
+                }
+                RuntimeMaintenanceWindowKind::DiscoveryWorkerRun => {
+                    summary.discovery_worker_run_tickets += 1;
+                }
+            }
+        }
+
+        summary.bridge_count = bridge_ids.len();
+        summary.entity_count = entity_ids.len();
+        summary.worker_count = worker_ids.len();
+        summary
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.requires_attention_tickets > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_tickets > 0
+    }
+
+    fn has_overdue_actions(&self) -> bool {
+        self.overdue_tickets > 0
+    }
+}
+
+fn list_runtime_maintenance_tickets_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceTicketQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) =
+        runtime_maintenance_ticket_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "runtime_maintenance_tickets",
+            JsonValue::Array(rows.iter().map(runtime_maintenance_ticket_json).collect()),
+        ),
+        ("summary", runtime_maintenance_ticket_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_runtime_maintenance_tickets")),
+            ("count", integer(rows.len() as i64)),
+            ("total_tickets", integer(summary.total_tickets as i64)),
+            ("total_actions", integer(summary.total_actions as i64)),
+            (
+                "requires_attention_tickets",
+                integer(summary.requires_attention_tickets as i64),
+            ),
+            ("blocked_tickets", integer(summary.blocked_tickets as i64)),
+            ("overdue_tickets", integer(summary.overdue_tickets as i64)),
+        ]),
+    ))
+}
+
+fn get_runtime_maintenance_ticket_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceTicketQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = runtime_maintenance_ticket_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        runtime_maintenance_ticket_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_runtime_maintenance_ticket_summary"),
+            ),
+            ("total_tickets", integer(summary.total_tickets as i64)),
+            ("total_actions", integer(summary.total_actions as i64)),
+            (
+                "requires_attention_tickets",
+                integer(summary.requires_attention_tickets as i64),
+            ),
+            ("blocked_tickets", integer(summary.blocked_tickets as i64)),
+            ("overdue_tickets", integer(summary.overdue_tickets as i64)),
+        ]),
+    ))
+}
+
+fn runtime_maintenance_ticket_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &RuntimeMaintenanceTicketQuery,
+) -> Result<
+    (
+        Vec<RuntimeMaintenanceTicketRow>,
+        RuntimeMaintenanceTicketSummary,
+    ),
+    ToolCallError,
+> {
+    let plan_query = query.plan_query();
+    let (plans, _) = runtime_maintenance_plan_rows(runtime, principal_id, now_ms, &plan_query)?;
+    let mut tickets = plans
+        .iter()
+        .map(RuntimeMaintenanceTicketRow::from_plan)
+        .filter(|row| runtime_maintenance_ticket_matches(row, query))
+        .collect::<Vec<_>>();
+    tickets.sort_by(|left, right| {
+        left.priority
+            .cmp(&right.priority)
+            .then_with(|| {
+                runtime_maintenance_ticket_status_rank(left.ticket_status)
+                    .cmp(&runtime_maintenance_ticket_status_rank(right.ticket_status))
+            })
+            .then_with(|| left.first_due_at_ms.cmp(&right.first_due_at_ms))
+            .then_with(|| left.ticket_id.cmp(&right.ticket_id))
+    });
+    for (index, row) in tickets.iter_mut().enumerate() {
+        row.execution_order = index + 1;
+    }
+
+    let summary = RuntimeMaintenanceTicketSummary::from_rows(&tickets);
+    Ok((tickets, summary))
+}
+
+impl RuntimeMaintenanceTicketRow {
+    fn from_plan(row: &RuntimeMaintenancePlanRow) -> Self {
+        let label = runtime_maintenance_window_kind_label(row.window_kind);
+        Self {
+            ticket_id: format!("maintenance_ticket:{label}"),
+            plan_id: row.plan_id.clone(),
+            window_id: row.window_id.clone(),
+            window_kind: row.window_kind,
+            priority: row.priority,
+            execution_order: row.execution_order,
+            ticket_status: row.status,
+            ticket_title: runtime_maintenance_ticket_title(row.window_kind),
+            assignment_lane: runtime_maintenance_window_risk_lane(row.window_kind),
+            risk_lane: row.risk_lane,
+            recommended_tool: row.recommended_tool,
+            recommended_action: row.recommended_action,
+            action_count: row.action_count,
+            blocked_action_count: row.blocked_action_count,
+            requires_attention_count: row.requires_attention_count,
+            overdue_action_count: row.overdue_action_count,
+            bridge_ids: row.bridge_ids.clone(),
+            entity_ids: row.entity_ids.clone(),
+            worker_ids: row.worker_ids.clone(),
+            first_due_at_ms: row.first_due_at_ms,
+            max_overdue_by_ms: row.max_overdue_by_ms,
+            next_action_ids: row.next_action_ids.clone(),
+            remediation_ids: row.remediation_ids.clone(),
+        }
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.requires_attention_count > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_action_count > 0
+    }
+
+    fn has_overdue_actions(&self) -> bool {
+        self.overdue_action_count > 0
+    }
+}
+
+fn runtime_maintenance_ticket_matches(
+    row: &RuntimeMaintenanceTicketRow,
+    query: &RuntimeMaintenanceTicketQuery,
+) -> bool {
+    query.ticket_statuses.is_empty() || query.ticket_statuses.contains(&row.ticket_status)
+}
+
+fn runtime_maintenance_ticket_status_rank(status: &str) -> u8 {
+    match status {
+        "blocked" => 0,
+        "overdue" => 1,
+        "attention_required" => 2,
+        "ready" => 3,
+        _ => 4,
+    }
+}
+
+fn runtime_maintenance_ticket_title(kind: RuntimeMaintenanceWindowKind) -> &'static str {
+    match kind {
+        RuntimeMaintenanceWindowKind::CriticalRecovery => "Runtime critical recovery",
+        RuntimeMaintenanceWindowKind::StateRefresh => "Runtime state refresh",
+        RuntimeMaintenanceWindowKind::DesiredStateReconciliation => "Desired state reconciliation",
+        RuntimeMaintenanceWindowKind::DiscoveryWorkerRun => "Discovery worker run",
+    }
+}
+
 fn min_optional_u64(left: Option<u64>, right: Option<u64>) -> Option<u64> {
     match (left, right) {
         (Some(left), Some(right)) => Some(left.min(right)),
@@ -60840,6 +61285,151 @@ fn runtime_maintenance_plan_summary_json(summary: &RuntimeMaintenancePlanSummary
     ])
 }
 
+fn runtime_maintenance_ticket_json(row: &RuntimeMaintenanceTicketRow) -> JsonValue {
+    object([
+        ("ticket_id", string(&row.ticket_id)),
+        ("plan_id", string(&row.plan_id)),
+        ("window_id", string(&row.window_id)),
+        (
+            "window_kind",
+            string(runtime_maintenance_window_kind_label(row.window_kind)),
+        ),
+        ("priority", integer(row.priority as i64)),
+        ("execution_order", integer(row.execution_order as i64)),
+        ("ticket_status", string(row.ticket_status)),
+        ("ticket_title", string(row.ticket_title)),
+        ("assignment_lane", string(row.assignment_lane)),
+        ("risk_lane", string(row.risk_lane)),
+        ("recommended_tool", string(row.recommended_tool)),
+        ("recommended_action", string(row.recommended_action)),
+        ("action_count", integer(row.action_count as i64)),
+        (
+            "blocked_action_count",
+            integer(row.blocked_action_count as i64),
+        ),
+        (
+            "requires_attention_count",
+            integer(row.requires_attention_count as i64),
+        ),
+        (
+            "overdue_action_count",
+            integer(row.overdue_action_count as i64),
+        ),
+        ("bridge_count", integer(row.bridge_ids.len() as i64)),
+        ("entity_count", integer(row.entity_ids.len() as i64)),
+        ("worker_count", integer(row.worker_ids.len() as i64)),
+        (
+            "bridge_ids",
+            JsonValue::Array(row.bridge_ids.iter().map(string).collect()),
+        ),
+        (
+            "entity_ids",
+            JsonValue::Array(row.entity_ids.iter().map(string).collect()),
+        ),
+        (
+            "worker_ids",
+            JsonValue::Array(row.worker_ids.iter().map(string).collect()),
+        ),
+        (
+            "first_due_at_ms",
+            row.first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            row.max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_action_ids",
+            JsonValue::Array(row.next_action_ids.iter().map(string).collect()),
+        ),
+        (
+            "remediation_ids",
+            JsonValue::Array(row.remediation_ids.iter().map(string).collect()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention()),
+        ),
+        ("has_blockers", JsonValue::Bool(row.has_blockers())),
+        (
+            "has_overdue_actions",
+            JsonValue::Bool(row.has_overdue_actions()),
+        ),
+    ])
+}
+
+fn runtime_maintenance_ticket_summary_json(summary: &RuntimeMaintenanceTicketSummary) -> JsonValue {
+    object([
+        ("total_tickets", integer(summary.total_tickets as i64)),
+        (
+            "critical_recovery_tickets",
+            integer(summary.critical_recovery_tickets as i64),
+        ),
+        (
+            "state_refresh_tickets",
+            integer(summary.state_refresh_tickets as i64),
+        ),
+        (
+            "desired_state_reconciliation_tickets",
+            integer(summary.desired_state_reconciliation_tickets as i64),
+        ),
+        (
+            "discovery_worker_run_tickets",
+            integer(summary.discovery_worker_run_tickets as i64),
+        ),
+        ("blocked_tickets", integer(summary.blocked_tickets as i64)),
+        (
+            "requires_attention_tickets",
+            integer(summary.requires_attention_tickets as i64),
+        ),
+        ("overdue_tickets", integer(summary.overdue_tickets as i64)),
+        ("total_actions", integer(summary.total_actions as i64)),
+        ("blocked_actions", integer(summary.blocked_actions as i64)),
+        (
+            "requires_attention_actions",
+            integer(summary.requires_attention_actions as i64),
+        ),
+        ("overdue_actions", integer(summary.overdue_actions as i64)),
+        ("bridge_count", integer(summary.bridge_count as i64)),
+        ("entity_count", integer(summary.entity_count as i64)),
+        ("worker_count", integer(summary.worker_count as i64)),
+        (
+            "first_due_at_ms",
+            summary
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            summary
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_priority",
+            summary
+                .highest_priority
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_overdue_actions",
+            JsonValue::Bool(summary.has_overdue_actions()),
+        ),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -63743,6 +64333,18 @@ fn parse_runtime_maintenance_window_kind(
         }
         _ => Err(validation_error(format!(
             "unsupported runtime maintenance window kind `{value}`"
+        ))),
+    }
+}
+
+fn parse_runtime_maintenance_ticket_status(value: &str) -> Result<&'static str, ToolCallError> {
+    match value {
+        "blocked" | "blocker" => Ok("blocked"),
+        "overdue" | "late" => Ok("overdue"),
+        "attention_required" | "requires_attention" | "attention" => Ok("attention_required"),
+        "ready" | "open" => Ok("ready"),
+        _ => Err(validation_error(format!(
+            "unsupported runtime maintenance ticket status `{value}`"
         ))),
     }
 }
@@ -67585,7 +68187,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 262);
+        assert_eq!(definitions.len(), 264);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -68334,9 +68936,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_PLAN_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_RUNTIME_MAINTENANCE_TICKETS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_TICKET_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            254
+            256
         );
         assert_eq!(
             export
@@ -68972,6 +69580,14 @@ mod tests {
             SMART_HOME_GET_RUNTIME_MAINTENANCE_PLAN_SUMMARY_TOOL_ID
         )
         .is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_RUNTIME_MAINTENANCE_TICKETS_TOOL_ID)
+                .is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_TICKET_SUMMARY_TOOL_ID
+        )
+        .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_COMPLETE_PAIRING_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_REPORT_EVENT_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
@@ -69206,11 +69822,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(262))
+            Some(&integer(264))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(254))
+            Some(&integer(256))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -83812,7 +84428,7 @@ mod tests {
     }
 
     #[test]
-    fn runtime_maintenance_plan_tools_group_action_pressure_end_to_end() {
+    fn runtime_maintenance_plan_and_ticket_tools_group_action_pressure_end_to_end() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime
             .borrow_mut()
@@ -83993,16 +84609,111 @@ mod tests {
         );
         assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
 
+        let ticket_list_request = request(
+            "call-list-runtime-maintenance-tickets",
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_TICKETS_TOOL_ID,
+            object([
+                ("ticket_status", string("blocked")),
+                ("requires_attention_only", JsonValue::Bool(true)),
+                ("blocked_only", JsonValue::Bool(true)),
+                ("max_priority", integer(1)),
+                ("limit", integer(10)),
+            ]),
+            2_002,
+        );
+        let ticket_list_trace = tool_runtime.invoke_with_events(&ticket_list_request);
+        assert!(ticket_list_trace.result.ok);
+        assert_eq!(ticket_list_trace.summary().progress_event_count, 1);
+        let ticket_list_output = ticket_list_trace.result.output.as_ref().unwrap();
+        let tickets = field(ticket_list_output, "runtime_maintenance_tickets").unwrap();
+        let ticket_summary = field(ticket_list_output, "summary").unwrap();
+        assert!(
+            array_len(tickets).unwrap() >= 3,
+            "maintenance tickets should expose critical, state refresh, and desired-state work"
+        );
+        assert!(integer_value(field(ticket_summary, "total_tickets").unwrap()).unwrap() >= 3);
+        assert_eq!(
+            field(ticket_summary, "critical_recovery_tickets"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(ticket_summary, "desired_state_reconciliation_tickets"),
+            Some(&integer(1))
+        );
+        assert!(integer_value(field(ticket_summary, "blocked_tickets").unwrap()).unwrap() >= 3);
+        assert!(integer_value(field(ticket_summary, "total_actions").unwrap()).unwrap() >= 4);
+        assert_eq!(
+            field(ticket_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let JsonValue::Array(ticket_rows) = tickets else {
+            panic!("runtime_maintenance_tickets should be an array");
+        };
+        assert!(ticket_rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("critical_recovery"))
+            && field(row, "ticket_status") == Some(&string("blocked"))
+            && field(row, "ticket_title") == Some(&string("Runtime critical recovery"))
+            && field(row, "assignment_lane") == Some(&string("critical_recovery"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID))
+            && field(row, "priority") == Some(&integer(0))
+            && integer_value(field(row, "action_count").unwrap()).unwrap() >= 2
+            && array_len(field(row, "next_action_ids").unwrap()).unwrap() >= 2));
+        assert!(ticket_rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("desired_state_reconciliation"))
+            && field(row, "ticket_status") == Some(&string("blocked"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID))
+            && field(row, "entity_count") == Some(&integer(1))
+            && field(row, "recommended_action") == Some(&string("reconcile_desired_state"))
+            && field(row, "has_blockers") == Some(&JsonValue::Bool(true))));
+        assert!(
+            ticket_rows
+                .iter()
+                .all(|row| { integer_value(field(row, "execution_order").unwrap()).unwrap() >= 1 }),
+            "ticket rows should expose a stable execution order"
+        );
+
+        let ticket_summary_request = request(
+            "call-runtime-maintenance-ticket-summary",
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_TICKET_SUMMARY_TOOL_ID,
+            object([
+                ("window_kind", string("desired_state_reconciliation")),
+                ("ticket_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+            ]),
+            2_003,
+        );
+        let ticket_summary_trace = tool_runtime.invoke_with_events(&ticket_summary_request);
+        assert!(ticket_summary_trace.result.ok);
+        assert_eq!(ticket_summary_trace.summary().progress_event_count, 1);
+        let ticket_summary_output = ticket_summary_trace.result.output.as_ref().unwrap();
+        let ticket_rollup = field(ticket_summary_output, "summary").unwrap();
+        assert_eq!(field(ticket_rollup, "total_tickets"), Some(&integer(1)));
+        assert_eq!(field(ticket_rollup, "total_actions"), Some(&integer(1)));
+        assert_eq!(
+            field(ticket_rollup, "desired_state_reconciliation_tickets"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(ticket_rollup, "blocked_tickets"), Some(&integer(1)));
+        assert_eq!(
+            field(ticket_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let mut journal = ToolExecutionJournal::new();
         journal.record_trace(list_request, list_trace);
         journal.record_trace(summary_request, summary_trace);
+        journal.record_trace(ticket_list_request, ticket_list_trace);
+        journal.record_trace(ticket_summary_request, ticket_summary_trace);
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 2);
-        assert_eq!(journal_summary.completed_count, 2);
+        assert_eq!(journal_summary.invocation_count, 4);
+        assert_eq!(journal_summary.completed_count, 4);
         assert_eq!(
             runtime.borrow().registry().counts().authorization_decisions,
-            2,
-            "maintenance plan list and summary both authorize through runtime read tools"
+            4,
+            "maintenance plan and ticket reads authorize through runtime read tools"
         );
     }
 

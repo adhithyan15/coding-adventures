@@ -13197,6 +13197,451 @@ impl
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind
+{
+    RepairEvidence,
+    OperatorHandoffEvidence,
+    ReviewEvidence,
+    LineageEvidence,
+    ReleaseHandoffEvidence,
+}
+
+impl
+    IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind
+{
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::RepairEvidence => "repair_evidence",
+            Self::OperatorHandoffEvidence => "operator_handoff_evidence",
+            Self::ReviewEvidence => "review_evidence",
+            Self::LineageEvidence => "lineage_evidence",
+            Self::ReleaseHandoffEvidence => "release_handoff_evidence",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceRow {
+    pub sequence: usize,
+    pub slot_clearance_action_evidence_key: String,
+    pub slot_clearance_action_sequence: usize,
+    pub slot_clearance_action_key: String,
+    pub slot_clearance_sequence: usize,
+    pub slot_clearance_key: String,
+    pub slot_sequence: usize,
+    pub slot_key: String,
+    pub disposition_action_key: String,
+    pub disposition_key: String,
+    pub review_key: String,
+    pub evidence_key: String,
+    pub clearance_action_key: String,
+    pub clearance_key: String,
+    pub audit_key: String,
+    pub guardrail_key: String,
+    pub work_order_key: String,
+    pub execution_slot_key: String,
+    pub packet_key: String,
+    pub ticket_key: String,
+    pub check_sequence: usize,
+    pub check_kind: IntegrationMeshReleaseReadinessCheckKind,
+    pub status: IntegrationMeshReleaseReadinessStatus,
+    pub handoff_lane: IntegrationMeshReleaseDispatchTicketHandoffLane,
+    pub disposition_action_kind:
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionKind,
+    pub disposition_kind:
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionKind,
+    pub slot_clearance_kind:
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceKind,
+    pub slot_clearance_action_kind:
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionKind,
+    pub slot_clearance_action_evidence_kind:
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub review_required: bool,
+    pub dispatch_required: bool,
+    pub execution_required: bool,
+    pub lineage_complete: bool,
+    pub action_required: bool,
+    pub release_handoff_evidence: bool,
+    pub action_evidence_ready: bool,
+}
+
+impl
+    IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceRow
+{
+    pub fn from_slot_clearance_action_row(
+        sequence: usize,
+        action_row: &IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionRow,
+    ) -> Self {
+        let slot_clearance_action_evidence_kind = match action_row.slot_clearance_action_kind {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionKind::ScheduleRepair => {
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::RepairEvidence
+            }
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionKind::CoordinateOperatorHandoff => {
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::OperatorHandoffEvidence
+            }
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionKind::CompleteReview => {
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::ReviewEvidence
+            }
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionKind::RestoreLineage => {
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::LineageEvidence
+            }
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionKind::ReleaseHandoff => {
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::ReleaseHandoffEvidence
+            }
+        };
+        let lineage_complete = action_row.has_lineage()
+            && action_row.check_sequence > 0
+            && !action_row.slot_clearance_action_key.is_empty()
+            && !action_row.slot_clearance_key.is_empty()
+            && !action_row.slot_key.is_empty()
+            && !action_row.disposition_action_key.is_empty()
+            && !action_row.disposition_key.is_empty()
+            && !action_row.review_key.is_empty()
+            && !action_row.evidence_key.is_empty()
+            && !action_row.clearance_action_key.is_empty()
+            && !action_row.clearance_key.is_empty()
+            && !action_row.audit_key.is_empty()
+            && !action_row.guardrail_key.is_empty()
+            && !action_row.work_order_key.is_empty()
+            && !action_row.execution_slot_key.is_empty()
+            && !action_row.packet_key.is_empty()
+            && !action_row.ticket_key.is_empty();
+        let release_handoff_evidence = slot_clearance_action_evidence_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::ReleaseHandoffEvidence;
+        let action_evidence_ready =
+            release_handoff_evidence && action_row.ready_to_release_handoff() && lineage_complete;
+
+        Self {
+            sequence,
+            slot_clearance_action_evidence_key: format!(
+                "release-ticket-handoff-disposition-action-slot-clearance-action-evidence-{sequence:02}-{}-{}",
+                slot_clearance_action_evidence_kind.as_str(),
+                action_row.check_kind.as_str()
+            ),
+            slot_clearance_action_sequence: action_row.sequence,
+            slot_clearance_action_key: action_row.slot_clearance_action_key.clone(),
+            slot_clearance_sequence: action_row.slot_clearance_sequence,
+            slot_clearance_key: action_row.slot_clearance_key.clone(),
+            slot_sequence: action_row.slot_sequence,
+            slot_key: action_row.slot_key.clone(),
+            disposition_action_key: action_row.disposition_action_key.clone(),
+            disposition_key: action_row.disposition_key.clone(),
+            review_key: action_row.review_key.clone(),
+            evidence_key: action_row.evidence_key.clone(),
+            clearance_action_key: action_row.clearance_action_key.clone(),
+            clearance_key: action_row.clearance_key.clone(),
+            audit_key: action_row.audit_key.clone(),
+            guardrail_key: action_row.guardrail_key.clone(),
+            work_order_key: action_row.work_order_key.clone(),
+            execution_slot_key: action_row.execution_slot_key.clone(),
+            packet_key: action_row.packet_key.clone(),
+            ticket_key: action_row.ticket_key.clone(),
+            check_sequence: action_row.check_sequence,
+            check_kind: action_row.check_kind,
+            status: action_row.status,
+            handoff_lane: action_row.handoff_lane,
+            disposition_action_kind: action_row.disposition_action_kind,
+            disposition_kind: action_row.disposition_kind,
+            slot_clearance_kind: action_row.slot_clearance_kind,
+            slot_clearance_action_kind: action_row.slot_clearance_action_kind,
+            slot_clearance_action_evidence_kind,
+            release_blocking: action_row.blocks_release(),
+            operator_required: action_row.needs_operator(),
+            review_required: action_row.needs_review(),
+            dispatch_required: action_row.dispatch_required,
+            execution_required: action_row.execution_required,
+            lineage_complete,
+            action_required: action_row.requires_action(),
+            release_handoff_evidence,
+            action_evidence_ready,
+        }
+    }
+
+    pub fn requires_action(&self) -> bool {
+        self.action_required
+    }
+
+    pub fn blocks_release(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn has_lineage(&self) -> bool {
+        self.lineage_complete
+    }
+
+    pub fn is_repair_evidence(&self) -> bool {
+        self.slot_clearance_action_evidence_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::RepairEvidence
+    }
+
+    pub fn is_operator_handoff_evidence(&self) -> bool {
+        self.slot_clearance_action_evidence_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::OperatorHandoffEvidence
+    }
+
+    pub fn is_review_evidence(&self) -> bool {
+        self.slot_clearance_action_evidence_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::ReviewEvidence
+    }
+
+    pub fn is_lineage_evidence(&self) -> bool {
+        self.slot_clearance_action_evidence_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::LineageEvidence
+    }
+
+    pub fn is_release_handoff_evidence(&self) -> bool {
+        self.release_handoff_evidence
+    }
+
+    pub fn ready_to_release_handoff(&self) -> bool {
+        self.action_evidence_ready
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_action()
+            || self.blocks_release()
+            || self.needs_operator()
+            || self.needs_review()
+            || self.dispatch_required
+            || self.execution_required
+            || !self.has_lineage()
+            || !self.ready_to_release_handoff()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceSummary {
+    pub total_slot_clearance_action_evidence_rows: usize,
+    pub repair_evidence: usize,
+    pub operator_handoff_evidence: usize,
+    pub review_evidence: usize,
+    pub lineage_evidence: usize,
+    pub release_handoff_evidence: usize,
+    pub required_evidence: usize,
+    pub release_blocking_evidence: usize,
+    pub operator_required_evidence: usize,
+    pub review_required_evidence: usize,
+    pub dispatch_required_evidence: usize,
+    pub execution_required_evidence: usize,
+    pub lineage_complete_evidence: usize,
+    pub ready_evidence: usize,
+    pub first_slot_clearance_action_evidence_key: Option<String>,
+    pub first_required_evidence_key: Option<String>,
+    pub first_repair_evidence_key: Option<String>,
+    pub first_operator_handoff_evidence_key: Option<String>,
+    pub first_review_evidence_key: Option<String>,
+    pub first_lineage_evidence_key: Option<String>,
+    pub first_release_handoff_evidence_key: Option<String>,
+    pub first_slot_clearance_action_key: Option<String>,
+    pub first_slot_clearance_key: Option<String>,
+    pub first_slot_key: Option<String>,
+    pub first_disposition_action_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_slot_clearance_action_evidence_kind: Option<
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind,
+    >,
+    pub first_slot_clearance_action_kind: Option<
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionKind,
+    >,
+    pub first_slot_clearance_kind: Option<
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceKind,
+    >,
+    pub first_disposition_action_kind: Option<
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionKind,
+    >,
+    pub first_handoff_lane: Option<IntegrationMeshReleaseDispatchTicketHandoffLane>,
+    pub first_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub first_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub release_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_ready: bool,
+}
+
+impl
+    IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceSummary
+{
+    pub fn from_action_evidence_rows<'a>(
+        evidence_rows: impl IntoIterator<
+            Item = &'a IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceRow,
+        >,
+    ) -> Self {
+        let evidence_rows = evidence_rows.into_iter().collect::<Vec<_>>();
+        let first_evidence_row = evidence_rows.iter().min_by_key(|row| row.sequence);
+        let first_required_evidence = evidence_rows
+            .iter()
+            .filter(|row| row.requires_action())
+            .min_by_key(|row| row.sequence);
+        let first_repair_evidence = evidence_rows
+            .iter()
+            .filter(|row| row.is_repair_evidence())
+            .min_by_key(|row| row.sequence);
+        let first_operator_handoff_evidence = evidence_rows
+            .iter()
+            .filter(|row| row.is_operator_handoff_evidence())
+            .min_by_key(|row| row.sequence);
+        let first_review_evidence = evidence_rows
+            .iter()
+            .filter(|row| row.is_review_evidence())
+            .min_by_key(|row| row.sequence);
+        let first_lineage_evidence = evidence_rows
+            .iter()
+            .filter(|row| row.is_lineage_evidence())
+            .min_by_key(|row| row.sequence);
+        let first_release_handoff_evidence = evidence_rows
+            .iter()
+            .filter(|row| row.is_release_handoff_evidence())
+            .min_by_key(|row| row.sequence);
+
+        Self {
+            total_slot_clearance_action_evidence_rows: evidence_rows.len(),
+            repair_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.is_repair_evidence())
+                .count(),
+            operator_handoff_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.is_operator_handoff_evidence())
+                .count(),
+            review_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.is_review_evidence())
+                .count(),
+            lineage_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.is_lineage_evidence())
+                .count(),
+            release_handoff_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.is_release_handoff_evidence())
+                .count(),
+            required_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.requires_action())
+                .count(),
+            release_blocking_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.blocks_release())
+                .count(),
+            operator_required_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.needs_operator())
+                .count(),
+            review_required_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.needs_review())
+                .count(),
+            dispatch_required_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.dispatch_required)
+                .count(),
+            execution_required_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.execution_required)
+                .count(),
+            lineage_complete_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.has_lineage())
+                .count(),
+            ready_evidence: evidence_rows
+                .iter()
+                .filter(|row| row.ready_to_release_handoff())
+                .count(),
+            first_slot_clearance_action_evidence_key: first_evidence_row
+                .map(|row| row.slot_clearance_action_evidence_key.clone()),
+            first_required_evidence_key: first_required_evidence
+                .map(|row| row.slot_clearance_action_evidence_key.clone()),
+            first_repair_evidence_key: first_repair_evidence
+                .map(|row| row.slot_clearance_action_evidence_key.clone()),
+            first_operator_handoff_evidence_key: first_operator_handoff_evidence
+                .map(|row| row.slot_clearance_action_evidence_key.clone()),
+            first_review_evidence_key: first_review_evidence
+                .map(|row| row.slot_clearance_action_evidence_key.clone()),
+            first_lineage_evidence_key: first_lineage_evidence
+                .map(|row| row.slot_clearance_action_evidence_key.clone()),
+            first_release_handoff_evidence_key: first_release_handoff_evidence
+                .map(|row| row.slot_clearance_action_evidence_key.clone()),
+            first_slot_clearance_action_key: first_evidence_row
+                .map(|row| row.slot_clearance_action_key.clone()),
+            first_slot_clearance_key: first_evidence_row
+                .map(|row| row.slot_clearance_key.clone()),
+            first_slot_key: first_evidence_row.map(|row| row.slot_key.clone()),
+            first_disposition_action_key: first_evidence_row
+                .map(|row| row.disposition_action_key.clone()),
+            first_work_order_key: first_evidence_row.map(|row| row.work_order_key.clone()),
+            first_ticket_key: first_evidence_row.map(|row| row.ticket_key.clone()),
+            first_slot_clearance_action_evidence_kind: first_evidence_row
+                .map(|row| row.slot_clearance_action_evidence_kind),
+            first_slot_clearance_action_kind: first_evidence_row
+                .map(|row| row.slot_clearance_action_kind),
+            first_slot_clearance_kind: first_evidence_row.map(|row| row.slot_clearance_kind),
+            first_disposition_action_kind: first_evidence_row
+                .map(|row| row.disposition_action_kind),
+            first_handoff_lane: first_evidence_row.map(|row| row.handoff_lane),
+            first_check_kind: first_evidence_row.map(|row| row.check_kind),
+            first_check_status: first_evidence_row.map(|row| row.status),
+            release_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_ready:
+                !evidence_rows.is_empty()
+                    && evidence_rows
+                        .iter()
+                        .all(|row| row.ready_to_release_handoff()),
+        }
+    }
+
+    pub fn has_slot_clearance_action_evidence_rows(&self) -> bool {
+        self.total_slot_clearance_action_evidence_rows > 0
+    }
+
+    pub fn has_required_evidence(&self) -> bool {
+        self.required_evidence > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.release_blocking_evidence > 0 || self.repair_evidence > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_evidence > 0 || self.operator_handoff_evidence > 0
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required_evidence > 0 || self.review_evidence > 0
+    }
+
+    pub fn has_lineage_gaps(&self) -> bool {
+        self.lineage_evidence > 0
+    }
+
+    pub fn has_release_handoff_evidence(&self) -> bool {
+        self.release_handoff_evidence > 0
+    }
+
+    pub fn has_complete_lineage(&self) -> bool {
+        self.lineage_complete_evidence == self.total_slot_clearance_action_evidence_rows
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_required_evidence()
+            || self.has_blockers()
+            || self.needs_operator()
+            || self.needs_review()
+            || self.dispatch_required_evidence > 0
+            || self.execution_required_evidence > 0
+            || self.has_lineage_gaps()
+            || !self
+                .release_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_ready
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReadinessSummary {
     pub release_ticket_handoff_guardrail_audit_clearance_action_readiness_summary:
@@ -38455,6 +38900,82 @@ pub fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearanc
     )
 }
 
+pub fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_rows_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<
+    IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceRow,
+>{
+    mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_rows_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+    .iter()
+    .enumerate()
+    .map(|(index, action_row)| {
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceRow::from_slot_clearance_action_row(
+            index + 1,
+            action_row,
+        )
+    })
+    .collect()
+}
+
+pub fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_rows(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<
+    IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceRow,
+>{
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_rows_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceSummary
+{
+    let evidence_rows =
+        mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_rows_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+
+    IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceSummary::from_action_evidence_rows(
+        evidence_rows.iter(),
+    )
+}
+
+pub fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceSummary
+{
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 pub fn mesh_release_ticket_handoff_execution_work_order_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -53172,6 +53693,240 @@ mod tests {
         ));
         assert!(action_rows.iter().all(
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionRow::is_release_handoff_action
+        ));
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_rows_surface_action_lineage(
+    ) {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let action_rows =
+            mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_rows(
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+        let evidence_rows =
+            mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_rows(
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+        let summary =
+            mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_summary(
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(evidence_rows.len(), 5);
+        assert_eq!(summary.total_slot_clearance_action_evidence_rows, 5);
+        assert_eq!(summary.repair_evidence, 3);
+        assert_eq!(summary.operator_handoff_evidence, 0);
+        assert_eq!(summary.review_evidence, 2);
+        assert_eq!(summary.lineage_evidence, 0);
+        assert_eq!(summary.release_handoff_evidence, 0);
+        assert_eq!(summary.required_evidence, 5);
+        assert_eq!(summary.release_blocking_evidence, 3);
+        assert_eq!(summary.operator_required_evidence, 4);
+        assert_eq!(summary.review_required_evidence, 2);
+        assert_eq!(summary.dispatch_required_evidence, 5);
+        assert_eq!(summary.execution_required_evidence, 5);
+        assert_eq!(summary.lineage_complete_evidence, 5);
+        assert_eq!(summary.ready_evidence, 0);
+        assert_eq!(
+            summary.first_slot_clearance_action_evidence_key,
+            Some(
+                "release-ticket-handoff-disposition-action-slot-clearance-action-evidence-01-repair_evidence-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_required_evidence_key,
+            summary.first_slot_clearance_action_evidence_key
+        );
+        assert_eq!(
+            summary.first_repair_evidence_key,
+            summary.first_slot_clearance_action_evidence_key
+        );
+        assert_eq!(summary.first_operator_handoff_evidence_key, None);
+        assert_eq!(
+            summary.first_review_evidence_key,
+            Some(
+                "release-ticket-handoff-disposition-action-slot-clearance-action-evidence-02-review_evidence-evidence_remediation"
+                    .to_string()
+            )
+        );
+        assert_eq!(summary.first_lineage_evidence_key, None);
+        assert_eq!(summary.first_release_handoff_evidence_key, None);
+        assert_eq!(
+            summary.first_slot_clearance_action_key,
+            Some(
+                "release-ticket-handoff-disposition-action-slot-clearance-action-01-schedule_repair-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_slot_clearance_action_evidence_kind,
+            Some(
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::RepairEvidence
+            )
+        );
+        assert_eq!(
+            summary.first_slot_clearance_action_kind,
+            Some(
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionKind::ScheduleRepair
+            )
+        );
+        assert!(
+            !summary
+                .release_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_ready
+        );
+        assert!(summary.has_slot_clearance_action_evidence_rows());
+        assert!(summary.has_required_evidence());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert!(summary.needs_review());
+        assert!(!summary.has_lineage_gaps());
+        assert!(!summary.has_release_handoff_evidence());
+        assert!(summary.has_complete_lineage());
+        assert!(summary.requires_attention());
+
+        let first = &evidence_rows[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(
+            first.slot_clearance_action_sequence,
+            action_rows[0].sequence
+        );
+        assert!(first.is_repair_evidence());
+        assert!(first.requires_action());
+        assert!(first.blocks_release());
+        assert!(first.needs_operator());
+        assert!(!first.needs_review());
+        assert!(first.has_lineage());
+        assert!(!first.ready_to_release_handoff());
+        assert!(first.requires_attention());
+
+        let mut lineage_action = action_rows[0].clone();
+        lineage_action.slot_clearance_action_kind =
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionKind::RestoreLineage;
+        lineage_action.slot_key.clear();
+        lineage_action.lineage_complete = false;
+        lineage_action.action_ready = false;
+        let lineage_evidence =
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceRow::from_slot_clearance_action_row(
+                1,
+                &lineage_action,
+            );
+
+        assert_eq!(
+            lineage_evidence.slot_clearance_action_evidence_key,
+            "release-ticket-handoff-disposition-action-slot-clearance-action-evidence-01-lineage_evidence-substrate_actions"
+        );
+        assert!(lineage_evidence.is_lineage_evidence());
+        assert!(!lineage_evidence.has_lineage());
+        assert!(!lineage_evidence.ready_to_release_handoff());
+        assert!(lineage_evidence.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_rows_mark_release_handoff(
+    ) {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let evidence_rows =
+            mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_rows_for_catalog(
+                &catalog,
+                all_primitive_families(),
+                &allowed_capabilities,
+                &[],
+            );
+        let summary =
+            mesh_release_ticket_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_summary_for_catalog(
+                &catalog,
+                all_primitive_families(),
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(evidence_rows.len(), 5);
+        assert_eq!(summary.total_slot_clearance_action_evidence_rows, 5);
+        assert_eq!(summary.repair_evidence, 0);
+        assert_eq!(summary.operator_handoff_evidence, 0);
+        assert_eq!(summary.review_evidence, 0);
+        assert_eq!(summary.lineage_evidence, 0);
+        assert_eq!(summary.release_handoff_evidence, 5);
+        assert_eq!(summary.required_evidence, 0);
+        assert_eq!(summary.release_blocking_evidence, 0);
+        assert_eq!(summary.operator_required_evidence, 0);
+        assert_eq!(summary.review_required_evidence, 0);
+        assert_eq!(summary.dispatch_required_evidence, 0);
+        assert_eq!(summary.execution_required_evidence, 0);
+        assert_eq!(summary.lineage_complete_evidence, 5);
+        assert_eq!(summary.ready_evidence, 5);
+        assert_eq!(
+            summary.first_slot_clearance_action_evidence_key,
+            Some(
+                "release-ticket-handoff-disposition-action-slot-clearance-action-evidence-01-release_handoff_evidence-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(summary.first_required_evidence_key, None);
+        assert_eq!(summary.first_repair_evidence_key, None);
+        assert_eq!(summary.first_operator_handoff_evidence_key, None);
+        assert_eq!(summary.first_review_evidence_key, None);
+        assert_eq!(summary.first_lineage_evidence_key, None);
+        assert_eq!(
+            summary.first_release_handoff_evidence_key,
+            summary.first_slot_clearance_action_evidence_key
+        );
+        assert_eq!(
+            summary.first_slot_clearance_action_key,
+            Some(
+                "release-ticket-handoff-disposition-action-slot-clearance-action-01-release_handoff-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_slot_clearance_action_evidence_kind,
+            Some(
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceKind::ReleaseHandoffEvidence
+            )
+        );
+        assert_eq!(
+            summary.first_slot_clearance_action_kind,
+            Some(
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionKind::ReleaseHandoff
+            )
+        );
+        assert!(
+            summary
+                .release_handoff_execution_work_order_guardrail_audit_clearance_action_evidence_review_disposition_action_slot_clearance_action_evidence_ready
+        );
+        assert!(summary.has_slot_clearance_action_evidence_rows());
+        assert!(!summary.has_required_evidence());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.needs_review());
+        assert!(!summary.has_lineage_gaps());
+        assert!(summary.has_release_handoff_evidence());
+        assert!(summary.has_complete_lineage());
+        assert!(!summary.requires_attention());
+        assert!(evidence_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceRow::ready_to_release_handoff
+        ));
+        assert!(evidence_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceRow::is_release_handoff_evidence
         ));
     }
 

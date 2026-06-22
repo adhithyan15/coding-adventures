@@ -133,6 +133,23 @@ void main() {
       expect(c.window(1, 13, 1, 13)[0][0], '15'); // M1
       expect(c.getRaw('M1').replaceAll(RegExp(r'[()]'), ''), '=L1*3');
     });
+
+    test('setFormat changes only the display, not the stored value', () {
+      final s = SpreadsheetSession();
+      s.setCell('A1', '1234');
+      String disp() => s.window(1, 1, 1, 1)[0][0];
+      expect(disp(), '1234'); // unformatted
+      s.setFormat('A1', '#,##0.00');
+      expect(disp(), '1,234.00');
+      s.setFormat('A1', '0.0%');
+      expect(disp(), '123400.0%');
+      s.setFormat('A1', '\$#,##0.00');
+      expect(disp(), '\$1,234.00');
+      s.setFormat('A1', ''); // clear → General
+      expect(disp(), '1234');
+      // The format is display-only: the raw stored value never changed.
+      expect(s.getRaw('A1'), '1234');
+    });
   });
 
   // The infinite-view binding layer (InfiniteGrid drives these): one engine read

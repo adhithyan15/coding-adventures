@@ -31,14 +31,16 @@ receivers into method bodies (out of scope for the backend).  See
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 from typing import Any
 
 # Block-taking catalog methods (each/map/select/…) invoke a Ruby block.  A block
 # reaches us as a trailing ``Closure`` from ``sir-runtime-core``; ``apply`` calls
 # it with proc-lenient arity, and ``truthy`` applies SIR truthiness (only
-# ``False``/``nil`` are falsy) to predicate results.
-from coding_adventures_sir_runtime_core import Closure, apply, truthy
+# ``False``/``nil`` are falsy) to predicate results.  ``intern`` mints the
+# :class:`Symbol` that ``String#to_sym`` returns.
+from coding_adventures_sir_runtime_core import Closure, apply, intern, truthy
 
 # The SIR universal value type at this package's boundary.
 Val = Any
@@ -345,6 +347,46 @@ _HASH_BLOCK_METHODS = frozenset(
     }
 )
 
+# Non-block ``String`` methods (M1c).  A Ruby ``String`` is a Python ``str``,
+# which is **immutable** — so every method here is non-mutating and returns a
+# fresh value (Ruby's bang-free methods do the same; the in-place ``upcase!``
+# family is out of v0 scope).  ``sub``/``gsub`` here are the *literal* forms:
+# the pattern is matched as a plain substring, never a regex, and the replacement
+# is inserted verbatim (no ``\1``/``&`` back-reference expansion).
+_STRING_METHODS = frozenset(
+    {
+        "length",
+        "size",
+        "upcase",
+        "downcase",
+        "capitalize",
+        "reverse",
+        "strip",
+        "lstrip",
+        "rstrip",
+        "chomp",
+        "chars",
+        "bytes",
+        "split",
+        "include?",
+        "start_with?",
+        "end_with?",
+        "index",
+        "replace",
+        "sub",
+        "gsub",
+        "to_i",
+        "to_f",
+        "to_sym",
+        "empty?",
+        "*",
+        "+",
+    }
+)
+
+# Block-taking ``String`` methods (M1c); ``each_char`` yields one character.
+_STRING_BLOCK_METHODS = frozenset({"each_char"})
+
 
 def _method_name(arg: Val) -> str:
     """Coerce a ``respond_to?`` argument (a :class:`Symbol`, ``":m"``-ish string,
@@ -362,6 +404,10 @@ def _responds_to(recv: Val, name: str) -> bool:
         return True
     if name in _OBJECT_METHODS:
         return True
+    # ``str`` is checked before ``list``/``dict`` would be irrelevant (a str is
+    # neither), but note bools are ints — order vs Array/Hash does not collide.
+    if isinstance(recv, str):
+        return name in _STRING_METHODS or name in _STRING_BLOCK_METHODS
     if isinstance(recv, list):
         return name in _ARRAY_METHODS or name in _ARRAY_BLOCK_METHODS
     if isinstance(recv, dict):
@@ -602,6 +648,141 @@ def _hash_block_method(recv: dict[Val, Val], name: str, block: Closure) -> Val:
     return _MISS
 
 
+# Leading-numeric extractors for ``String#to_i`` / ``String#to_f``.  Ruby parses
+# an optional sign and the longest leading numeric run, ignoring surrounding
+# whitespace, and yields ``0`` / ``0.0`` when nothing numeric leads — never an
+# error (unlike Python's ``int()``/``float()``, which raise).
+_INT_PREFIX = re.compile(r"[+-]?\d+")
+_FLOAT_PREFIX = re.compile(r"[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?")
+
+
+def _str_to_i(s: str) -> int:
+    """Ruby ``String#to_i``: leading integer, else ``0``."""
+    match = _INT_PREFIX.match(s.strip())
+    return int(match.group()) if match else 0
+
+
+def _str_to_f(s: str) -> float:
+    """Ruby ``String#to_f``: leading float, else ``0.0``."""
+    match = _FLOAT_PREFIX.match(s.strip())
+    return float(match.group()) if match else 0.0
+
+
+# Upper bound on the character count ``String#*`` will produce.  A repeat count
+# can come from untrusted input (e.g. ``gets.to_i``); without a cap a hostile
+# count would attempt a multi-gigabyte allocation (``MemoryError``).  Past the
+# cap we yield the empty string rather than raise — honouring the runtime's
+# "never raise on the OO surface" invariant.
+_MAX_REPEAT_LEN = 100_000_000
+
+
+def _str_repeat(s: str, count: Val) -> str:
+    """Ruby ``String#*``: ``s`` repeated ``count`` times.
+
+    Non-positive counts yield ``""`` (Ruby raises ``ArgumentError`` on a negative
+    count, but the runtime floor is to never raise), and an over-large product is
+    clamped to :data:`_MAX_REPEAT_LEN` characters to bound a DoS from a hostile
+    count.
+    """
+    n = int(count) if isinstance(count, (int, float)) else 0
+    if n <= 0 or not s:
+        return ""
+    if len(s) * n > _MAX_REPEAT_LEN:
+        n = _MAX_REPEAT_LEN // len(s)
+    return s * n
+
+
+def _chomp(s: str, sep: Val) -> str:
+    """Ruby ``String#chomp``: drop a trailing record separator.
+
+    With an explicit ``sep`` argument, drop exactly that trailing suffix; with no
+    argument, drop one trailing ``\\r\\n``, ``\\n``, or ``\\r`` (Ruby's default
+    line ending handling).
+    """
+    if sep is not None:
+        return s[: -len(sep)] if sep and s.endswith(sep) else s
+    if s.endswith("\r\n"):
+        return s[:-2]
+    if s.endswith(("\n", "\r")):
+        return s[:-1]
+    return s
+
+
+def _string_method(recv: str, name: str, args: list[Val]) -> Val:
+    """Non-block ``String`` methods.  Returns :data:`_MISS` if ``name`` is not a
+    catalogued string method.  Every result is a fresh value — ``str`` is
+    immutable, so nothing mutates ``recv`` in place."""
+    if name in ("length", "size"):
+        return len(recv)
+    if name == "upcase":
+        return recv.upper()
+    if name == "downcase":
+        return recv.lower()
+    if name == "capitalize":
+        # Ruby: first char upcased, the rest downcased — exactly ``str.capitalize``.
+        return recv.capitalize()
+    if name == "reverse":
+        return recv[::-1]
+    if name == "strip":
+        return recv.strip()
+    if name == "lstrip":
+        return recv.lstrip()
+    if name == "rstrip":
+        return recv.rstrip()
+    if name == "chomp":
+        return _chomp(recv, args[0] if args else None)
+    if name == "chars":
+        return list(recv)
+    if name == "bytes":
+        return list(recv.encode("utf-8"))
+    if name == "split":
+        # No argument ⇒ split on runs of whitespace (Ruby's awk-style default);
+        # with a separator ⇒ split on that literal substring.
+        return recv.split(args[0]) if args else recv.split()
+    if name == "include?":
+        return args[0] in recv
+    if name == "start_with?":
+        return recv.startswith(args[0])
+    if name == "end_with?":
+        return recv.endswith(args[0])
+    if name == "index":
+        pos = recv.find(args[0])
+        return pos if pos >= 0 else None
+    if name == "replace":
+        # Ruby ``String#replace`` overwrites the whole content; for an immutable
+        # ``str`` that is just the replacement value.
+        return args[0]
+    if name == "sub":
+        # Literal first-occurrence replacement; ``str.replace`` is verbatim (no
+        # back-reference expansion), so there is no ``$&`` foot-gun here.
+        return recv.replace(args[0], args[1], 1)
+    if name == "gsub":
+        return recv.replace(args[0], args[1])
+    if name == "to_i":
+        return _str_to_i(recv)
+    if name == "to_f":
+        return _str_to_f(recv)
+    if name == "to_sym":
+        return intern(recv)
+    if name == "empty?":
+        return len(recv) == 0
+    if name == "*":
+        return _str_repeat(recv, args[0])
+    if name == "+":
+        return recv + args[0]
+    return _MISS
+
+
+def _string_block_method(recv: str, name: str, block: Closure) -> Val:
+    """Block-taking ``String`` methods.  Returns :data:`_MISS` if ``name`` is not
+    a string block method."""
+    if name == "each_char":
+        for char in recv:
+            apply(block, [char])
+        return recv
+    return _MISS
+
+
 def call_method(recv: Val, name: str, *args: Val) -> Val:
     """Dispatch method ``name`` on ``recv``.
 
@@ -633,7 +814,16 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
         return fn(recv, list(args))
 
     arg_list = list(args)
-    if isinstance(recv, list):
+    if isinstance(recv, str):
+        # A block method (each_char) dispatches only with a trailing Closure.
+        if name in _STRING_BLOCK_METHODS and arg_list and isinstance(arg_list[-1], Closure):
+            result = _string_block_method(recv, name, arg_list[-1])
+            if result is not _MISS:
+                return result
+        result = _string_method(recv, name, arg_list)
+        if result is not _MISS:
+            return result
+    elif isinstance(recv, list):
         # A block method (each/map/…) is dispatched only when an actual trailing
         # Closure block is present; the block is split off the positional args.
         if name in _ARRAY_BLOCK_METHODS and arg_list and isinstance(arg_list[-1], Closure):

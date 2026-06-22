@@ -639,6 +639,12 @@ class InfiniteSheetModel {
     computeExtent();
   }
 
+  /// Number formatting: attach an Excel-style format code to the selected cell
+  /// (`#,##0.00`, `0.0%`, `$#,##0.00`, or `""` to clear). Display-only — the
+  /// stored value is unchanged; the engine renders it through the code, so a
+  /// fresh rowCells read shows the formatted string.
+  void applyFormat(String code) => _session.setFormat(infAddress, code);
+
   /// Structural edits: insert / delete the selected cell's row or column. The
   /// engine shifts every formula reference at or after the band (a reference
   /// whose whole band is deleted becomes `#REF!`) and recomputes; regrow the

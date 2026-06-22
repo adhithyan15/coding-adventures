@@ -3,6 +3,17 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.1] — 2026-06-22 (fix: `global_load` into an i32 dest narrows with `l2i`)
+
+The E6 `global_load` always read the 64-bit static field (`getstatic …:J`, a
+long) and stored it with `emit_typed_store` — correct only for an `i64`/Long
+dest. An `integer` ALGOL program concretised to **i32** has an `int` dest slot,
+so `istore` of a long is a verifier type error (hidden in 0.17.0's e2e test by
+`-Xverify:none`). The **E6 matrix proof** — which runs the real verifier — caught
+it. Now `global_load` emits `l2i` before `istore` when the dest is narrower than
+`long`, the mirror of the existing `i2l` widen on `global_store`. Regression
+test `e6_global_load_into_i32_dest_narrows_with_l2i`.
+
 ## [0.17.0] — 2026-06-22 (typed module globals → static fields — LANG-FULL E6 layer 1)
 
 `global_load` / `global_store` were a `LANG32b`-deferred `UnsupportedOp`

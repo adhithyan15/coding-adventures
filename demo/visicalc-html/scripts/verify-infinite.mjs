@@ -230,5 +230,23 @@ ok(wbc.getRaw("C1") === "=(B1*3)" || wbc.getRaw("C1") === "=B1*3",
   `insertCols shifted the formula's column refs: ${wbc.getRaw("C1")}`);
 ok(wbc.getDisplayWindow(1, 3, 1, 3).cells[0][0] === "15", "insertCols: formula moved to C1, still = 15");
 
+// Number formatting (the .00 / % / $ / Gen buttons): setFormat attaches an
+// Excel-style code to a cell; it's display-only (the stored value is unchanged),
+// and getDisplayWindow renders through it. "" clears the format back to General.
+const wbf = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+wbf.setCell("A1", "1234");
+const fmtDisp = () => wbf.getDisplayWindow(1, 1, 1, 1).cells[0][0];
+ok(fmtDisp() === "1234", `unformatted: ${fmtDisp()}`);
+wbf.setFormat("A1", "#,##0.00");
+ok(fmtDisp() === "1,234.00", `#,##0.00 → ${fmtDisp()}`);
+wbf.setFormat("A1", "0.0%");
+ok(fmtDisp() === "123400.0%", `0.0% → ${fmtDisp()}`);
+wbf.setFormat("A1", "$#,##0.00");
+ok(fmtDisp() === "$1,234.00", `$#,##0.00 → ${fmtDisp()}`);
+wbf.setFormat("A1", "");
+ok(fmtDisp() === "1234", `cleared (General) → ${fmtDisp()}`);
+// The format is display-only: the raw stored value never changed.
+ok(wbf.getRaw("A1") === "1234", `raw value untouched by formatting: ${wbf.getRaw("A1")}`);
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);

@@ -94,4 +94,66 @@ rulebook neuro_facts {
         source "Therefore, any midline cerebellar lesions manifest as imbalance, while hemispheric cerebellar lesions result mainly in incoordination."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK562317/"
         trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH: high-yield neuroanatomy localizations (lesion site -> deficit), each
+    % grounded to a self-contained verbatim NCBI Bookshelf span naming both the
+    % structure and the deficit/syndrome it produces. (optic_chiasm ->
+    % bitemporal_hemianopia declined: NBK545213/NBK542287 have no single span that
+    % both names the chiasm and states it CAUSES the defect — left out, not stretched.)
+    % ------------------------------------------------------------------------
+
+    % Mammillary bodies (diencephalon) — the amnesia of Wernicke-Korsakoff.
+    relate lesion_causes(mammillary_bodies, wernicke_korsakoff_syndrome)
+        source "The amnesia associated with Wernicke-Korsakoff syndrome results from atrophy of diencephalic structures (thalamus, hypothalamus, and mammillary bodies)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430729/"
+        trust authoritative
+
+    % Amygdala (bilateral temporal) — Klüver-Bucy syndrome.
+    relate lesion_causes(amygdala, kluver_bucy_syndrome)
+        source "Kluver-Bucy syndrome (KBS) is a rare neuropsychiatric disorder due to lesions affecting bilateral temporal lobes, especially the hippocampus and amygdala."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544221/"
+        trust authoritative
+
+    % Hippocampus — anterograde amnesia (no new memories).
+    relate lesion_causes(hippocampus, anterograde_amnesia)
+        source "A lesion in the hippocampus can cause anterograde amnesia and the inability to make new memories."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537247/"
+        trust authoritative
+
+    % Medial longitudinal fasciculus — internuclear ophthalmoplegia.
+    relate lesion_causes(medial_longitudinal_fasciculus, internuclear_ophthalmoplegia)
+        source "Internuclear ophthalmoplegia is an ocular movement disorder caused by a lesion of the medial longitudinal fasciculus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441970/"
+        trust authoritative
+
+    % Posterior limb of the internal capsule — pure motor hemiparesis (lacunar).
+    relate lesion_causes(internal_capsule, pure_motor_hemiparesis)
+        source "Pure motor hemiparesis involves the posterior limb of the internal capsule, corona radiata, or ventral pons."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563216/"
+        trust authoritative
+
+    % Dominant (left) parietal lobe / angular gyrus — Gerstmann syndrome.
+    relate lesion_causes(dominant_parietal_lobe, gerstmann_syndrome)
+        source "Gerstmann's syndrome is caused by specific brain lesions which affect the posterior lobule of the parietal lobe in the dominant hemisphere, which is usually in the left hemisphere but in some patients it could be the right, especially the angular gyrus and adjacent structures (at the confluence of parietal, temporal and occipital lobes), some studies showed that it's caused not only by lesion in the mentioned area but also in the left middle frontal lobe of the dominant hemisphere."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519528/"
+        trust authoritative
+
+    % Nondominant (right) parietal lobe — hemispatial neglect.
+    relate lesion_causes(nondominant_parietal_lobe, hemispatial_neglect)
+        source "Damage to the non-dominant parietal lobe (usually right) leads to agnosia of the contralateral side of the world, also known as hemispatial neglect syndrome."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537247/"
+        trust authoritative
+
+    % Frontal lobe (prefrontal cortex) — frontal lobe syndrome (personality change).
+    relate lesion_causes(frontal_lobe, personality_change)
+        source "Frontal lobe syndrome is characterized by impairments in executive function, behavior, emotion, motivation, and personality resulting from damage to the frontal lobes, particularly the prefrontal cortex and its associated neural networks."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532981/"
+        trust authoritative
+
+    % Posterior (dorsal) columns — loss of vibration and proprioception.
+    relate lesion_causes(posterior_columns, loss_of_proprioception)
+        source "The classic clinical features of Brown-Séquard syndrome include contralateral loss of pain and temperature (spinothalamic tract), ipsilateral hemiparesis (corticospinal tract), and ipsilateral loss of vibration and proprioception (posterior column pathway)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507888/"
+        trust authoritative
 }
