@@ -182,6 +182,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReadinessSummary`
   and helpers for combining clearance action readiness with evidence lineage
   state.
+- `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReviewReadinessSummary`
+  and helpers for combining clearance action evidence readiness with
+  evidence-review outcomes.
 - `IntegrationMeshReleaseTicketHandoffWorkOrderGuardrailReadinessSummary` and
   helpers for combining work-order readiness with handoff guardrail state.
 - `IntegrationMeshReleaseTicketHandoffGuardrailAuditReadinessSummary` and
