@@ -46,6 +46,10 @@ EXPECTED = [
     ("myotonic_dystrophy", "gene_defect", "dmpk"),                   # expand (NBK557446)
     ("friedreich_ataxia", "gene_defect", "fxn"),                     # expand (NBK563199)
     ("marfan_syndrome", "gene_defect", "fbn1"),                      # expand (NBK537339)
+    ("angelman_syndrome", "imprinting", "maternal"),                 # expand (NBK560870)
+    ("angelman_syndrome", "gene_defect", "ube3a"),                   # expand (NBK560870)
+    ("friedreich_ataxia", "inheritance", "autosomal_recessive"),     # expand (NBK563199)
+    ("friedreich_ataxia", "trinucleotide_repeat", "gaa"),            # expand (NBK563199)
 ]
 VAR = {"inheritance": "Pattern", "gene_defect": "Gene",
        "trinucleotide_repeat": "Repeat", "imprinting": "Parent"}
