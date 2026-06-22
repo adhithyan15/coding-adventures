@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.36.0] - 2026-06-22
+
+### Added
+
+- **Date/time completeness (R-45)** — extends the R-44 Date builtins **in place**
+  (same Hinnant civil kernel, same `Date` class machinery, same parse-safety
+  guards; no new dependency — English name tables are hand-rolled `const` arrays).
+  - **Extended `strftime` fields** in `format.Date` / the `format()` generic:
+    `%B` (full month `"January"`..`"December"`), `%b` (abbreviated
+    `"Jan"`..`"Dec"`), `%A` (full weekday `"Monday"`..`"Sunday"`), `%a`
+    (abbreviated `"Mon"`..`"Sun"`), and `%e` (day of month, **space-padded** to
+    width 2 — the 5th renders as `" 5"`). The weekday name reuses R-44's
+    `(days + 4).rem_euclid(7)` Sunday-based index via a shared `weekday_index`
+    helper (now also used by `weekdays`).
+  - **Extended `strptime` fields** in `as.Date`: `%B`/`%b` parse month names
+    **case-insensitively** (`"january"`/`"JAN"`/`"Jan"` all match); `%A`/`%a`
+    parse and spell-check weekday names (consumed but, like base R, not used to
+    constrain the date); `%e` parses an optionally space-padded day. `as.Date`
+    now also accepts the format as its **second positional** argument
+    (`as.Date("15 Jan 2021", "%d %b %Y")`), matching base R and `format.Date`.
+    So `as.Date("January 15, 2021", "%B %d, %Y")` parses correctly; a malformed
+    month/weekday name degrades to `NA`, never a panic.
+  - **`seq.Date(from, to, by)`** — dispatched from `seq()` when the first argument
+    is a `Date`. `by` is a number of days (`by = 1`, `by = 7`) or a unit string
+    `"day"`/`"week"`/`"month"`/`"year"` with an optional leading integer
+    multiplier (`"2 weeks"`). Day/week step a fixed day count; month/year step the
+    civil Y/M/D, **clamping** the day-of-month to the target month's length
+    (`seq(as.Date("2021-01-31"), by = "month", length.out = 3)` → Jan 31, Feb 28,
+    Mar 31). `length.out =` is supported as an alternative to `to`.
+  - **`months(d)`** → the full month name (= `format(d, "%B")`); **`quarters(d)`**
+    → `"Q1"`..`"Q4"`. Both vectorised and `NA`-preserving.
+  - **Security**: month/weekday-name parsing scans a fixed, length-bounded table
+    with ASCII case-folding (`eq_ignore_ascii_case`) and a `checked_add` length
+    check, so crafted strings can never index out of bounds — a bad name → `NA`.
+    `seq.Date` bounds its output length against `MAX_SEQ_LEN` with checked
+    arithmetic **before** any allocation (a `from`/`to`/`by` implying tens of
+    millions of dates errors rather than OOMs); `by = 0` errors rather than
+    looping; month/year clamp math uses saturating/`div_euclid`/`rem_euclid` so it
+    never panics, and every generated day count is re-validated against the R-44
+    `MAX_DATE_DAYS` bound.
+  - **Deferred to R-46**: `POSIXct`/`POSIXlt` date-*times* & timezones; sub-day
+    fields `%H`/`%M`/`%S`/`%p`; `%U`/`%W` week-of-year; locale (non-English)
+    names; and compound `"N units"` `by=` beyond a single leading integer
+    multiplier.
+
 ## [0.35.0] - 2026-06-22
 
 ### Added

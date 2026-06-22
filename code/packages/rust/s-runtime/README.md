@@ -325,9 +325,22 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   codes). The calendar uses Howard Hinnant's dependency-free
   `days_from_civil`/`civil_from_days` (leap years and negative dates handled).
   Parse safety: bounded `i64` digit accumulation rejects absurd years before
-  overflow; impossible days rejected via a civil round-trip. Deferred to R-45:
-  full `strptime`/`strftime`, `POSIXct`/`POSIXlt` & timezones, `seq.Date`,
-  `months()`/`quarters()`, non-day `difftime` units.
+  overflow; impossible days rejected via a civil round-trip.
+- **Date/time completeness** (R-45): extends the R-44 Date builtins in place
+  (same kernel, no new dependency). **`format`/`format.Date`** gain `%B` (full
+  month name), `%b` (abbreviated month), `%A` (full weekday), `%a` (abbreviated
+  weekday), and `%e` (space-padded day) —
+  `format(as.Date("2021-01-15"), "%B %d, %Y")` → `"January 15, 2021"`.
+  **`as.Date`** parses `%B`/`%b` (case-insensitive), `%A`/`%a`, and `%e`, and
+  accepts the format as its 2nd positional argument —
+  `as.Date("15 Jan 2021", "%d %b %Y")` → `2021-01-15`; a bad name → `NA`.
+  **`seq(from, to, by)` / `seq.Date`** generate a Date sequence with `by` a
+  number of days or `"day"`/`"week"`/`"month"`/`"year"` (optionally
+  `"2 weeks"`); month/year steps clamp the day to month length, and
+  `length.out=` is an alternative to `to`. Output length is `MAX_SEQ_LEN`-capped
+  with checked arithmetic before allocating. **`months(d)`** → full month name;
+  **`quarters(d)`** → `"Q1"`..`"Q4"`. Deferred to R-46: `POSIXct`/`POSIXlt` &
+  timezones, `%H`/`%M`/`%S`/`%p`, `%U`/`%W`, locale names, compound `by=`.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
