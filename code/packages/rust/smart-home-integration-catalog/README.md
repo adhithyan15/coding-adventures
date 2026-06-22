@@ -162,6 +162,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - low-level mesh release ticket handoff disposition-action slot clearance rows
   that classify sequenced slots into repair, review, lineage, and release
   handoff outcomes
+- low-level mesh release ticket handoff disposition-action slot clearance
+  action rows that turn slot-clearance outcomes into repair, review, lineage,
+  and release handoff work
 - mesh release ticket handoff guardrail audit clearance action evidence
   readiness summaries that combine clearance action readiness with evidence
   lineage state and first actionable evidence pointers
