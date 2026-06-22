@@ -162,4 +162,14 @@ rulebook pharm_facts {
         source "Penicillamine is a copper chelator derived from penicillin."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK513316/"
         trust authoritative
+    % --- EXPAND: idarucizumab reverses the anticoagulant dabigatran --------------
+    relate antidote_for(dabigatran_toxicity, idarucizumab)
+        source "Idarucizumab is an anti-dabigatran monoclonal antibody fragment used in patients treated with dabigatran presenting with life-threatening bleeding."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560651/"
+        trust authoritative
+    % --- EXPAND: dimercaprol (BAL) chelates arsenic / heavy metals ---------------
+    relate antidote_for(arsenic_poisoning, dimercaprol)
+        source "Dimercaprol is a medication used to treat toxic exposure to arsenic, mercury, gold, and lead."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549804/"
+        trust authoritative
 }
