@@ -1,6 +1,6 @@
 [package]
 name = "x86-simulator"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "x86/x86-64 runtime simulator — decode + execute machine code, and run the x86_64-backend's emitted code locally (host-arch-independent)"
 
@@ -10,3 +10,8 @@ x86_64-encoder = { path = "../x86_64-encoder" }
 [dev-dependencies]
 x86_64-backend = { path = "../x86_64-backend" }
 jit-core = { path = "../jit-core" }
+# S3: drive real language frontends → IIR → x86_64 machine code, then run that
+# machine code through this simulator — a *local* (host-arch-independent) stand-in
+# for the LANG-FULL matrix's `NativeAot` x86_64 column.
+lang-aot = { path = "../lang-aot" }
+aot-core = { path = "../aot-core" }
