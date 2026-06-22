@@ -128,6 +128,17 @@ pub struct VMCore {
     /// Flat address-space memory (used by `load_mem` / `store_mem` / I/O).
     memory: HashMap<i64, Value>,
 
+    /// Module-level global variables (LANG-FULL E6), keyed by name.
+    /// `global_store("g", v)` writes here; `global_load("g")` reads it (a
+    /// never-written global reads as `Value::Int(0)`, matching the zero-init the
+    /// code-gen backends give their `_twig_globals` slots). This is distinct
+    /// from `memory` (addressed by `i64`) and from the dynamic
+    /// `call_builtin "global_set"/"global_get"` table the Twig front-end uses —
+    /// these are the *lowered, typed* `global_load`/`global_store` IIR ops a
+    /// statically-typed frontend (ALGOL procedures over an enclosing variable)
+    /// emits directly.
+    globals: HashMap<String, Value>,
+
     /// Heap of bounds-checked arrays (LANG-FULL E5). `alloc_array` pushes a new
     /// `Vec<Value>` and binds its 0-based index as the array *handle* (an
     /// `i64`); `array_get`/`array_set` index the `Vec` with a range check, and
@@ -191,6 +202,7 @@ impl VMCore {
             max_instructions: None, // unlimited — trusted code path
             frames: Vec::new(),
             memory: HashMap::new(),
+            globals: HashMap::new(),
             arrays: Vec::new(),
             jit_handlers: HashMap::new(),
             extra_opcodes: HashMap::new(),
@@ -313,6 +325,7 @@ impl VMCore {
             module_fns: &mut module.functions,
             builtins: &self.builtins,
             memory: &mut self.memory,
+            globals: &mut self.globals,
             arrays: &mut self.arrays,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
@@ -386,6 +399,7 @@ impl VMCore {
             module_fns: &mut module.functions,
             builtins: &self.builtins,
             memory: &mut self.memory,
+            globals: &mut self.globals,
             arrays: &mut self.arrays,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
