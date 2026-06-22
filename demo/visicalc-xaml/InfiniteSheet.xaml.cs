@@ -35,14 +35,24 @@ namespace Mosaic.Generated;
 
 public sealed partial class InfiniteSheet : UserControl
 {
-    private const double ColW = 90, RowH = 24, GutterW = 64, HeadH = 26;
+    // Roomier geometry, to match the web reference.
+    private const double ColW = 92, RowH = 26, GutterW = 64, HeadH = 28;
 
-    private static readonly SolidColorBrush Bg = New(0x1E, 0x1E, 0x1E);
-    private static readonly SolidColorBrush Chrome = New(0x2D, 0x2D, 0x30);
-    private static readonly SolidColorBrush BorderC = New(0x3F, 0x3F, 0x46);
-    private static readonly SolidColorBrush Ink = New(0xCC, 0xCC, 0xCC);
-    private static readonly SolidColorBrush Dim = New(0x9D, 0x9D, 0x9D);
-    private static readonly SolidColorBrush Sel = New(0x09, 0x47, 0x71);
+    // ── Design tokens ──────────────────────────────────────────────────
+    // Mirror demo/visicalc-html/infinite.html's palette so every VisiCalc backend
+    // reads as one considered surface (dark modern spreadsheet). Same token set as
+    // the Qt / Flutter / Compose ports.
+    private static readonly SolidColorBrush Bg = New(0x16, 0x18, 0x1D); // base cell
+    private static readonly SolidColorBrush Panel = New(0x1B, 0x1E, 0x24); // zebra band
+    private static readonly SolidColorBrush Line = New(0x2C, 0x31, 0x3A); // hairline borders
+    private static readonly SolidColorBrush LineStrong = New(0x3A, 0x40, 0x4B); // control borders
+    private static readonly SolidColorBrush Head = New(0x20, 0x24, 0x2B); // row/col headers
+    private static readonly SolidColorBrush HeadSel = New(0x2B, 0x33, 0x40); // header of selected row/col
+    private static readonly SolidColorBrush Ink = New(0xE8, 0xEA, 0xED); // primary text
+    private static readonly SolidColorBrush Muted = New(0x9A, 0xA3, 0xB2); // labels, headers
+    private static readonly SolidColorBrush Accent = New(0x4A, 0xA3, 0xFF); // selection + focus
+    private static readonly SolidColorBrush White = New(0xFF, 0xFF, 0xFF);
+    private static readonly SolidColorBrush Sel = New(0x21, 0x34, 0x4A); // selected-cell fill
     private static readonly FontFamily Mono = new("Consolas");
 
     private readonly InfiniteSheetModel _model = new();
@@ -83,11 +93,12 @@ public sealed partial class InfiniteSheet : UserControl
                 _gutterInnerSv?.ChangeView(null, _bodyInnerSv.VerticalOffset, null, true);
     }
 
-    // ── Header (built once) ──────────────────────────────────────────
+    // ── Header (rebuilt on selection so the selected column tints to accent) ──
     private void BuildHeader()
     {
+        HeaderPanel.Children.Clear();
         for (int c = 1; c <= _model.TotalCols; c++)
-            HeaderPanel.Children.Add(ChromeCell(ColW, HeadH, _model.ColumnLetters(c)));
+            HeaderPanel.Children.Add(ChromeCell(ColW, HeadH, _model.ColumnLetters(c), _model.SelCol == c));
     }
 
     // ── Virtualized body + gutter population ─────────────────────────
@@ -103,16 +114,19 @@ public sealed partial class InfiniteSheet : UserControl
     {
         if (args.InRecycleQueue) return;
         int rowNum = (int)args.Item;
-        args.ItemContainer.Content = ChromeCell(GutterW, RowH, rowNum.ToString());
+        // The selected row's gutter label tints to the accent.
+        args.ItemContainer.Content = ChromeCell(GutterW, RowH, rowNum.ToString(), _model.SelRow == rowNum);
         args.Handled = true;
     }
 
     /// One body row: a horizontal strip of tappable cells. A single engine read
-    /// (RowCells) fills the whole row.
+    /// (RowCells) fills the whole row. Selected → accent fill + 2px accent ring;
+    /// otherwise a zebra band (even rows take the panel tint).
     private StackPanel BuildRow(int rowNum)
     {
         var sp = new StackPanel { Orientation = Orientation.Horizontal };
         IReadOnlyList<string> cells = _model.RowCells(rowNum);
+        SolidColorBrush band = rowNum % 2 == 0 ? Panel : Bg;
         for (int c = 1; c <= _model.TotalCols; c++)
         {
             string text = (c - 1) < cells.Count ? cells[c - 1] : string.Empty;
@@ -122,18 +136,19 @@ public sealed partial class InfiniteSheet : UserControl
             {
                 Width = ColW,
                 Height = RowH,
-                Background = selected ? Sel : Bg,
-                BorderBrush = BorderC,
-                BorderThickness = new Thickness(0.5),
+                Background = selected ? Sel : band,
+                BorderBrush = selected ? Accent : Line,
+                BorderThickness = new Thickness(selected ? 2 : 0.5),
                 Child = new TextBlock
                 {
                     Text = text,
-                    Foreground = Ink,
+                    Foreground = selected ? White : Ink,
                     FontSize = 12,
                     FontFamily = Mono,
+                    FontWeight = selected ? FontWeights.SemiBold : FontWeights.Normal,
                     HorizontalAlignment = HorizontalAlignment.Right,
                     VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(0, 0, 4, 0),
+                    Margin = new Thickness(0, 0, 6, 0),
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 },
             };
@@ -143,19 +158,22 @@ public sealed partial class InfiniteSheet : UserControl
         return sp;
     }
 
-    private Border ChromeCell(double w, double h, string text) => new()
+    /// A frozen header/gutter cell. When [selected] (its row/column holds the
+    /// cursor) it tints to the accent.
+    private Border ChromeCell(double w, double h, string text, bool selected = false) => new()
     {
         Width = w,
         Height = h,
-        Background = Chrome,
-        BorderBrush = BorderC,
+        Background = selected ? HeadSel : Head,
+        BorderBrush = Line,
         BorderThickness = new Thickness(0.5),
         Child = new TextBlock
         {
             Text = text,
-            Foreground = Dim,
-            FontSize = 12,
+            Foreground = selected ? Accent : Muted,
+            FontSize = 11,
             FontFamily = Mono,
+            FontWeight = FontWeights.SemiBold,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
         },
@@ -176,6 +194,20 @@ public sealed partial class InfiniteSheet : UserControl
         RefreshFormulaBar();
         RepaintRealizedRows();
         e.Handled = true;
+    }
+
+    // The formula field's accent focus ring: thicken + tint the wrapping border
+    // while the box has focus (the WinUI analog of the web demo's :focus ring).
+    private void FormulaBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        FormulaFieldBorder.BorderBrush = Accent;
+        FormulaFieldBorder.BorderThickness = new Thickness(2);
+    }
+
+    private void FormulaBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        FormulaFieldBorder.BorderBrush = LineStrong;
+        FormulaFieldBorder.BorderThickness = new Thickness(1);
     }
 
     /// Drag-fill: replicate the selected cell into the 10 rows below it. The
@@ -249,19 +281,31 @@ public sealed partial class InfiniteSheet : UserControl
         AddressText.Text = _model.InfAddress;
         FormulaBox.Text = _model.Formula;
         RefreshHistoryButtons();
+        UpdateStatus();
     }
 
-    /// Rebuild only the currently-realized body rows so selection highlight and
-    /// recomputed values show. ContainerFromItem returns null for virtualized
-    /// (off-screen) rows, so this touches just what's on screen.
+    /// The hairline footer: the live virtual-grid size + the per-edit revision
+    /// clock (mirrors the web/Qt/Flutter/Compose status lines).
+    private void UpdateStatus() =>
+        StatusText.Text =
+            $"Virtual grid: {_model.TotalRows} rows × {_model.TotalCols} cols  ·  revision {_model.Revision}";
+
+    /// Rebuild only the currently-realized rows (body + gutter) and the header so
+    /// the selection highlight, accent-tinted row/column headers, and recomputed
+    /// values show. ContainerFromItem returns null for virtualized (off-screen)
+    /// rows, so this touches just what's on screen.
     private void RepaintRealizedRows()
     {
         foreach (int rowNum in _rowNumbers)
         {
-            if (BodyList.ContainerFromItem(rowNum) is ListViewItem { Content: StackPanel } item)
-                item.Content = BuildRow(rowNum);
+            if (BodyList.ContainerFromItem(rowNum) is ListViewItem { Content: StackPanel } bodyItem)
+                bodyItem.Content = BuildRow(rowNum);
+            if (GutterList.ContainerFromItem(rowNum) is ListViewItem { Content: Border } gutterItem)
+                gutterItem.Content = ChromeCell(GutterW, RowH, rowNum.ToString(), _model.SelRow == rowNum);
         }
+        BuildHeader(); // re-tint the selected column's header
         RefreshHistoryButtons(); // fill/paste mutate the doc → re-gate Undo/Redo
+        UpdateStatus();
     }
 
     // ── Scroll sync ──────────────────────────────────────────────────

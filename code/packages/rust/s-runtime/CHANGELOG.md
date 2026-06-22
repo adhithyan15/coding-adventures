@@ -2,6 +2,173 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.32.0] - 2026-06-21
+
+### Added
+
+- **`kronecker(X, Y)` — the Kronecker product (R-38)** — available to both S and
+  R through the shared tree-walker. The block-outer product of two matrices: for
+  an `m×n` matrix `X` and a `p×q` matrix `Y`, the result is the `(m·p)×(n·q)`
+  matrix whose block `(i, j)` is the scalar `X[i, j]` times the whole of `Y`,
+  i.e. `result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]` (1-based,
+  column-major to match `SValue::Matrix`).
+  - **Reuse, not reimplementation.** A new `matrix_or_column` helper pulls
+    `(data, nrow, ncol)` out of an `SValue::Matrix`, promoting a bare numeric
+    vector to an `n×1` column exactly like `matrix(v)`; the result is emitted via
+    the same `SValue::Matrix` constructor `matrix()`/`crossprod` use. NA is
+    propagated through the product (`na_mul`), matching R arithmetic.
+  - **Examples.** `kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0),
+    nrow=2))` is a 4×4 block matrix; `kronecker(matrix(5), Y)` is `5·Y`; a 2×3 ⊗
+    1×2 is 2×6. The result is a real matrix — `dim()`/`nrow()`/`ncol()` see it and
+    it composes with `%*%`.
+  - **Security — quadratic output-size guard.** The result has `(m·p)·(n·q)`
+    elements, quadratic in the inputs, so before allocating the result row count
+    `m·p`, column count `n·q`, and their product are each formed with
+    `checked_mul` and bounded by the existing `MAX_SEQ_LEN` cap (the same bound
+    `matrix()`/`matrix_multiply` enforce). Overflow or over-cap returns a clean
+    "result too large" error and never allocates. Degenerate `0×n` / `m×0` inputs
+    yield an empty result with the correct zero dimension; the loops do not
+    execute, so there is no out-of-bounds access. No new unbounded multiplier.
+  - **Deferred.** The R `%x%` infix alias (`X %x% Y`) needs lexer/grammar work and
+    is deferred to **R-40**, along with any `outer`-style custom-`FUN`
+    generalization. This release ships the `kronecker(X, Y)` function form only.
+
+## [0.31.0] - 2026-06-21
+
+### Added
+
+- **Ordered factors & `cut()` label polish (R-35)** — available to both S and R
+  through the shared tree-walker.
+  - **Representation**: `SValue::Factor` gains an `ordered: bool` field. `class()`
+    reports `c("ordered", "factor")` when set (plain `"factor"` otherwise), and an
+    ordered factor prints its `Levels:` line with `<` separators
+    (`Levels: lo < mid < hi`). All prior factor constructions default
+    `ordered = false`, so unordered factors are bit-for-bit unchanged.
+  - **`ordered(x, levels =, labels =)`** and **`factor(x, ordered = TRUE)`** build
+    an ordered factor (reusing the refactored `build_factor` helper).
+    **`as.ordered(x)`** coerces (a factor flips its flag; any other vector is
+    factor-encoded first). **`is.ordered(x)`** is `TRUE` iff `x` is an ordered
+    factor — never errors.
+  - **Ordered-factor comparison**: `<`, `<=`, `>`, `>=`, `==`, `!=` between two
+    ordered factors compare **by level index** (the 1-based `code`), not by label
+    string, NA-propagating. Two ordered factors with **different level sets** is a
+    clean error (`"level sets of factors are different"`). Order operators on an
+    *unordered* factor error (`"'<' not meaningful for factors"`); `==`/`!=` fall
+    back to label comparison.
+  - **`cut(..., ordered_result = TRUE)`** makes the binned factor an ordered factor
+    (intervals are naturally ordered low→high). **`cut(..., dig.lab = k)`** formats
+    auto-generated break labels to `k` significant digits (default **3**), e.g.
+    `cut(..., breaks = c(0, 3.14159, 10), dig.lab = 2)` → levels `"(0,3.1]"`,
+    `"(3.1,10]"`.
+  - **Security**: ordered comparison reads the integer `codes` only — an
+    out-of-range or `NA` code maps to `NA`, never panicking — and rejects differing
+    level sets before any compare. `dig.lab` is **clamped to `1..=22`** before
+    formatting (a malformed / non-positive value falls back to the default 3), so
+    no caller-controlled value can drive an unbounded format width or a panic. No
+    new unbounded multiplier; the level vector is still bounded by the
+    `MAX_SEQ_LEN`-bounded break count.
+  - **Deferred to R-39**: the S3 `Ops.ordered` group-generic *dispatch* surface and
+    order statistics on ordered factors (`sort`/`max`/`min`/`range` by level order).
+
+## [0.30.0] - 2026-06-21
+
+### Added
+
+- **Matrix cross products (R-36)** — `crossprod` and `tcrossprod`, available to
+  both S and R through the shared tree-walker. An independent matrix-algebra item
+  (not part of the binning/set-op chains), defined **entirely in terms of the
+  existing R-11 `t()` transpose and `%*%` matrix product** — no new linear algebra,
+  no new value type.
+  - **`crossprod(x, y)`** = `t(x) %*% y`; **`crossprod(x)`** (one argument) =
+    `t(x) %*% x` (the unscaled Gram matrix `X'X`). The second argument defaults to
+    the first.
+  - **`tcrossprod(x, y)`** = `x %*% t(y)`; **`tcrossprod(x)`** (one argument) =
+    `x %*% t(x)` (`XX'`). The "t" prefix transposes the *second* operand.
+  - Worked column-major example: `A = matrix(c(1,2,3,4), nrow=2)` gives
+    `crossprod(A)` = `[[5,11],[11,25]]` and `tcrossprod(A)` = `[[10,14],[14,20]]`.
+    Non-square `B = matrix(1:6, nrow=2)` (2×3) gives `crossprod(B)` 3×3 and
+    `tcrossprod(B)` 2×2.
+  - **Reuse / security**: the implementation calls the public `t()` builtin (`b_t`,
+    via a `transpose_value` helper) and the evaluator's `matrix_multiply` (the `%*%`
+    handler, newly exposed `pub(crate)`). It therefore inherits that handler's
+    already-reviewed `MAX_SEQ_LEN` allocation guard on the `nrow*ncol` result (no
+    unchecked multiply → OOM), the `"non-conformable arguments"` error raised before
+    any indexing, the column-major `array_runtime` fast path, and NA propagation.
+    The new surface is just the two argument-shuffling wrappers; a bare vector flows
+    through `%*%`'s existing vector promotion.
+
+## [0.29.0] - 2026-06-21
+
+### Added
+
+- **`cut()` option completeness (R-33)** — the four options deferred from R-32,
+  available to both S and R through the shared tree-walker. All extend the R-32
+  `cut` handler in place (same interval scan, same `SValue::Factor` builder); no
+  new value type, no new cap.
+  - **`labels =`** — `labels = FALSE` returns the **integer bin codes** as a plain
+    numeric vector (no factor allocation). A character `labels` vector is used
+    verbatim as the levels and must have length `length(breaks) - 1` (else a clean
+    `BadArgs` error). Absent / `labels = TRUE` keeps the auto-generated interval
+    labels. `strip_wrappers` peels `Classed`/`Named`/`Attributed` so we can tell
+    `FALSE`/`TRUE` from a character vector.
+  - **`right = FALSE`** — left-closed `[lo, hi)` intervals (the index becomes
+    `#{breaks <= x}` rather than `#{breaks < x}`); auto-labels become `"[lo,hi)"`
+    via the new `cut_interval_label` helper. The default `right = TRUE` scan now
+    also honours the `(lo,hi]` boundary convention exactly (an `x` equal to an
+    interior break lands in the lower interval).
+  - **`include.lowest = TRUE`** — folds the single extreme boundary value (the
+    lowest break for `right = TRUE`, the highest for `right = FALSE`) into the
+    adjacent interval so it bins instead of going `NA`.
+  - **integer `breaks`** — a single number `N` requests `N` equal-width bins over
+    the range of `x`, extended by `dx/1000` each side (`dx = max - min`; degenerate
+    `dx == 0` falls back to `abs(min)`, then `1`) — see `equal_width_breaks`.
+  - The new `cut_code` helper centralises the per-value interval logic shared by the
+    factor and `labels = FALSE` paths.
+  - **Security**: `N` is capped at `MAX_SEQ_LEN` **before** any vector is built;
+    the equal-width breaks use finite/checked arithmetic (no divide-by-zero on a
+    degenerate range); the `labels` length check returns `Err`, never panics. No new
+    user-controlled multiplier.
+  - **Deferred to R-34**: `dig.lab=` and `ordered_result=`.
+
+## [0.28.0] - 2026-06-21
+
+### Added
+
+- **Binning & cross-product utilities (R-32)** — the numeric-binning family,
+  available to both S and R through the shared tree-walker. A pivot away from the
+  thin R-31 deferral of `incomparables=`/`fromLast=` on the binary set ops
+  (`union`/`intersect`/`setdiff`): base R does not accept those arguments there, so
+  implementing them would be non-faithful. All build on existing machinery
+  (`as_double`, `na_real`/`is_na_real`, `first_positional`, and the existing
+  `SValue::Factor { codes, levels }` constructor) — no new value type, no new cap.
+  - **`findInterval(x, vec)`** — for each element of the non-decreasing breakpoint
+    vector `vec`, the 1-based index of the last break not exceeding `x`: `0` below
+    the first, `length(vec)` at/above the last; `NA`/non-finite `x` → `NA`.
+    `findInterval(c(0.5, 1.5, 2.5), c(1, 2, 3))` → `c(0, 1, 2)`;
+    `findInterval(5, c(1, 2, 3))` → `3`. A linear scan over the (short, sorted)
+    breaks; a non-finite/NA/out-of-order break stops the count, so it never indexes
+    out of bounds.
+  - **`cut(x, breaks)`** — bins `x` into the `k-1` right-closed `(lo,hi]` intervals
+    of the sorted `breaks`, returning a real **`Factor`** whose `levels` are the
+    auto-generated `"(lo,hi]"` labels. Built directly on `findInterval`: the
+    interval index is the 1-based level code when it lies in `1..=k-1`; boundary
+    indices `0`/`k` and `NA` `x` map to a `<NA>` code. So `levels()`,
+    `as.integer()`, `as.character()`, and `nlevels()` are all factor-aware on the
+    result. `cut(c(1, 5, 10), breaks = c(0, 3, 6, 11))` → a factor with levels
+    `c("(0,3]", "(3,6]", "(6,11]")` and values `(0,3]`, `(3,6]`, `(6,11]`;
+    `cut(c(-1, 20), breaks = c(0, 3, 6, 11))` → both `NA`. `saturating_sub` guards
+    the interval count when fewer than two breaks are supplied (→ all `NA`).
+  - **Security**: no new user-controlled multiplier. `cut` allocates one code per
+    input element (length already `MAX_SEQ_LEN`-bounded) and `k-1` level strings
+    (bounded by the capped `breaks` length); `findInterval` is `O(len(x)·len(vec))`
+    with both lengths capped; the existing `tabulate` `nbins`-vs-`MAX_SEQ_LEN`
+    checked guard is unchanged. The `vec=`/`breaks=` readers (shared `second_arg`
+    helper) return a clean `BadArgs` error when absent; no path indexes out of
+    bounds.
+  - **Deferred to R-33**: `cut`'s `labels=` (custom labels), `right=FALSE`
+    (left-closed `[lo,hi)`), `include.lowest=`, and integer `breaks` (equal-width
+    bin count).
+
 ## [0.27.0] - 2026-06-21
 
 ### Added

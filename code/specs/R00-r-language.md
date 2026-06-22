@@ -1077,6 +1077,258 @@ unchanged.
     pass — and the `fromLast =` argument on those same binary set ops. The `%o%` infix
     alias for `outer` remains open for a later grammar pass.
 
+- **R-32 — binning & cross-product utilities** *(this PR)*. A **pivot** away from
+  the R-31 deferral of `incomparables=`/`fromLast=` on the binary set ops
+  (`union`/`intersect`/`setdiff`): on inspection base R's `union`/`intersect`/`setdiff`
+  do **not** accept those arguments at all (only the `{set,union,...}` generics and
+  `duplicated`/`unique` do), so wiring them onto the binary set ops would be
+  **non-faithful**. R-32 instead lands a coherent, faithful adjacent unit — the
+  numeric-binning family — all in the shared `s-runtime` (R reuses them verbatim
+  through the shared tree-walker). They build on the existing factor value
+  (`SValue::Factor { codes, levels }`, the R-13 factor type) and the existing
+  `MAX_SEQ_LEN` cap; no new value type is introduced.
+  - **`findInterval(x, vec)`** — the primitive the others build on. `vec` must be
+    **non-decreasing** (a sorted vector of breakpoints). For each element of `x` it
+    returns the largest index `i` (1-based) such that `vec[i] <= x`, i.e. the count of
+    breakpoints that do not exceed `x`: `0` when `x < vec[1]`, `length(vec)` when
+    `x >= vec[length(vec)]`. Implemented as a linear scan (`vec` is assumed short and
+    sorted); `NA`/non-finite `x` propagate to `NA`. Worked examples:
+    `findInterval(c(0.5, 1.5, 2.5), c(1, 2, 3))` is `c(0, 1, 2)`;
+    `findInterval(5, c(1, 2, 3))` is `3`.
+  - **`tabulate(bin, nbins)`** — unchanged from R-28 (already shipped); listed here as
+    part of the binning family. Counts integer codes `1..nbins`; codes `<= 0` or
+    `> nbins` are ignored; `nbins` defaults to `max(bin)` and is capped at
+    `MAX_SEQ_LEN`. `tabulate(c(1,2,2,3,5), nbins = 5)` is `c(1, 2, 1, 0, 1)`.
+  - **`cut(x, breaks)`** — bin a numeric vector `x` into the intervals delimited by
+    the **sorted** breakpoint vector `breaks`, returning a **`factor`** (a real
+    `SValue::Factor`, so `levels()`, `as.integer()`, `as.character()`, and `table()`
+    all work on the result). With `k = length(breaks)` breakpoints there are `k - 1`
+    intervals; the default intervals are **right-closed** `(lo, hi]`, and the
+    auto-generated level labels are exactly `"(lo,hi]"` formatted from the numeric
+    breakpoints. An element that falls in no interval — `x <= breaks[1]` or
+    `x > breaks[k]`, or `NA`/non-finite — maps to a `NA` factor code (printed `<NA>`),
+    not to a level. `cut` is implemented **on top of `findInterval`**: the interval
+    index is `findInterval(x, breaks)`, which is the 1-based level code when it lies in
+    `1..k-1` and `NA` (out of range) otherwise. Worked example:
+    `cut(c(1, 5, 10), breaks = c(0, 3, 6, 11))` is a factor with levels
+    `c("(0,3]", "(3,6]", "(6,11]")` and values `(0,3]`, `(3,6]`, `(6,11]`;
+    `cut(c(-1, 20), breaks = c(0, 3, 6, 11))` is `NA, NA` (both outside the breaks).
+  - **Output-size caps (security).** No new unbounded multiplier. `cut` allocates one
+    output code per input element (length already `MAX_SEQ_LEN`-bounded) and `k - 1`
+    level strings (bounded by the `breaks` length, itself capped). `findInterval` is
+    `O(len(x) * len(vec))` with both lengths capped. `tabulate` keeps its existing
+    `nbins`-vs-`MAX_SEQ_LEN` checked guard. Named-arg readers reject malformed values
+    gracefully (`Err`, never panic): `breaks` is read through `as_double` (NA/empty is
+    a clean error or empty result), and the deferred options below are simply ignored
+    when absent.
+  - **Scope outcome / deferred to R-33.** `findInterval`, `tabulate`, and `cut`
+    (default right-closed `(lo,hi]` intervals with auto-generated labels) ship
+    **solidly** in R-32.
+
+- **R-33 — `cut()` option completeness**. Extends the R-32 `cut`
+  handler in place (same `findInterval`-backed kernel, same factor builder) with
+  the four deferred options. None of them change the default behaviour; they are
+  pure refinements layered onto the existing interval scan.
+  - **`labels =`** — three forms:
+    - **absent / `labels = TRUE`** — the auto-generated interval strings (the
+      R-32 default), `"(lo,hi]"` (or `"[lo,hi)"` when `right = FALSE`).
+    - **a character vector** — used verbatim as the factor levels. Its length
+      **must equal the number of intervals** (`length(breaks) - 1`); otherwise
+      `cut` raises an error (`"lengths of 'breaks' and 'labels' differ"`).
+      `cut(c(1,5,10), breaks=c(0,3,6,11), labels=c("lo","mid","hi"))` → a factor
+      with levels `c("lo","mid","hi")`.
+    - **`labels = FALSE`** — return the **integer bin codes** (a plain numeric
+      vector, *not* a factor). Out-of-range / `NA` values become `NA`.
+      `cut(c(1,2,3), breaks=c(0,3,6), labels=FALSE)` → `c(1,1,2)`.
+  - **`right = FALSE`** — left-closed intervals `[lo, hi)` rather than the
+    default right-closed `(lo, hi]`. The bin scan switches from "largest break
+    `<= x`" to "number of breaks `< x`", and the auto-labels become `"[lo,hi)"`.
+    `cut(c(1,3), breaks=c(0,3,6), right=FALSE)` → `1 ∈ "[0,3)"`, `3 ∈ "[3,6)"`.
+  - **`include.lowest = TRUE`** — include the extreme boundary value in the
+    closest interval. With `right = TRUE` (default) the **lowest** break is folded
+    into the first interval (so `x == breaks[1]` lands in interval 1 instead of
+    `NA`); with `right = FALSE` the **highest** break is folded into the last
+    interval (so `x == breaks[k]` lands in interval `k-1`). Default `FALSE`.
+    `cut(c(0,1,2), breaks=c(0,1,2), include.lowest=TRUE)` → `0` lands in the first
+    interval rather than `NA`.
+  - **integer `breaks` (a single number `N`)** — divide the **range of `x`** into
+    `N` equal-width intervals. R's `cut.default` extends the range by 0.1 % on each
+    side so the extreme data points sit strictly inside the outer bins; we
+    replicate that exactly:
+    ```text
+      rx = range(x, na.rm = TRUE)         # = (min, max) over finite x
+      dx = rx.max - rx.min
+      if dx == 0:                          # degenerate (all x equal)
+          dx = abs(rx.min)                 # R: abs(rx[1L]); if still 0, dx = 1
+          if dx == 0: dx = 1
+      lo = rx.min - dx/1000
+      hi = rx.max + dx/1000
+      breaks = N+1 equally spaced points from lo to hi   # N equal-width bins
+    ```
+    `N` is bounded by `MAX_SEQ_LEN` (a huge `N` → huge levels vector is rejected,
+    not allocated) and the spacing is computed with checked/finite arithmetic so a
+    degenerate range never divides by zero. `cut(0:10, breaks=5)` → a factor with
+    5 levels spanning the slightly-extended `0..10` range; every value gets a
+    non-`NA` bin.
+  - **Security.** `N` for integer breaks is capped at `MAX_SEQ_LEN` before any
+    allocation; the equal-width break vector is built with finite/checked
+    arithmetic (degenerate all-equal `x` is handled without divide-by-zero);
+    `labels` length validation returns a clean `Err` (never panics); `labels =
+    FALSE` returns a numeric vector with no factor allocation. No new
+    user-controlled multiplier beyond the existing `MAX_SEQ_LEN`-bounded input and
+    break lengths.
+  - **Scope outcome / deferred to R-34.** `labels =` (incl. `FALSE`),
+    `right = FALSE`, `include.lowest =`, and integer `breaks` ship **solidly**.
+    **Deferred to R-34:** `dig.lab =` (significant-digit control of auto-label
+    formatting) and `ordered_result =` (an ordered factor result). The `%o%` infix
+    alias for `outer` remains open for a later grammar pass.
+- **R-38 — `kronecker()` (Kronecker product)** *(this PR)*. An **independent
+  matrix-algebra item** in the same family as R-36, landed in the shared
+  `s-runtime` (R reuses it verbatim through the shared tree-walker). The
+  Kronecker product is the block-outer-product of two matrices: for an `m×n`
+  matrix `X` and a `p×q` matrix `Y`, `kronecker(X, Y)` is the `(m·p)×(n·q)`
+  matrix made of `m·n` blocks, where block `(i, j)` is the scalar `X[i, j]`
+  times the whole of `Y`.
+  - **Block / element formula (1-based, column-major to match `SValue::Matrix`).**
+    `result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]` for `i∈1..m`,
+    `j∈1..n`, `k∈1..p`, `l∈1..q`. Equivalently, result row `r = (i-1)·p + k`
+    and column `c = (j-1)·q + l` decompose the result coordinate into an
+    *outer* index into `X` (`i = (r-1) div p`, `j = (c-1) div q`) and an *inner*
+    index into `Y` (`k = (r-1) mod p`, `l = (c-1) mod q`). The result is stored
+    column-major like every other `SValue::Matrix`.
+  - **Reuse of matrix machinery.** The implementation pulls `(data, nrow, ncol)`
+    out of each operand with the existing `matrix_parts` helper, and emits a
+    `SValue::Matrix` directly (the same constructor `matrix()`/`crossprod` use).
+    A bare numeric vector is promoted with the **same** convention `matrix()`'s
+    bare-column default uses: an `n`-length vector becomes an `n×1` column
+    matrix. So `kronecker(c(1,2), Y)` is a `(2·p)×(1·q)` matrix.
+  - **Output-size guard (security).** The result has `(m·p)·(n·q)` elements — a
+    *quadratic* blow-up in the inputs, so two innocuous-looking 100×100 matrices
+    would Kronecker to a 10 000×10 000 (10⁸-element) matrix. Before allocating,
+    the result row count `m·p`, column count `n·q`, **and** their product are
+    each formed with `checked_mul` and bounded by the existing `MAX_SEQ_LEN`
+    cap (the very bound `matrix()` and `matrix_multiply` already enforce); on
+    overflow or over-cap the function returns the same "result too large" error
+    those builtins raise, never allocating. Degenerate `0×n` / `m×0` inputs
+    produce an empty (`0`-element) result with the correct zero dimension and
+    never index out of bounds.
+  - **Worked example (column-major).** `X = matrix(c(1,2,3,4), nrow = 2)` is
+    col1=(1,2), col2=(3,4), i.e. `[[1,3],[2,4]]`. `Y = matrix(c(0,1,1,0),
+    nrow = 2)` is `[[0,1],[1,0]]`. `kronecker(X, Y)` is the 4×4 matrix whose
+    top-left 2×2 block is `1·Y`, top-right is `3·Y`, bottom-left `2·Y`,
+    bottom-right `4·Y`. A 1×1 `X = matrix(5)` gives `kronecker(X, Y) = 5·Y`.
+  - **`%x%` infix deferred to R-40.** R spells the Kronecker product with the
+    infix `%x%` operator (`X %x% Y`), which — like `%o%`/`%in%` — needs
+    lexer/parser/grammar work to add the special-operator token. This PR ships
+    only the **function form** `kronecker(X, Y)`; the `%x%` infix alias is
+    explicitly deferred to **R-40** (grammar work), as is any `outer`-style
+    generalization (custom `FUN`) and sparse handling.
+- **R-36 — `crossprod` / `tcrossprod` (matrix cross products)** *(this PR)*. An
+  **independent matrix-algebra item** (not part of the binning/cut/set-op chains):
+  the two cross-product convenience functions that statistics code reaches for
+  constantly, landed in the shared `s-runtime` (R reuses them verbatim through the
+  shared tree-walker). Both are defined **entirely in terms of the existing R-11
+  `t()` transpose and R-11 `%*%` matrix product** — no new linear algebra, no new
+  value type:
+  - **`crossprod(x, y)`** = `t(x) %*% y`; **`crossprod(x)`** (one argument) =
+    `t(x) %*% x` (the unscaled Gram matrix `X'X`, the heart of a least-squares
+    normal equation). The second argument defaults to the first.
+  - **`tcrossprod(x, y)`** = `x %*% t(y)`; **`tcrossprod(x)`** (one argument) =
+    `x %*% t(x)` (the `XX'` of pairwise row dot products). The "t" prefix means
+    the *second* operand is transposed (vs. `crossprod`, which transposes the
+    first).
+  - **Worked example (column-major, as R stores matrices).**
+    `A = matrix(c(1,2,3,4), nrow = 2)` is col1=(1,2), col2=(3,4). Then
+    `crossprod(A) = t(A) %*% A = [[5, 11], [11, 25]]` and
+    `tcrossprod(A) = A %*% t(A) = [[10, 14], [14, 20]]`. Non-square:
+    `B = matrix(1:6, nrow = 2)` (2×3) gives `crossprod(B)` 3×3 and `tcrossprod(B)`
+    2×2.
+  - **Reuse, not reimplementation (security).** The implementation calls the
+    public `t()` builtin (`b_t`) for the transpose and the evaluator's
+    `matrix_multiply` (the `%*%` handler, exposed `pub(crate)` for this) for the
+    product. It therefore **inherits** that handler's already-reviewed safety
+    properties: the `MAX_SEQ_LEN` allocation guard on the `nrow * ncol` result
+    (no unchecked multiply → OOM), the `"non-conformable arguments"` error raised
+    *before* any indexing when inner dimensions disagree (so `crossprod(A, C)` for
+    a non-conformable `C` is the same clean error `%*%` raises), the column-major
+    `array_runtime` fast path, and NA propagation. The new surface is just the
+    two argument-shuffling wrappers. As in R, a bare numeric vector flows through
+    the same vector-promotion rules `%*%` already applies (left operand a row,
+    right operand a column), so `crossprod(v)` is `1×1`; the matrix case is the
+    solid, tested core.
+- **R-35 — ordered factors & `cut()` label polish** *(this PR)*. Completes the
+  R-33 deferral of `ordered_result =` and `dig.lab =`, and adds the
+  ordered-factor family. R reuses the shared `s-runtime` factor machinery
+  through the tree-walker, so the whole feature lives in `s-runtime` and is
+  exercised here through R syntax.
+  - **Representation choice.** An ordered factor is a factor whose **levels carry
+    a meaningful order**. R models this as a factor with class
+    `c("ordered", "factor")`. We add a single boolean field to the existing
+    factor value: `SValue::Factor { codes, levels, ordered }` (the R-13 type
+    grew an `ordered` flag rather than introducing a parallel `Classed` wrapper —
+    lowest-churn, and keeps the codes/levels invariants in one place). When
+    `ordered` is `true`, `class()` reports `c("ordered", "factor")`; when `false`
+    it reports `"factor"` as before. All existing constructions default
+    `ordered: false`, so unordered factors are bit-for-bit unchanged.
+  - **`ordered(x, levels =, labels =)`** — build an ordered factor. Identical to
+    `factor` (it **reuses the `factor` builder** for level inference, code
+    assignment, and `labels` renaming) but sets `ordered = true`. With no
+    explicit `levels`, the order is the sorted distinct values — same default as
+    `factor`, but now *meaningful*. `factor(x, ordered = TRUE)` is an accepted
+    synonym (the `ordered =` named flag on `factor`).
+  - **`as.ordered(x)`** — coerce to an ordered factor. A factor (ordered or not)
+    keeps its codes/levels and gains `ordered = true`; any other vector is run
+    through the `factor` builder first.
+  - **`is.ordered(x)`** — `TRUE` iff `x` is a factor with `ordered = true`,
+    `FALSE` for an unordered factor or any non-factor (never errors).
+  - **Ordered-factor comparison.** The relational operators
+    `<`, `<=`, `>`, `>=`, `==`, `!=` between two ordered factors compare by
+    **level index** (the 1-based code into the levels vector), *not* by the label
+    string. So with `levels = c("lo","mid","hi")`, the element `"hi"` (code 3) is
+    `>` the element `"lo"` (code 1). `compare` gains an early ordered-factor
+    branch that runs *before* the numeric/character coercion: it compares the
+    recycled `codes` numerically (an `NA` code on either side → `NA`, matching
+    R). Comparing two ordered factors whose **level sets differ** is an
+    **error** (`"level sets of factors are different"`), faithful to base R. An
+    *unordered* factor under a relational operator keeps R's behaviour for
+    non-`==`/`!=` ops: only `==`/`!=` are defined (by label), and `<`/`>` raise
+    `"'<' not meaningful for factors"` — but the headline path is the ordered
+    case.
+  - **`cut(..., ordered_result = TRUE)`** — make `cut`'s returned factor an
+    **ordered** factor (intervals are naturally ordered low→high), so its bins
+    compare by interval order. Reuses the same factor builder; only flips the
+    `ordered` flag. Default `FALSE` (an ordinary factor, unchanged from R-33).
+  - **`cut(..., dig.lab = k)`** — number of **significant digits** used when
+    auto-generating the `"(lo,hi]"` interval labels (default **3**, matching base
+    R). The break numbers in each label are formatted to `k` significant digits
+    via a small `format_break_sig` helper (built on Rust's `{:.*e}` then trimmed
+    of trailing zeros, so `3.14159` at `dig.lab = 2` → `"3.1"` and integer breaks
+    still print cleanly as `3`). `dig.lab` is read from the named arg, validated
+    to a finite positive integer, and **clamped** to a safe range
+    (`1..=22`, R's representable-digit ceiling) so an extreme `dig.lab` can never
+    drive an unbounded allocation or a formatter panic. A custom `labels =`
+    vector overrides auto-labels entirely, so `dig.lab` is ignored when `labels`
+    is supplied (as in R).
+  - **Worked label example.**
+    `cut(c(1.23456, 5.6789), breaks = c(0, 3.14159, 10), dig.lab = 2)` →
+    a factor with levels `c("(0,3.1]", "(3.1,10]")` (the interior break `3.14159`
+    rounds to 2 significant digits `3.1`; the integer breaks `0` and `10` stay
+    integral). The two values fall in bins 1 and 2 respectively.
+  - **Security.** Ordered comparison never indexes out of bounds: it works on the
+    integer `codes` directly (an out-of-range or `NA` code → `NA`, never a panic),
+    and differing level sets are rejected with a clean `Err` before any compare.
+    `dig.lab` is clamped to `1..=22` before formatting, so no caller-controlled
+    value can drive a huge `{:.*}` width allocation; a malformed (non-numeric /
+    non-finite / ≤ 0) `dig.lab` falls back to the default 3 (or errors cleanly
+    via the shared numeric-arg parse). No new unbounded multiplier; the level
+    vector is still bounded by the break count, itself `MAX_SEQ_LEN`-bounded.
+  - **Scope outcome / deferred to R-39.** `ordered()`/`as.ordered()`/
+    `is.ordered()`, the six ordered-comparison operators, `ordered_result =`, and
+    `dig.lab =` ship **solidly**. **Deferred to R-39:** the S3 `Ops.ordered`
+    group-generic *dispatch* surface and the order statistics on ordered factors
+    (`sort`, `max`, `min`, `range` honouring the level order) — none of which
+    blocks the comparison/constructor core delivered here.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -1111,8 +1363,11 @@ refinements (multi-key `order(x, y, ...)`, `rank`'s `ties.method` =
 `average`/`min`/`max`/`first`, `duplicated(fromLast=)`, `anyDuplicated`) land in
 **R-30**; the set-op & ordering refinements (`incomparables=` on
 `duplicated`/`anyDuplicated`/`unique`, `unique(fromLast=)`, and `rank`'s `"random"`
-tie method) land in **R-31**, with `incomparables=`/`fromLast=` on the binary set ops
-(`union`/`intersect`/`setdiff`) deferred to **R-32**; namespaces and `library()`
+tie method) land in **R-31**; the binning & cross-product utilities (`findInterval`,
+`cut` returning a factor) land in **R-32** — a pivot away from `incomparables=`/`fromLast=`
+on the binary set ops (`union`/`intersect`/`setdiff`), which base R does not accept there,
+making them non-faithful; `cut`'s `labels=`/`right=FALSE`/`include.lowest=` and integer
+`breaks` are deferred to **R-33**; namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.

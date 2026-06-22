@@ -118,8 +118,17 @@ downstream tools to compare.
      through the same direct selected-execution fields and selected-run
      artifact exports; accepted `.control` `write <rawfile> ...` markers now
      also produce deterministic in-memory ASCII rawfile artifacts with stable
-     table, CSV, compact JSON, and host-native record summaries while `wrdata`
-     markers and filesystem writes remain metadata-only.
+     table, CSV, compact JSON, and host-native record summaries, and explicit
+     `write` probe lists now select the emitted in-memory rawfile vector
+     columns and carry matched/unmatched probe inventories, and accepted
+     `.control` `wrdata <file> ...` markers now produce deterministic
+     in-memory ASCII data-file artifacts with matching stable table, CSV,
+     compact JSON, and host-native record summaries, and WRDATA artifacts now
+     carry accepted rawfile/data-write option inventories plus deterministic
+     `wr_vecnames` / `wr_singlescale` rendering metadata, and explicit
+     `wrdata` probe lists now select the emitted in-memory data-file columns
+     and carry matched/unmatched probe inventories while filesystem writes
+     remain metadata-only.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1036,6 +1045,51 @@ downstream tools to compare.
       stable rawfile artifact table, CSV, compact JSON, and host-native record
       summaries while `wrdata` markers and filesystem writes remain
       metadata-only.
+
+95. Deck WRDATA ASCII artifacts.
+    - Status: completed in this deck WRDATA ASCII artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now produce
+      deterministic in-memory ASCII data-file artifacts for accepted
+      `.control` `wrdata <file> ...` markers.
+    - Each selected execution exposes WRDATA artifact count/list metadata plus
+      stable WRDATA artifact table, CSV, compact JSON, and host-native record
+      summaries while filesystem writes remain metadata-only.
+
+96. Deck WRDATA rawfile option rendering artifacts.
+    - Status: completed in this deck WRDATA rawfile option rendering artifact
+      slice.
+    - Python, Rust, and TypeScript WRDATA artifacts now carry accepted
+      rawfile/data-write option inventories through stable `Options` /
+      `RawfileOptionList` summary fields.
+    - In-memory WRDATA data files now render deterministic `VectorNames` and
+      `Scale` metadata when accepted `set wr_vecnames` and `set wr_singlescale`
+      controls are present, while filesystem writes remain metadata-only.
+
+97. Deck WRDATA probe column artifacts.
+    - Status: completed in this deck WRDATA probe column artifact slice.
+    - Python, Rust, and TypeScript `format_deck_wrdata_ascii` /
+      `formatDeckWrdataAscii` helpers now treat explicit
+      `wrdata <file> <probes...>` marker probes as data-file column selectors.
+    - In-memory WRDATA data files preserve the scale column plus requested
+      matching probe columns in marker order, while filesystem writes remain
+      metadata-only.
+
+98. Deck WRDATA unmatched probe artifact inventories.
+    - Status: completed in this deck WRDATA unmatched probe artifact slice.
+    - Python, Rust, and TypeScript WRDATA artifact summaries now expose stable
+      matched and unmatched probe counts/lists beside the requested probe list.
+    - Stable WRDATA artifact table, CSV, compact JSON, and host-native record
+      exports make ignored `wrdata` probe names auditable while keeping
+      filesystem writes metadata-only.
+
+99. Deck rawfile write probe artifact inventories.
+    - Status: completed in this deck rawfile write probe artifact slice.
+    - Python, Rust, and TypeScript rawfile artifact summaries now expose stable
+      matched and unmatched probe counts/lists beside the requested `write`
+      probe list.
+    - In-memory ASCII rawfile artifacts now keep the scale column plus matching
+      requested vector columns, while stable table, CSV, compact JSON, and
+      host-native record exports make ignored `write` probe names auditable.
 
 ## Backlog
 

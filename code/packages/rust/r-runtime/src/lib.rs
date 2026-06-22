@@ -2732,6 +2732,179 @@ mod tests {
         assert_eq!(nums("tabulate(c(0, 1, 2, 99), nbins = 2)\n"), vec![1.0, 1.0]);
     }
 
+    // --- R-32: binning & cross-product utilities ------------------------
+
+    #[test]
+    fn r32_tabulate_binning_family_examples() {
+        // The canonical R-32 example: counts of 1..5 across c(1,2,2,3,5).
+        assert_eq!(
+            nums("tabulate(c(1, 2, 2, 3, 5), nbins = 5)\n"),
+            vec![1.0, 2.0, 1.0, 0.0, 1.0]
+        );
+        // Without nbins, the default is max(bin) = 5, so the trailing 0 stays.
+        assert_eq!(
+            nums("tabulate(c(1, 2, 2, 3, 5))\n"),
+            vec![1.0, 2.0, 1.0, 0.0, 1.0]
+        );
+    }
+
+    #[test]
+    fn r32_find_interval_indexes_breakpoints() {
+        // 0.5 is below the first break (→ 0); 1.5 is in [1,2) (→ 1); 2.5 in [2,3) (→ 2).
+        assert_eq!(
+            nums("findInterval(c(0.5, 1.5, 2.5), c(1, 2, 3))\n"),
+            vec![0.0, 1.0, 2.0]
+        );
+        // At or above the last break the index is length(vec).
+        assert_eq!(nums("findInterval(5, c(1, 2, 3))\n"), vec![3.0]);
+        // Exact hits land at their own index (right-open from below): 2 → index 2.
+        assert_eq!(
+            nums("findInterval(c(1, 2, 3), c(1, 2, 3))\n"),
+            vec![1.0, 2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn r32_find_interval_na_propagates() {
+        // NA / non-finite x propagate to NA without panicking.
+        let v = nums("findInterval(c(NA, 2), c(1, 2, 3))\n");
+        assert!(v[0].is_nan());
+        assert_eq!(v[1], 2.0);
+    }
+
+    #[test]
+    fn r32_cut_returns_a_factor_with_interval_levels() {
+        // cut produces a real factor (class "factor").
+        assert_eq!(
+            show("class(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            "[1] \"factor\""
+        );
+        // The levels are the auto-generated right-closed interval labels.
+        assert_eq!(
+            names_of("levels(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            vec!["(0,3]", "(3,6]", "(6,11]"]
+        );
+        // as.character of the binned values: 1∈(0,3], 5∈(3,6], 10∈(6,11].
+        assert_eq!(
+            names_of("as.character(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            vec!["(0,3]", "(3,6]", "(6,11]"]
+        );
+        // as.integer recovers the 1-based interval codes.
+        assert_eq!(
+            nums("as.integer(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            vec![1.0, 2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn r32_cut_values_outside_breaks_are_na() {
+        // -1 is below break[1]; 20 is above break[k] → both NA codes.
+        let v = nums("as.integer(cut(c(-1, 20), breaks = c(0, 3, 6, 11)))\n");
+        assert!(v[0].is_nan());
+        assert!(v[1].is_nan());
+        // The factor still carries the three interval levels.
+        assert_eq!(
+            names_of("levels(cut(c(-1, 20), breaks = c(0, 3, 6, 11)))\n"),
+            vec!["(0,3]", "(3,6]", "(6,11]"]
+        );
+    }
+
+    #[test]
+    fn r32_cut_factor_integrates_with_nlevels() {
+        // nlevels sees the factor's three interval levels (a factor-aware path).
+        assert_eq!(
+            nums("nlevels(cut(c(1, 2, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            vec![3.0]
+        );
+    }
+
+    #[test]
+    fn r32_binning_malformed_inputs_do_not_panic() {
+        // Empty inputs yield empty results, not panics.
+        assert_eq!(eval_r("findInterval(c(), c(1, 2))\n").unwrap().length(), 0);
+        assert_eq!(eval_r("cut(c(), breaks = c(0, 1, 2))\n").unwrap().length(), 0);
+        // A single-element `breaks` is the equal-width-bin form (R-33): breaks = 5
+        // means 5 bins over the range of x, so both values get a non-NA code.
+        let v = nums("as.integer(cut(c(1, 2), breaks = c(5)))\n");
+        assert_eq!(v.len(), 2);
+        assert!(v.iter().all(|x| !x.is_nan()));
+    }
+
+    // --- R-33: cut() option completeness --------------------------------
+
+    #[test]
+    fn r33_cut_custom_labels_replace_interval_strings() {
+        // labels= supplies the level names verbatim (length must match #intervals).
+        assert_eq!(
+            names_of(
+                "levels(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c(\"lo\", \"mid\", \"hi\")))\n"
+            ),
+            vec!["lo", "mid", "hi"]
+        );
+        assert_eq!(
+            names_of(
+                "as.character(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c(\"lo\", \"mid\", \"hi\")))\n"
+            ),
+            vec!["lo", "mid", "hi"]
+        );
+        // A labels vector of the wrong length is an error, not a panic.
+        assert!(eval_r(
+            "cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c(\"lo\", \"hi\"))\n"
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn r33_cut_labels_false_returns_integer_codes() {
+        // labels=FALSE returns the plain integer bin codes — NOT a factor.
+        // 1,2 ∈ (0,3] (code 1); 5 ∈ (3,6] (code 2). (Right-closed: 3 itself would
+        // also be code 1, so we use 5 to demonstrate a second bin.)
+        assert_eq!(
+            nums("cut(c(1, 2, 5), breaks = c(0, 3, 6), labels = FALSE)\n"),
+            vec![1.0, 1.0, 2.0]
+        );
+        assert_eq!(
+            show("class(cut(c(1, 2, 5), breaks = c(0, 3, 6), labels = FALSE))\n"),
+            "[1] \"numeric\""
+        );
+    }
+
+    #[test]
+    fn r33_cut_right_false_is_left_closed() {
+        // right=FALSE → [lo,hi): 1 ∈ [0,3), 3 ∈ [3,6).
+        assert_eq!(
+            names_of("levels(cut(c(1, 3), breaks = c(0, 3, 6), right = FALSE))\n"),
+            vec!["[0,3)", "[3,6)"]
+        );
+        assert_eq!(
+            names_of("as.character(cut(c(1, 3), breaks = c(0, 3, 6), right = FALSE))\n"),
+            vec!["[0,3)", "[3,6)"]
+        );
+    }
+
+    #[test]
+    fn r33_cut_include_lowest_folds_boundary() {
+        // include.lowest=TRUE folds breaks[1] (0) into the first interval instead
+        // of leaving it NA.
+        let v = nums(
+            "as.integer(cut(c(0, 1, 2), breaks = c(0, 1, 2), include.lowest = TRUE))\n",
+        );
+        assert_eq!(v[0], 1.0); // 0 folded into (0,1]
+        assert!(!v[0].is_nan());
+    }
+
+    #[test]
+    fn r33_cut_integer_breaks_makes_n_bins() {
+        // cut(0:10, breaks=5): a factor with 5 levels covering the extended range,
+        // every value binned (non-NA).
+        assert_eq!(nums("nlevels(cut(0:10, breaks = 5))\n"), vec![5.0]);
+        let v = nums("as.integer(cut(0:10, breaks = 5))\n");
+        assert_eq!(v.len(), 11);
+        assert!(v.iter().all(|x| !x.is_nan()));
+        // A huge N is rejected (MAX_SEQ_LEN guard), not allocated.
+        assert!(eval_r("cut(0:10, breaks = 1e9)\n").is_err());
+    }
+
     #[test]
     fn r28_malformed_inputs_do_not_panic() {
         // outer with a non-callable FUN → clean error, no panic.
@@ -2922,5 +3095,206 @@ mod tests {
         // Same seed → identical result.
         let b = nums("set.seed(1)\nrank(c(3, 1, 3), ties.method = \"random\")\n");
         assert_eq!(a, b);
+    }
+
+    // --- R-36: crossprod / tcrossprod (R syntax) ------------------------
+
+    /// Evaluate `src` (R syntax), expect a `Matrix`, return `(column-major data,
+    /// nrow, ncol)`.
+    fn matrix_data(src: &str) -> (Vec<f64>, usize, usize) {
+        match eval_r(src).unwrap() {
+            SValue::Matrix { data, nrow, ncol } => (data.data().to_vec(), nrow, ncol),
+            other => panic!("expected matrix, got {}", other.type_name()),
+        }
+    }
+
+    #[test]
+    fn crossprod_one_arg() {
+        // A = matrix(c(1,2,3,4), nrow=2). crossprod(A) = t(A)%*%A = [[5,11],[11,25]].
+        let (data, nrow, ncol) = matrix_data("crossprod(matrix(c(1,2,3,4), nrow = 2))\n");
+        assert_eq!((nrow, ncol), (2, 2));
+        assert_eq!(data, vec![5.0, 11.0, 11.0, 25.0]);
+        // dim() agrees.
+        assert_eq!(
+            nums("dim(crossprod(matrix(c(1,2,3,4), nrow = 2)))\n"),
+            vec![2.0, 2.0]
+        );
+    }
+
+    #[test]
+    fn crossprod_two_arg_equals_one_arg() {
+        assert_eq!(
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(crossprod(A, A))\n"),
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(crossprod(A))\n"),
+        );
+        // And both equal the explicit t(A) %*% A.
+        assert_eq!(
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(crossprod(A))\n"),
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(t(A) %*% A)\n"),
+        );
+    }
+
+    #[test]
+    fn tcrossprod_one_arg() {
+        // tcrossprod(A) = A %*% t(A) = [[10,14],[14,20]].
+        let (data, nrow, ncol) = matrix_data("tcrossprod(matrix(c(1,2,3,4), nrow = 2))\n");
+        assert_eq!((nrow, ncol), (2, 2));
+        assert_eq!(data, vec![10.0, 14.0, 14.0, 20.0]);
+        assert_eq!(
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(tcrossprod(A))\n"),
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(A %*% t(A))\n"),
+        );
+    }
+
+    #[test]
+    fn crossprod_nonsquare_dims() {
+        // B = matrix(1:6, nrow=2) is 2x3. crossprod(B) -> 3x3; tcrossprod(B) -> 2x2.
+        assert_eq!(
+            nums("dim(crossprod(matrix(1:6, nrow = 2)))\n"),
+            vec![3.0, 3.0]
+        );
+        assert_eq!(
+            nums("dim(tcrossprod(matrix(1:6, nrow = 2)))\n"),
+            vec![2.0, 2.0]
+        );
+        // Spot-check entries: crossprod(B)[1,1] = 1*1+2*2 = 5;
+        // tcrossprod(B)[1,1] = 1*1+3*3+5*5 = 35.
+        let (cp, _, _) = matrix_data("crossprod(matrix(1:6, nrow = 2))\n");
+        assert_eq!(cp[0], 5.0);
+        let (tcp, _, _) = matrix_data("tcrossprod(matrix(1:6, nrow = 2))\n");
+        assert_eq!(tcp[0], 35.0);
+    }
+
+    #[test]
+    fn crossprod_nonconformable_errors() {
+        // t(A) is 2x2; multiplying by a 3-row matrix is non-conformable, the
+        // same error %*% raises.
+        let err = eval_r(
+            "A <- matrix(c(1,2,3,4), nrow = 2)\nC <- matrix(1:6, nrow = 3)\ncrossprod(A, C)\n",
+        )
+        .unwrap_err();
+        assert!(
+            format!("{err}").contains("non-conformable"),
+            "expected conformability error, got: {err}"
+        );
+    }
+
+    // --- R-38: kronecker (Kronecker product, R syntax) ------------------
+
+    #[test]
+    fn kronecker_blocks_through_r_syntax() {
+        // 2x2 ⊗ 2x2 → 4x4. dim() and a few exact entries computed from
+        // result[(i-1)*2+k, (j-1)*2+l] = X[i,j]*Y[k,l].
+        assert_eq!(
+            nums("dim(kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0), nrow=2)))\n"),
+            vec![4.0, 4.0]
+        );
+        let (data, nrow, ncol) = matrix_data(
+            "kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0), nrow=2))\n",
+        );
+        assert_eq!((nrow, ncol), (4, 4));
+        let at = |r: usize, c: usize| data[c * 4 + r];
+        assert_eq!(at(1, 0), 1.0); // block(1,1)=1*Y, Y[2,1]=1
+        assert_eq!(at(1, 2), 3.0); // block(1,2)=3*Y, Y[2,1]=1
+        assert_eq!(at(3, 2), 4.0); // block(2,2)=4*Y, Y[2,1]=1
+    }
+
+    #[test]
+    fn kronecker_nonsquare_through_r_syntax() {
+        // 2x3 ⊗ 1x2 → 2x6.
+        assert_eq!(
+            nums("dim(kronecker(matrix(1:6, nrow=2), matrix(c(1,1), nrow=1)))\n"),
+            vec![2.0, 6.0]
+        );
+        let (data, _, _) =
+            matrix_data("kronecker(matrix(1:6, nrow=2), matrix(c(1,1), nrow=1))\n");
+        let at = |r: usize, c: usize| data[c * 2 + r];
+        assert_eq!(at(0, 0), 1.0); // X[1,1]=1, copied across the 1x2 block
+        assert_eq!(at(0, 1), 1.0);
+        assert_eq!(at(1, 5), 6.0); // X[2,3]=6
+    }
+
+    #[test]
+    fn kronecker_one_by_one_scalar_times_y() {
+        // kronecker(matrix(5), Y) = 5*Y, a 2x2 matrix.
+        assert_eq!(
+            nums("c(kronecker(matrix(5), matrix(c(1,2,3,4), nrow=2)))\n"),
+            vec![5.0, 10.0, 15.0, 20.0]
+        );
+    }
+
+    #[test]
+    fn kronecker_composes_with_matmul() {
+        // The result is a real matrix usable on the LHS of %*%.
+        assert_eq!(
+            nums("K <- kronecker(matrix(c(1,0,0,1), nrow=2), matrix(c(2,0,0,2), nrow=2))\nc(K %*% matrix(c(1,1,1,1), nrow=4))\n"),
+            vec![2.0, 2.0, 2.0, 2.0]
+        );
+    }
+
+    // --- R-35: ordered factors & cut() label polish (R syntax) ----------
+
+    #[test]
+    fn is_ordered_through_r_syntax() {
+        assert_eq!(
+            show("is.ordered(ordered(c(\"lo\", \"hi\"), levels = c(\"lo\", \"mid\", \"hi\")))\n"),
+            "[1] TRUE"
+        );
+        assert_eq!(show("is.ordered(factor(c(\"a\", \"b\")))\n"), "[1] FALSE");
+    }
+
+    #[test]
+    fn ordered_class_vector_through_r_syntax() {
+        // class(ordered(...)) prints as the two-element character vector.
+        // Elements are right-aligned to the widest quoted string ("ordered" is
+        // wider than "factor"), so "factor" gets a leading pad space.
+        assert_eq!(
+            show("class(ordered(c(\"a\", \"b\")))\n"),
+            "[1] \"ordered\"  \"factor\""
+        );
+    }
+
+    #[test]
+    fn ordered_comparison_by_level_index_through_r_syntax() {
+        // f[1] < f[2] is lo < hi (TRUE); f[2] < f[3] is hi < mid (FALSE).
+        assert_eq!(
+            show("f <- ordered(c(\"lo\", \"hi\", \"mid\"), levels = c(\"lo\", \"mid\", \"hi\"))\nf[1] < f[2]\n"),
+            "[1] TRUE"
+        );
+        assert_eq!(
+            show("f <- ordered(c(\"lo\", \"hi\", \"mid\"), levels = c(\"lo\", \"mid\", \"hi\"))\nf[2] < f[3]\n"),
+            "[1] FALSE"
+        );
+    }
+
+    #[test]
+    fn as_ordered_through_r_syntax() {
+        assert_eq!(
+            show("is.ordered(as.ordered(factor(c(\"a\", \"b\"))))\n"),
+            "[1] TRUE"
+        );
+    }
+
+    #[test]
+    fn cut_ordered_result_through_r_syntax() {
+        assert_eq!(
+            show("is.ordered(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), ordered_result = TRUE))\n"),
+            "[1] TRUE"
+        );
+        // Ordered bins compare by interval order.
+        assert_eq!(
+            show("g <- cut(c(1, 10), breaks = c(0, 3, 6, 11), ordered_result = TRUE)\ng[1] < g[2]\n"),
+            "[1] TRUE"
+        );
+    }
+
+    #[test]
+    fn cut_dig_lab_through_r_syntax() {
+        // levels() of the dig.lab=2 cut prints both interval labels, right-aligned
+        // to the wider "(3.1,10]" (so "(0,3.1]" gets a leading pad space).
+        assert_eq!(
+            show("levels(cut(c(1.23456, 5.6789), breaks = c(0, 3.14159, 10), dig.lab = 2))\n"),
+            "[1]  \"(0,3.1]\" \"(3.1,10]\""
+        );
     }
 }

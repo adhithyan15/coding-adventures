@@ -137,6 +137,15 @@ pub fn install(env: &Env) {
     define(env, "split", builtin("split", b_split));
     define(env, "tabulate", builtin("tabulate", b_tabulate));
 
+    // Binning & cross-product utilities (R-32) — build on the factor value (R-13)
+    // and reuse `tabulate`'s allocation discipline.
+    define(
+        env,
+        "findInterval",
+        builtin("findInterval", b_find_interval),
+    );
+    define(env, "cut", builtin("cut", b_cut));
+
     // Regular expressions (R-7).
     define(env, "grepl", builtin("grepl", b_grepl));
     define(env, "grep", builtin("grep", b_grep));
@@ -220,6 +229,10 @@ pub fn install(env: &Env) {
 
     // v2 — factors.
     define(env, "factor", builtin("factor", b_factor));
+    // R-35 — ordered factors.
+    define(env, "ordered", builtin("ordered", b_ordered));
+    define(env, "as.ordered", builtin("as.ordered", b_as_ordered));
+    define(env, "is.ordered", builtin("is.ordered", b_is_ordered));
     define(env, "levels", builtin("levels", b_levels));
     define(env, "nlevels", builtin("nlevels", b_nlevels));
     define(env, "as.character", builtin("as.character", b_as_character));
@@ -241,6 +254,14 @@ pub fn install(env: &Env) {
     define(env, "matrix", builtin("matrix", b_matrix));
     define(env, "t", builtin("t", b_t));
     define(env, "apply", builtin("apply", b_apply));
+    // Matrix cross products (R-36): `t(x) %*% y` and `x %*% t(y)`. Both reuse
+    // the `t()` transpose and the `%*%` product above — no new linear algebra.
+    define(env, "crossprod", builtin("crossprod", b_crossprod));
+    define(env, "tcrossprod", builtin("tcrossprod", b_tcrossprod));
+    // Kronecker product (R-38): the (m*p)×(n*q) block-outer product. Reuses the
+    // SValue::Matrix constructor + the MAX_SEQ_LEN cap (the `%x%` infix alias is
+    // deferred to R-40, which needs grammar work).
+    define(env, "kronecker", builtin("kronecker", b_kronecker));
 
     // Matrix linear algebra (R-12).
     define(env, "diag", builtin("diag", b_diag));
@@ -543,6 +564,234 @@ fn b_t(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
                 ncol: n,
             })
         }
+    }
+}
+
+/// Transpose a single value by reusing the public `t()` builtin (`b_t`). We wrap
+/// `value` back into a one-element `Arg` slice — exactly the shape `b_t` expects
+/// — so `crossprod`/`tcrossprod` get *identical* transpose semantics (matrix →
+/// swapped dims; bare vector → `1×n` row matrix) with zero duplicated logic.
+fn transpose_value(interp: &Interpreter, value: &SValue) -> SResult<SValue> {
+    let one = [Arg {
+        name: None,
+        value: value.clone(),
+    }];
+    b_t(interp, &one)
+}
+
+/// `crossprod(x, y)` = `t(x) %*% y`; `crossprod(x)` (one argument) = `t(x) %*% x`.
+///
+/// This is the *Gram matrix* operation that shows up everywhere in statistics:
+/// for a data matrix `X` whose columns are variables, `crossprod(X)` is the
+/// (unscaled) `X'X` — the column-by-column dot products, the heart of a
+/// least-squares normal equation `X'X b = X'y`.
+///
+/// ## Worked example (column-major, as R stores matrices)
+///
+/// `A = matrix(c(1, 2, 3, 4), nrow = 2)` is
+///
+/// ```text
+///       col1 col2
+/// row1   1    3
+/// row2   2    4
+/// ```
+///
+/// Its transpose `t(A)` is
+///
+/// ```text
+///       col1 col2
+/// row1   1    2
+/// row2   3    4
+/// ```
+///
+/// so `crossprod(A) = t(A) %*% A` =
+///
+/// ```text
+/// [ 1*1+2*2  1*3+2*4 ]   [  5  11 ]
+/// [ 3*1+4*2  3*3+4*4 ] = [ 11  25 ]
+/// ```
+///
+/// ## Implementation
+///
+/// We do **not** reimplement multiply or transpose. We call the public `t()`
+/// (`b_t`, via `transpose_value`) for the transpose and the evaluator's
+/// `matrix_multiply` for the product. That means we inherit, for free:
+///   * the `MAX_SEQ_LEN` allocation guard on `nrow * ncol` (no unchecked
+///     multiply → OOM),
+///   * the `"non-conformable arguments"` error when inner dims disagree,
+///   * the column-major `array_runtime` fast path and NA propagation.
+///
+/// The second argument is optional and defaults to `x` (the one-argument form),
+/// matching R. Inner dims always conform in the one-argument case because
+/// `t(x)` has as many columns as `x` has rows.
+fn b_crossprod(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let y_owned;
+    let y = match nth_positional(args, 1) {
+        Some(y) => y,
+        None => {
+            // crossprod(x) ≡ crossprod(x, x): the second operand is x itself.
+            y_owned = x.clone();
+            &y_owned
+        }
+    };
+    let xt = transpose_value(interp, x)?;
+    interp.matrix_multiply(&xt, y)
+}
+
+/// `tcrossprod(x, y)` = `x %*% t(y)`; `tcrossprod(x)` (one argument) =
+/// `x %*% t(x)`.
+///
+/// The "t" is for *transposed*: where `crossprod` transposes the **first**
+/// operand, `tcrossprod` transposes the **second**. For a data matrix `X` whose
+/// rows are observations, `tcrossprod(X)` is the `XX'` of pairwise row dot
+/// products (a Gram matrix over observations rather than variables).
+///
+/// ## Worked example (same `A` as `crossprod`)
+///
+/// `tcrossprod(A) = A %*% t(A)` =
+///
+/// ```text
+/// [ 1*1+3*3  1*2+3*4 ]   [ 10  14 ]
+/// [ 2*1+4*3  2*2+4*4 ] = [ 14  20 ]
+/// ```
+///
+/// As with `crossprod`, the multiply and transpose are *reused*, not rebuilt,
+/// so the allocation guard, conformability error, and NA rules all carry over.
+fn b_tcrossprod(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let y_owned;
+    let y = match nth_positional(args, 1) {
+        Some(y) => y,
+        None => {
+            // tcrossprod(x) ≡ tcrossprod(x, x).
+            y_owned = x.clone();
+            &y_owned
+        }
+    };
+    let yt = transpose_value(interp, y)?;
+    interp.matrix_multiply(x, &yt)
+}
+
+/// Coerce a value to `(column-major data, nrow, ncol)` for the matrix builtins
+/// that accept a bare vector. A `Matrix` keeps its shape; any other value is
+/// read as a numeric vector and promoted to an `n × 1` **column** — the same
+/// bare-column default `matrix(v)` itself uses (`matrix(c(1,2))` is 2×1). This
+/// makes `kronecker(c(1,2), Y)` behave like `kronecker(matrix(c(1,2)), Y)`.
+fn matrix_or_column(value: &SValue) -> SResult<(Double, usize, usize)> {
+    match value {
+        SValue::Matrix { data, nrow, ncol } => Ok((data.clone(), *nrow, *ncol)),
+        other => {
+            let d = other.as_double()?;
+            let n = d.len();
+            Ok((d, n, 1)) // bare vector → n×1 column, matching matrix(v)
+        }
+    }
+}
+
+/// `kronecker(X, Y)` — the **Kronecker product** (a.k.a. tensor/direct product).
+///
+/// For an `m × n` matrix `X` and a `p × q` matrix `Y`, the result is the
+/// `(m·p) × (n·q)` matrix built from `m·n` blocks, where block `(i, j)` is the
+/// scalar `X[i, j]` times the **whole** of `Y`:
+///
+/// ```text
+///                 ┌                               ┐
+///                 │  X[1,1]·Y   X[1,2]·Y  …  X[1,n]·Y │
+///   X ⊗ Y   =     │  X[2,1]·Y   X[2,2]·Y  …  X[2,n]·Y │
+///                 │     ⋮           ⋮     ⋱     ⋮     │
+///                 │  X[m,1]·Y   X[m,2]·Y  …  X[m,n]·Y │
+///                 └                               ┘
+/// ```
+///
+/// ## Element formula (1-based, column-major to match `SValue::Matrix`)
+///
+/// `result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]`. Read the other way:
+/// a result cell at row `r`, column `c` (both 0-based here) splits into
+///   * the **outer** index into `X`:  `i = r / p`,  `j = c / q`  (integer div), and
+///   * the **inner** index into `Y`:  `k = r % p`,  `l = c % q`.
+///
+/// We build the result column-by-column. The element at column-major offset
+/// `c·(m·p) + r` is `X[i, j] · Y[k, l]` for those four decoded indices, where
+/// `X[i, j]` lives at `X`'s offset `j·m + i` and `Y[k, l]` at `Y`'s offset
+/// `l·p + k` (both stores are column-major).
+///
+/// ## Worked example
+///
+/// `X = matrix(c(1,2,3,4), nrow=2)` is `[[1,3],[2,4]]`; `Y = matrix(c(0,1,1,0),
+/// nrow=2)` is `[[0,1],[1,0]]`. `kronecker(X, Y)` is the 4×4 matrix whose
+/// top-left block is `1·Y`, top-right `3·Y`, bottom-left `2·Y`, bottom-right
+/// `4·Y`. A 1×1 `X = matrix(5)` gives `5·Y`.
+///
+/// ## Vectors
+///
+/// A bare numeric vector is promoted to an `n × 1` column (the `matrix(v)`
+/// default), via [`matrix_or_column`].
+///
+/// ## Security — the quadratic output-size guard
+///
+/// The result has `(m·p)·(n·q)` elements, **quadratic** in the inputs: two
+/// 100×100 matrices Kronecker to a 10⁸-element matrix. So *before* allocating
+/// we form the result row count `m·p`, column count `n·q`, **and** their product
+/// with `checked_mul`, and reject anything exceeding `MAX_SEQ_LEN` — the same
+/// cap `matrix()` and `matrix_multiply` enforce. An overflow or over-cap result
+/// returns a "result too large" error and never allocates. Degenerate inputs
+/// (`m=0`, `p=0`, …) yield a `0`-element result with a correct zero dimension;
+/// the loops below simply do not execute, so there is no out-of-bounds risk.
+///
+/// The R infix alias `%x%` (i.e. `X %x% Y`) is **deferred to R-40** (it needs
+/// lexer/grammar work for the special operator); this builtin is the function
+/// form only.
+fn b_kronecker(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let y = nth_positional(args, 1)
+        .ok_or_else(|| SError::BadArgs("kronecker: needs two arguments (X, Y)".into()))?;
+    let (xd, m, n) = matrix_or_column(x)?;
+    let (yd, p, q) = matrix_or_column(y)?;
+
+    // Result is (m*p) × (n*q). Guard each result dimension AND the total element
+    // count with checked_mul against MAX_SEQ_LEN, before any allocation.
+    let too_large =
+        || SError::Index(format!("kronecker: result too large (limit {MAX_SEQ_LEN} elements)"));
+    let rows = m.checked_mul(p).filter(|&t| t <= MAX_SEQ_LEN).ok_or_else(too_large)?;
+    let cols = n.checked_mul(q).filter(|&t| t <= MAX_SEQ_LEN).ok_or_else(too_large)?;
+    let total = rows
+        .checked_mul(cols)
+        .filter(|&t| t <= MAX_SEQ_LEN)
+        .ok_or_else(too_large)?;
+
+    let xs = xd.data();
+    let ys = yd.data();
+    let mut out = vec![0.0; total];
+    // Walk the result column-major. For each output cell (r, c):
+    //   outer X index (i, j) = (r / p, c / q); inner Y index (k, l) = (r % p, c % q).
+    // X[i,j] is at j*m + i (column-major); Y[k,l] is at l*p + k.
+    for c in 0..cols {
+        let j = c / q; // outer column → X column
+        let l = c % q; // inner column → Y column
+        for r in 0..rows {
+            let i = r / p; // outer row → X row
+            let k = r % p; // inner row → Y row
+            let xv = xs[j * m + i];
+            let yv = ys[l * p + k];
+            out[c * rows + r] = na_mul(xv, yv);
+        }
+    }
+    Ok(SValue::Matrix {
+        data: Double::from_values(out),
+        nrow: rows,
+        ncol: cols,
+    })
+}
+
+/// Multiply two doubles, propagating R's `NA` (a specific NaN bit pattern): if
+/// either operand is `NA_real_`, the product is `NA_real_`, exactly as R's
+/// arithmetic does — so an `NA` anywhere in `X` or `Y` shows up in the product.
+fn na_mul(a: f64, b: f64) -> f64 {
+    if is_na_real(a) || is_na_real(b) {
+        na_real()
+    } else {
+        a * b
     }
 }
 
@@ -1128,9 +1377,23 @@ fn gauss_jordan(mut a: Vec<f64>, n: usize, mut b: Vec<f64>, m: usize) -> SResult
 // v2 — factors
 // ===========================================================================
 
-/// `factor(x, levels =, labels =)` — encode `x` as a factor. Levels default to
-/// the sorted unique non-`NA` values of `x`; `labels` (if given) rename them.
+/// `factor(x, levels =, labels =, ordered =)` — encode `x` as a factor. Levels
+/// default to the sorted unique non-`NA` values of `x`; `labels` (if given) rename
+/// them. **R-35:** `ordered = TRUE` makes the result an *ordered* factor (see
+/// [`build_factor`]); the default is an unordered factor.
 fn b_factor(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    // `ordered =` is a logical flag (default FALSE). A malformed value surfaces as
+    // a clean error via `truthy` rather than a panic.
+    let ordered = named_flag(args, "ordered", false)?;
+    build_factor(args, ordered)
+}
+
+/// The shared factor builder used by `factor` (R-13) and `ordered` (R-35). Reads
+/// the first positional argument as the data, the `levels =` / `labels =` named
+/// arguments exactly as `factor` does, and stamps the supplied `ordered` flag onto
+/// the result. Centralising this keeps `ordered()` from re-deriving the level
+/// inference and code assignment.
+fn build_factor(args: &[Arg], ordered: bool) -> SResult<SValue> {
     let values = first_positional(args)?.as_character();
 
     // Levels: explicit, else the sorted distinct non-NA values.
@@ -1169,7 +1432,41 @@ fn b_factor(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     Ok(SValue::Factor {
         codes,
         levels: display,
+        ordered,
     })
+}
+
+/// `ordered(x, levels =, labels =)` — build an **ordered** factor (R-35): a factor
+/// whose levels carry a meaningful order, so its elements compare by level index.
+/// Identical to `factor` (it reuses [`build_factor`]) but with `ordered = true`.
+fn b_ordered(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    build_factor(args, true)
+}
+
+/// `as.ordered(x)` — coerce `x` to an ordered factor (R-35). An existing factor
+/// (ordered or not) keeps its codes/levels and gains the ordered flag; any other
+/// value is first encoded with [`build_factor`] (sorted-unique levels).
+fn b_as_ordered(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match peel_structural(first_positional(args)?) {
+        SValue::Factor { codes, levels, .. } => Ok(SValue::Factor {
+            codes: codes.clone(),
+            levels: levels.clone(),
+            ordered: true,
+        }),
+        // Not already a factor: encode it, then mark ordered. We reuse the same
+        // single positional argument (the data) through `build_factor`.
+        _ => build_factor(args, true),
+    }
+}
+
+/// `is.ordered(x)` — `TRUE` iff `x` is an ordered factor (R-35); `FALSE` for an
+/// unordered factor or any non-factor. Never errors.
+fn b_is_ordered(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let ordered = matches!(
+        peel_structural(first_positional(args)?),
+        SValue::Factor { ordered: true, .. }
+    );
+    Ok(SValue::Logical(vec![Some(ordered)]))
 }
 
 /// `levels(f)` — the level labels of a factor (`NULL` otherwise).
@@ -4120,7 +4417,7 @@ fn b_outer(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// Returns `(levels, labels)` where `labels[k]` is the group of element `k`.
 fn group_labels(index: &SValue) -> (Vec<String>, Vec<Option<String>>) {
     match index.strip_names() {
-        SValue::Factor { codes, levels } => {
+        SValue::Factor { codes, levels, .. } => {
             let labels: Vec<Option<String>> = codes
                 .iter()
                 .map(|c| c.and_then(|k| levels.get((k as usize).wrapping_sub(1)).cloned()))
@@ -4293,6 +4590,486 @@ fn b_tabulate(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         }
     }
     Ok(SValue::doubles(counts))
+}
+
+/// The second positional argument (used by `findInterval` and `cut` for their
+/// `vec` / `breaks` operand), or the value of the given `name`d argument if
+/// present. Returns a `BadArgs` error (never panics) when neither is supplied.
+fn second_arg<'a>(args: &'a [Arg], name: &str, what: &str) -> SResult<&'a SValue> {
+    args.iter()
+        .find(|a| a.name.as_deref() == Some(name))
+        .map(|a| &a.value)
+        .or_else(|| {
+            args.iter()
+                .filter(|a| a.name.is_none())
+                .nth(1)
+                .map(|a| &a.value)
+        })
+        .ok_or_else(|| SError::BadArgs(format!("{what}: argument \"{name}\" is missing")))
+}
+
+/// `find_interval_index(x, vec)` — the shared kernel behind `findInterval` (and,
+/// transitively, `cut`).
+///
+/// `vec` is a **non-decreasing** vector of breakpoints. For a single value `x`
+/// we return the 1-based count of breakpoints that do **not exceed** `x` — i.e.
+/// the largest `i` with `vec[i] <= x`:
+///
+/// ```text
+///   vec = [1, 2, 3]
+///
+///   x        : -inf .. 1   1 .. 2   2 .. 3   3 .. +inf
+///   result   :     0         1        2         3
+///                  |         |        |         |
+///   meaning  :  below      in       in       at/above
+///              first      [1,2)    [2,3)     last break
+/// ```
+///
+/// A right-continuous (left-closed) step: an `x` exactly equal to `vec[i]` lands
+/// in the bucket that *starts* at `vec[i]`. `NA`/non-finite `x` returns `None`
+/// (the caller maps it to `NA`).
+///
+/// `prefix` is the **leading non-NA run** of the breakpoint vector (everything up
+/// to, but not including, the first `NA` element) — computed once per call by
+/// [`break_prefix_len`]. Within that run the breaks are assumed sorted, so we use
+/// `partition_point` (a binary search) rather than a linear scan: this turns the
+/// whole `findInterval(x, vec)` / `cut` cost from `O(len(x) · len(vec))` into
+/// `O(len(x) · log(len(vec)))`, which matters because both lengths can reach
+/// `MAX_SEQ_LEN` (≈ 16.7M) — a quadratic scan there would be a CPU-amplification
+/// hazard for untrusted programs. Trimming to the non-NA prefix preserves the
+/// "first `NA` breakpoint stops the count" behaviour of the original linear form.
+fn find_interval_index(x: f64, prefix: &[f64]) -> Option<usize> {
+    if is_na_real(x) || !x.is_finite() {
+        return None;
+    }
+    // The number of breaks `<= x` — equivalently the first index whose break is
+    // strictly greater than `x`. `partition_point` requires the predicate to be
+    // partitioned (all-true then all-false), which holds for a sorted prefix.
+    Some(prefix.partition_point(|&b| b <= x))
+}
+
+/// The length of the leading non-`NA` run of a breakpoint vector. `find_interval`
+/// and `cut` only ever consider breaks before the first `NA` (an `NA` break acts
+/// as a hard stop, matching the original linear scan), so the binary search runs
+/// over `&breaks[..break_prefix_len(breaks)]`.
+fn break_prefix_len(breaks: &[f64]) -> usize {
+    breaks
+        .iter()
+        .position(|&b| is_na_real(b))
+        .unwrap_or(breaks.len())
+}
+
+/// `findInterval(x, vec)` — for each element of `x`, the index of the last
+/// breakpoint in the non-decreasing `vec` that does not exceed it (see
+/// [`find_interval_index`]). `0` below the first break, `length(vec)` at or above
+/// the last; `NA`/non-finite `x` → `NA`.
+///
+/// ```text
+///   findInterval(c(0.5, 1.5, 2.5), c(1, 2, 3))  ->  c(0, 1, 2)
+///   findInterval(5,                c(1, 2, 3))  ->  3
+/// ```
+fn b_find_interval(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.as_double()?;
+    let vec: Vec<f64> = second_arg(args, "vec", "findInterval")?
+        .as_double()?
+        .iter()
+        .collect();
+    // The binary search runs over the leading non-NA run only (an NA break stops
+    // the count). Computed once, reused for every element of `x`.
+    let prefix = &vec[..break_prefix_len(&vec)];
+
+    let out: Vec<f64> = x
+        .iter()
+        .map(|xi| match find_interval_index(xi, prefix) {
+            Some(i) => i as f64,
+            None => na_real(),
+        })
+        .collect();
+    Ok(SValue::doubles(out))
+}
+
+/// Format a numeric breakpoint for an interval label to `dig_lab` **significant
+/// digits** (R-35), the way R's `cut` formats break numbers.
+///
+/// * A "nice" integer break (`3.0`, `10`) prints without a decimal point
+///   (`"3"`, `"10"`) regardless of `dig_lab`, keeping labels like `"(0,3]"`.
+/// * A fractional break is rounded to `dig_lab` significant figures with trailing
+///   zeros trimmed, so `3.14159` at `dig_lab = 2` → `"3.1"` and at the default
+///   `dig_lab = 3` → `"3.14"`.
+///
+/// `dig_lab` is already clamped to `1..=22` by [`dig_lab_value`], so the fixed
+/// precision below is bounded — no caller-controlled value can force a huge width.
+fn format_break(b: f64, dig_lab: usize) -> String {
+    // Non-finite (shouldn't reach here for real breaks) → plain fallback.
+    if !b.is_finite() {
+        return format!("{b}");
+    }
+    // A whole-number break keeps its integer form (no spurious ".0"), matching the
+    // R-32/R-33 behaviour, as long as it is representable as an i64.
+    if b.fract() == 0.0 && b.abs() < 1e15 {
+        return format!("{}", b as i64);
+    }
+    format_sig(b, dig_lab)
+}
+
+/// Round `x` to `sig` significant digits and render it without an exponent,
+/// trimming trailing zeros. `sig` is bounded (`1..=22`) by the caller.
+///
+/// **Bound on the format width (security).** The number of decimal places needed
+/// for `sig` significant figures is `sig - 1 - floor(log10|x|)`. For a *tiny* break
+/// (e.g. `1e-300`) `floor(log10|x|)` is very negative, so the naive count would be
+/// several hundred — a 340-character fixed-precision string per break. The clamp to
+/// `0..=22` below caps that: we never emit more than 22 fractional digits, so a
+/// caller-controlled (subnormal) break can neither force a huge allocation nor a
+/// long label. `sig <= 22` keeps the *high* end small too. (R itself switches to
+/// scientific notation for such values; capping the digit count tracks that.)
+fn format_sig(x: f64, sig: usize) -> String {
+    if x == 0.0 {
+        return "0".to_string();
+    }
+    let exp = x.abs().log10().floor() as i32;
+    // Clamp the decimal count to `0..=22`: `.max(0)` alone is NOT enough, because a
+    // tiny `x` makes `exp` very negative and blows the count up — `clamp` bounds it.
+    let decimals = (sig as i32 - 1 - exp).clamp(0, 22) as usize;
+    let s = format!("{x:.decimals$}");
+    if s.contains('.') {
+        s.trim_end_matches('0').trim_end_matches('.').to_string()
+    } else {
+        s
+    }
+}
+
+/// Build the auto-generated interval label for the `i`-th interval (0-based) of
+/// `breaks`, respecting `right`: right-closed intervals print `"(lo,hi]"`,
+/// left-closed `[lo,hi)`. (R-33 — extends the R-32 right-closed-only formatter;
+/// R-35 — break numbers are formatted to `dig_lab` significant digits.)
+fn cut_interval_label(breaks: &[f64], i: usize, right: bool, dig_lab: usize) -> String {
+    let lo = format_break(breaks[i], dig_lab);
+    let hi = format_break(breaks[i + 1], dig_lab);
+    if right {
+        format!("({lo},{hi}]")
+    } else {
+        format!("[{lo},{hi})")
+    }
+}
+
+/// Derive the `breaks` vector when `cut` is called with a **single number** `n`
+/// (the number of equal-width bins). Mirrors R's `cut.default`: take the range of
+/// the finite values of `x`, extend it by `dx/1000` on each side so the extreme
+/// data points sit strictly inside the outer bins, then lay down `n + 1` equally
+/// spaced breakpoints. Returns a `BadArgs`/`Index` error (never panics or
+/// allocates a giant vector) when `n` is non-finite, `< 1`, or would exceed
+/// `MAX_SEQ_LEN`, or when `x` has no finite values.
+///
+/// ```text
+///   rx = (min, max) over the finite x          dx = max - min
+///   if dx == 0: dx = |min|; if still 0: dx = 1   (degenerate all-equal x)
+///   lo = min - dx/1000      hi = max + dx/1000
+///   breaks[j] = lo + j * (hi - lo)/n   for j in 0..=n
+/// ```
+fn equal_width_breaks(x: &Double, n_f: f64) -> SResult<Vec<f64>> {
+    // `n` must be a finite, positive whole number. R rounds the requested bin
+    // count toward the nearest integer; we require it to be at least 1.
+    if !n_f.is_finite() || n_f < 1.0 {
+        return Err(SError::BadArgs(
+            "cut: invalid number of intervals".to_string(),
+        ));
+    }
+    // Guard the bin count BEFORE building any vector: a huge `n` would otherwise
+    // allocate `n + 1` breaks and `n` level strings. `MAX_SEQ_LEN` is the same cap
+    // every other length-amplifying builtin honours.
+    if n_f > MAX_SEQ_LEN as f64 {
+        return Err(SError::Index(format!(
+            "cut: number of intervals too large (limit {MAX_SEQ_LEN})"
+        )));
+    }
+    let n = n_f as usize;
+
+    // The range over the finite (non-NA, non-infinite) values of `x`.
+    let mut lo = f64::INFINITY;
+    let mut hi = f64::NEG_INFINITY;
+    for v in x.iter() {
+        if v.is_finite() {
+            lo = lo.min(v);
+            hi = hi.max(v);
+        }
+    }
+    if !lo.is_finite() || !hi.is_finite() {
+        return Err(SError::BadArgs(
+            "cut: 'x' has no finite values to bin".to_string(),
+        ));
+    }
+
+    // Extend the range by 0.1% on each side. A degenerate (all-equal) range has
+    // `dx == 0`; R falls back to `abs(min)`, then to `1`, so the bins stay finite
+    // and we never divide by zero when computing the step.
+    let mut dx = hi - lo;
+    if dx == 0.0 {
+        dx = lo.abs();
+        if dx == 0.0 {
+            dx = 1.0;
+        }
+    }
+    let pad = dx / 1000.0;
+    let lo = lo - pad;
+    let hi = hi + pad;
+
+    // `n + 1` equally spaced breakpoints. `n >= 1` so the step denominator is
+    // non-zero and finite. Extreme-magnitude `x` can still overflow the extended
+    // range to `±inf` (e.g. `dx = hi - lo` overflowing), which would make the
+    // breaks `NaN`/`inf`; reject that up front so every emitted break is finite
+    // (no garbage `"(NaN,NaN]"` levels, and the downstream scan only ever sees
+    // sorted finite breaks).
+    let step = (hi - lo) / n as f64;
+    if !lo.is_finite() || !hi.is_finite() || !step.is_finite() {
+        return Err(SError::BadArgs(
+            "cut: range of 'x' is too large to bin".to_string(),
+        ));
+    }
+    let mut breaks = Vec::with_capacity(n + 1);
+    for j in 0..=n {
+        breaks.push(lo + j as f64 * step);
+    }
+    Ok(breaks)
+}
+
+/// `cut(x, breaks)` — bin the numeric vector `x` into the intervals delimited by
+/// the **sorted** breakpoint vector `breaks`, returning a **factor**.
+///
+/// With `k = length(breaks)` breakpoints there are `k - 1` intervals. The default
+/// intervals are **right-closed** `(lo, hi]`, and the auto-generated level labels
+/// are exactly `"(lo,hi]"`:
+///
+/// ```text
+///   breaks = [0, 3, 6, 11]            levels = ["(0,3]", "(3,6]", "(6,11]"]
+///
+///   x = 1   -> findInterval = 1 -> code 1 -> "(0,3]"
+///   x = 5   -> findInterval = 2 -> code 2 -> "(3,6]"
+///   x = 10  -> findInterval = 3 -> code 3 -> "(6,11]"
+///   x = -1  -> findInterval = 0 -> out of range -> NA
+///   x = 20  -> findInterval = 4 (= k) -> out of range -> NA
+/// ```
+///
+/// The whole job reduces to `findInterval`: the interval index `i` is the 1-based
+/// factor code precisely when `1 <= i <= k-1`; the boundary indices `0` (below the
+/// first break) and `k` (at/above the last) — and any `NA` `x` — map to a `NA`
+/// code.
+///
+/// **R-33 options** (all layered onto the same scan, none changing the default):
+///
+/// - **`right = FALSE`** — left-closed intervals `[lo, hi)`. The default
+///   right-closed `(lo, hi]` lookup counts breaks strictly `< x` (so `x == break`
+///   lands in the bin it *closes*); the left-closed lookup counts breaks `<= x`
+///   (so `x == break` lands in the bin it *opens*). See [`cut_code`].
+/// - **`include.lowest = TRUE`** — fold the extreme break into the adjacent
+///   interval. Right-closed: an `x` equal to `breaks[0]` (which would otherwise be
+///   "below the first interval") is pulled into interval 1. Left-closed: an `x`
+///   equal to `breaks[k-1]` (otherwise "at/above the last") is pulled into the
+///   last interval.
+/// - **`labels = FALSE`** — return the **integer bin codes** as a plain numeric
+///   vector (not a factor). `labels = <character>` — use those strings as the
+///   factor levels (length must equal the number of intervals).
+/// - **integer `breaks`** — a single number `N` requests `N` equal-width bins over
+///   the (slightly extended) range of `x` (see [`equal_width_breaks`]).
+fn b_cut(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.as_double()?;
+
+    // `right` (default TRUE) and `include.lowest` (default FALSE) are read as
+    // logical flags; a malformed value is a clean error via `truthy`.
+    let right = named_flag(args, "right", true)?;
+    let include_lowest = named_flag(args, "include.lowest", false)?;
+
+    // `breaks` may be the usual breakpoint vector OR a single number `N` (number
+    // of equal-width bins). R treats `length(breaks) == 1` as the bin-count form.
+    let breaks_val = second_arg(args, "breaks", "cut")?;
+    let breaks_double = breaks_val.as_double()?;
+    let breaks: Vec<f64> = if breaks_double.len() == 1 {
+        // Single number → derive equal-width breakpoints over the range of `x`.
+        // (Honours the MAX_SEQ_LEN cap and degenerate-range fallback internally.)
+        let n = breaks_double.get_value(0).unwrap_or(na_real());
+        equal_width_breaks(&x, n)?
+    } else {
+        breaks_double.iter().collect()
+    };
+
+    // `k - 1` intervals; with fewer than two breaks there are none, so every
+    // value is unbinned (NA). `saturating_sub` keeps this from underflowing.
+    let n_intervals = breaks.len().saturating_sub(1);
+
+    // Each value's 1-based interval code (or `None` for out-of-range / NA).
+    let prefix = &breaks[..break_prefix_len(&breaks)];
+    let codes: Vec<Option<u32>> = x
+        .iter()
+        .map(|xi| cut_code(xi, prefix, &breaks, n_intervals, right, include_lowest))
+        .collect();
+
+    // `labels = FALSE` short-circuits to the bare integer codes — no factor.
+    if let Some(arg) = args.iter().find(|a| a.name.as_deref() == Some("labels")) {
+        if let SValue::Logical(v) = strip_wrappers(&arg.value) {
+            if matches!(v.first(), Some(Some(false))) {
+                let out: Vec<f64> = codes
+                    .iter()
+                    .map(|c| c.map(|k| k as f64).unwrap_or_else(na_real))
+                    .collect();
+                return Ok(SValue::doubles(out));
+            }
+        }
+    }
+
+    // R-35: `dig.lab` (default 3) controls the number of significant digits used
+    // when formatting break numbers in the auto-generated labels. It is clamped to
+    // a safe range inside `dig_lab_value` so an extreme value cannot drive a huge
+    // allocation or a formatter panic.
+    let dig_lab = dig_lab_value(args)?;
+
+    // Otherwise build the factor levels: custom `labels` (validated length) or the
+    // auto-generated interval strings (respecting `right` and `dig.lab`).
+    let levels = cut_levels(args, &breaks, n_intervals, right, dig_lab)?;
+
+    // R-35: `ordered_result = TRUE` makes the binned factor an *ordered* factor —
+    // its intervals are naturally ordered low→high, so the bins compare by order.
+    let ordered = named_flag(args, "ordered_result", false)?;
+
+    Ok(SValue::Factor {
+        codes,
+        levels,
+        ordered,
+    })
+}
+
+/// R-35 — read `cut`'s `dig.lab` argument: the number of **significant digits**
+/// used when auto-formatting break numbers in interval labels. Defaults to **3**
+/// (base R's default). The value is **clamped to `1..=22`** (R's representable-
+/// digit ceiling) so a caller-supplied extreme (e.g. `dig.lab = 1e9`) can never
+/// drive an unbounded format width or a panic; a non-finite or non-positive value
+/// falls back to the default rather than erroring, matching R's lenient handling.
+fn dig_lab_value(args: &[Arg]) -> SResult<usize> {
+    const DEFAULT: usize = 3;
+    const MAX: usize = 22;
+    match args.iter().find(|a| a.name.as_deref() == Some("dig.lab")) {
+        None => Ok(DEFAULT),
+        Some(arg) => {
+            let d = arg.value.as_double()?;
+            match d.get_value(0) {
+                Some(x) if x.is_finite() && x >= 1.0 => Ok((x.trunc() as usize).clamp(1, MAX)),
+                // NA / non-finite / < 1 → fall back to the default (no panic).
+                _ => Ok(DEFAULT),
+            }
+        }
+    }
+}
+
+/// The 1-based factor code for a single value under `cut`'s interval rules, or
+/// `None` (→ `<NA>`) when the value falls in no interval. Centralises the
+/// `right` / `include.lowest` logic shared by the factor and `labels=FALSE`
+/// paths.
+fn cut_code(
+    xi: f64,
+    prefix: &[f64],
+    breaks: &[f64],
+    n_intervals: usize,
+    right: bool,
+    include_lowest: bool,
+) -> Option<u32> {
+    if n_intervals == 0 || is_na_real(xi) || !xi.is_finite() {
+        return None;
+    }
+    // The 1-based interval index is a count of breakpoints below `xi`, with the
+    // comparison decided by which end is closed:
+    //
+    //   right = TRUE   (lo, hi]  →  interval i contains `breaks[i-1] < x <= breaks[i]`
+    //                              →  index = #{breaks strictly < x}
+    //   right = FALSE  [lo, hi)  →  interval i contains `breaks[i-1] <= x < breaks[i]`
+    //                              →  index = #{breaks <= x}
+    //
+    // (Both are `partition_point` binary searches over the sorted non-NA prefix.)
+    // For an `x` exactly on an *interior* break the two rules disagree by one,
+    // which is precisely the `(lo,hi]` vs `[lo,hi)` boundary convention.
+    let idx = if right {
+        prefix.partition_point(|&b| b < xi)
+    } else {
+        prefix.partition_point(|&b| b <= xi)
+    };
+
+    if idx >= 1 && idx <= n_intervals {
+        return Some(idx as u32);
+    }
+
+    // `include.lowest`: fold the single extreme boundary value into the adjacent
+    // interval (the only point that the strict end-convention leaves unbinned).
+    if include_lowest {
+        if right {
+            // Right-closed: `x == breaks[0]` gives index 0 (below the first
+            // interval) — pull it into interval 1, making the first bin `[lo,hi]`.
+            if xi == breaks[0] {
+                return Some(1);
+            }
+        } else {
+            // Left-closed: `x == breaks[k]` gives index k = n_intervals + 1 (at/above
+            // the last) — pull it into the last interval, making it `[lo,hi]`.
+            if xi == breaks[n_intervals] {
+                return Some(n_intervals as u32);
+            }
+        }
+    }
+    None
+}
+
+/// Build the factor levels for `cut`: a custom `labels = <character>` vector
+/// (whose length must equal `n_intervals`) when supplied, otherwise the
+/// auto-generated `"(lo,hi]"` / `"[lo,hi)"` interval strings.
+fn cut_levels(
+    args: &[Arg],
+    breaks: &[f64],
+    n_intervals: usize,
+    right: bool,
+    dig_lab: usize,
+) -> SResult<Vec<String>> {
+    if let Some(arg) = args.iter().find(|a| a.name.as_deref() == Some("labels")) {
+        let stripped = strip_wrappers(&arg.value);
+        // `labels = TRUE` (or absent) means "use the auto labels"; only a non-
+        // logical value is taken as a custom label vector. `labels = FALSE` is
+        // handled by the caller before we ever get here.
+        let is_logical_flag = matches!(stripped, SValue::Logical(_));
+        if !is_logical_flag && !matches!(stripped, SValue::Null) {
+            let labels: Vec<String> = arg
+                .value
+                .as_character()
+                .into_iter()
+                .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+                .collect();
+            if labels.len() != n_intervals {
+                return Err(SError::BadArgs(
+                    "lengths of 'breaks' and 'labels' differ".to_string(),
+                ));
+            }
+            return Ok(labels);
+        }
+    }
+    Ok((0..n_intervals)
+        .map(|i| cut_interval_label(breaks, i, right, dig_lab))
+        .collect())
+}
+
+/// Read a named logical flag (`right`, `include.lowest`) with a default. A
+/// malformed value surfaces as a clean error via `truthy` rather than a panic.
+fn named_flag(args: &[Arg], name: &str, default: bool) -> SResult<bool> {
+    match args.iter().find(|a| a.name.as_deref() == Some(name)) {
+        Some(arg) => arg.value.truthy(),
+        None => Ok(default),
+    }
+}
+
+/// Peel `Classed` / `Named` / `Attributed` wrappers off a value so we can inspect
+/// its underlying variant (used to tell `labels = FALSE`/`TRUE` from a character
+/// label vector).
+fn strip_wrappers(v: &SValue) -> &SValue {
+    match v {
+        SValue::Classed { inner, .. }
+        | SValue::Named { values: inner, .. }
+        | SValue::Attributed { inner, .. } => strip_wrappers(inner),
+        other => other,
+    }
 }
 
 fn builtin(name: &str, func: fn(&Interpreter, &[Arg]) -> SResult<SValue>) -> SValue {

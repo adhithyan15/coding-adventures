@@ -35,6 +35,8 @@ EXPECTED = {
     "substantia_nigra": "parkinson_disease",
     "subthalamic_nucleus": "hemiballismus",
     "caudate_nucleus": "huntington_disease",
+    "midline_cerebellum": "imbalance",              # expand (NBK562317)
+    "cerebellar_hemisphere": "incoordination",      # expand (NBK562317)
 }
 REL = "lesion_causes"
 VAR = "Deficit"

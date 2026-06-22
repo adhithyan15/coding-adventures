@@ -148,6 +148,29 @@ runtime and Chief of Staff tools a typed catalog for:
 - low-level mesh release ticket handoff execution work-order guardrail audit
   clearance action evidence rows that preserve clearance action lineage for
   blocker, operator, review, and release evidence
+- low-level mesh release ticket handoff execution work-order guardrail audit
+  clearance action evidence review rows that classify evidence into blocker,
+  operator, review, lineage, and release-ready outcomes
+- low-level mesh release ticket handoff execution work-order guardrail audit
+  clearance action evidence review disposition rows that route reviewed
+  evidence into repair, operator, review, lineage, and release-ready outcomes
+- low-level mesh release ticket handoff execution work-order guardrail audit
+  clearance action evidence review disposition action rows that turn review
+  dispositions into repair, operator, review, lineage, and release handoff work
+- low-level mesh release ticket handoff disposition-action slot rows that
+  sequence disposition actions into repair, review, lineage, and release slots
+- mesh release ticket handoff guardrail audit clearance action evidence
+  readiness summaries that combine clearance action readiness with evidence
+  lineage state and first actionable evidence pointers
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  readiness summaries that combine action-evidence readiness with evidence
+  review outcomes and next review pointers
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  disposition readiness summaries that combine evidence-review readiness with
+  disposition outcomes and next disposition pointers
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  disposition-action readiness summaries that combine disposition readiness
+  with action counts and next disposition-action pointers
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work

@@ -93,6 +93,7 @@ Chief of Staff job/session/agent
   -> runtime snapshot, desired-state, and pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
+  -> supervision remediation and runtime maintenance-window reads
   -> authorized desired-state reconciliation and supervision ticks
   -> supervised worker inventory and heartbeat schedule reads
   -> device command acceptance
@@ -271,6 +272,8 @@ Chief of Staff job/session/agent
 - `smart_home.list_workers`
 - `smart_home.get_worker_heartbeat_schedule`
 - `smart_home.get_supervision_plan`
+- `smart_home.list_runtime_maintenance_windows`
+- `smart_home.get_runtime_maintenance_window_summary`
 - `smart_home.reconcile_desired_states`
 - `smart_home.run_supervision_tick`
 - `smart_home.pair_bridge`

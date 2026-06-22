@@ -21,8 +21,9 @@
 % Honest scope: relations chosen so the cited span NAMES both endpoints. gene_defect
 % reuses the same relation the IMMUNO library uses (the engine binds any grounded
 % `relate(rel, args)`); the disorders here are disjoint from immunology's. Edges with
-% no clean self-contained span (e.g. Marfan→FBN1, where the page's FBN1 mentions are
-% citation titles or negative-finding clauses) are deferred rather than over-claimed.
+% no clean self-contained span are deferred rather than over-claimed — currently the
+% Duchenne→X-linked-recessive inheritance edge (the page states the inheritance in a
+% separate anaphoric "It is inherited..." sentence, not alongside the disease name).
 % ============================================================================
 
 dictionary genetics_vocab {
@@ -91,5 +92,70 @@ rulebook genetics_facts {
     relate gene_defect(duchenne_muscular_dystrophy, dystrophin)
         source "Mutations in the dystrophin gene result in diseases known as dystrophinopathies, which encompass Duchenne muscular dystrophy, Becker muscular dystrophy, and an intermediate form."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK482346/"
+        trust authoritative
+
+    % --- EXPAND: myotonic dystrophy (CTG expansion in DMPK) — one span names both --
+    % The page's defined abbreviation DM1 = myotonic dystrophy type 1; one declarative
+    % names the CTG repeat AND the DMPK gene, grounding both edges.
+    relate trinucleotide_repeat(myotonic_dystrophy, ctg)
+        source "DM1 is caused by expansion of cytosine-thymine-guanine (CTG) repeat in the 3'-untranslated region of the DM1 protein kinase (DMPK) gene on chromosome 19q13.3."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557446/"
+        trust authoritative
+    relate gene_defect(myotonic_dystrophy, dmpk)
+        source "DM1 is caused by expansion of cytosine-thymine-guanine (CTG) repeat in the 3'-untranslated region of the DM1 protein kinase (DMPK) gene on chromosome 19q13.3."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557446/"
+        trust authoritative
+
+    % --- EXPAND: Friedreich ataxia (FXN gene) ---------------------------
+    relate gene_defect(friedreich_ataxia, fxn)
+        source "Friedreich ataxia results from loss-of-function mutations in the frataxin (FXN) gene, located in the centromeric region of chromosome 9q (9q13 to 21.1)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
+        trust authoritative
+
+    % --- EXPAND: Marfan syndrome gene (FBN1) — rounds out the existing AD edge -------
+    % The page's defined abbreviation MFS = Marfan syndrome; this declarative names the
+    % FBN1 gene as the de-novo-mutation cause, grounding the gene_defect edge.
+    relate gene_defect(marfan_syndrome, fbn1)
+        source "While most individuals with MFS have an affected parent, 25% of patients develop the disease due to a de novo mutation involving the gene (FBN1) encoding the connective tissue protein fibrillin-1."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537339/"
+        trust authoritative
+    % --- EXPAND: Angelman syndrome (maternal imprinting; UBE3A) — PWS counterpart ---
+    relate imprinting(angelman_syndrome, maternal)
+        source "Angelman syndrome is a rare neurodevelopmental disorder caused by loss of maternal UBE3A expression on chromosome 15q11.2–q13"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560870/"
+        trust authoritative
+    relate gene_defect(angelman_syndrome, ube3a)
+        source "Angelman syndrome is a rare neurodevelopmental disorder caused by loss of maternal UBE3A expression on chromosome 15q11.2–q13"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560870/"
+        trust authoritative
+
+    % --- EXPAND: Friedreich ataxia inheritance + GAA repeat (one span names both) ----
+    relate inheritance(friedreich_ataxia, autosomal_recessive)
+        source "Friedreich ataxia is an autosomal recessive neurodegenerative disorder caused by guanine-adenine-adenine repeat expansion in the frataxin gene, leading to mitochondrial dysfunction."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
+        trust authoritative
+    relate trinucleotide_repeat(friedreich_ataxia, gaa)
+        source "Friedreich ataxia is an autosomal recessive neurodegenerative disorder caused by guanine-adenine-adenine repeat expansion in the frataxin gene, leading to mitochondrial dysfunction."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
+        trust authoritative
+
+    % --- EXPAND: Wilson disease (autosomal recessive; ATP7B) — one span names both ----
+    relate inheritance(wilson_disease, autosomal_recessive)
+        source "Wilson disease is an autosomal recessive condition caused by 1 of several mutations in ATP7B gene which encodes the ATP7B protein transporter on the long arm of chromosome 13 (13q) responsible for excreting excess copper into bile and out of the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441990/"
+        trust authoritative
+    relate gene_defect(wilson_disease, atp7b)
+        source "Wilson disease is an autosomal recessive condition caused by 1 of several mutations in ATP7B gene which encodes the ATP7B protein transporter on the long arm of chromosome 13 (13q) responsible for excreting excess copper into bile and out of the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441990/"
+        trust authoritative
+
+    % --- EXPAND: hereditary hemochromatosis (autosomal recessive; HFE gene) -----------
+    relate inheritance(hereditary_hemochromatosis, autosomal_recessive)
+        source "This is considered the classic form of hereditary hemochromatosis, is inherited in an autosomal recessive fashion, and disproportionately affects males."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430862/"
+        trust authoritative
+    relate gene_defect(hereditary_hemochromatosis, hfe)
+        source "Type 1 hereditary hemochromatosis occurs in patients who are typically homozygous for loss-of-function mutations in HFE."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430862/"
         trust authoritative
 }

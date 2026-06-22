@@ -1,5 +1,85 @@
 # Changelog — x86-simulator
 
+## 0.6.0 — 2026-06-21 — stdin (`getchar`) + Brainfuck cat runs locally (x86-sim PR-S6)
+
+Completes the Brainfuck story: the stdin-driven `,` programs now run on the
+x86_64 column locally. No new opcode was needed — only a real `getchar`.
+
+### Added
+- **`getchar` reads a stdin buffer** — the `Simulator` gains an `input: Vec<u8>`
+  consumed front-to-back; `getchar` returns the next byte, or EOF (`-1`) once
+  drained. Returning `-1` (not `0`) matches the libc/native convention, so the
+  Brainfuck IIR's negative-`getchar`→0 clamp halts a `,[.,]` cat loop at
+  end-of-input exactly as it does on the real native backend.
+- **`MachineCodeHarness::stdin(&[u8])`** — supplies that buffer (defaults to
+  empty, i.e. immediate EOF, so existing programs are unchanged).
+- **3 stdin Brainfuck matrix cells**: `,+.` (input `A` ⇒ `B`), `,.,.` (echo
+  `Hi` ⇒ `Hi`), and `,[.,]` (cat `Hi` ⇒ `Hi`) — run on the x86_64 column
+  locally via a new `run_with_stdin` helper.
+
+### Verified
+- Cat (`,[.,]`) reads+prints until the simulator's EOF threads through the
+  backend's clamp and halts the loop. 53 tests (28 unit + 21 matrix + 4
+  lib/harness).
+
+## 0.5.0 — 2026-06-21 — byte-tape store + Brainfuck runs locally (x86-sim PR-S5)
+
+Continues the coverage-mining pattern (S4): running a **Brainfuck** program
+through the simulator surfaced two more gaps, now closed.
+
+### Added
+- **`mov r/m8, r8` (`0x88`)** — the 8-bit `store_byte` the byte-tape ops emit
+  (`mov [base], src8`), which S1–S4 never decoded (a Brainfuck `.` trapped with
+  `DecodeError { opcode: 0x88 }`). A register destination keeps its upper bytes;
+  a memory destination is a single-byte store.
+- **`__twig_putchar` / `__twig_getchar` host-shim aliases** — the backend emits
+  the runtime-prefixed symbols; the shims previously matched only the bare
+  `putchar`/`getchar` (so Brainfuck output trapped `UnresolvedExternal`).
+- **Brainfuck matrix cell** — `++++++++[>++++++++<-]>+.` ⇒ stdout `A`, run on the
+  x86_64 column locally. Exercises the byte-tape surface the arithmetic programs
+  never touched: `__twig_alloc_bytes` for the tape, the `[...]` loop, the 8-bit
+  store, and `putchar`. (Stdin-driven Brainfuck — `,[.,]` cat — still pends an
+  input-buffer in the harness; `getchar` returns EOF for now.)
+
+### Verified
+- Brainfuck runs end-to-end; `0x88` gets direct decode + execute unit tests
+  (register masked-write keeps upper bytes; memory single-byte store leaves the
+  neighbour untouched). 50 tests (28 unit + 18 matrix + 4 lib/harness).
+
+## 0.4.0 — 2026-06-21 — group-3 (`not`/`neg`/`div`/`idiv`) + broader matrix coverage (x86-sim PR-S4)
+
+Broadens the **local** LANG-FULL x86_64 coverage from S3's 7 cells to 17 by
+running more matrix programs through the simulator — which surfaced a real
+missing opcode and added it.
+
+### Added
+- **Group-3 `0xF7` + `cqo`** — the opcodes the `x86_64-backend` emits for the IIR
+  `not`/`neg`/division ops, which S1–S3 never decoded (a Nib `~0` / Oct
+  `out(1, ~0)` trapped with `DecodeError { opcode: 0xF7 }`):
+  - `not r/m64` (`0xF7 /2`) — bitwise complement, no flag effects;
+  - `neg r/m64` (`0xF7 /3`) — two's-complement negate, flags as `sub 0, dst`;
+  - `div`/`idiv r/m64` (`0xF7 /6` unsigned, `/7` signed) — divides the full
+    128-bit `rdx:rax` pair, quotient → `rax`, remainder → `rdx`;
+  - `cqo` (`0x48 0x99`) — sign-extend `rax` into `rdx:rax` (the `idiv` preamble).
+- **`Trap::DivideError`** — divide-by-zero **and** quotient-overflow (e.g.
+  `i64::MIN / -1`) raise the `#DE` analogue, fail-closed like every other fault.
+- **8 new matrix cells** in `tests/lang_matrix_x86.rs`, each a verbatim matrix
+  program run on the x86_64 column locally: Twig top-level `define`s; Nib u8
+  saturating-add wrap and `~` complement; ALGOL switch/computed-goto and the
+  `for`-loop sum-of-squares array; Dartmouth BASIC `PRINT` and `FOR`/`NEXT`
+  (stdout-captured via the host shims); Oct `out(1, ~0)` (the cell that exposed
+  the `0xF7` gap). New `run_capturing_stdout` helper for the print programs.
+- **Division end-to-end** — a Nib unsigned `84 / 2` (lowers to `xor rdx,rdx;
+  div rcx`) and an ALGOL signed `85 div 2` (`cqo; idiv rcx`), both ⇒ 42, so the
+  group-3 division path is exercised from real backend output, not just the unit
+  tests.
+
+### Verified
+- The `not` and `div`/`idiv` ops now run end-to-end (Nib + Oct + ALGOL);
+  `neg`/`cqo` and the division corner cases get direct decode + execute unit
+  tests (quotient/remainder, signed negatives, div-by-zero, signed-overflow, and
+  the crafted `i128::MIN / -1`). 42 tests (25 unit + 17 matrix).
+
 ## 0.3.0 — 2026-06-21 — local LANG-FULL x86_64 matrix column (x86-sim PR-S3)
 
 Wires the simulator into the LANG-FULL matrix: a new integration test drives the

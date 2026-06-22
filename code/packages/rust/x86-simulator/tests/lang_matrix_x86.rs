@@ -99,6 +99,25 @@ fn run_on_x86_sim(lang: Language, src: &str) -> i32 {
     sim.run().expect("x86_64 machine code should run to a clean ret")
 }
 
+/// Like [`run_on_x86_sim`] but also returns whatever the program printed via the
+/// host `print_i64` / `putchar` shims — for the matrix's stdout-asserting cells
+/// (BASIC `PRINT`, Oct `out`, …) whose observable result is text, not an exit
+/// code.
+fn run_capturing_stdout(lang: Language, src: &str) -> (i32, String) {
+    let (funcs, entry) = compile_to_x86_functions(lang, src);
+    let mut builder = MachineCodeHarness::new();
+    for f in &funcs {
+        builder = builder.function(&f.name, &f.bytes, &f.relocs);
+    }
+    let mut sim = builder
+        .build(&entry)
+        .expect("harness should lay out + link the matrix program");
+    let code = sim.run().expect("x86_64 machine code should run to a clean ret");
+    let out = String::from_utf8(sim.stdout.clone())
+        .expect("captured stdout should be valid UTF-8");
+    (code, out)
+}
+
 // ===========================================================================
 // The cells — each `src` is a verbatim copy of a `lang_matrix.rs` NativeAot
 // cell; each `assert_eq!` is the same exit code the matrix asserts.
@@ -166,4 +185,142 @@ fn algol_static_array_runs_on_x86_sim() {
     let src = "begin integer array A[1:3]; integer result; \
                A[1] := 40; A[3] := 2; result := A[1] + A[3] end";
     assert_eq!(run_on_x86_sim(Language::Algol60, src), 42);
+}
+
+// ===========================================================================
+// S4 — broader coverage: more matrix programs run on the x86_64 column locally.
+// (Exploratory batch — confirm which the current opcode set already handles.)
+// ===========================================================================
+
+/// Twig — top-level value `define`s summed (`(define x 40)(define y 2)(+ x y)`
+/// ⇒ 42).  Exercises multiple typed registers in `main`.
+#[test]
+fn twig_define_runs_on_x86_sim() {
+    assert_eq!(run_on_x86_sim(Language::Twig, "(define x 40) (define y 2) (+ x y)"), 42);
+}
+
+/// Nib — `u8` saturating-add wrap guard (`200 +? 100` clamps to 255 ⇒ exit 1).
+/// Exercises a narrow add + a clamp branch (`cmp`/`jcc`) at u8 width.
+#[test]
+fn nib_u8_wrap_runs_on_x86_sim() {
+    let src = "fn main() -> u8 { let x: u8 = 200 +? 100; if x == 255 { return 1; } return 0; }";
+    assert_eq!(run_on_x86_sim(Language::Nib, src), 1);
+}
+
+/// Nib — unary `~` complement at u8 width (`~0` ⇒ 255 ⇒ exit 1).  Exercises the
+/// `not` op + the u8 value mask.
+#[test]
+fn nib_complement_runs_on_x86_sim() {
+    let src = "fn main() -> u8 { let x: u8 = ~0; if x == 255 { return 1; } return 0; }";
+    assert_eq!(run_on_x86_sim(Language::Nib, src), 1);
+}
+
+/// ALGOL — a switch / computed goto (`goto s[3]` ⇒ exit 49).  Exercises the
+/// 1-based index compare chain + multiple `jmp`/`jcc`/`label`s.
+#[test]
+fn algol_switch_runs_on_x86_sim() {
+    let src = "begin integer result; switch s := a1, a2, a3; integer i; i := 3; \
+               goto s[i]; a1: result := 1; goto done; a2: result := 2; goto done; \
+               a3: result := 49; done: end";
+    assert_eq!(run_on_x86_sim(Language::Algol60, src), 49);
+}
+
+/// ALGOL — `for`-loop sum of squares into an array (`1+4+9+16+25` ⇒ exit 55).
+/// Exercises a counted loop + `array_set`/`array_get` inside it.
+#[test]
+fn algol_for_loop_array_runs_on_x86_sim() {
+    let src = "begin integer array A[1:5]; integer i, result; \
+               for i := 1 step 1 until 5 do A[i] := i * i; \
+               result := 0; \
+               for i := 1 step 1 until 5 do result := result + A[i] end";
+    assert_eq!(run_on_x86_sim(Language::Algol60, src), 55);
+}
+
+/// Dartmouth BASIC — `PRINT 42` ⇒ stdout `42` via the `print_i64` host shim.
+#[test]
+fn basic_print_runs_on_x86_sim() {
+    let (_code, out) = run_capturing_stdout(Language::DartmouthBasic, "10 PRINT 42\n20 END\n");
+    assert_eq!(out, "42");
+}
+
+/// Dartmouth BASIC — `FOR`/`NEXT` accumulator summing 1..5 ⇒ stdout `15`.
+#[test]
+fn basic_for_loop_runs_on_x86_sim() {
+    let src = "10 LET S = 0\n20 FOR I = 1 TO 5\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n";
+    let (_code, out) = run_capturing_stdout(Language::DartmouthBasic, src);
+    assert_eq!(out, "15");
+}
+
+/// Oct — bitwise complement (the `not` op → x86 `0xF7 /2`) printed via `out`
+/// (`fn main() { out(1, ~0); }` ⇒ stdout `255`, the u8-masked `-1`).  This is
+/// the cell that surfaced the missing group-3 `0xF7` opcode in the simulator.
+#[test]
+fn oct_complement_runs_on_x86_sim() {
+    let (_code, out) = run_capturing_stdout(Language::Oct, "fn main() { out(1, ~0); }");
+    assert_eq!(out, "255");
+}
+
+/// Nib — **unsigned division** (`84 / 2` ⇒ exit 42).  The `div` op lowers to the
+/// x86 unsigned-division sequence `xor rdx,rdx; div rcx` — exercising the
+/// group-3 `0xF7 /6` end-to-end (S4's unit tests cover `div` in isolation; this
+/// runs it from real backend output).
+#[test]
+fn nib_unsigned_division_runs_on_x86_sim() {
+    assert_eq!(run_on_x86_sim(Language::Nib, "fn main() -> u8 { return 84 / 2; }"), 42);
+}
+
+/// ALGOL — **signed integer division** (`85 div 2` ⇒ exit 42).  ALGOL's `div`
+/// lowers to the signed sequence `cqo; idiv rcx` — exercising `0xF7 /7` + `cqo`
+/// end-to-end (the `idiv`/`cqo` path S4 otherwise only unit-tests).
+#[test]
+fn algol_signed_division_runs_on_x86_sim() {
+    let src = "begin integer result; result := 85 div 2 end";
+    assert_eq!(run_on_x86_sim(Language::Algol60, src), 42);
+}
+
+/// Brainfuck — build 65 on the tape and `putchar` it (`++++++++[>++++++++<-]>+.`
+/// ⇒ stdout `A`).  Exercises the **byte-tape** opcode surface the arithmetic
+/// programs never touch: `__twig_alloc_bytes` for the tape, 8-bit load/store
+/// (`load_byte`/`store_byte`), a `[...]` loop, and the `putchar` host shim.
+#[test]
+fn brainfuck_putchar_runs_on_x86_sim() {
+    let (_code, out) = run_capturing_stdout(Language::Brainfuck, "++++++++[>++++++++<-]>+.");
+    assert_eq!(out, "A");
+}
+
+/// Like [`run_capturing_stdout`] but feeds `input` to the program's `getchar`
+/// (the harness stdin buffer) — for the Brainfuck `,` programs.
+fn run_with_stdin(lang: Language, src: &str, input: &[u8]) -> String {
+    let (funcs, entry) = compile_to_x86_functions(lang, src);
+    let mut builder = MachineCodeHarness::new().stdin(input);
+    for f in &funcs {
+        builder = builder.function(&f.name, &f.bytes, &f.relocs);
+    }
+    let mut sim = builder
+        .build(&entry)
+        .expect("harness should lay out + link the matrix program");
+    sim.run().expect("x86_64 machine code should run to a clean ret");
+    String::from_utf8(sim.stdout.clone()).expect("stdout should be valid UTF-8")
+}
+
+/// Brainfuck — **read a byte from stdin**, `+`, print (`,+.` with input `A` ⇒
+/// `B`).  Exercises the `getchar` host shim consuming a real input byte.
+#[test]
+fn brainfuck_stdin_increment_runs_on_x86_sim() {
+    assert_eq!(run_with_stdin(Language::Brainfuck, ",+.", b"A"), "B");
+}
+
+/// Brainfuck — **echo two bytes** (`,.,.` with input `Hi` ⇒ `Hi`).
+#[test]
+fn brainfuck_stdin_echo_runs_on_x86_sim() {
+    assert_eq!(run_with_stdin(Language::Brainfuck, ",.,.", b"Hi"), "Hi");
+}
+
+/// Brainfuck — **cat until EOF** (`,[.,]` with input `Hi` ⇒ `Hi`).  The `[...]`
+/// loop reads+prints until `getchar` returns EOF, which the Brainfuck IIR clamps
+/// to a 0 cell so the loop halts — so this also checks the simulator's EOF (`-1`)
+/// convention threads correctly through the backend's clamp.
+#[test]
+fn brainfuck_cat_runs_on_x86_sim() {
+    assert_eq!(run_with_stdin(Language::Brainfuck, ",[.,]", b"Hi"), "Hi");
 }

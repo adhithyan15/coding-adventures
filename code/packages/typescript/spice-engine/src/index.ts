@@ -717,9 +717,27 @@ export interface DeckRawfileArtifact {
   readonly marker: string;
   readonly probeCount: number;
   readonly probes: readonly string[];
+  readonly matchedProbeCount: number;
+  readonly matchedProbes: readonly string[];
+  readonly unmatchedProbeCount: number;
+  readonly unmatchedProbes: readonly string[];
   readonly optionCount: number;
   readonly options: readonly string[];
   readonly rawfile: string;
+}
+
+export interface DeckWrdataArtifact {
+  readonly target: string;
+  readonly marker: string;
+  readonly probeCount: number;
+  readonly probes: readonly string[];
+  readonly matchedProbeCount: number;
+  readonly matchedProbes: readonly string[];
+  readonly unmatchedProbeCount: number;
+  readonly unmatchedProbes: readonly string[];
+  readonly optionCount: number;
+  readonly options: readonly string[];
+  readonly datafile: string;
 }
 
 export interface DeckAnalysisExecution {
@@ -741,6 +759,12 @@ export interface DeckAnalysisExecution {
   readonly rawfileArtifactCsv: string;
   readonly rawfileArtifactJson: string;
   readonly rawfileArtifactRecords: ReadonlyArray<Record<string, string>>;
+  readonly wrdataArtifactCount: number;
+  readonly wrdataArtifacts: readonly DeckWrdataArtifact[];
+  readonly wrdataArtifactTable: string;
+  readonly wrdataArtifactCsv: string;
+  readonly wrdataArtifactJson: string;
+  readonly wrdataArtifactRecords: ReadonlyArray<Record<string, string>>;
   readonly diagnosticCount: number;
   readonly diagnosticCodes: readonly string[];
   readonly tableCount: number;
@@ -8291,12 +8315,22 @@ export function formatDeckRawfileAscii(
   analysis: DeckAnalysisPlan["analysis"],
   rawfileOptions: readonly string[] = [],
 ): string {
+  return formatDeckRawfileAsciiForProbes(table, analysis, rawfileOptions, []);
+}
+
+function formatDeckRawfileAsciiForProbes(
+  table: string,
+  analysis: DeckAnalysisPlan["analysis"],
+  rawfileOptions: readonly string[],
+  probes: readonly string[],
+): string {
   const rows = deckTableRows(table);
   if (rows.length === 0) {
     return "";
   }
-  const columns = rows[0]!.split("\t");
-  const dataRows = rows.slice(1).map((row) => row.split("\t"));
+  const projectedRows = deckRawfileProjectRows(rows, probes);
+  const columns = projectedRows[0]!.split("\t");
+  const dataRows = projectedRows.slice(1).map((row) => row.split("\t"));
   const lines = [
     `Title: SPICE deck ${analysis} result`,
     "Date: deterministic",
@@ -8318,6 +8352,45 @@ export function formatDeckRawfileAscii(
   return `${lines.join("\n")}\n`;
 }
 
+function deckRawfileProjectRows(rows: readonly string[], probes: readonly string[]): string[] {
+  const columns = rows[0]!.split("\t");
+  if (probes.length === 0) {
+    return [...rows];
+  }
+  const { selectedIndices } = deckRawfileProbeInventory(columns, probes);
+  return rows.map((row) => {
+    const cells = row.split("\t");
+    return selectedIndices.map((index) => cells[index] ?? "").join("\t");
+  });
+}
+
+function deckRawfileProbeInventory(
+  columns: readonly string[],
+  probes: readonly string[],
+): {
+  selectedIndices: number[];
+  matchedProbes: string[];
+  unmatchedProbes: string[];
+} {
+  const selectedIndices: number[] = [];
+  const matchedProbes: string[] = [];
+  const unmatchedProbes: string[] = [];
+  if (columns.length > 0) {
+    selectedIndices.push(0);
+  }
+  const normalizedColumns = columns.map((column) => column.toLowerCase());
+  for (const probe of probes) {
+    const index = normalizedColumns.indexOf(probe.toLowerCase());
+    if (index !== -1 && !selectedIndices.includes(index)) {
+      selectedIndices.push(index);
+      matchedProbes.push(columns[index]!);
+    } else if (index === -1) {
+      unmatchedProbes.push(probe);
+    }
+  }
+  return { selectedIndices, matchedProbes, unmatchedProbes };
+}
+
 function deckWriteMarkerParts(marker: string): { target: string; probes: string[] } | undefined {
   const parts = marker.trim().split(/\s+/u);
   if (parts.length < 2 || parts[0] !== "write") {
@@ -8335,20 +8408,34 @@ function deckRawfileArtifacts(
   writeMarkers: readonly string[],
   rawfileOptions: readonly string[],
 ): DeckRawfileArtifact[] {
-  const rawfile = formatDeckRawfileAscii(table, plan.analysis, rawfileOptions);
+  const rows = deckTableRows(table);
+  const columns = rows[0]?.split("\t") ?? [];
   return writeMarkers.flatMap((marker) => {
     const parts = deckWriteMarkerParts(marker);
     if (parts === undefined) {
       return [];
     }
+    const { matchedProbes, unmatchedProbes } = deckRawfileProbeInventory(
+      columns,
+      parts.probes,
+    );
     return [{
       target: parts.target,
       marker,
       probeCount: parts.probes.length,
       probes: [...parts.probes],
+      matchedProbeCount: matchedProbes.length,
+      matchedProbes,
+      unmatchedProbeCount: unmatchedProbes.length,
+      unmatchedProbes,
       optionCount: rawfileOptions.length,
       options: [...rawfileOptions],
-      rawfile,
+      rawfile: formatDeckRawfileAsciiForProbes(
+        table,
+        plan.analysis,
+        rawfileOptions,
+        parts.probes,
+      ),
     }];
   });
 }
@@ -8358,6 +8445,10 @@ const DECK_RAWFILE_ARTIFACT_COLUMNS = [
   "Marker",
   "Probes",
   "ProbeList",
+  "MatchedProbes",
+  "MatchedProbeList",
+  "UnmatchedProbes",
+  "UnmatchedProbeList",
   "Options",
   "RawfileOptionList",
   "Bytes",
@@ -8369,6 +8460,10 @@ function deckRawfileArtifactCells(artifact: DeckRawfileArtifact): string[] {
     artifact.marker,
     String(artifact.probeCount),
     artifact.probes.join(";"),
+    String(artifact.matchedProbeCount),
+    artifact.matchedProbes.join(";"),
+    String(artifact.unmatchedProbeCount),
+    artifact.unmatchedProbes.join(";"),
     String(artifact.optionCount),
     artifact.options.join(";"),
     String(artifact.rawfile.length),
@@ -8410,6 +8505,184 @@ export function formatDeckRawfileArtifactJson(
   artifacts: readonly DeckRawfileArtifact[],
 ): string {
   return `${JSON.stringify(deckRawfileArtifactRecords(artifacts))}\n`;
+}
+
+export function formatDeckWrdataAscii(
+  table: string,
+  probes: readonly string[] = [],
+  rawfileOptions: readonly string[] = [],
+): string {
+  const rows = deckTableRows(table);
+  if (rows.length === 0) {
+    return "";
+  }
+  const projectedRows = deckWrdataProjectRows(rows, probes);
+  const columns = projectedRows[0]!.split("\t");
+  const lines = [
+    "# SPICE deck wrdata artifact",
+    `Probes: ${probes.join(";")}`,
+  ];
+  if (rawfileOptions.length > 0) {
+    lines.push(`Options: ${rawfileOptions.join(";")}`);
+  }
+  const normalizedOptions = new Set(rawfileOptions.map((option) => option.toLowerCase()));
+  if (normalizedOptions.has("set wr_vecnames")) {
+    lines.push(`VectorNames: ${columns.join(";")}`);
+  }
+  if (normalizedOptions.has("set wr_singlescale") && columns.length > 0) {
+    lines.push(`Scale: ${columns[0]}`);
+  }
+  lines.push(...projectedRows);
+  return `${lines.join("\n")}\n`;
+}
+
+function deckWrdataProjectRows(rows: readonly string[], probes: readonly string[]): string[] {
+  const columns = rows[0]!.split("\t");
+  if (probes.length === 0) {
+    return [...rows];
+  }
+  const { selectedIndices } = deckWrdataProbeInventory(columns, probes);
+  return rows.map((row) => {
+    const cells = row.split("\t");
+    return selectedIndices.map((index) => cells[index] ?? "").join("\t");
+  });
+}
+
+function deckWrdataProbeInventory(
+  columns: readonly string[],
+  probes: readonly string[],
+): {
+  selectedIndices: number[];
+  matchedProbes: string[];
+  unmatchedProbes: string[];
+} {
+  const selectedIndices: number[] = [];
+  const matchedProbes: string[] = [];
+  const unmatchedProbes: string[] = [];
+  if (columns.length > 0) {
+    selectedIndices.push(0);
+  }
+  const normalizedColumns = columns.map((column) => column.toLowerCase());
+  for (const probe of probes) {
+    const index = normalizedColumns.indexOf(probe.toLowerCase());
+    if (index !== -1 && !selectedIndices.includes(index)) {
+      selectedIndices.push(index);
+      matchedProbes.push(columns[index]!);
+    } else if (index === -1) {
+      unmatchedProbes.push(probe);
+    }
+  }
+  return { selectedIndices, matchedProbes, unmatchedProbes };
+}
+
+function deckWrdataMarkerParts(marker: string): { target: string; probes: string[] } | undefined {
+  const parts = marker.trim().split(/\s+/u);
+  if (parts.length < 2 || parts[0] !== "wrdata") {
+    return undefined;
+  }
+  return {
+    target: parts[1]!,
+    probes: parts.slice(2),
+  };
+}
+
+function deckWrdataArtifacts(
+  table: string,
+  writeMarkers: readonly string[],
+  rawfileOptions: readonly string[],
+): DeckWrdataArtifact[] {
+  const rows = deckTableRows(table);
+  const columns = rows[0]?.split("\t") ?? [];
+  return writeMarkers.flatMap((marker) => {
+    const parts = deckWrdataMarkerParts(marker);
+    if (parts === undefined) {
+      return [];
+    }
+    const { matchedProbes, unmatchedProbes } = deckWrdataProbeInventory(
+      columns,
+      parts.probes,
+    );
+    return [{
+      target: parts.target,
+      marker,
+      probeCount: parts.probes.length,
+      probes: [...parts.probes],
+      matchedProbeCount: matchedProbes.length,
+      matchedProbes,
+      unmatchedProbeCount: unmatchedProbes.length,
+      unmatchedProbes,
+      optionCount: rawfileOptions.length,
+      options: [...rawfileOptions],
+      datafile: formatDeckWrdataAscii(table, parts.probes, rawfileOptions),
+    }];
+  });
+}
+
+const DECK_WRDATA_ARTIFACT_COLUMNS = [
+  "Target",
+  "Marker",
+  "Probes",
+  "ProbeList",
+  "MatchedProbes",
+  "MatchedProbeList",
+  "UnmatchedProbes",
+  "UnmatchedProbeList",
+  "Options",
+  "RawfileOptionList",
+  "Bytes",
+] as const;
+
+function deckWrdataArtifactCells(artifact: DeckWrdataArtifact): string[] {
+  return [
+    artifact.target,
+    artifact.marker,
+    String(artifact.probeCount),
+    artifact.probes.join(";"),
+    String(artifact.matchedProbeCount),
+    artifact.matchedProbes.join(";"),
+    String(artifact.unmatchedProbeCount),
+    artifact.unmatchedProbes.join(";"),
+    String(artifact.optionCount),
+    artifact.options.join(";"),
+    String(artifact.datafile.length),
+  ];
+}
+
+export function deckWrdataArtifactRecords(
+  artifacts: readonly DeckWrdataArtifact[],
+): Array<Record<string, string>> {
+  return artifacts.map((artifact) => {
+    const cells = deckWrdataArtifactCells(artifact);
+    return Object.fromEntries(
+      DECK_WRDATA_ARTIFACT_COLUMNS.map((column, index) => [column, cells[index] ?? ""]),
+    );
+  });
+}
+
+export function formatDeckWrdataArtifactTable(
+  artifacts: readonly DeckWrdataArtifact[],
+): string {
+  const rows = [DECK_WRDATA_ARTIFACT_COLUMNS.join("\t")];
+  for (const artifact of artifacts) {
+    rows.push(deckWrdataArtifactCells(artifact).join("\t"));
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+export function formatDeckWrdataArtifactCsv(
+  artifacts: readonly DeckWrdataArtifact[],
+): string {
+  const rows = [DECK_WRDATA_ARTIFACT_COLUMNS.join(",")];
+  for (const artifact of artifacts) {
+    rows.push(deckWrdataArtifactCells(artifact).map(formatCsvCell).join(","));
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+export function formatDeckWrdataArtifactJson(
+  artifacts: readonly DeckWrdataArtifact[],
+): string {
+  return `${JSON.stringify(deckWrdataArtifactRecords(artifacts))}\n`;
 }
 
 export function formatDeckRunArtifactCsv(artifacts: readonly DeckRunArtifact[]): string {
@@ -8507,6 +8780,11 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
+    const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
+    const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
+    const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
+    const wrdataArtifactRecords = deckWrdataArtifactRecords(wrdataArtifacts);
     return {
       plan,
       result,
@@ -8526,6 +8804,12 @@ export function runDeckAnalysis(
       rawfileArtifactCsv,
       rawfileArtifactJson,
       rawfileArtifactRecords,
+      wrdataArtifactCount: wrdataArtifacts.length,
+      wrdataArtifacts,
+      wrdataArtifactTable,
+      wrdataArtifactCsv,
+      wrdataArtifactJson,
+      wrdataArtifactRecords,
       diagnosticCount: diagnosticCodes.length,
       diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
@@ -8584,6 +8868,11 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
+    const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
+    const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
+    const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
+    const wrdataArtifactRecords = deckWrdataArtifactRecords(wrdataArtifacts);
     return {
       plan,
       result,
@@ -8603,6 +8892,12 @@ export function runDeckAnalysis(
       rawfileArtifactCsv,
       rawfileArtifactJson,
       rawfileArtifactRecords,
+      wrdataArtifactCount: wrdataArtifacts.length,
+      wrdataArtifacts,
+      wrdataArtifactTable,
+      wrdataArtifactCsv,
+      wrdataArtifactJson,
+      wrdataArtifactRecords,
       diagnosticCount: diagnosticCodes.length,
       diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
@@ -8672,6 +8967,11 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
+    const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
+    const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
+    const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
+    const wrdataArtifactRecords = deckWrdataArtifactRecords(wrdataArtifacts);
     return {
       plan,
       result,
@@ -8691,6 +8991,12 @@ export function runDeckAnalysis(
       rawfileArtifactCsv,
       rawfileArtifactJson,
       rawfileArtifactRecords,
+      wrdataArtifactCount: wrdataArtifacts.length,
+      wrdataArtifacts,
+      wrdataArtifactTable,
+      wrdataArtifactCsv,
+      wrdataArtifactJson,
+      wrdataArtifactRecords,
       diagnosticCount: diagnosticCodes.length,
       diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
@@ -8755,6 +9061,11 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
+    const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
+    const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
+    const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
+    const wrdataArtifactRecords = deckWrdataArtifactRecords(wrdataArtifacts);
     return {
       plan,
       result,
@@ -8774,6 +9085,12 @@ export function runDeckAnalysis(
       rawfileArtifactCsv,
       rawfileArtifactJson,
       rawfileArtifactRecords,
+      wrdataArtifactCount: wrdataArtifacts.length,
+      wrdataArtifacts,
+      wrdataArtifactTable,
+      wrdataArtifactCsv,
+      wrdataArtifactJson,
+      wrdataArtifactRecords,
       diagnosticCount: diagnosticCodes.length,
       diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
@@ -8828,6 +9145,11 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
+    const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
+    const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
+    const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
+    const wrdataArtifactRecords = deckWrdataArtifactRecords(wrdataArtifacts);
     return {
       plan,
       result,
@@ -8847,6 +9169,12 @@ export function runDeckAnalysis(
       rawfileArtifactCsv,
       rawfileArtifactJson,
       rawfileArtifactRecords,
+      wrdataArtifactCount: wrdataArtifacts.length,
+      wrdataArtifacts,
+      wrdataArtifactTable,
+      wrdataArtifactCsv,
+      wrdataArtifactJson,
+      wrdataArtifactRecords,
       diagnosticCount: diagnosticCodes.length,
       diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
@@ -8900,6 +9228,11 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
+    const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
+    const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
+    const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
+    const wrdataArtifactRecords = deckWrdataArtifactRecords(wrdataArtifacts);
     return {
       plan,
       result,
@@ -8919,6 +9252,12 @@ export function runDeckAnalysis(
       rawfileArtifactCsv,
       rawfileArtifactJson,
       rawfileArtifactRecords,
+      wrdataArtifactCount: wrdataArtifacts.length,
+      wrdataArtifacts,
+      wrdataArtifactTable,
+      wrdataArtifactCsv,
+      wrdataArtifactJson,
+      wrdataArtifactRecords,
       diagnosticCount: diagnosticCodes.length,
       diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
@@ -8982,6 +9321,11 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
+    const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
+    const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
+    const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
+    const wrdataArtifactRecords = deckWrdataArtifactRecords(wrdataArtifacts);
     return {
       plan,
       result,
@@ -9001,6 +9345,12 @@ export function runDeckAnalysis(
       rawfileArtifactCsv,
       rawfileArtifactJson,
       rawfileArtifactRecords,
+      wrdataArtifactCount: wrdataArtifacts.length,
+      wrdataArtifacts,
+      wrdataArtifactTable,
+      wrdataArtifactCsv,
+      wrdataArtifactJson,
+      wrdataArtifactRecords,
       diagnosticCount: diagnosticCodes.length,
       diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,

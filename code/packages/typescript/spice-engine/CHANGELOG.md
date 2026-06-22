@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- Carry matched and unmatched `write <rawfile> <probes...>` probe inventories
+  through rawfile artifact `MatchedProbes` / `MatchedProbeList` and
+  `UnmatchedProbes` / `UnmatchedProbeList` summary columns, and keep only
+  requested matching vector columns in deterministic in-memory rawfile output,
+  matching Python and Rust.
+- Carry matched and unmatched `wrdata <file> <probes...>` probe inventories
+  through WRDATA artifact `MatchedProbes` / `MatchedProbeList` and
+  `UnmatchedProbes` / `UnmatchedProbeList` summary columns, matching Python and
+  Rust.
+- Treat explicit `wrdata <file> <probes...>` probe lists as in-memory data-file
+  column selectors in `formatDeckWrdataAscii`, preserving the scale column plus
+  requested matching probe columns in deterministic WRDATA output, matching
+  Python and Rust.
+- Carry accepted `.control` rawfile/data-write option inventories through
+  WRDATA artifact `Options` / `RawfileOptionList` summary columns, and render
+  `wr_vecnames` / `wr_singlescale` intent as deterministic `VectorNames` /
+  `Scale` metadata in in-memory WRDATA data files, matching Python and Rust.
+- Expose deterministic in-memory ASCII data-file artifacts for accepted
+  `.control` `wrdata <file> ...` markers from selected `runDeckAnalysis`
+  execution results as `wrdataArtifactCount`, `wrdataArtifacts`,
+  `wrdataArtifactTable`, `wrdataArtifactCsv`, `wrdataArtifactJson`, and
+  `wrdataArtifactRecords`, matching Python and Rust.
 - Expose deterministic in-memory ASCII rawfile artifacts for accepted
   `.control` `write <rawfile> ...` markers from selected `runDeckAnalysis`
   execution results as `rawfileArtifactCount`, `rawfileArtifacts`,

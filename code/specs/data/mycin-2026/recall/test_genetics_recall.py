@@ -42,6 +42,18 @@ EXPECTED = [
     ("cystic_fibrosis", "inheritance", "autosomal_recessive"),       # expand (NBK493206)
     ("cystic_fibrosis", "gene_defect", "cftr"),                      # expand (NBK493206)
     ("duchenne_muscular_dystrophy", "gene_defect", "dystrophin"),    # expand (NBK482346)
+    ("myotonic_dystrophy", "trinucleotide_repeat", "ctg"),           # expand (NBK557446)
+    ("myotonic_dystrophy", "gene_defect", "dmpk"),                   # expand (NBK557446)
+    ("friedreich_ataxia", "gene_defect", "fxn"),                     # expand (NBK563199)
+    ("marfan_syndrome", "gene_defect", "fbn1"),                      # expand (NBK537339)
+    ("angelman_syndrome", "imprinting", "maternal"),                 # expand (NBK560870)
+    ("angelman_syndrome", "gene_defect", "ube3a"),                   # expand (NBK560870)
+    ("friedreich_ataxia", "inheritance", "autosomal_recessive"),     # expand (NBK563199)
+    ("friedreich_ataxia", "trinucleotide_repeat", "gaa"),            # expand (NBK563199)
+    ("wilson_disease", "inheritance", "autosomal_recessive"),        # expand (NBK441990)
+    ("wilson_disease", "gene_defect", "atp7b"),                      # expand (NBK441990)
+    ("hereditary_hemochromatosis", "inheritance", "autosomal_recessive"),  # expand (NBK430862)
+    ("hereditary_hemochromatosis", "gene_defect", "hfe"),            # expand (NBK430862)
 ]
 VAR = {"inheritance": "Pattern", "gene_defect": "Gene",
        "trinucleotide_repeat": "Repeat", "imprinting": "Parent"}
