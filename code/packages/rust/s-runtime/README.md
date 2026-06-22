@@ -309,6 +309,25 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   inputs give an empty result, no OOB). `kronecker(matrix(c(1,2,3,4), nrow=2),
   matrix(c(0,1,1,0), nrow=2))` is a 4×4 block matrix; `kronecker(matrix(5), Y)`
   is `5·Y`. The R `%x%` infix alias is deferred to R-40 (grammar work).
+- **Base R Date support** (R-44): a **`Date`** is a numeric vector of **days since
+  the Unix epoch 1970-01-01** carrying class `"Date"` — modelled with the existing
+  transparent `SValue::Classed { inner: Double, class: ["Date"] }` wrapper, so
+  **no new value variant** and every coercion / `arithmetic` call sees through to
+  the day count. **`as.Date(x, format=)`** parses a character vector (default
+  `"%Y-%m-%d"`, or `"%Y/%m/%d"` etc. via `format=`, fields `%Y`/`%m`/`%d`) or wraps
+  a numeric as days-since-epoch; malformed/out-of-range strings → `NA`, never a
+  panic. **`format.Date(d, format=)`** and the **`format()`** generic render with
+  `%Y`/`%m`/`%d`/`%j`. **`Sys.Date()`** is today (wall clock; tested for structure
+  only). **`difftime(d1, d2)`** and **`d1 - d2`** give the difference in **days**.
+  **`weekdays(d)`** names the day (anchored on 1970-01-01 = Thursday,
+  `(days+4).rem_euclid(7)` so pre-epoch counts never panic). **`as.numeric`** /
+  **`as.double`** added as base coercions (a Date → days-since-epoch; a factor →
+  codes). The calendar uses Howard Hinnant's dependency-free
+  `days_from_civil`/`civil_from_days` (leap years and negative dates handled).
+  Parse safety: bounded `i64` digit accumulation rejects absurd years before
+  overflow; impossible days rejected via a civil round-trip. Deferred to R-45:
+  full `strptime`/`strftime`, `POSIXct`/`POSIXlt` & timezones, `seq.Date`,
+  `months()`/`quarters()`, non-day `difftime` units.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

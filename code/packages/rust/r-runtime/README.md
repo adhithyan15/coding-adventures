@@ -301,6 +301,31 @@ over-large product errors rather than OOMing, and `0×n`/`m×0` inputs give an e
 result with no out-of-bounds access. The R `%x%` infix alias (`X %x% Y`) needs
 lexer/grammar work and is deferred to **R-40**; this ships the function form only.
 
+**R-44 — base R Date support** adds R's first calendar type, again through the
+shared `s-runtime`. A **`Date`** is *not* a new value kind: it is a numeric vector
+of **days since the Unix epoch 1970-01-01** carrying class `"Date"` (the existing
+transparent `Classed` wrapper), so coercions and arithmetic already see through to
+the day count. `as.Date(x, format=)` parses a character vector (default ISO
+`"%Y-%m-%d"`, or `"%Y/%m/%d"` etc. via `format=`) or wraps a numeric vector as
+days-since-epoch (`as.Date(0)` → 1970-01-01); a malformed string
+(`as.Date("not-a-date")`, `as.Date("2021-02-30")`) → `NA`, never a panic.
+`class(as.Date("2021-03-14"))` → `"Date"`; `as.numeric(as.Date("1970-01-02"))` →
+`1`; `as.numeric(as.Date("1969-12-31"))` → `-1`. `format(d)` / `format.Date(d, fmt)`
+render with `%Y`/`%m`/`%d`/`%j` (default `"%Y-%m-%d"`):
+`format(as.Date("2021-03-14"))` → `"2021-03-14"`. `Sys.Date()` is today (wall
+clock; non-deterministic, so only its class/structure is asserted). `d1 - d2` and
+`difftime(d1, d2)` give the difference in **days** (`as.Date("2021-03-20") -
+as.Date("2021-03-14")` → `6`). `weekdays(d)` names the day, anchored on the fact
+that 1970-01-01 was a Thursday — `weekdays(as.Date("1970-01-01"))` → `"Thursday"`,
+`weekdays(as.Date("2021-03-14"))` → `"Sunday"`. The calendar uses Howard Hinnant's
+dependency-free `days_from_civil`/`civil_from_days` algorithms (leap years and
+pre-epoch dates handled). Parse safety: untrusted strings parse with bounded `i64`
+accumulation (no overflow on crafted years), impossible days are rejected via a
+civil round-trip, and weekday/day-of-year modulo uses `rem_euclid` (safe on
+pre-epoch negatives). Deferred to **R-45**: full `strptime`/`strftime` fields,
+`POSIXct`/`POSIXlt` date-times and timezones, `seq.Date`, `months()`/`quarters()`,
+and `difftime` units other than days.
+
 ## Usage
 
 ```rust

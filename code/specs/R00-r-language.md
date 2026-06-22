@@ -1404,6 +1404,61 @@ unchanged.
     ≥ 3.6) by reusing the existing RE2-based `regex` engine. Nothing in the family
     remains deferred.
 
+- **R-44 — base R Date support** *(this PR)*. A first calendar type. In R a
+  **`Date`** is *not* a new value kind: it is an ordinary numeric vector — the
+  count of **days since the Unix epoch `1970-01-01`** — carrying the S3 class
+  attribute `"Date"`. We model it with the existing transparent
+  `SValue::Classed { inner: Double, class: ["Date"] }` wrapper (the same R-13/S-v2
+  machinery factors and explicit S3 classes already use), so **no new `SValue`
+  variant** is introduced and every coercion (`as_double`, `as_character`,
+  `as_logical`) already sees straight through to the day count. Concretely:
+  - **`Sys.Date()`** — today's date as a length-1 `Date`. The runtime has no
+    pre-existing deterministic clock hook (no `Sys.time`/`now` abstraction exists
+    yet), so this reads the wall clock via `std::time::SystemTime::now()` and
+    converts the elapsed duration to whole days since the epoch (`UNIX_EPOCH`).
+    A clock before the epoch (negative duration) is handled without panic. Because
+    the value is non-deterministic, tests assert only its **structure** — `class()`
+    is `"Date"` and it is a single finite numeric — never an exact day.
+  - **`as.Date(x, format =)`** — parse a **character** vector to `Date`, or wrap a
+    **numeric** vector as days-since-epoch directly (`as.Date(0)` → `1970-01-01`).
+    Character parsing supports the default ISO `"%Y-%m-%d"` and, via `format =`,
+    at least `"%Y/%m/%d"`; the recognised fields are `%Y` (year), `%m` (month),
+    `%d` (day), plus literal separators. Unparseable / malformed / out-of-range
+    strings become `NA` (**never** a panic). Vectorised over the input.
+  - **`format.Date(d, format =)` / `format(d, fmt)`** — render a `Date` back to a
+    string. The default format is `"%Y-%m-%d"`; the supported fields are `%Y`,
+    `%m`, `%d`, and `%j` (zero-padded day-of-year, 001..366). `format()` detects
+    the `"Date"` class and dispatches to the Date renderer; on any other value it
+    is unchanged.
+  - **`difftime(d1, d2)` and `d1 - d2`** — the difference in **days** between two
+    `Date`s, as a numeric. Subtraction needs no special case: `arithmetic("-", …)`
+    already coerces both operands through `as_double` (the `Classed` wrapper is
+    transparent), so `as.Date("2021-03-20") - as.Date("2021-03-14")` is `6`
+    automatically. `difftime` is the named builtin form (units = days only here).
+    `as.numeric(d)` yields the raw days-since-epoch.
+  - **`weekdays(d)`** — the English weekday name (`"Monday"`..`"Sunday"`). The
+    anchor is the historical fact that **`1970-01-01` was a Thursday**; the index
+    is `(days + 3).rem_euclid(7)` so **pre-epoch (negative) day counts** map
+    correctly (Rust's `%` can go negative — `rem_euclid` cannot).
+  - **The civil-date kernel.** Two pure helpers implement the calendar with **no
+    new dependency**, using Howard Hinnant's well-known algorithms:
+    `days_from_civil(y, m, d)` → days since the epoch (handles the proleptic
+    Gregorian calendar, leap years, and negative/pre-epoch dates via the
+    era/year-of-era/day-of-era decomposition), and `civil_from_days(z)` → `(y, m,
+    d)`. They are exact inverses; round-trips are unit-tested across leap days
+    (`2000-02-29`, `2020-02-29`) and pre-epoch dates (`1969-12-31` → `-1`).
+  - **Parse-safety.** Untrusted date strings are parsed with **bounded** integer
+    accumulation in `i64` (a digit cap rejects absurd years before they can
+    overflow the day arithmetic; the civil conversion uses `i64` throughout), so
+    no crafted string can overflow or panic — it degrades to `NA`. All weekday /
+    day-of-year modulo math uses `rem_euclid` so negative day counts never panic.
+  - **Deferred to R-45.** Full `strptime`/`strftime` field coverage (`%B`, `%A`,
+    `%H`, `%M`, `%S`, `%p`, locale names, …); `POSIXct`/`POSIXlt` date-*times* and
+    timezones; `seq.Date`; `months()` / `quarters()`; and `difftime` units other
+    than days. The core (`as.Date` for `%Y-%m-%d`/`%Y/%m/%d`, `Sys.Date`,
+    `format.Date` for `%Y`/`%m`/`%d`/`%j`, Date subtraction + `difftime` in days,
+    and `weekdays`) ships **solidly** here.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`

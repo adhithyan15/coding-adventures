@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.34.0] - 2026-06-22
+
+### Added (via the shared `s-runtime`)
+
+- **Base R Date support (R-44)** — R's first calendar type, reached through
+  ordinary R syntax. A **`Date`** is a numeric vector of **days since the Unix
+  epoch 1970-01-01** carrying class `"Date"` (the existing transparent
+  `Classed` wrapper — no new value kind), so coercions and arithmetic see
+  straight through to the day count.
+  - **`as.Date(x, format = "%Y-%m-%d")`** — parse a character vector (default
+    `"%Y-%m-%d"`, or `"%Y/%m/%d"` etc. via `format =`), or wrap a numeric vector
+    as days-since-epoch. `class(as.Date("2021-03-14"))` → `"Date"`;
+    `as.numeric(as.Date("1970-01-02"))` → `1`; `as.numeric(as.Date("1969-12-31"))`
+    → `-1`. Malformed strings (`as.Date("not-a-date")`) → `NA`, never a panic.
+  - **`format(d)` / `format.Date(d, fmt)`** — render to a string (`%Y`/`%m`/`%d`/
+    `%j`, default `"%Y-%m-%d"`). `format(as.Date("2021-03-14"))` → `"2021-03-14"`.
+  - **`Sys.Date()`** — today as a Date (wall clock; non-deterministic, so only its
+    class/structure is asserted in tests).
+  - **`d1 - d2` and `difftime(d1, d2)`** — difference in **days**.
+    `as.Date("2021-03-20") - as.Date("2021-03-14")` → `6`.
+  - **`weekdays(d)`** — `weekdays(as.Date("1970-01-01"))` → `"Thursday"`;
+    `weekdays(as.Date("2021-03-14"))` → `"Sunday"`.
+  - **`as.numeric` / `as.double`** — base coercions yielding a Date's
+    days-since-epoch (and a factor's codes).
+  - **Security**: untrusted date strings parse with bounded `i64` accumulation
+    (no overflow on crafted years); impossible days rejected via a civil
+    round-trip; weekday/day-of-year math uses `rem_euclid` (safe on pre-epoch
+    negatives). Malformed input → `NA`, never a panic.
+  - **Deferred to R-45**: full `strptime`/`strftime` fields; `POSIXct`/`POSIXlt`
+    date-times and timezones; `seq.Date`; `months()`/`quarters()`; non-day
+    `difftime` units.
+
 ## [0.33.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)
