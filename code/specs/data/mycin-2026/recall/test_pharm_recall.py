@@ -54,6 +54,7 @@ EXPECTED = [
     ("dabigatran_toxicity", "antidote_for", "idarucizumab"),      # expand (NBK560651)
     ("arsenic_poisoning", "antidote_for", "dimercaprol"),         # expand (NBK549804)
     ("isoniazid_toxicity", "antidote_for", "pyridoxine"),         # expand (NBK557436)
+    ("rocuronium_toxicity", "antidote_for", "sugammadex"),        # expand (NBK470263)
 ]
 VAR = {"drug_class": "Class", "mechanism": "MOA", "adverse_effect": "Effect",
        "antidote_for": "Antidote"}
