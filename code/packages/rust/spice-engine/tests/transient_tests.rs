@@ -11,21 +11,22 @@ use spice_engine::{
     format_deck_rawfile_artifact_csv, format_deck_rawfile_artifact_json,
     format_deck_rawfile_artifact_table, format_deck_run_artifact_csv,
     format_deck_run_artifact_json, format_deck_run_artifact_table, format_deck_table_csv,
-    format_deck_table_json, format_deck_transient_table, format_digital_bridge_schedule_table,
-    format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
-    format_fourier_table, format_measurement_table, format_pole_zero_table, format_pss_table,
-    format_transient_table, fourier, fourier_corners, fourier_transient_deck,
-    measure_transient_deck, measure_transient_delay_between_probes,
-    measure_transient_find_at_probe, measure_transient_probe, measure_transient_when_probe,
-    measure_transient_when_probe_counted, pole_zero_rc_highpass, pole_zero_rc_lowpass,
-    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
-    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
-    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
-    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, run_deck_analysis,
-    sample_transient_probe_as_digital_events, sample_transient_probes_as_digital_event_streams,
-    transient, transient_adaptive, transient_adaptive_corners,
-    transient_adaptive_with_digital_event_streams,
+    format_deck_table_json, format_deck_transient_table, format_deck_wrdata_artifact_csv,
+    format_deck_wrdata_artifact_json, format_deck_wrdata_artifact_table,
+    format_digital_bridge_schedule_table, format_digital_event_stream_table,
+    format_digital_event_table, format_distortion_table, format_fourier_table,
+    format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
+    fourier, fourier_corners, fourier_transient_deck, measure_transient_deck,
+    measure_transient_delay_between_probes, measure_transient_find_at_probe,
+    measure_transient_probe, measure_transient_when_probe, measure_transient_when_probe_counted,
+    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
+    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
+    pss_with_tolerance, run_deck_analysis, sample_transient_probe_as_digital_events,
+    sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
+    transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
     transient_with_digital_event_streams, transient_with_digital_event_streams_corners,
     transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
@@ -2841,6 +2842,60 @@ let gain = 2
     assert_eq!(
         execution.rawfile_artifact_json,
         format_deck_rawfile_artifact_json(&execution.rawfile_artifacts)
+    );
+    assert_eq!(execution.wrdata_artifact_count, 1);
+    assert_eq!(execution.wrdata_artifacts[0].target, "out.dat");
+    assert_eq!(execution.wrdata_artifacts[0].marker, "wrdata out.dat V(in)");
+    assert_eq!(execution.wrdata_artifacts[0].probe_count, 1);
+    assert_eq!(execution.wrdata_artifacts[0].probes, vec!["V(in)"]);
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("# SPICE deck wrdata artifact\n"));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("Probes: V(in)\n"));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("Index\tV(in)\n"));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("0\t1.000000e+00\n"));
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("Target")
+            .map(String::as_str),
+        Some("out.dat")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("Marker")
+            .map(String::as_str),
+        Some("wrdata out.dat V(in)")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("ProbeList")
+            .map(String::as_str),
+        Some("V(in)")
+    );
+    let wrdata_bytes = execution.wrdata_artifacts[0].datafile.len().to_string();
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("Bytes")
+            .map(String::as_str),
+        Some(wrdata_bytes.as_str())
+    );
+    assert_eq!(
+        execution.wrdata_artifact_table,
+        format_deck_wrdata_artifact_table(&execution.wrdata_artifacts)
+    );
+    assert_eq!(
+        execution.wrdata_artifact_csv,
+        format_deck_wrdata_artifact_csv(&execution.wrdata_artifacts)
+    );
+    assert_eq!(
+        execution.wrdata_artifact_json,
+        format_deck_wrdata_artifact_json(&execution.wrdata_artifacts)
     );
     assert_eq!(execution.diagnostic_count, expected_codes.len());
     assert_eq!(execution.diagnostic_codes, expected_codes);

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Expose deterministic in-memory ASCII data-file artifacts for accepted
+  `.control` `wrdata <file> ...` markers from selected `run_deck_analysis`
+  execution results as `wrdata_artifact_count`, `wrdata_artifacts`,
+  `wrdata_artifact_table`, `wrdata_artifact_csv`, `wrdata_artifact_json`, and
+  `wrdata_artifact_records`, matching Python and TypeScript.
 - Expose deterministic in-memory ASCII rawfile artifacts for accepted
   `.control` `write <rawfile> ...` markers from selected `run_deck_analysis`
   execution results as `rawfile_artifact_count`, `rawfile_artifacts`,

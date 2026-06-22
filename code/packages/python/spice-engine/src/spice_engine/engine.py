@@ -2386,6 +2386,17 @@ class DeckRawfileArtifact:
 
 
 @dataclass(frozen=True)
+class DeckWrdataArtifact:
+    """In-memory ASCII data-file content for an accepted control wrdata marker."""
+
+    target: str
+    marker: str
+    probe_count: int
+    probes: list[str]
+    datafile: str
+
+
+@dataclass(frozen=True)
 class DeckAnalysisExecution:
     """A selected deck analysis plan plus its executed solver output."""
 
@@ -2418,37 +2429,79 @@ class DeckAnalysisExecution:
     rawfile_artifact_csv: str = ""
     rawfile_artifact_json: str = ""
     rawfile_artifact_records: list[dict[str, str]] = field(default_factory=list)
+    wrdata_artifact_count: int = 0
+    wrdata_artifacts: list[DeckWrdataArtifact] = field(default_factory=list)
+    wrdata_artifact_table: str = ""
+    wrdata_artifact_csv: str = ""
+    wrdata_artifact_json: str = ""
+    wrdata_artifact_records: list[dict[str, str]] = field(default_factory=list)
 
     def __post_init__(self) -> None:
-        artifacts = list(self.rawfile_artifacts) or _deck_rawfile_artifacts(
+        rawfile_artifacts = list(self.rawfile_artifacts) or _deck_rawfile_artifacts(
             self.plan,
             self.table,
             self.write_markers,
             self.rawfile_options,
         )
-        object.__setattr__(self, "rawfile_artifact_count", len(artifacts))
-        object.__setattr__(self, "rawfile_artifacts", artifacts)
+        object.__setattr__(
+            self, "rawfile_artifact_count", len(rawfile_artifacts)
+        )
+        object.__setattr__(self, "rawfile_artifacts", rawfile_artifacts)
         object.__setattr__(
             self,
             "rawfile_artifact_table",
             self.rawfile_artifact_table
-            or format_deck_rawfile_artifact_table(artifacts),
+            or format_deck_rawfile_artifact_table(rawfile_artifacts),
         )
         object.__setattr__(
             self,
             "rawfile_artifact_csv",
-            self.rawfile_artifact_csv or format_deck_rawfile_artifact_csv(artifacts),
+            self.rawfile_artifact_csv
+            or format_deck_rawfile_artifact_csv(rawfile_artifacts),
         )
         object.__setattr__(
             self,
             "rawfile_artifact_json",
-            self.rawfile_artifact_json or format_deck_rawfile_artifact_json(artifacts),
+            self.rawfile_artifact_json
+            or format_deck_rawfile_artifact_json(rawfile_artifacts),
         )
         object.__setattr__(
             self,
             "rawfile_artifact_records",
             self.rawfile_artifact_records
-            or deck_rawfile_artifact_records(artifacts),
+            or deck_rawfile_artifact_records(rawfile_artifacts),
+        )
+        wrdata_artifacts = list(self.wrdata_artifacts) or _deck_wrdata_artifacts(
+            self.table,
+            self.write_markers,
+        )
+        object.__setattr__(
+            self, "wrdata_artifact_count", len(wrdata_artifacts)
+        )
+        object.__setattr__(self, "wrdata_artifacts", wrdata_artifacts)
+        object.__setattr__(
+            self,
+            "wrdata_artifact_table",
+            self.wrdata_artifact_table
+            or format_deck_wrdata_artifact_table(wrdata_artifacts),
+        )
+        object.__setattr__(
+            self,
+            "wrdata_artifact_csv",
+            self.wrdata_artifact_csv
+            or format_deck_wrdata_artifact_csv(wrdata_artifacts),
+        )
+        object.__setattr__(
+            self,
+            "wrdata_artifact_json",
+            self.wrdata_artifact_json
+            or format_deck_wrdata_artifact_json(wrdata_artifacts),
+        )
+        object.__setattr__(
+            self,
+            "wrdata_artifact_records",
+            self.wrdata_artifact_records
+            or deck_wrdata_artifact_records(wrdata_artifacts),
         )
 
 
@@ -2949,6 +3002,127 @@ def format_deck_rawfile_artifact_json(
 
     return json.dumps(
         deck_rawfile_artifact_records(artifacts),
+        separators=(",", ":"),
+    ) + "\n"
+
+
+def format_deck_wrdata_ascii(
+    table: str,
+    probes: Iterable[str] = (),
+) -> str:
+    """Format a selected deck table as deterministic in-memory WRDATA text."""
+
+    rows = table.splitlines()
+    if not rows:
+        return ""
+    return "\n".join(
+        [
+            "# SPICE deck wrdata artifact",
+            "Probes: " + ";".join(probes),
+            *rows,
+        ]
+    ) + "\n"
+
+
+def _deck_wrdata_marker_parts(marker: str) -> tuple[str, list[str]] | None:
+    parts = marker.split()
+    if len(parts) < 2 or parts[0] != "wrdata":
+        return None
+    return parts[1], parts[2:]
+
+
+def _deck_wrdata_artifacts(
+    table: str,
+    write_markers: Iterable[str],
+) -> list[DeckWrdataArtifact]:
+    artifacts: list[DeckWrdataArtifact] = []
+    for marker in write_markers:
+        parts = _deck_wrdata_marker_parts(marker)
+        if parts is None:
+            continue
+        target, probes = parts
+        artifacts.append(
+            DeckWrdataArtifact(
+                target=target,
+                marker=marker,
+                probe_count=len(probes),
+                probes=probes,
+                datafile=format_deck_wrdata_ascii(table, probes),
+            )
+        )
+    return artifacts
+
+
+_DECK_WRDATA_ARTIFACT_COLUMNS = [
+    "Target",
+    "Marker",
+    "Probes",
+    "ProbeList",
+    "Bytes",
+]
+
+
+def _deck_wrdata_artifact_cells(artifact: DeckWrdataArtifact) -> list[str]:
+    return [
+        artifact.target,
+        artifact.marker,
+        str(artifact.probe_count),
+        ";".join(artifact.probes),
+        str(len(artifact.datafile.encode())),
+    ]
+
+
+def deck_wrdata_artifact_records(
+    artifacts: Iterable[DeckWrdataArtifact],
+) -> list[dict[str, str]]:
+    """Format selected WRDATA artifacts as header-keyed summary records."""
+
+    return [
+        dict(
+            zip(
+                _DECK_WRDATA_ARTIFACT_COLUMNS,
+                _deck_wrdata_artifact_cells(artifact),
+                strict=True,
+            )
+        )
+        for artifact in artifacts
+    ]
+
+
+def format_deck_wrdata_artifact_table(
+    artifacts: Iterable[DeckWrdataArtifact],
+) -> str:
+    """Format selected WRDATA artifacts as a stable summary table."""
+
+    rows = ["\t".join(_DECK_WRDATA_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append("\t".join(_deck_wrdata_artifact_cells(artifact)))
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_wrdata_artifact_csv(
+    artifacts: Iterable[DeckWrdataArtifact],
+) -> str:
+    """Format selected WRDATA artifacts as stable RFC 4180-style CSV."""
+
+    rows = [",".join(_DECK_WRDATA_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append(
+            ",".join(
+                _format_csv_cell(cell)
+                for cell in _deck_wrdata_artifact_cells(artifact)
+            )
+        )
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_wrdata_artifact_json(
+    artifacts: Iterable[DeckWrdataArtifact],
+) -> str:
+    """Format selected WRDATA artifacts as stable compact JSON records."""
+
+    return json.dumps(
+        deck_wrdata_artifact_records(artifacts),
         separators=(",", ":"),
     ) + "\n"
 
