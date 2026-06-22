@@ -30,7 +30,9 @@
 //! | `REM …`        | no-op |
 //! | `GOSUB` / `RETURN` | **deferred** — V1 returns `UnsupportedStatement` |
 //! | `READ` / `DATA` / `RESTORE` | **deferred** — needs data pool |
-//! | `DIM` / arrays | **deferred** — needs LANG76 byte memory ops |
+//! | `DIM A(n)`     | `alloc_array A = <n+1>` (0-based, inclusive) — BA3 / E5 |
+//! | `LET A(i)=e`   | `<eval i → x>; <eval e → v>; array_set A, x, v` (BA3) |
+//! | `A(i)` (rvalue) | `<eval i → x>; array_get A, x -> t` (BA3) |
 //! | `STOP`         | same as `END` for V1 |
 //! | `DEF FNx(P)=e` | sibling `IIRFunction` + `call` (BA5); `FNx(arg)` → `call` |
 //!
@@ -42,8 +44,9 @@
 //! ## Variables
 //!
 //! BASIC's `A..Z` and `A0..Z9` variable names map 1:1 to IIR slot
-//! names — the IIR compiler emits them directly.  Array references
-//! (`A(I)`) are deferred to V2.
+//! names — the IIR compiler emits them directly.  An array `A` (declared
+//! with `DIM A(n)`) uses the same-named register to hold its *handle*; a
+//! scalar `A` and an array `A` are distinct variables in Dartmouth BASIC.
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
@@ -212,6 +215,14 @@ struct Compiler {
     /// reference is a clean `Unsupported` error rather than an
     /// undefined-register miscompile.  `None` while lowering `main`.
     current_fn_param: Option<String>,
+    /// Names declared as arrays via `DIM` (BA3 / enabler **E5**).  Each
+    /// name maps to the IIR register holding the array *handle* — we use
+    /// the BASIC variable name itself as that register (an array `A` and a
+    /// scalar `A` are different variables in Dartmouth BASIC, and tiny
+    /// programs never collide them).  Membership also tells the `LET` and
+    /// expression paths whether a subscripted `A(I)` is a real array
+    /// access (→ `array_set`/`array_get`) or an undeclared use (an error).
+    arrays: std::collections::HashSet<String>,
 }
 
 impl Default for Compiler {
@@ -226,6 +237,7 @@ impl Default for Compiler {
             functions: Vec::new(),
             defined_fns: std::collections::HashSet::new(),
             current_fn_param: None,
+            arrays: std::collections::HashSet::new(),
         }
     }
 }
@@ -374,7 +386,7 @@ impl Compiler {
             "read_stmt"    => Err(CompileError::UnsupportedStatement("READ".into())),
             "data_stmt"    => Err(CompileError::UnsupportedStatement("DATA".into())),
             "restore_stmt" => Err(CompileError::UnsupportedStatement("RESTORE".into())),
-            "dim_stmt"     => Err(CompileError::UnsupportedStatement("DIM".into())),
+            "dim_stmt"     => self.emit_dim(stmt),
             "def_stmt"     => self.emit_def(stmt),
             other => Err(CompileError::Malformed(
                 format!("unknown statement `{other}`"))),
@@ -385,14 +397,76 @@ impl Compiler {
 
     fn emit_let(&mut self, stmt: &GrammarASTNode) -> Result<(), CompileError> {
         // `LET` KEYWORD, `variable` node, `EQ` token, `expr` node.
-        let var_name = extract_let_variable_name(stmt)?;
+        let var_node = child_nodes(stmt).into_iter()
+            .find(|n| n.rule_name == "variable")
+            .ok_or_else(|| CompileError::Malformed("LET missing variable".into()))?;
         let expr_node = child_nodes(stmt).into_iter()
             .find(|n| n.rule_name == "expr")
             .ok_or_else(|| CompileError::Malformed("LET missing expr".into()))?;
+
+        // `LET A(I) = e` stores into an array element (BA3 / E5); `LET x = e`
+        // is a plain register move.  We compute the right-hand side *first* in
+        // both cases so the index expression's temporaries don't interleave
+        // with it confusingly — the order is irrelevant to correctness (no
+        // shared state) but keeps the emitted IR readable.
+        if let Some(index_expr) = array_subscript_index(var_node) {
+            let name = array_target_name(var_node)?;
+            if !self.arrays.contains(&name) {
+                return Err(CompileError::Unsupported(format!(
+                    "assignment to `{name}(...)` but `{name}` was never DIMmed \
+                     — declare it with `DIM {name}(n)` first")));
+            }
+            let idx = self.emit_expr(index_expr)?;
+            let val = self.emit_expr(expr_node)?;
+            // `array_set handle, idx, value` — BASIC subscripts are already
+            // 0-based (`DIM A(N)` gives `A(0)..A(N)`), so the subscript IS the
+            // IIR index; no lower-bound subtraction (unlike ALGOL's `[lo:hi]`).
+            self.emit("array_set", None,
+                vec![Operand::Var(name), Operand::Var(idx), Operand::Var(val)],
+                "i64");
+            return Ok(());
+        }
+
+        let var_name = scalar_variable_name(var_node)?;
         let val = self.emit_expr(expr_node)?;
         // `mov_i64 dest = src` — the backend handles this via `emit_binop`/etc.
         self.emit("mov", Some(&var_name),
                   vec![Operand::Var(val)], "i64");
+        Ok(())
+    }
+
+    /// Lower `DIM A(n) [, B(m) …]` to one `alloc_array` per declared name
+    /// (BA3 / enabler **E5**).
+    ///
+    /// Dartmouth BASIC arrays are **0-based and inclusive**: `DIM A(10)`
+    /// declares the eleven elements `A(0)` through `A(10)`.  So the element
+    /// count `alloc_array` needs is `n + 1`, and a subscript needs no
+    /// adjustment — `A(I)` indexes element `I` directly.  (Contrast ALGOL's
+    /// `array A[lo:hi]`, which carries an arbitrary lower bound and subtracts
+    /// it on every access.)  Each handle lives in the register named after the
+    /// BASIC array, and the name is recorded so `LET`/expression subscripts
+    /// resolve to `array_set`/`array_get`.
+    fn emit_dim(&mut self, stmt: &GrammarASTNode) -> Result<(), CompileError> {
+        for decl in child_nodes(stmt).into_iter()
+            .filter(|n| n.rule_name == "dim_decl")
+        {
+            // `dim_decl = NAME LPAREN NUMBER RPAREN`.
+            let name = first_name_token_value(decl).ok_or_else(|| {
+                CompileError::Malformed("DIM decl missing array name".into())
+            })?;
+            let max_sub = dim_decl_bound(decl)?;
+            if max_sub < 0 {
+                return Err(CompileError::Unsupported(format!(
+                    "DIM {name}({max_sub}) — array bound must be non-negative")));
+            }
+            // Element count = max subscript + 1 (inclusive, 0-based).
+            let len = self.fresh_temp();
+            self.emit("const", Some(&len),
+                vec![Operand::Int(max_sub + 1)], "i64");
+            self.emit("alloc_array", Some(&name),
+                vec![Operand::Var(len)], "array<i64>");
+            self.arrays.insert(name);
+        }
         Ok(())
     }
 
@@ -730,6 +804,20 @@ impl Compiler {
                         "built-in function `{}` (needs E3 reals)", t.value)));
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "variable" => {
+                    // `A(I)` reads an array element (BA3 / E5) → `array_get`.
+                    if let Some(index_expr) = array_subscript_index(n) {
+                        let name = array_target_name(n)?;
+                        if !self.arrays.contains(&name) {
+                            return Err(CompileError::Unsupported(format!(
+                                "`{name}(...)` is read but `{name}` was never \
+                                 DIMmed — declare it with `DIM {name}(n)` first")));
+                        }
+                        let idx = self.emit_expr(index_expr)?;
+                        let dest = self.fresh_temp();
+                        self.emit("array_get", Some(&dest),
+                            vec![Operand::Var(name), Operand::Var(idx)], "i64");
+                        return Ok(dest);
+                    }
                     let name = scalar_variable_name(n)?;
                     // Inside a `DEF` body, only the formal parameter is in
                     // scope.  Referencing any other variable would read an
@@ -883,13 +971,41 @@ fn extract_line_num(line: &GrammarASTNode) -> Option<i64> {
     None
 }
 
-fn extract_let_variable_name(stmt: &GrammarASTNode)
-    -> Result<String, CompileError>
-{
-    let var = child_nodes(stmt).into_iter()
-        .find(|n| n.rule_name == "variable")
-        .ok_or_else(|| CompileError::Malformed("LET missing variable".into()))?;
-    scalar_variable_name(var)
+/// If `var` is a *subscripted* variable `A(I)` (`variable = NAME LPAREN expr
+/// RPAREN`), return its index `expr` node; for the scalar form (`NAME`) return
+/// `None`.  This is the single place that distinguishes an array access from a
+/// plain variable — both the `LET` write path and the expression read path use
+/// it (BA3 / enabler **E5**).
+fn array_subscript_index(var: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    child_nodes(var).into_iter().find(|n| n.rule_name == "expr")
+}
+
+/// The array name of a subscripted `variable` node `A(I)` — the leading NAME
+/// token.  (`scalar_variable_name` deliberately rejects the subscripted form,
+/// so the array paths use this instead.)
+fn array_target_name(var: &GrammarASTNode) -> Result<String, CompileError> {
+    first_name_token_value(var).ok_or_else(|| {
+        CompileError::Malformed("subscripted variable missing NAME token".into())
+    })
+}
+
+/// The integer bound `n` in a `dim_decl = NAME LPAREN NUMBER RPAREN`.  The
+/// grammar pins the bound to a `NUMBER` literal (not an arbitrary expression),
+/// so we read it straight from the token rather than emitting code to compute
+/// it.  Truncates a float spelling to `i64` for consistency with how the rest
+/// of this integer-only V1 treats `NUMBER`.
+fn dim_decl_bound(decl: &GrammarASTNode) -> Result<i64, CompileError> {
+    for c in &decl.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.effective_type_name() == "NUMBER" {
+                return Ok(t.value.trim().parse::<f64>()
+                    .map(|f| f as i64)
+                    .map_err(|_| CompileError::Malformed(format!(
+                        "DIM bound `{}` is not a number", t.value)))?);
+            }
+        }
+    }
+    Err(CompileError::Malformed("DIM decl missing NUMBER bound".into()))
 }
 
 fn scalar_variable_name(var: &GrammarASTNode)
@@ -1301,5 +1417,120 @@ mod tests {
             i.op == "call_builtin" && i.srcs.first().and_then(|s| match s {
                 Operand::Var(n) => Some(n.as_str()), _ => None,
             }) == Some("print_i64")));
+    }
+
+    // -----------------------------------------------------------------------
+    // BA3 — DIM arrays (enabler E5)
+    // -----------------------------------------------------------------------
+
+    fn var_name(op: Option<&Operand>) -> Option<&str> {
+        match op {
+            Some(Operand::Var(n)) => Some(n.as_str()),
+            _ => None,
+        }
+    }
+
+    /// `DIM A(5)` lowers to `alloc_array A = <len>` where the length is the
+    /// **inclusive** element count `5 + 1 = 6` (BASIC arrays are 0-based:
+    /// `A(0)..A(5)`).
+    #[test]
+    fn compiles_dim_to_alloc_array() {
+        let m = compile("10 DIM A(5)\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let alloc = body.iter().find(|i| i.op == "alloc_array")
+            .expect("DIM produces an alloc_array");
+        assert_eq!(alloc.dest.as_deref(), Some("A"));
+        assert_eq!(alloc.type_hint, "array<i64>");
+        // Its length operand is a register that was `const 6`.
+        let len_reg = var_name(alloc.srcs.first()).expect("alloc_array len reg");
+        assert!(body.iter().any(|i|
+            i.op == "const" && i.dest.as_deref() == Some(len_reg)
+                && matches!(i.srcs.first(), Some(Operand::Int(6)))),
+            "expected `const 6` feeding the alloc_array length");
+    }
+
+    /// `DIM A(3), B(2)` declares two arrays in one statement → two
+    /// `alloc_array`s with lengths 4 and 3.
+    #[test]
+    fn compiles_multi_dim_to_two_alloc_arrays() {
+        let m = compile("10 DIM A(3), B(2)\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let allocs: Vec<_> = body.iter().filter(|i| i.op == "alloc_array").collect();
+        assert_eq!(allocs.len(), 2);
+        assert_eq!(allocs[0].dest.as_deref(), Some("A"));
+        assert_eq!(allocs[1].dest.as_deref(), Some("B"));
+    }
+
+    /// `LET A(2) = 7` lowers to `array_set A, idx, val` with the subscript
+    /// used **directly** as the 0-based index (no lower-bound subtraction).
+    #[test]
+    fn compiles_array_assignment_to_array_set() {
+        let m = compile("10 DIM A(5)\n20 LET A(2) = 7\n30 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let set = body.iter().find(|i| i.op == "array_set")
+            .expect("LET A(i)=e produces an array_set");
+        assert_eq!(set.type_hint, "i64");
+        assert_eq!(var_name(set.srcs.first()), Some("A"));
+        assert_eq!(set.srcs.len(), 3, "array_set takes handle, index, value");
+        // The index register was `const 2`, used as-is (BASIC is 0-based).
+        let idx_reg = var_name(set.srcs.get(1)).expect("index reg");
+        assert!(body.iter().any(|i|
+            i.op == "const" && i.dest.as_deref() == Some(idx_reg)
+                && matches!(i.srcs.first(), Some(Operand::Int(2)))));
+    }
+
+    /// `LET X = A(2)` reads an element → `array_get A, idx → dest`.
+    #[test]
+    fn compiles_array_read_to_array_get() {
+        let m = compile("10 DIM A(5)\n20 LET X = A(2)\n30 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let get = body.iter().find(|i| i.op == "array_get")
+            .expect("reading A(i) produces an array_get");
+        assert_eq!(get.type_hint, "i64");
+        assert_eq!(var_name(get.srcs.first()), Some("A"));
+        assert!(get.dest.is_some(), "array_get writes a destination register");
+    }
+
+    /// Storing into an array that was never `DIM`med is a clean error, not a
+    /// miscompile against an undefined handle register.
+    #[test]
+    fn undeclared_array_write_is_unsupported() {
+        let err = compile("10 LET A(2) = 7\n20 END\n").unwrap_err();
+        match err {
+            CompileError::Unsupported(msg) => assert!(msg.contains("DIM")),
+            other => panic!("expected Unsupported(DIM…), got {other:?}"),
+        }
+    }
+
+    /// Reading an array that was never `DIM`med is likewise an error.
+    #[test]
+    fn undeclared_array_read_is_unsupported() {
+        let err = compile("10 LET X = A(2)\n20 END\n").unwrap_err();
+        match err {
+            CompileError::Unsupported(msg) => assert!(msg.contains("DIM")),
+            other => panic!("expected Unsupported(DIM…), got {other:?}"),
+        }
+    }
+
+    /// End-to-end shape: fill an array in a loop and sum it back — the canonical
+    /// E5 program.  Confirms the alloc/set/get ops all appear and the subscript
+    /// expression (a variable `I`) flows through as the index.
+    #[test]
+    fn compiles_array_fill_and_sum_program() {
+        let src = "10 DIM A(3)\n\
+                   20 FOR I = 0 TO 3\n\
+                   30 LET A(I) = I\n\
+                   40 NEXT I\n\
+                   50 LET S = 0\n\
+                   60 FOR I = 0 TO 3\n\
+                   70 LET S = S + A(I)\n\
+                   80 NEXT I\n\
+                   90 PRINT S\n\
+                   99 END\n";
+        let m = compile(src).expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "alloc_array"));
+        assert!(body.iter().any(|i| i.op == "array_set" && var_name(i.srcs.first()) == Some("A")));
+        assert!(body.iter().any(|i| i.op == "array_get" && var_name(i.srcs.first()) == Some("A")));
     }
 }
