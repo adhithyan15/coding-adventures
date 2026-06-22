@@ -274,5 +274,37 @@ void main() {
       expect(m.redoEdit(), isTrue);
       expect(m.rowCells(1)[7], '16');
     });
+
+    // Range sort (the ▲/▼ Sort buttons drive the model's sortBlock →
+    // session.sortRange): reorder the budget block A1:E4 by a key column. Each
+    // row moves as a record — the E-column SUM formulas travel with their row
+    // (the engine shifts the refs), so every total stays correct.
+    test('sortRange reorders the budget rows by a key column', () {
+      final s = SpreadsheetSession();
+      addTearDown(s.dispose);
+      // Budget block A1:E4: column A = 15,8,12,4; each E cell totals its row.
+      const cells = {
+        'A1': '15', 'B1': '3', 'C1': '12', 'D1': '8', 'E1': '=SUM(A1:D1)',
+        'A2': '8', 'B2': '14', 'C2': '7', 'D2': '22', 'E2': '=SUM(A2:D2)',
+        'A3': '12', 'B3': '9', 'C3': '18', 'D3': '6', 'E3': '=SUM(A3:D3)',
+        'A4': '4', 'B4': '11', 'C4': '3', 'D4': '17', 'E4': '=SUM(A4:D4)',
+      };
+      cells.forEach(s.setCell);
+      // Pre-sort: column A rows 1..4 = 15,8,12,4.
+      expect(s.window(1, 1, 4, 1).map((r) => r[0]).toList(), ['15', '8', '12', '4']);
+      // Sort A1:E4 by column A ascending → 4,8,12,15.
+      expect(s.sortRange('A1', 'E4', 1, true), isTrue);
+      expect(s.window(1, 1, 4, 1).map((r) => r[0]).toList(), ['4', '8', '12', '15']);
+      // Each row's E total tracked its row (E = SUM of that row's A..D).
+      expect(s.window(1, 5, 1, 5)[0][0], '35'); // 4+11+3+17
+      expect(s.window(4, 5, 4, 5)[0][0], '38'); // 15+3+12+8
+      // Descending reverses the key order.
+      expect(s.sortRange('A1', 'E4', 1, false), isTrue);
+      expect(s.window(1, 1, 1, 1)[0][0], '15');
+      expect(s.window(4, 1, 4, 1)[0][0], '4');
+      // Bad args are a no-op returning false (no crash).
+      expect(s.sortRange('A1', 'A1', 1, true), isFalse); // single-row range
+      expect(s.sortRange('A1', 'E4', 9, true), isFalse); // key column outside range
+    });
   });
 }
