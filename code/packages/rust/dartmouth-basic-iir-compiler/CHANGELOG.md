@@ -30,6 +30,12 @@ and two `array_get`s feeding the `add`, printing `42`.
 - **Undeclared use is a clean error**: subscripting a name that was never
   `DIM`med returns `Unsupported` rather than miscompiling against an undefined
   handle register.
+- **Bounded + panic-free**: a `DIM` bound is validated against `MAX_DIM_BOUND`
+  (2^24) *before* the `f64`→`i64` cast, so an oversized or non-finite literal
+  (e.g. `DIM A(1E30)`, which a bare `as i64` cast would saturate to `i64::MAX`
+  and then overflow on the `+ 1` element count) is a clean `Unsupported` error,
+  never a debug-build panic or a release-build wrapped/garbage length. The
+  element-count `+ 1` also uses `checked_add` as a second guard.
 - **Verified by RUNNING** the straight-line array program across the matrix
   (`lang-aot` `tests/lang_matrix.rs`): the managed runtimes bounds-check natively
   (JVM `int[]`/`iastore`/`iaload`, CLR `int32[]`/`stelem`/`ldelem`), the static

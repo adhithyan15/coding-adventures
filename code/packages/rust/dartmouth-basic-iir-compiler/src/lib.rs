@@ -460,9 +460,16 @@ impl Compiler {
                     "DIM {name}({max_sub}) — array bound must be non-negative")));
             }
             // Element count = max subscript + 1 (inclusive, 0-based).
+            // `dim_decl_bound` already rejects bounds above `MAX_DIM_BOUND`, so
+            // this `+ 1` cannot overflow; the `checked_add` is a belt-and-braces
+            // guard that keeps the compile path panic-free regardless.
+            let count = max_sub.checked_add(1).ok_or_else(|| {
+                CompileError::Unsupported(format!(
+                    "DIM {name}({max_sub}) — array bound too large"))
+            })?;
             let len = self.fresh_temp();
             self.emit("const", Some(&len),
-                vec![Operand::Int(max_sub + 1)], "i64");
+                vec![Operand::Int(count)], "i64");
             self.emit("alloc_array", Some(&name),
                 vec![Operand::Var(len)], "array<i64>");
             self.arrays.insert(name);
@@ -989,19 +996,41 @@ fn array_target_name(var: &GrammarASTNode) -> Result<String, CompileError> {
     })
 }
 
+/// The largest array subscript `DIM` will accept.  BASIC arrays are tiny in
+/// practice; this cap keeps the bound (a) exactly representable in `f64` (well
+/// under 2^53, so the parse→cast round-trip is lossless) and (b) far from
+/// `i64::MAX`, so the `+ 1` element-count computation can never overflow.  A
+/// bound above this is a clean `Unsupported` error, never a panic.
+const MAX_DIM_BOUND: i64 = 16_777_216; // 2^24 elements — generous for BASIC
+
 /// The integer bound `n` in a `dim_decl = NAME LPAREN NUMBER RPAREN`.  The
 /// grammar pins the bound to a `NUMBER` literal (not an arbitrary expression),
 /// so we read it straight from the token rather than emitting code to compute
-/// it.  Truncates a float spelling to `i64` for consistency with how the rest
-/// of this integer-only V1 treats `NUMBER`.
+/// it.
+///
+/// A `NUMBER` token can spell an arbitrarily large or fractional value, so we
+/// validate the parsed `f64` *before* casting: the bare `as i64` cast saturates
+/// (e.g. `1e30 as i64` → `i64::MAX`), which would otherwise sail past a naive
+/// range check and overflow the later `+ 1`.  We therefore reject non-finite,
+/// negative, and out-of-`MAX_DIM_BOUND`-range values up front; only an in-range
+/// value reaches the (now lossless) `as i64` cast.  A fractional spelling is
+/// truncated toward zero, consistent with how this integer-only V1 treats every
+/// other `NUMBER`.
 fn dim_decl_bound(decl: &GrammarASTNode) -> Result<i64, CompileError> {
     for c in &decl.children {
         if let ASTNodeOrToken::Token(t) = c {
             if t.effective_type_name() == "NUMBER" {
-                return Ok(t.value.trim().parse::<f64>()
-                    .map(|f| f as i64)
-                    .map_err(|_| CompileError::Malformed(format!(
-                        "DIM bound `{}` is not a number", t.value)))?);
+                let raw = t.value.trim();
+                let f = raw.parse::<f64>().map_err(|_| CompileError::Malformed(
+                    format!("DIM bound `{raw}` is not a number")))?;
+                if !f.is_finite() || f < 0.0 || f > MAX_DIM_BOUND as f64 {
+                    return Err(CompileError::Unsupported(format!(
+                        "DIM bound `{raw}` is out of the supported range \
+                         0..={MAX_DIM_BOUND}")));
+                }
+                // In range and non-negative ⇒ this `as i64` truncates the
+                // fractional part without saturation or overflow.
+                return Ok(f as i64);
             }
         }
     }
@@ -1499,6 +1528,19 @@ mod tests {
         match err {
             CompileError::Unsupported(msg) => assert!(msg.contains("DIM")),
             other => panic!("expected Unsupported(DIM…), got {other:?}"),
+        }
+    }
+
+    /// A `DIM` bound far larger than `MAX_DIM_BOUND` (here spelled in
+    /// scientific notation, which the bare `as i64` cast would *saturate* to
+    /// `i64::MAX` and then overflow on the `+ 1`) must be a clean `Unsupported`
+    /// error — never a panic or a wrapped/garbage length.
+    #[test]
+    fn oversized_dim_bound_is_unsupported_not_a_panic() {
+        let err = compile("10 DIM A(1E30)\n20 END\n").unwrap_err();
+        match err {
+            CompileError::Unsupported(msg) => assert!(msg.contains("range")),
+            other => panic!("expected Unsupported(range…), got {other:?}"),
         }
     }
 
