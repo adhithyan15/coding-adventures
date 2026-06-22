@@ -2,6 +2,45 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.0] - 2026-06-22
+
+### Added — ASI Phase 3: restricted productions (Rule 3)
+
+A new proactive pre-pass, `force_restricted_semicolons`, run *before* the
+retry-on-error loop in `parse_with_asi`. It forces an automatic semicolon
+immediately after a restricted keyword (`return`/`throw`/`break`/`continue`/
+`yield`) whose argument is pushed onto the next line — the ECMAScript §12.10.1
+"no LineTerminator here" rule.
+
+This is the first ASI rule that must change a parse the grammar *already
+accepts*: because the grammar is newline-blind, `return ⏎ a + b` would otherwise
+parse as `return a + b` and closurec would re-emit that — a silent **miscompile**
+(JS semantics are `return; a + b`). The retry-on-error harness (Rules 1/2) can
+never see this, since the bad parse *succeeds*, so Rule 3 needs its own
+forward-scanning pass.
+
+Safety is preserved by the same lever as Rules 1/2: an insertion is made **only
+when a line terminator actually follows the keyword** (`TOKEN_PRECEDED_BY_NEWLINE`
+on the next token), so every valid single-line `return x;` is byte-identical.
+Context guards keep a `return` that is really a *property name* from being
+mis-split:
+
+- **member access** — a `.`/`?.` before the keyword (`a.return`, `a?.return`)
+  demotes it to a property; declined.
+- **property key / label** — a `:` after the keyword (`{return: 1}`) marks it as
+  an object key; declined.
+- **already terminated** — a `;`/`}` after the keyword needs no extra `;`
+  (Rule 2 covers the `}`); declined.
+
+The pre-pass is idempotent and allocation-free on any stream containing no
+restricted keyword. `yield` only triggers where the lexer classifies it as a
+genuine keyword (inside a generator); as an ordinary identifier it is left to
+Rule 1, which already splits it correctly. Postfix `++`/`--` restricted
+productions remain a documented follow-up.
+
+8 new unit tests cover each keyword, the same-line no-op, every guard, the
+double-insert guard at `}`, idempotence, and the allocation-free fast path.
+
 ## [0.18.0] - 2026-06-21
 
 ### Changed — ASI Rule 1 reads the lexer's newline flag (limitation removed)
