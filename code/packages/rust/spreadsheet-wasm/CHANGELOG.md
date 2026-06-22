@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.10.0
+
+**Range sort — `sort_range` export.** New linear-memory export
+`sort_range(start_ptr, start_len, end_ptr, end_len, key_col, ascending) -> i32` over
+the facade's `sort_range`: reorder the rows of the rectangle by the computed values in
+`key_col`; `ascending` is a flag (0 = descending). Returns 1 when applied (or already
+sorted), 0 for a malformed address / out-of-range `key_col` / empty-single-row /
+oversized range. The committed `pkg/spreadsheet_engine.wasm` is rebuilt to carry the
+new export; the JS host re-reads via `get_window` afterwards.
+
 ## 0.9.0
 
 **Undo / redo (session history).** New zero-arg linear-memory exports `undo()`, `redo()`, `can_undo()`, `can_redo()` — each returns `i32` (1/0), no string marshalling. JS loader gains `undo()` / `redo()` / `canUndo()` / `canRedo()` (each → `boolean`). Rebuilt `pkg/spreadsheet_engine.wasm`. `js/smoke.mjs` extended: make two edits, undo both (B1 then A1 gone), redo both (the formula recomputes live → 10), and confirm `canUndo`/`canRedo` gate correctly and a redo at the top is a no-op. Delegates to spreadsheet-core-wasm 0.9.0's snapshot-based history.

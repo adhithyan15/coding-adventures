@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.10.0
+
+**Range sort — `sc_sort_range`.** New C ABI entry point
+`int sc_sort_range(ScSession *s, const char *start, const char *end, uint32_t key_col,
+int ascending)` over the facade's `sort_range`: reorder the rows of the rectangle
+`start`..`end` by the computed values in `key_col` (1-based, inside the rectangle);
+`ascending` is a flag (0 = descending). Returns 1 when applied (or already sorted), 0
+for a malformed address / out-of-range `key_col` / empty-single-row / oversized range.
+No char* results — the host re-reads via `sc_get_window` afterwards. Declared in
+`include/spreadsheet.h`. Same string-marshalling path as `sc_fill`/`sc_paste`.
+
 ## 0.9.0
 
 **Undo / redo (session history).** New C ABI exports `sc_undo(s)`, `sc_redo(s)`, `sc_can_undo(s)`, `sc_can_redo(s)` — each returns `int` (1/0). `sc_undo`/`sc_redo` return 1 when they changed the document, 0 when there was nothing to do; `sc_can_undo`/`sc_can_redo` report whether the corresponding control should be enabled. Declared in `include/spreadsheet.h`. Null session is safe (every call returns 0). Delegates to spreadsheet-core-wasm 0.9.0's snapshot-based history. 1 round-trip test (edit → undo×2 → redo×2 with a live-recompute check, plus null-safety).
