@@ -4587,16 +4587,24 @@ fn format_break(b: f64, dig_lab: usize) -> String {
 }
 
 /// Round `x` to `sig` significant digits and render it without an exponent,
-/// trimming trailing zeros. `sig` is bounded (`1..=22`) by the caller, so the
-/// formatting width here is bounded too (no caller-driven huge allocation).
+/// trimming trailing zeros. `sig` is bounded (`1..=22`) by the caller.
+///
+/// **Bound on the format width (security).** The number of decimal places needed
+/// for `sig` significant figures is `sig - 1 - floor(log10|x|)`. For a *tiny* break
+/// (e.g. `1e-300`) `floor(log10|x|)` is very negative, so the naive count would be
+/// several hundred — a 340-character fixed-precision string per break. The clamp to
+/// `0..=22` below caps that: we never emit more than 22 fractional digits, so a
+/// caller-controlled (subnormal) break can neither force a huge allocation nor a
+/// long label. `sig <= 22` keeps the *high* end small too. (R itself switches to
+/// scientific notation for such values; capping the digit count tracks that.)
 fn format_sig(x: f64, sig: usize) -> String {
     if x == 0.0 {
         return "0".to_string();
     }
-    // Decimal places needed for `sig` significant figures = sig - 1 - floor(log10|x|).
     let exp = x.abs().log10().floor() as i32;
-    let decimals = (sig as i32 - 1 - exp).max(0) as usize;
-    // `decimals` is bounded: `sig <= 22`, so the fixed-precision width stays small.
+    // Clamp the decimal count to `0..=22`: `.max(0)` alone is NOT enough, because a
+    // tiny `x` makes `exp` very negative and blows the count up — `clamp` bounds it.
+    let decimals = (sig as i32 - 1 - exp).clamp(0, 22) as usize;
     let s = format!("{x:.decimals$}");
     if s.contains('.') {
         s.trim_end_matches('0').trim_end_matches('.').to_string()

@@ -2653,6 +2653,23 @@ mod r33_cut_options {
     }
 
     #[test]
+    fn cut_tiny_break_label_is_length_bounded() {
+        // Security regression: a subnormal/tiny break (1e-300) must not produce a
+        // ~340-char fixed-precision label. format_sig clamps the decimal count to
+        // 22, so each break number stays short regardless of how tiny it is.
+        let levels = strs("levels(cut(c(2e-300, 5e-300), breaks = c(0, 1e-300, 1e-299)))\n");
+        // Two interval labels, each bounded in length (no runaway allocation).
+        assert_eq!(levels.len(), 2);
+        for lab in &levels {
+            assert!(
+                lab.len() < 40,
+                "interval label unexpectedly long ({} chars): {lab}",
+                lab.len()
+            );
+        }
+    }
+
+    #[test]
     fn cut_dig_lab_extreme_value_does_not_panic_or_overallocate() {
         // A huge dig.lab is clamped (1..=22) — no panic, no giant allocation.
         assert!(eval_s(
