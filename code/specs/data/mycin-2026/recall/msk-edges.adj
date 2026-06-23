@@ -1,0 +1,92 @@
+% ============================================================================
+% msk-edges — the musculoskeletal special-test knowledge-graph (MYCIN-2026 MSK).
+% ============================================================================
+% A high-yield orthopedics/sports-medicine board domain: the physical-examination
+% special test (a named provocative maneuver) and the diagnosis it points to. "The
+% Lachman test is positive — what injury?" becomes the binding query
+%     ? special_test_indicates(lachman_test, $Diagnosis).
+%
+% Direction note: the relation is test -> diagnosis (`special_test_indicates`), the
+% board direction — a named maneuver is positive and you must name the lesion. The
+% cited spans read either way ("The Lachman test ... assess[es] the integrity of the
+% anterior cruciate ligament"; "A positive Trendelenburg sign usually indicates
+% weakness in the hip abductor muscles") — what matters for grounding is that one
+% self-contained span names BOTH the test AND the diagnosis. Each test here maps to
+% one canonical diagnosis, so a query binds a single answer (two distinct tests may
+% point to the same diagnosis — e.g. Phalen and Tinel both -> carpal tunnel).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (a pure ADJ-only recall domain, like OPHTHO/ECG/URINE/RESP).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see msk-recall.query.adj. Nothing here is
+% asserted "from memory": every edge is defended by a span a reader can re-fetch and
+% check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only tests whose page states the association in a clean self-
+% contained span (both test AND diagnosis named) are included. Deferred (re-checked,
+% the test and the lesion appear only in separate adjacent sentences):
+%   Thompson test -> Achilles tendon rupture (NBK430844 says "suspected rupture",
+%     never "Achilles tendon rupture" alongside "Thompson") — reused as the off-
+%     vocabulary abstention control;
+%   drop arm test -> rotator cuff tear (NBK547664/NBK531506/NBK441844/NBK532270 all
+%     split the maneuver from the tear).
+% ============================================================================
+
+dictionary msk_vocab {
+    define test      : entity   surface "special test", "provocative maneuver"
+    define diagnosis : entity   surface "musculoskeletal diagnosis", "injury or lesion"
+
+    define special_test_indicates : relation from test to diagnosis  % the lesion a positive test points to
+}
+
+rulebook msk_facts {
+    use msk_vocab
+
+    % --- McMurray test -> meniscal tear ----------------------------------------
+    relate special_test_indicates(mcmurray_test, meniscal_tear)
+        source "Regarding lateral meniscus tears, the McMurray test was the most sensitive (56.2%), while all other tests were equally specific."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470549/"
+        trust authoritative
+
+    % --- Lachman test -> anterior cruciate ligament (ACL) tear -----------------
+    relate special_test_indicates(lachman_test, acl_tear)
+        source "The Lachman test is a physical examination maneuver used to assess the integrity of the anterior cruciate ligament in a suspected anterior cruciate ligament (ACL) injury."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554415/"
+        trust authoritative
+
+    % --- Finkelstein test -> De Quervain tenosynovitis -------------------------
+    relate special_test_indicates(finkelstein_test, de_quervain_tenosynovitis)
+        source "Finkelstein's test is more reliable in diagnosing De Quervain tenosynovitis than the Eichhoff's test, but studies that have tested the reliability of the Finkelstein's test are currently very limited."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539768/"
+        trust authoritative
+
+    % --- Phalen test -> carpal tunnel syndrome ---------------------------------
+    relate special_test_indicates(phalen_test, carpal_tunnel_syndrome)
+        source "Studies have also shown that Tinel's Sign is less useful in evaluating carpal tunnel syndrome compared to other provocative tests, such as Phalen's or Durkan's tests, which have a greater sensitivity and specificity."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555934/"
+        trust authoritative
+
+    % --- Tinel sign -> carpal tunnel syndrome (distinct test, same diagnosis) ---
+    relate special_test_indicates(tinel_sign, carpal_tunnel_syndrome)
+        source "Although it is most associated with carpal tunnel syndrome, the Hoffman-Tinel sign is generalized, and an examiner can also elicit it in other known neuropathies such as tarsal tunnel syndrome, cubital tunnel syndrome, or Guyon canal syndrome."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555934/"
+        trust authoritative
+
+    % --- Spurling test -> cervical radiculopathy -------------------------------
+    relate special_test_indicates(spurling_test, cervical_radiculopathy)
+        source "The Spurling test is a well-recognized provocative test that is routinely used in the evaluation of neck pain and cervical radiculopathy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493152/"
+        trust authoritative
+
+    % --- Trendelenburg sign -> hip abductor (gluteus medius) weakness ----------
+    relate special_test_indicates(trendelenburg_sign, hip_abductor_weakness)
+        source "A positive Trendelenburg sign usually indicates weakness in the hip abductor muscles, which consists of the gluteus medius and gluteus minimus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555987/"
+        trust authoritative
+}
