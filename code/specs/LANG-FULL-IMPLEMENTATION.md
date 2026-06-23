@@ -254,8 +254,14 @@ multiple languages; close an enabler before the features that depend on it.
     the VM *for free* (the saturating `trunc_sat` would clamp — deliberately not
     used, so no explicit guard needed). RUN-verified on a real wasm runtime
     (`floor(45.0−2.7)`⇒42, trunc/floor sign cases).
-  - ◑ **PR-4 — JVM** (`i2d`/`d2l`/`Math.floor`) — in review (#6596); `d2i`/`d2l`
-    saturate (documented divergence).
+  - ✅ **PR-4 — JVM** (iir-to-jvm-class-file 0.18.0). `int_to_real`→`i2d`/`l2d`
+    (per the source's value model); `real_to_int_trunc`→`d2i`/`d2l` (truncate
+    toward zero); `real_to_int_floor`→`invokestatic Math.floor(D)D` then
+    `d2i`/`d2l`. **Documented trap divergence** (spec §7): `d2i`/`d2l`
+    *saturate* (NaN→0, ±∞→MIN/MAX) where the VM traps — agrees bit-for-bit on
+    every finite, in-range value, so the matrix cells match; a JVM range-check +
+    `athrow` has no reusable precedent in this backend. RUN-verified on real
+    `java` (`floor(int_to_real(45)−2.7)`⇒42).
   - ◑ **PR-5 — CLR** (`conv.r8`/`conv.ovf.i4`/`Math::Floor`) — in review (#6597);
     `conv.ovf` traps, matching the VM.
   - ✅ **PR-6a — native aarch64** (aarch64-encoder 0.5.0 + aarch64-backend 0.13.0).
