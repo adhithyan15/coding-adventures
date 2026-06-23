@@ -1144,6 +1144,70 @@ mod tests {
         assert_eq!(r, Value::Float(-2.5));
     }
 
+    // ---- E8: numeric conversions (integer ↔ real) ----
+
+    /// Run a single unary conversion `op` on a constant operand and return the
+    /// raw `Value` (or the error). `lit` is the input constant, `in_ty`/`ret_ty`
+    /// its IIR types.
+    fn run_convert(
+        op: &str,
+        lit: Operand,
+        in_ty: &str,
+        ret_ty: &str,
+    ) -> Result<Value, crate::errors::VMError> {
+        let fn_ = IIRFunction::new(
+            "main", vec![], ret_ty,
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![lit], in_ty),
+                IIRInstr::new(op, Some("r".into()), vec![Operand::Var("a".into())], ret_ty),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], ret_ty),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).map(|o| o.unwrap())
+    }
+
+    #[test]
+    fn int_to_real_widens_exactly() {
+        assert_eq!(run_convert("int_to_real", Operand::Int(3), "i64", "f64").unwrap(), Value::Float(3.0));
+        assert_eq!(run_convert("int_to_real", Operand::Int(-7), "i64", "f64").unwrap(), Value::Float(-7.0));
+        assert_eq!(run_convert("int_to_real", Operand::Int(0), "i64", "f64").unwrap(), Value::Float(0.0));
+    }
+
+    #[test]
+    fn real_to_int_trunc_rounds_toward_zero() {
+        // Truncation: positive and negative both round toward zero.
+        assert_eq!(run_convert("real_to_int_trunc", Operand::Float(2.7), "f64", "i64").unwrap(), Value::Int(2));
+        assert_eq!(run_convert("real_to_int_trunc", Operand::Float(-2.7), "f64", "i64").unwrap(), Value::Int(-2));
+        assert_eq!(run_convert("real_to_int_trunc", Operand::Float(5.0), "f64", "i64").unwrap(), Value::Int(5));
+    }
+
+    #[test]
+    fn real_to_int_floor_rounds_toward_neg_inf() {
+        // Floor (ALGOL entier): a negative non-integer rounds DOWN, the key
+        // difference from truncation — entier(-2.7) = -3, not -2.
+        assert_eq!(run_convert("real_to_int_floor", Operand::Float(2.7), "f64", "i64").unwrap(), Value::Int(2));
+        assert_eq!(run_convert("real_to_int_floor", Operand::Float(-2.7), "f64", "i64").unwrap(), Value::Int(-3));
+        assert_eq!(run_convert("real_to_int_floor", Operand::Float(-3.0), "f64", "i64").unwrap(), Value::Int(-3));
+    }
+
+    #[test]
+    fn real_to_int_traps_on_nan_and_infinity() {
+        // Fail-closed (like array bounds / divide-by-zero), never a garbage int.
+        assert!(run_convert("real_to_int_trunc", Operand::Float(f64::NAN), "f64", "i64").is_err());
+        assert!(run_convert("real_to_int_floor", Operand::Float(f64::INFINITY), "f64", "i64").is_err());
+        assert!(run_convert("real_to_int_trunc", Operand::Float(f64::NEG_INFINITY), "f64", "i64").is_err());
+    }
+
+    #[test]
+    fn real_to_int_traps_on_out_of_range() {
+        // 2^63 and beyond does not fit i64 — trap rather than saturate/wrap.
+        let two_pow_63 = 9_223_372_036_854_775_808.0_f64; // = 2^63 = -(i64::MIN as f64)
+        assert!(run_convert("real_to_int_trunc", Operand::Float(two_pow_63), "f64", "i64").is_err());
+        assert!(run_convert("real_to_int_floor", Operand::Float(-1e30), "f64", "i64").is_err());
+    }
+
     // ---- E5: bounds-checked arrays ----
 
     /// Helper: build `main` from instrs returning `ret_ty`, run, return result.

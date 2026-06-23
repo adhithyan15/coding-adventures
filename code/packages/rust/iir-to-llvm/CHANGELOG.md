@@ -3,6 +3,30 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.0] — 2026-06-22 — numeric conversions integer↔real (LANG-FULL E8 PR-2)
+
+LLVM lowering for the three E8 conversion opcodes (vm-core 0.9.0 gave the
+reference semantics; spec `lang-full-e8-numeric-conversions.md`).
+
+- **`int_to_real`** → `sitofp i64 … to double` (IEEE-754). The dest slot is
+  already typed `double` by `collect_slot_types` (its `type_hint` is `f64`).
+- **`real_to_int_trunc`** / **`real_to_int_floor`** → round first with
+  `@llvm.trunc.f64` (toward zero) / `@llvm.floor.f64` (toward −∞), then a
+  range-check, then `fptosi double … to i64`. Rounding before `fptosi` mirrors
+  the VM's `real_to_i64_checked(f.trunc()/f.floor())` **exactly**.
+- **Trap matches the VM (no UB).** A bare `fptosi` of an out-of-range/NaN
+  `double` is LLVM poison (UB); instead `emit_real_range_check` traps
+  (`@llvm.trap` + `unreachable`, the same block shape as the E5 array-bounds
+  `emit_bounds_check`) unless the rounded value is in `[-2⁶³, 2⁶³)`. The bounds
+  are the `double` hex literals for ∓2⁶³, and the comparisons are **ordered**
+  (`fcmp oge`/`olt`, `false` for NaN) so NaN/±∞ trap through the same check.
+- Intrinsics (`@llvm.trap`, `@llvm.floor.f64`, `@llvm.trunc.f64`) declared once,
+  gated on `is_conversion`; `@llvm.trap` shared with arrays (declared once when
+  both are present). Added the three ops to `SUPPORTED_OPS`.
+- Verified by RUNNING on **real clang**: `floor(int_to_real(45) − 2.7)` =
+  `floor(42.3)` = 42 ⇒ exit 42 (`conversions_round_trip_runs_on_real_clang`),
+  plus textual-emit assertions for `sitofp`/floor/trunc/range-check/`fptosi`.
+
 ## [0.15.0] — 2026-06-22 — typed module globals (LANG-FULL E6 layer 1)
 
 `global_load` / `global_store` were the last of the `LANG32b`-deferred

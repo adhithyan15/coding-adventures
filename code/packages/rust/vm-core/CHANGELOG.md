@@ -1,5 +1,26 @@
 # Changelog — vm-core
 
+## [0.9.0] — 2026-06-22 (LANG-FULL E8 — numeric conversions, PR-1)
+
+Reference VM semantics for the three `integer`↔`real` conversion opcodes
+(spec `code/specs/lang-full-e8-numeric-conversions.md`). E3 gave the VM f64
+*arithmetic*; these are the convert opcodes that sit next to it — every backend
+has a one-instruction equivalent, and this is the behaviour they must agree
+with.
+
+- **`int_to_real`** — `i64` → `f64` (IEEE-754, exact for |x| < 2⁵³).
+- **`real_to_int_trunc`** — `f64` → `i64` rounding toward **zero** (C / BASIC
+  `INT()`): `2.7 → 2`, `-2.7 → -2`.
+- **`real_to_int_floor`** — `f64` → `i64` rounding toward **−∞** (ALGOL
+  `entier`): `2.7 → 2`, `-2.7 → -3`.
+- Both `real_to_int_*` **trap** (fail-closed, like array-bounds and
+  divide-by-zero) on a NaN/±∞ or out-of-`i64`-range operand — never a silent
+  wrap. The range check is exact (`i64::MAX` is unrepresentable as `f64`, so the
+  bound is `< 2⁶³` via `-(i64::MIN as f64)`).
+- 5 unit tests (each direction + rounding-sign + the NaN/∞ and out-of-range
+  traps); the JIT tier inherits all three via cold-interpret (proved by
+  `jit-core/tests/e8_conversions_jit.rs`, an integer→real→integer round trip).
+
 ## [0.8.0] — 2026-06-22 (LANG-FULL E6 layer 1 — typed module globals)
 
 ### Added

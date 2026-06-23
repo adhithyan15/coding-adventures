@@ -398,6 +398,21 @@ fn algol_abs_runs_on_x86_sim() {
     assert_eq!(run_on_x86_sim(Language::Algol60, src), 42);
 }
 
+/// ALGOL — the **`sign` standard function** (LANG-FULL AL8) on the x86_64
+/// backend.  `sign` lowers to the *nested* conditional `if E > 0 then 1 else
+/// if E < 0 then -1 else 0` — two compares (`cmp_gt`, `cmp_lt`) and three
+/// `i64` constants moved into one slot across three branch arms.  Where the
+/// `algol_abs` cell merges a value out of **two** arms, this runs the **three**-
+/// way merge from real x86_64 machine code.  `43 + sign(0 - 1)` = 43 + (-1) =
+/// 42 ⇒ exit 42 proves the negative arm (-1) and the join produce correct
+/// native code.  Together with `algol_abs_runs_on_x86_sim` this exercises both
+/// AL8 standard functions locally on the x86_64 backend.
+#[test]
+fn algol_sign_runs_on_x86_sim() {
+    let src = "begin integer result; result := 43 + sign(0 - 1) end";
+    assert_eq!(run_on_x86_sim(Language::Algol60, src), 42);
+}
+
 /// Brainfuck — build 65 on the tape and `putchar` it (`++++++++[>++++++++<-]>+.`
 /// ⇒ stdout `A`).  Exercises the **byte-tape** opcode surface the arithmetic
 /// programs never touch: `__twig_alloc_bytes` for the tape, 8-bit load/store

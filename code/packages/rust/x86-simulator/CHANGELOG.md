@@ -1,5 +1,16 @@
 # Changelog — x86-simulator
 
+## 0.7.5 — 2026-06-22 — ALGOL `sign` cell (LANG-FULL AL8 follow-up)
+
+Adds an executed matrix cell `algol_sign_runs_on_x86_sim`: the ALGOL `sign`
+standard function (LANG-FULL AL8, merged) run as real x86_64 machine code on the
+simulator — `43 + sign(0 - 1)` ⇒ exit `42`. Where the `algol_abs` cell (0.7.4)
+merges a value out of **two** branch arms, `sign` lowers to a *nested* conditional
+(`if E>0 then 1 else if E<0 then -1 else 0`) and merges across **three** arms — so
+this is the first cell to run a three-way value-merge from native code. With the
+abs cell, both AL8 standard functions now execute locally on the x86_64 backend.
+Test-only; no library change.
+
 ## 0.7.4 — 2026-06-22 — ALGOL `abs` cell (LANG-FULL AL8 follow-up)
 
 Adds an executed matrix cell `algol_abs_runs_on_x86_sim`: the ALGOL `abs`

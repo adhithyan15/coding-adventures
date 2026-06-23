@@ -1,5 +1,18 @@
 # Changelog — interpreter-ir
 
+## [0.8.0] — 2026-06-22 (LANG-FULL E8 — numeric conversion opcodes, PR-1)
+
+Defines the three `integer`↔`real` conversion opcodes in the shared op-classifier
+(`opcodes.rs`), so downstream passes recognise them as a category (spec
+`code/specs/lang-full-e8-numeric-conversions.md`).
+
+- New **`is_conversion(op)`** predicate covering `int_to_real`,
+  `real_to_int_trunc`, `real_to_int_floor` — distinct from the width-masking
+  `is_coercion` (`cast`/`type_assert`) because these change the numeric
+  *representation* and the `real → integer` direction traps on out-of-range.
+- All three registered in `is_value_producing` (each yields a `dest`).
+- Doctest + the existing category coverage stays exhaustive (no silent gaps).
+
 ## [0.7.0] — 2026-06-20 (LANG-FULL E5 — array primitive)
 
 ### Added — `array<T>` type + four array opcodes
