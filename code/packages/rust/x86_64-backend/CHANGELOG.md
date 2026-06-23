@@ -1,5 +1,28 @@
 # Changelog — `x86_64-backend`
 
+## 0.15.0 — 2026-06-23 — int ⇄ real conversions (LANG-FULL E8 PR-6b)
+
+Dispatch the three IIR numeric-conversion ops to x86_64 SSE — completing E8's
+**seventh and final backend** (after VM/JIT, LLVM, WASM, JVM, CLR, aarch64):
+
+| IIR op | x86_64 sequence |
+|--------|-----------------|
+| `int_to_real` | `mov rax,[src]; cvtsi2sd xmm0,rax; movsd [dest],xmm0` |
+| `real_to_int_trunc` | `movsd xmm0,[src]; cvttsd2si rax,xmm0; mov [dest],rax` |
+| `real_to_int_floor` | `movsd xmm0,[src]; roundsd xmm0,xmm0,1; cvttsd2si rax,xmm0; mov [dest],rax` |
+
+True 64-bit i64↔f64 (full registers), like aarch64. The ops arrive with their
+bare IIR names (the `specialise` pass passes unrecognised ops through unchanged),
+so the backend matches them directly. `roundsd …,1` rounds toward −∞ (floor);
+`cvttsd2si` truncates toward zero and yields the integer-indefinite `0x8000…0`
+on NaN/±∞/out-of-range (no trap) — documented divergence, shared with
+JVM/aarch64.
+
+RUN-verified end-to-end through real x86_64 codegen executed in the
+**x86-simulator** (`tests/sse_floats.rs`): `floor(int_to_real(45) − 2.7) ⇒ 42`
+and `trunc(42.3) ⇒ 42`, matching the LLVM/WASM/VM/JVM/CLR/aarch64 matrix-cell
+value. Requires x86_64-encoder ≥ 0.5.0 and x86-simulator ≥ 0.7.6.
+
 ## 0.14.0 — 2026-06-21 — bounds-checked arrays (LANG-FULL E5 PR-4c) — completes E5
 
 The four E5 array opcodes now lower to raw x86_64, using the **static**
