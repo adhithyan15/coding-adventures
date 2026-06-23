@@ -64,8 +64,15 @@ pass-through move into one result slot), so it **runs on all 7 backends**;
 `sign(E)` is `+1`/`-1`/`0` for a positive/negative/zero operand and, unlike
 `abs`, always yields an **`integer`** (`sign(-2.5)` is the integer `-1`). It
 lowers the same way — `if E > 0 then 1 else if E < 0 then -1 else 0` — and
-also runs on every backend; `43 + sign(0 - 1)` ⇒ `42`. The remaining standard
-functions (`entier`, then `sqrt`/`sin`/`cos`/…) are not implemented yet.
+also runs on every backend; `43 + sign(0 - 1)` ⇒ `42`.
+
+`entier(E)` (ALGOL 60 §3.2.5) is the largest **integer** not greater than the
+**real** `E` — floor, rounding toward −∞: `entier(2.7)` ⇒ `2`, `entier(-2.7)` ⇒
+`-3` (not `-2`). It lowers to a single E8 `real_to_int_floor` IIR op (the floor
+and the real→integer narrowing fused into the primitive), so every backend emits
+its native floor-then-convert. A `real` argument is required (it is specifically
+the real→integer floor). The remaining standard functions (`sqrt`/`sin`/`cos`/…)
+are not implemented yet.
 
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real

@@ -1036,6 +1036,7 @@ impl Compiler {
         match name {
             "abs" => Ok(Some(self.emit_abs(node)?)),
             "sign" => Ok(Some(self.emit_sign(node)?)),
+            "entier" => Ok(Some(self.emit_entier(node)?)),
             _ => Ok(None),
         }
     }
@@ -1264,6 +1265,60 @@ impl Compiler {
         ));
         self.emit_label(&end_label);
 
+        Ok(ExprValue {
+            slot: dest,
+            ty: ScalarType::Integer,
+        })
+    }
+
+    /// `entier(E)` — ALGOL 60 §3.2.5: the largest **integer** not greater than
+    /// the **real** `E` (i.e. floor, rounding toward −∞).  `entier(2.7) = 2`,
+    /// `entier(-2.7) = -3` (NOT `-2` — a plain truncation toward zero would be
+    /// wrong here, which is exactly why E8 provides a distinct
+    /// `real_to_int_floor` op alongside `real_to_int_trunc`).
+    ///
+    /// This is the canonical use of the E8 conversion family: a single
+    /// `real_to_int_floor` whose result type is `integer`.  Unlike `abs`/`sign`
+    /// (which synthesise a conditional), `entier` is one IIR op — the floor and
+    /// the real→integer narrowing are fused into the primitive, so every backend
+    /// emits its native floor-then-convert (`llvm.floor`+`fptosi`, `f64.floor`+
+    /// `i64.trunc_sat`, `Math.floor`+`d2l`, `Math::Floor`+`conv.ovf.i4`,
+    /// `frintm`+`fcvtzs`, `roundsd`+`cvttsd2si`).
+    ///
+    /// The operand must be `real`: `entier` is *specifically* the real→integer
+    /// floor, so an `integer` argument is a type error (there is nothing to
+    /// floor — the frontend would just be discarding the type).  A user
+    /// `integer procedure entier` still wins, because `proc_sigs` is consulted
+    /// before this fallback in `emit_call_common`.
+    fn emit_entier(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return Err(CompileError::Type(format!(
+                "standard function entier expects 1 argument, got {}",
+                actuals.len()
+            )));
+        }
+        let value = self.emit_expr(actuals[0])?;
+        match value.ty {
+            ScalarType::Real => {}
+            other => {
+                return Err(CompileError::Type(format!(
+                    "standard function entier requires a real argument, got {}",
+                    other.name()
+                )))
+            }
+        }
+
+        // result := floor(E), narrowed to an integer.  `real_to_int_floor`'s
+        // `type_hint` is the *result* type (`integer`/`i64`), matching the E8
+        // convention that a backend sizes the op from the hint.
+        let dest = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "real_to_int_floor",
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot)],
+            ScalarType::Integer.iir(),
+        ));
         Ok(ExprValue {
             slot: dest,
             ty: ScalarType::Integer,
@@ -3210,6 +3265,78 @@ mod tests {
                    integer procedure sign(x); value x; integer x; sign := x + 1; \
                    result := sign(41) end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    // ── LANG-FULL E8: ALGOL `entier` (real → integer floor) ──────────────
+
+    #[test]
+    fn entier_floors_a_positive_real() {
+        // entier(2.7) = 2 (largest integer ≤ 2.7).
+        assert_eq!(run_i64("begin integer result; result := entier(2.7) end"), 2);
+        assert_eq!(run_i64("begin integer result; result := entier(42.9) end"), 42);
+    }
+
+    #[test]
+    fn entier_rounds_toward_minus_infinity() {
+        // entier(-2.7) = -3, NOT -2 — this is the floor-vs-truncate distinction
+        // that justifies a distinct `real_to_int_floor` op. 45 + entier(-2.7) =
+        // 45 + (-3) = 42.
+        assert_eq!(
+            run_i64("begin integer result; result := 45 + entier(0.0 - 2.7) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn entier_of_an_exact_integer_real_is_that_integer() {
+        // entier(42.0) = 42 (already integral).
+        assert_eq!(run_i64("begin integer result; result := entier(42.0) end"), 42);
+    }
+
+    #[test]
+    fn entier_emits_a_single_real_to_int_floor_op() {
+        // The lowering is one IIR op, not a synthesised conditional.
+        let module = compile_source("begin integer result; result := entier(2.7) end", "test")
+            .expect("entier compiles");
+        let n_floor = module.functions.iter()
+            .flat_map(|f| &f.instructions)
+            .filter(|i| i.op == "real_to_int_floor")
+            .count();
+        assert_eq!(n_floor, 1, "entier lowers to exactly one real_to_int_floor");
+    }
+
+    #[test]
+    fn entier_requires_a_real_argument() {
+        // An `integer` argument is a type error — entier is specifically the
+        // real→integer floor.
+        let err = compile_source("begin integer result; result := entier(7) end", "test")
+            .expect_err("entier of an integer is a type error");
+        assert!(format!("{err:?}").contains("entier requires a real argument"));
+    }
+
+    #[test]
+    fn entier_rejects_wrong_arity() {
+        let err = compile_source("begin integer result; result := entier(1.0, 2.0) end", "test")
+            .expect_err("two-argument entier is a type error");
+        assert!(format!("{err:?}").contains("entier expects 1 argument"));
+    }
+
+    #[test]
+    fn user_declared_entier_overrides_the_builtin() {
+        // A user `integer procedure entier` wins over the standard function.
+        let src = "begin integer result; \
+                   integer procedure entier(x); value x; integer x; entier := x + 1; \
+                   result := entier(41) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn entier_composes_with_abs() {
+        // abs(entier(-2.7)) = abs(-3) = 3 → 39 + 3 = 42.
+        assert_eq!(
+            run_i64("begin integer result; result := 39 + abs(entier(0.0 - 2.7)) end"),
+            42
+        );
     }
 
     #[test]
