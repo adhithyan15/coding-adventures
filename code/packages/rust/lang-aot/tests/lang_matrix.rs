@@ -511,6 +511,20 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the `sign` **standard function** (§3.2.4, LANG-FULL AL8). Like
+    // `abs`, `sign` is built in and resolved by name; it lowers to the nested
+    // conditional `if E > 0 then 1 else if E < 0 then -1 else 0` — three `i64`
+    // constants moved into one result slot (store-per-branch, no phi). `sign`
+    // always returns an `integer` regardless of operand type. `sign(0 - 1) = -1`,
+    // so `43 + sign(0 - 1)` = 42 ⇒ exit 42 — exercising the negative branch on
+    // native-AOT / LLVM / WASM / JVM / CLR / VM / JIT.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; result := 43 + sign(0 - 1) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *typed procedure with a value parameter* (`integer procedure
     // sq(x); value x; integer x; sq := x*x`) called from the main block:
     // `result := sq(7)` ⇒ exit 49.  `algol-iir-compiler` lowers the procedure
