@@ -1,5 +1,15 @@
 # Changelog — x86-simulator
 
+## 0.7.4 — 2026-06-22 — ALGOL `abs` cell (LANG-FULL AL8 follow-up)
+
+Adds an executed matrix cell `algol_abs_runs_on_x86_sim`: the ALGOL `abs`
+standard function (LANG-FULL AL8, merged) run as real x86_64 machine code on the
+simulator — `abs(0 - 42)` ⇒ exit `42`. This is the first cell to exercise the
+**compare-and-branch-into-a-merged-result** lowering (`cmp_lt` + `jmp_if_false`
++ negated/pass-through `mov` into one slot) from native code: existing ALGOL
+cells branch for `for`/`switch` control flow but never merge a *value* back out
+of two arms. Test-only; no library change.
+
 ## 0.7.3 — 2026-06-22 — Dartmouth BASIC `DIM` array cell (LANG-FULL BA3 follow-up)
 
 Adds an executed matrix cell `basic_array_runs_on_x86_sim`: a Dartmouth BASIC

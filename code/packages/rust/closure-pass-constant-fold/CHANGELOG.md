@@ -23,8 +23,30 @@ JS string but not a Rust `String` — the same guard `slice`/`charAt` use). 6 ne
 unit tests with V8-derived oracle values.
 
 > Version note: bumped to 0.28.0 — above the merged `repeat` fold (0.26.0) and
-> the open numeric `toString(radix)` fold (0.27.0, PR #6560) — so the parallel
-> branches don't collide on the version line.
+> the merged numeric `toString(radix)` fold (0.27.0) — so the parallel branches
+> don't collide on the version line.
+
+## [0.27.0] - 2026-06-22
+
+### Added — fold `(N).toString([radix])` on non-negative integer literals
+
+A numeric literal's `toString` now folds to a string literal when the receiver
+is a non-negative integer and the radix is known (ECMAScript §21.1.3.6):
+`(255).toString()` → `"255"`, `(255).toString(16)` → `"ff"`,
+`(255).toString(2)` → `"11111111"`, `(35).toString(36)` → `"z"`. A new
+`to_radix_string` helper renders the integer with JS's lowercase `0-9a-z`
+digits.
+
+Conservative scope: the receiver must be a non-negative integer below `2^53`
+(beyond the safe-integer ceiling JS switches to exponential notation, which a
+digit loop would not reproduce); the radix is the default 10 or a single
+integer literal in `2..=36`. A fractional receiver (`(3.5).toString(2)` is a
+binary fraction we don't model), an out-of-range radix (1, 0, 37 → RangeError),
+and a variable radix all pass through unchanged. 7 new unit tests.
+
+> Version note: bumped to 0.27.0 — above the merged `repeat` fold (0.26.0),
+> `slice` fold (0.24.0), and `indexOf` fold (0.22.0) — so the parallel branches
+> don't collide on the version line.
 
 ## [0.26.0] - 2026-06-22
 
