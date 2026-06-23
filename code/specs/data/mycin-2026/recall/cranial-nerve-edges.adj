@@ -1,0 +1,88 @@
+% ============================================================================
+% cranial-nerve-edges — the cranial-nerve function knowledge-graph (MYCIN-2026 CRANIAL).
+% ============================================================================
+% A foundational clinical-neuroanatomy board domain: a named cranial nerve and
+% its primary function (the muscle it innervates, or the sense/autonomic action
+% it carries). "The trochlear nerve has which function?" becomes the binding query
+%     ? cranial_nerve_function(trochlear_nerve, $Function).
+%
+% Direction note: the relation is nerve -> function (`cranial_nerve_function`),
+% the board direction — you name a cranial nerve and must recall WHAT it does
+% (innervates the superior oblique, carries smell, etc.). Each nerve here maps to
+% one canonical primary function, so a query binds a single answer. What matters
+% for grounding is that one self-contained span names BOTH the nerve AND its
+% function in the same sentence.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like NERVE/EXOTOXIN/EMBRYO).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see cranial-nerve-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Object atoms are span-faithful: the abducens span names the IPSILATERAL lateral
+% rectus as its primary target (lateral_rectus_muscle); the vagus span describes
+% parasympathetic action on the viscera of the abdomen and thorax
+% (parasympathetic_innervation_of_viscera); the accessory span names both the
+% sternocleidomastoid and trapezius (sternocleidomastoid_and_trapezius).
+% ============================================================================
+
+dictionary cranial_nerve_vocab {
+    define nerve    : entity   surface "cranial nerve", "named CN"
+    define function : entity   surface "primary function", "muscle or sense served"
+
+    define cranial_nerve_function : relation from nerve to function  % what a cranial nerve does
+}
+
+rulebook cranial_nerve_facts {
+    use cranial_nerve_vocab
+
+    % --- CN I olfactory -> smell -----------------------------------------------
+    relate cranial_nerve_function(olfactory_nerve, smell)
+        source "The olfactory nerve is the first cranial nerve and is instrumental in our sense of smell."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556051/"
+        trust authoritative
+
+    % --- CN II optic -> vision -------------------------------------------------
+    relate cranial_nerve_function(optic_nerve, vision)
+        source "The optic nerve is the second cranial nerve (CN II) responsible for transmitting visual information."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507907/"
+        trust authoritative
+
+    % --- CN IV trochlear -> superior oblique muscle ----------------------------
+    relate cranial_nerve_function(trochlear_nerve, superior_oblique_muscle)
+        source "The only muscle the trochlear nerve innervates, the superior oblique muscle, is the longest and thinnest muscle among the extraocular muscles."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537244/"
+        trust authoritative
+
+    % --- CN VI abducens -> lateral rectus muscle -------------------------------
+    relate cranial_nerve_function(abducens_nerve, lateral_rectus_muscle)
+        source "The abducens nerve functions to innervate the ipsilateral lateral rectus muscle and partially innervate the contralateral medial rectus muscle (at the level of the nucleus - via the medial longitudinal fasciculus)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430711/"
+        trust authoritative
+
+    % --- CN X vagus -> parasympathetic innervation of the viscera --------------
+    relate cranial_nerve_function(vagus_nerve, parasympathetic_innervation_of_viscera)
+        source "Cranial nerves carrying parasympathetic functions include the oculomotor nerve (III) acting on the eyes, the facial nerve (VII) working on the lacrimal gland, the salivary glands, and the mucous membranes within the nasal cavity, the glossopharyngeal nerve (IX) acting on the parotid gland, and the vagus nerve (X) acting on the viscera of the abdomen and thorax."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553141/"
+        trust authoritative
+
+    % --- CN XI accessory -> sternocleidomastoid and trapezius ------------------
+    relate cranial_nerve_function(accessory_nerve, sternocleidomastoid_and_trapezius)
+        source "The spinal accessory nerve (SAN, 11th cranial nerve, CN XI) is essential for neck and shoulder movement, as it innervates the sternocleidomastoid (SCM) and trapezius muscles through its spinal root."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507722/"
+        trust authoritative
+
+    % --- CN XII hypoglossal -> tongue muscles ----------------------------------
+    relate cranial_nerve_function(hypoglossal_nerve, tongue_muscles)
+        source "The hypoglossal nerve is mainly a somatic efferent (motor) nerve to innervate the tongue musculature"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532869/"
+        trust authoritative
+}

@@ -3,6 +3,40 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.18.0] — 2026-06-23 (numeric conversions int ⇄ real — LANG-FULL E8 backend 4)
+
+The three IIR numeric-conversion ops now lower to JVM bytecode, the fourth
+backend (after VM/JIT, LLVM, WASM) to gain them and the prerequisite for
+ALGOL's `entier` and integer↔real coercion:
+
+| IIR op | JVM lowering |
+|--------|--------------|
+| `int_to_real` | `i2d` (0x87) / `l2d` (0x8A) — widen int→double, exact |
+| `real_to_int_trunc` | `d2i` (0x8E) / `d2l` (0x8F) — truncate toward zero |
+| `real_to_int_floor` | `invokestatic java/lang/Math.floor(D)D` then `d2i`/`d2l` — round toward −∞ |
+
+The int vs long opcode form follows the operand's **value model** (the source's
+own jtype for `int_to_real`, the dest slot's jtype for the narrowing ops), not
+the `type_hint` — consistent with the dual-value-model rule the rest of the
+backend obeys. `real_to_int_floor` has no single opcode, so it composes
+`Math.floor` (round to −∞, still a double) with a bare narrowing (which now only
+drops a `.0`).
+
+**Trap divergence (documented — diverges from `lang-full-e8-numeric-conversions.md`
+§7's uniform-trap recommendation; recorded in that spec's footnote ²):** the VM / LLVM / WASM backends
+*trap* on NaN / ±∞ / out-of-i64-range inputs to `real_to_int_*`. The JVM's
+`d2i`/`d2l` instead **saturate** (NaN→0, +∞→MAX, −∞→MIN) and never throw. For
+every finite, in-range value — all the `entier`/coercion use case produces — the
+two agree bit-for-bit, so the matrix cells (which exercise only such values)
+match. Emitting a JVM range-check + `athrow` would require from-scratch
+exception bytecode with no reusable precedent in this backend, so we take the
+documented-divergence path.
+
+Tests: emit-level coverage of the i32 (`i2d`/`d2i`) and i64 (`l2d`/`d2l`) value
+models plus the `Math.floor` methodref, and `e8_conversions_round_trip_runs_on_real_java`
+— an end-to-end run on real `java` of `floor(int_to_real(45) − 2.7) ⇒ 42`,
+matching the LLVM/WASM/VM matrix-cell value.
+
 ## [0.17.1] — 2026-06-22 (fix: `global_load` into an i32 dest narrows with `l2i`)
 
 The E6 `global_load` always read the 64-bit static field (`getstatic …:J`, a

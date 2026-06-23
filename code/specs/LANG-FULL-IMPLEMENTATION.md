@@ -248,10 +248,32 @@ multiple languages; close an enabler before the features that depend on it.
     `real_to_int_*`→`@llvm.trunc.f64`/`@llvm.floor.f64` + range-check
     (`@llvm.trap`, matching the VM — a bare `fptosi` of out-of-range is UB) +
     `fptosi`. RUN-verified on real clang (`floor(45.0−2.7)`⇒42).
-  - ☐ **PR-3..6** — WASM (`convert`/`trunc_sat`/`floor`), JVM
-    (`i2d`/`d2l`/`Math.floor`), CLR (`conv.r8`/`conv.i8`/`Math::Floor`), native
-    (aarch64 `scvtf`/`fcvtzs`/`frintm` + x86_64 `cvtsi2sd`/`cvttsd2si`/`roundsd`,
-    + x86-sim cell). Each RUN-verified.
+  - ✅ **PR-3 — WASM** (iir-to-wasm 0.17.0). `int_to_real`→`f64.convert_i64_s`;
+    `real_to_int_trunc`→`i64.trunc_f64_s`; `real_to_int_floor`→`f64.floor` then
+    `i64.trunc_f64_s`. The **non-saturating** trunc traps out-of-range, matching
+    the VM *for free* (the saturating `trunc_sat` would clamp — deliberately not
+    used, so no explicit guard needed). RUN-verified on a real wasm runtime
+    (`floor(45.0−2.7)`⇒42, trunc/floor sign cases).
+  - ✅ **PR-4 — JVM** (iir-to-jvm-class-file 0.18.0). `int_to_real`→`i2d`/`l2d`
+    (per the source's value model); `real_to_int_trunc`→`d2i`/`d2l` (truncate
+    toward zero); `real_to_int_floor`→`invokestatic Math.floor(D)D` then
+    `d2i`/`d2l`. **Documented trap divergence** (spec §7): `d2i`/`d2l`
+    *saturate* (NaN→0, ±∞→MIN/MAX) where the VM traps — agrees bit-for-bit on
+    every finite, in-range value, so the matrix cells match; a JVM range-check +
+    `athrow` has no reusable precedent in this backend. RUN-verified on real
+    `java` (`floor(int_to_real(45)−2.7)`⇒42).
+  - ✅ **PR-5 — CLR** (iir-to-cil-bytecode 0.26.0). `int_to_real`→`conv.r8`;
+    `real_to_int_trunc`→`conv.ovf.i4`; `real_to_int_floor`→`call
+    System.Math::Floor(float64)` then `conv.ovf.i4`. The **overflow-checking**
+    `conv.ovf.i4` truncates toward zero AND traps (`OverflowException`) on
+    NaN/±∞/out-of-range — the VM's fail-closed contract *for free*, strictly
+    better than the JVM's saturating divergence. Scalar ints are uniformly 32-bit
+    here, so the narrow target is always `conv.ovf.i4`. RUN-verified on real
+    `ilasm` + `dotnet` (`floor(int_to_real(45)−2.7)`⇒42).
+  - ◑ **PR-6a — native aarch64** (`scvtf`/`fcvtzs`/`frintm`) — in review (#6598);
+    `fcvtzs` saturates (documented divergence). Executed on real Apple Silicon.
+  - ☐ **PR-6b — native x86_64 + x86-sim** (`cvtsi2sd`/`cvttsd2si`/`roundsd`).
+    RUN-verified via the x86-simulator.
   - ☐ **PR-7 — ALGOL `entier`** frontend slice + matrix proof on all 7 backends.
 
 ---

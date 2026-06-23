@@ -363,6 +363,24 @@ pub const F64_DIV: u8 = 0xA3;
 /// `f64.neg` (0x9A) — f64 negation.
 pub const F64_NEG: u8 = 0x9A;
 
+// ── numeric conversions integer↔real (LANG-FULL E8) ───────────────────────
+//
+// All three are wasm MVP opcodes (no feature gate). The **non-saturating**
+// `i64.trunc_f64_s` is deliberate: it **traps** on NaN / ±∞ / out-of-`i64`-range,
+// which matches vm-core's `real_to_i64_checked` fail-closed contract exactly —
+// no explicit range guard needed (unlike the saturating `i64.trunc_sat_f64_s`,
+// which would clamp and silently diverge from the VM).
+
+/// `f64.floor` (0x9C) — round a double toward −∞ (for `real_to_int_floor`).
+pub const F64_FLOOR: u8 = 0x9C;
+
+/// `i64.trunc_f64_s` (0xB0) — truncate a double toward zero to a signed i64,
+/// **trapping** on NaN/±∞/out-of-range.
+pub const I64_TRUNC_F64_S: u8 = 0xB0;
+
+/// `f64.convert_i64_s` (0xB9) — convert a signed i64 to a double (IEEE-754).
+pub const F64_CONVERT_I64_S: u8 = 0xB9;
+
 // ── drop (stack cleanup) ──────────────────────────────────────────────────
 
 /// `drop` (0x1A) — discard the top of the stack.

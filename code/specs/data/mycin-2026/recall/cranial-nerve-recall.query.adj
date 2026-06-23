@@ -1,0 +1,23 @@
+% ============================================================================
+% cranial-nerve-recall.query.adj — a worked recall query over the cranial-nerve library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this cranial nerve has
+% which function?" question: it states no neuroanatomy fact — it only `import`s
+% the grounded library and asks binding queries. The native adj-lang engine
+% resolves each `?` against the imported `relate` edges and returns the binding +
+% the citing clause's source/locator/trust. All knowledge is in the library; none
+% is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli cranial-nerve-recall.query.adj
+% ============================================================================
+
+import "cranial-nerve-edges.adj"
+
+? cranial_nerve_function(olfactory_nerve, $Function)    % expect smell
+? cranial_nerve_function(optic_nerve, $Function)        % expect vision
+? cranial_nerve_function(trochlear_nerve, $Function)    % expect superior_oblique_muscle
+? cranial_nerve_function(abducens_nerve, $Function)     % expect lateral_rectus_muscle
+? cranial_nerve_function(vagus_nerve, $Function)        % expect parasympathetic_innervation_of_viscera
+? cranial_nerve_function(accessory_nerve, $Function)    % expect sternocleidomastoid_and_trapezius
+? cranial_nerve_function(hypoglossal_nerve, $Function)  % expect tongue_muscles
