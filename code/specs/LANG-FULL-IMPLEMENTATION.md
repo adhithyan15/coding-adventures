@@ -244,10 +244,16 @@ multiple languages; close an enabler before the features that depend on it.
     VM reference semantics (range-checked, fail-closed trap on NaN/∞/overflow);
     JIT inherits via cold-interpret. 5 vm-core unit tests + a jit-core
     integer→real→integer round-trip.
-  - ☐ **PR-2..6** — LLVM (`sitofp`/`fptosi`/`llvm.floor`), WASM
-    (`convert`/`trunc_sat`/`floor`), JVM (`i2d`/`d2l`/`Math.floor`), CLR
-    (`conv.r8`/`conv.i8`/`Math::Floor`), native (aarch64 `scvtf`/`fcvtzs`/`frintm`
-    + x86_64 `cvtsi2sd`/`cvttsd2si`/`roundsd`, + x86-sim cell). Each RUN-verified.
+  - ✅ **PR-3 — WASM** (iir-to-wasm 0.17.0). `int_to_real`→`f64.convert_i64_s`;
+    `real_to_int_trunc`→`i64.trunc_f64_s`; `real_to_int_floor`→`f64.floor` then
+    `i64.trunc_f64_s`. The **non-saturating** trunc traps out-of-range, matching
+    the VM (the saturating `trunc_sat` would clamp — deliberately not used).
+    RUN-verified on a real wasm runtime (`floor(45.0−2.7)`⇒42, trunc/floor sign
+    cases). *(PR-2 LLVM in flight separately.)*
+  - ☐ **PR-2/4/5/6** — LLVM (`sitofp`/`fptosi`/`llvm.floor`), JVM
+    (`i2d`/`d2l`/`Math.floor`), CLR (`conv.r8`/`conv.i8`/`Math::Floor`), native
+    (aarch64 `scvtf`/`fcvtzs`/`frintm` + x86_64 `cvtsi2sd`/`cvttsd2si`/`roundsd`,
+    + x86-sim cell). Each RUN-verified.
   - ☐ **PR-7 — ALGOL `entier`** frontend slice + matrix proof on all 7 backends.
 
 ---
