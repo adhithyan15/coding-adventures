@@ -1,5 +1,30 @@
 # Changelog — `x86_64-encoder`
 
+## 0.5.0 — 2026-06-23 (int ⇄ real conversions — LANG-FULL E8 PR-6b)
+
+### Added — `cvtsi2sd` / `cvttsd2si` / `roundsd`
+
+Three SSE conversion encoders for the E8 numeric-conversion ops, plus two new
+private emit helpers they need:
+
+| Method | Instruction | Encoding | Purpose |
+|--------|-------------|----------|---------|
+| `cvtsi2sd(xmm_dst, gpr_src)` | `CVTSI2SD xmm, r/m64` | `F2 REX.W 0F 2A /r` | signed i64 → double |
+| `cvttsd2si(gpr_dst, xmm_src)` | `CVTTSD2SI r64, xmm/m64` | `F2 REX.W 0F 2C /r` | double → i64, toward zero |
+| `roundsd(xmm_dst, xmm_src, imm8)` | `ROUNDSD xmm, xmm, ib` | `66 0F 3A 0B /r ib` | round under `imm8` (1 = floor) |
+
+- `emit_sse_rr_w` — SSE reg/reg with a **mandatory REX.W** (the existing
+  `emit_sse_rr` only adds a REX byte for high registers and never sets W;
+  `cvtsi2sd`/`cvttsd2si` mix a 64-bit GPR with an XMM and require it).
+- `emit_sse_rri_0f3a` — the **three-byte** `66 0F 3A <op>` form with a trailing
+  `imm8` (used by `roundsd`).
+
+Exact bytes unit-tested for the base (xmm0/rax) encodings and for ModRM.reg /
+ModRM.rm placement with REX.R/REX.B extension (e.g. `cvtsi2sd xmm1,r8` =
+`F2 49 0F 2A C8`). `cvttsd2si` yields the integer-indefinite `0x8000…0` on
+NaN/±∞/out-of-range (no trap) — a documented divergence from the VM trap, shared
+with the JVM/aarch64 backends.
+
 ## 0.4.0 — 2026-06-20 (SSE2 scalar double-precision FP — LANG-FULL E3)
 
 ### Added — `movsd`/`addsd`/`subsd`/`mulsd`/`divsd`/`ucomisd` (double)

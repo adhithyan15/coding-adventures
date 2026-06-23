@@ -262,9 +262,17 @@ multiple languages; close an enabler before the features that depend on it.
     every finite, in-range value, so the matrix cells match; a JVM range-check +
     `athrow` has no reusable precedent in this backend. RUN-verified on real
     `java` (`floor(int_to_real(45)−2.7)`⇒42).
-  - ☐ **PR-5/6** — CLR (`conv.r8`/`conv.i8`/`Math::Floor`), native
-    (aarch64 `scvtf`/`fcvtzs`/`frintm` + x86_64 `cvtsi2sd`/`cvttsd2si`/`roundsd`,
-    + x86-sim cell). Each RUN-verified.
+  - ◑ **PR-5 — CLR** (`conv.r8`/`conv.ovf.i4`/`Math::Floor`) — in review (#6597);
+    `conv.ovf` traps, matching the VM.
+  - ◑ **PR-6a — native aarch64** (`scvtf`/`fcvtzs`/`frintm`) — in review (#6598);
+    `fcvtzs` saturates (documented divergence). Executed on real Apple Silicon.
+  - ✅ **PR-6b — native x86_64** (x86_64-encoder 0.5.0 + x86_64-backend 0.15.0 +
+    x86-simulator 0.7.6). `int_to_real`→`cvtsi2sd`; `real_to_int_trunc`→
+    `cvttsd2si`; `real_to_int_floor`→`roundsd …,1` then `cvttsd2si`. True i64↔f64.
+    `cvttsd2si` yields the integer-indefinite on OOB (saturating divergence, like
+    JVM/aarch64). **RUN-verified end-to-end through real x86_64 codegen executed
+    in the x86-simulator** (`floor(int_to_real(45)−2.7)`⇒42, `trunc(42.3)`⇒42).
+    With this, E8's conversion ops are implemented on **all seven backends**.
   - ☐ **PR-7 — ALGOL `entier`** frontend slice + matrix proof on all 7 backends.
 
 ---
