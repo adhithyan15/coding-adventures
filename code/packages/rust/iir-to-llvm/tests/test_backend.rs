@@ -1629,3 +1629,96 @@ fn e6_global_runs_on_real_clang() {
     let _ = std::fs::remove_dir_all(&dir);
     assert_eq!(run.code(), Some(42), "global program should exit 42");
 }
+
+// ===========================================================================
+// LANG-FULL E8 — numeric conversions (integer ↔ real)
+// ===========================================================================
+
+/// `int_to_real` lowers to `sitofp i64 … to double`.
+#[test]
+fn int_to_real_emits_sitofp() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("x".into(), "i64".into())],
+        "f64",
+        vec![
+            IIRInstr::new("int_to_real", Some("r".into()), vec![Operand::Var("x".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%r = sitofp i64 %x to double"),
+        "expected sitofp; got:\n{ll}");
+}
+
+/// `real_to_int_floor` rounds with `@llvm.floor.f64`, range-checks (trap), then
+/// `fptosi … to i64`. `real_to_int_trunc` uses `@llvm.trunc.f64` instead.
+#[test]
+fn real_to_int_emits_round_check_and_fptosi() {
+    let floor_fn = IIRFunction::new(
+        "f",
+        vec![("x".into(), "f64".into())],
+        "i64",
+        vec![
+            IIRInstr::new("real_to_int_floor", Some("r".into()), vec![Operand::Var("x".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ]);
+    let ll = lower(&module_with(floor_fn));
+    assert!(ll.contains("call double @llvm.floor.f64(double %x)"), "expected floor intrinsic:\n{ll}");
+    assert!(ll.contains("fcmp oge double") && ll.contains("fcmp olt double"),
+        "expected ordered range comparisons:\n{ll}");
+    assert!(ll.contains("call void @llvm.trap()"), "expected trap on out-of-range:\n{ll}");
+    assert!(ll.contains("fptosi double") && ll.contains("to i64"), "expected fptosi to i64:\n{ll}");
+    assert!(ll.contains("declare double @llvm.floor.f64(double)"), "expected floor declare:\n{ll}");
+
+    let trunc_fn = IIRFunction::new(
+        "f",
+        vec![("x".into(), "f64".into())],
+        "i64",
+        vec![
+            IIRInstr::new("real_to_int_trunc", Some("r".into()), vec![Operand::Var("x".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ]);
+    let llt = lower(&module_with(trunc_fn));
+    assert!(llt.contains("call double @llvm.trunc.f64(double %x)"), "expected trunc intrinsic:\n{llt}");
+}
+
+/// End-to-end on real `clang`: an integer→real→integer round trip through both
+/// conversion directions plus an f64 subtraction. `floor(45.0 − 2.7)` =
+/// `floor(42.3)` = 42 ⇒ exit code 42. Skipped if clang is absent.
+#[test]
+fn conversions_round_trip_runs_on_real_clang() {
+    use std::process::Command;
+    if Command::new("clang").arg("--version").output().map(|o| !o.status.success()).unwrap_or(true) {
+        eprintln!("clang not available — skipping conversions_round_trip_runs_on_real_clang");
+        return;
+    }
+    // main() -> i64 { return floor(int_to_real(45) - 2.7); }  = floor(42.3) = 42
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(45)], "i64"),
+            IIRInstr::new("int_to_real", Some("fi".into()), vec![Operand::Var("i".into())], "f64"),
+            IIRInstr::new("const", Some("d".into()), vec![Operand::Float(2.7)], "f64"),
+            IIRInstr::new("sub", Some("diff".into()),
+                vec![Operand::Var("fi".into()), Operand::Var("d".into())], "f64"),
+            IIRInstr::new("real_to_int_floor", Some("r".into()), vec![Operand::Var("diff".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ]);
+    let ll = lower(&module_with(main));
+    let dir = std::env::temp_dir().join(format!("e8_llvm_{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let ll_path = dir.join("prog.ll");
+    let exe = dir.join("prog");
+    std::fs::write(&ll_path, &ll).expect("write .ll");
+    let built = Command::new("clang")
+        .arg("-x").arg("ir").arg(&ll_path)
+        .arg("-o").arg(&exe)
+        .output().expect("run clang");
+    assert!(built.status.success(),
+        "clang failed:\n{}\n--- .ll ---\n{ll}", String::from_utf8_lossy(&built.stderr));
+    let run = Command::new(&exe).status().expect("run exe");
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(run.code(), Some(42), "floor(45.0 - 2.7) should exit 42");
+}
