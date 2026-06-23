@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.181.0] - 2026-06-23
+
+### Added — SIMPLE folds `"x".startsWith/endsWith/includes(needle)` → boolean
+
+Pulls in `closure-pass-constant-fold` 0.32.0, whose pass folds the
+single-argument substring predicates `String#startsWith`, `endsWith`, and
+`includes` on two string literals to a boolean literal:
+`"hello".startsWith("he")` → `true`, `"hello".endsWith("xo")` → `false`,
+`"hello".includes("ell")` → `true`. The whole method call collapses to
+`true`/`false`, so no call survives the typed pipeline.
+
+New end-to-end fixture `tests/diff/simple-fold-strpred/` (three integration
+tests) exercises all three predicates at `--compilation_level SIMPLE`,
+asserting the booleans, that no method call remains, and that the typed
+pipeline (not the `WHITESPACE_ONLY` fallback) produced the output.
+
 ## [0.177.0] - 2026-06-22
 
 ### Added — string `padStart` / `padEnd` fold at SIMPLE/ADVANCED
