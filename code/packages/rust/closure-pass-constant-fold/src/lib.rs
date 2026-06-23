@@ -699,6 +699,52 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
             }
+
+            // ---- numeric `toString([radix])` on a non-negative integer ----
+            //
+            // `(255).toString()` → `"255"`, `(255).toString(16)` → `"ff"`,
+            // `(255).toString(2)` → `"11111111"` (ECMAScript §21.1.3.6).
+            // The receiver must be a NON-NEGATIVE INTEGER literal (a numeric
+            // literal is never negative in the AST — `-255` is a unary
+            // expression — so this is automatic, but we assert it anyway), and
+            // small enough to format with plain digits in every radix
+            // (`< 2^53`, the safe-integer ceiling; beyond it JS switches to
+            // exponential notation, which a digit loop would not reproduce).
+            // The radix is the default 10 or a single integer-literal argument
+            // in `2..=36`; anything else (a variable radix, a fractional or
+            // out-of-range radix) is left for the runtime.
+            if let (Expression::NumericLiteral(n), Expression::Identifier(id)) =
+                (m.object.as_ref(), m.property.as_ref())
+            {
+                if id.name == "toString"
+                    && n.value.is_finite()
+                    && n.value >= 0.0
+                    && n.value.fract() == 0.0
+                    && n.value < 9_007_199_254_740_992.0
+                {
+                    let radix = match arguments.as_slice() {
+                        [] => Some(10u32),
+                        [Expression::NumericLiteral(r)]
+                            if r.value.fract() == 0.0 && (2.0..=36.0).contains(&r.value) =>
+                        {
+                            Some(r.value as u32)
+                        }
+                        _ => None,
+                    };
+                    if let Some(radix) = radix {
+                        let result = to_radix_string(n.value as u64, radix);
+                        let parent = c.cv.clone();
+                        let before = if radix == 10 {
+                            format!("({}).toString()", format_js_number(n.value))
+                        } else {
+                            format!("({}).toString({})", format_js_number(n.value), radix)
+                        };
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
+            }
         }
     }
 
@@ -707,6 +753,27 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         callee: Box::new(callee),
         arguments,
     })
+}
+
+/// Render a non-negative integer `v` in `radix` (2..=36) the way JavaScript's
+/// `Number.prototype.toString(radix)` does: lowercase digits `0-9a-z`, no
+/// leading zeros, and `"0"` for zero. This is the inverse of parsing a
+/// base-`radix` integer literal. `radix` is guaranteed in range by the caller,
+/// so the digit lookup never goes out of bounds and the `from_utf8` of an
+/// all-ASCII buffer never fails.
+fn to_radix_string(mut v: u64, radix: u32) -> String {
+    const DIGITS: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyz";
+    if v == 0 {
+        return "0".to_string();
+    }
+    let radix = radix as u64;
+    let mut out = Vec::new();
+    while v > 0 {
+        out.push(DIGITS[(v % radix) as usize]);
+        v /= radix;
+    }
+    out.reverse();
+    String::from_utf8(out).expect("radix digits are ASCII")
 }
 
 /// Compute `value.slice(args…)` at compile time, or `None` when it cannot be
@@ -3001,6 +3068,90 @@ mod tests {
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.charCodeAt(0) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- numeric toString([radix]) -------------------
+
+    /// Fold `call` and return the resulting string literal's value, or `None`
+    /// if the pass left the call unchanged.
+    fn folded_string(call: Expression) -> Option<String> {
+        let (out, _, changed, _) = run_pass(program_with_expr(call, true));
+        if !changed {
+            return None;
+        }
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => Some(s.value.clone()),
+            other => panic!("expected a string literal; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_number_to_string_default_radix() {
+        // `(255).toString()` → "255" (radix 10).
+        let c = call0(num(255.0, None), "toString");
+        assert_eq!(folded_string(c).as_deref(), Some("255"));
+        // Zero is a valid receiver.
+        let z = call0(num(0.0, None), "toString");
+        assert_eq!(folded_string(z).as_deref(), Some("0"));
+    }
+
+    #[test]
+    fn fold_number_to_string_with_radix() {
+        // Hex, binary, and base-36, matching V8.
+        for (value, radix, expect) in [
+            (255.0, 16.0, "ff"),
+            (255.0, 2.0, "11111111"),
+            (35.0, 36.0, "z"),
+            (10.0, 2.0, "1010"),
+        ] {
+            let c = call1(num(value, None), "toString", num(radix, None));
+            assert_eq!(
+                folded_string(c).as_deref(),
+                Some(expect),
+                "({value}).toString({radix})",
+            );
+        }
+    }
+
+    #[test]
+    fn number_to_string_out_of_range_radix_does_not_fold() {
+        // Radix must be 2..=36; 37 and 1 are RangeErrors at runtime, so we
+        // leave the call alone rather than invent a result.
+        for bad in [1.0, 37.0, 0.0] {
+            let c = call1(num(255.0, None), "toString", num(bad, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "radix {bad} is out of range and must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn number_to_string_non_integer_receiver_does_not_fold() {
+        // `(3.5).toString(2)` is a binary *fraction* ("11.1"); we don't model
+        // that, so a fractional receiver passes through.
+        let c = call1(num(3.5, None), "toString", num(2.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "fractional receiver must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn number_to_string_variable_radix_does_not_fold() {
+        // A non-literal radix (`(255).toString(r)`) is unknown at compile time.
+        let c = call1(num(255.0, None), "toString", ident("r"));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "variable radix must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn to_radix_string_matches_known_values() {
+        // Direct unit coverage of the digit-loop helper.
+        assert_eq!(to_radix_string(0, 16), "0");
+        assert_eq!(to_radix_string(255, 16), "ff");
+        assert_eq!(to_radix_string(255, 10), "255");
+        assert_eq!(to_radix_string(255, 2), "11111111");
+        assert_eq!(to_radix_string(35, 36), "z");
     }
 
     // ------------------- indexOf (substring search) ------------------
