@@ -1,5 +1,36 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.26.0] — 2026-06-23 — numeric conversions int ⇄ real (LANG-FULL E8 backend 5)
+
+The textual `il_text` path (the cross-backend matrix's `ilasm` route) now lowers
+the three IIR numeric-conversion ops — the fifth backend (after VM/JIT, LLVM,
+WASM, JVM) to gain them and the prerequisite for ALGOL's `entier` and integer↔real
+coercion:
+
+| IIR op | CIL lowering |
+|--------|--------------|
+| `int_to_real` | `conv.r8` (or `conv.r4` for `f32`) — widen int→float, exact for any int width |
+| `real_to_int_trunc` | `conv.ovf.i4` — truncate toward zero |
+| `real_to_int_floor` | `call float64 [System.Runtime]System.Math::Floor(float64)` then `conv.ovf.i4` — round toward −∞ |
+
+**The CLR matches the VM's fail-closed trap contract — for free.** The
+overflow-checking `conv.ovf.i4` truncates toward zero *and* throws
+`OverflowException` on NaN / ±∞ / out-of-`int32`-range, which is exactly the
+VM/LLVM/WASM trap semantics (spec §7's recommendation) in a single opcode with no
+exception-table plumbing. This is strictly better than the JVM backend, whose
+`d2i`/`d2l` saturate and required a documented divergence. `conv.r8` needs no
+overflow check — widening an integer to a double is always exact.
+
+This backend's scalar integer model is uniformly **32-bit** (`cil_local_type`
+collapses `i64`/`i32`/… → `int32`, as the existing scalar-`i64` and E5 `int32[]`
+paths already do), so `real_to_int_*` always narrows to `conv.ovf.i4`.
+
+Tests: emit-level coverage of `conv.r8` / `conv.ovf.i4` over both the `i64` and
+`i32` IR widths plus the `Math::Floor` methodref, and
+`e8_conversions_round_trip_runs_on_real_clr` — an end-to-end run on real
+`ilasm` + `dotnet` of `floor(int_to_real(45) − 2.7) ⇒ 42`, matching the
+LLVM/WASM/VM/JVM matrix-cell value.
+
 ## [0.25.0] — 2026-06-22 — void functions & void calls in the textual emitter (LANG-FULL O3)
 
 The textual `il_text` path (the one the cross-backend matrix assembles with `ilasm`)

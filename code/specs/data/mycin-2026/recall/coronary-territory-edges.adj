@@ -1,0 +1,94 @@
+% ============================================================================
+% coronary-territory-edges — the coronary-artery blood-supply knowledge-graph (MYCIN-2026 CORONARY).
+% ============================================================================
+% A high-yield cardiology/anatomy board domain: which coronary artery supplies
+% which region of the heart. The board reflex — "an inferior-wall STEMI implicates
+% which artery?", "the AV node is fed by which artery?" — is the binding query
+%     ? coronary_artery_territory(right_coronary_artery, $Region).
+%
+% Direction note: the relation is artery -> supplied region
+% (`coronary_artery_territory`), the anatomy direction — you name the artery and
+% recall the myocardial wall / septum / conduction node it perfuses. A single
+% artery can supply several regions (the RCA feeds the inferior wall, the SA node,
+% and the AV node in a right-dominant heart), so a query may bind MORE THAN ONE
+% region; each binding still carries its own citing span.
+%
+% What matters for grounding is that one self-contained span names BOTH the artery
+% AND the region, stating the supply relationship. "Region" here spans myocardial
+% walls (anterior/inferior/lateral), the interventricular septum, and the
+% conduction nodes — all are territories a coronary artery perfuses, so one
+% relation covers them uniformly.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like ENZYME/CRANIAL/NERVE).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see coronary-territory-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Note: two edges (lad -> anterior_wall and lad -> interventricular_septum) are
+% defended by the SAME sentence (NBK482375), which names both regions the LAD
+% supplies; each edge cites it independently. Atoms are stable identifiers naming
+% the concept, not required to match the span's exact wording (e.g. the LCx span
+% says "left ventricular lateral wall"; the atom is lateral_wall).
+% ============================================================================
+
+dictionary coronary_vocab {
+    define artery : entity   surface "coronary artery", "named artery"
+    define region : entity   surface "myocardial territory", "supplied region"
+
+    define coronary_artery_territory : relation from artery to region  % the region a coronary artery supplies
+}
+
+rulebook coronary_facts {
+    use coronary_vocab
+
+    % --- left anterior descending -> anterior wall ----------------------------
+    relate coronary_artery_territory(lad, anterior_wall)
+        source "The LAD, also known as the anterior interventricular branch of the LCA, serves as the principal arterial supply to the anterior left ventricular wall and the majority of the interventricular septum."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482375/"
+        trust authoritative
+
+    % --- left anterior descending -> interventricular septum ------------------
+    relate coronary_artery_territory(lad, interventricular_septum)
+        source "The LAD, also known as the anterior interventricular branch of the LCA, serves as the principal arterial supply to the anterior left ventricular wall and the majority of the interventricular septum."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482375/"
+        trust authoritative
+
+    % --- right coronary artery -> inferior wall -------------------------------
+    relate coronary_artery_territory(right_coronary_artery, inferior_wall)
+        source "In right-dominant circulation (75%-80%), the RCA supplies the right atrium, right ventricle, and the inferior wall of the left ventricle via the posterior descending artery (PDA), as well as the sinoatrial (SA) and atrioventricular (AV) nodes."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470572/"
+        trust authoritative
+
+    % --- left circumflex -> lateral wall --------------------------------------
+    relate coronary_artery_territory(left_circumflex_artery, lateral_wall)
+        source "Branches of the LAD and LCx supply the left ventricular lateral wall."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537228/"
+        trust authoritative
+
+    % --- right coronary artery -> sinoatrial node -----------------------------
+    relate coronary_artery_territory(right_coronary_artery, sinoatrial_node)
+        source "The sinoatrial nodal artery is a branch of the RCA that supplies the SA node."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534790/"
+        trust authoritative
+
+    % --- right coronary artery -> atrioventricular node -----------------------
+    relate coronary_artery_territory(right_coronary_artery, atrioventricular_node)
+        source "In a right-dominant heart, the atrioventricular node is supplied by the right coronary artery."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557664/"
+        trust authoritative
+
+    % --- posterior descending artery -> posterior septum ----------------------
+    relate coronary_artery_territory(posterior_descending_artery, posterior_septum)
+        source "The posterior descending artery supplies the posterior third of the interventricular septum, including the posterior and inferior walls of the left ventricle."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537207/"
+        trust authoritative
+}
