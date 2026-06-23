@@ -1712,8 +1712,13 @@ fn conversions_round_trip_runs_on_real_clang() {
     let ll_path = dir.join("prog.ll");
     let exe = dir.join("prog");
     std::fs::write(&ll_path, &ll).expect("write .ll");
+    // `-lm`: at `-O0` (the default for `clang -x ir`) `@llvm.floor.f64` lowers to
+    // a libm `floor` call, which on Linux must be linked explicitly with `-lm`
+    // (on macOS libm lives in libSystem, so it is harmless there). A real
+    // entier-using program links the same way.
     let built = Command::new("clang")
         .arg("-x").arg("ir").arg(&ll_path)
+        .arg("-lm")
         .arg("-o").arg(&exe)
         .output().expect("run clang");
     assert!(built.status.success(),
