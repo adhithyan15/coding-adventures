@@ -3374,6 +3374,66 @@ mod tests {
         assert!(format!("{err}").to_lowercase().contains("square"));
     }
 
+    // --- R-41: backsolve / forwardsolve (triangular solves, R syntax) ---
+
+    #[test]
+    fn backsolve_vector_through_r_syntax() {
+        // r upper-triangular [[2,1],[0,3]]; solve r %*% y = c(5,9) -> c(1,3).
+        let y = nums("backsolve(matrix(c(2,0,1,3), nrow = 2), c(5,9))\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 1.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn forwardsolve_vector_through_r_syntax() {
+        // l lower-triangular [[2,0],[1,3]]; solve l %*% y = c(4,11) -> c(2,3).
+        let y = nums("forwardsolve(matrix(c(2,1,0,3), nrow = 2), c(4,11))\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 2.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_round_trip_through_r_syntax() {
+        // r %*% backsolve(r, x) reconstructs x within tolerance.
+        let rhs = nums(
+            "r <- matrix(c(2,0,1,3), nrow = 2)\nas.numeric(r %*% backsolve(r, c(5,9)))\n",
+        );
+        assert!((rhs[0] - 5.0).abs() < 1e-9 && (rhs[1] - 9.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn forwardsolve_round_trip_through_r_syntax() {
+        let rhs = nums(
+            "l <- matrix(c(2,1,0,3), nrow = 2)\nas.numeric(l %*% forwardsolve(l, c(4,11)))\n",
+        );
+        assert!((rhs[0] - 4.0).abs() < 1e-9 && (rhs[1] - 11.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_matrix_rhs_through_r_syntax() {
+        // Two RHS columns: c(5,9) -> c(1,3) and c(2,6) -> c(0,2).
+        let (data, nrow, ncol) = matrix_data(
+            "backsolve(matrix(c(2,0,1,3), nrow = 2), matrix(c(5,9,2,6), nrow = 2))\n",
+        );
+        assert_eq!((nrow, ncol), (2, 2));
+        assert!(chol_max_abs_diff(&data, &[1.0, 3.0, 0.0, 2.0]) < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_singular_errors_through_r_syntax() {
+        // r[1,1] = 0 -> division by zero in back-substitution -> clean error.
+        let err = eval_r("backsolve(matrix(c(0,0,1,3), nrow = 2), c(1,2))\n").unwrap_err();
+        assert!(format!("{err}").to_lowercase().contains("singular"));
+    }
+
+    #[test]
+    fn forwardsolve_non_square_errors_through_r_syntax() {
+        let err = eval_r("forwardsolve(matrix(1:6, nrow = 2), c(1,2))\n").unwrap_err();
+        assert!(format!("{err}").to_lowercase().contains("square"));
+    }
+
     // --- R-35: ordered factors & cut() label polish (R syntax) ----------
 
     #[test]
