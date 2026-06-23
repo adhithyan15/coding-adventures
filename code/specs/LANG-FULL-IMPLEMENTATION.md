@@ -234,6 +234,21 @@ multiple languages; close an enabler before the features that depend on it.
     stack on top.
 - **E7 — Subroutine / return-stack.** `GOSUB`/`RETURN` and procedure call/return —
   likely expressible with existing `call`/`ret`; confirm and add if needed.
+- **E8 — Numeric conversions (`integer` ↔ `real`).** ◑ *Spec signed off
+  ([`lang-full-e8-numeric-conversions.md`](lang-full-e8-numeric-conversions.md)); implementation in progress.*
+  Three ops (`int_to_real`, `real_to_int_trunc`, `real_to_int_floor`); `real→int`
+  traps out-of-range. Unblocks **AL8 `entier`** (floor), int→real **coercion**,
+  BASIC **`INT()`** / **BA7**.
+  - ✅ **PR-1 — interpreter-ir + vm-core + JIT** (interpreter-ir 0.8.0,
+    vm-core 0.9.0). `is_conversion` classifier + value-producing registration;
+    VM reference semantics (range-checked, fail-closed trap on NaN/∞/overflow);
+    JIT inherits via cold-interpret. 5 vm-core unit tests + a jit-core
+    integer→real→integer round-trip.
+  - ☐ **PR-2..6** — LLVM (`sitofp`/`fptosi`/`llvm.floor`), WASM
+    (`convert`/`trunc_sat`/`floor`), JVM (`i2d`/`d2l`/`Math.floor`), CLR
+    (`conv.r8`/`conv.i8`/`Math::Floor`), native (aarch64 `scvtf`/`fcvtzs`/`frintm`
+    + x86_64 `cvtsi2sd`/`cvttsd2si`/`roundsd`, + x86-sim cell). Each RUN-verified.
+  - ☐ **PR-7 — ALGOL `entier`** frontend slice + matrix proof on all 7 backends.
 
 ---
 

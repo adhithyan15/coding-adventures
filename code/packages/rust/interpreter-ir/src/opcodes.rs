@@ -282,6 +282,28 @@ pub fn is_coercion(op: &str) -> bool {
     matches!(op, "cast" | "type_assert")
 }
 
+/// Numeric conversions between `integer` and `real` (LANG-FULL E8).
+///
+/// Unlike the width-masking `cast` (`is_coercion`), these change the numeric
+/// *representation*, and the `real → integer` direction traps (fail-closed) on
+/// a non-finite or out-of-range operand rather than wrapping.
+///
+/// | Opcode | Direction | Rounding |
+/// |--------|-----------|----------|
+/// | `int_to_real`       | `i64` → `f64` | exact (IEEE-754) |
+/// | `real_to_int_trunc` | `f64` → `i64` | toward zero (`INT()`) |
+/// | `real_to_int_floor` | `f64` → `i64` | toward −∞ (ALGOL `entier`) |
+///
+/// ```
+/// use interpreter_ir::opcodes::is_conversion;
+/// assert!(is_conversion("int_to_real"));
+/// assert!(is_conversion("real_to_int_floor"));
+/// assert!(!is_conversion("cast"));
+/// ```
+pub fn is_conversion(op: &str) -> bool {
+    matches!(op, "int_to_real" | "real_to_int_trunc" | "real_to_int_floor")
+}
+
 /// Heap / GC operations (LANG16).
 ///
 /// Programs that never allocate never emit these — GC overhead is zero.
@@ -348,6 +370,10 @@ pub fn is_value_producing(op: &str) -> bool {
                 | "array_get"
                 // Global variable read (LANG32)
                 | "global_load"
+                // Numeric conversions integer↔real (LANG-FULL E8)
+                | "int_to_real"
+                | "real_to_int_trunc"
+                | "real_to_int_floor"
                 // Closure allocation and application (LANG34)
                 | "alloc_closure"
                 | "call_closure"
