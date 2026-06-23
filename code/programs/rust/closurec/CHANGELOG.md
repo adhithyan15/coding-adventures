@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.180.0] - 2026-06-22
+
+### Added — string `at` fold at SIMPLE/ADVANCED (negative-from-end indexing)
+
+The typed-AST optimization pipeline now folds `String.prototype.at` on a string
+literal with an integer-literal index (via `closure-pass-constant-fold`
+0.31.0): `"abcde".at(-2)` → `"d"`. Unlike `charAt`, a negative index counts
+from the end. An out-of-range index (JS `undefined`, no literal), a
+fractional/non-literal index, or a lone-surrogate result passes through to the
+runtime; `WHITESPACE_ONLY` leaves the call untouched.
+
+New end-to-end fixture `tests/diff/simple-fold-at/` and integration test
+`tests/diff_simple_fold_at.rs` (three assertions: byte-exact stdout, the call
+is folded to `"d"`, and the SIMPLE typed pipeline ran rather than the
+whitespace fallback).
+
 ## [0.176.0] - 2026-06-22
 
 ### Added — numeric `toString([radix])` fold at SIMPLE/ADVANCED
