@@ -1,5 +1,26 @@
 # Changelog — `aarch64-encoder`
 
+## 0.5.0 — 2026-06-23 (int ⇄ real conversions — LANG-FULL E8)
+
+### Added — `scvtf` / `fcvtzs` / `frintm`
+
+Three scalar conversion encoders for the E8 numeric-conversion ops:
+
+| Method | Instruction | Encoding | Purpose |
+|--------|-------------|----------|---------|
+| `scvtf(dd, xn)` | `SCVTF Dd, Xn` | `0x9E620000 \| (Xn<<5) \| Dd` | signed i64 → double (widen, exact ≤2⁵³) |
+| `fcvtzs(xd, dn)` | `FCVTZS Xd, Dn` | `0x9E780000 \| (Dn<<5) \| Xd` | double → signed i64, round toward zero |
+| `frintm(dd, dn)` | `FRINTM Dd, Dn` | `0x1E654000 \| (Dn<<5) \| Dd` | round double toward −∞ (floor) |
+
+`int_to_real` lowers to `scvtf`; `real_to_int_trunc` to `fcvtzs`;
+`real_to_int_floor` to `frintm` then `fcvtzs`. As with `ldr_d`/`str_d`, the
+register-file (`Xn` GPR vs `Dn` FP) is selected by the opcode, so callers pass
+`Reg::Xk` to name either `Xk` or `Dk`. Unit tests assert the exact bytes for
+both base (all-zero) and non-zero register placements.
+
+`fcvtzs` *saturates* on NaN/±∞/out-of-range (ARM never traps) — a documented
+divergence from the VM's fail-closed trap, shared with the JVM backend.
+
 ## 0.4.0 — 2026-06-20 (scalar double-precision FP — LANG-FULL E3)
 
 ### Added — `ldr_d`/`str_d`/`fadd`/`fsub`/`fmul`/`fdiv`/`fcmp` (double)

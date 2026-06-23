@@ -254,10 +254,18 @@ multiple languages; close an enabler before the features that depend on it.
     the VM *for free* (the saturating `trunc_sat` would clamp — deliberately not
     used, so no explicit guard needed). RUN-verified on a real wasm runtime
     (`floor(45.0−2.7)`⇒42, trunc/floor sign cases).
-  - ☐ **PR-4/5/6** — JVM
-    (`i2d`/`d2l`/`Math.floor`), CLR (`conv.r8`/`conv.i8`/`Math::Floor`), native
-    (aarch64 `scvtf`/`fcvtzs`/`frintm` + x86_64 `cvtsi2sd`/`cvttsd2si`/`roundsd`,
-    + x86-sim cell). Each RUN-verified.
+  - ◑ **PR-4 — JVM** (`i2d`/`d2l`/`Math.floor`) — in review (#6596); `d2i`/`d2l`
+    saturate (documented divergence).
+  - ◑ **PR-5 — CLR** (`conv.r8`/`conv.ovf.i4`/`Math::Floor`) — in review (#6597);
+    `conv.ovf` traps, matching the VM.
+  - ✅ **PR-6a — native aarch64** (aarch64-encoder 0.5.0 + aarch64-backend 0.13.0).
+    `int_to_real`→`scvtf`; `real_to_int_trunc`→`fcvtzs`; `real_to_int_floor`→
+    `frintm` then `fcvtzs`. True i64↔f64 (full Xn). `fcvtzs` saturates (documented
+    divergence, like the JVM). **Executed on real Apple Silicon**:
+    `floor(int_to_real(45)−2.7)`⇒42, plus the sign-sensitive `floor(−2.7)=−3` vs
+    `trunc(−2.7)=−2`.
+  - ☐ **PR-6b — native x86_64 + x86-sim cell** (`cvtsi2sd`/`cvttsd2si`/`roundsd`).
+    RUN-verified via the x86-simulator.
   - ☐ **PR-7 — ALGOL `entier`** frontend slice + matrix proof on all 7 backends.
 
 ---
