@@ -1,0 +1,20 @@
+% ============================================================================
+% diuretic-site-recall.query.adj — a worked recall query over the diuretic library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this diuretic acts on
+% which nephron segment?" question: it states no pharmacology fact — it only
+% `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli diuretic-site-recall.query.adj
+% ============================================================================
+
+import "diuretic-site-edges.adj"
+
+? diuretic_site(loop_diuretic, $Segment)              % expect thick_ascending_limb
+? diuretic_site(thiazide, $Segment)                   % expect distal_convoluted_tubule
+? diuretic_site(amiloride, $Segment)                  % expect collecting_duct
+? diuretic_site(carbonic_anhydrase_inhibitor, $Segment) % expect proximal_tubule
