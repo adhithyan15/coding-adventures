@@ -1,0 +1,91 @@
+% ============================================================================
+% tox-edges — the toxidrome knowledge-graph (MYCIN-2026 TOX).
+% ============================================================================
+% A core emergency-medicine/pharmacology board domain: the classic toxidrome
+% (the recognizable cluster of vital-sign and exam findings of a poisoning) and
+% the agent class that causes it. "A patient with miosis, respiratory depression,
+% and CNS depression — which toxidrome / agent?" reduces to the binding query
+%     ? toxidrome_caused_by(opioid_toxidrome, $Agent).
+%
+% Direction note: the relation is toxidrome -> agent (`toxidrome_caused_by`), the
+% board direction — you recognize the toxidrome at the bedside and must name the
+% culprit drug class. The cited spans read agent-first or toxidrome-first ("The
+% most common cause of cholinergic toxicity ... is exposure to organophosphate ...
+% insecticides"; "Opiate overdose also leads to respiratory depression ... and
+% miosis") — what matters for grounding is that one self-contained span names BOTH
+% the toxidrome AND the causative agent. Each toxidrome here maps to one canonical
+% agent class, so a query binds a single answer.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (a pure ADJ-only recall domain, like PSYCH/MSK/OPHTHO/ECG/URINE).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see tox-recall.query.adj. Nothing here is
+% asserted "from memory": every edge is defended by a span a reader can re-fetch and
+% check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Faithful atoms: where a page co-names the toxidrome only with a specific agent,
+% the atom follows the span — anticholinergic_toxidrome -> tricyclic_antidepressants
+% (the page's self-contained sentence names TCAs), and serotonin_syndrome ->
+% monoamine_oxidase_inhibitors (the only self-contained co-naming sentence names
+% MAOIs as the most severe cause).
+%
+% Honest scope: only toxidromes whose page states the association in a clean self-
+% contained AFFIRMATIVE span (both toxidrome AND agent named) are included. Held:
+% salicylate (aspirin) toxicity — well grounded (NBK519032: "Aspirin causes high
+% anion gap metabolic acidosis and respiratory alkalosis."), but that edge is
+% agent->lab-pattern, the opposite direction of this toxidrome->agent relation, so
+% it is reused as the off-vocabulary abstention control rather than mixed in here.
+% ============================================================================
+
+dictionary tox_vocab {
+    define toxidrome : entity   surface "toxidrome", "poisoning syndrome"
+    define agent     : entity   surface "causative agent", "drug or toxin class"
+
+    define toxidrome_caused_by : relation from toxidrome to agent  % the agent class a toxidrome points to
+}
+
+rulebook tox_facts {
+    use tox_vocab
+
+    % --- cholinergic toxidrome -> organophosphates -----------------------------
+    relate toxidrome_caused_by(cholinergic_toxidrome, organophosphates)
+        source "The most common cause of cholinergic toxicity worldwide is exposure to organophosphate and carbamate insecticides."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539783/"
+        trust authoritative
+
+    % --- anticholinergic toxidrome -> tricyclic antidepressants ----------------
+    relate toxidrome_caused_by(anticholinergic_toxidrome, tricyclic_antidepressants)
+        source "Pure anticholinergic toxicity versus mixed toxicity, as seen with tricyclic antidepressants and phenothiazines, should be considered."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534798/"
+        trust authoritative
+
+    % --- sympathomimetic toxidrome -> cocaine / amphetamines -------------------
+    relate toxidrome_caused_by(sympathomimetic_toxidrome, cocaine_amphetamines)
+        source "The etiology of acute sympathomimetic toxicity is exposure to a stimulant, with the most commonly encountered being amphetamines, cocaine, arylcyclohexylamines such as phencyclidine, and cathinones."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430757/"
+        trust authoritative
+
+    % --- opioid toxidrome -> opioids -------------------------------------------
+    relate toxidrome_caused_by(opioid_toxidrome, opioids)
+        source "Opiate overdose also leads to respiratory depression, generalized central nervous system (CNS) impairment, and miosis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470415/"
+        trust authoritative
+
+    % --- serotonin syndrome -> monoamine oxidase inhibitors --------------------
+    relate toxidrome_caused_by(serotonin_syndrome, monoamine_oxidase_inhibitors)
+        source "Monoamine oxidase inhibitors are a class of antidepressants that inhibit the metabolism of serotonin and, when implicated in serotonin syndrome, tend to cause the most severe cases."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482377/"
+        trust authoritative
+
+    % --- sedative-hypnotic toxidrome -> benzodiazepines ------------------------
+    relate toxidrome_caused_by(sedative_hypnotic_toxidrome, benzodiazepines)
+        source "Patients with benzodiazepine toxicity will primarily present with central nervous system depression ranging from mild drowsiness to a coma-like, stuporous state."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482238/"
+        trust authoritative
+}
