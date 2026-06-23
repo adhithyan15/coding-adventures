@@ -68,7 +68,7 @@ fork.
 | **LLVM** | `sitofp i64 → double` | `fptosi double → i64` | `llvm.floor.f64` then `fptosi` |
 | **WASM** | `f64.convert_i64_s` | `i64.trunc_sat_f64_s` ¹ | `f64.floor` then `i64.trunc_sat_f64_s` |
 | **JVM** | `i2d` ² | `d2l` (truncates toward zero by spec) | `Math.floor(D)D` then `d2l` |
-| **CLR** | `conv.r8` | `conv.i8` (truncates toward zero) | `[mscorlib]Math::Floor(float64)` then `conv.i8` |
+| **CLR** | `conv.r8` | `conv.ovf.i4` ³ (truncate toward zero **+ trap**) | `[System.Runtime]Math::Floor(float64)` then `conv.ovf.i4` ³ |
 | **native x86_64** | `cvtsi2sd` | `cvttsd2si` (truncating convert) | `roundsd $1,…` (SSE4.1, round-down) then `cvttsd2si` |
 | **native aarch64** | `scvtf` | `fcvtzs` (round-toward-zero) | `frintm` (round-toward-−∞) then `fcvtzs` |
 
@@ -89,6 +89,14 @@ confined to pathological inputs the matrix never feeds. PR-4 therefore ships the
 **saturating** lowering and documents it here rather than block the arc on
 exception-table plumbing. If a future caller needs the trap on the JVM, add the
 range-check guard then.
+³ CLR (PR-5, iir-to-cil-bytecode 0.26.0): the **overflow-checking**
+`conv.ovf.i4` truncates toward zero *and* throws `OverflowException` on
+NaN/±∞/out-of-range, so it gives the VM's fail-closed trap (O-2's recommendation)
+for free — one opcode, no exception-table plumbing — unlike the JVM, whose
+`d2i`/`d2l` saturate. The backend's scalar integer model is uniformly 32-bit
+(`i64`/`i32` both lower to `int32`, as the existing scalar paths do), so the
+narrowing target is always the 32-bit `conv.ovf.i4` (no scalar `int64` local
+exists to land a `conv.ovf.i8` in). The widen `conv.r8` needs no check.
 
 **No backend needs a new capability** — every one already emits float
 arithmetic (E3); these are just the convert opcodes that sit next to the
