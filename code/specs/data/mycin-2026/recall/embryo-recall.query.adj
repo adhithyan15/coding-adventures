@@ -1,0 +1,24 @@
+% ============================================================================
+% embryo-recall.query.adj — a worked recall query over the embryology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this structure derives
+% from which embryonic origin?" question: it states no embryology fact — it only
+% `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli embryo-recall.query.adj
+% ============================================================================
+
+import "embryo-edges.adj"
+
+? embryonic_origin(adrenal_medulla, $Origin)         % expect neural_crest
+? embryonic_origin(melanocytes, $Origin)             % expect neural_crest
+? embryonic_origin(schwann_cells, $Origin)           % expect neural_crest
+? embryonic_origin(parafollicular_c_cells, $Origin)  % expect neural_crest
+? embryonic_origin(posterior_pituitary, $Origin)     % expect neuroectoderm
+? embryonic_origin(diaphragm, $Origin)               % expect septum_transversum
+? embryonic_origin(thymus, $Origin)                  % expect third_pharyngeal_pouch
+? embryonic_origin(inferior_parathyroid, $Origin)    % expect third_pharyngeal_pouch
