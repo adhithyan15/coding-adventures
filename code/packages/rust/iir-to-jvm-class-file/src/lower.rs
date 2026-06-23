@@ -168,6 +168,37 @@ const LOR: u8 = 0x81;   // long bitwise OR
 const IXOR: u8 = 0x82;  // int bitwise XOR
 const LXOR: u8 = 0x83;  // long bitwise XOR
 
+// ── E8: numeric conversions (int ⇄ real) ────────────────────────────────────
+//
+// The JVM has dedicated single-byte opcodes for every primitive→primitive
+// numeric widening/narrowing.  We use four of them:
+//
+//   * `i2d` / `l2d` — widen an int / long to a double (exact for all int
+//     values; the IIR `int_to_real` op).
+//   * `d2i` / `d2l` — narrow a double to an int / long, **truncating toward
+//     zero** (drops the fraction).  This is exactly the IIR
+//     `real_to_int_trunc` semantics.
+//
+// `real_to_int_floor` (round toward −∞, ALGOL `entier`) has no single opcode:
+// we first call `java/lang/Math.floor(D)D` (which rounds toward −∞, returning
+// a double) and *then* `d2l`/`d2i` to land in the integer model.
+//
+// ⚠️ Trap divergence (documented — diverges from
+// `lang-full-e8-numeric-conversions.md` §7's uniform-trap recommendation,
+// recorded in that spec's footnote ²): the VM / LLVM / WASM backends
+// *trap* on NaN / ±∞ / out-of-i64-range inputs to `real_to_int_*`.  The JVM's
+// `d2i`/`d2l` instead **saturate** (NaN→0, +∞→MAX, −∞→MIN) and never throw.
+// For every *finite, in-range* value — which is all the `entier`/coercion
+// use case ever produces — the two agree bit-for-bit, so the matrix cells
+// (which exercise only such values) match.  The divergence is confined to
+// pathological inputs the matrix never feeds; emitting a JVM range-check +
+// `athrow` would require from-scratch exception bytecode with no reusable
+// precedent in this backend, so we take the documented-divergence path.
+const I2D: u8 = 0x87;  // int → double (widen, exact)
+const L2D: u8 = 0x8A;  // long → double (widen)
+const D2I: u8 = 0x8E;  // double → int (truncate toward zero, saturating)
+const D2L: u8 = 0x8F;  // double → long (truncate toward zero, saturating)
+
 // ── Returns ────────────────────────────────────────────────────────────────
 const IRETURN: u8 = 0xAC; // return int
 const LRETURN: u8 = 0xAD; // return long
@@ -2026,6 +2057,67 @@ fn lower_function(
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
+                }
+            }
+
+            // ── E8: int_to_real ─────────────────────────────────────────────
+            //
+            // Widen an integer to a double.  We load the source with *its own*
+            // jtype (an integer is sometimes modelled as JVM `int`, sometimes
+            // as `long` — see the dual-value-model note) and pick `i2d` vs
+            // `l2d` to match, then store into the (double) destination slot.
+            "int_to_real" => {
+                let src = one_src(func, instr, &slots)?;
+                emit_typed_load(&mut code, src.0, src.1);
+                code.push(match src.1 {
+                    JvmType::Long => L2D,
+                    _ => I2D,
+                });
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
+                }
+            }
+
+            // ── E8: real_to_int_trunc ────────────────────────────────────────
+            //
+            // Narrow a double to an integer, truncating toward zero.  `d2i` /
+            // `d2l` *are* the truncate-toward-zero opcodes, so this is a single
+            // instruction; we pick the width from the destination slot's jtype.
+            "real_to_int_trunc" => {
+                let src = one_src(func, instr, &slots)?;
+                emit_typed_load(&mut code, src.0, src.1);
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    code.push(match dest_jtype {
+                        JvmType::Long => D2L,
+                        _ => D2I,
+                    });
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
+                }
+            }
+
+            // ── E8: real_to_int_floor (ALGOL `entier`) ──────────────────────
+            //
+            // Round toward −∞, then land in the integer model.  There is no
+            // single "floor-to-int" opcode, so we call `Math.floor(D)D` (rounds
+            // toward −∞, still a double) and *then* `d2l`/`d2i` (which now only
+            // drops a `.0` fraction, so the truncate direction no longer
+            // matters).  For 2.7 → floor → 2.0 → 2; for −2.7 → floor → −3.0 →
+            // −3 (vs −2 for a bare truncate), which is the `entier` contract.
+            "real_to_int_floor" => {
+                let src = one_src(func, instr, &slots)?;
+                emit_typed_load(&mut code, src.0, src.1);
+                let mref = cp.add_methodref("java/lang/Math", "floor", "(D)D");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    code.push(match dest_jtype {
+                        JvmType::Long => D2L,
+                        _ => D2I,
+                    });
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
                 }
             }
 

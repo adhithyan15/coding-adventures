@@ -602,6 +602,62 @@ fn emit_method(
                 load_var(il, &regs, src)?;
                 store_var(il, &regs, dest)?;
             }
+            // ── LANG-FULL E8: int_to_real ───────────────────────────────────
+            //
+            // Widen an integer to a real. CIL `conv.r8` converts whatever
+            // numeric is on the stack — `int32` or `int64` — to `float64`, exact
+            // for every integer value, so no per-width opcode is needed. An
+            // `f32` destination uses `conv.r4`.
+            "int_to_real" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "int_to_real must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "int_to_real")?;
+                load_var(il, &regs, src)?;
+                let _ = writeln!(
+                    il,
+                    "    {}",
+                    if instr.type_hint == "f32" { "conv.r4" } else { "conv.r8" }
+                );
+                store_var(il, &regs, dest)?;
+            }
+            // ── LANG-FULL E8: real_to_int_trunc / real_to_int_floor ─────────
+            //
+            // Narrow a real to an integer. The CLR's **overflow-checking**
+            // conversion `conv.ovf.i4` truncates toward zero AND throws
+            // `OverflowException` when the value is NaN, ±∞, or out of `int32`
+            // range. That gives us the VM's *fail-closed trap* contract for free
+            // (spec §7's recommendation) — one opcode, no exception-table
+            // plumbing — so unlike the JVM backend (whose `d2i`/`d2l` saturate)
+            // the CLR matches the VM bit-for-bit on the pathological inputs too.
+            //
+            // This backend's scalar integer model is uniformly **32-bit**
+            // (`cil_local_type` collapses `i64`/`i32`/… → `int32`, exactly as the
+            // existing scalar-`i64` and E5 `int32[]` paths already do), so the
+            // narrowing target is always `conv.ovf.i4` — there is no `int64`
+            // scalar local to land a `conv.ovf.i8` in.
+            //
+            // `real_to_int_floor` (ALGOL `entier`) rounds toward −∞ first: there
+            // is no single floor-to-int opcode, so we `call System.Math::Floor`
+            // (round to −∞, still a `float64`) and then the overflow-checked
+            // narrowing (which now only drops a `.0`).
+            "real_to_int_trunc" | "real_to_int_floor" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let src = var_src(f, instr, 0, &instr.op)?;
+                load_var(il, &regs, src)?;
+                if instr.op == "real_to_int_floor" {
+                    let _ = writeln!(
+                        il,
+                        "    call float64 [System.Runtime]System.Math::Floor(float64)"
+                    );
+                }
+                let _ = writeln!(il, "    conv.ovf.i4");
+                store_var(il, &regs, dest)?;
+            }
             // ret <src>  →  ld<src>; ret
             "ret" => {
                 let src = var_src(f, instr, 0, "ret")?;

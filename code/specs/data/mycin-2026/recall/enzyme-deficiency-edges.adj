@@ -1,0 +1,94 @@
+% ============================================================================
+% enzyme-deficiency-edges — the enzyme-deficiency disease knowledge-graph (MYCIN-2026 ENZYME).
+% ============================================================================
+% A high-yield biochemistry board domain: the deficient enzyme and the inborn
+% error of metabolism (lysosomal / glycogen storage / amino-acid disorder) it
+% causes. "A deficiency of glucocerebrosidase causes which disease?" becomes the
+% binding query
+%     ? enzyme_deficiency_disease(glucocerebrosidase, $Disease).
+%
+% Direction note: the relation is enzyme -> disease (`enzyme_deficiency_disease`),
+% the board direction — you name the deficient enzyme and must recall the disease
+% its deficiency produces. Each enzyme here maps to one canonical disease, so a
+% query binds a single answer. What matters for grounding is that one
+% self-contained span names BOTH the enzyme AND the disease, stating the
+% deficiency causes it.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like CRANIAL/NERVE/EXOTOXIN).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see enzyme-deficiency-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Note: the Pompe span writes alpha as the Greek letter (acid α-glucosidase),
+% preserved character-for-character; the GALT span spells the enzyme
+% "uridylyltransferase". Atoms are stable identifiers, not required to match the
+% span's exact spelling — each atom names the concept the span states.
+% ============================================================================
+
+dictionary enzyme_vocab {
+    define enzyme  : entity   surface "deficient enzyme", "named enzyme"
+    define disease : entity   surface "metabolic disease", "inborn error of metabolism"
+
+    define enzyme_deficiency_disease : relation from enzyme to disease  % the disease an enzyme deficiency causes
+}
+
+rulebook enzyme_facts {
+    use enzyme_vocab
+
+    % --- glucocerebrosidase -> Gaucher disease ---------------------------------
+    relate enzyme_deficiency_disease(glucocerebrosidase, gaucher_disease)
+        source "The underlying cause of all forms of Gaucher disease is mutations in the GBA1 gene, resulting in a lysosomal deficiency of glucocerebrosidase activity."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448080/"
+        trust authoritative
+
+    % --- acid sphingomyelinase -> Niemann-Pick disease -------------------------
+    relate enzyme_deficiency_disease(sphingomyelinase, niemann_pick_disease)
+        source "Niemann-Pick disease (NPD) is a lysosomal storage disease caused by acid sphingomyelinase deficiency (ASMD), which catalyzes the hydrolysis of sphingomyelin to ceramide and phosphocholine."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556129/"
+        trust authoritative
+
+    % --- alpha-galactosidase A -> Fabry disease --------------------------------
+    relate enzyme_deficiency_disease(alpha_galactosidase_a, fabry_disease)
+        source "Fabry disease is a rare, X-linked lysosomal storage disorder caused by deficient activity of the enzyme alpha-galactosidase A, resulting in progressive accumulation of globotriaosylceramide in various organs."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK435996/"
+        trust authoritative
+
+    % --- arylsulfatase A -> metachromatic leukodystrophy -----------------------
+    relate enzyme_deficiency_disease(arylsulfatase_a, metachromatic_leukodystrophy)
+        source "Metachromatic leukodystrophy is a rare lysosomal storage disease caused due to deficient activity of arylsulfatase A."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560744/"
+        trust authoritative
+
+    % --- glucose-6-phosphatase -> von Gierke disease (GSD I) -------------------
+    relate enzyme_deficiency_disease(glucose_6_phosphatase, von_gierke_disease)
+        source "First described by Dr. Edgar Von Gierke in 1929, GSD I results from mutations affecting glucose-6-phosphatase (G6Pase) activity, leading to excessive glycogen accumulation in the liver and kidneys."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534196/"
+        trust authoritative
+
+    % --- acid alpha-glucosidase -> Pompe disease (GSD II) ----------------------
+    relate enzyme_deficiency_disease(acid_alpha_glucosidase, pompe_disease)
+        source "Glycogen storage disease type II, or Pompe disease, is a rare inherited disorder caused by a deficiency of the enzyme acid α-glucosidase (GAA)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470558/"
+        trust authoritative
+
+    % --- galactose-1-phosphate uridyltransferase -> galactosemia ---------------
+    relate enzyme_deficiency_disease(galactose_1_phosphate_uridyltransferase, galactosemia)
+        source "Classic galactosemia is caused by galactose-1-phosphate uridylyltransferase (GALT) deficiency, whereas galactokinase and UDP-galactose epimerase deficiencies may cause similar clinical consequences by disrupting the normal galactose metabolism (see figure)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441957/"
+        trust authoritative
+
+    % --- homogentisate 1,2-dioxygenase -> alkaptonuria -------------------------
+    relate enzyme_deficiency_disease(homogentisate_oxidase, alkaptonuria)
+        source "Alkaptonuria is one of a rare autosomal recessive genetic disorder, which results from the deficiency of homogentisate 1,2 dioxygenase (HGD)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560571/"
+        trust authoritative
+}

@@ -1,0 +1,101 @@
+% ============================================================================
+% nephron-transporter-edges — the nephron-segment transporter knowledge-graph (MYCIN-2026 NEPHRON).
+% ============================================================================
+% A high-yield renal-physiology board domain: which membrane transporter / channel
+% does the work of solute (or water) handling at each segment of the nephron, and
+% therefore where each diuretic class acts. "The thiazide-sensitive cotransporter
+% lives in which segment?" becomes the binding query
+%     ? nephron_segment_transporter(distal_convoluted_tubule, $Transporter).
+%
+% Direction note: the relation is segment -> transporter
+% (`nephron_segment_transporter`), the physiology direction — you name the nephron
+% segment and recall the transporter/channel that operates there. A single segment
+% can carry several transporters (the proximal tubule has both SGLT2 and luminal
+% carbonic anhydrase), so a query may bind MORE THAN ONE answer; each binding still
+% carries its own citing span.
+%
+% What matters for grounding is that one self-contained span names BOTH the segment
+% AND the transporter, stating the transporter operates there. Several spans reach
+% the localization through a drug's mechanism of action (a loop diuretic blocking
+% NKCC2 "at the apical membrane of the thick ascending limb", thiazide inhibiting
+% NCC "in the DCT", SGLT2 inhibitors targeting "SGLT2 proteins in the proximal
+% convoluted tubules") — the localization is stated regardless of the drug framing.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like CORONARY/ENZYME/NERVE).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see nephron-transporter-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Faithfulness notes:
+%   - The ENaC span names "principal cells" (the cells of the collecting duct), not
+%     the duct itself, so the subject atom is span-faithfully `principal_cell`.
+%   - The water-permeability span says "descending limb" (not "thin descending
+%     limb"), so the subject atom is `descending_limb`.
+%   - The AQP2 span contains a source-side typo, "aquaporin-porin (AQP2)", preserved
+%     character-for-character for byte-stability; the atom is aquaporin_2.
+%   - The NCC span uses a Unicode minus in "Na+/Cl−", preserved verbatim.
+% Atoms are stable identifiers naming the concept, not required to match the span's
+% exact spelling.
+% ============================================================================
+
+dictionary nephron_vocab {
+    define segment     : entity   surface "nephron segment", "tubule segment"
+    define transporter : entity   surface "membrane transporter", "ion channel"
+
+    define nephron_segment_transporter : relation from segment to transporter  % the transporter a nephron segment carries
+}
+
+rulebook nephron_facts {
+    use nephron_vocab
+
+    % --- thick ascending limb -> Na-K-2Cl cotransporter (NKCC2) ---------------
+    relate nephron_segment_transporter(thick_ascending_limb, nkcc2)
+        source "Loop diuretics induce its effect by competing with chloride to bind to the Na-K-2Cl (NKCC2) cotransporter at the apical membrane of the thick ascending limb of the loop of Henle and blocking the cotransporter, which inhibits the reabsorption of sodium and chloride."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK546656/"
+        trust authoritative
+
+    % --- distal convoluted tubule -> Na-Cl cotransporter (NCC) ----------------
+    relate nephron_segment_transporter(distal_convoluted_tubule, ncc)
+        source "Hydrochlorothiazide selectively inhibits the Na+/Cl− cotransporter (NCC), the primary pathway for sodium reabsorption on the apical membrane of epithelial cells in the DCT, thereby reducing sodium and chloride reabsorption."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430766/"
+        trust authoritative
+
+    % --- collecting-duct principal cell -> epithelial sodium channel (ENaC) ---
+    relate nephron_segment_transporter(principal_cell, enac)
+        source "Principal cells contain sodium (epithelial sodium channels or ENaCs) and potassium channels on their apical surfaces."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549766/"
+        trust authoritative
+
+    % --- proximal convoluted tubule -> sodium-glucose cotransporter 2 (SGLT2) --
+    relate nephron_segment_transporter(proximal_convoluted_tubule, sglt2)
+        source "SGLT2 inhibitors, including canagliflozin, dapagliflozin, empagliflozin, ertugliflozin, and bexagliflozin, target SGLT2 proteins in the proximal convoluted tubules of the kidneys."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK576405/"
+        trust authoritative
+
+    % --- proximal convoluted tubule -> carbonic anhydrase ---------------------
+    relate nephron_segment_transporter(proximal_convoluted_tubule, carbonic_anhydrase)
+        source "Carbonic anhydrase in the lumen of the proximal tubule of the kidney converts carbonic acid to water and carbon dioxide."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557736/"
+        trust authoritative
+
+    % --- collecting duct -> aquaporin-2 water channel -------------------------
+    relate nephron_segment_transporter(collecting_duct, aquaporin_2)
+        source "These V2 receptors are found in the basolateral membrane of principal cells in the late distal tubule and the whole length of the collecting duct (CD); a G protein couples them to cyclic adenosine monophosphate generation, which ultimately leads to the insertion of aquaporin-porin (AQP2) water channels into the apical membrane of this otherwise water-impermeable segment."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470458/"
+        trust authoritative
+
+    % --- descending limb of loop of Henle -> water (osmotic reabsorption) -----
+    relate nephron_segment_transporter(descending_limb, water)
+        source "The descending limb functions to reabsorb water via osmosis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538339/"
+        trust authoritative
+}
