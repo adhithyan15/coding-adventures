@@ -1,0 +1,21 @@
+% ============================================================================
+% coronary-territory-recall.query.adj — a worked recall query over the coronary library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "which region does this
+% artery supply?" question: it states no anatomy fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the
+% citing clause's source/locator/trust. A single artery may bind several regions
+% (the RCA feeds the inferior wall, the SA node, and the AV node), and the engine
+% returns one answer per grounded edge. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli coronary-territory-recall.query.adj
+% ============================================================================
+
+import "coronary-territory-edges.adj"
+
+? coronary_artery_territory(lad, $Region)                          % expect anterior_wall + interventricular_septum
+? coronary_artery_territory(right_coronary_artery, $Region)        % expect inferior_wall + sinoatrial_node + atrioventricular_node
+? coronary_artery_territory(left_circumflex_artery, $Region)       % expect lateral_wall
+? coronary_artery_territory(posterior_descending_artery, $Region)  % expect posterior_septum

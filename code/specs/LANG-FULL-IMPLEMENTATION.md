@@ -262,9 +262,18 @@ multiple languages; close an enabler before the features that depend on it.
     every finite, in-range value, so the matrix cells match; a JVM range-check +
     `athrow` has no reusable precedent in this backend. RUN-verified on real
     `java` (`floor(int_to_real(45)−2.7)`⇒42).
-  - ☐ **PR-5/6** — CLR (`conv.r8`/`conv.i8`/`Math::Floor`), native
-    (aarch64 `scvtf`/`fcvtzs`/`frintm` + x86_64 `cvtsi2sd`/`cvttsd2si`/`roundsd`,
-    + x86-sim cell). Each RUN-verified.
+  - ✅ **PR-5 — CLR** (iir-to-cil-bytecode 0.26.0). `int_to_real`→`conv.r8`;
+    `real_to_int_trunc`→`conv.ovf.i4`; `real_to_int_floor`→`call
+    System.Math::Floor(float64)` then `conv.ovf.i4`. The **overflow-checking**
+    `conv.ovf.i4` truncates toward zero AND traps (`OverflowException`) on
+    NaN/±∞/out-of-range — the VM's fail-closed contract *for free*, strictly
+    better than the JVM's saturating divergence. Scalar ints are uniformly 32-bit
+    here, so the narrow target is always `conv.ovf.i4`. RUN-verified on real
+    `ilasm` + `dotnet` (`floor(int_to_real(45)−2.7)`⇒42).
+  - ◑ **PR-6a — native aarch64** (`scvtf`/`fcvtzs`/`frintm`) — in review (#6598);
+    `fcvtzs` saturates (documented divergence). Executed on real Apple Silicon.
+  - ☐ **PR-6b — native x86_64 + x86-sim** (`cvtsi2sd`/`cvttsd2si`/`roundsd`).
+    RUN-verified via the x86-simulator.
   - ☐ **PR-7 — ALGOL `entier`** frontend slice + matrix proof on all 7 backends.
 
 ---
