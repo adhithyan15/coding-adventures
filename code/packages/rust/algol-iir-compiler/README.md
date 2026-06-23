@@ -60,8 +60,12 @@ built in: `abs(E)` is the absolute value of `E`, keeping its type
 still redeclare its own `procedure abs`, which then wins — and lowers inline to
 `if E < 0 then -E else E` (a compare against zero, then a negated or
 pass-through move into one result slot), so it **runs on all 7 backends**;
-`abs(0 - 42)` ⇒ `42`. The other standard functions (`sign`, `entier`, then
-`sqrt`/`sin`/`cos`/…) are not implemented yet.
+`abs(0 - 42)` ⇒ `42`. **`sign`** is the second (algol-iir-compiler 0.9.0):
+`sign(E)` is `+1`/`-1`/`0` for a positive/negative/zero operand and, unlike
+`abs`, always yields an **`integer`** (`sign(-2.5)` is the integer `-1`). It
+lowers the same way — `if E > 0 then 1 else if E < 0 then -1 else 0` — and
+also runs on every backend; `43 + sign(0 - 1)` ⇒ `42`. The remaining standard
+functions (`entier`, then `sqrt`/`sin`/`cos`/…) are not implemented yet.
 
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real
