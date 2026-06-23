@@ -1,0 +1,90 @@
+% ============================================================================
+% psych-edges — the psychopharmacology adverse-effect graph (MYCIN-2026 PSYCH).
+% ============================================================================
+% A high-yield psychiatry board domain: the psychotropic drug (or drug class) and
+% the characteristic adverse effect it causes. "A patient on clozapine — what is the
+% feared adverse effect?" becomes the binding query
+%     ? drug_adverse_effect(clozapine, $Effect).
+%
+% Direction note: the relation is drug -> effect (`drug_adverse_effect`), the board
+% direction — the history names the drug and you must name its signature toxicity.
+% The cited spans read either way ("clozapine is the adverse effect of
+% agranulocytosis..."; "MAOIs can trigger a hypertensive crisis...") — what matters
+% for grounding is that one self-contained span AFFIRMATIVELY names BOTH the drug AND
+% the effect. Each drug here maps to one canonical adverse effect, so a query binds a
+% single answer.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (a pure ADJ-only recall domain, like MSK/OPHTHO/ECG/URINE). Each
+% fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                where the span quotes a token, the inner ASCII quotes are
+%                backslash-escaped so the ADJ string still parses).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see psych-recall.query.adj. Nothing here
+% is asserted "from memory": every edge is defended by a span a reader can re-fetch
+% and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Faithful atoms: where the page names the drug-class only by its mechanism, the
+% atom follows the span — dopamine_receptor_antagonists (= antipsychotics) for NMS,
+% and the effect for TCA overdose is qrs_prolongation (the exact phrase the page
+% uses), not the broader word "cardiotoxicity".
+%
+% Honest scope: only drugs whose page states the association in a clean self-
+% contained AFFIRMATIVE span (both drug AND the spelled-out effect named) are
+% included. Deferred (re-checked): haloperidol -> tardive dyskinesia (NBK560892
+% names the drug only beside the abbreviation "TD", never the spelled-out effect) —
+% reused as the off-vocabulary abstention control; lamotrigine -> Stevens-Johnson
+% syndrome (NBK470442 splits the drug name from the SJS mention).
+% ============================================================================
+
+dictionary psych_vocab {
+    define drug   : entity   surface "psychotropic drug", "drug class"
+    define effect : entity   surface "adverse effect", "drug toxicity"
+
+    define drug_adverse_effect : relation from drug to effect  % the signature toxicity a psychotropic causes
+}
+
+rulebook psych_facts {
+    use psych_vocab
+
+    % --- lithium -> nephrogenic diabetes insipidus -----------------------------
+    relate drug_adverse_effect(lithium, nephrogenic_diabetes_insipidus)
+        source "Chronic therapy with lithium can precipitate nephrogenic diabetes insipidus, which might elicit a cascade of symptoms and signs of lithium toxicity."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499992/"
+        trust authoritative
+
+    % --- clozapine -> agranulocytosis ------------------------------------------
+    relate drug_adverse_effect(clozapine, agranulocytosis)
+        source "One of the most significant concerns for clozapine is the adverse effect of agranulocytosis, which requires cessation of therapy and hematology consultation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535399/"
+        trust authoritative
+
+    % --- valproate (valproic acid) -> hepatotoxicity ---------------------------
+    relate drug_adverse_effect(valproate, hepatotoxicity)
+        source "Acute valproate toxicity can result in dose-related and reversible hepatotoxicity."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560898/"
+        trust authoritative
+
+    % --- MAOIs -> hypertensive crisis (tyramine reaction) ----------------------
+    relate drug_adverse_effect(maoi, hypertensive_crisis)
+        source "MAOIs can trigger a hypertensive crisis if patients consume foods or beverages high in tyramine or are exposed to specific pharmacologic agents."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539848/"
+        trust authoritative
+
+    % --- tricyclic antidepressants -> QRS prolongation (overdose cardiotoxicity) -
+    relate drug_adverse_effect(tricyclic_antidepressants, qrs_prolongation)
+        source "The characteristic QRS prolongation seen in TCA overdose occurs secondary to prolongation of phase \"0\" of the myocardial action potential."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430931/"
+        trust authoritative
+
+    % --- dopamine-receptor antagonists (antipsychotics) -> neuroleptic malignant syndrome -
+    relate drug_adverse_effect(dopamine_receptor_antagonists, neuroleptic_malignant_syndrome)
+        source "Neuroleptic malignant syndrome (NMS) is a life-threatening syndrome associated with the use of dopamine-receptor antagonist medications or with rapid withdrawal of dopaminergic medications."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482282/"
+        trust authoritative
+}
