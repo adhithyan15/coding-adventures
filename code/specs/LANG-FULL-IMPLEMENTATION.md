@@ -276,8 +276,13 @@ multiple languages; close an enabler before the features that depend on it.
     divergence, like the JVM). **Executed on real Apple Silicon**:
     `floor(int_to_real(45)−2.7)`⇒42, plus the sign-sensitive `floor(−2.7)=−3` vs
     `trunc(−2.7)=−2`.
-  - ☐ **PR-6b — native x86_64 + x86-sim** (`cvtsi2sd`/`cvttsd2si`/`roundsd`).
-    RUN-verified via the x86-simulator.
+  - ✅ **PR-6b — native x86_64** (x86_64-encoder 0.5.0 + x86_64-backend 0.15.0 +
+    x86-simulator 0.7.6). `int_to_real`→`cvtsi2sd`; `real_to_int_trunc`→
+    `cvttsd2si`; `real_to_int_floor`→`roundsd …,1` then `cvttsd2si`. True i64↔f64.
+    `cvttsd2si` yields the integer-indefinite on OOB (saturating divergence, like
+    JVM/aarch64). **RUN-verified end-to-end through real x86_64 codegen executed
+    in the x86-simulator** (`floor(int_to_real(45)−2.7)`⇒42, `trunc(42.3)`⇒42).
+    With this, E8's conversion ops are implemented on **all seven backends**.
   - ☐ **PR-7 — ALGOL `entier`** frontend slice + matrix proof on all 7 backends.
 
 ---

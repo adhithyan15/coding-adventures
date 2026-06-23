@@ -90,6 +90,16 @@ pub enum Instr {
     Ucomisd { a: u8, b: XmmRm },
     /// `setcc r/m8` — set the low byte to 1 if the condition holds, else 0.
     Setcc { cond: u8, dst: Operand },
+    // ── LANG-FULL E8: int ⇄ real conversions ──────────────────────────────
+    /// `cvtsi2sd xmm, r64` — signed 64-bit integer → double (IIR `int_to_real`).
+    Cvtsi2sd { xmm: u8, gpr: Reg },
+    /// `cvttsd2si r64, xmm` — double → signed 64-bit integer, truncating toward
+    /// zero (IIR `real_to_int_trunc`; also the tail of `real_to_int_floor`).
+    Cvttsd2si { gpr: Reg, xmm: u8 },
+    /// `roundsd xmm, xmm, imm8` — round a double under `mode` (`mode & 3`:
+    /// 0 = nearest-even, 1 = −∞/floor, 2 = +∞/ceil, 3 = toward-zero/trunc).
+    /// `mode == 1` composes with `cvttsd2si` for IIR `real_to_int_floor`.
+    Roundsd { dst: u8, src: u8, mode: u8 },
 }
 
 /// SSE2 scalar-double arithmetic ops.
@@ -196,6 +206,26 @@ pub fn decode(code: &[u8], off: usize) -> Result<Decoded, Trap> {
 
         // SSE2 scalar double (a mandatory F2/66 prefix preceded the 0F).
         if let Some(pfx) = sse_prefix {
+            // Three-byte SSE4.1 form `66 0F 3A <op3> /r ib` — here only ROUNDSD
+            // (LANG-FULL E8 `real_to_int_floor`). `op2 == 0x3A` is the opcode-map
+            // escape; the real opcode is the next byte, and an `imm8` trails the
+            // ModRM (the rounding mode).
+            if pfx == 0x66 && op2 == 0x3A {
+                let op3 = at(p)?; p += 1;
+                let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?;
+                let imm8 = code.get(np).copied()
+                    .ok_or(Trap::DecodeError { offset: np as u64, opcode: op3 })?;
+                let end = np + 1;
+                let src = match m.rm {
+                    Operand::Reg(r) => r as u8,
+                    _ => return Err(Trap::DecodeError { offset: p as u64, opcode: op3 }),
+                };
+                let instr = match op3 {
+                    0x0B => Instr::Roundsd { dst: m.reg, src, mode: imm8 },
+                    other => return Err(Trap::DecodeError { offset: (p - 1) as u64, opcode: other }),
+                };
+                return Ok(Decoded { instr, len: end - off });
+            }
             let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?;
             let xmm = m.reg; // ModRM.reg is the XMM register number
             let rm_xmm = match m.rm {
@@ -203,6 +233,16 @@ pub fn decode(code: &[u8], off: usize) -> Result<Decoded, Trap> {
                 mem => XmmRm::Mem(mem),
             };
             let instr = match (pfx, op2) {
+                // F2 0F 2A — cvtsi2sd xmm, r/m64 (the rm is a GPR, not an XMM).
+                (0xF2, 0x2A) => match m.rm {
+                    Operand::Reg(gpr) => Instr::Cvtsi2sd { xmm, gpr },
+                    _ => return Err(Trap::DecodeError { offset: p as u64, opcode: op2 }),
+                },
+                // F2 0F 2C — cvttsd2si r64, xmm/m64 (ModRM.reg is the GPR dest).
+                (0xF2, 0x2C) => match rm_xmm {
+                    XmmRm::Xmm(s) => Instr::Cvttsd2si { gpr: reg_of(m.reg), xmm: s },
+                    XmmRm::Mem(_) => return Err(Trap::DecodeError { offset: p as u64, opcode: op2 }),
+                },
                 // F2 0F 10 — movsd xmm, xmm/m64 (load)
                 (0xF2, 0x10) => match rm_xmm {
                     XmmRm::Xmm(s) => Instr::MovsdRr { dst: xmm, src: s },
@@ -476,5 +516,23 @@ mod tests {
         // sete al  — 40 0F 94 C0   (cond 4 = E)
         assert_eq!(decode(&[0x40, 0x0F, 0x94, 0xC0], 0).unwrap().instr,
                    Instr::Setcc { cond: 0x4, dst: Operand::Reg(Reg::Rax) });
+    }
+
+    /// LANG-FULL E8: the three conversion opcodes decode — including the
+    /// three-byte `66 0F 3A 0B` form with a trailing `imm8`.
+    #[test]
+    fn e8_conversions_decode() {
+        // cvtsi2sd xmm0, rax  — F2 48 0F 2A C0  (rm is a GPR, not an XMM)
+        let d = decode(&[0xF2, 0x48, 0x0F, 0x2A, 0xC0], 0).unwrap();
+        assert_eq!(d.instr, Instr::Cvtsi2sd { xmm: 0, gpr: Reg::Rax });
+        assert_eq!(d.len, 5);
+        // cvttsd2si rax, xmm0 — F2 48 0F 2C C0  (ModRM.reg is the GPR dest)
+        let d = decode(&[0xF2, 0x48, 0x0F, 0x2C, 0xC0], 0).unwrap();
+        assert_eq!(d.instr, Instr::Cvttsd2si { gpr: Reg::Rax, xmm: 0 });
+        assert_eq!(d.len, 5);
+        // roundsd xmm0, xmm0, 1 — 66 0F 3A 0B C0 01  (3-byte opcode + imm8)
+        let d = decode(&[0x66, 0x0F, 0x3A, 0x0B, 0xC0, 0x01], 0).unwrap();
+        assert_eq!(d.instr, Instr::Roundsd { dst: 0, src: 0, mode: 1 });
+        assert_eq!(d.len, 6);
     }
 }
