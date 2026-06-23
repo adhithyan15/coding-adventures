@@ -1,0 +1,23 @@
+% ============================================================================
+% nephron-transporter-recall.query.adj — a worked recall query over the nephron library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "which transporter acts at
+% this nephron segment?" question: it states no physiology fact — it only `import`s
+% the grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. A single segment may bind several transporters (the
+% proximal tubule carries both SGLT2 and luminal carbonic anhydrase), and the engine
+% returns one answer per grounded edge. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli nephron-transporter-recall.query.adj
+% ============================================================================
+
+import "nephron-transporter-edges.adj"
+
+? nephron_segment_transporter(proximal_convoluted_tubule, $Transporter)  % expect sglt2 + carbonic_anhydrase
+? nephron_segment_transporter(thick_ascending_limb, $Transporter)        % expect nkcc2
+? nephron_segment_transporter(distal_convoluted_tubule, $Transporter)    % expect ncc
+? nephron_segment_transporter(collecting_duct, $Transporter)             % expect aquaporin_2
+? nephron_segment_transporter(principal_cell, $Transporter)              % expect enac
+? nephron_segment_transporter(descending_limb, $Transporter)             % expect water
