@@ -1,6 +1,6 @@
 [package]
 name = "x86-simulator"
-version = "0.7.4"
+version = "0.7.5"
 edition = "2021"
 description = "x86/x86-64 runtime simulator — decode + execute machine code, and run the x86_64-backend's emitted code locally (host-arch-independent)"
 
