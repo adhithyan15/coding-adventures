@@ -263,6 +263,11 @@ const SUPPORTED_OPS: &[&str] = &[
     // (the LLVM analogue of the native `_twig_globals` slots / JVM-CLR static
     // fields). The name is a string literal, never a register.
     "global_load", "global_store",
+    // LANG-FULL E8 — numeric conversions integer↔real. `int_to_real` is
+    // `sitofp i64 → double`; `real_to_int_trunc`/`real_to_int_floor` round
+    // (`@llvm.trunc.f64`/`@llvm.floor.f64`), range-check (trap on
+    // NaN/∞/out-of-i64-range, matching the VM), then `fptosi double → i64`.
+    "int_to_real", "real_to_int_trunc", "real_to_int_floor",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -455,6 +460,10 @@ pub fn lower_iir_to_llvm(
     // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
     // (the out-of-bounds trap). `is_array_op` covers alloc_array/array_*.
     let mut used_arrays = false;
+    // LANG-FULL E8: the `real_to_int_*` conversions need `@llvm.trap` (the
+    // out-of-range trap) plus the `@llvm.floor.f64`/`@llvm.trunc.f64` rounding
+    // intrinsics. `is_conversion` covers int_to_real / real_to_int_{trunc,floor}.
+    let mut used_conversions = false;
     // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
     // first-seen order, so each gets exactly one `declare i64 @__twig_lispy_*`.
     let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
@@ -465,6 +474,9 @@ pub fn lower_iir_to_llvm(
             }
             if interpreter_ir::opcodes::is_array_op(&i.op) {
                 used_arrays = true;
+            }
+            if interpreter_ir::opcodes::is_conversion(&i.op) {
+                used_conversions = true;
             }
             if i.op == "call_builtin" {
                 if let Some(Operand::Var(name)) = i.srcs.first() {
@@ -491,15 +503,24 @@ pub fn lower_iir_to_llvm(
     // LLVM05 — libc / allocator declarations for the Brainfuck tape & I/O.
     // `calloc(nmemb, size)` returns a zero-filled buffer (BF cells start at 0);
     // `putchar`/`getchar` are the libc character I/O the BF `.`/`,` map to.
-    if used_alloc_bytes || used_arrays || used_putchar || used_getchar {
+    if used_alloc_bytes || used_arrays || used_conversions || used_putchar || used_getchar {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
             out.push_str("declare ptr @calloc(i64, i64)\n");
         }
-        if used_arrays {
-            // The out-of-bounds trap target (LANG-FULL E5). `llvm.trap` is an
+        if used_arrays || used_conversions {
+            // The trap target — out-of-bounds for arrays (LANG-FULL E5) and
+            // out-of-range for `real_to_int_*` (LANG-FULL E8). `llvm.trap` is an
             // intrinsic — declaring it is harmless and keeps the module explicit.
+            // Declared once even when both arrays and conversions are present.
             out.push_str("declare void @llvm.trap()\n");
+        }
+        if used_conversions {
+            // Rounding intrinsics for `real_to_int_floor` (toward −∞) and
+            // `real_to_int_trunc` (toward zero). `int_to_real` needs no declare
+            // (`sitofp` is a core instruction, not an intrinsic).
+            out.push_str("declare double @llvm.floor.f64(double)\n");
+            out.push_str("declare double @llvm.trunc.f64(double)\n");
         }
         if used_putchar {
             out.push_str("declare i32 @putchar(i32)\n");
@@ -1069,11 +1090,89 @@ fn lower_instr(
         "global_load" => lower_global_load(instr, state, out),
         "global_store" => lower_global_store(instr, state, out),
 
+        // ── numeric conversions integer↔real (LANG-FULL E8) ───────────────
+        "int_to_real" => lower_int_to_real(instr, state, out),
+        "real_to_int_trunc" => lower_real_to_int(instr, state, out, /*floor=*/ false),
+        "real_to_int_floor" => lower_real_to_int(instr, state, out, /*floor=*/ true),
+
         other => Err(IIRLlvmError::UnsupportedOp {
             function: fn_name.into(),
             op: other.into(),
         }),
     }
+}
+
+/// Lower `int_to_real dest <- x` — widen an `i64` to `f64` with `sitofp`
+/// (IEEE-754 round-to-nearest-even). The dest slot is already typed `double` by
+/// `collect_slot_types` (the op's `type_hint` is `f64`).
+fn lower_int_to_real(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "int_to_real", state.fn_name)?.to_string();
+    let a = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    out.push_str(&format!("  %{dest} = sitofp i64 {a} to double\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower `real_to_int_trunc` / `real_to_int_floor dest <- x` — round a `real` to
+/// an integer, trapping (fail-closed, exactly like the VM and the E5 array
+/// bounds) on a NaN/±∞/out-of-`i64`-range operand.
+///
+/// To match the VM's `real_to_i64_checked(f.floor()/f.trunc())` **exactly**, we
+/// (1) round first with `@llvm.floor.f64` (toward −∞, `entier`) or
+/// `@llvm.trunc.f64` (toward zero, `INT()`), (2) range-check the *rounded*
+/// value, then (3) `fptosi` — which on an already-integral, in-range `double`
+/// is exact and never the UB that a bare `fptosi` of an out-of-range value would
+/// be.
+fn lower_real_to_int(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+    floor: bool,
+) -> Result<(), IIRLlvmError> {
+    let opname = if floor { "real_to_int_floor" } else { "real_to_int_trunc" };
+    let dest = require_dest(instr, opname, state.fn_name)?.to_string();
+    let a = resolve_operand(instr.srcs.first(), &state.env, "f64", state.fn_name)?;
+
+    let intrinsic = if floor { "@llvm.floor.f64" } else { "@llvm.trunc.f64" };
+    let rounded = state.fresh("rrnd");
+    out.push_str(&format!("  {rounded} = call double {intrinsic}(double {a})\n"));
+
+    emit_real_range_check(&rounded, state, out);
+
+    out.push_str(&format!("  %{dest} = fptosi double {rounded} to i64\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Emit the finiteness + `i64`-range check shared by the `real_to_int_*` ops:
+/// trap (`@llvm.trap` + `unreachable`) unless the already-rounded operand is in
+/// `[-2⁶³, 2⁶³)`. The comparisons are **ordered** (`fcmp oge`/`olt`), which are
+/// `false` for NaN — so NaN and ±∞ fall through the same single check and trap.
+/// The bounds are the `double` hex literals for −2⁶³ and +2⁶³ (`i64::MAX` =
+/// 2⁶³−1 is unrepresentable as `double`, so the upper bound is the exact `< 2⁶³`
+/// the VM uses). Mirrors `emit_bounds_check`; leaves the cursor in the "ok"
+/// block.
+fn emit_real_range_check(operand: &str, state: &mut FnState, out: &mut String) {
+    let ge = state.fresh("rge");
+    let lt = state.fresh("rlt");
+    let inr = state.fresh("rin");
+    state.counter += 1;
+    let trap = format!("__rtrap{}", state.counter);
+    state.counter += 1;
+    let ok = format!("__rok{}", state.counter);
+    // -2^63 = 0xC3E0000000000000 ; +2^63 = 0x43E0000000000000 (LLVM double hex).
+    out.push_str(&format!("  {ge} = fcmp oge double {operand}, 0xC3E0000000000000\n"));
+    out.push_str(&format!("  {lt} = fcmp olt double {operand}, 0x43E0000000000000\n"));
+    out.push_str(&format!("  {inr} = and i1 {ge}, {lt}\n"));
+    out.push_str(&format!("  br i1 {inr}, label %{ok}, label %{trap}\n"));
+    out.push_str(&format!("{trap}:\n"));
+    out.push_str("  call void @llvm.trap()\n");
+    out.push_str("  unreachable\n");
+    out.push_str(&format!("{ok}:\n"));
 }
 
 // ---------------------------------------------------------------------------
