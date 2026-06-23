@@ -1703,3 +1703,99 @@ fn e6_global_runs_on_real_clr() {
     let _ = std::fs::remove_dir_all(&dir);
     assert_eq!(stdout, "42", "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
 }
+
+// ===========================================================================
+// LANG-FULL E8 — numeric conversions (int ⇄ real)
+//
+//   int_to_real        → conv.r8 / conv.r4   (widen int→float, exact, any width)
+//   real_to_int_trunc  → conv.ovf.i4 / conv.ovf.i8   (truncate toward zero + trap)
+//   real_to_int_floor  → call Math::Floor(float64) ; conv.ovf.i4/i8   (round to −∞ + trap)
+//
+// The CLR's overflow-checked `conv.ovf.*` truncates toward zero AND throws
+// OverflowException on NaN/±∞/out-of-range — giving the VM's fail-closed trap
+// contract for free (one opcode), unlike the JVM backend whose d2i/d2l saturate.
+// ===========================================================================
+
+/// `int_to_real` over an integer source emits `conv.r8` (widen to float64);
+/// `real_to_int_trunc` emits the overflow-checked `conv.ovf.i4` (truncate
+/// toward zero + trap on NaN/±∞/out-of-range). This backend's scalar integer
+/// model is uniformly 32-bit (`i64` and `i32` both collapse to `int32`), so the
+/// narrowing target is always `conv.ovf.i4` regardless of the IR's int width.
+#[test]
+fn e8_int_to_real_emits_conv_r8_and_trunc_emits_conv_ovf() {
+    for ty in ["i64", "i32"] {
+        let mut m = IIRModule::new("Main", "Main");
+        m.entry_point = Some("compute".into());
+        m.add_or_replace(IIRFunction::new("compute", vec![], ty, vec![
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(45)], ty),
+            IIRInstr::new("int_to_real", Some("r".into()), vec![Operand::Var("i".into())], "f64"),
+            IIRInstr::new("real_to_int_trunc", Some("o".into()), vec![Operand::Var("r".into())], ty),
+            IIRInstr::new("ret", None, vec![Operand::Var("o".into())], ty),
+        ]));
+        let il = emit_il(&m, &default_cfg()).unwrap_or_else(|e| panic!("emit_il {ty}: {e:?}"));
+        assert!(il.contains("conv.r8"), "int_to_real ({ty}) must widen with conv.r8:\n{il}");
+        assert!(il.contains("conv.ovf.i4"),
+            "real_to_int_trunc ({ty}) must use the trapping conv.ovf.i4:\n{il}");
+    }
+}
+
+/// `real_to_int_floor` calls `System.Math::Floor(float64)` (round toward −∞)
+/// then narrows with the overflow-checked conversion.
+#[test]
+fn e8_real_to_int_floor_calls_math_floor_then_conv_ovf() {
+    let mut m = IIRModule::new("Main", "Main");
+    m.entry_point = Some("compute".into());
+    m.add_or_replace(IIRFunction::new("compute", vec![], "i32", vec![
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Float(-2.7)], "f64"),
+        IIRInstr::new("real_to_int_floor", Some("o".into()), vec![Operand::Var("x".into())], "i32"),
+        IIRInstr::new("ret", None, vec![Operand::Var("o".into())], "i32"),
+    ]));
+    let il = emit_il(&m, &default_cfg()).expect("emit_il");
+    assert!(il.contains("[System.Runtime]System.Math::Floor(float64)"),
+        "real_to_int_floor must call Math::Floor:\n{il}");
+    assert!(il.contains("conv.ovf.i4"),
+        "after Math::Floor the result is narrowed with conv.ovf.i4:\n{il}");
+}
+
+/// End-to-end on real `ilasm` + `dotnet`: `floor(int_to_real(45) − 2.7)` ⇒
+/// `floor(42.3)` ⇒ 42 — exercises all three conversion ops plus an f64
+/// subtraction, matching the LLVM/WASM/VM/JVM matrix-cell value. Skipped if the
+/// CLR toolchain is unavailable.
+#[test]
+fn e8_conversions_round_trip_runs_on_real_clr() {
+    use std::process::Command;
+    let Some(ilasm) = find_ilasm() else { eprintln!("no ilasm — skipping"); return; };
+    if Command::new("dotnet").arg("--version").output().map(|o| !o.status.success()).unwrap_or(true) {
+        eprintln!("no dotnet — skipping"); return;
+    }
+    let mut m = IIRModule::new("Main", "Main");
+    m.entry_point = Some("compute".into());
+    m.add_or_replace(IIRFunction::new("compute", vec![], "i32", vec![
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(45)], "i32"),
+        IIRInstr::new("int_to_real", Some("r".into()), vec![Operand::Var("i".into())], "f64"),
+        IIRInstr::new("const", Some("c".into()), vec![Operand::Float(2.7)], "f64"),
+        IIRInstr::new("sub", Some("d".into()),
+            vec![Operand::Var("r".into()), Operand::Var("c".into())], "f64"),
+        IIRInstr::new("real_to_int_floor", Some("o".into()), vec![Operand::Var("d".into())], "i32"),
+        IIRInstr::new("ret", None, vec![Operand::Var("o".into())], "i32"),
+    ]));
+    let il = emit_il(&m, &default_cfg()).expect("emit_il");
+    let dir = std::env::temp_dir().join(format!("e8_clr_{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let il_path = dir.join("Main.il");
+    let dll = dir.join("Main.dll");
+    std::fs::write(&il_path, &il).expect("write .il");
+    let asm = Command::new(&ilasm)
+        .arg("-dll=false").arg("-exe")
+        .arg(format!("-output={}", dll.display()))
+        .arg(&il_path).output().expect("run ilasm");
+    assert!(asm.status.success() && dll.exists(),
+        "ilasm failed:\n{}\n--- .il ---\n{il}", String::from_utf8_lossy(&asm.stdout));
+    std::fs::write(dir.join("Main.runtimeconfig.json"),
+        r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#)
+        .expect("write runtimeconfig");
+    let out = Command::new("dotnet").arg(&dll).output().expect("run dotnet");
+    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(stdout, "42", "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
+}
