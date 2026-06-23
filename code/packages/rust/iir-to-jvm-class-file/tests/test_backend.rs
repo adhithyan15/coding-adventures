@@ -2957,3 +2957,154 @@ fn e6_global_runs_on_real_java() {
     assert_eq!(stdout.trim(), "42",
         "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
 }
+
+// ===========================================================================
+// LANG-FULL E8 — numeric conversions (int ⇄ real)
+//
+// Three IIR ops lower to JVM primitive-conversion opcodes:
+//   int_to_real      → i2d (0x87) / l2d (0x8A)   [widen, exact]
+//   real_to_int_trunc → d2i (0x8E) / d2l (0x8F)  [truncate toward zero]
+//   real_to_int_floor → invokestatic Math.floor(D)D ; d2i/d2l  [round to −∞]
+// The width (int vs long form) follows the operand's value model, not the
+// type_hint — see the dual-value-model note in lower.rs.
+// ===========================================================================
+
+const I2D: u8 = 0x87;
+const L2D: u8 = 0x8A;
+const D2I: u8 = 0x8E;
+const D2L: u8 = 0x8F;
+
+/// `int_to_real` over an `i64` (Long) source widens with `l2d`; the round-trip
+/// `real_to_int_trunc` back to `i64` narrows with `d2l` (truncate toward zero).
+#[test]
+fn e8_int_to_real_and_trunc_use_l2d_and_d2l() {
+    let f = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(45)], "i64"),
+        IIRInstr::new("int_to_real", Some("r".into()), vec![Operand::Var("i".into())], "f64"),
+        IIRInstr::new("real_to_int_trunc", Some("o".into()), vec![Operand::Var("r".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("o".into())], "i64"),
+    ]);
+    let code = code_bytes(&lower(&module_with(f)));
+    assert!(code.contains(&L2D), "int_to_real over an i64 source must widen with l2d");
+    assert!(code.contains(&D2L), "real_to_int_trunc into an i64 dest must narrow with d2l");
+    // It must NOT route through the float opcodes for an integer source/dest.
+    assert!(!code.contains(&I2D), "an i64 source uses l2d, not i2d");
+    assert!(!code.contains(&D2I), "an i64 dest uses d2l, not d2i");
+}
+
+/// `int_to_real` over an `i32` (Int) source widens with `i2d`, and
+/// `real_to_int_trunc` into an `i32` dest narrows with `d2i`.
+#[test]
+fn e8_int_to_real_and_trunc_over_i32_use_i2d_and_d2i() {
+    let f = IIRFunction::new("main", vec![], "i32", vec![
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(45)], "i32"),
+        IIRInstr::new("int_to_real", Some("r".into()), vec![Operand::Var("i".into())], "f64"),
+        IIRInstr::new("real_to_int_trunc", Some("o".into()), vec![Operand::Var("r".into())], "i32"),
+        IIRInstr::new("ret", None, vec![Operand::Var("o".into())], "i32"),
+    ]);
+    let code = code_bytes(&lower(&module_with(f)));
+    assert!(code.contains(&I2D), "int_to_real over an i32 source must widen with i2d");
+    assert!(code.contains(&D2I), "real_to_int_trunc into an i32 dest must narrow with d2i");
+}
+
+/// `real_to_int_floor` has no single opcode: it calls `java/lang/Math.floor(D)D`
+/// (round toward −∞, still a double) and then `d2l`/`d2i` to land in the integer
+/// model. Assert both the Math.floor methodref and the narrowing opcode appear.
+#[test]
+fn e8_real_to_int_floor_calls_math_floor_then_narrows() {
+    let f = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Float(-2.7)], "f64"),
+        IIRInstr::new("real_to_int_floor", Some("o".into()), vec![Operand::Var("x".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("o".into())], "i64"),
+    ]);
+    let class = lower(&module_with(f));
+    assert_ne!(
+        find_methodref_in_cp(&class.constant_pool, "java/lang/Math", "floor", "(D)D"), 0,
+        "real_to_int_floor must add a Methodref to java/lang/Math.floor(D)D");
+    assert!(code_bytes(&class).contains(&D2L),
+        "after Math.floor the floored double is narrowed to i64 with d2l");
+}
+
+/// End-to-end on real `java`: `floor(int_to_real(45) − 2.7)` ⇒ `floor(42.3)` ⇒ 42.
+/// This exercises all three conversion ops in one program — int_to_real (l2d),
+/// an f64 subtraction (dsub), and real_to_int_floor (Math.floor + d2l) — and
+/// matches the LLVM/WASM/VM matrix cell value of 42. Skipped if `java` is absent.
+#[test]
+fn e8_conversions_round_trip_runs_on_real_java() {
+    if !java_available() {
+        eprintln!("java not available — skipping e8_conversions_round_trip_runs_on_real_java");
+        return;
+    }
+    // compute()J: floor(int_to_real(45) − 2.7) = 42.
+    let mut m = IIRModule::new("Main", "Main");
+    m.add_or_replace(IIRFunction::new("compute", vec![], "i64", vec![
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(45)], "i64"),
+        IIRInstr::new("int_to_real", Some("r".into()), vec![Operand::Var("i".into())], "f64"),
+        IIRInstr::new("const", Some("c".into()), vec![Operand::Float(2.7)], "f64"),
+        IIRInstr::new("sub", Some("d".into()),
+            vec![Operand::Var("r".into()), Operand::Var("c".into())], "f64"),
+        IIRInstr::new("real_to_int_floor", Some("o".into()), vec![Operand::Var("d".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("o".into())], "i64"),
+    ]));
+    let mut class = lower_iir_to_jvm(&m, &IIRJvmConfig { class_name: "Main".into(), ..Default::default() })
+        .expect("lower");
+
+    // Inject a `main(String[])` that prints Main.compute()J (same launcher shape
+    // as e6_global_runs_on_real_java).
+    {
+        use jvm_class_file::JvmConstantPoolEntry as E;
+        let cp = &mut class.constant_pool;
+        let sys_utf8 = cp_append(cp, E::Utf8("java/lang/System".into()));
+        let sys_class = cp_append(cp, E::Class { name_index: sys_utf8 });
+        let out_utf8 = cp_append(cp, E::Utf8("out".into()));
+        let ps_desc = cp_append(cp, E::Utf8("Ljava/io/PrintStream;".into()));
+        let out_nat = cp_append(cp, E::NameAndType { name_index: out_utf8, descriptor_index: ps_desc });
+        let out_fieldref = cp_append(cp, E::Fieldref { class_index: sys_class, name_and_type_index: out_nat });
+        let ps_utf8 = cp_append(cp, E::Utf8("java/io/PrintStream".into()));
+        let ps_class = cp_append(cp, E::Class { name_index: ps_utf8 });
+        let pln_utf8 = cp_append(cp, E::Utf8("println".into()));
+        let pln_desc = cp_append(cp, E::Utf8("(J)V".into()));
+        let pln_nat = cp_append(cp, E::NameAndType { name_index: pln_utf8, descriptor_index: pln_desc });
+        let println_ref = cp_append(cp, E::Methodref { class_index: ps_class, name_and_type_index: pln_nat });
+        let _ = cp_append(cp, E::Utf8("main".into()));
+        let _ = cp_append(cp, E::Utf8("([Ljava/lang/String;)V".into()));
+
+        let compute_ref = find_methodref_in_cp(&class.constant_pool, "Main", "compute", "()J");
+        assert_ne!(compute_ref, 0, "Main.compute Methodref must be in CP");
+
+        let [out_hi, out_lo] = out_fieldref.to_be_bytes();
+        let [cmp_hi, cmp_lo] = compute_ref.to_be_bytes();
+        let [pln_hi, pln_lo] = println_ref.to_be_bytes();
+        let main_code = vec![
+            0xB2, out_hi, out_lo, // getstatic System.out
+            0xB8, cmp_hi, cmp_lo, // invokestatic Main.compute()J
+            0xB6, pln_hi, pln_lo, // invokevirtual println(J)V
+            0xB1,                 // return
+        ];
+        use jvm_class_file::{ACC_PUBLIC, ACC_STATIC, JvmCodeAttribute, JvmMethodAttribute};
+        class.methods.push(JvmMethodInfo {
+            access_flags: ACC_PUBLIC | ACC_STATIC,
+            name: "main".into(),
+            descriptor: "([Ljava/lang/String;)V".into(),
+            attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute {
+                name: "Code".into(),
+                max_stack: 4,
+                max_locals: 1,
+                code: main_code,
+                nested_attributes: vec![],
+            })],
+        });
+    }
+
+    let bytes = serialize_jvm_class_file(&class);
+    let tmp = std::env::temp_dir().join(format!("e8_jvm_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("mkdir");
+    std::fs::write(tmp.join("Main.class"), &bytes).expect("write Main.class");
+    let out = std::process::Command::new("java")
+        .arg("-Xverify:none").arg("-cp").arg(&tmp).arg("Main")
+        .output().expect("run java");
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    let _ = std::fs::remove_dir_all(&tmp);
+    assert_eq!(stdout.trim(), "42",
+        "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
+}
