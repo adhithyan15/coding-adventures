@@ -1,0 +1,22 @@
+% ============================================================================
+% exotoxin-recall.query.adj — a worked recall query over the exotoxin library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this toxin acts by
+% which mechanism?" question: it states no microbiology fact — it only `import`s
+% the grounded library and asks binding queries. The native adj-lang engine
+% resolves each `?` against the imported `relate` edges and returns the binding
+% + the citing clause's source/locator/trust. All knowledge is in the library;
+% none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli exotoxin-recall.query.adj
+% ============================================================================
+
+import "exotoxin-edges.adj"
+
+? exotoxin_action(diphtheria_toxin, $Mechanism)        % expect adp_ribosylation_of_ef2
+? exotoxin_action(shiga_toxin, $Mechanism)             % expect inhibition_of_protein_synthesis
+? exotoxin_action(cholera_toxin, $Mechanism)           % expect activation_of_gs_adenylate_cyclase
+? exotoxin_action(heat_labile_enterotoxin, $Mechanism) % expect activation_of_adenylate_cyclase
+? exotoxin_action(pertussis_toxin, $Mechanism)         % expect adp_ribosylation_of_gi
+? exotoxin_action(tetanospasmin, $Mechanism)           % expect blocks_inhibitory_neurotransmitter_release
