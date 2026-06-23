@@ -1,0 +1,24 @@
+% ============================================================================
+% nerve-injury-recall.query.adj — a worked recall query over the nerve-lesion library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this nerve injury
+% produces which sign?" question: it states no neuroanatomy fact — it only
+% `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli nerve-injury-recall.query.adj
+% ============================================================================
+
+import "nerve-injury-edges.adj"
+
+? nerve_lesion_sign(radial_nerve, $Sign)              % expect wrist_drop
+? nerve_lesion_sign(median_nerve, $Sign)              % expect hand_of_benediction
+? nerve_lesion_sign(ulnar_nerve, $Sign)               % expect ulnar_claw_hand
+? nerve_lesion_sign(long_thoracic_nerve, $Sign)       % expect winged_scapula
+? nerve_lesion_sign(recurrent_laryngeal_nerve, $Sign) % expect vocal_cord_paralysis
+? nerve_lesion_sign(facial_nerve, $Sign)              % expect facial_paralysis
+? nerve_lesion_sign(superior_gluteal_nerve, $Sign)    % expect trendelenburg_gait
+? nerve_lesion_sign(deep_fibular_nerve, $Sign)        % expect foot_drop

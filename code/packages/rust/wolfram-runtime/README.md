@@ -186,6 +186,12 @@ assert_eq!(eval("ReplaceAll[{1, 2, 3}, x_Integer -> x^2]\n").unwrap(), "Out[1]= 
 assert_eq!(eval("Replace[5, x_ -> x + 1]\n").unwrap(), "Out[1]= 6\n");    // Replace matches the whole expr
 assert_eq!(eval("h[3] /. h[n_] :> n + 1\n").unwrap(), "Out[1]= 4\n");     // RuleDelayed: RHS held
 
+// W-20 advanced pattern constructs — head forms (operator sugar deferred to W-21):
+assert_eq!(eval("MatchQ[2, Alternatives[1, 2, 3]]\n").unwrap(), "Out[1]= True\n");
+assert_eq!(eval("Cases[{1, 2, 3, 4}, Condition[Pattern[x, Blank[]], x > 2]]\n").unwrap(), "Out[1]= {3, 4}\n");
+assert_eq!(eval("MatchQ[4, PatternTest[Blank[], EvenQ]]\n").unwrap(), "Out[1]= True\n");
+assert_eq!(eval("ReplaceRepeated[{1, 2, 3}, Rule[2, 99]]\n").unwrap(), "Out[1]= {1, 99, 3}\n"); // fixed point
+
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
 s.feed("square[x_] := x^2;\n").unwrap();   // `;` suppresses display
@@ -541,10 +547,34 @@ held `Replace` head matches the **whole expression** only.
 
 `ReplaceAll` recurses depth-bounded by `REPLACE_MAX_DEPTH`; the single pass cannot
 expand unboundedly or loop, an unbound RHS capture is left in place (no panic),
-and a non-rule operand returns the subject unchanged. The richer pattern algebra —
-alternatives `a | b`, conditions `patt /; t`, `PatternTest`, sequences `__`/`___`,
-`Repeated`, `Replace` **level specs**, and `ReplaceRepeated` (`//.`) — is
-**deferred to W-20** (MA04 §21.7).
+and a non-rule operand returns the subject unchanged.
+
+**W-20** adds the **advanced pattern constructs** (MA04 §22) — **runtime-only**,
+shipped as ordinary head applications (`Alternatives[…]`, `Condition[…]`,
+`PatternTest[…]`, `ReplaceRepeated[…]`), since the parser already accepts
+`NAME[args]`. The operator sugar (`|`, `/;`, `?`, `//.`) needs a grammar change
+and is **deferred to W-21**.
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Alternatives` | `MatchQ[2, Alternatives[1, 2, 3]]` | `True` |
+| `Alternatives` | `MatchQ[5, Alternatives[1, 2, 3]]` | `False` |
+| `Condition` | `Cases[{1,2,3,4}, Condition[Pattern[x, Blank[]], x > 2]]` | `{3, 4}` |
+| `PatternTest` | `MatchQ[4, PatternTest[Blank[], EvenQ]]` | `True` |
+| `ReplaceRepeated` | `ReplaceRepeated[{1, 2, 3}, Rule[2, 99]]` | `{1, 99, 3}` |
+| `ReplaceRepeated` | `ReplaceRepeated[{1, 2}, {Rule[1, 2], Rule[2, 3]}]` | `{3, 3}` |
+
+`Alternatives` tries each branch once (left to right — no combinatorial blowup);
+`Condition`/`PatternTest` evaluate their test through a fresh, stateless VM with
+the standard bounded evaluator (anything but `True` fails the match). The big
+safety bound is on **`ReplaceRepeated`**: it iterates `ReplaceAll` to a fixed
+point but with a **hard cap** (`REPLACE_REPEATED_MAX_ITERATIONS` = `2^16`), so a
+self-recursive rule like `x -> f[x]` that never converges stops at the cap and
+returns the last form — no hang, no panic, no unbounded memory.
+
+The remaining pattern algebra — the operator sugar above, sequences `__`/`___`
+(`BlankSequence`/`BlankNullSequence`), `Repeated`, `Except`, `Longest`/`Shortest`,
+and `Replace` **level specs** — is **deferred to W-21** (MA04 §22.7).
 
 **W-16** adds the **nested/structured list operations** — the *shape* vocabulary
 for matrix-like nested lists, on top of the W-9 flat-list heads. All reuse the

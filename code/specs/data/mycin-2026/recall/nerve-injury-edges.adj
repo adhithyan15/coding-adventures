@@ -1,0 +1,95 @@
+% ============================================================================
+% nerve-injury-edges — the peripheral-nerve-lesion knowledge-graph (MYCIN-2026 NERVE).
+% ============================================================================
+% A high-yield clinical-neuroanatomy board domain: a named peripheral (or cranial)
+% nerve and the classic clinical sign its injury produces. "Injury to the radial
+% nerve produces which sign?" becomes the binding query
+%     ? nerve_lesion_sign(radial_nerve, $Sign).
+%
+% Direction note: the relation is nerve -> sign (`nerve_lesion_sign`), the board
+% direction — you name the injured nerve and must recall its localizing clinical
+% sign (wrist drop, claw hand, winged scapula, foot drop, ...). Each nerve here
+% maps to one canonical localizing sign, so a query binds a single answer. What
+% matters for grounding is that one self-contained span names BOTH the nerve AND
+% its sign in the same sentence.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like EXOTOXIN/EMBRYO/TOX).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized RUNNING
+%                text; every span here was independently re-fetched and confirmed,
+%                and figure-caption spans truncated by the page UI were rejected
+%                in favour of a clean body sentence — see the ulnar edge).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see nerve-injury-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Faithful atoms: the foot-drop span names the DEEP FIBULAR nerve (the dorsiflexion
+% branch of the common peroneal/fibular nerve), so its subject atom is the
+% span-faithful deep_fibular_nerve, not the broader common_peroneal_nerve — the
+% atom matches the concept the cited sentence actually names.
+% ============================================================================
+
+dictionary nerve_vocab {
+    define nerve : entity   surface "peripheral nerve", "injured nerve"
+    define sign  : entity   surface "clinical sign", "localizing deficit"
+
+    define nerve_lesion_sign : relation from nerve to sign  % the sign a nerve injury produces
+}
+
+rulebook nerve_facts {
+    use nerve_vocab
+
+    % --- radial nerve -> wrist drop --------------------------------------------
+    relate nerve_lesion_sign(radial_nerve, wrist_drop)
+        source "Wrist drop is a disabling clinical condition resulting from dysfunction of the radial nerve, a major peripheral nerve that provides motor innervation to the extensor muscles of the wrist and fingers and sensory innervation to the dorsum of the hand."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532993/"
+        trust authoritative
+
+    % --- median nerve -> hand of benediction -----------------------------------
+    relate nerve_lesion_sign(median_nerve, hand_of_benediction)
+        source "A low median nerve lesion can manifest as a positive Benediction sign when attempting to make a fist, given its role in innervating the muscles responsible for flexing the first to third fingers."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554458/"
+        trust authoritative
+
+    % --- ulnar nerve -> ulnar claw hand (clean body sentence, not a caption) ----
+    relate nerve_lesion_sign(ulnar_nerve, ulnar_claw_hand)
+        source "Motor complaints may include weakness/paralysis of the intrinsic muscles of the hand innervated by the ulnar nerve, which may present as a weakening of the handgrip and clawing of the fourth and fifth digits."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK431063/"
+        trust authoritative
+
+    % --- long thoracic nerve -> winged scapula ---------------------------------
+    relate nerve_lesion_sign(long_thoracic_nerve, winged_scapula)
+        source "When the long thoracic nerve is injured, a phenomenon known as winging of the scapula results."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535396/"
+        trust authoritative
+
+    % --- recurrent laryngeal nerve -> vocal cord paralysis ---------------------
+    relate nerve_lesion_sign(recurrent_laryngeal_nerve, vocal_cord_paralysis)
+        source "Injury to the recurrent laryngeal nerve has the potential to cause unilateral vocal cord paralysis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560832/"
+        trust authoritative
+
+    % --- facial nerve (CN VII) -> facial paralysis -----------------------------
+    relate nerve_lesion_sign(facial_nerve, facial_paralysis)
+        source "Bell palsy is the most common paralysis of the seventh cranial nerve, with an onset that is typically rapid and hemifacial."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482290/"
+        trust authoritative
+
+    % --- superior gluteal nerve -> Trendelenburg gait --------------------------
+    relate nerve_lesion_sign(superior_gluteal_nerve, trendelenburg_gait)
+        source "Damage to the superior gluteal nerve results in paralysis of the gluteus medius muscle resulting in a characteristic gait on walking and standing known as the Trendelenburg gait."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535408/"
+        trust authoritative
+
+    % --- deep fibular nerve -> foot drop (span names the deep fibular branch) ---
+    relate nerve_lesion_sign(deep_fibular_nerve, foot_drop)
+        source "Clinically, the deep fibular nerve is most commonly associated with foot drop, a consequence of impaired dorsiflexion."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526033/"
+        trust authoritative
+}
