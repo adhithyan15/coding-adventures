@@ -147,8 +147,10 @@ use crate::codegen::{
     encode_f64_load, encode_f64_store, encode_i64_load, encode_i64_store,
     encode_i32_const, encode_i64_const, encode_local_get, encode_local_set, BLOCK, BLOCK_EMPTY,
     DROP, END, F32_ADD, F32_DIV, F32_EQ, F32_GE, F32_GT, F32_LE, F32_LT, F32_MUL, F32_NEG,
-    F32_NE, F32_SUB, F64_ADD, F64_DIV, F64_EQ, F64_GE, F64_GT, F64_LE, F64_LT, F64_MUL,
+    F32_NE, F32_SUB, F64_ADD, F64_CONVERT_I64_S, F64_DIV, F64_EQ, F64_FLOOR, F64_GE, F64_GT,
+    F64_LE, F64_LT, F64_MUL,
     F64_NEG, F64_NE, F64_SUB, I32_ADD, I32_AND, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S,
+    I64_TRUNC_F64_S,
     I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
     I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
     I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GE_U, I64_GT_S, I64_LE_S, I64_LT_S,
@@ -1162,6 +1164,51 @@ fn emit_instr(
 
             code.extend(encode_local_get(r));
             code.push(I32_EQZ);
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── numeric conversions integer↔real (LANG-FULL E8) ───────────────────
+        //
+        // The dest local is already typed `f64` (int_to_real) or `i64`
+        // (real_to_int_*) by `infer_local_type_hints`, which reads each var's
+        // type from the producing instruction's `type_hint`.
+        //
+        // `real_to_int_*` uses the **non-saturating** `i64.trunc_f64_s`, which
+        // **traps** on NaN/±∞/out-of-`i64`-range — matching vm-core's
+        // `real_to_i64_checked` fail-closed trap exactly. (The saturating
+        // `trunc_sat` would clamp instead and silently diverge from the VM.)
+        "int_to_real" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "int_to_real must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            code.extend(encode_local_get(r)); // i64
+            code.push(F64_CONVERT_I64_S); // → f64
+            code.extend(encode_local_set(rd));
+        }
+        "real_to_int_trunc" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "real_to_int_trunc must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            code.extend(encode_local_get(r)); // f64
+            code.push(I64_TRUNC_F64_S); // → i64 (toward zero; traps out-of-range)
+            code.extend(encode_local_set(rd));
+        }
+        "real_to_int_floor" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "real_to_int_floor must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            code.extend(encode_local_get(r)); // f64
+            code.push(F64_FLOOR); // round toward −∞ (entier)
+            code.push(I64_TRUNC_F64_S); // trunc the integral result → i64 (traps out-of-range)
             code.extend(encode_local_set(rd));
         }
 

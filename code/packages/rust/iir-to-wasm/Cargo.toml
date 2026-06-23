@@ -1,6 +1,6 @@
 [package]
 name = "iir-to-wasm"
-version = "0.16.0"
+version = "0.17.0"
 edition = "2021"
 description = "IIR → WASM backend — lowers IIRModule to WasmModule.  v0.15.0 (LANG-FULL E2 integration — compute-wide + mask): narrow **unsigned** types (u4/u8/u16/u32) now ride the **i64 register model** (i64 locals + `i64.*` ops + `i64.const <mask>; i64.and`) instead of i32. The i32-op approach trapped the moment a narrow op met an i64-slot operand (a const/let) — exactly a real frontend's value model (Nib materialises every const/let as i64) — with `type mismatch: expected i32, got I64`. Computing wide and masking the value is operand-width-agnostic, matching the vm/jit/llvm/native backends.  v0.14.0 (E2 backend 3/6): masked narrow results with `i32.const <mask>; i32.and` after the i32 op (superseded by v0.15.0's i64 model).  v0.13.0 (LANG-MATRIX LM-W Brainfuck): adds the byte-tape ops alloc_bytes/load_byte/store_byte over linear memory (with i32.wrap_i64 / i64.extend_i32_u at the byte boundary), i64-aware putchar/getchar, and width-correct i64 branch conditions (i64.eqz) + i64-widened comparison results — so the i64-widened Brainfuck runs on wasm.  v0.7.0 (G1): accept cmp_*-prefixed comparison opcodes.  v0.8.0 (G2): whitelist call_builtin print_i64 and route it to the env.__print_i64 host import that io_out uses, so BASIC's PRINT reaches real wasm bytecode."
 
