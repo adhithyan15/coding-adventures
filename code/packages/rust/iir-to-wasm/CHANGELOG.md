@@ -3,6 +3,26 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.0] — 2026-06-23 (LANG-FULL E8 — numeric conversions integer↔real, PR-3)
+
+WASM lowering for the three E8 conversion opcodes (vm-core 0.9.0 gave the
+reference semantics; spec `lang-full-e8-numeric-conversions.md`). All three are
+wasm-MVP opcodes — no feature gate.
+
+- **`int_to_real`** → `f64.convert_i64_s` (0xB9).
+- **`real_to_int_trunc`** → `i64.trunc_f64_s` (0xB0) — truncate toward zero.
+- **`real_to_int_floor`** → `f64.floor` (0x9C) then `i64.trunc_f64_s`.
+- The dest local is typed `f64`/`i64` automatically by `infer_local_type_hints`
+  (it reads each var's type from the producing instruction's `type_hint`).
+- **Trap matches the VM for free.** The **non-saturating** `i64.trunc_f64_s`
+  traps on NaN/±∞/out-of-`i64`-range — exactly vm-core's `real_to_i64_checked`
+  fail-closed contract. (The saturating `i64.trunc_sat_f64_s` would clamp and
+  silently diverge, so it is deliberately *not* used; no explicit guard needed.)
+- Verified by RUNNING on a real wasm runtime (`tests/e8_conversions.rs`): the
+  integer→real→integer round trip `floor(int_to_real(45) − 2.7)` ⇒ 42, plus
+  trunc-toward-zero (`44 + trunc(-2.9)` ⇒ 42) and floor-toward-−∞
+  (`45 + floor(-2.5)` ⇒ 42, the negative-rounding difference).
+
 ## [0.16.0] — 2026-06-21 (LANG-FULL E5 — arrays via linear memory + explicit bounds-trap)
 
 The four E5 array opcodes now lower to the **static** array model in WASM **linear

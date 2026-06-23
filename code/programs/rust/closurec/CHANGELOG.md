@@ -18,6 +18,27 @@ New end-to-end fixture `tests/diff/simple-fold-at/` and integration test
 is folded to `"d"`, and the SIMPLE typed pipeline ran rather than the
 whitespace fallback).
 
+## [0.178.0] - 2026-06-22
+
+### Added — string `trim` / `trimStart` / `trimEnd` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.29.0, which folds
+`String#trim` / `trimStart` / `trimEnd` on a string literal: `"  hi  ".trim()`
+→ `"hi"`, `.trimStart()` → `"hi  "`, `.trimEnd()` → `"  hi"`. The stripped set
+is the exact ECMAScript white-space + line-terminator set (hard-coded, not
+Rust's `char::is_whitespace`, which disagrees on U+0085/U+FEFF), so the fold is
+sound.
+
+New e2e fixture `tests/diff/simple-fold-trim` (and integration test
+`diff_simple_fold_trim.rs`): `var s = "  hi  ".trim(); report(s);` →
+`var s="hi";report(s);`, with a whitespace-fallback guard proving the fold
+comes from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.178.0 to sit above main (closurec 0.175.0), the
+> open numeric `toString([radix])` fold branch (closurec 0.176.0, PR #6560),
+> and the open `padStart/padEnd` fold branch (closurec 0.177.0, PR #6571), so
+> the parallel branches never collide on the version line.
 ## [0.177.0] - 2026-06-22
 
 ### Added — string `padStart` / `padEnd` fold at SIMPLE/ADVANCED
