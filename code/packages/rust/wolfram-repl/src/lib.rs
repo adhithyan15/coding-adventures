@@ -380,6 +380,54 @@ mod tests {
     }
 
     #[test]
+    fn w20_advanced_pattern_constructs_evaluate_end_to_end() {
+        // W-20 ships the four advanced constructs as ORDINARY head applications —
+        // the operator sugar (`|`, `/;`, `?`, `//.`) is deferred to W-21 (needs a
+        // grammar change), so we exercise the head forms, which the parser already
+        // accepts as `NAME[args]`. This confirms the held handlers + the matcher
+        // dispatch wire up through the real parse → lower → eval pipeline.
+        let mut r = WolframRepl::new();
+
+        // Alternatives: matches any branch.
+        assert!(matches!(
+            r.feed("MatchQ[2, Alternatives[1, 2, 3]]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("MatchQ[5, Alternatives[1, 2, 3]]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+
+        // Condition: the test sees the captured named binding `x`.
+        assert!(matches!(
+            r.feed("Cases[{1, 2, 3, 4}, Condition[Pattern[x, Blank[]], x > 2]]"),
+            ReplResponse::Output(t) if t.contains("{3, 4}")
+        ));
+
+        // PatternTest: applies the predicate to the subject (W-9 EvenQ).
+        assert!(matches!(
+            r.feed("MatchQ[4, PatternTest[Blank[], EvenQ]]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("MatchQ[3, PatternTest[Blank[], EvenQ]]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+
+        // ReplaceRepeated: fixed point. {1,2,3} with 2->99 converges to {1,99,3}.
+        assert!(matches!(
+            r.feed("ReplaceRepeated[{1, 2, 3}, Rule[2, 99]]"),
+            ReplResponse::Output(t) if t.contains("{1, 99, 3}")
+        ));
+        // A multi-step fixed point that genuinely iterates: {1,2} with {1->2,2->3}
+        // settles on {3, 3}.
+        assert!(matches!(
+            r.feed("ReplaceRepeated[{1, 2}, {Rule[1, 2], Rule[2, 3]}]"),
+            ReplResponse::Output(t) if t.contains("{3, 3}")
+        ));
+    }
+
+    #[test]
     fn continues_while_a_bracket_is_open() {
         let mut r = WolframRepl::new();
         assert_eq!(r.feed("f[1,"), ReplResponse::NeedMore); // open bracket

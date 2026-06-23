@@ -1,0 +1,72 @@
+% ============================================================================
+% diuretic-site-edges — the diuretic site-of-action knowledge-graph (MYCIN-2026 DIURETIC).
+% ============================================================================
+% A high-yield renal-pharmacology board domain: a diuretic (named drug OR drug
+% class) and the nephron segment where it acts. "Loop diuretics act on which
+% nephron segment?" becomes the binding query
+%     ? diuretic_site(loop_diuretic, $Segment).
+%
+% Direction note: the relation is diuretic -> nephron segment (`diuretic_site`),
+% the board direction — you name a diuretic and must recall WHERE along the
+% nephron it works (proximal tubule / thick ascending limb / distal convoluted
+% tubule / collecting duct). Each subject here maps to one canonical segment, so a
+% query binds a single answer. What matters for grounding is that one
+% self-contained span names BOTH the diuretic AND its segment in the same sentence.
+%
+% Subject granularity is SPAN-FAITHFUL, not uniform: where the cited sentence
+% names a drug CLASS ("Loop diuretics ...", "Thiazide diuretics ...", "carbonic
+% anhydrase inhibitors ...") the subject atom is the class (loop_diuretic,
+% thiazide, carbonic_anhydrase_inhibitor); where it names an individual drug
+% ("Amiloride ...") the subject atom is that drug (amiloride). The atom always
+% matches the concept the span actually names — we do not promote a class span to
+% a specific drug it never mentions.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like NERVE/EXOTOXIN/EMBRYO).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see diuretic-site-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary diuretic_vocab {
+    define diuretic : entity   surface "diuretic drug or class", "named diuretic"
+    define segment  : entity   surface "nephron segment", "site of action"
+
+    define diuretic_site : relation from diuretic to segment  % the nephron segment a diuretic acts on
+}
+
+rulebook diuretic_facts {
+    use diuretic_vocab
+
+    % --- loop diuretics -> thick ascending limb --------------------------------
+    relate diuretic_site(loop_diuretic, thick_ascending_limb)
+        source "Loop diuretics induce its effect by competing with chloride to bind to the Na-K-2Cl (NKCC2) cotransporter at the apical membrane of the thick ascending limb of the loop of Henle and blocking the cotransporter, which inhibits the reabsorption of sodium and chloride."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK546656/"
+        trust authoritative
+
+    % --- thiazide diuretics -> distal convoluted tubule ------------------------
+    relate diuretic_site(thiazide, distal_convoluted_tubule)
+        source "Thiazide diuretics exert their diuretic effect via blockage of the sodium-chloride (Na+/Cl-) channel in the proximal segment of the distal convoluted tubule (DCT)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532918/"
+        trust authoritative
+
+    % --- amiloride -> collecting duct (ENaC, distal nephron) -------------------
+    relate diuretic_site(amiloride, collecting_duct)
+        source "Amiloride works by inhibiting the epithelial sodium channels (ENaC) in the distal nephron (distal convoluted tubule and cortical collecting duct), lung, and colon."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542303/"
+        trust authoritative
+
+    % --- carbonic anhydrase inhibitors -> proximal tubule ----------------------
+    relate diuretic_site(carbonic_anhydrase_inhibitor, proximal_tubule)
+        source "Proximal RTA in adults may also result from carbonic anhydrase inhibitors, which impair proximal bicarbonate reabsorption without affecting the reabsorption of other proximal tubule solutes."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519044/"
+        trust authoritative
+}
