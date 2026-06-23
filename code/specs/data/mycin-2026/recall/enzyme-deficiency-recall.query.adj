@@ -1,0 +1,24 @@
+% ============================================================================
+% enzyme-deficiency-recall.query.adj — a worked recall query over the enzyme library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "deficiency of this
+% enzyme causes which disease?" question: it states no biochemistry fact — it only
+% `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli enzyme-deficiency-recall.query.adj
+% ============================================================================
+
+import "enzyme-deficiency-edges.adj"
+
+? enzyme_deficiency_disease(glucocerebrosidase, $Disease)                       % expect gaucher_disease
+? enzyme_deficiency_disease(sphingomyelinase, $Disease)                         % expect niemann_pick_disease
+? enzyme_deficiency_disease(alpha_galactosidase_a, $Disease)                    % expect fabry_disease
+? enzyme_deficiency_disease(arylsulfatase_a, $Disease)                          % expect metachromatic_leukodystrophy
+? enzyme_deficiency_disease(glucose_6_phosphatase, $Disease)                    % expect von_gierke_disease
+? enzyme_deficiency_disease(acid_alpha_glucosidase, $Disease)                   % expect pompe_disease
+? enzyme_deficiency_disease(galactose_1_phosphate_uridyltransferase, $Disease)  % expect galactosemia
+? enzyme_deficiency_disease(homogentisate_oxidase, $Disease)                    % expect alkaptonuria

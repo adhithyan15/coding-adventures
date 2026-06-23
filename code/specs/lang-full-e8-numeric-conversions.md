@@ -77,7 +77,18 @@ range check the frontend/VM applies still gives the uniform trap semantics, and
 we assert the operand is in range before lowering for the non-saturating story.
 Open question O-2 below.
 ² JVM `i2d` is always exact (an `int` fits a `double`); when the operand is a
-concretised `long`, use `l2d`.
+concretised `long`, use `l2d`. **Trap divergence (PR-4, iir-to-jvm-class-file
+0.18.0):** unlike the VM/LLVM/WASM trap on NaN/±∞/out-of-range (O-2's
+recommendation), JVM `d2i`/`d2l` *saturate* (NaN→0, +∞→MAX, −∞→MIN) and cannot
+throw. Matching the trap would need from-scratch exception bytecode (range-check
++ `athrow` + an exception table) with **no reusable precedent** in this backend
+— its E5 array bounds rely on the JVM's *native* `*aload` check, not an explicit
+trap. Since every finite, in-range value (all `entier`/coercion ever produces)
+converts identically, the matrix cells agree bit-for-bit; the divergence is
+confined to pathological inputs the matrix never feeds. PR-4 therefore ships the
+**saturating** lowering and documents it here rather than block the arc on
+exception-table plumbing. If a future caller needs the trap on the JVM, add the
+range-check guard then.
 ³ CLR (PR-5, iir-to-cil-bytecode 0.26.0): the **overflow-checking**
 `conv.ovf.i4` truncates toward zero *and* throws `OverflowException` on
 NaN/±∞/out-of-range, so it gives the VM's fail-closed trap (O-2's recommendation)
