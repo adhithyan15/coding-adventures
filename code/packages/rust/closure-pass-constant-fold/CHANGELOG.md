@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.28.0] - 2026-06-22
+
+### Added — fold `"x".padStart(target[, pad])` / `padEnd(...)` on string literals
+
+`String.prototype.padStart` / `padEnd` (ECMAScript §22.1.3.16 / §22.1.3.17) now
+fold to a string literal when the receiver is a string literal, the target
+length is a non-negative integer literal, and the optional pad is a string
+literal (default a single space): `"5".padStart(3, "0")` → `"005"`,
+`"abc".padEnd(6)` → `"abc   "`, `"abc".padStart(6, "12")` → `"121abc"` (the pad
+repeats and truncates to the shortfall). A string already at or over the target
+is returned unchanged. A new `fold_string_pad` helper works in UTF-16 code
+units.
+
+Conservative scope, with a **denial-of-service guard**: declines (leaves the
+call) for no argument or more than two, a non-integer target, a non-string-
+literal pad, a target over `MAX_PAD_UNITS` (100 000) UTF-16 code units, or a
+fill truncation that would split a surrogate pair into a lone surrogate (a valid
+JS string but not a Rust `String` — the same guard `slice`/`charAt` use). 6 new
+unit tests with V8-derived oracle values.
+
+> Version note: bumped to 0.28.0 — above the merged `repeat` fold (0.26.0) and
+> the merged numeric `toString(radix)` fold (0.27.0) — so the parallel branches
+> don't collide on the version line.
+
 ## [0.27.0] - 2026-06-22
 
 ### Added — fold `(N).toString([radix])` on non-negative integer literals

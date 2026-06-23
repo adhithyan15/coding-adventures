@@ -1,0 +1,87 @@
+% ============================================================================
+% exotoxin-edges — the bacterial-exotoxin mechanism knowledge-graph (MYCIN-2026 EXOTOXIN).
+% ============================================================================
+% A high-yield clinical-microbiology board domain: a named bacterial exotoxin
+% and its molecular mechanism of action. "Diphtheria toxin acts by which
+% mechanism?" becomes the binding query
+%     ? exotoxin_action(diphtheria_toxin, $Mechanism).
+%
+% Direction note: the relation is toxin -> mechanism (`exotoxin_action`), the
+% board direction — you name a toxin and must recall HOW it injures the host
+% cell (which target it modifies and with what biochemical reaction). Several
+% toxins converge on the same biochemical move (ADP-ribosylation of a target),
+% but each toxin modifies a DIFFERENT target, so each query binds a single
+% answer. What matters for grounding is that one self-contained span names BOTH
+% the toxin AND its mechanism in the same sentence.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like EMBRYO/TOX/PSYCH/MSK).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see exotoxin-recall.query.adj. Nothing
+% here is asserted "from memory": every edge is defended by a span a reader can
+% re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Mechanism atoms are faithful to the cited span: diphtheria and exotoxin-A-class
+% toxins ADP-ribosylate elongation factor 2 (atom adp_ribosylation_of_ef2);
+% Shiga toxin's cited span states ribosome binding -> protein-synthesis
+% inhibition without naming the 60S subunit, so its atom is the span-faithful
+% inhibition_of_protein_synthesis (not the finer 60S detail). Cholera toxin and
+% the ETEC heat-labile toxin both raise cAMP via adenylate cyclase; cholera's
+% span names the Gs ADP-ribosylation step explicitly so it carries the more
+% specific activation_of_gs_adenylate_cyclase atom, the heat-labile span names
+% only adenylate-cyclase stimulation so it carries activation_of_adenylate_cyclase.
+% ============================================================================
+
+dictionary exotoxin_vocab {
+    define toxin     : entity   surface "bacterial exotoxin", "named toxin"
+    define mechanism : entity   surface "mechanism of action", "molecular target modified"
+
+    define exotoxin_action : relation from toxin to mechanism  % how the toxin injures the host cell
+}
+
+rulebook exotoxin_facts {
+    use exotoxin_vocab
+
+    % --- diphtheria toxin -> ADP-ribosylation of EF-2 --------------------------
+    relate exotoxin_action(diphtheria_toxin, adp_ribosylation_of_ef2)
+        source "Fragment A catalyzes the NAD+-dependent ADP-ribosylation of elongation factor 2, thereby inhibiting protein synthesis in eukaryotic cells."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK7971/"
+        trust authoritative
+
+    % --- Shiga toxin -> inhibition of protein synthesis (ribosome) -------------
+    relate exotoxin_action(shiga_toxin, inhibition_of_protein_synthesis)
+        source "The Shiga toxin/Gb3 complex binds to cell ribosomes, inhibiting protein synthesis and causing apoptosis; inflammatory cytokines are also produced."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556038/"
+        trust authoritative
+
+    % --- cholera toxin -> ADP-ribosylation of Gs (adenylate cyclase) -----------
+    relate exotoxin_action(cholera_toxin, activation_of_gs_adenylate_cyclase)
+        source "Cholera toxin is produced, which ADP-ribosylates the Gs subunit of the G protein complex in the gut epithelium."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470232/"
+        trust authoritative
+
+    % --- ETEC heat-labile toxin -> adenylate cyclase / cAMP --------------------
+    relate exotoxin_action(heat_labile_enterotoxin, activation_of_adenylate_cyclase)
+        source "Heat-labile toxin stimulates adenylate cyclase, leading to increased intracellular cyclic adenosine monophosphate (cAMP) and subsequent chloride secretion from intestinal crypt cells."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK564298/"
+        trust authoritative
+
+    % --- pertussis toxin -> ADP-ribosylation of Gi -----------------------------
+    relate exotoxin_action(pertussis_toxin, adp_ribosylation_of_gi)
+        source "The S1 subunit of pertussis toxin ADP-ribosylates the Cys352 of protein Gi (GTP-binding protein), as well as the corresponding cysteine of protein Gα and of transducin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK7813/"
+        trust authoritative
+
+    % --- tetanospasmin -> blocks inhibitory neurotransmitter release -----------
+    relate exotoxin_action(tetanospasmin, blocks_inhibitory_neurotransmitter_release)
+        source "Within the CNS, tetanospasmin blocks the release of the neurotransmitters gamma amino butyric acid (GABA) and glycine from inhibitory interneurons within the spinal cord and brain stem."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482484/"
+        trust authoritative
+}

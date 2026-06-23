@@ -4,6 +4,75 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.16.0] — 2026-06-22
+
+The **W-20** deliverable (MA04 §22): Wolfram's **advanced pattern constructs**,
+built on W-18's matcher, W-19's `replace_all_once`, and the existing
+`cas-pattern-matching` crate. **No grammar change** — the four constructs ship as
+ordinary head applications (`Alternatives[…]`, `Condition[…]`, `PatternTest[…]`,
+`ReplaceRepeated[…]`), which the parser already accepts as `NAME[args]`. The
+surface operator sugar (`|`, `/;`, `?`, `//.`) needs new lexer tokens + parser
+precedence + lowering + a regenerated grammar, so it is **deferred to W-21** (see
+below). W-20 is entirely in `wolfram-runtime`.
+
+### Added (advanced pattern constructs)
+
+- **`Alternatives[a, b, …]`** (`a | b | c`) — matches the subject against each
+  alternative **in order**; the first that matches wins (with its bindings). An
+  empty `Alternatives[]` matches nothing. Branches nest freely
+  (`_Integer | _String`). `MatchQ[2, Alternatives[1, 2, 3]]` → `True`;
+  `MatchQ[5, Alternatives[1, 2, 3]]` → `False`. Bounded — each branch is tried
+  once, left to right; no cross-branch combinatorial expansion.
+- **`Condition[patt, test]`** (`patt /; test`) — matches `patt`, substitutes the
+  captured **named bindings** into `test` (bare-symbol substitution — a test
+  references its captures as ordinary symbols, e.g. `x > 2`, not `Pattern[…]`
+  nodes), and accepts **only if** `test` evaluates to `True`.
+  `Cases[{1,2,3,4}, Condition[Pattern[x, Blank[]], x > 2]]` → `{3, 4}`. The test
+  runs through a **fresh, stateless** `WolframBackend`-backed VM (it is pure and
+  must not see/mutate session state) and via the standard bounded evaluator.
+- **`PatternTest[patt, fn]`** (`patt ? fn`) — matches `patt`, then accepts only if
+  `fn[subject]` evaluates to `True` (the *subject*, not a binding).
+  `MatchQ[4, PatternTest[Blank[], EvenQ]]` → `True`;
+  `MatchQ[3, PatternTest[Blank[], EvenQ]]` → `False` (the W-9 `EvenQ` predicate).
+- **`ReplaceRepeated[expr, rules]`** (`expr //. rules`) — apply `ReplaceAll`
+  repeatedly to a **fixed point**, evaluating between passes, until either a pass
+  produces a result identical to its input (convergence) or the pass count reaches
+  `REPLACE_REPEATED_MAX_ITERATIONS` (`2^16`, the same order of magnitude as
+  Wolfram's default `MaxIterations`). `ReplaceRepeated[{1,2,3}, Rule[2, 99]]` →
+  `{1, 99, 3}` (converges); `ReplaceRepeated[{1,2}, {Rule[1,2], Rule[2,3]}]` →
+  `{3, 3}` (genuinely iterates). Held (joins `PATTERN_HEADS`), so its rules survive
+  literally; only the subject is evaluated up front.
+
+### Safety
+
+- **Hard iteration cap on `ReplaceRepeated`.** A self-recursive rule like
+  `ReplaceRepeated[x, x -> f[x]]` never converges — the term changes every pass,
+  so the equality check never fires. The iteration counter is what terminates the
+  loop: at the cap it returns the **last form** with **no hang, no panic, and no
+  unbounded memory**. Each individual pass is still depth-guarded by
+  `REPLACE_MAX_DEPTH`, so both the inner (tree depth) and outer (pass count) loops
+  are bounded. A dedicated test asserts the self-recursive case returns rather
+  than hanging.
+- **Bounded backtracking.** `Alternatives` tries each branch once, left to right —
+  no exponential cross-product. The advanced-construct dispatch recurses through
+  the same depth discipline as W-18/W-19.
+- **Bounded test evaluation.** `Condition`/`PatternTest` evaluate their tests
+  through the standard VM with its existing recursion/stack guards; the fresh VM
+  has no session state to corrupt. Anything other than `True` fails the match.
+- **No panic on malformed nodes.** The `pattern_tree_well_formed` guard still
+  rejects malformed `Pattern[…]` before any indexing; a malformed
+  `Alternatives`/`Condition`/`PatternTest` (wrong arity) simply **fails to match**,
+  and `ReplaceRepeated` with the wrong arity stays unevaluated.
+
+### Deferred to W-21
+
+The operator **sugar** for all four constructs (`|`, `/;`, `?`, `//.` — needs a
+grammar change), the **sequence patterns** `__` (`BlankSequence`) / `___`
+(`BlankNullSequence`) — variable-arity matching is not yet in the shared
+`cas-pattern-matching` matcher, so the `ReplaceRepeated` tests use non-sequence
+rules — plus **`Repeated`** `patt..`, **`Except`**, **`Longest`/`Shortest`**, and
+**`Replace` level specifications** (the third argument).
+
 ## [0.15.0] — 2026-06-21
 
 The **W-19** deliverable (MA04 §21): Wolfram's **named patterns** and
