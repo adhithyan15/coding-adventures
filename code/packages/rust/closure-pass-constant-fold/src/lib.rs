@@ -619,14 +619,22 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                     }
                 }
-                // ---- zero-argument casing methods (ASCII-only) ----
+                // ---- zero-argument casing + trimming methods ----
+                //
+                // `toUpperCase`/`toLowerCase` are ASCII-only (full-Unicode case
+                // mapping has length-changing special cases we don't reproduce);
+                // `trim`/`trimStart`/`trimEnd` strip the ECMAScript whitespace
+                // set (`fold_string_trim` below) from one or both ends.
                 else if arguments.is_empty() {
-                    let cased = match id.name.as_str() {
+                    let folded = match id.name.as_str() {
                         "toUpperCase" if s.value.is_ascii() => Some(s.value.to_ascii_uppercase()),
                         "toLowerCase" if s.value.is_ascii() => Some(s.value.to_ascii_lowercase()),
+                        "trim" => Some(fold_string_trim(&s.value, true, true)),
+                        "trimStart" => Some(fold_string_trim(&s.value, true, false)),
+                        "trimEnd" => Some(fold_string_trim(&s.value, false, true)),
                         _ => None,
                     };
-                    if let Some(result) = cased {
+                    if let Some(result) = folded {
                         let parent = c.cv.clone();
                         let before = format!("\"{}\".{}()", s.value, id.name);
                         let after = format!("\"{}\"", result);
@@ -906,6 +914,61 @@ fn fold_string_repeat(value: &str, args: &[Expression]) -> Option<String> {
         Some(total) if total <= MAX_REPEAT_UNITS => Some(value.repeat(count as usize)),
         _ => None,
     }
+}
+
+/// `true` iff `c` is in the ECMAScript string-trim white-space set — the union
+/// of `WhiteSpace` and `LineTerminator` that `String.prototype.trim` removes
+/// (ECMAScript §22.1.3.32, via `TrimString`).
+///
+/// We hard-code the exact set rather than use Rust's `char::is_whitespace`,
+/// because the two **disagree**: Rust treats U+0085 (NEL) as whitespace but JS
+/// does not, and JS treats U+FEFF (the BOM / ZERO WIDTH NO-BREAK SPACE) as
+/// whitespace but Rust does not. Folding with the wrong set would silently
+/// miscompile, so the predicate below is the single source of truth.
+///
+/// | code point(s)        | name                                   |
+/// |----------------------|----------------------------------------|
+/// | U+0009..=U+000D      | tab, LF, VT, FF, CR                     |
+/// | U+0020               | space                                  |
+/// | U+00A0               | no-break space                         |
+/// | U+1680               | ogham space mark                       |
+/// | U+2000..=U+200A      | en quad … hair space                   |
+/// | U+2028, U+2029       | line / paragraph separator             |
+/// | U+202F               | narrow no-break space                  |
+/// | U+205F               | medium mathematical space              |
+/// | U+3000               | ideographic space                      |
+/// | U+FEFF               | zero-width no-break space (BOM)        |
+fn is_js_trim_whitespace(c: char) -> bool {
+    matches!(c,
+        '\u{0009}'..='\u{000D}'
+        | '\u{0020}'
+        | '\u{00A0}'
+        | '\u{1680}'
+        | '\u{2000}'..='\u{200A}'
+        | '\u{2028}'
+        | '\u{2029}'
+        | '\u{202F}'
+        | '\u{205F}'
+        | '\u{3000}'
+        | '\u{FEFF}'
+    )
+}
+
+/// Compute `value.trim()` / `trimStart()` / `trimEnd()` at compile time
+/// (ECMAScript §22.1.3.32/.34/.33). `start`/`end` select which ends to strip;
+/// trimming works on whole Unicode scalar values, so — unlike `slice` — it can
+/// never split a surrogate pair, and always yields a valid Rust `String`
+/// (hence it returns `String`, not `Option`). The stripped set is exactly
+/// `is_js_trim_whitespace`.
+fn fold_string_trim(value: &str, start: bool, end: bool) -> String {
+    let mut s = value;
+    if start {
+        s = s.trim_start_matches(is_js_trim_whitespace);
+    }
+    if end {
+        s = s.trim_end_matches(is_js_trim_whitespace);
+    }
+    s.to_string()
 }
 
 /// Compute `value.padStart(target[, pad])` (when `at_start`) or
@@ -3064,10 +3127,88 @@ mod tests {
 
     #[test]
     fn unknown_string_method_does_not_fold() {
-        // `"abc".trim()` is not a casing method we model — pass through.
-        let t = call0(string("  abc  ", None), "trim");
+        // `"abc".normalize()` is not a method we model — pass through. (We do
+        // fold `trim`/`trimStart`/`trimEnd` now; see the trimming tests below.)
+        let t = call0(string("abc", None), "normalize");
         let (out, _, changed, _) = run_pass(program_with_expr(t, true));
-        assert!(!changed, "\"...\".trim() must not fold");
+        assert!(!changed, "\"abc\".normalize() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- trimming (trim / trimStart / trimEnd) --------
+
+    #[test]
+    fn fold_string_trim_basic() {
+        // (recv, method, expect) — oracle values from V8.
+        for (recv, method, expect) in [
+            ("  abc  ", "trim", "abc"),
+            ("  abc  ", "trimStart", "abc  "),
+            ("  abc  ", "trimEnd", "  abc"),
+            ("\t\n abc \r\n", "trim", "abc"),  // mixed tab/newline/CR
+            ("abc", "trim", "abc"),            // nothing to strip
+            ("   ", "trim", ""),               // all whitespace → empty
+            ("a b", "trim", "a b"),            // interior space kept
+        ] {
+            let c = call0(string(recv, None), method);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "{:?}.{method}() should fold", recv);
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => {
+                    assert_eq!(s.value, expect, "{:?}.{method}()", recv)
+                }
+                other => panic!("expected {:?}; got {:?}", expect, other),
+            }
+        }
+    }
+
+    #[test]
+    fn trim_strips_the_full_js_whitespace_set() {
+        // A non-ASCII space JS strips: U+00A0 (no-break) and U+3000 (ideographic)
+        // and U+FEFF (BOM). All must be removed at the ends.
+        let recv = "\u{00A0}\u{3000}\u{FEFF}hi\u{2028}\u{205F}";
+        let c = call0(string(recv, None), "trim");
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "hi"),
+            other => panic!("expected \"hi\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn trim_does_not_strip_non_js_whitespace() {
+        // U+200B (zero-width space), U+2060 (word joiner), and U+180E are NOT in
+        // the JS trim set — Rust's `char::is_whitespace` agrees here, but the
+        // guard matters: they must survive at the ends.
+        let recv = "\u{200B}hi\u{2060}";
+        let c = call0(string(recv, None), "trim");
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "trim still folds (to the unchanged value)");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, recv),
+            other => panic!("expected the value unchanged; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn trim_on_identifier_receiver_does_not_fold() {
+        // `s.trim()` needs the runtime value of `s`.
+        let c = call0(ident("s"), "trim");
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.trim() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn trim_with_argument_does_not_fold() {
+        // An argument keeps us conservative (trim ignores it, but we don't model
+        // that): `"  x  ".trim(1)` survives.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("  x  ", None), "trim")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "\"  x  \".trim(1) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
