@@ -861,6 +861,64 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         }
     }
 
+    // ---- global parseInt(string[, radix]) / parseFloat(string) ----
+    //
+    // `parseInt("12px")` → `12`, `parseInt("FF", 16)` → `255`,
+    // `parseInt("0x1F")` → `31`, `parseInt("-7")` → `-7`,
+    // `parseFloat("3.14abc")` → `3.14`, `parseFloat("1e3")` → `1000`
+    // (ECMAScript §19.2.5 / §19.2.4). Both functions read the *leading* numeric
+    // prefix of a string and ignore the trailing garbage, so a string LITERAL
+    // argument folds to the exact numeric literal V8 produces at runtime.
+    //
+    // SOUNDNESS NOTE — these fold under the same "builtins are intact" premise
+    // every fold in this pass already relies on, but one notch weaker. A string
+    // literal's `.slice`/`.concat` can only be subverted by monkeypatching
+    // `String.prototype`; `parseInt`/`parseFloat` are *free identifiers*, so a
+    // local binding (`let parseInt = …`) can additionally mask them. We fold
+    // them anyway — matching Closure Compiler, which treats redefining these
+    // globals as out of scope — but ONLY when the callee is the bare identifier
+    // `parseInt`/`parseFloat`, never a member access (`window.parseInt`, which
+    // reaches the MemberExpression arm above and is left untouched).
+    //
+    // We DECLINE (leave the call for the runtime) whenever the runtime result
+    // is `NaN` (`parseInt("")`, an invalid/out-of-range radix) or `±Infinity`
+    // (`parseFloat("Infinity")`): JavaScript has no literal token for either —
+    // `NaN`/`Infinity` are themselves shadowable global identifiers — so there
+    // is nothing sound to substitute. The helpers below return `None` for those
+    // cases.
+    if let Expression::Identifier(id) = &callee {
+        if let Some(Expression::StringLiteral(s)) = arguments.first() {
+            let folded = match id.name.as_str() {
+                // The optional second argument is an integer-literal radix; a
+                // non-literal or fractional radix can't be modelled, so the
+                // whole call is left alone (we never guess the radix).
+                "parseInt" if arguments.len() <= 2 => match arguments.get(1) {
+                    None => fold_parse_int(&s.value, None),
+                    Some(Expression::NumericLiteral(r))
+                        if r.value.is_finite() && r.value.fract() == 0.0 =>
+                    {
+                        fold_parse_int(&s.value, Some(r.value))
+                    }
+                    Some(_) => None,
+                },
+                "parseFloat" if arguments.len() == 1 => fold_parse_float(&s.value),
+                _ => None,
+            };
+            if let Some(value) = folded {
+                let parent = c.cv.clone();
+                let before = match arguments.get(1) {
+                    Some(Expression::NumericLiteral(r)) => {
+                        format!("{}(\"{}\",{})", id.name, s.value, format_js_number(r.value))
+                    }
+                    _ => format!("{}(\"{}\")", id.name, s.value),
+                };
+                let after = format_js_number(value);
+                let new_cv = st.fork_cv(&parent, &before, &after);
+                return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
+            }
+        }
+    }
+
     Expression::CallExpression(CallExpression {
         cv: c.cv.clone(),
         callee: Box::new(callee),
@@ -1762,6 +1820,154 @@ fn literal_to_string(expr: &Expression) -> Option<String> {
 /// Render a number the way JS's `String(x)` does — `42` not `42.0`,
 /// `0.5` not `.5`, `NaN` and `Infinity` literal-cased. Used so
 /// `"x" + 1 === "x1"` not `"x1.0"`.
+/// Compute JavaScript's global `parseInt(string, radix)` at compile time
+/// (ECMAScript §19.2.5), or `None` when the runtime result would be `NaN`.
+///
+/// The algorithm: strip leading whitespace, read an optional `+`/`-` sign, pick
+/// the radix, then consume the longest run of valid base-`radix` digits and
+/// stop at the first character that is not one — which is why `parseInt("12px")`
+/// is `12` (the `"px"` is ignored). With no valid leading digit the runtime
+/// yields `NaN`, which has no literal, so we return `None`.
+///
+/// `radix_arg` is the already integer-validated second argument: `None` for the
+/// one-argument call. A radix of `0` (or absent) means base 10, except that a
+/// `"0x"`/`"0X"` prefix selects base 16 — modern JS no longer treats a leading
+/// `"0"` as octal, so `parseInt("08")` is `8`. Any radix outside `2..=36` makes
+/// the runtime return `NaN`, so we decline.
+///
+/// Like V8 we accumulate in `f64`, so a magnitude beyond `2^53` rounds exactly
+/// the way the engine's own `parseInt` rounds, and a run long enough to overflow
+/// to `Infinity` fails the final `is_finite` check and is declined.
+fn fold_parse_int(input: &str, radix_arg: Option<f64>) -> Option<f64> {
+    let s = input.trim_start_matches(is_js_trim_whitespace);
+    let b = s.as_bytes();
+    let mut i = 0usize;
+
+    let mut sign = 1.0f64;
+    if let Some(&c) = b.first() {
+        if c == b'+' || c == b'-' {
+            if c == b'-' {
+                sign = -1.0;
+            }
+            i = 1;
+        }
+    }
+
+    // Resolve the radix, honouring a `0x`/`0X` prefix for base 0 (auto) and 16.
+    let mut radix = radix_arg.unwrap_or(0.0) as i64;
+    if radix == 0 {
+        if i + 1 < b.len() && b[i] == b'0' && (b[i + 1] | 0x20) == b'x' {
+            radix = 16;
+            i += 2;
+        } else {
+            radix = 10;
+        }
+    } else if radix == 16 && i + 1 < b.len() && b[i] == b'0' && (b[i + 1] | 0x20) == b'x' {
+        i += 2;
+    }
+    if !(2..=36).contains(&radix) {
+        return None;
+    }
+
+    let digits_start = i;
+    let mut acc = 0.0f64;
+    while i < b.len() {
+        let digit = match b[i] {
+            c @ b'0'..=b'9' => (c - b'0') as i64,
+            c @ b'a'..=b'z' => (c - b'a') as i64 + 10,
+            c @ b'A'..=b'Z' => (c - b'A') as i64 + 10,
+            _ => break,
+        };
+        if digit >= radix {
+            break;
+        }
+        acc = acc * radix as f64 + digit as f64;
+        i += 1;
+    }
+    if i == digits_start {
+        return None; // no valid leading digit → NaN
+    }
+    let value = sign * acc;
+    value.is_finite().then_some(value)
+}
+
+/// Compute JavaScript's global `parseFloat(string)` at compile time
+/// (ECMAScript §19.2.4), or `None` when the result is `NaN` or `±Infinity`.
+///
+/// `parseFloat` reads the longest leading prefix of the whitespace-trimmed
+/// string that matches a decimal number — optional sign, integer part,
+/// fractional part, exponent — and ignores the rest, so `parseFloat("3.14abc")`
+/// is `3.14` and `parseFloat("1e3")` is `1000`. A missing mantissa
+/// (`parseFloat("")`, `parseFloat("abc")`) yields `NaN`; the prefix `"Infinity"`
+/// yields `Infinity`. Neither `NaN` nor `Infinity` has a numeric literal, so
+/// both make us decline.
+///
+/// We scan the prefix ourselves to accept exactly JavaScript's grammar (a
+/// trailing `"5."` and a leading `".5"` are both valid), then hand the matched
+/// text to Rust's own correctly-rounded `f64` parser, which yields the same
+/// nearest-`f64` value the engine produces. A bare trailing dot (and a dot
+/// directly before the exponent, `"5.e3"`) is the one shape Rust rejects, so we
+/// splice in a `0` before parsing.
+fn fold_parse_float(input: &str) -> Option<f64> {
+    let s = input.trim_start_matches(is_js_trim_whitespace);
+    let b = s.as_bytes();
+    let mut i = 0usize;
+    if let Some(&c) = b.first() {
+        if c == b'+' || c == b'-' {
+            i = 1;
+        }
+    }
+    // `Infinity` (after an optional sign) → runtime `±Infinity` → decline.
+    if s[i..].starts_with("Infinity") {
+        return None;
+    }
+
+    let mut saw_digit = false;
+    let mut j = i;
+    while j < b.len() && b[j].is_ascii_digit() {
+        j += 1;
+        saw_digit = true;
+    }
+    if j < b.len() && b[j] == b'.' {
+        j += 1;
+        while j < b.len() && b[j].is_ascii_digit() {
+            j += 1;
+            saw_digit = true;
+        }
+    }
+    if !saw_digit {
+        return None; // no mantissa digit → NaN
+    }
+    // Optional exponent — consumed only when it carries at least one digit, so
+    // `"1e"` parses as `1` with the `"e"` left as trailing garbage.
+    if j < b.len() && (b[j] | 0x20) == b'e' {
+        let mut k = j + 1;
+        if k < b.len() && (b[k] == b'+' || b[k] == b'-') {
+            k += 1;
+        }
+        let exp_digits_start = k;
+        while k < b.len() && b[k].is_ascii_digit() {
+            k += 1;
+        }
+        if k > exp_digits_start {
+            j = k;
+        }
+    }
+
+    // `&s[0..j]` keeps the leading sign. Normalise the one shape Rust's parser
+    // rejects — a dot with no digit after it (`"5."`, `"5.e3"`) — by inserting
+    // a `0`; a leading dot (`".5"`) Rust already accepts.
+    let matched = &s[0..j];
+    let normalised = matched.replace(".e", ".0e").replace(".E", ".0E");
+    let normalised = if normalised.ends_with('.') {
+        format!("{normalised}0")
+    } else {
+        normalised
+    };
+    let value: f64 = normalised.parse().ok()?;
+    value.is_finite().then_some(value)
+}
+
 fn format_js_number(n: f64) -> String {
     if n.is_nan() {
         return "NaN".to_string();
@@ -3310,6 +3516,151 @@ mod tests {
         let c = call0(ident("s"), "trim");
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.trim() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    /// Build a global call `name(args…)` whose callee is the bare identifier
+    /// `name` (not a member access) — the shape `parseInt`/`parseFloat` take.
+    fn global_call(name: &str, args: Vec<Expression>) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(ident(name)),
+            arguments: args,
+        })
+    }
+
+    #[test]
+    fn fold_parse_int_direct_oracle() {
+        // (input, radix, expected) — values confirmed against V8.
+        for (input, radix, expect) in [
+            ("12px", None, Some(12.0)),     // trailing garbage ignored
+            ("", None, None),               // empty → NaN → decline
+            ("0x1F", None, Some(31.0)),     // auto-detected hex prefix
+            ("FF", Some(16.0), Some(255.0)), // explicit radix 16
+            ("-7", None, Some(-7.0)),       // negative sign
+            ("+9", None, Some(9.0)),        // positive sign
+            ("08", None, Some(8.0)),        // NOT octal in modern JS
+            ("3.9", None, Some(3.0)),       // stops at the dot
+            ("  42  ", None, Some(42.0)),   // leading whitespace skipped
+            ("z", Some(36.0), Some(35.0)),  // base-36 digit
+            ("10", Some(2.0), Some(2.0)),   // binary
+            ("xyz", None, None),            // no leading digit → NaN
+            ("99", Some(1.0), None),        // radix < 2 → NaN
+            ("99", Some(37.0), None),       // radix > 36 → NaN
+            ("0x1F", Some(16.0), Some(31.0)), // 0x prefix honoured at radix 16
+            ("12", Some(0.0), Some(12.0)),  // radix 0 → base 10
+        ] {
+            assert_eq!(
+                fold_parse_int(input, radix),
+                expect,
+                "parseInt({input:?}, {radix:?})"
+            );
+        }
+    }
+
+    #[test]
+    fn fold_parse_float_direct_oracle() {
+        for (input, expect) in [
+            ("3.14abc", Some(3.14)), // trailing garbage ignored
+            ("", None),              // empty → NaN → decline
+            ("1e3", Some(1000.0)),   // exponent
+            ("Infinity", None),      // Infinity → decline (no literal)
+            ("-Infinity", None),     // signed Infinity → decline
+            (".5", Some(0.5)),       // leading dot
+            ("5.", Some(5.0)),       // trailing dot
+            ("-7", Some(-7.0)),      // negative
+            ("  6.0 ", Some(6.0)),   // leading whitespace
+            ("abc", None),           // no mantissa → NaN
+            ("1e", Some(1.0)),       // dangling exponent → just the mantissa
+            ("2.5e-3", Some(0.0025)), // signed exponent
+        ] {
+            assert_eq!(fold_parse_float(input), expect, "parseFloat({input:?})");
+        }
+    }
+
+    #[test]
+    fn fold_parse_int_through_pass() {
+        // `parseInt("12px")` folds to the numeric literal `12`.
+        let c = global_call("parseInt", vec![string("12px", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "parseInt(\"12px\") should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 12.0),
+            other => panic!("expected 12; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_parse_int_with_radix_through_pass() {
+        // `parseInt("FF", 16)` → `255`.
+        let c = global_call("parseInt", vec![string("FF", None), num(16.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "parseInt(\"FF\", 16) should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 255.0),
+            other => panic!("expected 255; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_parse_float_through_pass() {
+        // `parseFloat("3.14abc")` → `3.14`.
+        let c = global_call("parseFloat", vec![string("3.14abc", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "parseFloat(\"3.14abc\") should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.14),
+            other => panic!("expected 3.14; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn parse_int_nan_result_does_not_fold() {
+        // `parseInt("")` is NaN — no literal, so the call is left intact.
+        let c = global_call("parseInt", vec![string("", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "parseInt(\"\") must not fold (NaN)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn parse_float_infinity_does_not_fold() {
+        // `parseFloat("Infinity")` is Infinity — no literal, so left intact.
+        let c = global_call("parseFloat", vec![string("Infinity", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "parseFloat(\"Infinity\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn parse_int_non_literal_radix_does_not_fold() {
+        // A variable radix can't be modelled — leave the call alone.
+        let c = global_call("parseInt", vec![string("10", None), ident("r")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "parseInt(\"10\", r) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn parse_int_non_string_argument_does_not_fold() {
+        // Only a STRING-literal argument folds; `parseInt(x)` needs runtime `x`.
+        let c = global_call("parseInt", vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "parseInt(x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn member_parse_int_does_not_fold() {
+        // `window.parseInt("12")` is a member call, not the global identifier —
+        // it must NOT be folded by the global-call arm.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("window"), "parseInt")),
+            arguments: vec![string("12", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "window.parseInt(\"12\") must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
