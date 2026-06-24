@@ -1,0 +1,23 @@
+% ============================================================================
+% ratelimit-enzyme-recall.query.adj — a worked recall query over the ratelimit library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what is the rate-limiting
+% enzyme of pathway X?" question: it states no biochemistry fact — it only `import`s
+% the grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ratelimit-enzyme-recall.query.adj
+% ============================================================================
+
+import "ratelimit-enzyme-edges.adj"
+
+? rate_limiting_enzyme_of(glycolysis, $Enzyme)            % expect phosphofructokinase_1
+? rate_limiting_enzyme_of(citric_acid_cycle, $Enzyme)    % expect isocitrate_dehydrogenase
+? rate_limiting_enzyme_of(cholesterol_synthesis, $Enzyme) % expect hmg_coa_reductase
+? rate_limiting_enzyme_of(fatty_acid_synthesis, $Enzyme)  % expect acetyl_coa_carboxylase
+? rate_limiting_enzyme_of(fatty_acid_oxidation, $Enzyme)  % expect carnitine_palmitoyltransferase_1
+? rate_limiting_enzyme_of(heme_synthesis, $Enzyme)        % expect ala_synthase
+? rate_limiting_enzyme_of(glycogenesis, $Enzyme)          % expect glycogen_synthase
+? rate_limiting_enzyme_of(glycogenolysis, $Enzyme)        % expect glycogen_phosphorylase
