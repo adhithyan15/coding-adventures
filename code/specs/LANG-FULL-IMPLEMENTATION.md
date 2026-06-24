@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3), `READ`/`DATA`/`RESTORE` (BA6) — all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign` standard functions ✅ (AL8, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -283,7 +283,13 @@ multiple languages; close an enabler before the features that depend on it.
     JVM/aarch64). **RUN-verified end-to-end through real x86_64 codegen executed
     in the x86-simulator** (`floor(int_to_real(45)−2.7)`⇒42, `trunc(42.3)`⇒42).
     With this, E8's conversion ops are implemented on **all seven backends**.
-  - ☐ **PR-7 — ALGOL `entier`** frontend slice + matrix proof on all 7 backends.
+  - ✅ **PR-7 — ALGOL `entier`** (algol-iir-compiler 0.10.0 + lang-aot matrix). The
+    standard function `entier(E)` (§3.2.5) — the largest integer ≤ the *real* `E`,
+    floor toward −∞ — lowers to a single E8 `real_to_int_floor` op (the floor + the
+    real→integer narrowing fused), so every backend emits its native floor-then-convert.
+    A `real` argument is required. **RUN-verified on all 7 backends** via a new
+    `lang_matrix.rs` cell: `45 + entier(0.0 − 2.7)` = `45 + (−3)` = 42 (the negative
+    operand distinguishes floor from trunc — trunc would give 43). **E8 COMPLETE.**
 
 ---
 
