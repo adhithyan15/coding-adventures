@@ -1,0 +1,22 @@
+% ============================================================================
+% lysosomal-storage-recall.query.adj — a worked recall query over the lysosomal library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what accumulates in storage
+% disease X?" question: it states no biochemistry fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli lysosomal-storage-recall.query.adj
+% ============================================================================
+
+import "lysosomal-storage-edges.adj"
+
+? accumulates(tay_sachs, $Substrate)                    % expect gm2_ganglioside
+? accumulates(gaucher, $Substrate)                      % expect glucocerebroside
+? accumulates(niemann_pick, $Substrate)                 % expect sphingomyelin
+? accumulates(fabry, $Substrate)                        % expect globotriaosylceramide
+? accumulates(hurler, $Substrate)                       % expect glycosaminoglycans
+? accumulates(metachromatic_leukodystrophy, $Substrate) % expect sulfatides
+? accumulates(pompe, $Substrate)                        % expect glycogen
