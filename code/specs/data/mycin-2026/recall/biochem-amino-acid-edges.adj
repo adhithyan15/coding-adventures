@@ -1,0 +1,111 @@
+% ============================================================================
+% biochem-amino-acid-edges — the metabolite→precursor-amino-acid knowledge-graph
+% (MYCIN-2026 BIOCHEM).
+% ============================================================================
+% A high-yield biochemistry board domain: which amino acid is the biosynthetic
+% PRECURSOR of a given neurotransmitter / signalling molecule / pigment / heme.
+% "Dopamine is derived from which amino acid?" becomes the binding query
+%     ? derived_from(dopamine, $AminoAcid).
+%
+% Direction note: the relation is metabolite -> precursor amino acid
+% (`derived_from`), the board direction — you name the product (serotonin,
+% dopamine, histamine, …) and recall the amino acid it is synthesized from.
+% Each product here maps to ONE canonical precursor amino acid, so a query binds
+% a single answer (several products share one precursor — the three catecholamines
+% and melanin all derive from tyrosine — which is a many-subjects→one-object map,
+% still single-answer per subject).
+%
+% What matters for grounding is that one self-contained span names BOTH the
+% product AND its precursor amino acid, stating the synthesized-from / derived-from
+% relationship. The catecholamine edges (dopamine / norepinephrine / epinephrine)
+% all cite the SAME StatPearls sentence (NBK507716), which co-names all three
+% products and tyrosine in a single clause — one span legitimately defends three
+% edges.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like BRACHIAL/NEPHRON/ENZYME).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed,
+%                including Unicode characters — the prime ′ in "pyridoxal-5′-phosphate"
+%                and the en dash – in "amino acid–like" are preserved exactly).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see biochem-amino-acid-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary biochem_vocab {
+    define metabolite : entity   surface "biochemical product", "neurotransmitter or signalling molecule"
+    define amino_acid : entity   surface "precursor amino acid", "proteinogenic amino acid"
+
+    define derived_from : relation from metabolite to amino_acid  % the amino acid a metabolite is biosynthesized from
+}
+
+rulebook biochem_facts {
+    use biochem_vocab
+
+    % --- serotonin -> tryptophan ----------------------------------------------
+    relate derived_from(serotonin, tryptophan)
+        source "Serotonin forms from the hydroxylation (i.e., the addition of -OH group) and decarboxylation of the tryptophan amino acid."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560856/"
+        trust authoritative
+
+    % --- dopamine -> tyrosine -------------------------------------------------
+    relate derived_from(dopamine, tyrosine)
+        source "These chemical messengers include dopamine, norepinephrine (noradrenaline), and epinephrine (adrenaline), which are derived from the amino acid tyrosine."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507716/"
+        trust authoritative
+
+    % --- norepinephrine -> tyrosine (same catecholamine span) -----------------
+    relate derived_from(norepinephrine, tyrosine)
+        source "These chemical messengers include dopamine, norepinephrine (noradrenaline), and epinephrine (adrenaline), which are derived from the amino acid tyrosine."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507716/"
+        trust authoritative
+
+    % --- epinephrine -> tyrosine (same catecholamine span) --------------------
+    relate derived_from(epinephrine, tyrosine)
+        source "These chemical messengers include dopamine, norepinephrine (noradrenaline), and epinephrine (adrenaline), which are derived from the amino acid tyrosine."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507716/"
+        trust authoritative
+
+    % --- melanin -> tyrosine --------------------------------------------------
+    relate derived_from(melanin, tyrosine)
+        source "Tyrosine is the key precursor for the synthesis of melanin, the pigment responsible for coloration in the skin, hair, and eyes."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459156/"
+        trust authoritative
+
+    % --- histamine -> histidine -----------------------------------------------
+    relate derived_from(histamine, histidine)
+        source "Histamine is a biogenic amine synthesized from the amino acid L-histidine exclusively by the enzyme L-histidine decarboxylase (HDC), which requires pyridoxal-5′-phosphate as an essential cofactor."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557790/"
+        trust authoritative
+
+    % --- GABA -> glutamate ----------------------------------------------------
+    relate derived_from(gaba, glutamate)
+        source "GABA is synthesized from glutamate in the presynaptic neuron by the enzyme glutamate decarboxylase (GAD), which requires pyridoxal phosphate (vitamin B6) as a co-factor."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551683/"
+        trust authoritative
+
+    % --- nitric oxide -> arginine ---------------------------------------------
+    relate derived_from(nitric_oxide, arginine)
+        source "Nitric oxide (NO) is produced by converting L-arginine into NO via NO synthases (NOS) in various parts of the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554485/"
+        trust authoritative
+
+    % --- creatine -> arginine -------------------------------------------------
+    relate derived_from(creatine, arginine)
+        source "Creatine (N-[aminoiminomethyl]-N-methyl glycine) is an amino acid–like compound that is produced endogenously in the liver, kidney, pancreas, and possibly the brain from the biosynthesis of the essential amino acids methionine, glycine, and arginine, or obtained from dietary sources."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK209321/"
+        trust authoritative
+
+    % --- heme -> glycine ------------------------------------------------------
+    relate derived_from(heme, glycine)
+        source "At the cellular level, heme biosynthesis consists of an 8-step enzymatic pathway distributed between the mitochondria and cytosol, beginning with glycine and succinyl coenzyme A (succinyl-CoA) and culminating in the insertion of ferrous iron into protoporphyrin IX."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537329/"
+        trust authoritative
+}

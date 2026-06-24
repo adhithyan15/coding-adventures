@@ -1,0 +1,26 @@
+% ============================================================================
+% biochem-amino-acid-recall.query.adj — a worked recall query over the biochem library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "which amino acid is this
+% molecule derived from?" question: it states no biochemistry fact — it only
+% `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli biochem-amino-acid-recall.query.adj
+% ============================================================================
+
+import "biochem-amino-acid-edges.adj"
+
+? derived_from(serotonin, $AminoAcid)       % expect tryptophan
+? derived_from(dopamine, $AminoAcid)        % expect tyrosine
+? derived_from(norepinephrine, $AminoAcid)  % expect tyrosine
+? derived_from(epinephrine, $AminoAcid)     % expect tyrosine
+? derived_from(melanin, $AminoAcid)         % expect tyrosine
+? derived_from(histamine, $AminoAcid)       % expect histidine
+? derived_from(gaba, $AminoAcid)            % expect glutamate
+? derived_from(nitric_oxide, $AminoAcid)    % expect arginine
+? derived_from(creatine, $AminoAcid)        % expect arginine
+? derived_from(heme, $AminoAcid)            % expect glycine

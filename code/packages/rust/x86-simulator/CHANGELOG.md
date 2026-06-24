@@ -1,5 +1,26 @@
 # Changelog — x86-simulator
 
+## 0.7.6 — 2026-06-23 — int ⇄ real conversions (LANG-FULL E8 PR-6b)
+
+Decode + execute the three SSE conversion opcodes, so the simulator can RUN
+x86_64 E8 codegen locally:
+
+| Opcode | Instr | Semantics |
+|--------|-------|-----------|
+| `F2 48 0F 2A /r` | `Cvtsi2sd` | signed i64 (GPR) → double (XMM) |
+| `F2 48 0F 2C /r` | `Cvttsd2si` | double (XMM) → i64 (GPR), truncate toward zero |
+| `66 0F 3A 0B /r ib` | `Roundsd` | round under `imm8 & 3` (0 nearest / 1 floor / 2 ceil / 3 trunc) |
+
+`roundsd` exercises the decoder's first **three-byte opcode** (`0F 3A`) path —
+the opcode-map escape plus a trailing `imm8`. `cvttsd2si` reproduces the silicon
+exactly: NaN / ±∞ / out-of-`i64`-range yield the **integer indefinite**
+`0x8000_0000_0000_0000` (no trap), rather than Rust's saturating `as i64`.
+
+Decode + execute unit tests, and the end-to-end matrix proof
+(`tests/sse_floats.rs`): real x86_64 codegen (`cvtsi2sd`→`subsd`→`roundsd`→
+`cvttsd2si`) executed in the simulator computes `floor(int_to_real(45) − 2.7) =
+42`, matching the other six backends.
+
 ## 0.7.5 — 2026-06-22 — ALGOL `sign` cell (LANG-FULL AL8 follow-up)
 
 Adds an executed matrix cell `algol_sign_runs_on_x86_sim`: the ALGOL `sign`
