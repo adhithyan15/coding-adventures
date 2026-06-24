@@ -1,0 +1,85 @@
+% ============================================================================
+% brachial-plexus-edges — the brachial-plexus origin knowledge-graph (MYCIN-2026 BRACHIAL).
+% ============================================================================
+% A high-yield anatomy board domain: which cord (or root) of the brachial plexus
+% each terminal nerve arises from. "The radial nerve is a continuation of which
+% cord?" becomes the binding query
+%     ? brachial_plexus_origin(radial_nerve, $Origin).
+%
+% Direction note: the relation is nerve -> origin (`brachial_plexus_origin`), the
+% board direction — you name the nerve and recall the cord/root it comes from.
+% Each nerve here maps to one canonical origin (the median nerve's origin is the
+% union of two cords, captured as a single atom lateral_and_medial_cords), so a
+% query binds a single answer.
+%
+% What matters for grounding is that one self-contained span names BOTH the nerve
+% AND its cord/root of origin, stating the arises-from relationship. "Origin" here
+% spans the three cords (lateral / posterior / medial) and the plexus roots — all
+% are levels of the brachial plexus a nerve can arise from.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like NEPHRON/CORONARY/ENZYME).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see brachial-plexus-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Note: the long_thoracic span names the C5/C6/C7 nerve roots specifically; the
+% object atom is `roots` (the plexus roots level). The median nerve atom
+% `lateral_and_medial_cords` reflects its dual-cord origin. Atoms are stable
+% identifiers naming the concept, not required to match the span's exact spelling.
+% ============================================================================
+
+dictionary brachial_vocab {
+    define nerve  : entity   surface "terminal nerve", "named nerve"
+    define origin : entity   surface "cord or root of origin", "plexus level"
+
+    define brachial_plexus_origin : relation from nerve to origin  % the cord/root a brachial-plexus nerve arises from
+}
+
+rulebook brachial_facts {
+    use brachial_vocab
+
+    % --- musculocutaneous nerve -> lateral cord -------------------------------
+    relate brachial_plexus_origin(musculocutaneous_nerve, lateral_cord)
+        source "The musculocutaneous nerve (C5-7) is a terminal branch of the lateral cord."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534199/"
+        trust authoritative
+
+    % --- axillary nerve -> posterior cord -------------------------------------
+    relate brachial_plexus_origin(axillary_nerve, posterior_cord)
+        source "The axillary nerve begins at the ventral rami of C5 and C6 spinal nerves and continues as the smaller branch of the posterior cord of the brachial plexus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493212/"
+        trust authoritative
+
+    % --- radial nerve -> posterior cord ---------------------------------------
+    relate brachial_plexus_origin(radial_nerve, posterior_cord)
+        source "The radial nerve is the direct continuation of the posterior cord and the biggest terminal branch of the brachial plexus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534840/"
+        trust authoritative
+
+    % --- ulnar nerve -> medial cord -------------------------------------------
+    relate brachial_plexus_origin(ulnar_nerve, medial_cord)
+        source "The ulnar nerve is one of the 5 terminal branches of the brachial plexus, arising from the medial cord."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499892/"
+        trust authoritative
+
+    % --- long thoracic nerve -> roots (C5-C7) ---------------------------------
+    relate brachial_plexus_origin(long_thoracic_nerve, roots)
+        source "The long thoracic nerve forms as an upper portion originating from the C5 and C6 nerve roots and a lower portion coming from the C7 nerve root."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535396/"
+        trust authoritative
+
+    % --- median nerve -> lateral + medial cords -------------------------------
+    relate brachial_plexus_origin(median_nerve, lateral_and_medial_cords)
+        source "The median nerve, 1 of the 5 terminal branches of the brachial plexus, is formed by the union of the lateral and medial cords."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448084/"
+        trust authoritative
+}

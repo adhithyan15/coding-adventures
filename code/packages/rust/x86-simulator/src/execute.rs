@@ -268,6 +268,44 @@ pub fn exec_one(
             };
             Ok(Flow::Next)
         }
+        // ── LANG-FULL E8: int ⇄ real conversions ──────────────────────────
+        Instr::Cvtsi2sd { xmm, gpr } => {
+            // Signed 64-bit integer → double. Exact for |x|<2⁵³; round-to-
+            // nearest-even beyond (Rust `as f64` matches the SSE default).
+            let v = st.get(*gpr) as i64;
+            write_xmm(st, *xmm, v as f64);
+            Ok(Flow::Next)
+        }
+        Instr::Cvttsd2si { gpr, xmm } => {
+            // Double → signed 64-bit integer, truncating toward zero. On NaN /
+            // ±∞ / out-of-`i64`-range, real `cvttsd2si` yields the "integer
+            // indefinite" `0x8000_0000_0000_0000` (it does NOT trap) — we
+            // reproduce that exactly rather than relying on Rust's saturating
+            // `as i64`, so the simulator matches the silicon bit-for-bit.
+            let f = read_xmm(st, *xmm).trunc();
+            // `i64::MAX` rounds up to 2⁶³ as an f64, so the in-range upper bound
+            // is the strict `< 2⁶³`; the lower bound `-2⁶³` is representable.
+            let out = if f.is_nan() || f < -(9223372036854775808.0_f64) || f >= 9223372036854775808.0_f64 {
+                0x8000_0000_0000_0000_u64
+            } else {
+                f as i64 as u64
+            };
+            st.set(*gpr, out);
+            Ok(Flow::Next)
+        }
+        Instr::Roundsd { dst, src, mode } => {
+            let f = read_xmm(st, *src);
+            // imm8[1:0] picks the mode when imm8[2]==0 (use-imm, not MXCSR);
+            // the backend only ever emits mode 1 (floor), but all four are cheap.
+            let r = match mode & 0b11 {
+                0 => f.round_ties_even(),
+                1 => f.floor(),
+                2 => f.ceil(),
+                _ => f.trunc(),
+            };
+            write_xmm(st, *dst, r);
+            Ok(Flow::Next)
+        }
         Instr::Setcc { cond, dst } => {
             let c = crate::flags::Cond::from_nibble(*cond);
             let bit = crate::flags::condition_holds(c, &st.flags) as u64;
@@ -351,6 +389,38 @@ mod tests {
         exec(&mut st, &Instr::Neg { dst: Operand::Reg(Reg::Rax) }).unwrap();
         assert_eq!(st.get(Reg::Rax), 0);
         assert!(st.flags.zf && !st.flags.cf);
+    }
+
+    /// LANG-FULL E8: the full int⇄real conversion chain executed in the sim.
+    /// `floor(int_to_real(45) − 2.7)` is exercised piecewise, plus the
+    /// sign-sensitive floor-vs-trunc distinction and the NaN→indefinite edge.
+    #[test]
+    fn e8_conversions_execute() {
+        let mut st = CpuState::default();
+        // cvtsi2sd xmm0, rax : 45 → 45.0
+        st.set(Reg::Rax, 45);
+        exec(&mut st, &Instr::Cvtsi2sd { xmm: 0, gpr: Reg::Rax }).unwrap();
+        assert_eq!(read_xmm(&st, 0), 45.0);
+        // roundsd xmm0, xmm0, 1 : floor(42.3) = 42.0
+        write_xmm(&mut st, 0, 42.3);
+        exec(&mut st, &Instr::Roundsd { dst: 0, src: 0, mode: 1 }).unwrap();
+        assert_eq!(read_xmm(&st, 0), 42.0);
+        // cvttsd2si rax, xmm0 : 42.0 → 42
+        exec(&mut st, &Instr::Cvttsd2si { gpr: Reg::Rax, xmm: 0 }).unwrap();
+        assert_eq!(st.get(Reg::Rax), 42);
+
+        // Sign sensitivity: floor(−2.7) = −3, but trunc(−2.7) = −2.
+        write_xmm(&mut st, 1, -2.7);
+        exec(&mut st, &Instr::Roundsd { dst: 1, src: 1, mode: 1 }).unwrap();
+        assert_eq!(read_xmm(&st, 1), -3.0);
+        write_xmm(&mut st, 2, -2.7);
+        exec(&mut st, &Instr::Cvttsd2si { gpr: Reg::Rbx, xmm: 2 }).unwrap();
+        assert_eq!(st.get(Reg::Rbx) as i64, -2);
+
+        // NaN → integer indefinite (matches the silicon; does not trap).
+        write_xmm(&mut st, 3, f64::NAN);
+        exec(&mut st, &Instr::Cvttsd2si { gpr: Reg::Rcx, xmm: 3 }).unwrap();
+        assert_eq!(st.get(Reg::Rcx), 0x8000_0000_0000_0000);
     }
 
     #[test]

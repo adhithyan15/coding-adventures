@@ -849,6 +849,54 @@ impl Assembler {
         self.emit(0x1E602000 | (dm.idx() << 16) | (dn.idx() << 5));
     }
 
+    // -----------------------------------------------------------------------
+    // LANG-FULL E8 — int ⇄ real conversions
+    //
+    // Three scalar conversion instructions, all in the "floating-point ⇄
+    // fixed-point / integer" and "FP data-processing (1 source)" encoding
+    // groups.  The register-file (`Xn` GPR vs `Dn` FP) is selected by the
+    // *opcode*, not the `Reg` value, so callers pass the same `Reg::Xk` to name
+    // either `Xk` or `Dk` — exactly as `ldr_d`/`str_d` already do.
+    // -----------------------------------------------------------------------
+
+    /// `SCVTF Dd, Xn` — convert a signed 64-bit integer (`Xn`) to a double
+    /// (`Dd`).  Exact for every `i64` whose magnitude fits 53 bits; larger
+    /// values round to nearest (IEEE-754 default), matching every other
+    /// backend's widen.  The IIR `int_to_real` op.
+    ///
+    /// FP↔int conversion encoding: `sf 0 0 11110 type 1 rmode opcode 000000 Rn Rd`,
+    /// with `sf=1` (64-bit `Xn`), `type=01` (double), `rmode=00`, `opcode=010`:
+    /// `1001_1110_0110_0010_0000_00nn_nnnd_dddd` (`0x9E620000`).
+    pub fn scvtf(&mut self, dd: Reg, xn: Reg) {
+        self.emit(0x9E620000 | (xn.idx() << 5) | dd.idx());
+    }
+
+    /// `FCVTZS Xd, Dn` — convert a double (`Dn`) to a signed 64-bit integer
+    /// (`Xd`), **rounding toward zero** (truncate).  On NaN / ±∞ / out-of-range
+    /// it *saturates* to `0` / `i64::MIN` / `i64::MAX` (ARM does not trap) — a
+    /// documented divergence from the VM's fail-closed trap, shared with the JVM
+    /// backend; every finite, in-range value converts identically.  The IIR
+    /// `real_to_int_trunc` op (and the tail of `real_to_int_floor`).
+    ///
+    /// `sf=1` (64-bit `Xd`), `type=01` (double), `rmode=11` (toward zero),
+    /// `opcode=000`: `1001_1110_0111_1000_0000_00nn_nnnd_dddd` (`0x9E780000`).
+    pub fn fcvtzs(&mut self, xd: Reg, dn: Reg) {
+        self.emit(0x9E780000 | (dn.idx() << 5) | xd.idx());
+    }
+
+    /// `FRINTM Dd, Dn` — round a double (`Dn`) to an integral double toward −∞
+    /// (floor), result in `Dd`.  Composed with `fcvtzs` it gives the IIR
+    /// `real_to_int_floor` (ALGOL `entier`): `frintm` does the −∞ rounding, then
+    /// `fcvtzs` only drops the now-`.0` fraction.
+    ///
+    /// FP data-processing (1 source) encoding:
+    /// `0 0 0 11110 type 1 opcode 10000 Rn Rd`, with `type=01` (double) and
+    /// `opcode=001010` (FRINTM): `0001_1110_0110_0101_0100_00nn_nnnd_dddd`
+    /// (`0x1E654000`).
+    pub fn frintm(&mut self, dd: Reg, dn: Reg) {
+        self.emit(0x1E654000 | (dn.idx() << 5) | dd.idx());
+    }
+
     /// `LDRB Wt, [Xn, #imm]` — load one byte, zero-extend to 32 bits (LANG76).
     ///
     /// `imm` is a 12-bit unsigned immediate in the range `[0, 4095]` (the
@@ -1315,6 +1363,35 @@ mod tests {
         let mut a = Assembler::new();
         a.fcmp(Reg::X0, Reg::X1);
         assert_eq!(a.finish().unwrap(), words_to_bytes(&[0x1E612000]));
+    }
+
+    // ---- LANG-FULL E8: int ⇄ real conversions ----
+
+    #[test]
+    fn fp_conversions_e8() {
+        // The register field placement is verified with non-zero registers:
+        //   scvtf  d0, x3   → 0x9E620000 | (3<<5) | 0 = 0x9E620060
+        //   fcvtzs x2, d0   → 0x9E780000 | (0<<5) | 2 = 0x9E780002
+        //   frintm d0, d1   → 0x1E654000 | (1<<5) | 0 = 0x1E654020
+        let mut a = Assembler::new();
+        a.scvtf(Reg::X0, Reg::X3);
+        a.fcvtzs(Reg::X2, Reg::X0);
+        a.frintm(Reg::X0, Reg::X1);
+        assert_eq!(a.finish().unwrap(), words_to_bytes(&[
+            0x9E620060, // scvtf  d0, x3
+            0x9E780002, // fcvtzs x2, d0
+            0x1E654020, // frintm d0, d1
+        ]));
+    }
+
+    #[test]
+    fn fp_conversions_e8_base_regs() {
+        // The base (all-zero register) encodings, as documented on each method.
+        let mut a = Assembler::new();
+        a.scvtf(Reg::X0, Reg::X0);  // 0x9E620000
+        a.fcvtzs(Reg::X0, Reg::X0); // 0x9E780000
+        a.frintm(Reg::X0, Reg::X0); // 0x1E654000
+        assert_eq!(a.finish().unwrap(), words_to_bytes(&[0x9E620000, 0x9E780000, 0x1E654000]));
     }
 
     // ---- STP / LDP ----
