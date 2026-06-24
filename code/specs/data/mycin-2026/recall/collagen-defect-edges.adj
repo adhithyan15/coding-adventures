@@ -1,0 +1,92 @@
+% ============================================================================
+% collagen-defect-edges — the collagen-type→associated-disease knowledge-graph
+% (MYCIN-2026 COLLAGEN).
+% ============================================================================
+% A classic high-yield biochemistry/genetics board table: each fibrillar or
+% network collagen type, when defective (mutation in its gene), causes a
+% characteristic heritable connective-tissue disease. "A defect in type I
+% collagen causes which disease?" becomes the binding query
+%     ? defect_causes(type_i, $Disease).
+%
+% Direction note: the relation is collagen type -> the disease its defect causes
+% (`defect_causes`), the board direction — you name the collagen type and recall
+% the disease. Each collagen type here maps to ONE canonical disease, so a query
+% binds a single answer.
+%
+% What matters for grounding is that one self-contained span names BOTH the
+% collagen type AND the disease AND the causal/defect relationship. Several spans
+% name the collagen type directly (Osteogenesis imperfecta -> type I; Alport
+% syndrome -> type 4 collagen; classic Ehlers-Danlos -> type V collagen). Two
+% spans (Stickler, dystrophic epidermolysis bullosa) co-name the endpoints via
+% the canonical GENE symbol — COL2A1 is the gene encoding type II collagen and
+% COL7A1 the gene encoding type VII collagen, so "pathogenic variants in COLnA1
+% cause <disease>" grounds the type-n-collagen→disease edge by combined bytes
+% (the same defeasible byte-grounding the framework uses elsewhere). Gene symbols
+% render in italics on the source pages; the markdown italic markers are a
+% conversion artifact — the real page bytes are the plain symbols (COL2A1, COL7A1),
+% reproduced here exactly.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like LYSOSOMAL/RATELIMIT/BIOCHEM).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed,
+%                including the Unicode α in "collagen 4 α345 network" (Alport)).
+%     locator  — the URL the span was read from (NCBI StatPearls / GeneReviews).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see collagen-defect-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% DEFERRED (honest gap, not authored over): type III collagen → vascular
+% Ehlers-Danlos syndrome. On NBK549814 (StatPearls) and NBK1494 (GeneReviews) the
+% disease and type III collagen/COL3A1 are split across separate sentences — the
+% collagen-naming sentence calls the disease only "the vascular type"/"It", never
+% the literal "Ehlers-Danlos" or "Vascular EDS", so no single self-contained span
+% co-names both with the relationship. Omitted rather than grounded on a split
+% span; re-groundable later from an alternate source.
+% ============================================================================
+
+dictionary collagen_vocab {
+    define collagen_type : entity   surface "collagen type", "collagen subtype"
+    define disease        : entity   surface "collagen disorder", "connective tissue disease"
+
+    define defect_causes : relation from collagen_type to disease  % the disease a defect in this collagen causes
+}
+
+rulebook collagen_facts {
+    use collagen_vocab
+
+    % --- type I collagen -> osteogenesis imperfecta ---------------------------
+    relate defect_causes(type_i, osteogenesis_imperfecta)
+        source "Osteogenesis imperfecta (OI) is a genetic disorder of connective tissues caused by an abnormality in the synthesis or processing of type I collagen."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK536957/"
+        trust authoritative
+
+    % --- type II collagen -> Stickler syndrome (gene span: COL2A1 = type II) ---
+    relate defect_causes(type_ii, stickler_syndrome)
+        source "Pathogenic variants in COL2A1 that cause Stickler syndrome are typically loss-of-functions variants associated with haploinsufficiency of type II collagen (e.g., nonsense variants, small deletions/duplications, splicing variants that cause a frameshift)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1302/"
+        trust authoritative
+
+    % --- type IV collagen -> Alport syndrome ----------------------------------
+    relate defect_causes(type_iv, alport_syndrome)
+        source "Alport syndrome, also known as hereditary nephritis, is a genetic disorder arising from the mutations in the genes encoding alpha-3, alpha-4, and alpha-5 of type 4 collagen (COL4A3, COL4A4, COL4A5) or collagen 4 α345 network."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470419/"
+        trust authoritative
+
+    % --- type V collagen -> classical Ehlers-Danlos syndrome ------------------
+    relate defect_causes(type_v, classical_ehlers_danlos)
+        source "In classic Ehlers-Danlos syndrome, type V collagen mutations are pivotal."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549814/"
+        trust authoritative
+
+    % --- type VII collagen -> dystrophic epidermolysis bullosa (gene span: COL7A1 = type VII) --
+    relate defect_causes(type_vii, dystrophic_epidermolysis_bullosa)
+        source "Pathogenic variants in COL7A1 can lead to reduced resistance to minor trauma and the resulting blistering that is the hallmark of dystrophic epidermolysis bullosa (DEB)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1304/"
+        trust authoritative
+}
