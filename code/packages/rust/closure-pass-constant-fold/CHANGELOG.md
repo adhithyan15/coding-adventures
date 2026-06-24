@@ -26,6 +26,28 @@ declines — never panics.
 
 When `--correlation_vector` tracking is on, the fold forks a contribution
 recording the rewrite (`"abc".at(-1)` → `"c"`).
+## [0.30.0] - 2026-06-22
+
+### Added — fold `"a".concat("b", "c")` on string literals
+
+`String.prototype.concat` now folds to a single string literal when the
+receiver and **every** argument are string literals (ECMAScript §22.1.3.4):
+`"a".concat("b", "c")` → `"abc"`, `"".concat("x")` → `"x"`,
+`"foo".concat("bar")` → `"foobar"`, `"a".concat()` → `"a"` (identity, still
+dropping the call). A new `fold_string_concat_call` helper performs the join.
+
+Conservative scope: every argument must already be a string literal. JS coerces
+non-string arguments via `ToString` (`"a".concat(1)` → `"a1"`), but we don't
+model that coercion, so a numeric or identifier argument (and any non-string
+receiver) leaves the call for the runtime. Concatenating valid strings can only
+produce valid UTF-16 — no surrogate pair is ever split, the hazard `slice` and
+`charAt` guard against — so the result is always a representable literal. The
+joined length is bounded by a fixed 100_000-UTF-16-code-unit cap (with
+`checked_add` on the running total) as a defensive algorithmic-blowup guard,
+mirroring `repeat` and `padStart`/`padEnd`.
+
+When `--correlation_vector` tracking is on, the fold forks a contribution
+recording the rewrite (`"a".concat("b","c")` → `"abc"`).
 ## [0.29.0] - 2026-06-22
 
 ### Added — fold `"  x  ".trim()` / `trimStart()` / `trimEnd()` on string literals

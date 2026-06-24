@@ -1,0 +1,21 @@
+% ============================================================================
+% brachial-plexus-recall.query.adj — a worked recall query over the brachial library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "which cord/root does this
+% nerve arise from?" question: it states no anatomy fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli brachial-plexus-recall.query.adj
+% ============================================================================
+
+import "brachial-plexus-edges.adj"
+
+? brachial_plexus_origin(musculocutaneous_nerve, $Origin)  % expect lateral_cord
+? brachial_plexus_origin(axillary_nerve, $Origin)          % expect posterior_cord
+? brachial_plexus_origin(radial_nerve, $Origin)            % expect posterior_cord
+? brachial_plexus_origin(ulnar_nerve, $Origin)             % expect medial_cord
+? brachial_plexus_origin(long_thoracic_nerve, $Origin)     % expect roots
+? brachial_plexus_origin(median_nerve, $Origin)            % expect lateral_and_medial_cords

@@ -17,6 +17,21 @@ New end-to-end fixture `tests/diff/simple-fold-at/` and integration test
 `tests/diff_simple_fold_at.rs` (three assertions: byte-exact stdout, the call
 is folded to `"d"`, and the SIMPLE typed pipeline ran rather than the
 whitespace fallback).
+## [0.179.0] - 2026-06-22
+
+### Added — string `concat` fold at SIMPLE/ADVANCED
+
+The typed-AST optimization pipeline now folds `String.prototype.concat` when
+the receiver and every argument are string literals (via
+`closure-pass-constant-fold` 0.30.0): `"foo".concat("bar", "baz")` →
+`"foobarbaz"`. A non-string argument (which JS coerces via `ToString`), a
+non-literal argument, or a result over the optimizer's 100 000-code-unit cap
+passes through to the runtime; `WHITESPACE_ONLY` leaves the call untouched.
+
+New end-to-end fixture `tests/diff/simple-fold-concat/` and integration test
+`tests/diff_simple_fold_concat.rs` (three assertions: byte-exact stdout, the
+call is folded to `"foobarbaz"`, and the SIMPLE typed pipeline ran rather than
+the whitespace fallback).
 
 ## [0.178.0] - 2026-06-22
 
