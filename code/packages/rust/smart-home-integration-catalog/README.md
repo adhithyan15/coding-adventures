@@ -226,6 +226,10 @@ runtime and Chief of Staff tools a typed catalog for:
   action evidence review clearance action readiness evidence review rows that
   classify readiness evidence into blocker, operator, review, lineage, and
   release-ready outcomes
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  disposition-action slot clearance action evidence review clearance action
+  readiness evidence review summaries that combine readiness-evidence review
+  rows with review counts and next review pointers
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work

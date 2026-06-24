@@ -57,6 +57,9 @@ All notable changes to this package will be documented in this file.
   review clearance action readiness evidence review rows that classify
   readiness evidence into blocker, operator, review, lineage, and release-ready
   outcomes.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
+  review clearance action readiness evidence review summaries that combine
+  readiness-evidence review rows with review counts and next review pointers.
 - Virtual alias entries for product lines supported by another integration or
   standard.
 - Read-only D18D tool descriptors for listing/describing integrations and
