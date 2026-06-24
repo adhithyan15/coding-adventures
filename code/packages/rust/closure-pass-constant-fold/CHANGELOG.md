@@ -22,6 +22,39 @@ position overloads (`startsWith(needle, pos)`, etc.) carry a second argument,
 land in the two-argument arm, and pass through to the runtime. Eight unit tests
 cover true/false results, the empty needle, astral-char matching, the position
 overload, an identifier receiver, and a non-string needle.
+## [0.34.0] - 2026-06-23
+
+### Added — fold global `parseInt(lit[, radix])` / `parseFloat(lit)` on string literals
+
+The global `parseInt` and `parseFloat` functions now fold to a numeric literal
+when their first argument is a string literal (ECMAScript §19.2.5 / §19.2.4):
+`parseInt("12px")` → `12`, `parseInt("0x1F")` → `31`, `parseInt("FF", 16)` →
+`255`, `parseInt("-7")` → `-7`, `parseInt("08")` → `8` (not octal in modern JS),
+`parseFloat("3.14abc")` → `3.14`, `parseFloat("1e3")` → `1000`,
+`parseFloat(".5")` → `0.5`, `parseFloat("5.")` → `5`. New `fold_parse_int` and
+`fold_parse_float` helpers reproduce the engine algorithm: skip leading
+whitespace, read an optional sign, (for `parseInt`) resolve the radix honouring
+a `0x`/`0X` prefix, then consume the longest valid numeric prefix and ignore the
+trailing garbage. `parseInt` accumulates in `f64` so values beyond `2^53` round
+exactly as V8 does.
+
+Conservative scope: the callee must be the **bare identifier** `parseInt` /
+`parseFloat` — a member access such as `window.parseInt(...)` is left untouched.
+A `parseInt` radix argument, when present, must be an integer literal in
+`2..=36` (a non-literal or out-of-range radix leaves the call for the runtime).
+We **decline** (leave the call) whenever the runtime result is `NaN`
+(`parseInt("")`, an invalid radix) or `±Infinity` (`parseFloat("Infinity")`):
+JavaScript has no literal token for either, so there is nothing sound to
+substitute.
+
+Soundness note: this folds under the same "builtins are intact" premise the
+whole pass relies on, one notch weaker — unlike a string literal's `.slice`,
+`parseInt`/`parseFloat` are free identifiers that a local binding could mask, so
+we fold them only as the bare global, matching Closure Compiler's treatment of
+redefining these globals as out of scope.
+
+When `--correlation_vector` tracking is on, the fold forks a contribution
+recording the rewrite (e.g. `parseInt("FF",16)` → `255`).
 
 ## [0.30.0] - 2026-06-22
 

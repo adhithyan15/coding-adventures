@@ -525,6 +525,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the `entier` **standard function** (§3.2.5, LANG-FULL E8 + AL-entier).
+    // `entier(E)` is the largest *integer* not greater than the *real* `E` — floor,
+    // rounding toward −∞ (NOT trunc toward zero): `entier(2.7)` = 2, `entier(−2.7)`
+    // = −3.  Unlike `abs`/`sign` (which lower to compare+branch over existing ops),
+    // `entier` lowers to a single **E8 `real_to_int_floor`** IIR conversion op — the
+    // floor and the real→integer narrowing fused into one primitive that every
+    // backend emits in its native idiom: LLVM `@llvm.floor.f64`+`fptosi`, WASM
+    // `f64.floor`+`i32.trunc_f64_s`, JVM `Math.floor`+`d2i`, CLR `Math::Floor`+
+    // `conv.ovf.i4`, native aarch64 `frintm`+`fcvtzs`, native x86_64 `roundsd …,1`+
+    // `cvttsd2si`.  The program builds a *negative* real (`0.0 − 2.7 = −2.7`) so the
+    // observable distinguishes floor from trunc: `45 + entier(−2.7)` = `45 + (−3)` =
+    // 42 (trunc would give `45 + (−2)` = 43).  This RUNS the E8 floor-conversion op
+    // end-to-end on **all 7 backends** — the proof that closes the E8 conversions arc.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := 0.0 - 2.7; \
+               result := 45 + entier(r) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *typed procedure with a value parameter* (`integer procedure
     // sq(x); value x; integer x; sq := x*x`) called from the main block:
     // `result := sq(7)` ⇒ exit 49.  `algol-iir-compiler` lowers the procedure

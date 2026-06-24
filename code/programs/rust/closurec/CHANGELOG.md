@@ -17,6 +17,24 @@ New end-to-end fixture `tests/diff/simple-fold-strpred/` (three integration
 tests) exercises all three predicates at `--compilation_level SIMPLE`,
 asserting the booleans, that no method call remains, and that the typed
 pipeline (not the `WHITESPACE_ONLY` fallback) produced the output.
+## [0.183.0] - 2026-06-23
+
+### Added — global `parseInt` / `parseFloat` fold at SIMPLE/ADVANCED
+
+The `constant-fold` pass (bumped to 0.34.0) now folds global `parseInt(lit[,
+radix])` and `parseFloat(lit)` calls whose first argument is a string literal to
+the numeric literal V8 produces (ECMAScript §19.2.5 / §19.2.4):
+`parseInt("12px")` → `12`, `parseInt("FF", 16)` → `255`, `parseInt("0x1F")` →
+`31`, `parseFloat("3.14abc")` → `3.14`. Only the bare global identifier folds —
+`window.parseInt(...)` is left alone — and calls whose result is `NaN`
+(`parseInt("")`) or `±Infinity` (`parseFloat("Infinity")`) are left for the
+runtime since neither has a literal token.
+
+New end-to-end fixture `tests/diff/simple-fold-parseint/` and integration test
+`diff_simple_fold_parseint.rs` cover the SIMPLE path
+(`var a=12;var b=255;var c=3.14;var d=31;report(a,b,c,d);`). The `--help_markdown`
+golden and `cli.spec.json` version were regenerated for the 0.183.0 bump.
+
 ## [0.179.0] - 2026-06-22
 
 ### Added — string `concat` fold at SIMPLE/ADVANCED
