@@ -591,6 +591,37 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                     }
                 }
+                // ---- concat(...strings) → receiver followed by each argument ----
+                //
+                // `"a".concat("b", "c")` → `"abc"`, `"".concat("x")` → `"x"`,
+                // `"a".concat()` → `"a"` (ECMAScript §22.1.3.4, the variadic
+                // form). Every argument must itself be a STRING literal — JS
+                // coerces non-strings via `ToString` (`"a".concat(1)` → `"a1"`),
+                // but we don't model that coercion, so a numeric/identifier
+                // argument makes `fold_string_concat_call` decline and the call
+                // is left for the runtime. Concatenating valid strings can only
+                // ever yield valid UTF-16 (no surrogate pair is ever split, the
+                // hazard `slice`/`charAt` guard against), so the result is always
+                // a representable literal. The total length is still bounded by a
+                // fixed cap as an algorithmic-blowup / DoS guard, mirroring
+                // `repeat` and `padStart`/`padEnd`.
+                else if id.name == "concat" {
+                    if let Some(result) = fold_string_concat_call(&s.value, &arguments) {
+                        let parent = c.cv.clone();
+                        let args_src = arguments
+                            .iter()
+                            .map(|a| match a {
+                                Expression::StringLiteral(a) => format!("\"{}\"", a.value),
+                                _ => "?".to_string(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(",");
+                        let before = format!("\"{}\".concat({})", s.value, args_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
                 // ---- padStart(target[, pad]) / padEnd(target[, pad]) ----
                 //
                 // `"5".padStart(3, "0")` → `"005"`, `"abc".padEnd(6)` →
@@ -981,6 +1012,44 @@ fn fold_string_repeat(value: &str, args: &[Expression]) -> Option<String> {
         Some(total) if total <= MAX_REPEAT_UNITS => Some(value.repeat(count as usize)),
         _ => None,
     }
+}
+
+/// Compute `value.concat(args…)` at compile time, or `None` when it cannot be
+/// folded soundly (ECMAScript §22.1.3.4, `String.prototype.concat`).
+///
+/// `concat` appends each argument, coerced to a string, to the receiver:
+/// `"a".concat("b", "c")` → `"abc"`. We fold only the case where **every**
+/// argument is already a string literal, so the result is a pure textual
+/// join — no `ToString` coercion to model, and (because each piece is a valid
+/// string) the join is always valid UTF-16, so it can never produce a lone
+/// surrogate the way a `slice` cut can. A zero-argument call (`"a".concat()`)
+/// folds to the receiver unchanged.
+///
+/// We decline (return `None`, leaving the call for the runtime) when:
+/// - any argument is not a string literal (e.g. `"a".concat(x)` or
+///   `"a".concat(1)`); or
+/// - the joined length would exceed `MAX_CONCAT_UNITS` UTF-16 code units. The
+///   pieces all come from the source, so this is a defensive cap (and
+///   `checked_add` stops the running length from overflowing) rather than a
+///   true blowup vector, but it mirrors the `repeat`/`pad` guards.
+fn fold_string_concat_call(value: &str, args: &[Expression]) -> Option<String> {
+    /// Cap on the folded result's length, in UTF-16 code units.
+    const MAX_CONCAT_UNITS: usize = 100_000;
+
+    let mut units = value.encode_utf16().count();
+    let mut out = String::from(value);
+    for a in args {
+        let piece = match a {
+            Expression::StringLiteral(s) => &s.value,
+            _ => return None,
+        };
+        units = units.checked_add(piece.encode_utf16().count())?;
+        if units > MAX_CONCAT_UNITS {
+            return None;
+        }
+        out.push_str(piece);
+    }
+    Some(out)
 }
 
 /// `true` iff `c` is in the ECMAScript string-trim white-space set — the union
@@ -3848,6 +3917,117 @@ mod tests {
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.repeat(3) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- concat (variadic join) ----------------------
+
+    /// Build `"<recv>".concat("<a>", "<b>", …)` from string-literal arguments.
+    fn concat_call(recv: &str, args: &[&str]) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(recv, None), "concat")),
+            arguments: args.iter().map(|a| string(a, None)).collect(),
+        })
+    }
+
+    #[test]
+    fn fold_string_concat_method_basic() {
+        for (recv, args, expect) in [
+            ("a", &["b", "c"][..], "abc"),
+            ("", &["x"][..], "x"),        // empty receiver
+            ("a", &[""][..], "a"),        // empty argument
+            ("foo", &["bar"][..], "foobar"),
+            ("💩", &["x"][..], "💩x"),  // astral char preserved whole
+        ] {
+            let c = concat_call(recv, args);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{recv}\".concat({args:?}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => {
+                    assert_eq!(s.value, expect, "\"{recv}\".concat({args:?})")
+                }
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn concat_no_args_folds_to_receiver() {
+        // `"abc".concat()` → `"abc"` (identity), still removing the call.
+        let c = concat_call("abc", &[]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "\"abc\".concat() should fold to the receiver");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "abc"),
+            other => panic!("expected \"abc\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn concat_non_string_argument_does_not_fold() {
+        // `"a".concat(1)` is `"a1"` in JS via ToString, but we don't model that
+        // coercion — leave it for the runtime rather than guess.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("a", None), "concat")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "concat with a numeric argument must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn concat_identifier_argument_does_not_fold() {
+        // `"a".concat(s)` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("a", None), "concat")),
+            arguments: vec![ident("s")],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "concat with an identifier argument must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn concat_on_identifier_receiver_does_not_fold() {
+        // `s.concat("x")` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "concat")),
+            arguments: vec![string("x", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.concat(\"x\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn concat_over_size_cap_does_not_fold() {
+        // Receiver (50_001 units) + one 50_000-unit argument = 100_001 > cap,
+        // so the defensive DoS guard declines. Just at the cap folds.
+        let big = "x".repeat(50_000);
+        let over = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(&"x".repeat(50_001), None), "concat")),
+            arguments: vec![string(&big, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(over, true));
+        assert!(!changed, "concat over the size cap must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+
+        let under = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(&"x".repeat(50_000), None), "concat")),
+            arguments: vec![string(&big, None)],
+        });
+        let (out2, _, changed2, _) = run_pass(program_with_expr(under, true));
+        assert!(changed2, "concat exactly at the cap should fold");
+        match extract_expr(&out2) {
+            Expression::StringLiteral(s) => assert_eq!(s.value.len(), 100_000),
+            other => panic!("expected a 100_000-byte literal; got {:?}", other),
+        }
     }
 
     // ------------------- padStart / padEnd ---------------------------
