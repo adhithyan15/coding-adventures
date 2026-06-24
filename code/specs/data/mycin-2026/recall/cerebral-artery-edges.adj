@@ -1,0 +1,97 @@
+% ============================================================================
+% cerebral-artery-edges — the cerebral-artery→territory knowledge-graph
+% (MYCIN-2026 CEREBRAL-ARTERY).
+% ============================================================================
+% A classic high-yield neuroanatomy / stroke-localization board table: each
+% named cerebral (or orbital) artery and the brain territory it supplies. "The
+% middle cerebral artery supplies which territory?" becomes the binding query
+%     ? supplies(middle_cerebral_artery, $Territory).
+%
+% Direction note: the relation is artery -> the territory it supplies
+% (`supplies`), the board direction for stroke localization — you name the
+% occluded artery and recall the region (and therefore the deficit). Each artery
+% here maps to ONE canonical territory span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` object is bound to the territory the cited
+% sentence ACTUALLY names, not to a finer label we might have preferred. Two
+% spans name a broader region than the textbook shorthand, and we bind to the
+% span: the basilar-artery sentence says "brainstem" (not "pons" specifically),
+% so the object is `brainstem`; the ophthalmic-artery sentence says "the eye"
+% (not "retina" specifically), so the object is `eye`. Grounding to the literal
+% bytes beats grounding to the label we went looking for.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like COLLAGEN/LYSOSOMAL/
+% CORONARY). Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see cerebral-artery-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% DEFERRED (honest gap, not authored over): posterior inferior cerebellar artery
+% (PICA) -> lateral medulla (the Wallenberg / lateral medullary syndrome
+% territory). On the StatPearls pages read (NBK551670, NBK470174) no single
+% self-contained sentence co-names PICA AND "lateral medulla" AND a supply
+% relationship; the closest used "dorsolateral medulla" across multiple clauses.
+% Omitted rather than grounded on a split or paraphrased span; re-groundable
+% later from an alternate source.
+% ============================================================================
+
+dictionary cerebral_artery_vocab {
+    define artery    : entity   surface "cerebral artery", "intracranial artery"
+    define territory : entity   surface "vascular territory", "brain region supplied"
+
+    define supplies : relation from artery to territory  % the territory this artery supplies
+}
+
+rulebook cerebral_artery_facts {
+    use cerebral_artery_vocab
+
+    % --- middle cerebral artery -> lateral cerebral cortex --------------------
+    relate supplies(middle_cerebral_artery, lateral_cerebral_cortex)
+        source "The MCA's cortical branches supply most of the lateral cerebral hemisphere, including the frontal, parietal, and temporal lobes."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526002/"
+        trust authoritative
+
+    % --- anterior cerebral artery -> medial cerebral surface ------------------
+    relate supplies(anterior_cerebral_artery, medial_cerebral_surface)
+        source "It then gives off branches supplying the hypothalamus regions via the posterior communicating arteries, the areas surrounding the globus pallidus, and the amygdala via the anterior choroidal arteries, and the medial surfaces of the anterior segment of the brain via the anterior cerebral artery."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549894/"
+        trust authoritative
+
+    % --- posterior cerebral artery -> occipital lobe --------------------------
+    relate supplies(posterior_cerebral_artery, occipital_lobe)
+        source "The occipital lobe receives vascular supply from the cortical branches of the posterior cerebral artery (PCA)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544320/"
+        trust authoritative
+
+    % --- basilar artery -> brainstem (span says "brainstem", not "pons") ------
+    relate supplies(basilar_artery, brainstem)
+        source "The basilar artery serves as the primary source of arterial supply to the brainstem and posterior cerebral hemispheres."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK540995/"
+        trust authoritative
+
+    % --- anterior inferior cerebellar artery -> lateral pons ------------------
+    relate supplies(anterior_inferior_cerebellar_artery, lateral_pons)
+        source "The anterior inferior cerebellar artery supplies the middle cerebellar peduncle, lower lateral pons, anteroinferior surface of the cerebellum, flocculus and the choroid plexus of the lateral ventricle."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448167/"
+        trust authoritative
+
+    % --- lenticulostriate arteries -> basal ganglia & internal capsule --------
+    relate supplies(lenticulostriate_arteries, basal_ganglia_internal_capsule)
+        source "Deep perforators, the lenticulostriate arteries, arise from the MCA and perfuse the basal ganglia and internal capsule."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526002/"
+        trust authoritative
+
+    % --- ophthalmic artery -> eye (span says "the eye", not "retina") ---------
+    relate supplies(ophthalmic_artery, eye)
+        source "The branches of the ophthalmic artery comprise the entire arterial supply to the eye."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537063/"
+        trust authoritative
+}

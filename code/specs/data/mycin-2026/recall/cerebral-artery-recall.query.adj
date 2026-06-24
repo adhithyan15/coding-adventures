@@ -1,0 +1,23 @@
+% ============================================================================
+% cerebral-artery-recall.query.adj — a worked recall query over the cerebral-artery library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "which territory does
+% artery X supply?" question: it states no neuroanatomy fact — it only `import`s
+% the grounded library and asks binding queries. The native adj-lang engine
+% resolves each `?` against the imported `relate` edges and returns the binding +
+% the citing clause's source/locator/trust. All knowledge is in the library;
+% none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli cerebral-artery-recall.query.adj
+% ============================================================================
+
+import "cerebral-artery-edges.adj"
+
+? supplies(middle_cerebral_artery, $Territory)               % expect lateral_cerebral_cortex
+? supplies(anterior_cerebral_artery, $Territory)             % expect medial_cerebral_surface
+? supplies(posterior_cerebral_artery, $Territory)            % expect occipital_lobe
+? supplies(basilar_artery, $Territory)                       % expect brainstem
+? supplies(anterior_inferior_cerebellar_artery, $Territory)  % expect lateral_pons
+? supplies(lenticulostriate_arteries, $Territory)            % expect basal_ganglia_internal_capsule
+? supplies(ophthalmic_artery, $Territory)                    % expect eye
