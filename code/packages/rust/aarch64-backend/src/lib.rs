@@ -545,6 +545,44 @@ fn emit_instr(
         return Ok(());
     }
 
+    // ---- LANG-FULL E8: int ⇄ real conversions ---------------------------
+    //
+    // These reach the backend with their bare IIR names (the `specialise`
+    // pass passes unrecognised ops through unchanged), so they are matched
+    // here rather than via a typed `_<ty>` suffix.
+    //
+    //   int_to_real        ldr x0,[src]; scvtf d0,x0;            str_d d0,[dest]
+    //   real_to_int_trunc  ldr_d d0,[src]; fcvtzs x0,d0;         str x0,[dest]
+    //   real_to_int_floor  ldr_d d0,[src]; frintm d0,d0; fcvtzs x0,d0; str x0,[dest]
+    //
+    // `fcvtzs` rounds toward zero and *saturates* on NaN/±∞/out-of-range (ARM
+    // does not trap) — a documented divergence from the VM trap shared with the
+    // JVM backend; every finite, in-range value (all `entier`/coercion produces)
+    // converts identically.
+    if op == "int_to_real" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr("int_to_real needs srcs[0]".into()))?;
+        load_operand(asm, alloc, Reg::X0, src)?; // i64 → X0
+        asm.scvtf(Reg::X0, Reg::X0);             // D0 = (double) X0
+        let slot = alloc.slot_of(dest);
+        asm.str_d(Reg::X0, Reg::Sp, slot)?;      // store the double
+        return Ok(());
+    }
+    if op == "real_to_int_trunc" || op == "real_to_int_floor" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_fp_operand(asm, alloc, Reg::X0, src)?; // f64 → D0
+        if op == "real_to_int_floor" {
+            asm.frintm(Reg::X0, Reg::X0);           // D0 = floor(D0)  (round to −∞)
+        }
+        asm.fcvtzs(Reg::X0, Reg::X0);               // X0 = (i64) D0   (trunc toward zero)
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;          // store the integer
+        return Ok(());
+    }
+
     // ---- add/sub/mul (typed) --------------------------------------------
     for (prefix, kind) in &[("add_", BinKind::Add), ("sub_", BinKind::Sub), ("mul_", BinKind::Mul)] {
         if let Some(ty) = op.strip_prefix(*prefix) {
@@ -2676,5 +2714,57 @@ mod tests {
         assert_eq!(run_u64(&f64_cmp_module("le", 5.0, 5.0)), 1);
         assert_eq!(run_u64(&f64_cmp_module("ge", 5.0, 5.0)), 1);
         assert_eq!(run_u64(&f64_cmp_module("ne", 5.0, 4.0)), 1);
+    }
+
+    // ---- LANG-FULL E8: int ⇄ real conversions ----
+
+    /// A single-source conversion CIR instruction (`int_to_real`,
+    /// `real_to_int_trunc`, `real_to_int_floor`).
+    fn make_unary_cir(op: &str, dest: &str, src: &str, ty: &str) -> CIRInstr {
+        CIRInstr { op: op.into(), dest: Some(dest.into()),
+                   srcs: vec![CIROperand::Var(src.into())], ty: ty.into(), deopt_to: None }
+    }
+
+    /// `const i = a; r = int_to_real i; const c = b; d = r − c; o = <round> d;
+    /// ret_u64 o` — the round op is `real_to_int_trunc`/`real_to_int_floor`.
+    /// Returns the i64 result as a u64 bit pattern.
+    fn e8_round_module(round_op: &str, a: i64, b: f64) -> Vec<u8> {
+        let cir = vec![
+            const_u64("i", a),
+            make_unary_cir("int_to_real", "r", "i", "f64"),
+            const_f64("c", b),
+            make_binop_cir("sub_f64", "d", "r", "c", "f64"),
+            make_unary_cir(round_op, "o", "d", "i64"),
+            ret_u64("o"),
+        ];
+        compile(&ctx("f", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("{round_op} compile failed: {e}"))
+    }
+
+    /// The conversion ops compile on every host (structural — the executed
+    /// proof below is `cfg`'d to Apple Silicon only).
+    #[test]
+    fn e8_conversions_compile() {
+        assert!(!e8_round_module("real_to_int_trunc", 45, 0.0).is_empty(), "trunc should compile");
+        assert!(!e8_round_module("real_to_int_floor", 45, 0.0).is_empty(), "floor should compile");
+    }
+
+    /// **Executed** on real Apple-Silicon hardware: the full conversion chain
+    /// (`scvtf` → `fsub` → optional `frintm` → `fcvtzs`) produces the right i64.
+    /// `floor(int_to_real(45) − 2.7) = floor(42.3) = 42` matches the
+    /// LLVM/WASM/VM/JVM/CLR matrix-cell value.
+    #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
+    #[test]
+    fn e8_conversions_execute() {
+        // floor(45.0 − 2.7) = floor(42.3) = 42
+        assert_eq!(run_u64(&e8_round_module("real_to_int_floor", 45, 2.7)), 42);
+        // trunc(45.0 − 2.7) = trunc(42.3) = 42 (toward zero drops the .3)
+        assert_eq!(run_u64(&e8_round_module("real_to_int_trunc", 45, 2.7)), 42);
+        // Sign sensitivity: floor(2.0 − 4.7) = floor(−2.7) = −3, but
+        // trunc(−2.7) = −2. Verifies frintm rounds toward −∞, not toward zero.
+        assert_eq!(run_u64(&e8_round_module("real_to_int_floor", 2, 4.7)) as i64, -3);
+        assert_eq!(run_u64(&e8_round_module("real_to_int_trunc", 2, 4.7)) as i64, -2);
+        // Round-trip identity: int_to_real(45) − 0.0 → 45.0 → 45.
+        assert_eq!(run_u64(&e8_round_module("real_to_int_trunc", 45, 0.0)), 45);
     }
 }

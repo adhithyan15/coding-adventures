@@ -270,8 +270,12 @@ multiple languages; close an enabler before the features that depend on it.
     better than the JVM's saturating divergence. Scalar ints are uniformly 32-bit
     here, so the narrow target is always `conv.ovf.i4`. RUN-verified on real
     `ilasm` + `dotnet` (`floor(int_to_real(45)−2.7)`⇒42).
-  - ◑ **PR-6a — native aarch64** (`scvtf`/`fcvtzs`/`frintm`) — in review (#6598);
-    `fcvtzs` saturates (documented divergence). Executed on real Apple Silicon.
+  - ✅ **PR-6a — native aarch64** (aarch64-encoder 0.5.0 + aarch64-backend 0.13.0).
+    `int_to_real`→`scvtf`; `real_to_int_trunc`→`fcvtzs`; `real_to_int_floor`→
+    `frintm` then `fcvtzs`. True i64↔f64 (full Xn). `fcvtzs` saturates (documented
+    divergence, like the JVM). **Executed on real Apple Silicon**:
+    `floor(int_to_real(45)−2.7)`⇒42, plus the sign-sensitive `floor(−2.7)=−3` vs
+    `trunc(−2.7)=−2`.
   - ✅ **PR-6b — native x86_64** (x86_64-encoder 0.5.0 + x86_64-backend 0.15.0 +
     x86-simulator 0.7.6). `int_to_real`→`cvtsi2sd`; `real_to_int_trunc`→
     `cvttsd2si`; `real_to_int_floor`→`roundsd …,1` then `cvttsd2si`. True i64↔f64.

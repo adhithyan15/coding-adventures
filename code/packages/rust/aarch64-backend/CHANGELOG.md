@@ -1,5 +1,34 @@
 # Changelog — `aarch64-backend`
 
+## 0.13.0 — 2026-06-23 — int ⇄ real conversions (LANG-FULL E8 PR-6a)
+
+The three IIR numeric-conversion ops now lower to aarch64 — the sixth backend
+(after VM/JIT, LLVM, WASM, JVM, CLR) to gain them and a step toward the E8
+matrix proof (PR-7's ALGOL `entier`):
+
+| IIR op | aarch64 sequence |
+|--------|------------------|
+| `int_to_real` | `ldr x0,[src]; scvtf d0,x0; str d0,[dest]` |
+| `real_to_int_trunc` | `ldr d0,[src]; fcvtzs x0,d0; str x0,[dest]` |
+| `real_to_int_floor` | `ldr d0,[src]; frintm d0,d0; fcvtzs x0,d0; str x0,[dest]` |
+
+The native integer model is a true 64-bit `i64` (full `Xn` registers), so these
+are real i64↔f64 conversions (unlike the CLR/JVM 32-bit scalar model). The ops
+arrive with their bare IIR names — the `aot-core::specialise` pass passes
+unrecognised ops through unchanged — so the backend matches them directly rather
+than via a typed `_<ty>` suffix.
+
+**Trap divergence (documented):** `fcvtzs` rounds toward zero and *saturates* on
+NaN/±∞/out-of-range (ARM never traps), a divergence from the VM's fail-closed
+trap shared with the JVM backend; every finite, in-range value (all
+`entier`/coercion produces) converts identically.
+
+Verified by **executing generated machine code on real Apple Silicon**
+(`e8_conversions_execute`): `floor(int_to_real(45) − 2.7) = 42`,
+`trunc(42.3) = 42`, and the sign-sensitive `floor(−2.7) = −3` vs `trunc(−2.7) =
+−2` (proving `frintm` rounds toward −∞, not toward zero). Requires
+aarch64-encoder ≥ 0.5.0 (`scvtf`/`fcvtzs`/`frintm`).
+
 ## 0.12.0 — 2026-06-21 — bounds-checked arrays (LANG-FULL E5 PR-4c) — completes E5
 
 The four E5 array opcodes now lower to raw aarch64, using the **static**
