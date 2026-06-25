@@ -1,0 +1,75 @@
+% ============================================================================
+% hypothalamic-hormone-edges — the hypothalamic-releasing-hormone→pituitary-hormone
+% knowledge-graph (MYCIN-2026 HYPOTHALAMIC).
+% ============================================================================
+% A high-yield endocrine-physiology board table: each hypothalamic releasing
+% hormone and the anterior-pituitary hormone whose release it stimulates. This
+% completes the hypothalamus→pituitary→target axis (the pituitary→target half is
+% the sibling PITUITARY domain). "What does TRH stimulate?" becomes the binding
+% query
+%     ? stimulates_release_of(trh, $PituitaryHormone).
+%
+% Direction note: the relation is hypothalamic hormone -> the anterior-pituitary
+% hormone it stimulates the release of (`stimulates_release_of`). Each releasing
+% hormone here maps to ONE canonical pituitary-hormone span, so a query binds a
+% single answer (gnrh binds the LH+FSH gonadotropin pair its span names jointly).
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The object names the literal pituitary hormone the
+% sentence states the releasing hormone stimulates (TRH "stimulates thyrotrophs
+% ... to secrete TSH"; CRH "stimulates ACTH secretion"; GnRH "stimulates the
+% anterior pituitary to release FSH and LH"; GHRH "GH secretion is stimulated by
+% growth hormone-releasing hormone"). Each span was independently re-fetched and
+% confirmed on two separate fetches of the same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like PITUITARY/BONECELL/
+% AUTONOMIC/GIHORMONE). It is DISTINCT from the legacy endocrine domain: a
+% brand-new pure-ADJ file on the hypothalamic-releasing-hormone topic. Each fact
+% is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see hypothalamic-hormone-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary hypothalamic_hormone_vocab {
+    define releasing_hormone : entity   surface "hypothalamic hormone", "releasing hormone"
+    define pituitary_hormone : entity   surface "pituitary hormone", "anterior pituitary hormone"
+
+    define stimulates_release_of : relation from releasing_hormone to pituitary_hormone  % pituitary hormone whose release it triggers
+}
+
+rulebook hypothalamic_hormone_facts {
+    use hypothalamic_hormone_vocab
+
+    % --- TRH -> TSH ----------------------------------------------------------
+    relate stimulates_release_of(trh, tsh)
+        source "Specifically, neurons in the hypothalamus release TRH, or thyroid-releasing hormone, which stimulates thyrotrophs of the anterior pituitary to secrete TSH."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499850/"
+        trust authoritative
+
+    % --- CRH -> ACTH ---------------------------------------------------------
+    relate stimulates_release_of(crh, acth)
+        source "The hypothalamus, located in the ventral brain, secretes corticotropin-releasing hormone (CRH), which stimulates ACTH secretion from the anterior pituitary."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500031/"
+        trust authoritative
+
+    % --- GnRH -> FSH and LH --------------------------------------------------
+    relate stimulates_release_of(gnrh, fsh_and_lh)
+        source "The hypothalamus secretes GnRH, which stimulates the anterior pituitary to release FSH and LH."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535442/"
+        trust authoritative
+
+    % --- GHRH -> GH ----------------------------------------------------------
+    relate stimulates_release_of(ghrh, gh)
+        source "GH secretion is stimulated by growth hormone-releasing hormone (GHRH) but suppressed by another hormone peptide, somatostatin (also known as growth hormone-inhibiting hormone (GHIH))."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459247/"
+        trust authoritative
+}

@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.39.0] - 2026-06-25
+
+### Added (via the shared `s-runtime`)
+
+- **R-43 — `norm(x, type)` matrix norms**, reached through ordinary R syntax.
+  `norm(x, type = "O")` collapses a numeric matrix to a single non-negative
+  number; the one-letter, case-insensitive `type` chooses the norm:
+  - **`"O"`/`"1"`** one-norm (max absolute column sum — R's default), **`"I"`**
+    infinity-norm (max absolute row sum), **`"F"`/`"E"`** Frobenius/Euclidean
+    (`sqrt(sum of squares)`), **`"M"`** max-modulus (max absolute element).
+  - A bare numeric vector is treated as an `n × 1` matrix, so
+    `norm(c(3,4), "F")` is `5`. `type` may be positional or named (`type =`).
+  - `norm(matrix(c(1,2,3,4), nrow=2))` is `7`; `…, "I")` is `6`; `…, "F")` is
+    `sqrt(30) ≈ 5.477`; `norm(matrix(c(1,-5,3,4), nrow=2), "M")` is `5`.
+  - Any `NA` entry → `NA`; an unknown `type` is a clean error (never a panic).
+  - **Deferred to R-48**: `type = "2"` (spectral norm, needs an SVD) is a clear
+    *"type '2' (spectral) not yet supported"* error for now.
+
 ## [0.38.0] - 2026-06-25
 
 ### Added (via the shared `s-runtime`)

@@ -1,0 +1,1 @@
+var a="a_b_c";var b="a-bXc";report(a,b);
