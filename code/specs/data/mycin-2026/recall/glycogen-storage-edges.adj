@@ -1,0 +1,90 @@
+% ============================================================================
+% glycogen-storage-edges — the glycogen-storage-disease→deficient-enzyme
+% knowledge-graph (MYCIN-2026 GLYCOGEN).
+% ============================================================================
+% A high-yield biochemistry board table: each glycogen storage disease (GSD)
+% and the enzyme whose deficiency causes it. "Which enzyme is deficient in von
+% Gierke disease?" becomes the binding query
+%     ? deficient_in(gsd_type_i_von_gierke, $Enzyme).
+%
+% Direction note: the relation is disease -> the enzyme it is deficient in
+% (`deficient_in`). Each disease here maps to ONE canonical enzyme span, so a
+% query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The Pompe span writes the enzyme with a Greek letter,
+% "acid α-glucosidase (GAA)"; the object is bound acid_alpha_glucosidase
+% (spelled-out transliteration of the same enzyme name the sentence carries) and
+% the source preserves the Greek α byte-for-byte. The Cori span names the enzyme
+% as "glycogen debranching enzyme (amylo-1,6-glucosidase)" — object bound to the
+% spelled-out form. Each span was independently re-fetched and confirmed.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like ORGANELLE/
+% SPINAL-TRACT/CEREBRAL-ARTERY). Each fact is a `relate` clause whose
+% byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see glycogen-storage-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% DEFERRED (honest gaps, not authored over):
+%   - GSD V / McArdle disease -> muscle glycogen phosphorylase (myophosphorylase).
+%     On NBK470386 the deficiency sentence names the enzyme but its subject is
+%     "This condition" (not the disease), and the disease-naming sentence says
+%     McArdle "results from mutations involving the muscle-specific isoform of
+%     the glycogen phosphorylase enzyme" without a single self-contained
+%     deficiency co-naming. No one sentence binds McArdle/GSD-V to the enzyme as
+%     a deficiency.
+%   - GSD IV / Andersen disease -> glycogen branching enzyme. No single NCBI
+%     sentence co-names the disease AND "glycogen branching enzyme" with a
+%     deficiency relationship (the deficiency sentence's subject is the
+%     diagnosis/demonstration, and the disease-as-subject sentences reference
+%     only the GBE1 gene).
+%   - GSD VII / Tarui disease -> muscle phosphofructokinase. The only
+%     self-contained co-naming sentence found is in a PMC research article
+%     (PMC7010930), not an NCBI StatPearls/Bookshelf page; deferred to keep every
+%     shipped edge on a Bookshelf/StatPearls source. Re-groundable from a future
+%     StatPearls Tarui page.
+% ============================================================================
+
+dictionary glycogen_vocab {
+    define disease : entity   surface "glycogen storage disease", "GSD"
+    define enzyme  : entity   surface "deficient enzyme", "glycogen-metabolism enzyme"
+
+    define deficient_in : relation from disease to enzyme  % the enzyme this GSD lacks
+}
+
+rulebook glycogen_facts {
+    use glycogen_vocab
+
+    % --- GSD I / von Gierke -> glucose-6-phosphatase --------------------------
+    relate deficient_in(gsd_type_i_von_gierke, glucose_6_phosphatase)
+        source "von Gierke Disease: also known as glycogen storage disease type 1A, is an autosomal recessive disorder in which the enzyme glucose-6-phosphatase is deficient, leading to an inability to break down glycogen into glucose."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554417/"
+        trust authoritative
+
+    % --- GSD II / Pompe -> acid alpha-glucosidase (GAA) ----------------------
+    relate deficient_in(gsd_type_ii_pompe, acid_alpha_glucosidase)
+        source "Glycogen storage disease type II, or Pompe disease, is a rare inherited disorder caused by a deficiency of the enzyme acid α-glucosidase (GAA)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470558/"
+        trust authoritative
+
+    % --- GSD III / Cori / Forbes -> glycogen debranching enzyme --------------
+    relate deficient_in(gsd_type_iii_cori, glycogen_debranching_enzyme)
+        source "Cori Disease, also known as glycogen storage disease type III or limit dextrinosis, is a genetic disease caused by a mutation in the AGL gene on chromosome 1p21, which encodes the glycogen debranching enzyme (amylo-1,6-glucosidase), leading to deficient activity of the key enzyme responsible for glycogen degradation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554417/"
+        trust authoritative
+
+    % --- GSD VI / Hers -> liver glycogen phosphorylase -----------------------
+    relate deficient_in(gsd_type_vi_hers, liver_glycogen_phosphorylase)
+        source "Glycogen storage disease type VI (GSD VI) results from a loss of function of liver glycogen phosphorylase."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK5941/"
+        trust authoritative
+}

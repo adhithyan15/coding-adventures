@@ -1,0 +1,20 @@
+% ============================================================================
+% glycogen-storage-recall.query.adj — a worked recall query over the GSD library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "which enzyme is deficient
+% in glycogen storage disease X?" question: it states no biochemistry fact — it
+% only `import`s the grounded library and asks binding queries. The native
+% adj-lang engine resolves each `?` against the imported `relate` edges and
+% returns the binding + the citing clause's source/locator/trust. All knowledge
+% is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli glycogen-storage-recall.query.adj
+% ============================================================================
+
+import "glycogen-storage-edges.adj"
+
+? deficient_in(gsd_type_i_von_gierke, $Enzyme)    % expect glucose_6_phosphatase
+? deficient_in(gsd_type_ii_pompe, $Enzyme)        % expect acid_alpha_glucosidase
+? deficient_in(gsd_type_iii_cori, $Enzyme)        % expect glycogen_debranching_enzyme
+? deficient_in(gsd_type_vi_hers, $Enzyme)         % expect liver_glycogen_phosphorylase
