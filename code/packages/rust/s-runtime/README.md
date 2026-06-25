@@ -316,8 +316,10 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   vector) or an `n × m` matrix (→ one solved column per RHS), the same contract as
   `solve`. `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` is `c(1, 3)` and
   `r %*% y` reconstructs `c(5,9)`. Reuses the `square_matrix` reader; a zero on the
-  diagonal is a clean *singular*-matrix error (no `NaN`/panic). `k=`,
-  `transpose=TRUE`, and `upper.tri=FALSE` are deferred to R-42.
+  diagonal is a clean *singular*-matrix error (no `NaN`/panic). **R-42** adds the
+  base-R options: **`k=`** (use the leading `k×k` block + first `k` rows of `x`),
+  **`upper.tri=`** (which triangle to read — so `backsolve(L, x, upper.tri=FALSE)`
+  equals `forwardsolve(L, x)`), and **`transpose=TRUE`** (solve `t(R) %*% y = x`).
 - **Kronecker product** (R-38): **`kronecker(X, Y)`** — the `(m·p)×(n·q)`
   block-outer product of an `m×n` `X` and a `p×q` `Y`, where block `(i, j)` is
   `X[i,j] · Y` and `result[(i-1)·p+k, (j-1)·q+l] = X[i,j] · Y[k,l]`

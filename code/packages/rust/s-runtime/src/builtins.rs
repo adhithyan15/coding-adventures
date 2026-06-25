@@ -1521,7 +1521,37 @@ fn b_chol(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 ///   R = [[2,1],[0,3]],  x = (5, 9)
 ///     y[2] = 9 / 3         = 3
 ///     y[1] = (5 − 1·3) / 2 = 1      ⇒  y = (1, 3),  and  R %*% y == x.
-fn triangular_solve(args: &[Arg], who: &str, upper: bool) -> SResult<SValue> {
+///
+/// # R-42 — named options (`k` / `upper.tri` / `transpose`)
+///
+/// The bare two-argument form above is the R-41 default. R-42 threads three
+/// base-R named options through this *same* helper; the resolved values arrive
+/// as parameters so the per-builtin defaults live in the thin wrappers.
+///
+/// * **`upper_tri`** — which triangle of the first argument to read. Reading the
+///   **upper** triangle ⇒ **back**-substitution (rows bottom-up); reading the
+///   **lower** triangle ⇒ **forward**-substitution (rows top-down). So the
+///   substitution direction *follows the triangle read*.
+/// * **`transpose`** — when `true`, solve `t(R) %*% y = x`. Transposing a
+///   triangular factor swaps which triangle is active, so it **flips** the
+///   direction; and every coefficient read goes through the transposed
+///   column-major index (`R[j,i]` at `i·n + j`) instead of `R[i,j]` at `j·n + i`.
+///   The combined rule: the effective direction is **back**-substitution iff
+///   `upper_tri != transpose`.
+/// * **`k`** — solve only the **leading `k×k` block** of the (stride-`n`,
+///   column-major) factor against the **first `k` rows** of the RHS; the result
+///   has `k` rows. Indexing keeps the full stride `n`, so no data is copied — the
+///   loops simply range over `0..k`. `k` must satisfy `0 ≤ k ≤ n`; an
+///   out-of-range `k` is a clean error, never an out-of-bounds read.
+///
+/// The **diagonal** entry `a[i·n + i]` is the same with or without transpose, so
+/// the zero-on-the-used-diagonal *singular* check is unchanged — a clean error,
+/// never a propagated `NaN`/`Inf` and never a panic.
+fn triangular_solve(
+    args: &[Arg],
+    who: &str,
+    upper_tri_default: bool,
+) -> SResult<SValue> {
     // The coefficient matrix: reuse the det/solve/chol square-matrix reader, which
     // rejects non-matrix, non-square and over-MAX_SOLVE_DIM inputs up front and
     // returns the data column-major (entry (row i, col j) is at index `j*n + i`).
@@ -1532,8 +1562,41 @@ fn triangular_solve(args: &[Arg], who: &str, upper: bool) -> SResult<SValue> {
         )));
     }
 
+    // --- R-42 named options -------------------------------------------------
+    // `upper.tri =` (which triangle) and `transpose =` (solve t(R)) are logicals;
+    // missing ⇒ the per-builtin default / `FALSE`. Reuse the shared `named_flag`.
+    let upper_tri = named_flag(args, "upper.tri", upper_tri_default)?;
+    let transpose = named_flag(args, "transpose", false)?;
+    // The substitution runs back-substitution (rows bottom-up) iff the triangle
+    // read and the transpose flag disagree (see the doc comment's truth table).
+    let back = upper_tri != transpose;
+
+    // `k =` selects the leading `k×k` block + first `k` RHS rows. Default = `n`
+    // (the full matrix). Read it as a logical-free integer; a present-but-NA `k`
+    // also falls back to `n`. Range-check `0 ≤ k ≤ n` BEFORE any indexing so a
+    // malformed `k` is a clean error, never an out-of-bounds read.
+    let k = match named_arg(args, "k") {
+        Some(v) => {
+            let raw = v.as_double()?;
+            match raw.get_value(0) {
+                Some(x) if !is_na_real(x) => {
+                    // R truncates toward zero; reject anything outside `0..=n`.
+                    if !(0.0..=(n as f64)).contains(&x.trunc()) {
+                        return Err(SError::BadArgs(format!(
+                            "{who}: 'k' must be between 0 and {n} (got {x})"
+                        )));
+                    }
+                    x.trunc() as usize
+                }
+                _ => n, // empty / NA `k` ⇒ the full matrix, as in R.
+            }
+        }
+        None => n,
+    };
+
     // The right-hand side `x`: a matrix (→ matrix result, `m` columns) or a
-    // vector (→ vector result, a single column). Same handling as `solve`.
+    // vector (→ vector result, a single column). Same handling as `solve`. The
+    // RHS must have `n` rows/length (the full factor); we then use the first `k`.
     let (b, m, b_is_vector) = match nth_positional(args, 1) {
         Some(x_val) => {
             if let Some((bd, bnr, bnc)) = matrix_parts(x_val) {
@@ -1565,7 +1628,7 @@ fn triangular_solve(args: &[Arg], who: &str, upper: bool) -> SResult<SValue> {
             "{who}: NA in the right-hand side"
         )));
     }
-    // The substitution is O(n²·m); cap the column count like `solve` does so a
+    // The substitution is O(k²·m); cap the column count like `solve` does so a
     // wide right-hand side can't blow past the MAX_SOLVE_DIM work budget.
     if m > MAX_SOLVE_DIM {
         return Err(SError::Index(format!(
@@ -1573,41 +1636,56 @@ fn triangular_solve(args: &[Arg], who: &str, upper: bool) -> SResult<SValue> {
         )));
     }
 
-    // Solve each right-hand-side column independently. Visit the rows in the order
-    // that makes the already-solved entries available: bottom-up for an upper-
-    // triangular `R`, top-down for a lower-triangular `L`.
-    let mut y = vec![0.0; n * m];
-    for col in 0..m {
-        if upper {
-            for i in (0..n).rev() {
-                let mut s = b[col * n + i];
-                for j in (i + 1)..n {
-                    s -= a[j * n + i] * y[col * n + j];
-                }
-                let diag = a[i * n + i];
-                if diag == 0.0 {
-                    return Err(SError::BadArgs(format!(
-                        "{who}: the matrix is singular (zero on the diagonal, position {})",
-                        i + 1
-                    )));
-                }
-                y[col * n + i] = s / diag;
-            }
+    // Coefficient read for "equation i, unknown j" within the leading `k×k`
+    // block. Without transpose this is `A[i][j]` at `j*n + i`; with transpose we
+    // want `t(A)[i][j] = A[j][i]` at `i*n + j`. Both keep the full stride `n`, so
+    // `i, j < k ≤ n` stays in bounds. The `n` stride is captured by the closure.
+    let coef = |i: usize, j: usize| -> f64 {
+        if transpose {
+            a[i * n + j]
         } else {
-            for i in 0..n {
-                let mut s = b[col * n + i];
+            a[j * n + i]
+        }
+    };
+
+    // The result has `k` rows (one solved entry per active unknown), `m` columns.
+    // Solve each RHS column independently. Visit the rows in the order that makes
+    // the already-solved entries available: bottom-up for back-substitution,
+    // top-down for forward-substitution. We index the RHS row-wise within the
+    // first `k` rows of each length-`n` column (`col * n + i`, `i < k`) and write
+    // the packed `k`-row result (`col * k + i`).
+    let mut y = vec![0.0; k * m];
+    for col in 0..m {
+        // `rows()` yields the active row indices `0..k` in substitution order.
+        let order: Vec<usize> = if back {
+            (0..k).rev().collect()
+        } else {
+            (0..k).collect()
+        };
+        for &i in &order {
+            // Subtract the already-solved unknowns. For back-substitution those
+            // are the rows below (`j > i`); for forward-substitution, above
+            // (`j < i`). Both ranges stay within `0..k`.
+            let mut s = b[col * n + i];
+            if back {
+                for j in (i + 1)..k {
+                    s -= coef(i, j) * y[col * k + j];
+                }
+            } else {
                 for j in 0..i {
-                    s -= a[j * n + i] * y[col * n + j];
+                    s -= coef(i, j) * y[col * k + j];
                 }
-                let diag = a[i * n + i];
-                if diag == 0.0 {
-                    return Err(SError::BadArgs(format!(
-                        "{who}: the matrix is singular (zero on the diagonal, position {})",
-                        i + 1
-                    )));
-                }
-                y[col * n + i] = s / diag;
             }
+            // The diagonal is transpose-invariant (`a[i*n + i]`); a zero here
+            // makes the system singular — a clean error before the division.
+            let diag = a[i * n + i];
+            if diag == 0.0 {
+                return Err(SError::BadArgs(format!(
+                    "{who}: the matrix is singular (zero on the diagonal, position {})",
+                    i + 1
+                )));
+            }
+            y[col * k + i] = s / diag;
         }
     }
 
@@ -1616,20 +1694,22 @@ fn triangular_solve(args: &[Arg], who: &str, upper: bool) -> SResult<SValue> {
     } else {
         Ok(SValue::Matrix {
             data: Double::from_values(y),
-            nrow: n,
+            nrow: k,
             ncol: m,
         })
     }
 }
 
-/// `backsolve(r, x)` — solve the UPPER-triangular system `r %*% y = x`.
-/// See [`triangular_solve`].
+/// `backsolve(r, x, k = ncol(r), upper.tri = TRUE, transpose = FALSE)` —
+/// solve the UPPER-triangular system `r %*% y = x` (the default), honouring the
+/// R-42 named options. See [`triangular_solve`].
 fn b_backsolve(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     triangular_solve(args, "backsolve", true)
 }
 
-/// `forwardsolve(l, x)` — solve the LOWER-triangular system `l %*% y = x`.
-/// See [`triangular_solve`].
+/// `forwardsolve(l, x, k = ncol(l), upper.tri = FALSE, transpose = FALSE)` —
+/// solve the LOWER-triangular system `l %*% y = x` (the default), honouring the
+/// R-42 named options. See [`triangular_solve`].
 fn b_forwardsolve(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     triangular_solve(args, "forwardsolve", false)
 }
@@ -6208,6 +6288,15 @@ fn named_flag(args: &[Arg], name: &str, default: bool) -> SResult<bool> {
         Some(arg) => arg.value.truthy(),
         None => Ok(default),
     }
+}
+
+/// Borrow the value of a named argument (the first match), or `None` if absent.
+/// Used by callers that need to inspect the value themselves (e.g. read an
+/// integer `k =` with their own range check) rather than coerce to a flag.
+fn named_arg<'a>(args: &'a [Arg], name: &str) -> Option<&'a SValue> {
+    args.iter()
+        .find(|a| a.name.as_deref() == Some(name))
+        .map(|a| &a.value)
 }
 
 /// Peel `Classed` / `Named` / `Attributed` wrappers off a value so we can inspect
