@@ -66,7 +66,7 @@ pub use manifest::{Feature, FeatureManifest};
 pub use metadata::{Metadata, CURRENT_SIR_VERSION};
 pub use nodes::{
     Block, Capture, CaptureValue, ExportName, Expr, Function, Global, Import, ImportName, Module,
-    Param, RescueClause, Scope, Stmt,
+    Param, ParamKind, RescueClause, Scope, Stmt,
 };
 pub use span::Span;
 pub use text::{print_block, print_expr, print_function, print_module};
@@ -114,6 +114,7 @@ mod smoke {
             params: vec![Param {
                 name: "x".into(),
                 sir_type: None,
+                kind: ParamKind::Required,
                 span: Span::synthetic(),
             }],
             return_type: None,

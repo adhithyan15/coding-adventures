@@ -326,6 +326,34 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
   `tcrossprod` of the same is `[[10,14],[14,20]]`. As in R a bare vector flows
   through `%*%`'s existing vector promotion (left = row, right = column); the
   dense-matrix case is the solid, tested core.
+- **Triangular solves** *(R-41)*: `backsolve(r, x)` and `forwardsolve(l, x)`,
+  the two substitution-based linear solvers for a *triangular* coefficient
+  matrix — available to both S and R through the shared tree-walker.
+  **`backsolve(r, x)`** solves `r %*% y = x` for `y` with `r` **upper**-triangular
+  (`n×n`), by **back-substitution** (last row first):
+  `y[i] = (x[i] − Σ_{j>i} r[i,j]·y[j]) / r[i,i]` for `i = n-1 … 0`.
+  **`forwardsolve(l, x)`** solves `l %*% y = x` with `l` **lower**-triangular, by
+  **forward-substitution** (first row first):
+  `y[i] = (x[i] − Σ_{j<i} l[i,j]·y[j]) / l[i,i]` for `i = 0 … n-1`. In both, `x`
+  is either an `n`-vector (single RHS → an `n`-vector result) or an `n×k` matrix
+  (`k` RHS columns → an `n×k` matrix result, solved column-by-column). Only the
+  relevant triangle is read — upper for `backsolve`, lower for `forwardsolve` —
+  matching R's defaults (`upper.tri = TRUE`, `transpose = FALSE`); this is the
+  `O(n²·k)` fast path, half the work of the `O(n³)` general `solve`. The
+  implementation **reuses** the existing `square_matrix` helper (shared with
+  `det`/`solve`/`chol` — non-matrix / non-square / over-`MAX_SOLVE_DIM`
+  rejection), the same vector-vs-matrix RHS reading (`n`-row check, `MAX_SOLVE_DIM`
+  column cap) `solve` uses, column-major indexing (`r[i,j]` at `j·n + i`), and the
+  `SValue::Matrix` constructor. **Error paths, no panic / no NaN / no Inf:**
+  non-square or non-numeric `r`/`l` → error before any indexing; a RHS whose row
+  count ≠ `n` → error before the loop; a **zero on the diagonal** (singular) is
+  tested `== 0` **before** the division, so it is a clean *"apparently singular"*
+  error rather than a propagated `NaN`/`Inf`; `NA` in `r`/`l`/`x` → error. Worked
+  examples: `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` is `c(1,3)` (and
+  `r %*% c(1,3) == c(5,9)`); `forwardsolve(matrix(c(2,1,0,3), nrow=2), c(4,11))`
+  is `c(2,3)`. The optional `k =`, `transpose = TRUE`, and `upper.tri` flips are
+  **deferred to R-42**; this item ships the default full-triangle dense core
+  (vector and multi-column matrix RHS) only.
 - **Cholesky factorization** *(R-40)*: `chol(X)`, the Cholesky factor of a real
   symmetric positive-definite `n×n` matrix. Returns the **upper-triangular**
   matrix `R` with **`t(R) %*% R == X`** (R's convention — the upper factor, so
@@ -346,8 +374,8 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
   panic. Worked example: `chol(matrix(c(4,2,2,3), nrow=2))` is `[[2,1],[0,√2]]`
   and `t(R) %*% R` reconstructs the input; `chol(diag(3))` is the identity.
   `pivot=TRUE` (pivoted Cholesky), the `chol2inv()` companion, and complex
-  (Hermitian) matrices are **deferred to R-41**; this item ships the real-SPD
-  dense core only.
+  (Hermitian) matrices are **deferred to R-42** (R-41 ships the triangular solves
+  `backsolve`/`forwardsolve`); this item ships the real-SPD dense core only.
 - **Kronecker product** *(R-38)*: `kronecker(X, Y)`, the block-outer-product of
   two matrices. For `X` `m×n` and `Y` `p×q` the result is `(m·p)×(n·q)` with
   **`result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]`** (1-based,
@@ -681,6 +709,36 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
    - **Deferred to R-45.** Full `strptime`/`strftime` fields (`%B`/`%A`/`%H`/…);
      `POSIXct`/`POSIXlt` date-times & timezones; `seq.Date`; `months()`/`quarters()`;
      `difftime` units other than days.
+
+12. **Date/time completeness (R-45, shared builtins).** Extends the R-44 Date
+   builtins **in place** — same civil-date kernel, same `Date` class machinery,
+   same parse-safety guards, no new dependency (English month/weekday name tables
+   are hand-rolled `const` arrays).
+   - **Extended `strftime` fields** in `format.Date`/`format`: `%B` (full month
+     `"January"`..`"December"`), `%b` (abbrev `"Jan"`..`"Dec"`), `%A` (full
+     weekday `"Monday"`..`"Sunday"`), `%a` (abbrev `"Mon"`..`"Sun"`), `%e`
+     (space-padded day of month, width 2). Weekday reuses R-44's
+     `(days + 4).rem_euclid(7)` Sunday-based index.
+   - **Extended `strptime` fields** in `as.Date`: `%B`/`%b` parse month names
+     **case-insensitively** (`"january"`/`"JAN"`/`"Jan"`); `%A`/`%a` parse and
+     spell-check weekday names (consumed but not used to constrain the date, as in
+     base R); `%e` parses an optionally space-padded day. So
+     `as.Date("January 15, 2021", "%B %d, %Y")` and `as.Date("15 Jan 2021",
+     "%d %b %Y")` parse correctly; a malformed name → `NA`, never a panic
+     (name-matching scans a fixed, length-bounded table with ASCII case-folding).
+   - **`seq.Date(from, to, by)`** (also reached via the `seq` generic when `from`
+     is a `Date`): `by` is a number of days or a unit string
+     `"day"`/`"week"`/`"month"`/`"year"` with an optional leading integer
+     multiplier (`"2 weeks"`). Day/week step a fixed day count; month/year step
+     the civil Y/M/D, **clamping** day-of-month to the target month length
+     (`2021-01-31 + 1 month` → `2021-02-28`). `length.out =` supported as an
+     alternative to `to`. **Output length is `MAX_SEQ_LEN`-bounded** with checked
+     arithmetic before allocation.
+   - **`months(d)`** → full month name (= `format(d, "%B")`); **`quarters(d)`** →
+     `"Q1"`..`"Q4"`. Both vectorised, `NA`-preserving.
+   - **Deferred to R-46.** `POSIXct`/`POSIXlt`; timezones; sub-day
+     `%H`/`%M`/`%S`/`%p`; `%U`/`%W` week-of-year; locale (non-English) names;
+     compound `"N units"` `by=` beyond a single leading integer multiplier.
 
 ## §10 References
 

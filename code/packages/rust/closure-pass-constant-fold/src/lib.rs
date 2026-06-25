@@ -763,6 +763,52 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                                 _ => {}
                             }
                         }
+                        // ---- at(i): index with negative-from-end support ----
+                        //
+                        // `"abc".at(0)` → `"a"`, `"abc".at(2)` → `"c"`,
+                        // `"abc".at(-1)` → `"c"`, `"abc".at(-3)` → `"a"`
+                        // (ECMAScript §22.1.3.1). Unlike `charAt`, a NEGATIVE
+                        // index counts from the end (`len + i`), and an
+                        // out-of-range index returns `undefined` (NOT `""`) —
+                        // for which there is no literal, so we decline and
+                        // leave the call. The index must be an integer literal
+                        // of any sign; a fractional or non-literal index is
+                        // left for the runtime (we don't model `ToIntegerOr
+                        // Infinity` coercion). Like `charAt`, a lone surrogate
+                        // (`"💩".at(0)`) cannot be a Rust `String`, so
+                        // `from_utf16` fails and we leave that call unfolded.
+                        //
+                        // `saturating_add` keeps the `len + i` computation from
+                        // overflowing when `i` is a huge negative literal (the
+                        // `as i64` cast already saturates a float past the i64
+                        // range); a saturated index lands out of range and
+                        // declines, never panicking.
+                        if id.name == "at"
+                            && n.value.is_finite()
+                            && n.value.fract() == 0.0
+                        {
+                            let units: Vec<u16> = s.value.encode_utf16().collect();
+                            let len = units.len() as i64;
+                            let raw = n.value as i64;
+                            let idx = if raw < 0 { len.saturating_add(raw) } else { raw };
+                            if idx >= 0 && idx < len {
+                                let u = idx as usize;
+                                if let Ok(result) = String::from_utf16(&units[u..u + 1]) {
+                                    let parent = c.cv.clone();
+                                    let before = format!(
+                                        "\"{}\".at({})",
+                                        s.value,
+                                        format_js_number(n.value)
+                                    );
+                                    let after = format!("\"{}\"", result);
+                                    let new_cv = st.fork_cv(&parent, &before, &after);
+                                    return stamp_literal_cv(
+                                        FoldedLiteral::String(result),
+                                        new_cv,
+                                    );
+                                }
+                            }
+                        }
                     }
                     // ---- substring search: indexOf ----
                     //
@@ -3838,6 +3884,90 @@ mod tests {
         let c = call1(ident("s"), "charCodeAt", num(0.0, None));
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.charCodeAt(0) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- string .at(i) (negative-from-end) -----------
+
+    #[test]
+    fn fold_string_at_positive_and_negative() {
+        // V8 oracle: "abc".at(0)="a", at(2)="c", at(-1)="c", at(-3)="a".
+        for (idx, expect) in [(0.0, "a"), (2.0, "c"), (-1.0, "c"), (-3.0, "a")] {
+            let c = call1(string("abc", None), "at", num(idx, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"abc\".at({idx}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => assert_eq!(s.value, expect, "\"abc\".at({idx})"),
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn at_out_of_range_does_not_fold() {
+        // JS `"abc".at(5)` and `"abc".at(-5)` are `undefined` — no literal,
+        // so we decline rather than invent `""` (which is `charAt`'s behavior,
+        // not `at`'s).
+        for idx in [5.0, -5.0] {
+            let c = call1(string("abc", None), "at", num(idx, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "out-of-range \"abc\".at({idx}) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn at_counts_utf16_units() {
+        // "a💩b" is [a, D83D, DCA9, b] in UTF-16; index 3 is the trailing "b",
+        // and at(-1) is also "b" — proving we index code units, not scalars.
+        for idx in [3.0, -1.0] {
+            let c = call1(string("a💩b", None), "at", num(idx, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"a💩b\".at({idx}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => assert_eq!(s.value, "b", "\"a💩b\".at({idx})"),
+                other => panic!("expected \"b\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn at_on_lone_surrogate_does_not_fold() {
+        // "💩".at(0) is a length-1 JS string holding a lone high surrogate,
+        // which a Rust `String` can't hold — leave the call alone (like charAt).
+        let c = call1(string("💩", None), "at", num(0.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "at yielding a lone surrogate must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn at_fractional_index_does_not_fold() {
+        // JS `"abc".at(1.5)` is `"b"` via ToIntegerOrInfinity, but we don't
+        // model that coercion — leave it for the runtime.
+        let c = call1(string("abc", None), "at", num(1.5, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "fractional at index must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn at_huge_index_does_not_overflow_or_fold() {
+        // A huge negative literal — `as i64` saturates to i64::MIN and
+        // `saturating_add` keeps `len + i` from overflowing; the index lands
+        // out of range and declines (no panic).
+        let c = call1(string("abc", None), "at", num(-1e18, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "huge negative at index must not fold (no overflow)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn at_on_identifier_does_not_fold() {
+        // `s.at(0)` needs the runtime value of `s`.
+        let c = call1(ident("s"), "at", num(0.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.at(0) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

@@ -12,7 +12,7 @@ use std::collections::{BTreeSet, HashMap};
 use std::fmt::Write;
 
 use semantic_ir::{
-    Block, Expr, Feature, Function, Global, Module, Scope, Stmt,
+    Block, Expr, Feature, Function, Global, Module, ParamKind, Scope, Stmt,
 };
 
 use crate::runtime::RUNTIME;
@@ -29,6 +29,14 @@ fn uses_oop(m: &Module) -> bool {
     ]
     .iter()
     .any(|f| m.manifest.contains(*f))
+        // Method dispatch (`recv.meth(args)` → `BuiltinCall("__method__", …)`)
+        // and scoped lookups (`A::B` → `BuiltinCall("__scope__", …)`) both route
+        // through `_sir_oop_call_method`/the OOP runtime even when the module
+        // declares no class/module of its own — e.g. `"hi".upcase` or, post-M3,
+        // a rest param used as an Array (`def f(*a); a.length; end`). Gate the
+        // OOP import on those builtins too, else the emitted call is undefined.
+        || module_uses_builtin(m, "__method__")
+        || module_uses_builtin(m, "__scope__")
 }
 
 /// True if the module uses exception handling, in which case the emitted
@@ -301,9 +309,32 @@ fn emit_function(out: &mut String, f: &Function) {
             out.push_str(", ");
         }
         first = false;
+        // M3 variadic kinds map to Python's native variadic forms:
+        //   Rest   (`*rest`)  → `*rest`   (collects trailing positionals)
+        //   KwRest (`**opts`) → `**opts`  (collects trailing keywords)
+        // Both are faithful in Python; only the construction differs.
+        match p.kind {
+            ParamKind::Rest => out.push('*'),
+            ParamKind::KwRest => out.push_str("**"),
+            ParamKind::Required => {}
+        }
         out.push_str(&sanitize_ident(&p.name));
     }
     out.push_str("):\n");
+
+    // M3 Rest-param normalization. Python's `*rest` binds a *tuple*, but SIR
+    // sequence semantics (and Ruby's `*rest`, which is an `Array`) require a
+    // *list* — every downstream sequence op (`len`, indexing, dispatched
+    // `.map`/`.length`, …) is keyed to `list`. So rebind each Rest param to a
+    // list in the function prologue. (`**opts` already binds a `dict`, which
+    // matches SIR's map representation, so KwRest needs no fixup.)
+    let pad = indent_str(1);
+    for p in &f.params {
+        if p.kind == ParamKind::Rest {
+            let name = sanitize_ident(&p.name);
+            let _ = writeln!(out, "{pad}{name} = list({name})");
+        }
+    }
 
     emit_function_body(out, &f.body, 1);
 }
@@ -1481,7 +1512,7 @@ mod tests {
         };
         let f = Function {
             name: "id".into(),
-            params: vec![Param { name: "x".into(), sir_type: None, span: s() }],
+            params: vec![Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, span: s() }],
             return_type: None,
             captures: vec![],
             body,
@@ -1493,6 +1524,29 @@ mod tests {
         emit_function(&mut out, &f);
         assert!(out.contains("def id(x):"));
         assert!(out.contains("return x"));
+    }
+
+    #[test]
+    fn emit_variadic_params_native_star_forms() {
+        // M3: `def f(a, *rest, **opts); end` → Python `def f(a, *rest, **opts):`
+        // — both variadic kinds have faithful native Python forms.
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, span: s() },
+                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, span: s() },
+                Param { name: "opts".into(), sir_type: None, kind: ParamKind::KwRest, span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("def f(a, *rest, **opts):"), "got: {out}");
     }
 
     #[test]

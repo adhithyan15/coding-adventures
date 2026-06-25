@@ -1,0 +1,93 @@
+% ============================================================================
+% spinal-tract-edges — the spinal-cord-tract→function knowledge-graph
+% (MYCIN-2026 SPINAL-TRACT).
+% ============================================================================
+% A classic high-yield neuroanatomy board table: each ascending or descending
+% spinal cord tract and the sensory/motor function it carries. "The spinothalamic
+% tract carries which modality?" becomes the binding query
+%     ? carries(spinothalamic_tract, $Function).
+%
+% Direction note: the relation is tract -> the function it carries (`carries`),
+% the board direction for cord-lesion localization — you name the tract and recall
+% the modality (and therefore the deficit a lesion produces). Each tract here maps
+% to ONE canonical function span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names, not the textbook shorthand. The spinocerebellar span
+% names the DORSAL spinocerebellar tract specifically, so the subject is
+% `dorsal_spinocerebellar_tract`; the rubrospinal span says it controls "flexor
+% muscles" (and hand/finger movements), so the object is `flexor_muscles`; the
+% anterior-corticospinal span says "axial muscles of the trunk", so the object is
+% `axial_muscles`. Grounding to the literal bytes beats grounding to the label we
+% went looking for.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like CEREBRAL-ARTERY/
+% COLLAGEN/CORONARY). Each fact is a `relate` clause whose byte-provenance lives
+% INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see spinal-tract-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% DEFERRED (honest gap, not authored over): vestibulospinal tract -> balance /
+% posture (extensor antigravity tone). Across the StatPearls pages read, no single
+% self-contained sentence co-names the spelled-out "vestibulospinal tract" AND its
+% function AND the relationship; the closest names the tract only by the
+% abbreviation "LVST" and gives the function as "extensor muscles", which is not a
+% clean self-contained co-naming of vestibulospinal -> balance. Omitted rather than
+% grounded on an abbreviation-only span; re-groundable later from an alternate source.
+% ============================================================================
+
+dictionary spinal_tract_vocab {
+    define tract    : entity   surface "spinal cord tract", "spinal pathway"
+    define function : entity   surface "sensory modality", "motor function carried"
+
+    define carries : relation from tract to function  % the function this tract carries
+}
+
+rulebook spinal_tract_facts {
+    use spinal_tract_vocab
+
+    % --- lateral corticospinal tract -> voluntary motor control ---------------
+    relate carries(lateral_corticospinal_tract, voluntary_motor_control)
+        source "The primary responsibility of the lateral corticospinal tract is to control the voluntary movement of contralateral limbs."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534818/"
+        trust authoritative
+
+    % --- dorsal column (DCML) -> fine touch, proprioception, vibration --------
+    relate carries(dorsal_column, fine_touch_vibration_proprioception)
+        source "The dorsal column, also known as the dorsal column-medial lemniscus (DCML) pathway, mediates the conscious appreciation of fine touch, 2-point discrimination, conscious proprioception, and vibration sensations throughout the body except for the head."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507888/"
+        trust authoritative
+
+    % --- spinothalamic tract -> pain and temperature --------------------------
+    relate carries(spinothalamic_tract, pain_and_temperature)
+        source "The spinothalamic tract (STT) is a sensory tract that carries nociceptive, temperature, crude touch, and pressure from our skin to the somatosensory area of the thalamus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507824/"
+        trust authoritative
+
+    % --- dorsal spinocerebellar tract -> unconscious proprioception -----------
+    relate carries(dorsal_spinocerebellar_tract, unconscious_proprioception)
+        source "The dorsal spinocerebellar tract (DSCT), also known as the posterior spinocerebellar tract or Flechsig tract, is a somatosensory part of the sensory nervous system that relays unconscious proprioceptive information from the lower limbs and trunk of the body to the cerebellum."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556013/"
+        trust authoritative
+
+    % --- rubrospinal tract -> flexor muscles (span says "flexor muscles") -----
+    relate carries(rubrospinal_tract, flexor_muscles)
+        source "With the corticospinal tract, the rubrospinal tract controls hand and finger movements in addition to flexor muscles."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554542/"
+        trust authoritative
+
+    % --- anterior corticospinal tract -> axial muscles (span says "axial") ----
+    relate carries(anterior_corticospinal_tract, axial_muscles)
+        source "Fibers of the anterior corticospinal tract innervate axial muscles of the trunk."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK546614/"
+        trust authoritative
+}

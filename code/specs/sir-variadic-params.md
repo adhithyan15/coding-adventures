@@ -109,6 +109,27 @@ def params).
 - `cargo test -p semantic-ir -p ruby-to-semantic-ir -p semantic-ir-to-python -p semantic-ir-to-typescript`
   (plus a compile check of the go/rust backends).
 
+## Implementation notes (divergence from the original spec)
+
+Two faithfulness refinements surfaced during implementation and were added
+beyond the table above:
+
+- **Python Rest-param list normalization.** Python's `*rest` binds a *tuple*,
+  but SIR sequence semantics (and Ruby's `*rest`, an `Array`) require a *list* —
+  every downstream sequence op (`len`, indexing, dispatched `.map`/`.length`)
+  is keyed to `list`. So the Python backend rebinds each `Rest` param to
+  `list(...)` in the function prologue. (`**opts` already binds a `dict`,
+  matching SIR's map, so no fixup. TypeScript's `...rest` is already a real JS
+  `Array` = SIR sequence, so it needs none either.)
+- **OOP-import gating widened.** Making a rest param *useful* means calling
+  Array methods on it (`def f(*a); a.length; end`), which is method dispatch
+  (`BuiltinCall("__method__", …)`). Both backends' `uses_oop` previously gated
+  the `sir-runtime-oop` import only on the OOP *features* (Classes/Modules/…),
+  so a class-less dispatch program emitted an undefined `call_method`. `uses_oop`
+  now also fires on the `__method__` / `__scope__` dispatch builtins. (Pre-existing
+  latent gap, fixed here because M3's execution-proof is the first class-less
+  dispatch program exercised end-to-end.)
+
 ## Out of scope (documented, honest)
 
 - Required-keyword params (`def f(a:)`) and optional-with-default params

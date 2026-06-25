@@ -219,6 +219,67 @@ impl<'m> ValidatorState<'m> {
             }
         }
 
+        // Variadic-parameter well-formedness (M3). A Ruby-faithful, v0-light
+        // rule set over `kind`:
+        //   - at most one `Rest` (`*rest`) parameter;
+        //   - at most one `KwRest` (`**opts`) parameter;
+        //   - ordering: required positionals come first, then the lone Rest,
+        //     then the lone KwRest. A Required after a Rest, or anything after
+        //     a KwRest, is a structural error (not a panic).
+        // Truth table for the offending transitions we reject:
+        //   prev\cur | Required | Rest     | KwRest
+        //   Rest     | ERROR    | (dup)    | ok
+        //   KwRest   | ERROR    | ERROR    | (dup)
+        let mut rest_seen = false;
+        let mut kwrest_seen = false;
+        for p in &f.params {
+            match p.kind {
+                ParamKind::Rest => {
+                    if rest_seen {
+                        self.error(
+                            format!("more than one rest parameter (`*{}`)", p.name),
+                            &p.span,
+                        );
+                    }
+                    if kwrest_seen {
+                        self.error(
+                            format!("rest parameter `*{}` must precede the keyword-rest parameter", p.name),
+                            &p.span,
+                        );
+                    }
+                    rest_seen = true;
+                }
+                ParamKind::KwRest => {
+                    if kwrest_seen {
+                        self.error(
+                            format!("more than one keyword-rest parameter (`**{}`)", p.name),
+                            &p.span,
+                        );
+                    }
+                    kwrest_seen = true;
+                }
+                ParamKind::Required => {
+                    // The reserved trailing block parameter (Q9e) is always
+                    // Required and always appended last — after any variadic
+                    // params — so it is exempt from the ordering rule.
+                    if p.name == "__sir_block__" {
+                        continue;
+                    }
+                    if kwrest_seen {
+                        self.error(
+                            format!("required parameter `{}` must precede the keyword-rest parameter", p.name),
+                            &p.span,
+                        );
+                    } else if rest_seen {
+                        self.error(
+                            format!("required parameter `{}` must precede the rest parameter", p.name),
+                            &p.span,
+                        );
+                    }
+                }
+            }
+        }
+
         let mut capture_names: HashSet<String> = HashSet::new();
         for c in &f.captures {
             if !capture_names.insert(c.name.clone()) {
@@ -789,6 +850,102 @@ mod tests {
         });
         let r = validate(&m);
         assert!(!r.is_ok());
+    }
+
+    /// Build a single-function module whose function has `params` and a
+    /// trivial nil body — for exercising the M3 variadic ordering rules.
+    fn module_with_params(params: Vec<Param>) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::DynamicTyping]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    fn p(name: &str, kind: ParamKind) -> Param {
+        Param { name: name.into(), sir_type: None, kind, span: s() }
+    }
+
+    #[test]
+    fn variadic_params_in_canonical_order_are_valid() {
+        // def f(a, *rest, **opts) — required, then one Rest, then one KwRest.
+        let m = module_with_params(vec![
+            p("a", ParamKind::Required),
+            p("rest", ParamKind::Rest),
+            p("opts", ParamKind::KwRest),
+        ]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn two_rest_params_is_error() {
+        let m = module_with_params(vec![
+            p("a", ParamKind::Rest),
+            p("b", ParamKind::Rest),
+        ]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("more than one rest")));
+    }
+
+    #[test]
+    fn two_kwrest_params_is_error() {
+        let m = module_with_params(vec![
+            p("a", ParamKind::KwRest),
+            p("b", ParamKind::KwRest),
+        ]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("more than one keyword-rest")));
+    }
+
+    #[test]
+    fn kwrest_before_rest_is_error() {
+        // def f(**opts, *rest) — Rest must precede KwRest.
+        let m = module_with_params(vec![
+            p("opts", ParamKind::KwRest),
+            p("rest", ParamKind::Rest),
+        ]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("must precede the keyword-rest")));
+    }
+
+    #[test]
+    fn required_after_rest_is_error() {
+        // def f(*rest, a) — a required positional after the rest param.
+        let m = module_with_params(vec![
+            p("rest", ParamKind::Rest),
+            p("a", ParamKind::Required),
+        ]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("must precede the rest")));
+    }
+
+    #[test]
+    fn reserved_block_param_after_rest_is_exempt() {
+        // The Q9e trailing block param is always Required and always last,
+        // appearing after any variadic params — and must NOT trigger the
+        // ordering rule. def f(*rest) { yield } → params [*rest, __sir_block__].
+        let m = module_with_params(vec![
+            p("rest", ParamKind::Rest),
+            p("__sir_block__", ParamKind::Required),
+        ]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
     }
 
     #[test]

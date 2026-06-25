@@ -39,6 +39,30 @@ large literals can't OOM the optimizer at compile time. Verified against V8.
 Adds the `fold_string_replace` helper and ten unit tests (first-vs-all,
 literal-not-regex, no-match identity, `$`-decline, empty-search-decline,
 non-string-arg, identifier-receiver, wrong-arity, over-size-cap).
+## [0.31.0] - 2026-06-22
+
+### Added — fold `"abc".at(i)` on string literals (negative-from-end indexing)
+
+`String.prototype.at` now folds to a one-code-unit string literal on a string
+literal with an integer-literal index (ECMAScript §22.1.3.1):
+`"abc".at(0)` → `"a"`, `"abc".at(2)` → `"c"`, and — unlike `charAt` — a
+**negative** index counts from the end: `"abc".at(-1)` → `"c"`,
+`"abc".at(-3)` → `"a"`. Indexing is by UTF-16 code unit (sharing `charAt`'s
+machinery), so `"a💩b".at(-1)` → `"b"`.
+
+Conservative scope: the index must be an integer literal of any sign. An
+out-of-range index (`"abc".at(5)`, `"abc".at(-5)`) is `undefined` in JS, for
+which there is no literal — so we decline rather than invent `""` (that is
+`charAt`'s behavior, not `at`'s). A fractional/non-literal index (we don't
+model `ToIntegerOrInfinity` coercion) and a lone-surrogate result
+(`"💩".at(0)`, unrepresentable as a Rust `String`) are also left for the
+runtime. `saturating_add` keeps the `len + i` index computation from
+overflowing on a huge negative literal (the `as i64` cast already saturates a
+float past the i64 range), so a saturated index simply lands out of range and
+declines — never panics.
+
+When `--correlation_vector` tracking is on, the fold forks a contribution
+recording the rewrite (`"abc".at(-1)` → `"c"`).
 ## [0.34.0] - 2026-06-23
 
 ### Added — fold global `parseInt(lit[, radix])` / `parseFloat(lit)` on string literals
