@@ -1,0 +1,97 @@
+% ============================================================================
+% organelle-edges — the cell-organelle→function knowledge-graph
+% (MYCIN-2026 ORGANELLE).
+% ============================================================================
+% A foundational high-yield cell-biology / biochemistry board table: each
+% membrane-bound (or ribonucleoprotein) organelle and the principal cellular
+% function it performs. "Which organelle produces ATP?" becomes the binding query
+%     ? performs(mitochondria, $Function).
+%
+% Direction note: the relation is organelle -> the function it performs
+% (`performs`). Each organelle here maps to ONE canonical function span, so a
+% query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The mitochondria span attributes ATP synthesis to the
+% "mitochondrial matrix" (the full adjectival form of the organelle naming its
+% interior compartment), so it grounds mitochondria->ATP by combined bytes. The
+% Golgi span appears in the source with markdown hyperlink brackets around
+% "proteins", "ER", and "plasma membrane"; those are a fetch-conversion artifact —
+% the real page bytes are the plain words, reproduced here exactly (the same
+% defeasible byte-grounding the framework uses for gene-symbol italics elsewhere).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like SPINAL-TRACT/
+% CEREBRAL-ARTERY/COLLAGEN). Each fact is a `relate` clause whose byte-provenance
+% lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Cooper, The Cell).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see organelle-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% DEFERRED (honest gaps, not authored over):
+%   - rough endoplasmic reticulum -> protein synthesis. On NBK563126 the only
+%     sentence co-naming the organelle with protein synthesis uses the
+%     abbreviation "RER" ("The RER plays a significant role in the synthesis of
+%     various proteins."), never the spelled-out "rough endoplasmic reticulum".
+%   - smooth endoplasmic reticulum -> lipid/steroid synthesis. On NBK9889 the
+%     only co-naming uses the abbreviation "smooth ER" AND is indirect (steroids
+%     "are synthesized ... in the ER", with smooth ER merely "found in" steroid-
+%     producing cells), not a direct organelle->function statement.
+% Both omitted rather than grounded on abbreviation-only / indirect spans
+% (consistent with the SPINAL-TRACT vestibulospinal "LVST" deferral); re-groundable
+% later from an alternate source that spells the organelle out.
+% ============================================================================
+
+dictionary organelle_vocab {
+    define organelle : entity   surface "cell organelle", "subcellular structure"
+    define function  : entity   surface "cellular function", "organelle role"
+
+    define performs : relation from organelle to function  % the function this organelle performs
+}
+
+rulebook organelle_facts {
+    use organelle_vocab
+
+    % --- mitochondria -> ATP production (span names the mitochondrial matrix) --
+    relate performs(mitochondria, atp_production)
+        source "The majority of ATP synthesis occurs during cellular respiration in the mitochondrial matrix, generating approximately 32 ATP molecules per glucose molecule oxidized."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553175/"
+        trust authoritative
+
+    % --- Golgi apparatus -> protein modification & sorting --------------------
+    relate performs(golgi_apparatus, protein_modification_and_sorting)
+        source "The Golgi apparatus, or Golgi complex, functions as a factory in which proteins received from the ER are further processed and sorted for transport to their eventual destinations: lysosomes, the plasma membrane, or secretion."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK9838/"
+        trust authoritative
+
+    % --- lysosome -> intracellular degradation / digestion --------------------
+    relate performs(lysosome, intracellular_degradation)
+        source "Lysosomes function as the digestive system of the cell, serving both to degrade material taken up from outside the cell and to digest obsolete components of the cell itself."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK9953/"
+        trust authoritative
+
+    % --- peroxisome -> fatty acid oxidation -----------------------------------
+    relate performs(peroxisome, fatty_acid_oxidation)
+        source "The peroxisomes are involved in beta-oxidation of very-long-chain fatty acids (VLCFA), alpha oxidation of branched-chain fatty acids, catabolism of amino acids and ethanol, biosynthesis of bile acids, steroid hormones, gluconeogenesis, and plasmalogen formation which are important constituents of the cell membrane and myelin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560676/"
+        trust authoritative
+
+    % --- ribosome -> protein synthesis ----------------------------------------
+    relate performs(ribosome, protein_synthesis)
+        source "Ribosomes are the sites of protein synthesis in both prokaryotic and eukaryotic cells."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK9849/"
+        trust authoritative
+
+    % --- nucleus -> genetic material storage ----------------------------------
+    relate performs(nucleus, genetic_material_storage)
+        source "By housing the cell's genome, the nucleus serves both as the repository of genetic information and as the cell's control center."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK9845/"
+        trust authoritative
+}

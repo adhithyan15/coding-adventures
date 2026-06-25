@@ -3374,6 +3374,66 @@ mod tests {
         assert!(format!("{err}").to_lowercase().contains("square"));
     }
 
+    // --- R-41: backsolve / forwardsolve (triangular solves, R syntax) ---
+
+    #[test]
+    fn backsolve_vector_through_r_syntax() {
+        // r upper-triangular [[2,1],[0,3]]; solve r %*% y = c(5,9) -> c(1,3).
+        let y = nums("backsolve(matrix(c(2,0,1,3), nrow = 2), c(5,9))\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 1.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn forwardsolve_vector_through_r_syntax() {
+        // l lower-triangular [[2,0],[1,3]]; solve l %*% y = c(4,11) -> c(2,3).
+        let y = nums("forwardsolve(matrix(c(2,1,0,3), nrow = 2), c(4,11))\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 2.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_round_trip_through_r_syntax() {
+        // r %*% backsolve(r, x) reconstructs x within tolerance.
+        let rhs = nums(
+            "r <- matrix(c(2,0,1,3), nrow = 2)\nas.numeric(r %*% backsolve(r, c(5,9)))\n",
+        );
+        assert!((rhs[0] - 5.0).abs() < 1e-9 && (rhs[1] - 9.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn forwardsolve_round_trip_through_r_syntax() {
+        let rhs = nums(
+            "l <- matrix(c(2,1,0,3), nrow = 2)\nas.numeric(l %*% forwardsolve(l, c(4,11)))\n",
+        );
+        assert!((rhs[0] - 4.0).abs() < 1e-9 && (rhs[1] - 11.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_matrix_rhs_through_r_syntax() {
+        // Two RHS columns: c(5,9) -> c(1,3) and c(2,6) -> c(0,2).
+        let (data, nrow, ncol) = matrix_data(
+            "backsolve(matrix(c(2,0,1,3), nrow = 2), matrix(c(5,9,2,6), nrow = 2))\n",
+        );
+        assert_eq!((nrow, ncol), (2, 2));
+        assert!(chol_max_abs_diff(&data, &[1.0, 3.0, 0.0, 2.0]) < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_singular_errors_through_r_syntax() {
+        // r[1,1] = 0 -> division by zero in back-substitution -> clean error.
+        let err = eval_r("backsolve(matrix(c(0,0,1,3), nrow = 2), c(1,2))\n").unwrap_err();
+        assert!(format!("{err}").to_lowercase().contains("singular"));
+    }
+
+    #[test]
+    fn forwardsolve_non_square_errors_through_r_syntax() {
+        let err = eval_r("forwardsolve(matrix(1:6, nrow = 2), c(1,2))\n").unwrap_err();
+        assert!(format!("{err}").to_lowercase().contains("square"));
+    }
+
     // --- R-35: ordered factors & cut() label polish (R syntax) ----------
 
     #[test]
@@ -3501,5 +3561,69 @@ mod tests {
         // Non-deterministic: assert only class + single numeric.
         assert_eq!(show("class(Sys.Date())\n"), "[1] \"Date\"");
         assert_eq!(nums("length(Sys.Date())\n"), vec![1.0]);
+    }
+
+    // --- R-45: Date/time completeness (through R syntax) ----------------------
+
+    #[test]
+    fn date_strftime_names_through_r_syntax() {
+        // 2021-01-15 = Friday. %B/%b/%A/%a render English month/weekday names.
+        assert_eq!(
+            show("format(as.Date(\"2021-01-15\"), \"%B %d, %Y\")\n"),
+            "[1] \"January 15, 2021\""
+        );
+        assert_eq!(show("format(as.Date(\"2021-01-15\"), \"%b\")\n"), "[1] \"Jan\"");
+        assert_eq!(
+            show("format(as.Date(\"2021-01-15\"), \"%A\")\n"),
+            "[1] \"Friday\""
+        );
+        assert_eq!(show("format(as.Date(\"2021-01-15\"), \"%a\")\n"), "[1] \"Fri\"");
+    }
+
+    #[test]
+    fn date_strptime_month_name_through_r_syntax() {
+        assert_eq!(
+            nums("as.numeric(as.Date(\"January 15, 2021\", format = \"%B %d, %Y\"))\n"),
+            nums("as.numeric(as.Date(\"2021-01-15\"))\n")
+        );
+        assert_eq!(
+            nums("as.numeric(as.Date(\"15 Jan 2021\", \"%d %b %Y\"))\n"),
+            nums("as.numeric(as.Date(\"2021-01-15\"))\n")
+        );
+        // Malformed month name → NA, never a panic.
+        assert_eq!(
+            show("as.numeric(as.Date(\"Smarch 15, 2021\", \"%B %d, %Y\"))\n"),
+            "[1] NA"
+        );
+    }
+
+    #[test]
+    fn months_quarters_through_r_syntax() {
+        assert_eq!(show("months(as.Date(\"2021-03-14\"))\n"), "[1] \"March\"");
+        assert_eq!(show("quarters(as.Date(\"2021-03-14\"))\n"), "[1] \"Q1\"");
+        assert_eq!(show("quarters(as.Date(\"2021-12-01\"))\n"), "[1] \"Q4\"");
+    }
+
+    #[test]
+    fn seq_date_through_r_syntax() {
+        // by = 1 → 5 consecutive days.
+        assert_eq!(
+            show("format(seq(as.Date(\"2021-01-01\"), as.Date(\"2021-01-05\"), by = 1))\n"),
+            "[1] \"2021-01-01\" \"2021-01-02\" \"2021-01-03\" \"2021-01-04\" \"2021-01-05\""
+        );
+        // by = "month" from Jan 31, length.out = 3 → clamps to month length.
+        assert_eq!(
+            show("format(seq(as.Date(\"2021-01-31\"), by = \"month\", length.out = 3))\n"),
+            "[1] \"2021-01-31\" \"2021-02-28\" \"2021-03-31\""
+        );
+    }
+
+    #[test]
+    fn seq_date_length_capped_through_r_syntax() {
+        // A span of tens of millions of days exceeds MAX_SEQ_LEN → error (cap),
+        // never OOM.
+        assert!(
+            eval_r("seq(as.Date(\"1970-01-01\"), as.Date(\"99999-01-01\"), by = 1)\n").is_err()
+        );
     }
 }

@@ -1,0 +1,85 @@
+% ============================================================================
+% autonomic-receptor-edges — the autonomic-receptor→effect knowledge-graph
+% (MYCIN-2026 AUTONOMIC).
+% ============================================================================
+% A high-yield autonomic-pharmacology board table: each major adrenergic and
+% cholinergic (muscarinic) receptor subtype and the principal physiological
+% effect its activation mediates. "What does the beta-1 receptor do?" becomes
+% the binding query
+%     ? mediates(beta_1, $Effect).
+%
+% Direction note: the relation is receptor -> the effect its activation
+% produces (`mediates`). Each receptor here maps to ONE canonical effect span,
+% so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The effect object names the literal effect the
+% sentence states (alpha-1 "stimulation causes vasoconstriction"; alpha-2
+% "decrease norepinephrine release"; beta-1 "increasing heart rate and
+% contractility"; beta-2 "relaxation and airway dilation"; M2 "an overall
+% decrease in heart rate"; M3 "contraction of airway smooth muscle"). Each span
+% was independently re-fetched and confirmed on two separate fetches of the
+% same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like GIHORMONE/CONDUCTION/
+% GLYCOGEN/ORGANELLE). Each fact is a `relate` clause whose byte-provenance lives
+% INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see autonomic-receptor-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary autonomic_receptor_vocab {
+    define receptor : entity   surface "autonomic receptor", "adrenergic/cholinergic receptor"
+    define effect   : entity   surface "physiological effect", "receptor effect"
+
+    define mediates : relation from receptor to effect  % the effect this receptor's activation produces
+}
+
+rulebook autonomic_receptor_facts {
+    use autonomic_receptor_vocab
+
+    % --- alpha-1 adrenergic -> vasoconstriction ------------------------------
+    relate mediates(alpha_1, vasoconstriction)
+        source "Alpha-1 adrenergic receptors are present on vascular smooth muscle and myocardial tissue; therefore, stimulation causes vasoconstriction and positive inotropic effects, respectively."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551698/"
+        trust authoritative
+
+    % --- alpha-2 adrenergic -> decreases norepinephrine release --------------
+    relate mediates(alpha_2, decreases_norepinephrine_release)
+        source "Clonidine activates alpha-2 receptors, which decrease the firing rate of presynaptic neurons and decrease norepinephrine release into the prefrontal cortex."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459124/"
+        trust authoritative
+
+    % --- beta-1 adrenergic -> increases heart rate and contractility ---------
+    relate mediates(beta_1, increases_heart_rate_and_contractility)
+        source "Targeted activation of the beta-1 receptor in the heart increases sinoatrial (SA) nodal, atrioventricular (AV) nodal, and ventricular muscular firing, thus increasing heart rate and contractility."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532904/"
+        trust authoritative
+
+    % --- beta-2 adrenergic -> smooth muscle relaxation (bronchodilation) -----
+    relate mediates(beta_2, smooth_muscle_relaxation)
+        source "These agents stimulate beta-2 adrenergic receptors in bronchial smooth muscle, leading to cyclic adenosine monophosphate–mediated relaxation and airway dilation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542249/"
+        trust authoritative
+
+    % --- M2 muscarinic -> decreases heart rate -------------------------------
+    relate mediates(m2, decreases_heart_rate)
+        source "M2 receptors, when activated, inhibit sympathetic influence on the heart, reducing contractility and reducing firing from the sinoatrial node, causing an overall decrease in heart rate."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555909/"
+        trust authoritative
+
+    % --- M3 muscarinic -> smooth muscle contraction --------------------------
+    relate mediates(m3, smooth_muscle_contraction)
+        source "M3 receptors mainly control the contraction of airway smooth muscle."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555909/"
+        trust authoritative
+}

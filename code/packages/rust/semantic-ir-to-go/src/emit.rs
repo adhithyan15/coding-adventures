@@ -561,7 +561,7 @@ fn quote_go_string(s: &str) -> String {
 mod tests {
     use super::*;
     use semantic_ir::{
-        EffectSet, FeatureManifest, Metadata, Param, Span,
+        EffectSet, FeatureManifest, Metadata, Param, ParamKind, Span,
     };
 
     fn s() -> Span {
@@ -638,7 +638,7 @@ mod tests {
         };
         let f = Function {
             name: "id".into(),
-            params: vec![Param { name: "x".into(), sir_type: None, span: s() }],
+            params: vec![Param { name: "x".into(), kind: ParamKind::Required, sir_type: None, span: s() }],
             return_type: None,
             captures: vec![],
             body,

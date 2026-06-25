@@ -61,7 +61,7 @@ pub fn compile_source(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use semantic_ir::{Effect, Expr, Scope, Stmt};
+    use semantic_ir::{Effect, Expr, ParamKind, Scope, Stmt};
 
     fn lower(src: &str) -> semantic_ir::Module {
         compile_source(src, "test").expect("lowering succeeded")
@@ -258,6 +258,46 @@ mod tests {
         // `main` is still present and exported.
         assert!(m.functions.iter().any(|f| f.name == "main"));
         assert!(m.exports.iter().any(|e| e.name == "main"));
+    }
+
+    #[test]
+    fn def_rest_param_lowers_to_kind_rest() {
+        // M3: `def f(*r); end` → one Param whose kind is Rest (previously the
+        // splat prefix was dropped and the param lowered as Required).
+        let m = lower("def f(*r)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").expect("fn f");
+        assert_eq!(f.params.len(), 1);
+        assert_eq!(f.params[0].name, "r");
+        assert_eq!(f.params[0].kind, ParamKind::Rest);
+    }
+
+    #[test]
+    fn def_kwrest_param_lowers_to_kind_kwrest() {
+        // M3: `def g(**o); end` → one Param whose kind is KwRest.
+        let m = lower("def g(**o)\nend\n");
+        let g = m.functions.iter().find(|f| f.name == "g").expect("fn g");
+        assert_eq!(g.params.len(), 1);
+        assert_eq!(g.params[0].name, "o");
+        assert_eq!(g.params[0].kind, ParamKind::KwRest);
+    }
+
+    #[test]
+    fn def_required_then_rest_preserves_order_and_kinds() {
+        // M3: `def h(a, *r); end` → [Required(a), Rest(r)].
+        let m = lower("def h(a, *r)\nend\n");
+        let h = m.functions.iter().find(|f| f.name == "h").expect("fn h");
+        assert_eq!(h.params.len(), 2);
+        assert_eq!(h.params[0].kind, ParamKind::Required);
+        assert_eq!(h.params[1].name, "r");
+        assert_eq!(h.params[1].kind, ParamKind::Rest);
+    }
+
+    #[test]
+    fn def_plain_param_stays_required() {
+        // Regression: an ordinary positional param keeps kind Required.
+        let m = lower("def k(a)\nend\n");
+        let k = m.functions.iter().find(|f| f.name == "k").expect("fn k");
+        assert_eq!(k.params[0].kind, ParamKind::Required);
     }
 
     #[test]

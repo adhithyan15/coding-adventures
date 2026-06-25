@@ -1,0 +1,21 @@
+% ============================================================================
+% conduction-system-recall.query.adj — a worked recall query over the cardiac
+% conduction-system library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what is the function of
+% cardiac conduction structure X?" question: it states no physiology fact — it
+% only `import`s the grounded library and asks binding queries. The native
+% adj-lang engine resolves each `?` against the imported `relate` edges and
+% returns the binding + the citing clause's source/locator/trust. All knowledge
+% is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli conduction-system-recall.query.adj
+% ============================================================================
+
+import "conduction-system-edges.adj"
+
+? has_function(sinoatrial_node, $Function)        % expect natural_pacemaker
+? has_function(atrioventricular_node, $Function)  % expect delays_signal_between_atria_and_ventricles
+? has_function(bundle_of_his, $Function)          % expect transmits_impulse_to_bundle_branches_and_ventricles
+? has_function(purkinje_fibers, $Function)        % expect transmit_signal_to_papillary_muscles_and_ventricular_wall

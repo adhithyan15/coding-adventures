@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file.
 
+<<<<<<< HEAD
+## [0.37.0] - 2026-06-25
+
+### Added (via the shared `s-runtime`)
+
+- **R-45 — Date/time completeness**: the strftime/strptime fields, `seq.Date`,
+  and `months()`/`quarters()` deferred from R-44 now ship, reached through
+  ordinary R syntax. The R-44 Date builtins are extended **in place** in the
+  shared tree-walker — no new value kind, no new dependency.
+  - **Extended `format()` / `format.Date` fields** — `%B` (full month name),
+    `%b` (abbreviated month), `%A` (full weekday), `%a` (abbreviated weekday),
+    `%e` (space-padded day-of-month) join R-44's `%Y`/`%m`/`%d`/`%j`.
+    `format(as.Date("2021-01-15"), "%B %d, %Y")` → `"January 15, 2021"`; `%b` →
+    `"Jan"`; `%A` → `"Friday"`; `%a` → `"Fri"`; `%e` of the 5th → `" 5"`.
+  - **Extended `as.Date()` parsing** — `%B`/`%b` parse month names
+    case-insensitively; `%A`/`%a` parse weekday names; `%e` parses a padded day.
+    The format may now be the 2nd positional argument.
+    `as.Date("January 15, 2021", format = "%B %d, %Y")` and
+    `as.Date("15 Jan 2021", "%d %b %Y")` both yield `2021-01-15`; a malformed
+    month name → `NA`, never a panic.
+  - **`seq(from, to, by)` / `seq.Date`** — `seq()` dispatches to a Date sequence
+    when `from` is a Date. `seq(as.Date("2021-01-01"), as.Date("2021-01-05"),
+    by = 1)` is five consecutive days; `by = "week"` steps 7 days;
+    `seq(as.Date("2021-01-31"), by = "month", length.out = 3)` →
+    Jan 31, Feb 28, Mar 31 (day clamped to month length). `by` also accepts
+    `"year"` and `"N units"` multipliers (`"2 weeks"`); `length.out =` is an
+    alternative to `to`.
+  - **`months(d)`** → full month name (`months(as.Date("2021-03-14"))` →
+    `"March"`); **`quarters(d)`** → `"Q1"`..`"Q4"`
+    (`quarters(as.Date("2021-12-01"))` → `"Q4"`).
+  - **Security**: name parsing is table-bounded with ASCII case-folding (no OOB on
+    crafted input — bad name → `NA`); `seq.Date` caps its output at `MAX_SEQ_LEN`
+    with checked arithmetic before allocating, rejects `by = 0`, and clamps
+    month/year steps with non-panicking euclidean math.
+  - **Deferred to R-46**: `POSIXct`/`POSIXlt` & timezones; `%H`/`%M`/`%S`/`%p`;
+    `%U`/`%W` week-of-year; locale names; compound `by=` beyond a single integer
+    multiplier.
+=======
+## [0.36.0] - 2026-06-25
+
+### Added (via the shared `s-runtime`)
+
+- **R-41 — `backsolve(r, x)` / `forwardsolve(l, x)` (triangular solves)**,
+  reached through ordinary R syntax. `backsolve` solves the upper-triangular
+  system `r %*% y = x` by back-substitution; `forwardsolve` solves the
+  lower-triangular `l %*% y = x` by forward-substitution.
+  - `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` → `c(1, 3)`, and
+    `r %*% y` reconstructs `c(5,9)`. The right-hand side may be a vector (→ a
+    vector) or a matrix (→ one solved column per right-hand side).
+  - A zero on the diagonal is a clean **singular**-matrix error (never `NaN`/a
+    panic); non-square / dimension-mismatched inputs error cleanly too.
+  - **Reuse**: the `square_matrix` reader (shared with `solve`/`det`/`chol`) and
+    the `solve`-style RHS handling.
+  - **Deferred to R-42:** `k =`, `transpose = TRUE`, `upper.tri = FALSE`.
+>>>>>>> origin/main
+
 ## [0.35.0] - 2026-06-22
 
 ### Added (via the shared `s-runtime`)
