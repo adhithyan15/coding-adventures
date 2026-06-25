@@ -46,6 +46,34 @@ All notable changes to this project will be documented in this file.
     fields `%H`/`%M`/`%S`/`%p`; `%U`/`%W` week-of-year; locale (non-English)
     names; and compound `"N units"` `by=` beyond a single leading integer
     multiplier.
+## [0.37.0] - 2026-06-25
+
+### Added
+
+- **`backsolve(r, x)` / `forwardsolve(l, x)` — triangular solves (R-41)** —
+  available to both S and R through the shared tree-walker. `backsolve` solves
+  the **upper**-triangular system `r %*% y = x` by back-substitution;
+  `forwardsolve` solves the **lower**-triangular system `l %*% y = x` by
+  forward-substitution. Only the relevant triangle of the coefficient matrix is
+  read.
+  - **Right-hand side.** `x` may be a length-`n` vector (→ a vector result) or an
+    `n × m` matrix (→ an `n × m` result, one solved column per right-hand side) —
+    the same shape contract as `solve`. e.g.
+    `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` → `c(1, 3)` (and
+    `r %*% y == c(5,9)`); a two-column RHS solves both systems at once.
+  - **Algorithm.** Column-major back/forward substitution:
+    `y[i] = (x[i] − Σ_{j>i} R[i,j]·y[j]) / R[i,i]` (back) or
+    `y[i] = (x[i] − Σ_{j<i} L[i,j]·y[j]) / L[i,i]` (forward).
+  - **Reuse.** Built on the existing `square_matrix` reader (shared with
+    `solve`/`det`/`chol`) and the `solve`-style vector/matrix RHS handling.
+  - **Errors (no panics).** A zero on the diagonal makes the system *singular* —
+    a clean error, never a divide-by-zero `NaN`/`Inf`. A non-square or
+    non-numeric coefficient matrix, an `NA`, or a right-hand side whose
+    rows/length don't match `n` are all clean errors raised before any indexing.
+  - **Bounds.** The column count is capped at `MAX_SOLVE_DIM` (as in `solve`) so
+    a wide right-hand side can't blow past the work budget.
+  - **Deferred to R-42:** the `k =`, `transpose = TRUE`, and `upper.tri = FALSE`
+    options of base R's `backsolve`/`forwardsolve`.
 
 ## [0.36.0] - 2026-06-22
 

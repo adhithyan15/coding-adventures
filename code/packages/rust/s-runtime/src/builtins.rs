@@ -303,6 +303,13 @@ pub fn install(env: &Env) {
     // Reuses the `square_matrix` reader (shared with solve/det) and the
     // SValue::Matrix constructor. pivot=TRUE / chol2inv / complex deferred to R-41.
     define(env, "chol", builtin("chol", b_chol));
+    // Triangular solves (R-41): backsolve solves an upper-triangular system,
+    // forwardsolve a lower-triangular one, by back/forward substitution. Both
+    // reuse `square_matrix` + the solve-style vector/matrix RHS handling; a zero
+    // on the diagonal is a clean "singular" error. transpose=/k=/upper.tri=
+    // deferred to R-42.
+    define(env, "backsolve", builtin("backsolve", b_backsolve));
+    define(env, "forwardsolve", builtin("forwardsolve", b_forwardsolve));
 }
 
 // ===========================================================================
@@ -1498,6 +1505,133 @@ fn b_chol(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         nrow: n,
         ncol: n,
     })
+}
+
+/// `backsolve(r, x)` / `forwardsolve(l, x)` — solve a TRIANGULAR linear system
+/// `R %*% y = x` (`backsolve`, `r` upper-triangular) or `L %*% y = x`
+/// (`forwardsolve`, `l` lower-triangular) for `y`, by back/forward substitution.
+///
+/// Only the relevant triangle of the coefficient matrix is read. The right-hand
+/// side `x` is either a length-`n` vector (→ a vector result) or an `n × m`
+/// matrix (→ an `n × m` result, one solved column per right-hand side) — the
+/// same shape contract as [`b_solve`]. A zero on the diagonal makes the system
+/// singular: a clean error, never a divide-by-zero `NaN`/`Inf` or a panic.
+///
+/// Worked example (`backsolve`, upper-triangular, column-major):
+///   R = [[2,1],[0,3]],  x = (5, 9)
+///     y[2] = 9 / 3         = 3
+///     y[1] = (5 − 1·3) / 2 = 1      ⇒  y = (1, 3),  and  R %*% y == x.
+fn triangular_solve(args: &[Arg], who: &str, upper: bool) -> SResult<SValue> {
+    // The coefficient matrix: reuse the det/solve/chol square-matrix reader, which
+    // rejects non-matrix, non-square and over-MAX_SOLVE_DIM inputs up front and
+    // returns the data column-major (entry (row i, col j) is at index `j*n + i`).
+    let (a, n) = square_matrix(first_positional(args)?, who)?;
+    if a.iter().any(|v| is_na_real(*v)) {
+        return Err(SError::BadArgs(format!(
+            "{who}: NA in the coefficient matrix"
+        )));
+    }
+
+    // The right-hand side `x`: a matrix (→ matrix result, `m` columns) or a
+    // vector (→ vector result, a single column). Same handling as `solve`.
+    let (b, m, b_is_vector) = match nth_positional(args, 1) {
+        Some(x_val) => {
+            if let Some((bd, bnr, bnc)) = matrix_parts(x_val) {
+                if bnr != n {
+                    return Err(SError::BadArgs(format!(
+                        "{who}: the right-hand side must have {n} rows (got {bnr})"
+                    )));
+                }
+                (bd.data().to_vec(), bnc, false)
+            } else {
+                let bd = x_val.as_double()?;
+                if bd.len() != n {
+                    return Err(SError::BadArgs(format!(
+                        "{who}: the right-hand side must have length {n} (got {})",
+                        bd.len()
+                    )));
+                }
+                (bd.data().to_vec(), 1, true)
+            }
+        }
+        None => {
+            return Err(SError::BadArgs(format!(
+                "{who}: missing the right-hand side 'x'"
+            )))
+        }
+    };
+    if b.iter().any(|v| is_na_real(*v)) {
+        return Err(SError::BadArgs(format!(
+            "{who}: NA in the right-hand side"
+        )));
+    }
+    // The substitution is O(n²·m); cap the column count like `solve` does so a
+    // wide right-hand side can't blow past the MAX_SOLVE_DIM work budget.
+    if m > MAX_SOLVE_DIM {
+        return Err(SError::Index(format!(
+            "{who}: too many right-hand sides ({m}; limit {MAX_SOLVE_DIM})"
+        )));
+    }
+
+    // Solve each right-hand-side column independently. Visit the rows in the order
+    // that makes the already-solved entries available: bottom-up for an upper-
+    // triangular `R`, top-down for a lower-triangular `L`.
+    let mut y = vec![0.0; n * m];
+    for col in 0..m {
+        if upper {
+            for i in (0..n).rev() {
+                let mut s = b[col * n + i];
+                for j in (i + 1)..n {
+                    s -= a[j * n + i] * y[col * n + j];
+                }
+                let diag = a[i * n + i];
+                if diag == 0.0 {
+                    return Err(SError::BadArgs(format!(
+                        "{who}: the matrix is singular (zero on the diagonal, position {})",
+                        i + 1
+                    )));
+                }
+                y[col * n + i] = s / diag;
+            }
+        } else {
+            for i in 0..n {
+                let mut s = b[col * n + i];
+                for j in 0..i {
+                    s -= a[j * n + i] * y[col * n + j];
+                }
+                let diag = a[i * n + i];
+                if diag == 0.0 {
+                    return Err(SError::BadArgs(format!(
+                        "{who}: the matrix is singular (zero on the diagonal, position {})",
+                        i + 1
+                    )));
+                }
+                y[col * n + i] = s / diag;
+            }
+        }
+    }
+
+    if b_is_vector {
+        Ok(SValue::doubles(y))
+    } else {
+        Ok(SValue::Matrix {
+            data: Double::from_values(y),
+            nrow: n,
+            ncol: m,
+        })
+    }
+}
+
+/// `backsolve(r, x)` — solve the UPPER-triangular system `r %*% y = x`.
+/// See [`triangular_solve`].
+fn b_backsolve(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    triangular_solve(args, "backsolve", true)
+}
+
+/// `forwardsolve(l, x)` — solve the LOWER-triangular system `l %*% y = x`.
+/// See [`triangular_solve`].
+fn b_forwardsolve(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    triangular_solve(args, "forwardsolve", false)
 }
 
 // ===========================================================================

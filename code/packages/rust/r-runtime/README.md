@@ -317,6 +317,17 @@ reconstructs `x`; `chol(diag(3))` is the identity. The diagonal pivot is checked
 matrix errors before any indexing. `pivot=TRUE` (pivoted Cholesky), `chol2inv()`,
 and complex (Hermitian) matrices are deferred to **R-41**.
 
+**R-41 — `backsolve(r, x)` / `forwardsolve(l, x)` (triangular solves)** solve an
+upper- (resp. lower-) triangular system `r %*% y = x` by back- (resp. forward-)
+substitution, through the shared `s-runtime`. The right-hand side may be a vector
+(→ a vector) or a matrix (→ one solved column per right-hand side), the same
+contract as `solve`. `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` is `c(1, 3)`,
+and `r %*% y` reconstructs `c(5,9)`. They reuse the `square_matrix` reader and the
+`solve`-style RHS handling; a zero on the diagonal is a clean *singular*-matrix
+error (never `NaN`/a panic), and non-square / dimension-mismatched inputs error
+before any indexing. The `k=`, `transpose=TRUE`, and `upper.tri=FALSE` options are
+deferred to **R-42**.
+
 **R-44 — base R Date support** adds R's first calendar type, again through the
 shared `s-runtime`. A **`Date`** is *not* a new value kind: it is a numeric vector
 of **days since the Unix epoch 1970-01-01** carrying class `"Date"` (the existing

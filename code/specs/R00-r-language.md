@@ -1182,6 +1182,61 @@ unchanged.
     **Deferred to R-34:** `dig.lab =` (significant-digit control of auto-label
     formatting) and `ordered_result =` (an ordered factor result). The `%o%` infix
     alias for `outer` remains open for a later grammar pass.
+- **R-41 — `backsolve()` / `forwardsolve()` (triangular solves)** *(this PR)*.
+  An **independent matrix-algebra item** in the same family as R-12/R-40, landed
+  in the shared `s-runtime` (R reuses it verbatim through the shared
+  tree-walker). The two triangular linear solvers that the LU/Cholesky family
+  leans on: given a *triangular* coefficient matrix, recover the solution by
+  substitution instead of full Gaussian elimination.
+  - **`backsolve(r, x)`** solves `r %*% y = x` for `y`, where `r` is an `n×n`
+    **upper**-triangular matrix, by **back-substitution** (last row first). `x`
+    may be an `n`-vector (single right-hand side → an `n`-vector result) or an
+    `n×k` matrix (`k` right-hand-side columns → an `n×k` matrix result).
+  - **`forwardsolve(l, x)`** solves `l %*% y = x` for `y`, where `l` is an `n×n`
+    **lower**-triangular matrix, by **forward-substitution** (first row first),
+    with the same vector-or-matrix right-hand-side convention.
+  - **Algorithm (column-major, 0-based here; the maths is 1-based).** For each
+    right-hand-side column `b`, **back-substitution** runs `i = n-1` down to `0`:
+    `y[i] = (b[i] − Σ_{j>i} r[i,j]·y[j]) / r[i,i]`. **Forward-substitution** runs
+    `i = 0` up to `n-1`: `y[i] = (b[i] − Σ_{j<i} l[i,j]·y[j]) / l[i,i]`. Each is
+    `O(n²·k)` flops — half the work of the `O(n³)` general `solve`, which is the
+    whole point of having a triangular fast path. Only the relevant triangle is
+    read (upper for `backsolve`, lower for `forwardsolve`); the opposite triangle
+    is **never touched**, matching R's defaults (`upper.tri = TRUE`,
+    `transpose = FALSE`).
+  - **Error conditions (faithful to R, no panic / no NaN / no Inf).**
+    * **Non-square / non-matrix / over-cap** `r` (or `l`) → the **shared
+      `square_matrix` helper** (the same one `det`/`solve`/`chol` use) raises the
+      error *before* any indexing, so a non-square input never reads out of
+      bounds.
+    * **Right-hand-side shape mismatch** — `x` must have exactly `n` rows (vector
+      length `n`, or `n×k` matrix); a wrong row count is a clean error raised
+      **before** the substitution loop indexes anything.
+    * **Singular triangular matrix** — a **zero on the diagonal** makes the
+      division `… / r[i,i]` undefined. The diagonal entry is tested for `== 0`
+      **before** dividing, so a singular matrix is a clean *"… apparently
+      singular"* error, never a propagated `NaN`/`Inf` and never a panic.
+    * **`NA` in `r`/`l` or `x`** → a clean error (an `NA` cannot be solved),
+      matching the `solve` convention.
+  - **Reuse of matrix machinery.** The implementation pulls the square matrix out
+    with the existing `square_matrix` helper (column-major data + order `n`),
+    reads the right-hand side with the same vector-vs-matrix / row-count / column
+    cap (`MAX_SOLVE_DIM`) logic `solve` already uses, indexes column-major
+    (`r[i,j]` at `j·n + i`), and emits an `SValue::Matrix` (matrix RHS) or a bare
+    numeric vector (vector RHS) — no new value type. Allocation is the single
+    `n×k` result buffer, bounded by the `MAX_SOLVE_DIM` order/column caps.
+  - **Worked examples (column-major).** `backsolve(matrix(c(2,0,1,3), nrow=2),
+    c(5,9))`: `r` is `[[2,1],[0,3]]`; `y[2]=9/3=3`, `y[1]=(5−1·3)/2=1`, so
+    `c(1,3)`, and `r %*% c(1,3) == c(5,9)`. `forwardsolve(matrix(c(2,1,0,3),
+    nrow=2), c(4,11))`: `l` is `[[2,0],[1,3]]`; `y[1]=4/2=2`,
+    `y[2]=(11−1·2)/3=3`, so `c(2,3)`, and `l %*% c(2,3) == c(4,11)`. A
+    multi-column `x` is solved column-by-column.
+  - **Deferred to R-42.** The optional arguments `k =` (use only the leading
+    `k×k` sub-block), `transpose = TRUE` (solve `t(r) %*% y = x`), and
+    `upper.tri = FALSE` for `backsolve` / `upper.tri = TRUE` for `forwardsolve`
+    (read the other triangle) are **out of scope here** and explicitly deferred
+    to **R-42**. This item ships the default full-triangle dense core (single
+    vector RHS and multi-column matrix RHS) solidly.
 - **R-40 — `chol()` (Cholesky factorization)** *(this PR)*. An **independent
   matrix-algebra item** in the same family as R-36/R-38, landed in the shared
   `s-runtime` (R reuses it verbatim through the shared tree-walker). For a real
@@ -1218,11 +1273,12 @@ unchanged.
     SPD matrix `[[4,2],[2,3]]`. `chol(X)` is `R = [[2,1],[0,√2]]`
     (`R[1,1]=√4=2`, `R[1,2]=2/2=1`, `R[2,2]=√(3−1²)=√2`), and `t(R) %*% R`
     reconstructs `X`. `chol(diag(3))` is the identity.
-  - **Deferred to R-41.** `pivot = TRUE` (pivoted Cholesky for
+  - **Deferred to R-42.** `pivot = TRUE` (pivoted Cholesky for
     positive-*semi*-definite matrices, with the `attr(,"pivot")` permutation and
     `rank` attributes), the `chol2inv()` companion (inverse from a Cholesky
     factor), and complex (Hermitian) matrices are all **out of scope here** and
-    explicitly deferred to **R-41**. This item ships the real-SPD dense core only.
+    explicitly deferred to **R-42** (R-41 ships the triangular solves
+    `backsolve`/`forwardsolve`). This item ships the real-SPD dense core only.
 - **R-38 — `kronecker()` (Kronecker product)** *(this PR)*. An **independent
   matrix-algebra item** in the same family as R-36, landed in the shared
   `s-runtime` (R reuses it verbatim through the shared tree-walker). The
