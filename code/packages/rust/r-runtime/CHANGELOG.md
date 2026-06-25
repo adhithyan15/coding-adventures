@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.35.0] - 2026-06-22
+## [0.37.0] - 2026-06-25
 
 ### Added (via the shared `s-runtime`)
 
@@ -38,6 +38,30 @@ All notable changes to this project will be documented in this file.
   - **Deferred to R-46**: `POSIXct`/`POSIXlt` & timezones; `%H`/`%M`/`%S`/`%p`;
     `%U`/`%W` week-of-year; locale names; compound `by=` beyond a single integer
     multiplier.
+
+## [0.35.0] - 2026-06-22
+
+### Added (via the shared `s-runtime`)
+
+- **R-40 — `chol(x)` (Cholesky factorization)**, reached through ordinary R
+  syntax. For a real symmetric positive-definite `n×n` matrix `x`, `chol(x)`
+  returns the **upper-triangular** matrix `R` with `t(R) %*% R == x` (R's
+  convention — the upper factor, `R'R = X`).
+  - `chol(matrix(c(4,2,2,3), nrow=2))` is `[[2,1],[0,√2]]`; `t(R) %*% R`
+    reconstructs the input; `chol(diag(3))` is the identity. Only the **upper
+    triangle** of `x` is read (matching R's default `chol`).
+  - **Reuse**: built on the existing `square_matrix` reader (shared with
+    `det`/`solve`) for the non-matrix / non-square / over-cap rejection, and the
+    `SValue::Matrix` constructor for the result — no new value type, column-major
+    throughout.
+  - **Security**: the diagonal pivot is tested for `> 0`/finiteness **before**
+    the `sqrt`, so a non-positive-definite matrix (e.g.
+    `chol(matrix(c(1,2,2,1), nrow=2))`, eigenvalues `3, -1`) is a clean
+    *"…not positive definite"* error — never `sqrt` of a negative (`NaN`) and
+    never a panic. A non-square matrix errors before any indexing; `NA` in the
+    upper triangle errors; allocation is bounded by the `MAX_SOLVE_DIM` order cap.
+  - **Deferred to R-41**: `pivot=TRUE` (pivoted Cholesky), `chol2inv()`, and
+    complex (Hermitian) matrices; this item ships the real-SPD dense core only.
 
 ## [0.34.0] - 2026-06-22
 

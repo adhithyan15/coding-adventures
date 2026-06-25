@@ -1,0 +1,109 @@
+% ============================================================================
+% ecg-edges — the electrocardiogram pattern knowledge-graph (MYCIN-2026 ECG).
+% ============================================================================
+% A core cardiology/internal-medicine board domain (USMLE high-yield): the
+% classic ECG waveform finding and the diagnosis it points to. "A tracing shows
+% a delta wave — what is the diagnosis?" becomes the binding query
+%     ? ecg_finding_indicates(delta_wave, $Diagnosis).
+%
+% Direction note: the relation is finding -> diagnosis (`ecg_finding_indicates`),
+% the board direction — you READ the waveform pattern off the strip and must name
+% the diagnosis. The cited spans read either way ("the hallmark ECG finding of WPW
+% ... is a delta wave"; "Peaked T waves are ... associated with hyperkalemia") —
+% what matters for grounding is that one self-contained span names BOTH the ECG
+% finding AND the diagnosis. Each finding here maps to one canonical diagnosis, so
+% a query binds a single answer.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like RESP/DERM/GI/NEURO/
+% HISTO/ONCO/CARDIO). Each fact is a `relate` clause whose byte-provenance lives
+% INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                where the span itself quotes a term, the inner ASCII quotes are
+%                backslash-escaped so the ADJ string still parses).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see ecg-recall.query.adj. Nothing here
+% is asserted "from memory": every edge is defended by a span a reader can
+% re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only findings whose StatPearls page states the association in a
+% clean self-contained span (both finding AND diagnosis named) are included.
+% Page-defined abbreviations are accepted (WPW, ARVC, STEMI). Two spans quote the
+% finding term verbatim and the inner quotes are escaped: the delta wave
+% (\"delta\" wave) and the irregularly-irregular AF pattern.
+% Still deferred (re-checked, no single self-contained NBK span names both):
+%   U waves -> hypokalemia (NBK482465 uses "potassium deficiency", not the word
+%     "hypokalemia", in the U-wave sentence);
+%   Osborn/J wave -> hypothermia (NBK545239/NBK568789 split the two across
+%     adjacent sentences; the only self-contained sentence is in a PMC journal
+%     article, not a Bookshelf chapter);
+%   S1Q3T3 -> pulmonary embolism (NBK560551 names S1Q3T3 only beside the
+%     abbreviation "PE", never the spelled-out disease in the same sentence);
+%   coved ST elevation V1-V2 -> Brugada syndrome (NBK519568 splits the morphology
+%     sentence from the "Brugada syndrome" sentence);
+%   diffuse ST elevation / PR depression -> acute pericarditis (NBK431080 lists
+%     the ECG finding only as a criteria bullet without the word "pericarditis").
+% ============================================================================
+
+dictionary ecg_vocab {
+    define finding   : entity   surface "ECG finding", "electrocardiogram pattern"
+    define diagnosis : entity   surface "cardiac diagnosis", "arrhythmia or condition"
+
+    define ecg_finding_indicates : relation from finding to diagnosis  % the diagnosis an ECG pattern points to
+}
+
+rulebook ecg_facts {
+    use ecg_vocab
+
+    % --- delta wave -> Wolff-Parkinson-White (named on-page as "WPW") ----------
+    relate ecg_finding_indicates(delta_wave, wolff_parkinson_white)
+        source "The hallmark electrocardiographic (ECG) finding of WPW pattern or preexcitation consists of a short PR interval and prolonged QRS with an initial slurring upstroke (\"delta\" wave) in the presence of sinus rhythm."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554437/"
+        trust authoritative
+
+    % --- sawtooth flutter waves -> atrial flutter ------------------------------
+    relate ecg_finding_indicates(sawtooth_waves, atrial_flutter)
+        source "The presence of fibrillation waves or the classic sawtooth pattern of atrial flutter indicates the absence of synchronized atrial contraction."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482421/"
+        trust authoritative
+
+    % --- absent P waves (irregularly irregular) -> atrial fibrillation ---------
+    relate ecg_finding_indicates(absent_p_waves, atrial_fibrillation)
+        source "On ECG, atrial fibrillation presents with the typical narrow complex \"irregularly irregular\" pattern with no distinguishable p-waves."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526072/"
+        trust authoritative
+
+    % --- peaked (tall, tented) T waves -> hyperkalemia -------------------------
+    relate ecg_finding_indicates(peaked_t_waves, hyperkalemia)
+        source "Peaked T waves are tall, narrow, and symmetrical and are associated with hyperkalemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538264/"
+        trust authoritative
+
+    % --- prolonged QT interval -> long QT syndrome -----------------------------
+    relate ecg_finding_indicates(prolonged_qt_interval, long_qt_syndrome)
+        source "In the absence of reversible or acquired causes of QT prolongation, Long QT syndrome is diagnosed."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441860/"
+        trust authoritative
+
+    % --- ST-segment elevation -> (ST-elevation) myocardial infarction ----------
+    relate ecg_finding_indicates(st_segment_elevation, myocardial_infarction)
+        source "An acute ST-segment elevation myocardial infarction (STEMI) arises from the occlusion of 1 or more coronary arteries, causing transmural myocardial ischemia and subsequent myocardial injury or necrosis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532281/"
+        trust authoritative
+
+    % --- epsilon wave -> arrhythmogenic right ventricular cardiomyopathy (ARVC) -
+    relate ecg_finding_indicates(epsilon_wave, arrhythmogenic_right_ventricular_cardiomyopathy)
+        source "The epsilon wave is found in 50% of ARVC cases and was downgraded to minor criteria after 2020."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470378/"
+        trust authoritative
+
+    % --- electrical alternans -> cardiac tamponade -----------------------------
+    relate ecg_finding_indicates(electrical_alternans, cardiac_tamponade)
+        source "When accompanied by sinus tachycardia and low-voltage QRS complexes, electrical alternans indicates hemodynamically significant pericardial effusion and may precede cardiac tamponade."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534229/"
+        trust authoritative
+}

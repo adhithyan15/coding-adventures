@@ -1,0 +1,27 @@
+% ============================================================================
+% ophtho-recall.query.adj — a worked recall query over the ophthalmology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this eye finding means
+% which diagnosis?" question: it states no ophthalmology fact — it only `import`s
+% the grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ophtho-recall.query.adj
+% ============================================================================
+
+import "ophtho-edges.adj"
+
+? eye_finding_indicates(cherry_red_spot, $Diagnosis)                % expect central_retinal_artery_occlusion
+? eye_finding_indicates(roth_spots, $Diagnosis)                    % expect infective_endocarditis
+? eye_finding_indicates(leukocoria, $Diagnosis)                    % expect retinoblastoma
+? eye_finding_indicates(optic_disc_cupping, $Diagnosis)            % expect glaucoma
+? eye_finding_indicates(kayser_fleischer_rings, $Diagnosis)        % expect wilson_disease
+? eye_finding_indicates(papilledema, $Diagnosis)                   % expect increased_intracranial_pressure
+? eye_finding_indicates(retinal_neovascularization, $Diagnosis)    % expect proliferative_diabetic_retinopathy
+? eye_finding_indicates(superior_lens_dislocation, $Diagnosis)     % expect marfan_syndrome
+? eye_finding_indicates(cotton_wool_spots, $Diagnosis)             % expect hypertensive_retinopathy
+? eye_finding_indicates(flame_shaped_hemorrhages, $Diagnosis)      % expect hypertensive_retinopathy
+? eye_finding_indicates(arteriovenous_crossing_changes, $Diagnosis) % expect hypertensive_retinopathy
+? eye_finding_indicates(macular_star, $Diagnosis)                  % expect hypertensive_retinopathy

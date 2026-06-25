@@ -1,0 +1,23 @@
+% ============================================================================
+% ecg-recall.query.adj — a worked recall query over the electrocardiogram library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this ECG pattern means
+% which diagnosis?" question: it states no cardiology fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ecg-recall.query.adj
+% ============================================================================
+
+import "ecg-edges.adj"
+
+? ecg_finding_indicates(delta_wave, $Diagnosis)            % expect wolff_parkinson_white
+? ecg_finding_indicates(sawtooth_waves, $Diagnosis)        % expect atrial_flutter
+? ecg_finding_indicates(absent_p_waves, $Diagnosis)        % expect atrial_fibrillation
+? ecg_finding_indicates(peaked_t_waves, $Diagnosis)        % expect hyperkalemia
+? ecg_finding_indicates(prolonged_qt_interval, $Diagnosis) % expect long_qt_syndrome
+? ecg_finding_indicates(st_segment_elevation, $Diagnosis)  % expect myocardial_infarction
+? ecg_finding_indicates(epsilon_wave, $Diagnosis)          % expect arrhythmogenic_right_ventricular_cardiomyopathy
+? ecg_finding_indicates(electrical_alternans, $Diagnosis)  % expect cardiac_tamponade

@@ -1092,6 +1092,90 @@ fn handle_type_assert(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
 }
 
 // ---------------------------------------------------------------------------
+// E8 — numeric conversions (`integer` ↔ `real`)
+//
+// E3 gave the VM f64 *arithmetic*; these are the convert opcodes that sit next
+// to it (see `code/specs/lang-full-e8-numeric-conversions.md`).  Every backend
+// has a one-instruction equivalent (`sitofp`/`fptosi`/`floor`, `i2d`/`d2l`,
+// `conv.r8`/`conv.i8`, `cvtsi2sd`/`cvttsd2si`/`roundsd`, `scvtf`/`fcvtzs`/
+// `frintm`); this is the VM's reference semantics they must agree with.
+// ---------------------------------------------------------------------------
+
+/// Convert an already-rounded integral `f64` to `i64`, trapping (fail-closed,
+/// like the array-bounds and divide-by-zero traps) on a non-finite operand or
+/// one outside the `i64` range — never a silent wrap or garbage integer.  The
+/// caller passes a value that has *already* been `trunc()`'d or `floor()`'d, so
+/// `t` is integral; this only range-checks and casts.
+///
+/// The bounds are written so the rejection is **exact**: `i64::MIN as f64` is
+/// exactly −2⁶³, but `i64::MAX` (2⁶³−1) is not representable as an `f64`, so
+/// `i64::MAX as f64` rounds *up* to 2⁶³.  Comparing against `-(i64::MIN as f64)`
+/// (= +2⁶³) therefore rejects 2⁶³ and above; the largest accepted value is the
+/// greatest integral `f64` strictly below 2⁶³.  (`t as i64` for an in-range
+/// integral `t` is exact — Rust's saturating cast never fires here.)
+fn real_to_i64_checked(t: f64) -> Result<i64, VMError> {
+    if !t.is_finite() {
+        return Err(VMError::Custom(
+            "real_to_int: operand is not finite".into(),
+        ));
+    }
+    if t < i64::MIN as f64 || t >= -(i64::MIN as f64) {
+        return Err(VMError::Custom(format!(
+            "real_to_int: {t} is outside the i64 range"
+        )));
+    }
+    Ok(t as i64)
+}
+
+/// `int_to_real` — widen an `i64` to `f64` (IEEE-754 round-to-nearest-even;
+/// exact for |x| < 2⁵³).
+fn handle_int_to_real(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let n = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_i64()
+            .ok_or_else(|| VMError::Custom("int_to_real: operand is not an integer".into()))?
+    };
+    let result = Value::Float(n as f64);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// `real_to_int_trunc` — round a `real` toward **zero** (C / most BASIC
+/// `INT()`): `2.7 → 2`, `-2.7 → -2`.  Traps on NaN/±∞/out-of-range.
+fn handle_real_to_int_trunc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let f = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("real_to_int_trunc: operand is not a real".into()))?
+    };
+    let result = Value::Int(real_to_i64_checked(f.trunc())?);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// `real_to_int_floor` — round a `real` toward **−∞** (ALGOL `entier`):
+/// `2.7 → 2`, `-2.7 → -3`.  Traps on NaN/±∞/out-of-range.
+fn handle_real_to_int_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let f = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("real_to_int_floor: operand is not a real".into()))?
+    };
+    let result = Value::Int(real_to_i64_checked(f.floor())?);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+// ---------------------------------------------------------------------------
 // Standard opcode dispatch table
 // ---------------------------------------------------------------------------
 
@@ -1143,6 +1227,9 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "io_out"       => Some(handle_io_out),
         "cast"         => Some(handle_cast),
         "type_assert"  => Some(handle_type_assert),
+        "int_to_real"       => Some(handle_int_to_real),
+        "real_to_int_trunc" => Some(handle_real_to_int_trunc),
+        "real_to_int_floor" => Some(handle_real_to_int_floor),
         // `call` is handled specially (needs jit_handlers) — see dispatch loop.
         _              => None,
     }

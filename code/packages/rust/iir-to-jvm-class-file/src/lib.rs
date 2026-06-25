@@ -84,6 +84,9 @@
 //! | `load_reg` | `iload/lload/… src; istore/lstore/… dest` |
 //! | `store_reg` | same as `load_reg` |
 //! | `type_assert` | nop (erased) |
+//! | `int_to_real` | `i2d` / `l2d` (widen int→double, exact) |
+//! | `real_to_int_trunc` | `d2i` / `d2l` (truncate toward zero) |
+//! | `real_to_int_floor` | `invokestatic Math.floor(D)D; d2i/d2l` (round to −∞) |
 //!
 //! ## Unsupported (validation rejects)
 //!

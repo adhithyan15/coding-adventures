@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.36.0] - 2026-06-22
+## [0.38.0] - 2026-06-25
 
 ### Added
 
@@ -46,6 +46,39 @@ All notable changes to this project will be documented in this file.
     fields `%H`/`%M`/`%S`/`%p`; `%U`/`%W` week-of-year; locale (non-English)
     names; and compound `"N units"` `by=` beyond a single leading integer
     multiplier.
+
+## [0.36.0] - 2026-06-22
+
+### Added
+
+- **`chol(x)` — the Cholesky factorization (R-40)** — available to both S and R
+  through the shared tree-walker. For a real symmetric positive-definite `n×n`
+  matrix `x`, `chol(x)` returns the **upper-triangular** matrix `R` such that
+  `t(R) %*% R == x` (R's convention — the upper factor, so `R'R = X`).
+  - **Algorithm.** The Cholesky–Banachiewicz recurrence in upper form:
+    `R[i,i] = sqrt(X[i,i] − Σ_{k<i} R[k,i]²)` and, for `j > i`,
+    `R[i,j] = (X[i,j] − Σ_{k<i} R[k,i]·R[k,j]) / R[i,i]`; sub-diagonal entries are
+    `0`. Only the **upper triangle** of `X` is read (matching R's default
+    `chol`), so an asymmetric lower triangle is ignored.
+  - **Reuse, not reimplementation.** The new `b_chol` builtin pulls the square
+    matrix out with the **existing `square_matrix` helper** (shared with
+    `det`/`solve`), which rejects non-matrix, non-square, and over-`MAX_SOLVE_DIM`
+    inputs up front; the result is emitted via the same `SValue::Matrix`
+    constructor `matrix()`/`solve` use. Indexing is column-major throughout.
+  - **Examples.** `chol(matrix(c(4,2,2,3), nrow=2))` is `[[2,1],[0,√2]]` and
+    `t(R) %*% R` reconstructs the input; `chol(diag(3))` is the identity; a 3×3
+    SPD matrix reconstructs to within float tolerance.
+  - **Security — no panic, no NaN.** The diagonal pivot
+    `X[i,i] − Σ_{k<i} R[k,i]²` is tested for `> 0` and finiteness **before** the
+    `sqrt`, so a non-positive-definite matrix is a clean error
+    (*"the leading minor of order i is not positive definite"*) rather than a
+    `sqrt` of a negative (`NaN`) or a panic. `NA` in the upper triangle is also a
+    clean error, a non-square matrix is rejected before any indexing, and
+    allocation is the single `n×n` result buffer bounded by the `MAX_SOLVE_DIM`
+    order cap (`n ≤ 1000 ⇒ n² ≤ 10⁶`). The `0×0` matrix factors to `0×0`.
+  - **Deferred to R-41:** `pivot=TRUE` (pivoted Cholesky for positive-*semi*-
+    definite matrices), the `chol2inv()` companion, and complex (Hermitian)
+    matrices. This release ships the real-SPD dense core only.
 
 ## [0.35.0] - 2026-06-22
 

@@ -326,6 +326,28 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
   `tcrossprod` of the same is `[[10,14],[14,20]]`. As in R a bare vector flows
   through `%*%`'s existing vector promotion (left = row, right = column); the
   dense-matrix case is the solid, tested core.
+- **Cholesky factorization** *(R-40)*: `chol(X)`, the Cholesky factor of a real
+  symmetric positive-definite `n×n` matrix. Returns the **upper-triangular**
+  matrix `R` with **`t(R) %*% R == X`** (R's convention — the upper factor, so
+  `R'R = X`). The Cholesky–Banachiewicz recurrence walks columns `i = 1..n`:
+  `R[i,i] = sqrt(X[i,i] − Σ_{k<i} R[k,i]²)` and, for `j > i`,
+  `R[i,j] = (X[i,j] − Σ_{k<i} R[k,i]·R[k,j]) / R[i,i]`; sub-diagonal entries are
+  `0`. Only the **upper triangle** of `X` is read (matching R's default), so an
+  asymmetric lower triangle is ignored. The implementation reuses the existing
+  `square_matrix` helper (shared with `det`/`solve` — it rejects non-matrix,
+  non-square and over-`MAX_SOLVE_DIM` inputs and hands back column-major data and
+  the order `n`), indexes column-major (`X[i,j]` at `j·n + i`), and emits an
+  `SValue::Matrix` directly. **Error paths, faithful to R:** non-square →
+  error; `NA` in the upper triangle → error; and if the pivot
+  `X[i,i] − Σ_{k<i} R[k,i]²` is `≤ 0` (or non-finite) the matrix is not
+  positive-definite and `chol` errors with *"the leading minor of order i is not
+  positive definite"*. The `≤ 0` check runs **before** the `sqrt`, so a non-SPD
+  matrix is a clean error — never `sqrt` of a negative, never `NaN`, never a
+  panic. Worked example: `chol(matrix(c(4,2,2,3), nrow=2))` is `[[2,1],[0,√2]]`
+  and `t(R) %*% R` reconstructs the input; `chol(diag(3))` is the identity.
+  `pivot=TRUE` (pivoted Cholesky), the `chol2inv()` companion, and complex
+  (Hermitian) matrices are **deferred to R-41**; this item ships the real-SPD
+  dense core only.
 - **Kronecker product** *(R-38)*: `kronecker(X, Y)`, the block-outer-product of
   two matrices. For `X` `m×n` and `Y` `p×q` the result is `(m·p)×(n·q)` with
   **`result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]`** (1-based,

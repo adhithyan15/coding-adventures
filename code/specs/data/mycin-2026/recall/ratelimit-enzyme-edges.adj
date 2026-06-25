@@ -1,0 +1,103 @@
+% ============================================================================
+% ratelimit-enzyme-edges — the metabolic-pathway→rate-limiting-enzyme knowledge-graph
+% (MYCIN-2026 RATELIMIT).
+% ============================================================================
+% A classic high-yield biochemistry board table: the rate-limiting (committed-step)
+% enzyme of each major metabolic pathway. "What is the rate-limiting enzyme of
+% glycolysis?" becomes the binding query
+%     ? rate_limiting_enzyme_of(glycolysis, $Enzyme).
+%
+% Direction note: the relation is pathway -> rate-limiting enzyme
+% (`rate_limiting_enzyme_of`), the board direction — you name the pathway and recall
+% the enzyme that controls its committed/rate-limiting step. Each pathway here maps
+% to ONE canonical rate-limiting enzyme, so a query binds a single answer.
+%
+% What matters for grounding is that one self-contained span names BOTH the pathway
+% AND its rate-limiting (or "first committed step") enzyme, stating that control
+% relationship. A few spans name the enzyme by its standard board abbreviation
+% (e.g. "CPT I" for carnitine palmitoyltransferase I) — the atom is the full enzyme
+% name; atoms are stable identifiers, not required to match the span's exact spelling.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like BIOCHEM/BRACHIAL/NEPHRON).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed,
+%                including verbatim quirks — the spacing in "NAD+ -dependent", the
+%                cross-reference "(see below)", the run-together "ALA synthase1",
+%                and the Unicode α in "α-1-4 bond" are preserved exactly).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see ratelimit-enzyme-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% DEFERRED (honest gap, not authored over): gluconeogenesis → fructose-1,6-
+% bisphosphatase. On NBK544346 the rate-limiting designation ("...the rate-limiting
+% step of gluconeogenesis.") and the enzyme name appear in two separate consecutive
+% sentences; NBK541119/NBK550349 call it only "a key enzyme" without "rate-limiting".
+% No single self-contained NCBI sentence co-names both endpoints with the rate-
+% limiting relationship, so the edge is omitted rather than grounded on a split span.
+% ============================================================================
+
+dictionary ratelimit_vocab {
+    define pathway : entity   surface "metabolic pathway", "biochemical pathway"
+    define enzyme  : entity   surface "rate-limiting enzyme", "committed-step enzyme"
+
+    define rate_limiting_enzyme_of : relation from pathway to enzyme  % the enzyme controlling a pathway's rate-limiting step
+}
+
+rulebook ratelimit_facts {
+    use ratelimit_vocab
+
+    % --- glycolysis -> phosphofructokinase-1 ----------------------------------
+    relate rate_limiting_enzyme_of(glycolysis, phosphofructokinase_1)
+        source "The processing of fructose in the liver is not controlled by hormone or allosteric mechanisms, and fructose bypasses the rate-limiting step of glycolysis catalyzed by phosphofructokinase 1 (PFK 1)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK576428/"
+        trust authoritative
+
+    % --- citric acid cycle (TCA) -> isocitrate dehydrogenase ------------------
+    relate rate_limiting_enzyme_of(citric_acid_cycle, isocitrate_dehydrogenase)
+        source "The oxidative decarboxylation of isocitrate to alpha-ketoglutarate becomes catalyzed by NAD+ -dependent isocitrate dehydrogenase, producing CO2, NADH, and a proton; this is the rate-limiting step of the TCA cycle."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556032/"
+        trust authoritative
+
+    % --- cholesterol synthesis -> HMG-CoA reductase ---------------------------
+    relate rate_limiting_enzyme_of(cholesterol_synthesis, hmg_coa_reductase)
+        source "Conversion of 3-hydroxy-3-methyl glutaryl-CoA (HMG-CoA) to mevalonate by HMG-CoA reductase in the hepatocytes is the first and rate-limiting step in cholesterol biosynthesis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542212/"
+        trust authoritative
+
+    % --- fatty acid synthesis -> acetyl-CoA carboxylase -----------------------
+    relate rate_limiting_enzyme_of(fatty_acid_synthesis, acetyl_coa_carboxylase)
+        source "The first committed step of fatty acid biosynthesis, in which malonyl-CoA is generated from acetyl-CoA, is catalyzed by acetyl-CoA carboxylase (ACC) (see below)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK2413/"
+        trust authoritative
+
+    % --- fatty acid oxidation -> carnitine palmitoyltransferase I -------------
+    relate rate_limiting_enzyme_of(fatty_acid_oxidation, carnitine_palmitoyltransferase_1)
+        source "The enzymatic transportation and conversion completed by CPT I is the rate-limiting step of fatty acid oxidation in the mitochondria."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556002/"
+        trust authoritative
+
+    % --- heme synthesis -> ALA synthase ---------------------------------------
+    relate rate_limiting_enzyme_of(heme_synthesis, ala_synthase)
+        source "The rate-limiting enzyme in the formation of heme is the hepatic ALA synthase1 enzyme, which heme inhibits."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537352/"
+        trust authoritative
+
+    % --- glycogenesis -> glycogen synthase ------------------------------------
+    relate rate_limiting_enzyme_of(glycogenesis, glycogen_synthase)
+        source "Glycogen synthase, the rate-limiting enzyme in glycogen synthesis, exists in 2 interconvertible forms: the active, dephosphorylated glycogen synthase a and the less active, phosphorylated glycogen synthase b."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539802/"
+        trust authoritative
+
+    % --- glycogenolysis -> glycogen phosphorylase -----------------------------
+    relate rate_limiting_enzyme_of(glycogenolysis, glycogen_phosphorylase)
+        source "Corresponding to cytosolic degradation, glycogen phosphorylase, the rate-limiting enzyme of glycogenolysis, cleaves terminal glucose residue connected to a glycogen branch while substituting a phosphoryl group for the α-1-4 bond."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549820/"
+        trust authoritative
+}

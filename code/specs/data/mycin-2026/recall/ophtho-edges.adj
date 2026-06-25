@@ -1,0 +1,135 @@
+% ============================================================================
+% ophtho-edges — the ophthalmology finding knowledge-graph (MYCIN-2026 OPHTHO).
+% ============================================================================
+% A high-yield ophthalmology/internal-medicine board domain: the eye finding
+% (fundoscopic sign, pupillary reflex, corneal/lens finding) and the diagnosis it
+% points to. "Fundoscopy shows a cherry-red spot — what is the diagnosis?" becomes
+% the binding query
+%     ? eye_finding_indicates(cherry_red_spot, $Diagnosis).
+%
+% Direction note: the relation is finding -> diagnosis (`eye_finding_indicates`),
+% the board direction — you SEE the eye finding and must name the diagnosis. The
+% cited spans read either way ("Kayser-Fleischer rings are a common ... finding in
+% patients with Wilson disease"; "the most common presenting features of
+% retinoblastoma include leukocoria") — what matters for grounding is that one
+% self-contained span names BOTH the eye finding AND the diagnosis. Each finding
+% here maps to one canonical diagnosis, so a query binds a single answer.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (a pure ADJ-only recall domain, like ECG/URINE/RESP/DERM). Each
+% fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, or
+%                NCBI PubMed Central for the one finding with no StatPearls span).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see ophtho-recall.query.adj. Nothing here
+% is asserted "from memory": every edge is defended by a span a reader can re-fetch
+% and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Write-once / use-many: the four hypertensive-retinopathy findings (cotton wool
+% spots, flame-shaped hemorrhages, arteriovenous crossing changes, macular star)
+% are all minted from ONE NBK525980 sentence that lists them together — one grounded
+% span, four edges. Papilledema also appears in that sentence but is deliberately
+% NOT bound to hypertensive retinopathy here: it already binds increased
+% intracranial pressure (NBK538295), and the single-answer property forbids a second
+% binding for one finding.
+%
+% Honest scope: only findings whose page states the association in a clean self-
+% contained AFFIRMATIVE span (both endpoints named; a negating/caveat sentence does
+% not count) are included. Deferred (re-checked): Hollenhorst plaque -> carotid
+% atherosclerosis (NBK470445 splits the spelled-out plaque name from the carotid
+% source; the carotid-origin sentence abbreviates to "HPs") — reused as the off-
+% vocabulary abstention control.
+% ============================================================================
+
+dictionary ophtho_vocab {
+    define finding   : entity   surface "eye finding", "ophthalmologic sign"
+    define diagnosis : entity   surface "ocular or systemic diagnosis", "condition"
+
+    define eye_finding_indicates : relation from finding to diagnosis  % the diagnosis an eye finding points to
+}
+
+rulebook ophtho_facts {
+    use ophtho_vocab
+
+    % --- cherry red spot -> central retinal artery occlusion (CRAO) ------------
+    relate eye_finding_indicates(cherry_red_spot, central_retinal_artery_occlusion)
+        source "Retinal whitening and a cherry-red spot are important manifestations of acute CRAO."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539841/"
+        trust authoritative
+
+    % --- Roth spots -> infective endocarditis (NCBI PMC; no StatPearls span) ----
+    relate eye_finding_indicates(roth_spots, infective_endocarditis)
+        source "Roth's spots are not pathognomonic for infective endocarditis but are suggestive of the diagnosis."
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC7417078/"
+        trust authoritative
+
+    % --- leukocoria (white pupillary reflex) -> retinoblastoma ------------------
+    relate eye_finding_indicates(leukocoria, retinoblastoma)
+        source "The most common presenting features of retinoblastoma include leukocoria, strabismus, eye redness or pain, visual impairment, and proptosis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545276/"
+        trust authoritative
+
+    % --- optic disc cupping (raised cup-to-disc ratio) -> glaucoma --------------
+    relate eye_finding_indicates(optic_disc_cupping, glaucoma)
+        source "A cup-to-disc ratio greater than 0.5 is often associated with glaucoma, and initial loss is typically observed in the inferotemporal and superotemporal poles of the optic disc."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441887/"
+        trust authoritative
+
+    % --- Kayser-Fleischer rings -> Wilson disease ------------------------------
+    relate eye_finding_indicates(kayser_fleischer_rings, wilson_disease)
+        source "Kayser-Fleischer rings are a common ophthalmological finding in patients with Wilson disease—a genetic disorder that affects copper metabolism in the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459187/"
+        trust authoritative
+
+    % --- papilledema -> increased intracranial pressure ------------------------
+    relate eye_finding_indicates(papilledema, increased_intracranial_pressure)
+        source "Papilledema is characterized by swelling of the optic disc resulting from elevated intracranial pressure (ICP), which can arise from multiple causes."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538295/"
+        trust authoritative
+
+    % --- retinal neovascularization -> proliferative diabetic retinopathy ------
+    relate eye_finding_indicates(retinal_neovascularization, proliferative_diabetic_retinopathy)
+        source "In proliferative diabetic retinopathy, many of the changes seen in NPDR are present in addition to neovascularization that extends along the surface of the retina or into the vitreous cavity."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK278967/"
+        trust authoritative
+
+    % --- superior (supero-temporal) lens dislocation -> Marfan syndrome --------
+    relate eye_finding_indicates(superior_lens_dislocation, marfan_syndrome)
+        source "A bilateral supero-temporal lens displacement is seen in Marfan syndrome."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK578193/"
+        trust authoritative
+
+    % ------------------------------------------------------------------------
+    % WRITE-ONCE / USE-MANY: the four findings below are all named in ONE
+    % NBK525980 sentence enumerating the key features of hypertensive
+    % retinopathy — one grounded span, four edges.
+    % ------------------------------------------------------------------------
+
+    % --- cotton wool spots -> hypertensive retinopathy -------------------------
+    relate eye_finding_indicates(cotton_wool_spots, hypertensive_retinopathy)
+        source "Key features of hypertensive retinopathy include arteriovenous crossing changes, cotton wool spots, flame-shaped peripapillary hemorrhages, optic disc swelling (papilledema), and macular star formation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK525980/"
+        trust authoritative
+
+    % --- flame-shaped hemorrhages -> hypertensive retinopathy (same span) ------
+    relate eye_finding_indicates(flame_shaped_hemorrhages, hypertensive_retinopathy)
+        source "Key features of hypertensive retinopathy include arteriovenous crossing changes, cotton wool spots, flame-shaped peripapillary hemorrhages, optic disc swelling (papilledema), and macular star formation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK525980/"
+        trust authoritative
+
+    % --- arteriovenous crossing changes (AV nicking) -> hypertensive retinopathy (same span) -
+    relate eye_finding_indicates(arteriovenous_crossing_changes, hypertensive_retinopathy)
+        source "Key features of hypertensive retinopathy include arteriovenous crossing changes, cotton wool spots, flame-shaped peripapillary hemorrhages, optic disc swelling (papilledema), and macular star formation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK525980/"
+        trust authoritative
+
+    % --- macular star -> hypertensive retinopathy (same span) ------------------
+    relate eye_finding_indicates(macular_star, hypertensive_retinopathy)
+        source "Key features of hypertensive retinopathy include arteriovenous crossing changes, cotton wool spots, flame-shaped peripapillary hemorrhages, optic disc swelling (papilledema), and macular star formation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK525980/"
+        trust authoritative
+}

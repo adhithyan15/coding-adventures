@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3), `READ`/`DATA`/`RESTORE` (BA6) — all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -234,6 +234,62 @@ multiple languages; close an enabler before the features that depend on it.
     stack on top.
 - **E7 — Subroutine / return-stack.** `GOSUB`/`RETURN` and procedure call/return —
   likely expressible with existing `call`/`ret`; confirm and add if needed.
+- **E8 — Numeric conversions (`integer` ↔ `real`).** ◑ *Spec signed off
+  ([`lang-full-e8-numeric-conversions.md`](lang-full-e8-numeric-conversions.md)); implementation in progress.*
+  Three ops (`int_to_real`, `real_to_int_trunc`, `real_to_int_floor`); `real→int`
+  traps out-of-range. Unblocks **AL8 `entier`** (floor), int→real **coercion**,
+  BASIC **`INT()`** / **BA7**.
+  - ✅ **PR-1 — interpreter-ir + vm-core + JIT** (interpreter-ir 0.8.0,
+    vm-core 0.9.0). `is_conversion` classifier + value-producing registration;
+    VM reference semantics (range-checked, fail-closed trap on NaN/∞/overflow);
+    JIT inherits via cold-interpret. 5 vm-core unit tests + a jit-core
+    integer→real→integer round-trip.
+  - ✅ **PR-2 — LLVM** (iir-to-llvm 0.16.0). `int_to_real`→`sitofp`;
+    `real_to_int_*`→`@llvm.trunc.f64`/`@llvm.floor.f64` + range-check
+    (`@llvm.trap`, matching the VM — a bare `fptosi` of out-of-range is UB) +
+    `fptosi`. RUN-verified on real clang (`floor(45.0−2.7)`⇒42).
+  - ✅ **PR-3 — WASM** (iir-to-wasm 0.17.0). `int_to_real`→`f64.convert_i64_s`;
+    `real_to_int_trunc`→`i64.trunc_f64_s`; `real_to_int_floor`→`f64.floor` then
+    `i64.trunc_f64_s`. The **non-saturating** trunc traps out-of-range, matching
+    the VM *for free* (the saturating `trunc_sat` would clamp — deliberately not
+    used, so no explicit guard needed). RUN-verified on a real wasm runtime
+    (`floor(45.0−2.7)`⇒42, trunc/floor sign cases).
+  - ✅ **PR-4 — JVM** (iir-to-jvm-class-file 0.18.0). `int_to_real`→`i2d`/`l2d`
+    (per the source's value model); `real_to_int_trunc`→`d2i`/`d2l` (truncate
+    toward zero); `real_to_int_floor`→`invokestatic Math.floor(D)D` then
+    `d2i`/`d2l`. **Documented trap divergence** (spec §7): `d2i`/`d2l`
+    *saturate* (NaN→0, ±∞→MIN/MAX) where the VM traps — agrees bit-for-bit on
+    every finite, in-range value, so the matrix cells match; a JVM range-check +
+    `athrow` has no reusable precedent in this backend. RUN-verified on real
+    `java` (`floor(int_to_real(45)−2.7)`⇒42).
+  - ✅ **PR-5 — CLR** (iir-to-cil-bytecode 0.26.0). `int_to_real`→`conv.r8`;
+    `real_to_int_trunc`→`conv.ovf.i4`; `real_to_int_floor`→`call
+    System.Math::Floor(float64)` then `conv.ovf.i4`. The **overflow-checking**
+    `conv.ovf.i4` truncates toward zero AND traps (`OverflowException`) on
+    NaN/±∞/out-of-range — the VM's fail-closed contract *for free*, strictly
+    better than the JVM's saturating divergence. Scalar ints are uniformly 32-bit
+    here, so the narrow target is always `conv.ovf.i4`. RUN-verified on real
+    `ilasm` + `dotnet` (`floor(int_to_real(45)−2.7)`⇒42).
+  - ✅ **PR-6a — native aarch64** (aarch64-encoder 0.5.0 + aarch64-backend 0.13.0).
+    `int_to_real`→`scvtf`; `real_to_int_trunc`→`fcvtzs`; `real_to_int_floor`→
+    `frintm` then `fcvtzs`. True i64↔f64 (full Xn). `fcvtzs` saturates (documented
+    divergence, like the JVM). **Executed on real Apple Silicon**:
+    `floor(int_to_real(45)−2.7)`⇒42, plus the sign-sensitive `floor(−2.7)=−3` vs
+    `trunc(−2.7)=−2`.
+  - ✅ **PR-6b — native x86_64** (x86_64-encoder 0.5.0 + x86_64-backend 0.15.0 +
+    x86-simulator 0.7.6). `int_to_real`→`cvtsi2sd`; `real_to_int_trunc`→
+    `cvttsd2si`; `real_to_int_floor`→`roundsd …,1` then `cvttsd2si`. True i64↔f64.
+    `cvttsd2si` yields the integer-indefinite on OOB (saturating divergence, like
+    JVM/aarch64). **RUN-verified end-to-end through real x86_64 codegen executed
+    in the x86-simulator** (`floor(int_to_real(45)−2.7)`⇒42, `trunc(42.3)`⇒42).
+    With this, E8's conversion ops are implemented on **all seven backends**.
+  - ✅ **PR-7 — ALGOL `entier`** (algol-iir-compiler 0.10.0 + lang-aot matrix). The
+    standard function `entier(E)` (§3.2.5) — the largest integer ≤ the *real* `E`,
+    floor toward −∞ — lowers to a single E8 `real_to_int_floor` op (the floor + the
+    real→integer narrowing fused), so every backend emits its native floor-then-convert.
+    A `real` argument is required. **RUN-verified on all 7 backends** via a new
+    `lang_matrix.rs` cell: `45 + entier(0.0 − 2.7)` = `45 + (−3)` = 42 (the negative
+    operand distinguishes floor from trunc — trunc would give 43). **E8 COMPLETE.**
 
 ---
 
@@ -443,7 +499,16 @@ backend immediately) come before the enabler-dependent items.
   has drifted ahead of the compiled grammar in other rules; resync is follow-up.)
 - ☐ **AL7** — ⚠ call-by-name (Jensen-style expression thunks). **Hardest item in the
   campaign — design pass + user check before implementing.**
-- ☐ **AL8** — standard functions (`abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/… — needs **E3**).
+- ◑ **AL8** — standard functions (§3.2.4). **`abs` ✅** (algol-iir-compiler 0.8.0)
+  and **`sign` ✅** (0.9.0): both built-in, resolved by name (overridable by a user
+  `procedure`), lowered inline to compares + `jmp_if_false` + `mov`-into-one-slot
+  (store-per-branch, no phi). `abs(E)` = `if E<0 then -E else E` (preserves
+  `integer`/`real`); `sign(E)` = `if E>0 then 1 else if E<0 then -1 else 0` (always
+  `integer`). Verified by RUNNING `abs(0-42)`⇒42 and `43+sign(0-1)`⇒42 on
+  native/LLVM/WASM/JVM/CLR/VM/JIT. **Remaining:** `entier` (floor of a real → integer:
+  needs a float-floor+convert, not a portable IIR op — closer to the transcendentals
+  than to abs/sign), then `sqrt`/`sin`/`cos`/`ln`/`exp` (need a cross-backend runtime
+  math library).
 
 ### Twig
 - ✅ **TW1** — variadic arithmetic typed lowering. An all-`i64` `(+ a b c …)` /

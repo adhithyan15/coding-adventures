@@ -200,6 +200,40 @@ runtime and Chief of Staff tools a typed catalog for:
 - mesh release ticket handoff guardrail audit clearance action evidence review
   disposition-action slot clearance action evidence review readiness summaries
   that combine evidence readiness with review counts and next review pointers
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  disposition-action slot clearance action evidence review clearance rows that
+  project review readiness into repair, review, dispatch, execution, lineage,
+  and release handoff clearance outcomes
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  disposition-action slot clearance action evidence review clearance readiness
+  summaries that combine review readiness with clearance-row counts and next
+  clearance pointers
+- low-level mesh release ticket handoff disposition-action slot clearance
+  action evidence review clearance action rows that turn clearance readiness
+  into repair, review, dispatch, execution, lineage, and release handoff work
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  disposition-action slot clearance action evidence review clearance action
+  readiness summaries that combine clearance readiness with action-row counts
+  and next clearance-action pointers
+- low-level mesh release ticket handoff disposition-action slot clearance
+  action evidence review clearance action readiness evidence rows that capture
+  repair, review, dispatch, execution, lineage, and release handoff evidence
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  disposition-action slot clearance action evidence review clearance action
+  readiness evidence summaries that combine evidence readiness with evidence
+  counts and next readiness evidence pointers
+- low-level mesh release ticket handoff disposition-action slot clearance
+  action evidence review clearance action readiness evidence review rows that
+  classify readiness evidence into blocker, operator, review, lineage, and
+  release-ready outcomes
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  disposition-action slot clearance action evidence review clearance action
+  readiness evidence review summaries that combine readiness-evidence review
+  rows with review counts and next review pointers
+- low-level mesh release ticket handoff disposition-action slot clearance
+  action evidence review clearance action readiness evidence review
+  disposition rows that turn reviewed readiness evidence into repair, operator,
+  review, lineage, and release-ready handoff outcomes
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work

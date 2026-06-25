@@ -2,6 +2,181 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.34.0] - 2026-06-23
+
+### Added — fold global `parseInt(lit[, radix])` / `parseFloat(lit)` on string literals
+
+The global `parseInt` and `parseFloat` functions now fold to a numeric literal
+when their first argument is a string literal (ECMAScript §19.2.5 / §19.2.4):
+`parseInt("12px")` → `12`, `parseInt("0x1F")` → `31`, `parseInt("FF", 16)` →
+`255`, `parseInt("-7")` → `-7`, `parseInt("08")` → `8` (not octal in modern JS),
+`parseFloat("3.14abc")` → `3.14`, `parseFloat("1e3")` → `1000`,
+`parseFloat(".5")` → `0.5`, `parseFloat("5.")` → `5`. New `fold_parse_int` and
+`fold_parse_float` helpers reproduce the engine algorithm: skip leading
+whitespace, read an optional sign, (for `parseInt`) resolve the radix honouring
+a `0x`/`0X` prefix, then consume the longest valid numeric prefix and ignore the
+trailing garbage. `parseInt` accumulates in `f64` so values beyond `2^53` round
+exactly as V8 does.
+
+Conservative scope: the callee must be the **bare identifier** `parseInt` /
+`parseFloat` — a member access such as `window.parseInt(...)` is left untouched.
+A `parseInt` radix argument, when present, must be an integer literal in
+`2..=36` (a non-literal or out-of-range radix leaves the call for the runtime).
+We **decline** (leave the call) whenever the runtime result is `NaN`
+(`parseInt("")`, an invalid radix) or `±Infinity` (`parseFloat("Infinity")`):
+JavaScript has no literal token for either, so there is nothing sound to
+substitute.
+
+Soundness note: this folds under the same "builtins are intact" premise the
+whole pass relies on, one notch weaker — unlike a string literal's `.slice`,
+`parseInt`/`parseFloat` are free identifiers that a local binding could mask, so
+we fold them only as the bare global, matching Closure Compiler's treatment of
+redefining these globals as out of scope.
+
+When `--correlation_vector` tracking is on, the fold forks a contribution
+recording the rewrite (e.g. `parseInt("FF",16)` → `255`).
+
+## [0.30.0] - 2026-06-22
+
+### Added — fold `"a".concat("b", "c")` on string literals
+
+`String.prototype.concat` now folds to a single string literal when the
+receiver and **every** argument are string literals (ECMAScript §22.1.3.4):
+`"a".concat("b", "c")` → `"abc"`, `"".concat("x")` → `"x"`,
+`"foo".concat("bar")` → `"foobar"`, `"a".concat()` → `"a"` (identity, still
+dropping the call). A new `fold_string_concat_call` helper performs the join.
+
+Conservative scope: every argument must already be a string literal. JS coerces
+non-string arguments via `ToString` (`"a".concat(1)` → `"a1"`), but we don't
+model that coercion, so a numeric or identifier argument (and any non-string
+receiver) leaves the call for the runtime. Concatenating valid strings can only
+produce valid UTF-16 — no surrogate pair is ever split, the hazard `slice` and
+`charAt` guard against — so the result is always a representable literal. The
+joined length is bounded by a fixed 100_000-UTF-16-code-unit cap (with
+`checked_add` on the running total) as a defensive algorithmic-blowup guard,
+mirroring `repeat` and `padStart`/`padEnd`.
+
+When `--correlation_vector` tracking is on, the fold forks a contribution
+recording the rewrite (`"a".concat("b","c")` → `"abc"`).
+## [0.29.0] - 2026-06-22
+
+### Added — fold `"  x  ".trim()` / `trimStart()` / `trimEnd()` on string literals
+
+`String.prototype.trim` / `trimStart` / `trimEnd` (ECMAScript §22.1.3.32/.34/.33)
+now fold to a string literal when the receiver is a string literal:
+`"  abc  ".trim()` → `"abc"`, `.trimStart()` → `"abc  "`, `.trimEnd()` →
+`"  abc"`. Trimming works on whole Unicode scalars, so — unlike `slice` — it
+can never split a surrogate pair.
+
+**Soundness note:** the stripped set is hard-coded as the exact ECMAScript
+white-space + line-terminator set (`is_js_trim_whitespace`), *not* Rust's
+`char::is_whitespace`, because the two disagree: Rust treats U+0085 (NEL) as
+whitespace but JS does not, and JS treats U+FEFF (BOM) as whitespace but Rust
+does not. Folding with the wrong set would silently miscompile. The set is
+U+0009–000D, U+0020, U+00A0, U+1680, U+2000–200A, U+2028, U+2029, U+202F,
+U+205F, U+3000, U+FEFF.
+
+8 new unit tests (basic/mixed/empty/interior cases, the full non-ASCII JS set,
+explicit exclusion of U+200B/U+2060, identifier-receiver and argument
+declines), with V8-derived oracle values. The pre-existing
+`unknown_string_method_does_not_fold` test (which used `trim` as its example)
+now uses `normalize`.
+
+> Version note: bumped to 0.29.0 — above the merged `repeat` fold (0.26.0), the
+> merged numeric `toString(radix)` fold (0.27.0), and the open `padStart/padEnd`
+> fold (0.28.0, PR #6571) — so the parallel branches don't collide on the
+> version line.
+## [0.28.0] - 2026-06-22
+
+### Added — fold `"x".padStart(target[, pad])` / `padEnd(...)` on string literals
+
+`String.prototype.padStart` / `padEnd` (ECMAScript §22.1.3.16 / §22.1.3.17) now
+fold to a string literal when the receiver is a string literal, the target
+length is a non-negative integer literal, and the optional pad is a string
+literal (default a single space): `"5".padStart(3, "0")` → `"005"`,
+`"abc".padEnd(6)` → `"abc   "`, `"abc".padStart(6, "12")` → `"121abc"` (the pad
+repeats and truncates to the shortfall). A string already at or over the target
+is returned unchanged. A new `fold_string_pad` helper works in UTF-16 code
+units.
+
+Conservative scope, with a **denial-of-service guard**: declines (leaves the
+call) for no argument or more than two, a non-integer target, a non-string-
+literal pad, a target over `MAX_PAD_UNITS` (100 000) UTF-16 code units, or a
+fill truncation that would split a surrogate pair into a lone surrogate (a valid
+JS string but not a Rust `String` — the same guard `slice`/`charAt` use). 6 new
+unit tests with V8-derived oracle values.
+
+> Version note: bumped to 0.28.0 — above the merged `repeat` fold (0.26.0) and
+> the merged numeric `toString(radix)` fold (0.27.0) — so the parallel branches
+> don't collide on the version line.
+
+## [0.27.0] - 2026-06-22
+
+### Added — fold `(N).toString([radix])` on non-negative integer literals
+
+A numeric literal's `toString` now folds to a string literal when the receiver
+is a non-negative integer and the radix is known (ECMAScript §21.1.3.6):
+`(255).toString()` → `"255"`, `(255).toString(16)` → `"ff"`,
+`(255).toString(2)` → `"11111111"`, `(35).toString(36)` → `"z"`. A new
+`to_radix_string` helper renders the integer with JS's lowercase `0-9a-z`
+digits.
+
+Conservative scope: the receiver must be a non-negative integer below `2^53`
+(beyond the safe-integer ceiling JS switches to exponential notation, which a
+digit loop would not reproduce); the radix is the default 10 or a single
+integer literal in `2..=36`. A fractional receiver (`(3.5).toString(2)` is a
+binary fraction we don't model), an out-of-range radix (1, 0, 37 → RangeError),
+and a variable radix all pass through unchanged. 7 new unit tests.
+
+> Version note: bumped to 0.27.0 — above the merged `repeat` fold (0.26.0),
+> `slice` fold (0.24.0), and `indexOf` fold (0.22.0) — so the parallel branches
+> don't collide on the version line.
+
+## [0.26.0] - 2026-06-22
+
+### Added — fold `"ab".repeat(count)` on string literals
+
+`String.prototype.repeat` (ECMAScript §22.1.3.18) now folds to a string literal
+when the receiver is a string literal and the single argument is a non-negative
+integer literal: `"ab".repeat(3)` → `"ababab"`, `"x".repeat(0)` → `""`. A new
+`fold_string_repeat` helper concatenates the whole receiver `count` times —
+unlike `slice` it can never split a surrogate pair, since the string is
+duplicated, not cut.
+
+Conservative scope, with an explicit **denial-of-service guard**: declines
+(leaves the call) for a negative count (JS throws a `RangeError`, which folding
+would erase), a fractional/non-finite/non-literal count, or a result that would
+exceed `MAX_REPEAT_UNITS` (100 000) UTF-16 code units — `"x".repeat(1e9)` is a
+valid program but must not be materialized into a gigabyte literal at compile
+time. `checked_mul` keeps the length computation itself from overflowing. 6 new
+unit tests.
+
+> Version note: bumped to 0.26.0 — above the merged `slice` fold (0.24.0) and
+> the open numeric `toString(radix)` fold (0.25.0, PR #6560) — so the parallel
+> branches don't collide on the version line.
+
+## [0.24.0] - 2026-06-22
+
+### Added — fold `"abcd".slice(start[, end])` on string literals
+
+`String.prototype.slice` (ECMAScript §22.1.3.22) now folds to a string literal
+when the receiver is a string literal and the (0, 1, or 2) arguments are integer
+literals: `"abcd".slice(1, 3)` → `"bc"`, `"abcd".slice(1)` → `"bcd"`,
+`"abcd".slice(-2)` → `"cd"`, `"abcd".slice(0, -1)` → `"abc"`,
+`"abcd".slice(2, 1)` → `""`, `"abc".slice()` → `"abc"`. A new `fold_string_slice`
+helper implements the spec's clamp-and-half-open-range over UTF-16 code units (a
+negative index counts from the end).
+
+UTF-16 indexing means `"💩ab".slice(2)` → `"ab"` (the astral char is two units).
+Conservative scope: declines (leaves the call) for more than two arguments, a
+non-integer-literal argument, an identifier receiver, or a cut that would split
+a surrogate pair into a lone surrogate (a valid JS string but not a Rust
+`String` — the same guard `charAt` uses). 6 new unit tests.
+
+> Version note: bumped to 0.24.0 (skipping 0.23.0, reserved by the concurrently
+> -developed numeric `toString(radix)` fold) so the parallel branches don't
+> collide on the version line.
+
 ## [0.22.0] - 2026-06-22
 
 ### Added — fold `"haystack".indexOf("needle")` on string literals

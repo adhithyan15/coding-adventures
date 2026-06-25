@@ -1,0 +1,21 @@
+% ============================================================================
+% spinal-tract-recall.query.adj — a worked recall query over the spinal-tract library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "which function does tract
+% X carry?" question: it states no neuroanatomy fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli spinal-tract-recall.query.adj
+% ============================================================================
+
+import "spinal-tract-edges.adj"
+
+? carries(lateral_corticospinal_tract, $Function)    % expect voluntary_motor_control
+? carries(dorsal_column, $Function)                  % expect fine_touch_vibration_proprioception
+? carries(spinothalamic_tract, $Function)            % expect pain_and_temperature
+? carries(dorsal_spinocerebellar_tract, $Function)   % expect unconscious_proprioception
+? carries(rubrospinal_tract, $Function)              % expect flexor_muscles
+? carries(anterior_corticospinal_tract, $Function)   % expect axial_muscles

@@ -1,0 +1,99 @@
+% ============================================================================
+% embryo-edges — the developmental-origin knowledge-graph (MYCIN-2026 EMBRYO).
+% ============================================================================
+% A high-yield embryology board domain: the adult structure (cell, organ, tissue)
+% and the embryonic precursor it derives from. "The adrenal medulla derives from
+% which embryonic origin?" becomes the binding query
+%     ? embryonic_origin(adrenal_medulla, $Origin).
+%
+% Direction note: the relation is structure -> origin (`embryonic_origin`), the
+% board direction — you name an adult structure and must recall its developmental
+% precursor (germ layer / neural crest / pharyngeal pouch / embryonic structure).
+% The cited spans read origin-first or structure-first ("The neural crest also gives
+% rise to ... chromaffin cells of the adrenal medulla ..."; "The neurohypophysis ...
+% develops from the neuroectodermal infundibulum") — what matters for grounding is
+% that one self-contained span names BOTH the structure AND its origin. Each
+% structure here maps to one canonical origin, so a query binds a single answer
+% (multiple structures may share an origin — four neural-crest derivatives here).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (a pure ADJ-only recall domain, like TOX/PSYCH/MSK/OPHTHO/ECG).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see embryo-recall.query.adj. Nothing here
+% is asserted "from memory": every edge is defended by a span a reader can re-fetch
+% and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Write-once / use-many: the thymus and the inferior parathyroid are BOTH minted
+% from ONE NBK557724 sentence ("The third pharyngeal pouch develops into the thymus
+% and the inferior portion of the parathyroid.") — one grounded span, two edges.
+% ============================================================================
+
+dictionary embryo_vocab {
+    define structure : entity   surface "adult structure", "cell or organ"
+    define origin    : entity   surface "embryonic origin", "developmental precursor"
+
+    define embryonic_origin : relation from structure to origin  % the precursor a structure derives from
+}
+
+rulebook embryo_facts {
+    use embryo_vocab
+
+    % --- adrenal medulla -> neural crest ---------------------------------------
+    relate embryonic_origin(adrenal_medulla, neural_crest)
+        source "The neural crest also gives rise to Schwann cells, chromaffin cells of the adrenal medulla, inner ear, cornea, odontoblasts, melanoblasts, pharyngeal arches, and the meninges of the brain and spinal cord."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539836/"
+        trust authoritative
+
+    % --- melanocytes -> neural crest -------------------------------------------
+    relate embryonic_origin(melanocytes, neural_crest)
+        source "Neural crest cells are precursors to a wide variety of tissues, including the ectodermal derivatives of melanocytes, sensory and autonomic ganglion neurons, and Schwann cells."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK547700/"
+        trust authoritative
+
+    % --- Schwann cells -> neural crest -----------------------------------------
+    relate embryonic_origin(schwann_cells, neural_crest)
+        source "Schwann cells embryologically derive from the neural crest."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544316/"
+        trust authoritative
+
+    % --- thyroid parafollicular (C) cells -> neural crest ----------------------
+    relate embryonic_origin(parafollicular_c_cells, neural_crest)
+        source "Unlike other thyroid neoplasms, MTC is a neuroendocrine tumor because C cells, arising from ultimobranchial bodies, are derived from neural crest tissue."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519054/"
+        trust authoritative
+
+    % --- posterior pituitary (neurohypophysis) -> neuroectoderm ----------------
+    relate embryonic_origin(posterior_pituitary, neuroectoderm)
+        source "The neurohypophysis, also called the posterior pituitary gland, develops from the neuroectodermal infundibulum."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526130/"
+        trust authoritative
+
+    % --- diaphragm (central tendon) -> septum transversum ----------------------
+    relate embryonic_origin(diaphragm, septum_transversum)
+        source "During this period, the central tendon is formed from the anterior septum transversum, which then merges with the pleuroperitoneal folds on the sides and the dorsal mesentery of the esophagus in the center, creating the initial structure of the diaphragm."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560497/"
+        trust authoritative
+
+    % ------------------------------------------------------------------------
+    % WRITE-ONCE / USE-MANY: thymus + inferior parathyroid, both from ONE
+    % NBK557724 sentence naming the third pharyngeal pouch's two derivatives.
+    % ------------------------------------------------------------------------
+
+    % --- thymus -> third pharyngeal pouch --------------------------------------
+    relate embryonic_origin(thymus, third_pharyngeal_pouch)
+        source "The third pharyngeal pouch develops into the thymus and the inferior portion of the parathyroid."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557724/"
+        trust authoritative
+
+    % --- inferior parathyroid -> third pharyngeal pouch (same span) ------------
+    relate embryonic_origin(inferior_parathyroid, third_pharyngeal_pouch)
+        source "The third pharyngeal pouch develops into the thymus and the inferior portion of the parathyroid."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557724/"
+        trust authoritative
+}

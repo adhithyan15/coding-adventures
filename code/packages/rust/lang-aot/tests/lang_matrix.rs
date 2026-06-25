@@ -495,6 +495,57 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the `abs` **standard function** (§3.2.4, LANG-FULL AL8). `abs`
+    // is built into the language, not a user procedure, so `algol-iir-compiler`
+    // resolves it by name and lowers `abs(0 - 42)` inline to the value of
+    // `if (0-42) < 0 then -(0-42) else (0-42)` — a `cmp_lt` against zero, then a
+    // `jmp_if_false` choosing between a negated and a pass-through `mov` into one
+    // result slot (the store-per-branch shape the conditional-expression lowering
+    // already runs on every backend). No backend learns anything about `abs`: it
+    // is compare + branch + subtract in the shared IIR, so |−42| = 42 ⇒ exit 42
+    // on native-AOT / LLVM / WASM / JVM / CLR / VM / JIT alike.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; result := abs(0 - 42) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — the `sign` **standard function** (§3.2.4, LANG-FULL AL8). Like
+    // `abs`, `sign` is built in and resolved by name; it lowers to the nested
+    // conditional `if E > 0 then 1 else if E < 0 then -1 else 0` — three `i64`
+    // constants moved into one result slot (store-per-branch, no phi). `sign`
+    // always returns an `integer` regardless of operand type. `sign(0 - 1) = -1`,
+    // so `43 + sign(0 - 1)` = 42 ⇒ exit 42 — exercising the negative branch on
+    // native-AOT / LLVM / WASM / JVM / CLR / VM / JIT.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; result := 43 + sign(0 - 1) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — the `entier` **standard function** (§3.2.5, LANG-FULL E8 + AL-entier).
+    // `entier(E)` is the largest *integer* not greater than the *real* `E` — floor,
+    // rounding toward −∞ (NOT trunc toward zero): `entier(2.7)` = 2, `entier(−2.7)`
+    // = −3.  Unlike `abs`/`sign` (which lower to compare+branch over existing ops),
+    // `entier` lowers to a single **E8 `real_to_int_floor`** IIR conversion op — the
+    // floor and the real→integer narrowing fused into one primitive that every
+    // backend emits in its native idiom: LLVM `@llvm.floor.f64`+`fptosi`, WASM
+    // `f64.floor`+`i32.trunc_f64_s`, JVM `Math.floor`+`d2i`, CLR `Math::Floor`+
+    // `conv.ovf.i4`, native aarch64 `frintm`+`fcvtzs`, native x86_64 `roundsd …,1`+
+    // `cvttsd2si`.  The program builds a *negative* real (`0.0 − 2.7 = −2.7`) so the
+    // observable distinguishes floor from trunc: `45 + entier(−2.7)` = `45 + (−3)` =
+    // 42 (trunc would give `45 + (−2)` = 43).  This RUNS the E8 floor-conversion op
+    // end-to-end on **all 7 backends** — the proof that closes the E8 conversions arc.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := 0.0 - 2.7; \
+               result := 45 + entier(r) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *typed procedure with a value parameter* (`integer procedure
     // sq(x); value x; integer x; sq := x*x`) called from the main block:
     // `result := sq(7)` ⇒ exit 49.  `algol-iir-compiler` lowers the procedure

@@ -543,14 +543,129 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
             if let (Expression::StringLiteral(s), Expression::Identifier(id)) =
                 (m.object.as_ref(), m.property.as_ref())
             {
-                // ---- zero-argument casing methods (ASCII-only) ----
-                if arguments.is_empty() {
-                    let cased = match id.name.as_str() {
+                // ---- slice(start[, end]) → substring ----
+                //
+                // `"abcd".slice(1, 3)` → `"bc"`, `"abcd".slice(1)` → `"bcd"`,
+                // `"abcd".slice(-2)` → `"cd"`, `"abc".slice()` → `"abc"`
+                // (ECMAScript §22.1.3.22). Indices are UTF-16 code units;
+                // negatives count from the end. Computed by `fold_string_slice`
+                // below, which returns `None` (leaving the call) for a
+                // non-integer-literal argument, more than two arguments, or a
+                // cut that would split a surrogate pair into a lone surrogate.
+                if id.name == "slice" {
+                    if let Some(result) = fold_string_slice(&s.value, &arguments) {
+                        let parent = c.cv.clone();
+                        let args_src = arguments
+                            .iter()
+                            .map(|a| match a {
+                                Expression::NumericLiteral(n) => format_js_number(n.value),
+                                _ => "?".to_string(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(",");
+                        let before = format!("\"{}\".slice({})", s.value, args_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
+                // ---- repeat(count) → the string concatenated `count` times ----
+                //
+                // `"ab".repeat(3)` → `"ababab"` (ECMAScript §22.1.3.18). The
+                // count must be a non-negative integer literal; `fold_string_repeat`
+                // declines (leaves the call) for a negative count (JS throws a
+                // `RangeError`), a fractional/non-literal count, or a result
+                // whose length would exceed a fixed cap — the cap keeps the
+                // optimizer from materializing a megabyte string at compile time
+                // (an algorithmic-blowup / DoS guard).
+                else if id.name == "repeat" {
+                    if let Some(result) = fold_string_repeat(&s.value, &arguments) {
+                        let parent = c.cv.clone();
+                        let count_src = match arguments.first() {
+                            Some(Expression::NumericLiteral(n)) => format_js_number(n.value),
+                            _ => "?".to_string(),
+                        };
+                        let before = format!("\"{}\".repeat({})", s.value, count_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
+                // ---- concat(...strings) → receiver followed by each argument ----
+                //
+                // `"a".concat("b", "c")` → `"abc"`, `"".concat("x")` → `"x"`,
+                // `"a".concat()` → `"a"` (ECMAScript §22.1.3.4, the variadic
+                // form). Every argument must itself be a STRING literal — JS
+                // coerces non-strings via `ToString` (`"a".concat(1)` → `"a1"`),
+                // but we don't model that coercion, so a numeric/identifier
+                // argument makes `fold_string_concat_call` decline and the call
+                // is left for the runtime. Concatenating valid strings can only
+                // ever yield valid UTF-16 (no surrogate pair is ever split, the
+                // hazard `slice`/`charAt` guard against), so the result is always
+                // a representable literal. The total length is still bounded by a
+                // fixed cap as an algorithmic-blowup / DoS guard, mirroring
+                // `repeat` and `padStart`/`padEnd`.
+                else if id.name == "concat" {
+                    if let Some(result) = fold_string_concat_call(&s.value, &arguments) {
+                        let parent = c.cv.clone();
+                        let args_src = arguments
+                            .iter()
+                            .map(|a| match a {
+                                Expression::StringLiteral(a) => format!("\"{}\"", a.value),
+                                _ => "?".to_string(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(",");
+                        let before = format!("\"{}\".concat({})", s.value, args_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
+                // ---- padStart(target[, pad]) / padEnd(target[, pad]) ----
+                //
+                // `"5".padStart(3, "0")` → `"005"`, `"abc".padEnd(6)` →
+                // `"abc   "` (ECMAScript §22.1.3.16/17). Pads the string to a
+                // target length (in UTF-16 code units) with a fill string
+                // (default a single space), repeated and truncated to fit.
+                // `fold_string_pad` declines for a non-integer target, a
+                // non-string-literal pad, a target over the size cap, or a
+                // truncation that would leave a lone surrogate.
+                else if id.name == "padStart" || id.name == "padEnd" {
+                    let at_start = id.name == "padStart";
+                    if let Some(result) = fold_string_pad(&s.value, &arguments, at_start) {
+                        let parent = c.cv.clone();
+                        let args_src = arguments
+                            .iter()
+                            .map(|a| match a {
+                                Expression::NumericLiteral(n) => format_js_number(n.value),
+                                Expression::StringLiteral(p) => format!("\"{}\"", p.value),
+                                _ => "?".to_string(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(",");
+                        let before = format!("\"{}\".{}({})", s.value, id.name, args_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
+                // ---- zero-argument casing + trimming methods ----
+                //
+                // `toUpperCase`/`toLowerCase` are ASCII-only (full-Unicode case
+                // mapping has length-changing special cases we don't reproduce);
+                // `trim`/`trimStart`/`trimEnd` strip the ECMAScript whitespace
+                // set (`fold_string_trim` below) from one or both ends.
+                else if arguments.is_empty() {
+                    let folded = match id.name.as_str() {
                         "toUpperCase" if s.value.is_ascii() => Some(s.value.to_ascii_uppercase()),
                         "toLowerCase" if s.value.is_ascii() => Some(s.value.to_ascii_lowercase()),
+                        "trim" => Some(fold_string_trim(&s.value, true, true)),
+                        "trimStart" => Some(fold_string_trim(&s.value, true, false)),
+                        "trimEnd" => Some(fold_string_trim(&s.value, false, true)),
                         _ => None,
                     };
-                    if let Some(result) = cased {
+                    if let Some(result) = folded {
                         let parent = c.cv.clone();
                         let before = format!("\"{}\".{}()", s.value, id.name);
                         let after = format!("\"{}\"", result);
@@ -651,6 +766,110 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
             }
+
+            // ---- numeric `toString([radix])` on a non-negative integer ----
+            //
+            // `(255).toString()` → `"255"`, `(255).toString(16)` → `"ff"`,
+            // `(255).toString(2)` → `"11111111"` (ECMAScript §21.1.3.6).
+            // The receiver must be a NON-NEGATIVE INTEGER literal (a numeric
+            // literal is never negative in the AST — `-255` is a unary
+            // expression — so this is automatic, but we assert it anyway), and
+            // small enough to format with plain digits in every radix
+            // (`< 2^53`, the safe-integer ceiling; beyond it JS switches to
+            // exponential notation, which a digit loop would not reproduce).
+            // The radix is the default 10 or a single integer-literal argument
+            // in `2..=36`; anything else (a variable radix, a fractional or
+            // out-of-range radix) is left for the runtime.
+            if let (Expression::NumericLiteral(n), Expression::Identifier(id)) =
+                (m.object.as_ref(), m.property.as_ref())
+            {
+                if id.name == "toString"
+                    && n.value.is_finite()
+                    && n.value >= 0.0
+                    && n.value.fract() == 0.0
+                    && n.value < 9_007_199_254_740_992.0
+                {
+                    let radix = match arguments.as_slice() {
+                        [] => Some(10u32),
+                        [Expression::NumericLiteral(r)]
+                            if r.value.fract() == 0.0 && (2.0..=36.0).contains(&r.value) =>
+                        {
+                            Some(r.value as u32)
+                        }
+                        _ => None,
+                    };
+                    if let Some(radix) = radix {
+                        let result = to_radix_string(n.value as u64, radix);
+                        let parent = c.cv.clone();
+                        let before = if radix == 10 {
+                            format!("({}).toString()", format_js_number(n.value))
+                        } else {
+                            format!("({}).toString({})", format_js_number(n.value), radix)
+                        };
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
+            }
+        }
+    }
+
+    // ---- global parseInt(string[, radix]) / parseFloat(string) ----
+    //
+    // `parseInt("12px")` → `12`, `parseInt("FF", 16)` → `255`,
+    // `parseInt("0x1F")` → `31`, `parseInt("-7")` → `-7`,
+    // `parseFloat("3.14abc")` → `3.14`, `parseFloat("1e3")` → `1000`
+    // (ECMAScript §19.2.5 / §19.2.4). Both functions read the *leading* numeric
+    // prefix of a string and ignore the trailing garbage, so a string LITERAL
+    // argument folds to the exact numeric literal V8 produces at runtime.
+    //
+    // SOUNDNESS NOTE — these fold under the same "builtins are intact" premise
+    // every fold in this pass already relies on, but one notch weaker. A string
+    // literal's `.slice`/`.concat` can only be subverted by monkeypatching
+    // `String.prototype`; `parseInt`/`parseFloat` are *free identifiers*, so a
+    // local binding (`let parseInt = …`) can additionally mask them. We fold
+    // them anyway — matching Closure Compiler, which treats redefining these
+    // globals as out of scope — but ONLY when the callee is the bare identifier
+    // `parseInt`/`parseFloat`, never a member access (`window.parseInt`, which
+    // reaches the MemberExpression arm above and is left untouched).
+    //
+    // We DECLINE (leave the call for the runtime) whenever the runtime result
+    // is `NaN` (`parseInt("")`, an invalid/out-of-range radix) or `±Infinity`
+    // (`parseFloat("Infinity")`): JavaScript has no literal token for either —
+    // `NaN`/`Infinity` are themselves shadowable global identifiers — so there
+    // is nothing sound to substitute. The helpers below return `None` for those
+    // cases.
+    if let Expression::Identifier(id) = &callee {
+        if let Some(Expression::StringLiteral(s)) = arguments.first() {
+            let folded = match id.name.as_str() {
+                // The optional second argument is an integer-literal radix; a
+                // non-literal or fractional radix can't be modelled, so the
+                // whole call is left alone (we never guess the radix).
+                "parseInt" if arguments.len() <= 2 => match arguments.get(1) {
+                    None => fold_parse_int(&s.value, None),
+                    Some(Expression::NumericLiteral(r))
+                        if r.value.is_finite() && r.value.fract() == 0.0 =>
+                    {
+                        fold_parse_int(&s.value, Some(r.value))
+                    }
+                    Some(_) => None,
+                },
+                "parseFloat" if arguments.len() == 1 => fold_parse_float(&s.value),
+                _ => None,
+            };
+            if let Some(value) = folded {
+                let parent = c.cv.clone();
+                let before = match arguments.get(1) {
+                    Some(Expression::NumericLiteral(r)) => {
+                        format!("{}(\"{}\",{})", id.name, s.value, format_js_number(r.value))
+                    }
+                    _ => format!("{}(\"{}\")", id.name, s.value),
+                };
+                let after = format_js_number(value);
+                let new_cv = st.fork_cv(&parent, &before, &after);
+                return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
+            }
         }
     }
 
@@ -659,6 +878,298 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         callee: Box::new(callee),
         arguments,
     })
+}
+
+/// Render a non-negative integer `v` in `radix` (2..=36) the way JavaScript's
+/// `Number.prototype.toString(radix)` does: lowercase digits `0-9a-z`, no
+/// leading zeros, and `"0"` for zero. This is the inverse of parsing a
+/// base-`radix` integer literal. `radix` is guaranteed in range by the caller,
+/// so the digit lookup never goes out of bounds and the `from_utf8` of an
+/// all-ASCII buffer never fails.
+fn to_radix_string(mut v: u64, radix: u32) -> String {
+    const DIGITS: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyz";
+    if v == 0 {
+        return "0".to_string();
+    }
+    let radix = radix as u64;
+    let mut out = Vec::new();
+    while v > 0 {
+        out.push(DIGITS[(v % radix) as usize]);
+        v /= radix;
+    }
+    out.reverse();
+    String::from_utf8(out).expect("radix digits are ASCII")
+}
+
+/// Compute `value.slice(args…)` at compile time, or `None` when it cannot be
+/// folded soundly (ECMAScript §22.1.3.22, `String.prototype.slice`).
+///
+/// `slice` works in **UTF-16 code units**, so we index into `encode_utf16()`
+/// (an astral char is two units). The algorithm, matching the spec:
+///
+/// 1. `start` (default `0`) and `end` (default the length) are each clamped:
+///    a negative index counts from the end (`len + idx`, floored at `0`); a
+///    non-negative one is capped at `len`.
+/// 2. the result is the half-open range `[start, max(start, end))` — empty when
+///    `start >= end`.
+///
+/// We decline (return `None`, leaving the call for the runtime) when:
+/// - there are more than two arguments;
+/// - any *given* argument is not a finite integer literal (we don't model
+///   `ToInteger` coercion of arbitrary values); or
+/// - the cut would split a surrogate pair, yielding a lone surrogate that a
+///   Rust `String` cannot hold (`String::from_utf16` fails) — the same
+///   conservative guard `charAt` uses.
+fn fold_string_slice(value: &str, args: &[Expression]) -> Option<String> {
+    if args.len() > 2 {
+        return None;
+    }
+    // A provided argument must be a finite integer literal (any sign).
+    let to_int = |e: &Expression| -> Option<i64> {
+        match e {
+            Expression::NumericLiteral(n)
+                if n.value.is_finite()
+                    && n.value.fract() == 0.0
+                    && n.value.abs() < 9_007_199_254_740_992.0 =>
+            {
+                Some(n.value as i64)
+            }
+            _ => None,
+        }
+    };
+
+    let units: Vec<u16> = value.encode_utf16().collect();
+    let len = units.len() as i64;
+    let clamp = |idx: i64| -> i64 {
+        if idx < 0 {
+            (len + idx).max(0)
+        } else {
+            idx.min(len)
+        }
+    };
+
+    let start = match args.first() {
+        None => 0,
+        Some(e) => clamp(to_int(e)?),
+    };
+    let end = match args.get(1) {
+        None => len,
+        Some(e) => clamp(to_int(e)?),
+    };
+
+    let lo = start as usize;
+    let hi = end.max(start) as usize; // empty range when end < start
+    if lo >= hi {
+        return Some(String::new());
+    }
+    // A lone surrogate (split pair) can't be a Rust String — decline.
+    String::from_utf16(&units[lo..hi]).ok()
+}
+
+/// Compute `value.repeat(count)` at compile time, or `None` when it cannot be
+/// folded soundly (ECMAScript §22.1.3.18, `String.prototype.repeat`).
+///
+/// `repeat` concatenates the whole receiver `count` times, so — unlike `slice`
+/// — it never splits a surrogate pair: the UTF-8 string is simply duplicated.
+/// We require exactly one **non-negative integer literal** argument:
+/// `"ab".repeat(3)` → `"ababab"`, `"x".repeat(0)` → `""`.
+///
+/// We decline (return `None`, leaving the call for the runtime) when:
+/// - the argument is missing, fractional, non-finite, or not a numeric literal
+///   (we don't model `ToInteger` coercion of arbitrary values);
+/// - the count is negative — JS throws a `RangeError`, which we must not erase
+///   by folding to a value; or
+/// - the materialized result would exceed `MAX_REPEAT_UNITS` UTF-16 code units.
+///   `"x".repeat(1e9)` is a valid program, but expanding it at compile time
+///   would balloon the output (and the optimizer's memory) — an
+///   algorithmic-blowup / DoS guard. `checked_mul` also stops the length
+///   computation itself from overflowing.
+fn fold_string_repeat(value: &str, args: &[Expression]) -> Option<String> {
+    /// Cap on the folded result's length, in UTF-16 code units. Past this we
+    /// leave `repeat` for the runtime rather than materialize a huge literal.
+    const MAX_REPEAT_UNITS: u64 = 100_000;
+
+    let n = match args {
+        [Expression::NumericLiteral(n)] => n,
+        _ => return None,
+    };
+    if !(n.value.is_finite() && n.value.fract() == 0.0 && n.value >= 0.0) {
+        return None;
+    }
+    let count = n.value as u64;
+    let unit_len = value.encode_utf16().count() as u64;
+    // Decline on overflow (None from checked_mul) or when over the cap.
+    match unit_len.checked_mul(count) {
+        Some(total) if total <= MAX_REPEAT_UNITS => Some(value.repeat(count as usize)),
+        _ => None,
+    }
+}
+
+/// Compute `value.concat(args…)` at compile time, or `None` when it cannot be
+/// folded soundly (ECMAScript §22.1.3.4, `String.prototype.concat`).
+///
+/// `concat` appends each argument, coerced to a string, to the receiver:
+/// `"a".concat("b", "c")` → `"abc"`. We fold only the case where **every**
+/// argument is already a string literal, so the result is a pure textual
+/// join — no `ToString` coercion to model, and (because each piece is a valid
+/// string) the join is always valid UTF-16, so it can never produce a lone
+/// surrogate the way a `slice` cut can. A zero-argument call (`"a".concat()`)
+/// folds to the receiver unchanged.
+///
+/// We decline (return `None`, leaving the call for the runtime) when:
+/// - any argument is not a string literal (e.g. `"a".concat(x)` or
+///   `"a".concat(1)`); or
+/// - the joined length would exceed `MAX_CONCAT_UNITS` UTF-16 code units. The
+///   pieces all come from the source, so this is a defensive cap (and
+///   `checked_add` stops the running length from overflowing) rather than a
+///   true blowup vector, but it mirrors the `repeat`/`pad` guards.
+fn fold_string_concat_call(value: &str, args: &[Expression]) -> Option<String> {
+    /// Cap on the folded result's length, in UTF-16 code units.
+    const MAX_CONCAT_UNITS: usize = 100_000;
+
+    let mut units = value.encode_utf16().count();
+    let mut out = String::from(value);
+    for a in args {
+        let piece = match a {
+            Expression::StringLiteral(s) => &s.value,
+            _ => return None,
+        };
+        units = units.checked_add(piece.encode_utf16().count())?;
+        if units > MAX_CONCAT_UNITS {
+            return None;
+        }
+        out.push_str(piece);
+    }
+    Some(out)
+}
+
+/// `true` iff `c` is in the ECMAScript string-trim white-space set — the union
+/// of `WhiteSpace` and `LineTerminator` that `String.prototype.trim` removes
+/// (ECMAScript §22.1.3.32, via `TrimString`).
+///
+/// We hard-code the exact set rather than use Rust's `char::is_whitespace`,
+/// because the two **disagree**: Rust treats U+0085 (NEL) as whitespace but JS
+/// does not, and JS treats U+FEFF (the BOM / ZERO WIDTH NO-BREAK SPACE) as
+/// whitespace but Rust does not. Folding with the wrong set would silently
+/// miscompile, so the predicate below is the single source of truth.
+///
+/// | code point(s)        | name                                   |
+/// |----------------------|----------------------------------------|
+/// | U+0009..=U+000D      | tab, LF, VT, FF, CR                     |
+/// | U+0020               | space                                  |
+/// | U+00A0               | no-break space                         |
+/// | U+1680               | ogham space mark                       |
+/// | U+2000..=U+200A      | en quad … hair space                   |
+/// | U+2028, U+2029       | line / paragraph separator             |
+/// | U+202F               | narrow no-break space                  |
+/// | U+205F               | medium mathematical space              |
+/// | U+3000               | ideographic space                      |
+/// | U+FEFF               | zero-width no-break space (BOM)        |
+fn is_js_trim_whitespace(c: char) -> bool {
+    matches!(c,
+        '\u{0009}'..='\u{000D}'
+        | '\u{0020}'
+        | '\u{00A0}'
+        | '\u{1680}'
+        | '\u{2000}'..='\u{200A}'
+        | '\u{2028}'
+        | '\u{2029}'
+        | '\u{202F}'
+        | '\u{205F}'
+        | '\u{3000}'
+        | '\u{FEFF}'
+    )
+}
+
+/// Compute `value.trim()` / `trimStart()` / `trimEnd()` at compile time
+/// (ECMAScript §22.1.3.32/.34/.33). `start`/`end` select which ends to strip;
+/// trimming works on whole Unicode scalar values, so — unlike `slice` — it can
+/// never split a surrogate pair, and always yields a valid Rust `String`
+/// (hence it returns `String`, not `Option`). The stripped set is exactly
+/// `is_js_trim_whitespace`.
+fn fold_string_trim(value: &str, start: bool, end: bool) -> String {
+    let mut s = value;
+    if start {
+        s = s.trim_start_matches(is_js_trim_whitespace);
+    }
+    if end {
+        s = s.trim_end_matches(is_js_trim_whitespace);
+    }
+    s.to_string()
+}
+
+/// Compute `value.padStart(target[, pad])` (when `at_start`) or
+/// `value.padEnd(target[, pad])` at compile time, or `None` when it cannot be
+/// folded soundly (ECMAScript §22.1.3.16 / §22.1.3.17).
+///
+/// JS pads to `target` **UTF-16 code units** with a fill string (default a
+/// single space `" "`), formed by repeating `pad` and truncating it to exactly
+/// the shortfall. `"5".padStart(3, "0")` → `"005"`, `"abc".padEnd(6)` →
+/// `"abc   "`, `"abc".padStart(6, "12")` → `"121abc"` (the `"12"` repeats to
+/// `"121"`). If the string is already `>= target`, it is returned unchanged.
+///
+/// We decline (return `None`, leaving the call for the runtime) when:
+/// - there is no argument, or more than two;
+/// - the target is not a non-negative integer literal (no `ToLength` coercion);
+/// - the pad argument is present but not a string literal;
+/// - the target exceeds `MAX_PAD_UNITS` (a denial-of-service guard against
+///   materializing a huge literal at compile time); or
+/// - truncating the fill would split a surrogate pair, leaving a lone surrogate
+///   the result `String` cannot hold (`String::from_utf16` fails) — the same
+///   conservative guard `slice`/`charAt` use.
+fn fold_string_pad(value: &str, args: &[Expression], at_start: bool) -> Option<String> {
+    /// Cap on the padded result's length, in UTF-16 code units.
+    const MAX_PAD_UNITS: u64 = 100_000;
+
+    if args.is_empty() || args.len() > 2 {
+        return None;
+    }
+    // arg 0: target length — a non-negative integer literal.
+    let target = match &args[0] {
+        Expression::NumericLiteral(n)
+            if n.value.is_finite() && n.value.fract() == 0.0 && n.value >= 0.0 =>
+        {
+            n.value as u64
+        }
+        _ => return None,
+    };
+    if target > MAX_PAD_UNITS {
+        return None;
+    }
+    // arg 1: pad string — a string literal, defaulting to a single space.
+    let pad: &str = match args.get(1) {
+        None => " ",
+        Some(Expression::StringLiteral(p)) => &p.value,
+        Some(_) => return None,
+    };
+
+    let s_units: Vec<u16> = value.encode_utf16().collect();
+    let s_len = s_units.len() as u64;
+    // Already long enough (or an empty pad can't extend it) → unchanged.
+    if target <= s_len {
+        return Some(value.to_string());
+    }
+    let pad_units: Vec<u16> = pad.encode_utf16().collect();
+    if pad_units.is_empty() {
+        return Some(value.to_string());
+    }
+
+    // Build the filler by repeating `pad` and truncating to the shortfall.
+    let fill_len = (target - s_len) as usize;
+    let mut filler: Vec<u16> = Vec::with_capacity(fill_len);
+    while filler.len() < fill_len {
+        let take = (fill_len - filler.len()).min(pad_units.len());
+        filler.extend_from_slice(&pad_units[..take]);
+    }
+
+    // Concatenate (filler before or after the string) and reject a result that
+    // a Rust `String` cannot hold (a truncation-induced lone surrogate).
+    let result_units: Vec<u16> = if at_start {
+        filler.iter().chain(s_units.iter()).copied().collect()
+    } else {
+        s_units.iter().chain(filler.iter()).copied().collect()
+    };
+    String::from_utf16(&result_units).ok()
 }
 
 // ---------------------------------------------------------------------
@@ -1263,6 +1774,154 @@ fn literal_to_string(expr: &Expression) -> Option<String> {
 /// Render a number the way JS's `String(x)` does — `42` not `42.0`,
 /// `0.5` not `.5`, `NaN` and `Infinity` literal-cased. Used so
 /// `"x" + 1 === "x1"` not `"x1.0"`.
+/// Compute JavaScript's global `parseInt(string, radix)` at compile time
+/// (ECMAScript §19.2.5), or `None` when the runtime result would be `NaN`.
+///
+/// The algorithm: strip leading whitespace, read an optional `+`/`-` sign, pick
+/// the radix, then consume the longest run of valid base-`radix` digits and
+/// stop at the first character that is not one — which is why `parseInt("12px")`
+/// is `12` (the `"px"` is ignored). With no valid leading digit the runtime
+/// yields `NaN`, which has no literal, so we return `None`.
+///
+/// `radix_arg` is the already integer-validated second argument: `None` for the
+/// one-argument call. A radix of `0` (or absent) means base 10, except that a
+/// `"0x"`/`"0X"` prefix selects base 16 — modern JS no longer treats a leading
+/// `"0"` as octal, so `parseInt("08")` is `8`. Any radix outside `2..=36` makes
+/// the runtime return `NaN`, so we decline.
+///
+/// Like V8 we accumulate in `f64`, so a magnitude beyond `2^53` rounds exactly
+/// the way the engine's own `parseInt` rounds, and a run long enough to overflow
+/// to `Infinity` fails the final `is_finite` check and is declined.
+fn fold_parse_int(input: &str, radix_arg: Option<f64>) -> Option<f64> {
+    let s = input.trim_start_matches(is_js_trim_whitespace);
+    let b = s.as_bytes();
+    let mut i = 0usize;
+
+    let mut sign = 1.0f64;
+    if let Some(&c) = b.first() {
+        if c == b'+' || c == b'-' {
+            if c == b'-' {
+                sign = -1.0;
+            }
+            i = 1;
+        }
+    }
+
+    // Resolve the radix, honouring a `0x`/`0X` prefix for base 0 (auto) and 16.
+    let mut radix = radix_arg.unwrap_or(0.0) as i64;
+    if radix == 0 {
+        if i + 1 < b.len() && b[i] == b'0' && (b[i + 1] | 0x20) == b'x' {
+            radix = 16;
+            i += 2;
+        } else {
+            radix = 10;
+        }
+    } else if radix == 16 && i + 1 < b.len() && b[i] == b'0' && (b[i + 1] | 0x20) == b'x' {
+        i += 2;
+    }
+    if !(2..=36).contains(&radix) {
+        return None;
+    }
+
+    let digits_start = i;
+    let mut acc = 0.0f64;
+    while i < b.len() {
+        let digit = match b[i] {
+            c @ b'0'..=b'9' => (c - b'0') as i64,
+            c @ b'a'..=b'z' => (c - b'a') as i64 + 10,
+            c @ b'A'..=b'Z' => (c - b'A') as i64 + 10,
+            _ => break,
+        };
+        if digit >= radix {
+            break;
+        }
+        acc = acc * radix as f64 + digit as f64;
+        i += 1;
+    }
+    if i == digits_start {
+        return None; // no valid leading digit → NaN
+    }
+    let value = sign * acc;
+    value.is_finite().then_some(value)
+}
+
+/// Compute JavaScript's global `parseFloat(string)` at compile time
+/// (ECMAScript §19.2.4), or `None` when the result is `NaN` or `±Infinity`.
+///
+/// `parseFloat` reads the longest leading prefix of the whitespace-trimmed
+/// string that matches a decimal number — optional sign, integer part,
+/// fractional part, exponent — and ignores the rest, so `parseFloat("3.14abc")`
+/// is `3.14` and `parseFloat("1e3")` is `1000`. A missing mantissa
+/// (`parseFloat("")`, `parseFloat("abc")`) yields `NaN`; the prefix `"Infinity"`
+/// yields `Infinity`. Neither `NaN` nor `Infinity` has a numeric literal, so
+/// both make us decline.
+///
+/// We scan the prefix ourselves to accept exactly JavaScript's grammar (a
+/// trailing `"5."` and a leading `".5"` are both valid), then hand the matched
+/// text to Rust's own correctly-rounded `f64` parser, which yields the same
+/// nearest-`f64` value the engine produces. A bare trailing dot (and a dot
+/// directly before the exponent, `"5.e3"`) is the one shape Rust rejects, so we
+/// splice in a `0` before parsing.
+fn fold_parse_float(input: &str) -> Option<f64> {
+    let s = input.trim_start_matches(is_js_trim_whitespace);
+    let b = s.as_bytes();
+    let mut i = 0usize;
+    if let Some(&c) = b.first() {
+        if c == b'+' || c == b'-' {
+            i = 1;
+        }
+    }
+    // `Infinity` (after an optional sign) → runtime `±Infinity` → decline.
+    if s[i..].starts_with("Infinity") {
+        return None;
+    }
+
+    let mut saw_digit = false;
+    let mut j = i;
+    while j < b.len() && b[j].is_ascii_digit() {
+        j += 1;
+        saw_digit = true;
+    }
+    if j < b.len() && b[j] == b'.' {
+        j += 1;
+        while j < b.len() && b[j].is_ascii_digit() {
+            j += 1;
+            saw_digit = true;
+        }
+    }
+    if !saw_digit {
+        return None; // no mantissa digit → NaN
+    }
+    // Optional exponent — consumed only when it carries at least one digit, so
+    // `"1e"` parses as `1` with the `"e"` left as trailing garbage.
+    if j < b.len() && (b[j] | 0x20) == b'e' {
+        let mut k = j + 1;
+        if k < b.len() && (b[k] == b'+' || b[k] == b'-') {
+            k += 1;
+        }
+        let exp_digits_start = k;
+        while k < b.len() && b[k].is_ascii_digit() {
+            k += 1;
+        }
+        if k > exp_digits_start {
+            j = k;
+        }
+    }
+
+    // `&s[0..j]` keeps the leading sign. Normalise the one shape Rust's parser
+    // rejects — a dot with no digit after it (`"5."`, `"5.e3"`) — by inserting
+    // a `0`; a leading dot (`".5"`) Rust already accepts.
+    let matched = &s[0..j];
+    let normalised = matched.replace(".e", ".0e").replace(".E", ".0E");
+    let normalised = if normalised.ends_with('.') {
+        format!("{normalised}0")
+    } else {
+        normalised
+    };
+    let value: f64 = normalised.parse().ok()?;
+    value.is_finite().then_some(value)
+}
+
 fn format_js_number(n: f64) -> String {
     if n.is_nan() {
         return "NaN".to_string();
@@ -2743,10 +3402,233 @@ mod tests {
 
     #[test]
     fn unknown_string_method_does_not_fold() {
-        // `"abc".trim()` is not a casing method we model — pass through.
-        let t = call0(string("  abc  ", None), "trim");
+        // `"abc".normalize()` is not a method we model — pass through. (We do
+        // fold `trim`/`trimStart`/`trimEnd` now; see the trimming tests below.)
+        let t = call0(string("abc", None), "normalize");
         let (out, _, changed, _) = run_pass(program_with_expr(t, true));
-        assert!(!changed, "\"...\".trim() must not fold");
+        assert!(!changed, "\"abc\".normalize() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- trimming (trim / trimStart / trimEnd) --------
+
+    #[test]
+    fn fold_string_trim_basic() {
+        // (recv, method, expect) — oracle values from V8.
+        for (recv, method, expect) in [
+            ("  abc  ", "trim", "abc"),
+            ("  abc  ", "trimStart", "abc  "),
+            ("  abc  ", "trimEnd", "  abc"),
+            ("\t\n abc \r\n", "trim", "abc"),  // mixed tab/newline/CR
+            ("abc", "trim", "abc"),            // nothing to strip
+            ("   ", "trim", ""),               // all whitespace → empty
+            ("a b", "trim", "a b"),            // interior space kept
+        ] {
+            let c = call0(string(recv, None), method);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "{:?}.{method}() should fold", recv);
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => {
+                    assert_eq!(s.value, expect, "{:?}.{method}()", recv)
+                }
+                other => panic!("expected {:?}; got {:?}", expect, other),
+            }
+        }
+    }
+
+    #[test]
+    fn trim_strips_the_full_js_whitespace_set() {
+        // A non-ASCII space JS strips: U+00A0 (no-break) and U+3000 (ideographic)
+        // and U+FEFF (BOM). All must be removed at the ends.
+        let recv = "\u{00A0}\u{3000}\u{FEFF}hi\u{2028}\u{205F}";
+        let c = call0(string(recv, None), "trim");
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "hi"),
+            other => panic!("expected \"hi\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn trim_does_not_strip_non_js_whitespace() {
+        // U+200B (zero-width space), U+2060 (word joiner), and U+180E are NOT in
+        // the JS trim set — Rust's `char::is_whitespace` agrees here, but the
+        // guard matters: they must survive at the ends.
+        let recv = "\u{200B}hi\u{2060}";
+        let c = call0(string(recv, None), "trim");
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "trim still folds (to the unchanged value)");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, recv),
+            other => panic!("expected the value unchanged; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn trim_on_identifier_receiver_does_not_fold() {
+        // `s.trim()` needs the runtime value of `s`.
+        let c = call0(ident("s"), "trim");
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.trim() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    /// Build a global call `name(args…)` whose callee is the bare identifier
+    /// `name` (not a member access) — the shape `parseInt`/`parseFloat` take.
+    fn global_call(name: &str, args: Vec<Expression>) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(ident(name)),
+            arguments: args,
+        })
+    }
+
+    #[test]
+    fn fold_parse_int_direct_oracle() {
+        // (input, radix, expected) — values confirmed against V8.
+        for (input, radix, expect) in [
+            ("12px", None, Some(12.0)),     // trailing garbage ignored
+            ("", None, None),               // empty → NaN → decline
+            ("0x1F", None, Some(31.0)),     // auto-detected hex prefix
+            ("FF", Some(16.0), Some(255.0)), // explicit radix 16
+            ("-7", None, Some(-7.0)),       // negative sign
+            ("+9", None, Some(9.0)),        // positive sign
+            ("08", None, Some(8.0)),        // NOT octal in modern JS
+            ("3.9", None, Some(3.0)),       // stops at the dot
+            ("  42  ", None, Some(42.0)),   // leading whitespace skipped
+            ("z", Some(36.0), Some(35.0)),  // base-36 digit
+            ("10", Some(2.0), Some(2.0)),   // binary
+            ("xyz", None, None),            // no leading digit → NaN
+            ("99", Some(1.0), None),        // radix < 2 → NaN
+            ("99", Some(37.0), None),       // radix > 36 → NaN
+            ("0x1F", Some(16.0), Some(31.0)), // 0x prefix honoured at radix 16
+            ("12", Some(0.0), Some(12.0)),  // radix 0 → base 10
+        ] {
+            assert_eq!(
+                fold_parse_int(input, radix),
+                expect,
+                "parseInt({input:?}, {radix:?})"
+            );
+        }
+    }
+
+    #[test]
+    fn fold_parse_float_direct_oracle() {
+        for (input, expect) in [
+            ("3.14abc", Some(3.14)), // trailing garbage ignored
+            ("", None),              // empty → NaN → decline
+            ("1e3", Some(1000.0)),   // exponent
+            ("Infinity", None),      // Infinity → decline (no literal)
+            ("-Infinity", None),     // signed Infinity → decline
+            (".5", Some(0.5)),       // leading dot
+            ("5.", Some(5.0)),       // trailing dot
+            ("-7", Some(-7.0)),      // negative
+            ("  6.0 ", Some(6.0)),   // leading whitespace
+            ("abc", None),           // no mantissa → NaN
+            ("1e", Some(1.0)),       // dangling exponent → just the mantissa
+            ("2.5e-3", Some(0.0025)), // signed exponent
+        ] {
+            assert_eq!(fold_parse_float(input), expect, "parseFloat({input:?})");
+        }
+    }
+
+    #[test]
+    fn fold_parse_int_through_pass() {
+        // `parseInt("12px")` folds to the numeric literal `12`.
+        let c = global_call("parseInt", vec![string("12px", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "parseInt(\"12px\") should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 12.0),
+            other => panic!("expected 12; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_parse_int_with_radix_through_pass() {
+        // `parseInt("FF", 16)` → `255`.
+        let c = global_call("parseInt", vec![string("FF", None), num(16.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "parseInt(\"FF\", 16) should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 255.0),
+            other => panic!("expected 255; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_parse_float_through_pass() {
+        // `parseFloat("3.14abc")` → `3.14`.
+        let c = global_call("parseFloat", vec![string("3.14abc", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "parseFloat(\"3.14abc\") should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.14),
+            other => panic!("expected 3.14; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn parse_int_nan_result_does_not_fold() {
+        // `parseInt("")` is NaN — no literal, so the call is left intact.
+        let c = global_call("parseInt", vec![string("", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "parseInt(\"\") must not fold (NaN)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn parse_float_infinity_does_not_fold() {
+        // `parseFloat("Infinity")` is Infinity — no literal, so left intact.
+        let c = global_call("parseFloat", vec![string("Infinity", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "parseFloat(\"Infinity\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn parse_int_non_literal_radix_does_not_fold() {
+        // A variable radix can't be modelled — leave the call alone.
+        let c = global_call("parseInt", vec![string("10", None), ident("r")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "parseInt(\"10\", r) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn parse_int_non_string_argument_does_not_fold() {
+        // Only a STRING-literal argument folds; `parseInt(x)` needs runtime `x`.
+        let c = global_call("parseInt", vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "parseInt(x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn member_parse_int_does_not_fold() {
+        // `window.parseInt("12")` is a member call, not the global identifier —
+        // it must NOT be folded by the global-call arm.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("window"), "parseInt")),
+            arguments: vec![string("12", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "window.parseInt(\"12\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn trim_with_argument_does_not_fold() {
+        // An argument keeps us conservative (trim ignores it, but we don't model
+        // that): `"  x  ".trim(1)` survives.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("  x  ", None), "trim")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "\"  x  \".trim(1) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
@@ -2851,6 +3733,90 @@ mod tests {
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
+    // ------------------- numeric toString([radix]) -------------------
+
+    /// Fold `call` and return the resulting string literal's value, or `None`
+    /// if the pass left the call unchanged.
+    fn folded_string(call: Expression) -> Option<String> {
+        let (out, _, changed, _) = run_pass(program_with_expr(call, true));
+        if !changed {
+            return None;
+        }
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => Some(s.value.clone()),
+            other => panic!("expected a string literal; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_number_to_string_default_radix() {
+        // `(255).toString()` → "255" (radix 10).
+        let c = call0(num(255.0, None), "toString");
+        assert_eq!(folded_string(c).as_deref(), Some("255"));
+        // Zero is a valid receiver.
+        let z = call0(num(0.0, None), "toString");
+        assert_eq!(folded_string(z).as_deref(), Some("0"));
+    }
+
+    #[test]
+    fn fold_number_to_string_with_radix() {
+        // Hex, binary, and base-36, matching V8.
+        for (value, radix, expect) in [
+            (255.0, 16.0, "ff"),
+            (255.0, 2.0, "11111111"),
+            (35.0, 36.0, "z"),
+            (10.0, 2.0, "1010"),
+        ] {
+            let c = call1(num(value, None), "toString", num(radix, None));
+            assert_eq!(
+                folded_string(c).as_deref(),
+                Some(expect),
+                "({value}).toString({radix})",
+            );
+        }
+    }
+
+    #[test]
+    fn number_to_string_out_of_range_radix_does_not_fold() {
+        // Radix must be 2..=36; 37 and 1 are RangeErrors at runtime, so we
+        // leave the call alone rather than invent a result.
+        for bad in [1.0, 37.0, 0.0] {
+            let c = call1(num(255.0, None), "toString", num(bad, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "radix {bad} is out of range and must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn number_to_string_non_integer_receiver_does_not_fold() {
+        // `(3.5).toString(2)` is a binary *fraction* ("11.1"); we don't model
+        // that, so a fractional receiver passes through.
+        let c = call1(num(3.5, None), "toString", num(2.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "fractional receiver must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn number_to_string_variable_radix_does_not_fold() {
+        // A non-literal radix (`(255).toString(r)`) is unknown at compile time.
+        let c = call1(num(255.0, None), "toString", ident("r"));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "variable radix must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn to_radix_string_matches_known_values() {
+        // Direct unit coverage of the digit-loop helper.
+        assert_eq!(to_radix_string(0, 16), "0");
+        assert_eq!(to_radix_string(255, 16), "ff");
+        assert_eq!(to_radix_string(255, 10), "255");
+        assert_eq!(to_radix_string(255, 2), "11111111");
+        assert_eq!(to_radix_string(35, 36), "z");
+    }
+
     // ------------------- indexOf (substring search) ------------------
 
     #[test]
@@ -2913,6 +3879,411 @@ mod tests {
         let c = call1(ident("s"), "indexOf", string("x", None));
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.indexOf(\"x\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- slice (substring) ---------------------------
+
+    /// Build `"<recv>".slice(<args…>)` from numeric literal arguments.
+    fn slice_call(recv: &str, args: &[f64]) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(recv, None), "slice")),
+            arguments: args.iter().map(|&a| num(a, None)).collect(),
+        })
+    }
+
+    #[test]
+    fn fold_string_slice_two_args() {
+        // Positive, negative, and end-before-start (→ empty).
+        for (recv, args, expect) in [
+            ("abcd", vec![1.0, 3.0], "bc"),
+            ("abcd", vec![0.0, -1.0], "abc"),
+            ("abcd", vec![-2.0], "cd"),
+            ("abcd", vec![1.0], "bcd"),
+            ("abcd", vec![2.0, 1.0], ""),
+            ("abcd", vec![10.0], ""),
+        ] {
+            let c = slice_call(recv, &args);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{recv}\".slice({args:?}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => {
+                    assert_eq!(s.value, expect, "\"{recv}\".slice({args:?})")
+                }
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_string_slice_no_args_is_identity() {
+        // `"abc".slice()` → "abc" (whole string).
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("abc", None), "slice")),
+            arguments: vec![],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "\"abc\".slice() should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "abc"),
+            other => panic!("expected \"abc\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn slice_counts_utf16_units() {
+        // "💩" is two UTF-16 units; "💩ab".slice(2) drops the astral char and
+        // keeps "ab" — proving UTF-16 (not scalar) indexing.
+        let c = slice_call("💩ab", &[2.0]);
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "ab"),
+            other => panic!("expected \"ab\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn slice_splitting_a_surrogate_pair_does_not_fold() {
+        // "💩".slice(0, 1) would be a lone high surrogate — a valid JS string
+        // but not a Rust `String`, so we decline (conservative, like charAt).
+        let c = slice_call("💩", &[0.0, 1.0]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "slice splitting a surrogate pair must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn slice_non_integer_or_too_many_args_does_not_fold() {
+        // Fractional argument: don't model ToInteger coercion.
+        let frac = slice_call("abcd", &[1.5]);
+        let (out, _, changed, _) = run_pass(program_with_expr(frac, true));
+        assert!(!changed, "fractional slice index must not fold");
+
+        // Three arguments: not the slice signature we model.
+        let three = slice_call("abcd", &[0.0, 1.0, 2.0]);
+        let (out2, _, changed2, _) = run_pass(program_with_expr(three, true));
+        assert!(!changed2, "three-arg slice must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        assert!(matches!(extract_expr(&out2), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn slice_on_identifier_receiver_does_not_fold() {
+        // `s.slice(1)` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "slice")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.slice(1) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- repeat (concatenation) ----------------------
+
+    /// Build `"<recv>".repeat(<count>)`.
+    fn repeat_call(recv: &str, count: f64) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(recv, None), "repeat")),
+            arguments: vec![num(count, None)],
+        })
+    }
+
+    #[test]
+    fn fold_string_repeat_basic() {
+        for (recv, count, expect) in [
+            ("ab", 3.0, "ababab"),
+            ("x", 5.0, "xxxxx"),
+            ("ab", 0.0, ""),  // count 0 → empty
+            ("", 9.0, ""),    // empty receiver → empty
+            ("é", 2.0, "éé"), // multibyte char duplicated whole, never split
+        ] {
+            let c = repeat_call(recv, count);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{recv}\".repeat({count}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => {
+                    assert_eq!(s.value, expect, "\"{recv}\".repeat({count})")
+                }
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn repeat_negative_count_does_not_fold() {
+        // JS `"ab".repeat(-1)` throws RangeError — folding would erase the throw.
+        let c = repeat_call("ab", -1.0);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "negative repeat count must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn repeat_fractional_count_does_not_fold() {
+        // We don't model ToInteger coercion (`"ab".repeat(2.5)` → 2 in JS).
+        let c = repeat_call("ab", 2.5);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "fractional repeat count must not fold");
+    }
+
+    #[test]
+    fn repeat_over_size_cap_does_not_fold() {
+        // 10-unit string * 50_000 = 500_000 units > 100_000 cap — DoS guard
+        // declines rather than materialize a half-megabyte literal at compile
+        // time. Just under the cap folds.
+        let over = repeat_call("0123456789", 50_000.0);
+        let (out, _, changed, _) = run_pass(program_with_expr(over, true));
+        assert!(!changed, "repeat over the size cap must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+
+        let under = repeat_call("0123456789", 10_000.0); // 100_000 units, == cap
+        let (out2, _, changed2, _) = run_pass(program_with_expr(under, true));
+        assert!(changed2, "repeat exactly at the cap should fold");
+        match extract_expr(&out2) {
+            Expression::StringLiteral(s) => assert_eq!(s.value.len(), 100_000),
+            other => panic!("expected a 100_000-byte literal; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn repeat_huge_count_does_not_overflow_or_fold() {
+        // `"x".repeat(1e18)` — checked_mul keeps the length math from
+        // overflowing; the call is left for the runtime.
+        let c = repeat_call("x", 1e18);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "huge repeat count must not fold (no overflow)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn repeat_on_identifier_receiver_does_not_fold() {
+        // `s.repeat(3)` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "repeat")),
+            arguments: vec![num(3.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.repeat(3) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- concat (variadic join) ----------------------
+
+    /// Build `"<recv>".concat("<a>", "<b>", …)` from string-literal arguments.
+    fn concat_call(recv: &str, args: &[&str]) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(recv, None), "concat")),
+            arguments: args.iter().map(|a| string(a, None)).collect(),
+        })
+    }
+
+    #[test]
+    fn fold_string_concat_method_basic() {
+        for (recv, args, expect) in [
+            ("a", &["b", "c"][..], "abc"),
+            ("", &["x"][..], "x"),        // empty receiver
+            ("a", &[""][..], "a"),        // empty argument
+            ("foo", &["bar"][..], "foobar"),
+            ("💩", &["x"][..], "💩x"),  // astral char preserved whole
+        ] {
+            let c = concat_call(recv, args);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{recv}\".concat({args:?}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => {
+                    assert_eq!(s.value, expect, "\"{recv}\".concat({args:?})")
+                }
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn concat_no_args_folds_to_receiver() {
+        // `"abc".concat()` → `"abc"` (identity), still removing the call.
+        let c = concat_call("abc", &[]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "\"abc\".concat() should fold to the receiver");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "abc"),
+            other => panic!("expected \"abc\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn concat_non_string_argument_does_not_fold() {
+        // `"a".concat(1)` is `"a1"` in JS via ToString, but we don't model that
+        // coercion — leave it for the runtime rather than guess.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("a", None), "concat")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "concat with a numeric argument must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn concat_identifier_argument_does_not_fold() {
+        // `"a".concat(s)` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("a", None), "concat")),
+            arguments: vec![ident("s")],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "concat with an identifier argument must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn concat_on_identifier_receiver_does_not_fold() {
+        // `s.concat("x")` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "concat")),
+            arguments: vec![string("x", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.concat(\"x\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn concat_over_size_cap_does_not_fold() {
+        // Receiver (50_001 units) + one 50_000-unit argument = 100_001 > cap,
+        // so the defensive DoS guard declines. Just at the cap folds.
+        let big = "x".repeat(50_000);
+        let over = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(&"x".repeat(50_001), None), "concat")),
+            arguments: vec![string(&big, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(over, true));
+        assert!(!changed, "concat over the size cap must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+
+        let under = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(&"x".repeat(50_000), None), "concat")),
+            arguments: vec![string(&big, None)],
+        });
+        let (out2, _, changed2, _) = run_pass(program_with_expr(under, true));
+        assert!(changed2, "concat exactly at the cap should fold");
+        match extract_expr(&out2) {
+            Expression::StringLiteral(s) => assert_eq!(s.value.len(), 100_000),
+            other => panic!("expected a 100_000-byte literal; got {:?}", other),
+        }
+    }
+
+    // ------------------- padStart / padEnd ---------------------------
+
+    /// Build `"<recv>".<method>(<target>[, "<pad>"])`.
+    fn pad_call(recv: &str, method: &str, target: f64, pad: Option<&str>) -> Expression {
+        let mut arguments = vec![num(target, None)];
+        if let Some(p) = pad {
+            arguments.push(string(p, None));
+        }
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(recv, None), method)),
+            arguments,
+        })
+    }
+
+    #[test]
+    fn fold_string_pad_basic() {
+        // (recv, method, target, pad, expect) — oracle values from V8.
+        for (recv, method, target, pad, expect) in [
+            ("abc", "padStart", 6.0, None, "   abc"),     // default space pad
+            ("abc", "padStart", 6.0, Some("*"), "***abc"),
+            ("abc", "padEnd", 6.0, Some("*"), "abc***"),
+            ("abc", "padStart", 2.0, Some("*"), "abc"),   // already long enough
+            ("abc", "padStart", 6.0, Some("12"), "121abc"), // repeats + truncates
+            ("abc", "padEnd", 8.0, Some("xy"), "abcxyxyx"),
+            ("abc", "padStart", 6.0, Some(""), "abc"),    // empty pad → unchanged
+            ("5", "padStart", 3.0, Some("0"), "005"),     // zero-pad
+        ] {
+            let c = pad_call(recv, method, target, pad);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{recv}\".{method}({target}, {pad:?}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => assert_eq!(
+                    s.value, expect,
+                    "\"{recv}\".{method}({target}, {pad:?})"
+                ),
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn pad_counts_utf16_units() {
+        // "💩" is two UTF-16 units, so "💩".padEnd(4, "x") adds two → "💩xx".
+        let c = pad_call("💩", "padEnd", 4.0, Some("x"));
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "💩xx"),
+            other => panic!("expected \"💩xx\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn pad_truncating_a_surrogate_pair_does_not_fold() {
+        // pad "💩" (2 units) truncated to a 1-unit shortfall is a lone high
+        // surrogate — a valid JS string but not a Rust `String`, so decline.
+        let c = pad_call("abc", "padStart", 4.0, Some("💩"));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "pad truncating a surrogate pair must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn pad_over_size_cap_does_not_fold() {
+        // target 200_000 > 100_000 cap — DoS guard declines.
+        let c = pad_call("abc", "padStart", 200_000.0, Some("*"));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "pad over the size cap must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn pad_non_integer_target_or_non_literal_pad_does_not_fold() {
+        // Fractional target: don't model ToLength coercion.
+        let frac = pad_call("abc", "padStart", 5.5, Some("*"));
+        let (out, _, changed, _) = run_pass(program_with_expr(frac, true));
+        assert!(!changed, "fractional pad target must not fold");
+
+        // Non-literal pad (a numeric pad arg) — only string-literal pads fold.
+        let numpad = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("abc", None), "padStart")),
+            arguments: vec![num(6.0, None), num(0.0, None)],
+        });
+        let (out2, _, changed2, _) = run_pass(program_with_expr(numpad, true));
+        assert!(!changed2, "non-string-literal pad must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        assert!(matches!(extract_expr(&out2), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn pad_on_identifier_receiver_does_not_fold() {
+        // `s.padStart(5)` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "padStart")),
+            arguments: vec![num(5.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.padStart(5) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

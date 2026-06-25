@@ -2937,6 +2937,98 @@ mod r30_ordering {
         assert_eq!((nrow, ncol), (1, 1));
         assert_eq!(data, vec![12.0]);
     }
+
+    // --- R-40: chol (Cholesky factorization) ----------------------------
+
+    /// Largest absolute difference between two same-length slices — the tolerance
+    /// yard-stick for the irrational (sqrt) entries the Cholesky factor produces.
+    fn max_abs_diff(a: &[f64], b: &[f64]) -> f64 {
+        assert_eq!(a.len(), b.len(), "length mismatch in max_abs_diff");
+        a.iter()
+            .zip(b)
+            .map(|(x, y)| (x - y).abs())
+            .fold(0.0, f64::max)
+    }
+
+    #[test]
+    fn chol_two_by_two_spd() {
+        // X = [[4,2],[2,3]] (column-major c(4,2,2,3)). chol(X) is upper-triangular
+        // R = [[2,1],[0,sqrt(2)]] with R[1,1]=2, R[1,2]=1, R[2,1]=0, R[2,2]=sqrt(2).
+        let (data, nrow, ncol) = matrix_data("chol(matrix(c(4,2,2,3), nrow = 2))\n");
+        assert_eq!((nrow, ncol), (2, 2));
+        let at = |r: usize, c: usize| data[c * 2 + r];
+        assert!((at(0, 0) - 2.0).abs() < 1e-9);
+        assert!((at(0, 1) - 1.0).abs() < 1e-9);
+        assert_eq!(at(1, 0), 0.0); // strictly-lower entry is exactly zero
+        assert!((at(1, 1) - 2.0_f64.sqrt()).abs() < 1e-9);
+    }
+
+    #[test]
+    fn chol_reconstructs_the_input() {
+        // t(R) %*% R must reconstruct X within a float tolerance.
+        let (recon, _, _) =
+            matrix_data("X <- matrix(c(4,2,2,3), nrow = 2)\nR <- chol(X)\nt(R) %*% R\n");
+        assert!(max_abs_diff(&recon, &[4.0, 2.0, 2.0, 3.0]) < 1e-9);
+    }
+
+    #[test]
+    fn chol_identity_is_identity() {
+        // chol(diag(3)) is the 3x3 identity (R[i,i]=1, off-diagonal 0).
+        let (data, nrow, ncol) = matrix_data("chol(diag(3))\n");
+        assert_eq!((nrow, ncol), (3, 3));
+        assert!(max_abs_diff(&data, &[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]) < 1e-9);
+    }
+
+    #[test]
+    fn chol_three_by_three_reconstructs() {
+        // A known 3x3 SPD matrix (column-major); verify t(R) %*% R == X.
+        // X = [[4,12,-16],[12,37,-43],[-16,-43,98]] (the classic textbook example).
+        let src = "X <- matrix(c(4,12,-16, 12,37,-43, -16,-43,98), nrow = 3)\n";
+        let (xdata, _, _) = matrix_data(&format!("{src}X\n"));
+        let (recon, nrow, ncol) = matrix_data(&format!("{src}R <- chol(X)\nt(R) %*% R\n"));
+        assert_eq!((nrow, ncol), (3, 3));
+        assert!(max_abs_diff(&recon, &xdata) < 1e-9);
+        // The factor is upper-triangular: known answer R = [[2,6,-8],[0,1,5],[0,0,3]].
+        let (r, _, _) = matrix_data(&format!("{src}chol(X)\n"));
+        let at = |row: usize, col: usize| r[col * 3 + row];
+        assert!((at(0, 0) - 2.0).abs() < 1e-9);
+        assert!((at(1, 1) - 1.0).abs() < 1e-9);
+        assert!((at(2, 2) - 3.0).abs() < 1e-9);
+        assert_eq!(at(1, 0), 0.0);
+        assert_eq!(at(2, 0), 0.0);
+        assert_eq!(at(2, 1), 0.0);
+    }
+
+    #[test]
+    fn chol_non_spd_is_a_clean_error() {
+        // [[1,2],[2,1]] has eigenvalues 3 and -1 — not positive definite. chol
+        // must error (no NaN, no panic): the pivot for column 2 is 1 - 2^2 = -3.
+        let err = eval_s("chol(matrix(c(1,2,2,1), nrow = 2))\n").unwrap_err();
+        let msg = format!("{err}");
+        assert!(
+            msg.contains("positive definite"),
+            "expected a not-positive-definite error, got: {msg}"
+        );
+    }
+
+    #[test]
+    fn chol_non_square_is_an_error() {
+        // A 2x3 matrix is not square; chol errors before any indexing.
+        let err = eval_s("chol(matrix(1:6, nrow = 2))\n").unwrap_err();
+        let msg = format!("{err}");
+        assert!(
+            msg.to_lowercase().contains("square"),
+            "expected a non-square error, got: {msg}"
+        );
+    }
+
+    #[test]
+    fn chol_zero_diagonal_is_not_positive_definite() {
+        // A leading 0 on the diagonal makes the first pivot exactly 0 (<= 0): not
+        // SPD. The check precedes sqrt, so this is an error, not sqrt(0)=0 garbage.
+        let err = eval_s("chol(matrix(c(0,0,0,1), nrow = 2))\n").unwrap_err();
+        assert!(format!("{err}").contains("positive definite"));
+    }
 }
 
 #[cfg(test)]

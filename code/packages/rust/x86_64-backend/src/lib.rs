@@ -579,6 +579,45 @@ fn emit_instr(
         return Ok(());
     }
 
+    // --- LANG-FULL E8: int ⇄ real conversions ---
+    //
+    // These arrive with their bare IIR names (the `specialise` pass passes
+    // unrecognised ops through unchanged), so they are matched here, not via a
+    // typed `_<ty>` suffix. `Reg::Rax` names both `rax` and `xmm0` — the opcode
+    // selects the register file, exactly as the f64 arithmetic path relies on.
+    //
+    //   int_to_real        mov rax,[src]; cvtsi2sd xmm0,rax;       movsd [dest],xmm0
+    //   real_to_int_trunc  movsd xmm0,[src]; cvttsd2si rax,xmm0;   mov [dest],rax
+    //   real_to_int_floor  movsd xmm0,[src]; roundsd xmm0,xmm0,1; cvttsd2si rax,xmm0; mov [dest],rax
+    //
+    // `cvttsd2si` truncates toward zero and yields the integer-indefinite
+    // `0x8000…0` on NaN/±∞/out-of-range (no trap) — a documented divergence from
+    // the VM trap, shared with the JVM/aarch64 backends; every finite, in-range
+    // value converts identically. `roundsd … ,1` rounds toward −∞ (floor).
+    if op == "int_to_real" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr("int_to_real needs srcs[0]".into()))?;
+        load_operand(asm, alloc, Reg::Rax, src);       // i64 → rax
+        asm.cvtsi2sd(Reg::Rax, Reg::Rax);              // xmm0 = (double) rax
+        let slot = alloc.slot_of(dest);
+        asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store xmm0
+        return Ok(());
+    }
+    if op == "real_to_int_trunc" || op == "real_to_int_floor" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_fp_operand(asm, alloc, Reg::Rax, src)?;   // f64 → xmm0
+        if op == "real_to_int_floor" {
+            asm.roundsd(Reg::Rax, Reg::Rax, 1);        // xmm0 = floor(xmm0)  (mode 1 = −∞)
+        }
+        asm.cvttsd2si(Reg::Rax, Reg::Rax);             // rax = (i64) xmm0  (trunc toward zero)
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store rax
+        return Ok(());
+    }
+
     // --- add_<ty> / sub_<ty> / mul_<ty> ---
     if let Some(ty) = op.strip_prefix("add_") { return emit_binop(asm, alloc, instr, BinOp::Add, ty); }
     if let Some(ty) = op.strip_prefix("sub_") { return emit_binop(asm, alloc, instr, BinOp::Sub, ty); }

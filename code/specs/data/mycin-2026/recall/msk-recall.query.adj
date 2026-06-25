@@ -1,0 +1,23 @@
+% ============================================================================
+% msk-recall.query.adj — a worked recall query over the musculoskeletal library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this special test is
+% positive — which injury?" question: it states no orthopedics fact — it only
+% `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli msk-recall.query.adj
+% ============================================================================
+
+import "msk-edges.adj"
+
+? special_test_indicates(mcmurray_test, $Diagnosis)        % expect meniscal_tear
+? special_test_indicates(lachman_test, $Diagnosis)         % expect acl_tear
+? special_test_indicates(finkelstein_test, $Diagnosis)     % expect de_quervain_tenosynovitis
+? special_test_indicates(phalen_test, $Diagnosis)          % expect carpal_tunnel_syndrome
+? special_test_indicates(tinel_sign, $Diagnosis)           % expect carpal_tunnel_syndrome
+? special_test_indicates(spurling_test, $Diagnosis)        % expect cervical_radiculopathy
+? special_test_indicates(trendelenburg_sign, $Diagnosis)   % expect hip_abductor_weakness

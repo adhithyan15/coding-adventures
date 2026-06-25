@@ -1,0 +1,101 @@
+% ============================================================================
+% urine-edges — the urinalysis / urine-microscopy knowledge-graph (MYCIN-2026 URINE).
+% ============================================================================
+% A core renal/internal-medicine board domain (USMLE high-yield): the urine
+% finding (cast, cell, crystal, protein, or dipstick result) and the diagnosis it
+% points to. "Urine microscopy shows muddy brown casts — what is the diagnosis?"
+% becomes the binding query
+%     ? urine_finding_indicates(muddy_brown_casts, $Diagnosis).
+%
+% Direction note: the relation is finding -> diagnosis (`urine_finding_indicates`),
+% the board direction — you READ the finding off the urinalysis/microscopy and must
+% name the diagnosis. The cited spans read either way ("RBC casts are pathognomonic
+% of glomerulonephritis"; "hexagonal crystals of cystine ... are considered
+% diagnostic of cystinuria") — what matters for grounding is that one self-contained
+% span names BOTH the urine finding AND the diagnosis. Each finding here maps to one
+% canonical diagnosis, so a query binds a single answer.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (a pure ADJ-only recall domain, like ECG/RESP/DERM/GI/NEURO).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                where the span itself quotes a term, the inner ASCII quotes are
+%                backslash-escaped so the ADJ string still parses).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see urine-recall.query.adj. Nothing here
+% is asserted "from memory": every edge is defended by a span a reader can re-fetch
+% and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only findings whose StatPearls page states the association in a
+% clean self-contained span (both finding AND diagnosis named) are included. The
+% muddy-brown-casts span quotes the finding verbatim (inner quotes escaped).
+% Still deferred (re-checked, no single self-contained NBK span names both, or the
+% only span undercuts the indicative direction):
+%   WBC (leukocyte) casts -> pyelonephritis (checked 14 StatPearls chapters; all
+%     split the cast term from "pyelonephritis"; co-occurrence only in PMC
+%     articles, not Bookshelf chapters) — reused as the off-vocabulary control;
+%   broad/waxy casts -> chronic kidney disease (NBK557685 pairs them only in a
+%     structured table entry, not a self-contained sentence);
+%   urine eosinophils -> acute interstitial nephritis (the only self-contained
+%     NBK sentence says eosinophiluria LACKS sensitivity/specificity for AIN, so
+%     it undercuts an "indicates" edge — faithfulness over recall);
+%   cola/tea-colored urine -> poststreptococcal glomerulonephritis (the urine
+%     color and the diagnosis name always sit in separate sentences).
+% ============================================================================
+
+dictionary urine_vocab {
+    define finding   : entity   surface "urine finding", "urinalysis or microscopy result"
+    define diagnosis : entity   surface "renal or systemic diagnosis", "condition"
+
+    define urine_finding_indicates : relation from finding to diagnosis  % the diagnosis a urine finding points to
+}
+
+rulebook urine_facts {
+    use urine_vocab
+
+    % --- RBC casts -> glomerulonephritis ---------------------------------------
+    relate urine_finding_indicates(rbc_casts, glomerulonephritis)
+        source "The dysmorphic RBCs- a feature of glomerular hematuria, acanthocytes, and RBC casts are pathognomonic of glomerulonephritis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562240/"
+        trust authoritative
+
+    % --- dysmorphic RBCs -> glomerular hematuria -------------------------------
+    relate urine_finding_indicates(dysmorphic_rbcs, glomerular_hematuria)
+        source "Dysmorphic RBCs on microscopy are characteristic of glomerular hematuria and RBC casts are highly suggestive of this diagnosis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557430/"
+        trust authoritative
+
+    % --- muddy brown (granular) casts -> acute tubular necrosis ----------------
+    relate urine_finding_indicates(muddy_brown_casts, acute_tubular_necrosis)
+        source "On the other hand, ferroptosis and necroptosis are the likely mechanisms underlying ATN, creating the characteristic \"muddy brown casts\" seen on urine microscopy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507815/"
+        trust authoritative
+
+    % --- fatty casts (oval fat bodies) -> minimal change disease ---------------
+    relate urine_finding_indicates(fatty_casts, minimal_change_disease)
+        source "In MCD, the urine typically looks frothy secondary to proteinuria, and the microscopy shows oval fat bodies and fatty casts."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560639/"
+        trust authoritative
+
+    % --- Bence Jones proteinuria -> multiple myeloma ---------------------------
+    relate urine_finding_indicates(bence_jones_proteinuria, multiple_myeloma)
+        source "Testing for Bence-Jones proteinuria is indicated when plasma cell disorders such as multiple myeloma are suspected."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541035/"
+        trust authoritative
+
+    % --- positive urine nitrites -> urinary tract infection --------------------
+    relate urine_finding_indicates(urine_nitrites, urinary_tract_infection)
+        source "Furthermore, nitrites are not normally found in urine, and it is highly specific for urinary tract infection."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557685/"
+        trust authoritative
+
+    % --- hexagonal (cystine) crystals -> cystinuria ----------------------------
+    relate urine_finding_indicates(hexagonal_crystals, cystinuria)
+        source "Characteristic hexagonal crystals of cystine will appear in 25% of cases on early morning urinalyses and are considered diagnostic of cystinuria."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470527/"
+        trust authoritative
+}

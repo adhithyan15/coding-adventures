@@ -2,6 +2,146 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.183.0] - 2026-06-23
+
+### Added — global `parseInt` / `parseFloat` fold at SIMPLE/ADVANCED
+
+The `constant-fold` pass (bumped to 0.34.0) now folds global `parseInt(lit[,
+radix])` and `parseFloat(lit)` calls whose first argument is a string literal to
+the numeric literal V8 produces (ECMAScript §19.2.5 / §19.2.4):
+`parseInt("12px")` → `12`, `parseInt("FF", 16)` → `255`, `parseInt("0x1F")` →
+`31`, `parseFloat("3.14abc")` → `3.14`. Only the bare global identifier folds —
+`window.parseInt(...)` is left alone — and calls whose result is `NaN`
+(`parseInt("")`) or `±Infinity` (`parseFloat("Infinity")`) are left for the
+runtime since neither has a literal token.
+
+New end-to-end fixture `tests/diff/simple-fold-parseint/` and integration test
+`diff_simple_fold_parseint.rs` cover the SIMPLE path
+(`var a=12;var b=255;var c=3.14;var d=31;report(a,b,c,d);`). The `--help_markdown`
+golden and `cli.spec.json` version were regenerated for the 0.183.0 bump.
+
+## [0.179.0] - 2026-06-22
+
+### Added — string `concat` fold at SIMPLE/ADVANCED
+
+The typed-AST optimization pipeline now folds `String.prototype.concat` when
+the receiver and every argument are string literals (via
+`closure-pass-constant-fold` 0.30.0): `"foo".concat("bar", "baz")` →
+`"foobarbaz"`. A non-string argument (which JS coerces via `ToString`), a
+non-literal argument, or a result over the optimizer's 100 000-code-unit cap
+passes through to the runtime; `WHITESPACE_ONLY` leaves the call untouched.
+
+New end-to-end fixture `tests/diff/simple-fold-concat/` and integration test
+`tests/diff_simple_fold_concat.rs` (three assertions: byte-exact stdout, the
+call is folded to `"foobarbaz"`, and the SIMPLE typed pipeline ran rather than
+the whitespace fallback).
+
+## [0.178.0] - 2026-06-22
+
+### Added — string `trim` / `trimStart` / `trimEnd` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.29.0, which folds
+`String#trim` / `trimStart` / `trimEnd` on a string literal: `"  hi  ".trim()`
+→ `"hi"`, `.trimStart()` → `"hi  "`, `.trimEnd()` → `"  hi"`. The stripped set
+is the exact ECMAScript white-space + line-terminator set (hard-coded, not
+Rust's `char::is_whitespace`, which disagrees on U+0085/U+FEFF), so the fold is
+sound.
+
+New e2e fixture `tests/diff/simple-fold-trim` (and integration test
+`diff_simple_fold_trim.rs`): `var s = "  hi  ".trim(); report(s);` →
+`var s="hi";report(s);`, with a whitespace-fallback guard proving the fold
+comes from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.178.0 to sit above main (closurec 0.175.0), the
+> open numeric `toString([radix])` fold branch (closurec 0.176.0, PR #6560),
+> and the open `padStart/padEnd` fold branch (closurec 0.177.0, PR #6571), so
+> the parallel branches never collide on the version line.
+## [0.177.0] - 2026-06-22
+
+### Added — string `padStart` / `padEnd` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.28.0, which folds
+`String#padStart` / `padEnd` on a string literal with an integer-literal target
+length and an optional string-literal pad (default a single space):
+`"5".padStart(3, "0")` → `"005"`, `"abc".padEnd(6)` → `"abc   "`,
+`"abc".padStart(6, "12")` → `"121abc"`. A non-integer target, a non-literal pad,
+a target over the optimizer's 100 000-code-unit cap (a denial-of-service guard),
+and a fill that would split a surrogate pair all pass through unfolded.
+
+New e2e fixture `tests/diff/simple-fold-pad` (and integration test
+`diff_simple_fold_pad.rs`): `var s = "5".padStart(3, "0"); report(s);` →
+`var s="005";report(s);`, with a whitespace-fallback guard proving the fold
+comes from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.177.0 to sit above main (closurec 0.175.0) and the
+> merged numeric `toString([radix])` fold (closurec 0.176.0), so the parallel branches never collide on the version line.
+## [0.176.0] - 2026-06-22
+
+### Added — numeric `toString([radix])` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.27.0, which folds
+`Number.prototype.toString` on a non-negative integer literal with a known radix
+to a string literal: `(255).toString()` → `"255"`, `(255).toString(16)` →
+`"ff"`, `(255).toString(2)` → `"11111111"`. The radix is the default 10 or a
+single integer literal in `2..=36`; a fractional receiver, an out-of-range
+radix, and a variable radix pass through.
+
+New e2e fixture `tests/diff/simple-fold-radix` (and integration test
+`diff_simple_fold_radix.rs`): `var s = (255).toString(16); report(s);` →
+`var s="ff";report(s);`, with a whitespace-fallback guard proving the fold comes
+from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.176.0 to sit above main (closurec 0.173.0), the
+> merged `repeat` fold (0.175.0), and the merged `slice` fold (0.173.0), so the
+> parallel branches never collide on the version line.
+
+## [0.175.0] - 2026-06-22
+
+### Added — string `repeat` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.26.0, which folds
+`String#repeat` on a string literal with a non-negative integer-literal count
+to a string literal: `"ab".repeat(3)` → `"ababab"`, `"x".repeat(0)` → `""`. A
+negative count (JS `RangeError`), a fractional/non-literal count, and a result
+over the optimizer's 100 000-code-unit cap (a denial-of-service guard against
+materializing a huge literal at compile time) all pass through unfolded.
+
+New e2e fixture `tests/diff/simple-fold-repeat` (and integration test
+`diff_simple_fold_repeat.rs`): `var s = "ab".repeat(3); report(s);` →
+`var s="ababab";report(s);`, with a whitespace-fallback guard proving the fold
+comes from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.175.0 to sit above main (closurec 0.173.0) and the
+> concurrently-open numeric `toString([radix])` fold branch (closurec 0.174.0,
+> PR #6560), so the parallel branches never collide on the version line.
+
+## [0.173.0] - 2026-06-22
+
+### Added — string `slice` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.24.0, which folds
+`String#slice` on a string literal with integer-literal arguments to a string
+literal: `"abcd".slice(1, 3)` → `"bc"`. JS `slice` indexes by UTF-16 code unit
+over the half-open range `[start, end)`; negative arguments count from the end
+and both ends clamp to `[0, length]`. Zero, one, or two integer-literal
+arguments fold; a non-integer argument, more than two arguments, an identifier
+receiver, or a cut that would split a surrogate pair (yielding a lone
+surrogate) all pass through unfolded — matching `charAt`'s conservative stance.
+
+New e2e fixture `tests/diff/simple-fold-slice` (and integration test
+`diff_simple_fold_slice.rs`): `var s = "abcd".slice(1, 3); report(s);` →
+`var s="bc";report(s);`, with a whitespace-fallback guard proving the fold
+comes from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.173.0 to sit above main (closurec 0.171.0) and the
+> concurrently-open numeric `toString([radix])` fold branch (closurec 0.172.0,
+> PR #6560), so the parallel branches never collide on the version line.
+
 ## [0.171.0] - 2026-06-22
 
 ### Added — string `indexOf` fold at SIMPLE/ADVANCED

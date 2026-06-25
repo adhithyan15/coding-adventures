@@ -956,11 +956,23 @@ impl Compiler {
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("call has no procedure name".into()))?;
 
-        let sig = self
-            .proc_sigs
-            .get(&name)
-            .cloned()
-            .ok_or_else(|| CompileError::Type(format!("call to undeclared procedure {name:?}")))?;
+        // ALGOL 60 §3.2.4 *standard functions* (`abs`, `sign`, `entier`, …) are
+        // built into the language, not user-declared procedures, so they have no
+        // `proc_sigs` entry.  A program may still legally *redeclare* one as its
+        // own procedure — so we only fall back to the built-in when the name is
+        // not a user-declared procedure.  This keeps the override semantics the
+        // Report grants while making `abs(x)` work out of the box.
+        let sig = match self.proc_sigs.get(&name).cloned() {
+            Some(sig) => sig,
+            None => {
+                if let Some(result) = self.try_emit_standard_function(&name, node)? {
+                    return Ok(result);
+                }
+                return Err(CompileError::Type(format!(
+                    "call to undeclared procedure {name:?}"
+                )));
+            }
+        };
 
         let actuals: Vec<&GrammarASTNode> = match first_direct_node(node, "actual_params") {
             Some(ap) => direct_nodes(ap)
@@ -1003,6 +1015,313 @@ impl Compiler {
         Ok(ExprValue {
             slot: dest,
             ty: sig.ret,
+        })
+    }
+
+    /// Resolve a *standard function* call (ALGOL 60 §3.2.4) by name.  Returns
+    /// `Ok(Some(value))` if `name` is a built-in we lower inline, `Ok(None)` if
+    /// it is not a standard function (so the caller raises the usual
+    /// "undeclared procedure" error).
+    ///
+    /// Implemented so far: `abs` (PR-1) and `sign` (PR-2) — both pure IIR
+    /// (compare + branch + move/const).  `entier` (floor of a real → integer)
+    /// needs a float-floor+convert that is not a portable IIR op, and
+    /// `sqrt`/`sin`/`cos`/… need a runtime math library on every backend; those
+    /// land in later slices.
+    fn try_emit_standard_function(
+        &mut self,
+        name: &str,
+        node: &GrammarASTNode,
+    ) -> Result<Option<ExprValue>, CompileError> {
+        match name {
+            "abs" => Ok(Some(self.emit_abs(node)?)),
+            "sign" => Ok(Some(self.emit_sign(node)?)),
+            "entier" => Ok(Some(self.emit_entier(node)?)),
+            _ => Ok(None),
+        }
+    }
+
+    /// Extract the actual-parameter expressions of a standard-function call —
+    /// the same `actual_params → expression*` shape `emit_call_common` reads.
+    fn standard_fn_actuals<'n>(&self, node: &'n GrammarASTNode) -> Vec<&'n GrammarASTNode> {
+        match first_direct_node(node, "actual_params") {
+            Some(ap) => direct_nodes(ap)
+                .into_iter()
+                .filter(|n| n.rule_name == "expression")
+                .collect(),
+            None => Vec::new(),
+        }
+    }
+
+    /// `abs(E)` — absolute value, preserving `E`'s numeric type
+    /// (`integer`→`integer`, `real`→`real`).  We lower it to the value of the
+    /// conditional expression `if E < 0 then -E else E`, using the *exact*
+    /// `jmp_if_false` / `mov`-into-`dest` shape `emit_conditional_branches`
+    /// uses.  Writing `dest` once per branch (store-per-branch, never an SSA
+    /// phi) is what lets the result merge identically on all seven backends —
+    /// the VM/JIT and the stack machines treat `dest` as a slot, and the LLVM
+    /// backend promotes a twice-assigned temp to an `alloca` (the same
+    /// reassigned-value path E-LLVM-1 hardened).  `E` is evaluated **once**
+    /// (its slot is read by the test, the negation, and the else branch), so
+    /// `abs` has no double-evaluation surprise even if `E` has side effects.
+    ///
+    /// ```text
+    ///        t := E                 ; evaluate the operand once
+    ///        cond := t < 0          ; cmp_lt at the operand width
+    ///        jmp_if_false cond, else
+    ///        neg := 0 - t           ; -t  (i64 sub / f64 fsub)
+    ///        dest := neg
+    ///        jmp end
+    ///   else: dest := t
+    ///   end:  (dest holds |E|)
+    /// ```
+    fn emit_abs(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return Err(CompileError::Type(format!(
+                "standard function abs expects 1 argument, got {}",
+                actuals.len()
+            )));
+        }
+        let value = self.emit_expr(actuals[0])?;
+        let ty = match value.ty {
+            ScalarType::Integer | ScalarType::Real => value.ty,
+            ScalarType::Boolean => {
+                return Err(CompileError::Type(
+                    "standard function abs requires a numeric argument".into(),
+                ))
+            }
+        };
+
+        // cond := (value < 0), compared at the operand width (see the relational
+        // lowering in `emit_binary`: the hint is the operand type, not `bool`).
+        let zero = self.emit_const(ty, ty.default_operand());
+        let cond = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_lt",
+            Some(cond.clone()),
+            vec![Operand::Var(value.slot.clone()), Operand::Var(zero)],
+            ty.iir(),
+        ));
+
+        let else_label = self.fresh_label("abs_else");
+        let end_label = self.fresh_label("abs_end");
+        let dest = self.fresh_temp();
+
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(cond), Operand::Var(else_label.clone())],
+            "void",
+        ));
+        // then: dest := -value
+        let neg = self.emit_unary_minus(ExprValue {
+            slot: value.slot.clone(),
+            ty,
+        })?;
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(neg.slot)],
+            ty.iir(),
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+        // else: dest := value
+        self.emit_label(&else_label);
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot)],
+            ty.iir(),
+        ));
+        self.emit_label(&end_label);
+
+        Ok(ExprValue { slot: dest, ty })
+    }
+
+    /// `sign(E)` — the *signum*: `+1` if `E > 0`, `-1` if `E < 0`, `0` if
+    /// `E = 0` (ALGOL 60 §3.2.4).  Unlike `abs`, the **result is always
+    /// `integer`** regardless of the operand's type — `sign(-2.5)` is the
+    /// integer `-1`.  The operand may be `integer` or `real`; the comparisons
+    /// run at the operand width (the `0` we compare against is typed to match),
+    /// but every value `dest` receives is an `i64` constant.
+    ///
+    /// It lowers to the nested conditional `if E > 0 then 1 else if E < 0 then
+    /// -1 else 0`, written with the same store-per-branch `dest` discipline as
+    /// `abs` (one `mov`/`const` into `dest` per path, no SSA phi), so it runs
+    /// identically on all seven backends.  `E` is evaluated once.
+    ///
+    /// ```text
+    ///        t := E                  ; evaluate the operand once
+    ///        gt := t > 0             ; cmp_gt at the operand width
+    ///        jmp_if_false gt, neg?   ; not positive → test the sign
+    ///        dest := 1
+    ///        jmp end
+    ///   neg?: lt := t < 0
+    ///        jmp_if_false lt, zero   ; not negative (and not positive) → 0
+    ///        dest := -1
+    ///        jmp end
+    ///   zero: dest := 0
+    ///   end:  (dest holds sign E, an integer)
+    /// ```
+    fn emit_sign(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return Err(CompileError::Type(format!(
+                "standard function sign expects 1 argument, got {}",
+                actuals.len()
+            )));
+        }
+        let value = self.emit_expr(actuals[0])?;
+        let operand_ty = match value.ty {
+            ScalarType::Integer | ScalarType::Real => value.ty,
+            ScalarType::Boolean => {
+                return Err(CompileError::Type(
+                    "standard function sign requires a numeric argument".into(),
+                ))
+            }
+        };
+
+        // The result is always an integer; the three outcomes are i64 consts.
+        let dest = self.fresh_temp();
+        let neg_label = self.fresh_label("sign_neg");
+        let zero_label = self.fresh_label("sign_zero");
+        let end_label = self.fresh_label("sign_end");
+
+        // gt := (value > 0), compared at the operand width.
+        let zero_operand = self.emit_const(operand_ty, operand_ty.default_operand());
+        let gt = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_gt",
+            Some(gt.clone()),
+            vec![Operand::Var(value.slot.clone()), Operand::Var(zero_operand)],
+            operand_ty.iir(),
+        ));
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(gt), Operand::Var(neg_label.clone())],
+            "void",
+        ));
+        // positive ⇒ dest := 1
+        let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(one)],
+            "i64",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+
+        // neg?: lt := (value < 0)
+        self.emit_label(&neg_label);
+        let zero_operand2 = self.emit_const(operand_ty, operand_ty.default_operand());
+        let lt = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_lt",
+            Some(lt.clone()),
+            vec![Operand::Var(value.slot), Operand::Var(zero_operand2)],
+            operand_ty.iir(),
+        ));
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(lt), Operand::Var(zero_label.clone())],
+            "void",
+        ));
+        // negative ⇒ dest := -1
+        let minus_one = self.emit_const(ScalarType::Integer, Operand::Int(-1));
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(minus_one)],
+            "i64",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+
+        // zero ⇒ dest := 0
+        self.emit_label(&zero_label);
+        let zero_result = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(zero_result)],
+            "i64",
+        ));
+        self.emit_label(&end_label);
+
+        Ok(ExprValue {
+            slot: dest,
+            ty: ScalarType::Integer,
+        })
+    }
+
+    /// `entier(E)` — ALGOL 60 §3.2.5: the largest **integer** not greater than
+    /// the **real** `E` (i.e. floor, rounding toward −∞).  `entier(2.7) = 2`,
+    /// `entier(-2.7) = -3` (NOT `-2` — a plain truncation toward zero would be
+    /// wrong here, which is exactly why E8 provides a distinct
+    /// `real_to_int_floor` op alongside `real_to_int_trunc`).
+    ///
+    /// This is the canonical use of the E8 conversion family: a single
+    /// `real_to_int_floor` whose result type is `integer`.  Unlike `abs`/`sign`
+    /// (which synthesise a conditional), `entier` is one IIR op — the floor and
+    /// the real→integer narrowing are fused into the primitive, so every backend
+    /// emits its native floor-then-convert (`llvm.floor`+`fptosi`, `f64.floor`+
+    /// `i64.trunc_sat`, `Math.floor`+`d2l`, `Math::Floor`+`conv.ovf.i4`,
+    /// `frintm`+`fcvtzs`, `roundsd`+`cvttsd2si`).
+    ///
+    /// The operand must be `real`: `entier` is *specifically* the real→integer
+    /// floor, so an `integer` argument is a type error (there is nothing to
+    /// floor — the frontend would just be discarding the type).  A user
+    /// `integer procedure entier` still wins, because `proc_sigs` is consulted
+    /// before this fallback in `emit_call_common`.
+    fn emit_entier(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return Err(CompileError::Type(format!(
+                "standard function entier expects 1 argument, got {}",
+                actuals.len()
+            )));
+        }
+        let value = self.emit_expr(actuals[0])?;
+        match value.ty {
+            ScalarType::Real => {}
+            other => {
+                return Err(CompileError::Type(format!(
+                    "standard function entier requires a real argument, got {}",
+                    other.name()
+                )))
+            }
+        }
+
+        // result := floor(E), narrowed to an integer.  `real_to_int_floor`'s
+        // `type_hint` is the *result* type (`integer`/`i64`), matching the E8
+        // convention that a backend sizes the op from the hint.
+        let dest = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "real_to_int_floor",
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot)],
+            ScalarType::Integer.iir(),
+        ));
+        Ok(ExprValue {
+            slot: dest,
+            ty: ScalarType::Integer,
         })
     }
 
@@ -2806,6 +3125,225 @@ mod tests {
     fn compiles_and_runs_boolean_conditional_expression() {
         let src = "begin boolean flag; integer result; flag := true; if if flag then true else false then result := 42 else result := 1 end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    // ── AL8 — standard functions (§3.2.4) ───────────────────────────────────
+
+    #[test]
+    fn abs_of_negative_integer_runs() {
+        // |0 - 42| = 42, preserving `integer`.
+        assert_eq!(run_i64("begin integer result; result := abs(0 - 42) end"), 42);
+    }
+
+    #[test]
+    fn abs_of_positive_integer_is_identity() {
+        // The else branch: a non-negative argument passes through unchanged.
+        assert_eq!(run_i64("begin integer result; result := abs(42) end"), 42);
+    }
+
+    #[test]
+    fn abs_of_zero_is_zero() {
+        // Boundary: `0 < 0` is false ⇒ else branch ⇒ 0 (not `-0`).
+        assert_eq!(run_i64("begin integer result; result := abs(0) end"), 0);
+    }
+
+    #[test]
+    fn abs_composes_in_an_expression() {
+        // `abs` is a value expression like any other — usable mid-arithmetic.
+        assert_eq!(
+            run_i64("begin integer result; result := 40 + abs(0 - 2) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn abs_of_negative_real_runs() {
+        // Real `abs` lowers the negation to `fsub` and compares at `f64` width.
+        assert_eq!(
+            run_f64("begin real result; result := abs(0.0 - 3.5) end"),
+            3.5
+        );
+    }
+
+    #[test]
+    fn abs_of_positive_real_is_identity() {
+        assert_eq!(run_f64("begin real result; result := abs(3.5) end"), 3.5);
+    }
+
+    #[test]
+    fn abs_lowers_to_branches_not_a_call() {
+        // The built-in must NOT emit a `call abs` (there is no such procedure):
+        // it lowers inline to a compare + conditional negate.
+        let module = compile_source("begin integer result; result := abs(0 - 1) end", "test")
+            .expect("abs compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        assert!(
+            main.instructions.iter().any(|i| i.op == "cmp_lt"),
+            "abs should compare the operand against zero"
+        );
+        assert!(
+            !main
+                .instructions
+                .iter()
+                .any(|i| i.op == "call" && i.srcs.first().and_then(|o| o.as_str_lit()) == Some("abs")),
+            "abs must not lower to a procedure call"
+        );
+    }
+
+    #[test]
+    fn user_declared_abs_overrides_the_builtin() {
+        // The Report lets a program redeclare a standard function.  A user
+        // `procedure abs` returning `x + 1` must win over the built-in, so
+        // `abs(41)` ⇒ 42 (the built-in would give 41).
+        let src = "begin integer result; \
+                   integer procedure abs(x); value x; integer x; abs := x + 1; \
+                   result := abs(41) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn abs_rejects_wrong_arity() {
+        let err = compile_source("begin integer result; result := abs(1, 2) end", "test")
+            .expect_err("two-argument abs is a type error");
+        assert!(format!("{err:?}").contains("abs expects 1 argument"));
+    }
+
+    #[test]
+    fn sign_of_positive_is_one() {
+        assert_eq!(run_i64("begin integer result; result := sign(7) end"), 1);
+    }
+
+    #[test]
+    fn sign_of_negative_is_minus_one() {
+        // `sign` returns -1, which as an exit code wraps to 255, so we test via
+        // arithmetic: 43 + sign(0 - 9) = 43 + (-1) = 42.
+        assert_eq!(
+            run_i64("begin integer result; result := 43 + sign(0 - 9) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn sign_of_zero_is_zero() {
+        assert_eq!(run_i64("begin integer result; result := sign(0) end"), 0);
+    }
+
+    #[test]
+    fn sign_of_real_is_an_integer() {
+        // The operand is `real`, but `sign` yields the *integer* 1 — usable in
+        // an integer context with no real→integer coercion needed.
+        assert_eq!(
+            run_i64("begin integer result; result := sign(2.5) end"),
+            1
+        );
+    }
+
+    #[test]
+    fn sign_of_negative_real_is_minus_one() {
+        assert_eq!(
+            run_i64("begin integer result; result := 43 + sign(0.0 - 2.5) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn sign_composes_with_abs() {
+        // |sign(-4)| = |-1| = 1 — two standard functions nested.
+        assert_eq!(
+            run_i64("begin integer result; result := 41 + abs(sign(0 - 4)) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn user_declared_sign_overrides_the_builtin() {
+        let src = "begin integer result; \
+                   integer procedure sign(x); value x; integer x; sign := x + 1; \
+                   result := sign(41) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    // ── LANG-FULL E8: ALGOL `entier` (real → integer floor) ──────────────
+
+    #[test]
+    fn entier_floors_a_positive_real() {
+        // entier(2.7) = 2 (largest integer ≤ 2.7).
+        assert_eq!(run_i64("begin integer result; result := entier(2.7) end"), 2);
+        assert_eq!(run_i64("begin integer result; result := entier(42.9) end"), 42);
+    }
+
+    #[test]
+    fn entier_rounds_toward_minus_infinity() {
+        // entier(-2.7) = -3, NOT -2 — this is the floor-vs-truncate distinction
+        // that justifies a distinct `real_to_int_floor` op. 45 + entier(-2.7) =
+        // 45 + (-3) = 42.
+        assert_eq!(
+            run_i64("begin integer result; result := 45 + entier(0.0 - 2.7) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn entier_of_an_exact_integer_real_is_that_integer() {
+        // entier(42.0) = 42 (already integral).
+        assert_eq!(run_i64("begin integer result; result := entier(42.0) end"), 42);
+    }
+
+    #[test]
+    fn entier_emits_a_single_real_to_int_floor_op() {
+        // The lowering is one IIR op, not a synthesised conditional.
+        let module = compile_source("begin integer result; result := entier(2.7) end", "test")
+            .expect("entier compiles");
+        let n_floor = module.functions.iter()
+            .flat_map(|f| &f.instructions)
+            .filter(|i| i.op == "real_to_int_floor")
+            .count();
+        assert_eq!(n_floor, 1, "entier lowers to exactly one real_to_int_floor");
+    }
+
+    #[test]
+    fn entier_requires_a_real_argument() {
+        // An `integer` argument is a type error — entier is specifically the
+        // real→integer floor.
+        let err = compile_source("begin integer result; result := entier(7) end", "test")
+            .expect_err("entier of an integer is a type error");
+        assert!(format!("{err:?}").contains("entier requires a real argument"));
+    }
+
+    #[test]
+    fn entier_rejects_wrong_arity() {
+        let err = compile_source("begin integer result; result := entier(1.0, 2.0) end", "test")
+            .expect_err("two-argument entier is a type error");
+        assert!(format!("{err:?}").contains("entier expects 1 argument"));
+    }
+
+    #[test]
+    fn user_declared_entier_overrides_the_builtin() {
+        // A user `integer procedure entier` wins over the standard function.
+        let src = "begin integer result; \
+                   integer procedure entier(x); value x; integer x; entier := x + 1; \
+                   result := entier(41) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn entier_composes_with_abs() {
+        // abs(entier(-2.7)) = abs(-3) = 3 → 39 + 3 = 42.
+        assert_eq!(
+            run_i64("begin integer result; result := 39 + abs(entier(0.0 - 2.7)) end"),
+            42
+        );
+    }
+
+    #[test]
+    fn sign_rejects_wrong_arity() {
+        let err = compile_source("begin integer result; result := sign(1, 2) end", "test")
+            .expect_err("two-argument sign is a type error");
+        assert!(format!("{err:?}").contains("sign expects 1 argument"));
     }
 
     #[test]

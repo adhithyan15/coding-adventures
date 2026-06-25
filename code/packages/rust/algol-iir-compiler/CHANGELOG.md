@@ -1,5 +1,88 @@
 # Changelog
 
+## 0.10.0 — 2026-06-23 — `entier` standard function (LANG-FULL E8 PR-7)
+
+The ALGOL 60 standard function **`entier`** (§3.2.5) — the largest integer not
+greater than a real (floor, toward −∞):
+
+```algol
+entier(2.7)   ⇒ 2
+entier(-2.7)  ⇒ -3      ; NOT -2 — floor, not truncate-toward-zero
+entier(42.0)  ⇒ 42
+```
+
+This is the first **frontend consumer** of the E8 numeric-conversion ops. Unlike
+`abs`/`sign` (which synthesise a conditional), `entier` lowers to a **single**
+`real_to_int_floor` IIR op — the floor and the real→integer narrowing fused into
+the primitive — so each backend emits its native floor-then-convert
+(`llvm.floor`+`fptosi`, `f64.floor`+`i64.trunc_sat`, `Math.floor`+`d2l`,
+`Math::Floor`+`conv.ovf.i4`, `frintm`+`fcvtzs`, `roundsd`+`cvttsd2si`). The
+floor-vs-truncate distinction is exactly why E8 provides a distinct
+`real_to_int_floor` alongside `real_to_int_trunc`.
+
+The operand must be `real` (`entier` is specifically the real→integer floor; an
+`integer` argument is a type error). A user `integer procedure entier` still
+overrides the builtin (`proc_sigs` is consulted first in `emit_call_common`).
+Resolved like `abs`/`sign` — no grammar change (`entier(x)` already parses as a
+`proc_call`). Eight frontend unit tests (floor, toward-−∞, exact-integer,
+single-op lowering, real-required, arity, user-override, composition with `abs`),
+executed on the VM. The 7-backend executed matrix proof lands alongside.
+
+## 0.9.0 — 2026-06-22 — `sign` standard function (LANG-FULL AL8, PR-2)
+
+The second ALGOL 60 standard function (§3.2.4), **`sign`**, building on the
+`abs` machinery from 0.8.0.
+
+- `sign(E)` is the *signum*: `+1` if `E > 0`, `-1` if `E < 0`, `0` if `E = 0`.
+  Unlike `abs`, the **result is always `integer`** regardless of the operand's
+  type — `sign(-2.5)` is the integer `-1` (no real→integer coercion needed at
+  the use site).  The operand may be `integer` or `real`.
+- It lowers to the nested conditional `if E > 0 then 1 else if E < 0 then -1
+  else 0`: a `cmp_gt` then a `cmp_lt` against a typed zero (compared at the
+  operand width), with three `i64` constants moved into one result slot — the
+  same store-per-branch shape (no SSA phi) `abs` uses, so it **runs on all seven
+  backends** (native-AOT/LLVM/WASM/JVM/CLR/VM/JIT).  `E` is evaluated once.
+- Same name-based, overridable resolution as `abs`: a user `procedure sign`
+  wins over the built-in.
+- **Verified by RUNNING:** a `lang_matrix.rs` cell — `43 + sign(0 - 1)` ⇒ exit
+  **42** (the negative branch) — executes on every backend; plus 8 inline tests
+  (positive / negative / zero integer `sign`, positive / negative real `sign`
+  yielding an integer, composition with `abs`, the user-override case, and the
+  wrong-arity rejection).
+
+`entier` (floor of a real → integer) needs a float-floor+convert that is not a
+portable IIR op, and `sqrt`/`sin`/`cos`/… need a runtime math library on every
+backend; those are later AL8 slices.
+
+## 0.8.0 — 2026-06-22 — `abs` standard function (LANG-FULL AL8, PR-1)
+
+ALGOL 60 *standard functions* (§3.2.4) are built into the language rather than
+user-declared procedures.  This release adds the first one, **`abs`**.
+
+- `abs(E)` yields the absolute value of `E`, preserving its numeric type
+  (`integer`→`integer`, `real`→`real`).  It lowers inline to the value of
+  `if E < 0 then -E else E`: a `cmp_lt` against a typed zero, then a
+  `jmp_if_false` choosing between a negated (`0 - E`, i.e. `sub`/`fsub`) and a
+  pass-through `mov` into a single result slot.  This is the same store-per-branch
+  shape the conditional-expression lowering already runs on **all seven backends**
+  (native-AOT/LLVM/WASM/JVM/CLR/VM/JIT) — no backend learns anything about `abs`;
+  it is compare + branch + subtract in the shared IIR.  `E` is evaluated once.
+- **Resolution is name-based and overridable.** A standard function has no
+  `proc_sigs` entry, so a call resolves to the built-in only when the name is
+  *not* a user-declared procedure — a program that redeclares `procedure abs`
+  gets its own version, exactly as the Report permits.
+- **No grammar change.** `abs(x)` already parses as a `proc_call`; only the
+  IIR-compiler's call lowering changed.
+- **Verified by RUNNING:** a new `lang_matrix.rs` cell — `result := abs(0 - 42)`
+  ⇒ exit **42** — executes on every backend; plus 9 inline tests (negative /
+  positive / zero / composed integer `abs`, negative / positive real `abs`, the
+  lowers-to-branches-not-a-call structural check, the user-override case, and the
+  wrong-arity rejection).
+
+`sign`/`entier`/`sqrt`/`sin`/`cos`/… follow in later AL8 slices (the
+transcendentals need a runtime math library on every backend; the pure-IIR
+`abs`/`sign`/`entier` come first).
+
 ## 0.7.0 — 2026-06-22 — `own` variables: static lifetime (LANG-FULL AL6)
 
 ALGOL 60's `own` declarations (`own integer n`) now lower to **module globals**,

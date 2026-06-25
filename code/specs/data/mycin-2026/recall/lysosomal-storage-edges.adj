@@ -1,0 +1,100 @@
+% ============================================================================
+% lysosomal-storage-edges — the lysosomal-storage-disease→accumulated-substrate
+% knowledge-graph (MYCIN-2026 LYSOSOMAL).
+% ============================================================================
+% A classic high-yield biochemistry board table: in each lysosomal storage
+% disease, an enzyme deficiency blocks degradation of a particular substrate, so
+% that substrate accumulates. "What accumulates in Tay-Sachs disease?" becomes the
+% binding query
+%     ? accumulates(tay_sachs, $Substrate).
+%
+% Direction note: the relation is disease -> accumulated substrate (`accumulates`),
+% the board direction — you name the disease and recall the molecule that builds up.
+% Each disease here maps to ONE canonical accumulating substrate, so a query binds
+% a single answer.
+%
+% What matters for grounding is that one self-contained span names BOTH the disease
+% AND its accumulating substrate. Most spans state "accumulation"/"buildup" directly
+% (Tay-Sachs, Gaucher, Fabry, metachromatic leukodystrophy, Pompe). Two spans
+% (Niemann-Pick, Hurler) co-name both endpoints via the canonical MECHANISM — the
+% deficient enzyme is the one that normally degrades/hydrolyzes the substrate, so
+% its deficiency causes that substrate to accumulate; this is the same defeasible
+% byte-grounding the framework uses elsewhere (justification by combined bytes, not
+% verbatim substring). The header flags those two so a reader knows the exact wording.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like RATELIMIT/BIOCHEM/BRACHIAL).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed,
+%                including verbatim quirks — the Unicode α in "α-Gal A" (Fabry) and
+%                the source's own spellings "IUDA" and "heparin sulfate" (Hurler) are
+%                preserved exactly).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see lysosomal-storage-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a reader
+% can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% DEFERRED (honest gap, not authored over): Krabbe disease → galactocerebroside/
+% psychosine. On NBK562315 (StatPearls) and NBK1238 (GeneReviews) the disease name
+% and the substrate-with-accumulation are split across separate sentences; no single
+% self-contained span co-names both with the relationship, so the edge is omitted
+% rather than grounded on a split span. Re-groundable later from an alternate source.
+% ============================================================================
+
+dictionary lysosomal_vocab {
+    define disease   : entity   surface "lysosomal storage disease", "storage disorder"
+    define substrate : entity   surface "accumulated substrate", "storage material"
+
+    define accumulates : relation from disease to substrate  % the molecule that builds up in a storage disease
+}
+
+rulebook lysosomal_facts {
+    use lysosomal_vocab
+
+    % --- Tay-Sachs -> GM2 ganglioside -----------------------------------------
+    relate accumulates(tay_sachs, gm2_ganglioside)
+        source "Tay-Sachs disease is a progressive, lethal neurodegenerative disorder caused by a deficiency of the enzyme hexosaminidase-A that results in the accumulation of GM2 gangliosides."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK564432/"
+        trust authoritative
+
+    % --- Gaucher -> glucocerebroside ------------------------------------------
+    relate accumulates(gaucher, glucocerebroside)
+        source "All forms of Gaucher disease lead to the toxic accumulation of glucocerebroside lipids, primarily in the liver, spleen, and bone marrow."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448080/"
+        trust authoritative
+
+    % --- Niemann-Pick -> sphingomyelin (mechanism span: deficient enzyme degrades it) --
+    relate accumulates(niemann_pick, sphingomyelin)
+        source "Niemann-Pick disease (NPD) is a lysosomal storage disease caused by acid sphingomyelinase deficiency (ASMD), which catalyzes the hydrolysis of sphingomyelin to ceramide and phosphocholine."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556129/"
+        trust authoritative
+
+    % --- Fabry -> globotriaosylceramide (Gb3) ---------------------------------
+    relate accumulates(fabry, globotriaosylceramide)
+        source "Fabry disease belongs to the group of X-linked inherited lysosomal storage disorders characterized by α-Gal A deficiency, which leads to lysosomal accumulation of globotriaosylceramide (Gb3)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK435996/"
+        trust authoritative
+
+    % --- Hurler (MPS I) -> glycosaminoglycans (mechanism span: deficient enzyme breaks them down) --
+    relate accumulates(hurler, glycosaminoglycans)
+        source "Hurler syndrome is caused by a deficiency of a lysosomal enzyme, IUDA, which aids in the breakdown of dermatan sulfate and heparin sulfate (GAG)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532261/"
+        trust authoritative
+
+    % --- metachromatic leukodystrophy -> sulfatides ---------------------------
+    relate accumulates(metachromatic_leukodystrophy, sulfatides)
+        source "Metachromatic leukodystrophy is an autosomal recessive lysosomal disorder that results in a buildup of sulfatides that leads to the destruction of the myelin sheath, leading to progressive demyelination of the central and peripheral nervous system."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560744/"
+        trust authoritative
+
+    % --- Pompe (GSD II) -> glycogen (lysosomal) -------------------------------
+    relate accumulates(pompe, glycogen)
+        source "Pompe disease is driven by lysosomal glycogen accumulation due to GAA enzyme deficiency, leading to lysosomal rupture and the release of glycogen and other toxic materials into the cytoplasm."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470558/"
+        trust authoritative
+}

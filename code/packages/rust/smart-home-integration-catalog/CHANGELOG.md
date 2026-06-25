@@ -35,6 +35,35 @@ All notable changes to this package will be documented in this file.
 - Mesh release ticket handoff disposition-action slot clearance action evidence
   review readiness summaries that combine evidence readiness with review counts
   and next review pointers.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
+  review clearance rows that project review readiness into repair, review,
+  dispatch, execution, lineage, and release handoff outcomes.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
+  review clearance readiness summaries that combine review readiness with
+  clearance-row counts and next clearance pointers.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
+  review clearance action rows that turn clearance readiness into repair,
+  review, dispatch, execution, lineage, and release handoff work.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
+  review clearance action readiness summaries that combine clearance readiness
+  with action-row counts and next clearance-action pointers.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
+  review clearance action readiness evidence rows that capture repair, review,
+  dispatch, execution, lineage, and release handoff evidence.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
+  review clearance action readiness evidence summaries that combine evidence
+  readiness with evidence counts and next readiness evidence pointers.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
+  review clearance action readiness evidence review rows that classify
+  readiness evidence into blocker, operator, review, lineage, and release-ready
+  outcomes.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
+  review clearance action readiness evidence review summaries that combine
+  readiness-evidence review rows with review counts and next review pointers.
+- Mesh release ticket handoff disposition-action slot clearance action evidence
+  review clearance action readiness evidence review disposition rows that turn
+  reviewed readiness evidence into repair, operator, review, lineage, and
+  release-ready handoff outcomes.
 - Virtual alias entries for product lines supported by another integration or
   standard.
 - Read-only D18D tool descriptors for listing/describing integrations and
