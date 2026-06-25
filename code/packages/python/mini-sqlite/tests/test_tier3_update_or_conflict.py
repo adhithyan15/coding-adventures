@@ -39,9 +39,9 @@ from __future__ import annotations
 
 import sqlite3
 
-import mini_sqlite
 import pytest
 
+import mini_sqlite
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -95,8 +95,13 @@ class TestPlainUpdateUnchanged:
         assert m == r
 
     def test_plain_update_with_where(self) -> None:
+        setup = (
+            "CREATE TABLE t (x INT, y TEXT);"
+            " INSERT INTO t VALUES (1,'a');"
+            " INSERT INTO t VALUES (2,'b')"
+        )
         m, r = _exec_and_fetch(
-            "CREATE TABLE t (x INT, y TEXT); INSERT INTO t VALUES (1,'a'); INSERT INTO t VALUES (2,'b')",
+            setup,
             "UPDATE t SET y = 'z' WHERE x = 1",
             "SELECT x, y FROM t ORDER BY x",
         )
