@@ -238,12 +238,77 @@ mod tests {
         assert!(try_parse_wolfram("x[[]]\n").is_err());
     }
 
+    // --- W-21 pattern operator sugar: |, /;, ?, //. ----------------------
+
+    #[test]
+    fn alternatives_operator_parses_via_alternatives_rule() {
+        // `a | b | c` matches the new `alternatives` infix level.
+        assert_eq!(
+            first_token_of(&parse_wolfram("a | b\n"), "alternatives").as_deref(),
+            Some("|")
+        );
+        assert!(contains_rule(&parse_wolfram("a | b | c\n"), "alternatives"));
+        // `||` (OR) still wins over `|` (longest-match by declaration order): the
+        // `alternatives` rule is a transparent wrapper here (always in the cascade),
+        // so it matches NO `|` token — `first_token_of` finds no ALTERNATIVES op.
+        assert!(contains_rule(&parse_wolfram("a || b\n"), "logical_or"));
+        assert_eq!(
+            first_token_of(&parse_wolfram("a || b\n"), "alternatives"),
+            None
+        );
+    }
+
+    #[test]
+    fn condition_operator_parses_and_binds_looser_than_alternatives() {
+        assert_eq!(
+            first_token_of(&parse_wolfram("p /; t\n"), "condition").as_deref(),
+            Some("/;")
+        );
+        // `a | b /; t` — the `condition` node sits ABOVE the `alternatives` node
+        // (so `/;` is looser than `|`): the AST contains both, with condition
+        // wrapping alternatives.
+        let ast = parse_wolfram("a | b /; t\n");
+        assert!(contains_rule(&ast, "condition") && contains_rule(&ast, "alternatives"));
+        // A real Condition example.
+        assert!(parses("x_ /; x > 2\n"));
+    }
+
+    #[test]
+    fn patterntest_operator_parses_via_patterntest_rule() {
+        assert_eq!(
+            first_token_of(&parse_wolfram("p ? f\n"), "patterntest").as_deref(),
+            Some("?")
+        );
+        // `_?EvenQ` — the `?` binds tighter than application/list, so it parses.
+        assert!(parses("_?EvenQ\n"));
+        assert!(parses("x_?IntegerQ\n"));
+        // Chained `?` (left-associative).
+        assert!(parses("_?IntegerQ?Positive\n"));
+    }
+
+    #[test]
+    fn replacerepeated_operator_parses_at_the_replaceall_level() {
+        // `//.` shares the `replaceall` rule with `/.`.
+        assert_eq!(
+            first_token_of(&parse_wolfram("e //. r\n"), "replaceall").as_deref(),
+            Some("//.")
+        );
+        // `//.` must NOT lex as `/` `/.` — the whole operator is one token, so
+        // `{1, 2, 3} //. 2 -> 99` parses as ReplaceRepeated of the rule.
+        assert!(parses("{1, 2, 3} //. 2 -> 99\n"));
+        // Mixed chain with `/.` at the same level.
+        assert!(parses("x /. a //. b\n"));
+    }
+
     #[test]
     fn syntax_error_is_reported() {
         assert!(try_parse_wolfram("1 +\n").is_err());
         assert!(try_parse_wolfram("f[x\n").is_err()); // unclosed bracket
         assert!(try_parse_wolfram("x[[1\n").is_err()); // unclosed double bracket
         assert!(try_parse_wolfram("f /@\n").is_err()); // map with no right operand
+        assert!(try_parse_wolfram("a |\n").is_err()); // W-21: `|` with no right operand
+        assert!(try_parse_wolfram("p ?\n").is_err()); // W-21: `?` with no right operand
+        assert!(try_parse_wolfram("e //.\n").is_err()); // W-21: `//.` with no rules
     }
 
     #[test]
