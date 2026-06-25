@@ -842,6 +842,45 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                             let new_cv = st.fork_cv(&parent, &before, &after);
                             return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
                         }
+                        // ---- substring predicates: startsWith / endsWith / includes ----
+                        //
+                        // `"abc".startsWith("a")` → `true`, `"abc".endsWith("c")`
+                        // → `true`, `"abc".includes("b")` → `true` (ECMAScript
+                        // §22.1.3.{23,7,9}, each in its single-argument form).
+                        // Both receiver and search string must be string
+                        // literals; the result is a boolean literal, so the
+                        // whole call collapses to `true`/`false`.
+                        //
+                        // JS compares these by UTF-16 code unit while Rust's
+                        // `starts_with` / `ends_with` / `contains` compare UTF-8
+                        // bytes — but the two ALWAYS agree here, because both
+                        // operands are valid Rust `String`s (no lone
+                        // surrogates), and prefix / suffix / substring matching
+                        // over a sequence of whole Unicode scalar values gives
+                        // the same yes/no answer in either encoding (each
+                        // encoding is deterministic and self-synchronizing per
+                        // scalar, so a match can only land on scalar
+                        // boundaries). `"a💩b".includes("💩")` is `true` in both,
+                        // and an empty needle is always present (`""` is a
+                        // prefix, a suffix, and a substring of everything),
+                        // matching `str`'s behavior exactly.
+                        //
+                        // Only the single-argument form folds; the position
+                        // overloads (`"abc".startsWith("b", 1)`, etc.) carry a
+                        // second argument and so never reach this one-argument
+                        // arm — they pass through to the runtime.
+                        else if let Some(value) =
+                            fold_string_predicate(&id.name, &s.value, &needle.value)
+                        {
+                            let parent = c.cv.clone();
+                            let before = format!(
+                                "\"{}\".{}(\"{}\")",
+                                s.value, id.name, needle.value
+                            );
+                            let after = if value { "true" } else { "false" };
+                            let new_cv = st.fork_cv(&parent, &before, after);
+                            return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
+                        }
                     }
                 }
             }
@@ -957,6 +996,34 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         callee: Box::new(callee),
         arguments,
     })
+}
+
+/// Evaluate a single-argument `String.prototype` substring **predicate** —
+/// `startsWith`, `endsWith`, or `includes` — over two constant strings,
+/// returning the boolean answer, or `None` when `method` is not one we model
+/// (so the caller leaves the call untouched).
+///
+/// | JS call                  | result  | Rust intrinsic    |
+/// |--------------------------|---------|-------------------|
+/// | `"abc".startsWith("a")`  | `true`  | `str::starts_with`|
+/// | `"abc".endsWith("c")`    | `true`  | `str::ends_with`  |
+/// | `"abc".includes("b")`    | `true`  | `str::contains`   |
+/// | `"abc".includes("x")`    | `false` | `str::contains`   |
+///
+/// These coincide bit-for-bit with V8 for any pair of literals: JS matches by
+/// UTF-16 code unit and Rust by UTF-8 byte, but both operands are valid
+/// `String`s (whole Unicode scalars, no lone surrogates), and a prefix /
+/// suffix / substring relation over a scalar sequence holds identically in
+/// every self-synchronizing encoding. The empty needle is always present, just
+/// as `str` reports (`"".starts_with("")` and `"abc".contains("")` are both
+/// `true`).
+fn fold_string_predicate(method: &str, haystack: &str, needle: &str) -> Option<bool> {
+    match method {
+        "startsWith" => Some(haystack.starts_with(needle)),
+        "endsWith" => Some(haystack.ends_with(needle)),
+        "includes" => Some(haystack.contains(needle)),
+        _ => None,
+    }
 }
 
 /// Render a non-negative integer `v` in `radix` (2..=36) the way JavaScript's
@@ -4117,6 +4184,136 @@ mod tests {
         let c = call1(ident("s"), "indexOf", string("x", None));
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.indexOf(\"x\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------- substring predicates (startsWith/endsWith/includes) -------
+
+    /// Drive `call`, asserting it folds to the boolean `expect`.
+    fn assert_folds_to_bool(c: Expression, expect: bool, label: &str) {
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "{label} should fold");
+        match extract_expr(&out) {
+            Expression::BooleanLiteral(b) => assert_eq!(b.value, expect, "{label}"),
+            other => panic!("{label}: expected {expect}; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_starts_with_true_and_false() {
+        // V8 oracle: "abc".startsWith("a")=true, "abc".startsWith("b")=false.
+        assert_folds_to_bool(
+            call1(string("abc", None), "startsWith", string("a", None)),
+            true,
+            "\"abc\".startsWith(\"a\")",
+        );
+        assert_folds_to_bool(
+            call1(string("abc", None), "startsWith", string("b", None)),
+            false,
+            "\"abc\".startsWith(\"b\")",
+        );
+    }
+
+    #[test]
+    fn fold_ends_with_true_and_false() {
+        // V8 oracle: "abc".endsWith("c")=true, "abc".endsWith("b")=false.
+        assert_folds_to_bool(
+            call1(string("abc", None), "endsWith", string("c", None)),
+            true,
+            "\"abc\".endsWith(\"c\")",
+        );
+        assert_folds_to_bool(
+            call1(string("abc", None), "endsWith", string("b", None)),
+            false,
+            "\"abc\".endsWith(\"b\")",
+        );
+    }
+
+    #[test]
+    fn fold_includes_true_and_false() {
+        // V8 oracle: "abc".includes("b")=true, "abc".includes("x")=false.
+        assert_folds_to_bool(
+            call1(string("abc", None), "includes", string("b", None)),
+            true,
+            "\"abc\".includes(\"b\")",
+        );
+        assert_folds_to_bool(
+            call1(string("abc", None), "includes", string("x", None)),
+            false,
+            "\"abc\".includes(\"x\")",
+        );
+    }
+
+    #[test]
+    fn predicates_empty_needle_is_always_true() {
+        // The empty string is a prefix, a suffix, and a substring of every
+        // string — `"abc".startsWith("")`, `.endsWith("")`, `.includes("")`
+        // are all `true` in V8, matching `str`.
+        for method in ["startsWith", "endsWith", "includes"] {
+            assert_folds_to_bool(
+                call1(string("abc", None), method, string("", None)),
+                true,
+                method,
+            );
+        }
+    }
+
+    #[test]
+    fn predicates_match_across_astral_chars() {
+        // "a💩b" holds an astral char (a surrogate pair in UTF-16, four UTF-8
+        // bytes). Matching whole scalars agrees in both encodings, so V8 and
+        // Rust both say yes here — proving we don't false-split the pair.
+        assert_folds_to_bool(
+            call1(string("a💩b", None), "startsWith", string("a💩", None)),
+            true,
+            "\"a💩b\".startsWith(\"a💩\")",
+        );
+        assert_folds_to_bool(
+            call1(string("a💩b", None), "endsWith", string("💩b", None)),
+            true,
+            "\"a💩b\".endsWith(\"💩b\")",
+        );
+        assert_folds_to_bool(
+            call1(string("a💩b", None), "includes", string("💩", None)),
+            true,
+            "\"a💩b\".includes(\"💩\")",
+        );
+    }
+
+    #[test]
+    fn predicate_with_position_arg_does_not_fold() {
+        // The two-argument position overloads (`startsWith(s, pos)` etc.) land
+        // in the 2-arg arm and are left for the runtime.
+        for method in ["startsWith", "endsWith", "includes"] {
+            let c = Expression::CallExpression(CallExpression {
+                cv: Some("c.cv".to_string()),
+                callee: Box::new(member(string("abc", None), method)),
+                arguments: vec![string("b", None), num(1.0, None)],
+            });
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "two-arg {method}(needle, pos) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn predicate_on_identifier_receiver_does_not_fold() {
+        // `s.includes("x")` needs the runtime value of `s`.
+        for method in ["startsWith", "endsWith", "includes"] {
+            let c = call1(ident("s"), method, string("x", None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "s.{method}(\"x\") must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn predicate_with_non_string_needle_does_not_fold() {
+        // A numeric search argument (`"abc".includes(1)`) is not a string
+        // literal, so it isn't our case — leave it for the runtime.
+        let c = call1(string("abc", None), "includes", num(1.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "includes with a numeric arg must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
