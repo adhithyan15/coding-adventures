@@ -259,6 +259,10 @@ pub fn install(env: &Env) {
     define(env, "format.Date", builtin("format.Date", b_format_date));
     define(env, "difftime", builtin("difftime", b_difftime));
     define(env, "weekdays", builtin("weekdays", b_weekdays));
+    // R-45: month/quarter accessors. `seq.Date` is dispatched from within `seq`
+    // when the first argument carries class "Date" (see `b_seq`).
+    define(env, "months", builtin("months", b_months));
+    define(env, "quarters", builtin("quarters", b_quarters));
 
     // v2 — data frames.
     define(env, "data.frame", builtin("data.frame", b_data_frame));
@@ -1857,6 +1861,93 @@ fn civil_from_days(z: i64) -> (i64, i64, i64) {
     (y, m, d)
 }
 
+// ---------------------------------------------------------------------------
+// R-45: English month / weekday name tables (hand-rolled — no new dependency).
+// ---------------------------------------------------------------------------
+//
+// These back `%B`/`%b`/`%A`/`%a` in both rendering (`format.Date`) and parsing
+// (`as.Date`), plus `months()`. All names are English; locale-specific names are
+// deferred to R-46. The full and abbreviated forms are kept in parallel arrays so
+// the abbreviation is always the first three letters — which it is for every
+// English month and weekday — but we store both explicitly for clarity and so a
+// future irregular abbreviation needs no special-casing.
+
+/// Full month names, indexed by `month - 1` (so `MONTHS_FULL[0]` is January).
+const MONTHS_FULL: [&str; 12] = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];
+
+/// Abbreviated month names, indexed by `month - 1` (`MONTHS_ABBR[0]` = "Jan").
+const MONTHS_ABBR: [&str; 12] = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+/// Full weekday names, **Sunday-based** (index 0 = Sunday) to match the weekday
+/// index `(days + 4).rem_euclid(7)` (day 0 = Thursday = index 4).
+const WEEKDAYS_FULL: [&str; 7] = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+];
+
+/// Abbreviated weekday names, Sunday-based (index 0 = "Sun").
+const WEEKDAYS_ABBR: [&str; 7] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/// The Sunday-based weekday index (0..7) of a day count `z`. The anchor is
+/// `1970-01-01` (day 0) = Thursday = index 4; `rem_euclid` keeps the result in
+/// `0..7` even for negative (pre-epoch) `z` (Rust's `%` can return a negative
+/// remainder, which would panic on array indexing). Shared by `%A`/`%a` and the
+/// `weekdays` builtin.
+fn weekday_index(z: i64) -> usize {
+    (z + 4).rem_euclid(7) as usize
+}
+
+/// Match `input` (starting at char index `idx`) against a fixed name `table`,
+/// **case-insensitively** over ASCII, longest-name-first so e.g. "June" is not
+/// shadowed by a hypothetical "Jun" prefix. On a match, advance `idx` past the
+/// consumed name and return the table position (0-based); on no match, leave
+/// `idx` and return `None` (→ the whole parse fails → NA). Never indexes out of
+/// bounds: the comparison is length-checked against the remaining input, and
+/// ASCII case-folding (`eq_ignore_ascii_case`) is byte-safe on the `char` slice.
+fn match_name(input: &[char], idx: &mut usize, table: &[&str]) -> Option<usize> {
+    // Try longer names before shorter ones so a short name that is a prefix of a
+    // longer one (none in the English tables, but defensive) cannot win early.
+    let mut order: Vec<usize> = (0..table.len()).collect();
+    order.sort_by_key(|&i| std::cmp::Reverse(table[i].len()));
+    for &pos in &order {
+        let name: Vec<char> = table[pos].chars().collect();
+        let end = idx.checked_add(name.len())?;
+        if end > input.len() {
+            continue; // not enough input left for this name
+        }
+        // Case-insensitive ASCII comparison, char by char (bounded by name.len()).
+        let matches = input[*idx..end]
+            .iter()
+            .zip(name.iter())
+            .all(|(a, b)| a.eq_ignore_ascii_case(b));
+        if matches {
+            *idx = end;
+            return Some(pos);
+        }
+    }
+    None
+}
+
 /// The largest number of decimal digits we will accumulate for any single date
 /// field while parsing. A year is at most 4–6 digits in practice; capping the run
 /// length means a crafted string of a million '9's can never overflow the `i64`
@@ -1944,8 +2035,31 @@ fn parse_date_str(string: &str, format: &str) -> Option<i64> {
                 'Y' => year = Some(parse_uint_field(&chars, &mut ci)?),
                 'm' => month = Some(parse_uint_field(&chars, &mut ci)?),
                 'd' => day = Some(parse_uint_field(&chars, &mut ci)?),
+                // %e is a space-padded day-of-month: a single optional leading
+                // space, then the digits. Skip the pad, then read the number.
+                'e' => {
+                    if ci < chars.len() && chars[ci] == ' ' {
+                        ci += 1;
+                    }
+                    day = Some(parse_uint_field(&chars, &mut ci)?);
+                }
+                // %B / %b: a month NAME (full or abbreviated), case-insensitive.
+                // Try the full table first, then the abbreviation. The matched
+                // position + 1 is the month number. A bogus name → None → NA.
+                'B' | 'b' => {
+                    let pos = match_name(&chars, &mut ci, &MONTHS_FULL)
+                        .or_else(|| match_name(&chars, &mut ci, &MONTHS_ABBR))?;
+                    month = Some(pos as i64 + 1);
+                }
+                // %A / %a: a weekday NAME. Like base R's strptime, the weekday is
+                // parsed (and must be a real name) but does NOT constrain the
+                // resulting date — we consume and discard it.
+                'A' | 'a' => {
+                    match_name(&chars, &mut ci, &WEEKDAYS_FULL)
+                        .or_else(|| match_name(&chars, &mut ci, &WEEKDAYS_ABBR))?;
+                }
                 // An unsupported conversion in the format → no parse (NA), rather
-                // than silently misreading. (Full %B/%A/… land in R-45.)
+                // than silently misreading. (Sub-day %H/%M/%S land in R-46.)
                 _ => return None,
             }
             fi += 2;
@@ -1993,6 +2107,15 @@ fn format_date_days(z: i64, format: &str) -> String {
                 'Y' => out.push_str(&y.to_string()),
                 'm' => out.push_str(&format!("{m:02}")),
                 'd' => out.push_str(&format!("{d:02}")),
+                // %e: day of month, **space-padded** to width 2 ("the 5th" → " 5").
+                'e' => out.push_str(&format!("{d:2}")),
+                // %B / %b: full / abbreviated English month name. `m` is 1..=12 by
+                // construction (civil_from_days), so `m - 1` is a valid 0..11 index.
+                'B' => out.push_str(MONTHS_FULL[(m - 1) as usize]),
+                'b' => out.push_str(MONTHS_ABBR[(m - 1) as usize]),
+                // %A / %a: full / abbreviated English weekday name.
+                'A' => out.push_str(WEEKDAYS_FULL[weekday_index(z)]),
+                'a' => out.push_str(WEEKDAYS_ABBR[weekday_index(z)]),
                 'j' => {
                     // Day of year, 001..366 = (this day) − (Jan 1 of the same year) + 1.
                     let doy = z - days_from_civil(y, 1, 1) + 1;
@@ -2014,13 +2137,16 @@ fn format_date_days(z: i64, format: &str) -> String {
     out
 }
 
-/// `as.Date(x, format = "%Y-%m-%d")` — build a `Date` (R-44).
+/// `as.Date(x, format = "%Y-%m-%d")` — build a `Date` (R-44; R-45 extends fields).
 ///
 /// - **Character `x`:** each element is parsed against `format` (default ISO
-///   `"%Y-%m-%d"`; pass e.g. `format = "%Y/%m/%d"`). Unparseable / out-of-range
-///   strings become `NA` — never a panic.
+///   `"%Y-%m-%d"`; pass e.g. `format = "%Y/%m/%d"` or `"%B %d, %Y"`). The format
+///   may be supplied either as the named `format =` or — matching base R and
+///   `format.Date` — as the **second positional** argument
+///   (`as.Date("15 Jan 2021", "%d %b %Y")`). Unparseable / out-of-range strings
+///   become `NA` — never a panic.
 /// - **Numeric `x`:** taken directly as days-since-epoch (`as.Date(0)` is
-///   1970-01-01). An `origin =` other than the epoch is deferred (R-45); we use
+///   1970-01-01). An `origin =` other than the epoch is deferred (R-46); we use
 ///   1970-01-01.
 ///
 /// Vectorised; the result always carries class "Date".
@@ -2030,7 +2156,15 @@ fn b_as_date(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     if is_date(x) {
         return Ok(x.clone());
     }
-    let format = named_str(args, "format").unwrap_or_else(|| "%Y-%m-%d".to_string());
+    // The format is the named `format =`, or the second positional string (only
+    // meaningful on the character path — the numeric path ignores it). Defaults to
+    // ISO. Reading the positional only as a string means a numeric second arg
+    // (which `as.Date` does not otherwise define) is harmlessly ignored.
+    let format = named_str(args, "format")
+        .or_else(|| {
+            nth_positional(args, 1).and_then(|v| v.as_character().into_iter().next().flatten())
+        })
+        .unwrap_or_else(|| "%Y-%m-%d".to_string());
 
     // The peeled value decides character-parse vs numeric-wrap. A character vector
     // parses; anything coercible to double is taken as raw day counts.
@@ -2130,26 +2264,48 @@ fn b_difftime(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// counts, which would panic on `Vec` indexing; `rem_euclid` always lands in
 /// `0..7`. `NA` days yield `NA`.
 fn b_weekdays(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    const NAMES: [&str; 7] = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-    ];
     let days = first_positional(args)?.as_double()?;
     let out: Vec<Option<String>> = days
         .iter()
         .map(|v| {
             // `checked_date_days` rejects NA / non-finite / out-of-range counts → NA,
-            // so `z + 4` below can never overflow (which would panic for i64::MAX).
+            // so `z + 4` in `weekday_index` can never overflow. The shared
+            // `WEEKDAYS_FULL` table (Sunday-based) is the same one `%A` uses.
+            checked_date_days(v).map(|z| WEEKDAYS_FULL[weekday_index(z)].to_string())
+        })
+        .collect();
+    Ok(SValue::Character(out))
+}
+
+/// `months(d)` — the full English month name of each `Date` (R-45). Equivalent to
+/// `format(d, "%B")`. Vectorised; `NA` days yield `NA`. `civil_from_days` always
+/// returns a month in `1..=12`, so the `m - 1` index is always in range.
+fn b_months(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let days = first_positional(args)?.as_double()?;
+    let out: Vec<Option<String>> = days
+        .iter()
+        .map(|v| {
             checked_date_days(v).map(|z| {
-                // Day 0 = Thursday = index 4 (Sunday-based). rem_euclid keeps the
-                // index in 0..7 even for negative z (pre-epoch).
-                let idx = (z + 4).rem_euclid(7) as usize;
-                NAMES[idx].to_string()
+                let (_, m, _) = civil_from_days(z);
+                MONTHS_FULL[(m - 1) as usize].to_string()
+            })
+        })
+        .collect();
+    Ok(SValue::Character(out))
+}
+
+/// `quarters(d)` — the calendar quarter of each `Date` as `"Q1"`..`"Q4"` (R-45).
+/// The quarter is `(month - 1) / 3 + 1` (Jan–Mar = Q1, …, Oct–Dec = Q4).
+/// Vectorised; `NA` days yield `NA`.
+fn b_quarters(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let days = first_positional(args)?.as_double()?;
+    let out: Vec<Option<String>> = days
+        .iter()
+        .map(|v| {
+            checked_date_days(v).map(|z| {
+                let (_, m, _) = civil_from_days(z);
+                let q = (m - 1) / 3 + 1; // m in 1..=12 → q in 1..=4
+                format!("Q{q}")
             })
         })
         .collect();
@@ -6157,8 +6313,20 @@ fn b_condition_message(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 }
 
 /// `seq(to)` is `1:to`; `seq(from, to)` is `from:to` (step 1). A minimal subset
-/// of R's `seq` sufficient for v1.
+/// of R's `seq` sufficient for v1, plus the R-45 `seq.Date` dispatch: when the
+/// first positional argument carries class "Date", we delegate to [`seq_date`],
+/// which understands a numeric / `"day"` / `"week"` / `"month"` / `"year"` `by =`
+/// and a `length.out =` alternative to `to`.
 fn b_seq(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    // R-45: Date dispatch. `seq(as.Date(...), ...)` is S3 `seq.Date`. We branch on
+    // the first positional's class before the numeric fast-path so plain numeric
+    // `seq` is entirely unaffected.
+    if let Some(first) = args.iter().find(|a| a.name.is_none()) {
+        if is_date(&first.value) {
+            return seq_date(args);
+        }
+    }
+
     let positionals: Vec<f64> = args
         .iter()
         .filter(|a| a.name.is_none())
@@ -6174,6 +6342,286 @@ fn b_seq(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         [] => return Err(SError::BadArgs("seq requires at least one argument".into())),
     };
     Ok(SValue::doubles(bounded_sequence(from, to)?))
+}
+
+/// A `seq.Date` `by =` step, parsed from either a number (of days) or a unit
+/// string. `Days(n)` covers numeric `by`, `"day"` (n=1×mult), and `"week"`
+/// (n=7×mult); `Months(n)` and `Years(n)` step the civil Y/M/D with day clamping.
+enum DateStep {
+    Days(i64),
+    Months(i64),
+    Years(i64),
+}
+
+/// Parse a `seq.Date` `by =` argument into a [`DateStep`]. A numeric `by` is a
+/// (possibly negative) whole number of days. A string `by` is `"day"`, `"week"`,
+/// `"month"`, or `"year"` with an optional leading **integer multiplier**
+/// (`"2 weeks"`, `"3 months"`) — anything else is rejected. The multiplier is
+/// parsed with a bounded `i64` and the resulting day step for day/week units is
+/// later checked against the sequence-length cap, so no `by =` can drive an
+/// unbounded allocation.
+fn parse_date_by(args: &[Arg]) -> SResult<DateStep> {
+    let by = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("by"))
+        .map(|a| &a.value);
+    let Some(by) = by else {
+        // Default step is one day (R's default for Date `from:to`).
+        return Ok(DateStep::Days(1));
+    };
+    // Numeric `by` → that many days. (`by = 7` ≡ `by = "week"`.)
+    if let SValue::Double(d) = peel_structural(by) {
+        let v = d.get_value(0).unwrap_or(f64::NAN);
+        if !v.is_finite() {
+            return Err(SError::BadArgs("seq.Date: 'by' must be finite".into()));
+        }
+        return Ok(DateStep::Days(v.trunc() as i64));
+    }
+    // String `by` → "[mult ]unit". Split on the first space; the optional left
+    // part is an integer multiplier, the right (or whole) part is the unit.
+    let s = by
+        .as_character()
+        .into_iter()
+        .next()
+        .flatten()
+        .ok_or_else(|| SError::BadArgs("seq.Date: invalid 'by'".into()))?;
+    let s = s.trim();
+    let (mult, unit) = match s.split_once(char::is_whitespace) {
+        Some((n, u)) => {
+            let m: i64 = n
+                .trim()
+                .parse()
+                .map_err(|_| SError::BadArgs(format!("seq.Date: invalid 'by' = {s:?}")))?;
+            (m, u.trim())
+        }
+        None => (1, s),
+    };
+    // Accept both singular and plural unit spellings ("week"/"weeks").
+    let unit = unit.strip_suffix('s').unwrap_or(unit);
+    match unit {
+        "day" => Ok(DateStep::Days(mult)),
+        "week" => {
+            let n = mult
+                .checked_mul(7)
+                .ok_or_else(|| SError::BadArgs("seq.Date: 'by' overflow".into()))?;
+            Ok(DateStep::Days(n))
+        }
+        "month" => Ok(DateStep::Months(mult)),
+        "year" => Ok(DateStep::Years(mult)),
+        other => Err(SError::BadArgs(format!("seq.Date: invalid 'by' unit {other:?}"))),
+    }
+}
+
+/// The widest absolute civil-month index `add_months_clamped` will ever feed to
+/// the kernel. A representable Date is at most `MAX_DATE_DAYS` ≈ 1e11 days from the
+/// epoch (~270 million years); a month is at least 28 days, so any month index
+/// beyond `MAX_DATE_DAYS / 28` (plus a small slack) provably lands outside the
+/// Date range. Clamping `total` to this bound keeps `days_from_civil`'s internal
+/// `era * 146097` multiplication comfortably inside `i64` — so an absurd `by =
+/// "9e18 months"` can never overflow/panic the kernel; the clamped (still
+/// out-of-range) day count is then rejected by the caller's `MAX_DATE_DAYS`
+/// `push` guard, exactly as a directly out-of-range numeric Date would be.
+const MAX_DATE_MONTHS: i64 = MAX_DATE_DAYS / 28 + 12;
+
+/// Add `n` civil months to `(y, m)` (keeping a separate day), clamping the
+/// day-of-month to the target month's length. `n` may be negative. Pure i64
+/// arithmetic with `rem_euclid`/`div_euclid` so negative totals never panic, and
+/// the absolute month index is clamped to [`MAX_DATE_MONTHS`] so the kernel call
+/// below can never overflow even for an absurd `n`.
+fn add_months_clamped(y: i64, m: i64, d: i64, n: i64) -> (i64, i64, i64) {
+    // Convert to a 0-based absolute month index, shift, decompose back. Saturating
+    // arithmetic prevents an overflow *here*, and the explicit clamp keeps the
+    // index small enough that `days_from_civil` (called via `days_in_month`)
+    // cannot overflow either. A clamped, out-of-range result is re-validated
+    // against MAX_DATE_DAYS by the caller's `push`, which turns it into an error.
+    let total = y
+        .saturating_mul(12)
+        .saturating_add(m - 1)
+        .saturating_add(n)
+        .clamp(-MAX_DATE_MONTHS, MAX_DATE_MONTHS);
+    let ny = total.div_euclid(12);
+    let nm = total.rem_euclid(12) + 1; // 1..=12
+                                       // Clamp the day to the new month's length.
+    let last = days_in_month(ny, nm);
+    (ny, nm, d.min(last))
+}
+
+/// The number of days in civil month `m` of year `y` (Gregorian, leap-aware).
+/// Computed from the kernel itself — the day before the 1st of the *next* month —
+/// so the leap-year rule lives in exactly one place (`days_from_civil`).
+fn days_in_month(y: i64, m: i64) -> i64 {
+    let (ny, nm) = if m == 12 { (y + 1, 1) } else { (y, m + 1) };
+    days_from_civil(ny, nm, 1) - days_from_civil(y, m, 1)
+}
+
+/// `seq.Date(from, to = , by = , length.out = )` — generate a `Date` sequence
+/// (R-45). `from` is the first (positional) Date; `to` is the second positional
+/// **or** the named `to =`. The step comes from [`parse_date_by`]. `length.out =`
+/// is an alternative to `to` (and wins if both are given). The output length is
+/// bounded by [`MAX_SEQ_LEN`] with checked arithmetic *before* any allocation, so
+/// a span/step implying billions of dates errors rather than exhausting memory.
+fn seq_date(args: &[Arg]) -> SResult<SValue> {
+    // `from` — the first positional Date, taken as a single day count. We route it
+    // through `checked_date_days` (the same ±MAX_DATE_DAYS guard `as.Date` uses) so
+    // a hand-built out-of-range Date (e.g. `structure(1e300, class="Date")`) is
+    // rejected up front and the span/step arithmetic below can never overflow i64.
+    let from = first_positional(args)?
+        .as_double()?
+        .get_value(0)
+        .and_then(checked_date_days)
+        .ok_or_else(|| SError::BadArgs("seq.Date: 'from' must be a finite, in-range Date".into()))?;
+
+    let step = parse_date_by(args)?;
+
+    // `length.out =` (alias `length_out`) takes priority over `to`.
+    let length_out = named_count(args, "length.out").or_else(|| named_count(args, "length_out"));
+
+    // `to` is the second positional argument or the named `to =`. Same in-range
+    // guard as `from`, so a crafted out-of-range `to` cannot overflow `to - from`.
+    let to: Option<i64> = nth_positional(args, 1)
+        .or_else(|| {
+            args.iter()
+                .find(|a| a.name.as_deref() == Some("to"))
+                .map(|a| &a.value)
+        })
+        .and_then(|v| v.as_double().ok())
+        .and_then(|d| d.get_value(0))
+        .and_then(checked_date_days);
+
+    if length_out.is_none() && to.is_none() {
+        return Err(SError::BadArgs(
+            "seq.Date: need either 'to' or 'length.out'".into(),
+        ));
+    }
+
+    // Build the day-count vector, capping length at MAX_SEQ_LEN throughout.
+    let mut days: Vec<f64> = Vec::new();
+    let push = |days: &mut Vec<f64>, z: i64| -> SResult<()> {
+        if days.len() >= MAX_SEQ_LEN {
+            return Err(SError::BadArgs(format!(
+                "seq.Date: result too large (limit {MAX_SEQ_LEN} elements)"
+            )));
+        }
+        if z.abs() > MAX_DATE_DAYS {
+            return Err(SError::BadArgs(
+                "seq.Date: generated date out of range".into(),
+            ));
+        }
+        days.push(z as f64);
+        Ok(())
+    };
+
+    match (length_out, to, &step) {
+        // length.out given: emit exactly that many dates from `from`. Each date is
+        // computed directly as `from + k·step` (k = 0..n), so there is no carried
+        // mutable state to get wrong and month/year clamping always references the
+        // *original* anchor day (R's behaviour: Jan 31, Feb 28, Mar 31 — not Feb
+        // 28, Feb 28, …).
+        (Some(n), _, _) => {
+            if n > MAX_SEQ_LEN {
+                return Err(SError::BadArgs(format!(
+                    "seq.Date: length.out {n} exceeds the limit of {MAX_SEQ_LEN}"
+                )));
+            }
+            let (oy, om, od) = civil_from_days(from);
+            for k in 0..n as i64 {
+                let z = match &step {
+                    DateStep::Days(s) => {
+                        let off = s
+                            .checked_mul(k)
+                            .ok_or_else(|| SError::BadArgs("seq.Date: step overflow".into()))?;
+                        from.checked_add(off)
+                            .ok_or_else(|| SError::BadArgs("seq.Date: step overflow".into()))?
+                    }
+                    DateStep::Months(s) => {
+                        let months = s
+                            .checked_mul(k)
+                            .ok_or_else(|| SError::BadArgs("seq.Date: step overflow".into()))?;
+                        let (ny, nm, nd) = add_months_clamped(oy, om, od, months);
+                        days_from_civil(ny, nm, nd)
+                    }
+                    DateStep::Years(s) => {
+                        let months = s
+                            .checked_mul(12)
+                            .and_then(|sm| sm.checked_mul(k))
+                            .ok_or_else(|| SError::BadArgs("seq.Date: step overflow".into()))?;
+                        let (ny, nm, nd) = add_months_clamped(oy, om, od, months);
+                        days_from_civil(ny, nm, nd)
+                    }
+                };
+                push(&mut days, z)?;
+            }
+        }
+        // `to` given (no length.out): step until we pass `to`.
+        (None, Some(to), _) => match &step {
+            DateStep::Days(s) => {
+                if *s == 0 {
+                    return Err(SError::BadArgs("seq.Date: 'by' must be non-zero".into()));
+                }
+                // Pre-compute the length and cap it BEFORE allocating, so a huge
+                // span can never OOM. n = floor((to - from) / s) + 1 when the sign
+                // of (to - from) matches s; else the sequence is empty.
+                let span = to - from;
+                if (span >= 0) == (*s > 0) || span == 0 {
+                    let steps = (span / s).unsigned_abs();
+                    let n = steps
+                        .checked_add(1)
+                        .filter(|&t| t <= MAX_SEQ_LEN as u64)
+                        .ok_or_else(|| {
+                            SError::BadArgs(format!(
+                                "seq.Date: result too large (limit {MAX_SEQ_LEN} elements)"
+                            ))
+                        })?;
+                    for k in 0..n as i64 {
+                        // Checked: `from + s·k`. By construction k·s stays within
+                        // the (bounded) span, but compute it defensively so even a
+                        // crafted `by` cannot overflow — it errors instead.
+                        let off = s
+                            .checked_mul(k)
+                            .ok_or_else(|| SError::BadArgs("seq.Date: step overflow".into()))?;
+                        let z = from
+                            .checked_add(off)
+                            .ok_or_else(|| SError::BadArgs("seq.Date: step overflow".into()))?;
+                        push(&mut days, z)?;
+                    }
+                }
+                // else: step points away from `to` → empty sequence (R returns
+                // `from` only when to==from; the equality case is handled above).
+            }
+            DateStep::Months(s) | DateStep::Years(s) => {
+                let step_months = if matches!(step, DateStep::Years(_)) {
+                    s.checked_mul(12)
+                        .ok_or_else(|| SError::BadArgs("seq.Date: 'by' overflow".into()))?
+                } else {
+                    *s
+                };
+                if step_months == 0 {
+                    return Err(SError::BadArgs("seq.Date: 'by' must be non-zero".into()));
+                }
+                let (oy, om, od) = civil_from_days(from);
+                let ascending = step_months > 0;
+                let mut k: i64 = 0;
+                loop {
+                    // Saturating: a runaway k cannot overflow here, and the
+                    // resulting out-of-range day is rejected by `push` below.
+                    let (ny, nm, nd) =
+                        add_months_clamped(oy, om, od, step_months.saturating_mul(k));
+                    let z = days_from_civil(ny, nm, nd);
+                    // Stop once we pass `to` in the step's direction.
+                    if (ascending && z > to) || (!ascending && z < to) {
+                        break;
+                    }
+                    push(&mut days, z)?;
+                    k = k
+                        .checked_add(1)
+                        .ok_or_else(|| SError::BadArgs("seq.Date: step overflow".into()))?;
+                }
+            }
+        },
+        (None, None, _) => unreachable!("guarded above"),
+    }
+
+    Ok(make_date(days))
 }
 
 // ===========================================================================

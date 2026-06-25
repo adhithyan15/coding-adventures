@@ -710,6 +710,36 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
      `POSIXct`/`POSIXlt` date-times & timezones; `seq.Date`; `months()`/`quarters()`;
      `difftime` units other than days.
 
+12. **Date/time completeness (R-45, shared builtins).** Extends the R-44 Date
+   builtins **in place** — same civil-date kernel, same `Date` class machinery,
+   same parse-safety guards, no new dependency (English month/weekday name tables
+   are hand-rolled `const` arrays).
+   - **Extended `strftime` fields** in `format.Date`/`format`: `%B` (full month
+     `"January"`..`"December"`), `%b` (abbrev `"Jan"`..`"Dec"`), `%A` (full
+     weekday `"Monday"`..`"Sunday"`), `%a` (abbrev `"Mon"`..`"Sun"`), `%e`
+     (space-padded day of month, width 2). Weekday reuses R-44's
+     `(days + 4).rem_euclid(7)` Sunday-based index.
+   - **Extended `strptime` fields** in `as.Date`: `%B`/`%b` parse month names
+     **case-insensitively** (`"january"`/`"JAN"`/`"Jan"`); `%A`/`%a` parse and
+     spell-check weekday names (consumed but not used to constrain the date, as in
+     base R); `%e` parses an optionally space-padded day. So
+     `as.Date("January 15, 2021", "%B %d, %Y")` and `as.Date("15 Jan 2021",
+     "%d %b %Y")` parse correctly; a malformed name → `NA`, never a panic
+     (name-matching scans a fixed, length-bounded table with ASCII case-folding).
+   - **`seq.Date(from, to, by)`** (also reached via the `seq` generic when `from`
+     is a `Date`): `by` is a number of days or a unit string
+     `"day"`/`"week"`/`"month"`/`"year"` with an optional leading integer
+     multiplier (`"2 weeks"`). Day/week step a fixed day count; month/year step
+     the civil Y/M/D, **clamping** day-of-month to the target month length
+     (`2021-01-31 + 1 month` → `2021-02-28`). `length.out =` supported as an
+     alternative to `to`. **Output length is `MAX_SEQ_LEN`-bounded** with checked
+     arithmetic before allocation.
+   - **`months(d)`** → full month name (= `format(d, "%B")`); **`quarters(d)`** →
+     `"Q1"`..`"Q4"`. Both vectorised, `NA`-preserving.
+   - **Deferred to R-46.** `POSIXct`/`POSIXlt`; timezones; sub-day
+     `%H`/`%M`/`%S`/`%p`; `%U`/`%W` week-of-year; locale (non-English) names;
+     compound `"N units"` `by=` beyond a single leading integer multiplier.
+
 ## §10 References
 
 Internal: [`ST00-r-stats-roadmap.md`](ST00-r-stats-roadmap.md),

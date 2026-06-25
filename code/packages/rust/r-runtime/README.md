@@ -349,9 +349,28 @@ dependency-free `days_from_civil`/`civil_from_days` algorithms (leap years and
 pre-epoch dates handled). Parse safety: untrusted strings parse with bounded `i64`
 accumulation (no overflow on crafted years), impossible days are rejected via a
 civil round-trip, and weekday/day-of-year modulo uses `rem_euclid` (safe on
-pre-epoch negatives). Deferred to **R-45**: full `strptime`/`strftime` fields,
-`POSIXct`/`POSIXlt` date-times and timezones, `seq.Date`, `months()`/`quarters()`,
-and `difftime` units other than days.
+pre-epoch negatives).
+
+**R-45 — Date/time completeness** extends those Date builtins in place (same
+kernel, no new dependency). `format()` / `format.Date` gain `%B` (full month
+name), `%b` (abbreviated month), `%A` (full weekday), `%a` (abbreviated
+weekday), and `%e` (space-padded day): `format(as.Date("2021-01-15"), "%B %d,
+%Y")` → `"January 15, 2021"`, `%A` → `"Friday"`. `as.Date` parses `%B`/`%b`
+(case-insensitive), `%A`/`%a`, and `%e`, and accepts the format as its 2nd
+positional argument: `as.Date("January 15, 2021", "%B %d, %Y")` and
+`as.Date("15 Jan 2021", "%d %b %Y")` both → `2021-01-15`; a malformed name →
+`NA`, never a panic. `seq(from, to, by)` dispatches to a Date sequence when
+`from` is a Date — `seq(as.Date("2021-01-01"), as.Date("2021-01-05"), by = 1)`
+is five days, `by = "week"` steps 7 days, and
+`seq(as.Date("2021-01-31"), by = "month", length.out = 3)` →
+Jan 31, Feb 28, Mar 31 (day clamped to month length); `by` also takes `"year"`
+and `"N units"` multipliers, and `length.out=` is an alternative to `to`.
+`months(d)` → the full month name; `quarters(d)` → `"Q1"`..`"Q4"`. Security:
+name parsing is table-bounded with ASCII case-folding (no OOB), and `seq.Date`
+caps its length at `MAX_SEQ_LEN` with checked arithmetic before allocating
+(`by = 0` errors; huge spans error rather than OOM). Deferred to **R-46**:
+`POSIXct`/`POSIXlt` & timezones, `%H`/`%M`/`%S`/`%p`, `%U`/`%W` week-of-year,
+locale names, and compound `by=` beyond a single integer multiplier.
 
 ## Usage
 
