@@ -1,0 +1,85 @@
+% ============================================================================
+% pituitary-hormone-edges — the pituitary-hormone→target knowledge-graph
+% (MYCIN-2026 PITUITARY).
+% ============================================================================
+% A high-yield endocrine-physiology board table: each major pituitary hormone
+% (anterior tropic hormones + posterior ADH) and the target organ/effect it acts
+% on. "What does TSH act on?" becomes the binding query
+%     ? targets(tsh, $Target).
+%
+% Direction note: the relation is hormone -> the target organ/effect it acts on
+% (`targets`). Each hormone here maps to ONE canonical target span, so a query
+% binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The target object names the literal target/effect the
+% sentence states (TSH "stimulates receptors ... of the thyroid gland"; ACTH
+% "acts on the adrenal cortex"; prolactin "growth of mammary alveoli ... the
+% mammary gland"; ADH "increase water reabsorption" in the kidney; LH "causes
+% the testes' Leydig cells to produce testosterone"; FSH "stimulates the
+% maturation of ovarian follicles"). Each span was independently re-fetched and
+% confirmed on two separate fetches of the same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like BONECELL/AUTONOMIC/
+% GIHORMONE/CONDUCTION). It is DISTINCT from the legacy endocrine domain: this is
+% a brand-new pure-ADJ file on the pituitary-axis hormone→target topic. Each fact
+% is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see pituitary-hormone-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary pituitary_hormone_vocab {
+    define hormone : entity   surface "pituitary hormone", "tropic hormone"
+    define target  : entity   surface "target organ", "hormone target"
+
+    define targets : relation from hormone to target  % the target/effect this hormone acts on
+}
+
+rulebook pituitary_hormone_facts {
+    use pituitary_hormone_vocab
+
+    % --- TSH -> thyroid gland ------------------------------------------------
+    relate targets(tsh, thyroid_gland)
+        source "TSH stimulates receptors found in the follicular cells of the thyroid gland to produce thyroid hormones T4 and T3."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499898/"
+        trust authoritative
+
+    % --- ACTH -> adrenal cortex ----------------------------------------------
+    relate targets(acth, adrenal_cortex)
+        source "ACTH then acts on the adrenal cortex to promote cortisol synthesis and release."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500031/"
+        trust authoritative
+
+    % --- prolactin -> mammary gland ------------------------------------------
+    relate targets(prolactin, mammary_gland)
+        source "Prolactin promotes the growth of mammary alveoli, which are the components of the mammary gland, where the actual production of milk occurs."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507829/"
+        trust authoritative
+
+    % --- ADH (vasopressin) -> kidney water reabsorption ----------------------
+    relate targets(adh, promotes_water_reabsorption)
+        source "ADH primarily affects the ability of the kidney to reabsorb water; when present, ADH induces expression of water transport proteins in the late distal tubule and collecting duct to increase water reabsorption."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526069/"
+        trust authoritative
+
+    % --- LH -> Leydig cells (testosterone) -----------------------------------
+    relate targets(lh, stimulates_leydig_cells)
+        source "In men, LH causes the testes' Leydig cells to produce testosterone."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539692/"
+        trust authoritative
+
+    % --- FSH -> ovarian follicle maturation ----------------------------------
+    relate targets(fsh, stimulates_follicle_growth)
+        source "During the follicular phase of the menstrual cycle, FSH stimulates the maturation of ovarian follicles."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535442/"
+        trust authoritative
+}
