@@ -352,8 +352,33 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
   examples: `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` is `c(1,3)` (and
   `r %*% c(1,3) == c(5,9)`); `forwardsolve(matrix(c(2,1,0,3), nrow=2), c(4,11))`
   is `c(2,3)`. The optional `k =`, `transpose = TRUE`, and `upper.tri` flips are
-  **deferred to R-42**; this item ships the default full-triangle dense core
-  (vector and multi-column matrix RHS) only.
+  shipped in **R-42** (see next item); this item ships the default full-triangle
+  dense core (vector and multi-column matrix RHS).
+- **Triangular-solve options** *(R-42)*: the same shared `triangular_solve`
+  helper, extended with base-R's three named arguments —
+  `backsolve(r, x, k = ncol(r), upper.tri = TRUE,  transpose = FALSE)` and
+  `forwardsolve(l, x, k = ncol(l), upper.tri = FALSE, transpose = FALSE)`.
+  **`upper.tri`** selects which triangle of the first argument to read (its
+  per-builtin default — `TRUE` for `backsolve`, `FALSE` for `forwardsolve` — is
+  overridden by an explicit value); the substitution direction follows the
+  triangle read (upper ⇒ back-substitution, lower ⇒ forward-substitution).
+  **`transpose = TRUE`** solves `t(R) %*% y = x`, which flips the direction and
+  reroutes every coefficient read through the transposed column-major index
+  (`R[j,i]` at `i·n + j` wherever the untransposed solve used `R[i,j]` at
+  `j·n + i`); the effective direction is back-substitution iff
+  `upper.tri != transpose`. **`k`** restricts the solve to the leading `k×k`
+  block and the first `k` RHS rows (result has `k` rows); indexing keeps the
+  full stride `n`, so no data is copied — the loops simply range over `0..k`.
+  **Safety (preserved from R-41):** `k` is range-checked `0 ≤ k ≤ n` (a
+  malformed/out-of-range `k` is a clean error, never an out-of-bounds read); the
+  zero-on-the-*used*-diagonal singular check is unchanged (the diagonal index is
+  transpose-invariant); RHS dimensions are validated before indexing. Worked
+  examples: `backsolve(m, c(4,11), upper.tri = FALSE)` equals `forwardsolve(m)`;
+  `backsolve(matrix(c(2,0,1,3), nrow=2), c(4,11), transpose = TRUE)` solves the
+  lower-triangular `t(R) = [[2,0],[1,3]]` ⇒ `c(2,3)`. Exotic full
+  cross-products of all three options with a *wide* multi-column matrix RHS are
+  **deferred to R-43**; R-42 ships each option independently plus the common
+  combinations.
 - **Cholesky factorization** *(R-40)*: `chol(X)`, the Cholesky factor of a real
   symmetric positive-definite `n×n` matrix. Returns the **upper-triangular**
   matrix `R` with **`t(R) %*% R == X`** (R's convention — the upper factor, so

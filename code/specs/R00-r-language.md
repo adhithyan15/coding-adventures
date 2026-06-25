@@ -1182,7 +1182,61 @@ unchanged.
     **Deferred to R-34:** `dig.lab =` (significant-digit control of auto-label
     formatting) and `ordered_result =` (an ordered factor result). The `%o%` infix
     alias for `outer` remains open for a later grammar pass.
-- **R-41 — `backsolve()` / `forwardsolve()` (triangular solves)** *(this PR)*.
+- **R-42 — triangular-solve options (`k` / `upper.tri` / `transpose`)** *(this PR)*.
+  Extends the R-41 `backsolve`/`forwardsolve` core (the shared
+  `triangular_solve` helper in `s-runtime`) with base-R's three named options.
+  No grammar change — the named arguments flow through the existing call path.
+  Base-R signatures:
+  `backsolve(r, x, k = ncol(r), upper.tri = TRUE,  transpose = FALSE)` and
+  `forwardsolve(l, x, k = ncol(l), upper.tri = FALSE, transpose = FALSE)`.
+  - **`upper.tri = TRUE/FALSE`** — *which triangle of the first argument to
+    read*. `backsolve` defaults `TRUE` (read the **upper** triangle),
+    `forwardsolve` defaults `FALSE` (read the **lower** triangle). An explicit
+    `upper.tri =` overrides the per-builtin default. The substitution
+    **direction follows the triangle read**: reading the upper triangle ⇒
+    **back**-substitution (bottom-up), reading the lower triangle ⇒
+    **forward**-substitution (top-down). So `backsolve(m, x, upper.tri = FALSE)`
+    is exactly `forwardsolve(m, x)`, and vice-versa.
+  - **`transpose = TRUE/FALSE`** — when `TRUE`, solve `t(R) %*% y = x` instead of
+    `R %*% y = x`. Transposing a triangular factor swaps which triangle is
+    "active", so `transpose = TRUE` **flips** the substitution direction: an
+    upper-triangular `R` solved transposed runs **forward**-substitution over the
+    transposed entries (the code reads `R[j,i]` — column-major index `i·n + j` —
+    wherever the untransposed solve read `R[i,j]`). Formally the effective
+    direction is `back ⟺ (upper.tri XOR transpose) == upper.tri` … i.e. the
+    direction is back-substitution iff `upper.tri != transpose`.
+  - **`k =`** — use only the **leading `k×k` block** of the (column-major,
+    stride-`n`) triangular factor *and* the **first `k` rows** of the right-hand
+    side; the result has **`k` rows**. Default `k = ncol(r)` (the full matrix —
+    the helper uses `nrow(r)`, which equals `ncol(r)` for the square factor).
+    Indexing keeps the full stride `n`: the leading block's entry `(i,j)` for
+    `i,j < k` is still at `a[j·n + i]`, so no data is copied — the loops simply
+    range over `0..k`.
+  - **Combined semantics.** The three options compose: `k` selects the active
+    block, `upper.tri` picks the base direction, `transpose` may flip it and
+    re-routes every coefficient read through the transposed index. The diagonal
+    (`a[i·n + i]`) is the same under transpose, so the singular-diagonal check is
+    unchanged.
+  - **Worked examples.**
+    `backsolve(matrix(c(2,1,0,3), nrow=2), c(4,11), upper.tri = FALSE)` reads the
+    lower triangle of `[[2,0],[1,3]]` ⇒ forward-sub ⇒ `c(2,3)` (identical to
+    `forwardsolve` of that matrix).
+    `backsolve(matrix(c(2,0,1,3), nrow=2), c(4,11), transpose = TRUE)`: `R` is
+    `[[2,1],[0,3]]`, `t(R) = [[2,0],[1,3]]`; the solve runs forward-sub over the
+    transposed entries ⇒ `y[1]=4/2=2`, `y[2]=(11−1·2)/3=3` ⇒ `c(2,3)`, and
+    `t(R) %*% c(2,3) == c(4,11)`.
+    With a `3×3` upper-tri `r` and `k = 2`, only the leading `2×2` block and the
+    first two RHS rows are used and the result has length 2.
+  - **Safety (preserved from R-41).** A zero on the *used* diagonal → a clean
+    *singular* error (never `NaN`/`Inf`/panic). `k` is range-checked
+    `0 ≤ k ≤ n` (a malformed/out-of-range `k` is a clean error, never an
+    out-of-bounds read). RHS row/column counts are validated before any indexing;
+    order and column caps come from `square_matrix`/`MAX_SOLVE_DIM` as before.
+  - **Deferred to R-43.** Exotic full cross-products of all three options with a
+    *wide multi-column* matrix RHS beyond the cases tested here, and any pivoted
+    variants, are deferred to **R-43**. R-42 ships each option **independently**
+    plus the common combinations (each with vector and the tested matrix RHS).
+- **R-41 — `backsolve()` / `forwardsolve()` (triangular solves)** *(previous PR)*.
   An **independent matrix-algebra item** in the same family as R-12/R-40, landed
   in the shared `s-runtime` (R reuses it verbatim through the shared
   tree-walker). The two triangular linear solvers that the LU/Cholesky family
@@ -1231,12 +1285,14 @@ unchanged.
     nrow=2), c(4,11))`: `l` is `[[2,0],[1,3]]`; `y[1]=4/2=2`,
     `y[2]=(11−1·2)/3=3`, so `c(2,3)`, and `l %*% c(2,3) == c(4,11)`. A
     multi-column `x` is solved column-by-column.
-  - **Deferred to R-42.** The optional arguments `k =` (use only the leading
+  - **Shipped in R-42.** The optional arguments `k =` (use only the leading
     `k×k` sub-block), `transpose = TRUE` (solve `t(r) %*% y = x`), and
     `upper.tri = FALSE` for `backsolve` / `upper.tri = TRUE` for `forwardsolve`
-    (read the other triangle) are **out of scope here** and explicitly deferred
-    to **R-42**. This item ships the default full-triangle dense core (single
-    vector RHS and multi-column matrix RHS) solidly.
+    (read the other triangle) were **out of scope here** and shipped in the
+    follow-on item **R-42** (see below). This item ships the default
+    full-triangle dense core (single vector RHS and multi-column matrix RHS)
+    solidly; R-42 extends the *same* shared helper without changing this
+    default behaviour.
 - **R-40 — `chol()` (Cholesky factorization)** *(this PR)*. An **independent
   matrix-algebra item** in the same family as R-36/R-38, landed in the shared
   `s-runtime` (R reuses it verbatim through the shared tree-walker). For a real
