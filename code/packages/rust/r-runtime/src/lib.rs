@@ -3598,6 +3598,105 @@ mod tests {
         assert!((y[1] - 3.0).abs() < 1e-9);
     }
 
+    // --- R-43: norm(x, type) — matrix norms (R syntax) ------------------
+
+    #[test]
+    fn norm_default_one_norm_through_r_syntax() {
+        // Default type = "O" (one-norm): max absolute COLUMN sum.
+        // matrix(c(1,2,3,4), nrow=2) col-major -> cols (1,2) and (3,4).
+        // |1|+|2| = 3, |3|+|4| = 7 -> max = 7.
+        assert_eq!(nums("norm(matrix(c(1,2,3,4), nrow = 2))\n"), vec![7.0]);
+        // Explicit "O" and "1" agree with the default.
+        assert_eq!(nums("norm(matrix(c(1,2,3,4), nrow = 2), \"O\")\n"), vec![7.0]);
+        assert_eq!(nums("norm(matrix(c(1,2,3,4), nrow = 2), \"1\")\n"), vec![7.0]);
+    }
+
+    #[test]
+    fn norm_infinity_norm_through_r_syntax() {
+        // type = "I" (infinity-norm): max absolute ROW sum.
+        // rows of [[1,3],[2,4]]: |1|+|3| = 4, |2|+|4| = 6 -> max = 6.
+        assert_eq!(nums("norm(matrix(c(1,2,3,4), nrow = 2), \"I\")\n"), vec![6.0]);
+    }
+
+    #[test]
+    fn norm_frobenius_through_r_syntax() {
+        // type = "F"/"E" (Frobenius): sqrt(sum of squares).
+        // sqrt(1 + 4 + 9 + 16) = sqrt(30) ~= 5.477225575.
+        let f = nums("norm(matrix(c(1,2,3,4), nrow = 2), \"F\")\n");
+        assert_eq!(f.len(), 1);
+        assert!((f[0] - 30f64.sqrt()).abs() < 1e-9);
+        // "E" is an accepted alias for the Euclidean (Frobenius) norm.
+        let e = nums("norm(matrix(c(1,2,3,4), nrow = 2), \"E\")\n");
+        assert!((e[0] - 30f64.sqrt()).abs() < 1e-9);
+    }
+
+    #[test]
+    fn norm_max_modulus_through_r_syntax() {
+        // type = "M": max absolute ELEMENT. Negatives go through abs.
+        assert_eq!(nums("norm(matrix(c(1,-5,3,4), nrow = 2), \"M\")\n"), vec![5.0]);
+    }
+
+    #[test]
+    fn norm_type_is_case_insensitive_through_r_syntax() {
+        // R lower-cases type before matching: "o", "f", "i", "m" all work.
+        assert_eq!(nums("norm(matrix(c(1,2,3,4), nrow = 2), \"o\")\n"), vec![7.0]);
+        assert_eq!(nums("norm(matrix(c(1,2,3,4), nrow = 2), \"i\")\n"), vec![6.0]);
+        assert_eq!(nums("norm(matrix(c(1,-5,3,4), nrow = 2), \"m\")\n"), vec![5.0]);
+        let f = nums("norm(matrix(c(1,2,3,4), nrow = 2), \"f\")\n");
+        assert!((f[0] - 30f64.sqrt()).abs() < 1e-9);
+    }
+
+    #[test]
+    fn norm_named_type_argument_through_r_syntax() {
+        // type may be passed by name as well as positionally.
+        assert_eq!(nums("norm(matrix(c(1,2,3,4), nrow = 2), type = \"I\")\n"), vec![6.0]);
+    }
+
+    #[test]
+    fn norm_vector_promoted_to_one_column_matrix_through_r_syntax() {
+        // A plain numeric vector is treated as an n*1 matrix.
+        // Frobenius of c(3,4) is the 3-4-5 right triangle -> 5.
+        assert_eq!(nums("norm(c(3, 4), \"F\")\n"), vec![5.0]);
+        // One-norm: the single column's absolute sum = 3 + 4 = 7.
+        assert_eq!(nums("norm(c(3, 4), \"O\")\n"), vec![7.0]);
+        // Infinity-norm: the largest single-element row = 4.
+        assert_eq!(nums("norm(c(3, 4), \"I\")\n"), vec![4.0]);
+        // Max-modulus = 4.
+        assert_eq!(nums("norm(c(3, 4), \"M\")\n"), vec![4.0]);
+    }
+
+    #[test]
+    fn norm_handles_negative_entries_through_r_syntax() {
+        // Every norm uses absolute values, so signs do not matter beyond |.|.
+        // matrix(c(-1,-2,-3,-4), nrow=2): one-norm still 7, Frobenius still sqrt(30).
+        assert_eq!(nums("norm(matrix(c(-1,-2,-3,-4), nrow = 2), \"O\")\n"), vec![7.0]);
+        let f = nums("norm(matrix(c(-1,-2,-3,-4), nrow = 2), \"F\")\n");
+        assert!((f[0] - 30f64.sqrt()).abs() < 1e-9);
+    }
+
+    #[test]
+    fn norm_na_propagates_through_r_syntax() {
+        // An NA entry makes the whole result NA (base R semantics).
+        assert_eq!(show("norm(matrix(c(1, NA, 3, 4), nrow = 2))\n"), "[1] NA");
+        assert_eq!(show("norm(matrix(c(1, NA, 3, 4), nrow = 2), \"F\")\n"), "[1] NA");
+    }
+
+    #[test]
+    fn norm_unknown_type_is_clean_error_through_r_syntax() {
+        // An unrecognised type letter is a clean error, never a panic.
+        let err = eval_r("norm(matrix(c(1,2,3,4), nrow = 2), \"Z\")\n").unwrap_err();
+        assert!(!format!("{err}").is_empty());
+    }
+
+    #[test]
+    fn norm_spectral_type_deferred_error_through_r_syntax() {
+        // type = "2" (spectral norm, needs SVD) is deferred to R-48: a clear
+        // error mentioning the unsupported type, not a wrong number or a panic.
+        let err = eval_r("norm(matrix(c(1,2,3,4), nrow = 2), \"2\")\n").unwrap_err();
+        let msg = format!("{err}").to_lowercase();
+        assert!(msg.contains('2') || msg.contains("spectral"));
+    }
+
     // --- R-35: ordered factors & cut() label polish (R syntax) ----------
 
     #[test]

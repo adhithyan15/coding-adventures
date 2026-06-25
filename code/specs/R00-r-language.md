@@ -1182,6 +1182,46 @@ unchanged.
     **Deferred to R-34:** `dig.lab =` (significant-digit control of auto-label
     formatting) and `ordered_result =` (an ordered factor result). The `%o%` infix
     alias for `outer` remains open for a later grammar pass.
+- **R-43 — `norm(x, type)` (matrix norms)** *(this PR)*. An **independent
+  matrix-algebra item** in the R-12/R-40/R-41 family: `norm(x, type = "O")`
+  reduces a numeric matrix `x` to a single non-negative number measuring its
+  "size". `type` is a one-letter string, **case-insensitive** (R lower-cases it
+  before matching), and selects which norm:
+  - **`"O"` / `"o"` / `"1"`** — the **one-norm**: the maximum absolute *column*
+    sum, `max_j Σ_i |x[i,j]|`. This is R's **default** `type`.
+  - **`"I"` / `"i"`** — the **infinity-norm**: the maximum absolute *row* sum,
+    `max_i Σ_j |x[i,j]|`.
+  - **`"F"` / `"f"` / `"E"` / `"e"`** — the **Frobenius** (a.k.a. Euclidean)
+    norm: `sqrt(Σ_{i,j} x[i,j]²)`, the entrywise 2-norm. The sum of squares
+    accumulates in `f64` (never an intermediate integer) so it cannot overflow
+    for any `MAX_SEQ_LEN`-legal matrix of finite entries.
+  - **`"M"` / `"m"`** — the **max-modulus**: the maximum absolute element,
+    `max_{i,j} |x[i,j]|`.
+  - **Vector promotion.** A plain numeric **vector** (not a `matrix`) is treated
+    as a single-**column** matrix (`n×1`), exactly as base R does. So
+    `norm(c(3,4), "F") == 5` (a 3-4-5 right triangle), `norm(c(3,4), "O") == 7`
+    (the lone column's absolute sum), and `norm(c(3,4), "I") == 4` (the largest
+    row, here a single element). `norm(c(3,4), "M") == 4`.
+  - **Reuse.** Reads dims+data through the shared **`matrix_parts`** helper
+    (column-major `(data, nrow, ncol)`) — *not* `square_matrix`, because norms
+    apply to **rectangular** matrices too. The vector case promotes through the
+    shared `as_double` coercion. The `type =` argument is read with the same
+    named-/positional-string convention as other builtins (`as_character` of the
+    first non-`x` argument), and the result is a `SValue::scalar`.
+  - **NA / safety.** Any `NA` entry makes the result `NA` (base R propagates `NA`
+    through these reductions). An **unknown `type`** (any letter not in the set
+    above) is a **clean error**, never a panic. An empty / 0-row / 0-column
+    matrix does not panic (the column/row/element reductions start from `0`).
+  - **Worked examples (column-major).**
+    `norm(matrix(c(1,2,3,4), nrow=2))` (default `"O"`): columns `(1,2)→3`,
+    `(3,4)→7` ⇒ **7**.
+    `norm(matrix(c(1,2,3,4), nrow=2), "I")`: rows `|1|+|3|=4`, `|2|+|4|=6` ⇒ **6**.
+    `norm(matrix(c(1,2,3,4), nrow=2), "F") = sqrt(1+4+9+16) = sqrt(30) ≈ 5.477`.
+    `norm(matrix(c(1,-5,3,4), nrow=2), "M") = 5` (negatives go through `abs`).
+  - **Deferred to R-48.** `type = "2"` — the **spectral norm** (the largest
+    singular value) — needs an SVD and is **deferred to R-48**; for now a
+    `type = "2"` request returns a clear *"norm type '2' (spectral) not yet
+    supported"* error rather than a wrong number. No grammar change in this item.
 - **R-42 — triangular-solve options (`k` / `upper.tri` / `transpose`)** *(this PR)*.
   Extends the R-41 `backsolve`/`forwardsolve` core (the shared
   `triangular_solve` helper in `s-runtime`) with base-R's three named options.
@@ -1232,10 +1272,12 @@ unchanged.
     `0 ≤ k ≤ n` (a malformed/out-of-range `k` is a clean error, never an
     out-of-bounds read). RHS row/column counts are validated before any indexing;
     order and column caps come from `square_matrix`/`MAX_SOLVE_DIM` as before.
-  - **Deferred to R-43.** Exotic full cross-products of all three options with a
-    *wide multi-column* matrix RHS beyond the cases tested here, and any pivoted
-    variants, are deferred to **R-43**. R-42 ships each option **independently**
+  - **Deferred to a later item.** Exotic full cross-products of all three options
+    with a *wide multi-column* matrix RHS beyond the cases tested here, and any
+    pivoted variants, are deferred. R-42 ships each option **independently**
     plus the common combinations (each with vector and the tested matrix RHS).
+    (R-43 itself is now `norm()`; the residual triangular-solve corner cases move
+    to a later linear-algebra item.)
 - **R-41 — `backsolve()` / `forwardsolve()` (triangular solves)** *(previous PR)*.
   An **independent matrix-algebra item** in the same family as R-12/R-40, landed
   in the shared `s-runtime` (R reuses it verbatim through the shared

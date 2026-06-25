@@ -320,6 +320,19 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   base-R options: **`k=`** (use the leading `k×k` block + first `k` rows of `x`),
   **`upper.tri=`** (which triangle to read — so `backsolve(L, x, upper.tri=FALSE)`
   equals `forwardsolve(L, x)`), and **`transpose=TRUE`** (solve `t(R) %*% y = x`).
+- **Matrix norms** (R-43): **`norm(x, type = "O")`** — collapses a numeric matrix
+  to a single non-negative "size". The one-letter, **case-insensitive** `type`
+  picks the norm: **`"O"`/`"1"`** one-norm (max absolute **column** sum, R's
+  default), **`"I"`** infinity-norm (max absolute **row** sum), **`"F"`/`"E"`**
+  Frobenius/Euclidean (`sqrt(Σ x[i,j]²)`), **`"M"`** max-modulus (max `|x[i,j]|`).
+  A bare numeric vector becomes an `n×1` column, so `norm(c(3,4), "F")` is `5`;
+  `type` may be positional or named. Reuses the shared `matrix_parts` reader
+  (column-major, **rectangular** — not `square_matrix`) and `as_double` for the
+  vector promotion. Any `NA` entry → `NA`; an unknown `type` is a clean error (no
+  panic); the Frobenius sum-of-squares accumulates in `f64` (no overflow).
+  `norm(matrix(c(1,2,3,4), nrow=2))` is `7`, `…, "I")` is `6`, `…, "F")` is
+  `sqrt(30) ≈ 5.477`. `type = "2"` (the spectral norm, needs an SVD) is deferred
+  to R-48 with a clear error.
 - **Kronecker product** (R-38): **`kronecker(X, Y)`** — the `(m·p)×(n·q)`
   block-outer product of an `m×n` `X` and a `p×q` `Y`, where block `(i, j)` is
   `X[i,j] · Y` and `result[(i-1)·p+k, (j-1)·q+l] = X[i,j] · Y[k,l]`

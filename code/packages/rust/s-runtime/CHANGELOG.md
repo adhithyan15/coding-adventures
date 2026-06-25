@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.40.0] - 2026-06-25
+
+### Added
+
+- **Matrix norms — `norm(x, type = "O")` (R-43)** — a new linear-algebra builtin
+  in the shared tree-walker, available to both S and R. `norm` reduces a numeric
+  matrix to a single non-negative number; the one-letter, **case-insensitive**
+  `type` selects which norm:
+  - **`"O"` / `"1"`** — the one-norm: maximum absolute **column** sum (R's
+    default `type`).
+  - **`"I"`** — the infinity-norm: maximum absolute **row** sum.
+  - **`"F"` / `"E"`** — the Frobenius / Euclidean norm: `sqrt(Σ x[i,j]²)`.
+  - **`"M"`** — the max-modulus: maximum absolute element.
+  - A plain numeric **vector** is treated as an `n × 1` column matrix, so
+    `norm(c(3,4), "F")` is `5`. `type` may be positional or named (`type =`).
+  - **Reuse**: dims+data come from the shared `matrix_parts` reader (column-major
+    `(data, nrow, ncol)` — rectangular matrices, not just square); the vector
+    case promotes through `as_double`; `type =` is read as a named/positional
+    string; the result is a `SValue::scalar`.
+  - **Safety**: any `NA` entry → `NA`; an unknown `type` is a clean error (never
+    a panic); an empty matrix does not panic; the Frobenius sum-of-squares
+    accumulates in `f64` (no overflow).
+  - **Deferred to R-48**: `type = "2"` (the spectral norm = largest singular
+    value, needs an SVD) returns a clear *"type '2' (spectral) not yet
+    supported"* error for now.
+
 ## [0.39.0] - 2026-06-25
 
 ### Added

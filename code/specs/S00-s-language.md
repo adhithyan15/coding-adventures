@@ -377,8 +377,27 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
   `backsolve(matrix(c(2,0,1,3), nrow=2), c(4,11), transpose = TRUE)` solves the
   lower-triangular `t(R) = [[2,0],[1,3]]` ⇒ `c(2,3)`. Exotic full
   cross-products of all three options with a *wide* multi-column matrix RHS are
-  **deferred to R-43**; R-42 ships each option independently plus the common
-  combinations.
+  **deferred to a later linear-algebra item** (R-43 itself is now `norm()`); R-42
+  ships each option independently plus the common combinations.
+- **Matrix norms** *(R-43)*: `norm(x, type = "O")` reduces a numeric matrix to a
+  single non-negative "size". `type` is a one-letter, **case-insensitive** string
+  selecting the norm: **`"O"`/`"1"`** the one-norm (max absolute *column* sum,
+  R's default), **`"I"`** the infinity-norm (max absolute *row* sum),
+  **`"F"`/`"E"`** the Frobenius/Euclidean norm (`sqrt(Σ x[i,j]²)`), **`"M"`** the
+  max-modulus (max `|x[i,j]|`). A plain numeric **vector** is treated as an `n×1`
+  matrix, so `norm(c(3,4), "F") == 5`. **Reuse:** dims+data come from the shared
+  **`matrix_parts`** helper (column-major `(data, nrow, ncol)` — *not*
+  `square_matrix`, since norms apply to rectangular matrices); the vector case
+  promotes through `as_double`; `type =` is read as a named-or-positional string
+  (`as_character`); the result is a `SValue::scalar`. **Safety:** any `NA` entry
+  ⇒ `NA`; an **unknown `type`** is a clean error (never a panic); an empty matrix
+  does not panic (reductions start from `0`); the Frobenius sum-of-squares
+  accumulates in `f64` (no integer overflow). Worked examples (column-major):
+  `norm(matrix(c(1,2,3,4), nrow=2))` is `7` (one-norm), `…, "I")` is `6`,
+  `…, "F")` is `sqrt(30) ≈ 5.477`, `norm(matrix(c(1,-5,3,4), nrow=2), "M")` is `5`.
+  **`type = "2"`** (the spectral norm = largest singular value) needs an SVD and
+  is **deferred to R-48**; for now it returns a clear *"norm type '2' (spectral)
+  not yet supported"* error rather than a wrong number.
 - **Cholesky factorization** *(R-40)*: `chol(X)`, the Cholesky factor of a real
   symmetric positive-definite `n×n` matrix. Returns the **upper-triangular**
   matrix `R` with **`t(R) %*% R == X`** (R's convention — the upper factor, so

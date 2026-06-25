@@ -299,6 +299,12 @@ pub fn install(env: &Env) {
     define(env, "rbind", builtin("rbind", b_rbind));
     define(env, "solve", builtin("solve", b_solve));
     define(env, "det", builtin("det", b_det));
+    // Matrix norms (R-43): one-norm ("O"/"1"), infinity-norm ("I"), Frobenius/
+    // Euclidean ("F"/"E"), and max-modulus ("M"). Reuses the shared matrix_parts
+    // reader (rectangular matrices, not just square) and as_double for the
+    // vector→1-column promotion. The spectral norm ("2", needs SVD) is deferred
+    // to R-48 with a clear error.
+    define(env, "norm", builtin("norm", b_norm));
     // Cholesky factorization (R-40): upper-triangular R with t(R) %*% R == X.
     // Reuses the `square_matrix` reader (shared with solve/det) and the
     // SValue::Matrix constructor. pivot=TRUE / chol2inv / complex deferred to R-41.
@@ -1292,6 +1298,137 @@ fn b_det(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         }
     }
     Ok(SValue::scalar(det))
+}
+
+/// `norm(x, type = "O")` — a **matrix norm**: one number measuring the "size" of
+/// a numeric matrix `x`. `type` is a one-letter, case-insensitive string picking
+/// *which* norm; each is a different way of collapsing all the `|x[i,j]|` into a
+/// single non-negative scalar:
+///
+/// ```text
+///   type            name              formula
+///   ----            ----              -------
+///   "O" / "1"       one-norm          max over columns j of  Σ_i |x[i,j]|
+///   "I"             infinity-norm     max over rows    i of  Σ_j |x[i,j]|
+///   "F" / "E"       Frobenius/        sqrt( Σ_{i,j} x[i,j]² )
+///                   Euclidean
+///   "M"             max-modulus       max_{i,j} |x[i,j]|
+/// ```
+///
+/// Intuition: the one-norm asks "which **column** is biggest (in absolute sum)?",
+/// the infinity-norm asks the same of **rows**, the Frobenius norm treats the
+/// matrix as one long vector and takes its Euclidean length, and the max-modulus
+/// is simply the largest single entry by magnitude.
+///
+/// `x` may also be a plain numeric **vector**, which R (and we) treat as an
+/// `n × 1` (single-**column**) matrix. So `norm(c(3,4), "F")` is `sqrt(3²+4²) = 5`
+/// (the 3-4-5 right triangle), `norm(c(3,4), "O")` is the lone column's absolute
+/// sum `7`, and `norm(c(3,4), "I")` is the largest single-element row `4`.
+///
+/// **Reuse.** Dimensions + data come from the shared [`matrix_parts`] reader
+/// (`(data, nrow, ncol)`, column-major), *not* `square_matrix` — norms apply to
+/// rectangular matrices too. The vector case promotes through `as_double`, and
+/// `type =` is read with the same named-or-positional string convention as other
+/// builtins (`as_character` of the first non-`x` argument). The result is a
+/// `SValue::scalar`.
+///
+/// **Safety / NA.** Any `NA` entry makes the result `NA` (base R propagates `NA`
+/// through these reductions). An unknown `type` letter is a clean `BadArgs`
+/// error — never a panic. An empty / 0-row / 0-column matrix does not panic: the
+/// reductions start from `0`. The Frobenius sum-of-squares accumulates in `f64`,
+/// so no `MAX_SEQ_LEN`-legal matrix of finite entries can overflow.
+///
+/// **Deferred.** `type = "2"` is the *spectral* norm (the largest singular value);
+/// it needs an SVD and is deferred to **R-48**. For now it is a clear error
+/// rather than a wrong number.
+fn b_norm(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    // --- 1. Read x as (data, nrow, ncol), promoting a bare vector to n×1. ---
+    let x = first_positional(args)?;
+    let (data, nrow, ncol): (Vec<f64>, usize, usize) = match matrix_parts(x) {
+        Some((d, nr, nc)) => (d.data().to_vec(), nr, nc),
+        // A non-matrix numeric value → a single column (n rows, 1 column).
+        None => {
+            let d = x.as_double()?;
+            let n = d.len();
+            (d.data().to_vec(), n, 1)
+        }
+    };
+
+    // --- 2. NA anywhere ⇒ NA (matches base R for all of these reductions). ---
+    if data.iter().any(|v| is_na_real(*v)) {
+        return Ok(SValue::scalar(na_real()));
+    }
+
+    // --- 3. Read the `type` letter. It may be positional (the 2nd positional
+    // argument) or named `type =`; default "O" (R's default). Lower-case it so
+    // matching is case-insensitive, then look at just the first character. ---
+    let type_value = named_arg(args, "type").or_else(|| nth_positional(args, 1));
+    let type_str: String = match type_value {
+        Some(v) => match v.as_character().into_iter().next().flatten() {
+            // An explicit NA / empty `type` falls back to the default, as in R.
+            Some(s) if !s.is_empty() => s,
+            _ => "O".to_string(),
+        },
+        None => "O".to_string(),
+    };
+    let kind = type_str.trim().to_ascii_uppercase();
+    let first = kind.chars().next().unwrap_or('O');
+
+    // --- 4. Dispatch on the (upper-cased) first letter. Column-major data: the
+    // element at row i, column j lives at `j * nrow + i`. ---
+    let result = match first {
+        // One-norm: maximum absolute column sum. An empty matrix ⇒ 0.
+        'O' | '1' => {
+            let mut best = 0.0_f64;
+            for j in 0..ncol {
+                let mut col_sum = 0.0_f64;
+                for i in 0..nrow {
+                    col_sum += data[j * nrow + i].abs();
+                }
+                if col_sum > best {
+                    best = col_sum;
+                }
+            }
+            best
+        }
+        // Infinity-norm: maximum absolute row sum.
+        'I' => {
+            let mut best = 0.0_f64;
+            for i in 0..nrow {
+                let mut row_sum = 0.0_f64;
+                for j in 0..ncol {
+                    row_sum += data[j * nrow + i].abs();
+                }
+                if row_sum > best {
+                    best = row_sum;
+                }
+            }
+            best
+        }
+        // Frobenius / Euclidean: sqrt of the sum of squares of every entry.
+        'F' | 'E' => {
+            let mut ss = 0.0_f64;
+            for &v in &data {
+                ss += v * v;
+            }
+            ss.sqrt()
+        }
+        // Max-modulus: the largest absolute entry. Empty ⇒ 0.
+        'M' => data.iter().fold(0.0_f64, |m, &v| m.max(v.abs())),
+        // The spectral norm (largest singular value) needs an SVD; deferred.
+        '2' => {
+            return Err(SError::BadArgs(
+                "norm: type '2' (spectral) not yet supported".into(),
+            ));
+        }
+        // Anything else is an unrecognised norm type → a clean error.
+        _ => {
+            return Err(SError::BadArgs(format!(
+                "norm: 'type' must be one of \"O\"/\"1\", \"I\", \"F\"/\"E\", \"M\" (got {type_str:?})"
+            )));
+        }
+    };
+    Ok(SValue::scalar(result))
 }
 
 /// `solve(a)` → the inverse of `a`; `solve(a, b)` → the `x` solving `a %*% x = b`
