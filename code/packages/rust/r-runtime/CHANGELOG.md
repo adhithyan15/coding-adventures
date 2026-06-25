@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.36.0] - 2026-06-25
+
+### Added (via the shared `s-runtime`)
+
+- **R-41 — `backsolve(r, x)` / `forwardsolve(l, x)` (triangular solves)**,
+  reached through ordinary R syntax. `backsolve` solves the upper-triangular
+  system `r %*% y = x` by back-substitution; `forwardsolve` solves the
+  lower-triangular `l %*% y = x` by forward-substitution.
+  - `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` → `c(1, 3)`, and
+    `r %*% y` reconstructs `c(5,9)`. The right-hand side may be a vector (→ a
+    vector) or a matrix (→ one solved column per right-hand side).
+  - A zero on the diagonal is a clean **singular**-matrix error (never `NaN`/a
+    panic); non-square / dimension-mismatched inputs error cleanly too.
+  - **Reuse**: the `square_matrix` reader (shared with `solve`/`det`/`chol`) and
+    the `solve`-style RHS handling.
+  - **Deferred to R-42:** `k =`, `transpose = TRUE`, `upper.tri = FALSE`.
+
 ## [0.35.0] - 2026-06-22
 
 ### Added (via the shared `s-runtime`)
