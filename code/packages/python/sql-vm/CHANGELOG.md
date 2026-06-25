@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.61.1 — 2026-06-25
+
+### Fixed
+
+- Added `test_update_or_conflict.py`: 16 new tests covering `UPDATE OR REPLACE`,
+  `UPDATE OR IGNORE`, upsert `WHERE` predicate, `CREATE/DROP INDEX`,
+  `CREATE/DROP TRIGGER`, and `ALTER TABLE ADD COLUMN`.  These paths were
+  introduced in v1.61.0 but not exercised by the existing suite, dropping
+  coverage to 79%.  Total coverage is now 81.17% (above the 80% threshold).
+
 ## 1.61.0 — 2026-06-19
 
 ### Added
