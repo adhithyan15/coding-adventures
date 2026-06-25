@@ -7387,4 +7387,89 @@ mod date_tests {
     fn format_pre_epoch() {
         assert_eq!(format_date_days(-1, "%Y-%m-%d"), "1969-12-31");
     }
+
+    // -----------------------------------------------------------------------
+    // R-46 — POSIXct: the seconds↔(days, h, m, s) split, parse, and render.
+    // -----------------------------------------------------------------------
+
+    /// The intraday split is `div_euclid`/`rem_euclid` by 86400, so it stays
+    /// correct (and never negatively-indexes) on pre-epoch (negative) seconds.
+    #[test]
+    fn posixct_intraday_split_handles_pre_epoch() {
+        // +1 second past the epoch: 0 days, 1 intraday second.
+        assert_eq!(1i64.div_euclid(86_400), 0);
+        assert_eq!(1i64.rem_euclid(86_400), 1);
+        // -1 second (1969-12-31 23:59:59): -1 day, 86399 intraday seconds.
+        assert_eq!((-1i64).div_euclid(86_400), -1);
+        assert_eq!((-1i64).rem_euclid(86_400), 86_399);
+    }
+
+    /// `parse_posixct_str` reads "YYYY-MM-DD HH:MM:SS" to seconds since epoch.
+    #[test]
+    fn parse_posixct_full_datetime() {
+        assert_eq!(parse_posixct_str("1970-01-01 00:00:00"), Some(0));
+        assert_eq!(parse_posixct_str("1970-01-01 00:01:00"), Some(60));
+        assert_eq!(parse_posixct_str("1970-01-02 00:00:00"), Some(86_400));
+        // 2021-03-14 09:30:05.
+        let z = days_from_civil(2021, 3, 14);
+        assert_eq!(
+            parse_posixct_str("2021-03-14 09:30:05"),
+            Some(z * 86_400 + 9 * 3600 + 30 * 60 + 5)
+        );
+    }
+
+    /// A bare date with no time half is taken as midnight (days * 86400).
+    #[test]
+    fn parse_posixct_date_only_is_midnight() {
+        let z = days_from_civil(2021, 3, 14);
+        assert_eq!(parse_posixct_str("2021-03-14"), Some(z * 86_400));
+    }
+
+    /// Malformed input and out-of-range H/M/S are rejected (None → NA), never a
+    /// panic. The leap-second slot (S = 60) is accepted.
+    #[test]
+    fn parse_posixct_malformed_and_ranges() {
+        assert_eq!(parse_posixct_str("garbage"), None);
+        assert_eq!(parse_posixct_str("2021-03-14 25:00:00"), None); // hour > 23
+        assert_eq!(parse_posixct_str("2021-03-14 09:60:00"), None); // minute > 59
+        assert_eq!(parse_posixct_str("2021-03-14 09:30:61"), None); // second > 60
+        assert!(parse_posixct_str("2021-03-14 09:30:60").is_some()); // leap second OK
+        assert_eq!(parse_posixct_str("2021-13-01 00:00:00"), None); // bad month
+    }
+
+    /// `format_posixct_seconds` renders the default and a custom format, reusing
+    /// the R-45 date fields on the date half.
+    #[test]
+    fn format_posixct_default_and_fields() {
+        let secs = parse_posixct_str("2021-03-14 09:30:05").unwrap();
+        assert_eq!(
+            format_posixct_seconds(secs, "%Y-%m-%d %H:%M:%S"),
+            "2021-03-14 09:30:05"
+        );
+        assert_eq!(format_posixct_seconds(secs, "%H:%M"), "09:30");
+        // Reused %B from the date half.
+        let jan = parse_posixct_str("2021-01-15 06:07:08").unwrap();
+        assert_eq!(format_posixct_seconds(jan, "%B"), "January");
+    }
+
+    /// Pre-epoch seconds render without panic and pick the correct clock time.
+    #[test]
+    fn format_posixct_pre_epoch() {
+        // -1 second = 1969-12-31 23:59:59.
+        assert_eq!(
+            format_posixct_seconds(-1, "%Y-%m-%d %H:%M:%S"),
+            "1969-12-31 23:59:59"
+        );
+    }
+
+    /// The seconds bound rejects absurd magnitudes before the civil kernel sees
+    /// them (→ NA), the numeric counterpart to the digit cap.
+    #[test]
+    fn posixct_seconds_bound() {
+        assert!(checked_posixct_seconds(0.0).is_some());
+        assert!(checked_posixct_seconds(MAX_POSIXCT_SECONDS as f64).is_some());
+        assert!(checked_posixct_seconds(1e300).is_none());
+        assert!(checked_posixct_seconds(f64::NAN).is_none());
+        assert!(checked_posixct_seconds(f64::INFINITY).is_none());
+    }
 }

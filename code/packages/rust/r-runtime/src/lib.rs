@@ -3889,4 +3889,100 @@ mod tests {
             eval_r("seq(as.Date(\"1970-01-01\"), as.Date(\"99999-01-01\"), by = 1)\n").is_err()
         );
     }
+
+    // --- R-46: POSIXct date-times, UTC (through R syntax) ---------------------
+
+    #[test]
+    fn posixct_class_through_r_syntax() {
+        // A POSIXct carries the two-element class c("POSIXct","POSIXt").
+        assert_eq!(
+            show("class(as.POSIXct(\"2021-03-14 09:30:00\"))\n"),
+            "[1] \"POSIXct\" \"POSIXt\""
+        );
+    }
+
+    #[test]
+    fn posixct_as_numeric_is_seconds_through_r_syntax() {
+        // Seconds since the epoch: midnight = 0, +1 min = 60, +1 day = 86400.
+        assert_eq!(
+            nums("as.numeric(as.POSIXct(\"1970-01-01 00:00:00\"))\n"),
+            vec![0.0]
+        );
+        assert_eq!(
+            nums("as.numeric(as.POSIXct(\"1970-01-01 00:01:00\"))\n"),
+            vec![60.0]
+        );
+        assert_eq!(
+            nums("as.numeric(as.POSIXct(\"1970-01-02 00:00:00\"))\n"),
+            vec![86400.0]
+        );
+    }
+
+    #[test]
+    fn posixct_date_only_is_midnight_through_r_syntax() {
+        // A bare "YYYY-MM-DD" is taken as 00:00:00 → days * 86400 seconds.
+        assert_eq!(
+            nums("as.numeric(as.POSIXct(\"2021-03-14\"))\n"),
+            nums("as.numeric(as.Date(\"2021-03-14\")) * 86400\n")
+        );
+    }
+
+    #[test]
+    fn posixct_numeric_wrap_through_r_syntax() {
+        // A numeric is wrapped as raw seconds-since-epoch directly.
+        assert_eq!(
+            show("format(as.POSIXct(86400))\n"),
+            "[1] \"1970-01-02 00:00:00\""
+        );
+    }
+
+    #[test]
+    fn posixct_format_default_and_custom_through_r_syntax() {
+        assert_eq!(
+            show("format(as.POSIXct(\"2021-03-14 09:30:05\"))\n"),
+            "[1] \"2021-03-14 09:30:05\""
+        );
+        assert_eq!(
+            show("format(as.POSIXct(\"2021-03-14 09:30:05\"), \"%H:%M\")\n"),
+            "[1] \"09:30\""
+        );
+        // Reused R-45 date fields work on the date half.
+        assert_eq!(
+            show("format(as.POSIXct(\"2021-01-15 06:07:08\"), \"%B %d, %Y %H:%M:%S\")\n"),
+            "[1] \"January 15, 2021 06:07:08\""
+        );
+    }
+
+    #[test]
+    fn posixct_subtraction_is_seconds_through_r_syntax() {
+        // t1 - t2 flows through the shared arithmetic kernel → seconds difference.
+        assert_eq!(
+            nums("as.POSIXct(\"2021-03-14 09:30:00\") - as.POSIXct(\"2021-03-14 09:00:00\")\n"),
+            vec![1800.0]
+        );
+    }
+
+    #[test]
+    fn posixct_malformed_is_na_through_r_syntax() {
+        // Garbage → NA, never a panic.
+        assert_eq!(show("as.numeric(as.POSIXct(\"garbage\"))\n"), "[1] NA");
+        // Out-of-range H/M/S → NA.
+        assert_eq!(
+            show("as.numeric(as.POSIXct(\"2021-03-14 25:00:00\"))\n"),
+            "[1] NA"
+        );
+        assert_eq!(
+            show("as.numeric(as.POSIXct(\"2021-03-14 09:61:00\"))\n"),
+            "[1] NA"
+        );
+    }
+
+    #[test]
+    fn sys_time_structure_through_r_syntax() {
+        // Non-deterministic: assert only class + single numeric.
+        assert_eq!(show("class(Sys.time())\n"), "[1] \"POSIXct\" \"POSIXt\"");
+        assert_eq!(nums("length(Sys.time())\n"), vec![1.0]);
+        // The wall-clock value is finite (not NA / Inf).
+        assert_eq!(show("is.finite(as.numeric(Sys.time()))\n"), "[1] TRUE");
+    }
 }
