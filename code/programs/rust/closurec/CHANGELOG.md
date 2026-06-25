@@ -22,6 +22,24 @@ rules: `"abcde".substr(1, 2)` → `"bc"`, `"abcde".substr(1)` → `"bcde"`,
 survives, and that the result is the typed pipeline (not the WHITESPACE_ONLY
 fallback).
 
+## [0.182.0] - 2026-06-23
+
+### Added — string `replace` / `replaceAll` fold at SIMPLE/ADVANCED
+
+The typed-AST optimization pipeline now folds `String.prototype.replace` and
+`replaceAll` when the receiver and both the search and replacement arguments
+are string literals (via `closure-pass-constant-fold` 0.33.0): `replace`
+substitutes the first match, `replaceAll` every match —
+`"a-b-c".replaceAll("-","_")` → `"a_b_c"`, `"aXbXc".replace("X","-")` →
+`"a-bXc"`. The search string is matched literally (no regex). A `$` in the
+replacement (V8 substitution patterns), an empty search string (V8 boundary
+insertion), a non-string argument, or a non-literal receiver passes through to
+the runtime; `WHITESPACE_ONLY` leaves the calls untouched.
+
+New end-to-end fixture `tests/diff/simple-fold-replace/` and integration test
+`tests/diff_simple_fold_replace.rs` (three assertions: byte-exact stdout,
+`replaceAll` folds all matches while `replace` folds only the first, and the
+SIMPLE typed pipeline ran rather than the whitespace fallback).
 ## [0.181.0] - 2026-06-23
 
 ### Added — SIMPLE folds `"x".startsWith/endsWith/includes(needle)` → boolean

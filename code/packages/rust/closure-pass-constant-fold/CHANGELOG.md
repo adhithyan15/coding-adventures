@@ -30,6 +30,43 @@ call for the runtime) for a non-integer-literal argument (we don't model
 surrogate pair into a lone surrogate (a valid JS string but not a Rust
 `String`).
 
+## [0.33.0] - 2026-06-23
+
+### Added — fold `"a".replace(from, to)` / `replaceAll(from, to)` on string literals
+
+`String.prototype.replace` and `replaceAll` now fold to a single string
+literal when the receiver and **both** the search (`from`) and replacement
+(`to`) are string literals — the string-pattern, string-replacement overload
+(ECMAScript §22.1.3.19 / §22.1.3.20). `replace` substitutes the first match,
+`replaceAll` every match: `"aXbXc".replace("X","-")` → `"a-bXc"`,
+`"a-b-c".replaceAll("-","_")` → `"a_b_c"`. A new `fold_string_replace` helper
+performs the substitution (`replacen(.., 1)` for `replace`, `replace` for
+`replaceAll`).
+
+The string overload matches `from` **literally** — no regex interpretation —
+so `"a.b".replace(".","X")` → `"aXb"` (the `.` is a literal dot, not "any
+char"). Both operands are valid strings, so a literal substitution can only
+produce valid UTF-16; no surrogate pair is ever split.
+
+Two cases JS handles differently from a plain literal copy are declined and
+left for the runtime:
+
+- **`$` in the replacement.** When the replacement is a *string*, V8 still
+  expands `$$`, `$&`, `` $` ``, `$'`, and `$n` substitution patterns, which a
+  verbatim copy would not reproduce (`"abc".replace("b","$&")` → `"abc"` in
+  JS). We decline whenever `to` contains `$`.
+- **Empty search string.** `replaceAll("", "X")` inserts `X` at every
+  code-unit boundary (`"abc".replaceAll("","X")` → `"XaXbXcX"`); a literal
+  find/replace cannot reproduce that. An empty `from` declines.
+
+A non-string argument (e.g. `"a1b".replace(1,"X")`), a non-literal receiver,
+or the one-argument form leaves the call for the runtime. As with the
+`repeat` / `pad` folds, the worst-case output length is bounded *before*
+allocating (a `MAX_REPLACE_BYTES` cap, 100 000) so a pathological pair of
+large literals can't OOM the optimizer at compile time. Verified against V8.
+Adds the `fold_string_replace` helper and ten unit tests (first-vs-all,
+literal-not-regex, no-match identity, `$`-decline, empty-search-decline,
+non-string-arg, identifier-receiver, wrong-arity, over-size-cap).
 ## [0.32.0] - 2026-06-23
 
 ### Added — fold `"x".startsWith/endsWith/includes(needle)` → boolean on string literals
