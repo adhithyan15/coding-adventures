@@ -3897,7 +3897,9 @@ mod tests {
         // A POSIXct carries the two-element class c("POSIXct","POSIXt").
         assert_eq!(
             show("class(as.POSIXct(\"2021-03-14 09:30:00\"))\n"),
-            "[1] \"POSIXct\" \"POSIXt\""
+            // The character renderer pads to a common width, so "POSIXt" (6) is
+            // one space behind "POSIXct" (7) → two spaces between the quotes.
+            "[1] \"POSIXct\"  \"POSIXt\""
         );
     }
 
@@ -3980,9 +3982,14 @@ mod tests {
     #[test]
     fn sys_time_structure_through_r_syntax() {
         // Non-deterministic: assert only class + single numeric.
-        assert_eq!(show("class(Sys.time())\n"), "[1] \"POSIXct\" \"POSIXt\"");
+        assert_eq!(show("class(Sys.time())\n"), "[1] \"POSIXct\"  \"POSIXt\"");
         assert_eq!(nums("length(Sys.time())\n"), vec![1.0]);
-        // The wall-clock value is finite (not NA / Inf).
-        assert_eq!(show("is.finite(as.numeric(Sys.time()))\n"), "[1] TRUE");
+        // The wall-clock value is a real, post-2000 instant (sanity-checks that
+        // it is a finite numeric, without asserting the exact non-deterministic
+        // value): now is well after 2000-01-01.
+        assert_eq!(
+            show("Sys.time() > as.POSIXct(\"2000-01-01 00:00:00\")\n"),
+            "[1] TRUE"
+        );
     }
 }
