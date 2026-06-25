@@ -246,6 +246,10 @@ runtime and Chief of Staff tools a typed catalog for:
   disposition-action slot clearance action evidence review clearance action
   readiness evidence review disposition-action summaries that combine action
   counts with next repair, review, lineage, and release handoff pointers
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  disposition-action slot clearance action evidence review clearance action
+  readiness evidence review disposition-action readiness summaries that lift
+  action outcomes into release-ready package rollups
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work
