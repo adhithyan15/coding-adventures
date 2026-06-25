@@ -1693,6 +1693,54 @@ unchanged.
     names; and any compound `"N units"` `by=` shapes beyond a single leading
     integer multiplier.
 
+- **R-46 — POSIXct date-times (UTC).** Adds R's first *date-time* type on top of
+  R-44/R-45's calendar machinery. A **`POSIXct`** is — exactly like `Date` — *not*
+  a new value kind: it is an ordinary numeric vector of **seconds since the epoch
+  1970-01-01 00:00:00 UTC**, carrying the two-element class
+  `c("POSIXct", "POSIXt")`. We model it with the same transparent
+  `SValue::Classed { inner: Double, class: ["POSIXct", "POSIXt"] }` wrapper that
+  backs `Date`. The single insight that makes this nearly free: a POSIXct's
+  **date part** is `seconds.div_euclid(86400)` (days since epoch — exactly the
+  R-44 `Date` representation) and its **time part** is `seconds.rem_euclid(86400)`
+  (intraday seconds, split into H/M/S). So the civil-date kernel (`days_from_civil`
+  / `civil_from_days`), the English name tables, and the `%`-field renderer are all
+  **reused unchanged**; only the seconds↔(days, h, m, s) split is new.
+  - **`as.POSIXct(x, tz = "UTC")`** — parse a **character** vector of
+    `"YYYY-MM-DD HH:MM:SS"` (or `"YYYY-MM-DD"`, taken as midnight) to a POSIXct, or
+    wrap a **numeric** vector as raw seconds-since-epoch directly. Parsing reuses
+    the R-44 `parse_date_str` calendar parse for the date half, then adds an
+    optional `" HH:MM:SS"` time half (H 0–23, M 0–59, S 0–60 — the leap-second
+    slot is accepted). Malformed input → `NA`, never a panic. Only `tz = "UTC"`
+    is honoured (any other `tz` is currently ignored — see deferrals).
+  - **`Sys.time()`** — the current time as a length-1 POSIXct. Like `Sys.Date`,
+    the runtime has no deterministic clock hook, so it reads the wall clock
+    (`SystemTime::now()` → seconds since `UNIX_EPOCH`); a pre-epoch clock yields a
+    negative count without panicking. Non-deterministic, so tests assert only its
+    structure (class `c("POSIXct","POSIXt")` + a single finite numeric).
+  - **`format.POSIXct(x, format =)` / `format(x, fmt)`** — render a POSIXct to a
+    character vector. Default `"%Y-%m-%d %H:%M:%S"`. Supports the new sub-day
+    fields `%H` (00–23), `%M` (00–59), `%S` (00–60) **plus every R-44/R-45 date
+    field** (`%Y %m %d %B %b %A %a %j %e`), since the date half is just the day
+    count fed straight into the reused `format_date_days` field machinery. The
+    `format()` generic checks for class `"POSIXct"` *before* `"Date"` and routes
+    accordingly.
+  - **POSIXct subtraction & `as.numeric`** — need **no special case**: the
+    transparent `Classed` wrapper means `as.numeric(t)` peels to the raw seconds
+    and `t1 - t2` flows through the shared `arithmetic("-", …)` kernel, yielding
+    the difference **in seconds**. So
+    `as.POSIXct("2021-03-14 09:30:00") - as.POSIXct("2021-03-14 09:00:00")` is
+    `1800`, and `as.numeric(as.POSIXct("1970-01-02 00:00:00"))` is `86400`.
+  - **Parse-safety.** Untrusted datetime strings must never panic or overflow.
+    A new `MAX_POSIXCT_SECONDS` (≈ `MAX_DATE_DAYS * 86400`) bounds any parsed or
+    directly-supplied seconds count *before* it reaches the civil kernel; the
+    date half still passes through R-44's `MAX_DATE_DAYS` / `MAX_DATE_DIGITS`
+    caps; H/M/S are range-checked (0–23 / 0–59 / 0–60); and the seconds→(days,
+    intraday) split uses `div_euclid`/`rem_euclid` so pre-epoch (negative)
+    seconds split correctly without a negative array index. Malformed → `NA`.
+  - **Deferred to R-47.** Non-UTC timezones (and DST); `POSIXlt` (the broken-down
+    list form); fractional (sub-)seconds; `%z`/`%Z` offset/zone fields;
+    `strptime`/`strftime` as standalone functions; and `as.POSIXlt`.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
