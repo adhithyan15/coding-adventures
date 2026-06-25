@@ -1,0 +1,20 @@
+% ============================================================================
+% lung-volume-recall.query.adj — a worked recall query over the lung-volume library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what is lung volume X?"
+% question: it states no physiology fact — it only `import`s the grounded library
+% and asks binding queries. The native adj-lang engine resolves each `?` against
+% the imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli lung-volume-recall.query.adj
+% ============================================================================
+
+import "lung-volume-edges.adj"
+
+? is_defined_as(tidal_volume, $Definition)                 % expect air_per_respiratory_cycle
+? is_defined_as(residual_volume, $Definition)              % expect air_remaining_after_maximal_forceful_expiration
+? is_defined_as(inspiratory_reserve_volume, $Definition)   % expect air_inhaled_after_normal_tidal
+? is_defined_as(vital_capacity, $Definition)               % expect max_air_exhaled_after_max_inspiration
+? is_defined_as(functional_residual_capacity, $Definition) % expect air_remaining_after_normal_passive_exhalation
