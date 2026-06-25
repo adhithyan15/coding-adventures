@@ -2,6 +2,20 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.96.0] - 2026-06-22
+
+### Added (M3 — faithful variadic def parameters)
+
+- `def f(*rest)` and `def g(**opts)` now lower to a `Param` whose new
+  `kind` field is `ParamKind::Rest` / `ParamKind::KwRest` instead of dropping
+  the `*` / `**` prefix and emitting a bare positional `Param`. All three
+  def-param lowering paths (`lower_def_statement`, the singleton-def path, and
+  the endless-def path) detect the leading prefix token and set the kind;
+  ordinary positionals stay `Required`. The lossy-limitation comment is
+  removed. No grammar change (the parser already accepts `*`/`**` on def
+  params). Closes the def side of variadics; the call side (`f(*arr)`) was
+  already handled by Q9c.
+
 ## [0.95.0] - 2026-06-21
 
 ### Added (RB2 — `yield` inside a hoisted block captures the enclosing block)

@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.20 — variadic parameter emission (`...rest`) (M3)
+
+A `Param` carrying the new SIR `ParamKind` now emits TypeScript's variadic
+forms: `Rest` → `...name: __Sir.Val[]` (native JS rest, already a real Array =
+SIR sequence); `Required` is unchanged. So `def f(a, *rest); end` emits
+`function f(a: __Sir.Val, ...rest: __Sir.Val[])`.
+
+- **KwRest v0 object fallback.** JavaScript has no keyword-argument call form,
+  so a `KwRest` (`**opts`) def parameter has no faithful native declaration. v0
+  emits it as a trailing ordinary object parameter (`opts: __Sir.Val`) — the
+  call side (Q10f) already collapses `**h` into a single merged trailing
+  object, so this binds it. Documented limitation; mirrors the TS double-splat
+  call-position treatment.
+- **OOP import gating widened.** `uses_oop` now also fires on the `__method__`
+  and `__scope__` dispatch builtins, not only the OOP *features* — so a
+  class-less dispatch program (`"hi".upcase`, or a rest param used as an Array)
+  imports `@coding-adventures/sir-runtime-oop`.
+
 ## 0.1.19 — `&:sym` symbol-to-proc on dispatched calls (M2)
 
 A `&:sym` block argument on a method-dispatch call (`recv.map(&:to_s)`) now

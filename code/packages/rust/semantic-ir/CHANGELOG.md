@@ -2,6 +2,32 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.11.0 — SIR19: variadic parameter kinds (`Param.kind` / `ParamKind`) (M3)
+
+Closes the def-side variadic limitation: previously a splat parameter
+(`def f(*rest)` / `def g(**opts)`) lost its splat-ness at the SIR level and
+lowered to an ordinary positional `Param`, so the emitted Python/TypeScript
+declared a fixed positional parameter and a variadic call (`f(1, 2, 3)`) broke.
+
+### Added
+
+- `ParamKind` enum — `Required` (default), `Rest` (`*rest`), `KwRest`
+  (`**opts`) — re-exported from the crate root.
+- `Param.kind: ParamKind` — a new field on `Param`. Every in-tree construction
+  sets it explicitly.
+- Validator rules (`validate`): at most one `Rest` and at most one `KwRest`
+  per parameter list, and ordering — required positionals precede the lone
+  `Rest`, which precedes the lone `KwRest`. The reserved trailing block
+  parameter `__sir_block__` (Q9e) is exempt (always `Required`, always last).
+- Text printer renders `*name` / `**name` for the two variadic kinds so a
+  round-tripped module preserves splat-ness.
+
+### Changed
+
+- Every literal `Param { … }` construction (smoke tests, printer tests) now
+  sets `kind`. Backends read params by field access, so the added field does
+  not affect their reads — only constructions.
+
 ## 0.10.0 — SIR18: string interpolation (`Expr::StrConcat`)
 
 Introduced by the Ruby frontend's Phase 20b (`"a#{x}b"` interpolation).
