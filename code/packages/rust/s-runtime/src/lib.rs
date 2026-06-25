@@ -1558,6 +1558,218 @@ mod tests {
         assert_eq!(day.len(), 1);
         assert!(day[0].is_finite());
     }
+
+    // --- R-45: Date/time completeness (through S syntax) ---------------------
+
+    #[test]
+    fn date_format_month_and_weekday_names() {
+        // %B full month, %b abbrev, %A full weekday, %a abbrev. 2021-01-15 = Friday.
+        assert_eq!(
+            show("format(as.Date(\"2021-01-15\"), \"%B %d, %Y\")\n"),
+            "[1] \"January 15, 2021\""
+        );
+        assert_eq!(show("format(as.Date(\"2021-01-15\"), \"%b\")\n"), "[1] \"Jan\"");
+        assert_eq!(
+            show("format(as.Date(\"2021-01-15\"), \"%A\")\n"),
+            "[1] \"Friday\""
+        );
+        assert_eq!(show("format(as.Date(\"2021-01-15\"), \"%a\")\n"), "[1] \"Fri\"");
+    }
+
+    #[test]
+    fn date_format_space_padded_day() {
+        // %e is space-padded to width 2: the 5th is " 5", the 15th is "15".
+        assert_eq!(show("format(as.Date(\"2021-01-05\"), \"%e\")\n"), "[1] \" 5\"");
+        assert_eq!(show("format(as.Date(\"2021-01-15\"), \"%e\")\n"), "[1] \"15\"");
+    }
+
+    #[test]
+    fn date_parse_full_month_name() {
+        // as.Date parses %B month names → same date as the ISO form.
+        assert_eq!(
+            nums("as.numeric(as.Date(\"January 15, 2021\", format = \"%B %d, %Y\"))\n"),
+            nums("as.numeric(as.Date(\"2021-01-15\"))\n")
+        );
+    }
+
+    #[test]
+    fn date_parse_abbrev_month_name() {
+        assert_eq!(
+            nums("as.numeric(as.Date(\"15 Jan 2021\", \"%d %b %Y\"))\n"),
+            nums("as.numeric(as.Date(\"2021-01-15\"))\n")
+        );
+    }
+
+    #[test]
+    fn date_parse_month_name_case_insensitive() {
+        // Case-folding: lower / upper / mixed all match.
+        let want = nums("as.numeric(as.Date(\"2021-01-15\"))\n");
+        assert_eq!(
+            nums("as.numeric(as.Date(\"january 15, 2021\", \"%B %d, %Y\"))\n"),
+            want
+        );
+        assert_eq!(
+            nums("as.numeric(as.Date(\"15 JAN 2021\", \"%d %b %Y\"))\n"),
+            want
+        );
+    }
+
+    #[test]
+    fn date_parse_weekday_name_consumed_not_constraining() {
+        // %A/%a are parsed (spell-checked) but do not constrain the date — base R
+        // behaviour. A wrong-but-valid weekday name still parses.
+        assert_eq!(
+            nums("as.numeric(as.Date(\"Monday 15 January 2021\", \"%A %d %B %Y\"))\n"),
+            nums("as.numeric(as.Date(\"2021-01-15\"))\n")
+        );
+    }
+
+    #[test]
+    fn date_parse_malformed_month_name_is_na() {
+        // A bogus month name → NA, never a panic.
+        assert_eq!(
+            show("as.numeric(as.Date(\"Smarch 15, 2021\", \"%B %d, %Y\"))\n"),
+            "[1] NA"
+        );
+        // An empty / truncated name at end-of-string also → NA.
+        assert_eq!(
+            show("as.numeric(as.Date(\"15 Ja 2021\", \"%d %b %Y\"))\n"),
+            "[1] NA"
+        );
+    }
+
+    #[test]
+    fn months_and_quarters() {
+        assert_eq!(date_strs("months(as.Date(\"2021-03-14\"))\n"), vec!["March"]);
+        assert_eq!(date_strs("quarters(as.Date(\"2021-03-14\"))\n"), vec!["Q1"]);
+        assert_eq!(date_strs("quarters(as.Date(\"2021-12-01\"))\n"), vec!["Q4"]);
+        // Q boundaries: Apr → Q2, Jul → Q3.
+        assert_eq!(date_strs("quarters(as.Date(\"2021-04-01\"))\n"), vec!["Q2"]);
+        assert_eq!(date_strs("quarters(as.Date(\"2021-07-01\"))\n"), vec!["Q3"]);
+    }
+
+    #[test]
+    fn months_quarters_na_preserving() {
+        assert_eq!(date_strs("months(as.Date(NA))\n"), vec!["NA"]);
+        assert_eq!(date_strs("quarters(as.Date(NA))\n"), vec!["NA"]);
+    }
+
+    #[test]
+    fn seq_date_by_days() {
+        // by = 1 → 5 consecutive days; result carries class Date.
+        assert_eq!(date_strs("class(seq(as.Date(\"2021-01-01\"), as.Date(\"2021-01-05\"), by = 1))\n"), vec!["Date"]);
+        assert_eq!(
+            date_strs("format(seq(as.Date(\"2021-01-01\"), as.Date(\"2021-01-05\"), by = 1))\n"),
+            vec![
+                "2021-01-01",
+                "2021-01-02",
+                "2021-01-03",
+                "2021-01-04",
+                "2021-01-05",
+            ]
+        );
+    }
+
+    #[test]
+    fn seq_date_by_week() {
+        // by = "week" steps 7 days.
+        assert_eq!(
+            date_strs("format(seq(as.Date(\"2021-01-01\"), as.Date(\"2021-01-15\"), by = \"week\"))\n"),
+            vec!["2021-01-01", "2021-01-08", "2021-01-15"]
+        );
+        // Numeric by = 7 is equivalent.
+        assert_eq!(
+            date_strs("format(seq(as.Date(\"2021-01-01\"), as.Date(\"2021-01-15\"), by = 7))\n"),
+            vec!["2021-01-01", "2021-01-08", "2021-01-15"]
+        );
+    }
+
+    #[test]
+    fn seq_date_by_month_clamps_day() {
+        // by = "month" from Jan 31 clamps to each month's last day.
+        assert_eq!(
+            date_strs("format(seq(as.Date(\"2021-01-31\"), by = \"month\", length.out = 3))\n"),
+            vec!["2021-01-31", "2021-02-28", "2021-03-31"]
+        );
+    }
+
+    #[test]
+    fn seq_date_by_year() {
+        assert_eq!(
+            date_strs("format(seq(as.Date(\"2020-02-29\"), by = \"year\", length.out = 2))\n"),
+            // 2020-02-29 + 1 year clamps to 2021-02-28 (2021 is not a leap year).
+            vec!["2020-02-29", "2021-02-28"]
+        );
+    }
+
+    #[test]
+    fn seq_date_multiplier_unit() {
+        // "2 weeks" steps 14 days.
+        assert_eq!(
+            date_strs("format(seq(as.Date(\"2021-01-01\"), as.Date(\"2021-01-29\"), by = \"2 weeks\"))\n"),
+            vec!["2021-01-01", "2021-01-15", "2021-01-29"]
+        );
+    }
+
+    #[test]
+    fn seq_date_descending() {
+        // A negative day step counts down.
+        assert_eq!(
+            date_strs("format(seq(as.Date(\"2021-01-05\"), as.Date(\"2021-01-01\"), by = -1))\n"),
+            vec![
+                "2021-01-05",
+                "2021-01-04",
+                "2021-01-03",
+                "2021-01-02",
+                "2021-01-01",
+            ]
+        );
+    }
+
+    #[test]
+    fn seq_date_length_capped_not_oom() {
+        // A from/to/by implying tens of millions of dates must error (cap), never
+        // OOM. Year 99999 is ~36M days past the epoch, well over MAX_SEQ_LEN (16.7M).
+        let out = eval_s("seq(as.Date(\"1970-01-01\"), as.Date(\"99999-01-01\"), by = 1)\n");
+        assert!(out.is_err(), "huge seq.Date should error, got {out:?}");
+    }
+
+    #[test]
+    fn seq_date_zero_by_errors() {
+        // by = 0 would loop forever — must error, not hang.
+        assert!(eval_s("seq(as.Date(\"2021-01-01\"), as.Date(\"2021-01-05\"), by = 0)\n").is_err());
+    }
+
+    #[test]
+    fn seq_date_huge_month_multiplier_no_overflow_panic() {
+        // A crafted enormous month/year multiplier must NOT overflow-panic the
+        // civil kernel (it would, pre-fix, via add_months_clamped → days_from_civil).
+        // The month index is clamped to MAX_DATE_MONTHS, so the generated date is
+        // out of range: the `to` path simply steps past `to` immediately (empty
+        // sequence), and the `length.out` path errors via the MAX_DATE_DAYS push
+        // guard. Either way — no panic, no OOM. We assert only that evaluation
+        // *completes* (Ok-or-Err, never a panic) and any result stays bounded.
+        let to_path = eval_s(
+            "seq(as.Date(\"2000-01-01\"), as.Date(\"2001-01-01\"), by = \"9000000000000000000 months\")\n",
+        );
+        match to_path {
+            Ok(v) => assert!(v.length() <= 1, "expected a bounded result, got {}", v.length()),
+            Err(_) => {} // erroring is also acceptable
+        }
+        // The length.out path reaches k=1 with the huge step → out-of-range day →
+        // clean error (never a panic).
+        assert!(eval_s(
+            "seq(as.Date(\"2000-01-01\"), by = \"9000000000000000000 years\", length.out = 3)\n"
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn seq_numeric_unaffected_by_date_path() {
+        // Plain numeric seq still works (no Date dispatch).
+        assert_eq!(nums("seq(1, 5)\n"), vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        assert_eq!(nums("seq(5)\n"), vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+    }
 }
 
 #[cfg(test)]

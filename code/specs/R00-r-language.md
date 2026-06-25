@@ -1612,6 +1612,45 @@ unchanged.
     `format.Date` for `%Y`/`%m`/`%d`/`%j`, Date subtraction + `difftime` in days,
     and `weekdays`) ships **solidly** here.
 
+- **R-45 — Date/time completeness.** Extends R-44's Date builtins *in place*
+  (same civil-date kernel, same `Date` class machinery, same parse-safety
+  guards). No new value kind; no new dependency — the month/weekday name tables
+  are hand-rolled English arrays (full + abbreviated).
+  - **Extended `strftime` fields in `format.Date` / `format`.** Alongside R-44's
+    `%Y`/`%m`/`%d`/`%j`, the renderer now supports `%B` (full month name
+    `"January"`..`"December"`), `%b` (abbreviated `"Jan"`..`"Dec"`), `%A` (full
+    weekday `"Monday"`..`"Sunday"`), `%a` (abbreviated `"Mon"`..`"Sun"`), and
+    `%e` (day of month, **space-padded** to width 2, so the 5th is `" 5"`). The
+    weekday name reuses R-44's `(days + 4).rem_euclid(7)` Sunday-based index
+    (`1970-01-01` = Thursday). Unknown conversions still echo literally.
+  - **Extended `strptime` fields in `as.Date`.** The parser additionally accepts
+    `%B`/`%b` (month names, **case-insensitive**: `"january"`, `"JAN"`, and
+    `"Jan"` all match), `%A`/`%a` (weekday names — consumed and validated for
+    spelling but, like base R, **not** used to constrain the resulting date), and
+    `%e` (space-or-not padded day). So
+    `as.Date("January 15, 2021", format = "%B %d, %Y")` and
+    `as.Date("15 Jan 2021", "%d %b %Y")` both parse to `2021-01-15`. A
+    **malformed** month/weekday name → `NA` (never a panic): name-matching scans a
+    fixed, length-bounded table and case-folds ASCII safely.
+  - **`seq.Date(from, to, by)` / `seq(from, to, by)` for Dates.** Generates a
+    `Date` sequence. `by` is either a **number of days** (`by = 1`, `by = 7`) or a
+    **string unit** `"day"`/`"week"`/`"month"`/`"year"` (a leading integer
+    multiplier is accepted — `"2 weeks"`, `"3 months"`). `"day"`/`"week"` step a
+    fixed day count (`1`/`7` × multiplier); `"month"`/`"year"` step the **civil
+    Y/M/D**, clamping the day-of-month to the target month's length (so
+    `2021-01-31 + 1 month` is `2021-02-28`, not March 3). `length.out =` is
+    supported as an alternative to `to`; if both `to` and `length.out` are given,
+    `length.out` wins. The generated length is **bounded by `MAX_SEQ_LEN`** with
+    checked arithmetic before any allocation — a `from`/`to`/`by` implying
+    billions of dates errors rather than OOMs.
+  - **`months(d)`** → the full month name(s) (equivalent to `format(d, "%B")`).
+    **`quarters(d)`** → `"Q1"`..`"Q4"` from the month (`(m-1)/3 + 1`). Both
+    vectorised and `NA`-preserving.
+  - **Deferred to R-46.** `POSIXct`/`POSIXlt` date-*times*; timezones; sub-day
+    fields `%H`/`%M`/`%S`/`%p`; `%U`/`%W` week-of-year; locale-specific (non-English)
+    names; and any compound `"N units"` `by=` shapes beyond a single leading
+    integer multiplier.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`

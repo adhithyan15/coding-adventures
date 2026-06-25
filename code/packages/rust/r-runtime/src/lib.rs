@@ -3726,4 +3726,68 @@ mod tests {
         assert_eq!(show("class(Sys.Date())\n"), "[1] \"Date\"");
         assert_eq!(nums("length(Sys.Date())\n"), vec![1.0]);
     }
+
+    // --- R-45: Date/time completeness (through R syntax) ----------------------
+
+    #[test]
+    fn date_strftime_names_through_r_syntax() {
+        // 2021-01-15 = Friday. %B/%b/%A/%a render English month/weekday names.
+        assert_eq!(
+            show("format(as.Date(\"2021-01-15\"), \"%B %d, %Y\")\n"),
+            "[1] \"January 15, 2021\""
+        );
+        assert_eq!(show("format(as.Date(\"2021-01-15\"), \"%b\")\n"), "[1] \"Jan\"");
+        assert_eq!(
+            show("format(as.Date(\"2021-01-15\"), \"%A\")\n"),
+            "[1] \"Friday\""
+        );
+        assert_eq!(show("format(as.Date(\"2021-01-15\"), \"%a\")\n"), "[1] \"Fri\"");
+    }
+
+    #[test]
+    fn date_strptime_month_name_through_r_syntax() {
+        assert_eq!(
+            nums("as.numeric(as.Date(\"January 15, 2021\", format = \"%B %d, %Y\"))\n"),
+            nums("as.numeric(as.Date(\"2021-01-15\"))\n")
+        );
+        assert_eq!(
+            nums("as.numeric(as.Date(\"15 Jan 2021\", \"%d %b %Y\"))\n"),
+            nums("as.numeric(as.Date(\"2021-01-15\"))\n")
+        );
+        // Malformed month name → NA, never a panic.
+        assert_eq!(
+            show("as.numeric(as.Date(\"Smarch 15, 2021\", \"%B %d, %Y\"))\n"),
+            "[1] NA"
+        );
+    }
+
+    #[test]
+    fn months_quarters_through_r_syntax() {
+        assert_eq!(show("months(as.Date(\"2021-03-14\"))\n"), "[1] \"March\"");
+        assert_eq!(show("quarters(as.Date(\"2021-03-14\"))\n"), "[1] \"Q1\"");
+        assert_eq!(show("quarters(as.Date(\"2021-12-01\"))\n"), "[1] \"Q4\"");
+    }
+
+    #[test]
+    fn seq_date_through_r_syntax() {
+        // by = 1 → 5 consecutive days.
+        assert_eq!(
+            show("format(seq(as.Date(\"2021-01-01\"), as.Date(\"2021-01-05\"), by = 1))\n"),
+            "[1] \"2021-01-01\" \"2021-01-02\" \"2021-01-03\" \"2021-01-04\" \"2021-01-05\""
+        );
+        // by = "month" from Jan 31, length.out = 3 → clamps to month length.
+        assert_eq!(
+            show("format(seq(as.Date(\"2021-01-31\"), by = \"month\", length.out = 3))\n"),
+            "[1] \"2021-01-31\" \"2021-02-28\" \"2021-03-31\""
+        );
+    }
+
+    #[test]
+    fn seq_date_length_capped_through_r_syntax() {
+        // A span of tens of millions of days exceeds MAX_SEQ_LEN → error (cap),
+        // never OOM.
+        assert!(
+            eval_r("seq(as.Date(\"1970-01-01\"), as.Date(\"99999-01-01\"), by = 1)\n").is_err()
+        );
+    }
 }
