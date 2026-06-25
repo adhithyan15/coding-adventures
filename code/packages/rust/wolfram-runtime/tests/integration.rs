@@ -1057,3 +1057,21 @@ fn w21_does_not_disturb_existing_operators() {
     assert_eq!(eval("True || False\n").unwrap(), "Out[1]= True\n");
     assert_eq!(eval("1 + 2*3\n").unwrap(), "Out[1]= 7\n");
 }
+
+/// W-21 security: a deeply-nested operator chain (`a | a | … | a`) is bounded by
+/// the SAME per-statement token cap (`MAX_STATEMENT_TOKENS`) that already bounds
+/// `->`/`+`/`/.`, so it is rejected as "too complex" before the parser can
+/// recurse deep enough to overflow. The new operators add no new unbounded path.
+#[test]
+fn w21_deep_operator_chain_hits_the_complexity_cap_not_a_stack_overflow() {
+    // ~1500 alternatives → ~3000 tokens, over the 2000-token cap.
+    let alts = format!("MatchQ[1, 1{}]\n", " | 1".repeat(1500));
+    let err = eval(&alts).unwrap_err();
+    assert!(err.contains("too complex"), "got {err:?}");
+    // A deep Condition chain is bounded identically.
+    let conds = format!("x{}\n", " /; x".repeat(1500));
+    assert!(eval(&conds).unwrap_err().contains("too complex"));
+    // And a deep ReplaceRepeated/PatternTest chain.
+    let tests = format!("_{}\n", "?f".repeat(1500));
+    assert!(eval(&tests).unwrap_err().contains("too complex"));
+}
