@@ -1,0 +1,81 @@
+% ============================================================================
+% dural-sinus-edges — the dural-venous-sinus→drainage-destination knowledge-graph
+% (MYCIN-2026 DURALSINUS).
+% ============================================================================
+% A high-yield neuroanatomy board table: each major dural venous sinus and the
+% structure it drains into along the cerebral venous outflow path
+% (superior sagittal / straight → confluence → transverse → sigmoid → internal
+% jugular vein; cavernous → petrosal sinuses). "Where does the sigmoid sinus
+% drain?" becomes the binding query
+%     ? drains_into(sigmoid_sinus, $Destination).
+%
+% Direction note: the relation is sinus -> the structure it drains into
+% (`drains_into`). Each sinus here maps to ONE canonical destination span, so a
+% query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The destination object names the literal structure the
+% sentence states the sinus drains into (superior sagittal "progresses
+% posteriorly to the confluence of sinuses"; straight "terminates into the
+% confluence of sinuses"; transverse "continues as a sigmoid sinus"; sigmoid
+% "drain venous blood into the internal jugular vein"; cavernous "drains to the
+% superior and inferior petrosal sinuses"). Each span was independently
+% re-fetched and confirmed on two separate fetches of the same page for
+% byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like HYPOTHALAMIC/
+% PITUITARY/BONECELL/AUTONOMIC). Each fact is a `relate` clause whose
+% byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see dural-sinus-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary dural_sinus_vocab {
+    define sinus       : entity   surface "dural venous sinus", "cerebral venous sinus"
+    define destination : entity   surface "drainage destination", "downstream structure"
+
+    define drains_into : relation from sinus to destination  % the structure this sinus drains into
+}
+
+rulebook dural_sinus_facts {
+    use dural_sinus_vocab
+
+    % --- superior sagittal sinus -> confluence of sinuses --------------------
+    relate drains_into(superior_sagittal_sinus, confluence_of_sinuses)
+        source "The superior sagittal sinus eventually progresses posteriorly to the confluence of sinuses, where it terminates."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK546615/"
+        trust authoritative
+
+    % --- straight sinus -> confluence of sinuses -----------------------------
+    relate drains_into(straight_sinus, confluence_of_sinuses)
+        source "The straight sinus drains contents from inferior sagittal sinus and great cerebral vein and terminates into the confluence of sinuses."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482257/"
+        trust authoritative
+
+    % --- transverse sinus -> sigmoid sinus -----------------------------------
+    relate drains_into(transverse_sinus, sigmoid_sinus)
+        source "Each transverse sinus descends and continues as a sigmoid sinus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK546605/"
+        trust authoritative
+
+    % --- sigmoid sinus -> internal jugular vein ------------------------------
+    relate drains_into(sigmoid_sinus, internal_jugular_vein)
+        source "Left and right sigmoid sinuses collectively drain venous blood into the internal jugular vein, which exits at the jugular foramen."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482257/"
+        trust authoritative
+
+    % --- cavernous sinus -> superior and inferior petrosal sinuses -----------
+    relate drains_into(cavernous_sinus, superior_and_inferior_petrosal_sinuses)
+        source "After collecting venous blood from these different veins, the cavernous sinus drains to the superior and inferior petrosal sinuses, which then join the sigmoid sinus to form the internal jugular vein."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459244/"
+        trust authoritative
+}

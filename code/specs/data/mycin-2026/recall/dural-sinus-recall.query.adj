@@ -1,0 +1,20 @@
+% ============================================================================
+% dural-sinus-recall.query.adj — a worked recall query over the dural-sinus library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "where does sinus X drain?"
+% question: it states no anatomy fact — it only `import`s the grounded library
+% and asks binding queries. The native adj-lang engine resolves each `?` against
+% the imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli dural-sinus-recall.query.adj
+% ============================================================================
+
+import "dural-sinus-edges.adj"
+
+? drains_into(superior_sagittal_sinus, $Destination)  % expect confluence_of_sinuses
+? drains_into(straight_sinus, $Destination)           % expect confluence_of_sinuses
+? drains_into(transverse_sinus, $Destination)         % expect sigmoid_sinus
+? drains_into(sigmoid_sinus, $Destination)            % expect internal_jugular_vein
+? drains_into(cavernous_sinus, $Destination)          % expect superior_and_inferior_petrosal_sinuses
