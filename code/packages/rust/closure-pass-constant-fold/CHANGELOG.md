@@ -28,6 +28,26 @@ the runtime) for a non-integer-literal argument (we don't model `ToInteger`
 coercion), more than two arguments, or a cut that would split a surrogate pair
 into a lone surrogate (a valid JS string but not a Rust `String`).
 
+## [0.32.0] - 2026-06-23
+
+### Added — fold `"x".startsWith/endsWith/includes(needle)` → boolean on string literals
+
+The single-argument substring predicates `String.prototype.startsWith`,
+`endsWith`, and `includes` (ECMAScript §22.1.3.{23,7,9}) now fold to a boolean
+literal when both the receiver and the search string are string literals:
+`"abc".startsWith("a")` → `true`, `"abc".endsWith("b")` → `false`,
+`"abc".includes("b")` → `true`. A new `fold_string_predicate` helper dispatches
+to Rust's `str::starts_with` / `ends_with` / `contains`.
+
+These are sound for any pair of literals: JS compares by UTF-16 code unit and
+Rust by UTF-8 byte, but both operands are valid `String`s (whole Unicode
+scalars, no lone surrogates), so a prefix / suffix / substring relation holds
+identically in either encoding — `"a💩b".includes("💩")` is `true` in both, and
+the empty needle is always present. Only the single-argument form folds; the
+position overloads (`startsWith(needle, pos)`, etc.) carry a second argument,
+land in the two-argument arm, and pass through to the runtime. Eight unit tests
+cover true/false results, the empty needle, astral-char matching, the position
+overload, an identifier receiver, and a non-string needle.
 ## [0.31.0] - 2026-06-22
 
 ### Added — fold `"abc".at(i)` on string literals (negative-from-end indexing)
