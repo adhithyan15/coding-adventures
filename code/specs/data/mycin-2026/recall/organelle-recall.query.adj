@@ -1,0 +1,22 @@
+% ============================================================================
+% organelle-recall.query.adj — a worked recall query over the organelle library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "which function does
+% organelle X perform?" question: it states no cell-biology fact — it only
+% `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli organelle-recall.query.adj
+% ============================================================================
+
+import "organelle-edges.adj"
+
+? performs(mitochondria, $Function)      % expect atp_production
+? performs(golgi_apparatus, $Function)   % expect protein_modification_and_sorting
+? performs(lysosome, $Function)          % expect intracellular_degradation
+? performs(peroxisome, $Function)        % expect fatty_acid_oxidation
+? performs(ribosome, $Function)          % expect protein_synthesis
+? performs(nucleus, $Function)           % expect genetic_material_storage
