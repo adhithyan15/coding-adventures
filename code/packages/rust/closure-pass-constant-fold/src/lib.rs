@@ -569,6 +569,34 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                     }
                 }
+                // ---- substring(start[, end]) → the clamped, ordered cut ----
+                //
+                // `"abcd".substring(1, 3)` → `"bc"`, `"abcd".substring(2)` →
+                // `"cd"`, `"abcd".substring(3, 1)` → `"bc"` (the endpoints SWAP
+                // when start > end), `"abcd".substring(-2)` → `"abcd"` (a
+                // negative — or `NaN` — clamps to 0; substring NEVER counts from
+                // the end, that is `slice`'s job), `"abc".substring()` → `"abc"`
+                // (ECMAScript §22.1.3.24). Indices are UTF-16 code units.
+                // `fold_string_substring` returns `None` (leaving the call) for a
+                // non-integer-literal argument, more than two arguments, or a cut
+                // that would split a surrogate pair into a lone surrogate.
+                else if id.name == "substring" {
+                    if let Some(result) = fold_string_substring(&s.value, &arguments) {
+                        let parent = c.cv.clone();
+                        let args_src = arguments
+                            .iter()
+                            .map(|a| match a {
+                                Expression::NumericLiteral(n) => format_js_number(n.value),
+                                _ => "?".to_string(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(",");
+                        let before = format!("\"{}\".substring({})", s.value, args_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
                 // ---- repeat(count) → the string concatenated `count` times ----
                 //
                 // `"ab".repeat(3)` → `"ababab"` (ECMAScript §22.1.3.18). The
@@ -1005,6 +1033,64 @@ fn fold_string_slice(value: &str, args: &[Expression]) -> Option<String> {
 
     let lo = start as usize;
     let hi = end.max(start) as usize; // empty range when end < start
+    if lo >= hi {
+        return Some(String::new());
+    }
+    // A lone surrogate (split pair) can't be a Rust String — decline.
+    String::from_utf16(&units[lo..hi]).ok()
+}
+
+/// Fold `"…".substring(start[, end])` (ECMAScript §22.1.3.24).
+///
+/// `substring` differs from `slice` in two ways, both modelled here:
+///
+///   1. **Clamping.** Each index is clamped into `[0, len]`. A negative (or
+///      `NaN`) argument becomes `0` — it never counts from the end the way
+///      `slice` does. So `"abcd".substring(-2)` is the whole string, whereas
+///      `"abcd".slice(-2)` is `"cd"`.
+///   2. **Ordering.** After clamping, the smaller index is the start: when
+///      `start > end` the two endpoints SWAP. So `"abcd".substring(3, 1)` and
+///      `"abcd".substring(1, 3)` both yield `"bc"`.
+///
+/// Indices are UTF-16 code units (matching `slice`/`charAt`). Returns `None`
+/// (leaving the call for the runtime) for a non-integer-literal argument, more
+/// than two arguments, or a cut that would split a surrogate pair into a lone
+/// surrogate (a valid JS string but not a Rust `String`).
+fn fold_string_substring(value: &str, args: &[Expression]) -> Option<String> {
+    if args.len() > 2 {
+        return None;
+    }
+    // A provided argument must be a finite integer literal.
+    let to_int = |e: &Expression| -> Option<i64> {
+        match e {
+            Expression::NumericLiteral(n)
+                if n.value.is_finite()
+                    && n.value.fract() == 0.0
+                    && n.value.abs() < 9_007_199_254_740_992.0 =>
+            {
+                Some(n.value as i64)
+            }
+            _ => None,
+        }
+    };
+
+    let units: Vec<u16> = value.encode_utf16().collect();
+    let len = units.len() as i64;
+    // Clamp into [0, len]: negatives become 0 (no end-relative indexing).
+    let clamp = |idx: i64| -> i64 { idx.clamp(0, len) };
+
+    let start = match args.first() {
+        None => 0,
+        Some(e) => clamp(to_int(e)?),
+    };
+    let end = match args.get(1) {
+        None => len,
+        Some(e) => clamp(to_int(e)?),
+    };
+
+    // Swap so the cut is always the range [lo, hi).
+    let lo = start.min(end) as usize;
+    let hi = start.max(end) as usize;
     if lo >= hi {
         return Some(String::new());
     }
@@ -4109,6 +4195,114 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.slice(1) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- substring (clamped, ordered cut) -------------
+
+    /// Build `"<recv>".substring(<args…>)`.
+    fn substring_call(recv: &str, args: &[f64]) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(recv, None), "substring")),
+            arguments: args.iter().map(|&a| num(a, None)).collect(),
+        })
+    }
+
+    #[test]
+    fn fold_string_substring_clamps_and_swaps() {
+        // V8 oracle (node): each row is the exact runtime result.
+        //   "abcd".substring(1,3) === "bc"
+        //   "abcd".substring(2)   === "cd"
+        //   "abcd".substring(3,1) === "bc"   (endpoints swap)
+        //   "abcd".substring(-2)  === "abcd" (negative clamps to 0)
+        //   "abcd".substring(1,-1)=== "a"    (-1 clamps to 0, then swap → [0,1))
+        //   "abcd".substring(2,2) === ""     (empty range)
+        //   "abcd".substring(10)  === ""     (start clamps to len)
+        for (recv, args, expect) in [
+            ("abcd", vec![1.0, 3.0], "bc"),
+            ("abcd", vec![2.0], "cd"),
+            ("abcd", vec![3.0, 1.0], "bc"),
+            ("abcd", vec![-2.0], "abcd"),
+            ("abcd", vec![1.0, -1.0], "a"),
+            ("abcd", vec![2.0, 2.0], ""),
+            ("abcd", vec![10.0], ""),
+        ] {
+            let c = substring_call(recv, &args);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{recv}\".substring({args:?}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => {
+                    assert_eq!(s.value, expect, "\"{recv}\".substring({args:?})")
+                }
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_string_substring_no_args_is_identity() {
+        // `"abc".substring()` → "abc" (whole string).
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("abc", None), "substring")),
+            arguments: vec![],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "\"abc\".substring() should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "abc"),
+            other => panic!("expected \"abc\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn substring_counts_utf16_units() {
+        // "💩" is two UTF-16 units; "💩ab".substring(2) drops the astral char
+        // and keeps "ab" — proving UTF-16 (not scalar) indexing.
+        let c = substring_call("💩ab", &[2.0]);
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "ab"),
+            other => panic!("expected \"ab\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn substring_splitting_a_surrogate_pair_does_not_fold() {
+        // "💩".substring(0, 1) would be a lone high surrogate — a valid JS
+        // string but not a Rust `String`, so we decline (conservative).
+        let c = substring_call("💩", &[0.0, 1.0]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "substring splitting a surrogate pair must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn substring_non_integer_or_too_many_args_does_not_fold() {
+        // Fractional argument: don't model ToInteger coercion.
+        let frac = substring_call("abcd", &[1.5]);
+        let (out, _, changed, _) = run_pass(program_with_expr(frac, true));
+        assert!(!changed, "fractional substring index must not fold");
+
+        // Three arguments: not the substring signature we model.
+        let three = substring_call("abcd", &[0.0, 1.0, 2.0]);
+        let (out2, _, changed2, _) = run_pass(program_with_expr(three, true));
+        assert!(!changed2, "three-arg substring must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        assert!(matches!(extract_expr(&out2), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn substring_on_identifier_receiver_does_not_fold() {
+        // `s.substring(1)` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "substring")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.substring(1) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
