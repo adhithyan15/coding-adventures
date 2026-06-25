@@ -2817,6 +2817,115 @@ mod r30_ordering {
         let err = eval_s("chol(matrix(c(0,0,0,1), nrow = 2))\n").unwrap_err();
         assert!(format!("{err}").contains("positive definite"));
     }
+
+    // --- R-41: backsolve / forwardsolve (triangular solves) -------------
+
+    #[test]
+    fn backsolve_vector_rhs() {
+        // r = matrix(c(2,0,1,3), nrow=2) is upper-triangular [[2,1],[0,3]].
+        // Solve r %*% y = c(5,9): y[2]=9/3=3; y[1]=(5-1*3)/2=1 -> c(1,3).
+        let y = nums("backsolve(matrix(c(2,0,1,3), nrow = 2), c(5,9))\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 1.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+        // Round-trip: r %*% y reconstructs the right-hand side.
+        let rhs = nums(
+            "r <- matrix(c(2,0,1,3), nrow = 2)\ny <- backsolve(r, c(5,9))\nas.numeric(r %*% y)\n",
+        );
+        assert!((rhs[0] - 5.0).abs() < 1e-9 && (rhs[1] - 9.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn forwardsolve_vector_rhs() {
+        // l = matrix(c(2,1,0,3), nrow=2) is lower-triangular [[2,0],[1,3]].
+        // Solve l %*% y = c(4,11): y[1]=4/2=2; y[2]=(11-1*2)/3=3 -> c(2,3).
+        let y = nums("forwardsolve(matrix(c(2,1,0,3), nrow = 2), c(4,11))\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 2.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+        let rhs = nums(
+            "l <- matrix(c(2,1,0,3), nrow = 2)\ny <- forwardsolve(l, c(4,11))\nas.numeric(l %*% y)\n",
+        );
+        assert!((rhs[0] - 4.0).abs() < 1e-9 && (rhs[1] - 11.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_matrix_rhs_multi_column() {
+        // Two right-hand sides at once: x is 2x2 with columns c(5,9) and c(2,6).
+        // Column 1 -> c(1,3) (as above); column 2: y[2]=6/3=2, y[1]=(2-1*2)/2=0.
+        let (data, nrow, ncol) = matrix_data(
+            "backsolve(matrix(c(2,0,1,3), nrow = 2), matrix(c(5,9,2,6), nrow = 2))\n",
+        );
+        assert_eq!((nrow, ncol), (2, 2));
+        // Column-major: [y1_c1, y2_c1, y1_c2, y2_c2] = [1,3,0,2].
+        assert!((data[0] - 1.0).abs() < 1e-9);
+        assert!((data[1] - 3.0).abs() < 1e-9);
+        assert!((data[2] - 0.0).abs() < 1e-9);
+        assert!((data[3] - 2.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn forwardsolve_matrix_rhs_multi_column() {
+        // l = [[2,0],[1,3]]; x columns c(4,11) -> c(2,3) and c(2,8) -> y1=1, y2=(8-1)/3.
+        let (data, nrow, ncol) = matrix_data(
+            "forwardsolve(matrix(c(2,1,0,3), nrow = 2), matrix(c(4,11,2,8), nrow = 2))\n",
+        );
+        assert_eq!((nrow, ncol), (2, 2));
+        assert!((data[0] - 2.0).abs() < 1e-9);
+        assert!((data[1] - 3.0).abs() < 1e-9);
+        assert!((data[2] - 1.0).abs() < 1e-9);
+        assert!((data[3] - 7.0 / 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_three_by_three_round_trip() {
+        // A larger upper-triangular system to exercise the inner sum.
+        // r upper-triangular [[1,2,3],[0,4,5],[0,0,6]] (column-major).
+        let src = "r <- matrix(c(1,0,0, 2,4,0, 3,5,6), nrow = 3)\n";
+        let rhs = nums(&format!(
+            "{src}y <- backsolve(r, c(14,23,18))\nas.numeric(r %*% y)\n"
+        ));
+        assert!((rhs[0] - 14.0).abs() < 1e-9);
+        assert!((rhs[1] - 23.0).abs() < 1e-9);
+        assert!((rhs[2] - 18.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_singular_zero_diagonal_is_an_error() {
+        // r = matrix(c(0,0,1,3), nrow=2) has a 0 on the diagonal (r[1,1]=0): the
+        // back-substitution would divide by 0. Must error, never NaN/Inf/panic.
+        let err = eval_s("backsolve(matrix(c(0,0,1,3), nrow = 2), c(1,2))\n").unwrap_err();
+        let msg = format!("{err}").to_lowercase();
+        assert!(
+            msg.contains("singular"),
+            "expected a singular-matrix error, got: {msg}"
+        );
+    }
+
+    #[test]
+    fn forwardsolve_singular_zero_diagonal_is_an_error() {
+        // l = matrix(c(0,1,0,3), nrow=2) has l[1,1]=0: forward-substitution divides
+        // by 0 on the very first step. Clean error, no NaN/Inf/panic.
+        let err = eval_s("forwardsolve(matrix(c(0,1,0,3), nrow = 2), c(1,2))\n").unwrap_err();
+        assert!(format!("{err}").to_lowercase().contains("singular"));
+    }
+
+    #[test]
+    fn backsolve_non_square_is_an_error() {
+        // A 2x3 matrix is not square; backsolve errors before any indexing.
+        let err = eval_s("backsolve(matrix(1:6, nrow = 2), c(1,2))\n").unwrap_err();
+        assert!(format!("{err}").to_lowercase().contains("square"));
+    }
+
+    #[test]
+    fn forwardsolve_rhs_length_mismatch_is_an_error() {
+        // r is 2x2 but x has length 3: a row-count mismatch must error before the
+        // substitution loop indexes out of bounds.
+        let err =
+            eval_s("forwardsolve(matrix(c(2,1,0,3), nrow = 2), c(1,2,3))\n").unwrap_err();
+        let msg = format!("{err}").to_lowercase();
+        assert!(msg.contains("length") || msg.contains("rows"), "got: {msg}");
+    }
 }
 
 #[cfg(test)]

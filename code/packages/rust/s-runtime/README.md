@@ -310,6 +310,14 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   triangle errors too. `chol(matrix(c(4,2,2,3), nrow=2))` is `[[2,1],[0,√2]]`
   with `t(R) %*% R` reconstructing the input; `chol(diag(3))` is the identity.
   `pivot=TRUE`, `chol2inv()`, and complex matrices are deferred to R-41.
+- **Triangular solves** (R-41): **`backsolve(r, x)`** / **`forwardsolve(l, x)`** —
+  solve an upper- (resp. lower-) triangular system `r %*% y = x` by back- (resp.
+  forward-) substitution. The right-hand side `x` is a length-`n` vector (→ a
+  vector) or an `n × m` matrix (→ one solved column per RHS), the same contract as
+  `solve`. `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` is `c(1, 3)` and
+  `r %*% y` reconstructs `c(5,9)`. Reuses the `square_matrix` reader; a zero on the
+  diagonal is a clean *singular*-matrix error (no `NaN`/panic). `k=`,
+  `transpose=TRUE`, and `upper.tri=FALSE` are deferred to R-42.
 - **Kronecker product** (R-38): **`kronecker(X, Y)`** — the `(m·p)×(n·q)`
   block-outer product of an `m×n` `X` and a `p×q` `Y`, where block `(i, j)` is
   `X[i,j] · Y` and `result[(i-1)·p+k, (j-1)·q+l] = X[i,j] · Y[k,l]`
