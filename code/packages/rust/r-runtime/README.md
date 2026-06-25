@@ -325,8 +325,13 @@ contract as `solve`. `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` is `c(1, 3)
 and `r %*% y` reconstructs `c(5,9)`. They reuse the `square_matrix` reader and the
 `solve`-style RHS handling; a zero on the diagonal is a clean *singular*-matrix
 error (never `NaN`/a panic), and non-square / dimension-mismatched inputs error
-before any indexing. The `k=`, `transpose=TRUE`, and `upper.tri=FALSE` options are
-deferred to **R-42**.
+before any indexing.
+
+**R-42** adds their base-R options: **`k=`** (use the leading `k×k` block and the
+first `k` rows of `x`), **`upper.tri=`** (which triangle to read — so
+`backsolve(L, x, upper.tri=FALSE)` equals `forwardsolve(L, x)`), and
+**`transpose=TRUE`** (solve `t(R) %*% y = x`). The R-41 behavior is unchanged when
+the options are omitted, and `k` is range-checked.
 
 **R-44 — base R Date support** adds R's first calendar type, again through the
 shared `s-runtime`. A **`Date`** is *not* a new value kind: it is a numeric vector

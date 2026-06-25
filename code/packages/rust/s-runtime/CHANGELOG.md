@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.39.0] - 2026-06-25
+
+### Added
+
+- **Triangular-solve options (R-42)** — `backsolve` / `forwardsolve` (R-41) now
+  accept base R's named arguments, threaded through the shared `triangular_solve`
+  helper (the R-41 behavior is unchanged when they're omitted):
+  - **`k =`** — use only the leading `k × k` block of the triangular factor and
+    the first `k` rows of the right-hand side; the result has `k` rows. Defaults
+    to the full matrix. `k` outside `0..=n` is a clean error (never out-of-bounds).
+  - **`upper.tri =`** — which triangle of the first argument to read.
+    `backsolve` defaults `TRUE` (upper), `forwardsolve` defaults `FALSE` (lower);
+    passing it explicitly overrides the default, and the substitution direction
+    follows the triangle read (so `backsolve(L, x, upper.tri = FALSE)` equals
+    `forwardsolve(L, x)`).
+  - **`transpose =`** — when `TRUE`, solve `t(R) %*% y = x` instead of
+    `R %*% y = x` (the substitution runs over the transposed entries `R[j,i]`).
+  - **Safety**: the zero-on-the-(used-)diagonal *singular* error, the RHS
+    dimension checks, and the `MAX_SOLVE_DIM` bounds from R-41 all still hold; `k`
+    is range-checked before any indexing.
+  - **Deferred to R-43**: exotic three-way option combinations with wide
+    multi-column right-hand sides beyond the cases covered here.
+
 ## [0.37.0] - 2026-06-25
 
 ### Added

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.38.0] - 2026-06-25
+
+### Added (via the shared `s-runtime`)
+
+- **R-42 — triangular-solve options** for `backsolve`/`forwardsolve`, through
+  ordinary R syntax:
+  - **`k =`** uses the leading `k × k` block (and first `k` rows of `x`); result
+    has `k` rows. **`upper.tri =`** chooses the triangle read (`backsolve`
+    defaults upper, `forwardsolve` lower), so `backsolve(L, x, upper.tri=FALSE)`
+    matches `forwardsolve(L, x)`. **`transpose=TRUE`** solves `t(R) %*% y = x`.
+  - R-41's behavior is preserved when the options are omitted; the *singular*
+    zero-diagonal error and dimension checks still hold; `k` is range-checked.
+  - **Deferred to R-43**: exotic three-way option combinations with wide
+    multi-column right-hand sides.
+
 ## [0.36.0] - 2026-06-25
 
 ### Added (via the shared `s-runtime`)
