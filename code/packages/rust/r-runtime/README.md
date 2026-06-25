@@ -333,6 +333,20 @@ first `k` rows of `x`), **`upper.tri=`** (which triangle to read — so
 **`transpose=TRUE`** (solve `t(R) %*% y = x`). The R-41 behavior is unchanged when
 the options are omitted, and `k` is range-checked.
 
+**R-43 — `norm(x, type)` (matrix norms)** collapses a numeric matrix to a single
+non-negative "size", through the shared `s-runtime`. The one-letter,
+**case-insensitive** `type` chooses the norm: **`"O"`/`"1"`** one-norm (max
+absolute **column** sum — R's default), **`"I"`** infinity-norm (max absolute
+**row** sum), **`"F"`/`"E"`** Frobenius/Euclidean (`sqrt(Σ x[i,j]²)`), **`"M"`**
+max-modulus (max `|x[i,j]|`). A bare numeric vector is treated as an `n×1` matrix,
+so `norm(c(3,4), "F")` is `5`; `type` may be positional or named.
+`norm(matrix(c(1,2,3,4), nrow=2))` is `7`, `…, "I")` is `6`, `…, "F")` is
+`sqrt(30) ≈ 5.477`, `norm(matrix(c(1,-5,3,4), nrow=2), "M")` is `5`. It reuses the
+shared `matrix_parts` reader (column-major, **rectangular** — not `square_matrix`)
+and `as_double` for the vector promotion; any `NA` entry → `NA`, and an unknown
+`type` is a clean error (never a panic). `type = "2"` (the spectral norm, needs an
+SVD) is deferred to **R-48** with a clear *"not yet supported"* error.
+
 **R-44 — base R Date support** adds R's first calendar type, again through the
 shared `s-runtime`. A **`Date`** is *not* a new value kind: it is a numeric vector
 of **days since the Unix epoch 1970-01-01** carrying class `"Date"` (the existing

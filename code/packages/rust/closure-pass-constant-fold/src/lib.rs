@@ -678,6 +678,39 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                     }
                 }
+                // ---- two-argument literal replacement: replace / replaceAll ----
+                //
+                // `"…".replace(from, to)` substitutes the FIRST literal
+                // occurrence of `from`; `replaceAll(from, to)` substitutes
+                // EVERY occurrence. We fold only the string-pattern,
+                // string-replacement overload — both arguments are string
+                // literals. `fold_string_replace` declines the two cases JS
+                // handles differently from a plain literal copy: a `to`
+                // containing `$` (V8 expands `$$`/`$&`/`` $` ``/`$'`/`$n`
+                // substitution patterns) and an empty `from` (V8 inserts at
+                // every code-unit boundary). The string overload matches
+                // `from` literally — no regex — so `"a.b".replace(".","X")`
+                // → `"aXb"` is sound.
+                else if (id.name == "replace" || id.name == "replaceAll")
+                    && arguments.len() == 2
+                {
+                    if let (Expression::StringLiteral(from), Expression::StringLiteral(to)) =
+                        (&arguments[0], &arguments[1])
+                    {
+                        if let Some(result) =
+                            fold_string_replace(&id.name, &s.value, &from.value, &to.value)
+                        {
+                            let parent = c.cv.clone();
+                            let before = format!(
+                                "\"{}\".{}(\"{}\",\"{}\")",
+                                s.value, id.name, from.value, to.value
+                            );
+                            let after = format!("\"{}\"", result);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                        }
+                    }
+                }
                 // ---- zero-argument casing + trimming methods ----
                 //
                 // `toUpperCase`/`toLowerCase` are ASCII-only (full-Unicode case
@@ -1369,6 +1402,81 @@ fn fold_string_pad(value: &str, args: &[Expression], at_start: bool) -> Option<S
         s_units.iter().chain(filler.iter()).copied().collect()
     };
     String::from_utf16(&result_units).ok()
+}
+
+/// Compute `value.replace(from, to)` (FIRST match) or
+/// `value.replaceAll(from, to)` (EVERY match) at compile time, or `None`
+/// when it cannot be folded soundly. This handles only the
+/// **string-pattern, string-replacement** overload — `from` and `to` are
+/// both plain string literals (ECMAScript §22.1.3.19 / §22.1.3.20).
+///
+/// Two divergences from a naive Rust `str::replace` make us decline:
+///
+///  1. **`$` substitution patterns in the replacement.** When the
+///     replacement is a *string*, V8 still scans it for `$$`, `$&`,
+///     `` $` ``, `$'`, and `$n` and substitutes the matched / surrounding
+///     text. Rust's `str::replace` copies the replacement verbatim. So we
+///     decline whenever `to` contains a `$`: `"a".replace("a","$&!")`
+///     yields `"a!"` in JS but `"$&!"` under a literal copy.
+///
+///  2. **Empty search string.** V8's `replaceAll("", "X")` inserts `X`
+///     at *every* code-unit boundary (and at both ends); `replace("",
+///     "X")` prepends `X`. A literal find/replace cannot reproduce that
+///     boundary semantics, so an empty `from` declines.
+///
+/// Otherwise `from` is matched **literally** — the string overload does
+/// no regex interpretation, so `"a.b".replace(".", "X")` → `"aXb"` is
+/// sound. `replace` folds the first match via `replacen(.., .., 1)`;
+/// `replaceAll` folds every match via `replace`. Both operands are valid
+/// strings, so a literal substitution can only yield valid UTF-16 — no
+/// surrogate pair is ever split.
+///
+/// | call                              | result   |
+/// |-----------------------------------|----------|
+/// | `"aXbXc".replace("X","-")`         | `"a-bXc"`|
+/// | `"a-b-c".replaceAll("-","_")`      | `"a_b_c"`|
+/// | `"a.b".replace(".","X")`           | `"aXb"`  |
+/// | `"abc".replace("z","Q")`           | `"abc"`  |
+/// | `"a".replace("a","$&")` (→ `$`)    | declines |
+/// | `"abc".replaceAll("","X")` (empty) | declines |
+fn fold_string_replace(method: &str, haystack: &str, from: &str, to: &str) -> Option<String> {
+    /// Cap on the folded result's length, in bytes. Mirrors the size guards
+    /// on the `repeat` / `pad` folds: `replaceAll`'s output is bounded by
+    /// `haystack.len() * to.len()` (a one-byte `from` matched everywhere and
+    /// replaced by a long `to`), a quadratic blowup in source size, so we
+    /// decline rather than materialize a huge literal at compile time. Unlike
+    /// `repeat`, both operands are already in the source, so this is a
+    /// defensive cap rather than an amplification vector — but it keeps a
+    /// pathological pair of large literals from OOMing the optimizer.
+    const MAX_REPLACE_BYTES: usize = 100_000;
+
+    // The replacement's `$` patterns and the empty-search boundary
+    // semantics are the two cases JS handles differently from a literal
+    // copy; decline both (see the doc comment).
+    if to.contains('$') || from.is_empty() {
+        return None;
+    }
+    // Bound the worst-case output length *before* allocating. `replace`
+    // touches one match; `replaceAll` touches every (non-overlapping) match.
+    // Each match changes the length by `to.len() - from.len()`; only growth
+    // (a `to` longer than `from`) can blow up, so use a saturating delta and
+    // checked arithmetic against `usize` overflow.
+    let matches = match method {
+        "replaceAll" => haystack.matches(from).count(),
+        "replace" => 1,
+        _ => return None,
+    };
+    let worst_case = haystack
+        .len()
+        .checked_add(matches.checked_mul(to.len().saturating_sub(from.len()))?)?;
+    if worst_case > MAX_REPLACE_BYTES {
+        return None;
+    }
+    match method {
+        "replace" => Some(haystack.replacen(from, to, 1)),
+        "replaceAll" => Some(haystack.replace(from, to)),
+        _ => None,
+    }
 }
 
 // ---------------------------------------------------------------------
@@ -4806,6 +4914,139 @@ mod tests {
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.padStart(5) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- replace / replaceAll ------------------------
+
+    /// Build `"recv".method("from", "to")` — the 2-string-arg form.
+    fn replace_call(recv: &str, method: &str, from: &str, to: &str) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(recv, None), method)),
+            arguments: vec![string(from, None), string(to, None)],
+        })
+    }
+
+    /// Assert `"recv".method("from","to")` folds to the string `expect`.
+    fn assert_replace(recv: &str, method: &str, from: &str, to: &str, expect: &str) {
+        let c = replace_call(recv, method, from, to);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "\"{recv}\".{method}(\"{from}\",\"{to}\") should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(
+                s.value, expect,
+                "\"{recv}\".{method}(\"{from}\",\"{to}\")"
+            ),
+            other => panic!("expected \"{expect}\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn replace_first_match_only() {
+        // `replace` substitutes only the FIRST occurrence (V8 oracle).
+        assert_replace("aXbXc", "replace", "X", "-", "a-bXc");
+        assert_replace("a-b-c", "replace", "-", "_", "a_b-c");
+    }
+
+    #[test]
+    fn replace_all_matches() {
+        // `replaceAll` substitutes EVERY occurrence (V8 oracle).
+        assert_replace("a-b-c", "replaceAll", "-", "_", "a_b_c");
+        assert_replace("aXbXc", "replaceAll", "X", "-", "a-b-c");
+    }
+
+    #[test]
+    fn replace_matches_from_literally_not_as_regex() {
+        // The string overload treats `from` literally — `.` is not "any
+        // char". `"a.b".replace(".","X")` → `"aXb"`, not `"XXX"`.
+        assert_replace("a.b", "replace", ".", "X", "aXb");
+        assert_replace("a.b.c", "replaceAll", ".", "X", "aXbXc");
+    }
+
+    #[test]
+    fn replace_no_match_is_identity() {
+        // No occurrence of `from` → the receiver unchanged (but still folds
+        // the call away).
+        assert_replace("abc", "replace", "z", "Q", "abc");
+        assert_replace("abc", "replaceAll", "z", "Q", "abc");
+    }
+
+    #[test]
+    fn replace_declines_dollar_in_replacement() {
+        // A `$` in `to` triggers V8's substitution patterns ($$, $&, …),
+        // which a literal copy would not reproduce — decline.
+        for method in ["replace", "replaceAll"] {
+            let c = replace_call("abc", method, "b", "$&");
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "{method} with `$` in replacement must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn replace_declines_empty_search() {
+        // An empty `from` has V8 boundary-insertion semantics a literal
+        // find/replace can't reproduce — decline.
+        for method in ["replace", "replaceAll"] {
+            let c = replace_call("abc", method, "", "X");
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "{method} with empty search must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn replace_non_string_argument_does_not_fold() {
+        // A numeric `from` (or `to`) is not the string-overload we model.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("a1b", None), "replace")),
+            arguments: vec![num(1.0, None), string("X", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "replace with a non-string argument must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn replace_on_identifier_receiver_does_not_fold() {
+        // `s.replace("a","b")` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "replace")),
+            arguments: vec![string("a", None), string("b", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.replace(\"a\",\"b\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn replace_wrong_arity_does_not_fold() {
+        // One-arg `"abc".replace("a")` is not the 2-arg form we fold.
+        let c = call1(string("abc", None), "replace", string("a", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "one-arg replace must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn replace_over_size_cap_does_not_fold() {
+        // A 100k-byte all-`a` string, `replaceAll("a","bb")` → 200k bytes,
+        // over the cap — decline rather than materialize a huge literal at
+        // compile time (DoS guard, mirrors repeat/pad).
+        let big = "a".repeat(100_000);
+        let c = replace_call(&big, "replaceAll", "a", "bb");
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "over-cap replaceAll must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+
+        // Just under the cap still folds.
+        let small = "a".repeat(100);
+        let c2 = replace_call(&small, "replaceAll", "a", "b");
+        let (out2, _, changed2, _) = run_pass(program_with_expr(c2, true));
+        assert!(changed2, "under-cap replaceAll should fold");
+        assert!(matches!(extract_expr(&out2), Expression::StringLiteral(_)));
     }
 
     // ------------------- logical (short-circuit) ---------------------
