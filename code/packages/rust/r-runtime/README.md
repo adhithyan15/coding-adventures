@@ -387,9 +387,31 @@ and `"N units"` multipliers, and `length.out=` is an alternative to `to`.
 `months(d)` → the full month name; `quarters(d)` → `"Q1"`..`"Q4"`. Security:
 name parsing is table-bounded with ASCII case-folding (no OOB), and `seq.Date`
 caps its length at `MAX_SEQ_LEN` with checked arithmetic before allocating
-(`by = 0` errors; huge spans error rather than OOM). Deferred to **R-46**:
-`POSIXct`/`POSIXlt` & timezones, `%H`/`%M`/`%S`/`%p`, `%U`/`%W` week-of-year,
-locale names, and compound `by=` beyond a single integer multiplier.
+(`by = 0` errors; huge spans error rather than OOM).
+
+**R-46 — POSIXct date-times (UTC)** adds R's first *date-time* type on top of the
+R-44/R-45 calendar machinery. A `POSIXct` is a numeric vector of **seconds since
+1970-01-01 00:00:00 UTC** with class `c("POSIXct", "POSIXt")` (the same
+transparent class wrapper as `Date`), so `as.numeric(t)` peels to raw seconds and
+`t1 - t2` is a difference **in seconds** — both for free. The implementation
+splits a seconds count into `div_euclid(86400)` (the `Date` day count, fed to the
+reused civil kernel) and `rem_euclid(86400)` (intraday seconds → H/M/S), so only
+the time half is new. `as.POSIXct("2021-03-14 09:30:00")` parses a datetime,
+`as.POSIXct("2021-03-14")` is midnight, and `as.POSIXct(86400)` wraps raw
+seconds; a malformed or out-of-range string (`as.POSIXct("garbage")`,
+`as.POSIXct("2021-03-14 25:00:00")`) → `NA`, never a panic. `Sys.time()` is the
+current instant (wall clock; structure-tested). `format(t)` /
+`format.POSIXct(t, fmt)` default to `"%Y-%m-%d %H:%M:%S"`, supporting
+`%H`/`%M`/`%S` plus every reused R-45 date field — so
+`format(as.POSIXct("2021-03-14 09:30:05"))` → `"2021-03-14 09:30:05"` and
+`format(..., "%H:%M")` → `"09:30"`. Worked numbers:
+`as.numeric(as.POSIXct("1970-01-02 00:00:00"))` → `86400`,
+`as.POSIXct("2021-03-14 09:30:00") - as.POSIXct("2021-03-14 09:00:00")` → `1800`.
+Security: a `MAX_POSIXCT_SECONDS` bound rejects absurd seconds before the civil
+kernel, H/M/S are range-checked (0–23 / 0–59 / 0–60), and the days×86400+intraday
+combine uses `checked_mul`/`checked_add`. UTC only. Deferred to **R-47**: non-UTC
+timezones & DST, `POSIXlt`, fractional seconds, `%z`/`%Z`, standalone
+`strptime`/`strftime`, and `as.POSIXlt`.
 
 ## Usage
 

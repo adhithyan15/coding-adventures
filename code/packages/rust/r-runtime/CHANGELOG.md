@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.40.0] - 2026-06-25
+
+### Added (via the shared `s-runtime`)
+
+- **R-46 — POSIXct date-times (UTC)**, reached through ordinary R syntax. A
+  `POSIXct` is a numeric vector of **seconds since 1970-01-01 00:00:00 UTC** with
+  class `c("POSIXct", "POSIXt")`, layered on the R-44/R-45 calendar machinery.
+  - `as.POSIXct("YYYY-MM-DD HH:MM:SS")` / `as.POSIXct("YYYY-MM-DD")` (→ midnight)
+    / `as.POSIXct(<numeric seconds>)`; malformed → `NA`. UTC only.
+  - `Sys.time()` — current time as a length-1 POSIXct (wall clock).
+  - `format(x)` / `format.POSIXct(x, fmt)` — default `"%Y-%m-%d %H:%M:%S"`; adds
+    `%H`/`%M`/`%S` and reuses the R-45 date fields (`%Y %m %d %B %b %A %a %j %e`).
+  - `t1 - t2` → seconds; `as.numeric(t)` → seconds since epoch (the transparent
+    class wrapper makes both fall out of the shared kernels for free).
+  - Worked R examples:
+    - `as.numeric(as.POSIXct("1970-01-02 00:00:00"))` → `86400`
+    - `format(as.POSIXct("2021-03-14 09:30:05"))` → `"2021-03-14 09:30:05"`
+    - `as.POSIXct("2021-03-14 09:30:00") - as.POSIXct("2021-03-14 09:00:00")` →
+      `1800`
+  - Deferred to R-47: non-UTC timezones/DST, `POSIXlt`, fractional seconds,
+    `%z`/`%Z`, standalone `strptime`/`strftime`, `as.POSIXlt`.
+
 ## [0.39.0] - 2026-06-25
 
 ### Added (via the shared `s-runtime`)
