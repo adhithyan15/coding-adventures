@@ -3374,6 +3374,230 @@ mod tests {
         assert!(format!("{err}").to_lowercase().contains("square"));
     }
 
+    // --- R-41: backsolve / forwardsolve (triangular solves, R syntax) ---
+
+    #[test]
+    fn backsolve_vector_through_r_syntax() {
+        // r upper-triangular [[2,1],[0,3]]; solve r %*% y = c(5,9) -> c(1,3).
+        let y = nums("backsolve(matrix(c(2,0,1,3), nrow = 2), c(5,9))\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 1.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn forwardsolve_vector_through_r_syntax() {
+        // l lower-triangular [[2,0],[1,3]]; solve l %*% y = c(4,11) -> c(2,3).
+        let y = nums("forwardsolve(matrix(c(2,1,0,3), nrow = 2), c(4,11))\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 2.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_round_trip_through_r_syntax() {
+        // r %*% backsolve(r, x) reconstructs x within tolerance.
+        let rhs = nums(
+            "r <- matrix(c(2,0,1,3), nrow = 2)\nas.numeric(r %*% backsolve(r, c(5,9)))\n",
+        );
+        assert!((rhs[0] - 5.0).abs() < 1e-9 && (rhs[1] - 9.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn forwardsolve_round_trip_through_r_syntax() {
+        let rhs = nums(
+            "l <- matrix(c(2,1,0,3), nrow = 2)\nas.numeric(l %*% forwardsolve(l, c(4,11)))\n",
+        );
+        assert!((rhs[0] - 4.0).abs() < 1e-9 && (rhs[1] - 11.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_matrix_rhs_through_r_syntax() {
+        // Two RHS columns: c(5,9) -> c(1,3) and c(2,6) -> c(0,2).
+        let (data, nrow, ncol) = matrix_data(
+            "backsolve(matrix(c(2,0,1,3), nrow = 2), matrix(c(5,9,2,6), nrow = 2))\n",
+        );
+        assert_eq!((nrow, ncol), (2, 2));
+        assert!(chol_max_abs_diff(&data, &[1.0, 3.0, 0.0, 2.0]) < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_singular_errors_through_r_syntax() {
+        // r[1,1] = 0 -> division by zero in back-substitution -> clean error.
+        let err = eval_r("backsolve(matrix(c(0,0,1,3), nrow = 2), c(1,2))\n").unwrap_err();
+        assert!(format!("{err}").to_lowercase().contains("singular"));
+    }
+
+    #[test]
+    fn forwardsolve_non_square_errors_through_r_syntax() {
+        let err = eval_r("forwardsolve(matrix(1:6, nrow = 2), c(1,2))\n").unwrap_err();
+        assert!(format!("{err}").to_lowercase().contains("square"));
+    }
+
+    // --- R-42: triangular-solve options (k / upper.tri / transpose) ------
+    //
+    // These extend the R-41 core (the shared `triangular_solve` helper) with
+    // base-R's three named arguments. Every expected value is computed by hand
+    // in the comment above the assertion, then checked to a float tolerance.
+
+    #[test]
+    fn backsolve_upper_tri_false_reads_lower_triangle() {
+        // `backsolve` defaults upper.tri = TRUE; passing FALSE makes it read the
+        // LOWER triangle instead, i.e. it becomes `forwardsolve` of that matrix.
+        // m col-major c(2,1,0,3) -> [[2,0],[1,3]] (lower-tri). Solve m %*% y =
+        // c(4,11): y[0] = 4/2 = 2, y[1] = (11 - 1*2)/3 = 3  -> c(2,3).
+        let y = nums("backsolve(matrix(c(2,1,0,3), nrow = 2), c(4,11), upper.tri = FALSE)\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 2.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_upper_tri_false_equals_forwardsolve() {
+        // Identity: backsolve(m, x, upper.tri = FALSE) == forwardsolve(m, x).
+        let a = nums("backsolve(matrix(c(2,1,0,3), nrow = 2), c(4,11), upper.tri = FALSE)\n");
+        let b = nums("forwardsolve(matrix(c(2,1,0,3), nrow = 2), c(4,11))\n");
+        assert_eq!(a.len(), b.len());
+        for (x, y) in a.iter().zip(b.iter()) {
+            assert!((x - y).abs() < 1e-12);
+        }
+    }
+
+    #[test]
+    fn forwardsolve_upper_tri_true_reads_upper_triangle() {
+        // `forwardsolve` defaults upper.tri = FALSE; passing TRUE makes it read
+        // the UPPER triangle, i.e. it becomes `backsolve` of that matrix.
+        // m col-major c(2,0,1,3) -> [[2,1],[0,3]] (upper-tri). Solve m %*% y =
+        // c(5,9): y[1] = 9/3 = 3, y[0] = (5 - 1*3)/2 = 1 -> c(1,3).
+        let y = nums("forwardsolve(matrix(c(2,0,1,3), nrow = 2), c(5,9), upper.tri = TRUE)\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 1.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_transpose_solves_transposed_system() {
+        // R col-major c(2,0,1,3) -> [[2,1],[0,3]] (upper-tri). transpose = TRUE
+        // solves t(R) %*% y = x where t(R) = [[2,0],[1,3]] (lower-tri).
+        // For x = c(4,11): forward-sub over t(R): y[0] = 4/2 = 2,
+        // y[1] = (11 - 1*2)/3 = 3 -> c(2,3).
+        let y = nums("backsolve(matrix(c(2,0,1,3), nrow = 2), c(4,11), transpose = TRUE)\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 2.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_transpose_round_trip() {
+        // t(r) %*% backsolve(r, x, transpose = TRUE) reconstructs x.
+        let rhs = nums(
+            "r <- matrix(c(2,0,1,3), nrow = 2)\n\
+             as.numeric(t(r) %*% backsolve(r, c(4,11), transpose = TRUE))\n",
+        );
+        assert!((rhs[0] - 4.0).abs() < 1e-9 && (rhs[1] - 11.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn forwardsolve_transpose_solves_transposed_system() {
+        // L col-major c(2,1,0,3) -> [[2,0],[1,3]] (lower-tri). transpose = TRUE
+        // solves t(L) %*% y = x where t(L) = [[2,1],[0,3]] (upper-tri).
+        // For x = c(5,9): back-sub over t(L): y[1] = 9/3 = 3,
+        // y[0] = (5 - 1*3)/2 = 1 -> c(1,3).
+        let y = nums("forwardsolve(matrix(c(2,1,0,3), nrow = 2), c(5,9), transpose = TRUE)\n");
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 1.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_k_uses_leading_block_only() {
+        // 3x3 upper-tri r, col-major c(2,0,0, 1,3,0, 4,5,6) ->
+        // [[2,1,4],[0,3,5],[0,0,6]]. With k = 2 we use only the leading 2x2
+        // block [[2,1],[0,3]] and the first two RHS rows c(5,9) (the third
+        // entry, 99, is ignored). Solve: y[1] = 9/3 = 3, y[0] = (5-1*3)/2 = 1.
+        // Result length 2 -> c(1,3).
+        let y = nums(
+            "backsolve(matrix(c(2,0,0, 1,3,0, 4,5,6), nrow = 3), c(5,9,99), k = 2)\n",
+        );
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 1.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_k_full_matches_default() {
+        // k equal to the full order is identical to omitting k.
+        let a = nums("backsolve(matrix(c(2,0,1,3), nrow = 2), c(5,9), k = 2)\n");
+        let b = nums("backsolve(matrix(c(2,0,1,3), nrow = 2), c(5,9))\n");
+        assert_eq!(a.len(), 2);
+        for (x, y) in a.iter().zip(b.iter()) {
+            assert!((x - y).abs() < 1e-12);
+        }
+    }
+
+    #[test]
+    fn backsolve_k_matrix_rhs_uses_leading_rows() {
+        // k = 2 with a matrix RHS: only the first two rows of each column are
+        // used and the result has 2 rows. RHS matrix col-major
+        // c(5,9,99, 2,6,99) -> columns c(5,9,99) and c(2,6,99). Leading 2x2
+        // block [[2,1],[0,3]]: c(5,9)->c(1,3); c(2,6)->y[1]=2, y[0]=(2-1*2)/2=0
+        // -> c(0,2).
+        let (data, nrow, ncol) = matrix_data(
+            "backsolve(matrix(c(2,0,0, 1,3,0, 4,5,6), nrow = 3), \
+             matrix(c(5,9,99, 2,6,99), nrow = 3), k = 2)\n",
+        );
+        assert_eq!((nrow, ncol), (2, 2));
+        assert!(chol_max_abs_diff(&data, &[1.0, 3.0, 0.0, 2.0]) < 1e-9);
+    }
+
+    #[test]
+    fn backsolve_k_zero_returns_empty() {
+        // k = 0 -> the empty (0-row) solve; a length-0 result, no error.
+        let y = nums("backsolve(matrix(c(2,0,1,3), nrow = 2), c(5,9), k = 0)\n");
+        assert_eq!(y.len(), 0);
+    }
+
+    #[test]
+    fn backsolve_k_out_of_range_errors() {
+        // k > n is a clean error, never an out-of-bounds read.
+        let err = eval_r("backsolve(matrix(c(2,0,1,3), nrow = 2), c(5,9), k = 5)\n").unwrap_err();
+        let msg = format!("{err}").to_lowercase();
+        assert!(msg.contains('k') || msg.contains("range") || msg.contains("out"));
+    }
+
+    #[test]
+    fn backsolve_k_negative_errors() {
+        // A negative k is rejected cleanly (no panic, no OOB).
+        let err = eval_r("backsolve(matrix(c(2,0,1,3), nrow = 2), c(5,9), k = -1)\n").unwrap_err();
+        assert!(!format!("{err}").is_empty());
+    }
+
+    #[test]
+    fn backsolve_transpose_singular_still_clean_error() {
+        // A zero on the (transpose-invariant) diagonal is still a clean singular
+        // error under transpose = TRUE -- never NaN / Inf / panic.
+        let err = eval_r(
+            "backsolve(matrix(c(0,0,1,3), nrow = 2), c(1,2), transpose = TRUE)\n",
+        )
+        .unwrap_err();
+        assert!(format!("{err}").to_lowercase().contains("singular"));
+    }
+
+    #[test]
+    fn backsolve_upper_tri_false_and_k_combine() {
+        // Combine two options: lower triangle of the leading 2x2 block.
+        // m col-major c(2,1,0, 0,3,0, 0,0,9) -> [[2,0,0],[1,3,0],[0,0,9]].
+        // upper.tri = FALSE reads the lower triangle; k = 2 uses [[2,0],[1,3]]
+        // and RHS c(4,11): y[0] = 4/2 = 2, y[1] = (11-1*2)/3 = 3 -> c(2,3).
+        let y = nums(
+            "backsolve(matrix(c(2,1,0, 0,3,0, 0,0,9), nrow = 3), c(4,11,99), \
+             upper.tri = FALSE, k = 2)\n",
+        );
+        assert_eq!(y.len(), 2);
+        assert!((y[0] - 2.0).abs() < 1e-9);
+        assert!((y[1] - 3.0).abs() < 1e-9);
+    }
+
     // --- R-35: ordered factors & cut() label polish (R syntax) ----------
 
     #[test]
@@ -3501,5 +3725,69 @@ mod tests {
         // Non-deterministic: assert only class + single numeric.
         assert_eq!(show("class(Sys.Date())\n"), "[1] \"Date\"");
         assert_eq!(nums("length(Sys.Date())\n"), vec![1.0]);
+    }
+
+    // --- R-45: Date/time completeness (through R syntax) ----------------------
+
+    #[test]
+    fn date_strftime_names_through_r_syntax() {
+        // 2021-01-15 = Friday. %B/%b/%A/%a render English month/weekday names.
+        assert_eq!(
+            show("format(as.Date(\"2021-01-15\"), \"%B %d, %Y\")\n"),
+            "[1] \"January 15, 2021\""
+        );
+        assert_eq!(show("format(as.Date(\"2021-01-15\"), \"%b\")\n"), "[1] \"Jan\"");
+        assert_eq!(
+            show("format(as.Date(\"2021-01-15\"), \"%A\")\n"),
+            "[1] \"Friday\""
+        );
+        assert_eq!(show("format(as.Date(\"2021-01-15\"), \"%a\")\n"), "[1] \"Fri\"");
+    }
+
+    #[test]
+    fn date_strptime_month_name_through_r_syntax() {
+        assert_eq!(
+            nums("as.numeric(as.Date(\"January 15, 2021\", format = \"%B %d, %Y\"))\n"),
+            nums("as.numeric(as.Date(\"2021-01-15\"))\n")
+        );
+        assert_eq!(
+            nums("as.numeric(as.Date(\"15 Jan 2021\", \"%d %b %Y\"))\n"),
+            nums("as.numeric(as.Date(\"2021-01-15\"))\n")
+        );
+        // Malformed month name → NA, never a panic.
+        assert_eq!(
+            show("as.numeric(as.Date(\"Smarch 15, 2021\", \"%B %d, %Y\"))\n"),
+            "[1] NA"
+        );
+    }
+
+    #[test]
+    fn months_quarters_through_r_syntax() {
+        assert_eq!(show("months(as.Date(\"2021-03-14\"))\n"), "[1] \"March\"");
+        assert_eq!(show("quarters(as.Date(\"2021-03-14\"))\n"), "[1] \"Q1\"");
+        assert_eq!(show("quarters(as.Date(\"2021-12-01\"))\n"), "[1] \"Q4\"");
+    }
+
+    #[test]
+    fn seq_date_through_r_syntax() {
+        // by = 1 → 5 consecutive days.
+        assert_eq!(
+            show("format(seq(as.Date(\"2021-01-01\"), as.Date(\"2021-01-05\"), by = 1))\n"),
+            "[1] \"2021-01-01\" \"2021-01-02\" \"2021-01-03\" \"2021-01-04\" \"2021-01-05\""
+        );
+        // by = "month" from Jan 31, length.out = 3 → clamps to month length.
+        assert_eq!(
+            show("format(seq(as.Date(\"2021-01-31\"), by = \"month\", length.out = 3))\n"),
+            "[1] \"2021-01-31\" \"2021-02-28\" \"2021-03-31\""
+        );
+    }
+
+    #[test]
+    fn seq_date_length_capped_through_r_syntax() {
+        // A span of tens of millions of days exceeds MAX_SEQ_LEN → error (cap),
+        // never OOM.
+        assert!(
+            eval_r("seq(as.Date(\"1970-01-01\"), as.Date(\"99999-01-01\"), by = 1)\n").is_err()
+        );
     }
 }

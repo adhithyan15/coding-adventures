@@ -100,7 +100,15 @@ fn print_function_indented(out: &mut String, f: &Function, indent: usize) {
         if i > 0 {
             out.push(' ');
         }
-        let _ = write!(out, "({} {})", p.name, type_or_any(p.sir_type.as_ref()));
+        // Variadic kinds render with a Ruby-faithful prefix so a
+        // round-tripped module preserves splat-ness: `*rest` for a Rest
+        // param, `**opts` for a KwRest param, plain `name` otherwise.
+        let prefix = match p.kind {
+            ParamKind::Required => "",
+            ParamKind::Rest => "*",
+            ParamKind::KwRest => "**",
+        };
+        let _ = write!(out, "({}{} {})", prefix, p.name, type_or_any(p.sir_type.as_ref()));
     }
     let _ = write!(out, ") {}", type_or_any(f.return_type.as_ref()));
     if !f.captures.is_empty() {
@@ -687,8 +695,8 @@ mod tests {
         let f = Function {
             name: "add".into(),
             params: vec![
-                Param { name: "x".into(), sir_type: None, span: s() },
-                Param { name: "y".into(), sir_type: None, span: s() },
+                Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, span: s() },
+                Param { name: "y".into(), sir_type: None, kind: ParamKind::Required, span: s() },
             ],
             return_type: None,
             captures: vec![],
@@ -704,6 +712,40 @@ mod tests {
         let text = print_module(&m);
         assert!(text.contains("(function add ((x any) (y any)) any (effects pure)"));
         assert!(text.contains("(builtin-call + (effects pure) (var-ref x param) (var-ref y param))"));
+    }
+
+    #[test]
+    fn print_variadic_params_render_splat_prefix() {
+        // M3: a Rest param renders `*name`, a KwRest param renders `**name`,
+        // so round-tripping preserves splat-ness. `def f(a, *rest, **opts)`.
+        let body = Block {
+            stmts: vec![],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, span: s() },
+                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, span: s() },
+                Param { name: "opts".into(), sir_type: None, kind: ParamKind::KwRest, span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = module_with(
+            vec![f],
+            FeatureManifest::from_features(&[Feature::DynamicTyping]),
+        );
+        let text = print_module(&m);
+        assert!(
+            text.contains("(function f ((a any) (*rest any) (**opts any)) any"),
+            "got: {text}"
+        );
     }
 
     #[test]

@@ -2,6 +2,102 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.39.0] - 2026-06-25
+
+### Added
+
+- **Triangular-solve options (R-42)** — `backsolve` / `forwardsolve` (R-41) now
+  accept base R's named arguments, threaded through the shared `triangular_solve`
+  helper (the R-41 behavior is unchanged when they're omitted):
+  - **`k =`** — use only the leading `k × k` block of the triangular factor and
+    the first `k` rows of the right-hand side; the result has `k` rows. Defaults
+    to the full matrix. `k` outside `0..=n` is a clean error (never out-of-bounds).
+  - **`upper.tri =`** — which triangle of the first argument to read.
+    `backsolve` defaults `TRUE` (upper), `forwardsolve` defaults `FALSE` (lower);
+    passing it explicitly overrides the default, and the substitution direction
+    follows the triangle read (so `backsolve(L, x, upper.tri = FALSE)` equals
+    `forwardsolve(L, x)`).
+  - **`transpose =`** — when `TRUE`, solve `t(R) %*% y = x` instead of
+    `R %*% y = x` (the substitution runs over the transposed entries `R[j,i]`).
+  - **Safety**: the zero-on-the-(used-)diagonal *singular* error, the RHS
+    dimension checks, and the `MAX_SOLVE_DIM` bounds from R-41 all still hold; `k`
+    is range-checked before any indexing.
+  - **Deferred to R-43**: exotic three-way option combinations with wide
+    multi-column right-hand sides beyond the cases covered here.
+
+## [0.38.0] - 2026-06-25
+
+### Added
+
+- **Date/time completeness (R-45)** — extends the R-44 Date builtins **in place**
+  (same Hinnant civil kernel, same `Date` class machinery, same parse-safety
+  guards; no new dependency — English name tables are hand-rolled `const` arrays).
+  - **Extended `strftime` fields** in `format.Date` / the `format()` generic:
+    `%B` (full month `"January"`..`"December"`), `%b` (abbreviated
+    `"Jan"`..`"Dec"`), `%A` (full weekday `"Monday"`..`"Sunday"`), `%a`
+    (abbreviated `"Mon"`..`"Sun"`), and `%e` (day of month, **space-padded** to
+    width 2 — the 5th renders as `" 5"`). The weekday name reuses R-44's
+    `(days + 4).rem_euclid(7)` Sunday-based index via a shared `weekday_index`
+    helper (now also used by `weekdays`).
+  - **Extended `strptime` fields** in `as.Date`: `%B`/`%b` parse month names
+    **case-insensitively** (`"january"`/`"JAN"`/`"Jan"` all match); `%A`/`%a`
+    parse and spell-check weekday names (consumed but, like base R, not used to
+    constrain the date); `%e` parses an optionally space-padded day. `as.Date`
+    now also accepts the format as its **second positional** argument
+    (`as.Date("15 Jan 2021", "%d %b %Y")`), matching base R and `format.Date`.
+    So `as.Date("January 15, 2021", "%B %d, %Y")` parses correctly; a malformed
+    month/weekday name degrades to `NA`, never a panic.
+  - **`seq.Date(from, to, by)`** — dispatched from `seq()` when the first argument
+    is a `Date`. `by` is a number of days (`by = 1`, `by = 7`) or a unit string
+    `"day"`/`"week"`/`"month"`/`"year"` with an optional leading integer
+    multiplier (`"2 weeks"`). Day/week step a fixed day count; month/year step the
+    civil Y/M/D, **clamping** the day-of-month to the target month's length
+    (`seq(as.Date("2021-01-31"), by = "month", length.out = 3)` → Jan 31, Feb 28,
+    Mar 31). `length.out =` is supported as an alternative to `to`.
+  - **`months(d)`** → the full month name (= `format(d, "%B")`); **`quarters(d)`**
+    → `"Q1"`..`"Q4"`. Both vectorised and `NA`-preserving.
+  - **Security**: month/weekday-name parsing scans a fixed, length-bounded table
+    with ASCII case-folding (`eq_ignore_ascii_case`) and a `checked_add` length
+    check, so crafted strings can never index out of bounds — a bad name → `NA`.
+    `seq.Date` bounds its output length against `MAX_SEQ_LEN` with checked
+    arithmetic **before** any allocation (a `from`/`to`/`by` implying tens of
+    millions of dates errors rather than OOMs); `by = 0` errors rather than
+    looping; month/year clamp math uses saturating/`div_euclid`/`rem_euclid` so it
+    never panics, and every generated day count is re-validated against the R-44
+    `MAX_DATE_DAYS` bound.
+  - **Deferred to R-46**: `POSIXct`/`POSIXlt` date-*times* & timezones; sub-day
+    fields `%H`/`%M`/`%S`/`%p`; `%U`/`%W` week-of-year; locale (non-English)
+    names; and compound `"N units"` `by=` beyond a single leading integer
+    multiplier.
+## [0.37.0] - 2026-06-25
+
+### Added
+
+- **`backsolve(r, x)` / `forwardsolve(l, x)` — triangular solves (R-41)** —
+  available to both S and R through the shared tree-walker. `backsolve` solves
+  the **upper**-triangular system `r %*% y = x` by back-substitution;
+  `forwardsolve` solves the **lower**-triangular system `l %*% y = x` by
+  forward-substitution. Only the relevant triangle of the coefficient matrix is
+  read.
+  - **Right-hand side.** `x` may be a length-`n` vector (→ a vector result) or an
+    `n × m` matrix (→ an `n × m` result, one solved column per right-hand side) —
+    the same shape contract as `solve`. e.g.
+    `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` → `c(1, 3)` (and
+    `r %*% y == c(5,9)`); a two-column RHS solves both systems at once.
+  - **Algorithm.** Column-major back/forward substitution:
+    `y[i] = (x[i] − Σ_{j>i} R[i,j]·y[j]) / R[i,i]` (back) or
+    `y[i] = (x[i] − Σ_{j<i} L[i,j]·y[j]) / L[i,i]` (forward).
+  - **Reuse.** Built on the existing `square_matrix` reader (shared with
+    `solve`/`det`/`chol`) and the `solve`-style vector/matrix RHS handling.
+  - **Errors (no panics).** A zero on the diagonal makes the system *singular* —
+    a clean error, never a divide-by-zero `NaN`/`Inf`. A non-square or
+    non-numeric coefficient matrix, an `NA`, or a right-hand side whose
+    rows/length don't match `n` are all clean errors raised before any indexing.
+  - **Bounds.** The column count is capped at `MAX_SOLVE_DIM` (as in `solve`) so
+    a wide right-hand side can't blow past the work budget.
+  - **Deferred to R-42:** the `k =`, `transpose = TRUE`, and `upper.tri = FALSE`
+    options of base R's `backsolve`/`forwardsolve`.
+
 ## [0.36.0] - 2026-06-22
 
 ### Added

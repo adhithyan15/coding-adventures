@@ -1,0 +1,72 @@
+% ============================================================================
+% gi-hormone-edges — the gastrointestinal-hormone→action knowledge-graph
+% (MYCIN-2026 GIHORMONE).
+% ============================================================================
+% A high-yield GI-physiology board table: each major gut hormone and the
+% principal physiological action it performs. "What does gastrin do?" becomes
+% the binding query
+%     ? has_action(gastrin, $Action).
+%
+% Direction note: the relation is hormone -> the action it performs
+% (`has_action`). Each hormone here maps to ONE canonical action span, so a
+% query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The action object names the literal effect the
+% sentence states (gastrin "stimulates acid secretion directly via parietal
+% cells"; secretin "stimulates the secretion of bicarbonate-rich pancreatic
+% fluid"; CCK "stimulates gallbladder wall contraction"; somatostatin "inhibits
+% bile secretion, colonic fluid secretions, gastric acid secretion, ..." — an
+% inhibitory hormone, bound inhibits_secretion). Each span was independently
+% re-fetched and confirmed on two separate fetches of the same page for
+% byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like CONDUCTION/GLYCOGEN/
+% ORGANELLE). Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see gi-hormone-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary gi_hormone_vocab {
+    define hormone : entity   surface "gut hormone", "GI hormone"
+    define action  : entity   surface "physiological action", "hormone effect"
+
+    define has_action : relation from hormone to action  % the action this hormone performs
+}
+
+rulebook gi_hormone_facts {
+    use gi_hormone_vocab
+
+    % --- gastrin -> stimulates gastric acid secretion (parietal cells) -------
+    relate has_action(gastrin, stimulates_gastric_acid_secretion_by_parietal_cells)
+        source "Gastrin stimulates acid secretion directly via parietal cells and activates the ECL cells to secrete histamine, resulting in acid production."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534822/"
+        trust authoritative
+
+    % --- secretin -> stimulates pancreatic bicarbonate secretion -------------
+    relate has_action(secretin, stimulates_pancreatic_bicarbonate_secretion)
+        source "Secretin stimulates the secretion of bicarbonate-rich pancreatic fluid."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537116/"
+        trust authoritative
+
+    % --- cholecystokinin -> stimulates gallbladder contraction ---------------
+    relate has_action(cholecystokinin, stimulates_gallbladder_wall_contraction)
+        source "Lipids in the duodenum stimulate the release of cholecystokinin, which stimulates gallbladder wall contraction, resulting in the release of bile into the cystic and common bile duct."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542254/"
+        trust authoritative
+
+    % --- somatostatin -> inhibits secretion (an inhibitory hormone) ----------
+    relate has_action(somatostatin, inhibits_secretion)
+        source "In the exocrine system, somatostatin inhibits bile secretion, colonic fluid secretions, gastric acid secretion, pancreatic enzymes, cholecystokinin, and vasoactive intestinal peptide (VIP)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538327/"
+        trust authoritative
+}

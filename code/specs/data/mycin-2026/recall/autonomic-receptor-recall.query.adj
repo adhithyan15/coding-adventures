@@ -1,0 +1,22 @@
+% ============================================================================
+% autonomic-receptor-recall.query.adj — a worked recall query over the
+% autonomic-receptor library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what does receptor X
+% do?" question: it states no physiology fact — it only `import`s the grounded
+% library and asks binding queries. The native adj-lang engine resolves each `?`
+% against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli autonomic-receptor-recall.query.adj
+% ============================================================================
+
+import "autonomic-receptor-edges.adj"
+
+? mediates(alpha_1, $Effect)   % expect vasoconstriction
+? mediates(alpha_2, $Effect)   % expect decreases_norepinephrine_release
+? mediates(beta_1, $Effect)    % expect increases_heart_rate_and_contractility
+? mediates(beta_2, $Effect)    % expect smooth_muscle_relaxation
+? mediates(m2, $Effect)        % expect decreases_heart_rate
+? mediates(m3, $Effect)        % expect smooth_muscle_contraction

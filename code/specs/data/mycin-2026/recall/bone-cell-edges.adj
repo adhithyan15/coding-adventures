@@ -1,0 +1,71 @@
+% ============================================================================
+% bone-cell-edges — the bone-cell→function knowledge-graph (MYCIN-2026 BONECELL).
+% ============================================================================
+% A high-yield histology/physiology board table: each principal bone (and the
+% related cartilage) cell type and the function it performs. "What does the
+% osteoclast do?" becomes the binding query
+%     ? has_function(osteoclast, $Function).
+%
+% Direction note: the relation is cell -> the function it performs
+% (`has_function`). Each cell here maps to ONE canonical function span, so a
+% query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The function object names the literal role the
+% sentence states (osteoblast "synthesize and deposit organic bone matrix";
+% osteoclast "the cells responsible for bone resorption"; osteocyte
+% "orchestrators of bone remodeling"; chondrocyte "production of collagen and
+% the extracellular matrix ... maintenance of cartilaginous tissues"). Each span
+% was independently re-fetched and confirmed on two separate fetches of the same
+% page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like AUTONOMIC/GIHORMONE/
+% CONDUCTION/ORGANELLE). Each fact is a `relate` clause whose byte-provenance
+% lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see bone-cell-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary bone_cell_vocab {
+    define cell     : entity   surface "bone cell", "skeletal cell"
+    define function : entity   surface "cellular function", "cell role"
+
+    define has_function : relation from cell to function  % the function this cell performs
+}
+
+rulebook bone_cell_facts {
+    use bone_cell_vocab
+
+    % --- osteoblast -> bone formation (synthesizes/deposits bone matrix) ------
+    relate has_function(osteoblast, bone_formation)
+        source "Osteoblasts synthesize and deposit organic bone matrix (osteoid) proteins that will mineralize in both developing skeletons and during the process of bone remodeling that occurs continuously throughout an individual's life."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557792/"
+        trust authoritative
+
+    % --- osteoclast -> bone resorption ---------------------------------------
+    relate has_function(osteoclast, bone_resorption)
+        source "Osteoclasts serve a vital role in bone metabolism and turnover, being the cells responsible for bone resorption."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554489/"
+        trust authoritative
+
+    % --- osteocyte -> regulates (orchestrates) bone remodeling ---------------
+    relate has_function(osteocyte, regulates_bone_remodeling)
+        source "Osteocytes act as orchestrators of bone remodeling and as a result, are also considered endocrine cells."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441968/"
+        trust authoritative
+
+    % --- chondrocyte -> produces cartilage matrix ----------------------------
+    relate has_function(chondrocyte, produces_cartilage_matrix)
+        source "Chondrocytes are mainly responsible for the production of collagen and the extracellular matrix that leads to the maintenance of cartilaginous tissues within joints."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557576/"
+        trust authoritative
+}

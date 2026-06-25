@@ -310,6 +310,16 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   triangle errors too. `chol(matrix(c(4,2,2,3), nrow=2))` is `[[2,1],[0,√2]]`
   with `t(R) %*% R` reconstructing the input; `chol(diag(3))` is the identity.
   `pivot=TRUE`, `chol2inv()`, and complex matrices are deferred to R-41.
+- **Triangular solves** (R-41): **`backsolve(r, x)`** / **`forwardsolve(l, x)`** —
+  solve an upper- (resp. lower-) triangular system `r %*% y = x` by back- (resp.
+  forward-) substitution. The right-hand side `x` is a length-`n` vector (→ a
+  vector) or an `n × m` matrix (→ one solved column per RHS), the same contract as
+  `solve`. `backsolve(matrix(c(2,0,1,3), nrow=2), c(5,9))` is `c(1, 3)` and
+  `r %*% y` reconstructs `c(5,9)`. Reuses the `square_matrix` reader; a zero on the
+  diagonal is a clean *singular*-matrix error (no `NaN`/panic). **R-42** adds the
+  base-R options: **`k=`** (use the leading `k×k` block + first `k` rows of `x`),
+  **`upper.tri=`** (which triangle to read — so `backsolve(L, x, upper.tri=FALSE)`
+  equals `forwardsolve(L, x)`), and **`transpose=TRUE`** (solve `t(R) %*% y = x`).
 - **Kronecker product** (R-38): **`kronecker(X, Y)`** — the `(m·p)×(n·q)`
   block-outer product of an `m×n` `X` and a `p×q` `Y`, where block `(i, j)` is
   `X[i,j] · Y` and `result[(i-1)·p+k, (j-1)·q+l] = X[i,j] · Y[k,l]`
@@ -337,9 +347,22 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   codes). The calendar uses Howard Hinnant's dependency-free
   `days_from_civil`/`civil_from_days` (leap years and negative dates handled).
   Parse safety: bounded `i64` digit accumulation rejects absurd years before
-  overflow; impossible days rejected via a civil round-trip. Deferred to R-45:
-  full `strptime`/`strftime`, `POSIXct`/`POSIXlt` & timezones, `seq.Date`,
-  `months()`/`quarters()`, non-day `difftime` units.
+  overflow; impossible days rejected via a civil round-trip.
+- **Date/time completeness** (R-45): extends the R-44 Date builtins in place
+  (same kernel, no new dependency). **`format`/`format.Date`** gain `%B` (full
+  month name), `%b` (abbreviated month), `%A` (full weekday), `%a` (abbreviated
+  weekday), and `%e` (space-padded day) —
+  `format(as.Date("2021-01-15"), "%B %d, %Y")` → `"January 15, 2021"`.
+  **`as.Date`** parses `%B`/`%b` (case-insensitive), `%A`/`%a`, and `%e`, and
+  accepts the format as its 2nd positional argument —
+  `as.Date("15 Jan 2021", "%d %b %Y")` → `2021-01-15`; a bad name → `NA`.
+  **`seq(from, to, by)` / `seq.Date`** generate a Date sequence with `by` a
+  number of days or `"day"`/`"week"`/`"month"`/`"year"` (optionally
+  `"2 weeks"`); month/year steps clamp the day to month length, and
+  `length.out=` is an alternative to `to`. Output length is `MAX_SEQ_LEN`-capped
+  with checked arithmetic before allocating. **`months(d)`** → full month name;
+  **`quarters(d)`** → `"Q1"`..`"Q4"`. Deferred to R-46: `POSIXct`/`POSIXlt` &
+  timezones, `%H`/`%M`/`%S`/`%p`, `%U`/`%W`, locale names, compound `by=`.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

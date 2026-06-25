@@ -1,0 +1,19 @@
+% ============================================================================
+% gi-hormone-recall.query.adj — a worked recall query over the GI-hormone library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what does gut hormone X
+% do?" question: it states no physiology fact — it only `import`s the grounded
+% library and asks binding queries. The native adj-lang engine resolves each `?`
+% against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli gi-hormone-recall.query.adj
+% ============================================================================
+
+import "gi-hormone-edges.adj"
+
+? has_action(gastrin, $Action)          % expect stimulates_gastric_acid_secretion_by_parietal_cells
+? has_action(secretin, $Action)         % expect stimulates_pancreatic_bicarbonate_secretion
+? has_action(cholecystokinin, $Action)  % expect stimulates_gallbladder_wall_contraction
+? has_action(somatostatin, $Action)     % expect inhibits_secretion

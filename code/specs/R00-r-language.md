@@ -1182,6 +1182,117 @@ unchanged.
     **Deferred to R-34:** `dig.lab =` (significant-digit control of auto-label
     formatting) and `ordered_result =` (an ordered factor result). The `%o%` infix
     alias for `outer` remains open for a later grammar pass.
+- **R-42 — triangular-solve options (`k` / `upper.tri` / `transpose`)** *(this PR)*.
+  Extends the R-41 `backsolve`/`forwardsolve` core (the shared
+  `triangular_solve` helper in `s-runtime`) with base-R's three named options.
+  No grammar change — the named arguments flow through the existing call path.
+  Base-R signatures:
+  `backsolve(r, x, k = ncol(r), upper.tri = TRUE,  transpose = FALSE)` and
+  `forwardsolve(l, x, k = ncol(l), upper.tri = FALSE, transpose = FALSE)`.
+  - **`upper.tri = TRUE/FALSE`** — *which triangle of the first argument to
+    read*. `backsolve` defaults `TRUE` (read the **upper** triangle),
+    `forwardsolve` defaults `FALSE` (read the **lower** triangle). An explicit
+    `upper.tri =` overrides the per-builtin default. The substitution
+    **direction follows the triangle read**: reading the upper triangle ⇒
+    **back**-substitution (bottom-up), reading the lower triangle ⇒
+    **forward**-substitution (top-down). So `backsolve(m, x, upper.tri = FALSE)`
+    is exactly `forwardsolve(m, x)`, and vice-versa.
+  - **`transpose = TRUE/FALSE`** — when `TRUE`, solve `t(R) %*% y = x` instead of
+    `R %*% y = x`. Transposing a triangular factor swaps which triangle is
+    "active", so `transpose = TRUE` **flips** the substitution direction: an
+    upper-triangular `R` solved transposed runs **forward**-substitution over the
+    transposed entries (the code reads `R[j,i]` — column-major index `i·n + j` —
+    wherever the untransposed solve read `R[i,j]`). Formally the effective
+    direction is `back ⟺ (upper.tri XOR transpose) == upper.tri` … i.e. the
+    direction is back-substitution iff `upper.tri != transpose`.
+  - **`k =`** — use only the **leading `k×k` block** of the (column-major,
+    stride-`n`) triangular factor *and* the **first `k` rows** of the right-hand
+    side; the result has **`k` rows**. Default `k = ncol(r)` (the full matrix —
+    the helper uses `nrow(r)`, which equals `ncol(r)` for the square factor).
+    Indexing keeps the full stride `n`: the leading block's entry `(i,j)` for
+    `i,j < k` is still at `a[j·n + i]`, so no data is copied — the loops simply
+    range over `0..k`.
+  - **Combined semantics.** The three options compose: `k` selects the active
+    block, `upper.tri` picks the base direction, `transpose` may flip it and
+    re-routes every coefficient read through the transposed index. The diagonal
+    (`a[i·n + i]`) is the same under transpose, so the singular-diagonal check is
+    unchanged.
+  - **Worked examples.**
+    `backsolve(matrix(c(2,1,0,3), nrow=2), c(4,11), upper.tri = FALSE)` reads the
+    lower triangle of `[[2,0],[1,3]]` ⇒ forward-sub ⇒ `c(2,3)` (identical to
+    `forwardsolve` of that matrix).
+    `backsolve(matrix(c(2,0,1,3), nrow=2), c(4,11), transpose = TRUE)`: `R` is
+    `[[2,1],[0,3]]`, `t(R) = [[2,0],[1,3]]`; the solve runs forward-sub over the
+    transposed entries ⇒ `y[1]=4/2=2`, `y[2]=(11−1·2)/3=3` ⇒ `c(2,3)`, and
+    `t(R) %*% c(2,3) == c(4,11)`.
+    With a `3×3` upper-tri `r` and `k = 2`, only the leading `2×2` block and the
+    first two RHS rows are used and the result has length 2.
+  - **Safety (preserved from R-41).** A zero on the *used* diagonal → a clean
+    *singular* error (never `NaN`/`Inf`/panic). `k` is range-checked
+    `0 ≤ k ≤ n` (a malformed/out-of-range `k` is a clean error, never an
+    out-of-bounds read). RHS row/column counts are validated before any indexing;
+    order and column caps come from `square_matrix`/`MAX_SOLVE_DIM` as before.
+  - **Deferred to R-43.** Exotic full cross-products of all three options with a
+    *wide multi-column* matrix RHS beyond the cases tested here, and any pivoted
+    variants, are deferred to **R-43**. R-42 ships each option **independently**
+    plus the common combinations (each with vector and the tested matrix RHS).
+- **R-41 — `backsolve()` / `forwardsolve()` (triangular solves)** *(previous PR)*.
+  An **independent matrix-algebra item** in the same family as R-12/R-40, landed
+  in the shared `s-runtime` (R reuses it verbatim through the shared
+  tree-walker). The two triangular linear solvers that the LU/Cholesky family
+  leans on: given a *triangular* coefficient matrix, recover the solution by
+  substitution instead of full Gaussian elimination.
+  - **`backsolve(r, x)`** solves `r %*% y = x` for `y`, where `r` is an `n×n`
+    **upper**-triangular matrix, by **back-substitution** (last row first). `x`
+    may be an `n`-vector (single right-hand side → an `n`-vector result) or an
+    `n×k` matrix (`k` right-hand-side columns → an `n×k` matrix result).
+  - **`forwardsolve(l, x)`** solves `l %*% y = x` for `y`, where `l` is an `n×n`
+    **lower**-triangular matrix, by **forward-substitution** (first row first),
+    with the same vector-or-matrix right-hand-side convention.
+  - **Algorithm (column-major, 0-based here; the maths is 1-based).** For each
+    right-hand-side column `b`, **back-substitution** runs `i = n-1` down to `0`:
+    `y[i] = (b[i] − Σ_{j>i} r[i,j]·y[j]) / r[i,i]`. **Forward-substitution** runs
+    `i = 0` up to `n-1`: `y[i] = (b[i] − Σ_{j<i} l[i,j]·y[j]) / l[i,i]`. Each is
+    `O(n²·k)` flops — half the work of the `O(n³)` general `solve`, which is the
+    whole point of having a triangular fast path. Only the relevant triangle is
+    read (upper for `backsolve`, lower for `forwardsolve`); the opposite triangle
+    is **never touched**, matching R's defaults (`upper.tri = TRUE`,
+    `transpose = FALSE`).
+  - **Error conditions (faithful to R, no panic / no NaN / no Inf).**
+    * **Non-square / non-matrix / over-cap** `r` (or `l`) → the **shared
+      `square_matrix` helper** (the same one `det`/`solve`/`chol` use) raises the
+      error *before* any indexing, so a non-square input never reads out of
+      bounds.
+    * **Right-hand-side shape mismatch** — `x` must have exactly `n` rows (vector
+      length `n`, or `n×k` matrix); a wrong row count is a clean error raised
+      **before** the substitution loop indexes anything.
+    * **Singular triangular matrix** — a **zero on the diagonal** makes the
+      division `… / r[i,i]` undefined. The diagonal entry is tested for `== 0`
+      **before** dividing, so a singular matrix is a clean *"… apparently
+      singular"* error, never a propagated `NaN`/`Inf` and never a panic.
+    * **`NA` in `r`/`l` or `x`** → a clean error (an `NA` cannot be solved),
+      matching the `solve` convention.
+  - **Reuse of matrix machinery.** The implementation pulls the square matrix out
+    with the existing `square_matrix` helper (column-major data + order `n`),
+    reads the right-hand side with the same vector-vs-matrix / row-count / column
+    cap (`MAX_SOLVE_DIM`) logic `solve` already uses, indexes column-major
+    (`r[i,j]` at `j·n + i`), and emits an `SValue::Matrix` (matrix RHS) or a bare
+    numeric vector (vector RHS) — no new value type. Allocation is the single
+    `n×k` result buffer, bounded by the `MAX_SOLVE_DIM` order/column caps.
+  - **Worked examples (column-major).** `backsolve(matrix(c(2,0,1,3), nrow=2),
+    c(5,9))`: `r` is `[[2,1],[0,3]]`; `y[2]=9/3=3`, `y[1]=(5−1·3)/2=1`, so
+    `c(1,3)`, and `r %*% c(1,3) == c(5,9)`. `forwardsolve(matrix(c(2,1,0,3),
+    nrow=2), c(4,11))`: `l` is `[[2,0],[1,3]]`; `y[1]=4/2=2`,
+    `y[2]=(11−1·2)/3=3`, so `c(2,3)`, and `l %*% c(2,3) == c(4,11)`. A
+    multi-column `x` is solved column-by-column.
+  - **Shipped in R-42.** The optional arguments `k =` (use only the leading
+    `k×k` sub-block), `transpose = TRUE` (solve `t(r) %*% y = x`), and
+    `upper.tri = FALSE` for `backsolve` / `upper.tri = TRUE` for `forwardsolve`
+    (read the other triangle) were **out of scope here** and shipped in the
+    follow-on item **R-42** (see below). This item ships the default
+    full-triangle dense core (single vector RHS and multi-column matrix RHS)
+    solidly; R-42 extends the *same* shared helper without changing this
+    default behaviour.
 - **R-40 — `chol()` (Cholesky factorization)** *(this PR)*. An **independent
   matrix-algebra item** in the same family as R-36/R-38, landed in the shared
   `s-runtime` (R reuses it verbatim through the shared tree-walker). For a real
@@ -1218,11 +1329,12 @@ unchanged.
     SPD matrix `[[4,2],[2,3]]`. `chol(X)` is `R = [[2,1],[0,√2]]`
     (`R[1,1]=√4=2`, `R[1,2]=2/2=1`, `R[2,2]=√(3−1²)=√2`), and `t(R) %*% R`
     reconstructs `X`. `chol(diag(3))` is the identity.
-  - **Deferred to R-41.** `pivot = TRUE` (pivoted Cholesky for
+  - **Deferred to R-42.** `pivot = TRUE` (pivoted Cholesky for
     positive-*semi*-definite matrices, with the `attr(,"pivot")` permutation and
     `rank` attributes), the `chol2inv()` companion (inverse from a Cholesky
     factor), and complex (Hermitian) matrices are all **out of scope here** and
-    explicitly deferred to **R-41**. This item ships the real-SPD dense core only.
+    explicitly deferred to **R-42** (R-41 ships the triangular solves
+    `backsolve`/`forwardsolve`). This item ships the real-SPD dense core only.
 - **R-38 — `kronecker()` (Kronecker product)** *(this PR)*. An **independent
   matrix-algebra item** in the same family as R-36, landed in the shared
   `s-runtime` (R reuses it verbatim through the shared tree-walker). The
@@ -1499,6 +1611,45 @@ unchanged.
     than days. The core (`as.Date` for `%Y-%m-%d`/`%Y/%m/%d`, `Sys.Date`,
     `format.Date` for `%Y`/`%m`/`%d`/`%j`, Date subtraction + `difftime` in days,
     and `weekdays`) ships **solidly** here.
+
+- **R-45 — Date/time completeness.** Extends R-44's Date builtins *in place*
+  (same civil-date kernel, same `Date` class machinery, same parse-safety
+  guards). No new value kind; no new dependency — the month/weekday name tables
+  are hand-rolled English arrays (full + abbreviated).
+  - **Extended `strftime` fields in `format.Date` / `format`.** Alongside R-44's
+    `%Y`/`%m`/`%d`/`%j`, the renderer now supports `%B` (full month name
+    `"January"`..`"December"`), `%b` (abbreviated `"Jan"`..`"Dec"`), `%A` (full
+    weekday `"Monday"`..`"Sunday"`), `%a` (abbreviated `"Mon"`..`"Sun"`), and
+    `%e` (day of month, **space-padded** to width 2, so the 5th is `" 5"`). The
+    weekday name reuses R-44's `(days + 4).rem_euclid(7)` Sunday-based index
+    (`1970-01-01` = Thursday). Unknown conversions still echo literally.
+  - **Extended `strptime` fields in `as.Date`.** The parser additionally accepts
+    `%B`/`%b` (month names, **case-insensitive**: `"january"`, `"JAN"`, and
+    `"Jan"` all match), `%A`/`%a` (weekday names — consumed and validated for
+    spelling but, like base R, **not** used to constrain the resulting date), and
+    `%e` (space-or-not padded day). So
+    `as.Date("January 15, 2021", format = "%B %d, %Y")` and
+    `as.Date("15 Jan 2021", "%d %b %Y")` both parse to `2021-01-15`. A
+    **malformed** month/weekday name → `NA` (never a panic): name-matching scans a
+    fixed, length-bounded table and case-folds ASCII safely.
+  - **`seq.Date(from, to, by)` / `seq(from, to, by)` for Dates.** Generates a
+    `Date` sequence. `by` is either a **number of days** (`by = 1`, `by = 7`) or a
+    **string unit** `"day"`/`"week"`/`"month"`/`"year"` (a leading integer
+    multiplier is accepted — `"2 weeks"`, `"3 months"`). `"day"`/`"week"` step a
+    fixed day count (`1`/`7` × multiplier); `"month"`/`"year"` step the **civil
+    Y/M/D**, clamping the day-of-month to the target month's length (so
+    `2021-01-31 + 1 month` is `2021-02-28`, not March 3). `length.out =` is
+    supported as an alternative to `to`; if both `to` and `length.out` are given,
+    `length.out` wins. The generated length is **bounded by `MAX_SEQ_LEN`** with
+    checked arithmetic before any allocation — a `from`/`to`/`by` implying
+    billions of dates errors rather than OOMs.
+  - **`months(d)`** → the full month name(s) (equivalent to `format(d, "%B")`).
+    **`quarters(d)`** → `"Q1"`..`"Q4"` from the month (`(m-1)/3 + 1`). Both
+    vectorised and `NA`-preserving.
+  - **Deferred to R-46.** `POSIXct`/`POSIXlt` date-*times*; timezones; sub-day
+    fields `%H`/`%M`/`%S`/`%p`; `%U`/`%W` week-of-year; locale-specific (non-English)
+    names; and any compound `"N units"` `by=` shapes beyond a single leading
+    integer multiplier.
 
 ## §4 Reuse strategy
 

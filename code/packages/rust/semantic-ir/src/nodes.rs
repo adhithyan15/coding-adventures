@@ -124,11 +124,30 @@ pub struct Function {
     pub span: Span,
 }
 
+/// How a parameter binds its arguments (M3 — see
+/// `code/specs/sir-variadic-params.md`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum ParamKind {
+    /// An ordinary positional parameter (`x`). The default for every
+    /// parameter that is not a splat.
+    #[default]
+    Required,
+    /// A rest parameter (`*rest`) — collects trailing positional arguments
+    /// into a sequence.
+    Rest,
+    /// A keyword-rest parameter (`**opts`) — collects trailing keyword
+    /// arguments into a map.
+    KwRest,
+}
+
 /// A function parameter.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Param {
     pub name: String,
     pub sir_type: Option<SirType>,
+    /// The binding kind (`Required` by default; `Rest`/`KwRest` for the
+    /// `*rest`/`**opts` variadic forms — M3).
+    pub kind: ParamKind,
     pub span: Span,
 }
 

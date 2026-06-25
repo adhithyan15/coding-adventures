@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.1.21 — variadic parameter emission (`*args` / `**kwargs`) (M3)
+
+A `Param` carrying the new SIR `ParamKind` now emits Python's native variadic
+forms: `Rest` → `*name`, `KwRest` → `**name`; `Required` is unchanged. So
+`def f(a, *rest, **opts); end` emits `def f(a, *rest, **opts):`.
+
+- **Rest-param list normalization.** Python's `*rest` binds a *tuple*, but SIR
+  sequence semantics (and Ruby's `*rest`, an `Array`) require a *list* — every
+  downstream sequence op (`len`, indexing, dispatched `.map`/`.length`) is keyed
+  to `list`. Each `Rest` param is therefore rebound to a `list(...)` in the
+  function prologue. (`**opts` already binds a `dict`, matching SIR's map, so
+  no fixup.)
+- **OOP import gating widened.** `uses_oop` now also fires on the `__method__`
+  and `__scope__` dispatch builtins, not only the OOP *features* — so a
+  class-less dispatch program (`"hi".upcase`, or a rest param used as an Array)
+  imports `sir-runtime-oop`. Previously such modules emitted an undefined
+  `_sir_oop_call_method` call.
+- Execution-proof: `def f(*a); a.length; end; print f(1, 2, 3)` → `3` through a
+  real interpreter (skips gracefully if absent). The shared run harness now
+  names its temp file uniquely per call so concurrent proofs don't collide.
+
 ## 0.1.20 — `&:sym` symbol-to-proc on dispatched calls (M2)
 
 A `&:sym` block argument on a method-dispatch call (`recv.map(&:to_s)`) now
