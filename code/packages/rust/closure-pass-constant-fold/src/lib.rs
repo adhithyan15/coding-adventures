@@ -842,6 +842,36 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                             let new_cv = st.fork_cv(&parent, &before, &after);
                             return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
                         }
+                        // ---- substring search from the end: lastIndexOf ----
+                        //
+                        // `"abcabc".lastIndexOf("bc")` → the UTF-16 code-unit
+                        // index of the *last* occurrence, or `-1` when absent
+                        // (ECMAScript §22.1.3.9, the one-argument form). The
+                        // mirror of `indexOf`: Rust's `str::rfind` returns the
+                        // *byte* offset of the last match, which we re-measure in
+                        // UTF-16 code units via `encode_utf16()` (an astral char
+                        // before the hit counts as two units), so
+                        // `"💩x💩x".lastIndexOf("x")` → `5`, matching V8.
+                        //
+                        // An empty needle yields the string *length* (in UTF-16
+                        // units): `"abc".lastIndexOf("")` is `3`, and `str::rfind("")`
+                        // returns `Some(byte_len)`, whose UTF-16 re-measure is
+                        // exactly that length. Only the single-argument form
+                        // folds; the `fromIndex` overload
+                        // (`"abc".lastIndexOf("b", 0)`) carries a second argument
+                        // and passes through to the runtime.
+                        else if id.name == "lastIndexOf" {
+                            let value = match s.value.rfind(&needle.value) {
+                                Some(byte) => s.value[..byte].encode_utf16().count() as f64,
+                                None => -1.0,
+                            };
+                            let parent = c.cv.clone();
+                            let before =
+                                format!("\"{}\".lastIndexOf(\"{}\")", s.value, needle.value);
+                            let after = format_js_number(value);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
+                        }
                         // ---- substring predicates: startsWith / endsWith / includes ----
                         //
                         // `"abc".startsWith("a")` → `true`, `"abc".endsWith("c")`
@@ -4184,6 +4214,81 @@ mod tests {
         let c = call1(ident("s"), "indexOf", string("x", None));
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.indexOf(\"x\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- lastIndexOf (search from the end) -----------
+
+    #[test]
+    fn fold_last_index_of_found_and_not_found() {
+        // V8 oracle (node):
+        //   "abcabc".lastIndexOf("bc") === 4 (the *last* "bc")
+        //   "abcabc".lastIndexOf("b")  === 4
+        //   "abc".lastIndexOf("z")     === -1
+        for (hay, needle, expect) in [
+            ("abcabc", "bc", 4.0),
+            ("abcabc", "b", 4.0),
+            ("abc", "z", -1.0),
+        ] {
+            let c = call1(string(hay, None), "lastIndexOf", string(needle, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{hay}\".lastIndexOf(\"{needle}\") should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, expect),
+                other => panic!("expected {expect}; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_last_index_of_empty_needle_is_length() {
+        // JS `"abc".lastIndexOf("")` is the string *length* (3), not 0 — the
+        // empty string matches at every position and lastIndexOf takes the
+        // highest. Rust `str::rfind("")` returns `Some(byte_len)`, whose UTF-16
+        // re-measure is exactly that length.
+        let c = call1(string("abc", None), "lastIndexOf", string("", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "lastIndexOf of the empty string should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.0),
+            other => panic!("expected 3 (length); got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_last_index_of_counts_utf16_units_not_bytes() {
+        // "💩" is one astral char = two UTF-16 code units (four UTF-8 bytes).
+        // `"💩x💩x".lastIndexOf("x")` must be 5 (UTF-16 index of the last "x"),
+        // NOT 3 (char index) or 9 (byte index) — proving we re-measure the
+        // prefix in UTF-16, exactly like V8.
+        let c = call1(string("💩x💩x", None), "lastIndexOf", string("x", None));
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 5.0),
+            other => panic!("expected 5 (UTF-16 index); got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn last_index_of_with_from_index_arg_does_not_fold() {
+        // The two-argument `fromIndex` overload lands in the 2-arg arm and is
+        // left for the runtime (we only fold the single-argument form).
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("abcabc", None), "lastIndexOf")),
+            arguments: vec![string("b", None), num(0.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "two-arg lastIndexOf(needle, fromIndex) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn last_index_of_on_identifier_receiver_does_not_fold() {
+        // `s.lastIndexOf("x")` needs the runtime value of `s`.
+        let c = call1(ident("s"), "lastIndexOf", string("x", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.lastIndexOf(\"x\") must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
