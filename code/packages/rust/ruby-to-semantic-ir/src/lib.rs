@@ -5050,8 +5050,9 @@ mod tests {
     // final tail.
 
     #[test]
-    fn case_single_when_lowers_to_if_with_eq() {
-        // `case x; when 1; y = 1; end` — one when, no else.
+    fn case_single_when_lowers_to_if_with_case_eq() {
+        // M5: `case x; when 1; y = 1; end` — a literal `when` lowers to
+        // `case_eq(1, x)` (Ruby case-equality `1 === x`, whose floor is `==`).
         let m = lower("x = 1\ncase x\nwhen 1\n  y = 1\nend\n");
         let b = main_body(&m);
         // Second stmt should be an ExprStmt(If) — the case lowering.
@@ -5063,17 +5064,43 @@ mod tests {
             Expr::If { cond, .. } => cond,
             other => panic!("expected If from case, got {:?}", other),
         };
-        // The condition is BuiltinCall("==", [VarRef(x), IntLit(1)]).
+        // The condition is BuiltinCall("case_eq", [IntLit(1), VarRef(x)]).
         assert!(
-            matches!(cond.as_ref(), Expr::BuiltinCall { name, .. } if name == "=="),
-            "expected `==` builtin in when cond, got {:?}",
+            matches!(cond.as_ref(), Expr::BuiltinCall { name, .. } if name == "case_eq"),
+            "expected `case_eq` builtin in when cond, got {:?}",
             cond
         );
     }
 
     #[test]
+    fn case_when_class_lowers_to_is_a_dispatch() {
+        // M5: `when Integer` (a bare constant) is a class match → lowers to a
+        // `__method__` `is_a?` dispatch, NOT `case_eq`/`==`.
+        let m = lower("x = 1\ncase x\nwhen Integer\n  y = 1\nend\n");
+        let b = main_body(&m);
+        let if_expr = match &b.stmts[1] {
+            Stmt::ExprStmt { expr, .. } => expr,
+            other => panic!("expected ExprStmt(If), got {:?}", other),
+        };
+        let cond = match if_expr {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If, got {:?}", other),
+        };
+        match cond.as_ref() {
+            Expr::BuiltinCall { name, args, .. } if name == "__method__" => {
+                assert!(
+                    matches!(&args[1], Expr::StrLit { value, .. } if value == "is_a?"),
+                    "expected is_a? dispatch, got {:?}",
+                    args
+                );
+            }
+            other => panic!("expected __method__ is_a? dispatch for `when Integer`, got {:?}", other),
+        }
+    }
+
+    #[test]
     fn case_with_multi_value_when_lowers_to_or_chain() {
-        // `when 1, 2, 3` → cond is `(((x==1) || (x==2)) || (x==3))`.
+        // M5: `when 1, 2, 3` → `((ceq(1,x) || ceq(2,x)) || ceq(3,x))`.
         let m = lower("x = 1\ncase x\nwhen 1, 2, 3\n  y = 1\nend\n");
         let b = main_body(&m);
         let if_expr = match &b.stmts[1] {
@@ -5084,7 +5111,7 @@ mod tests {
             Expr::If { cond, .. } => cond,
             other => panic!("expected If, got {:?}", other),
         };
-        // Outermost should be `or`.  Count `==` and `or` nodes.
+        // Outermost should be `or`.  Count `case_eq` and `or` nodes.
         fn count_builtin(e: &Expr, target: &str) -> usize {
             match e {
                 Expr::BuiltinCall { name, args, .. } => {
@@ -5095,9 +5122,9 @@ mod tests {
             }
         }
         assert_eq!(
-            count_builtin(cond.as_ref(), "=="),
+            count_builtin(cond.as_ref(), "case_eq"),
             3,
-            "expected three `==` comparisons for three when values"
+            "expected three `case_eq` comparisons for three when values"
         );
         assert_eq!(
             count_builtin(cond.as_ref(), "or"),

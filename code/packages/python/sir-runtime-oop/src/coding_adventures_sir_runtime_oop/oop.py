@@ -41,7 +41,7 @@ from typing import Any
 # it with proc-lenient arity, and ``truthy`` applies SIR truthiness (only
 # ``False``/``nil`` are falsy) to predicate results.  ``intern`` mints the
 # :class:`Symbol` that ``String#to_sym`` / ``Symbol#upcase`` return.
-from coding_adventures_sir_runtime_core import Closure, Symbol, apply, intern, truthy
+from coding_adventures_sir_runtime_core import Closure, Symbol, apply, eq, intern, truthy
 
 # The SIR universal value type at this package's boundary.
 Val = Any
@@ -1194,6 +1194,45 @@ def sym_to_proc(sym: Val) -> Closure:
         return call_method(recv, method, *rest)
 
     return Closure(_invoke, arity=None)
+
+
+def case_eq(pattern: Val, value: Val) -> bool:
+    """Ruby case-equality (``pattern === value``), the test a ``when`` clause
+    runs (M5).  Unlike ``==``, the operation is keyed to the *pattern*'s type:
+
+    | pattern kind        | semantics                                  |
+    |---------------------|--------------------------------------------|
+    | ``Range``           | membership — ``value`` falls in the range  |
+    | ``re.Pattern`` (Regexp) | the regex matches ``str(value)``       |
+    | anything else       | value equality (``==``)                    |
+
+    The class case (``when Integer``) is handled at the *frontend* — it lowers
+    to ``value.is_a?(Const)`` via the ``__method__`` dispatch envelope — so it
+    never reaches here.  The else-branch floor is ``eq`` (``==``), so a literal
+    ``when 5`` keeps its plain-equality meaning.
+
+    ``Range`` is detected structurally (by type name) rather than imported, so
+    ``sir-runtime-oop`` gains no dependency on ``sir-runtime-range``; ``re``
+    is already imported by this module.
+    """
+    if isinstance(pattern, re.Pattern):
+        # Ruby `/re/ === x` is true when the regex matches x (a String).  A
+        # non-string scrutinee never matches (Ruby returns false), mirrored by
+        # `str(value)` only being meaningful for strings — guard explicitly.
+        if not isinstance(value, str):
+            return False
+        return pattern.search(value) is not None
+    # `Range` is our own type (from sir-runtime-range); match by name to avoid
+    # a package dependency.  A real Range exposes `includes`.
+    if type(pattern).__name__ == "Range" and hasattr(pattern, "includes"):
+        # Ruby `(10..20) === "x"` is *false*, not an error — a `<`/`>` between
+        # incomparable types raises `TypeError` in Python, so swallow it and
+        # report no match (mirroring Ruby's case-equality on a mismatched type).
+        try:
+            return bool(pattern.includes(value))
+        except TypeError:
+            return False
+    return eq(pattern, value)
 
 
 def reset_oop() -> None:

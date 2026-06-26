@@ -1659,11 +1659,39 @@ impl Lowerer {
         let mut cond: Option<Expr> = None;
         for vn in &value_nodes {
             let val = self.lower_expression(vn)?;
-            let cmp = Expr::BuiltinCall {
-                name: "==".to_string(),
-                args: vec![scrutinee.clone(), val],
-                effects: EffectSet::PURE,
-                span: span.clone(),
+            // M5 — a `when` clause uses Ruby case-equality (`pattern === x`),
+            // NOT `==`.  Three shapes need type-aware dispatch:
+            //   • a bare constant (`when Integer` / `when MyClass`) → a class
+            //     match, lowered to `x.is_a?(Const)` via the `__method__`
+            //     dispatch envelope (the backend already passes a `Const`
+            //     operand to `is_a?` as its name string, so a built-in class
+            //     name needs no binding);
+            //   • a range (`when 1..5`) or regex (`when /re/`) literal, plus
+            //     any other value → the `case_eq(pattern, x)` runtime helper,
+            //     which dispatches Range→membership, Regexp→match, else `==`.
+            // The `case_eq` floor is `==`, so plain literals keep their old
+            // behaviour.
+            let cmp = if matches!(val, Expr::VarRef { scope: Scope::Const, .. }) {
+                self.features_used.insert(Feature::Classes);
+                // The synthetic `"is_a?"` method-name is a string literal.
+                self.features_used.insert(Feature::Strings);
+                Expr::BuiltinCall {
+                    name: "__method__".to_string(),
+                    args: vec![
+                        scrutinee.clone(),
+                        Expr::StrLit { value: "is_a?".to_string(), span: span.clone() },
+                        val,
+                    ],
+                    effects: EffectSet::PURE,
+                    span: span.clone(),
+                }
+            } else {
+                Expr::BuiltinCall {
+                    name: "case_eq".to_string(),
+                    args: vec![val, scrutinee.clone()],
+                    effects: EffectSet::PURE,
+                    span: span.clone(),
+                }
             };
             cond = Some(match cond {
                 None => cmp,

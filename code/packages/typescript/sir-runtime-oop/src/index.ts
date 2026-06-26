@@ -38,7 +38,7 @@
 // reaches us as a trailing `Closure` from sir-runtime-core; `apply` calls it with
 // proc-lenient arity, and `truthy` applies SIR truthiness (only `false`/`nil` are
 // falsy) to predicate results.
-import { apply, Closure, intern, isSymbol, truthy } from "@coding-adventures/sir-runtime-core";
+import { apply, Closure, eq, intern, isSymbol, truthy } from "@coding-adventures/sir-runtime-core";
 
 /**
  * The SIR universal value type at this package's boundary.  Kept as `unknown`'s
@@ -1157,6 +1157,45 @@ function classNameArg(arg: Val): string {
 export function symToProc(sym: Val): Closure {
   const method = isSymbol(sym) ? (sym as { name: string }).name : String(sym);
   return new Closure((recv: Val, ...rest: Val[]): Val => callMethod(recv, method, ...rest));
+}
+
+/**
+ * Ruby case-equality (`pattern === value`), the test a `when` clause runs (M5).
+ * Unlike `==`, the operation is keyed to the *pattern*'s type:
+ *
+ * | pattern kind | semantics                                    |
+ * |--------------|----------------------------------------------|
+ * | `RegExp`     | the regex matches `String(value)`            |
+ * | `Range`      | membership — `value` falls in the range      |
+ * | otherwise    | value equality (`==`)                        |
+ *
+ * The class case (`when Integer`) is handled at the *frontend* (it lowers to
+ * `value.is_a?(Const)` via the `__method__` envelope) and never reaches here.
+ * The else-branch floor is `eq`, so a literal `when 5` keeps plain equality.
+ *
+ * `Range` is detected structurally (by constructor name + an `includes`
+ * method) rather than imported, so this package gains no dependency on
+ * `sir-runtime-range`; `RegExp` is a native JS type.
+ */
+export function caseEq(pattern: Val, value: Val): boolean {
+  if (pattern instanceof RegExp) {
+    // Ruby `/re/ === x` is true when the regex matches x (a String); a
+    // non-string scrutinee never matches.
+    if (typeof value !== "string") {
+      return false;
+    }
+    return pattern.test(value);
+  }
+  const p = pattern as { constructor?: { name?: string }; includes?: (v: Val) => boolean };
+  if (
+    p != null &&
+    typeof p.includes === "function" &&
+    p.constructor != null &&
+    p.constructor.name === "Range"
+  ) {
+    return Boolean(p.includes(value));
+  }
+  return eq(pattern, value);
 }
 
 /**
