@@ -277,6 +277,9 @@ runtime and Chief of Staff tools a typed catalog for:
   that classify handoff-action evidence into blocker, operator, review,
   lineage, and release-ready outcomes
 - mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review summaries that combine
+  review rows with next blocker, review, lineage, and release-ready pointers
+- mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence summaries that combine evidence
   rows with next repair, review, and release handoff pointers
 - mesh release ticket handoff work-order guardrail readiness summaries that
