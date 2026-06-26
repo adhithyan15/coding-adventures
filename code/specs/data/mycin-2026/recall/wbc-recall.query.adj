@@ -1,0 +1,21 @@
+% ============================================================================
+% wbc-recall.query.adj — a worked recall query over the wbc library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what is the function of
+% white blood cell X?" question: it states no immunology fact — it only `import`s
+% the grounded library and asks binding queries. The native adj-lang engine
+% resolves each `?` against the imported `relate` edges and returns the binding +
+% the citing clause's source/locator/trust. All knowledge is in the library; none
+% is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli wbc-recall.query.adj
+% ============================================================================
+
+import "wbc-edges.adj"
+
+? has_function(neutrophil, $Function)   % expect phagocytosis_of_bacteria
+? has_function(eosinophil, $Function)   % expect defense_against_parasites
+? has_function(basophil, $Function)     % expect synthesize_store_histamine
+? has_function(monocyte, $Function)     % expect differentiate_into_macrophages_and_dendritic_cells
+? has_function(lymphocyte, $Function)   % expect adaptive_immunity
