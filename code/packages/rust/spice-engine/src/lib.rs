@@ -10276,7 +10276,7 @@ fn deck_run_artifacts(
 ) -> Vec<DeckRunArtifact> {
     let is_transient = plan.analysis == "tran";
     let analysis_directives = deck_analysis_directives(plan);
-    let tables = deck_stable_tables(measurements, fourier);
+    let tables = deck_stable_tables(measurements, fourier, control_policy_artifacts);
     let control_policy_summaries = deck_control_policy_summary_artifacts(control_policy_artifacts);
     let control_policy_categories = control_policy_summaries
         .iter()
@@ -10354,13 +10354,21 @@ fn deck_analysis_directives(plan: &DeckAnalysisPlan) -> Vec<String> {
     }
 }
 
-fn deck_stable_tables(measurements: &[ProbeMeasurement], fourier: &[FourierResult]) -> Vec<String> {
+fn deck_stable_tables(
+    measurements: &[ProbeMeasurement],
+    fourier: &[FourierResult],
+    control_policy_artifacts: &[DeckControlPolicyArtifact],
+) -> Vec<String> {
     let mut tables = vec!["result".to_string()];
     if !measurements.is_empty() {
         tables.push("measurement".to_string());
     }
     if !fourier.is_empty() {
         tables.push("fourier".to_string());
+    }
+    if !control_policy_artifacts.is_empty() {
+        tables.push("control-policy".to_string());
+        tables.push("control-policy-summary".to_string());
     }
     tables.push("run-artifact".to_string());
     tables
@@ -10605,6 +10613,10 @@ fn deck_table_artifacts(
     run_artifact_table: &str,
     measurements: &[ProbeMeasurement],
     fourier: &[FourierResult],
+    control_policy_artifacts: &[DeckControlPolicyArtifact],
+    control_policy_artifact_table: &str,
+    control_policy_summary_artifacts: &[DeckControlPolicySummaryArtifact],
+    control_policy_summary_artifact_table: &str,
 ) -> Vec<DeckTableArtifact> {
     let mut artifacts = vec![deck_table_artifact("result", result_table)];
     if !measurements.is_empty() {
@@ -10612,6 +10624,18 @@ fn deck_table_artifacts(
     }
     if !fourier.is_empty() {
         artifacts.push(deck_table_artifact("fourier", fourier_table));
+    }
+    if !control_policy_artifacts.is_empty() {
+        artifacts.push(deck_table_artifact(
+            "control-policy",
+            control_policy_artifact_table,
+        ));
+    }
+    if !control_policy_summary_artifacts.is_empty() {
+        artifacts.push(deck_table_artifact(
+            "control-policy-summary",
+            control_policy_summary_artifact_table,
+        ));
     }
     artifacts.push(deck_table_artifact("run-artifact", run_artifact_table));
     artifacts
@@ -11502,6 +11526,10 @@ pub fn run_deck_analysis(
                 &run_artifact_table,
                 &measurements,
                 &fourier,
+                &control_policy_artifacts,
+                &control_policy_artifact_table,
+                &control_policy_summary_artifacts,
+                &control_policy_summary_artifact_table,
             );
             let rawfile_artifacts =
                 deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
@@ -11514,7 +11542,7 @@ pub fn run_deck_analysis(
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
             let wrdata_artifact_records = deck_wrdata_artifact_records(&wrdata_artifacts);
-            let tables = deck_stable_tables(&measurements, &fourier);
+            let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Op(result),
@@ -11606,6 +11634,10 @@ pub fn run_deck_analysis(
                 &run_artifact_table,
                 &measurements,
                 &fourier,
+                &control_policy_artifacts,
+                &control_policy_artifact_table,
+                &control_policy_summary_artifacts,
+                &control_policy_summary_artifact_table,
             );
             let rawfile_artifacts =
                 deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
@@ -11618,7 +11650,7 @@ pub fn run_deck_analysis(
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
             let wrdata_artifact_records = deck_wrdata_artifact_records(&wrdata_artifacts);
-            let tables = deck_stable_tables(&measurements, &fourier);
+            let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::DcSweep(result),
@@ -11711,6 +11743,10 @@ pub fn run_deck_analysis(
                 &run_artifact_table,
                 &measurements,
                 &fourier,
+                &control_policy_artifacts,
+                &control_policy_artifact_table,
+                &control_policy_summary_artifacts,
+                &control_policy_summary_artifact_table,
             );
             let rawfile_artifacts =
                 deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
@@ -11723,7 +11759,7 @@ pub fn run_deck_analysis(
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
             let wrdata_artifact_records = deck_wrdata_artifact_records(&wrdata_artifacts);
-            let tables = deck_stable_tables(&measurements, &fourier);
+            let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Ac(result),
@@ -11819,6 +11855,10 @@ pub fn run_deck_analysis(
                 &run_artifact_table,
                 &measurements,
                 &fourier,
+                &control_policy_artifacts,
+                &control_policy_artifact_table,
+                &control_policy_summary_artifacts,
+                &control_policy_summary_artifact_table,
             );
             let rawfile_artifacts =
                 deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
@@ -11831,7 +11871,7 @@ pub fn run_deck_analysis(
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
             let wrdata_artifact_records = deck_wrdata_artifact_records(&wrdata_artifacts);
-            let tables = deck_stable_tables(&measurements, &fourier);
+            let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Tran(result),
@@ -11921,6 +11961,10 @@ pub fn run_deck_analysis(
                 &run_artifact_table,
                 &measurements,
                 &fourier,
+                &control_policy_artifacts,
+                &control_policy_artifact_table,
+                &control_policy_summary_artifacts,
+                &control_policy_summary_artifact_table,
             );
             let rawfile_artifacts =
                 deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
@@ -11933,7 +11977,7 @@ pub fn run_deck_analysis(
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
             let wrdata_artifact_records = deck_wrdata_artifact_records(&wrdata_artifacts);
-            let tables = deck_stable_tables(&measurements, &fourier);
+            let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Tf(result.clone()),
@@ -12021,6 +12065,10 @@ pub fn run_deck_analysis(
                 &run_artifact_table,
                 &measurements,
                 &fourier,
+                &control_policy_artifacts,
+                &control_policy_artifact_table,
+                &control_policy_summary_artifacts,
+                &control_policy_summary_artifact_table,
             );
             let rawfile_artifacts =
                 deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
@@ -12033,7 +12081,7 @@ pub fn run_deck_analysis(
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
             let wrdata_artifact_records = deck_wrdata_artifact_records(&wrdata_artifacts);
-            let tables = deck_stable_tables(&measurements, &fourier);
+            let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Sens(result.clone()),
@@ -12133,6 +12181,10 @@ pub fn run_deck_analysis(
                 &run_artifact_table,
                 &measurements,
                 &fourier,
+                &control_policy_artifacts,
+                &control_policy_artifact_table,
+                &control_policy_summary_artifacts,
+                &control_policy_summary_artifact_table,
             );
             let rawfile_artifacts =
                 deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
@@ -12145,7 +12197,7 @@ pub fn run_deck_analysis(
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
             let wrdata_artifact_records = deck_wrdata_artifact_records(&wrdata_artifacts);
-            let tables = deck_stable_tables(&measurements, &fourier);
+            let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Noise(result.clone()),

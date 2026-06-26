@@ -2747,12 +2747,15 @@ def _deck_analysis_directives(plan: DeckAnalysisPlan) -> list[str]:
 def _deck_stable_tables(
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
+    control_policy_artifacts: list[DeckControlPolicyArtifact],
 ) -> list[str]:
     tables = ["result"]
     if measurements:
         tables.append("measurement")
     if fourier:
         tables.append("fourier")
+    if control_policy_artifacts:
+        tables.extend(["control-policy", "control-policy-summary"])
     tables.append("run-artifact")
     return tables
 
@@ -2773,7 +2776,7 @@ def _deck_run_artifacts(
 ) -> list[DeckRunArtifact]:
     is_transient = plan.analysis == "tran"
     analysis_directives = _deck_analysis_directives(plan)
-    tables = _deck_stable_tables(measurements, fourier)
+    tables = _deck_stable_tables(measurements, fourier, control_policy_artifacts)
     control_policy_summaries = _deck_control_policy_summary_artifacts(
         control_policy_artifacts
     )
@@ -3014,12 +3017,27 @@ def _deck_table_artifacts(
     run_artifact_table: str,
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
+    control_policy_artifacts: list[DeckControlPolicyArtifact],
+    control_policy_artifact_table: str,
+    control_policy_summary_artifacts: list[DeckControlPolicySummaryArtifact],
+    control_policy_summary_artifact_table: str,
 ) -> list[DeckTableArtifact]:
     artifacts = [_deck_table_artifact("result", result_table)]
     if measurements:
         artifacts.append(_deck_table_artifact("measurement", measurement_table))
     if fourier:
         artifacts.append(_deck_table_artifact("fourier", fourier_table))
+    if control_policy_artifacts:
+        artifacts.append(
+            _deck_table_artifact("control-policy", control_policy_artifact_table)
+        )
+    if control_policy_summary_artifacts:
+        artifacts.append(
+            _deck_table_artifact(
+                "control-policy-summary",
+                control_policy_summary_artifact_table,
+            )
+        )
     artifacts.append(_deck_table_artifact("run-artifact", run_artifact_table))
     return artifacts
 
@@ -3687,6 +3705,17 @@ def run_deck_analysis(
     write_markers = _deck_control_write_markers(netlist)
     rawfile_options = _deck_control_rawfile_options(netlist)
     control_policy_artifacts = _deck_control_policy_artifacts(netlist)
+    control_policy_artifact_table = format_deck_control_policy_artifact_table(
+        control_policy_artifacts
+    )
+    control_policy_summary_artifacts = _deck_control_policy_summary_artifacts(
+        control_policy_artifacts
+    )
+    control_policy_summary_artifact_table = (
+        format_deck_control_policy_summary_artifact_table(
+            control_policy_summary_artifacts
+        )
+    )
     analysis_directives = _deck_analysis_directives(plan)
     if plan.analysis == "op":
         result = dc_op(circuit)
@@ -3714,7 +3743,11 @@ def run_deck_analysis(
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -3722,6 +3755,10 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -3781,7 +3818,11 @@ def run_deck_analysis(
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -3789,6 +3830,10 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -3850,7 +3895,11 @@ def run_deck_analysis(
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -3858,6 +3907,10 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -3925,7 +3978,11 @@ def run_deck_analysis(
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -3933,6 +3990,10 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -3988,7 +4049,11 @@ def run_deck_analysis(
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -3996,6 +4061,10 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -4050,7 +4119,11 @@ def run_deck_analysis(
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -4058,6 +4131,10 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -4131,7 +4208,11 @@ def run_deck_analysis(
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -4139,6 +4220,10 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
         )
         return DeckAnalysisExecution(
             plan=plan,

@@ -131,7 +131,9 @@ downstream tools to compare.
      remain metadata-only, and policy-blocked `.control` commands now have
      direct selected-execution artifacts with line, category, command, code,
      severity, message, stable table, CSV, compact JSON, and host-native record
-     exports.
+     exports, and those row-level and category-summary policy tables now also
+     travel through ordered table export artifacts plus selected-run `TableList`
+     metadata.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1121,6 +1123,16 @@ downstream tools to compare.
     - Stable run-artifact table, CSV, compact JSON, `table_artifacts`, and
       host-native record exports now surface the policy inventory without
       requiring callers to parse separate policy artifact tables.
+
+103. Deck control policy table export artifacts.
+    - Status: completed in this deck control policy table export artifact slice.
+    - Python, Rust, and TypeScript selected executions now include
+      `control-policy` and `control-policy-summary` entries in stable table
+      inventories whenever policy-blocked `.control` commands are present.
+    - The ordered table export artifacts now carry those row-level and
+      category-summary policy tables with stable table, CSV, compact JSON, and
+      host-native record payloads, and selected-run `TableList` metadata names
+      the exported policy tables beside result and run-artifact tables.
 
 ## Backlog
 

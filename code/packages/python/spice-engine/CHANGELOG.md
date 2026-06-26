@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck control policy table export artifacts** —
+  selected `run_deck_analysis()` executions now include `control-policy` and
+  `control-policy-summary` entries in `tables`, selected-run `TableList`
+  metadata, and ordered `table_artifacts` with stable table, CSV, compact JSON,
+  and header-keyed record payloads, matching Rust and TypeScript.
+
 - **Deck control policy run-artifact inventories** —
   selected `run_deck_analysis()` run artifacts now carry
   `ControlPolicyArtifacts`, `ControlPolicyCategoryList`,

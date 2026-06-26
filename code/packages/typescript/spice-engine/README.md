@@ -141,9 +141,12 @@ exports. The selected-run artifact row also carries
 `ControlPolicyCodeList`, and `ControlPolicySeverityList` inventory columns.
 `controlPolicySummaryArtifacts` groups the same policy artifacts by
 category with stable count, line-list, command-list, code-list, and severity-list
-table, CSV, compact JSON, and record exports. `formatDeckTableCsv` also converts
-any stable tab-separated deck table to CSV, `formatDeckTableJson` converts the
-same tables to compact JSON records, and `deckTableRecords` returns header-keyed
+table, CSV, compact JSON, and record exports. The same policy row and summary
+tables also appear as `control-policy` and `control-policy-summary` entries in
+`tables`, selected-run `TableList` metadata, and ordered `tableArtifacts`.
+`formatDeckTableCsv` also converts any stable tab-separated deck table to CSV,
+`formatDeckTableJson` converts the same tables to compact JSON records, and
+`deckTableRecords` returns header-keyed
 native records for browser and host integrations.
 `resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save`, scoped or
 global `.probe`, scoped `.print <analysis> ...`, and scoped
