@@ -469,15 +469,15 @@ backend immediately) come before the enabler-dependent items.
   the bounds-checked `array_get`. **Runs on all 7 backends**: `DATA 21 / READ A /
   RESTORE / READ B / PRINT A+B` ⇒ 42 (proves sequential consumption + rewind).
   Integer DATA only (real DATA = follow-up).
-- ☐ **BA7** — floating-point (needs **E3**, ✅). ◑ *Design spec written, pending user
-  sign-off* ([`lang-full-ba7-floating-point.md`](lang-full-ba7-floating-point.md)).
-  Cutover of BASIC's value model from the V1 i64-truncation to **`f64` end-to-end**
-  (the real Dartmouth semantics — every number is floating-point). Builds on E3 (f64
-  on all backends), E8 (`real_to_int_trunc` for array subscripts), and BA2 (the
-  `putchar` digit substrate — adds `__basic_print_real` for real formatting). **No new
-  backend op.** Sliced BA7-1 (value model + arithmetic + whole-valued PRINT) → BA7-2
-  (fractional formatting) → BA7-3 (comparisons/FOR/arrays/DATA reals). §7 open Qs:
-  leading-zero `.25` vs `0.25`, fractional precision, scientific-notation deferral.
+- ☐ **BA7** — floating-point (needs **E3**, ✅). ◑ *Design spec **decision-complete***
+  ([`lang-full-ba7-floating-point.md`](lang-full-ba7-floating-point.md)) — §7 resolved
+  by historical Dartmouth BASIC fidelity (no sign-off gate). Cutover of BASIC's value
+  model from the V1 i64-truncation to **`f64` end-to-end** (real Dartmouth semantics —
+  every number is floating-point). Builds on E3 (f64 on all backends), E8
+  (`real_to_int_trunc` for array subscripts), and BA2 (the `putchar` digit substrate —
+  adds `__basic_print_real`). **No new backend op.** Slices: BA7-1 (value model +
+  arithmetic + whole-valued PRINT) → BA7-2 (fractional formatting + `E` notation,
+  6 significant digits, no leading zero) → BA7-3 (comparisons/FOR/arrays/DATA reals).
 
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`

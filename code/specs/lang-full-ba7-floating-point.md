@@ -1,6 +1,7 @@
 # LANG-FULL BA7 — Dartmouth BASIC floating-point (`f64`)
 
-**Status:** design spec, pending user sign-off (no implementation yet).
+**Status:** design spec — **decision-complete** (all §7 questions resolved by
+historical Dartmouth BASIC fidelity); implementation proceeds in slices BA7-1..3.
 **Depends on:** **E3** (reals / `f64` — COMPLETE, every backend executes f64),
 **E8** (numeric conversions `int_to_real` / `real_to_int_trunc` — COMPLETE), and
 **BA2** (character-level `PRINT` via `putchar` — COMPLETE, the digit-printing
@@ -89,12 +90,13 @@ Dartmouth BASIC's rule (and the BA7 proposal):
   matrix cells — keep their exact output.) Detected by `value == trunc(value)`
   and in range.
 - **Non-whole reals print an integer part, `.`, and fractional digits:**
-  `PRINT 3.14` ⇒ `3.14`, `PRINT 1.0 / 4.0` ⇒ `.25` or `0.25` (see open Q1).
+  `PRINT 3.14` ⇒ `3.14`, `PRINT 1.0 / 4.0` ⇒ `.25` (no leading zero — §7.1).
 - **Sign:** a leading `-` for negatives (reuse BA2's sign handling).
-- **Fixed significant precision, trailing zeros trimmed:** emit up to *N*
-  fractional digits (proposal **N = 6**, matching common BASIC behaviour), then
-  strip trailing zeros so `0.5` prints `.5`, not `.500000`. Round the last kept
+- **6 significant digits, trailing zeros trimmed (§7.2):** the GE-225 printed 6
+  significant decimal digits; emit digits until 6 significant ones are produced,
+  trim trailing zeros (`0.5` ⇒ `.5`, not `.500000`), round-half-up the last kept
   digit.
+- **Out-of-range magnitudes use `E` notation (§7.3) — implemented in BA7-2.**
 
 ### Lowering — extend, don't replace, the BA2 helper
 
@@ -153,9 +155,11 @@ BA7 is bigger than BA2, so it ships in focused slices rather than one mega-PR:
   Matrix cell: `PRINT 6.0 * 7.0` ⇒ `42` on all 7 backends — proving the f64 path
   runs end to end while output is unchanged. Update in-crate test assertions to
   the f64 model.
-- **BA7-2 — fractional PRINT formatting.** Turn on the `.`-and-fraction path with
-  trailing-zero trimming + rounding. Matrix cells: `PRINT 3.14` ⇒ `3.14`,
-  `PRINT 1.0 / 4.0` ⇒ `.25`/`0.25`, `PRINT 0.0 - 2.5` ⇒ `-2.5`.
+- **BA7-2 — fractional PRINT formatting + `E` notation.** Turn on the
+  `.`-and-fraction path (6 significant digits, trailing-zero trim, round-half-up,
+  no leading zero) and the out-of-range `E`-notation path (§7.3). Matrix cells:
+  `PRINT 3.14` ⇒ `3.14`, `PRINT 1.0 / 4.0` ⇒ `.25`, `PRINT 0.0 - 2.5` ⇒ `-2.5`,
+  plus an `E`-notation cell.
 - **BA7-3 — reals in the rest of the language.** `f64` comparisons (`IF A < 1.5`),
   `FOR I = 1 TO 2 STEP 0.5`, `DIM`/array elements as `array<f64>` with
   `real_to_int_trunc` subscripts, and `f64` `DATA`/`READ`. One matrix cell each.
@@ -166,18 +170,36 @@ security-review (diff inline), push, babysit. BA7 marked ✅ when BA7-1..3 land.
 
 ---
 
-## 7. Open questions for sign-off
+## 7. Resolved decisions — honoring historical Dartmouth BASIC
 
-1. **Leading zero: `0.25` or `.25`?** Classic Dartmouth BASIC prints `.25` (no
-   leading zero). Proposal: follow the original — `.25`, `-.25`. (Trivial to flip
-   to `0.25` if preferred.)
-2. **Fractional precision N.** Proposal **6** significant fractional digits with
-   trailing-zero trim and round-half-up on the last digit. Acceptable, or match a
-   specific dialect's 6-significant-*total*-digits rule?
-3. **Very large / very small magnitudes → scientific notation?** Real Dartmouth
-   BASIC switches to `E` notation outside a fixed range. Proposal: **defer** `E`
-   output to a BA7 follow-up; BA7-1..3 use plain decimal (programs in range print
-   exactly; out-of-range is a documented later item). Confirm deferral.
-4. **`real_to_int_trunc` traps out of range (E8 semantics).** A subscript or
-   `INT()` of a real beyond `i64` range traps. That matches "array index out of
-   range" intent. Acceptable?
+These were open questions; they are **resolved here by fidelity to the original
+GE-225 Dartmouth BASIC** (the project's rule: a historical language honors the
+decisions the real language made, rather than a modernized variant). No further
+sign-off needed — these are the spec.
+
+1. **Leading zero — NO leading zero: `.25`, `-.25`.** The 1964 Dartmouth system
+   printed a magnitude less than 1 without a leading `0` (`.25`, not `0.25`).
+   Lowering: when the integer part is `0` and a fraction exists, skip the
+   `__basic_print_uint(0)` call and emit `.` directly (still emit `0` for an
+   exact `0`/`0.0`).
+2. **Precision — 6 significant digits.** The GE-225 stored numbers in
+   single-precision floating point (~6–7 significant decimal digits), and the
+   interpreter printed **6 significant digits**, trailing zeros trimmed,
+   round-half-up on the last kept digit. (This is *significant* digits across the
+   whole number, not 6 fractional digits: `123.456`, `1.23457`, `.000123457`.)
+   The fractional-emit loop counts significant digits, not places.
+3. **Scientific notation — honored, sequenced to BA7-2.** The original DID switch
+   to `E` notation for magnitudes outside roughly `1e-1 .. 1e6` (e.g.
+   `1.23457E+08`, `1.23457E-04`). We **honor it** — it is not dropped — but
+   implement it in **BA7-2** alongside the fractional formatter; **BA7-1** covers
+   whole-valued and in-range decimals (the common case, and what keeps the
+   existing matrix cells green). The roadmap notes E-notation as an explicit BA7-2
+   deliverable, not an open question.
+4. **`real_to_int_trunc` trap on out-of-range — kept.** A subscript or `INT()` of
+   a real beyond `i64` range traps (E8 semantics). The original BASIC errored on
+   an out-of-range subscript, so the trap is the faithful behavior.
+
+*Carried over from BA2 (documented there, not reopened here):* the historical
+leading-space-for-sign and trailing-space "print zone" column behavior remains a
+separate print-zones follow-up on top of BA2's separator model; BA7 changes the
+*number format*, not the *separator/zone* model.
