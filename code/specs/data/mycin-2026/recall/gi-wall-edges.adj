@@ -1,0 +1,72 @@
+% ============================================================================
+% gi-wall-edges — the GI-tract wall layer → tissue knowledge-graph
+% (MYCIN-2026 GIWALL).
+% ============================================================================
+% A high-yield histology board table: the four concentric layers of the
+% gastrointestinal (GI) tract wall (mucosa, submucosa, muscularis externa, serosa)
+% and the characteristic tissue each is composed of. "What tissue makes up the
+% muscularis externa?" becomes the binding query
+%     ? composed_of(muscularis_externa, $Tissue).
+%
+% Direction note: the relation is wall layer -> the tissue it is composed of
+% (`composed_of`). Each layer here maps to ONE canonical tissue span, so a query
+% binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The tissue object names the tissue the sentence states
+% (mucosa "a single layer of epithelium"; submucosa "a connective tissue layer";
+% muscularis externa "2 major smooth muscle layers"; serosa "consisting of
+% mesothelium"). Each cited sentence names the layer by its FULL term. Each span
+% was independently re-fetched and confirmed on two separate fetches of the same
+% page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like MUSCLEFIBER/GERMLAYER/
+% ACIDBASE/HEARTVALVE). Each fact is a `relate` clause whose byte-provenance lives
+% INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see gi-wall-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary gi_wall_vocab {
+    define wall_layer : entity   surface "GI tract wall layer", "gastrointestinal wall layer"
+    define tissue     : entity   surface "tissue", "tissue composition"
+
+    define composed_of : relation from wall_layer to tissue  % the tissue this wall layer is composed of
+}
+
+rulebook gi_wall_facts {
+    use gi_wall_vocab
+
+    % --- mucosa -> epithelium -----------------------------------------------
+    relate composed_of(mucosa, epithelium)
+        source "The mucosa consists of a single layer of epithelium, which is highly folded to increase its surface area for absorption."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537103/"
+        trust authoritative
+
+    % --- submucosa -> connective tissue -------------------------------------
+    relate composed_of(submucosa, connective_tissue)
+        source "The submucosa, a connective tissue layer, houses blood and lymphatic vessels that support the gastrointestinal tract."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537103/"
+        trust authoritative
+
+    % --- muscularis externa -> smooth muscle --------------------------------
+    relate composed_of(muscularis_externa, smooth_muscle)
+        source "The muscularis externa comprises 2 major smooth muscle layers: an inner circular and an outer longitudinal muscular layer."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537103/"
+        trust authoritative
+
+    % --- serosa -> mesothelium ----------------------------------------------
+    relate composed_of(serosa, mesothelium)
+        source "The serosa is the outermost small intestinal layer, consisting of mesothelium and epithelium."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459366/"
+        trust authoritative
+}
