@@ -347,12 +347,17 @@ class Assignment:
 
 @dataclass(frozen=True, slots=True)
 class UpdateStmt:
-    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...]."""
+    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...].
+
+    ``on_conflict`` carries the optional ``UPDATE OR <action>`` strategy.
+    ``None`` → default SQLite ABORT behaviour.
+    """
 
     table: str
     assignments: tuple[Assignment, ...]
     where: Expr | None = None
     returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
 
 
 @dataclass(frozen=True, slots=True)

@@ -196,7 +196,7 @@ class AggregateItem:
     distinct: bool = False
     separator: str | None = None    # GROUP_CONCAT only
     key_arg: FuncArg | None = None  # JSON_GROUP_OBJECT only: the key expression
-    filter_expr: "Expr | None" = None  # FILTER (WHERE expr) — skip rows where False/NULL
+    filter_expr: Expr | None = None  # FILTER (WHERE expr) — skip rows where False/NULL
     output: bool = True  # False → compute but do not emit as a result column
 
 
@@ -528,12 +528,18 @@ class Assignment:
 
 @dataclass(frozen=True, slots=True)
 class Update:
-    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...]."""
+    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...].
+
+    ``on_conflict`` carries the optional ``UPDATE OR <action>`` strategy.
+    It mirrors the semantics of :class:`Insert`.  ``None`` → default SQLite
+    ABORT behaviour (raise on constraint violation).
+    """
 
     table: str
     assignments: tuple[Assignment, ...]
     predicate: Expr | None = None  # None = update every row
     returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
 
 
 @dataclass(frozen=True, slots=True)

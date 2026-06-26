@@ -720,10 +720,17 @@ class InsertFromResult:
 
 @dataclass(frozen=True, slots=True)
 class UpdateRows:
-    """For the row under the current cursor, update the named assignments."""
+    """For the row under the current cursor, update the named assignments.
+
+    ``on_conflict`` carries the optional ``UPDATE OR <action>`` strategy.
+    ``None`` → default SQLite ABORT behaviour (raise on constraint violation).
+    ``"IGNORE"`` → skip the update for this row silently.
+    ``"REPLACE"`` → pre-delete conflicting rows, then apply the update.
+    """
     table: str
     assignments: tuple[str, ...]
     cursor_id: int
+    on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
 
 
 @dataclass(frozen=True, slots=True)

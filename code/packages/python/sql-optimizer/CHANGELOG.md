@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.17.0] - 2026-06-19
+
+### Fixed
+
+- Constant-folding pass now preserves `Update.on_conflict` when rebuilding
+  an `Update` plan node.  The previous pattern match did not capture
+  `on_conflict`, so the field was silently reset to `None` after folding,
+  causing `UPDATE OR IGNORE` and `UPDATE OR REPLACE` statements to behave
+  identically to a plain `UPDATE` (raising on constraint violation instead
+  of ignoring or replacing).
+
 ## [0.16.0] - 2026-05-22
 
 ### Fixed

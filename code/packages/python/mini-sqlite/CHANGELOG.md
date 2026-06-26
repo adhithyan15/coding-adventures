@@ -34,6 +34,46 @@
   idempotent duplicate semantics, and the original-trigger-survives
   invariant.
 
+- **`UPDATE OR <conflict>` conflict resolution** — the five conflict-resolution
+  strategies that SQLite supports for `INSERT` now also work with `UPDATE`:
+
+  ```sql
+  UPDATE OR IGNORE t SET id = 1 WHERE id = 2  -- skip row if constraint violated
+  UPDATE OR REPLACE t SET id = 1 WHERE id = 2 -- delete conflicting rows, then update
+  UPDATE OR ABORT t SET id = 1 WHERE id = 2   -- raise (same as no modifier)
+  UPDATE OR FAIL t SET id = 1 WHERE id = 2    -- raise (same as ABORT here)
+  UPDATE OR ROLLBACK t SET id = 1 WHERE id = 2 -- raise (same as ABORT here)
+  ```
+
+  Implementation spans the full pipeline:
+
+  - **Grammar** (`sql.grammar`): `update_stmt` gains an optional
+    `[ conflict_clause ]` immediately after the `UPDATE` keyword, reusing the
+    same rule already used by `INSERT`.
+  - **Adapter** (`mini_sqlite/adapter.py`): `_update()` extracts the conflict
+    action via the shared `_conflict_action()` helper.
+  - **AST/Planner** (`sql-planner`): `UpdateStmt` and the `Update` plan node
+    each gain an `on_conflict: str | None` field.  The planner forwards the
+    field through without transformation.
+  - **Constant-folding optimizer** (`sql-optimizer`): the `Update` pattern
+    match now captures and preserves `on_conflict` so it is not silently
+    dropped during folding.
+  - **Codegen** (`sql-codegen`): the `UpdateRows` IR node gains `on_conflict`;
+    the compiler passes it through from the plan.
+  - **VM** (`sql-vm`): `_do_update()` dispatches on `on_conflict`:
+    - `IGNORE` — if `_check_constraints` raises `ConstraintViolation`, the
+      current row is silently skipped and the loop continues.  `rows_affected`
+      counts only rows that were actually changed.
+    - `REPLACE` — any other row whose unique-column values conflict with the
+      post-update merged row is deleted before the current row is updated in
+      place.  The scan cursor's index is corrected for each pre-cursor
+      deletion so the outer scan loop resumes correctly.
+    - `ABORT`, `FAIL`, `ROLLBACK` — raise `ConstraintViolation` (same as the
+      default behaviour; full transactional semantics are deferred).
+
+  21 oracle tests in `tests/test_tier3_update_or_conflict.py` compare
+  mini-sqlite output byte-for-byte against `stdlib sqlite3`.
+
 ## [2.27.0] - 2026-06-19
 
 ### Fixed

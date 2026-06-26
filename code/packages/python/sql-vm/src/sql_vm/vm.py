@@ -2557,13 +2557,94 @@ def _do_update(ins: UpdateRows, st: _VmState) -> None:
     cursor = st.cursors.get(ins.cursor_id)
     if cursor is None:
         raise InternalError(message=f"update: cursor {ins.cursor_id} not open")
+    if ins.on_conflict is not None and ins.on_conflict not in _VALID_ON_CONFLICT:
+        raise InternalError(
+            message=f"invalid on_conflict action {ins.on_conflict!r}; "
+            f"expected one of {sorted(_VALID_ON_CONFLICT)}"
+        )
     # Evaluate CHECK and FK constraints against the post-update row.
     # Copy current row so the AFTER trigger sees the pre-update snapshot in old_row,
     # even after st.current_row is mutated below.
     current = dict(st.current_row.get(ins.cursor_id, {}))
     merged = {**current, **assignments}
-    _check_constraints(ins.table, merged, st)
-    _check_fk_child(ins.table, merged, st)
+    # UPDATE OR REPLACE: delete OTHER rows that conflict on unique/PK columns,
+    # then update the current row in place.
+    #
+    # Why not delete-then-reinsert?
+    # Appending the merged row at the list tail causes the outer scan cursor to
+    # eventually reach and re-process it (infinite update loop).  Updating in
+    # place avoids this entirely — the row stays at its original position.
+    #
+    # Skipping the current row:
+    # ``_replace_delete_conflicts`` would also delete the current row (its
+    # unique values match the merged row's values).  We use content comparison
+    # (``row == current``) to skip it: since the update hasn't been applied yet
+    # the backend row still carries the original values stored in ``current``.
+    #
+    # Cursor-index correction:
+    # Deleting a conflict at index J < cursor._idx shifts the backend list left
+    # so cursor now points one element too high.  We read tmp_cur._idx (a
+    # duck-typed attribute on InMemory-family cursors) just before the delete
+    # to know J and decrement cursor._idx accordingly.
+    #
+    # CHECK and FK constraints still apply for REPLACE — only uniqueness
+    # violations are resolved by pre-deletion, not structural errors.
+    if ins.on_conflict == "REPLACE":
+        _check_constraints(ins.table, merged, st)
+        _check_fk_child(ins.table, merged, st)
+        try:
+            col_defs = st.backend.columns(ins.table)
+        except (NotImplementedError, AttributeError):
+            col_defs = []
+        unique_cols: list[str] = [
+            cd.name
+            for cd in col_defs
+            if (cd.primary_key or cd.unique) and merged.get(cd.name) is not None
+        ]
+        if unique_cols:
+            opener = getattr(st.backend, "_open_cursor", None)
+            tmp_cur = opener(ins.table) if opener is not None else st.backend.scan(ins.table)
+            try:
+                while True:
+                    row = tmp_cur.next()
+                    if row is None:
+                        break
+                    if row == current:
+                        # This is the current row — leave it for the in-place update.
+                        continue
+                    for col in unique_cols:
+                        if row.get(col) == merged[col]:
+                            tmp_idx_before = getattr(tmp_cur, "_idx", None)
+                            st.backend.delete(ins.table, tmp_cur)
+                            # Correct the outer scan cursor for the list shift.
+                            if (
+                                tmp_idx_before is not None
+                                and hasattr(cursor, "_idx")
+                                and tmp_idx_before < cursor._idx
+                            ):
+                                cursor._idx -= 1
+                            break
+            finally:
+                tmp_cur.close()
+        try:
+            st.backend.update(ins.table, cursor, assignments)
+        except be.BackendError as e:
+            raise _translate_backend_error(e) from e
+        if ins.cursor_id in st.current_row:
+            st.current_row[ins.cursor_id].update(assignments)
+        st.result.rows_affected = (st.result.rows_affected or 0) + 1
+        return
+    try:
+        _check_constraints(ins.table, merged, st)
+        _check_fk_child(ins.table, merged, st)
+    except ConstraintViolation:
+        if ins.on_conflict == "IGNORE":
+            # Ensure rows_affected is 0 rather than None so rowcount reports 0,
+            # matching SQLite's behaviour when all rows are skipped.
+            if st.result.rows_affected is None:
+                st.result.rows_affected = 0
+            return  # skip this row silently; do not increment rows_affected
+        raise
     # Fire BEFORE UPDATE triggers.
     before_triggers = [
         t for t in st.backend.list_triggers(ins.table)
@@ -2573,6 +2654,12 @@ def _do_update(ins: UpdateRows, st: _VmState) -> None:
         _fire_trigger(defn, merged, current, st)
     try:
         st.backend.update(ins.table, cursor, assignments)
+    except be.ConstraintViolation as e:
+        if ins.on_conflict == "IGNORE":
+            if st.result.rows_affected is None:
+                st.result.rows_affected = 0
+            return  # backend-level violation (e.g. UNIQUE): skip silently
+        raise _translate_backend_error(e) from e
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     # Keep the local current_row in sync so subsequent LoadColumn in the loop

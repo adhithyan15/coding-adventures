@@ -10,6 +10,11 @@
   destructures the matching `CreateTrigger` plan-node field and forwards
   it here.
 
+- `UpdateRows` IR node gains an `on_conflict: str | None` field (default
+  `None`).  The compiler's `_compile_update()` passes the value through from
+  the `Update` plan node so the VM can dispatch on the conflict-resolution
+  strategy at runtime.
+
 ## [1.43.0] - 2026-06-16
 
 ### Fixed
