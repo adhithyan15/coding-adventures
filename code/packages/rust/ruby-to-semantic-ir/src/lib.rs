@@ -301,6 +301,63 @@ mod tests {
     }
 
     #[test]
+    fn block_captures_outer_local() {
+        // M4: a block referencing an enclosing local captures it. The hoisted
+        // `__block_0` gains a capture named `x`, and inside its body the read
+        // of `x` is rewritten from Local to Capture so the SIR validates.
+        let m = lower("def run\n  x = 10\n  [1, 2, 3].each { |n| n + x }\nend\n");
+        let blk = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("hoisted block function");
+        assert!(
+            blk.captures.iter().any(|c| c.name == "x"),
+            "block should capture outer local `x`; captures = {:?}",
+            blk.captures.iter().map(|c| &c.name).collect::<Vec<_>>()
+        );
+        // The block param `n` stays a param; `x` is NOT a param.
+        assert!(blk.params.iter().any(|p| p.name == "n"));
+        assert!(!blk.params.iter().any(|p| p.name == "x"));
+        // The whole module validates (the capture rewrite keeps the SIR sound).
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "validation failed: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+    }
+
+    #[test]
+    fn block_does_not_capture_block_param_or_fresh_local() {
+        // Regression: a block whose body only uses its own param (and a fresh
+        // block-internal local) captures nothing.
+        let m = lower("def run\n  [1, 2, 3].each do |n|\n    y = n + 1\n    y\n  end\nend\n");
+        let blk = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("hoisted block function");
+        assert!(blk.captures.is_empty(), "captures = {:?}", blk.captures);
+    }
+
+    #[test]
+    fn block_reassigning_outer_name_is_not_captured() {
+        // A name assigned inside the block is block-local (v0: capture-then-
+        // reassign would need by-reference capture), so it is NOT captured.
+        let m = lower("def run\n  x = 1\n  [1, 2, 3].each do |n|\n    x = n\n    x\n  end\nend\n");
+        let blk = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("hoisted block function");
+        assert!(
+            !blk.captures.iter().any(|c| c.name == "x"),
+            "an in-block-assigned name must not be captured; captures = {:?}",
+            blk.captures.iter().map(|c| &c.name).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
     fn def_with_no_params_lowers_cleanly() {
         let m = lower("def hello\nend\n");
         let hello = m

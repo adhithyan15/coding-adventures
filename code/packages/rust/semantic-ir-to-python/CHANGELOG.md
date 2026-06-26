@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.22 — coverage: outer-local block captures (M4)
+
+No emitter change — the backend already prepends `MakeClosure` captures as
+leading parameters. Adds an execution-proof that a block reading an enclosing
+local (`def run; base = 100; apply { |n| print n + base }; end`) emits
+`def __block_0(base, n):` with `base` threaded by the closure, and prints
+`105` through a real interpreter. The frontend now produces such captures (see
+`ruby-to-semantic-ir` 0.97.0, M4).
+
 ## 0.1.21 — variadic parameter emission (`*args` / `**kwargs`) (M3)
 
 A `Param` carrying the new SIR `ParamKind` now emits Python's native variadic
