@@ -264,6 +264,19 @@ pub fn install(env: &Env) {
     define(env, "months", builtin("months", b_months));
     define(env, "quarters", builtin("quarters", b_quarters));
 
+    // R-46 — base R POSIXct date-times (UTC). A POSIXct is seconds-since-epoch
+    // (1970-01-01 00:00:00 UTC) carried by the transparent `SValue::Classed`
+    // wrapper with class c("POSIXct","POSIXt"); the date half reuses the R-44/R-45
+    // civil kernel and field renderer. `as.numeric`/subtraction need no special
+    // case (the wrapper is transparent → raw seconds).
+    define(env, "as.POSIXct", builtin("as.POSIXct", b_as_posixct));
+    define(env, "Sys.time", builtin("Sys.time", b_sys_time));
+    define(
+        env,
+        "format.POSIXct",
+        builtin("format.POSIXct", b_format_posixct),
+    );
+
     // v2 — data frames.
     define(env, "data.frame", builtin("data.frame", b_data_frame));
     define(env, "nrow", builtin("nrow", b_nrow));
@@ -2525,6 +2538,309 @@ fn b_quarters(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
                 format!("Q{q}")
             })
         })
+        .collect();
+    Ok(SValue::Character(out))
+}
+
+// ===========================================================================
+// R-46 — POSIXct date-times (UTC). A *date-time* layered on the R-44/R-45
+// calendar machinery.
+// ===========================================================================
+//
+// A `POSIXct` is — exactly like `Date` — an ordinary numeric vector, but the
+// number counts **seconds since the epoch 1970-01-01 00:00:00 UTC** instead of
+// whole days. It carries the two-element class `c("POSIXct", "POSIXt")` via the
+// same transparent `SValue::Classed` wrapper that backs `Date`, so it is just as
+// transparent to `as.numeric`, arithmetic, recycling, and indexing.
+//
+//   seconds = days * 86400 + intraday_seconds
+//
+// The whole point of the design is **reuse**: split a seconds count into a day
+// count and an intraday remainder, and *everything else is the existing Date
+// code*. The date half feeds straight into the R-44 civil kernel
+// (`civil_from_days` / `days_from_civil`) and the R-45 `format_date_days`
+// `%`-field renderer; only the intraday H:M:S split and the seconds bound are new.
+//
+//   ┌──────────── seconds (i64, may be negative for pre-epoch) ────────────┐
+//   │  div_euclid(86400) → day count z  ──▶ civil_from_days / format_date  │
+//   │  rem_euclid(86400) → intraday s   ──▶ H = s/3600, M = s/60%60, S=s%60 │
+//   └──────────────────────────────────────────────────────────────────────┘
+//
+// `div_euclid` / `rem_euclid` (NOT `/` and `%`) are essential: for a pre-epoch
+// instant like −1 second (= 1969-12-31 23:59:59) we need day −1 with intraday
+// 86399, which is exactly what the *Euclidean* (floored) operations give; plain
+// truncating division would give day 0 with intraday −1 and a negative array
+// index. This mirrors the `rem_euclid` reasoning already used for `weekday_index`.
+
+/// Seconds in one day — the conversion factor between the `Date` day count and a
+/// `POSIXct` seconds count.
+const SECONDS_PER_DAY: i64 = 86_400;
+
+/// The largest magnitude (in seconds) we admit for a `POSIXct`. It is the
+/// [`MAX_DATE_DAYS`] day bound scaled to seconds, so a POSIXct's *date half* can
+/// never exceed the range the civil kernel safely handles, and the multiply
+/// `MAX_DATE_DAYS * 86400` (≈ 8.64e15) stays well inside `i64` (max ≈ 9.2e18).
+/// This is the numeric counterpart to [`MAX_DATE_DIGITS`] for the seconds path:
+/// `as.POSIXct(1e300)` becomes `NA` rather than overflowing the kernel.
+const MAX_POSIXCT_SECONDS: i64 = MAX_DATE_DAYS * SECONDS_PER_DAY;
+
+/// Clamp-or-reject a raw seconds count: `Some(s)` if it is finite and within
+/// [`MAX_POSIXCT_SECONDS`], else `None` (→ NA). The seconds analogue of
+/// [`checked_date_days`]; every untrusted `f64`→POSIXct boundary funnels through
+/// here so the civil kernel only ever sees an in-range day count.
+fn checked_posixct_seconds(v: f64) -> Option<i64> {
+    if is_na_real(v) || !v.is_finite() {
+        return None;
+    }
+    let s = v.trunc();
+    if s.abs() > MAX_POSIXCT_SECONDS as f64 {
+        None
+    } else {
+        Some(s as i64)
+    }
+}
+
+/// Is `x` a POSIXct — a value whose (explicit) class vector contains "POSIXct"?
+fn is_posixct(x: &SValue) -> bool {
+    class_of(x).iter().any(|c| c == "POSIXct")
+}
+
+/// Wrap a vector of seconds-since-epoch (NA-aware doubles) as a `POSIXct` — class
+/// `c("POSIXct", "POSIXt")` over a plain `Double`. The single constructor every
+/// POSIXct-producing builtin funnels through (mirrors [`make_date`]).
+fn make_posixct(seconds: Vec<f64>) -> SValue {
+    SValue::Classed {
+        inner: Box::new(SValue::doubles(seconds)),
+        class: vec!["POSIXct".to_string(), "POSIXt".to_string()],
+    }
+}
+
+/// Parse a `"YYYY-MM-DD HH:MM:SS"` (or bare `"YYYY-MM-DD"` → midnight) datetime
+/// string to **seconds since the epoch**, or `None` (→ NA) on any malformed or
+/// out-of-range input. Never panics on crafted input.
+///
+/// The date half reuses R-44's [`parse_date_str`] with the ISO `"%Y-%m-%d"`
+/// pattern, so it inherits all of that function's safety (digit cap, calendar
+/// round-trip validation, `MAX_DATE_DIGITS`). The optional time half is then read
+/// as `HH:MM:SS` with the fields range-checked — **hour** 0–23, **minute** 0–59,
+/// **second** 0–60 (the trailing 60 is the POSIX leap-second slot, which base R
+/// also accepts). The resulting seconds are bounded by [`MAX_POSIXCT_SECONDS`]
+/// before return.
+fn parse_posixct_str(string: &str) -> Option<i64> {
+    // Split the date and (optional) time on the first ASCII space. A datetime is
+    // "<date> <time>"; a bare date has no space and is treated as midnight.
+    let (date_part, time_part) = match string.split_once(' ') {
+        Some((d, t)) => (d, Some(t)),
+        None => (string, None),
+    };
+
+    // Reuse the R-44 calendar parser for the date half (ISO only — other date
+    // layouts are out of scope for `as.POSIXct` here).
+    let z = parse_date_str(date_part, "%Y-%m-%d")?;
+
+    // The intraday offset in seconds. Absent time half ⇒ midnight (0).
+    let intraday = match time_part {
+        None => 0,
+        Some(t) => {
+            // Parse exactly "HH:MM:SS" via the same length-bounded uint reader the
+            // date parser uses. Any trailing garbage, missing colon, or extra
+            // field fails the whole parse (→ NA).
+            let chars: Vec<char> = t.chars().collect();
+            let mut i = 0usize;
+            let h = parse_uint_field(&chars, &mut i)?;
+            expect_char(&chars, &mut i, ':')?;
+            let m = parse_uint_field(&chars, &mut i)?;
+            expect_char(&chars, &mut i, ':')?;
+            let s = parse_uint_field(&chars, &mut i)?;
+            // No trailing characters allowed (e.g. fractional seconds → R-47).
+            if i != chars.len() {
+                return None;
+            }
+            // Range-check each field. Second admits 60 (leap-second slot).
+            if !(0..=23).contains(&h) || !(0..=59).contains(&m) || !(0..=60).contains(&s) {
+                return None;
+            }
+            h * 3600 + m * 60 + s
+        }
+    };
+
+    // days * 86400 + intraday. `z` is already bounded by MAX_DATE_DAYS (from
+    // parse_date_str), so this multiply stays inside i64; the final bound check
+    // is belt-and-suspenders against the additive intraday term.
+    let seconds = z.checked_mul(SECONDS_PER_DAY)?.checked_add(intraday)?;
+    if seconds.abs() > MAX_POSIXCT_SECONDS {
+        return None;
+    }
+    Some(seconds)
+}
+
+/// Match a single literal character at `chars[*idx]`, advancing past it; `None`
+/// (→ the whole parse fails → NA) if the input is exhausted or the char differs.
+/// A tiny helper so the time parser reads literally like its grammar `HH:MM:SS`.
+fn expect_char(chars: &[char], idx: &mut usize, want: char) -> Option<()> {
+    if *idx < chars.len() && chars[*idx] == want {
+        *idx += 1;
+        Some(())
+    } else {
+        None
+    }
+}
+
+/// Render one seconds count to a string under `format`. Supports the new sub-day
+/// fields `%H` (00–23), `%M` (00–59), `%S` (00–60) and **every R-44/R-45 date
+/// field** (`%Y %m %d %B %b %A %a %j %e` and literals), since the date half is
+/// just the day count fed into [`format_date_days`]. Total — never panics; the
+/// `div_euclid`/`rem_euclid` split keeps pre-epoch instants correct.
+///
+/// Implementation note: rather than re-implement the whole `%`-field scanner, we
+/// pre-substitute *only* the three time fields into the format string and let the
+/// reused date renderer handle the rest. The time fields render to fixed two-digit
+/// numbers with no `%`, so they cannot collide with the date renderer's scan, and
+/// a `%%` escape is preserved (the date renderer passes unknown `%x` through
+/// literally, and we never touch `%%`).
+fn format_posixct_seconds(seconds: i64, format: &str) -> String {
+    // Floored split: day count for the date half, intraday seconds for the clock.
+    let z = seconds.div_euclid(SECONDS_PER_DAY);
+    let intraday = seconds.rem_euclid(SECONDS_PER_DAY); // 0..86400
+    let hh = intraday / 3600;
+    let mm = (intraday % 3600) / 60;
+    let ss = intraday % 60;
+
+    // Walk the format, emitting %H/%M/%S ourselves and delegating each maximal run
+    // of date-only text to `format_date_days`. We accumulate non-time format
+    // characters into `date_run` and flush them (rendered against `z`) whenever we
+    // hit a time field, so reused fields like %B/%A still resolve correctly.
+    let fmt: Vec<char> = format.chars().collect();
+    let mut out = String::new();
+    let mut date_run = String::new();
+    let mut fi = 0;
+    while fi < fmt.len() {
+        if fmt[fi] == '%' && fi + 1 < fmt.len() {
+            match fmt[fi + 1] {
+                'H' | 'M' | 'S' => {
+                    // Flush any pending date-only run first (preserves order).
+                    if !date_run.is_empty() {
+                        out.push_str(&format_date_days(z, &date_run));
+                        date_run.clear();
+                    }
+                    let val = match fmt[fi + 1] {
+                        'H' => hh,
+                        'M' => mm,
+                        _ => ss,
+                    };
+                    out.push_str(&format!("{val:02}"));
+                }
+                // Any other conversion belongs to the date renderer — buffer it
+                // verbatim (both the '%' and the letter) for the next flush.
+                other => {
+                    date_run.push('%');
+                    date_run.push(other);
+                }
+            }
+            fi += 2;
+        } else {
+            date_run.push(fmt[fi]);
+            fi += 1;
+        }
+    }
+    if !date_run.is_empty() {
+        out.push_str(&format_date_days(z, &date_run));
+    }
+    out
+}
+
+/// `as.POSIXct(x, tz = "UTC")` — build a `POSIXct` (R-46).
+///
+/// - **Character `x`:** each element is parsed as `"YYYY-MM-DD HH:MM:SS"` (or
+///   `"YYYY-MM-DD"` → midnight) to seconds since the epoch. Unparseable or
+///   out-of-range strings become `NA` — never a panic.
+/// - **Numeric `x`:** taken directly as raw seconds-since-epoch (bounded by
+///   [`MAX_POSIXCT_SECONDS`]; out-of-range / non-finite → `NA`).
+///
+/// Only `tz = "UTC"` is honoured; a different `tz` is currently ignored (R-47).
+/// Vectorised; the result carries class `c("POSIXct", "POSIXt")`.
+fn b_as_posixct(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    // Already a POSIXct? Return as-is (idempotent), seeing through the wrapper.
+    if is_posixct(x) {
+        return Ok(x.clone());
+    }
+    // A `Date` converts by scaling its day count to seconds (midnight UTC).
+    if is_date(x) {
+        let days = x.as_double()?;
+        let seconds: Vec<f64> = days
+            .iter()
+            .map(|v| {
+                checked_date_days(v)
+                    .map(|z| (z * SECONDS_PER_DAY) as f64)
+                    .unwrap_or_else(na_real)
+            })
+            .collect();
+        return Ok(make_posixct(seconds));
+    }
+
+    let seconds: Vec<f64> = match peel_structural(x) {
+        SValue::Character(strs) => strs
+            .iter()
+            .map(|opt| match opt {
+                Some(s) => parse_posixct_str(s)
+                    .map(|secs| secs as f64)
+                    .unwrap_or_else(na_real),
+                None => na_real(),
+            })
+            .collect(),
+        other => {
+            // Numeric (or coercible) input → raw seconds, bounded so an
+            // out-of-range value (`as.POSIXct(1e300)`) becomes NA rather than
+            // overflowing the kernel downstream.
+            let d = other.as_double()?;
+            d.iter()
+                .map(|v| {
+                    checked_posixct_seconds(v)
+                        .map(|s| s as f64)
+                        .unwrap_or_else(na_real)
+                })
+                .collect()
+        }
+    };
+    Ok(make_posixct(seconds))
+}
+
+/// `Sys.time()` — the current time as a length-1 `POSIXct` (R-46).
+///
+/// Like [`b_sys_date`], the runtime has no deterministic clock hook, so we read
+/// the wall clock directly: seconds since `UNIX_EPOCH`. A clock set *before* the
+/// epoch yields a negative count, handled without panic. Non-deterministic, so
+/// tests assert only its structure (class `c("POSIXct","POSIXt")` + a single
+/// finite numeric), never the exact instant.
+fn b_sys_time(_interp: &Interpreter, _args: &[Arg]) -> SResult<SValue> {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let now = SystemTime::now();
+    let seconds = match now.duration_since(UNIX_EPOCH) {
+        Ok(dur) => dur.as_secs() as i64,
+        Err(e) => -(e.duration().as_secs() as i64),
+    };
+    Ok(make_posixct(vec![seconds as f64]))
+}
+
+/// `format.POSIXct(x, format = "%Y-%m-%d %H:%M:%S")` — render a `POSIXct` to a
+/// character vector (R-46). Supports `%H`/`%M`/`%S` plus every reused R-44/R-45
+/// date field; `NA` seconds stay `NA`. Reached directly and via the `format()`
+/// generic's dispatch (which checks `"POSIXct"` before `"Date"`).
+fn b_format_posixct(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let format = named_str(args, "format")
+        .or_else(|| {
+            nth_positional(args, 1).and_then(|v| v.as_character().into_iter().next().flatten())
+        })
+        .unwrap_or_else(|| "%Y-%m-%d %H:%M:%S".to_string());
+
+    let secs = x.as_double()?;
+    let out: Vec<Option<String>> = secs
+        .iter()
+        // `checked_posixct_seconds` rejects NA / non-finite / out-of-range → NA,
+        // so an out-of-range seconds count can never overflow the civil kernel.
+        .map(|v| checked_posixct_seconds(v).map(|s| format_posixct_seconds(s, &format)))
         .collect();
     Ok(SValue::Character(out))
 }
@@ -5015,6 +5331,13 @@ fn b_format(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     // R-44: `format()` is an S3 generic. A value carrying class "Date" routes to
     // the Date renderer (`format.Date`) — so `format(as.Date("2021-03-14"))`
     // yields "2021-03-14" rather than the bare day count.
+    //
+    // R-46: check "POSIXct" *first* — a POSIXct's class is c("POSIXct","POSIXt")
+    // and does NOT contain "Date", but ordering the date-time renderer ahead keeps
+    // the intent explicit and is robust to any future shared class.
+    if is_posixct(x) {
+        return b_format_posixct(_interp, args);
+    }
     if is_date(x) {
         return b_format_date(_interp, args);
     }
@@ -7386,5 +7709,90 @@ mod date_tests {
     #[test]
     fn format_pre_epoch() {
         assert_eq!(format_date_days(-1, "%Y-%m-%d"), "1969-12-31");
+    }
+
+    // -----------------------------------------------------------------------
+    // R-46 — POSIXct: the seconds↔(days, h, m, s) split, parse, and render.
+    // -----------------------------------------------------------------------
+
+    /// The intraday split is `div_euclid`/`rem_euclid` by 86400, so it stays
+    /// correct (and never negatively-indexes) on pre-epoch (negative) seconds.
+    #[test]
+    fn posixct_intraday_split_handles_pre_epoch() {
+        // +1 second past the epoch: 0 days, 1 intraday second.
+        assert_eq!(1i64.div_euclid(86_400), 0);
+        assert_eq!(1i64.rem_euclid(86_400), 1);
+        // -1 second (1969-12-31 23:59:59): -1 day, 86399 intraday seconds.
+        assert_eq!((-1i64).div_euclid(86_400), -1);
+        assert_eq!((-1i64).rem_euclid(86_400), 86_399);
+    }
+
+    /// `parse_posixct_str` reads "YYYY-MM-DD HH:MM:SS" to seconds since epoch.
+    #[test]
+    fn parse_posixct_full_datetime() {
+        assert_eq!(parse_posixct_str("1970-01-01 00:00:00"), Some(0));
+        assert_eq!(parse_posixct_str("1970-01-01 00:01:00"), Some(60));
+        assert_eq!(parse_posixct_str("1970-01-02 00:00:00"), Some(86_400));
+        // 2021-03-14 09:30:05.
+        let z = days_from_civil(2021, 3, 14);
+        assert_eq!(
+            parse_posixct_str("2021-03-14 09:30:05"),
+            Some(z * 86_400 + 9 * 3600 + 30 * 60 + 5)
+        );
+    }
+
+    /// A bare date with no time half is taken as midnight (days * 86400).
+    #[test]
+    fn parse_posixct_date_only_is_midnight() {
+        let z = days_from_civil(2021, 3, 14);
+        assert_eq!(parse_posixct_str("2021-03-14"), Some(z * 86_400));
+    }
+
+    /// Malformed input and out-of-range H/M/S are rejected (None → NA), never a
+    /// panic. The leap-second slot (S = 60) is accepted.
+    #[test]
+    fn parse_posixct_malformed_and_ranges() {
+        assert_eq!(parse_posixct_str("garbage"), None);
+        assert_eq!(parse_posixct_str("2021-03-14 25:00:00"), None); // hour > 23
+        assert_eq!(parse_posixct_str("2021-03-14 09:60:00"), None); // minute > 59
+        assert_eq!(parse_posixct_str("2021-03-14 09:30:61"), None); // second > 60
+        assert!(parse_posixct_str("2021-03-14 09:30:60").is_some()); // leap second OK
+        assert_eq!(parse_posixct_str("2021-13-01 00:00:00"), None); // bad month
+    }
+
+    /// `format_posixct_seconds` renders the default and a custom format, reusing
+    /// the R-45 date fields on the date half.
+    #[test]
+    fn format_posixct_default_and_fields() {
+        let secs = parse_posixct_str("2021-03-14 09:30:05").unwrap();
+        assert_eq!(
+            format_posixct_seconds(secs, "%Y-%m-%d %H:%M:%S"),
+            "2021-03-14 09:30:05"
+        );
+        assert_eq!(format_posixct_seconds(secs, "%H:%M"), "09:30");
+        // Reused %B from the date half.
+        let jan = parse_posixct_str("2021-01-15 06:07:08").unwrap();
+        assert_eq!(format_posixct_seconds(jan, "%B"), "January");
+    }
+
+    /// Pre-epoch seconds render without panic and pick the correct clock time.
+    #[test]
+    fn format_posixct_pre_epoch() {
+        // -1 second = 1969-12-31 23:59:59.
+        assert_eq!(
+            format_posixct_seconds(-1, "%Y-%m-%d %H:%M:%S"),
+            "1969-12-31 23:59:59"
+        );
+    }
+
+    /// The seconds bound rejects absurd magnitudes before the civil kernel sees
+    /// them (→ NA), the numeric counterpart to the digit cap.
+    #[test]
+    fn posixct_seconds_bound() {
+        assert!(checked_posixct_seconds(0.0).is_some());
+        assert!(checked_posixct_seconds(MAX_POSIXCT_SECONDS as f64).is_some());
+        assert!(checked_posixct_seconds(1e300).is_none());
+        assert!(checked_posixct_seconds(f64::NAN).is_none());
+        assert!(checked_posixct_seconds(f64::INFINITY).is_none());
     }
 }

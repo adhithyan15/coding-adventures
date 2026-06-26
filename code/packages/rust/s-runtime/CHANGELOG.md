@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.41.0] - 2026-06-25
+
+### Added
+
+- **POSIXct date-times — `as.POSIXct` / `Sys.time` / `format.POSIXct` (R-46)** —
+  the first *date-time* type, layered on the R-44/R-45 calendar machinery and
+  shared with R. A **`POSIXct`** is — exactly like `Date` — an ordinary numeric
+  vector, but it counts **seconds since the epoch 1970-01-01 00:00:00 UTC** and
+  carries the two-element class `c("POSIXct", "POSIXt")` via the same transparent
+  `SValue::Classed` wrapper.
+  - **Design = reuse.** `seconds = days * 86400 + intraday`. Splitting a seconds
+    count with `div_euclid(86400)` (day count) and `rem_euclid(86400)` (intraday
+    seconds) means the **date half** feeds straight into the R-44 civil kernel
+    (`civil_from_days` / `days_from_civil`) and the R-45 `format_date_days`
+    `%`-field renderer; only the intraday H:M:S split and the seconds bound are
+    new. `div_euclid` / `rem_euclid` (not `/` / `%`) keep pre-epoch instants
+    correct (`−1s` = `1969-12-31 23:59:59`) with no negative array index.
+  - **`as.POSIXct(x, tz = "UTC")`** — parse `"YYYY-MM-DD HH:MM:SS"` (or
+    `"YYYY-MM-DD"` → midnight) via the reused ISO date parser plus an optional
+    `HH:MM:SS` time half; or wrap a numeric (raw seconds) or a `Date`
+    (`days * 86400`) directly. Malformed / out-of-range → `NA`, never a panic.
+    Only `tz = "UTC"` honoured.
+  - **`Sys.time()`** — current time as a length-1 POSIXct (wall clock; pre-epoch
+    handled without panic). Structure-tested only.
+  - **`format.POSIXct(x, format)` / `format(x, fmt)`** — default
+    `"%Y-%m-%d %H:%M:%S"`; adds `%H`/`%M`/`%S` and reuses every R-44/R-45 date
+    field (`%Y %m %d %B %b %A %a %j %e`) by delegating date-only runs to
+    `format_date_days`. The `format()` generic routes `POSIXct` (checked before
+    `Date`) to this renderer.
+  - **Subtraction & `as.numeric`** — no special case: the transparent wrapper
+    peels to raw seconds, so `t1 - t2` flows through `arithmetic("-", …)` →
+    difference **in seconds**.
+  - **Parse-safety.** A new `MAX_POSIXCT_SECONDS` (= `MAX_DATE_DAYS * 86400`)
+    bounds any parsed/supplied seconds before the civil kernel; H 0–23, M 0–59,
+    S 0–60 (leap-second slot) range-checked; `checked_mul`/`checked_add` combine
+    the `days * 86400 + intraday`.
+  - **Deferred to R-47.** Non-UTC timezones (and DST); `POSIXlt`; fractional
+    seconds; `%z`/`%Z`; standalone `strptime`/`strftime`; `as.POSIXlt`.
+
 ## [0.40.0] - 2026-06-25
 
 ### Added
