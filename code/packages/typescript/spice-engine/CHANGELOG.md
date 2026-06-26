@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Carry policy-blocked `.control` command inventories through selected
+  `runDeckAnalysis` run artifacts as stable `ControlPolicyArtifacts`,
+  `ControlPolicyCategoryList`, `ControlPolicyCodeList`, and
+  `ControlPolicySeverityList` table, CSV/JSON, and `tableArtifacts` fields,
+  matching Python and Rust.
 - Group policy-blocked `.control` command artifacts from selected
   `runDeckAnalysis` execution results by category as
   `controlPolicySummaryArtifacts` with stable counts, line lists, command lists,

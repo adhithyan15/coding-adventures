@@ -1112,6 +1112,16 @@ downstream tools to compare.
       policy surface easier to inventory without parsing row-level diagnostic
       artifacts.
 
+102. Deck control policy run-artifact inventories.
+    - Status: completed in this deck control policy run-artifact inventory slice.
+    - Python, Rust, and TypeScript selected run artifacts now expose
+      policy-blocked `.control` command counts, category lists, code lists, and
+      severity lists beside existing command, write-marker, rawfile-option, and
+      diagnostic inventories.
+    - Stable run-artifact table, CSV, compact JSON, `table_artifacts`, and
+      host-native record exports now surface the policy inventory without
+      requiring callers to parse separate policy artifact tables.
+
 ## Backlog
 
 1. Deck execution layer.

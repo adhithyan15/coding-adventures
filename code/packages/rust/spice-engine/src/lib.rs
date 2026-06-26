@@ -3445,6 +3445,10 @@ pub struct DeckRunArtifact {
     pub write_markers: Vec<String>,
     pub rawfile_option_count: usize,
     pub rawfile_options: Vec<String>,
+    pub control_policy_artifact_count: usize,
+    pub control_policy_categories: Vec<String>,
+    pub control_policy_codes: Vec<String>,
+    pub control_policy_severities: Vec<String>,
     pub diagnostic_count: usize,
     pub diagnostic_codes: Vec<String>,
 }
@@ -10268,10 +10272,26 @@ fn deck_run_artifacts(
     write_markers: &[String],
     rawfile_options: &[String],
     diagnostic_codes: &[String],
+    control_policy_artifacts: &[DeckControlPolicyArtifact],
 ) -> Vec<DeckRunArtifact> {
     let is_transient = plan.analysis == "tran";
     let analysis_directives = deck_analysis_directives(plan);
     let tables = deck_stable_tables(measurements, fourier);
+    let control_policy_summaries = deck_control_policy_summary_artifacts(control_policy_artifacts);
+    let control_policy_categories = control_policy_summaries
+        .iter()
+        .map(|artifact| artifact.category.clone())
+        .collect::<Vec<_>>();
+    let control_policy_codes = control_policy_summaries
+        .iter()
+        .flat_map(|artifact| artifact.codes.iter().cloned())
+        .collect::<Vec<_>>();
+    let mut control_policy_severities = Vec::new();
+    for artifact in &control_policy_summaries {
+        for severity in &artifact.severities {
+            push_unique_string(&mut control_policy_severities, severity);
+        }
+    }
     vec![DeckRunArtifact {
         analysis: plan.analysis.clone(),
         directive: plan.directive.clone(),
@@ -10317,6 +10337,10 @@ fn deck_run_artifacts(
         write_markers: write_markers.to_vec(),
         rawfile_option_count: rawfile_options.len(),
         rawfile_options: rawfile_options.to_vec(),
+        control_policy_artifact_count: control_policy_artifacts.len(),
+        control_policy_categories,
+        control_policy_codes,
+        control_policy_severities,
         diagnostic_count: diagnostic_codes.len(),
         diagnostic_codes: diagnostic_codes.to_vec(),
     }]
@@ -10427,6 +10451,10 @@ const DECK_RUN_ARTIFACT_COLUMNS: &[&str] = &[
     "WriteMarkerList",
     "RawfileOptions",
     "RawfileOptionList",
+    "ControlPolicyArtifacts",
+    "ControlPolicyCategoryList",
+    "ControlPolicyCodeList",
+    "ControlPolicySeverityList",
     "Diagnostics",
     "DiagnosticCodeList",
 ];
@@ -10474,6 +10502,10 @@ fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
         artifact.write_markers.join(";"),
         artifact.rawfile_option_count.to_string(),
         artifact.rawfile_options.join(";"),
+        artifact.control_policy_artifact_count.to_string(),
+        artifact.control_policy_categories.join(";"),
+        artifact.control_policy_codes.join(";"),
+        artifact.control_policy_severities.join(";"),
         artifact.diagnostic_count.to_string(),
         artifact.diagnostic_codes.join(";"),
     ]
@@ -11460,6 +11492,7 @@ pub fn run_deck_analysis(
                 &write_markers,
                 &rawfile_options,
                 &diagnostic_codes,
+                &control_policy_artifacts,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let table_artifacts = deck_table_artifacts(
@@ -11563,6 +11596,7 @@ pub fn run_deck_analysis(
                 &write_markers,
                 &rawfile_options,
                 &diagnostic_codes,
+                &control_policy_artifacts,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let table_artifacts = deck_table_artifacts(
@@ -11667,6 +11701,7 @@ pub fn run_deck_analysis(
                 &write_markers,
                 &rawfile_options,
                 &diagnostic_codes,
+                &control_policy_artifacts,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let table_artifacts = deck_table_artifacts(
@@ -11774,6 +11809,7 @@ pub fn run_deck_analysis(
                 &write_markers,
                 &rawfile_options,
                 &diagnostic_codes,
+                &control_policy_artifacts,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let table_artifacts = deck_table_artifacts(
@@ -11875,6 +11911,7 @@ pub fn run_deck_analysis(
                 &write_markers,
                 &rawfile_options,
                 &diagnostic_codes,
+                &control_policy_artifacts,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let table_artifacts = deck_table_artifacts(
@@ -11974,6 +12011,7 @@ pub fn run_deck_analysis(
                 &write_markers,
                 &rawfile_options,
                 &diagnostic_codes,
+                &control_policy_artifacts,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let table_artifacts = deck_table_artifacts(
@@ -12085,6 +12123,7 @@ pub fn run_deck_analysis(
                 &write_markers,
                 &rawfile_options,
                 &diagnostic_codes,
+                &control_policy_artifacts,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let table_artifacts = deck_table_artifacts(
