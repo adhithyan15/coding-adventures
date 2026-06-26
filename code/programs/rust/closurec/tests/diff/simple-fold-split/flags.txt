@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE
+--js
+tests/diff/simple-fold-split/input/a.js

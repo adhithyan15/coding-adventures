@@ -622,6 +622,73 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                     }
                 }
+                // ---- split(separator[, limit]) → array of substrings ----
+                //
+                // `"a,b,c".split(",")` → `["a","b","c"]`,
+                // `"axbxc".split("x")` → `["a","b","c"]`,
+                // `"abc".split("")` → `["a","b","c"]` (empty separator splits
+                // into single UTF-16 code units), `"".split(",")` → `[""]`,
+                // `"".split("")` → `[]`, `"abc".split()` (no separator) →
+                // `["abc"]` (ECMAScript §22.1.3.23). An optional second argument
+                // is a non-negative integer LIMIT that caps the number of
+                // pieces (`"a,b,c".split(",", 2)` → `["a","b"]`, limit 0 → `[]`).
+                //
+                // This is the FIRST fold that produces an *array* rather than a
+                // scalar literal: the result is an `ArrayExpression` whose
+                // elements are the piece strings, each a `StringLiteral`. The
+                // array node and every element carry correlation-vector
+                // provenance forked from the original call, so each produced
+                // byte traces back to the `split` it came from.
+                //
+                // `fold_string_split` DECLINES (leaves the call for the
+                // runtime, returning `None`) for: a non-string-literal
+                // separator (a regular-expression separator needs a regex
+                // engine; a numeric/identifier separator would need `ToString`
+                // coercion we don't model), a non-integer / negative / non-
+                // literal limit, more than two arguments, or — for the
+                // empty-separator per-code-unit split — a receiver containing an
+                // astral (non-BMP) character, since splitting its surrogate pair
+                // would produce a lone surrogate that has no representable Rust
+                // `String` (the same hazard `slice`/`charAt` guard against).
+                // No output-size cap is needed: unlike `repeat`/`pad`, `split`
+                // never amplifies — the pieces' total length never exceeds the
+                // receiver's, so there is no algorithmic-blowup vector.
+                else if id.name == "split" {
+                    if let Some(parts) = fold_string_split(&s.value, &arguments) {
+                        let parent = c.cv.clone();
+                        let args_src = arguments
+                            .iter()
+                            .map(|a| match a {
+                                Expression::StringLiteral(a) => format!("\"{}\"", a.value),
+                                Expression::NumericLiteral(n) => format_js_number(n.value),
+                                _ => "?".to_string(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(",");
+                        let before = format!("\"{}\".split({})", s.value, args_src);
+                        let after = format!(
+                            "[{}]",
+                            parts
+                                .iter()
+                                .map(|p| format!("\"{}\"", p))
+                                .collect::<Vec<_>>()
+                                .join(",")
+                        );
+                        let array_cv = st.fork_cv(&parent, &before, &after);
+                        let elements: Vec<Option<Expression>> = parts
+                            .into_iter()
+                            .map(|p| {
+                                let elem_after = format!("\"{}\"", p);
+                                let elem_cv = st.fork_cv(&array_cv, &before, &elem_after);
+                                Some(stamp_literal_cv(FoldedLiteral::String(p), elem_cv))
+                            })
+                            .collect();
+                        return Expression::ArrayExpression(ArrayExpression {
+                            cv: array_cv,
+                            elements,
+                        });
+                    }
+                }
                 // ---- padStart(target[, pad]) / padEnd(target[, pad]) ----
                 //
                 // `"5".padStart(3, "0")` → `"005"`, `"abc".padEnd(6)` →
@@ -1187,6 +1254,104 @@ fn fold_string_concat_call(value: &str, args: &[Expression]) -> Option<String> {
         out.push_str(piece);
     }
     Some(out)
+}
+
+/// Compute `receiver.split(separator[, limit])` at compile time, returning the
+/// pieces, or `None` to decline (leaving the call for the runtime).
+///
+/// `split` turns one string into an *array* of strings (ECMAScript §22.1.3.23).
+/// We model the three shapes the language defines, and only those:
+///
+/// | call                       | result                | rule                          |
+/// |----------------------------|-----------------------|-------------------------------|
+/// | `"a,b,c".split(",")`       | `["a","b","c"]`       | split at each occurrence      |
+/// | `"axbxc".split("x")`       | `["a","b","c"]`       | of the (non-empty) separator  |
+/// | `"abc".split("x")`         | `["abc"]`             | no occurrence → whole string  |
+/// | `"".split(",")`            | `[""]`                | empty receiver, found nothing |
+/// | `"abc".split("")`          | `["a","b","c"]`       | empty sep → one piece per     |
+/// | `"".split("")`             | `[]`                  | UTF-16 code unit              |
+/// | `"abc".split()`            | `["abc"]`             | no separator → whole string   |
+/// | `"a,b,c".split(",", 2)`    | `["a","b"]`           | LIMIT caps the piece count    |
+/// | `"a,b,c".split(",", 0)`    | `[]`                  | limit 0 → empty array         |
+///
+/// **Why a non-empty separator is always safe.** When the separator is a
+/// non-empty string we delegate to Rust's `str::split`, which matches whole
+/// code points on UTF-8 boundaries. JS matches UTF-16 code units, but because
+/// our separator is itself a valid Rust `String` (it can hold no lone
+/// surrogate), every match in both encodings lands on a code-point boundary —
+/// so the two agree piece for piece. Each piece is a substring of the receiver
+/// and therefore always a representable literal.
+///
+/// **Why the empty separator needs a guard.** `split("")` cuts *between every
+/// UTF-16 code unit*. For a character outside the Basic Multilingual Plane —
+/// e.g. `"💩"`, encoded as the surrogate pair `D83D DCA9` — JS produces two
+/// *lone surrogates* (`["\uD83D","\uDCA9"]`), which no Rust `String` can hold.
+/// So we DECLINE the empty-separator split whenever the receiver contains an
+/// astral character (`c as u32 > 0xFFFF`), exactly the hazard `slice`/`charAt`
+/// guard against. For an all-BMP receiver each `char` is a single UTF-16 unit,
+/// so `chars()` reproduces the per-code-unit pieces JS would.
+///
+/// **What we decline** (return `None`, leave the call):
+/// - a separator that is **not a string literal** — a `RegExp` separator would
+///   need a regex engine; a numeric/identifier separator would need the
+///   `ToString` coercion we deliberately don't model;
+/// - a **limit** that is not a non-negative integer literal (negative,
+///   fractional, non-finite, or non-literal);
+/// - **more than two arguments**;
+/// - the astral-character empty-separator case described above.
+///
+/// No output-size cap is required. Unlike `repeat`/`pad`, `split` cannot
+/// amplify: the pieces' combined length never exceeds the receiver's, so there
+/// is no algorithmic-blowup / DoS vector to bound.
+fn fold_string_split(receiver: &str, args: &[Expression]) -> Option<Vec<String>> {
+    match args.len() {
+        // `split()` with no separator → the whole string as the only piece.
+        0 => Some(vec![receiver.to_string()]),
+        // `split(sep)` or `split(sep, limit)`.
+        1 | 2 => {
+            // The separator must be a STRING literal. A regex literal, numeric,
+            // identifier, `undefined`, etc. → decline.
+            let sep = match &args[0] {
+                Expression::StringLiteral(s) => s.value.as_str(),
+                _ => return None,
+            };
+            // Optional non-negative-integer limit.
+            let limit: Option<usize> = if args.len() == 2 {
+                match &args[1] {
+                    Expression::NumericLiteral(n) => {
+                        let v = n.value;
+                        if v.is_finite() && v >= 0.0 && v.fract() == 0.0 {
+                            Some(v as usize)
+                        } else {
+                            return None; // negative / fractional / non-finite
+                        }
+                    }
+                    _ => return None, // non-literal limit
+                }
+            } else {
+                None
+            };
+
+            let parts: Vec<String> = if sep.is_empty() {
+                // Empty separator → one piece per UTF-16 code unit. Decline if
+                // any character is astral (its surrogate pair can't be split
+                // into representable Rust strings).
+                if receiver.chars().any(|c| c as u32 > 0xFFFF) {
+                    return None;
+                }
+                receiver.chars().map(|c| c.to_string()).collect()
+            } else {
+                receiver.split(sep).map(|p| p.to_string()).collect()
+            };
+
+            Some(match limit {
+                Some(n) => parts.into_iter().take(n).collect(),
+                None => parts,
+            })
+        }
+        // More than two arguments → decline (be conservative).
+        _ => None,
+    }
 }
 
 /// `true` iff `c` is in the ECMAScript string-trim white-space set — the union
@@ -3862,6 +4027,168 @@ mod tests {
             callee: Box::new(member(object, name)),
             arguments: vec![arg],
         })
+    }
+
+    fn call2(object: Expression, name: &str, a: Expression, b: Expression) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(object, name)),
+            arguments: vec![a, b],
+        })
+    }
+
+    /// Run the pass and assert the result is an `ArrayExpression` of string
+    /// literals, returning their values for comparison against the V8 oracle.
+    fn split_parts(expr: Expression) -> Vec<String> {
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "split should have folded");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => a
+                .elements
+                .iter()
+                .map(|e| match e {
+                    Some(Expression::StringLiteral(s)) => s.value.clone(),
+                    other => panic!("expected string element; got {:?}", other),
+                })
+                .collect(),
+            other => panic!("expected ArrayExpression; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_split_non_empty_separator() {
+        // V8: "a,b,c".split(",") → ["a","b","c"]
+        assert_eq!(
+            split_parts(call1(string("a,b,c", None), "split", string(",", None))),
+            vec!["a", "b", "c"]
+        );
+        // V8: "axbxc".split("x") → ["a","b","c"]
+        assert_eq!(
+            split_parts(call1(string("axbxc", None), "split", string("x", None))),
+            vec!["a", "b", "c"]
+        );
+    }
+
+    #[test]
+    fn fold_split_empty_separator_is_per_code_unit() {
+        // V8: "abc".split("") → ["a","b","c"]
+        assert_eq!(
+            split_parts(call1(string("abc", None), "split", string("", None))),
+            vec!["a", "b", "c"]
+        );
+    }
+
+    #[test]
+    fn fold_split_empty_receiver() {
+        // V8: "".split(",") → [""]  (one empty piece — nothing was found)
+        assert_eq!(
+            split_parts(call1(string("", None), "split", string(",", None))),
+            vec![""]
+        );
+        // V8: "".split("") → []  (zero pieces)
+        assert_eq!(
+            split_parts(call1(string("", None), "split", string("", None))),
+            Vec::<String>::new()
+        );
+    }
+
+    #[test]
+    fn fold_split_no_separator_is_whole_string() {
+        // V8: "abc".split() → ["abc"]
+        assert_eq!(
+            split_parts(call0(string("abc", None), "split")),
+            vec!["abc"]
+        );
+    }
+
+    #[test]
+    fn fold_split_separator_absent_is_whole_string() {
+        // V8: "abc".split("x") → ["abc"]  (separator never occurs)
+        assert_eq!(
+            split_parts(call1(string("abc", None), "split", string("x", None))),
+            vec!["abc"]
+        );
+    }
+
+    #[test]
+    fn fold_split_with_limit() {
+        // V8: "a,b,c".split(",", 2) → ["a","b"]
+        assert_eq!(
+            split_parts(call2(
+                string("a,b,c", None),
+                "split",
+                string(",", None),
+                num(2.0, None)
+            )),
+            vec!["a", "b"]
+        );
+        // V8: "a,b,c".split(",", 0) → []
+        assert_eq!(
+            split_parts(call2(
+                string("a,b,c", None),
+                "split",
+                string(",", None),
+                num(0.0, None)
+            )),
+            Vec::<String>::new()
+        );
+    }
+
+    #[test]
+    fn split_astral_empty_separator_does_not_fold() {
+        // "💩a".split("") in V8 → ["\uD83D","\uDCA9","a"]: the pile-of-poo is a
+        // surrogate pair that splits into two LONE surrogates, which no Rust
+        // String can hold. We must decline (leave the call for the runtime).
+        let c = call1(string("💩a", None), "split", string("", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "empty-separator split of an astral string must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn split_astral_non_empty_separator_still_folds() {
+        // A non-empty separator never cuts inside a surrogate pair, so an astral
+        // receiver is fine: "a💩b".split("💩") → ["a","b"].
+        assert_eq!(
+            split_parts(call1(string("a💩b", None), "split", string("💩", None))),
+            vec!["a", "b"]
+        );
+    }
+
+    #[test]
+    fn split_non_string_separator_does_not_fold() {
+        // A numeric separator would need ToString coercion we don't model.
+        let c = call1(string("a1b", None), "split", num(1.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "non-string-literal separator must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn split_bad_limit_does_not_fold() {
+        // Negative, fractional, and non-literal limits all decline.
+        for bad in [num(-1.0, None), num(1.5, None)] {
+            let c = call2(string("a,b,c", None), "split", string(",", None), bad);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "bad limit must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn split_helper_unit_oracle() {
+        // Direct unit checks of the pure helper against the V8 oracle.
+        let sl = |v: &str| string(v, None);
+        assert_eq!(
+            fold_string_split("a,b,c", &[sl(",")]),
+            Some(vec!["a".into(), "b".into(), "c".into()])
+        );
+        assert_eq!(fold_string_split("", &[sl("")]), Some(vec![]));
+        assert_eq!(fold_string_split("", &[sl(",")]), Some(vec!["".to_string()]));
+        assert_eq!(fold_string_split("abc", &[]), Some(vec!["abc".to_string()]));
+        // astral + empty separator declines; three+ args declines.
+        assert_eq!(fold_string_split("💩", &[sl("")]), None);
+        assert_eq!(fold_string_split("a", &[sl(","), num(1.0, None), sl("x")]), None);
     }
 
     #[test]
