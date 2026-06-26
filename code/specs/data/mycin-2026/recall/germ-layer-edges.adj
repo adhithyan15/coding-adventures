@@ -1,0 +1,86 @@
+% ============================================================================
+% germ-layer-edges — the primary germ layer → derivative knowledge-graph
+% (MYCIN-2026 GERMLAYER).
+% ============================================================================
+% A high-yield embryology board table: each of the three primary embryonic germ
+% layers (ectoderm, mesoderm, endoderm) and representative adult structures it
+% gives rise to. "What does the ectoderm give rise to?" becomes the binding query
+%     ? gives_rise_to(ectoderm, $Derivative).
+%
+% Direction note: the relation is germ layer -> a structure that DEVELOPS FROM it
+% (`gives_rise_to`). Each germ layer here maps to TWO representative derivatives,
+% so a query for a given layer binds two answers (each with its own citation).
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The derivative object names a structure the sentence
+% explicitly states the layer forms (ectoderm "will form the epidermis"; surface
+% ectoderm "give rise to ... anterior pituitary"; intermediate mesoderm "gives
+% rise to ... kidneys"; paraxial mesoderm somites "develop into ... dermis";
+% endoderm "gives rise to the gastrointestinal tract"; endoderm precursor to the
+% "liver"). Each cited sentence names the germ layer by its FULL term (including
+% the subtype prefix where present — surface/intermediate/paraxial mesoderm is
+% still the mesoderm). Each span was independently re-fetched and confirmed on two
+% separate fetches of the same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like ACIDBASE/HEARTVALVE/
+% PHARYNGEAL/FETALSHUNT). Each fact is a `relate` clause whose byte-provenance
+% lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see germ-layer-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary germ_layer_vocab {
+    define germ_layer : entity   surface "germ layer", "primary embryonic germ layer"
+    define derivative : entity   surface "germ-layer derivative", "adult structure"
+
+    define gives_rise_to : relation from germ_layer to derivative  % a structure that develops from this germ layer
+}
+
+rulebook germ_layer_facts {
+    use germ_layer_vocab
+
+    % --- ectoderm -> epidermis ----------------------------------------------
+    relate gives_rise_to(ectoderm, epidermis)
+        source "The ectoderm that fails to involute will form the epidermis of the skin, hair, exocrine glands, and the anterior pituitary."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539836/"
+        trust authoritative
+
+    % --- ectoderm -> anterior pituitary -------------------------------------
+    relate gives_rise_to(ectoderm, anterior_pituitary)
+        source "The surface ectoderm will give rise to the epidermis, external glands, hair, nails, anterior pituitary, and the apical ectodermal ridge amongst others."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539836/"
+        trust authoritative
+
+    % --- mesoderm -> kidney -------------------------------------------------
+    relate gives_rise_to(mesoderm, kidney)
+        source "The intermediate mesoderm gives rise to the gonads, kidneys, and other urogenital structures."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526024/"
+        trust authoritative
+
+    % --- mesoderm -> dermis -------------------------------------------------
+    relate gives_rise_to(mesoderm, dermis)
+        source "The paraxial mesoderm consists primarily of somites, which develop into the axial skeleton, dermis, and skeletal muscles."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526024/"
+        trust authoritative
+
+    % --- endoderm -> gastrointestinal tract ---------------------------------
+    relate gives_rise_to(endoderm, gastrointestinal_tract)
+        source "The endoderm is the innermost layer, which gives rise to the gastrointestinal tract, the lining of the gut, the liver, the pancreas, and portions of the lungs and glandular tissues."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554394/"
+        trust authoritative
+
+    % --- endoderm -> liver --------------------------------------------------
+    relate gives_rise_to(endoderm, liver)
+        source "Endoderm is the embryonic precursor to the thyroid, lungs, pancreas, liver, and intestines, which evolve from 4 consecutive developmental steps: proliferation and induction of pluripotent stem cells, the separation of stem cell-derived endoderm versus mesoderm germ layers, anterior-posterior patterning, and bifurcation of the liver and pancreas."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554394/"
+        trust authoritative
+}

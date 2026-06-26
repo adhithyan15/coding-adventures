@@ -20,6 +20,24 @@ integration test assert the SIMPLE-level output
 `String.fromCodePoint(128169,65)` → `"💩A"`, and guard that no `fromCodePoint`
 call survives (proving the typed SIMPLE pipeline ran, not the WHITESPACE_ONLY
 fallback).
+## [0.191.0] - 2026-06-25
+
+### Added — `codePointAt` string-literal folding observable end-to-end at SIMPLE
+
+Picks up `closure-pass-constant-fold` 0.42.0, which folds
+`"…".codePointAt(i)` on a string-literal receiver with a non-negative
+integer-literal index into the Unicode code point starting at that UTF-16
+code-unit index (ECMAScript §22.1.3.4). When `i` begins a surrogate pair the
+two units combine into one astral code point — the defining difference from
+`charCodeAt`.
+
+New `tests/diff/simple-fold-codepointat/` fixture + `diff_simple_fold_codepointat.rs`
+integration test assert the SIMPLE-level output
+`var a=97;var b=128169;var c=56489;report(a,b,c);` for
+`"a💩b".codePointAt(0)` → `97` (BMP), `"a💩b".codePointAt(1)` → `128169`
+(the pair → `U+1F4A9`), and `"💩".codePointAt(1)` → `56489` (lone low
+surrogate), and guard that no `codePointAt` call survives (proving the typed
+SIMPLE pipeline ran, not the WHITESPACE_ONLY fallback).
 
 ## [0.190.0] - 2026-06-25
 

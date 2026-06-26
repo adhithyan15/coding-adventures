@@ -374,8 +374,23 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   `"2 weeks"`); month/year steps clamp the day to month length, and
   `length.out=` is an alternative to `to`. Output length is `MAX_SEQ_LEN`-capped
   with checked arithmetic before allocating. **`months(d)`** → full month name;
-  **`quarters(d)`** → `"Q1"`..`"Q4"`. Deferred to R-46: `POSIXct`/`POSIXlt` &
-  timezones, `%H`/`%M`/`%S`/`%p`, `%U`/`%W`, locale names, compound `by=`.
+  **`quarters(d)`** → `"Q1"`..`"Q4"`.
+- **POSIXct date-times (UTC)** (R-46): the first *date-time* type, layered on the
+  R-44/R-45 calendar machinery. A **`POSIXct`** is a numeric vector of **seconds
+  since 1970-01-01 00:00:00 UTC** with class `c("POSIXct", "POSIXt")` (same
+  transparent `Classed` wrapper as `Date`). The reuse trick:
+  `seconds.div_euclid(86400)` is the `Date` day count and
+  `seconds.rem_euclid(86400)` is the intraday seconds, so the civil kernel and
+  the R-45 field renderer are reused unchanged. **`as.POSIXct(x, tz="UTC")`**
+  parses `"YYYY-MM-DD HH:MM:SS"` (or `"YYYY-MM-DD"` → midnight) or wraps a numeric
+  (seconds) / a `Date` (`×86400`); malformed → `NA`. **`Sys.time()`** is now
+  (wall clock; structure-tested). **`format`/`format.POSIXct`** default to
+  `"%Y-%m-%d %H:%M:%S"`, adding `%H`/`%M`/`%S` plus the reused date fields —
+  `format(as.POSIXct("2021-03-14 09:30:05"), "%H:%M")` → `"09:30"`. Subtraction
+  and `as.numeric` give **seconds** for free via the transparent wrapper. Parse
+  safety: `MAX_POSIXCT_SECONDS` bound + H/M/S range checks + `checked_mul`. UTC
+  only. Deferred to R-47: non-UTC timezones/DST, `POSIXlt`, fractional seconds,
+  `%z`/`%Z`, standalone `strptime`/`strftime`.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
