@@ -17,24 +17,62 @@
 //!     │
 //!     ▼ JITCore::execute_with_jit
 //!   (vm-core interprets; jit-core compiles hot fns into native;
-//!    builtins like `print_i64` resolve through a custom registry)
+//!    the `putchar` builtin resolves through a custom registry)
 //! captured stdout
 //! ```
 //!
 //! ## What we capture
 //!
-//! Since the JIT path runs in-process, we register a custom `print_i64`
-//! handler on the VM's `BuiltinRegistry` that pushes each printed
-//! integer to a shared `Vec<i64>`.  After execution we assert the
-//! captured numbers match what the BASIC program wrote.
+//! Since the JIT path runs in-process, we register a custom `putchar`
+//! handler on the VM's `BuiltinRegistry` that pushes each printed byte to a
+//! shared `Vec<u8>`.  After execution we decode it and assert the captured
+//! string matches what the BASIC program wrote (BA2's character-level PRINT).
+//! The backend is `DeferToInterpreterBackend` (`compile` → `None`) so every
+//! function — including BA2's synthetic print helpers — runs through the
+//! interpreter; see its docs for why `NullBackend` is the wrong choice here.
 
 use std::sync::{Arc, Mutex};
 
 use dartmouth_basic_iir_compiler::compile_source;
-use jit_core::backend::NullBackend;
+use jit_core::backend::Backend;
+use jit_core::cir::CIRInstr;
 use jit_core::core::JITCore;
 use vm_core::core::VMCore;
 use vm_core::value::Value;
+
+/// A backend that always **defers to the interpreter**: `compile` returns
+/// `None`, so jit-core caches nothing and every function — including BA2's
+/// synthetic `__basic_print_int` / `__basic_print_uint` helpers — runs through
+/// the VM interpreter.
+///
+/// We deliberately do *not* use `NullBackend` here. `NullBackend::compile`
+/// returns `Some(sentinel)` and `run` returns `Value::Null`, i.e. it "compiles"
+/// every function to a **no-op binary**. Before BA2 that was harmless because
+/// BASIC's `main` was the only function and Phase-2 interprets `main` directly.
+/// BA2 made `PRINT` call the FullyTyped helper functions, which
+/// `execute_with_jit` eagerly compiles — with `NullBackend` they become no-op
+/// binaries, so the digits never print (`PRINT 42` ⇒ `"\n"`). A real backend
+/// returns `None` for ops it can't compile and lets the interpreter run them
+/// (exactly what `BasicCirJit` does for the helpers' `call`/`putchar`), so
+/// `DeferToInterpreterBackend` models that realistic path and produces correct,
+/// deterministic output.
+struct DeferToInterpreterBackend;
+
+impl Backend for DeferToInterpreterBackend {
+    fn name(&self) -> &str {
+        "defer-to-interpreter"
+    }
+
+    fn compile(&self, _ir: &[CIRInstr]) -> Option<Vec<u8>> {
+        None // never compile — the interpreter runs everything
+    }
+
+    fn run(&self, _binary: &[u8], _args: &[Value]) -> Value {
+        // Unreachable: with `compile` returning `None`, jit-core never caches a
+        // binary for this backend, so `run` is never called.
+        Value::Null
+    }
+}
 
 /// Run a BASIC source through the JIT chain and return everything that
 /// `PRINT` wrote.  Each `PRINT n` becomes one entry in the returned vec.
@@ -63,7 +101,7 @@ fn jit_execute_and_capture_prints(source: &str) -> String {
         });
     }
 
-    let mut jit = JITCore::new(&mut vm, Box::new(NullBackend));
+    let mut jit = JITCore::new(&mut vm, Box::new(DeferToInterpreterBackend));
     jit.execute_with_jit(&mut vm, &mut module, "main", &[])
         .expect("JIT execution must succeed");
 
