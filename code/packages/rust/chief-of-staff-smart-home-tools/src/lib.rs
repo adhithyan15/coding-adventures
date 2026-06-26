@@ -340,6 +340,10 @@ pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDERS_TOOL_ID: &str =
     "smart_home.list_runtime_maintenance_work_orders";
 pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_SUMMARY_TOOL_ID: &str =
     "smart_home.get_runtime_maintenance_work_order_summary";
+pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID: &str =
+    "smart_home.list_runtime_maintenance_work_order_guardrails";
+pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_runtime_maintenance_work_order_guardrail_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2487,6 +2491,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_work_order_query(&arguments)?;
                     get_runtime_maintenance_work_order_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID => {
+                    let query = runtime_maintenance_work_order_guardrail_query(&arguments)?;
+                    list_runtime_maintenance_work_order_guardrails_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID => {
+                    let query = runtime_maintenance_work_order_guardrail_query(&arguments)?;
+                    get_runtime_maintenance_work_order_guardrail_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6230,6 +6252,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_maintenance_ticket_summary_definition(),
         list_runtime_maintenance_work_orders_definition(),
         get_runtime_maintenance_work_order_summary_definition(),
+        list_runtime_maintenance_work_order_guardrails_definition(),
+        get_runtime_maintenance_work_order_guardrail_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -7489,6 +7513,80 @@ fn get_runtime_maintenance_work_order_summary_definition() -> ToolDefinition {
         "Summarize Chief-visible work orders derived from D23 runtime maintenance tickets.",
         runtime_maintenance_work_order_query_schema(),
         runtime_maintenance_work_order_summary_output_schema(),
+    )
+}
+
+fn runtime_maintenance_work_order_guardrail_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("window_kind", JsonSchema::String),
+            SchemaProperty::new("window_kinds", string_array_schema()),
+            SchemaProperty::new("remediation_kind", JsonSchema::String),
+            SchemaProperty::new("remediation_kinds", string_array_schema()),
+            SchemaProperty::new("ticket_status", JsonSchema::String),
+            SchemaProperty::new("ticket_statuses", string_array_schema()),
+            SchemaProperty::new("work_order_status", JsonSchema::String),
+            SchemaProperty::new("work_order_statuses", string_array_schema()),
+            SchemaProperty::new("guardrail_status", JsonSchema::String),
+            SchemaProperty::new("guardrail_statuses", string_array_schema()),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("recommended_tool", JsonSchema::String),
+            SchemaProperty::new("max_priority", JsonSchema::Integer),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn runtime_maintenance_work_order_guardrail_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "runtime_maintenance_work_order_guardrails",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec![
+            "runtime_maintenance_work_order_guardrails",
+            "summary",
+            "count",
+        ],
+        false,
+    )
+}
+
+fn runtime_maintenance_work_order_guardrail_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_runtime_maintenance_work_order_guardrails_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID,
+        "List smart-home runtime maintenance work-order guardrails",
+        "List Chief-visible guardrails derived from D23 runtime maintenance work orders without mutating the runtime.",
+        runtime_maintenance_work_order_guardrail_query_schema(),
+        runtime_maintenance_work_order_guardrail_list_output_schema(),
+    )
+}
+
+fn get_runtime_maintenance_work_order_guardrail_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID,
+        "Summarize smart-home runtime maintenance work-order guardrails",
+        "Summarize Chief-visible guardrails derived from D23 runtime maintenance work orders.",
+        runtime_maintenance_work_order_guardrail_query_schema(),
+        runtime_maintenance_work_order_guardrail_summary_output_schema(),
     )
 }
 
@@ -9050,6 +9148,29 @@ fn runtime_maintenance_work_order_query(
         requires_attention_only: optional_bool(arguments, "requires_attention_only")?
             .unwrap_or(false),
         limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RuntimeMaintenanceWorkOrderGuardrailQuery {
+    work_order_query: RuntimeMaintenanceWorkOrderQuery,
+    guardrail_statuses: Vec<&'static str>,
+}
+
+fn runtime_maintenance_work_order_guardrail_query(
+    arguments: &JsonValue,
+) -> Result<RuntimeMaintenanceWorkOrderGuardrailQuery, ToolCallError> {
+    let work_order_query = runtime_maintenance_work_order_query(arguments)?;
+    Ok(RuntimeMaintenanceWorkOrderGuardrailQuery {
+        work_order_query,
+        guardrail_statuses: optional_string_list(
+            arguments,
+            "guardrail_status",
+            "guardrail_statuses",
+        )?
+        .into_iter()
+        .map(|status| parse_runtime_maintenance_work_order_guardrail_status(&status))
+        .collect::<Result<Vec<_>, _>>()?,
     })
 }
 
@@ -37542,6 +37663,279 @@ fn runtime_maintenance_work_order_status_rank(status: &str) -> u8 {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct RuntimeMaintenanceWorkOrderGuardrailRow {
+    guardrail_id: String,
+    work_order_id: String,
+    ticket_id: String,
+    plan_id: String,
+    window_id: String,
+    window_kind: RuntimeMaintenanceWindowKind,
+    priority: u8,
+    execution_order: usize,
+    guardrail_status: &'static str,
+    guardrail_kind: &'static str,
+    work_order_status: &'static str,
+    assignment_lane: &'static str,
+    recommended_tool: &'static str,
+    recommended_action: &'static str,
+    action_count: usize,
+    blocked_action_count: usize,
+    requires_attention_count: usize,
+    overdue_action_count: usize,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    next_action_ids: Vec<String>,
+    remediation_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct RuntimeMaintenanceWorkOrderGuardrailSummary {
+    total_guardrails: usize,
+    release_blocker_guardrails: usize,
+    operator_handoff_guardrails: usize,
+    ready_to_execute_guardrails: usize,
+    total_actions: usize,
+    blocked_actions: usize,
+    requires_attention_actions: usize,
+    overdue_actions: usize,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    highest_priority: Option<u8>,
+}
+
+impl RuntimeMaintenanceWorkOrderGuardrailSummary {
+    fn from_rows(rows: &[RuntimeMaintenanceWorkOrderGuardrailRow]) -> Self {
+        let mut summary = Self::default();
+
+        for row in rows {
+            summary.total_guardrails += 1;
+            summary.total_actions += row.action_count;
+            summary.blocked_actions += row.blocked_action_count;
+            summary.requires_attention_actions += row.requires_attention_count;
+            summary.overdue_actions += row.overdue_action_count;
+            summary.first_due_at_ms =
+                min_optional_u64(summary.first_due_at_ms, row.first_due_at_ms);
+            summary.max_overdue_by_ms =
+                max_optional_u64(summary.max_overdue_by_ms, row.max_overdue_by_ms);
+            summary.highest_priority =
+                min_optional_u8(summary.highest_priority, Some(row.priority));
+
+            match row.guardrail_status {
+                "release_blocker" => summary.release_blocker_guardrails += 1,
+                "operator_handoff" => summary.operator_handoff_guardrails += 1,
+                "ready_to_execute" => summary.ready_to_execute_guardrails += 1,
+                _ => {}
+            }
+        }
+
+        summary
+    }
+
+    fn has_guardrails(&self) -> bool {
+        self.total_guardrails > 0
+    }
+
+    fn execution_work_order_guardrails_ready(&self) -> bool {
+        self.total_guardrails > 0 && self.ready_to_execute_guardrails == self.total_guardrails
+    }
+}
+
+fn list_runtime_maintenance_work_order_guardrails_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWorkOrderGuardrailQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) =
+        runtime_maintenance_work_order_guardrail_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.work_order_query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "runtime_maintenance_work_order_guardrails",
+            JsonValue::Array(
+                rows.iter()
+                    .map(runtime_maintenance_work_order_guardrail_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            runtime_maintenance_work_order_guardrail_summary_json(&summary),
+        ),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_runtime_maintenance_work_order_guardrails"),
+            ),
+            ("guardrails", integer(rows.len() as i64)),
+            (
+                "release_blocker_guardrails",
+                integer(summary.release_blocker_guardrails as i64),
+            ),
+            (
+                "operator_handoff_guardrails",
+                integer(summary.operator_handoff_guardrails as i64),
+            ),
+            (
+                "ready_to_execute_guardrails",
+                integer(summary.ready_to_execute_guardrails as i64),
+            ),
+            (
+                "execution_work_order_guardrails_ready",
+                JsonValue::Bool(summary.execution_work_order_guardrails_ready()),
+            ),
+        ]),
+    ))
+}
+
+fn get_runtime_maintenance_work_order_guardrail_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWorkOrderGuardrailQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) =
+        runtime_maintenance_work_order_guardrail_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        runtime_maintenance_work_order_guardrail_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_runtime_maintenance_work_order_guardrail_summary"),
+            ),
+            ("total_guardrails", integer(summary.total_guardrails as i64)),
+            (
+                "release_blocker_guardrails",
+                integer(summary.release_blocker_guardrails as i64),
+            ),
+            (
+                "operator_handoff_guardrails",
+                integer(summary.operator_handoff_guardrails as i64),
+            ),
+            (
+                "ready_to_execute_guardrails",
+                integer(summary.ready_to_execute_guardrails as i64),
+            ),
+        ]),
+    ))
+}
+
+fn runtime_maintenance_work_order_guardrail_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &RuntimeMaintenanceWorkOrderGuardrailQuery,
+) -> Result<
+    (
+        Vec<RuntimeMaintenanceWorkOrderGuardrailRow>,
+        RuntimeMaintenanceWorkOrderGuardrailSummary,
+    ),
+    ToolCallError,
+> {
+    let (work_orders, _) = runtime_maintenance_work_order_rows(
+        runtime,
+        principal_id,
+        now_ms,
+        &query.work_order_query,
+    )?;
+    let rows = work_orders
+        .iter()
+        .map(RuntimeMaintenanceWorkOrderGuardrailRow::from_work_order)
+        .filter(|row| runtime_maintenance_work_order_guardrail_matches(row, query))
+        .collect::<Vec<_>>();
+    let summary = RuntimeMaintenanceWorkOrderGuardrailSummary::from_rows(&rows);
+    Ok((rows, summary))
+}
+
+impl RuntimeMaintenanceWorkOrderGuardrailRow {
+    fn from_work_order(row: &RuntimeMaintenanceWorkOrderRow) -> Self {
+        let guardrail_status = runtime_maintenance_work_order_guardrail_status(row);
+        let guardrail_kind = runtime_maintenance_work_order_guardrail_kind(row);
+        Self {
+            guardrail_id: format!("maintenance_work_order_guardrail:{}", row.work_order_id),
+            work_order_id: row.work_order_id.clone(),
+            ticket_id: row.ticket_id.clone(),
+            plan_id: row.plan_id.clone(),
+            window_id: row.window_id.clone(),
+            window_kind: row.window_kind,
+            priority: row.priority,
+            execution_order: row.execution_order,
+            guardrail_status,
+            guardrail_kind,
+            work_order_status: row.work_order_status,
+            assignment_lane: row.assignment_lane,
+            recommended_tool: row.recommended_tool,
+            recommended_action: row.recommended_action,
+            action_count: row.action_count,
+            blocked_action_count: row.blocked_action_count,
+            requires_attention_count: row.requires_attention_count,
+            overdue_action_count: row.overdue_action_count,
+            first_due_at_ms: row.first_due_at_ms,
+            max_overdue_by_ms: row.max_overdue_by_ms,
+            next_action_ids: row.next_action_ids.clone(),
+            remediation_ids: row.remediation_ids.clone(),
+        }
+    }
+
+    fn release_blocker(&self) -> bool {
+        self.guardrail_status == "release_blocker"
+    }
+
+    fn operator_handoff(&self) -> bool {
+        self.guardrail_status == "operator_handoff"
+    }
+
+    fn ready_to_execute(&self) -> bool {
+        self.guardrail_status == "ready_to_execute"
+    }
+}
+
+fn runtime_maintenance_work_order_guardrail_matches(
+    row: &RuntimeMaintenanceWorkOrderGuardrailRow,
+    query: &RuntimeMaintenanceWorkOrderGuardrailQuery,
+) -> bool {
+    query.guardrail_statuses.is_empty() || query.guardrail_statuses.contains(&row.guardrail_status)
+}
+
+fn runtime_maintenance_work_order_guardrail_status(
+    row: &RuntimeMaintenanceWorkOrderRow,
+) -> &'static str {
+    if row.has_blockers() {
+        "release_blocker"
+    } else if row.operator_required() {
+        "operator_handoff"
+    } else {
+        "ready_to_execute"
+    }
+}
+
+fn runtime_maintenance_work_order_guardrail_kind(
+    row: &RuntimeMaintenanceWorkOrderRow,
+) -> &'static str {
+    if row.blocked_action_count > 0 {
+        "blocked_actions"
+    } else if row.overdue_action_count > 0 {
+        "overdue_actions"
+    } else if row.requires_attention_count > 0 {
+        "attention_actions"
+    } else {
+        "ready_execution"
+    }
+}
+
 fn min_optional_u64(left: Option<u64>, right: Option<u64>) -> Option<u64> {
     match (left, right) {
         (Some(left), Some(right)) => Some(left.min(right)),
@@ -62020,6 +62414,119 @@ fn runtime_maintenance_work_order_summary_json(
     ])
 }
 
+fn runtime_maintenance_work_order_guardrail_json(
+    row: &RuntimeMaintenanceWorkOrderGuardrailRow,
+) -> JsonValue {
+    object([
+        ("guardrail_id", string(&row.guardrail_id)),
+        ("work_order_id", string(&row.work_order_id)),
+        ("ticket_id", string(&row.ticket_id)),
+        ("plan_id", string(&row.plan_id)),
+        ("window_id", string(&row.window_id)),
+        (
+            "window_kind",
+            string(runtime_maintenance_window_kind_label(row.window_kind)),
+        ),
+        ("priority", integer(row.priority as i64)),
+        ("execution_order", integer(row.execution_order as i64)),
+        ("guardrail_status", string(row.guardrail_status)),
+        ("guardrail_kind", string(row.guardrail_kind)),
+        ("work_order_status", string(row.work_order_status)),
+        ("assignment_lane", string(row.assignment_lane)),
+        ("recommended_tool", string(row.recommended_tool)),
+        ("recommended_action", string(row.recommended_action)),
+        ("action_count", integer(row.action_count as i64)),
+        (
+            "blocked_action_count",
+            integer(row.blocked_action_count as i64),
+        ),
+        (
+            "requires_attention_count",
+            integer(row.requires_attention_count as i64),
+        ),
+        (
+            "overdue_action_count",
+            integer(row.overdue_action_count as i64),
+        ),
+        (
+            "first_due_at_ms",
+            row.first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            row.max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_action_ids",
+            JsonValue::Array(row.next_action_ids.iter().map(string).collect()),
+        ),
+        (
+            "remediation_ids",
+            JsonValue::Array(row.remediation_ids.iter().map(string).collect()),
+        ),
+        ("release_blocker", JsonValue::Bool(row.release_blocker())),
+        ("operator_handoff", JsonValue::Bool(row.operator_handoff())),
+        ("ready_to_execute", JsonValue::Bool(row.ready_to_execute())),
+    ])
+}
+
+fn runtime_maintenance_work_order_guardrail_summary_json(
+    summary: &RuntimeMaintenanceWorkOrderGuardrailSummary,
+) -> JsonValue {
+    object([
+        ("total_guardrails", integer(summary.total_guardrails as i64)),
+        (
+            "release_blocker_guardrails",
+            integer(summary.release_blocker_guardrails as i64),
+        ),
+        (
+            "operator_handoff_guardrails",
+            integer(summary.operator_handoff_guardrails as i64),
+        ),
+        (
+            "ready_to_execute_guardrails",
+            integer(summary.ready_to_execute_guardrails as i64),
+        ),
+        ("total_actions", integer(summary.total_actions as i64)),
+        ("blocked_actions", integer(summary.blocked_actions as i64)),
+        (
+            "requires_attention_actions",
+            integer(summary.requires_attention_actions as i64),
+        ),
+        ("overdue_actions", integer(summary.overdue_actions as i64)),
+        (
+            "first_due_at_ms",
+            summary
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            summary
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_priority",
+            summary
+                .highest_priority
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("has_guardrails", JsonValue::Bool(summary.has_guardrails())),
+        (
+            "execution_work_order_guardrails_ready",
+            JsonValue::Bool(summary.execution_work_order_guardrails_ready()),
+        ),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -64947,6 +65454,21 @@ fn parse_runtime_maintenance_work_order_status(value: &str) -> Result<&'static s
         "ready_to_execute" | "ready" | "open" => Ok("ready_to_execute"),
         _ => Err(validation_error(format!(
             "unsupported runtime maintenance work order status `{value}`"
+        ))),
+    }
+}
+
+fn parse_runtime_maintenance_work_order_guardrail_status(
+    value: &str,
+) -> Result<&'static str, ToolCallError> {
+    match value {
+        "release_blocker" | "blocked" | "blocker" => Ok("release_blocker"),
+        "operator_handoff" | "operator_required" | "attention_required" | "requires_attention" => {
+            Ok("operator_handoff")
+        }
+        "ready_to_execute" | "ready" => Ok("ready_to_execute"),
+        _ => Err(validation_error(format!(
+            "unsupported runtime maintenance work order guardrail status `{value}`"
         ))),
     }
 }
@@ -68789,7 +69311,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 266);
+        assert_eq!(definitions.len(), 268);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -69550,9 +70072,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            258
+            260
         );
         assert_eq!(
             export
@@ -70204,6 +70732,14 @@ mod tests {
             SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_SUMMARY_TOOL_ID
         )
         .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID
+        )
+        .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_COMPLETE_PAIRING_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_REPORT_EVENT_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
@@ -70438,11 +70974,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(266))
+            Some(&integer(268))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(258))
+            Some(&integer(260))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -85044,7 +85580,8 @@ mod tests {
     }
 
     #[test]
-    fn runtime_maintenance_plan_ticket_and_work_order_tools_group_action_pressure_end_to_end() {
+    fn runtime_maintenance_plan_ticket_work_order_and_guardrail_tools_group_action_pressure_end_to_end(
+    ) {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime
             .borrow_mut()
@@ -85423,6 +85960,94 @@ mod tests {
             Some(&JsonValue::Bool(false))
         );
 
+        let guardrail_list_request = request(
+            "call-list-runtime-maintenance-work-order-guardrails",
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID,
+            object([
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+                ("max_priority", integer(1)),
+                ("limit", integer(10)),
+            ]),
+            2_006,
+        );
+        let guardrail_list_trace = tool_runtime.invoke_with_events(&guardrail_list_request);
+        assert!(guardrail_list_trace.result.ok);
+        assert_eq!(guardrail_list_trace.summary().progress_event_count, 1);
+        let guardrail_list_output = guardrail_list_trace.result.output.as_ref().unwrap();
+        let guardrails = field(
+            guardrail_list_output,
+            "runtime_maintenance_work_order_guardrails",
+        )
+        .unwrap();
+        let guardrail_summary = field(guardrail_list_output, "summary").unwrap();
+        assert!(
+            array_len(guardrails).unwrap() >= 3,
+            "maintenance guardrails should expose blocked runtime execution lanes"
+        );
+        assert!(integer_value(field(guardrail_summary, "total_guardrails").unwrap()).unwrap() >= 3);
+        assert!(
+            integer_value(field(guardrail_summary, "release_blocker_guardrails").unwrap()).unwrap()
+                >= 3
+        );
+        assert_eq!(
+            field(guardrail_summary, "execution_work_order_guardrails_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let JsonValue::Array(guardrail_rows) = guardrails else {
+            panic!("runtime_maintenance_work_order_guardrails should be an array");
+        };
+        assert!(guardrail_rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("critical_recovery"))
+            && field(row, "guardrail_status") == Some(&string("release_blocker"))
+            && field(row, "guardrail_kind") == Some(&string("blocked_actions"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID))
+            && field(row, "release_blocker") == Some(&JsonValue::Bool(true))
+            && integer_value(field(row, "blocked_action_count").unwrap()).unwrap() >= 2));
+        assert!(guardrail_rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("desired_state_reconciliation"))
+            && field(row, "guardrail_status") == Some(&string("release_blocker"))
+            && field(row, "work_order_status") == Some(&string("blocked"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID))
+            && field(row, "recommended_action") == Some(&string("reconcile_desired_state"))));
+
+        let guardrail_summary_request = request(
+            "call-runtime-maintenance-work-order-guardrail-summary",
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID,
+            object([
+                ("window_kind", string("desired_state_reconciliation")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+            ]),
+            2_007,
+        );
+        let guardrail_summary_trace = tool_runtime.invoke_with_events(&guardrail_summary_request);
+        assert!(guardrail_summary_trace.result.ok);
+        assert_eq!(guardrail_summary_trace.summary().progress_event_count, 1);
+        let guardrail_summary_output = guardrail_summary_trace.result.output.as_ref().unwrap();
+        let guardrail_rollup = field(guardrail_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(guardrail_rollup, "total_guardrails"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(guardrail_rollup, "release_blocker_guardrails"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(guardrail_rollup, "blocked_actions"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(guardrail_rollup, "execution_work_order_guardrails_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
         let mut journal = ToolExecutionJournal::new();
         journal.record_trace(list_request, list_trace);
         journal.record_trace(summary_request, summary_trace);
@@ -85430,13 +86055,15 @@ mod tests {
         journal.record_trace(ticket_summary_request, ticket_summary_trace);
         journal.record_trace(work_order_list_request, work_order_list_trace);
         journal.record_trace(work_order_summary_request, work_order_summary_trace);
+        journal.record_trace(guardrail_list_request, guardrail_list_trace);
+        journal.record_trace(guardrail_summary_request, guardrail_summary_trace);
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 6);
-        assert_eq!(journal_summary.completed_count, 6);
+        assert_eq!(journal_summary.invocation_count, 8);
+        assert_eq!(journal_summary.completed_count, 8);
         assert_eq!(
             runtime.borrow().registry().counts().authorization_decisions,
-            6,
-            "maintenance plan, ticket, and work-order reads authorize through runtime read tools"
+            8,
+            "maintenance plan, ticket, work-order, and guardrail reads authorize through runtime read tools"
         );
     }
 
