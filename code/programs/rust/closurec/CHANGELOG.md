@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.193.0] - 2026-06-25
+
+### Added — static `String.fromCodePoint(...)` folding observable end-to-end at SIMPLE
+
+Picks up `closure-pass-constant-fold` 0.44.0, which folds the static
+`String.fromCodePoint(cp0, cp1, …)` into a string literal when every argument is
+a non-negative integer literal that is a valid Unicode scalar (`0..=0x10FFFF`,
+not a surrogate) — ECMAScript §22.1.2.2. Each argument is a whole code point
+(unlike `fromCharCode`'s UTF-16 units), so a single astral argument suffices.
+
+New `tests/diff/simple-fold-fromcodepoint/` fixture + `diff_simple_fold_fromcodepoint.rs`
+integration test assert the SIMPLE-level output
+`var a="HI";var b="💩";var c="💩A";report(a,b,c);` for
+`String.fromCodePoint(72,73)` → `"HI"`, `String.fromCodePoint(128169)` → `"💩"`
+(a single astral arg, emitted as its escaped surrogate pair), and
+`String.fromCodePoint(128169,65)` → `"💩A"`, and guard that no `fromCodePoint`
+call survives (proving the typed SIMPLE pipeline ran, not the WHITESPACE_ONLY
+fallback).
+
 ## [0.189.0] - 2026-06-25
 
 ### Added — SIMPLE/ADVANCED fold `"abcde".substr(start[, length])`

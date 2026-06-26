@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.44.0] - 2026-06-25
+
+### Added — fold the static `String.fromCodePoint(cp0, cp1, …)` into a string literal
+
+`String.fromCodePoint` now folds to a string literal when every argument is a
+non-negative integer literal that is a **valid Unicode scalar** — in
+`0..=0x10FFFF` and not a surrogate `0xD800..=0xDFFF` (ECMAScript §22.1.2.2).
+Unlike the sibling `fromCharCode` (whose arguments are 16-bit UTF-16 *units*),
+each argument here is a whole **code point**, so a single astral argument
+suffices: `String.fromCodePoint(128169)` → `"💩"` (U+1F4A9),
+`String.fromCodePoint(72, 73)` → `"HI"`, `String.fromCodePoint(128169, 65)` →
+`"💩A"`, no args → `""`.
+
+Lands in the same bare-global-`String` identifier-receiver dispatch shape as
+`fromCharCode` (`window.String.…` and other non-identifier receivers never
+match); the "builtins intact" soundness note carries over (a local `let String`
+could mask the global, but we fold anyway, matching Closure Compiler).
+
+New `fold_string_from_code_point` helper builds the string via
+`char::from_u32`, which returns `None` for exactly the invalid inputs — a
+**surrogate code point** (a valid JS argument that yields a lone-surrogate
+string no Rust `String` can hold) and anything **past U+10FFFF**. JS throws a
+`RangeError` for an out-of-range / fractional argument, so declining there also
+avoids folding a call that would have thrown. A fractional, negative, or
+non-literal argument likewise declines. Three V8-oracle unit tests (BMP +
+single-astral + empty, surrogate/out-of-range/fractional decline, non-`String`
+receiver decline).
+
 ## [0.40.0] - 2026-06-25
 
 ### Added — fold `"abcde".substr(start[, length])` on string literals
