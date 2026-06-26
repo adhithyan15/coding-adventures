@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.43.0] - 2026-06-25
+
+### Added — fold the static `String.fromCharCode(u0, u1, …)` into a string literal
+
+`String.fromCharCode` now folds to a string literal when every argument is a
+non-negative integer literal in `0..=0xFFFF` (ECMAScript §22.1.2.1). The
+arguments are UTF-16 code **units**, so `String.fromCharCode(72, 73)` → `"HI"`,
+an adjacent high+low surrogate pair assembles one astral scalar
+(`String.fromCharCode(0xD83D, 0xDCA9)` → `"💩"`), and `String.fromCharCode()` →
+`""`.
+
+This is the first fold whose receiver is the **bare global identifier
+`String`** rather than a string/number literal — it lands in a new
+identifier-receiver branch of the MemberExpression arm (`window.String.…` and
+other non-identifier receivers never match). Soundness follows the same
+"builtins intact" premise as the rest of the pass, one notch weaker (like
+`parseInt`/`parseFloat`): a local `let String = …` could mask the global, but
+we fold anyway, matching Closure Compiler.
+
+New `fold_string_from_char_code` helper. It **declines** (leaving the call) for
+a fractional, negative, `>0xFFFF`, or non-literal argument — we don't model
+JS's `ToUint16` wrap-around — and for any unit sequence that is not valid
+UTF-16, i.e. a **lone surrogate** (a legal JS string but not a Rust `String`,
+the same guard `slice`/`charAt`/`codePointAt` use). Five V8-oracle unit tests
+(basic + empty, surrogate-pair assembly, lone-surrogate decline,
+out-of-range/fractional decline, non-`String` receiver decline).
 ## [0.42.0] - 2026-06-25
 
 ### Added — fold `"a💩b".codePointAt(i)` on string literals into a number
