@@ -260,6 +260,35 @@ fun main() {
     check("sort bad key no-op", so.sortRange("A1", "E4", 9, true).toString(), "false")
     so.close()
 
+    // Find / replace (the find/replace fields + Find/Replace buttons drive
+    // findAll/replaceAll): findAll returns the A1 addresses whose SOURCE contains
+    // the query (case-insensitive); replaceAll rewrites the query in every cell's
+    // source and recomputes, returning the count. A rewritten formula stays live;
+    // a rewritten literal stays typed.
+    val fr = InfiniteSheetModel()
+    // The seed has the literal "15" only at A1, and "=SUM(" in every total formula.
+    check("find literal 15", fr.findAll("15").joinToString(","), "A1")
+    checkContains("find formula SUM has E1", fr.findAll("sum").joinToString(","), "E1")
+    check("find empty query", fr.findAll("").size.toString(), "0")
+    check("find no match", fr.findAll("zzz").size.toString(), "0")
+    // selectA1 moves the cursor onto a hit (parsing column letters past Z).
+    fr.selectA1("Z1000")
+    check("selectA1 Z1000 addr", fr.infAddress(), "Z1000")
+    // Replace a literal: A1 "15" → "99"; E1 = 99+3+12+8 = 122 (#,##0.00 format).
+    check("replace 15→99 count", fr.replaceAll("15", "99").toString(), "1")
+    fr.selectA1("A1")
+    check("replaced A1 value", fr.rowCells(1)[0], "99")
+    check("replaced E1 recomputed", fr.rowCells(1)[4], "122.00")
+    // Replace inside a formula reference keeps it LIVE: H1=10, H2=20, H3 = =H1+5
+    // (15). Rewrite "H1" → "H2" → H3 becomes =H2+5 = 25, recomputed by the engine.
+    fr.selectInf(1, 8); fr.commitInf("10")     // H1
+    fr.selectInf(2, 8); fr.commitInf("20")     // H2
+    fr.selectInf(3, 8); fr.commitInf("=H1+5")  // H3 = 15
+    check("pre-replace H3", fr.rowCells(3)[7], "15")
+    check("replace H1→H2 count", fr.replaceAll("H1", "H2").toString(), "1")
+    check("H3 recomputed live", fr.rowCells(3)[7], "25") // =H2+5
+    fr.close()
+
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)
 }
