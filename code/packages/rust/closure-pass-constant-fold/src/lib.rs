@@ -1125,30 +1125,61 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
             }
-            // ---- String.fromCodePoint(cp0, cp1, …) → the built string ----
+            // ---- String.fromCharCode(u0, u1, …) → the built string ----
             //
-            // The static `String.fromCodePoint` (ECMAScript §22.1.2.2) builds a
-            // string from Unicode CODE POINTS — unlike `fromCharCode`, whose
-            // arguments are 16-bit UTF-16 *units*. So a single astral argument
-            // suffices: `String.fromCodePoint(128169)` → `"💩"` (U+1F4A9),
-            // `String.fromCodePoint(72, 73)` → `"HI"`, no args → `""`.
+            // The static `String.fromCharCode` (ECMAScript §22.1.2.1) builds a
+            // string from UTF-16 code UNITS: `String.fromCharCode(72, 73)` →
+            // `"HI"`, and an adjacent high+low surrogate pair assembles one
+            // astral character — `String.fromCharCode(0xD83D, 0xDCA9)` → `"💩"`.
+            // No arguments yields `""`.
             //
-            // SOUNDNESS — folds under the same "builtins intact" premise as every
-            // fold here, one notch weaker (like `parseInt`/`parseFloat` and
-            // `fromCharCode`): `String` is a free identifier a local binding
-            // could mask, but we fold anyway, matching Closure Compiler, and ONLY
-            // for the bare identifier `String` (never `window.String`, whose
-            // object is not an Identifier). Each argument must be a non-negative
-            // integer literal that is a VALID code point — `0..=0x10FFFF` AND not
-            // a surrogate (`0xD800..=0xDFFF`). JS throws a `RangeError` for an
-            // out-of-range / fractional / non-integer argument, and a surrogate
-            // code point yields a lone-surrogate string no Rust `String` can
-            // hold; `char::from_u32` returns `None` for exactly those, so we
-            // DECLINE (leave the call) in every such case rather than emit a
-            // wrong literal or a value JS would have thrown on.
+            // SOUNDNESS — this folds under the same "builtins intact" premise as
+            // every fold here, but, like `parseInt`/`parseFloat` below, one notch
+            // weaker: `String` is a *free identifier*, so a local binding
+            // (`let String = …`) could mask it. We fold anyway — matching Closure
+            // Compiler, which treats redefining the global as out of scope — but
+            // ONLY when the receiver is the bare identifier `String` (never a
+            // member access like `window.String`, which would carry a non-
+            // Identifier object). Each argument must be a non-negative integer
+            // literal that fits in 16 bits (`0..=0xFFFF`); JS applies `ToUint16`
+            // (mod 2^16) to every argument, but we stay conservative and DECLINE
+            // for a fractional, negative, out-of-16-bit, or non-literal argument
+            // rather than model that coercion. We also DECLINE when the units do
+            // not form valid UTF-16 — a LONE surrogate is a valid JS string but
+            // cannot be a Rust `String` (the same hazard `slice`/`charAt`/
+            // `codePointAt` guard against).
             if let (Expression::Identifier(obj), Expression::Identifier(prop)) =
                 (m.object.as_ref(), m.property.as_ref())
             {
+                if obj.name == "String" && prop.name == "fromCharCode" {
+                    if let Some(result) = fold_string_from_char_code(&arguments) {
+                        let parent = c.cv.clone();
+                        let args_src = arguments
+                            .iter()
+                            .map(|a| match a {
+                                Expression::NumericLiteral(n) => format_js_number(n.value),
+                                _ => "?".to_string(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(",");
+                        let before = format!("String.fromCharCode({})", args_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
+                // ---- String.fromCodePoint(cp0, cp1, …) → the built string ----
+                //
+                // The static `String.fromCodePoint` (ECMAScript §22.1.2.2) builds
+                // a string from Unicode CODE POINTS — unlike `fromCharCode`, whose
+                // arguments are 16-bit UTF-16 *units*. So a single astral argument
+                // suffices: `String.fromCodePoint(128169)` → `"💩"` (U+1F4A9),
+                // `String.fromCodePoint(72, 73)` → `"HI"`, no args → `""`. Same
+                // bare-global-`String` soundness premise as `fromCharCode`; each
+                // argument must be a non-negative integer literal that is a VALID
+                // code point (`0..=0x10FFFF`, not a surrogate) — `char::from_u32`
+                // returns `None` for exactly the inputs JS would throw on or that
+                // can't be a Rust `char`, so we DECLINE rather than mis-fold.
                 if obj.name == "String" && prop.name == "fromCodePoint" {
                     if let Some(result) = fold_string_from_code_point(&arguments) {
                         let parent = c.cv.clone();
@@ -1347,6 +1378,40 @@ fn fold_string_slice(value: &str, args: &[Expression]) -> Option<String> {
     }
     // A lone surrogate (split pair) can't be a Rust String — decline.
     String::from_utf16(&units[lo..hi]).ok()
+}
+
+/// Fold the static `String.fromCharCode(u0, u1, …)` — build a string from
+/// UTF-16 code units (ECMAScript §22.1.2.1).
+///
+/// Each argument is one UTF-16 code unit, so `String.fromCharCode(72, 73)` →
+/// `"HI"` and an adjacent high+low surrogate pair assembles an astral scalar
+/// (`String.fromCharCode(0xD83D, 0xDCA9)` → `"💩"`). No arguments → `""`.
+///
+/// Conservative scope: every argument must be a non-negative integer literal
+/// that already fits in 16 bits (`0..=0xFFFF`). JS coerces each via `ToUint16`
+/// (mod 2^16), but we decline (returning `None`, leaving the call) for a
+/// fractional, negative, out-of-range, or non-literal argument rather than
+/// model that wrap-around. We also return `None` when the assembled units are
+/// not valid UTF-16 — a LONE surrogate is a legal JS string but cannot be a
+/// Rust `String` (`String::from_utf16` fails), the same guard `slice`/`charAt`/
+/// `codePointAt` use.
+fn fold_string_from_char_code(args: &[Expression]) -> Option<String> {
+    let mut units: Vec<u16> = Vec::with_capacity(args.len());
+    for a in args {
+        match a {
+            Expression::NumericLiteral(n)
+                if n.value.is_finite()
+                    && n.value.fract() == 0.0
+                    && n.value >= 0.0
+                    && n.value <= 0xFFFF as f64 =>
+            {
+                units.push(n.value as u16);
+            }
+            _ => return None,
+        }
+    }
+    // A lone surrogate among the units can't be a Rust String — decline.
+    String::from_utf16(&units).ok()
 }
 
 /// Fold the static `String.fromCodePoint(cp0, cp1, …)` — build a string from
@@ -5101,6 +5166,80 @@ mod tests {
         let c = call1(string("abc", None), "includes", num(1.0, None));
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "includes with a numeric arg must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- String.fromCharCode (static) ----------------
+
+    /// Build `String.fromCharCode(<args…>)` from numeric literal arguments.
+    fn from_char_code_call(args: &[f64]) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("String"), "fromCharCode")),
+            arguments: args.iter().map(|&a| num(a, None)).collect(),
+        })
+    }
+
+    #[test]
+    fn fold_from_char_code_basic_and_empty() {
+        // V8 oracle: String.fromCharCode(72,73) === "HI"; fromCharCode() === "".
+        for (args, expect) in [(vec![72.0, 73.0], "HI"), (vec![], ""), (vec![65.0], "A")] {
+            let c = from_char_code_call(&args);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "String.fromCharCode({args:?}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => assert_eq!(s.value, expect),
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_from_char_code_assembles_surrogate_pair() {
+        // Adjacent high+low surrogate units assemble the astral scalar U+1F4A9:
+        // String.fromCharCode(0xD83D, 0xDCA9) === "💩" (V8).
+        let c = from_char_code_call(&[0xD83D as f64, 0xDCA9 as f64]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "surrogate-pair fromCharCode should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "💩"),
+            other => panic!("expected \"💩\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn from_char_code_lone_surrogate_does_not_fold() {
+        // A lone high surrogate is a valid JS string but not a Rust String —
+        // decline (String.fromCharCode(0xD83D) has no literal we can emit).
+        let c = from_char_code_call(&[0xD83D as f64]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "lone-surrogate fromCharCode must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn from_char_code_out_of_range_or_fractional_does_not_fold() {
+        // We conservatively decline rather than model ToUint16 wrap-around for
+        // a fractional, negative, or >0xFFFF argument.
+        for args in [vec![65.5], vec![-1.0], vec![70000.0], vec![65.0, 0.5]] {
+            let c = from_char_code_call(&args);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "String.fromCharCode({args:?}) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn from_char_code_on_non_string_receiver_does_not_fold() {
+        // Only the bare global `String` folds; `s.fromCharCode(72)` (some other
+        // receiver) is left untouched.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "fromCharCode")),
+            arguments: vec![num(72.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "non-String receiver fromCharCode must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

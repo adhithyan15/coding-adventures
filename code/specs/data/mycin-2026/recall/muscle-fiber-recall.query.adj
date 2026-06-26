@@ -1,0 +1,19 @@
+% ============================================================================
+% muscle-fiber-recall.query.adj — a worked recall query over the muscle-fiber library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what are the properties of
+% fiber type X?" question: it states no physiology fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding(s) + each
+% citing clause's source/locator/trust. A fiber type with several grounded
+% properties binds several answers. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli muscle-fiber-recall.query.adj
+% ============================================================================
+
+import "muscle-fiber-edges.adj"
+
+? has_property(type_i_fiber, $Property)     % expect slow_twitch, high_myoglobin, fatigue_resistant
+? has_property(type_iia_fiber, $Property)   % expect fast_oxidative
+? has_property(type_iib_fiber, $Property)   % expect fast_twitch_glycolytic

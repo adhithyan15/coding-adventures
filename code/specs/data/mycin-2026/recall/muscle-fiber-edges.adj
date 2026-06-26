@@ -1,0 +1,82 @@
+% ============================================================================
+% muscle-fiber-edges — the skeletal-muscle fiber type → property knowledge-graph
+% (MYCIN-2026 MUSCLEFIBER).
+% ============================================================================
+% A high-yield physiology board table: the three classic skeletal-muscle fiber
+% types (Type I, Type IIa, Type IIb) and their defining contractile/metabolic
+% properties. "What are the properties of a Type I muscle fiber?" becomes the
+% binding query
+%     ? has_property(type_i_fiber, $Property).
+%
+% Direction note: the relation is fiber type -> a defining PROPERTY it has
+% (`has_property`). Type I maps to several grounded properties, so a query for it
+% binds multiple answers (each with its own citation); Type IIa and Type IIb each
+% map to one here.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The subject is bound to the EXACT fiber type the
+% sentence names (Type I / Type IIa / Type IIb — the source distinguishes the
+% fast subtypes IIa "fast oxidative" vs IIb "fast glycolytic", and this library
+% preserves that distinction rather than collapsing them into a generic "Type II").
+% The property object names what the sentence states (Type I "slow-twitching";
+% Type I "high myoglobin content"; Type I "low rate of fatigue"; Type IIa "fast
+% oxidative ... fast twitching"; Type IIb "fast glycolytic ... fast-twitching").
+% Each span was independently re-fetched and confirmed on two separate fetches of
+% the same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like GERMLAYER/ACIDBASE/
+% HEARTVALVE/FETALSHUNT). Each fact is a `relate` clause whose byte-provenance
+% lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see muscle-fiber-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary muscle_fiber_vocab {
+    define fiber_type : entity   surface "skeletal muscle fiber type", "muscle fiber type"
+    define property   : entity   surface "fiber property", "contractile or metabolic property"
+
+    define has_property : relation from fiber_type to property  % a defining property of this fiber type
+}
+
+rulebook muscle_fiber_facts {
+    use muscle_fiber_vocab
+
+    % --- Type I fiber -> slow-twitch ----------------------------------------
+    relate has_property(type_i_fiber, slow_twitch)
+        source "Type I fibers, or slow oxidative fibers, are slow-twitching fibers."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537139/"
+        trust authoritative
+
+    % --- Type I fiber -> high myoglobin content -----------------------------
+    relate has_property(type_i_fiber, high_myoglobin)
+        source "Type I and IIa fibers are called red fibers, meaning they have a high myoglobin content."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537139/"
+        trust authoritative
+
+    % --- Type I fiber -> fatigue-resistant (low rate of fatigue) -------------
+    relate has_property(type_i_fiber, fatigue_resistant)
+        source "Type I fibers have a low rate of fatigue, slow contractile speed, and low myosin ATPase activity, making them best suited for endurance types of contraction, such as maintaining posture and marathon running."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537139/"
+        trust authoritative
+
+    % --- Type IIa fiber -> fast oxidative -----------------------------------
+    relate has_property(type_iia_fiber, fast_oxidative)
+        source "Type IIa fibers, or fast oxidative fibers, are fast twitching fibers with a high myosin ATPase activity and an intermediate rate of fatigue."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537139/"
+        trust authoritative
+
+    % --- Type IIb fiber -> fast glycolytic (fast-twitch) --------------------
+    relate has_property(type_iib_fiber, fast_twitch_glycolytic)
+        source "Type IIb fibers, or fast glycolytic fibers, are fast-twitching fibers."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537139/"
+        trust authoritative
+}
