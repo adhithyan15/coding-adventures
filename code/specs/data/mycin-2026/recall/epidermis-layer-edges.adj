@@ -1,0 +1,78 @@
+% ============================================================================
+% epidermis-layer-edges — the epidermal layer → defining characteristic
+% knowledge-graph (MYCIN-2026 EPIDERMIS).
+% ============================================================================
+% A high-yield histology board table: the strata of the epidermis (deep → superficial:
+% basale, spinosum, granulosum, lucidum, corneum) and the defining feature of each.
+% "What characterizes the stratum granulosum?" becomes the binding query
+%     ? characterized_by(stratum_granulosum, $Characteristic).
+%
+% Direction note: the relation is epidermal layer -> the defining characteristic
+% the cited sentence states for it (`characterized_by`). Each layer here maps to
+% ONE canonical characteristic span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The characteristic object names the feature the
+% sentence states (basale "separated from the dermis by the basement membrane";
+% spinosum "the prickle cell layer"; granulosum "keratohyalin ... granules";
+% corneum "the outermost layer ... final stage of keratinocyte maturation";
+% lucidum "present in thicker skin on the palms and soles"). Each cited sentence
+% names the layer by its FULL term ("stratum basale", etc.). Each span was
+% independently re-fetched and confirmed on two separate fetches of the same page
+% for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like COMPLEMENT/IG-ISOTYPE/
+% WBC/GIWALL). Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see epidermis-layer-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary epidermis_layer_vocab {
+    define epidermal_layer : entity   surface "epidermal layer", "stratum of the epidermis"
+    define characteristic  : entity   surface "characteristic", "defining feature"
+
+    define characterized_by : relation from epidermal_layer to characteristic  % the defining feature of this epidermal layer
+}
+
+rulebook epidermis_layer_facts {
+    use epidermis_layer_vocab
+
+    % --- stratum basale -> separated from dermis by the basement membrane ---
+    relate characterized_by(stratum_basale, separated_from_dermis_by_basement_membrane)
+        source "The stratum basale, also known as stratum germinativum, is separated from the dermis by the basement membrane (basal lamina) and attached to it by hemidesmosomes."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470464/"
+        trust authoritative
+
+    % --- stratum spinosum -> the prickle cell layer -------------------------
+    relate characterized_by(stratum_spinosum, prickle_cell_layer)
+        source "The stratum spinosum, comprising 8 to 10 cell layers, is also called the prickle cell layer."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470464/"
+        trust authoritative
+
+    % --- stratum granulosum -> keratohyalin granules ------------------------
+    relate characterized_by(stratum_granulosum, keratohyalin_granules)
+        source "The stratum granulosum has 3 to 5 cell layers and contains diamond-shaped cells with keratohyalin and lamellar granules."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470464/"
+        trust authoritative
+
+    % --- stratum lucidum -> present only in thick skin ----------------------
+    relate characterized_by(stratum_lucidum, only_in_thick_skin)
+        source "The stratum lucidum comprises 2 to 3 cell layers and is present in thicker skin on the palms and soles."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470464/"
+        trust authoritative
+
+    % --- stratum corneum -> outermost layer, final keratinocyte maturation --
+    relate characterized_by(stratum_corneum, outermost_layer_keratinocyte_maturation)
+        source "The stratum corneum is the outermost layer of the epidermis and marks the final stage of keratinocyte maturation and development."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK513299/"
+        trust authoritative
+}
