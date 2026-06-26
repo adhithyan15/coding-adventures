@@ -30,12 +30,30 @@ SETDELAYED  = ":="
 RULEDELAYED = ":>"
 RULE        = "->"
 
+# `//.` (ReplaceRepeated sugar, W-21) is the LONGEST `/`-prefixed operator, so it
+# MUST be declared before every shorter `/`-form below — `/@` (MAP), `/.`
+# (REPLACEALL), `/;` (CONDITION), and the bare `/` (SLASH, SECTION 2). The lexer
+# is FIRST-MATCH-WINS by declaration order (see lexer/grammar_lexer.rs), so a
+# later, shorter pattern can never pre-empt this: otherwise `//.` would lex as
+# `/` then `/.`, never as one ReplaceRepeated token. `e //. r` ⇒ ReplaceRepeated.
+REPLACEREPEATED = "//."
+
 # `/@` (Map sugar) and `/.` (ReplaceAll) both begin with `/`; both must precede
 # the bare `/` (SLASH) below. Their order relative to each other does not matter
 # (the second char differs: `@` vs `.`), but keep them grouped here so the
-# longest-match-first contract for the `/`-family is obvious at a glance.
+# longest-match-first contract for the `/`-family is obvious at a glance. Both are
+# two chars, so they win over `/` but lose to the three-char `//.` above (which
+# is declared first).
 MAP         = "/@"
 REPLACEALL  = "/."
+
+# `/;` (Condition sugar, W-21) is a two-char `/`-form. It must precede the bare
+# `/` (SLASH) and the bare `;` (SEMI, SECTION 2) so `patt /; test` lexes as one
+# CONDITION token, never `/` then `;`. It shares the `/` prefix with `//.` above
+# (three chars, declared first, so unreachable past it) and with `/@`/`/.` (its
+# second char `;` is distinct from `@`/`.`, so order among the two-char forms is
+# immaterial). `p /; t` ⇒ Condition[p, t].
+CONDITION   = "/;"
 
 # `@@` (Apply sugar). There is no bare `@` token in this subset, so `@@` is the
 # only `@`-form; it is listed here in SECTION 1 alongside the other multi-char
@@ -62,6 +80,12 @@ GE          = ">="
 AND         = "&&"
 OR          = "||"
 
+# `|` (Alternatives sugar, W-21) is a SINGLE `|`. The two-char `||` (OR) is
+# declared just above, so first-match-wins keeps `||` winning where two `|` are
+# adjacent; a lone `|` (not part of `||`) lexes as ALTERNATIVES. `a | b | c` ⇒
+# Alternatives[a, b, c].
+ALTERNATIVES = "|"
+
 # `##` (SlotSequence) must precede the single `#` (HASH, in SECTION 2) so
 # longest-match wins: `##` lexes as one SLOTSEQ, never two HASH. There is no
 # `&&`-vs-`&` ambiguity for the `&` pure-function postfix — the two-char `AND`
@@ -82,6 +106,12 @@ SET       = "="
 LESS      = "<"
 GREATER   = ">"
 NOT       = "!"
+
+# `?` (PatternTest sugar, W-21). A brand-new single-character lexeme with no
+# overlap with any other token (no `??` form in this subset), so its position
+# here is for grouping only. `patt ? fn` ⇒ PatternTest[patt, fn]; it binds very
+# tightly (just below application) so `_?EvenQ` attaches `?EvenQ` to the blank.
+PATTERNTEST = "?"
 
 # `_` is the pattern Blank — it is NOT a symbol/name character in Wolfram
 # (unlike R). `x_` therefore lexes as NAME `x` followed by BLANK.

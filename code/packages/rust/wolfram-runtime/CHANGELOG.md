@@ -4,6 +4,38 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.17.0] — 2026-06-25
+
+The **W-21** deliverable (MA04 §23): **lowering** for the W-20 pattern
+constructs' operator sugar. W-21 is grammar + lowering only — the four runtime
+heads (`Alternatives`, `Condition`, `PatternTest`, `ReplaceRepeated`) shipped and
+evaluated in W-20 (§22) and are **reused unchanged**; no new evaluation logic was
+added. This crate gains only the lowering that maps the new parser rules to those
+heads, so an operator form and its `Head[args]` long form produce identical IR.
+
+### Added (W-21 — operator-sugar lowering)
+
+- `lower_alternatives` — `a | b | c` → one n-ary `Alternatives[a, b, c]` (folded
+  flat like `+`/`&&`; a lone operand passes through).
+- `lower_condition` — `patt /; test` → `Condition[patt, test]`. Unlike
+  `lower_rule`, it deliberately keeps **bare** named-symbol references in the
+  test, because the W-20 `Condition` handler substitutes the match's named
+  bindings into the test before evaluating it.
+- `lower_patterntest` — `patt ? fn` → `PatternTest[patt, fn]` (left-associative
+  chain).
+- `lower_replaceall` extended — `expr //. rules` → `ReplaceRepeated[expr, rules]`
+  beside the existing `/.` → `ReplaceAll`, both at the same left-associative
+  level (it now walks operator tokens to pick the head per step). `//.` inherits
+  W-20's hard iteration cap (`REPLACE_REPEATED_MAX_ITERATIONS`) and growth cap
+  (`REPLACE_GROWTH_NODE_CAP`) verbatim — lowering to the operator is identical to
+  writing `ReplaceRepeated[…]`.
+
+### Tests
+
+- 5 lowering unit tests (each operator + `|`-tighter-than-`/;` precedence +
+  `?`-chain fold + mixed `/.`/`//.` chain) and 6 end-to-end integration tests
+  (the §23 acceptance examples, each asserting operator form == W-20 long form).
+
 ## [0.16.0] — 2026-06-22
 
 The **W-20** deliverable (MA04 §22): Wolfram's **advanced pattern constructs**,

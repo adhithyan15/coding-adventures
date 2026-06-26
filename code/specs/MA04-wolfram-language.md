@@ -1957,16 +1957,17 @@ inner (per-pass tree depth) and outer (number of passes) loops are bounded.
   `Alternatives`/`Condition`/`PatternTest` (wrong arity) simply fails to match
   rather than panicking.
 
-### §22.6 No grammar change — the operator sugar is deferred to W-21
+### §22.6 No grammar change in W-20 — the operator sugar lands in W-21 (§23)
 
-The four constructs ship as **ordinary head applications** (`Alternatives[…]`,
-`Condition[…]`, `PatternTest[…]`, `ReplaceRepeated[…]`), which the existing parser
-already accepts as `NAME[args]`. The surface **operator sugar** — `a | b`
-(`Alternatives`), `patt /; test` (`Condition`), `patt ? fn` (`PatternTest`), and
-`expr //. rules` (`ReplaceRepeated`) — would require new lexer tokens (`|`, `/;`,
-`?`, `//.`), parser precedence rules, lowering, and a regenerated compiled
-grammar. To keep W-20 bounded and runtime-only (the W-19 precedent), that grammar
-work is **deferred to W-21** along with the sequence patterns below.
+W-20 ships the four constructs as **ordinary head applications**
+(`Alternatives[…]`, `Condition[…]`, `PatternTest[…]`, `ReplaceRepeated[…]`),
+which the existing parser already accepts as `NAME[args]`. The surface **operator
+sugar** — `a | b` (`Alternatives`), `patt /; test` (`Condition`), `patt ? fn`
+(`PatternTest`), and `expr //. rules` (`ReplaceRepeated`) — needs new lexer tokens
+(`|`, `/;`, `?`, `//.`), parser precedence rules, lowering, and a regenerated
+compiled grammar. To keep W-20 bounded and runtime-only (the W-19 precedent), that
+grammar work is done in **W-21 (§23)**, lowering each operator to the W-20 head it
+desugars to (the runtime heads are reused unchanged).
 
 ### §22.7 Deferred to W-21 (explicitly out of scope)
 
@@ -1974,15 +1975,121 @@ W-20 ships the core matching algebra (`Alternatives`/`Condition`/`PatternTest`)
 plus fixed-point `ReplaceRepeated`, and defers:
 
 * **operator sugar** for all four constructs (`|`, `/;`, `?`, `//.`) — needs a
-  grammar change (new tokens + precedence + lowering + regenerated grammar);
+  grammar change (new tokens + precedence + lowering + regenerated grammar). This
+  ships in **W-21 (§23)**;
 * **sequence patterns** `__` (`BlankSequence`) / `___` (`BlankNullSequence`) — the
   big one: variable-arity sequence matching is not yet supported by the shared
   `cas-pattern-matching` matcher, so the §22 `ReplaceRepeated` acceptance tests use
-  non-sequence rules (e.g. `{1,2,3} //. 2 -> 99`); sequence support is W-21;
+  non-sequence rules (e.g. `{1,2,3} //. 2 -> 99`); sequence support is deferred;
 * **`Repeated`** `patt..` and **`Except`** `Except[p]`;
 * **`Longest` / `Shortest`** sequence disambiguators;
 * **level specifications** for `Replace` (the third argument).
 
+
+## §23 W-21 pattern operator sugar — `a|b`, `patt /; test`, `patt ? fn`, `expr //. rules`
+
+W-21 adds the **infix operator surface** for the four W-20 pattern constructs.
+The runtime heads `Alternatives`, `Condition`, `PatternTest`, and
+`ReplaceRepeated` already evaluate (§22) as ordinary `Head[args]` applications;
+W-21 is **grammar + lowering only** — it lexes the operators, parses them at the
+right precedence, and lowers each to the *existing* W-20 head. **No new runtime
+evaluation logic is introduced**: the §22 matcher and the fixed-point
+`ReplaceRepeated` pre-pass are reused unchanged.
+
+### §23.1 What W-21 adds
+
+| operator surface     | lowers to                       | reuses (§22) |
+| -------------------- | ------------------------------- | ------------ |
+| `a \| b \| c`         | `Alternatives[a, b, c]`         | §22.2 |
+| `patt /; test`       | `Condition[patt, test]`         | §22.3 |
+| `patt ? fn`          | `PatternTest[patt, fn]`         | §22.3 |
+| `expr //. rules`     | `ReplaceRepeated[expr, rules]`  | §22.4 |
+
+Worked examples (the W-21 acceptance tests):
+
+```
+MatchQ[2, 1 | 2 | 3]                 (* True  — Alternatives  *)
+MatchQ[5, 1 | 2 | 3]                 (* False                 *)
+Cases[{1, 2, 3, 4}, x_ /; x > 2]     (* {3, 4} — Condition    *)
+MatchQ[4, _?EvenQ]                    (* True  — PatternTest   *)
+MatchQ[3, _?EvenQ]                    (* False                 *)
+{1, 2, 3} //. 2 -> 99                 (* {1, 99, 3} — ReplaceRepeated (terminating) *)
+```
+
+### §23.2 New tokens (lexer) — longest-match ordering
+
+Four new tokens join `code/grammars/wolfram.tokens`:
+
+| token             | lexeme | placement constraint |
+| ----------------- | ------ | -------------------- |
+| `REPLACEREPEATED` | `//.`  | **before** `MAP` (`/@`), `REPLACEALL` (`/.`), and `CONDITION` (`/;`) — else `//.` mis-lexes as `/` then `/.` |
+| `CONDITION`       | `/;`   | **before** the bare `SLASH` (`/`) and `SEMI` (`;`) — else `/;` mis-lexes as `/` then `;` |
+| `ALTERNATIVES`    | `\|`    | distinct from `OR` (`\|\|`, already first) — longest-match keeps `\|\|` winning |
+| `PATTERNTEST`     | `?`    | a brand-new lexeme; no overlap with any existing token |
+
+The lexer is longest-match-first by declaration order, so the multi-char
+`//.` and `/;` are declared in SECTION 1 *ahead of* the `/`-family they share a
+prefix with. `ALTERNATIVES` (`|`) is declared after `OR` (`||`) so `||` still
+wins; `PATTERNTEST` (`?`) is a fresh single char in SECTION 2.
+
+### §23.3 Precedence cascade and parser rules
+
+Wolfram's precedence for these operators (loosest binds first → tightest last),
+mapped into the existing W-1..W-11 cascade:
+
+```
+  replaceall    /.  //.            (left-assoc; //. sits beside /.)
+  rule          ->  :>
+  condition     /;                 (right-assoc; looser than | )
+  alternatives  |                  (left-assoc, n-ary; looser than ||)
+  logical_or    ||
+  …                                (unchanged W-1..W-11 stack)
+  mapapply      /@  @@
+  patterntest   ?                  (left-assoc; tighter than /@, looser than postfix)
+  postfix       f[…]  x[[…]]
+```
+
+So `?` binds **tighter** than `/;` (a `_?EvenQ` test attaches before the
+condition), `|` is the alternatives layer between `/;` and `||`, and `//.` is a
+low-precedence replace operator alongside `/.`. The grammar rules added (modelled
+on the existing `replaceall`→`ReplaceAll` and `rule`→`Rule` rules):
+
+```
+replaceall   = rule        { ( REPLACEALL | REPLACEREPEATED ) rule } ;
+rule         = condition    [ ( RULE | RULEDELAYED ) rule ] ;
+condition    = alternatives  [ CONDITION condition ] ;
+alternatives = logical_or   { ALTERNATIVES logical_or } ;
+patterntest  = postfix      { PATTERNTEST postfix } ;
+```
+
+`replaceall` gains the `REPLACEREPEATED` arm; `rule` now recurses on `condition`;
+`condition` (new) wraps `alternatives` (new), which wraps the old `logical_or`;
+`patterntest` (new) is inserted between `mapapply` and `postfix` (so `power`'s
+`mapapply` child stays, but `mapapply`'s child becomes `patterntest`).
+
+### §23.4 Lowering — to the existing W-20 heads
+
+`wolfram-runtime/src/lower.rs` gains four small handlers mirroring §22:
+
+* `replaceall` folds left into `ReplaceAll` for `/.` and `ReplaceRepeated` for
+  `//.` (inspecting the operator token between operands).
+* `condition` emits `Condition[patt, test]`; like `rule`, named LHS pattern
+  bindings are rewritten in the test so the matcher's `substitute` fills them in.
+* `alternatives` folds its operands into one n-ary `Alternatives[a, b, …]`; a
+  single operand passes through transparently.
+* `patterntest` folds left into `PatternTest[patt, fn]`.
+
+No new IR heads and **no new runtime evaluation** are introduced: each lowers to a
+head that §22 already evaluates.
+
+### §23.5 Safety
+
+The new surface is purely grammar/parsing. The parser's existing nesting cap
+bounds deeply-nested `a|b|c|…` / `patt /; t /; …` (no new recursion path escapes
+it). `ReplaceRepeated` retains its §22.4 hard iteration cap
+(`REPLACE_REPEATED_MAX_ITERATIONS`) and §22.5 growth cap
+(`REPLACE_GROWTH_NODE_CAP`) — the `//.` operator lowers to the very same head, so
+the DoS bounds apply identically whether written as operator or `Head[args]`.
 
 ### §6 References
 

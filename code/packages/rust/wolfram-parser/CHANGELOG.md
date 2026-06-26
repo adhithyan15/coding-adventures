@@ -4,6 +4,27 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 Semantic Versioning.
 
+## [0.4.0] — 2026-06-25
+
+### Added (W-21 — pattern operator grammar)
+
+- Parser rules for the W-20 pattern constructs' operator sugar (MA04 §23),
+  modelled on the existing `replaceall`→`ReplaceAll` and `rule`→`Rule` rules and
+  inserted at Wolfram precedence (loosest→tightest):
+  - `replaceall = rule { ( REPLACEALL | REPLACEREPEATED ) rule }` — the `//.`
+    arm joins `/.` at the same left-associative replace level.
+  - `rule = condition [ ( RULE | RULEDELAYED ) rule ]` — `->`/`:>` now recurse
+    on the new `condition` rule, so `/;` binds tighter than `->`.
+  - `condition = alternatives [ CONDITION condition ]` — the new `/;` level,
+    right-associative, looser than `|`.
+  - `alternatives = logical_or { ALTERNATIVES logical_or }` — the new `|` level,
+    infix/left-associative, folded into one n-ary `Alternatives` by the runtime.
+  - `patterntest = postfix { PATTERNTEST postfix }` — the new `?` level inserted
+    between `mapapply` and `postfix`, so `?` binds tightest (just above
+    application); `mapapply`'s operand changed from `postfix` to `patterntest`.
+- The embedded `_grammar.rs` was regenerated via the Rust grammar-tools CLI
+  (`compile-grammar`); generated files are never hand-edited.
+
 ## [0.3.0] — 2026-06-19
 
 ### Added (W-11 — pure-function grammar)

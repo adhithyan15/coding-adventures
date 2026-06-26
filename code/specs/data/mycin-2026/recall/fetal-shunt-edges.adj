@@ -1,0 +1,86 @@
+% ============================================================================
+% fetal-shunt-edges — the fetal-structure→adult-remnant knowledge-graph
+% (MYCIN-2026 FETALSHUNT).
+% ============================================================================
+% A classic high-yield embryology/anatomy board table: each fetal circulatory
+% shunt / vessel and the obliterated adult remnant it becomes after birth.
+% "What does the ductus arteriosus become?" becomes the binding query
+%     ? becomes(ductus_arteriosus, $Remnant).
+%
+% Direction note: the relation is fetal structure -> the adult remnant it
+% becomes (`becomes`). Each fetal structure here maps to ONE canonical remnant
+% span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The remnant object names the literal adult structure
+% the sentence states the fetal structure becomes (ductus arteriosus "forming a
+% fibrous cord called the ligamentum arteriosum"; ductus venosus "develops into
+% a ligament called the ligamentum venosum"; umbilical vein "becomes the
+% ligamentum teres hepatis"; foramen ovale "fuse to become the fossa ovalis";
+% umbilical arteries "Medial umbilical ligaments are the remains of obliterated
+% umbilical arteries"; urachus "develops into ... the median umbilical
+% ligament"). Each span was independently re-fetched and confirmed on two
+% separate fetches of the same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like LUNGVOLUME/
+% DURALSINUS/HYPOTHALAMIC/PITUITARY). Each fact is a `relate` clause whose
+% byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see fetal-shunt-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary fetal_shunt_vocab {
+    define fetal_structure : entity   surface "fetal structure", "fetal shunt"
+    define adult_remnant   : entity   surface "adult remnant", "obliterated remnant"
+
+    define becomes : relation from fetal_structure to adult_remnant  % the adult remnant this fetal structure becomes
+}
+
+rulebook fetal_shunt_facts {
+    use fetal_shunt_vocab
+
+    % --- ductus arteriosus -> ligamentum arteriosum --------------------------
+    relate becomes(ductus_arteriosus, ligamentum_arteriosum)
+        source "The ductus arteriosus typically closes in the first 3 days of life, forming a fibrous cord called the ligamentum arteriosum."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553173/"
+        trust authoritative
+
+    % --- ductus venosus -> ligamentum venosum --------------------------------
+    relate becomes(ductus_venosus, ligamentum_venosum)
+        source "At birth, the remnant of the ductus venosus gradually develops into a ligament called the ligamentum venosum."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK547759/"
+        trust authoritative
+
+    % --- umbilical vein -> ligamentum teres hepatis --------------------------
+    relate becomes(umbilical_vein, ligamentum_teres_hepatis)
+        source "The remnant of the umbilical vein becomes the ligamentum teres hepatis, which extends superiorly from the umbilicus to connect to the falciform ligament of the liver."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557490/"
+        trust authoritative
+
+    % --- foramen ovale -> fossa ovalis ---------------------------------------
+    relate becomes(foramen_ovale, fossa_ovalis)
+        source "Over time, the foramen ovale tissues fuse to become the fossa ovalis, a closed remnant of the foramen ovale."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545203/"
+        trust authoritative
+
+    % --- umbilical arteries -> medial umbilical ligaments --------------------
+    relate becomes(umbilical_arteries, medial_umbilical_ligaments)
+        source "Medial umbilical ligaments are the remains of obliterated umbilical arteries and are visible either side of the median ligament."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551649/"
+        trust authoritative
+
+    % --- urachus -> median umbilical ligament --------------------------------
+    relate becomes(urachus, median_umbilical_ligament)
+        source "The urachus later develops into a fibrous cord, the median umbilical ligament."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK531465/"
+        trust authoritative
+}
