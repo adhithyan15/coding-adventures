@@ -1757,8 +1757,10 @@ mod tests {
     fn compiles_def_fn_into_sibling_function() {
         let m = compile("10 DEF FNS(X) = X * X\n20 PRINT FNS(7)\n30 END\n")
             .expect("ok");
-        // main + one sibling function.
-        assert_eq!(m.functions.len(), 2, "expected main + fns");
+        // `main` is first, with the `FNS` sibling present after it. (The module
+        // also carries the two BA2 print helpers because `PRINT` renders a
+        // value, so the total count is not asserted here — see the FNS lookup.)
+        assert_eq!(m.functions[0].name, "main");
         let f = m.functions.iter().find(|f| f.name == "FNS")
             .expect("sibling function `FNS`");
         assert_eq!(f.return_type, "i64");
