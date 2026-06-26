@@ -180,6 +180,8 @@ Current scope:
   plans over supervision work
 - D18D runtime maintenance-ticket descriptors for Chief-visible ticket queues
   over grouped supervision work
+- D18D runtime maintenance-work-order descriptors for Chief-visible execution
+  handoff over maintenance tickets
 - D18D supervision execution tool descriptors for authorized desired-state
   reconciliation and runtime supervision ticks
 - compact smart-home tool catalog summaries for read-side inspection
