@@ -440,6 +440,52 @@ impl SpreadsheetSession {
         true
     }
 
+    /// Find every cell whose text contains `query` — the engine's `find_all`
+    /// behind a JSON return. `in_formulas` searches the cell's **source** (formula
+    /// text / literal canonical string) when true, its **computed display** value
+    /// when false; `match_case = false` folds ASCII case. Returns
+    /// `{"matches":["A1","C3",…]}` (the A1 addresses, in (row,col) order); an empty
+    /// query yields an empty list. Read-only — no `mutate`, no `raw` change.
+    pub fn find_all(&self, query: &str, in_formulas: bool, match_case: bool) -> String {
+        let matches: Vec<Value> = self
+            .wb
+            .find_all(self.sheet, query, in_formulas, match_case)
+            .iter()
+            .map(|a| Value::String(a.to_a1()))
+            .collect();
+        json!({ "matches": matches }).to_string()
+    }
+
+    /// Replace `query` with `replacement` in the **source** of every matching
+    /// cell, via the engine's `replace_all` (which rewrites + recomputes), then
+    /// resync this facade's `raw` echo for the changed cells from the engine's new
+    /// source text so the formula bar stays in step. Returns the count of cells
+    /// changed; an empty query is a no-op. Routed through `mutate` for undo/redo.
+    pub fn replace_all(&mut self, query: &str, replacement: &str, match_case: bool) -> u32 {
+        self.mutate(|s| s.replace_all_inner(query, replacement, match_case))
+    }
+
+    fn replace_all_inner(&mut self, query: &str, replacement: &str, match_case: bool) -> u32 {
+        if query.is_empty() {
+            return 0;
+        }
+        // The cells replace_all will edit are exactly those whose SOURCE matches
+        // (in_formulas = true). Capture them up front so we can resync `raw` after.
+        let hits = self.wb.find_all(self.sheet, query, true, match_case);
+        let count = self.wb.replace_all(self.sheet, query, replacement, match_case) as u32;
+        // Resync the raw echo from the engine's post-replace source text: a cell
+        // cleared to empty drops out of the map; otherwise it holds the new source.
+        for addr in &hits {
+            let src = self.wb.cell_source_text(self.sheet, *addr);
+            if src.is_empty() {
+                self.raw.remove(addr);
+            } else {
+                self.raw.insert(*addr, src);
+            }
+        }
+        count
+    }
+
     /// Copy the inclusive rectangle `start_a1`..`end_a1` into the clipboard — a
     /// whole-block copy that pastes as a unit (the sibling of [`fill`](Self::fill),
     /// which replicates one cell). Content + format are captured by the engine;
@@ -1435,5 +1481,32 @@ mod tests {
         assert!(!s.sort_range("nope", "A2", 1, true)); // malformed address
         assert!(!s.sort_range("A1", "A1", 1, true)); // single-row range
         assert!(!s.sort_range("A1", "A2", 9, true)); // key_col outside range
+    }
+
+    #[test]
+    fn find_all_and_replace_all_over_the_facade() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "100");
+        s.set_cell("A2", "100");
+        s.set_cell("B1", "=A1+1"); // displays 101
+        // find by computed value: "10" is in 100 (A1, A2) and 101 (B1 display).
+        let by_val = s.find_all("10", false, true);
+        assert!(by_val.contains("\"A1\"") && by_val.contains("\"A2\"") && by_val.contains("\"B1\""));
+        // find by source: "A1" only in B1's formula text.
+        let by_src = s.find_all("A1", true, true);
+        assert!(by_src.contains("\"B1\"") && !by_src.contains("\"A1\""));
+        // empty query → empty matches.
+        assert_eq!(s.find_all("", false, true), "{\"matches\":[]}");
+        // replace the literal 100 → 7 in the two number cells (count 2); the raw
+        // echo resyncs so get_raw shows the new source.
+        assert_eq!(s.replace_all("100", "7", true), 2);
+        assert_eq!(s.get_raw("A1"), "7");
+        assert!(s.get_value("A1").contains("7"));
+        // replace A1 → A2 in the formula source; it re-parses + recomputes (=A2+1 = 8).
+        assert_eq!(s.replace_all("A1", "A2", true), 1);
+        assert!(s.get_value("B1").contains("8"));
+        // no-match / empty query → 0.
+        assert_eq!(s.replace_all("zzz", "q", true), 0);
+        assert_eq!(s.replace_all("", "q", true), 0);
     }
 }

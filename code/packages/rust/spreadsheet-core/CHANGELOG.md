@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.1
+
+- Make `Workbook::cell_source_text` **public** so a facade can resync its
+  raw-source echo map after `replace_all` rewrites cells (the engine had no other
+  public accessor for a cell's source text). No behavior change.
+
 ## 0.11.0
 
 **Find / replace + `set_raw` (Edit ▸ Find / Replace).** Locate and bulk-edit cells
