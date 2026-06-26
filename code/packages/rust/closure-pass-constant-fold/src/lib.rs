@@ -1213,12 +1213,13 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
     // SOUNDNESS NOTE — these fold under the same "builtins are intact" premise
     // every fold in this pass already relies on, but one notch weaker. A string
     // literal's `.slice`/`.concat` can only be subverted by monkeypatching
-    // `String.prototype`; `parseInt`/`parseFloat` are *free identifiers*, so a
-    // local binding (`let parseInt = …`) can additionally mask them. We fold
-    // them anyway — matching Closure Compiler, which treats redefining these
-    // globals as out of scope — but ONLY when the callee is the bare identifier
-    // `parseInt`/`parseFloat`, never a member access (`window.parseInt`, which
-    // reaches the MemberExpression arm above and is left untouched).
+    // `String.prototype`; `parseInt`/`parseFloat`/`Number` are *free
+    // identifiers*, so a local binding (`let parseInt = …`) can additionally
+    // mask them. We fold them anyway — matching Closure Compiler, which treats
+    // redefining these globals as out of scope — but ONLY when the callee is the
+    // bare identifier `parseInt`/`parseFloat`/`Number`, never a member access
+    // (`window.parseInt`, which reaches the MemberExpression arm above and is
+    // left untouched).
     //
     // We DECLINE (leave the call for the runtime) whenever the runtime result
     // is `NaN` (`parseInt("")`, an invalid/out-of-range radix) or `±Infinity`
@@ -1242,6 +1243,12 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     Some(_) => None,
                 },
                 "parseFloat" if arguments.len() == 1 => fold_parse_float(&s.value),
+                // `Number("…")` runs the FULL string→number coercion (not the
+                // longest-prefix scan `parseInt`/`parseFloat` use): the whole
+                // trimmed string must be a numeric literal or the result is
+                // `NaN`. One string argument only — a second argument is ignored
+                // by the runtime but we leave such calls alone to stay obvious.
+                "Number" if arguments.len() == 1 => fold_number(&s.value),
                 _ => None,
             };
             if let Some(value) = folded {
@@ -2774,6 +2781,146 @@ fn fold_parse_float(input: &str) -> Option<f64> {
     // a `0`; a leading dot (`".5"`) Rust already accepts.
     let matched = &s[0..j];
     let normalised = matched.replace(".e", ".0e").replace(".E", ".0E");
+    let normalised = if normalised.ends_with('.') {
+        format!("{normalised}0")
+    } else {
+        normalised
+    };
+    let value: f64 = normalised.parse().ok()?;
+    value.is_finite().then_some(value)
+}
+
+/// Is `body` (already stripped of any leading sign) a JavaScript
+/// `StrDecimalLiteral` mantissa — i.e. the part of `Number("…")` that is plain
+/// base-10? It must hold at least one digit, with the shape
+///
+/// ```text
+///   DecimalDigits ( '.' DecimalDigits? )? ( [eE] [+-]? DecimalDigits )?
+///   '.' DecimalDigits                      ( [eE] [+-]? DecimalDigits )?
+/// ```
+///
+/// and NOTHING left over. Examples that pass: `"5"`, `"5."`, `".5"`, `"5.5"`,
+/// `"5e3"`, `"5.e3"`, `"1E-9"`. Examples that fail (→ `NaN`, so we decline):
+/// `"1,2"` (stray comma), `"1_000"` (underscore), `"abc"` (no digit), `"1e"`
+/// (exponent with no digit), `"0x1F"` (the `x` is leftover — the hex form is
+/// handled separately, before this is ever called).
+///
+/// We validate the shape ourselves rather than trust Rust's `f64` parser
+/// because that parser ALSO accepts spellings JavaScript's `Number` rejects
+/// (`"inf"`, `"nan"`), and we must never fold one of those into a literal.
+fn is_js_decimal_literal(body: &str) -> bool {
+    let b = body.as_bytes();
+    let mut i = 0usize;
+    let mut saw_digit = false;
+
+    while i < b.len() && b[i].is_ascii_digit() {
+        i += 1;
+        saw_digit = true;
+    }
+    if i < b.len() && b[i] == b'.' {
+        i += 1;
+        while i < b.len() && b[i].is_ascii_digit() {
+            i += 1;
+            saw_digit = true;
+        }
+    }
+    if !saw_digit {
+        return false; // a bare `"."`, `"e5"`, `""` — no mantissa digit
+    }
+    // Optional exponent — `[eE]`, optional sign, then ≥1 digit. Unlike
+    // `parseFloat` (which would keep `"1"` and drop a digitless `"e"`), `Number`
+    // requires the WHOLE string to parse, so `"1e"` is simply invalid here.
+    if i < b.len() && (b[i] | 0x20) == b'e' {
+        i += 1;
+        if i < b.len() && (b[i] == b'+' || b[i] == b'-') {
+            i += 1;
+        }
+        let exp_start = i;
+        while i < b.len() && b[i].is_ascii_digit() {
+            i += 1;
+        }
+        if i == exp_start {
+            return false; // `"1e"`, `"1e+"` — exponent marker without digits
+        }
+    }
+    i == b.len() // reject any trailing garbage (`"1,2"`, `"5px"`, `"1_0"`)
+}
+
+/// Compute JavaScript's global `Number(string)` coercion at compile time
+/// (ECMAScript §21.1.1.1 → §7.1.4.1.1 `StringToNumber`), or `None` when the
+/// result is `NaN` or `±Infinity` (neither has a literal token to substitute).
+///
+/// Unlike `parseInt`/`parseFloat`, `Number` consumes the *entire* string after
+/// trimming — a single stray character anywhere makes the whole thing `NaN`:
+///
+/// | call                  | value     | note                                  |
+/// |-----------------------|-----------|---------------------------------------|
+/// | `Number("42")`        | `42`      | plain decimal                         |
+/// | `Number("")`          | `0`       | empty / all-whitespace → `+0`         |
+/// | `Number("  3.5 ")`    | `3.5`     | surrounding whitespace is trimmed     |
+/// | `Number("0x1F")`      | `31`      | hex — **no** sign permitted           |
+/// | `Number("0b101")`     | `5`       | binary                                |
+/// | `Number("0o17")`      | `15`      | octal                                 |
+/// | `Number("017")`       | `17`      | leading zero is decimal, NOT octal    |
+/// | `Number("abc")`       | `NaN`     | → decline                             |
+/// | `Number("1,2")`       | `NaN`     | → decline                             |
+/// | `Number("Infinity")`  | `∞`       | → decline (no literal)                |
+///
+/// SOUNDNESS: the trimmed set is exactly `is_js_trim_whitespace` (the engine's
+/// `StrWhiteSpace`), so a successful trim never diverges from the runtime. For
+/// the non-decimal `0x`/`0b`/`0o` forms we decline any value above `2^53`, where
+/// an `f64` can no longer represent every integer exactly — so whatever literal
+/// we emit is bit-identical to what the engine would compute.
+fn fold_number(input: &str) -> Option<f64> {
+    let s = input.trim_matches(is_js_trim_whitespace);
+
+    // An empty or all-whitespace string coerces to `+0`, not `NaN`.
+    if s.is_empty() {
+        return Some(0.0);
+    }
+
+    // NonDecimalIntegerLiteral: `0x`/`0b`/`0o` (case-insensitive), no sign, and
+    // at least one digit valid for the base. `u128::from_str_radix` would also
+    // accept a leading `+`/`-`, so we screen the digits ourselves first — both
+    // to reject signs (`Number("0x+1")` is `NaN`) and stray separators.
+    let non_decimal = s
+        .strip_prefix("0x")
+        .or_else(|| s.strip_prefix("0X"))
+        .map(|d| (16u32, d))
+        .or_else(|| {
+            s.strip_prefix("0b")
+                .or_else(|| s.strip_prefix("0B"))
+                .map(|d| (2u32, d))
+        })
+        .or_else(|| {
+            s.strip_prefix("0o")
+                .or_else(|| s.strip_prefix("0O"))
+                .map(|d| (8u32, d))
+        });
+    if let Some((radix, digits)) = non_decimal {
+        if digits.is_empty() || !digits.bytes().all(|c| (c as char).is_digit(radix)) {
+            return None;
+        }
+        let value = u128::from_str_radix(digits, radix).ok()?;
+        if value > (1u128 << 53) {
+            return None; // beyond exact f64 integer range — don't risk a mis-fold
+        }
+        return Some(value as f64);
+    }
+
+    // StrDecimalLiteral: an optional sign in front of a base-10 mantissa.
+    // `Infinity`/`±Infinity` has no numeric literal, so it makes us decline.
+    let body = s.strip_prefix(['+', '-']).unwrap_or(s);
+    if body == "Infinity" {
+        return None;
+    }
+    if !is_js_decimal_literal(body) {
+        return None;
+    }
+    // The shape is verified; normalise the two spellings Rust's `f64` parser
+    // rejects — a bare trailing dot (`"5."`) and a dot right before the exponent
+    // (`"5.e3"`) — then hand it to that correctly-rounded parser.
+    let normalised = s.replace(".e", ".0e").replace(".E", ".0E");
     let normalised = if normalised.ends_with('.') {
         format!("{normalised}0")
     } else {
@@ -4502,6 +4649,41 @@ mod tests {
     }
 
     #[test]
+    fn fold_number_direct_oracle() {
+        // (input, expected) — every value confirmed against V8's `Number(x)`.
+        for (input, expect) in [
+            ("42", Some(42.0)),        // plain decimal
+            ("", Some(0.0)),           // empty → +0 (NOT NaN, unlike parseFloat)
+            ("   ", Some(0.0)),        // all-whitespace → +0
+            ("  3.5 ", Some(3.5)),     // surrounding whitespace trimmed
+            ("0x1F", Some(31.0)),      // hex
+            ("0X1f", Some(31.0)),      // hex, mixed case
+            ("0b101", Some(5.0)),      // binary
+            ("0o17", Some(15.0)),      // octal
+            ("017", Some(17.0)),       // leading zero is DECIMAL, not octal
+            (".5", Some(0.5)),         // leading dot
+            ("5.", Some(5.0)),         // trailing dot
+            ("1e3", Some(1000.0)),     // exponent
+            ("2.5e-3", Some(0.0025)),  // signed exponent
+            ("-7", Some(-7.0)),        // negative decimal
+            ("+9", Some(9.0)),         // explicit positive
+            ("abc", None),             // not numeric → NaN → decline
+            ("1,2", None),             // stray comma → NaN → decline
+            ("12px", None),            // trailing garbage → NaN (Number is total)
+            ("1_000", None),           // underscore separators → NaN
+            ("1e", None),              // dangling exponent → NaN
+            ("Infinity", None),        // ∞ has no literal → decline
+            ("-Infinity", None),       // signed ∞ → decline
+            ("1e400", None),           // overflows to ∞ → decline
+            ("0x", None),              // prefix with no digits → NaN
+            ("0x+1", None),            // sign inside hex → NaN (no mis-fold)
+            ("-0x1F", None),           // sign before hex → NaN
+        ] {
+            assert_eq!(fold_number(input), expect, "Number({input:?})");
+        }
+    }
+
+    #[test]
     fn fold_string_number_through_pass() {
         // `String(42)` folds to the string literal `"42"`.
         let c = global_call("String", vec![num(42.0, None)]);
@@ -4510,6 +4692,18 @@ mod tests {
         match extract_expr(&out) {
             Expression::StringLiteral(s) => assert_eq!(s.value, "42"),
             other => panic!("expected \"42\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_number_through_pass() {
+        // `Number("0x1F")` folds to the numeric literal `31`.
+        let c = global_call("Number", vec![string("0x1F", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Number(\"0x1F\") should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 31.0),
+            other => panic!("expected 31; got {:?}", other),
         }
     }
 
@@ -4526,6 +4720,18 @@ mod tests {
     }
 
     #[test]
+    fn fold_number_empty_string_folds_to_zero() {
+        // `Number("")` is `0`, not NaN — the one shape that surprises people.
+        let c = global_call("Number", vec![string("", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Number(\"\") should fold to 0");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
+            other => panic!("expected 0; got {:?}", other),
+        }
+    }
+
+    #[test]
     fn string_exponential_number_does_not_fold() {
         // `String(1e21)` is "1e+21" in V8 — exponential notation Rust won't
         // produce — so we decline and leave the call intact.
@@ -4536,11 +4742,29 @@ mod tests {
     }
 
     #[test]
+    fn number_nan_result_does_not_fold() {
+        // `Number("abc")` is NaN — no literal token, so the call survives.
+        let c = global_call("Number", vec![string("abc", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Number(\"abc\") must not fold (NaN)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
     fn string_non_literal_argument_does_not_fold() {
         // Only string/number LITERAL args fold; `String(x)` needs runtime `x`.
         let c = global_call("String", vec![ident("x")]);
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "String(x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn number_with_second_argument_does_not_fold() {
+        // We only model the single-argument form; `Number("5", x)` is left alone.
+        let c = global_call("Number", vec![string("5", None), ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Number(\"5\", x) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
@@ -4563,6 +4787,19 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "window.String(5) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn member_number_does_not_fold() {
+        // `window.Number("5")` is a member call, not the bare global — leave it.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("window"), "Number")),
+            arguments: vec![string("5", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "window.Number(\"5\") must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

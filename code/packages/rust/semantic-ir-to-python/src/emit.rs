@@ -37,6 +37,8 @@ fn uses_oop(m: &Module) -> bool {
         // OOP import on those builtins too, else the emitted call is undefined.
         || module_uses_builtin(m, "__method__")
         || module_uses_builtin(m, "__scope__")
+        // `case_eq` (M5) routes through the OOP runtime helper.
+        || module_uses_builtin(m, "case_eq")
 }
 
 /// True if the module uses exception handling, in which case the emitted
@@ -903,6 +905,18 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             out.push(')');
             return;
         }
+    }
+    // `case_eq` (M5) — Ruby case-equality `pattern === value`, emitted by a
+    // `when` clause for range/regex/literal patterns (the class case lowers to
+    // `is_a?` via `__method__` instead).  Routes to the OOP runtime helper,
+    // which dispatches Range→membership, Regexp→match, else `==`.
+    if name == "case_eq" && args.len() == 2 {
+        out.push_str("_sir_oop_case_eq(");
+        emit_expr(out, &args[0], indent);
+        out.push_str(", ");
+        emit_expr(out, &args[1], indent);
+        out.push(')');
+        return;
     }
     // `raise` → raise a SIR exception via the exception runtime.  The first
     // argument decides the shape:

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.22 — case-equality `case_eq` emission (M5)
+
+A `case_eq` builtin (emitted by a `when` clause for range/regex/literal
+patterns) now routes to `__SirOop.caseEq(pattern, value)` (the `import * as
+__SirOop` already exposes it). `uses_oop` fires on `case_eq` so a class-less
+`case/when` still imports `@coding-adventures/sir-runtime-oop`. Emitted-shape
+test covers the dispatch.
+
 ## 0.1.21 — coverage: outer-local block captures (M4)
 
 No emitter change — the backend already closes over `MakeClosure` captures as

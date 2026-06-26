@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.23 — case-equality `case_eq` emission (M5)
+
+A `case_eq` builtin (emitted by a `when` clause for range/regex/literal
+patterns) now routes to `_sir_oop_case_eq(pattern, value)`. The OOP import
+header gains the alias, and `uses_oop` fires on `case_eq` so a class-less
+`case/when` still imports `sir-runtime-oop`. Execution-proof: a `case/when` over
+`when 10..20` / `when /hi/` / `when Integer` / `else` dispatches by Ruby
+case-equality and prints the right branch per scrutinee. The shared
+`run_emitted_python` harness now also puts `sir-runtime-range` and
+`sir-runtime-regex` on `PYTHONPATH` so range/regex programs run.
+
 ## 0.1.22 — coverage: outer-local block captures (M4)
 
 No emitter change — the backend already prepends `MakeClosure` captures as
