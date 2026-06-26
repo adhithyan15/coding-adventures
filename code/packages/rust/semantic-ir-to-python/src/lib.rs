@@ -206,6 +206,8 @@ mod tests {
             py_root.join("sir-runtime-core/src"),
             py_root.join("sir-runtime-pairs/src"),
             py_root.join("sir-runtime-oop/src"),
+            py_root.join("sir-runtime-range/src"),
+            py_root.join("sir-runtime-regex/src"),
         ])
         .expect("join PYTHONPATH");
 
@@ -307,6 +309,39 @@ mod tests {
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
             assert_eq!(stdout, "105\n", "emitted python printed unexpected output");
+        }
+    }
+
+    #[test]
+    fn end_to_end_case_when_case_equality_executes_py() {
+        // M5 execution-proof: a `case/when` over mixed pattern kinds dispatches
+        // by Ruby case-equality (`===`), not `==`:
+        //   • `when 10..20` → range membership
+        //   • `when /hi/`   → regex match
+        //   • `when Integer`→ class match (is_a?)
+        //   • else          → fallthrough
+        // Clauses are tested in order; a `when 10..20` tested against a String
+        // must not raise (Ruby returns false).
+        let src = "def label(x)\n  case x\n  when 10..20\n    print \"R\"\n  \
+                   when /hi/\n    print \"X\"\n  when Integer\n    print \"I\"\n  \
+                   else\n    print \"O\"\n  end\nend\n\
+                   label(15)\nlabel(\"hill\")\nlabel(5)\nlabel(3.5)\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("_sir_oop_case_eq("),
+            "range/regex whens must use case_eq; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("_sir_oop_call_method") && a.source.contains("\"is_a?\""),
+            "a class when must dispatch is_a?; got:\n{}",
+            a.source
+        );
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            // 15→range(R), "hill"→regex(X), 5→Integer(I), 3.5→else(O).
+            // `_sir_print` terminates each line with a newline.
+            assert_eq!(stdout, "R\nX\nI\nO\n", "case-equality dispatch produced wrong branches");
         }
     }
 

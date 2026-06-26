@@ -21,6 +21,7 @@ emitted code imports and calls.
 | `pushSelf` / `popSelf` / `ivarGet` / `ivarSet` | Instance variables addressed through a *current-self* stack, since methods have no receiver. |
 | `cvarGet` / `cvarSet` | Class-variable store. |
 | `callMethod` / `defineMethod` | Reflective dispatch for `is_a?`/`kind_of?`/`instance_of?`/`class` (emitted as SIR `__method__` calls) + a singleton-method table. |
+| `caseEq` | Ruby case-equality (`pattern === value`) — the test a `when` clause runs. RegExp→match, Range→membership, else `==`. |
 
 ## Usage
 
