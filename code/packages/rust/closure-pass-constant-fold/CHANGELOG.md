@@ -24,6 +24,33 @@ pair combination cannot overflow. Four V8-oracle unit tests cover the BMP path
 (agreement with `charCodeAt`), surrogate-pair combination, the lone-low-surrogate
 unit value, and the out-of-range decline.
 
+## [0.40.0] - 2026-06-25
+
+### Added — fold `"abcde".substr(start[, length])` on string literals
+
+The legacy `String.prototype.substr` (ECMAScript Annex B §B.2.3.1) now folds to
+a string literal when the receiver is a string literal and any provided
+arguments are integer literals. It completes the slice family (`slice`,
+`substring`, `substr`); unlike the other two, its **second argument is a
+*length*, not an end index**:
+
+- **Start** — a negative `start` counts from the end and then clamps to 0
+  (`"abcde".substr(-2)` begins at index 3 → `"de"`); a non-negative `start`
+  clamps to `len`.
+- **Length** — when omitted it defaults to "the rest"; the requested count is
+  clamped into `[0, len - start]`, so it can never read past the end. A length
+  `<= 0` yields `""`.
+
+Examples: `"abcde".substr(1, 2)` → `"bc"`, `"abcde".substr(1)` → `"bcde"`,
+`"abcde".substr(-2, 1)` → `"d"`, `"abcde".substr(0, 100)` → `"abcde"`,
+`"abcde".substr(10)` → `""`. Indices are UTF-16 code units (sharing the
+`slice`/`charAt` machinery), so `"💩ab".substr(2)` → `"ab"`.
+
+Conservative scope mirrors `slice`/`substring`: the helper declines (leaving the
+call for the runtime) for a non-integer-literal argument (we don't model
+`ToInteger` coercion), more than two arguments, or a cut that would split a
+surrogate pair into a lone surrogate (a valid JS string but not a Rust
+`String`).
 ## [0.39.0] - 2026-06-24
 
 ### Added — fold `"abcd".substring(start[, end])` on string literals

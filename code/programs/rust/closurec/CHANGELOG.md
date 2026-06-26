@@ -21,6 +21,25 @@ integration test assert the SIMPLE-level output
 surrogate), and guard that no `codePointAt` call survives (proving the typed
 SIMPLE pipeline ran, not the WHITESPACE_ONLY fallback).
 
+## [0.189.0] - 2026-06-25
+
+### Added — SIMPLE/ADVANCED fold `"abcde".substr(start[, length])`
+
+Wires the new legacy-`String.prototype.substr` fold (constant-fold 0.40.0) end
+to end through the closurec CLI. At `--compilation_level SIMPLE` (and ADVANCED,
+which routes through the same typed pipeline), a `"…".substr(startLit[,
+lengthLit])` call on a string literal collapses to the substring string literal.
+
+`substr` completes the slice family (`slice`, `substring`, `substr`); unlike the
+other two, its second argument is a *length*, not an end index: a negative start
+counts from the end (then clamps to 0) and the length clamps into
+`[0, len - start]`. New fixture `tests/diff/simple-fold-substr/` exercises those
+rules: `"abcde".substr(1, 2)` → `"bc"`, `"abcde".substr(1)` → `"bcde"`,
+`"abcde".substr(-2)` → `"de"`, `"abcde".substr(10)` → `""`, so the output is
+`var a="bc";var b="bcde";var c="de";var d="";report(a,b,c,d);`. Integration test
+`diff_simple_fold_substr.rs` asserts the folded stdout, that no `.substr(` call
+survives, and that the result is the typed pipeline (not the WHITESPACE_ONLY
+fallback).
 ## [0.188.0] - 2026-06-24
 
 ### Added — SIMPLE/ADVANCED fold `"abcd".substring(start[, end])`

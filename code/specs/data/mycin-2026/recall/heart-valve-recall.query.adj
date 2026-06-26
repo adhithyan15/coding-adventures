@@ -1,0 +1,19 @@
+% ============================================================================
+% heart-valve-recall.query.adj — a worked recall query over the heart-valve library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "where is valve X best
+% heard?" question: it states no exam fact — it only `import`s the grounded
+% library and asks binding queries. The native adj-lang engine resolves each `?`
+% against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli heart-valve-recall.query.adj
+% ============================================================================
+
+import "heart-valve-edges.adj"
+
+? best_heard_at(aortic_valve, $Location)      % expect right_second_intercostal_space
+? best_heard_at(pulmonic_valve, $Location)    % expect left_second_intercostal_space
+? best_heard_at(tricuspid_valve, $Location)   % expect fourth_left_intercostal_space
+? best_heard_at(mitral_valve, $Location)      % expect fifth_intercostal_space_midclavicular_line
