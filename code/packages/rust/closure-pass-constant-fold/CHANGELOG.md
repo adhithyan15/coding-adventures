@@ -28,6 +28,27 @@ UTF-16, i.e. a **lone surrogate** (a legal JS string but not a Rust `String`,
 the same guard `slice`/`charAt`/`codePointAt` use). Five V8-oracle unit tests
 (basic + empty, surrogate-pair assembly, lone-surrogate decline,
 out-of-range/fractional decline, non-`String` receiver decline).
+## [0.42.0] - 2026-06-25
+
+### Added — fold `"a💩b".codePointAt(i)` on string literals into a number
+
+`String.prototype.codePointAt` on a string-literal receiver with a
+non-negative integer-literal index now folds to a numeric literal (ECMAScript
+§22.1.3.4). The index is a UTF-16 code-unit position; when it lands on a
+**high surrogate** immediately followed by a **low surrogate**, the two units
+are combined into one astral code point in `U+10000..=U+10FFFF` — the defining
+difference from the already-folded `charCodeAt`, which returns a single 16-bit
+code unit. Examples: `"abc".codePointAt(0)` → `97`, `"a💩b".codePointAt(1)` →
+`128169` (vs `charCodeAt(1)` → `55357`), `"💩".codePointAt(1)` → `56489` (the
+lone trailing low surrogate, returned as its bare unit value). An out-of-range
+index is JS `undefined`, for which there is no literal, so the call is left
+unfolded (conservative).
+
+The branch sits alongside `charCodeAt`/`charAt` in the numeric-index match arm.
+All surrogate arithmetic is performed on 16-bit values widened to `u32`, so the
+pair combination cannot overflow. Four V8-oracle unit tests cover the BMP path
+(agreement with `charCodeAt`), surrogate-pair combination, the lone-low-surrogate
+unit value, and the out-of-range decline.
 
 ## [0.41.0] - 2026-06-25
 
