@@ -245,6 +245,28 @@ mod tests {
     }
 
     #[test]
+    fn end_to_end_block_captures_outer_local_emits_native_capture_ts() {
+        // M4 (TS shape mirror of the Python execution-proof): a block reads an
+        // enclosing local (`base`); the hoisted block must declare it as a
+        // leading parameter and the closure must close over it.
+        let src = "def apply\n  yield 5\nend\n\
+                   def run\n  base = 100\n  apply { |n| print n + base }\nend\n\
+                   run()\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(
+            a.source.contains("function __block_0(base: __Sir.Val, n: __Sir.Val)"),
+            "captured `base` must be the hoisted block's leading param; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("__block_0(base, ..._a)"),
+            "captured `base` must be forwarded into the hoisted block; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
     fn compiles_minimal_module() {
         let m = minimal_module();
         let a = compile(&m).expect("compile");

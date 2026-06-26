@@ -3037,26 +3037,6 @@ impl Lowerer {
         func
     }
 
-    /// Phase RB2 — build the `MakeClosure` capture list for a hoisted
-    /// block.  When the block body `yield`ed (`captured` true), thread a
-    /// single `__sir_block__` capture whose value reads the enclosing
-    /// method's `__sir_block__` parameter (which `thread_block_param`
-    /// appends to that method).  Otherwise no captures (the v0 baseline:
-    /// block bodies referencing other outer locals are not yet captured).
-    fn block_capture_values(&self, captured: bool, span: Span) -> Vec<CaptureValue> {
-        if captured {
-            vec![CaptureValue {
-                name: BLOCK_PARAM_NAME.to_string(),
-                value: Expr::VarRef {
-                    name: BLOCK_PARAM_NAME.to_string(),
-                    scope: Scope::Param,
-                    span,
-                },
-            }]
-        } else {
-            Vec::new()
-        }
-    }
 
     /// Rewrite every direct-in-body `yield` within a [`Block`], returning
     /// whether at least one was found.  Recurses through the block's
@@ -3276,6 +3256,298 @@ impl Lowerer {
             | Expr::StrLit { .. }
             | Expr::FloatLit { .. }
             | Expr::VarRef { .. } => false,
+        }
+    }
+
+    // ===================================================================
+    // M4 (FC) — general outer-local captures for hoisted blocks
+    //
+    // A Ruby block closes over the locals of its enclosing scope:
+    //
+    //     def f
+    //       x = 10
+    //       [1, 2, 3].each { |n| puts n + x }   # `x` is captured
+    //     end
+    //
+    // The block body is hoisted to a top-level `__block_<n>` function, so a
+    // reference to the enclosing `x` (lowered as `VarRef{scope:Local}`)
+    // would be an unbound name inside that function.  M4 detects such free
+    // reads, rewrites them to `Scope::Capture`, and threads the enclosing
+    // value in as a `MakeClosure` capture (which the backends prepend as a
+    // leading parameter).
+    //
+    // **Capture rule (v0, read-only, single-level).** A name is captured
+    // iff it is *read* (`VarRef{Local}`) in the block body, is bound in the
+    // *immediate* enclosing scope (a method/outer-block param or local), and
+    // is NOT bound inside the block itself (block param, block-local, or a
+    // name assigned anywhere in the block body — an in-block assignment
+    // makes it block-local, and capture-then-reassign would need
+    // by-reference capture, a documented cut-line shared with RB2's nested
+    // `yield`).  Capturing a variable two scopes up (capture chaining) is
+    // likewise deferred.
+    // ===================================================================
+
+    /// Collect every name *bound within* a block body — `Assign` /
+    /// `LetBinding` / `LetStarBinding` targets, `for`-loop variables, and a
+    /// typed-rescue exception binding.  A bound name shadows any enclosing
+    /// binding, so it is excluded from capture.  Nested `MakeClosure`
+    /// bodies are hoisted separately and are NOT descended.
+    fn collect_bound_names_in_block(block: &Block, out: &mut HashSet<String>) {
+        for s in &block.stmts {
+            Self::collect_bound_names_in_stmt(s, out);
+        }
+        Self::collect_bound_names_in_expr(&block.value, out);
+    }
+
+    fn collect_bound_names_in_stmt(stmt: &Stmt, out: &mut HashSet<String>) {
+        match stmt {
+            Stmt::LetBinding { name, value, .. }
+            | Stmt::LetStarBinding { name, value, .. }
+            | Stmt::Assign { name, value, .. } => {
+                out.insert(name.clone());
+                Self::collect_bound_names_in_expr(value, out);
+            }
+            Stmt::ExprStmt { expr, .. } => Self::collect_bound_names_in_expr(expr, out),
+            Stmt::While { cond, body, .. } => {
+                Self::collect_bound_names_in_expr(cond, out);
+                Self::collect_bound_names_in_block(body, out);
+            }
+            Stmt::ForRange { var, start, stop, step, body, .. } => {
+                out.insert(var.clone());
+                Self::collect_bound_names_in_expr(start, out);
+                Self::collect_bound_names_in_expr(stop, out);
+                Self::collect_bound_names_in_expr(step, out);
+                Self::collect_bound_names_in_block(body, out);
+            }
+            Stmt::ForEach { var, iter, body, .. } => {
+                out.insert(var.clone());
+                Self::collect_bound_names_in_expr(iter, out);
+                Self::collect_bound_names_in_block(body, out);
+            }
+            Stmt::SeqSet { seq, index, value, .. } => {
+                Self::collect_bound_names_in_expr(seq, out);
+                Self::collect_bound_names_in_expr(index, out);
+                Self::collect_bound_names_in_expr(value, out);
+            }
+            Stmt::MapSet { map, key, value, .. } => {
+                Self::collect_bound_names_in_expr(map, out);
+                Self::collect_bound_names_in_expr(key, out);
+                Self::collect_bound_names_in_expr(value, out);
+            }
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                for s in body {
+                    Self::collect_bound_names_in_stmt(s, out);
+                }
+                for r in rescues {
+                    if let Some(n) = &r.binding {
+                        out.insert(n.clone());
+                    }
+                    for s in &r.body {
+                        Self::collect_bound_names_in_stmt(s, out);
+                    }
+                }
+                if let Some(eb) = ensure_body {
+                    for s in eb {
+                        Self::collect_bound_names_in_stmt(s, out);
+                    }
+                }
+            }
+            // Declaration bodies hoist their own methods; not descended.
+            Stmt::ClassDef { .. }
+            | Stmt::ModuleDef { .. }
+            | Stmt::SingletonClassDef { .. } => {}
+        }
+    }
+
+    fn collect_bound_names_in_expr(expr: &Expr, out: &mut HashSet<String>) {
+        match expr {
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                Self::collect_bound_names_in_expr(cond, out);
+                Self::collect_bound_names_in_block(then_branch, out);
+                Self::collect_bound_names_in_block(else_branch, out);
+            }
+            Expr::Block(b) => Self::collect_bound_names_in_block(b, out),
+            Expr::BuiltinCall { args, .. }
+            | Expr::DirectCall { args, .. }
+            | Expr::Intrinsic { args, .. } => {
+                for a in args {
+                    Self::collect_bound_names_in_expr(a, out);
+                }
+            }
+            Expr::IndirectCall { target, args, .. } => {
+                Self::collect_bound_names_in_expr(target, out);
+                for a in args {
+                    Self::collect_bound_names_in_expr(a, out);
+                }
+            }
+            Expr::SeqLit { items, .. } => {
+                for i in items {
+                    Self::collect_bound_names_in_expr(i, out);
+                }
+            }
+            Expr::SeqIndex { seq, index, .. } => {
+                Self::collect_bound_names_in_expr(seq, out);
+                Self::collect_bound_names_in_expr(index, out);
+            }
+            Expr::SeqLen { seq, .. } => Self::collect_bound_names_in_expr(seq, out),
+            Expr::MapLit { entries, .. } => {
+                for e in entries {
+                    Self::collect_bound_names_in_expr(&e.key, out);
+                    Self::collect_bound_names_in_expr(&e.value, out);
+                }
+            }
+            Expr::MapGet { map, key, .. } => {
+                Self::collect_bound_names_in_expr(map, out);
+                Self::collect_bound_names_in_expr(key, out);
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                Self::collect_bound_names_in_expr(lhs, out);
+                Self::collect_bound_names_in_expr(rhs, out);
+            }
+            Expr::StrConcat { parts, .. } => {
+                for p in parts {
+                    Self::collect_bound_names_in_expr(p, out);
+                }
+            }
+            // MakeClosure not descended; atoms/VarRef bind nothing.
+            _ => {}
+        }
+    }
+
+    /// Rewrite every free *read* (`VarRef{scope:Local}`) of a name for which
+    /// `is_free(name)` holds to `Scope::Capture`, recording each captured
+    /// name once in first-occurrence order.  Nested `MakeClosure` bodies are
+    /// NOT descended (they capture in their own right).
+    fn recapture_reads_in_block(
+        block: &mut Block,
+        is_free: &impl Fn(&str) -> bool,
+        found: &mut Vec<String>,
+    ) {
+        for s in &mut block.stmts {
+            Self::recapture_reads_in_stmt(s, is_free, found);
+        }
+        Self::recapture_reads_in_expr(&mut block.value, is_free, found);
+    }
+
+    fn recapture_reads_in_stmt(
+        stmt: &mut Stmt,
+        is_free: &impl Fn(&str) -> bool,
+        found: &mut Vec<String>,
+    ) {
+        match stmt {
+            Stmt::LetBinding { value, .. }
+            | Stmt::LetStarBinding { value, .. }
+            | Stmt::Assign { value, .. }
+            | Stmt::ExprStmt { expr: value, .. } => {
+                Self::recapture_reads_in_expr(value, is_free, found)
+            }
+            Stmt::While { cond, body, .. } => {
+                Self::recapture_reads_in_expr(cond, is_free, found);
+                Self::recapture_reads_in_block(body, is_free, found);
+            }
+            Stmt::ForRange { start, stop, step, body, .. } => {
+                Self::recapture_reads_in_expr(start, is_free, found);
+                Self::recapture_reads_in_expr(stop, is_free, found);
+                Self::recapture_reads_in_expr(step, is_free, found);
+                Self::recapture_reads_in_block(body, is_free, found);
+            }
+            Stmt::ForEach { iter, body, .. } => {
+                Self::recapture_reads_in_expr(iter, is_free, found);
+                Self::recapture_reads_in_block(body, is_free, found);
+            }
+            Stmt::SeqSet { seq, index, value, .. } => {
+                Self::recapture_reads_in_expr(seq, is_free, found);
+                Self::recapture_reads_in_expr(index, is_free, found);
+                Self::recapture_reads_in_expr(value, is_free, found);
+            }
+            Stmt::MapSet { map, key, value, .. } => {
+                Self::recapture_reads_in_expr(map, is_free, found);
+                Self::recapture_reads_in_expr(key, is_free, found);
+                Self::recapture_reads_in_expr(value, is_free, found);
+            }
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                for s in body {
+                    Self::recapture_reads_in_stmt(s, is_free, found);
+                }
+                for r in rescues {
+                    for s in &mut r.body {
+                        Self::recapture_reads_in_stmt(s, is_free, found);
+                    }
+                }
+                if let Some(eb) = ensure_body {
+                    for s in eb {
+                        Self::recapture_reads_in_stmt(s, is_free, found);
+                    }
+                }
+            }
+            Stmt::ClassDef { .. }
+            | Stmt::ModuleDef { .. }
+            | Stmt::SingletonClassDef { .. } => {}
+        }
+    }
+
+    fn recapture_reads_in_expr(
+        expr: &mut Expr,
+        is_free: &impl Fn(&str) -> bool,
+        found: &mut Vec<String>,
+    ) {
+        match expr {
+            Expr::VarRef { name, scope, .. } if *scope == Scope::Local && is_free(name) => {
+                if !found.iter().any(|n| n == name) {
+                    found.push(name.clone());
+                }
+                *scope = Scope::Capture;
+            }
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                Self::recapture_reads_in_expr(cond, is_free, found);
+                Self::recapture_reads_in_block(then_branch, is_free, found);
+                Self::recapture_reads_in_block(else_branch, is_free, found);
+            }
+            Expr::Block(b) => Self::recapture_reads_in_block(b, is_free, found),
+            Expr::BuiltinCall { args, .. }
+            | Expr::DirectCall { args, .. }
+            | Expr::Intrinsic { args, .. } => {
+                for a in args.iter_mut() {
+                    Self::recapture_reads_in_expr(a, is_free, found);
+                }
+            }
+            Expr::IndirectCall { target, args, .. } => {
+                Self::recapture_reads_in_expr(target, is_free, found);
+                for a in args.iter_mut() {
+                    Self::recapture_reads_in_expr(a, is_free, found);
+                }
+            }
+            Expr::SeqLit { items, .. } => {
+                for i in items.iter_mut() {
+                    Self::recapture_reads_in_expr(i, is_free, found);
+                }
+            }
+            Expr::SeqIndex { seq, index, .. } => {
+                Self::recapture_reads_in_expr(seq, is_free, found);
+                Self::recapture_reads_in_expr(index, is_free, found);
+            }
+            Expr::SeqLen { seq, .. } => Self::recapture_reads_in_expr(seq, is_free, found),
+            Expr::MapLit { entries, .. } => {
+                for e in entries.iter_mut() {
+                    Self::recapture_reads_in_expr(&mut e.key, is_free, found);
+                    Self::recapture_reads_in_expr(&mut e.value, is_free, found);
+                }
+            }
+            Expr::MapGet { map, key, .. } => {
+                Self::recapture_reads_in_expr(map, is_free, found);
+                Self::recapture_reads_in_expr(key, is_free, found);
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                Self::recapture_reads_in_expr(lhs, is_free, found);
+                Self::recapture_reads_in_expr(rhs, is_free, found);
+            }
+            Expr::StrConcat { parts, .. } => {
+                for p in parts.iter_mut() {
+                    Self::recapture_reads_in_expr(p, is_free, found);
+                }
+            }
+            // MakeClosure not descended; remaining atoms/VarRefs untouched.
+            _ => {}
         }
     }
 
@@ -5380,17 +5652,15 @@ impl Lowerer {
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
             })?;
-        let (fn_name, captured_block) = self.hoist_block_to_function(block_node)?;
+        let (fn_name, capture_values) = self.hoist_block_to_function(block_node)?;
 
-        // Append `MakeClosure` as the trailing arg.  Captures are empty in
-        // v0 EXCEPT the RB2 enclosing-block capture: when the block body
-        // `yield`s, it captures the enclosing method's `__sir_block__`
-        // (block bodies referencing other outer locals remain a known
-        // limitation).
+        // Append `MakeClosure` as the trailing arg.  Captures cover the RB2
+        // enclosing-block capture (`__sir_block__`, when the block `yield`s)
+        // and, per M4, any enclosing locals/params the block reads.
         let bspan = self.span_of(block_node);
         let make_closure = Expr::MakeClosure {
             fn_name: fn_name.clone(),
-            captures: self.block_capture_values(captured_block, bspan.clone()),
+            captures: capture_values,
             span: bspan,
         };
         self.features_used.insert(Feature::Closures);
@@ -5423,7 +5693,7 @@ impl Lowerer {
     fn hoist_block_to_function(
         &mut self,
         block_node: &GrammarASTNode,
-    ) -> Result<(String, bool), RubyLowerError> {
+    ) -> Result<(String, Vec<CaptureValue>), RubyLowerError> {
         // Drill into the do_block / brace_block child.
         let inner = self.first_node_child(block_node).ok_or_else(|| RubyLowerError {
             message: "block missing do_block/brace_block child".to_string(),
@@ -5520,6 +5790,13 @@ impl Lowerer {
         // `lower_def_statement`).
         let saved_locals = std::mem::take(&mut self.declared_locals);
         let saved_params = std::mem::take(&mut self.current_params);
+        // M4 — snapshot the *immediate* enclosing scope (the method or outer
+        // block whose body we are lowering inside of) so that, after the body
+        // is lowered, we can recognise free reads of its locals/params and
+        // capture them.  Cloned now because `saved_*` are moved back into
+        // `self` when the block scope is restored below.
+        let enclosing_locals = saved_locals.clone();
+        let enclosing_params = saved_params.clone();
         // Phase RB2 — whether THIS block is being hoisted while already
         // inside another block.  Captured before we mark ourselves as a
         // block body, so an inner block (hoisted during our body lowering)
@@ -5643,8 +5920,12 @@ impl Lowerer {
         // re-capture `__sir_block__`; until that chaining exists, a nested
         // block keeps its raw `yield` (valid SIR) rather than emit an
         // invalid cross-level `Param` reference.
+        // `captures` lists the hoisted function's capture names; the parallel
+        // `capture_values` are the values the caller threads at the
+        // `MakeClosure` — kept in lockstep (same order) so capture[i] binds
+        // value[i].  The backends prepend captures as leading parameters.
         let mut captures: Vec<Capture> = Vec::new();
-        let mut captured_enclosing_block = false;
+        let mut capture_values: Vec<CaptureValue> = Vec::new();
         if self.in_def_body
             && !nested_in_block
             && Self::rewrite_yields_in_block(&mut body, Scope::Capture)
@@ -5653,10 +5934,66 @@ impl Lowerer {
                 name: BLOCK_PARAM_NAME.to_string(),
                 sir_type: None,
             });
+            capture_values.push(CaptureValue {
+                name: BLOCK_PARAM_NAME.to_string(),
+                value: Expr::VarRef {
+                    name: BLOCK_PARAM_NAME.to_string(),
+                    scope: Scope::Param,
+                    span: self.span_of(block_node),
+                },
+            });
             self.block_captures_enclosing = true;
-            captured_enclosing_block = true;
             self.features_used.insert(Feature::Closures);
             self.features_used.insert(Feature::DynamicTyping);
+        }
+
+        // M4 — capture free reads of the immediate enclosing scope's
+        // locals/params.  Compute the block's own bound names (params,
+        // block-locals, and anything assigned inside the body — those shadow
+        // or rebind locally and are NOT captured), then rewrite every free
+        // read to `Scope::Capture` and thread the enclosing value in.
+        let mut block_bound: HashSet<String> = HashSet::new();
+        for p in &params {
+            block_bound.insert(p.name.clone());
+        }
+        for name in &block_locals {
+            block_bound.insert(name.clone());
+        }
+        Self::collect_bound_names_in_block(&body, &mut block_bound);
+        // The reserved block param is threaded by RB2, never via this path.
+        block_bound.insert(BLOCK_PARAM_NAME.to_string());
+
+        let is_free = |name: &str| {
+            !block_bound.contains(name)
+                && (enclosing_params.contains(name) || enclosing_locals.contains(name))
+        };
+        let mut free: Vec<String> = Vec::new();
+        Self::recapture_reads_in_block(&mut body, &is_free, &mut free);
+        if !free.is_empty() {
+            self.features_used.insert(Feature::Closures);
+            self.features_used.insert(Feature::DynamicTyping);
+        }
+        let cap_span = self.span_of(block_node);
+        for name in free {
+            // The enclosing value-ref scope: an enclosing *param* reads back
+            // as `Param`, otherwise an enclosing *local* reads as `Local`.
+            let outer_scope = if enclosing_params.contains(&name) {
+                Scope::Param
+            } else {
+                Scope::Local
+            };
+            captures.push(Capture {
+                name: name.clone(),
+                sir_type: None,
+            });
+            capture_values.push(CaptureValue {
+                name: name.clone(),
+                value: Expr::VarRef {
+                    name,
+                    scope: outer_scope,
+                    span: cap_span.clone(),
+                },
+            });
         }
 
         // Mint the synthetic function name and push the hoisted
@@ -5679,7 +6016,7 @@ impl Lowerer {
             span: self.span_of(block_node),
         });
 
-        Ok((fn_name, captured_enclosing_block))
+        Ok((fn_name, capture_values))
     }
 
     // -------------------------------------------------------------------
@@ -7687,15 +8024,15 @@ impl Lowerer {
         // hoist it to a top-level Function and append the resulting
         // `MakeClosure` as the call's trailing argument, exactly as
         // `method_with_block` does for bare-name calls.  Without this the
-        // block would be silently dropped.  Captures are empty in v0
-        // (block bodies referencing outer locals remain a known
-        // limitation, shared with `method_with_block`).
+        // block would be silently dropped.  Captures cover the RB2
+        // enclosing-block capture and, per M4, any enclosing locals/params
+        // the block reads (shared with `method_with_block`).
         if let Some(block_node) = self.find_node_child(dot_node, "block") {
-            let (fn_name, captured_block) = self.hoist_block_to_function(block_node)?;
+            let (fn_name, capture_values) = self.hoist_block_to_function(block_node)?;
             let bspan = self.span_of(block_node);
             full_args.push(Expr::MakeClosure {
                 fn_name,
-                captures: self.block_capture_values(captured_block, bspan.clone()),
+                captures: capture_values,
                 span: bspan,
             });
             self.features_used.insert(Feature::Closures);
