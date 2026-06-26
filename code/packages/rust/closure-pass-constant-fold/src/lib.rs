@@ -1186,11 +1186,88 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         }
     }
 
+    // ---- global String(value) on a string- or number-literal argument ----
+    //
+    // `String("x")` → `"x"` (identity) and `String(42)` → `"42"` — the ToString
+    // coercion (ECMAScript §22.1.3.1 → §7.1.17). We fold only the two literal
+    // argument shapes we can render *exactly*:
+    //
+    //   * a string literal — returned unchanged;
+    //   * an INTEGER number literal — rendered by `fold_string_of_number`, which
+    //     folds only integers (declining fractional values whose shortest-decimal
+    //     tie-break could diverge from V8), so we never substitute a wrong string.
+    //
+    // Every other argument (a boolean, `null`, an identifier, a second argument)
+    // is left for the runtime. Like `parseInt`/`parseFloat`, `String` is a free
+    // identifier, so we fold only the bare `String(...)` callee — never a member
+    // access (`window.String(...)`, handled by the MemberExpression arm above).
+    if let Expression::Identifier(id) = &callee {
+        if id.name == "String" && arguments.len() == 1 {
+            let folded: Option<String> = match arguments.first() {
+                Some(Expression::StringLiteral(s)) => Some(s.value.clone()),
+                Some(Expression::NumericLiteral(n)) => fold_string_of_number(n.value),
+                _ => None,
+            };
+            if let Some(result) = folded {
+                let parent = c.cv.clone();
+                let before = match arguments.first() {
+                    Some(Expression::NumericLiteral(n)) => {
+                        format!("String({})", format_js_number(n.value))
+                    }
+                    _ => format!("String(\"{}\")", result),
+                };
+                let after = format!("\"{}\"", result);
+                let new_cv = st.fork_cv(&parent, &before, &after);
+                return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+            }
+        }
+    }
+
     Expression::CallExpression(CallExpression {
         cv: c.cv.clone(),
         callee: Box::new(callee),
         arguments,
     })
+}
+
+/// Render a NUMBER literal the way JavaScript's `String(n)` / `Number.prototype
+/// .toString()` would (ECMAScript §6.1.6.1.20 `Number::toString`), or `None`
+/// when we can't guarantee a byte-identical result.
+///
+/// `n` is always finite here (a `NumericLiteral` can never be `NaN`/`Infinity`
+/// — those are global identifiers, not literal tokens).
+///
+/// We fold ONLY integer-valued numbers in the exact-`i64` range. We deliberately
+/// do **not** fold fractional values: Rust's `f64::to_string` and V8's
+/// `Number::toString` are *both* shortest-round-trip, but on a value that sits
+/// exactly halfway between two equally-short decimals they can break the tie in
+/// OPPOSITE directions — a silent last-digit-off-by-one (e.g.
+/// `String(108868734838530.12)` would mis-fold to `"...530.13"`). Reproducing
+/// V8's tie-breaking would mean implementing the full spec `Number::toString`,
+/// so instead we decline every fractional argument (the call is left for the
+/// runtime — always sound). An integer, by contrast, has a *unique* decimal
+/// spelling, so the `i64` path is byte-identical to V8.
+///
+/// | call             | value    | branch                              |
+/// |------------------|----------|-------------------------------------|
+/// | `String(0)`      | `"0"`    | zero (covers `-0` too)              |
+/// | `String(42)`     | `"42"`   | exact integer via `i64`             |
+/// | `String(-3)`     | `"-3"`   | exact integer                       |
+/// | `String(0.5)`    | decline  | fractional → tie-break divergence   |
+/// | `String(3.14)`   | decline  | fractional → tie-break divergence   |
+/// | `String(1e21)`   | decline  | ≥ 2^53 (and V8 exponential anyway)  |
+fn fold_string_of_number(n: f64) -> Option<String> {
+    // Both `+0` and `-0` stringify to `"0"` (and `-0.0 == 0.0` in Rust).
+    if n == 0.0 {
+        return Some("0".to_string());
+    }
+    // Integer-valued and inside `i64`'s exact range: `< 2^53` keeps every integer
+    // both exactly f64-representable AND safely inside `i64` (so the `as` cast
+    // can't saturate). Fractional values, and integers ≥ 2^53, are declined.
+    if n.fract() == 0.0 && n.abs() < 9_007_199_254_740_992.0 {
+        return Some(format!("{}", n as i64));
+    }
+    None
 }
 
 /// Evaluate a single-argument `String.prototype` substring **predicate** —
@@ -4255,6 +4332,93 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "window.parseInt(\"12\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn fold_string_of_number_direct_oracle() {
+        // (input, expected) — folded values confirmed against V8's `String(n)`;
+        // fractional and ≥2^53 inputs DECLINE (we never risk a tie-break mis-fold).
+        for (input, expect) in [
+            (0.0, Some("0".to_string())),       // +0 → "0"
+            (-0.0, Some("0".to_string())),      // -0 → "0"
+            (42.0, Some("42".to_string())),     // integer
+            (-3.0, Some("-3".to_string())),     // negative integer
+            (255.0, Some("255".to_string())),   // integer
+            (1000000.0, Some("1000000".to_string())), // 1e6 integer
+            (0.5, None),    // fractional → decline (Rust/V8 tie-break can diverge)
+            (3.14, None),   // fractional → decline
+            (-2.5, None),   // fractional → decline
+            (108868734838530.12, None), // the reviewer's known off-by-one → decline
+            (1e20, None),   // integer but ≥ 2^53 → decline (conservative)
+            (1e21, None),   // ≥ 2^53; V8 exponential anyway → decline
+        ] {
+            assert_eq!(fold_string_of_number(input), expect, "String({input})");
+        }
+    }
+
+    #[test]
+    fn fold_string_number_through_pass() {
+        // `String(42)` folds to the string literal `"42"`.
+        let c = global_call("String", vec![num(42.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "String(42) should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "42"),
+            other => panic!("expected \"42\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_string_identity_through_pass() {
+        // `String("x")` is the identity on a string literal → `"x"`.
+        let c = global_call("String", vec![string("x", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "String(\"x\") should fold to \"x\"");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "x"),
+            other => panic!("expected \"x\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn string_exponential_number_does_not_fold() {
+        // `String(1e21)` is "1e+21" in V8 — exponential notation Rust won't
+        // produce — so we decline and leave the call intact.
+        let c = global_call("String", vec![num(1e21, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "String(1e21) must not fold (exponential)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn string_non_literal_argument_does_not_fold() {
+        // Only string/number LITERAL args fold; `String(x)` needs runtime `x`.
+        let c = global_call("String", vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "String(x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn string_with_second_argument_does_not_fold() {
+        // We model only the single-argument form; `String(5, x)` is left alone.
+        let c = global_call("String", vec![num(5.0, None), ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "String(5, x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn member_string_does_not_fold() {
+        // `window.String(5)` is a member call, not the bare global — leave it.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("window"), "String")),
+            arguments: vec![num(5.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "window.String(5) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

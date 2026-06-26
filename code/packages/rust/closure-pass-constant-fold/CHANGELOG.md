@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.46.0] - 2026-06-25
+
+### Added — fold global `String(…)` → string literal on string/number literals
+
+The global `String(value)` coercion now folds to a string literal when its
+single argument is a **string** or **integer** number literal (ECMAScript
+§22.1.3.1 → §7.1.17 `ToString`):
+
+- string literal → returned unchanged (identity): `String("x")` → `"x"`;
+- integer number literal → its decimal spelling: `String(42)` → `"42"`,
+  `String(-3)` → `"-3"`, `String(255)` → `"255"`.
+
+The numeric case is handled by a new `fold_string_of_number` helper that folds
+**only integer-valued** numbers in the exact-`i64` range (`|n| < 2^53`, where an
+integer is both exactly representable and safe to render through `i64`).
+**Fractional** numbers are deliberately declined: Rust's `f64::to_string` and
+V8's `Number::toString` are both shortest-round-trip but can break an exact
+binary tie in opposite directions (a last-digit-off-by-one, e.g.
+`String(108868734838530.12)`), so folding them could silently change the
+program. An integer, by contrast, has a unique decimal spelling, so the `i64`
+path is byte-identical to V8. Declining is always sound (the call is left for the
+runtime).
+
+Every other argument — a fractional or `≥ 2^53` number, a boolean, `null`, an
+identifier, a second argument — is left intact, and like
+`parseInt`/`parseFloat`/`Number` it folds only the **bare** global identifier,
+never a member access (`window.String(...)` is untouched).
+
 ## [0.42.0] - 2026-06-25
 
 ### Added — fold `"a💩b".codePointAt(i)` on string literals into a number
