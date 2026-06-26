@@ -1,0 +1,75 @@
+% ============================================================================
+% acid-base-edges — the primary acid-base disturbance → expected compensation
+% knowledge-graph (MYCIN-2026 ACIDBASE).
+% ============================================================================
+% A high-yield physiology board table: each of the four SIMPLE (primary) acid-base
+% disturbances and the body's EXPECTED compensatory response. "How does the body
+% compensate for a metabolic acidosis?" becomes the binding query
+%     ? compensated_by(metabolic_acidosis, $Compensation).
+%
+% Direction note: the relation is the PRIMARY disturbance -> the compensatory
+% mechanism the body mounts against it (`compensated_by`). A metabolic disturbance
+% is compensated by the RESPIRATORY system (changing PaCO2 in minutes); a
+% respiratory disturbance is compensated by the METABOLIC / RENAL system (changing
+% serum bicarbonate over hours-to-days). Each disturbance here maps to ONE canonical
+% compensation span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The compensation object names the literal mechanism the
+% sentence states (metabolic acidosis "respiratory compensation"; metabolic
+% alkalosis "increase in PaCO2"; respiratory acidosis "the metabolic response
+% should increase the amount of bicarbonate via the renal system"; respiratory
+% alkalosis chronic "low to normal HCO3 levels" — the renal lowering of
+% bicarbonate over time). Each span was independently re-fetched and confirmed on
+% two separate fetches of the same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like HEARTVALVE/PHARYNGEAL/
+% FETALSHUNT/LUNGVOLUME). Each fact is a `relate` clause whose byte-provenance
+% lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see acid-base-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary acid_base_vocab {
+    define disturbance  : entity   surface "acid-base disturbance", "primary acid-base disorder"
+    define compensation : entity   surface "compensatory response", "compensation mechanism"
+
+    define compensated_by : relation from disturbance to compensation  % the expected compensatory response to this primary disturbance
+}
+
+rulebook acid_base_facts {
+    use acid_base_vocab
+
+    % --- metabolic acidosis -> respiratory compensation ---------------------
+    relate compensated_by(metabolic_acidosis, respiratory_compensation)
+        source "Respiratory compensation is the physiologic mechanism to help normalize a metabolic acidosis; however, compensation never completely corrects an acidemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482146/"
+        trust authoritative
+
+    % --- metabolic alkalosis -> increased PaCO2 (respiratory) compensation --
+    relate compensated_by(metabolic_alkalosis, increased_paco2_compensation)
+        source "In metabolic alkalosis, exact values may vary, but an estimate is that there is about a 0.5 mm Hg increase in PaCO2 per 1 mmol/L increase in HCO3."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545269/"
+        trust authoritative
+
+    % --- respiratory acidosis -> metabolic (renal) bicarbonate increase -----
+    relate compensated_by(respiratory_acidosis, metabolic_response_increased_bicarbonate)
+        source "When respiratory acidosis occurs, the metabolic response should increase the amount of bicarbonate via the renal system."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507807/"
+        trust authoritative
+
+    % --- respiratory alkalosis -> chronic renal lowering of bicarbonate -----
+    relate compensated_by(respiratory_alkalosis, chronic_lowered_bicarbonate)
+        source "Therefore, acute respiratory alkalosis is associated with high bicarbonate levels since there has not been sufficient time to lower the HCO3 levels and chronic respiratory alkalosis is associated with low to normal HCO3 levels."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482117/"
+        trust authoritative
+}
