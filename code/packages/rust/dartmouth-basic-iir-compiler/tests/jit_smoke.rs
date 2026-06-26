@@ -67,8 +67,12 @@ fn jit_execute_and_capture_prints(source: &str) -> String {
     jit.execute_with_jit(&mut vm, &mut module, "main", &[])
         .expect("JIT execution must succeed");
 
-    String::from_utf8(printed.lock().unwrap().clone())
-        .expect("BASIC PRINT output must be valid UTF-8")
+    // Bind the cloned bytes to a local first so the `MutexGuard` temporary is
+    // dropped before `printed` goes out of scope (a tail
+    // `printed.lock().unwrap().clone()` expression holds the guard until the
+    // block ends, which older rustc rejects — E0597).
+    let bytes = printed.lock().unwrap().clone();
+    String::from_utf8(bytes).expect("BASIC PRINT output must be valid UTF-8")
 }
 
 /// Smallest possible PRINT test: `10 PRINT 42 / 20 END` must push the

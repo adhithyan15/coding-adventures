@@ -119,8 +119,12 @@ fn run_with_real_jit(source: &str) -> String {
         panic!("BasicCirJit reported runtime error: {msg}");
     }
 
-    String::from_utf8(chars.lock().unwrap().clone())
-        .expect("BASIC PRINT output must be valid UTF-8")
+    // Bind the cloned bytes to a local first so the `MutexGuard` temporary is
+    // dropped here (before `chars` goes out of scope at the closing brace) —
+    // a tail `chars.lock().unwrap().clone()` expression holds the guard until
+    // the block ends, which older rustc rejects (E0597).
+    let bytes = chars.lock().unwrap().clone();
+    String::from_utf8(bytes).expect("BASIC PRINT output must be valid UTF-8")
 }
 
 /// Smallest possible PRINT test through the real JIT.
