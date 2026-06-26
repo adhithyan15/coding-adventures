@@ -21,6 +21,24 @@ integration test assert the SIMPLE-level output
 `""`, and guard that no `fromCharCode` call survives (proving the typed SIMPLE
 pipeline ran, not the WHITESPACE_ONLY fallback).
 
+## [0.190.0] - 2026-06-25
+
+### Added — SIMPLE/ADVANCED fold `"abcabc".lastIndexOf(needle)` → numeric
+
+Wires the new `String.prototype.lastIndexOf` fold (constant-fold 0.41.0) end to
+end through the closurec CLI. At `--compilation_level SIMPLE` (and ADVANCED,
+which routes through the same typed pipeline), a `"…".lastIndexOf("…")` call on
+string-literal operands collapses to the UTF-16 code-unit index of the **last**
+occurrence, or `-1` when absent — the mirror of the already-folded `indexOf`.
+
+New fixture `tests/diff/simple-fold-lastindexof/` covers last-match, absent,
+empty-needle, and the basic case: `"abcabc".lastIndexOf("bc")` → `4`,
+`"abcabc".lastIndexOf("z")` → `-1`, `"abc".lastIndexOf("")` → `3` (an empty
+needle yields the string length, not 0), `"ab".lastIndexOf("b")` → `1`, so the
+output is `var a=4;var b=-1;var c=3;var d=1;report(a,b,c,d);`. Integration test
+`diff_simple_fold_lastindexof.rs` asserts the folded stdout, that no
+`lastIndexOf` call survives, and that the result is the typed pipeline (not the
+WHITESPACE_ONLY fallback).
 ## [0.189.0] - 2026-06-25
 
 ### Added — SIMPLE/ADVANCED fold `"abcde".substr(start[, length])`

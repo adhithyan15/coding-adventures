@@ -29,6 +29,29 @@ the same guard `slice`/`charAt`/`codePointAt` use). Five V8-oracle unit tests
 (basic + empty, surrogate-pair assembly, lone-surrogate decline,
 out-of-range/fractional decline, non-`String` receiver decline).
 
+## [0.41.0] - 2026-06-25
+
+### Added — fold `"abcabc".lastIndexOf(needle)` → numeric on string literals
+
+`String.prototype.lastIndexOf` now folds to a numeric literal — the UTF-16
+code-unit index of the **last** occurrence of `needle`, or `-1` when absent
+(ECMAScript §22.1.3.9, the single-argument form) — when both the receiver and
+the search string are string literals. It is the mirror of the already-folded
+`indexOf`: it reuses the same machinery but with Rust's `str::rfind` in place of
+`str::find`, then re-measures the matched prefix in UTF-16 units with
+`encode_utf16()` (an astral char before the hit counts as two units), so
+`"💩x💩x".lastIndexOf("x")` → `5`, matching V8.
+
+`"abcabc".lastIndexOf("bc")` → `4`, `"abc".lastIndexOf("z")` → `-1`. An **empty
+needle** yields the string *length* in UTF-16 units — `"abc".lastIndexOf("")` →
+`3`, not `0` — because the empty string matches at every position and
+`lastIndexOf` takes the highest; `str::rfind("")` returns `Some(byte_len)`, whose
+UTF-16 re-measure is exactly that length.
+
+Conservative scope mirrors `indexOf`: only the single-argument form folds; the
+`fromIndex` overload (`"abc".lastIndexOf("b", 0)`) carries a second argument,
+lands in the two-argument arm, and passes through to the runtime, as does a
+non-string needle or a non-literal receiver.
 ## [0.40.0] - 2026-06-25
 
 ### Added — fold `"abcde".substr(start[, length])` on string literals
