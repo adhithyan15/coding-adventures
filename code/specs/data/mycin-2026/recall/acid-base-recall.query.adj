@@ -1,0 +1,20 @@
+% ============================================================================
+% acid-base-recall.query.adj — a worked recall query over the acid-base library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "how is disturbance X
+% compensated?" question: it states no physiology fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the
+% citing clause's source/locator/trust. All knowledge is in the library; none is
+% here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli acid-base-recall.query.adj
+% ============================================================================
+
+import "acid-base-edges.adj"
+
+? compensated_by(metabolic_acidosis, $Compensation)    % expect respiratory_compensation
+? compensated_by(metabolic_alkalosis, $Compensation)   % expect increased_paco2_compensation
+? compensated_by(respiratory_acidosis, $Compensation)  % expect metabolic_response_increased_bicarbonate
+? compensated_by(respiratory_alkalosis, $Compensation) % expect chronic_lowered_bicarbonate
