@@ -1073,7 +1073,7 @@ def _propagate_column_collation(expr: Expr, schema: SchemaProvider) -> Expr:
         if isinstance(e, BinaryExpr):
             new_left = rec(e.left)
             new_right = rec(e.right)
-            if e.op in _COMPARISON_OPS:
+            if e.op in _COMPARISON_OPS:  # noqa: SIM102
                 # Don't re-wrap if the adapter (PR #4002) already did so.
                 if not _is_already_wrapped(new_left) and not _is_already_wrapped(new_right):
                     left_coll = (
@@ -1667,6 +1667,7 @@ def _plan_update(stmt: UpdateStmt, schema: SchemaProvider) -> P.LogicalPlan:
         assignments=resolved_assignments,
         predicate=predicate,
         returning=resolved_returning,
+        on_conflict=stmt.on_conflict,
     )
 
 

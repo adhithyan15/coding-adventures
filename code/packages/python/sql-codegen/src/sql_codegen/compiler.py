@@ -1837,6 +1837,7 @@ def _compile_update(upd: Update, ctx: _Ctx) -> list[Instruction]:
             table=upd.table,
             assignments=tuple(a.column for a in upd.assignments),
             cursor_id=cid,
+            on_conflict=upd.on_conflict,
         )
     )
     # RETURNING: emit columns AFTER UpdateRows — ``st.current_row[cid]`` is
