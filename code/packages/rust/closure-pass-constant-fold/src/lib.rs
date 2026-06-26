@@ -34,6 +34,7 @@
 //! "ab".toUpperCase() →  "AB"                     (ASCII string casing methods)
 //! "abc".charCodeAt(0)→  97                        (string-literal indexing methods)
 //! "abc".charAt(1)    →  "b"
+//! "a💩b".codePointAt(1)→ 128169                    (astral code POINT, not unit)
 //! ```
 //!
 //! And recurses through every child node, so `1 + (2 * 3) → 1 + 6 → 7`
@@ -858,6 +859,45 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                                     let value = units[i] as f64;
                                     let parent = c.cv.clone();
                                     let before = format!("\"{}\".charCodeAt({})", s.value, i);
+                                    let after = format_js_number(value);
+                                    let new_cv = st.fork_cv(&parent, &before, &after);
+                                    return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
+                                }
+                                // `"a💩b".codePointAt(i)` → the Unicode code
+                                // POINT whose encoding starts at UTF-16 unit `i`
+                                // (ECMAScript §22.1.3.4). Unlike `charCodeAt`
+                                // (which returns a single 16-bit code UNIT),
+                                // `codePointAt` combines a leading high surrogate
+                                // at `i` with the following low surrogate into one
+                                // astral code point in U+10000..=U+10FFFF — e.g.
+                                // for "💩" (units [0xD83D, 0xDCA9])
+                                // `codePointAt(0)` is 128169, whereas
+                                // `charCodeAt(0)` is 55357. When `i` does NOT
+                                // begin a surrogate pair — an ordinary BMP unit,
+                                // a high surrogate with no following low, or a
+                                // low surrogate itself — the result is just the
+                                // code-unit value at `i`, identical to
+                                // `charCodeAt`. Out of range is JS `undefined`,
+                                // for which there is no literal, so we decline
+                                // (`i < units.len()`). All arithmetic is on
+                                // 16-bit values widened to `u32`, so the pair
+                                // combination cannot overflow.
+                                "codePointAt" if i < units.len() => {
+                                    let hi = units[i];
+                                    let value = if (0xD800..=0xDBFF).contains(&hi)
+                                        && i + 1 < units.len()
+                                        && (0xDC00..=0xDFFF).contains(&units[i + 1])
+                                    {
+                                        let lo = units[i + 1];
+                                        (((hi as u32 - 0xD800) << 10)
+                                            + (lo as u32 - 0xDC00)
+                                            + 0x1_0000) as f64
+                                    } else {
+                                        hi as f64
+                                    };
+                                    let parent = c.cv.clone();
+                                    let before =
+                                        format!("\"{}\".codePointAt({})", s.value, i);
                                     let after = format_js_number(value);
                                     let new_cv = st.fork_cv(&parent, &before, &after);
                                     return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
@@ -4438,6 +4478,58 @@ mod tests {
             Expression::NumericLiteral(n) => assert_eq!(n.value, 55357.0),
             other => panic!("expected 55357 (high surrogate); got {:?}", other),
         }
+    }
+
+    #[test]
+    fn fold_code_point_at_bmp_matches_char_code_at() {
+        // For a BMP-only string, codePointAt and charCodeAt agree:
+        // "abc".codePointAt(0) → 97, .codePointAt(2) → 99 (V8 oracle).
+        for (idx, expect) in [(0.0, 97.0), (2.0, 99.0)] {
+            let c = call1(string("abc", None), "codePointAt", num(idx, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"abc\".codePointAt({idx}) should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, expect),
+                other => panic!("expected {expect}; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_code_point_at_combines_surrogate_pair() {
+        // "a💩b" units = [0x61, 0xD83D, 0xDCA9, 0x62]. codePointAt(1) starts on
+        // the high surrogate and combines the pair into U+1F4A9 = 128169 — the
+        // defining difference from charCodeAt(1), which would give 55357 (V8).
+        let c = call1(string("a💩b", None), "codePointAt", num(1.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "\"a💩b\".codePointAt(1) should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 128169.0),
+            other => panic!("expected 128169 (astral code point); got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_code_point_at_lone_low_surrogate_is_unit_value() {
+        // codePointAt landing on the SECOND half of a pair (the low surrogate,
+        // not preceded here at this index by a high one) returns the bare code
+        // unit — "💩".codePointAt(1) → 0xDCA9 = 56489, same as charCodeAt(1) (V8).
+        let c = call1(string("💩", None), "codePointAt", num(1.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "\"💩\".codePointAt(1) should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 56489.0),
+            other => panic!("expected 56489 (lone low surrogate); got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn code_point_at_out_of_range_does_not_fold() {
+        // JS `"abc".codePointAt(5)` is `undefined` — no literal, so don't fold.
+        let c = call1(string("abc", None), "codePointAt", num(5.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "out-of-range codePointAt must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
     #[test]
