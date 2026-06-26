@@ -4,6 +4,20 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 Semantic Versioning.
 
+## [0.4.0] — 2026-06-25
+
+### Added (W-21 — pattern operator tokens)
+
+- Four tokens for the W-20 pattern constructs' operator sugar (MA04 §23):
+  `REPLACEREPEATED` (`//.`), `CONDITION` (`/;`), `ALTERNATIVES` (`|`), and
+  `PATTERNTEST` (`?`). The lexer is first-match-wins by declaration order, so:
+  `//.` is declared **before** `/@` (`MAP`), `/.` (`REPLACEALL`), `/;`, and the
+  bare `/` (`SLASH`) — otherwise `//.` would lex as `/` then `/.`; `/;` is
+  declared **before** `/` and `;` (`SEMI`) so it lexes as one token; and `|`
+  (`ALTERNATIVES`) is declared **after** `||` (`OR`) so `||` still wins. `?`
+  (`PATTERNTEST`) is a fresh single char with no overlap. The embedded
+  `_grammar.rs` was regenerated via the Rust grammar-tools CLI (`compile-tokens`).
+
 ## [0.3.0] — 2026-06-19
 
 ### Added (W-11 — pure-function tokens)

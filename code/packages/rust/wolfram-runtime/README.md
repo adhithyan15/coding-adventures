@@ -186,11 +186,18 @@ assert_eq!(eval("ReplaceAll[{1, 2, 3}, x_Integer -> x^2]\n").unwrap(), "Out[1]= 
 assert_eq!(eval("Replace[5, x_ -> x + 1]\n").unwrap(), "Out[1]= 6\n");    // Replace matches the whole expr
 assert_eq!(eval("h[3] /. h[n_] :> n + 1\n").unwrap(), "Out[1]= 4\n");     // RuleDelayed: RHS held
 
-// W-20 advanced pattern constructs — head forms (operator sugar deferred to W-21):
+// W-20 advanced pattern constructs — head forms:
 assert_eq!(eval("MatchQ[2, Alternatives[1, 2, 3]]\n").unwrap(), "Out[1]= True\n");
 assert_eq!(eval("Cases[{1, 2, 3, 4}, Condition[Pattern[x, Blank[]], x > 2]]\n").unwrap(), "Out[1]= {3, 4}\n");
 assert_eq!(eval("MatchQ[4, PatternTest[Blank[], EvenQ]]\n").unwrap(), "Out[1]= True\n");
 assert_eq!(eval("ReplaceRepeated[{1, 2, 3}, Rule[2, 99]]\n").unwrap(), "Out[1]= {1, 99, 3}\n"); // fixed point
+
+// W-21 operator sugar — the SAME four constructs written the Wolfram way
+// (each lowers to the W-20 head above, so they evaluate identically):
+assert_eq!(eval("MatchQ[2, 1 | 2 | 3]\n").unwrap(), "Out[1]= True\n");          // a | b   = Alternatives
+assert_eq!(eval("Cases[{1, 2, 3, 4}, x_ /; x > 2]\n").unwrap(), "Out[1]= {3, 4}\n"); // p /; t = Condition
+assert_eq!(eval("MatchQ[4, _?EvenQ]\n").unwrap(), "Out[1]= True\n");            // p ? fn  = PatternTest
+assert_eq!(eval("{1, 2, 3} //. 2 -> 99\n").unwrap(), "Out[1]= {1, 99, 3}\n");   // e //. r = ReplaceRepeated
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();

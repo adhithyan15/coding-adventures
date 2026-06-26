@@ -36,6 +36,15 @@ every arithmetic/comparison operator but tighter than `,`, making `#^2 &`,
 runtime lowers `#`/`#n` to `Slot[n]`, `##` to `SlotSequence[1]`, and `body &` /
 `Function[…]` to a `Function` it resolves by substitution at apply time.
 
+The W-21 pattern operator sugar adds four rules at Wolfram precedence
+(loosest→tightest): `//.` joins `/.` in `replaceall`; the new `condition` rule
+(`patt /; test`, right-assoc) sits between `rule` and the new `alternatives`
+rule (`a | b | c`, infix/left-assoc, looser than `||`); and the new
+`patterntest` rule (`patt ? fn`, left-assoc) is inserted between `mapapply` and
+`postfix` so `?` binds tightest (just above application). The runtime lowers each
+to the W-20 head it desugars to — `Alternatives`, `Condition`, `PatternTest`,
+`ReplaceRepeated` — so `a | b` is identical to `Alternatives[a, b]`, etc.
+
 ## Where it fits
 
 ```

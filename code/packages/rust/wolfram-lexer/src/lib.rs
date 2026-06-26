@@ -259,6 +259,48 @@ mod tests {
         assert!(!types(&lex("a && b\n")).contains(&"AMP"));
     }
 
+    // --- W-21 pattern operator tokens: //., /;, |, ? -------------------------
+
+    #[test]
+    fn replacerepeated_wins_over_replaceall_and_slash() {
+        // `//.` is ONE token (REPLACEREPEATED), never `/` then `/.` — it is
+        // declared before /@ and /. so first-match-first picks it.
+        let p = lex("e //. r\n");
+        assert_eq!(types(&p), vec!["NAME", "REPLACEREPEATED", "NAME"]);
+        pair(&p, 1, "REPLACEREPEATED", "//.");
+        // The shorter `/.` still lexes on its own when there is no leading `/`.
+        assert!(types(&lex("e /. r\n")).contains(&"REPLACEALL"));
+        assert!(!types(&lex("e /. r\n")).contains(&"REPLACEREPEATED"));
+    }
+
+    #[test]
+    fn condition_wins_over_slash_then_semi() {
+        // `/;` is ONE token (CONDITION), never `/` then `;`.
+        let p = lex("p /; t\n");
+        assert_eq!(types(&p), vec!["NAME", "CONDITION", "NAME"]);
+        pair(&p, 1, "CONDITION", "/;");
+        // A bare `/` (SLASH) and a bare `;` (SEMI) still lex separately elsewhere.
+        assert!(types(&lex("a / b\n")).contains(&"SLASH"));
+        assert!(types(&lex("a; b\n")).contains(&"SEMI"));
+    }
+
+    #[test]
+    fn alternatives_is_single_pipe_distinct_from_or() {
+        // A lone `|` is ALTERNATIVES.
+        pair(&lex("a | b\n"), 1, "ALTERNATIVES", "|");
+        // `||` still wins as one OR (declared first), never two ALTERNATIVES.
+        assert!(types(&lex("a || b\n")).contains(&"OR"));
+        assert!(!types(&lex("a || b\n")).contains(&"ALTERNATIVES"));
+    }
+
+    #[test]
+    fn patterntest_question_mark_lexes() {
+        // `_?EvenQ` is BLANK PATTERNTEST NAME.
+        let p = lex("_?EvenQ\n");
+        assert_eq!(types(&p), vec!["BLANK", "PATTERNTEST", "NAME"]);
+        pair(&p, 1, "PATTERNTEST", "?");
+    }
+
     #[test]
     fn pure_function_full_form_lexes() {
         // (#1 + #2) & — a slot-based two-argument pure function.

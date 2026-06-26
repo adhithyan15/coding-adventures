@@ -6,8 +6,10 @@ W-2 of the Wolfram frontend.
 Wolfram's surface is built around `head[arg, …]` (square-bracket application),
 `{a, b}` list braces, the replacement operators `/.` `->` `:>`, the pattern
 blanks `_`/`x_`, (W-6) the operator sugar `/@` (Map), `@@` (Apply), and `[[`
-(Part), and (W-11) the pure-function tokens `#`/`#n`/`##` (slots) and `&`
-(the pure-function postfix). This crate is a thin wrapper over the generic
+(Part), (W-11) the pure-function tokens `#`/`#n`/`##` (slots) and `&`
+(the pure-function postfix), and (W-21) the pattern operators `//.`
+(ReplaceRepeated), `/;` (Condition), `|` (Alternatives), and `?` (PatternTest).
+This crate is a thin wrapper over the generic
 `GrammarLexer`
 (a sibling of `r-lexer` / `macsyma-lexer`) with the committed `_grammar.rs`
 compiled from [`code/grammars/wolfram.tokens`](../../../grammars/wolfram.tokens),
@@ -24,6 +26,13 @@ The W-11 pure-function tokens follow the same longest-match-first convention:
 the two-char `&&` (`AND`) is matched before a lone `&` (`AMP`). A numbered slot
 `#n` lexes as `HASH` then the ordinary `NUMBER` token — there is no dedicated
 slot-number token.
+
+The W-21 pattern operators rely on the same first-match-wins (longest-match)
+discipline: `//.` (`REPLACEREPEATED`) is declared *before* `/@`, `/.`, `/;`, and
+the bare `/`, so `e //. r` is one token rather than `/` then `/.`; `/;`
+(`CONDITION`) is declared before `/` and `;` so `p /; t` is one token; and `|`
+(`ALTERNATIVES`) is declared *after* `||` (`OR`) so `||` still wins. `?`
+(`PATTERNTEST`) is a fresh single char.
 
 ## Where it fits in the stack
 

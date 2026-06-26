@@ -72,6 +72,24 @@ use symbolic_ir::{
 /// never hand it to the VM, so it needs no entry in the handler/held tables.
 pub const REPLACE_ALL: &str = "ReplaceAll";
 
+/// The W-20 pattern-construct heads the W-21 operator sugar desugars to. Each is
+/// the *exact* surface name the W-20 runtime already evaluates (see
+/// `wolfram-runtime/src/builtins.rs`): `a | b` → `Alternatives[a, b]`,
+/// `patt /; test` → `Condition[patt, test]`, `patt ? fn` →
+/// `PatternTest[patt, fn]`, and `expr //. rules` → `ReplaceRepeated[expr, rules]`.
+/// W-21 introduces NO new evaluation — these heads are reused unchanged, so an
+/// operator form and its `Head[args]` long form produce identical IR. Like
+/// `ReplaceAll`/`ReplaceRepeated` they are recognised by the runtime before the
+/// VM sees them; they need no handler/held-table entry here.
+const ALTERNATIVES_HEAD: &str = "Alternatives";
+const CONDITION_HEAD: &str = "Condition";
+const PATTERN_TEST_HEAD: &str = "PatternTest";
+/// `expr //. rules` desugars to this head, which W-20 (§22.4) already evaluates
+/// with its hard iteration + growth caps. The operator surface inherits those
+/// DoS bounds verbatim — lowering to `//.` is identical to writing
+/// `ReplaceRepeated[…]`.
+pub const REPLACE_REPEATED: &str = "ReplaceRepeated";
+
 /// The W-5 head names the W-6 operator sugar desugars to. `f /@ x` lowers to
 /// `Map[f, x]`, `f @@ x` to `Apply[f, x]`, and `x[[i]]` to `Part[x, i]` — the
 /// *exact same* heads the [`WolframBackend`](crate::backend) built-in table
@@ -166,6 +184,9 @@ fn lower_node(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
             "assignment" => lower_assignment(node),
             "replaceall" => lower_replaceall(node),
             "rule" => lower_rule(node),
+            "condition" => lower_condition(node),
+            "alternatives" => lower_alternatives(node),
+            "patterntest" => lower_patterntest(node),
             "logical_or" => lower_logical_chain(node, OR),
             "logical_and" => lower_logical_chain(node, AND),
             "logical_not" => lower_logical_not(node),
@@ -305,19 +326,37 @@ fn param_binding_symbol(param: &IRNode) -> IRNode {
     param.clone()
 }
 
-/// `replaceall = rule { REPLACEALL rule }` — left-associative `/.`.
+/// `replaceall = rule { ( REPLACEALL | REPLACEREPEATED ) rule }` —
+/// left-associative `/.` *and* (W-21) `//.`.
 ///
-/// `e /. r1 /. r2` is `ReplaceAll[ReplaceAll[e, r1], r2]`. We fold left into the
-/// synthetic [`REPLACE_ALL`] head; the runtime intercepts it and runs
-/// `cas_pattern_matching::rewrite` rather than handing it to the VM.
+/// `e /. r1 /. r2` is `ReplaceAll[ReplaceAll[e, r1], r2]`; `e //. r` is
+/// `ReplaceRepeated[e, r]` (W-21). Both operators share this one precedence level
+/// and fold strictly left, so a mixed chain `e /. a //. b` is
+/// `ReplaceRepeated[ReplaceAll[e, a], b]`. We must therefore walk the children
+/// *including the operator tokens* (not just `child_nodes`, which drops them) to
+/// pick `REPLACE_ALL` vs `REPLACE_REPEATED` per step. The runtime intercepts both
+/// synthetic heads before the VM: `/.` runs `cas_pattern_matching::rewrite` once,
+/// `//.` (§22.4) iterates to a fixed point under its hard iteration + growth caps.
 fn lower_replaceall(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
-    let mut operands = child_nodes(node);
-    let first = operands
+    // Fast path: a transparent single-operand wrapper (no replace operator).
+    if node.children.len() == 1 {
+        return lower_child(&node.children[0]);
+    }
+    let mut children = node.children.iter();
+    let first = children
         .next()
         .ok_or_else(|| LowerError::new("empty replaceall node"))?;
-    let mut result = lower_node(first)?;
-    for rhs in operands {
-        result = apply(sym(REPLACE_ALL), vec![result, lower_node(rhs)?]);
+    let mut result = lower_child(first)?;
+    while let Some(op_child) = children.next() {
+        let head = match as_token(op_child).map(token_type) {
+            Some("REPLACEALL") => REPLACE_ALL,
+            Some("REPLACEREPEATED") => REPLACE_REPEATED,
+            _ => return Err(LowerError::new("expected a `/.` or `//.` operator")),
+        };
+        let rhs = children
+            .next()
+            .ok_or_else(|| LowerError::new("`/.`/`//.` with no right operand"))?;
+        result = apply(sym(head), vec![result, lower_child(rhs)?]);
     }
     Ok(result)
 }
@@ -353,6 +392,81 @@ fn lower_rule(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
     let bound = collect_pattern_names(&lhs);
     let rhs = bind_pattern_refs(rhs, &bound);
     Ok(apply(sym(head), vec![lhs, rhs]))
+}
+
+/// `condition = alternatives [ CONDITION condition ]` — the W-21 `/;` operator.
+///
+/// `patt /; test` lowers to `Condition[patt, test]`, the W-20 head §22.3 already
+/// evaluates. Right-associative (the grammar recurses on the RHS), so the rare
+/// nested `a /; b /; c` is `Condition[a, Condition[b, c]]`.
+///
+/// Crucially — UNLIKE `lower_rule` — the test keeps its **bare** named-symbol
+/// references. The W-20 `Condition` handler substitutes the match's named
+/// bindings (`Symbol("x")`) into the test before evaluating it (§22.3,
+/// `substitute_bound_symbols`), so `x_ /; x > 2` must lower to
+/// `Condition[Pattern[x, Blank[]], Greater[x, 2]]` with a *bare* `x` in the test.
+/// We therefore do NOT run `bind_pattern_refs` on the test.
+fn lower_condition(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
+    let Some(op_index) = node
+        .children
+        .iter()
+        .position(|c| as_token(c).is_some_and(|t| token_type(t) == "CONDITION"))
+    else {
+        // No `/;` — a transparent wrapper over the single `alternatives` operand.
+        return lower_first_node(node);
+    };
+    if op_index == 0 || op_index + 1 >= node.children.len() {
+        return Err(LowerError::new("malformed condition node"));
+    }
+    let patt = lower_child(&node.children[op_index - 1])?;
+    let test = lower_child(&node.children[op_index + 1])?;
+    Ok(apply(sym(CONDITION_HEAD), vec![patt, test]))
+}
+
+/// `alternatives = logical_or { ALTERNATIVES logical_or }` — the W-21 `|` operator.
+///
+/// `a | b | c` lowers to the single n-ary `Alternatives[a, b, c]` the W-20 head
+/// §22.2 evaluates (first alternative that matches wins). Like `+`/`&&` the whole
+/// run folds into ONE flat head, not nested binary applies; a lone operand (no
+/// `|`) passes straight through as a transparent wrapper.
+fn lower_alternatives(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
+    let operands = child_nodes(node)
+        .map(lower_node)
+        .collect::<Result<Vec<_>, _>>()?;
+    match operands.len() {
+        0 => Err(LowerError::new("empty alternatives node")),
+        1 => Ok(operands.into_iter().next().unwrap()),
+        _ => Ok(apply(sym(ALTERNATIVES_HEAD), operands)),
+    }
+}
+
+/// `patterntest = postfix { PATTERNTEST postfix }` — the W-21 `?` operator.
+///
+/// `patt ? fn` lowers to `PatternTest[patt, fn]`, the W-20 head §22.3 evaluates
+/// (`fn[subject]` must be `True`). Infix, left-associative, so a chain
+/// `_?IntegerQ?Positive` folds left into
+/// `PatternTest[PatternTest[Blank[], IntegerQ], Positive]`. A lone `postfix`
+/// (no `?`) is a transparent single-child wrapper.
+fn lower_patterntest(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
+    // Fast path: no `?` present — a transparent wrapper over one operand.
+    if node.children.len() == 1 {
+        return lower_child(&node.children[0]);
+    }
+    let mut children = node.children.iter();
+    let first = children
+        .next()
+        .ok_or_else(|| LowerError::new("empty patterntest node"))?;
+    let mut result = lower_child(first)?;
+    while let Some(op_child) = children.next() {
+        if as_token(op_child).map(token_type) != Some("PATTERNTEST") {
+            return Err(LowerError::new("expected a `?` operator"));
+        }
+        let rhs = children
+            .next()
+            .ok_or_else(|| LowerError::new("`?` with no right operand"))?;
+        result = apply(sym(PATTERN_TEST_HEAD), vec![result, lower_child(rhs)?]);
+    }
+    Ok(result)
 }
 
 /// Gather the names captured by `Pattern(name, …)` nodes anywhere in `node`.
@@ -1187,6 +1301,102 @@ mod tests {
             apply(
                 sym(REPLACE_ALL),
                 vec![sym("x"), apply(sym(PM_RULE), vec![sym("a"), sym("b")])]
+            )
+        );
+    }
+
+    // ----- W-21 pattern operator sugar lowering --------------------------------
+
+    #[test]
+    fn alternatives_operator_folds_to_one_nary_head() {
+        // a | b | c  ->  Alternatives(a, b, c)  (one flat head, like + / &&)
+        assert_eq!(
+            lower_one("a | b | c\n"),
+            apply(sym(ALTERNATIVES_HEAD), vec![sym("a"), sym("b"), sym("c")])
+        );
+        // A lone operand (no `|`) passes straight through.
+        assert_eq!(lower_one("a\n"), sym("a"));
+    }
+
+    #[test]
+    fn condition_operator_lowers_to_condition_head_with_bare_test() {
+        // x_ /; x > 2  ->  Condition(Pattern(x, Blank()), Greater(x, 2))
+        // The test keeps a BARE `x` (the W-20 Condition handler substitutes the
+        // named binding into it), so we must NOT rewrite it into a Pattern node.
+        assert_eq!(
+            lower_one("x_ /; x > 2\n"),
+            apply(
+                sym(CONDITION_HEAD),
+                vec![
+                    apply(sym(PATTERN), vec![sym("x"), apply(sym(BLANK), vec![])]),
+                    apply(sym(GREATER), vec![sym("x"), int(2)]),
+                ]
+            )
+        );
+    }
+
+    #[test]
+    fn condition_binds_looser_than_alternatives() {
+        // a | b /; t  ->  Condition(Alternatives(a, b), t)  (| tighter than /;)
+        assert_eq!(
+            lower_one("a | b /; t\n"),
+            apply(
+                sym(CONDITION_HEAD),
+                vec![
+                    apply(sym(ALTERNATIVES_HEAD), vec![sym("a"), sym("b")]),
+                    sym("t"),
+                ]
+            )
+        );
+    }
+
+    #[test]
+    fn patterntest_operator_lowers_to_patterntest_head() {
+        // _?EvenQ  ->  PatternTest(Blank(), EvenQ)
+        assert_eq!(
+            lower_one("_?EvenQ\n"),
+            apply(
+                sym(PATTERN_TEST_HEAD),
+                vec![apply(sym(BLANK), vec![]), sym("EvenQ")]
+            )
+        );
+        // Left-associative chain: _?IntegerQ?Positive
+        //   ->  PatternTest(PatternTest(Blank(), IntegerQ), Positive)
+        assert_eq!(
+            lower_one("_?IntegerQ?Positive\n"),
+            apply(
+                sym(PATTERN_TEST_HEAD),
+                vec![
+                    apply(
+                        sym(PATTERN_TEST_HEAD),
+                        vec![apply(sym(BLANK), vec![]), sym("IntegerQ")]
+                    ),
+                    sym("Positive"),
+                ]
+            )
+        );
+    }
+
+    #[test]
+    fn replacerepeated_operator_lowers_to_replacerepeated_head_left_assoc() {
+        // x //. a -> b  ->  ReplaceRepeated(x, Rule(a, b))
+        assert_eq!(
+            lower_one("x //. a -> b\n"),
+            apply(
+                sym(REPLACE_REPEATED),
+                vec![sym("x"), apply(sym(PM_RULE), vec![sym("a"), sym("b")])]
+            )
+        );
+        // Mixed chain folds strictly left: x /. a //. b
+        //   ->  ReplaceRepeated(ReplaceAll(x, a), b)
+        assert_eq!(
+            lower_one("x /. a //. b\n"),
+            apply(
+                sym(REPLACE_REPEATED),
+                vec![
+                    apply(sym(REPLACE_ALL), vec![sym("x"), sym("a")]),
+                    sym("b"),
+                ]
             )
         );
     }

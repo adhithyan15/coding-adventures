@@ -4,6 +4,16 @@ All notable changes to `wolfram-repl` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.1.1] — 2026-06-25
+
+### Added (W-21 — pattern operator sugar)
+
+- An end-to-end test confirming the W-21 pattern operators (`a | b`,
+  `patt /; test`, `patt ? fn`, `expr //. rules`) parse and evaluate through the
+  REPL's real lex → parse → lower → eval `feed` path. No driver change was
+  needed — the operator support comes entirely from the upstream lexer/parser
+  (0.4.0) and runtime (0.17.0) lowering; this is a regression guard.
+
 ## [0.1.0] — 2026-06-17
 
 Initial release — the **W-5** REPL of the Wolfram-language lane (MA04 §7.3).

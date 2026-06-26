@@ -954,3 +954,124 @@ fn w16_does_not_disturb_existing_forms() {
     assert_eq!(eval("Total[{1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
     assert_eq!(eval("GCD[12, 18]\n").unwrap(), "Out[1]= 6\n");
 }
+
+// ===========================================================================
+// W-21 — pattern operator sugar: `a|b`, `patt /; test`, `patt ? fn`, `//.`
+//
+// These are the W-21 acceptance examples, end to end through the public `eval`
+// surface. W-21 adds ONLY the operator surface; each operator lowers to the
+// W-20 head it desugars to, so the operator form must evaluate IDENTICALLY to
+// the `Head[args]` long form (which W-20 already shipped). The equivalence
+// asserts (operator form == long form) are the crux: they prove no new
+// evaluation path was introduced.
+// ===========================================================================
+
+/// `a | b | c` → `Alternatives[a, b, c]`: matches iff the subject matches any.
+#[test]
+fn w21_alternatives_operator_evaluates() {
+    assert_eq!(eval("MatchQ[2, 1 | 2 | 3]\n").unwrap(), "Out[1]= True\n");
+    assert_eq!(eval("MatchQ[5, 1 | 2 | 3]\n").unwrap(), "Out[1]= False\n");
+    // Operator form == long form (the W-20 head, reused unchanged).
+    assert_eq!(
+        eval("MatchQ[2, 1 | 2 | 3]\n").unwrap(),
+        eval("MatchQ[2, Alternatives[1, 2, 3]]\n").unwrap()
+    );
+}
+
+/// `patt /; test` → `Condition[patt, test]`: the test sees the match's bindings.
+#[test]
+fn w21_condition_operator_evaluates() {
+    // Cases keeps only the elements whose binding satisfies the condition.
+    assert_eq!(
+        eval("Cases[{1, 2, 3, 4}, x_ /; x > 2]\n").unwrap(),
+        "Out[1]= {3, 4}\n"
+    );
+    // Operator form == long form.
+    assert_eq!(
+        eval("Cases[{1, 2, 3, 4}, x_ /; x > 2]\n").unwrap(),
+        eval("Cases[{1, 2, 3, 4}, Condition[x_, x > 2]]\n").unwrap()
+    );
+}
+
+/// `patt ? fn` → `PatternTest[patt, fn]`: accept iff `fn[subject]` is True.
+#[test]
+fn w21_patterntest_operator_evaluates() {
+    assert_eq!(eval("MatchQ[4, _?EvenQ]\n").unwrap(), "Out[1]= True\n");
+    assert_eq!(eval("MatchQ[3, _?EvenQ]\n").unwrap(), "Out[1]= False\n");
+    // In Cases, `_?EvenQ` keeps the even elements.
+    assert_eq!(
+        eval("Cases[{1, 2, 3, 4}, _?EvenQ]\n").unwrap(),
+        "Out[1]= {2, 4}\n"
+    );
+    // Operator form == long form.
+    assert_eq!(
+        eval("MatchQ[4, _?EvenQ]\n").unwrap(),
+        eval("MatchQ[4, PatternTest[_, EvenQ]]\n").unwrap()
+    );
+}
+
+/// `expr //. rules` → `ReplaceRepeated[expr, rules]`: iterate to a fixed point.
+#[test]
+fn w21_replacerepeated_operator_evaluates() {
+    // A terminating example: 2 -> 99 fires once and converges.
+    assert_eq!(
+        eval("{1, 2, 3} //. 2 -> 99\n").unwrap(),
+        "Out[1]= {1, 99, 3}\n"
+    );
+    // Operator form == long form.
+    assert_eq!(
+        eval("{1, 2, 3} //. 2 -> 99\n").unwrap(),
+        eval("ReplaceRepeated[{1, 2, 3}, 2 -> 99]\n").unwrap()
+    );
+    // `//.` must NOT be mis-lexed as `/` `/.`: a genuine multi-step fixed point
+    // {1, 2} //. {1 -> 2, 2 -> 3} → {3, 3} requires real iteration (`/.` alone
+    // would give {2, 3}).
+    assert_eq!(
+        eval("{1, 2} //. {1 -> 2, 2 -> 3}\n").unwrap(),
+        "Out[1]= {3, 3}\n"
+    );
+}
+
+/// Precedence: `?` binds tighter than `/;`, `|` is between them, `//.` is a low
+/// replace operator. A combined form exercises the cascade.
+#[test]
+fn w21_operator_precedence_combines() {
+    // `_?IntegerQ /; True` — `?` attaches to the blank first, then `/;` wraps it.
+    assert_eq!(
+        eval("MatchQ[4, _?IntegerQ /; True]\n").unwrap(),
+        "Out[1]= True\n"
+    );
+    // `1 | 2 | 3` as a Condition pattern: `(1|2|3) /; True`.
+    assert_eq!(
+        eval("MatchQ[2, 1 | 2 | 3 /; True]\n").unwrap(),
+        "Out[1]= True\n"
+    );
+}
+
+/// Regression: the bare `/.` `/@` `||` `;` forms still lex/evaluate unchanged
+/// now that `//.`, `/;`, `|` share their prefixes.
+#[test]
+fn w21_does_not_disturb_existing_operators() {
+    assert_eq!(eval("x /. x -> 9\n").unwrap(), "Out[1]= 9\n");
+    assert_eq!(eval("f /@ {1, 2}\n").unwrap(), "Out[1]= {f[1], f[2]}\n");
+    assert_eq!(eval("True || False\n").unwrap(), "Out[1]= True\n");
+    assert_eq!(eval("1 + 2*3\n").unwrap(), "Out[1]= 7\n");
+}
+
+/// W-21 security: a deeply-nested operator chain (`a | a | … | a`) is bounded by
+/// the SAME per-statement token cap (`MAX_STATEMENT_TOKENS`) that already bounds
+/// `->`/`+`/`/.`, so it is rejected as "too complex" before the parser can
+/// recurse deep enough to overflow. The new operators add no new unbounded path.
+#[test]
+fn w21_deep_operator_chain_hits_the_complexity_cap_not_a_stack_overflow() {
+    // ~1500 alternatives → ~3000 tokens, over the 2000-token cap.
+    let alts = format!("MatchQ[1, 1{}]\n", " | 1".repeat(1500));
+    let err = eval(&alts).unwrap_err();
+    assert!(err.contains("too complex"), "got {err:?}");
+    // A deep Condition chain is bounded identically.
+    let conds = format!("x{}\n", " /; x".repeat(1500));
+    assert!(eval(&conds).unwrap_err().contains("too complex"));
+    // And a deep ReplaceRepeated/PatternTest chain.
+    let tests = format!("_{}\n", "?f".repeat(1500));
+    assert!(eval(&tests).unwrap_err().contains("too complex"));
+}
