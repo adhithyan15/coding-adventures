@@ -1,0 +1,20 @@
+% ============================================================================
+% gi-wall-recall.query.adj — a worked recall query over the gi-wall library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what tissue makes up GI
+% wall layer X?" question: it states no histology fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the
+% citing clause's source/locator/trust. All knowledge is in the library; none is
+% here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli gi-wall-recall.query.adj
+% ============================================================================
+
+import "gi-wall-edges.adj"
+
+? composed_of(mucosa, $Tissue)              % expect epithelium
+? composed_of(submucosa, $Tissue)           % expect connective_tissue
+? composed_of(muscularis_externa, $Tissue)  % expect smooth_muscle
+? composed_of(serosa, $Tissue)              % expect mesothelium
