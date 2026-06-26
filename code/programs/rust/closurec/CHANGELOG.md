@@ -21,6 +21,21 @@ output is `var a="bc";var b="bc";var c="abcd";var d="";report(a,b,c,d);`.
 Integration test `diff_simple_fold_substring.rs` asserts the folded stdout, that
 no `.substring(` call survives, and that the result is the typed pipeline (not
 the WHITESPACE_ONLY fallback).
+## [0.187.0] - 2026-06-24
+
+### Added — `"a,b,c".split(separator[, limit])` folds to an array literal at SIMPLE/ADVANCED
+
+Picks up `closure-pass-constant-fold` 0.38.0: a `String.prototype.split` call on
+a string-literal receiver with a string-literal separator now folds to an
+**array literal** of the piece strings (the first constant-fold that emits an
+`ArrayExpression` rather than a scalar). `"a,b,c".split(",")` → `["a","b","c"]`,
+`"abc".split("")` → `["a","b","c"]`, `"a,b,c".split(",", 2)` → `["a","b"]`,
+`"abc".split()` → `["abc"]`. The fold declines (the call survives for the
+runtime) for a non-string-literal/regex separator, a non-integer or negative
+limit, or an empty-separator split of a receiver containing an astral character
+(its surrogate pair would split into a lone surrogate). New
+`tests/diff/simple-fold-split/` end-to-end fixture and `diff_simple_fold_split`
+integration test.
 
 ## [0.182.0] - 2026-06-23
 
