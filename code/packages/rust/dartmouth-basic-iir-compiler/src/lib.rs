@@ -21,7 +21,7 @@
 //! | Statement     | Lowering |
 //! |---------------|----------|
 //! | `LET A = expr` | `<eval expr → t>; mov_i64 A = t` |
-//! | `PRINT expr`   | `<eval expr → v>; call_builtin "print_i64", v` |
+//! | `PRINT a; b, c` | per item `<eval → v>; call "__basic_print_int", v`, with `;`=tight / `,`=space separators and a trailing `putchar(10)` newline (BA2) |
 //! | `INPUT X`      | `call_builtin "input_i64" -> X` |
 //! | `IF cond THEN m` | `<eval cond → c>; jmp_if_true c, "line_m"` |
 //! | `GOTO m`       | `jmp "line_m"` |
@@ -167,6 +167,16 @@ fn compile_program(ast: &GrammarASTNode, module_name: &str)
     main.source_map = std::mem::take(&mut comp.source_map);
     let mut module = IIRModule::new(module_name, "dartmouth-basic");
     module.functions.push(main);
+    // BA2: if any `PRINT` rendered a value, append the two synthetic
+    // digit-printing helpers (`__basic_print_int` / `__basic_print_uint`) so
+    // the `call`s emitted by `emit_print` resolve.  Appended before the
+    // user-defined functions purely for readability; order doesn't matter
+    // because every `call` resolves the callee by name.
+    if comp.needs_print_helpers {
+        for func in print_helper_functions() {
+            module.functions.push(func);
+        }
+    }
     // Sibling user-defined functions (`DEF FNx`, BA5) follow `main`.  They
     // were lowered out of line into their own emission contexts during
     // `emit_program`; a same-module `call` resolves each by name.
@@ -233,6 +243,13 @@ struct Compiler {
     /// a real (`f64`) DATA value is a follow-up (the i64 value model, like
     /// integer `DIM` arrays).
     data_pool: Vec<i64>,
+    /// Set once any `PRINT` lowers a numeric item (BA2).  When true,
+    /// `compile_program` appends the two synthetic digit-printing helper
+    /// functions (`__basic_print_int` / `__basic_print_uint`) after `main`
+    /// so the `call`s emitted by [`emit_print`] resolve.  We only emit the
+    /// helpers when they're actually used — a program with no `PRINT` (or
+    /// only bare `PRINT`s) carries no dead functions.
+    needs_print_helpers: bool,
 }
 
 impl Default for Compiler {
@@ -249,6 +266,7 @@ impl Default for Compiler {
             current_fn_param: None,
             arrays: std::collections::HashSet::new(),
             data_pool: Vec::new(),
+            needs_print_helpers: false,
         }
     }
 }
@@ -642,36 +660,95 @@ impl Compiler {
         Ok(())
     }
 
+    /// Emit `putchar(byte)` — a `const` feeding the universal `putchar`
+    /// builtin (the same one Brainfuck uses, so it lowers on all 7 backends).
+    /// This is BA2's atom of output: every character BASIC prints — digits,
+    /// the minus sign, separator spaces, the line-ending newline — goes out
+    /// one `putchar` at a time, which is what lets several `PRINT` items share
+    /// a single line.
+    fn emit_putchar(&mut self, byte: i64) {
+        let t = self.fresh_temp();
+        self.emit("const", Some(&t), vec![Operand::Int(byte)], "i64");
+        self.emit("call_builtin", None,
+            vec![Operand::Var("putchar".into()), Operand::Var(t)], "void");
+    }
+
+    /// BA2 — `PRINT` with multiple items and `;` / `,` separators on one line.
+    ///
+    /// ```text
+    ///   10 PRINT 4; 2      ⇒  42        ( ';' joins tightly )
+    ///   20 PRINT 4, 2      ⇒  4 2       ( ',' inserts a space )
+    ///   30 PRINT 7;        ⇒  7         ( trailing sep ⇒ no newline )
+    /// ```
+    ///
+    /// Why a *character-level* model.  The old lowering emitted one
+    /// `call_builtin "print_i64"` per item, and `print_i64` prints the number
+    /// **followed by a newline** — so `PRINT 4; 2` wrongly landed `4` and `2`
+    /// on separate lines.  Same-line printing requires separating "print the
+    /// value" from "end the line", i.e. printing digit by digit with
+    /// `putchar` and emitting the newline ourselves.  The digits come from the
+    /// synthetic recursive helper `__basic_print_int` (see
+    /// [`print_helper_functions`]); here we sequence items, separators, and
+    /// the trailing newline.
+    ///
+    /// Separator semantics (BA2): `;` concatenates with nothing between;
+    /// `,` inserts a single space.  Historical Dartmouth BASIC tabs `,` to
+    /// the next 14-column *print zone*, which needs a run-time column counter
+    /// — deferred to a later item; a single space is the well-defined BA2
+    /// approximation.  A **trailing** separator (`PRINT X;` or `PRINT X,`)
+    /// suppresses the line-ending newline, exactly as the manual specifies.
     fn emit_print(&mut self, stmt: &GrammarASTNode) -> Result<(), CompileError> {
-        // `PRINT` optional `print_list`.  V1: only numeric `print_item`s
-        // are supported; strings error out.
         let Some(list) = child_nodes(stmt).into_iter()
             .find(|n| n.rule_name == "print_list")
         else {
-            // Bare `PRINT` — emits a blank line.  For V1 we just no-op;
-            // a future spec can emit `__twig_putchar(10)`.
+            // Bare `PRINT` — emits a blank line (a lone newline).
+            self.emit_putchar(b'\n' as i64);
             return Ok(());
         };
-        for item in child_nodes(list).into_iter()
-            .filter(|n| n.rule_name == "print_item")
-        {
-            let inner = child_nodes(item).into_iter().next();
-            match inner {
-                Some(expr_node) if expr_node.rule_name == "expr" => {
-                    let v = self.emit_expr(expr_node)?;
-                    self.emit("call_builtin", None,
-                        vec![Operand::Var("print_i64".into()),
-                             Operand::Var(v)],
-                        "void");
+
+        // Walk the `print_list` children in source order.  Both `print_item`
+        // and `print_sep` are rule nodes; their interleaving is the layout.
+        // `pending_sep` carries the separator seen *before* the next item so
+        // we can insert its spacing between items (not before the first one);
+        // if it is still `Some` after the loop, the list ended on a separator
+        // and the newline is suppressed.
+        let mut pending_sep: Option<char> = None;
+        for child in child_nodes(list) {
+            match child.rule_name.as_str() {
+                "print_sep" => pending_sep = Some(print_sep_char(child)),
+                "print_item" => {
+                    if pending_sep.take() == Some(',') {
+                        self.emit_putchar(b' ' as i64);
+                    }
+                    let inner = child_nodes(child).into_iter().next();
+                    match inner {
+                        Some(expr_node) if expr_node.rule_name == "expr" => {
+                            let v = self.emit_expr(expr_node)?;
+                            let dest = self.fresh_temp();
+                            // Discardable result: the helper returns a dummy 0
+                            // (its work is the `putchar` side effects).
+                            self.emit("call", Some(&dest),
+                                vec![Operand::Var("__basic_print_int".into()),
+                                     Operand::Var(v)],
+                                "i64");
+                            self.needs_print_helpers = true;
+                        }
+                        _ => {
+                            // STRING `print_item` — a token child, not a node.
+                            // Strings in PRINT wait for LANG77 (BA4 / E4).
+                            return Err(CompileError::Unsupported(
+                                "string literals in PRINT (need LANG77)".into()));
+                        }
+                    }
                 }
-                _ => {
-                    // The other allowed `print_item` form is STRING — a
-                    // direct token child rather than a node.  We don't
-                    // support strings until LANG77 lands.
-                    return Err(CompileError::Unsupported(
-                        "string literals in PRINT (need LANG77)".into()));
-                }
+                _ => {}
             }
+        }
+
+        // A trailing separator (pending_sep still set) suppresses the newline;
+        // otherwise PRINT ends its line.
+        if pending_sep.is_none() {
+            self.emit_putchar(b'\n' as i64);
         }
         Ok(())
     }
@@ -1317,6 +1394,118 @@ fn binary_op_name(op: &str) -> Option<&'static str> {
     }
 }
 
+/// The separator character carried by a `print_sep` node — `,` or `;`.
+/// (`print_sep = COMMA | SEMICOLON`, so the node has exactly one token
+/// child.)  Falls back to `;` (the tight, space-free join) if the token is
+/// somehow missing, so a malformed parse never injects stray spaces.
+fn print_sep_char(node: &GrammarASTNode) -> char {
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            match t.value.trim() {
+                "," => return ',',
+                ";" => return ';',
+                _ => {}
+            }
+        }
+    }
+    ';'
+}
+
+/// The two synthetic helper functions BA2's `PRINT` lowering calls to render a
+/// signed integer one character at a time (so several items can share a line).
+/// They are appended to the module after `main` only when a program actually
+/// `PRINT`s a value (`Compiler::needs_print_helpers`).
+///
+/// They use **only** ops every backend already runs — `const`, `cmp_*`,
+/// `div`/`mul`/`sub`/`add`, `call` (the ALGOL value-procedure ABI, AL3),
+/// `jmp`/`label`, and the universal `putchar` builtin (shared with Brainfuck)
+/// — so BA2 needs **zero** backend changes and runs on all seven targets.
+///
+/// ```text
+///   fn __basic_print_uint(n):              # n >= 0
+///       if n >= 10:
+///           __basic_print_uint(n / 10)     # high-order digits first…
+///       putchar('0' + n - (n / 10) * 10)   # …then this digit (the last)
+///
+///   fn __basic_print_int(n):
+///       if n < 0:
+///           putchar('-'); __basic_print_uint(0 - n)
+///       else:
+///           __basic_print_uint(n)
+/// ```
+///
+/// The recursion is what gets the digits out in left-to-right order with no
+/// reversal buffer: the deepest call prints the most-significant digit first.
+/// (`0 - n` for the sign overflows only at `i64::MIN`, a value no BA2 program
+/// can express; a saturating negate is a later refinement.)
+fn print_helper_functions() -> Vec<IIRFunction> {
+    fn var(s: &str) -> Operand { Operand::Var(s.to_string()) }
+    let mk = |op: &str, dest: Option<&str>, srcs: Vec<Operand>, ty: &str| {
+        IIRInstr::new(op, dest.map(|s| s.to_string()), srcs, ty)
+    };
+
+    // __basic_print_uint(n) — unsigned magnitude, recursive.
+    let uint_body = vec![
+        mk("const", Some("ten"), vec![Operand::Int(10)], "i64"),
+        // n >= 10 ?  (operand width i64, like every BASIC compare — a "bool"
+        // hint would make the backends emit a 1-bit compare, the BA0 bug.)
+        mk("cmp_ge", Some("hi"), vec![var("n"), var("ten")], "i64"),
+        mk("jmp_if_false", None, vec![var("hi"), var("uint_tail")], "void"),
+        mk("div", Some("hq"), vec![var("n"), var("ten")], "i64"),
+        mk("call", Some("_r"),
+            vec![var("__basic_print_uint"), var("hq")], "i64"),
+        mk("label", None, vec![var("uint_tail")], "void"),
+        // last digit = n - (n / 10) * 10
+        mk("div", Some("q"), vec![var("n"), var("ten")], "i64"),
+        mk("mul", Some("qt"), vec![var("q"), var("ten")], "i64"),
+        mk("sub", Some("rem"), vec![var("n"), var("qt")], "i64"),
+        mk("const", Some("c0"), vec![Operand::Int(b'0' as i64)], "i64"),
+        mk("add", Some("digit"), vec![var("c0"), var("rem")], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("digit")], "void"),
+        mk("const", Some("z"), vec![Operand::Int(0)], "i64"),
+        mk("ret", None, vec![var("z")], "i64"),
+    ];
+
+    // __basic_print_int(n) — sign dispatch over the magnitude helper.
+    let int_body = vec![
+        mk("const", Some("zero"), vec![Operand::Int(0)], "i64"),
+        mk("cmp_lt", Some("neg"), vec![var("n"), var("zero")], "i64"),
+        mk("jmp_if_false", None, vec![var("neg"), var("int_nonneg")], "void"),
+        mk("const", Some("minus"), vec![Operand::Int(b'-' as i64)], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("minus")], "void"),
+        mk("sub", Some("mag"), vec![var("zero"), var("n")], "i64"),
+        mk("call", Some("_rn"),
+            vec![var("__basic_print_uint"), var("mag")], "i64"),
+        mk("jmp", None, vec![var("int_done")], "void"),
+        mk("label", None, vec![var("int_nonneg")], "void"),
+        mk("call", Some("_rp"),
+            vec![var("__basic_print_uint"), var("n")], "i64"),
+        mk("label", None, vec![var("int_done")], "void"),
+        mk("const", Some("z2"), vec![Operand::Int(0)], "i64"),
+        mk("ret", None, vec![var("z2")], "i64"),
+    ];
+
+    let mut funcs = Vec::new();
+    for (name, body) in [("__basic_print_uint", uint_body),
+                         ("__basic_print_int", int_body)] {
+        let len = body.len();
+        let mut f = IIRFunction::new(
+            name,
+            vec![("n".to_string(), "i64".to_string())],
+            "i64",
+            body,
+        );
+        // Every op carries a concrete (non-"any") hint, so — like `main` and
+        // the `DEF FN` siblings — the function is genuinely fully typed.
+        f.type_status = FunctionTypeStatus::FullyTyped;
+        let mut sm = Vec::with_capacity(len);
+        for _ in 0..len { sm.push(SourceLoc::SYNTHETIC); }
+        f.source_map = sm;
+        funcs.push(f);
+    }
+    funcs
+}
+
 // ===========================================================================
 // Tests
 // ===========================================================================
@@ -1360,17 +1549,106 @@ mod tests {
             i.op == "const" && matches!(i.srcs.first(), Some(Operand::Int(42)))));
     }
 
-    /// `PRINT 42` lowers to `const 42 → t; call_builtin "print_i64", t`.
+    /// Returns the callee name of the first `call`/`call_builtin` whose first
+    /// source operand matches `name`, anywhere in `body`.
+    fn calls_named(body: &[IIRInstr], name: &str) -> bool {
+        body.iter().any(|i|
+            (i.op == "call" || i.op == "call_builtin")
+            && i.srcs.first().and_then(|s| match s {
+                Operand::Var(n) => Some(n.as_str()), _ => None,
+            }) == Some(name))
+    }
+
+    /// BA2: `PRINT 42` lowers to a `call __basic_print_int(42)` (the
+    /// character-level helper) — *not* the old line-buffered `print_i64`.
     #[test]
     fn compiles_print_integer() {
         let m = compile("10 PRINT 42\n20 END\n").expect("ok");
         let body = &m.functions[0].instructions;
-        let call = body.iter().find(|i|
-            i.op == "call_builtin" && i.srcs.first().and_then(|s| match s {
+        assert!(calls_named(body, "__basic_print_int"),
+            "expected call __basic_print_int in {body:?}");
+        // The old builtin must be gone — same-line printing replaced it.
+        assert!(!calls_named(body, "print_i64"),
+            "print_i64 should no longer be emitted");
+        // And the helper functions must be present in the module.
+        assert!(m.functions.iter().any(|f| f.name == "__basic_print_int"));
+        assert!(m.functions.iter().any(|f| f.name == "__basic_print_uint"));
+    }
+
+    /// BA2: a program with no value-printing `PRINT` carries no helper
+    /// functions (they're emitted lazily, only when used).
+    #[test]
+    fn no_print_no_helpers() {
+        let m = compile("10 LET A = 1\n20 END\n").expect("ok");
+        assert!(!m.functions.iter().any(|f| f.name == "__basic_print_int"),
+            "helpers must not be emitted when nothing prints");
+    }
+
+    /// BA2: `PRINT 4; 2` (semicolon) joins tightly — two `__basic_print_int`
+    /// calls, no separator space, and a single trailing newline.
+    #[test]
+    fn print_semicolon_joins_tight() {
+        let m = compile("10 PRINT 4; 2\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let prints = body.iter().filter(|i| i.op == "call"
+            && i.srcs.first().and_then(|s| match s {
                 Operand::Var(n) => Some(n.as_str()), _ => None,
-            }) == Some("print_i64")
-        );
-        assert!(call.is_some(), "expected call_builtin print_i64 in {body:?}");
+            }) == Some("__basic_print_int")).count();
+        assert_eq!(prints, 2, "two items ⇒ two helper calls");
+        // No space (32) const between items for ';'.
+        assert!(!body.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Int(32)))),
+            "';' must not insert a space");
+        // Exactly one trailing newline (10).
+        assert_eq!(body.iter().filter(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Int(10)))).count(), 1,
+            "one trailing newline");
+    }
+
+    /// BA2: `PRINT 4, 2` (comma) inserts a space (const 32) between items.
+    #[test]
+    fn print_comma_inserts_space() {
+        let m = compile("10 PRINT 4, 2\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Int(32)))),
+            "',' must insert a space (const 32)");
+    }
+
+    /// BA2: a trailing separator (`PRINT 7;`) suppresses the final newline.
+    #[test]
+    fn print_trailing_sep_suppresses_newline() {
+        let m = compile("10 PRINT 7;\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(!body.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Int(10)))),
+            "trailing ';' must suppress the newline");
+    }
+
+    /// BA2: bare `PRINT` emits a lone newline (a blank line).
+    #[test]
+    fn bare_print_emits_newline() {
+        let m = compile("10 PRINT\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Int(10)))),
+            "bare PRINT must emit a newline");
+        // No value printed ⇒ no helper calls.
+        assert!(!calls_named(body, "__basic_print_int"));
+    }
+
+    /// BA2: the magnitude helper recurses on itself (multi-digit support).
+    #[test]
+    fn print_uint_helper_recurses() {
+        let m = compile("10 PRINT 123\n20 END\n").expect("ok");
+        let uint = m.functions.iter()
+            .find(|f| f.name == "__basic_print_uint").expect("helper present");
+        assert!(calls_named(&uint.instructions, "__basic_print_uint"),
+            "__basic_print_uint must call itself");
+        // Sign helper must dispatch to the magnitude helper.
+        let int = m.functions.iter()
+            .find(|f| f.name == "__basic_print_int").expect("helper present");
+        assert!(calls_named(&int.instructions, "__basic_print_uint"));
     }
 
     /// `GOTO 99` emits a `jmp` to label `line_99`.
@@ -1612,12 +1890,10 @@ mod tests {
                    50 END\n";
         let m = compile(src).expect("ok");
         let body = &m.functions[0].instructions;
-        // Should have at least one `add` and one `call_builtin print_i64`.
+        // Should have at least one `add` (the LET) and one `call` to the BA2
+        // print helper (PRINT now lowers to `call __basic_print_int`).
         assert!(body.iter().any(|i| i.op == "add"));
-        assert!(body.iter().any(|i|
-            i.op == "call_builtin" && i.srcs.first().and_then(|s| match s {
-                Operand::Var(n) => Some(n.as_str()), _ => None,
-            }) == Some("print_i64")));
+        assert!(calls_named(body, "__basic_print_int"));
     }
 
     // -----------------------------------------------------------------------

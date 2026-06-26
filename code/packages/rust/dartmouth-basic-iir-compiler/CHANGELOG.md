@@ -1,5 +1,43 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.9.0 — 2026-06-26 — multi-item `PRINT` on one line (LANG-FULL BA2)
+
+`PRINT` could only print a single value per statement, because each item lowered
+to `call_builtin "print_i64"` and `print_i64` appends a newline — so `PRINT A; B`
+wrongly split `A` and `B` onto separate lines. BA2 moves BASIC to a
+**character-level output model** that lets several items share a line:
+
+- **Two synthetic helper functions** are appended to the module (only when a
+  program actually prints a value): `__basic_print_uint(n)` renders an
+  unsigned magnitude by **recursing** on `n / 10` (high-order digits first, so
+  digits come out left-to-right with no reversal buffer) and emitting each digit
+  with the universal `putchar` builtin; `__basic_print_int(n)` handles the sign
+  (`putchar('-')` then the magnitude) and dispatches to it. Both use **only**
+  ops every backend already runs — `const`, `cmp_*`, `div`/`mul`/`sub`/`add`,
+  `call` (the ALGOL value-procedure ABI), `jmp`/`label`, and `putchar` (shared
+  with Brainfuck) — so BA2 required **zero backend changes** and runs on all
+  seven targets (NativeAot/LLVM/WASM/JVM/CLR/VM/JIT).
+- **`emit_print`** now walks the `print_list` in source order, lowering each
+  numeric item to a `call __basic_print_int`, applying separator spacing, and
+  emitting a trailing `putchar(10)` newline unless the list ends on a separator.
+- **Separators:** `;` joins items tightly (nothing between); `,` inserts a
+  single space. A **trailing** separator (`PRINT X;` / `PRINT X,`) suppresses
+  the final newline. Bare `PRINT` now emits a blank line (a lone newline)
+  instead of being a no-op.
+  - *Divergence (documented):* historical Dartmouth BASIC tabs `,` to the next
+    14-column **print zone**; that needs a run-time output-column counter and is
+    deferred to a later item. A single space is BA2's well-defined approximation.
+  - *Limitation:* the sign path negates with `0 - n`, which overflows only at
+    `i64::MIN` — a value no BA2 program can express; a saturating negate is a
+    later refinement.
+- **String `PRINT` items** still error (`need LANG77`) — they wait for BA4 /
+  enabler E4. **More relops** were already in place (the grammar and
+  `extract_relop_op` cover all six: `= < > <= >= <>`); BA2 adds no relop work.
+- Proven by two executed `lang-aot` matrix cells (`PRINT 0 - 12; 34` ⇒ `-1234`,
+  `PRINT 5, 6` ⇒ `5 6`) that run on all 7 backends, plus six new frontend unit
+  tests. The existing single-item BASIC matrix cells now route through `putchar`
+  too and still pass unchanged.
+
 ## 0.8.0 — 2026-06-22 — `READ` / `DATA` / `RESTORE` (LANG-FULL BA6)
 
 `READ`, `DATA`, and `RESTORE` were `UnsupportedStatement` rejections; they now

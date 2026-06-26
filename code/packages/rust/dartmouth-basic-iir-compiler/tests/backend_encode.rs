@@ -165,9 +165,12 @@ fn basic_for_loop_lowers_to_clr_assembly() {
 
 #[test]
 fn print_lowers_to_wasm_bytes() {
-    // G2 (PR #4738+) flipped this from "blocked" to "works" — BASIC's
-    // PRINT now reaches real wasm bytecode through the
-    // `env.__print_i64` host import that `iir-to-wasm` injects.
+    // G2 (PR #4738+) flipped this from "blocked" to "works" — BASIC's PRINT
+    // reaches real wasm bytecode. BA2 (`dartmouth-basic-iir-compiler` 0.9.0)
+    // changed the output model: PRINT now renders digits one at a time via the
+    // universal `putchar` builtin (so several items can share a line) instead
+    // of the old line-buffered `print_i64`, so the host import `iir-to-wasm`
+    // injects is now `env.putchar` rather than `env.__print_i64`.
     //
     // We test the full path: BASIC source → IIR → validator (must
     // accept) → lower (must succeed) → encode (must produce a
@@ -184,8 +187,8 @@ fn print_lowers_to_wasm_bytes() {
     let bytes = wasm_module_encoder::encode_module(&wm).expect("encode");
     assert_eq!(&bytes[..4], &[0x00, 0x61, 0x73, 0x6D],
         "expected wasm magic prefix; got {:?}", &bytes[..bytes.len().min(8)]);
-    // The host import must exist.
+    // The host output import must exist — BA2 prints through `putchar`.
     let has_print = wm.imports.iter().any(|i|
-        i.module_name == "env" && i.name == "__print_i64");
-    assert!(has_print, "expected env.__print_i64 host import");
+        i.module_name == "env" && i.name == "putchar");
+    assert!(has_print, "expected env.putchar host import (BA2 print model)");
 }
