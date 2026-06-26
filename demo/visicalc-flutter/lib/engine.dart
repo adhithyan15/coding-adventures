@@ -80,6 +80,14 @@ typedef _SortRangeC = Int32 Function(
 typedef _SortRangeD = int Function(
     Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, int, int);
 
+// sc_find_all(session, query, in_formulas, match_case) → char* JSON
+// {"matches":["A1",…]} (free with sc_string_free).
+typedef _FindAllC = Pointer<Uint8> Function(Pointer<Void>, Pointer<Uint8>, Int32, Int32);
+typedef _FindAllD = Pointer<Uint8> Function(Pointer<Void>, Pointer<Uint8>, int, int);
+// sc_replace_all(session, query, replacement, match_case) → int (count changed).
+typedef _ReplaceAllC = Int32 Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Int32);
+typedef _ReplaceAllD = int Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, int);
+
 // sc_insert_rows / sc_delete_rows / sc_insert_cols / sc_delete_cols(session, at,
 // count) → void. Structural edits at a 1-based position; the engine shifts
 // formula references across the band.
@@ -110,6 +118,8 @@ class SpreadsheetSession {
   late final _SetFormatD _setFormatFn;
   late final _FillD _fillFn;
   late final _SortRangeD _sortRangeFn;
+  late final _FindAllD _findAllFn;
+  late final _ReplaceAllD _replaceAllFn;
   late final _ClipD _copyFn;
   late final _ClipD _cutFn;
   late final _PasteD _pasteFn;
@@ -147,6 +157,8 @@ class SpreadsheetSession {
     _setFormatFn = _lib.lookupFunction<_SetFormatC, _SetFormatD>('sc_set_format');
     _fillFn = _lib.lookupFunction<_FillC, _FillD>('sc_fill');
     _sortRangeFn = _lib.lookupFunction<_SortRangeC, _SortRangeD>('sc_sort_range');
+    _findAllFn = _lib.lookupFunction<_FindAllC, _FindAllD>('sc_find_all');
+    _replaceAllFn = _lib.lookupFunction<_ReplaceAllC, _ReplaceAllD>('sc_replace_all');
     _copyFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_copy');
     _cutFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_cut');
     _pasteFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_paste');
@@ -340,6 +352,36 @@ class SpreadsheetSession {
     } finally {
       _freeCString(startPtr);
       _freeCString(endPtr);
+    }
+  }
+
+  /// Find every cell whose text contains [query] — the A1 addresses, parsed from
+  /// the engine's `{"matches":[...]}` JSON. [inFormulas] searches each cell's
+  /// source when true, its computed display value when false; [matchCase]=false
+  /// folds ASCII case. Empty query → empty list. Read-only.
+  List<String> findAll(String query, bool inFormulas, bool matchCase) {
+    final qPtr = _toCString(query);
+    try {
+      final json = _takeString(_findAllFn(_handle, qPtr, inFormulas ? 1 : 0, matchCase ? 1 : 0));
+      final obj = jsonDecode(json) as Map<String, dynamic>;
+      return (obj['matches'] as List).cast<String>();
+    } finally {
+      _freeCString(qPtr);
+    }
+  }
+
+  /// Replace [query] with [replacement] in the source of every matching cell (the
+  /// engine rewrites + recomputes; the facade keeps its source echo in step).
+  /// [matchCase]=false folds ASCII case. Returns the count of cells changed; an
+  /// empty query is a no-op (0).
+  int replaceAll(String query, String replacement, bool matchCase) {
+    final qPtr = _toCString(query);
+    final rPtr = _toCString(replacement);
+    try {
+      return _replaceAllFn(_handle, qPtr, rPtr, matchCase ? 1 : 0);
+    } finally {
+      _freeCString(qPtr);
+      _freeCString(rPtr);
     }
   }
 
@@ -682,6 +724,29 @@ class InfiniteSheetModel {
     final ok = _session.sortRange('A1', 'E4', keyCol, ascending);
     computeExtent();
     return ok;
+  }
+
+  /// Find: the A1 addresses whose source contains [query] (case-insensitive).
+  List<String> findAll(String query) => _session.findAll(query, true, false);
+
+  /// Replace [query] → [replacement] in every matching cell's source (the engine
+  /// recomputes); returns the count changed and regrows the extent.
+  int replaceAll(String query, String replacement) {
+    final n = _session.replaceAll(query, replacement, false);
+    computeExtent();
+    return n;
+  }
+
+  /// Select the cell at an A1 address (e.g. "B3"); a no-op for a malformed ref.
+  void selectA1(String a1) {
+    final m = RegExp(r'^([A-Za-z]+)(\d+)$').firstMatch(a1);
+    if (m == null) return;
+    final letters = m.group(1)!.toUpperCase();
+    var col = 0;
+    for (var i = 0; i < letters.length; i++) {
+      col = col * 26 + (letters.codeUnitAt(i) - 64);
+    }
+    selectInf(int.parse(m.group(2)!), col);
   }
 
   /// Structural edits: insert / delete the selected cell's row or column. The

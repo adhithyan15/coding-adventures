@@ -79,6 +79,10 @@ class _InfiniteGridState extends State<InfiniteGrid> {
   // Drives the formula field's accent focus ring (rebuild on focus changes).
   final _formulaFocus = FocusNode();
 
+  // Find / replace inputs.
+  final _findCtrl = TextEditingController();
+  final _replaceCtrl = TextEditingController();
+
   // In-memory "saved file" slot for the Save / Load buttons: Save stows the
   // serialized workbook here, Load restores from it. (A real app would write
   // this string to a file; the demo keeps the round trip self-contained.)
@@ -112,6 +116,8 @@ class _InfiniteGridState extends State<InfiniteGrid> {
     _headerH.dispose();
     _formulaCtrl.dispose();
     _formulaFocus.dispose();
+    _findCtrl.dispose();
+    _replaceCtrl.dispose();
     _model.dispose();
     super.dispose();
   }
@@ -197,6 +203,29 @@ class _InfiniteGridState extends State<InfiniteGrid> {
   // ascending/descending. A setState rebuild re-reads the reordered rows.
   void _sortBlock(bool ascending) => setState(() => _model.sortBlock(ascending));
 
+  // Find: select the first cell whose source contains the find text.
+  void _find() {
+    final q = _findCtrl.text;
+    if (q.isEmpty) return;
+    final hits = _model.findAll(q);
+    if (hits.isEmpty) return;
+    setState(() {
+      _model.selectA1(hits.first);
+      _formulaCtrl.text = _model.formula;
+    });
+  }
+
+  // Replace all: rewrite the find text → replacement in every matching cell's
+  // source (the engine recomputes); the grid re-reads.
+  void _replaceAll() {
+    final q = _findCtrl.text;
+    if (q.isEmpty) return;
+    setState(() {
+      _model.replaceAll(q, _replaceCtrl.text);
+      _formulaCtrl.text = _model.formula;
+    });
+  }
+
   // A compact, modern toolbar button (rounded chip with hover/down/disabled
   // states) — the Flutter analog of the web demo's segmented controls and the
   // Qt port's `component ToolButton`. `enabled: null` disables it (Undo/Redo/
@@ -217,6 +246,32 @@ class _InfiniteGridState extends State<InfiniteGrid> {
         height: 22,
         margin: const EdgeInsets.symmetric(horizontal: 6),
         color: _cLine,
+      );
+
+  // A compact toolbar text field for the find / replace inputs.
+  Widget _findField(TextEditingController ctrl, String hint) => SizedBox(
+        width: 96,
+        child: Container(
+          height: 30,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: _cField,
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: _cLineStrong),
+          ),
+          alignment: Alignment.centerLeft,
+          child: TextField(
+            controller: ctrl,
+            style: const TextStyle(color: _cInk, fontSize: 12, fontFamily: _mono),
+            cursorColor: _cAccent,
+            decoration: InputDecoration(
+              isCollapsed: true,
+              border: InputBorder.none,
+              hintText: hint,
+              hintStyle: const TextStyle(color: Color(0xFF5F6672), fontSize: 12, fontFamily: _mono),
+            ),
+          ),
+        ),
       );
 
   @override
@@ -298,6 +353,7 @@ class _InfiniteGridState extends State<InfiniteGrid> {
               ),
               alignment: Alignment.centerLeft,
               child: TextField(
+                key: const Key('formulaField'),
                 controller: _formulaCtrl,
                 focusNode: _formulaFocus,
                 onSubmitted: (_) => _commit(),
@@ -367,6 +423,18 @@ class _InfiniteGridState extends State<InfiniteGrid> {
           _toolButton('▼ Sort',
               'Sort the budget block A1:E4 by the selected column, descending',
               () => _sortBlock(false)),
+          _toolSep(),
+          // ── Find / replace (locate cells by text; bulk-edit their source) ──
+          _findField(_findCtrl, 'find'),
+          const SizedBox(width: 6),
+          _findField(_replaceCtrl, 'replace'),
+          const SizedBox(width: 6),
+          _toolButton('Find',
+              'Select the first cell whose source contains the find text', _find),
+          const SizedBox(width: 6),
+          _toolButton('Replace all',
+              "Replace the find text with the replacement in every matching cell's source",
+              _replaceAll),
           _toolSep(),
           // ── History (undo / redo) ──
           _toolButton('↶ Undo', 'Undo the last edit', _undo,
