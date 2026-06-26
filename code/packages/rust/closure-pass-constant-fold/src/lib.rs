@@ -1168,6 +1168,35 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                     }
                 }
+                // ---- String.fromCodePoint(cp0, cp1, …) → the built string ----
+                //
+                // The static `String.fromCodePoint` (ECMAScript §22.1.2.2) builds
+                // a string from Unicode CODE POINTS — unlike `fromCharCode`, whose
+                // arguments are 16-bit UTF-16 *units*. So a single astral argument
+                // suffices: `String.fromCodePoint(128169)` → `"💩"` (U+1F4A9),
+                // `String.fromCodePoint(72, 73)` → `"HI"`, no args → `""`. Same
+                // bare-global-`String` soundness premise as `fromCharCode`; each
+                // argument must be a non-negative integer literal that is a VALID
+                // code point (`0..=0x10FFFF`, not a surrogate) — `char::from_u32`
+                // returns `None` for exactly the inputs JS would throw on or that
+                // can't be a Rust `char`, so we DECLINE rather than mis-fold.
+                if obj.name == "String" && prop.name == "fromCodePoint" {
+                    if let Some(result) = fold_string_from_code_point(&arguments) {
+                        let parent = c.cv.clone();
+                        let args_src = arguments
+                            .iter()
+                            .map(|a| match a {
+                                Expression::NumericLiteral(n) => format_js_number(n.value),
+                                _ => "?".to_string(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(",");
+                        let before = format!("String.fromCodePoint({})", args_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
             }
         }
     }
@@ -1383,6 +1412,43 @@ fn fold_string_from_char_code(args: &[Expression]) -> Option<String> {
     }
     // A lone surrogate among the units can't be a Rust String — decline.
     String::from_utf16(&units).ok()
+}
+
+/// Fold the static `String.fromCodePoint(cp0, cp1, …)` — build a string from
+/// Unicode CODE POINTS (ECMAScript §22.1.2.2).
+///
+/// Unlike `fromCharCode` (whose arguments are 16-bit UTF-16 *units*), each
+/// argument here is a whole code point, so one astral argument is enough:
+/// `String.fromCodePoint(128169)` → `"💩"` (U+1F4A9),
+/// `String.fromCodePoint(72, 73)` → `"HI"`, no arguments → `""`.
+///
+/// Conservative scope: every argument must be a non-negative integer literal
+/// that is a VALID Unicode scalar — in `0..=0x10FFFF` and NOT a surrogate
+/// (`0xD800..=0xDFFF`). In JS an out-of-range / fractional argument throws a
+/// `RangeError`, and a surrogate code point yields a lone-surrogate string a
+/// Rust `String` cannot hold; `char::from_u32` returns `None` for exactly those
+/// inputs, so we return `None` (leaving the call for the runtime) rather than
+/// emit a wrong literal or one for a call JS would have thrown on. A
+/// fractional, negative, `>0x10FFFF`, or non-literal argument also declines.
+fn fold_string_from_code_point(args: &[Expression]) -> Option<String> {
+    let mut result = String::new();
+    for a in args {
+        match a {
+            Expression::NumericLiteral(n)
+                if n.value.is_finite()
+                    && n.value.fract() == 0.0
+                    && n.value >= 0.0
+                    && n.value <= 0x10FFFF as f64 =>
+            {
+                // `char::from_u32` rejects surrogates (D800..DFFF) and anything
+                // past U+10FFFF, exactly the code points that can't be a Rust
+                // `char` — decline (`?`) for those.
+                result.push(char::from_u32(n.value as u32)?);
+            }
+            _ => return None,
+        }
+    }
+    Some(result)
 }
 
 /// Fold `"…".substring(start[, end])` (ECMAScript §22.1.3.24).
@@ -5174,6 +5240,70 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "non-String receiver fromCharCode must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- String.fromCodePoint (static) ---------------
+
+    /// Build `String.fromCodePoint(<args…>)` from numeric literal arguments.
+    fn from_code_point_call(args: &[f64]) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("String"), "fromCodePoint")),
+            arguments: args.iter().map(|&a| num(a, None)).collect(),
+        })
+    }
+
+    #[test]
+    fn fold_from_code_point_bmp_astral_and_empty() {
+        // V8 oracle: fromCodePoint(72,73)==="HI"; (128169)==="💩" (a SINGLE
+        // astral arg, unlike fromCharCode which needs the surrogate pair);
+        // ()==="".
+        for (args, expect) in [
+            (vec![72.0, 73.0], "HI"),
+            (vec![128169.0], "💩"),
+            (vec![128169.0, 65.0], "💩A"),
+            (vec![], ""),
+        ] {
+            let c = from_code_point_call(&args);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "String.fromCodePoint({args:?}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => assert_eq!(s.value, expect),
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn from_code_point_surrogate_or_out_of_range_does_not_fold() {
+        // A surrogate code point (D800..DFFF) is a valid JS arg but yields a
+        // lone-surrogate string no Rust String can hold; >0x10FFFF, negative,
+        // and fractional all throw RangeError in JS — decline in every case.
+        for args in [
+            vec![0xD83D as f64],   // lone high surrogate
+            vec![0x110000 as f64], // past U+10FFFF
+            vec![-1.0],
+            vec![65.5],
+            vec![65.0, 0.5],
+        ] {
+            let c = from_code_point_call(&args);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "String.fromCodePoint({args:?}) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn from_code_point_on_non_string_receiver_does_not_fold() {
+        // Only the bare global `String` folds; `s.fromCodePoint(65)` is left.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "fromCodePoint")),
+            arguments: vec![num(65.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "non-String receiver fromCodePoint must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
