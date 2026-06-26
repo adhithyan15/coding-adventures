@@ -26,6 +26,24 @@ or any non-bare callee like `window.String(...)`, is left for the runtime. New
 fixture `tests/diff/simple-fold-string/` and integration test
 `tests/diff_simple_fold_string.rs` cover it end-to-end.
 
+## [0.192.0] - 2026-06-25
+
+### Added — static `String.fromCharCode(...)` folding observable end-to-end at SIMPLE
+
+Picks up `closure-pass-constant-fold` 0.43.0, which folds the static
+`String.fromCharCode(u0, u1, …)` into a string literal when every argument is a
+non-negative integer literal in `0..=0xFFFF` (ECMAScript §22.1.2.1) — the first
+fold whose receiver is the bare global `String` rather than a string/number
+literal. The arguments are UTF-16 code units, so an adjacent high+low surrogate
+pair assembles an astral scalar.
+
+New `tests/diff/simple-fold-fromcharcode/` fixture + `diff_simple_fold_fromcharcode.rs`
+integration test assert the SIMPLE-level output
+`var a="HI";var b="💩";var c="";report(a,b,c);` for
+`String.fromCharCode(72,73)` → `"HI"`, `String.fromCharCode(0xD83D,0xDCA9)` →
+`"💩"` (emitted as its escaped surrogate pair), and `String.fromCharCode()` →
+`""`, and guard that no `fromCharCode` call survives (proving the typed SIMPLE
+pipeline ran, not the WHITESPACE_ONLY fallback).
 ## [0.191.0] - 2026-06-25
 
 ### Added — `codePointAt` string-literal folding observable end-to-end at SIMPLE
