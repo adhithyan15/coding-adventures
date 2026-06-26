@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Carry policy-blocked `.control` command inventories through selected
+  `run_deck_analysis` run artifacts as stable `ControlPolicyArtifacts`,
+  `ControlPolicyCategoryList`, `ControlPolicyCodeList`, and
+  `ControlPolicySeverityList` table, CSV/JSON, and `table_artifacts` fields,
+  matching Python and TypeScript.
 - Group policy-blocked `.control` command artifacts from selected
   `run_deck_analysis` execution results by category as
   `control_policy_summary_artifacts` with stable counts, line lists, command

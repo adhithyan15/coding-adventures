@@ -700,6 +700,10 @@ export interface DeckRunArtifact {
   readonly writeMarkers: readonly string[];
   readonly rawfileOptionCount: number;
   readonly rawfileOptions: readonly string[];
+  readonly controlPolicyArtifactCount: number;
+  readonly controlPolicyCategories: readonly string[];
+  readonly controlPolicyCodes: readonly string[];
+  readonly controlPolicySeverities: readonly string[];
   readonly diagnosticCount: number;
   readonly diagnosticCodes: readonly string[];
 }
@@ -8051,10 +8055,20 @@ function deckRunArtifacts(
   writeMarkers: readonly string[],
   rawfileOptions: readonly string[],
   diagnosticCodes: readonly string[],
+  controlPolicyArtifacts: readonly DeckControlPolicyArtifact[],
 ): DeckRunArtifact[] {
   const isTransient = plan.analysis === "tran";
   const analysisDirectives = deckAnalysisDirectives(plan);
   const tables = deckStableTables(measurements, fourier);
+  const controlPolicySummaries = deckControlPolicySummaryArtifacts(controlPolicyArtifacts);
+  const controlPolicyCategories = controlPolicySummaries.map((artifact) => artifact.category);
+  const controlPolicyCodes = controlPolicySummaries.flatMap((artifact) => artifact.codes);
+  const controlPolicySeverities: string[] = [];
+  for (const artifact of controlPolicySummaries) {
+    for (const severity of artifact.severities) {
+      pushUniqueString(controlPolicySeverities, severity);
+    }
+  }
   return [
     {
       analysis: plan.analysis,
@@ -8095,6 +8109,10 @@ function deckRunArtifacts(
       writeMarkers: [...writeMarkers],
       rawfileOptionCount: rawfileOptions.length,
       rawfileOptions: [...rawfileOptions],
+      controlPolicyArtifactCount: controlPolicyArtifacts.length,
+      controlPolicyCategories,
+      controlPolicyCodes,
+      controlPolicySeverities,
       diagnosticCount: diagnosticCodes.length,
       diagnosticCodes: [...diagnosticCodes],
     },
@@ -8200,6 +8218,10 @@ const DECK_RUN_ARTIFACT_COLUMNS = [
   "WriteMarkerList",
   "RawfileOptions",
   "RawfileOptionList",
+  "ControlPolicyArtifacts",
+  "ControlPolicyCategoryList",
+  "ControlPolicyCodeList",
+  "ControlPolicySeverityList",
   "Diagnostics",
   "DiagnosticCodeList",
 ] as const;
@@ -8244,6 +8266,10 @@ function deckRunArtifactCells(artifact: DeckRunArtifact): string[] {
     artifact.writeMarkers.join(";"),
     String(artifact.rawfileOptionCount),
     artifact.rawfileOptions.join(";"),
+    String(artifact.controlPolicyArtifactCount),
+    artifact.controlPolicyCategories.join(";"),
+    artifact.controlPolicyCodes.join(";"),
+    artifact.controlPolicySeverities.join(";"),
     String(artifact.diagnosticCount),
     artifact.diagnosticCodes.join(";"),
   ];
@@ -9000,6 +9026,7 @@ export function runDeckAnalysis(
       writeMarkers,
       rawfileOptions,
       diagnosticCodes,
+      controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier);
     const measurementTable = formatMeasurementTable(measurements);
@@ -9100,6 +9127,7 @@ export function runDeckAnalysis(
       writeMarkers,
       rawfileOptions,
       diagnosticCodes,
+      controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier);
     const measurementTable = formatMeasurementTable(measurements);
@@ -9211,6 +9239,7 @@ export function runDeckAnalysis(
       writeMarkers,
       rawfileOptions,
       diagnosticCodes,
+      controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier);
     const measurementTable = formatMeasurementTable(measurements);
@@ -9317,6 +9346,7 @@ export function runDeckAnalysis(
       writeMarkers,
       rawfileOptions,
       diagnosticCodes,
+      controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier);
     const measurementTable = formatMeasurementTable(measurements);
@@ -9413,6 +9443,7 @@ export function runDeckAnalysis(
       writeMarkers,
       rawfileOptions,
       diagnosticCodes,
+      controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier);
     const measurementTable = formatMeasurementTable(measurements);
@@ -9508,6 +9539,7 @@ export function runDeckAnalysis(
       writeMarkers,
       rawfileOptions,
       diagnosticCodes,
+      controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier);
     const measurementTable = formatMeasurementTable(measurements);
@@ -9613,6 +9645,7 @@ export function runDeckAnalysis(
       writeMarkers,
       rawfileOptions,
       diagnosticCodes,
+      controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier);
     const measurementTable = formatMeasurementTable(measurements);

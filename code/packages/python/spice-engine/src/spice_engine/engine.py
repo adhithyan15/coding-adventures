@@ -2357,6 +2357,10 @@ class DeckRunArtifact:
     write_markers: list[str]
     rawfile_option_count: int
     rawfile_options: list[str]
+    control_policy_artifact_count: int
+    control_policy_categories: list[str]
+    control_policy_codes: list[str]
+    control_policy_severities: list[str]
     diagnostic_count: int
     diagnostic_codes: list[str]
 
@@ -2722,6 +2726,10 @@ _DECK_RUN_ARTIFACT_COLUMNS = [
     "WriteMarkerList",
     "RawfileOptions",
     "RawfileOptionList",
+    "ControlPolicyArtifacts",
+    "ControlPolicyCategoryList",
+    "ControlPolicyCodeList",
+    "ControlPolicySeverityList",
     "Diagnostics",
     "DiagnosticCodeList",
 ]
@@ -2761,10 +2769,25 @@ def _deck_run_artifacts(
     write_markers: list[str],
     rawfile_options: list[str],
     diagnostic_codes: list[str],
+    control_policy_artifacts: list[DeckControlPolicyArtifact],
 ) -> list[DeckRunArtifact]:
     is_transient = plan.analysis == "tran"
     analysis_directives = _deck_analysis_directives(plan)
     tables = _deck_stable_tables(measurements, fourier)
+    control_policy_summaries = _deck_control_policy_summary_artifacts(
+        control_policy_artifacts
+    )
+    control_policy_categories = [
+        artifact.category for artifact in control_policy_summaries
+    ]
+    control_policy_codes = [
+        code for artifact in control_policy_summaries for code in artifact.codes
+    ]
+    control_policy_severities: list[str] = []
+    for artifact in control_policy_summaries:
+        for severity in artifact.severities:
+            if severity not in control_policy_severities:
+                control_policy_severities.append(severity)
     return [
         DeckRunArtifact(
             analysis=plan.analysis,
@@ -2809,6 +2832,10 @@ def _deck_run_artifacts(
             write_markers=list(write_markers),
             rawfile_option_count=len(rawfile_options),
             rawfile_options=list(rawfile_options),
+            control_policy_artifact_count=len(control_policy_artifacts),
+            control_policy_categories=control_policy_categories,
+            control_policy_codes=control_policy_codes,
+            control_policy_severities=control_policy_severities,
             diagnostic_count=len(diagnostic_codes),
             diagnostic_codes=list(diagnostic_codes),
         )
@@ -2905,6 +2932,10 @@ def _deck_run_artifact_cells(artifact: DeckRunArtifact) -> list[str]:
         ";".join(artifact.write_markers),
         str(artifact.rawfile_option_count),
         ";".join(artifact.rawfile_options),
+        str(artifact.control_policy_artifact_count),
+        ";".join(artifact.control_policy_categories),
+        ";".join(artifact.control_policy_codes),
+        ";".join(artifact.control_policy_severities),
         str(artifact.diagnostic_count),
         ";".join(artifact.diagnostic_codes),
     ]
@@ -3678,6 +3709,7 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -3744,6 +3776,7 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -3812,6 +3845,7 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -3886,6 +3920,7 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -3948,6 +3983,7 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4009,6 +4045,7 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4089,6 +4126,7 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)

@@ -136,7 +136,10 @@ and `tableArtifacts` records. Policy-blocked `source` / `shell`, `cd`,
 control-flow, and variable/state commands also populate
 `controlPolicyArtifacts` with stable line, category, command, code, severity,
 and message fields plus table, CSV, compact JSON, and header-keyed record
-exports. `controlPolicySummaryArtifacts` groups the same policy artifacts by
+exports. The selected-run artifact row also carries
+`ControlPolicyArtifacts`, `ControlPolicyCategoryList`,
+`ControlPolicyCodeList`, and `ControlPolicySeverityList` inventory columns.
+`controlPolicySummaryArtifacts` groups the same policy artifacts by
 category with stable count, line-list, command-list, code-list, and severity-list
 table, CSV, compact JSON, and record exports. `formatDeckTableCsv` also converts
 any stable tab-separated deck table to CSV, `formatDeckTableJson` converts the
@@ -236,7 +239,7 @@ deck-selected table output with normalized table-inventory, output-probe, and
 output-directive artifacts, selected measurement artifacts, selected transient Fourier artifacts,
 selected-run artifact summaries with table, analysis-directive, output-probe, output-directive,
 measurement, Fourier probe, `.control` command, write-marker, rawfile-option, and
-diagnostic inventories, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and
+control-policy diagnostic inventories, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and
 `.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls. Selected
 execution fields expose `.control` command, write-marker, rawfile-option, and
 diagnostic inventories directly for host integrations.
