@@ -29,6 +29,7 @@ private slots:
     void structuralInsertDeleteShiftsReferences();
     void numberFormatAppliesToSelectedCell();
     void sortRangeReordersRowsByKeyColumn();
+    void findAndReplaceLocatesAndRewritesCells();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -339,6 +340,34 @@ void TstWindow::sortRangeReordersRowsByKeyColumn() {
     // Bad args are a no-op returning false (no crash).
     QVERIFY(!m.sortRange("A1", "A1", 1, true));   // single-row range
     QVERIFY(!m.sortRange("A1", "E4", 9, true));   // key column outside the range
+}
+
+// Find / replace (the Find / Replace-all toolbar group drives findMatches /
+// replaceAll): locate cells by text and bulk-edit their source. Seed two number
+// cells + a formula referencing one of them.
+void TstWindow::findAndReplaceLocatesAndRewritesCells() {
+    SpreadsheetModel m;
+    // Use a token (555) absent from the default budget seed (whose far cell
+    // "=Z1000*2" would otherwise also contain "100").
+    m.setCell("H1", "555");
+    m.setCell("H2", "555");
+    m.setCell("I1", "=H1+1"); // displays 556
+    // find by computed value: "555" is the display of H1 and H2.
+    const QStringList byVal = m.findMatches("555", false, false);
+    QVERIFY(byVal.contains("H1") && byVal.contains("H2"));
+    // find by source: "H1" only in I1's formula text.
+    QCOMPARE(m.findMatches("H1", true, false), QStringList{"I1"});
+    // empty query → no matches.
+    QVERIFY(m.findMatches("", false, false).isEmpty());
+    // replace the literal 555 → 7 in the two number cells (count 2).
+    QCOMPARE(m.replaceAll("555", "7", false), 2);
+    QCOMPARE(at(m.window(1, 8, 1, 8), 1, 8, 1, 8), QStringLiteral("7"));  // H1
+    // replace H1 → H2 in the formula source; it re-parses + recomputes (=H2+1 = 8).
+    QCOMPARE(m.replaceAll("H1", "H2", false), 1);
+    QCOMPARE(at(m.window(1, 9, 1, 9), 1, 9, 1, 9), QStringLiteral("8"));  // I1
+    // no-match / empty query → 0.
+    QCOMPARE(m.replaceAll("zzz", "q", false), 0);
+    QCOMPARE(m.replaceAll("", "q", false), 0);
 }
 
 QTEST_MAIN(TstWindow)

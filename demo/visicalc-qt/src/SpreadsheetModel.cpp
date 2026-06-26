@@ -354,6 +354,37 @@ bool SpreadsheetModel::sortRange(const QString &start, const QString &end, int k
     return ok != 0;
 }
 
+// Find: the engine returns {"matches":["A1",…]} (the A1 addresses whose text
+// contains the query); parse it into a QStringList. NAMED QByteArray local so the
+// UTF-8 buffer outlives the C call. Read-only — no recompute.
+QStringList SpreadsheetModel::findMatches(const QString &query, bool inFormulas, bool matchCase) const {
+    const QByteArray q = query.toUtf8();
+    const QString json = takeString(
+        sc_find_all(session_, q.constData(), inFormulas ? 1 : 0, matchCase ? 1 : 0));
+    QStringList out;
+    const QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
+    if (!doc.isObject()) return out;
+    for (const QJsonValue &v : doc.object().value(QStringLiteral("matches")).toArray()) {
+        out.append(v.toString());
+    }
+    return out;
+}
+
+// Replace: the engine rewrites `query` → `replacement` in every matching cell's
+// source and recomputes; sc_replace_all returns the count changed. NAMED
+// QByteArray locals so the UTF-8 buffers outlive the C call.
+int SpreadsheetModel::replaceAll(const QString &query, const QString &replacement, bool matchCase) {
+    const QByteArray q = query.toUtf8();
+    const QByteArray r = replacement.toUtf8();
+    const int n = sc_replace_all(session_, q.constData(), r.constData(), matchCase ? 1 : 0);
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+    return n;
+}
+
 // Clipboard: copy/cut capture the inclusive rectangle into the engine's
 // clipboard; paste places it (the whole block's references shift by the
 // destination's offset). The QByteArray locals are NAMED so the UTF-8 buffers
