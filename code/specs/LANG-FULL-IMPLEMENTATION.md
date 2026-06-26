@@ -426,7 +426,18 @@ backend immediately) come before the enabler-dependent items.
   real `java`** — the BASIC `FOR` sum (`15`) and `IF` branch (`7`) now run on the JVM; both added
   to the matrix JVM column.
 - ☐ **BA1** — `GOSUB` / `RETURN` (needs **E7**).
-- ☐ **BA2** — multi-item `PRINT`, `;`/`,` separators, more relops.
+- ✅ **BA2** — multi-item `PRINT`, `;`/`,` separators (`dartmouth-basic-iir-compiler`
+  0.9.0). `PRINT` now prints several items on ONE line: each numeric item lowers to a
+  `call __basic_print_int` — a synthetic *recursive* helper that renders digits one at a
+  time through the universal `putchar` builtin (the same one Brainfuck uses) — instead of
+  the old per-item `print_i64` (which appended a newline, forcing items onto separate
+  lines). `;` joins tightly, `,` inserts a space, a trailing separator suppresses the
+  newline, and bare `PRINT` emits a blank line. Because the helpers reuse only ops every
+  backend already runs (`call`, integer `div`/`mul`/`sub`/`add`, `cmp_*`, `putchar`), BA2
+  needed **zero** backend changes — verified by two executed matrix cells (`PRINT 0 - 12;
+  34` ⇒ `-1234`, `PRINT 5, 6` ⇒ `5 6`) on all 7 backends. *More relops* were already done
+  (grammar + `extract_relop_op` cover all six `= < > <= >= <>`). Deferred: string `PRINT`
+  items (→ BA4/E4); true 14-column `,` print zones (a single space approximates them).
 - ✅ **BA3** — arrays / `DIM` (enabler **E5**). `DIM A(n)` lowers to `alloc_array`
   (BASIC arrays are 0-based + inclusive, so `n + 1` elements); `LET A(i) = e` →
   `array_set` and `A(i)` rvalues → `array_get`, with the subscript used directly as

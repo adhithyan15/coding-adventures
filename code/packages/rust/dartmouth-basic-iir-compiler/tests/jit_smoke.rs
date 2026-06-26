@@ -17,28 +17,66 @@
 //!     │
 //!     ▼ JITCore::execute_with_jit
 //!   (vm-core interprets; jit-core compiles hot fns into native;
-//!    builtins like `print_i64` resolve through a custom registry)
+//!    the `putchar` builtin resolves through a custom registry)
 //! captured stdout
 //! ```
 //!
 //! ## What we capture
 //!
-//! Since the JIT path runs in-process, we register a custom `print_i64`
-//! handler on the VM's `BuiltinRegistry` that pushes each printed
-//! integer to a shared `Vec<i64>`.  After execution we assert the
-//! captured numbers match what the BASIC program wrote.
+//! Since the JIT path runs in-process, we register a custom `putchar`
+//! handler on the VM's `BuiltinRegistry` that pushes each printed byte to a
+//! shared `Vec<u8>`.  After execution we decode it and assert the captured
+//! string matches what the BASIC program wrote (BA2's character-level PRINT).
+//! The backend is `DeferToInterpreterBackend` (`compile` → `None`) so every
+//! function — including BA2's synthetic print helpers — runs through the
+//! interpreter; see its docs for why `NullBackend` is the wrong choice here.
 
 use std::sync::{Arc, Mutex};
 
 use dartmouth_basic_iir_compiler::compile_source;
-use jit_core::backend::NullBackend;
+use jit_core::backend::Backend;
+use jit_core::cir::CIRInstr;
 use jit_core::core::JITCore;
 use vm_core::core::VMCore;
 use vm_core::value::Value;
 
+/// A backend that always **defers to the interpreter**: `compile` returns
+/// `None`, so jit-core caches nothing and every function — including BA2's
+/// synthetic `__basic_print_int` / `__basic_print_uint` helpers — runs through
+/// the VM interpreter.
+///
+/// We deliberately do *not* use `NullBackend` here. `NullBackend::compile`
+/// returns `Some(sentinel)` and `run` returns `Value::Null`, i.e. it "compiles"
+/// every function to a **no-op binary**. Before BA2 that was harmless because
+/// BASIC's `main` was the only function and Phase-2 interprets `main` directly.
+/// BA2 made `PRINT` call the FullyTyped helper functions, which
+/// `execute_with_jit` eagerly compiles — with `NullBackend` they become no-op
+/// binaries, so the digits never print (`PRINT 42` ⇒ `"\n"`). A real backend
+/// returns `None` for ops it can't compile and lets the interpreter run them
+/// (exactly what `BasicCirJit` does for the helpers' `call`/`putchar`), so
+/// `DeferToInterpreterBackend` models that realistic path and produces correct,
+/// deterministic output.
+struct DeferToInterpreterBackend;
+
+impl Backend for DeferToInterpreterBackend {
+    fn name(&self) -> &str {
+        "defer-to-interpreter"
+    }
+
+    fn compile(&self, _ir: &[CIRInstr]) -> Option<Vec<u8>> {
+        None // never compile — the interpreter runs everything
+    }
+
+    fn run(&self, _binary: &[u8], _args: &[Value]) -> Value {
+        // Unreachable: with `compile` returning `None`, jit-core never caches a
+        // binary for this backend, so `run` is never called.
+        Value::Null
+    }
+}
+
 /// Run a BASIC source through the JIT chain and return everything that
 /// `PRINT` wrote.  Each `PRINT n` becomes one entry in the returned vec.
-fn jit_execute_and_capture_prints(source: &str) -> Vec<i64> {
+fn jit_execute_and_capture_prints(source: &str) -> String {
     let mut module = compile_source(source, "jit_demo")
         .expect("BASIC source must compile");
 
@@ -48,27 +86,31 @@ fn jit_execute_and_capture_prints(source: &str) -> Vec<i64> {
     // interpreted path still runs the whole program.
     let mut vm = VMCore::new();
 
-    // Register the LANG75 V1 builtins the BASIC iir-compiler emits.
-    // For this smoke we only care about `print_i64`; `input_i64` could
-    // be wired up the same way for INPUT statements.
-    let printed: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+    // BA2: BASIC `PRINT` renders output one character at a time through the
+    // universal `putchar` builtin (digits via the synthetic recursive
+    // `__basic_print_int` helper, plus separator spaces and the line-ending
+    // newline) — *not* the old line-buffered `print_i64`.  Capture the raw
+    // byte stream and decode it to a string for comparison.
+    let printed: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
     {
         let printed = Arc::clone(&printed);
-        vm.builtins_mut().register("print_i64", move |args| {
-            let n = args.first()
-                .and_then(|v| v.as_i64())
-                .unwrap_or(0);
-            printed.lock().unwrap().push(n);
+        vm.builtins_mut().register("putchar", move |args| {
+            let b = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+            printed.lock().unwrap().push(b as u8);
             Ok(Value::Null)
         });
     }
 
-    let mut jit = JITCore::new(&mut vm, Box::new(NullBackend));
+    let mut jit = JITCore::new(&mut vm, Box::new(DeferToInterpreterBackend));
     jit.execute_with_jit(&mut vm, &mut module, "main", &[])
         .expect("JIT execution must succeed");
 
-    let out = printed.lock().unwrap().clone();
-    out
+    // Bind the cloned bytes to a local first so the `MutexGuard` temporary is
+    // dropped before `printed` goes out of scope (a tail
+    // `printed.lock().unwrap().clone()` expression holds the guard until the
+    // block ends, which older rustc rejects — E0597).
+    let bytes = printed.lock().unwrap().clone();
+    String::from_utf8(bytes).expect("BASIC PRINT output must be valid UTF-8")
 }
 
 /// Smallest possible PRINT test: `10 PRINT 42 / 20 END` must push the
@@ -76,8 +118,8 @@ fn jit_execute_and_capture_prints(source: &str) -> Vec<i64> {
 #[test]
 fn jit_basic_print_42() {
     let got = jit_execute_and_capture_prints("10 PRINT 42\n20 END\n");
-    assert_eq!(got, vec![42],
-        "expected one printed value 42, got {got:?}");
+    assert_eq!(got, "42\n",
+        "expected printed `42` + newline, got {got:?}");
 }
 
 /// LET + arithmetic + PRINT: confirms that mov / add / `call_builtin`
@@ -92,8 +134,8 @@ fn jit_basic_let_arithmetic_print() {
                30 PRINT A + B\n\
                40 END\n";
     let got = jit_execute_and_capture_prints(src);
-    assert_eq!(got, vec![42],
-        "expected [42] from 30 + 12, got {got:?}");
+    assert_eq!(got, "42\n",
+        "expected `42` + newline from 30 + 12, got {got:?}");
 }
 
 /// BA6 — `READ` / `DATA`: a single value flows from the DATA pool into a
@@ -105,7 +147,7 @@ fn jit_basic_read_data_single() {
                30 PRINT X\n\
                40 END\n";
     let got = jit_execute_and_capture_prints(src);
-    assert_eq!(got, vec![42], "READ X from DATA 42 should print 42, got {got:?}");
+    assert_eq!(got, "42\n", "READ X from DATA 42 should print 42, got {got:?}");
 }
 
 /// BA6 — multi-`READ` advances the pointer, and `RESTORE` rewinds it.  The
@@ -123,7 +165,7 @@ fn jit_basic_read_restore_rewinds() {
                70 PRINT C\n\
                80 END\n";
     let got = jit_execute_and_capture_prints(src);
-    assert_eq!(got, vec![10, 20, 10],
+    assert_eq!(got, "10\n20\n10\n",
         "READ A,B then RESTORE then READ C should print 10,20,10, got {got:?}");
 }
 
@@ -137,8 +179,8 @@ fn jit_basic_for_loop_prints_1_2_3() {
                30 NEXT I\n\
                40 END\n";
     let got = jit_execute_and_capture_prints(src);
-    assert_eq!(got, vec![1, 2, 3],
-        "expected [1,2,3] from FOR I = 1 TO 3, got {got:?}");
+    assert_eq!(got, "1\n2\n3\n",
+        "expected 1,2,3 (each on its own line) from FOR I = 1 TO 3, got {got:?}");
 }
 
 /// IF / GOTO branch: `10 LET A = 7 / 20 IF A > 5 THEN 100 / 30 PRINT 0 /
@@ -153,6 +195,6 @@ fn jit_basic_if_then_goto() {
                100 PRINT A\n\
                110 END\n";
     let got = jit_execute_and_capture_prints(src);
-    assert_eq!(got, vec![7],
-        "expected [7] from IF A > 5 THEN 100, got {got:?}");
+    assert_eq!(got, "7\n",
+        "expected `7` + newline from IF A > 5 THEN 100, got {got:?}");
 }
