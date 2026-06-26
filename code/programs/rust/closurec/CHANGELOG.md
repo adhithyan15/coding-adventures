@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.198.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold global `encodeURI(…)` / `decodeURI(…)` → string
+
+Bumps `closure-pass-constant-fold` to 0.49.0, which folds the global whole-URI
+escapers `encodeURI(string)` / `decodeURI(string)` whose single argument is a
+string literal to the string literal V8 produces at runtime (ECMAScript
+§19.2.6.4 / §19.2.6.2). They are the whole-URI siblings of `encodeURIComponent`
+/ `decodeURIComponent`, differing only in their treatment of the URI
+reserved/structural delimiters `; , / ? : @ & = + $` and `#`:
+
+- `encodeURI` keeps those reserved delimiters unescaped (it escapes only the
+  genuinely unsafe bytes — space, non-ASCII, controls, and `< > " { } | \ ^ [ ]`
+  `` ` ``): `encodeURI("a b")` → `"a%20b"`, `encodeURI("a/b?c=d")` → `"a/b?c=d"`,
+  `encodeURI("é")` → `"%C3%A9"`.
+- `decodeURI` keeps a `%XX` escape ENCODED when its byte is a reserved delimiter,
+  so reserved structure survives a round trip — the one behavioural difference
+  from `decodeURIComponent`: `decodeURI("a%20b")` → `"a b"`, but `decodeURI("%2F")`
+  → `"%2F"` (whereas `decodeURIComponent("%2F")` → `"/"`).
+
+Folds the **bare global identifier** only (never `window.encodeURI`); `decodeURI`
+DECLINES the fold on the two `URIError` inputs (malformed `%XX` escape, or a
+`%`-decoded byte run that is not valid UTF-8), so a runtime throw is never
+folded into a value.
+
+Adds the `simple-fold-uri` diff fixture and `diff_simple_fold_uri.rs` integration
+test (byte-exact stdout, per-binding folds including the reserved-preservation
+distinction and the declined `URIError` call, and a WHITESPACE_ONLY-fallback
+regression guard). Regenerates the `--help_markdown` golden for the version bump.
+
 ## [0.194.0] - 2026-06-25
 
 ### Added — SIMPLE/ADVANCED fold global `Number("…")` → numeric
