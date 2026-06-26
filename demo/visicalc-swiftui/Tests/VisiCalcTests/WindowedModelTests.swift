@@ -249,4 +249,34 @@ final class WindowedModelTests: XCTestCase {
         XCTAssertEqual(m.window(rows: 1...1, cols: 1...1)[0][0], "15")
         XCTAssertEqual(m.window(rows: 4...4, cols: 1...1)[0][0], "4")
     }
+
+    /// Find / replace (the find/replace boxes + Find/Replace buttons drive
+    /// findAll/replaceAll): findAll returns the A1 addresses whose SOURCE contains
+    /// the query (case-insensitive); replaceAll rewrites the query in every cell's
+    /// source and recomputes, returning the count. A rewritten formula stays live;
+    /// a rewritten literal stays typed.
+    func testFindAndReplaceLocatesAndRewritesCells() {
+        let m = WindowedSheetModel()
+        // The seed has the literal "15" only at A1, and "=SUM(" in every total formula.
+        XCTAssertEqual(m.findAll("15"), ["A1"])
+        XCTAssertTrue(m.findAll("sum").contains("E1"))  // case-insensitive
+        XCTAssertEqual(m.findAll(""), [])
+        XCTAssertEqual(m.findAll("zzz"), [])
+        // selectA1 moves the cursor onto a hit (parsing column letters past Z).
+        m.selectA1("Z1000")
+        XCTAssertEqual(m.selectedRow, 1000)
+        XCTAssertEqual(m.selectedCol, 26)
+        // Replace a literal: A1 "15" → "99"; E1 = 99+3+12+8 = 122 ("#,##0.00").
+        XCTAssertEqual(m.replaceAll("15", "99"), 1)
+        XCTAssertEqual(m.rowCells(1)[0], "99")
+        XCTAssertEqual(m.rowCells(1)[4], "122.00")
+        // Replace inside a formula reference keeps it LIVE: H1=10, H2=20, H3 = =H1+5
+        // (15). Rewrite "H1" → "H2" → H3 becomes =H2+5 = 25, recomputed by the engine.
+        m.setCell("H1", "10")
+        m.setCell("H2", "20")
+        m.setCell("H3", "=H1+5") // 15
+        XCTAssertEqual(m.rowCells(3)[7], "15")
+        XCTAssertEqual(m.replaceAll("H1", "H2"), 1)
+        XCTAssertEqual(m.rowCells(3)[7], "25") // =H2+5
+    }
 }
