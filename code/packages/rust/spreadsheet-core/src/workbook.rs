@@ -1223,7 +1223,9 @@ impl Workbook {
 
     /// The cell's **source** text: a formula's stored text, or a literal's
     /// canonical string (the form a user would re-type). Empty cells → "".
-    fn cell_source_text(&self, sheet: SheetId, addr: CellAddress) -> String {
+    /// Public so a facade can resync its raw-source echo after `replace_all`
+    /// rewrites cells (the engine has no other public source accessor).
+    pub fn cell_source_text(&self, sheet: SheetId, addr: CellAddress) -> String {
         let Some(s) = self.sheets.get(sheet.0 as usize) else {
             return String::new();
         };

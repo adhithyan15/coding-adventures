@@ -376,6 +376,46 @@ pub unsafe extern "C" fn sort_range(
     }
 }
 
+/// `find_all(query, in_formulas, match_case)` — locate cells whose text contains
+/// `query`. `in_formulas`/`match_case` are flags (non-zero = search source / fold
+/// case off). Returns a packed JSON string `{"matches":["A1",…]}` (the host reads
+/// it via [`read_output`] and releases it with [`dealloc`], like any packed
+/// string). An empty query → empty list. See [`SpreadsheetSession::find_all`].
+///
+/// # Safety
+/// The `(ptr, len)` pair must describe a readable byte range (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn find_all(
+    query_ptr: *const u8,
+    query_len: usize,
+    in_formulas: i32,
+    match_case: i32,
+) -> *mut u8 {
+    let query = read_input(query_ptr, query_len);
+    pack(SESSION.with(|s| s.borrow().find_all(&query, in_formulas != 0, match_case != 0)))
+}
+
+/// `replace_all(query, replacement, match_case)` — replace `query` with
+/// `replacement` in the source of every matching cell (engine rewrites +
+/// recomputes; the facade keeps its source echo in step). `match_case` is a flag
+/// (0 folds case). Returns the count of cells changed as a flag-style i32; an
+/// empty query is a no-op (0). See [`SpreadsheetSession::replace_all`].
+///
+/// # Safety
+/// Both `(ptr, len)` pairs must describe readable byte ranges (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn replace_all(
+    query_ptr: *const u8,
+    query_len: usize,
+    repl_ptr: *const u8,
+    repl_len: usize,
+    match_case: i32,
+) -> i32 {
+    let query = read_input(query_ptr, query_len);
+    let repl = read_input(repl_ptr, repl_len);
+    SESSION.with(|s| s.borrow_mut().replace_all(&query, &repl, match_case != 0)) as i32
+}
+
 // ── Save / load (serialize) ──────────────────────────────────────────
 
 /// `serialize()` → a packed JSON document holding the workbook's SOURCE (formula

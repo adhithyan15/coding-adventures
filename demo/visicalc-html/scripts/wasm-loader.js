@@ -173,6 +173,27 @@
             return ok === 1;
           },
 
+          // Find / replace. findAll returns the A1 addresses whose text contains
+          // query (inFormulas=true searches each cell's source, else its computed
+          // display value; matchCase=false folds ASCII case) as a JS array, parsed
+          // from the engine's {"matches":[...]} JSON. replaceAll replaces query
+          // with replacement in matching cells' source (engine rewrites +
+          // recomputes) and returns the count changed. Empty query → [] / 0.
+          findAll: (query, inFormulas = false, matchCase = true) => {
+            const [qp, ql] = writeStr(String(query));
+            const json = readResult(ex.find_all(qp, ql, inFormulas ? 1 : 0, matchCase ? 1 : 0));
+            freeInput(qp, ql);
+            return JSON.parse(json).matches;
+          },
+          replaceAll: (query, replacement, matchCase = true) => {
+            const [qp, ql] = writeStr(String(query));
+            const [rp, rl] = writeStr(String(replacement));
+            const n = ex.replace_all(qp, ql, rp, rl, matchCase ? 1 : 0);
+            freeInput(qp, ql);
+            freeInput(rp, rl);
+            return n >>> 0;
+          },
+
           // Save / load: serialize the workbook's SOURCE (formula text + typed
           // literals) + formats to a JSON string, and restore from one. Computed
           // values recompute on load, so a loaded formula stays live.

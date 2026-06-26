@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.11.0
+
+**Find / replace facade.** `find_all(query, in_formulas, match_case) -> String`
+returns `{"matches":["A1",…]}` (the engine's `Workbook::find_all` behind a JSON
+return; read-only). `replace_all(query, replacement, match_case) -> u32` delegates
+to the engine's `replace_all` (which rewrites + recomputes), then **resyncs the
+`raw` echo map** for the changed cells from the engine's new source text
+(`Workbook::cell_source_text`, now public) so the formula bar stays in step;
+routed through `mutate` for undo/redo. Empty query → empty / 0. 1 test
+(find by value vs source + empty-query; replace literals + formula refs with
+recompute + raw resync + no-match/empty → 0). → 0.11.0.
+
 ## 0.10.0
 
 **Range sort facade — `sort_range`.** Wraps `Workbook::sort_range` (spreadsheet-core

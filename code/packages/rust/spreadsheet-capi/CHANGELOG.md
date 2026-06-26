@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.11.0
+
+**Find / replace — `sc_find_all` / `sc_replace_all`.**
+`char *sc_find_all(s, query, in_formulas, match_case)` returns a heap JSON object
+`{"matches":["A1",…]}` (free with `sc_string_free`); `int sc_replace_all(s, query,
+replacement, match_case)` returns the count of cells changed. Both wrap the
+facade's `find_all`/`replace_all`; same `read_cstr`/`into_cstr` marshalling as
+`sc_serialize`. Declared in `include/spreadsheet.h`. → 0.11.0.
+
 ## 0.10.0
 
 **Range sort — `sc_sort_range`.** New C ABI entry point

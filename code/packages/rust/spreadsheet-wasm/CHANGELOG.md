@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.0
+
+**Find / replace exports.** `find_all(query_ptr, query_len, in_formulas, match_case)
+-> *mut u8` returns a packed JSON string `{"matches":[…]}`; `replace_all(query…,
+repl…, match_case) -> i32` returns the count of cells changed. The committed
+`pkg/spreadsheet_engine.wasm` is rebuilt to carry both. → 0.11.0.
+
 ## 0.10.0
 
 **Range sort — `sort_range` export.** New linear-memory export
