@@ -62,6 +62,9 @@ public sealed partial class InfiniteSheet : UserControl
     // serialized workbook here, Load restores from it. (A real app would write it
     // to a file; the demo keeps the round trip self-contained.)
     private string _savedSnapshot = string.Empty;
+
+    /// Short find/replace status (match/replace count) echoed in the footer.
+    private string _findStatus = string.Empty;
     private ScrollViewer? _bodyInnerSv, _gutterInnerSv;
 
     public InfiniteSheet()
@@ -331,11 +334,60 @@ public sealed partial class InfiniteSheet : UserControl
         UpdateStatus();
     }
 
+    /// Find: locate every cell whose source contains the query (case-insensitive)
+    /// and jump the selection to the first hit; the footer shows the match count.
+    /// The .NET sibling of the web demo's Find button and the Qt/Flutter/Compose
+    /// ports — it searches formula text, so "=SUM" or a literal like "15" both hit.
+    private void FindButton_Click(object sender, RoutedEventArgs e) => RunFind();
+    private void FindBox_KeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key != VirtualKey.Enter) return;
+        RunFind();
+        e.Handled = true;
+    }
+
+    private void RunFind()
+    {
+        string query = FindBox.Text;
+        var hits = _model.FindAll(query);
+        if (hits.Count > 0)
+        {
+            _model.SelectA1(hits[0]);
+            RefreshFormulaBar();
+            RepaintRealizedRows();
+        }
+        _findStatus = query.Length == 0 ? string.Empty
+            : hits.Count == 0 ? "no match"
+            : $"{hits.Count} match{(hits.Count == 1 ? "" : "es")}";
+        UpdateStatus();
+    }
+
+    /// Replace: rewrite the query → replacement in every cell's source and
+    /// recompute; the footer shows how many cells changed. The engine re-parses
+    /// each rewrite (so a formula stays live, a literal stays typed).
+    private void ReplaceButton_Click(object sender, RoutedEventArgs e) => RunReplace();
+    private void ReplaceBox_KeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key != VirtualKey.Enter) return;
+        RunReplace();
+        e.Handled = true;
+    }
+
+    private void RunReplace()
+    {
+        int n = _model.ReplaceAll(FindBox.Text, ReplaceBox.Text);
+        _findStatus = $"{n} replaced";
+        RefreshFormulaBar();
+        RepaintRealizedRows();
+    }
+
     /// The hairline footer: the live virtual-grid size + the per-edit revision
-    /// clock (mirrors the web/Qt/Flutter/Compose status lines).
+    /// clock (mirrors the web/Qt/Flutter/Compose status lines), with the
+    /// find/replace count appended when present.
     private void UpdateStatus() =>
         StatusText.Text =
-            $"Virtual grid: {_model.TotalRows} rows × {_model.TotalCols} cols  ·  revision {_model.Revision}";
+            $"Virtual grid: {_model.TotalRows} rows × {_model.TotalCols} cols  ·  revision {_model.Revision}"
+            + (_findStatus.Length > 0 ? $"  ·  {_findStatus}" : string.Empty);
 
     /// Rebuild only the currently-realized rows (body + gutter) and the header so
     /// the selection highlight, accent-tinted row/column headers, and recomputed

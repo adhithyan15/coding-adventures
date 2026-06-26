@@ -269,5 +269,35 @@ using (var so = new SpreadsheetSession())
     Check("sort bad key no-op", so.SortRange("A1", "E4", 9, true).ToString(), "False");
 }
 
+// ── Find / replace (the find/replace boxes + Find/Replace buttons drive
+// FindAll/ReplaceAll): FindAll returns the A1 addresses whose SOURCE contains
+// the query (case-insensitive); ReplaceAll rewrites the query in every cell's
+// source and recomputes, returning the count. A rewritten formula stays live;
+// a rewritten literal stays typed.
+using (var fr = new InfiniteSheetModel())
+{
+    // The seed has the literal "15" only at A1, and "=SUM(" in every total formula.
+    Check("find literal 15", string.Join(",", fr.FindAll("15")), "A1");
+    Contains("find formula SUM has E1", string.Join(",", fr.FindAll("sum")), "E1");
+    Check("find empty query", fr.FindAll("").Count.ToString(), "0");
+    Check("find no match", fr.FindAll("zzz").Count.ToString(), "0");
+    // SelectA1 moves the cursor onto a hit (parsing column letters past Z).
+    fr.SelectA1("Z1000");
+    Check("selectA1 Z1000 addr", fr.InfAddress, "Z1000");
+    // Replace a literal: A1 "15" → "99"; E1 = 99+3+12+8 = 122 (#,##0.00 format).
+    Check("replace 15->99 count", fr.ReplaceAll("15", "99").ToString(), "1");
+    fr.SelectA1("A1");
+    Check("replaced A1 value", fr.RowCells(1)[0], "99");
+    Check("replaced E1 recomputed", fr.RowCells(1)[4], "122.00");
+    // Replace inside a formula reference keeps it LIVE: H1=10, H2=20, H3 = =H1+5
+    // (15). Rewrite "H1" → "H2" → H3 becomes =H2+5 = 25, recomputed by the engine.
+    fr.SelectInf(1, 8); fr.CommitInf("10");     // H1
+    fr.SelectInf(2, 8); fr.CommitInf("20");     // H2
+    fr.SelectInf(3, 8); fr.CommitInf("=H1+5");  // H3 = 15
+    Check("pre-replace H3", fr.RowCells(3)[7], "15");
+    Check("replace H1->H2 count", fr.ReplaceAll("H1", "H2").ToString(), "1");
+    Check("H3 recomputed live", fr.RowCells(3)[7], "25"); // =H2+5
+}
+
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;
