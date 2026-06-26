@@ -106,6 +106,10 @@ All notable changes to this package will be documented in this file.
   handoff-action evidence into blocker, operator, review, lineage, and
   release-ready outcomes.
 - Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review disposition rows that
+  turn evidence review outcomes into repair, review, lineage, operator, and
+  release handoff actions.
+- Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence review summaries that combine
   review rows with next blocker, review, lineage, and release-ready pointers.
 - Mesh release ticket handoff readiness-evidence review disposition-action
