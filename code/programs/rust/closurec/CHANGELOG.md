@@ -36,6 +36,32 @@ tests cover the byte-exact stdout, the per-binding folds, and a regression
 guard that exactly one (declined) call survives, proving the typed SIMPLE
 optimizer ran rather than the `WHITESPACE_ONLY` fallback.
 
+## [0.194.0] - 2026-06-25
+
+### Added — SIMPLE/ADVANCED fold global `Number("…")` → numeric
+
+Bumps `closure-pass-constant-fold` to 0.45.0, which folds a global
+`Number(string)` call whose single argument is a string literal to the numeric
+literal V8 produces at runtime (ECMAScript §21.1.1.1 → §7.1.4.1.1
+`StringToNumber`). Unlike `parseInt`/`parseFloat`, the coercion is **total** —
+the whole trimmed string must be numeric or the result is `NaN`:
+
+```js
+// in
+var a = Number("42"), b = Number(""), c = Number("  3.5 "),
+    d = Number("0x1F"), e = Number("0b101"), f = Number("0o17"),
+    g = Number("abc");
+// out (SIMPLE)
+var a=42,b=0,c=3.5,d=31,e=5,f=15,g=Number("abc");
+```
+
+`Number("")` → `0` (the empty string is `+0`, not `NaN`), the `0x`/`0b`/`0o`
+forms fold to their integer value, and a leading zero stays decimal
+(`Number("017")` → `17`). Calls whose result has no literal token — `NaN`
+(`Number("abc")`, `Number("12px")`, `Number("1,2")`) or `±Infinity`
+(`Number("Infinity")`) — are left for the runtime, as is any non-bare callee
+(`window.Number(...)`). New fixture `tests/diff/simple-fold-number/` and
+integration test `tests/diff_simple_fold_number.rs` cover it end-to-end.
 ## [0.193.0] - 2026-06-25
 
 ### Added — static `String.fromCodePoint(...)` folding observable end-to-end at SIMPLE

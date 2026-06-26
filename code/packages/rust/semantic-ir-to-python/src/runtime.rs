@@ -24,6 +24,7 @@ from coding_adventures_sir_runtime_oop import (
     cvar_set as _sir_oop_cvar_set,
     call_method as _sir_oop_call_method,
     sym_to_proc as _sir_oop_sym_to_proc,
+    case_eq as _sir_oop_case_eq,
 )
 "##;
 

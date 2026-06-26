@@ -3,6 +3,7 @@ import { apply, Closure, intern } from "@coding-adventures/sir-runtime-core";
 import type { Val } from "../src/index.js";
 import {
   callMethod,
+  caseEq,
   classOf,
   cvarGet,
   cvarSet,
@@ -639,5 +640,39 @@ describe("nil / true / false + Object to_s/inspect (M1c)", () => {
       "2",
       "3",
     ]);
+  });
+});
+
+describe("case-equality (M5)", () => {
+  it("matches a regex pattern against a string", () => {
+    expect(caseEq(/ell/, "hello")).toBe(true);
+    expect(caseEq(/ell/, "world")).toBe(false);
+  });
+
+  it("never matches a regex against a non-string scrutinee", () => {
+    expect(caseEq(/1/, 1)).toBe(false);
+  });
+
+  it("tests Range membership (structural detection)", () => {
+    // A stand-in named `Range` with an `includes` method exercises the path
+    // without importing sir-runtime-range.
+    class Range {
+      constructor(
+        private lo: number,
+        private hi: number,
+      ) {}
+      includes(value: Val): boolean {
+        return (value as number) >= this.lo && (value as number) <= this.hi;
+      }
+    }
+    const r = new Range(1, 5) as unknown as Val;
+    expect(caseEq(r, 3)).toBe(true);
+    expect(caseEq(r, 9)).toBe(false);
+  });
+
+  it("falls back to value equality for a plain literal", () => {
+    expect(caseEq(5, 5)).toBe(true);
+    expect(caseEq(5, 6)).toBe(false);
+    expect(caseEq("a", "a")).toBe(true);
   });
 });

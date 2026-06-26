@@ -2,6 +2,19 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.7] - 2026-06-26
+
+### Added (M5 — case-equality `===`)
+
+- `case_eq(pattern, value)` — Ruby case-equality, the test a `when` clause
+  runs. Dispatches on the *pattern*'s type: a `re.Pattern` (Regexp) → the regex
+  matches `str(value)`; a `Range` (detected structurally by type name, so no
+  dependency on `sir-runtime-range`) → membership via its `includes`; anything
+  else → value equality (`eq`). A range/non-comparable-type mismatch
+  (`(1..5) === "x"`) returns `False` rather than raising, mirroring Ruby. The
+  class case (`when Integer`) is handled at the frontend (`value.is_a?(Const)`)
+  and never reaches here.
+
 ## [0.1.6] - 2026-06-22
 
 ### Added

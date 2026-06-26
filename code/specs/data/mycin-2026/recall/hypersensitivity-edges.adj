@@ -1,0 +1,70 @@
+% ============================================================================
+% hypersensitivity-edges — the hypersensitivity type → immune mechanism
+% knowledge-graph (MYCIN-2026 HYPERSENSITIVITY).
+% ============================================================================
+% A high-yield immunology board table: the four Gell-Coombs hypersensitivity types
+% and the immune mechanism that mediates each. "What mediates a Type II
+% hypersensitivity reaction?" becomes the binding query
+%     ? mediated_by(type_ii_hypersensitivity, $Mechanism).
+%
+% Direction note: the relation is hypersensitivity type -> the immune mechanism
+% that mediates it (`mediated_by`). Each type here maps to ONE canonical mechanism
+% span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The mechanism object names the mediator the sentence
+% states (Type I "IgE-mediated"; Type II "IgG ... or IgM ... antibodies bind to
+% antigens on cell surfaces"; Type III "immune complex-mediated"; Type IV
+% "T-cell–mediated"). Each cited sentence names the type by its FULL term ("Type I
+% ... hypersensitivity", etc.). Each span was independently re-fetched and
+% confirmed on two separate fetches of the same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like WBC/GIWALL/MUSCLEFIBER/
+% GERMLAYER). Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see hypersensitivity-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary hypersensitivity_vocab {
+    define hypersensitivity_type : entity   surface "hypersensitivity type", "Gell-Coombs hypersensitivity type"
+    define mechanism             : entity   surface "immune mechanism", "mediating mechanism"
+
+    define mediated_by : relation from hypersensitivity_type to mechanism  % the immune mechanism that mediates this hypersensitivity type
+}
+
+rulebook hypersensitivity_facts {
+    use hypersensitivity_vocab
+
+    % --- Type I -> IgE-mediated ---------------------------------------------
+    relate mediated_by(type_i_hypersensitivity, ige_mediated)
+        source "Type I or immediate hypersensitivity: IgE-mediated mast cell and basophil degranulation leading to histamine and cytokine release as seen in anaphylaxis and atopic dermatitis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559122/"
+        trust authoritative
+
+    % --- Type II -> IgG/IgM bind cell-surface antigens ----------------------
+    relate mediated_by(type_ii_hypersensitivity, igg_igm_bind_cell_surface_antigens)
+        source "Type II hypersensitivity reactions are antibody-mediated immune processes in which immunoglobulin G (IgG) or immunoglobulin M (IgM) antibodies bind to antigens on cell surfaces or within the extracellular matrix."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563264/"
+        trust authoritative
+
+    % --- Type III -> immune complex-mediated --------------------------------
+    relate mediated_by(type_iii_hypersensitivity, immune_complex_mediated)
+        source "Type III or immune complex-mediated hypersensitivity: Circulating antigen-antibody complexes deposit in tissues, activating complement and recruiting neutrophils, leading to inflammation and tissue injury, causing conditions such as serum sickness, systemic lupus erythematosus (SLE), post-streptococcal glomerulonephritis (PSGN), and hypersensitivity vasculitides such as IgA vasculitis or cryoglobulinemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559122/"
+        trust authoritative
+
+    % --- Type IV -> T-cell-mediated (delayed) -------------------------------
+    relate mediated_by(type_iv_hypersensitivity, t_cell_mediated)
+        source "Type IV hypersensitivity, or delayed hypersensitivity reactions, are T-cell–mediated immune responses that typically manifest 48 to 72 hours after antigen exposure, although they can take weeks to manifest."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562228/"
+        trust authoritative
+}

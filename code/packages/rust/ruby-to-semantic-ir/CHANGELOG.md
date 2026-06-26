@@ -2,6 +2,23 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.98.0] - 2026-06-26
+
+### Changed (M5 — `when` uses case-equality `===`, not `==`)
+
+- A `when` clause now lowers with Ruby case-equality semantics instead of plain
+  `==`. Per value:
+  - a bare constant (`when Integer` / `when MyClass`) → a class match, lowered
+    to `x.is_a?(Const)` via the `__method__` dispatch envelope (the backend
+    passes a `Const` operand to `is_a?` as its name string, so a built-in class
+    name needs no binding);
+  - a range (`when 1..5`), regex (`when /re/`), or any other value → the
+    `case_eq(pattern, x)` runtime helper (`sir-runtime-oop`), which dispatches
+    Range→membership, Regexp→match, else `==`.
+  Multiple values in one `when` still OR-chain. The `case_eq` floor is `==`, so
+  a literal `when 5` keeps plain-equality behaviour. Closes the v0 caveat that
+  `when` ignored class/range/regex case-equality.
+
 ## [0.97.0] - 2026-06-26
 
 ### Added (M4 — general outer-local block captures)
