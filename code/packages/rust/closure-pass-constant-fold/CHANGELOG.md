@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.45.0] - 2026-06-25
+
+### Added — fold global `Number("…")` → numeric on string literals
+
+The global `Number(string)` coercion now folds to a numeric literal when its
+single argument is a string literal (ECMAScript §21.1.1.1 → §7.1.4.1.1
+`StringToNumber`). Unlike `parseInt`/`parseFloat` — which read a *prefix* and
+ignore trailing garbage — `Number` is **total**: the entire trimmed string must
+be a numeric literal, otherwise the result is `NaN`. So `Number("42")` → `42`
+but `Number("12px")` is left intact.
+
+Supported spellings, all V8-confirmed:
+
+- decimal, with optional sign / fraction / exponent: `Number("42")` → `42`,
+  `Number("  3.5 ")` → `3.5` (surrounding whitespace trimmed), `Number("2.5e-3")`
+  → `0.0025`, `Number(".5")` → `0.5`, `Number("5.")` → `5`;
+- the empty (or all-whitespace) string → `+0`: `Number("")` → `0`,
+  `Number("   ")` → `0` — the one shape that catches people out;
+- non-decimal integer literals, **no sign permitted**: `Number("0x1F")` → `31`,
+  `Number("0b101")` → `5`, `Number("0o17")` → `15`;
+- a leading zero is decimal, *not* octal: `Number("017")` → `17`.
+
+It **declines** (leaves the call for the runtime) whenever the result has no
+literal token: `NaN` (`Number("abc")`, `Number("1,2")`, `Number("12px")`,
+`Number("1_000")`, `Number("0x+1")`, `Number("-0x1F")`) or `±Infinity`
+(`Number("Infinity")`, `Number("1e400")`). For the `0x`/`0b`/`0o` forms it also
+declines values above `2^53`, beyond which an `f64` can no longer hold every
+integer exactly — so any literal it does emit is bit-identical to the engine's.
+
+Like `parseInt`/`parseFloat` it folds only the **bare** global identifier, never
+a member access (`window.Number("5")` is untouched), under the same
+builtins-intact premise the rest of the pass relies on.
+
 ## [0.41.0] - 2026-06-25
 
 ### Added — fold `"abcabc".lastIndexOf(needle)` → numeric on string literals

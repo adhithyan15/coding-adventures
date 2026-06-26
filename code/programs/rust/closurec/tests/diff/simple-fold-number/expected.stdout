@@ -1,0 +1,1 @@
+var a=42;var b=0;var c=3.5;var d=31;var e=5;var f=15;var g=Number("abc");report(a,b,c,d,e,f,g);
