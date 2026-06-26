@@ -1,0 +1,77 @@
+% ============================================================================
+% islet-cell-edges — the pancreatic islet cell → secreted hormone knowledge-graph
+% (MYCIN-2026 ISLET-CELL).
+% ============================================================================
+% A high-yield endocrine-histology board table: the cell types of the islets of
+% Langerhans and the hormone each secretes. "What does a pancreatic beta cell
+% secrete?" becomes the binding query
+%     ? secretes(beta_cell, $Hormone).
+%
+% Direction note: the relation is islet cell type -> the hormone the cited sentence
+% states it secretes (`secretes`). Each cell maps to ONE canonical hormone span, so
+% a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The hormone object names the product the sentence states
+% (beta "insulin"; alpha "glucagon"; delta "somatostatin"; PP "pancreatic
+% polypeptide"; epsilon "ghrelin"). Each cited sentence names the cell by its FULL
+% term ("beta cells", "alpha cells", etc.) AND the hormone in the same sentence.
+% Each span was independently re-fetched and confirmed on two separate fetches of
+% the same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like EXOCRINE-GLAND/
+% EPIDERMIS/COMPLEMENT/IG-ISOTYPE). Each fact is a `relate` clause whose
+% byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see islet-cell-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary islet_cell_vocab {
+    define islet_cell : entity   surface "pancreatic islet cell", "islet of Langerhans cell"
+    define hormone    : entity   surface "hormone", "secreted hormone"
+
+    define secretes : relation from islet_cell to hormone  % the hormone this islet cell type secretes
+}
+
+rulebook islet_cell_facts {
+    use islet_cell_vocab
+
+    % --- beta cell -> insulin -----------------------------------------------
+    relate secretes(beta_cell, insulin)
+        source "Insulin is a peptide hormone secreted in the body by beta cells of islets of Langerhans of the pancreas and regulates blood glucose levels."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560688/"
+        trust authoritative
+
+    % --- alpha cell -> glucagon ---------------------------------------------
+    relate secretes(alpha_cell, glucagon)
+        source "The alpha cells release glucagon, a peptide hormone that raises the concentration of glucose and fatty acids in the bloodstream and is the primary catabolic hormone in the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542302/"
+        trust authoritative
+
+    % --- delta cell -> somatostatin -----------------------------------------
+    relate secretes(delta_cell, somatostatin)
+        source "The delta cells release somatostatin, which inhibits glucagon and insulin secretion."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542302/"
+        trust authoritative
+
+    % --- PP cell -> pancreatic polypeptide ----------------------------------
+    relate secretes(pp_cell, pancreatic_polypeptide)
+        source "The PP cells release pancreatic polypeptide, a satiety hormone that decreases gastric acid secretion, emptying, and upper intestinal motility."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542302/"
+        trust authoritative
+
+    % --- epsilon cell -> ghrelin --------------------------------------------
+    relate secretes(epsilon_cell, ghrelin)
+        source "The epsilon cells release ghrelin, a hormone that stimulates appetite, increases fat storage, and stimulates the growth hormone release from the pituitary gland."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542302/"
+        trust authoritative
+}
