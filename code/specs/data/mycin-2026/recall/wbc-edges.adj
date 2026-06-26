@@ -1,0 +1,78 @@
+% ============================================================================
+% wbc-edges — the white-blood-cell type → primary function knowledge-graph
+% (MYCIN-2026 WBC).
+% ============================================================================
+% A high-yield hematology/immunology board table: each of the five circulating
+% white blood cell (leukocyte) types and its primary immune function. "What is the
+% main function of an eosinophil?" becomes the binding query
+%     ? has_function(eosinophil, $Function).
+%
+% Direction note: the relation is leukocyte -> its defining functional role
+% (`has_function`). Each cell here maps to ONE canonical function span, so a query
+% binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The function object names the role the sentence states
+% (neutrophil "ingest, kill, and digest ... bacteria"; eosinophil "combat parasitic
+% infections"; basophil "synthesize and store histamine"; monocyte "differentiates
+% into ... macrophages and dendritic cells"; lymphocyte "antigen-specific immune
+% response"). Each cited sentence names the cell by its FULL term. Each span was
+% independently re-fetched and confirmed on two separate fetches of the same page
+% for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like GIWALL/MUSCLEFIBER/
+% GERMLAYER/ACIDBASE). Each fact is a `relate` clause whose byte-provenance lives
+% INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see wbc-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary wbc_vocab {
+    define white_blood_cell : entity   surface "white blood cell", "leukocyte"
+    define function         : entity   surface "immune function", "functional role"
+
+    define has_function : relation from white_blood_cell to function  % the primary immune function of this leukocyte
+}
+
+rulebook wbc_facts {
+    use wbc_vocab
+
+    % --- neutrophil -> phagocytosis of bacteria -----------------------------
+    relate has_function(neutrophil, phagocytosis_of_bacteria)
+        source "Neutrophils ingest, kill, and digest invading microorganisms such as fungi and bacteria."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507702/"
+        trust authoritative
+
+    % --- eosinophil -> defense against parasites ----------------------------
+    relate has_function(eosinophil, defense_against_parasites)
+        source "Eosinophils combat parasitic infections by releasing their specific granules, of which the cationic protein, a major basic protein, has toxicity against helminth parasites."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563148/"
+        trust authoritative
+
+    % --- basophil -> synthesize and store histamine -------------------------
+    relate has_function(basophil, synthesize_store_histamine)
+        source "Basophils can synthesize and store histamine and eosinophil chemotactic factors of anaphylaxis (ECF-A)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535365/"
+        trust authoritative
+
+    % --- monocyte -> differentiates into macrophages and dendritic cells ----
+    relate has_function(monocyte, differentiate_into_macrophages_and_dendritic_cells)
+        source "A monocyte is a type of white blood cell that differentiates into populations of macrophages and dendritic cells to regulate cellular homeostasis, especially in the setting of infection and inflammation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557618/"
+        trust authoritative
+
+    % --- lymphocyte -> adaptive (antigen-specific) immunity -----------------
+    relate has_function(lymphocyte, adaptive_immunity)
+        source "The T and B lymphocytes (T and B Cells) are involved in the acquired or antigen-specific immune response given that they are the only cells in the organism able to recognize and respond specifically to each antigenic epitope."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459471/"
+        trust authoritative
+}

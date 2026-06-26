@@ -284,6 +284,33 @@ mod tests {
     }
 
     #[test]
+    fn end_to_end_block_captures_outer_local_executes_py() {
+        // M4 execution-proof: a block reads an enclosing local (`base`). The
+        // hoisted block must capture it (prepended as a leading parameter) and
+        // the `MakeClosure` must thread the enclosing value, so that when
+        // `apply` yields into the block, `n + base` evaluates with base = 100.
+        let src = "def apply\n  yield 5\nend\n\
+                   def run\n  base = 100\n  apply { |n| print n + base }\nend\n\
+                   run()\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        // `base` is captured → prepended before the block param `n`.
+        assert!(
+            a.source.contains("def __block_0(base, n):"),
+            "block must capture `base` as a leading param; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("__block_0, [base]"),
+            "MakeClosure must thread the enclosing `base`; got:\n{}",
+            a.source
+        );
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "105\n", "emitted python printed unexpected output");
+        }
+    }
+
+    #[test]
     fn compiles_minimal_module() {
         let m = minimal_module();
         let a = compile(&m).expect("compile");

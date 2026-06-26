@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.21 — coverage: outer-local block captures (M4)
+
+No emitter change — the backend already closes over `MakeClosure` captures as
+leading parameters. Adds an emitted-shape test that a block reading an
+enclosing local emits `function __block_0(base: __Sir.Val, n: __Sir.Val)` with
+`base` forwarded into the hoisted block. The frontend now produces such
+captures (see `ruby-to-semantic-ir` 0.97.0, M4).
+
 ## 0.1.20 — variadic parameter emission (`...rest`) (M3)
 
 A `Param` carrying the new SIR `ParamKind` now emits TypeScript's variadic
