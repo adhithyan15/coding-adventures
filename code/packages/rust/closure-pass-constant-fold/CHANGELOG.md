@@ -25,6 +25,31 @@ Conservative scope mirrors `indexOf`: only the single-argument form folds; the
 `fromIndex` overload (`"abc".lastIndexOf("b", 0)`) carries a second argument,
 lands in the two-argument arm, and passes through to the runtime, as does a
 non-string needle or a non-literal receiver.
+## [0.39.0] - 2026-06-24
+
+### Added — fold `"abcd".substring(start[, end])` on string literals
+
+`String.prototype.substring` now folds to a string literal when the receiver is
+a string literal and any provided arguments are integer literals (ECMAScript
+§22.1.3.24). It is the sibling of the already-folded `slice`, but with two
+distinct semantics, both modelled:
+
+- **Clamping into `[0, len]`** — a negative (or `NaN`) argument becomes `0`; it
+  never counts from the end the way `slice` does. `"abcd".substring(-2)` →
+  `"abcd"` (whereas `"abcd".slice(-2)` → `"cd"`).
+- **Endpoint ordering** — after clamping, the smaller index is the start, so
+  `start > end` makes the two SWAP: `"abcd".substring(3, 1)` and
+  `"abcd".substring(1, 3)` both → `"bc"`.
+
+Examples: `"abcd".substring(1, 3)` → `"bc"`, `"abcd".substring(2)` → `"cd"`,
+`"abc".substring()` → `"abc"`, `"abcd".substring(10)` → `""` (start clamps to
+`len`). Indices are UTF-16 code units (sharing `slice`/`charAt` machinery), so
+`"💩ab".substring(2)` → `"ab"`.
+
+Conservative scope mirrors `slice`: the helper declines (leaving the call for
+the runtime) for a non-integer-literal argument (we don't model `ToInteger`
+coercion), more than two arguments, or a cut that would split a surrogate pair
+into a lone surrogate (a valid JS string but not a Rust `String`).
 ## [0.38.0] - 2026-06-24
 
 ### Added — fold `"a,b,c".split(separator[, limit])` on string literals into an array

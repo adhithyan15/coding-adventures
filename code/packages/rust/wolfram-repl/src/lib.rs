@@ -287,6 +287,44 @@ mod tests {
     }
 
     #[test]
+    fn w21_pattern_operator_sugar_evaluates_end_to_end() {
+        // The W-21 infix operators parse and evaluate through the REPL's real
+        // lex → parse → lower → eval path (not just the runtime's `eval`):
+        // `a|b` (Alternatives), `patt /; test` (Condition), `patt ? fn`
+        // (PatternTest), and `expr //. rules` (ReplaceRepeated). Each lowers to
+        // the W-20 head it desugars to, reused unchanged.
+        let mut r = WolframRepl::new();
+        // Alternatives.
+        assert!(matches!(
+            r.feed("MatchQ[2, 1 | 2 | 3]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("MatchQ[5, 1 | 2 | 3]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+        // Condition — `x_ /; x > 2` keeps {3, 4}.
+        assert!(matches!(
+            r.feed("Cases[{1, 2, 3, 4}, x_ /; x > 2]"),
+            ReplResponse::Output(t) if t.contains("{3, 4}")
+        ));
+        // PatternTest — `_?EvenQ`.
+        assert!(matches!(
+            r.feed("MatchQ[4, _?EvenQ]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("MatchQ[3, _?EvenQ]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+        // ReplaceRepeated — `//.` is one token, not `/` `/.`; terminates.
+        assert!(matches!(
+            r.feed("{1, 2, 3} //. 2 -> 99"),
+            ReplResponse::Output(t) if t.contains("{1, 99, 3}")
+        ));
+    }
+
+    #[test]
     fn w18_pattern_matching_evaluates_end_to_end() {
         // Parsed from real source, so the `_`/`_Integer`/`_Real` spellings go
         // through the lowerer (`_Integer` → `Blank[Integer]`) and the held

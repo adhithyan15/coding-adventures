@@ -1,0 +1,88 @@
+% ============================================================================
+% lung-volume-edges — the lung-volume/capacity→definition knowledge-graph
+% (MYCIN-2026 LUNGVOLUME).
+% ============================================================================
+% A classic high-yield respiratory-physiology board table: each static lung
+% volume/capacity and its definition. "What is functional residual capacity?"
+% becomes the binding query
+%     ? is_defined_as(functional_residual_capacity, $Definition).
+%
+% Direction note: the relation is volume/capacity -> its definition
+% (`is_defined_as`). Each term here maps to ONE canonical definition span, so a
+% query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The definition object names the literal definition the
+% sentence states (tidal volume "air that moves in or out ... with each
+% respiratory cycle"; residual volume "air that remains ... after maximum
+% forceful expiration"; inspiratory reserve volume "forcible amount of air
+% inhaled after normal TV"; vital capacity "maximal volume of air that can be
+% expired following maximum inspiration"; functional residual capacity "volume
+% remaining ... after a normal, passive exhalation"). Each span was independently
+% re-fetched and confirmed on two separate fetches of the same page for
+% byte-stability, and each NAMES THE FULL TERM (not an abbreviation alone).
+%
+% Deferred this batch (documented, not shipped): EXPIRATORY RESERVE VOLUME. Its
+% only self-contained StatPearls sentence names the term by abbreviation alone
+% ("The ERV is the volume of air that can be forcefully exhaled after a normal
+% resting expiration..."), with the full term spelled out only in an adjacent
+% sentence — which fails this library's strict "the one sentence must name the
+% full term" bar. It is reused below as the off-vocabulary abstention probe; it
+% can be added when a full-term self-contained span is found.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like DURALSINUS/
+% HYPOTHALAMIC/PITUITARY/BONECELL). Each fact is a `relate` clause whose
+% byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see lung-volume-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary lung_volume_vocab {
+    define volume     : entity   surface "lung volume", "lung capacity"
+    define definition : entity   surface "physiological definition", "volume definition"
+
+    define is_defined_as : relation from volume to definition  % the definition of this lung volume/capacity
+}
+
+rulebook lung_volume_facts {
+    use lung_volume_vocab
+
+    % --- tidal volume -> air per respiratory cycle ---------------------------
+    relate is_defined_as(tidal_volume, air_per_respiratory_cycle)
+        source "Tidal volume is the amount of air that moves in or out of the lungs with each respiratory cycle."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482502/"
+        trust authoritative
+
+    % --- residual volume -> air remaining after maximal forceful expiration --
+    relate is_defined_as(residual_volume, air_remaining_after_maximal_forceful_expiration)
+        source "Residual volume (RV) is the air that remains in the lungs after maximum forceful expiration."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493170/"
+        trust authoritative
+
+    % --- inspiratory reserve volume -> air inhaled after normal tidal --------
+    relate is_defined_as(inspiratory_reserve_volume, air_inhaled_after_normal_tidal)
+        source "Inspiratory reserve volume (IRV) is the forcible amount of air inhaled after normal TV."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560526/"
+        trust authoritative
+
+    % --- vital capacity -> max air exhaled after max inspiration -------------
+    relate is_defined_as(vital_capacity, max_air_exhaled_after_max_inspiration)
+        source "Vital capacity (VC) refers to the maximal volume of air that can be expired following maximum inspiration."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541099/"
+        trust authoritative
+
+    % --- functional residual capacity -> air remaining after normal exhalation
+    relate is_defined_as(functional_residual_capacity, air_remaining_after_normal_passive_exhalation)
+        source "Functional residual capacity (FRC) is the volume remaining in the lungs after a normal, passive exhalation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500007/"
+        trust authoritative
+}

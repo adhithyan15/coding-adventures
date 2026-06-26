@@ -1,0 +1,21 @@
+% ============================================================================
+% fetal-shunt-recall.query.adj — a worked recall query over the fetal-shunt library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what does fetal structure
+% X become?" question: it states no anatomy fact — it only `import`s the grounded
+% library and asks binding queries. The native adj-lang engine resolves each `?`
+% against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fetal-shunt-recall.query.adj
+% ============================================================================
+
+import "fetal-shunt-edges.adj"
+
+? becomes(ductus_arteriosus, $Remnant)    % expect ligamentum_arteriosum
+? becomes(ductus_venosus, $Remnant)       % expect ligamentum_venosum
+? becomes(umbilical_vein, $Remnant)       % expect ligamentum_teres_hepatis
+? becomes(foramen_ovale, $Remnant)        % expect fossa_ovalis
+? becomes(umbilical_arteries, $Remnant)   % expect medial_umbilical_ligaments
+? becomes(urachus, $Remnant)              % expect median_umbilical_ligament

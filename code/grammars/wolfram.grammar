@@ -13,7 +13,8 @@
 # Token names (UPPERCASE) come from the Wolfram lexer (code/grammars/wolfram.tokens):
 #   NUMBER STRING NAME                literals and symbols
 #   SET (=)  SETDELAYED (:=)          assignment
-#   RULE (->)  RULEDELAYED (:>)  REPLACEALL (/.)
+#   RULE (->)  RULEDELAYED (:>)  REPLACEALL (/.)  REPLACEREPEATED (//.)   (W-21)
+#   CONDITION (/;)  ALTERNATIVES (|)  PATTERNTEST (?)                     (W-21)
 #   AND (&&)  OR (||)  NOT (!)
 #   EQUAL (==)  UNEQUAL (!=)  LESS (<)  GREATER (>)  LE (<=)  GE (>=)
 #   PLUS MINUS TIMES SLASH POWER       arithmetic
@@ -28,8 +29,10 @@
 # Precedence cascade (loosest binds first -> tightest binds last)
 # ---------------------------------------------------------------
 #   assignment      =  :=                 (right-associative)
-#   replaceall      /.                    (left-associative)
+#   replaceall      /.  //.               (left-associative)          (W-21: //.)
 #   rule            ->  :>                (right-associative)
+#   condition       /;                    (right-associative)         (W-21)
+#   alternatives    |                     (infix, left-assoc, n-ary)  (W-21)
 #   logical_or      ||
 #   logical_and     &&
 #   logical_not     !  (prefix)
@@ -40,6 +43,7 @@
 #   unary           - +  (prefix)
 #   power           ^                     (right-associative)
 #   mapapply        /@ @@                 (infix, left-associative)   (W-6)
+#   patterntest     ?                     (infix, left-associative)   (W-21)
 #   application     f[...]  x[[...]]      (postfix)                   (W-6: [[]])
 #   atom            literals, symbols, patterns, slots, {...}, ( ... )  (W-11: # ## #n)
 # =============================================================================
@@ -60,11 +64,28 @@ expr = assignment ;
 # Set / SetDelayed — right-associative, the loosest binding.
 assignment = replaceall [ ( SET | SETDELAYED ) assignment ] ;
 
-# ReplaceAll — left-associative: `e /. a /. b` is ReplaceAll[ReplaceAll[e,a],b].
-replaceall = rule { REPLACEALL rule } ;
+# ReplaceAll / ReplaceRepeated — left-associative, and at the SAME precedence
+# level (both are `/`-replace operators): `e /. a /. b` is
+# ReplaceAll[ReplaceAll[e,a],b], `e //. a` is ReplaceRepeated[e, a], and a mixed
+# chain `e /. a //. b` folds left to ReplaceRepeated[ReplaceAll[e,a], b]. W-21
+# adds the `//.` (REPLACEREPEATED) arm beside the existing `/.` (REPLACEALL) one;
+# the runtime lowering inspects the operator token to pick the head.
+replaceall = rule { ( REPLACEALL | REPLACEREPEATED ) rule } ;
 
 # Rule / RuleDelayed — right-associative: `a -> b -> c` is Rule[a, Rule[b, c]].
-rule = logical_or [ ( RULE | RULEDELAYED ) rule ] ;
+# Its operand is now `condition` (W-21), so `/;` binds tighter than `->`.
+rule = condition [ ( RULE | RULEDELAYED ) rule ] ;
+
+# Condition (W-21) — `patt /; test` is Condition[patt, test]. Right-associative
+# (`a /; b /; c` is Condition[a, Condition[b, c]], the rare nested form), and
+# LOOSER than `|` (so `a | b /; t` is Condition[Alternatives[a,b], t]). Modelled
+# on `rule`: a single `alternatives` with no `/;` falls straight through.
+condition = alternatives [ CONDITION condition ] ;
+
+# Alternatives (W-21) — `a | b | c` is the n-ary Alternatives[a, b, c]. Infix,
+# left-associative, folded into ONE n-ary head (like `+`/`&&`), and TIGHTER than
+# `/;` but LOOSER than `||`. A lone operand (no `|`) is a transparent wrapper.
+alternatives = logical_or { ALTERNATIVES logical_or } ;
 
 logical_or  = logical_and { OR logical_and } ;
 logical_and = logical_not { AND logical_not } ;
@@ -116,8 +137,16 @@ power = mapapply [ POWER unary ] ;
 # desugars each to the SAME W-5 head the long form uses (`Map`/`Apply`), so
 # `f /@ {1, 2}` and `Map[f, {1, 2}]` produce identical IR. A chain folds left,
 # `g @@ f /@ x` ⇒ `Apply[g, Map[f, x]]` — exact precedence vs arithmetic is not
-# part of the tested subset (write parentheses when mixing).
-mapapply = postfix { ( MAP | APPLY ) postfix } ;
+# part of the tested subset (write parentheses when mixing). Its operand is now
+# `patterntest` (W-21), so `?` binds tighter than `/@`/`@@`.
+mapapply = patterntest { ( MAP | APPLY ) patterntest } ;
+
+# PatternTest (W-21) — `patt ? fn` is PatternTest[patt, fn]. Infix, left-
+# associative, binding VERY tightly — just above application/`postfix` and below
+# `mapapply` — so in `_?EvenQ` the `?EvenQ` attaches to the blank `_`, and a
+# chain `_?IntegerQ?Positive` folds left to PatternTest[PatternTest[_,IntegerQ],
+# Positive]. A lone `postfix` (no `?`) passes straight through.
+patterntest = postfix { PATTERNTEST postfix } ;
 
 # Postfix application (W-6 adds the `[[ … ]]` Part sugar alongside `f[…]`):
 #   `f[x][y]`     is `(f[x])[y]`             — function application, may be empty
