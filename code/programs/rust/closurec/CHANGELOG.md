@@ -24,6 +24,29 @@ boolean, `null`, an identifier like `Boolean(z)`, a second argument) or a
 non-bare callee (`window.Boolean(...)`) is left for the runtime. New fixture
 `tests/diff/simple-fold-boolean/` and integration test
 `tests/diff_simple_fold_boolean.rs` cover it end-to-end.
+## [0.195.0] - 2026-06-25
+
+### Added — SIMPLE/ADVANCED fold global `String(…)` → string literal
+
+Bumps `closure-pass-constant-fold` to 0.46.0, which folds a global
+`String(value)` call whose single argument is a string or **integer** number
+literal to a string literal (ECMAScript §22.1.3.1 → §7.1.17 `ToString`):
+
+```js
+// in
+var a = String(42), b = String("x"), c = String(-3),
+    d = String(255), e = String(0.5);
+// out (SIMPLE)
+var a="42",b="x",c="-3",d="255",e=String(0.5);
+```
+
+A string argument is the identity; an integer renders as its decimal text.
+`String(0.5)` is **not** folded — a fractional number is declined because Rust's
+and V8's shortest-decimal formatters can break an exact binary tie in opposite
+directions, which would silently mis-fold. Any fractional or `≥ 2^53` number,
+or any non-bare callee like `window.String(...)`, is left for the runtime. New
+fixture `tests/diff/simple-fold-string/` and integration test
+`tests/diff_simple_fold_string.rs` cover it end-to-end.
 
 ## [0.194.0] - 2026-06-25
 

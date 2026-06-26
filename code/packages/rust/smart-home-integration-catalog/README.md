@@ -272,6 +272,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - low-level mesh release ticket handoff readiness-evidence review
   disposition-action readiness execution handoff action evidence rows that
   preserve action lineage, release evidence, and handoff readiness flags
+- mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence summaries that combine evidence
+  rows with next repair, review, and release handoff pointers
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work
