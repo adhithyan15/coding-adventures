@@ -2377,6 +2377,22 @@ class DeckTableArtifact:
 
 
 @dataclass(frozen=True)
+class DeckOutputPlanArtifact:
+    """Stable inventory of one selected deck execution output plan."""
+
+    analysis: str
+    directive: str
+    result_column_count: int
+    result_columns: list[str]
+    output_probe_count: int
+    output_probes: list[str]
+    output_directive_count: int
+    output_directives: list[str]
+    table_count: int
+    tables: list[str]
+
+
+@dataclass(frozen=True)
 class DeckControlPolicyArtifact:
     """Stable metadata for one policy-blocked control command."""
 
@@ -2444,6 +2460,12 @@ class DeckAnalysisExecution:
     output_probes: list[str]
     output_directives: list[str]
     analysis_directives: list[str]
+    output_plan_artifact_count: int
+    output_plan_artifacts: list[DeckOutputPlanArtifact]
+    output_plan_artifact_table: str
+    output_plan_artifact_csv: str
+    output_plan_artifact_json: str
+    output_plan_artifact_records: list[dict[str, str]]
     control_line_count: int
     control_lines: list[str]
     write_marker_count: int
@@ -2843,6 +2865,136 @@ def _deck_run_artifacts(
             diagnostic_codes=list(diagnostic_codes),
         )
     ]
+
+
+def _deck_output_plan_artifacts(
+    plan: DeckAnalysisPlan,
+    result_columns: list[str],
+    output_probes: list[str],
+    output_directives: list[str],
+    tables: list[str],
+) -> list[DeckOutputPlanArtifact]:
+    return [
+        DeckOutputPlanArtifact(
+            analysis=plan.analysis,
+            directive=plan.directive,
+            result_column_count=len(result_columns),
+            result_columns=list(result_columns),
+            output_probe_count=len(output_probes),
+            output_probes=list(output_probes),
+            output_directive_count=len(output_directives),
+            output_directives=list(output_directives),
+            table_count=len(tables),
+            tables=list(tables),
+        )
+    ]
+
+
+_DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
+    "Analysis",
+    "Directive",
+    "ResultColumns",
+    "ResultColumnList",
+    "OutputProbes",
+    "OutputProbeList",
+    "OutputDirectives",
+    "OutputDirectiveList",
+    "Tables",
+    "TableList",
+]
+
+
+def _deck_output_plan_artifact_cells(artifact: DeckOutputPlanArtifact) -> list[str]:
+    return [
+        artifact.analysis,
+        artifact.directive,
+        str(artifact.result_column_count),
+        ";".join(artifact.result_columns),
+        str(artifact.output_probe_count),
+        ";".join(artifact.output_probes),
+        str(artifact.output_directive_count),
+        ";".join(artifact.output_directives),
+        str(artifact.table_count),
+        ";".join(artifact.tables),
+    ]
+
+
+def deck_output_plan_artifact_records(
+    artifacts: Iterable[DeckOutputPlanArtifact],
+) -> list[dict[str, str]]:
+    """Format selected output-plan artifacts as header-keyed records."""
+
+    return [
+        dict(
+            zip(
+                _DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS,
+                _deck_output_plan_artifact_cells(artifact),
+                strict=True,
+            )
+        )
+        for artifact in artifacts
+    ]
+
+
+def format_deck_output_plan_artifact_table(
+    artifacts: Iterable[DeckOutputPlanArtifact],
+) -> str:
+    """Format selected output-plan artifacts as a stable summary table."""
+
+    rows = ["\t".join(_DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append("\t".join(_deck_output_plan_artifact_cells(artifact)))
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_output_plan_artifact_csv(
+    artifacts: Iterable[DeckOutputPlanArtifact],
+) -> str:
+    """Format selected output-plan artifacts as stable RFC 4180-style CSV."""
+
+    rows = [",".join(_DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append(
+            ",".join(
+                _format_csv_cell(cell)
+                for cell in _deck_output_plan_artifact_cells(artifact)
+            )
+        )
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_output_plan_artifact_json(
+    artifacts: Iterable[DeckOutputPlanArtifact],
+) -> str:
+    """Format selected output-plan artifacts as stable compact JSON records."""
+
+    return json.dumps(
+        deck_output_plan_artifact_records(artifacts),
+        separators=(",", ":"),
+    ) + "\n"
+
+
+def _deck_output_plan_artifact_bundle(
+    plan: DeckAnalysisPlan,
+    result_table: str,
+    output_probes: list[str],
+    output_directives: list[str],
+    tables: list[str],
+) -> tuple[list[DeckOutputPlanArtifact], str, str, str, list[dict[str, str]]]:
+    artifacts = _deck_output_plan_artifacts(
+        plan,
+        _deck_table_columns(result_table),
+        output_probes,
+        output_directives,
+        tables,
+    )
+    return (
+        artifacts,
+        format_deck_output_plan_artifact_table(artifacts),
+        format_deck_output_plan_artifact_csv(artifacts),
+        format_deck_output_plan_artifact_json(artifacts),
+        deck_output_plan_artifact_records(artifacts),
+    )
 
 
 def _deck_analysis_diagnostic_codes(
@@ -3760,6 +3912,19 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
         )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -3767,6 +3932,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -3835,6 +4006,19 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
         )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -3842,6 +4026,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -3912,6 +4102,19 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
         )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -3919,6 +4122,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -3995,6 +4204,19 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
         )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -4002,6 +4224,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -4066,6 +4294,19 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
         )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -4073,6 +4314,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -4136,6 +4383,19 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
         )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -4143,6 +4403,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -4225,6 +4491,19 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
         )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -4232,6 +4511,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
