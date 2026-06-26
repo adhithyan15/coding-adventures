@@ -267,6 +267,25 @@ mod tests {
     }
 
     #[test]
+    fn end_to_end_case_when_emits_case_eq_and_is_a_ts() {
+        // M5: a `when` range/regex/literal → `__SirOop.caseEq`; a `when Const`
+        // → an `is_a?` dispatch.
+        let src = "x = 5\ncase x\nwhen 1..3\n  y = 1\nwhen Integer\n  y = 2\nend\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(
+            a.source.contains("__SirOop.caseEq("),
+            "range `when` must emit caseEq; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("\"is_a?\""),
+            "class `when` must emit an is_a? dispatch; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
     fn compiles_minimal_module() {
         let m = minimal_module();
         let a = compile(&m).expect("compile");

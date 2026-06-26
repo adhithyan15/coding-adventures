@@ -1,0 +1,21 @@
+% ============================================================================
+% hypersensitivity-recall.query.adj — a worked recall query over the
+% hypersensitivity library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what mediates
+% hypersensitivity type X?" question: it states no immunology fact — it only
+% `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli hypersensitivity-recall.query.adj
+% ============================================================================
+
+import "hypersensitivity-edges.adj"
+
+? mediated_by(type_i_hypersensitivity, $Mechanism)     % expect ige_mediated
+? mediated_by(type_ii_hypersensitivity, $Mechanism)    % expect igg_igm_bind_cell_surface_antigens
+? mediated_by(type_iii_hypersensitivity, $Mechanism)   % expect immune_complex_mediated
+? mediated_by(type_iv_hypersensitivity, $Mechanism)    % expect t_cell_mediated

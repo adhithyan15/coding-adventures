@@ -667,3 +667,46 @@ def test_sym_to_proc_drives_array_block_method_dispatch() -> None:
     # End-to-end through call_method: [1, 2, 3].map(&:to_s).
     proc = oop.sym_to_proc(intern("to_s"))
     assert oop.call_method([1, 2, 3], "map", proc) == ["1", "2", "3"]
+
+
+# ── case-equality (M5) ─────────────────────────────────────────────────────────
+
+
+def test_case_eq_regex_matches_string() -> None:
+    import re
+
+    pat = re.compile("ell")
+    assert oop.case_eq(pat, "hello") is True
+    assert oop.case_eq(pat, "world") is False
+
+
+def test_case_eq_regex_non_string_never_matches() -> None:
+    import re
+
+    # A non-String scrutinee never matches a regex (Ruby returns false).
+    assert oop.case_eq(re.compile("1"), 1) is False
+
+
+def test_case_eq_range_membership() -> None:
+    # A Range is detected structurally (class name + `includes`), so a stand-in
+    # named `Range` exercises the path without importing sir-runtime-range.
+    class Range:
+        def __init__(self, lo: int, hi: int) -> None:
+            self.lo, self.hi = lo, hi
+
+        def includes(self, value: Val) -> bool:
+            return self.lo <= value <= self.hi
+
+    r = Range(1, 5)
+    assert oop.case_eq(r, 3) is True
+    assert oop.case_eq(r, 9) is False
+    # Ruby `(1..5) === "x"` is false, not an error — the int/str comparison
+    # raises TypeError inside `includes`, which case_eq swallows.
+    assert oop.case_eq(r, "x") is False
+
+
+def test_case_eq_falls_back_to_equality() -> None:
+    # A plain literal pattern uses value equality (the `==` floor).
+    assert oop.case_eq(5, 5) is True
+    assert oop.case_eq(5, 6) is False
+    assert oop.case_eq("a", "a") is True
