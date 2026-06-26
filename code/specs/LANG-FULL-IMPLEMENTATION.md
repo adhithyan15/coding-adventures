@@ -232,8 +232,16 @@ multiple languages; close an enabler before the features that depend on it.
     enclosing-scope-variable frontend + a matrix proof. Unblocks AL6 (`own`), O3 (Oct
     globals); foundation for closures. The general `any`-dispatch / closure layers
     stack on top.
-- **E7 — Subroutine / return-stack.** `GOSUB`/`RETURN` and procedure call/return —
-  likely expressible with existing `call`/`ret`; confirm and add if needed.
+- **E7 — Subroutine / return-stack.** `GOSUB`/`RETURN` and procedure call/return.
+  ◑ *Design spec written, pending user sign-off*
+  ([`lang-full-e7-subroutine-return-stack.md`](lang-full-e7-subroutine-return-stack.md)).
+  **Confirmed:** structured procedure call/return is already done (`call`/`ret` —
+  ALGOL AL3, BASIC `DEF FN` BA5). BASIC `GOSUB`/`RETURN` is *unstructured* (the same
+  `RETURN` resumes at the dynamically most-recent `GOSUB`) and `call`/`ret` cannot
+  express it — but it needs **no new backend op**: lower it inside `main` as an E5
+  `array<i64>` return-PC stack + the AL5 computed-goto chain (`cmp`+`jmp_if_false`+`jmp`),
+  both already proven on all 7 backends. Pure frontend lowering (BA6-sized), one PR;
+  unblocks **BA1**.
 - **E8 — Numeric conversions (`integer` ↔ `real`).** ◑ *Spec signed off
   ([`lang-full-e8-numeric-conversions.md`](lang-full-e8-numeric-conversions.md)); implementation in progress.*
   Three ops (`int_to_real`, `real_to_int_trunc`, `real_to_int_floor`); `real→int`
