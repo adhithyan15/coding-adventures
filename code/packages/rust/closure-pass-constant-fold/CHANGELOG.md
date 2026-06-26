@@ -34,6 +34,26 @@ not valid UTF-8 — so we never substitute a value where the runtime would throw
 
 Added direct-oracle, round-trip, through-the-pass, decline, non-string-argument,
 extra-argument, and member-access unit tests, all V8-confirmed.
+## [0.47.0] - 2026-06-26
+
+### Added — fold global `Boolean(…)` → boolean literal on string/number literals
+
+The global `Boolean(value)` coercion (the `ToBoolean` operation, ECMAScript
+§7.1.2) now folds to a boolean literal when its single argument is a string or
+number literal — the answer is exact and total, so no decline:
+
+- string literal → `false` only for the EMPTY string, else `true`:
+  `Boolean("")` → `false`, `Boolean("x")` → `true`, and crucially
+  `Boolean("0")` → `true` (a **non-empty** string is truthy even when it looks
+  falsy);
+- number literal → `false` for `0`/`-0`, else `true`: `Boolean(0)` → `false`,
+  `Boolean(-0)` → `false` (since `-0.0 == 0.0`), `Boolean(1)` → `true`. `NaN` is
+  falsy but cannot appear as a numeric literal token.
+
+Every other argument — a boolean, `null`, an identifier, a second argument — is
+left for the runtime, and like `parseInt`/`parseFloat`/`Number`/`String` it
+folds only the **bare** global identifier, never a member access
+(`window.Boolean(...)` is untouched).
 ## [0.46.0] - 2026-06-25
 
 ### Added — fold global `String(…)` → string literal on string/number literals

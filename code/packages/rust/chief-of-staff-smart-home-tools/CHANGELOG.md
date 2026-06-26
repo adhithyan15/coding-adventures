@@ -265,6 +265,18 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_runtime_maintenance_ticket_summary` over the D23 runtime read
   facade so Chief of Staff jobs can inspect ticket-ready maintenance queues
   without owning platform mutation logic.
+- Added `smart_home.list_runtime_maintenance_work_orders` and
+  `smart_home.get_runtime_maintenance_work_order_summary` over the D23 runtime
+  read facade so Chief of Staff jobs can inspect execution work-order handoffs
+  without owning platform mutation logic.
+- Added `smart_home.list_runtime_maintenance_work_order_guardrails` and
+  `smart_home.get_runtime_maintenance_work_order_guardrail_summary` over the
+  D23 runtime read facade so Chief of Staff jobs can inspect release blockers,
+  operator handoffs, and ready execution lanes without owning mutation logic.
+- Added `smart_home.list_runtime_maintenance_work_order_evidence` and
+  `smart_home.get_runtime_maintenance_work_order_evidence_summary` over the D23
+  runtime read facade so Chief of Staff jobs can inspect work-order evidence
+  packets without owning platform mutation logic.
 - Added `smart_home.list_workers` and
   `smart_home.get_worker_heartbeat_schedule` over the D23 runtime read facade
   so Chief of Staff jobs can inspect supervised bridge workers and heartbeat

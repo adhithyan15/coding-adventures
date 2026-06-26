@@ -74,6 +74,11 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     private val scRedo = handle("sc_redo", FunctionDescriptor.of(i32, ptr))
     private val scCanUndo = handle("sc_can_undo", FunctionDescriptor.of(i32, ptr))
     private val scCanRedo = handle("sc_can_redo", FunctionDescriptor.of(i32, ptr))
+    // sc_find_all(session, query, in_formulas, match_case) -> char* JSON object
+    //   {"matches":[<a1>,...]}; sc_replace_all(session, query, replacement,
+    //   match_case) -> int (count of cells whose source was rewritten).
+    private val scFindAll = handle("sc_find_all", FunctionDescriptor.of(ptr, ptr, ptr, i32, i32))
+    private val scReplaceAll = handle("sc_replace_all", FunctionDescriptor.of(i32, ptr, ptr, ptr, i32))
     private val scUsedRange = handle("sc_used_range", FunctionDescriptor.of(ptr, ptr))
     private val scColumnLetters = handle("sc_column_letters", FunctionDescriptor.of(ptr, ptr, i32))
     private val scCurrentRevision = handle("sc_current_revision", FunctionDescriptor.of(i64, ptr))
@@ -243,6 +248,41 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
             (row as List<*>).map { it as? String ?: "" }
         }
     }
+
+    /// Find every cell whose source (when [inFormulas]) or computed display text
+    /// (otherwise) contains [query], case-sensitively when [matchCase]. Returns
+    /// the matching A1 addresses, engine-sorted row-major. The engine scans only
+    /// the populated cells, so the cost is bounded by the data, not the u32 grid.
+    /// An empty query returns no matches. Reaches sc_find_all — the same engine
+    /// path the web/Qt/Flutter demos drive.
+    fun findAll(query: String, inFormulas: Boolean, matchCase: Boolean): List<String> =
+        Arena.ofConfined().use { a ->
+            val json = take(
+                scFindAll.invoke(
+                    session,
+                    a.allocateUtf8String(query),
+                    if (inFormulas) 1 else 0,
+                    if (matchCase) 1 else 0,
+                ) as MemorySegment,
+            )
+            val obj = parseJson(json) as? Map<*, *> ?: return emptyList()
+            (obj["matches"] as? List<*>)?.map { it as String } ?: emptyList()
+        }
+
+    /// Replace every occurrence of [query] with [replacement] in the SOURCE of
+    /// every cell, case-sensitively when [matchCase]; returns the number of cells
+    /// rewritten. The engine re-parses each rewritten source through its centralised
+    /// coerce (set_raw), so a rewritten "=A1" stays a live formula and a rewritten
+    /// literal stays typed, then recomputes every dependent. Reaches sc_replace_all.
+    fun replaceAll(query: String, replacement: String, matchCase: Boolean): Int =
+        Arena.ofConfined().use { a ->
+            scReplaceAll.invoke(
+                session,
+                a.allocateUtf8String(query),
+                a.allocateUtf8String(replacement),
+                if (matchCase) 1 else 0,
+            ) as Int
+        }
 
     /// The data extent {minRow,minCol,maxRow,maxCol}, or null if the sheet is
     /// empty (the engine returns the JSON literal `null`).
@@ -512,6 +552,36 @@ class InfiniteSheetModel(
         val ok = session.sortRange("A1", "E4", keyCol, ascending)
         computeExtent()
         return ok
+    }
+
+    /// Find: every cell whose SOURCE contains [query] (case-insensitive), as A1
+    /// addresses in row-major order. The Kotlin sibling of the web demo's findAll
+    /// and the Qt/Flutter ports — it searches formula text, so "=SUM" or a literal
+    /// like "15" both hit. An empty query returns no matches.
+    fun findAll(query: String): List<String> = session.findAll(query, true, false)
+
+    /// Replace: rewrite [query] → [replacement] in every cell's source
+    /// (case-insensitive), returning the number of cells changed. The engine
+    /// re-parses each rewrite (so a formula stays live, a literal stays typed) and
+    /// recomputes dependents; regrow the extent and re-sync the formula bar so the
+    /// view re-reads.
+    fun replaceAll(query: String, replacement: String): Int {
+        val n = session.replaceAll(query, replacement, false)
+        computeExtent()
+        formula = session.getRaw(infAddress())
+        return n
+    }
+
+    /// Move the selection onto an A1 address (e.g. a find hit like "Z1000"),
+    /// parsing the column letters (past Z) and row digits and clamping into the
+    /// grid. A no-op on a malformed address.
+    fun selectA1(a1: String) {
+        val m = Regex("^([A-Za-z]+)([0-9]+)$").find(a1.trim()) ?: return
+        val (letters, digits) = m.destructured
+        var col = 0
+        for (ch in letters.uppercase()) col = col * 26 + (ch - 'A' + 1)
+        val row = digits.toIntOrNull() ?: return
+        selectInf(row, col)
     }
 
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The

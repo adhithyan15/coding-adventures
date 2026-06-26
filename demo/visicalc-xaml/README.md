@@ -177,6 +177,16 @@ The **.00 / % / $ / Gen** buttons apply a number **format** to the selected cell
 `#,##0.00`, `0.0%`, `$#,##0.00`, or `""` to clear). The format is display-only —
 the engine renders the stored value through the code, so the underlying number is
 unchanged.
+The **find / replace** group (a `find` box + a `replace` box + **Find** /
+**Replace** buttons) searches and rewrites cell SOURCES: `InfiniteSheetModel.FindAll`
+(over the C ABI's `sc_find_all`) returns the A1 addresses whose formula text contains
+the query (case-insensitive) and **Find** jumps the selection to the first hit
+(`SelectA1` parses column letters past Z); `InfiniteSheetModel.ReplaceAll` (over
+`sc_replace_all`) rewrites the query → replacement in every cell's source and
+recomputes, with the footer echoing the match / replace count. Because the engine
+re-parses each rewrite through its centralised coerce (`set_raw`), a rewritten formula
+stays live (`H1`→`H2` turns `=H1+5` into a recomputed `=H2+5`) and a rewritten literal
+stays typed (`15`→`99` re-totals every dependent).
 
 `InfiniteSheetModel` (in `Engine.cs`, WinUI-free) seeds far-flung sparse cells
 (`Z1000`, `BA50`, `BB50`) and derives the extent from `UsedRange()` + a margin
@@ -194,7 +204,7 @@ web demo's CSS custom properties. From those it builds: a panel-wrapped **toolba
 with an address **pill**, an italic `fx` marker, then a grown formula field with
 an accent **focus ring** (the wrapping `Border` thickens + tints to the accent on
 `GotFocus`); the actions are **segmented button groups** (drag-fill · clipboard ·
-file · history) — a rounded `ToolChip` button style whose hover/pressed/disabled
+file · history · find/replace) — a rounded `ToolChip` button style whose hover/pressed/disabled
 chrome is recolored by overriding the stock WinUI `Button*` theme brushes in
 `UserControl.Resources` (no custom `ControlTemplate`) — separated by thin rules.
 The grid gets subtle **zebra** row banding (`rowNum % 2`), a 2-px **accent
@@ -221,7 +231,11 @@ clipboard copy/cut/paste, and a save/load round trip (`SaveBook` → mutate A1 �
 E1 523.00 → `LoadBook` restores A1 15 / E1 38.00, the loaded formula stays live
 with A1=5 ⇒ E1 28.00, and malformed input is rejected), and an undo/redo walk on
 a fresh session (two edits → undo both → redo both with the formula recomputing
-live → a fresh edit forks history).
+live → a fresh edit forks history). And it drives **find / replace**: `FindAll("15")`
+locates the one literal (`A1`), a case-insensitive `FindAll("sum")` finds the total
+formulas, empty / no-match queries return nothing, `SelectA1("Z1000")` parses a far
+address, and `ReplaceAll` rewrites both a literal (`15`→`99` ⇒ E1 122.00) and a
+formula reference (`H1`→`H2` ⇒ `=H1+5` recomputes to 25) keeping each live.
 
 ## Where this fits in the cross-backend demo plan
 

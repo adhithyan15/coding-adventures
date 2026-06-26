@@ -105,6 +105,18 @@ internal static class ScNative
     [DllImport("spreadsheet_capi")] internal static extern int sc_redo(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern int sc_can_undo(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern int sc_can_redo(IntPtr s);
+    // sc_find_all(session, query, in_formulas, match_case) → char* JSON object
+    //   {"matches":[<a1>,...]}; sc_replace_all(session, query, replacement,
+    //   match_case) → int (count of cells whose source was rewritten).
+    [DllImport("spreadsheet_capi")]
+    internal static extern IntPtr sc_find_all(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string query,
+        int inFormulas, int matchCase);
+    [DllImport("spreadsheet_capi")]
+    internal static extern int sc_replace_all(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string query,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string replacement,
+        int matchCase);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_used_range(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_column_letters(IntPtr s, uint index);
     [DllImport("spreadsheet_capi")] internal static extern ulong sc_current_revision(IntPtr s);
@@ -356,6 +368,35 @@ public sealed class SpreadsheetSession : IDisposable
         }
     }
 
+    /// Find every cell whose source (when `inFormulas`) or computed display text
+    /// (otherwise) contains `query`, case-sensitively when `matchCase`. Returns
+    /// the matching A1 addresses, engine-sorted row-major. The engine scans only
+    /// the populated cells, so the cost is bounded by the data, not the u32 grid.
+    /// An empty query returns no matches. Reaches sc_find_all — the same engine
+    /// path every other backend drives.
+    public IReadOnlyList<string> FindAll(string query, bool inFormulas, bool matchCase)
+    {
+        string json = Take(ScNative.sc_find_all(_handle, query, inFormulas ? 1 : 0, matchCase ? 1 : 0));
+        var matches = new List<string>();
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.TryGetProperty("matches", out var arr))
+                foreach (var m in arr.EnumerateArray()) matches.Add(m.GetString() ?? string.Empty);
+        }
+        catch (Exception ex) when (ex is JsonException or KeyNotFoundException or InvalidOperationException) { /* bad response → no matches */ }
+        return matches;
+    }
+
+    /// Replace every occurrence of `query` with `replacement` in the SOURCE of
+    /// every cell, case-sensitively when `matchCase`; returns the number of cells
+    /// rewritten. The engine re-parses each rewritten source through its
+    /// centralised coerce (set_raw), so a rewritten formula stays live and a
+    /// rewritten literal stays typed, then recomputes every dependent. Reaches
+    /// sc_replace_all.
+    public int ReplaceAll(string query, string replacement, bool matchCase) =>
+        ScNative.sc_replace_all(_handle, query, replacement, matchCase ? 1 : 0);
+
     public void Dispose()
     {
         if (_handle != IntPtr.Zero)
@@ -594,6 +635,38 @@ public sealed class InfiniteSheetModel : IDisposable
         bool ok = _session.SortRange("A1", "E4", keyCol, ascending);
         ComputeExtent();
         return ok;
+    }
+
+    /// Find: every cell whose SOURCE contains `query` (case-insensitive), as A1
+    /// addresses in row-major order. The .NET sibling of the web demo's findAll
+    /// and the Qt/Flutter/Compose ports — it searches formula text, so "=SUM" or a
+    /// literal like "15" both hit. An empty query returns no matches.
+    public IReadOnlyList<string> FindAll(string query) => _session.FindAll(query, true, false);
+
+    /// Replace: rewrite `query` → `replacement` in every cell's source
+    /// (case-insensitive), returning the number of cells changed. The engine
+    /// re-parses each rewrite (so a formula stays live, a literal stays typed) and
+    /// recomputes dependents; regrow the extent and re-sync the formula bar so the
+    /// view re-reads.
+    public int ReplaceAll(string query, string replacement)
+    {
+        int n = _session.ReplaceAll(query, replacement, false);
+        ComputeExtent();
+        Formula = _session.GetRaw(InfAddress);
+        return n;
+    }
+
+    /// Move the selection onto an A1 address (e.g. a find hit like "Z1000"),
+    /// parsing the column letters (past Z) and row digits and clamping into the
+    /// grid via <see cref="SelectInf"/>. A no-op on a malformed address.
+    public void SelectA1(string a1)
+    {
+        var m = System.Text.RegularExpressions.Regex.Match(a1.Trim(), "^([A-Za-z]+)([0-9]+)$");
+        if (!m.Success) return;
+        int col = 0;
+        foreach (char ch in m.Groups[1].Value.ToUpperInvariant()) col = col * 26 + (ch - 'A' + 1);
+        if (!int.TryParse(m.Groups[2].Value, out int row)) return;
+        SelectInf(row, col);
     }
 
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The

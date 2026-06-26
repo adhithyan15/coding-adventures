@@ -203,6 +203,32 @@ final class SpreadsheetSession {
         if obj["stale"] as? Bool == true { return ([], true) }
         return (obj["changed"] as? [String] ?? [], false)
     }
+
+    /// Find every cell whose source (when `inFormulas`) or computed display text
+    /// (otherwise) contains `query`, case-sensitively when `matchCase`. Returns
+    /// the matching A1 addresses, engine-sorted row-major. The engine scans only
+    /// the populated cells, so the cost is bounded by the data, not the u32 grid.
+    /// An empty query returns no matches. Reaches `sc_find_all` — the same engine
+    /// path every other backend drives.
+    func findAll(_ query: String, _ inFormulas: Bool, _ matchCase: Bool) -> [String] {
+        let json = take(sc_find_all(handle, query, inFormulas ? 1 : 0, matchCase ? 1 : 0))
+        guard
+            let data = json.data(using: .utf8),
+            let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let matches = obj["matches"] as? [String]
+        else { return [] }
+        return matches
+    }
+
+    /// Replace every occurrence of `query` with `replacement` in the SOURCE of
+    /// every cell, case-sensitively when `matchCase`; returns the number of cells
+    /// rewritten. The engine re-parses each rewritten source through its
+    /// centralised coerce (`set_raw`), so a rewritten formula stays live and a
+    /// rewritten literal stays typed, then recomputes every dependent. Reaches
+    /// `sc_replace_all`.
+    func replaceAll(_ query: String, _ replacement: String, _ matchCase: Bool) -> Int {
+        Int(sc_replace_all(handle, query, replacement, matchCase ? 1 : 0))
+    }
 }
 
 /// SwiftUI model: an engine-backed 5×5 spreadsheet. `@Published` properties

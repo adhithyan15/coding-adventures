@@ -31,6 +31,28 @@ Adds the `simple-fold-uri` diff fixture and `diff_simple_fold_uri.rs` integratio
 test (byte-exact stdout, per-binding folds including the reserved-preservation
 distinction and the declined `URIError` call, and a WHITESPACE_ONLY-fallback
 regression guard). Regenerates the `--help_markdown` golden for the version bump.
+## [0.196.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold global `Boolean(…)` → boolean literal
+
+Bumps `closure-pass-constant-fold` to 0.47.0, which folds a global
+`Boolean(value)` call whose single argument is a string or number literal to a
+boolean literal (the `ToBoolean` coercion, ECMAScript §7.1.2):
+
+```js
+// in
+var a = Boolean(""), b = Boolean("x"), c = Boolean("0"),
+    d = Boolean(0), e = Boolean(1), f = Boolean(z);
+// out (SIMPLE)
+var a=false,b=true,c=true,d=false,e=true,f=Boolean(z);
+```
+
+A string is falsy only when empty (`Boolean("0")` → `true`, a non-empty string);
+a number is falsy only for `0`/`-0`. Any non-string/number-literal argument (a
+boolean, `null`, an identifier like `Boolean(z)`, a second argument) or a
+non-bare callee (`window.Boolean(...)`) is left for the runtime. New fixture
+`tests/diff/simple-fold-boolean/` and integration test
+`tests/diff_simple_fold_boolean.rs` cover it end-to-end.
 ## [0.195.0] - 2026-06-25
 
 ### Added — SIMPLE/ADVANCED fold global `String(…)` → string literal

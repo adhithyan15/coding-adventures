@@ -1,0 +1,84 @@
+% ============================================================================
+% vitamin-activation-edges — the vitamin → biologically active form
+% knowledge-graph (MYCIN-2026 VITAMIN-ACTIVATION).
+% ============================================================================
+% A high-yield biochemistry board table: dietary vitamins and the active
+% (coenzyme / hormonally active) form each is converted to in the body. "What is
+% the active form of vitamin D?" becomes the binding query
+%     ? activated_to(vitamin_d, $ActiveForm).
+%
+% Scope note: this is a BRAND-NEW pure-ADJ domain about vitamin ACTIVATION. It is
+% deliberately separate from the legacy `vitamin-edges.adj` (vitamin → DEFICIENCY
+% disease) library — different relation, different question.
+%
+% Direction note: the relation is vitamin -> the active form the cited sentence
+% names for it (`activated_to`). Each vitamin here maps to ONE canonical active-
+% form span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The active-form object names the metabolite the
+% sentence states (vitamin D "Calcitriol ... the most potent active form";
+% folate/folic acid "tetrahydrofolate"; vitamin B6 "pyridoxal 5-phosphate"; vitamin
+% A / retinol oxidized to "retinoic acid"). Each cited sentence names the vitamin
+% AND the active form in the SAME self-contained sentence. Each span was
+% independently re-fetched and confirmed on two separate fetches of the same page
+% for byte-stability.
+%
+% Deferred (documented, not shipped): THIAMINE (vitamin B1) → thiamine
+% pyrophosphate. No single self-contained StatPearls sentence names both
+% "thiamine" AND the spelled-out "thiamine pyrophosphate/diphosphate" while
+% stating the active/coenzyme-form relationship (candidates either use the
+% abbreviation "TPP", open with a referential "This vitamin", or omit the
+% active-form qualifier). Held back rather than bend the self-contained-span bar.
+% (It is the abstain probe in the test.)
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like EPIDERMIS/COMPLEMENT/
+% IG-ISOTYPE/WBC). Each fact is a `relate` clause whose byte-provenance lives
+% INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see vitamin-activation-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary vitamin_activation_vocab {
+    define vitamin     : entity   surface "vitamin", "provitamin"
+    define active_form : entity   surface "active form", "coenzyme form"
+
+    define activated_to : relation from vitamin to active_form  % the biologically active form this vitamin is converted to
+}
+
+rulebook vitamin_activation_facts {
+    use vitamin_activation_vocab
+
+    % --- vitamin D -> calcitriol --------------------------------------------
+    relate activated_to(vitamin_d, calcitriol)
+        source "Calcitriol is the most potent active form of vitamin D3; concurrent administration of vitamin D and its analogs should be avoided to prevent potential additive effects and the risk of hypercalcemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526025/"
+        trust authoritative
+
+    % --- folate -> tetrahydrofolate -----------------------------------------
+    relate activated_to(folate, tetrahydrofolate)
+        source "The active form of folic acid is known as tetrahydrofolic acid or tetrahydrofolate (THF or FH4), which is a result of the addition of four hydrogen atoms to 5,6,7 and 8 positions in the pteridine ring."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539712/"
+        trust authoritative
+
+    % --- vitamin B6 -> pyridoxal phosphate ----------------------------------
+    relate activated_to(vitamin_b6, pyridoxal_phosphate)
+        source "Vitamin B6 has three natural forms: pyridoxine (PN), pyridoxal (PL), and pyridoxamine (PM), all of which transform into its active forms in the body, which is the coenzyme pyridoxal 5-phosphate (PLP or P5P)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557436/"
+        trust authoritative
+
+    % --- vitamin A -> retinoic acid -----------------------------------------
+    relate activated_to(vitamin_a, retinoic_acid)
+        source "In tissues, both retinol and β-carotene are oxidized to retinal and retinoic acid, which are critical for vision and gene regulation, respectively."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482362/"
+        trust authoritative
+}

@@ -138,6 +138,13 @@ public:
     // applied (or the range was already sorted), false for a no-op (malformed
     // address / out-of-range key / oversized range). Recomputes + bumps revision.
     Q_INVOKABLE bool sortRange(const QString &start, const QString &end, int keyCol, bool ascending);
+    // Find / replace. findMatches returns the A1 addresses whose text contains
+    // `query` (inFormulas searches each cell's source, else its computed display
+    // value; matchCase=false folds ASCII case). replaceAll rewrites `query` →
+    // `replacement` in every matching cell's source (the engine recomputes) and
+    // returns the count of cells changed; it recomputes the grid + bumps revision.
+    Q_INVOKABLE QStringList findMatches(const QString &query, bool inFormulas, bool matchCase) const;
+    Q_INVOKABLE int replaceAll(const QString &query, const QString &replacement, bool matchCase);
     // Clipboard: copy/cut capture the inclusive rectangle `start`..`end` (a
     // whole-block copy that pastes as a unit); paste places the block so its
     // top-left lands at `dstStart`, shifting the block's references by the

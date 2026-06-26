@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.11.1
+
+- Make `Workbook::cell_source_text` **public** so a facade can resync its
+  raw-source echo map after `replace_all` rewrites cells (the engine had no other
+  public accessor for a cell's source text). No behavior change.
+
+## 0.11.0
+
+**Find / replace + `set_raw` (Edit ▸ Find / Replace).** Locate and bulk-edit cells
+by text, and a single raw-string entry point that centralizes cell-entry policy.
+
+- `Workbook::set_raw(sheet, addr, raw)` (`workbook.rs`): the one place that decides
+  "what a typed string means" — trims, routes empty → `clear_cell`, a `=`-prefix →
+  `set_formula` (a string that won't parse degrades to a `#VALUE!` literal), and
+  anything else through literal coercion (`"TRUE"`/`"FALSE"` → boolean, finite
+  number → number, else text) → `set_value`. The facades previously each
+  re-implemented this; the replace path and any host can now reach the engine's
+  full cell-entry behaviour through one call.
+- `Workbook::find_all(sheet, query, in_formulas, match_case) -> Vec<CellAddress>`:
+  every non-empty cell whose text contains `query`, in (row, col) order.
+  `in_formulas` picks the haystack — the cell's **source** (formula text / literal
+  canonical string) when true, its **computed display** value when false.
+  `match_case = false` folds ASCII case. Empty query → no matches. Sparse (scans
+  only populated cells).
+- `Workbook::replace_all(sheet, query, replacement, match_case) -> usize`: rewrites
+  the matched substring(s) in each matching cell's **source** and re-applies via
+  `set_raw` (so the result re-parses — a still-`=` result as a formula, a literal
+  re-coerced); returns the count of cells changed. Empty query is a no-op. Like a
+  spreadsheet, a replace can break a formula or edit its *text* not its references
+  — the caller chooses the query.
+- New private helpers `coerce_literal` / `contains` / `replace_substring`
+  (case-insensitive replace splices over original spans, UTF-8-boundary-safe) +
+  `cell_source_text`. 4 unit tests (set_raw routing incl. invalid-formula→#VALUE!;
+  find by value vs source, case-insensitive, ordered, empty-query; replace in
+  literals + formulas with recompute, no-match/empty → 0; case-insensitive
+  replace). Spec §4 "Find / replace". No new public types; `spreadsheet-core` →
+  0.11.0. Facades + the 6 demos follow in later PRs.
+
 ## 0.10.0
 
 **Range sort — `Workbook::sort_range` (Data ▸ Sort).** Reorders the **rows** of a

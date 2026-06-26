@@ -389,6 +389,51 @@ pub unsafe extern "C" fn sc_sort_range(
     }
 }
 
+/// `find_all(query, in_formulas, ascending_case_flags)` — locate cells whose text
+/// contains `query`. `in_formulas` (flag: non-zero searches each cell's source,
+/// 0 its computed display value) and `match_case` (flag: 0 folds ASCII case).
+/// Returns a heap `char*` JSON object `{"matches":["A1",…]}` (A1 addresses in
+/// (row,col) order); free it with [`sc_string_free`]. An empty query → empty list.
+///
+/// # Safety
+/// `s` must be a valid session; `query` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn sc_find_all(
+    s: *mut ScSession,
+    query: *const c_char,
+    in_formulas: c_int,
+    match_case: c_int,
+) -> *mut c_char {
+    if s.is_null() {
+        return into_cstr(String::from("{\"matches\":[]}"));
+    }
+    let query = read_cstr(query);
+    into_cstr((*s).inner.find_all(&query, in_formulas != 0, match_case != 0))
+}
+
+/// `replace_all(query, replacement, match_case)` — replace `query` with
+/// `replacement` in the source of every matching cell (the engine rewrites +
+/// recomputes; the facade keeps its source echo in step). `match_case` is a flag
+/// (0 folds ASCII case). Returns the count of cells changed; an empty query is a
+/// no-op returning 0. The host re-reads via sc_get_window / sc_get_raw afterwards.
+///
+/// # Safety
+/// `s` must be a valid session; the string args must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn sc_replace_all(
+    s: *mut ScSession,
+    query: *const c_char,
+    replacement: *const c_char,
+    match_case: c_int,
+) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    let query = read_cstr(query);
+    let replacement = read_cstr(replacement);
+    (*s).inner.replace_all(&query, &replacement, match_case != 0) as c_int
+}
+
 /// `serialize()` → a self-contained JSON document capturing the workbook's
 /// source (formula text + typed literals) and per-cell formats — everything
 /// needed to reconstruct the sheet, but not the computed values (those recompute

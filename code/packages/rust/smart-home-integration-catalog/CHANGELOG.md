@@ -102,6 +102,21 @@ All notable changes to this package will be documented in this file.
   readiness execution handoff action evidence rows that preserve action
   lineage, release evidence, and handoff readiness flags.
 - Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review rows that classify
+  handoff-action evidence into blocker, operator, review, lineage, and
+  release-ready outcomes.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review disposition rows that
+  turn evidence review outcomes into repair, review, lineage, operator, and
+  release handoff actions.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review disposition summaries
+  that combine disposition rows with next repair, review, lineage, and release
+  handoff pointers.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review summaries that combine
+  review rows with next blocker, review, lineage, and release-ready pointers.
+- Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence summaries that combine evidence
   rows with next repair, review, and release handoff pointers.
 - Virtual alias entries for product lines supported by another integration or

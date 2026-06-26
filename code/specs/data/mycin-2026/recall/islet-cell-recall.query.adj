@@ -1,0 +1,21 @@
+% ============================================================================
+% islet-cell-recall.query.adj — a worked recall query over the islet-cell library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what hormone does
+% pancreatic islet cell X secrete?" question: it states no endocrinology fact — it
+% only `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli islet-cell-recall.query.adj
+% ============================================================================
+
+import "islet-cell-edges.adj"
+
+? secretes(beta_cell, $Hormone)      % expect insulin
+? secretes(alpha_cell, $Hormone)     % expect glucagon
+? secretes(delta_cell, $Hormone)     % expect somatostatin
+? secretes(pp_cell, $Hormone)        % expect pancreatic_polypeptide
+? secretes(epsilon_cell, $Hormone)   % expect ghrelin

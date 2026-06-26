@@ -53,7 +53,15 @@ same shared array ops ALGOL's E5 arrays run on every backend; **BA6** added
 plus a read-pointer register, `READ` does `array_get pool, ptr` + `ptr := ptr +
 1`, and `RESTORE` resets the pointer.  A `DEF` body may reference only its own
 parameter — global access from inside a function needs enabler E6 (see
-`code/specs/LANG-FULL-IMPLEMENTATION.md`).
+`code/specs/LANG-FULL-IMPLEMENTATION.md`).  **BA2** made `PRINT` print several
+items on one line: each numeric item lowers to a `call __basic_print_int` — a
+synthetic recursive helper that renders digits one at a time via the universal
+`putchar` builtin — so `;` joins items tightly (`PRINT 4; 2` ⇒ `42`), `,`
+inserts a space (`PRINT 4, 2` ⇒ `4 2`), and a trailing separator suppresses the
+line-ending newline.  Because the helpers reuse only ops every backend already
+runs, BA2 needed **zero** backend changes.  (String `PRINT` items still wait for
+LANG77 / E4; `,` is a single space rather than a true 14-column print zone — a
+documented, deferred approximation.)
 
 ## Spec
 
