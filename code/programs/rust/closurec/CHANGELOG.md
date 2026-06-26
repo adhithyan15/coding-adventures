@@ -21,6 +21,25 @@ rules: `"abcde".substr(1, 2)` → `"bc"`, `"abcde".substr(1)` → `"bcde"`,
 `diff_simple_fold_substr.rs` asserts the folded stdout, that no `.substr(` call
 survives, and that the result is the typed pipeline (not the WHITESPACE_ONLY
 fallback).
+## [0.188.0] - 2026-06-24
+
+### Added — SIMPLE/ADVANCED fold `"abcd".substring(start[, end])`
+
+Wires the new `String.prototype.substring` fold (constant-fold 0.39.0) end to
+end through the closurec CLI. At `--compilation_level SIMPLE` (and ADVANCED,
+which routes through the same typed pipeline), a `"…".substring(startLit[,
+endLit])` call on a string literal collapses to the substring string literal.
+
+`substring` is the sibling of the already-folded `slice` but clamps each index
+into `[0, len]` (a negative argument becomes 0 — it never counts from the end)
+and SWAPS the endpoints when `start > end`. New fixture
+`tests/diff/simple-fold-substring/` exercises exactly those rules:
+`"abcd".substring(1, 3)` → `"bc"`, `"abcd".substring(3, 1)` → `"bc"` (swap),
+`"abcd".substring(-2)` → `"abcd"` (clamp), `"abcd".substring(10)` → `""`, so the
+output is `var a="bc";var b="bc";var c="abcd";var d="";report(a,b,c,d);`.
+Integration test `diff_simple_fold_substring.rs` asserts the folded stdout, that
+no `.substring(` call survives, and that the result is the typed pipeline (not
+the WHITESPACE_ONLY fallback).
 ## [0.187.0] - 2026-06-24
 
 ### Added — `"a,b,c".split(separator[, limit])` folds to an array literal at SIMPLE/ADVANCED
