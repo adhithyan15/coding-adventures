@@ -63,7 +63,7 @@ void main() {
     await tester.tap(cell('15'));
     await tester.pumpAndSettle();
 
-    final field = tester.widget<TextField>(find.byType(TextField));
+    final field = tester.widget<TextField>(find.byKey(const Key('formulaField')));
     expect(field.controller!.text, '15');
     expect(find.text('A1'), findsOneWidget);
   });
@@ -75,7 +75,7 @@ void main() {
     // Select A1 and change 15 -> 115 through the formula bar.
     await tester.tap(cell('15'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextField), '115');
+    await tester.enterText(find.byKey(const Key('formulaField')), '115');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
 
