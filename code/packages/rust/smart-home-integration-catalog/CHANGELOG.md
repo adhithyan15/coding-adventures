@@ -89,6 +89,9 @@ All notable changes to this package will be documented in this file.
 - Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff rows that project execution slots into repair,
   review, and release handoff lineage.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff summaries that combine handoff rows with next
+  repair, review, and release handoff pointers.
 - Virtual alias entries for product lines supported by another integration or
   standard.
 - Read-only D18D tool descriptors for listing/describing integrations and
