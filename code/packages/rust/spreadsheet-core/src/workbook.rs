@@ -1115,6 +1115,127 @@ impl Workbook {
     }
 
     // ----------------------------------------------------------------
+    // Find / replace (Edit ▸ Find / Replace)
+    // ----------------------------------------------------------------
+
+    /// Set a cell from a raw user-typed string — the single entry point that owns
+    /// the "what a typed string means" policy. Trims, then routes:
+    /// empty → [`clear_cell`](Self::clear_cell); a `=`-prefix → [`set_formula`]
+    /// (a string that won't parse degrades to a `#VALUE!` literal); otherwise
+    /// literal coercion (`"TRUE"`/`"FALSE"` → boolean, a finite number → number,
+    /// else text) → [`set_value`]. The replace path and any host can reach the
+    /// engine's full cell-entry behaviour through this one call (the facades
+    /// previously each re-implemented it).
+    ///
+    /// [`set_formula`]: Self::set_formula
+    /// [`set_value`]: Self::set_value
+    pub fn set_raw(&mut self, sheet: SheetId, addr: CellAddress, raw: &str) {
+        let trimmed = raw.trim();
+        if trimmed.is_empty() {
+            self.clear_cell(sheet, addr);
+            return;
+        }
+        if trimmed.starts_with('=') {
+            if self.set_formula(sheet, addr, trimmed).is_err() {
+                self.set_value(sheet, addr, CellValue::Error(SpreadsheetError::Value));
+            }
+            return;
+        }
+        self.set_value(sheet, addr, coerce_literal(trimmed));
+    }
+
+    /// Find every non-empty cell whose text contains `query`, in (row, col) order.
+    /// `in_formulas` picks the haystack: the cell's **source** (formula text or a
+    /// literal's canonical string) when true, its **computed display** value when
+    /// false. `match_case = false` compares case-insensitively (ASCII). An empty
+    /// `query` matches nothing. Sparse: scans only populated cells. Unknown sheet
+    /// → empty.
+    pub fn find_all(
+        &self,
+        sheet: SheetId,
+        query: &str,
+        in_formulas: bool,
+        match_case: bool,
+    ) -> Vec<CellAddress> {
+        if query.is_empty() {
+            return Vec::new();
+        }
+        let Some(s) = self.sheets.get(sheet.0 as usize) else {
+            return Vec::new();
+        };
+        let mut hits: Vec<CellAddress> = s
+            .cells
+            .keys()
+            .copied()
+            .filter(|&addr| {
+                let hay = if in_formulas {
+                    self.cell_source_text(sheet, addr)
+                } else {
+                    self.get_display(sheet, addr)
+                };
+                contains(&hay, query, match_case)
+            })
+            .collect();
+        // Stable, predictable order for callers (and tests): top-to-bottom,
+        // left-to-right.
+        hits.sort_by(|a, b| (a.row, a.col).cmp(&(b.row, b.col)));
+        hits
+    }
+
+    /// Replace `query` with `replacement` in the **source** of every matching
+    /// non-empty cell, re-applying each result through [`set_raw`](Self::set_raw)
+    /// so the cell re-parses (a still-`=` result as a formula, a literal
+    /// re-coerced). `match_case = false` matches case-insensitively. Returns the
+    /// number of cells changed. An empty `query` is a no-op (returns 0). Unknown
+    /// sheet → 0.
+    pub fn replace_all(
+        &mut self,
+        sheet: SheetId,
+        query: &str,
+        replacement: &str,
+        match_case: bool,
+    ) -> usize {
+        if query.is_empty() || self.sheets.get(sheet.0 as usize).is_none() {
+            return 0;
+        }
+        // Snapshot the targets first: we mutate cells as we go, and a replacement
+        // could in principle reintroduce the query, so decide the work set up front.
+        let targets: Vec<(CellAddress, String)> = {
+            let s = &self.sheets[sheet.0 as usize];
+            s.cells
+                .keys()
+                .copied()
+                .filter_map(|addr| {
+                    let src = self.cell_source_text(sheet, addr);
+                    if contains(&src, query, match_case) {
+                        Some((addr, replace_substring(&src, query, replacement, match_case)))
+                    } else {
+                        None
+                    }
+                })
+                .collect()
+        };
+        for (addr, new_raw) in &targets {
+            self.set_raw(sheet, *addr, new_raw);
+        }
+        targets.len()
+    }
+
+    /// The cell's **source** text: a formula's stored text, or a literal's
+    /// canonical string (the form a user would re-type). Empty cells → "".
+    fn cell_source_text(&self, sheet: SheetId, addr: CellAddress) -> String {
+        let Some(s) = self.sheets.get(sheet.0 as usize) else {
+            return String::new();
+        };
+        match s.cells.get(&addr).map(|c| &c.content) {
+            Some(CellContent::Formula { text, .. }) => text.clone(),
+            Some(CellContent::Value(CellValue::Error(e))) => e.display().to_string(),
+            Some(CellContent::Value(v)) => v.coerce_text().unwrap_or_default(),
+            Some(CellContent::Empty) | None => String::new(),
+        }
+    }
+
+    // ----------------------------------------------------------------
     // Persistence — serialize / deserialize (save / load)
     // ----------------------------------------------------------------
 
@@ -1387,6 +1508,62 @@ impl Default for Workbook {
 /// overflow when `row1 - row0 == u32::MAX`, wrapping to a bogus small count that
 /// slips past the cap and sends the caller's loop over the entire u32 range (an
 /// OOM DoS). `checked_mul` then rejects any product that still overflows `u64`.
+/// Coerce a raw literal string (already trimmed, not a formula) to a typed value:
+/// `"TRUE"`/`"FALSE"` (any case) → boolean, a finite parseable number → number,
+/// anything else → text. The literal half of [`Workbook::set_raw`]'s policy.
+fn coerce_literal(s: &str) -> CellValue {
+    match s.to_ascii_uppercase().as_str() {
+        "TRUE" => return CellValue::Boolean(true),
+        "FALSE" => return CellValue::Boolean(false),
+        _ => {}
+    }
+    if let Ok(n) = s.parse::<f64>() {
+        if n.is_finite() {
+            return CellValue::Number(n);
+        }
+    }
+    CellValue::Text(s.to_string())
+}
+
+/// Substring containment, honoring `match_case`. Case-insensitive uses an ASCII
+/// lowercase fold (the spreadsheet convention; full Unicode case-folding is out of
+/// scope, matching the rest of the engine's ASCII-oriented text handling).
+fn contains(haystack: &str, needle: &str, match_case: bool) -> bool {
+    if match_case {
+        haystack.contains(needle)
+    } else {
+        haystack
+            .to_ascii_lowercase()
+            .contains(&needle.to_ascii_lowercase())
+    }
+}
+
+/// Replace every occurrence of `needle` with `repl` in `haystack`. Case-sensitive
+/// uses `str::replace`; case-insensitive scans the ASCII-lowercased haystack for
+/// match positions and splices `repl` over the original (case-preserving) spans.
+/// `needle` is always non-empty here (callers guard the empty query).
+fn replace_substring(haystack: &str, needle: &str, repl: &str, match_case: bool) -> String {
+    if match_case {
+        return haystack.replace(needle, repl);
+    }
+    let hay_lower = haystack.to_ascii_lowercase();
+    let needle_lower = needle.to_ascii_lowercase();
+    let mut out = String::with_capacity(haystack.len());
+    let mut i = 0;
+    while i < haystack.len() {
+        if hay_lower[i..].starts_with(&needle_lower) {
+            out.push_str(repl);
+            i += needle.len();
+        } else {
+            // Advance one full UTF-8 char so we never split a multibyte boundary.
+            let ch = haystack[i..].chars().next().unwrap();
+            out.push(ch);
+            i += ch.len_utf8();
+        }
+    }
+    out
+}
+
 fn window_dims(row0: u32, col0: u32, row1: u32, col1: u32) -> Result<(u64, u64), SpreadsheetError> {
     if row0 == 0 || col0 == 0 || row1 < row0 || col1 < col0 {
         return Err(SpreadsheetError::Ref);
@@ -2576,5 +2753,80 @@ mod tests {
         assert_eq!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true), Some(vec![0, 1, 2]));
         // A rejected sort reports None.
         assert_eq!(wb.sort_range(s, rng(1, 1, 3, 1), 9, true), None);
+    }
+
+    // ── Find / replace (Edit ▸ Find / Replace) ──────────────────────
+
+    #[test]
+    fn set_raw_routes_by_string_shape() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        // Number, boolean, text, formula, and empty (clear).
+        wb.set_raw(s, cell(1, 1), "15");
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(15.0)));
+        wb.set_raw(s, cell(1, 2), "TRUE");
+        assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Boolean(true)));
+        wb.set_raw(s, cell(1, 3), "hello");
+        assert_eq!(wb.get_value(s, cell(1, 3)), Some(CellValue::Text("hello".into())));
+        wb.set_raw(s, cell(1, 4), "=A1*2"); // 30
+        assert_eq!(wb.get_value(s, cell(1, 4)), Some(CellValue::Number(30.0)));
+        wb.set_raw(s, cell(1, 1), "   "); // whitespace → clear
+        assert_eq!(wb.get_value(s, cell(1, 1)), None);
+        // A "=" string that won't parse degrades to a #VALUE! literal.
+        wb.set_raw(s, cell(2, 1), "=this is not a formula(((");
+        assert_eq!(
+            wb.get_value(s, cell(2, 1)),
+            Some(CellValue::Error(SpreadsheetError::Value))
+        );
+    }
+
+    #[test]
+    fn find_all_searches_values_or_sources_in_order() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_raw(s, cell(1, 1), "100");
+        wb.set_raw(s, cell(3, 1), "hello world");
+        wb.set_raw(s, cell(2, 2), "=A1+1"); // displays 101
+        // Search computed VALUES: "10" is in 100 (A1) and 101 (B2's display).
+        let by_value = wb.find_all(s, "10", false, true);
+        assert_eq!(by_value, vec![cell(1, 1), cell(2, 2)]); // (row,col) order
+        // Search SOURCES: "A1" appears only in B2's formula text, not in "100".
+        assert_eq!(wb.find_all(s, "A1", true, true), vec![cell(2, 2)]);
+        // Case-insensitive finds "HELLO" in "hello world".
+        assert_eq!(wb.find_all(s, "HELLO", true, false), vec![cell(3, 1)]);
+        assert!(wb.find_all(s, "HELLO", true, true).is_empty()); // case-sensitive misses
+        // Empty query matches nothing.
+        assert!(wb.find_all(s, "", false, true).is_empty());
+    }
+
+    #[test]
+    fn replace_all_edits_sources_and_recomputes() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_raw(s, cell(1, 1), "10"); // A1
+        wb.set_raw(s, cell(2, 1), "10"); // A2
+        wb.set_raw(s, cell(3, 1), "=A1+A1"); // 20, formula referencing A1 twice
+        // Replace the literal "10" → "7" in the two number cells (count = 2; the
+        // formula's source "=A1+A1" has no "10").
+        assert_eq!(wb.replace_all(s, "10", "7", true), 2);
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(7.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(7.0)));
+        // Now rewrite the formula's refs by replacing "A1" → "A2" in its source;
+        // it re-parses and recomputes (=A2+A2 = 7+7 = 14).
+        assert_eq!(wb.replace_all(s, "A1", "A2", true), 1);
+        assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(14.0)));
+        // No match → 0 changes; empty query → 0.
+        assert_eq!(wb.replace_all(s, "zzz", "q", true), 0);
+        assert_eq!(wb.replace_all(s, "", "q", true), 0);
+    }
+
+    #[test]
+    fn replace_all_is_case_insensitive_when_asked() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_raw(s, cell(1, 1), "Hello"); // text
+        // Case-insensitive replace of "hello" → "Hi" splices over the original span.
+        assert_eq!(wb.replace_all(s, "hello", "Hi", false), 1);
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Text("Hi".into())));
     }
 }
