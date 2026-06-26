@@ -2,6 +2,41 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.97.0] - 2026-06-26
+
+### Added (M4 — general outer-local block captures)
+
+- A block that *reads* a local or parameter of its enclosing scope now
+  **captures** it. When `hoist_block_to_function` lowers a block body, it
+  detects free reads (`VarRef{scope:Local}`) of names bound in the immediate
+  enclosing method/block, rewrites them to `Scope::Capture`, and threads the
+  enclosing value in as a `MakeClosure` capture (which the Python/TypeScript
+  backends prepend as a leading parameter). Previously such references became
+  unbound names in the hoisted `__block_<n>` function — invalid SIR — so any
+  block closing over an outer variable failed to lower.
+
+  Example now supported end-to-end:
+
+  ```ruby
+  def run
+    base = 100
+    apply { |n| print n + base }   # `base` is captured
+  end
+  ```
+
+- Capture rule (v0): read-only, single-level. A name is captured iff it is
+  read in the body, is bound in the *immediate* enclosing scope, and is NOT
+  bound inside the block (block param, block-local, or assigned anywhere in
+  the body — an in-block assignment makes it block-local). Capturing a
+  variable two scopes up (capture chaining) and write-back to the enclosing
+  binding (by-reference capture) remain documented cut-lines, shared with
+  RB2's nested-`yield` limitation.
+
+- Internal: `hoist_block_to_function` now returns the `MakeClosure` capture
+  values directly (replacing the RB2-only `block_capture_values` helper), so
+  the enclosing-block (`__sir_block__`) capture and the new outer-local
+  captures are threaded through one consistent, ordered list.
+
 ## [0.96.0] - 2026-06-22
 
 ### Added (M3 — faithful variadic def parameters)
