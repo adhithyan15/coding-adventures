@@ -277,6 +277,10 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_runtime_maintenance_work_order_guardrail_summary` tool
   descriptors for read-only Chief maintenance release-blocker and
   operator-handoff checks derived from runtime work orders.
+- `smart_home.list_runtime_maintenance_work_order_evidence` and
+  `smart_home.get_runtime_maintenance_work_order_evidence_summary` tool
+  descriptors for read-only Chief maintenance evidence packets derived from
+  runtime work-order guardrails.
 - `smart_home.reconcile_desired_states` and `smart_home.run_supervision_tick`
   tool descriptors for authorized runtime supervision execution.
 - Health and command-result status helpers for shared supervision/read-side
