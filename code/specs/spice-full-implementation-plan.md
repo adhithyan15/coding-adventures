@@ -1134,6 +1134,15 @@ downstream tools to compare.
       host-native record payloads, and selected-run `TableList` metadata names
       the exported policy tables beside result and run-artifact tables.
 
+104. Deck output-plan inventory artifacts.
+    - Status: completed in this deck output-plan inventory artifact slice.
+    - Python, Rust, and TypeScript selected executions now expose stable
+      output-plan artifacts with selected result-column, output-probe,
+      output-directive, and table inventories.
+    - Matching table, CSV, compact JSON, and host-native record exports let
+      host and browser integrations audit the output plan without reparsing
+      selected result tables or selected-run artifact rows.
+
 ## Backlog
 
 1. Deck execution layer.

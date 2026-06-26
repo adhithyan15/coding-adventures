@@ -1,22 +1,24 @@
 use std::collections::BTreeMap;
 
 use spice_engine::{
-    dc_op, deck_table_records, digital_event_streams_to_voltage_sources, distortion_from_fourier,
-    distortion_from_transient, distortion_from_transient_corners, estimate_period,
-    format_adaptive_digital_event_stream_table, format_adaptive_transient_table,
-    format_corner_adaptive_digital_event_stream_table, format_corner_adaptive_transient_table,
-    format_corner_digital_event_stream_table, format_corner_distortion_table,
-    format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
-    format_corner_transient_table, format_dc_table, format_deck_control_policy_artifact_csv,
-    format_deck_control_policy_artifact_json, format_deck_control_policy_artifact_table,
-    format_deck_control_policy_summary_artifact_csv,
+    dc_op, deck_output_plan_artifact_records, deck_table_records,
+    digital_event_streams_to_voltage_sources, distortion_from_fourier, distortion_from_transient,
+    distortion_from_transient_corners, estimate_period, format_adaptive_digital_event_stream_table,
+    format_adaptive_transient_table, format_corner_adaptive_digital_event_stream_table,
+    format_corner_adaptive_transient_table, format_corner_digital_event_stream_table,
+    format_corner_distortion_table, format_corner_fourier_table, format_corner_pole_zero_table,
+    format_corner_pss_table, format_corner_transient_table, format_dc_table,
+    format_deck_control_policy_artifact_csv, format_deck_control_policy_artifact_json,
+    format_deck_control_policy_artifact_table, format_deck_control_policy_summary_artifact_csv,
     format_deck_control_policy_summary_artifact_json,
     format_deck_control_policy_summary_artifact_table, format_deck_noise_table,
-    format_deck_rawfile_artifact_csv, format_deck_rawfile_artifact_json,
-    format_deck_rawfile_artifact_table, format_deck_run_artifact_csv,
-    format_deck_run_artifact_json, format_deck_run_artifact_table, format_deck_table_csv,
-    format_deck_table_json, format_deck_transient_table, format_deck_wrdata_artifact_csv,
-    format_deck_wrdata_artifact_json, format_deck_wrdata_artifact_table, format_deck_wrdata_ascii,
+    format_deck_output_plan_artifact_csv, format_deck_output_plan_artifact_json,
+    format_deck_output_plan_artifact_table, format_deck_rawfile_artifact_csv,
+    format_deck_rawfile_artifact_json, format_deck_rawfile_artifact_table,
+    format_deck_run_artifact_csv, format_deck_run_artifact_json, format_deck_run_artifact_table,
+    format_deck_table_csv, format_deck_table_json, format_deck_transient_table,
+    format_deck_wrdata_artifact_csv, format_deck_wrdata_artifact_json,
+    format_deck_wrdata_artifact_table, format_deck_wrdata_ascii,
     format_digital_bridge_schedule_table, format_digital_event_stream_table,
     format_digital_event_table, format_distortion_table, format_fourier_table,
     format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
@@ -1959,6 +1961,68 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         format_deck_table_json(&op_execution.table)
     );
     assert_eq!(&op_execution.table_artifacts[0].records, &op_records);
+    assert_eq!(op_execution.output_plan_artifact_count, 1);
+    let output_plan_artifact = &op_execution.output_plan_artifacts[0];
+    assert_eq!(output_plan_artifact.analysis, "op");
+    assert_eq!(output_plan_artifact.directive, ".op");
+    assert_eq!(
+        output_plan_artifact.result_columns,
+        vec!["Index".to_string(), "V(mid)".to_string()]
+    );
+    assert_eq!(
+        output_plan_artifact.output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    assert_eq!(
+        output_plan_artifact.output_directives,
+        vec![".save".to_string()]
+    );
+    assert_eq!(
+        output_plan_artifact.tables,
+        vec!["result".to_string(), "run-artifact".to_string()]
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_table,
+        "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tTables\tTableList\nop\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t2\tresult;run-artifact\n"
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_table,
+        format_deck_output_plan_artifact_table(&op_execution.output_plan_artifacts)
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_csv,
+        "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Tables,TableList\nop,.op,2,Index;V(mid),1,V(mid),1,.save,2,result;run-artifact\n"
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_csv,
+        format_deck_output_plan_artifact_csv(&op_execution.output_plan_artifacts)
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_json,
+        format_deck_output_plan_artifact_json(&op_execution.output_plan_artifacts)
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_records,
+        deck_output_plan_artifact_records(&op_execution.output_plan_artifacts)
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_records[0]
+            .get("ResultColumnList")
+            .map(String::as_str),
+        Some("Index;V(mid)")
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_records[0]
+            .get("OutputDirectiveList")
+            .map(String::as_str),
+        Some(".save")
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_records[0]
+            .get("TableList")
+            .map(String::as_str),
+        Some("result;run-artifact")
+    );
     assert_eq!(op_execution.run_artifacts[0].result_rows, 1);
     assert_eq!(op_execution.run_artifacts[0].result_column_count, 2);
     assert_eq!(
