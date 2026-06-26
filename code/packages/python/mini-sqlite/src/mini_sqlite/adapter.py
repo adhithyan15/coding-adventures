@@ -1435,7 +1435,9 @@ def _row_value(node: ASTNode, state: _PlaceholderCounter) -> tuple[Expr, ...]:
 
 def _update(node: ASTNode) -> UpdateStmt:
     state = _PlaceholderCounter()
-    # update_stmt = "UPDATE" NAME "SET" assignment { "," assignment } [where] [returning]
+    # update_stmt = "UPDATE" [ conflict_clause ] NAME "SET" assignment { "," assignment }
+    #               [ where_clause ] [ returning_clause ]
+    on_conflict: str | None = _conflict_action(node)
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
     table = table_tok.value
@@ -1447,7 +1449,10 @@ def _update(node: ASTNode) -> UpdateStmt:
     )
     where = _maybe_expr(node, "where_clause", state, skip=1)
     returning = _returning_exprs(node, state)
-    return UpdateStmt(table=table, assignments=assignments, where=where, returning=returning)
+    return UpdateStmt(
+        table=table, assignments=assignments, where=where,
+        returning=returning, on_conflict=on_conflict,
+    )
 
 
 def _assignment(node: ASTNode, state: _PlaceholderCounter) -> Assignment:

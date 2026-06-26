@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.61.1 — 2026-06-25
+
+### Fixed
+
+- Added `test_update_or_conflict.py`: 16 new tests covering `UPDATE OR REPLACE`,
+  `UPDATE OR IGNORE`, upsert `WHERE` predicate, `CREATE/DROP INDEX`,
+  `CREATE/DROP TRIGGER`, and `ALTER TABLE ADD COLUMN`.  These paths were
+  introduced in v1.61.0 but not exercised by the existing suite, dropping
+  coverage to 79%.  Total coverage is now 81.17% (above the 80% threshold).
+
 ## 1.61.0 — 2026-06-19
 
 ### Added
@@ -9,6 +19,27 @@
   `if_not_exists=True`, the VM now swallows the error silently (matching
   SQLite's semantics for `CREATE TRIGGER IF NOT EXISTS`).  Without the
   flag the error is still translated and re-raised as before.
+
+- `_do_update()` now dispatches on `UpdateRows.on_conflict`:
+
+  - **`IGNORE`** — `ConstraintViolation` raised by `_check_constraints` or
+    `backend.update()` is caught and swallowed; the current row is silently
+    skipped.  `rows_affected` is incremented only for rows that were actually
+    changed (skipped rows do not count, and the field is initialised to `0`
+    rather than `None` when all rows are skipped, so `cursor.rowcount`
+    returns `0` instead of `-1`).
+
+  - **`REPLACE`** — Other rows that conflict with the post-update merged row
+    on any `UNIQUE` or `PRIMARY KEY` column are deleted before the current
+    row is updated in place.  A separate scan cursor (`tmp_cur`) is opened
+    to locate conflicts; the current row is identified by content comparison
+    (`row == current`) and skipped so it is not deleted.  For each conflict
+    row deleted at index `J < cursor._idx`, `cursor._idx` is decremented by
+    one to keep the outer scan cursor pointing at the correct row after the
+    underlying list shifts left.
+
+  - **`ABORT`**, **`FAIL`**, **`ROLLBACK`** — re-raise the constraint error
+    (same as the default `None` path; full per-statement rollback is deferred).
 
 ## 1.60.0 — 2026-06-16
 

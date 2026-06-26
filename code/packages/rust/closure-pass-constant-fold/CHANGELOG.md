@@ -25,6 +25,34 @@ Conservative scope mirrors `indexOf`: only the single-argument form folds; the
 `fromIndex` overload (`"abc".lastIndexOf("b", 0)`) carries a second argument,
 lands in the two-argument arm, and passes through to the runtime, as does a
 non-string needle or a non-literal receiver.
+## [0.38.0] - 2026-06-24
+
+### Added — fold `"a,b,c".split(separator[, limit])` on string literals into an array
+
+`String.prototype.split` on a string-literal receiver with a string-literal
+separator now folds to an **array literal** of the piece strings (ECMAScript
+§22.1.3.23) — the first constant-fold that produces an `ArrayExpression` rather
+than a scalar. Examples: `"a,b,c".split(",")` → `["a","b","c"]`,
+`"axbxc".split("x")` → `["a","b","c"]`, `"abc".split("")` → `["a","b","c"]`
+(empty separator splits into single UTF-16 code units), `"".split(",")` →
+`[""]`, `"".split("")` → `[]`, `"abc".split()` (no separator) → `["abc"]`. An
+optional non-negative integer `limit` caps the piece count
+(`"a,b,c".split(",", 2)` → `["a","b"]`, limit 0 → `[]`).
+
+New `fold_string_split` helper returns the pieces (or `None` to decline). The
+array node and every produced element carry correlation-vector provenance forked
+from the original call, so each output byte traces back to the `split` it came
+from. The fold **declines** (leaving the call for the runtime) for: a
+non-string-literal separator (a regex separator needs a regex engine; a
+numeric/identifier separator would need `ToString` coercion we don't model); a
+non-integer / negative / non-literal limit; more than two arguments; and — for
+the empty-separator per-code-unit split — a receiver containing an astral
+(non-BMP) character, whose surrogate pair would split into a lone surrogate no
+Rust `String` can hold (the same hazard `slice`/`charAt` guard against). A
+non-empty separator never cuts inside a surrogate pair, so it stays foldable
+even for astral receivers (`"a💩b".split("💩")` → `["a","b"]`). No output-size
+cap is needed: `split` never amplifies, so unlike `repeat`/`pad` there is no
+algorithmic-blowup vector to bound. 11 new V8-oracle unit tests.
 
 ## [0.33.0] - 2026-06-23
 

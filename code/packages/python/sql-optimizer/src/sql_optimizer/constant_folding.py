@@ -159,7 +159,7 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
                 table=t, columns=cols, source=new_src, on_conflict=oc,
                 returning=new_ret, upsert=new_up,
             )
-        case Update(table=t, assignments=asgs, predicate=pred, returning=ret):
+        case Update(table=t, assignments=asgs, predicate=pred, returning=ret, on_conflict=oc):
             return Update(
                 table=t,
                 assignments=tuple(
@@ -168,6 +168,7 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
                 ),
                 predicate=_fold_expr(pred) if pred is not None else None,
                 returning=tuple(_fold_expr(r) for r in ret),
+                on_conflict=oc,
             )
         case Delete(table=t, predicate=pred, returning=ret):
             return Delete(
