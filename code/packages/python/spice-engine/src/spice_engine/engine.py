@@ -2357,6 +2357,10 @@ class DeckRunArtifact:
     write_markers: list[str]
     rawfile_option_count: int
     rawfile_options: list[str]
+    control_policy_artifact_count: int
+    control_policy_categories: list[str]
+    control_policy_codes: list[str]
+    control_policy_severities: list[str]
     diagnostic_count: int
     diagnostic_codes: list[str]
 
@@ -2370,6 +2374,22 @@ class DeckTableArtifact:
     csv: str
     json: str
     records: list[dict[str, str]]
+
+
+@dataclass(frozen=True)
+class DeckOutputPlanArtifact:
+    """Stable inventory of one selected deck execution output plan."""
+
+    analysis: str
+    directive: str
+    result_column_count: int
+    result_columns: list[str]
+    output_probe_count: int
+    output_probes: list[str]
+    output_directive_count: int
+    output_directives: list[str]
+    table_count: int
+    tables: list[str]
 
 
 @dataclass(frozen=True)
@@ -2440,6 +2460,12 @@ class DeckAnalysisExecution:
     output_probes: list[str]
     output_directives: list[str]
     analysis_directives: list[str]
+    output_plan_artifact_count: int
+    output_plan_artifacts: list[DeckOutputPlanArtifact]
+    output_plan_artifact_table: str
+    output_plan_artifact_csv: str
+    output_plan_artifact_json: str
+    output_plan_artifact_records: list[dict[str, str]]
     control_line_count: int
     control_lines: list[str]
     write_marker_count: int
@@ -2722,6 +2748,10 @@ _DECK_RUN_ARTIFACT_COLUMNS = [
     "WriteMarkerList",
     "RawfileOptions",
     "RawfileOptionList",
+    "ControlPolicyArtifacts",
+    "ControlPolicyCategoryList",
+    "ControlPolicyCodeList",
+    "ControlPolicySeverityList",
     "Diagnostics",
     "DiagnosticCodeList",
 ]
@@ -2739,12 +2769,15 @@ def _deck_analysis_directives(plan: DeckAnalysisPlan) -> list[str]:
 def _deck_stable_tables(
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
+    control_policy_artifacts: list[DeckControlPolicyArtifact],
 ) -> list[str]:
     tables = ["result"]
     if measurements:
         tables.append("measurement")
     if fourier:
         tables.append("fourier")
+    if control_policy_artifacts:
+        tables.extend(["control-policy", "control-policy-summary"])
     tables.append("run-artifact")
     return tables
 
@@ -2761,10 +2794,25 @@ def _deck_run_artifacts(
     write_markers: list[str],
     rawfile_options: list[str],
     diagnostic_codes: list[str],
+    control_policy_artifacts: list[DeckControlPolicyArtifact],
 ) -> list[DeckRunArtifact]:
     is_transient = plan.analysis == "tran"
     analysis_directives = _deck_analysis_directives(plan)
-    tables = _deck_stable_tables(measurements, fourier)
+    tables = _deck_stable_tables(measurements, fourier, control_policy_artifacts)
+    control_policy_summaries = _deck_control_policy_summary_artifacts(
+        control_policy_artifacts
+    )
+    control_policy_categories = [
+        artifact.category for artifact in control_policy_summaries
+    ]
+    control_policy_codes = [
+        code for artifact in control_policy_summaries for code in artifact.codes
+    ]
+    control_policy_severities: list[str] = []
+    for artifact in control_policy_summaries:
+        for severity in artifact.severities:
+            if severity not in control_policy_severities:
+                control_policy_severities.append(severity)
     return [
         DeckRunArtifact(
             analysis=plan.analysis,
@@ -2809,10 +2857,144 @@ def _deck_run_artifacts(
             write_markers=list(write_markers),
             rawfile_option_count=len(rawfile_options),
             rawfile_options=list(rawfile_options),
+            control_policy_artifact_count=len(control_policy_artifacts),
+            control_policy_categories=control_policy_categories,
+            control_policy_codes=control_policy_codes,
+            control_policy_severities=control_policy_severities,
             diagnostic_count=len(diagnostic_codes),
             diagnostic_codes=list(diagnostic_codes),
         )
     ]
+
+
+def _deck_output_plan_artifacts(
+    plan: DeckAnalysisPlan,
+    result_columns: list[str],
+    output_probes: list[str],
+    output_directives: list[str],
+    tables: list[str],
+) -> list[DeckOutputPlanArtifact]:
+    return [
+        DeckOutputPlanArtifact(
+            analysis=plan.analysis,
+            directive=plan.directive,
+            result_column_count=len(result_columns),
+            result_columns=list(result_columns),
+            output_probe_count=len(output_probes),
+            output_probes=list(output_probes),
+            output_directive_count=len(output_directives),
+            output_directives=list(output_directives),
+            table_count=len(tables),
+            tables=list(tables),
+        )
+    ]
+
+
+_DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
+    "Analysis",
+    "Directive",
+    "ResultColumns",
+    "ResultColumnList",
+    "OutputProbes",
+    "OutputProbeList",
+    "OutputDirectives",
+    "OutputDirectiveList",
+    "Tables",
+    "TableList",
+]
+
+
+def _deck_output_plan_artifact_cells(artifact: DeckOutputPlanArtifact) -> list[str]:
+    return [
+        artifact.analysis,
+        artifact.directive,
+        str(artifact.result_column_count),
+        ";".join(artifact.result_columns),
+        str(artifact.output_probe_count),
+        ";".join(artifact.output_probes),
+        str(artifact.output_directive_count),
+        ";".join(artifact.output_directives),
+        str(artifact.table_count),
+        ";".join(artifact.tables),
+    ]
+
+
+def deck_output_plan_artifact_records(
+    artifacts: Iterable[DeckOutputPlanArtifact],
+) -> list[dict[str, str]]:
+    """Format selected output-plan artifacts as header-keyed records."""
+
+    return [
+        dict(
+            zip(
+                _DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS,
+                _deck_output_plan_artifact_cells(artifact),
+                strict=True,
+            )
+        )
+        for artifact in artifacts
+    ]
+
+
+def format_deck_output_plan_artifact_table(
+    artifacts: Iterable[DeckOutputPlanArtifact],
+) -> str:
+    """Format selected output-plan artifacts as a stable summary table."""
+
+    rows = ["\t".join(_DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append("\t".join(_deck_output_plan_artifact_cells(artifact)))
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_output_plan_artifact_csv(
+    artifacts: Iterable[DeckOutputPlanArtifact],
+) -> str:
+    """Format selected output-plan artifacts as stable RFC 4180-style CSV."""
+
+    rows = [",".join(_DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append(
+            ",".join(
+                _format_csv_cell(cell)
+                for cell in _deck_output_plan_artifact_cells(artifact)
+            )
+        )
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_output_plan_artifact_json(
+    artifacts: Iterable[DeckOutputPlanArtifact],
+) -> str:
+    """Format selected output-plan artifacts as stable compact JSON records."""
+
+    return json.dumps(
+        deck_output_plan_artifact_records(artifacts),
+        separators=(",", ":"),
+    ) + "\n"
+
+
+def _deck_output_plan_artifact_bundle(
+    plan: DeckAnalysisPlan,
+    result_table: str,
+    output_probes: list[str],
+    output_directives: list[str],
+    tables: list[str],
+) -> tuple[list[DeckOutputPlanArtifact], str, str, str, list[dict[str, str]]]:
+    artifacts = _deck_output_plan_artifacts(
+        plan,
+        _deck_table_columns(result_table),
+        output_probes,
+        output_directives,
+        tables,
+    )
+    return (
+        artifacts,
+        format_deck_output_plan_artifact_table(artifacts),
+        format_deck_output_plan_artifact_csv(artifacts),
+        format_deck_output_plan_artifact_json(artifacts),
+        deck_output_plan_artifact_records(artifacts),
+    )
 
 
 def _deck_analysis_diagnostic_codes(
@@ -2905,6 +3087,10 @@ def _deck_run_artifact_cells(artifact: DeckRunArtifact) -> list[str]:
         ";".join(artifact.write_markers),
         str(artifact.rawfile_option_count),
         ";".join(artifact.rawfile_options),
+        str(artifact.control_policy_artifact_count),
+        ";".join(artifact.control_policy_categories),
+        ";".join(artifact.control_policy_codes),
+        ";".join(artifact.control_policy_severities),
         str(artifact.diagnostic_count),
         ";".join(artifact.diagnostic_codes),
     ]
@@ -2983,12 +3169,27 @@ def _deck_table_artifacts(
     run_artifact_table: str,
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
+    control_policy_artifacts: list[DeckControlPolicyArtifact],
+    control_policy_artifact_table: str,
+    control_policy_summary_artifacts: list[DeckControlPolicySummaryArtifact],
+    control_policy_summary_artifact_table: str,
 ) -> list[DeckTableArtifact]:
     artifacts = [_deck_table_artifact("result", result_table)]
     if measurements:
         artifacts.append(_deck_table_artifact("measurement", measurement_table))
     if fourier:
         artifacts.append(_deck_table_artifact("fourier", fourier_table))
+    if control_policy_artifacts:
+        artifacts.append(
+            _deck_table_artifact("control-policy", control_policy_artifact_table)
+        )
+    if control_policy_summary_artifacts:
+        artifacts.append(
+            _deck_table_artifact(
+                "control-policy-summary",
+                control_policy_summary_artifact_table,
+            )
+        )
     artifacts.append(_deck_table_artifact("run-artifact", run_artifact_table))
     return artifacts
 
@@ -3656,6 +3857,17 @@ def run_deck_analysis(
     write_markers = _deck_control_write_markers(netlist)
     rawfile_options = _deck_control_rawfile_options(netlist)
     control_policy_artifacts = _deck_control_policy_artifacts(netlist)
+    control_policy_artifact_table = format_deck_control_policy_artifact_table(
+        control_policy_artifacts
+    )
+    control_policy_summary_artifacts = _deck_control_policy_summary_artifacts(
+        control_policy_artifacts
+    )
+    control_policy_summary_artifact_table = (
+        format_deck_control_policy_summary_artifact_table(
+            control_policy_summary_artifacts
+        )
+    )
     analysis_directives = _deck_analysis_directives(plan)
     if plan.analysis == "op":
         result = dc_op(circuit)
@@ -3678,11 +3890,16 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -3690,6 +3907,23 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
+        )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -3698,6 +3932,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -3744,11 +3984,16 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -3756,6 +4001,23 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
+        )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -3764,6 +4026,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -3812,11 +4080,16 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -3824,6 +4097,23 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
+        )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -3832,6 +4122,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -3886,11 +4182,16 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -3898,6 +4199,23 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
+        )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -3906,6 +4224,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -3948,11 +4272,16 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -3960,6 +4289,23 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
+        )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -3968,6 +4314,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -4009,11 +4361,16 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -4021,6 +4378,23 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
+        )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -4029,6 +4403,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),
@@ -4089,11 +4469,16 @@ def run_deck_analysis(
             write_markers,
             rawfile_options,
             diagnostic_codes,
+            control_policy_artifacts,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
         run_artifact_table = format_deck_run_artifact_table(run_artifacts)
-        tables = _deck_stable_tables(measurements, fourier)
+        tables = _deck_stable_tables(
+            measurements,
+            fourier,
+            control_policy_artifacts,
+        )
         table_artifacts = _deck_table_artifacts(
             table,
             measurement_table,
@@ -4101,6 +4486,23 @@ def run_deck_analysis(
             run_artifact_table,
             measurements,
             fourier,
+            control_policy_artifacts,
+            control_policy_artifact_table,
+            control_policy_summary_artifacts,
+            control_policy_summary_artifact_table,
+        )
+        (
+            output_plan_artifacts,
+            output_plan_artifact_table,
+            output_plan_artifact_csv,
+            output_plan_artifact_json,
+            output_plan_artifact_records,
+        ) = _deck_output_plan_artifact_bundle(
+            plan,
+            table,
+            output_probes,
+            output_directives,
+            tables,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -4109,6 +4511,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            output_plan_artifact_count=len(output_plan_artifacts),
+            output_plan_artifacts=output_plan_artifacts,
+            output_plan_artifact_table=output_plan_artifact_table,
+            output_plan_artifact_csv=output_plan_artifact_csv,
+            output_plan_artifact_json=output_plan_artifact_json,
+            output_plan_artifact_records=output_plan_artifact_records,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
             write_marker_count=len(write_markers),

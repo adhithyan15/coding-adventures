@@ -30,6 +30,11 @@ final class WindowedSheetModel: ObservableObject {
     @Published private(set) var selectedCol: Int = 1
     /// The formula bar's text — the selected cell's source, edited in place.
     @Published var formulaText: String = ""
+    /// The find/replace boxes' text + a short status (match/replace count) shown
+    /// in the footer. The query searches every cell's SOURCE (case-insensitive).
+    @Published var findText: String = ""
+    @Published var replaceText: String = ""
+    @Published private(set) var findStatus: String = ""
 
     /// Column letters cached once per resize (`columnLetters` is a pure engine
     /// call, but the header would otherwise re-issue it for every column on
@@ -189,6 +194,72 @@ final class WindowedSheetModel: ObservableObject {
         return ok
     }
 
+    /// Find: every cell whose SOURCE contains `query` (case-insensitive), as A1
+    /// addresses in row-major order. The SwiftUI sibling of the web demo's findAll
+    /// and the Qt/Flutter/Compose/XAML ports — it searches formula text, so "=SUM"
+    /// or a literal like "15" both hit. An empty query returns no matches.
+    func findAll(_ query: String) -> [String] { session.findAll(query, true, false) }
+
+    /// Replace: rewrite `query` → `replacement` in every cell's source
+    /// (case-insensitive), returning the number of cells changed. The engine
+    /// re-parses each rewrite (so a formula stays live, a literal stays typed) and
+    /// recomputes dependents; resize the extent, re-sync the formula bar, and bump
+    /// `revision` so the visible rows re-fetch.
+    @discardableResult
+    func replaceAll(_ query: String, _ replacement: String) -> Int {
+        let n = session.replaceAll(query, replacement, false)
+        resize()
+        formulaText = session.getRaw(address(selectedRow, selectedCol))
+        revision += 1
+        return n
+    }
+
+    /// Find button: locate the matches for `findText`, jump the selection to the
+    /// first hit, and set `findStatus` to the match count for the footer. An empty
+    /// query clears the status and does nothing.
+    func runFind() {
+        let hits = findAll(findText)
+        if let first = hits.first { selectA1(first) }
+        if findText.isEmpty {
+            findStatus = ""
+        } else if hits.isEmpty {
+            findStatus = "no match"
+        } else {
+            findStatus = "\(hits.count) match\(hits.count == 1 ? "" : "es")"
+        }
+    }
+
+    /// Replace button: rewrite `findText` → `replaceText` everywhere and recompute;
+    /// `findStatus` shows how many cells changed.
+    func runReplace() {
+        let n = replaceAll(findText, replaceText)
+        findStatus = "\(n) replaced"
+    }
+
+    /// Move the selection onto an A1 address (e.g. a find hit like "Z1000"),
+    /// parsing the column letters (past Z) and row digits and clamping into the
+    /// grid via `select`. A no-op on a malformed address.
+    func selectA1(_ a1: String) {
+        let trimmed = a1.trimmingCharacters(in: .whitespaces)
+        var letters = "", digits = ""
+        for ch in trimmed {
+            if ch.isLetter, digits.isEmpty { letters.append(ch) }
+            else if ch.isNumber { digits.append(ch) }
+            else { return } // malformed: bail out
+        }
+        // A u32-bounded sheet's widest column ("FXSHRXW", 2^32) is 7 letters, so a
+        // longer run is malformed — bail before the `col * 26` accumulate (which
+        // would otherwise trap on Int overflow for a ~13+ letter run; `select`
+        // clamps the result, but only after the multiply).
+        guard !letters.isEmpty, letters.count <= 7, let row = Int(digits) else { return }
+        var col = 0
+        for ch in letters.uppercased() {
+            guard let v = ch.asciiValue, v >= 65, v <= 90 else { return }
+            col = col * 26 + Int(v - 64) // 'A' = 1
+        }
+        select(row: row, col: col)
+    }
+
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
     /// engine shifts the pasted formula's relative references by the
     /// destination's offset, pins absolute (`$`) refs, carries the format; a cut
@@ -333,7 +404,8 @@ struct InfiniteGridView: View {
         VStack(spacing: 0) {
             Rectangle().fill(line).frame(height: 1)
             HStack {
-                Text("Virtual grid: \(model.totalRows) rows × \(model.totalCols) cols  ·  revision \(model.revision)")
+                Text("Virtual grid: \(model.totalRows) rows × \(model.totalCols) cols  ·  revision \(model.revision)"
+                    + (model.findStatus.isEmpty ? "" : "  ·  \(model.findStatus)"))
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(muted)
                 Spacer()
@@ -430,6 +502,32 @@ struct InfiniteGridView: View {
             Button("↷ Redo") { model.redoEdit() }
                 .disabled(!model.canRedo())
                 .help("Redo the last undone edit")
+            toolSep
+            // ── Find / replace (search cell sources; rewrite matches) ──
+            TextField("find", text: $model.findText)
+                .textFieldStyle(.plain)
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundColor(ink)
+                .padding(.horizontal, 8)
+                .frame(width: 96, height: 30)
+                .background(cField)
+                .overlay(RoundedRectangle(cornerRadius: 5).stroke(lineStrong, lineWidth: 1))
+                .cornerRadius(5)
+                .onSubmit { model.runFind() }
+            Button("Find") { model.runFind() }
+                .help("Find every cell whose source contains the query (case-insensitive) and jump to the first hit")
+            TextField("replace", text: $model.replaceText)
+                .textFieldStyle(.plain)
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundColor(ink)
+                .padding(.horizontal, 8)
+                .frame(width: 96, height: 30)
+                .background(cField)
+                .overlay(RoundedRectangle(cornerRadius: 5).stroke(lineStrong, lineWidth: 1))
+                .cornerRadius(5)
+                .onSubmit { model.runReplace() }
+            Button("Replace") { model.runReplace() }
+                .help("Replace the query with the replacement in every cell's source and recompute")
         }
         .buttonStyle(ChipButtonStyle())
         .padding(8)

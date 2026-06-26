@@ -95,6 +95,9 @@ solver result, deck-selected output table, and normalized analysis directive,
 table count/name list, output probes, and output directives that produced the
 table, plus selected `.measure` results and
 a stable measurement table for `.dc`, `.ac`, and `.tran` executions.
+Execution `outputPlanArtifacts` summarize the selected result columns, output
+probes, output directives, and stable table names with table, CSV, compact JSON,
+and header-keyed record exports.
 Execution `tableArtifacts` preserve the same order as `tables` and carry each
 stable table's text, CSV, compact JSON, and header-keyed records. Selected
 `.tran` plans route
@@ -136,11 +139,17 @@ and `tableArtifacts` records. Policy-blocked `source` / `shell`, `cd`,
 control-flow, and variable/state commands also populate
 `controlPolicyArtifacts` with stable line, category, command, code, severity,
 and message fields plus table, CSV, compact JSON, and header-keyed record
-exports. `controlPolicySummaryArtifacts` groups the same policy artifacts by
+exports. The selected-run artifact row also carries
+`ControlPolicyArtifacts`, `ControlPolicyCategoryList`,
+`ControlPolicyCodeList`, and `ControlPolicySeverityList` inventory columns.
+`controlPolicySummaryArtifacts` groups the same policy artifacts by
 category with stable count, line-list, command-list, code-list, and severity-list
-table, CSV, compact JSON, and record exports. `formatDeckTableCsv` also converts
-any stable tab-separated deck table to CSV, `formatDeckTableJson` converts the
-same tables to compact JSON records, and `deckTableRecords` returns header-keyed
+table, CSV, compact JSON, and record exports. The same policy row and summary
+tables also appear as `control-policy` and `control-policy-summary` entries in
+`tables`, selected-run `TableList` metadata, and ordered `tableArtifacts`.
+`formatDeckTableCsv` also converts any stable tab-separated deck table to CSV,
+`formatDeckTableJson` converts the same tables to compact JSON records, and
+`deckTableRecords` returns header-keyed
 native records for browser and host integrations.
 `resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save`, scoped or
 global `.probe`, scoped `.print <analysis> ...`, and scoped
@@ -233,10 +242,10 @@ malformed deck-level analysis controls.
 deck execution helpers.
 `runDeckAnalysis` routes that selected plan into the matching solver and stable
 deck-selected table output with normalized table-inventory, output-probe, and
-output-directive artifacts, selected measurement artifacts, selected transient Fourier artifacts,
+output-directive artifacts, output-plan inventory artifacts, selected measurement artifacts, selected transient Fourier artifacts,
 selected-run artifact summaries with table, analysis-directive, output-probe, output-directive,
 measurement, Fourier probe, `.control` command, write-marker, rawfile-option, and
-diagnostic inventories, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and
+control-policy diagnostic inventories, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and
 `.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls. Selected
 execution fields expose `.control` command, write-marker, rawfile-option, and
 diagnostic inventories directly for host integrations.

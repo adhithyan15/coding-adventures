@@ -303,6 +303,75 @@ Item {
                 }
                 Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
 
+                // ── Find / replace (locate cells by text; bulk-edit their source) ──
+                // Find (case-insensitive, searches sources) selects the first match
+                // and reports the count; Replace all rewrites find → replacement in
+                // every matching cell's source (the engine recomputes).
+                Rectangle {
+                    Layout.preferredWidth: 84
+                    Layout.preferredHeight: 30
+                    color: "#0f1115"; radius: 5
+                    border.color: findField.activeFocus ? sheet.cAccent : sheet.cLineStrong
+                    border.width: findField.activeFocus ? 2 : 1
+                    TextInput {
+                        id: findField
+                        anchors.fill: parent; anchors.leftMargin: 8; anchors.rightMargin: 8
+                        verticalAlignment: TextInput.AlignVCenter
+                        color: sheet.cInk; font.pixelSize: 12; font.family: sheet.monoFamily
+                        clip: true; selectByMouse: true
+                        Text {
+                            anchors.fill: parent; verticalAlignment: Text.AlignVCenter
+                            text: "find"; color: "#5f6672"; font: parent.font
+                            visible: parent.text.length === 0 && !parent.activeFocus
+                        }
+                    }
+                }
+                Rectangle {
+                    Layout.preferredWidth: 84
+                    Layout.preferredHeight: 30
+                    Layout.leftMargin: 6
+                    color: "#0f1115"; radius: 5
+                    border.color: replaceField.activeFocus ? sheet.cAccent : sheet.cLineStrong
+                    border.width: replaceField.activeFocus ? 2 : 1
+                    TextInput {
+                        id: replaceField
+                        anchors.fill: parent; anchors.leftMargin: 8; anchors.rightMargin: 8
+                        verticalAlignment: TextInput.AlignVCenter
+                        color: sheet.cInk; font.pixelSize: 12; font.family: sheet.monoFamily
+                        clip: true; selectByMouse: true
+                        Text {
+                            anchors.fill: parent; verticalAlignment: Text.AlignVCenter
+                            text: "replace"; color: "#5f6672"; font: parent.font
+                            visible: parent.text.length === 0 && !parent.activeFocus
+                        }
+                    }
+                }
+                ToolButton {
+                    text: "Find"
+                    Layout.leftMargin: 6
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Select the first cell whose source contains the find text"
+                    onClicked: {
+                        if (!doc || findField.text.length === 0) return;
+                        var hits = doc.findMatches(findField.text, true, false);
+                        if (hits.length === 0) return;
+                        // Parse the first A1 (e.g. "B3") into row/col and select it.
+                        var m = /^([A-Za-z]+)(\d+)$/.exec(hits[0]);
+                        if (m) {
+                            var letters = m[1].toUpperCase(), col = 0;
+                            for (var i = 0; i < letters.length; i++) col = col * 26 + (letters.charCodeAt(i) - 64);
+                            doc.selectInf(parseInt(m[2]), col);
+                        }
+                    }
+                }
+                ToolButton {
+                    text: "Replace all"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Replace the find text with the replacement in every matching cell's source"
+                    onClicked: if (doc && findField.text.length > 0) doc.replaceAll(findField.text, replaceField.text, false)
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
                 // ── History (undo / redo) ──
                 ToolButton {
                     text: "↶ Undo"

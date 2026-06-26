@@ -4,6 +4,26 @@
 
 ### Added
 
+- **Deck output-plan inventory artifacts** —
+  selected `run_deck_analysis()` executions now expose
+  `output_plan_artifacts` with stable result-column, output-probe,
+  output-directive, and table inventories plus table, CSV, compact JSON, and
+  header-keyed record exports, matching Rust and TypeScript.
+
+- **Deck control policy table export artifacts** —
+  selected `run_deck_analysis()` executions now include `control-policy` and
+  `control-policy-summary` entries in `tables`, selected-run `TableList`
+  metadata, and ordered `table_artifacts` with stable table, CSV, compact JSON,
+  and header-keyed record payloads, matching Rust and TypeScript.
+
+- **Deck control policy run-artifact inventories** —
+  selected `run_deck_analysis()` run artifacts now carry
+  `ControlPolicyArtifacts`, `ControlPolicyCategoryList`,
+  `ControlPolicyCodeList`, and `ControlPolicySeverityList` summary fields so
+  policy-blocked `.control` commands are visible in the stable run-artifact
+  table, CSV, compact JSON, and header-keyed record exports, matching Rust and
+  TypeScript.
+
 - **Deck control policy summary artifacts** —
   selected `run_deck_analysis()` executions now group policy-blocked `.control`
   command artifacts by category as `control_policy_summary_artifacts` with

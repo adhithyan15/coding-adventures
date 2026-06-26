@@ -306,5 +306,31 @@ void main() {
       expect(s.sortRange('A1', 'A1', 1, true), isFalse); // single-row range
       expect(s.sortRange('A1', 'E4', 9, true), isFalse); // key column outside range
     });
+
+    // Find / replace (the Find / Replace-all buttons drive findAll/replaceAll):
+    // locate cells by text and bulk-edit their source.
+    test('findAll and replaceAll locate and rewrite cells', () {
+      final s = SpreadsheetSession();
+      addTearDown(s.dispose);
+      s.setCell('A1', '100');
+      s.setCell('A2', '100');
+      s.setCell('B1', '=A1+1'); // displays 101
+      // find by computed value: "10" is in 100/100/101.
+      final byVal = s.findAll('10', false, true);
+      expect(byVal.toSet(), {'A1', 'A2', 'B1'});
+      // find by source: "A1" only in B1's formula text.
+      expect(s.findAll('A1', true, true), ['B1']);
+      // empty query → no matches.
+      expect(s.findAll('', false, true), isEmpty);
+      // replace the literal 100 → 7 in the two number cells (count 2).
+      expect(s.replaceAll('100', '7', true), 2);
+      expect(s.window(1, 1, 1, 1)[0][0], '7'); // A1
+      // replace A1 → A2 in the formula source; it re-parses + recomputes (=A2+1 = 8).
+      expect(s.replaceAll('A1', 'A2', true), 1);
+      expect(s.window(1, 2, 1, 2)[0][0], '8'); // B1
+      // no-match / empty query → 0.
+      expect(s.replaceAll('zzz', 'q', true), 0);
+      expect(s.replaceAll('', 'q', true), 0);
+    });
   });
 }

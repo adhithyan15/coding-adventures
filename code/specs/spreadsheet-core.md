@@ -325,6 +325,43 @@ already-sorted range returns `Some(identity)` and is left untouched.
 > expected; a range thick with intra-range relative formulas inherits the same
 > documented limitation as `cut`.
 
+### Find / replace
+
+`Workbook::find_all(sheet, query, in_formulas, match_case) -> Vec<CellAddress>`
+and `Workbook::replace_all(sheet, query, replacement, match_case) -> usize`
+locate and bulk-edit cells whose text contains a substring — the engine side of
+*Edit ▸ Find / Replace*. Both scan only the **non-empty** cells (sparse: cost is
+proportional to populated cells, not the u32×u32 grid) and return addresses in
+(row, col) order.
+
+The **search text** for a cell depends on `in_formulas`:
+
+- `in_formulas = true` searches the cell's **source** — a formula's text
+  (`"=A1+2"`) or a literal's canonical string (`15` → `"15"`, `TRUE`, an error's
+  code). This is what `replace_all` edits.
+- `in_formulas = false` searches the cell's **computed display** value (the
+  format-applied string `get_display` returns), so you can find by what you see.
+
+`match_case = false` compares case-insensitively (ASCII). An empty `query` matches
+nothing (`find_all` returns empty, `replace_all` returns 0) — replacing "" would
+be meaningless.
+
+`replace_all` rewrites the matched substring(s) in each cell's **source**, then
+re-applies the result through `set_raw` (below) so the cell re-parses: a result
+that still begins with `=` re-parses as a formula (an invalid one degrades to
+`#VALUE!`), and a literal re-coerces (number / boolean / text). It returns the
+**count of cells changed**. One caveat, like a spreadsheet's: a replace can break
+a formula (replacing `1` in `=A1` yields `=A`, a `#NAME?`), and replacing inside a
+formula edits its *text*, not its references — the caller chooses the query.
+
+`Workbook::set_raw(sheet, addr, raw)` is the **single raw-string entry point** the
+replace path (and any host) uses: it trims, and routes an empty string to
+`clear_cell`, a `=`-prefixed string to `set_formula` (falling back to a `#VALUE!`
+literal if it won't parse), and anything else through literal coercion
+(`"TRUE"`/`"FALSE"` → boolean, a finite number → number, otherwise text) to
+`set_value`. It centralizes the "what a typed string means" policy that the
+facades previously each owned.
+
 ---
 
 ## §5 The Dependency Graph

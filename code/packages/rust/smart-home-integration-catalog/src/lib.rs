@@ -22425,6 +22425,389 @@ impl
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow {
+    pub sequence: usize,
+    pub handoff_action_evidence_review_row_key: String,
+    pub handoff_action_evidence_row_sequence: usize,
+    pub handoff_action_evidence_row_key: String,
+    pub handoff_action_row_key: String,
+    pub handoff_row_key: String,
+    pub readiness_evidence_review_disposition_action_readiness_execution_slot_key: String,
+    pub readiness_evidence_review_disposition_action_key: String,
+    pub work_order_key: String,
+    pub ticket_key: String,
+    pub check_sequence: usize,
+    pub check_kind: IntegrationMeshReleaseReadinessCheckKind,
+    pub status: IntegrationMeshReleaseReadinessStatus,
+    pub handoff_lane: IntegrationMeshReleaseDispatchTicketHandoffLane,
+    pub handoff_action_kind:
+        IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind,
+    pub disposition_action_kind:
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind,
+    pub handoff_action_evidence_review_kind:
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub review_required: bool,
+    pub dispatch_required: bool,
+    pub execution_required: bool,
+    pub lineage_complete: bool,
+    pub evidence_required: bool,
+    pub release_handoff_evidence: bool,
+    pub release_ready_review: bool,
+    pub handoff_actions_ready: bool,
+    pub handoff_action_evidence_ready: bool,
+    pub ready_for_release_handoff: bool,
+}
+
+impl
+    IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow
+{
+    pub fn from_evidence_row(
+        sequence: usize,
+        evidence_row: &IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceRow,
+        handoff_action_evidence_ready: bool,
+    ) -> Self {
+        let handoff_action_evidence_review_kind = if !evidence_row.has_lineage() {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::LineageGap
+        } else if evidence_row.blocks_release() {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::BlockerReview
+        } else if evidence_row.needs_review() {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::ReviewGate
+        } else if evidence_row.needs_operator() {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::OperatorReview
+        } else {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::ReleaseReady
+        };
+        let release_ready_review = handoff_action_evidence_ready
+            && evidence_row.ready_for_release_handoff()
+            && evidence_row.has_lineage()
+            && !evidence_row.blocks_release()
+            && !evidence_row.needs_operator()
+            && !evidence_row.needs_review()
+            && !evidence_row.requires_dispatch()
+            && !evidence_row.requires_execution()
+            && handoff_action_evidence_review_kind
+                == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::ReleaseReady;
+
+        Self {
+            sequence,
+            handoff_action_evidence_review_row_key: format!(
+                "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-{sequence:02}-{}-{}",
+                handoff_action_evidence_review_kind.as_str(),
+                evidence_row.check_kind.as_str()
+            ),
+            handoff_action_evidence_row_sequence: evidence_row.sequence,
+            handoff_action_evidence_row_key: evidence_row.handoff_action_evidence_row_key.clone(),
+            handoff_action_row_key: evidence_row.handoff_action_row_key.clone(),
+            handoff_row_key: evidence_row.handoff_row_key.clone(),
+            readiness_evidence_review_disposition_action_readiness_execution_slot_key: evidence_row
+                .readiness_evidence_review_disposition_action_readiness_execution_slot_key
+                .clone(),
+            readiness_evidence_review_disposition_action_key: evidence_row
+                .readiness_evidence_review_disposition_action_key
+                .clone(),
+            work_order_key: evidence_row.work_order_key.clone(),
+            ticket_key: evidence_row.ticket_key.clone(),
+            check_sequence: evidence_row.check_sequence,
+            check_kind: evidence_row.check_kind,
+            status: evidence_row.status,
+            handoff_lane: evidence_row.handoff_lane,
+            handoff_action_kind: evidence_row.handoff_action_kind,
+            disposition_action_kind: evidence_row.disposition_action_kind,
+            handoff_action_evidence_review_kind,
+            release_blocking: evidence_row.blocks_release(),
+            operator_required: evidence_row.needs_operator(),
+            review_required: evidence_row.needs_review(),
+            dispatch_required: evidence_row.requires_dispatch(),
+            execution_required: evidence_row.requires_execution(),
+            lineage_complete: evidence_row.has_lineage(),
+            evidence_required: evidence_row.requires_attention(),
+            release_handoff_evidence: evidence_row.has_release_handoff_evidence(),
+            release_ready_review,
+            handoff_actions_ready: evidence_row.ready_for_release_handoff(),
+            handoff_action_evidence_ready,
+            ready_for_release_handoff: release_ready_review,
+        }
+    }
+
+    pub fn is_lineage_gap(&self) -> bool {
+        self.handoff_action_evidence_review_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::LineageGap
+    }
+
+    pub fn is_blocker_review(&self) -> bool {
+        self.handoff_action_evidence_review_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::BlockerReview
+    }
+
+    pub fn is_review_gate(&self) -> bool {
+        self.handoff_action_evidence_review_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::ReviewGate
+    }
+
+    pub fn is_operator_review(&self) -> bool {
+        self.handoff_action_evidence_review_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::OperatorReview
+    }
+
+    pub fn is_release_ready_review(&self) -> bool {
+        self.release_ready_review
+    }
+
+    pub fn blocks_release(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn requires_dispatch(&self) -> bool {
+        self.dispatch_required
+    }
+
+    pub fn requires_execution(&self) -> bool {
+        self.execution_required
+    }
+
+    pub fn has_lineage(&self) -> bool {
+        self.lineage_complete
+    }
+
+    pub fn requires_evidence_review(&self) -> bool {
+        self.evidence_required
+    }
+
+    pub fn is_repair_action(&self) -> bool {
+        self.handoff_action_kind
+            == IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::RepairHandoff
+    }
+
+    pub fn is_review_action(&self) -> bool {
+        self.handoff_action_kind
+            == IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::ReviewHandoff
+    }
+
+    pub fn is_release_handoff_action(&self) -> bool {
+        self.handoff_action_kind
+            == IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::ReleaseHandoff
+    }
+
+    pub fn is_release_handoff_evidence(&self) -> bool {
+        self.release_handoff_evidence
+    }
+
+    pub fn ready_to_release_handoff(&self) -> bool {
+        self.ready_for_release_handoff
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.blocks_release()
+            || self.needs_operator()
+            || self.needs_review()
+            || self.requires_dispatch()
+            || self.requires_execution()
+            || self.is_lineage_gap()
+            || !self.has_lineage()
+            || !self.is_release_handoff_evidence()
+            || !self.ready_to_release_handoff()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow {
+    pub sequence: usize,
+    pub handoff_action_evidence_review_disposition_row_key: String,
+    pub handoff_action_evidence_review_row_sequence: usize,
+    pub handoff_action_evidence_review_row_key: String,
+    pub handoff_action_evidence_row_key: String,
+    pub handoff_action_row_key: String,
+    pub handoff_row_key: String,
+    pub readiness_evidence_review_disposition_action_readiness_execution_slot_key: String,
+    pub readiness_evidence_review_disposition_action_key: String,
+    pub work_order_key: String,
+    pub ticket_key: String,
+    pub check_sequence: usize,
+    pub check_kind: IntegrationMeshReleaseReadinessCheckKind,
+    pub status: IntegrationMeshReleaseReadinessStatus,
+    pub handoff_lane: IntegrationMeshReleaseDispatchTicketHandoffLane,
+    pub handoff_action_kind:
+        IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind,
+    pub disposition_action_kind:
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind,
+    pub handoff_action_evidence_review_kind:
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind,
+    pub handoff_action_evidence_review_disposition_action_kind:
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub review_required: bool,
+    pub dispatch_required: bool,
+    pub execution_required: bool,
+    pub lineage_complete: bool,
+    pub release_handoff_evidence: bool,
+    pub release_ready_review: bool,
+    pub handoff_action_evidence_reviews_ready: bool,
+    pub release_ready_disposition: bool,
+    pub ready_for_release_handoff: bool,
+}
+
+impl
+    IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow
+{
+    pub fn from_review_row(
+        sequence: usize,
+        review_row: &IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow,
+        handoff_action_evidence_reviews_ready: bool,
+    ) -> Self {
+        let handoff_action_evidence_review_disposition_action_kind = if !review_row.has_lineage()
+            || review_row.is_lineage_gap()
+        {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::RestoreEvidenceLineage
+        } else if review_row.blocks_release() {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ScheduleReleaseBlockerRepair
+        } else if review_row.needs_review() || review_row.is_review_gate() {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview
+        } else if review_row.needs_operator() {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CoordinateOperatorHandoff
+        } else {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff
+        };
+        let release_ready_disposition = handoff_action_evidence_reviews_ready
+            && review_row.ready_to_release_handoff()
+            && review_row.is_release_ready_review()
+            && review_row.has_lineage()
+            && handoff_action_evidence_review_disposition_action_kind
+                == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff;
+
+        Self {
+            sequence,
+            handoff_action_evidence_review_disposition_row_key: format!(
+                "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-disposition-{sequence:02}-{}-{}",
+                handoff_action_evidence_review_disposition_action_kind.as_str(),
+                review_row.check_kind.as_str()
+            ),
+            handoff_action_evidence_review_row_sequence: review_row.sequence,
+            handoff_action_evidence_review_row_key: review_row
+                .handoff_action_evidence_review_row_key
+                .clone(),
+            handoff_action_evidence_row_key: review_row.handoff_action_evidence_row_key.clone(),
+            handoff_action_row_key: review_row.handoff_action_row_key.clone(),
+            handoff_row_key: review_row.handoff_row_key.clone(),
+            readiness_evidence_review_disposition_action_readiness_execution_slot_key: review_row
+                .readiness_evidence_review_disposition_action_readiness_execution_slot_key
+                .clone(),
+            readiness_evidence_review_disposition_action_key: review_row
+                .readiness_evidence_review_disposition_action_key
+                .clone(),
+            work_order_key: review_row.work_order_key.clone(),
+            ticket_key: review_row.ticket_key.clone(),
+            check_sequence: review_row.check_sequence,
+            check_kind: review_row.check_kind,
+            status: review_row.status,
+            handoff_lane: review_row.handoff_lane,
+            handoff_action_kind: review_row.handoff_action_kind,
+            disposition_action_kind: review_row.disposition_action_kind,
+            handoff_action_evidence_review_kind: review_row.handoff_action_evidence_review_kind,
+            handoff_action_evidence_review_disposition_action_kind,
+            release_blocking: review_row.blocks_release(),
+            operator_required: review_row.needs_operator(),
+            review_required: review_row.needs_review(),
+            dispatch_required: review_row.requires_dispatch(),
+            execution_required: review_row.requires_execution(),
+            lineage_complete: review_row.has_lineage(),
+            release_handoff_evidence: review_row.is_release_handoff_evidence(),
+            release_ready_review: review_row.is_release_ready_review(),
+            handoff_action_evidence_reviews_ready,
+            release_ready_disposition,
+            ready_for_release_handoff: release_ready_disposition,
+        }
+    }
+
+    pub fn blocks_release(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn requires_dispatch(&self) -> bool {
+        self.dispatch_required
+    }
+
+    pub fn requires_execution(&self) -> bool {
+        self.execution_required
+    }
+
+    pub fn has_lineage(&self) -> bool {
+        self.lineage_complete
+    }
+
+    pub fn is_repair_disposition(&self) -> bool {
+        self.handoff_action_evidence_review_disposition_action_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ScheduleReleaseBlockerRepair
+    }
+
+    pub fn is_operator_disposition(&self) -> bool {
+        self.handoff_action_evidence_review_disposition_action_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CoordinateOperatorHandoff
+    }
+
+    pub fn is_review_disposition(&self) -> bool {
+        self.handoff_action_evidence_review_disposition_action_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview
+    }
+
+    pub fn is_lineage_repair_disposition(&self) -> bool {
+        self.handoff_action_evidence_review_disposition_action_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::RestoreEvidenceLineage
+    }
+
+    pub fn is_release_handoff_disposition(&self) -> bool {
+        self.handoff_action_evidence_review_disposition_action_kind
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff
+    }
+
+    pub fn is_release_handoff_evidence(&self) -> bool {
+        self.release_handoff_evidence
+    }
+
+    pub fn is_release_ready_review(&self) -> bool {
+        self.release_ready_review
+    }
+
+    pub fn is_release_ready_disposition(&self) -> bool {
+        self.release_ready_disposition && self.is_release_handoff_disposition()
+    }
+
+    pub fn ready_to_release_handoff(&self) -> bool {
+        self.ready_for_release_handoff
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.blocks_release()
+            || self.needs_operator()
+            || self.needs_review()
+            || self.requires_dispatch()
+            || self.requires_execution()
+            || !self.has_lineage()
+            || !self.is_release_handoff_evidence()
+            || !self.is_release_ready_review()
+            || !self.is_release_ready_disposition()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionSummary {
     pub release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_summary:
         Box<IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffSummary>,
@@ -22966,6 +23349,581 @@ impl
             || self.has_lineage_gaps()
             || !self
                 .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_ready
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewSummary {
+    pub release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary:
+        Box<IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceSummary>,
+    pub total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_rows:
+        usize,
+    pub total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+        usize,
+    pub required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+        usize,
+    pub blocker_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+        usize,
+    pub operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+        usize,
+    pub review_gate_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+        usize,
+    pub lineage_gap_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+        usize,
+    pub release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+        usize,
+    pub release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+        usize,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+        Option<String>,
+    pub first_required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+        Option<String>,
+    pub first_blocker_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+        Option<String>,
+    pub first_operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+        Option<String>,
+    pub first_review_gate_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+        Option<String>,
+    pub first_lineage_gap_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+        Option<String>,
+    pub first_release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_row_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_row_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_handoff_row_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_slot_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_handoff_action_kind: Option<
+        IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind,
+    >,
+    pub first_handoff_lane: Option<IntegrationMeshReleaseDispatchTicketHandoffLane>,
+    pub first_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub first_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_row_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_row_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_handoff_row_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_slot_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_key: Option<String>,
+    pub next_work_order_key: Option<String>,
+    pub next_ticket_key: Option<String>,
+    pub next_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub next_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_handoff_lane: Option<IntegrationMeshReleaseDispatchTicketHandoffLane>,
+    pub release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_ready:
+        bool,
+    pub release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready:
+        bool,
+}
+
+impl
+    IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewSummary
+{
+    pub fn from_summaries<'a>(
+        release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary: IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceSummary,
+        review_rows: impl IntoIterator<
+            Item = &'a IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow,
+        >,
+    ) -> Self {
+        let review_rows: Vec<&IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow> =
+            review_rows.into_iter().collect();
+        let first_row = review_rows.first().copied();
+        let first_required_row = review_rows
+            .iter()
+            .copied()
+            .find(|row| row.requires_attention());
+        let first_blocker_row = review_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_blocker_review());
+        let first_operator_row = review_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_operator_review());
+        let first_review_gate_row = review_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_review_gate());
+        let first_lineage_gap_row = review_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_lineage_gap());
+        let first_release_ready_row = review_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_release_ready_review());
+        let next_row = first_required_row;
+        let release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready =
+            review_rows.len()
+                == release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary
+                    .total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_rows
+                && review_rows
+                    .iter()
+                    .all(|row| row.ready_to_release_handoff());
+
+        Self {
+            total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_rows:
+                release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary
+                    .total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_rows,
+            total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+                review_rows.len(),
+            required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+                review_rows.iter().filter(|row| row.requires_attention()).count(),
+            blocker_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+                review_rows.iter().filter(|row| row.is_blocker_review()).count(),
+            operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+                review_rows.iter().filter(|row| row.is_operator_review()).count(),
+            review_gate_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+                review_rows.iter().filter(|row| row.is_review_gate()).count(),
+            lineage_gap_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+                review_rows.iter().filter(|row| row.is_lineage_gap()).count(),
+            release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+                review_rows
+                    .iter()
+                    .filter(|row| row.is_release_handoff_evidence())
+                    .count(),
+            release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+                review_rows
+                    .iter()
+                    .filter(|row| row.is_release_ready_review())
+                    .count(),
+            first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+                first_row.map(|row| row.handoff_action_evidence_review_row_key.clone()),
+            first_required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+                first_required_row.map(|row| row.handoff_action_evidence_review_row_key.clone()),
+            first_blocker_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+                first_blocker_row.map(|row| row.handoff_action_evidence_review_row_key.clone()),
+            first_operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+                first_operator_row.map(|row| row.handoff_action_evidence_review_row_key.clone()),
+            first_review_gate_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+                first_review_gate_row.map(|row| row.handoff_action_evidence_review_row_key.clone()),
+            first_lineage_gap_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+                first_lineage_gap_row.map(|row| row.handoff_action_evidence_review_row_key.clone()),
+            first_release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+                first_release_ready_row.map(|row| row.handoff_action_evidence_review_row_key.clone()),
+            first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_row_key:
+                first_row.map(|row| row.handoff_action_evidence_row_key.clone()),
+            first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_row_key:
+                first_row.map(|row| row.handoff_action_row_key.clone()),
+            first_readiness_evidence_review_disposition_action_readiness_execution_handoff_row_key:
+                first_row.map(|row| row.handoff_row_key.clone()),
+            first_readiness_evidence_review_disposition_action_readiness_execution_slot_key:
+                first_row.map(|row| {
+                    row.readiness_evidence_review_disposition_action_readiness_execution_slot_key
+                        .clone()
+                }),
+            first_readiness_evidence_review_disposition_action_key:
+                first_row.map(|row| row.readiness_evidence_review_disposition_action_key.clone()),
+            first_work_order_key: first_row.map(|row| row.work_order_key.clone()),
+            first_ticket_key: first_row.map(|row| row.ticket_key.clone()),
+            first_handoff_action_kind: first_row.map(|row| row.handoff_action_kind),
+            first_handoff_lane: first_row.map(|row| row.handoff_lane),
+            first_check_kind: first_row.map(|row| row.check_kind),
+            first_check_status: first_row.map(|row| row.status),
+            next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+                next_row.map(|row| row.handoff_action_evidence_review_row_key.clone()),
+            next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_row_key:
+                next_row.map(|row| row.handoff_action_evidence_row_key.clone()),
+            next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_row_key:
+                next_row.map(|row| row.handoff_action_row_key.clone()),
+            next_readiness_evidence_review_disposition_action_readiness_execution_handoff_row_key:
+                next_row.map(|row| row.handoff_row_key.clone()),
+            next_readiness_evidence_review_disposition_action_readiness_execution_slot_key:
+                next_row.map(|row| {
+                    row.readiness_evidence_review_disposition_action_readiness_execution_slot_key
+                        .clone()
+                }),
+            next_readiness_evidence_review_disposition_action_key:
+                next_row.map(|row| row.readiness_evidence_review_disposition_action_key.clone()),
+            next_work_order_key: next_row.map(|row| row.work_order_key.clone()),
+            next_ticket_key: next_row.map(|row| row.ticket_key.clone()),
+            next_check_kind: next_row.map(|row| row.check_kind),
+            next_check_status: next_row.map(|row| row.status),
+            next_handoff_lane: next_row.map(|row| row.handoff_lane),
+            release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_ready:
+                release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary
+                    .ready_for_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence(),
+            release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready,
+            release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary:
+                Box::new(
+                    release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary,
+                ),
+        }
+    }
+
+    pub fn has_handoff_action_evidence_review_rows(&self) -> bool {
+        self.total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows > 0
+    }
+
+    pub fn ready_for_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews(
+        &self,
+    ) -> bool {
+        self.release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_ready
+            && self.release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready
+            && !self.requires_attention()
+    }
+
+    pub fn has_required_reviews(&self) -> bool {
+        self.required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows
+            > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocker_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows
+            > 0
+            || self
+                .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary
+                .has_blockers()
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows
+            > 0
+            || self
+                .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary
+                .needs_operator()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_gate_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows
+            > 0
+            || self
+                .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary
+                .has_review_work()
+    }
+
+    pub fn has_lineage_gaps(&self) -> bool {
+        self.lineage_gap_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows
+            > 0
+            || self
+                .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary
+                .has_lineage_gaps()
+    }
+
+    pub fn has_release_handoff_reviews(&self) -> bool {
+        self.release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows
+            > 0
+    }
+
+    pub fn has_release_ready_reviews(&self) -> bool {
+        self.release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows
+            > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_required_reviews()
+            || self.has_blockers()
+            || self.needs_operator()
+            || self.has_review_work()
+            || self.has_lineage_gaps()
+            || !self
+                .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionSummary {
+    pub release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary:
+        Box<IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewSummary>,
+    pub total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+        usize,
+    pub total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+        usize,
+    pub required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+        usize,
+    pub repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+        usize,
+    pub operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+        usize,
+    pub review_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+        usize,
+    pub lineage_repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+        usize,
+    pub release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+        usize,
+    pub release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+        usize,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+        Option<String>,
+    pub first_required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+        Option<String>,
+    pub first_repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+        Option<String>,
+    pub first_operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+        Option<String>,
+    pub first_review_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+        Option<String>,
+    pub first_lineage_repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+        Option<String>,
+    pub first_release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+        Option<String>,
+    pub first_release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_row_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_row_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_handoff_row_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_readiness_execution_slot_key:
+        Option<String>,
+    pub first_readiness_evidence_review_disposition_action_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_handoff_action_kind: Option<
+        IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind,
+    >,
+    pub first_handoff_action_evidence_review_disposition_action_kind: Option<
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind,
+    >,
+    pub first_handoff_lane: Option<IntegrationMeshReleaseDispatchTicketHandoffLane>,
+    pub first_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub first_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_row_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_row_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_handoff_row_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_readiness_execution_slot_key:
+        Option<String>,
+    pub next_readiness_evidence_review_disposition_action_key: Option<String>,
+    pub next_work_order_key: Option<String>,
+    pub next_ticket_key: Option<String>,
+    pub next_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub next_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_handoff_lane: Option<IntegrationMeshReleaseDispatchTicketHandoffLane>,
+    pub release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready:
+        bool,
+    pub release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_dispositions_ready:
+        bool,
+}
+
+impl
+    IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionSummary
+{
+    pub fn from_summaries<'a>(
+        release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary: IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewSummary,
+        disposition_rows: impl IntoIterator<
+            Item = &'a IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow,
+        >,
+    ) -> Self {
+        let disposition_rows: Vec<&IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow> =
+            disposition_rows.into_iter().collect();
+        let first_row = disposition_rows.first().copied();
+        let first_required_row = disposition_rows
+            .iter()
+            .copied()
+            .find(|row| row.requires_attention());
+        let first_repair_row = disposition_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_repair_disposition());
+        let first_operator_row = disposition_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_operator_disposition());
+        let first_review_row = disposition_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_review_disposition());
+        let first_lineage_repair_row = disposition_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_lineage_repair_disposition());
+        let first_release_handoff_row = disposition_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_release_handoff_disposition());
+        let first_release_ready_row = disposition_rows
+            .iter()
+            .copied()
+            .find(|row| row.is_release_ready_disposition());
+        let next_row = first_required_row;
+        let release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_dispositions_ready =
+            disposition_rows.len()
+                == release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary
+                    .total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows
+                && disposition_rows
+                    .iter()
+                    .all(|row| row.ready_to_release_handoff());
+
+        Self {
+            total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows:
+                release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary
+                    .total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+                disposition_rows.len(),
+            required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+                disposition_rows.iter().filter(|row| row.requires_attention()).count(),
+            repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+                disposition_rows.iter().filter(|row| row.is_repair_disposition()).count(),
+            operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+                disposition_rows.iter().filter(|row| row.is_operator_disposition()).count(),
+            review_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+                disposition_rows.iter().filter(|row| row.is_review_disposition()).count(),
+            lineage_repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+                disposition_rows.iter().filter(|row| row.is_lineage_repair_disposition()).count(),
+            release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+                disposition_rows.iter().filter(|row| row.is_release_handoff_disposition()).count(),
+            release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows:
+                disposition_rows.iter().filter(|row| row.is_release_ready_disposition()).count(),
+            first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+                first_row.map(|row| row.handoff_action_evidence_review_disposition_row_key.clone()),
+            first_required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+                first_required_row.map(|row| row.handoff_action_evidence_review_disposition_row_key.clone()),
+            first_repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+                first_repair_row.map(|row| row.handoff_action_evidence_review_disposition_row_key.clone()),
+            first_operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+                first_operator_row.map(|row| row.handoff_action_evidence_review_disposition_row_key.clone()),
+            first_review_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+                first_review_row.map(|row| row.handoff_action_evidence_review_disposition_row_key.clone()),
+            first_lineage_repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+                first_lineage_repair_row.map(|row| row.handoff_action_evidence_review_disposition_row_key.clone()),
+            first_release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+                first_release_handoff_row.map(|row| row.handoff_action_evidence_review_disposition_row_key.clone()),
+            first_release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+                first_release_ready_row.map(|row| row.handoff_action_evidence_review_disposition_row_key.clone()),
+            first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+                first_row.map(|row| row.handoff_action_evidence_review_row_key.clone()),
+            first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_row_key:
+                first_row.map(|row| row.handoff_action_evidence_row_key.clone()),
+            first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_row_key:
+                first_row.map(|row| row.handoff_action_row_key.clone()),
+            first_readiness_evidence_review_disposition_action_readiness_execution_handoff_row_key:
+                first_row.map(|row| row.handoff_row_key.clone()),
+            first_readiness_evidence_review_disposition_action_readiness_execution_slot_key:
+                first_row.map(|row| {
+                    row.readiness_evidence_review_disposition_action_readiness_execution_slot_key
+                        .clone()
+                }),
+            first_readiness_evidence_review_disposition_action_key:
+                first_row.map(|row| row.readiness_evidence_review_disposition_action_key.clone()),
+            first_work_order_key: first_row.map(|row| row.work_order_key.clone()),
+            first_ticket_key: first_row.map(|row| row.ticket_key.clone()),
+            first_handoff_action_kind: first_row.map(|row| row.handoff_action_kind),
+            first_handoff_action_evidence_review_disposition_action_kind:
+                first_row.map(|row| row.handoff_action_evidence_review_disposition_action_kind),
+            first_handoff_lane: first_row.map(|row| row.handoff_lane),
+            first_check_kind: first_row.map(|row| row.check_kind),
+            first_check_status: first_row.map(|row| row.status),
+            next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key:
+                next_row.map(|row| row.handoff_action_evidence_review_disposition_row_key.clone()),
+            next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key:
+                next_row.map(|row| row.handoff_action_evidence_review_row_key.clone()),
+            next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_row_key:
+                next_row.map(|row| row.handoff_action_evidence_row_key.clone()),
+            next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_row_key:
+                next_row.map(|row| row.handoff_action_row_key.clone()),
+            next_readiness_evidence_review_disposition_action_readiness_execution_handoff_row_key:
+                next_row.map(|row| row.handoff_row_key.clone()),
+            next_readiness_evidence_review_disposition_action_readiness_execution_slot_key:
+                next_row.map(|row| {
+                    row.readiness_evidence_review_disposition_action_readiness_execution_slot_key
+                        .clone()
+                }),
+            next_readiness_evidence_review_disposition_action_key:
+                next_row.map(|row| row.readiness_evidence_review_disposition_action_key.clone()),
+            next_work_order_key: next_row.map(|row| row.work_order_key.clone()),
+            next_ticket_key: next_row.map(|row| row.ticket_key.clone()),
+            next_check_kind: next_row.map(|row| row.check_kind),
+            next_check_status: next_row.map(|row| row.status),
+            next_handoff_lane: next_row.map(|row| row.handoff_lane),
+            release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready:
+                release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary
+                    .ready_for_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews(),
+            release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_dispositions_ready,
+            release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary:
+                Box::new(
+                    release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary,
+                ),
+        }
+    }
+
+    pub fn has_handoff_action_evidence_review_disposition_rows(&self) -> bool {
+        self.total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows > 0
+    }
+
+    pub fn ready_for_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_dispositions(
+        &self,
+    ) -> bool {
+        self.release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready
+            && self.release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_dispositions_ready
+            && !self.requires_attention()
+    }
+
+    pub fn has_required_dispositions(&self) -> bool {
+        self.required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows
+            > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows
+            > 0
+            || self
+                .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary
+                .has_blockers()
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows
+            > 0
+            || self
+                .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary
+                .needs_operator()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows
+            > 0
+            || self
+                .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary
+                .has_review_work()
+    }
+
+    pub fn has_lineage_repairs(&self) -> bool {
+        self.lineage_repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows
+            > 0
+            || self
+                .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary
+                .has_lineage_gaps()
+    }
+
+    pub fn has_release_handoff_dispositions(&self) -> bool {
+        self.release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows
+            > 0
+    }
+
+    pub fn has_release_ready_dispositions(&self) -> bool {
+        self.release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows
+            > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_required_dispositions()
+            || self.has_blockers()
+            || self.needs_operator()
+            || self.has_review_work()
+            || self.has_lineage_repairs()
+            || !self
+                .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_dispositions_ready
     }
 }
 
@@ -47401,6 +48359,110 @@ pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_
     )
 }
 
+pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow>
+{
+    let evidence_summary =
+        mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+    let handoff_action_evidence_ready = evidence_summary
+        .ready_for_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence();
+    let evidence_rows =
+        mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_rows_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+
+    evidence_rows
+        .iter()
+        .enumerate()
+        .map(|(index, evidence_row)| {
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow::from_evidence_row(
+                index + 1,
+                evidence_row,
+                handoff_action_evidence_ready,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow>
+{
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow>
+{
+    let review_summary =
+        mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+    let handoff_action_evidence_reviews_ready = review_summary
+        .ready_for_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews();
+    let review_rows =
+        mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+
+    review_rows
+        .iter()
+        .enumerate()
+        .map(|(index, review_row)| {
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow::from_review_row(
+                index + 1,
+                review_row,
+                handoff_action_evidence_reviews_ready,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow>
+{
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -47437,6 +48499,92 @@ pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_
 {
     let catalog = first_party_catalog();
     mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewSummary
+{
+    let evidence_summary =
+        mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+    let review_rows =
+        mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+
+    IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewSummary::from_summaries(
+        evidence_summary,
+        review_rows.iter(),
+    )
+}
+
+pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewSummary
+{
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionSummary
+{
+    let review_summary =
+        mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+    let disposition_rows =
+        mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+
+    IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionSummary::from_summaries(
+        review_summary,
+        disposition_rows.iter(),
+    )
+}
+
+pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionSummary
+{
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_summary_for_catalog(
         &catalog,
         available_primitives,
         allowed_capabilities,
@@ -64897,6 +66045,751 @@ mod tests {
         assert!(evidence_rows
             .iter()
             .all(|row| row.has_release_handoff_evidence()));
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows_surface_review_outcomes(
+    ) {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let evidence_rows =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_rows(
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+        let review_rows =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows(
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(review_rows.len(), evidence_rows.len());
+        assert_eq!(
+            review_rows
+                .iter()
+                .filter(|row| row.is_blocker_review())
+                .count(),
+            3
+        );
+        assert_eq!(
+            review_rows
+                .iter()
+                .filter(|row| row.is_review_gate())
+                .count(),
+            2
+        );
+        assert_eq!(
+            review_rows
+                .iter()
+                .filter(|row| row.is_release_ready_review())
+                .count(),
+            0
+        );
+        assert!(review_rows
+            .iter()
+            .all(|row| !row.handoff_action_evidence_ready));
+        assert!(review_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow::requires_attention
+        ));
+
+        let first = &review_rows[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(
+            first.handoff_action_evidence_review_row_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-01-blocker_review-substrate_actions"
+        );
+        assert_eq!(
+            first.handoff_action_evidence_row_sequence,
+            evidence_rows[0].sequence
+        );
+        assert_eq!(
+            first.handoff_action_evidence_row_key,
+            evidence_rows[0].handoff_action_evidence_row_key
+        );
+        assert_eq!(
+            first.handoff_action_evidence_review_kind,
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::BlockerReview
+        );
+        assert!(first.is_blocker_review());
+        assert!(first.requires_evidence_review());
+        assert!(first.blocks_release());
+        assert!(first.needs_operator());
+        assert!(!first.needs_review());
+        assert!(first.has_lineage());
+        assert!(!first.is_release_ready_review());
+        assert!(!first.ready_to_release_handoff());
+
+        let mut lineage_evidence = evidence_rows[0].clone();
+        lineage_evidence.handoff_row_key.clear();
+        lineage_evidence.lineage_complete = false;
+        lineage_evidence.handoff_action_ready = false;
+        let lineage_review =
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow::from_evidence_row(
+                1,
+                &lineage_evidence,
+                false,
+            );
+
+        assert_eq!(
+            lineage_review.handoff_action_evidence_review_row_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-01-lineage_gap-substrate_actions"
+        );
+        assert!(lineage_review.is_lineage_gap());
+        assert!(!lineage_review.has_lineage());
+        assert!(lineage_review.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows_mark_release_ready(
+    ) {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let review_rows =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows_for_catalog(
+                &catalog,
+                all_primitive_families(),
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(review_rows.len(), 5);
+        assert!(review_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow::is_release_handoff_evidence
+        ));
+        assert!(review_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow::is_release_ready_review
+        ));
+        assert!(review_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewRow::ready_to_release_handoff
+        ));
+        assert!(review_rows
+            .iter()
+            .all(|row| row.handoff_action_evidence_ready));
+        assert!(review_rows.iter().all(|row| !row.requires_attention()));
+        assert_eq!(
+            review_rows[0].handoff_action_evidence_review_row_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-01-release_ready-substrate_actions"
+        );
+        assert_eq!(
+            review_rows[0].handoff_action_evidence_review_kind,
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewKind::ReleaseReady
+        );
+        assert_eq!(review_rows[0].handoff_action_evidence_row_sequence, 1);
+        assert_eq!(
+            review_rows[0].handoff_action_kind,
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::ReleaseHandoff
+        );
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows_surface_review_dispositions(
+    ) {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let review_rows =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows(
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+        let disposition_rows =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows(
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(disposition_rows.len(), review_rows.len());
+        assert_eq!(
+            disposition_rows
+                .iter()
+                .filter(|row| row.is_repair_disposition())
+                .count(),
+            3
+        );
+        assert_eq!(
+            disposition_rows
+                .iter()
+                .filter(|row| row.is_review_disposition())
+                .count(),
+            2
+        );
+        assert_eq!(
+            disposition_rows
+                .iter()
+                .filter(|row| row.is_release_handoff_disposition())
+                .count(),
+            0
+        );
+        assert_eq!(
+            disposition_rows
+                .iter()
+                .filter(|row| row.is_release_ready_disposition())
+                .count(),
+            0
+        );
+        assert!(disposition_rows
+            .iter()
+            .all(|row| !row.handoff_action_evidence_reviews_ready));
+        assert!(disposition_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow::requires_attention
+        ));
+
+        let first = &disposition_rows[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(
+            first.handoff_action_evidence_review_disposition_row_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-disposition-01-schedule_release_blocker_repair-substrate_actions"
+        );
+        assert_eq!(
+            first.handoff_action_evidence_review_row_sequence,
+            review_rows[0].sequence
+        );
+        assert_eq!(
+            first.handoff_action_evidence_review_row_key,
+            review_rows[0].handoff_action_evidence_review_row_key
+        );
+        assert_eq!(
+            first.handoff_action_evidence_review_disposition_action_kind,
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ScheduleReleaseBlockerRepair
+        );
+        assert!(first.is_repair_disposition());
+        assert!(first.blocks_release());
+        assert!(first.needs_operator());
+        assert!(!first.needs_review());
+        assert!(first.has_lineage());
+        assert!(!first.is_release_handoff_evidence());
+        assert!(!first.is_release_ready_disposition());
+        assert!(!first.ready_to_release_handoff());
+
+        let second = &disposition_rows[1];
+        assert_eq!(
+            second.handoff_action_evidence_review_disposition_row_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-disposition-02-complete_evidence_review-evidence_remediation"
+        );
+        assert!(second.is_review_disposition());
+        assert!(second.needs_review());
+
+        let mut lineage_review = review_rows[0].clone();
+        lineage_review.handoff_row_key.clear();
+        lineage_review.lineage_complete = false;
+        lineage_review.ready_for_release_handoff = false;
+        let lineage_disposition =
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow::from_review_row(
+                1,
+                &lineage_review,
+                false,
+            );
+
+        assert_eq!(
+            lineage_disposition.handoff_action_evidence_review_disposition_row_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-disposition-01-restore_evidence_lineage-substrate_actions"
+        );
+        assert!(lineage_disposition.is_lineage_repair_disposition());
+        assert!(!lineage_disposition.has_lineage());
+        assert!(lineage_disposition.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows_mark_release_ready(
+    ) {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let disposition_rows =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows_for_catalog(
+                &catalog,
+                all_primitive_families(),
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(disposition_rows.len(), 5);
+        assert!(disposition_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow::is_release_handoff_disposition
+        ));
+        assert!(disposition_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow::is_release_handoff_evidence
+        ));
+        assert!(disposition_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow::is_release_ready_review
+        ));
+        assert!(disposition_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow::is_release_ready_disposition
+        ));
+        assert!(disposition_rows.iter().all(
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionRow::ready_to_release_handoff
+        ));
+        assert!(disposition_rows
+            .iter()
+            .all(|row| row.handoff_action_evidence_reviews_ready));
+        assert!(disposition_rows.iter().all(|row| !row.requires_attention()));
+        assert_eq!(
+            disposition_rows[0].handoff_action_evidence_review_disposition_row_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-disposition-01-release_handoff-substrate_actions"
+        );
+        assert_eq!(
+            disposition_rows[0].handoff_action_evidence_review_disposition_action_kind,
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff
+        );
+        assert_eq!(
+            disposition_rows[0].handoff_action_evidence_review_row_sequence,
+            1
+        );
+        assert_eq!(
+            disposition_rows[0].handoff_action_kind,
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::ReleaseHandoff
+        );
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_summary_surfaces_attention(
+    ) {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_summary(
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(
+            summary
+                .total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            5
+        );
+        assert_eq!(
+            summary
+                .total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            5
+        );
+        assert_eq!(
+            summary
+                .required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            5
+        );
+        assert_eq!(
+            summary
+                .repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            3
+        );
+        assert_eq!(
+            summary
+                .review_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            2
+        );
+        assert_eq!(
+            summary
+                .operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .lineage_repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            0
+        );
+        assert_eq!(
+            summary.first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            Some(
+                "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-disposition-01-schedule_release_blocker_repair-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key
+        );
+        assert_eq!(
+            summary.first_repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key
+        );
+        assert_eq!(
+            summary.first_review_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            Some(
+                "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-disposition-02-complete_evidence_review-evidence_remediation"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            None
+        );
+        assert_eq!(
+            summary.next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key
+        );
+        assert_eq!(
+            summary.next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key
+        );
+        assert_eq!(summary.next_work_order_key, summary.first_work_order_key);
+        assert_eq!(summary.next_ticket_key, summary.first_ticket_key);
+        assert_eq!(
+            summary.next_handoff_lane,
+            Some(IntegrationMeshReleaseDispatchTicketHandoffLane::Repair)
+        );
+        assert!(!summary
+            .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready);
+        assert!(!summary
+            .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_dispositions_ready);
+        assert!(!summary.ready_for_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_dispositions());
+        assert!(summary.has_handoff_action_evidence_review_disposition_rows());
+        assert!(summary.has_required_dispositions());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.needs_operator());
+        assert!(!summary.has_lineage_repairs());
+        assert!(!summary.has_release_handoff_dispositions());
+        assert!(!summary.has_release_ready_dispositions());
+        assert!(summary.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_summary_marks_release_ready(
+    ) {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_summary_for_catalog(
+                &catalog,
+                all_primitive_families(),
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(
+            summary
+                .total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            5
+        );
+        assert_eq!(
+            summary
+                .required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .review_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .lineage_repair_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            5
+        );
+        assert_eq!(
+            summary
+                .release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_rows,
+            5
+        );
+        assert_eq!(
+            summary.first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            Some(
+                "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-disposition-01-release_handoff-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            None
+        );
+        assert_eq!(
+            summary.first_release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key
+        );
+        assert_eq!(
+            summary.first_release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key
+        );
+        assert_eq!(
+            summary.next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_disposition_row_key,
+            None
+        );
+        assert_eq!(summary.next_work_order_key, None);
+        assert_eq!(summary.next_ticket_key, None);
+        assert!(summary
+            .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready);
+        assert!(summary
+            .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_dispositions_ready);
+        assert!(summary.ready_for_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_dispositions());
+        assert!(summary.has_handoff_action_evidence_review_disposition_rows());
+        assert!(!summary.has_required_dispositions());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.has_review_work());
+        assert!(!summary.has_lineage_repairs());
+        assert!(summary.has_release_handoff_dispositions());
+        assert!(summary.has_release_ready_dispositions());
+        assert!(!summary.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary_surfaces_attention(
+    ) {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary(
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(
+            summary
+                .total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_rows,
+            5
+        );
+        assert_eq!(
+            summary
+                .total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            5
+        );
+        assert_eq!(
+            summary
+                .required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            5
+        );
+        assert_eq!(
+            summary
+                .blocker_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            3
+        );
+        assert_eq!(
+            summary
+                .operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .review_gate_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            2
+        );
+        assert_eq!(
+            summary
+                .lineage_gap_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            0
+        );
+        assert_eq!(
+            summary.first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            Some(
+                "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-01-blocker_review-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key
+        );
+        assert_eq!(
+            summary.first_blocker_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key
+        );
+        assert_eq!(
+            summary.first_review_gate_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            Some(
+                "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-02-review_gate-evidence_remediation"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            None
+        );
+        assert_eq!(
+            summary.next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key
+        );
+        assert_eq!(
+            summary.next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_row_key
+        );
+        assert_eq!(summary.next_work_order_key, summary.first_work_order_key);
+        assert_eq!(summary.next_ticket_key, summary.first_ticket_key);
+        assert_eq!(
+            summary.next_handoff_lane,
+            Some(IntegrationMeshReleaseDispatchTicketHandoffLane::Repair)
+        );
+        assert!(!summary
+            .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_ready);
+        assert!(!summary
+            .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready);
+        assert!(!summary
+            .ready_for_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews());
+        assert!(summary.has_handoff_action_evidence_review_rows());
+        assert!(summary.has_required_reviews());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.needs_operator());
+        assert!(!summary.has_lineage_gaps());
+        assert!(!summary.has_release_handoff_reviews());
+        assert!(!summary.has_release_ready_reviews());
+        assert!(summary.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary_marks_release_ready(
+    ) {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary_for_catalog(
+                &catalog,
+                all_primitive_families(),
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(
+            summary
+                .total_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            5
+        );
+        assert_eq!(
+            summary
+                .required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .blocker_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .operator_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .review_gate_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            0
+        );
+        assert_eq!(
+            summary
+                .release_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            5
+        );
+        assert_eq!(
+            summary
+                .release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_rows,
+            5
+        );
+        assert_eq!(
+            summary.first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            Some(
+                "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-review-01-release_ready-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_required_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            None
+        );
+        assert_eq!(
+            summary.first_release_ready_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            summary
+                .first_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key
+        );
+        assert_eq!(
+            summary.next_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_row_key,
+            None
+        );
+        assert_eq!(summary.next_work_order_key, None);
+        assert_eq!(summary.next_ticket_key, None);
+        assert!(summary
+            .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_ready);
+        assert!(summary
+            .release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews_ready);
+        assert!(summary
+            .ready_for_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_reviews());
+        assert!(summary.has_handoff_action_evidence_review_rows());
+        assert!(!summary.has_required_reviews());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.has_review_work());
+        assert!(!summary.has_lineage_gaps());
+        assert!(summary.has_release_handoff_reviews());
+        assert!(summary.has_release_ready_reviews());
+        assert!(!summary.requires_attention());
     }
 
     #[test]

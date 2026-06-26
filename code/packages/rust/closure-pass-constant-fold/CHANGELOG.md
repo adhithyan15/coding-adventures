@@ -30,6 +30,26 @@ byte V8 would encode. `decodeURIComponent` **declines** (returns the call to the
 runtime) for exactly the two inputs JS throws a `URIError` on: a malformed
 escape (a `%` not followed by two hex digits) and a `%`-decoded byte run that
 is not valid UTF-8. Declining a throw is always sound.
+## [0.47.0] - 2026-06-26
+
+### Added — fold global `Boolean(…)` → boolean literal on string/number literals
+
+The global `Boolean(value)` coercion (the `ToBoolean` operation, ECMAScript
+§7.1.2) now folds to a boolean literal when its single argument is a string or
+number literal — the answer is exact and total, so no decline:
+
+- string literal → `false` only for the EMPTY string, else `true`:
+  `Boolean("")` → `false`, `Boolean("x")` → `true`, and crucially
+  `Boolean("0")` → `true` (a **non-empty** string is truthy even when it looks
+  falsy);
+- number literal → `false` for `0`/`-0`, else `true`: `Boolean(0)` → `false`,
+  `Boolean(-0)` → `false` (since `-0.0 == 0.0`), `Boolean(1)` → `true`. `NaN` is
+  falsy but cannot appear as a numeric literal token.
+
+Every other argument — a boolean, `null`, an identifier, a second argument — is
+left for the runtime, and like `parseInt`/`parseFloat`/`Number`/`String` it
+folds only the **bare** global identifier, never a member access
+(`window.Boolean(...)` is untouched).
 ## [0.46.0] - 2026-06-25
 
 ### Added — fold global `String(…)` → string literal on string/number literals

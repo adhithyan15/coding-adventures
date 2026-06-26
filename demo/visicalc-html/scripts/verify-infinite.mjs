@@ -269,5 +269,27 @@ ok(sd(1, 1) === "30" && sd(3, 1) === "10", `keys sorted descending: ${sd(1, 1)},
 ok(!wbo.sortRange("A1", "A1", 1, true), "single-row range rejected");
 ok(!wbo.sortRange("A1", "B3", 9, true), "out-of-range key column rejected");
 
+// Find / replace: locate cells by text and bulk-edit their source. A=100,100 and
+// B1 = A1+1 (displays 101).
+const wfr = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+wfr.setCell("A1", "100"); wfr.setCell("A2", "100"); wfr.setCell("B1", "=A1+1");
+// findAll by computed value: "10" is in 100/100/101.
+ok(JSON.stringify(wfr.findAll("10", false, true).sort()) === '["A1","A2","B1"]',
+  `findAll by value: ${JSON.stringify(wfr.findAll("10", false, true))}`);
+// findAll by source: "A1" only in B1's formula text, not the literal "100"s.
+ok(JSON.stringify(wfr.findAll("A1", true, true)) === '["B1"]',
+  `findAll by source: ${JSON.stringify(wfr.findAll("A1", true, true))}`);
+ok(wfr.findAll("", false, true).length === 0, "empty query → no matches");
+// replaceAll the literal 100 → 7 in the two number cells (count 2); raw echo resyncs.
+ok(wfr.replaceAll("100", "7", true) === 2, "replaceAll count = 2");
+ok(wfr.getRaw("A1") === "7", `replaced source resynced: ${wfr.getRaw("A1")}`);
+ok(wfr.getDisplayWindow(1, 1, 1, 1).cells[0][0] === "7", "A1 recomputed to 7");
+// replace A1 → A2 in the formula source; it re-parses + recomputes (=A2+1 = 8).
+ok(wfr.replaceAll("A1", "A2", true) === 1, "replaceAll formula ref count = 1");
+ok(wfr.getDisplayWindow(1, 2, 1, 2).cells[0][0] === "8", `B1 recomputed: ${wfr.getDisplayWindow(1, 2, 1, 2).cells[0][0]}`);
+// no-match / empty query → 0 (no throw).
+ok(wfr.replaceAll("zzz", "q", true) === 0, "no-match replace → 0");
+ok(wfr.replaceAll("", "q", true) === 0, "empty-query replace → 0");
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);
