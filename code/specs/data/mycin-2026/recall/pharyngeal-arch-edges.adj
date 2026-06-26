@@ -1,0 +1,77 @@
+% ============================================================================
+% pharyngeal-arch-edges — the pharyngeal-arch→cranial-nerve knowledge-graph
+% (MYCIN-2026 PHARYNGEAL).
+% ============================================================================
+% A classic high-yield embryology board table: each pharyngeal (branchial) arch
+% and the cranial nerve that innervates / derives from it. "Which nerve goes with
+% the third pharyngeal arch?" becomes the binding query
+%     ? innervated_by(third_pharyngeal_arch, $Nerve).
+%
+% Direction note: the relation is arch -> its cranial nerve (`innervated_by`).
+% Each arch here maps to ONE canonical nerve span, so a query binds a single
+% answer. (The 5th arch is rudimentary/absent in humans and is intentionally
+% omitted — it is reused as the off-vocabulary abstention probe in the test.)
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names, by FULL nerve name (not a CN-number abbreviation
+% alone): arch 1 "trigeminal nerve"; arch 2 "facial nerve"; arch 3
+% "glossopharyngeal nerve"; arch 4 "superior laryngeal nerve" (a branch of CN X);
+% arch 6 "recurrent laryngeal nerve". Each span was independently re-fetched and
+% confirmed on two separate fetches of the same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like FETALSHUNT/
+% LUNGVOLUME/DURALSINUS/HYPOTHALAMIC). Each fact is a `relate` clause whose
+% byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see pharyngeal-arch-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary pharyngeal_arch_vocab {
+    define pharyngeal_arch : entity   surface "pharyngeal arch", "branchial arch"
+    define cranial_nerve   : entity   surface "cranial nerve", "arch nerve"
+
+    define innervated_by : relation from pharyngeal_arch to cranial_nerve  % the cranial nerve of this arch
+}
+
+rulebook pharyngeal_arch_facts {
+    use pharyngeal_arch_vocab
+
+    % --- first arch -> trigeminal nerve (CN V) -------------------------------
+    relate innervated_by(first_pharyngeal_arch, trigeminal_nerve)
+        source "The trigeminal nerve is derived from the first pharyngeal arch."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507820/"
+        trust authoritative
+
+    % --- second arch -> facial nerve (CN VII) --------------------------------
+    relate innervated_by(second_pharyngeal_arch, facial_nerve)
+        source "While the facial nerve develops from the second pharyngeal arch, the geniculate ganglion develops mainly from the epibranchial placode."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555950/"
+        trust authoritative
+
+    % --- third arch -> glossopharyngeal nerve (CN IX) ------------------------
+    relate innervated_by(third_pharyngeal_arch, glossopharyngeal_nerve)
+        source "The glossopharyngeal nerve derives from the third pharyngeal arch and is the only structure formed by it, although the third pharyngeal pouch is the embryologic origin of part of the thymus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539877/"
+        trust authoritative
+
+    % --- fourth arch -> superior laryngeal nerve (branch of CN X) ------------
+    relate innervated_by(fourth_pharyngeal_arch, superior_laryngeal_nerve)
+        source "The superior laryngeal nerve (a branch of CN X) supplies the part of the larynx that develops from the fourth pharyngeal arch, and the recurrent laryngeal nerve (a branch of CN X) supplies the part that derives from the sixth pharyngeal arch."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532995/"
+        trust authoritative
+
+    % --- sixth arch -> recurrent laryngeal nerve (branch of CN X) ------------
+    relate innervated_by(sixth_pharyngeal_arch, recurrent_laryngeal_nerve)
+        source "The sixth pharyngeal arch gives rise to the recurrent laryngeal nerve, cricoid cartilage, arytenoid cartilages, corniculate cartilages and the intrinsic musculature of the larynx."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538307/"
+        trust authoritative
+}
