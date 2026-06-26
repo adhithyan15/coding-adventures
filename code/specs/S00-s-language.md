@@ -784,6 +784,40 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
      `%H`/`%M`/`%S`/`%p`; `%U`/`%W` week-of-year; locale (non-English) names;
      compound `"N units"` `by=` beyond a single leading integer multiplier.
 
+13. **POSIXct date-times (R-46, shared builtins).** Adds the first *date-time*
+   type on top of the R-44/R-45 calendar machinery, again **in place** and with
+   **no new dependency**. A `POSIXct` is — exactly like `Date` — an ordinary
+   numeric vector, but of **seconds since 1970-01-01 00:00:00 UTC**, carrying the
+   two-element class `c("POSIXct", "POSIXt")` via the same transparent
+   `SValue::Classed` wrapper. The key reuse: a POSIXct's **date part** is
+   `seconds.div_euclid(86400)` (= the R-44 `Date` day count) and its **time part**
+   is `seconds.rem_euclid(86400)` (intraday seconds → H/M/S), so the civil kernel
+   (`days_from_civil`/`civil_from_days`), the English name tables, and the
+   `format_date_days` `%`-field renderer are all reused **unchanged** — only the
+   seconds↔(days, h, m, s) split is new.
+   - **`as.POSIXct(x, tz = "UTC")`** — parse a character vector of
+     `"YYYY-MM-DD HH:MM:SS"` (or `"YYYY-MM-DD"` → midnight) to a POSIXct, or wrap a
+     numeric vector as raw seconds directly. The date half reuses R-44's
+     `parse_date_str`; an optional ` HH:MM:SS` time half is parsed with H 0–23,
+     M 0–59, S 0–60 (leap-second slot accepted). Malformed → `NA`, never a panic.
+     Only `tz = "UTC"` honoured.
+   - **`Sys.time()`** — current time as a length-1 POSIXct (reads the wall clock
+     like `Sys.Date`; pre-epoch handled without panic). Structure-tested only.
+   - **`format.POSIXct(x, format =)` / `format(x, fmt)`** — render to character.
+     Default `"%Y-%m-%d %H:%M:%S"`. New fields `%H`/`%M`/`%S`; reuses every R-44/
+     R-45 date field (`%Y %m %d %B %b %A %a %j %e`) by feeding the day count to
+     `format_date_days`. The `format()` generic checks `"POSIXct"` before `"Date"`.
+   - **POSIXct subtraction & `as.numeric`** — no special case: `as.numeric` peels
+     the wrapper to raw seconds, and `t1 - t2` flows through `arithmetic("-", …)`,
+     giving the difference **in seconds**.
+   - **Parse-safety.** A new `MAX_POSIXCT_SECONDS` (≈ `MAX_DATE_DAYS * 86400`)
+     bounds any parsed/supplied seconds *before* the civil kernel; the date half
+     still passes through `MAX_DATE_DAYS`/`MAX_DATE_DIGITS`; H/M/S range-checked;
+     the seconds→(days, intraday) split uses `div_euclid`/`rem_euclid` so negative
+     (pre-epoch) seconds split without a negative index.
+   - **Deferred to R-47.** Non-UTC timezones (and DST); `POSIXlt`; fractional
+     seconds; `%z`/`%Z`; standalone `strptime`/`strftime`; `as.POSIXlt`.
+
 ## §10 References
 
 Internal: [`ST00-r-stats-roadmap.md`](ST00-r-stats-roadmap.md),
