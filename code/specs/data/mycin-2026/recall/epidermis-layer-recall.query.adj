@@ -1,0 +1,22 @@
+% ============================================================================
+% epidermis-layer-recall.query.adj — a worked recall query over the
+% epidermal-layer library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what characterizes
+% epidermal layer X?" question: it states no histology fact — it only `import`s
+% the grounded library and asks binding queries. The native adj-lang engine
+% resolves each `?` against the imported `relate` edges and returns the binding +
+% the citing clause's source/locator/trust. All knowledge is in the library; none
+% is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli epidermis-layer-recall.query.adj
+% ============================================================================
+
+import "epidermis-layer-edges.adj"
+
+? characterized_by(stratum_basale, $Characteristic)      % expect separated_from_dermis_by_basement_membrane
+? characterized_by(stratum_spinosum, $Characteristic)    % expect prickle_cell_layer
+? characterized_by(stratum_granulosum, $Characteristic)  % expect keratohyalin_granules
+? characterized_by(stratum_lucidum, $Characteristic)     % expect only_in_thick_skin
+? characterized_by(stratum_corneum, $Characteristic)     % expect outermost_layer_keratinocyte_maturation
