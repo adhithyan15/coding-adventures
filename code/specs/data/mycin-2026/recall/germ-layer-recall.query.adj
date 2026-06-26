@@ -1,0 +1,19 @@
+% ============================================================================
+% germ-layer-recall.query.adj — a worked recall query over the germ-layer library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what does germ layer X
+% give rise to?" question: it states no embryology fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding(s) + each
+% citing clause's source/locator/trust. A germ layer with two grounded derivatives
+% binds two answers. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli germ-layer-recall.query.adj
+% ============================================================================
+
+import "germ-layer-edges.adj"
+
+? gives_rise_to(ectoderm, $Derivative)   % expect epidermis, anterior_pituitary
+? gives_rise_to(mesoderm, $Derivative)   % expect kidney, dermis
+? gives_rise_to(endoderm, $Derivative)   % expect gastrointestinal_tract, liver
