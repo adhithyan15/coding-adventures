@@ -1,0 +1,73 @@
+% ============================================================================
+% ig-isotype-edges — the immunoglobulin isotype → function knowledge-graph
+% (MYCIN-2026 IG-ISOTYPE).
+% ============================================================================
+% A high-yield immunology board table: the five-isotype antibody family and the
+% defining function/role of each. "What is the function of IgM?" becomes the
+% binding query
+%     ? has_function(igm, $Function).
+%
+% Direction note: the relation is immunoglobulin isotype -> the defining function
+% the cited sentence states for it (`has_function`). Each isotype here maps to
+% ONE canonical function span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The function object names the role the sentence states
+% (IgG "the only immunoglobulin that crosses the placenta"; IgA "the dominant
+% antibody of immunity" in mucosal homeostasis; IgM "the first antibody secreted
+% by the adaptive immune system"; IgE "inducing immediate hypersensitivity
+% reactions"). Each cited sentence names the isotype by its term ("IgG", "IgA" /
+% "Immunoglobulin A (IgA)", "IgM", "IgE" / "immunoglobulin E (IgE)"). Each span
+% was independently re-fetched and confirmed on two separate fetches of the same
+% page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like WBC/HYPERSENSITIVITY/
+% GIWALL/MUSCLEFIBER). Each fact is a `relate` clause whose byte-provenance lives
+% INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see ig-isotype-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary ig_isotype_vocab {
+    define immunoglobulin_isotype : entity   surface "immunoglobulin isotype", "antibody isotype"
+    define function               : entity   surface "function", "defining role"
+
+    define has_function : relation from immunoglobulin_isotype to function  % the defining function of this immunoglobulin isotype
+}
+
+rulebook ig_isotype_facts {
+    use ig_isotype_vocab
+
+    % --- IgG -> crosses the placenta ----------------------------------------
+    relate has_function(igg, crosses_placenta)
+        source "IgG is the only immunoglobulin that crosses the placenta as its Fc portion binds to the receptors present on the surface of the placenta, protecting the neonate from infectious diseases."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK513460/"
+        trust authoritative
+
+    % --- IgA -> dominant antibody of mucosal immunity -----------------------
+    relate has_function(iga, mucosal_secretory_immunity)
+        source "Immunoglobulin A (IgA), one of the five primary immunoglobulins, plays a pivotal role in mucosal homeostasis in the gastrointestinal, respiratory, and genitourinary tracts, functioning as the dominant antibody of immunity in this role."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551516/"
+        trust authoritative
+
+    % --- IgM -> first antibody of the primary response ----------------------
+    relate has_function(igm, first_antibody_primary_response)
+        source "IgM is the first antibody secreted by the adaptive immune system in response to a foreign antigen."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555995/"
+        trust authoritative
+
+    % --- IgE -> mediates immediate (type I) hypersensitivity ----------------
+    relate has_function(ige, mediates_type_i_hypersensitivity)
+        source "As one of the five designated immunoglobulin isotypes, immunoglobulin E (IgE) plays a significant role in atopic conditions by inducing immediate hypersensitivity reactions."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482212/"
+        trust authoritative
+}
