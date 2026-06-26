@@ -7458,6 +7458,12 @@ let gain = 2
         "if v(in) > 0",
         "let gain = 2",
     ]
+    expected_table_names = [
+        "result",
+        "control-policy",
+        "control-policy-summary",
+        "run-artifact",
+    ]
 
     assert execution.control_line_count == len(expected_control_lines)
     assert execution.control_lines == expected_control_lines
@@ -7650,8 +7656,39 @@ let gain = 2
     assert summary_json[3]["CommandList"] == "let gain = 2"
     assert execution.diagnostic_count == len(expected_codes)
     assert execution.diagnostic_codes == expected_codes
+    assert execution.table_count == len(expected_table_names)
+    assert execution.tables == expected_table_names
+    assert [artifact.name for artifact in execution.table_artifacts] == (
+        expected_table_names
+    )
+    policy_table_artifact = execution.table_artifacts[-3]
+    assert policy_table_artifact.name == "control-policy"
+    assert policy_table_artifact.table == execution.control_policy_artifact_table
+    assert policy_table_artifact.csv == execution.control_policy_artifact_csv
+    assert policy_table_artifact.json == execution.control_policy_artifact_json
+    assert policy_table_artifact.records == execution.control_policy_artifact_records
+    summary_table_artifact = execution.table_artifacts[-2]
+    assert summary_table_artifact.name == "control-policy-summary"
+    assert (
+        summary_table_artifact.table
+        == execution.control_policy_summary_artifact_table
+    )
+    assert (
+        summary_table_artifact.csv
+        == execution.control_policy_summary_artifact_csv
+    )
+    assert (
+        summary_table_artifact.json
+        == execution.control_policy_summary_artifact_json
+    )
+    assert (
+        summary_table_artifact.records
+        == execution.control_policy_summary_artifact_records
+    )
     assert execution.run_artifacts[0].control_line_count == len(expected_control_lines)
     assert execution.run_artifacts[0].control_lines == expected_control_lines
+    assert execution.run_artifacts[0].table_count == len(expected_table_names)
+    assert execution.run_artifacts[0].tables == expected_table_names
     assert execution.run_artifacts[0].write_marker_count == len(expected_write_markers)
     assert execution.run_artifacts[0].write_markers == expected_write_markers
     assert execution.run_artifacts[0].rawfile_option_count == len(
@@ -7670,6 +7707,8 @@ let gain = 2
     assert execution.run_artifacts[0].diagnostic_count == len(expected_codes)
     assert execution.run_artifacts[0].diagnostic_codes == expected_codes
     record = deck_table_records(execution.run_artifact_table)[0]
+    assert record["Tables"] == str(len(expected_table_names))
+    assert record["TableList"] == ";".join(expected_table_names)
     assert record["ControlLines"] == str(len(expected_control_lines))
     assert record["ControlLineList"] == control_line_list
     assert record["WriteMarkers"] == str(len(expected_write_markers))

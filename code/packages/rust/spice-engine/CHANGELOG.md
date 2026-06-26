@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Include policy-blocked `.control` row and summary tables in selected
+  `run_deck_analysis` execution `tables`, selected-run `TableList` metadata,
+  and ordered `table_artifacts` as `control-policy` and
+  `control-policy-summary` exports with stable table, CSV, JSON, and
+  header-keyed records, matching Python and TypeScript.
 - Carry policy-blocked `.control` command inventories through selected
   `run_deck_analysis` run artifacts as stable `ControlPolicyArtifacts`,
   `ControlPolicyCategoryList`, `ControlPolicyCodeList`, and

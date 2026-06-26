@@ -2127,6 +2127,12 @@ let gain = 2
       "if v(in) > 0",
       "let gain = 2",
     ];
+    const expectedTableNames = [
+      "result",
+      "control-policy",
+      "control-policy-summary",
+      "run-artifact",
+    ];
 
     expect(execution.controlLineCount).toBe(expectedControlLines.length);
     expect(execution.controlLines).toEqual(expectedControlLines);
@@ -2305,6 +2311,25 @@ let gain = 2
     expect(summaryJson[3].CommandList).toBe("let gain = 2");
     expect(execution.diagnosticCount).toBe(expectedCodes.length);
     expect(execution.diagnosticCodes).toEqual(expectedCodes);
+    expect(execution.tableCount).toBe(expectedTableNames.length);
+    expect(execution.tables).toEqual(expectedTableNames);
+    expect(execution.tableArtifacts.map((artifact) => artifact.name)).toEqual(
+      expectedTableNames,
+    );
+    const policyTableArtifact = execution.tableArtifacts.at(-3)!;
+    expect(policyTableArtifact.name).toBe("control-policy");
+    expect(policyTableArtifact.table).toBe(execution.controlPolicyArtifactTable);
+    expect(policyTableArtifact.csv).toBe(execution.controlPolicyArtifactCsv);
+    expect(policyTableArtifact.json).toBe(execution.controlPolicyArtifactJson);
+    expect(policyTableArtifact.records).toEqual(execution.controlPolicyArtifactRecords);
+    const summaryTableArtifact = execution.tableArtifacts.at(-2)!;
+    expect(summaryTableArtifact.name).toBe("control-policy-summary");
+    expect(summaryTableArtifact.table).toBe(execution.controlPolicySummaryArtifactTable);
+    expect(summaryTableArtifact.csv).toBe(execution.controlPolicySummaryArtifactCsv);
+    expect(summaryTableArtifact.json).toBe(execution.controlPolicySummaryArtifactJson);
+    expect(summaryTableArtifact.records).toEqual(
+      execution.controlPolicySummaryArtifactRecords,
+    );
     expect(execution.runArtifacts[0]?.controlLineCount).toBe(expectedControlLines.length);
     expect(execution.runArtifacts[0]?.controlLines).toEqual(expectedControlLines);
     expect(execution.runArtifacts[0]?.writeMarkerCount).toBe(expectedWriteMarkers.length);
@@ -2317,9 +2342,13 @@ let gain = 2
     );
     expect(execution.runArtifacts[0]?.controlPolicyCodes).toEqual(expectedCodes);
     expect(execution.runArtifacts[0]?.controlPolicySeverities).toEqual(["error"]);
+    expect(execution.runArtifacts[0]?.tableCount).toBe(expectedTableNames.length);
+    expect(execution.runArtifacts[0]?.tables).toEqual(expectedTableNames);
     expect(execution.runArtifacts[0]?.diagnosticCount).toBe(expectedCodes.length);
     expect(execution.runArtifacts[0]?.diagnosticCodes).toEqual(expectedCodes);
     const record = deckTableRecords(execution.runArtifactTable)[0]!;
+    expect(record["Tables"]).toBe(String(expectedTableNames.length));
+    expect(record["TableList"]).toBe(expectedTableNames.join(";"));
     expect(record["ControlLines"]).toBe(String(expectedControlLines.length));
     expect(record["ControlLineList"]).toBe(controlLineList);
     expect(record["WriteMarkers"]).toBe(String(expectedWriteMarkers.length));

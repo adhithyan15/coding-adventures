@@ -2814,6 +2814,13 @@ let gain = 2
         "if v(in) > 0".to_string(),
         "let gain = 2".to_string(),
     ];
+    let expected_table_names = vec![
+        "result".to_string(),
+        "control-policy".to_string(),
+        "control-policy-summary".to_string(),
+        "run-artifact".to_string(),
+    ];
+    let table_list = expected_table_names.join(";");
 
     assert_eq!(execution.control_line_count, expected_control_lines.len());
     assert_eq!(execution.control_lines, expected_control_lines);
@@ -3259,6 +3266,52 @@ let gain = 2
         .contains("\"CommandList\":\"let gain = 2\""));
     assert_eq!(execution.diagnostic_count, expected_codes.len());
     assert_eq!(execution.diagnostic_codes, expected_codes);
+    assert_eq!(execution.table_count, expected_table_names.len());
+    assert_eq!(execution.tables, expected_table_names);
+    assert_eq!(
+        execution
+            .table_artifacts
+            .iter()
+            .map(|artifact| artifact.name.clone())
+            .collect::<Vec<_>>(),
+        expected_table_names
+    );
+    let policy_table_artifact = &execution.table_artifacts[execution.table_artifacts.len() - 3];
+    assert_eq!(policy_table_artifact.name, "control-policy");
+    assert_eq!(
+        policy_table_artifact.table,
+        execution.control_policy_artifact_table
+    );
+    assert_eq!(
+        policy_table_artifact.csv,
+        execution.control_policy_artifact_csv
+    );
+    assert_eq!(
+        policy_table_artifact.json,
+        format_deck_table_json(&execution.control_policy_artifact_table)
+    );
+    assert_eq!(
+        policy_table_artifact.records,
+        execution.control_policy_artifact_records
+    );
+    let summary_table_artifact = &execution.table_artifacts[execution.table_artifacts.len() - 2];
+    assert_eq!(summary_table_artifact.name, "control-policy-summary");
+    assert_eq!(
+        summary_table_artifact.table,
+        execution.control_policy_summary_artifact_table
+    );
+    assert_eq!(
+        summary_table_artifact.csv,
+        execution.control_policy_summary_artifact_csv
+    );
+    assert_eq!(
+        summary_table_artifact.json,
+        format_deck_table_json(&execution.control_policy_summary_artifact_table)
+    );
+    assert_eq!(
+        summary_table_artifact.records,
+        execution.control_policy_summary_artifact_records
+    );
     assert_eq!(
         execution.run_artifacts[0].control_line_count,
         expected_control_lines.len()
@@ -3300,11 +3353,21 @@ let gain = 2
         vec!["error".to_string()]
     );
     assert_eq!(
+        execution.run_artifacts[0].table_count,
+        expected_table_names.len()
+    );
+    assert_eq!(execution.run_artifacts[0].tables, expected_table_names);
+    assert_eq!(
         execution.run_artifacts[0].diagnostic_count,
         expected_codes.len()
     );
     assert_eq!(execution.run_artifacts[0].diagnostic_codes, expected_codes);
     let records = deck_table_records(&execution.run_artifact_table);
+    assert_eq!(records[0].get("Tables").map(String::as_str), Some("4"));
+    assert_eq!(
+        records[0].get("TableList").map(String::as_str),
+        Some(table_list.as_str())
+    );
     assert_eq!(
         records[0].get("ControlLines").map(String::as_str),
         Some("2")
