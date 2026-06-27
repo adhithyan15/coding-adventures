@@ -648,6 +648,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — literal-backed scalar string copy. This keeps AL4 inside the
+    // same immutable E4 shape BASIC now uses: `t := s` lowers through
+    // `str_concat` with an empty suffix, then `print(t)` consumes the target
+    // string slot.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s, t; s := 'OK'; t := s; print(t) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — the `abs` **standard function** (§3.2.4, LANG-FULL AL8). `abs`
     // is built into the language, not a user procedure, so `algol-iir-compiler`
     // resolves it by name and lowers `abs(0 - 42)` inline to the value of

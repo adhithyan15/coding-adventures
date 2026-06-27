@@ -1530,17 +1530,74 @@ impl Compiler {
             if saw_string_target {
                 return Ok(());
             }
-        } else {
-            for left in &left_parts {
-                let var_node = first_direct_node(left, "variable")
-                    .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
-                if array_subscripts(var_node).is_none() {
-                    let name = self.simple_variable_name(var_node)?;
-                    if self.require_var(&name)?.ty == ScalarType::String {
+        } else if let Some(src_name) = expr_variable_name(expr) {
+            let src_binding = self.require_var(&src_name)?;
+            if src_binding.ty == ScalarType::String {
+                if !self.literal_string_slots.contains(&src_binding.slot) {
+                    return Err(CompileError::Unsupported(format!(
+                        "string assignment requires literal-backed string variable {src_name:?}"
+                    )));
+                }
+                let src_slot = src_binding.slot.clone();
+                let mut saw_string_target = false;
+                for left in &left_parts {
+                    let var_node = first_direct_node(left, "variable").ok_or_else(|| {
+                        CompileError::Malformed("left_part has no variable".into())
+                    })?;
+                    if array_subscripts(var_node).is_some() {
                         return Err(CompileError::Unsupported(
-                            "string assignment currently supports literal RHS only".into(),
+                            "string array assignments".into(),
                         ));
                     }
+                    let name = self.simple_variable_name(var_node)?;
+                    let binding = self.require_var(&name)?;
+                    let target_ty = binding.ty;
+                    let target_slot = binding.slot.clone();
+                    let target_is_global = binding.is_global;
+                    if target_ty != ScalarType::String {
+                        return Err(CompileError::Type(format!(
+                            "cannot assign string expression to {} variable {name:?}",
+                            target_ty.name()
+                        )));
+                    }
+                    if target_is_global {
+                        return Err(CompileError::Unsupported(
+                            "captured string assignments".into(),
+                        ));
+                    }
+                    saw_string_target = true;
+                    if target_slot != src_slot {
+                        let empty = self.fresh_temp();
+                        self.emit(IIRInstr::new(
+                            "str_const",
+                            Some(empty.clone()),
+                            vec![Operand::Str(String::new())],
+                            "str",
+                        ));
+                        self.emit(IIRInstr::new(
+                            "str_concat",
+                            Some(target_slot.clone()),
+                            vec![Operand::Var(src_slot.clone()), Operand::Var(empty)],
+                            "str",
+                        ));
+                    }
+                    self.literal_string_slots.insert(target_slot);
+                }
+                if saw_string_target {
+                    return Ok(());
+                }
+            }
+        }
+
+        for left in &left_parts {
+            let var_node = first_direct_node(left, "variable")
+                .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
+            if array_subscripts(var_node).is_none() {
+                let name = self.simple_variable_name(var_node)?;
+                if self.require_var(&name)?.ty == ScalarType::String {
+                    return Err(CompileError::Unsupported(
+                        "string assignment currently supports literal or literal-backed variable RHS only".into(),
+                    ));
                 }
             }
         }
@@ -3425,10 +3482,46 @@ mod tests {
     }
 
     #[test]
-    fn al4_string_variable_copy_rejects_until_dynamic_strings_land() {
-        let err = compile_source("begin string s, t; s := 'HI'; t := s; print(t) end", "test")
-            .expect_err("string variable copies need dynamic string slots");
-        assert!(format!("{err:?}").contains("literal RHS only"));
+    fn al4_string_variable_copy_lowers_to_concat_with_empty_suffix() {
+        let module = compile_source("begin string s, t; s := 'HI'; t := s; print(t) end", "test")
+            .expect("literal-backed string variable copy compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        let empty_slot = main.instructions.iter()
+            .find(|i| {
+                i.op == "str_const"
+                    && matches!(i.srcs.first(), Some(Operand::Str(text)) if text.is_empty())
+            })
+            .and_then(|i| i.dest.as_deref())
+            .expect("copy should materialize an empty suffix");
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "str_concat"
+                    && i.dest.as_deref() == Some("t")
+                    && matches!(i.srcs.as_slice(), [
+                        Operand::Var(left),
+                        Operand::Var(right)
+                    ] if left == "s" && right == empty_slot)
+            }),
+            "t := s should copy through E4 str_concat with an empty suffix"
+        );
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "t")
+            }),
+            "print(t) should consume the copied literal-backed string slot"
+        );
+    }
+
+    #[test]
+    fn al4_unassigned_string_variable_copy_rejects() {
+        let err = compile_source("begin string s, t; t := s; print(t) end", "test")
+            .expect_err("unassigned string variable copies are not literal-backed");
+        assert!(format!("{err:?}").contains("literal-backed string variable"));
     }
 
     // ── AL8 — standard functions (§3.2.4) ───────────────────────────────────

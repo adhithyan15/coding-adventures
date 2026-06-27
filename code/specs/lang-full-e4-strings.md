@@ -161,8 +161,10 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   produces string literals. The current foothold recognises undeclared
   statement-position `print`/`output` calls and lowers string literal actuals to
   `str_const` + `print_str`. Literal-backed scalar string variables now lower
-  `s := 'HI'` to a direct `str_const` slot consumed by `print(s)`; dynamic
-  string copies, captured strings, arrays, and parameters remain follow-ups.
+  `s := 'HI'` to a direct `str_const` slot consumed by `print(s)`, and
+  literal-backed scalar copies lower `t := s` through `str_concat` with an empty
+  suffix; captured strings, arrays, parameters, and broader dynamic strings
+  remain follow-ups.
 - **Twig (TW4)** — Twig string literals + `print` lower to `str_const` +
   `print_str`; `++`/`string-append` to `str_concat`, `string=?` to `str_eq`. (The
   dynamic-`any` Twig path still needs broader E6; the *typed* string slice here is
@@ -250,9 +252,10 @@ merge before the next:
    slot with E4 `str_const`; `print(s)` is accepted only for literal-backed
    slots. Matrix `Prog` `begin string s; s := 'HI'; print(s) end` returns stdout
    `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR, and the sibling
-   `output(s)` matrix proof returns `OK` through the same E4 path. Dynamic
-   string copies, captured/`own` strings, string arrays, and string parameters
-   remain follow-ups.
+   `output(s)` matrix proof returns `OK` through the same E4 path. The scalar
+   copy proof `begin string s, t; s := 'OK'; t := s; print(t) end` now returns
+   stdout `OK` on the same seven backends. Captured/`own` strings, string arrays,
+   string parameters, and broader dynamic strings remain follow-ups.
 3. ✅ **E4-literal-metadata/index proofs** — Twig lowers literal
    `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
    `(string=? "HELLO" "HELLO")`, and

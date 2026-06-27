@@ -1,8 +1,8 @@
 [package]
 name = "algol-iir-compiler"
-version = "0.12.0"
+version = "0.13.0"
 edition = "2021"
-description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.12.0 extends LANG-FULL AL4 with literal-backed string scalars: string s; s := 'HI'; print(s) lowers to E4 str_const + print_str on every LANG backend."
+description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.13.0 extends LANG-FULL AL4 with literal-backed scalar string copies: string s, t; s := 'OK'; t := s; print(t) lowers through E4 str_concat + print_str on every LANG backend."
 
 [dependencies]
 coding-adventures-algol-parser = { path = "../algol-parser" }

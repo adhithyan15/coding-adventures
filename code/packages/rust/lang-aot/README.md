@@ -4,7 +4,7 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.127.0):**
+> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.128.0):**
 > `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 > It also proves `10 LET A$ = "HI"; 20 PRINT A$` produces stdout `HI` on
 > the same seven backends, and `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
@@ -30,7 +30,9 @@ LANG VM chain.
 > The next ALGOL row proves literal-backed scalar string variables too:
 > `begin string s; s := 'HI'; print(s) end` produces stdout `HI` everywhere,
 > and `begin string s; s := 'OK'; output(s) end` proves the `output` alias;
-> dynamic string copies/captured strings remain follow-up work.
+> `begin string s, t; s := 'OK'; t := s; print(t) end` now proves
+> literal-backed scalar string copy; captured strings and broader dynamic string
+> storage remain follow-up work.
 > It also proves Twig `(string-length "HELLO")` returns exit code `5` and
 > `(string-ref "ABC" 1)` returns exit code `66`,
 > `(string=? "HELLO" "HELLO")` returns exit code `1`, plus
