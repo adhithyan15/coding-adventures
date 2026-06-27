@@ -96,6 +96,24 @@ int   sc_sort_range(ScSession *s, const char *start, const char *end,
 char *sc_find_all(ScSession *s, const char *query, int in_formulas, int match_case);
 int   sc_replace_all(ScSession *s, const char *query, const char *replacement, int match_case);
 
+/* Multi-sheet workbook. A session has one or more named sheets; bare-A1 cell ops
+   address the ACTIVE sheet, and a formula may reference another (=Summary!A1).
+   sc_sheet_names() returns a heap char* JSON object
+   {"sheets":["Sheet1",...],"active":0} (names in tab order + the active 0-based
+   index) — free with sc_string_free(). sc_active_sheet() is the active index.
+   The mutators return 1 on success, 0 on rejection (bad index / empty-or-duplicate
+   name / can't-delete-last-sheet); the host re-reads cells/raw afterwards.
+   sc_set_active_sheet switches by index; sc_add_sheet appends a sheet and makes
+   it active; sc_rename_sheet rewrites referencing formulas' qualifiers;
+   sc_delete_sheet turns inbound refs into #REF!; sc_move_sheet reorders a tab. */
+char    *sc_sheet_names(ScSession *s);
+uint32_t sc_active_sheet(ScSession *s);
+int      sc_set_active_sheet(ScSession *s, uint32_t index);
+int      sc_add_sheet(ScSession *s, const char *name);
+int      sc_rename_sheet(ScSession *s, uint32_t index, const char *new_name);
+int      sc_delete_sheet(ScSession *s, uint32_t index);
+int      sc_move_sheet(ScSession *s, uint32_t index, uint32_t to_index);
+
 /* Save / load. sc_serialize() returns a self-contained JSON document holding the
    workbook's SOURCE (formula text + typed literals) and per-cell formats — not the
    computed values, which recompute on load (small file, can't disagree with itself).
