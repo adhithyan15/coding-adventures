@@ -2388,6 +2388,8 @@ class DeckOutputPlanArtifact:
     output_probes: list[str]
     output_directive_count: int
     output_directives: list[str]
+    output_directive_kind_count: int
+    output_directive_kinds: list[str]
     table_count: int
     tables: list[str]
 
@@ -2783,6 +2785,23 @@ def _deck_stable_tables(
     return tables
 
 
+def _deck_output_directive_kind(directive: str) -> str:
+    token = directive.strip().split(maxsplit=1)[0].lower()
+    return token[1:] if token.startswith(".") else token
+
+
+def _deck_output_directive_kinds(output_directives: Iterable[str]) -> list[str]:
+    selected: list[str] = []
+    seen: set[str] = set()
+    for directive in output_directives:
+        kind = _deck_output_directive_kind(directive)
+        if not kind or kind in seen:
+            continue
+        seen.add(kind)
+        selected.append(kind)
+    return selected
+
+
 def _deck_run_artifacts(
     plan: DeckAnalysisPlan,
     result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
@@ -2875,6 +2894,7 @@ def _deck_output_plan_artifacts(
     output_directives: list[str],
     tables: list[str],
 ) -> list[DeckOutputPlanArtifact]:
+    output_directive_kinds = _deck_output_directive_kinds(output_directives)
     return [
         DeckOutputPlanArtifact(
             analysis=plan.analysis,
@@ -2885,6 +2905,8 @@ def _deck_output_plan_artifacts(
             output_probes=list(output_probes),
             output_directive_count=len(output_directives),
             output_directives=list(output_directives),
+            output_directive_kind_count=len(output_directive_kinds),
+            output_directive_kinds=output_directive_kinds,
             table_count=len(tables),
             tables=list(tables),
         )
@@ -2900,6 +2922,8 @@ _DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
     "OutputProbeList",
     "OutputDirectives",
     "OutputDirectiveList",
+    "OutputDirectiveKinds",
+    "OutputDirectiveKindList",
     "Tables",
     "TableList",
 ]
@@ -2915,6 +2939,8 @@ def _deck_output_plan_artifact_cells(artifact: DeckOutputPlanArtifact) -> list[s
         ";".join(artifact.output_probes),
         str(artifact.output_directive_count),
         ";".join(artifact.output_directives),
+        str(artifact.output_directive_kind_count),
+        ";".join(artifact.output_directive_kinds),
         str(artifact.table_count),
         ";".join(artifact.tables),
     ]

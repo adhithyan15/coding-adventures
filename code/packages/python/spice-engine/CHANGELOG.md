@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck output-plan directive-kind artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose normalized
+  output directive kind counts/lists beside the selected directive tokens in
+  table, CSV, compact JSON, and header-keyed record exports, matching Rust and
+  TypeScript.
+
 - **Deck output-plan table export artifacts** —
   selected `run_deck_analysis()` executions now include `output-plan` in
   `tables`, selected-run `TableList` metadata, and ordered `table_artifacts`

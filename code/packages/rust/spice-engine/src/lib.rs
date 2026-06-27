@@ -3472,6 +3472,8 @@ pub struct DeckOutputPlanArtifact {
     pub output_probes: Vec<String>,
     pub output_directive_count: usize,
     pub output_directives: Vec<String>,
+    pub output_directive_kind_count: usize,
+    pub output_directive_kinds: Vec<String>,
     pub table_count: usize,
     pub tables: Vec<String>,
 }
@@ -10373,6 +10375,7 @@ fn deck_output_plan_artifacts(
     output_directives: &[String],
     tables: &[String],
 ) -> Vec<DeckOutputPlanArtifact> {
+    let output_directive_kinds = deck_output_directive_kinds(output_directives);
     vec![DeckOutputPlanArtifact {
         analysis: plan.analysis.clone(),
         directive: plan.directive.clone(),
@@ -10382,9 +10385,34 @@ fn deck_output_plan_artifacts(
         output_probes: output_probes.to_vec(),
         output_directive_count: output_directives.len(),
         output_directives: output_directives.to_vec(),
+        output_directive_kind_count: output_directive_kinds.len(),
+        output_directive_kinds,
         table_count: tables.len(),
         tables: tables.to_vec(),
     }]
+}
+
+fn deck_output_directive_kind(directive: &str) -> String {
+    let token = directive
+        .trim()
+        .split_whitespace()
+        .next()
+        .unwrap_or("")
+        .to_ascii_lowercase();
+    token.strip_prefix('.').unwrap_or(&token).to_string()
+}
+
+fn deck_output_directive_kinds(output_directives: &[String]) -> Vec<String> {
+    let mut selected = Vec::new();
+    let mut seen = HashSet::new();
+    for directive in output_directives {
+        let kind = deck_output_directive_kind(directive);
+        if kind.is_empty() || !seen.insert(kind.clone()) {
+            continue;
+        }
+        selected.push(kind);
+    }
+    selected
 }
 
 const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS: &[&str] = &[
@@ -10396,6 +10424,8 @@ const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS: &[&str] = &[
     "OutputProbeList",
     "OutputDirectives",
     "OutputDirectiveList",
+    "OutputDirectiveKinds",
+    "OutputDirectiveKindList",
     "Tables",
     "TableList",
 ];
@@ -10410,6 +10440,8 @@ fn deck_output_plan_artifact_cells(artifact: &DeckOutputPlanArtifact) -> Vec<Str
         artifact.output_probes.join(";"),
         artifact.output_directive_count.to_string(),
         artifact.output_directives.join(";"),
+        artifact.output_directive_kind_count.to_string(),
+        artifact.output_directive_kinds.join(";"),
         artifact.table_count.to_string(),
         artifact.tables.join(";"),
     ]

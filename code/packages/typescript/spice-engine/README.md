@@ -96,8 +96,8 @@ table count/name list, output probes, and output directives that produced the
 table, plus selected `.measure` results and
 a stable measurement table for `.dc`, `.ac`, and `.tran` executions.
 Execution `outputPlanArtifacts` summarize the selected result columns, output
-probes, output directives, and stable table names with table, CSV, compact JSON,
-and header-keyed record exports.
+probes, output directives, normalized output directive kinds, and stable table
+names with table, CSV, compact JSON, and header-keyed record exports.
 Execution `tableArtifacts` preserve the same order as `tables` and carry each
 stable table's text, CSV, compact JSON, and header-keyed records.
 The `output-plan` entry in `tableArtifacts` carries the same
