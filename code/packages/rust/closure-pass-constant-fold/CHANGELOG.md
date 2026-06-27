@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
-## [0.51.0] - 2026-06-26
+## [0.56.0] - 2026-06-26
 
 ### Added — fold global `isNaN(…)` / `isFinite(…)` → boolean literal
 
