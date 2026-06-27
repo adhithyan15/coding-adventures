@@ -30,6 +30,419 @@ use web_core::{WebApp, WebRequest, WebResponse};
 
 pub const VERSION: &str = "0.1.0";
 
+const DASHBOARD_HTML: &str = r##"<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex Home</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1b2428;
+      --muted: #5d6b70;
+      --line: #d8e0df;
+      --panel: #ffffff;
+      --page: #eef3f1;
+      --good: #28724f;
+      --warn: #a46614;
+      --bad: #a43939;
+      --blue: #276d9a;
+      --teal: #19706d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
+      background: #f9fbfa;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+      gap: 16px;
+      padding: 16px;
+    }
+
+    section, aside {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .toolbar, .row, .metric-grid {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .metric {
+      min-height: 66px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fbfcfb;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--blue);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0;
+    }
+
+    .status.ready, .status.ok {
+      background: var(--good);
+    }
+
+    .status.attention {
+      background: var(--warn);
+    }
+
+    .status.blocked, .status.degraded {
+      background: var(--bad);
+    }
+
+    button {
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid #8aa0a0;
+      border-radius: 8px;
+      color: var(--ink);
+      background: #ffffff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.primary {
+      color: #fff;
+      border-color: var(--teal);
+      background: var(--teal);
+    }
+
+    button:disabled {
+      color: #7b878a;
+      background: #edf1f0;
+      cursor: wait;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .entity-card {
+      min-height: 132px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fbfcfb;
+    }
+
+    .entity-card .actions {
+      margin-top: 10px;
+    }
+
+    .log {
+      max-height: 170px;
+      overflow: auto;
+      white-space: pre-wrap;
+      color: #263235;
+      background: #f5f7f6;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    @media (max-width: 800px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Codex Home</h1>
+      <p id="location" class="muted"></p>
+    </div>
+    <div class="toolbar">
+      <span id="status" class="status">Loading</span>
+      <button id="refresh" class="primary" type="button">Refresh</button>
+    </div>
+  </header>
+  <main>
+    <aside>
+      <section class="panel">
+        <h2>Readiness</h2>
+        <div id="checks"></div>
+      </section>
+      <section class="panel">
+        <h2>Activity</h2>
+        <div id="activity" class="metric-grid"></div>
+      </section>
+    </aside>
+    <section>
+      <div class="panel">
+        <h2>Home</h2>
+        <div id="summary" class="metric-grid"></div>
+      </div>
+      <div class="panel">
+        <div class="row">
+          <h2>Entities</h2>
+          <span id="state-count" class="muted"></span>
+        </div>
+        <div id="entities" class="cards"></div>
+      </div>
+      <div class="panel">
+        <h2>State Gaps</h2>
+        <table>
+          <thead>
+            <tr><th>Entity</th><th>Domain</th><th>Status</th></tr>
+          </thead>
+          <tbody id="gaps"></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h2>Log</h2>
+        <div id="log" class="log"></div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const els = {
+      activity: document.querySelector("#activity"),
+      checks: document.querySelector("#checks"),
+      entities: document.querySelector("#entities"),
+      gaps: document.querySelector("#gaps"),
+      location: document.querySelector("#location"),
+      log: document.querySelector("#log"),
+      refresh: document.querySelector("#refresh"),
+      stateCount: document.querySelector("#state-count"),
+      status: document.querySelector("#status"),
+      summary: document.querySelector("#summary")
+    };
+
+    const json = async (url, options) => {
+      const response = await fetch(url, options);
+      const body = await response.json();
+      if (!response.ok) {
+        throw new Error(body.error || response.statusText);
+      }
+      return body;
+    };
+
+    const metric = (label, value) =>
+      `<div class="metric"><strong>${value}</strong><span class="muted">${label}</span></div>`;
+
+    const statusClass = (status) => `status ${String(status || "ok").toLowerCase()}`;
+
+    const log = (message) => {
+      const at = new Date().toLocaleTimeString();
+      els.log.textContent = `[${at}] ${message}\n${els.log.textContent}`.slice(0, 2000);
+    };
+
+    const renderChecks = (readiness) => {
+      els.checks.innerHTML = readiness.checks.map((check) => `
+        <div class="row" style="justify-content: space-between; margin-top: 8px;">
+          <div>
+            <h3>${check.label}</h3>
+            <p class="muted">${check.message}</p>
+          </div>
+          <span class="${statusClass(check.status)}">${check.status}</span>
+        </div>
+      `).join("");
+    };
+
+    const renderEntities = (states) => {
+      els.stateCount.textContent = `${states.summary.total_entities} tracked`;
+      els.entities.innerHTML = states.states.map((entity) => {
+        const value = entity.value === null ? "No state" : JSON.stringify(entity.value);
+        const canToggle = entity.domain === "light";
+        return `
+          <article class="entity-card">
+            <div class="row" style="justify-content: space-between;">
+              <h3>${entity.name}</h3>
+              <span class="${statusClass(entity.stale ? "attention" : entity.confidence || "ok")}">
+                ${entity.stale ? "stale" : entity.confidence || "ready"}
+              </span>
+            </div>
+            <p class="muted">${entity.home_assistant_entity_id}</p>
+            <p>${value}</p>
+            <div class="actions row">
+              ${canToggle ? `<button type="button" data-service="turn_on" data-entity="${entity.home_assistant_entity_id}">Turn on</button><button type="button" data-service="turn_off" data-entity="${entity.home_assistant_entity_id}">Turn off</button>` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+    };
+
+    const renderGaps = (stateGaps) => {
+      els.gaps.innerHTML = stateGaps.states.map((entity) => `
+        <tr>
+          <td>${entity.name}<br><span class="muted">${entity.home_assistant_entity_id}</span></td>
+          <td>${entity.domain}</td>
+          <td><span class="${statusClass(entity.stale ? "attention" : "ok")}">${entity.stale ? "needs refresh" : "ok"}</span></td>
+        </tr>
+      `).join("") || `<tr><td colspan="3" class="muted">Clear</td></tr>`;
+    };
+
+    const render = async () => {
+      els.refresh.disabled = true;
+      try {
+        const [bootstrap, readiness, states] = await Promise.all([
+          json("/api/smart_home/bootstrap"),
+          json("/api/smart_home/readiness"),
+          json("/api/smart_home/states?limit=24")
+        ]);
+        const summary = bootstrap.dashboard.summary;
+        els.location.textContent = bootstrap.dashboard.config.location_name;
+        els.status.className = statusClass(readiness.status);
+        els.status.textContent = readiness.status;
+        els.summary.innerHTML = [
+          metric("Entities", summary.entity_count),
+          metric("Devices", summary.device_count),
+          metric("Rooms", summary.room_count),
+          metric("Scenes", summary.scene_count)
+        ].join("");
+        els.activity.innerHTML = [
+          metric("Events", bootstrap.recent_activity.events.summary.total_events),
+          metric("Commands", bootstrap.recent_activity.command_results.summary.total_results),
+          metric("Decisions", bootstrap.recent_activity.authorization_decisions.summary.total_decisions),
+          metric("State gaps", bootstrap.state_gaps.summary.total_entities)
+        ].join("");
+        renderChecks(readiness);
+        renderEntities(states);
+        renderGaps(bootstrap.state_gaps);
+        log("Dashboard refreshed");
+      } catch (error) {
+        els.status.className = statusClass("blocked");
+        els.status.textContent = "blocked";
+        log(error.message);
+      } finally {
+        els.refresh.disabled = false;
+      }
+    };
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-service]");
+      if (!button) {
+        return;
+      }
+      button.disabled = true;
+      try {
+        await json(`/api/services/light/${button.dataset.service}`, {
+          method: "POST",
+          headers: {"content-type": "application/json"},
+          body: JSON.stringify({entity_id: button.dataset.entity})
+        });
+        log(`${button.dataset.service} accepted for ${button.dataset.entity}`);
+        await render();
+      } catch (error) {
+        log(error.message);
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    els.refresh.addEventListener("click", render);
+    render();
+  </script>
+</body>
+</html>
+"##;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SmartHomePlatformHttpConfig {
     pub location_name: String,
@@ -292,6 +705,10 @@ pub fn home_assistant_web_app(state: SmartHomePlatformHttpState) -> WebApp {
 
 pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> WebApp {
     let mut app = WebApp::new();
+
+    app.get("/", |_| dashboard_ui_response());
+    app.get("/dashboard", |_| dashboard_ui_response());
+    app.get("/smart-home", |_| dashboard_ui_response());
 
     app.get("/api/", move |_| {
         WebResponse::json(api_root_json().into_bytes())
@@ -908,6 +1325,33 @@ struct ApiRouteDescriptor {
 const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     ApiRouteDescriptor {
         method: "GET",
+        path: "/",
+        category: "dashboard",
+        surface: "browser",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/dashboard",
+        category: "dashboard",
+        surface: "browser",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/smart-home",
+        category: "dashboard",
+        surface: "browser",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/",
         category: "home_assistant",
         surface: "home_assistant",
@@ -1328,7 +1772,7 @@ fn api_catalog_routes(request: &WebRequest) -> Result<Vec<&'static ApiRouteDescr
     let authorized = query_bool(request, "authorized")?;
 
     if let Some(surface) = surface {
-        if !matches!(surface, "all" | "home_assistant" | "smart_home") {
+        if !matches!(surface, "all" | "browser" | "home_assistant" | "smart_home") {
             return Err(ApiError::bad_request(format!(
                 "unsupported API surface `{surface}`"
             )));
@@ -1377,6 +1821,11 @@ fn api_route_json(route: &ApiRouteDescriptor) -> String {
         route.runtime_authorized,
         json_id_array(route.query_params.iter().copied()),
     )
+}
+
+fn dashboard_ui_response() -> WebResponse {
+    WebResponse::ok(DASHBOARD_HTML.as_bytes().to_vec())
+        .with_content_type("text/html; charset=utf-8")
 }
 
 fn runtime_snapshot_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
@@ -5711,6 +6160,29 @@ mod tests {
     }
 
     #[test]
+    fn runtime_web_app_serves_browser_dashboard_shell() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+
+        for path in ["/", "/dashboard", "/smart-home"] {
+            let response: web_core::WebResponse = app.handle(request("GET", path)).into();
+            let headers = response.headers.clone();
+            let body = response_body(response);
+
+            assert!(
+                headers.iter().any(|(name, value)| {
+                    name.eq_ignore_ascii_case("content-type") && value == "text/html; charset=utf-8"
+                }),
+                "dashboard shell should be served as HTML"
+            );
+            assert!(body.contains("<title>Codex Home</title>"));
+            assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
+            assert!(body.contains("json(\"/api/smart_home/readiness\")"));
+            assert!(body.contains("json(\"/api/smart_home/states?limit=24\")"));
+            assert!(body.contains("/api/services/light/"));
+        }
+    }
+
+    #[test]
     fn home_assistant_web_app_serves_config_states_services_and_events() {
         let state = fixture_state();
         let app = home_assistant_web_app(state);
@@ -6101,6 +6573,17 @@ mod tests {
             catalog_json["route_count"].as_u64().unwrap_or_default() >= 30,
             "catalog exposes the local controller route surface"
         );
+
+        let browser = response_body(
+            app.handle(request("GET", "/api/smart_home/api?surface=browser"))
+                .into(),
+        );
+        let browser_json: JsonValue =
+            serde_json::from_str(&browser).expect("browser API catalog response is JSON");
+        assert_eq!(browser_json["route_count"], 3);
+        assert!(browser.contains(r#""path":"/""#));
+        assert!(browser.contains(r#""path":"/dashboard""#));
+        assert!(browser.contains(r#""path":"/smart-home""#));
 
         let mutating = response_body(
             app.handle(request(
@@ -6709,6 +7192,18 @@ mod tests {
         assert!(body.contains(r#""service":"set_brightness""#));
         assert!(body.contains(r#""result_count":1"#));
         assert!(body.contains(r#""status":"accepted""#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_shell_over_repo_http_server() {
+        let (port, stop) = start_server(home_assistant_runtime_web_app(fixture_runtime(true)));
+        let (status, body) = http_get(port, "/");
+        stop.stop();
+
+        assert_eq!(status, 200);
+        assert!(body.contains("<title>Codex Home</title>"));
+        assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
+        assert!(body.contains("/api/services/light/"));
     }
 
     #[test]
