@@ -6,7 +6,7 @@ A two-arm proof is only worth anything if the question bank is honest. This gate
 result legible. It is QA on the BANK — it is NOT on the answer path (the engine still
 does every bit of the actual reasoning at eval time).
 
-Checks performed (rung 0 — self-authored arithmetic):
+Checks performed (self-authored arithmetic rungs):
 
   1. Unique ids                — no item counted twice.
   2. Five distinct options     — each item has options A..E with DISTINCT values, so
@@ -23,10 +23,11 @@ Checks performed (rung 0 — self-authored arithmetic):
   5. No-result-literals        — every number in `formula` also appears in `stem`, so
                                  the gold decomposition itself never smuggles the
                                  answer in (the same gate Arm B applies to the model).
-  6. No external provenance    — rung 0 is self-contained: items carry no `source` /
-                                 library import, so contamination against an external
-                                 bank is structurally impossible here. (Higher rungs
-                                 add a source-disjointness check.)
+  6. No external provenance    — these starter rungs are self-contained: items carry
+                                 no `source` / library import, so contamination
+                                 against an external bank is structurally impossible
+                                 here. (Higher sourced rungs add a source-disjointness
+                                 check.)
 
 Exit non-zero on any violation. Usage: python3 contamination_check.py rung0_arithmetic
 """
@@ -100,7 +101,7 @@ def check(rung: str) -> list[str]:
             errors.append(f"{iid}: formula numbers {leaked} not present in stem (result-literal leak)")
 
         if "source" in it or "import" in it:
-            errors.append(f"{iid}: rung-0 items must be self-contained (no external source/import)")
+            errors.append(f"{iid}: starter rung items must be self-contained (no external source/import)")
     return errors
 
 

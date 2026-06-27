@@ -37,6 +37,8 @@ adj-ladder/
   test_ladder_eval.py       unit + cached end-to-end tests
   rung0_arithmetic/
     items.json              20 fresh grade-school MCQs {id,stem,formula,options,gold_letter}
+  rung1_fractions_percent/
+    items.json              20 fresh fractions/percent/ratio MCQs, self-contained
   ladder-scorecard.json     emitted artifact (per-arm metrics + divergence + buckets)
 ```
 
@@ -68,9 +70,11 @@ cargo build -p adj-lang-cli          # from code/packages/rust/
 
 # 2. bank integrity (off the answer path)
 python3 contamination_check.py rung0_arithmetic
+python3 contamination_check.py rung1_fractions_percent
 
 # 3. engine-only (cached) run — expect Arm B 100%, wrong 0
 python3 ladder_eval.py rung0_arithmetic
+python3 ladder_eval.py rung1_fractions_percent
 
 # 4. tests
 python3 -m pytest test_ladder_eval.py -q
@@ -95,3 +99,8 @@ Drop a new `rungN_<name>/items.json` with the same schema and a mini standard li
 the engine imports; reuse `ladder_eval.py` unchanged. Each rung pulls in the next
 engine capability from ADJ-REASON-MATH (exact rationals, CAS wiring, dimensional
 units, the deduction↔evidence bridge) — see ADJ-LADDER.md §5.
+
+`rung1_fractions_percent` is intentionally a starter scaffold: its current bank sticks
+to terminating fractions and integer percent answers so the existing engine can own
+the arithmetic today. Harder arbitrary fraction equality still belongs to the exact
+rational work called out in ADJ-REASON-MATH.

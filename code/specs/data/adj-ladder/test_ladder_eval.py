@@ -3,9 +3,9 @@
 
 These cover the parts that have NO model and NO engine dependency (program building,
 faithfulness gate, decision→letter mapping, formula extraction, scoring/divergence
-math) plus, when the adj-lang-cli binary is present, an end-to-end cached run of rung 0
+math) plus, when the adj-lang-cli binary is present, end-to-end cached rung runs
 asserting the engine selects every gold option exactly. The bank-integrity checks live
-in test_contamination too.
+here too.
 
 Run:  python3 -m pytest test_ladder_eval.py -q
 """
@@ -17,8 +17,10 @@ from pathlib import Path
 
 import contamination_check as cc
 import ladder_eval as le
+import pytest
 
 HERE = Path(__file__).resolve().parent
+SELF_CONTAINED_RUNGS = ("rung0_arithmetic", "rung1_fractions_percent")
 
 
 # ---- Arm-B program building ---------------------------------------------------
@@ -137,11 +139,11 @@ def test_divergence_math():
 
 
 # ---- end-to-end engine run (only when the CLI is built) -----------------------
-def test_cached_engine_selects_every_gold():
+@pytest.mark.parametrize("rung", SELF_CONTAINED_RUNGS)
+def test_cached_engine_selects_every_gold(rung):
     if le._CLI is None:
-        import pytest
         pytest.skip("adj-lang-cli not built")
-    card = le.run("rung0_arithmetic", gen=None)
+    card = le.run(rung, gen=None)
     s = card.summary()["arm_b_model_plus_adj"]
     # The engine must compute every arithmetic answer exactly and select the gold
     # option — zero wrong, zero abstain.
@@ -151,7 +153,6 @@ def test_cached_engine_selects_every_gold():
 
 def test_native_adj_latex_formula_runs_through_engine():
     if le._CLI is None:
-        import pytest
         pytest.skip("adj-lang-cli not built")
     decision = le.run_decision(
         le.build_arm_b_program(r'latex "$5 \times 12$"', {"A": 60.0, "B": 61.0})
@@ -160,8 +161,9 @@ def test_native_adj_latex_formula_runs_through_engine():
 
 
 # ---- bank integrity -----------------------------------------------------------
-def test_contamination_check_clean():
-    assert cc.check("rung0_arithmetic") == []
+@pytest.mark.parametrize("rung", SELF_CONTAINED_RUNGS)
+def test_contamination_check_clean(rung):
+    assert cc.check(rung) == []
 
 
 def test_safe_eval_rejects_code():
@@ -170,8 +172,9 @@ def test_safe_eval_rejects_code():
         cc.safe_eval("__import__('os').system('echo hi')")
 
 
-def test_items_json_valid():
-    data = json.loads((HERE / "rung0_arithmetic" / "items.json").read_text())
+@pytest.mark.parametrize("rung", SELF_CONTAINED_RUNGS)
+def test_items_json_valid(rung):
+    data = json.loads((HERE / rung / "items.json").read_text())
     assert len(data["items"]) >= 20
     for it in data["items"]:
         assert set(it["options"]) == set("ABCDE")

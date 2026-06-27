@@ -1,6 +1,7 @@
 # ADJ-LADDER — A Graduated, Two-Arm Proof that Reasoning Lives in the Framework
 
-**Status:** Specs-first; PR-0 (this PR) ships the instrument + rung 0.
+**Status:** PR-0 shipped the instrument + rung 0; the ladder now climbs in small,
+audited rungs from the existing engine surface before heavier symbolic work.
 **Author:** evaluation-systems architecture pass, 2026-06-26.
 **North star:** A Haiku- or Gemma-class (small, non-frontier) model + the ADJ engine
 and its content-addressed *standard library* passes a Medical Licensing Exam where the
@@ -159,8 +160,8 @@ engine gap that blocks it, and every rung ships a two-arm divergence number.
 
 | Rung | Content | Engine capability it pulls |
 |------|---------|----------------------------|
-| **0** | grade-school arithmetic + 1-step word problems | **none** (value-math exists) — **shipped here** |
-| 1 | fractions / percent | exact rationals (ADJ-REASON-MATH PR-3) for clean fraction equality |
+| **0** | grade-school arithmetic + 1-step word problems | **none** (value-math exists) — shipped |
+| **1** | fractions / percent | starter scaffold uses terminating cases today; exact rationals (ADJ-REASON-MATH PR-3) for arbitrary fraction equality |
 | 2 | pre-algebra / algebra word problems | multi-step deduction→evidence bridge (PR-1) + CAS solve (PR-6) |
 | 3 | algebra / calculus | CAS wiring (PR-6) + rewrite trail (PR-4) |
 | 4 | physics / chem with units | dimensional engine (exists) + exact compute (PR-3) |
@@ -213,8 +214,8 @@ The mechanism is proven; the ladder can climb.
 
 ## 7. Next
 
-PR-1 = the ADJ-REASON-MATH **deduction→evidence bridge** (`logic-engine` —
-`observed_evidence` falls back to SLD provability + attenuates confidence + threads
-rule provenance), the unlock for every multi-step rung. Then rungs 1→5 in order, each
-gating the next engine PR, culminating in the MLE-PASS clinical rung and the
-pediatrics apex.
+Continue rung 1 by hardening exact rational equality, then PR-1 = the
+ADJ-REASON-MATH **deduction→evidence bridge** (`logic-engine` — `observed_evidence`
+falls back to SLD provability + attenuates confidence + threads rule provenance), the
+unlock for every multi-step rung. Then rungs 2→5 in order, each gating the next engine
+PR, culminating in the MLE-PASS clinical rung and the pediatrics apex.
