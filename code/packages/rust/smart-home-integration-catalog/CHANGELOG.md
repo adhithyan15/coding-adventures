@@ -175,6 +175,10 @@ All notable changes to this package will be documented in this file.
   disposition-action readiness execution handoff action protocol-evidence
   package handoff rows that project Zigbee, Z-Wave, and Thread packet
   readiness into package handoff work.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence package handoff
+  summaries that combine package handoff rows with next actionable protocol
+  and evidence pointers.
 - Virtual alias entries for product lines supported by another integration or
   standard.
 - Read-only D18D tool descriptors for listing/describing integrations and
