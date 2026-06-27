@@ -16,10 +16,12 @@ use smart_home_core::{
 };
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
+    RuntimeClearDesiredStateToolOutput, RuntimeClearDesiredStateToolRequest,
     RuntimeCommandResultQuery, RuntimeCommandResultRecord, RuntimeCommandResultSort,
     RuntimeCommandToolRequest, RuntimeError, RuntimeEvent, RuntimeEventCheckpoint,
     RuntimeEventFilter, RuntimeEventLogEntry, RuntimeEventQuery, RuntimeEventSort,
-    RuntimeReadSnapshot, SmartHomeRuntime,
+    RuntimeReadSnapshot, RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest,
+    SmartHomeRuntime,
 };
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
@@ -332,6 +334,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.post("/api/states/:entity_id", move |request| {
+            set_desired_state_response(&runtime, request, true)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/services", move |_| {
             let state = runtime.snapshot();
             WebResponse::json(services_json(&platform_services(&state)).into_bytes())
@@ -393,6 +402,22 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
         app.get("/api/smart_home/desired_states", move |request| {
             runtime_desired_states_response(&runtime, request)
         });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.post(
+            "/api/smart_home/desired_states/:entity_id",
+            move |request| set_desired_state_response(&runtime, request, false),
+        );
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.delete(
+            "/api/smart_home/desired_states/:entity_id",
+            move |request| clear_desired_state_response(&runtime, request),
+        );
     }
 
     {
@@ -648,14 +673,14 @@ fn runtime_desired_states_response(
     runtime: &SmartHomePlatformHttpRuntime,
     request: &WebRequest,
 ) -> WebResponse {
-    let query = match desired_state_query(request) {
-        Ok(query) => query,
-        Err(error) => return api_error_response(error),
-    };
     let runtime_guard = runtime
         .runtime
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
+    let query = match desired_state_query(&runtime_guard, request) {
+        Ok(query) => query,
+        Err(error) => return api_error_response(error),
+    };
     let desired_states = runtime_guard.query_desired_states(&query);
     WebResponse::json(desired_states_json(&desired_states, &runtime_guard).into_bytes())
 }
@@ -1074,10 +1099,13 @@ fn runtime_authorization_decision_query(
     Ok(query)
 }
 
-fn desired_state_query(request: &WebRequest) -> Result<DesiredStateQuery, ApiError> {
+fn desired_state_query(
+    runtime: &SmartHomeRuntime,
+    request: &WebRequest,
+) -> Result<DesiredStateQuery, ApiError> {
     let mut query = DesiredStateQuery::new().with_limit(query_limit(request, 100, 500)?);
     if let Some(entity_id) = query_string(request, "entity_id") {
-        query = query.for_entity(EntityId::trusted(entity_id));
+        query = query.for_entity(runtime_entity_id(runtime, entity_id)?);
     }
     if let Some(requested_by) = query_string(request, "requested_by") {
         query = query.requested_by(requested_by);
@@ -1139,6 +1167,26 @@ fn runtime_entity_id(runtime: &SmartHomeRuntime, value: &str) -> Result<EntityId
         .find(|entity| entity_matches_external_id(entity, value))
         .map(|entity| entity.entity_id.clone())
         .ok_or_else(|| ApiError::not_found(format!("entity `{value}` not found")))
+}
+
+fn runtime_entity(runtime: &SmartHomeRuntime, value: &str) -> Result<Entity, ApiError> {
+    runtime
+        .registry()
+        .entities()
+        .find(|entity| entity_matches_external_id(entity, value))
+        .cloned()
+        .ok_or_else(|| ApiError::not_found(format!("entity `{value}` not found")))
+}
+
+fn home_assistant_entity_id_for_runtime(
+    runtime: &SmartHomeRuntime,
+    entity_id: &EntityId,
+) -> String {
+    runtime
+        .registry()
+        .entity(entity_id)
+        .map(home_assistant_entity_id)
+        .unwrap_or_else(|| home_assistant_entity_id_for(entity_id))
 }
 
 fn state_history_json(events: &[&DeviceEvent], runtime: &SmartHomeRuntime) -> String {
@@ -1325,6 +1373,328 @@ impl ApiError {
     fn forbidden(message: impl Into<String>) -> Self {
         Self::new(403, message)
     }
+}
+
+fn set_desired_state_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+    allow_home_assistant_state_body: bool,
+) -> WebResponse {
+    let Some(target) = request.route_params.get("entity_id") else {
+        return json_error(400, "missing entity_id");
+    };
+
+    let mut runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let entity = match runtime_entity(&runtime_guard, target) {
+        Ok(entity) => entity,
+        Err(error) => return api_error_response(error),
+    };
+    let desired_state = match parse_desired_state_request(
+        request.body(),
+        &entity,
+        runtime.principal_id.as_str(),
+        allow_home_assistant_state_body,
+    ) {
+        Ok(desired_state) => desired_state,
+        Err(error) => return api_error_response(error),
+    };
+
+    let output = match runtime_guard.execute_set_desired_state_tool(
+        runtime.principal_id.clone(),
+        RuntimeSetDesiredStateToolRequest::new(desired_state),
+        runtime.now_ms,
+    ) {
+        Ok(output) => output,
+        Err(error) => return api_error_response(runtime_error_to_api_error(error)),
+    };
+    let query = DesiredStateQuery::new().for_entity(entity.entity_id.clone());
+    let desired_states = runtime_guard.query_desired_states(&query);
+    WebResponse::json(set_desired_state_json(&output, &desired_states, &runtime_guard).into_bytes())
+}
+
+fn clear_desired_state_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(target) = request.route_params.get("entity_id") else {
+        return json_error(400, "missing entity_id");
+    };
+
+    let mut runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let entity_id = match runtime_entity_id(&runtime_guard, target) {
+        Ok(entity_id) => entity_id,
+        Err(error) => return api_error_response(error),
+    };
+
+    let output = match runtime_guard.execute_clear_desired_state_tool(
+        runtime.principal_id.clone(),
+        RuntimeClearDesiredStateToolRequest::new(entity_id),
+        runtime.now_ms,
+    ) {
+        Ok(output) => output,
+        Err(error) => return api_error_response(runtime_error_to_api_error(error)),
+    };
+    let query = DesiredStateQuery::new().for_entity(output.entity_id.clone());
+    let desired_states = runtime_guard.query_desired_states(&query);
+    WebResponse::json(
+        clear_desired_state_json(&output, &desired_states, &runtime_guard).into_bytes(),
+    )
+}
+
+fn parse_desired_state_request(
+    body: &[u8],
+    entity: &Entity,
+    default_requested_by: &str,
+    allow_home_assistant_state_body: bool,
+) -> Result<DesiredEntityState, ApiError> {
+    let body = parse_json_body(body)?;
+    let desired = if let Some(value) = body.get("desired_state").or_else(|| body.get("desired")) {
+        desired_state_deltas_from_json(value)?
+    } else if allow_home_assistant_state_body {
+        home_assistant_state_deltas(entity, &body)?
+    } else {
+        return Err(ApiError::bad_request(
+            "desired-state request requires a desired_state object",
+        ));
+    };
+
+    if desired.is_empty() {
+        return Err(ApiError::bad_request(
+            "desired-state request must include at least one capability",
+        ));
+    }
+
+    let requested_by = json_string_field(&body, "requested_by")
+        .unwrap_or_else(|| default_requested_by.to_string());
+    let mut desired_state =
+        DesiredEntityState::new(entity.entity_id.clone(), desired).requested_by(requested_by);
+    if let Some(timeout_ms) =
+        json_u64_field(&body, "command_timeout_ms").or_else(|| json_u64_field(&body, "timeout_ms"))
+    {
+        desired_state = desired_state.with_command_timeout(timeout_ms);
+    }
+    Ok(desired_state)
+}
+
+fn parse_json_body(body: &[u8]) -> Result<JsonValue, ApiError> {
+    if body.is_empty() {
+        return Err(ApiError::bad_request("JSON body is required"));
+    }
+    serde_json::from_slice(body)
+        .map_err(|error| ApiError::bad_request(format!("invalid JSON body: {error}")))
+}
+
+fn desired_state_deltas_from_json(value: &JsonValue) -> Result<Vec<StateDelta>, ApiError> {
+    let fields = value
+        .as_object()
+        .ok_or_else(|| ApiError::bad_request("desired_state must be an object"))?;
+    let mut deltas = Vec::new();
+    for (capability_id, value) in fields {
+        deltas.push(StateDelta {
+            capability_id: CapabilityId::trusted(capability_id.clone()),
+            value: json_capability_value(capability_id, value)?,
+        });
+    }
+    deltas.sort_by(|left, right| {
+        left.capability_id
+            .as_str()
+            .cmp(right.capability_id.as_str())
+    });
+    Ok(deltas)
+}
+
+fn home_assistant_state_deltas(
+    entity: &Entity,
+    body: &JsonValue,
+) -> Result<Vec<StateDelta>, ApiError> {
+    let attributes = body.get("attributes").unwrap_or(body);
+    let mut deltas = Vec::new();
+    match entity_domain(entity.kind) {
+        "light" => {
+            if let Some(state) = json_string_field(body, "state") {
+                match state.as_str() {
+                    "on" => deltas.push(state_delta("light.on_off", Value::Bool(true))),
+                    "off" => deltas.push(state_delta("light.on_off", Value::Bool(false))),
+                    other => {
+                        return Err(ApiError::bad_request(format!(
+                            "unsupported light state `{other}`"
+                        )));
+                    }
+                }
+            }
+            if let Some(value) = brightness_value(attributes)? {
+                deltas.push(state_delta("light.brightness", value));
+            }
+            if let Some(value) = color_temperature_value(attributes)? {
+                deltas.push(state_delta("light.color_temperature", value));
+            }
+            if let Some(value) = color_value(attributes)? {
+                deltas.push(state_delta("light.color", value));
+            }
+        }
+        "lock" => {
+            let state = json_string_field(body, "state")
+                .ok_or_else(|| ApiError::bad_request("lock desired state requires state"))?;
+            match state.as_str() {
+                "locked" | "unlocked" => deltas.push(state_delta("lock.state", Value::Text(state))),
+                other => {
+                    return Err(ApiError::bad_request(format!(
+                        "unsupported lock state `{other}`"
+                    )));
+                }
+            }
+        }
+        "climate" => {
+            let value = number_or_integer_field(attributes, "temperature")
+                .or_else(|| number_or_integer_field(body, "temperature"))
+                .ok_or_else(|| {
+                    ApiError::bad_request("climate desired state requires temperature")
+                })?;
+            deltas.push(state_delta("climate.setpoint", value));
+        }
+        domain => {
+            return Err(ApiError::bad_request(format!(
+                "Home Assistant state body is not supported for domain `{domain}`; use desired_state"
+            )));
+        }
+    }
+
+    deltas.sort_by(|left, right| {
+        left.capability_id
+            .as_str()
+            .cmp(right.capability_id.as_str())
+    });
+    deltas.dedup_by(|left, right| left.capability_id == right.capability_id);
+    Ok(deltas)
+}
+
+fn state_delta(capability_id: impl Into<String>, value: Value) -> StateDelta {
+    StateDelta {
+        capability_id: CapabilityId::trusted(capability_id.into()),
+        value,
+    }
+}
+
+fn json_capability_value(capability_id: &str, value: &JsonValue) -> Result<Value, ApiError> {
+    match capability_id {
+        "light.on_off" => match value {
+            JsonValue::Bool(value) => Ok(Value::Bool(*value)),
+            JsonValue::String(value) if value == "on" => Ok(Value::Bool(true)),
+            JsonValue::String(value) if value == "off" => Ok(Value::Bool(false)),
+            _ => Err(ApiError::bad_request("light.on_off must be boolean")),
+        },
+        "light.brightness" => json_percentage_value(value, capability_id),
+        "light.color_temperature" => json_i64_value(value, capability_id).map(Value::Integer),
+        "lock.state" => value
+            .as_str()
+            .map(|state| Value::Text(state.to_string()))
+            .ok_or_else(|| ApiError::bad_request("lock.state must be a string")),
+        "climate.setpoint" => json_number_or_integer_value(value, capability_id),
+        _ => json_value_to_value(value),
+    }
+}
+
+fn json_percentage_value(value: &JsonValue, field: &str) -> Result<Value, ApiError> {
+    let value = value
+        .as_u64()
+        .ok_or_else(|| ApiError::bad_request(format!("{field} must be an integer percentage")))?;
+    if value > 100 {
+        return Err(ApiError::bad_request(format!(
+            "{field} must be between 0 and 100"
+        )));
+    }
+    Ok(Value::Percentage(value as u8))
+}
+
+fn json_i64_value(value: &JsonValue, field: &str) -> Result<i64, ApiError> {
+    value
+        .as_i64()
+        .ok_or_else(|| ApiError::bad_request(format!("{field} must be an integer")))
+}
+
+fn json_number_or_integer_value(value: &JsonValue, field: &str) -> Result<Value, ApiError> {
+    value
+        .as_i64()
+        .map(Value::Integer)
+        .or_else(|| value.as_f64().map(Value::Number))
+        .ok_or_else(|| ApiError::bad_request(format!("{field} must be numeric")))
+}
+
+fn json_value_to_value(value: &JsonValue) -> Result<Value, ApiError> {
+    match value {
+        JsonValue::Null => Ok(Value::Null),
+        JsonValue::Bool(value) => Ok(Value::Bool(*value)),
+        JsonValue::Number(value) => value
+            .as_i64()
+            .map(Value::Integer)
+            .or_else(|| value.as_f64().map(Value::Number))
+            .ok_or_else(|| ApiError::bad_request("JSON number is not representable")),
+        JsonValue::String(value) => Ok(Value::Text(value.clone())),
+        JsonValue::Array(values) => values
+            .iter()
+            .map(json_value_to_value)
+            .collect::<Result<Vec<_>, _>>()
+            .map(Value::Array),
+        JsonValue::Object(fields) => {
+            let mut fields = fields
+                .iter()
+                .map(|(key, value)| Ok((key.clone(), json_value_to_value(value)?)))
+                .collect::<Result<Vec<_>, ApiError>>()?;
+            fields.sort_by(|left, right| left.0.cmp(&right.0));
+            Ok(Value::Object(fields))
+        }
+    }
+}
+
+fn set_desired_state_json(
+    output: &RuntimeSetDesiredStateToolOutput,
+    desired_states: &[&DesiredEntityState],
+    runtime: &SmartHomeRuntime,
+) -> String {
+    format!(
+        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"replaced\":{},\"desired_state\":{},\"previous\":{},\"desired_states\":{}}}",
+        json_string(output.desired_state.entity_id.as_str()),
+        json_string(home_assistant_entity_id_for_runtime(
+            runtime,
+            &output.desired_state.entity_id,
+        )),
+        output.replaced,
+        desired_state_json(&output.desired_state, runtime),
+        output
+            .previous
+            .as_ref()
+            .map(|desired_state| desired_state_json(desired_state, runtime))
+            .unwrap_or_else(|| "null".to_string()),
+        desired_states_json(desired_states, runtime),
+    )
+}
+
+fn clear_desired_state_json(
+    output: &RuntimeClearDesiredStateToolOutput,
+    desired_states: &[&DesiredEntityState],
+    runtime: &SmartHomeRuntime,
+) -> String {
+    format!(
+        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"removed\":{},\"removed_desired_state\":{},\"desired_states\":{}}}",
+        json_string(output.entity_id.as_str()),
+        json_string(home_assistant_entity_id_for_runtime(
+            runtime,
+            &output.entity_id,
+        )),
+        output.removed(),
+        output
+            .removed
+            .as_ref()
+            .map(|desired_state| desired_state_json(desired_state, runtime))
+            .unwrap_or_else(|| "null".to_string()),
+        desired_states_json(desired_states, runtime),
+    )
 }
 
 fn service_call_response(
@@ -2518,7 +2888,7 @@ mod tests {
         let body = response_body(
             app.handle(request(
                 "GET",
-                "/api/smart_home/desired_states?entity_id=entity-light-1",
+                "/api/smart_home/desired_states?entity_id=light.entity_light_1",
             ))
             .into(),
         );
@@ -2528,6 +2898,95 @@ mod tests {
         assert!(body.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
         assert!(body.contains(r#""requested_by":"agent:chief-of-staff""#));
         assert!(body.contains(r#""capability_id":"light.on_off""#));
+    }
+
+    #[test]
+    fn runtime_web_app_sets_desired_state_through_runtime_authorization() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/desired_states/light.entity_light_1",
+                r#"{"desired_state":{"light.on_off":true,"light.brightness":80},"requested_by":"agent:dashboard","command_timeout_ms":3000}"#,
+            ))
+            .into();
+
+        let body = response_body(response.clone());
+        assert_eq!(response.status, 200);
+        assert!(body.contains(r#""entity_id":"entity-light-1""#));
+        assert!(body.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(body.contains(r#""replaced":false"#));
+        assert!(body.contains(r#""requested_by":"agent:dashboard""#));
+        assert!(body.contains(r#""command_timeout_ms":3000"#));
+        assert!(body.contains(r#""capability_id":"light.on_off""#));
+        assert!(body.contains(r#""capability_id":"light.brightness""#));
+
+        let desired_states = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/desired_states?entity_id=light.entity_light_1",
+            ))
+            .into(),
+        );
+        assert!(desired_states.contains(r#""total_desired_states":1"#));
+        assert!(desired_states.contains(r#""total_desired_capabilities":2"#));
+    }
+
+    #[test]
+    fn runtime_web_app_posts_home_assistant_state_as_desired_state() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/states/light.entity_light_1",
+                r#"{"state":"on","attributes":{"brightness":191,"color_temp_kelvin":2700}}"#,
+            ))
+            .into();
+
+        let body = response_body(response.clone());
+        assert_eq!(response.status, 200);
+        assert!(body.contains(r#""entity_id":"entity-light-1""#));
+        assert!(body.contains(r#""requested_by":"agent:home-assistant-local-api""#));
+        assert!(body.contains(r#""capability_id":"light.on_off""#));
+        assert!(body.contains(r#""capability_id":"light.brightness""#));
+        assert!(body.contains(r#""capability_id":"light.color_temperature""#));
+        assert!(body.contains(r#""value":75"#));
+        assert!(body.contains(r#""value":2700"#));
+    }
+
+    #[test]
+    fn runtime_web_app_clears_desired_state_through_runtime_authorization() {
+        let app = home_assistant_runtime_web_app(
+            fixture_runtime_with_desired_state().grant_local_full_access("test", 1_000),
+        );
+        let response: web_core::WebResponse = app
+            .handle(request(
+                "DELETE",
+                "/api/smart_home/desired_states/light.entity_light_1",
+            ))
+            .into();
+
+        let body = response_body(response.clone());
+        assert_eq!(response.status, 200);
+        assert!(body.contains(r#""entity_id":"entity-light-1""#));
+        assert!(body.contains(r#""removed":true"#));
+        assert!(body.contains(r#""removed_desired_state":{"entity_id":"entity-light-1""#));
+        assert!(body.contains(r#""total_desired_states":0"#));
+    }
+
+    #[test]
+    fn runtime_web_app_rejects_desired_state_without_runtime_grants() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(false));
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/desired_states/entity-light-1",
+                r#"{"desired_state":{"light.on_off":true}}"#,
+            ))
+            .into();
+
+        assert_eq!(response.status, 403);
+        assert!(response_body(response).contains("not authorized"));
     }
 
     #[test]

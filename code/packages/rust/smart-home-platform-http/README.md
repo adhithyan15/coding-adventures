@@ -16,11 +16,14 @@ stable local API responses for:
 - `/api/events`
 - `/api/history/period`
 - `/api/history/period/:start_time`
+- `POST /api/states/:entity_id`
 - `/api/smart_home/runtime`
 - `/api/smart_home/events`
 - `/api/smart_home/command_results`
 - `/api/smart_home/authorization_decisions`
 - `/api/smart_home/desired_states`
+- `POST /api/smart_home/desired_states/:entity_id`
+- `DELETE /api/smart_home/desired_states/:entity_id`
 - `/api/smart_home/state_history`
 
 `POST /api/services/:domain/:service` accepts Home Assistant-style JSON targets
@@ -29,6 +32,14 @@ capability grants still decide whether a local API caller can mutate devices.
 Targets can use either the D23 entity ids, such as `entity-light-1`, or the
 Home Assistant-style aliases exposed in state attributes, such as
 `light.entity_light_1`.
+
+Local controller state writes are represented as runtime desired-state targets,
+not observed-state rewrites. `POST /api/smart_home/desired_states/:entity_id`
+accepts a `desired_state` capability map and `POST /api/states/:entity_id`
+accepts a small Home Assistant-style state body for lights, locks, and climate
+entities. Both routes call `SmartHomeRuntime::execute_set_desired_state_tool`;
+`DELETE /api/smart_home/desired_states/:entity_id` calls the matching clear
+tool.
 
 The `GET /api/smart_home/*` routes expose dashboard-ready read models for the
 same runtime: pending-work snapshot counts, checkpointed event-log entries,
@@ -68,4 +79,11 @@ curl 'http://127.0.0.1:8123/api/history/period?filter_entity_id=light.entity_lig
 curl -X POST http://127.0.0.1:8123/api/services/light/turn_on \
   -H 'Content-Type: application/json' \
   -d '{"entity_id":"light.entity_light_1","brightness_pct":75}'
+curl -X POST http://127.0.0.1:8123/api/smart_home/desired_states/light.entity_light_1 \
+  -H 'Content-Type: application/json' \
+  -d '{"desired_state":{"light.on_off":true,"light.brightness":80},"requested_by":"agent:dashboard"}'
+curl -X POST http://127.0.0.1:8123/api/states/light.entity_light_1 \
+  -H 'Content-Type: application/json' \
+  -d '{"state":"on","attributes":{"brightness":191}}'
+curl -X DELETE http://127.0.0.1:8123/api/smart_home/desired_states/light.entity_light_1
 ```

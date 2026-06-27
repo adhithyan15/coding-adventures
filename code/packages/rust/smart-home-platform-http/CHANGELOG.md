@@ -15,5 +15,8 @@ All notable changes to this package will be documented in this file.
   entity-alias, event-type, and timestamp filtering.
 - Added Home Assistant-style `/api/history/period` routes backed by the same
   runtime state-history projection.
+- Added runtime-authorized desired-state set and clear routes, including a
+  Home Assistant-style `POST /api/states/:entity_id` controller surface that
+  creates desired targets instead of rewriting observed state.
 - Added a Hue fixture controller example that serves the API through the repo
   HTTP server for manual local smoke tests.
