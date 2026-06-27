@@ -1,0 +1,17 @@
+[package]
+name = "smart-home-platform-http"
+version = "0.1.0"
+edition = "2021"
+description = "Home Assistant-compatible local HTTP API routes for the smart-home platform"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+web-core = { path = "../web-core" }
+
+[dev-dependencies]
+embeddable-http-server = { path = "../embeddable-http-server" }
+http-core = { path = "../http-core" }
+smart-home-testkit = { path = "../smart-home-testkit" }
+tcp-runtime = { path = "../tcp-runtime" }
