@@ -1055,6 +1055,23 @@ export interface DeviceModelNoiseBehaviorFixture {
   readonly deckLines: readonly string[];
 }
 
+export interface DeviceModelChargeBehaviorFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly circuit: Circuit;
+  readonly probeNode: string;
+  readonly timeStepSeconds: number;
+  readonly stopTimeSeconds: number;
+  readonly storageCapacitanceFarads: number;
+  readonly expectedInitialMin: number;
+  readonly expectedInitialMax: number;
+  readonly expectedFinalMin: number;
+  readonly expectedFinalMax: number;
+  readonly chargeBehavior: string;
+  readonly deckLines: readonly string[];
+}
+
 export interface Vccs {
   readonly kind: "vccs";
   readonly name: string;
@@ -7558,6 +7575,161 @@ export function deviceModelNoiseAuditFixtures(): readonly DeviceModelNoiseBehavi
         "Rload vdd out 1k",
         "M1 out gate 0 0 Mn",
         ".noise V(out) Vgate lin 1 1k 1k",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+  ];
+}
+
+export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBehaviorFixture[] {
+  const helperName = "deviceModelChargeAuditFixtures";
+  const models = modelCardByName(deviceModelAuditFixtures());
+  const timeStepSeconds = 2.0e-8;
+  const stopTimeSeconds = 2.0e-6;
+  const storageCapacitanceFarads = 1.0e-10;
+
+  const diodeModel = requiredModel(models, "Dfast", helperName);
+  const diodeCircuit = new Circuit();
+  diodeCircuit.add(voltageSource("Vbias", "vin", "0", 0.8));
+  diodeCircuit.add(resistor("Rlimit", "vin", "out", 1_000.0));
+  diodeCircuit.add(diodeFromModelCard("D1", "out", "0", diodeModel));
+  diodeCircuit.add(capacitor("Cstore", "out", "0", storageCapacitanceFarads));
+
+  const bjtModel = requiredModel(models, "Qsmall", helperName);
+  const bjtCircuit = new Circuit();
+  bjtCircuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+  bjtCircuit.add(voltageSource("Vbase", "base", "0", 0.72));
+  bjtCircuit.add(resistor("Rload", "out", "0", 1_000.0));
+  bjtCircuit.add(bjtFromModelCard("Q1", "vcc", "base", "out", bjtModel));
+  bjtCircuit.add(capacitor("Cstore", "out", "0", storageCapacitanceFarads));
+
+  const jfetModel = requiredModel(models, "Jn", helperName);
+  const jfetCircuit = new Circuit();
+  jfetCircuit.add(voltageSource("Vdd", "vdd", "0", 10.0));
+  jfetCircuit.add(voltageSource("Vg", "gate", "0", 0.0));
+  jfetCircuit.add(resistor("Rd", "vdd", "drain", 2_000.0));
+  jfetCircuit.add(resistor("Rs", "source", "0", 1_000.0));
+  jfetCircuit.add(jfetFromModelCard("J1", "drain", "gate", "source", jfetModel));
+  jfetCircuit.add(capacitor("Cstore", "source", "0", storageCapacitanceFarads));
+
+  const mosModel = requiredModel(models, "Mn", helperName);
+  const mosCircuit = new Circuit();
+  mosCircuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
+  mosCircuit.add(voltageSource("Vgate", "gate", "0", 1.8));
+  mosCircuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+  mosCircuit.add(mosfetFromModelCard("M1", "out", "gate", "0", "0", mosModel));
+  mosCircuit.add(capacitor("Cstore", "out", "0", storageCapacitanceFarads));
+
+  return [
+    {
+      name: "diode-storage-charge",
+      kind: diodeModel.kind,
+      model: diodeModel,
+      circuit: diodeCircuit,
+      probeNode: "out",
+      timeStepSeconds,
+      stopTimeSeconds,
+      storageCapacitanceFarads,
+      expectedInitialMin: -1.0e-9,
+      expectedInitialMax: 1.0,
+      expectedFinalMin: 0.58,
+      expectedFinalMax: 0.61,
+      chargeBehavior:
+        "diode terminal charge is conserved through explicit Cstore; CJO/TT remain AC-only until nonlinear charge stamping lands",
+      deckLines: [
+        "* device-model charge fixture: diode-storage-charge",
+        ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+        "Vbias vin 0 0.8",
+        "Rlimit vin out 1k",
+        "D1 out 0 Dfast",
+        "Cstore out 0 100p",
+        ".tran 20n 2u",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "bjt-storage-charge",
+      kind: bjtModel.kind,
+      model: bjtModel,
+      circuit: bjtCircuit,
+      probeNode: "out",
+      timeStepSeconds,
+      stopTimeSeconds,
+      storageCapacitanceFarads,
+      expectedInitialMin: -1.0e-9,
+      expectedInitialMax: 1.0,
+      expectedFinalMin: 0.10,
+      expectedFinalMax: 0.14,
+      chargeBehavior:
+        "BJT terminal charge is conserved through explicit Cstore; CJE/CJC/TF/TR remain AC-only until nonlinear charge stamping lands",
+      deckLines: [
+        "* device-model charge fixture: bjt-storage-charge",
+        ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+        "Vcc vcc 0 5",
+        "Vbase base 0 0.72",
+        "Q1 vcc base out Qsmall",
+        "Rload out 0 1k",
+        "Cstore out 0 100p",
+        ".tran 20n 2u",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "jfet-storage-charge",
+      kind: jfetModel.kind,
+      model: jfetModel,
+      circuit: jfetCircuit,
+      probeNode: "source",
+      timeStepSeconds,
+      stopTimeSeconds,
+      storageCapacitanceFarads,
+      expectedInitialMin: -1.0e-9,
+      expectedInitialMax: 1.0,
+      expectedFinalMin: 0.86,
+      expectedFinalMax: 0.90,
+      chargeBehavior:
+        "JFET transient charge is intentionally external-only; fixture records explicit source storage until a JFET capacitance policy lands",
+      deckLines: [
+        "* device-model charge fixture: jfet-storage-charge",
+        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+        "Vdd vdd 0 10",
+        "Vg gate 0 0",
+        "Rd vdd drain 2k",
+        "Rs source 0 1k",
+        "J1 drain gate source Jn",
+        "Cstore source 0 100p",
+        ".tran 20n 2u",
+        ".save V(source)",
+        ".end",
+      ],
+    },
+    {
+      name: "mos-level1-storage-charge",
+      kind: mosModel.kind,
+      model: mosModel,
+      circuit: mosCircuit,
+      probeNode: "out",
+      timeStepSeconds,
+      stopTimeSeconds,
+      storageCapacitanceFarads,
+      expectedInitialMin: -1.0e-9,
+      expectedInitialMax: 1.0,
+      expectedFinalMin: 0.68,
+      expectedFinalMax: 0.73,
+      chargeBehavior:
+        "Level-1 MOS terminal charge is conserved through explicit Cstore; overlap and junction capacitances remain AC-only until nonlinear charge stamping lands",
+      deckLines: [
+        "* device-model charge fixture: mos-level1-storage-charge",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+        "Vdd vdd 0 1.8",
+        "Vgate gate 0 1.8",
+        "Rload vdd out 1k",
+        "M1 out gate 0 0 Mn",
+        "Cstore out 0 100p",
+        ".tran 20n 2u",
         ".save V(out)",
         ".end",
       ],

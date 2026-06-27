@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Device model charge audit fixtures** —
+  `device_model_charge_audit_fixtures()` now exposes runnable one-device
+  `.tran` fixtures with reference deck lines, explicit terminal storage
+  capacitance metadata, stable first/final probe-voltage windows, and
+  charge-behavior notes for diode, BJT, JFET, and Level-1 MOS audits,
+  matching Rust and TypeScript.
+
 - **Device model noise audit fixtures** —
   `device_model_noise_audit_fixtures()` now exposes runnable one-device
   `.noise` fixtures with reference deck lines and stable source/output PSD

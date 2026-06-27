@@ -210,6 +210,10 @@ magnitude windows for capacitance and current JFET invariant audits.
 `device_model_noise_audit_fixtures()` adds matching `.noise` reference-deck
 metadata and stable source/output PSD windows for diode and BJT shot noise plus
 JFET and Level-1 MOS channel thermal noise audits.
+`device_model_charge_audit_fixtures()` adds matching `.tran` reference-deck
+metadata, explicit terminal storage capacitance metadata, stable first/final
+probe-voltage windows, and charge-behavior notes for diode, BJT, JFET, and
+Level-1 MOS charge audits.
 
 `DigitalEventStream`, `DigitalLogicLevels`, and `DigitalThresholds` provide the
 first mixed-signal bridge surface: digital event streams can drive finite-edge

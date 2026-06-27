@@ -21,6 +21,7 @@ import {
   currentSource,
   currentSourceWithWaveform,
   dcOp,
+  deviceModelChargeAuditFixtures,
   digitalEventStreamsToBridgeSchedule,
   digitalEventStreamsToVoltageSources,
   digitalEventsToPwlWaveform,
@@ -178,6 +179,37 @@ describe("transient", () => {
     expect(finalOut).toBeGreaterThan(initialOut! + 1.0);
     expect(finalOut).toBeGreaterThan(1.5);
     expect(finalOut).toBeLessThan(2.0);
+  });
+
+  it("runs device model charge audit transient fixtures", () => {
+    const fixtures = deviceModelChargeAuditFixtures();
+    expect(fixtures.map((fixture) => fixture.name)).toEqual([
+      "diode-storage-charge",
+      "bjt-storage-charge",
+      "jfet-storage-charge",
+      "mos-level1-storage-charge",
+    ]);
+
+    for (const fixture of fixtures) {
+      const points = transient(fixture.circuit, fixture.timeStepSeconds, fixture.stopTimeSeconds);
+      expect(points.length).toBeGreaterThan(0);
+      const initial = points[0].voltage(fixture.probeNode);
+      const final = points[points.length - 1].voltage(fixture.probeNode);
+      expect(initial).not.toBeUndefined();
+      expect(final).not.toBeUndefined();
+      expect(initial!).toBeGreaterThanOrEqual(fixture.expectedInitialMin);
+      expect(initial!).toBeLessThanOrEqual(fixture.expectedInitialMax);
+      expect(final!).toBeGreaterThanOrEqual(fixture.expectedFinalMin);
+      expect(final!).toBeLessThanOrEqual(fixture.expectedFinalMax);
+      expect(fixture.storageCapacitanceFarads).toBeGreaterThan(0.0);
+      expect(fixture.deckLines[0].startsWith("* device-model charge fixture:")).toBe(true);
+      expect(fixture.deckLines.some((line) => line.startsWith(".model "))).toBe(true);
+      expect(fixture.deckLines.some((line) => line.startsWith(".tran "))).toBe(true);
+      expect(fixture.chargeBehavior.length).toBeGreaterThan(0);
+    }
+
+    const jfetFixture = fixtures.find((fixture) => fixture.kind === "NJF");
+    expect(jfetFixture?.chargeBehavior).toContain("external-only");
   });
 
   it("reports periods for periodic source waveforms", () => {

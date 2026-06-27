@@ -199,6 +199,10 @@ capacitance and current JFET invariant audits.
 `deviceModelNoiseAuditFixtures` adds matching `.noise` reference-deck metadata
 and stable source/output PSD windows for diode and BJT shot noise plus JFET
 and Level-1 MOS channel thermal noise audits.
+`deviceModelChargeAuditFixtures` adds matching `.tran` reference-deck metadata,
+explicit terminal storage capacitance metadata, stable first/final
+probe-voltage windows, and charge-behavior notes for diode, BJT, JFET, and
+Level-1 MOS charge audits.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.
