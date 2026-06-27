@@ -32,11 +32,13 @@ is notation-agnostic (it is *not* LaTeX-shaped):
 pub enum MathExpr {
     Number(Number),                 // exact-preserving numeric literal (see §2.1)
     Symbol(String),                 // a variable or named constant: "x", "pi", "alpha"
-    Bin(BinOp, Box<MathExpr>, Box<MathExpr>),   // Add Sub Mul Div Pow (Mul carries no
-                                                //   surface style — \cdot vs \times vs
-                                                //   juxtaposition all become Mul)
+    Bin(BinOp, Box<MathExpr>, Box<MathExpr>),   // Add Sub Mul Div Pow PlusMinus MinusPlus
+                                                //   (Mul carries no surface style — \cdot vs
+                                                //   \times vs juxtaposition all become Mul;
+                                                //   PlusMinus/MinusPlus = ± / ∓)
     Unary(UnaryOp, Box<MathExpr>),              // Neg, Pos
     Frac(Box<MathExpr>, Box<MathExpr>),         // numerator / denominator (a Div with intent)
+    Binom(Box<MathExpr>, Box<MathExpr>),        // binomial coefficient C(n,k) (no division bar)
     Root { degree: Option<Box<MathExpr>>, radicand: Box<MathExpr> },  // nth root
     Call { func: Func, arg: Box<MathExpr> },    // sin, cos, ln, exp, … (named functions)
     BigOp { op: BigOp, lower: Option<Box<MathExpr>>, upper: Option<Box<MathExpr>>,

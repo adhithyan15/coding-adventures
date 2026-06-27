@@ -170,6 +170,11 @@ pub enum BinOp {
     Mul,
     Div,
     Pow,
+    /// `a ± b` — denotes the *pair* {a+b, a−b}. A meaning-bearing operator (not presentation),
+    /// kept binary so a consumer can interpret both branches.
+    PlusMinus,
+    /// `a ∓ b` — the opposite pairing to [`BinOp::PlusMinus`] ({a−b, a+b}).
+    MinusPlus,
 }
 
 /// Unary prefix operators.
@@ -225,6 +230,9 @@ pub enum MathExpr {
     /// A fraction `numerator / denominator` (a `Div` that the source wrote as a built-up
     /// fraction; kept distinct so a renderer can reproduce it, but it means division).
     Frac(Box<MathExpr>, Box<MathExpr>),
+    /// A binomial coefficient `C(n, k)` = "n choose k" — `Binom(n, k)`. Distinct from `Frac`
+    /// (no division bar) and meaning-bearing, so consumers can evaluate or render it.
+    Binom(Box<MathExpr>, Box<MathExpr>),
     /// An nth root: `degree` is `None` for a square root.
     Root {
         degree: Option<Box<MathExpr>>,
@@ -254,6 +262,20 @@ pub enum MathExpr {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn plusminus_and_binom_are_constructible_and_compare() {
+        let one = || Box::new(MathExpr::Number(Number::from_i64(1)));
+        let pm = MathExpr::Bin(BinOp::PlusMinus, one(), one());
+        let mp = MathExpr::Bin(BinOp::MinusPlus, one(), one());
+        // ± and ∓ are distinct operators.
+        assert_ne!(pm, mp);
+        assert_eq!(pm, MathExpr::Bin(BinOp::PlusMinus, one(), one()));
+        // Binom is distinct from Frac with the same operands.
+        let binom = MathExpr::Binom(one(), one());
+        assert_eq!(binom, MathExpr::Binom(one(), one()));
+        assert_ne!(binom, MathExpr::Frac(one(), one()));
+    }
 
     #[test]
     fn number_normalizes_equal_values() {

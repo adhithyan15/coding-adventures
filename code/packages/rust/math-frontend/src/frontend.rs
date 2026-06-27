@@ -60,6 +60,10 @@ pub struct Capabilities {
     pub matrices: bool,
     pub implicit_mul: bool,
     pub text: bool,
+    /// Emits the ± / ∓ operators ([`crate::BinOp::PlusMinus`] / [`crate::BinOp::MinusPlus`]).
+    pub plusminus: bool,
+    /// Emits binomial coefficients ([`crate::MathExpr::Binom`]).
+    pub binomials: bool,
 }
 
 impl Capabilities {
@@ -81,6 +85,8 @@ impl Capabilities {
             matrices: true,
             implicit_mul: true,
             text: true,
+            plusminus: true,
+            binomials: true,
         }
     }
 
@@ -93,6 +99,8 @@ impl Capabilities {
     pub fn with_matrices(mut self) -> Self { self.matrices = true; self }
     pub fn with_implicit_mul(mut self) -> Self { self.implicit_mul = true; self }
     pub fn with_text(mut self) -> Self { self.text = true; self }
+    pub fn with_plusminus(mut self) -> Self { self.plusminus = true; self }
+    pub fn with_binomials(mut self) -> Self { self.binomials = true; self }
 }
 
 /// The contract every notation parser implements.
@@ -129,6 +137,11 @@ mod tests {
         assert_eq!(Capabilities::none(), Capabilities::default());
         let a = Capabilities::all();
         assert!(a.fractions && a.matrices && a.text && a.relations);
+        assert!(a.plusminus && a.binomials);
+        // none() leaves the new flags off; builders flip exactly them.
+        assert!(!Capabilities::none().plusminus && !Capabilities::none().binomials);
+        let c = Capabilities::none().with_plusminus().with_binomials();
+        assert!(c.plusminus && c.binomials && !c.fractions);
     }
 
     #[test]
