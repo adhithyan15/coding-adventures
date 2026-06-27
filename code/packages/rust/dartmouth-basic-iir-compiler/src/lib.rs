@@ -18,12 +18,13 @@
 //! literals, variables, arithmetic, `DEF FN`, `FOR`, `IF`, `PRINT`, `DATA`, and
 //! arrays lower as `f64`.  Integer `i64` remains at structural boundaries: line
 //! numbers, `DIM` bounds, array subscripts, DATA read pointers, and GOSUB return
-//! stacks.  Strings and exponentiation remain follow-ups outside BA7.
+//! stacks.  String literals in `PRINT` lower through the shared E4 string ops on
+//! the VM/JIT path; string variables and code-gen backends remain follow-ups.
 //!
 //! | Statement     | Lowering |
 //! |---------------|----------|
 //! | `LET A = expr` | `<eval expr → t>; mov A = t` (`f64` scalar values; explicit `i64` boundaries) |
-//! | `PRINT a; b, c` | per item `<eval → v>; call "__basic_print_int"/"__basic_print_real", v`, with `;`=tight / `,`=space separators and a trailing `putchar(10)` newline (BA2/BA7) |
+//! | `PRINT a; "x", c` | numeric items call `__basic_print_int`/`__basic_print_real`, string literals lower to `str_const` + `print_str`, with `;`=tight / `,`=space separators and a trailing `putchar(10)` newline (BA2/BA4/BA7) |
 //! | `INPUT X`      | `call_builtin "input_i64" -> X` |
 //! | `IF cond THEN m` | `<eval cond → c>; jmp_if_true c, "line_m"` |
 //! | `GOTO m`       | `jmp "line_m"` |
@@ -41,8 +42,10 @@
 //!
 //! ## Strings
 //!
-//! Strings (e.g. `PRINT "HELLO"`) are deferred — they need LANG77
-//! `.rodata` support.  V1 errors out cleanly on `PRINT "…"`.
+//! `PRINT "HELLO"` lowers to the shared LANG-FULL E4 string ops
+//! (`str_const` + `print_str`) and runs on the VM/JIT columns.  String
+//! variables (`A$`) and string lowering for the code-gen backends remain BA4/E4
+//! follow-ups.
 //!
 //! ## Variables
 //!
@@ -94,7 +97,7 @@ pub enum CompileError {
     /// V1 doesn't support this statement family (GOSUB/RETURN/READ/DIM/DEF).
     UnsupportedStatement(String),
     /// A BASIC construct exists in source but V1 doesn't lower it (e.g.
-    /// string literals, array indexing, user-defined functions).
+    /// string variables or a not-yet-enabled backend-specific feature).
     Unsupported(String),
     /// AST shape didn't match our expectations — a parser change probably
     /// requires updating this crate.
@@ -807,10 +810,16 @@ impl Compiler {
                             self.needs_print_helpers = true;
                         }
                         _ => {
-                            // STRING `print_item` — a token child, not a node.
-                            // Strings in PRINT wait for LANG77 (BA4 / E4).
-                            return Err(CompileError::Unsupported(
-                                "string literals in PRINT (need LANG77)".into()));
+                            if let Some(text) = string_token_value(child) {
+                                let s = self.fresh_temp();
+                                self.emit("str_const", Some(&s),
+                                    vec![Operand::Str(text)], "str");
+                                self.emit("print_str", None,
+                                    vec![Operand::Var(s)], "void");
+                            } else {
+                                return Err(CompileError::Malformed(
+                                    "PRINT item was neither an expression nor a STRING".into()));
+                            }
                         }
                     }
                 }
@@ -1603,6 +1612,26 @@ fn first_number_token(node: &GrammarASTNode) -> Option<i64> {
     None
 }
 
+fn string_token_value(node: &GrammarASTNode) -> Option<String> {
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.effective_type_name() == "STRING" {
+                return Some(unquote_basic_string(&t.value));
+            }
+        }
+    }
+    None
+}
+
+fn unquote_basic_string(raw: &str) -> String {
+    let s = raw.trim();
+    if s.len() >= 2 && s.starts_with('"') && s.ends_with('"') {
+        s[1..s.len() - 1].to_string()
+    } else {
+        s.to_string()
+    }
+}
+
 fn extract_if_target(stmt: &GrammarASTNode) -> Result<i64, CompileError> {
     // `IF` expr relop expr `THEN` NUMBER — the NUMBER comes *after* THEN.
     // Since both LINE_NUM and NUMBER tokens can appear in an IF chain
@@ -2269,14 +2298,27 @@ mod tests {
             "expected widened input temp to move into X");
     }
 
-    /// String literals in PRINT are deferred → `Unsupported`.
+    /// String literals in PRINT lower through shared E4 string ops.
     #[test]
-    fn rejects_print_string() {
-        let err = compile("10 PRINT \"HI\"\n20 END\n").unwrap_err();
-        match err {
-            CompileError::Unsupported(_) => {}
-            other => panic!("expected Unsupported, got {other:?}"),
-        }
+    fn compiles_print_string() {
+        let m = compile("10 PRINT \"HI\"\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "str_const"
+            && i.dest.as_deref().is_some()
+            && i.type_hint == "str"
+            && matches!(i.srcs.first(), Some(Operand::Str(s)) if s == "HI")),
+            "expected str_const for PRINT literal");
+        let str_dest = body.iter().find(|i| i.op == "str_const")
+            .and_then(|i| i.dest.as_deref())
+            .expect("string literal has a destination")
+            .to_string();
+        assert!(body.iter().any(|i| i.op == "print_str"
+            && i.type_hint == "void"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == &str_dest)),
+            "expected print_str to consume the string temp");
+        assert!(body.iter().any(|i| i.op == "call_builtin"
+            && matches!(i.srcs.as_slice(), [Operand::Var(name), Operand::Var(_)] if name == "putchar")),
+            "PRINT should still emit the trailing newline via putchar");
     }
 
     // ── GOSUB / RETURN — unstructured subroutines (BA1, enabler E7) ──────

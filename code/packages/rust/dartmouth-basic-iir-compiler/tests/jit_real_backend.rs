@@ -81,6 +81,14 @@ fn run_with_real_jit(source: &str) -> String {
             Ok(Value::Null)
         });
     }
+    {
+        let chars = Arc::clone(&chars);
+        vm.builtins_mut().register("print_str", move |args| {
+            let s = args.first().and_then(Value::as_str).unwrap_or("");
+            chars.lock().unwrap().extend_from_slice(s.as_bytes());
+            Ok(Value::Null)
+        });
+    }
     // The legacy `print_i64` sink stays registered (and is shared with
     // `BasicCirJit` below) so any path that still emits it has a home; BA2
     // BASIC no longer emits it, so it simply stays empty.
@@ -133,6 +141,48 @@ fn real_jit_basic_print_42() {
     let got = run_with_real_jit("10 PRINT 42\n20 END\n");
     assert_eq!(got, "42\n",
         "BasicCirJit should print `42` + newline, got {got:?}");
+}
+
+#[test]
+fn real_jit_basic_print_string_literal_falls_back_to_vm() {
+    let mut module = compile_source("10 PRINT \"HELLO\"\n20 END\n", "real_jit_string")
+        .expect("BASIC source must compile");
+    let chars: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
+    let mut vm = VMCore::new();
+    {
+        let chars = Arc::clone(&chars);
+        vm.builtins_mut().register("putchar", move |args| {
+            let b = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+            chars.lock().unwrap().push(b as u8);
+            Ok(Value::Null)
+        });
+    }
+    {
+        let chars = Arc::clone(&chars);
+        vm.builtins_mut().register("print_str", move |args| {
+            let s = args.first().and_then(Value::as_str).unwrap_or("");
+            chars.lock().unwrap().extend_from_slice(s.as_bytes());
+            Ok(Value::Null)
+        });
+    }
+    let backend = BasicCirJit::new(
+        Arc::new(Mutex::new(Vec::new())),
+        Arc::new(Mutex::new(VecDeque::new())),
+        Arc::new(Mutex::new(0)),
+        Arc::new(Mutex::new(None)),
+        None,
+        None,
+    );
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+    jit.execute_with_jit(&mut vm, &mut module, "main", &[])
+        .expect("string PRINT should run through interpreter fallback");
+
+    assert!(
+        !jit.is_compiled("main"),
+        "BasicCirJit is i64-only; string PRINT should not install a bytecode handler"
+    );
+    let got = String::from_utf8(chars.lock().unwrap().clone()).unwrap();
+    assert_eq!(got, "HELLO\n");
 }
 
 /// LET + arithmetic + PRINT through the real JIT.

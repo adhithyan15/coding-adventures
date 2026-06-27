@@ -1,8 +1,8 @@
 [package]
 name = "dartmouth-basic-iir-compiler"
-version = "0.13.0"
+version = "0.14.0"
 edition = "2021"
-description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.13.0 carries BA7 f64 values through scalar arithmetic, PRINT, DATA, READ, arrays, and historical real formatting."
+description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.14.0 adds E4/BA4 string literal PRINT on the VM/JIT path; v0.13.0 carries BA7 f64 values through scalar arithmetic, PRINT, DATA, READ, arrays, and historical real formatting."
 
 [dependencies]
 coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }

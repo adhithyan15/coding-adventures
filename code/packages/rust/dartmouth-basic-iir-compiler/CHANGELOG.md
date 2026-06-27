@@ -1,5 +1,18 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.14.0 — 2026-06-27 — BA4 string literal `PRINT` on VM/JIT
+
+The first E4 source-language proof is live:
+
+- `PRINT "literal"` now lowers to shared string ops: `str_const` materialises
+  the literal and `print_str` writes it without an implicit newline.
+- The existing BASIC `PRINT` separator/newline model is preserved: `;` joins
+  tightly, `,` emits a space before the next item, and the final newline still
+  comes from `putchar(10)`.
+- The VM/JIT capture harnesses register a `print_str` sink, and the lang matrix
+  now includes a VM/JIT-only `PRINT "HELLO"` proof. Managed/static backend
+  string lowering remains the next E4 work.
+
 ## 0.13.0 — 2026-06-27 — BA7 historical real formatting
 
 BA7 real `PRINT` now implements the historical formatter tail instead of the
@@ -134,9 +147,10 @@ wrongly split `A` and `B` onto separate lines. BA2 moves BASIC to a
   - *Limitation:* the sign path negates with `0 - n`, which overflows only at
     `i64::MIN` — a value no BA2 program can express; a saturating negate is a
     later refinement.
-- **String `PRINT` items** still error (`need LANG77`) — they wait for BA4 /
-  enabler E4. **More relops** were already in place (the grammar and
-  `extract_relop_op` cover all six: `= < > <= >= <>`); BA2 adds no relop work.
+- **At this point in the history, string `PRINT` items still errored**; BA4 /
+  enabler E4 removes that limitation in 0.14.0. **More relops** were already in
+  place (the grammar and `extract_relop_op` cover all six: `= < > <= >= <>`);
+  BA2 adds no relop work.
 - Proven by two executed `lang-aot` matrix cells (`PRINT 0 - 12; 34` ⇒ `-1234`,
   `PRINT 5, 6` ⇒ `5 6`) that run on all 7 backends, plus six new frontend unit
   tests. The existing single-item BASIC matrix cells now route through `putchar`
@@ -466,7 +480,7 @@ and is not pluggable into the LANG VM chain.
 | Statement | Status |
 |-----------|--------|
 | `LET A = expr` | ✓ |
-| `PRINT expr`   | ✓ (numeric only — strings deferred to LANG77) |
+| `PRINT expr`   | ✓ (numeric in the initial release; string literal `PRINT` added in 0.14.0 for VM/JIT) |
 | `INPUT X`      | ✓ |
 | `IF cond THEN m` | ✓ |
 | `GOTO m`       | ✓ |

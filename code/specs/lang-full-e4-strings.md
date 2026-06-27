@@ -133,9 +133,9 @@ This is the one genuinely new piece of host surface E4 adds beyond E5.
 ## 4. Frontend drivers
 
 - **Dartmouth BASIC (BA4)** — `PRINT "HELLO"` already *parses* (the grammar has a
-  `STRING` `print_item`; the frontend currently errors "string literals in PRINT
-  (need LANG77)"). Lower a `STRING` print-item to `str_const` + `print_str`;
-  string variables (`A$`) and `PRINT A$` to a `str`-typed slot. String compare in
+  `STRING` `print_item`); the frontend now lowers a `STRING` print-item to
+  `str_const` + `print_str` for the VM/JIT proof. String variables (`A$`) and
+  `PRINT A$` still need `str`-typed slots. String compare in
   `IF A$ = "Y"` lowers to `str_eq`.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
   produces string literals. Lower `string` declarations to `str` slots and the
@@ -187,9 +187,10 @@ merge before the next:
    (needs a frontend), but a direct IIR unit test proves it runs.* The generic CIR
    JIT remains i64-only and cold-interprets/declines string-shaped functions
    until a string-capable tier is added.
-2. **E4-basic-frontend** — `dartmouth-basic-iir-compiler` lowers `PRINT "…"` to
-   `str_const` + `print_str`; matrix `Prog` (`PRINT "HELLO"` ⇒ stdout `HELLO`)
-   runs on VM + JIT.
+2. ✅ **E4-basic-frontend (VM/JIT proof)** — `dartmouth-basic-iir-compiler` lowers
+   `PRINT "…"` to `str_const` + `print_str`; matrix `Prog` (`PRINT "HELLO"` ⇒
+   stdout `HELLO`) runs on VM + JIT. The all-7 version waits for the managed and
+   static backend lowering slices below.
 3. **E4-managed-backends** — JVM, CLR, WASM string lowering (native `String` /
    managed `(array i8)` + the `printStr` runtime); extend the matrix Prog's
    backend list. (May be one PR per backend if they diverge.)

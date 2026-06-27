@@ -856,6 +856,19 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — E4/BA4 first string-PRINT proof. The frontend lowers a
+    // string literal item to shared `str_const` + `print_str`, and the existing
+    // BASIC PRINT machinery emits the trailing newline via `putchar`. Only the
+    // VM/JIT columns are tagged here: managed/static backend string lowering is
+    // the next E4 work, so this cell proves the source-language lowering without
+    // pretending the code-gen columns are ready.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT \"HELLO\"\n20 END\n",
+        expect: Expect::Stdout("HELLO"),
+        backends: &[Vm, Jit],
+    },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
     // backends could not run correctly until this slice (LLVM compared at `i1` width;
@@ -1815,6 +1828,15 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
         bytes.lock().expect("lang-matrix VM putchar buffer poisoned").push(b);
         Ok(Value::Null)
     });
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("print_str", move |args: &[Value]| {
+        let s = args.first().and_then(Value::as_str).unwrap_or("");
+        bytes
+            .lock()
+            .expect("lang-matrix VM print_str buffer poisoned")
+            .extend_from_slice(s.as_bytes());
+        Ok(Value::Null)
+    });
     // The program's stdin, drained one byte per `getchar` (Brainfuck `,`); empty for
     // every other program, so the first read is EOF → 0 (the prior behaviour).
     let stdin_buf: Arc<Mutex<std::collections::VecDeque<u8>>> =
@@ -1890,6 +1912,15 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
     vm.builtins_mut().register("putchar", move |args: &[Value]| {
         let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
         bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
+        Ok(Value::Null)
+    });
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("print_str", move |args: &[Value]| {
+        let s = args.first().and_then(Value::as_str).unwrap_or("");
+        bytes
+            .lock()
+            .expect("lang-matrix JIT print_str buffer poisoned")
+            .extend_from_slice(s.as_bytes());
         Ok(Value::Null)
     });
     // The program's stdin, shared by BOTH tiers' `getchar` (a function runs on one tier,
