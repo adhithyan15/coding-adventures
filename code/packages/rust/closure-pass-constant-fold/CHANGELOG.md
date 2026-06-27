@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
-## [0.57.0] - 2026-06-26
+## [0.61.0] - 2026-06-26
 
 ### Added — fold static `JSON.stringify(…)` → string literal (primitive subset)
 
@@ -28,6 +28,27 @@ statics) — only the bare global `JSON.stringify(...)` folds, never a shadowed
 receiver. The folded text is pure ASCII, so it needs no escaping. Added six unit
 tests (the primitive V8-oracle table, and the string / fractional-and-large /
 array-object-identifier / second-argument / non-`JSON`-receiver declines).
+## [0.59.0] - 2026-06-26
+
+### Added — fold static `Object.keys/values/entries({})` → `[]`
+
+The static `Object.keys(x)` / `Object.values(x)` / `Object.entries(x)`
+(ECMAScript §20.1.2.16/.22/.5) now fold to the empty array literal `[]` when the
+single argument is an **empty object literal** `{}`. An empty object has no own
+enumerable keys, and evaluating `{}` has no observable side effect, so collapsing
+the call to `[]` is sound for all three methods.
+
+Only the empty-object case folds. A **non-empty** object literal is declined: its
+property values (and any computed keys / spreads) may have side effects that
+collapsing to `[]` would drop, and the result is non-empty anyway. An array
+literal, a primitive (`Object.keys("ab")` → `["0","1"]`), an identifier, or any
+call with ≠1 argument is also declined. Dispatches through the `MemberExpression`
+callee arm (alongside the `String.from*` / `Number.isX`/`parseX` statics) — only
+the bare global `Object.keys/values/entries(...)` folds, never a shadowed
+receiver. Emits an empty `ArrayExpression` (like the `split` fold). Added five
+unit tests (the empty-object `[]` for all three methods, and the
+non-empty-object / array-primitive-identifier / second-argument /
+non-`Object`-receiver declines).
 
 ## [0.55.0] - 2026-06-26
 

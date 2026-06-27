@@ -1024,6 +1024,31 @@ def select_deck_output_directive_analysis_kinds(
     return selected
 
 
+def select_deck_output_directive_lines(netlist: str, analysis: str) -> list[int]:
+    """Return deduplicated output directive source lines selected for an analysis."""
+
+    summary = resolve_deck_outputs(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            "select_deck_output_directive_lines: "
+            f"line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    selected: list[int] = []
+    seen: set[int] = set()
+    for selection in summary.selections:
+        if selection.analysis is not None and not _deck_output_analysis_matches(
+            selection.analysis,
+            analysis,
+        ):
+            continue
+        if selection.line_number in seen:
+            continue
+        seen.add(selection.line_number)
+        selected.append(selection.line_number)
+    return selected
+
+
 def resolve_deck_analyses(netlist: str) -> DeckAnalysisSummary:
     """Extract supported top-level analysis directives before ``.end``."""
 
