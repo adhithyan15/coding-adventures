@@ -379,6 +379,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/health", move |_| {
+            runtime_health_response(&runtime)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/dashboard", move |_| {
             runtime_dashboard_response(&runtime)
         });
@@ -680,6 +687,14 @@ fn runtime_snapshot_response(runtime: &SmartHomePlatformHttpRuntime) -> WebRespo
     WebResponse::json(
         runtime_snapshot_json(&runtime_guard.read_snapshot_at(runtime.now_ms)).into_bytes(),
     )
+}
+
+fn runtime_health_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    WebResponse::json(runtime_health_json(runtime, &runtime_guard).into_bytes())
 }
 
 fn runtime_dashboard_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
@@ -985,6 +1000,101 @@ fn runtime_snapshot_json(snapshot: &RuntimeReadSnapshot) -> String {
     )
 }
 
+fn runtime_health_json(
+    runtime: &SmartHomePlatformHttpRuntime,
+    runtime_guard: &SmartHomeRuntime,
+) -> String {
+    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms);
+    let topology = runtime_guard.topology_summary();
+    let pending = snapshot.pending_work_summary();
+    let stale_entities = runtime_guard
+        .registry()
+        .entities()
+        .filter(|entity| {
+            entity
+                .state
+                .as_ref()
+                .is_some_and(|snapshot| snapshot.is_stale_at(runtime.now_ms))
+        })
+        .count();
+    let status = if pending.unhealthy_worker_count > 0
+        || pending.unhealthy_discovery_worker_count > 0
+        || topology.has_attention_items()
+    {
+        "degraded"
+    } else if snapshot.has_pending_work()
+        || topology.has_state_gaps()
+        || topology.has_pairing_candidates()
+    {
+        "attention"
+    } else {
+        "ok"
+    };
+    let ready = snapshot.registry_counts.bridges > 0
+        && snapshot.registry_counts.devices > 0
+        && snapshot.registry_counts.entities > 0
+        && pending.unhealthy_worker_count == 0
+        && pending.unhealthy_discovery_worker_count == 0;
+
+    format!(
+        "{{\"generated_at_ms\":{},\"status\":{},\"live\":true,\"ready\":{},\"has_pending_work\":{},\"has_attention\":{},\"has_state_gaps\":{},\"has_pairing_candidates\":{},\"summary\":{{\"bridge_count\":{},\"online_bridges\":{},\"attention_bridges\":{},\"device_count\":{},\"online_devices\":{},\"attention_devices\":{},\"entity_count\":{},\"entities_with_state\":{},\"entities_without_state\":{},\"stale_entities\":{},\"desired_state_count\":{},\"pending_work_total\":{},\"event_backlog_count\":{},\"discovery_worker_due_count\":{},\"unhealthy_discovery_worker_count\":{},\"restart_due_count\":{},\"unhealthy_worker_count\":{},\"state_refresh_target_count\":{}}},\"checks\":{{\"registry\":{},\"event_bus\":{},\"discovery\":{},\"supervisor\":{},\"state\":{}}}}}",
+        runtime.now_ms,
+        json_string(status),
+        ready,
+        snapshot.has_pending_work(),
+        topology.has_attention_items(),
+        topology.has_state_gaps(),
+        topology.has_pairing_candidates(),
+        topology.bridges,
+        topology.online_bridges,
+        topology.attention_bridges,
+        topology.devices,
+        topology.online_devices,
+        topology.attention_devices,
+        topology.entities,
+        topology.entities_with_state,
+        topology.entities_without_state,
+        stale_entities,
+        snapshot.desired_state_count,
+        pending.total_pending_work_count(),
+        pending.event_backlog_count,
+        pending.discovery_worker_due_count,
+        pending.unhealthy_discovery_worker_count,
+        pending.restart_due_count,
+        pending.unhealthy_worker_count,
+        pending.state_refresh_target_count,
+        json_string(if snapshot.registry_counts.entities == 0 {
+            "empty"
+        } else {
+            "ok"
+        }),
+        json_string(if pending.has_event_backlog() {
+            "backlogged"
+        } else {
+            "ok"
+        }),
+        json_string(if pending.unhealthy_discovery_worker_count > 0 {
+            "degraded"
+        } else if pending.discovery_worker_due_count > 0 {
+            "attention"
+        } else {
+            "ok"
+        }),
+        json_string(if pending.unhealthy_worker_count > 0 {
+            "degraded"
+        } else if pending.restart_due_count > 0 {
+            "attention"
+        } else {
+            "ok"
+        }),
+        json_string(if topology.has_state_gaps() {
+            "attention"
+        } else {
+            "ok"
+        }),
+    )
+}
+
 fn runtime_dashboard_json(
     runtime: &SmartHomePlatformHttpRuntime,
     runtime_guard: &SmartHomeRuntime,
@@ -1025,7 +1135,7 @@ fn runtime_dashboard_json(
     entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
 
     format!(
-        "{{\"generated_at_ms\":{},\"config\":{},\"summary\":{{\"state_count\":{},\"known_state_count\":{},\"unknown_state_count\":{},\"stale_state_count\":{},\"optimistic_state_count\":{},\"service_count\":{},\"event_type_count\":{},\"bridge_count\":{},\"device_count\":{},\"entity_count\":{},\"room_count\":{},\"scene_count\":{},\"desired_state_count\":{},\"pending_work_total\":{},\"has_attention\":{},\"has_state_gaps\":{},\"has_pairing_candidates\":{}}},\"runtime\":{},\"topology\":{{\"bridges\":{},\"devices\":{},\"entities\":{},\"scenes\":{},\"online_bridges\":{},\"attention_bridges\":{},\"online_devices\":{},\"attention_devices\":{},\"devices_with_room\":{},\"devices_without_room\":{},\"unique_rooms\":{},\"entities_with_state\":{},\"entities_without_state\":{},\"total_capabilities\":{},\"scene_actions\":{}}},\"bridges\":{},\"devices\":{},\"entities\":{},\"capabilities\":{},\"rooms\":{},\"desired_states\":{},\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}",
+        "{{\"generated_at_ms\":{},\"config\":{},\"summary\":{{\"state_count\":{},\"known_state_count\":{},\"unknown_state_count\":{},\"stale_state_count\":{},\"optimistic_state_count\":{},\"service_count\":{},\"event_type_count\":{},\"bridge_count\":{},\"device_count\":{},\"entity_count\":{},\"room_count\":{},\"scene_count\":{},\"desired_state_count\":{},\"pending_work_total\":{},\"has_attention\":{},\"has_state_gaps\":{},\"has_pairing_candidates\":{}}},\"health\":{},\"runtime\":{},\"topology\":{{\"bridges\":{},\"devices\":{},\"entities\":{},\"scenes\":{},\"online_bridges\":{},\"attention_bridges\":{},\"online_devices\":{},\"attention_devices\":{},\"devices_with_room\":{},\"devices_without_room\":{},\"unique_rooms\":{},\"entities_with_state\":{},\"entities_without_state\":{},\"total_capabilities\":{},\"scene_actions\":{}}},\"bridges\":{},\"devices\":{},\"entities\":{},\"capabilities\":{},\"rooms\":{},\"desired_states\":{},\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}",
         runtime.now_ms,
         config_json(&state),
         state_summary.state_count,
@@ -1045,6 +1155,7 @@ fn runtime_dashboard_json(
         topology.has_attention_items(),
         pending.state_refresh_target_count > 0,
         topology.has_pairing_candidates(),
+        runtime_health_json(runtime, runtime_guard),
         runtime_snapshot_json(&snapshot),
         topology.bridges,
         topology.devices,
@@ -4095,6 +4206,34 @@ mod tests {
     }
 
     #[test]
+    fn runtime_web_app_serves_dashboard_ready_health_probe() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let health = response_body(app.handle(request("GET", "/api/smart_home/health")).into());
+
+        assert!(health.contains(r#""generated_at_ms":5000"#));
+        assert!(health.contains(r#""status":"attention""#));
+        assert!(health.contains(r#""live":true"#));
+        assert!(health.contains(r#""ready":true"#));
+        assert!(health.contains(r#""has_pending_work":true"#));
+        assert!(health.contains(r#""has_attention":false"#));
+        assert!(health.contains(r#""has_state_gaps":true"#));
+        assert!(health.contains(r#""bridge_count":1"#));
+        assert!(health.contains(r#""online_bridges":1"#));
+        assert!(health.contains(r#""device_count":1"#));
+        assert!(health.contains(r#""online_devices":1"#));
+        assert!(health.contains(r#""entity_count":2"#));
+        assert!(health.contains(r#""entities_without_state":2"#));
+        assert!(health.contains(r#""stale_entities":0"#));
+        assert!(health.contains(r#""pending_work_total":2"#));
+        assert!(health.contains(r#""state_refresh_target_count":2"#));
+        assert!(health.contains(r#""registry":"ok""#));
+        assert!(health.contains(r#""event_bus":"ok""#));
+        assert!(health.contains(r#""discovery":"ok""#));
+        assert!(health.contains(r#""supervisor":"ok""#));
+        assert!(health.contains(r#""state":"attention""#));
+    }
+
+    #[test]
     fn runtime_web_app_serves_dashboard_overview() {
         let app = home_assistant_runtime_web_app(fixture_runtime(true));
         let response: web_core::WebResponse = app
@@ -4121,6 +4260,9 @@ mod tests {
         assert!(dashboard.contains(r#""scene_count":1"#));
         assert!(dashboard.contains(r#""pending_work_total":"#));
         assert!(dashboard.contains(r#""has_state_gaps":true"#));
+        assert!(dashboard.contains(r#""health":{"generated_at_ms":5000"#));
+        assert!(dashboard.contains(r#""status":"attention""#));
+        assert!(dashboard.contains(r#""ready":true"#));
         assert!(dashboard.contains(r#""runtime":{"generated_at_ms":5000"#));
         assert!(dashboard.contains(r#""topology":{"bridges":1"#));
         assert!(dashboard.contains(r#""bridges":{"summary":{"total_bridges":1"#));
