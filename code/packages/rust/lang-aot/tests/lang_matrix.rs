@@ -991,6 +991,20 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("5 6"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA7-1 staged real arithmetic. A decimal spelling
+    // (`6.0`, `7.0`) now enters the IIR `f64` value path instead of being
+    // silently truncated during expression lowering; `*` is an `f64` multiply,
+    // and `PRINT` routes through `__basic_print_real`, whose current BA7-1
+    // contract is whole-valued output via E8 `real_to_int_trunc` plus the
+    // existing BA2 digit printer. Fractional formatting remains the next BA7
+    // slice, so this proof stays intentionally whole-valued: 6.0 * 7.0 => 42.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 6.0 * 7.0\n20 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — *unstructured `GOSUB` / `RETURN`* (LANG-FULL BA1, enabler
     // **E7**). The headline proof that one `RETURN` resumes at the *dynamically
     // most-recent* `GOSUB`: line 100 is `GOSUB`'d twice and its single `RETURN`

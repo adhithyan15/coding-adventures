@@ -1,7 +1,9 @@
 # LANG-FULL BA7 — Dartmouth BASIC floating-point (`f64`)
 
 **Status:** design spec — **decision-complete** (all §7 questions resolved by
-historical Dartmouth BASIC fidelity); implementation proceeds in slices BA7-1..3.
+historical Dartmouth BASIC fidelity); **BA7-1a landed** (decimal/exponent
+literals, mixed `f64` arithmetic, and whole-valued real `PRINT`), remaining
+implementation proceeds in slices BA7-1b..3.
 **Depends on:** **E3** (reals / `f64` — COMPLETE, every backend executes f64),
 **E8** (numeric conversions `int_to_real` / `real_to_int_trunc` — COMPLETE), and
 **BA2** (character-level `PRINT` via `putchar` — COMPLETE, the digit-printing
@@ -21,12 +23,14 @@ grammar already says so:
 > integers like 42 are stored as 42.0."* — `code/grammars/dartmouth_basic.tokens`
 
 The lexer already recognises every real literal form (`42`, `3.14`, `.5`,
-`1.5E3`, `1.5E-3`). But `dartmouth-basic-iir-compiler` currently **truncates
-every number to `i64`** (`f as i64`) and runs the whole language on an integer
-value model — a deliberate V1 limitation taken *"until the backends grow SSE2
-support"* (module doc). E3 removed that limitation: every backend now executes
+`1.5E3`, `1.5E-3`). Before BA7, `dartmouth-basic-iir-compiler` **truncated every
+number to `i64`** (`f as i64`) and ran the whole language on an integer value
+model — a deliberate V1 limitation taken *"until the backends grow SSE2 support"*
+(the old module doc). E3 removed that limitation: every backend now executes
 `f64`. BA7 is the cutover — make BASIC's value model **`f64`, end to end**, the
-way the real language always was.
+way the real language always was. BA7-1a has started that cutover for
+real-spelled literals and mixed arithmetic; the final all-`f64` model remains a
+follow-up slice.
 
 This is a **whole-value-model change**, so it gets a spec before code.
 
@@ -149,12 +153,15 @@ all and run the **full** crate suite fresh, not just `--lib`.
 
 BA7 is bigger than BA2, so it ships in focused slices rather than one mega-PR:
 
-- **BA7-1 — value model + arithmetic + whole-valued PRINT.** Stop truncating
-  literals; carry `f64` through `LET`/arithmetic/`PRINT`; add `__basic_print_real`
-  but only exercise whole-valued output first (so all existing cells stay green).
-  Matrix cell: `PRINT 6.0 * 7.0` ⇒ `42` on all 7 backends — proving the f64 path
-  runs end to end while output is unchanged. Update in-crate test assertions to
-  the f64 model.
+- **BA7-1a — decimal/exponent arithmetic + whole-valued PRINT. ✅** Stop
+  truncating real-spelled literals; carry `f64` through mixed
+  `LET`/arithmetic/`IF`/`FOR`/`PRINT`; add `__basic_print_real` for whole-valued
+  output via E8 `real_to_int_trunc` and the BA2 digit helper. Matrix cell:
+  `PRINT 6.0 * 7.0` ⇒ `42` on all 7 backends — proving the f64 path runs end to
+  end while output is unchanged for whole values.
+- **BA7-1b — full value-model cutover.** Make integer-spelled numeric values use
+  the BASIC `f64` value model too, while keeping explicit integer boundaries for
+  line numbers, array subscripts, and future `INT(x)`.
 - **BA7-2 — fractional PRINT formatting + `E` notation.** Turn on the
   `.`-and-fraction path (6 significant digits, trailing-zero trim, round-half-up,
   no leading zero) and the out-of-range `E`-notation path (§7.3). Matrix cells:

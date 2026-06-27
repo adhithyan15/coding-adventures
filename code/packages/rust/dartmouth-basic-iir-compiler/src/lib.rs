@@ -14,14 +14,16 @@
 //!
 //! ## V1 scope
 //!
-//! Integer BASIC only — floats are deferred until the backends grow
-//! SSE2 support.  Programs that use floating-point literals (`3.14`)
-//! get the integer-cast (`3`) silently.
+//! Integer-first BASIC with a staged BA7 real path.  Integer-spelled programs
+//! still lower as `i64`, while decimal/exponent literals (`3.14`, `1E3`) and
+//! mixed arithmetic carry `f64` through `LET`/`IF`/`FOR`/`PRINT`.  Fractional
+//! real formatting, real `DATA`/arrays, and the final all-`f64` value-model
+//! cutover remain BA7 follow-ups.
 //!
 //! | Statement     | Lowering |
 //! |---------------|----------|
-//! | `LET A = expr` | `<eval expr → t>; mov_i64 A = t` |
-//! | `PRINT a; b, c` | per item `<eval → v>; call "__basic_print_int", v`, with `;`=tight / `,`=space separators and a trailing `putchar(10)` newline (BA2) |
+//! | `LET A = expr` | `<eval expr → t>; mov A = t` (`i64` or staged BA7 `f64`) |
+//! | `PRINT a; b, c` | per item `<eval → v>; call "__basic_print_int"/"__basic_print_real", v`, with `;`=tight / `,`=space separators and a trailing `putchar(10)` newline (BA2/BA7) |
 //! | `INPUT X`      | `call_builtin "input_i64" -> X` |
 //! | `IF cond THEN m` | `<eval cond → c>; jmp_if_true c, "line_m"` |
 //! | `GOTO m`       | `jmp "line_m"` |
@@ -30,7 +32,7 @@
 //! | `REM …`        | no-op |
 //! | `GOSUB n`      | push call-site id on the `array<i64>` return stack, `jmp line_n`, drop `gosub_ret_<id>` (BA1 / E7) |
 //! | `RETURN`       | pop the id, computed-`goto` (`cmp_eq`+`jmp_if_true`) to its `gosub_ret_<id>` (BA1 / E7) |
-//! | `READ` / `DATA` / `RESTORE` | **deferred** — needs data pool |
+//! | `READ` / `DATA` / `RESTORE` | integer `DATA` pool over `array<i64>` (BA6) |
 //! | `DIM A(n)`     | `alloc_array A = <n+1>` (0-based, inclusive) — BA3 / E5 |
 //! | `LET A(i)=e`   | `<eval i → x>; <eval e → v>; array_set A, x, v` (BA3) |
 //! | `A(i)` (rvalue) | `<eval i → x>; array_get A, x -> t` (BA3) |
@@ -168,9 +170,10 @@ fn compile_program(ast: &GrammarASTNode, module_name: &str)
     main.source_map = std::mem::take(&mut comp.source_map);
     let mut module = IIRModule::new(module_name, "dartmouth-basic");
     module.functions.push(main);
-    // BA2: if any `PRINT` rendered a value, append the two synthetic
-    // digit-printing helpers (`__basic_print_int` / `__basic_print_uint`) so
-    // the `call`s emitted by `emit_print` resolve.  Appended before the
+    // BA2/BA7: if any `PRINT` rendered a value, append the synthetic
+    // numeric helpers (`__basic_print_int` / `__basic_print_uint` /
+    // `__basic_print_real`) so the `call`s emitted by `emit_print` resolve.
+    // Appended before the
     // user-defined functions purely for readability; order doesn't matter
     // because every `call` resolves the callee by name.
     if comp.needs_print_helpers {
@@ -234,6 +237,11 @@ struct Compiler {
     /// expression paths whether a subscripted `A(I)` is a real array
     /// access (→ `array_set`/`array_get`) or an undeclared use (an error).
     arrays: std::collections::HashSet<String>,
+    /// Scalar value types learned while lowering `main`.  BA7 starts the
+    /// BASIC real-value cutover incrementally: integer-only programs keep their
+    /// i64 slots, while decimal/exponent literals and any arithmetic fed by
+    /// them carry f64 slots through LET/IF/PRINT.
+    scalar_types: std::collections::HashMap<String, BasicScalarType>,
     /// The `DATA` pool (BA6): every numeric literal from every `DATA`
     /// statement, gathered in line-number order by a pre-pass.  `READ`
     /// consumes these sequentially through a run-time pointer; `RESTORE`
@@ -244,9 +252,9 @@ struct Compiler {
     /// a real (`f64`) DATA value is a follow-up (the i64 value model, like
     /// integer `DIM` arrays).
     data_pool: Vec<i64>,
-    /// Set once any `PRINT` lowers a numeric item (BA2).  When true,
-    /// `compile_program` appends the two synthetic digit-printing helper
-    /// functions (`__basic_print_int` / `__basic_print_uint`) after `main`
+    /// Set once any `PRINT` lowers a numeric item (BA2/BA7).  When true,
+    /// `compile_program` appends the synthetic digit-printing helper functions
+    /// (`__basic_print_int` / `__basic_print_uint` / `__basic_print_real`) after `main`
     /// so the `call`s emitted by [`emit_print`] resolve.  We only emit the
     /// helpers when they're actually used — a program with no `PRINT` (or
     /// only bare `PRINT`s) carries no dead functions.
@@ -279,6 +287,7 @@ impl Default for Compiler {
             defined_fns: std::collections::HashSet::new(),
             current_fn_param: None,
             arrays: std::collections::HashSet::new(),
+            scalar_types: std::collections::HashMap::new(),
             data_pool: Vec::new(),
             needs_print_helpers: false,
             gosub_count: 0,
@@ -293,8 +302,30 @@ struct ForState {
     var: String,
     limit_slot: String,
     step_slot: String,
+    ty: BasicScalarType,
     test_label: String,
     end_label: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum BasicScalarType {
+    Int,
+    Real,
+}
+
+impl BasicScalarType {
+    fn iir(self) -> &'static str {
+        match self {
+            Self::Int => "i64",
+            Self::Real => "f64",
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+struct ExprValue {
+    slot: String,
+    ty: BasicScalarType,
 }
 
 impl Compiler {
@@ -328,6 +359,20 @@ impl Compiler {
     /// the `source_map` field.
     fn set_loc(&self, loc: SourceLoc) {
         self.current_loc.set(loc);
+    }
+
+    fn coerce_value(&mut self, value: ExprValue, target: BasicScalarType) -> ExprValue {
+        if value.ty == target {
+            return value;
+        }
+        let dest = self.fresh_temp();
+        let op = match (value.ty, target) {
+            (BasicScalarType::Int, BasicScalarType::Real) => "int_to_real",
+            (BasicScalarType::Real, BasicScalarType::Int) => "real_to_int_trunc",
+            _ => unreachable!("checked equal types above"),
+        };
+        self.emit(op, Some(&dest), vec![Operand::Var(value.slot)], target.iir());
+        ExprValue { slot: dest, ty: target }
     }
 
     fn emit_program(&mut self, ast: &GrammarASTNode) -> Result<(), CompileError> {
@@ -490,21 +535,29 @@ impl Compiler {
                      — declare it with `DIM {name}(n)` first")));
             }
             let idx = self.emit_expr(index_expr)?;
+            let idx = self.coerce_value(idx, BasicScalarType::Int);
             let val = self.emit_expr(expr_node)?;
+            let val = self.coerce_value(val, BasicScalarType::Int);
             // `array_set handle, idx, value` — BASIC subscripts are already
             // 0-based (`DIM A(N)` gives `A(0)..A(N)`), so the subscript IS the
             // IIR index; no lower-bound subtraction (unlike ALGOL's `[lo:hi]`).
             self.emit("array_set", None,
-                vec![Operand::Var(name), Operand::Var(idx), Operand::Var(val)],
+                vec![Operand::Var(name), Operand::Var(idx.slot), Operand::Var(val.slot)],
                 "i64");
             return Ok(());
         }
 
         let var_name = scalar_variable_name(var_node)?;
         let val = self.emit_expr(expr_node)?;
-        // `mov_i64 dest = src` — the backend handles this via `emit_binop`/etc.
+        let target_ty = match (self.scalar_types.get(&var_name).copied(), val.ty) {
+            (Some(BasicScalarType::Real), _) | (_, BasicScalarType::Real) => BasicScalarType::Real,
+            _ => BasicScalarType::Int,
+        };
+        let val = self.coerce_value(val, target_ty);
+        // Scalar BASIC values can now be integer or real (BA7 staging).
         self.emit("mov", Some(&var_name),
-                  vec![Operand::Var(val)], "i64");
+                  vec![Operand::Var(val.slot)], val.ty.iir());
+        self.scalar_types.insert(var_name, val.ty);
         Ok(())
     }
 
@@ -653,13 +706,19 @@ impl Compiler {
                         "READ into `{name}(...)` but `{name}` was never DIMmed")));
                 }
                 let idx = self.emit_expr(index_expr)?;
+                let idx = self.coerce_value(idx, BasicScalarType::Int);
                 self.emit("array_set", None,
-                    vec![Operand::Var(name), Operand::Var(idx),
+                    vec![Operand::Var(name), Operand::Var(idx.slot),
                          Operand::Var(value)], "i64");
             } else {
                 let target = scalar_variable_name(var_node)?;
+                let value = ExprValue { slot: value, ty: BasicScalarType::Int };
+                let target_ty = self.scalar_types.get(&target).copied()
+                    .unwrap_or(BasicScalarType::Int);
+                let value = self.coerce_value(value, target_ty);
                 self.emit("mov", Some(&target),
-                    vec![Operand::Var(value)], "i64");
+                    vec![Operand::Var(value.slot)], value.ty.iir());
+                self.scalar_types.insert(target, value.ty);
             }
             // Advance the pointer: `__basic_data_ptr = __basic_data_ptr + 1`.
             let one = self.fresh_temp();
@@ -752,9 +811,13 @@ impl Compiler {
                             let dest = self.fresh_temp();
                             // Discardable result: the helper returns a dummy 0
                             // (its work is the `putchar` side effects).
+                            let helper = match v.ty {
+                                BasicScalarType::Int => "__basic_print_int",
+                                BasicScalarType::Real => "__basic_print_real",
+                            };
                             self.emit("call", Some(&dest),
-                                vec![Operand::Var("__basic_print_int".into()),
-                                     Operand::Var(v)],
+                                vec![Operand::Var(helper.into()),
+                                     Operand::Var(v.slot)],
                                 "i64");
                             self.needs_print_helpers = true;
                         }
@@ -786,9 +849,16 @@ impl Compiler {
             .filter(|n| n.rule_name == "variable")
         {
             let name = scalar_variable_name(v)?;
-            self.emit("call_builtin", Some(&name),
+            let input = self.fresh_temp();
+            self.emit("call_builtin", Some(&input),
                 vec![Operand::Var("input_i64".into())],
                 "i64");
+            let input = ExprValue { slot: input, ty: BasicScalarType::Int };
+            let target_ty = self.scalar_types.get(&name).copied()
+                .unwrap_or(BasicScalarType::Int);
+            let input = self.coerce_value(input, target_ty);
+            self.emit("mov", Some(&name), vec![Operand::Var(input.slot)], input.ty.iir());
+            self.scalar_types.insert(name, input.ty);
         }
         Ok(())
     }
@@ -808,14 +878,21 @@ impl Compiler {
 
         let lhs = self.emit_expr(exprs[0])?;
         let rhs = self.emit_expr(exprs[1])?;
+        let cmp_ty = if lhs.ty == BasicScalarType::Real || rhs.ty == BasicScalarType::Real {
+            BasicScalarType::Real
+        } else {
+            BasicScalarType::Int
+        };
+        let lhs = self.coerce_value(lhs, cmp_ty);
+        let rhs = self.coerce_value(rhs, cmp_ty);
         let cond = self.fresh_temp();
         // The `type_hint` on a comparison is the OPERAND width, not the (always
         // boolean) result — the IIR-to-* backends size the machine compare from
         // it (`i1 sgt` truncates to a 1-bit compare, the LANG-FULL BA0 bug).
         // BASIC's scalars materialise as `i64`, matching Nib/Oct/ALGOL.
         self.emit(cmp_op, Some(&cond),
-            vec![Operand::Var(lhs), Operand::Var(rhs)],
-            "i64");
+            vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
+            cmp_ty.iir());
 
         // THEN target — find the NUMBER token (after the THEN keyword).
         let target_line = extract_if_target(stmt)?;
@@ -966,14 +1043,36 @@ impl Compiler {
         }
         let start_v = self.emit_expr(exprs[0])?;
         let limit_v = self.emit_expr(exprs[1])?;
+        let mut loop_ty = if start_v.ty == BasicScalarType::Real
+            || limit_v.ty == BasicScalarType::Real
+            || self.scalar_types.get(&var).copied() == Some(BasicScalarType::Real)
+        {
+            BasicScalarType::Real
+        } else {
+            BasicScalarType::Int
+        };
         let step_v = if let Some(step_expr) = exprs.get(2) {
-            self.emit_expr(step_expr)?
+            let step = self.emit_expr(step_expr)?;
+            if step.ty == BasicScalarType::Real {
+                loop_ty = BasicScalarType::Real;
+            }
+            step
         } else {
             // STEP defaults to 1.
             let t = self.fresh_temp();
-            self.emit("const", Some(&t), vec![Operand::Int(1)], "i64");
-            t
+            match loop_ty {
+                BasicScalarType::Int => {
+                    self.emit("const", Some(&t), vec![Operand::Int(1)], "i64");
+                }
+                BasicScalarType::Real => {
+                    self.emit("const", Some(&t), vec![Operand::Float(1.0)], "f64");
+                }
+            }
+            ExprValue { slot: t, ty: loop_ty }
         };
+        let start_v = self.coerce_value(start_v, loop_ty);
+        let limit_v = self.coerce_value(limit_v, loop_ty);
+        let step_v = self.coerce_value(step_v, loop_ty);
 
         // Stash limit and step in named slots so NEXT can read them later
         // (they're computed once at FOR entry, not re-evaluated each pass).
@@ -984,9 +1083,10 @@ impl Compiler {
         let test_label = format!("for_{id}_test");
         let end_label  = format!("for_{id}_end");
 
-        self.emit("mov", Some(&var), vec![Operand::Var(start_v)], "i64");
-        self.emit("mov", Some(&limit_slot), vec![Operand::Var(limit_v)], "i64");
-        self.emit("mov", Some(&step_slot),  vec![Operand::Var(step_v)],  "i64");
+        self.emit("mov", Some(&var), vec![Operand::Var(start_v.slot)], loop_ty.iir());
+        self.emit("mov", Some(&limit_slot), vec![Operand::Var(limit_v.slot)], loop_ty.iir());
+        self.emit("mov", Some(&step_slot),  vec![Operand::Var(step_v.slot)],  loop_ty.iir());
+        self.scalar_types.insert(var.clone(), loop_ty);
 
         // Test label + per-iteration guard.
         self.emit("label", None, vec![Operand::Var(test_label.clone())], "void");
@@ -1001,7 +1101,7 @@ impl Compiler {
         // backends emit a 1-bit `i1` compare, breaking FOR on LLVM/WASM.
         self.emit("cmp_le", Some(&cond),
             vec![Operand::Var(var.clone()), Operand::Var(limit_slot.clone())],
-            "i64");
+            loop_ty.iir());
         self.emit("jmp_if_false", None,
             vec![Operand::Var(cond), Operand::Var(end_label.clone())],
             "void");
@@ -1015,6 +1115,7 @@ impl Compiler {
             var,
             limit_slot,
             step_slot,
+            ty: loop_ty,
             test_label,
             end_label,
         });
@@ -1037,9 +1138,10 @@ impl Compiler {
         let new_val = self.fresh_temp();
         self.emit("add", Some(&new_val),
             vec![Operand::Var(top.var.clone()), Operand::Var(top.step_slot)],
-            "i64");
+            top.ty.iir());
         self.emit("mov", Some(&top.var),
-            vec![Operand::Var(new_val)], "i64");
+            vec![Operand::Var(new_val)], top.ty.iir());
+        self.scalar_types.insert(top.var.clone(), top.ty);
         self.emit("jmp", None,
             vec![Operand::Var(top.test_label)], "void");
         self.emit("label", None,
@@ -1061,7 +1163,7 @@ impl Compiler {
     // and produce a fresh temp for each intermediate.
 
     fn emit_expr(&mut self, node: &GrammarASTNode)
-        -> Result<String, CompileError>
+        -> Result<ExprValue, CompileError>
     {
         match node.rule_name.as_str() {
             "expr"  => self.emit_left_assoc_chain(node),
@@ -1082,7 +1184,7 @@ impl Compiler {
     }
 
     fn emit_left_assoc_chain(&mut self, node: &GrammarASTNode)
-        -> Result<String, CompileError>
+        -> Result<ExprValue, CompileError>
     {
         // node = first_sub_expr { OP next_sub_expr }
         //
@@ -1115,16 +1217,23 @@ impl Compiler {
             let cir_op = binary_op_name(&op.value)
                 .ok_or_else(|| CompileError::Unsupported(
                     format!("operator `{}`", op.value)))?;
+            let result_ty = if acc.ty == BasicScalarType::Real || rhs.ty == BasicScalarType::Real {
+                BasicScalarType::Real
+            } else {
+                BasicScalarType::Int
+            };
+            let acc_v = self.coerce_value(acc, result_ty);
+            let rhs_v = self.coerce_value(rhs, result_ty);
             self.emit(cir_op, Some(&dest),
-                vec![Operand::Var(acc), Operand::Var(rhs)],
-                "i64");
-            acc = dest;
+                vec![Operand::Var(acc_v.slot), Operand::Var(rhs_v.slot)],
+                result_ty.iir());
+            acc = ExprValue { slot: dest, ty: result_ty };
         }
         Ok(acc)
     }
 
     fn emit_power(&mut self, node: &GrammarASTNode)
-        -> Result<String, CompileError>
+        -> Result<ExprValue, CompileError>
     {
         // `power = unary [ CARET power ]` — right-associative.  V1 doesn't
         // support exponentiation (would need a runtime helper or
@@ -1153,7 +1262,7 @@ impl Compiler {
     }
 
     fn emit_unary(&mut self, node: &GrammarASTNode)
-        -> Result<String, CompileError>
+        -> Result<ExprValue, CompileError>
     {
         // `unary = MINUS primary | primary`.
         let has_minus = node.children.iter().any(|c| matches!(c,
@@ -1164,12 +1273,12 @@ impl Compiler {
         if !has_minus { return Ok(v); }
         // Emit `neg dest, v`.
         let dest = self.fresh_temp();
-        self.emit("neg", Some(&dest), vec![Operand::Var(v)], "i64");
-        Ok(dest)
+        self.emit("neg", Some(&dest), vec![Operand::Var(v.slot)], v.ty.iir());
+        Ok(ExprValue { slot: dest, ty: v.ty })
     }
 
     fn emit_primary(&mut self, node: &GrammarASTNode)
-        -> Result<String, CompileError>
+        -> Result<ExprValue, CompileError>
     {
         // primary = NUMBER | BUILTIN_FN(expr) | USER_FN(expr) | variable | (expr)
         //
@@ -1178,14 +1287,24 @@ impl Compiler {
         for c in &node.children {
             match c {
                 ASTNodeOrToken::Token(t) if t.effective_type_name() == "NUMBER" => {
-                    // Truncate floats to i64 — V1 is integer-only.
-                    let v: i64 = t.value.trim().parse::<f64>()
-                        .map(|f| f as i64)
-                        .unwrap_or(0);
+                    let raw = t.value.trim();
                     let dest = self.fresh_temp();
+                    if number_spells_real(raw) {
+                        let v = raw.parse::<f64>().map_err(|_| CompileError::Malformed(
+                            format!("NUMBER literal `{raw}` is not a real value")))?;
+                        if !v.is_finite() {
+                            return Err(CompileError::Unsupported(format!(
+                                "non-finite real literal `{raw}`")));
+                        }
+                        self.emit("const", Some(&dest),
+                            vec![Operand::Float(v)], "f64");
+                        return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
+                    }
+                    let v = raw.parse::<i64>().map_err(|_| CompileError::Malformed(
+                        format!("NUMBER literal `{raw}` is not an i64 integer")))?;
                     self.emit("const", Some(&dest),
                         vec![Operand::Int(v)], "i64");
-                    return Ok(dest);
+                    return Ok(ExprValue { slot: dest, ty: BasicScalarType::Int });
                 }
                 ASTNodeOrToken::Token(t) if t.effective_type_name() == "USER_FN" => {
                     // `USER_FN LPAREN expr RPAREN` — a call to a user-defined
@@ -1207,10 +1326,11 @@ impl Compiler {
                                  DIMmed — declare it with `DIM {name}(n)` first")));
                         }
                         let idx = self.emit_expr(index_expr)?;
+                        let idx = self.coerce_value(idx, BasicScalarType::Int);
                         let dest = self.fresh_temp();
                         self.emit("array_get", Some(&dest),
-                            vec![Operand::Var(name), Operand::Var(idx)], "i64");
-                        return Ok(dest);
+                            vec![Operand::Var(name), Operand::Var(idx.slot)], "i64");
+                        return Ok(ExprValue { slot: dest, ty: BasicScalarType::Int });
                     }
                     let name = scalar_variable_name(n)?;
                     // Inside a `DEF` body, only the formal parameter is in
@@ -1226,8 +1346,11 @@ impl Compiler {
                                  parameter `{param}` is in scope (global access \
                                  from a function needs enabler E6)")));
                         }
+                        return Ok(ExprValue { slot: name, ty: BasicScalarType::Int });
                     }
-                    return Ok(name);
+                    let ty = self.scalar_types.get(&name).copied()
+                        .unwrap_or(BasicScalarType::Int);
+                    return Ok(ExprValue { slot: name, ty });
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "expr" => {
                     return self.emit_expr(n);
@@ -1249,7 +1372,7 @@ impl Compiler {
     /// the BASIC counterpart of ALGOL's value-procedure calls (AL3), which
     /// already run on native/LLVM/WASM/JVM/CLR/VM/JIT.
     fn emit_user_fn_call(&mut self, name: &str, node: &GrammarASTNode)
-        -> Result<String, CompileError>
+        -> Result<ExprValue, CompileError>
     {
         if !self.defined_fns.contains(name) {
             return Err(CompileError::Unsupported(format!(
@@ -1261,10 +1384,11 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed(format!(
                 "user function call `{name}` missing argument expr")))?;
         let arg = self.emit_expr(arg_node)?;
+        let arg = self.coerce_value(arg, BasicScalarType::Int);
         let dest = self.fresh_temp();
         self.emit("call", Some(&dest),
-            vec![Operand::Var(name.to_string()), Operand::Var(arg)], "i64");
-        Ok(dest)
+            vec![Operand::Var(name.to_string()), Operand::Var(arg.slot)], "i64");
+        Ok(ExprValue { slot: dest, ty: BasicScalarType::Int })
     }
 
     /// Pre-pass: record every `DEF FNx` name declared on `line` so a call
@@ -1315,7 +1439,8 @@ impl Compiler {
         // name (`param`) and the body may reference only it (enforced in
         // `emit_primary`).
         let result = self.emit_expr(body)?;
-        self.emit("ret", None, vec![Operand::Var(result)], "i64");
+        let result = self.coerce_value(result, BasicScalarType::Int);
+        self.emit("ret", None, vec![Operand::Var(result.slot)], "i64");
 
         // ── assemble the function and restore main's context ────────────
         let body_instrs = std::mem::take(&mut self.instrs);
@@ -1549,6 +1674,13 @@ fn binary_op_name(op: &str) -> Option<&'static str> {
     }
 }
 
+/// Whether a BASIC numeric literal should enter the BA7 real path.  A decimal
+/// point or exponent marker is enough, even when the value is whole-valued
+/// (`6.0`, `1E3`), because the spelling carries the user's intent.
+fn number_spells_real(raw: &str) -> bool {
+    raw.contains('.') || raw.contains('e') || raw.contains('E')
+}
+
 /// The separator character carried by a `print_sep` node — `,` or `;`.
 /// (`print_sep = COMMA | SEMICOLON`, so the node has exactly one token
 /// child.)  Falls back to `;` (the tight, space-free join) if the token is
@@ -1566,8 +1698,8 @@ fn print_sep_char(node: &GrammarASTNode) -> char {
     ';'
 }
 
-/// The two synthetic helper functions BA2's `PRINT` lowering calls to render a
-/// signed integer one character at a time (so several items can share a line).
+/// Synthetic helper functions BA2/BA7 `PRINT` lowering calls to render numeric
+/// values one character at a time (so several items can share a line).
 /// They are appended to the module after `main` only when a program actually
 /// `PRINT`s a value (`Compiler::needs_print_helpers`).
 ///
@@ -1587,6 +1719,9 @@ fn print_sep_char(node: &GrammarASTNode) -> char {
 ///           putchar('-'); __basic_print_uint(0 - n)
 ///       else:
 ///           __basic_print_uint(n)
+///
+///   fn __basic_print_real(x):
+///       __basic_print_int(real_to_int_trunc(x))    # BA7-1 whole-valued print
 /// ```
 ///
 /// The recursion is what gets the digits out in left-to-right order with no
@@ -1640,13 +1775,27 @@ fn print_helper_functions() -> Vec<IIRFunction> {
         mk("ret", None, vec![var("z2")], "i64"),
     ];
 
+    // __basic_print_real(x) — BA7-1's whole-valued real output path. Fractional
+    // formatting is a later BA7 slice; for now, whole-valued f64 expressions
+    // print through the existing integer digit renderer.
+    let real_body = vec![
+        mk("real_to_int_trunc", Some("i"), vec![var("x")], "i64"),
+        mk("call", Some("_r"),
+            vec![var("__basic_print_int"), var("i")], "i64"),
+        mk("const", Some("z"), vec![Operand::Int(0)], "i64"),
+        mk("ret", None, vec![var("z")], "i64"),
+    ];
+
     let mut funcs = Vec::new();
-    for (name, body) in [("__basic_print_uint", uint_body),
-                         ("__basic_print_int", int_body)] {
+    for (name, params, body) in vec![
+        ("__basic_print_uint", vec![("n".to_string(), "i64".to_string())], uint_body),
+        ("__basic_print_int", vec![("n".to_string(), "i64".to_string())], int_body),
+        ("__basic_print_real", vec![("x".to_string(), "f64".to_string())], real_body),
+    ] {
         let len = body.len();
         let mut f = IIRFunction::new(
             name,
-            vec![("n".to_string(), "i64".to_string())],
+            params,
             "i64",
             body,
         );
@@ -1728,6 +1877,49 @@ mod tests {
         // And the helper functions must be present in the module.
         assert!(m.functions.iter().any(|f| f.name == "__basic_print_int"));
         assert!(m.functions.iter().any(|f| f.name == "__basic_print_uint"));
+    }
+
+    /// BA7-1: decimal/exponent literals enter the staged `f64` value path.
+    #[test]
+    fn compiles_decimal_literal_as_f64_const() {
+        let m = compile("10 LET A = 6.0\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "const"
+            && i.type_hint == "f64"
+            && matches!(i.srcs.first(), Some(Operand::Float(v)) if (*v - 6.0).abs() < f64::EPSILON)),
+            "expected f64 const 6.0 in {body:?}");
+        assert!(body.iter().any(|i| i.op == "mov"
+            && i.dest.as_deref() == Some("A")
+            && i.type_hint == "f64"),
+            "LET A = 6.0 should store A as f64");
+    }
+
+    /// BA7-1: real arithmetic stays on the `f64` track and whole-valued PRINT
+    /// delegates through `__basic_print_real`.
+    #[test]
+    fn float_arithmetic_uses_f64_and_print_real() {
+        let m = compile("10 PRINT 6.0 * 7.0\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "mul" && i.type_hint == "f64"),
+            "6.0 * 7.0 should lower to f64 mul: {body:?}");
+        assert!(calls_named(body, "__basic_print_real"),
+            "real PRINT should call __basic_print_real");
+        assert!(m.functions.iter().any(|f| f.name == "__basic_print_real"
+            && f.params == vec![("x".to_string(), "f64".to_string())]),
+            "module should include f64 real print helper");
+    }
+
+    /// BA7-1: mixed integer/real arithmetic widens the integer operand rather
+    /// than truncating the real operand back to i64.
+    #[test]
+    fn mixed_int_real_arithmetic_widens_to_f64() {
+        let m = compile("10 PRINT 40 + 2.0\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "int_to_real"),
+            "mixed arithmetic should widen the integer operand: {body:?}");
+        assert!(body.iter().any(|i| i.op == "add" && i.type_hint == "f64"),
+            "mixed arithmetic result should be f64");
+        assert!(calls_named(body, "__basic_print_real"));
     }
 
     /// BA2: a program with no value-printing `PRINT` carries no helper
@@ -1869,18 +2061,24 @@ mod tests {
         assert!(between.contains(&"label"));
     }
 
-    /// `INPUT X` emits `call_builtin "input_i64" -> X`.
+    /// `INPUT X` emits `call_builtin "input_i64"` then stores into `X`.
     #[test]
     fn compiles_input() {
         let m = compile("10 INPUT X\n20 END\n").expect("ok");
         let body = &m.functions[0].instructions;
         let call = body.iter().find(|i|
-            i.op == "call_builtin" && i.dest.as_deref() == Some("X"));
-        assert!(call.is_some(), "expected call_builtin -> X");
+            i.op == "call_builtin"
+                && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "input_i64"));
+        assert!(call.is_some(), "expected call_builtin input_i64");
         let helper = call.unwrap().srcs.first().and_then(|s| match s {
             Operand::Var(n) => Some(n.as_str()), _ => None,
         });
         assert_eq!(helper, Some("input_i64"));
+        let dest = call.unwrap().dest.as_deref().expect("input has destination temp");
+        assert!(body.iter().any(|i| i.op == "mov"
+            && i.dest.as_deref() == Some("X")
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == dest)),
+            "expected input temp to move into X");
     }
 
     /// String literals in PRINT are deferred → `Unsupported`.
