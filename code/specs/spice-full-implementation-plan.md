@@ -15,153 +15,20 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Deck execution layer.
+1. Production solver core.
    - Status: current PR completion candidate.
-   - Complete deck-level execution wiring so `run_deck` / `runDeck` execute
-     every parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`, `.sens`, and `.noise`
-     card in source order, preserve duplicate analysis directives, default
-     analysis-less decks to an implicit `.op`, and aggregate whole-run artifact
-     tables, CSV, compact JSON, and host-native records across the selected
-     executions.
-   - Convert parsed netlists into runnable analysis plans beyond the initial
-     `.op`, `.dc`, `.ac`, and `.tran` subset.
-   - Support richer expression/function surfaces and execution wiring for
-     parsed `.func`, `.ic`, and `.nodeset` hints; `.end` boundary detection,
-     map-backed `.include` / `.lib` source resolution, scalar `.param`
-     evaluation, active-line expression rewriting, function-definition
-     extraction, scalar function-call evaluation, and initial-condition /
-     nodeset extraction plus DC warm-start execution aids now have shared
-     diagnostic and solver footholds; transient scalar `.measure`-style output
-     helpers now cover shared peak-to-peak and final-value measurement output,
-     and parsed transient `.measure` / `.meas` cards can now feed those
-     measurement helpers from deck text; parsed `.save`, `.probe`,
-     `.print <analysis> ...`, and `.plot <analysis> ...` cards now drive
-     stable table output for operating-point, DC sweep, AC sweep, and transient
-     results; unsupported `.control` / `.endc` blocks are now excluded from
-     active deck and source-resolved solver input while body commands emit
-     stable non-executed diagnostics, and selected `.control` block
-     analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
-     `measure`, `meas`, `four`, `fourier`, `print`, and `plot`) now normalize
-     into dotted deck cards while `run`, `reset`, `quit`, and UI-only
-     `set noaskquit` options plus ASCII rawfile-format `set filetype=ascii`
-     options, rawfile vector-name/single-scale toggles (`set wr_vecnames`,
-     `set wr_singlescale`), and rawfile append-write `set appendwrite` options
-     plus target-bearing rawfile `write <rawfile> [probes...]` markers and
-     ASCII data-write `wrdata <file> <probes...>` markers are accepted as
-     no-op control markers, and read-only `display` / `listing` / `show` /
-     `showmod` / `status` / `version` / `help` / `echo` / `rusage` / `where`
-     inspection, introspection, and console/debug commands are accepted as
-     no-op control markers, while selected `source` and `shell` external
-     script/shell commands now emit explicit policy diagnostics instead of
-     generic unsupported-command diagnostics, and selected `cd`
-     working-directory mutation commands now emit explicit policy diagnostics
-     instead of generic unsupported-command diagnostics, and selected
-     control-flow commands (`if`, `while`, `foreach`, and `repeat`) now emit
-     explicit policy diagnostics instead of generic unsupported-command
-     diagnostics, and selected variable/state mutation commands (`let`,
-     `alter`, `alterparam`, `set`, and `unset`) now emit explicit policy
-     diagnostics instead of generic unsupported-command diagnostics while
-     accepted no-op `set` options continue to route as no-op markers; parsed
-     `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
-     the shared scalar measurement table surface;
-     parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
-     optional frequency windows into the same measurement table surface; parsed
-     transient `.measure ... FIND ... AT=` cards now route single-time probe
-     samples through the shared measurement table with interpolation between
-     neighboring transient samples; parsed transient
-     `.measure ... WHEN probe=target` cards now route first-crossing times over
-     optional transient windows into the shared measurement table; parsed
-     transient `.measure ... WHEN probe=target RISE|FALL|CROSS=n` cards now
-     route counted threshold occurrences into the same stable measurement
-     table; parsed transient `.measure ... TRIG ... TARG ...` cards now route
-     trigger-to-target delay measurements with counted crossing controls into
-     stable scalar rows; parsed transient `.four` deck cards now route harmonic
-     analyses over transient outputs with optional `HARMONICS=` and `FROM=`
-     controls; parsed `.op`, `.dc`, `.ac`, and `.tran` cards now resolve into
-     shared cross-language analysis-plan metadata before execution, and callers
-     can select one explicit or implicit plan with stable ambiguity errors and
-     route `.op`, `.dc`, `.ac LIN`, `.ac DEC`, `.ac OCT`, or `.tran` into the
-     matching solver plus deck-selected table output, including `.tran`
-     `START` output filtering, `MAXSTEP` fixed-step caps, and `UIC`
-     initial-condition intent; selected `.tran` execution now keeps `.tran
-     TSTEP` as the deck output print grid while `MAXSTEP` caps internal solver
-     stepping; deck executions now expose normalized selected table
-     count/name lists, analysis directives, output probes, and output
-     directives as inspectable artifacts alongside the stable table;
-     selected `.measure` outputs now travel with deck execution results as
-     structured measurements plus stable measurement tables; selected transient
-     `.four` outputs now
-     travel with deck execution results as structured Fourier artifacts plus
-     stable Fourier tables; selected deck executions now include structured
-     run-artifact summaries plus stable row/count tables for result rows,
-     stable table names, output probes, measurements, and Fourier artifacts,
-     with normalized table, output-probe, measurement, and Fourier probe name
-     lists included in the run artifacts, and selected executions now expose the
-     same stable table count/name inventory directly; transfer-function,
-     sensitivity, and noise run artifacts now
-     also expose their selected output node, and selected-run artifacts can now
-     render as stable CSV and compact JSON beside the existing tab-separated
-     table; stable deck output tables can now also convert to deterministic CSV
-     and compact JSON records or host-native header-keyed records across
-     Python, Rust, and TypeScript, and selected executions now expose ordered
-     table export artifacts with text, CSV, compact JSON, and host-native
-     records for each stable table; selected deck run artifacts now also carry
-     existing `.control` body policy diagnostic codes through their stable
-     table, CSV, compact JSON, and ordered table export artifacts; normalized
-     accepted `.control` command inventories now travel through
-     `ControlLines` / `ControlLineList` metadata in the same run-artifact
-     table, CSV, compact JSON, and ordered table export artifacts, and
-     selected executions now expose the same normalized control command
-     count/list directly beside table, output, measurement, Fourier, and
-     analysis-directive artifacts; selected executions now also expose
-     diagnostic count/code inventories directly beside those execution-level
-     artifacts; accepted rawfile/data-write marker inventories for `.control`
-     `write` / `wrdata` commands now travel through direct selected-execution
-     fields and stable selected-run artifact tables, CSV/JSON helpers, and
-     ordered table export artifacts without serializing files, and accepted
-     rawfile output option inventories for `.control` `set filetype=ascii`,
-     `set wr_vecnames`, `set wr_singlescale`, and `set appendwrite` now travel
-     through the same direct selected-execution fields and selected-run
-     artifact exports; accepted `.control` `write <rawfile> ...` markers now
-     also produce deterministic in-memory ASCII rawfile artifacts with stable
-     table, CSV, compact JSON, and host-native record summaries, and explicit
-     `write` probe lists now select the emitted in-memory rawfile vector
-     columns and carry matched/unmatched probe inventories, and accepted
-     `.control` `wrdata <file> ...` markers now produce deterministic
-     in-memory ASCII data-file artifacts with matching stable table, CSV,
-     compact JSON, and host-native record summaries, and WRDATA artifacts now
-     carry accepted rawfile/data-write option inventories plus deterministic
-     `wr_vecnames` / `wr_singlescale` rendering metadata, and explicit
-     `wrdata` probe lists now select the emitted in-memory data-file columns
-     and carry matched/unmatched probe inventories while filesystem writes
-     remain metadata-only, and policy-blocked `.control` commands now have
-     direct selected-execution artifacts with line, category, command, code,
-     severity, message, stable table, CSV, compact JSON, and host-native record
-     exports, and those row-level and category-summary policy tables now also
-     travel through ordered table export artifacts plus selected-run `TableList`
-     metadata; selected output-plan artifacts now also expose normalized
-     `.save`, `.probe`, `.print`, and `.plot` directive kind counts/lists
-     beside the selected directive tokens in table, CSV, compact JSON, and
-     host-native record exports, and selected output-plan artifacts now also
-     expose normalized output directive analysis scope counts/lists that
-     distinguish global `.save` / `.probe` selections from scoped `.probe`,
-     `.print`, and `.plot` selections in the same exports, and selected
-     output-plan artifacts now also expose selected output directive source
-     line counts/lists beside those directive provenance inventories, and
-     selected output-plan artifacts now also expose selected output probe
-     source line counts/lists aligned with the selected output-probe list, and
-     selected output-plan artifacts now also expose selected result row counts
-     beside result-column inventories, and selected output-plan artifacts now
-     also expose selected analysis line/source metadata beside directive
-     inventories, and selected output-plan artifacts now also expose selected
-     analysis output-node metadata beside that analysis provenance, and selected
-     output-plan artifacts now also expose selected sweep, frequency, transient
-     timing, and `UIC` metadata beside that selected-analysis provenance, and
-     whole-deck executions now preserve source-order analysis execution with
-     aggregate run-artifact exports plus deck-wide analysis kind and directive
-     inventories.
-   - Expand remaining deck-controlled analyses toward full SPICE compatibility
-     while keeping unsupported control-flow diagnostics explicit.
+   - Python now routes large real DC solves through an optional SciPy sparse-LU
+     backend when available and falls back to the native sparse-row Gaussian
+     solver with an explicit fallback reason.
+   - Rust and TypeScript keep their native sparse-row real solver paths and now
+     report the actual backend used for large DC solves.
+   - Python, Rust, and TypeScript `DcResult.diagnostics` now carry a stable
+     solver profile with matrix size, selected solver kind, backend,
+     structural nonzero count, density, peak fill-in count, and fallback
+     metadata so production integrations can audit sparse activation without
+     reparsing matrices.
+   - Sparse large-ladder parity tests cover the profile contract across all
+     three packages while preserving existing real and complex solver behavior.
 
 ## Completed Slices
 
@@ -215,13 +82,19 @@ downstream tools to compare.
      results.
 
 7. Sparse solver productionization and convergence diagnostics.
-   - Status: completed in this sparse-solver diagnostics slice.
+   - Status: completed through the sparse-solver diagnostics and production
+     profile slices.
    - Python, Rust, and TypeScript now expose stable DC solver diagnostics with
      matrix size, selected real solver path, tolerance, convergence aid, and
      final Newton delta metadata.
    - Large real DC and complex AC matrix solves now route through sparse-row
      solver implementations in all three packages when the shared threshold is
      reached.
+   - Python now uses an optional SciPy sparse-LU backend for large real DC
+     solves with an explicit native sparse fallback, while Rust and TypeScript
+     expose their native sparse-row backend choices.
+   - DC diagnostics now include stable solver profiles with structural nonzero
+     counts, density, fill-in, backend, and fallback metadata.
 
 8. Device model audit fixtures and model-card alias compatibility.
    - Status: completed in this device-model alias fixture slice.
@@ -1279,13 +1152,16 @@ downstream tools to compare.
      command routing, including control flow, variables, and script execution
      policy.
 
-2. Production solver core.
-   - Finish sparse real and complex matrix paths.
-   - Use a Rust production sparse path suitable for large decks, a Python
-     SciPy-backed path with a structured fallback, and a TypeScript native sparse
-     or WASM strategy for browser workloads.
-   - Harden Newton damping, device limiting, convergence aids, tolerances, and
-     diagnostics.
+2. Production solver core follow-up.
+   - Sparse real/complex matrix paths now have cross-language native coverage,
+     and Python real DC solves now use an optional SciPy sparse-LU backend with
+     structured native fallback metadata.
+   - Rust, Python, and TypeScript DC diagnostics now expose stable solver
+     profiles for sparse activation, structural nonzeros, density, fill-in,
+     backend choice, and fallback reasons.
+   - Remaining solver-core work should focus on nonlinear hardening: Newton
+     damping, device limiting, tolerance policy, and additional convergence
+     diagnostics for difficult transistor decks.
 
 3. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
@@ -1317,4 +1193,6 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Production solver core.
+1. Nonlinear convergence hardening.
+2. Device model depth.
+3. Analysis completion.

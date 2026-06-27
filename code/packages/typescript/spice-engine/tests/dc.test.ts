@@ -237,6 +237,14 @@ describe("dcOp", () => {
     expect(result.diagnostics.convergenceAid).toBe("newton");
     expectClose(result.diagnostics.tolerance, 1.0e-9);
     expect(Number.isFinite(result.diagnostics.maxDelta)).toBe(true);
+    expect(result.diagnostics.solverProfile.matrixSize).toBe(36);
+    expect(result.diagnostics.solverProfile.solver).toBe("sparse_real");
+    expect(result.diagnostics.solverProfile.backend).toBe("native_sparse_gaussian");
+    expect(result.diagnostics.solverProfile.structuralNonzeros).toBeGreaterThan(0);
+    expect(result.diagnostics.solverProfile.density).toBeGreaterThan(0);
+    expect(result.diagnostics.solverProfile.density).toBeLessThan(0.1);
+    expect(result.diagnostics.solverProfile.fillInNonzeros).toBeLessThanOrEqual(36 * 36);
+    expect(result.diagnostics.solverProfile.fallbackReason).toBeUndefined();
   });
 
   it("expands subcircuit instances into namespaced primitive elements", () => {

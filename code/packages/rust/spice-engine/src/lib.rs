@@ -31,6 +31,63 @@ fn complex_solver_kind(matrix_size: usize) -> &'static str {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct LinearSolverProfile {
+    pub matrix_size: usize,
+    pub solver: String,
+    pub backend: String,
+    pub structural_nonzeros: usize,
+    pub density: f64,
+    pub fill_in_nonzeros: usize,
+    pub fallback_reason: Option<String>,
+}
+
+fn empty_solver_profile(matrix_size: usize) -> LinearSolverProfile {
+    LinearSolverProfile {
+        matrix_size,
+        solver: real_solver_kind(matrix_size).to_string(),
+        backend: "none".to_string(),
+        structural_nonzeros: 0,
+        density: 0.0,
+        fill_in_nonzeros: 0,
+        fallback_reason: None,
+    }
+}
+
+fn real_matrix_nonzeros(matrix: &[Vec<f64>]) -> usize {
+    matrix
+        .iter()
+        .map(|row| row.iter().filter(|&&value| value != 0.0).count())
+        .sum()
+}
+
+fn real_matrix_density(matrix_size: usize, structural_nonzeros: usize) -> f64 {
+    if matrix_size == 0 {
+        0.0
+    } else {
+        structural_nonzeros as f64 / (matrix_size * matrix_size) as f64
+    }
+}
+
+fn real_solver_profile(
+    matrix: &[Vec<f64>],
+    backend: &str,
+    fill_in_nonzeros: usize,
+    fallback_reason: Option<String>,
+) -> LinearSolverProfile {
+    let matrix_size = matrix.len();
+    let structural_nonzeros = real_matrix_nonzeros(matrix);
+    LinearSolverProfile {
+        matrix_size,
+        solver: real_solver_kind(matrix_size).to_string(),
+        backend: backend.to_string(),
+        structural_nonzeros,
+        density: real_matrix_density(matrix_size, structural_nonzeros),
+        fill_in_nonzeros,
+        fallback_reason,
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct Circuit {
     elements: Vec<Element>,
     subcircuits: HashMap<String, SubcircuitDefinition>,
@@ -7886,6 +7943,7 @@ pub struct DcSolverDiagnostics {
     pub tolerance: f64,
     pub max_delta: f64,
     pub convergence_aid: DcConvergenceAid,
+    pub solver_profile: LinearSolverProfile,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -15116,6 +15174,7 @@ fn dc_result_from_linear_solution(
             tolerance,
             max_delta: solution.max_delta,
             convergence_aid,
+            solver_profile: solution.solver_profile,
         },
     }
 }
@@ -17676,6 +17735,13 @@ struct LinearSolution {
     iterations: usize,
     converged: bool,
     max_delta: f64,
+    solver_profile: LinearSolverProfile,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct SolvedLinearSystem {
+    solution: Vec<f64>,
+    profile: LinearSolverProfile,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -17767,6 +17833,7 @@ fn solve_linear_circuit_with_options(
             iterations: 0,
             converged: true,
             max_delta: 0.0,
+            solver_profile: empty_solver_profile(0),
         });
     }
 
@@ -17889,6 +17956,7 @@ fn solve_linear_circuit_at_operating_point_or_failure(
                 operating_point,
                 false,
                 f64::INFINITY,
+                empty_solver_profile(matrix_size),
             ))
         }
         Err(error) => Err(error),
@@ -18005,16 +18073,17 @@ fn solve_linear_circuit_at_operating_point(
         }
     }
 
-    let solution = solve_linear_system(matrix, rhs)?;
+    let solved = solve_linear_system_with_profile(matrix, rhs)?;
     Ok(linear_solution_from_vector(
         circuit,
         inductor_states,
         node_indices,
         voltage_sources,
         node_count,
-        &solution,
+        &solved.solution,
         true,
         0.0,
+        solved.profile,
     ))
 }
 
@@ -18027,6 +18096,7 @@ fn linear_solution_from_vector(
     solution: &[f64],
     converged: bool,
     max_delta: f64,
+    solver_profile: LinearSolverProfile,
 ) -> LinearSolution {
     let node_voltages = node_voltages_from_solution(node_indices, solution);
     let mut branch_currents = BTreeMap::new();
@@ -18050,6 +18120,7 @@ fn linear_solution_from_vector(
         iterations: 1,
         converged,
         max_delta,
+        solver_profile,
     }
 }
 
@@ -21564,10 +21635,21 @@ fn stamp_complex_transconductance(
 }
 
 fn solve_linear_system(matrix: Vec<Vec<f64>>, rhs: Vec<f64>) -> Result<Vec<f64>, SpiceError> {
+    Ok(solve_linear_system_with_profile(matrix, rhs)?.solution)
+}
+
+fn solve_linear_system_with_profile(
+    matrix: Vec<Vec<f64>>,
+    rhs: Vec<f64>,
+) -> Result<SolvedLinearSystem, SpiceError> {
     if rhs.len() >= SPARSE_SOLVER_THRESHOLD {
-        return solve_sparse_linear_system(matrix, rhs);
+        return solve_sparse_linear_system_with_profile(matrix, rhs);
     }
-    solve_dense_linear_system(matrix, rhs)
+    let profile = real_solver_profile(&matrix, "dense_gaussian", 0, None);
+    Ok(SolvedLinearSystem {
+        solution: solve_dense_linear_system(matrix, rhs)?,
+        profile,
+    })
 }
 
 fn solve_dense_linear_system(
@@ -21616,11 +21698,14 @@ fn solve_dense_linear_system(
     Ok(solution)
 }
 
-fn solve_sparse_linear_system(
+fn solve_sparse_linear_system_with_profile(
     matrix: Vec<Vec<f64>>,
     rhs: Vec<f64>,
-) -> Result<Vec<f64>, SpiceError> {
+) -> Result<SolvedLinearSystem, SpiceError> {
     let n = rhs.len();
+    let initial_nonzeros = real_matrix_nonzeros(&matrix);
+    let mut peak_nonzeros = initial_nonzeros;
+    let mut profile = real_solver_profile(&matrix, "native_sparse_gaussian", 0, None);
     let mut rows: Vec<HashMap<usize, f64>> = matrix
         .into_iter()
         .map(|row| {
@@ -21652,6 +21737,7 @@ fn solve_sparse_linear_system(
             .abs()
             < PIVOT_EPSILON
         {
+            profile.fill_in_nonzeros = peak_nonzeros.saturating_sub(initial_nonzeros);
             return Err(SpiceError::SingularMatrix);
         }
 
@@ -21680,12 +21766,14 @@ fn solve_sparse_linear_system(
             }
             rhs[row] -= factor * rhs[pivot_col];
         }
+        peak_nonzeros = peak_nonzeros.max(rows.iter().map(HashMap::len).sum());
     }
 
     let mut solution = vec![0.0; n];
     for row in (0..n).rev() {
         let diagonal = rows[row].get(&row).copied().unwrap_or(0.0);
         if diagonal.abs() < PIVOT_EPSILON {
+            profile.fill_in_nonzeros = peak_nonzeros.saturating_sub(initial_nonzeros);
             return Err(SpiceError::SingularMatrix);
         }
         let mut value = rhs[row];
@@ -21697,7 +21785,8 @@ fn solve_sparse_linear_system(
         solution[row] = value / diagonal;
     }
 
-    Ok(solution)
+    profile.fill_in_nonzeros = peak_nonzeros.saturating_sub(initial_nonzeros);
+    Ok(SolvedLinearSystem { solution, profile })
 }
 
 fn solve_complex_linear_system(

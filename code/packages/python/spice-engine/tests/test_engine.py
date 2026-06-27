@@ -990,6 +990,20 @@ def test_large_resistor_ladder_uses_sparse_real_solver_path():
     assert r.diagnostics.convergence_aid == "newton"
     assert r.diagnostics.tolerance == pytest.approx(1.0e-6)
     assert math.isfinite(r.diagnostics.max_delta)
+    profile = r.diagnostics.solver_profile
+    assert profile.matrix_size == 36
+    assert profile.solver == "sparse_real"
+    assert profile.backend in {"scipy_sparse_lu", "native_sparse_gaussian"}
+    assert profile.structural_nonzeros > 0
+    assert 0.0 < profile.density < 0.1
+    assert profile.fill_in_nonzeros >= 0
+    if profile.backend == "native_sparse_gaussian":
+        assert (
+            profile.fallback_reason in {None, "scipy_unavailable"}
+            or profile.fallback_reason.startswith("scipy_sparse_lu:")
+        )
+    else:
+        assert profile.fallback_reason is None
 
 
 def test_current_source_into_resistor():
@@ -6996,7 +7010,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         + "\n"
     )
     expected_output_plan_records = [
-        dict(zip(expected_output_plan_columns, expected_output_plan_row))
+        dict(zip(expected_output_plan_columns, expected_output_plan_row, strict=False))
     ]
     assert op_execution.output_plan_artifact_count == 1
     assert len(op_execution.output_plan_artifacts) == 1
