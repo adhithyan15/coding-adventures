@@ -1266,6 +1266,34 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         }
     }
 
+    // ---- global encodeURI(string) / decodeURI(string) ----
+    //
+    // `encodeURI("a b")` → `"a%20b"`, `encodeURI("é")` → `"%C3%A9"`,
+    // `decodeURI("a%20b")` → `"a b"` (ECMAScript §19.2.6.4 / §19.2.6.2).
+    // `encodeURI` is the *whole-URI* escaper: like `encodeURIComponent` it
+    // percent-escapes every UTF-8 byte that is not unreserved, but it
+    // ADDITIONALLY leaves the URI reserved/structural delimiters
+    // (`; , / ? : @ & = + $` and `#`) intact — escaping them would corrupt an
+    // already-assembled URI. So `encodeURI` escapes only the genuinely unsafe
+    // bytes (space, non-ASCII, controls, and ``< > " { } | \ ^ [ ] ` ``).
+    //
+    // `decodeURI` is the matching inverse, but NOT a plain `%XX`→byte decode: it
+    // KEEPS a `%XX` escape encoded (verbatim) whenever the byte it would decode
+    // to is one of the reserved delimiters `; / ? : @ & = + $ , #`, so that the
+    // reserved structure of a URI survives a round trip. That is the *only*
+    // difference from `decodeURIComponent`, which decodes every escape.
+    //
+    // SOUNDNESS — identical to the `encodeURIComponent`/`parseInt` reasoning:
+    // these are *free identifiers* a local could shadow (`let encodeURI = …`),
+    // but we fold the bare identifier anyway (matching Closure Compiler) and
+    // NEVER a member access (`window.encodeURI` reaches the MemberExpression arm
+    // above and is left alone). A string literal's value is a Rust `&str` —
+    // whole Unicode scalars — so every byte we emit is a real UTF-8 byte V8 would
+    // emit too; there is no lone-surrogate input (the only `encodeURI` throw) to
+    // hit. `decodeURI` DECLINES (returns the call to the runtime) on exactly the
+    // two `URIError` inputs: a malformed `%XX` escape and a `%`-decoded byte run
+    // that is not valid UTF-8. Declining a throw is always sound.
+    //
     // ---- global encodeURIComponent(string) / decodeURIComponent(string) ----
     //
     // `encodeURIComponent("a b")` → `"a%20b"`, `encodeURIComponent("é")` →
@@ -1295,6 +1323,8 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         if arguments.len() == 1 {
             if let Some(Expression::StringLiteral(s)) = arguments.first() {
                 let folded = match id.name.as_str() {
+                    "encodeURI" => Some(encode_uri(&s.value)),
+                    "decodeURI" => decode_uri(&s.value),
                     "encodeURIComponent" => Some(encode_uri_component(&s.value)),
                     "decodeURIComponent" => decode_uri_component(&s.value),
                     _ => None,
@@ -1394,6 +1424,50 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
     })
 }
 
+/// Percent-encode `s` exactly as JavaScript's global `encodeURI` (ECMAScript
+/// §19.2.6.4). Every byte of the string's UTF-8 encoding is emitted verbatim
+/// when it is part of the **unescaped** set and as `%XX` — two UPPERCASE hex
+/// digits — otherwise. `encodeURI` is the *whole-URI* escaper: its unescaped set
+/// is the unreserved characters (ASCII alphanumerics plus the marks
+/// ``- _ . ! ~ * ' ( )``) PLUS the URI reserved/structural delimiters
+/// `; , / ? : @ & = + $` and `#`. That wider keep-set — leaving the reserved
+/// punctuation intact — is exactly what distinguishes it from
+/// `encodeURIComponent`, which escapes those delimiters too.
+///
+/// | input      | bytes (UTF-8) | output       | note                       |
+/// |------------|---------------|--------------|----------------------------|
+/// | `"a b"`    | `61 20 62`    | `"a%20b"`    | space → `%20`              |
+/// | `"a/b?c"`  | …             | `"a/b?c"`    | reserved kept intact       |
+/// | `"é"`      | `C3 A9`       | `"%C3%A9"`   | non-ASCII escaped per byte  |
+/// | `"a<b>"`   | …             | `"a%3Cb%3E"` | `< >` are unsafe → escaped  |
+///
+/// This coincides bit-for-bit with V8 for any string literal: a literal's value
+/// is a Rust `&str`, i.e. a run of whole Unicode scalars, so `s.as_bytes()` is
+/// precisely the UTF-8 byte sequence V8 percent-encodes — there is no lone
+/// surrogate (the only `encodeURI` input that throws) to worry about.
+fn encode_uri(s: &str) -> String {
+    const HEX: &[u8] = b"0123456789ABCDEF";
+    let mut out = String::with_capacity(s.len());
+    for &b in s.as_bytes() {
+        if b.is_ascii_alphanumeric()
+            || matches!(
+                b,
+                // unreserved marks (the `encodeURIComponent` keep-set) …
+                b'-' | b'_' | b'.' | b'!' | b'~' | b'*' | b'\'' | b'(' | b')'
+                // … PLUS the URI reserved/structural delimiters `encodeURI` keeps.
+                | b';' | b',' | b'/' | b'?' | b':' | b'@' | b'&' | b'=' | b'+' | b'$' | b'#'
+            )
+        {
+            out.push(b as char);
+        } else {
+            out.push('%');
+            out.push(HEX[(b >> 4) as usize] as char);
+            out.push(HEX[(b & 0x0f) as usize] as char);
+        }
+    }
+    out
+}
+
 /// Percent-encode `s` exactly as JavaScript's global `encodeURIComponent`
 /// (ECMAScript §19.2.6.5). Every byte of the string's UTF-8 encoding is emitted
 /// verbatim when it is an **unreserved** character and as `%XX` — two UPPERCASE
@@ -1431,6 +1505,69 @@ fn encode_uri_component(s: &str) -> String {
         }
     }
     out
+}
+
+/// Decode `s` exactly as JavaScript's global `decodeURI` (ECMAScript §19.2.6.2),
+/// the inverse of [`encode_uri`]. Each `%XX` escape (two hex digits) decodes to
+/// one byte, EXCEPT that an escape whose byte is one of the reserved delimiters
+/// `; / ? : @ & = + $ , #` is left **encoded** — its original three characters
+/// pass through verbatim — so the reserved structure of a URI survives. Every
+/// other character passes through as its own UTF-8 byte(s); the collected bytes
+/// are then re-interpreted as UTF-8. Returns `None` — DECLINING the fold — for
+/// exactly the inputs on which JS throws a `URIError`: a malformed escape (a `%`
+/// not followed by two hex digits) and a decoded byte run that is not valid
+/// UTF-8.
+///
+/// | input      | result          | note                                       |
+/// |------------|-----------------|--------------------------------------------|
+/// | `"a%20b"`  | `Some("a b")`   | `%20`→space (not reserved) → decoded       |
+/// | `"%2F"`    | `Some("%2F")`   | `/` IS reserved → kept encoded (vs Comp.)  |
+/// | `"%C3%A9"` | `Some("é")`     | two non-reserved bytes → one scalar        |
+/// | `"%41"`    | `Some("A")`     | `A` not reserved → decoded                 |
+/// | `"%"`      | `None`          | truncated escape → URIError                |
+/// | `"%80"`    | `None`          | lone continuation byte: bad UTF-8          |
+///
+/// The reserved bytes are all ASCII (`< 0x80`), so they can never coincide with
+/// a UTF-8 lead or continuation byte (`>= 0x80`); preserving them therefore
+/// never disturbs a multi-byte scalar, which always decodes (its code point is
+/// non-ASCII, hence never reserved). Decoding the whole buffer once and
+/// validating is equivalent to the spec's per-`%XX`-run reading because UTF-8 is
+/// self-synchronizing — JS succeeds and we succeed on the same inputs, and JS
+/// throws (we decline) on the same ones.
+fn decode_uri(s: &str) -> Option<String> {
+    let bytes = s.as_bytes();
+    let mut out: Vec<u8> = Vec::with_capacity(bytes.len());
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'%' {
+            // A `%` must be followed by two hex digits; otherwise JS throws.
+            if i + 2 >= bytes.len() {
+                return None;
+            }
+            let hi = (bytes[i + 1] as char).to_digit(16)?;
+            let lo = (bytes[i + 2] as char).to_digit(16)?;
+            let byte = (hi * 16 + lo) as u8;
+            // `decodeURI` keeps reserved-delimiter escapes ENCODED: emit the
+            // original three characters (`%` + both hex digits) verbatim.
+            if matches!(
+                byte,
+                b';' | b'/' | b'?' | b':' | b'@' | b'&' | b'=' | b'+' | b'$' | b',' | b'#'
+            ) {
+                out.push(bytes[i]);
+                out.push(bytes[i + 1]);
+                out.push(bytes[i + 2]);
+            } else {
+                out.push(byte);
+            }
+            i += 3;
+        } else {
+            // `s` is valid UTF-8, so a non-`%` byte is part of a complete scalar
+            // we copy through verbatim.
+            out.push(bytes[i]);
+            i += 1;
+        }
+    }
+    String::from_utf8(out).ok()
 }
 
 /// Decode `s` exactly as JavaScript's global `decodeURIComponent` (ECMAScript
@@ -5166,6 +5303,124 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "window.Number(\"5\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn encode_uri_direct_oracle() {
+        // Each output confirmed against V8's `encodeURI`. The reserved URI
+        // delimiters pass through untouched; only the genuinely unsafe bytes
+        // (space, non-ASCII, and `< > " { } | \ ^ [ ]`) get percent-escaped.
+        for (input, expect) in [
+            ("a b", "a%20b"),                        // space → %20
+            ("abc-_.!~*'()", "abc-_.!~*'()"),        // unreserved marks kept
+            ("a;,/?:@&=+$#b", "a;,/?:@&=+$#b"),       // reserved delimiters kept
+            ("é", "%C3%A9"),                          // 2-byte scalar, per byte
+            ("a<b>", "a%3Cb%3E"),                     // < > escaped
+            ("\"q\"", "%22q%22"),                     // double quote escaped
+            ("{x}", "%7Bx%7D"),                        // braces escaped
+            ("100%", "100%25"),                        // bare % escaped
+            ("a[b]", "a%5Bb%5D"),                      // brackets escaped
+        ] {
+            assert_eq!(encode_uri(input), expect, "encodeURI({input:?})");
+        }
+    }
+
+    #[test]
+    fn decode_uri_direct_oracle() {
+        // Each output confirmed against V8's `decodeURI`. Escapes of reserved
+        // delimiters stay ENCODED (the whole point vs decodeURIComponent);
+        // escapes of non-reserved bytes decode; malformed/invalid → None.
+        for (input, expect) in [
+            ("a%20b", Some("a b".to_string())),       // %20 not reserved → decoded
+            ("%C3%A9", Some("é".to_string())),         // two bytes → one scalar
+            ("%41", Some("A".to_string())),            // 'A' not reserved → decoded
+            ("%25", Some("%".to_string())),            // '%' not reserved → decoded
+            ("%2F", Some("%2F".to_string())),          // '/' reserved → kept encoded
+            ("%3B%2C%3F%3A%40%26%3D%2B%24%23", Some("%3B%2C%3F%3A%40%26%3D%2B%24%23".to_string())), // ; , ? : @ & = + $ # all reserved → kept
+            ("a/b", Some("a/b".to_string())),          // literal reserved passes through
+            ("%", None),                                // truncated → URIError
+            ("%2", None),                               // truncated → URIError
+            ("%G0", None),                              // non-hex → URIError
+            ("%80", None),                              // lone continuation byte → bad UTF-8
+            ("%C3%41", None),                           // lead byte + non-continuation → bad UTF-8
+        ] {
+            assert_eq!(decode_uri(input), expect, "decodeURI({input:?})");
+        }
+    }
+
+    #[test]
+    fn encode_uri_decode_uri_round_trip() {
+        // encodeURI never escapes a reserved delimiter, so its output's only
+        // `%XX` escapes are of non-reserved bytes — which decodeURI fully
+        // decodes — so encode∘decode is the identity on every literal.
+        for s in ["a b/c?d=e&f", "héllo wörld", "100% sure!", "a,b;c#frag", "[x]<y>{z}"] {
+            assert_eq!(decode_uri(&encode_uri(s)).as_deref(), Some(s), "round-trip {s:?}");
+        }
+    }
+
+    #[test]
+    fn fold_encode_uri_through_pass() {
+        // `encodeURI("a b")` folds to the string literal `"a%20b"`.
+        let c = global_call("encodeURI", vec![string("a b", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "encodeURI(\"a b\") should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "a%20b"),
+            other => panic!("expected \"a%20b\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_decode_uri_through_pass() {
+        // `decodeURI("a%20b")` folds to the string literal `"a b"`.
+        let c = global_call("decodeURI", vec![string("a%20b", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "decodeURI(\"a%20b\") should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "a b"),
+            other => panic!("expected \"a b\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn decode_uri_malformed_does_not_fold() {
+        // `decodeURI("%E0")` is a truncated 3-byte lead → invalid UTF-8 → the
+        // runtime throws URIError, so we DECLINE and leave the call intact.
+        let c = global_call("decodeURI", vec![string("%E0", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "decodeURI(\"%E0\") must not fold (URIError)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn uri_non_string_argument_does_not_fold() {
+        // Only a string LITERAL folds; `encodeURI(x)` needs the runtime value.
+        let c = global_call("encodeURI", vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "encodeURI(x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn uri_extra_argument_does_not_fold() {
+        // We model only the single-argument form; `encodeURI("a", x)` is left.
+        let c = global_call("encodeURI", vec![string("a", None), ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "encodeURI(\"a\", x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn member_uri_does_not_fold() {
+        // `window.encodeURI("a b")` is a member call, not the bare global — leave it.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("window"), "encodeURI")),
+            arguments: vec![string("a b", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "window.encodeURI(\"a b\") must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
