@@ -1916,6 +1916,25 @@
             ]
           }
         ],
+        "aria_collection_descriptors": [
+          {
+            "collection_index": 1,
+            "element": "div",
+            "id": "tabs",
+            "role": "tablist",
+            "text": "Home Settings",
+            "accessible_name": "Pages",
+            "collection_kind": "tablist",
+            "aria_orientation": "horizontal",
+            "aria_activedescendant": "tab-settings",
+            "item_count": 2,
+            "item_roles": ["tab"],
+            "selected_item_count": 1,
+            "disabled_item_count": 1,
+            "selection_mode": "single",
+            "active_descendant_matches_item": true
+          }
+        ],
         "links": [],
         "images": [],
         "interactive_elements": [

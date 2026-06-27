@@ -1,9 +1,9 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserActivationDescriptor, BrowserAnchor, BrowserAnchorDescriptor,
-    BrowserAnimationInteractionDescriptor, BrowserAriaCollection, BrowserAriaCollectionItem,
-    BrowserAriaDescriptionDescriptor, BrowserAriaLiveRegion, BrowserAriaNameDescriptor,
-    BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserCanvasDescriptor,
-    BrowserClipboardInteractionDescriptor, BrowserCommandElement,
+    BrowserAnimationInteractionDescriptor, BrowserAriaCollection, BrowserAriaCollectionDescriptor,
+    BrowserAriaCollectionItem, BrowserAriaDescriptionDescriptor, BrowserAriaLiveRegion,
+    BrowserAriaNameDescriptor, BrowserAriaRange, BrowserAriaRelationDescriptor,
+    BrowserCanvasDescriptor, BrowserClipboardInteractionDescriptor, BrowserCommandElement,
     BrowserComponentHydrationDescriptor, BrowserComponentHydrationTarget,
     BrowserCompositionInteractionDescriptor, BrowserContextMenuInteractionDescriptor,
     BrowserCustomElementDescriptor, BrowserDataAttribute, BrowserDataAttributeDescriptor,
@@ -165,6 +165,8 @@ struct ExpectedBrowserDocument {
     popover_descriptors: Option<Vec<ExpectedPopoverDescriptor>>,
     #[serde(default)]
     aria_collections: Vec<ExpectedAriaCollection>,
+    #[serde(default)]
+    aria_collection_descriptors: Option<Vec<ExpectedAriaCollectionDescriptor>>,
     #[serde(default)]
     aria_ranges: Vec<ExpectedAriaRange>,
     #[serde(default)]
@@ -2666,6 +2668,49 @@ struct ExpectedAriaCollectionItem {
 }
 
 #[derive(Debug, Deserialize)]
+struct ExpectedAriaCollectionDescriptor {
+    collection_index: usize,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    collection_kind: String,
+    #[serde(default)]
+    aria_orientation: Option<String>,
+    #[serde(default)]
+    aria_multiselectable: Option<String>,
+    #[serde(default)]
+    aria_activedescendant: Option<String>,
+    #[serde(default)]
+    aria_owns: Vec<String>,
+    #[serde(default)]
+    item_count: usize,
+    #[serde(default)]
+    item_roles: Vec<String>,
+    #[serde(default)]
+    selected_item_count: usize,
+    #[serde(default)]
+    checked_item_count: usize,
+    #[serde(default)]
+    current_item_count: usize,
+    #[serde(default)]
+    disabled_item_count: usize,
+    #[serde(default)]
+    selection_mode: String,
+    #[serde(default)]
+    active_descendant_matches_item: bool,
+    #[serde(default)]
+    collection_blocked: bool,
+    #[serde(default)]
+    collection_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
 struct ExpectedAriaRange {
     element: String,
     #[serde(default)]
@@ -4763,6 +4808,8 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         let tracks_text_semantic_descriptors = case.expected.text_semantic_descriptors.is_some();
         let tracks_text_flow_descriptors = case.expected.text_flow_descriptors.is_some();
         let tracks_popover_descriptors = case.expected.popover_descriptors.is_some();
+        let tracks_aria_collection_descriptors =
+            case.expected.aria_collection_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4818,6 +4865,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_popover_descriptors {
             expected.popover_descriptors = actual.popover_descriptors.clone();
+        }
+        if !tracks_aria_collection_descriptors {
+            expected.aria_collection_descriptors = actual.aria_collection_descriptors.clone();
         }
 
         assert_eq!(
@@ -5840,6 +5890,10 @@ fn browser_aria_collection_descriptor_metadata_tracks_grouped_composites() {
         actual.aria_collections, expected.aria_collections,
         "ARIA collection descriptors should preserve composite roles, active descendants, item roles, and item states",
     );
+    assert_eq!(
+        actual.aria_collection_descriptors, expected.aria_collection_descriptors,
+        "ARIA collection descriptor metadata should flatten composite inventory and readiness blockers",
+    );
 }
 
 #[test]
@@ -5876,6 +5930,67 @@ fn browser_aria_collection_descriptors_track_selection_model_and_active_descenda
     assert_eq!(list.selection_mode, "multiple");
     assert!(!list.active_descendant_matches_item);
     assert_eq!(list.disabled_item_count, 1);
+}
+
+#[test]
+fn browser_aria_collection_descriptors_track_selection_inventory_and_activedescendant() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <div id=menu role=menu aria-label="Actions" aria-activedescendant=item-two>
+              <button id=item-one role=menuitem>One</button>
+              <button id=item-two role=menuitemcheckbox aria-checked=mixed>Two</button>
+            </div>
+            <div id=list role=listbox aria-label="Choices" aria-multiselectable=true>
+              <div id=alpha role=option aria-selected=true>Alpha</div>
+              <div id=beta role=option aria-selected=true aria-disabled=true>Beta</div>
+            </div>
+        </body>"#,
+    )
+    .expect("ARIA collection descriptor fixture should parse");
+
+    assert_eq!(actual.aria_collection_descriptors.len(), 2);
+    let menu = &actual.aria_collection_descriptors[0];
+    assert_eq!(menu.collection_index, 1);
+    assert_eq!(menu.id.as_deref(), Some("menu"));
+    assert_eq!(menu.collection_kind, "menu");
+    assert_eq!(menu.accessible_name.as_deref(), Some("Actions"));
+    assert_eq!(menu.item_count, 2);
+    assert_eq!(menu.item_roles, vec!["menuitem", "menuitemcheckbox"]);
+    assert_eq!(menu.checked_item_count, 1);
+    assert_eq!(menu.selection_mode, "single");
+    assert!(menu.active_descendant_matches_item);
+    assert!(!menu.collection_blocked);
+
+    let list = &actual.aria_collection_descriptors[1];
+    assert_eq!(list.collection_kind, "listbox");
+    assert_eq!(list.aria_multiselectable.as_deref(), Some("true"));
+    assert_eq!(list.item_roles, vec!["option"]);
+    assert_eq!(list.selected_item_count, 2);
+    assert_eq!(list.disabled_item_count, 1);
+    assert_eq!(list.selection_mode, "multiple");
+    assert!(!list.collection_blocked);
+}
+
+#[test]
+fn browser_aria_collection_descriptors_track_missing_and_unresolved_blockers() {
+    let actual = parse_browser_document(
+        r#"<div id=bad role=menu aria-activedescendant=ghost aria-owns=ghost></div>"#,
+    )
+    .expect("blocked ARIA collection descriptor fixture should parse");
+
+    assert_eq!(actual.aria_collection_descriptors.len(), 1);
+    let bad = &actual.aria_collection_descriptors[0];
+    assert_eq!(bad.id.as_deref(), Some("bad"));
+    assert_eq!(bad.item_count, 0);
+    assert_eq!(
+        bad.collection_block_reasons,
+        vec![
+            "missing-accessible-name",
+            "missing-items",
+            "unresolved-active-descendant",
+            "unresolved-owned-items",
+        ],
+    );
 }
 
 #[test]
@@ -8625,6 +8740,12 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedPopoverDescriptor::into_browser_popover_descriptor)
             .collect();
+        let aria_collection_descriptors = self
+            .aria_collection_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedAriaCollectionDescriptor::into_browser_aria_collection_descriptor)
+            .collect();
         let aria_ranges: Vec<_> = self
             .aria_ranges
             .into_iter()
@@ -8973,6 +9094,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedAriaCollection::into_browser_aria_collection)
                 .collect(),
+            aria_collection_descriptors,
             aria_ranges,
             aria_live_regions: self
                 .aria_live_regions
@@ -16237,6 +16359,35 @@ impl ExpectedAriaCollectionItem {
             aria_rowindex: self.aria_rowindex,
             aria_colindex: self.aria_colindex,
             aria_controls: self.aria_controls,
+        }
+    }
+}
+
+impl ExpectedAriaCollectionDescriptor {
+    fn into_browser_aria_collection_descriptor(self) -> BrowserAriaCollectionDescriptor {
+        BrowserAriaCollectionDescriptor {
+            collection_index: self.collection_index,
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            collection_kind: self.collection_kind,
+            aria_orientation: self.aria_orientation,
+            aria_multiselectable: self.aria_multiselectable,
+            aria_activedescendant: self.aria_activedescendant,
+            aria_owns: self.aria_owns,
+            item_count: self.item_count,
+            item_roles: self.item_roles,
+            selected_item_count: self.selected_item_count,
+            checked_item_count: self.checked_item_count,
+            current_item_count: self.current_item_count,
+            disabled_item_count: self.disabled_item_count,
+            selection_mode: self.selection_mode,
+            active_descendant_matches_item: self.active_descendant_matches_item,
+            collection_blocked: self.collection_blocked,
+            collection_block_reasons: self.collection_block_reasons,
         }
     }
 }

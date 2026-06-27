@@ -871,6 +871,7 @@ pub struct BrowserDocument {
     pub popovers: Vec<BrowserPopover>,
     pub popover_descriptors: Vec<BrowserPopoverDescriptor>,
     pub aria_collections: Vec<BrowserAriaCollection>,
+    pub aria_collection_descriptors: Vec<BrowserAriaCollectionDescriptor>,
     pub aria_ranges: Vec<BrowserAriaRange>,
     pub aria_live_regions: Vec<BrowserAriaLiveRegion>,
     pub aria_name_descriptors: Vec<BrowserAriaNameDescriptor>,
@@ -2661,6 +2662,32 @@ pub struct BrowserAriaCollectionItem {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaCollectionDescriptor {
+    pub collection_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub collection_kind: String,
+    pub aria_orientation: Option<String>,
+    pub aria_multiselectable: Option<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_owns: Vec<String>,
+    pub item_count: usize,
+    pub item_roles: Vec<String>,
+    pub selected_item_count: usize,
+    pub checked_item_count: usize,
+    pub current_item_count: usize,
+    pub disabled_item_count: usize,
+    pub selection_mode: String,
+    pub active_descendant_matches_item: bool,
+    pub collection_blocked: bool,
+    pub collection_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserAriaRange {
     pub element: String,
     pub id: Option<String>,
@@ -3998,6 +4025,8 @@ impl BrowserDocument {
             &summary.disclosures,
         );
         summary.popover_descriptors = browser_popover_descriptors(&summary.popovers);
+        summary.aria_collection_descriptors =
+            browser_aria_collection_descriptors(&summary.aria_collections);
         summary.focus_navigation_descriptors =
             browser_focus_navigation_descriptors(&summary.interactive_elements);
         summary.keyboard_interaction_descriptors =
@@ -18682,6 +18711,75 @@ fn browser_authored_collection_item_role(element: &Element) -> Option<String> {
             | "treeitem"
     )
     .then_some(role)
+}
+
+fn browser_aria_collection_descriptors(
+    collections: &[BrowserAriaCollection],
+) -> Vec<BrowserAriaCollectionDescriptor> {
+    collections
+        .iter()
+        .enumerate()
+        .map(|(index, collection)| browser_aria_collection_descriptor(index + 1, collection))
+        .collect()
+}
+
+fn browser_aria_collection_descriptor(
+    collection_index: usize,
+    collection: &BrowserAriaCollection,
+) -> BrowserAriaCollectionDescriptor {
+    let mut descriptor = BrowserAriaCollectionDescriptor {
+        collection_index,
+        element: collection.element.clone(),
+        id: collection.id.clone(),
+        role: collection.role.clone(),
+        text: collection.text.clone(),
+        accessible_name: collection.accessible_name.clone(),
+        accessible_description: collection.accessible_description.clone(),
+        collection_kind: collection.role.clone(),
+        aria_orientation: collection.aria_orientation.clone(),
+        aria_multiselectable: collection.aria_multiselectable.clone(),
+        aria_activedescendant: collection.aria_activedescendant.clone(),
+        aria_owns: collection.aria_owns.clone(),
+        item_count: collection.item_count,
+        item_roles: collection.item_roles.clone(),
+        selected_item_count: collection.selected_item_count,
+        checked_item_count: collection.checked_item_count,
+        current_item_count: collection.current_item_count,
+        disabled_item_count: collection.disabled_item_count,
+        selection_mode: collection.selection_mode.clone(),
+        active_descendant_matches_item: collection.active_descendant_matches_item,
+        collection_blocked: false,
+        collection_block_reasons: Vec::new(),
+    };
+    descriptor.collection_block_reasons =
+        browser_aria_collection_block_reasons(collection, &descriptor);
+    descriptor.collection_blocked = !descriptor.collection_block_reasons.is_empty();
+    descriptor
+}
+
+fn browser_aria_collection_block_reasons(
+    collection: &BrowserAriaCollection,
+    descriptor: &BrowserAriaCollectionDescriptor,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if descriptor.accessible_name.is_none() {
+        reasons.push("missing-accessible-name".to_string());
+    }
+    if descriptor.item_count == 0 {
+        reasons.push("missing-items".to_string());
+    }
+    if descriptor.aria_activedescendant.is_some() && !descriptor.active_descendant_matches_item {
+        reasons.push("unresolved-active-descendant".to_string());
+    }
+    if collection.aria_owns.iter().any(|owned_id| {
+        !collection
+            .items
+            .iter()
+            .any(|item| item.id.as_deref() == Some(owned_id.as_str()))
+    }) {
+        reasons.push("unresolved-owned-items".to_string());
+    }
+    reasons
 }
 
 fn browser_aria_range_element(
