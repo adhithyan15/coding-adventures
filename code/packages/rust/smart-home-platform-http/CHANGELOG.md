@@ -37,6 +37,8 @@ All notable changes to this package will be documented in this file.
 - Added browser dashboard desired-state target controls for light on/off and
   brightness so the local controller can supervise intended state through the
   existing runtime-authorized native API.
+- Added browser dashboard command-result and authorization-decision audit
+  panels backed by the existing local-controller audit routes.
 - Added a native readiness checklist route with actionable links for registry,
   topology, state coverage, event bus, discovery, supervisor, authorization,
   and desired-state checks.

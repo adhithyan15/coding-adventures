@@ -338,6 +338,24 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         </table>
       </div>
       <div class="panel">
+        <h2>Commands</h2>
+        <table>
+          <thead>
+            <tr><th>Command</th><th>Status</th><th>Bridge</th><th>Sequence</th></tr>
+          </thead>
+          <tbody id="command-results"></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h2>Authorization</h2>
+        <table>
+          <thead>
+            <tr><th>Principal</th><th>Subject</th><th>Outcome</th><th>Tier</th></tr>
+          </thead>
+          <tbody id="authorization-decisions"></tbody>
+        </table>
+      </div>
+      <div class="panel">
         <h2>Log</h2>
         <div id="log" class="log"></div>
       </div>
@@ -346,7 +364,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
   <script>
     const els = {
       activity: document.querySelector("#activity"),
+      authorizationDecisions: document.querySelector("#authorization-decisions"),
       checks: document.querySelector("#checks"),
+      commandResults: document.querySelector("#command-results"),
       desired: document.querySelector("#desired"),
       entities: document.querySelector("#entities"),
       gaps: document.querySelector("#gaps"),
@@ -394,6 +414,15 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         return "";
       }
       return ms > 1000000000000 ? new Date(ms).toLocaleString() : `${ms} ms`;
+    };
+    const subjectText = (subject) => {
+      if (!subject) {
+        return "unknown";
+      }
+      if (subject.kind === "tool") {
+        return subject.tool_id || "tool";
+      }
+      return [subject.command_type, subject.entity_id].filter(Boolean).join(" ") || subject.kind || "subject";
     };
 
     const log = (message) => {
@@ -535,10 +564,48 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }).join("") || `<tr><td colspan="4" class="muted">No state history</td></tr>`;
     };
 
+    const renderCommandResults = (audit) => {
+      const results = audit.results || [];
+      els.commandResults.innerHTML = results.map((record) => {
+        const result = record.result || {};
+        return `
+          <tr>
+            <td>${result.command_id || "unknown"}<br><span class="muted">${result.correlation_id || ""}</span></td>
+            <td><span class="${statusClass(result.status || "ok")}">${result.status || "unknown"}</span></td>
+            <td>${result.bridge_id || ""}</td>
+            <td>${record.sequence}</td>
+          </tr>
+        `;
+      }).join("") || `<tr><td colspan="4" class="muted">No command results</td></tr>`;
+    };
+
+    const renderAuthorizationDecisions = (audit) => {
+      const decisions = audit.decisions || [];
+      els.authorizationDecisions.innerHTML = decisions.map((record) => `
+        <tr>
+          <td>${record.principal_id}<br><span class="muted">${observedText(record.decided_at_ms)}</span></td>
+          <td>${subjectText(record.subject)}</td>
+          <td><span class="${statusClass(record.outcome || "ok")}">${record.outcome}</span></td>
+          <td>${record.required_tier}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="4" class="muted">No authorization decisions</td></tr>`;
+    };
+
     const render = async () => {
       els.refresh.disabled = true;
       try {
-        const [bootstrap, readiness, states, scenes, desiredStates, history, services, routes] = await Promise.all([
+        const [
+          bootstrap,
+          readiness,
+          states,
+          scenes,
+          desiredStates,
+          history,
+          services,
+          routes,
+          commandResults,
+          authorizationDecisions
+        ] = await Promise.all([
           json("/api/smart_home/bootstrap"),
           json("/api/smart_home/readiness"),
           json("/api/smart_home/states?limit=24"),
@@ -546,7 +613,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           json("/api/smart_home/desired_states?limit=12"),
           json("/api/smart_home/state_history?limit=12"),
           json("/api/smart_home/services?limit=8"),
-          json("/api/smart_home/api?mutating=true&authorized=true")
+          json("/api/smart_home/api?mutating=true&authorized=true"),
+          json("/api/smart_home/command_results?limit=8"),
+          json("/api/smart_home/authorization_decisions?limit=8")
         ]);
         const summary = bootstrap.dashboard.summary;
         els.location.textContent = bootstrap.dashboard.config.location_name;
@@ -572,6 +641,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         renderDesiredStates(desiredStates);
         renderGaps(bootstrap.state_gaps);
         renderHistory(history);
+        renderCommandResults(commandResults);
+        renderAuthorizationDecisions(authorizationDecisions);
         log("Dashboard refreshed");
       } catch (error) {
         els.status.className = statusClass("blocked");
@@ -6402,6 +6473,8 @@ mod tests {
             assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
             assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
+            assert!(body.contains("json(\"/api/smart_home/command_results?limit=8\")"));
+            assert!(body.contains("json(\"/api/smart_home/authorization_decisions?limit=8\")"));
             assert!(body.contains("/api/services/light/"));
             assert!(body.contains("data-service=\"set_brightness\""));
             assert!(body.contains("brightness_pct"));
@@ -7436,6 +7509,8 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
         assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
         assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
+        assert!(body.contains("json(\"/api/smart_home/command_results?limit=8\")"));
+        assert!(body.contains("json(\"/api/smart_home/authorization_decisions?limit=8\")"));
         assert!(body.contains("/api/services/light/"));
         assert!(body.contains("data-brightness-input"));
         assert!(body.contains("brightness_pct"));
