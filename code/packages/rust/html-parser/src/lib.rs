@@ -4531,7 +4531,6 @@ impl HtmlParser {
         repair_anchor_center_boundary(&mut document.children);
         repair_em_aside_continuation(&mut document.children, self.explicit_em_end_seen);
         repair_svg_title_tail_text(&mut document.children);
-        repair_select_option_hr(&mut document.children);
         repair_select_button_selectedcontent(&mut document.children);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
@@ -5023,6 +5022,16 @@ impl HtmlParser {
             path.push(child_index);
             self.open_elements.push(path);
             return;
+        }
+
+        if !in_foreign_content && name == "hr" && self.has_open_element("select") {
+            self.close_open_element_if(|name| name == "option");
+            if self.insert_node_under_last_open_element(
+                "select",
+                Node::element(name.clone(), attributes.clone()),
+            ) {
+                return;
+            }
         }
 
         if !in_foreign_content
@@ -5691,6 +5700,24 @@ impl HtmlParser {
         };
         html.children.push(node);
         Some(vec![html_index, html.children.len() - 1])
+    }
+
+    fn insert_node_under_last_open_element(&mut self, element_name: &str, node: Node) -> bool {
+        let Some(path) = self
+            .open_elements
+            .iter()
+            .rfind(|path| {
+                element_at_path(&self.document, path).is_some_and(|name| name == element_name)
+            })
+            .cloned()
+        else {
+            return false;
+        };
+        let Some(element) = element_at_path_mut(&mut self.document, &path) else {
+            return false;
+        };
+        element.children.push(node);
+        true
     }
 
     fn append_implied_element(&mut self, name: &str) {
@@ -8467,83 +8494,6 @@ fn take_svg_title_tail_text(element: &mut Element) -> Option<String> {
     }
     title.children.clear();
     Some(data)
-}
-
-fn repair_select_option_hr(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_select_option_hr(&mut element.children);
-    }
-
-    for node in nodes {
-        let Node::Element(select) = node else {
-            continue;
-        };
-        if select.name != "select" {
-            continue;
-        }
-        let mut index = 0;
-        while index < select.children.len() {
-            if let Some(hr) = take_hr_from_optgroup_option(select.children.get_mut(index)) {
-                select.children.insert(index + 1, hr);
-                index += 2;
-                continue;
-            }
-            let hr_index = match select.children.get(index) {
-                Some(Node::Element(option)) if option.name == "option" => option
-                    .children
-                    .iter()
-                    .position(|child| matches!(child, Node::Element(child) if child.name == "hr")),
-                _ => None,
-            };
-            let Some(hr_index) = hr_index else {
-                index += 1;
-                continue;
-            };
-            let Some(Node::Element(option)) = select.children.get_mut(index) else {
-                index += 1;
-                continue;
-            };
-            let hr = option.children.remove(hr_index);
-            select.children.insert(index + 1, hr);
-            index += 2;
-        }
-    }
-}
-
-fn take_hr_from_optgroup_option(node: Option<&mut Node>) -> Option<Node> {
-    let Some(Node::Element(optgroup)) = node else {
-        return None;
-    };
-    if optgroup.name != "optgroup" {
-        return None;
-    }
-    if let Some(hr_index) = optgroup
-        .children
-        .iter()
-        .position(|child| matches!(child, Node::Element(child) if child.name == "hr"))
-    {
-        return Some(optgroup.children.remove(hr_index));
-    }
-    for child in &mut optgroup.children {
-        let Node::Element(option) = child else {
-            continue;
-        };
-        if option.name != "option" {
-            continue;
-        }
-        let Some(hr_index) = option
-            .children
-            .iter()
-            .position(|child| matches!(child, Node::Element(child) if child.name == "hr"))
-        else {
-            continue;
-        };
-        return Some(option.children.remove(hr_index));
-    }
-    None
 }
 
 fn repair_select_button_selectedcontent(nodes: &mut Vec<Node>) {
