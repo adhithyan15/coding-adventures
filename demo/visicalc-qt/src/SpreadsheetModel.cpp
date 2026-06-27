@@ -120,6 +120,16 @@ void SpreadsheetModel::seed() {
     for (const auto &f : formats) {
         sc_set_format(session_, f.a1, f.code);
     }
+
+    // Seed a second "Summary" sheet so cross-sheet references are demoable out of
+    // the box: type =Summary!A3 on Sheet1 and it tracks Summary's running total,
+    // recomputing live when Summary changes. add_sheet makes it active, so switch
+    // back to Sheet1 (index 0) as the default active sheet.
+    sc_add_sheet(session_, "Summary");
+    takeString(sc_set_cell(session_, "A1", "100"));
+    takeString(sc_set_cell(session_, "A2", "200"));
+    takeString(sc_set_cell(session_, "A3", "=A1+A2")); // 300
+    sc_set_active_sheet(session_, 0);
 }
 
 QString SpreadsheetModel::display(const QString &a1) const {
@@ -525,4 +535,71 @@ bool SpreadsheetModel::redo() {
         emit revisionChanged();
     }
     return ok;
+}
+
+// ── Multi-sheet workbook ─────────────────────────────────────────────
+
+// Shared tail after a sheet op that changed the active sheet (add/select/rename/
+// delete): reset the infinite-view selection to the active sheet's top-left,
+// re-read the grid, resync the formula bar, regrow the extent, bump the revision,
+// and fire the rebind signals (grid + tab bar).
+void SpreadsheetModel::refreshAfterSheetOp() {
+    infRow_ = 1;
+    infCol_ = 1;
+    recompute();
+    computeExtent();
+    infFormula_ = rawAt(infAddress());
+    revision_++;
+    emit changed();
+    emit infSelectionChanged();
+    emit revisionChanged();
+    emit sheetsChanged();
+}
+
+QVariantMap SpreadsheetModel::sheetNames() const {
+    QVariantMap out;
+    const QString json = takeString(sc_sheet_names(session_));
+    const QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
+    if (!doc.isObject()) return out;
+    const QJsonObject obj = doc.object();
+    QStringList names;
+    for (const QJsonValue &v : obj.value(QStringLiteral("sheets")).toArray()) {
+        names.append(v.toString());
+    }
+    out.insert(QStringLiteral("sheets"), names);
+    out.insert(QStringLiteral("active"), obj.value(QStringLiteral("active")).toInt());
+    return out;
+}
+
+int SpreadsheetModel::activeSheet() const {
+    return static_cast<int>(sc_active_sheet(session_));
+}
+
+bool SpreadsheetModel::selectSheet(int index) {
+    if (sc_set_active_sheet(session_, static_cast<unsigned>(std::max(0, index))) == 0)
+        return false;
+    refreshAfterSheetOp();
+    return true;
+}
+
+bool SpreadsheetModel::addSheet(const QString &name) {
+    const QByteArray n = name.toUtf8();
+    if (sc_add_sheet(session_, n.constData()) == 0) return false;
+    refreshAfterSheetOp();
+    return true;
+}
+
+bool SpreadsheetModel::renameSheet(int index, const QString &newName) {
+    const QByteArray n = newName.toUtf8();
+    if (sc_rename_sheet(session_, static_cast<unsigned>(std::max(0, index)), n.constData()) == 0)
+        return false;
+    refreshAfterSheetOp();
+    return true;
+}
+
+bool SpreadsheetModel::deleteSheet(int index) {
+    if (sc_delete_sheet(session_, static_cast<unsigned>(std::max(0, index))) == 0)
+        return false;
+    refreshAfterSheetOp();
+    return true;
 }

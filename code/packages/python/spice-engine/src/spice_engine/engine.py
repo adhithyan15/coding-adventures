@@ -79,6 +79,7 @@ from spice_engine.compatibility import (
     select_deck_output_directive_analysis_kinds,
     select_deck_output_directive_lines,
     select_deck_output_directives,
+    select_deck_output_probe_lines,
     select_deck_output_probes,
 )
 from spice_engine.elements import (
@@ -2388,6 +2389,8 @@ class DeckOutputPlanArtifact:
     result_columns: list[str]
     output_probe_count: int
     output_probes: list[str]
+    output_probe_line_count: int
+    output_probe_lines: list[int]
     output_directive_count: int
     output_directives: list[str]
     output_directive_kind_count: int
@@ -2897,6 +2900,7 @@ def _deck_output_plan_artifacts(
     plan: DeckAnalysisPlan,
     result_columns: list[str],
     output_probes: list[str],
+    output_probe_lines: list[int],
     output_directives: list[str],
     output_directive_analysis_kinds: list[str],
     output_directive_lines: list[int],
@@ -2911,6 +2915,8 @@ def _deck_output_plan_artifacts(
             result_columns=list(result_columns),
             output_probe_count=len(output_probes),
             output_probes=list(output_probes),
+            output_probe_line_count=len(output_probe_lines),
+            output_probe_lines=list(output_probe_lines),
             output_directive_count=len(output_directives),
             output_directives=list(output_directives),
             output_directive_kind_count=len(output_directive_kinds),
@@ -2934,6 +2940,8 @@ _DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
     "ResultColumnList",
     "OutputProbes",
     "OutputProbeList",
+    "OutputProbeLines",
+    "OutputProbeLineList",
     "OutputDirectives",
     "OutputDirectiveList",
     "OutputDirectiveKinds",
@@ -2955,6 +2963,8 @@ def _deck_output_plan_artifact_cells(artifact: DeckOutputPlanArtifact) -> list[s
         ";".join(artifact.result_columns),
         str(artifact.output_probe_count),
         ";".join(artifact.output_probes),
+        str(artifact.output_probe_line_count),
+        ";".join(str(line) for line in artifact.output_probe_lines),
         str(artifact.output_directive_count),
         ";".join(artifact.output_directives),
         str(artifact.output_directive_kind_count),
@@ -3027,6 +3037,7 @@ def _deck_output_plan_artifact_bundle(
     plan: DeckAnalysisPlan,
     result_table: str,
     output_probes: list[str],
+    output_probe_lines: list[int],
     output_directives: list[str],
     output_directive_analysis_kinds: list[str],
     output_directive_lines: list[int],
@@ -3036,6 +3047,7 @@ def _deck_output_plan_artifact_bundle(
         plan,
         _deck_table_columns(result_table),
         output_probes,
+        output_probe_lines,
         output_directives,
         output_directive_analysis_kinds,
         output_directive_lines,
@@ -3228,6 +3240,7 @@ def _deck_table_artifacts(
     control_policy_summary_artifacts: list[DeckControlPolicySummaryArtifact],
     control_policy_summary_artifact_table: str,
     output_probes: list[str],
+    output_probe_lines: list[int],
     output_directives: list[str],
     output_directive_analysis_kinds: list[str],
     output_directive_lines: list[int],
@@ -3253,6 +3266,7 @@ def _deck_table_artifacts(
         plan,
         result_table,
         output_probes,
+        output_probe_lines,
         output_directives,
         output_directive_analysis_kinds,
         output_directive_lines,
@@ -3946,6 +3960,7 @@ def run_deck_analysis(
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         measurements: list[ProbeMeasurement] = []
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_probe_lines = select_deck_output_probe_lines(netlist, plan.analysis)
         output_directives = select_deck_output_directives(netlist, plan.analysis)
         output_directive_analysis_kinds = select_deck_output_directive_analysis_kinds(
             netlist,
@@ -3990,6 +4005,7 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4005,6 +4021,7 @@ def run_deck_analysis(
             plan,
             table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4056,6 +4073,7 @@ def run_deck_analysis(
         fourier = []
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_probe_lines = select_deck_output_probe_lines(netlist, plan.analysis)
         output_directives = select_deck_output_directives(netlist, plan.analysis)
         output_directive_analysis_kinds = select_deck_output_directive_analysis_kinds(
             netlist,
@@ -4100,6 +4118,7 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4115,6 +4134,7 @@ def run_deck_analysis(
             plan,
             table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4168,6 +4188,7 @@ def run_deck_analysis(
         fourier = []
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_probe_lines = select_deck_output_probe_lines(netlist, plan.analysis)
         output_directives = select_deck_output_directives(netlist, plan.analysis)
         output_directive_analysis_kinds = select_deck_output_directive_analysis_kinds(
             netlist,
@@ -4212,6 +4233,7 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4227,6 +4249,7 @@ def run_deck_analysis(
             plan,
             table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4286,6 +4309,7 @@ def run_deck_analysis(
             _select_deck_fourier_cards_for_analysis(netlist, plan.analysis),
         )
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_probe_lines = select_deck_output_probe_lines(netlist, plan.analysis)
         output_directives = select_deck_output_directives(netlist, plan.analysis)
         output_directive_analysis_kinds = select_deck_output_directive_analysis_kinds(
             netlist,
@@ -4330,6 +4354,7 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4345,6 +4370,7 @@ def run_deck_analysis(
             plan,
             table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4391,6 +4417,7 @@ def run_deck_analysis(
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         fourier = []
         output_probes = [f"V({output_node})"]
+        output_probe_lines: list[int] = []
         output_directives: list[str] = []
         output_directive_analysis_kinds: list[str] = []
         output_directive_lines: list[int] = []
@@ -4430,6 +4457,7 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4445,6 +4473,7 @@ def run_deck_analysis(
             plan,
             table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4490,6 +4519,7 @@ def run_deck_analysis(
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         fourier = []
         output_probes = [f"V({output_node})"]
+        output_probe_lines: list[int] = []
         output_directives = []
         output_directive_analysis_kinds: list[str] = []
         output_directive_lines: list[int] = []
@@ -4529,6 +4559,7 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4544,6 +4575,7 @@ def run_deck_analysis(
             plan,
             table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4608,6 +4640,7 @@ def run_deck_analysis(
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         fourier = []
         output_probes = [f"V({output_node})"]
+        output_probe_lines: list[int] = []
         output_directives = []
         output_directive_analysis_kinds: list[str] = []
         output_directive_lines: list[int] = []
@@ -4647,6 +4680,7 @@ def run_deck_analysis(
             control_policy_summary_artifacts,
             control_policy_summary_artifact_table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,
@@ -4662,6 +4696,7 @@ def run_deck_analysis(
             plan,
             table,
             output_probes,
+            output_probe_lines,
             output_directives,
             output_directive_analysis_kinds,
             output_directive_lines,

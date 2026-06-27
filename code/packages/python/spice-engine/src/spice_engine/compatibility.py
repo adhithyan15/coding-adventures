@@ -971,6 +971,33 @@ def select_deck_output_probes(netlist: str, analysis: str) -> list[str]:
     return selected
 
 
+def select_deck_output_probe_lines(netlist: str, analysis: str) -> list[int]:
+    """Return source lines for deduplicated output probes selected for an analysis."""
+
+    summary = resolve_deck_outputs(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            "select_deck_output_probe_lines: "
+            f"line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    selected: list[int] = []
+    seen: set[str] = set()
+    for selection in summary.selections:
+        if selection.analysis is not None and not _deck_output_analysis_matches(
+            selection.analysis,
+            analysis,
+        ):
+            continue
+        for probe in selection.probes:
+            key = _deck_output_probe_key(probe)
+            if key in seen:
+                continue
+            seen.add(key)
+            selected.append(selection.line_number)
+    return selected
+
+
 def select_deck_output_directives(netlist: str, analysis: str) -> list[str]:
     """Return deduplicated output directive kinds selected for an analysis."""
 

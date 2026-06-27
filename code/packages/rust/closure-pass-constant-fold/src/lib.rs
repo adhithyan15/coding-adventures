@@ -1612,6 +1612,61 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         }
     }
 
+    // ---- global isNaN(value) / isFinite(value) → boolean ----
+    //
+    // `isNaN(x)` / `isFinite(x)` (ECMAScript §19.2.3 / §19.2.2) coerce their
+    // argument with `ToNumber`, then test the result: `isNaN` is `true` exactly
+    // when `ToNumber(x)` is `NaN`; `isFinite` is `true` exactly when it is
+    // neither `NaN` nor `±Infinity`. For the two literal argument shapes we can
+    // run `ToNumber` at compile time and the answer is exact and total:
+    //
+    //   * a NUMBER literal — its value is already the coerced number, so
+    //     `isNaN(0)` → `false`, `isFinite(0)` → `true`, and a literal that
+    //     overflows to `Infinity` (`1e400`) → `isFinite` `false`;
+    //   * a STRING literal — coerced by `js_to_number` (the FULL ECMAScript
+    //     string→number coercion, which — unlike `parseInt`/`parseFloat` — reads
+    //     the WHOLE trimmed string): `isNaN("abc")` → `true`, `isNaN("42")` →
+    //     `false`, `isNaN(" ")` → `false` (`ToNumber(" ")` is `+0`),
+    //     `isFinite("1e3")` → `true`, `isFinite("Infinity")` → `false`.
+    //
+    // Every other argument (a boolean, `null`, an identifier, a second argument)
+    // is left for the runtime. Like `parseInt`/`Number`/`Boolean`, `isNaN` and
+    // `isFinite` are free identifiers, so we fold only the bare callee — never a
+    // member access (`window.isNaN(...)`, handled by the MemberExpression arm
+    // above). Unlike `Number(...)`, no shape DECLINES: `js_to_number` returns a
+    // real `f64` (`NaN`/`±Infinity`/finite) for every string, and we only ever
+    // read its `is_nan()`/`is_finite()` classification — never emit the number —
+    // so a value beyond the exact-integer range is still classified correctly.
+    if let Expression::Identifier(id) = &callee {
+        if (id.name == "isNaN" || id.name == "isFinite") && arguments.len() == 1 {
+            let coerced: Option<f64> = match arguments.first() {
+                Some(Expression::NumericLiteral(n)) => Some(n.value),
+                Some(Expression::StringLiteral(s)) => Some(js_to_number(&s.value)),
+                _ => None,
+            };
+            if let Some(v) = coerced {
+                let value = if id.name == "isNaN" {
+                    v.is_nan()
+                } else {
+                    v.is_finite()
+                };
+                let parent = c.cv.clone();
+                let before = match arguments.first() {
+                    Some(Expression::NumericLiteral(n)) => {
+                        format!("{}({})", id.name, format_js_number(n.value))
+                    }
+                    Some(Expression::StringLiteral(s)) => {
+                        format!("{}(\"{}\")", id.name, s.value)
+                    }
+                    _ => format!("{}(?)", id.name),
+                };
+                let after = if value { "!0" } else { "!1" };
+                let new_cv = st.fork_cv(&parent, &before, after);
+                return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
+            }
+        }
+    }
+
     // ---- global escape(string) / unescape(string) ----
     //
     // The legacy Annex B escapers (ECMAScript §B.2.1.1 / §B.2.1.2). `escape`
@@ -3587,6 +3642,96 @@ fn fold_number(input: &str) -> Option<f64> {
     };
     let value: f64 = normalised.parse().ok()?;
     value.is_finite().then_some(value)
+}
+
+/// Coerce a string the way JavaScript's `ToNumber` does, returning the EXACT
+/// `f64` — including `NaN` and `±Infinity` — rather than declining like
+/// [`fold_number`]. This is the classifier behind `isNaN`/`isFinite` folding:
+/// those predicates only ever read `.is_nan()` / `.is_finite()`, never emit the
+/// number, so (unlike `fold_number`, which declines anything it cannot render as
+/// an exact literal — `Infinity`, `NaN`, and integers beyond `2^53`) we can and
+/// must return the real classification for every string.
+///
+/// The grammar mirrors `fold_number` exactly (same `is_js_trim_whitespace` trim,
+/// same `0x`/`0b`/`0o` and decimal shapes via `is_js_decimal_literal`); the only
+/// difference is that the non-finite results are kept rather than declined:
+///
+/// | input        | result      | isNaN | isFinite |
+/// |--------------|-------------|-------|----------|
+/// | `"42"`       | `42`        | false | true     |
+/// | `""` / `" "` | `+0`        | false | true     |
+/// | `"abc"`      | `NaN`       | true  | false    |
+/// | `"1e3"`      | `1000`      | false | true     |
+/// | `"Infinity"` | `+∞`        | false | false    |
+/// | `"-Infinity"`| `-∞`        | false | false    |
+/// | `"1e400"`    | `+∞`        | false | false    |
+///
+/// For the non-decimal forms we fold the digits into an `f64` accumulator (rather
+/// than `fold_number`'s exact-`u128` path): we never emit the value, only its
+/// finite-vs-infinite class, and the accumulator overflows to `Infinity` exactly
+/// when the true number does — so the classification stays correct without
+/// `fold_number`'s conservative `2^53` decline.
+fn js_to_number(input: &str) -> f64 {
+    let s = input.trim_matches(is_js_trim_whitespace);
+
+    // An empty / all-whitespace string coerces to `+0`.
+    if s.is_empty() {
+        return 0.0;
+    }
+
+    // NonDecimalIntegerLiteral: `0x`/`0b`/`0o` (case-insensitive), no sign.
+    let non_decimal = s
+        .strip_prefix("0x")
+        .or_else(|| s.strip_prefix("0X"))
+        .map(|d| (16u32, d))
+        .or_else(|| {
+            s.strip_prefix("0b")
+                .or_else(|| s.strip_prefix("0B"))
+                .map(|d| (2u32, d))
+        })
+        .or_else(|| {
+            s.strip_prefix("0o")
+                .or_else(|| s.strip_prefix("0O"))
+                .map(|d| (8u32, d))
+        });
+    if let Some((radix, digits)) = non_decimal {
+        if digits.is_empty() || !digits.bytes().all(|c| (c as char).is_digit(radix)) {
+            return f64::NAN;
+        }
+        // Every byte is a validated base-`radix` digit, so `to_digit` is always
+        // `Some`; `unwrap_or(0)` is a panic-free guard that is never taken.
+        let mut acc = 0.0_f64;
+        for c in digits.bytes() {
+            acc = acc * radix as f64 + (c as char).to_digit(radix).unwrap_or(0) as f64;
+        }
+        return acc;
+    }
+
+    // StrDecimalLiteral: an optional sign in front of `Infinity` or a base-10
+    // mantissa. A non-matching shape is `NaN` (ToNumber reads the WHOLE string).
+    let body = s.strip_prefix(['+', '-']).unwrap_or(s);
+    if body == "Infinity" {
+        return if s.starts_with('-') {
+            f64::NEG_INFINITY
+        } else {
+            f64::INFINITY
+        };
+    }
+    if !is_js_decimal_literal(body) {
+        return f64::NAN;
+    }
+    // Same normalisation as `fold_number` for the two spellings Rust's parser
+    // rejects (`"5."`, `"5.e3"`). Rust's `f64` parser is correctly rounded and
+    // returns `Infinity` for an overflowing magnitude (`"1e400"`) — exactly the
+    // engine's result — so a parse failure can only mean a shape bug; we fall
+    // back to `NaN`, the safe (non-folding-divergent) classification.
+    let normalised = s.replace(".e", ".0e").replace(".E", ".0E");
+    let normalised = if normalised.ends_with('.') {
+        format!("{normalised}0")
+    } else {
+        normalised
+    };
+    normalised.parse::<f64>().unwrap_or(f64::NAN)
 }
 
 fn format_js_number(n: f64) -> String {
@@ -5773,6 +5918,40 @@ mod tests {
     }
 
     #[test]
+    fn js_to_number_direct_oracle() {
+        // (input, is_nan, is_finite) — every classification confirmed against
+        // V8's `Number(input)` ToNumber coercion.
+        for (input, nan, fin) in [
+            ("42", false, true),
+            ("", false, true),         // empty → +0
+            ("   ", false, true),      // all-whitespace → +0
+            ("  3.5 ", false, true),   // surrounding whitespace trimmed
+            ("1e3", false, true),      // exponent
+            ("0x1F", false, true),     // hex
+            ("0b101", false, true),    // binary
+            ("0o17", false, true),     // octal
+            ("-7", false, true),       // negative
+            ("+9", false, true),       // explicit positive
+            (".5", false, true),       // leading dot
+            ("5.", false, true),       // trailing dot
+            ("abc", true, false),      // not numeric → NaN
+            ("12px", true, false),     // trailing garbage → NaN (total coercion)
+            ("1,2", true, false),      // stray comma → NaN
+            ("0x", true, false),       // prefix, no digits → NaN
+            ("0x+1", true, false),     // sign inside hex → NaN
+            ("Infinity", false, false), // +∞
+            ("+Infinity", false, false),
+            ("-Infinity", false, false), // -∞
+            ("1e400", false, false),   // overflow → +∞
+            ("0xfffffffffffffffffffff", false, true), // huge but finite hex
+        ] {
+            let v = js_to_number(input);
+            assert_eq!(v.is_nan(), nan, "is_nan(Number({input:?}))");
+            assert_eq!(v.is_finite(), fin, "is_finite(Number({input:?}))");
+        }
+    }
+
+    #[test]
     fn encode_uri_direct_oracle() {
         // Each output confirmed against V8's `encodeURI`. The reserved URI
         // delimiters pass through untouched; only the genuinely unsafe bytes
@@ -5789,6 +5968,28 @@ mod tests {
             ("a[b]", "a%5Bb%5D"),                      // brackets escaped
         ] {
             assert_eq!(encode_uri(input), expect, "encodeURI({input:?})");
+        }
+    }
+
+    #[test]
+    fn js_to_number_exact_finite_values() {
+        // A few exact values (the fold only reads the class, but pin the math).
+        assert_eq!(js_to_number("42"), 42.0);
+        assert_eq!(js_to_number("0x1F"), 31.0);
+        assert_eq!(js_to_number("-2.5"), -2.5);
+        assert_eq!(js_to_number(""), 0.0);
+        assert_eq!(js_to_number("  10  "), 10.0);
+    }
+
+    #[test]
+    fn fold_isnan_through_pass() {
+        // `isNaN("abc")` folds to the boolean `true` (emitted as `!0`).
+        let c = global_call("isNaN", vec![string("abc", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "isNaN(\"abc\") should fold");
+        match extract_expr(&out) {
+            Expression::BooleanLiteral(b) => assert!(b.value, "isNaN(\"abc\") → true"),
+            other => panic!("expected true; got {:?}", other),
         }
     }
 
@@ -5838,6 +6039,18 @@ mod tests {
     }
 
     #[test]
+    fn fold_isfinite_through_pass() {
+        // `isFinite("1e3")` folds to the boolean `true`.
+        let c = global_call("isFinite", vec![string("1e3", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "isFinite(\"1e3\") should fold");
+        match extract_expr(&out) {
+            Expression::BooleanLiteral(b) => assert!(b.value, "isFinite(\"1e3\") → true"),
+            other => panic!("expected true; got {:?}", other),
+        }
+    }
+
+    #[test]
     fn fold_decode_uri_through_pass() {
         // `decodeURI("a%20b")` folds to the string literal `"a b"`.
         let c = global_call("decodeURI", vec![string("a%20b", None)]);
@@ -5847,6 +6060,45 @@ mod tests {
             Expression::StringLiteral(s) => assert_eq!(s.value, "a b"),
             other => panic!("expected \"a b\"; got {:?}", other),
         }
+    }
+
+    #[test]
+    fn fold_isnan_isfinite_number_literals() {
+        // A NUMBER literal coerces to itself: isNaN(0) → false, isFinite(0) → true.
+        for (name, expect) in [("isNaN", false), ("isFinite", true)] {
+            let c = global_call(name, vec![num(0.0, None)]);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "{name}(0) should fold");
+            match extract_expr(&out) {
+                Expression::BooleanLiteral(b) => assert_eq!(b.value, expect, "{name}(0)"),
+                other => panic!("expected bool; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_isnan_isfinite_infinity_string() {
+        // `"Infinity"` is a NUMBER (not NaN): isNaN → false, isFinite → false.
+        for (name, expect) in [("isNaN", false), ("isFinite", false)] {
+            let c = global_call(name, vec![string("Infinity", None)]);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "{name}(\"Infinity\") should fold");
+            match extract_expr(&out) {
+                Expression::BooleanLiteral(b) => {
+                    assert_eq!(b.value, expect, "{name}(\"Infinity\")")
+                }
+                other => panic!("expected bool; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn isnan_non_literal_argument_does_not_fold() {
+        // Only string/number LITERAL args fold; `isNaN(x)` needs the runtime `x`.
+        let c = global_call("isNaN", vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "isNaN(x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
     #[test]
@@ -5860,11 +6112,33 @@ mod tests {
     }
 
     #[test]
+    fn isfinite_with_second_argument_does_not_fold() {
+        // We model only the single-argument form; `isFinite("1", y)` is left.
+        let c = global_call("isFinite", vec![string("1", None), ident("y")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "isFinite(\"1\", y) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
     fn uri_non_string_argument_does_not_fold() {
         // Only a string LITERAL folds; `encodeURI(x)` needs the runtime value.
         let c = global_call("encodeURI", vec![ident("x")]);
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "encodeURI(x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn member_isnan_does_not_fold() {
+        // `window.isNaN("abc")` is a member call, not the bare global — leave it.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("window"), "isNaN")),
+            arguments: vec![string("abc", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "window.isNaN(\"abc\") must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

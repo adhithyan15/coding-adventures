@@ -48,6 +48,7 @@ from spice_engine.compatibility import (
     select_deck_output_directive_analysis_kinds,
     select_deck_output_directive_lines,
     select_deck_output_directives,
+    select_deck_output_probe_lines,
     select_deck_output_probes,
 )
 from spice_engine.elements import (
@@ -648,6 +649,7 @@ __all__ = [
     "select_deck_output_directive_analysis_kinds",
     "select_deck_output_directive_lines",
     "select_deck_output_directives",
+    "select_deck_output_probe_lines",
     "select_deck_output_probes",
     "sens_dc",
     "s_parameters",

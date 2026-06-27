@@ -30,6 +30,7 @@ private slots:
     void numberFormatAppliesToSelectedCell();
     void sortRangeReordersRowsByKeyColumn();
     void findAndReplaceLocatesAndRewritesCells();
+    void multiSheetWorkbookAndCrossSheetRefs();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -368,6 +369,55 @@ void TstWindow::findAndReplaceLocatesAndRewritesCells() {
     // no-match / empty query → 0.
     QCOMPARE(m.replaceAll("zzz", "q", false), 0);
     QCOMPARE(m.replaceAll("", "q", false), 0);
+}
+
+// Multi-sheet workbook + cross-sheet references: the model seeds Sheet1 (active)
+// plus a Summary sheet (A3 = A1+A2 = 300). A formula on Sheet1 can reference it
+// (=Summary!A3) and recompute live; add/rename/delete reindex + rewrite/#REF!.
+void TstWindow::multiSheetWorkbookAndCrossSheetRefs() {
+    SpreadsheetModel m;
+    QCOMPARE(m.sheetNames().value("sheets").toStringList(),
+             (QStringList{"Sheet1", "Summary"}));
+    QCOMPARE(m.activeSheet(), 0);
+
+    // Cross-sheet ref on Sheet1: G1 = =Summary!A3 → 300.
+    m.setCell("G1", "=Summary!A3");
+    QCOMPARE(at(m.window(1, 7, 1, 7), 1, 7, 1, 7), QStringLiteral("300"));
+    // Switch to Summary, edit A1 100→500 (A3 → 700), switch back → recompute live.
+    QVERIFY(m.selectSheet(1));
+    m.setCell("A1", "500");
+    QVERIFY(m.selectSheet(0));
+    QCOMPARE(at(m.window(1, 7, 1, 7), 1, 7, 1, 7), QStringLiteral("700"));
+
+    // Add a sheet → becomes active; duplicate/empty names rejected.
+    QVERIFY(m.addSheet("Detail"));
+    QCOMPARE(m.activeSheet(), 2);
+    QVERIFY(!m.addSheet("Sheet1"));
+    QVERIFY(!m.addSheet(""));
+
+    // Rename Summary → Totals: the qualifier follows, value holds.
+    QVERIFY(m.selectSheet(0));
+    QVERIFY(m.renameSheet(1, "Totals"));
+    QCOMPARE(m.sheetNames().value("sheets").toStringList(),
+             (QStringList{"Sheet1", "Totals", "Detail"}));
+    QCOMPARE(at(m.window(1, 7, 1, 7), 1, 7, 1, 7), QStringLiteral("700"));
+
+    // Delete Totals → the inbound ref becomes #REF!; can't delete the last sheet.
+    QVERIFY(m.deleteSheet(1));
+    QCOMPARE(m.sheetNames().value("sheets").toStringList(),
+             (QStringList{"Sheet1", "Detail"}));
+    QVERIFY(m.valueJson("G1").contains("#REF!"));
+
+    // Save/load round-trips a second sheet + a live cross-sheet formula.
+    QVERIFY(m.addSheet("Data"));
+    m.setCell("A1", "9"); // Data!A1
+    QVERIFY(m.selectSheet(0));
+    m.setCell("F1", "=Data!A1"); // 9
+    const QString docJson = m.serialize();
+    SpreadsheetModel m2;
+    QVERIFY(m2.deserialize(docJson));
+    QVERIFY(m2.sheetNames().value("sheets").toStringList().contains("Data"));
+    QCOMPARE(at(m2.window(1, 6, 1, 6), 1, 6, 1, 6), QStringLiteral("9"));
 }
 
 QTEST_MAIN(TstWindow)
