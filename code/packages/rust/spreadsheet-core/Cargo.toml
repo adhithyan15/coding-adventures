@@ -1,6 +1,6 @@
 [package]
 name = "spreadsheet-core"
-version = "0.12.0"
+version = "0.13.0"
 edition = "2021"
 description = "Headless spreadsheet engine — cell model, formula AST, dependency DAG, recalc, dispatch to Layer-1 cores. The engine VisiCalc Modern and any other Mosaic-rendered spreadsheet sits on top of."
 

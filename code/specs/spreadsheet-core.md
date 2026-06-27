@@ -226,6 +226,15 @@ a free no-op. The parser disambiguates `Name!A1` (a `!` makes the preceding toke
 sheet name, never a cell) and single-quotes a name on re-emit only when it isn't a
 bare token. See `code/specs/visicalc-multi-sheet.md` for the full multi-sheet arc.
 
+**Resolution + cross-sheet recompute (implemented).** `evaluate` and `collect_refs`
+take a `resolve: Fn(&str) -> Option<SheetId>` callback; the workbook supplies
+`|name| self.sheet_by_name.get(name).copied()`. A qualified reference reads the
+resolved target sheet and registers a dependency edge `(target_sheet, addr)`, so the
+cross-sheet dependency graph (`Node = (SheetId, CellAddress)`) recomputes a formula
+on one sheet when a precedent on another sheet changes. An unknown sheet name → `None`
+→ `#REF!`, registering no precedent. Because edges are resolved when a formula is
+*set*, a forward reference to a not-yet-created sheet reads `#REF!` until re-entered.
+
 ---
 
 ## §4 The Workbook

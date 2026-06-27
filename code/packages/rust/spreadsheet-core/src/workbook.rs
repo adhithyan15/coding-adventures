@@ -320,9 +320,14 @@ impl Workbook {
                 },
             },
         );
-        // Update dependency edges.
+        // Update dependency edges. A cross-sheet ref registers an edge into its
+        // target sheet (resolved via the sheet-name map), so editing that sheet's
+        // cell recomputes this formula through the cross-sheet graph.
         let mut refs = Vec::new();
-        collect_refs(&ast, sheet, &mut refs);
+        {
+            let resolve = |name: &str| self.sheet_by_name.get(name).copied();
+            collect_refs(&ast, sheet, &resolve, &mut refs);
+        }
         self.graph.set_dependencies((sheet, addr), refs);
         // Evaluate the new formula and recalc downstream.
         self.recalc_dependents_of(sheet, addr);
@@ -1390,12 +1395,14 @@ impl Workbook {
         // dependency nodes.
         type Node = (SheetId, CellAddress);
         let mut deps: Vec<(Node, Vec<Node>)> = Vec::new();
+        let sheet_by_name = &self.sheet_by_name;
+        let resolve = |name: &str| sheet_by_name.get(name).copied();
         for (i, s) in self.sheets.iter().enumerate() {
             let sheet = SheetId(i as u32);
             for (addr, cell) in &s.cells {
                 if let CellContent::Formula { ast, .. } = &cell.content {
                     let mut refs = Vec::new();
-                    collect_refs(ast, sheet, &mut refs);
+                    collect_refs(ast, sheet, &resolve, &mut refs);
                     deps.push(((sheet, *addr), refs));
                 }
             }
@@ -1455,7 +1462,11 @@ impl Workbook {
                     .map(|c| c.current_value())
                     .unwrap_or(CellValue::Empty)
             };
-            match evaluate(&ast, sheet, &lookup) {
+            // Map a sheet name to its id so a cross-sheet ref (`Summary!A1`) reads
+            // the target sheet; an unknown name resolves to `None` → `#REF!`.
+            let sheet_by_name = &self.sheet_by_name;
+            let resolve = |name: &str| sheet_by_name.get(name).copied();
+            match evaluate(&ast, sheet, &lookup, &resolve) {
                 Ok(v) => v,
                 Err(e) => CellValue::Error(e),
             }
@@ -1662,6 +1673,42 @@ mod tests {
         let wb = Workbook::new();
         assert_eq!(wb.sheet_count(), 0);
         assert_eq!(wb.epoch(), 0);
+    }
+
+    #[test]
+    fn cross_sheet_formula_reads_and_recomputes_across_sheets() {
+        // Two sheets: Sheet1 holds a formula that references Summary!A1. Editing
+        // Summary's cell must recompute Sheet1's dependent through the cross-sheet
+        // dependency graph — the payoff of resolving the qualifier to a SheetId in
+        // both eval and dependency collection.
+        let mut wb = Workbook::new();
+        let s1 = wb.add_sheet("Sheet1");
+        let summary = wb.add_sheet("Summary");
+        wb.set_value(summary, cell(1, 1), CellValue::Number(10.0)); // Summary!A1 = 10
+        wb.set_formula(s1, cell(1, 2), "=Summary!A1*2").unwrap(); // Sheet1!B1
+        assert_eq!(wb.cell_value(s1, cell(1, 2)), CellValue::Number(20.0));
+
+        // Edit the precedent on the OTHER sheet → the cross-sheet dependent updates.
+        wb.set_value(summary, cell(1, 1), CellValue::Number(50.0));
+        assert_eq!(wb.cell_value(s1, cell(1, 2)), CellValue::Number(100.0));
+
+        // A qualified SUM over a range on another sheet works too.
+        wb.set_value(summary, cell(1, 1), CellValue::Number(1.0));
+        wb.set_value(summary, cell(2, 1), CellValue::Number(2.0));
+        wb.set_value(summary, cell(3, 1), CellValue::Number(3.0));
+        wb.set_formula(s1, cell(2, 2), "=SUM(Summary!A1:A3)").unwrap();
+        assert_eq!(wb.cell_value(s1, cell(2, 2)), CellValue::Number(6.0));
+
+        // A reference to a sheet that doesn't exist is #REF! (not a panic).
+        wb.set_formula(s1, cell(3, 2), "=Ghost!A1").unwrap();
+        assert_eq!(
+            wb.cell_value(s1, cell(3, 2)),
+            CellValue::Error(SpreadsheetError::Ref)
+        );
+
+        // The cross-sheet qualifier is preserved in the cell's stored source.
+        wb.set_formula(s1, cell(4, 2), "=Summary!A1+1").unwrap();
+        assert_eq!(wb.cell_source_text(s1, cell(4, 2)), "=Summary!A1+1");
     }
 
     #[test]

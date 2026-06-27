@@ -6,38 +6,54 @@ use crate::cell::CellValue;
 use crate::dispatch::dispatch;
 use crate::errors::SpreadsheetError;
 
+/// Resolve a reference's sheet to a concrete [`SheetId`]: an unqualified ref
+/// (`None`) resolves to `current_sheet`; a qualified ref (`Some(name)`) is looked
+/// up via `resolve`, which returns `None` for an unknown sheet name — the caller
+/// then yields `#REF!`.
+fn resolve_sheet<G>(sheet: &Option<String>, current_sheet: SheetId, resolve: &G) -> Option<SheetId>
+where
+    G: Fn(&str) -> Option<SheetId>,
+{
+    match sheet {
+        None => Some(current_sheet),
+        Some(name) => resolve(name),
+    }
+}
+
 /// Evaluate a formula AST against the workbook view.
 ///
-/// `lookup` is an injected callback that returns the current value
-/// of an arbitrary cell (the workbook owns the storage; we don't
-/// need a mutable reference here). `current_sheet` is the sheet the
-/// formula lives on (used to resolve sheet-local refs).
-pub fn evaluate<F>(
+/// `lookup` is an injected callback that returns the current value of an
+/// arbitrary cell (the workbook owns the storage; we don't need a mutable
+/// reference here). `current_sheet` is the sheet the formula lives on (resolves
+/// unqualified refs). `resolve` maps a sheet *name* to its [`SheetId`] so a
+/// cross-sheet reference (`Summary!A1`) reads the target sheet; it returns `None`
+/// for an unknown sheet, which becomes `#REF!`.
+pub fn evaluate<F, G>(
     ast: &FormulaAst,
     current_sheet: SheetId,
     lookup: &F,
+    resolve: &G,
 ) -> Result<CellValue, SpreadsheetError>
 where
     F: Fn(SheetId, CellAddress) -> CellValue,
+    G: Fn(&str) -> Option<SheetId>,
 {
     match ast {
         FormulaAst::Literal(v) => Ok(v.clone()),
-        FormulaAst::Ref { sheet: None, addr } => Ok(lookup(current_sheet, *addr)),
-        FormulaAst::Range { sheet: None, range } => evaluate_range(*range, current_sheet, lookup),
-        // Cross-sheet references parse and round-trip, but resolving a sheet name
-        // to a `SheetId` needs a workbook the evaluator doesn't hold yet, so they
-        // evaluate to `#REF!` for now — a clean "not wired" signal, never a wrong
-        // value. The next slice threads a name resolver through and reads the
-        // target sheet.
-        FormulaAst::Ref { sheet: Some(_), .. } | FormulaAst::Range { sheet: Some(_), .. } => {
-            Err(SpreadsheetError::Ref)
-        }
+        FormulaAst::Ref { sheet, addr } => match resolve_sheet(sheet, current_sheet, resolve) {
+            Some(sid) => Ok(lookup(sid, *addr)),
+            None => Err(SpreadsheetError::Ref), // unknown sheet name
+        },
+        FormulaAst::Range { sheet, range } => match resolve_sheet(sheet, current_sheet, resolve) {
+            Some(sid) => evaluate_range(*range, sid, lookup),
+            None => Err(SpreadsheetError::Ref),
+        },
         FormulaAst::Percent(inner) => {
-            let v = evaluate(inner, current_sheet, lookup)?.coerce_number()?;
+            let v = evaluate(inner, current_sheet, lookup, resolve)?.coerce_number()?;
             Ok(CellValue::Number(v / 100.0))
         }
         FormulaAst::Unary { op, operand } => {
-            let v = evaluate(operand, current_sheet, lookup)?.coerce_number()?;
+            let v = evaluate(operand, current_sheet, lookup, resolve)?.coerce_number()?;
             match op {
                 UnaryOp::Negate => Ok(CellValue::Number(-v)),
                 UnaryOp::Plus => Ok(CellValue::Number(v)),
@@ -45,8 +61,8 @@ where
         }
         FormulaAst::Binary { op, lhs, rhs } => {
             // Errors propagate left-first.
-            let l = evaluate(lhs, current_sheet, lookup)?;
-            let r = evaluate(rhs, current_sheet, lookup)?;
+            let l = evaluate(lhs, current_sheet, lookup, resolve)?;
+            let r = evaluate(rhs, current_sheet, lookup, resolve)?;
             apply_binary(*op, l, r)
         }
         FormulaAst::Call { name, args } => {
@@ -55,15 +71,15 @@ where
             // matters for `IF(A1=0, 0, 1/A1)`-style guards.
             let upper = name.to_ascii_uppercase();
             if upper == "IF" {
-                return eval_if_lazy(args, current_sheet, lookup);
+                return eval_if_lazy(args, current_sheet, lookup, resolve);
             }
             if upper == "AND" || upper == "OR" {
-                return eval_logical_short_circuit(&upper, args, current_sheet, lookup);
+                return eval_logical_short_circuit(&upper, args, current_sheet, lookup, resolve);
             }
             // IFERROR / IFNA: catch the inner error rather than
             // letting it propagate up before we see it.
             if upper == "IFERROR" || upper == "IFNA" {
-                return eval_iferror_lazy(&upper, args, current_sheet, lookup);
+                return eval_iferror_lazy(&upper, args, current_sheet, lookup, resolve);
             }
             // Normal eager call. Range arguments are expanded into
             // individual cell values so SUM(A1:A5) flattens to five
@@ -72,21 +88,20 @@ where
             let mut resolved = Vec::with_capacity(args.len());
             for a in args {
                 if let FormulaAst::Range { sheet, range } = a {
-                    // Cross-sheet range arg: same "#REF! until wired" rule as a
-                    // standalone cross-sheet ref.
-                    if sheet.is_some() {
-                        return Err(SpreadsheetError::Ref);
-                    }
+                    // Resolve the range's sheet (the cell's own, or a named one).
+                    let Some(sid) = resolve_sheet(sheet, current_sheet, resolve) else {
+                        return Err(SpreadsheetError::Ref); // unknown sheet name
+                    };
                     // Reject an adversarially huge range before it can
                     // allocate billions of argument values.
                     if range.is_oversized() {
                         return Err(SpreadsheetError::Ref);
                     }
                     for addr in range.iter() {
-                        resolved.push(lookup(current_sheet, addr));
+                        resolved.push(lookup(sid, addr));
                     }
                 } else {
-                    let v = evaluate(a, current_sheet, lookup)?;
+                    let v = evaluate(a, current_sheet, lookup, resolve)?;
                     resolved.push(v);
                 }
             }
@@ -228,22 +243,24 @@ fn compare_op(op: BinaryOp, ord: Option<core::cmp::Ordering>) -> bool {
     }
 }
 
-fn eval_if_lazy<F>(
+fn eval_if_lazy<F, G>(
     args: &[FormulaAst],
     sheet: SheetId,
     lookup: &F,
+    resolve: &G,
 ) -> Result<CellValue, SpreadsheetError>
 where
     F: Fn(SheetId, CellAddress) -> CellValue,
+    G: Fn(&str) -> Option<SheetId>,
 {
     if args.len() < 2 || args.len() > 3 {
         return Err(SpreadsheetError::Value);
     }
-    let cond = evaluate(&args[0], sheet, lookup)?.coerce_bool()?;
+    let cond = evaluate(&args[0], sheet, lookup, resolve)?.coerce_bool()?;
     if cond {
-        evaluate(&args[1], sheet, lookup)
+        evaluate(&args[1], sheet, lookup, resolve)
     } else if args.len() == 3 {
-        evaluate(&args[2], sheet, lookup)
+        evaluate(&args[2], sheet, lookup, resolve)
     } else {
         Ok(CellValue::Boolean(false))
     }
@@ -253,26 +270,28 @@ where
 /// special-case handling because the inner evaluation may return an
 /// error; the engine's normal `Result<CellValue, _>` would propagate
 /// the error past the IFERROR wrapper.
-fn eval_iferror_lazy<F>(
+fn eval_iferror_lazy<F, G>(
     name: &str,
     args: &[FormulaAst],
     sheet: SheetId,
     lookup: &F,
+    resolve: &G,
 ) -> Result<CellValue, SpreadsheetError>
 where
     F: Fn(SheetId, CellAddress) -> CellValue,
+    G: Fn(&str) -> Option<SheetId>,
 {
     if args.len() != 2 {
         return Err(SpreadsheetError::Value);
     }
     // Try the primary expression. If it errors, swap to the fallback
     // (for IFNA, only swap when the error is specifically #N/A).
-    let primary = match evaluate(&args[0], sheet, lookup) {
+    let primary = match evaluate(&args[0], sheet, lookup, resolve) {
         Ok(v) => v,
         Err(SpreadsheetError::NotAvailable) if name == "IFNA" => {
-            return evaluate(&args[1], sheet, lookup);
+            return evaluate(&args[1], sheet, lookup, resolve);
         }
-        Err(_) if name == "IFERROR" => return evaluate(&args[1], sheet, lookup),
+        Err(_) if name == "IFERROR" => return evaluate(&args[1], sheet, lookup, resolve),
         Err(e) if name == "IFNA" => return Err(e),
         Err(e) => return Err(e),
     };
@@ -281,29 +300,31 @@ where
     if name == "IFNA"
         && matches!(primary, CellValue::Error(SpreadsheetError::NotAvailable))
     {
-        return evaluate(&args[1], sheet, lookup);
+        return evaluate(&args[1], sheet, lookup, resolve);
     }
     if name == "IFERROR" && matches!(primary, CellValue::Error(_)) {
-        return evaluate(&args[1], sheet, lookup);
+        return evaluate(&args[1], sheet, lookup, resolve);
     }
     Ok(primary)
 }
 
-fn eval_logical_short_circuit<F>(
+fn eval_logical_short_circuit<F, G>(
     op: &str,
     args: &[FormulaAst],
     sheet: SheetId,
     lookup: &F,
+    resolve: &G,
 ) -> Result<CellValue, SpreadsheetError>
 where
     F: Fn(SheetId, CellAddress) -> CellValue,
+    G: Fn(&str) -> Option<SheetId>,
 {
     if args.is_empty() {
         return Err(SpreadsheetError::Value);
     }
     let want_true = op == "AND";
     for a in args {
-        let b = evaluate(a, sheet, lookup)?.coerce_bool()?;
+        let b = evaluate(a, sheet, lookup, resolve)?.coerce_bool()?;
         if b != want_true {
             return Ok(CellValue::Boolean(!want_true));
         }
@@ -311,43 +332,55 @@ where
     Ok(CellValue::Boolean(want_true))
 }
 
-/// Recursively walk an AST and emit the cell addresses it depends on.
-/// Used by the workbook to build the dependency graph after parsing.
-pub fn collect_refs(ast: &FormulaAst, current_sheet: SheetId, out: &mut Vec<(SheetId, CellAddress)>) {
+/// Recursively walk an AST and emit the `(sheet, cell)` nodes it depends on.
+/// Used by the workbook to build the dependency graph after parsing. `resolve`
+/// maps a sheet name to its [`SheetId`] so a cross-sheet reference registers an
+/// edge into the *target* sheet (the dependency graph is cross-sheet); a
+/// reference to an unknown sheet evaluates to `#REF!` and registers nothing.
+pub fn collect_refs<G>(
+    ast: &FormulaAst,
+    current_sheet: SheetId,
+    resolve: &G,
+    out: &mut Vec<(SheetId, CellAddress)>,
+) where
+    G: Fn(&str) -> Option<SheetId>,
+{
     match ast {
         FormulaAst::Literal(_) => {}
         // Normalise away `$` markers: the dependency graph (like the cell store)
         // is keyed by position, so a `$A$1` precedent points at the same node as
         // `A1` — otherwise the edge would never match and `set_value` wouldn't
-        // recompute a dependent that referenced it absolutely.
-        FormulaAst::Ref { sheet: None, addr } => {
-            out.push((current_sheet, addr.without_absolute()))
+        // recompute a dependent that referenced it absolutely. A qualified ref
+        // registers against its *target* sheet; an unknown sheet name registers
+        // nothing (the formula is `#REF!`).
+        FormulaAst::Ref { sheet, addr } => {
+            if let Some(sid) = resolve_sheet(sheet, current_sheet, resolve) {
+                out.push((sid, addr.without_absolute()));
+            }
         }
-        FormulaAst::Range { sheet: None, range } => {
+        FormulaAst::Range { sheet, range } => {
             // Skip expansion of an oversized range: registering one
             // dependency per cell for `=SUM(A1:XFD1048576)` would
             // exhaust memory. Such a formula evaluates to `#REF!`
             // anyway (see the call-arg expansion and `evaluate_range`),
             // so it has no meaningful precedents to track.
-            if !range.is_oversized() {
-                for addr in range.iter() {
-                    out.push((current_sheet, addr.without_absolute()));
+            if let Some(sid) = resolve_sheet(sheet, current_sheet, resolve) {
+                if !range.is_oversized() {
+                    for addr in range.iter() {
+                        out.push((sid, addr.without_absolute()));
+                    }
                 }
             }
         }
-        // A cross-sheet reference evaluates to `#REF!` until the resolver lands,
-        // so it has no precedent to register yet. The next slice resolves the
-        // sheet name and pushes `(target_sheet, addr)` here.
-        FormulaAst::Ref { sheet: Some(_), .. } | FormulaAst::Range { sheet: Some(_), .. } => {}
-        FormulaAst::Unary { operand, .. } => collect_refs(operand, current_sheet, out),
+        FormulaAst::Unary { operand, .. } => collect_refs(operand, current_sheet, resolve, out),
         FormulaAst::Binary { lhs, rhs, .. } => {
-            collect_refs(lhs, current_sheet, out);
-            collect_refs(rhs, current_sheet, out);
+            collect_refs(lhs, current_sheet, resolve, out);
+            collect_refs(rhs, current_sheet, resolve, out);
         }
-        FormulaAst::Percent(inner) => collect_refs(inner, current_sheet, out),
+        FormulaAst::Percent(inner) => collect_refs(inner, current_sheet, resolve, out),
         FormulaAst::Call { args, .. } => {
             for a in args {
-                collect_refs(a, current_sheet, out);
+                collect_refs(a, current_sheet, resolve, out);
             }
         }
     }
@@ -366,34 +399,41 @@ mod tests {
         CellValue::Empty
     }
 
+    /// A resolver for a single-sheet world: every sheet name is unknown, so a
+    /// cross-sheet reference becomes `#REF!`. (Cross-sheet *success* is exercised
+    /// at the workbook level, where real sheets exist.)
+    fn no_sheets(_: &str) -> Option<SheetId> {
+        None
+    }
+
     #[test]
     fn literal_evaluates_to_self() {
         let ast = parse("=42").unwrap();
-        let r = evaluate(&ast, SheetId(0), &empty_lookup).unwrap();
+        let r = evaluate(&ast, SheetId(0), &empty_lookup, &no_sheets).unwrap();
         assert_eq!(r, CellValue::Number(42.0));
     }
 
     #[test]
     fn arithmetic_basic() {
-        let r = evaluate(&parse("=1+2*3").unwrap(), SheetId(0), &empty_lookup).unwrap();
+        let r = evaluate(&parse("=1+2*3").unwrap(), SheetId(0), &empty_lookup, &no_sheets).unwrap();
         assert_eq!(r, CellValue::Number(7.0));
     }
 
     #[test]
     fn division_by_zero() {
-        let r = evaluate(&parse("=1/0").unwrap(), SheetId(0), &empty_lookup);
+        let r = evaluate(&parse("=1/0").unwrap(), SheetId(0), &empty_lookup, &no_sheets);
         assert_eq!(r, Err(SpreadsheetError::DivZero));
     }
 
     #[test]
     fn concat_operator() {
-        let r = evaluate(&parse("=\"a\"&\"b\"").unwrap(), SheetId(0), &empty_lookup).unwrap();
+        let r = evaluate(&parse("=\"a\"&\"b\"").unwrap(), SheetId(0), &empty_lookup, &no_sheets).unwrap();
         assert_eq!(r, CellValue::Text("ab".into()));
     }
 
     #[test]
     fn comparison_returns_boolean() {
-        let r = evaluate(&parse("=3>2").unwrap(), SheetId(0), &empty_lookup).unwrap();
+        let r = evaluate(&parse("=3>2").unwrap(), SheetId(0), &empty_lookup, &no_sheets).unwrap();
         assert_eq!(r, CellValue::Boolean(true));
     }
 
@@ -403,6 +443,7 @@ mod tests {
             &parse("=SUM(1, 2, 3)").unwrap(),
             SheetId(0),
             &empty_lookup,
+            &no_sheets,
         )
         .unwrap();
         assert_eq!(r, CellValue::Number(6.0));
@@ -416,6 +457,7 @@ mod tests {
             &parse("=IF(0=0, 0, 1/0)").unwrap(),
             SheetId(0),
             &empty_lookup,
+            &no_sheets,
         )
         .unwrap();
         assert_eq!(r, CellValue::Number(0.0));
@@ -428,6 +470,7 @@ mod tests {
             &parse("=AND(FALSE, 1/0)").unwrap(),
             SheetId(0),
             &empty_lookup,
+            &no_sheets,
         )
         .unwrap();
         assert_eq!(r, CellValue::Boolean(false));
@@ -437,7 +480,7 @@ mod tests {
     fn cell_ref_via_injected_lookup() {
         let r = evaluate(&parse("=A1*2").unwrap(), SheetId(0), &|_, _| {
             CellValue::Number(5.0)
-        })
+        }, &no_sheets)
         .unwrap();
         assert_eq!(r, CellValue::Number(10.0));
     }
@@ -446,54 +489,85 @@ mod tests {
     fn collect_refs_walks_tree() {
         let ast = parse("=SUM(A1, B2:B4) + C1").unwrap();
         let mut refs = Vec::new();
-        collect_refs(&ast, SheetId(0), &mut refs);
+        collect_refs(&ast, SheetId(0), &no_sheets, &mut refs);
         // A1, B2, B3, B4, C1 — five refs.
         assert_eq!(refs.len(), 5);
     }
 
     #[test]
-    fn cross_sheet_ref_evaluates_to_ref_error_until_resolver_lands() {
-        // A qualified reference parses and round-trips, but the evaluator can't
-        // resolve a sheet name to a SheetId yet, so it yields #REF! — a clean
-        // "not wired" signal, never a wrong value. The next slice replaces this.
-        let r = evaluate(&parse("=Summary!A1").unwrap(), SheetId(0), &empty_lookup);
+    fn cross_sheet_ref_to_unknown_sheet_is_ref_error() {
+        // A reference to a sheet that doesn't exist resolves to #REF! — never a
+        // wrong value, and never a panic. (no_sheets resolves every name to None.)
+        let r = evaluate(&parse("=Summary!A1").unwrap(), SheetId(0), &empty_lookup, &no_sheets);
         assert_eq!(r, Err(SpreadsheetError::Ref));
         // …including a qualified range, standalone or as a SUM arg.
         assert_eq!(
-            evaluate(&parse("=Summary!A1:B2").unwrap(), SheetId(0), &empty_lookup),
+            evaluate(&parse("=Summary!A1:B2").unwrap(), SheetId(0), &empty_lookup, &no_sheets),
             Err(SpreadsheetError::Ref)
         );
         assert_eq!(
-            evaluate(&parse("=SUM(Summary!A1:A4)").unwrap(), SheetId(0), &empty_lookup),
+            evaluate(&parse("=SUM(Summary!A1:A4)").unwrap(), SheetId(0), &empty_lookup, &no_sheets),
             Err(SpreadsheetError::Ref)
         );
     }
 
     #[test]
-    fn collect_refs_skips_unresolved_cross_sheet_refs() {
-        // A cross-sheet ref has no resolvable precedent yet, so it registers none
-        // (its value is #REF! regardless). Same-sheet refs around it still count.
+    fn cross_sheet_ref_reads_the_resolved_target_sheet() {
+        // A resolver that knows "Summary" = sheet 1, and a lookup that returns 7
+        // for any cell on sheet 1 (and 0 elsewhere). =Summary!A1 must read sheet 1.
+        let resolve = |name: &str| (name == "Summary").then_some(SheetId(1));
+        let lookup = |sid: SheetId, _a: CellAddress| {
+            CellValue::Number(if sid == SheetId(1) { 7.0 } else { 0.0 })
+        };
+        assert_eq!(
+            evaluate(&parse("=Summary!A1").unwrap(), SheetId(0), &lookup, &resolve),
+            Ok(CellValue::Number(7.0))
+        );
+        // A qualified range in SUM flattens against the target sheet: 3 cells × 7.
+        assert_eq!(
+            evaluate(&parse("=SUM(Summary!A1:A3)").unwrap(), SheetId(0), &lookup, &resolve),
+            Ok(CellValue::Number(21.0))
+        );
+        // An unqualified ref in the same formula still reads the current sheet (0).
+        assert_eq!(
+            evaluate(&parse("=A1+Summary!A1").unwrap(), SheetId(0), &lookup, &resolve),
+            Ok(CellValue::Number(7.0)) // 0 (sheet 0) + 7 (sheet 1)
+        );
+    }
+
+    #[test]
+    fn collect_refs_registers_cross_sheet_precedents_against_the_target() {
+        // With "Summary" → sheet 1, a cross-sheet ref registers an edge into sheet
+        // 1, while the same-sheet refs register against the current sheet (0).
+        let resolve = |name: &str| (name == "Summary").then_some(SheetId(1));
         let ast = parse("=A1 + Summary!B2 + C3").unwrap();
         let mut refs = Vec::new();
-        collect_refs(&ast, SheetId(0), &mut refs);
-        assert_eq!(refs.len(), 2); // A1 and C3 only
+        collect_refs(&ast, SheetId(0), &resolve, &mut refs);
+        assert!(refs.contains(&(SheetId(0), CellAddress::new(1, 1)))); // A1 on sheet 0
+        assert!(refs.contains(&(SheetId(1), CellAddress::new(2, 2)))); // Summary!B2 on sheet 1
+        assert!(refs.contains(&(SheetId(0), CellAddress::new(3, 3)))); // C3 on sheet 0
+        assert_eq!(refs.len(), 3);
+        // An unknown sheet registers no precedent (the ref is #REF!).
+        let mut refs2 = Vec::new();
+        collect_refs(&parse("=Nope!A1").unwrap(), SheetId(0), &no_sheets, &mut refs2);
+        assert!(refs2.is_empty());
     }
 
     #[test]
     fn unary_negate() {
-        let r = evaluate(&parse("=-5").unwrap(), SheetId(0), &empty_lookup).unwrap();
+        let r = evaluate(&parse("=-5").unwrap(), SheetId(0), &empty_lookup, &no_sheets).unwrap();
         assert_eq!(r, CellValue::Number(-5.0));
     }
 
     #[test]
     fn percent_postfix() {
-        let r = evaluate(&parse("=50%").unwrap(), SheetId(0), &empty_lookup).unwrap();
+        let r = evaluate(&parse("=50%").unwrap(), SheetId(0), &empty_lookup, &no_sheets).unwrap();
         assert_eq!(r, CellValue::Number(0.5));
     }
 
     #[test]
     fn error_literal_passes_through_arithmetic() {
-        let r = evaluate(&parse("=#N/A + 1").unwrap(), SheetId(0), &empty_lookup);
+        let r = evaluate(&parse("=#N/A + 1").unwrap(), SheetId(0), &empty_lookup, &no_sheets);
         assert_eq!(r, Err(SpreadsheetError::NotAvailable));
     }
 }
