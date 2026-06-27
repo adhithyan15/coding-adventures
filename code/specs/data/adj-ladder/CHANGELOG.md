@@ -2,6 +2,39 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.2.0] — 2026-06-26
+
+### Added — Gemma as the canonical local base target + first real two-arm number
+
+- **Gemma base target.** `--model gemma` / `--model gemma-1b` aliases load the cached
+  `mlx-community/gemma-3-{4b,1b}-it-bf16` instruct checkpoints via MLX — a small,
+  non-frontier, **fully-local** model (no API, offline). MLX loading now applies the
+  tokenizer chat template and greedy sampling (`temp=0`) for reproducible runs.
+- **First real two-arm result (rung 0, Gemma-3-4b, greedy):** Arm A (model alone)
+  **60%** (12/20, **8 wrong**); Arm B (model+ADJ) **95%** (19/20, **0 wrong**,
+  defensibility **1.00**); **divergence +35% (+7 items)**. Arm B's single miss is a
+  decompose error the engine caught and abstained on — zero fabrications.
+  Artifact: `ladder-scorecard.gemma.json`.
+- **Formula extraction stays strict, now through the real LaTeX parser.** A few-shot
+  decompose prompt steers the model to plain ASCII arithmetic; `extract_formula` still
+  accepts a plain `+ - * / ()` line directly (stripping an echoed `Formula:` label).
+  When Gemma emits LaTeX math (`\times`, `\cdot`, `\frac`, `$...$`, `\(...\)`), the
+  harness calls the `latex` crate's `MathFrontend` adapter via `latex-math-to-adj` and
+  lowers only the supported arithmetic subset into ADJ's ASCII `let` syntax. Unsupported
+  math still **abstains**; the harness never regex-rewrites the model's math.
+- **Per-model scorecards.** Model runs write `ladder-scorecard.<model>.json`; cached
+  runs write `ladder-scorecard.json` — a cached CI run never clobbers a committed
+  two-arm headline. Scorecard summary now records the `model`.
+- Tests: +5 (label stripping, LaTeX helper hook/integration, unsupported-math
+  abstention, alias resolution) → 23 total.
+
+### Added — LaTeX arithmetic bridge
+
+- **`latex-math-to-adj`** — a tiny binary in the `latex` crate that parses LaTeX math
+  with `latex::registry()` and lowers the arithmetic subset needed by rung 0 into ADJ
+  formulas (`\times`/`\cdot` → `*`, `\frac{a}{b}` → `a / b`, parentheses preserved).
+  This is the first direct consumer of the new LaTeX parser from the LADDER harness.
+
 ## [0.1.0] — 2026-06-26
 
 ### Added — PR-0: the two-arm instrument + rung 0 (no engine change)

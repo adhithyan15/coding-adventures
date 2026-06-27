@@ -261,6 +261,7 @@ def classify_bucket(arm_b_outcome: str, faithful: bool) -> str | None:
 class Scorecard:
     rung: str
     mode: str
+    model: str | None = None
     results: list[ItemResult] = field(default_factory=list)
 
     def _arm_summary(self, arm: str) -> dict:
@@ -290,6 +291,7 @@ class Scorecard:
         return {
             "rung": self.rung,
             "mode": self.mode,
+            "model": self.model,
             "arm_a_model_alone": a,
             "arm_b_model_plus_adj": b,
             # The money number: how much the engine arm out-scores the model alone.
@@ -338,31 +340,103 @@ def score_item(item: dict, gen) -> ItemResult:
 # Model decomposition (only used in --model mode).
 # ----------------------------------------------------------------------------------
 def decompose_prompt(item: dict) -> str:
+    # Two worked examples (a bare expression and a one-step word problem) give a small
+    # model a fair shot at the FORMAT — we are measuring its decomposition ability, not
+    # its prompt-guessing. The examples carry no overlap with any bank item's numbers.
     return (
-        "Translate the arithmetic in this question into a single formula using only "
-        "the numbers that appear in the question and the operators + - * / and "
-        "parentheses. Do NOT compute the answer — output only the formula.\n\n"
-        f"Question: {item['stem']}\n\nFormula:"
+        "Translate the arithmetic in a question into a SINGLE formula using ONLY the "
+        "numbers that appear in the question and the operators + - * / and "
+        "parentheses. Do NOT compute the answer. Output ONLY the formula, on one line.\n\n"
+        "Question: What is 11 * 4 - 6?\nFormula: 11 * 4 - 6\n\n"
+        "Question: A box holds 8 pens. How many pens are in 3 boxes?\nFormula: 3 * 8\n\n"
+        f"Question: {item['stem']}\nFormula:"
     )
 
 
 _FORMULA_OK = re.compile(r"^[\d\s+\-*/().]+$")
+_LABEL = re.compile(r"(?i)^\s*formula\s*[:=]?\s*")
+_LATEX_HINT = re.compile(r"(\\[A-Za-z]+|\\\(|\\\[|\$)")
 
 
-def extract_formula(text: str) -> str | None:
-    """Take the model's reply and keep the first line that is a pure arithmetic
-    expression (digits, operators, parens, spaces). Anything else → None (abstain)."""
-    for line in (text or "").splitlines():
-        line = line.strip().rstrip(".")
-        if line and _FORMULA_OK.match(line):
-            return line
+def _find_latex_helper() -> Path | None:
+    override = os.environ.get("LADDER_LATEX_HELPER")
+    if override and Path(override).exists():
+        return Path(override)
+    rust = HERE.parents[2] / "packages" / "rust"
+    candidates = [
+        rust / "target" / "debug" / "latex-math-to-adj",
+        rust / "target" / "release" / "latex-math-to-adj",
+    ]
+    for c in candidates:
+        if c.exists():
+            return c
     return None
 
 
+_LATEX_HELPER = _find_latex_helper()
+
+
+def latex_to_adj_formula(text: str) -> str | None:
+    """Parse a LaTeX math expression with the repo's LaTeX frontend and lower the
+    arithmetic subset to ADJ's ASCII `let` formula syntax.
+
+    The helper is intentionally a Rust binary from `code/packages/rust/latex`: it
+    routes Gemma's LaTeX output through the actual parser/frontend stack instead of
+    teaching this Python harness a second, unofficial math parser. If the helper is
+    not built, or the expression is outside the arithmetic subset, the item abstains."""
+    if _LATEX_HELPER is None:
+        return None
+    if not _LATEX_HINT.search(text):
+        return None
+    try:
+        out = subprocess.run(
+            [str(_LATEX_HELPER), text],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    formula = out.stdout.strip()
+    return formula if formula and _FORMULA_OK.match(formula) else None
+
+
+def extract_formula(text: str) -> str | None:
+    """Take the model's reply and return the first usable arithmetic expression.
+
+    The only cosmetic step is stripping a leading "Formula:" label the model may echo;
+    plain ASCII arithmetic passes through directly. If the line looks like LaTeX math,
+    it is parsed by the Rust `latex` frontend helper and lowered to the same ASCII
+    subset. Unsupported notation still abstains — no ad-hoc regex repair here."""
+    for raw in (text or "").splitlines():
+        line = _LABEL.sub("", raw.strip()).rstrip(".")
+        if line and _FORMULA_OK.match(line):
+            return line
+        formula = latex_to_adj_formula(line)
+        if formula is not None:
+            return formula
+    return None
+
+
+# Gemma is the canonical base target for the ladder: a small, fully-LOCAL, non-frontier
+# model (no API, runs offline on commodity Apple-silicon via MLX). The headline claim is
+# explicitly "a Haiku- or Gemma-class model + ADJ passes an exam the model alone cannot",
+# so these aliases let `--model gemma` Just Work against the cached instruct checkpoints.
+MODEL_ALIASES = {
+    "gemma": "mlx:mlx-community/gemma-3-4b-it-bf16",      # default base target (4B)
+    "gemma-4b": "mlx:mlx-community/gemma-3-4b-it-bf16",
+    "gemma-1b": "mlx:mlx-community/gemma-3-1b-it-bf16",   # even smaller — wider gap earlier
+}
+
+
 def load_gen(spec: str):
-    """Build a prompt→text callable from a --model spec. `mlx:<repo>` loads a local
-    MLX model (Apple silicon); `cmd:<shell>` pipes the prompt to a command's stdin and
-    reads its stdout (works with any local inference server / wrapper)."""
+    """Build a prompt→text callable from a --model spec. Accepts a Gemma alias
+    (`gemma`, `gemma-1b`, …), `mlx:<repo>` for any local MLX checkpoint (Apple
+    silicon), or `cmd:<shell>` which pipes the prompt to a command's stdin and reads
+    its stdout (works with any local inference server / wrapper, e.g. ollama)."""
+    spec = MODEL_ALIASES.get(spec, spec)
     if spec.startswith("cmd:"):
         shell = spec[4:]
 
@@ -374,24 +448,29 @@ def load_gen(spec: str):
         return gen
     if spec.startswith("mlx:"):
         repo = spec[4:]
-        from mlx_lm import generate, load           # lazy: only needed in model mode
+        from mlx_lm import generate, load              # lazy: only needed in model mode
+        from mlx_lm.sample_utils import make_sampler
 
         model, tok = load(repo)
+        sampler = make_sampler(temp=0.0)              # greedy → reproducible runs
 
         def gen(prompt: str) -> str:
-            return generate(model, tok, prompt=prompt, max_tokens=64, verbose=False)
+            msgs = [{"role": "user", "content": prompt}]
+            templated = tok.apply_chat_template(msgs, add_generation_prompt=True, tokenize=False)
+            return generate(model, tok, prompt=templated, max_tokens=64,
+                            sampler=sampler, verbose=False)
 
         return gen
-    raise SystemExit(f"unknown --model spec {spec!r} (use mlx:<repo> or cmd:<shell>)")
+    raise SystemExit(f"unknown --model spec {spec!r} (use a gemma alias, mlx:<repo>, or cmd:<shell>)")
 
 
 # ----------------------------------------------------------------------------------
 # Driver.
 # ----------------------------------------------------------------------------------
-def run(rung: str, gen) -> Scorecard:
+def run(rung: str, gen, model: str | None = None) -> Scorecard:
     items = json.loads((HERE / rung / "items.json").read_text())["items"]
     mode = "cached" if gen is None else "model"
-    card = Scorecard(rung, mode)
+    card = Scorecard(rung, mode, model)
     for it in items:
         card.results.append(score_item(it, gen))
     return card
@@ -400,12 +479,12 @@ def run(rung: str, gen) -> Scorecard:
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="ADJ-LADDER two-arm scoreboard")
     ap.add_argument("rung", help="rung directory name, e.g. rung0_arithmetic")
-    ap.add_argument("--model", help="model spec: mlx:<repo> or cmd:<shell> (omit for cached engine-only run)")
+    ap.add_argument("--model", help="model spec: a gemma alias (gemma, gemma-1b), mlx:<repo>, or cmd:<shell> (omit for cached engine-only run)")
     ap.add_argument("--quiet", action="store_true", help="emit scorecard JSON only")
     args = ap.parse_args(argv)
 
     gen = load_gen(args.model) if args.model else None
-    card = run(args.rung, gen)
+    card = run(args.rung, gen, args.model)
     summary = card.summary()
 
     scorecard = {
@@ -418,7 +497,14 @@ def main(argv: list[str]) -> int:
             for r in card.results
         ],
     }
-    (HERE / "ladder-scorecard.json").write_text(json.dumps(scorecard, indent=2) + "\n")
+    # Write per-mode/model files so a cached CI run never clobbers a committed two-arm
+    # headline: cached → ladder-scorecard.json; model → ladder-scorecard.<model>.json.
+    if card.mode == "cached":
+        out_name = "ladder-scorecard.json"
+    else:
+        slug = re.sub(r"[^a-z0-9.-]+", "-", args.model.lower()).strip("-")
+        out_name = f"ladder-scorecard.{slug}.json"
+    (HERE / out_name).write_text(json.dumps(scorecard, indent=2) + "\n")
 
     if not args.quiet:
         _pretty(card, summary)

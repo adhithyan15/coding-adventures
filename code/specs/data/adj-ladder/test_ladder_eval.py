@@ -82,6 +82,38 @@ def test_extract_formula_rejects_prose():
     assert le.extract_formula("fifty nine") is None
 
 
+def test_extract_formula_strips_label_only():
+    # a "Formula:" label the model echoes is stripped; plain arithmetic passes through.
+    assert le.extract_formula("Formula: 5 * 12") == "5 * 12"
+
+
+def test_extract_formula_accepts_latex_via_helper(monkeypatch):
+    def fake_helper(line: str) -> str | None:
+        return "5 * 12" if line == "$5 \\times 12$" else None
+
+    monkeypatch.setattr(le, "latex_to_adj_formula", fake_helper)
+    assert le.extract_formula("$5 \\times 12$") == "5 * 12"
+
+
+def test_latex_helper_normalizes_basic_math_when_built():
+    if le._LATEX_HELPER is None:
+        import pytest
+        pytest.skip("latex-math-to-adj not built")
+    assert le.latex_to_adj_formula("$5 \\times 12$") == "5 * 12"
+    assert le.latex_to_adj_formula("\\frac{12}{3}") == "12 / 3"
+
+
+def test_extract_formula_abstains_on_unsupported_math(monkeypatch):
+    monkeypatch.setattr(le, "latex_to_adj_formula", lambda line: None)
+    assert le.extract_formula("5 × 12") is None
+
+
+def test_model_aliases_resolve():
+    assert le.MODEL_ALIASES["gemma"].startswith("mlx:")
+    assert "gemma" in le.MODEL_ALIASES["gemma"]
+    assert le.MODEL_ALIASES["gemma-1b"].endswith("gemma-3-1b-it-bf16")
+
+
 # ---- scoring / divergence -----------------------------------------------------
 def test_outcome():
     assert le.outcome("A", "A") == "correct"

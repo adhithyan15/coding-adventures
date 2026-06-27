@@ -1,38 +1,40 @@
 {
   "summary": {
     "rung": "rung0_arithmetic",
-    "mode": "cached",
-    "model": null,
+    "mode": "model",
+    "model": "gemma",
     "arm_a_model_alone": {
       "total": 20,
-      "correct": 0,
-      "abstained": 20,
-      "wrong": 0,
-      "raw_accuracy": 0.0,
-      "defensibility": 1.0,
-      "accuracy_on_attempted": null
+      "correct": 12,
+      "abstained": 0,
+      "wrong": 8,
+      "raw_accuracy": 0.6,
+      "defensibility": 0.6,
+      "accuracy_on_attempted": 0.6
     },
     "arm_b_model_plus_adj": {
       "total": 20,
-      "correct": 20,
-      "abstained": 0,
+      "correct": 19,
+      "abstained": 1,
       "wrong": 0,
-      "raw_accuracy": 1.0,
+      "raw_accuracy": 0.95,
       "defensibility": 1.0,
       "accuracy_on_attempted": 1.0
     },
     "divergence": {
-      "raw_accuracy": 1.0,
-      "correct": 20
+      "raw_accuracy": 0.35,
+      "correct": 7
     },
-    "arm_b_failure_buckets": {}
+    "arm_b_failure_buckets": {
+      "b": 1
+    }
   },
   "results": [
     {
       "id": "r0-01",
       "gold": "A",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "B",
+      "arm_a_outcome": "wrong",
       "arm_b": "A",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -40,8 +42,8 @@
     {
       "id": "r0-02",
       "gold": "C",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "A",
+      "arm_a_outcome": "wrong",
       "arm_b": "C",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -49,8 +51,8 @@
     {
       "id": "r0-03",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "A",
+      "arm_a_outcome": "wrong",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -58,8 +60,8 @@
     {
       "id": "r0-04",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "B",
+      "arm_a_outcome": "correct",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -67,8 +69,8 @@
     {
       "id": "r0-05",
       "gold": "A",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "A",
+      "arm_a_outcome": "correct",
       "arm_b": "A",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -76,8 +78,8 @@
     {
       "id": "r0-06",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "C",
+      "arm_a_outcome": "wrong",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -85,8 +87,8 @@
     {
       "id": "r0-07",
       "gold": "A",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "A",
+      "arm_a_outcome": "correct",
       "arm_b": "A",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -94,8 +96,8 @@
     {
       "id": "r0-08",
       "gold": "C",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "B",
+      "arm_a_outcome": "wrong",
       "arm_b": "C",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -103,17 +105,17 @@
     {
       "id": "r0-09",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
-      "arm_b": "B",
-      "arm_b_outcome": "correct",
-      "bucket": null
+      "arm_a": "B",
+      "arm_a_outcome": "correct",
+      "arm_b": null,
+      "arm_b_outcome": "abstained",
+      "bucket": "b"
     },
     {
       "id": "r0-10",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "A",
+      "arm_a_outcome": "wrong",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -121,8 +123,8 @@
     {
       "id": "r0-11",
       "gold": "C",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "C",
+      "arm_a_outcome": "correct",
       "arm_b": "C",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -130,8 +132,8 @@
     {
       "id": "r0-12",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "A",
+      "arm_a_outcome": "wrong",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -139,8 +141,8 @@
     {
       "id": "r0-13",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "B",
+      "arm_a_outcome": "correct",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -148,8 +150,8 @@
     {
       "id": "r0-14",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "B",
+      "arm_a_outcome": "correct",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -157,8 +159,8 @@
     {
       "id": "r0-15",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "C",
+      "arm_a_outcome": "wrong",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -166,8 +168,8 @@
     {
       "id": "r0-16",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "B",
+      "arm_a_outcome": "correct",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -175,8 +177,8 @@
     {
       "id": "r0-17",
       "gold": "C",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "C",
+      "arm_a_outcome": "correct",
       "arm_b": "C",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -184,8 +186,8 @@
     {
       "id": "r0-18",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "B",
+      "arm_a_outcome": "correct",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -193,8 +195,8 @@
     {
       "id": "r0-19",
       "gold": "A",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "A",
+      "arm_a_outcome": "correct",
       "arm_b": "A",
       "arm_b_outcome": "correct",
       "bucket": null
@@ -202,8 +204,8 @@
     {
       "id": "r0-20",
       "gold": "B",
-      "arm_a": null,
-      "arm_a_outcome": "abstained",
+      "arm_a": "B",
+      "arm_a_outcome": "correct",
       "arm_b": "B",
       "arm_b_outcome": "correct",
       "bucket": null
