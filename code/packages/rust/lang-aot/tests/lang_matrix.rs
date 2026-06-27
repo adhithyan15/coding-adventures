@@ -1011,11 +1011,7 @@ const PROGRAMS: &[Prog] = &[
         src: "10 GOSUB 100\n20 PRINT 1;\n30 GOSUB 100\n40 END\n\
                100 PRINT 9;\n110 RETURN\n",
         expect: Expect::Stdout("919"),
-        // Wasm excluded: GOSUB's computed-`goto` (RETURN dispatch) produces an
-        // irreducible CFG that trips iir-to-wasm's dispatch-loop lowering with a
-        // runtime StackUnderflow (the wasm *compiles* but traps). Tracked as a
-        // follow-up (BA1-WASM); runs on the other six backends meanwhile.
-        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — *nested* `GOSUB` (LANG-FULL BA1). A subroutine that itself
     // `GOSUB`s a second one before returning — proves the **LIFO stack discipline**
@@ -1030,8 +1026,7 @@ const PROGRAMS: &[Prog] = &[
         src: "10 GOSUB 100\n20 END\n100 PRINT 8;\n110 GOSUB 200\n\
                120 PRINT 6;\n130 RETURN\n200 PRINT 7;\n210 RETURN\n",
         expect: Expect::Stdout("876"),
-        // Wasm excluded — see the BA1-WASM note on the cell above.
-        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
 
