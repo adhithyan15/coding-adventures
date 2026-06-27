@@ -1,0 +1,125 @@
+#!/usr/bin/env python3
+"""contamination_check.py — bank-integrity & anti-circularity gate for a ladder rung.
+
+A two-arm proof is only worth anything if the question bank is honest. This gate runs
+*offline* over a rung's items.json and asserts the structural properties that keep the
+result legible. It is QA on the BANK — it is NOT on the answer path (the engine still
+does every bit of the actual reasoning at eval time).
+
+Checks performed (rung 0 — self-authored arithmetic):
+
+  1. Unique ids                — no item counted twice.
+  2. Five distinct options     — each item has options A..E with DISTINCT values, so
+                                 the engine's `answer == value` match is unambiguous
+                                 (a duplicate value would make a correct compute tie
+                                 and abstain — a measurement artifact, not a miss).
+  3. Gold points at an option  — gold_letter ∈ options.
+  4. Gold is internally correct— evaluating the item's `formula` (a restricted, safe
+                                 arithmetic eval — digits and + - * / () only) equals
+                                 the gold option's value. This catches authoring slips
+                                 in the key. It is the ONLY place the bank's answer is
+                                 computed in Python, and it exists to validate the key,
+                                 never to answer a question.
+  5. No-result-literals        — every number in `formula` also appears in `stem`, so
+                                 the gold decomposition itself never smuggles the
+                                 answer in (the same gate Arm B applies to the model).
+  6. No external provenance    — rung 0 is self-contained: items carry no `source` /
+                                 library import, so contamination against an external
+                                 bank is structurally impossible here. (Higher rungs
+                                 add a source-disjointness check.)
+
+Exit non-zero on any violation. Usage: python3 contamination_check.py rung0_arithmetic
+"""
+
+from __future__ import annotations
+
+import ast
+import json
+import operator
+import re
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+_NUM = re.compile(r"\d+(?:\.\d+)?")
+
+# A tiny, safe arithmetic evaluator (NOT Python's eval) — supports only +, -, *, /,
+# unary minus, parentheses, and numeric literals. Anything else raises, so a malformed
+# or sneaky formula can never execute arbitrary code.
+_BINOPS = {ast.Add: operator.add, ast.Sub: operator.sub,
+           ast.Mult: operator.mul, ast.Div: operator.truediv}
+_UNOPS = {ast.UAdd: operator.pos, ast.USub: operator.neg}
+
+
+def safe_eval(expr: str) -> float:
+    def ev(node):
+        if isinstance(node, ast.Expression):
+            return ev(node.body)
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return node.value
+        if isinstance(node, ast.BinOp) and type(node.op) in _BINOPS:
+            return _BINOPS[type(node.op)](ev(node.left), ev(node.right))
+        if isinstance(node, ast.UnaryOp) and type(node.op) in _UNOPS:
+            return _UNOPS[type(node.op)](ev(node.operand))
+        raise ValueError(f"disallowed expression element: {ast.dump(node)}")
+    return ev(ast.parse(expr, mode="eval"))
+
+
+def check(rung: str) -> list[str]:
+    items = json.loads((HERE / rung / "items.json").read_text())["items"]
+    errors: list[str] = []
+    seen: set[str] = set()
+    for it in items:
+        iid = it.get("id", "<no-id>")
+        if iid in seen:
+            errors.append(f"{iid}: duplicate id")
+        seen.add(iid)
+
+        opts = it.get("options", {})
+        if sorted(opts) != list("ABCDE"):
+            errors.append(f"{iid}: options must be exactly A..E, got {sorted(opts)}")
+        if len(set(opts.values())) != len(opts):
+            errors.append(f"{iid}: option values must be distinct, got {opts}")
+
+        gold = it.get("gold_letter")
+        if gold not in opts:
+            errors.append(f"{iid}: gold_letter {gold!r} not among options")
+            continue
+
+        try:
+            computed = safe_eval(it["formula"])
+        except (ValueError, SyntaxError, ZeroDivisionError) as e:
+            errors.append(f"{iid}: formula {it['formula']!r} did not evaluate: {e}")
+            continue
+        if abs(computed - opts[gold]) > 1e-9:
+            errors.append(f"{iid}: gold {gold}={opts[gold]} ≠ formula value {computed}")
+
+        stem_nums = set(_NUM.findall(it.get("stem", "")))
+        leaked = [n for n in _NUM.findall(it["formula"]) if n not in stem_nums]
+        if leaked:
+            errors.append(f"{iid}: formula numbers {leaked} not present in stem (result-literal leak)")
+
+        if "source" in it or "import" in it:
+            errors.append(f"{iid}: rung-0 items must be self-contained (no external source/import)")
+    return errors
+
+
+def main(argv: list[str]) -> int:
+    if not argv:
+        print("usage: contamination_check.py <rung-dir>", file=sys.stderr)
+        return 2
+    rung = argv[0]
+    errors = check(rung)
+    if errors:
+        print(f"contamination_check {rung}: {len(errors)} violation(s)")
+        for e in errors:
+            print(f"  ✗ {e}")
+        return 1
+    n = len(json.loads((HERE / rung / "items.json").read_text())["items"])
+    print(f"contamination_check {rung}: ✓ {n} items clean "
+          "(unique, distinct options, gold matches formula, no result-literal leak, self-contained)")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

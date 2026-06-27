@@ -34,6 +34,34 @@ not valid UTF-8 — so we never substitute a value where the runtime would throw
 
 Added direct-oracle, round-trip, through-the-pass, decline, non-string-argument,
 extra-argument, and member-access unit tests, all V8-confirmed.
+## [0.48.0] - 2026-06-26
+
+### Added — fold global `encodeURIComponent(str)` / `decodeURIComponent(str)` over a string literal
+
+The two global URI-component functions now fold to a string literal when their
+single argument is a string literal (ECMAScript §19.2.6.5 / §19.2.6.3),
+modelled exactly like the sibling `parseInt`/`parseFloat` free-identifier
+folds.
+
+- `encodeURIComponent` percent-escapes every byte of the literal's UTF-8
+  encoding that is **not** an unreserved character — ASCII alphanumerics plus
+  the nine marks ``- _ . ! ~ * ' ( )`` — emitting `%XX` with uppercase hex
+  otherwise: `encodeURIComponent("a b")` → `"a%20b"`, `encodeURIComponent("é")`
+  → `"%C3%A9"`, `encodeURIComponent("/")` → `"%2F"`. The URI *reserved*
+  delimiters (`; , / ? : @ & = + $`) that `encodeURI` keeps intact ARE escaped
+  here — that asymmetry is the whole point of the `…Component` variant.
+- `decodeURIComponent` is the inverse: `decodeURIComponent("a%20b")` → `"a b"`,
+  `decodeURIComponent("%C3%A9")` → `"é"`.
+
+**Soundness.** Same "builtins intact" premise and *free identifier* caveat as
+`parseInt`/`parseFloat`: we fold only the bare global identifier, never a
+member access (`window.decodeURIComponent` is left alone). A string literal's
+value is a Rust `&str` (whole Unicode scalars), so `encodeURIComponent` never
+hits the lone-surrogate input that throws — every emitted byte is a real UTF-8
+byte V8 would encode. `decodeURIComponent` **declines** (returns the call to the
+runtime) for exactly the two inputs JS throws a `URIError` on: a malformed
+escape (a `%` not followed by two hex digits) and a `%`-decoded byte run that
+is not valid UTF-8. Declining a throw is always sound.
 ## [0.47.0] - 2026-06-26
 
 ### Added — fold global `Boolean(…)` → boolean literal on string/number literals

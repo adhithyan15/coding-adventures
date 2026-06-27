@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Include selected `run_deck_analysis` output-plan tables in execution
+  `tables`, selected-run `TableList` metadata, and ordered `table_artifacts`
+  with stable table, CSV, compact JSON, and header-keyed record payloads,
+  matching Python and TypeScript.
 - Expose selected `run_deck_analysis` output-plan inventories as
   `output_plan_artifacts` with stable result-column, output-probe,
   output-directive, and table lists plus table, CSV, compact JSON, and

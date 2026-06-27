@@ -205,14 +205,29 @@ impl FormulaAst {
     pub fn adjust(&self, edit: StructuralEdit) -> FormulaAst {
         match self {
             FormulaAst::Literal(v) => FormulaAst::Literal(v.clone()),
-            FormulaAst::Ref(addr) => match addr.adjust(edit) {
-                Some(a) => FormulaAst::Ref(a),
+            // An unqualified reference points into this formula's own sheet — the
+            // sheet being edited — so it shifts (or collapses to `#REF!` if its
+            // band was deleted).
+            FormulaAst::Ref { sheet: None, addr } => match addr.adjust(edit) {
+                Some(a) => FormulaAst::cell(a),
                 None => ref_error(),
             },
-            FormulaAst::Range(range) => match range.adjust(edit) {
-                Some(r) => FormulaAst::Range(r),
+            FormulaAst::Range { sheet: None, range } => match range.adjust(edit) {
+                Some(r) => FormulaAst::cell_range(r),
                 None => ref_error(),
             },
+            // A cross-sheet reference targets another sheet, so a structural edit
+            // on this formula's sheet leaves it untouched. (Propagating an edit on
+            // sheet S to inbound `S!`-qualified refs that live on *other* sheets is
+            // a separate workbook-level pass, handled in a later slice.)
+            FormulaAst::Ref {
+                sheet: Some(s),
+                addr,
+            } => FormulaAst::sheet_cell(s.clone(), *addr),
+            FormulaAst::Range {
+                sheet: Some(s),
+                range,
+            } => FormulaAst::sheet_range(s.clone(), *range),
             FormulaAst::Unary { op, operand } => FormulaAst::Unary {
                 op: *op,
                 operand: Box::new(operand.adjust(edit)),
@@ -366,7 +381,7 @@ mod tests {
         match ast {
             FormulaAst::Binary { lhs, rhs, .. } => {
                 assert_eq!(*lhs, ref_error());
-                assert_eq!(*rhs, FormulaAst::Ref(a("A4")));
+                assert_eq!(*rhs, FormulaAst::cell(a("A4")));
             }
             other => panic!("expected a binary op, got {other:?}"),
         }

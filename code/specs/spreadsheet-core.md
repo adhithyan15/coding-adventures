@@ -206,9 +206,25 @@ behavior — copying a formula from A1 to A2 increments relative rows
 but not absolute. The recalc engine itself does not care about
 absoluteness; it sees the resolved address.
 
-Sheet IDs are dense `u32`s, separately tracked from sheet names so
-that renaming a sheet does not require rewriting every formula. The
-formula AST holds `SheetId`; the parser converts names at parse time.
+Sheet IDs are dense `u32`s, separately tracked from sheet names.
+
+**Cross-sheet references (implemented; diverged from the original plan).** A
+formula reference may be sheet-qualified (`=Summary!A1`, `='Q1 Budget'!A1:B2`).
+The reference AST carries an **optional sheet *name*** — `FormulaAst::Ref { sheet:
+Option<String>, addr }` / `Range { sheet, range }`, where `None` is the formula's
+own sheet (the common case, byte-identical to single-sheet behaviour). The name is
+resolved to a `SheetId` later, at *evaluation / dependency-collection* time, by a
+workbook that knows its sheets.
+
+This **reverses** the earlier note here ("the AST holds `SheetId`; the parser
+converts names at parse time"): the bare `parse()` is workbook-free, so it cannot
+resolve a name, and keeping it pure means a formula that references a not-yet-created
+sheet is a clean `#REF!` at evaluation rather than a parse error (formulas can load
+in any order). The trade-off — accepted deliberately — is that **renaming a sheet
+must rewrite the stored name** in every referencing formula's AST, rather than being
+a free no-op. The parser disambiguates `Name!A1` (a `!` makes the preceding token a
+sheet name, never a cell) and single-quotes a name on re-emit only when it isn't a
+bare token. See `code/specs/visicalc-multi-sheet.md` for the full multi-sheet arc.
 
 ---
 

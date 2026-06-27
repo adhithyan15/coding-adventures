@@ -8157,6 +8157,7 @@ function deckStableTables(
   if (controlPolicyArtifacts.length > 0) {
     tables.push("control-policy", "control-policy-summary");
   }
+  tables.push("output-plan");
   tables.push("run-artifact");
   return tables;
 }
@@ -8491,6 +8492,7 @@ function deckTableArtifact(name: string, table: string): DeckTableArtifact {
 }
 
 function deckTableArtifacts(
+  plan: DeckAnalysisPlan,
   resultTable: string,
   measurementTable: string,
   fourierTable: string,
@@ -8501,6 +8503,9 @@ function deckTableArtifacts(
   controlPolicyArtifactTable: string,
   controlPolicySummaryArtifacts: readonly DeckControlPolicySummaryArtifact[],
   controlPolicySummaryArtifactTable: string,
+  outputProbes: readonly string[],
+  outputDirectives: readonly string[],
+  tables: readonly string[],
 ): DeckTableArtifact[] {
   const artifacts = [deckTableArtifact("result", resultTable)];
   if (measurements.length > 0) {
@@ -8517,6 +8522,14 @@ function deckTableArtifacts(
       deckTableArtifact("control-policy-summary", controlPolicySummaryArtifactTable),
     );
   }
+  const outputPlanArtifactTable = deckOutputPlanArtifactBundle(
+    plan,
+    resultTable,
+    outputProbes,
+    outputDirectives,
+    tables,
+  ).table;
+  artifacts.push(deckTableArtifact("output-plan", outputPlanArtifactTable));
   artifacts.push(deckTableArtifact("run-artifact", runArtifactTable));
   return artifacts;
 }
@@ -9195,6 +9208,7 @@ export function runDeckAnalysis(
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
     const tableArtifacts = deckTableArtifacts(
+      plan,
       table,
       measurementTable,
       fourierTable,
@@ -9205,6 +9219,9 @@ export function runDeckAnalysis(
       controlPolicyArtifactTable,
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
+      outputProbes,
+      outputDirectives,
+      tables,
     );
     const rawfileArtifacts = deckRawfileArtifacts(plan, table, writeMarkers, rawfileOptions);
     const rawfileArtifactTable = formatDeckRawfileArtifactTable(rawfileArtifacts);
@@ -9314,6 +9331,7 @@ export function runDeckAnalysis(
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
     const tableArtifacts = deckTableArtifacts(
+      plan,
       table,
       measurementTable,
       fourierTable,
@@ -9324,6 +9342,9 @@ export function runDeckAnalysis(
       controlPolicyArtifactTable,
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
+      outputProbes,
+      outputDirectives,
+      tables,
     );
     const rawfileArtifacts = deckRawfileArtifacts(plan, table, writeMarkers, rawfileOptions);
     const rawfileArtifactTable = formatDeckRawfileArtifactTable(rawfileArtifacts);
@@ -9444,6 +9465,7 @@ export function runDeckAnalysis(
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
     const tableArtifacts = deckTableArtifacts(
+      plan,
       table,
       measurementTable,
       fourierTable,
@@ -9454,6 +9476,9 @@ export function runDeckAnalysis(
       controlPolicyArtifactTable,
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
+      outputProbes,
+      outputDirectives,
+      tables,
     );
     const rawfileArtifacts = deckRawfileArtifacts(plan, table, writeMarkers, rawfileOptions);
     const rawfileArtifactTable = formatDeckRawfileArtifactTable(rawfileArtifacts);
@@ -9569,6 +9594,7 @@ export function runDeckAnalysis(
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
     const tableArtifacts = deckTableArtifacts(
+      plan,
       table,
       measurementTable,
       fourierTable,
@@ -9579,6 +9605,9 @@ export function runDeckAnalysis(
       controlPolicyArtifactTable,
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
+      outputProbes,
+      outputDirectives,
+      tables,
     );
     const rawfileArtifacts = deckRawfileArtifacts(plan, table, writeMarkers, rawfileOptions);
     const rawfileArtifactTable = formatDeckRawfileArtifactTable(rawfileArtifacts);
@@ -9684,6 +9713,7 @@ export function runDeckAnalysis(
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
     const tableArtifacts = deckTableArtifacts(
+      plan,
       table,
       measurementTable,
       fourierTable,
@@ -9694,6 +9724,9 @@ export function runDeckAnalysis(
       controlPolicyArtifactTable,
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
+      outputProbes,
+      outputDirectives,
+      tables,
     );
     const rawfileArtifacts = deckRawfileArtifacts(plan, table, writeMarkers, rawfileOptions);
     const rawfileArtifactTable = formatDeckRawfileArtifactTable(rawfileArtifacts);
@@ -9798,6 +9831,7 @@ export function runDeckAnalysis(
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
     const tableArtifacts = deckTableArtifacts(
+      plan,
       table,
       measurementTable,
       fourierTable,
@@ -9808,6 +9842,9 @@ export function runDeckAnalysis(
       controlPolicyArtifactTable,
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
+      outputProbes,
+      outputDirectives,
+      tables,
     );
     const rawfileArtifacts = deckRawfileArtifacts(plan, table, writeMarkers, rawfileOptions);
     const rawfileArtifactTable = formatDeckRawfileArtifactTable(rawfileArtifacts);
@@ -9922,6 +9959,7 @@ export function runDeckAnalysis(
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
     const tableArtifacts = deckTableArtifacts(
+      plan,
       table,
       measurementTable,
       fourierTable,
@@ -9932,6 +9970,9 @@ export function runDeckAnalysis(
       controlPolicyArtifactTable,
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
+      outputProbes,
+      outputDirectives,
+      tables,
     );
     const rawfileArtifacts = deckRawfileArtifacts(plan, table, writeMarkers, rawfileOptions);
     const rawfileArtifactTable = formatDeckRawfileArtifactTable(rawfileArtifacts);
