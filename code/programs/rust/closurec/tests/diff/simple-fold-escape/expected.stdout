@@ -1,0 +1,1 @@
+var a="a%20b";var b="%7E/@";var c="%E9";var d="%uD83D%uDE00";var e="a b";var f="\u00e9";var g="/";var h=unescape("%uD83D");report(a,b,c,d,e,f,g,h);
