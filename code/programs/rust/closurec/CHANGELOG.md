@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.218.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold static `Array.from("…")` → array of code-point strings
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static `Array.from(x)`
+call (ECMAScript §23.1.2.1) to an array literal when `x` is a string literal and
+there is no `mapFn`. The string iterator yields one element per code point (like
+spread), so `Array.from("abc")` → `["a","b","c"]`, `Array.from("")` → `[]`, and
+astral characters stay whole. We decline a second `mapFn` argument, any
+non-string-literal first argument, and a shadowed receiver. New end-to-end
+fixture `tests/diff/simple-fold-array-from/` plus integration test
+`tests/diff_simple_fold_array_from.rs`.
+
 ## [0.214.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold static `JSON.stringify(…)` → string
