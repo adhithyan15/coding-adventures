@@ -1,0 +1,1 @@
+var a=true;var b=false;var c=true;var d=false;var e=Number.isSafeInteger(x);report(a,b,c,d,e);

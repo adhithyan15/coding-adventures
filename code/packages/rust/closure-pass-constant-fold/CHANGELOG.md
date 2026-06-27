@@ -21,6 +21,29 @@ literals (byte-equal), two boolean literals, two `null` literals (`true`), and a
 mismatch of literal kinds (`false`, different Type). We DECLINE if either argument
 is a non-literal (value unknown) or the arity is not two. Only the bare global
 `Object.is(...)` callee folds (never a shadowed `o.is(...)`).
+## [0.68.0] - 2026-06-26
+
+### Added — fold static `Number.isSafeInteger(x)` → boolean
+
+The ES2015 static predicate `Number.isSafeInteger` (ECMAScript §21.1.2.5) now
+folds to a boolean literal, alongside the existing `Number.isInteger` /
+`isFinite` / `isNaN`. Like its siblings it does **no** coercion: a non-Number
+argument is `false`. It returns `true` only for an integer whose magnitude does
+not exceed 2^53−1 (`Number.MAX_SAFE_INTEGER` = 9007199254740991), the largest
+integer the f64 mantissa represents without colliding with a neighbour:
+
+| call                               | result  |
+|------------------------------------|---------|
+| `Number.isSafeInteger(7)`          | `true`  |
+| `Number.isSafeInteger(9007199254740991)` | `true`  |
+| `Number.isSafeInteger(9007199254740992)` (2^53) | `false` |
+| `Number.isSafeInteger(3.5)`        | `false` |
+| `Number.isSafeInteger(1e21)`       | `false` |
+| `Number.isSafeInteger("7")`        | `false` |
+
+Only the bare global `Number.isSafeInteger(...)` callee folds (a member access,
+not a shadowable free identifier). An identifier / non-literal argument is
+declined (type unknown at compile time).
 ## [0.67.0] - 2026-06-26
 
 ### Added — fold static `Array.of(v0, v1, …)` → array literal `[v0, v1, …]`

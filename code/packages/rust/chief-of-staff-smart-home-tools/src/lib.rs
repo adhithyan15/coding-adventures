@@ -372,6 +372,10 @@ pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSI
     &str = "smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoffs";
 pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_SUMMARY_TOOL_ID:
     &str = "smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_summary";
+pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID:
+    &str = "smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations";
+pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATION_SUMMARY_TOOL_ID:
+    &str = "smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2701,6 +2705,32 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID =>
+                {
+                    let query =
+                        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_query(
+                            &arguments,
+                        )?;
+                    list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATION_SUMMARY_TOOL_ID =>
+                {
+                    let query =
+                        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_query(
+                            &arguments,
+                        )?;
+                    get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6460,6 +6490,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_definition(),
         list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoffs_definition(),
         get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_summary_definition(),
+        list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations_definition(),
+        get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -8282,6 +8314,79 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
     )
 }
 
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_query_schema(
+) -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("window_kind", JsonSchema::String),
+            SchemaProperty::new("window_kinds", string_array_schema()),
+            SchemaProperty::new("remediation_kind", JsonSchema::String),
+            SchemaProperty::new("remediation_kinds", string_array_schema()),
+            SchemaProperty::new("ticket_status", JsonSchema::String),
+            SchemaProperty::new("ticket_statuses", string_array_schema()),
+            SchemaProperty::new("work_order_status", JsonSchema::String),
+            SchemaProperty::new("work_order_statuses", string_array_schema()),
+            SchemaProperty::new("guardrail_status", JsonSchema::String),
+            SchemaProperty::new("guardrail_statuses", string_array_schema()),
+            SchemaProperty::new("evidence_status", JsonSchema::String),
+            SchemaProperty::new("evidence_statuses", string_array_schema()),
+            SchemaProperty::new("review_status", JsonSchema::String),
+            SchemaProperty::new("review_statuses", string_array_schema()),
+            SchemaProperty::new("disposition_status", JsonSchema::String),
+            SchemaProperty::new("disposition_statuses", string_array_schema()),
+            SchemaProperty::new("action_status", JsonSchema::String),
+            SchemaProperty::new("action_statuses", string_array_schema()),
+            SchemaProperty::new("outcome_status", JsonSchema::String),
+            SchemaProperty::new("outcome_statuses", string_array_schema()),
+            SchemaProperty::new("readiness_status", JsonSchema::String),
+            SchemaProperty::new("readiness_statuses", string_array_schema()),
+            SchemaProperty::new("handoff_status", JsonSchema::String),
+            SchemaProperty::new("handoff_statuses", string_array_schema()),
+            SchemaProperty::new("reconciliation_status", JsonSchema::String),
+            SchemaProperty::new("reconciliation_statuses", string_array_schema()),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("recommended_tool", JsonSchema::String),
+            SchemaProperty::new("max_priority", JsonSchema::Integer),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_list_output_schema(
+) -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec![
+            "runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations",
+            "summary",
+            "count",
+        ],
+        false,
+    )
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_output_schema(
+) -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
 fn list_runtime_maintenance_work_order_evidence_review_dispositions_definition() -> ToolDefinition {
     read_definition(
         SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITIONS_TOOL_ID,
@@ -8388,6 +8493,28 @@ fn get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome
         "Summarize Chief-visible handoff packages derived from D23 runtime maintenance work-order evidence review disposition action outcome readiness.",
         runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_query_schema(),
         runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_summary_output_schema(),
+    )
+}
+
+fn list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations_definition(
+) -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID,
+        "List smart-home runtime maintenance work-order evidence review disposition action outcome readiness handoff reconciliations",
+        "List Chief-visible reconciliation checkpoints derived from D23 runtime maintenance handoff packages without mutating the runtime.",
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_query_schema(),
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_list_output_schema(),
+    )
+}
+
+fn get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_definition(
+) -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATION_SUMMARY_TOOL_ID,
+        "Summarize smart-home runtime maintenance work-order evidence review disposition action outcome readiness handoff reconciliations",
+        "Summarize Chief-visible reconciliation checkpoints derived from D23 runtime maintenance handoff packages.",
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_query_schema(),
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_output_schema(),
     )
 }
 
@@ -10155,6 +10282,43 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
             .into_iter()
             .map(|status| {
                 parse_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_status(
+                    &status,
+                )
+            })
+            .collect::<Result<Vec<_>, _>>()?,
+        },
+    )
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationQuery
+{
+    handoff_query:
+        RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffQuery,
+    reconciliation_statuses: Vec<&'static str>,
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_query(
+    arguments: &JsonValue,
+) -> Result<
+    RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationQuery,
+    ToolCallError,
+>{
+    let handoff_query =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_query(
+            arguments,
+        )?;
+    Ok(
+        RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationQuery {
+            handoff_query,
+            reconciliation_statuses: optional_string_list(
+                arguments,
+                "reconciliation_status",
+                "reconciliation_statuses",
+            )?
+            .into_iter()
+            .map(|status| {
+                parse_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_status(
                     &status,
                 )
             })
@@ -40167,6 +40331,208 @@ impl RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessH
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliation
+{
+    reconciliation_id: String,
+    handoff_id: String,
+    readiness_id: String,
+    outcome_id: String,
+    action_id: String,
+    disposition_id: String,
+    review_id: String,
+    evidence_id: String,
+    guardrail_id: String,
+    work_order_id: String,
+    ticket_id: String,
+    plan_id: String,
+    window_id: String,
+    window_kind: RuntimeMaintenanceWindowKind,
+    priority: u8,
+    execution_order: usize,
+    reconciliation_status: &'static str,
+    reconciliation_kind: &'static str,
+    reconciliation_lane: &'static str,
+    reconciliation_package_kind: &'static str,
+    recommended_reconciliation_action: &'static str,
+    handoff_status: &'static str,
+    handoff_kind: &'static str,
+    handoff_lane: &'static str,
+    handoff_package_kind: &'static str,
+    recommended_handoff_action: &'static str,
+    readiness_status: &'static str,
+    readiness_kind: &'static str,
+    readiness_lane: &'static str,
+    recommended_readiness_action: &'static str,
+    outcome_status: &'static str,
+    outcome_kind: &'static str,
+    outcome_lane: &'static str,
+    recommended_outcome_action: &'static str,
+    action_status: &'static str,
+    action_kind: &'static str,
+    action_lane: &'static str,
+    recommended_action: &'static str,
+    recommended_tool: &'static str,
+    disposition_status: &'static str,
+    disposition_kind: &'static str,
+    disposition_lane: &'static str,
+    recommended_disposition_action: &'static str,
+    review_status: &'static str,
+    review_kind: &'static str,
+    reviewer_lane: &'static str,
+    recommended_review_action: &'static str,
+    evidence_status: &'static str,
+    evidence_kind: &'static str,
+    guardrail_status: &'static str,
+    work_order_status: &'static str,
+    source_recommended_action: &'static str,
+    action_count: usize,
+    blocked_action_count: usize,
+    requires_attention_count: usize,
+    overdue_action_count: usize,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    next_action_ids: Vec<String>,
+    remediation_ids: Vec<String>,
+    release_blocking: bool,
+    operator_required: bool,
+    lineage_complete: bool,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary
+{
+    total_reconciliations: usize,
+    release_hold_reconciliations: usize,
+    operator_route_reconciliations: usize,
+    lineage_repair_reconciliations: usize,
+    closeout_ready_reconciliations: usize,
+    release_blocking_reconciliations: usize,
+    operator_required_reconciliations: usize,
+    lineage_complete_reconciliations: usize,
+    source_runtime_actions: usize,
+    blocked_runtime_actions: usize,
+    requires_attention_runtime_actions: usize,
+    overdue_runtime_actions: usize,
+    first_reconciliation_id: Option<String>,
+    first_release_hold_reconciliation_id: Option<String>,
+    first_operator_route_reconciliation_id: Option<String>,
+    first_lineage_repair_reconciliation_id: Option<String>,
+    first_closeout_reconciliation_id: Option<String>,
+    first_handoff_id: Option<String>,
+    first_readiness_id: Option<String>,
+    first_outcome_id: Option<String>,
+    first_action_id: Option<String>,
+    first_disposition_id: Option<String>,
+    first_review_id: Option<String>,
+    first_evidence_id: Option<String>,
+    first_work_order_id: Option<String>,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    highest_priority: Option<u8>,
+}
+
+impl RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary {
+    fn from_reconciliations(
+        reconciliations: &[RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliation],
+    ) -> Self {
+        let mut summary = Self::default();
+
+        for reconciliation in reconciliations {
+            summary.total_reconciliations += 1;
+            summary.source_runtime_actions += reconciliation.action_count;
+            summary.blocked_runtime_actions += reconciliation.blocked_action_count;
+            summary.requires_attention_runtime_actions += reconciliation.requires_attention_count;
+            summary.overdue_runtime_actions += reconciliation.overdue_action_count;
+            summary.first_due_at_ms =
+                min_optional_u64(summary.first_due_at_ms, reconciliation.first_due_at_ms);
+            summary.max_overdue_by_ms =
+                max_optional_u64(summary.max_overdue_by_ms, reconciliation.max_overdue_by_ms);
+            summary.highest_priority =
+                min_optional_u8(summary.highest_priority, Some(reconciliation.priority));
+            summary
+                .first_reconciliation_id
+                .get_or_insert_with(|| reconciliation.reconciliation_id.clone());
+            summary
+                .first_handoff_id
+                .get_or_insert_with(|| reconciliation.handoff_id.clone());
+            summary
+                .first_readiness_id
+                .get_or_insert_with(|| reconciliation.readiness_id.clone());
+            summary
+                .first_outcome_id
+                .get_or_insert_with(|| reconciliation.outcome_id.clone());
+            summary
+                .first_action_id
+                .get_or_insert_with(|| reconciliation.action_id.clone());
+            summary
+                .first_disposition_id
+                .get_or_insert_with(|| reconciliation.disposition_id.clone());
+            summary
+                .first_review_id
+                .get_or_insert_with(|| reconciliation.review_id.clone());
+            summary
+                .first_evidence_id
+                .get_or_insert_with(|| reconciliation.evidence_id.clone());
+            summary
+                .first_work_order_id
+                .get_or_insert_with(|| reconciliation.work_order_id.clone());
+
+            if reconciliation.release_hold_reconciled() {
+                summary.release_hold_reconciliations += 1;
+                summary
+                    .first_release_hold_reconciliation_id
+                    .get_or_insert_with(|| reconciliation.reconciliation_id.clone());
+            }
+            if reconciliation.operator_route_pending() {
+                summary.operator_route_reconciliations += 1;
+                summary
+                    .first_operator_route_reconciliation_id
+                    .get_or_insert_with(|| reconciliation.reconciliation_id.clone());
+            }
+            if reconciliation.lineage_repair_pending() {
+                summary.lineage_repair_reconciliations += 1;
+                summary
+                    .first_lineage_repair_reconciliation_id
+                    .get_or_insert_with(|| reconciliation.reconciliation_id.clone());
+            }
+            if reconciliation.ready_for_closeout() {
+                summary.closeout_ready_reconciliations += 1;
+                summary
+                    .first_closeout_reconciliation_id
+                    .get_or_insert_with(|| reconciliation.reconciliation_id.clone());
+            }
+            if reconciliation.release_blocking {
+                summary.release_blocking_reconciliations += 1;
+            }
+            if reconciliation.operator_required {
+                summary.operator_required_reconciliations += 1;
+            }
+            if reconciliation.lineage_complete {
+                summary.lineage_complete_reconciliations += 1;
+            }
+        }
+
+        summary
+    }
+
+    fn has_reconciliations(&self) -> bool {
+        self.total_reconciliations > 0
+    }
+
+    fn has_reconciliation_work(&self) -> bool {
+        self.release_hold_reconciliations > 0
+            || self.operator_route_reconciliations > 0
+            || self.lineage_repair_reconciliations > 0
+    }
+
+    fn reconciliation_ready(&self) -> bool {
+        self.total_reconciliations > 0
+            && self.closeout_ready_reconciliations == self.total_reconciliations
+            && self.lineage_complete_reconciliations == self.total_reconciliations
+    }
+}
+
 fn list_runtime_maintenance_work_order_evidence_reviews_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -40837,6 +41203,140 @@ fn get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome
     ))
 }
 
+fn list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut reconciliations, summary) =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations(
+            runtime,
+            principal_id,
+            now_ms,
+            &query,
+        )?;
+    if let Some(limit) = query
+        .handoff_query
+        .readiness_query
+        .outcome_query
+        .action_query
+        .disposition_query
+        .review_query
+        .evidence_query
+        .guardrail_query
+        .work_order_query
+        .limit
+    {
+        reconciliations.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations",
+            JsonValue::Array(
+                reconciliations
+                    .iter()
+                    .map(
+                        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_json,
+                    )
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_json(
+                &summary,
+            ),
+        ),
+        ("count", integer(reconciliations.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string(
+                    "list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations",
+                ),
+            ),
+            (
+                "handoff_reconciliations",
+                integer(reconciliations.len() as i64),
+            ),
+            (
+                "release_hold_reconciliations",
+                integer(summary.release_hold_reconciliations as i64),
+            ),
+            (
+                "operator_route_reconciliations",
+                integer(summary.operator_route_reconciliations as i64),
+            ),
+            (
+                "closeout_ready_reconciliations",
+                integer(summary.closeout_ready_reconciliations as i64),
+            ),
+            (
+                "reconciliation_ready",
+                JsonValue::Bool(summary.reconciliation_ready()),
+            ),
+        ]),
+    ))
+}
+
+fn get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations(
+            runtime,
+            principal_id,
+            now_ms,
+            &query,
+        )?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_json(
+            &summary,
+        ),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string(
+                    "get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary",
+                ),
+            ),
+            (
+                "total_reconciliations",
+                integer(summary.total_reconciliations as i64),
+            ),
+            (
+                "release_hold_reconciliations",
+                integer(summary.release_hold_reconciliations as i64),
+            ),
+            (
+                "operator_route_reconciliations",
+                integer(summary.operator_route_reconciliations as i64),
+            ),
+            (
+                "closeout_ready_reconciliations",
+                integer(summary.closeout_ready_reconciliations as i64),
+            ),
+            (
+                "has_reconciliations",
+                JsonValue::Bool(summary.has_reconciliations()),
+            ),
+        ]),
+    ))
+}
+
 fn runtime_maintenance_work_order_evidence_reviews(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -41026,6 +41526,44 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
             &handoffs,
         );
     Ok((handoffs, summary))
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationQuery,
+) -> Result<
+    (
+        Vec<RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliation>,
+        RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    ),
+    ToolCallError,
+>{
+    let (handoffs, _) =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoffs(
+            runtime,
+            principal_id,
+            now_ms,
+            &query.handoff_query,
+        )?;
+    let reconciliations = handoffs
+        .iter()
+        .map(
+            RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliation::from_handoff,
+        )
+        .filter(|reconciliation| {
+            runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_matches(
+                reconciliation,
+                query,
+            )
+        })
+        .collect::<Vec<_>>();
+    let summary =
+        RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary::from_reconciliations(
+            &reconciliations,
+        );
+    Ok((reconciliations, summary))
 }
 
 impl RuntimeMaintenanceWorkOrderEvidenceReview {
@@ -41588,6 +42126,123 @@ impl RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessH
     }
 }
 
+impl
+    RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliation
+{
+    fn from_handoff(
+        handoff: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoff,
+    ) -> Self {
+        let reconciliation_status =
+            runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_status(
+                handoff,
+            );
+        Self {
+            reconciliation_id: format!(
+                "maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation:{}",
+                handoff.handoff_id
+            ),
+            handoff_id: handoff.handoff_id.clone(),
+            readiness_id: handoff.readiness_id.clone(),
+            outcome_id: handoff.outcome_id.clone(),
+            action_id: handoff.action_id.clone(),
+            disposition_id: handoff.disposition_id.clone(),
+            review_id: handoff.review_id.clone(),
+            evidence_id: handoff.evidence_id.clone(),
+            guardrail_id: handoff.guardrail_id.clone(),
+            work_order_id: handoff.work_order_id.clone(),
+            ticket_id: handoff.ticket_id.clone(),
+            plan_id: handoff.plan_id.clone(),
+            window_id: handoff.window_id.clone(),
+            window_kind: handoff.window_kind,
+            priority: handoff.priority,
+            execution_order: handoff.execution_order,
+            reconciliation_status,
+            reconciliation_kind:
+                runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_kind(
+                    reconciliation_status,
+                ),
+            reconciliation_lane:
+                runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_lane(
+                    reconciliation_status,
+                ),
+            reconciliation_package_kind:
+                runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_package_kind(
+                    reconciliation_status,
+                ),
+            recommended_reconciliation_action:
+                runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_recommended_reconciliation_action(
+                    reconciliation_status,
+                ),
+            handoff_status: handoff.handoff_status,
+            handoff_kind: handoff.handoff_kind,
+            handoff_lane: handoff.handoff_lane,
+            handoff_package_kind: handoff.handoff_package_kind,
+            recommended_handoff_action: handoff.recommended_handoff_action,
+            readiness_status: handoff.readiness_status,
+            readiness_kind: handoff.readiness_kind,
+            readiness_lane: handoff.readiness_lane,
+            recommended_readiness_action: handoff.recommended_readiness_action,
+            outcome_status: handoff.outcome_status,
+            outcome_kind: handoff.outcome_kind,
+            outcome_lane: handoff.outcome_lane,
+            recommended_outcome_action: handoff.recommended_outcome_action,
+            action_status: handoff.action_status,
+            action_kind: handoff.action_kind,
+            action_lane: handoff.action_lane,
+            recommended_action: handoff.recommended_action,
+            recommended_tool: handoff.recommended_tool,
+            disposition_status: handoff.disposition_status,
+            disposition_kind: handoff.disposition_kind,
+            disposition_lane: handoff.disposition_lane,
+            recommended_disposition_action: handoff.recommended_disposition_action,
+            review_status: handoff.review_status,
+            review_kind: handoff.review_kind,
+            reviewer_lane: handoff.reviewer_lane,
+            recommended_review_action: handoff.recommended_review_action,
+            evidence_status: handoff.evidence_status,
+            evidence_kind: handoff.evidence_kind,
+            guardrail_status: handoff.guardrail_status,
+            work_order_status: handoff.work_order_status,
+            source_recommended_action: handoff.source_recommended_action,
+            action_count: handoff.action_count,
+            blocked_action_count: handoff.blocked_action_count,
+            requires_attention_count: handoff.requires_attention_count,
+            overdue_action_count: handoff.overdue_action_count,
+            first_due_at_ms: handoff.first_due_at_ms,
+            max_overdue_by_ms: handoff.max_overdue_by_ms,
+            next_action_ids: handoff.next_action_ids.clone(),
+            remediation_ids: handoff.remediation_ids.clone(),
+            release_blocking: handoff.release_blocking,
+            operator_required: handoff.operator_required,
+            lineage_complete: handoff.lineage_complete,
+        }
+    }
+
+    fn requires_reconciliation_work(&self) -> bool {
+        self.reconciliation_status != "ready_for_closeout"
+    }
+
+    fn release_hold_reconciled(&self) -> bool {
+        self.reconciliation_status == "release_hold_reconciled"
+    }
+
+    fn operator_route_pending(&self) -> bool {
+        self.reconciliation_status == "operator_route_pending"
+    }
+
+    fn lineage_repair_pending(&self) -> bool {
+        self.reconciliation_status == "lineage_repair_pending"
+    }
+
+    fn ready_for_closeout(&self) -> bool {
+        self.reconciliation_status == "ready_for_closeout"
+    }
+
+    fn reconciliation_ready(&self) -> bool {
+        self.ready_for_closeout() && self.lineage_complete
+    }
+}
+
 fn runtime_maintenance_work_order_evidence_review_disposition_matches(
     disposition: &RuntimeMaintenanceWorkOrderEvidenceReviewDisposition,
     query: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionQuery,
@@ -41627,6 +42282,16 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
     query: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffQuery,
 ) -> bool {
     query.handoff_statuses.is_empty() || query.handoff_statuses.contains(&handoff.handoff_status)
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_matches(
+    reconciliation: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliation,
+    query: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationQuery,
+) -> bool {
+    query.reconciliation_statuses.is_empty()
+        || query
+            .reconciliation_statuses
+            .contains(&reconciliation.reconciliation_status)
 }
 
 fn runtime_maintenance_work_order_evidence_review_disposition_status(
@@ -41847,6 +42512,64 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
         "operator_handoff" => "route_operator_handoff",
         "lineage_repair" => "repair_readiness_lineage",
         _ => "close_maintenance_work_order_outcome",
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_status(
+    handoff: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoff,
+) -> &'static str {
+    if handoff.blocks_release() {
+        "release_hold_reconciled"
+    } else if handoff.operator_handoff() {
+        "operator_route_pending"
+    } else if handoff.lineage_repair() {
+        "lineage_repair_pending"
+    } else {
+        "ready_for_closeout"
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_kind(
+    reconciliation_status: &str,
+) -> &'static str {
+    match reconciliation_status {
+        "release_hold_reconciled" => "release_hold_reconciliation",
+        "operator_route_pending" => "operator_route_reconciliation",
+        "lineage_repair_pending" => "lineage_repair_reconciliation",
+        _ => "closeout_reconciliation",
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_lane(
+    reconciliation_status: &str,
+) -> &'static str {
+    match reconciliation_status {
+        "release_hold_reconciled" => "chief_release_decision",
+        "operator_route_pending" => "runtime_operator_handoff",
+        "lineage_repair_pending" => "evidence_lineage_repair",
+        _ => "execution_closeout",
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_package_kind(
+    reconciliation_status: &str,
+) -> &'static str {
+    match reconciliation_status {
+        "release_hold_reconciled" => "release_hold_reconciliation_packet",
+        "operator_route_pending" => "operator_route_reconciliation_packet",
+        "lineage_repair_pending" => "lineage_repair_reconciliation_packet",
+        _ => "closeout_reconciliation_packet",
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_recommended_reconciliation_action(
+    reconciliation_status: &str,
+) -> &'static str {
+    match reconciliation_status {
+        "release_hold_reconciled" => "verify_release_hold_packet",
+        "operator_route_pending" => "route_operator_handoff_packet",
+        "lineage_repair_pending" => "repair_lineage_before_closeout",
+        _ => "finalize_maintenance_closeout",
     }
 }
 
@@ -67754,6 +68477,192 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
     ])
 }
 
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_json(
+    reconciliation: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliation,
+) -> JsonValue {
+    object([
+        (
+            "reconciliation_id",
+            string(&reconciliation.reconciliation_id),
+        ),
+        ("handoff_id", string(&reconciliation.handoff_id)),
+        ("readiness_id", string(&reconciliation.readiness_id)),
+        ("outcome_id", string(&reconciliation.outcome_id)),
+        ("action_id", string(&reconciliation.action_id)),
+        ("disposition_id", string(&reconciliation.disposition_id)),
+        ("review_id", string(&reconciliation.review_id)),
+        ("evidence_id", string(&reconciliation.evidence_id)),
+        ("guardrail_id", string(&reconciliation.guardrail_id)),
+        ("work_order_id", string(&reconciliation.work_order_id)),
+        ("ticket_id", string(&reconciliation.ticket_id)),
+        ("plan_id", string(&reconciliation.plan_id)),
+        ("window_id", string(&reconciliation.window_id)),
+        (
+            "window_kind",
+            string(runtime_maintenance_window_kind_label(
+                reconciliation.window_kind,
+            )),
+        ),
+        ("priority", integer(reconciliation.priority as i64)),
+        (
+            "execution_order",
+            integer(reconciliation.execution_order as i64),
+        ),
+        (
+            "reconciliation_status",
+            string(reconciliation.reconciliation_status),
+        ),
+        (
+            "reconciliation_kind",
+            string(reconciliation.reconciliation_kind),
+        ),
+        (
+            "reconciliation_lane",
+            string(reconciliation.reconciliation_lane),
+        ),
+        (
+            "reconciliation_package_kind",
+            string(reconciliation.reconciliation_package_kind),
+        ),
+        (
+            "recommended_reconciliation_action",
+            string(reconciliation.recommended_reconciliation_action),
+        ),
+        ("handoff_status", string(reconciliation.handoff_status)),
+        ("handoff_kind", string(reconciliation.handoff_kind)),
+        ("handoff_lane", string(reconciliation.handoff_lane)),
+        (
+            "handoff_package_kind",
+            string(reconciliation.handoff_package_kind),
+        ),
+        (
+            "recommended_handoff_action",
+            string(reconciliation.recommended_handoff_action),
+        ),
+        ("readiness_status", string(reconciliation.readiness_status)),
+        ("readiness_kind", string(reconciliation.readiness_kind)),
+        ("readiness_lane", string(reconciliation.readiness_lane)),
+        (
+            "recommended_readiness_action",
+            string(reconciliation.recommended_readiness_action),
+        ),
+        ("outcome_status", string(reconciliation.outcome_status)),
+        ("outcome_kind", string(reconciliation.outcome_kind)),
+        ("outcome_lane", string(reconciliation.outcome_lane)),
+        (
+            "recommended_outcome_action",
+            string(reconciliation.recommended_outcome_action),
+        ),
+        ("action_status", string(reconciliation.action_status)),
+        ("action_kind", string(reconciliation.action_kind)),
+        ("action_lane", string(reconciliation.action_lane)),
+        (
+            "recommended_action",
+            string(reconciliation.recommended_action),
+        ),
+        ("recommended_tool", string(reconciliation.recommended_tool)),
+        (
+            "disposition_status",
+            string(reconciliation.disposition_status),
+        ),
+        ("disposition_kind", string(reconciliation.disposition_kind)),
+        ("disposition_lane", string(reconciliation.disposition_lane)),
+        (
+            "recommended_disposition_action",
+            string(reconciliation.recommended_disposition_action),
+        ),
+        ("review_status", string(reconciliation.review_status)),
+        ("review_kind", string(reconciliation.review_kind)),
+        ("reviewer_lane", string(reconciliation.reviewer_lane)),
+        (
+            "recommended_review_action",
+            string(reconciliation.recommended_review_action),
+        ),
+        ("evidence_status", string(reconciliation.evidence_status)),
+        ("evidence_kind", string(reconciliation.evidence_kind)),
+        ("guardrail_status", string(reconciliation.guardrail_status)),
+        (
+            "work_order_status",
+            string(reconciliation.work_order_status),
+        ),
+        (
+            "source_recommended_action",
+            string(reconciliation.source_recommended_action),
+        ),
+        ("action_count", integer(reconciliation.action_count as i64)),
+        (
+            "blocked_action_count",
+            integer(reconciliation.blocked_action_count as i64),
+        ),
+        (
+            "requires_attention_count",
+            integer(reconciliation.requires_attention_count as i64),
+        ),
+        (
+            "overdue_action_count",
+            integer(reconciliation.overdue_action_count as i64),
+        ),
+        (
+            "first_due_at_ms",
+            reconciliation
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            reconciliation
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_action_ids",
+            JsonValue::Array(reconciliation.next_action_ids.iter().map(string).collect()),
+        ),
+        (
+            "remediation_ids",
+            JsonValue::Array(reconciliation.remediation_ids.iter().map(string).collect()),
+        ),
+        (
+            "release_blocking",
+            JsonValue::Bool(reconciliation.release_blocking),
+        ),
+        (
+            "operator_required",
+            JsonValue::Bool(reconciliation.operator_required),
+        ),
+        (
+            "lineage_complete",
+            JsonValue::Bool(reconciliation.lineage_complete),
+        ),
+        (
+            "requires_reconciliation_work",
+            JsonValue::Bool(reconciliation.requires_reconciliation_work()),
+        ),
+        (
+            "release_hold_reconciled",
+            JsonValue::Bool(reconciliation.release_hold_reconciled()),
+        ),
+        (
+            "operator_route_pending",
+            JsonValue::Bool(reconciliation.operator_route_pending()),
+        ),
+        (
+            "lineage_repair_pending",
+            JsonValue::Bool(reconciliation.lineage_repair_pending()),
+        ),
+        (
+            "ready_for_closeout",
+            JsonValue::Bool(reconciliation.ready_for_closeout()),
+        ),
+        (
+            "reconciliation_ready",
+            JsonValue::Bool(reconciliation.reconciliation_ready()),
+        ),
+    ])
+}
+
 fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_json(
     summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
 ) -> JsonValue {
@@ -68080,6 +68989,198 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
             JsonValue::Bool(summary.has_handoff_work()),
         ),
         ("handoff_ready", JsonValue::Bool(summary.handoff_ready())),
+    ])
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_json(
+    summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> JsonValue {
+    object([
+        (
+            "total_reconciliations",
+            integer(summary.total_reconciliations as i64),
+        ),
+        (
+            "release_hold_reconciliations",
+            integer(summary.release_hold_reconciliations as i64),
+        ),
+        (
+            "operator_route_reconciliations",
+            integer(summary.operator_route_reconciliations as i64),
+        ),
+        (
+            "lineage_repair_reconciliations",
+            integer(summary.lineage_repair_reconciliations as i64),
+        ),
+        (
+            "closeout_ready_reconciliations",
+            integer(summary.closeout_ready_reconciliations as i64),
+        ),
+        (
+            "release_blocking_reconciliations",
+            integer(summary.release_blocking_reconciliations as i64),
+        ),
+        (
+            "operator_required_reconciliations",
+            integer(summary.operator_required_reconciliations as i64),
+        ),
+        (
+            "lineage_complete_reconciliations",
+            integer(summary.lineage_complete_reconciliations as i64),
+        ),
+        (
+            "source_runtime_actions",
+            integer(summary.source_runtime_actions as i64),
+        ),
+        (
+            "blocked_runtime_actions",
+            integer(summary.blocked_runtime_actions as i64),
+        ),
+        (
+            "requires_attention_runtime_actions",
+            integer(summary.requires_attention_runtime_actions as i64),
+        ),
+        (
+            "overdue_runtime_actions",
+            integer(summary.overdue_runtime_actions as i64),
+        ),
+        (
+            "first_reconciliation_id",
+            summary
+                .first_reconciliation_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_release_hold_reconciliation_id",
+            summary
+                .first_release_hold_reconciliation_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_route_reconciliation_id",
+            summary
+                .first_operator_route_reconciliation_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_lineage_repair_reconciliation_id",
+            summary
+                .first_lineage_repair_reconciliation_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_closeout_reconciliation_id",
+            summary
+                .first_closeout_reconciliation_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_handoff_id",
+            summary
+                .first_handoff_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_readiness_id",
+            summary
+                .first_readiness_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_outcome_id",
+            summary
+                .first_outcome_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_id",
+            summary
+                .first_action_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_disposition_id",
+            summary
+                .first_disposition_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_id",
+            summary
+                .first_review_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_evidence_id",
+            summary
+                .first_evidence_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_work_order_id",
+            summary
+                .first_work_order_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_due_at_ms",
+            summary
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            summary
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_priority",
+            summary
+                .highest_priority
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "has_reconciliations",
+            JsonValue::Bool(summary.has_reconciliations()),
+        ),
+        (
+            "has_reconciliation_work",
+            JsonValue::Bool(summary.has_reconciliation_work()),
+        ),
+        (
+            "reconciliation_ready",
+            JsonValue::Bool(summary.reconciliation_ready()),
+        ),
     ])
 }
 
@@ -71166,6 +72267,35 @@ fn parse_runtime_maintenance_work_order_evidence_review_disposition_action_outco
         }
         _ => Err(validation_error(format!(
             "unsupported runtime maintenance work order evidence review disposition action outcome readiness handoff status `{value}`"
+        ))),
+    }
+}
+
+fn parse_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_status(
+    value: &str,
+) -> Result<&'static str, ToolCallError> {
+    match value {
+        "release_hold_reconciled"
+        | "release_hold"
+        | "blocked"
+        | "release_hold_reconciliation"
+        | "hold_release" => Ok("release_hold_reconciled"),
+        "operator_route_pending"
+        | "operator_handoff"
+        | "operator_route"
+        | "handoff"
+        | "requires_operator" => Ok("operator_route_pending"),
+        "lineage_repair_pending" | "lineage_repair" | "lineage_gap" | "repair_lineage" => {
+            Ok("lineage_repair_pending")
+        }
+        "ready_for_closeout"
+        | "ready_for_closure"
+        | "closure_ready"
+        | "closeout_ready"
+        | "ready_to_close"
+        | "ready" => Ok("ready_for_closeout"),
+        _ => Err(validation_error(format!(
+            "unsupported runtime maintenance work order evidence review disposition action outcome readiness handoff reconciliation status `{value}`"
         ))),
     }
 }
@@ -75008,7 +76138,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 282);
+        assert_eq!(definitions.len(), 284);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -75817,9 +76947,15 @@ mod tests {
         assert!(export.tool_ids().contains(
             &SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_SUMMARY_TOOL_ID
         ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID
+        ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATION_SUMMARY_TOOL_ID
+        ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            274
+            276
         );
         assert_eq!(
             export
@@ -76737,11 +77873,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(282))
+            Some(&integer(284))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(274))
+            Some(&integer(276))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -92522,6 +93658,152 @@ mod tests {
             Some(&JsonValue::Bool(false))
         );
 
+        let handoff_reconciliation_list_request = request(
+            "call-list-runtime-maintenance-work-order-evidence-review-disposition-action-outcome-readiness-handoff-reconciliations",
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID,
+            object([
+                ("reconciliation_status", string("release_hold_reconciled")),
+                ("handoff_status", string("release_hold")),
+                ("readiness_status", string("blocked")),
+                ("outcome_status", string("blocked")),
+                ("action_status", string("required")),
+                ("disposition_status", string("blocked")),
+                ("review_status", string("release_blocker_review")),
+                ("evidence_status", string("blocked")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+                ("max_priority", integer(1)),
+                ("limit", integer(10)),
+            ]),
+            2_022,
+        );
+        let handoff_reconciliation_list_trace =
+            tool_runtime.invoke_with_events(&handoff_reconciliation_list_request);
+        assert!(handoff_reconciliation_list_trace.result.ok);
+        assert_eq!(
+            handoff_reconciliation_list_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let handoff_reconciliation_list_output = handoff_reconciliation_list_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let handoff_reconciliations = field(
+            handoff_reconciliation_list_output,
+            "runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations",
+        )
+        .unwrap();
+        let handoff_reconciliation_summary =
+            field(handoff_reconciliation_list_output, "summary").unwrap();
+        assert!(
+            array_len(handoff_reconciliations).unwrap() >= 3,
+            "maintenance handoff reconciliations should expose release-hold checkpoints"
+        );
+        assert!(
+            integer_value(field(handoff_reconciliation_summary, "total_reconciliations").unwrap())
+                .unwrap()
+                >= 3
+        );
+        assert!(
+            integer_value(
+                field(
+                    handoff_reconciliation_summary,
+                    "release_hold_reconciliations"
+                )
+                .unwrap()
+            )
+            .unwrap()
+                >= 3
+        );
+        assert_eq!(
+            field(handoff_reconciliation_summary, "reconciliation_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let JsonValue::Array(handoff_reconciliation_rows) = handoff_reconciliations else {
+            panic!(
+                "runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations should be an array"
+            );
+        };
+        assert!(handoff_reconciliation_rows
+            .iter()
+            .any(
+                |row| field(row, "window_kind") == Some(&string("critical_recovery"))
+                    && field(row, "reconciliation_status")
+                        == Some(&string("release_hold_reconciled"))
+                    && field(row, "reconciliation_kind")
+                        == Some(&string("release_hold_reconciliation"))
+                    && field(row, "reconciliation_package_kind")
+                        == Some(&string("release_hold_reconciliation_packet"))
+                    && field(row, "recommended_reconciliation_action")
+                        == Some(&string("verify_release_hold_packet"))
+                    && field(row, "handoff_status") == Some(&string("release_hold"))
+                    && field(row, "readiness_status") == Some(&string("blocked"))
+                    && field(row, "recommended_tool")
+                        == Some(&string(SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID))
+                    && field(row, "release_blocking") == Some(&JsonValue::Bool(true))
+                    && field(row, "reconciliation_ready") == Some(&JsonValue::Bool(false))
+            ));
+
+        let handoff_reconciliation_summary_request = request(
+            "call-runtime-maintenance-work-order-evidence-review-disposition-action-outcome-readiness-handoff-reconciliation-summary",
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATION_SUMMARY_TOOL_ID,
+            object([
+                ("window_kind", string("desired_state_reconciliation")),
+                ("reconciliation_status", string("release_hold_reconciled")),
+                ("handoff_status", string("release_hold")),
+                ("readiness_status", string("blocked")),
+                ("outcome_status", string("blocked")),
+                ("action_status", string("required")),
+                ("disposition_status", string("blocked")),
+                ("review_status", string("release_blocker_review")),
+                ("evidence_status", string("blocked")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+            ]),
+            2_023,
+        );
+        let handoff_reconciliation_summary_trace =
+            tool_runtime.invoke_with_events(&handoff_reconciliation_summary_request);
+        assert!(handoff_reconciliation_summary_trace.result.ok);
+        assert_eq!(
+            handoff_reconciliation_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let handoff_reconciliation_summary_output = handoff_reconciliation_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let handoff_reconciliation_rollup =
+            field(handoff_reconciliation_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(handoff_reconciliation_rollup, "total_reconciliations"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                handoff_reconciliation_rollup,
+                "release_hold_reconciliations"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(handoff_reconciliation_rollup, "source_runtime_actions"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(handoff_reconciliation_rollup, "reconciliation_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
         let mut journal = ToolExecutionJournal::new();
         journal.record_trace(list_request, list_trace);
         journal.record_trace(summary_request, summary_trace);
@@ -92551,13 +93833,21 @@ mod tests {
             readiness_handoff_summary_request,
             readiness_handoff_summary_trace,
         );
+        journal.record_trace(
+            handoff_reconciliation_list_request,
+            handoff_reconciliation_list_trace,
+        );
+        journal.record_trace(
+            handoff_reconciliation_summary_request,
+            handoff_reconciliation_summary_trace,
+        );
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 22);
-        assert_eq!(journal_summary.completed_count, 22);
+        assert_eq!(journal_summary.invocation_count, 24);
+        assert_eq!(journal_summary.completed_count, 24);
         assert_eq!(
             runtime.borrow().registry().counts().authorization_decisions,
-            22,
-            "maintenance plan, ticket, work-order, guardrail, evidence, review, disposition, disposition action, outcome, outcome readiness, and readiness handoff reads authorize through runtime read tools"
+            24,
+            "maintenance plan, ticket, work-order, guardrail, evidence, review, disposition, disposition action, outcome, outcome readiness, readiness handoff, and handoff reconciliation reads authorize through runtime read tools"
         );
     }
 

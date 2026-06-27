@@ -65,7 +65,12 @@ type CapturedArgs = (Vec<Vec<Node>>, Vec<Vec<Node>>);
 /// recursive descent as deep as it nests; this bound turns a pathological input into a
 /// spanned error instead of a stack overflow, keeping the parser total. Real documents
 /// nest only a handful deep, so this is generous.
-const MAX_DEPTH: usize = 512;
+// Each `Token` carries a `TokenKind` whose largest variants now hold owned `String`s
+// (`Verb`, `VerbatimEnv`, …), so recursive-descent frames are heavier than they were at L1.
+// Keep the structural nesting cap low enough that pathological input (thousands of `{`) trips
+// the guard well within even a small (2 MB test-thread) stack instead of overflowing — real
+// documents never nest anywhere near this deep.
+const MAX_DEPTH: usize = 256;
 
 struct Parser<'a> {
     toks: &'a [Token],
@@ -167,6 +172,10 @@ impl<'a> Parser<'a> {
             TokenKind::Verb { star, delim, content } => {
                 self.bump();
                 Ok(Node::Verb { star, delim, content })
+            }
+            TokenKind::VerbatimEnv { env, content } => {
+                self.bump();
+                Ok(Node::VerbatimEnv { env, content })
             }
             // In text mode these four are literal characters; they only carry structural
             // meaning inside math/environments, which are handled elsewhere (L2/L3).
@@ -539,5 +548,22 @@ mod tests {
                 Text("c".into()),
             ]
         );
+    }
+
+    #[test]
+    fn verbatim_environment_is_a_node() {
+        assert_eq!(
+            p("\\begin{verbatim}let x = {1};\n$y$\\end{verbatim}"),
+            vec![VerbatimEnv {
+                env: "verbatim".into(),
+                content: "let x = {1};\n$y$".into(),
+            }]
+        );
+    }
+
+    #[test]
+    fn verbatim_environment_round_trips() {
+        assert_round_trips("before \\begin{verbatim}raw {code} $here$\\end{verbatim} after");
+        assert_round_trips(r"\begin{verbatim*}v s\end{verbatim*}");
     }
 }
