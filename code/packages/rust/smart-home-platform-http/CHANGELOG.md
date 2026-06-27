@@ -8,3 +8,5 @@ All notable changes to this package will be documented in this file.
   config, state, services, and events over smart-home runtime snapshots.
 - Added a live runtime-backed API constructor with `POST /api/services/:domain/:service`
   dispatch through runtime command authorization and command results.
+- Added a Hue fixture controller example that serves the API through the repo
+  HTTP server for manual local smoke tests.

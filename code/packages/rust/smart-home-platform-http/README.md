@@ -33,3 +33,21 @@ Home Assistant-style aliases exposed in state attributes, such as
 ```bash
 bash BUILD
 ```
+
+## Fixture Controller
+
+Run the deterministic Hue fixture controller locally:
+
+```bash
+cargo run -p smart-home-platform-http --example hue_fixture_controller -- 127.0.0.1:8123
+```
+
+Then query it from another shell:
+
+```bash
+curl http://127.0.0.1:8123/api/
+curl http://127.0.0.1:8123/api/states
+curl -X POST http://127.0.0.1:8123/api/services/light/turn_on \
+  -H 'Content-Type: application/json' \
+  -d '{"entity_id":"light.entity_light_1","brightness_pct":75}'
+```
