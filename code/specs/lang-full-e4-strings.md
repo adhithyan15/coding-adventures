@@ -144,8 +144,8 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `str_const` + `print_str` on all seven backends. `$` string variables now
   tokenize/parse as `NAME`s, and `LET A$ = "HI"; PRINT A$` lowers to a safe E4
   string slot plus `print_str`. String compare in `IF A$ = "Y"` lowers to
-  `str_eq`; string arrays, string `INPUT`, and richer expressions remain
-  follow-ups.
+  `str_eq` and now drives line-control branching on all seven backends; string
+  arrays, string `INPUT`, and richer expressions remain follow-ups.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
   produces string literals. The current foothold recognises undeclared
   statement-position `print`/`output` calls and lowers string literal actuals to
@@ -220,7 +220,9 @@ merge before the next:
    primary expression, and `dartmouth-basic-iir-compiler` lowers `LET A$ = "HI"`
    into a safe typed string slot consumed by `PRINT A$`. Matrix `Prog` returns
    stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Richer string
-   expressions, string arrays, and string `INPUT` remain follow-ups.
+   expressions, string arrays, and string `INPUT` remain follow-ups. A second
+   matrix `Prog` proves `IF A$ = "Y" THEN ...` routes to `PRINT "OK"` through
+   E4 `str_eq` on the same seven backends.
 2b. ✅ **AL4-literal-output proof** — `algol-iir-compiler` recognises
    undeclared statement-position `print`/`output` calls and lowers string literal
    actuals to E4 `str_const` + `print_str`. Matrix `Prog`

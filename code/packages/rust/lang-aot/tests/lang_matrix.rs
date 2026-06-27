@@ -1027,6 +1027,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 string equality drives control flow. `IF A$ = "Y"`
+    // lowers to shared E4 `str_eq`, then the existing branch machinery chooses
+    // the target line. The false path prints BAD and stops; the true path prints
+    // OK, so stdout proves both the variable/string comparison and the branch.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"Y\"\n20 IF A$ = \"Y\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
     // backends could not run correctly until this slice (LLVM compared at `i1` width;

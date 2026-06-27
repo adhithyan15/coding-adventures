@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.118.0"
+version = "0.119.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.118.0 (LANG-FULL AL4/E4 — ALGOL string variables): `tests/lang_matrix.rs` proves `begin string s; s := 'HI'; print(s) end` on native/LLVM/WASM/JVM/CLR/VM/JIT, backed by `algol-iir-compiler` 0.12.0 literal-backed string scalar slots.  v0.117.0 (LANG-FULL AL4/E4 — ALGOL literal string output): `tests/lang_matrix.rs` proves `begin print('HI') end` on native/LLVM/WASM/JVM/CLR/VM/JIT, backed by `algol-iir-compiler` 0.11.0 lowering undeclared print/output statement calls to E4 `str_const` + `print_str`.  v0.116.0 (LANG-FULL BA4/E4 — BASIC string variables): `tests/lang_matrix.rs` proves `LET A$ = \"HI\"; PRINT A$` on native/LLVM/WASM/JVM/CLR/VM/JIT, backed by `dartmouth-basic-iir-compiler` 0.15.0 literal-backed string slots."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.119.0 (LANG-FULL BA4/E4 — BASIC string equality): `tests/lang_matrix.rs` proves `IF A$ = \"Y\" THEN ...` drives control flow through E4 `str_eq` on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.118.0 (LANG-FULL AL4/E4 — ALGOL string variables): `tests/lang_matrix.rs` proves `begin string s; s := 'HI'; print(s) end` on native/LLVM/WASM/JVM/CLR/VM/JIT, backed by `algol-iir-compiler` 0.12.0 literal-backed string scalar slots.  v0.117.0 (LANG-FULL AL4/E4 — ALGOL literal string output): `tests/lang_matrix.rs` proves `begin print('HI') end` on native/LLVM/WASM/JVM/CLR/VM/JIT, backed by `algol-iir-compiler` 0.11.0 lowering undeclared print/output statement calls to E4 `str_const` + `print_str`."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
