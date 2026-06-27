@@ -174,10 +174,12 @@ footholds also prove direct literal `str_len`, `str_index`, `str_eq`, and
 `str_concat`-feeding-`str_len` via exit codes `5`/`66`/`1`/`5`. The named-value
 proofs exercise immutable top-level string values with `str_concat` + `str_len`,
 `str_eq` driving an `if`, and `str_index` via exit codes `5`/`42`/`67` on every
-backend. The matrix also covers the **bounds-trap** case: `(string-ref "ABC" 3)`
-must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT. Follow-up
-proofs now focus on full source-language string variables and richer dynamic
-string values.
+backend. Lexical string locals now also run: `(let ((s "ABC") (i 2))
+(string-ref s i))` returns `67` everywhere. The matrix also covers the
+**bounds-trap** case: `(string-ref "ABC" 3)` must fail closed on native-AOT +
+LLVM + WASM + JVM + CLR + VM + JIT. Follow-up proofs now focus on
+captured/reassigned source-language string variables and richer dynamic string
+values.
 
 `run_native` runs the host arch, so `NativeAot` exercises aarch64 locally and
 x86_64 on CI (as for E3/E5). The `x86-simulator` harness can additionally run the
@@ -219,8 +221,13 @@ merge before the next:
    defines stay in `main` as typed `str_const` registers, so named values can
    feed `str_concat`+`str_len`, `str_eq` in an `if`, and `str_index`; matrix
    `Prog`s return `5`, `42`, and `67` on native-AOT + VM + JIT + LLVM + WASM +
-   JVM + CLR. This is still not full variable semantics: captured/reassigned
-   strings and `let` string slots wait for the broader string representation.
+   JVM + CLR.
+3b. ✅ **E4-lexical-local proof** — Twig `let`/`let*` string literal bindings
+   materialise directly as typed `str_const` registers, and known local string
+   and integer registers can feed E4 ops. Matrix `Prog`
+   `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67` on native-AOT + VM +
+   JIT + LLVM + WASM + JVM + CLR. Captured/reassigned strings still wait for the
+   broader dynamic representation.
 4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
    diverge.)
@@ -229,8 +236,8 @@ merge before the next:
    guard). Native literal output is already proven through the heap-byte foothold;
    this item is now the richer ops/representation slice.
 6. ✅ **E4-ops-proofs** — named-value `str_concat`+`str_len`, `str_eq` driving a
-   branch, named `str_index`, and the `str_index` out-of-bounds **trap** proof
-   now run across every backend.
+   branch, named/local `str_index`, and the `str_index` out-of-bounds **trap**
+   proof now run across every backend.
 7. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`; string
    *variables* and reassignment in each frontend; ALGOL `string` arrays; Unicode
    codepoint/grapheme semantics; the dynamic-`any` Twig string path (needs broader

@@ -218,9 +218,10 @@ multiple languages; close an enabler before the features that depend on it.
   `str_len`/`str_index`/`str_eq`/`str_concat` on all 7 backends. Twig immutable
   top-level string value defines now also feed those same ops: named
   `str_concat`+`str_len`, `str_eq` driving an `if`, and named `str_index` all run
-  on all 7 backends. The matrix now also proves the E4 bounds contract:
-  `(string-ref "ABC" 3)` traps on native-AOT + LLVM + WASM + JVM + CLR + VM +
-  JIT. WASM owns the literal-output
+  on all 7 backends. Twig lexical `let` string locals now also run through E4:
+  `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67` on all 7 backends. The
+  matrix now also proves the E4 bounds contract: `(string-ref "ABC" 3)` traps on
+  native-AOT + LLVM + WASM + JVM + CLR + VM + JIT. WASM owns the literal-output
   shape with a linear-memory data segment + `env.__print_str(ptr,len)`, LLVM owns
   the static private `{len,bytes}` global + `@__print_str` shape, native AOT owns
   the heap-byte `alloc_bytes` + `store_byte` + `print_string` shape, and JVM/CLR

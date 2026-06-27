@@ -1,5 +1,12 @@
 # Changelog — `twig-aot`
 
+## 0.19.0 — 2026-06-27 — native string literal metadata through local moves (LANG-FULL E4)
+
+`prepare_module_for_aot` now propagates literal string and integer metadata
+through `mov`, so lexical Twig bindings such as `(let ((s "ABC") (i 2))
+(string-ref s i))` still fold the native `str_index` to a byte constant instead
+of leaving an unsupported string op in the direct native backend.
+
 ## 0.18.0 — 2026-06-27 — native literal string index OOB trap (LANG-FULL E4)
 
 `prepare_module_for_aot` now preserves the E4 trap contract for direct-literal

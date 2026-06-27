@@ -307,17 +307,21 @@ impl FnCtx {
 
     fn emit_str_const(&mut self, literal: &str, loc: SourceLoc) -> String {
         let v = self.fresh_var("s");
+        self.emit_str_const_to(&v, literal, loc);
+        v
+    }
+
+    fn emit_str_const_to(&mut self, dest: &str, literal: &str, loc: SourceLoc) {
         self.emit(
             IIRInstr::new(
                 "str_const",
-                Some(v.clone()),
+                Some(dest.to_string()),
                 vec![Operand::Str(literal.to_string())],
                 "str",
             ),
             loc,
         );
-        self.record_type(&v, "str");
-        v
+        self.record_type(dest, "str");
     }
 
     /// Look up the inferred type of `var`, returning the matching
@@ -1150,10 +1154,19 @@ impl Compiler {
 
     fn compile_let(&mut self, expr: &Let, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.line, expr.column);
+        enum BindingValue {
+            Reg(String),
+            StrLiteral(String, SourceLoc),
+        }
+
         // Compile RHSs in the OUTER scope (Scheme `let`, not `let*`).
-        let mut binding_values: Vec<(String, String)> = Vec::new();
+        let mut binding_values: Vec<(String, BindingValue)> = Vec::new();
         for (name, rhs) in &expr.bindings {
-            let v = self.compile_expr(rhs, ctx)?;
+            let v = if let Expr::StrLit(StrLit { value, .. }) = rhs {
+                BindingValue::StrLiteral(value.clone(), SourceLoc::new(rhs.pos().0, rhs.pos().1))
+            } else {
+                BindingValue::Reg(self.compile_expr(rhs, ctx)?)
+            };
             binding_values.push((name.clone(), v));
         }
 
@@ -1167,7 +1180,12 @@ impl Compiler {
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
-            ctx.emit_move(name, src, loc);
+            match src {
+                BindingValue::Reg(src) => ctx.emit_move(name, src, loc),
+                BindingValue::StrLiteral(value, value_loc) => {
+                    ctx.emit_str_const_to(name, value, *value_loc);
+                }
+            }
         }
 
         // Compile body — at least one expression (parser-enforced).
@@ -1206,6 +1224,14 @@ impl Compiler {
         for (name, rhs) in &expr.bindings {
             // Compile the RHS in the current scope (which already includes
             // all prior let* bindings).
+            if let Expr::StrLit(StrLit { value, .. }) = rhs {
+                if ctx.locals.insert(name.clone()) {
+                    added.push(name.clone());
+                }
+                ctx.emit_str_const_to(name, value, SourceLoc::new(rhs.pos().0, rhs.pos().1));
+                continue;
+            }
+
             let v = self.compile_expr(rhs, ctx)?;
 
             // Bind the name into locals BEFORE compiling the next binding.
@@ -1349,10 +1375,15 @@ impl Compiler {
         matches!(self.value_global_locals.get(name), Some(reg) if ctx.type_of(reg) == ty)
     }
 
+    fn is_known_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
+        self.is_known_main_value_type(name, ctx, ty)
+            || (ctx.locals.contains(name) && ctx.type_of(name) == ty)
+    }
+
     fn can_compile_e4_string_expr(&self, expr: &Expr, ctx: &FnCtx) -> bool {
         match expr {
             Expr::StrLit(_) => true,
-            Expr::VarRef(v) => self.is_known_main_value_type(&v.name, ctx, "str"),
+            Expr::VarRef(v) => self.is_known_value_type(&v.name, ctx, "str"),
             Expr::Apply(apply) => {
                 if let Expr::VarRef(f) = apply.fn_expr.as_ref() {
                     f.name == "string-append"
@@ -1371,8 +1402,8 @@ impl Compiler {
         match expr {
             Expr::IntLit(_) => true,
             Expr::VarRef(v) => {
-                self.is_known_main_value_type(&v.name, ctx, "i64")
-                    || self.is_known_main_value_type(&v.name, ctx, "i32")
+                self.is_known_value_type(&v.name, ctx, "i64")
+                    || self.is_known_value_type(&v.name, ctx, "i32")
             }
             _ => false,
         }

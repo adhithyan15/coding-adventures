@@ -1470,6 +1470,21 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             continue;
         }
 
+        if instr.op == "mov" {
+            if let (Some(dest), Some(Operand::Var(src))) =
+                (instr.dest.as_ref(), instr.srcs.first())
+            {
+                if let Some(value) = ints.get(src).copied() {
+                    ints.insert(dest.clone(), value);
+                }
+                if let Some(string) = strings.get(src).cloned() {
+                    strings.insert(dest.clone(), string);
+                }
+            }
+            lowered.push(instr);
+            continue;
+        }
+
         if instr.op == "str_const" {
             let dest = match instr.dest.clone() {
                 Some(dest) => dest,
@@ -2277,6 +2292,34 @@ mod tests {
         assert!(
             matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(0)]),
             "trap path should still seed the destination for downstream typing: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_index_uses_integer_mov_metadata() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+                IIRInstr::new("const", Some("tmp".into()), vec![Operand::Int(2)], "i64"),
+                IIRInstr::new("mov", Some("i".into()), vec![Operand::Var("tmp".into())], "i64"),
+                IIRInstr::new("str_index", Some("b".into()), vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("i".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
+        assert!(
+            matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(67)]),
+            "str_index should see integer metadata through mov: {:?}",
             f.instructions
         );
     }

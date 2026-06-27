@@ -245,6 +245,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(67),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 lexical string locals. A `let` string binding now materialises
+    // directly as a typed `str_const` register, and a local integer binding can
+    // feed the `str_index` index operand. This proves local string slots across
+    // the same all-seven E4 path without claiming captured/reassigned strings.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((s \"ABC\") (i 2)) (string-ref s i))",
+        expect: Expect::Exit(67),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =

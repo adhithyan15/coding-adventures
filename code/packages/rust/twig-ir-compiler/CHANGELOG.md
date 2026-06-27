@@ -1,5 +1,17 @@
 # Changelog — twig-ir-compiler
 
+## [0.28.0] — 2026-06-27 (LANG-FULL E4 — lexical string locals)
+
+Lexical `let` and `let*` string literal bindings now materialize as typed
+`str_const` registers instead of legacy dynamic `const Operand::Str` values when
+they feed the E4 string-op path. The E4 recognizer now accepts known local
+typed `str` registers and local integer index registers, so `(let ((s "ABC")
+(i 2)) (string-ref s i))` lowers to shared `str_index` without `call_builtin`.
+
+This proves local string slots for the current literal-value foothold while still
+leaving captured/reassigned strings and broader dynamic string values to the
+future byte-string representation work.
+
 ## [0.27.0] — 2026-06-27 (LANG-FULL E4 — named string values)
 
 Immutable top-level string value defines now lower to `str_const` registers when

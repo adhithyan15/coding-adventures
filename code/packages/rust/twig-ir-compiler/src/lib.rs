@@ -1602,6 +1602,40 @@ mod tests {
         assert_eq!(main.return_type, "i64");
     }
 
+    #[test]
+    fn let_string_binding_feeds_e4_string_ref() {
+        let m = compile_source("(let ((s \"ABC\") (i 2)) (string-ref s i))", "string_let_ref")
+            .expect("let string binding should feed E4 string-ref");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["const", "str_const", "mov", "str_index", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let string-ref should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[1].dest.as_deref(), Some("s"));
+        assert_eq!(main.instructions[3].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn let_star_string_binding_feeds_e4_string_length() {
+        let m = compile_source("(let* ((s \"HELLO\")) (string-length s))", "string_let_star_len")
+            .expect("let* string binding should feed E4 string-length");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let* string-length should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].dest.as_deref(), Some("s"));
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
     // =========================================================================
     // LANG51: String literal tests
     // =========================================================================
