@@ -171,6 +171,10 @@ All notable changes to this package will be documented in this file.
   readiness execution handoff action protocol-evidence package readiness
   summaries that lift protocol packet state into package-facing go/no-go
   release coordination.
+- Low-level mesh release ticket handoff readiness-evidence review
+  disposition-action readiness execution handoff action protocol-evidence
+  package handoff rows that project Zigbee, Z-Wave, and Thread packet
+  readiness into package handoff work.
 - Virtual alias entries for product lines supported by another integration or
   standard.
 - Read-only D18D tool descriptors for listing/describing integrations and
