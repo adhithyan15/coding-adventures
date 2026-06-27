@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added D18D handlers for Chief-visible smart-home runtime maintenance handoff
+  reconciliation checkpoints:
+  `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations`
+  and
+  `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary`.
 - Added D18D handlers for Chief-visible smart-home runtime maintenance outcome
   readiness handoff packages:
   `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoffs`
