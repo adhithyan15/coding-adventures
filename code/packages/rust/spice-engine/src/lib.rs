@@ -3466,6 +3466,8 @@ pub struct DeckTableArtifact {
 pub struct DeckOutputPlanArtifact {
     pub analysis: String,
     pub directive: String,
+    pub line_number: usize,
+    pub source_name: Option<String>,
     pub result_row_count: usize,
     pub result_column_count: usize,
     pub result_columns: Vec<String>,
@@ -10472,6 +10474,8 @@ fn deck_output_plan_artifacts(
     vec![DeckOutputPlanArtifact {
         analysis: plan.analysis.clone(),
         directive: plan.directive.clone(),
+        line_number: plan.line_number,
+        source_name: plan.source_name.clone(),
         result_row_count,
         result_column_count: result_columns.len(),
         result_columns: result_columns.to_vec(),
@@ -10518,6 +10522,8 @@ fn deck_output_directive_kinds(output_directives: &[String]) -> Vec<String> {
 const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS: &[&str] = &[
     "Analysis",
     "Directive",
+    "Line",
+    "SourceName",
     "ResultRows",
     "ResultColumns",
     "ResultColumnList",
@@ -10541,6 +10547,8 @@ fn deck_output_plan_artifact_cells(artifact: &DeckOutputPlanArtifact) -> Vec<Str
     vec![
         artifact.analysis.clone(),
         artifact.directive.clone(),
+        artifact.line_number.to_string(),
+        artifact.source_name.clone().unwrap_or_default(),
         artifact.result_row_count.to_string(),
         artifact.result_column_count.to_string(),
         artifact.result_columns.join(";"),
