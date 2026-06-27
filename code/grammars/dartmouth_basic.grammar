@@ -19,7 +19,7 @@
 #   LINE_NUM   — the integer at the start of every numbered line (e.g. "10")
 #   NUMBER     — numeric literal in an expression (e.g. "3.14", "1E5")
 #   STRING     — double-quoted string literal (e.g. "HELLO")
-#   NAME       — single-letter or letter+digit variable (A–Z, A0–Z9)
+#   NAME       — numeric variable (A–Z, A0–Z9) or string variable (A$, A0$)
 #   BUILTIN_FN — built-in function name (SIN, COS, TAN, ATN, EXP, LOG, ABS,
 #                                         SQR, INT, RND, SGN)
 #   USER_FN    — user-defined function name (FNA–FNZ)
@@ -112,6 +112,7 @@ statement = let_stmt
 #
 #   10 LET X = 5
 #   20 LET A(3) = X + 1
+#   30 LET A$ = "HELLO"
 #
 # The = in LET is always assignment — never a comparison. Comparison uses
 # the relop rule in if_stmt.
@@ -296,7 +297,8 @@ def_stmt = "DEF" USER_FN LPAREN NAME RPAREN EQ expr ;
 # =============================================================================
 # variable — an lvalue (assignment target) or rvalue (expression term)
 #
-#   X      — scalar variable (single NAME token)
+#   X      — scalar numeric variable (single NAME token)
+#   A$     — scalar string variable (single NAME token)
 #   A(I)   — array element (NAME followed by a parenthesised index)
 #
 # The same rule covers both reading and writing a variable. Downstream
@@ -350,6 +352,7 @@ unary = MINUS primary
 # Primary: atomic units of expressions.
 #
 #   NUMBER           — numeric literal: 42, 3.14, 1E-5
+#   STRING           — string literal used by string assignment/comparison
 #   BUILTIN_FN(expr) — built-in function call: SIN(X), ABS(Y−1)
 #   USER_FN(expr)    — user-defined function call: FNA(X)
 #   variable         — scalar or array access: X, A(I)
@@ -361,6 +364,7 @@ unary = MINUS primary
 # ordering helps the parser's error messages point at the right rule.
 
 primary = NUMBER
+        | STRING
         | BUILTIN_FN LPAREN expr RPAREN
         | USER_FN LPAREN expr RPAREN
         | variable

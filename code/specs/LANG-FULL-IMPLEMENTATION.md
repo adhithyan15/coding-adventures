@@ -478,8 +478,11 @@ backend immediately) come before the enabler-dependent items.
   backends — verified by a straight-line array program (`DIM A(3); A(1)=40; A(2)=2;
   PRINT A(1)+A(2)` ⇒ `42`) in `lang-aot/tests/lang_matrix.rs`. (`dartmouth-basic-iir-compiler`
   0.7.0.) Undeclared subscript use is a clean `Unsupported` error.
-- ◑ **BA4** — string literal `PRINT` runs on all 7 backends via **E4**; string
-  variables and richer string ops remain.
+- ◑ **BA4** — string literal `PRINT` runs on all 7 backends via **E4**.
+  Literal-backed scalar string variables now run too: `LET A$ = "HI"; PRINT A$`
+  produces `HI` on native/LLVM/WASM/JVM/CLR/VM/JIT. `IF A$ = "Y" THEN n`
+  lowers to `str_eq` in the frontend. String arrays, string `INPUT`, and richer
+  string expressions remain.
 - ✅ **BA5** — `DEF FN` single-line user functions. `DEF FNx(P) = expr` lowers to a
   sibling `IIRFunction` (one numeric param, `FullyTyped`) and `FNx(arg)` lowers to the
   shared IIR `call` — the same convention ALGOL's value procedures (AL3) run on every

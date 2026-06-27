@@ -43,8 +43,10 @@ output (`PRINT 6.0 * 7.0`) and ordinary fixed-decimal fractional output (`3.14`,
 `.25`, `-2.5`), six-significant-digit rounding, and `E` notation run through the
 shared E3/E8 backends. Integer `i64` remains explicit at structural boundaries:
 line numbers, `DIM` bounds, array subscripts, DATA read pointers, and GOSUB
-return stacks. String literal `PRINT` now lowers through the shared E4 VM/JIT
-path; string variables and code-gen backend string lowering remain follow-ups. See
+return stacks. String literal `PRINT` and literal-backed string variables
+(`LET A$ = "HI"` / `PRINT A$`) now lower through the shared E4 path on all
+seven matrix backends. Richer string expressions, string arrays, and string
+`INPUT` remain follow-ups. See
 [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`

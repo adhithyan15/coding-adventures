@@ -14,9 +14,9 @@
 //!   `200`. This number is both an address (where to jump with GOTO) and an
 //!   ordering key (lines execute in numeric order, regardless of input order).
 //!
-//! - **Simple syntax** — no declarations, no type annotations. Variables are
-//!   just names: single letters (`A`, `B`) or letter+digit (`A1`, `X9`). All
-//!   variables start at zero.
+//! - **Simple syntax** — no declarations, no type annotations. Numeric variables
+//!   are names like `A` or `X9`; string variables carry a trailing dollar sign
+//!   such as `A$`. All variables start with their type's zero value.
 //!
 //! - **Forgiving** — every variable pre-initialized to 0, no "undeclared
 //!   variable" errors, simple error messages.
@@ -856,11 +856,13 @@ mod tests {
     // -----------------------------------------------------------------------
     // Test 14: Variable name formats
     //
-    // Dartmouth BASIC 1964 allows exactly two variable name forms:
+    // Dartmouth BASIC 1964 allows compact variable names:
     //   - Single letter:  A, B, …, Z
     //   - Letter + digit: A0, A1, …, Z9
+    //   - String variables with a trailing dollar: A$, A0$
     //
-    // The grammar rule NAME = /[A-Z][0-9]?/ captures both.
+    // The grammar token captures all of these and later stages decide whether
+    // a slot is numeric or string-valued.
     // -----------------------------------------------------------------------
 
     #[test]
@@ -875,6 +877,18 @@ mod tests {
         let tokens = tokenize_dartmouth_basic("10 LET A1 = 2\n");
         let p = pairs_no_newline(&tokens);
         assert_eq!(p[2], ("NAME", "A1"), "Letter+digit variable");
+    }
+
+    #[test]
+    fn test_variable_string_suffix() {
+        let tokens = tokenize_dartmouth_basic("10 LET A$ = \"HI\"\n20 PRINT A$\n");
+        let p = pairs_no_newline(&tokens);
+        assert_eq!(p[2], ("NAME", "A$"), "String variable assignment target");
+        assert_eq!(
+            p.iter().filter(|(name, value)| *name == "NAME" && *value == "A$").count(),
+            2,
+            "Both string variable occurrences should be single NAME tokens: {p:?}"
+        );
     }
 
     #[test]

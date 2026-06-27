@@ -141,9 +141,11 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
 
 - **Dartmouth BASIC (BA4)** — `PRINT "HELLO"` already *parses* (the grammar has a
   `STRING` `print_item`); the frontend now lowers a `STRING` print-item to
-  `str_const` + `print_str` for the VM/JIT/JVM/CLR proof. String variables (`A$`) and
-  `PRINT A$` still need `str`-typed slots. String compare in
-  `IF A$ = "Y"` lowers to `str_eq`.
+  `str_const` + `print_str` on all seven backends. `$` string variables now
+  tokenize/parse as `NAME`s, and `LET A$ = "HI"; PRINT A$` lowers to a safe E4
+  string slot plus `print_str`. String compare in `IF A$ = "Y"` lowers to
+  `str_eq`; string arrays, string `INPUT`, and richer expressions remain
+  follow-ups.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
   produces string literals. Lower `string` declarations to `str` slots and the
   (to-be-added) `print`/`output` intrinsic to `print_str`.
@@ -177,9 +179,11 @@ proofs exercise immutable top-level string values with `str_concat` + `str_len`,
 backend. Lexical string locals now also run: `(let ((s "ABC") (i 2))
 (string-ref s i))` returns `67` everywhere. The matrix also covers the
 **bounds-trap** case: `(string-ref "ABC" 3)` must fail closed on native-AOT +
-LLVM + WASM + JVM + CLR + VM + JIT. Follow-up proofs now focus on
-captured/reassigned source-language string variables and richer dynamic string
-values.
+LLVM + WASM + JVM + CLR + VM + JIT. Dartmouth BASIC also proves the first
+source-language string variable: `LET A$ = "HI"; PRINT A$` produces `HI` on all
+seven backends. Follow-up proofs now focus on string arrays/input, richer
+source-language string expressions, captured/reassigned strings, and dynamic
+string values.
 
 `run_native` runs the host arch, so `NativeAot` exercises aarch64 locally and
 x86_64 on CI (as for E3/E5). The `x86-simulator` harness can additionally run the
@@ -208,6 +212,12 @@ merge before the next:
    WASM data segment +
    `env.__print_str(ptr,len)`, JVM/CLR `ldc`/`ldstr` + `PrintStream.print`/
    `Console.Write(string)`).
+2a. ✅ **BA4-string-variable proof** — `coding-adventures-dartmouth-basic-lexer`
+   tokenizes `$`-suffixed names as one `NAME`, the parser accepts `STRING` as a
+   primary expression, and `dartmouth-basic-iir-compiler` lowers `LET A$ = "HI"`
+   into a safe typed string slot consumed by `PRINT A$`. Matrix `Prog` returns
+   stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Richer string
+   expressions, string arrays, and string `INPUT` remain follow-ups.
 3. ✅ **E4-literal-metadata/index proofs** — Twig lowers literal
    `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
    `(string=? "HELLO" "HELLO")`, and

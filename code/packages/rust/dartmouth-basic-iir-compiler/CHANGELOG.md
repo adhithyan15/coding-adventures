@@ -1,5 +1,18 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.15.0 — 2026-06-27 — BA4 scalar string variables
+
+The first Dartmouth BASIC string-variable slice now lowers through E4:
+
+- `LET A$ = "literal"` materialises the literal directly into a safe
+  backend-facing string slot (`__basic_str_A`) instead of exposing `$` in IIR
+  register names.
+- `PRINT A$` emits `print_str` over that slot, reusing the all-backend E4 string
+  output path.
+- `IF A$ = "literal" THEN n` lowers to `str_eq` feeding the existing BASIC branch
+  machinery. Richer string expressions, string arrays, and string `INPUT` remain
+  follow-ups.
+
 ## 0.14.0 — 2026-06-27 — BA4 string literal `PRINT` on VM/JIT
 
 The first E4 source-language proof is live:

@@ -987,6 +987,18 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HELLO"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 string variables. The frontend accepts `$`-suffixed
+    // names, lowers `LET A$ = "HI"` directly into a safe typed `str_const` slot,
+    // and `PRINT A$` reuses the same `print_str` path proven by literal output.
+    // This is deliberately still the literal-backed scalar slice: string arrays,
+    // INPUT, and richer string expressions remain follow-ups.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"HI\"\n20 PRINT A$\n30 END\n",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
     // backends could not run correctly until this slice (LLVM compared at `i1` width;

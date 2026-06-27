@@ -15,11 +15,11 @@
 //! ## V1 scope
 //!
 //! BA7 scalar BASIC uses the historical Dartmouth numeric model: scalar
-//! literals, variables, arithmetic, `DEF FN`, `FOR`, `IF`, `PRINT`, `DATA`, and
-//! arrays lower as `f64`.  Integer `i64` remains at structural boundaries: line
-//! numbers, `DIM` bounds, array subscripts, DATA read pointers, and GOSUB return
-//! stacks.  String literals in `PRINT` lower through the shared E4 string ops on
-//! the VM/JIT path; string variables and code-gen backends remain follow-ups.
+//! literals, numeric variables, arithmetic, `DEF FN`, `FOR`, `IF`, `PRINT`,
+//! `DATA`, and arrays lower as `f64`.  Integer `i64` remains at structural
+//! boundaries: line numbers, `DIM` bounds, array subscripts, DATA read pointers,
+//! and GOSUB return stacks.  String literals and literal-backed string variables
+//! in `PRINT` lower through the shared E4 string ops.
 //!
 //! | Statement     | Lowering |
 //! |---------------|----------|
@@ -43,9 +43,10 @@
 //! ## Strings
 //!
 //! `PRINT "HELLO"` lowers to the shared LANG-FULL E4 string ops
-//! (`str_const` + `print_str`) and runs on the VM/JIT columns.  String
-//! variables (`A$`) and string lowering for the code-gen backends remain BA4/E4
-//! follow-ups.
+//! (`str_const` + `print_str`) and runs on every matrix column.  String
+//! variables (`A$`) can be assigned from literals and printed through the same
+//! E4 path.  `IF A$ = "Y" THEN n` lowers to `str_eq`; richer string expressions,
+//! string arrays, and string `INPUT` remain BA4/E4 follow-ups.
 //!
 //! ## Variables
 //!
@@ -354,6 +355,10 @@ impl Compiler {
         self.source_map.push(self.current_loc.get());
     }
 
+    fn emit_str_const_to(&mut self, dest: &str, text: String) {
+        self.emit("str_const", Some(dest), vec![Operand::Str(text)], "str");
+    }
+
     /// Update the "currently compiling" source position.  Subsequent
     /// [`emit`] calls tag their instructions with this position via
     /// the `source_map` field.
@@ -529,6 +534,10 @@ impl Compiler {
         // shared state) but keeps the emitted IR readable.
         if let Some(index_expr) = array_subscript_index(var_node) {
             let name = array_target_name(var_node)?;
+            if is_basic_string_name(&name) {
+                return Err(CompileError::Unsupported(format!(
+                    "string array `{name}(...)` — BA4 currently supports scalar string variables")));
+            }
             if !self.arrays.contains(&name) {
                 return Err(CompileError::Unsupported(format!(
                     "assignment to `{name}(...)` but `{name}` was never DIMmed \
@@ -548,6 +557,15 @@ impl Compiler {
         }
 
         let var_name = scalar_variable_name(var_node)?;
+        if is_basic_string_name(&var_name) {
+            let Some(text) = expr_string_literal(expr_node) else {
+                return Err(CompileError::Unsupported(format!(
+                    "string variable `{var_name}` assignment currently supports a string literal RHS")));
+            };
+            let slot = basic_string_slot(&var_name);
+            self.emit_str_const_to(&slot, text);
+            return Ok(());
+        }
         let val = self.emit_expr(expr_node)?;
         let target_ty = self.scalar_types.get(&var_name).copied()
             .unwrap_or(BasicScalarType::Real);
@@ -583,6 +601,10 @@ impl Compiler {
             let name = first_name_token_value(decl).ok_or_else(|| {
                 CompileError::Malformed("DIM decl missing array name".into())
             })?;
+            if is_basic_string_name(&name) {
+                return Err(CompileError::Unsupported(format!(
+                    "DIM {name}(...) — string arrays are a BA4 follow-up")));
+            }
             let max_sub = dim_decl_bound(decl)?;
             if max_sub < 0 {
                 return Err(CompileError::Unsupported(format!(
@@ -693,13 +715,17 @@ impl Compiler {
                     return Err(CompileError::Unsupported(format!(
                         "READ into `{name}(...)` but `{name}` was never DIMmed")));
                 }
+                if is_basic_string_name(&name) {
+                    return Err(CompileError::Unsupported(format!(
+                        "READ into string array `{name}(...)` — DATA is numeric today")));
+                }
                 let idx = self.emit_expr(index_expr)?;
                 let idx = self.coerce_value(idx, BasicScalarType::Int);
                 self.emit("array_set", None,
                     vec![Operand::Var(name), Operand::Var(idx.slot),
                          Operand::Var(value)], "f64");
             } else {
-                let target = scalar_variable_name(var_node)?;
+                let target = numeric_scalar_variable_name(var_node)?;
                 let value = ExprValue { slot: value, ty: BasicScalarType::Real };
                 let target_ty = self.scalar_types.get(&target).copied()
                     .unwrap_or(BasicScalarType::Real);
@@ -795,6 +821,11 @@ impl Compiler {
                     let inner = child_nodes(child).into_iter().next();
                     match inner {
                         Some(expr_node) if expr_node.rule_name == "expr" => {
+                            if let Some(name) = expr_string_variable_name(expr_node)? {
+                                self.emit("print_str", None,
+                                    vec![Operand::Var(basic_string_slot(&name))], "void");
+                                continue;
+                            }
                             let v = self.emit_expr(expr_node)?;
                             let dest = self.fresh_temp();
                             // Discardable result: the helper returns a dummy 0
@@ -812,8 +843,7 @@ impl Compiler {
                         _ => {
                             if let Some(text) = string_token_value(child) {
                                 let s = self.fresh_temp();
-                                self.emit("str_const", Some(&s),
-                                    vec![Operand::Str(text)], "str");
+                                self.emit_str_const_to(&s, text);
                                 self.emit("print_str", None,
                                     vec![Operand::Var(s)], "void");
                             } else {
@@ -842,7 +872,7 @@ impl Compiler {
         for v in child_nodes(stmt).into_iter()
             .filter(|n| n.rule_name == "variable")
         {
-            let name = scalar_variable_name(v)?;
+            let name = numeric_scalar_variable_name(v)?;
             let input = self.fresh_temp();
             self.emit("call_builtin", Some(&input),
                 vec![Operand::Var("input_i64".into())],
@@ -869,6 +899,27 @@ impl Compiler {
             .find(|n| n.rule_name == "relop")
             .ok_or_else(|| CompileError::Malformed("IF missing relop".into()))?;
         let cmp_op = extract_relop_op(relop_node)?;
+
+        let lhs_str = self.emit_basic_string_expr(exprs[0])?;
+        let rhs_str = self.emit_basic_string_expr(exprs[1])?;
+        if lhs_str.is_some() || rhs_str.is_some() {
+            let (Some(lhs), Some(rhs)) = (lhs_str, rhs_str) else {
+                return Err(CompileError::Unsupported(
+                    "mixed string/numeric IF comparison".into()));
+            };
+            if cmp_op != "cmp_eq" {
+                return Err(CompileError::Unsupported(
+                    "string IF comparisons currently support `=` only".into()));
+            }
+            let cond = self.fresh_temp();
+            self.emit("str_eq", Some(&cond),
+                vec![Operand::Var(lhs), Operand::Var(rhs)], "i64");
+            let target_line = extract_if_target(stmt)?;
+            self.emit("jmp_if_true", None,
+                vec![Operand::Var(cond), Operand::Var(format!("line_{target_line}"))],
+                "void");
+            return Ok(());
+        }
 
         let lhs = self.emit_expr(exprs[0])?;
         let rhs = self.emit_expr(exprs[1])?;
@@ -1029,6 +1080,10 @@ impl Compiler {
         // `FOR` NAME `=` expr `TO` expr [ `STEP` expr ]
         let var = first_name_token_value(stmt)
             .ok_or_else(|| CompileError::Malformed("FOR missing NAME".into()))?;
+        if is_basic_string_name(&var) {
+            return Err(CompileError::Unsupported(format!(
+                "FOR variable `{var}` must be numeric")));
+        }
         let exprs: Vec<&GrammarASTNode> = child_nodes(stmt).into_iter()
             .filter(|n| n.rule_name == "expr").collect();
         if exprs.len() < 2 {
@@ -1119,6 +1174,10 @@ impl Compiler {
     fn emit_next(&mut self, stmt: &GrammarASTNode) -> Result<(), CompileError> {
         let var = first_name_token_value(stmt)
             .ok_or_else(|| CompileError::Malformed("NEXT missing NAME".into()))?;
+        if is_basic_string_name(&var) {
+            return Err(CompileError::Unsupported(format!(
+                "NEXT variable `{var}` must be numeric")));
+        }
         // Pop the matching FOR from the stack.
         let top = self.open_fors.pop()
             .ok_or_else(|| CompileError::Malformed(
@@ -1175,6 +1234,20 @@ impl Compiler {
                     "unknown expr rule `{}`", node.rule_name)))
             }
         }
+    }
+
+    fn emit_basic_string_expr(&mut self, node: &GrammarASTNode)
+        -> Result<Option<String>, CompileError>
+    {
+        if let Some(text) = expr_string_literal(node) {
+            let dest = self.fresh_temp();
+            self.emit_str_const_to(&dest, text);
+            return Ok(Some(dest));
+        }
+        if let Some(name) = expr_string_variable_name(node)? {
+            return Ok(Some(basic_string_slot(&name)));
+        }
+        Ok(None)
     }
 
     fn emit_left_assoc_chain(&mut self, node: &GrammarASTNode)
@@ -1293,6 +1366,10 @@ impl Compiler {
                         vec![Operand::Float(v)], "f64");
                     return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
                 }
+                ASTNodeOrToken::Token(t) if t.effective_type_name() == "STRING" => {
+                    return Err(CompileError::Unsupported(
+                        format!("string literal `{}` in numeric expression", t.value)));
+                }
                 ASTNodeOrToken::Token(t) if t.effective_type_name() == "USER_FN" => {
                     // `USER_FN LPAREN expr RPAREN` — a call to a user-defined
                     // function (BA5).  Lower to the same IIR `call` convention
@@ -1319,7 +1396,7 @@ impl Compiler {
                             vec![Operand::Var(name), Operand::Var(idx.slot)], "f64");
                         return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
                     }
-                    let name = scalar_variable_name(n)?;
+                    let name = numeric_scalar_variable_name(n)?;
                     // Inside a `DEF` body, only the formal parameter is in
                     // scope.  Referencing any other variable would read an
                     // undefined register on the code-gen backends (a function
@@ -1572,6 +1649,67 @@ fn scalar_variable_name(var: &GrammarASTNode)
     }
     Err(CompileError::Malformed(
         "variable node missing NAME token".into()))
+}
+
+fn numeric_scalar_variable_name(var: &GrammarASTNode)
+    -> Result<String, CompileError>
+{
+    let name = scalar_variable_name(var)?;
+    if is_basic_string_name(&name) {
+        return Err(CompileError::Unsupported(format!(
+            "string variable `{name}` is only supported in literal assignment, PRINT, and IF equality")));
+    }
+    Ok(name)
+}
+
+fn is_basic_string_name(name: &str) -> bool {
+    name.ends_with('$')
+}
+
+fn basic_string_slot(name: &str) -> String {
+    let stem = name.strip_suffix('$').unwrap_or(name);
+    format!("__basic_str_{stem}")
+}
+
+fn single_child_node(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    if node.children.len() != 1 {
+        return None;
+    }
+    match node.children.first()? {
+        ASTNodeOrToken::Node(n) => Some(n),
+        ASTNodeOrToken::Token(_) => None,
+    }
+}
+
+fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
+    if node.rule_name == "primary" {
+        return string_token_value(node);
+    }
+    single_child_node(node).and_then(expr_string_literal)
+}
+
+fn expr_plain_variable(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    if node.rule_name == "primary" {
+        return child_nodes(node).into_iter().find(|n| n.rule_name == "variable");
+    }
+    single_child_node(node).and_then(expr_plain_variable)
+}
+
+fn expr_string_variable_name(node: &GrammarASTNode)
+    -> Result<Option<String>, CompileError>
+{
+    let Some(var) = expr_plain_variable(node) else {
+        return Ok(None);
+    };
+    if array_subscript_index(var).is_some() {
+        return Ok(None);
+    }
+    let name = scalar_variable_name(var)?;
+    if is_basic_string_name(&name) {
+        Ok(Some(name))
+    } else {
+        Ok(None)
+    }
 }
 
 fn first_name_token_value(node: &GrammarASTNode) -> Option<String> {
@@ -2319,6 +2457,51 @@ mod tests {
         assert!(body.iter().any(|i| i.op == "call_builtin"
             && matches!(i.srcs.as_slice(), [Operand::Var(name), Operand::Var(_)] if name == "putchar")),
             "PRINT should still emit the trailing newline via putchar");
+    }
+
+    #[test]
+    fn compiles_string_variable_assignment_and_print() {
+        let m = compile("10 LET A$ = \"HI\"\n20 PRINT A$\n30 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "str_const"
+            && i.dest.as_deref() == Some("__basic_str_A")
+            && i.type_hint == "str"
+            && matches!(i.srcs.first(), Some(Operand::Str(s)) if s == "HI")),
+            "LET A$ should materialize the string literal directly into a safe slot");
+        assert!(body.iter().any(|i| i.op == "print_str"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "__basic_str_A")),
+            "PRINT A$ should write the string slot through E4 print_str");
+        assert!(body.iter().all(|i| i.dest.as_deref() != Some("A$")),
+            "backend-facing registers must not contain `$`");
+    }
+
+    #[test]
+    fn compiles_string_variable_if_equality() {
+        let src = "10 LET A$ = \"Y\"\n\
+                   20 IF A$ = \"Y\" THEN 40\n\
+                   30 PRINT \"NO\"\n\
+                   40 PRINT A$\n\
+                   50 END\n";
+        let m = compile(src).expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "str_eq"
+            && matches!(i.srcs.as_slice(), [
+                Operand::Var(lhs),
+                Operand::Var(_rhs)
+            ] if lhs == "__basic_str_A")),
+            "IF A$ = literal should lower to E4 str_eq");
+        assert!(body.iter().any(|i| i.op == "jmp_if_true"),
+            "string equality should feed the existing BASIC branch lowering");
+    }
+
+    #[test]
+    fn rejects_string_variable_numeric_expression() {
+        let err = compile("10 LET A$ = \"HI\"\n20 PRINT A$ + 1\n30 END\n")
+            .unwrap_err();
+        match err {
+            CompileError::Unsupported(msg) => assert!(msg.contains("string variable")),
+            other => panic!("expected Unsupported(string variable...), got {other:?}"),
+        }
     }
 
     // ── GOSUB / RETURN — unstructured subroutines (BA1, enabler E7) ──────
