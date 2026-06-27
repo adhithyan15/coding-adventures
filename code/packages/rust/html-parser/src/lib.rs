@@ -4526,7 +4526,6 @@ impl HtmlParser {
         repair_tricky_adoption_agency(&mut document);
         repair_div_bold_nobr_continuation(&mut document.children);
         repair_font_paragraph_boundary(&mut document.children);
-        repair_anchor_center_boundary(&mut document.children);
         repair_em_aside_continuation(&mut document.children, self.explicit_em_end_seen);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
@@ -6609,7 +6608,7 @@ impl HtmlParser {
             }
         } else if incoming_name == "li" {
             if !self.current_parent_has_element_ancestor("button") {
-                self.close_open_anchor_for_list_item_start();
+                self.close_open_anchor_for_reconstruction_boundary();
                 self.close_open_element_if(|name| name == "p");
                 self.close_open_list_item_if_in_scope();
             }
@@ -6647,6 +6646,9 @@ impl HtmlParser {
             }
             if self.current_parent_has_element_ancestor("button") {
                 return;
+            }
+            if incoming_name == "center" {
+                self.close_open_anchor_for_reconstruction_boundary();
             }
             self.close_open_element_if(|name| name == "p");
         }
@@ -6764,7 +6766,7 @@ impl HtmlParser {
         true
     }
 
-    fn close_open_anchor_for_list_item_start(&mut self) -> bool {
+    fn close_open_anchor_for_reconstruction_boundary(&mut self) -> bool {
         let Some(index) = self.open_elements.iter().rposition(|path| {
             element_at_path(&self.document, path).is_some_and(|name| name == "a")
         }) else {
@@ -8290,49 +8292,6 @@ fn repair_font_paragraph_boundary(nodes: &mut Vec<Node>) {
         }
         second_paragraph_element.children.push(reconstructed_font);
         nodes.insert(index + 1, second_paragraph);
-        index += 2;
-    }
-}
-
-fn repair_anchor_center_boundary(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_anchor_center_boundary(&mut element.children);
-        }
-
-        let should_split = matches!(
-            nodes.get(index),
-            Some(Node::Element(anchor))
-                if anchor.name == "a"
-                    && anchor.children.len() == 1
-                    && matches!(
-                        anchor.children.first(),
-                        Some(Node::Element(center)) if center.name == "center"
-                    )
-                    && matches!(nodes.get(index + 1), Some(Node::Element(next)) if next.name == "a")
-        );
-        if !should_split {
-            index += 1;
-            continue;
-        }
-
-        let following_anchor = nodes.remove(index + 1);
-        let Some(Node::Element(anchor)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        let Node::Element(mut center) = anchor.children.remove(0) else {
-            index += 1;
-            continue;
-        };
-        let mut inner_anchor = Node::element("a".to_string(), Vec::new());
-        if let Node::Element(element) = &mut inner_anchor {
-            element.children = std::mem::take(&mut center.children);
-        }
-        center.children.push(inner_anchor);
-        center.children.push(following_anchor);
-        nodes.insert(index + 1, Node::Element(center));
         index += 2;
     }
 }
@@ -30867,6 +30826,31 @@ mod tests {
         assert_eq!(inner_anchor.children.len(), 2);
         assert_eq!(element(&inner_anchor.children[0]).name, "style");
         assert_eq!(element(&inner_anchor.children[1]).name, "title");
+    }
+
+    #[test]
+    fn center_start_splits_open_anchor_and_reconstructs_inside_center() {
+        let document = parse_html("<a><center><title></title><a>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_anchor = element(&body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert!(outer_anchor.children.is_empty());
+
+        let center = element(&body.children[1]);
+        assert_eq!(center.name, "center");
+        assert_eq!(center.children.len(), 2);
+
+        let reconstructed_anchor = element(&center.children[0]);
+        assert_eq!(reconstructed_anchor.name, "a");
+        assert_eq!(reconstructed_anchor.children.len(), 1);
+        assert_eq!(element(&reconstructed_anchor.children[0]).name, "title");
+
+        let following_anchor = element(&center.children[1]);
+        assert_eq!(following_anchor.name, "a");
+        assert!(following_anchor.children.is_empty());
     }
 
     #[test]
