@@ -66,6 +66,14 @@ def safe_eval(expr: str) -> float:
     return ev(ast.parse(expr, mode="eval"))
 
 
+def option_value(value) -> float:
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        return float(safe_eval(value))
+    raise ValueError(f"unsupported option value {value!r}")
+
+
 def check(rung: str) -> list[str]:
     items = json.loads((HERE / rung / "items.json").read_text())["items"]
     errors: list[str] = []
@@ -79,8 +87,20 @@ def check(rung: str) -> list[str]:
         opts = it.get("options", {})
         if sorted(opts) != list("ABCDE"):
             errors.append(f"{iid}: options must be exactly A..E, got {sorted(opts)}")
-        if len(set(opts.values())) != len(opts):
-            errors.append(f"{iid}: option values must be distinct, got {opts}")
+        numeric_opts: dict[str, float] = {}
+        for ltr, value in opts.items():
+            try:
+                numeric_opts[ltr] = option_value(value)
+            except (ValueError, SyntaxError, ZeroDivisionError) as e:
+                errors.append(f"{iid}: option {ltr} value {value!r} did not evaluate: {e}")
+        duplicates = [
+            (a, b)
+            for i, (a, av) in enumerate(numeric_opts.items())
+            for b, bv in list(numeric_opts.items())[i + 1 :]
+            if abs(av - bv) <= 1e-9
+        ]
+        if duplicates:
+            errors.append(f"{iid}: option values must be distinct, got duplicates {duplicates}")
 
         gold = it.get("gold_letter")
         if gold not in opts:
@@ -92,7 +112,7 @@ def check(rung: str) -> list[str]:
         except (ValueError, SyntaxError, ZeroDivisionError) as e:
             errors.append(f"{iid}: formula {it['formula']!r} did not evaluate: {e}")
             continue
-        if abs(computed - opts[gold]) > 1e-9:
+        if gold in numeric_opts and abs(computed - numeric_opts[gold]) > 1e-9:
             errors.append(f"{iid}: gold {gold}={opts[gold]} ≠ formula value {computed}")
 
         stem_nums = set(_NUM.findall(it.get("stem", "")))

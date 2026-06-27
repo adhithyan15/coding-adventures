@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.19.0] - 2026-06-27 — predicate RHS expressions
+
+### Added
+
+- Predicate evidence now accepts a full arithmetic expression on the right-hand
+  side: `contributes 1000000 from answer == 3 / 10 to opt_a`. This lets a
+  decomposer emit the printed option expression directly while ADJ evaluates and
+  compares the values.
+- Lowering now preserves the predicate RHS as a `ComputeExpr` through
+  `logic_engine::PredicateContributionClause::from_lr_expr`.
+
 ## [0.18.0] - 2026-06-27 — native LaTeX math expressions and equations
 
 ### Added

@@ -56,11 +56,12 @@ contributes 1000000 from answer == 59 to opt_a
 ```
 
 The formula can be plain ADJ arithmetic or native ADJ LaTeX syntax such as
-`latex "$5 \times 12$"`; either way, `adj-lang-cli` owns parsing and execution. The
-engine computes `answer`, the matching predicate fires, and the decision returns
-`determinate` with `leader = opt_a` → **A**. No match (or a tie) → `kickback` →
-**abstain**. The harness supplies only the formula and the printed option values; the
-arithmetic and the selection are the engine's.
+`latex "$5 \times 12$"`; option values can be numeric literals or ADJ expressions
+such as `3 / 10`. Either way, `adj-lang-cli` owns parsing and execution. The engine
+computes `answer`, compares it against each option expression, the matching predicate
+fires, and the decision returns `determinate` with `leader = opt_a` → **A**. No match
+(or a tie) → `kickback` → **abstain**. The harness supplies only the formula and the
+printed option values; the arithmetic and the selection are the engine's.
 
 ## Run it
 
@@ -100,7 +101,8 @@ the engine imports; reuse `ladder_eval.py` unchanged. Each rung pulls in the nex
 engine capability from ADJ-REASON-MATH (exact rationals, CAS wiring, dimensional
 units, the deduction↔evidence bridge) — see ADJ-LADDER.md §5.
 
-`rung1_fractions_percent` is intentionally a starter scaffold: its current bank sticks
-to terminating fractions and integer percent answers so the existing engine can own
-the arithmetic today. Harder arbitrary fraction equality still belongs to the exact
-rational work called out in ADJ-REASON-MATH.
+`rung1_fractions_percent` is intentionally a starter scaffold. It now has the native
+surface it needs for fractional option matching (`answer == 3 / 10`), with exact
+rational sidecars carrying integer/rational arithmetic through predicate equality.
+The next climb is using that surface in harder banks and then connecting multi-step
+deductions into probabilistic evidence.

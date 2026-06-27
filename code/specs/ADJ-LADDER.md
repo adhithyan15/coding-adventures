@@ -84,12 +84,12 @@ contributes 1000000 from answer == 62 to opt_e
 
 The engine evaluates `answer` (= 59), the predicate `answer == 59` fires, opt_a's
 log-odds jump decisively, and the decision returns `determinate` with `leader = opt_a`
-→ letter **A**. If the computed answer matches **no** option (or, via a duplicate-value
-accident, two) the hypotheses stay tied → `kickback` → the harness **ABSTAINS** rather
-than guess. The harness supplies only the formula and the printed option values; the
-arithmetic, the comparison, and the selection are all the engine's. (This is the
-`let` + predicate-`contributes` mechanism from `proration.adj`; it needs **zero engine
-change** — the first audited rung is answerable today.)
+→ letter **A**. Fractional options use the same path with an expression RHS, for
+example `contributes 1000000 from answer == 3 / 10 to opt_a`. If the computed answer
+matches **no** option (or, via a duplicate-value accident, two) the hypotheses stay tied
+→ `kickback` → the harness **ABSTAINS** rather than guess. The harness supplies only
+the formula and the printed option values; the arithmetic, the comparison, and the
+selection are all the engine's.
 
 ---
 
@@ -161,7 +161,7 @@ engine gap that blocks it, and every rung ships a two-arm divergence number.
 | Rung | Content | Engine capability it pulls |
 |------|---------|----------------------------|
 | **0** | grade-school arithmetic + 1-step word problems | **none** (value-math exists) — shipped |
-| **1** | fractions / percent | starter scaffold uses terminating cases today; exact rationals (ADJ-REASON-MATH PR-3) for arbitrary fraction equality |
+| **1** | fractions / percent | native predicate RHS expressions plus exact rational sidecars for fractional equality; harder banks climb from here |
 | 2 | pre-algebra / algebra word problems | multi-step deduction→evidence bridge (PR-1) + CAS solve (PR-6) |
 | 3 | algebra / calculus | CAS wiring (PR-6) + rewrite trail (PR-4) |
 | 4 | physics / chem with units | dimensional engine (exists) + exact compute (PR-3) |
@@ -214,7 +214,7 @@ The mechanism is proven; the ladder can climb.
 
 ## 7. Next
 
-Continue rung 1 by hardening exact rational equality, then PR-1 = the
+Continue rung 1 with harder fraction/percent banks, then PR-1 = the
 ADJ-REASON-MATH **deduction→evidence bridge** (`logic-engine` — `observed_evidence`
 falls back to SLD provability + attenuates confidence + threads rule provenance), the
 unlock for every multi-step rung. Then rungs 2→5 in order, each gating the next engine

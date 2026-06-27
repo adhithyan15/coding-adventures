@@ -35,9 +35,11 @@ observe gross_income(18000)
 ```
 
 The engine evaluates `gross_income >= 14600` on the CPU at decision time —
-the model that authored the rulebook never ran the comparison. The proof
-step records the literal comparison that fired (`slot`, `op`, `threshold`,
-`observed`), so the audit trail shows the numbers, not a model's claim.
+the model that authored the rulebook never ran the comparison. The right-hand
+side may be a full arithmetic expression such as `answer == 3 / 10`, including
+native `latex "<math>"` wherever an expression is legal. The proof step records
+the comparison that fired (`slot`, `op`, `threshold`, `observed`), so the audit
+trail shows the numbers, not a model's claim.
 DETERMINATE / INDETERMINATE / CONFLICT still fall out of the differential
 (leader / insufficient-evidence / kickback) — **one engine, not two**.
 Operators: `>= <= > < ==`.

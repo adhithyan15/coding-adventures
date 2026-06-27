@@ -36,6 +36,7 @@
 
 use logic_core::{Substitution, Term};
 
+use crate::compute::{compute, ComputeExpr, ExactRational};
 use crate::proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 use crate::{
     ContributionClauseId, FactId, JointContributionClauseId, KnowledgeBase,
@@ -189,6 +190,28 @@ impl CmpOp {
         }
     }
 
+    /// Evaluate with exact rational sidecars when both sides have them.
+    /// This keeps legacy f64 behaviour for ordinary thresholds while making
+    /// fraction equality such as `1 / 10 + 2 / 10 == 3 / 10` exact.
+    pub fn eval_values(
+        &self,
+        lhs: f64,
+        rhs: f64,
+        lhs_exact: Option<ExactRational>,
+        rhs_exact: Option<ExactRational>,
+    ) -> bool {
+        match (lhs_exact, rhs_exact) {
+            (Some(a), Some(b)) => match self {
+                CmpOp::Ge => cmp_exact(a, b) >= 0,
+                CmpOp::Le => cmp_exact(a, b) <= 0,
+                CmpOp::Gt => cmp_exact(a, b) > 0,
+                CmpOp::Lt => cmp_exact(a, b) < 0,
+                CmpOp::Eq => a == b,
+            },
+            _ => self.eval(lhs, rhs),
+        }
+    }
+
     pub fn symbol(&self) -> &'static str {
         match self {
             CmpOp::Ge => ">=",
@@ -197,6 +220,24 @@ impl CmpOp {
             CmpOp::Lt => "<",
             CmpOp::Eq => "==",
         }
+    }
+}
+
+fn cmp_exact(lhs: ExactRational, rhs: ExactRational) -> i8 {
+    let Some(a) = lhs.num.checked_mul(rhs.den) else {
+        return ordering_i8(lhs.to_f64().total_cmp(&rhs.to_f64()));
+    };
+    let Some(b) = rhs.num.checked_mul(lhs.den) else {
+        return ordering_i8(lhs.to_f64().total_cmp(&rhs.to_f64()));
+    };
+    ordering_i8(a.cmp(&b))
+}
+
+fn ordering_i8(ordering: std::cmp::Ordering) -> i8 {
+    match ordering {
+        std::cmp::Ordering::Less => -1,
+        std::cmp::Ordering::Equal => 0,
+        std::cmp::Ordering::Greater => 1,
     }
 }
 
@@ -216,7 +257,7 @@ pub struct PredicateContributionClause {
     pub conclusion: Term,
     pub slot: String,
     pub op: CmpOp,
-    pub value: f64,
+    pub rhs: ComputeExpr,
     pub logit_delta: f64,
     pub provenance: Provenance,
 }
@@ -234,7 +275,25 @@ impl PredicateContributionClause {
             conclusion,
             slot: slot.into(),
             op,
-            value,
+            rhs: ComputeExpr::Lit(value),
+            logit_delta,
+            provenance: Provenance::unattributed(),
+        }
+    }
+
+    pub fn new_expr(
+        conclusion: Term,
+        slot: impl Into<String>,
+        op: CmpOp,
+        rhs: ComputeExpr,
+        logit_delta: f64,
+    ) -> Self {
+        Self {
+            id: PredicateContributionClauseId(u64::MAX),
+            conclusion,
+            slot: slot.into(),
+            op,
+            rhs,
             logit_delta,
             provenance: Provenance::unattributed(),
         }
@@ -253,6 +312,22 @@ impl PredicateContributionClause {
             "PredicateContributionClause::from_lr requires lr > 0.0; got {lr}"
         );
         Self::new(conclusion, slot, op, value, lr.ln())
+    }
+
+    /// Construct a predicate contribution whose right-hand side is a full
+    /// compute expression (`from answer == 3 / 10 to opt_a`).
+    pub fn from_lr_expr(
+        conclusion: Term,
+        slot: impl Into<String>,
+        op: CmpOp,
+        rhs: ComputeExpr,
+        lr: f64,
+    ) -> Self {
+        assert!(
+            lr > 0.0,
+            "PredicateContributionClause::from_lr_expr requires lr > 0.0; got {lr}"
+        );
+        Self::new_expr(conclusion, slot, op, rhs, lr.ln())
     }
 
     pub fn with_provenance(mut self, provenance: Provenance) -> Self {
@@ -788,8 +863,14 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
     // value of its slot and evaluate the predicate on CPU; if true, apply its
     // logit_delta. A saturating logit_delta makes this a deterministic rule.
     for pc in kb.predicate_contributions_for(query) {
-        if let Some(observed) = kb.observed_value(&pc.slot) {
-            if pc.op.eval(observed, pc.value) {
+        if let Some((observed, observed_exact)) = kb.observed_numeric(&pc.slot) {
+            let Ok(rhs) = compute("__predicate_rhs", &pc.rhs, kb) else {
+                continue;
+            };
+            if pc
+                .op
+                .eval_values(observed, rhs.value, observed_exact, rhs.exact)
+            {
                 any_contribution_active = true;
                 steps.push(ProofStep {
                     goal: query.clone(),
@@ -797,7 +878,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                         clause_id: pc.id,
                         slot: pc.slot.clone(),
                         op: pc.op,
-                        threshold: pc.value,
+                        threshold: rhs.value,
                         observed,
                         logit_delta: pc.logit_delta,
                     },
@@ -888,7 +969,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{Fact, KnowledgeBase};
+    use crate::{ComputeOp, Fact, KnowledgeBase};
     use logic_core::{atom, compound};
 
     fn approx_eq(a: f64, b: f64, tol: f64) -> bool {
@@ -1137,6 +1218,51 @@ mod tests {
             })
             .expect("a predicate step should be present");
         assert_eq!(step, ("gross_income".to_string(), ">=", 14600.0, 18000.0));
+    }
+
+    #[test]
+    fn predicate_expression_rhs_uses_exact_fraction_equality() {
+        let mut kb = KnowledgeBase::new();
+        kb.add_prior(PriorClause::from_probability(atom("opt_a"), 0.10))
+            .unwrap();
+        let answer = crate::compute(
+            "answer",
+            &ComputeExpr::Bin(
+                ComputeOp::Add,
+                Box::new(ComputeExpr::Bin(
+                    ComputeOp::Div,
+                    Box::new(ComputeExpr::Lit(1.0)),
+                    Box::new(ComputeExpr::Lit(10.0)),
+                )),
+                Box::new(ComputeExpr::Bin(
+                    ComputeOp::Div,
+                    Box::new(ComputeExpr::Lit(2.0)),
+                    Box::new(ComputeExpr::Lit(10.0)),
+                )),
+            ),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(answer.exact, ExactRational::new(3, 10));
+        kb.add_derived(answer);
+        kb.add_predicate_contribution(PredicateContributionClause::from_lr_expr(
+            atom("opt_a"),
+            "answer",
+            CmpOp::Eq,
+            ComputeExpr::Bin(
+                ComputeOp::Div,
+                Box::new(ComputeExpr::Lit(3.0)),
+                Box::new(ComputeExpr::Lit(10.0)),
+            ),
+            1e6,
+        ));
+
+        let result = lr_aggregate(&atom("opt_a"), &kb);
+        assert!(result.posterior > 0.9999, "got {}", result.posterior);
+        assert!(result.dag.proofs[0]
+            .steps
+            .iter()
+            .any(|s| matches!(s.origin, DerivationOrigin::FromPredicateContribution { .. })));
     }
 
     #[test]

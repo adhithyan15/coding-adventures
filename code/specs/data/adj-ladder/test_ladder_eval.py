@@ -40,6 +40,13 @@ def test_build_program_renders_int_thresholds():
     assert "answer == 5 to opt_b" in prog
 
 
+def test_build_program_accepts_option_expressions():
+    prog = le.build_arm_b_program("1 / 10 + 2 / 10", {"A": "3 / 10", "B": "1 / 2"})
+    assert "let answer = 1 / 10 + 2 / 10" in prog
+    assert "contributes 1000000 from answer == 3 / 10 to opt_a" in prog
+    assert "contributes 1000000 from answer == 1 / 2 to opt_b" in prog
+
+
 # ---- faithfulness / no-result-literals ----------------------------------------
 def test_faithful_formula_passes():
     assert le.formula_is_faithful("7 * 8 + 3", "What is 7 * 8 + 3?")
@@ -160,10 +167,34 @@ def test_native_adj_latex_formula_runs_through_engine():
     assert le.decision_to_letter(decision) == "A"
 
 
+def test_option_expression_predicate_runs_through_engine():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    decision = le.run_decision(
+        le.build_arm_b_program("1 / 10 + 2 / 10", {"A": "3 / 10", "B": "1 / 2"})
+    )
+    assert le.decision_to_letter(decision) == "A"
+
+
 # ---- bank integrity -----------------------------------------------------------
 @pytest.mark.parametrize("rung", SELF_CONTAINED_RUNGS)
 def test_contamination_check_clean(rung):
     assert cc.check(rung) == []
+
+
+def test_contamination_check_accepts_option_expressions(tmp_path, monkeypatch):
+    rung = tmp_path / "expr_options"
+    rung.mkdir()
+    (rung / "items.json").write_text(json.dumps({"items": [{
+        "id": "frac_expr_001",
+        "qtype": "fraction",
+        "stem": "What is 1/10 + 2/10?",
+        "formula": "1 / 10 + 2 / 10",
+        "options": {"A": "3 / 10", "B": "1 / 2", "C": "1 / 10", "D": "2 / 10", "E": "4 / 10"},
+        "gold_letter": "A",
+    }]}) + "\n")
+    monkeypatch.setattr(cc, "HERE", tmp_path)
+    assert cc.check("expr_options") == []
 
 
 def test_safe_eval_rejects_code():
