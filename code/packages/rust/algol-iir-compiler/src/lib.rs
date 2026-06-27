@@ -3518,6 +3518,42 @@ mod tests {
     }
 
     #[test]
+    fn al4_string_variable_copy_survives_source_reassignment() {
+        let module =
+            compile_source("begin string s, t; s := 'OK'; t := s; s := 'NO'; print(t) end", "test")
+                .expect("literal-backed string copy snapshot compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        let copy_idx = main.instructions.iter()
+            .position(|i| {
+                i.op == "str_concat"
+                    && i.dest.as_deref() == Some("t")
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+            })
+            .expect("t := s should copy through str_concat");
+        let reassign_idx = main.instructions.iter()
+            .position(|i| {
+                i.op == "str_const"
+                    && i.dest.as_deref() == Some("s")
+                    && matches!(i.srcs.first(), Some(Operand::Str(text)) if text == "NO")
+            })
+            .expect("s should be reassigned after the copy");
+        let print_idx = main.instructions.iter()
+            .position(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "t")
+            })
+            .expect("print(t) should consume the copied target slot");
+        assert!(
+            copy_idx < reassign_idx && reassign_idx < print_idx,
+            "copy must be observable independently of later source reassignment"
+        );
+    }
+
+    #[test]
     fn al4_unassigned_string_variable_copy_rejects() {
         let err = compile_source("begin string s, t; t := s; print(t) end", "test")
             .expect_err("unassigned string variable copies are not literal-backed");

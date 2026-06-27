@@ -670,6 +670,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — copied scalar string slots are snapshots. Reassigning the
+    // source after `t := s` rematerializes `s` but must not change `t`, keeping
+    // the AL4 copy foothold inside immutable E4 string values.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s, t; s := 'OK'; t := s; s := 'NO'; print(t) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — the `abs` **standard function** (§3.2.4, LANG-FULL AL8). `abs`
     // is built into the language, not a user procedure, so `algol-iir-compiler`
     // resolves it by name and lowers `abs(0 - 42)` inline to the value of

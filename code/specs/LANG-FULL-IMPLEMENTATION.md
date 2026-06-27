@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed concat assignment, `PRINT`/`IF` string concat expressions, literal-backed scalar string copy, copied-slot string equality, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); richer string ops and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables and scalar copies ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables and scalar copy snapshots ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -232,10 +232,12 @@ multiple languages; close an enabler before the features that depend on it.
   `begin print('HI') end` (and `output`) lowers literal actuals to `str_const` +
   `print_str` and runs on all 7 backends; `begin string s; s := 'HI'; print(s) end`
   proves literal-backed scalar string variables through the same path.
-  BASIC also proves literal reassignment (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`)
-  through the same slot and copied-slot equality (`LET A$ = "OK"; LET B$ = A$;
-  IF B$ = A$ THEN ...`) through `str_eq`. Captured string variables and broader
-  dynamic string values remain.
+  ALGOL scalar string copies are snapshots (`begin string s, t; s := 'OK'; t := s;
+  s := 'NO'; print(t) end` still prints `OK`). BASIC also proves literal
+  reassignment (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`) through the same slot
+  and copied-slot equality (`LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...`)
+  through `str_eq`. Captured string variables and broader dynamic string values
+  remain.
   Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR
@@ -570,8 +572,8 @@ backend immediately) come before the enabler-dependent items.
   **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
   to `str_const` + `print_str`, and literal-backed scalar string variables
   (`string s; s := 'HI'; print(s)`) now run the same way. The matrix also proves
-  the `output(s)` spelling plus literal-backed scalar copy
-  (`string s, t; s := 'OK'; t := s; print(t)`), all on
+  the `output(s)` spelling plus literal-backed scalar copy snapshot semantics
+  (`string s, t; s := 'OK'; t := s; s := 'NO'; print(t)`), all on
   native/LLVM/WASM/JVM/CLR/VM/JIT. Captured/`own` strings, arrays, parameters,
   and broader dynamic string expressions remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
