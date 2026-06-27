@@ -14,6 +14,8 @@ stable local API responses for:
 - `/api/services`
 - `/api/services/:domain/:service`
 - `/api/events`
+- `/api/history/period`
+- `/api/history/period/:start_time`
 - `/api/smart_home/runtime`
 - `/api/smart_home/events`
 - `/api/smart_home/command_results`
@@ -32,7 +34,8 @@ The `GET /api/smart_home/*` routes expose dashboard-ready read models for the
 same runtime: pending-work snapshot counts, checkpointed event-log entries,
 command-result audit records, authorization decisions, and desired-state
 supervision targets. State-history reads expose registry-backed device events
-with Home Assistant entity aliases, state deltas, and timestamp filters.
+with Home Assistant entity aliases, state deltas, and timestamp filters; the
+Home Assistant-style history route accepts `filter_entity_id`.
 
 ## Dependencies
 
@@ -61,6 +64,7 @@ curl http://127.0.0.1:8123/api/
 curl http://127.0.0.1:8123/api/states
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/state_history?entity_id=light.entity_light_1'
+curl 'http://127.0.0.1:8123/api/history/period?filter_entity_id=light.entity_light_1'
 curl -X POST http://127.0.0.1:8123/api/services/light/turn_on \
   -H 'Content-Type: application/json' \
   -d '{"entity_id":"light.entity_light_1","brightness_pct":75}'

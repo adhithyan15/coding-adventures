@@ -13,5 +13,7 @@ All notable changes to this package will be documented in this file.
   desired-state supervision targets.
 - Added a state-history read route over registry-backed device events with
   entity-alias, event-type, and timestamp filtering.
+- Added Home Assistant-style `/api/history/period` routes backed by the same
+  runtime state-history projection.
 - Added a Hue fixture controller example that serves the API through the repo
   HTTP server for manual local smoke tests.

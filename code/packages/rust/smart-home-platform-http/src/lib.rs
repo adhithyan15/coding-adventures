@@ -348,6 +348,20 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/history/period", move |request| {
+            home_assistant_history_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/history/period/:start_time", move |request| {
+            home_assistant_history_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/runtime", move |_| {
             runtime_snapshot_response(&runtime)
         });
@@ -659,6 +673,21 @@ fn runtime_state_history_response(
         Err(error) => return api_error_response(error),
     };
     WebResponse::json(state_history_json(&events, &runtime_guard).into_bytes())
+}
+
+fn home_assistant_history_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let events = match state_history_events(&runtime_guard, request) {
+        Ok(events) => events,
+        Err(error) => return api_error_response(error),
+    };
+    WebResponse::json(home_assistant_history_json(&events, &runtime_guard).into_bytes())
 }
 
 fn runtime_snapshot_json(snapshot: &RuntimeReadSnapshot) -> String {
@@ -1063,7 +1092,7 @@ fn state_history_events<'a>(
     runtime: &'a SmartHomeRuntime,
     request: &WebRequest,
 ) -> Result<Vec<&'a DeviceEvent>, ApiError> {
-    let entity_id = query_string(request, "entity_id")
+    let entity_id = history_entity_filter(request)
         .map(|entity_id| runtime_entity_id(runtime, entity_id))
         .transpose()?;
     let event_type = query_string(request, "event_type")
@@ -1097,6 +1126,10 @@ fn state_history_events<'a>(
     }
     events.truncate(limit);
     Ok(events)
+}
+
+fn history_entity_filter<'a>(request: &'a WebRequest) -> Option<&'a str> {
+    query_string(request, "entity_id").or_else(|| query_string(request, "filter_entity_id"))
 }
 
 fn runtime_entity_id(runtime: &SmartHomeRuntime, value: &str) -> Result<EntityId, ApiError> {
@@ -1145,6 +1178,91 @@ fn state_history_json(events: &[&DeviceEvent], runtime: &SmartHomeRuntime) -> St
             .map(|event| state_history_event_json(event, runtime))
             .collect::<Vec<_>>()
             .join(","),
+    )
+}
+
+fn home_assistant_history_json(events: &[&DeviceEvent], runtime: &SmartHomeRuntime) -> String {
+    let mut by_entity = BTreeMap::<String, Vec<&DeviceEvent>>::new();
+    for event in events {
+        let key = event
+            .entity_id
+            .as_ref()
+            .and_then(|entity_id| runtime.registry().entity(entity_id))
+            .map(home_assistant_entity_id)
+            .unwrap_or_else(|| "unknown.unknown".to_string());
+        by_entity.entry(key).or_default().push(event);
+    }
+
+    format!(
+        "[{}]",
+        by_entity
+            .into_values()
+            .map(|events| {
+                format!(
+                    "[{}]",
+                    events
+                        .iter()
+                        .map(|event| home_assistant_history_event_json(event, runtime))
+                        .collect::<Vec<_>>()
+                        .join(",")
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",")
+    )
+}
+
+fn home_assistant_history_event_json(event: &DeviceEvent, runtime: &SmartHomeRuntime) -> String {
+    let entity = event
+        .entity_id
+        .as_ref()
+        .and_then(|entity_id| runtime.registry().entity(entity_id));
+    let home_assistant_entity_id = entity
+        .map(home_assistant_entity_id)
+        .unwrap_or_else(|| "unknown.unknown".to_string());
+    let canonical_entity_id = event.entity_id.as_ref().map(|entity_id| entity_id.as_str());
+    let (state, capability_id, state_delta_value) = match &event.state_delta {
+        Some(delta) => (
+            value_json(&delta.value),
+            json_string(delta.capability_id.as_str()),
+            value_json(&delta.value),
+        ),
+        None => (
+            json_string(device_event_type_label(event.event_type)),
+            "null".to_string(),
+            "null".to_string(),
+        ),
+    };
+
+    format!(
+        "{{\"entity_id\":{},\"state\":{},\"attributes\":{{\"canonical_entity_id\":{},\"event_id\":{},\"bridge_id\":{},\"device_id\":{},\"event_type\":{},\"capability_id\":{},\"state_delta_value\":{},\"raw_ref\":{}}},\"last_changed_ms\":{},\"last_updated_ms\":{},\"context\":{{\"source\":\"event_stream\",\"correlation_id\":{}}}}}",
+        json_string(home_assistant_entity_id),
+        state,
+        canonical_entity_id
+            .map(json_string)
+            .unwrap_or_else(|| "null".to_string()),
+        json_string(event.event_id.as_str()),
+        json_string(event.bridge_id.as_str()),
+        event
+            .device_id
+            .as_ref()
+            .map(|device_id| json_string(device_id.as_str()))
+            .unwrap_or_else(|| "null".to_string()),
+        json_string(device_event_type_label(event.event_type)),
+        capability_id,
+        state_delta_value,
+        event
+            .raw_ref
+            .as_ref()
+            .map(json_string)
+            .unwrap_or_else(|| "null".to_string()),
+        event.observed_at_ms,
+        event.received_at_ms,
+        event
+            .correlation_id
+            .as_ref()
+            .map(|correlation_id| json_string(correlation_id.as_str()))
+            .unwrap_or_else(|| "null".to_string()),
     )
 }
 
@@ -2431,6 +2549,34 @@ mod tests {
         assert!(body.contains(r#""event_type":"updated""#));
         assert!(body.contains(r#""capability_id":"light.on_off""#));
         assert!(body.contains(r#""value":true"#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_home_assistant_history_period_route() {
+        let app = home_assistant_runtime_web_app(fixture_runtime_with_state_history());
+        let body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/history/period?filter_entity_id=light.entity_light_1",
+            ))
+            .into(),
+        );
+
+        assert!(body.starts_with("[["));
+        assert!(body.contains(r#""entity_id":"light.entity_light_1""#));
+        assert!(body.contains(r#""state":true"#));
+        assert!(body.contains(r#""canonical_entity_id":"entity-light-1""#));
+        assert!(body.contains(r#""event_id":"event-light-1-on""#));
+        assert!(body.contains(r#""capability_id":"light.on_off""#));
+
+        let period_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/history/period/2000?filter_entity_id=light.entity_light_1",
+            ))
+            .into(),
+        );
+        assert_eq!(period_body, body);
     }
 
     #[test]
