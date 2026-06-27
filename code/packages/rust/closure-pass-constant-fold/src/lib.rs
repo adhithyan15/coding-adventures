@@ -1529,7 +1529,6 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         }
     }
 
-<<<<<<< HEAD
     // ---- global isNaN(value) / isFinite(value) → boolean ----
     //
     // `isNaN(x)` / `isFinite(x)` (ECMAScript §19.2.3 / §19.2.2) coerce their
@@ -1581,7 +1580,10 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                 let after = if value { "!0" } else { "!1" };
                 let new_cv = st.fork_cv(&parent, &before, after);
                 return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
-=======
+            }
+        }
+    }
+
     // ---- global escape(string) / unescape(string) ----
     //
     // The legacy Annex B escapers (ECMAScript §B.2.1.1 / §B.2.1.2). `escape`
@@ -1624,7 +1626,6 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     let new_cv = st.fork_cv(&parent, &before, &after);
                     return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                 }
->>>>>>> origin/main
             }
         }
     }
