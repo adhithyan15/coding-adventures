@@ -425,7 +425,15 @@ backend immediately) come before the enabler-dependent items.
   BASIC prints, so it keeps the i64 model.) Fix: comparison dests are typed `int`. **Verified on
   real `java`** — the BASIC `FOR` sum (`15`) and `IF` branch (`7`) now run on the JVM; both added
   to the matrix JVM column.
-- ☐ **BA1** — `GOSUB` / `RETURN` (needs **E7**).
+- ◑ **BA1** — `GOSUB` / `RETURN` (enabler **E7**). `dartmouth-basic-iir-compiler` 0.10.0
+  lowers unstructured `GOSUB`/`RETURN` *inside* `main` per the E7 spec: a fixed-capacity
+  `array<i64>` return-address stack + an AL5 computed-`goto` (`cmp_eq`+`jmp_if_true`)
+  dispatch — **no new backend op**. The same `RETURN` resumes at the dynamically
+  most-recent `GOSUB`. Proven by two executed matrix programs (`919` = one `RETURN`,
+  two call sites; `876` = nested LIFO) on **six** backends (native/LLVM/JVM/CLR/VM/JIT).
+  **BA1-WASM gap:** the computed-`goto` is an irreducible CFG that trips iir-to-wasm's
+  dispatch-loop with a runtime `StackUnderflow` (compiles, traps) — a focused
+  iir-to-wasm follow-up; the 7th backend lands with that fix.
 - ✅ **BA2** — multi-item `PRINT`, `;`/`,` separators (`dartmouth-basic-iir-compiler`
   0.9.0). `PRINT` now prints several items on ONE line: each numeric item lowers to a
   `call __basic_print_int` — a synthetic *recursive* helper that renders digits one at a

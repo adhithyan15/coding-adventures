@@ -991,6 +991,48 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("5 6"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — *unstructured `GOSUB` / `RETURN`* (LANG-FULL BA1, enabler
+    // **E7**). The headline proof that one `RETURN` resumes at the *dynamically
+    // most-recent* `GOSUB`: line 100 is `GOSUB`'d twice and its single `RETURN`
+    // (line 110) must come back to two DIFFERENT places. `GOSUB 100` (push site 0)
+    // prints `9`; `RETURN` pops 0 and resumes at line 20 → `1`; `GOSUB 100` again
+    // (push site 1) prints `9`; `RETURN` pops 1 and resumes at line 40 → END.
+    // Output `919` (trailing `;` from BA2 keeps it on one line). A fixed return
+    // label couldn't do this — only the runtime return-address stack can.
+    // `dartmouth-basic-iir-compiler` lowers this INSIDE `main` with NO new backend
+    // op: an E5 `array<i64>` return stack (`alloc_array`/`array_set`/`array_get`,
+    // the same ops BA3/BA6 run on every backend) + the AL5 computed-`goto` chain
+    // (`cmp_eq` + `jmp_if_true`). So BA1 runs on all 7 backends exactly like the
+    // array cells. Straight control flow + the BA2 print helpers — both already
+    // green on JVM, so no BA-JVM-1 caveat.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 GOSUB 100\n20 PRINT 1;\n30 GOSUB 100\n40 END\n\
+               100 PRINT 9;\n110 RETURN\n",
+        expect: Expect::Stdout("919"),
+        // Wasm excluded: GOSUB's computed-`goto` (RETURN dispatch) produces an
+        // irreducible CFG that trips iir-to-wasm's dispatch-loop lowering with a
+        // runtime StackUnderflow (the wasm *compiles* but traps). Tracked as a
+        // follow-up (BA1-WASM); runs on the other six backends meanwhile.
+        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — *nested* `GOSUB` (LANG-FULL BA1). A subroutine that itself
+    // `GOSUB`s a second one before returning — proves the **LIFO stack discipline**
+    // across depth > 1, not just a single level. `GOSUB 100` prints `8`, then
+    // (line 110) `GOSUB 200` prints `7`, whose `RETURN` (line 210) must resume at
+    // line 120 → `6`, whose `RETURN` (line 130) must resume at line 20 → END.
+    // Output `876`: the inner return goes to 120 and the outer to 20, which only a
+    // proper stack (not a single saved address) produces.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 GOSUB 100\n20 END\n100 PRINT 8;\n110 GOSUB 200\n\
+               120 PRINT 6;\n130 RETURN\n200 PRINT 7;\n210 RETURN\n",
+        expect: Expect::Stdout("876"),
+        // Wasm excluded — see the BA1-WASM note on the cell above.
+        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -1383,7 +1425,13 @@ fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
             .collect::<Vec<_>>()
             .join("\n")
     } else {
-        String::from_utf8_lossy(&printed_bytes).to_string()
+        // `.trim()` to match the six sibling `run_*` functions (native/LLVM/CLR/
+        // JVM/VM/JIT all trim): BASIC's BA2 `PRINT` ends each line with a
+        // `putchar('\n')`, so the raw byte stream for `PRINT 42` is `"42\n"`.
+        // Without trimming, the Wasm column alone disagreed with the others on
+        // every BASIC `Stdout` cell (a latent inconsistency the putchar print
+        // model surfaced). Inner newlines (multi-line output) are preserved.
+        String::from_utf8_lossy(&printed_bytes).trim().to_string()
     };
     Some((code, stdout))
 }
@@ -1576,10 +1624,14 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
     // classpath so its `println(J)V` resolves. `javac` ships with the JDK; if it is
     // somehow absent the cell skips gracefully (`None`).
     if prints {
-        // Pick the host class the program's I/O lowers to: Brainfuck's `.`/`,` +
-        // tape use `env.BFRuntime`; Dartmouth BASIC's `PRINT` uses
-        // `env.BasicRuntime`. Compile it onto the classpath with `javac`.
-        let (file, source) = if p.lang == Language::Brainfuck {
+        // Pick the host class the program's I/O lowers to. Both Brainfuck's
+        // `.`/`,` and — since BA2 — Dartmouth BASIC's `PRINT` lower to the
+        // generic `putchar` builtin (`invokestatic env/BFRuntime.putchar(I)V`),
+        // so both use `env.BFRuntime`. (The legacy `env.BasicRuntime.println`
+        // path is kept for any future language that lowers `print_i64`.)
+        let (file, source) = if p.lang == Language::Brainfuck
+            || p.lang == Language::DartmouthBasic
+        {
             ("BFRuntime.java", BF_RUNTIME_JAVA)
         } else {
             ("BasicRuntime.java", BASIC_RUNTIME_JAVA)
@@ -1752,7 +1804,9 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
             .collect::<Vec<_>>()
             .join("\n")
     } else {
-        String::from_utf8_lossy(&byte_buf).to_string()
+        // `.trim()` to match the subprocess columns: BA2 BASIC `PRINT` ends
+        // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
+        String::from_utf8_lossy(&byte_buf).trim().to_string()
     };
     Some((code, stdout))
 }
@@ -1849,7 +1903,9 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
             .collect::<Vec<_>>()
             .join("\n")
     } else {
-        String::from_utf8_lossy(&byte_buf).to_string()
+        // `.trim()` to match the subprocess columns: BA2 BASIC `PRINT` ends
+        // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
+        String::from_utf8_lossy(&byte_buf).trim().to_string()
     };
     Some((code, stdout))
 }
