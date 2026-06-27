@@ -1,5 +1,17 @@
 # Changelog — `twig-aot`
 
+## 0.15.0 — 2026-06-27 — native string literal PRINT lowering (LANG-FULL E4 / BA4)
+
+`prepare_module_for_aot` now lowers the landed E4 literal-output pair
+`str_const` + `print_str` into the native runtime path that already existed:
+`alloc_bytes`, one `store_byte` per printable-ASCII byte, and
+`call_builtin "print_string"` (`__twig_print_string(ptr,len)`). This covers the
+direct native AOT column without adding object-file rodata support or duplicating
+machine-backend logic.
+
+Added unit coverage for the rewrite shape and a Mach-O object compile test that
+proves the transformed IIR reaches the aarch64 backend/packager.
+
 ## 0.14.0 — 2026-06-10 — `lispy_runtime.c`: universal exit coercion (LANG77 / McCarthy W13b)
 
 Adds `__twig_lispy_to_exit_code(uint64_t)` to the shared tagged-word C runtime: it

@@ -108,8 +108,8 @@ explicit `cmp idx,len` + branch-to-trap.
 | **CLR** | GC | `System.String` for the landed literal-output slice; byte-string representation still under E4-managed | `ldstr "…"` ✅ for ASCII literals | planned | planned | planned | `Console.Write(string)` ✅ |
 | **WASM** | linear-memory foothold now; WasmGC later | `i32` pointer into a data segment for the landed literal-output slice; richer byte-string representation still under E4-managed | data segment ✅ for ASCII literals | planned | planned | planned | host import `env.__print_str(ptr,len)` ✅ |
 | **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | private `{len,bytes}` global ✅ for ASCII literals | planned | planned | planned | `@__print_str(i8* base+8, i64 len)` C-runtime ✅ |
-| **x86_64** | static | length-prefixed `__twig_alloc_bytes` buffer; literals in `.rodata` | emit the literal into rodata, materialise its address | load header | `cmp`/`jae trap`; else `movzx [base+8+idx]` | alloc + `rep movsb` ×2 | `call __print_str` |
-| **aarch64** | static | length-prefixed buffer; literals in `__TEXT,__const` | `adrp`/`add` the literal address | load header | `cmp`/`b.hs trap`; else `ldrb [base+8+idx]` | alloc + copy | `bl __print_str` |
+| **x86_64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | planned | planned | planned | `call __twig_print_string(ptr,len)` ✅ |
+| **aarch64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | planned | planned | planned | `bl __twig_print_string(ptr,len)` ✅ |
 
 **Unmanaged header layout** (LLVM / x86_64 / aarch64): identical to E5's array
 header — word 0 is the byte count, bytes start at offset 8. String literals are
@@ -191,21 +191,21 @@ merge before the next:
    (needs a frontend), but a direct IIR unit test proves it runs.* The generic CIR
    JIT remains i64-only and cold-interprets/declines string-shaped functions
    until a string-capable tier is added.
-2. ✅ **E4-basic-frontend (VM/JIT/LLVM/WASM/JVM/CLR proof)** — `dartmouth-basic-iir-compiler` lowers
+2. ✅ **E4-basic-frontend (all-7 literal-output proof)** — `dartmouth-basic-iir-compiler` lowers
    `PRINT "…"` to `str_const` + `print_str`; matrix `Prog` (`PRINT "HELLO"` ⇒
-   stdout `HELLO`) runs on VM + JIT + LLVM + WASM + JVM + CLR. The LLVM/WASM/JVM/CLR slices
-   are deliberately literal-output footholds (LLVM private `{len,bytes}` global,
+   stdout `HELLO`) runs on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. The
+   native/LLVM/WASM/JVM/CLR slices are deliberately literal-output footholds
+   (native heap-byte `alloc_bytes` + `store_byte` + `print_string`, LLVM private `{len,bytes}` global,
    WASM data segment +
    `env.__print_str(ptr,len)`, JVM/CLR `ldc`/`ldstr` + `PrintStream.print`/
-   `Console.Write(string)`); the all-7 version waits for the native
-   static backend lowering slice below.
+   `Console.Write(string)`).
 3. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
    diverge.)
-4. **E4-static-backends** — native x86_64 + aarch64 (length-prefixed
-   rodata literals + heap `str_concat` + the shared `__print_str` C runtime +
-   explicit `str_index` guard); extend the matrix Prog to all 7. Native encodings
-   byte-verified vs the system assembler (as for E3/E5-native).
+4. **E4-static-backends** — full native x86_64 + aarch64 byte-string ops
+   (length-prefixed rodata literals + heap `str_concat` + explicit `str_index`
+   guard). Native literal output is already proven through the heap-byte foothold;
+   this item is now the richer ops/representation slice.
 5. **E4-ops-proofs** — matrix programs for `str_concat`+`str_len` (⇒ `5`) and
    `str_eq` driving a branch, plus the `str_index` out-of-bounds **trap** proof,
    across every backend.

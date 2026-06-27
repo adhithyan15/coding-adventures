@@ -1446,6 +1446,118 @@ fn strip_dead_string_consts(func: &mut IIRFunction) {
     });
 }
 
+/// Lower the landed E4 literal-output string ops to native byte-buffer I/O.
+///
+/// The direct native backends already know how to allocate bytes, store bytes,
+/// and call the portable `__twig_print_string(ptr,len)` runtime helper. This
+/// pass reuses that path for `str_const` + `print_str`; richer string ops remain
+/// unsupported until the full byte-string runtime lands.
+fn lower_string_literals_for_aot(func: &mut IIRFunction) {
+    let mut lowered = Vec::with_capacity(func.instructions.len());
+    let mut strings: HashMap<String, (String, String)> = HashMap::new();
+    let mut next = 0usize;
+
+    for instr in std::mem::take(&mut func.instructions) {
+        if instr.op == "str_const" {
+            let dest = match instr.dest.clone() {
+                Some(dest) => dest,
+                None => {
+                    lowered.push(instr);
+                    continue;
+                }
+            };
+            let literal = match instr.srcs.first() {
+                Some(Operand::Str(literal)) => literal.clone(),
+                _ => {
+                    lowered.push(instr);
+                    continue;
+                }
+            };
+            if !is_printable_ascii_str(&literal) {
+                lowered.push(instr);
+                continue;
+            }
+
+            let base = format!("__aot_str{next}");
+            next += 1;
+            let len_var = format!("{base}_len");
+            let buf_var = format!("{base}_buf");
+
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(len_var.clone()),
+                vec![Operand::Int(literal.len() as i64)],
+                "i64",
+            ));
+            lowered.push(IIRInstr::new(
+                "alloc_bytes",
+                Some(buf_var.clone()),
+                vec![Operand::Var(len_var.clone())],
+                "i64",
+            ));
+            for (idx, byte) in literal.bytes().enumerate() {
+                let off_var = format!("{base}_off{idx}");
+                let byte_var = format!("{base}_byte{idx}");
+                lowered.push(IIRInstr::new(
+                    "const",
+                    Some(off_var.clone()),
+                    vec![Operand::Int(idx as i64)],
+                    "i64",
+                ));
+                lowered.push(IIRInstr::new(
+                    "const",
+                    Some(byte_var.clone()),
+                    vec![Operand::Int(byte as i64)],
+                    "i64",
+                ));
+                lowered.push(IIRInstr::new(
+                    "store_byte",
+                    None,
+                    vec![
+                        Operand::Var(buf_var.clone()),
+                        Operand::Var(off_var),
+                        Operand::Var(byte_var),
+                    ],
+                    "void",
+                ));
+            }
+            strings.insert(dest, (buf_var, len_var));
+            continue;
+        }
+
+        if instr.op == "print_str" {
+            let Some(Operand::Var(src)) = instr.srcs.first() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((buf_var, len_var)) = strings.get(src).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            lowered.push(IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![
+                    Operand::Var("print_string".into()),
+                    Operand::Var(buf_var),
+                    Operand::Var(len_var),
+                ],
+                "void",
+            ));
+            continue;
+        }
+
+        lowered.push(instr);
+    }
+
+    func.instructions = lowered;
+}
+
+fn is_printable_ascii_str(s: &str) -> bool {
+    s.bytes()
+        .all(|b| matches!(b, b'\n' | b'\r' | b'\t' | 0x20..=0x7e))
+}
+
 /// Step 3b: default any remaining `"any"` hints on arithmetic / move
 /// instructions to `"i64"`.
 ///
@@ -1475,6 +1587,9 @@ fn default_any_to_i64(func: &mut IIRFunction) {
 ///  0. `lower_global_io` — converts `call_builtin "global_set"` /
 ///     `"global_get"` to `global_store` / `global_load` (LANG39).
 ///     Must run first so the const-string look-back can see all instructions.
+///  0a-string. `lower_string_literals_for_aot` — converts E4 literal-output
+///     `str_const` + `print_str` into existing native heap-byte I/O:
+///     `alloc_bytes`, `store_byte`, and `call_builtin "print_string"`.
 ///  0b. `strip_dead_string_consts` — removes `const %n = Var("name")`
 ///     instructions that are now dead after step 0.  Without this pass,
 ///     `aot_specialise` converts them to `const_str` which the ARM64 backend
@@ -1517,6 +1632,7 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     lower_lisp_repr(module);
 
     for func in &mut module.functions {
+        lower_string_literals_for_aot(func);
         // Phase 0b: remove dead name-register `const` instructions.
         // `lower_global_io` leaves `const %n = Var("x")` in place even after
         // the `global_set`/`global_get` that consumed it is rewritten.
@@ -1858,6 +1974,69 @@ mod tests {
 
         // Verify Mach-O magic and file type.
         let bytes = result.unwrap();
+        assert_eq!(&bytes[0..4], &[0xCF, 0xFA, 0xED, 0xFE], "Mach-O magic");
+        let filetype = u32::from_le_bytes(bytes[12..16].try_into().unwrap());
+        assert_eq!(filetype, 1, "MH_OBJECT");
+    }
+
+    #[test]
+    fn string_literal_print_lowers_to_heap_byte_io() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HELLO".into())], "str"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+                IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_const" && i.op != "print_str"),
+            "native lowering should remove literal string ops: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().any(|i| i.op == "alloc_bytes"),
+            "string literal should allocate a byte buffer"
+        );
+        assert_eq!(
+            f.instructions.iter().filter(|i| i.op == "store_byte").count(),
+            5,
+            "HELLO should lower to five byte stores"
+        );
+        assert!(
+            f.instructions.iter().any(|i| {
+                i.op == "call_builtin"
+                    && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "print_string")
+            }),
+            "print_str should lower to call_builtin print_string"
+        );
+    }
+
+    #[test]
+    fn string_literal_print_compiles_to_macho_object() {
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HELLO".into())], "str"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+                IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        let mut module = IIRModule::new("native_string_print", "lang");
+        module.functions.push(main);
+        module.entry_point = Some("main".into());
+
+        let bytes = compile_module_macos_arm64_object(&module)
+            .unwrap_or_else(|e| panic!("native string print should compile: {e}"));
         assert_eq!(&bytes[0..4], &[0xCF, 0xFA, 0xED, 0xFE], "Mach-O magic");
         let filetype = u32::from_le_bytes(bytes[12..16].try_into().unwrap());
         assert_eq!(filetype, 1, "MH_OBJECT");

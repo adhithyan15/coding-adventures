@@ -858,18 +858,20 @@ const PROGRAMS: &[Prog] = &[
     },
     // Dartmouth BASIC — E4/BA4 first string-PRINT proof. The frontend lowers a
     // string literal item to shared `str_const` + `print_str`, and the existing
-    // BASIC PRINT machinery emits the trailing newline via `putchar`. LLVM emits
-    // a length-prefixed private constant and calls the generic `__print_str`
-    // runtime with `(payload,len)`; WASM stores the literal bytes in linear memory
-    // and calls `env.__print_str(ptr,len)`; JVM uses `ldc` + `PrintStream.print(String)`
-    // and textual CIL uses `ldstr` + `Console.Write(string)`, while richer
-    // byte-string operations stay outside this slice.
+    // BASIC PRINT machinery emits the trailing newline via `putchar`. Native AOT
+    // rewrites the literal to `alloc_bytes` + `store_byte` + `print_string`;
+    // LLVM emits a length-prefixed private constant and calls the generic
+    // `__print_str` runtime with `(payload,len)`; WASM stores the literal bytes in
+    // linear memory and calls `env.__print_str(ptr,len)`; JVM uses `ldc` +
+    // `PrintStream.print(String)` and textual CIL uses `ldstr` +
+    // `Console.Write(string)`, while richer byte-string operations stay outside
+    // this slice.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT \"HELLO\"\n20 END\n",
         expect: Expect::Stdout("HELLO"),
-        backends: &[Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
