@@ -1111,6 +1111,10 @@ fn dispatch(
                 exec_const(instr, &mut frame)?;
                 pc += 1;
             }
+            "str_const" => {
+                exec_str_const(instr, &mut frame)?;
+                pc += 1;
+            }
             "call_builtin" => {
                 exec_call_builtin(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
                 pc += 1;
@@ -1386,6 +1390,23 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
             lispy_runtime::heap::alloc_string(text.as_bytes())
         }
     };
+    frame.set(dest.clone(), value)?;
+    Ok(())
+}
+
+fn exec_str_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("str_const requires dest".into())
+    })?;
+    let src = instr.srcs.first().ok_or_else(|| {
+        RunError::MalformedInstruction("str_const requires srcs[0]".into())
+    })?;
+    let Operand::Str(text) = src else {
+        return Err(RunError::MalformedInstruction(format!(
+            "str_const requires Operand::Str, got {src:?}"
+        )));
+    };
+    let value = lispy_runtime::heap::alloc_string(text.as_bytes());
     frame.set(dest.clone(), value)?;
     Ok(())
 }
@@ -5370,6 +5391,21 @@ mod tests {
         let v = run(&module_with_main(instrs, 1)).unwrap();
         assert!(v.is_heap(), "Operand::Str should produce a heap value");
         // SAFETY: v was produced by alloc_string in exec_const.
+        unsafe {
+            assert!(lispy_runtime::is_string(v), "heap value should be a LangString");
+            let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
+            assert_eq!(bytes, b"hello");
+        }
+    }
+
+    #[test]
+    fn str_const_produces_heap_string() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hello".into())], "str"),
+            IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 1)).unwrap();
+        assert!(v.is_heap(), "str_const should produce a heap value");
         unsafe {
             assert!(lispy_runtime::is_string(v), "heap value should be a LangString");
             let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
