@@ -4524,7 +4524,6 @@ impl HtmlParser {
         repair_split_div_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         repair_tricky_adoption_agency(&mut document);
-        repair_nested_select_option_pairs(&mut document.children);
         repair_div_bold_nobr_continuation(&mut document.children);
         repair_anchor_list_item_boundary(&mut document.children);
         repair_font_paragraph_boundary(&mut document.children);
@@ -6622,7 +6621,9 @@ impl HtmlParser {
         } else if incoming_name == "option"
             && (self.current_element_is("option") || self.has_open_element("select"))
         {
-            self.close_open_element_if(|name| name == "option");
+            if !self.current_empty_select_is_nested_in_option() {
+                self.close_open_element_if(|name| name == "option");
+            }
         } else if incoming_name == "optgroup" {
             self.close_open_element_if(|name| name == "option");
             self.close_open_element_if(|name| name == "optgroup");
@@ -7764,6 +7765,22 @@ impl HtmlParser {
             .is_some_and(|current| current.eq_ignore_ascii_case(name))
     }
 
+    fn current_empty_select_is_nested_in_option(&self) -> bool {
+        let Some(select_path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(select) = element_ref_at_path(&self.document, select_path) else {
+            return false;
+        };
+        if select.name != "select" || !select.children.is_empty() {
+            return false;
+        }
+        let Some((_child_index, parent_path)) = select_path.split_last() else {
+            return false;
+        };
+        element_at_path(&self.document, parent_path).is_some_and(|name| name == "option")
+    }
+
     fn has_open_element_before_namespace_boundary(&self, name: &str) -> bool {
         for path in self.open_elements.iter().rev() {
             let Some(element) = element_ref_at_path(&self.document, path) else {
@@ -8158,57 +8175,6 @@ fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_insanely_badly_nested_table_sequence(&mut document.children);
     unwrap_empty_font_newline_after_font(&mut document.children);
     remove_empty_text_nodes(&mut document.children);
-}
-
-fn repair_nested_select_option_pairs(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_nested_select_option_pairs(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index + 1 < nodes.len() {
-        let current_has_empty_trailing_select = matches!(
-            nodes.get(index),
-            Some(Node::Element(option))
-                if option.name == "option"
-                    && matches!(
-                        option.children.last(),
-                        Some(Node::Element(select))
-                            if select.name == "select" && select.children.is_empty()
-                    )
-        );
-        let next_is_option = matches!(
-            nodes.get(index + 1),
-            Some(Node::Element(option)) if option.name == "option"
-        );
-        if !current_has_empty_trailing_select || !next_is_option {
-            index += 1;
-            continue;
-        }
-
-        let mut nested_option = nodes.remove(index + 1);
-        if let Node::Element(option) = &mut nested_option {
-            if matches!(
-                option.children.last(),
-                Some(Node::Element(select)) if select.name == "select" && select.children.is_empty()
-            ) {
-                option.children.pop();
-            }
-        }
-        let Some(Node::Element(option)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        let Some(Node::Element(select)) = option.children.last_mut() else {
-            index += 1;
-            continue;
-        };
-        select.children.push(nested_option);
-        index += 1;
-    }
 }
 
 fn repair_div_bold_nobr_continuation(nodes: &mut Vec<Node>) {
