@@ -1988,6 +1988,11 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         output_plan_artifact.output_directive_kinds,
         vec!["save".to_string()]
     );
+    assert_eq!(output_plan_artifact.output_directive_analysis_kind_count, 1);
+    assert_eq!(
+        output_plan_artifact.output_directive_analysis_kinds,
+        vec!["global".to_string()]
+    );
     assert_eq!(
         output_plan_artifact.tables,
         vec![
@@ -1998,7 +2003,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(
         op_execution.output_plan_artifact_table,
-        "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tTables\tTableList\nop\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t3\tresult;output-plan;run-artifact\n"
+        "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tTables\tTableList\nop\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t1\tglobal\t3\tresult;output-plan;run-artifact\n"
     );
     assert_eq!(
         op_execution.output_plan_artifact_table,
@@ -2006,7 +2011,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(
         op_execution.output_plan_artifact_csv,
-        "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,Tables,TableList\nop,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,3,result;output-plan;run-artifact\n"
+        "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,Tables,TableList\nop,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,1,global,3,result;output-plan;run-artifact\n"
     );
     assert_eq!(
         op_execution.output_plan_artifact_csv,
@@ -2025,6 +2030,12 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             .get("ResultColumnList")
             .map(String::as_str),
         Some("Index;V(mid)")
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_records[0]
+            .get("OutputDirectiveAnalysisKindList")
+            .map(String::as_str),
+        Some("global")
     );
     assert_eq!(
         op_execution.output_plan_artifact_records[0]
@@ -2244,6 +2255,16 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             .map(String::as_str),
         Some("save;probe;print")
     );
+    assert_eq!(
+        dc_execution.output_plan_artifacts[0].output_directive_analysis_kinds,
+        vec!["global".to_string(), "dc".to_string()]
+    );
+    assert_eq!(
+        dc_execution.output_plan_artifact_records[0]
+            .get("OutputDirectiveAnalysisKindList")
+            .map(String::as_str),
+        Some("global;dc")
+    );
     assert_eq!(dc_execution.analysis_directives, vec![".dc".to_string()]);
     assert_eq!(dc_execution.table_count, 4);
     assert_eq!(
@@ -2368,6 +2389,16 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             .get("OutputDirectiveKindList")
             .map(String::as_str),
         Some("save;plot")
+    );
+    assert_eq!(
+        ac_execution.output_plan_artifacts[0].output_directive_analysis_kinds,
+        vec!["global".to_string(), "ac".to_string()]
+    );
+    assert_eq!(
+        ac_execution.output_plan_artifact_records[0]
+            .get("OutputDirectiveAnalysisKindList")
+            .map(String::as_str),
+        Some("global;ac")
     );
     assert_eq!(ac_execution.analysis_directives, vec![".ac".to_string()]);
     assert_eq!(ac_execution.table_count, 4);

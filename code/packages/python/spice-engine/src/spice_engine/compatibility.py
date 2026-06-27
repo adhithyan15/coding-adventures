@@ -995,6 +995,35 @@ def select_deck_output_directives(netlist: str, analysis: str) -> list[str]:
     return selected
 
 
+def select_deck_output_directive_analysis_kinds(
+    netlist: str,
+    analysis: str,
+) -> list[str]:
+    """Return deduplicated output directive analysis scopes for an analysis."""
+
+    summary = resolve_deck_outputs(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            "select_deck_output_directive_analysis_kinds: "
+            f"line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    selected: list[str] = []
+    seen: set[str] = set()
+    for selection in summary.selections:
+        if selection.analysis is not None and not _deck_output_analysis_matches(
+            selection.analysis,
+            analysis,
+        ):
+            continue
+        analysis_kind = selection.analysis or "global"
+        if analysis_kind in seen:
+            continue
+        seen.add(analysis_kind)
+        selected.append(analysis_kind)
+    return selected
+
+
 def resolve_deck_analyses(netlist: str) -> DeckAnalysisSummary:
     """Extract supported top-level analysis directives before ``.end``."""
 

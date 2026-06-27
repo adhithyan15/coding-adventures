@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck output-plan directive analysis-kind artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose normalized
+  output directive analysis scope counts/lists beside directive kind
+  inventories, distinguishing global `.save` / `.probe` selections from
+  scoped `.probe`, `.print`, and `.plot` selections in table, CSV, compact
+  JSON, and header-keyed record exports, matching Rust and TypeScript.
+
 - **Deck output-plan directive-kind artifacts** —
   selected `run_deck_analysis()` output-plan artifacts now expose normalized
   output directive kind counts/lists beside the selected directive tokens in
