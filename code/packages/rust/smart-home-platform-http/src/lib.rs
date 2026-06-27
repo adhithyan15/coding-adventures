@@ -282,6 +282,14 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         <h2>Activity</h2>
         <div id="activity" class="metric-grid"></div>
       </section>
+      <section class="panel">
+        <h2>Services</h2>
+        <div id="services"></div>
+      </section>
+      <section class="panel">
+        <h2>API Surface</h2>
+        <div id="routes"></div>
+      </section>
     </aside>
     <section>
       <div class="panel">
@@ -346,7 +354,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       location: document.querySelector("#location"),
       log: document.querySelector("#log"),
       refresh: document.querySelector("#refresh"),
+      routes: document.querySelector("#routes"),
       scenes: document.querySelector("#scenes"),
+      services: document.querySelector("#services"),
       stateCount: document.querySelector("#state-count"),
       status: document.querySelector("#status"),
       summary: document.querySelector("#summary")
@@ -418,6 +428,36 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           </div>
         </article>
       `).join("") || `<p class="muted">No scenes</p>`;
+    };
+
+    const renderServices = (catalog) => {
+      const services = catalog.services || [];
+      els.services.innerHTML = services.map((service) => `
+        <div class="row" style="justify-content: space-between; margin-top: 8px;">
+          <div>
+            <h3>${service.service_id}</h3>
+            <p class="muted">${service.home_assistant_path}</p>
+          </div>
+          <span class="${statusClass(service.runtime_authorized ? "ready" : "attention")}">
+            ${service.home_assistant_entity_ids.length + service.home_assistant_scene_ids.length}
+          </span>
+        </div>
+      `).join("") || `<p class="muted">No services</p>`;
+    };
+
+    const renderRoutes = (catalog) => {
+      const routes = catalog.routes || [];
+      els.routes.innerHTML = routes.map((route) => `
+        <div class="row" style="justify-content: space-between; margin-top: 8px;">
+          <div>
+            <h3>${route.method} ${route.path}</h3>
+            <p class="muted">${route.category} | ${route.surface}</p>
+          </div>
+          <span class="${statusClass(route.runtime_authorized ? "ready" : "attention")}">
+            ${route.mutates_runtime ? "mutates" : "read"}
+          </span>
+        </div>
+      `).join("") || `<p class="muted">No routes</p>`;
     };
 
     const renderEntities = (states) => {
@@ -496,13 +536,15 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     const render = async () => {
       els.refresh.disabled = true;
       try {
-        const [bootstrap, readiness, states, scenes, desiredStates, history] = await Promise.all([
+        const [bootstrap, readiness, states, scenes, desiredStates, history, services, routes] = await Promise.all([
           json("/api/smart_home/bootstrap"),
           json("/api/smart_home/readiness"),
           json("/api/smart_home/states?limit=24"),
           json("/api/smart_home/scenes?limit=12"),
           json("/api/smart_home/desired_states?limit=12"),
-          json("/api/smart_home/state_history?limit=12")
+          json("/api/smart_home/state_history?limit=12"),
+          json("/api/smart_home/services?limit=8"),
+          json("/api/smart_home/api?mutating=true&authorized=true")
         ]);
         const summary = bootstrap.dashboard.summary;
         els.location.textContent = bootstrap.dashboard.config.location_name;
@@ -521,6 +563,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           metric("State gaps", bootstrap.state_gaps.summary.total_entities)
         ].join("");
         renderChecks(readiness);
+        renderServices(services);
+        renderRoutes(routes);
         renderScenes(scenes);
         renderEntities(states);
         renderDesiredStates(desiredStates);
@@ -6335,6 +6379,8 @@ mod tests {
             assert!(body.contains("json(\"/api/smart_home/scenes?limit=12\")"));
             assert!(body.contains("json(\"/api/smart_home/desired_states?limit=12\")"));
             assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
+            assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
+            assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
             assert!(body.contains("/api/services/light/"));
             assert!(body.contains("data-service=\"set_brightness\""));
             assert!(body.contains("brightness_pct"));
@@ -7367,6 +7413,8 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/scenes?limit=12\")"));
         assert!(body.contains("json(\"/api/smart_home/desired_states?limit=12\")"));
         assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
+        assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
+        assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
         assert!(body.contains("/api/services/light/"));
         assert!(body.contains("data-brightness-input"));
         assert!(body.contains("brightness_pct"));
