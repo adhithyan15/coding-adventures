@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Expose selected output probe source line inventories in `run_deck_analysis`
+  output-plan artifacts aligned with selected output-probe inventories, with
+  stable table, CSV, compact JSON, and header-keyed record exports, matching
+  Python and TypeScript.
 - Expose selected output directive source line inventories in
   `run_deck_analysis` output-plan artifacts beside directive scope
   inventories, with stable table, CSV, compact JSON, and header-keyed record

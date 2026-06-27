@@ -25,6 +25,27 @@ the per-binding boolean folds (incl. empty-array `true` and primitive/object
 `false`), the declined non-empty array, and a WHITESPACE_ONLY-fallback regression
 guard (exactly one `Array.isArray(` call remains). Help-markdown regenerated to
 Version 0.203.0.
+## [0.209.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold global `isNaN(…)` / `isFinite(…)` → boolean
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses the global numeric
+predicates `isNaN(x)` / `isFinite(x)` (ECMAScript §19.2.3 / §19.2.2) to a boolean
+literal when the single argument is a string- or number-literal — via the new
+`js_to_number` ToNumber classifier in `closure-pass-constant-fold` 0.51.0.
+
+Both coerce with `ToNumber` then classify: `isNaN("abc")` → `true`,
+`isNaN("42")` → `false`, `isNaN(" ")` → `false` (`ToNumber(" ")` is `+0`),
+`isFinite("1e3")` → `true`, `isFinite("Infinity")` → `false`, `isFinite(0)` →
+`true`. Unlike `Number(...)`, no shape declines — every string has a
+well-defined NaN / Infinity / finite class.
+
+New end-to-end fixture `tests/diff/simple-fold-isnan/` and integration test
+`tests/diff_simple_fold_isnan.rs` assert byte-exact SIMPLE output, the
+per-binding boolean folds (including the `ToNumber(" ")=+0` and `"Infinity"`
+cases), and a WHITESPACE_ONLY-fallback regression guard (zero `isNaN(` / zero
+`isFinite(` calls remain). Help-markdown regenerated to Version 0.200.0.
 ## [0.208.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold static `Object.keys/values/entries({})` → `[]`

@@ -28,6 +28,35 @@ Dispatches through the `MemberExpression` callee arm (alongside the
 six unit tests (the empty-array `true`, the non-array-literal `false` set, the
 non-empty-array decline, and the identifier / second-argument / non-`Array`-
 receiver guards).
+## [0.60.0] - 2026-06-26
+
+### Added — fold global `isNaN(…)` / `isFinite(…)` → boolean literal
+
+The global predicates `isNaN(x)` / `isFinite(x)` (ECMAScript §19.2.3 / §19.2.2)
+now fold to a boolean literal when their single argument is a string- or
+number-literal. Both coerce the argument with `ToNumber`, then classify:
+`isNaN` is `true` exactly when the result is `NaN`; `isFinite` is `true` exactly
+when it is neither `NaN` nor `±Infinity`:
+
+- `isNaN("abc")` → `true`, `isNaN("42")` → `false`, `isNaN(" ")` → `false`
+  (`ToNumber(" ")` is `+0`), `isNaN(0)` → `false`;
+- `isFinite("1e3")` → `true`, `isFinite("Infinity")` → `false`,
+  `isFinite("abc")` → `false`, `isFinite(0)` → `true`.
+
+A new `js_to_number` helper implements the FULL ECMAScript string→number
+coercion returning the exact `f64` — **including** `NaN` and `±Infinity` — rather
+than declining like `fold_number` (which returns `None` for `NaN`/`Infinity` and
+integers beyond `2^53`, because it must emit an exact literal). Since the
+predicates only ever read `.is_nan()` / `.is_finite()` and never emit the number,
+`js_to_number` can classify every string correctly (non-decimal digits are folded
+into an `f64` accumulator that overflows to `Infinity` exactly when the true value
+does). The grammar mirrors `fold_number` (same `is_js_trim_whitespace` /
+`is_js_decimal_literal`). Booleans are emitted as `!0` / `!1`, matching the
+`Boolean(…)` fold. Both are free identifiers, so only the bare callee folds —
+never a member access (`window.isNaN`). Added nine unit tests (a V8-oracle
+classification table for `js_to_number`, exact-value checks, through-pass folds
+for both predicates, the number-literal and `"Infinity"`-string cases, and
+non-literal/second-arg/member guards).
 ## [0.59.0] - 2026-06-26
 
 ### Added — fold static `Object.keys/values/entries({})` → `[]`

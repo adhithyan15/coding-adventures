@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck output-plan probe source line artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose selected
+  output probe source line counts/lists aligned with the selected output-probe
+  inventories in table, CSV, compact JSON, and header-keyed record exports,
+  matching Rust and TypeScript.
+
 - **Deck output-plan directive line artifacts** —
   selected `run_deck_analysis()` output-plan artifacts now expose selected
   output directive source line counts/lists beside directive scope inventories

@@ -177,8 +177,23 @@ public:
     // canUndo/canRedo bindings).
     Q_INVOKABLE bool undo();
     Q_INVOKABLE bool redo();
+    // ── Multi-sheet workbook ─────────────────────────────────────────
+    // Bare-A1 ops address the ACTIVE sheet; a formula may reference another
+    // (=Summary!A1) and recompute live when it changes. sheetNames() returns a map
+    // { "sheets": [names…], "active": index }; the mutators return true on success
+    // (false for a bad index / empty-or-duplicate name / can't-delete-last sheet);
+    // selectSheet switches the active sheet. After a sheet op the grid re-reads the
+    // active sheet from its top, the formula bar resyncs, and sheetsChanged() fires.
+    Q_INVOKABLE QVariantMap sheetNames() const;
+    Q_INVOKABLE int activeSheet() const;
+    Q_INVOKABLE bool selectSheet(int index);
+    Q_INVOKABLE bool addSheet(const QString &name);
+    Q_INVOKABLE bool renameSheet(int index, const QString &newName);
+    Q_INVOKABLE bool deleteSheet(int index);
 
 signals:
+    // The set of sheets or the active sheet changed — QML rebinds the tab bar.
+    void sheetsChanged();
     // viewportRows changed (after a recompute) — QML rebinds the grid.
     void changed();
     // The selection moved — QML rebinds cellAddress / selectedRaw / highlight.
@@ -200,6 +215,11 @@ private:
 
     // Re-derive totalRows_/totalCols_ from the engine's used_range + a margin.
     void computeExtent();
+    // Shared refresh after a sheet op (select/add/rename/delete): reset the
+    // infinite-view selection to the active sheet's top-left, recompute, regrow
+    // the extent, resync the formula bar, bump the revision, and emit the rebind
+    // signals (grid + tab bar).
+    void refreshAfterSheetOp();
     // The raw source of an A1 cell (the formula bar's text).
     QString rawAt(const QString &a1) const;
 

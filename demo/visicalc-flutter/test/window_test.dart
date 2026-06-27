@@ -333,4 +333,94 @@ void main() {
       expect(s.replaceAll('', 'q', true), 0);
     });
   });
+
+  // ── Multi-sheet workbook + cross-sheet references ──
+  // The workbook holds several sheets; bare-A1 ops address the ACTIVE sheet,
+  // while a formula reaches across with a qualifier (`=Summary!B3`). This proves
+  // the Dart ↔ C ABI path drives sheet management and cross-sheet recompute —
+  // the Flutter sibling of verify-infinite.mjs's multi-sheet section and the Qt
+  // tst_window multiSheet test.
+  group('multi-sheet workbook over dart:ffi', () {
+    test('cross-sheet reference computes and stays live', () {
+      final s = SpreadsheetSession();
+      addTearDown(s.dispose);
+
+      // Start on Sheet1 (the default). Add a second sheet and fill it.
+      expect(s.sheetNames()['sheets'], ['Sheet1']);
+      expect(s.addSheet('Summary'), isTrue);
+      expect(s.sheetNames()['sheets'], ['Sheet1', 'Summary']);
+
+      // Edit the Summary sheet (index 1): B3 = A1 + A2 = 300.
+      expect(s.setActiveSheet(1), isTrue);
+      expect(s.activeSheet(), 1);
+      s.setCell('A1', '100');
+      s.setCell('A2', '200');
+      s.setCell('B3', '=A1+A2');
+      expect(s.window(3, 2, 3, 2)[0][0], '300'); // Summary!B3
+
+      // Back on Sheet1, reach ACROSS with a qualifier.
+      expect(s.setActiveSheet(0), isTrue);
+      s.setCell('G1', '=Summary!B3');
+      expect(s.window(1, 7, 1, 7)[0][0], '300'); // Sheet1!G1 pulled across
+
+      // Editing a Summary input recomputes the cross-sheet dependent live.
+      expect(s.setActiveSheet(1), isTrue);
+      s.setCell('A1', '150'); // Summary!A1: 100 → 150, so B3 = 350
+      expect(s.setActiveSheet(0), isTrue);
+      expect(s.window(1, 7, 1, 7)[0][0], '350'); // Sheet1!G1 follows
+    });
+
+    test('renaming a sheet rewrites cross-sheet references', () {
+      final s = SpreadsheetSession();
+      addTearDown(s.dispose);
+      s.addSheet('Summary');
+      s.setActiveSheet(1);
+      s.setCell('B3', '=10+20'); // 30
+      s.setActiveSheet(0);
+      s.setCell('G1', '=Summary!B3');
+      expect(s.window(1, 7, 1, 7)[0][0], '30');
+
+      // Rename Summary → Totals; the qualifier in G1 is rewritten by the engine.
+      expect(s.renameSheet(1, 'Totals'), isTrue);
+      expect(s.sheetNames()['sheets'], ['Sheet1', 'Totals']);
+      expect(s.getRaw('G1'), contains('Totals')); // source now names Totals
+      expect(s.window(1, 7, 1, 7)[0][0], '30'); // still live after the rename
+    });
+
+    test('deleting a referenced sheet yields #REF!', () {
+      final s = SpreadsheetSession();
+      addTearDown(s.dispose);
+      s.addSheet('Summary');
+      s.setActiveSheet(1);
+      s.setCell('B3', '=5+5'); // 10
+      s.setActiveSheet(0);
+      s.setCell('G1', '=Summary!B3');
+      expect(s.window(1, 7, 1, 7)[0][0], '10');
+
+      // Delete Summary (index 1); the dangling cross-sheet ref becomes #REF!.
+      expect(s.deleteSheet(1), isTrue);
+      expect(s.sheetNames()['sheets'], ['Sheet1']);
+      expect(s.window(1, 7, 1, 7)[0][0], contains('#REF!'));
+
+      // The engine keeps at least one sheet: deleting the last one is a no-op.
+      expect(s.deleteSheet(0), isFalse);
+      expect(s.sheetNames()['sheets'], ['Sheet1']);
+    });
+
+    test('InfiniteSheetModel seeds a Summary sheet with a live cross-ref', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+
+      // The seed leaves Sheet1 active with a cross-sheet G1 = Summary!B3 = 300.
+      expect(m.sheetNames, ['Sheet1', 'Summary']);
+      expect(m.activeSheet, 0);
+      m.selectA1('G1');
+      expect(m.rowCells(1)[6], '300'); // Sheet1!G1 (col 7, 0-based index 6)
+
+      // Switch to Summary and confirm its own cells compute there.
+      m.selectSheet(1);
+      expect(m.activeSheet, 1);
+      expect(m.rowCells(3)[1], '300'); // Summary!B3 = A1+A2 = 100+200
+    });
+  });
 }

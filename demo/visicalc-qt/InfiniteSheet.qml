@@ -390,6 +390,77 @@ Item {
             }
         }
 
+        // ── Sheet tab bar ────────────────────────────────────────────────
+        // One tab per sheet, the active one highlighted. Click a tab to switch the
+        // sheet bare-A1 ops address; a formula can still reference another sheet by
+        // name (=Summary!A1) and recomputes live. Right-click a tab to delete it;
+        // the + button adds one. `sheetTick` re-reads sheetNames() on sheetsChanged.
+        RowLayout {
+            id: sheetTabs
+            Layout.fillWidth: true
+            Layout.leftMargin: 8
+            Layout.rightMargin: 8
+            Layout.topMargin: 6
+            spacing: 2
+            property int sheetTick: 0
+            property var info: {
+                sheetTabs.sheetTick; // re-evaluate when a sheet op fires
+                return doc ? doc.sheetNames() : ({ sheets: [], active: 0 });
+            }
+            Connections {
+                target: doc
+                function onSheetsChanged() { sheetTabs.sheetTick++ }
+            }
+            Repeater {
+                model: sheetTabs.info.sheets
+                delegate: Button {
+                    id: tab
+                    required property int index
+                    required property string modelData
+                    text: modelData
+                    implicitHeight: 26
+                    padding: 6
+                    leftPadding: 12
+                    rightPadding: 12
+                    font.pixelSize: 12
+                    contentItem: Text {
+                        text: tab.text
+                        color: index === sheetTabs.info.active ? "#e8eaed" : "#9aa3b2"
+                        font: tab.font
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    background: Rectangle {
+                        color: index === sheetTabs.info.active ? "#1b1e24"
+                             : (tab.hovered ? "#2b313a" : "#21252c")
+                        border.color: "#3a404b"
+                        radius: 5
+                        // accent top-border on the active tab
+                        Rectangle {
+                            visible: index === sheetTabs.info.active
+                            anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+                            height: 2; color: "#4aa3ff"; radius: 1
+                        }
+                    }
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Switch to " + modelData + " · right-click to delete"
+                    onClicked: if (doc) doc.selectSheet(index)
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.RightButton
+                        onClicked: if (doc && doc.sheetNames().sheets.length > 1) doc.deleteSheet(tab.index)
+                    }
+                }
+            }
+            Button {
+                text: "+"
+                implicitHeight: 26
+                padding: 6; leftPadding: 10; rightPadding: 10
+                ToolTip.visible: hovered
+                ToolTip.text: "Add a sheet"
+                onClicked: if (doc) doc.addSheet("Sheet" + (doc.sheetNames().sheets.length + 1))
+            }
+        }
+
         // ── Column-letter header (frozen vertically, scrolls horizontally) ──
         RowLayout {
             Layout.fillWidth: true

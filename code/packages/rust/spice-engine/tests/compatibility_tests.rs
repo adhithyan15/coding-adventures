@@ -5,8 +5,8 @@ use spice_engine::{
     format_release_readiness_report, release_readiness_gates, resolve_deck_analyses,
     resolve_deck_fourier, resolve_deck_functions, resolve_deck_initial_conditions,
     resolve_deck_measurements, resolve_deck_outputs, resolve_deck_parameters, resolve_deck_sources,
-    select_deck_analysis_plan, select_deck_output_probes, CompatibilityDeck,
-    CompatibilityGoldenValue, CompatibilityOracle,
+    select_deck_analysis_plan, select_deck_output_probe_lines, select_deck_output_probes,
+    CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
 };
 
 #[test]
@@ -1147,6 +1147,20 @@ V1 in 0 DC 1
         )
         .unwrap(),
         vec!["V(out)", "I(V1)", "V(clk)", "I(V2)", "V(extra)"]
+    );
+    assert_eq!(
+        select_deck_output_probe_lines(
+            &[
+                ".save V(out)",
+                ".print dc V(out) I(V1)",
+                ".probe ac V(freq)",
+                ".end",
+            ]
+            .join("\n"),
+            "dc",
+        )
+        .unwrap(),
+        vec![1, 2]
     );
 }
 
