@@ -34,6 +34,9 @@ All notable changes to this package will be documented in this file.
   service path.
 - Added browser dashboard service and authorized API catalog panels backed by
   the native local-controller discovery routes.
+- Added browser dashboard desired-state target controls for light on/off and
+  brightness so the local controller can supervise intended state through the
+  existing runtime-authorized native API.
 - Added a native readiness checklist route with actionable links for registry,
   topology, state coverage, event bus, discovery, supervisor, authorization,
   and desired-state checks.

@@ -483,12 +483,14 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             <p>${value}</p>
             <div class="actions row">
               ${canToggle ? `<button type="button" data-service="turn_on" data-entity="${entity.home_assistant_entity_id}">Turn on</button><button type="button" data-service="turn_off" data-entity="${entity.home_assistant_entity_id}">Turn off</button>` : ""}
+              ${canToggle ? `<button type="button" data-desired-action="on" data-entity="${entity.home_assistant_entity_id}">Target on</button><button type="button" data-desired-action="off" data-entity="${entity.home_assistant_entity_id}">Target off</button>` : ""}
             </div>
             ${canSetBrightness ? `
               <label class="range-control">
                 <span class="muted">Brightness <strong data-brightness-value="${entity.home_assistant_entity_id}">${brightnessCurrent}%</strong></span>
                 <input type="range" min="${brightnessMin}" max="${brightnessMax}" step="${brightnessStep}" value="${brightnessCurrent}" data-brightness-input="${entity.home_assistant_entity_id}">
                 <button type="button" data-service="set_brightness" data-entity="${entity.home_assistant_entity_id}" data-brightness-for="${entity.home_assistant_entity_id}">Set brightness</button>
+                <button type="button" data-desired-action="brightness" data-entity="${entity.home_assistant_entity_id}" data-brightness-for="${entity.home_assistant_entity_id}">Target brightness</button>
               </label>
             ` : ""}
           </article>
@@ -595,7 +597,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       const serviceButton = event.target.closest("button[data-service]");
       const sceneButton = event.target.closest("button[data-scene]");
       const clearDesiredButton = event.target.closest("button[data-clear-desired]");
-      const button = serviceButton || sceneButton || clearDesiredButton;
+      const desiredButton = event.target.closest("button[data-desired-action]");
+      const button = serviceButton || sceneButton || clearDesiredButton || desiredButton;
       if (!button) {
         return;
       }
@@ -620,11 +623,29 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             body: JSON.stringify({entity_id: sceneButton.dataset.scene})
           });
           log(`scene.turn_on accepted for ${sceneButton.dataset.scene}`);
-        } else {
+        } else if (clearDesiredButton) {
           await json(`/api/smart_home/desired_states/${encodeURIComponent(clearDesiredButton.dataset.clearDesired)}`, {
             method: "DELETE"
           });
           log(`desired state cleared for ${clearDesiredButton.dataset.clearDesired}`);
+        } else {
+          const desiredState = {};
+          if (desiredButton.dataset.desiredAction === "brightness") {
+            const input = brightnessInputFor(desiredButton.dataset.brightnessFor);
+            desiredState["light.brightness"] = input ? Number(input.value) : 100;
+          } else {
+            desiredState["light.on_off"] = desiredButton.dataset.desiredAction === "on";
+          }
+          await json(`/api/smart_home/desired_states/${encodeURIComponent(desiredButton.dataset.entity)}`, {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify({
+              desired_state: desiredState,
+              requested_by: "agent:dashboard",
+              command_timeout_ms: 3000
+            })
+          });
+          log(`desired ${desiredButton.dataset.desiredAction} target accepted for ${desiredButton.dataset.entity}`);
         }
         await render();
       } catch (error) {
@@ -7418,6 +7439,9 @@ mod tests {
         assert!(body.contains("/api/services/light/"));
         assert!(body.contains("data-brightness-input"));
         assert!(body.contains("brightness_pct"));
+        assert!(body.contains("data-desired-action"));
+        assert!(body.contains(r#"requested_by: "agent:dashboard""#));
+        assert!(body.contains("command_timeout_ms: 3000"));
         assert!(body.contains("/api/services/scene/turn_on"));
         assert!(body.contains("/api/smart_home/desired_states/"));
     }
