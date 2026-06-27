@@ -39,6 +39,8 @@ All notable changes to this package will be documented in this file.
   existing runtime-authorized native API.
 - Added browser dashboard command-result and authorization-decision audit
   panels backed by the existing local-controller audit routes.
+- Added browser dashboard room, device, and bridge topology panels backed by
+  the existing local-controller inventory routes.
 - Added a native readiness checklist route with actionable links for registry,
   topology, state coverage, event bus, discovery, supervisor, authorization,
   and desired-state checks.

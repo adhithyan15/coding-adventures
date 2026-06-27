@@ -298,6 +298,27 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       </div>
       <div class="panel">
         <div class="row">
+          <h2>Rooms</h2>
+          <span class="muted">Topology and coverage</span>
+        </div>
+        <div id="rooms" class="cards"></div>
+      </div>
+      <div class="panel">
+        <div class="row">
+          <h2>Devices</h2>
+          <span class="muted">Bridge inventory</span>
+        </div>
+        <div id="devices" class="cards"></div>
+      </div>
+      <div class="panel">
+        <div class="row">
+          <h2>Bridges</h2>
+          <span class="muted">Integration health</span>
+        </div>
+        <div id="bridges" class="cards"></div>
+      </div>
+      <div class="panel">
+        <div class="row">
           <h2>Scenes</h2>
           <span class="muted">Run saved room states</span>
         </div>
@@ -365,9 +386,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     const els = {
       activity: document.querySelector("#activity"),
       authorizationDecisions: document.querySelector("#authorization-decisions"),
+      bridges: document.querySelector("#bridges"),
       checks: document.querySelector("#checks"),
       commandResults: document.querySelector("#command-results"),
       desired: document.querySelector("#desired"),
+      devices: document.querySelector("#devices"),
       entities: document.querySelector("#entities"),
       gaps: document.querySelector("#gaps"),
       history: document.querySelector("#history"),
@@ -375,6 +398,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       log: document.querySelector("#log"),
       refresh: document.querySelector("#refresh"),
       routes: document.querySelector("#routes"),
+      rooms: document.querySelector("#rooms"),
       scenes: document.querySelector("#scenes"),
       services: document.querySelector("#services"),
       stateCount: document.querySelector("#state-count"),
@@ -487,6 +511,51 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           </span>
         </div>
       `).join("") || `<p class="muted">No routes</p>`;
+    };
+
+    const renderRooms = (inventory) => {
+      const rooms = inventory.rooms || [];
+      els.rooms.innerHTML = rooms.map((room) => `
+        <article class="entity-card">
+          <div class="row" style="justify-content: space-between;">
+            <h3>${room.room_id}</h3>
+            <span class="${statusClass(room.has_attention || room.has_state_gaps ? "attention" : "ready")}">
+              ${room.has_state_gaps ? "state gaps" : "ready"}
+            </span>
+          </div>
+          <p>${room.device_count} devices | ${room.entity_count} entities | ${room.scene_count} scenes</p>
+          <p class="muted">${room.online_devices} online, ${room.scene_action_count} scene actions</p>
+        </article>
+      `).join("") || `<p class="muted">No rooms</p>`;
+    };
+
+    const renderDevices = (inventory) => {
+      const devices = inventory.devices || [];
+      els.devices.innerHTML = devices.map((device) => `
+        <article class="entity-card">
+          <div class="row" style="justify-content: space-between;">
+            <h3>${device.name}</h3>
+            <span class="${statusClass(device.health)}">${device.health}</span>
+          </div>
+          <p class="muted">${device.device_id} | ${device.bridge_id}</p>
+          <p>${device.entity_count} entities | ${device.capability_count} capabilities</p>
+          <p class="muted">${device.room_id || "unassigned"} | ${device.manufacturer} ${device.model}</p>
+        </article>
+      `).join("") || `<p class="muted">No devices</p>`;
+    };
+
+    const renderBridges = (inventory) => {
+      const bridges = inventory.bridges || [];
+      els.bridges.innerHTML = bridges.map((bridge) => `
+        <article class="entity-card">
+          <div class="row" style="justify-content: space-between;">
+            <h3>${bridge.bridge_id}</h3>
+            <span class="${statusClass(bridge.health)}">${bridge.health}</span>
+          </div>
+          <p>${bridge.integration_id} | ${bridge.transport}</p>
+          <p class="muted">${bridge.device_count} devices | ${bridge.entity_count} entities | ${bridge.room_count} rooms</p>
+        </article>
+      `).join("") || `<p class="muted">No bridges</p>`;
     };
 
     const renderEntities = (states) => {
@@ -603,6 +672,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           history,
           services,
           routes,
+          rooms,
+          devices,
+          bridges,
           commandResults,
           authorizationDecisions
         ] = await Promise.all([
@@ -614,6 +686,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           json("/api/smart_home/state_history?limit=12"),
           json("/api/smart_home/services?limit=8"),
           json("/api/smart_home/api?mutating=true&authorized=true"),
+          json("/api/smart_home/rooms?sort=scene_count"),
+          json("/api/smart_home/devices?limit=8"),
+          json("/api/smart_home/bridges?limit=8"),
           json("/api/smart_home/command_results?limit=8"),
           json("/api/smart_home/authorization_decisions?limit=8")
         ]);
@@ -636,6 +711,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         renderChecks(readiness);
         renderServices(services);
         renderRoutes(routes);
+        renderRooms(rooms);
+        renderDevices(devices);
+        renderBridges(bridges);
         renderScenes(scenes);
         renderEntities(states);
         renderDesiredStates(desiredStates);
@@ -6473,6 +6551,9 @@ mod tests {
             assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
             assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
+            assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
+            assert!(body.contains("json(\"/api/smart_home/devices?limit=8\")"));
+            assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/command_results?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/authorization_decisions?limit=8\")"));
             assert!(body.contains("/api/services/light/"));
@@ -7509,6 +7590,9 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
         assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
         assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
+        assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
+        assert!(body.contains("json(\"/api/smart_home/devices?limit=8\")"));
+        assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
         assert!(body.contains("json(\"/api/smart_home/command_results?limit=8\")"));
         assert!(body.contains("json(\"/api/smart_home/authorization_decisions?limit=8\")"));
         assert!(body.contains("/api/services/light/"));
