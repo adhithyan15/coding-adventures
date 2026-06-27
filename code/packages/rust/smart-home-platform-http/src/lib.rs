@@ -395,6 +395,20 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/states", move |request| {
+            runtime_states_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/states/:entity_id", move |request| {
+            runtime_state_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/services", move |request| {
             runtime_services_response(&runtime, request)
         });
@@ -1006,6 +1020,33 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/states",
+        category: "states",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[
+            "capability_id",
+            "confidence",
+            "domain",
+            "has_state",
+            "kind",
+            "limit",
+            "source",
+            "stale",
+        ],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/states/:entity_id",
+        category: "states",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/services",
         category: "services",
         surface: "smart_home",
@@ -1338,6 +1379,45 @@ fn api_catalog_response(request: &WebRequest) -> WebResponse {
         Err(error) => return api_error_response(error),
     };
     WebResponse::json(api_catalog_json(&routes).into_bytes())
+}
+
+fn runtime_states_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let entities = match runtime_state_entities(&runtime_guard, request, runtime.now_ms) {
+        Ok(entities) => entities,
+        Err(error) => return api_error_response(error),
+    };
+    WebResponse::json(states_registry_json(&entities, &runtime_guard, runtime.now_ms).into_bytes())
+}
+
+fn runtime_state_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(target) = request.route_params.get("entity_id") else {
+        return json_error(400, "missing entity_id");
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let entity = match runtime_guard
+        .registry()
+        .entities()
+        .find(|entity| entity_matches_external_id(entity, target))
+    {
+        Some(entity) => entity,
+        None => {
+            return api_error_response(ApiError::not_found(format!("state `{target}` not found")));
+        }
+    };
+    WebResponse::json(state_registry_json(entity, &runtime_guard, runtime.now_ms).into_bytes())
 }
 
 fn runtime_services_response(
@@ -2267,6 +2347,83 @@ fn authorization_subject_json(subject: &AuthorizationSubject) -> String {
     }
 }
 
+fn states_registry_json(entities: &[&Entity], runtime: &SmartHomeRuntime, now_ms: u64) -> String {
+    let with_state = entities
+        .iter()
+        .filter(|entity| entity.state.is_some())
+        .count();
+    let stale = entities
+        .iter()
+        .filter(|entity| {
+            entity
+                .state
+                .as_ref()
+                .is_none_or(|snapshot| snapshot.is_stale_at(now_ms))
+        })
+        .count();
+    let optimistic = entities
+        .iter()
+        .filter(|entity| {
+            entity
+                .state
+                .as_ref()
+                .is_some_and(|snapshot| snapshot.confidence == StateConfidence::Optimistic)
+        })
+        .count();
+
+    format!(
+        "{{\"summary\":{{\"total_entities\":{},\"entities_with_state\":{},\"entities_without_state\":{},\"stale_entities\":{},\"optimistic_entities\":{}}},\"states\":[{}]}}",
+        entities.len(),
+        with_state,
+        entities.len().saturating_sub(with_state),
+        stale,
+        optimistic,
+        entities
+            .iter()
+            .map(|entity| state_registry_json(entity, runtime, now_ms))
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn state_registry_json(entity: &Entity, runtime: &SmartHomeRuntime, now_ms: u64) -> String {
+    let device = runtime.registry().device(&entity.device_id);
+    let bridge_id = device.map(|device| device.bridge_id.as_str());
+    let room_id = device.and_then(|device| device.room_id.as_deref());
+    let capability_ids = entity
+        .capabilities
+        .iter()
+        .map(|capability| capability.capability_id.as_str());
+    let snapshot = entity.state.as_ref();
+
+    format!(
+        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"device_id\":{},\"bridge_id\":{},\"room_id\":{},\"name\":{},\"domain\":{},\"entity_kind\":{},\"has_state\":{},\"stale\":{},\"value\":{},\"source\":{},\"confidence\":{},\"observed_at_ms\":{},\"received_at_ms\":{},\"expires_at_ms\":{},\"capability_ids\":[{}]}}",
+        json_string(entity.entity_id.as_str()),
+        json_string(home_assistant_entity_id(entity)),
+        json_string(entity.device_id.as_str()),
+        optional_str_json(bridge_id),
+        optional_str_json(room_id),
+        json_string(&entity.name),
+        json_string(entity_domain(entity.kind)),
+        json_string(entity_kind_label(entity.kind)),
+        snapshot.is_some(),
+        snapshot.is_none_or(|snapshot| snapshot.is_stale_at(now_ms)),
+        snapshot
+            .map(|snapshot| value_json(&snapshot.value))
+            .unwrap_or_else(|| "null".to_string()),
+        snapshot
+            .map(|snapshot| json_string(state_source_label(snapshot.source)))
+            .unwrap_or_else(|| "null".to_string()),
+        snapshot
+            .map(|snapshot| json_string(state_confidence_label(snapshot.confidence)))
+            .unwrap_or_else(|| "null".to_string()),
+        optional_u64_json(snapshot.map(|snapshot| snapshot.observed_at_ms)),
+        optional_u64_json(snapshot.map(|snapshot| snapshot.received_at_ms)),
+        optional_u64_json(snapshot.and_then(|snapshot| snapshot.expires_at_ms)),
+        json_id_array(capability_ids),
+    )
+}
+
 fn entities_registry_json(entities: &[&Entity], runtime: &SmartHomeRuntime, now_ms: u64) -> String {
     let stateful_entities = entities
         .iter()
@@ -3187,6 +3344,72 @@ fn runtime_entities<'a>(
         .filter(|entity| {
             commandable.is_none_or(|commandable| {
                 entity.capabilities.iter().any(capability_allows_command) == commandable
+            })
+        })
+        .collect::<Vec<_>>();
+
+    entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
+    entities.truncate(limit);
+    Ok(entities)
+}
+
+fn runtime_state_entities<'a>(
+    runtime: &'a SmartHomeRuntime,
+    request: &WebRequest,
+    now_ms: u64,
+) -> Result<Vec<&'a Entity>, ApiError> {
+    let domain = query_string(request, "domain");
+    let kind = query_string(request, "kind")
+        .map(entity_kind_from_label)
+        .transpose()?;
+    let capability_id = query_string(request, "capability_id");
+    let has_state = query_bool(request, "has_state")?;
+    let stale = query_bool(request, "stale")?;
+    let confidence = query_string(request, "confidence")
+        .map(state_confidence_from_label)
+        .transpose()?;
+    let source = query_string(request, "source")
+        .map(state_source_from_label)
+        .transpose()?;
+    let limit = query_limit(request, 100, 1_000)?;
+
+    let mut entities = runtime
+        .registry()
+        .entities()
+        .filter(|entity| domain.is_none_or(|domain| entity_domain(entity.kind) == domain))
+        .filter(|entity| kind.is_none_or(|kind| entity.kind == kind))
+        .filter(|entity| {
+            capability_id.is_none_or(|capability_id| {
+                entity
+                    .capabilities
+                    .iter()
+                    .any(|capability| capability.capability_id.as_str() == capability_id)
+            })
+        })
+        .filter(|entity| has_state.is_none_or(|has_state| entity.state.is_some() == has_state))
+        .filter(|entity| {
+            stale.is_none_or(|stale| {
+                entity
+                    .state
+                    .as_ref()
+                    .is_none_or(|snapshot| snapshot.is_stale_at(now_ms))
+                    == stale
+            })
+        })
+        .filter(|entity| {
+            confidence.is_none_or(|confidence| {
+                entity
+                    .state
+                    .as_ref()
+                    .is_some_and(|snapshot| snapshot.confidence == confidence)
+            })
+        })
+        .filter(|entity| {
+            source.is_none_or(|source| {
+                entity
+                    .state
+                    .as_ref()
+                    .is_some_and(|snapshot| snapshot.source == source)
             })
         })
         .collect::<Vec<_>>();
@@ -4818,12 +5041,36 @@ fn state_source_label(source: StateSource) -> &'static str {
     }
 }
 
+fn state_source_from_label(source: &str) -> Result<StateSource, ApiError> {
+    match source {
+        "event_stream" | "event-stream" => Ok(StateSource::EventStream),
+        "poll" => Ok(StateSource::Poll),
+        "optimistic_command" | "optimistic-command" => Ok(StateSource::OptimisticCommand),
+        "manual" => Ok(StateSource::Manual),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported state source `{other}`"
+        ))),
+    }
+}
+
 fn state_confidence_label(confidence: StateConfidence) -> &'static str {
     match confidence {
         StateConfidence::Confirmed => "confirmed",
         StateConfidence::Optimistic => "optimistic",
         StateConfidence::Stale => "stale",
         StateConfidence::Unknown => "unknown",
+    }
+}
+
+fn state_confidence_from_label(confidence: &str) -> Result<StateConfidence, ApiError> {
+    match confidence {
+        "confirmed" => Ok(StateConfidence::Confirmed),
+        "optimistic" => Ok(StateConfidence::Optimistic),
+        "stale" => Ok(StateConfidence::Stale),
+        "unknown" => Ok(StateConfidence::Unknown),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported state confidence `{other}`"
+        ))),
     }
 }
 
@@ -5602,6 +5849,66 @@ mod tests {
         assert_eq!(one_response.status, 200);
         assert!(one_body.contains(r#""name":"Kitchen Light""#));
         assert!(one_body.contains(r#""domain":"light""#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_ready_state_registry() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let missing_states = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/states?domain=light&has_state=false&stale=true",
+            ))
+            .into(),
+        );
+
+        assert!(missing_states.contains(r#""total_entities":1"#));
+        assert!(missing_states.contains(r#""entities_without_state":1"#));
+        assert!(missing_states.contains(r#""entity_id":"entity-light-1""#));
+        assert!(missing_states.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(missing_states.contains(r#""has_state":false"#));
+        assert!(missing_states.contains(r#""value":null"#));
+        assert!(missing_states.contains(r#""stale":true"#));
+
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/services/light/turn_on",
+                r#"{"entity_id":"light.entity_light_1","brightness_pct":75}"#,
+            ))
+            .into();
+        assert_eq!(response.status, 200);
+
+        let optimistic_states = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/states?domain=light&has_state=true&confidence=optimistic&source=optimistic_command",
+            ))
+            .into(),
+        );
+        assert!(optimistic_states.contains(r#""total_entities":1"#));
+        assert!(optimistic_states.contains(r#""entities_with_state":1"#));
+        assert!(optimistic_states.contains(r#""optimistic_entities":1"#));
+        assert!(optimistic_states.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(optimistic_states.contains(r#""source":"optimistic_command""#));
+        assert!(optimistic_states.contains(r#""confidence":"optimistic""#));
+        assert!(optimistic_states.contains(r#""light.brightness":75"#));
+
+        let detail_response: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/states/light.entity_light_1",
+            ))
+            .into();
+        let detail = response_body(detail_response.clone());
+        assert_eq!(detail_response.status, 200);
+        assert!(detail.contains(r#""entity_id":"entity-light-1""#));
+        assert!(detail.contains(r#""has_state":true"#));
+
+        let invalid_confidence: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/states?confidence=maybe"))
+            .into();
+        assert_eq!(invalid_confidence.status, 400);
     }
 
     #[test]
