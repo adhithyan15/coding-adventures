@@ -189,6 +189,40 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 named string values. Non-escaping top-level string `define`s
+    // now stay in `main` as typed `str_const` registers, so shared string ops can
+    // consume them without the dynamic `global_set`/`global_get` path. This
+    // proves non-literal `str_concat` feeding `str_len` while staying within the
+    // immutable top-level value subset; reassigned string variables remain a
+    // separate E4/BA4 frontend slice.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define a \"AB\") (define b \"CDE\") (string-length (string-append a b))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 named string equality driving control flow. The `string=?`
+    // result is the shared i64 boolean consumed by the existing `if` lowering,
+    // which makes the observable value depend on the string operation rather
+    // than on a folded top-level constant.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define s \"HELLO\") (if (string=? s \"HELLO\") 42 0)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 named string indexing. This reuses the landed in-bounds
+    // `str_index` backend support but proves the source string can be a named
+    // top-level value rather than only a direct literal at the call site.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define s \"ABC\") (string-ref s 2)",
+        expect: Expect::Exit(67),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =

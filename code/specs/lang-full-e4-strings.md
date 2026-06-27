@@ -1,8 +1,8 @@
 # LANG-FULL E4 — Strings (design spec)
 
-**Status:** IR + reference VM slice implemented; BASIC literal output and Twig
-literal length/equality/append-length footholds run on all seven backends; richer
-frontend and backend string work remains.
+**Status:** IR + reference VM slice implemented; BASIC literal output, Twig
+literal metadata/index proofs, and immutable top-level Twig string values run on
+all seven backends; richer frontend and backend string work remains.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
 **Unlocks:** Dartmouth BASIC strings + string `PRINT` (BA4), ALGOL 60 strings +
 `print`/`output` I/O (AL4), Twig strings on the code-gen backends (TW4), and any
@@ -171,11 +171,12 @@ proof:
 
 ⇒ stdout `HELLO` on every backend the toolchain is present for. The landed Twig
 footholds also prove direct literal `str_len`, `str_index`, `str_eq`, and
-`str_concat`-feeding-`str_len` via exit codes `5`/`66`/`1`/`5`. Follow-up
-proofs exercise non-literal `str_concat` + `str_len` observably, non-literal
-`str_eq` driving a branch (`IF A$ = "Y" THEN PRINT 1 ELSE PRINT 0`), and a
-**bounds-trap** proof (`str_index` out of range) confirming the check fires
-(aborts non-zero) on each backend.
+`str_concat`-feeding-`str_len` via exit codes `5`/`66`/`1`/`5`. The named-value
+proofs exercise immutable top-level string values with `str_concat` + `str_len`,
+`str_eq` driving an `if`, and `str_index` via exit codes `5`/`42`/`67` on every
+backend. Follow-up proofs still need the **bounds-trap** case (`str_index` out
+of range) confirming the check fires (aborts non-zero) on each backend, plus
+full source-language string variables.
 
 `run_native` runs the host arch, so `NativeAot` exercises aarch64 locally and
 x86_64 on CI (as for E3/E5). The `x86-simulator` harness can additionally run the
@@ -213,6 +214,12 @@ merge before the next:
    deliberately still a direct-literal foothold: native and LLVM fold to integer
    consts, WASM uses literal data plus a guarded byte load, and JVM/CLR use
    managed `String` metadata/index/equality/concat for printable ASCII.
+3a. ✅ **E4-named-value ops proofs** — immutable top-level Twig string value
+   defines stay in `main` as typed `str_const` registers, so named values can
+   feed `str_concat`+`str_len`, `str_eq` in an `if`, and `str_index`; matrix
+   `Prog`s return `5`, `42`, and `67` on native-AOT + VM + JIT + LLVM + WASM +
+   JVM + CLR. This is still not full variable semantics: captured/reassigned
+   strings and `let` string slots wait for the broader string representation.
 4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
    diverge.)
@@ -220,9 +227,9 @@ merge before the next:
    (length-prefixed rodata literals + heap `str_concat` + explicit `str_index`
    guard). Native literal output is already proven through the heap-byte foothold;
    this item is now the richer ops/representation slice.
-6. **E4-ops-proofs** — matrix programs for non-literal `str_concat`+`str_len`,
-   non-literal `str_eq` driving a branch, plus the `str_index` out-of-bounds
-   **trap** proof, across every backend.
+6. ◑ **E4-ops-proofs** — named-value `str_concat`+`str_len`, `str_eq` driving a
+   branch, and named `str_index` now run across every backend. Remaining: the
+   `str_index` out-of-bounds **trap** proof across every backend.
 7. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`; string
    *variables* and reassignment in each frontend; ALGOL `string` arrays; Unicode
    codepoint/grapheme semantics; the dynamic-`any` Twig string path (needs broader

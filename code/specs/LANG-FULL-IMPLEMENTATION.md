@@ -215,13 +215,16 @@ multiple languages; close an enabler before the features that depend on it.
   `PRINT "HELLO"` runs on all 7 backends, and Twig `(string-length "HELLO")`,
   `(string-ref "ABC" 1)`, `(string=? "HELLO" "HELLO")`, plus
   `(string-length (string-append "AB" "CDE"))` prove direct literal
-  `str_len`/`str_index`/`str_eq`/`str_concat` on all 7 backends. WASM owns the literal-output
+  `str_len`/`str_index`/`str_eq`/`str_concat` on all 7 backends. Twig immutable
+  top-level string value defines now also feed those same ops: named
+  `str_concat`+`str_len`, `str_eq` driving an `if`, and named `str_index` all run
+  on all 7 backends. WASM owns the literal-output
   shape with a linear-memory data segment + `env.__print_str(ptr,len)`, LLVM owns
   the static private `{len,bytes}` global + `@__print_str` shape, native AOT owns
   the heap-byte `alloc_bytes` + `store_byte` + `print_string` shape, and JVM/CLR
   own it with `ldc`/`ldstr` + `PrintStream.print(String)`/`Console.Write(string)`
-  plus host string metadata/index calls; non-literal `str_index`/`str_concat`/
-  `str_eq`, the out-of-bounds trap matrix proof, and string variables remain.
+  plus host string metadata/index calls; the out-of-bounds trap matrix proof,
+  reassignable/captured string variables, and broader dynamic string values remain.
   Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR

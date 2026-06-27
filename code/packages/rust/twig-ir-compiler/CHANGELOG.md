@@ -1,5 +1,21 @@
 # Changelog — twig-ir-compiler
 
+## [0.27.0] — 2026-06-27 (LANG-FULL E4 — named string values)
+
+Immutable top-level string value defines now lower to `str_const` registers when
+they are not captured by a lambda or forced through a forward reference. Reads of
+those names stay in `main`, so `string-length`, `string-append`, `string=?`, and
+`string-ref` can lower to the shared E4 `str_len`/`str_concat`/`str_eq`/
+`str_index` ops over named string values instead of falling back to dynamic
+globals or `call_builtin`.
+
+This deliberately does not claim full string variable semantics: `let`/reassignable
+string slots, captured strings, and dynamic string values still stay on their
+existing paths until the broader E4 string representation lands.
+
+Verified by compiler tests for named string length, concat length, equality in a
+branch, and indexing, plus new `lang-aot` matrix rows across all seven backends.
+
 ## [0.26.0] — 2026-06-27 (LANG-FULL E4 — literal string index)
 
 Literal `(string-ref "..." i)` now lowers to the shared E4 `str_index` path:
