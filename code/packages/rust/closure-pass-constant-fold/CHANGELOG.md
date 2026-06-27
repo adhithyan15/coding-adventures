@@ -31,6 +31,30 @@ never a member access (`window.isNaN`). Added nine unit tests (a V8-oracle
 classification table for `js_to_number`, exact-value checks, through-pass folds
 for both predicates, the number-literal and `"Infinity"`-string cases, and
 non-literal/second-arg/member guards).
+## [0.53.0] - 2026-06-26
+
+### Added — fold static `Number.parseInt(…)` / `Number.parseFloat(…)` → numeric
+
+The ES2015 static methods `Number.parseInt(string[, radix])` and
+`Number.parseFloat(string)` (ECMAScript §21.1.2.12/.13) now fold to a numeric
+literal. These are the *same function objects* as the global
+`parseInt`/`parseFloat` (`Number.parseInt === parseInt`), so they run the
+identical algorithm — the fold reuses the existing `fold_parse_int` /
+`fold_parse_float` helpers:
+
+- `Number.parseInt("12px")` → `12`, `Number.parseInt("FF", 16)` → `255`,
+  `Number.parseInt("0x1F")` → `31`, `Number.parseInt("101", 2)` → `5`;
+- `Number.parseFloat("3.14abc")` → `3.14`, `Number.parseFloat("1e3")` → `1000`.
+
+They dispatch through the `MemberExpression` callee arm (alongside the
+`String.fromCharCode`/`fromCodePoint` and `Number.isInteger` statics), so only
+the bare global `Number.parseX(...)` folds — never a shadowed receiver
+(`n.parseInt(...)`). As with the global forms, a `NaN`/`±Infinity` result is
+DECLINED (no literal token to substitute: `Number.parseInt("")`,
+`Number.parseFloat("Infinity")`), and `parseInt` only folds with a missing or
+integer-literal radix. Added five unit tests (V8-oracle through-pass tables for
+both methods incl. a radix, the NaN/Infinity declines, the fractional-radix and
+non-string-arg declines, and the non-`Number`-receiver guard).
 ## [0.52.0] - 2026-06-26
 
 ### Added — fold static `Number.isInteger/isFinite/isNaN(…)` → boolean literal

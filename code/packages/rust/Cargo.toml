@@ -219,6 +219,7 @@ members = [
     "logic-core",
     "lookup-core",
     "logic-engine",
+    "math-frontend",
     "adjudication-ir",
     "llm-cache",
     "llm-gateway",
