@@ -488,10 +488,11 @@ backend immediately) come before the enabler-dependent items.
   scalar literals now lower to `Operand::Float`; scalar arithmetic/variables,
   `DEF FN`, `IF`, `FOR`, and `PRINT` run as `f64`; array/index integer
   boundaries use `real_to_int_trunc`; and `PRINT` has a staged
-  `__basic_print_real(x: f64)` helper for whole-valued output. **Verified by
-  RUNNING** `PRINT 42` and `PRINT 6.0 * 7.0` ⇒ `42` on
-  native/LLVM/WASM/JVM/CLR/VM/JIT. Remaining BA7 slices: fractional formatting +
-  `E` notation (6 significant digits, no leading zero), and real `DATA`/arrays.
+  `__basic_print_real(x: f64)` helper for whole-valued and ordinary
+  fixed-decimal output. **Verified by RUNNING** `PRINT 42`, `PRINT 6.0 * 7.0` ⇒
+  `42`, and `3.14`/`.25`/`-2.5` fractional output on
+  native/LLVM/WASM/JVM/CLR/VM/JIT. Remaining BA7 slices: 6-significant-digit
+  rounding + `E` notation, and real `DATA`/arrays.
 
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`
@@ -581,7 +582,8 @@ backend immediately) come before the enabler-dependent items.
 ## Suggested global ordering
 
 1. **BA7 numeric tail** — finish BASIC floating point after the BA7-1a/1b scalar
-   cutover: fractional formatting, `E` notation, and real DATA/arrays.
+   cutover and BA7-2a fixed-decimal foothold: 6-significant-digit rounding,
+   `E` notation, and real DATA/arrays.
 2. **E4 strings** — unblock BASIC string `PRINT`, ALGOL string I/O, and Twig strings
    with one shared string value model instead of per-frontend shortcuts.
 3. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record

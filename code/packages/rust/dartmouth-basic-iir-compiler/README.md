@@ -38,10 +38,11 @@ just use `lang-aot foo.bas`, which does the routing for you).
 
 BA7 scalar BASIC now follows Dartmouth's real numeric model: numeric literals
 (including integer-spelled `42`), scalar variables, arithmetic, `DEF FN`,
-`IF`, `FOR`, and `PRINT` lower as `f64`, and whole-valued real output (`PRINT
-6.0 * 7.0`) runs through the shared E3/E8 backends. Integer `i64` remains
-explicit at structural boundaries: line numbers, `DIM` bounds, DATA storage,
-array subscripts/elements, and GOSUB return stacks. Fractional formatting and
+`IF`, `FOR`, and `PRINT` lower as `f64`. Whole-valued real output (`PRINT 6.0 *
+7.0`) and ordinary fixed-decimal fractional output (`3.14`, `.25`, `-2.5`) run
+through the shared E3/E8 backends. Integer `i64` remains explicit at structural
+boundaries: line numbers, `DIM` bounds, DATA storage, array subscripts/elements,
+and GOSUB return stacks. Full six-significant-digit rounding, `E` notation, and
 real `DATA`/arrays remain BA7 follow-ups; strings are deferred to LANG77.  See
 [CHANGELOG.md](CHANGELOG.md) for the full table.
 
@@ -74,12 +75,14 @@ runs, BA2 needed **zero** backend changes.  (String `PRINT` items still wait for
 LANG77 / E4; `,` is a single space rather than a true 14-column print zone — a
 documented, deferred approximation.)
 
-**BA7-1 scalar real arithmetic** makes scalar BASIC values `f64` even when the
-source spells them as integers. `PRINT` chooses `__basic_print_real` for numeric
-items; that helper currently truncates whole-valued reals via E8
-`real_to_int_trunc` and delegates to the BA2 digit printer. The matrix proofs
-for `PRINT 42` and `PRINT 6.0 * 7.0` ⇒ `42` run on native / LLVM / WASM / JVM /
-CLR / VM / JIT without adding backend ops.
+**BA7-1/2a scalar real arithmetic and fixed-decimal `PRINT`** makes scalar BASIC
+values `f64` even when the source spells them as integers. `PRINT` chooses
+`__basic_print_real` for numeric items; that helper truncates whole-valued reals
+via E8 `real_to_int_trunc`, delegates integer parts to the BA2 digit printer,
+and emits up to three trimmed fractional digits for ordinary fixed-decimal
+values. The matrix proofs for `PRINT 42`, `PRINT 6.0 * 7.0` ⇒ `42`, and
+`3.14`/`.25`/`-2.5` fractional output run on native / LLVM / WASM / JVM / CLR /
+VM / JIT without adding backend ops.
 
 ## Spec
 

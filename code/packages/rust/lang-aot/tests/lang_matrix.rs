@@ -988,13 +988,26 @@ const PROGRAMS: &[Prog] = &[
     // Dartmouth BASIC — BA7-1 scalar real arithmetic. Decimal spellings (`6.0`,
     // `7.0`) stay on the same `f64` value path as integer-spelled literals; `*`
     // is an `f64` multiply, and `PRINT` routes through `__basic_print_real`.
-    // Fractional formatting remains the next BA7 slice, so this proof stays
-    // intentionally whole-valued: 6.0 * 7.0 => 42.
+    // This proof stays intentionally whole-valued: 6.0 * 7.0 => 42.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 6.0 * 7.0\n20 END\n",
         expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA7-2a fixed-decimal fractional `PRINT`. The helper
+    // handles ordinary fractional values without backend-specific code: an
+    // integer part plus trimmed fractional digits (`3.14`), a magnitude below 1
+    // with no leading zero (`.25`), and a negative fractional value (`-2.5`).
+    // Scientific notation and full six-significant-digit rounding remain the
+    // BA7 numeric tail; this cell proves the fractional path itself runs on all
+    // 7 backends.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 3.14\n20 PRINT 1.0 / 4.0\n30 PRINT 0.0 - 2.5\n40 END\n",
+        expect: Expect::Stdout("3.14\n.25\n-2.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — *unstructured `GOSUB` / `RETURN`* (LANG-FULL BA1, enabler

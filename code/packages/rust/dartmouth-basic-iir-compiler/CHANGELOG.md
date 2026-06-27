@@ -1,6 +1,6 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
-## 0.11.0 — 2026-06-27 — BA7 scalar real arithmetic + whole-valued `PRINT`
+## 0.11.0 — 2026-06-27 — BA7 scalar real arithmetic + fixed-decimal `PRINT`
 
 BA7 moves Dartmouth BASIC's scalar numeric model onto `f64` while keeping the
 remaining integer boundaries explicit:
@@ -20,12 +20,17 @@ remaining integer boundaries explicit:
 - `READ` and `INPUT` still consume integer sources today, then widen into scalar
   `f64` variables with E8 `int_to_real`.
 - `PRINT` chooses a new synthetic `__basic_print_real(x: f64)` helper for numeric
-  items. This BA7-1 helper implements whole-valued output by truncating with E8
-  `real_to_int_trunc` and delegating to the BA2 digit printer. Fractional
-  formatting and `E` notation remain the next BA7 slice.
+  items. This BA7 helper implements whole-valued output by truncating with E8
+  `real_to_int_trunc` and delegating to the BA2 digit printer; BA7-2a adds the
+  fixed-decimal path for ordinary fractional values, including no-leading-zero
+  magnitudes below 1 and negative fractional values. The current helper emits up
+  to three trimmed fractional digits to stay within the direct AArch64 backend's
+  frame limit. Full six-significant-digit rounding and `E` notation remain BA7
+  tail work.
 - Verified by frontend unit tests, backend validator/encoder smokes, and executed
-  `lang-aot` matrix programs: `PRINT 42` and `PRINT 6.0 * 7.0` => `42` on native
-  / LLVM / WASM / JVM / CLR / VM / JIT.
+  `lang-aot` matrix programs: `PRINT 42` and `PRINT 6.0 * 7.0` => `42`, plus
+  `PRINT 3.14`, `PRINT 1.0 / 4.0`, and `PRINT 0.0 - 2.5` => `3.14`, `.25`, and
+  `-2.5` on native / LLVM / WASM / JVM / CLR / VM / JIT.
 
 ## 0.10.0 — 2026-06-26 — `GOSUB` / `RETURN` (LANG-FULL BA1, enabler E7)
 

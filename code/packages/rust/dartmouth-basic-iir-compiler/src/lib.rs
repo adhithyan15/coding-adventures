@@ -1709,7 +1709,11 @@ fn print_sep_char(node: &GrammarASTNode) -> char {
 ///           __basic_print_uint(n)
 ///
 ///   fn __basic_print_real(x):
-///       __basic_print_int(real_to_int_trunc(x))    # BA7-1 whole-valued print
+///       if x < 0: putchar('-'); x = 0.0 - x
+///       ip = real_to_int_trunc(x)
+///       frac = x - int_to_real(ip)
+///       if frac == 0: __basic_print_uint(ip)
+///       else: [__basic_print_uint(ip) if ip > 0]; putchar('.'); print frac digits
 /// ```
 ///
 /// The recursion is what gets the digits out in left-to-right order with no
@@ -1763,13 +1767,86 @@ fn print_helper_functions() -> Vec<IIRFunction> {
         mk("ret", None, vec![var("z2")], "i64"),
     ];
 
-    // __basic_print_real(x) — BA7-1's whole-valued real output path. Fractional
-    // formatting is a later BA7 slice; for now, whole-valued f64 expressions
-    // print through the existing integer digit renderer.
+    // __basic_print_real(x) — BA7 fixed-decimal real output. This keeps the
+    // BA7-1 whole-valued path (`42.0` -> `42`) and adds fractional digits for
+    // ordinary in-range values (`3.14`, `.25`, `-2.5`). This first fractional
+    // foothold emits up to three trimmed fractional digits to stay within the
+    // direct AArch64 backend's current stack-frame limit; scientific notation
+    // and six-significant-digit rounding remain later BA7 tail work.
     let real_body = vec![
-        mk("real_to_int_trunc", Some("i"), vec![var("x")], "i64"),
-        mk("call", Some("_r"),
-            vec![var("__basic_print_int"), var("i")], "i64"),
+        mk("const", Some("zero_i"), vec![Operand::Int(0)], "i64"),
+        mk("const", Some("zero_r"), vec![Operand::Float(0.0)], "f64"),
+        mk("cmp_lt", Some("neg"), vec![var("x"), var("zero_r")], "f64"),
+        mk("jmp_if_false", None, vec![var("neg"), var("real_nonneg")], "void"),
+        mk("const", Some("minus"), vec![Operand::Int(b'-' as i64)], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("minus")], "void"),
+        mk("sub", Some("mag"), vec![var("zero_r"), var("x")], "f64"),
+        mk("jmp", None, vec![var("real_abs_done")], "void"),
+        mk("label", None, vec![var("real_nonneg")], "void"),
+        mk("add", Some("mag"), vec![var("x"), var("zero_r")], "f64"),
+        mk("label", None, vec![var("real_abs_done")], "void"),
+        mk("real_to_int_trunc", Some("ip"), vec![var("mag")], "i64"),
+        mk("int_to_real", Some("ip_r"), vec![var("ip")], "f64"),
+        mk("sub", Some("frac"), vec![var("mag"), var("ip_r")], "f64"),
+        mk("cmp_gt", Some("has_frac"), vec![var("frac"), var("zero_r")], "f64"),
+        mk("jmp_if_true", None, vec![var("has_frac"), var("real_fractional")], "void"),
+        mk("call", Some("_whole"),
+            vec![var("__basic_print_uint"), var("ip")], "i64"),
+        mk("jmp", None, vec![var("real_done")], "void"),
+        mk("label", None, vec![var("real_fractional")], "void"),
+        mk("cmp_gt", Some("has_ip"), vec![var("ip"), var("zero_i")], "i64"),
+        mk("jmp_if_false", None, vec![var("has_ip"), var("real_skip_int")], "void"),
+        mk("call", Some("_ip"),
+            vec![var("__basic_print_uint"), var("ip")], "i64"),
+        mk("label", None, vec![var("real_skip_int")], "void"),
+        mk("const", Some("dot"), vec![Operand::Int(b'.' as i64)], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("dot")], "void"),
+        mk("const", Some("ten_r"), vec![Operand::Float(10.0)], "f64"),
+        mk("const", Some("c0"), vec![Operand::Int(b'0' as i64)], "i64"),
+        mk("const", Some("one_i"), vec![Operand::Int(1)], "i64"),
+        mk("const", Some("two_i"), vec![Operand::Int(2)], "i64"),
+        mk("const", Some("three_i"), vec![Operand::Int(3)], "i64"),
+        mk("const", Some("last"), vec![Operand::Int(0)], "i64"),
+        mk("mul", Some("scaled1"), vec![var("frac"), var("ten_r")], "f64"),
+        mk("real_to_int_trunc", Some("d1"), vec![var("scaled1")], "i64"),
+        mk("int_to_real", Some("d1_r"), vec![var("d1")], "f64"),
+        mk("sub", Some("frac1"), vec![var("scaled1"), var("d1_r")], "f64"),
+        mk("cmp_ne", Some("d1nz"), vec![var("d1"), var("zero_i")], "i64"),
+        mk("jmp_if_false", None, vec![var("d1nz"), var("real_d1_zero")], "void"),
+        mk("add", Some("last"), vec![var("one_i"), var("zero_i")], "i64"),
+        mk("label", None, vec![var("real_d1_zero")], "void"),
+        mk("mul", Some("scaled2"), vec![var("frac1"), var("ten_r")], "f64"),
+        mk("real_to_int_trunc", Some("d2"), vec![var("scaled2")], "i64"),
+        mk("int_to_real", Some("d2_r"), vec![var("d2")], "f64"),
+        mk("sub", Some("frac2"), vec![var("scaled2"), var("d2_r")], "f64"),
+        mk("cmp_ne", Some("d2nz"), vec![var("d2"), var("zero_i")], "i64"),
+        mk("jmp_if_false", None, vec![var("d2nz"), var("real_d2_zero")], "void"),
+        mk("add", Some("last"), vec![var("two_i"), var("zero_i")], "i64"),
+        mk("label", None, vec![var("real_d2_zero")], "void"),
+        mk("mul", Some("scaled3"), vec![var("frac2"), var("ten_r")], "f64"),
+        mk("real_to_int_trunc", Some("d3"), vec![var("scaled3")], "i64"),
+        mk("int_to_real", Some("d3_r"), vec![var("d3")], "f64"),
+        mk("sub", Some("frac3"), vec![var("scaled3"), var("d3_r")], "f64"),
+        mk("cmp_ne", Some("d3nz"), vec![var("d3"), var("zero_i")], "i64"),
+        mk("jmp_if_false", None, vec![var("d3nz"), var("real_d3_zero")], "void"),
+        mk("add", Some("last"), vec![var("three_i"), var("zero_i")], "i64"),
+        mk("label", None, vec![var("real_d3_zero")], "void"),
+        mk("cmp_le", Some("emit1"), vec![var("one_i"), var("last")], "i64"),
+        mk("jmp_if_false", None, vec![var("emit1"), var("real_emit1_done")], "void"),
+        mk("add", Some("ch1"), vec![var("c0"), var("d1")], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("ch1")], "void"),
+        mk("label", None, vec![var("real_emit1_done")], "void"),
+        mk("cmp_le", Some("emit2"), vec![var("two_i"), var("last")], "i64"),
+        mk("jmp_if_false", None, vec![var("emit2"), var("real_emit2_done")], "void"),
+        mk("add", Some("ch2"), vec![var("c0"), var("d2")], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("ch2")], "void"),
+        mk("label", None, vec![var("real_emit2_done")], "void"),
+        mk("cmp_le", Some("emit3"), vec![var("three_i"), var("last")], "i64"),
+        mk("jmp_if_false", None, vec![var("emit3"), var("real_emit3_done")], "void"),
+        mk("add", Some("ch3"), vec![var("c0"), var("d3")], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("ch3")], "void"),
+        mk("label", None, vec![var("real_emit3_done")], "void"),
+        mk("label", None, vec![var("real_done")], "void"),
         mk("const", Some("z"), vec![Operand::Int(0)], "i64"),
         mk("ret", None, vec![var("z")], "i64"),
     ];
