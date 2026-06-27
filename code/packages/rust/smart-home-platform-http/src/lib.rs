@@ -17,11 +17,11 @@ use smart_home_core::{
 };
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
-    RuntimeClearDesiredStateToolOutput, RuntimeClearDesiredStateToolRequest,
-    RuntimeCommandResultQuery, RuntimeCommandResultRecord, RuntimeCommandResultSort,
-    RuntimeCommandToolRequest, RuntimeError, RuntimeEvent, RuntimeEventCheckpoint,
-    RuntimeEventFilter, RuntimeEventLogEntry, RuntimeEventQuery, RuntimeEventSort,
-    RuntimeReadSnapshot, RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary,
+    RuntimeAuthorizationDecisionSort, RuntimeClearDesiredStateToolOutput,
+    RuntimeClearDesiredStateToolRequest, RuntimeCommandResultQuery, RuntimeCommandResultRecord,
+    RuntimeCommandResultSort, RuntimeCommandToolRequest, RuntimeError, RuntimeEvent,
+    RuntimeEventCheckpoint, RuntimeEventFilter, RuntimeEventLogEntry, RuntimeEventQuery,
+    RuntimeEventSort, RuntimeReadSnapshot, RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary,
     RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest, SmartHomeRuntime,
 };
 use std::collections::BTreeMap;
@@ -2263,6 +2263,9 @@ fn runtime_command_result_query(
     if let Some(status) = query_string(request, "status") {
         query = query.with_status(command_status_from_label(status)?);
     }
+    if let Some(sort) = query_string(request, "sort") {
+        query = query.sorted_by(command_result_sort_from_label(sort)?);
+    }
     if let Some(command_id) = query_string(request, "command_id") {
         query = query.for_command(CommandId::trusted(command_id));
     }
@@ -2285,6 +2288,9 @@ fn runtime_authorization_decision_query(
     }
     if let Some(outcome) = query_string(request, "outcome") {
         query = query.with_outcome(authorization_outcome_from_label(outcome)?);
+    }
+    if let Some(sort) = query_string(request, "sort") {
+        query = query.sorted_by(authorization_decision_sort_from_label(sort)?);
     }
     Ok(query)
 }
@@ -3621,6 +3627,19 @@ fn command_status_from_label(status: &str) -> Result<CommandStatus, ApiError> {
     }
 }
 
+fn command_result_sort_from_label(sort: &str) -> Result<RuntimeCommandResultSort, ApiError> {
+    match sort {
+        "sequence_asc" | "oldest_first" => Ok(RuntimeCommandResultSort::SequenceAsc),
+        "sequence_desc" | "newest_first" => Ok(RuntimeCommandResultSort::SequenceDesc),
+        "status_then_sequence_desc" | "status_then_newest" | "status" => {
+            Ok(RuntimeCommandResultSort::StatusThenSequenceDesc)
+        }
+        other => Err(ApiError::bad_request(format!(
+            "unsupported command result sort `{other}`"
+        ))),
+    }
+}
+
 fn authorization_outcome_label(outcome: AuthorizationOutcome) -> &'static str {
     match outcome {
         AuthorizationOutcome::Allowed => "allowed",
@@ -3634,6 +3653,18 @@ fn authorization_outcome_from_label(outcome: &str) -> Result<AuthorizationOutcom
         "denied" => Ok(AuthorizationOutcome::Denied),
         other => Err(ApiError::bad_request(format!(
             "unsupported authorization outcome `{other}`"
+        ))),
+    }
+}
+
+fn authorization_decision_sort_from_label(
+    sort: &str,
+) -> Result<RuntimeAuthorizationDecisionSort, ApiError> {
+    match sort {
+        "decided_at_asc" | "oldest_first" => Ok(RuntimeAuthorizationDecisionSort::DecidedAtAsc),
+        "decided_at_desc" | "newest_first" => Ok(RuntimeAuthorizationDecisionSort::DecidedAtDesc),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported authorization decision sort `{other}`"
         ))),
     }
 }
@@ -4430,6 +4461,16 @@ mod tests {
         );
         assert!(unknown_command.contains(r#""total_results":0"#));
 
+        let status_sorted_command_results = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_results?sort=status_then_newest&limit=5",
+            ))
+            .into(),
+        );
+        assert!(status_sorted_command_results.contains(r#""total_results":1"#));
+        assert!(status_sorted_command_results.contains(r#""status":"accepted""#));
+
         let events = response_body(
             app.handle(request(
                 "GET",
@@ -4476,6 +4517,16 @@ mod tests {
         let decision_index = decisions_json["decisions"][0]["decision_index"]
             .as_u64()
             .expect("authorization decision exposes decision_index");
+
+        let principal_decisions = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/authorization_decisions?principal_id=agent:home-assistant-local-api&sort=oldest_first&limit=5",
+            ))
+            .into(),
+        );
+        assert!(principal_decisions.contains(r#""total_decisions":2"#));
+        assert!(principal_decisions.contains(r#""principal_id":"agent:home-assistant-local-api""#));
 
         let decision_detail_path =
             format!("/api/smart_home/authorization_decisions/{decision_index}");

@@ -16,6 +16,8 @@ All notable changes to this package will be documented in this file.
   records so dashboard clients can drill into a specific audit row.
 - Added command-result audit filters for command id, bridge id, and correlation
   id.
+- Added command-result and authorization-decision audit sort controls, plus
+  authorization-decision principal filtering for dashboard audit views.
 - Added indexed authorization-decision audit rows and a matching detail lookup
   for dashboard drill-down flows.
 - Added a state-history event detail lookup for registry-backed event drill-down

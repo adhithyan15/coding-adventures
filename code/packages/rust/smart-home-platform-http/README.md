@@ -60,8 +60,9 @@ same runtime: pending-work snapshot counts, entity and capability registry
 records, a compact health probe, a capability catalog grouped across entities,
 device and bridge inventory, room topology summaries, a dashboard overview,
 checkpointed event-log entries with detail lookups, command-result audit
-records with command, bridge, and correlation filters, indexed authorization
-decisions, and desired-state supervision targets. State-history reads expose
+records with command, bridge, correlation, status, and sort filters, indexed
+authorization decisions with principal, outcome, and sort filters, and
+desired-state supervision targets. State-history reads expose
 registry-backed device events with Home Assistant entity aliases, state deltas,
 timestamp filters, and event-id detail lookups; the Home Assistant-style
 history route accepts `filter_entity_id`.
@@ -101,6 +102,8 @@ curl 'http://127.0.0.1:8123/api/smart_home/rooms?sort=scene_count&state_gaps_onl
 curl 'http://127.0.0.1:8123/api/smart_home/events/0'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?bridge_id=bridge-1'
+curl 'http://127.0.0.1:8123/api/smart_home/command_results?sort=status_then_newest'
+curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions?principal_id=agent:home-assistant-local-api&sort=oldest_first'
 curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions/0'
 curl 'http://127.0.0.1:8123/api/smart_home/state_history?entity_id=light.entity_light_1'
 curl 'http://127.0.0.1:8123/api/smart_home/state_history/event-light-1-on'
