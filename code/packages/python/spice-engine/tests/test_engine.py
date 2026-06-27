@@ -6890,44 +6890,86 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.table_artifacts[0].records == deck_table_records(
         op_execution.table
     )
+    expected_output_plan_columns = [
+        "Analysis",
+        "Directive",
+        "Line",
+        "SourceName",
+        "OutputNode",
+        "SweepKind",
+        "StartValue",
+        "StopValue",
+        "StepValue",
+        "PointCount",
+        "StartFrequencyHz",
+        "StopFrequencyHz",
+        "StepTime",
+        "StopTime",
+        "StartTime",
+        "MaxStep",
+        "UseInitialConditions",
+        "ResultRows",
+        "ResultColumns",
+        "ResultColumnList",
+        "OutputProbes",
+        "OutputProbeList",
+        "OutputProbeLines",
+        "OutputProbeLineList",
+        "OutputDirectives",
+        "OutputDirectiveList",
+        "OutputDirectiveKinds",
+        "OutputDirectiveKindList",
+        "OutputDirectiveAnalysisKinds",
+        "OutputDirectiveAnalysisKindList",
+        "OutputDirectiveLines",
+        "OutputDirectiveLineList",
+        "Tables",
+        "TableList",
+    ]
+    expected_output_plan_row = [
+        "op",
+        ".op",
+        str(op_execution.plan.line_number),
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "1",
+        "2",
+        "Index;V(mid)",
+        "1",
+        "V(mid)",
+        "1",
+        str(save_line),
+        "1",
+        ".save",
+        "1",
+        "save",
+        "1",
+        "global",
+        "1",
+        str(save_line),
+        "3",
+        "result;output-plan;run-artifact",
+    ]
     expected_output_plan_table = (
-        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tResultRows\tResultColumns\t"
-        "ResultColumnList\tOutputProbes\t"
-        "OutputProbeList\tOutputProbeLines\tOutputProbeLineList\t"
-        "OutputDirectives\tOutputDirectiveList\t"
-        "OutputDirectiveKinds\tOutputDirectiveKindList\t"
-        "OutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\t"
-        "OutputDirectiveLines\tOutputDirectiveLineList\t"
-        "Tables\tTableList\n"
-        f"op\t.op\t{op_execution.plan.line_number}\t\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t"
-        f"1\t{save_line}\t1\t.save\t1\tsave\t1\tglobal\t1\t{save_line}\t3\t"
-        "result;output-plan;run-artifact\n"
+        "\t".join(expected_output_plan_columns)
+        + "\n"
+        + "\t".join(expected_output_plan_row)
+        + "\n"
     )
     expected_output_plan_records = [
-        {
-            "Analysis": "op",
-            "Directive": ".op",
-            "Line": str(op_execution.plan.line_number),
-            "SourceName": "",
-            "OutputNode": "",
-            "ResultRows": "1",
-            "ResultColumns": "2",
-            "ResultColumnList": "Index;V(mid)",
-            "OutputProbes": "1",
-            "OutputProbeList": "V(mid)",
-            "OutputProbeLines": "1",
-            "OutputProbeLineList": str(save_line),
-            "OutputDirectives": "1",
-            "OutputDirectiveList": ".save",
-            "OutputDirectiveKinds": "1",
-            "OutputDirectiveKindList": "save",
-            "OutputDirectiveAnalysisKinds": "1",
-            "OutputDirectiveAnalysisKindList": "global",
-            "OutputDirectiveLines": "1",
-            "OutputDirectiveLineList": str(save_line),
-            "Tables": "3",
-            "TableList": "result;output-plan;run-artifact",
-        }
+        dict(zip(expected_output_plan_columns, expected_output_plan_row))
     ]
     assert op_execution.output_plan_artifact_count == 1
     assert len(op_execution.output_plan_artifacts) == 1
@@ -6937,6 +6979,18 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert output_plan_artifact.line_number == op_execution.plan.line_number
     assert output_plan_artifact.source_name is None
     assert output_plan_artifact.output_node is None
+    assert output_plan_artifact.sweep_kind is None
+    assert output_plan_artifact.start_value is None
+    assert output_plan_artifact.stop_value is None
+    assert output_plan_artifact.step_value is None
+    assert output_plan_artifact.point_count is None
+    assert output_plan_artifact.start_frequency_hz is None
+    assert output_plan_artifact.stop_frequency_hz is None
+    assert output_plan_artifact.step_time is None
+    assert output_plan_artifact.stop_time is None
+    assert output_plan_artifact.start_time is None
+    assert output_plan_artifact.max_step is None
+    assert output_plan_artifact.use_initial_conditions is None
     assert output_plan_artifact.result_row_count == 1
     assert output_plan_artifact.result_columns == ["Index", "V(mid)"]
     assert output_plan_artifact.output_probes == ["V(mid)"]
@@ -6955,16 +7009,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         format_deck_output_plan_artifact_table(op_execution.output_plan_artifacts)
     )
     assert op_execution.output_plan_artifact_csv == (
-        "Analysis,Directive,Line,SourceName,OutputNode,ResultRows,ResultColumns,"
-        "ResultColumnList,OutputProbes,"
-        "OutputProbeList,OutputProbeLines,OutputProbeLineList,"
-        "OutputDirectives,OutputDirectiveList,"
-        "OutputDirectiveKinds,OutputDirectiveKindList,"
-        "OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,"
-        "OutputDirectiveLines,OutputDirectiveLineList,"
-        "Tables,TableList\n"
-        f"op,.op,{op_execution.plan.line_number},,,1,2,Index;V(mid),1,V(mid),1,{save_line},1,.save,1,save,1,global,1,{save_line},3,"
-        "result;output-plan;run-artifact\n"
+        ",".join(expected_output_plan_columns)
+        + "\n"
+        + ",".join(expected_output_plan_row)
+        + "\n"
     )
     assert op_execution.output_plan_artifact_csv == (
         format_deck_output_plan_artifact_csv(op_execution.output_plan_artifacts)
@@ -7167,11 +7215,29 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert dc_execution.output_plan_artifacts[0].line_number == dc_execution.plan.line_number
     assert dc_execution.output_plan_artifacts[0].source_name == "V1"
     assert dc_execution.output_plan_artifacts[0].output_node is None
+    assert dc_execution.output_plan_artifacts[0].sweep_kind is None
+    assert dc_execution.output_plan_artifacts[0].start_value == pytest.approx(0.0)
+    assert dc_execution.output_plan_artifacts[0].stop_value == pytest.approx(1.0)
+    assert dc_execution.output_plan_artifacts[0].step_value == pytest.approx(1.0)
+    assert dc_execution.output_plan_artifacts[0].point_count is None
+    assert dc_execution.output_plan_artifacts[0].start_frequency_hz is None
+    assert dc_execution.output_plan_artifacts[0].stop_frequency_hz is None
+    assert dc_execution.output_plan_artifacts[0].step_time is None
+    assert dc_execution.output_plan_artifacts[0].use_initial_conditions is None
     assert dc_execution.output_plan_artifact_records[0]["Line"] == str(
         dc_execution.plan.line_number
     )
     assert dc_execution.output_plan_artifact_records[0]["SourceName"] == "V1"
     assert dc_execution.output_plan_artifact_records[0]["OutputNode"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["SweepKind"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StartValue"] == "0.000000e+00"
+    assert dc_execution.output_plan_artifact_records[0]["StopValue"] == "1.000000e+00"
+    assert dc_execution.output_plan_artifact_records[0]["StepValue"] == "1.000000e+00"
+    assert dc_execution.output_plan_artifact_records[0]["PointCount"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StartFrequencyHz"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StopFrequencyHz"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StepTime"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["UseInitialConditions"] == ""
     assert dc_execution.output_plan_artifacts[0].output_directive_kinds == [
         "save",
         "probe",
@@ -7272,6 +7338,18 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert ac_execution.output_probes == ["V(mid)"]
     assert ac_execution.output_directives == [".save", ".plot"]
     assert ac_execution.output_plan_artifacts[0].output_node is None
+    assert ac_execution.output_plan_artifacts[0].sweep_kind == "dec"
+    assert ac_execution.output_plan_artifacts[0].point_count == 1
+    assert ac_execution.output_plan_artifacts[0].start_frequency_hz == pytest.approx(1.0e3)
+    assert ac_execution.output_plan_artifacts[0].stop_frequency_hz == pytest.approx(1.0e3)
+    assert ac_execution.output_plan_artifacts[0].start_value is None
+    assert ac_execution.output_plan_artifacts[0].step_time is None
+    assert ac_execution.output_plan_artifacts[0].use_initial_conditions is None
+    assert ac_execution.output_plan_artifact_records[0]["SweepKind"] == "dec"
+    assert ac_execution.output_plan_artifact_records[0]["PointCount"] == "1"
+    assert ac_execution.output_plan_artifact_records[0]["StartFrequencyHz"] == "1.000000e+03"
+    assert ac_execution.output_plan_artifact_records[0]["StopFrequencyHz"] == "1.000000e+03"
+    assert ac_execution.output_plan_artifact_records[0]["StepTime"] == ""
     assert ac_execution.output_plan_artifacts[0].output_directive_kinds == [
         "save",
         "plot",
@@ -7346,6 +7424,16 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
     assert tran_execution.output_probes == ["V(mid)"]
     assert tran_execution.output_directives == [".save"]
+    assert tran_execution.output_plan_artifacts[0].step_time == pytest.approx(1.0e-3)
+    assert tran_execution.output_plan_artifacts[0].stop_time == pytest.approx(1.0e-3)
+    assert tran_execution.output_plan_artifacts[0].start_time is None
+    assert tran_execution.output_plan_artifacts[0].max_step is None
+    assert tran_execution.output_plan_artifacts[0].use_initial_conditions is False
+    assert tran_execution.output_plan_artifact_records[0]["StepTime"] == "1.000000e-03"
+    assert tran_execution.output_plan_artifact_records[0]["StopTime"] == "1.000000e-03"
+    assert tran_execution.output_plan_artifact_records[0]["StartTime"] == ""
+    assert tran_execution.output_plan_artifact_records[0]["MaxStep"] == ""
+    assert tran_execution.output_plan_artifact_records[0]["UseInitialConditions"] == "false"
     assert tran_execution.output_plan_artifacts[0].output_directive_lines == [
         save_line
     ]
@@ -7494,7 +7582,21 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert noise_execution.output_probes == ["V(mid)"]
     assert noise_execution.output_plan_artifacts[0].source_name == "V1"
     assert noise_execution.output_plan_artifacts[0].output_node == "mid"
+    assert noise_execution.output_plan_artifacts[0].sweep_kind == "lin"
+    assert noise_execution.output_plan_artifacts[0].point_count == 1
+    assert noise_execution.output_plan_artifacts[0].start_frequency_hz == pytest.approx(1.0e3)
+    assert noise_execution.output_plan_artifacts[0].stop_frequency_hz == pytest.approx(1.0e3)
     assert noise_execution.output_plan_artifact_records[0]["OutputNode"] == "mid"
+    assert noise_execution.output_plan_artifact_records[0]["SweepKind"] == "lin"
+    assert noise_execution.output_plan_artifact_records[0]["PointCount"] == "1"
+    assert (
+        noise_execution.output_plan_artifact_records[0]["StartFrequencyHz"]
+        == "1.000000e+03"
+    )
+    assert (
+        noise_execution.output_plan_artifact_records[0]["StopFrequencyHz"]
+        == "1.000000e+03"
+    )
     assert noise_execution.analysis_directives == [".noise"]
     assert noise_execution.table_count == 3
     assert noise_execution.tables == ["result", "output-plan", "run-artifact"]

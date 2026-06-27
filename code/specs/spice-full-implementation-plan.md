@@ -148,7 +148,9 @@ downstream tools to compare.
      beside result-column inventories, and selected output-plan artifacts now
      also expose selected analysis line/source metadata beside directive
      inventories, and selected output-plan artifacts now also expose selected
-     analysis output-node metadata beside that analysis provenance.
+     analysis output-node metadata beside that analysis provenance, and selected
+     output-plan artifacts now also expose selected sweep, frequency, transient
+     timing, and `UIC` metadata beside that selected-analysis provenance.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1232,6 +1234,16 @@ downstream tools to compare.
     - Table, CSV, compact JSON, and host-native record exports make `.tf`,
       `.sens`, and `.noise` selected output nodes auditable from the
       output-plan artifact without reparsing the analysis plan.
+
+113. Deck output-plan analysis sweep artifacts.
+    - Status: completed in this deck output-plan analysis sweep artifact slice.
+    - Python, Rust, and TypeScript selected output-plan artifacts now expose
+      selected sweep kind/count/value metadata, AC/noise frequency bounds, and
+      transient timing plus `UIC` metadata beside analysis line/source/output
+      provenance.
+    - Table, CSV, compact JSON, and host-native record exports make `.dc`,
+      `.ac`, `.tran`, and `.noise` sweep inputs auditable from the output-plan
+      artifact without reparsing the analysis plan.
 
 ## Backlog
 

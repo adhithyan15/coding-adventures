@@ -1545,31 +1545,85 @@ describe("transient", () => {
       json: formatDeckTableJson(opExecution.table),
       records: deckTableRecords(opExecution.table),
     });
+    const expectedOutputPlanColumns = [
+      "Analysis",
+      "Directive",
+      "Line",
+      "SourceName",
+      "OutputNode",
+      "SweepKind",
+      "StartValue",
+      "StopValue",
+      "StepValue",
+      "PointCount",
+      "StartFrequencyHz",
+      "StopFrequencyHz",
+      "StepTime",
+      "StopTime",
+      "StartTime",
+      "MaxStep",
+      "UseInitialConditions",
+      "ResultRows",
+      "ResultColumns",
+      "ResultColumnList",
+      "OutputProbes",
+      "OutputProbeList",
+      "OutputProbeLines",
+      "OutputProbeLineList",
+      "OutputDirectives",
+      "OutputDirectiveList",
+      "OutputDirectiveKinds",
+      "OutputDirectiveKindList",
+      "OutputDirectiveAnalysisKinds",
+      "OutputDirectiveAnalysisKindList",
+      "OutputDirectiveLines",
+      "OutputDirectiveLineList",
+      "Tables",
+      "TableList",
+    ];
+    const expectedOutputPlanRow = [
+      "op",
+      ".op",
+      String(opExecution.plan.lineNumber),
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "1",
+      "2",
+      "Index;V(mid)",
+      "1",
+      "V(mid)",
+      "1",
+      String(saveLine),
+      "1",
+      ".save",
+      "1",
+      "save",
+      "1",
+      "global",
+      "1",
+      String(saveLine),
+      "3",
+      "result;output-plan;run-artifact",
+    ];
     const expectedOutputPlanRecords = [
-      {
-        Analysis: "op",
-        Directive: ".op",
-        Line: String(opExecution.plan.lineNumber),
-        SourceName: "",
-        OutputNode: "",
-        ResultRows: "1",
-        ResultColumns: "2",
-        ResultColumnList: "Index;V(mid)",
-        OutputProbes: "1",
-        OutputProbeList: "V(mid)",
-        OutputProbeLines: "1",
-        OutputProbeLineList: String(saveLine),
-        OutputDirectives: "1",
-        OutputDirectiveList: ".save",
-        OutputDirectiveKinds: "1",
-        OutputDirectiveKindList: "save",
-        OutputDirectiveAnalysisKinds: "1",
-        OutputDirectiveAnalysisKindList: "global",
-        OutputDirectiveLines: "1",
-        OutputDirectiveLineList: String(saveLine),
-        Tables: "3",
-        TableList: "result;output-plan;run-artifact",
-      },
+      Object.fromEntries(
+        expectedOutputPlanColumns.map((column, index) => [
+          column,
+          expectedOutputPlanRow[index] ?? "",
+        ]),
+      ),
     ];
     expect(opExecution.outputPlanArtifactCount).toBe(1);
     expect(opExecution.outputPlanArtifacts).toHaveLength(1);
@@ -1579,6 +1633,18 @@ describe("transient", () => {
       lineNumber: opExecution.plan.lineNumber,
       sourceName: undefined,
       outputNode: undefined,
+      sweepKind: undefined,
+      startValue: undefined,
+      stopValue: undefined,
+      stepValue: undefined,
+      pointCount: undefined,
+      startFrequencyHz: undefined,
+      stopFrequencyHz: undefined,
+      stepTime: undefined,
+      stopTime: undefined,
+      startTime: undefined,
+      maxStep: undefined,
+      useInitialConditions: undefined,
       resultRowCount: 1,
       resultColumnCount: 2,
       resultColumns: ["Index", "V(mid)"],
@@ -1598,15 +1664,13 @@ describe("transient", () => {
       tables: ["result", "output-plan", "run-artifact"],
     });
     expect(opExecution.outputPlanArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tSourceName\tOutputNode\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputProbeLines\tOutputProbeLineList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tOutputDirectiveLines\tOutputDirectiveLineList\tTables\tTableList\n" +
-        `op\t.op\t${opExecution.plan.lineNumber}\t\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t1\t${saveLine}\t1\t.save\t1\tsave\t1\tglobal\t1\t${saveLine}\t3\tresult;output-plan;run-artifact\n`,
+      `${expectedOutputPlanColumns.join("\t")}\n${expectedOutputPlanRow.join("\t")}\n`,
     );
     expect(opExecution.outputPlanArtifactTable).toBe(
       formatDeckOutputPlanArtifactTable(opExecution.outputPlanArtifacts),
     );
     expect(opExecution.outputPlanArtifactCsv).toBe(
-      "Analysis,Directive,Line,SourceName,OutputNode,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputProbeLines,OutputProbeLineList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,OutputDirectiveLines,OutputDirectiveLineList,Tables,TableList\n" +
-        `op,.op,${opExecution.plan.lineNumber},,,1,2,Index;V(mid),1,V(mid),1,${saveLine},1,.save,1,save,1,global,1,${saveLine},3,result;output-plan;run-artifact\n`,
+      `${expectedOutputPlanColumns.join(",")}\n${expectedOutputPlanRow.join(",")}\n`,
     );
     expect(opExecution.outputPlanArtifactCsv).toBe(
       formatDeckOutputPlanArtifactCsv(opExecution.outputPlanArtifacts),
@@ -1809,11 +1873,29 @@ describe("transient", () => {
     expect(dcExecution.outputPlanArtifacts[0]?.lineNumber).toBe(dcExecution.plan.lineNumber);
     expect(dcExecution.outputPlanArtifacts[0]?.sourceName).toBe("V1");
     expect(dcExecution.outputPlanArtifacts[0]?.outputNode).toBeUndefined();
+    expect(dcExecution.outputPlanArtifacts[0]?.sweepKind).toBeUndefined();
+    expect(dcExecution.outputPlanArtifacts[0]?.startValue).toBeCloseTo(0.0, 12);
+    expect(dcExecution.outputPlanArtifacts[0]?.stopValue).toBeCloseTo(1.0, 12);
+    expect(dcExecution.outputPlanArtifacts[0]?.stepValue).toBeCloseTo(1.0, 12);
+    expect(dcExecution.outputPlanArtifacts[0]?.pointCount).toBeUndefined();
+    expect(dcExecution.outputPlanArtifacts[0]?.startFrequencyHz).toBeUndefined();
+    expect(dcExecution.outputPlanArtifacts[0]?.stopFrequencyHz).toBeUndefined();
+    expect(dcExecution.outputPlanArtifacts[0]?.stepTime).toBeUndefined();
+    expect(dcExecution.outputPlanArtifacts[0]?.useInitialConditions).toBeUndefined();
     expect(dcExecution.outputPlanArtifactRecords[0]?.Line).toBe(
       String(dcExecution.plan.lineNumber),
     );
     expect(dcExecution.outputPlanArtifactRecords[0]?.SourceName).toBe("V1");
     expect(dcExecution.outputPlanArtifactRecords[0]?.OutputNode).toBe("");
+    expect(dcExecution.outputPlanArtifactRecords[0]?.SweepKind).toBe("");
+    expect(dcExecution.outputPlanArtifactRecords[0]?.StartValue).toBe("0.000000e+00");
+    expect(dcExecution.outputPlanArtifactRecords[0]?.StopValue).toBe("1.000000e+00");
+    expect(dcExecution.outputPlanArtifactRecords[0]?.StepValue).toBe("1.000000e+00");
+    expect(dcExecution.outputPlanArtifactRecords[0]?.PointCount).toBe("");
+    expect(dcExecution.outputPlanArtifactRecords[0]?.StartFrequencyHz).toBe("");
+    expect(dcExecution.outputPlanArtifactRecords[0]?.StopFrequencyHz).toBe("");
+    expect(dcExecution.outputPlanArtifactRecords[0]?.StepTime).toBe("");
+    expect(dcExecution.outputPlanArtifactRecords[0]?.UseInitialConditions).toBe("");
     expect(dcExecution.outputPlanArtifacts[0]?.outputDirectiveKinds).toEqual([
       "save",
       "probe",
@@ -1908,6 +1990,18 @@ describe("transient", () => {
     expect(acExecution.outputProbes).toEqual(["V(mid)"]);
     expect(acExecution.outputDirectives).toEqual([".save", ".plot"]);
     expect(acExecution.outputPlanArtifacts[0]?.outputNode).toBeUndefined();
+    expect(acExecution.outputPlanArtifacts[0]?.sweepKind).toBe("dec");
+    expect(acExecution.outputPlanArtifacts[0]?.pointCount).toBe(1);
+    expect(acExecution.outputPlanArtifacts[0]?.startFrequencyHz).toBeCloseTo(1.0e3, 9);
+    expect(acExecution.outputPlanArtifacts[0]?.stopFrequencyHz).toBeCloseTo(1.0e3, 9);
+    expect(acExecution.outputPlanArtifacts[0]?.startValue).toBeUndefined();
+    expect(acExecution.outputPlanArtifacts[0]?.stepTime).toBeUndefined();
+    expect(acExecution.outputPlanArtifacts[0]?.useInitialConditions).toBeUndefined();
+    expect(acExecution.outputPlanArtifactRecords[0]?.SweepKind).toBe("dec");
+    expect(acExecution.outputPlanArtifactRecords[0]?.PointCount).toBe("1");
+    expect(acExecution.outputPlanArtifactRecords[0]?.StartFrequencyHz).toBe("1.000000e+03");
+    expect(acExecution.outputPlanArtifactRecords[0]?.StopFrequencyHz).toBe("1.000000e+03");
+    expect(acExecution.outputPlanArtifactRecords[0]?.StepTime).toBe("");
     expect(acExecution.outputPlanArtifacts[0]?.outputDirectiveKinds).toEqual([
       "save",
       "plot",
@@ -1980,6 +2074,16 @@ describe("transient", () => {
     const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
     expect(tranExecution.outputProbes).toEqual(["V(mid)"]);
     expect(tranExecution.outputDirectives).toEqual([".save"]);
+    expect(tranExecution.outputPlanArtifacts[0]?.stepTime).toBeCloseTo(1.0e-3, 12);
+    expect(tranExecution.outputPlanArtifacts[0]?.stopTime).toBeCloseTo(1.0e-3, 12);
+    expect(tranExecution.outputPlanArtifacts[0]?.startTime).toBeUndefined();
+    expect(tranExecution.outputPlanArtifacts[0]?.maxStep).toBeUndefined();
+    expect(tranExecution.outputPlanArtifacts[0]?.useInitialConditions).toBe(false);
+    expect(tranExecution.outputPlanArtifactRecords[0]?.StepTime).toBe("1.000000e-03");
+    expect(tranExecution.outputPlanArtifactRecords[0]?.StopTime).toBe("1.000000e-03");
+    expect(tranExecution.outputPlanArtifactRecords[0]?.StartTime).toBe("");
+    expect(tranExecution.outputPlanArtifactRecords[0]?.MaxStep).toBe("");
+    expect(tranExecution.outputPlanArtifactRecords[0]?.UseInitialConditions).toBe("false");
     expect(tranExecution.outputPlanArtifacts[0]?.outputProbeLines).toEqual([saveLine]);
     expect(tranExecution.outputPlanArtifacts[0]?.outputDirectiveLines).toEqual([saveLine]);
     expect(tranExecution.analysisDirectives).toEqual([".tran"]);
@@ -2130,7 +2234,15 @@ describe("transient", () => {
     expect(noiseExecution.outputProbes).toEqual(["V(mid)"]);
     expect(noiseExecution.outputPlanArtifacts[0]?.sourceName).toBe("V1");
     expect(noiseExecution.outputPlanArtifacts[0]?.outputNode).toBe("mid");
+    expect(noiseExecution.outputPlanArtifacts[0]?.sweepKind).toBe("lin");
+    expect(noiseExecution.outputPlanArtifacts[0]?.pointCount).toBe(1);
+    expect(noiseExecution.outputPlanArtifacts[0]?.startFrequencyHz).toBeCloseTo(1.0e3, 9);
+    expect(noiseExecution.outputPlanArtifacts[0]?.stopFrequencyHz).toBeCloseTo(1.0e3, 9);
     expect(noiseExecution.outputPlanArtifactRecords[0]?.OutputNode).toBe("mid");
+    expect(noiseExecution.outputPlanArtifactRecords[0]?.SweepKind).toBe("lin");
+    expect(noiseExecution.outputPlanArtifactRecords[0]?.PointCount).toBe("1");
+    expect(noiseExecution.outputPlanArtifactRecords[0]?.StartFrequencyHz).toBe("1.000000e+03");
+    expect(noiseExecution.outputPlanArtifactRecords[0]?.StopFrequencyHz).toBe("1.000000e+03");
     expect(noiseExecution.analysisDirectives).toEqual([".noise"]);
     expect(noiseExecution.tableCount).toBe(3);
     expect(noiseExecution.tables).toEqual(["result", "output-plan", "run-artifact"]);

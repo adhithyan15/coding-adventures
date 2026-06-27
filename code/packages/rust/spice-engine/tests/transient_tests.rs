@@ -1997,6 +1997,18 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(output_plan_artifact.source_name, None);
     assert_eq!(output_plan_artifact.output_node, None);
+    assert_eq!(output_plan_artifact.sweep_kind, None);
+    assert_eq!(output_plan_artifact.start_value, None);
+    assert_eq!(output_plan_artifact.stop_value, None);
+    assert_eq!(output_plan_artifact.step_value, None);
+    assert_eq!(output_plan_artifact.point_count, None);
+    assert_eq!(output_plan_artifact.start_frequency_hz, None);
+    assert_eq!(output_plan_artifact.stop_frequency_hz, None);
+    assert_eq!(output_plan_artifact.step_time, None);
+    assert_eq!(output_plan_artifact.stop_time, None);
+    assert_eq!(output_plan_artifact.start_time, None);
+    assert_eq!(output_plan_artifact.max_step, None);
+    assert_eq!(output_plan_artifact.use_initial_conditions, None);
     assert_eq!(output_plan_artifact.result_row_count, 1);
     assert_eq!(
         output_plan_artifact.result_columns,
@@ -2032,11 +2044,84 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             "run-artifact".to_string()
         ]
     );
+    let expected_output_plan_columns = [
+        "Analysis",
+        "Directive",
+        "Line",
+        "SourceName",
+        "OutputNode",
+        "SweepKind",
+        "StartValue",
+        "StopValue",
+        "StepValue",
+        "PointCount",
+        "StartFrequencyHz",
+        "StopFrequencyHz",
+        "StepTime",
+        "StopTime",
+        "StartTime",
+        "MaxStep",
+        "UseInitialConditions",
+        "ResultRows",
+        "ResultColumns",
+        "ResultColumnList",
+        "OutputProbes",
+        "OutputProbeList",
+        "OutputProbeLines",
+        "OutputProbeLineList",
+        "OutputDirectives",
+        "OutputDirectiveList",
+        "OutputDirectiveKinds",
+        "OutputDirectiveKindList",
+        "OutputDirectiveAnalysisKinds",
+        "OutputDirectiveAnalysisKindList",
+        "OutputDirectiveLines",
+        "OutputDirectiveLineList",
+        "Tables",
+        "TableList",
+    ];
+    let expected_output_plan_row = vec![
+        "op".to_string(),
+        ".op".to_string(),
+        op_execution.plan.line_number.to_string(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        "1".to_string(),
+        "2".to_string(),
+        "Index;V(mid)".to_string(),
+        "1".to_string(),
+        "V(mid)".to_string(),
+        "1".to_string(),
+        save_line.to_string(),
+        "1".to_string(),
+        ".save".to_string(),
+        "1".to_string(),
+        "save".to_string(),
+        "1".to_string(),
+        "global".to_string(),
+        "1".to_string(),
+        save_line.to_string(),
+        "3".to_string(),
+        "result;output-plan;run-artifact".to_string(),
+    ];
     assert_eq!(
         op_execution.output_plan_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputProbeLines\tOutputProbeLineList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tOutputDirectiveLines\tOutputDirectiveLineList\tTables\tTableList\nop\t.op\t{}\t\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t1\t{}\t1\t.save\t1\tsave\t1\tglobal\t1\t{}\t3\tresult;output-plan;run-artifact\n",
-            op_execution.plan.line_number, save_line, save_line
+            "{}\n{}\n",
+            expected_output_plan_columns.join("\t"),
+            expected_output_plan_row.join("\t")
         )
     );
     assert_eq!(
@@ -2046,8 +2131,9 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         op_execution.output_plan_artifact_csv,
         format!(
-            "Analysis,Directive,Line,SourceName,OutputNode,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputProbeLines,OutputProbeLineList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,OutputDirectiveLines,OutputDirectiveLineList,Tables,TableList\nop,.op,{0},,,1,2,Index;V(mid),1,V(mid),1,{1},1,.save,1,save,1,global,1,{1},3,result;output-plan;run-artifact\n",
-            op_execution.plan.line_number, save_line
+            "{}\n{}\n",
+            expected_output_plan_columns.join(","),
+            expected_output_plan_row.join(",")
         )
     );
     assert_eq!(
@@ -2072,6 +2158,24 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         op_execution.output_plan_artifact_records[0]
             .get("OutputNode")
+            .map(String::as_str),
+        Some("")
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_records[0]
+            .get("SweepKind")
+            .map(String::as_str),
+        Some("")
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_records[0]
+            .get("StepTime")
+            .map(String::as_str),
+        Some("")
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_records[0]
+            .get("UseInitialConditions")
             .map(String::as_str),
         Some("")
     );
@@ -2329,6 +2433,24 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         Some("V1")
     );
     assert_eq!(dc_execution.output_plan_artifacts[0].output_node, None);
+    assert_eq!(dc_execution.output_plan_artifacts[0].sweep_kind, None);
+    assert_eq!(dc_execution.output_plan_artifacts[0].start_value, Some(0.0));
+    assert_eq!(dc_execution.output_plan_artifacts[0].stop_value, Some(1.0));
+    assert_eq!(dc_execution.output_plan_artifacts[0].step_value, Some(1.0));
+    assert_eq!(dc_execution.output_plan_artifacts[0].point_count, None);
+    assert_eq!(
+        dc_execution.output_plan_artifacts[0].start_frequency_hz,
+        None
+    );
+    assert_eq!(
+        dc_execution.output_plan_artifacts[0].stop_frequency_hz,
+        None
+    );
+    assert_eq!(dc_execution.output_plan_artifacts[0].step_time, None);
+    assert_eq!(
+        dc_execution.output_plan_artifacts[0].use_initial_conditions,
+        None
+    );
     let dc_line = dc_execution.plan.line_number.to_string();
     assert_eq!(
         dc_execution.output_plan_artifact_records[0]
@@ -2345,6 +2467,30 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         dc_execution.output_plan_artifact_records[0]
             .get("OutputNode")
+            .map(String::as_str),
+        Some("")
+    );
+    assert_eq!(
+        dc_execution.output_plan_artifact_records[0]
+            .get("StartValue")
+            .map(String::as_str),
+        Some("0.000000e+00")
+    );
+    assert_eq!(
+        dc_execution.output_plan_artifact_records[0]
+            .get("StopValue")
+            .map(String::as_str),
+        Some("1.000000e+00")
+    );
+    assert_eq!(
+        dc_execution.output_plan_artifact_records[0]
+            .get("StepValue")
+            .map(String::as_str),
+        Some("1.000000e+00")
+    );
+    assert_eq!(
+        dc_execution.output_plan_artifact_records[0]
+            .get("PointCount")
             .map(String::as_str),
         Some("")
     );
@@ -2517,6 +2663,49 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(ac_execution.output_plan_artifacts[0].output_node, None);
     assert_eq!(
+        ac_execution.output_plan_artifacts[0].sweep_kind.as_deref(),
+        Some("dec")
+    );
+    assert_eq!(ac_execution.output_plan_artifacts[0].point_count, Some(1));
+    assert_eq!(
+        ac_execution.output_plan_artifacts[0].start_frequency_hz,
+        Some(1.0e3)
+    );
+    assert_eq!(
+        ac_execution.output_plan_artifacts[0].stop_frequency_hz,
+        Some(1.0e3)
+    );
+    assert_eq!(ac_execution.output_plan_artifacts[0].start_value, None);
+    assert_eq!(ac_execution.output_plan_artifacts[0].step_time, None);
+    assert_eq!(
+        ac_execution.output_plan_artifacts[0].use_initial_conditions,
+        None
+    );
+    assert_eq!(
+        ac_execution.output_plan_artifact_records[0]
+            .get("SweepKind")
+            .map(String::as_str),
+        Some("dec")
+    );
+    assert_eq!(
+        ac_execution.output_plan_artifact_records[0]
+            .get("PointCount")
+            .map(String::as_str),
+        Some("1")
+    );
+    assert_eq!(
+        ac_execution.output_plan_artifact_records[0]
+            .get("StartFrequencyHz")
+            .map(String::as_str),
+        Some("1.000000e+03")
+    );
+    assert_eq!(
+        ac_execution.output_plan_artifact_records[0]
+            .get("StopFrequencyHz")
+            .map(String::as_str),
+        Some("1.000000e+03")
+    );
+    assert_eq!(
         ac_execution.output_plan_artifacts[0].output_directive_kinds,
         vec!["save".to_string(), "plot".to_string()]
     );
@@ -2641,6 +2830,38 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
     assert_eq!(tran_execution.output_probes, vec!["V(mid)".to_string()]);
     assert_eq!(tran_execution.output_directives, vec![".save".to_string()]);
+    assert_eq!(
+        tran_execution.output_plan_artifacts[0].step_time,
+        Some(1.0e-3)
+    );
+    assert_eq!(
+        tran_execution.output_plan_artifacts[0].stop_time,
+        Some(1.0e-3)
+    );
+    assert_eq!(tran_execution.output_plan_artifacts[0].start_time, None);
+    assert_eq!(tran_execution.output_plan_artifacts[0].max_step, None);
+    assert_eq!(
+        tran_execution.output_plan_artifacts[0].use_initial_conditions,
+        Some(false)
+    );
+    assert_eq!(
+        tran_execution.output_plan_artifact_records[0]
+            .get("StepTime")
+            .map(String::as_str),
+        Some("1.000000e-03")
+    );
+    assert_eq!(
+        tran_execution.output_plan_artifact_records[0]
+            .get("StopTime")
+            .map(String::as_str),
+        Some("1.000000e-03")
+    );
+    assert_eq!(
+        tran_execution.output_plan_artifact_records[0]
+            .get("UseInitialConditions")
+            .map(String::as_str),
+        Some("false")
+    );
     assert_eq!(
         tran_execution.output_plan_artifacts[0].output_directive_lines,
         vec![save_line]
@@ -2935,10 +3156,52 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         Some("mid")
     );
     assert_eq!(
+        noise_execution.output_plan_artifacts[0]
+            .sweep_kind
+            .as_deref(),
+        Some("lin")
+    );
+    assert_eq!(
+        noise_execution.output_plan_artifacts[0].point_count,
+        Some(1)
+    );
+    assert_eq!(
+        noise_execution.output_plan_artifacts[0].start_frequency_hz,
+        Some(1.0e3)
+    );
+    assert_eq!(
+        noise_execution.output_plan_artifacts[0].stop_frequency_hz,
+        Some(1.0e3)
+    );
+    assert_eq!(
         noise_execution.output_plan_artifact_records[0]
             .get("OutputNode")
             .map(String::as_str),
         Some("mid")
+    );
+    assert_eq!(
+        noise_execution.output_plan_artifact_records[0]
+            .get("SweepKind")
+            .map(String::as_str),
+        Some("lin")
+    );
+    assert_eq!(
+        noise_execution.output_plan_artifact_records[0]
+            .get("PointCount")
+            .map(String::as_str),
+        Some("1")
+    );
+    assert_eq!(
+        noise_execution.output_plan_artifact_records[0]
+            .get("StartFrequencyHz")
+            .map(String::as_str),
+        Some("1.000000e+03")
+    );
+    assert_eq!(
+        noise_execution.output_plan_artifact_records[0]
+            .get("StopFrequencyHz")
+            .map(String::as_str),
+        Some("1.000000e+03")
     );
     assert_eq!(
         noise_execution.analysis_directives,

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Expose selected analysis sweep, frequency, transient timing, and `UIC`
+  metadata in `run_deck_analysis` output-plan artifacts, with stable table,
+  CSV, compact JSON, and header-keyed record exports, matching Python and
+  TypeScript.
 - Expose selected analysis output-node metadata in `run_deck_analysis`
   output-plan artifacts beside line/source metadata, with stable table, CSV,
   compact JSON, and header-keyed record exports, matching Python and

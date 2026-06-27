@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose selected analysis sweep, frequency, transient timing, and `UIC`
+  metadata in `runDeckAnalysis` output-plan artifacts, with stable table, CSV,
+  compact JSON, and header-keyed record exports, matching Python and Rust.
 - Expose selected analysis output-node metadata in `runDeckAnalysis`
   output-plan artifacts beside line/source metadata, with stable table, CSV,
   compact JSON, and header-keyed record exports, matching Python and Rust.
