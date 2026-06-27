@@ -48,8 +48,10 @@ return stacks. String literal `PRINT`, literal-backed string variables
 (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`), and `IF A$ = "Y"` / `IF A$ <> "Y"`
 string branches now lower through the shared E4 path on all seven matrix
 backends. Literal `+` concatenation (`LET A$ = "O" + "K"; PRINT A$`) uses E4
-`str_concat` on the same backends. Richer string expressions, string arrays,
-string `INPUT`, and non-literal string copies remain follow-ups. See
+`str_concat` on the same backends, and literal-backed scalar string copies
+(`LET A$ = "OK"; LET B$ = A$; PRINT B$`) reuse that E4 path with an empty
+suffix. Richer dynamic string storage, string arrays, and string `INPUT` remain
+follow-ups. See
 [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`

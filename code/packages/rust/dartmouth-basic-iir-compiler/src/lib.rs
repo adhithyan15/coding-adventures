@@ -1262,8 +1262,11 @@ impl Compiler {
                 if src == target {
                     return Ok(Some(src));
                 }
-                return Err(CompileError::Unsupported(
-                    "string variable assignment currently supports literals and `+` concatenation, not string-to-string copies".into()));
+                let empty = self.fresh_temp();
+                self.emit_str_const_to(&empty, String::new());
+                self.emit("str_concat", Some(target),
+                    vec![Operand::Var(src), Operand::Var(empty)], "str");
+                return Ok(Some(target.to_string()));
             }
             return Ok(Some(basic_string_slot(&name)));
         }
@@ -2594,6 +2597,28 @@ mod tests {
         assert!(body.iter().any(|i| i.op == "print_str"
             && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "__basic_str_A")),
             "PRINT A$ should consume the concatenated string slot");
+    }
+
+    #[test]
+    fn compiles_string_variable_copy_assignment_and_print() {
+        let m = compile("10 LET A$ = \"OK\"\n20 LET B$ = A$\n30 PRINT B$\n40 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        let empty_slot = body.iter()
+            .find(|i| i.op == "str_const"
+                && matches!(i.srcs.first(), Some(Operand::Str(s)) if s.is_empty()))
+            .and_then(|i| i.dest.as_deref())
+            .expect("copy should materialize an empty string concat operand");
+        assert!(body.iter().any(|i| i.op == "str_concat"
+            && i.dest.as_deref() == Some("__basic_str_B")
+            && matches!(i.srcs.as_slice(), [
+                Operand::Var(left),
+                Operand::Var(right)
+            ] if left == "__basic_str_A" && right == empty_slot)),
+            "B$ = A$ should copy through E4 str_concat with an empty suffix");
+        assert!(body.iter().any(|i| i.op == "print_str"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "__basic_str_B")),
+            "PRINT B$ should consume the copied string slot");
     }
 
     #[test]

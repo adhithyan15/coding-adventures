@@ -1059,6 +1059,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 literal-backed scalar string copy. `B$ = A$`
+    // lowers to E4 `str_concat` with an empty suffix, proving immutable copy
+    // semantics without a new string-copy opcode or dynamic string storage.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"OK\"\n20 LET B$ = A$\n30 PRINT B$\n40 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — BA4 string equality drives control flow. `IF A$ = "Y"`
     // lowers to shared E4 `str_eq`, then the existing branch machinery chooses
     // the target line. The false path prints BAD and stops; the true path prints

@@ -1,5 +1,20 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.19.0 — 2026-06-27 — BA4 literal-backed scalar string copy
+
+Scalar string assignment now accepts a string variable RHS:
+
+```basic
+10 LET A$ = "OK"
+20 LET B$ = A$
+30 PRINT B$
+```
+
+The compiler lowers `B$ = A$` as E4 `str_concat B, A, ""`, materializing the
+empty suffix as `str_const`. This proves immutable string-copy semantics over
+the existing E4 opcode set without adding a dedicated copy opcode or claiming
+general dynamic byte-string storage, string arrays, or string `INPUT`.
+
 ## 0.18.0 — 2026-06-27 — BA4 literal string concatenation
 
 BASIC string assignment now accepts literal-backed `+` concatenation:

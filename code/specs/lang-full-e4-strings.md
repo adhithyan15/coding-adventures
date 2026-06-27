@@ -147,11 +147,12 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   tokenize/parse as `NAME`s, and `LET A$ = "HI"; PRINT A$` lowers to a safe E4
   string slot plus `print_str`; `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
   proves literal reassignment through that same slot, and
-  `LET A$ = "O" + "K"; PRINT A$` proves literal `str_concat`. String compares in
-  `IF A$ = "Y"` and `IF A$ <> "Y"` lower to `str_eq` (the latter branches with
-  `jmp_if_false`) and now drive line-control branching on all seven backends;
-  string arrays, string `INPUT`, non-literal string copies, and richer
-  expressions remain follow-ups.
+  `LET A$ = "O" + "K"; PRINT A$` proves literal `str_concat`. `LET A$ = "OK";
+  LET B$ = A$; PRINT B$` proves scalar string copy by lowering through
+  `str_concat` with an empty suffix. String compares in `IF A$ = "Y"` and
+  `IF A$ <> "Y"` lower to `str_eq` (the latter branches with `jmp_if_false`) and
+  now drive line-control branching on all seven backends; string arrays, string
+  `INPUT`, and broader dynamic string expressions remain follow-ups.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
   produces string literals. The current foothold recognises undeclared
   statement-position `print`/`output` calls and lowers string literal actuals to
@@ -225,8 +226,10 @@ merge before the next:
    tokenizes `$`-suffixed names as one `NAME`, the parser accepts `STRING` as a
    primary expression, and `dartmouth-basic-iir-compiler` lowers `LET A$ = "HI"`
    into a safe typed string slot consumed by `PRINT A$`. Matrix `Prog` returns
-   stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Richer string
-   expressions, string arrays, and string `INPUT` remain follow-ups. A second
+   stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Scalar copy
+   `LET A$ = "OK"; LET B$ = A$; PRINT B$` now returns stdout `OK` on the same
+   seven backends. Richer dynamic string expressions, string arrays, and string
+   `INPUT` remain follow-ups. A second
    matrix `Prog` proves `IF A$ = "Y" THEN ...` routes to `PRINT "OK"` through
    E4 `str_eq` on the same seven backends.
 2b. ✅ **AL4-literal-output proof** — `algol-iir-compiler` recognises
