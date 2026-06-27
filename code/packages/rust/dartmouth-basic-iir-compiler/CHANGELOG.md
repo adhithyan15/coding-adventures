@@ -1,5 +1,21 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.28.0 — 2026-06-27 — BA4 variable-variable string PRINT concat proof
+
+String `PRINT` now has an explicit unit and matrix proof for concatenating two
+scalar string variables directly in the print expression:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = "K"
+30 PRINT A$ + B$
+```
+
+The compiler lowers the expression to E4 `str_concat` with
+`__basic_str_A` and `__basic_str_B` operands, then feeds the temporary result
+directly to `print_str`. `lang-aot` observes stdout `OK` on every LANG-FULL
+backend.
+
 ## 0.27.0 — 2026-06-27 — BA4 chained string concatenation proof
 
 String expressions now have an explicit unit and matrix proof for chained

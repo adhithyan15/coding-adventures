@@ -1221,6 +1221,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 variable-variable string expression in PRINT.
+    // This proves `PRINT` can consume a temporary E4 `str_concat` result when
+    // both concat operands are scalar string slots, not only a slot + literal.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$ + B$\n40 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — BA4 string expression in IF equality. This proves the
     // relation path can consume a temporary E4 string expression result before
     // `str_eq` drives the existing line-control branch.

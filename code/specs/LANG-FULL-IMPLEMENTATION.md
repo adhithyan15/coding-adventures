@@ -522,7 +522,9 @@ backend immediately) come before the enabler-dependent items.
   `LET A$ = "OK"; LET B$ = A$; PRINT B$` proves scalar string copy,
   `PRINT A$; B$` proves ordered repeated string output, and
   `LET A$ = "O"; PRINT A$ + "K"` proves `PRINT` can consume a temporary string
-  expression result directly. `LET A$ = "O"; IF A$ + "K" = "OK" THEN n`
+  expression result directly. `LET A$ = "O"; LET B$ = "K"; PRINT A$ + B$`
+  proves both concat operands can be scalar string slots in that direct-print path.
+  `LET A$ = "O"; IF A$ + "K" = "OK" THEN n`
   proves that same expression path before `str_eq` line-control branching.
   `LET A$ = "O"; LET B$ = A$ + "K"; PRINT B$` proves variable-backed concat
   assignment into a second scalar string slot, and

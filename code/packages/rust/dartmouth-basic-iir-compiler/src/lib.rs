@@ -2740,6 +2740,24 @@ mod tests {
     }
 
     #[test]
+    fn compiles_string_variable_concat_print_expression() {
+        let m = compile("10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$ + B$\n40 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        let concat_dest = body.iter()
+            .find(|i| i.op == "str_concat"
+                && matches!(i.srcs.as_slice(), [
+                    Operand::Var(left),
+                    Operand::Var(right)
+                ] if left == "__basic_str_A" && right == "__basic_str_B"))
+            .and_then(|i| i.dest.as_deref())
+            .expect("PRINT A$ + B$ should lower through str_concat");
+        assert!(body.iter().any(|i| i.op == "print_str"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == concat_dest)),
+            "PRINT should consume the variable-variable concat result directly");
+    }
+
+    #[test]
     fn compiles_string_concat_if_expression_equality() {
         let src = "10 LET A$ = \"O\"\n\
                    20 IF A$ + \"K\" = \"OK\" THEN 50\n\

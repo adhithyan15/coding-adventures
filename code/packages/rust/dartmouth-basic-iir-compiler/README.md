@@ -58,8 +58,9 @@ Multi-item string printing (`PRINT A$; B$`) emits ordered `print_str` calls
 without numeric formatting helpers, and comma-separated string printing
 (`PRINT A$, B$`) reuses BA2's single-space separator between those E4 calls.
 `PRINT A$ + "K"` also consumes a temporary E4 `str_concat` result directly, and
-`IF A$ + "K" = "OK" THEN ...` feeds the same expression path into `str_eq`
-line-control branching. `LET B$ = A$ + "K"; PRINT B$` stores the variable-backed
+`PRINT A$ + B$` proves both concat operands can be scalar string slots in that
+direct-print path. `IF A$ + "K" = "OK" THEN ...` feeds the same expression path
+into `str_eq` line-control branching. `LET B$ = A$ + "K"; PRINT B$` stores the variable-backed
 concat directly into another scalar string slot, and
 `LET B$ = A$ + "B" + "C"; PRINT B$` proves chained left-associative concat
 through repeated E4 `str_concat`. Richer dynamic string storage, string arrays,

@@ -3,7 +3,8 @@
 **Status:** IR + reference VM slice implemented. BASIC BA4 literal/scalar
 strings, reassignment, equality/inequality, copied-slot equality, literal and
 variable-backed concat, expression concat in `PRINT`/`IF`, and multi-item string
-`PRINT` with `;` and `,` run on all seven backends. ALGOL AL4 literal output,
+`PRINT` with `;` and `,` run on all seven backends, including `PRINT A$ + B$`
+over two scalar string slots. ALGOL AL4 literal output,
 `output`, multi-argument `output`, scalar variables, scalar copies, and copy
 snapshots run on all seven backends. Twig
 literal, immutable top-level, and lexical-local string ops run on all seven
@@ -159,7 +160,8 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   output without concat or numeric formatting helpers, while `PRINT A$, B$`
   proves BA2's comma separator (`putchar(' ')`) composes with the same ordered
   `print_str` calls. `LET A$ = "O"; PRINT A$ + "K"` proves `PRINT` can consume a
-  temporary E4 string-expression result, and
+  temporary E4 string-expression result, and `LET B$ = "K"; PRINT A$ + B$`
+  proves both concat operands can be scalar string slots in that direct-print path.
   `IF A$ + "K" = "OK" THEN ...` proves the same temporary expression path before
   `str_eq`. `LET B$ = A$ + "K"; PRINT B$` proves variable-backed concat
   assignment into another scalar string slot. String compares in `IF A$ = "Y"` and
@@ -217,7 +219,7 @@ everywhere. The matrix also covers the **bounds-trap** case: `(string-ref "ABC"
 3)` must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 Dartmouth BASIC proves source-language string variables, reassignment, scalar
 copy, copied-slot equality, literal/variable-backed concat, concat expressions in
-`PRINT`/`IF`, equality/inequality branches, and multi-item string `PRINT` with
+`PRINT`/`IF` including `PRINT A$ + B$`, equality/inequality branches, and multi-item string `PRINT` with
 both `;` and `,` on all seven backends. ALGOL proves literal output, the
 `output` alias, multi-argument `output`, scalar string variables, scalar copies,
 and copy snapshots on the same all-seven E4 path.
@@ -258,7 +260,8 @@ merge before the next:
    into a safe typed string slot consumed by `PRINT A$`. Matrix `Prog` returns
    stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Literal
    reassignment, literal concat assignment, scalar copy, variable-backed concat
-   assignment, concat expressions in `PRINT`/`IF`, equality/inequality branches,
+   assignment, concat expressions in `PRINT`/`IF` including `PRINT A$ + B$`,
+   equality/inequality branches,
    copied-slot equality, tight multi-item string `PRINT` (`PRINT A$; B$`), and
    comma-separated string `PRINT` (`PRINT A$, B$` => `O K`) all now run on the
    same seven backends. String arrays, string `INPUT`, captured/dynamic storage,
