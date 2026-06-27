@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose selected result row counts in `runDeckAnalysis` output-plan artifacts
+  beside result-column inventories, with stable table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and Rust.
 - Expose selected output probe source line inventories in `runDeckAnalysis`
   output-plan artifacts aligned with selected output-probe inventories, with
   stable table, CSV, compact JSON, and header-keyed record exports, matching
