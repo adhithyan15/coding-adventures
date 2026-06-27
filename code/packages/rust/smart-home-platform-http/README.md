@@ -14,6 +14,11 @@ stable local API responses for:
 - `/api/services`
 - `/api/services/:domain/:service`
 - `/api/events`
+- `/api/smart_home/runtime`
+- `/api/smart_home/events`
+- `/api/smart_home/command_results`
+- `/api/smart_home/authorization_decisions`
+- `/api/smart_home/desired_states`
 
 `POST /api/services/:domain/:service` accepts Home Assistant-style JSON targets
 and dispatches through `SmartHomeRuntime::execute_command_tool`, so runtime
@@ -21,6 +26,11 @@ capability grants still decide whether a local API caller can mutate devices.
 Targets can use either the D23 entity ids, such as `entity-light-1`, or the
 Home Assistant-style aliases exposed in state attributes, such as
 `light.entity_light_1`.
+
+The `GET /api/smart_home/*` routes expose dashboard-ready read models for the
+same runtime: pending-work snapshot counts, checkpointed event-log entries,
+command-result audit records, authorization decisions, and desired-state
+supervision targets.
 
 ## Dependencies
 
@@ -47,6 +57,7 @@ Then query it from another shell:
 ```bash
 curl http://127.0.0.1:8123/api/
 curl http://127.0.0.1:8123/api/states
+curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
 curl -X POST http://127.0.0.1:8123/api/services/light/turn_on \
   -H 'Content-Type: application/json' \
   -d '{"entity_id":"light.entity_light_1","brightness_pct":75}'

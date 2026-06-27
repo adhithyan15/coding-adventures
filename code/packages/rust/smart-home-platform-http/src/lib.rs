@@ -9,11 +9,18 @@
 
 use serde_json::Value as JsonValue;
 use smart_home_core::{
-    AgentId, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode,
-    CommandResult, CommandStatus, CommandType, Entity, EntityId, EntityKind, PrivilegeTier, Scene,
+    AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Capability,
+    CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode, CommandResult, CommandStatus,
+    CommandType, DeviceEvent, DeviceEventType, Entity, EntityId, EntityKind, PrivilegeTier, Scene,
     StateConfidence, StateDelta, StateSource, Value,
 };
-use smart_home_runtime::{RuntimeCommandToolRequest, RuntimeError, SmartHomeRuntime};
+use smart_home_runtime::{
+    DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
+    RuntimeCommandResultQuery, RuntimeCommandResultRecord, RuntimeCommandResultSort,
+    RuntimeCommandToolRequest, RuntimeError, RuntimeEvent, RuntimeEventCheckpoint,
+    RuntimeEventFilter, RuntimeEventLogEntry, RuntimeEventQuery, RuntimeEventSort,
+    RuntimeReadSnapshot, SmartHomeRuntime,
+};
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
 use web_core::{WebApp, WebRequest, WebResponse};
@@ -341,6 +348,41 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/runtime", move |_| {
+            runtime_snapshot_response(&runtime)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/events", move |request| {
+            runtime_events_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/command_results", move |request| {
+            runtime_command_results_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/authorization_decisions", move |request| {
+            runtime_authorization_decisions_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/desired_states", move |request| {
+            runtime_desired_states_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.post("/api/services/:domain/:service", move |request| {
             service_call_response(&runtime, request)
         });
@@ -518,6 +560,481 @@ fn events_json(event_types: &[String]) -> String {
             .collect::<Vec<_>>()
             .join(",")
     )
+}
+
+fn runtime_snapshot_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    WebResponse::json(
+        runtime_snapshot_json(&runtime_guard.read_snapshot_at(runtime.now_ms)).into_bytes(),
+    )
+}
+
+fn runtime_events_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let query = match runtime_event_query(request) {
+        Ok(query) => query,
+        Err(error) => return api_error_response(error),
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let entries = runtime_guard.event_bus().query_events(&query);
+    let summary = runtime_guard.event_bus().event_log_summary(&query);
+    WebResponse::json(runtime_event_log_json(&entries, &summary).into_bytes())
+}
+
+fn runtime_command_results_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let query = match runtime_command_result_query(request) {
+        Ok(query) => query,
+        Err(error) => return api_error_response(error),
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let records = runtime_guard.query_command_results(&query);
+    let summary = runtime_guard.command_result_summary(&query);
+    WebResponse::json(command_results_audit_json(&records, &summary).into_bytes())
+}
+
+fn runtime_authorization_decisions_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let query = match runtime_authorization_decision_query(request) {
+        Ok(query) => query,
+        Err(error) => return api_error_response(error),
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let decisions = runtime_guard.query_authorization_decisions(&query);
+    let summary = runtime_guard.authorization_decision_summary(&query);
+    WebResponse::json(authorization_decisions_json(&decisions, &summary).into_bytes())
+}
+
+fn runtime_desired_states_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let query = match desired_state_query(request) {
+        Ok(query) => query,
+        Err(error) => return api_error_response(error),
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let desired_states = runtime_guard.query_desired_states(&query);
+    WebResponse::json(desired_states_json(&desired_states, &runtime_guard).into_bytes())
+}
+
+fn runtime_snapshot_json(snapshot: &RuntimeReadSnapshot) -> String {
+    let pending = snapshot.pending_work_summary();
+    format!(
+        "{{\"generated_at_ms\":{},\"registry\":{{\"bridges\":{},\"devices\":{},\"entities\":{},\"scenes\":{},\"states\":{},\"events\":{},\"protocol_identifiers\":{},\"capability_grants\":{},\"authorization_decisions\":{}}},\"event_bus\":{{\"subscription_count\":{},\"pending_delivery_count\":{},\"published_event_count\":{},\"backlogged_subscription_count\":{},\"max_pending_delivery_count\":{}}},\"discovery\":{{\"record_count\":{},\"worker_count\":{},\"due_worker_count\":{},\"unhealthy_worker_count\":{},\"workers_with_failures\":{}}},\"supervisor\":{{\"worker_count\":{},\"restart_due_count\":{},\"unhealthy_count\":{},\"running_count\":{}}},\"desired_state\":{{\"target_count\":{},\"capability_count\":{}}},\"pairing\":{{\"session_count\":{},\"expiring_session_count\":{}}},\"optimistic_state\":{{\"target_count\":{},\"stale_target_count\":{}}},\"pending_work\":{{\"total\":{},\"event_backlog_count\":{},\"backlogged_subscription_count\":{},\"discovery_worker_due_count\":{},\"unhealthy_discovery_worker_count\":{},\"restart_due_count\":{},\"unhealthy_worker_count\":{},\"expiring_pairing_session_count\":{},\"stale_optimistic_state_count\":{},\"state_refresh_target_count\":{}}}}}",
+        snapshot.generated_at_ms,
+        snapshot.registry_counts.bridges,
+        snapshot.registry_counts.devices,
+        snapshot.registry_counts.entities,
+        snapshot.registry_counts.scenes,
+        snapshot.registry_counts.states,
+        snapshot.registry_counts.events,
+        snapshot.registry_counts.protocol_identifiers,
+        snapshot.registry_counts.capability_grants,
+        snapshot.registry_counts.authorization_decisions,
+        snapshot.event_bus.subscription_count,
+        snapshot.event_bus.pending_delivery_count,
+        snapshot.event_bus.published_event_count,
+        snapshot.event_bus.backlogged_subscription_count,
+        snapshot.event_bus.max_pending_delivery_count,
+        snapshot.discovery_record_count,
+        snapshot.discovery_scheduler.worker_count,
+        snapshot.discovery_scheduler.due_worker_count,
+        snapshot.discovery_scheduler.unhealthy_count,
+        snapshot.discovery_scheduler.workers_with_failures,
+        snapshot.supervisor.worker_count,
+        snapshot.supervisor.restart_due_count,
+        snapshot.supervisor.unhealthy_count,
+        snapshot.supervisor.running_count,
+        snapshot.desired_state_count,
+        snapshot.desired_capability_count,
+        snapshot.pairing_session_count,
+        snapshot.expiring_pairing_session_count,
+        snapshot.optimistic_state_count,
+        snapshot.stale_optimistic_state_count,
+        pending.total_pending_work_count(),
+        pending.event_backlog_count,
+        pending.backlogged_subscription_count,
+        pending.discovery_worker_due_count,
+        pending.unhealthy_discovery_worker_count,
+        pending.restart_due_count,
+        pending.unhealthy_worker_count,
+        pending.expiring_pairing_session_count,
+        pending.stale_optimistic_state_count,
+        pending.state_refresh_target_count,
+    )
+}
+
+fn runtime_event_log_json(
+    entries: &[RuntimeEventLogEntry<'_>],
+    summary: &smart_home_runtime::RuntimeEventLogSummary,
+) -> String {
+    format!(
+        "{{\"summary\":{},\"events\":[{}]}}",
+        runtime_event_summary_json(summary),
+        entries
+            .iter()
+            .map(|entry| runtime_event_entry_json(entry))
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn runtime_event_summary_json(summary: &smart_home_runtime::RuntimeEventLogSummary) -> String {
+    format!(
+        "{{\"total_events\":{},\"device_events\":{},\"command_results\":{},\"bridge_health_events\":{},\"state_expired_events\":{},\"desired_state_drift_events\":{},\"worker_restart_events\":{},\"first_sequence\":{},\"latest_sequence\":{},\"next_sequence\":{}}}",
+        summary.total_events,
+        summary.device_events,
+        summary.command_results,
+        summary.bridge_health_events,
+        summary.state_expired_events,
+        summary.desired_state_drift_events,
+        summary.worker_restart_events,
+        optional_u64_json(summary.first_sequence),
+        optional_u64_json(summary.latest_sequence),
+        summary.next_checkpoint.next_sequence(),
+    )
+}
+
+fn runtime_event_entry_json(entry: &RuntimeEventLogEntry<'_>) -> String {
+    format!(
+        "{{\"sequence\":{},\"next_sequence\":{},\"event\":{}}}",
+        entry.sequence,
+        entry.next_checkpoint.next_sequence(),
+        runtime_event_json(entry.event),
+    )
+}
+
+fn runtime_event_json(event: &RuntimeEvent) -> String {
+    match event {
+        RuntimeEvent::Device(event) => device_event_json(event),
+        RuntimeEvent::CommandResult(result) => format!(
+            "{{\"kind\":\"command_result\",\"result\":{}}}",
+            command_result_json(result)
+        ),
+        RuntimeEvent::BridgeHealth {
+            event_id,
+            bridge_id,
+            health,
+            observed_at_ms,
+            received_at_ms,
+        } => format!(
+            "{{\"kind\":\"bridge_health\",\"event_id\":{},\"bridge_id\":{},\"health\":{},\"observed_at_ms\":{},\"received_at_ms\":{}}}",
+            json_string(event_id.as_str()),
+            json_string(bridge_id.as_str()),
+            json_string(format!("{health:?}").to_ascii_lowercase()),
+            observed_at_ms,
+            received_at_ms,
+        ),
+        RuntimeEvent::StateExpired {
+            entity_id,
+            expired_at_ms,
+        } => format!(
+            "{{\"kind\":\"state_expired\",\"entity_id\":{},\"expired_at_ms\":{}}}",
+            json_string(entity_id.as_str()),
+            expired_at_ms,
+        ),
+        RuntimeEvent::DesiredStateDrift {
+            bridge_id,
+            entity_id,
+            capability_id,
+            reason,
+            detected_at_ms,
+        } => format!(
+            "{{\"kind\":\"desired_state_drift\",\"bridge_id\":{},\"entity_id\":{},\"capability_id\":{},\"reason\":{},\"detected_at_ms\":{}}}",
+            json_string(bridge_id.as_str()),
+            json_string(entity_id.as_str()),
+            json_string(capability_id.as_str()),
+            json_string(format!("{reason:?}").to_ascii_lowercase()),
+            detected_at_ms,
+        ),
+        RuntimeEvent::WorkerNeedsRestart {
+            bridge_id,
+            integration_id,
+            overdue_at_ms,
+        } => format!(
+            "{{\"kind\":\"worker_needs_restart\",\"bridge_id\":{},\"integration_id\":{},\"overdue_at_ms\":{}}}",
+            json_string(bridge_id.as_str()),
+            json_string(integration_id.as_str()),
+            overdue_at_ms,
+        ),
+    }
+}
+
+fn device_event_json(event: &DeviceEvent) -> String {
+    format!(
+        "{{\"kind\":\"device_event\",\"event_id\":{},\"bridge_id\":{},\"device_id\":{},\"entity_id\":{},\"event_type\":{},\"observed_at_ms\":{},\"received_at_ms\":{},\"state_delta\":{},\"raw_ref\":{},\"correlation_id\":{}}}",
+        json_string(event.event_id.as_str()),
+        json_string(event.bridge_id.as_str()),
+        event
+            .device_id
+            .as_ref()
+            .map(|device_id| json_string(device_id.as_str()))
+            .unwrap_or_else(|| "null".to_string()),
+        event
+            .entity_id
+            .as_ref()
+            .map(|entity_id| json_string(entity_id.as_str()))
+            .unwrap_or_else(|| "null".to_string()),
+        json_string(device_event_type_label(event.event_type)),
+        event.observed_at_ms,
+        event.received_at_ms,
+        event
+            .state_delta
+            .as_ref()
+            .map(state_delta_json)
+            .unwrap_or_else(|| "null".to_string()),
+        event
+            .raw_ref
+            .as_ref()
+            .map(json_string)
+            .unwrap_or_else(|| "null".to_string()),
+        event
+            .correlation_id
+            .as_ref()
+            .map(|correlation_id| json_string(correlation_id.as_str()))
+            .unwrap_or_else(|| "null".to_string()),
+    )
+}
+
+fn command_results_audit_json(
+    records: &[RuntimeCommandResultRecord],
+    summary: &smart_home_runtime::RuntimeCommandResultSummary,
+) -> String {
+    format!(
+        "{{\"summary\":{},\"results\":[{}]}}",
+        command_result_summary_json(summary),
+        records
+            .iter()
+            .map(|record| {
+                format!(
+                    "{{\"sequence\":{},\"next_sequence\":{},\"result\":{}}}",
+                    record.sequence,
+                    record.next_checkpoint.next_sequence(),
+                    command_result_json(&record.result),
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",")
+    )
+}
+
+fn command_result_summary_json(
+    summary: &smart_home_runtime::RuntimeCommandResultSummary,
+) -> String {
+    format!(
+        "{{\"total_results\":{},\"accepted_results\":{},\"rejected_results\":{},\"timed_out_results\":{},\"failed_results\":{},\"first_sequence\":{},\"latest_sequence\":{},\"next_sequence\":{}}}",
+        summary.total_results,
+        summary.accepted_results,
+        summary.rejected_results,
+        summary.timed_out_results,
+        summary.failed_results,
+        optional_u64_json(summary.first_sequence),
+        optional_u64_json(summary.latest_sequence),
+        summary.next_checkpoint.next_sequence(),
+    )
+}
+
+fn authorization_decisions_json(
+    decisions: &[&AuthorizationDecision],
+    summary: &smart_home_core::AuthorizationDecisionLogSummary,
+) -> String {
+    format!(
+        "{{\"summary\":{},\"decisions\":[{}]}}",
+        authorization_decision_summary_json(summary),
+        decisions
+            .iter()
+            .map(|decision| authorization_decision_json(decision))
+            .collect::<Vec<_>>()
+            .join(",")
+    )
+}
+
+fn authorization_decision_summary_json(
+    summary: &smart_home_core::AuthorizationDecisionLogSummary,
+) -> String {
+    format!(
+        "{{\"total_decisions\":{},\"allowed_decisions\":{},\"denied_decisions\":{},\"tool_decisions\":{},\"command_decisions\":{},\"read_only_tier_decisions\":{},\"low_risk_tier_decisions\":{},\"human_approval_tier_decisions\":{},\"high_risk_tier_decisions\":{},\"decisions_with_missing_capabilities\":{},\"total_required_capabilities\":{},\"total_matched_grants\":{},\"total_missing_capabilities\":{}}}",
+        summary.total_decisions,
+        summary.allowed_decisions,
+        summary.denied_decisions,
+        summary.tool_decisions,
+        summary.command_decisions,
+        summary.read_only_tier_decisions,
+        summary.low_risk_tier_decisions,
+        summary.human_approval_tier_decisions,
+        summary.high_risk_tier_decisions,
+        summary.decisions_with_missing_capabilities,
+        summary.total_required_capabilities,
+        summary.total_matched_grants,
+        summary.total_missing_capabilities,
+    )
+}
+
+fn authorization_decision_json(decision: &AuthorizationDecision) -> String {
+    format!(
+        "{{\"principal_id\":{},\"subject\":{},\"outcome\":{},\"required_tier\":{},\"required_capabilities\":[{}],\"matched_grants\":[{}],\"missing_capabilities\":[{}],\"decided_at_ms\":{}}}",
+        json_string(decision.principal_id.as_str()),
+        authorization_subject_json(&decision.subject),
+        json_string(authorization_outcome_label(decision.outcome)),
+        json_string(privilege_tier_label(decision.required_tier)),
+        json_id_array(decision.required_capabilities.iter().map(|id| id.as_str())),
+        json_id_array(decision.matched_grants.iter().map(|id| id.as_str())),
+        json_id_array(decision.missing_capabilities.iter().map(|id| id.as_str())),
+        decision.decided_at_ms,
+    )
+}
+
+fn authorization_subject_json(subject: &AuthorizationSubject) -> String {
+    match subject {
+        AuthorizationSubject::Tool(tool) => {
+            format!(
+                "{{\"kind\":\"tool\",\"tool_id\":{}}}",
+                json_string(tool.descriptor().tool_id)
+            )
+        }
+        AuthorizationSubject::Command {
+            command_id,
+            entity_id,
+            command_type,
+        } => format!(
+            "{{\"kind\":\"command\",\"command_id\":{},\"entity_id\":{},\"command_type\":{}}}",
+            json_string(command_id.as_str()),
+            json_string(entity_id.as_str()),
+            json_string(command_type_label(*command_type)),
+        ),
+    }
+}
+
+fn desired_states_json(
+    desired_states: &[&DesiredEntityState],
+    runtime: &SmartHomeRuntime,
+) -> String {
+    let desired_capability_count = desired_states
+        .iter()
+        .map(|desired_state| desired_state.desired.len())
+        .sum::<usize>();
+    format!(
+        "{{\"summary\":{{\"total_desired_states\":{},\"total_desired_capabilities\":{}}},\"desired_states\":[{}]}}",
+        desired_states.len(),
+        desired_capability_count,
+        desired_states
+            .iter()
+            .map(|desired_state| desired_state_json(desired_state, runtime))
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn desired_state_json(desired_state: &DesiredEntityState, runtime: &SmartHomeRuntime) -> String {
+    let home_assistant_entity_id = runtime
+        .registry()
+        .entity(&desired_state.entity_id)
+        .map(home_assistant_entity_id)
+        .unwrap_or_else(|| home_assistant_entity_id_for(&desired_state.entity_id));
+    format!(
+        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"requested_by\":{},\"command_timeout_ms\":{},\"desired\":[{}]}}",
+        json_string(desired_state.entity_id.as_str()),
+        json_string(home_assistant_entity_id),
+        json_string(&desired_state.requested_by),
+        desired_state.command_timeout_ms,
+        desired_state
+            .desired
+            .iter()
+            .map(state_delta_json)
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn runtime_event_query(request: &WebRequest) -> Result<RuntimeEventQuery, ApiError> {
+    let mut query = RuntimeEventQuery::new()
+        .from_checkpoint(RuntimeEventCheckpoint::from_next_sequence(
+            query_u64(request, "from_sequence")?.unwrap_or(0),
+        ))
+        .with_limit(query_limit(request, 50, 500)?);
+
+    if query_string(request, "sort").is_some_and(|sort| sort == "desc") {
+        query = query.sorted_by(RuntimeEventSort::SequenceDesc);
+    }
+    if let Some(kind) = query_string(request, "kind") {
+        query = query.matching(match kind {
+            "all" => RuntimeEventFilter::All,
+            "commands" | "command_results" => RuntimeEventFilter::Commands,
+            "supervision" => RuntimeEventFilter::Supervision,
+            other => {
+                return Err(ApiError::bad_request(format!(
+                    "unsupported event kind `{other}`"
+                )));
+            }
+        });
+    }
+
+    Ok(query)
+}
+
+fn runtime_command_result_query(
+    request: &WebRequest,
+) -> Result<RuntimeCommandResultQuery, ApiError> {
+    let mut query = RuntimeCommandResultQuery::new()
+        .from_checkpoint(RuntimeEventCheckpoint::from_next_sequence(
+            query_u64(request, "from_sequence")?.unwrap_or(0),
+        ))
+        .sorted_by(RuntimeCommandResultSort::SequenceDesc)
+        .with_limit(query_limit(request, 50, 500)?);
+    if let Some(status) = query_string(request, "status") {
+        query = query.with_status(command_status_from_label(status)?);
+    }
+    Ok(query)
+}
+
+fn runtime_authorization_decision_query(
+    request: &WebRequest,
+) -> Result<RuntimeAuthorizationDecisionQuery, ApiError> {
+    let mut query =
+        RuntimeAuthorizationDecisionQuery::new().with_limit(query_limit(request, 50, 500)?);
+    if let Some(principal_id) = query_string(request, "principal_id") {
+        query = query.for_principal(AgentId::trusted(principal_id));
+    }
+    if let Some(outcome) = query_string(request, "outcome") {
+        query = query.with_outcome(authorization_outcome_from_label(outcome)?);
+    }
+    Ok(query)
+}
+
+fn desired_state_query(request: &WebRequest) -> Result<DesiredStateQuery, ApiError> {
+    let mut query = DesiredStateQuery::new().with_limit(query_limit(request, 100, 500)?);
+    if let Some(entity_id) = query_string(request, "entity_id") {
+        query = query.for_entity(EntityId::trusted(entity_id));
+    }
+    if let Some(requested_by) = query_string(request, "requested_by") {
+        query = query.requested_by(requested_by);
+    }
+    if let Some(capability_id) = query_string(request, "capability_id") {
+        query = query.with_capability(CapabilityId::trusted(capability_id));
+    }
+    Ok(query)
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1042,12 +1559,106 @@ fn command_result_json(result: &CommandResult) -> String {
     )
 }
 
+fn state_delta_json(delta: &StateDelta) -> String {
+    format!(
+        "{{\"capability_id\":{},\"value\":{}}}",
+        json_string(delta.capability_id.as_str()),
+        value_json(&delta.value),
+    )
+}
+
+fn query_string<'a>(request: &'a WebRequest, key: &str) -> Option<&'a str> {
+    request.query_params.get(key).map(String::as_str)
+}
+
+fn query_u64(request: &WebRequest, key: &str) -> Result<Option<u64>, ApiError> {
+    query_string(request, key)
+        .map(|value| {
+            value
+                .parse::<u64>()
+                .map_err(|_| ApiError::bad_request(format!("{key} must be an unsigned integer")))
+        })
+        .transpose()
+}
+
+fn query_limit(request: &WebRequest, default: usize, max: usize) -> Result<usize, ApiError> {
+    let Some(value) = query_string(request, "limit") else {
+        return Ok(default.min(max));
+    };
+    let limit = value
+        .parse::<usize>()
+        .map_err(|_| ApiError::bad_request("limit must be an unsigned integer"))?;
+    Ok(limit.min(max))
+}
+
 fn command_status_label(status: CommandStatus) -> &'static str {
     match status {
         CommandStatus::Accepted => "accepted",
         CommandStatus::Rejected => "rejected",
         CommandStatus::TimedOut => "timed_out",
         CommandStatus::Failed => "failed",
+    }
+}
+
+fn command_status_from_label(status: &str) -> Result<CommandStatus, ApiError> {
+    match status {
+        "accepted" => Ok(CommandStatus::Accepted),
+        "rejected" => Ok(CommandStatus::Rejected),
+        "timed_out" => Ok(CommandStatus::TimedOut),
+        "failed" => Ok(CommandStatus::Failed),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported command status `{other}`"
+        ))),
+    }
+}
+
+fn authorization_outcome_label(outcome: AuthorizationOutcome) -> &'static str {
+    match outcome {
+        AuthorizationOutcome::Allowed => "allowed",
+        AuthorizationOutcome::Denied => "denied",
+    }
+}
+
+fn authorization_outcome_from_label(outcome: &str) -> Result<AuthorizationOutcome, ApiError> {
+    match outcome {
+        "allowed" => Ok(AuthorizationOutcome::Allowed),
+        "denied" => Ok(AuthorizationOutcome::Denied),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported authorization outcome `{other}`"
+        ))),
+    }
+}
+
+fn privilege_tier_label(tier: PrivilegeTier) -> &'static str {
+    match tier {
+        PrivilegeTier::ReadOnly => "read_only",
+        PrivilegeTier::LowRisk => "low_risk",
+        PrivilegeTier::HumanApproval => "human_approval",
+        PrivilegeTier::HighRisk => "high_risk",
+    }
+}
+
+fn command_type_label(command_type: CommandType) -> &'static str {
+    match command_type {
+        CommandType::TurnOn => "turn_on",
+        CommandType::TurnOff => "turn_off",
+        CommandType::SetBrightness => "set_brightness",
+        CommandType::SetColor => "set_color",
+        CommandType::SetColorTemperature => "set_color_temperature",
+        CommandType::RecallScene => "recall_scene",
+        CommandType::SetLock => "set_lock",
+        CommandType::SetThermostatSetpoint => "set_thermostat_setpoint",
+    }
+}
+
+fn device_event_type_label(event_type: DeviceEventType) -> &'static str {
+    match event_type {
+        DeviceEventType::Discovered => "discovered",
+        DeviceEventType::Updated => "updated",
+        DeviceEventType::Removed => "removed",
+        DeviceEventType::Unavailable => "unavailable",
+        DeviceEventType::Error => "error",
+        DeviceEventType::Health => "health",
     }
 }
 
@@ -1147,6 +1758,10 @@ fn home_assistant_entity_id(entity: &Entity) -> String {
     )
 }
 
+fn home_assistant_entity_id_for(entity_id: &EntityId) -> String {
+    format!("entity.{}", object_id(entity_id.as_str()))
+}
+
 fn home_assistant_scene_id(scene: &Scene) -> String {
     format!("scene.{}", object_id(scene.scene_id.as_str()))
 }
@@ -1231,6 +1846,20 @@ fn value_json(value: &Value) -> String {
 
 fn json_string_array(values: &[String]) -> String {
     values.iter().map(json_string).collect::<Vec<_>>().join(",")
+}
+
+fn json_id_array<'a>(values: impl IntoIterator<Item = &'a str>) -> String {
+    values
+        .into_iter()
+        .map(json_string)
+        .collect::<Vec<_>>()
+        .join(",")
+}
+
+fn optional_u64_json(value: Option<u64>) -> String {
+    value
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "null".to_string())
 }
 
 fn json_string(value: impl AsRef<str>) -> String {
@@ -1433,6 +2062,29 @@ mod tests {
         }
     }
 
+    fn fixture_runtime_with_desired_state() -> SmartHomePlatformHttpRuntime {
+        let mut runtime = hue_lighting_runtime();
+        runtime
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-light-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(true),
+                    }],
+                )
+                .requested_by("agent:chief-of-staff")
+                .with_command_timeout(2_500),
+            )
+            .expect("fixture desired state should validate");
+
+        SmartHomePlatformHttpRuntime::new(
+            runtime,
+            SmartHomePlatformHttpConfig::new("Codex Home").with_time_zone("America/Los_Angeles"),
+        )
+        .with_now_ms(5_000)
+    }
+
     #[test]
     fn platform_http_summary_counts_runtime_snapshot_shape() {
         let state = fixture_state();
@@ -1521,6 +2173,76 @@ mod tests {
     }
 
     #[test]
+    fn runtime_web_app_serves_dashboard_ready_audit_routes() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+
+        let snapshot = response_body(app.handle(request("GET", "/api/smart_home/runtime")).into());
+        assert!(snapshot.contains(r#""registry":{"bridges":1"#));
+        assert!(snapshot.contains(r#""event_bus":{"subscription_count":0"#));
+        assert!(snapshot.contains(r#""pending_work":{"total":"#));
+        assert!(snapshot.contains(r#""state_refresh_target_count":2"#));
+
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/services/light/turn_on",
+                r#"{"entity_id":"entity-light-1"}"#,
+            ))
+            .into();
+        assert_eq!(response.status, 200);
+
+        let command_results = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_results?status=accepted&limit=5",
+            ))
+            .into(),
+        );
+        assert!(command_results.contains(r#""total_results":1"#));
+        assert!(command_results.contains(r#""status":"accepted""#));
+        assert!(command_results.contains(r#""sequence":0"#));
+
+        let events = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/events?kind=commands&sort=desc&limit=5",
+            ))
+            .into(),
+        );
+        assert!(events.contains(r#""command_results":1"#));
+        assert!(events.contains(r#""kind":"command_result""#));
+
+        let decisions = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/authorization_decisions?outcome=allowed&limit=5",
+            ))
+            .into(),
+        );
+        assert!(decisions.contains(r#""allowed_decisions":2"#));
+        assert!(decisions.contains(r#""principal_id":"agent:home-assistant-local-api""#));
+        assert!(decisions.contains(r#""kind":"command""#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_desired_state_targets() {
+        let app = home_assistant_runtime_web_app(fixture_runtime_with_desired_state());
+        let body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/desired_states?entity_id=entity-light-1",
+            ))
+            .into(),
+        );
+
+        assert!(body.contains(r#""total_desired_states":1"#));
+        assert!(body.contains(r#""entity_id":"entity-light-1""#));
+        assert!(body.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(body.contains(r#""requested_by":"agent:chief-of-staff""#));
+        assert!(body.contains(r#""capability_id":"light.on_off""#));
+    }
+
+    #[test]
     fn runtime_web_app_rejects_service_calls_without_runtime_grants() {
         let app = home_assistant_runtime_web_app(fixture_runtime(false));
         let response: web_core::WebResponse = app
@@ -1567,6 +2289,17 @@ mod tests {
         assert!(body.contains(r#""service":"set_brightness""#));
         assert!(body.contains(r#""result_count":1"#));
         assert!(body.contains(r#""status":"accepted""#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_runtime_snapshot_over_repo_http_server() {
+        let (port, stop) = start_server(home_assistant_runtime_web_app(fixture_runtime(true)));
+        let (status, body) = http_get(port, "/api/smart_home/runtime");
+        stop.stop();
+
+        assert_eq!(status, 200);
+        assert!(body.contains(r#""registry":{"bridges":1"#));
+        assert!(body.contains(r#""desired_state":{"target_count":0"#));
     }
 
     #[test]
