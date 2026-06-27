@@ -1005,6 +1005,25 @@ export interface DeviceModelBehaviorFixture {
   readonly deckLines: readonly string[];
 }
 
+export interface DeviceModelTemperaturePoint {
+  readonly temperatureKelvin: number;
+  readonly expectedMin: number;
+  readonly expectedMax: number;
+}
+
+export interface DeviceModelTemperatureBehaviorFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly circuit: Circuit;
+  readonly probeNode: string;
+  readonly nominalTemperatureKelvin: number;
+  readonly energyGapElectronVolts: number;
+  readonly temperatureBehavior: string;
+  readonly temperaturePoints: readonly DeviceModelTemperaturePoint[];
+  readonly deckLines: readonly string[];
+}
+
 export interface Vccs {
   readonly kind: "vccs";
   readonly name: string;
@@ -7170,6 +7189,77 @@ export function deviceModelBehaviorAuditFixtures(): readonly DeviceModelBehavior
       ],
     },
   ];
+}
+
+function deviceModelTemperaturePoints(name: string): readonly DeviceModelTemperaturePoint[] {
+  const windows: Record<string, readonly [number, number, number][]> = {
+    "diode-forward-bias": [
+      [260.15, 0.63, 0.70],
+      [300.15, 0.55, 0.65],
+      [340.15, 0.49, 0.56],
+    ],
+    "bjt-emitter-follower": [
+      [260.15, 0.03, 0.09],
+      [300.15, 0.08, 0.18],
+      [340.15, 0.15, 0.22],
+    ],
+    "jfet-source-bias": [
+      [260.15, 0.86, 0.90],
+      [300.15, 0.86, 0.90],
+      [340.15, 0.86, 0.90],
+    ],
+    "mos-level1-common-source": [
+      [260.15, 0.58, 0.68],
+      [300.15, 0.55, 0.85],
+      [340.15, 0.70, 0.82],
+    ],
+  };
+  const fixtureWindows = windows[name];
+  if (fixtureWindows === undefined) {
+    throw invalidElement("deviceModelTemperatureAuditFixtures", `missing temperature windows for ${name}`);
+  }
+  return fixtureWindows.map(([temperatureKelvin, expectedMin, expectedMax]) => ({
+    temperatureKelvin,
+    expectedMin,
+    expectedMax,
+  }));
+}
+
+function deviceModelTemperatureBehavior(name: string): string {
+  const behaviors: Record<string, string> = {
+    "diode-forward-bias": "diode saturation current and thermal voltage scale with temperature",
+    "bjt-emitter-follower": "BJT saturation current and thermal voltage scale with temperature",
+    "jfet-source-bias": "JFET temperature scaling is intentionally invariant until a policy lands",
+    "mos-level1-common-source": "Level-1 MOS threshold and transconductance scale with temperature",
+  };
+  const behavior = behaviors[name];
+  if (behavior === undefined) {
+    throw invalidElement("deviceModelTemperatureAuditFixtures", `missing temperature behavior for ${name}`);
+  }
+  return behavior;
+}
+
+function deviceModelTemperatureDeckLines(fixture: DeviceModelBehaviorFixture): readonly string[] {
+  const lines = [...fixture.deckLines];
+  lines[0] = `* device-model temperature fixture: ${fixture.name}`;
+  const opIndex = lines.indexOf(".op");
+  lines.splice(opIndex >= 0 ? opIndex : lines.length, 0, ".temp 260.15 300.15 340.15");
+  return lines;
+}
+
+export function deviceModelTemperatureAuditFixtures(): readonly DeviceModelTemperatureBehaviorFixture[] {
+  return deviceModelBehaviorAuditFixtures().map((fixture) => ({
+    name: fixture.name,
+    kind: fixture.kind,
+    model: fixture.model,
+    circuit: fixture.circuit,
+    probeNode: fixture.probeNode,
+    nominalTemperatureKelvin: 300.15,
+    energyGapElectronVolts: 1.11,
+    temperatureBehavior: deviceModelTemperatureBehavior(fixture.name),
+    temperaturePoints: deviceModelTemperaturePoints(fixture.name),
+    deckLines: deviceModelTemperatureDeckLines(fixture),
+  }));
 }
 
 export function vccs(

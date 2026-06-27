@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `deviceModelTemperatureAuditFixtures` runnable one-device DC
+  temperature-sweep fixtures with `.temp` reference deck lines and stable
+  probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth
+  audits, matching Python and Rust.
 - Add `deviceModelBehaviorAuditFixtures` runnable one-device DC bias fixtures
   with reference deck lines and stable probe-voltage windows for diode, BJT,
   JFET, and Level-1 MOS model-depth audits, matching Python and Rust.

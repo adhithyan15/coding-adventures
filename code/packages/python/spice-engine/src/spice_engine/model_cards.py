@@ -40,6 +40,31 @@ class DeviceModelBehaviorFixture:
     deck_lines: tuple[str, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class DeviceModelTemperaturePoint:
+    """Expected probe-voltage window for one model-fixture temperature."""
+
+    temperature_kelvin: float
+    expected_min: float
+    expected_max: float
+
+
+@dataclass(frozen=True, slots=True)
+class DeviceModelTemperatureBehaviorFixture:
+    """A runnable model-card temperature fixture with stable sweep windows."""
+
+    name: str
+    kind: str
+    model: NormalizedModelCard
+    circuit: Circuit
+    probe_node: str
+    nominal_temperature_kelvin: float
+    energy_gap_ev: float
+    temperature_behavior: str
+    temperature_points: tuple[DeviceModelTemperaturePoint, ...]
+    deck_lines: tuple[str, ...]
+
+
 _MODEL_TYPE_ALIASES: dict[str, str] = {
     "D": "D",
     "DIODE": "D",
@@ -449,4 +474,71 @@ def device_model_behavior_audit_fixtures() -> tuple[DeviceModelBehaviorFixture, 
                 ".end",
             ),
         ),
+    )
+
+
+def _temperature_deck_lines(fixture: DeviceModelBehaviorFixture) -> tuple[str, ...]:
+    lines = [*fixture.deck_lines]
+    lines[0] = f"* device-model temperature fixture: {fixture.name}"
+    op_index = lines.index(".op")
+    lines.insert(op_index, ".temp 260.15 300.15 340.15")
+    return tuple(lines)
+
+
+def _temperature_points_for_fixture(name: str) -> tuple[DeviceModelTemperaturePoint, ...]:
+    windows = {
+        "diode-forward-bias": (
+            (260.15, 0.63, 0.70),
+            (300.15, 0.55, 0.65),
+            (340.15, 0.49, 0.56),
+        ),
+        "bjt-emitter-follower": (
+            (260.15, 0.03, 0.09),
+            (300.15, 0.08, 0.18),
+            (340.15, 0.15, 0.22),
+        ),
+        "jfet-source-bias": (
+            (260.15, 0.86, 0.90),
+            (300.15, 0.86, 0.90),
+            (340.15, 0.86, 0.90),
+        ),
+        "mos-level1-common-source": (
+            (260.15, 0.58, 0.68),
+            (300.15, 0.55, 0.85),
+            (340.15, 0.70, 0.82),
+        ),
+    }[name]
+    return tuple(
+        DeviceModelTemperaturePoint(
+            temperature_kelvin=temperature_kelvin,
+            expected_min=expected_min,
+            expected_max=expected_max,
+        )
+        for temperature_kelvin, expected_min, expected_max in windows
+    )
+
+
+def device_model_temperature_audit_fixtures() -> tuple[DeviceModelTemperatureBehaviorFixture, ...]:
+    """Return runnable model-card temperature sweep fixtures for model-depth audits."""
+
+    behavior_by_name = {
+        "diode-forward-bias": "diode saturation current and thermal voltage scale with temperature",
+        "bjt-emitter-follower": "BJT saturation current and thermal voltage scale with temperature",
+        "jfet-source-bias": "JFET temperature scaling is intentionally invariant until a policy lands",
+        "mos-level1-common-source": "Level-1 MOS threshold and transconductance scale with temperature",
+    }
+    return tuple(
+        DeviceModelTemperatureBehaviorFixture(
+            name=fixture.name,
+            kind=fixture.kind,
+            model=fixture.model,
+            circuit=fixture.circuit,
+            probe_node=fixture.probe_node,
+            nominal_temperature_kelvin=300.15,
+            energy_gap_ev=1.11,
+            temperature_behavior=behavior_by_name[fixture.name],
+            temperature_points=_temperature_points_for_fixture(fixture.name),
+            deck_lines=_temperature_deck_lines(fixture),
+        )
+        for fixture in device_model_behavior_audit_fixtures()
     )

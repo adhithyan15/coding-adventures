@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `device_model_temperature_audit_fixtures` runnable one-device DC
+  temperature-sweep fixtures with `.temp` reference deck lines and stable
+  probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth
+  audits, matching Python and TypeScript.
 - Add `device_model_behavior_audit_fixtures` runnable one-device DC bias
   fixtures with reference deck lines and stable probe-voltage windows for
   diode, BJT, JFET, and Level-1 MOS model-depth audits, matching Python and

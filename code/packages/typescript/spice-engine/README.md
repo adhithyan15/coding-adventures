@@ -191,6 +191,9 @@ used to keep the TypeScript, Python, and Rust ports aligned.
 `deviceModelBehaviorAuditFixtures` extends those cards into runnable one-device
 DC bias fixtures with reference deck lines and stable expected probe-voltage
 windows for diode, BJT, JFET, and Level-1 MOS model-depth audits.
+`deviceModelTemperatureAuditFixtures` adds matching `.temp` reference-deck
+metadata and stable per-temperature probe windows for those same fixture
+circuits.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.

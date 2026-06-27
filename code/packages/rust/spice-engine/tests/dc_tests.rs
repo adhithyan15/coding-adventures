@@ -3,10 +3,11 @@ use spice_engine::{
     dc_corners_parallel, dc_initial_vector_from_conditions, dc_op, dc_op_with_initial_conditions,
     dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
     dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
-    device_model_behavior_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
-    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
-    format_measurement_table, format_temperature_dc_table, jfet_from_model_card,
-    measure_dc_sweep_deck, measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
+    device_model_behavior_audit_fixtures, device_model_temperature_audit_fixtures,
+    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
+    format_corner_temperature_dc_table, format_dc_sweep_table, format_measurement_table,
+    format_temperature_dc_table, jfet_from_model_card, measure_dc_sweep_deck,
+    measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
     normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs,
     Ccvs, Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource,
     CustomModel, DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity,
@@ -166,6 +167,71 @@ fn device_model_behavior_audit_fixtures_run_reference_bias_points() {
             .iter()
             .any(|line| line.starts_with(".model ")));
     }
+}
+
+#[test]
+fn device_model_temperature_audit_fixtures_run_reference_sweeps() {
+    let fixtures = device_model_temperature_audit_fixtures().unwrap();
+    assert_eq!(
+        fixtures
+            .iter()
+            .map(|fixture| fixture.name.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "diode-forward-bias",
+            "bjt-emitter-follower",
+            "jfet-source-bias",
+            "mos-level1-common-source"
+        ]
+    );
+
+    for fixture in &fixtures {
+        let temperatures = fixture
+            .temperature_points
+            .iter()
+            .map(|point| point.temperature_kelvin)
+            .collect::<Vec<_>>();
+        let result = dc_temperature_sweep(
+            &fixture.circuit,
+            &temperatures,
+            fixture.nominal_temperature_kelvin,
+            fixture.energy_gap_electron_volts,
+            DcOpOptions::default(),
+        )
+        .unwrap();
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line == ".temp 260.15 300.15 340.15"));
+        assert!(fixture.deck_lines[0].starts_with("* device-model temperature fixture:"));
+        assert_eq!(result.points.len(), fixture.temperature_points.len());
+        for (actual, expected) in result.points.iter().zip(&fixture.temperature_points) {
+            let value = *actual
+                .result
+                .node_voltages
+                .get(&fixture.probe_node)
+                .expect("fixture probe node should be present");
+            assert!(actual.result.converged);
+            assert_close(actual.temperature_kelvin, expected.temperature_kelvin);
+            assert!(
+                value >= expected.expected_min && value <= expected.expected_max,
+                "{} expected {} <= {} <= {} at {} K",
+                fixture.name,
+                expected.expected_min,
+                value,
+                expected.expected_max,
+                expected.temperature_kelvin
+            );
+        }
+    }
+
+    let jfet_fixture = fixtures
+        .iter()
+        .find(|fixture| fixture.kind == ModelCardKind::Njf)
+        .expect("NJF fixture should exist");
+    assert!(jfet_fixture
+        .temperature_behavior
+        .starts_with("JFET temperature scaling is intentionally"));
 }
 
 #[test]

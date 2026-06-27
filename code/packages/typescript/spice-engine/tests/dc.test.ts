@@ -23,6 +23,7 @@ import {
   dcTemperatureSweepCorners,
   deviceModelAuditFixtures,
   deviceModelBehaviorAuditFixtures,
+  deviceModelTemperatureAuditFixtures,
   diode,
   diodeFromModelCard,
   formatCornerDcSweepTable,
@@ -143,6 +144,42 @@ describe("dcOp", () => {
       expect(fixture.deckLines).toContain(".op");
       expect(fixture.deckLines.some((line) => line.startsWith(".model "))).toBe(true);
     }
+  });
+
+  it("runs device model temperature audit fixtures as reference sweeps", () => {
+    const fixtures = deviceModelTemperatureAuditFixtures();
+    expect(fixtures.map((fixture) => fixture.name)).toStrictEqual([
+      "diode-forward-bias",
+      "bjt-emitter-follower",
+      "jfet-source-bias",
+      "mos-level1-common-source",
+    ]);
+
+    for (const fixture of fixtures) {
+      const result = dcTemperatureSweep(
+        fixture.circuit,
+        fixture.temperaturePoints.map((point) => point.temperatureKelvin),
+        {},
+        fixture.nominalTemperatureKelvin,
+        fixture.energyGapElectronVolts,
+      );
+      expect(fixture.deckLines).toContain(".temp 260.15 300.15 340.15");
+      expect(fixture.deckLines[0]!.startsWith("* device-model temperature fixture:")).toBe(true);
+      expect(result.points).toHaveLength(fixture.temperaturePoints.length);
+      for (let index = 0; index < result.points.length; index += 1) {
+        const actual = result.points[index]!;
+        const expected = fixture.temperaturePoints[index]!;
+        const value = actual.result.voltage(fixture.probeNode);
+        expect(actual.result.converged).toBe(true);
+        expectClose(actual.temperatureKelvin, expected.temperatureKelvin);
+        expect(value).not.toBeUndefined();
+        expect(value!).toBeGreaterThanOrEqual(expected.expectedMin);
+        expect(value!).toBeLessThanOrEqual(expected.expectedMax);
+      }
+    }
+
+    const jfetFixture = fixtures.find((fixture) => fixture.kind === "NJF");
+    expect(jfetFixture?.temperatureBehavior.startsWith("JFET temperature scaling is intentionally")).toBe(true);
   });
 
   it("rejects non-Level-1 MOS model cards explicitly", () => {
