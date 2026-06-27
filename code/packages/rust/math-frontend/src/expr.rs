@@ -86,14 +86,17 @@ impl Number {
         }
 
         // Combine into digits × 10^exponent: the fraction shifts the exponent down.
+        // All exponent arithmetic is CHECKED so an adversarial literal (e.g. an
+        // exponent near i64::MAX) returns None rather than overflow-panicking — the
+        // parser must stay total, never panic.
         let mut all_digits = String::with_capacity(int_part.len() + frac_part.len());
         all_digits.push_str(int_part);
         all_digits.push_str(frac_part);
-        let mut exponent = exp - frac_part.len() as i64;
+        let mut exponent = exp.checked_sub(frac_part.len() as i64)?;
 
         // Normalize: strip trailing zeros (raising the exponent) then leading zeros.
         let trimmed_trailing = all_digits.trim_end_matches('0');
-        exponent += (all_digits.len() - trimmed_trailing.len()) as i64;
+        exponent = exponent.checked_add((all_digits.len() - trimmed_trailing.len()) as i64)?;
         let normalized: String = trimmed_trailing.trim_start_matches('0').to_string();
 
         let (digits, exponent, negative) = if normalized.is_empty() {
@@ -128,7 +131,11 @@ impl Number {
             return Some(0.0);
         }
         let mantissa: f64 = self.digits.parse().ok()?;
-        let v = mantissa * 10f64.powi(self.exponent as i32);
+        // Range-check the exponent rather than truncating with `as i32`: a magnitude
+        // too extreme for i32 is exactly the "cannot be represented" case → None,
+        // never a silently-wrong finite value.
+        let exp = i32::try_from(self.exponent).ok()?;
+        let v = mantissa * 10f64.powi(exp);
         if v.is_finite() {
             Some(if self.negative { -v } else { v })
         } else {
@@ -293,6 +300,20 @@ mod tests {
         assert!(Number::parse("1e").is_none());
         assert!(Number::parse("1e+").is_none());
         assert!(Number::parse("0x10").is_none());
+    }
+
+    #[test]
+    fn adversarial_exponents_stay_total_and_honest() {
+        // A near-i64::MAX exponent with trailing-zero normalization must NOT overflow-
+        // panic in parse — it returns None (the value isn't a representable numeral here).
+        assert!(Number::parse("100e9223372036854775807").is_none());
+        // A huge but parseable exponent: to_f64 must return None (too extreme), never a
+        // truncated finite lie.
+        if let Some(n) = Number::parse("1e3000000000") {
+            assert_eq!(n.to_f64(), None);
+        }
+        // Sanity: a normal large-ish exponent still works.
+        assert_eq!(Number::parse("1e3").unwrap().to_f64(), Some(1000.0));
     }
 
     #[test]
