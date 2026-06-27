@@ -9,10 +9,31 @@ use crate::errors::SpreadsheetError;
 pub enum FormulaAst {
     /// A literal value (number, text, bool, error).
     Literal(CellValue),
-    /// A single-cell reference.
-    Ref(CellAddress),
-    /// A rectangular range reference.
-    Range(CellRange),
+    /// A single-cell reference, optionally qualified by a sheet name.
+    ///
+    /// `sheet` is `None` for the common same-sheet reference (`A1`) — that case
+    /// resolves against the formula's own sheet and is byte-identical to the
+    /// pre-multi-sheet behaviour. `Some(name)` is a cross-sheet reference
+    /// (`Summary!A1`); the name is the sheet *as written* (resolved to a
+    /// `SheetId` later, at evaluation/dependency time, by a workbook that knows
+    /// its sheets). See [`FormulaAst::cell`] / [`FormulaAst::sheet_cell`].
+    Ref {
+        /// The qualifying sheet name, or `None` for the formula's own sheet.
+        sheet: Option<String>,
+        /// The cell address (column/row, with `$`-absolute flags).
+        addr: CellAddress,
+    },
+    /// A rectangular range reference, optionally qualified by a sheet name.
+    ///
+    /// Both endpoints share the one qualifier (`Summary!A1:B2`); split-sheet
+    /// 3-D ranges (`Sheet1:Sheet3!A1`) are intentionally out of scope. See
+    /// [`FormulaAst::cell_range`] / [`FormulaAst::sheet_range`].
+    Range {
+        /// The qualifying sheet name, or `None` for the formula's own sheet.
+        sheet: Option<String>,
+        /// The rectangular range (start/end addresses).
+        range: CellRange,
+    },
     /// Unary prefix operator.
     Unary {
         /// The operator.
@@ -122,6 +143,32 @@ impl BinaryOp {
 }
 
 impl FormulaAst {
+    /// A same-sheet single-cell reference (`A1`) — the common case.
+    pub fn cell(addr: CellAddress) -> FormulaAst {
+        FormulaAst::Ref { sheet: None, addr }
+    }
+
+    /// A sheet-qualified single-cell reference (`Summary!A1`).
+    pub fn sheet_cell(sheet: impl Into<String>, addr: CellAddress) -> FormulaAst {
+        FormulaAst::Ref {
+            sheet: Some(sheet.into()),
+            addr,
+        }
+    }
+
+    /// A same-sheet range reference (`A1:B2`).
+    pub fn cell_range(range: CellRange) -> FormulaAst {
+        FormulaAst::Range { sheet: None, range }
+    }
+
+    /// A sheet-qualified range reference (`Summary!A1:B2`).
+    pub fn sheet_range(sheet: impl Into<String>, range: CellRange) -> FormulaAst {
+        FormulaAst::Range {
+            sheet: Some(sheet.into()),
+            range,
+        }
+    }
+
     /// Render this AST back to a formula string (without the leading `=`).
     ///
     /// Binary operators are **fully parenthesised**, so the output always
@@ -134,8 +181,13 @@ impl FormulaAst {
     pub fn to_formula_string(&self) -> String {
         match self {
             FormulaAst::Literal(v) => literal_source(v),
-            FormulaAst::Ref(addr) => addr.to_a1(),
-            FormulaAst::Range(range) => format!("{}:{}", range.start.to_a1(), range.end.to_a1()),
+            FormulaAst::Ref { sheet, addr } => format!("{}{}", sheet_prefix(sheet), addr.to_a1()),
+            FormulaAst::Range { sheet, range } => format!(
+                "{}{}:{}",
+                sheet_prefix(sheet),
+                range.start.to_a1(),
+                range.end.to_a1()
+            ),
             FormulaAst::Unary { op, operand } => {
                 let inner = operand.to_formula_string();
                 match op {
@@ -178,15 +230,23 @@ impl FormulaAst {
     pub fn shift(&self, d_row: i32, d_col: i32) -> FormulaAst {
         match self {
             FormulaAst::Literal(v) => FormulaAst::Literal(v.clone()),
-            FormulaAst::Ref(addr) => match addr.shift(d_row, d_col) {
-                Ok(a) => FormulaAst::Ref(a),
+            // The sheet qualifier rides along unchanged — filling `=Detail!A1`
+            // down a column gives `=Detail!A2` (same sheet, shifted address).
+            FormulaAst::Ref { sheet, addr } => match addr.shift(d_row, d_col) {
+                Ok(a) => FormulaAst::Ref {
+                    sheet: sheet.clone(),
+                    addr: a,
+                },
                 Err(_) => ref_error(),
             },
             // A range shifts both corners; if either falls off-grid the whole
             // range is a dangling reference → `#REF!`.
-            FormulaAst::Range(range) => {
+            FormulaAst::Range { sheet, range } => {
                 match (range.start.shift(d_row, d_col), range.end.shift(d_row, d_col)) {
-                    (Ok(start), Ok(end)) => FormulaAst::Range(CellRange::new(start, end)),
+                    (Ok(start), Ok(end)) => FormulaAst::Range {
+                        sheet: sheet.clone(),
+                        range: CellRange::new(start, end),
+                    },
                     _ => ref_error(),
                 }
             }
@@ -213,6 +273,48 @@ impl FormulaAst {
 /// stay in their own modules.)
 fn ref_error() -> FormulaAst {
     FormulaAst::Literal(CellValue::Error(SpreadsheetError::Ref))
+}
+
+/// Render a reference's sheet qualifier for source re-emission: `""` for an
+/// unqualified (`None`) reference, otherwise `Name!`, single-quoting the name
+/// when it isn't a bare token. The quoting rule matches Excel/Sheets: a name is
+/// safe to write bare only when it is all letters/digits/underscore, does not
+/// start with a digit, and does not itself spell a cell address (`A1`) — anything
+/// else (spaces, punctuation, leading digit, an A1-looking name, or an empty
+/// name) is wrapped in single quotes with internal quotes doubled (`'O''Brien'`).
+fn sheet_prefix(sheet: &Option<String>) -> String {
+    match sheet {
+        None => String::new(),
+        Some(name) => {
+            if needs_quoting(name) {
+                format!("'{}'!", name.replace('\'', "''"))
+            } else {
+                format!("{name}!")
+            }
+        }
+    }
+}
+
+/// Whether a sheet name must be single-quoted when written in a formula.
+fn needs_quoting(name: &str) -> bool {
+    if name.is_empty() {
+        return true;
+    }
+    // Any character outside the bare set forces quoting.
+    if !name
+        .chars()
+        .all(|c| c.is_ascii_alphanumeric() || c == '_')
+    {
+        return true;
+    }
+    // A leading digit would read as a number, not a name.
+    if name.chars().next().is_some_and(|c| c.is_ascii_digit()) {
+        return true;
+    }
+    // A name that itself spells a cell address (`A1`, `BZ400`) must be quoted so
+    // `A1!B2` can't be misread — the parser treats the token before `!` as the
+    // sheet, but quoting keeps the round-trip unambiguous.
+    CellAddress::parse(name).is_ok()
 }
 
 /// Render a literal value back to its formula-source form: numbers bare
@@ -263,9 +365,52 @@ mod tests {
             "=A1&\" txt\"",
             "=2^3^2",          // right-assoc
             "=A1<=B1",
+            "=Summary!A1",       // cross-sheet ref
+            "=Summary!A1:B10",   // cross-sheet range
+            "=Summary!B2+Detail!B2", // two cross-sheet refs in one formula
+            "=SUM(Detail!A1:A4)",    // qualified range as a function arg
         ] {
             round_trips(src);
         }
+    }
+
+    #[test]
+    fn cross_sheet_qualifier_quotes_only_when_needed() {
+        use crate::parser::parse;
+        // A bare alphanumeric name needs no quoting.
+        assert_eq!(parse("=Summary!A1").unwrap().to_formula_string(), "Summary!A1");
+        // A name with a space must be single-quoted.
+        assert_eq!(
+            parse("='Q1 Budget'!A1").unwrap().to_formula_string(),
+            "'Q1 Budget'!A1"
+        );
+        // An apostrophe inside the name is doubled.
+        assert_eq!(
+            parse("='O''Brien'!A1").unwrap().to_formula_string(),
+            "'O''Brien'!A1"
+        );
+        // A name that itself spells a cell address is quoted to stay unambiguous.
+        assert_eq!(parse("='A1'!B2").unwrap().to_formula_string(), "'A1'!B2");
+        // A leading-digit name is quoted.
+        assert_eq!(parse("='2024'!A1").unwrap().to_formula_string(), "'2024'!A1");
+    }
+
+    #[test]
+    fn shift_preserves_the_sheet_qualifier() {
+        use crate::parser::parse;
+        // Filling =Detail!A1 one row down → =Detail!A2 (same sheet, shifted addr).
+        assert_eq!(
+            parse("=Detail!A1").unwrap().shift(1, 0).to_formula_string(),
+            "Detail!A2"
+        );
+        // A quoted qualifier rides along too, and a range shifts both corners.
+        assert_eq!(
+            parse("='Q1 Budget'!A1:B2")
+                .unwrap()
+                .shift(0, 1)
+                .to_formula_string(),
+            "'Q1 Budget'!B1:C2"
+        );
     }
 
     #[test]

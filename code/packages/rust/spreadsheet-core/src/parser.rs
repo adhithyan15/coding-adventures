@@ -271,6 +271,7 @@ impl<'a> Parser<'a> {
                 Ok(inner)
             }
             '"' => self.parse_string(),
+            '\'' => self.parse_quoted_sheet_ref(),
             '#' => self.parse_error_literal(),
             '0'..='9' | '.' => self.parse_number(),
             c if c.is_ascii_alphabetic() || c == '$' || c == '@' => self.parse_ident_or_ref(),
@@ -388,6 +389,18 @@ impl<'a> Parser<'a> {
         // Lotus-style `@SUM` — strip the leading `@`.
         let core_text = text.strip_prefix('@').unwrap_or(text);
 
+        // Sheet-qualified reference: `Summary!A1` / `Summary!A1:B2`. A `!`
+        // immediately after a bareword makes that word a **sheet name** (never a
+        // cell), per the disambiguation rule — so `A1!B2` reads as "cell B2 on a
+        // sheet literally named A1". The name is kept as written and resolved to a
+        // `SheetId` later (by a workbook); an unknown sheet becomes `#REF!` at
+        // evaluation, not a parse error.
+        if self.peek() == Some('!') {
+            self.advance(); // consume '!'
+            let token = self.read_ref_token();
+            return self.finish_ref_or_range(Some(core_text.to_string()), &token);
+        }
+
         // Boolean literals.
         match core_text.to_ascii_uppercase().as_str() {
             "TRUE" => {
@@ -412,29 +425,10 @@ impl<'a> Parser<'a> {
             return self.finish_function_call(core_text.to_string());
         }
 
-        // Cell or range reference?
-        if let Ok(addr) = CellAddress::parse(core_text) {
-            // Range?
-            if self.peek() == Some(':') {
-                self.advance();
-                let next_start = self.pos;
-                while let Some(c) = self.peek() {
-                    if c.is_ascii_alphanumeric() || c == '$' {
-                        self.advance();
-                    } else {
-                        break;
-                    }
-                }
-                let next_text =
-                    std::str::from_utf8(&self.input[next_start..self.pos]).unwrap();
-                let end_addr = CellAddress::parse(next_text).map_err(|_| {
-                    ParseError::BadReference {
-                        text: next_text.to_string(),
-                    }
-                })?;
-                return Ok(FormulaAst::Range(CellRange::new(addr, end_addr)));
-            }
-            return Ok(FormulaAst::Ref(addr));
+        // Cell or range reference (unqualified — resolves against the formula's
+        // own sheet).
+        if CellAddress::parse(core_text).is_ok() {
+            return self.finish_ref_or_range(None, core_text);
         }
 
         // Otherwise: bare name — treat as a zero-arg function call
@@ -443,6 +437,80 @@ impl<'a> Parser<'a> {
         Err(ParseError::BadReference {
             text: core_text.to_string(),
         })
+    }
+
+    /// Read a bare cell/range token (`A1`, `$B$5`) from the cursor — the
+    /// letters/digits/`$` run — and return it as an owned string. Stops at the
+    /// first character that can't be part of an A1 address.
+    fn read_ref_token(&mut self) -> String {
+        let start = self.pos;
+        while let Some(c) = self.peek() {
+            if c.is_ascii_alphanumeric() || c == '$' {
+                self.advance();
+            } else {
+                break;
+            }
+        }
+        std::str::from_utf8(&self.input[start..self.pos])
+            .unwrap()
+            .to_string()
+    }
+
+    /// Build a [`FormulaAst::Ref`] or [`FormulaAst::Range`] from a first A1 token
+    /// (already read) and an optional sheet qualifier, consuming a `:end` token if
+    /// the reference is a range. A token that doesn't parse as an address is a
+    /// `BadReference`.
+    fn finish_ref_or_range(
+        &mut self,
+        sheet: Option<String>,
+        first_token: &str,
+    ) -> Result<FormulaAst, ParseError> {
+        let addr = CellAddress::parse(first_token).map_err(|_| ParseError::BadReference {
+            text: first_token.to_string(),
+        })?;
+        if self.peek() == Some(':') {
+            self.advance();
+            let next_text = self.read_ref_token();
+            let end_addr =
+                CellAddress::parse(&next_text).map_err(|_| ParseError::BadReference {
+                    text: next_text.clone(),
+                })?;
+            return Ok(FormulaAst::Range {
+                sheet,
+                range: CellRange::new(addr, end_addr),
+            });
+        }
+        Ok(FormulaAst::Ref { sheet, addr })
+    }
+
+    /// Parse a single-quoted sheet name and the reference it qualifies:
+    /// `'Q1 Budget'!A1` / `'O''Brien'!A1:B2`. A doubled `''` inside the quotes is
+    /// a literal apostrophe (the Excel rule). The `!` is required.
+    fn parse_quoted_sheet_ref(&mut self) -> Result<FormulaAst, ParseError> {
+        self.advance(); // opening quote
+        let mut name = String::new();
+        loop {
+            match self.advance() {
+                None => return Err(ParseError::UnexpectedEof),
+                Some('\'') => {
+                    if self.peek() == Some('\'') {
+                        self.advance(); // doubled '' → a literal apostrophe
+                        name.push('\'');
+                    } else {
+                        break; // closing quote
+                    }
+                }
+                Some(c) => name.push(c),
+            }
+        }
+        if self.advance() != Some('!') {
+            return Err(ParseError::ExpectedToken {
+                expected: "!",
+                found: "quoted sheet name without '!'".into(),
+            });
+        }
+        let token = self.read_ref_token();
+        self.finish_ref_or_range(Some(name), &token)
     }
 
     fn finish_function_call(&mut self, name: String) -> Result<FormulaAst, ParseError> {
@@ -540,20 +608,66 @@ mod tests {
     #[test]
     fn parse_cell_ref() {
         let r = parse("A1").unwrap();
-        assert_eq!(r, FormulaAst::Ref(CellAddress::new(1, 1)));
+        assert_eq!(r, FormulaAst::cell(CellAddress::new(1, 1)));
         let r = parse("$B$5").unwrap();
-        assert_eq!(r, FormulaAst::Ref(CellAddress::absolute(5, 2)));
+        assert_eq!(r, FormulaAst::cell(CellAddress::absolute(5, 2)));
     }
 
     #[test]
     fn parse_range() {
         let r = parse("A1:B10").unwrap();
-        if let FormulaAst::Range(r) = r {
+        if let FormulaAst::Range { range: r, .. } = r {
             assert_eq!(r.start, CellAddress::new(1, 1));
             assert_eq!(r.end, CellAddress::new(10, 2));
         } else {
             panic!("expected Range, got {r:?}");
         }
+    }
+
+    #[test]
+    fn parse_cross_sheet_ref() {
+        // An unqualified ref carries no sheet.
+        assert_eq!(
+            parse("A1").unwrap(),
+            FormulaAst::Ref {
+                sheet: None,
+                addr: CellAddress::new(1, 1)
+            }
+        );
+        // `Summary!A1` qualifies the ref with the sheet name (as written).
+        assert_eq!(
+            parse("Summary!A1").unwrap(),
+            FormulaAst::sheet_cell("Summary", CellAddress::new(1, 1))
+        );
+        // `Summary!A1:B2` qualifies a range; both endpoints share the qualifier.
+        assert_eq!(
+            parse("Summary!A1:B2").unwrap(),
+            FormulaAst::sheet_range("Summary", CellRange::new(CellAddress::new(1, 1), CellAddress::new(2, 2)))
+        );
+    }
+
+    #[test]
+    fn parse_quoted_cross_sheet_ref() {
+        // A single-quoted name allows spaces/punctuation.
+        assert_eq!(
+            parse("'Q1 Budget'!A1").unwrap(),
+            FormulaAst::sheet_cell("Q1 Budget", CellAddress::new(1, 1))
+        );
+        // Doubled '' inside the quotes is a literal apostrophe.
+        assert_eq!(
+            parse("'O''Brien'!A1").unwrap(),
+            FormulaAst::sheet_cell("O'Brien", CellAddress::new(1, 1))
+        );
+    }
+
+    #[test]
+    fn cross_sheet_ref_disambiguates_a1_named_sheet() {
+        // A `!` makes the token before it a sheet name, never a cell — so
+        // `'A1'!B2` is "cell B2 on the sheet named A1", not a range.
+        assert_eq!(
+            parse("'A1'!B2").unwrap(),
+            FormulaAst::sheet_cell("A1", CellAddress::new(2, 2))
+        );
     }
 
     #[test]
@@ -592,7 +706,7 @@ mod tests {
         if let FormulaAst::Call { name, args } = r {
             assert_eq!(name, "SUM");
             assert_eq!(args.len(), 1);
-            assert!(matches!(args[0], FormulaAst::Range(_)));
+            assert!(matches!(args[0], FormulaAst::Range { .. }));
         } else {
             panic!("expected Call");
         }
@@ -635,7 +749,7 @@ mod tests {
         let r = parse("-A1").unwrap();
         if let FormulaAst::Unary { op, operand } = r {
             assert_eq!(op, UnaryOp::Negate);
-            assert_eq!(*operand, FormulaAst::Ref(CellAddress::new(1, 1)));
+            assert_eq!(*operand, FormulaAst::cell(CellAddress::new(1, 1)));
         } else {
             panic!("expected Unary");
         }
