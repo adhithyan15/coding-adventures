@@ -485,6 +485,14 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get(
+            "/api/smart_home/authorization_decisions/:decision_index",
+            move |request| runtime_authorization_decision_response(&runtime, request),
+        );
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/desired_states", move |request| {
             runtime_desired_states_response(&runtime, request)
         });
@@ -965,8 +973,39 @@ fn runtime_authorization_decisions_response(
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
     let decisions = runtime_guard.query_authorization_decisions(&query);
+    let records = authorization_decision_records(&runtime_guard, decisions);
     let summary = runtime_guard.authorization_decision_summary(&query);
-    WebResponse::json(authorization_decisions_json(&decisions, &summary).into_bytes())
+    WebResponse::json(authorization_decisions_json(&records, &summary).into_bytes())
+}
+
+fn runtime_authorization_decision_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let decision_index = match route_usize(request, "decision_index") {
+        Ok(decision_index) => decision_index,
+        Err(error) => return api_error_response(error),
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let Some(decision) = runtime_guard
+        .registry()
+        .authorization_decisions()
+        .nth(decision_index)
+    else {
+        return api_error_response(ApiError::not_found(format!(
+            "authorization decision `{decision_index}` not found"
+        )));
+    };
+    WebResponse::json(
+        authorization_decision_record_json(&AuthorizationDecisionRecord {
+            decision_index,
+            decision,
+        })
+        .into_bytes(),
+    )
 }
 
 fn runtime_desired_states_response(
@@ -1419,18 +1458,47 @@ fn command_result_summary_json(
 }
 
 fn authorization_decisions_json(
-    decisions: &[&AuthorizationDecision],
+    records: &[AuthorizationDecisionRecord<'_>],
     summary: &smart_home_core::AuthorizationDecisionLogSummary,
 ) -> String {
     format!(
         "{{\"summary\":{},\"decisions\":[{}]}}",
         authorization_decision_summary_json(summary),
-        decisions
+        records
             .iter()
-            .map(|decision| authorization_decision_json(decision))
+            .map(authorization_decision_record_json)
             .collect::<Vec<_>>()
             .join(",")
     )
+}
+
+#[derive(Debug, Clone, Copy)]
+struct AuthorizationDecisionRecord<'a> {
+    decision_index: usize,
+    decision: &'a AuthorizationDecision,
+}
+
+fn authorization_decision_records<'a>(
+    runtime: &'a SmartHomeRuntime,
+    decisions: Vec<&'a AuthorizationDecision>,
+) -> Vec<AuthorizationDecisionRecord<'a>> {
+    let indexed_decisions = runtime
+        .registry()
+        .authorization_decisions()
+        .enumerate()
+        .collect::<Vec<_>>();
+    decisions
+        .into_iter()
+        .filter_map(|decision| {
+            indexed_decisions
+                .iter()
+                .find(|(_, candidate)| std::ptr::eq(*candidate, decision))
+                .map(|(decision_index, _)| AuthorizationDecisionRecord {
+                    decision_index: *decision_index,
+                    decision,
+                })
+        })
+        .collect()
 }
 
 fn authorization_decision_summary_json(
@@ -1454,9 +1522,11 @@ fn authorization_decision_summary_json(
     )
 }
 
-fn authorization_decision_json(decision: &AuthorizationDecision) -> String {
+fn authorization_decision_record_json(record: &AuthorizationDecisionRecord<'_>) -> String {
+    let decision = record.decision;
     format!(
-        "{{\"principal_id\":{},\"subject\":{},\"outcome\":{},\"required_tier\":{},\"required_capabilities\":[{}],\"matched_grants\":[{}],\"missing_capabilities\":[{}],\"decided_at_ms\":{}}}",
+        "{{\"decision_index\":{},\"principal_id\":{},\"subject\":{},\"outcome\":{},\"required_tier\":{},\"required_capabilities\":[{}],\"matched_grants\":[{}],\"missing_capabilities\":[{}],\"decided_at_ms\":{}}}",
+        record.decision_index,
         json_string(decision.principal_id.as_str()),
         authorization_subject_json(&decision.subject),
         json_string(authorization_outcome_label(decision.outcome)),
@@ -3463,6 +3533,15 @@ fn route_u64(request: &WebRequest, key: &str) -> Result<u64, ApiError> {
         .map_err(|_| ApiError::bad_request(format!("{key} must be an unsigned integer")))
 }
 
+fn route_usize(request: &WebRequest, key: &str) -> Result<usize, ApiError> {
+    let Some(value) = request.route_params.get(key) else {
+        return Err(ApiError::bad_request(format!("missing {key}")));
+    };
+    value
+        .parse::<usize>()
+        .map_err(|_| ApiError::bad_request(format!("{key} must be an unsigned integer")))
+}
+
 fn query_bool(request: &WebRequest, key: &str) -> Result<Option<bool>, ApiError> {
     query_string(request, key)
         .map(|value| match value {
@@ -4306,6 +4385,27 @@ mod tests {
         assert!(decisions.contains(r#""allowed_decisions":2"#));
         assert!(decisions.contains(r#""principal_id":"agent:home-assistant-local-api""#));
         assert!(decisions.contains(r#""kind":"command""#));
+        assert!(decisions.contains(r#""decision_index":"#));
+        let decisions_json: JsonValue =
+            serde_json::from_str(&decisions).expect("authorization decisions response is JSON");
+        let decision_index = decisions_json["decisions"][0]["decision_index"]
+            .as_u64()
+            .expect("authorization decision exposes decision_index");
+
+        let decision_detail_path =
+            format!("/api/smart_home/authorization_decisions/{decision_index}");
+        let decision_detail =
+            response_body(app.handle(request("GET", &decision_detail_path)).into());
+        assert!(decision_detail.contains(&format!(r#""decision_index":{decision_index}"#)));
+        assert!(decision_detail.contains(r#""principal_id":"agent:home-assistant-local-api""#));
+
+        let missing_decision: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/authorization_decisions/999",
+            ))
+            .into();
+        assert_eq!(missing_decision.status, 404);
     }
 
     #[test]

@@ -33,6 +33,7 @@ stable local API responses for:
 - `/api/smart_home/command_results`
 - `/api/smart_home/command_results/:command_id`
 - `/api/smart_home/authorization_decisions`
+- `/api/smart_home/authorization_decisions/:decision_index`
 - `/api/smart_home/desired_states`
 - `POST /api/smart_home/desired_states/:entity_id`
 - `DELETE /api/smart_home/desired_states/:entity_id`
@@ -58,11 +59,10 @@ same runtime: pending-work snapshot counts, entity and capability registry
 records, a compact health probe, a capability catalog grouped across entities,
 device and bridge inventory, room topology summaries, a dashboard overview,
 checkpointed event-log entries with detail lookups, command-result audit
-records with command-id lookups,
-authorization decisions, and desired-state supervision targets. State-history
-reads expose registry-backed device events with Home Assistant entity aliases,
-state deltas, and timestamp filters; the Home Assistant-style history route
-accepts `filter_entity_id`.
+records with command-id lookups, indexed authorization decisions, and
+desired-state supervision targets. State-history reads expose registry-backed
+device events with Home Assistant entity aliases, state deltas, and timestamp
+filters; the Home Assistant-style history route accepts `filter_entity_id`.
 
 ## Dependencies
 
@@ -98,6 +98,7 @@ curl 'http://127.0.0.1:8123/api/smart_home/bridges?integration_id=hue&transport=
 curl 'http://127.0.0.1:8123/api/smart_home/rooms?sort=scene_count&state_gaps_only=true'
 curl 'http://127.0.0.1:8123/api/smart_home/events/0'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
+curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions/0'
 curl 'http://127.0.0.1:8123/api/smart_home/state_history?entity_id=light.entity_light_1'
 curl 'http://127.0.0.1:8123/api/history/period?filter_entity_id=light.entity_light_1'
 curl -X POST http://127.0.0.1:8123/api/services/light/turn_on \
