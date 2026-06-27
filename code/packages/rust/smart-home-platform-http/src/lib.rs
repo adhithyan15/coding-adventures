@@ -1,19 +1,22 @@
 //! Home Assistant-compatible local HTTP API routes for the smart-home platform.
 //!
-//! The crate builds a `web-core::WebApp` over runtime-owned smart-home registry
-//! snapshots. It deliberately uses the repo's own HTTP server stack and keeps
-//! mutation routes out until they can be wired through runtime command and
-//! desired-state authorization paths.
+//! The crate builds `web-core::WebApp` routes over runtime-owned smart-home
+//! registry snapshots. It deliberately uses the repo's own HTTP server stack;
+//! service calls are wired through runtime command authorization instead of a
+//! parallel mutation path.
 
 #![forbid(unsafe_code)]
 
+use serde_json::Value as JsonValue;
 use smart_home_core::{
-    Capability, CapabilityMode, Entity, EntityKind, Scene, StateConfidence, StateSource, Value,
+    AgentId, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode,
+    CommandResult, CommandStatus, CommandType, Entity, EntityId, EntityKind, PrivilegeTier, Scene,
+    StateConfidence, StateDelta, StateSource, Value,
 };
-use smart_home_runtime::SmartHomeRuntime;
+use smart_home_runtime::{RuntimeCommandToolRequest, RuntimeError, SmartHomeRuntime};
 use std::collections::BTreeMap;
-use std::sync::Arc;
-use web_core::{WebApp, WebResponse};
+use std::sync::{Arc, Mutex};
+use web_core::{WebApp, WebRequest, WebResponse};
 
 pub const VERSION: &str = "0.1.0";
 
@@ -135,9 +138,95 @@ pub struct SmartHomePlatformService {
     pub capability_ids: Vec<String>,
 }
 
+#[derive(Clone)]
+pub struct SmartHomePlatformHttpRuntime {
+    runtime: Arc<Mutex<SmartHomeRuntime>>,
+    config: SmartHomePlatformHttpConfig,
+    event_types: Vec<String>,
+    principal_id: AgentId,
+    now_ms: u64,
+}
+
+impl SmartHomePlatformHttpRuntime {
+    pub fn new(runtime: SmartHomeRuntime, config: SmartHomePlatformHttpConfig) -> Self {
+        Self::from_shared_runtime(Arc::new(Mutex::new(runtime)), config)
+    }
+
+    pub fn from_shared_runtime(
+        runtime: Arc<Mutex<SmartHomeRuntime>>,
+        config: SmartHomePlatformHttpConfig,
+    ) -> Self {
+        Self {
+            runtime,
+            config,
+            event_types: default_event_types(),
+            principal_id: AgentId::trusted("agent:home-assistant-local-api"),
+            now_ms: 0,
+        }
+    }
+
+    pub fn with_event_types(
+        mut self,
+        event_types: impl IntoIterator<Item = impl Into<String>>,
+    ) -> Self {
+        self.event_types = sorted_unique_strings(event_types);
+        self
+    }
+
+    pub fn with_principal_id(mut self, principal_id: AgentId) -> Self {
+        self.principal_id = principal_id;
+        self
+    }
+
+    pub fn with_now_ms(mut self, now_ms: u64) -> Self {
+        self.now_ms = now_ms;
+        self
+    }
+
+    pub fn grant_local_full_access(
+        self,
+        granted_by: impl Into<String>,
+        granted_at_ms: u64,
+    ) -> Self {
+        let grant = CapabilityGrant::for_all_smart_home(
+            CapabilityGrantId::trusted(format!(
+                "grant:{}:local-api-full-access",
+                self.principal_id.as_str()
+            )),
+            self.principal_id.clone(),
+            PrivilegeTier::HighRisk,
+            granted_by,
+            granted_at_ms,
+        );
+        self.runtime
+            .lock()
+            .expect("smart-home runtime mutex should not be poisoned")
+            .registry_mut()
+            .upsert_capability_grant(grant);
+        self
+    }
+
+    pub fn snapshot(&self) -> SmartHomePlatformHttpState {
+        let runtime = self
+            .runtime
+            .lock()
+            .expect("smart-home runtime mutex should not be poisoned");
+        SmartHomePlatformHttpState::from_runtime(
+            &runtime,
+            self.config.clone(),
+            self.event_types.clone(),
+            self.now_ms,
+        )
+    }
+}
+
 pub fn home_assistant_web_app(state: SmartHomePlatformHttpState) -> WebApp {
     let state = Arc::new(state);
     let mut app = WebApp::new();
+
+    app.get("/api/", move |_| {
+        WebResponse::json(api_root_json().into_bytes())
+    });
 
     {
         let state = Arc::clone(&state);
@@ -185,6 +274,75 @@ pub fn home_assistant_web_app(state: SmartHomePlatformHttpState) -> WebApp {
         let state = Arc::clone(&state);
         app.get("/api/events", move |_| {
             WebResponse::json(events_json(&state.event_types).into_bytes())
+        });
+    }
+
+    app
+}
+
+pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> WebApp {
+    let mut app = WebApp::new();
+
+    app.get("/api/", move |_| {
+        WebResponse::json(api_root_json().into_bytes())
+    });
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/config", move |_| {
+            let state = runtime.snapshot();
+            WebResponse::json(config_json(&state).into_bytes())
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/states", move |_| {
+            let state = runtime.snapshot();
+            WebResponse::json(states_json(&state.entities, state.generated_at_ms).into_bytes())
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/states/:entity_id", move |request| {
+            let Some(entity_id) = request.route_params.get("entity_id") else {
+                return json_error(400, "missing entity_id");
+            };
+            let state = runtime.snapshot();
+            match state
+                .entities
+                .iter()
+                .find(|entity| entity_matches_external_id(entity, entity_id))
+            {
+                Some(entity) => {
+                    WebResponse::json(state_json(entity, state.generated_at_ms).into_bytes())
+                }
+                None => json_error(404, "entity not found"),
+            }
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/services", move |_| {
+            let state = runtime.snapshot();
+            WebResponse::json(services_json(&platform_services(&state)).into_bytes())
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/events", move |_| {
+            let state = runtime.snapshot();
+            WebResponse::json(events_json(&state.event_types).into_bytes())
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.post("/api/services/:domain/:service", move |request| {
+            service_call_response(&runtime, request)
         });
     }
 
@@ -253,6 +411,10 @@ fn config_json(state: &SmartHomePlatformHttpState) -> String {
     )
 }
 
+fn api_root_json() -> String {
+    "{\"message\":\"API running.\"}".to_string()
+}
+
 fn states_json(entities: &[Entity], now_ms: u64) -> String {
     format!(
         "[{}]",
@@ -286,13 +448,14 @@ fn state_json(entity: &Entity, now_ms: u64) -> String {
         .join(",");
 
     format!(
-        "{{\"entity_id\":{},\"state\":{},\"attributes\":{{\"friendly_name\":{},\"device_id\":{},\"domain\":{},\"entity_kind\":{},\"capability_count\":{},\"capabilities\":[{}],\"stale\":{}}},\"last_changed_ms\":{},\"last_updated_ms\":{},\"context\":{{\"source\":{},\"confidence\":{}}}}}",
+        "{{\"entity_id\":{},\"state\":{},\"attributes\":{{\"friendly_name\":{},\"device_id\":{},\"domain\":{},\"entity_kind\":{},\"home_assistant_entity_id\":{},\"capability_count\":{},\"capabilities\":[{}],\"stale\":{}}},\"last_changed_ms\":{},\"last_updated_ms\":{},\"context\":{{\"source\":{},\"confidence\":{}}}}}",
         json_string(entity.entity_id.as_str()),
         state_value,
         json_string(&entity.name),
         json_string(entity.device_id.as_str()),
         json_string(entity_domain(entity.kind)),
         json_string(entity_kind_label(entity.kind)),
+        json_string(home_assistant_entity_id(entity)),
         entity.capabilities.len(),
         capability_ids,
         stale,
@@ -357,6 +520,580 @@ fn events_json(event_types: &[String]) -> String {
     )
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct ServiceCall {
+    target_entity_ids: Vec<String>,
+    target_scene_ids: Vec<String>,
+    body: JsonValue,
+    idempotency_key: Option<String>,
+    timeout_ms: Option<u64>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct ServiceCommand {
+    entity_id: EntityId,
+    command_type: CommandType,
+    arguments: Value,
+    idempotency_key: Option<String>,
+    timeout_ms: Option<u64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ApiError {
+    status: u16,
+    message: String,
+}
+
+impl ApiError {
+    fn new(status: u16, message: impl Into<String>) -> Self {
+        Self {
+            status,
+            message: message.into(),
+        }
+    }
+
+    fn bad_request(message: impl Into<String>) -> Self {
+        Self::new(400, message)
+    }
+
+    fn not_found(message: impl Into<String>) -> Self {
+        Self::new(404, message)
+    }
+
+    fn forbidden(message: impl Into<String>) -> Self {
+        Self::new(403, message)
+    }
+}
+
+fn service_call_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let domain = match request.route_params.get("domain") {
+        Some(domain) => domain.as_str(),
+        None => return json_error(400, "missing domain"),
+    };
+    let service = match request.route_params.get("service") {
+        Some(service) => service.as_str(),
+        None => return json_error(400, "missing service"),
+    };
+
+    let call = match parse_service_call(request.body()) {
+        Ok(call) => call,
+        Err(error) => return api_error_response(error),
+    };
+
+    let mut runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let before = SmartHomePlatformHttpState::from_runtime(
+        &runtime_guard,
+        runtime.config.clone(),
+        runtime.event_types.clone(),
+        runtime.now_ms,
+    );
+    let commands = match service_commands(&before, domain, service, &call) {
+        Ok(commands) => commands,
+        Err(error) => return api_error_response(error),
+    };
+
+    let mut results = Vec::new();
+    for command in commands {
+        let mut request = RuntimeCommandToolRequest::new(
+            command.entity_id,
+            command.command_type,
+            command.arguments,
+        );
+        if let Some(idempotency_key) = command.idempotency_key {
+            request = request.with_idempotency_key(idempotency_key);
+        }
+        if let Some(timeout_ms) = command.timeout_ms {
+            request = request.with_timeout_ms(timeout_ms);
+        }
+
+        match runtime_guard.execute_command_tool(
+            runtime.principal_id.clone(),
+            request,
+            runtime.now_ms,
+        ) {
+            Ok(result) => results.push(result),
+            Err(error) => return api_error_response(runtime_error_to_api_error(error)),
+        }
+    }
+
+    let after = SmartHomePlatformHttpState::from_runtime(
+        &runtime_guard,
+        runtime.config.clone(),
+        runtime.event_types.clone(),
+        runtime.now_ms,
+    );
+    WebResponse::json(service_call_json(domain, service, &results, &after).into_bytes())
+}
+
+fn parse_service_call(body: &[u8]) -> Result<ServiceCall, ApiError> {
+    let body = if body.is_empty() {
+        JsonValue::Object(Default::default())
+    } else {
+        serde_json::from_slice(body)
+            .map_err(|error| ApiError::bad_request(format!("invalid JSON body: {error}")))?
+    };
+
+    let mut target_entity_ids = Vec::new();
+    let mut target_scene_ids = Vec::new();
+    collect_string_values(&body, "entity_id", &mut target_entity_ids);
+    collect_string_values(&body, "entity_ids", &mut target_entity_ids);
+    collect_string_values(&body, "scene_id", &mut target_scene_ids);
+    collect_string_values(&body, "scene_ids", &mut target_scene_ids);
+
+    if let Some(target) = body.get("target") {
+        collect_string_values(target, "entity_id", &mut target_entity_ids);
+        collect_string_values(target, "entity_ids", &mut target_entity_ids);
+        collect_string_values(target, "scene_id", &mut target_scene_ids);
+        collect_string_values(target, "scene_ids", &mut target_scene_ids);
+    }
+
+    target_entity_ids.sort();
+    target_entity_ids.dedup();
+    target_scene_ids.sort();
+    target_scene_ids.dedup();
+
+    Ok(ServiceCall {
+        idempotency_key: json_string_field(&body, "idempotency_key"),
+        timeout_ms: json_u64_field(&body, "timeout_ms"),
+        target_entity_ids,
+        target_scene_ids,
+        body,
+    })
+}
+
+fn service_commands(
+    state: &SmartHomePlatformHttpState,
+    domain: &str,
+    service: &str,
+    call: &ServiceCall,
+) -> Result<Vec<ServiceCommand>, ApiError> {
+    if domain == "scene" && service == "turn_on" {
+        return scene_service_commands(state, call);
+    }
+
+    let entities = target_entities(state, domain, call)?;
+    let mut commands = Vec::new();
+    for entity in entities {
+        commands.extend(entity_service_commands(domain, service, entity, call)?);
+    }
+    Ok(commands)
+}
+
+fn target_entities<'a>(
+    state: &'a SmartHomePlatformHttpState,
+    domain: &str,
+    call: &ServiceCall,
+) -> Result<Vec<&'a Entity>, ApiError> {
+    if call.target_entity_ids.is_empty() {
+        return Err(ApiError::bad_request(
+            "service call requires an entity target",
+        ));
+    }
+
+    let mut entities = Vec::new();
+    for target in &call.target_entity_ids {
+        let entity = state
+            .entities
+            .iter()
+            .find(|entity| entity_matches_external_id(entity, target))
+            .ok_or_else(|| ApiError::not_found(format!("entity target `{target}` not found")))?;
+        if entity_domain(entity.kind) != domain {
+            return Err(ApiError::bad_request(format!(
+                "entity target `{target}` is not in domain `{domain}`"
+            )));
+        }
+        entities.push(entity);
+    }
+    Ok(entities)
+}
+
+fn scene_service_commands(
+    state: &SmartHomePlatformHttpState,
+    call: &ServiceCall,
+) -> Result<Vec<ServiceCommand>, ApiError> {
+    if call.target_scene_ids.is_empty() && call.target_entity_ids.is_empty() {
+        return Err(ApiError::bad_request(
+            "scene.turn_on requires a scene target",
+        ));
+    }
+
+    let mut commands = Vec::new();
+    for target in call
+        .target_scene_ids
+        .iter()
+        .chain(call.target_entity_ids.iter())
+    {
+        let scene = state
+            .scenes
+            .iter()
+            .find(|scene| scene_matches_external_id(scene, target))
+            .ok_or_else(|| ApiError::not_found(format!("scene target `{target}` not found")))?;
+        for action in &scene.actions {
+            for delta in state_deltas_from_value(&action.desired_state)? {
+                let (command_type, arguments) =
+                    command_from_capability_value(&action.entity_id, &delta)?;
+                commands.push(ServiceCommand {
+                    entity_id: action.entity_id.clone(),
+                    command_type,
+                    arguments,
+                    idempotency_key: call.idempotency_key.clone(),
+                    timeout_ms: call.timeout_ms,
+                });
+            }
+        }
+    }
+    Ok(commands)
+}
+
+fn entity_service_commands(
+    domain: &str,
+    service: &str,
+    entity: &Entity,
+    call: &ServiceCall,
+) -> Result<Vec<ServiceCommand>, ApiError> {
+    let mut commands = Vec::new();
+    match (domain, service) {
+        ("light", "turn_on") => {
+            commands.push(service_command(
+                entity,
+                CommandType::TurnOn,
+                Value::Null,
+                call,
+            ));
+            if let Some(value) = brightness_value(&call.body)? {
+                commands.push(service_command(
+                    entity,
+                    CommandType::SetBrightness,
+                    value,
+                    call,
+                ));
+            }
+            if let Some(value) = color_temperature_value(&call.body)? {
+                commands.push(service_command(
+                    entity,
+                    CommandType::SetColorTemperature,
+                    value,
+                    call,
+                ));
+            }
+            if let Some(value) = color_value(&call.body)? {
+                commands.push(service_command(entity, CommandType::SetColor, value, call));
+            }
+        }
+        ("light", "turn_off") => {
+            commands.push(service_command(
+                entity,
+                CommandType::TurnOff,
+                Value::Null,
+                call,
+            ));
+        }
+        ("light", "set_brightness") => {
+            let value = brightness_value(&call.body)?.ok_or_else(|| {
+                ApiError::bad_request("light.set_brightness requires brightness_pct or brightness")
+            })?;
+            commands.push(service_command(
+                entity,
+                CommandType::SetBrightness,
+                value,
+                call,
+            ));
+        }
+        ("light", "set_color_temperature") => {
+            let value = color_temperature_value(&call.body)?.ok_or_else(|| {
+                ApiError::bad_request(
+                    "light.set_color_temperature requires color_temp, color_temp_kelvin, or kelvin",
+                )
+            })?;
+            commands.push(service_command(
+                entity,
+                CommandType::SetColorTemperature,
+                value,
+                call,
+            ));
+        }
+        ("light", "set_color") => {
+            let value = color_value(&call.body)?
+                .ok_or_else(|| ApiError::bad_request("light.set_color requires rgb_color"))?;
+            commands.push(service_command(entity, CommandType::SetColor, value, call));
+        }
+        ("lock", "lock") => {
+            commands.push(service_command(
+                entity,
+                CommandType::SetLock,
+                Value::Text("locked".to_string()),
+                call,
+            ));
+        }
+        ("lock", "unlock") => {
+            commands.push(service_command(
+                entity,
+                CommandType::SetLock,
+                Value::Text("unlocked".to_string()),
+                call,
+            ));
+        }
+        ("climate", "set_temperature") => {
+            let value = number_or_integer_field(&call.body, "temperature").ok_or_else(|| {
+                ApiError::bad_request("climate.set_temperature requires temperature")
+            })?;
+            commands.push(service_command(
+                entity,
+                CommandType::SetThermostatSetpoint,
+                value,
+                call,
+            ));
+        }
+        _ => {
+            return Err(ApiError::bad_request(format!(
+                "unsupported service `{domain}.{service}`"
+            )));
+        }
+    }
+
+    Ok(commands)
+}
+
+fn service_command(
+    entity: &Entity,
+    command_type: CommandType,
+    arguments: Value,
+    call: &ServiceCall,
+) -> ServiceCommand {
+    ServiceCommand {
+        entity_id: entity.entity_id.clone(),
+        command_type,
+        arguments,
+        idempotency_key: call.idempotency_key.clone(),
+        timeout_ms: call.timeout_ms,
+    }
+}
+
+fn state_deltas_from_value(value: &Value) -> Result<Vec<StateDelta>, ApiError> {
+    match value {
+        Value::Object(fields) => Ok(fields
+            .iter()
+            .map(|(capability_id, value)| StateDelta {
+                capability_id: CapabilityId::trusted(capability_id.clone()),
+                value: value.clone(),
+            })
+            .collect()),
+        _ => Err(ApiError::bad_request(
+            "scene action desired_state must be an object",
+        )),
+    }
+}
+
+fn command_from_capability_value(
+    entity_id: &EntityId,
+    delta: &StateDelta,
+) -> Result<(CommandType, Value), ApiError> {
+    match delta.capability_id.as_str() {
+        "light.on_off" => match delta.value {
+            Value::Bool(true) => Ok((CommandType::TurnOn, Value::Null)),
+            Value::Bool(false) => Ok((CommandType::TurnOff, Value::Null)),
+            _ => Err(ApiError::bad_request(format!(
+                "entity {entity_id} light.on_off scene value must be boolean"
+            ))),
+        },
+        "light.brightness" => Ok((CommandType::SetBrightness, delta.value.clone())),
+        "light.color" => Ok((CommandType::SetColor, delta.value.clone())),
+        "light.color_temperature" => Ok((CommandType::SetColorTemperature, delta.value.clone())),
+        "lock.state" => Ok((CommandType::SetLock, delta.value.clone())),
+        "climate.setpoint" => Ok((CommandType::SetThermostatSetpoint, delta.value.clone())),
+        capability_id => Err(ApiError::bad_request(format!(
+            "entity {entity_id} desired state for capability `{capability_id}` cannot be mapped"
+        ))),
+    }
+}
+
+fn brightness_value(body: &JsonValue) -> Result<Option<Value>, ApiError> {
+    if let Some(value) = json_u64_field(body, "brightness_pct") {
+        if value > 100 {
+            return Err(ApiError::bad_request(
+                "brightness_pct must be between 0 and 100",
+            ));
+        }
+        return Ok(Some(Value::Percentage(value as u8)));
+    }
+
+    if let Some(value) = json_u64_field(body, "brightness") {
+        if value > 255 {
+            return Err(ApiError::bad_request(
+                "brightness must be between 0 and 255",
+            ));
+        }
+        let percentage = ((value * 100) + 127) / 255;
+        return Ok(Some(Value::Percentage(percentage as u8)));
+    }
+
+    Ok(None)
+}
+
+fn color_temperature_value(body: &JsonValue) -> Result<Option<Value>, ApiError> {
+    for field in ["color_temp_kelvin", "kelvin", "color_temp"] {
+        if let Some(value) = json_u64_field(body, field) {
+            return Ok(Some(Value::Integer(value as i64)));
+        }
+    }
+    Ok(None)
+}
+
+fn color_value(body: &JsonValue) -> Result<Option<Value>, ApiError> {
+    let Some(rgb) = body.get("rgb_color") else {
+        return Ok(None);
+    };
+    let values = rgb
+        .as_array()
+        .ok_or_else(|| ApiError::bad_request("rgb_color must be an array"))?;
+    if values.len() != 3 {
+        return Err(ApiError::bad_request("rgb_color must have three channels"));
+    }
+    let mut channels = Vec::new();
+    for value in values {
+        let channel = value
+            .as_u64()
+            .ok_or_else(|| ApiError::bad_request("rgb_color channels must be integers"))?;
+        if channel > 255 {
+            return Err(ApiError::bad_request(
+                "rgb_color channels must be between 0 and 255",
+            ));
+        }
+        channels.push(Value::Integer(channel as i64));
+    }
+    Ok(Some(Value::Array(channels)))
+}
+
+fn number_or_integer_field(body: &JsonValue, field: &str) -> Option<Value> {
+    body.get(field).and_then(|value| {
+        value
+            .as_i64()
+            .map(Value::Integer)
+            .or_else(|| value.as_f64().map(Value::Number))
+    })
+}
+
+fn collect_string_values(value: &JsonValue, field: &str, output: &mut Vec<String>) {
+    let Some(value) = value.get(field) else {
+        return;
+    };
+    match value {
+        JsonValue::String(value) => output.push(value.clone()),
+        JsonValue::Array(values) => {
+            for value in values {
+                if let Some(value) = value.as_str() {
+                    output.push(value.to_string());
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
+fn json_string_field(value: &JsonValue, field: &str) -> Option<String> {
+    value
+        .get(field)
+        .and_then(JsonValue::as_str)
+        .map(str::to_string)
+}
+
+fn json_u64_field(value: &JsonValue, field: &str) -> Option<u64> {
+    value.get(field).and_then(JsonValue::as_u64)
+}
+
+fn service_call_json(
+    domain: &str,
+    service: &str,
+    results: &[CommandResult],
+    state: &SmartHomePlatformHttpState,
+) -> String {
+    format!(
+        "{{\"domain\":{},\"service\":{},\"result_count\":{},\"results\":[{}],\"states\":{}}}",
+        json_string(domain),
+        json_string(service),
+        results.len(),
+        results
+            .iter()
+            .map(command_result_json)
+            .collect::<Vec<_>>()
+            .join(","),
+        states_json(&state.entities, state.generated_at_ms),
+    )
+}
+
+fn command_result_json(result: &CommandResult) -> String {
+    format!(
+        "{{\"command_id\":{},\"status\":{},\"bridge_id\":{},\"correlation_id\":{},\"message\":{}}}",
+        json_string(result.command_id.as_str()),
+        json_string(command_status_label(result.status)),
+        json_string(result.bridge_id.as_str()),
+        json_string(result.correlation_id.as_str()),
+        result
+            .message
+            .as_ref()
+            .map(json_string)
+            .unwrap_or_else(|| "null".to_string()),
+    )
+}
+
+fn command_status_label(status: CommandStatus) -> &'static str {
+    match status {
+        CommandStatus::Accepted => "accepted",
+        CommandStatus::Rejected => "rejected",
+        CommandStatus::TimedOut => "timed_out",
+        CommandStatus::Failed => "failed",
+    }
+}
+
+fn runtime_error_to_api_error(error: RuntimeError) -> ApiError {
+    match error {
+        RuntimeError::UnauthorizedCommand { .. } | RuntimeError::UnauthorizedTool { .. } => {
+            ApiError::forbidden(error.to_string())
+        }
+        RuntimeError::UnknownEntity(_) | RuntimeError::UnknownScene(_) => {
+            ApiError::not_found(error.to_string())
+        }
+        RuntimeError::UnsupportedCapability { .. }
+        | RuntimeError::ReadOnlyCapability { .. }
+        | RuntimeError::UnsupportedDesiredState { .. } => ApiError::bad_request(error.to_string()),
+        _ => ApiError::new(500, error.to_string()),
+    }
+}
+
+fn api_error_response(error: ApiError) -> WebResponse {
+    json_error(error.status, error.message)
+}
+
+fn json_error(status: u16, message: impl AsRef<str>) -> WebResponse {
+    WebResponse::new(
+        status,
+        format!("{{\"error\":{}}}", json_string(message.as_ref())).into_bytes(),
+    )
+    .with_content_type("application/json")
+}
+
+fn default_event_types() -> Vec<String> {
+    sorted_unique_strings([
+        "call_service",
+        "command_result",
+        "state_changed",
+        "state_expired",
+    ])
+}
+
+fn sorted_unique_strings(values: impl IntoIterator<Item = impl Into<String>>) -> Vec<String> {
+    let mut values = values.into_iter().map(Into::into).collect::<Vec<_>>();
+    values.sort();
+    values.dedup();
+    values
+}
+
 fn services_for_capability(domain: &str, capability: &Capability) -> Vec<&'static str> {
     match capability.capability_id.as_str() {
         "light.on_off" => vec!["turn_on", "turn_off"],
@@ -391,6 +1128,46 @@ fn entity_domain(kind: EntityKind) -> &'static str {
         EntityKind::BridgeHealth => "binary_sensor",
         EntityKind::NetworkDiagnostic => "diagnostic",
         EntityKind::Unknown => "unknown",
+    }
+}
+
+fn entity_matches_external_id(entity: &Entity, target: &str) -> bool {
+    entity.entity_id.as_str() == target || home_assistant_entity_id(entity) == target
+}
+
+fn scene_matches_external_id(scene: &Scene, target: &str) -> bool {
+    scene.scene_id.as_str() == target || home_assistant_scene_id(scene) == target
+}
+
+fn home_assistant_entity_id(entity: &Entity) -> String {
+    format!(
+        "{}.{}",
+        entity_domain(entity.kind),
+        object_id(entity.entity_id.as_str())
+    )
+}
+
+fn home_assistant_scene_id(scene: &Scene) -> String {
+    format!("scene.{}", object_id(scene.scene_id.as_str()))
+}
+
+fn object_id(value: &str) -> String {
+    let mut object_id = String::new();
+    let mut previous_was_separator = false;
+    for ch in value.chars() {
+        if ch.is_ascii_alphanumeric() {
+            object_id.push(ch.to_ascii_lowercase());
+            previous_was_separator = false;
+        } else if !previous_was_separator {
+            object_id.push('_');
+            previous_was_separator = true;
+        }
+    }
+    let object_id = object_id.trim_matches('_');
+    if object_id.is_empty() {
+        "unnamed".to_string()
+    } else {
+        object_id.to_string()
     }
 }
 
@@ -494,6 +1271,25 @@ mod tests {
     use web_core::WebServer;
 
     fn request(method: &str, target: &str) -> HttpRequest {
+        request_with_body(method, target, "")
+    }
+
+    fn request_with_body(method: &str, target: &str, body: &str) -> HttpRequest {
+        let mut headers = vec![Header {
+            name: "Host".to_string(),
+            value: "localhost".to_string(),
+        }];
+        if !body.is_empty() {
+            headers.push(Header {
+                name: "Content-Type".to_string(),
+                value: "application/json".to_string(),
+            });
+            headers.push(Header {
+                name: "Content-Length".to_string(),
+                value: body.len().to_string(),
+            });
+        }
+
         HttpRequest {
             connection: TcpConnectionInfo {
                 id: ConnectionId(0),
@@ -504,12 +1300,9 @@ mod tests {
                 method: method.to_string(),
                 target: target.to_string(),
                 version: HttpVersion { major: 1, minor: 1 },
-                headers: vec![Header {
-                    name: "Host".to_string(),
-                    value: "localhost".to_string(),
-                }],
+                headers,
             },
-            body: Vec::new(),
+            body: body.as_bytes().to_vec(),
         }
     }
 
@@ -518,13 +1311,23 @@ mod tests {
     }
 
     fn http_get(port: u16, path: &str) -> (u16, String) {
+        http_request(port, "GET", path, "")
+    }
+
+    fn http_post(port: u16, path: &str, body: &str) -> (u16, String) {
+        http_request(port, "POST", path, body)
+    }
+
+    fn http_request(port: u16, method: &str, path: &str, body: &str) -> (u16, String) {
         let mut stream = TcpStream::connect(("127.0.0.1", port)).expect("connect");
         stream
             .set_read_timeout(Some(Duration::from_secs(5)))
             .expect("set read timeout");
 
-        let request =
-            format!("GET {path} HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n");
+        let request = format!(
+            "{method} {path} HTTP/1.1\r\nHost: localhost\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+            body.len()
+        );
         stream.write_all(request.as_bytes()).expect("write request");
 
         let mut reader = BufReader::new(&stream);
@@ -615,6 +1418,21 @@ mod tests {
         )
     }
 
+    fn fixture_runtime(grant_access: bool) -> SmartHomePlatformHttpRuntime {
+        let runtime = SmartHomePlatformHttpRuntime::new(
+            hue_lighting_runtime(),
+            SmartHomePlatformHttpConfig::new("Codex Home").with_time_zone("America/Los_Angeles"),
+        )
+        .with_event_types(["state_changed", "call_service", "command_result"])
+        .with_now_ms(5_000);
+
+        if grant_access {
+            runtime.grant_local_full_access("test", 1_000)
+        } else {
+            runtime
+        }
+    }
+
     #[test]
     fn platform_http_summary_counts_runtime_snapshot_shape() {
         let state = fixture_state();
@@ -631,6 +1449,9 @@ mod tests {
     fn home_assistant_web_app_serves_config_states_services_and_events() {
         let state = fixture_state();
         let app = home_assistant_web_app(state);
+
+        let root = response_body(app.handle(request("GET", "/api/")).into());
+        assert_eq!(root, r#"{"message":"API running."}"#);
 
         let config = response_body(app.handle(request("GET", "/api/config")).into());
         assert!(config.contains(r#""location_name":"Codex Home""#));
@@ -671,6 +1492,81 @@ mod tests {
         assert!(body.contains(r#""entity_id":"entity-light-1""#));
         assert!(body.contains(r#""domain":"light""#));
         assert!(body.contains(r#""friendly_name":"Kitchen Light""#));
+    }
+
+    #[test]
+    fn runtime_web_app_dispatches_authorized_light_service_calls() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/services/light/turn_on",
+                r#"{"entity_id":"light.entity_light_1","brightness_pct":75,"idempotency_key":"ha:turn-on:kitchen"}"#,
+            ))
+            .into();
+
+        let body = response_body(response.clone());
+        assert_eq!(response.status, 200);
+        assert!(body.contains(r#""domain":"light""#));
+        assert!(body.contains(r#""service":"turn_on""#));
+        assert!(body.contains(r#""result_count":2"#));
+        assert!(body.contains(r#""status":"accepted""#));
+
+        let state = response_body(
+            app.handle(request("GET", "/api/states/light.entity_light_1"))
+                .into(),
+        );
+        assert!(state.contains(r#""confidence":"optimistic""#));
+        assert!(state.contains(r#""light.brightness":75"#));
+    }
+
+    #[test]
+    fn runtime_web_app_rejects_service_calls_without_runtime_grants() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(false));
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/services/light/turn_on",
+                r#"{"entity_id":"entity-light-1"}"#,
+            ))
+            .into();
+
+        assert_eq!(response.status, 403);
+        assert!(response_body(response).contains("not authorized"));
+    }
+
+    #[test]
+    fn runtime_web_app_expands_scene_turn_on_into_commands() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/services/scene/turn_on",
+                r#"{"entity_id":"scene.scene_kitchen_bright"}"#,
+            ))
+            .into();
+
+        let body = response_body(response.clone());
+        assert_eq!(response.status, 200);
+        assert!(body.contains(r#""domain":"scene""#));
+        assert!(body.contains(r#""result_count":2"#));
+        assert!(body.contains(r#""status":"accepted""#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_post_services_over_repo_http_server() {
+        let (port, stop) = start_server(home_assistant_runtime_web_app(fixture_runtime(true)));
+        let (status, body) = http_post(
+            port,
+            "/api/services/light/set_brightness",
+            r#"{"entity_id":"entity-light-1","brightness":128}"#,
+        );
+        stop.stop();
+
+        assert_eq!(status, 200);
+        assert!(body.contains(r#""service":"set_brightness""#));
+        assert!(body.contains(r#""result_count":1"#));
+        assert!(body.contains(r#""status":"accepted""#));
     }
 
     #[test]
