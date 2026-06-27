@@ -2847,6 +2847,20 @@ pub struct DeviceModelTemperatureBehaviorFixture {
     pub deck_lines: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelCapacitanceBehaviorFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub circuit: Circuit,
+    pub probe_node: String,
+    pub frequency_hz: f64,
+    pub expected_magnitude_min: f64,
+    pub expected_magnitude_max: f64,
+    pub capacitance_behavior: String,
+    pub deck_lines: Vec<String>,
+}
+
 fn model_type_key(text: &str) -> String {
     text.trim()
         .chars()
@@ -3440,6 +3454,192 @@ pub fn device_model_temperature_audit_fixtures(
             })
         })
         .collect()
+}
+
+pub fn device_model_capacitance_audit_fixtures(
+) -> Result<Vec<DeviceModelCapacitanceBehaviorFixture>, SpiceError> {
+    let models = model_card_by_name(&device_model_audit_fixtures()?)?;
+    let frequency_hz = 100_000.0;
+
+    let diode_model = models
+        .get("Dfast")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_capacitance_audit_fixtures".to_string(),
+            reason: "missing Dfast model fixture".to_string(),
+        })?;
+    let mut diode_circuit = Circuit::new();
+    diode_circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vdrive", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    diode_circuit.add(Element::Resistor(Resistor::new(
+        "Rin",
+        "in",
+        "out",
+        1_000_000.0,
+    )));
+    diode_circuit.add(Element::Diode(diode_from_model_card(
+        "D1",
+        "out",
+        "0",
+        diode_model,
+    )?));
+
+    let bjt_model = models
+        .get("Qsmall")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_capacitance_audit_fixtures".to_string(),
+            reason: "missing Qsmall model fixture".to_string(),
+        })?;
+    let mut bjt_circuit = Circuit::new();
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vdrive", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    bjt_circuit.add(Element::Resistor(Resistor::new(
+        "Rin",
+        "in",
+        "base",
+        1_000_000.0,
+    )));
+    bjt_circuit.add(Element::Resistor(Resistor::new("Rc", "col", "0", 1_000.0)));
+    bjt_circuit.add(Element::Bjt(bjt_from_model_card(
+        "Q1", "col", "base", "0", bjt_model,
+    )?));
+
+    let jfet_model = models.get("Jn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_capacitance_audit_fixtures".to_string(),
+        reason: "missing Jn model fixture".to_string(),
+    })?;
+    let mut jfet_circuit = Circuit::new();
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vdrive", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rin", "in", "source", 1_000.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rd", "drain", "0", 2_000.0,
+    )));
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    jfet_circuit.add(Element::Jfet(jfet_from_model_card(
+        "J1", "drain", "gate", "source", jfet_model,
+    )?));
+
+    let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_capacitance_audit_fixtures".to_string(),
+        reason: "missing Mn model fixture".to_string(),
+    })?;
+    let mut mos_circuit = Circuit::new();
+    mos_circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vdrive", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    mos_circuit.add(Element::Resistor(Resistor::new(
+        "Rin",
+        "in",
+        "drain",
+        5_000_000.0,
+    )));
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    mos_circuit.add(Element::Mosfet(mosfet_from_model_card(
+        "M1", "drain", "gate", "0", "0", mos_model,
+    )?));
+
+    Ok(vec![
+        DeviceModelCapacitanceBehaviorFixture {
+            name: "diode-capacitance-ac".to_string(),
+            kind: diode_model.kind,
+            model: diode_model.clone(),
+            circuit: diode_circuit,
+            probe_node: "out".to_string(),
+            frequency_hz,
+            expected_magnitude_min: 0.72,
+            expected_magnitude_max: 0.74,
+            capacitance_behavior:
+                "diode CJO and TT contribute high-frequency shunt capacitance".to_string(),
+            deck_lines: vec![
+                "* device-model capacitance fixture: diode-capacitance-ac".to_string(),
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)".to_string(),
+                "Vdrive in 0 0 AC 1".to_string(),
+                "Rin in out 1meg".to_string(),
+                "D1 out 0 Dfast".to_string(),
+                ".ac lin 1 100k 100k".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelCapacitanceBehaviorFixture {
+            name: "bjt-capacitance-ac".to_string(),
+            kind: bjt_model.kind,
+            model: bjt_model.clone(),
+            circuit: bjt_circuit,
+            probe_node: "base".to_string(),
+            frequency_hz,
+            expected_magnitude_min: 0.61,
+            expected_magnitude_max: 0.64,
+            capacitance_behavior:
+                "BJT CJE and TF contribute base-emitter AC capacitance".to_string(),
+            deck_lines: vec![
+                "* device-model capacitance fixture: bjt-capacitance-ac".to_string(),
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)".to_string(),
+                "Vdrive in 0 0 AC 1".to_string(),
+                "Rin in base 1meg".to_string(),
+                "Rc col 0 1k".to_string(),
+                "Q1 col base 0 Qsmall".to_string(),
+                ".ac lin 1 100k 100k".to_string(),
+                ".save V(base)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelCapacitanceBehaviorFixture {
+            name: "jfet-capacitance-invariant-ac".to_string(),
+            kind: jfet_model.kind,
+            model: jfet_model.clone(),
+            circuit: jfet_circuit,
+            probe_node: "source".to_string(),
+            frequency_hz,
+            expected_magnitude_min: 0.69,
+            expected_magnitude_max: 0.71,
+            capacitance_behavior: "JFET capacitance is intentionally unmodeled; fixture records conductance-only AC response".to_string(),
+            deck_lines: vec![
+                "* device-model capacitance fixture: jfet-capacitance-invariant-ac".to_string(),
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)".to_string(),
+                "Vdrive in 0 0 AC 1".to_string(),
+                "Rin in source 1k".to_string(),
+                "Rd drain 0 2k".to_string(),
+                "Vgate gate 0 0".to_string(),
+                "J1 drain gate source Jn".to_string(),
+                ".ac lin 1 100k 100k".to_string(),
+                ".save V(source)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelCapacitanceBehaviorFixture {
+            name: "mos-level1-capacitance-ac".to_string(),
+            kind: mos_model.kind,
+            model: mos_model.clone(),
+            circuit: mos_circuit,
+            probe_node: "drain".to_string(),
+            frequency_hz,
+            expected_magnitude_min: 0.72,
+            expected_magnitude_max: 0.74,
+            capacitance_behavior:
+                "Level-1 MOS CBD contributes drain-bulk AC capacitance".to_string(),
+            deck_lines: vec![
+                "* device-model capacitance fixture: mos-level1-capacitance-ac".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)".to_string(),
+                "Vdrive in 0 0 AC 1".to_string(),
+                "Rin in drain 5meg".to_string(),
+                "Vgate gate 0 0".to_string(),
+                "M1 drain gate 0 0 Mn".to_string(),
+                ".ac lin 1 100k 100k".to_string(),
+                ".save V(drain)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+    ])
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

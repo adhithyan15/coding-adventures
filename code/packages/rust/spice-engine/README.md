@@ -128,7 +128,9 @@ one-device DC bias fixtures with reference deck lines and stable expected
 probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth audits.
 `device_model_temperature_audit_fixtures` adds matching `.temp`
 reference-deck metadata and stable per-temperature probe windows for those same
-fixture circuits.
+fixture circuits. `device_model_capacitance_audit_fixtures` adds matching
+`.ac` reference-deck metadata and stable high-frequency probe magnitude windows
+for capacitance and current JFET invariant audits.
 
 `analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
 module shape and rejects dynamic/event/system constructs; it is not a full

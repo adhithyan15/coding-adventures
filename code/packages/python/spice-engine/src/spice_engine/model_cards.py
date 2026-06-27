@@ -12,7 +12,7 @@ from dataclasses import dataclass, replace
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 
-from spice_engine.elements import BJT, JFET, Diode, Mosfet, Resistor, VoltageSource
+from spice_engine.elements import BJT, JFET, AcSource, Diode, Mosfet, Resistor, VoltageSource
 from spice_engine.engine import Circuit
 
 
@@ -62,6 +62,22 @@ class DeviceModelTemperatureBehaviorFixture:
     energy_gap_ev: float
     temperature_behavior: str
     temperature_points: tuple[DeviceModelTemperaturePoint, ...]
+    deck_lines: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class DeviceModelCapacitanceBehaviorFixture:
+    """A runnable model-card AC fixture with a stable capacitance probe window."""
+
+    name: str
+    kind: str
+    model: NormalizedModelCard
+    circuit: Circuit
+    probe_node: str
+    frequency_hz: float
+    expected_magnitude_min: float
+    expected_magnitude_max: float
+    capacitance_behavior: str
     deck_lines: tuple[str, ...]
 
 
@@ -541,4 +557,129 @@ def device_model_temperature_audit_fixtures() -> tuple[DeviceModelTemperatureBeh
             deck_lines=_temperature_deck_lines(fixture),
         )
         for fixture in device_model_behavior_audit_fixtures()
+    )
+
+
+def device_model_capacitance_audit_fixtures() -> tuple[DeviceModelCapacitanceBehaviorFixture, ...]:
+    """Return runnable model-card AC fixtures for capacitance model-depth audits."""
+
+    models = _model_card_by_name()
+    frequency_hz = 100_000.0
+
+    diode_circuit = Circuit()
+    diode_circuit.add(VoltageSource("Vdrive", "in", "0", 0.0, ac=AcSource(1.0)))
+    diode_circuit.add(Resistor("Rin", "in", "out", 1_000_000.0))
+    diode_circuit.add(diode_from_model_card("D1", "out", "0", models["Dfast"]))
+
+    bjt_circuit = Circuit()
+    bjt_circuit.add(VoltageSource("Vdrive", "in", "0", 0.0, ac=AcSource(1.0)))
+    bjt_circuit.add(Resistor("Rin", "in", "base", 1_000_000.0))
+    bjt_circuit.add(Resistor("Rc", "col", "0", 1_000.0))
+    bjt_circuit.add(bjt_from_model_card("Q1", "col", "base", "0", models["Qsmall"]))
+
+    jfet_circuit = Circuit()
+    jfet_circuit.add(VoltageSource("Vdrive", "in", "0", 0.0, ac=AcSource(1.0)))
+    jfet_circuit.add(Resistor("Rin", "in", "source", 1_000.0))
+    jfet_circuit.add(Resistor("Rd", "drain", "0", 2_000.0))
+    jfet_circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+    jfet_circuit.add(jfet_from_model_card("J1", "drain", "gate", "source", models["Jn"]))
+
+    mos_circuit = Circuit()
+    mos_circuit.add(VoltageSource("Vdrive", "in", "0", 0.0, ac=AcSource(1.0)))
+    mos_circuit.add(Resistor("Rin", "in", "drain", 5_000_000.0))
+    mos_circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+    mos_circuit.add(mosfet_from_model_card("M1", "drain", "gate", "0", "0", models["Mn"]))
+
+    return (
+        DeviceModelCapacitanceBehaviorFixture(
+            name="diode-capacitance-ac",
+            kind=models["Dfast"].kind,
+            model=models["Dfast"],
+            circuit=diode_circuit,
+            probe_node="out",
+            frequency_hz=frequency_hz,
+            expected_magnitude_min=0.72,
+            expected_magnitude_max=0.74,
+            capacitance_behavior="diode CJO and TT contribute high-frequency shunt capacitance",
+            deck_lines=(
+                "* device-model capacitance fixture: diode-capacitance-ac",
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+                "Vdrive in 0 0 AC 1",
+                "Rin in out 1meg",
+                "D1 out 0 Dfast",
+                ".ac lin 1 100k 100k",
+                ".save V(out)",
+                ".end",
+            ),
+        ),
+        DeviceModelCapacitanceBehaviorFixture(
+            name="bjt-capacitance-ac",
+            kind=models["Qsmall"].kind,
+            model=models["Qsmall"],
+            circuit=bjt_circuit,
+            probe_node="base",
+            frequency_hz=frequency_hz,
+            expected_magnitude_min=0.61,
+            expected_magnitude_max=0.64,
+            capacitance_behavior="BJT CJE and TF contribute base-emitter AC capacitance",
+            deck_lines=(
+                "* device-model capacitance fixture: bjt-capacitance-ac",
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+                "Vdrive in 0 0 AC 1",
+                "Rin in base 1meg",
+                "Rc col 0 1k",
+                "Q1 col base 0 Qsmall",
+                ".ac lin 1 100k 100k",
+                ".save V(base)",
+                ".end",
+            ),
+        ),
+        DeviceModelCapacitanceBehaviorFixture(
+            name="jfet-capacitance-invariant-ac",
+            kind=models["Jn"].kind,
+            model=models["Jn"],
+            circuit=jfet_circuit,
+            probe_node="source",
+            frequency_hz=frequency_hz,
+            expected_magnitude_min=0.69,
+            expected_magnitude_max=0.71,
+            capacitance_behavior=(
+                "JFET capacitance is intentionally unmodeled; fixture records "
+                "conductance-only AC response"
+            ),
+            deck_lines=(
+                "* device-model capacitance fixture: jfet-capacitance-invariant-ac",
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+                "Vdrive in 0 0 AC 1",
+                "Rin in source 1k",
+                "Rd drain 0 2k",
+                "Vgate gate 0 0",
+                "J1 drain gate source Jn",
+                ".ac lin 1 100k 100k",
+                ".save V(source)",
+                ".end",
+            ),
+        ),
+        DeviceModelCapacitanceBehaviorFixture(
+            name="mos-level1-capacitance-ac",
+            kind=models["Mn"].kind,
+            model=models["Mn"],
+            circuit=mos_circuit,
+            probe_node="drain",
+            frequency_hz=frequency_hz,
+            expected_magnitude_min=0.72,
+            expected_magnitude_max=0.74,
+            capacitance_behavior="Level-1 MOS CBD contributes drain-bulk AC capacitance",
+            deck_lines=(
+                "* device-model capacitance fixture: mos-level1-capacitance-ac",
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+                "Vdrive in 0 0 AC 1",
+                "Rin in drain 5meg",
+                "Vgate gate 0 0",
+                "M1 drain gate 0 0 Mn",
+                ".ac lin 1 100k 100k",
+                ".save V(drain)",
+                ".end",
+            ),
+        ),
     )

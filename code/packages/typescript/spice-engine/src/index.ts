@@ -1024,6 +1024,19 @@ export interface DeviceModelTemperatureBehaviorFixture {
   readonly deckLines: readonly string[];
 }
 
+export interface DeviceModelCapacitanceBehaviorFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly circuit: Circuit;
+  readonly probeNode: string;
+  readonly frequencyHz: number;
+  readonly expectedMagnitudeMin: number;
+  readonly expectedMagnitudeMax: number;
+  readonly capacitanceBehavior: string;
+  readonly deckLines: readonly string[];
+}
+
 export interface Vccs {
   readonly kind: "vccs";
   readonly name: string;
@@ -7068,10 +7081,11 @@ function modelCardByName(models: readonly NormalizedModelCard[]): Map<string, No
 function requiredModel(
   models: ReadonlyMap<string, NormalizedModelCard>,
   name: string,
+  helperName = "deviceModelBehaviorAuditFixtures",
 ): NormalizedModelCard {
   const model = models.get(name);
   if (model === undefined) {
-    throw invalidElement("deviceModelBehaviorAuditFixtures", `missing ${name} model fixture`);
+    throw invalidElement(helperName, `missing ${name} model fixture`);
   }
   return model;
 }
@@ -7260,6 +7274,132 @@ export function deviceModelTemperatureAuditFixtures(): readonly DeviceModelTempe
     temperaturePoints: deviceModelTemperaturePoints(fixture.name),
     deckLines: deviceModelTemperatureDeckLines(fixture),
   }));
+}
+
+export function deviceModelCapacitanceAuditFixtures(): readonly DeviceModelCapacitanceBehaviorFixture[] {
+  const helperName = "deviceModelCapacitanceAuditFixtures";
+  const models = modelCardByName(deviceModelAuditFixtures());
+  const frequencyHz = 100_000.0;
+
+  const diodeModel = requiredModel(models, "Dfast", helperName);
+  const diodeCircuit = new Circuit();
+  diodeCircuit.add(voltageSourceWithAc("Vdrive", "in", "0", 0.0, 1.0, 0.0));
+  diodeCircuit.add(resistor("Rin", "in", "out", 1_000_000.0));
+  diodeCircuit.add(diodeFromModelCard("D1", "out", "0", diodeModel));
+
+  const bjtModel = requiredModel(models, "Qsmall", helperName);
+  const bjtCircuit = new Circuit();
+  bjtCircuit.add(voltageSourceWithAc("Vdrive", "in", "0", 0.0, 1.0, 0.0));
+  bjtCircuit.add(resistor("Rin", "in", "base", 1_000_000.0));
+  bjtCircuit.add(resistor("Rc", "col", "0", 1_000.0));
+  bjtCircuit.add(bjtFromModelCard("Q1", "col", "base", "0", bjtModel));
+
+  const jfetModel = requiredModel(models, "Jn", helperName);
+  const jfetCircuit = new Circuit();
+  jfetCircuit.add(voltageSourceWithAc("Vdrive", "in", "0", 0.0, 1.0, 0.0));
+  jfetCircuit.add(resistor("Rin", "in", "source", 1_000.0));
+  jfetCircuit.add(resistor("Rd", "drain", "0", 2_000.0));
+  jfetCircuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+  jfetCircuit.add(jfetFromModelCard("J1", "drain", "gate", "source", jfetModel));
+
+  const mosModel = requiredModel(models, "Mn", helperName);
+  const mosCircuit = new Circuit();
+  mosCircuit.add(voltageSourceWithAc("Vdrive", "in", "0", 0.0, 1.0, 0.0));
+  mosCircuit.add(resistor("Rin", "in", "drain", 5_000_000.0));
+  mosCircuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+  mosCircuit.add(mosfetFromModelCard("M1", "drain", "gate", "0", "0", mosModel));
+
+  return [
+    {
+      name: "diode-capacitance-ac",
+      kind: diodeModel.kind,
+      model: diodeModel,
+      circuit: diodeCircuit,
+      probeNode: "out",
+      frequencyHz,
+      expectedMagnitudeMin: 0.72,
+      expectedMagnitudeMax: 0.74,
+      capacitanceBehavior: "diode CJO and TT contribute high-frequency shunt capacitance",
+      deckLines: [
+        "* device-model capacitance fixture: diode-capacitance-ac",
+        ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+        "Vdrive in 0 0 AC 1",
+        "Rin in out 1meg",
+        "D1 out 0 Dfast",
+        ".ac lin 1 100k 100k",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "bjt-capacitance-ac",
+      kind: bjtModel.kind,
+      model: bjtModel,
+      circuit: bjtCircuit,
+      probeNode: "base",
+      frequencyHz,
+      expectedMagnitudeMin: 0.61,
+      expectedMagnitudeMax: 0.64,
+      capacitanceBehavior: "BJT CJE and TF contribute base-emitter AC capacitance",
+      deckLines: [
+        "* device-model capacitance fixture: bjt-capacitance-ac",
+        ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+        "Vdrive in 0 0 AC 1",
+        "Rin in base 1meg",
+        "Rc col 0 1k",
+        "Q1 col base 0 Qsmall",
+        ".ac lin 1 100k 100k",
+        ".save V(base)",
+        ".end",
+      ],
+    },
+    {
+      name: "jfet-capacitance-invariant-ac",
+      kind: jfetModel.kind,
+      model: jfetModel,
+      circuit: jfetCircuit,
+      probeNode: "source",
+      frequencyHz,
+      expectedMagnitudeMin: 0.69,
+      expectedMagnitudeMax: 0.71,
+      capacitanceBehavior:
+        "JFET capacitance is intentionally unmodeled; fixture records conductance-only AC response",
+      deckLines: [
+        "* device-model capacitance fixture: jfet-capacitance-invariant-ac",
+        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+        "Vdrive in 0 0 AC 1",
+        "Rin in source 1k",
+        "Rd drain 0 2k",
+        "Vgate gate 0 0",
+        "J1 drain gate source Jn",
+        ".ac lin 1 100k 100k",
+        ".save V(source)",
+        ".end",
+      ],
+    },
+    {
+      name: "mos-level1-capacitance-ac",
+      kind: mosModel.kind,
+      model: mosModel,
+      circuit: mosCircuit,
+      probeNode: "drain",
+      frequencyHz,
+      expectedMagnitudeMin: 0.72,
+      expectedMagnitudeMax: 0.74,
+      capacitanceBehavior: "Level-1 MOS CBD contributes drain-bulk AC capacitance",
+      deckLines: [
+        "* device-model capacitance fixture: mos-level1-capacitance-ac",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+        "Vdrive in 0 0 AC 1",
+        "Rin in drain 5meg",
+        "Vgate gate 0 0",
+        "M1 drain gate 0 0 Mn",
+        ".ac lin 1 100k 100k",
+        ".save V(drain)",
+        ".end",
+      ],
+    },
+  ];
 }
 
 export function vccs(
