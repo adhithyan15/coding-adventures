@@ -105,6 +105,35 @@ The current parser surface includes:
   elements, and landmark-like regions such as `main`, `nav`, `aside`,
   `header`, and `footer`
 
+## Browser-Readiness Completion Boundary
+
+The browser-readiness pass is complete when `BrowserDocument` exposes stable,
+flat planning inventories for the major browser subsystems that need parser
+facts before CSS, layout, script execution, accessibility tree construction,
+network scheduling, and activation planning. The completion boundary is not
+"add every possible browser API"; it is a bounded parser-owned contract:
+
+- document/head policy, URL, resource, script, stylesheet, fetch, and loading
+  inventories
+- form ownership, control, validation, submission, reset, autofill, and form
+  policy inventories
+- navigation targets, navigation groups, headings, landmarks, text semantics,
+  text flow, structured data, table structure, and global state inventories
+- ARIA name, description, relation, collection, range, and live-region
+  inventories
+- media, embedded content, responsive image, image-map, canvas, template, slot,
+  custom element, component-hydration, and data-attribute inventories
+- activation, popover, disclosure, focus, keyboard, input, drag/drop,
+  clipboard, selection, composition, pointer, scroll, lifecycle, animation,
+  fullscreen, context-menu, and event-handler inventories
+
+Each public browser-readiness inventory must have either checked fixture
+evidence in `tests/fixtures/html-browser-readiness.json` or an explicitly named
+focused regression test in `tests/browser_readiness_test.rs`. The
+`browser_readiness_completion_manifest_matches_public_surface` test is the
+executable source of truth for that boundary and should fail if a future field
+is added without coverage evidence.
+
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources
 by source signature. A separate adapter can project DOM into `document-ast` for
