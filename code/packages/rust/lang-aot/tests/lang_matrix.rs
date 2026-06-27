@@ -890,7 +890,7 @@ const PROGRAMS: &[Prog] = &[
     },
     // Dartmouth BASIC — `DEF FN` user-defined function (LANG-FULL BA5). The
     // single-line definition `DEF FNS(X) = X * X` lowers to a *sibling*
-    // `IIRFunction` named `FNS` (one `i64` parameter, body `mul X X; ret`),
+    // `IIRFunction` named `FNS` (one `f64` parameter, body `mul X X; ret`),
     // and `PRINT FNS(7)` lowers to an IIR `call` — exactly the calling
     // convention ALGOL's value procedures (AL3) already run on every backend.
     // This RUNS a real cross-function call combined with `print_i64` output:
@@ -905,11 +905,13 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("49"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // Dartmouth BASIC — *one-dimensional integer arrays* (LANG-FULL BA3, enabler
+    // Dartmouth BASIC — *one-dimensional real arrays* (LANG-FULL BA3 + BA7,
+    // enabler
     // **E5**). `DIM A(3)` lowers to an IIR `alloc_array` (element count `3 + 1`,
     // since BASIC arrays are **0-based and inclusive**: `A(0)..A(3)`). `LET
-    // A(1) := 40` / `A(2) := 2` are `array_set`s and `PRINT A(1) + A(2)` reads
-    // them back with two `array_get`s ⇒ prints 42.  These are the *same* IIR
+    // A(1) := 40` / `A(2) := 2` are `array_set`s into `array<f64>` storage and
+    // `PRINT A(1) + A(2)` reads them back with two `array_get`s ⇒ prints 42.
+    // These are the *same* IIR
     // array ops ALGOL's E5 arrays emit, so BASIC arrays run on every backend E5
     // already supports — straight-line (no loop), so the JVM's BA-JVM-1
     // loop+print StackMapTable follow-up doesn't apply, and all 7 backends run:
@@ -926,9 +928,9 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // Dartmouth BASIC — *`READ` / `DATA` / `RESTORE`* (LANG-FULL BA6). The `DATA`
-    // pool is materialised once at the top of `main` as an `array<i64>` (the same
-    // E5 array ops BA3 uses) plus an `__basic_data_ptr` register seeded to 0;
+    // Dartmouth BASIC — *`READ` / `DATA` / `RESTORE`* (LANG-FULL BA6 + BA7). The
+    // `DATA` pool is materialised once at the top of `main` as an `array<f64>`
+    // (the same E5 array ops BA3 uses) plus an `__basic_data_ptr` register seeded to 0;
     // `READ` does `array_get pool, ptr` then `ptr := ptr + 1`, and `RESTORE` resets
     // `ptr := 0`. Here `DATA 21` is a one-value pool: `READ A` takes 21 and advances
     // the pointer; `RESTORE` rewinds it; `READ B` therefore takes 21 *again* — so
@@ -1008,6 +1010,18 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT 3.14\n20 PRINT 1.0 / 4.0\n30 PRINT 0.0 - 2.5\n40 END\n",
         expect: Expect::Stdout("3.14\n.25\n-2.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA7-3 real aggregate storage. Fractional `DATA` values
+    // are materialised in an `array<f64>` pool, `READ A(0)` stores one into a
+    // BASIC `array<f64>`, and `READ B` stores the next into a scalar. Printing
+    // both proves fractional DATA survives the pool, array element storage, and
+    // scalar READ path on every backend.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DIM A(1)\n20 DATA 3.14, 0.25\n30 READ A(0)\n40 READ B\n50 PRINT A(0)\n60 PRINT B\n70 END\n",
+        expect: Expect::Stdout("3.14\n.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — *unstructured `GOSUB` / `RETURN`* (LANG-FULL BA1, enabler

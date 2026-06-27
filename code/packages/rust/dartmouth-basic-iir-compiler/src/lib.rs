@@ -15,10 +15,10 @@
 //! ## V1 scope
 //!
 //! BA7 scalar BASIC uses the historical Dartmouth numeric model: scalar
-//! literals, variables, arithmetic, `DEF FN`, `FOR`, `IF`, and `PRINT` lower as
-//! `f64`.  Integer `i64` remains at structural boundaries: line numbers, `DIM`
-//! bounds, DATA storage, array subscripts/elements, and GOSUB return stacks.
-//! Fractional real formatting and real `DATA`/arrays remain BA7 follow-ups.
+//! literals, variables, arithmetic, `DEF FN`, `FOR`, `IF`, `PRINT`, `DATA`, and
+//! arrays lower as `f64`.  Integer `i64` remains at structural boundaries: line
+//! numbers, `DIM` bounds, array subscripts, DATA read pointers, and GOSUB return
+//! stacks.  Six-significant-digit rounding and `E` notation remain BA7 follow-ups.
 //!
 //! | Statement     | Lowering |
 //! |---------------|----------|
@@ -32,8 +32,8 @@
 //! | `REM …`        | no-op |
 //! | `GOSUB n`      | push call-site id on the `array<i64>` return stack, `jmp line_n`, drop `gosub_ret_<id>` (BA1 / E7) |
 //! | `RETURN`       | pop the id, computed-`goto` (`cmp_eq`+`jmp_if_true`) to its `gosub_ret_<id>` (BA1 / E7) |
-//! | `READ` / `DATA` / `RESTORE` | integer `DATA` pool over `array<i64>` (BA6) |
-//! | `DIM A(n)`     | `alloc_array A = <n+1>` (0-based, inclusive) — BA3 / E5 |
+//! | `READ` / `DATA` / `RESTORE` | real `DATA` pool over `array<f64>` (BA6 / BA7) |
+//! | `DIM A(n)`     | `alloc_array A = <n+1>` (`array<f64>`, 0-based, inclusive) — BA3 / BA7 |
 //! | `LET A(i)=e`   | `<eval i → x>; <eval e → v>; array_set A, x, v` (BA3) |
 //! | `A(i)` (rvalue) | `<eval i → x>; array_get A, x -> t` (BA3) |
 //! | `STOP`         | same as `END` for V1 |
@@ -238,19 +238,17 @@ struct Compiler {
     /// access (→ `array_set`/`array_get`) or an undeclared use (an error).
     arrays: std::collections::HashSet<String>,
     /// Scalar value types learned while lowering `main`.  BA7 makes BASIC
-    /// scalar values real (`f64`), while array/DATA/GOSUB structural storage
-    /// remains explicitly `i64` until those BA7 follow-ups land.
+    /// scalar values real (`f64`); the few integer slots left are true
+    /// structural boundaries such as indexes, read pointers, and return PCs.
     scalar_types: std::collections::HashMap<String, BasicScalarType>,
     /// The `DATA` pool (BA6): every numeric literal from every `DATA`
     /// statement, gathered in line-number order by a pre-pass.  `READ`
     /// consumes these sequentially through a run-time pointer; `RESTORE`
     /// rewinds the pointer.  Because the BASIC program is a single `main`
     /// function (no `GOSUB` yet), the pool is materialised once at the top of
-    /// `main` as an `array<i64>` ([[E5]] arrays) plus an `i64` pointer
-    /// register — no module global is needed.  Integer literals only in v1;
-    /// a real (`f64`) DATA value is a follow-up (the i64 value model, like
-    /// integer `DIM` arrays).
-    data_pool: Vec<i64>,
+    /// `main` as an `array<f64>` ([[E5]] arrays, with BA7 real elements) plus
+    /// an `i64` pointer register — no module global is needed.
+    data_pool: Vec<f64>,
     /// Set once any `PRINT` lowers a numeric item (BA2/BA7).  When true,
     /// `compile_program` appends the synthetic digit-printing helper functions
     /// (`__basic_print_int` / `__basic_print_uint` / `__basic_print_real`) after `main`
@@ -410,7 +408,7 @@ impl Compiler {
                 }
             }
         }
-        // Materialise the pool once at the top of `main`: an `array<i64>` of
+        // Materialise the pool once at the top of `main`: an `array<f64>` of
         // the literals plus the `__basic_data_ptr` register initialised to 0.
         self.emit_data_pool_init();
 
@@ -536,13 +534,13 @@ impl Compiler {
             let idx = self.emit_expr(index_expr)?;
             let idx = self.coerce_value(idx, BasicScalarType::Int);
             let val = self.emit_expr(expr_node)?;
-            let val = self.coerce_value(val, BasicScalarType::Int);
+            let val = self.coerce_value(val, BasicScalarType::Real);
             // `array_set handle, idx, value` — BASIC subscripts are already
             // 0-based (`DIM A(N)` gives `A(0)..A(N)`), so the subscript IS the
             // IIR index; no lower-bound subtraction (unlike ALGOL's `[lo:hi]`).
             self.emit("array_set", None,
                 vec![Operand::Var(name), Operand::Var(idx.slot), Operand::Var(val.slot)],
-                "i64");
+                "f64");
             return Ok(());
         }
 
@@ -599,17 +597,15 @@ impl Compiler {
             self.emit("const", Some(&len),
                 vec![Operand::Int(count)], "i64");
             self.emit("alloc_array", Some(&name),
-                vec![Operand::Var(len)], "array<i64>");
+                vec![Operand::Var(len)], "array<f64>");
             self.arrays.insert(name);
         }
         Ok(())
     }
 
-    /// BA6 pre-pass: append a `DATA` statement's numeric literals to
+    /// BA6/BA7 pre-pass: append a `DATA` statement's numeric literals to
     /// [`data_pool`].  Called once per line before any statement is lowered,
-    /// so the pool ends up in line-number (source) order.  Integer literals
-    /// only — a non-integer `DATA` value is a clean `Unsupported` error (real
-    /// DATA is a follow-up, like integer-only `DIM` arrays).
+    /// so the pool ends up in line-number (source) order.
     fn collect_data(&mut self, line: &GrammarASTNode) -> Result<(), CompileError> {
         let Some(stmt) = child_nodes(line).into_iter()
             .find(|n| n.rule_name == "statement")
@@ -624,31 +620,18 @@ impl Compiler {
                 let raw = t.value.trim();
                 let f = raw.parse::<f64>().map_err(|_| CompileError::Malformed(
                     format!("DATA value `{raw}` is not a number")))?;
-                if !f.is_finite() || f.fract() != 0.0 {
+                if !f.is_finite() {
                     return Err(CompileError::Unsupported(format!(
-                        "non-integer DATA value `{raw}` — only integer DATA is \
-                         supported so far (real DATA is a follow-up)")));
+                        "non-finite DATA value `{raw}`")));
                 }
-                // `f.fract() == 0.0` and finite, so the cast is exact for any
-                // value an `f64` can represent; guard the i64 range explicitly.
-                // The bounds are written so the rejection is EXACT: `i64::MIN as
-                // f64` is exactly -2^63, but `i64::MAX as f64` rounds *up* to
-                // 2^63 (i64::MAX = 2^63-1 isn't representable), so comparing
-                // against `-(i64::MIN as f64)` (= +2^63) rejects 2^63 and above
-                // rather than admitting that single boundary value (which would
-                // otherwise saturate to i64::MAX through the cast).
-                if f < i64::MIN as f64 || f >= -(i64::MIN as f64) {
-                    return Err(CompileError::Unsupported(format!(
-                        "DATA value `{raw}` is out of the i64 range")));
-                }
-                self.data_pool.push(f as i64);
+                self.data_pool.push(f);
             }
         }
         Ok(())
     }
 
     /// BA6: materialise the gathered `DATA` pool at the top of `main`.  Emits
-    /// nothing when there is no `DATA`.  Otherwise allocates an `array<i64>`
+    /// nothing when there is no `DATA`.  Otherwise allocates an `array<f64>`
     /// of the literals (one `array_set` per value) and seeds the read pointer
     /// `__basic_data_ptr` to 0.  Both live in `main`'s register file — the
     /// program is a single function, so no module global is needed for the
@@ -661,18 +644,18 @@ impl Compiler {
         let len = self.fresh_temp();
         self.emit("const", Some(&len), vec![Operand::Int(count)], "i64");
         self.emit("alloc_array", Some(BASIC_DATA_ARRAY),
-            vec![Operand::Var(len.clone())], "array<i64>");
+            vec![Operand::Var(len.clone())], "array<f64>");
         // Fill the pool.  `self.data_pool` is cloned to a local first so the
         // immutable borrow doesn't clash with the `&mut self` emits.
-        let values: Vec<i64> = self.data_pool.clone();
+        let values: Vec<f64> = self.data_pool.clone();
         for (i, value) in values.into_iter().enumerate() {
             let idx = self.fresh_temp();
             self.emit("const", Some(&idx), vec![Operand::Int(i as i64)], "i64");
             let val = self.fresh_temp();
-            self.emit("const", Some(&val), vec![Operand::Int(value)], "i64");
+            self.emit("const", Some(&val), vec![Operand::Float(value)], "f64");
             self.emit("array_set", None,
                 vec![Operand::Var(BASIC_DATA_ARRAY.into()),
-                     Operand::Var(idx), Operand::Var(val)], "i64");
+                     Operand::Var(idx), Operand::Var(val)], "f64");
         }
         // Read pointer starts at the first value.
         let zero = self.fresh_temp();
@@ -699,7 +682,7 @@ impl Compiler {
             let value = self.fresh_temp();
             self.emit("array_get", Some(&value),
                 vec![Operand::Var(BASIC_DATA_ARRAY.into()),
-                     Operand::Var(BASIC_DATA_PTR.into())], "i64");
+                     Operand::Var(BASIC_DATA_PTR.into())], "f64");
             // Store it into the target — array element or scalar.
             if let Some(index_expr) = array_subscript_index(var_node) {
                 let name = array_target_name(var_node)?;
@@ -711,10 +694,10 @@ impl Compiler {
                 let idx = self.coerce_value(idx, BasicScalarType::Int);
                 self.emit("array_set", None,
                     vec![Operand::Var(name), Operand::Var(idx.slot),
-                         Operand::Var(value)], "i64");
+                         Operand::Var(value)], "f64");
             } else {
                 let target = scalar_variable_name(var_node)?;
-                let value = ExprValue { slot: value, ty: BasicScalarType::Int };
+                let value = ExprValue { slot: value, ty: BasicScalarType::Real };
                 let target_ty = self.scalar_types.get(&target).copied()
                     .unwrap_or(BasicScalarType::Real);
                 let value = self.coerce_value(value, target_ty);
@@ -1324,8 +1307,8 @@ impl Compiler {
                         let idx = self.coerce_value(idx, BasicScalarType::Int);
                         let dest = self.fresh_temp();
                         self.emit("array_get", Some(&dest),
-                            vec![Operand::Var(name), Operand::Var(idx.slot)], "i64");
-                        return Ok(ExprValue { slot: dest, ty: BasicScalarType::Int });
+                            vec![Operand::Var(name), Operand::Var(idx.slot)], "f64");
+                        return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
                     }
                     let name = scalar_variable_name(n)?;
                     // Inside a `DEF` body, only the formal parameter is in
@@ -1538,8 +1521,8 @@ const BASIC_DATA_PTR: &str = "__basic_data_ptr";
 /// range check and overflow the later `+ 1`.  We therefore reject non-finite,
 /// negative, and out-of-`MAX_DIM_BOUND`-range values up front; only an in-range
 /// value reaches the (now lossless) `as i64` cast.  A fractional spelling is
-/// truncated toward zero, consistent with how this integer-only V1 treats every
-/// other `NUMBER`.
+/// truncated toward zero because the DIM bound remains an integer structural
+/// boundary even though BASIC values are otherwise real in BA7.
 fn dim_decl_bound(decl: &GrammarASTNode) -> Result<i64, CompileError> {
     for c in &decl.children {
         if let ASTNodeOrToken::Token(t) = c {
@@ -2420,12 +2403,25 @@ mod tests {
             "READ with no DATA should be Unsupported, got {err:?}");
     }
 
-    /// A non-integer `DATA` value is rejected (real DATA is a follow-up).
+    /// A fractional `DATA` value is accepted into the real-valued pool.
     #[test]
-    fn non_integer_data_errors() {
-        let err = compile("10 DATA 3.5\n20 READ X\n30 END\n").unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)),
-            "non-integer DATA should be Unsupported, got {err:?}");
+    fn fractional_data_lowers_to_real_pool() {
+        let m = compile("10 DATA 3.5\n20 READ X\n30 PRINT X\n40 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i|
+            i.op == "alloc_array"
+                && i.dest.as_deref() == Some("__basic_data")
+                && i.type_hint == "array<f64>"),
+            "DATA must materialise an f64 pool");
+        assert!(body.iter().any(|i|
+            i.op == "const" && i.type_hint == "f64"
+                && matches!(i.srcs.first(), Some(Operand::Float(v)) if (*v - 3.5).abs() < f64::EPSILON)),
+            "fractional DATA literal should remain f64");
+        assert!(body.iter().any(|i|
+            i.op == "array_get"
+                && i.type_hint == "f64"
+                && var_name(i.srcs.first()) == Some("__basic_data")),
+            "READ should fetch f64 DATA values");
     }
 
     // -----------------------------------------------------------------------
@@ -2449,7 +2445,7 @@ mod tests {
         let alloc = body.iter().find(|i| i.op == "alloc_array")
             .expect("DIM produces an alloc_array");
         assert_eq!(alloc.dest.as_deref(), Some("A"));
-        assert_eq!(alloc.type_hint, "array<i64>");
+        assert_eq!(alloc.type_hint, "array<f64>");
         // Its length operand is a register that was `const 6`.
         let len_reg = var_name(alloc.srcs.first()).expect("alloc_array len reg");
         assert!(body.iter().any(|i|
@@ -2478,10 +2474,10 @@ mod tests {
         let body = &m.functions[0].instructions;
         let set = body.iter().find(|i| i.op == "array_set")
             .expect("LET A(i)=e produces an array_set");
-        assert_eq!(set.type_hint, "i64");
+        assert_eq!(set.type_hint, "f64");
         assert_eq!(var_name(set.srcs.first()), Some("A"));
         assert_eq!(set.srcs.len(), 3, "array_set takes handle, index, value");
-        // BA7 scalars are f64, then explicit array boundaries truncate to i64.
+        // BA7 array elements are f64; only the subscript truncates to i64.
         let idx_reg = var_name(set.srcs.get(1)).expect("index reg");
         assert!(body.iter().any(|i|
             i.op == "real_to_int_trunc" && i.dest.as_deref() == Some(idx_reg)),
@@ -2490,6 +2486,10 @@ mod tests {
             i.op == "const" && i.type_hint == "f64"
                 && matches!(i.srcs.first(), Some(Operand::Float(v)) if (*v - 2.0).abs() < f64::EPSILON)),
             "source subscript literal should be a scalar f64 const");
+        assert!(body.iter().any(|i|
+            i.op == "const" && i.type_hint == "f64"
+                && matches!(i.srcs.first(), Some(Operand::Float(v)) if (*v - 7.0).abs() < f64::EPSILON)),
+            "array value literal should stay f64");
     }
 
     /// `LET X = A(2)` reads an element → `array_get A, idx → dest`.
@@ -2499,7 +2499,7 @@ mod tests {
         let body = &m.functions[0].instructions;
         let get = body.iter().find(|i| i.op == "array_get")
             .expect("reading A(i) produces an array_get");
-        assert_eq!(get.type_hint, "i64");
+        assert_eq!(get.type_hint, "f64");
         assert_eq!(var_name(get.srcs.first()), Some("A"));
         assert!(get.dest.is_some(), "array_get writes a destination register");
     }

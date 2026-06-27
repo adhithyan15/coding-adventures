@@ -1,11 +1,12 @@
 # LANG-FULL BA7 — Dartmouth BASIC floating-point (`f64`)
 
 **Status:** design spec — **decision-complete** (all §7 questions resolved by
-historical Dartmouth BASIC fidelity); **BA7-1a/1b and BA7-2a landed**
+historical Dartmouth BASIC fidelity); **BA7-1a/1b, BA7-2a, and BA7-3 landed**
 (decimal/exponent literals, integer-spelled scalar literals, scalar `f64`
 arithmetic/variables, `DEF FN`, `IF`, `FOR`, whole-valued real `PRINT`, and an
-ordinary fixed-decimal fractional `PRINT` foothold), remaining implementation
-proceeds in slices BA7-2b..3.
+ordinary fixed-decimal fractional `PRINT` foothold, plus real `DATA`/`READ` and
+`array<f64>` storage), remaining implementation is BA7-2b formatter precision and
+`E` notation.
 **Depends on:** **E3** (reals / `f64` — COMPLETE, every backend executes f64),
 **E8** (numeric conversions `int_to_real` / `real_to_int_trunc` — COMPLETE), and
 **BA2** (character-level `PRINT` via `putchar` — COMPLETE, the digit-printing
@@ -31,9 +32,9 @@ model — a deliberate V1 limitation taken *"until the backends grow SSE2 suppor
 (the old module doc). E3 removed that limitation: every backend now executes
 `f64`. BA7 is the cutover — make BASIC's value model **`f64`, end to end**, the
 way the real language always was. BA7-1a/1b have completed the scalar cutover,
-and BA7-2a has landed ordinary fixed-decimal fractional output; full historical
-precision/`E` notation, real array elements, and real DATA storage remain
-follow-up slices.
+BA7-2a has landed ordinary fixed-decimal fractional output, and BA7-3 has moved
+array elements plus `DATA`/`READ` pools to `f64`; full historical precision and
+`E` notation remain follow-up work.
 
 This is a **whole-value-model change**, so it gets a spec before code.
 
@@ -164,8 +165,8 @@ BA7 is bigger than BA2, so it ships in focused slices rather than one mega-PR:
   end while output is unchanged for whole values.
 - **BA7-1b — scalar value-model cutover. ✅** Make integer-spelled scalar numeric
   values use the BASIC `f64` value model too, while keeping explicit integer
-  boundaries for line numbers, `DIM` bounds, DATA storage, array
-  subscripts/elements, GOSUB return stacks, and future `INT(x)`.
+  boundaries for line numbers, `DIM` bounds, array subscripts, DATA read
+  pointers, GOSUB return stacks, and future `INT(x)`.
 - **BA7-2a — fixed-decimal fractional PRINT. ✅** Turn on the `.`-and-fraction
   path for ordinary in-range values with no leading zero below 1 and trailing
   zero trimming. The current helper emits up to three fractional digits to stay
@@ -176,10 +177,11 @@ BA7 is bigger than BA2, so it ships in focused slices rather than one mega-PR:
   significant digits with round-half-up and out-of-range `E` notation (§7.3),
   likely by shrinking/reusing helper temporaries so direct native frame sizes
   remain within backend limits. Add an `E`-notation matrix cell.
-- **BA7-3 — reals in aggregate/input edges.** `DIM`/array elements as
-  `array<f64>` with `real_to_int_trunc` subscripts, and `f64` `DATA`/`READ`.
-  Add focused fractional-comparison/FOR matrix cells if BA7-2's formatter gives
-  them observable output. One matrix cell each.
+- **BA7-3 — reals in aggregate edges. ✅** `DIM`/array elements now use
+  `array<f64>` with `real_to_int_trunc` subscripts, and `DATA`/`READ` now move
+  finite `f64` values through an `array<f64>` pool. Matrix cell: `DATA 3.14,
+  0.25; READ A(0); READ B; PRINT A(0); PRINT B` ⇒ `3.14`, `.25` on all 7
+  backends.
 - **BA7-4 (optional) — `INT(x)` builtin** (`real_to_int_trunc`) and tidy-up.
 
 Each slice: bump `dartmouth-basic-iir-compiler` version + CHANGELOG + README,

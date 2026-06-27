@@ -1,5 +1,25 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.12.0 — 2026-06-27 — BA7 real `DATA` and arrays
+
+BA7 now carries Dartmouth BASIC's `f64` value model through aggregate storage,
+not just scalars and `PRINT`.
+
+- `DIM A(n)` allocates `array<f64>` elements. Subscripts remain the integer
+  structural boundary: index expressions lower as real values, then use E8
+  `real_to_int_trunc` before `array_get`/`array_set`.
+- `LET A(i) = expr` stores an `f64` element, and `A(i)` in an expression returns
+  an `f64` value.
+- `DATA` literals are gathered as finite `f64` values and materialised once at
+  the top of `main` as an `array<f64>` pool. `READ` fetches `f64` values into
+  either scalar variables or array elements; the read pointer remains `i64`, and
+  `RESTORE` still rewinds it to zero.
+- The native direct backends now accept 8-byte `array<f64>` elements, matching
+  the already-real-aware VM/JIT, LLVM, WASM, JVM, and CLR paths.
+- Verified by frontend unit tests and the `lang-aot` matrix on native / LLVM /
+  WASM / JVM / CLR / VM / JIT: `DATA 3.14, 0.25; READ A(0); READ B; PRINT A(0);
+  PRINT B` => `3.14` and `.25`.
+
 ## 0.11.0 — 2026-06-27 — BA7 scalar real arithmetic + fixed-decimal `PRINT`
 
 BA7 moves Dartmouth BASIC's scalar numeric model onto `f64` while keeping the
@@ -12,11 +32,11 @@ remaining integer boundaries explicit:
   `FOR`/`NEXT`, `DEF FN`, and `PRINT`. Scalar variables default to real slots, so
   a backend never sees the same BASIC scalar flip between integer and real
   storage.
-- Integer-only boundaries remain explicit: line numbers, `DIM` bounds, DATA
-  storage, array subscripts/elements, and GOSUB return stacks still use `i64`.
-  Array subscripts and integer array elements use E8 `real_to_int_trunc` when fed
-  a scalar real expression; real `DATA` and real array elements remain follow-up
-  BA7 work.
+- Integer-only boundaries in this scalar slice remained explicit: line numbers,
+  `DIM` bounds, the then-`i64` DATA pool, array subscripts/elements, and GOSUB
+  return stacks still used `i64`. Array subscripts and integer array elements used E8
+  `real_to_int_trunc` when fed a scalar real expression; 0.12.0 moves `DATA` and
+  array element storage to `f64`.
 - `READ` and `INPUT` still consume integer sources today, then widen into scalar
   `f64` variables with E8 `int_to_real`.
 - `PRINT` chooses a new synthetic `__basic_print_real(x: f64)` helper for numeric
