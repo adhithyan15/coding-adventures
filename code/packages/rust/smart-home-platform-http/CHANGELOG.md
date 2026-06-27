@@ -26,6 +26,9 @@ All notable changes to this package will be documented in this file.
   inventory, desired-state, and audit summaries for local controllers.
 - Added an embedded browser dashboard shell served by the repo HTTP stack for
   fixture-controller startup, readiness, state, and light command flows.
+- Extended the embedded dashboard shell with scene activation,
+  desired-state clearing, and recent state-history previews over existing
+  runtime-authorized API routes.
 - Added a native readiness checklist route with actionable links for registry,
   topology, state coverage, event bus, discovery, supervisor, authorization,
   and desired-state checks.

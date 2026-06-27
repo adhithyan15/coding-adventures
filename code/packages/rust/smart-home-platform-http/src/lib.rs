@@ -280,10 +280,26 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       </div>
       <div class="panel">
         <div class="row">
+          <h2>Scenes</h2>
+          <span class="muted">Run saved room states</span>
+        </div>
+        <div id="scenes" class="cards"></div>
+      </div>
+      <div class="panel">
+        <div class="row">
           <h2>Entities</h2>
           <span id="state-count" class="muted"></span>
         </div>
         <div id="entities" class="cards"></div>
+      </div>
+      <div class="panel">
+        <h2>Desired State</h2>
+        <table>
+          <thead>
+            <tr><th>Entity</th><th>Targets</th><th>Requested By</th><th></th></tr>
+          </thead>
+          <tbody id="desired"></tbody>
+        </table>
       </div>
       <div class="panel">
         <h2>State Gaps</h2>
@@ -292,6 +308,15 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             <tr><th>Entity</th><th>Domain</th><th>Status</th></tr>
           </thead>
           <tbody id="gaps"></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h2>History</h2>
+        <table>
+          <thead>
+            <tr><th>Entity</th><th>Event</th><th>State</th><th>Observed</th></tr>
+          </thead>
+          <tbody id="history"></tbody>
         </table>
       </div>
       <div class="panel">
@@ -304,11 +329,14 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     const els = {
       activity: document.querySelector("#activity"),
       checks: document.querySelector("#checks"),
+      desired: document.querySelector("#desired"),
       entities: document.querySelector("#entities"),
       gaps: document.querySelector("#gaps"),
+      history: document.querySelector("#history"),
       location: document.querySelector("#location"),
       log: document.querySelector("#log"),
       refresh: document.querySelector("#refresh"),
+      scenes: document.querySelector("#scenes"),
       stateCount: document.querySelector("#state-count"),
       status: document.querySelector("#status"),
       summary: document.querySelector("#summary")
@@ -327,6 +355,16 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       `<div class="metric"><strong>${value}</strong><span class="muted">${label}</span></div>`;
 
     const statusClass = (status) => `status ${String(status || "ok").toLowerCase()}`;
+    const valueText = (value) => value === null || value === undefined ? "null" : JSON.stringify(value);
+    const deltasText = (deltas) => (deltas || [])
+      .map((delta) => `${delta.capability_id}: ${valueText(delta.value)}`)
+      .join(", ") || "No targets";
+    const observedText = (ms) => {
+      if (typeof ms !== "number") {
+        return "";
+      }
+      return ms > 1000000000000 ? new Date(ms).toLocaleString() : `${ms} ms`;
+    };
 
     const log = (message) => {
       const at = new Date().toLocaleTimeString();
@@ -343,6 +381,23 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <span class="${statusClass(check.status)}">${check.status}</span>
         </div>
       `).join("");
+    };
+
+    const renderScenes = (sceneData) => {
+      const scenes = sceneData.scenes || [];
+      els.scenes.innerHTML = scenes.map((scene) => `
+        <article class="entity-card">
+          <div class="row" style="justify-content: space-between;">
+            <h3>${scene.home_assistant_scene_id}</h3>
+            <span class="${statusClass("ready")}">${scene.scope}</span>
+          </div>
+          <p class="muted">${scene.scene_id}</p>
+          <p>${scene.action_count} actions${scene.room_ids.length ? ` | ${scene.room_ids.join(", ")}` : ""}</p>
+          <div class="actions row">
+            <button type="button" data-scene="${scene.home_assistant_scene_id}">Run</button>
+          </div>
+        </article>
+      `).join("") || `<p class="muted">No scenes</p>`;
     };
 
     const renderEntities = (states) => {
@@ -368,6 +423,18 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }).join("");
     };
 
+    const renderDesiredStates = (desiredStates) => {
+      const targets = desiredStates.desired_states || [];
+      els.desired.innerHTML = targets.map((target) => `
+        <tr>
+          <td>${target.home_assistant_entity_id}<br><span class="muted">${target.entity_id}</span></td>
+          <td>${deltasText(target.desired)}</td>
+          <td>${target.requested_by}<br><span class="muted">${target.command_timeout_ms} ms</span></td>
+          <td><button type="button" data-clear-desired="${target.home_assistant_entity_id}">Clear</button></td>
+        </tr>
+      `).join("") || `<tr><td colspan="4" class="muted">No desired-state targets</td></tr>`;
+    };
+
     const renderGaps = (stateGaps) => {
       els.gaps.innerHTML = stateGaps.states.map((entity) => `
         <tr>
@@ -378,13 +445,31 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       `).join("") || `<tr><td colspan="3" class="muted">Clear</td></tr>`;
     };
 
+    const renderHistory = (history) => {
+      const events = history.events || [];
+      els.history.innerHTML = events.map((row) => {
+        const event = row.event || {};
+        return `
+          <tr>
+            <td>${row.home_assistant_entity_id || event.entity_id || "unknown"}</td>
+            <td>${event.event_type || event.kind || "event"}<br><span class="muted">${event.event_id || ""}</span></td>
+            <td>${event.state_delta ? deltasText([event.state_delta]) : "No state delta"}</td>
+            <td>${observedText(event.observed_at_ms)}</td>
+          </tr>
+        `;
+      }).join("") || `<tr><td colspan="4" class="muted">No state history</td></tr>`;
+    };
+
     const render = async () => {
       els.refresh.disabled = true;
       try {
-        const [bootstrap, readiness, states] = await Promise.all([
+        const [bootstrap, readiness, states, scenes, desiredStates, history] = await Promise.all([
           json("/api/smart_home/bootstrap"),
           json("/api/smart_home/readiness"),
-          json("/api/smart_home/states?limit=24")
+          json("/api/smart_home/states?limit=24"),
+          json("/api/smart_home/scenes?limit=12"),
+          json("/api/smart_home/desired_states?limit=12"),
+          json("/api/smart_home/state_history?limit=12")
         ]);
         const summary = bootstrap.dashboard.summary;
         els.location.textContent = bootstrap.dashboard.config.location_name;
@@ -403,8 +488,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           metric("State gaps", bootstrap.state_gaps.summary.total_entities)
         ].join("");
         renderChecks(readiness);
+        renderScenes(scenes);
         renderEntities(states);
+        renderDesiredStates(desiredStates);
         renderGaps(bootstrap.state_gaps);
+        renderHistory(history);
         log("Dashboard refreshed");
       } catch (error) {
         els.status.className = statusClass("blocked");
@@ -416,18 +504,35 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     };
 
     document.addEventListener("click", async (event) => {
-      const button = event.target.closest("button[data-service]");
+      const serviceButton = event.target.closest("button[data-service]");
+      const sceneButton = event.target.closest("button[data-scene]");
+      const clearDesiredButton = event.target.closest("button[data-clear-desired]");
+      const button = serviceButton || sceneButton || clearDesiredButton;
       if (!button) {
         return;
       }
       button.disabled = true;
       try {
-        await json(`/api/services/light/${button.dataset.service}`, {
-          method: "POST",
-          headers: {"content-type": "application/json"},
-          body: JSON.stringify({entity_id: button.dataset.entity})
-        });
-        log(`${button.dataset.service} accepted for ${button.dataset.entity}`);
+        if (serviceButton) {
+          await json(`/api/services/light/${serviceButton.dataset.service}`, {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify({entity_id: serviceButton.dataset.entity})
+          });
+          log(`${serviceButton.dataset.service} accepted for ${serviceButton.dataset.entity}`);
+        } else if (sceneButton) {
+          await json("/api/services/scene/turn_on", {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify({entity_id: sceneButton.dataset.scene})
+          });
+          log(`scene.turn_on accepted for ${sceneButton.dataset.scene}`);
+        } else {
+          await json(`/api/smart_home/desired_states/${encodeURIComponent(clearDesiredButton.dataset.clearDesired)}`, {
+            method: "DELETE"
+          });
+          log(`desired state cleared for ${clearDesiredButton.dataset.clearDesired}`);
+        }
         await render();
       } catch (error) {
         log(error.message);
@@ -6178,7 +6283,12 @@ mod tests {
             assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
             assert!(body.contains("json(\"/api/smart_home/readiness\")"));
             assert!(body.contains("json(\"/api/smart_home/states?limit=24\")"));
+            assert!(body.contains("json(\"/api/smart_home/scenes?limit=12\")"));
+            assert!(body.contains("json(\"/api/smart_home/desired_states?limit=12\")"));
+            assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
             assert!(body.contains("/api/services/light/"));
+            assert!(body.contains("/api/services/scene/turn_on"));
+            assert!(body.contains("/api/smart_home/desired_states/"));
         }
     }
 
@@ -7203,7 +7313,12 @@ mod tests {
         assert_eq!(status, 200);
         assert!(body.contains("<title>Codex Home</title>"));
         assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
+        assert!(body.contains("json(\"/api/smart_home/scenes?limit=12\")"));
+        assert!(body.contains("json(\"/api/smart_home/desired_states?limit=12\")"));
+        assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
         assert!(body.contains("/api/services/light/"));
+        assert!(body.contains("/api/services/scene/turn_on"));
+        assert!(body.contains("/api/smart_home/desired_states/"));
     }
 
     #[test]
