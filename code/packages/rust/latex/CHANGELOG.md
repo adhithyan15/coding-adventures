@@ -25,12 +25,16 @@ All notable changes to the full-fidelity LaTeX parser crate.
 - **Feature-gated:** the adapter (and the only dependency, `math-frontend`) sit behind the
   default-on **`frontend`** cargo feature. `--no-default-features` builds the zero-dependency
   L0–L5 document/math parser alone (verified: core tests pass under `--no-default-features`).
-- Total / panic-free: lowering recursion is bounded by `parse_math`'s `MAX_DEPTH`; no `unsafe`.
-- +15 tests (frac/pow/subscript/root/func/bigop/rel/implicit-mul/normalization/symbol/text/
-  group/accent/matrix/exact-number/gap-errors/parse-error-span/registry/conformance). **135
-  unit + 1 doc test** green with default features; core green under `--no-default-features`;
-  clippy `-D warnings` clean both ways. Crate 0.9.0 → 0.10.0. **This completes the LTX01 ladder
-  (L0–L6).**
+- Total / panic-free: the lowering walks the tree with an **explicit work stack** (not native
+  recursion), so its call-frame usage is O(1) in tree depth. This matters because a LaTeX math
+  tree can be arbitrarily deep along a left-associative spine (`a+a+a+…`, juxtaposition `aaa…`,
+  a chained relation) that `parse_math`'s nesting `MAX_DEPTH` does **not** bound — a recursive
+  lowering would overflow the stack (an uncatchable abort) on such adversarial input. No `unsafe`.
+- +16 tests (frac/pow/subscript/root/func/bigop/rel/implicit-mul/normalization/symbol/text/
+  group/accent/matrix/exact-number/gap-errors/parse-error-span/registry/conformance, plus a
+  deep-chain no-overflow regression at depth 4000). **136 unit + 1 doc test** green with default
+  features; core green under `--no-default-features`; clippy `-D warnings` clean both ways. Crate
+  0.9.0 → 0.10.0. **This completes the LTX01 ladder (L0–L6).**
 
 ## [0.9.0] — 2026-06-27
 

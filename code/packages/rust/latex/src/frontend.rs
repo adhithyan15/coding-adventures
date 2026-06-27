@@ -80,98 +80,240 @@ pub fn registry() -> FrontendRegistry {
     r
 }
 
-/// Box helper — keeps the lowering arms readable.
-fn b(e: MathExpr) -> Box<MathExpr> {
-    Box::new(e)
+/// An internal-imbalance error — produced only if the trampoline below were ever malformed
+/// (it never is). Keeps `lower` panic-free instead of `unwrap`-ing the value stack.
+fn imbalance(span: (usize, usize)) -> FrontendError {
+    FrontendError::new("latex", "internal lowering stack imbalance", span)
 }
 
-/// Lower one [`MathNode`] (LaTeX-shaped) into the neutral [`MathExpr`]. `span` is the
-/// whole-source span used for the (rare) lowering-gap errors. Total and panic-free: recursion is
-/// bounded by the tree depth, which [`parse_math`](crate::parse_math) already caps.
-fn lower(node: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError> {
-    Ok(match node {
-        MathNode::Num(s) => MathExpr::Number(Number::parse(&s).ok_or_else(|| {
-            FrontendError::new("latex", format!("invalid numeric literal {s:?}"), span)
-        })?),
-        MathNode::Sym(s) => MathExpr::Symbol(s),
-        MathNode::Bin(op, x, y) => {
-            // Resolve the operator first so `\pm`/`\mp` fail before we allocate the operands.
-            let op = lower_binop(op, span)?;
-            MathExpr::Bin(op, b(lower(*x, span)?), b(lower(*y, span)?))
-        }
-        MathNode::Unary(op, x) => {
-            let op = match op {
-                MUnOp::Neg => UnaryOp::Neg,
-                MUnOp::Pos => UnaryOp::Pos,
-            };
-            MathExpr::Unary(op, b(lower(*x, span)?))
-        }
-        MathNode::Frac(x, y) => MathExpr::Frac(b(lower(*x, span)?), b(lower(*y, span)?)),
-        MathNode::Binom(_, _) => {
-            return Err(FrontendError::new(
-                "latex",
-                "binomial \\binom has no neutral MathExpr representation",
-                span,
-            ))
-        }
-        MathNode::Root { degree, radicand } => MathExpr::Root {
-            degree: match degree {
-                Some(d) => Some(b(lower(*d, span)?)),
-                None => None,
-            },
-            radicand: b(lower(*radicand, span)?),
-        },
-        MathNode::Script { base, sub, sup } => {
-            // `a_i` → Subscript; `a^n` → Pow; `a_i^n` → Pow(Subscript(a, i), n).
-            let mut acc = lower(*base, span)?;
-            if let Some(s) = sub {
-                acc = MathExpr::Subscript(b(acc), b(lower(*s, span)?));
-            }
-            if let Some(p) = sup {
-                acc = MathExpr::Bin(BinOp::Pow, b(acc), b(lower(*p, span)?));
-            }
-            acc
-        }
-        MathNode::Call { func, arg } => MathExpr::Call {
-            func: lower_func(&func),
-            arg: b(lower(*arg, span)?),
-        },
-        MathNode::BigOp { op, lower: lo, upper, body } => MathExpr::BigOp {
-            op: lower_bigop(&op),
-            lower: match lo {
-                Some(l) => Some(b(lower(*l, span)?)),
-                None => None,
-            },
-            upper: match upper {
-                Some(u) => Some(b(lower(*u, span)?)),
-                None => None,
-            },
-            body: b(lower(*body, span)?),
-        },
-        // An accent is a named unary operator on its argument (`\hat{x}` ≈ hat(x)).
-        MathNode::Accent { kind, body } => MathExpr::Call {
-            func: Func::Other(kind),
-            arg: b(lower(*body, span)?),
-        },
-        // Fence style is presentation; the meaning is "this is grouped".
-        MathNode::Fenced { body, .. } => MathExpr::Group(b(lower(*body, span)?)),
-        MathNode::Text(s) => MathExpr::Text(s),
-        MathNode::Rel(op, x, y) => {
-            MathExpr::Rel(lower_relop(op), b(lower(*x, span)?), b(lower(*y, span)?))
-        }
-        // Matrix delimiter (pmatrix/bmatrix/cases/…) is presentation; rows/cols carry the math.
-        MathNode::Matrix { rows, .. } => {
-            let mut out = Vec::with_capacity(rows.len());
-            for row in rows {
-                let mut cells = Vec::with_capacity(row.len());
-                for cell in row {
-                    cells.push(lower(cell, span)?);
+/// A deferred "assemble this parent from already-lowered children on the value stack" step.
+/// Each variant pops a fixed number of `MathExpr`s and pushes the rebuilt node.
+enum Build {
+    Bin(BinOp),
+    Unary(UnaryOp),
+    Frac,
+    Root { has_degree: bool },
+    Script { has_sub: bool, has_sup: bool },
+    Call(Func),
+    BigOp { op: BigOp, has_lower: bool, has_upper: bool },
+    Group,
+    Rel(RelOp),
+    Matrix { row_lens: Vec<usize> },
+}
+
+/// One unit of work: either lower a raw node, or assemble a parent from finished children.
+enum Task {
+    Node(MathNode),
+    Build(Build),
+}
+
+/// Lower one [`MathNode`] (LaTeX-shaped) into the neutral [`MathExpr`].
+///
+/// **Iterative on purpose.** A LaTeX math tree can be *arbitrarily* deep along a left-
+/// associative spine — `a+a+a+…`, juxtaposition `aaa…`, a sign run `---…x`, a chained
+/// relation — because the parser builds those with loops, not nesting, so `parse_math`'s
+/// `MAX_DEPTH` (which bounds only *structural* nesting) does **not** bound them. A naive
+/// recursive lowering would therefore overflow the stack on adversarial input — an
+/// *uncatchable* abort, breaking the `MathFrontend` "total / panic-free" contract. So we walk
+/// the tree with an explicit work stack and an explicit value stack: stack usage is O(1) in the
+/// call frame regardless of tree depth, and the input is consumed spine-node-by-spine-node (no
+/// deep recursive `Drop` of the input either). `span` is the whole-source span used for the
+/// (rare) lowering-gap errors.
+fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError> {
+    let mut work: Vec<Task> = vec![Task::Node(root)];
+    let mut vals: Vec<MathExpr> = Vec::new();
+
+    // Pop a finished child off the value stack (only fails on an internal imbalance).
+    macro_rules! pop {
+        () => {
+            vals.pop().ok_or_else(|| imbalance(span))?
+        };
+    }
+
+    while let Some(task) = work.pop() {
+        match task {
+            // --- Decompose a node: push its assembler, then its children in REVERSE natural
+            //     order so the first natural child lands on top and is processed first. ---
+            Task::Node(node) => match node {
+                MathNode::Num(s) => vals.push(MathExpr::Number(Number::parse(&s).ok_or_else(
+                    || FrontendError::new("latex", format!("invalid numeric literal {s:?}"), span),
+                )?)),
+                MathNode::Sym(s) => vals.push(MathExpr::Symbol(s)),
+                MathNode::Text(s) => vals.push(MathExpr::Text(s)),
+                MathNode::Binom(_, _) => {
+                    return Err(FrontendError::new(
+                        "latex",
+                        "binomial \\binom has no neutral MathExpr representation",
+                        span,
+                    ))
                 }
-                out.push(cells);
-            }
-            MathExpr::Matrix(out)
+                MathNode::Bin(op, x, y) => {
+                    // Resolve the operator first so `\pm`/`\mp` fail before we descend.
+                    let op = lower_binop(op, span)?;
+                    work.push(Task::Build(Build::Bin(op)));
+                    work.push(Task::Node(*y));
+                    work.push(Task::Node(*x));
+                }
+                MathNode::Rel(op, x, y) => {
+                    work.push(Task::Build(Build::Rel(lower_relop(op))));
+                    work.push(Task::Node(*y));
+                    work.push(Task::Node(*x));
+                }
+                MathNode::Unary(op, x) => {
+                    let op = match op {
+                        MUnOp::Neg => UnaryOp::Neg,
+                        MUnOp::Pos => UnaryOp::Pos,
+                    };
+                    work.push(Task::Build(Build::Unary(op)));
+                    work.push(Task::Node(*x));
+                }
+                MathNode::Frac(x, y) => {
+                    work.push(Task::Build(Build::Frac));
+                    work.push(Task::Node(*y));
+                    work.push(Task::Node(*x));
+                }
+                MathNode::Root { degree, radicand } => {
+                    let has_degree = degree.is_some();
+                    work.push(Task::Build(Build::Root { has_degree }));
+                    work.push(Task::Node(*radicand));
+                    if let Some(d) = degree {
+                        work.push(Task::Node(*d));
+                    }
+                }
+                MathNode::Script { base, sub, sup } => {
+                    let (has_sub, has_sup) = (sub.is_some(), sup.is_some());
+                    work.push(Task::Build(Build::Script { has_sub, has_sup }));
+                    if let Some(p) = sup {
+                        work.push(Task::Node(*p));
+                    }
+                    if let Some(s) = sub {
+                        work.push(Task::Node(*s));
+                    }
+                    work.push(Task::Node(*base));
+                }
+                MathNode::Call { func, arg } => {
+                    work.push(Task::Build(Build::Call(lower_func(&func))));
+                    work.push(Task::Node(*arg));
+                }
+                // An accent is a named unary operator on its argument (`\hat{x}` ≈ hat(x)).
+                MathNode::Accent { kind, body } => {
+                    work.push(Task::Build(Build::Call(Func::Other(kind))));
+                    work.push(Task::Node(*body));
+                }
+                MathNode::BigOp { op, lower: lo, upper, body } => {
+                    let (has_lower, has_upper) = (lo.is_some(), upper.is_some());
+                    work.push(Task::Build(Build::BigOp {
+                        op: lower_bigop(&op),
+                        has_lower,
+                        has_upper,
+                    }));
+                    work.push(Task::Node(*body));
+                    if let Some(u) = upper {
+                        work.push(Task::Node(*u));
+                    }
+                    if let Some(l) = lo {
+                        work.push(Task::Node(*l));
+                    }
+                }
+                // Fence style is presentation; the meaning is "this is grouped".
+                MathNode::Fenced { body, .. } => {
+                    work.push(Task::Build(Build::Group));
+                    work.push(Task::Node(*body));
+                }
+                // Matrix delimiter (pmatrix/bmatrix/cases/…) is presentation; cells carry it.
+                MathNode::Matrix { rows, .. } => {
+                    let row_lens: Vec<usize> = rows.iter().map(|r| r.len()).collect();
+                    work.push(Task::Build(Build::Matrix { row_lens }));
+                    // Push cells in reverse so cell (0,0) is processed first.
+                    for row in rows.into_iter().rev() {
+                        for cell in row.into_iter().rev() {
+                            work.push(Task::Node(cell));
+                        }
+                    }
+                }
+            },
+
+            // --- Assemble a parent: children were pushed in natural order, so pop them in
+            //     reverse and rebuild. ---
+            Task::Build(build) => match build {
+                Build::Bin(op) => {
+                    let y = pop!();
+                    let x = pop!();
+                    vals.push(MathExpr::Bin(op, Box::new(x), Box::new(y)));
+                }
+                Build::Rel(op) => {
+                    let y = pop!();
+                    let x = pop!();
+                    vals.push(MathExpr::Rel(op, Box::new(x), Box::new(y)));
+                }
+                Build::Unary(op) => {
+                    let x = pop!();
+                    vals.push(MathExpr::Unary(op, Box::new(x)));
+                }
+                Build::Frac => {
+                    let y = pop!();
+                    let x = pop!();
+                    vals.push(MathExpr::Frac(Box::new(x), Box::new(y)));
+                }
+                Build::Root { has_degree } => {
+                    let radicand = pop!();
+                    let degree = if has_degree { Some(Box::new(pop!())) } else { None };
+                    vals.push(MathExpr::Root { degree, radicand: Box::new(radicand) });
+                }
+                Build::Script { has_sub, has_sup } => {
+                    // `a_i` → Subscript; `a^n` → Pow; `a_i^n` → Pow(Subscript(a, i), n).
+                    let sup = if has_sup { Some(pop!()) } else { None };
+                    let sub = if has_sub { Some(pop!()) } else { None };
+                    let mut acc = pop!(); // base
+                    if let Some(s) = sub {
+                        acc = MathExpr::Subscript(Box::new(acc), Box::new(s));
+                    }
+                    if let Some(p) = sup {
+                        acc = MathExpr::Bin(BinOp::Pow, Box::new(acc), Box::new(p));
+                    }
+                    vals.push(acc);
+                }
+                Build::Call(func) => {
+                    let arg = pop!();
+                    vals.push(MathExpr::Call { func, arg: Box::new(arg) });
+                }
+                Build::BigOp { op, has_lower, has_upper } => {
+                    let body = pop!();
+                    let upper = if has_upper { Some(Box::new(pop!())) } else { None };
+                    let lower = if has_lower { Some(Box::new(pop!())) } else { None };
+                    vals.push(MathExpr::BigOp { op, lower, upper, body: Box::new(body) });
+                }
+                Build::Group => {
+                    let inner = pop!();
+                    vals.push(MathExpr::Group(Box::new(inner)));
+                }
+                Build::Matrix { row_lens } => {
+                    let total: usize = row_lens.iter().sum();
+                    let mut flat = Vec::with_capacity(total);
+                    for _ in 0..total {
+                        flat.push(pop!());
+                    }
+                    flat.reverse(); // back to natural (0,0), (0,1), … order
+                    let mut it = flat.into_iter();
+                    let mut out = Vec::with_capacity(row_lens.len());
+                    for len in row_lens {
+                        let mut cells = Vec::with_capacity(len);
+                        for _ in 0..len {
+                            cells.push(it.next().ok_or_else(|| imbalance(span))?);
+                        }
+                        out.push(cells);
+                    }
+                    vals.push(MathExpr::Matrix(out));
+                }
+            },
         }
-    })
+    }
+
+    // Exactly one value remains: the fully-lowered root.
+    match vals.len() {
+        1 => Ok(vals.pop().expect("len checked")),
+        _ => Err(imbalance(span)),
+    }
 }
 
 /// Lower a binary operator. `\pm`/`\mp` have no neutral form → spanned error.
@@ -437,6 +579,29 @@ mod tests {
         let mut r = FrontendRegistry::new();
         register_latex(&mut r);
         assert!(r.get("latex").is_some());
+    }
+
+    #[test]
+    fn deep_operator_chains_do_not_overflow() {
+        // These build O(n)-deep left-spine trees that `parse_math`'s nesting `MAX_DEPTH` does
+        // NOT bound (the parser builds chains with loops). A recursive lowering overflowed the
+        // stack here (an uncatchable abort); the iterative trampoline must lower them fine. We
+        // run on the default test-thread stack (~2 MiB), where the old recursion died at ~1000.
+        let n = 4000;
+
+        // a + a + a + … (left-nested Bin(Add))
+        let add = format!("a{}", " + a".repeat(n));
+        assert!(matches!(m(&add), MathExpr::Bin(BinOp::Add, _, _)));
+
+        // a a a … (implicit multiplication → left-nested Bin(Mul))
+        let mul = "a".repeat(n);
+        assert!(matches!(m(&mul), MathExpr::Bin(BinOp::Mul, _, _)));
+
+        // a = a = … (chained relation → left-nested Rel)
+        // (A long *sign* run is instead bounded by the parser itself — `parse_unary` charges
+        // `MAX_DEPTH` per sign — so it errors at parse time and never reaches lowering.)
+        let rel = format!("a{}", " = a".repeat(n));
+        assert!(matches!(m(&rel), MathExpr::Rel(RelOp::Eq, _, _)));
     }
 
     #[test]
