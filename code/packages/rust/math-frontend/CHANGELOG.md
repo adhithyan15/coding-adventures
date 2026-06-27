@@ -2,6 +2,26 @@
 
 All notable changes to the pluggable parser-frontend framework.
 
+## [0.2.0] — 2026-06-27
+
+### Added — neutral-AST coverage for ± / ∓ and binomials
+
+Closes the two honest gaps the LaTeX frontend (LTX01 L6) had to error on because the neutral
+AST could not represent them:
+
+- **`BinOp::PlusMinus` / `BinOp::MinusPlus`** — the `±` / `∓` operators (`a ± b` denotes the
+  pair {a+b, a−b}; `∓` the opposite pairing). Meaning-bearing binary operators, not
+  presentation.
+- **`MathExpr::Binom(n, k)`** — a binomial coefficient "n choose k", distinct from `Frac`
+  (no division bar).
+- **`Capabilities`** gains `plusminus` and `binomials` flags (set by `all()` and the new
+  `with_plusminus()` / `with_binomials()` builders); the conformance harness's
+  `collect_used`/`over_emitted` now detect and police both, so a frontend emitting ± or a
+  binomial without declaring it is flagged (verified by new over-claimer tests).
+- Backward-compatible additive enum/struct changes (no removals). Downstream `latex` builds and
+  its 136 tests pass unchanged; the `latex` frontend will start *emitting* these in a follow-up.
+- +3 tests; **23 unit + 1 doc test** green; clippy `-D warnings` clean. Crate 0.1.0 → 0.2.0.
+
 ## [0.1.0] — 2026-06-26
 
 ### Added — PFE01 implementation: the framework
