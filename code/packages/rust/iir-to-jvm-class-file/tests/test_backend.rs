@@ -2064,7 +2064,7 @@ fn lang36_real_jvm_closure_adder() {
 
         // Store the fieldref and methodref indices for the bytecode below.
         // We stash them in local bindings so the borrow on `cp` ends here.
-        drop(cp); // end the mutable borrow — we need immutable later
+        let _ = cp; // end the mutable borrow — we need immutable later
 
         // ── Find make_and_call Methodref CP index ─────────────────────────────
         let mac_ref = find_methodref_in_cp(
@@ -2450,6 +2450,64 @@ fn e4_string_len_lowers_to_string_length() {
 
     let length_ref = find_methodref_in_cp(&class.constant_pool, "java/lang/String", "length", "()I");
     assert_ne!(length_ref, 0, "constant pool must contain java/lang/String.length()I");
+}
+
+#[test]
+fn e4_string_eq_lowers_to_string_equals() {
+    let f = IIRFunction::new(
+        "eq_hello",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal eq should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "eq_hello")
+        .expect("eq_hello method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.contains(&0xB6),
+        "str_eq must invokevirtual java/lang/String.equals; got: {:?}",
+        code
+    );
+    assert!(
+        code.contains(&0x85),
+        "i64 str_eq result must widen boolean int with I2L; got: {:?}",
+        code
+    );
+
+    let equals_ref = find_methodref_in_cp(
+        &class.constant_pool,
+        "java/lang/String",
+        "equals",
+        "(Ljava/lang/Object;)Z",
+    );
+    assert_ne!(equals_ref, 0, "constant pool must contain java/lang/String.equals(Object)");
 }
 
 /// McCarthy W3b: `box` lowers to `Integer.valueOf(I)` (invokestatic 0xB8) and

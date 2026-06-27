@@ -50,8 +50,9 @@ LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
 preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
 `call_builtin "print_string"`, so source-level BASIC `PRINT "HELLO"` runs through
 the same object/link/runtime pipeline as byte-tape programs. Direct-literal
-`str_len` folds to an integer constant before machine-code lowering, so Twig
-`(string-length "HELLO")` runs natively through the same preparation pass.
+`str_len` and `str_eq` over direct literals fold to integer constants before
+machine-code lowering, so Twig `(string-length "HELLO")` and
+`(string=? "HELLO" "HELLO")` run natively through the same preparation pass.
 
 As of 0.10.0, `prepare_module_for_aot` lowers a lisp frontend's `cons`/`car`/
 `cdr` to **calls into this runtime** (via

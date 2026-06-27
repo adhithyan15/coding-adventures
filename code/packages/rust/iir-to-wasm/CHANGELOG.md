@@ -3,17 +3,22 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.20.0] — 2026-06-27 (LANG-FULL E4 — literal string length on WASM)
+## [0.20.0] — 2026-06-27 (LANG-FULL E4 — literal string metadata on WASM)
 
-The WASM backend now accepts and lowers `str_len` for direct string literals:
+The WASM backend now accepts and lowers `str_len` and `str_eq` for direct string
+literals:
 
 - `str_len s` over a prior `str_const s = "..."` materialises the stored byte
   length as an `i64.const`/`i32.const`, depending on the destination local type.
+- `str_eq a, b` over two prior literal `str_const` values materialises `1`/`0`
+  from the stored bytes, again matching the destination local type.
 - The lowering reuses the same linear-memory data metadata introduced for
   `print_str`; no dynamic runtime string representation is exposed.
-- Richer string ops (`str_index`, `str_concat`, `str_eq`) still fail closed.
+- Richer string ops (`str_index`, `str_concat`) and non-literal string values
+  still fail closed.
 - Unit coverage now locks the validator acceptance path, and the lang matrix
-  proves `(string-length "HELLO")` returns `5` in the WASM column.
+  proves `(string-length "HELLO")` returns `5` and
+  `(string=? "HELLO" "HELLO")` returns `1` in the WASM column.
 
 ## [0.19.0] — 2026-06-27 (LANG-FULL E4 / BA4 — BASIC string literal PRINT on WASM)
 

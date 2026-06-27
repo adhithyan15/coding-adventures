@@ -1032,6 +1032,36 @@ fn e4_string_literal_len_folds_to_integer_return() {
 }
 
 #[test]
+fn e4_string_literal_eq_folds_to_integer_return() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("HELLO".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("HELLO".into())], "str"),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string eq should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("ret i64 1"),
+        "str_eq over equal literals should materialise true as 1:\n{ll}"
+    );
+    assert!(
+        !ll.contains("@__print_str"),
+        "str_eq alone should not pull in the string print runtime:\n{ll}"
+    );
+}
+
+#[test]
 fn e4_richer_string_ops_still_fail_closed() {
     let f = IIRFunction::new(
         "main",

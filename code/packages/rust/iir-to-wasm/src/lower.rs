@@ -165,10 +165,11 @@ use crate::validate::validate_for_wasm;
 /// space.
 const ARRAY_BUMP_GLOBAL: &str = "__array_bump";
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 struct WasmStringLiteral {
     offset: u32,
     len: u32,
+    bytes: Vec<u8>,
 }
 
 type FunctionStringLiterals = HashMap<String, WasmStringLiteral>;
@@ -921,6 +922,44 @@ fn emit_instr(
                     detail: format!("str_len literal length {} does not fit i32", lit.len),
                 })?;
                 code.extend(encode_i32_const(len));
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── str_eq → literal byte equality ───────────────────────────────────
+        "str_eq" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_eq must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let left = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_eq requires srcs[0] = Operand::Var(str)".to_string(),
+                }),
+            };
+            let right = match instr.srcs.get(1) {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_eq requires srcs[1] = Operand::Var(str)".to_string(),
+                }),
+            };
+            let left_lit = string_literals.get(left).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_eq left source {left:?} is not a direct str_const local"),
+            })?;
+            let right_lit = string_literals.get(right).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_eq right source {right:?} is not a direct str_const local"),
+            })?;
+            let value = if left_lit.bytes == right_lit.bytes { 1 } else { 0 };
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_const(value));
+            } else {
+                code.extend(encode_i32_const(value as i32));
             }
             code.extend(encode_local_set(rd));
         }
@@ -2886,7 +2925,11 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         string_literals
                             .entry(fn_.name.clone())
                             .or_default()
-                            .insert(dest.clone(), WasmStringLiteral { offset, len });
+                            .insert(dest.clone(), WasmStringLiteral {
+                                offset,
+                                len,
+                                bytes: s.as_bytes().to_vec(),
+                            });
                     }
                 }
                 "print_str" => {

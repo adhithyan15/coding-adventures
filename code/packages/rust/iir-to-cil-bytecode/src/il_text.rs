@@ -568,11 +568,12 @@ fn emit_method(
             // str_const <dest> = Str(s)  ->  ldstr "..."; st<dest>
             //
             // LANG-FULL E4 first managed foothold: Dartmouth BASIC string
-            // literal PRINT lowers to `str_const` + `print_str`, and literal
-            // string length lowers to `str_len`. Both map naturally to
-            // CoreCLR's `System.String`. The richer byte-oriented string
-            // algebra remains deliberately unsupported here until the
-            // representation is specified for non-ASCII and byte indexing.
+            // literal PRINT lowers to `str_const` + `print_str`, literal
+            // string length lowers to `str_len`, and literal equality lowers
+            // to `str_eq`. These map naturally to CoreCLR's `System.String`.
+            // The richer byte-oriented string algebra remains deliberately
+            // unsupported here until the representation is specified for
+            // non-ASCII and byte indexing.
             "str_const" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
@@ -605,6 +606,22 @@ fn emit_method(
                 let _ = writeln!(
                     il,
                     "    callvirt instance int32 [System.Runtime]System.String::get_Length()"
+                );
+                store_var(il, &regs, dest)?;
+            }
+            // str_eq <dest>, <left>, <right>  ->  System.String::Equals(string,string)
+            "str_eq" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_eq must have a dest".to_string(),
+                })?;
+                let left = var_src(f, instr, 0, "str_eq")?;
+                let right = var_src(f, instr, 1, "str_eq")?;
+                load_var(il, &regs, left)?;
+                load_var(il, &regs, right)?;
+                let _ = writeln!(
+                    il,
+                    "    call bool [System.Runtime]System.String::Equals(string, string)"
                 );
                 store_var(il, &regs, dest)?;
             }
@@ -1723,6 +1740,38 @@ mod tests {
         assert!(
             il.contains("callvirt instance int32 [System.Runtime]System.String::get_Length()"),
             "str_len must call System.String::get_Length(); got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_eq_emits_string_equals() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("ldstr \"HELLO\""), "str_const must emit ldstr; got:\n{il}");
+        assert!(
+            il.contains("call bool [System.Runtime]System.String::Equals(string, string)"),
+            "str_eq must call System.String::Equals(string,string); got:\n{il}"
         );
     }
 

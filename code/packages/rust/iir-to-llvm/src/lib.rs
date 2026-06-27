@@ -270,9 +270,9 @@ const SUPPORTED_OPS: &[&str] = &[
     "int_to_real", "real_to_int_trunc", "real_to_int_floor",
     // LANG-FULL E4 — string literal foothold for the static LLVM column.
     // `str_const` materialises a length-prefixed private constant, `str_len`
-    // reads the literal byte count from compile-time metadata, and `print_str`
-    // calls the generic C runtime. Richer byte-string ops remain unsupported.
-    "str_const", "str_len", "print_str",
+    // and `str_eq` read literal metadata, and `print_str` calls the generic C
+    // runtime. Richer byte-string ops remain unsupported.
+    "str_const", "str_len", "str_eq", "print_str",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -398,6 +398,10 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
                 validate_str_len(func, instr, &mut errors);
                 continue;
             }
+            if instr.op == "str_eq" {
+                validate_str_eq(func, instr, &mut errors);
+                continue;
+            }
             if instr.op == "print_str" {
                 validate_print_str(func, instr, &mut errors);
                 continue;
@@ -487,6 +491,28 @@ fn validate_str_len(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<Strin
         [Operand::Var(_)] => {}
         _ => errors.push(format!(
             "InvalidOperand: function {:?}, str_len requires exactly one Operand::Var",
+            func.name
+        )),
+    }
+}
+
+fn validate_str_eq(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_eq requires a dest",
+            func.name
+        ));
+    }
+    if llvm_type_for(&instr.type_hint, &func.name).is_err() {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_eq result type {:?} is not supported",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_), Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_eq requires exactly two Operand::Var sources",
             func.name
         )),
     }
@@ -655,9 +681,9 @@ pub fn lower_iir_to_llvm(
     //
     // Static backends use the unmanaged string layout from `lang-full-e4-strings`:
     // an `i64` byte-length header followed by the bytes. `str_const` binds a
-    // pointer to this header, `str_len` materialises the literal byte count, and
-    // `print_str` passes `header+8,len` to the C runtime. Richer ops
-    // (`str_index`, `str_concat`, `str_eq`) remain outside this slice, but this
+    // pointer to this header, `str_len`/`str_eq` materialise literal metadata,
+    // and `print_str` passes `header+8,len` to the C runtime. Richer ops
+    // (`str_index`, `str_concat`) remain outside this slice, but this
     // representation leaves the header in place for those later loads/checks.
     let (string_defs, string_literals) = collect_string_literals(module);
     if !string_defs.is_empty() {
@@ -789,6 +815,8 @@ struct FnState<'a> {
     /// this sidecar lets `print_str` pass `(base+8,len)` without inventing a
     /// general string value model for LLVM locals.
     str_lens: HashMap<String, usize>,
+    /// IIR string var name → literal text for literal-only E4 folds (`str_eq`).
+    str_values: HashMap<String, String>,
     /// Per-function counter for synthesized SSA names — used both for
     /// post-cmp zext'd values and for fallthrough block labels.
     counter: u32,
@@ -928,6 +956,7 @@ fn lower_function(
         env: HashMap::new(),
         env_i1: HashMap::new(),
         str_lens: HashMap::new(),
+        str_values: HashMap::new(),
         counter: 0,
         fn_name: &func.name,
         callee_sigs,
@@ -1282,6 +1311,7 @@ fn lower_instr(
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
         "str_len" => lower_str_len(instr, state),
+        "str_eq" => lower_str_eq(instr, state),
         "print_str" => lower_print_str(instr, state, out),
 
         other => Err(IIRLlvmError::UnsupportedOp {
@@ -1312,7 +1342,8 @@ fn lower_str_const(
         }
     })?;
     state.env.insert(dest.clone(), info.symbol.clone());
-    state.str_lens.insert(dest, info.len);
+    state.str_lens.insert(dest.clone(), info.len);
+    state.str_values.insert(dest, literal.clone());
     Ok(())
 }
 
@@ -1377,6 +1408,45 @@ fn lower_str_len(
         }
     })?;
     state.env.insert(dest, len.to_string());
+    Ok(())
+}
+
+fn lower_str_eq(
+    instr: &IIRInstr,
+    state: &mut FnState,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_eq", state.fn_name)?.to_string();
+    let left = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_eq requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let right = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_eq requires srcs[1] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let left_value = state.str_values.get(left).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_eq left source {left:?} is not a string literal value"),
+        }
+    })?;
+    let right_value = state.str_values.get(right).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_eq right source {right:?} is not a string literal value"),
+        }
+    })?;
+    state.env.insert(dest, if left_value == right_value { "1" } else { "0" }.into());
     Ok(())
 }
 

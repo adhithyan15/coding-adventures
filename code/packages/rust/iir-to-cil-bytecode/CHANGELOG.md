@@ -1,16 +1,20 @@
 # Changelog — iir-to-cil-bytecode
 
-## [0.28.0] — 2026-06-27 — textual CLR literal string length (LANG-FULL E4)
+## [0.28.0] — 2026-06-27 — textual CLR literal string metadata (LANG-FULL E4)
 
-The textual `.il` path now lowers `str_len` for direct string literals:
+The textual `.il` path now lowers `str_len` and `str_eq` for direct string
+literals:
 
 - `str_len` loads the `string` local and calls
   `System.String::get_Length()`, storing the resulting integer.
-- This proves Twig `(string-length "HELLO")` on real CoreCLR alongside the
-  earlier BASIC `PRINT "HELLO"` literal-output row.
-- Richer byte-oriented string operations (`str_index`, `str_concat`, `str_eq`)
-  still fail closed until the CLR representation owns shared UTF-8 byte
-  semantics.
+- `str_eq` loads two `string` locals and calls
+  `System.String::Equals(string, string)`, storing the resulting integer.
+- This proves Twig `(string-length "HELLO")` and
+  `(string=? "HELLO" "HELLO")` on real CoreCLR alongside the earlier BASIC
+  `PRINT "HELLO"` literal-output row.
+- Richer byte-oriented string operations (`str_index`, `str_concat`) and
+  non-literal string values still fail closed until the CLR representation owns
+  shared UTF-8 byte semantics.
 - Emitter and validator tests cover the new accepted shape.
 
 ## [0.27.0] — 2026-06-27 — textual CLR string literal PRINT foothold (LANG-FULL E4 / BA4)

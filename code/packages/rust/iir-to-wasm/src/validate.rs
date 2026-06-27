@@ -316,12 +316,12 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // unknown / unsafe builtins.
             if matches!(
                 instr.op.as_str(),
-                "str_index" | "str_concat" | "str_eq"
+                "str_index" | "str_concat"
             ) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the WASM backend's E4 literal slice; only str_const, \
-                     str_len, and print_str are supported",
+                     str_len, str_eq, and print_str are supported",
                     func.name, instr.op
                 ));
             } else if instr.op == "str_const" {
@@ -357,6 +357,26 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                         errors.push(format!(
                             "UnsupportedOp: function {:?}, op \"str_len\" requires \
                              dest, one Operand::Var source, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_eq" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (
+                        Some(_),
+                        [
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                        ],
+                        "i64" | "i32",
+                    ) => {
+                        // Accepted — lower.rs materialises literal equality.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_eq\" requires \
+                             dest, two Operand::Var sources, and i64/i32 result type",
                             func.name
                         ));
                     }
@@ -585,6 +605,34 @@ mod tests {
         assert!(
             errs.is_empty(),
             "str_len over a direct literal should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn e4_literal_str_eq_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("A".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("A".into())],
+                "str",
+            ),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_eq over direct literals should be accepted; got: {:?}",
             errs
         );
     }

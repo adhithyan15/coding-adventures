@@ -1451,11 +1451,11 @@ fn strip_dead_string_consts(func: &mut IIRFunction) {
 /// The direct native backends already know how to allocate bytes, store bytes,
 /// and call the portable `__twig_print_string(ptr,len)` runtime helper. This
 /// pass reuses that path for `str_const` + `print_str` and folds direct
-/// literal `str_len`; richer string ops remain unsupported until the full
-/// byte-string runtime lands.
+/// literal `str_len`/`str_eq`; richer string ops remain unsupported until the
+/// full byte-string runtime lands.
 fn lower_string_literals_for_aot(func: &mut IIRFunction) {
     let mut lowered = Vec::with_capacity(func.instructions.len());
-    let mut strings: HashMap<String, (String, String, usize)> = HashMap::new();
+    let mut strings: HashMap<String, (String, String, String)> = HashMap::new();
     let mut next = 0usize;
 
     for instr in std::mem::take(&mut func.instructions) {
@@ -1522,7 +1522,7 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                     "void",
                 ));
             }
-            strings.insert(dest, (buf_var, len_var, literal.len()));
+            strings.insert(dest, (buf_var, len_var, literal));
             continue;
         }
 
@@ -1535,14 +1535,40 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 lowered.push(instr);
                 continue;
             };
-            let Some((_, _, len)) = strings.get(src).cloned() else {
+            let Some((_, _, literal)) = strings.get(src).cloned() else {
                 lowered.push(instr);
                 continue;
             };
             lowered.push(IIRInstr::new(
                 "const",
                 Some(dest),
-                vec![Operand::Int(len as i64)],
+                vec![Operand::Int(literal.len() as i64)],
+                &instr.type_hint,
+            ));
+            continue;
+        }
+
+        if instr.op == "str_eq" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let [Operand::Var(left), Operand::Var(right)] = instr.srcs.as_slice() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, left_literal)) = strings.get(left).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, right_literal)) = strings.get(right).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(dest),
+                vec![Operand::Int((left_literal == right_literal) as i64)],
                 &instr.type_hint,
             ));
             continue;
@@ -2066,6 +2092,38 @@ mod tests {
         assert!(
             f.instructions.iter().all(|i| i.op != "str_len"),
             "native lowering should remove folded str_len: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_eq_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("HELLO".into())], "str"),
+                IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("HELLO".into())], "str"),
+                IIRInstr::new("str_eq", Some("ok".into()), vec![
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let eq_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("ok"));
+        assert!(
+            matches!(eq_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(1)]),
+            "str_eq over equal literals should fold to const 1: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_eq"),
+            "native lowering should remove folded str_eq: {:?}",
             f.instructions
         );
     }

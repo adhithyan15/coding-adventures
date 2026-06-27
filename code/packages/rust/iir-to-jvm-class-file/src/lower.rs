@@ -1919,11 +1919,11 @@ fn lower_function(
             // ── LANG-FULL E4: string literal output foothold ────────────────
             //
             // Dartmouth BASIC `PRINT "..."` lowers to `str_const` +
-            // `print_str`, and literal Twig `string-length` lowers to
-            // `str_len`. Use Java's native `String` only for this literal
-            // foothold; richer byte-oriented string algebra remains rejected
-            // by the validator until the JVM representation owns those
-            // semantics explicitly.
+            // `print_str`, literal Twig `string-length` lowers to `str_len`,
+            // and literal `string=?` lowers to `str_eq`. Use Java's native
+            // `String` only for this literal foothold; richer byte-oriented
+            // string algebra remains rejected by the validator until the JVM
+            // representation owns those semantics explicitly.
             "str_const" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
@@ -1983,6 +1983,56 @@ fn lower_function(
                 let length_ref = cp.add_methodref("java/lang/String", "length", "()I");
                 code.push(INVOKEVIRTUAL);
                 code.extend_from_slice(&length_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
+            }
+
+            "str_eq" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_eq instruction has no dest".to_string(),
+                })?;
+                let left = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_eq expects left string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let right = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_eq expects right string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (left_slot, left_type) = lookup_var(left)?;
+                let (right_slot, right_type) = lookup_var(right)?;
+                if left_type != JvmType::Ref || right_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, left_slot);
+                emit_aload(&mut code, right_slot);
+                let equals_ref =
+                    cp.add_methodref("java/lang/String", "equals", "(Ljava/lang/Object;)Z");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&equals_ref.to_be_bytes());
                 if dest_type == JvmType::Long {
                     code.push(I2L);
                 }

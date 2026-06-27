@@ -157,6 +157,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 literal `string=?`. Like the literal length row, this stays on
+    // the direct `str_const` + `str_eq` path so every codegen backend can prove
+    // observable string equality without taking on full dynamic byte-string
+    // algebra yet.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(string=? \"HELLO\" \"HELLO\")",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =

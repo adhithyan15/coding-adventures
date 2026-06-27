@@ -1,18 +1,20 @@
 # Changelog — `lang-aot`
 
-## 0.111.0 — 2026-06-27 — Twig literal string length runs on all seven backends (LANG-FULL E4)
+## 0.111.0 — 2026-06-27 — Twig literal string metadata runs on all seven backends (LANG-FULL E4)
 
-The Twig matrix now executes `(string-length "HELLO")` on **native-AOT + LLVM +
-WASM + JVM + CLR + VM + JIT**, returning exit code `5` everywhere.
+The Twig matrix now executes `(string-length "HELLO")` and
+`(string=? "HELLO" "HELLO")` on **native-AOT + LLVM + WASM + JVM + CLR + VM +
+JIT**, returning exit codes `5` and `1` everywhere.
 
-`twig-ir-compiler` 0.25.0 lowers literal `string-length` to typed `str_const` +
-`str_len`. The code-gen backends each keep the slice literal-only: native AOT
-folds to a constant, LLVM/WASM read the existing literal metadata, JVM calls
-`String.length()`, and CLR calls `String::get_Length()`.
+`twig-ir-compiler` 0.25.0 lowers literal `string-length` and `string=?` to typed
+`str_const` + `str_len`/`str_eq`. The code-gen backends each keep the slice
+literal-only: native AOT folds to constants, LLVM/WASM read the existing literal
+metadata, JVM calls `String.length()` / `String.equals(Object)`, and CLR calls
+`String::get_Length()` / `String::Equals(string,string)`.
 
 This extends the all-backend E4 foothold beyond output without claiming full
-string algebra: `str_index`, `str_concat`, `str_eq`, and string variables remain
-follow-up work.
+string algebra: `str_index`, `str_concat`, non-literal `str_eq`, and string
+variables remain follow-up work.
 
 ## 0.110.0 — 2026-06-27 — BASIC string literal PRINT runs on all seven backends (LANG-FULL E4 / BA4)
 
