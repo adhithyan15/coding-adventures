@@ -1,5 +1,22 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.23.0 — 2026-06-27 — BA4 copied string slots in IF equality
+
+String `IF` comparisons now have an explicit proof for comparing two scalar
+string slots after a copy:
+
+```basic
+10 LET A$ = "OK"
+20 LET B$ = A$
+30 IF B$ = A$ THEN 60
+40 PRINT "BAD"
+50 END
+60 PRINT "OK"
+```
+
+The relation path reuses E4 `str_eq` over `__basic_str_B` and `__basic_str_A`,
+then branches through the existing `jmp_if_true` line-control lowering.
+
 ## 0.22.0 — 2026-06-27 — BA4 variable-backed string concat assignment
 
 String assignment now has an explicit proof for concat expressions whose left

@@ -2704,6 +2704,27 @@ mod tests {
     }
 
     #[test]
+    fn compiles_string_variable_if_copied_slot_equality() {
+        let src = "10 LET A$ = \"OK\"\n\
+                   20 LET B$ = A$\n\
+                   30 IF B$ = A$ THEN 60\n\
+                   40 PRINT \"BAD\"\n\
+                   50 END\n\
+                   60 PRINT \"OK\"\n\
+                   70 END\n";
+        let m = compile(src).expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "str_eq"
+            && matches!(i.srcs.as_slice(), [
+                Operand::Var(lhs),
+                Operand::Var(rhs)
+            ] if lhs == "__basic_str_B" && rhs == "__basic_str_A")),
+            "IF B$ = A$ should compare two scalar string slots");
+        assert!(body.iter().any(|i| i.op == "jmp_if_true"),
+            "copied string slot equality should branch on true");
+    }
+
+    #[test]
     fn compiles_string_variable_if_inequality() {
         let src = "10 LET A$ = \"N\"\n\
                    20 IF A$ <> \"Y\" THEN 40\n\

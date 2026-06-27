@@ -1132,6 +1132,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 copied string slots in control flow. This composes
+    // the scalar copy foothold with `str_eq` over two string slots, proving
+    // variable-to-variable equality rather than only slot-vs-literal equality.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"OK\"\n20 LET B$ = A$\n30 IF B$ = A$ THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — BA4 string inequality drives control flow too. The
     // frontend reuses E4 `str_eq` but targets the THEN line with `jmp_if_false`,
     // proving the standard `<>` relop without adding a new string-compare op.

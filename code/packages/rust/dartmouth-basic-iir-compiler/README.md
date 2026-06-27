@@ -50,11 +50,12 @@ string branches now lower through the shared E4 path on all seven matrix
 backends. Literal `+` concatenation (`LET A$ = "O" + "K"; PRINT A$`) uses E4
 `str_concat` on the same backends, and literal-backed scalar string copies
 (`LET A$ = "OK"; LET B$ = A$; PRINT B$`) reuse that E4 path with an empty
-suffix. `PRINT A$ + "K"` also consumes a temporary E4 `str_concat` result
-directly, and `IF A$ + "K" = "OK" THEN ...` feeds the same expression path into
-`str_eq` line-control branching. `LET B$ = A$ + "K"; PRINT B$` stores the
-variable-backed concat directly into another scalar string slot. Richer dynamic
-string storage, string arrays, and string `INPUT` remain follow-ups. See
+suffix. Copied slots can participate in control flow too (`IF B$ = A$ THEN ...`).
+`PRINT A$ + "K"` also consumes a temporary E4 `str_concat` result directly, and
+`IF A$ + "K" = "OK" THEN ...` feeds the same expression path into `str_eq`
+line-control branching. `LET B$ = A$ + "K"; PRINT B$` stores the variable-backed
+concat directly into another scalar string slot. Richer dynamic string storage,
+string arrays, and string `INPUT` remain follow-ups. See
 [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`
