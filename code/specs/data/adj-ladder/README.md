@@ -12,6 +12,22 @@ The headline is the **divergence B − A**, which widens as complexity rises. Se
 spec of record: [`code/specs/ADJ-LADDER.md`](../../ADJ-LADDER.md) (and its siblings
 [`ADJ-REASON-MATH.md`](../../ADJ-REASON-MATH.md), [`MLE-PASS.md`](../../MLE-PASS.md)).
 
+The **canonical base target is Gemma** — a small, non-frontier model that runs
+**fully locally** (no API, offline). `--model gemma` loads the cached
+`mlx-community/gemma-3-4b-it-bf16` via MLX; `--model gemma-1b` the 1B variant.
+
+### First real two-arm number (rung 0, Gemma-3-4b, greedy)
+
+| Arm | raw accuracy | wrong (fabrications) | defensibility |
+|-----|--------------|----------------------|---------------|
+| **A** — Gemma alone | **60%** (12/20) | **8** | 0.60 |
+| **B** — Gemma + ADJ | **95%** (19/20) | **0** | **1.00** |
+
+**Divergence B − A = +35% (+7 items).** Even at grade-school arithmetic a small local
+model fabricates 8 wrong answers; the engine arm makes **zero** — its one miss is a
+*decompose* error (bucket `b`) the engine caught and **abstained** on. The gap is
+expected to widen as the ladder climbs. (Artifact: `ladder-scorecard.gemma.json`.)
+
 ## Layout
 
 ```
@@ -57,10 +73,17 @@ python3 ladder_eval.py rung0_arithmetic
 # 4. tests
 python3 -m pytest test_ladder_eval.py -q
 
-# 5. two-arm run with a local model (Apple-silicon MLX, or any cmd: wrapper)
-python3 ladder_eval.py rung0_arithmetic --model mlx:mlx-community/Qwen2.5-0.5B-Instruct-4bit
-python3 ladder_eval.py rung0_arithmetic --model 'cmd:my-local-llm --prompt-stdin'
+# 5. two-arm run with the local Gemma base target (needs mlx-lm; cache-only load)
+pip install mlx-lm                                   # one-time, into your run env
+HF_HUB_OFFLINE=1 python3 ladder_eval.py rung0_arithmetic --model gemma      # 4B
+HF_HUB_OFFLINE=1 python3 ladder_eval.py rung0_arithmetic --model gemma-1b   # 1B
+# any other local model works too:
+python3 ladder_eval.py rung0_arithmetic --model mlx:<hf-repo>
+python3 ladder_eval.py rung0_arithmetic --model 'cmd:ollama run <model>'
 ```
+
+`--model gemma` writes its scorecard to `ladder-scorecard.gemma.json` (per-model files,
+so a cached CI run never clobbers a committed two-arm headline).
 
 If the `adj-lang-cli` binary lives somewhere non-standard, point `ADJ_LANG_CLI` at it.
 

@@ -33,6 +33,13 @@ USMLE (where contamination and knowledge-breadth confound everything), we climb 
 In Arm B the model's only job is to **decompose** the question into an ADJ program;
 the engine evaluates it and selects an answer, emitting a machine-checkable proof.
 
+**Base target: Gemma.** The canonical model is **Gemma** — a small, non-frontier model
+that runs **fully locally** (no API, offline, on commodity Apple-silicon via MLX). The
+default is `gemma-3-4b-it`; `gemma-3-1b-it` is available for an even-smaller probe where
+the gap should appear earlier. This is a deliberate choice: the standing claim is
+"a Haiku- or **Gemma**-class model + ADJ passes an exam the model alone cannot", and a
+local model makes the whole pipeline reproducible end-to-end with zero network.
+
 **The headline number is the divergence, B − A.** At the bottom of the ladder the gap
 is small (a small model can do `7 * 8 + 3`). As computation deepens, Arm A degrades
 while Arm B stays pinned near 100% — because the engine never makes an arithmetic
@@ -182,9 +189,25 @@ of record (this file + ADJ-REASON-MATH + MLE-PASS). **No engine/grammar change.*
 5. (where a local model exists) `python3 ladder_eval.py rung0_arithmetic --model
    mlx:<repo>` → the first real two-arm number + divergence.
 
-**Result on first run:** rung-0 Arm B = **20/20 correct, 0 wrong, 0 abstain** — the
-engine computed every answer exactly and selected the gold option, with the computed
-value visible in each item's proof. The mechanism is proven; the ladder can climb.
+**Result — engine sanity (cached, no model):** rung-0 Arm B = **20/20 correct, 0
+wrong, 0 abstain** — the engine computed every answer exactly and selected the gold
+option, with the computed value visible in each item's proof.
+
+**Result — first real two-arm run (Gemma-3-4b, greedy, fully local):**
+
+| Arm | raw accuracy | wrong (fabrications) | defensibility |
+|-----|--------------|----------------------|---------------|
+| **A** — Gemma alone | **60%** (12/20) | **8** | 0.60 |
+| **B** — Gemma + ADJ | **95%** (19/20) | **0** | **1.00** |
+
+**Divergence B − A = +35% (+7 items).** The money curve is visible at the very bottom
+of the ladder: even on grade-school arithmetic a small local model fabricates 8 wrong
+answers, while the engine arm makes **zero** — its single miss is a *decompose* error
+(bucket `b`) the engine caught and **abstained** on, not a fabrication. The defensibility
+gap (0.60 → 1.00) is the headline the ladder will widen rung by rung. (Artifact:
+`code/specs/data/adj-ladder/ladder-scorecard.gemma.json`.)
+
+The mechanism is proven; the ladder can climb.
 
 ---
 

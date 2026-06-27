@@ -82,6 +82,24 @@ def test_extract_formula_rejects_prose():
     assert le.extract_formula("fifty nine") is None
 
 
+def test_extract_formula_strips_label_only():
+    # a "Formula:" label the model echoes is stripped; plain arithmetic passes through.
+    assert le.extract_formula("Formula: 5 * 12") == "5 * 12"
+
+
+def test_extract_formula_abstains_on_latex():
+    # LaTeX/unicode math is NOT normalized in the harness — that is the engine's job
+    # (adj-lang understands LaTeX natively). An un-plain reply abstains here.
+    assert le.extract_formula("$5 \\times 12$") is None
+    assert le.extract_formula("5 × 12") is None
+
+
+def test_model_aliases_resolve():
+    assert le.MODEL_ALIASES["gemma"].startswith("mlx:")
+    assert "gemma" in le.MODEL_ALIASES["gemma"]
+    assert le.MODEL_ALIASES["gemma-1b"].endswith("gemma-3-1b-it-bf16")
+
+
 # ---- scoring / divergence -----------------------------------------------------
 def test_outcome():
     assert le.outcome("A", "A") == "correct"

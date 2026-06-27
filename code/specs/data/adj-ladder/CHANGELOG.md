@@ -2,6 +2,30 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.2.0] — 2026-06-26
+
+### Added — Gemma as the canonical local base target + first real two-arm number
+
+- **Gemma base target.** `--model gemma` / `--model gemma-1b` aliases load the cached
+  `mlx-community/gemma-3-{4b,1b}-it-bf16` instruct checkpoints via MLX — a small,
+  non-frontier, **fully-local** model (no API, offline). MLX loading now applies the
+  tokenizer chat template and greedy sampling (`temp=0`) for reproducible runs.
+- **First real two-arm result (rung 0, Gemma-3-4b, greedy):** Arm A (model alone)
+  **60%** (12/20, **8 wrong**); Arm B (model+ADJ) **95%** (19/20, **0 wrong**,
+  defensibility **1.00**); **divergence +35% (+7 items)**. Arm B's single miss is a
+  decompose error the engine caught and abstained on — zero fabrications.
+  Artifact: `ladder-scorecard.gemma.json`.
+- **Formula extraction stays strict.** A few-shot decompose prompt steers the model to
+  plain ASCII arithmetic; `extract_formula` accepts only a plain `+ - * / ()` line
+  (stripping an echoed `Formula:` label) and **abstains** on anything else. LaTeX/unicode
+  math is deliberately NOT normalized in the harness — that is a parsing concern owned
+  by the engine (adj-lang will understand LaTeX math natively; tracked as its own PR),
+  not an ad-hoc regex in the eval layer. The harness never rewrites the model's math.
+- **Per-model scorecards.** Model runs write `ladder-scorecard.<model>.json`; cached
+  runs write `ladder-scorecard.json` — a cached CI run never clobbers a committed
+  two-arm headline. Scorecard summary now records the `model`.
+- Tests: +2 (glyph/label normalization, alias resolution) → 20 total.
+
 ## [0.1.0] — 2026-06-26
 
 ### Added — PR-0: the two-arm instrument + rung 0 (no engine change)
