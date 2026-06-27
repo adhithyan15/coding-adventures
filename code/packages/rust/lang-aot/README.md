@@ -4,7 +4,7 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.132.0):**
+> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.133.0):**
 > `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 > It also proves `10 LET A$ = "HI"; 20 PRINT A$` produces stdout `HI` on
 > the same seven backends, and `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
@@ -17,6 +17,9 @@ LANG VM chain.
 > Multi-item string `PRINT` runs too:
 > `LET A$ = "O"; LET B$ = "K"; PRINT A$; B$` prints `OK` through ordered
 > `print_str` calls.
+> Comma-separated string `PRINT` composes BA2 separators with BA4 strings:
+> `LET A$ = "O"; LET B$ = "K"; PRINT A$, B$` prints `O K` by placing
+> `putchar(' ')` between the same ordered `print_str` calls.
 > `PRINT A$ + "K"` now proves `PRINT` can consume a temporary E4 string
 > expression result directly.
 > `IF A$ + "K" = "OK" THEN ...` proves the same expression path can feed
@@ -61,8 +64,8 @@ LANG VM chain.
 > `PrintStream.print(String)`; CLR maps them to `ldstr` and `Console.Write(string)`.
 > Literal length/index/equality/append metadata is folded/read from metadata on
 > native/LLVM/WASM and uses host string APIs on JVM/CLR; the OOB index row proves
-> each backend fails closed. Dynamic byte-string ops, non-literal string copies,
-> and captured string variables stay follow-up E4/BA4 slices.
+> each backend fails closed. Dynamic byte-string ops, broader dynamic string
+> copies, and captured string variables stay follow-up E4/BA4 slices.
 
 > **LANG-FULL O2 — Oct bitwise `~` + u8 wrap on all 7 backends (v0.92.0):**
 > `tests/lang_matrix.rs` adds `out(1, ~0)` → `255` and `out(1, 200 + 100)` → `44` (wrap).

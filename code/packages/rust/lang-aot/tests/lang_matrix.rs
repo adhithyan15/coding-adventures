@@ -1111,6 +1111,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 string PRINT composes with BA2 comma separators.
+    // The comma path emits a single `putchar(' ')` between the ordered E4
+    // `print_str` calls, proving separators stay language-neutral and do not
+    // route string items through numeric formatting.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$, B$\n40 END\n",
+        expect: Expect::Stdout("O K"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — BA4 string expression in PRINT. This keeps concat out
     // of an assignment target and proves `PRINT` can consume a temporary E4
     // string expression result directly.

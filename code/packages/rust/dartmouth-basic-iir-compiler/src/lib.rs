@@ -2710,6 +2710,38 @@ mod tests {
     }
 
     #[test]
+    fn compiles_multi_item_string_print_with_comma_separator() {
+        let m = compile("10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$, B$\n40 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        let print_a = body.iter()
+            .position(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "__basic_str_A")
+            })
+            .expect("PRINT should emit print_str for A$");
+        let print_b = body.iter()
+            .position(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "__basic_str_B")
+            })
+            .expect("PRINT should emit print_str for B$");
+        let space_call = body.iter()
+            .position(|i| {
+                i.op == "call_builtin"
+                    && matches!(i.srcs.as_slice(), [Operand::Var(name), Operand::Var(arg)]
+                        if name == "putchar" && body.iter().any(|c|
+                            c.dest.as_deref() == Some(arg.as_str())
+                                && matches!(c.srcs.first(), Some(Operand::Int(32)))))
+            })
+            .expect("comma separator should emit a single-space putchar");
+        assert!(
+            print_a < space_call && space_call < print_b,
+            "PRINT A$, B$ should emit the comma separator between string items"
+        );
+    }
+
+    #[test]
     fn compiles_string_variable_if_equality() {
         let src = "10 LET A$ = \"Y\"\n\
                    20 IF A$ = \"Y\" THEN 40\n\

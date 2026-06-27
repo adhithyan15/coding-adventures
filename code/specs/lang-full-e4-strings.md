@@ -3,7 +3,7 @@
 **Status:** IR + reference VM slice implemented. BASIC BA4 literal/scalar
 strings, reassignment, equality/inequality, copied-slot equality, literal and
 variable-backed concat, expression concat in `PRINT`/`IF`, and multi-item string
-`PRINT` run on all seven backends. ALGOL AL4 literal output, `output`, scalar
+`PRINT` with `;` and `,` run on all seven backends. ALGOL AL4 literal output, `output`, scalar
 variables, scalar copies, and copy snapshots run on all seven backends. Twig
 literal, immutable top-level, and lexical-local string ops run on all seven
 backends. Captured/dynamic strings, arrays/input/parameters, and fuller backend
@@ -154,9 +154,11 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `LET A$ = "O" + "K"; PRINT A$` proves literal `str_concat`. `LET A$ = "OK";
   LET B$ = A$; PRINT B$` proves scalar string copy by lowering through
   `str_concat` with an empty suffix, and `IF B$ = A$ THEN ...` proves copied-slot
-  equality through `str_eq`. `PRINT A$; B$` proves ordered multi-item string
-  output without concat or numeric formatting helpers. `LET A$ = "O"; PRINT A$ +
-  "K"` proves `PRINT` can consume a temporary E4 string-expression result, and
+  equality through `str_eq`. `PRINT A$; B$` proves ordered tight multi-item string
+  output without concat or numeric formatting helpers, while `PRINT A$, B$`
+  proves BA2's comma separator (`putchar(' ')`) composes with the same ordered
+  `print_str` calls. `LET A$ = "O"; PRINT A$ + "K"` proves `PRINT` can consume a
+  temporary E4 string-expression result, and
   `IF A$ + "K" = "OK" THEN ...` proves the same temporary expression path before
   `str_eq`. `LET B$ = A$ + "K"; PRINT B$` proves variable-backed concat
   assignment into another scalar string slot. String compares in `IF A$ = "Y"` and
@@ -210,8 +212,8 @@ everywhere. The matrix also covers the **bounds-trap** case: `(string-ref "ABC"
 3)` must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 Dartmouth BASIC proves source-language string variables, reassignment, scalar
 copy, copied-slot equality, literal/variable-backed concat, concat expressions in
-`PRINT`/`IF`, equality/inequality branches, and multi-item string `PRINT` on all
-seven backends. ALGOL proves literal output, the `output` alias, scalar string
+`PRINT`/`IF`, equality/inequality branches, and multi-item string `PRINT` with
+both `;` and `,` on all seven backends. ALGOL proves literal output, the `output` alias, scalar string
 variables, scalar copies, and copy snapshots on the same all-seven E4 path.
 Follow-up proofs now focus on string arrays/input/parameters, captured or
 reassigned dynamic strings, and runtime byte-string operations beyond the current
@@ -251,9 +253,10 @@ merge before the next:
    stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Literal
    reassignment, literal concat assignment, scalar copy, variable-backed concat
    assignment, concat expressions in `PRINT`/`IF`, equality/inequality branches,
-   copied-slot equality, and multi-item string `PRINT` all now return stdout `OK`
-   on the same seven backends. String arrays, string `INPUT`, captured/dynamic
-   storage, and broader runtime byte-string operations remain follow-ups.
+   copied-slot equality, tight multi-item string `PRINT` (`PRINT A$; B$`), and
+   comma-separated string `PRINT` (`PRINT A$, B$` => `O K`) all now run on the
+   same seven backends. String arrays, string `INPUT`, captured/dynamic storage,
+   and broader runtime byte-string operations remain follow-ups.
 2b. ✅ **AL4-literal-output proof** — `algol-iir-compiler` recognises
    undeclared statement-position `print`/`output` calls and lowers string literal
    actuals to E4 `str_const` + `print_str`. Matrix `Prog`

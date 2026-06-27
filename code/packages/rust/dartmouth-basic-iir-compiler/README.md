@@ -52,7 +52,8 @@ backends. Literal `+` concatenation (`LET A$ = "O" + "K"; PRINT A$`) uses E4
 (`LET A$ = "OK"; LET B$ = A$; PRINT B$`) reuse that E4 path with an empty
 suffix. Copied slots can participate in control flow too (`IF B$ = A$ THEN ...`).
 Multi-item string printing (`PRINT A$; B$`) emits ordered `print_str` calls
-without numeric formatting helpers.
+without numeric formatting helpers, and comma-separated string printing
+(`PRINT A$, B$`) reuses BA2's single-space separator between those E4 calls.
 `PRINT A$ + "K"` also consumes a temporary E4 `str_concat` result directly, and
 `IF A$ + "K" = "OK" THEN ...` feeds the same expression path into `str_eq`
 line-control branching. `LET B$ = A$ + "K"; PRINT B$` stores the variable-backed

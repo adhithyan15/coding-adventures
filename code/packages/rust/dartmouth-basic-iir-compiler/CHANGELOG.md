@@ -1,5 +1,20 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.25.0 — 2026-06-27 — BA4 comma-separated string PRINT sequencing
+
+String `PRINT` now has an explicit proof that BA2 comma separators compose with
+BA4/E4 string items:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = "K"
+30 PRINT A$, B$
+```
+
+The frontend emits `print_str(A$)`, then the existing comma separator
+`putchar(' ')`, then `print_str(B$)`. The all-backend matrix observes `O K`,
+proving string items do not detour through numeric formatting helpers.
+
 ## 0.24.0 — 2026-06-27 — BA4 multi-item string PRINT sequencing
 
 String `PRINT` now has an explicit proof for multiple scalar string items in
