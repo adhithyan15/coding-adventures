@@ -99,8 +99,11 @@ Execution `outputPlanArtifacts` summarize the selected result columns, output
 probes, output directives, and stable table names with table, CSV, compact JSON,
 and header-keyed record exports.
 Execution `tableArtifacts` preserve the same order as `tables` and carry each
-stable table's text, CSV, compact JSON, and header-keyed records. Selected
-`.tran` plans route
+stable table's text, CSV, compact JSON, and header-keyed records.
+The `output-plan` entry in `tableArtifacts` carries the same
+`outputPlanArtifactTable` data, CSV, compact JSON, and header-keyed record
+exports.
+Selected `.tran` plans route
 `START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
 an internal fixed-step cap, and `UIC` initial-condition intent through that
 stable transient table surface. They also return selected `.four` harmonic

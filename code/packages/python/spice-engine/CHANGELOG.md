@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck output-plan table export artifacts** —
+  selected `run_deck_analysis()` executions now include `output-plan` in
+  `tables`, selected-run `TableList` metadata, and ordered `table_artifacts`
+  with stable table, CSV, compact JSON, and header-keyed record payloads,
+  matching Rust and TypeScript.
+
 - **Deck output-plan inventory artifacts** —
   selected `run_deck_analysis()` executions now expose
   `output_plan_artifacts` with stable result-column, output-probe,
