@@ -400,6 +400,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/capabilities", move |request| {
+            runtime_capabilities_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/devices", move |request| {
             runtime_devices_response(&runtime, request)
         });
@@ -724,6 +731,22 @@ fn runtime_entity_response(
     WebResponse::json(entity_registry_json(entity, &runtime_guard, runtime.now_ms).into_bytes())
 }
 
+fn runtime_capabilities_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let query = match capability_catalog_query(request) {
+        Ok(query) => query,
+        Err(error) => return api_error_response(error),
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let capabilities = runtime_capability_catalog(&runtime_guard, &query);
+    WebResponse::json(capabilities_catalog_json(&capabilities).into_bytes())
+}
+
 fn runtime_devices_response(
     runtime: &SmartHomePlatformHttpRuntime,
     request: &WebRequest,
@@ -985,6 +1008,7 @@ fn runtime_dashboard_json(
     let mut bridges = runtime_guard.registry().bridges().collect::<Vec<_>>();
     let mut devices = runtime_guard.registry().devices().collect::<Vec<_>>();
     let mut entities = runtime_guard.registry().entities().collect::<Vec<_>>();
+    let capabilities = runtime_capability_catalog(runtime_guard, &CapabilityCatalogQuery::new(100));
     let desired_query = DesiredStateQuery::new().with_limit(50);
     let desired_states = runtime_guard.query_desired_states(&desired_query);
     let event_query = RuntimeEventQuery::new();
@@ -1001,7 +1025,7 @@ fn runtime_dashboard_json(
     entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
 
     format!(
-        "{{\"generated_at_ms\":{},\"config\":{},\"summary\":{{\"state_count\":{},\"known_state_count\":{},\"unknown_state_count\":{},\"stale_state_count\":{},\"optimistic_state_count\":{},\"service_count\":{},\"event_type_count\":{},\"bridge_count\":{},\"device_count\":{},\"entity_count\":{},\"room_count\":{},\"scene_count\":{},\"desired_state_count\":{},\"pending_work_total\":{},\"has_attention\":{},\"has_state_gaps\":{},\"has_pairing_candidates\":{}}},\"runtime\":{},\"topology\":{{\"bridges\":{},\"devices\":{},\"entities\":{},\"scenes\":{},\"online_bridges\":{},\"attention_bridges\":{},\"online_devices\":{},\"attention_devices\":{},\"devices_with_room\":{},\"devices_without_room\":{},\"unique_rooms\":{},\"entities_with_state\":{},\"entities_without_state\":{},\"total_capabilities\":{},\"scene_actions\":{}}},\"bridges\":{},\"devices\":{},\"entities\":{},\"rooms\":{},\"desired_states\":{},\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}",
+        "{{\"generated_at_ms\":{},\"config\":{},\"summary\":{{\"state_count\":{},\"known_state_count\":{},\"unknown_state_count\":{},\"stale_state_count\":{},\"optimistic_state_count\":{},\"service_count\":{},\"event_type_count\":{},\"bridge_count\":{},\"device_count\":{},\"entity_count\":{},\"room_count\":{},\"scene_count\":{},\"desired_state_count\":{},\"pending_work_total\":{},\"has_attention\":{},\"has_state_gaps\":{},\"has_pairing_candidates\":{}}},\"runtime\":{},\"topology\":{{\"bridges\":{},\"devices\":{},\"entities\":{},\"scenes\":{},\"online_bridges\":{},\"attention_bridges\":{},\"online_devices\":{},\"attention_devices\":{},\"devices_with_room\":{},\"devices_without_room\":{},\"unique_rooms\":{},\"entities_with_state\":{},\"entities_without_state\":{},\"total_capabilities\":{},\"scene_actions\":{}}},\"bridges\":{},\"devices\":{},\"entities\":{},\"capabilities\":{},\"rooms\":{},\"desired_states\":{},\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}",
         runtime.now_ms,
         config_json(&state),
         state_summary.state_count,
@@ -1040,6 +1064,7 @@ fn runtime_dashboard_json(
         bridges_registry_json(&bridges, runtime_guard, runtime.now_ms),
         devices_registry_json(&devices, runtime_guard, runtime.now_ms),
         entities_registry_json(&entities, runtime_guard, runtime.now_ms),
+        capabilities_catalog_json(&capabilities),
         rooms_json(&rooms, runtime_guard),
         desired_states_json(&desired_states, runtime_guard),
         runtime_event_summary_json(&event_summary),
@@ -1344,6 +1369,196 @@ impl EntityInventoryCounts {
         self.stale_entities += other.stale_entities;
         self.capability_count += other.capability_count;
     }
+}
+
+#[derive(Debug, Clone)]
+struct CapabilityCatalogQuery {
+    domain: Option<String>,
+    capability_id: Option<String>,
+    commandable: Option<bool>,
+    observable: Option<bool>,
+    limit: usize,
+}
+
+impl CapabilityCatalogQuery {
+    fn new(limit: usize) -> Self {
+        Self {
+            domain: None,
+            capability_id: None,
+            commandable: None,
+            observable: None,
+            limit,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+struct CapabilityCatalogItem {
+    capability_id: String,
+    mode: CapabilityMode,
+    value_kind: ValueKind,
+    unit: Option<String>,
+    min: Option<f64>,
+    max: Option<f64>,
+    step: Option<f64>,
+    domains: Vec<String>,
+    entity_kinds: Vec<String>,
+    entity_ids: Vec<String>,
+    home_assistant_entity_ids: Vec<String>,
+    device_ids: Vec<String>,
+    room_ids: Vec<String>,
+    service_ids: Vec<String>,
+}
+
+impl CapabilityCatalogItem {
+    fn from_capability(capability: &Capability) -> Self {
+        Self {
+            capability_id: capability.capability_id.as_str().to_string(),
+            mode: capability.mode,
+            value_kind: capability.value_kind,
+            unit: capability.unit.clone(),
+            min: capability.min,
+            max: capability.max,
+            step: capability.step,
+            domains: Vec::new(),
+            entity_kinds: Vec::new(),
+            entity_ids: Vec::new(),
+            home_assistant_entity_ids: Vec::new(),
+            device_ids: Vec::new(),
+            room_ids: Vec::new(),
+            service_ids: Vec::new(),
+        }
+    }
+
+    fn add_entity(&mut self, runtime: &SmartHomeRuntime, entity: &Entity, capability: &Capability) {
+        let domain = entity_domain(entity.kind);
+        push_unique_string(&mut self.domains, domain);
+        push_unique_string(&mut self.entity_kinds, entity_kind_label(entity.kind));
+        push_unique_string(&mut self.entity_ids, entity.entity_id.as_str());
+        push_unique_string(
+            &mut self.home_assistant_entity_ids,
+            &home_assistant_entity_id(entity),
+        );
+        push_unique_string(&mut self.device_ids, entity.device_id.as_str());
+
+        if let Some(device) = runtime.registry().device(&entity.device_id) {
+            if let Some(room_id) = &device.room_id {
+                push_unique_string(&mut self.room_ids, room_id);
+            }
+        }
+
+        if capability_allows_command(capability) {
+            for service in services_for_capability(domain, capability) {
+                push_unique_string(&mut self.service_ids, &format!("{domain}.{service}"));
+            }
+        }
+    }
+
+    fn sort_links(&mut self) {
+        self.domains.sort();
+        self.entity_kinds.sort();
+        self.entity_ids.sort();
+        self.home_assistant_entity_ids.sort();
+        self.device_ids.sort();
+        self.room_ids.sort();
+        self.service_ids.sort();
+    }
+
+    fn observable(&self) -> bool {
+        matches!(
+            self.mode,
+            CapabilityMode::Observe | CapabilityMode::ObserveAndCommand
+        )
+    }
+
+    fn commandable(&self) -> bool {
+        matches!(
+            self.mode,
+            CapabilityMode::Command | CapabilityMode::ObserveAndCommand
+        )
+    }
+
+    fn ranged(&self) -> bool {
+        self.min.is_some() || self.max.is_some() || self.step.is_some()
+    }
+}
+
+fn capabilities_catalog_json(capabilities: &[CapabilityCatalogItem]) -> String {
+    let mut domains = Vec::<String>::new();
+    for capability in capabilities {
+        for domain in &capability.domains {
+            push_unique_string(&mut domains, domain);
+        }
+    }
+
+    format!(
+        "{{\"summary\":{{\"total_capabilities\":{},\"commandable_capabilities\":{},\"observable_capabilities\":{},\"ranged_capabilities\":{},\"domain_count\":{},\"entity_link_count\":{},\"device_link_count\":{},\"room_link_count\":{},\"service_link_count\":{}}},\"capabilities\":[{}]}}",
+        capabilities.len(),
+        capabilities
+            .iter()
+            .filter(|capability| capability.commandable())
+            .count(),
+        capabilities
+            .iter()
+            .filter(|capability| capability.observable())
+            .count(),
+        capabilities
+            .iter()
+            .filter(|capability| capability.ranged())
+            .count(),
+        domains.len(),
+        capabilities
+            .iter()
+            .map(|capability| capability.entity_ids.len())
+            .sum::<usize>(),
+        capabilities
+            .iter()
+            .map(|capability| capability.device_ids.len())
+            .sum::<usize>(),
+        capabilities
+            .iter()
+            .map(|capability| capability.room_ids.len())
+            .sum::<usize>(),
+        capabilities
+            .iter()
+            .map(|capability| capability.service_ids.len())
+            .sum::<usize>(),
+        capabilities
+            .iter()
+            .map(capability_catalog_item_json)
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn capability_catalog_item_json(capability: &CapabilityCatalogItem) -> String {
+    format!(
+        "{{\"capability_id\":{},\"mode\":{},\"value_kind\":{},\"unit\":{},\"min\":{},\"max\":{},\"step\":{},\"observable\":{},\"commandable\":{},\"domains\":[{}],\"entity_kinds\":[{}],\"entity_count\":{},\"device_count\":{},\"room_count\":{},\"service_count\":{},\"entity_ids\":[{}],\"home_assistant_entity_ids\":[{}],\"device_ids\":[{}],\"room_ids\":[{}],\"service_ids\":[{}]}}",
+        json_string(&capability.capability_id),
+        json_string(capability_mode_label(capability.mode)),
+        json_string(value_kind_label(capability.value_kind)),
+        capability
+            .unit
+            .as_ref()
+            .map(json_string)
+            .unwrap_or_else(|| "null".to_string()),
+        optional_f64_json(capability.min),
+        optional_f64_json(capability.max),
+        optional_f64_json(capability.step),
+        capability.observable(),
+        capability.commandable(),
+        json_string_array(&capability.domains),
+        json_string_array(&capability.entity_kinds),
+        capability.entity_ids.len(),
+        capability.device_ids.len(),
+        capability.room_ids.len(),
+        capability.service_ids.len(),
+        json_string_array(&capability.entity_ids),
+        json_string_array(&capability.home_assistant_entity_ids),
+        json_string_array(&capability.device_ids),
+        json_string_array(&capability.room_ids),
+        json_string_array(&capability.service_ids),
+    )
 }
 
 fn devices_registry_json(devices: &[&Device], runtime: &SmartHomeRuntime, now_ms: u64) -> String {
@@ -1806,6 +2021,70 @@ fn desired_state_query(
         query = query.with_capability(CapabilityId::trusted(capability_id));
     }
     Ok(query)
+}
+
+fn capability_catalog_query(request: &WebRequest) -> Result<CapabilityCatalogQuery, ApiError> {
+    let mut query = CapabilityCatalogQuery::new(query_limit(request, 100, 1_000)?);
+    query.domain = query_string(request, "domain").map(str::to_string);
+    query.capability_id = query_string(request, "capability_id").map(str::to_string);
+    query.commandable = query_bool(request, "commandable")?;
+    query.observable = query_bool(request, "observable")?;
+    Ok(query)
+}
+
+fn runtime_capability_catalog(
+    runtime: &SmartHomeRuntime,
+    query: &CapabilityCatalogQuery,
+) -> Vec<CapabilityCatalogItem> {
+    let mut entities = runtime.registry().entities().collect::<Vec<_>>();
+    entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
+
+    let mut catalog = BTreeMap::<String, CapabilityCatalogItem>::new();
+    for entity in entities {
+        let domain = entity_domain(entity.kind);
+        if query
+            .domain
+            .as_deref()
+            .is_some_and(|filter| filter != domain)
+        {
+            continue;
+        }
+
+        for capability in &entity.capabilities {
+            if query
+                .capability_id
+                .as_deref()
+                .is_some_and(|filter| filter != capability.capability_id.as_str())
+            {
+                continue;
+            }
+            if query
+                .commandable
+                .is_some_and(|filter| filter != capability_allows_command(capability))
+            {
+                continue;
+            }
+            let observable = matches!(
+                capability.mode,
+                CapabilityMode::Observe | CapabilityMode::ObserveAndCommand
+            );
+            if query.observable.is_some_and(|filter| filter != observable) {
+                continue;
+            }
+
+            let entry = catalog
+                .entry(capability.capability_id.as_str().to_string())
+                .or_insert_with(|| CapabilityCatalogItem::from_capability(capability));
+            entry.add_entity(runtime, entity, capability);
+        }
+    }
+
+    let mut catalog = catalog.into_values().collect::<Vec<_>>();
+    for capability in &mut catalog {
+        capability.sort_links();
+    }
+    catalog.truncate(query.limit);
+    catalog
 }
 
 fn runtime_entities<'a>(
@@ -3847,6 +4126,7 @@ mod tests {
         assert!(dashboard.contains(r#""bridges":{"summary":{"total_bridges":1"#));
         assert!(dashboard.contains(r#""devices":{"summary":{"total_devices":1"#));
         assert!(dashboard.contains(r#""entities":{"summary":{"total_entities":2"#));
+        assert!(dashboard.contains(r#""capabilities":{"summary":{"total_capabilities":4"#));
         assert!(dashboard.contains(r#""rooms":{"summary":{"total_rooms":1"#));
         assert!(dashboard.contains(r#""desired_states":{"summary":{"total_desired_states":0"#));
         assert!(dashboard.contains(r#""events":{"summary":{"total_events":1"#));
@@ -3891,6 +4171,53 @@ mod tests {
         assert_eq!(one_response.status, 200);
         assert!(one_body.contains(r#""name":"Kitchen Light""#));
         assert!(one_body.contains(r#""domain":"light""#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_ready_capability_catalog() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let light_capabilities = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/capabilities?domain=light&commandable=true",
+            ))
+            .into(),
+        );
+
+        assert!(light_capabilities.contains(r#""total_capabilities":3"#));
+        assert!(light_capabilities.contains(r#""commandable_capabilities":3"#));
+        assert!(light_capabilities.contains(r#""observable_capabilities":3"#));
+        assert!(light_capabilities.contains(r#""ranged_capabilities":1"#));
+        assert!(light_capabilities.contains(r#""domain_count":1"#));
+        assert!(light_capabilities.contains(r#""capability_id":"light.brightness""#));
+        assert!(light_capabilities.contains(r#""mode":"observe_and_command""#));
+        assert!(light_capabilities.contains(r#""value_kind":"percentage""#));
+        assert!(light_capabilities.contains(r#""min":0"#));
+        assert!(light_capabilities.contains(r#""max":100"#));
+        assert!(light_capabilities.contains(r#""domains":["light"]"#));
+        assert!(light_capabilities.contains(r#""entity_kinds":["light"]"#));
+        assert!(light_capabilities.contains(r#""entity_ids":["entity-light-1"]"#));
+        assert!(
+            light_capabilities.contains(r#""home_assistant_entity_ids":["light.entity_light_1"]"#)
+        );
+        assert!(light_capabilities.contains(r#""device_ids":["device-1"]"#));
+        assert!(light_capabilities.contains(r#""room_ids":["kitchen"]"#));
+        assert!(light_capabilities.contains(r#""service_ids":["light.set_brightness"]"#));
+
+        let sensor_capability = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/capabilities?capability_id=sensor.occupancy&observable=true",
+            ))
+            .into(),
+        );
+
+        assert!(sensor_capability.contains(r#""total_capabilities":1"#));
+        assert!(sensor_capability.contains(r#""capability_id":"sensor.occupancy""#));
+        assert!(sensor_capability.contains(r#""domains":["sensor"]"#));
+        assert!(sensor_capability.contains(r#""entity_ids":["entity-sensor-1"]"#));
+        assert!(sensor_capability.contains(r#""commandable":false"#));
+        assert!(sensor_capability.contains(r#""service_count":0"#));
     }
 
     #[test]

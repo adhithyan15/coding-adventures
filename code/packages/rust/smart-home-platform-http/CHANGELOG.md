@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   supervision targets.
 - Added a dashboard overview route that composes runtime health, topology,
   inventory, desired-state, and audit summaries for local controllers.
+- Added a dashboard-ready capability catalog route that groups entity
+  capabilities, Home Assistant aliases, rooms, devices, and service affordances.
 - Added device and bridge inventory routes with platform topology rollups for
   local-controller dashboards.
 - Added a state-history read route over registry-backed device events with
