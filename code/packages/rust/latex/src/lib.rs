@@ -17,24 +17,31 @@
 //! ## Layers (built incrementally)
 //!
 //! 1. [`tokenize`] — a catcode-driven, **text-mode-primary** state machine from source to
-//!    a flat [`Token`] stream. **Implemented (this release).**
-//! 2. `parse` / `parse_math` — the structural and math parsers. *(Later layers.)*
+//!    a flat [`Token`] stream.
+//! 2. [`parse`] — the **structural** document parser: text, groups, commands
+//!    (`\cmd[opt]{arg}`), environments (`\begin…\end`), and raw math islands → a [`Node`]
+//!    tree, with [`Node::to_latex`] round-tripping. **Implemented (this release).**
+//! 3. `parse_math` — the math grammar over each island's raw content. *(Later layer.)*
 //!
 //! ## Example
 //!
 //! ```
-//! use latex::{tokenize, TokenKind};
-//! let toks = tokenize(r"Let $x$ be.").unwrap();
-//! assert_eq!(toks[0].kind, TokenKind::Char('L'));
-//! assert!(toks.iter().any(|t| matches!(t.kind, TokenKind::MathOn { .. })));
+//! use latex::{parse, Node};
+//! let doc = parse(r"Let $x$ be \textbf{bold}.").unwrap();
+//! assert!(matches!(doc[0], Node::Text(_)));
+//! assert!(doc.iter().any(|n| matches!(n, Node::Math { .. })));
 //! ```
 
 pub mod catcode;
+mod ast;
 mod error;
 mod lexer;
+mod parser;
 mod token;
 
+pub use ast::{document_to_latex, Node};
 pub use catcode::{catcode, Catcode};
-pub use error::LexError;
+pub use error::{LexError, ParseError};
 pub use lexer::tokenize;
+pub use parser::parse;
 pub use token::{Span, Token, TokenKind};
