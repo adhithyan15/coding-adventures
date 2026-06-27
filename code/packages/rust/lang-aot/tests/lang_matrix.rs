@@ -646,6 +646,18 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("44"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Oct — logical NOT (`!`) produces a clean boolean 0/1 (LANG-FULL O-!).
+    // `1 == 2` is false, so `!(1 == 2)` is true and prints 42. The old lowering
+    // reused bitwise `not`: `not 0` produced `-1`, which branch truthiness treated
+    // as true but did NOT materialise a clean Oct bool value. The new lowering uses
+    // the same portable branch substrate as O1 short-circuiting.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { if !(1 == 2) { out(1, 42); } else { out(1, 0); } }",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `static` module GLOBAL, shared across functions (LANG-FULL O3). Until now
     // Oct's top-level `static` was silently dropped at IIR-gen; `oct-iir-compiler` 0.8.0
     // lowers it to the IIR module-global ops (`global_load`/`global_store`, LANG32 — the

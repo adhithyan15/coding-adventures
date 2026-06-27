@@ -13,7 +13,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Nib | typed calls, `*`/`/`, `for`, bitwise, short-circuit logic, logical `!`, consts, const/static-expression folding, wrap/sat arithmetic, and module `static`s all run on all 7 backends | BCD semantics and Intel-4004 RAM mapping remain |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); richer string ops and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
-| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
+| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, and multi-argument string `output` ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
@@ -422,8 +422,8 @@ backend immediately) come before the enabler-dependent items.
   RUNNING `out(1, ~0)`→`255` and `out(1, 200 + 100)`→`44` on native/LLVM/WASM/JVM/CLR/VM/JIT.
   Surfaced + fixed a JVM dual-model bug: Oct's *printing* programs keep the i64/long model, so
   a narrow op had `long` operands — `iir-to-jvm-class-file` 0.14.0 now masks those with
-  `i2l; land` (the int `iand` was unverifiable over longs → empty output). (Logical `!` still
-  deferred — a separate item; only `~` is in O2.)
+  `i2l; land` (the int `iand` was unverifiable over longs → empty output). (Logical `!` is
+  covered by O-! below; only `~` is in O2.)
 - ✅ **O3** — `static` module globals (LANG-FULL O3). Top-level `static` was silently
   dropped at IIR-gen; `oct-iir-compiler` 0.8.0 lowers it to the IIR module-global ops
   (`global_load`/`global_store`, the E6 substrate). A `static counter: u8 = 40` shared
@@ -433,6 +433,11 @@ backend immediately) come before the enabler-dependent items.
   frontend now emits a dest-less IIR `call` for a void callee (a named void call is
   malformed LLVM), and `iir-to-cil-bytecode` 0.25.0's textual emitter lowers `ret_void`
   → bare `ret`, a `void` return signature, and a `call void …` with no trailing store.
+- ✅ **O-!** — logical `!` (LANG-FULL O-!). `oct-iir-compiler` 0.9.0 now lowers unary
+  logical NOT through `jmp_if_false` / `jmp` / `label`, assigning a clean 0/1 bool result
+  instead of reusing bitwise `not` (`not 0` = -1, `not 1` = -2). Verified by RUNNING
+  `if !(1 == 2) { out(1, 42) } else { out(1, 0) }` on native/LLVM/WASM/JVM/CLR/VM/JIT
+  → stdout `42`.
 - ☐ **O4** — ⚠ Intel-8008 intrinsics (`in`/`out`/`adc`/`sbb`/`rlc`/`rrc`/`ral`/`rar`/`carry`/`parity`).
   These are hardware-specific; on general backends they need a host/IIR-builtin model or a
   defined semantics. **Decision point — surface to the user before implementing.**

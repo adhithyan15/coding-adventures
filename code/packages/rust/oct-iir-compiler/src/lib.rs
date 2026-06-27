@@ -817,19 +817,27 @@ impl Compiler {
                     "unary missing operand".into()))?;
                 let v = self.compile_child(operand, out)?;
                 let dest = self.fresh_tmp();
-                // LANG-FULL O2 — both `~` (TILDE) and `!` (BANG) lower to the IIR `not`
-                // op (bitwise complement), but with DIFFERENT widths:
-                //
-                //  - `~u8` (bitwise NOT) carries the `u8` hint, so every backend masks
-                //    the complement to 8 bits: `~0u8 = 255` (`-1 & 0xFF`), not the i64
-                //    all-ones. This is the O2 fix — previously `~` flipped all 64 bits.
-                //  - `!bool` (logical NOT, operand is 0/1) stays `i64`: `not 0 = -1`,
-                //    `not 1 = -2` — *not* a clean boolean flip, but this is the prior
-                //    behaviour and proper logical negation (compare-to-zero) is a
-                //    separate item; only `~` is in scope for O2.
-                let hint = if kind == "TILDE" { "u8" } else { "i64" };
-                self.emit(out, "not", Some(&dest),
-                    vec![Operand::Var(v)], hint);
+                if kind == "TILDE" {
+                    // LANG-FULL O2: `~u8` is bitwise complement at the byte width, so
+                    // every backend must mask the shared IIR `not` result to 8 bits.
+                    self.emit(out, "not", Some(&dest),
+                        vec![Operand::Var(v)], "u8");
+                    return Ok(dest);
+                }
+
+                // LANG-FULL O-!: `!bool` is logical negation, not bitwise complement.
+                // Oct booleans are materialised as 0/1 i64 values; lowering through
+                // branches keeps the result a portable clean 0/1 instead of `not 0`
+                // -> -1 or `not 1` -> -2.
+                let false_lbl = self.fresh_label("not_false");
+                let end_lbl = self.fresh_label("not_end");
+                self.emit(out, "jmp_if_false", None,
+                    vec![Operand::Var(v), Operand::Var(false_lbl.clone())], "void");
+                self.emit(out, "const", Some(&dest), vec![Operand::Int(0)], "i64");
+                self.emit(out, "jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+                self.emit(out, "label", None, vec![Operand::Var(false_lbl)], "void");
+                self.emit(out, "const", Some(&dest), vec![Operand::Int(1)], "i64");
+                self.emit(out, "label", None, vec![Operand::Var(end_lbl)], "void");
                 return Ok(dest);
             }
         }
@@ -1411,6 +1419,32 @@ mod tests {
         assert!(ops.contains(&"jmp_if_false"), "|| must emit a short-circuit guard; got {ops:?}");
         assert!(ops.contains(&"jmp"), "|| must emit the short-circuit jump; got {ops:?}");
         assert!(!ops.contains(&"or"), "|| must not lower to an eager bitwise `or`; got {ops:?}");
+    }
+
+    #[test]
+    fn logical_not_lowers_to_truthiness_branch() {
+        let m = compile_source(
+            "fn main() { if !(1 == 2) { out(1, 42); } else { out(1, 0); } }", "test",
+        ).expect("ok");
+        let body = &m.functions.iter().find(|f| f.name == "main").unwrap().instructions;
+        let ops: Vec<&str> = body.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"jmp_if_false"), "! must test truthiness via branch; got {ops:?}");
+        assert!(ops.contains(&"jmp"), "! must skip the false arm after emitting 0; got {ops:?}");
+        assert!(ops.contains(&"label"), "! must join the branch result; got {ops:?}");
+        assert!(!ops.contains(&"not"),
+            "! must not lower to bitwise not (`not 0` = -1, `not 1` = -2); got {ops:?}");
+        let const_values: Vec<i64> = body.iter().filter_map(|i| {
+            if i.op == "const" {
+                match i.srcs.first() {
+                    Some(Operand::Int(v)) => Some(*v),
+                    _ => None,
+                }
+            } else {
+                None
+            }
+        }).collect();
+        assert!(const_values.contains(&0), "! lowering must materialise false as 0");
+        assert!(const_values.contains(&1), "! lowering must materialise true as 1");
     }
 
     #[test]
