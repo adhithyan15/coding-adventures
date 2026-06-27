@@ -69,6 +69,9 @@ The initial slices implement:
   sweeps.
 - Parsed transient and DC sweep `.measure` / `.meas` card extraction and
   execution helpers that route deck cards into stable scalar measurement rows.
+- Source-order `run_deck` whole-deck execution for parsed `.op`, `.dc`, `.ac`,
+  `.tran`, `.tf`, `.sens`, and `.noise` cards with aggregate run-artifact
+  table, CSV, compact JSON, and header-keyed record exports.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled
@@ -198,6 +201,13 @@ artifact summaries plus `format_deck_run_artifact_table` and
 stable result-row, table, analysis-directive, output-probe, output-directive,
 measurement, Fourier, control-command, write-marker, rawfile-option, and
 diagnostic count/name lists.
+`run_deck` executes every parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`, `.sens`,
+and `.noise` card in source order, preserves duplicate analysis directives,
+and defaults analysis-less decks to an implicit `.op`. Its whole-run result
+returns ordered selected executions plus aggregate selected-run artifact table,
+CSV, compact JSON, and header-keyed records, and each selected-run artifact
+carries the deck-wide analysis kind/directive inventories beside the selected
+analysis directive metadata.
 Normalized accepted `.control` commands are surfaced separately in
 `control_line_count` / `control_lines` execution fields and in
 `ControlLines` / `ControlLineList` artifact fields.

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add `run_deck` whole-run execution for every parsed `.op`, `.dc`, `.ac`,
+  `.tran`, `.tf`, `.sens`, and `.noise` card in source order, preserving
+  duplicate analysis directives, defaulting analysis-less decks to an implicit
+  `.op`, and returning aggregate run-artifact table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and TypeScript.
 - Expose selected analysis sweep, frequency, transient timing, and `UIC`
   metadata in `run_deck_analysis` output-plan artifacts, with stable table,
   CSV, compact JSON, and header-keyed record exports, matching Python and

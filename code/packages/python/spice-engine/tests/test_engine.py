@@ -290,6 +290,7 @@ from spice_engine import (
     pss_residual,
     pss_residual_jacobian,
     resolve_deck_initial_conditions,
+    run_deck,
     run_deck_analysis,
     s_parameters,
     s_parameters_corners,
@@ -321,6 +322,18 @@ from spice_engine.engine import (
     _voltage_sources,
     _x_from_result,
 )
+
+
+def _assert_run_artifact_table_matches(
+    execution: object,
+) -> dict[str, str]:
+    assert execution.run_artifact_table == format_deck_run_artifact_table(
+        execution.run_artifacts
+    )
+    records = deck_table_records(execution.run_artifact_table)
+    assert records == json.loads(format_deck_run_artifact_json(execution.run_artifacts))
+    assert len(records) == 1
+    return records[0]
 
 
 def test_package_version_matches_pyproject_release() -> None:
@@ -6865,6 +6878,20 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.output_probes == ["V(mid)"]
     assert op_execution.output_directives == [".save"]
     assert op_execution.analysis_directives == [".op"]
+    expected_deck_analysis_kinds = ["op", "dc", "ac", "tran", "tf", "sens", "noise"]
+    expected_deck_analysis_directives = [
+        ".op",
+        ".dc",
+        ".ac",
+        ".tran",
+        ".tf",
+        ".sens",
+        ".noise",
+    ]
+    assert op_execution.deck_analysis_kind_count == 7
+    assert op_execution.deck_analysis_kinds == expected_deck_analysis_kinds
+    assert op_execution.deck_analysis_directive_count == 7
+    assert op_execution.deck_analysis_directives == expected_deck_analysis_directives
     assert op_execution.table_count == 3
     assert op_execution.tables == ["result", "output-plan", "run-artifact"]
     assert [artifact.name for artifact in op_execution.table_artifacts] == (
@@ -7042,6 +7069,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.run_artifacts[0].output_directives == [".save"]
     assert op_execution.run_artifacts[0].analysis_directive_count == 1
     assert op_execution.run_artifacts[0].analysis_directives == [".op"]
+    assert op_execution.run_artifacts[0].deck_analysis_kind_count == 7
+    assert op_execution.run_artifacts[0].deck_analysis_kinds == (
+        expected_deck_analysis_kinds
+    )
+    assert op_execution.run_artifacts[0].deck_analysis_directive_count == 7
+    assert op_execution.run_artifacts[0].deck_analysis_directives == (
+        expected_deck_analysis_directives
+    )
     assert op_execution.run_artifacts[0].measurement_names == []
     assert op_execution.run_artifacts[0].fourier_probes == []
     assert op_execution.run_artifacts[0].control_line_count == 0
@@ -7051,8 +7086,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.run_artifacts[0].diagnostic_count == 0
     assert op_execution.run_artifacts[0].diagnostic_codes == []
     assert op_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"op\t.op\t1\t.op\t{op_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\tDeckAnalysisKinds\tDeckAnalysisKindList\tDeckAnalysisDirectives\tDeckAnalysisDirectiveList\n"
+        f"op\t.op\t1\t.op\t{op_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\t7\top;dc;ac;tran;tf;sens;noise\t7\t.op;.dc;.ac;.tran;.tf;.sens;.noise\n"
     )
     assert op_execution.table_artifacts[1].name == "output-plan"
     assert op_execution.table_artifacts[1].table == op_execution.output_plan_artifact_table
@@ -7076,8 +7111,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         format_deck_run_artifact_json(op_execution.run_artifacts)
     )
     assert format_deck_run_artifact_csv(op_execution.run_artifacts) == (
-        "Analysis,Directive,AnalysisDirectives,AnalysisDirectiveList,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,Tables,TableList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,ControlLines,ControlLineList,WriteMarkers,WriteMarkerList,RawfileOptions,RawfileOptionList,ControlPolicyArtifacts,ControlPolicyCategoryList,ControlPolicyCodeList,ControlPolicySeverityList,Diagnostics,DiagnosticCodeList\n"
-        f"op,.op,1,.op,{op_execution.plan.line_number},,,,,,,,,,,,,,,1,2,Index;V(mid),3,result;output-plan;run-artifact,1,V(mid),1,.save,0,,0,,0,,0,,0,,0,,,,0,\n"
+        "Analysis,Directive,AnalysisDirectives,AnalysisDirectiveList,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,Tables,TableList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,ControlLines,ControlLineList,WriteMarkers,WriteMarkerList,RawfileOptions,RawfileOptionList,ControlPolicyArtifacts,ControlPolicyCategoryList,ControlPolicyCodeList,ControlPolicySeverityList,Diagnostics,DiagnosticCodeList,DeckAnalysisKinds,DeckAnalysisKindList,DeckAnalysisDirectives,DeckAnalysisDirectiveList\n"
+        f"op,.op,1,.op,{op_execution.plan.line_number},,,,,,,,,,,,,,,1,2,Index;V(mid),3,result;output-plan;run-artifact,1,V(mid),1,.save,0,,0,,0,,0,,0,,0,,,,0,,7,op;dc;ac;tran;tf;sens;noise,7,.op;.dc;.ac;.tran;.tf;.sens;.noise\n"
     )
     assert format_deck_table_csv('Name\tValue\nprobe\tSPICE,"QUOTED"\n') == (
         'Name,Value\nprobe,"SPICE,""QUOTED"""\n'
@@ -7135,6 +7170,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "ControlPolicySeverityList",
         "Diagnostics",
         "DiagnosticCodeList",
+        "DeckAnalysisKinds",
+        "DeckAnalysisKindList",
+        "DeckAnalysisDirectives",
+        "DeckAnalysisDirectiveList",
     ]
     assert artifact_records == [
         {
@@ -7182,6 +7221,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
             "ControlPolicySeverityList": "",
             "Diagnostics": "0",
             "DiagnosticCodeList": "",
+            "DeckAnalysisKinds": "7",
+            "DeckAnalysisKindList": "op;dc;ac;tran;tf;sens;noise",
+            "DeckAnalysisDirectives": "7",
+            "DeckAnalysisDirectiveList": ".op;.dc;.ac;.tran;.tf;.sens;.noise",
         }
     ]
     diagnostic_artifact = replace(
@@ -7189,20 +7232,21 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         diagnostic_count=2,
         diagnostic_codes=["SPICE_DECK_ANALYSIS_TOKEN", "SPICE_DECK_ANALYSIS_RANGE"],
     )
-    diagnostic_row = format_deck_run_artifact_table(
-        [diagnostic_artifact]
-    ).splitlines()[1].split("\t")
-    assert diagnostic_row[-2:] == [
-        "2",
-        "SPICE_DECK_ANALYSIS_TOKEN;SPICE_DECK_ANALYSIS_RANGE",
-    ]
+    diagnostic_record = deck_table_records(
+        format_deck_run_artifact_table([diagnostic_artifact])
+    )[0]
+    assert diagnostic_record["Diagnostics"] == "2"
+    assert (
+        diagnostic_record["DiagnosticCodeList"]
+        == "SPICE_DECK_ANALYSIS_TOKEN;SPICE_DECK_ANALYSIS_RANGE"
+    )
     quoted_diagnostic_artifact = replace(
         op_execution.run_artifacts[0],
         diagnostic_count=2,
         diagnostic_codes=["SPICE_DECK_ANALYSIS_TOKEN", 'SPICE,"QUOTED"'],
     )
     assert format_deck_run_artifact_csv([quoted_diagnostic_artifact]).endswith(
-        ',0,,0,,0,,0,,,,2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED"""\n'
+        ',0,,0,,0,,0,,,,2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED""",7,op;dc;ac;tran;tf;sens;noise,7,.op;.dc;.ac;.tran;.tf;.sens;.noise\n'
     )
     assert json.loads(format_deck_run_artifact_json([quoted_diagnostic_artifact]))[
         0
@@ -7329,10 +7373,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert dc_execution.run_artifacts[0].analysis_directives == [".dc"]
     assert dc_execution.run_artifacts[0].measurement_names == ["mid_avg"]
     assert dc_execution.run_artifacts[0].fourier_probes == []
-    assert dc_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"dc\t.dc\t1\t.dc\t{dc_execution.plan.line_number}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t5\tIndex;Source;Value;V(mid);I(V1)\t4\tresult;measurement;output-plan;run-artifact\t2\tV(mid);I(V1)\t3\t.save;.probe;.print\t1\tmid_avg\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    dc_run_artifact_record = _assert_run_artifact_table_matches(dc_execution)
+    assert dc_run_artifact_record["Analysis"] == "dc"
+    assert dc_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        dc_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert dc_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     ac_execution = run_deck_analysis(circuit, netlist, "ac")
     assert ac_execution.output_probes == ["V(mid)"]
@@ -7416,10 +7464,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert ac_execution.run_artifacts[0].output_directives == [".save", ".plot"]
     assert ac_execution.run_artifacts[0].measurement_names == ["mid_peak"]
     assert ac_execution.run_artifacts[0].fourier_probes == []
-    assert ac_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"ac\t.ac\t1\t.ac\t{ac_execution.plan.line_number}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t7\tIndex;Frequency;Probe;Real;Imaginary;Magnitude;Phase\t4\tresult;measurement;output-plan;run-artifact\t1\tV(mid)\t2\t.save;.plot\t1\tmid_peak\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    ac_run_artifact_record = _assert_run_artifact_table_matches(ac_execution)
+    assert ac_run_artifact_record["Analysis"] == "ac"
+    assert ac_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        ac_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert ac_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
     assert tran_execution.output_probes == ["V(mid)"]
@@ -7476,10 +7528,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tran_execution.run_artifacts[0].fourier_probes == []
     assert tran_execution.run_artifacts[0].diagnostic_count == 0
     assert tran_execution.run_artifacts[0].diagnostic_codes == []
-    assert tran_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"tran\t.tran\t1\t.tran\t{tran_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t1.000000e-03\t1.000000e-03\t\t\tfalse\t2\t3\tIndex;Time;V(mid)\t4\tresult;measurement;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    tran_run_artifact_record = _assert_run_artifact_table_matches(tran_execution)
+    assert tran_run_artifact_record["Analysis"] == "tran"
+    assert tran_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        tran_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert tran_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     tf_execution = run_deck_analysis(circuit, netlist, "tf")
     assert tf_execution.plan.output_node == "mid"
@@ -7519,10 +7575,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tf_execution.run_artifacts[0].output_directives == []
     assert tf_execution.run_artifacts[0].measurement_names == []
     assert tf_execution.run_artifacts[0].fourier_probes == []
-    assert tf_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"tf\t.tf\t1\t.tf\t{tf_execution.plan.line_number}\tV1\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t3\tTransferRatio;InputImpedance;OutputImpedance\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    tf_run_artifact_record = _assert_run_artifact_table_matches(tf_execution)
+    assert tf_run_artifact_record["Analysis"] == "tf"
+    assert tf_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        tf_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert tf_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     sens_execution = run_deck_analysis(circuit, netlist, "sens")
     assert sens_execution.plan.output_node == "mid"
@@ -7563,10 +7623,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert sens_execution.run_artifacts[0].output_directives == []
     assert sens_execution.run_artifacts[0].measurement_names == []
     assert sens_execution.run_artifacts[0].fourier_probes == []
-    assert sens_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"sens\t.sens\t1\t.sens\t{sens_execution.plan.line_number}\t\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t7\tOutputNode;NominalVoltage;Element;Parameter;NominalValue;Sensitivity;RelativeSensitivity\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    sens_run_artifact_record = _assert_run_artifact_table_matches(sens_execution)
+    assert sens_run_artifact_record["Analysis"] == "sens"
+    assert sens_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        sens_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert sens_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     noise_execution = run_deck_analysis(circuit, netlist, "noise")
     assert noise_execution.plan.output_node == "mid"
@@ -7636,10 +7700,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert noise_execution.run_artifacts[0].output_directives == []
     assert noise_execution.run_artifacts[0].measurement_names == []
     assert noise_execution.run_artifacts[0].fourier_probes == []
-    assert noise_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"noise\t.noise\t1\t.noise\t{noise_execution.plan.line_number}\tV1\tmid\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t10\tIndex;Frequency;OutputNode;InputSource;OutputPSD;InputReferredPSD;Element;Type;SourcePSD;ContributionPSD\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    noise_run_artifact_record = _assert_run_artifact_table_matches(noise_execution)
+    assert noise_run_artifact_record["Analysis"] == "noise"
+    assert noise_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        noise_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert noise_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     tran_window_execution = run_deck_analysis(
         circuit,
@@ -7678,10 +7746,13 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "1\t4.000000e-03\t5.000000e-01\n"
         "2\t6.000000e-03\t5.000000e-01\n"
     )
-    assert tran_window_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"tran\t.tran\t1\t.tran\t{tran_window_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t2.000000e-03\t6.000000e-03\t2.000000e-03\t1.000000e-03\ttrue\t3\t3\tIndex;Time;V(mid)\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    tran_window_run_artifact_record = _assert_run_artifact_table_matches(
+        tran_window_execution
     )
+    assert tran_window_run_artifact_record["Analysis"] == "tran"
+    assert tran_window_run_artifact_record["DeckAnalysisKinds"] == "1"
+    assert tran_window_run_artifact_record["DeckAnalysisKindList"] == "tran"
+    assert tran_window_run_artifact_record["DeckAnalysisDirectives"] == "1"
 
     with pytest.raises(ValueError, match="multiple analysis cards"):
         run_deck_analysis(circuit, netlist)
@@ -7706,6 +7777,37 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
         "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
         "2\t4.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
+
+
+def test_run_deck_executes_all_analysis_cards_in_source_order() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(Resistor("R1", "in", "0", 1000.0))
+    netlist = ".save V(in)\n.op\n.dc V1 0 1 1\n.op\n.end\n"
+
+    with pytest.raises(ValueError, match="multiple analysis cards"):
+        run_deck_analysis(circuit, netlist)
+
+    execution = run_deck(circuit, netlist)
+
+    assert execution.execution_count == 3
+    assert execution.analysis_order == ["op", "dc", "op"]
+    assert execution.analysis_directives == [".op", ".dc", ".op"]
+    assert [item.plan.analysis for item in execution.executions] == ["op", "dc", "op"]
+    assert execution.run_artifact_count == 3
+    assert [artifact.analysis for artifact in execution.run_artifacts] == ["op", "dc", "op"]
+    assert execution.run_artifact_records == deck_table_records(
+        execution.run_artifact_table
+    )
+    assert json.loads(execution.run_artifact_json) == execution.run_artifact_records
+    assert execution.run_artifact_records[1]["Analysis"] == "dc"
+    assert execution.run_artifact_records[1]["DeckAnalysisKinds"] == "2"
+    assert execution.run_artifact_records[1]["DeckAnalysisKindList"] == "op;dc"
+    assert execution.run_artifact_records[1]["DeckAnalysisDirectives"] == "3"
+    assert (
+        execution.run_artifact_records[1]["DeckAnalysisDirectiveList"]
+        == ".op;.dc;.op"
     )
 
 
@@ -8201,9 +8303,20 @@ def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
     assert tran_execution.run_artifacts[0].output_directives == [".save"]
     assert tran_execution.run_artifacts[0].measurement_names == []
     assert tran_execution.run_artifacts[0].fourier_probes == ["V(mid)"]
+    assert tran_execution.deck_analysis_kind_count == 2
+    assert tran_execution.deck_analysis_kinds == ["op", "tran"]
+    assert tran_execution.deck_analysis_directive_count == 2
+    assert tran_execution.deck_analysis_directives == [".op", ".tran"]
+    assert tran_execution.run_artifacts[0].deck_analysis_kind_count == 2
+    assert tran_execution.run_artifacts[0].deck_analysis_kinds == ["op", "tran"]
+    assert tran_execution.run_artifacts[0].deck_analysis_directive_count == 2
+    assert tran_execution.run_artifacts[0].deck_analysis_directives == [
+        ".op",
+        ".tran",
+    ]
     assert tran_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"tran\t.tran\t1\t.tran\t{tran_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t3\t3\tIndex;Time;V(mid)\t4\tresult;fourier;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\tDeckAnalysisKinds\tDeckAnalysisKindList\tDeckAnalysisDirectives\tDeckAnalysisDirectiveList\n"
+        f"tran\t.tran\t1\t.tran\t{tran_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t3\t3\tIndex;Time;V(mid)\t4\tresult;fourier;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\t2\top;tran\t2\t.op;.tran\n"
     )
 
 

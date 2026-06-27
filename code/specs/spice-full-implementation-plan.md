@@ -16,7 +16,13 @@ downstream tools to compare.
 ## Current PR Slice
 
 1. Deck execution layer.
-   - Status: current.
+   - Status: current PR completion candidate.
+   - Complete deck-level execution wiring so `run_deck` / `runDeck` execute
+     every parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`, `.sens`, and `.noise`
+     card in source order, preserve duplicate analysis directives, default
+     analysis-less decks to an implicit `.op`, and aggregate whole-run artifact
+     tables, CSV, compact JSON, and host-native records across the selected
+     executions.
    - Convert parsed netlists into runnable analysis plans beyond the initial
      `.op`, `.dc`, `.ac`, and `.tran` subset.
    - Support richer expression/function surfaces and execution wiring for
@@ -150,7 +156,10 @@ downstream tools to compare.
      inventories, and selected output-plan artifacts now also expose selected
      analysis output-node metadata beside that analysis provenance, and selected
      output-plan artifacts now also expose selected sweep, frequency, transient
-     timing, and `UIC` metadata beside that selected-analysis provenance.
+     timing, and `UIC` metadata beside that selected-analysis provenance, and
+     whole-deck executions now preserve source-order analysis execution with
+     aggregate run-artifact exports plus deck-wide analysis kind and directive
+     inventories.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1245,12 +1254,24 @@ downstream tools to compare.
       `.ac`, `.tran`, and `.noise` sweep inputs auditable from the output-plan
       artifact without reparsing the analysis plan.
 
+114. Deck whole-run analysis execution.
+    - Status: completed in this deck whole-run execution slice.
+    - Python, Rust, and TypeScript now expose `run_deck` / `runDeck` whole-deck
+      executors that run every parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`,
+      `.sens`, and `.noise` analysis card in source order while preserving
+      duplicate directives and defaulting analysis-less decks to an implicit
+      `.op`.
+    - Whole-run executions aggregate ordered selected-run artifacts as stable
+      table, CSV, compact JSON, and host-native record exports, and each
+      selected-run artifact now carries whole-deck analysis kind/directive
+      inventories beside the selected analysis directive metadata.
+
 ## Backlog
 
-1. Deck execution layer.
-   - Expand selected-plan execution beyond fixed-step transient basics,
-     including richer deck-owned run artifacts beyond selected table inventory, output,
-     output-directive, measurement, Fourier, and transfer-function probe lists.
+1. Deck compatibility follow-up.
+   - Expand deck-owned output compatibility beyond source-order analysis
+     execution and stable artifact exports toward nested sweeps, raw-format
+     interoperability, and remaining vendor-style output controls.
    - Expand deck-controlled output-plan integration beyond stable table
      routing and scoped `.save`, `.probe`, `.print`, `.plot`, and `.four`
      selection toward full SPICE compatibility.
@@ -1296,4 +1317,4 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Deck execution layer.
+1. Production solver core.

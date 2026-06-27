@@ -59,13 +59,14 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `tf` | `.TF` | DC transfer function, input/output impedance |
 | `dc_sweep` | `.DC` | DC parameter sweep |
 | `resolve_deck_analyses` | `.OP` / `.DC` / `.AC` / `.TRAN` | Parsed deck analysis metadata |
+| `run_deck_analysis`, `run_deck` | Deck analysis execution | Selected-analysis execution or source-order whole-deck execution with aggregate artifacts |
 | `sens_dc` | `.SENS` | DC sensitivity analysis |
 | `mc_dc` | `.MC` | Monte Carlo DC analysis |
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 | `resolve_deck_outputs`, `format_deck_*_table`, `format_deck_table_csv`, `format_deck_table_json`, `deck_table_records` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables plus deterministic CSV/JSON/record conversion |
-| `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, table, analysis-directive, output-probe, output-directive, measurement, Fourier, control-command, and diagnostic count/name lists |
+| `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json`, `deck_run_artifact_records` | Deck execution artifact | Stable selected-run row, table, analysis-directive, deck-analysis, output-probe, output-directive, measurement, Fourier, control-command, and diagnostic count/name lists |
 | `format_deck_control_policy_artifact_table`, `format_deck_control_policy_artifact_csv`, `format_deck_control_policy_artifact_json` | `.control` policy diagnostic artifact | Stable line/category/command/code/severity/message exports for policy-blocked `.control` commands |
 | `format_deck_rawfile_ascii`, `format_deck_rawfile_artifact_table`, `format_deck_rawfile_artifact_csv`, `format_deck_rawfile_artifact_json` | `.control write` artifact | Deterministic in-memory ASCII rawfile text plus stable probe-aware rawfile artifact table/CSV/JSON exports |
 | `format_deck_wrdata_ascii`, `format_deck_wrdata_artifact_table`, `format_deck_wrdata_artifact_csv`, `format_deck_wrdata_artifact_json` | `.control wrdata` artifact | Deterministic in-memory ASCII data-file text plus stable option-aware WRDATA artifact table/CSV/JSON exports |
@@ -125,6 +126,13 @@ Fourier table. Executions also include a selected-run artifact summary plus
 for stable result-row, table, analysis-directive, output-probe,
 output-directive, measurement, Fourier, write-marker, rawfile-option, and
 diagnostic count/name lists.
+`run_deck()` executes every parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`,
+`.sens`, and `.noise` card in source order, preserves duplicate analysis
+directives, and defaults analysis-less decks to an implicit `.op`. Its
+whole-run result returns ordered selected executions plus aggregate
+selected-run artifact table, CSV, compact JSON, and header-keyed records, and
+each selected-run artifact carries the deck-wide analysis kind/directive
+inventories beside the selected analysis directive metadata.
 Normalized accepted `.control` commands are surfaced separately in
 `control_line_count` / `control_lines` execution fields and in
 `ControlLines` / `ControlLineList` artifact fields.

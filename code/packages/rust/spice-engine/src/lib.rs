@@ -3411,6 +3411,10 @@ pub struct DeckRunArtifact {
     pub directive: String,
     pub analysis_directive_count: usize,
     pub analysis_directives: Vec<String>,
+    pub deck_analysis_kind_count: usize,
+    pub deck_analysis_kinds: Vec<String>,
+    pub deck_analysis_directive_count: usize,
+    pub deck_analysis_directives: Vec<String>,
     pub line_number: usize,
     pub source_name: Option<String>,
     pub output_node: Option<String>,
@@ -3558,6 +3562,10 @@ pub struct DeckAnalysisExecution {
     pub output_probes: Vec<String>,
     pub output_directives: Vec<String>,
     pub analysis_directives: Vec<String>,
+    pub deck_analysis_kind_count: usize,
+    pub deck_analysis_kinds: Vec<String>,
+    pub deck_analysis_directive_count: usize,
+    pub deck_analysis_directives: Vec<String>,
     pub output_plan_artifact_count: usize,
     pub output_plan_artifacts: Vec<DeckOutputPlanArtifact>,
     pub output_plan_artifact_table: String,
@@ -3605,6 +3613,20 @@ pub struct DeckAnalysisExecution {
     pub fourier_table: String,
     pub run_artifacts: Vec<DeckRunArtifact>,
     pub run_artifact_table: String,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckExecution {
+    pub execution_count: usize,
+    pub analysis_order: Vec<String>,
+    pub analysis_directives: Vec<String>,
+    pub executions: Vec<DeckAnalysisExecution>,
+    pub run_artifact_count: usize,
+    pub run_artifacts: Vec<DeckRunArtifact>,
+    pub run_artifact_table: String,
+    pub run_artifact_csv: String,
+    pub run_artifact_json: String,
+    pub run_artifact_records: Vec<BTreeMap<String, String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -10399,6 +10421,8 @@ fn deck_run_artifacts(
     rawfile_options: &[String],
     diagnostic_codes: &[String],
     control_policy_artifacts: &[DeckControlPolicyArtifact],
+    deck_analysis_kinds: &[String],
+    deck_analysis_directive_inventory: &[String],
 ) -> Vec<DeckRunArtifact> {
     let is_transient = plan.analysis == "tran";
     let analysis_directives = deck_analysis_directives(plan);
@@ -10423,6 +10447,10 @@ fn deck_run_artifacts(
         directive: plan.directive.clone(),
         analysis_directive_count: analysis_directives.len(),
         analysis_directives,
+        deck_analysis_kind_count: deck_analysis_kinds.len(),
+        deck_analysis_kinds: deck_analysis_kinds.to_vec(),
+        deck_analysis_directive_count: deck_analysis_directive_inventory.len(),
+        deck_analysis_directives: deck_analysis_directive_inventory.to_vec(),
         line_number: plan.line_number,
         source_name: plan.source_name.clone(),
         output_node: plan.output_node.clone(),
@@ -10737,6 +10765,21 @@ fn deck_analysis_directives(plan: &DeckAnalysisPlan) -> Vec<String> {
     }
 }
 
+fn deck_analysis_inventory(netlist: &str) -> (Vec<String>, Vec<String>) {
+    let summary = resolve_deck_analyses(netlist);
+    let mut analysis_kinds = Vec::new();
+    let mut directives = Vec::new();
+    for plan in summary.analyses {
+        if !plan.analysis.is_empty() {
+            push_unique_string(&mut analysis_kinds, &plan.analysis);
+        }
+        if !plan.directive.is_empty() {
+            directives.push(plan.directive);
+        }
+    }
+    (analysis_kinds, directives)
+}
+
 fn deck_stable_tables(
     measurements: &[ProbeMeasurement],
     fourier: &[FourierResult],
@@ -10849,6 +10892,10 @@ const DECK_RUN_ARTIFACT_COLUMNS: &[&str] = &[
     "ControlPolicySeverityList",
     "Diagnostics",
     "DiagnosticCodeList",
+    "DeckAnalysisKinds",
+    "DeckAnalysisKindList",
+    "DeckAnalysisDirectives",
+    "DeckAnalysisDirectiveList",
 ];
 
 fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
@@ -10900,6 +10947,10 @@ fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
         artifact.control_policy_severities.join(";"),
         artifact.diagnostic_count.to_string(),
         artifact.diagnostic_codes.join(";"),
+        artifact.deck_analysis_kind_count.to_string(),
+        artifact.deck_analysis_kinds.join(";"),
+        artifact.deck_analysis_directive_count.to_string(),
+        artifact.deck_analysis_directives.join(";"),
     ]
 }
 
@@ -10908,6 +10959,18 @@ fn deck_run_artifact_record(artifact: &DeckRunArtifact) -> Vec<(&'static str, St
         .iter()
         .copied()
         .zip(deck_run_artifact_cells(artifact))
+        .collect()
+}
+
+pub fn deck_run_artifact_records(artifacts: &[DeckRunArtifact]) -> Vec<BTreeMap<String, String>> {
+    artifacts
+        .iter()
+        .map(|artifact| {
+            deck_run_artifact_record(artifact)
+                .into_iter()
+                .map(|(column, value)| (column.to_string(), value))
+                .collect()
+        })
         .collect()
 }
 
@@ -11891,6 +11954,78 @@ pub fn run_deck_analysis(
     analysis: Option<&str>,
 ) -> Result<DeckAnalysisExecution, SpiceError> {
     let plan = select_deck_analysis_plan(netlist, analysis)?;
+    run_deck_analysis_plan(circuit, netlist, plan)
+}
+
+pub fn run_deck(circuit: &Circuit, netlist: &str) -> Result<DeckExecution, SpiceError> {
+    let plans = deck_analysis_plans_for_execution(netlist, "run_deck")?;
+    let mut executions = Vec::new();
+    for plan in plans.iter().cloned() {
+        executions.push(run_deck_analysis_plan(circuit, netlist, plan)?);
+    }
+    let run_artifacts = executions
+        .iter()
+        .flat_map(|execution| execution.run_artifacts.iter().cloned())
+        .collect::<Vec<_>>();
+    let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+    let run_artifact_csv = format_deck_run_artifact_csv(&run_artifacts);
+    let run_artifact_json = format_deck_run_artifact_json(&run_artifacts);
+    let run_artifact_records = deck_run_artifact_records(&run_artifacts);
+    Ok(DeckExecution {
+        execution_count: executions.len(),
+        analysis_order: plans.iter().map(|plan| plan.analysis.clone()).collect(),
+        analysis_directives: plans.iter().map(|plan| plan.directive.clone()).collect(),
+        executions,
+        run_artifact_count: run_artifacts.len(),
+        run_artifacts,
+        run_artifact_table,
+        run_artifact_csv,
+        run_artifact_json,
+        run_artifact_records,
+    })
+}
+
+fn deck_analysis_plans_for_execution(
+    netlist: &str,
+    context: &str,
+) -> Result<Vec<DeckAnalysisPlan>, SpiceError> {
+    let summary = resolve_deck_analyses(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            context,
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    if summary.analyses.is_empty() {
+        Ok(vec![DeckAnalysisPlan {
+            directive: ".op".to_string(),
+            analysis: "op".to_string(),
+            line_number: 0,
+            source_name: None,
+            output_node: None,
+            start_value: None,
+            stop_value: None,
+            step_value: None,
+            sweep_kind: None,
+            point_count: None,
+            start_frequency_hz: None,
+            stop_frequency_hz: None,
+            step_time: None,
+            stop_time: None,
+            start_time: None,
+            max_step: None,
+            use_initial_conditions: false,
+        }])
+    } else {
+        Ok(summary.analyses)
+    }
+}
+
+fn run_deck_analysis_plan(
+    circuit: &Circuit,
+    netlist: &str,
+    plan: DeckAnalysisPlan,
+) -> Result<DeckAnalysisExecution, SpiceError> {
     let diagnostic_codes = deck_run_diagnostic_codes(netlist, &plan);
     let control_lines = deck_control_lines(netlist);
     let write_markers = deck_control_write_markers(netlist);
@@ -11915,6 +12050,7 @@ pub fn run_deck_analysis(
     let control_policy_summary_artifact_records =
         deck_control_policy_summary_artifact_records(&control_policy_summary_artifacts);
     let analysis_directives = deck_analysis_directives(&plan);
+    let (deck_analysis_kinds, deck_analysis_directives) = deck_analysis_inventory(netlist);
     match plan.analysis.as_str() {
         "op" => {
             let result = dc_op(circuit)?;
@@ -11944,6 +12080,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12000,6 +12138,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12091,6 +12233,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12147,6 +12291,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12239,6 +12387,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12295,6 +12445,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12390,6 +12544,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12446,6 +12602,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12534,6 +12694,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12590,6 +12752,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12676,6 +12842,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12732,6 +12900,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12830,6 +13002,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12886,6 +13060,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
