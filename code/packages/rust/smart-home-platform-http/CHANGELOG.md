@@ -24,6 +24,8 @@ All notable changes to this package will be documented in this file.
   by event id.
 - Added a dashboard overview route that composes runtime health, topology,
   inventory, desired-state, and audit summaries for local controllers.
+- Added an embedded browser dashboard shell served by the repo HTTP stack for
+  fixture-controller startup, readiness, state, and light command flows.
 - Added a native readiness checklist route with actionable links for registry,
   topology, state coverage, event bus, discovery, supervisor, authorization,
   and desired-state checks.

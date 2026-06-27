@@ -7,6 +7,9 @@ server stack. It does not open sockets by itself and it does not bypass the
 runtime model. Instead, it projects a `SmartHomeRuntime` registry snapshot into
 stable local API responses for:
 
+- `/`
+- `/dashboard`
+- `/smart-home`
 - `/api/`
 - `/api/config`
 - `/api/states`
@@ -81,6 +84,11 @@ State-history reads expose registry-backed device events with Home Assistant
 entity aliases, state deltas, timestamp filters, and event-id detail lookups;
 the Home Assistant-style history route accepts `filter_entity_id`.
 
+The browser routes serve an embedded local dashboard shell over the same
+`web-core::WebApp`. The shell loads bootstrap, readiness, state, and audit data
+from the native API routes and sends light actions through the existing
+Home Assistant-compatible service endpoint, preserving runtime authorization.
+
 ## Dependencies
 
 - smart-home-core
@@ -104,6 +112,7 @@ cargo run -p smart-home-platform-http --example hue_fixture_controller -- 127.0.
 Then query it from another shell:
 
 ```bash
+curl http://127.0.0.1:8123/
 curl http://127.0.0.1:8123/api/
 curl http://127.0.0.1:8123/api/states
 curl http://127.0.0.1:8123/api/smart_home/health
