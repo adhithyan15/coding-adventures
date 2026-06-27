@@ -295,6 +295,13 @@ All notable changes to this package will be documented in this file.
   over the D23 runtime read facade so Chief of Staff jobs can inspect
   release-hold, operator-handoff, and acceptance actions derived from
   evidence-review dispositions without owning platform mutation logic.
+- Added
+  `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcomes`
+  and
+  `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_summary`
+  over the D23 runtime read facade so Chief of Staff jobs can inspect
+  release-hold, operator-handoff, and accepted outcomes derived from
+  disposition actions without owning platform mutation logic.
 - Added `smart_home.list_workers` and
   `smart_home.get_worker_heartbeat_schedule` over the D23 runtime read facade
   so Chief of Staff jobs can inspect supervised bridge workers and heartbeat
