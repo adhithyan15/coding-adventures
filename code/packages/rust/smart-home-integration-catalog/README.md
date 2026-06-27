@@ -338,6 +338,10 @@ runtime and Chief of Staff tools a typed catalog for:
   readiness execution handoff action protocol-evidence packet summaries that
   combine packet readiness, substrate blockers, and first actionable evidence
   pointers
+- mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence package readiness
+  summaries that lift protocol packet state into package-facing go/no-go
+  release coordination
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work
