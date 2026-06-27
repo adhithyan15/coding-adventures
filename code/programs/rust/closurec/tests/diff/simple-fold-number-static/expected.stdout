@@ -1,0 +1,1 @@
+var a=true;var b=false;var c=true;var d=true;var e=false;var f=false;var g=false;report(a,b,c,d,e,f,g);
