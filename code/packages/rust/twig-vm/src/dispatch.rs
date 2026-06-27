@@ -1115,6 +1115,26 @@ fn dispatch(
                 exec_str_const(instr, &mut frame)?;
                 pc += 1;
             }
+            "str_len" => {
+                exec_str_len(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_index" => {
+                exec_str_index(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_concat" => {
+                exec_str_concat(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_eq" => {
+                exec_str_eq(instr, &mut frame)?;
+                pc += 1;
+            }
+            "print_str" => {
+                exec_print_str(instr, &frame)?;
+                pc += 1;
+            }
             "call_builtin" => {
                 exec_call_builtin(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
                 pc += 1;
@@ -1408,6 +1428,103 @@ fn exec_str_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     };
     let value = lispy_runtime::heap::alloc_string(text.as_bytes());
     frame.set(dest.clone(), value)?;
+    Ok(())
+}
+
+fn e4_dest<'a>(instr: &'a IIRInstr, op: &str) -> Result<&'a String, RunError> {
+    instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction(format!("{op} requires dest"))
+    })
+}
+
+fn e4_value_arg(
+    op: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+    pos: usize,
+) -> Result<LispyValue, RunError> {
+    let src = instr.srcs.get(pos).ok_or_else(|| {
+        RunError::MalformedInstruction(format!("{op} requires srcs[{pos}]"))
+    })?;
+    operand_to_value(src, &|n| frame.get(n)).map_err(RunError::OperandConversion)
+}
+
+fn e4_string_arg(
+    op: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+    pos: usize,
+) -> Result<Vec<u8>, RunError> {
+    let src = instr.srcs.get(pos).ok_or_else(|| {
+        RunError::MalformedInstruction(format!("{op} requires srcs[{pos}]"))
+    })?;
+    if let Operand::Str(text) = src {
+        return Ok(text.as_bytes().to_vec());
+    }
+    let value = e4_value_arg(op, instr, frame, pos)?;
+    // SAFETY: dispatch values come from the VM's tagged value space.
+    unsafe { lispy_runtime::heap::string_bytes(value) }
+        .map(|bytes| bytes.to_vec())
+        .ok_or_else(|| {
+            RunError::Runtime(RuntimeError::TypeError(format!(
+                "{op}: expected str at srcs[{pos}], got {value}"
+            )))
+        })
+}
+
+fn e4_int_arg(op: &str, instr: &IIRInstr, frame: &Frame, pos: usize) -> Result<i64, RunError> {
+    let value = e4_value_arg(op, instr, frame, pos)?;
+    value.as_int().ok_or_else(|| {
+        RunError::Runtime(RuntimeError::TypeError(format!(
+            "{op}: expected i64 at srcs[{pos}], got {value}"
+        )))
+    })
+}
+
+fn exec_str_len(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_len")?;
+    let bytes = e4_string_arg("str_len", instr, frame, 0)?;
+    frame.set(dest.clone(), LispyValue::int(bytes.len() as i64))?;
+    Ok(())
+}
+
+fn exec_str_index(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_index")?;
+    let bytes = e4_string_arg("str_index", instr, frame, 0)?;
+    let idx = e4_int_arg("str_index", instr, frame, 1)?;
+    if idx < 0 || idx as usize >= bytes.len() {
+        return Err(RunError::Runtime(RuntimeError::TypeError(format!(
+            "str_index: index {idx} out of bounds for string of length {}",
+            bytes.len()
+        ))));
+    }
+    frame.set(dest.clone(), LispyValue::int(i64::from(bytes[idx as usize])))?;
+    Ok(())
+}
+
+fn exec_str_concat(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_concat")?;
+    let mut bytes = e4_string_arg("str_concat", instr, frame, 0)?;
+    let rhs = e4_string_arg("str_concat", instr, frame, 1)?;
+    bytes.extend_from_slice(&rhs);
+    frame.set(dest.clone(), lispy_runtime::heap::alloc_string(&bytes))?;
+    Ok(())
+}
+
+fn exec_str_eq(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_eq")?;
+    let lhs = e4_string_arg("str_eq", instr, frame, 0)?;
+    let rhs = e4_string_arg("str_eq", instr, frame, 1)?;
+    frame.set(dest.clone(), LispyValue::bool(lhs == rhs))?;
+    Ok(())
+}
+
+fn exec_print_str(instr: &IIRInstr, frame: &Frame) -> Result<(), RunError> {
+    let bytes = e4_string_arg("print_str", instr, frame, 0)?;
+    use std::io::Write as _;
+    std::io::stdout()
+        .write_all(&bytes)
+        .map_err(|e| RunError::HostIo(e.to_string()))?;
     Ok(())
 }
 
@@ -5428,6 +5545,65 @@ mod tests {
             let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
             assert_eq!(bytes, b"hello");
         }
+    }
+
+    #[test]
+    fn e4_str_concat_then_len_runs() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("foo".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("bar".into())], "str"),
+            IIRInstr::new(
+                "str_concat",
+                Some("s".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 5)).unwrap().as_int(), Some(6));
+    }
+
+    #[test]
+    fn e4_str_index_returns_byte() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "str_index",
+                Some("b".into()),
+                vec![Operand::Var("s".into()), Operand::Var("i".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 4)).unwrap().as_int(), Some(66));
+    }
+
+    #[test]
+    fn e4_str_eq_returns_scheme_bool_for_branching() {
+        assert_eq!(
+            run_source(r#"(if (string=? "same" "same") 42 0)"#)
+                .unwrap()
+                .as_int(),
+            Some(42),
+        );
+        assert_eq!(
+            run_source(r#"(if (string=? "same" "different") 42 0)"#)
+                .unwrap()
+                .as_int(),
+            Some(0),
+        );
+    }
+
+    #[test]
+    fn e4_print_str_writes_heap_string() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ok".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "i64"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 2)).unwrap().as_int(), Some(0));
     }
 
     #[test]
