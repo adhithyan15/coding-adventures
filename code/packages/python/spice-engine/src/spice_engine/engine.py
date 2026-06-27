@@ -588,6 +588,19 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
 
 
 @dataclass
+class LinearSolverProfile:
+    """Auditable profile for one real-valued linear solve."""
+
+    matrix_size: int
+    solver: str
+    backend: str
+    structural_nonzeros: int
+    density: float
+    fill_in_nonzeros: int = 0
+    fallback_reason: str | None = None
+
+
+@dataclass
 class DcSolverDiagnostics:
     """Stable DC solve metadata for downstream comparison."""
 
@@ -596,6 +609,15 @@ class DcSolverDiagnostics:
     tolerance: float
     max_delta: float
     convergence_aid: str
+    solver_profile: LinearSolverProfile = field(
+        default_factory=lambda: LinearSolverProfile(
+            matrix_size=0,
+            solver="none",
+            backend="none",
+            structural_nonzeros=0,
+            density=0.0,
+        )
+    )
 
 
 @dataclass
@@ -7285,6 +7307,7 @@ def _dc_diagnostics(
     tol: float,
     max_delta: float,
     convergence_aid: str,
+    solver_profile: LinearSolverProfile | None = None,
 ) -> DcSolverDiagnostics:
     return DcSolverDiagnostics(
         matrix_size=matrix_size,
@@ -7292,6 +7315,9 @@ def _dc_diagnostics(
         tolerance=tol,
         max_delta=max_delta,
         convergence_aid=convergence_aid,
+        solver_profile=solver_profile
+        if solver_profile is not None
+        else _empty_solver_profile(matrix_size),
     )
 
 
@@ -7340,9 +7366,12 @@ def _dc_newton(
         b = [0.0] * size
         for el in circuit.elements:
             _stamp_dc(el, G, b, x, node_to_idx, branch_srcs)
+        solver_profile = _real_solver_profile(G, backend="pending")
         try:
-            x_new = _solve(G, b)
-        except ZeroDivisionError:
+            x_new, solver_profile = _solve_with_profile(G, b)
+        except ZeroDivisionError as exc:
+            if isinstance(exc, _LinearSolveFailure):
+                solver_profile = exc.solver_profile
             node_v = {nd: x[i] for nd, i in node_to_idx.items()}
             return DcResult(
                 node_v,
@@ -7354,6 +7383,7 @@ def _dc_newton(
                     tol=tol,
                     max_delta=float("inf"),
                     convergence_aid="newton",
+                    solver_profile=solver_profile,
                 ),
             )
 
@@ -7374,6 +7404,7 @@ def _dc_newton(
             tol=tol,
             max_delta=max_delta,
             convergence_aid="newton",
+            solver_profile=solver_profile,
         ),
     )
 
@@ -8792,10 +8823,66 @@ def _validate_bjt(el: BJT) -> None:
 _SPARSE_SOLVER_THRESHOLD = 30
 
 
+class _LinearSolveFailure(ZeroDivisionError):
+    def __init__(self, message: str, solver_profile: LinearSolverProfile):
+        super().__init__(message)
+        self.solver_profile = solver_profile
+
+
 def _solve(A: list[list[float]], b: list[float]) -> list[float]:
+    return _solve_with_profile(A, b)[0]
+
+
+def _empty_solver_profile(matrix_size: int = 0) -> LinearSolverProfile:
+    return LinearSolverProfile(
+        matrix_size=matrix_size,
+        solver=_real_solver_kind(matrix_size),
+        backend="none",
+        structural_nonzeros=0,
+        density=0.0,
+    )
+
+
+def _real_matrix_nonzeros(A: list[list[float]]) -> int:
+    return sum(1 for row in A for value in row if value != 0.0)
+
+
+def _real_matrix_density(matrix_size: int, structural_nonzeros: int) -> float:
+    if matrix_size == 0:
+        return 0.0
+    return structural_nonzeros / float(matrix_size * matrix_size)
+
+
+def _real_solver_profile(
+    A: list[list[float]],
+    *,
+    backend: str,
+    fill_in_nonzeros: int = 0,
+    fallback_reason: str | None = None,
+) -> LinearSolverProfile:
+    matrix_size = len(A)
+    structural_nonzeros = _real_matrix_nonzeros(A)
+    return LinearSolverProfile(
+        matrix_size=matrix_size,
+        solver=_real_solver_kind(matrix_size),
+        backend=backend,
+        structural_nonzeros=structural_nonzeros,
+        density=_real_matrix_density(matrix_size, structural_nonzeros),
+        fill_in_nonzeros=fill_in_nonzeros,
+        fallback_reason=fallback_reason,
+    )
+
+
+def _solve_with_profile(
+    A: list[list[float]], b: list[float]
+) -> tuple[list[float], LinearSolverProfile]:
     if len(A) >= _SPARSE_SOLVER_THRESHOLD:
-        return _solve_sparse(A, b)
-    return _solve_dense(A, b)
+        return _solve_sparse_with_profile(A, b)
+    profile = _real_solver_profile(A, backend="dense_gaussian")
+    try:
+        return _solve_dense(A, b), profile
+    except ZeroDivisionError as exc:
+        raise _LinearSolveFailure(str(exc), profile) from exc
 
 
 def _solve_dense(A: list[list[float]], b: list[float]) -> list[float]:
@@ -8833,6 +8920,72 @@ def _solve_dense(A: list[list[float]], b: list[float]) -> list[float]:
 
 
 def _solve_sparse(A: list[list[float]], b: list[float]) -> list[float]:
+    return _solve_sparse_with_profile(A, b)[0]
+
+
+def _solve_sparse_with_profile(
+    A: list[list[float]],
+    b: list[float],
+    *,
+    fallback_reason: str | None = None,
+) -> tuple[list[float], LinearSolverProfile]:
+    scipy_result = _solve_sparse_scipy(A, b)
+    if scipy_result is not None:
+        return scipy_result
+    return _solve_sparse_native_with_profile(
+        A,
+        b,
+        fallback_reason=fallback_reason or "scipy_unavailable",
+    )
+
+
+def _solve_sparse_scipy(
+    A: list[list[float]], b: list[float]
+) -> tuple[list[float], LinearSolverProfile] | None:
+    try:
+        from scipy.sparse import csc_matrix
+        from scipy.sparse.linalg import splu
+    except Exception:
+        return None
+
+    matrix_size = len(A)
+    structural_nonzeros = _real_matrix_nonzeros(A)
+    profile = LinearSolverProfile(
+        matrix_size=matrix_size,
+        solver=_real_solver_kind(matrix_size),
+        backend="scipy_sparse_lu",
+        structural_nonzeros=structural_nonzeros,
+        density=_real_matrix_density(matrix_size, structural_nonzeros),
+    )
+    try:
+        sparse_matrix = csc_matrix(A, dtype=float)
+        factorization = splu(sparse_matrix)
+        solution = factorization.solve(b)
+        fill_in_nonzeros = max(
+            0,
+            int(factorization.L.nnz + factorization.U.nnz) - structural_nonzeros,
+        )
+        return (
+            [float(value) for value in solution],
+            replace(profile, fill_in_nonzeros=fill_in_nonzeros),
+        )
+    except Exception as exc:
+        try:
+            return _solve_sparse_native_with_profile(
+                A,
+                b,
+                fallback_reason=f"scipy_sparse_lu:{type(exc).__name__}",
+            )
+        except ZeroDivisionError as native_exc:
+            raise _LinearSolveFailure(str(native_exc), profile) from native_exc
+
+
+def _solve_sparse_native_with_profile(
+    A: list[list[float]],
+    b: list[float],
+    *,
+    fallback_reason: str | None = None,
+) -> tuple[list[float], LinearSolverProfile]:
     """Sparse-row Gaussian elimination with partial pivoting.
 
     The MNA matrix is assembled densely today, but each device stamp touches
@@ -8842,7 +8995,17 @@ def _solve_sparse(A: list[list[float]], b: list[float]) -> list[float]:
 
     n = len(A)
     if n == 0:
-        return []
+        return [], _empty_solver_profile()
+    initial_nonzeros = _real_matrix_nonzeros(A)
+    peak_nonzeros = initial_nonzeros
+    profile = LinearSolverProfile(
+        matrix_size=n,
+        solver=_real_solver_kind(n),
+        backend="native_sparse_gaussian",
+        structural_nonzeros=initial_nonzeros,
+        density=_real_matrix_density(n, initial_nonzeros),
+        fallback_reason=fallback_reason,
+    )
     rows = [
         {col: value for col, value in enumerate(row) if value != 0.0}
         for row in A
@@ -8856,7 +9019,7 @@ def _solve_sparse(A: list[list[float]], b: list[float]) -> list[float]:
         )
         pivot_abs = abs(rows[pivot_row].get(pivot_col, 0.0))
         if pivot_abs < 1e-15:
-            raise ZeroDivisionError(f"singular matrix at row {pivot_col}")
+            raise _LinearSolveFailure(f"singular matrix at row {pivot_col}", profile)
 
         rows[pivot_col], rows[pivot_row] = rows[pivot_row], rows[pivot_col]
         rhs[pivot_col], rhs[pivot_row] = rhs[pivot_row], rhs[pivot_col]
@@ -8880,18 +9043,19 @@ def _solve_sparse(A: list[list[float]], b: list[float]) -> list[float]:
                 else:
                     rows[row_index][col] = next_value
             rhs[row_index] -= factor * rhs[pivot_col]
+        peak_nonzeros = max(peak_nonzeros, sum(len(row) for row in rows))
 
     x = [0.0] * n
     for row_index in range(n - 1, -1, -1):
         diag = rows[row_index].get(row_index, 0.0)
         if abs(diag) < 1e-15:
-            raise ZeroDivisionError(f"singular matrix at row {row_index}")
+            raise _LinearSolveFailure(f"singular matrix at row {row_index}", profile)
         total = rhs[row_index]
         for col, value in rows[row_index].items():
             if col > row_index:
                 total -= value * x[col]
         x[row_index] = total / diag
-    return x
+    return x, replace(profile, fill_in_nonzeros=max(0, peak_nonzeros - initial_nonzeros))
 
 
 # ---------------------------------------------------------------------------

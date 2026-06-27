@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Production solver profiles** —
+  `DcResult.diagnostics` now carries a nested `solver_profile` with matrix
+  size, solver kind, backend, structural nonzero count, density, peak fill-in,
+  and fallback metadata. Large real DC solves prefer an optional SciPy
+  sparse-LU backend and fall back to the native sparse-row solver with a stable
+  fallback reason, matching Rust and TypeScript profile surfaces.
+
 - **Deck whole-run analysis execution** —
   `run_deck()` now executes every parsed `.op`, `.dc`, `.ac`, `.tran`,
   `.tf`, `.sens`, and `.noise` card in source order, preserves duplicate

@@ -1046,12 +1046,25 @@ export type DcConvergenceAid = "newton" | "gmin" | "source" | "pseudo_transient"
 
 export type LinearSolverKind = "none" | "dense_real" | "sparse_real" | "dense_complex" | "sparse_complex";
 
+export type LinearSolverBackend = "none" | "dense_gaussian" | "native_sparse_gaussian";
+
+export interface LinearSolverProfile {
+  readonly matrixSize: number;
+  readonly solver: LinearSolverKind;
+  readonly backend: LinearSolverBackend;
+  readonly structuralNonzeros: number;
+  readonly density: number;
+  readonly fillInNonzeros: number;
+  readonly fallbackReason?: string;
+}
+
 export interface DcSolverDiagnostics {
   readonly matrixSize: number;
   readonly solver: LinearSolverKind;
   readonly tolerance: number;
   readonly maxDelta: number;
   readonly convergenceAid: DcConvergenceAid;
+  readonly solverProfile: LinearSolverProfile;
 }
 
 export interface DcOpOptions {
@@ -11306,6 +11319,50 @@ function complexSolverKind(matrixSize: number): LinearSolverKind {
   return matrixSize >= SPARSE_SOLVER_THRESHOLD ? "sparse_complex" : "dense_complex";
 }
 
+function emptySolverProfile(matrixSize = 0): LinearSolverProfile {
+  return {
+    matrixSize,
+    solver: realSolverKind(matrixSize),
+    backend: "none",
+    structuralNonzeros: 0,
+    density: 0.0,
+    fillInNonzeros: 0,
+  };
+}
+
+function realMatrixNonzeros(matrix: readonly (readonly number[])[]): number {
+  return matrix.reduce(
+    (count, row) => count + row.filter((value) => value !== 0.0).length,
+    0,
+  );
+}
+
+function realMatrixDensity(matrixSize: number, structuralNonzeros: number): number {
+  if (matrixSize === 0) {
+    return 0.0;
+  }
+  return structuralNonzeros / (matrixSize * matrixSize);
+}
+
+function realSolverProfile(
+  matrix: readonly (readonly number[])[],
+  backend: LinearSolverBackend,
+  fillInNonzeros = 0,
+  fallbackReason?: string,
+): LinearSolverProfile {
+  const matrixSize = matrix.length;
+  const structuralNonzeros = realMatrixNonzeros(matrix);
+  return {
+    matrixSize,
+    solver: realSolverKind(matrixSize),
+    backend,
+    structuralNonzeros,
+    density: realMatrixDensity(matrixSize, structuralNonzeros),
+    fillInNonzeros,
+    ...(fallbackReason === undefined ? {} : { fallbackReason }),
+  };
+}
+
 function dcDiagnosticsFromLinearSolution(
   solution: LinearSolution,
   convergenceAid: DcConvergenceAid,
@@ -11318,6 +11375,7 @@ function dcDiagnosticsFromLinearSolution(
     tolerance,
     maxDelta: solution.maxDelta,
     convergenceAid,
+    solverProfile: solution.solverProfile,
   };
 }
 
@@ -13858,6 +13916,12 @@ interface LinearSolution {
   readonly iterations: number;
   readonly converged: boolean;
   readonly maxDelta: number;
+  readonly solverProfile: LinearSolverProfile;
+}
+
+interface LinearSystemSolve {
+  readonly solution: readonly number[];
+  readonly profile: LinearSolverProfile;
 }
 
 interface LinearSolveOptions {
@@ -13982,6 +14046,7 @@ function solveLinearCircuitWithOptions(
       iterations: 0,
       converged: true,
       maxDelta: 0.0,
+      solverProfile: emptySolverProfile(0),
     };
   }
 
@@ -14077,6 +14142,7 @@ function solveLinearCircuitAtOperatingPointOrFailure(
         operatingPoint,
         false,
         Number.POSITIVE_INFINITY,
+        emptySolverProfile(matrixSize),
       );
     }
     throw error;
@@ -14690,16 +14756,17 @@ function solveLinearCircuitAtOperatingPoint(
     }
   }
 
-  const solution = solveLinearSystem(matrix, rhs);
+  const solved = solveLinearSystemWithProfile(matrix, rhs);
   return linearSolutionFromVector(
     circuit,
     inductorStates,
     nodeIndices,
     voltageSources,
     nodeCount,
-    solution,
+    solved.solution,
     true,
     0.0,
+    solved.profile,
   );
 }
 
@@ -14712,6 +14779,7 @@ function linearSolutionFromVector(
   solution: readonly number[],
   converged: boolean,
   maxDelta: number,
+  solverProfile: LinearSolverProfile,
 ): LinearSolution {
   const nodeVoltages = new Map<string, number>();
   const nodesByIndex = Array.from(nodeIndices.entries()).sort(
@@ -14739,6 +14807,7 @@ function linearSolutionFromVector(
     iterations: 1,
     converged,
     maxDelta,
+    solverProfile,
   };
 }
 
@@ -15050,6 +15119,7 @@ function makeDcResult(
     tolerance: 0.0,
     maxDelta: 0.0,
     convergenceAid,
+    solverProfile: emptySolverProfile(0),
   },
 ): DcResult {
   return {
@@ -17886,10 +17956,18 @@ function stampAcJfetSmallSignal(
 }
 
 function solveLinearSystem(matrix: number[][], rhs: number[]): number[] {
+  return [...solveLinearSystemWithProfile(matrix, rhs).solution];
+}
+
+function solveLinearSystemWithProfile(matrix: number[][], rhs: number[]): LinearSystemSolve {
   if (rhs.length >= SPARSE_SOLVER_THRESHOLD) {
-    return solveSparseLinearSystem(matrix, rhs);
+    return solveSparseLinearSystemWithProfile(matrix, rhs);
   }
-  return solveDenseLinearSystem(matrix, rhs);
+  const profile = realSolverProfile(matrix, "dense_gaussian");
+  return {
+    solution: solveDenseLinearSystem(matrix, rhs),
+    profile,
+  };
 }
 
 function solveDenseLinearSystem(matrix: number[][], rhs: number[]): number[] {
@@ -17944,7 +18022,13 @@ function solveDenseLinearSystem(matrix: number[][], rhs: number[]): number[] {
 }
 
 function solveSparseLinearSystem(matrix: number[][], rhs: number[]): number[] {
+  return [...solveSparseLinearSystemWithProfile(matrix, rhs).solution];
+}
+
+function solveSparseLinearSystemWithProfile(matrix: number[][], rhs: number[]): LinearSystemSolve {
   const n = rhs.length;
+  const initialNonzeros = realMatrixNonzeros(matrix);
+  let peakNonzeros = initialNonzeros;
   const rows = matrix.map((row) => {
     const entries = new Map<number, number>();
     row.forEach((value, col) => {
@@ -17998,6 +18082,10 @@ function solveSparseLinearSystem(matrix: number[][], rhs: number[]): number[] {
       }
       sparseRhs[row] -= factor * sparseRhs[pivotCol];
     }
+    peakNonzeros = Math.max(
+      peakNonzeros,
+      rows.reduce((count, row) => count + row.size, 0),
+    );
   }
 
   const solution = Array.from({ length: n }, () => 0.0);
@@ -18014,7 +18102,14 @@ function solveSparseLinearSystem(matrix: number[][], rhs: number[]): number[] {
     }
     solution[row] = value / diagonal;
   }
-  return solution;
+  return {
+    solution,
+    profile: realSolverProfile(
+      matrix,
+      "native_sparse_gaussian",
+      Math.max(0, peakNonzeros - initialNonzeros),
+    ),
+  };
 }
 
 function cloneMatrix(matrix: readonly (readonly number[])[]): number[][] {

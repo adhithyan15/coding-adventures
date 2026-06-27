@@ -251,6 +251,17 @@ fn dc_large_resistor_ladder_uses_sparse_real_solver_path() {
     assert_eq!(result.diagnostics.convergence_aid, DcConvergenceAid::Newton);
     assert_close(result.diagnostics.tolerance, 1.0e-9);
     assert!(result.diagnostics.max_delta.is_finite());
+    assert_eq!(result.diagnostics.solver_profile.matrix_size, 36);
+    assert_eq!(result.diagnostics.solver_profile.solver, "sparse_real");
+    assert_eq!(
+        result.diagnostics.solver_profile.backend,
+        "native_sparse_gaussian"
+    );
+    assert!(result.diagnostics.solver_profile.structural_nonzeros > 0);
+    assert!(result.diagnostics.solver_profile.density > 0.0);
+    assert!(result.diagnostics.solver_profile.density < 0.1);
+    assert!(result.diagnostics.solver_profile.fill_in_nonzeros <= 36 * 36);
+    assert!(result.diagnostics.solver_profile.fallback_reason.is_none());
 }
 
 #[test]

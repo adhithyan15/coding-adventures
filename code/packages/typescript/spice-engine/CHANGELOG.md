@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `dcOp(...).diagnostics.solverProfile` with matrix size, solver kind,
+  backend, structural nonzero count, density, peak fill-in, and fallback
+  metadata for production sparse-solver audits, matching Python and Rust.
 - Add `runDeck` whole-run execution for every parsed `.op`, `.dc`, `.ac`,
   `.tran`, `.tf`, `.sens`, and `.noise` card in source order, preserving
   duplicate analysis directives, defaulting analysis-less decks to an implicit

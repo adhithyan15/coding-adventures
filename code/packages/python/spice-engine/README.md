@@ -183,9 +183,12 @@ existing SPICE-style Fourier result shape with optional `HARMONICS=` and
 `FROM=` controls.
 
 `DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
-size, selected real solver path, tolerance, convergence aid, and final Newton
-delta.  Large real DC and complex AC matrix solves use sparse-row solver paths
-when the matrix size reaches the package threshold.
+size, selected real solver path, tolerance, convergence aid, final Newton
+delta, and a nested solver profile with backend, structural nonzero count,
+density, fill-in, and fallback metadata. Large real DC solves use an optional
+SciPy sparse-LU backend when available and fall back to the native sparse-row
+solver with an explicit fallback reason; large complex AC solves use the native
+sparse-row path when the matrix size reaches the package threshold.
 
 `normalize_model_card()`, `diode_from_model_card()`,
 `bjt_from_model_card()`, `jfet_from_model_card()`, and

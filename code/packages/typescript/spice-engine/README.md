@@ -55,9 +55,11 @@ const adaptive = transientAdaptive(circuit, 0.5e-9, 1.0e-9, { method: "gear2" })
 ```
 
 `dcOp(circuit).diagnostics` reports stable solve metadata, including the MNA
-matrix size, selected real solver path, tolerance, convergence aid, and final
-Newton delta. Large real DC and complex AC matrix solves use sparse-row solver
-paths when the matrix size reaches the package threshold.
+matrix size, selected real solver path, tolerance, convergence aid, final
+Newton delta, and a nested `solverProfile` with backend, structural nonzero
+count, density, fill-in, and fallback metadata. Large real DC and complex AC
+matrix solves use native sparse-row solver paths when the matrix size reaches
+the package threshold.
 
 `diodeAtTemperature`, `bjtAtTemperature`, `mosfetAtTemperature`, and
 `circuitAtTemperature` provide operating-temperature footholds for diode, BJT,
