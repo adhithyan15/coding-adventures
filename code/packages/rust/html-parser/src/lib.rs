@@ -4525,7 +4525,6 @@ impl HtmlParser {
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         repair_tricky_adoption_agency(&mut document);
         repair_div_bold_nobr_continuation(&mut document.children);
-        repair_anchor_list_item_boundary(&mut document.children);
         repair_font_paragraph_boundary(&mut document.children);
         repair_anchor_center_boundary(&mut document.children);
         repair_em_aside_continuation(&mut document.children, self.explicit_em_end_seen);
@@ -6610,6 +6609,7 @@ impl HtmlParser {
             }
         } else if incoming_name == "li" {
             if !self.current_parent_has_element_ancestor("button") {
+                self.close_open_anchor_for_list_item_start();
                 self.close_open_element_if(|name| name == "p");
                 self.close_open_list_item_if_in_scope();
             }
@@ -6761,6 +6761,25 @@ impl HtmlParser {
             return false;
         }
         self.open_elements.truncate(index);
+        true
+    }
+
+    fn close_open_anchor_for_list_item_start(&mut self) -> bool {
+        let Some(index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "a")
+        }) else {
+            return false;
+        };
+        if self.has_table_context_above(index) || self.has_special_element_above(index) {
+            return false;
+        }
+        let Some(element) = element_ref_at_path(&self.document, &self.open_elements[index]) else {
+            return false;
+        };
+        let attributes = element.attributes.clone();
+        self.open_elements.truncate(index);
+        self.pending_formatting_reconstruction =
+            trim_formatting_reconstruction_noah_ark(vec![("a".to_string(), attributes)]);
         true
     }
 
@@ -8214,43 +8233,6 @@ fn repair_div_bold_nobr_continuation(nodes: &mut Vec<Node>) {
             current.children.push(bold);
         }
         index += 1;
-    }
-}
-
-fn repair_anchor_list_item_boundary(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_anchor_list_item_boundary(&mut element.children);
-        }
-
-        let should_split = matches!(
-            nodes.get(index),
-            Some(Node::Element(anchor))
-                if anchor.name == "a"
-                    && anchor.children.len() == 1
-                    && matches!(anchor.children.first(), Some(Node::Element(child)) if child.name == "li")
-        );
-        if !should_split {
-            index += 1;
-            continue;
-        }
-
-        let Some(Node::Element(anchor)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        let Node::Element(mut list_item) = anchor.children.remove(0) else {
-            index += 1;
-            continue;
-        };
-        let mut inner_anchor = Node::element("a".to_string(), Vec::new());
-        if let Node::Element(element) = &mut inner_anchor {
-            element.children = std::mem::take(&mut list_item.children);
-        }
-        list_item.children.push(inner_anchor);
-        nodes.insert(index + 1, Node::Element(list_item));
-        index += 2;
     }
 }
 
@@ -10968,7 +10950,17 @@ fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
     matches!(
         name,
-        "a" | "b" | "br" | "code" | "i" | "marquee" | "menuitem" | "nobr" | "option" | "span"
+        "a" | "b"
+            | "br"
+            | "code"
+            | "i"
+            | "marquee"
+            | "menuitem"
+            | "nobr"
+            | "option"
+            | "span"
+            | "style"
+            | "title"
     )
 }
 
@@ -30853,6 +30845,28 @@ mod tests {
         let body = body(&document);
         assert_eq!(element(&body.children[0]).name, "p");
         assert_eq!(element(&body.children[1]).name, "li");
+    }
+
+    #[test]
+    fn list_item_start_splits_open_anchor_and_reconstructs_inside_item() {
+        let document = parse_html("<a><li><style></style><title></title></a>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_anchor = element(&body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert!(outer_anchor.children.is_empty());
+
+        let list_item = element(&body.children[1]);
+        assert_eq!(list_item.name, "li");
+        assert_eq!(list_item.children.len(), 1);
+
+        let inner_anchor = element(&list_item.children[0]);
+        assert_eq!(inner_anchor.name, "a");
+        assert_eq!(inner_anchor.children.len(), 2);
+        assert_eq!(element(&inner_anchor.children[0]).name, "style");
+        assert_eq!(element(&inner_anchor.children[1]).name, "title");
     }
 
     #[test]
