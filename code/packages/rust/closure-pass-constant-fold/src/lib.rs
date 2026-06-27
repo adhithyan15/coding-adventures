@@ -1198,6 +1198,60 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
 
+                // ---- Number.parseInt(string[, radix]) / Number.parseFloat(string) ----
+                //
+                // The ES2015 static methods (ECMAScript §21.1.2.12/.13) are the
+                // SAME function objects as the global `parseInt`/`parseFloat` —
+                // `Number.parseInt === parseInt` — so they run the identical
+                // algorithm and we reuse `fold_parse_int`/`fold_parse_float`:
+                // `Number.parseInt("12px")` → `12`, `Number.parseInt("FF", 16)` →
+                // `255`, `Number.parseFloat("3.14abc")` → `3.14`. As with the
+                // global forms, we DECLINE (leave the call) when the result is
+                // `NaN`/`±Infinity` (no literal to substitute), and `parseInt`
+                // only folds with a missing or integer-literal radix.
+                //
+                // These dispatch HERE (the MemberExpression arm) rather than the
+                // free-identifier arm because the callee is `Number.parseX`, a
+                // member access — so only the bare global `Number` folds, never a
+                // shadowed receiver (`n.parseInt(...)` is left alone), the same
+                // premise as the `String.from*` statics.
+                if obj.name == "Number"
+                    && matches!(prop.name.as_str(), "parseInt" | "parseFloat")
+                {
+                    if let Some(Expression::StringLiteral(s)) = arguments.first() {
+                        let folded = match prop.name.as_str() {
+                            "parseInt" if arguments.len() <= 2 => match arguments.get(1) {
+                                None => fold_parse_int(&s.value, None),
+                                Some(Expression::NumericLiteral(r))
+                                    if r.value.is_finite() && r.value.fract() == 0.0 =>
+                                {
+                                    fold_parse_int(&s.value, Some(r.value))
+                                }
+                                Some(_) => None,
+                            },
+                            "parseFloat" if arguments.len() == 1 => {
+                                fold_parse_float(&s.value)
+                            }
+                            _ => None,
+                        };
+                        if let Some(value) = folded {
+                            let parent = c.cv.clone();
+                            let before = match arguments.get(1) {
+                                Some(Expression::NumericLiteral(r)) => format!(
+                                    "Number.{}(\"{}\",{})",
+                                    prop.name,
+                                    s.value,
+                                    format_js_number(r.value)
+                                ),
+                                _ => format!("Number.{}(\"{}\")", prop.name, s.value),
+                            };
+                            let after = format_js_number(value);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
+                        }
+                    }
+                }
+
                 // ---- Number.isInteger / isFinite / isNaN (x) → boolean ----
                 //
                 // The ES2015 static predicates (ECMAScript §21.1.2.2/.3/.4). UNLIKE
@@ -6387,6 +6441,21 @@ mod tests {
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
+    // ------------------- Number.parseInt/parseFloat (static) ---------
+
+    /// Build `Number.<method>("<recv>"[, radix])`.
+    fn number_parse_call(method: &str, recv: &str, radix: Option<f64>) -> Expression {
+        let mut arguments = vec![string(recv, None)];
+        if let Some(r) = radix {
+            arguments.push(num(r, None));
+        }
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Number"), method)),
+            arguments,
+        })
+    }
+
     // ------------------- Number.isInteger/isFinite/isNaN (static) ----
 
     /// Build `Number.<method>(<arg>)`.
@@ -6396,6 +6465,26 @@ mod tests {
             callee: Box::new(member(ident("Number"), method)),
             arguments: vec![arg],
         })
+    }
+
+    #[test]
+    fn fold_number_parse_int_through_pass() {
+        // `Number.parseInt` is the same function as the global `parseInt`.
+        for (recv, radix, expect) in [
+            ("12px", None, 12.0),
+            ("FF", Some(16.0), 255.0),
+            ("0x1F", None, 31.0),
+            ("-7", None, -7.0),
+            ("101", Some(2.0), 5.0),
+        ] {
+            let c = number_parse_call("parseInt", recv, radix);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "Number.parseInt({recv:?},{radix:?}) should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, expect),
+                other => panic!("expected {expect}; got {:?}", other),
+            }
+        }
     }
 
     #[test]
@@ -6429,6 +6518,20 @@ mod tests {
     }
 
     #[test]
+    fn fold_number_parse_float_through_pass() {
+        // `Number.parseFloat` is the same function as the global `parseFloat`.
+        for (recv, expect) in [("3.14abc", 3.14), ("1e3", 1000.0), ("-2.5", -2.5)] {
+            let c = number_parse_call("parseFloat", recv, None);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "Number.parseFloat({recv:?}) should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, expect),
+                other => panic!("expected {expect}; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
     fn fold_number_static_on_non_number_literals_is_false() {
         // A non-number literal is provably NOT a Number — all three predicates
         // are `false`, with no `ToNumber` coercion (Number.isNaN("NaN") === false).
@@ -6453,6 +6556,49 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[test]
+    fn number_parse_nan_result_does_not_fold() {
+        // A `NaN`/`Infinity` result has no literal token — decline, like the
+        // global forms (`parseInt("")`, `parseFloat("Infinity")`).
+        for (method, recv) in [("parseInt", ""), ("parseFloat", "Infinity"), ("parseInt", "xyz")] {
+            let c = number_parse_call(method, recv, None);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "Number.{method}({recv:?}) must not fold (NaN/Infinity)");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn number_parse_non_literal_or_bad_radix_does_not_fold() {
+        // A non-string arg, or a non-integer-literal radix, is left alone.
+        let cases = [
+            number_parse_call("parseInt", "10", Some(2.5)), // fractional radix
+            Expression::CallExpression(CallExpression {
+                cv: Some("c.cv".to_string()),
+                callee: Box::new(member(ident("Number"), "parseInt")),
+                arguments: vec![ident("x")], // non-string arg
+            }),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "Number.parseInt(bad) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn number_parse_on_non_number_receiver_does_not_fold() {
+        // Only the bare global `Number` folds; `n.parseInt("5")` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("n"), "parseInt")),
+            arguments: vec![string("5", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "n.parseInt(\"5\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
     #[test]
