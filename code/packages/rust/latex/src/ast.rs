@@ -50,6 +50,16 @@ pub enum Node {
 }
 
 impl Node {
+    /// If this is a [`Node::Math`] island, parse its raw content into the math AST
+    /// ([`crate::MathNode`]); otherwise `None`. The structural tree is unchanged (L1
+    /// round-trip intact) — parsed math is produced on demand here.
+    pub fn parsed_math(&self) -> Option<Result<crate::MathNode, crate::ParseError>> {
+        match self {
+            Node::Math { content, .. } => Some(crate::parse_math(content)),
+            _ => None,
+        }
+    }
+
     /// Render this node back to LaTeX source. `parse(&node.to_latex()) == [node]` up to the
     /// normalizations noted in the module docs.
     pub fn to_latex(&self) -> String {

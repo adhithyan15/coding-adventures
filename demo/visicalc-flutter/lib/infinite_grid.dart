@@ -226,6 +226,63 @@ class _InfiniteGridState extends State<InfiniteGrid> {
     });
   }
 
+  // ── Multi-sheet tab handlers ──
+  // Switch the active sheet, add one, rename via a small dialog, or delete the
+  // active sheet. Each re-syncs the formula bar to the (re-primed) selection.
+  void _selectSheet(int index) => setState(() {
+        _model.selectSheet(index);
+        _formulaCtrl.text = _model.formula;
+      });
+
+  void _addSheet() {
+    // Name the new sheet "SheetN" where N avoids a clash with existing names.
+    final names = _model.sheetNames.toSet();
+    var n = names.length + 1;
+    while (names.contains('Sheet$n')) {
+      n++;
+    }
+    setState(() {
+      _model.addSheet('Sheet$n');
+      _formulaCtrl.text = _model.formula;
+    });
+  }
+
+  Future<void> _renameSheet(int index) async {
+    final ctrl = TextEditingController(text: _model.sheetNames[index]);
+    final newName = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: _cPanel,
+        title: const Text('Rename sheet', style: TextStyle(color: _cInk, fontSize: 14)),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          style: const TextStyle(color: _cInk, fontFamily: _mono),
+          cursorColor: _cAccent,
+          onSubmitted: (v) => Navigator.of(ctx).pop(v),
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.of(ctx).pop(ctrl.text),
+              child: const Text('Rename')),
+        ],
+      ),
+    );
+    ctrl.dispose();
+    if (newName == null || newName.trim().isEmpty) return;
+    setState(() {
+      _model.renameSheet(index, newName.trim());
+      _formulaCtrl.text = _model.formula;
+    });
+  }
+
+  void _deleteSheet(int index) => setState(() {
+        _model.deleteSheet(index);
+        _formulaCtrl.text = _model.formula;
+      });
+
   // A compact, modern toolbar button (rounded chip with hover/down/disabled
   // states) — the Flutter analog of the web demo's segmented controls and the
   // Qt port's `component ToolButton`. `enabled: null` disables it (Undo/Redo/
@@ -284,6 +341,7 @@ class _InfiniteGridState extends State<InfiniteGrid> {
           _formulaBar(),
           _header(),
           Expanded(child: _bodyRow()),
+          _sheetTabs(),
           _statusBar(),
         ],
       ),
@@ -444,6 +502,72 @@ class _InfiniteGridState extends State<InfiniteGrid> {
               enabled: _model.canRedo),
         ],
         ),
+      ),
+    );
+  }
+
+  // ── Sheet tab bar (Excel-style, along the bottom) ──
+  // One chip per sheet; the active one tints to the accent. Tap to switch,
+  // double-tap to rename, right-click (or long-press) to delete; the trailing
+  // "+" adds a sheet. A formula like `=Summary!B3` reaches across the tabs, so
+  // switching sheets and editing here updates every cross-sheet dependent live.
+  Widget _sheetTabs() {
+    final names = _model.sheetNames;
+    final active = _model.activeSheet;
+    return Container(
+      height: 34,
+      margin: const EdgeInsets.fromLTRB(10, 4, 10, 0),
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: _cLine)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: names.length,
+              itemBuilder: (_, i) {
+                final selected = i == active;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 4, top: 4),
+                  child: Tooltip(
+                    message: 'Tap to switch · double-tap to rename · right-click to delete',
+                    child: GestureDetector(
+                      onTap: () => _selectSheet(i),
+                      onDoubleTap: () => _renameSheet(i),
+                      onSecondaryTap: () => _deleteSheet(i),
+                      onLongPress: () => _deleteSheet(i),
+                      child: Container(
+                        key: Key('sheetTab_$i'),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: selected ? _cSel : _cSurface,
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
+                          border: Border.all(
+                            color: selected ? _cAccent : _cLineStrong,
+                            width: selected ? 2 : 1,
+                          ),
+                        ),
+                        child: Text(
+                          names[i],
+                          style: TextStyle(
+                            color: selected ? Colors.white : _cInk,
+                            fontSize: 12,
+                            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                            fontFamily: _mono,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(width: 6),
+          _toolButton('+ Sheet', 'Add a new sheet', _addSheet),
+        ],
       ),
     );
   }

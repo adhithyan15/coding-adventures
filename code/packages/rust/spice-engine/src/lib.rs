@@ -3470,6 +3470,8 @@ pub struct DeckOutputPlanArtifact {
     pub result_columns: Vec<String>,
     pub output_probe_count: usize,
     pub output_probes: Vec<String>,
+    pub output_probe_line_count: usize,
+    pub output_probe_lines: Vec<usize>,
     pub output_directive_count: usize,
     pub output_directives: Vec<String>,
     pub output_directive_kind_count: usize,
@@ -4104,6 +4106,35 @@ pub fn select_deck_output_probes(netlist: &str, analysis: &str) -> Result<Vec<St
             let key = deck_output_probe_key(&probe);
             if seen.insert(key) {
                 selected.push(probe);
+            }
+        }
+    }
+    Ok(selected)
+}
+
+pub fn select_deck_output_probe_lines(
+    netlist: &str,
+    analysis: &str,
+) -> Result<Vec<usize>, SpiceError> {
+    let summary = resolve_deck_outputs(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "select_deck_output_probe_lines",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    let mut selected = Vec::new();
+    let mut seen = HashSet::new();
+    for selection in summary.selections {
+        if !selection.analysis.as_deref().map_or(true, |requested| {
+            deck_output_analysis_matches(requested, analysis)
+        }) {
+            continue;
+        }
+        for probe in selection.probes {
+            let key = deck_output_probe_key(&probe);
+            if seen.insert(key) {
+                selected.push(selection.line_number);
             }
         }
     }
@@ -10429,6 +10460,7 @@ fn deck_output_plan_artifacts(
     plan: &DeckAnalysisPlan,
     result_columns: &[String],
     output_probes: &[String],
+    output_probe_lines: &[usize],
     output_directives: &[String],
     output_directive_analysis_kinds: &[String],
     output_directive_lines: &[usize],
@@ -10442,6 +10474,8 @@ fn deck_output_plan_artifacts(
         result_columns: result_columns.to_vec(),
         output_probe_count: output_probes.len(),
         output_probes: output_probes.to_vec(),
+        output_probe_line_count: output_probe_lines.len(),
+        output_probe_lines: output_probe_lines.to_vec(),
         output_directive_count: output_directives.len(),
         output_directives: output_directives.to_vec(),
         output_directive_kind_count: output_directive_kinds.len(),
@@ -10485,6 +10519,8 @@ const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS: &[&str] = &[
     "ResultColumnList",
     "OutputProbes",
     "OutputProbeList",
+    "OutputProbeLines",
+    "OutputProbeLineList",
     "OutputDirectives",
     "OutputDirectiveList",
     "OutputDirectiveKinds",
@@ -10505,6 +10541,13 @@ fn deck_output_plan_artifact_cells(artifact: &DeckOutputPlanArtifact) -> Vec<Str
         artifact.result_columns.join(";"),
         artifact.output_probe_count.to_string(),
         artifact.output_probes.join(";"),
+        artifact.output_probe_line_count.to_string(),
+        artifact
+            .output_probe_lines
+            .iter()
+            .map(usize::to_string)
+            .collect::<Vec<_>>()
+            .join(";"),
         artifact.output_directive_count.to_string(),
         artifact.output_directives.join(";"),
         artifact.output_directive_kind_count.to_string(),
@@ -10587,6 +10630,7 @@ fn deck_output_plan_artifact_bundle(
     plan: &DeckAnalysisPlan,
     result_table: &str,
     output_probes: &[String],
+    output_probe_lines: &[usize],
     output_directives: &[String],
     output_directive_analysis_kinds: &[String],
     output_directive_lines: &[usize],
@@ -10602,6 +10646,7 @@ fn deck_output_plan_artifact_bundle(
         plan,
         &deck_table_columns(result_table),
         output_probes,
+        output_probe_lines,
         output_directives,
         output_directive_analysis_kinds,
         output_directive_lines,
@@ -10888,6 +10933,7 @@ fn deck_table_artifacts(
     control_policy_summary_artifacts: &[DeckControlPolicySummaryArtifact],
     control_policy_summary_artifact_table: &str,
     output_probes: &[String],
+    output_probe_lines: &[usize],
     output_directives: &[String],
     output_directive_analysis_kinds: &[String],
     output_directive_lines: &[usize],
@@ -10922,6 +10968,7 @@ fn deck_table_artifacts(
         plan,
         result_table,
         output_probes,
+        output_probe_lines,
         output_directives,
         output_directive_analysis_kinds,
         output_directive_lines,
@@ -11800,6 +11847,7 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "op")?;
+            let output_probe_lines = select_deck_output_probe_lines(netlist, "op")?;
             let output_directives = select_deck_output_directives(netlist, "op")?;
             let output_directive_analysis_kinds =
                 select_deck_output_directive_analysis_kinds(netlist, "op")?;
@@ -11833,6 +11881,7 @@ pub fn run_deck_analysis(
                 &control_policy_summary_artifacts,
                 &control_policy_summary_artifact_table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -11859,6 +11908,7 @@ pub fn run_deck_analysis(
                 &plan,
                 &table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -11944,6 +11994,7 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "dc")?;
+            let output_probe_lines = select_deck_output_probe_lines(netlist, "dc")?;
             let output_directives = select_deck_output_directives(netlist, "dc")?;
             let output_directive_analysis_kinds =
                 select_deck_output_directive_analysis_kinds(netlist, "dc")?;
@@ -11977,6 +12028,7 @@ pub fn run_deck_analysis(
                 &control_policy_summary_artifacts,
                 &control_policy_summary_artifact_table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12003,6 +12055,7 @@ pub fn run_deck_analysis(
                 &plan,
                 &table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12089,6 +12142,7 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "ac")?;
+            let output_probe_lines = select_deck_output_probe_lines(netlist, "ac")?;
             let output_directives = select_deck_output_directives(netlist, "ac")?;
             let output_directive_analysis_kinds =
                 select_deck_output_directive_analysis_kinds(netlist, "ac")?;
@@ -12122,6 +12176,7 @@ pub fn run_deck_analysis(
                 &control_policy_summary_artifacts,
                 &control_policy_summary_artifact_table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12148,6 +12203,7 @@ pub fn run_deck_analysis(
                 &plan,
                 &table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12237,6 +12293,7 @@ pub fn run_deck_analysis(
             let fourier = fourier_transient_cards(&result, &fourier_cards)?;
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "tran")?;
+            let output_probe_lines = select_deck_output_probe_lines(netlist, "tran")?;
             let output_directives = select_deck_output_directives(netlist, "tran")?;
             let output_directive_analysis_kinds =
                 select_deck_output_directive_analysis_kinds(netlist, "tran")?;
@@ -12270,6 +12327,7 @@ pub fn run_deck_analysis(
                 &control_policy_summary_artifacts,
                 &control_policy_summary_artifact_table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12296,6 +12354,7 @@ pub fn run_deck_analysis(
                 &plan,
                 &table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12378,6 +12437,7 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = vec![format!("V({output_node})")];
+            let output_probe_lines = Vec::new();
             let output_directives = Vec::new();
             let output_directive_analysis_kinds = Vec::new();
             let output_directive_lines = Vec::new();
@@ -12411,6 +12471,7 @@ pub fn run_deck_analysis(
                 &control_policy_summary_artifacts,
                 &control_policy_summary_artifact_table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12437,6 +12498,7 @@ pub fn run_deck_analysis(
                 &plan,
                 &table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12517,6 +12579,7 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = vec![format!("V({output_node})")];
+            let output_probe_lines = Vec::new();
             let output_directives = Vec::new();
             let output_directive_analysis_kinds = Vec::new();
             let output_directive_lines = Vec::new();
@@ -12550,6 +12613,7 @@ pub fn run_deck_analysis(
                 &control_policy_summary_artifacts,
                 &control_policy_summary_artifact_table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12576,6 +12640,7 @@ pub fn run_deck_analysis(
                 &plan,
                 &table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12668,6 +12733,7 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = vec![format!("V({output_node})")];
+            let output_probe_lines = Vec::new();
             let output_directives = Vec::new();
             let output_directive_analysis_kinds = Vec::new();
             let output_directive_lines = Vec::new();
@@ -12701,6 +12767,7 @@ pub fn run_deck_analysis(
                 &control_policy_summary_artifacts,
                 &control_policy_summary_artifact_table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,
@@ -12727,6 +12794,7 @@ pub fn run_deck_analysis(
                 &plan,
                 &table,
                 &output_probes,
+                &output_probe_lines,
                 &output_directives,
                 &output_directive_analysis_kinds,
                 &output_directive_lines,

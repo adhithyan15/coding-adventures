@@ -2,6 +2,33 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.3.0] — 2026-06-26
+
+### Added — LTX01 L2: math grammar
+
+- **`parse_math(&str) -> Result<MathNode, ParseError>`** — a precedence-climbing parser
+  over a math island's raw inner source (the string L1 keeps in `Node::Math`). Re-uses the
+  L0 `tokenize` and filters space/par/comment tokens, then climbs:
+  relations (`= ≠ < ≤ > ≥ \approx \equiv`) < add/sub (`+ - \pm \mp`) < mul/div
+  (`\times \cdot \div /` **and implicit multiplication** via adjacency — `2x`, `\pi r`,
+  `(a)(b)`) < unary `± ∓` < scripts (`^`/`_`, right-assoc) < atoms.
+- **`MathNode` AST** (`math.rs`): `Num`, `Sym`, `Bin`, `Unary`, `Frac`/`\dfrac`/`\tfrac`,
+  `Binom`, `Root { degree, radicand }` (`\sqrt[n]{}`), `Script { base, sub, sup }`,
+  `Call { func, arg }` (named functions `\sin \log …`), `BigOp { op, lower, upper, body }`
+  (`\sum \prod \int \lim` with bound scripts), `Accent` (`\hat \bar \vec …`),
+  `Fenced { left, body, right }` (`\left( … \right)`, `\langle`, `|`, …), `Text`, and
+  `Rel`. `{…}` groups are **transparent** (grouping only — they do not appear as nodes).
+- **`MathNode::to_latex`** — precedence-aware round-trip: `parse_math(&m.to_latex()) == m`.
+  Children below the parent's precedence are wrapped in invisible `{…}` so the re-parse
+  re-associates identically.
+- **`Node::parsed_math`** — parses a `Node::Math` island on demand; the L1 structural tree
+  is unchanged (its round-trip stays intact).
+- Total / panic-free / spanned; recursion is **depth-guarded** (`MAX_DEPTH`) so adversarial
+  nesting (e.g. thousands of `(`) returns a spanned error instead of overflowing the stack.
+- +15 math tests incl. the worked corpus (`\frac{12 \times 15}{3}`, `2^{10}`,
+  `\sqrt[3]{27}`, `\sum_{i=1}^{n} i`, `\left(\frac{a}{b}\right)^2`), a round-trip corpus,
+  relations/functions, and the deep-nesting bound; clippy `-D warnings` clean, no `unsafe`.
+
 ## [0.2.0] — 2026-06-26
 
 ### Added — LTX01 L1: structural document parser

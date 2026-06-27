@@ -723,6 +723,8 @@ export interface DeckOutputPlanArtifact {
   readonly resultColumns: readonly string[];
   readonly outputProbeCount: number;
   readonly outputProbes: readonly string[];
+  readonly outputProbeLineCount: number;
+  readonly outputProbeLines: readonly number[];
   readonly outputDirectiveCount: number;
   readonly outputDirectives: readonly string[];
   readonly outputDirectiveKindCount: number;
@@ -3467,6 +3469,33 @@ export function selectDeckOutputProbes(netlist: string, analysis: string): strin
       }
       seen.add(key);
       selected.push(probe);
+    }
+  }
+  return selected;
+}
+
+export function selectDeckOutputProbeLines(netlist: string, analysis: string): number[] {
+  const summary = resolveDeckOutputs(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0];
+    throw invalidElement(
+      "selectDeckOutputProbeLines",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  const selected: number[] = [];
+  const seen = new Set<string>();
+  for (const selection of summary.selections) {
+    if (selection.analysis !== undefined && !deckOutputAnalysisMatches(selection.analysis, analysis)) {
+      continue;
+    }
+    for (const probe of selection.probes) {
+      const key = deckOutputProbeKey(probe);
+      if (seen.has(key)) {
+        continue;
+      }
+      seen.add(key);
+      selected.push(selection.lineNumber);
     }
   }
   return selected;
@@ -8367,6 +8396,7 @@ function deckOutputPlanArtifacts(
   plan: DeckAnalysisPlan,
   resultColumns: readonly string[],
   outputProbes: readonly string[],
+  outputProbeLines: readonly number[],
   outputDirectives: readonly string[],
   outputDirectiveAnalysisKinds: readonly string[],
   outputDirectiveLines: readonly number[],
@@ -8381,6 +8411,8 @@ function deckOutputPlanArtifacts(
       resultColumns: [...resultColumns],
       outputProbeCount: outputProbes.length,
       outputProbes: [...outputProbes],
+      outputProbeLineCount: outputProbeLines.length,
+      outputProbeLines: [...outputProbeLines],
       outputDirectiveCount: outputDirectives.length,
       outputDirectives: [...outputDirectives],
       outputDirectiveKindCount: outputDirectiveKinds.length,
@@ -8421,6 +8453,8 @@ const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
   "ResultColumnList",
   "OutputProbes",
   "OutputProbeList",
+  "OutputProbeLines",
+  "OutputProbeLineList",
   "OutputDirectives",
   "OutputDirectiveList",
   "OutputDirectiveKinds",
@@ -8441,6 +8475,8 @@ function deckOutputPlanArtifactCells(artifact: DeckOutputPlanArtifact): string[]
     artifact.resultColumns.join(";"),
     String(artifact.outputProbeCount),
     artifact.outputProbes.join(";"),
+    String(artifact.outputProbeLineCount),
+    artifact.outputProbeLines.map(String).join(";"),
     String(artifact.outputDirectiveCount),
     artifact.outputDirectives.join(";"),
     String(artifact.outputDirectiveKindCount),
@@ -8498,6 +8534,7 @@ function deckOutputPlanArtifactBundle(
   plan: DeckAnalysisPlan,
   resultTable: string,
   outputProbes: readonly string[],
+  outputProbeLines: readonly number[],
   outputDirectives: readonly string[],
   outputDirectiveAnalysisKinds: readonly string[],
   outputDirectiveLines: readonly number[],
@@ -8513,6 +8550,7 @@ function deckOutputPlanArtifactBundle(
     plan,
     deckTableColumns(resultTable),
     outputProbes,
+    outputProbeLines,
     outputDirectives,
     outputDirectiveAnalysisKinds,
     outputDirectiveLines,
@@ -8603,6 +8641,7 @@ function deckTableArtifacts(
   controlPolicySummaryArtifacts: readonly DeckControlPolicySummaryArtifact[],
   controlPolicySummaryArtifactTable: string,
   outputProbes: readonly string[],
+  outputProbeLines: readonly number[],
   outputDirectives: readonly string[],
   outputDirectiveAnalysisKinds: readonly string[],
   outputDirectiveLines: readonly number[],
@@ -8627,6 +8666,7 @@ function deckTableArtifacts(
     plan,
     resultTable,
     outputProbes,
+    outputProbeLines,
     outputDirectives,
     outputDirectiveAnalysisKinds,
     outputDirectiveLines,
@@ -9284,6 +9324,7 @@ export function runDeckAnalysis(
     const measurements: ProbeMeasurement[] = [];
     const fourier: FourierResult[] = [];
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
+    const outputProbeLines = selectDeckOutputProbeLines(netlist, plan.analysis);
     const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
     const outputDirectiveAnalysisKinds = selectDeckOutputDirectiveAnalysisKinds(
       netlist,
@@ -9309,6 +9350,7 @@ export function runDeckAnalysis(
       plan,
       table,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9330,6 +9372,7 @@ export function runDeckAnalysis(
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9415,6 +9458,7 @@ export function runDeckAnalysis(
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const fourier: FourierResult[] = [];
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
+    const outputProbeLines = selectDeckOutputProbeLines(netlist, plan.analysis);
     const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
     const outputDirectiveAnalysisKinds = selectDeckOutputDirectiveAnalysisKinds(
       netlist,
@@ -9441,6 +9485,7 @@ export function runDeckAnalysis(
       plan,
       table,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9462,6 +9507,7 @@ export function runDeckAnalysis(
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9558,6 +9604,7 @@ export function runDeckAnalysis(
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const fourier: FourierResult[] = [];
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
+    const outputProbeLines = selectDeckOutputProbeLines(netlist, plan.analysis);
     const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
     const outputDirectiveAnalysisKinds = selectDeckOutputDirectiveAnalysisKinds(
       netlist,
@@ -9584,6 +9631,7 @@ export function runDeckAnalysis(
       plan,
       table,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9605,6 +9653,7 @@ export function runDeckAnalysis(
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9696,6 +9745,7 @@ export function runDeckAnalysis(
       selectDeckFourierCardsForAnalysis(netlist, plan.analysis),
     );
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
+    const outputProbeLines = selectDeckOutputProbeLines(netlist, plan.analysis);
     const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
     const outputDirectiveAnalysisKinds = selectDeckOutputDirectiveAnalysisKinds(
       netlist,
@@ -9722,6 +9772,7 @@ export function runDeckAnalysis(
       plan,
       table,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9743,6 +9794,7 @@ export function runDeckAnalysis(
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9823,6 +9875,7 @@ export function runDeckAnalysis(
     const measurements: ProbeMeasurement[] = [];
     const fourier: FourierResult[] = [];
     const outputProbes = [`V(${outputNode})`];
+    const outputProbeLines: number[] = [];
     const outputDirectives: string[] = [];
     const outputDirectiveAnalysisKinds: string[] = [];
     const outputDirectiveLines: number[] = [];
@@ -9847,6 +9900,7 @@ export function runDeckAnalysis(
       plan,
       table,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9868,6 +9922,7 @@ export function runDeckAnalysis(
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9947,6 +10002,7 @@ export function runDeckAnalysis(
     const measurements: ProbeMeasurement[] = [];
     const fourier: FourierResult[] = [];
     const outputProbes = [`V(${outputNode})`];
+    const outputProbeLines: number[] = [];
     const outputDirectives: string[] = [];
     const outputDirectiveAnalysisKinds: string[] = [];
     const outputDirectiveLines: number[] = [];
@@ -9971,6 +10027,7 @@ export function runDeckAnalysis(
       plan,
       table,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -9992,6 +10049,7 @@ export function runDeckAnalysis(
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -10081,6 +10139,7 @@ export function runDeckAnalysis(
     const measurements: ProbeMeasurement[] = [];
     const fourier: FourierResult[] = [];
     const outputProbes = [`V(${outputNode})`];
+    const outputProbeLines: number[] = [];
     const outputDirectives: string[] = [];
     const outputDirectiveAnalysisKinds: string[] = [];
     const outputDirectiveLines: number[] = [];
@@ -10105,6 +10164,7 @@ export function runDeckAnalysis(
       plan,
       table,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
@@ -10126,6 +10186,7 @@ export function runDeckAnalysis(
       controlPolicySummaryArtifacts,
       controlPolicySummaryArtifactTable,
       outputProbes,
+      outputProbeLines,
       outputDirectives,
       outputDirectiveAnalysisKinds,
       outputDirectiveLines,
