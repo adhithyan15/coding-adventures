@@ -1,0 +1,9 @@
+[package]
+name = "math-frontend"
+version = "0.1.0"
+edition = "2021"
+description = "A pluggable parser-frontend framework: a neutral math AST (MathExpr), a MathFrontend trait + registry, and a shared conformance harness. Notation parsers (LaTeX, AsciiMath, MathML, …) implement the trait so any consumer lowers ONE neutral tree."
+license = "MIT"
+
+[dependencies]
+# No dependencies — this is the neutral framework every frontend and consumer shares.

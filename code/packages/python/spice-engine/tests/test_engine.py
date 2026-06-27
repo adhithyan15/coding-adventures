@@ -6872,8 +6872,11 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     expected_output_plan_table = (
         "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\t"
         "OutputProbeList\tOutputDirectives\tOutputDirectiveList\t"
-        "OutputDirectiveKinds\tOutputDirectiveKindList\tTables\tTableList\n"
-        "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t3\t"
+        "OutputDirectiveKinds\tOutputDirectiveKindList\t"
+        "OutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\t"
+        "Tables\tTableList\n"
+        "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t"
+        "1\tglobal\t3\t"
         "result;output-plan;run-artifact\n"
     )
     expected_output_plan_records = [
@@ -6888,6 +6891,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
             "OutputDirectiveList": ".save",
             "OutputDirectiveKinds": "1",
             "OutputDirectiveKindList": "save",
+            "OutputDirectiveAnalysisKinds": "1",
+            "OutputDirectiveAnalysisKindList": "global",
             "Tables": "3",
             "TableList": "result;output-plan;run-artifact",
         }
@@ -6902,6 +6907,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert output_plan_artifact.output_directives == [".save"]
     assert output_plan_artifact.output_directive_kind_count == 1
     assert output_plan_artifact.output_directive_kinds == ["save"]
+    assert output_plan_artifact.output_directive_analysis_kind_count == 1
+    assert output_plan_artifact.output_directive_analysis_kinds == ["global"]
     assert output_plan_artifact.tables == ["result", "output-plan", "run-artifact"]
     assert op_execution.output_plan_artifact_table == expected_output_plan_table
     assert op_execution.output_plan_artifact_table == (
@@ -6910,8 +6917,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.output_plan_artifact_csv == (
         "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,"
         "OutputProbeList,OutputDirectives,OutputDirectiveList,"
-        "OutputDirectiveKinds,OutputDirectiveKindList,Tables,TableList\n"
-        "op,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,3,"
+        "OutputDirectiveKinds,OutputDirectiveKindList,"
+        "OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,"
+        "Tables,TableList\n"
+        "op,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,1,global,3,"
         "result;output-plan;run-artifact\n"
     )
     assert op_execution.output_plan_artifact_csv == (
@@ -7120,6 +7129,13 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert dc_execution.output_plan_artifact_records[0][
         "OutputDirectiveKindList"
     ] == "save;probe;print"
+    assert dc_execution.output_plan_artifacts[0].output_directive_analysis_kinds == [
+        "global",
+        "dc",
+    ]
+    assert dc_execution.output_plan_artifact_records[0][
+        "OutputDirectiveAnalysisKindList"
+    ] == "global;dc"
     assert dc_execution.analysis_directives == [".dc"]
     assert dc_execution.table_count == 4
     assert dc_execution.tables == ["result", "measurement", "output-plan", "run-artifact"]
@@ -7195,6 +7211,13 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert ac_execution.output_plan_artifact_records[0][
         "OutputDirectiveKindList"
     ] == "save;plot"
+    assert ac_execution.output_plan_artifacts[0].output_directive_analysis_kinds == [
+        "global",
+        "ac",
+    ]
+    assert ac_execution.output_plan_artifact_records[0][
+        "OutputDirectiveAnalysisKindList"
+    ] == "global;ac"
     assert ac_execution.analysis_directives == [".ac"]
     assert ac_execution.table_count == 4
     assert ac_execution.tables == ["result", "measurement", "output-plan", "run-artifact"]
