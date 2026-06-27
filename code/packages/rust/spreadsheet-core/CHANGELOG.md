@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.12.0
+
+**Cross-sheet references — formula layer (multi-sheet workbooks, PR-1 of the arc).**
+The workbook container and the dependency graph were already multi-sheet
+(`Workbook.sheets` / `sheet_by_name`, `dag::Node = (SheetId, CellAddress)`); this
+release teaches the **formula layer** to *represent, parse, and re-emit* a
+cross-sheet reference (`=Summary!A1`). Evaluation of a qualified reference is
+deferred to the next release and yields `#REF!` in the meantime (a clean "not
+wired" signal, never a wrong value). The single-sheet path is byte-identical.
+
+- `FormulaAst::Ref` / `Range` gain an `Option<String>` **sheet qualifier**
+  (`ast.rs`): `None` = the formula's own sheet (the unchanged common case),
+  `Some(name)` = a cross-sheet reference, holding the sheet name *as written*
+  (resolved to a `SheetId` later, by a workbook). New ergonomic constructors
+  `FormulaAst::cell` / `sheet_cell` / `cell_range` / `sheet_range`.
+- Parser (`parser.rs`): `Name!A1`, `Name!A1:B2`, and single-quoted
+  `'Q1 Budget'!A1` / `'O''Brien'!A1` (doubled `''` → a literal apostrophe). A `!`
+  makes the preceding token a **sheet name**, never a cell, so `'A1'!B2` is
+  unambiguous. An unknown sheet is not a parse error — it becomes `#REF!` at
+  evaluation, so formulas can load in any order.
+- Re-emit (`to_formula_string`): a qualified reference prints `Name!A1`,
+  single-quoting the name only when it isn't a bare token (spaces, punctuation,
+  a leading digit, or a name that itself spells a cell address).
+- `shift` (fill/copy) and `adjust` (structural edits) **preserve the qualifier**:
+  a cross-sheet ref shifts its address but keeps its sheet, and a structural edit
+  on a formula's own sheet leaves its cross-sheet refs untouched (their target
+  lives elsewhere — inbound cross-sheet propagation is a later slice).
+- Evaluation + dependency extraction (`recalc.rs`): unqualified refs are
+  unchanged; a qualified ref evaluates to `#REF!` and registers no precedent
+  (pending the resolver slice).
+
 ## 0.11.1
 
 - Make `Workbook::cell_source_text` **public** so a facade can resync its

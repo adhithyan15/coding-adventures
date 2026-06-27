@@ -59,13 +59,15 @@ Extend `parse_ident_or_ref` so a bareword (or a single-quoted name) **followed b
   starting with a digit, and not a legal A1 address — disambiguation rule below).
 - `'Q1 Budget'!B2` — single-quoted names allow spaces/punctuation; `''` escapes a
   literal quote inside the name (Excel rule).
-- The sheet **name** is resolved to a `SheetId` at *parse-against-a-workbook* time,
-  not at bare-`parse()` time (the bare parser has no workbook). Two options, decided
-  in the engine PR: (a) the AST stores the *name* string until bound, or (b) parsing
-  stays workbook-aware. Leaning (a) — a `Ref { sheet: Option<SheetName>, … }` at the
-  AST layer, lowered to `SheetId` when set on a workbook — so `parse()` stays pure
-  and a formula referencing a not-yet-created sheet is a clean `#REF!` rather than a
-  parse error. The engine PR will pin this down and document the choice.
+- **Decided (PR-1, shipped): option (a) — the AST stores the sheet *name* string.**
+  `FormulaAst::Ref { sheet: Option<String>, addr }` / `Range { sheet, range }`,
+  `None` = own sheet. `parse()` stays pure (no workbook), so a formula referencing a
+  not-yet-created sheet is a clean `#REF!` at evaluation, never a parse error, and
+  formulas can load in any order. The name → `SheetId` resolution happens at
+  *evaluation / dependency* time (PR-2), where a workbook is in hand. Trade-off
+  accepted: **rename-sheet** must rewrite the stored name in every referencing
+  formula (PR-4) — chosen over option (b)'s free-rename because keeping `parse()`
+  workbook-free and forward-references clean is worth more than rename being a no-op.
 - Unknown sheet name → the reference evaluates to `#REF!` (not a parse error), so a
   workbook can load formulas in any order.
 - Ambiguity: `A1!B2` — `A1` is both a valid A1 address and a candidate sheet name.
@@ -175,6 +177,10 @@ the existing formula bar just works once the engine resolves it. Per backend:
 
 - 3-D refs (`Sheet1:Sheet3!A1`) — the AST single-sheet-qualifier choice keeps the
   door open but does not build it.
+- Non-ASCII sheet names. The formula parser uses an ASCII byte cursor (the
+  pre-existing engine assumption — string literals behave the same way), so a
+  multibyte-UTF-8 sheet name round-trips as mojibake. Demos name sheets in ASCII
+  (`Sheet1`, `Summary`); a UTF-8-aware cursor is a separate, orthogonal change.
 - Sheet-level formatting/visibility, sheet colors, very-hidden sheets.
 - Workbook-level named ranges (a separate candidate feature).
 

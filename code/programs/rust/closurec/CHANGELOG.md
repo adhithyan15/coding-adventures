@@ -24,6 +24,39 @@ per-binding boolean folds (including the `ToNumber(" ")=+0` and `"Infinity"`
 cases), and a WHITESPACE_ONLY-fallback regression guard (zero `isNaN(` / zero
 `isFinite(` calls remain). Help-markdown regenerated to Version 0.200.0.
 
+## [0.197.0] - 2026-06-26
+
+### Added — global `encodeURIComponent` / `decodeURIComponent` folding observable end-to-end at SIMPLE
+
+Bumps `closure-pass-constant-fold` to **0.48.0**, which folds a global
+`encodeURIComponent(str)` / `decodeURIComponent(str)` call on a string literal
+to the string literal V8 produces (ECMAScript §19.2.6.5 / §19.2.6.3),
+declining only the `decodeURIComponent` inputs that would throw a `URIError`.
+
+New end-to-end fixture `tests/diff/simple-fold-uricomponent/` proves the fold
+is observable through the whole closurec SIMPLE pipeline:
+
+```js
+// input
+var a = encodeURIComponent("a b");
+var b = encodeURIComponent("é");
+var c = encodeURIComponent("/");
+var d = decodeURIComponent("a%20b");
+var e = decodeURIComponent("%C3%A9");
+var f = decodeURIComponent("%E0");
+report(a, b, c, d, e, f);
+// SIMPLE output
+var a="a%20b";var b="%C3%A9";var c="%2F";var d="a b";var e="é";var f=decodeURIComponent("%E0");report(a,b,c,d,e,f);
+```
+
+`encodeURIComponent` percent-escapes every non-unreserved UTF-8 byte (the URI
+reserved delimiters `/` etc. ARE escaped, unlike `encodeURI`);
+`decodeURIComponent` reverses it. The truncated multi-byte input `"%E0"` is an
+invalid UTF-8 byte run on which JS throws `URIError`, so `f`'s call is left
+intact — a runtime throw is never folded into a value. Three diff-integration
+tests cover the byte-exact stdout, the per-binding folds, and a regression
+guard that exactly one (declined) call survives, proving the typed SIMPLE
+optimizer ran rather than the `WHITESPACE_ONLY` fallback.
 ## [0.196.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold global `Boolean(…)` → boolean literal

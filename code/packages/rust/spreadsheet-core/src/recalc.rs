@@ -22,8 +22,16 @@ where
 {
     match ast {
         FormulaAst::Literal(v) => Ok(v.clone()),
-        FormulaAst::Ref(addr) => Ok(lookup(current_sheet, *addr)),
-        FormulaAst::Range(r) => evaluate_range(*r, current_sheet, lookup),
+        FormulaAst::Ref { sheet: None, addr } => Ok(lookup(current_sheet, *addr)),
+        FormulaAst::Range { sheet: None, range } => evaluate_range(*range, current_sheet, lookup),
+        // Cross-sheet references parse and round-trip, but resolving a sheet name
+        // to a `SheetId` needs a workbook the evaluator doesn't hold yet, so they
+        // evaluate to `#REF!` for now — a clean "not wired" signal, never a wrong
+        // value. The next slice threads a name resolver through and reads the
+        // target sheet.
+        FormulaAst::Ref { sheet: Some(_), .. } | FormulaAst::Range { sheet: Some(_), .. } => {
+            Err(SpreadsheetError::Ref)
+        }
         FormulaAst::Percent(inner) => {
             let v = evaluate(inner, current_sheet, lookup)?.coerce_number()?;
             Ok(CellValue::Number(v / 100.0))
@@ -63,13 +71,18 @@ where
             // surrogate from `evaluate_range`.
             let mut resolved = Vec::with_capacity(args.len());
             for a in args {
-                if let FormulaAst::Range(r) = a {
-                    // Reject an adversarially huge range before it can
-                    // allocate billions of argument values.
-                    if r.is_oversized() {
+                if let FormulaAst::Range { sheet, range } = a {
+                    // Cross-sheet range arg: same "#REF! until wired" rule as a
+                    // standalone cross-sheet ref.
+                    if sheet.is_some() {
                         return Err(SpreadsheetError::Ref);
                     }
-                    for addr in r.iter() {
+                    // Reject an adversarially huge range before it can
+                    // allocate billions of argument values.
+                    if range.is_oversized() {
+                        return Err(SpreadsheetError::Ref);
+                    }
+                    for addr in range.iter() {
                         resolved.push(lookup(current_sheet, addr));
                     }
                 } else {
@@ -307,19 +320,25 @@ pub fn collect_refs(ast: &FormulaAst, current_sheet: SheetId, out: &mut Vec<(She
         // is keyed by position, so a `$A$1` precedent points at the same node as
         // `A1` — otherwise the edge would never match and `set_value` wouldn't
         // recompute a dependent that referenced it absolutely.
-        FormulaAst::Ref(a) => out.push((current_sheet, a.without_absolute())),
-        FormulaAst::Range(r) => {
+        FormulaAst::Ref { sheet: None, addr } => {
+            out.push((current_sheet, addr.without_absolute()))
+        }
+        FormulaAst::Range { sheet: None, range } => {
             // Skip expansion of an oversized range: registering one
             // dependency per cell for `=SUM(A1:XFD1048576)` would
             // exhaust memory. Such a formula evaluates to `#REF!`
             // anyway (see the call-arg expansion and `evaluate_range`),
             // so it has no meaningful precedents to track.
-            if !r.is_oversized() {
-                for addr in r.iter() {
+            if !range.is_oversized() {
+                for addr in range.iter() {
                     out.push((current_sheet, addr.without_absolute()));
                 }
             }
         }
+        // A cross-sheet reference evaluates to `#REF!` until the resolver lands,
+        // so it has no precedent to register yet. The next slice resolves the
+        // sheet name and pushes `(target_sheet, addr)` here.
+        FormulaAst::Ref { sheet: Some(_), .. } | FormulaAst::Range { sheet: Some(_), .. } => {}
         FormulaAst::Unary { operand, .. } => collect_refs(operand, current_sheet, out),
         FormulaAst::Binary { lhs, rhs, .. } => {
             collect_refs(lhs, current_sheet, out);
@@ -430,6 +449,34 @@ mod tests {
         collect_refs(&ast, SheetId(0), &mut refs);
         // A1, B2, B3, B4, C1 — five refs.
         assert_eq!(refs.len(), 5);
+    }
+
+    #[test]
+    fn cross_sheet_ref_evaluates_to_ref_error_until_resolver_lands() {
+        // A qualified reference parses and round-trips, but the evaluator can't
+        // resolve a sheet name to a SheetId yet, so it yields #REF! — a clean
+        // "not wired" signal, never a wrong value. The next slice replaces this.
+        let r = evaluate(&parse("=Summary!A1").unwrap(), SheetId(0), &empty_lookup);
+        assert_eq!(r, Err(SpreadsheetError::Ref));
+        // …including a qualified range, standalone or as a SUM arg.
+        assert_eq!(
+            evaluate(&parse("=Summary!A1:B2").unwrap(), SheetId(0), &empty_lookup),
+            Err(SpreadsheetError::Ref)
+        );
+        assert_eq!(
+            evaluate(&parse("=SUM(Summary!A1:A4)").unwrap(), SheetId(0), &empty_lookup),
+            Err(SpreadsheetError::Ref)
+        );
+    }
+
+    #[test]
+    fn collect_refs_skips_unresolved_cross_sheet_refs() {
+        // A cross-sheet ref has no resolvable precedent yet, so it registers none
+        // (its value is #REF! regardless). Same-sheet refs around it still count.
+        let ast = parse("=A1 + Summary!B2 + C3").unwrap();
+        let mut refs = Vec::new();
+        collect_refs(&ast, SheetId(0), &mut refs);
+        assert_eq!(refs.len(), 2); // A1 and C3 only
     }
 
     #[test]
