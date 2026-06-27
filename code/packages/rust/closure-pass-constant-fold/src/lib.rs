@@ -1496,6 +1496,46 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         }
                     }
                 }
+
+                // ---- Array.of(v0, v1, …) → array literal `[v0, v1, …]` ----
+                //
+                // `Array.of` (ECMAScript §23.1.2.3) ALWAYS builds a fresh array
+                // whose elements are EXACTLY its arguments, in order. Crucially it
+                // is NOT the `Array(…)` constructor: a single numeric argument to
+                // `Array` sets the LENGTH (`Array(7)` is a 7-hole array of length 7),
+                // whereas `Array.of(7)` is the one-element array `[7]`. So for ANY
+                // argument list — including side-effecting, identifier, or call
+                // arguments — `Array.of(a, b, c)` is byte-for-byte the array literal
+                // `[a, b, c]`:
+                //
+                //   Array.of()        → []
+                //   Array.of(7)       → [7]        (NOT Array(7)'s length-7 array!)
+                //   Array.of(1, 2, 3) → [1, 2, 3]
+                //   Array.of(f(), x)  → [f(), x]    (f() still called, order kept)
+                //
+                // Folding to an array literal preserves every element expression in
+                // evaluation order, so no argument is dropped, duplicated, or
+                // reordered and all side effects are retained — the fold is sound
+                // for every argument list. We would DECLINE only a spread argument
+                // (`Array.of(...xs)`), whose element count is unknown at compile
+                // time; the AST has no spread variant in call arguments today (only
+                // object spread is contemplated, as a future "Phase 2"), so every
+                // argument is a plain expression and the fold always applies. The
+                // guard below is written against `arguments` directly so that, if a
+                // call-argument spread node is ever added, it can be matched and
+                // declined here. Same bare-global-`Array` premise as `Array.isArray`
+                // — only the literal `Array.of(...)` callee folds, never a shadowed
+                // receiver (`a.of(...)` is left alone).
+                if obj.name == "Array" && prop.name == "of" {
+                    let parent = c.cv.clone();
+                    let before = format!("Array.of({} arg(s))", arguments.len());
+                    let after = format!("[{} elem(s)]", arguments.len());
+                    let new_cv = st.fork_cv(&parent, &before, &after);
+                    return Expression::ArrayExpression(ArrayExpression {
+                        cv: new_cv,
+                        elements: arguments.iter().map(|a| Some(a.clone())).collect(),
+                    });
+                }
             }
         }
     }
@@ -7786,6 +7826,109 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "o.keys({{}}) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- Array.of (static) ---------------------------
+
+    /// Build `Array.of(<args…>)`.
+    fn array_of_call(args: Vec<Expression>) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Array"), "of")),
+            arguments: args,
+        })
+    }
+
+    #[test]
+    fn fold_array_of_multiple_args_to_array_literal() {
+        // `Array.of(1, 2, 3)` → `[1, 2, 3]` — elements preserved in order.
+        let c = array_of_call(vec![num(1.0, None), num(2.0, None), num(3.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Array.of(1,2,3) should fold to [1,2,3]");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 3, "three elements");
+                let vals: Vec<f64> = a
+                    .elements
+                    .iter()
+                    .map(|e| match e {
+                        Some(Expression::NumericLiteral(n)) => n.value,
+                        other => panic!("expected numeric element; got {:?}", other),
+                    })
+                    .collect();
+                assert_eq!(vals, vec![1.0, 2.0, 3.0], "elements in order");
+            }
+            other => panic!("expected array literal; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_array_of_empty_to_empty_array() {
+        // `Array.of()` → `[]`.
+        let c = array_of_call(vec![]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Array.of() should fold to []");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => assert!(a.elements.is_empty(), "Array.of() → []"),
+            other => panic!("expected []; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_array_of_single_numeric_is_one_element_not_length() {
+        // The defining difference from the `Array(n)` constructor:
+        // `Array.of(7)` is the ONE-element array `[7]`, NOT `Array(7)`'s
+        // length-7 hole array. We must emit exactly one element whose value is 7.
+        let c = array_of_call(vec![num(7.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Array.of(7) should fold to [7]");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 1, "exactly one element (not length 7)");
+                match &a.elements[0] {
+                    Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 7.0, "the value 7"),
+                    other => panic!("expected the literal 7; got {:?}", other),
+                }
+            }
+            other => panic!("expected [7]; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_array_of_preserves_identifier_arguments() {
+        // Identifier (and any other) arguments are preserved as elements in
+        // order — folding never drops or evaluates them, so side effects survive.
+        let c = array_of_call(vec![ident("x"), ident("y")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Array.of(x, y) should fold to [x, y]");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 2, "two elements");
+                let names: Vec<&str> = a
+                    .elements
+                    .iter()
+                    .map(|e| match e {
+                        Some(Expression::Identifier(id)) => id.name.as_str(),
+                        other => panic!("expected identifier element; got {:?}", other),
+                    })
+                    .collect();
+                assert_eq!(names, vec!["x", "y"], "identifiers preserved in order");
+            }
+            other => panic!("expected [x, y]; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn array_of_on_non_array_receiver_does_not_fold() {
+        // Only the bare global `Array` folds; `a.of(1)` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("a"), "of")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "a.of(1) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

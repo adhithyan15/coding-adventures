@@ -34,8 +34,8 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L1 structural** | groups, `\cmd[opt]{arg}`, `\begin{env}…\end{env}`, text runs, raw math islands, `to_latex()` round-trip | ✅ |
 | **L2 math** | math AST (frac, binom, roots, scripts, big ops, functions, accents, `\left\right` fences, relations), precedence-climbing parser, `to_latex()` round-trip | ✅ |
 | **L3 environments** | math env family — `matrix`/`pmatrix`/`bmatrix`/`vmatrix`/`cases`/`aligned`/`align` split on `&` and `\\` → `MathNode::Matrix`, round-trip; nesting + scripts | ✅ |
-| **L4 macros** | `\newcommand`/`\renewcommand`/`\providecommand` with positional `#1`..`#9`; bounded recursive expansion via `expand()` (L4a) | ✅ this release |
-| L5 text breadth | sectioning, fonts, accents, `\verb`, refs | ⏳ |
+| **L4 macros** | `\newcommand`/`\renewcommand`/`\providecommand` with positional `#1`..`#9`; bounded recursive expansion via `expand()` (L4a) | ✅ |
+| **L5 text breadth** | inline `\verb`/`\verb*` raw verbatim (L5a); accents, sectioning, refs, `verbatim` env to follow | 🚧 this release (L5a) |
 | L6 frontend | implement `math-frontend::MathFrontend` (LaTeX becomes plugin #1) | ⏳ |
 
 ## Usage
@@ -113,6 +113,23 @@ Expansion is **bounded** — a recursive macro (`\newcommand{\a}{\a}\a`) or an e
 errors via a depth + work-budget guard rather than hanging or overflowing. Deferred to later
 sub-rungs: optional arguments with a default (`[n][default]`), TeX-style `\def`, and a
 built-in starter set; `#n` inside a math island is not substituted in L4a.
+
+### Verbatim (L5a)
+
+`\verb<delim>…<delim>` (and the `\verb*` visible-space variant) read their body **raw** — the
+tokenizer suspends catcodes inside, so `{ } $ # \` are literal — producing a `Node::Verb`
+that round-trips:
+
+```rust
+use latex::{parse, Node};
+
+let doc = parse(r"call \verb|x{y}$z| now").unwrap();
+assert!(matches!(doc[1], Node::Verb { delim: '|', .. }));   // body "x{y}$z" kept verbatim
+```
+
+An unterminated `\verb`, a body running past the end of the line, or a `*`/space delimiter is
+a spanned error — never a mis-parse. (The `verbatim` environment, text accents, sectioning,
+and cross-refs arrive in later L5 sub-rungs.)
 
 The low-level `tokenize` is also public. Tokens and errors carry half-open byte `Span`s;
 all of `parse`, `parse_math`, and `tokenize` return spanned errors rather than panicking,

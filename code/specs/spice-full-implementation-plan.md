@@ -147,7 +147,8 @@ downstream tools to compare.
      selected output-plan artifacts now also expose selected result row counts
      beside result-column inventories, and selected output-plan artifacts now
      also expose selected analysis line/source metadata beside directive
-     inventories.
+     inventories, and selected output-plan artifacts now also expose selected
+     analysis output-node metadata beside that analysis provenance.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1220,6 +1221,16 @@ downstream tools to compare.
       selected analysis line/source metadata beside directive inventories.
     - Table, CSV, compact JSON, and host-native record exports make the
       selected plan's analysis line and source name auditable from the
+      output-plan artifact without reparsing the analysis plan.
+
+112. Deck output-plan analysis output-node artifacts.
+    - Status: completed in this deck output-plan analysis output-node artifact
+      slice.
+    - Python, Rust, and TypeScript selected output-plan artifacts now expose
+      selected analysis output-node metadata beside analysis line/source
+      provenance.
+    - Table, CSV, compact JSON, and host-native record exports make `.tf`,
+      `.sens`, and `.noise` selected output nodes auditable from the
       output-plan artifact without reparsing the analysis plan.
 
 ## Backlog

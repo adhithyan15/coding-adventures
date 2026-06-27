@@ -41,6 +41,10 @@ pub enum Node {
     Math { display: bool, content: String },
     /// A comment (text without the `%` or trailing newline).
     Comment(String),
+    /// Inline verbatim (`\verb<delim>…<delim>` / `\verb*…`): the body is the **raw** inner
+    /// text (catcodes suspended), kept verbatim. `star` is the visible-space variant; `delim`
+    /// is the chosen delimiter, preserved so the node round-trips.
+    Verb { star: bool, delim: char, content: String },
     /// An active character that acts like a command — `~`.
     Active(char),
     /// A construct deliberately out of scope (the TeX-programmability asymptote — e.g.
@@ -127,6 +131,15 @@ impl Node {
                 out.push('%');
                 out.push_str(c);
                 out.push('\n');
+            }
+            Node::Verb { star, delim, content } => {
+                out.push_str("\\verb");
+                if *star {
+                    out.push('*');
+                }
+                out.push(*delim);
+                out.push_str(content);
+                out.push(*delim);
             }
             Node::Active(c) => out.push(*c),
             Node::Unsupported { construct, .. } => out.push_str(construct),

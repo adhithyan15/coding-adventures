@@ -70,10 +70,61 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, LexError> {
                         i += 1;
                     }
                     let name: String = chars[name_start..i].iter().map(|&(_, ch)| ch).collect();
-                    out.push(Token::new(TokenKind::ControlWord(name), start, off(i)));
-                    // TeX absorbs the spaces (and tabs) following a control word.
-                    while i < n && matches!(chars[i].1, ' ' | '\t') {
+                    if name == "verb" {
+                        // `\verb` reads its argument **raw**, with catcodes suspended — so the
+                        // body may contain `{ } $ # \` etc. as literal characters. An optional
+                        // `*` selects the visible-space variant; the next character is the
+                        // delimiter (anything but `*` or a space), and the body runs to the
+                        // matching delimiter on the same line.
+                        let star = i < n && chars[i].1 == '*';
+                        if star {
+                            i += 1;
+                        }
+                        if i >= n {
+                            return Err(LexError::new(
+                                "\\verb at end of input (expected a delimiter)",
+                                start,
+                                end,
+                            ));
+                        }
+                        let delim = chars[i].1;
+                        if matches!(delim, '*' | ' ' | '\t' | '\n') {
+                            return Err(LexError::new(
+                                "\\verb delimiter must be a visible character (not '*' or a space)",
+                                start,
+                                off(i),
+                            ));
+                        }
                         i += 1;
+                        let body_start = i;
+                        while i < n && chars[i].1 != delim {
+                            // `\verb` may not span a line break (a classic runaway source).
+                            if chars[i].1 == '\n' {
+                                return Err(LexError::new(
+                                    "\\verb argument runs past the end of the line (missing closing delimiter)",
+                                    start,
+                                    off(i),
+                                ));
+                            }
+                            i += 1;
+                        }
+                        if i >= n {
+                            return Err(LexError::new(
+                                "unterminated \\verb (missing closing delimiter)",
+                                start,
+                                end,
+                            ));
+                        }
+                        let content: String =
+                            chars[body_start..i].iter().map(|&(_, ch)| ch).collect();
+                        i += 1; // consume the closing delimiter
+                        out.push(Token::new(TokenKind::Verb { star, delim, content }, start, off(i)));
+                    } else {
+                        out.push(Token::new(TokenKind::ControlWord(name), start, off(i)));
+                        // TeX absorbs the spaces (and tabs) following a control word.
+                        while i < n && matches!(chars[i].1, ' ' | '\t') {
+                            i += 1;
+                        }
                     }
                 } else {
                     // control SYMBOL — or a math-delimiter control symbol.
@@ -360,5 +411,30 @@ mod tests {
     #[test]
     fn empty_input_is_just_eof() {
         assert_eq!(tokenize("").unwrap().len(), 1);
+    }
+
+    #[test]
+    fn verb_reads_body_raw() {
+        // Catcodes suspended inside: `{`, `}`, `$`, `#`, `\` are all literal.
+        assert_eq!(
+            kinds(r"\verb|a{b}$#\|"),
+            vec![Verb { star: false, delim: '|', content: r"a{b}$#\".into() }]
+        );
+    }
+
+    #[test]
+    fn verb_star_variant() {
+        assert_eq!(
+            kinds(r"\verb*+x y+"),
+            vec![Verb { star: true, delim: '+', content: "x y".into() }]
+        );
+    }
+
+    #[test]
+    fn verb_errors_are_spanned_not_panics() {
+        assert!(tokenize(r"\verb|abc").is_err()); // unterminated (EOF before close)
+        assert!(tokenize("\\verb|ab\ncd|").is_err()); // runs past end of line
+        assert!(tokenize(r"\verb").is_err()); // no delimiter at EOF
+        assert!(tokenize(r"\verb a|").is_err()); // delimiter may not be a space
     }
 }
