@@ -266,6 +266,54 @@ impl FormulaAst {
             },
         }
     }
+
+    /// Like [`shift`](FormulaAst::shift), but **only same-sheet references move** —
+    /// a cross-sheet (qualified) reference is left exactly as-is.
+    ///
+    /// This is the transform a **range sort** needs: sorting rows *within* a sheet
+    /// relocates each moved formula's references to cells on *that* sheet (so the
+    /// record keeps naming its own data), but a reference into *another* sheet
+    /// (`Summary!A1`) names a fixed cell elsewhere and must not move just because a
+    /// row was reordered here. (Drag-fill, by contrast, replicates the formula and
+    /// *does* shift qualified relative refs — use [`shift`] there.)
+    ///
+    /// Pure: returns a new tree.
+    pub fn shift_local(&self, d_row: i32, d_col: i32) -> FormulaAst {
+        match self {
+            FormulaAst::Literal(v) => FormulaAst::Literal(v.clone()),
+            // Same-sheet refs move exactly as in `shift`.
+            FormulaAst::Ref { sheet: None, addr } => match addr.shift(d_row, d_col) {
+                Ok(a) => FormulaAst::cell(a),
+                Err(_) => ref_error(),
+            },
+            FormulaAst::Range { sheet: None, range } => {
+                match (range.start.shift(d_row, d_col), range.end.shift(d_row, d_col)) {
+                    (Ok(start), Ok(end)) => FormulaAst::cell_range(CellRange::new(start, end)),
+                    _ => ref_error(),
+                }
+            }
+            // Cross-sheet refs name cells on another sheet — a sort here leaves them.
+            FormulaAst::Ref { sheet: Some(_), .. } | FormulaAst::Range { sheet: Some(_), .. } => {
+                self.clone()
+            }
+            FormulaAst::Unary { op, operand } => FormulaAst::Unary {
+                op: *op,
+                operand: Box::new(operand.shift_local(d_row, d_col)),
+            },
+            FormulaAst::Binary { op, lhs, rhs } => FormulaAst::Binary {
+                op: *op,
+                lhs: Box::new(lhs.shift_local(d_row, d_col)),
+                rhs: Box::new(rhs.shift_local(d_row, d_col)),
+            },
+            FormulaAst::Percent(inner) => {
+                FormulaAst::Percent(Box::new(inner.shift_local(d_row, d_col)))
+            }
+            FormulaAst::Call { name, args } => FormulaAst::Call {
+                name: name.clone(),
+                args: args.iter().map(|a| a.shift_local(d_row, d_col)).collect(),
+            },
+        }
+    }
 }
 
 /// The `#REF!` error as a formula literal — what a reference shifted off the grid
@@ -393,6 +441,29 @@ mod tests {
         assert_eq!(parse("='A1'!B2").unwrap().to_formula_string(), "'A1'!B2");
         // A leading-digit name is quoted.
         assert_eq!(parse("='2024'!A1").unwrap().to_formula_string(), "'2024'!A1");
+    }
+
+    #[test]
+    fn shift_local_moves_same_sheet_refs_but_pins_cross_sheet() {
+        use crate::parser::parse;
+        // Same-sheet (unqualified) ref tracks the offset, exactly like `shift`.
+        assert_eq!(
+            parse("=A1").unwrap().shift_local(1, 0).to_formula_string(),
+            "A2"
+        );
+        // A cross-sheet ref names a fixed cell elsewhere → unchanged by a local move.
+        assert_eq!(
+            parse("=Summary!A1").unwrap().shift_local(5, 5).to_formula_string(),
+            "Summary!A1"
+        );
+        // Mixed: only the same-sheet side of the sum moves.
+        assert_eq!(
+            parse("=A1+Summary!A1")
+                .unwrap()
+                .shift_local(1, 0)
+                .to_formula_string(),
+            "(A2+Summary!A1)"
+        );
     }
 
     #[test]

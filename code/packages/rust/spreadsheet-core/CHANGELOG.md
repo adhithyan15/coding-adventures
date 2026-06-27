@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.14.0
+
+**Cross-sheet references — structural-edit / fill / sort propagation (multi-sheet
+PR-3).** Cross-sheet references now survive the operations that move cells around:
+a structural edit on one sheet ripples into *inbound* references from other sheets,
+fill replicates a qualified relative ref correctly, and sort leaves cross-sheet refs
+pinned.
+
+- `FormulaAst::adjust_for_sheet_edit(edit, edited_is_host, edited_name)` (`edit.rs`):
+  a reference shifts (or → `#REF!` on a deleted band) **only if it points into the
+  edited sheet** — an unqualified ref when the formula's own sheet is edited, or a
+  qualified ref whose name matches the edited sheet. `apply_structural_edit` now
+  relocates the edited sheet's own cells with `edited_is_host = true`, then walks
+  **every other sheet** and rewrites only their `EditedSheet!…` references
+  (`edited_is_host = false`) — so inserting/deleting rows or columns on `Summary`
+  shifts a `=Summary!A5` reference living on `Sheet1` to `=Summary!A6` (and a
+  reference to a deleted band becomes `#REF!`).
+- `FormulaAst::shift_local(d_row, d_col)` (`ast.rs`): like `shift`, but **only
+  same-sheet refs move** — a qualified ref names a fixed cell on another sheet.
+  `sort_range` now uses `shift_local`, so sorting rows within a sheet no longer
+  mis-shifts a row's `=Summary!A1` reference (whereas *drag-fill* still uses `shift`,
+  which correctly shifts a qualified *relative* ref — `=Summary!A1` filled down is
+  `=Summary!A2`).
+- Tests: inbound structural shift + deleted-band → `#REF!`, an own-sheet edit leaving
+  the formula's outbound cross-sheet refs alone, fill shifting a qualified relative
+  ref (keeping the qualifier), and sort pinning cross-sheet refs while reordering rows.
+
 ## 0.13.0
 
 **Cross-sheet references — evaluation + dependencies (multi-sheet PR-2).** A

@@ -509,14 +509,22 @@ impl Workbook {
             return; // reject the whole edit rather than lose cells
         }
 
-        // 1. Relocate cells + rewrite formula references. A cell's *position*
-        //    and its formula's *references* both follow the same edit. Build a
+        // The name of the edited sheet — so an inbound `S!…` reference on another
+        // sheet can be recognised and shifted (see step 1c). Always `Some` for a
+        // valid sheet; default to "" (no real sheet is named "") if somehow absent.
+        let edited_name = s.name.clone();
+
+        // 1. Relocate the EDITED sheet's cells + rewrite each formula's references.
+        //    A cell's *position* and its formula's *references into this sheet*
+        //    both follow the edit. `adjust_for_sheet_edit(.., edited_is_host=true,
+        //    ..)` shifts this sheet's unqualified refs (and any self-qualified
+        //    `S!…` refs), while leaving refs into *other* sheets untouched. Build a
         //    fresh map: a cell on a deleted line has no new address → dropped.
         let old = std::mem::take(&mut s.cells);
         let mut moved: HashMap<CellAddress, Cell> = HashMap::with_capacity(old.len());
         for (addr, mut cell) in old {
             if let CellContent::Formula { ast, text, cached } = &mut cell.content {
-                *ast = ast.adjust(edit);
+                *ast = ast.adjust_for_sheet_edit(edit, true, &edited_name);
                 *text = ast.to_formula_string(); // keep the echo text honest
                 *cached = None; // recomputed below
             }
@@ -525,6 +533,35 @@ impl Workbook {
             }
         }
         self.sheets[sheet.0 as usize].cells = moved;
+
+        // 1c. Inbound cross-sheet propagation: every OTHER sheet's formulas may hold
+        //     a `S!…` reference into the edited sheet, which must shift too (the
+        //     grid those refs name just moved). Walk each non-edited sheet and
+        //     adjust only its refs qualified with `edited_name`
+        //     (`edited_is_host = false`), leaving its own-sheet and other-sheet refs
+        //     alone. Cells are NOT relocated here — only the *edited* sheet's cells
+        //     move; these are just reference rewrites on cells that stay put.
+        for other in 0..self.sheets.len() {
+            if other == sheet.0 as usize {
+                continue;
+            }
+            let cells = std::mem::take(&mut self.sheets[other].cells);
+            let rewritten = cells
+                .into_iter()
+                .map(|(addr, mut cell)| {
+                    if let CellContent::Formula { ast, text, cached } = &mut cell.content {
+                        let new_ast = ast.adjust_for_sheet_edit(edit, false, &edited_name);
+                        if new_ast != *ast {
+                            *ast = new_ast;
+                            *text = ast.to_formula_string();
+                            *cached = None;
+                        }
+                    }
+                    (addr, cell)
+                })
+                .collect();
+            self.sheets[other].cells = rewritten;
+        }
 
         // 1b. Relocate the format store the same way (formats ride with the cell
         //     they decorate; a format on a deleted line is dropped).
@@ -1010,7 +1047,11 @@ impl Workbook {
                     None | Some(CellContent::Empty) => CellContent::Empty,
                     Some(CellContent::Value(v)) => CellContent::Value(v.clone()),
                     Some(CellContent::Formula { ast, .. }) => {
-                        let shifted = ast.shift(d_row, 0);
+                        // `shift_local`, not `shift`: a sort relocates rows *within*
+                        // this sheet, so a moved formula's same-sheet refs track the
+                        // row displacement, but a cross-sheet (`Summary!A1`) ref names
+                        // a fixed cell on another sheet and must not move.
+                        let shifted = ast.shift_local(d_row, 0);
                         CellContent::Formula {
                             text: shifted.to_formula_string(),
                             ast: shifted,
@@ -1709,6 +1750,84 @@ mod tests {
         // The cross-sheet qualifier is preserved in the cell's stored source.
         wb.set_formula(s1, cell(4, 2), "=Summary!A1+1").unwrap();
         assert_eq!(wb.cell_source_text(s1, cell(4, 2)), "=Summary!A1+1");
+    }
+
+    #[test]
+    fn structural_edit_propagates_into_inbound_cross_sheet_refs() {
+        // Sheet1!B1 = =Summary!A5*1; Summary!A5 = 99. Inserting a row ABOVE row 5
+        // on Summary pushes its A5 down to A6, and the inbound `Summary!A5` ref on
+        // Sheet1 must follow to `Summary!A6` (and keep computing 99).
+        let mut wb = Workbook::new();
+        let s1 = wb.add_sheet("Sheet1");
+        let summary = wb.add_sheet("Summary");
+        wb.set_value(summary, cell(5, 1), CellValue::Number(99.0)); // Summary!A5
+        wb.set_formula(s1, cell(1, 2), "=Summary!A5*1").unwrap(); // Sheet1!B1
+        assert_eq!(wb.cell_value(s1, cell(1, 2)), CellValue::Number(99.0));
+
+        wb.insert_rows(summary, 3, 1); // insert above row 5 → A5 slides to A6
+        // A structural edit re-emits the source from the AST (no leading `=`,
+        // fully parenthesised) — the inbound ref now names Summary!A6.
+        assert_eq!(wb.cell_source_text(s1, cell(1, 2)), "(Summary!A6*1)");
+        assert_eq!(wb.cell_value(s1, cell(1, 2)), CellValue::Number(99.0));
+
+        // Deleting the band the inbound ref points at turns it into #REF!.
+        wb.delete_rows(summary, 6, 1); // delete the row holding the (moved) value
+        assert_eq!(
+            wb.cell_value(s1, cell(1, 2)),
+            CellValue::Error(SpreadsheetError::Ref)
+        );
+
+        // A structural edit on Sheet1 does NOT disturb its OWN cross-sheet refs
+        // (they point into Summary, which wasn't edited): re-seed and insert on s1.
+        wb.set_value(summary, cell(1, 1), CellValue::Number(5.0));
+        wb.set_formula(s1, cell(10, 2), "=Summary!A1").unwrap();
+        wb.insert_rows(s1, 1, 1); // moves the formula down a row but leaves its ref
+        assert_eq!(wb.cell_source_text(s1, cell(11, 2)), "Summary!A1");
+        assert_eq!(wb.cell_value(s1, cell(11, 2)), CellValue::Number(5.0));
+    }
+
+    #[test]
+    fn fill_shifts_cross_sheet_relative_refs_keeping_the_qualifier() {
+        // Drag-fill replicates a formula and shifts its relative refs by the copy
+        // offset — including a qualified relative ref. Filling =Summary!A1 down a
+        // column gives =Summary!A2, =Summary!A3, … (the qualifier rides along).
+        let mut wb = Workbook::new();
+        let s1 = wb.add_sheet("Sheet1");
+        let summary = wb.add_sheet("Summary");
+        wb.set_value(summary, cell(1, 1), CellValue::Number(11.0)); // Summary!A1
+        wb.set_value(summary, cell(2, 1), CellValue::Number(22.0)); // Summary!A2
+        wb.set_value(summary, cell(3, 1), CellValue::Number(33.0)); // Summary!A3
+        wb.set_formula(s1, cell(1, 1), "=Summary!A1").unwrap(); // Sheet1!A1
+        // Fill A1 down into A2:A3.
+        wb.fill(s1, cell(1, 1), CellRange::new(cell(2, 1), cell(3, 1)));
+        assert_eq!(wb.cell_source_text(s1, cell(2, 1)), "Summary!A2");
+        assert_eq!(wb.cell_source_text(s1, cell(3, 1)), "Summary!A3");
+        assert_eq!(wb.cell_value(s1, cell(2, 1)), CellValue::Number(22.0));
+        assert_eq!(wb.cell_value(s1, cell(3, 1)), CellValue::Number(33.0));
+    }
+
+    #[test]
+    fn sort_does_not_shift_cross_sheet_refs() {
+        // Two-row block on Sheet1 where each row's B holds a cross-sheet ref to a
+        // FIXED Summary cell. Sorting the block by column A (descending) reorders
+        // the rows, but the `Summary!…` refs must stay pinned (they name cells on
+        // another sheet that didn't move).
+        let mut wb = Workbook::new();
+        let s1 = wb.add_sheet("Sheet1");
+        let summary = wb.add_sheet("Summary");
+        wb.set_value(summary, cell(1, 1), CellValue::Number(100.0)); // Summary!A1
+        wb.set_value(s1, cell(1, 1), CellValue::Number(1.0)); // A1 key
+        wb.set_value(s1, cell(2, 1), CellValue::Number(2.0)); // A2 key
+        wb.set_formula(s1, cell(1, 2), "=Summary!A1").unwrap(); // B1
+        wb.set_formula(s1, cell(2, 2), "=Summary!A1+1").unwrap(); // B2
+        // Sort A1:B2 by column A descending → rows swap (2 then 1).
+        wb.sort_range(s1, CellRange::new(cell(1, 1), cell(2, 2)), 1, false);
+        // The cross-sheet refs travelled with their row but did NOT shift address
+        // (sort re-emits from the AST, so no leading `=`).
+        assert_eq!(wb.cell_source_text(s1, cell(1, 2)), "(Summary!A1+1)"); // was B2
+        assert_eq!(wb.cell_source_text(s1, cell(2, 2)), "Summary!A1"); // was B1
+        assert_eq!(wb.cell_value(s1, cell(1, 2)), CellValue::Number(101.0));
+        assert_eq!(wb.cell_value(s1, cell(2, 2)), CellValue::Number(100.0));
     }
 
     #[test]
