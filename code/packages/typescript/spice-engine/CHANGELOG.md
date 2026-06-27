@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Expose normalized selected output directive kind inventories in
+  `runDeckAnalysis` output-plan artifacts beside the selected directive tokens,
+  with stable table, CSV, compact JSON, and header-keyed record exports,
+  matching Python and Rust.
 - Include selected `runDeckAnalysis` output-plan tables in execution `tables`,
   selected-run `TableList` metadata, and ordered `tableArtifacts` with stable
   table, CSV, compact JSON, and header-keyed record payloads, matching Python

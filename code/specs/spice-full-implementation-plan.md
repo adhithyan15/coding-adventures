@@ -133,7 +133,10 @@ downstream tools to compare.
      severity, message, stable table, CSV, compact JSON, and host-native record
      exports, and those row-level and category-summary policy tables now also
      travel through ordered table export artifacts plus selected-run `TableList`
-     metadata.
+     metadata; selected output-plan artifacts now also expose normalized
+     `.save`, `.probe`, `.print`, and `.plot` directive kind counts/lists
+     beside the selected directive tokens in table, CSV, compact JSON, and
+     host-native record exports.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1151,6 +1154,15 @@ downstream tools to compare.
     - Ordered table export artifacts now carry the output-plan table with
       stable table, CSV, compact JSON, and host-native record payloads beside
       result, optional side tables, and selected-run artifact exports.
+
+106. Deck output-plan directive-kind artifacts.
+    - Status: completed in this deck output-plan directive-kind artifact slice.
+    - Python, Rust, and TypeScript selected output-plan artifacts now expose
+      normalized selected output directive kind counts/lists beside selected
+      directive tokens.
+    - Table, CSV, compact JSON, and host-native record exports make `.save`,
+      `.probe`, `.print`, and `.plot` selection provenance auditable without
+      parsing directive strings.
 
 ## Backlog
 

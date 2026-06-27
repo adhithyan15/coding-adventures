@@ -98,23 +98,27 @@ Extend `parse_ident_or_ref` so a bareword (or a single-quoted name) **followed b
   refinement). Loading a serialized workbook is unaffected as long as sheets are
   created before (or the graph is rebuilt after) the formulas load.
 
-### 2.4 Structural-edit + fill/sort interaction (the subtle part)
+### 2.4 Structural-edit + fill/sort interaction — **DONE (PR-3)** (the subtle part)
 
-- `shift(d_row, d_col)` on a **same-sheet** (`None`) ref is unchanged.
-- A **cross-sheet** ref shifts its *address* under fill/copy like any ref but
-  **keeps its sheet qualifier** (filling `=Detail!A1` down a column gives
-  `=Detail!A2`).
-- Structural edits (insert/delete rows/cols, sort) on sheet *S* must shift **every
-  reference that points into S** — including qualified refs living on *other*
-  sheets. Today structural edits walk one sheet's cells; they must also walk other
-  sheets' formulas for inbound qualified refs. A reference whose whole band is
-  deleted becomes `#REF!` (qualifier preserved or dropped — match Excel: the whole
-  ref becomes `#REF!`).
-- **Rename a sheet** ⇒ rewrite the qualifier string in every formula that names it
-  (the stored `SheetId` is stable, so eval is unaffected; only the *display/source*
-  name changes — handled at re-emit time if the AST holds `SheetId`, or by a
-  rewrite pass if it holds the name). **Delete a sheet** ⇒ inbound qualified refs
-  become `#REF!`.
+Three *different* transforms, now each correct for qualified refs:
+
+- **Fill / copy** (`shift`, unchanged): a **cross-sheet** ref shifts its *address*
+  like any relative ref but **keeps its sheet qualifier** — filling `=Detail!A1`
+  down a column gives `=Detail!A2`. Absolute (`$`) refs pin. (Shipped: PR-1's `shift`
+  already preserves the qualifier; PR-3 adds the workbook fill test.)
+- **Sort** (`shift_local`, new): sorting rows *within* a sheet shifts a moved
+  formula's **same-sheet** refs by the row displacement, but **leaves cross-sheet
+  refs pinned** (a `=Summary!A1` in a sorted row names a fixed cell on another sheet
+  that didn't move). `sort_range` switched from `shift` to `shift_local`.
+- **Structural edit** (`adjust_for_sheet_edit`, new): an insert/delete on sheet *S*
+  shifts **every reference that points into S** — `S`'s own unqualified refs *and*
+  inbound `S!…` qualified refs living on **other** sheets. `apply_structural_edit`
+  relocates `S`'s cells (`edited_is_host = true`) then walks every other sheet and
+  rewrites only its `S!…` refs (`edited_is_host = false`). A reference whose whole
+  band is deleted becomes `#REF!`. A formula's *outbound* refs into untouched sheets
+  stay put.
+- **Rename / delete a sheet** ⇒ deferred to PR-4 (rename rewrites the stored
+  qualifier in every referencing formula; delete → inbound qualified refs `#REF!`).
 
 ### 2.5 Sheet-management API on `Workbook`
 
