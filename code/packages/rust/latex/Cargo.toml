@@ -1,0 +1,10 @@
+[package]
+name = "latex"
+version = "0.1.0"
+edition = "2021"
+description = "A full-fidelity LaTeX parser (documents and math): a catcode-driven, text-mode-primary tokenizer and (in later layers) a structural + math parser producing a faithful AST. Standalone and reusable; will also implement the math-frontend MathFrontend trait."
+license = "MIT"
+
+[dependencies]
+# No dependencies yet. The math-frontend adapter (a later layer) will add it behind a
+# thin module so the core parser stays dependency-free.

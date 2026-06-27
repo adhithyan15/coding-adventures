@@ -1578,11 +1578,106 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         }
     }
 
+    // ---- global escape(string) / unescape(string) ----
+    //
+    // The legacy Annex B escapers (ECMAScript §B.2.1.1 / §B.2.1.2). `escape`
+    // percent-encodes each UTF-16 CODE UNIT that is not in its small unescaped
+    // set (`A-Z a-z 0-9` plus the seven marks ``@ * _ + - . /``): a unit below
+    // `0x100` becomes `%XX` (two UPPERCASE hex digits), a unit `0x100` and above
+    // becomes `%uXXXX` (four). So `escape("a b")` → `"a%20b"`, `escape("é")` →
+    // `"%E9"` (U+00E9 is one code unit < 0x100), and `escape("😀")` →
+    // `"%uD83D%uDE00"` (one astral scalar is two surrogate code units).
+    // `unescape` is the inverse: `%uXXXX` → that code unit, `%XX` → that code
+    // unit, and any `%` that does NOT begin a complete escape (a lone `%`, a
+    // non-hex digit, a truncated tail) passes through LITERALLY. Neither throws.
+    //
+    // Both operate on UTF-16 CODE UNITS, NOT UTF-8 bytes — which is why we
+    // iterate `.encode_utf16()` rather than `.as_bytes()`. (Escaping the UTF-8
+    // bytes of `é`/`😀` is what `encodeURIComponent` does, not `escape`.)
+    //
+    // SOUNDNESS — same *free identifier* rule as `parseInt`/`String`: a local
+    // binding could shadow the global, but we fold the bare identifier only
+    // (matching Closure Compiler), never a member access (`window.escape`, which
+    // reaches the MemberExpression arm above). A string literal's value is a Rust
+    // `&str` (whole Unicode scalars), so `escape` renders exactly what V8 does.
+    // `unescape` DECLINES (returns the call to the runtime) only when its result
+    // would contain an UNPAIRED surrogate (e.g. `unescape("%uD83D")`): such a
+    // value has no Rust-`String` / string-literal representation, so we leave the
+    // call rather than substitute a lossy one. `unescape` never throws, so
+    // declining is always sound.
+    if let Expression::Identifier(id) = &callee {
+        if arguments.len() == 1 {
+            if let Some(Expression::StringLiteral(s)) = arguments.first() {
+                let folded = match id.name.as_str() {
+                    "escape" => Some(escape_js(&s.value)),
+                    "unescape" => unescape_js(&s.value),
+                    _ => None,
+                };
+                if let Some(result) = folded {
+                    let parent = c.cv.clone();
+                    let before = format!("{}(\"{}\")", id.name, s.value);
+                    let after = format!("\"{}\"", result);
+                    let new_cv = st.fork_cv(&parent, &before, &after);
+                    return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                }
+            }
+        }
+    }
+
     Expression::CallExpression(CallExpression {
         cv: c.cv.clone(),
         callee: Box::new(callee),
         arguments,
     })
+}
+
+/// Percent-encode `s` exactly as JavaScript's legacy global `escape`
+/// (ECMAScript §B.2.1.1). Iterating over UTF-16 CODE UNITS, each unit is emitted
+/// verbatim when it is in the unescaped set — the ASCII alphanumerics plus the
+/// seven marks ``@ * _ + - . /`` — and percent-escaped otherwise: a unit below
+/// `0x100` as `%XX` (two UPPERCASE hex digits), a unit `0x100` and above as
+/// `%uXXXX` (four). `escape` never throws.
+///
+/// Operating on code units — not the UTF-8 bytes `encodeURIComponent` uses — is
+/// the whole distinction of the legacy escaper:
+///
+/// | input  | code units    | output            |
+/// |--------|---------------|-------------------|
+/// | `"a b"`| `61 20 62`    | `"a%20b"`         |
+/// | `"é"`  | `00E9`        | `"%E9"`           |
+/// | `"😀"` | `D83D DE00`   | `"%uD83D%uDE00"`  |
+/// | `"~"`  | `7E`          | `"%7E"` (not kept)|
+/// | `"/"`  | `2F` (a mark) | `"/"`             |
+///
+/// A string literal's value is a Rust `&str`, so `s.encode_utf16()` yields
+/// exactly the UTF-16 unit sequence V8 escapes — byte-for-byte identical output.
+fn escape_js(s: &str) -> String {
+    const HEX: &[u8] = b"0123456789ABCDEF";
+    let mut out = String::with_capacity(s.len());
+    for u in s.encode_utf16() {
+        // The unescaped set is entirely ASCII, so only a unit < 0x80 can match.
+        if u < 0x80
+            && {
+                let b = u as u8;
+                b.is_ascii_alphanumeric()
+                    || matches!(b, b'@' | b'*' | b'_' | b'+' | b'-' | b'.' | b'/')
+            }
+        {
+            out.push(u as u8 as char);
+        } else if u < 0x100 {
+            out.push('%');
+            out.push(HEX[(u >> 4) as usize] as char);
+            out.push(HEX[(u & 0xf) as usize] as char);
+        } else {
+            out.push('%');
+            out.push('u');
+            out.push(HEX[((u >> 12) & 0xf) as usize] as char);
+            out.push(HEX[((u >> 8) & 0xf) as usize] as char);
+            out.push(HEX[((u >> 4) & 0xf) as usize] as char);
+            out.push(HEX[(u & 0xf) as usize] as char);
+        }
+    }
+    out
 }
 
 /// Percent-encode `s` exactly as JavaScript's global `encodeURI` (ECMAScript
@@ -1666,6 +1761,68 @@ fn encode_uri_component(s: &str) -> String {
         }
     }
     out
+}
+
+/// Decode `s` exactly as JavaScript's legacy global `unescape` (ECMAScript
+/// §B.2.1.2), the inverse of [`escape_js`]. Scanning UTF-16 code units: `%uXXXX`
+/// (a `%u` followed by four hex digits) yields that one code unit, `%XX` (a `%`
+/// followed by two hex digits) yields that code unit, and any `%` that does NOT
+/// begin a complete escape — a lone `%`, a non-hex digit, a truncated tail —
+/// passes through verbatim. `unescape` itself never throws.
+///
+/// Returns `None` — DECLINING the fold — only when the decoded units would form
+/// an UNPAIRED surrogate (`unescape("%uD83D")`): that value cannot be held in a
+/// Rust `String` / a string literal, so we leave the call for the runtime rather
+/// than substitute a lossy replacement. Declining a non-throwing call is sound.
+///
+/// | input            | result            | note                          |
+/// |------------------|-------------------|-------------------------------|
+/// | `"a%20b"`        | `Some("a b")`     | round-trips an escape         |
+/// | `"%E9"`          | `Some("é")`       | one `%XX` code unit           |
+/// | `"%uD83D%uDE00"` | `Some("😀")`      | surrogate pair reassembled    |
+/// | `"%2F"`          | `Some("/")`       | every escape decodes          |
+/// | `"%"`            | `Some("%")`       | lone `%` passes through        |
+/// | `"%uD83D"`       | `None`            | unpaired surrogate → decline  |
+fn unescape_js(s: &str) -> Option<String> {
+    let units: Vec<u16> = s.encode_utf16().collect();
+    let n = units.len();
+    let mut out: Vec<u16> = Vec::with_capacity(n);
+    // A unit is only a hex digit when it is ASCII, so casting through `char` to
+    // reuse `to_digit(16)` is exact (and yields `None` for any non-hex unit).
+    let hexval = |c: u16| -> Option<u16> { char::from_u32(c as u32)?.to_digit(16).map(|d| d as u16) };
+    let mut i = 0;
+    while i < n {
+        if units[i] == b'%' as u16 {
+            // `%uXXXX` — the `u` plus four hex digits (needs five units ahead).
+            if i + 5 < n && units[i + 1] == b'u' as u16 {
+                if let (Some(a), Some(b), Some(c), Some(d)) = (
+                    hexval(units[i + 2]),
+                    hexval(units[i + 3]),
+                    hexval(units[i + 4]),
+                    hexval(units[i + 5]),
+                ) {
+                    out.push((a << 12) | (b << 8) | (c << 4) | d);
+                    i += 6;
+                    continue;
+                }
+            }
+            // `%XX` — two hex digits (needs two units ahead).
+            if i + 2 < n {
+                if let (Some(a), Some(b)) = (hexval(units[i + 1]), hexval(units[i + 2])) {
+                    out.push((a << 4) | b);
+                    i += 3;
+                    continue;
+                }
+            }
+            // A `%` that starts no complete escape is a literal `%`.
+            out.push(units[i]);
+            i += 1;
+        } else {
+            out.push(units[i]);
+            i += 1;
+        }
+    }
+    String::from_utf16(&out).ok()
 }
 
 /// Decode `s` exactly as JavaScript's global `decodeURI` (ECMAScript §19.2.6.2),
@@ -5451,6 +5608,120 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "window.String(5) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn escape_js_direct_oracle() {
+        // (input, output) — every result confirmed against V8's `escape`.
+        for (input, expect) in [
+            ("a b", "a%20b"),           // space → %20
+            ("", ""),                   // empty
+            ("abcABC123", "abcABC123"), // alphanumerics kept
+            ("@*_+-./", "@*_+-./"),     // every unescaped mark kept verbatim
+            ("~", "%7E"),               // tilde is NOT in escape's set (unlike …Component)
+            ("<", "%3C"),               // unsafe ASCII
+            ("\n", "%0A"),              // control char
+            ("é", "%E9"),               // U+00E9 < 0x100 → %XX of the code unit
+            ("中", "%u4E2D"),           // U+4E2D ≥ 0x100 → %uXXXX
+            ("😀", "%uD83D%uDE00"),     // one astral scalar → two surrogate units
+        ] {
+            assert_eq!(escape_js(input), expect, "escape({input:?})");
+        }
+    }
+
+    #[test]
+    fn unescape_js_direct_oracle() {
+        // (input, expected) — confirmed against V8's `unescape`; `None` = decline.
+        for (input, expect) in [
+            ("a%20b", Some("a b".to_string())),
+            ("%E9", Some("é".to_string())),
+            ("%2F", Some("/".to_string())), // EVERY escape decodes (unlike decodeURI)
+            ("%u4E2D", Some("中".to_string())),
+            ("%uD83D%uDE00", Some("😀".to_string())),
+            ("abc", Some("abc".to_string())), // no escapes
+            ("%", Some("%".to_string())),     // lone % passes through literally
+            ("%u", Some("%u".to_string())),   // truncated %u → literal
+            ("%G0", Some("%G0".to_string())), // non-hex digit → literal
+            ("%4", Some("%4".to_string())),   // truncated %X → literal
+            ("100%", Some("100%".to_string())), // trailing lone %
+            ("%uD83D", None),                 // unpaired surrogate → decline
+        ] {
+            assert_eq!(unescape_js(input), expect, "unescape({input:?})");
+        }
+    }
+
+    #[test]
+    fn escape_unescape_round_trip() {
+        // `unescape(escape(s)) == s` for any string-literal value (whole scalars).
+        for s in ["a b/c?<>", "é😀中", "@*_+-./~", "100%25", "plain"] {
+            let escaped = escape_js(s);
+            assert_eq!(unescape_js(&escaped).as_deref(), Some(s), "round-trip {s:?}");
+        }
+    }
+
+    #[test]
+    fn fold_escape_through_pass() {
+        // `escape("a b")` folds to the string literal `"a%20b"`.
+        let c = global_call("escape", vec![string("a b", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "escape(\"a b\") should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "a%20b"),
+            other => panic!("expected \"a%20b\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_unescape_through_pass() {
+        // `unescape("a%20b")` folds to the string literal `"a b"`.
+        let c = global_call("unescape", vec![string("a%20b", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "unescape(\"a%20b\") should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "a b"),
+            other => panic!("expected \"a b\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn unescape_unpaired_surrogate_does_not_fold() {
+        // `unescape("%uD83D")` yields a lone high surrogate — unrepresentable as a
+        // Rust string literal — so the call is left for the runtime.
+        let c = global_call("unescape", vec![string("%uD83D", None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "unescape(\"%uD83D\") must not fold (unpaired surrogate)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn escape_non_string_argument_does_not_fold() {
+        // Only a string LITERAL arg folds; `escape(x)` needs the runtime value.
+        let c = global_call("escape", vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "escape(x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn escape_with_second_argument_does_not_fold() {
+        // We model only the single-argument form; `escape("x", y)` is left alone.
+        let c = global_call("escape", vec![string("x", None), ident("y")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "escape(\"x\", y) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn member_escape_does_not_fold() {
+        // `window.escape("x")` is a member call, not the bare global — leave it.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("window"), "escape")),
+            arguments: vec![string("x", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "window.escape(\"x\") must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
