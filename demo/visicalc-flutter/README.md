@@ -151,6 +151,22 @@ unchanged. `InfiniteSheetModel`
 there's something to scroll to, and derives the extent from `usedRange()` + a
 margin.
 
+The bottom **sheet tab bar** drives a multi-sheet **workbook**: the workbook
+holds several sheets and bare-`A1` ops address the *active* one, while a formula
+reaches **across** with a qualifier (`=Summary!B3`). Each tab is a chip (the
+active one tints to the accent); **tap** to switch, **double-tap** to rename,
+**right-click / long-press** to delete, and **+ Sheet** adds one
+(`InfiniteSheetModel.selectSheet`/`renameSheet`/`deleteSheet`/`addSheet` over the
+C ABI's `sc_set_active_sheet`/`sc_rename_sheet`/`sc_delete_sheet`/`sc_add_sheet`,
+with `sc_sheet_names`/`sc_active_sheet` reading the tab list). The seed adds a
+second sheet, **Summary**, whose `B3` sums its own `A1`+`A2` (=300), and back on
+the first sheet `G1` = `=Summary!B3` pulls that value **across the sheets**;
+editing a Summary input recomputes the cross-sheet dependent live. Renaming
+`Summary` rewrites every referencing qualifier (the dependents stay live);
+deleting a referenced sheet turns the dangling reference into `#REF!`. The engine
+keeps at least one sheet, so deleting the last is a no-op. The single-sheet path
+is byte-identical — an unqualified `A1` still means the active sheet.
+
 #### Visual design
 
 `lib/infinite_grid.dart` mirrors the **reference visual language** defined by the
@@ -180,7 +196,11 @@ clamping + source load, `commitInf` recompute, drag-fill, clipboard copy/cut/
 paste, a save/load round trip — serialize → mutate → restore, with the loaded
 formula staying live and malformed input rejected — and an undo/redo walk on a
 fresh session (two edits → undo both → redo both with the formula recomputing
-live → a fresh edit forks history)).
+live → a fresh edit forks history)). A **multi-sheet** group proves the workbook
+over the C ABI: a cross-sheet `=Summary!B3` computes and stays live as its
+precedent changes, a rename rewrites the referencing qualifier, deleting a
+referenced sheet yields `#REF!` (and the last sheet can't be deleted), and the
+`InfiniteSheetModel` seed exposes `Sheet1`/`Summary` with a live cross-ref.
 
 `test/infinite_grid_test.dart` is a **widget test** that pumps the real
 `InfiniteGrid` tree on the live engine, taps the A1 cell, edits `15`→`115` in the
