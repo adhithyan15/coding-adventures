@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0 — 2026-06-27 — module-scoped static names type-check across functions (LANG-FULL N8)
+
+Top-level `static NAME: type = literal;` declarations now seed a module-scope
+typing environment before functions are checked. Reads and assignments in any
+function use the declared static type as context, while parameters and `let`
+locals still shadow the static name.
+
+This lets `static counter: u8 = 40; fn bump(step: u8) { counter = counter + step; }`
+type-check without treating `counter` as an unknown local, and rejects static
+initializers whose literal width does not fit the declared type.
+
 ## 0.3.0 — 2026-06-15 — bidirectional typing for E2 narrow-width arithmetic (LANG-FULL E2 / N6)
 
 Adds **bidirectional (top-down) type inference** so that integer literals in a

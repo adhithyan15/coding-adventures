@@ -533,6 +533,20 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — module-scoped `static` globals (LANG-FULL N8). The counter starts
+    // at 40, a separate function increments the same module global twice, and
+    // `main` reads back 42. A plain per-function register would lose the shared
+    // state. The frontend lowers the initializer/read/write to the shared E6
+    // `global_store`/`global_load` substrate that every backend already runs.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "static counter: u8 = 40; \
+              fn bump(step: u8) -> u8 { counter = counter + step; return counter; } \
+              fn main() -> u8 { let a: u8 = bump(1); let b: u8 = bump(1); return counter; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,

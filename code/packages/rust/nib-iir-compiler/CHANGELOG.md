@@ -1,5 +1,28 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.17.0 — 2026-06-27 — mutable module statics lower to shared globals (LANG-FULL N8)
+
+Adds the first executed Nib `static` slice:
+
+- collects top-level `static NAME: type = integer-literal;` declarations,
+- emits each initializer at the top of `main` as `const` + `global_store`,
+- lowers unshadowed static reads to `global_load`, and
+- lowers assignments to `global_store`.
+
+This deliberately keeps initializer support literal-only, matching the existing
+Nib `const` boundary. Const/static expression folding, BCD storage semantics,
+and Intel-4004 RAM mapping stay explicit follow-ups.
+
+The lang matrix proves a shared counter:
+
+```nib
+static counter: u8 = 40;
+fn bump(step: u8) -> u8 { counter = counter + step; return counter; }
+fn main() -> u8 { let a: u8 = bump(1); let b: u8 = bump(1); return counter; }
+```
+
+Expected exit code is `42` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+
 ## 0.16.0 — 2026-06-16 — bitwise NOT (`~`) lowers to the IIR `not` op (LANG-FULL N3)
 
 Unary `~` now lowers to the shared IIR `not` op (bitwise complement). Two fixes

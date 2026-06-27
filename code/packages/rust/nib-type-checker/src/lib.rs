@@ -48,6 +48,7 @@ pub fn check(root: GrammarASTNode) -> TypeCheckResult<TypedAst> {
     let mut checker = Checker {
         errors: Vec::new(),
         types: HashMap::new(),
+        statics: HashMap::new(),
     };
     checker.check_program(&root);
     let ok = checker.errors.is_empty();
@@ -64,10 +65,13 @@ pub fn check(root: GrammarASTNode) -> TypeCheckResult<TypedAst> {
 struct Checker {
     errors: Vec<TypeErrorDiagnostic>,
     types: HashMap<usize, NibType>,
+    statics: HashMap<String, NibType>,
 }
 
 impl Checker {
     fn check_program(&mut self, root: &GrammarASTNode) {
+        self.collect_static_declarations(root);
+        self.check_static_initializers(root);
         for decl in child_nodes(root) {
             if decl.rule_name == "fn_decl" {
                 self.check_function(decl);
@@ -81,8 +85,51 @@ impl Checker {
         }
     }
 
+    fn collect_static_declarations(&mut self, root: &GrammarASTNode) {
+        for decl in child_nodes(root) {
+            let Some(static_decl) = static_decl_node(decl) else {
+                continue;
+            };
+            let name = first_name(static_decl).unwrap_or_else(|| "<unknown>".to_string());
+            let declared = child_nodes(static_decl)
+                .into_iter()
+                .find(|node| node.rule_name == "type")
+                .and_then(parse_type)
+                .unwrap_or(NibType::U4);
+            self.statics.insert(name, declared);
+        }
+    }
+
+    fn check_static_initializers(&mut self, root: &GrammarASTNode) {
+        for decl in child_nodes(root) {
+            let Some(static_decl) = static_decl_node(decl) else {
+                continue;
+            };
+            let name = first_name(static_decl).unwrap_or_else(|| "<unknown>".to_string());
+            let declared = child_nodes(static_decl)
+                .into_iter()
+                .find(|node| node.rule_name == "type")
+                .and_then(parse_type)
+                .unwrap_or(NibType::U4);
+            let expr = child_nodes(static_decl)
+                .into_iter()
+                .find(|node| node.rule_name == "expr");
+            if let Some(expr) = expr {
+                let env = self.statics.clone();
+                if let Some(actual) = self.infer_expr(expr, &env, Some(&declared)) {
+                    if actual != declared {
+                        self.error(
+                            format!("static `{name}` expects {:?}, got {:?}", declared, actual),
+                            expr,
+                        );
+                    }
+                }
+            }
+        }
+    }
+
     fn check_function(&mut self, fn_decl: &GrammarASTNode) {
-        let mut env = HashMap::new();
+        let mut env = self.statics.clone();
         // Seed the env with the parameters' declared types so their uses type.
         for (name, ty) in extract_params(fn_decl) {
             env.insert(name, ty);
@@ -317,6 +364,18 @@ fn first_name(node: &GrammarASTNode) -> Option<String> {
     })
 }
 
+fn static_decl_node(decl: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    if decl.rule_name == "static_decl" {
+        Some(decl)
+    } else if decl.rule_name == "top_decl" {
+        child_nodes(decl)
+            .into_iter()
+            .find(|node| node.rule_name == "static_decl")
+    } else {
+        None
+    }
+}
+
 fn first_token_value(node: &GrammarASTNode) -> Option<String> {
     node.children.iter().find_map(|child| match child {
         ASTNodeOrToken::Token(token) => Some(token.value.clone()),
@@ -433,5 +492,29 @@ mod tests {
     fn check_source_rejects_bad_assignment() {
         let result = check_source("fn main() { let x: bool = 1 +% 2; }");
         assert!(!result.ok);
+    }
+
+    #[test]
+    fn check_source_accepts_static_assignment_across_functions() {
+        let result = check_source(
+            "static counter: u8 = 40; \
+             fn bump(step: u8) -> u8 { counter = counter + step; return counter; } \
+             fn main() -> u8 { let a: u8 = bump(1); let b: u8 = bump(1); return counter; }",
+        );
+        assert!(result.ok, "expected success, got {:?}", result.errors);
+    }
+
+    #[test]
+    fn check_source_rejects_static_initializer_wrong_width() {
+        let result = check_source("static small: u4 = 16; fn main() {}");
+        assert!(!result.ok);
+        assert!(
+            result
+                .errors
+                .iter()
+                .any(|err| err.message.contains("static `small` expects")),
+            "expected static width error, got {:?}",
+            result.errors
+        );
     }
 }
