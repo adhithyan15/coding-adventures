@@ -1,5 +1,20 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.24.0 — 2026-06-27 — BA4 multi-item string PRINT sequencing
+
+String `PRINT` now has an explicit proof for multiple scalar string items in
+one statement:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = "K"
+30 PRINT A$; B$
+```
+
+The frontend emits two ordered `print_str` calls and does not route the
+string-only statement through numeric print helpers. The `;` separator keeps the
+output adjacent, so the all-backend matrix observes `OK`.
+
 ## 0.23.0 — 2026-06-27 — BA4 copied string slots in IF equality
 
 String `IF` comparisons now have an explicit proof for comparing two scalar

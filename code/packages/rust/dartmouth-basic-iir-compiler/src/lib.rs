@@ -2685,6 +2685,31 @@ mod tests {
     }
 
     #[test]
+    fn compiles_multi_item_string_print_with_semicolon() {
+        let m = compile("10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$; B$\n40 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        let print_a = body.iter()
+            .position(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "__basic_str_A")
+            })
+            .expect("PRINT should emit print_str for A$");
+        let print_b = body.iter()
+            .position(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "__basic_str_B")
+            })
+            .expect("PRINT should emit print_str for B$");
+        assert!(print_a < print_b, "PRINT A$; B$ should preserve item order");
+        assert!(
+            !body.iter().any(|i| i.op == "call"
+                && i.srcs.first().and_then(|o| o.as_str_lit()) == Some("__basic_print_real")),
+            "string-only PRINT should not call numeric formatting helpers"
+        );
+    }
+
+    #[test]
     fn compiles_string_variable_if_equality() {
         let src = "10 LET A$ = \"Y\"\n\
                    20 IF A$ = \"Y\" THEN 40\n\

@@ -4,7 +4,7 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.131.0):**
+> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.132.0):**
 > `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 > It also proves `10 LET A$ = "HI"; 20 PRINT A$` produces stdout `HI` on
 > the same seven backends, and `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
@@ -14,6 +14,9 @@ LANG VM chain.
 > Literal-backed scalar string copy also runs everywhere:
 > `LET A$ = "OK"; LET B$ = A$; PRINT B$` lowers through `str_concat` with an
 > empty suffix.
+> Multi-item string `PRINT` runs too:
+> `LET A$ = "O"; LET B$ = "K"; PRINT A$; B$` prints `OK` through ordered
+> `print_str` calls.
 > `PRINT A$ + "K"` now proves `PRINT` can consume a temporary E4 string
 > expression result directly.
 > `IF A$ + "K" = "OK" THEN ...` proves the same expression path can feed

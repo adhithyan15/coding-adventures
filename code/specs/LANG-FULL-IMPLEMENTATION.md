@@ -12,7 +12,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Twig | `42` | rich Lisp frontend, but only typed int-arith/`if` clears the backend validators; lists/lambdas/strings/`print`/symbols need the VM only |
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
-| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed concat assignment, `PRINT`/`IF` string concat expressions, literal-backed scalar string copy, copied-slot string equality, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); richer string ops and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
+| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT`, literal-backed scalar string copy, copied-slot string equality, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); richer string ops and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables and scalar copy snapshots ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
 
@@ -234,10 +234,10 @@ multiple languages; close an enabler before the features that depend on it.
   proves literal-backed scalar string variables through the same path.
   ALGOL scalar string copies are snapshots (`begin string s, t; s := 'OK'; t := s;
   s := 'NO'; print(t) end` still prints `OK`). BASIC also proves literal
-  reassignment (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`) through the same slot
-  and copied-slot equality (`LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...`)
-  through `str_eq`. Captured string variables and broader dynamic string values
-  remain.
+  reassignment (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`) through the same slot,
+  multi-item string `PRINT` (`PRINT A$; B$`), and copied-slot equality
+  (`LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...`) through `str_eq`.
+  Captured string variables and broader dynamic string values remain.
   Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR
@@ -492,7 +492,8 @@ backend immediately) come before the enabler-dependent items.
   Literal-backed scalar string variables now run too: `LET A$ = "HI"; PRINT A$`
   produces `HI`, `LET A$ = "NO"; LET A$ = "OK"; PRINT A$` produces `OK`,
   `LET A$ = "O" + "K"; PRINT A$` proves literal `str_concat`,
-  `LET A$ = "OK"; LET B$ = A$; PRINT B$` proves scalar string copy, and
+  `LET A$ = "OK"; LET B$ = A$; PRINT B$` proves scalar string copy,
+  `PRINT A$; B$` proves ordered repeated string output, and
   `LET A$ = "O"; PRINT A$ + "K"` proves `PRINT` can consume a temporary string
   expression result directly. `LET A$ = "O"; IF A$ + "K" = "OK" THEN n`
   proves that same expression path before `str_eq` line-control branching.

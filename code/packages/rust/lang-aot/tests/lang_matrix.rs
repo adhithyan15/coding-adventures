@@ -1101,6 +1101,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 multi-item string PRINT. `;` keeps adjacent output,
+    // so two scalar string slots are consumed by ordered E4 `print_str` calls
+    // without using concat or numeric formatting helpers.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$; B$\n40 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — BA4 string expression in PRINT. This keeps concat out
     // of an assignment target and proves `PRINT` can consume a temporary E4
     // string expression result directly.
