@@ -114,9 +114,9 @@ executions. Execution `table_artifacts` preserve the same order as `tables` and
 carry each stable table's text, CSV, compact JSON, and header-keyed records.
 Execution `output_plan_artifacts` summarize the selected result columns,
 output probes, output directives, normalized output directive kinds, normalized
-directive analysis scopes, and stable table names, and the `output-plan` entry
-in `table_artifacts` carries the same table, CSV, compact JSON, and
-header-keyed record exports.
+directive analysis scopes, selected output directive source lines, and stable
+table names, and the `output-plan` entry in `table_artifacts` carries the same
+table, CSV, compact JSON, and header-keyed record exports.
 Selected `.tran` plans also return selected `.four` harmonic results and a stable
 Fourier table. Executions also include a selected-run artifact summary plus
 `format_deck_run_artifact_table()` and `format_deck_run_artifact_csv()` output
