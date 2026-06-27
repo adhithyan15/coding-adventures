@@ -95,11 +95,22 @@ enum Backend {
 }
 
 /// The known, backend-independent observable result of a conformance program.
+#[derive(Debug)]
 enum Expect {
     /// The process exit code (an expression language's returned value, `& 0xFF`).
     Exit(i32),
     /// A trimmed stdout string (an I/O language's printed output).
     Stdout(&'static str),
+    /// The program must fail closed at runtime (for example, a bounds trap).
+    Trap,
+}
+
+/// The observed outcome from a backend that was present and successfully built
+/// the program.
+#[derive(Debug)]
+enum RunResult {
+    Completed { code: Option<i32>, stdout: String },
+    Trapped,
 }
 
 /// One conformance program: a language, a source-file extension, the source, the
@@ -165,6 +176,17 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(string-ref \"ABC\" 1)",
         expect: Expect::Exit(66),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 literal `string-ref` out-of-bounds trap. This proves the same
+    // runtime fail-closed contract on every backend: native/LLVM lower the
+    // compile-known OOB literal to a trap path, WASM/VM/JIT use their shared bounds
+    // checks, and JVM/CLR surface their managed string index exceptions.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(string-ref \"ABC\" 3)",
+        expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 literal `string-append` feeding `string-length`. This exercises
@@ -1271,7 +1293,7 @@ fn output_with_stdin(mut cmd: Command, input: &[u8]) -> Option<std::process::Out
 /// cannot pre-create the directory or plant a symlink at `prog` and have the harness
 /// execute substituted code in the compile→run window (CWE-377/367). The `_dir`
 /// guard is held until after the executable runs so it is not removed early.
-fn run_native(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_native(p: &Prog) -> Option<RunResult> {
     if !native_linker_ok() {
         return None;
     }
@@ -1284,7 +1306,10 @@ fn run_native(p: &Prog) -> Option<(Option<i32>, String)> {
     // every other program, so the prior no-stdin behaviour is unchanged.
     let out = output_with_stdin(Command::new(&exe), program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
-    Some((out.status.code(), stdout))
+    if matches!(&p.expect, Expect::Trap) && !out.status.success() {
+        return Some(RunResult::Trapped);
+    }
+    Some(RunResult::Completed { code: out.status.code(), stdout })
 }
 
 /// Is a usable `clang` present? Gates the LLVM column (skip when absent).
@@ -1317,7 +1342,7 @@ const PRINT_RUNTIME_C: &str =
 ///
 /// Same temp-file hardening as `run_native`: a fresh `tempfile::tempdir()` whose
 /// guard outlives the run, so the executed `prog` cannot be substituted (CWE-377/367).
-fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_llvm(p: &Prog) -> Option<RunResult> {
     if !clang_ok() {
         return None;
     }
@@ -1348,7 +1373,10 @@ fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
     // process stdin; empty for every other program.
     let out = output_with_stdin(Command::new(&exe), program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
-    Some((out.status.code(), stdout))
+    if matches!(&p.expect, Expect::Trap) && !out.status.success() {
+        return Some(RunResult::Trapped);
+    }
+    Some(RunResult::Completed { code: out.status.code(), stdout })
 }
 
 /// The generic stdout primitive an I/O language's wasm emits. Dartmouth BASIC's
@@ -1583,7 +1611,7 @@ impl wasm_execution::HostInterface for PrintHost {
 /// result kinds: an expression language returns its value as `main`'s wasm result
 /// (the `code`); an I/O language (Dartmouth BASIC) prints through `env.__print_i64`,
 /// whose arguments the host captured into the buffer, joined as the program's stdout.
-fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_wasm(p: &Prog) -> Option<RunResult> {
     let wasm = lang_aot::compile_source_to_wasm(p.lang, p.src, "main").ok()?;
     let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     let byte_buf = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
@@ -1597,7 +1625,11 @@ fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
         input: std::sync::Arc::clone(&input),
     };
     let rt = wasm_runtime::WasmRuntime::with_host(Box::new(host));
-    let result = rt.load_and_run(&wasm, "main", &[]).ok()?;
+    let result = match rt.load_and_run(&wasm, "main", &[]) {
+        Ok(result) => result,
+        Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
+        Err(_) => return None,
+    };
     // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
     // convention the native/LLVM columns use for the same programs).
     let code = result.first().copied().map(|v| (v as i32) & 0xFF);
@@ -1623,7 +1655,7 @@ fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
         // model surfaced). Inner newlines (multi-line output) are preserved.
         String::from_utf8_lossy(&printed_bytes).trim().to_string()
     };
-    Some((code, stdout))
+    Some(RunResult::Completed { code, stdout })
 }
 
 /// Is a usable `java` present? Gates the JVM column (skip when absent), exactly as
@@ -1700,7 +1732,7 @@ public static int getchar(){ try { int b = System.in.read(); return b < 0 ? 0 : 
 /// executed `Main.class` nor the `javac`-compiled host can be substituted in the
 /// write→run window (CWE-377/367); the class name is the constant `"Main"`, never
 /// interpolated from input; and each program terminates by construction.
-fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_jvm(p: &Prog) -> Option<RunResult> {
     use iir_to_jvm_class_file::serialize_jvm_class_file;
     use jvm_class_file::{
         JvmCodeAttribute, JvmConstantPoolEntry, JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC,
@@ -1713,7 +1745,7 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
         cp.push(Some(e));
         (cp.len() - 1) as u16
     }
-    let prints = matches!(p.expect, Expect::Stdout(_));
+    let prints = matches!(&p.expect, Expect::Stdout(_));
     let mut class = lang_aot::compile_source_to_jvm_class(p.lang, p.src, "Main").ok()?;
     // The entry method's real return type — `I` (int) for the expression languages,
     // `J` (long) for a printing program. The launcher must match it exactly.
@@ -1839,13 +1871,16 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
     java.arg("-cp").arg(dir.path()).arg("Main");
     let out = output_with_stdin(java, program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    if matches!(&p.expect, Expect::Trap) && !out.status.success() {
+        return Some(RunResult::Trapped);
+    }
     if prints {
         // The program wrote its result to stdout via `env.BasicRuntime.println`.
-        Some((out.status.code(), stdout))
+        Some(RunResult::Completed { code: out.status.code(), stdout })
     } else {
         // The launcher printed the entry method's result; parse it as the program's
         // value (matching the exit-code convention of the other columns).
-        Some((stdout.parse::<i32>().ok(), String::new()))
+        Some(RunResult::Completed { code: stdout.parse::<i32>().ok(), stdout: String::new() })
     }
 }
 
@@ -1873,7 +1908,7 @@ fn dotnet_ok() -> bool {
 /// the run, so the executed assembly cannot be substituted in the assemble→run
 /// window (CWE-377/367); the class name is the constant `"Main"`, never from input;
 /// and each program terminates by construction.
-fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_clr(p: &Prog) -> Option<RunResult> {
     if !dotnet_ok() {
         return None;
     }
@@ -1906,6 +1941,9 @@ fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
     dn.arg(&dll);
     let out = output_with_stdin(dn, program_stdin(p))?;
     if !out.status.success() {
+        if matches!(&p.expect, Expect::Trap) {
+            return Some(RunResult::Trapped);
+        }
         return None;
     }
     // Whatever the program wrote to `Console`: for an expression language that's the
@@ -1914,7 +1952,7 @@ fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
     // the `PRINT` output captured directly. Return both — `assert_cell` picks the one
     // the program's `Expect` cares about.
     let printed = String::from_utf8_lossy(&out.stdout).trim().to_string();
-    Some((printed.parse::<i32>().ok(), printed))
+    Some(RunResult::Completed { code: printed.parse::<i32>().ok(), stdout: printed })
 }
 
 /// VM runner: source → IIR (`compile_source_to_iir`) → the **generic register VM**
@@ -1938,7 +1976,7 @@ fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
 /// other columns' convention); an I/O language's stdout is the captured buffer. `None`
 /// only if the program fails to compile or the VM errors — the VM is in-process, so a
 /// tagged cell always runs (no host gate).
-fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_vm(p: &Prog) -> Option<RunResult> {
     use std::sync::{Arc, Mutex};
     use vm_core::core::VMCore;
     use vm_core::value::Value;
@@ -1987,7 +2025,11 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
         Ok(Value::Int(byte.map(i64::from).unwrap_or(0)))
     });
 
-    let result = vm.execute(&mut module, &entry, &[]).ok()?;
+    let result = match vm.execute(&mut module, &entry, &[]) {
+        Ok(result) => result,
+        Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
+        Err(_) => return None,
+    };
 
     // The exit code: an expression language's `main` returns an `Int`.
     let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
@@ -2007,7 +2049,7 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
         // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
         String::from_utf8_lossy(&byte_buf).trim().to_string()
     };
-    Some((code, stdout))
+    Some(RunResult::Completed { code, stdout })
 }
 
 /// Run a program through the **generic JIT** and return `(exit_code, stdout)`.
@@ -2026,7 +2068,7 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
 /// path) and the `GenericCirJit` backend (the compiled path) so output is captured
 /// regardless of which tier a given function lands on. Each closure appends a bounded
 /// amount per call — no DoS vector.
-fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_jit(p: &Prog) -> Option<RunResult> {
     use std::sync::{Arc, Mutex};
     use jit_core::core::JITCore;
     use jit_core::GenericCirJit;
@@ -2096,7 +2138,11 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
     // `JITCore::new` takes `&mut vm` only to thread thresholds — it does not hold the
     // borrow, so `execute_with_jit` can re-borrow `vm` for the interpreter tier.
     let mut jit = JITCore::new(&mut vm, Box::new(backend));
-    let result = jit.execute_with_jit(&mut vm, &mut module, &entry, &[]).ok()?;
+    let result = match jit.execute_with_jit(&mut vm, &mut module, &entry, &[]) {
+        Ok(result) => result,
+        Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
+        Err(_) => return None,
+    };
 
     // Exit code / stdout extraction is identical to `run_vm` — the JIT is observably
     // equivalent to the interpreter, which is the whole point of a JIT.
@@ -2115,12 +2161,12 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
         // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
         String::from_utf8_lossy(&byte_buf).trim().to_string()
     };
-    Some((code, stdout))
+    Some(RunResult::Completed { code, stdout })
 }
 
 /// Dispatch a program to a backend runner. `None` = the backend's toolchain is
 /// unavailable on this host (skip, like the W16 external-tool backends).
-fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
+fn run(backend: Backend, p: &Prog) -> Option<RunResult> {
     match backend {
         Backend::NativeAot => run_native(p),
         Backend::Llvm => run_llvm(p),
@@ -2133,17 +2179,22 @@ fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
 }
 
 /// Assert a single matrix cell agrees with the program's known result.
-fn assert_cell(backend: Backend, p: &Prog, code: Option<i32>, stdout: &str) {
-    match &p.expect {
-        Expect::Exit(n) => assert_eq!(
+fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
+    match (&p.expect, result) {
+        (Expect::Exit(n), RunResult::Completed { code, stdout }) => assert_eq!(
             code,
             Some(*n),
             "{backend:?} {:?}: expected exit {n}, got {code:?} (stdout {stdout:?})",
             p.lang
         ),
-        Expect::Stdout(s) => assert_eq!(
+        (Expect::Stdout(s), RunResult::Completed { stdout, .. }) => assert_eq!(
             stdout, *s,
             "{backend:?} {:?}: expected stdout {s:?}, got {stdout:?}",
+            p.lang
+        ),
+        (Expect::Trap, RunResult::Trapped) => {}
+        (expect, other) => panic!(
+            "{backend:?} {:?}: expected {expect:?}, got {other:?}",
             p.lang
         ),
     }
@@ -2157,10 +2208,10 @@ fn matrix_every_proven_cell_agrees() {
     let mut ran = 0usize;
     for p in PROGRAMS {
         for &backend in p.backends {
-            let Some((code, stdout)) = run(backend, p) else {
+            let Some(result) = run(backend, p) else {
                 continue;
             };
-            assert_cell(backend, p, code, &stdout);
+            assert_cell(backend, p, result);
             ran += 1;
         }
     }

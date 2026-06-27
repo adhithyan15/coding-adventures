@@ -1123,6 +1123,39 @@ fn e4_string_literal_index_folds_to_integer_return() {
 }
 
 #[test]
+fn e4_string_literal_index_out_of_bounds_traps() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(
+        validate_for_llvm(&module).is_empty(),
+        "literal OOB string index should validate and trap at runtime"
+    );
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("declare void @llvm.trap()"),
+        "str_index OOB should declare llvm.trap:\n{ll}"
+    );
+    assert!(
+        ll.contains("call void @llvm.trap()"),
+        "str_index OOB should emit a runtime trap:\n{ll}"
+    );
+}
+
+#[test]
 fn e4_unknown_string_ops_still_fail_closed() {
     let f = IIRFunction::new(
         "main",

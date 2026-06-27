@@ -1,5 +1,13 @@
 # Changelog — `twig-aot`
 
+## 0.18.0 — 2026-06-27 — native literal string index OOB trap (LANG-FULL E4)
+
+`prepare_module_for_aot` now preserves the E4 trap contract for direct-literal
+`str_index` when the index is statically out of range. The native rewrite emits
+an unconditional `type_assert` trap before a dummy destination seed, so
+`(string-ref "ABC" 3)` reaches native machine code and traps at runtime instead
+of being rejected before execution.
+
 ## 0.17.0 — 2026-06-27 — native literal string index lowering (LANG-FULL E4)
 
 `prepare_module_for_aot` now folds direct-literal `str_index` when both the

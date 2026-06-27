@@ -3,6 +3,13 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.20.0] — 2026-06-27 — literal string index OOB traps (LANG-FULL E4)
+
+Direct-literal `str_index` now preserves the E4 trap contract when the index is
+statically out of range. Instead of rejecting the module during lowering, LLVM
+emits `call void @llvm.trap()` so the matrix can prove `(string-ref "ABC" 3)`
+fails at runtime.
+
 ## [0.19.0] — 2026-06-27 — literal string index reaches LLVM (LANG-FULL E4)
 
 Extends the direct-literal E4 metadata foothold with `str_index`.

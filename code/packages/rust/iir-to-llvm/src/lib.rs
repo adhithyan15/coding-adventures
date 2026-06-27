@@ -645,6 +645,9 @@ pub fn lower_iir_to_llvm(
     // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
     // (the out-of-bounds trap). `is_array_op` covers alloc_array/array_*.
     let mut used_arrays = false;
+    // LANG-FULL E4: direct-literal `str_index` can emit `@llvm.trap` when a
+    // compile-known index is out of bounds.
+    let mut used_str_index = false;
     // LANG-FULL E8: the `real_to_int_*` conversions need `@llvm.trap` (the
     // out-of-range trap) plus the `@llvm.floor.f64`/`@llvm.trunc.f64` rounding
     // intrinsics. `is_conversion` covers int_to_real / real_to_int_{trunc,floor}.
@@ -662,6 +665,9 @@ pub fn lower_iir_to_llvm(
             }
             if interpreter_ir::opcodes::is_array_op(&i.op) {
                 used_arrays = true;
+            }
+            if i.op == "str_index" {
+                used_str_index = true;
             }
             if interpreter_ir::opcodes::is_conversion(&i.op) {
                 used_conversions = true;
@@ -695,16 +701,16 @@ pub fn lower_iir_to_llvm(
     // LLVM05 — libc / allocator declarations for the Brainfuck tape & I/O.
     // `calloc(nmemb, size)` returns a zero-filled buffer (BF cells start at 0);
     // `putchar`/`getchar` are the libc character I/O the BF `.`/`,` map to.
-    if used_alloc_bytes || used_arrays || used_conversions || used_putchar || used_getchar {
+    if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
             out.push_str("declare ptr @calloc(i64, i64)\n");
         }
-        if used_arrays || used_conversions {
+        if used_arrays || used_conversions || used_str_index {
             // The trap target — out-of-bounds for arrays (LANG-FULL E5) and
-            // out-of-range for `real_to_int_*` (LANG-FULL E8). `llvm.trap` is an
-            // intrinsic — declaring it is harmless and keeps the module explicit.
-            // Declared once even when both arrays and conversions are present.
+            // `str_index`, and out-of-range for `real_to_int_*` (LANG-FULL E8).
+            // `llvm.trap` is an intrinsic — declaring it is harmless and keeps
+            // the module explicit. Declared once even when several users are present.
             out.push_str("declare void @llvm.trap()\n");
         }
         if used_conversions {
@@ -1363,7 +1369,7 @@ fn lower_instr(
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
         "str_concat" => lower_str_concat(instr, state),
-        "str_index" => lower_str_index(instr, state),
+        "str_index" => lower_str_index(instr, state, out),
         "str_len" => lower_str_len(instr, state),
         "str_eq" => lower_str_eq(instr, state),
         "print_str" => lower_print_str(instr, state, out),
@@ -1509,6 +1515,7 @@ fn lower_str_concat(
 fn lower_str_index(
     instr: &IIRInstr,
     state: &mut FnState,
+    out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "str_index", state.fn_name)?.to_string();
     let src = match instr.srcs.first() {
@@ -1543,14 +1550,15 @@ fn lower_str_index(
             function: state.fn_name.into(),
             detail: format!("str_index index {idx:?} is not a constant integer value"),
         })?;
-    let byte = usize::try_from(idx_value)
+    let Some(byte) = usize::try_from(idx_value)
         .ok()
         .and_then(|idx| literal.as_bytes().get(idx))
         .copied()
-        .ok_or_else(|| IIRLlvmError::InvalidOperand {
-            function: state.fn_name.into(),
-            detail: format!("str_index index {idx_value} is out of bounds for literal length {}", literal.len()),
-        })?;
+    else {
+        out.push_str("  call void @llvm.trap()\n");
+        state.env.insert(dest, "0".to_string());
+        return Ok(());
+    };
     state.env.insert(dest, byte.to_string());
     Ok(())
 }

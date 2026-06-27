@@ -1651,7 +1651,13 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 .and_then(|idx| literal.as_bytes().get(idx))
                 .copied()
             else {
-                lowered.push(instr);
+                lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
+                lowered.push(IIRInstr::new(
+                    "const",
+                    Some(dest),
+                    vec![Operand::Int(0)],
+                    &instr.type_hint,
+                ));
                 continue;
             };
             lowered.push(IIRInstr::new(
@@ -2239,6 +2245,38 @@ mod tests {
         assert!(
             f.instructions.iter().all(|i| i.op != "str_index"),
             "native lowering should remove folded str_index: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_index_out_of_bounds_lowers_to_trap() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(3)], "i64"),
+                IIRInstr::new("str_index", Some("b".into()), vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("i".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        assert!(
+            f.instructions.iter().any(|i| i.op == "type_assert"),
+            "out-of-bounds str_index should lower to an unconditional native trap: {:?}",
+            f.instructions
+        );
+        let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
+        assert!(
+            matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(0)]),
+            "trap path should still seed the destination for downstream typing: {:?}",
             f.instructions
         );
     }

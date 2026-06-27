@@ -174,9 +174,10 @@ footholds also prove direct literal `str_len`, `str_index`, `str_eq`, and
 `str_concat`-feeding-`str_len` via exit codes `5`/`66`/`1`/`5`. The named-value
 proofs exercise immutable top-level string values with `str_concat` + `str_len`,
 `str_eq` driving an `if`, and `str_index` via exit codes `5`/`42`/`67` on every
-backend. Follow-up proofs still need the **bounds-trap** case (`str_index` out
-of range) confirming the check fires (aborts non-zero) on each backend, plus
-full source-language string variables.
+backend. The matrix also covers the **bounds-trap** case: `(string-ref "ABC" 3)`
+must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT. Follow-up
+proofs now focus on full source-language string variables and richer dynamic
+string values.
 
 `run_native` runs the host arch, so `NativeAot` exercises aarch64 locally and
 x86_64 on CI (as for E3/E5). The `x86-simulator` harness can additionally run the
@@ -227,9 +228,9 @@ merge before the next:
    (length-prefixed rodata literals + heap `str_concat` + explicit `str_index`
    guard). Native literal output is already proven through the heap-byte foothold;
    this item is now the richer ops/representation slice.
-6. ◑ **E4-ops-proofs** — named-value `str_concat`+`str_len`, `str_eq` driving a
-   branch, and named `str_index` now run across every backend. Remaining: the
-   `str_index` out-of-bounds **trap** proof across every backend.
+6. ✅ **E4-ops-proofs** — named-value `str_concat`+`str_len`, `str_eq` driving a
+   branch, named `str_index`, and the `str_index` out-of-bounds **trap** proof
+   now run across every backend.
 7. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`; string
    *variables* and reassignment in each frontend; ALGOL `string` arrays; Unicode
    codepoint/grapheme semantics; the dynamic-`any` Twig string path (needs broader
@@ -239,7 +240,8 @@ Ordering rationale mirrors E5: get the IIR + reference interpreter right (1), pr
 it end-to-end through the simplest frontend (2), then the *managed* backends (3)
 where `String` is native and bounds-checking is free, then the *static* backends
 (4) where the rodata literal + header + heap concat + guard is the real work, then
-the richer ops + trap proof (5). Front-loads the cheap high-confidence wins.
+the richer dynamic ops and variable proofs (5). Front-loads the cheap
+high-confidence wins.
 
 ---
 
