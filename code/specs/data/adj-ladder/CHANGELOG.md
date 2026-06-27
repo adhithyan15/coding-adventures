@@ -15,16 +15,17 @@ All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
   defensibility **1.00**); **divergence +35% (+7 items)**. Arm B's single miss is a
   decompose error the engine caught and abstained on — zero fabrications.
   Artifact: `ladder-scorecard.gemma.json`.
-- **Formula extraction stays strict.** A few-shot decompose prompt steers the model to
-  plain ASCII arithmetic; `extract_formula` accepts only a plain `+ - * / ()` line
-  (stripping an echoed `Formula:` label) and **abstains** on anything else. LaTeX/unicode
-  math is deliberately NOT normalized in the harness — that is a parsing concern owned
-  by the engine (adj-lang will understand LaTeX math natively; tracked as its own PR),
-  not an ad-hoc regex in the eval layer. The harness never rewrites the model's math.
+- **Formula extraction stays strict.** A few-shot decompose prompt steers the model
+  to either plain ASCII arithmetic or ADJ's native LaTeX wrapper; `extract_formula`
+  accepts only a plain `+ - * / ()` line or native ADJ `latex "..."` expression
+  (stripping an echoed `Formula:` label) and **abstains** on anything else. Bare
+  LaTeX/unicode math is deliberately NOT normalized in the harness — the model must
+  emit ADJ syntax, and adj-lang owns parsing/solving.
 - **Per-model scorecards.** Model runs write `ladder-scorecard.<model>.json`; cached
   runs write `ladder-scorecard.json` — a cached CI run never clobbers a committed
   two-arm headline. Scorecard summary now records the `model`.
-- Tests: +2 (glyph/label normalization, alias resolution) → 20 total.
+- Tests: 24 total, including native ADJ LaTeX extraction and a harness-to-engine
+  `latex "$5 \times 12$"` smoke.
 
 ## [0.1.0] — 2026-06-26
 

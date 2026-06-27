@@ -12,10 +12,11 @@ through TWO arms:
             in its head (this is exactly what language models are bad at).
 
     Arm B — the small model + the ADJ engine.   The model only DECOMPOSES the
-            question into an ADJ program (a `let` formula over the numbers that
-            appear in the stem); the **engine** does every bit of arithmetic on the
-            CPU, exactly, and SELECTS the option whose value equals the computed
-            answer — emitting a machine-checkable proof.
+            question into an ADJ expression (ASCII arithmetic or ADJ's native
+            `latex "..."` form over the numbers that appear in the stem); the
+            **engine** does every bit of arithmetic on the CPU, exactly, and SELECTS
+            the option whose value equals the computed answer — emitting a
+            machine-checkable proof.
 
 The headline number is the **divergence, B − A**. At rung 0 the gap is small (a
 small model can do `7 * 8 + 3`). As the ladder climbs and the computation deepens,
@@ -344,9 +345,10 @@ def decompose_prompt(item: dict) -> str:
     # model a fair shot at the FORMAT — we are measuring its decomposition ability, not
     # its prompt-guessing. The examples carry no overlap with any bank item's numbers.
     return (
-        "Translate the arithmetic in a question into a SINGLE formula using ONLY the "
-        "numbers that appear in the question and the operators + - * / and "
-        "parentheses. Do NOT compute the answer. Output ONLY the formula, on one line.\n\n"
+        "Translate the arithmetic in a question into a SINGLE ADJ expression using ONLY "
+        "the numbers that appear in the question. Prefer + - * / and parentheses; if "
+        "you use LaTeX, wrap it as ADJ syntax like latex \"$5 \\times 12$\". Do NOT "
+        "compute the answer. Output ONLY the expression, on one line.\n\n"
         "Question: What is 11 * 4 - 6?\nFormula: 11 * 4 - 6\n\n"
         "Question: A box holds 8 pens. How many pens are in 3 boxes?\nFormula: 3 * 8\n\n"
         f"Question: {item['stem']}\nFormula:"
@@ -355,21 +357,20 @@ def decompose_prompt(item: dict) -> str:
 
 _FORMULA_OK = re.compile(r"^[\d\s+\-*/().]+$")
 _LABEL = re.compile(r"(?i)^\s*formula\s*[:=]?\s*")
+_NATIVE_LATEX_EXPR = re.compile(r'^latex\s+"([^"\\]|\\.)*"$')
 
 
 def extract_formula(text: str) -> str | None:
     """Take the model's reply and return the first line that is a plain ASCII
     arithmetic expression — digits, the four operators + - * /, and parentheses.
-    Anything else → None (abstain).
+    Or a native ADJ `latex "..."` expression. Anything else → None (abstain).
 
     The only cosmetic step is stripping a leading "Formula:" label the model may echo;
-    we never rewrite the math. In particular we do NOT normalize LaTeX or unicode math
-    glyphs here — that is a parsing concern owned by the engine (adj-lang understands
-    LaTeX math natively), not an ad-hoc regex in the eval harness. An expression the
-    engine can't yet parse is honestly abstained on, never silently repaired."""
+    we never rewrite the math. A model that wants LaTeX must emit ADJ's native
+    `latex "..."` expression syntax; parsing and solving belong to adj-lang."""
     for raw in (text or "").splitlines():
         line = _LABEL.sub("", raw.strip()).rstrip(".")
-        if line and _FORMULA_OK.match(line):
+        if line and (_FORMULA_OK.match(line) or _NATIVE_LATEX_EXPR.match(line)):
             return line
     return None
 
