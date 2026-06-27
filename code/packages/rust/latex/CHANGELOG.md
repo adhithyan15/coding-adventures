@@ -2,6 +2,36 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.10.0] — 2026-06-27
+
+### Added — LTX01 L6: `math-frontend` adapter (the ladder's capstone)
+
+- **`LatexMath`** implements `math_frontend::MathFrontend`: `parse(src)` runs the L2/L3a math
+  grammar (`parse_math`) and **lowers** the LaTeX-shaped `MathNode` into the notation-agnostic
+  `math_frontend::MathExpr`. LaTeX is now the first **pluggable frontend** of the PFE01 framework
+  — a consumer (rule engine, CAS, renderer) lowers one neutral tree and gets LaTeX for free.
+- **Registration:** `latex::registry()` returns a `FrontendRegistry` with LaTeX installed, and
+  `latex::register_latex(&mut reg)` installs it into an existing one. (`math-frontend`'s own
+  `with_builtins()` stays empty by design — it cannot depend on this crate without a cycle; the
+  wiring lives here.)
+- **Neutral lowering** drops presentation, keeps meaning: `\times`/`\cdot`/juxtaposition →
+  `Mul`; `\frac`/`\dfrac`/`\tfrac` → `Frac`; every fence style → `Group`; every matrix
+  delimiter → `Matrix`; `a^n` → `Pow`, `a_i` → `Subscript`, `a_i^n` → `Pow(Subscript(..),..)`;
+  accents (`\hat{x}`) → `Call{Other(kind), arg}`. Numbers stay **exact** (`MathExpr::Number`,
+  never `f64`). Declares `Capabilities::all()`; conforms to the shared `check_frontend` harness.
+- **Honest gaps:** `\pm`/`\mp` and `\binom` have **no** neutral representation, so they lower to
+  a well-formed spanned `FrontendError` rather than being faked. Extending the neutral AST to
+  cover them is a future `math-frontend`-crate change, not a hack here.
+- **Feature-gated:** the adapter (and the only dependency, `math-frontend`) sit behind the
+  default-on **`frontend`** cargo feature. `--no-default-features` builds the zero-dependency
+  L0–L5 document/math parser alone (verified: core tests pass under `--no-default-features`).
+- Total / panic-free: lowering recursion is bounded by `parse_math`'s `MAX_DEPTH`; no `unsafe`.
+- +15 tests (frac/pow/subscript/root/func/bigop/rel/implicit-mul/normalization/symbol/text/
+  group/accent/matrix/exact-number/gap-errors/parse-error-span/registry/conformance). **135
+  unit + 1 doc test** green with default features; core green under `--no-default-features`;
+  clippy `-D warnings` clean both ways. Crate 0.9.0 → 0.10.0. **This completes the LTX01 ladder
+  (L0–L6).**
+
 ## [0.9.0] — 2026-06-27
 
 ### Added — LTX01 L5d: document-structure recognition

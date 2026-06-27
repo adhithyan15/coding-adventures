@@ -36,7 +36,9 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L3 environments** | math env family — `matrix`/`pmatrix`/`bmatrix`/`vmatrix`/`cases`/`aligned`/`align` split on `&` and `\\` → `MathNode::Matrix`, round-trip; nesting + scripts | ✅ |
 | **L4 macros** | `\newcommand`/`\renewcommand`/`\providecommand` with positional `#1`..`#9`; bounded recursive expansion via `expand()` (L4a) | ✅ |
 | **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c) + sectioning/refs/preamble/font via `recognize_structure` (L5d) | ✅ |
-| L6 frontend | implement `math-frontend::MathFrontend` (LaTeX becomes plugin #1) | ⏳ |
+| **L6 frontend** | `LatexMath` implements `math-frontend::MathFrontend` — lifts `MathNode` → neutral `MathExpr`; LaTeX is plugin #1 via `registry()` (default-on `frontend` feature) | ✅ |
+
+The ladder is **complete** (L0–L6). 🎉
 
 ## Usage
 
@@ -189,6 +191,35 @@ cross-ref with no key) is left as a plain command — never dropped or mis-folde
 positional (until end of group), so wrapping them in an argument node would misrepresent them.
 The pass is idempotent and round-trips: `recognize_structure(parse(&n.to_latex())) == [n]`.
 (The two passes — `recognize_accents` and `recognize_structure` — are independent and compose.)
+
+### Pluggable frontend (L6)
+
+The capstone: `LatexMath` implements the [`math-frontend`](../math-frontend) `MathFrontend`
+trait, so LaTeX math plugs into the shared, notation-agnostic registry. `parse` runs the math
+grammar and **lowers** the LaTeX-shaped `MathNode` into the neutral `MathExpr` — two source
+strings that mean the same math produce the same tree, so a consumer lowers *one* AST and gets
+every notation for free:
+
+```rust
+use latex::registry;                       // a FrontendRegistry with LaTeX installed
+use math_frontend::{MathExpr, BinOp};
+
+let reg = registry();
+assert_eq!(reg.names(), ["latex"]);
+
+// \times, \cdot, and juxtaposition all normalize to the same neutral Mul:
+let a = reg.parse("latex", r"a \times b").unwrap();
+assert_eq!(a, reg.parse("latex", "ab").unwrap());
+assert!(matches!(a, MathExpr::Bin(BinOp::Mul, _, _)));
+```
+
+Lowering drops *presentation* and keeps *meaning*: fence style → `Group`, matrix delimiter →
+`Matrix`, `a^n` → `Pow`, `a_i` → `Subscript`, accents → `Call`; numbers stay **exact**
+(`MathExpr::Number`, never `f64`). Two constructs have no neutral counterpart yet — `\pm`/`\mp`
+and `\binom` — so they return a well-formed spanned error rather than being faked (extending the
+neutral AST to cover them is a future `math-frontend` change). The adapter sits behind the
+default-on **`frontend`** feature; build with `--no-default-features` for the zero-dependency
+L0–L5 parser alone.
 
 The low-level `tokenize` is also public. Tokens and errors carry half-open byte `Span`s;
 all of `parse`, `parse_math`, and `tokenize` return spanned errors rather than panicking,

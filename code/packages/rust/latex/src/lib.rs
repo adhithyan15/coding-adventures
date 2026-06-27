@@ -39,6 +39,11 @@
 //!    nodes: sectioning ([`Node::Section`]), cross-refs/citations ([`Node::CrossRef`]),
 //!    preamble directives ([`Node::Preamble`]), and argument-form font commands
 //!    ([`Node::Styled`]). **Implemented (L5d).**
+//! 8. [`LatexMath`] — the `math-frontend` adapter: implements `math_frontend::MathFrontend`,
+//!    lifting a math island's [`MathNode`] into the neutral `MathExpr`, so LaTeX plugs into the
+//!    pluggable-frontend registry ([`registry`] / [`register_latex`]). **Implemented (L6).**
+//!    Gated behind the default-on `frontend` cargo feature; `--no-default-features` keeps
+//!    L0–L5 dependency-free.
 //!
 //! ## Example
 //!
@@ -65,6 +70,12 @@ mod parser;
 mod structure;
 mod text;
 mod token;
+
+#[cfg(feature = "frontend")]
+mod frontend;
+
+#[cfg(feature = "frontend")]
+pub use frontend::{register_latex, registry, LatexMath};
 
 pub use ast::{document_to_latex, Node, SectionLevel};
 pub use catcode::{catcode, Catcode};

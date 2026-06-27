@@ -174,10 +174,19 @@ is text-primary, which is a different mode model.)
     them. `to_latex` re-renders each recognized node to a form that re-recognizes to the same
     node, so `recognize_structure(parse(&n.to_latex())) == [n]`. Implemented in structure.rs +
     ast.rs.
-- **L6 — `math-frontend` adapter.** Implement `MathFrontend` for `latex`: lift `Math`/`MathNode`
-  subtrees to the neutral `MathExpr`; declare capabilities; register in the builtin registry.
-  (This is where LaTeX becomes a *plugin*; [PFE01](PFE01-pluggable-parser-frontends.md)'s
-  `math-frontend` crate can land independently before this.)
+- **L6 (shipped) — `math-frontend` adapter.** `LatexMath` implements `MathFrontend` for `latex`:
+  `parse` runs the L2/L3a grammar and lowers `MathNode` → neutral `MathExpr` (presentation
+  dropped, meaning kept — `\times`/`\cdot`/juxtaposition → `Mul`, fence style → `Group`, matrix
+  delimiter → `Matrix`, accents → `Call{Other}`, exact numbers preserved). Declares
+  `Capabilities::all()` and conforms to the shared `check_frontend` harness. LaTeX is registered
+  as plugin #1 via `latex::registry()` / `register_latex` — `math-frontend`'s `with_builtins()`
+  stays empty because that crate cannot depend on `latex` (cycle), so the wiring lives in the
+  `latex` crate. Gated behind the default-on `frontend` cargo feature; `--no-default-features`
+  keeps L0–L5 dependency-free. Implemented in frontend.rs + Cargo.toml.
+  **Neutral-AST gaps:** `\pm`/`\mp` and `\binom` have no `MathExpr` representation today, so they
+  lower to a well-formed spanned `FrontendError` rather than being faked; extending the neutral
+  AST (a `math-frontend`-crate change) to cover them is deferred future work. This rung
+  **completes the LTX01 ladder (L0–L6).**
 
 **Asymptote (documented in README, not built):** runtime `\catcode`, `\expandafter`/
 `\noexpand`/`\csname`, arbitrary `\if…` programming, external `\input`/`\include`. Hit →
