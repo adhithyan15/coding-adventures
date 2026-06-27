@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- `<hr>` inside open `select` elements is now placed during tree construction,
+  removing a post-parse repair while preserving the html5lib select-list DOM
+  audit behavior.
 - Browser-readiness completion is now documented as a bounded planning surface
   and enforced by a manifest-style regression test that ties every public
   readiness inventory to fixture or focused-test evidence.
