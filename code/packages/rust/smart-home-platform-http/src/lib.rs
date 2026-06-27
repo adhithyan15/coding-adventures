@@ -9,11 +9,11 @@
 
 use serde_json::Value as JsonValue;
 use smart_home_core::{
-    AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Bridge,
+    AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Bridge, BridgeId,
     BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode,
-    CommandId, CommandResult, CommandStatus, CommandType, Device, DeviceEvent, DeviceEventType,
-    Entity, EntityId, EntityKind, EventId, Health, PrivilegeTier, Scene, StateConfidence,
-    StateDelta, StateSource, Value, ValueKind,
+    CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceEvent,
+    DeviceEventType, Entity, EntityId, EntityKind, EventId, Health, PrivilegeTier, Scene,
+    StateConfidence, StateDelta, StateSource, Value, ValueKind,
 };
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
@@ -2263,6 +2263,15 @@ fn runtime_command_result_query(
     if let Some(status) = query_string(request, "status") {
         query = query.with_status(command_status_from_label(status)?);
     }
+    if let Some(command_id) = query_string(request, "command_id") {
+        query = query.for_command(CommandId::trusted(command_id));
+    }
+    if let Some(bridge_id) = query_string(request, "bridge_id") {
+        query = query.for_bridge(BridgeId::trusted(bridge_id));
+    }
+    if let Some(correlation_id) = query_string(request, "correlation_id") {
+        query = query.for_correlation(CorrelationId::trusted(correlation_id));
+    }
     Ok(query)
 }
 
@@ -4368,11 +4377,58 @@ mod tests {
         let command_id = command_results_json["results"][0]["result"]["command_id"]
             .as_str()
             .expect("command result exposes command_id");
+        let command_bridge_id = command_results_json["results"][0]["result"]["bridge_id"]
+            .as_str()
+            .expect("command result exposes bridge_id");
+        let command_correlation_id = command_results_json["results"][0]["result"]["correlation_id"]
+            .as_str()
+            .expect("command result exposes correlation_id");
 
         let command_detail_path = format!("/api/smart_home/command_results/{command_id}");
         let command_detail = response_body(app.handle(request("GET", &command_detail_path)).into());
         assert!(command_detail.contains(r#""sequence":0"#));
         assert!(command_detail.contains(&format!(r#""command_id":"{command_id}""#)));
+
+        let by_command_id = response_body(
+            app.handle(request(
+                "GET",
+                &format!("/api/smart_home/command_results?command_id={command_id}"),
+            ))
+            .into(),
+        );
+        assert!(by_command_id.contains(r#""total_results":1"#));
+        assert!(by_command_id.contains(&format!(r#""command_id":"{command_id}""#)));
+
+        let by_bridge_id = response_body(
+            app.handle(request(
+                "GET",
+                &format!("/api/smart_home/command_results?bridge_id={command_bridge_id}"),
+            ))
+            .into(),
+        );
+        assert!(by_bridge_id.contains(r#""total_results":1"#));
+        assert!(by_bridge_id.contains(&format!(r#""bridge_id":"{command_bridge_id}""#)));
+
+        let by_correlation_id = response_body(
+            app.handle(request(
+                "GET",
+                &format!("/api/smart_home/command_results?correlation_id={command_correlation_id}"),
+            ))
+            .into(),
+        );
+        assert!(by_correlation_id.contains(r#""total_results":1"#));
+        assert!(
+            by_correlation_id.contains(&format!(r#""correlation_id":"{command_correlation_id}""#))
+        );
+
+        let unknown_command = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_results?command_id=missing-command",
+            ))
+            .into(),
+        );
+        assert!(unknown_command.contains(r#""total_results":0"#));
 
         let events = response_body(
             app.handle(request(

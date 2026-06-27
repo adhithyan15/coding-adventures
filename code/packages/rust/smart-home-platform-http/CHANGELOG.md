@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   supervision targets.
 - Added detail lookups for runtime event-log entries and command-result audit
   records so dashboard clients can drill into a specific audit row.
+- Added command-result audit filters for command id, bridge id, and correlation
+  id.
 - Added indexed authorization-decision audit rows and a matching detail lookup
   for dashboard drill-down flows.
 - Added a state-history event detail lookup for registry-backed event drill-down
