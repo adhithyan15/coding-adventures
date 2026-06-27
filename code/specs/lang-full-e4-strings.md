@@ -1,9 +1,13 @@
 # LANG-FULL E4 — Strings (design spec)
 
-**Status:** IR + reference VM slice implemented; BASIC literal output/scalar
-string variables/equality/inequality/literal concat/reassignment, Twig literal metadata/index
-proofs, and immutable top-level Twig string values run on all seven backends;
-richer frontend and backend string work remains.
+**Status:** IR + reference VM slice implemented. BASIC BA4 literal/scalar
+strings, reassignment, equality/inequality, copied-slot equality, literal and
+variable-backed concat, expression concat in `PRINT`/`IF`, and multi-item string
+`PRINT` run on all seven backends. ALGOL AL4 literal output, `output`, scalar
+variables, scalar copies, and copy snapshots run on all seven backends. Twig
+literal, immutable top-level, and lexical-local string ops run on all seven
+backends. Captured/dynamic strings, arrays/input/parameters, and fuller backend
+byte-string representations remain.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
 **Unlocks:** Dartmouth BASIC strings + string `PRINT` (BA4), ALGOL 60 strings +
 `print`/`output` I/O (AL4), Twig strings on the code-gen backends (TW4), and any
@@ -149,27 +153,34 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   proves literal reassignment through that same slot, and
   `LET A$ = "O" + "K"; PRINT A$` proves literal `str_concat`. `LET A$ = "OK";
   LET B$ = A$; PRINT B$` proves scalar string copy by lowering through
-  `str_concat` with an empty suffix. `LET A$ = "O"; PRINT A$ + "K"` proves
-  `PRINT` can consume a temporary E4 string-expression result, and
+  `str_concat` with an empty suffix, and `IF B$ = A$ THEN ...` proves copied-slot
+  equality through `str_eq`. `PRINT A$; B$` proves ordered multi-item string
+  output without concat or numeric formatting helpers. `LET A$ = "O"; PRINT A$ +
+  "K"` proves `PRINT` can consume a temporary E4 string-expression result, and
   `IF A$ + "K" = "OK" THEN ...` proves the same temporary expression path before
   `str_eq`. `LET B$ = A$ + "K"; PRINT B$` proves variable-backed concat
   assignment into another scalar string slot. String compares in `IF A$ = "Y"` and
   `IF A$ <> "Y"` lower to `str_eq` (the latter branches with `jmp_if_false`) and
   now drive line-control branching on all seven backends; string arrays, string
-  `INPUT`, and broader dynamic string expressions remain follow-ups.
+  `INPUT`, captured/dynamic string storage, and broader runtime byte-string
+  operations remain follow-ups.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
   produces string literals. The current foothold recognises undeclared
   statement-position `print`/`output` calls and lowers string literal actuals to
   `str_const` + `print_str`. Literal-backed scalar string variables now lower
   `s := 'HI'` to a direct `str_const` slot consumed by `print(s)`, and
   literal-backed scalar copies lower `t := s` through `str_concat` with an empty
-  suffix; captured strings, arrays, parameters, and broader dynamic strings
-  remain follow-ups.
+  suffix. Reassigning the source after a copy leaves the target printable as a
+  snapshot, matching the immutable E4 value model. Captured/`own` strings, arrays,
+  parameters, and broader dynamic strings remain follow-ups.
 - **Twig (TW4)** — Twig string literals + `print` lower to `str_const` +
-  `print_str`; `++`/`string-append` to `str_concat`, `string=?` to `str_eq`. (The
-  dynamic-`any` Twig path still needs broader E6; the *typed* string slice here is
-  the statically-typed subset that clears the code-gen validators, mirroring how
-  E5/E6 carved a typed slice out of Twig.)
+  `print_str`; `++`/`string-append` to `str_concat`, `string=?` to `str_eq`, and
+  `string-ref` to `str_index`. Direct literals, immutable top-level values, and
+  lexical `let`/`let*` locals can now feed `str_len`, `str_index`, `str_eq`, and
+  `str_concat` on all seven backends. The dynamic-`any`, captured, and reassigned
+  Twig string paths still need broader E6/dynamic representation work; the *typed*
+  string slice here is the statically-typed subset that clears the code-gen
+  validators, mirroring how E5/E6 carved a typed slice out of Twig.
 
 The frontends emit `str` values and the six ops; no backend learns anything
 language-specific.
@@ -192,14 +203,19 @@ footholds also prove direct literal `str_len`, `str_index`, `str_eq`, and
 `str_concat`-feeding-`str_len` via exit codes `5`/`66`/`1`/`5`. The named-value
 proofs exercise immutable top-level string values with `str_concat` + `str_len`,
 `str_eq` driving an `if`, and `str_index` via exit codes `5`/`42`/`67` on every
-backend. Lexical string locals now also run: `(let ((s "ABC") (i 2))
-(string-ref s i))` returns `67` everywhere. The matrix also covers the
-**bounds-trap** case: `(string-ref "ABC" 3)` must fail closed on native-AOT +
-LLVM + WASM + JVM + CLR + VM + JIT. Dartmouth BASIC also proves the first
-source-language string variable: `LET A$ = "HI"; PRINT A$` produces `HI` on all
-seven backends. Follow-up proofs now focus on string arrays/input, richer
-source-language string expressions, captured/reassigned strings, and dynamic
-string values.
+backend. Lexical string locals now run through both indexing and concat:
+`(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`, and
+`(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`
+everywhere. The matrix also covers the **bounds-trap** case: `(string-ref "ABC"
+3)` must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+Dartmouth BASIC proves source-language string variables, reassignment, scalar
+copy, copied-slot equality, literal/variable-backed concat, concat expressions in
+`PRINT`/`IF`, equality/inequality branches, and multi-item string `PRINT` on all
+seven backends. ALGOL proves literal output, the `output` alias, scalar string
+variables, scalar copies, and copy snapshots on the same all-seven E4 path.
+Follow-up proofs now focus on string arrays/input/parameters, captured or
+reassigned dynamic strings, and runtime byte-string operations beyond the current
+immutable scalar/local subset.
 
 `run_native` runs the host arch, so `NativeAot` exercises aarch64 locally and
 x86_64 on CI (as for E3/E5). The `x86-simulator` harness can additionally run the
@@ -232,15 +248,12 @@ merge before the next:
    tokenizes `$`-suffixed names as one `NAME`, the parser accepts `STRING` as a
    primary expression, and `dartmouth-basic-iir-compiler` lowers `LET A$ = "HI"`
    into a safe typed string slot consumed by `PRINT A$`. Matrix `Prog` returns
-   stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Scalar copy
-   `LET A$ = "OK"; LET B$ = A$; PRINT B$` now returns stdout `OK` on the same
-   seven backends, and `LET A$ = "O"; PRINT A$ + "K"` proves `PRINT` of a
-   temporary concat expression. `LET A$ = "O"; IF A$ + "K" = "OK" THEN ...`
-   proves that temporary expression before `str_eq`. `LET B$ = A$ + "K"` proves
-   assignment of a variable-backed concat into another safe scalar string slot.
-   Richer dynamic string expressions, string arrays, and string `INPUT` remain follow-ups. A second
-   matrix `Prog` proves `IF A$ = "Y" THEN ...` routes to `PRINT "OK"` through
-   E4 `str_eq` on the same seven backends.
+   stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Literal
+   reassignment, literal concat assignment, scalar copy, variable-backed concat
+   assignment, concat expressions in `PRINT`/`IF`, equality/inequality branches,
+   copied-slot equality, and multi-item string `PRINT` all now return stdout `OK`
+   on the same seven backends. String arrays, string `INPUT`, captured/dynamic
+   storage, and broader runtime byte-string operations remain follow-ups.
 2b. ✅ **AL4-literal-output proof** — `algol-iir-compiler` recognises
    undeclared statement-position `print`/`output` calls and lowers string literal
    actuals to E4 `str_const` + `print_str`. Matrix `Prog`
@@ -253,9 +266,11 @@ merge before the next:
    slots. Matrix `Prog` `begin string s; s := 'HI'; print(s) end` returns stdout
    `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR, and the sibling
    `output(s)` matrix proof returns `OK` through the same E4 path. The scalar
-   copy proof `begin string s, t; s := 'OK'; t := s; print(t) end` now returns
-   stdout `OK` on the same seven backends. Captured/`own` strings, string arrays,
-   string parameters, and broader dynamic strings remain follow-ups.
+   copy proof `begin string s, t; s := 'OK'; t := s; print(t) end` and the copy
+   snapshot proof `begin string s, t; s := 'OK'; t := s; s := 'NO'; print(t) end`
+   now return stdout `OK` on the same seven backends. Captured/`own` strings,
+   string arrays, string parameters, and broader dynamic strings remain
+   follow-ups.
 3. ✅ **E4-literal-metadata/index proofs** — Twig lowers literal
    `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
    `(string=? "HELLO" "HELLO")`, and
@@ -273,9 +288,10 @@ merge before the next:
 3b. ✅ **E4-lexical-local proof** — Twig `let`/`let*` string literal bindings
    materialise directly as typed `str_const` registers, and known local string
    and integer registers can feed E4 ops. Matrix `Prog`
-   `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67` on native-AOT + VM +
-   JIT + LLVM + WASM + JVM + CLR. Captured/reassigned strings still wait for the
-   broader dynamic representation.
+   `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`, and
+   `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`,
+   on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured/reassigned strings
+   still wait for the broader dynamic representation.
 4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
    diverge.)
@@ -287,16 +303,16 @@ merge before the next:
    branch, named/local `str_index`, and the `str_index` out-of-bounds **trap**
    proof now run across every backend.
 7. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`;
-   non-literal string copies, captured/reassigned strings, and string arrays in
-   each frontend; Unicode codepoint/grapheme semantics; the dynamic-`any` Twig
-   string path (needs broader E6); string interpolation.
+   captured/reassigned dynamic strings, string arrays/input/parameters in each
+   frontend, runtime byte-string allocation beyond the current immutable scalar
+   foothold, Unicode codepoint/grapheme semantics, the dynamic-`any` Twig string
+   path (needs broader E6), and string interpolation.
 
-Ordering rationale mirrors E5: get the IIR + reference interpreter right (1), prove
-it end-to-end through the simplest frontend (2), then the *managed* backends (3)
-where `String` is native and bounds-checking is free, then the *static* backends
-(4) where the rodata literal + header + heap concat + guard is the real work, then
-the richer dynamic ops and variable proofs (5). Front-loads the cheap
-high-confidence wins.
+Ordering rationale mirrors E5: get the IIR + reference interpreter right (1),
+prove it end-to-end through the simplest frontend (2), extend source-language
+frontends while staying inside the immutable typed slice (2a-3b), and only then
+take on the wider managed/static byte-string representations and dynamic
+front-end features. Front-loads the cheap high-confidence wins.
 
 ---
 
