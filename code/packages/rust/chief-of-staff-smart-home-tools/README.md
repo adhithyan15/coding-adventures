@@ -294,6 +294,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_summary`
 - `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcomes`
 - `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_summary`
+- `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness`
+- `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary`
 - `smart_home.reconcile_desired_states`
 - `smart_home.run_supervision_tick`
 - `smart_home.pair_bridge`
