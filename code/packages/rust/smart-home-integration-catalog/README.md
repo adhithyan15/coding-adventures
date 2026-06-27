@@ -284,6 +284,10 @@ runtime and Chief of Staff tools a typed catalog for:
   disposition-action readiness execution handoff action evidence review
   disposition action rows that turn reviewed dispositions into concrete
   repair, review, lineage, operator, and release handoff actions
+- low-level mesh release ticket handoff readiness-evidence review
+  disposition-action readiness execution handoff action evidence review
+  disposition action readiness rows that mark action readiness for repair,
+  review, lineage, operator, and release handoff follow-up
 - mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence review disposition action
   summaries that combine action rows with next repair, review, lineage, and
