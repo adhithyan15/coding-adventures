@@ -232,8 +232,16 @@ multiple languages; close an enabler before the features that depend on it.
     enclosing-scope-variable frontend + a matrix proof. Unblocks AL6 (`own`), O3 (Oct
     globals); foundation for closures. The general `any`-dispatch / closure layers
     stack on top.
-- **E7 — Subroutine / return-stack.** `GOSUB`/`RETURN` and procedure call/return —
-  likely expressible with existing `call`/`ret`; confirm and add if needed.
+- **E7 — Subroutine / return-stack.** `GOSUB`/`RETURN` and procedure call/return.
+  ◑ *Design spec written, pending user sign-off*
+  ([`lang-full-e7-subroutine-return-stack.md`](lang-full-e7-subroutine-return-stack.md)).
+  **Confirmed:** structured procedure call/return is already done (`call`/`ret` —
+  ALGOL AL3, BASIC `DEF FN` BA5). BASIC `GOSUB`/`RETURN` is *unstructured* (the same
+  `RETURN` resumes at the dynamically most-recent `GOSUB`) and `call`/`ret` cannot
+  express it — but it needs **no new backend op**: lower it inside `main` as an E5
+  `array<i64>` return-PC stack + the AL5 computed-goto chain (`cmp`+`jmp_if_false`+`jmp`),
+  both already proven on all 7 backends. Pure frontend lowering (BA6-sized), one PR;
+  unblocks **BA1**.
 - **E8 — Numeric conversions (`integer` ↔ `real`).** ◑ *Spec signed off
   ([`lang-full-e8-numeric-conversions.md`](lang-full-e8-numeric-conversions.md)); implementation in progress.*
   Three ops (`int_to_real`, `real_to_int_trunc`, `real_to_int_floor`); `real→int`
@@ -418,7 +426,18 @@ backend immediately) come before the enabler-dependent items.
   real `java`** — the BASIC `FOR` sum (`15`) and `IF` branch (`7`) now run on the JVM; both added
   to the matrix JVM column.
 - ☐ **BA1** — `GOSUB` / `RETURN` (needs **E7**).
-- ☐ **BA2** — multi-item `PRINT`, `;`/`,` separators, more relops.
+- ✅ **BA2** — multi-item `PRINT`, `;`/`,` separators (`dartmouth-basic-iir-compiler`
+  0.9.0). `PRINT` now prints several items on ONE line: each numeric item lowers to a
+  `call __basic_print_int` — a synthetic *recursive* helper that renders digits one at a
+  time through the universal `putchar` builtin (the same one Brainfuck uses) — instead of
+  the old per-item `print_i64` (which appended a newline, forcing items onto separate
+  lines). `;` joins tightly, `,` inserts a space, a trailing separator suppresses the
+  newline, and bare `PRINT` emits a blank line. Because the helpers reuse only ops every
+  backend already runs (`call`, integer `div`/`mul`/`sub`/`add`, `cmp_*`, `putchar`), BA2
+  needed **zero** backend changes — verified by two executed matrix cells (`PRINT 0 - 12;
+  34` ⇒ `-1234`, `PRINT 5, 6` ⇒ `5 6`) on all 7 backends. *More relops* were already done
+  (grammar + `extract_relop_op` cover all six `= < > <= >= <>`). Deferred: string `PRINT`
+  items (→ BA4/E4); true 14-column `,` print zones (a single space approximates them).
 - ✅ **BA3** — arrays / `DIM` (enabler **E5**). `DIM A(n)` lowers to `alloc_array`
   (BASIC arrays are 0-based + inclusive, so `n + 1` elements); `LET A(i) = e` →
   `array_set` and `A(i)` rvalues → `array_get`, with the subscript used directly as
@@ -450,7 +469,15 @@ backend immediately) come before the enabler-dependent items.
   the bounds-checked `array_get`. **Runs on all 7 backends**: `DATA 21 / READ A /
   RESTORE / READ B / PRINT A+B` ⇒ 42 (proves sequential consumption + rewind).
   Integer DATA only (real DATA = follow-up).
-- ☐ **BA7** — floating-point (needs **E3**).
+- ☐ **BA7** — floating-point (needs **E3**, ✅). ◑ *Design spec **decision-complete***
+  ([`lang-full-ba7-floating-point.md`](lang-full-ba7-floating-point.md)) — §7 resolved
+  by historical Dartmouth BASIC fidelity (no sign-off gate). Cutover of BASIC's value
+  model from the V1 i64-truncation to **`f64` end-to-end** (real Dartmouth semantics —
+  every number is floating-point). Builds on E3 (f64 on all backends), E8
+  (`real_to_int_trunc` for array subscripts), and BA2 (the `putchar` digit substrate —
+  adds `__basic_print_real`). **No new backend op.** Slices: BA7-1 (value model +
+  arithmetic + whole-valued PRINT) → BA7-2 (fractional formatting + `E` notation,
+  6 significant digits, no leading zero) → BA7-3 (comparisons/FOR/arrays/DATA reals).
 
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`

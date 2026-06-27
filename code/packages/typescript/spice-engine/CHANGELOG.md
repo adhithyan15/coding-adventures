@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Expose selected `runDeckAnalysis` output-plan inventories as
+  `outputPlanArtifacts` with stable result-column, output-probe,
+  output-directive, and table lists plus table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and Rust.
+- Include policy-blocked `.control` row and summary tables in selected
+  `runDeckAnalysis` execution `tables`, selected-run `TableList` metadata, and
+  ordered `tableArtifacts` as `control-policy` and `control-policy-summary`
+  exports with stable table, CSV, JSON, and header-keyed records, matching
+  Python and Rust.
+- Carry policy-blocked `.control` command inventories through selected
+  `runDeckAnalysis` run artifacts as stable `ControlPolicyArtifacts`,
+  `ControlPolicyCategoryList`, `ControlPolicyCodeList`, and
+  `ControlPolicySeverityList` table, CSV/JSON, and `tableArtifacts` fields,
+  matching Python and Rust.
 - Group policy-blocked `.control` command artifacts from selected
   `runDeckAnalysis` execution results by category as
   `controlPolicySummaryArtifacts` with stable counts, line lists, command lists,

@@ -950,6 +950,47 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — *multi-item `PRINT` on one line* with a `;` separator and
+    // a negative value (LANG-FULL BA2). `PRINT 0 - 12; 34` prints `-12` and `34`
+    // back-to-back on a SINGLE line ⇒ `-1234`. This is the headline BA2 proof:
+    // the old lowering emitted one `call_builtin "print_i64"` per item, and
+    // `print_i64` appends a newline, so the two items would have landed on
+    // separate lines (`-12⏎34`). BA2 replaces that with a character-level model —
+    // each item lowers to a `call __basic_print_int`, a synthetic *recursive*
+    // helper that emits digits one at a time through the universal `putchar`
+    // builtin (the very same builtin Brainfuck's `.` uses), then the statement
+    // emits its own trailing newline. So this one cell proves, observably and on
+    // every backend at once: (1) two items share a line (`;` joins with nothing
+    // between), (2) the recursion renders multi-digit numbers left-to-right
+    // (`12`, `34` — not `21`, `43`), and (3) the sign path runs (`-`). Because it
+    // reuses only ops the matrix already runs everywhere — `call` (the ALGOL
+    // value-procedure ABI), integer `div`/`mul`/`sub`/`add`, `cmp_*`, and
+    // `putchar` — BA2 needed ZERO backend changes; no runtime learned anything
+    // BASIC-specific. Straight-line `main` (no loop), so the JVM BA-JVM-1
+    // loop+print StackMapTable follow-up doesn't apply and all 7 backends run.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 0 - 12; 34\n20 END\n",
+        expect: Expect::Stdout("-1234"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — multi-item `PRINT` with a `,` separator (LANG-FULL BA2).
+    // Where `;` joins tightly, `,` inserts a separator space: `PRINT 5, 6` ⇒
+    // `5 6`. (Historical Dartmouth BASIC tabs `,` to the next 14-column print
+    // zone; that needs a run-time output-column counter and is deferred — a
+    // single space is BA2's well-defined approximation, documented in the
+    // dartmouth-basic-iir-compiler CHANGELOG.) The inner space (a `putchar(32)`
+    // between the two `__basic_print_int` calls) survives the harness's
+    // outer-trim, so `5 6` distinguishes `,` from `;` observably on all 7
+    // backends.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 5, 6\n20 END\n",
+        expect: Expect::Stdout("5 6"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

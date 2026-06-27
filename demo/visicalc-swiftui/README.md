@@ -116,6 +116,16 @@ number-format code to the selected cell's *display only*
 `#,##0.00` (`1234` → `1,234.00`), `%` → `0.0%`, `$` → `$#,##0.00`, and `Gen` →
 `""` (clears, back to General). The stored value is untouched — `getRaw` still
 returns the source and dependent formulas keep computing on the real number.
+The **find / replace** group (a `find` box + a `replace` box + **Find** /
+**Replace** buttons) searches and rewrites cell SOURCES: `WindowedSheetModel.findAll`
+(over the C ABI's `sc_find_all`) returns the A1 addresses whose formula text contains
+the query (case-insensitive) and **Find** jumps the selection to the first hit
+(`selectA1` parses column letters past Z); `WindowedSheetModel.replaceAll` (over
+`sc_replace_all`) rewrites the query → replacement in every cell's source and
+recomputes, with the footer echoing the match / replace count. Because the engine
+re-parses each rewrite through its centralised coerce (`set_raw`), a rewritten formula
+stays live (`H1`→`H2` turns `=H1+5` into a recomputed `=H2+5`) and a rewritten literal
+stays typed (`15`→`99` re-totals every dependent).
 
 ### Visual design
 
@@ -128,8 +138,9 @@ tokens at the top of the view (`cBg`/`cPanel`/`cSurface`/`line`/`ink`/`muted`/
 panel-wrapped **toolbar** with an address **pill**, an italic `fx` marker, then a
 grown formula field with an accent **focus ring** (a `@FocusState`-driven 2-px
 overlay stroke); the actions are **segmented button groups** (drag-fill ·
-clipboard · file · history) — a reusable `ChipButtonStyle` with hover/pressed/
-disabled states — separated by thin rules. The grid gets subtle **zebra** row
+clipboard · file · history · find/replace) — a reusable `ChipButtonStyle` with
+hover/pressed/disabled states, plus compact find/replace text fields — separated
+by thin rules. The grid gets subtle **zebra** row
 banding, a 2-px **accent selection ring**, and the selected cell's **row + column
 headers tint to the accent**; a hairline-separated **status footer** echoes the
 live virtual-grid size and revision.
@@ -145,7 +156,11 @@ no-op), and a save/load round trip (`saveBook` → mutate A1 ⇒ E1 523.00 →
 `loadBook` restores A1 15 / E1 38.00, the loaded formula stays live with A1=5 ⇒
 E1 28.00, and malformed input is rejected), and an undo/redo walk (two edits →
 undo both → redo both with the formula recomputing live → a fresh edit forks
-history). Run with `swift test`.
+history), and **find / replace** (`findAll("15")` locates the one literal `A1`, a
+case-insensitive `findAll("sum")` finds the total formulas, empty / no-match queries
+return nothing, `selectA1("Z1000")` parses a far address, and `replaceAll` rewrites
+both a literal `15`→`99` ⇒ E1 122.00 and a formula reference `H1`→`H2` ⇒ `=H1+5`
+recomputes to 25, keeping each live). Run with `swift test`.
 
 ## Notes
 

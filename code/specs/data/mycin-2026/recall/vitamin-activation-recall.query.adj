@@ -1,0 +1,21 @@
+% ============================================================================
+% vitamin-activation-recall.query.adj — a worked recall query over the
+% vitamin-activation library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what is the active form
+% of vitamin X?" question: it states no biochemistry fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the
+% citing clause's source/locator/trust. All knowledge is in the library; none is
+% here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli vitamin-activation-recall.query.adj
+% ============================================================================
+
+import "vitamin-activation-edges.adj"
+
+? activated_to(vitamin_d, $ActiveForm)    % expect calcitriol
+? activated_to(folate, $ActiveForm)       % expect tetrahydrofolate
+? activated_to(vitamin_b6, $ActiveForm)   % expect pyridoxal_phosphate
+? activated_to(vitamin_a, $ActiveForm)    % expect retinoic_acid

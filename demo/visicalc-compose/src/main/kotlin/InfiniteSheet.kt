@@ -122,6 +122,12 @@ fun InfiniteSheet() {
     // it to a file; the demo keeps the round trip self-contained.)
     var savedSnapshot by remember { mutableStateOf("") }
 
+    // Find / replace fields + a short status echoed in the footer (match/replace
+    // count). The query searches every cell's SOURCE (case-insensitive).
+    var findText by remember { mutableStateOf("") }
+    var replaceText by remember { mutableStateOf("") }
+    var findStatus by remember { mutableStateOf("") }
+
     // Drives the formula field's accent focus ring.
     val fieldInteraction = remember { MutableInteractionSource() }
     val fieldFocused by fieldInteraction.collectIsFocusedAsState()
@@ -199,6 +205,32 @@ fun InfiniteSheet() {
     // Range sort: reorder the budget block A1:E4 by the selected column,
     // ascending/descending. Bump rev so the reordered rows re-read.
     fun sortBlock(ascending: Boolean) { model.sortBlock(ascending); rev++ }
+
+    // Find: locate every cell whose source contains the query (case-insensitive)
+    // and jump the selection to the first hit; the footer shows the match count.
+    fun runFind() {
+        val hits = model.findAll(findText)
+        if (hits.isNotEmpty()) {
+            model.selectA1(hits.first())
+            selRow = model.selRow
+            selCol = model.selCol
+            formula = model.formula
+        }
+        findStatus = when {
+            findText.isEmpty() -> ""
+            hits.isEmpty() -> "no match"
+            else -> "${hits.size} match${if (hits.size == 1) "" else "es"}"
+        }
+    }
+
+    // Replace: rewrite the query → replacement in every cell's source and
+    // recompute; the footer shows how many cells changed.
+    fun runReplace() {
+        val n = model.replaceAll(findText, replaceText)
+        formula = model.formula
+        rev++
+        findStatus = "$n replaced"
+    }
 
     Column(modifier = Modifier.fillMaxSize().background(BG)) {
         // ── Formula bar: a panel holding the address pill, an `fx` marker, the
@@ -312,6 +344,15 @@ fun InfiniteSheet() {
             toolButton("↶ Undo", enabled = rev.let { model.canUndo() }) { undo() }
             Spacer(Modifier.width(6.dp))
             toolButton("↷ Redo", enabled = rev.let { model.canRedo() }) { redo() }
+            toolSep()
+            // ── Find / replace (search cell sources; rewrite matches) ──
+            searchField(findText, "find", { findText = it }) { runFind() }
+            Spacer(Modifier.width(6.dp))
+            toolButton("Find") { runFind() }
+            Spacer(Modifier.width(6.dp))
+            searchField(replaceText, "replace", { replaceText = it }) { runReplace() }
+            Spacer(Modifier.width(6.dp))
+            toolButton("Replace") { runReplace() }
         }
 
         // ── Column-letter header (frozen vertically, follows horizontal pan) ──
@@ -354,11 +395,51 @@ fun InfiniteSheet() {
         Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp).height(1.dp).background(LINE))
         androidx.compose.material.Text(
             "Virtual grid: ${model.totalRows} rows × ${model.totalCols} cols" +
-                "  ·  revision ${rev.let { model.revision() }}",
+                "  ·  revision ${rev.let { model.revision() }}" +
+                (if (findStatus.isNotEmpty()) "  ·  $findStatus" else ""),
             color = MUTED,
             fontSize = 12.sp,
             fontFamily = MONO,
             modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 6.dp, bottom = 10.dp),
+        )
+    }
+}
+
+/// A compact search input for the find / replace group — a narrow well with the
+/// same accent focus ring as the formula field, a muted placeholder when empty,
+/// and Enter-to-submit. The Compose analog of the web demo's find/replace boxes
+/// and the Qt/Flutter ports' search fields.
+@Composable
+private fun searchField(value: String, hint: String, onValueChange: (String) -> Unit, onSubmit: () -> Unit) {
+    val interaction = remember { MutableInteractionSource() }
+    val focused by interaction.collectIsFocusedAsState()
+    Box(
+        modifier = Modifier
+            .width(96.dp)
+            .height(30.dp)
+            .clip(RoundedCornerShape(5.dp))
+            .background(FIELD)
+            .border(
+                if (focused) 2.dp else 1.dp,
+                if (focused) ACCENT else LINE_STRONG,
+                RoundedCornerShape(5.dp),
+            )
+            .padding(horizontal = 8.dp),
+        contentAlignment = Alignment.CenterStart,
+    ) {
+        if (value.isEmpty()) {
+            androidx.compose.material.Text(hint, color = MUTED, fontSize = 12.sp, fontFamily = MONO)
+        }
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            singleLine = true,
+            interactionSource = interaction,
+            textStyle = TextStyle(color = INK, fontSize = 12.sp, fontFamily = MONO),
+            cursorBrush = androidx.compose.ui.graphics.SolidColor(ACCENT),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { onSubmit() }),
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+"""test_islet_cell_recall.py — the ADJ-only pancreatic-islet-cell→hormone recall
+library (MYCIN-2026 ISLET-CELL).
+
+A pure-ADJ recall domain (high-yield endocrine-histology board table): the hormone
+each cell type of the islets of Langerhans secretes. `islet-cell-edges.adj` is the
+SOLE source of truth — facts + byte-provenance inline, no Python gate, no JSON, no
+manifest. This test pins the property that matters: the native adj-lang engine,
+given a query .adj that only `import`s the library and asks binding queries
+(`islet-cell-recall.query.adj` — the shape an LLM produces), binds the grounded
+hormone for each cell, each carrying an AUTHORITATIVE citation with a real source
+span + locator. Knowledge lives in ADJ; the engine answers.
+
+If the native CLI isn't built (a Python-only CI lane), the engine-backed checks
+skip — the file-shape checks (every clause grounded, no authored-debt) still run.
+
+Run:  python3 test_islet_cell_recall.py
+"""
+
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ADJ = HERE / "islet-cell-edges.adj"
+QUERY = HERE / "islet-cell-recall.query.adj"
+CLI = HERE.parents[3] / "packages" / "rust" / "target" / "debug" / "adj-lang-cli"
+
+# Every grounded edge: islet cell type -> the hormone the library binds.
+EXPECTED = {
+    "beta_cell": "insulin",                       # NBK560688
+    "alpha_cell": "glucagon",                     # NBK542302
+    "delta_cell": "somatostatin",                 # NBK542302
+    "pp_cell": "pancreatic_polypeptide",          # NBK542302
+    "epsilon_cell": "ghrelin",                    # NBK542302
+}
+REL = "secretes"
+VAR = "Hormone"
+
+
+def _cli_available() -> bool:
+    return CLI.exists()
+
+
+def _run(program: Path) -> dict:
+    out = subprocess.run([str(CLI), str(program)], capture_output=True, text=True,
+                         cwd=str(HERE), timeout=60)
+    assert out.returncode == 0, f"adj-lang-cli failed: {out.stderr}"
+    return json.loads(out.stdout)
+
+
+# ---- 1. the ADJ file is the artifact — every clause grounded, no authored-debt ----
+
+def test_library_is_pure_adj_and_fully_grounded() -> None:
+    text = ADJ.read_text()
+    assert "trust consensus" not in text, "ISLET-CELL ships no authored-debt; ground or omit"
+    assert "[FLAG:" not in text
+    edge_count = len(EXPECTED)  # 5
+    assert text.count("    relate ") == edge_count
+    assert text.count("trust authoritative") == edge_count
+    assert text.count('\n        locator "') == edge_count
+    assert text.count('\n        source "') == edge_count
+    for line in text.splitlines():
+        line = line.strip()
+        if line.startswith("locator "):
+            assert "https://www.ncbi.nlm.nih.gov/" in line, f"non-NCBI locator: {line}"
+    assert not (HERE / "islet_cell_edge_ground.py").exists()
+    assert not (HERE / "islet-cell-edge-grounding.json").exists()
+    assert not (HERE / "islet-cell-edge-manifest.json").exists()
+
+
+# ---- 2. the engine binds each hormone with an authoritative citation -----------------
+
+def test_engine_binds_every_hormone_with_authoritative_citation() -> None:
+    if not _cli_available():
+        return
+    result = _run(QUERY)
+    by_query = {r["query"]: r for r in result["recall"]}
+    for cell, hormone in EXPECTED.items():
+        q = f"{REL}({cell}, {VAR})"
+        r = by_query.get(q)
+        assert r is not None and not r["abstained"], f"{q} abstained — edge missing?"
+        bound = {}
+        for a in r["answers"]:
+            bound[a["bindings"][VAR]] = (a.get("citations") or [{}])[0]
+        assert set(bound) == {hormone}, f"{cell}: bound {set(bound)} != {{{hormone}}}"
+        cite = bound[hormone]
+        assert cite.get("trust") == "authoritative", f"{cell}/{hormone} not authoritative"
+        assert cite.get("source"), f"{cell}/{hormone} has no source span"
+        assert cite.get("locator", "").startswith("https://www.ncbi.nlm.nih.gov/")
+
+
+# ---- 3. an off-vocabulary cell abstains, never fabricates -----------------------------
+
+def test_unknown_cell_abstains() -> None:
+    if not _cli_available():
+        return
+    import os
+    import tempfile
+    fd, path = tempfile.mkstemp(suffix=".adj", prefix=".islet_q_", dir=HERE)
+    try:
+        with os.fdopen(fd, "w") as fh:
+            # "acinar_cell" is a real pancreatic cell, but it is EXOCRINE (it
+            # secretes digestive enzymes) — not one of the endocrine islet cells
+            # this library models, so it is deliberately absent — the engine must
+            # abstain rather than fabricate a hormone.
+            fh.write(f'import "islet-cell-edges.adj"\n? {REL}(acinar_cell, ${VAR})\n')
+        res = _run(Path(path))
+        r = res["recall"][0] if res["recall"] else None
+        assert r is not None and r["abstained"], "an ungrounded cell must abstain"
+    finally:
+        os.unlink(path)
+
+
+def _run_all() -> int:
+    tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
+    failed = 0
+    for t in tests:
+        try:
+            t()
+            print(f"  PASS  {t.__name__}")
+        except AssertionError as exc:
+            failed += 1
+            print(f"  FAIL  {t.__name__}: {exc}")
+    print(f"\ntest_islet_cell_recall: {len(tests) - failed}/{len(tests)} passed")
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    sys.exit(_run_all())

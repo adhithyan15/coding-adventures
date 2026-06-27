@@ -1266,6 +1266,46 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
         }
     }
 
+    // ---- global Boolean(value) on a string- or number-literal argument ----
+    //
+    // `Boolean(x)` is the `ToBoolean` coercion (ECMAScript §7.1.2): it maps its
+    // argument to `true`/`false` by JS truthiness. For the two literal shapes we
+    // can judge at compile time the answer is exact and total — no decline:
+    //
+    //   * a string literal → `false` only for the EMPTY string, else `true`
+    //     (`Boolean("")` → `false`, `Boolean("0")` → `true` — a non-empty string
+    //     is truthy even if it looks falsy);
+    //   * a number literal → `false` for `0`/`-0`, else `true` (`Boolean(0)` →
+    //     `false`, `Boolean(-0)` → `false` since `-0.0 == 0.0`, `Boolean(1)` →
+    //     `true`). `NaN` is falsy but can't appear as a numeric LITERAL token.
+    //
+    // Every other argument (a boolean, `null`, an identifier, a second argument)
+    // is left for the runtime. Like `parseInt`/`parseFloat`/`Number`/`String`,
+    // `Boolean` is a free identifier, so we fold only the bare `Boolean(...)`
+    // callee — never a member access (`window.Boolean(...)`).
+    if let Expression::Identifier(id) = &callee {
+        if id.name == "Boolean" && arguments.len() == 1 {
+            let folded: Option<bool> = match arguments.first() {
+                Some(Expression::StringLiteral(s)) => Some(!s.value.is_empty()),
+                Some(Expression::NumericLiteral(n)) => Some(n.value != 0.0),
+                _ => None,
+            };
+            if let Some(value) = folded {
+                let parent = c.cv.clone();
+                let before = match arguments.first() {
+                    Some(Expression::NumericLiteral(n)) => {
+                        format!("Boolean({})", format_js_number(n.value))
+                    }
+                    Some(Expression::StringLiteral(s)) => format!("Boolean(\"{}\")", s.value),
+                    _ => "Boolean(?)".to_string(),
+                };
+                let after = if value { "!0" } else { "!1" };
+                let new_cv = st.fork_cv(&parent, &before, after);
+                return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
+            }
+        }
+    }
+
     // ---- global String(value) on a string- or number-literal argument ----
     //
     // `String("x")` → `"x"` (identity) and `String(42)` → `"42"` — the ToString
@@ -4784,6 +4824,29 @@ mod tests {
     }
 
     #[test]
+    fn fold_boolean_through_pass_string_and_number() {
+        // V8 oracle: a string is falsy only when EMPTY; a number is falsy only
+        // for 0/-0. So Boolean("")→false, Boolean("0")→true (non-empty!),
+        // Boolean(0)→false, Boolean(-0)→false, Boolean(1)→true.
+        let cases: [(Expression, bool); 6] = [
+            (global_call("Boolean", vec![string("", None)]), false),
+            (global_call("Boolean", vec![string("x", None)]), true),
+            (global_call("Boolean", vec![string("0", None)]), true), // non-empty
+            (global_call("Boolean", vec![num(0.0, None)]), false),
+            (global_call("Boolean", vec![num(-0.0, None)]), false),
+            (global_call("Boolean", vec![num(1.0, None)]), true),
+        ];
+        for (c, expect) in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "Boolean(...) should fold to {expect}");
+            match extract_expr(&out) {
+                Expression::BooleanLiteral(b) => assert_eq!(b.value, expect),
+                other => panic!("expected {expect}; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
     fn fold_string_of_number_direct_oracle() {
         // (input, expected) — folded values confirmed against V8's `String(n)`;
         // fractional and ≥2^53 inputs DECLINE (we never risk a tie-break mis-fold).
@@ -4841,6 +4904,18 @@ mod tests {
     }
 
     #[test]
+    fn boolean_non_literal_argument_does_not_fold() {
+        // Only string/number LITERAL args fold; `Boolean(x)` needs runtime `x`,
+        // and a boolean/null literal we conservatively leave alone.
+        for arg in [ident("x"), Expression::NullLiteral(NullLiteral { cv: None })] {
+            let c = global_call("Boolean", vec![arg]);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "Boolean(non-string/number-literal) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
     fn fold_string_number_through_pass() {
         // `String(42)` folds to the string literal `"42"`.
         let c = global_call("String", vec![num(42.0, None)]);
@@ -4850,6 +4925,15 @@ mod tests {
             Expression::StringLiteral(s) => assert_eq!(s.value, "42"),
             other => panic!("expected \"42\"; got {:?}", other),
         }
+    }
+
+    #[test]
+    fn boolean_with_second_argument_does_not_fold() {
+        // We model only the single-argument form; `Boolean("x", y)` is left.
+        let c = global_call("Boolean", vec![string("x", None), ident("y")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Boolean(\"x\", y) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
     #[test]
@@ -4904,6 +4988,19 @@ mod tests {
         let c = global_call("Number", vec![string("abc", None)]);
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "Number(\"abc\") must not fold (NaN)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn member_boolean_does_not_fold() {
+        // `window.Boolean("")` is a member call, not the bare global — leave it.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("window"), "Boolean")),
+            arguments: vec![string("", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "window.Boolean(\"\") must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

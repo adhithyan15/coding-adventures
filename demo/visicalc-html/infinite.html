@@ -203,6 +203,13 @@
         <button id="sortDesc" title="Sort the budget block A1:E4 by the selected column, descending">▼ Sort</button>
       </div>
       <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Find / replace">
+        <input id="findInput" placeholder="find" title="Text to find in cell sources" style="width:84px;margin-right:6px" />
+        <input id="replaceInput" placeholder="replace" title="Replacement text" style="width:84px;margin-right:6px" />
+        <button id="findBtn" title="Select the first cell whose source contains the find text (count in the status bar)">Find</button>
+        <button id="replaceBtn" title="Replace the find text with the replacement in every matching cell's source">Replace all</button>
+      </div>
+      <span class="sep"></span>
       <div class="grp" role="group" aria-label="History">
         <button id="undoBtn" title="Undo the last edit">↶ Undo</button>
         <button id="redoBtn" title="Redo the last undone edit">↷ Redo</button>
@@ -453,6 +460,42 @@
     }
     document.getElementById("sortAsc").addEventListener("click", function () { sortBlock(true); });
     document.getElementById("sortDesc").addEventListener("click", function () { sortBlock(false); });
+
+    // Find / replace: locate cells whose SOURCE contains the find text and
+    // bulk-edit them, over the loader's findAll/replaceAll (engine find_all/
+    // replace_all). Find (case-insensitive, searches sources) selects the first
+    // match and reports the count; Replace all rewrites find → replacement in
+    // every matching cell's source — the engine recomputes — then re-renders.
+    function parseA1(s) {
+      var m = /^([A-Za-z]+)(\d+)$/.exec(s);
+      if (!m) return null;
+      var letters = m[1].toUpperCase(), col = 0;
+      for (var i = 0; i < letters.length; i++) col = col * 26 + (letters.charCodeAt(i) - 64);
+      return { row: parseInt(m[2], 10), col: col };
+    }
+    document.getElementById("findBtn").addEventListener("click", function () {
+      var q = document.getElementById("findInput").value;
+      if (!q) { statusEl.innerHTML += " &nbsp;·&nbsp; find: (empty)"; return; }
+      var matches = workbook.findAll(q, true, false); // sources, case-insensitive
+      if (matches.length === 0) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; find " + esc(q) + ": no matches";
+        return;
+      }
+      var first = parseA1(matches[0]);
+      if (first) selectCell(first.row, first.col);
+      statusEl.innerHTML += " &nbsp;·&nbsp; find " + esc(q) + ": " + matches.length +
+        " match(es), first " + esc(matches[0]);
+    });
+    document.getElementById("replaceBtn").addEventListener("click", function () {
+      var q = document.getElementById("findInput").value;
+      var r = document.getElementById("replaceInput").value;
+      if (!q) { statusEl.innerHTML += " &nbsp;·&nbsp; replace: (empty find)"; return; }
+      var n = workbook.replaceAll(q, r, false); // case-insensitive
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+      statusEl.innerHTML += " &nbsp;·&nbsp; replaced " + esc(q) + " → " + esc(r) +
+        " in " + n + " cell(s)";
+    });
 
     // Save / load: serialize the whole workbook to a single JSON document and
     // stash it in the browser's localStorage; Load deserializes it back. The

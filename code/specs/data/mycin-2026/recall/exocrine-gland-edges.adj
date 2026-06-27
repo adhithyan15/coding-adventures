@@ -1,0 +1,83 @@
+% ============================================================================
+% exocrine-gland-edges — the exocrine gland → defining characteristic
+% knowledge-graph (MYCIN-2026 EXOCRINE-GLAND).
+% ============================================================================
+% A high-yield histology/physiology board table: the major exocrine glands of the
+% head/skin and the feature that distinguishes each — the three paired salivary
+% glands (by secretion type) and the two sweat glands (by function / distribution).
+% "What kind of secretion does the parotid gland produce?" becomes the binding
+% query
+%     ? characterized_by(parotid_gland, $Characteristic).
+%
+% Direction note: the relation is exocrine gland -> the defining characteristic the
+% cited sentence states for it (`characterized_by`). The characteristic is whatever
+% the sentence actually pins down — secretion type (serous / mucous / mixed),
+% physiologic function (thermoregulation), or anatomic distribution. Each gland
+% maps to ONE canonical characteristic span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The characteristic object names the feature the
+% sentence states (parotid "serous acini"; sublingual "mostly mucous acini";
+% submandibular "a predominance of serous cells with some mucous cells"; eccrine
+% "a thermoregulatory function"; apocrine "distributed in the axillae, anogenital
+% region ..."). Each cited sentence names the gland by its FULL term ("parotid
+% gland", "eccrine sweat glands", "apocrine glands", etc.). Each span was
+% independently re-fetched and confirmed on two separate fetches of the same page
+% for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like EPIDERMIS/COMPLEMENT/
+% IG-ISOTYPE/WBC). Each fact is a `relate` clause whose byte-provenance lives
+% INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see exocrine-gland-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary exocrine_gland_vocab {
+    define exocrine_gland : entity   surface "exocrine gland", "gland"
+    define characteristic : entity   surface "characteristic", "defining feature"
+
+    define characterized_by : relation from exocrine_gland to characteristic  % the defining feature of this exocrine gland
+}
+
+rulebook exocrine_gland_facts {
+    use exocrine_gland_vocab
+
+    % --- parotid gland -> serous --------------------------------------------
+    relate characterized_by(parotid_gland, serous)
+        source "The parotid gland is composed primarily of serous acini and produces watery saliva, which lubricates the oral cavity and helps with swallowing, talking, and maintaining homeostasis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551688/"
+        trust authoritative
+
+    % --- sublingual gland -> mucous -----------------------------------------
+    relate characterized_by(sublingual_gland, mucous)
+        source "The sublingual gland is composed of mostly mucous acini and thus produces the thickest and most viscous saliva."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551688/"
+        trust authoritative
+
+    % --- submandibular gland -> mixed (predominantly serous) ----------------
+    relate characterized_by(submandibular_gland, mixed_predominantly_serous)
+        source "The submandibular gland has a predominance of serous cells with some mucous cells."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551688/"
+        trust authoritative
+
+    % --- eccrine sweat gland -> thermoregulation ----------------------------
+    relate characterized_by(eccrine_gland, thermoregulatory_sweat)
+        source "Eccrine sweat glands serve a thermoregulatory function via evaporative heat loss."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482278/"
+        trust authoritative
+
+    % --- apocrine sweat gland -> axillary / anogenital distribution ---------
+    relate characterized_by(apocrine_gland, axillary_anogenital)
+        source "Apocrine glands are distributed in the axillae, anogenital region, periumbilical region, areolae, external auditory canals, and eyelids."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482199/"
+        trust authoritative
+}
