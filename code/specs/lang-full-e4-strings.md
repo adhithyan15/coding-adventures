@@ -1,6 +1,6 @@
 # LANG-FULL E4 — Strings (design spec)
 
-**Status:** design pass (this document) — implementation gated on sign-off.
+**Status:** IR + reference VM slice implemented; frontend/backends remain.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
 **Unlocks:** Dartmouth BASIC strings + string `PRINT` (BA4), ALGOL 60 strings +
 `print`/`output` I/O (AL4), Twig strings on the code-gen backends (TW4), and any
@@ -180,11 +180,13 @@ E4 is large, so it ships as a sequence, each a `feat(lang-full): …` PR babysat
 merge before the next:
 
 0. **E4-spec** (this document) — committed specs-first, for design sign-off.
-1. **E4-ir + vm** — define the six ops + the `str` type helper in `interpreter-ir`;
-   implement them in `vm-core` (+ jit-core): a string value model, the literal
-   pool, `str_len`/`str_index` (bounds-checked)/`str_concat`/`str_eq`, and
-   `print_str` to the host sink. Unit tests incl. an out-of-bounds trap. *No
-   matrix Prog yet (needs a frontend), but a direct IIR unit test proves it runs.*
+1. ✅ **E4-ir + vm** — define the six ops + the `str` type helper in
+   `interpreter-ir`; implement them in `vm-core`: a string value model,
+   `str_len`/`str_index` (bounds-checked)/`str_concat`/`str_eq`, and `print_str`
+   to the host sink. Unit tests incl. an out-of-bounds trap. *No matrix Prog yet
+   (needs a frontend), but a direct IIR unit test proves it runs.* The generic CIR
+   JIT remains i64-only and cold-interprets/declines string-shaped functions
+   until a string-capable tier is added.
 2. **E4-basic-frontend** — `dartmouth-basic-iir-compiler` lowers `PRINT "…"` to
    `str_const` + `print_str`; matrix `Prog` (`PRINT "HELLO"` ⇒ stdout `HELLO`)
    runs on VM + JIT.
