@@ -11,5 +11,7 @@ All notable changes to this package will be documented in this file.
 - Added dashboard-ready runtime read routes for snapshot pending work,
   event-log replay, command-result audit, authorization-decision audit, and
   desired-state supervision targets.
+- Added a state-history read route over registry-backed device events with
+  entity-alias, event-type, and timestamp filtering.
 - Added a Hue fixture controller example that serves the API through the repo
   HTTP server for manual local smoke tests.

@@ -19,6 +19,7 @@ stable local API responses for:
 - `/api/smart_home/command_results`
 - `/api/smart_home/authorization_decisions`
 - `/api/smart_home/desired_states`
+- `/api/smart_home/state_history`
 
 `POST /api/services/:domain/:service` accepts Home Assistant-style JSON targets
 and dispatches through `SmartHomeRuntime::execute_command_tool`, so runtime
@@ -30,7 +31,8 @@ Home Assistant-style aliases exposed in state attributes, such as
 The `GET /api/smart_home/*` routes expose dashboard-ready read models for the
 same runtime: pending-work snapshot counts, checkpointed event-log entries,
 command-result audit records, authorization decisions, and desired-state
-supervision targets.
+supervision targets. State-history reads expose registry-backed device events
+with Home Assistant entity aliases, state deltas, and timestamp filters.
 
 ## Dependencies
 
@@ -58,6 +60,7 @@ Then query it from another shell:
 curl http://127.0.0.1:8123/api/
 curl http://127.0.0.1:8123/api/states
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
+curl 'http://127.0.0.1:8123/api/smart_home/state_history?entity_id=light.entity_light_1'
 curl -X POST http://127.0.0.1:8123/api/services/light/turn_on \
   -H 'Content-Type: application/json' \
   -d '{"entity_id":"light.entity_light_1","brightness_pct":75}'

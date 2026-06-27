@@ -383,6 +383,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/state_history", move |request| {
+            runtime_state_history_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.post("/api/services/:domain/:service", move |request| {
             service_call_response(&runtime, request)
         });
@@ -637,6 +644,21 @@ fn runtime_desired_states_response(
         .expect("smart-home runtime mutex should not be poisoned");
     let desired_states = runtime_guard.query_desired_states(&query);
     WebResponse::json(desired_states_json(&desired_states, &runtime_guard).into_bytes())
+}
+
+fn runtime_state_history_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let events = match state_history_events(&runtime_guard, request) {
+        Ok(events) => events,
+        Err(error) => return api_error_response(error),
+    };
+    WebResponse::json(state_history_json(&events, &runtime_guard).into_bytes())
 }
 
 fn runtime_snapshot_json(snapshot: &RuntimeReadSnapshot) -> String {
@@ -1035,6 +1057,111 @@ fn desired_state_query(request: &WebRequest) -> Result<DesiredStateQuery, ApiErr
         query = query.with_capability(CapabilityId::trusted(capability_id));
     }
     Ok(query)
+}
+
+fn state_history_events<'a>(
+    runtime: &'a SmartHomeRuntime,
+    request: &WebRequest,
+) -> Result<Vec<&'a DeviceEvent>, ApiError> {
+    let entity_id = query_string(request, "entity_id")
+        .map(|entity_id| runtime_entity_id(runtime, entity_id))
+        .transpose()?;
+    let event_type = query_string(request, "event_type")
+        .map(device_event_type_from_label)
+        .transpose()?;
+    let observed_at_or_after_ms = query_u64(request, "observed_at_or_after_ms")?;
+    let received_at_or_after_ms = query_u64(request, "received_at_or_after_ms")?;
+    let limit = query_limit(request, 100, 1_000)?;
+
+    let mut events = runtime
+        .registry()
+        .events()
+        .filter(|event| {
+            entity_id
+                .as_ref()
+                .is_none_or(|entity_id| event.entity_id.as_ref() == Some(entity_id))
+        })
+        .filter(|event| event_type.is_none_or(|event_type| event.event_type == event_type))
+        .filter(|event| {
+            observed_at_or_after_ms
+                .is_none_or(|observed_at_ms| event.observed_at_ms >= observed_at_ms)
+        })
+        .filter(|event| {
+            received_at_or_after_ms
+                .is_none_or(|received_at_ms| event.received_at_ms >= received_at_ms)
+        })
+        .collect::<Vec<_>>();
+
+    if query_string(request, "sort").is_some_and(|sort| sort == "desc") {
+        events.reverse();
+    }
+    events.truncate(limit);
+    Ok(events)
+}
+
+fn runtime_entity_id(runtime: &SmartHomeRuntime, value: &str) -> Result<EntityId, ApiError> {
+    runtime
+        .registry()
+        .entities()
+        .find(|entity| entity_matches_external_id(entity, value))
+        .map(|entity| entity.entity_id.clone())
+        .ok_or_else(|| ApiError::not_found(format!("entity `{value}` not found")))
+}
+
+fn state_history_json(events: &[&DeviceEvent], runtime: &SmartHomeRuntime) -> String {
+    let mut entity_ids = Vec::<String>::new();
+    let mut state_delta_count = 0usize;
+    let mut first_observed_at_ms = None;
+    let mut latest_observed_at_ms = None;
+
+    for event in events {
+        if let Some(entity_id) = &event.entity_id {
+            push_unique_string(&mut entity_ids, entity_id.as_str());
+        }
+        if event.state_delta.is_some() {
+            state_delta_count += 1;
+        }
+        first_observed_at_ms = Some(
+            first_observed_at_ms
+                .map(|current: u64| current.min(event.observed_at_ms))
+                .unwrap_or(event.observed_at_ms),
+        );
+        latest_observed_at_ms = Some(
+            latest_observed_at_ms
+                .map(|current: u64| current.max(event.observed_at_ms))
+                .unwrap_or(event.observed_at_ms),
+        );
+    }
+
+    format!(
+        "{{\"summary\":{{\"total_events\":{},\"entity_count\":{},\"state_delta_count\":{},\"first_observed_at_ms\":{},\"latest_observed_at_ms\":{}}},\"events\":[{}]}}",
+        events.len(),
+        entity_ids.len(),
+        state_delta_count,
+        optional_u64_json(first_observed_at_ms),
+        optional_u64_json(latest_observed_at_ms),
+        events
+            .iter()
+            .map(|event| state_history_event_json(event, runtime))
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn state_history_event_json(event: &DeviceEvent, runtime: &SmartHomeRuntime) -> String {
+    let home_assistant_entity_id = event.entity_id.as_ref().and_then(|entity_id| {
+        runtime
+            .registry()
+            .entity(entity_id)
+            .map(home_assistant_entity_id)
+    });
+    format!(
+        "{{\"home_assistant_entity_id\":{},\"event\":{}}}",
+        home_assistant_entity_id
+            .map(json_string)
+            .unwrap_or_else(|| "null".to_string()),
+        device_event_json(event),
+    )
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1662,6 +1789,20 @@ fn device_event_type_label(event_type: DeviceEventType) -> &'static str {
     }
 }
 
+fn device_event_type_from_label(event_type: &str) -> Result<DeviceEventType, ApiError> {
+    match event_type {
+        "discovered" => Ok(DeviceEventType::Discovered),
+        "updated" => Ok(DeviceEventType::Updated),
+        "removed" => Ok(DeviceEventType::Removed),
+        "unavailable" => Ok(DeviceEventType::Unavailable),
+        "error" => Ok(DeviceEventType::Error),
+        "health" => Ok(DeviceEventType::Health),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported device event type `{other}`"
+        ))),
+    }
+}
+
 fn runtime_error_to_api_error(error: RuntimeError) -> ApiError {
     match error {
         RuntimeError::UnauthorizedCommand { .. } | RuntimeError::UnauthorizedTool { .. } => {
@@ -1890,6 +2031,7 @@ mod tests {
     use super::*;
     use embeddable_http_server::{HttpRequest, HttpServerOptions};
     use http_core::{Header, HttpVersion, RequestHead};
+    use smart_home_core::{BridgeId, DeviceId, EventId};
     use smart_home_testkit::hue_lighting_runtime;
     use std::io::{BufRead, BufReader, Read, Write};
     use std::net::{SocketAddr, TcpStream};
@@ -2085,6 +2227,34 @@ mod tests {
         .with_now_ms(5_000)
     }
 
+    fn fixture_runtime_with_state_history() -> SmartHomePlatformHttpRuntime {
+        let mut runtime = hue_lighting_runtime();
+        runtime
+            .apply_device_event(DeviceEvent {
+                event_id: EventId::trusted("event-light-1-on"),
+                bridge_id: BridgeId::trusted("bridge-1"),
+                device_id: Some(DeviceId::trusted("device-1")),
+                entity_id: Some(EntityId::trusted("entity-light-1")),
+                observed_at_ms: 2_000,
+                received_at_ms: 2_010,
+                event_type: DeviceEventType::Updated,
+                state_delta: Some(StateDelta {
+                    capability_id: CapabilityId::trusted("light.on_off"),
+                    value: Value::Bool(true),
+                }),
+                raw_ref: Some("event-log://fixture/light/1".to_string()),
+                correlation_id: None,
+                metadata: Vec::new(),
+            })
+            .expect("fixture event should validate");
+
+        SmartHomePlatformHttpRuntime::new(
+            runtime,
+            SmartHomePlatformHttpConfig::new("Codex Home").with_time_zone("America/Los_Angeles"),
+        )
+        .with_now_ms(5_000)
+    }
+
     #[test]
     fn platform_http_summary_counts_runtime_snapshot_shape() {
         let state = fixture_state();
@@ -2240,6 +2410,27 @@ mod tests {
         assert!(body.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
         assert!(body.contains(r#""requested_by":"agent:chief-of-staff""#));
         assert!(body.contains(r#""capability_id":"light.on_off""#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_state_history_with_alias_filters() {
+        let app = home_assistant_runtime_web_app(fixture_runtime_with_state_history());
+        let body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?entity_id=light.entity_light_1&event_type=updated",
+            ))
+            .into(),
+        );
+
+        assert!(body.contains(r#""total_events":1"#));
+        assert!(body.contains(r#""entity_count":1"#));
+        assert!(body.contains(r#""state_delta_count":1"#));
+        assert!(body.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(body.contains(r#""event_id":"event-light-1-on""#));
+        assert!(body.contains(r#""event_type":"updated""#));
+        assert!(body.contains(r#""capability_id":"light.on_off""#));
+        assert!(body.contains(r#""value":true"#));
     }
 
     #[test]
