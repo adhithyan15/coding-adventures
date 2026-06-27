@@ -1255,6 +1255,58 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
                     }
                 }
+
+                // ---- Array.isArray(x) → boolean ----
+                //
+                // The static `Array.isArray` (ECMAScript §22.1.2.2) tests whether
+                // its single argument is a real Array, with NO coercion. We decide
+                // it at compile time only for the literal shapes whose evaluation
+                // has NO observable side effect to drop:
+                //
+                //   * an EMPTY array literal `[]` → `true`;
+                //   * an EMPTY object literal `{}` → `false`;
+                //   * a primitive literal (string / number / boolean / null) →
+                //     `false` (provably not an Array).
+                //
+                // A NON-empty array/object literal is DECLINED: replacing the call
+                // with a boolean would discard the element/property expressions and
+                // drop any side effect they evaluate (`Array.isArray([f()])` must
+                // still call `f`). An identifier or any other non-literal is also
+                // declined (unknown type at compile time). Same bare-global-`Array`
+                // premise as the `String.from*` / `Number.isX` statics — only the
+                // literal `Array.isArray(...)` callee folds, never a shadowed
+                // receiver (`x.isArray(...)` is left alone).
+                if obj.name == "Array" && prop.name == "isArray" && arguments.len() == 1 {
+                    let folded: Option<bool> = match arguments.first() {
+                        Some(Expression::ArrayExpression(a)) if a.elements.is_empty() => {
+                            Some(true)
+                        }
+                        Some(Expression::ObjectExpression(o)) if o.properties.is_empty() => {
+                            Some(false)
+                        }
+                        Some(Expression::StringLiteral(_))
+                        | Some(Expression::NumericLiteral(_))
+                        | Some(Expression::BooleanLiteral(_))
+                        | Some(Expression::NullLiteral(_)) => Some(false),
+                        _ => None,
+                    };
+                    if let Some(value) = folded {
+                        let parent = c.cv.clone();
+                        let arg_src = match arguments.first() {
+                            Some(Expression::ArrayExpression(_)) => "[]".to_string(),
+                            Some(Expression::ObjectExpression(_)) => "{}".to_string(),
+                            Some(Expression::StringLiteral(s)) => format!("\"{}\"", s.value),
+                            Some(Expression::NumericLiteral(n)) => format_js_number(n.value),
+                            Some(Expression::BooleanLiteral(b)) => b.value.to_string(),
+                            Some(Expression::NullLiteral(_)) => "null".to_string(),
+                            _ => "?".to_string(),
+                        };
+                        let before = format!("Array.isArray({})", arg_src);
+                        let after = if value { "!0" } else { "!1" };
+                        let new_cv = st.fork_cv(&parent, &before, after);
+                        return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
+                    }
+                }
             }
         }
     }
@@ -6487,6 +6539,115 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "n.isInteger(5) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- Array.isArray (static) ----------------------
+
+    /// Build `Array.isArray(<arg>)`.
+    fn array_isarray_call(arg: Expression) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Array"), "isArray")),
+            arguments: vec![arg],
+        })
+    }
+
+    fn empty_array() -> Expression {
+        Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements: vec![],
+        })
+    }
+
+    fn empty_object() -> Expression {
+        Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![],
+        })
+    }
+
+    #[test]
+    fn fold_array_isarray_empty_array_is_true() {
+        // `Array.isArray([])` → `true` — the only literal that IS an Array.
+        let c = array_isarray_call(empty_array());
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Array.isArray([]) should fold to true");
+        match extract_expr(&out) {
+            Expression::BooleanLiteral(b) => assert!(b.value, "Array.isArray([]) → true"),
+            other => panic!("expected true; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_array_isarray_non_array_literals_are_false() {
+        // An empty object and every primitive literal are provably not Arrays.
+        let args = [
+            empty_object(),
+            string("x", None),
+            num(42.0, None),
+            Expression::BooleanLiteral(BooleanLiteral {
+                cv: None,
+                value: true,
+            }),
+            Expression::NullLiteral(NullLiteral { cv: None }),
+        ];
+        for arg in args {
+            let c = array_isarray_call(arg);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "Array.isArray(non-array literal) should fold to false");
+            match extract_expr(&out) {
+                Expression::BooleanLiteral(b) => assert!(!b.value, "→ false"),
+                other => panic!("expected false; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn array_isarray_non_empty_array_does_not_fold() {
+        // A non-empty array literal is DECLINED — folding to a boolean would
+        // discard the element expressions and drop any side effect they evaluate.
+        let c = array_isarray_call(Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements: vec![Some(num(1.0, None))],
+        }));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Array.isArray([1]) must not fold (element side effects)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn array_isarray_identifier_does_not_fold() {
+        // An identifier's runtime type is unknown — decline.
+        let c = array_isarray_call(ident("x"));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Array.isArray(x) must not fold (unknown type)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn array_isarray_second_argument_does_not_fold() {
+        // We model only the single-argument form; `Array.isArray([], y)` is left.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Array"), "isArray")),
+            arguments: vec![empty_array(), ident("y")],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Array.isArray([], y) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn array_isarray_on_non_array_receiver_does_not_fold() {
+        // Only the bare global `Array` folds; `a.isArray([])` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("a"), "isArray")),
+            arguments: vec![empty_array()],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "a.isArray([]) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

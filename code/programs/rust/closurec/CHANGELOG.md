@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.203.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold static `Array.isArray(…)` → boolean
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses the static `Array.isArray(x)`
+(ECMAScript §22.1.2.2) to a boolean literal — via the new `MemberExpression`-arm
+dispatch in `closure-pass-constant-fold` 0.54.0.
+
+It folds the literal shapes with no side effect to drop: `Array.isArray([])` →
+`true`, `Array.isArray({})` → `false`, and a primitive literal
+(`Array.isArray("x")`/`(42)`/`(true)`/`(null)`) → `false`. A **non-empty**
+array/object literal is declined (`Array.isArray([1,2])` is left intact, since
+folding would discard its element evaluation and any side effect), as is an
+identifier or non-literal argument. Only the bare global `Array.isArray(...)`
+folds — never a shadowed receiver.
+
+New end-to-end fixture `tests/diff/simple-fold-array-isarray/` and integration
+test `tests/diff_simple_fold_array_isarray.rs` assert byte-exact SIMPLE output,
+the per-binding boolean folds (incl. empty-array `true` and primitive/object
+`false`), the declined non-empty array, and a WHITESPACE_ONLY-fallback regression
+guard (exactly one `Array.isArray(` call remains). Help-markdown regenerated to
+Version 0.203.0.
+
 ## [0.201.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold static `Number.isInteger/isFinite/isNaN(…)`
