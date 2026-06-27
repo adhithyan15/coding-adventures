@@ -136,7 +136,10 @@ downstream tools to compare.
      metadata; selected output-plan artifacts now also expose normalized
      `.save`, `.probe`, `.print`, and `.plot` directive kind counts/lists
      beside the selected directive tokens in table, CSV, compact JSON, and
-     host-native record exports.
+     host-native record exports, and selected output-plan artifacts now also
+     expose normalized output directive analysis scope counts/lists that
+     distinguish global `.save` / `.probe` selections from scoped `.probe`,
+     `.print`, and `.plot` selections in the same exports.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1163,6 +1166,16 @@ downstream tools to compare.
     - Table, CSV, compact JSON, and host-native record exports make `.save`,
       `.probe`, `.print`, and `.plot` selection provenance auditable without
       parsing directive strings.
+
+107. Deck output-plan directive analysis-kind artifacts.
+    - Status: completed in this deck output-plan directive analysis-kind
+      artifact slice.
+    - Python, Rust, and TypeScript selected output-plan artifacts now expose
+      normalized selected output directive analysis scope counts/lists beside
+      directive kind inventories.
+    - Table, CSV, compact JSON, and host-native record exports distinguish
+      global `.save` / `.probe` selections from scoped `.probe`, `.print`, and
+      `.plot` selections without reparsing directive cards.
 
 ## Backlog
 

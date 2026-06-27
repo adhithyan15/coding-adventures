@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Expose normalized selected output directive analysis scope inventories in
+  `runDeckAnalysis` output-plan artifacts beside directive kind inventories,
+  distinguishing global `.save` / `.probe` selections from scoped `.probe`,
+  `.print`, and `.plot` selections in stable table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and Rust.
 - Expose normalized selected output directive kind inventories in
   `runDeckAnalysis` output-plan artifacts beside the selected directive tokens,
   with stable table, CSV, compact JSON, and header-keyed record exports,
