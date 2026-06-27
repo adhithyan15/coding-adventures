@@ -6,6 +6,11 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations`
+  and
+  `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary`
+  tool descriptors for read-only runtime maintenance handoff reconciliation
+  checkpoint review.
 - `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoffs`
   and
   `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_summary`

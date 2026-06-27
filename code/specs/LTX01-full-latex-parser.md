@@ -145,8 +145,10 @@ is text-primary, which is a different mode model.)
     tokenizer (catcodes suspended) → `Node::Verb { star, delim, content }`, round-tripping;
     spanned errors on unterminated / line-spanning / bad-delimiter. Implemented in
     lexer.rs + parser.rs + ast.rs.
-  - **L5b (later) — `verbatim` environment** (`\begin{verbatim}…\end{verbatim}`, `verbatim*`)
-    read raw to the matching `\end`.
+  - **L5b (shipped) — `verbatim` environment** (`\begin{verbatim}…\end{verbatim}`, `verbatim*`)
+    read raw to the matching `\end` (catcodes suspended, newlines kept) → `Node::VerbatimEnv`,
+    round-tripping; lexer peeks after `\begin` and only diverts for these env names; spanned
+    error on unterminated/wrong close. Implemented in lexer.rs + parser.rs + ast.rs.
   - **L5c (later) — text accents** (`\'e`, `\"o`, `\~n`, `\^o`, `\=`, `\u`, `\v`, `\c`, …)
     recognized over the next char/group.
   - **L5d (later) — sectioning/font recognition + cross-refs + preamble**: `\section`(+`*`),

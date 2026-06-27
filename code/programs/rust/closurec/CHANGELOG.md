@@ -22,6 +22,19 @@ literal's prototype setter). New end-to-end fixture
 `tests/diff/simple-fold-object-fromentries/` plus
 integration test `tests/diff_simple_fold_object_fromentries.rs`.
 
+## [0.217.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold static `Number.isSafeInteger(x)` → boolean
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static
+`Number.isSafeInteger(x)` call (ECMAScript §21.1.2.5) to a boolean literal,
+alongside the existing `Number.isInteger` / `isFinite` / `isNaN`. It returns
+`true` only for an integer whose magnitude does not exceed 2^53−1
+(`Number.MAX_SAFE_INTEGER` = 9007199254740991), does no coercion (a non-Number
+literal is `false`), and declines an identifier / non-literal. New end-to-end
+fixture `tests/diff/simple-fold-number-issafeinteger/` plus integration test
+`tests/diff_simple_fold_number_issafeinteger.rs`.
 ## [0.216.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold static `Array.of(...)` → array literal `[...]`
