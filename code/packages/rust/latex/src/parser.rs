@@ -27,7 +27,7 @@ use crate::token::{Token, TokenKind};
 /// Parse a LaTeX document into a sequence of structural nodes.
 pub fn parse(src: &str) -> Result<Vec<Node>, ParseError> {
     let toks = tokenize(src)?;
-    let mut p = Parser { toks: &toks, src, pos: 0 };
+    let mut p = Parser { toks: &toks, src, pos: 0, depth: 0 };
     let nodes = p.parse_seq(Stop::Document)?;
     // After a document sequence the only thing left should be Eof; a `\end` here is a
     // close with no matching `\begin`.
@@ -61,10 +61,17 @@ enum Stop {
 /// each argument is itself a node sequence.
 type CapturedArgs = (Vec<Vec<Node>>, Vec<Vec<Node>>);
 
+/// Maximum group/environment nesting depth. Deeply nested input (`{{{…}}}`) drives the
+/// recursive descent as deep as it nests; this bound turns a pathological input into a
+/// spanned error instead of a stack overflow, keeping the parser total. Real documents
+/// nest only a handful deep, so this is generous.
+const MAX_DEPTH: usize = 512;
+
 struct Parser<'a> {
     toks: &'a [Token],
     src: &'a str,
     pos: usize,
+    depth: usize,
 }
 
 impl<'a> Parser<'a> {
@@ -83,6 +90,24 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_seq(&mut self, stop: Stop) -> Result<Vec<Node>, ParseError> {
+        // Guard recursion depth (groups/environments/arguments recurse through here) so a
+        // pathologically nested input is a clean error, not a stack overflow.
+        self.depth += 1;
+        if self.depth > MAX_DEPTH {
+            let sp = self.peek().span;
+            self.depth -= 1;
+            return Err(ParseError::new(
+                format!("nesting too deep (>{MAX_DEPTH})"),
+                sp.start,
+                sp.end,
+            ));
+        }
+        let result = self.parse_seq_inner(stop);
+        self.depth -= 1;
+        result
+    }
+
+    fn parse_seq_inner(&mut self, stop: Stop) -> Result<Vec<Node>, ParseError> {
         let mut nodes = Vec::new();
         loop {
             let tok = self.peek();
@@ -455,6 +480,15 @@ mod tests {
     fn stray_end_errors() {
         let e = parse(r"x\end{a}").unwrap_err();
         assert!(e.message.contains("no matching \\begin"));
+    }
+
+    #[test]
+    fn pathological_nesting_errors_instead_of_overflowing() {
+        // 5000 nested groups would overflow a naive recursive descent; the depth guard
+        // turns it into a clean spanned error (no panic, no stack overflow).
+        let deep = "{".repeat(5000);
+        let e = parse(&deep).unwrap_err();
+        assert!(e.message.contains("nesting too deep"), "{}", e.message);
     }
 
     // ---- round-trips ----------------------------------------------------------
