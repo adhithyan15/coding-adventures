@@ -45,8 +45,8 @@ single-line user functions, `DIM` arrays, `READ`/`DATA`/`RESTORE`, and
 RUN on native / LLVM / WASM / JVM / CLR / VM / JIT.  **BA1** added unstructured
 `GOSUB`/`RETURN`: a return-address `array<i64>` stack + an AL5 computed-`goto`
 inside `main` (no new backend op), so the same `RETURN` resumes at the
-dynamically most-recent `GOSUB` — runs on six backends (the wasm computed-`goto`
-CFG is a tracked iir-to-wasm follow-up, BA1-WASM).  LANG-FULL BA0 fixed the
+dynamically most-recent `GOSUB`; after the `iir-to-wasm` 0.18.0 dispatch-loop
+fix, the two BA1 proof programs run on all 7 backends.  LANG-FULL BA0 fixed the
 comparison operand-width hint that had broken control flow on LLVM/WASM; BA5
 added `DEF FNx(X) = expr` (lowered to a sibling `IIRFunction` + `call`, like
 ALGOL's value procedures); **BA3** added one-dimensional integer arrays —
