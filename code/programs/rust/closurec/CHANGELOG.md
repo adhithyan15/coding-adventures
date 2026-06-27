@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.220.0] - 2026-06-27
+
+### Added — SIMPLE/ADVANCED fold static `Object.fromEntries(...)` → object literal
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static
+`Object.fromEntries([[k, v], …])` call (ECMAScript §20.1.2.7) — the inverse of
+`Object.entries` — to an object literal when its single argument is a static
+array of 2-element `[key, value]` array literals, each key a string or numeric
+literal (numeric → ToString) and each value a primitive literal (string /
+number / boolean / null). Identifier-name keys emit bare (`{a: 1}`), other keys
+quoted (`{"1": "x"}`); a duplicate key keeps its first position but takes its
+last value; the empty array folds to `{}`. We decline a non-global receiver
+(`o.fromEntries(...)`), wrong arity, a non-array argument, a non-pair element, a
+non-literal/boolean/null/identifier key, a non-literal value, and any array
+hole. New end-to-end fixture `tests/diff/simple-fold-object-fromentries/` plus
+integration test `tests/diff_simple_fold_object_fromentries.rs`.
+
 ## [0.216.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold static `Array.of(...)` → array literal `[...]`
