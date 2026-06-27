@@ -1037,6 +1037,24 @@ export interface DeviceModelCapacitanceBehaviorFixture {
   readonly deckLines: readonly string[];
 }
 
+export interface DeviceModelNoiseBehaviorFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly circuit: Circuit;
+  readonly outputNode: string;
+  readonly inputSource: string;
+  readonly frequencyHz: number;
+  readonly expectedNoiseElement: string;
+  readonly expectedNoiseType: NoiseType;
+  readonly expectedSourcePsdMin: number;
+  readonly expectedSourcePsdMax: number;
+  readonly expectedOutputPsdMin: number;
+  readonly expectedOutputPsdMax: number;
+  readonly noiseBehavior: string;
+  readonly deckLines: readonly string[];
+}
+
 export interface Vccs {
   readonly kind: "vccs";
   readonly name: string;
@@ -1310,7 +1328,7 @@ export interface CornerSParameterResult {
   readonly points: readonly CornerSParameterPoint[];
 }
 
-export type NoiseType = "thermal";
+export type NoiseType = "thermal" | "shot";
 
 export interface NoiseEntry {
   readonly elementName: string;
@@ -7396,6 +7414,151 @@ export function deviceModelCapacitanceAuditFixtures(): readonly DeviceModelCapac
         "M1 drain gate 0 0 Mn",
         ".ac lin 1 100k 100k",
         ".save V(drain)",
+        ".end",
+      ],
+    },
+  ];
+}
+
+export function deviceModelNoiseAuditFixtures(): readonly DeviceModelNoiseBehaviorFixture[] {
+  const helperName = "deviceModelNoiseAuditFixtures";
+  const models = modelCardByName(deviceModelAuditFixtures());
+  const frequencyHz = 1_000.0;
+
+  const diodeModel = requiredModel(models, "Dfast", helperName);
+  const diodeCircuit = new Circuit();
+  diodeCircuit.add(voltageSource("Vbias", "vin", "0", 0.8));
+  diodeCircuit.add(resistor("Rlimit", "vin", "out", 1_000.0));
+  diodeCircuit.add(diodeFromModelCard("D1", "out", "0", diodeModel));
+
+  const bjtModel = requiredModel(models, "Qsmall", helperName);
+  const bjtCircuit = new Circuit();
+  bjtCircuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+  bjtCircuit.add(voltageSource("Vbase", "base", "0", 0.72));
+  bjtCircuit.add(resistor("Rload", "out", "0", 1_000.0));
+  bjtCircuit.add(bjtFromModelCard("Q1", "vcc", "base", "out", bjtModel));
+
+  const jfetModel = requiredModel(models, "Jn", helperName);
+  const jfetCircuit = new Circuit();
+  jfetCircuit.add(voltageSource("Vdd", "vdd", "0", 10.0));
+  jfetCircuit.add(voltageSource("Vg", "gate", "0", 0.0));
+  jfetCircuit.add(resistor("Rd", "vdd", "drain", 2_000.0));
+  jfetCircuit.add(resistor("Rs", "source", "0", 1_000.0));
+  jfetCircuit.add(jfetFromModelCard("J1", "drain", "gate", "source", jfetModel));
+
+  const mosModel = requiredModel(models, "Mn", helperName);
+  const mosCircuit = new Circuit();
+  mosCircuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
+  mosCircuit.add(voltageSource("Vgate", "gate", "0", 1.8));
+  mosCircuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+  mosCircuit.add(mosfetFromModelCard("M1", "out", "gate", "0", "0", mosModel));
+
+  return [
+    {
+      name: "diode-shot-noise",
+      kind: diodeModel.kind,
+      model: diodeModel,
+      circuit: diodeCircuit,
+      outputNode: "out",
+      inputSource: "Vbias",
+      frequencyHz,
+      expectedNoiseElement: "D1",
+      expectedNoiseType: "shot",
+      expectedSourcePsdMin: 6.4e-23,
+      expectedSourcePsdMax: 6.7e-23,
+      expectedOutputPsdMin: 8.0e-19,
+      expectedOutputPsdMax: 8.5e-19,
+      noiseBehavior: "diode forward current contributes junction shot noise",
+      deckLines: [
+        "* device-model noise fixture: diode-shot-noise",
+        ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+        "Vbias vin 0 0.8",
+        "Rlimit vin out 1k",
+        "D1 out 0 Dfast",
+        ".noise V(out) Vbias lin 1 1k 1k",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "bjt-shot-noise",
+      kind: bjtModel.kind,
+      model: bjtModel,
+      circuit: bjtCircuit,
+      outputNode: "out",
+      inputSource: "Vbase",
+      frequencyHz,
+      expectedNoiseElement: "Q1",
+      expectedNoiseType: "shot",
+      expectedSourcePsdMin: 3.7e-23,
+      expectedSourcePsdMax: 3.9e-23,
+      expectedOutputPsdMin: 1.1e-18,
+      expectedOutputPsdMax: 1.3e-18,
+      noiseBehavior: "BJT forward-active collector current contributes shot noise",
+      deckLines: [
+        "* device-model noise fixture: bjt-shot-noise",
+        ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+        "Vcc vcc 0 5",
+        "Vbase base 0 0.72",
+        "Q1 vcc base out Qsmall",
+        "Rload out 0 1k",
+        ".noise V(out) Vbase lin 1 1k 1k",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "jfet-channel-noise",
+      kind: jfetModel.kind,
+      model: jfetModel,
+      circuit: jfetCircuit,
+      outputNode: "source",
+      inputSource: "Vdd",
+      frequencyHz,
+      expectedNoiseElement: "J1",
+      expectedNoiseType: "thermal",
+      expectedSourcePsdMin: 2.0e-23,
+      expectedSourcePsdMax: 2.2e-23,
+      expectedOutputPsdMin: 2.3e-18,
+      expectedOutputPsdMax: 2.5e-18,
+      noiseBehavior: "JFET transconductance contributes long-channel channel thermal noise",
+      deckLines: [
+        "* device-model noise fixture: jfet-channel-noise",
+        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+        "Vdd vdd 0 10",
+        "Vg gate 0 0",
+        "Rd vdd drain 2k",
+        "Rs source 0 1k",
+        "J1 drain gate source Jn",
+        ".noise V(source) Vdd lin 1 1k 1k",
+        ".save V(source)",
+        ".end",
+      ],
+    },
+    {
+      name: "mos-level1-channel-noise",
+      kind: mosModel.kind,
+      model: mosModel,
+      circuit: mosCircuit,
+      outputNode: "out",
+      inputSource: "Vgate",
+      frequencyHz,
+      expectedNoiseElement: "M1",
+      expectedNoiseType: "thermal",
+      expectedSourcePsdMin: 1.3e-23,
+      expectedSourcePsdMax: 1.4e-23,
+      expectedOutputPsdMin: 3.3e-18,
+      expectedOutputPsdMax: 3.5e-18,
+      noiseBehavior: "Level-1 MOS gm contributes long-channel channel thermal noise",
+      deckLines: [
+        "* device-model noise fixture: mos-level1-channel-noise",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+        "Vdd vdd 0 1.8",
+        "Vgate gate 0 1.8",
+        "Rload vdd out 1k",
+        "M1 out gate 0 0 Mn",
+        ".noise V(out) Vgate lin 1 1k 1k",
+        ".save V(out)",
         ".end",
       ],
     },
@@ -15385,7 +15548,7 @@ function buildSmallSignalMatrix(
         stampJfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
         break;
       case "bjt":
-        stampBjtSmallSignal(element, nodeIndices, matrix);
+        stampBjtSmallSignal(element, nodeIndices, matrix, operatingPoint);
         break;
       case "mosfet":
         stampMosfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
@@ -15568,7 +15731,7 @@ function buildAcMatrix(
         stampAcJfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
         break;
       case "bjt":
-        stampAcBjtSmallSignal(element, nodeIndices, matrix, omega);
+        stampAcBjtSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
         break;
       case "mosfet":
         stampAcMosfetSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
@@ -15954,6 +16117,62 @@ function collectNoiseSources(
         negative: nodeIndex(nodeIndices, element.n2),
         sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / element.resistanceOhms,
       });
+    } else if (element.kind === "diode") {
+      validateDiode(element);
+      const anode = nodeIndex(nodeIndices, element.anode);
+      const cathode = nodeIndex(nodeIndices, element.cathode);
+      const anodeVoltage = vectorVoltage(operatingPoint, anode);
+      const cathodeVoltage = vectorVoltage(operatingPoint, cathode);
+      const [current] = diodeCurrentConductance(element, anodeVoltage - cathodeVoltage);
+      sources.push({
+        elementName: element.name,
+        noiseType: "shot",
+        positive: anode,
+        negative: cathode,
+        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(current),
+      });
+    } else if (element.kind === "bjt") {
+      validateBjt(element);
+      const base = nodeIndex(nodeIndices, element.base);
+      const emitter = nodeIndex(nodeIndices, element.emitter);
+      const baseVoltage = vectorVoltage(operatingPoint, base);
+      const emitterVoltage = vectorVoltage(operatingPoint, emitter);
+      const junctionVoltage =
+        element.polarity === "NPN"
+          ? baseVoltage - emitterVoltage
+          : emitterVoltage - baseVoltage;
+      const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+      const collectorCurrent = element.saturationCurrent * (Math.exp(exponent) - 1.0);
+      sources.push({
+        elementName: element.name,
+        noiseType: "shot",
+        positive: element.polarity === "NPN" ? base : emitter,
+        negative: element.polarity === "NPN" ? emitter : base,
+        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(collectorCurrent),
+      });
+    } else if (element.kind === "jfet") {
+      validateJfet(element);
+      const drain = nodeIndex(nodeIndices, element.drain);
+      const gate = nodeIndex(nodeIndices, element.gate);
+      const source = nodeIndex(nodeIndices, element.source);
+      const drainVoltage = vectorVoltage(operatingPoint, drain);
+      const gateVoltage = vectorVoltage(operatingPoint, gate);
+      const sourceVoltage = vectorVoltage(operatingPoint, source);
+      const result = evaluateJfet(
+        element,
+        gateVoltage - sourceVoltage,
+        drainVoltage - sourceVoltage,
+      );
+      const gm = Math.max(0.0, result.gm);
+      if (gm > 0.0) {
+        sources.push({
+          elementName: element.name,
+          noiseType: "thermal",
+          positive: drain,
+          negative: source,
+          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin * MOSFET_CHANNEL_NOISE_GAMMA * gm,
+        });
+      }
     } else if (element.kind === "mosfet") {
       validateMosfet(element);
       const drain = nodeIndex(nodeIndices, element.drain);
@@ -17771,12 +17990,20 @@ function stampBjtSmallSignal(
   element: Bjt,
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
+  operatingPoint: readonly number[],
 ): void {
   validateBjt(element);
   const collector = nodeIndex(nodeIndices, element.collector);
   const base = nodeIndex(nodeIndices, element.base);
   const emitter = nodeIndex(nodeIndices, element.emitter);
-  const transconductance = element.saturationCurrent / element.thermalVoltage;
+  const baseVoltage = vectorVoltage(operatingPoint, base);
+  const emitterVoltage = vectorVoltage(operatingPoint, emitter);
+  const junctionVoltage =
+    element.polarity === "NPN"
+      ? baseVoltage - emitterVoltage
+      : emitterVoltage - baseVoltage;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+  const transconductance = element.saturationCurrent / element.thermalVoltage * Math.exp(exponent);
   const junctionConductance = transconductance / element.forwardBeta;
   if (element.polarity === "NPN") {
     stampConductance(matrix, base, emitter, junctionConductance);
@@ -18325,16 +18552,35 @@ function stampAcBjtSmallSignal(
   element: Bjt,
   nodeIndices: ReadonlyMap<string, number>,
   matrix: Complex[][],
+  operatingPoint: readonly number[],
   omega: number,
 ): void {
   validateBjt(element);
   const collector = nodeIndex(nodeIndices, element.collector);
   const base = nodeIndex(nodeIndices, element.base);
   const emitter = nodeIndex(nodeIndices, element.emitter);
-  const transconductance = element.saturationCurrent / element.thermalVoltage;
+  const collectorVoltage = vectorVoltage(operatingPoint, collector);
+  const baseVoltage = vectorVoltage(operatingPoint, base);
+  const emitterVoltage = vectorVoltage(operatingPoint, emitter);
+  const junctionVoltage =
+    element.polarity === "NPN"
+      ? baseVoltage - emitterVoltage
+      : emitterVoltage - baseVoltage;
+  const reverseJunctionVoltage =
+    element.polarity === "NPN"
+      ? baseVoltage - collectorVoltage
+      : collectorVoltage - baseVoltage;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+  const reverseExponent = Math.max(
+    -40.0,
+    Math.min(40.0, reverseJunctionVoltage / element.thermalVoltage),
+  );
+  const transconductance = element.saturationCurrent / element.thermalVoltage * Math.exp(exponent);
   const junctionConductance = transconductance / element.forwardBeta;
   const diffusionCapacitance = element.forwardTransitTime * transconductance;
-  const reverseDiffusionCapacitance = element.reverseTransitTime * transconductance;
+  const reverseTransconductance =
+    element.saturationCurrent / element.thermalVoltage * Math.exp(reverseExponent);
+  const reverseDiffusionCapacitance = element.reverseTransitTime * reverseTransconductance;
   const baseEmitterAdmittance = complex(
     junctionConductance,
     omega * (element.baseEmitterCapacitance + diffusionCapacitance),

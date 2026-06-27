@@ -81,6 +81,27 @@ class DeviceModelCapacitanceBehaviorFixture:
     deck_lines: tuple[str, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class DeviceModelNoiseBehaviorFixture:
+    """A runnable model-card noise fixture with a stable source PSD window."""
+
+    name: str
+    kind: str
+    model: NormalizedModelCard
+    circuit: Circuit
+    output_node: str
+    input_source: str
+    frequency_hz: float
+    expected_noise_element: str
+    expected_noise_type: str
+    expected_source_psd_min: float
+    expected_source_psd_max: float
+    expected_output_psd_min: float
+    expected_output_psd_max: float
+    noise_behavior: str
+    deck_lines: tuple[str, ...]
+
+
 _MODEL_TYPE_ALIASES: dict[str, str] = {
     "D": "D",
     "DIODE": "D",
@@ -679,6 +700,148 @@ def device_model_capacitance_audit_fixtures() -> tuple[DeviceModelCapacitanceBeh
                 "M1 drain gate 0 0 Mn",
                 ".ac lin 1 100k 100k",
                 ".save V(drain)",
+                ".end",
+            ),
+        ),
+    )
+
+
+def device_model_noise_audit_fixtures() -> tuple[DeviceModelNoiseBehaviorFixture, ...]:
+    """Return runnable model-card .noise fixtures for model-depth audits."""
+
+    models = _model_card_by_name()
+    frequency_hz = 1_000.0
+
+    diode_circuit = Circuit()
+    diode_circuit.add(VoltageSource("Vbias", "vin", "0", 0.8))
+    diode_circuit.add(Resistor("Rlimit", "vin", "out", 1_000.0))
+    diode_circuit.add(diode_from_model_card("D1", "out", "0", models["Dfast"]))
+
+    bjt_circuit = Circuit()
+    bjt_circuit.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+    bjt_circuit.add(VoltageSource("Vbase", "base", "0", 0.72))
+    bjt_circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+    bjt_circuit.add(bjt_from_model_card("Q1", "vcc", "base", "out", models["Qsmall"]))
+
+    jfet_circuit = Circuit()
+    jfet_circuit.add(VoltageSource("Vdd", "vdd", "0", 10.0))
+    jfet_circuit.add(VoltageSource("Vg", "gate", "0", 0.0))
+    jfet_circuit.add(Resistor("Rd", "vdd", "drain", 2_000.0))
+    jfet_circuit.add(Resistor("Rs", "source", "0", 1_000.0))
+    jfet_circuit.add(jfet_from_model_card("J1", "drain", "gate", "source", models["Jn"]))
+
+    mos_circuit = Circuit()
+    mos_circuit.add(VoltageSource("Vdd", "vdd", "0", 1.8))
+    mos_circuit.add(VoltageSource("Vgate", "gate", "0", 1.8))
+    mos_circuit.add(Resistor("Rload", "vdd", "out", 1_000.0))
+    mos_circuit.add(mosfet_from_model_card("M1", "out", "gate", "0", "0", models["Mn"]))
+
+    return (
+        DeviceModelNoiseBehaviorFixture(
+            name="diode-shot-noise",
+            kind=models["Dfast"].kind,
+            model=models["Dfast"],
+            circuit=diode_circuit,
+            output_node="out",
+            input_source="Vbias",
+            frequency_hz=frequency_hz,
+            expected_noise_element="D1",
+            expected_noise_type="shot",
+            expected_source_psd_min=6.4e-23,
+            expected_source_psd_max=6.7e-23,
+            expected_output_psd_min=8.0e-19,
+            expected_output_psd_max=8.5e-19,
+            noise_behavior="diode forward current contributes junction shot noise",
+            deck_lines=(
+                "* device-model noise fixture: diode-shot-noise",
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+                "Vbias vin 0 0.8",
+                "Rlimit vin out 1k",
+                "D1 out 0 Dfast",
+                ".noise V(out) Vbias lin 1 1k 1k",
+                ".save V(out)",
+                ".end",
+            ),
+        ),
+        DeviceModelNoiseBehaviorFixture(
+            name="bjt-shot-noise",
+            kind=models["Qsmall"].kind,
+            model=models["Qsmall"],
+            circuit=bjt_circuit,
+            output_node="out",
+            input_source="Vbase",
+            frequency_hz=frequency_hz,
+            expected_noise_element="Q1",
+            expected_noise_type="shot",
+            expected_source_psd_min=3.7e-23,
+            expected_source_psd_max=3.9e-23,
+            expected_output_psd_min=1.1e-18,
+            expected_output_psd_max=1.3e-18,
+            noise_behavior="BJT forward-active collector current contributes shot noise",
+            deck_lines=(
+                "* device-model noise fixture: bjt-shot-noise",
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+                "Vcc vcc 0 5",
+                "Vbase base 0 0.72",
+                "Q1 vcc base out Qsmall",
+                "Rload out 0 1k",
+                ".noise V(out) Vbase lin 1 1k 1k",
+                ".save V(out)",
+                ".end",
+            ),
+        ),
+        DeviceModelNoiseBehaviorFixture(
+            name="jfet-channel-noise",
+            kind=models["Jn"].kind,
+            model=models["Jn"],
+            circuit=jfet_circuit,
+            output_node="source",
+            input_source="Vdd",
+            frequency_hz=frequency_hz,
+            expected_noise_element="J1",
+            expected_noise_type="thermal",
+            expected_source_psd_min=2.0e-23,
+            expected_source_psd_max=2.2e-23,
+            expected_output_psd_min=2.3e-18,
+            expected_output_psd_max=2.5e-18,
+            noise_behavior="JFET transconductance contributes long-channel channel thermal noise",
+            deck_lines=(
+                "* device-model noise fixture: jfet-channel-noise",
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+                "Vdd vdd 0 10",
+                "Vg gate 0 0",
+                "Rd vdd drain 2k",
+                "Rs source 0 1k",
+                "J1 drain gate source Jn",
+                ".noise V(source) Vdd lin 1 1k 1k",
+                ".save V(source)",
+                ".end",
+            ),
+        ),
+        DeviceModelNoiseBehaviorFixture(
+            name="mos-level1-channel-noise",
+            kind=models["Mn"].kind,
+            model=models["Mn"],
+            circuit=mos_circuit,
+            output_node="out",
+            input_source="Vgate",
+            frequency_hz=frequency_hz,
+            expected_noise_element="M1",
+            expected_noise_type="thermal",
+            expected_source_psd_min=1.3e-23,
+            expected_source_psd_max=1.4e-23,
+            expected_output_psd_min=3.3e-18,
+            expected_output_psd_max=3.5e-18,
+            noise_behavior="Level-1 MOS gm contributes long-channel channel thermal noise",
+            deck_lines=(
+                "* device-model noise fixture: mos-level1-channel-noise",
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+                "Vdd vdd 0 1.8",
+                "Vgate gate 0 1.8",
+                "Rload vdd out 1k",
+                "M1 out gate 0 0 Mn",
+                ".noise V(out) Vgate lin 1 1k 1k",
+                ".save V(out)",
                 ".end",
             ),
         ),

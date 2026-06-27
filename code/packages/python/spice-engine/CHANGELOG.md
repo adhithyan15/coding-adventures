@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Device model noise audit fixtures** —
+  `device_model_noise_audit_fixtures()` now exposes runnable one-device
+  `.noise` fixtures with reference deck lines and stable source/output PSD
+  windows for diode and BJT shot noise plus JFET and Level-1 MOS channel
+  thermal noise audits, matching Rust and TypeScript.
+
 - **Device model capacitance audit fixtures** —
   `device_model_capacitance_audit_fixtures()` now exposes runnable
   one-device AC fixtures with `.ac` reference deck lines and stable

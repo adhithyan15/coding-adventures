@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `device_model_noise_audit_fixtures` runnable one-device `.noise`
+  fixtures with reference deck lines and stable source/output PSD windows for
+  diode and BJT shot noise plus JFET and Level-1 MOS channel thermal noise
+  audits, matching Python and TypeScript.
 - Add `device_model_capacitance_audit_fixtures` runnable one-device AC fixtures
   with `.ac` reference deck lines and stable high-frequency probe-magnitude
   windows for diode, BJT, JFET, and Level-1 MOS model-depth audits, matching

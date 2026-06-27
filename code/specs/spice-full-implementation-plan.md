@@ -15,20 +15,24 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Device model capacitance audit fixtures.
+1. Device model noise audit fixtures.
    - Status: current PR completion candidate.
    - Python, Rust, and TypeScript now expose matching runnable
-     `device_model_capacitance_audit_fixtures` /
-     `deviceModelCapacitanceAuditFixtures` one-device AC fixtures for diode,
+     `device_model_noise_audit_fixtures` /
+     `deviceModelNoiseAuditFixtures` one-device `.noise` fixtures for diode,
      BJT, JFET, and Level-1 MOS model cards.
-   - Each fixture carries the normalized model card, an executable AC circuit,
-     `.ac` reference deck lines, selected probe node, frequency, stable
-     expected probe-magnitude window, and a short capacitance-behavior note.
-   - The JFET fixture deliberately records the current conductance-only AC
-     response because JFET capacitance remains intentionally unmodeled until
-     that policy is chosen.
-   - Cross-language tests execute every fixture through AC sweep solving and
-     verify the probe-magnitude window plus reference-deck metadata.
+   - Each fixture carries the normalized model card, an executable circuit,
+     `.noise` reference deck lines, output node, input source, frequency,
+     expected noise element/type, stable source/output PSD windows, and a
+     short noise-behavior note.
+   - Rust and TypeScript now include diode/BJT shot-noise sources and JFET
+     channel thermal-noise sources in addition to the existing resistor and
+     Level-1 MOS thermal noise coverage.
+   - TypeScript BJT small-signal and AC stamping now derive transconductance
+     and diffusion capacitance from the converged operating point, matching
+     Python and Rust.
+   - Cross-language tests execute every fixture through `.noise` solving and
+     verify the PSD windows plus reference-deck metadata.
 
 ## Completed Slices
 
@@ -1176,6 +1180,21 @@ downstream tools to compare.
    - Cross-language tests execute every fixture through DC temperature sweeps
      and verify the probe windows plus reference-deck metadata, including the
      explicit JFET temperature-invariant policy.
+
+118. Device model capacitance audit fixtures.
+   - Status: completed in this device model capacitance audit fixture slice.
+   - Python, Rust, and TypeScript now expose matching runnable
+     `device_model_capacitance_audit_fixtures` /
+     `deviceModelCapacitanceAuditFixtures` one-device AC fixtures for diode,
+     BJT, JFET, and Level-1 MOS model cards.
+   - Each fixture carries the normalized model card, an executable AC circuit,
+     `.ac` reference deck lines, selected probe node, frequency, stable
+     expected probe-magnitude window, and a short capacitance-behavior note.
+   - The JFET fixture deliberately records the current conductance-only AC
+     response because JFET capacitance remains intentionally unmodeled until
+     that policy is chosen.
+   - Cross-language tests execute every fixture through AC sweep solving and
+     verify the probe-magnitude window plus reference-deck metadata.
 
 ## Backlog
 

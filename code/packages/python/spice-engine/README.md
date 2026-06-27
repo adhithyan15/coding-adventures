@@ -207,6 +207,9 @@ model-depth audits. `device_model_temperature_audit_fixtures()` adds matching
 those same fixture circuits. `device_model_capacitance_audit_fixtures()` adds
 matching `.ac` reference-deck metadata and stable high-frequency probe
 magnitude windows for capacitance and current JFET invariant audits.
+`device_model_noise_audit_fixtures()` adds matching `.noise` reference-deck
+metadata and stable source/output PSD windows for diode and BJT shot noise plus
+JFET and Level-1 MOS channel thermal noise audits.
 
 `DigitalEventStream`, `DigitalLogicLevels`, and `DigitalThresholds` provide the
 first mixed-signal bridge surface: digital event streams can drive finite-edge
