@@ -233,9 +233,10 @@ merge before the next:
    `string` declarations when assigned from a literal, materialising the variable
    slot with E4 `str_const`; `print(s)` is accepted only for literal-backed
    slots. Matrix `Prog` `begin string s; s := 'HI'; print(s) end` returns stdout
-   `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Dynamic string
-   copies, captured/`own` strings, string arrays, and string parameters remain
-   follow-ups.
+   `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR, and the sibling
+   `output(s)` matrix proof returns `OK` through the same E4 path. Dynamic
+   string copies, captured/`own` strings, string arrays, and string parameters
+   remain follow-ups.
 3. ✅ **E4-literal-metadata/index proofs** — Twig lowers literal
    `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
    `(string=? "HELLO" "HELLO")`, and

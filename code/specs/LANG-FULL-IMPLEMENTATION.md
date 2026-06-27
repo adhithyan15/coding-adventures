@@ -556,10 +556,10 @@ backend immediately) come before the enabler-dependent items.
 - ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
   **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
   to `str_const` + `print_str`, and literal-backed scalar string variables
-  (`string s; s := 'HI'; print(s)`) now run the same way, verified by
-  `lang_matrix.rs` on native/LLVM/WASM/JVM/CLR/VM/JIT. Dynamic string copies,
-  captured/`own` strings, arrays, parameters, and non-literal string expressions
-  remain.
+  (`string s; s := 'HI'; print(s)`) now run the same way. The matrix also proves
+  the `output(s)` spelling, all on native/LLVM/WASM/JVM/CLR/VM/JIT. Dynamic
+  string copies, captured/`own` strings, arrays, parameters, and non-literal
+  string expressions remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
   native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). `goto s[i]` lowers to a 1-based

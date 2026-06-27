@@ -637,6 +637,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the implementation-defined `output` spelling follows the same
+    // AL4 path as `print`: a literal-backed string slot consumed by E4
+    // `print_str`. This row proves the alias rather than only the `print`
+    // spelling, without widening into dynamic strings.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s; s := 'OK'; output(s) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — the `abs` **standard function** (§3.2.4, LANG-FULL AL8). `abs`
     // is built into the language, not a user procedure, so `algol-iir-compiler`
     // resolves it by name and lowers `abs(0 - 42)` inline to the value of

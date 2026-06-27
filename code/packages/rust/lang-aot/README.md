@@ -16,7 +16,8 @@ LANG VM chain.
 > path and producing stdout `HI` everywhere.
 > The next ALGOL row proves literal-backed scalar string variables too:
 > `begin string s; s := 'HI'; print(s) end` produces stdout `HI` everywhere,
-> while dynamic string copies/captured strings remain follow-up work.
+> and `begin string s; s := 'OK'; output(s) end` proves the `output` alias;
+> dynamic string copies/captured strings remain follow-up work.
 > It also proves Twig `(string-length "HELLO")` returns exit code `5` and
 > `(string-ref "ABC" 1)` returns exit code `66`,
 > `(string=? "HELLO" "HELLO")` returns exit code `1`, plus
