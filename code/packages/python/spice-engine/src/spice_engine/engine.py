@@ -2388,6 +2388,18 @@ class DeckOutputPlanArtifact:
     line_number: int
     source_name: str | None
     output_node: str | None
+    sweep_kind: str | None
+    start_value: float | None
+    stop_value: float | None
+    step_value: float | None
+    point_count: int | None
+    start_frequency_hz: float | None
+    stop_frequency_hz: float | None
+    step_time: float | None
+    stop_time: float | None
+    start_time: float | None
+    max_step: float | None
+    use_initial_conditions: bool | None
     result_row_count: int
     result_column_count: int
     result_columns: list[str]
@@ -2912,6 +2924,7 @@ def _deck_output_plan_artifacts(
     tables: list[str],
 ) -> list[DeckOutputPlanArtifact]:
     output_directive_kinds = _deck_output_directive_kinds(output_directives)
+    is_transient = plan.analysis == "tran"
     return [
         DeckOutputPlanArtifact(
             analysis=plan.analysis,
@@ -2919,6 +2932,20 @@ def _deck_output_plan_artifacts(
             line_number=plan.line_number,
             source_name=plan.source_name,
             output_node=plan.output_node,
+            sweep_kind=plan.sweep_kind,
+            start_value=plan.start_value,
+            stop_value=plan.stop_value,
+            step_value=plan.step_value,
+            point_count=plan.point_count,
+            start_frequency_hz=plan.start_frequency,
+            stop_frequency_hz=plan.stop_frequency,
+            step_time=plan.step_time if is_transient else None,
+            stop_time=plan.stop_time if is_transient else None,
+            start_time=plan.start_time if is_transient else None,
+            max_step=plan.max_step if is_transient else None,
+            use_initial_conditions=(
+                plan.use_initial_conditions if is_transient else None
+            ),
             result_row_count=result_row_count,
             result_column_count=len(result_columns),
             result_columns=list(result_columns),
@@ -2948,6 +2975,18 @@ _DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
     "Line",
     "SourceName",
     "OutputNode",
+    "SweepKind",
+    "StartValue",
+    "StopValue",
+    "StepValue",
+    "PointCount",
+    "StartFrequencyHz",
+    "StopFrequencyHz",
+    "StepTime",
+    "StopTime",
+    "StartTime",
+    "MaxStep",
+    "UseInitialConditions",
     "ResultRows",
     "ResultColumns",
     "ResultColumnList",
@@ -2975,6 +3014,18 @@ def _deck_output_plan_artifact_cells(artifact: DeckOutputPlanArtifact) -> list[s
         str(artifact.line_number),
         artifact.source_name or "",
         artifact.output_node or "",
+        artifact.sweep_kind or "",
+        _format_deck_artifact_float(artifact.start_value),
+        _format_deck_artifact_float(artifact.stop_value),
+        _format_deck_artifact_float(artifact.step_value),
+        "" if artifact.point_count is None else str(artifact.point_count),
+        _format_deck_artifact_float(artifact.start_frequency_hz),
+        _format_deck_artifact_float(artifact.stop_frequency_hz),
+        _format_deck_artifact_float(artifact.step_time),
+        _format_deck_artifact_float(artifact.stop_time),
+        _format_deck_artifact_float(artifact.start_time),
+        _format_deck_artifact_float(artifact.max_step),
+        _format_deck_artifact_bool(artifact.use_initial_conditions),
         str(artifact.result_row_count),
         str(artifact.result_column_count),
         ";".join(artifact.result_columns),

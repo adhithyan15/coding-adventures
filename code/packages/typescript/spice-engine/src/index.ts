@@ -722,6 +722,18 @@ export interface DeckOutputPlanArtifact {
   readonly lineNumber: number;
   readonly sourceName?: string;
   readonly outputNode?: string;
+  readonly sweepKind?: DeckAnalysisPlan["sweepKind"];
+  readonly startValue?: number;
+  readonly stopValue?: number;
+  readonly stepValue?: number;
+  readonly pointCount?: number;
+  readonly startFrequencyHz?: number;
+  readonly stopFrequencyHz?: number;
+  readonly stepTime?: number;
+  readonly stopTime?: number;
+  readonly startTime?: number;
+  readonly maxStep?: number;
+  readonly useInitialConditions?: boolean;
   readonly resultRowCount: number;
   readonly resultColumnCount: number;
   readonly resultColumns: readonly string[];
@@ -8408,6 +8420,7 @@ function deckOutputPlanArtifacts(
   tables: readonly string[],
 ): DeckOutputPlanArtifact[] {
   const outputDirectiveKinds = deckOutputDirectiveKinds(outputDirectives);
+  const isTransient = plan.analysis === "tran";
   return [
     {
       analysis: plan.analysis,
@@ -8415,6 +8428,18 @@ function deckOutputPlanArtifacts(
       lineNumber: plan.lineNumber,
       sourceName: plan.sourceName,
       outputNode: plan.outputNode,
+      sweepKind: plan.sweepKind,
+      startValue: plan.startValue,
+      stopValue: plan.stopValue,
+      stepValue: plan.stepValue,
+      pointCount: plan.pointCount,
+      startFrequencyHz: plan.startFrequencyHz,
+      stopFrequencyHz: plan.stopFrequencyHz,
+      stepTime: isTransient ? plan.stepTime : undefined,
+      stopTime: isTransient ? plan.stopTime : undefined,
+      startTime: isTransient ? plan.startTime : undefined,
+      maxStep: isTransient ? plan.maxStep : undefined,
+      useInitialConditions: isTransient ? plan.useInitialConditions : undefined,
       resultRowCount,
       resultColumnCount: resultColumns.length,
       resultColumns: [...resultColumns],
@@ -8461,6 +8486,18 @@ const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
   "Line",
   "SourceName",
   "OutputNode",
+  "SweepKind",
+  "StartValue",
+  "StopValue",
+  "StepValue",
+  "PointCount",
+  "StartFrequencyHz",
+  "StopFrequencyHz",
+  "StepTime",
+  "StopTime",
+  "StartTime",
+  "MaxStep",
+  "UseInitialConditions",
   "ResultRows",
   "ResultColumns",
   "ResultColumnList",
@@ -8487,6 +8524,18 @@ function deckOutputPlanArtifactCells(artifact: DeckOutputPlanArtifact): string[]
     String(artifact.lineNumber),
     artifact.sourceName ?? "",
     artifact.outputNode ?? "",
+    artifact.sweepKind ?? "",
+    formatDeckArtifactFloat(artifact.startValue),
+    formatDeckArtifactFloat(artifact.stopValue),
+    formatDeckArtifactFloat(artifact.stepValue),
+    artifact.pointCount === undefined ? "" : String(artifact.pointCount),
+    formatDeckArtifactFloat(artifact.startFrequencyHz),
+    formatDeckArtifactFloat(artifact.stopFrequencyHz),
+    formatDeckArtifactFloat(artifact.stepTime),
+    formatDeckArtifactFloat(artifact.stopTime),
+    formatDeckArtifactFloat(artifact.startTime),
+    formatDeckArtifactFloat(artifact.maxStep),
+    formatDeckArtifactBoolean(artifact.useInitialConditions),
     String(artifact.resultRowCount),
     String(artifact.resultColumnCount),
     artifact.resultColumns.join(";"),
