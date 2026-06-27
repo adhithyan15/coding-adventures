@@ -31,6 +31,30 @@ never a member access (`window.isNaN`). Added nine unit tests (a V8-oracle
 classification table for `js_to_number`, exact-value checks, through-pass folds
 for both predicates, the number-literal and `"Infinity"`-string cases, and
 non-literal/second-arg/member guards).
+## [0.52.0] - 2026-06-26
+
+### Added — fold static `Number.isInteger/isFinite/isNaN(…)` → boolean literal
+
+The ES2015 static numeric predicates `Number.isInteger(x)` / `Number.isFinite(x)`
+/ `Number.isNaN(x)` (ECMAScript §21.1.2.2/.3/.4) now fold to a boolean literal.
+**Unlike** the global `isNaN`/`isFinite`, these do **no** `ToNumber` coercion —
+the argument must already be a Number or the answer is `false`:
+
+- a NUMBER literal classifies its value directly: `Number.isInteger(42)` →
+  `true`, `Number.isInteger(3.5)` → `false`, `Number.isInteger(1e21)` → `true`
+  (every f64 magnitude ≥ 2⁵² is integer-valued), `Number.isFinite(42)` → `true`,
+  `Number.isNaN(NaN)` → `true`, and `Infinity`/`NaN` → `false` for `isInteger`
+  and `isFinite`;
+- a STRING / BOOLEAN / NULL literal → `false` for all three, with no coercion
+  (`Number.isNaN("NaN")` === `false`, `Number.isInteger("5")` === `false`).
+
+These are STATIC METHOD calls, so they dispatch through the `MemberExpression`
+callee arm (alongside `String.fromCharCode`/`fromCodePoint`) — only the bare
+global `Number.isX(...)` folds, never a shadowed receiver (`n.isInteger(5)`). An
+identifier/array/object argument, or any call with ≠1 argument, is left for the
+runtime. Added five unit tests (a V8-oracle table over number literals incl.
+`Infinity`/`NaN`/`1e21`, the non-number-literal `false` cases, and
+non-literal/second-arg/non-`Number`-receiver guards).
 
 ## [0.49.0] - 2026-06-26
 
