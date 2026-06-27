@@ -1,5 +1,40 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.10.0 — 2026-06-26 — `GOSUB` / `RETURN` (LANG-FULL BA1, enabler E7)
+
+`GOSUB` and `RETURN` were `UnsupportedStatement` rejections; they now lower onto
+the **E5 array** substrate + an **AL5 computed-`goto`** — no new IIR op, exactly
+as designed in `code/specs/lang-full-e7-subroutine-return-stack.md`.
+
+BASIC's `GOSUB`/`RETURN` is *unstructured*: the program is one flat list of
+line-numbered statements in `main`, and the same `RETURN` resumes at the
+**dynamically most-recent** `GOSUB`. Plain `call`/`ret` can't express that, so we
+model it *inside* `main`:
+
+- A pre-pass counts every `GOSUB` (so a `RETURN` appearing before some of the
+  `GOSUB`s it returns to still emits the full dispatch chain) and, when the
+  program uses `GOSUB`, materialises a return-address stack at the top of `main`:
+  a fixed-capacity (64) `array<i64>` (`__basic_gosub_stack`) plus the
+  `__basic_gosub_sp` pointer — mirroring the BA6 `DATA`-pool init.
+- **`GOSUB n`** pushes its 0-based call-site id (`array_set` + sp bump), `jmp`s to
+  `line_n`, and drops a `gosub_ret_<id>` resume label.
+- **`RETURN`** pops the id (`array_get` after sp decrement) and computed-`goto`s
+  to its `gosub_ret_<id>` via the AL5 switch chain (`cmp_eq` + `jmp_if_true` over
+  every site). A bare `RETURN` (no `GOSUB` in the program) is a clean error;
+  over-deep nesting traps via the bounds-checked `array_set` (the faithful
+  "GOSUB too deep" runtime error).
+- Every op (`alloc_array`/`array_set`/`array_get`, `const`/`add`/`sub`/`mov`,
+  `cmp_eq`/`jmp`/`jmp_if_true`/`label`) already runs on every backend, so **BA1
+  added ZERO backend ops** — proven by two executed `lang-aot` matrix programs:
+  `GOSUB 100` twice with one shared `RETURN` ⇒ `919` (same `RETURN`, two sites),
+  and a nested `GOSUB` ⇒ `876` (LIFO across depth > 1). Six new frontend unit
+  tests.
+- *Known gap (BA1-WASM):* the `RETURN` computed-`goto` produces an irreducible
+  CFG that trips `iir-to-wasm`'s dispatch-loop lowering with a runtime
+  `StackUnderflow` (the wasm *compiles* but traps), so the GOSUB matrix cells run
+  on the other **six** backends (native/LLVM/JVM/CLR/VM/JIT) pending a focused
+  iir-to-wasm fix.
+
 ## 0.9.0 — 2026-06-26 — multi-item `PRINT` on one line (LANG-FULL BA2)
 
 `PRINT` could only print a single value per statement, because each item lowered

@@ -28,7 +28,8 @@
 //! | `FOR I = a TO b STEP s` / `NEXT I` | classic counter loop with `for_<n>_test` / `for_<n>_end` labels |
 //! | `END`          | `const_i64 0 -> r; ret r` |
 //! | `REM …`        | no-op |
-//! | `GOSUB` / `RETURN` | **deferred** — V1 returns `UnsupportedStatement` |
+//! | `GOSUB n`      | push call-site id on the `array<i64>` return stack, `jmp line_n`, drop `gosub_ret_<id>` (BA1 / E7) |
+//! | `RETURN`       | pop the id, computed-`goto` (`cmp_eq`+`jmp_if_true`) to its `gosub_ret_<id>` (BA1 / E7) |
 //! | `READ` / `DATA` / `RESTORE` | **deferred** — needs data pool |
 //! | `DIM A(n)`     | `alloc_array A = <n+1>` (0-based, inclusive) — BA3 / E5 |
 //! | `LET A(i)=e`   | `<eval i → x>; <eval e → v>; array_set A, x, v` (BA3) |
@@ -250,6 +251,19 @@ struct Compiler {
     /// helpers when they're actually used — a program with no `PRINT` (or
     /// only bare `PRINT`s) carries no dead functions.
     needs_print_helpers: bool,
+    /// Number of `GOSUB` statements in the whole program, counted by a
+    /// pre-pass (BA1 / enabler E7).  When > 0, `main` gets a return-address
+    /// stack (an `array<i64>` + the `__basic_gosub_sp` pointer) materialised
+    /// at the top, and every `RETURN` dispatches over `0..gosub_count` return
+    /// sites.  Counting up front lets a `RETURN` that appears *before* some of
+    /// the `GOSUB`s it might return to (legal in BASIC's flat program) still
+    /// emit the complete dispatch chain.
+    gosub_count: usize,
+    /// Sequential id of the next `GOSUB` lowered, 0-based.  Emission walks
+    /// lines in source order, so the id handed out here matches the pre-pass
+    /// counting order — `GOSUB` #k pushes `k` and its return label is
+    /// `gosub_ret_k`.
+    gosub_next_id: usize,
 }
 
 impl Default for Compiler {
@@ -267,6 +281,8 @@ impl Default for Compiler {
             arrays: std::collections::HashSet::new(),
             data_pool: Vec::new(),
             needs_print_helpers: false,
+            gosub_count: 0,
+            gosub_next_id: 0,
         }
     }
 }
@@ -354,6 +370,16 @@ impl Compiler {
         // the literals plus the `__basic_data_ptr` register initialised to 0.
         self.emit_data_pool_init();
 
+        // Pre-pass — count `GOSUB` statements (BA1 / enabler E7).  The count is
+        // needed before lowering so every `RETURN` (which may appear earlier in
+        // the flat program than some of the `GOSUB`s it returns to) can emit a
+        // dispatch chain covering all return sites; it also tells us whether to
+        // materialise the return stack at all.
+        self.gosub_count = self.count_gosubs(ast);
+        if self.gosub_count > 0 {
+            self.emit_gosub_stack_init();
+        }
+
         // Walk every `line` child, in order.
         for child in &ast.children {
             if let ASTNodeOrToken::Node(line) = child {
@@ -425,9 +451,8 @@ impl Compiler {
             "end_stmt" | "stop_stmt"
                            => { self.emit_end(); Ok(()) },
             "rem_stmt"     => Ok(()),
-            // Explicitly-deferred V1 statements.
-            "gosub_stmt"   => Err(CompileError::UnsupportedStatement("GOSUB".into())),
-            "return_stmt"  => Err(CompileError::UnsupportedStatement("RETURN".into())),
+            "gosub_stmt"   => self.emit_gosub(stmt),
+            "return_stmt"  => self.emit_return(),
             "read_stmt"    => self.emit_read(stmt),
             // A `DATA` statement emits nothing at its position — its values
             // were gathered into the pool by the `collect_data` pre-pass and
@@ -806,6 +831,126 @@ impl Compiler {
         self.emit("jmp", None,
             vec![Operand::Var(format!("line_{target}"))],
             "void");
+        Ok(())
+    }
+
+    // -- GOSUB / RETURN (BA1, enabler E7) ----------------------------------
+    //
+    // BASIC's `GOSUB`/`RETURN` is *unstructured*: the program is one flat list
+    // of line-numbered statements in `main`, and the same `RETURN` resumes at
+    // the dynamically most-recent `GOSUB` (see `code/specs/lang-full-e7-
+    // subroutine-return-stack.md`).  Plain `call`/`ret` can't express that, but
+    // it needs NO new backend op: model it *inside* `main` as a runtime
+    // return-address stack (an E5 `array<i64>`) plus a computed `goto` — the
+    // exact AL5 switch chain (`cmp_eq` + `jmp_if_true`), which already runs on
+    // every backend, just like E5 arrays do.
+
+    /// Count every `gosub_stmt` in the program (pre-pass).
+    fn count_gosubs(&self, ast: &GrammarASTNode) -> usize {
+        let mut n = 0;
+        for child in &ast.children {
+            let ASTNodeOrToken::Node(line) = child else { continue };
+            if line.rule_name != "line" { continue; }
+            let Some(stmt) = child_nodes(line).into_iter()
+                .find(|s| s.rule_name == "statement") else { continue };
+            if let Some(inner) = child_nodes(stmt).into_iter().next() {
+                if inner.rule_name == "gosub_stmt" { n += 1; }
+            }
+        }
+        n
+    }
+
+    /// Materialise the return-address stack at the top of `main` (only when the
+    /// program uses `GOSUB`): a fixed-capacity `array<i64>` plus the
+    /// `__basic_gosub_sp` pointer seeded to 0.  Mirrors the BA6 `DATA`-pool
+    /// init — one `const` + `alloc_array` + a pointer `mov`.
+    fn emit_gosub_stack_init(&mut self) {
+        let cap = self.fresh_temp();
+        self.emit("const", Some(&cap),
+            vec![Operand::Int(BASIC_GOSUB_STACK_DEPTH)], "i64");
+        self.emit("alloc_array", Some(BASIC_GOSUB_STACK),
+            vec![Operand::Var(cap)], "array<i64>");
+        let zero = self.fresh_temp();
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+        self.emit("mov", Some(BASIC_GOSUB_SP), vec![Operand::Var(zero)], "i64");
+    }
+
+    /// `GOSUB n` — push this call site's id, jump to `line_n`, and drop a
+    /// `gosub_ret_<id>` label so the matching `RETURN` can resume here.
+    ///
+    /// ```text
+    ///   array_set __basic_gosub_stack, __basic_gosub_sp, <id>
+    ///   __basic_gosub_sp := __basic_gosub_sp + 1
+    ///   jmp line_n
+    ///   label gosub_ret_<id>
+    /// ```
+    fn emit_gosub(&mut self, stmt: &GrammarASTNode) -> Result<(), CompileError> {
+        let target = first_number_token(stmt)
+            .ok_or_else(|| CompileError::Malformed("GOSUB missing target".into()))?;
+        let id = self.gosub_next_id;
+        self.gosub_next_id += 1;
+
+        // push the id: stack[sp] = id
+        let id_reg = self.fresh_temp();
+        self.emit("const", Some(&id_reg), vec![Operand::Int(id as i64)], "i64");
+        self.emit("array_set", None,
+            vec![Operand::Var(BASIC_GOSUB_STACK.into()),
+                 Operand::Var(BASIC_GOSUB_SP.into()), Operand::Var(id_reg)],
+            "i64");
+        // sp := sp + 1
+        let one = self.fresh_temp();
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        let new_sp = self.fresh_temp();
+        self.emit("add", Some(&new_sp),
+            vec![Operand::Var(BASIC_GOSUB_SP.into()), Operand::Var(one)], "i64");
+        self.emit("mov", Some(BASIC_GOSUB_SP), vec![Operand::Var(new_sp)], "i64");
+        // jump into the subroutine, then land the resume label
+        self.emit("jmp", None,
+            vec![Operand::Var(format!("line_{target}"))], "void");
+        self.emit("label", None,
+            vec![Operand::Var(format!("gosub_ret_{id}"))], "void");
+        Ok(())
+    }
+
+    /// `RETURN` — pop the most-recent return id and computed-`goto` to its
+    /// `gosub_ret_<id>` label.  The dispatch is the AL5 switch chain over every
+    /// `GOSUB` site `0..gosub_count` (counted by the pre-pass).
+    ///
+    /// ```text
+    ///   __basic_gosub_sp := __basic_gosub_sp - 1
+    ///   r := array_get __basic_gosub_stack, __basic_gosub_sp
+    ///   if r == 0 : jmp gosub_ret_0
+    ///   …
+    ///   if r == K : jmp gosub_ret_K
+    /// ```
+    fn emit_return(&mut self) -> Result<(), CompileError> {
+        if self.gosub_count == 0 {
+            return Err(CompileError::Unsupported(
+                "RETURN with no GOSUB anywhere in the program".into()));
+        }
+        // sp := sp - 1
+        let one = self.fresh_temp();
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        let new_sp = self.fresh_temp();
+        self.emit("sub", Some(&new_sp),
+            vec![Operand::Var(BASIC_GOSUB_SP.into()), Operand::Var(one)], "i64");
+        self.emit("mov", Some(BASIC_GOSUB_SP), vec![Operand::Var(new_sp)], "i64");
+        // r := stack[sp]   (the popped return id)
+        let r = self.fresh_temp();
+        self.emit("array_get", Some(&r),
+            vec![Operand::Var(BASIC_GOSUB_STACK.into()),
+                 Operand::Var(BASIC_GOSUB_SP.into())], "i64");
+        // computed goto: for each site id, `if r == id jmp gosub_ret_id`.
+        for id in 0..self.gosub_count {
+            let k = self.fresh_temp();
+            self.emit("const", Some(&k), vec![Operand::Int(id as i64)], "i64");
+            let matched = self.fresh_temp();
+            self.emit("cmp_eq", Some(&matched),
+                vec![Operand::Var(r.clone()), Operand::Var(k)], "i64");
+            self.emit("jmp_if_true", None,
+                vec![Operand::Var(matched),
+                     Operand::Var(format!("gosub_ret_{id}"))], "void");
+        }
         Ok(())
     }
 
@@ -1248,6 +1393,16 @@ const MAX_DIM_BOUND: i64 = 16_777_216; // 2^24 elements — generous for BASIC
 /// The IIR register holding the `DATA` pool array handle (BA6).  Underscore-
 /// and lowercase-bearing, so it can never collide with a BASIC variable (which
 /// is an uppercase letter + optional digit, e.g. `A`, `X7`).
+/// The `GOSUB` return-address stack (BA1 / enabler E7): an `array<i64>` holding
+/// the id of each pending `GOSUB`'s return site, LIFO.
+const BASIC_GOSUB_STACK: &str = "__basic_gosub_stack";
+/// The stack pointer into [`BASIC_GOSUB_STACK`] — index of the next free slot.
+const BASIC_GOSUB_SP: &str = "__basic_gosub_sp";
+/// Fixed capacity of the `GOSUB` stack.  Dartmouth BASIC programs nest only a
+/// few levels deep; pushing past this traps via the bounds-checked `array_set`
+/// (the faithful "GOSUB nesting too deep" runtime error).
+const BASIC_GOSUB_STACK_DEPTH: i64 = 64;
+
 const BASIC_DATA_ARRAY: &str = "__basic_data";
 /// The IIR register holding the `READ`/`RESTORE` pointer into the pool (BA6).
 const BASIC_DATA_PTR: &str = "__basic_data_ptr";
@@ -1738,14 +1893,67 @@ mod tests {
         }
     }
 
-    /// GOSUB is deferred to V2 — emits `UnsupportedStatement`.
+    // ── GOSUB / RETURN — unstructured subroutines (BA1, enabler E7) ──────
+
+    /// `GOSUB 100` materialises the return stack, pushes the call-site id,
+    /// jumps to `line_100`, and drops a `gosub_ret_0` resume label.
     #[test]
-    fn rejects_gosub_as_unsupported_statement() {
-        let err = compile("10 GOSUB 100\n100 END\n").unwrap_err();
-        match err {
-            CompileError::UnsupportedStatement(name) => assert_eq!(name, "GOSUB"),
-            other => panic!("expected UnsupportedStatement(GOSUB), got {other:?}"),
-        }
+    fn compiles_gosub_pushes_and_jumps() {
+        let m = compile("10 GOSUB 100\n20 END\n100 RETURN\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let ops: Vec<&str> = body.iter().map(|i| i.op.as_str()).collect();
+        // Stack materialised + a push (array_set) + the pointer bump (add).
+        assert!(ops.contains(&"alloc_array"), "GOSUB needs a return stack: {ops:?}");
+        assert!(ops.contains(&"array_set"), "GOSUB must push a return id");
+        // Jump into the subroutine and a resume label after it.
+        let labels: Vec<&str> = body.iter().filter(|i| i.op == "label")
+            .filter_map(|i| match i.srcs.first() {
+                Some(Operand::Var(n)) => Some(n.as_str()), _ => None }).collect();
+        assert!(labels.contains(&"gosub_ret_0"),
+            "missing gosub_ret_0 resume label in {labels:?}");
+        let jmps: Vec<&str> = body.iter().filter(|i| i.op == "jmp")
+            .filter_map(|i| match i.srcs.first() {
+                Some(Operand::Var(n)) => Some(n.as_str()), _ => None }).collect();
+        assert!(jmps.contains(&"line_100"), "GOSUB must jmp to line_100: {jmps:?}");
+    }
+
+    /// `RETURN` pops the id and computed-`goto`s over every GOSUB site
+    /// (`cmp_eq` + `jmp_if_true gosub_ret_<id>`).
+    #[test]
+    fn compiles_return_dispatches_over_sites() {
+        // Two GOSUB sites ⇒ the RETURN chain has two `cmp_eq`/`jmp_if_true` arms.
+        let m = compile(
+            "10 GOSUB 100\n20 GOSUB 100\n30 END\n100 RETURN\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        // RETURN dispatch: a jmp_if_true to each gosub_ret_<id>.
+        let targets: Vec<String> = body.iter()
+            .filter(|i| i.op == "jmp_if_true")
+            .filter_map(|i| match i.srcs.get(1) {
+                Some(Operand::Var(n)) => Some(n.clone()), _ => None }).collect();
+        assert!(targets.iter().any(|t| t == "gosub_ret_0"));
+        assert!(targets.iter().any(|t| t == "gosub_ret_1"),
+            "RETURN must dispatch to both sites; got {targets:?}");
+        // The pop is an array_get off the stack.
+        assert!(body.iter().any(|i| i.op == "array_get"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == BASIC_GOSUB_STACK)),
+            "RETURN must array_get the popped id");
+    }
+
+    /// A program with no `GOSUB` carries no return stack (lazy materialisation),
+    /// and a bare `RETURN` is a clean error rather than a miscompile.
+    #[test]
+    fn gosub_stack_is_lazy_and_bare_return_errors() {
+        let m = compile("10 LET A = 1\n20 END\n").expect("ok");
+        let ops: Vec<&str> = m.functions[0].instructions.iter()
+            .map(|i| i.op.as_str()).collect();
+        // No GOSUB ⇒ no gosub stack array allocated for it. (DATA-less program
+        // has no alloc_array at all.)
+        assert!(!ops.contains(&"alloc_array"),
+            "no GOSUB/DATA ⇒ no array allocation: {ops:?}");
+
+        let err = compile("10 RETURN\n20 END\n").unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)),
+            "bare RETURN (no GOSUB) must be a clean error, got {err:?}");
     }
 
     // ── DEF FN — user-defined single-line functions (BA5) ────────────

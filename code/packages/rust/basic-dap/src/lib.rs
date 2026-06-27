@@ -321,8 +321,10 @@ mod tests {
 
     #[test]
     fn compile_propagates_compile_errors() {
-        // GOSUB is rejected by V1 — should surface as a non-empty Err.
-        let src = "10 GOSUB 100\n100 END\n";
+        // A string literal in `PRINT` is still unsupported (waits for LANG77 /
+        // E4 strings) — it should surface as a non-empty Err. (GOSUB used to be
+        // the rejection here, but BA1 made GOSUB/RETURN compile.)
+        let src = "10 PRINT \"HELLO\"\n20 END\n";
         let (path, _td) = write_temp_basic(src);
         let workspace = path.parent().unwrap();
         let err = BasicDebugAdapter.compile(&path, workspace).unwrap_err();
