@@ -140,6 +140,125 @@ impl Workbook {
         self.sheets.get(sheet.0 as usize).map(|s| s.name.as_str())
     }
 
+    /// All sheet names in tab order (`SheetId(i)` is the i-th name). Drives a
+    /// host's sheet tab bar.
+    pub fn sheet_names(&self) -> Vec<&str> {
+        self.sheets.iter().map(|s| s.name.as_str()).collect()
+    }
+
+    /// Rebuild the `name → SheetId` index from the current sheet order. Called
+    /// after any operation that changes names or reorders/removes sheets (so the
+    /// dense `SheetId` indices stay in sync with the `Vec`).
+    fn rebuild_sheet_index(&mut self) {
+        self.sheet_by_name.clear();
+        for (i, s) in self.sheets.iter().enumerate() {
+            self.sheet_by_name.insert(s.name.clone(), SheetId(i as u32));
+        }
+    }
+
+    /// Rename a sheet. The sheet's `SheetId` is unchanged (so the dependency graph
+    /// and computed values are untouched — a rename is purely cosmetic), but every
+    /// formula that *names* the old sheet has its qualifier rewritten to the new
+    /// name in its stored source (`=Old!A1` → `=New!A1`). Rejects an empty name or
+    /// one already used by a different sheet; renaming to the current name is a
+    /// no-op. Bumps the revision so a host re-reads the affected sources.
+    pub fn rename_sheet(
+        &mut self,
+        sheet: SheetId,
+        new_name: impl Into<String>,
+    ) -> Result<(), String> {
+        let new_name = new_name.into();
+        let idx = sheet.0 as usize;
+        if idx >= self.sheets.len() {
+            return Err("unknown sheet".to_string());
+        }
+        if new_name.is_empty() {
+            return Err("sheet name must not be empty".to_string());
+        }
+        let old_name = self.sheets[idx].name.clone();
+        if old_name == new_name {
+            return Ok(());
+        }
+        if let Some(existing) = self.sheet_by_name.get(&new_name) {
+            if *existing != sheet {
+                return Err(format!("a sheet named {new_name:?} already exists"));
+            }
+        }
+        self.sheets[idx].name = new_name.clone();
+        self.rebuild_sheet_index();
+        // Rewrite the qualifier in every formula that named the old sheet (any
+        // sheet may reference it). Values are unchanged, so no recalc is needed.
+        for s in &mut self.sheets {
+            for cell in s.cells.values_mut() {
+                if let CellContent::Formula { ast, text, .. } = &mut cell.content {
+                    let renamed = ast.rename_qualifier(&old_name, &new_name);
+                    if renamed != *ast {
+                        *ast = renamed;
+                        *text = ast.to_formula_string();
+                    }
+                }
+            }
+        }
+        self.revision = self.revision.wrapping_add(1);
+        Ok(())
+    }
+
+    /// Delete a sheet. Refuses to remove the last sheet (a workbook always has at
+    /// least one). Removing the sheet shifts every later sheet's dense `SheetId`
+    /// down by one, so the name index and dependency graph are rebuilt afterwards.
+    /// Every reference that pointed *into* the deleted sheet is rewritten to the
+    /// `#REF!` error literal (permanent — re-adding a same-named sheet doesn't
+    /// resurrect it), then the workbook recomputes.
+    pub fn delete_sheet(&mut self, sheet: SheetId) -> Result<(), String> {
+        let idx = sheet.0 as usize;
+        if idx >= self.sheets.len() {
+            return Err("unknown sheet".to_string());
+        }
+        if self.sheets.len() <= 1 {
+            return Err("cannot delete the last sheet".to_string());
+        }
+        let removed_name = self.sheets[idx].name.clone();
+        self.sheets.remove(idx);
+        self.rebuild_sheet_index();
+        // Inbound refs to the now-gone sheet collapse to #REF!.
+        for s in &mut self.sheets {
+            for cell in s.cells.values_mut() {
+                if let CellContent::Formula { ast, text, cached } = &mut cell.content {
+                    let rewritten = ast.sheet_refs_to_error(&removed_name);
+                    if rewritten != *ast {
+                        *ast = rewritten;
+                        *text = ast.to_formula_string();
+                        *cached = None;
+                    }
+                }
+            }
+        }
+        self.rebuild_dependency_graph();
+        self.recalc_all(); // bumps revision + epoch
+        Ok(())
+    }
+
+    /// Reorder a sheet to a new 0-based tab position (clamped into range). The
+    /// move changes dense `SheetId`s, so the name index and dependency graph are
+    /// rebuilt; names — and therefore every formula's qualifiers and computed
+    /// values — are unaffected. A move to the current position is a no-op.
+    pub fn move_sheet(&mut self, sheet: SheetId, to_index: usize) -> Result<(), String> {
+        let idx = sheet.0 as usize;
+        if idx >= self.sheets.len() {
+            return Err("unknown sheet".to_string());
+        }
+        let to = to_index.min(self.sheets.len() - 1);
+        if to == idx {
+            return Ok(());
+        }
+        let s = self.sheets.remove(idx);
+        self.sheets.insert(to, s);
+        self.rebuild_sheet_index();
+        self.rebuild_dependency_graph();
+        self.recalc_all(); // re-resolve names → new ids; values unchanged
+        Ok(())
+    }
+
     /// Get the recalc epoch — bumped on every successful
     /// `recalc_all`.
     pub fn epoch(&self) -> u64 {
@@ -1421,6 +1540,12 @@ impl Workbook {
             }
         }
 
+        // Rebuild the dependency graph now that ALL sheets exist: a cross-sheet
+        // formula loaded before its target sheet (sheets load in file order)
+        // couldn't resolve its qualifier at `set_formula` time, so its edge was
+        // skipped. A full rebuild re-resolves every name → SheetId, registering the
+        // cross-sheet edges so a later edit recomputes its dependents.
+        self.rebuild_dependency_graph();
         self.recalc_all();
         self.revision = self.revision.wrapping_add(1);
         Ok(())
@@ -1784,6 +1909,104 @@ mod tests {
         wb.insert_rows(s1, 1, 1); // moves the formula down a row but leaves its ref
         assert_eq!(wb.cell_source_text(s1, cell(11, 2)), "Summary!A1");
         assert_eq!(wb.cell_value(s1, cell(11, 2)), CellValue::Number(5.0));
+    }
+
+    #[test]
+    fn rename_sheet_rewrites_qualifiers_and_keeps_values() {
+        let mut wb = Workbook::new();
+        let s1 = wb.add_sheet("Sheet1");
+        let summary = wb.add_sheet("Summary");
+        wb.set_value(summary, cell(1, 1), CellValue::Number(7.0));
+        wb.set_formula(s1, cell(1, 1), "=Summary!A1*2").unwrap(); // 14
+        assert_eq!(wb.cell_value(s1, cell(1, 1)), CellValue::Number(14.0));
+
+        // Rename Summary → Totals: the qualifier in Sheet1's formula follows, the
+        // value is unchanged, and the new name resolves while the old does not.
+        wb.rename_sheet(summary, "Totals").unwrap();
+        assert_eq!(wb.sheet_names(), vec!["Sheet1", "Totals"]);
+        // Rename re-emits the source from the AST (no leading `=`, parenthesised).
+        assert_eq!(wb.cell_source_text(s1, cell(1, 1)), "(Totals!A1*2)");
+        assert_eq!(wb.cell_value(s1, cell(1, 1)), CellValue::Number(14.0));
+        // Editing the renamed sheet still recomputes the dependent (deps intact).
+        wb.set_value(summary, cell(1, 1), CellValue::Number(10.0));
+        assert_eq!(wb.cell_value(s1, cell(1, 1)), CellValue::Number(20.0));
+
+        // Guards: empty name and a duplicate of another sheet are rejected.
+        assert!(wb.rename_sheet(summary, "").is_err());
+        assert!(wb.rename_sheet(summary, "Sheet1").is_err());
+    }
+
+    #[test]
+    fn delete_sheet_reindexes_and_makes_inbound_refs_ref_error() {
+        let mut wb = Workbook::new();
+        let s1 = wb.add_sheet("Sheet1");
+        let mid = wb.add_sheet("Mid");
+        let last = wb.add_sheet("Last");
+        wb.set_value(last, cell(1, 1), CellValue::Number(5.0));
+        wb.set_value(mid, cell(1, 1), CellValue::Number(9.0));
+        wb.set_formula(s1, cell(1, 1), "=Mid!A1").unwrap(); // → 9
+        wb.set_formula(s1, cell(2, 1), "=Last!A1").unwrap(); // → 5
+        assert_eq!(wb.cell_value(s1, cell(1, 1)), CellValue::Number(9.0));
+
+        // Delete the middle sheet: Last's SheetId shifts from 2 → 1, the name index
+        // follows, the inbound `=Mid!A1` ref becomes #REF!, and `=Last!A1` still
+        // resolves (by NAME) to the reindexed sheet.
+        wb.delete_sheet(mid).unwrap();
+        assert_eq!(wb.sheet_names(), vec!["Sheet1", "Last"]);
+        assert_eq!(wb.sheet_id("Last"), Some(SheetId(1)));
+        assert_eq!(
+            wb.cell_value(s1, cell(1, 1)),
+            CellValue::Error(SpreadsheetError::Ref)
+        );
+        assert_eq!(wb.cell_value(s1, cell(2, 1)), CellValue::Number(5.0));
+        // Re-adding a sheet named Mid does NOT resurrect the dead ref (now #REF!).
+        let _ = wb.add_sheet("Mid");
+        assert_eq!(
+            wb.cell_value(s1, cell(1, 1)),
+            CellValue::Error(SpreadsheetError::Ref)
+        );
+
+        // Can't delete the last remaining sheet.
+        let mut single = Workbook::new();
+        let only = single.add_sheet("Only");
+        assert!(single.delete_sheet(only).is_err());
+    }
+
+    #[test]
+    fn move_sheet_reorders_tabs_and_preserves_cross_sheet_values() {
+        let mut wb = Workbook::new();
+        let a = wb.add_sheet("A");
+        let b = wb.add_sheet("B");
+        let _c = wb.add_sheet("C");
+        wb.set_value(b, cell(1, 1), CellValue::Number(8.0));
+        wb.set_formula(a, cell(1, 1), "=B!A1+1").unwrap(); // 9
+        // Move A to the end: tab order becomes B, C, A; the cross-sheet value holds
+        // (refs resolve by name, not by the shifted id).
+        wb.move_sheet(a, 2).unwrap();
+        assert_eq!(wb.sheet_names(), vec!["B", "C", "A"]);
+        let a_now = wb.sheet_id("A").unwrap();
+        assert_eq!(wb.cell_value(a_now, cell(1, 1)), CellValue::Number(9.0));
+        wb.set_value(wb.sheet_id("B").unwrap(), cell(1, 1), CellValue::Number(20.0));
+        assert_eq!(wb.cell_value(a_now, cell(1, 1)), CellValue::Number(21.0));
+    }
+
+    #[test]
+    fn serialize_round_trips_multiple_sheets_and_cross_sheet_refs() {
+        let mut wb = Workbook::new();
+        let s1 = wb.add_sheet("Sheet1");
+        let summary = wb.add_sheet("Summary");
+        wb.set_value(summary, cell(1, 1), CellValue::Number(50.0));
+        wb.set_formula(s1, cell(1, 1), "=Summary!A1+1").unwrap(); // 51
+        let doc = wb.serialize();
+
+        let mut loaded = Workbook::new();
+        loaded.deserialize(&doc).unwrap();
+        assert_eq!(loaded.sheet_names(), vec!["Sheet1", "Summary"]);
+        let ls1 = loaded.sheet_id("Sheet1").unwrap();
+        // The cross-sheet formula reloaded live: it recomputes against Summary.
+        assert_eq!(loaded.cell_value(ls1, cell(1, 1)), CellValue::Number(51.0));
+        loaded.set_value(loaded.sheet_id("Summary").unwrap(), cell(1, 1), CellValue::Number(99.0));
+        assert_eq!(loaded.cell_value(ls1, cell(1, 1)), CellValue::Number(100.0));
     }
 
     #[test]

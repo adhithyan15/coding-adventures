@@ -1550,6 +1550,8 @@ describe("transient", () => {
         OutputDirectiveList: ".save",
         OutputDirectiveKinds: "1",
         OutputDirectiveKindList: "save",
+        OutputDirectiveAnalysisKinds: "1",
+        OutputDirectiveAnalysisKindList: "global",
         Tables: "3",
         TableList: "result;output-plan;run-artifact",
       },
@@ -1567,19 +1569,21 @@ describe("transient", () => {
       outputDirectives: [".save"],
       outputDirectiveKindCount: 1,
       outputDirectiveKinds: ["save"],
+      outputDirectiveAnalysisKindCount: 1,
+      outputDirectiveAnalysisKinds: ["global"],
       tableCount: 3,
       tables: ["result", "output-plan", "run-artifact"],
     });
     expect(opExecution.outputPlanArtifactTable).toBe(
-      "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tTables\tTableList\n" +
-        "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t3\tresult;output-plan;run-artifact\n",
+      "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tTables\tTableList\n" +
+        "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t1\tglobal\t3\tresult;output-plan;run-artifact\n",
     );
     expect(opExecution.outputPlanArtifactTable).toBe(
       formatDeckOutputPlanArtifactTable(opExecution.outputPlanArtifacts),
     );
     expect(opExecution.outputPlanArtifactCsv).toBe(
-      "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,Tables,TableList\n" +
-        "op,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,3,result;output-plan;run-artifact\n",
+      "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,Tables,TableList\n" +
+        "op,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,1,global,3,result;output-plan;run-artifact\n",
     );
     expect(opExecution.outputPlanArtifactCsv).toBe(
       formatDeckOutputPlanArtifactCsv(opExecution.outputPlanArtifacts),
@@ -1787,6 +1791,13 @@ describe("transient", () => {
     expect(dcExecution.outputPlanArtifactRecords[0]?.OutputDirectiveKindList).toBe(
       "save;probe;print",
     );
+    expect(dcExecution.outputPlanArtifacts[0]?.outputDirectiveAnalysisKinds).toEqual([
+      "global",
+      "dc",
+    ]);
+    expect(dcExecution.outputPlanArtifactRecords[0]?.OutputDirectiveAnalysisKindList).toBe(
+      "global;dc",
+    );
     expect(dcExecution.analysisDirectives).toEqual([".dc"]);
     expect(dcExecution.tableCount).toBe(4);
     expect(dcExecution.tables).toEqual(["result", "measurement", "output-plan", "run-artifact"]);
@@ -1857,6 +1868,13 @@ describe("transient", () => {
     ]);
     expect(acExecution.outputPlanArtifactRecords[0]?.OutputDirectiveKindList).toBe(
       "save;plot",
+    );
+    expect(acExecution.outputPlanArtifacts[0]?.outputDirectiveAnalysisKinds).toEqual([
+      "global",
+      "ac",
+    ]);
+    expect(acExecution.outputPlanArtifactRecords[0]?.OutputDirectiveAnalysisKindList).toBe(
+      "global;ac",
     );
     expect(acExecution.analysisDirectives).toEqual([".ac"]);
     expect(acExecution.tableCount).toBe(4);
