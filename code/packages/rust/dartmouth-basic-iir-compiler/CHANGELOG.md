@@ -1,5 +1,20 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.16.0 — 2026-06-27 — BA4 literal string reassignment
+
+The BA4 scalar string slice now proves that the latest literal assignment wins:
+
+```basic
+10 LET A$ = "NO"
+20 LET A$ = "OK"
+30 PRINT A$
+```
+
+The compiler rematerialises each literal into the same safe backend-facing
+`__basic_str_A` slot with E4 `str_const`, and `PRINT A$` consumes that slot with
+`print_str`. This closes literal reassignment without claiming string-to-string
+copies, string arrays, string `INPUT`, or dynamic byte-string storage.
+
 ## 0.15.0 — 2026-06-27 — BA4 scalar string variables
 
 The first Dartmouth BASIC string-variable slice now lowers through E4:

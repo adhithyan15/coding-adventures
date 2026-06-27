@@ -1,8 +1,9 @@
 # LANG-FULL E4 — Strings (design spec)
 
-**Status:** IR + reference VM slice implemented; BASIC literal output, Twig
-literal metadata/index proofs, and immutable top-level Twig string values run on
-all seven backends; richer frontend and backend string work remains.
+**Status:** IR + reference VM slice implemented; BASIC literal output/scalar
+string variables/equality/literal reassignment, Twig literal metadata/index
+proofs, and immutable top-level Twig string values run on all seven backends;
+richer frontend and backend string work remains.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
 **Unlocks:** Dartmouth BASIC strings + string `PRINT` (BA4), ALGOL 60 strings +
 `print`/`output` I/O (AL4), Twig strings on the code-gen backends (TW4), and any
@@ -143,9 +144,11 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `STRING` `print_item`); the frontend now lowers a `STRING` print-item to
   `str_const` + `print_str` on all seven backends. `$` string variables now
   tokenize/parse as `NAME`s, and `LET A$ = "HI"; PRINT A$` lowers to a safe E4
-  string slot plus `print_str`. String compare in `IF A$ = "Y"` lowers to
-  `str_eq` and now drives line-control branching on all seven backends; string
-  arrays, string `INPUT`, and richer expressions remain follow-ups.
+  string slot plus `print_str`; `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
+  proves literal reassignment through that same slot. String compare in
+  `IF A$ = "Y"` lowers to `str_eq` and now drives line-control branching on all
+  seven backends; string arrays, string `INPUT`, non-literal string copies, and
+  richer expressions remain follow-ups.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
   produces string literals. The current foothold recognises undeclared
   statement-position `print`/`output` calls and lowers string literal actuals to
@@ -267,10 +270,10 @@ merge before the next:
 6. ✅ **E4-ops-proofs** — named-value `str_concat`+`str_len`, `str_eq` driving a
    branch, named/local `str_index`, and the `str_index` out-of-bounds **trap**
    proof now run across every backend.
-7. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`; string
-   *variables* and reassignment in each frontend; ALGOL `string` arrays; Unicode
-   codepoint/grapheme semantics; the dynamic-`any` Twig string path (needs broader
-   E6); string interpolation.
+7. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`;
+   non-literal string copies, captured/reassigned strings, and string arrays in
+   each frontend; Unicode codepoint/grapheme semantics; the dynamic-`any` Twig
+   string path (needs broader E6); string interpolation.
 
 Ordering rationale mirrors E5: get the IIR + reference interpreter right (1), prove
 it end-to-end through the simplest frontend (2), then the *managed* backends (3)

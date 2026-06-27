@@ -1038,6 +1038,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 literal string reassignment. Re-emitting
+    // `str_const` into the same backend-facing slot makes the most recent
+    // literal assignment observable through `PRINT A$` without widening into
+    // string-to-string copies or dynamic byte-string storage.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"NO\"\n20 LET A$ = \"OK\"\n30 PRINT A$\n40 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — BA4 string equality drives control flow. `IF A$ = "Y"`
     // lowers to shared E4 `str_eq`, then the existing branch machinery chooses
     // the target line. The false path prints BAD and stops; the true path prints

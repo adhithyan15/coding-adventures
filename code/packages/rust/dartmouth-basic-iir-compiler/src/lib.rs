@@ -2476,6 +2476,29 @@ mod tests {
     }
 
     #[test]
+    fn compiles_string_variable_literal_reassignment() {
+        let m = compile("10 LET A$ = \"NO\"\n20 LET A$ = \"OK\"\n30 PRINT A$\n40 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        let assigned: Vec<&str> = body.iter()
+            .filter(|i| i.op == "str_const"
+                && i.dest.as_deref() == Some("__basic_str_A"))
+            .filter_map(|i| match i.srcs.first() {
+                Some(Operand::Str(s)) => Some(s.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(
+            assigned,
+            vec!["NO", "OK"],
+            "each literal assignment should rematerialize the same safe string slot"
+        );
+        assert!(body.iter().any(|i| i.op == "print_str"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "__basic_str_A")),
+            "PRINT A$ should consume the reassigned string slot");
+    }
+
+    #[test]
     fn compiles_string_variable_if_equality() {
         let src = "10 LET A$ = \"Y\"\n\
                    20 IF A$ = \"Y\" THEN 40\n\

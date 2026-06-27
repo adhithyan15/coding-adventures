@@ -43,10 +43,12 @@ output (`PRINT 6.0 * 7.0`) and ordinary fixed-decimal fractional output (`3.14`,
 `.25`, `-2.5`), six-significant-digit rounding, and `E` notation run through the
 shared E3/E8 backends. Integer `i64` remains explicit at structural boundaries:
 line numbers, `DIM` bounds, array subscripts, DATA read pointers, and GOSUB
-return stacks. String literal `PRINT` and literal-backed string variables
-(`LET A$ = "HI"` / `PRINT A$`) now lower through the shared E4 path on all
-seven matrix backends. Richer string expressions, string arrays, and string
-`INPUT` remain follow-ups. See
+return stacks. String literal `PRINT`, literal-backed string variables
+(`LET A$ = "HI"` / `PRINT A$`), literal reassignment
+(`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`), and `IF A$ = "Y"` equality now
+lower through the shared E4 path on all seven matrix backends. Richer string
+expressions, string arrays, string `INPUT`, and non-literal string copies remain
+follow-ups. See
 [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`
@@ -74,10 +76,10 @@ synthetic recursive helper that renders digits one at a time via the universal
 `putchar` builtin — so `;` joins items tightly (`PRINT 4; 2` ⇒ `42`), `,`
 inserts a space (`PRINT 4, 2` ⇒ `4 2`), and a trailing separator suppresses the
 line-ending newline.  Because the helpers reuse only ops every backend already
-runs, BA2 needed **zero** backend changes.  String literal `PRINT` now uses E4
-on VM/JIT; string variables and code-gen backend string lowering remain.  (`,` is
-a single space rather than a true 14-column print zone — a documented, deferred
-approximation.)
+runs, BA2 needed **zero** backend changes.  String literal/scalar string
+printing, equality, and literal reassignment now use E4 on all seven backends.
+(`,` is a single space rather than a true 14-column print zone — a documented,
+deferred approximation.)
 
 **BA7-1/2/3 real values and historical real `PRINT`** makes BASIC values `f64`
 even when the source spells them as integers. `PRINT` chooses

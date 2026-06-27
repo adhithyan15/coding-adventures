@@ -4,10 +4,11 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.119.0):**
+> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.121.0):**
 > `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 > It also proves `10 LET A$ = "HI"; 20 PRINT A$` produces stdout `HI` on
-> the same seven backends.
+> the same seven backends, and `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
+> produces `OK`, proving literal reassignment through the same E4 slot.
 > BASIC string equality now drives control flow too:
 > `IF A$ = "Y" THEN ...` routes to `PRINT "OK"` through E4 `str_eq` on every
 > backend.
@@ -37,8 +38,8 @@ LANG VM chain.
 > `PrintStream.print(String)`; CLR maps them to `ldstr` and `Console.Write(string)`.
 > Literal length/index/equality/append metadata is folded/read from metadata on
 > native/LLVM/WASM and uses host string APIs on JVM/CLR; the OOB index row proves
-> each backend fails closed. Dynamic byte-string ops and reassignable/captured
-> string variables stay follow-up E4/BA4 slices.
+> each backend fails closed. Dynamic byte-string ops, non-literal string copies,
+> and captured string variables stay follow-up E4/BA4 slices.
 
 > **LANG-FULL O2 — Oct bitwise `~` + u8 wrap on all 7 backends (v0.92.0):**
 > `tests/lang_matrix.rs` adds `out(1, ~0)` → `255` and `out(1, 200 + 100)` → `44` (wrap).
