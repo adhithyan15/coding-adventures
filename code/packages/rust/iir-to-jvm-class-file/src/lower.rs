@@ -1919,11 +1919,11 @@ fn lower_function(
             // ── LANG-FULL E4: string literal output foothold ────────────────
             //
             // Dartmouth BASIC `PRINT "..."` lowers to `str_const` +
-            // `print_str`, literal Twig `string-length` lowers to `str_len`,
-            // and literal `string=?` lowers to `str_eq`. Use Java's native
-            // `String` only for this literal foothold; richer byte-oriented
-            // string algebra remains rejected by the validator until the JVM
-            // representation owns those semantics explicitly.
+            // `print_str`; literal Twig `string-length`, `string=?`, and
+            // `string-append` lower to `str_len`, `str_eq`, and `str_concat`.
+            // Use Java's native `String` only for this literal foothold; richer
+            // byte-oriented string algebra remains rejected by the validator
+            // until the JVM representation owns those semantics explicitly.
             "str_const" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
@@ -1948,6 +1948,50 @@ fn lower_function(
                 }
                 let idx = cp.add_string(literal);
                 emit_ldc_index(&mut code, idx);
+                emit_astore(&mut code, dest_slot);
+            }
+
+            "str_concat" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_concat instruction has no dest".to_string(),
+                })?;
+                let left = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_concat expects left string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let right = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_concat expects right string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (left_slot, left_type) = lookup_var(left)?;
+                let (right_slot, right_type) = lookup_var(right)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if left_type != JvmType::Ref || right_type != JvmType::Ref || dest_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                emit_aload(&mut code, left_slot);
+                emit_aload(&mut code, right_slot);
+                let concat_ref = cp.add_methodref(
+                    "java/lang/String",
+                    "concat",
+                    "(Ljava/lang/String;)Ljava/lang/String;",
+                );
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&concat_ref.to_be_bytes());
                 emit_astore(&mut code, dest_slot);
             }
 

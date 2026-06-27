@@ -2,12 +2,14 @@
 
 ## 0.16.0 — 2026-06-27 — native literal string metadata lowering (LANG-FULL E4)
 
-`prepare_module_for_aot` now folds `str_len` and `str_eq` over direct string
-literals to integer constants before native machine-code lowering. This lets
-Twig `(string-length "HELLO")` and `(string=? "HELLO" "HELLO")` run through the
-native AOT column without adding rodata string objects or a dynamic string
-runtime. The existing `str_const` + `print_str` rewrite still handles literal
-output, and richer byte-string ops remain deferred.
+`prepare_module_for_aot` now folds `str_len`, `str_eq`, and literal
+`str_concat` metadata over direct string literals before native machine-code
+lowering. This lets Twig `(string-length "HELLO")`,
+`(string=? "HELLO" "HELLO")`, and
+`(string-length (string-append "AB" "CDE"))` run through the native AOT column
+without adding rodata string objects or a dynamic string runtime. The existing
+`str_const` + `print_str` rewrite still handles literal output, and non-literal
+byte-string ops remain deferred.
 
 ## 0.15.0 — 2026-06-27 — native string literal PRINT lowering (LANG-FULL E4 / BA4)
 

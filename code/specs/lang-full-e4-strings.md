@@ -1,8 +1,8 @@
 # LANG-FULL E4 — Strings (design spec)
 
 **Status:** IR + reference VM slice implemented; BASIC literal output and Twig
-literal length/equality footholds run on all seven backends; richer frontend and
-backend string work remains.
+literal length/equality/append-length footholds run on all seven backends; richer
+frontend and backend string work remains.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
 **Unlocks:** Dartmouth BASIC strings + string `PRINT` (BA4), ALGOL 60 strings +
 `print`/`output` I/O (AL4), Twig strings on the code-gen backends (TW4), and any
@@ -106,12 +106,12 @@ explicit `cmp idx,len` + branch-to-trap.
 |---|---|---|---|---|---|---|---|---|
 | **vm-core** | (interp) | `Value::Str(Vec<u8>)` (new value variant) or a handle into `memory` | intern the literal bytes | `.len()` | byte equality | range-checked byte index | allocate a new buffer | write bytes to the host stdout sink |
 | **jit-core** | (interp) | same as vm-core (CIR mirrors it) | — | — | — | — | — | — |
-| **JVM** | GC | `java.lang.String` for the landed literal-output/length/equality slice; byte-string representation still under E4-managed | `ldc` string CP entry ✅ for ASCII literals | `String.length()` ✅ for ASCII literals | `String.equals(Object)` ✅ for ASCII literals | planned | planned | `PrintStream.print(String)` ✅ |
-| **CLR** | GC | `System.String` for the landed literal-output/length/equality slice; byte-string representation still under E4-managed | `ldstr "…"` ✅ for ASCII literals | `String.Length` ✅ for ASCII literals | `String.Equals(string,string)` ✅ for ASCII literals | planned | planned | `Console.Write(string)` ✅ |
-| **WASM** | linear-memory foothold now; WasmGC later | `i32` pointer into a data segment for the landed literal-output/length/equality slice; richer byte-string representation still under E4-managed | data segment ✅ for ASCII literals | literal side-table length ✅ | literal side-table byte equality ✅ | planned | planned | host import `env.__print_str(ptr,len)` ✅ |
-| **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | private `{len,bytes}` global ✅ for ASCII literals | literal side-table length ✅ | literal side-table byte equality ✅ | planned | planned | `@__print_str(i8* base+8, i64 len)` C-runtime ✅ |
-| **x86_64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | folded literal equality ✅ | planned | planned | `call __twig_print_string(ptr,len)` ✅ |
-| **aarch64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | folded literal equality ✅ | planned | planned | `bl __twig_print_string(ptr,len)` ✅ |
+| **JVM** | GC | `java.lang.String` for the landed literal-output/length/equality/concat slice; byte-string representation still under E4-managed | `ldc` string CP entry ✅ for ASCII literals | `String.length()` ✅ for ASCII literals | `String.equals(Object)` ✅ for ASCII literals | planned | `String.concat(String)` ✅ for ASCII literals | `PrintStream.print(String)` ✅ |
+| **CLR** | GC | `System.String` for the landed literal-output/length/equality/concat slice; byte-string representation still under E4-managed | `ldstr "…"` ✅ for ASCII literals | `String.Length` ✅ for ASCII literals | `String.Equals(string,string)` ✅ for ASCII literals | planned | `String.Concat(string,string)` ✅ for ASCII literals | `Console.Write(string)` ✅ |
+| **WASM** | linear-memory foothold now; WasmGC later | `i32` pointer into a data segment for the landed literal-output/length/equality/concat slice; richer byte-string representation still under E4-managed | data segment ✅ for ASCII literals | literal side-table length ✅ | literal side-table byte equality ✅ | planned | literal data entry ✅ | host import `env.__print_str(ptr,len)` ✅ |
+| **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | private `{len,bytes}` global ✅ for ASCII literals | literal side-table length ✅ | literal side-table byte equality ✅ | planned | literal metadata ✅ | `@__print_str(i8* base+8, i64 len)` C-runtime ✅ |
+| **x86_64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | folded literal equality ✅ | planned | folded literal concat ✅ | `call __twig_print_string(ptr,len)` ✅ |
+| **aarch64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | folded literal equality ✅ | planned | folded literal concat ✅ | `bl __twig_print_string(ptr,len)` ✅ |
 
 **Unmanaged header layout** (LLVM / x86_64 / aarch64): identical to E5's array
 header — word 0 is the byte count, bytes start at offset 8. String literals are
@@ -170,12 +170,12 @@ proof:
 ```
 
 ⇒ stdout `HELLO` on every backend the toolchain is present for. The landed Twig
-footholds also prove direct literal `str_len` and `str_eq` via exit codes
-`5`/`1`. Follow-up proofs exercise `str_concat` + `str_len` observably, e.g. a
-program that prints the length of `"AB" ++ "CDE"` ⇒ `5`, non-literal `str_eq`
-driving a branch (`IF A$ = "Y" THEN PRINT 1 ELSE PRINT 0`), and a **bounds-trap**
-proof (`str_index` out of range) confirming the check fires (aborts non-zero) on
-each backend.
+footholds also prove direct literal `str_len`, `str_eq`, and
+`str_concat`-feeding-`str_len` via exit codes `5`/`1`/`5`. Follow-up proofs
+exercise non-literal `str_concat` + `str_len` observably, non-literal `str_eq`
+driving a branch (`IF A$ = "Y" THEN PRINT 1 ELSE PRINT 0`), and a
+**bounds-trap** proof (`str_index` out of range) confirming the check fires
+(aborts non-zero) on each backend.
 
 `run_native` runs the host arch, so `NativeAot` exercises aarch64 locally and
 x86_64 on CI (as for E3/E5). The `x86-simulator` harness can additionally run the
@@ -205,12 +205,13 @@ merge before the next:
    `env.__print_str(ptr,len)`, JVM/CLR `ldc`/`ldstr` + `PrintStream.print`/
    `Console.Write(string)`).
 3. ✅ **E4-literal-metadata proofs** — Twig lowers literal
-   `(string-length "HELLO")` and `(string=? "HELLO" "HELLO")` to shared
-   `str_const` + `str_len`/`str_eq`; matrix `Prog`s return `5` and `1` on
+   `(string-length "HELLO")`, `(string=? "HELLO" "HELLO")`, and
+   `(string-length (string-append "AB" "CDE"))` to shared `str_const` +
+   `str_len`/`str_eq`/`str_concat`; matrix `Prog`s return `5`, `1`, and `5` on
    native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. This is deliberately still a
    direct-literal foothold: native folds to integer consts, LLVM/WASM use literal
-   side tables, and JVM/CLR use managed `String` metadata/equality for printable
-   ASCII.
+   side tables, and JVM/CLR use managed `String` metadata/equality/concat for
+   printable ASCII.
 4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
    diverge.)
@@ -218,7 +219,7 @@ merge before the next:
    (length-prefixed rodata literals + heap `str_concat` + explicit `str_index`
    guard). Native literal output is already proven through the heap-byte foothold;
    this item is now the richer ops/representation slice.
-6. **E4-ops-proofs** — matrix programs for `str_concat`+`str_len` (⇒ `5`),
+6. **E4-ops-proofs** — matrix programs for non-literal `str_concat`+`str_len`,
    non-literal `str_eq` driving a branch, plus the `str_index` out-of-bounds
    **trap** proof, across every backend.
 7. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`; string

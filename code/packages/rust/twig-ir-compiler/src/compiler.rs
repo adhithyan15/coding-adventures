@@ -1389,6 +1389,57 @@ impl Compiler {
                         ctx.var_types.insert(dest.clone(), "i64".to_string());
                         return Ok(dest);
                     }
+                    if let Expr::Apply(append) = &expr.args[0] {
+                        if let Expr::VarRef(append_fn) = append.fn_expr.as_ref() {
+                            if append_fn.name == "string-append" && append.args.len() == 2 {
+                                if let (
+                                    Expr::StrLit(StrLit { value: left, .. }),
+                                    Expr::StrLit(StrLit { value: right, .. }),
+                                ) = (&append.args[0], &append.args[1])
+                                {
+                                    let left_reg = ctx.fresh_var("s");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_const",
+                                        Some(left_reg.clone()),
+                                        vec![Operand::Str(left.clone())],
+                                        "str",
+                                    ), loc);
+                                    ctx.var_types.insert(left_reg.clone(), "str".to_string());
+
+                                    let right_reg = ctx.fresh_var("s");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_const",
+                                        Some(right_reg.clone()),
+                                        vec![Operand::Str(right.clone())],
+                                        "str",
+                                    ), loc);
+                                    ctx.var_types.insert(right_reg.clone(), "str".to_string());
+
+                                    let concat_reg = ctx.fresh_var("s");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_concat",
+                                        Some(concat_reg.clone()),
+                                        vec![
+                                            Operand::Var(left_reg),
+                                            Operand::Var(right_reg),
+                                        ],
+                                        "str",
+                                    ), loc);
+                                    ctx.var_types.insert(concat_reg.clone(), "str".to_string());
+
+                                    let dest = ctx.fresh_var("r");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_len",
+                                        Some(dest.clone()),
+                                        vec![Operand::Var(concat_reg)],
+                                        "i64",
+                                    ), loc);
+                                    ctx.var_types.insert(dest.clone(), "i64".to_string());
+                                    return Ok(dest);
+                                }
+                            }
+                        }
+                    }
                 }
                 if v.name == "string=?" && expr.args.len() == 2 {
                     if let (

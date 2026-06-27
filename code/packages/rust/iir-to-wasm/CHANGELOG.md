@@ -5,20 +5,24 @@ All notable changes to this crate are documented here.  The format follows
 
 ## [0.20.0] — 2026-06-27 (LANG-FULL E4 — literal string metadata on WASM)
 
-The WASM backend now accepts and lowers `str_len` and `str_eq` for direct string
-literals:
+The WASM backend now accepts and lowers `str_len`, `str_eq`, and literal
+`str_concat` for direct string literals:
 
 - `str_len s` over a prior `str_const s = "..."` materialises the stored byte
   length as an `i64.const`/`i32.const`, depending on the destination local type.
 - `str_eq a, b` over two prior literal `str_const` values materialises `1`/`0`
   from the stored bytes, again matching the destination local type.
+- `str_concat a, b` over two prior literal `str_const` values creates another
+  string-data entry whose bytes can feed the same `str_len`, `str_eq`, or
+  `print_str` metadata path.
 - The lowering reuses the same linear-memory data metadata introduced for
   `print_str`; no dynamic runtime string representation is exposed.
-- Richer string ops (`str_index`, `str_concat`) and non-literal string values
-  still fail closed.
+- Richer string ops (`str_index`) and non-literal string values still fail
+  closed.
 - Unit coverage now locks the validator acceptance path, and the lang matrix
   proves `(string-length "HELLO")` returns `5` and
-  `(string=? "HELLO" "HELLO")` returns `1` in the WASM column.
+  `(string=? "HELLO" "HELLO")` returns `1`, and
+  `(string-length (string-append "AB" "CDE"))` returns `5` in the WASM column.
 
 ## [0.19.0] — 2026-06-27 (LANG-FULL E4 / BA4 — BASIC string literal PRINT on WASM)
 

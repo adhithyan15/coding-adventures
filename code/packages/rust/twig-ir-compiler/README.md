@@ -22,10 +22,11 @@ Anonymous lambdas have their captured free variables prepended to the parameter 
 
 Top-level value defines lower one of two ways (TW2). A value define that is **not captured by any lambda** is read only from `main`, so its statically-typed (`i64`/`bool`) value is kept in a `main` register and reads return it directly — fully typed, accepted by every code-gen backend. A value define **captured by a closure** (read inside a lambda body, which compiles to a separate function) stays on the host global table via `call_builtin "global_set" name value` / `global_get`, as does a top-level forward reference.
 
-Literal `(string-length "...")` and `(string=? "..." "...")` lower to typed E4
-string metadata ops: `str_const` for each direct literal, then `str_len` or
-`str_eq` for the `i64` result. The dynamic `call_builtin` paths remain in place
-for non-literal string values.
+Literal `(string-length "...")`, `(string=? "..." "...")`, and
+`(string-length (string-append "..." "..."))` lower to typed E4 string metadata
+ops: `str_const` for each direct literal, then `str_len`, `str_eq`, or
+`str_concat` for the result path. The dynamic `call_builtin` paths remain in
+place for non-literal string values.
 
 All emitted instructions carry `type_hint = "any"` because Twig is dynamically typed. Functions therefore have `type_status = Untyped`. The vm-core profiler observes runtime types; the JIT specialises later.
 
@@ -37,7 +38,7 @@ The compiler decides at compile time:
 |-----------------------------|---------------------------------------------|
 | Top-level user fn           | `call <name>, ...args`                      |
 | Typed arithmetic (`+`,`-`,`*`,`/`) on `i64` args | a chain of typed `add`/`sub`/`mul`/`div` |
-| Direct literal string metadata (`string-length`, `string=?`) | `str_const` + `str_len`/`str_eq` |
+| Direct literal string metadata (`string-length`, `string=?`, `string-append`) | `str_const` + `str_len`/`str_eq`/`str_concat` |
 | Builtin (`cons`, `<`, …)    | `call_builtin <name>, ...args`              |
 | Anything else (locals etc.) | `call_builtin "apply_closure", h, ...args`  |
 

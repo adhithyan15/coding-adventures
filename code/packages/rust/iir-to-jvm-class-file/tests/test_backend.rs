@@ -2453,6 +2453,62 @@ fn e4_string_len_lowers_to_string_length() {
 }
 
 #[test]
+fn e4_string_concat_len_lowers_to_string_concat_and_length() {
+    let f = IIRFunction::new(
+        "concat_len",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("AB".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("CDE".into())],
+                "str",
+            ),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal concat len should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "concat_len")
+        .expect("concat_len method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.iter().filter(|&&b| b == 0xB6).count() >= 2,
+        "str_concat + str_len should use invokevirtual for concat and length; got: {:?}",
+        code
+    );
+
+    let concat_ref = find_methodref_in_cp(
+        &class.constant_pool,
+        "java/lang/String",
+        "concat",
+        "(Ljava/lang/String;)Ljava/lang/String;",
+    );
+    assert_ne!(concat_ref, 0, "constant pool must contain java/lang/String.concat(String)");
+    let length_ref = find_methodref_in_cp(&class.constant_pool, "java/lang/String", "length", "()I");
+    assert_ne!(length_ref, 0, "constant pool must contain java/lang/String.length()I");
+}
+
+#[test]
 fn e4_string_eq_lowers_to_string_equals() {
     let f = IIRFunction::new(
         "eq_hello",

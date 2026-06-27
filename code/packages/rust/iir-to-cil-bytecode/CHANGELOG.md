@@ -2,19 +2,22 @@
 
 ## [0.28.0] — 2026-06-27 — textual CLR literal string metadata (LANG-FULL E4)
 
-The textual `.il` path now lowers `str_len` and `str_eq` for direct string
-literals:
+The textual `.il` path now lowers `str_len`, `str_eq`, and `str_concat` for
+direct string literals:
 
 - `str_len` loads the `string` local and calls
   `System.String::get_Length()`, storing the resulting integer.
 - `str_eq` loads two `string` locals and calls
   `System.String::Equals(string, string)`, storing the resulting integer.
+- `str_concat` loads two `string` locals and calls
+  `System.String::Concat(string, string)`, storing the resulting string.
 - This proves Twig `(string-length "HELLO")` and
-  `(string=? "HELLO" "HELLO")` on real CoreCLR alongside the earlier BASIC
-  `PRINT "HELLO"` literal-output row.
-- Richer byte-oriented string operations (`str_index`, `str_concat`) and
-  non-literal string values still fail closed until the CLR representation owns
-  shared UTF-8 byte semantics.
+  `(string=? "HELLO" "HELLO")` plus
+  `(string-length (string-append "AB" "CDE"))` on real CoreCLR alongside the
+  earlier BASIC `PRINT "HELLO"` literal-output row.
+- Richer byte-oriented string operations (`str_index`) and non-literal string
+  values still fail closed until the CLR representation owns shared UTF-8 byte
+  semantics.
 - Emitter and validator tests cover the new accepted shape.
 
 ## [0.27.0] — 2026-06-27 — textual CLR string literal PRINT foothold (LANG-FULL E4 / BA4)

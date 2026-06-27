@@ -269,10 +269,10 @@ const SUPPORTED_OPS: &[&str] = &[
     // NaN/∞/out-of-i64-range, matching the VM), then `fptosi double → i64`.
     "int_to_real", "real_to_int_trunc", "real_to_int_floor",
     // LANG-FULL E4 — string literal foothold for the static LLVM column.
-    // `str_const` materialises a length-prefixed private constant, `str_len`
-    // and `str_eq` read literal metadata, and `print_str` calls the generic C
-    // runtime. Richer byte-string ops remain unsupported.
-    "str_const", "str_len", "str_eq", "print_str",
+    // `str_const` materialises a length-prefixed private constant. `str_concat`,
+    // `str_len`, and `str_eq` read literal metadata, and `print_str` calls the
+    // generic C runtime. Richer dynamic byte-string ops remain unsupported.
+    "str_const", "str_concat", "str_len", "str_eq", "print_str",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -394,6 +394,10 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
                 validate_str_const(func, instr, &mut errors);
                 continue;
             }
+            if instr.op == "str_concat" {
+                validate_str_concat(func, instr, &mut errors);
+                continue;
+            }
             if instr.op == "str_len" {
                 validate_str_len(func, instr, &mut errors);
                 continue;
@@ -491,6 +495,28 @@ fn validate_str_len(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<Strin
         [Operand::Var(_)] => {}
         _ => errors.push(format!(
             "InvalidOperand: function {:?}, str_len requires exactly one Operand::Var",
+            func.name
+        )),
+    }
+}
+
+fn validate_str_concat(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_concat requires a dest",
+            func.name
+        ));
+    }
+    if instr.type_hint != "str" {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_concat result type {:?} must be \"str\"",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_), Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_concat requires exactly two Operand::Var sources",
             func.name
         )),
     }
@@ -1310,6 +1336,7 @@ fn lower_instr(
 
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
+        "str_concat" => lower_str_concat(instr, state),
         "str_len" => lower_str_len(instr, state),
         "str_eq" => lower_str_eq(instr, state),
         "print_str" => lower_print_str(instr, state, out),
@@ -1408,6 +1435,47 @@ fn lower_str_len(
         }
     })?;
     state.env.insert(dest, len.to_string());
+    Ok(())
+}
+
+fn lower_str_concat(
+    instr: &IIRInstr,
+    state: &mut FnState,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_concat", state.fn_name)?.to_string();
+    let left = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_concat requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let right = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_concat requires srcs[1] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let left_value = state.str_values.get(left).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_concat left source {left:?} is not a string literal value"),
+        }
+    })?;
+    let right_value = state.str_values.get(right).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_concat right source {right:?} is not a string literal value"),
+        }
+    })?;
+    let value = format!("{left_value}{right_value}");
+    state.str_lens.insert(dest.clone(), value.len());
+    state.str_values.insert(dest, value);
     Ok(())
 }
 

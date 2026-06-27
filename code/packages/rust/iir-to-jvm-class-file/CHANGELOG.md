@@ -5,7 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.20.0] — 2026-06-27 (literal string metadata — LANG-FULL E4)
 
-The JVM backend now lowers the literal `str_len` and `str_eq` shapes:
+The JVM backend now lowers the literal `str_len`, `str_eq`, and `str_concat`
+shapes:
 
 - `str_len` loads the direct `String` local, calls
   `java/lang/String.length()I`, and widens with `i2l` when the IIR destination is
@@ -13,14 +14,19 @@ The JVM backend now lowers the literal `str_len` and `str_eq` shapes:
 - `str_eq` loads two direct `String` locals, calls
   `java/lang/String.equals(Ljava/lang/Object;)Z`, and widens with `i2l` when the
   IIR destination is `i64`.
+- `str_concat` loads two direct `String` locals and calls
+  `java/lang/String.concat(Ljava/lang/String;)Ljava/lang/String;`, producing a
+  `String` local that the existing `str_len`/`str_eq`/`print_str` path can
+  consume.
 - This is enough for Twig `(string-length "HELLO")` and
-  `(string=? "HELLO" "HELLO")` to run on real `java` while keeping the backend's
-  representation a host `String`.
-- Byte-oriented string operations (`str_index`, `str_concat`) and non-literal
-  string values remain rejected until the backend owns shared UTF-8 byte
-  semantics.
+  `(string=? "HELLO" "HELLO")` plus
+  `(string-length (string-append "AB" "CDE"))` to run on real `java` while
+  keeping the backend's representation a host `String`.
+- Byte-oriented string operations (`str_index`) and non-literal string values
+  remain rejected until the backend owns shared UTF-8 byte semantics.
 - Tests assert both validator acceptance and the emitted
-  `java/lang/String.length:()I` / `String.equals(Object):Z` method references.
+  `java/lang/String.length:()I`, `String.equals(Object):Z`, and
+  `String.concat(String):String` method references.
 
 ## [0.19.0] — 2026-06-27 (string literal PRINT foothold — LANG-FULL E4 / BA4)
 

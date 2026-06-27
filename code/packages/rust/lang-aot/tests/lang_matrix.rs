@@ -157,6 +157,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 literal `string-append` feeding `string-length`. This exercises
+    // the shared `str_concat` op while staying on the direct-literal metadata
+    // path: static backends carry the concatenated bytes as compile-time
+    // metadata, and JVM/CLR use their host `String` concat APIs.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(string-length (string-append \"AB\" \"CDE\"))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — E4 literal `string=?`. Like the literal length row, this stays on
     // the direct `str_const` + `str_eq` path so every codegen backend can prove
     // observable string equality without taking on full dynamic byte-string

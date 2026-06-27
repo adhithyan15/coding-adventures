@@ -874,8 +874,8 @@ fn emit_instr(
         // E4 literal-output foothold for WASM: materialise a string literal as
         // an i32 byte offset into the module's linear memory.  The companion
         // length is compile-time metadata carried in `string_literals` and is
-        // consumed by `print_str`; richer string value semantics stay rejected
-        // by validation until the full byte-string runtime lands.
+        // consumed by `print_str`; `str_concat` below uses the same table for
+        // literal-only concatenation metadata.
         "str_const" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
@@ -885,6 +885,21 @@ fn emit_instr(
             let lit = string_literals.get(dest).ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
                 detail: format!("str_const missing module string table entry for {dest:?}"),
+            })?;
+            code.extend(encode_i32_const(lit.offset as i32));
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── str_concat → literal data-segment metadata ───────────────────────
+        "str_concat" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_concat must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let lit = string_literals.get(dest).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_concat missing module string table entry for {dest:?}"),
             })?;
             code.extend(encode_i32_const(lit.offset as i32));
             code.extend(encode_local_set(rd));
@@ -2929,6 +2944,36 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                 offset,
                                 len,
                                 bytes: s.as_bytes().to_vec(),
+                            });
+                    }
+                }
+                "str_concat" => {
+                    if let (Some(dest), [Operand::Var(left), Operand::Var(right)]) =
+                        (instr.dest.as_ref(), instr.srcs.as_slice())
+                    {
+                        let Some((left_lit, right_lit)) = string_literals
+                            .get(&fn_.name)
+                            .and_then(|fn_strings| {
+                                Some((
+                                    fn_strings.get(left)?.clone(),
+                                    fn_strings.get(right)?.clone(),
+                                ))
+                            })
+                        else {
+                            continue;
+                        };
+                        let mut bytes = left_lit.bytes;
+                        bytes.extend_from_slice(&right_lit.bytes);
+                        let offset = string_data.len() as u32;
+                        let len = bytes.len() as u32;
+                        string_data.extend_from_slice(&bytes);
+                        string_literals
+                            .entry(fn_.name.clone())
+                            .or_default()
+                            .insert(dest.clone(), WasmStringLiteral {
+                                offset,
+                                len,
+                                bytes,
                             });
                     }
                 }

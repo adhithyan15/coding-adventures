@@ -332,11 +332,11 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
 
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
-            // `"str"` — The textual CLR path can now load an ASCII literal for
-            // `str_const`, which is enough for Dartmouth BASIC string `PRINT`.
-            // `str_len` produces an integer. Other string-typed producers still
-            // need a fuller byte-oriented representation before we can map them
-            // to `System.String` safely.
+            // `"str"` — The textual CLR path can now load ASCII literals and
+            // concatenate them through `System.String` for the narrow E4
+            // foothold. `str_len` and `str_eq` produce integers. Other
+            // string-typed producers still need a fuller byte-oriented
+            // representation before we can map them to `System.String` safely.
             //
             // `"ref<…>"` — Heap pointer types require GC-managed references.
             // In Phase 2 we lower `ref<LispyPair>` to `object[]` cons cells.
@@ -354,10 +354,10 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             //   - `jmp_if_true` / `jmp_if_false` — used for pattern-match dispatch
             //
             // All other ops remain rejected for `ref<LispyPair>`.
-            if instr.type_hint == "str" && instr.op != "str_const" {
+            if instr.type_hint == "str" && !matches!(instr.op.as_str(), "str_const" | "str_concat") {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const literals are supported in this CLR backend",
+                     only str_const and str_concat literals are supported in this CLR backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<") {
@@ -445,11 +445,11 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             // unknown / unsafe builtins.
             if matches!(
                 instr.op.as_str(),
-                "str_index" | "str_concat"
+                "str_index"
             ) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
-                     the CLR backend; only str_const + str_len + str_eq + print_str are supported \
+                     the CLR backend; only str_const + str_concat + str_len + str_eq + print_str are supported \
                      for LANG-FULL E4 in this slice",
                     func.name, instr.op
                 ));
@@ -462,6 +462,19 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
                         errors.push(format!(
                             "UnsupportedOp: function {:?}, op \"str_len\" requires \
                              dest, one Operand::Var source, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_concat" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "str") => {
+                        // Accepted — il_text.rs calls System.String::Concat(string,string).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_concat\" requires \
+                             dest, two Operand::Var sources, and str result type",
                             func.name
                         ));
                     }
@@ -670,14 +683,43 @@ mod tests {
     }
 
     #[test]
+    fn str_concat_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("AB".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("CDE".into())],
+                "str",
+            ),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_concat over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
     fn byte_string_algebra_still_rejected() {
-        for op in ["str_index", "str_concat"] {
+        for op in ["str_index"] {
             let errs = validate_iir_for_clr(&single_fn_module(vec![
                 IIRInstr::new(
                     op,
                     Some("v".into()),
                     vec![Operand::Var("s".into())],
-                    if op == "str_concat" { "str" } else { "i32" },
+                    "i32",
                 ),
                 IIRInstr::new("ret_void", None, vec![], "void"),
             ]));

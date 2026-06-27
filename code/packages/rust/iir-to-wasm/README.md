@@ -68,10 +68,12 @@ through a deprecated intermediate.
   printable ASCII literal bytes into a linear-memory data segment and stores the
   byte pointer in an `i32` local; `print_str` calls the host import
   `env.__print_str(ptr,len)`. `str_len` over a direct literal materialises that
-  literal's byte count as an integer constant, and `str_eq` over two direct
-  literals materialises byte equality as `1`/`0`. This covers BASIC
+  literal's byte count as an integer constant, `str_eq` over two direct literals
+  materialises byte equality as `1`/`0`, and literal `str_concat` creates another
+  data entry for the combined bytes. This covers BASIC
   `PRINT "HELLO"` plus Twig `(string-length "HELLO")` and
-  `(string=? "HELLO" "HELLO")`; richer string ops (`str_index`, `str_concat`)
+  `(string=? "HELLO" "HELLO")` and
+  `(string-length (string-append "AB" "CDE"))`; richer string ops (`str_index`)
   still fail closed until the full byte-string runtime lands.
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.

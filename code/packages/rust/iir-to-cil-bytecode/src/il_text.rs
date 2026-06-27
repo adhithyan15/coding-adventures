@@ -568,9 +568,10 @@ fn emit_method(
             // str_const <dest> = Str(s)  ->  ldstr "..."; st<dest>
             //
             // LANG-FULL E4 first managed foothold: Dartmouth BASIC string
-            // literal PRINT lowers to `str_const` + `print_str`, literal
-            // string length lowers to `str_len`, and literal equality lowers
-            // to `str_eq`. These map naturally to CoreCLR's `System.String`.
+            // literal PRINT lowers to `str_const` + `print_str`; literal
+            // string length, equality, and append lower to `str_len`, `str_eq`,
+            // and `str_concat`. These map naturally to CoreCLR's
+            // `System.String`.
             // The richer byte-oriented string algebra remains deliberately
             // unsupported here until the representation is specified for
             // non-ASCII and byte indexing.
@@ -589,6 +590,22 @@ fn emit_method(
                     }
                 };
                 let _ = writeln!(il, "    ldstr {literal}");
+                store_var(il, &regs, dest)?;
+            }
+            // str_concat <dest>, <left>, <right>  ->  System.String::Concat(string,string)
+            "str_concat" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_concat must have a dest".to_string(),
+                })?;
+                let left = var_src(f, instr, 0, "str_concat")?;
+                let right = var_src(f, instr, 1, "str_concat")?;
+                load_var(il, &regs, left)?;
+                load_var(il, &regs, right)?;
+                let _ = writeln!(
+                    il,
+                    "    call string [System.Runtime]System.String::Concat(string, string)"
+                );
                 store_var(il, &regs, dest)?;
             }
             // str_len <dest>, <src>  ->  System.String::get_Length()
@@ -1737,6 +1754,42 @@ mod tests {
         m.entry_point = Some("main".into());
         let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
         assert!(il.contains("ldstr \"HELLO\""), "str_const must emit ldstr; got:\n{il}");
+        assert!(
+            il.contains("callvirt instance int32 [System.Runtime]System.String::get_Length()"),
+            "str_len must call System.String::get_Length(); got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_concat_len_emits_string_concat() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("AB".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("CDE".into())],
+                "str",
+            ),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(
+            il.contains("call string [System.Runtime]System.String::Concat(string, string)"),
+            "str_concat must call System.String::Concat(string,string); got:\n{il}"
+        );
         assert!(
             il.contains("callvirt instance int32 [System.Runtime]System.String::get_Length()"),
             "str_len must call System.String::get_Length(); got:\n{il}"

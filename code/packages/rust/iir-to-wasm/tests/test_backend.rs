@@ -1657,6 +1657,44 @@ fn e4_string_print_lowers_to_data_memory_and_host_import() {
 }
 
 #[test]
+fn e4_string_concat_len_lowers_to_literal_length() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("a".into()),
+            vec![Operand::Str("AB".into())],
+            "str",
+        ),
+        IIRInstr::new(
+            "str_const",
+            Some("b".into()),
+            vec![Operand::Str("CDE".into())],
+            "str",
+        ),
+        IIRInstr::new("str_concat", Some("s".into()), vec![
+            Operand::Var("a".into()),
+            Operand::Var("b".into()),
+        ], "str"),
+        IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(), "E4: str_concat + str_len should validate: {errs:?}");
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_concat + str_len should lower");
+    assert_eq!(
+        wm.data[0].data,
+        b"ABCDEABCDE",
+        "E4: string data should include both literals plus the concatenated literal"
+    );
+    assert!(
+        wm.code[0].code.windows(2).any(|w| w == [0x42, 0x05]),
+        "E4: str_len over literal concat should emit i64.const 5"
+    );
+}
+
+#[test]
 fn e4_string_print_coexists_with_putchar_newline_import() {
     let m = module_one("main", vec![], "void", vec![
         IIRInstr::new(

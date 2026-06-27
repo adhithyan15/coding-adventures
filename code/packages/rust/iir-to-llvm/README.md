@@ -6,8 +6,9 @@ target triple, without depending on `llvm-sys` or a native LLVM install.
 **Status: v0.18.0 — LANG-FULL E4 literal string metadata.**  The backend now
 lowers scalar control/data ops, Brainfuck byte-tape I/O, arrays, globals,
 numeric conversions, and the `str_const` + `print_str` literal-output slice.
-It also materialises `str_len` and `str_eq` for direct literals from
-compile-time metadata. Richer byte-string ops remain outside this release.
+It also materialises `str_len`, `str_eq`, and literal `str_concat` for direct
+literals from compile-time metadata. Dynamic byte-string ops remain outside this
+release.
 
 ## Where it fits
 
@@ -96,7 +97,7 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.14.0 | **Bounds-checked arrays** (LANG-FULL E5, static model). `alloc_array`→length-prefixed `@calloc` `[i64 len][elems…]`; `array_get`/`array_set` emit an explicit `icmp uge idx, len` + `br` to a `call void @llvm.trap()` block (OOB → trap), then a typed `getelementptr`+`load`/`store`; `array_len` reads the header. Declares `@calloc`/`@llvm.trap` on demand. |
 | v0.15.0 | **Typed module globals** (LANG-FULL E6 layer 1). `global_load`/`global_store` lower: each distinct global name → a module-level `@__twig_global_N = internal global i64 0` (index-based, zero-init), with `load`/`store i64` at use sites — so a function reads/writes a global. Verified end-to-end on real `clang` (⇒ exit 42). |
 | v0.17.0 | **String literal output** (LANG-FULL E4 / BA4). `str_const` emits a private length-prefixed string constant and `print_str` calls `@__print_str(ptr,i64)` with the payload pointer plus byte length. Richer byte-string ops stay rejected. |
-| v0.18.0 | **Literal string metadata** (LANG-FULL E4). `str_len`/`str_eq` over direct `str_const` literals lower to compile-time integer results, proving `(string-length "HELLO")` and `(string=? "HELLO" "HELLO")` on LLVM while dynamic string algebra stays rejected. |
+| v0.18.0 | **Literal string metadata** (LANG-FULL E4). `str_len`/`str_eq`/`str_concat` over direct `str_const` literals lower to compile-time results, proving `(string-length "HELLO")`, `(string=? "HELLO" "HELLO")`, and `(string-length (string-append "AB" "CDE"))` on LLVM while dynamic string algebra stays rejected. |
 | (later) | GC, debug info via `!dbg`. |
 
 ### Bounds-checked arrays (v0.14.0)

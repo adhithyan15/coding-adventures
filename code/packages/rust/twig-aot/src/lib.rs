@@ -1526,6 +1526,76 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             continue;
         }
 
+        if instr.op == "str_concat" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let [Operand::Var(left), Operand::Var(right)] = instr.srcs.as_slice() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, left_literal)) = strings.get(left).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, right_literal)) = strings.get(right).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let literal = format!("{left_literal}{right_literal}");
+            if !is_printable_ascii_str(&literal) {
+                lowered.push(instr);
+                continue;
+            }
+
+            let base = format!("__aot_str{next}");
+            next += 1;
+            let len_var = format!("{base}_len");
+            let buf_var = format!("{base}_buf");
+
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(len_var.clone()),
+                vec![Operand::Int(literal.len() as i64)],
+                "i64",
+            ));
+            lowered.push(IIRInstr::new(
+                "alloc_bytes",
+                Some(buf_var.clone()),
+                vec![Operand::Var(len_var.clone())],
+                "i64",
+            ));
+            for (idx, byte) in literal.bytes().enumerate() {
+                let off_var = format!("{base}_off{idx}");
+                let byte_var = format!("{base}_byte{idx}");
+                lowered.push(IIRInstr::new(
+                    "const",
+                    Some(off_var.clone()),
+                    vec![Operand::Int(idx as i64)],
+                    "i64",
+                ));
+                lowered.push(IIRInstr::new(
+                    "const",
+                    Some(byte_var.clone()),
+                    vec![Operand::Int(byte as i64)],
+                    "i64",
+                ));
+                lowered.push(IIRInstr::new(
+                    "store_byte",
+                    None,
+                    vec![
+                        Operand::Var(buf_var.clone()),
+                        Operand::Var(off_var),
+                        Operand::Var(byte_var),
+                    ],
+                    "void",
+                ));
+            }
+            strings.insert(dest, (buf_var, len_var, literal));
+            continue;
+        }
+
         if instr.op == "str_len" {
             let Some(dest) = instr.dest.clone() else {
                 lowered.push(instr);
@@ -2092,6 +2162,39 @@ mod tests {
         assert!(
             f.instructions.iter().all(|i| i.op != "str_len"),
             "native lowering should remove folded str_len: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_concat_len_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+                IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
+                IIRInstr::new("str_concat", Some("s".into()), vec![
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let len_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n"));
+        assert!(
+            matches!(len_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(5)]),
+            "str_len over a literal concat should fold to const 5: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_concat" && i.op != "str_len"),
+            "native lowering should remove folded str_concat + str_len: {:?}",
             f.instructions
         );
     }

@@ -7,13 +7,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Extends the E4 literal-string foothold from output to direct literal metadata.
 
-- `str_len` and `str_eq` are now accepted when their operands are direct
-  `str_const` literal values in the same function.
-- Lowering materialises the byte count and byte equality result from the existing
-  private string-literal side table, so `(string-length "HELLO")` returns `5` and
-  `(string=? "HELLO" "HELLO")` returns `1` without needing a runtime string API.
-- Validation remains fail-closed for dynamic string algebra: `str_index`,
-  `str_concat`, and non-literal string values are still outside this slice.
+- `str_len`, `str_eq`, and literal `str_concat` are now accepted when their
+  operands are direct `str_const` literal values in the same function.
+- Lowering materialises the byte count, byte equality result, and concatenated
+  literal bytes from the existing private string-literal side table, so
+  `(string-length "HELLO")` returns `5`, `(string=? "HELLO" "HELLO")` returns
+  `1`, and `(string-length (string-append "AB" "CDE"))` returns `5` without
+  needing a runtime string API.
+- Validation remains fail-closed for dynamic string algebra: `str_index` and
+  non-literal string values are still outside this slice.
 - Backend tests assert the emitted functions return `ret i64 5` / `ret i64 1`
   and that the richer string-op rejection still fires.
 
