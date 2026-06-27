@@ -189,6 +189,10 @@ density, fill-in, and fallback metadata. Large real DC solves use an optional
 SciPy sparse-LU backend when available and fall back to the native sparse-row
 solver with an explicit fallback reason; large complex AC solves use the native
 sparse-row path when the matrix size reaches the package threshold.
+For nonlinear operating points, `dc_op(newton_step_limit=...)` bounds each
+Newton update per unknown. Diagnostics report the active limit, how many steps
+were clipped, and the minimum damping factor; pass `newton_step_limit=None` to
+disable the limiter.
 
 `normalize_model_card()`, `diode_from_model_card()`,
 `bjt_from_model_card()`, `jfet_from_model_card()`, and

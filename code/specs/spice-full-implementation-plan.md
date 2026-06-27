@@ -15,20 +15,16 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Production solver core.
+1. Nonlinear convergence hardening.
    - Status: current PR completion candidate.
-   - Python now routes large real DC solves through an optional SciPy sparse-LU
-     backend when available and falls back to the native sparse-row Gaussian
-     solver with an explicit fallback reason.
-   - Rust and TypeScript keep their native sparse-row real solver paths and now
-     report the actual backend used for large DC solves.
-   - Python, Rust, and TypeScript `DcResult.diagnostics` now carry a stable
-     solver profile with matrix size, selected solver kind, backend,
-     structural nonzero count, density, peak fill-in count, and fallback
-     metadata so production integrations can audit sparse activation without
-     reparsing matrices.
-   - Sparse large-ladder parity tests cover the profile contract across all
-     three packages while preserving existing real and complex solver behavior.
+   - Python, Rust, and TypeScript DC operating-point solves now apply a
+     configurable Newton update limit only when nonlinear devices are present,
+     keeping linear one-pass solves unchanged.
+   - `DcResult.diagnostics` now reports the active Newton step limit, clipped
+     Newton-step count, and minimum damping factor so difficult deck
+     convergence is auditable without reparsing iteration traces.
+   - Cross-language tests cover both the inactive linear sparse-ladder path and
+     a damped nonlinear first-step solve with convergence aids disabled.
 
 ## Completed Slices
 

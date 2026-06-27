@@ -60,6 +60,10 @@ Newton delta, and a nested `solverProfile` with backend, structural nonzero
 count, density, fill-in, and fallback metadata. Large real DC and complex AC
 matrix solves use native sparse-row solver paths when the matrix size reaches
 the package threshold.
+For nonlinear operating points, `dcOp(circuit, { newtonStepLimit })` bounds
+each Newton update per unknown. Diagnostics report the active limit, how many
+steps were clipped, and the minimum damping factor; pass
+`newtonStepLimit: null` to disable the limiter.
 
 `diodeAtTemperature`, `bjtAtTemperature`, `mosfetAtTemperature`, and
 `circuitAtTemperature` provide operating-temperature footholds for diode, BJT,

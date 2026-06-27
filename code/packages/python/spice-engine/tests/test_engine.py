@@ -990,6 +990,9 @@ def test_large_resistor_ladder_uses_sparse_real_solver_path():
     assert r.diagnostics.convergence_aid == "newton"
     assert r.diagnostics.tolerance == pytest.approx(1.0e-6)
     assert math.isfinite(r.diagnostics.max_delta)
+    assert r.diagnostics.newton_step_limit is None
+    assert r.diagnostics.limited_newton_steps == 0
+    assert r.diagnostics.minimum_damping_factor == pytest.approx(1.0)
     profile = r.diagnostics.solver_profile
     assert profile.matrix_size == 36
     assert profile.solver == "sparse_real"
@@ -8964,6 +8967,34 @@ def test_dc_op_reports_no_convergence_aid_when_disabled_solve_fails() -> None:
     result = dc_op(c, max_iterations=1, convergence_aids=False)
     assert not result.converged
     assert result.convergence_aid == "none"
+
+
+def test_dc_op_newton_step_limit_reports_damped_nonlinear_step() -> None:
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", 10.0),
+        Diode("D1", anode="in", cathode="out", Is=1e-15, Vt=0.02585),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+
+    result = dc_op(
+        c,
+        max_iterations=1,
+        convergence_aids=False,
+        newton_step_limit=0.25,
+    )
+
+    assert not result.converged
+    assert result.convergence_aid == "none"
+    assert result.diagnostics.newton_step_limit == pytest.approx(0.25)
+    assert result.diagnostics.limited_newton_steps == 1
+    assert 0.0 < result.diagnostics.minimum_damping_factor < 1.0
+    assert result.diagnostics.max_delta == pytest.approx(0.25)
+    assert max(abs(value) for value in result.node_voltages.values()) <= 0.25 + 1e-12
+
+
+def test_dc_op_rejects_invalid_newton_step_limit() -> None:
+    with pytest.raises(ValueError, match="newton_step_limit must be finite and positive"):
+        dc_op(Circuit(), newton_step_limit=0.0)
 
 
 def test_dc_op_pseudo_transient_recovers_after_earlier_aids_fail() -> None:

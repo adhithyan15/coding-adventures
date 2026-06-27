@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Nonlinear Newton damping diagnostics** —
+  `dc_op()` now applies a configurable `newton_step_limit` to nonlinear
+  Newton updates and reports `newton_step_limit`, `limited_newton_steps`, and
+  `minimum_damping_factor` in `DcResult.diagnostics`, matching Rust and
+  TypeScript.
+
 - **Production solver profiles** —
   `DcResult.diagnostics` now carries a nested `solver_profile` with matrix
   size, solver kind, backend, structural nonzero count, density, peak fill-in,

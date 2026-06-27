@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add configurable nonlinear Newton damping through
+  `DcOpOptions::newton_step_limit`, plus stable diagnostics for
+  `newton_step_limit`, `limited_newton_steps`, and `minimum_damping_factor`,
+  matching Python and TypeScript.
 - Add `DcResult::diagnostics.solver_profile` with matrix size, solver kind,
   backend, structural nonzero count, density, peak fill-in, and fallback
   metadata for production sparse-solver audits, matching Python and TypeScript.

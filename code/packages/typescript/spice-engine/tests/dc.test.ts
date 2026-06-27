@@ -237,6 +237,9 @@ describe("dcOp", () => {
     expect(result.diagnostics.convergenceAid).toBe("newton");
     expectClose(result.diagnostics.tolerance, 1.0e-9);
     expect(Number.isFinite(result.diagnostics.maxDelta)).toBe(true);
+    expect(result.diagnostics.newtonStepLimit).toBeUndefined();
+    expect(result.diagnostics.limitedNewtonSteps).toBe(0);
+    expectClose(result.diagnostics.minimumDampingFactor, 1.0);
     expect(result.diagnostics.solverProfile.matrixSize).toBe(36);
     expect(result.diagnostics.solverProfile.solver).toBe("sparse_real");
     expect(result.diagnostics.solverProfile.backend).toBe("native_sparse_gaussian");
@@ -657,6 +660,30 @@ describe("dcOp", () => {
     expect(result.iterations).toBe(1);
   });
 
+  it("reports damped nonlinear Newton steps from the step limiter", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vs", "in", "0", 10.0));
+    circuit.add(diode("D1", "in", "out", 1.0e-15, 0.02585));
+    circuit.add(resistor("Rload", "out", "0", 100.0));
+
+    const result = dcOp(circuit, {
+      maxIterations: 1,
+      convergenceAids: false,
+      newtonStepLimit: 0.25,
+    });
+
+    expect(result.converged).toBe(false);
+    expect(result.convergenceAid).toBe("none");
+    expectClose(result.diagnostics.newtonStepLimit ?? 0.0, 0.25);
+    expect(result.diagnostics.limitedNewtonSteps).toBe(1);
+    expect(result.diagnostics.minimumDampingFactor).toBeGreaterThan(0.0);
+    expect(result.diagnostics.minimumDampingFactor).toBeLessThan(1.0);
+    expectClose(result.diagnostics.maxDelta, 0.25);
+    expect(Math.max(...Array.from(result.nodeVoltages.values()).map(Math.abs))).toBeLessThanOrEqual(
+      0.25 + 1.0e-12,
+    );
+  });
+
   it("recovers with pseudo-transient continuation after earlier aids fail", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vs", "in", "0", 10.0));
@@ -850,6 +877,9 @@ describe("dcOp", () => {
     );
     expect(() => dcOp(circuit, { tolerance: 0.0 })).toThrowError(
       "tolerance must be finite and positive",
+    );
+    expect(() => dcOp(circuit, { newtonStepLimit: 0.0 })).toThrowError(
+      "newtonStepLimit must be finite and positive",
     );
   });
 
