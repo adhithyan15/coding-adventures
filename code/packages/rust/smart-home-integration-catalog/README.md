@@ -354,6 +354,10 @@ runtime and Chief of Staff tools a typed catalog for:
   disposition-action readiness execution handoff action protocol-evidence
   package handoff execution slots that order Zigbee, Z-Wave, and Thread
   package handoff work into deterministic release lanes
+- mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence package handoff
+  execution slot summaries that combine slot lane counts with next actionable
+  protocol and release handoff pointers
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work
