@@ -4525,7 +4525,6 @@ impl HtmlParser {
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         repair_tricky_adoption_agency(&mut document);
         repair_div_bold_nobr_continuation(&mut document.children);
-        repair_font_paragraph_boundary(&mut document.children);
         repair_em_aside_continuation(&mut document.children, self.explicit_em_end_seen);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
@@ -6299,6 +6298,18 @@ impl HtmlParser {
             }
             "p" if self.has_open_element("p")
                 && !self.has_open_element_before_namespace_boundary("p") =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element",
+                ));
+                self.append_node(Node::element("p".to_string(), Vec::new()));
+            }
+            "p" if !self.has_open_element("p")
+                && !self.has_open_table_context()
+                && self
+                    .current_element_name()
+                    .is_some_and(is_formatting_element) =>
             {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-p-end-tag",
@@ -8235,64 +8246,6 @@ fn repair_div_bold_nobr_continuation(nodes: &mut Vec<Node>) {
             current.children.push(bold);
         }
         index += 1;
-    }
-}
-
-fn repair_font_paragraph_boundary(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_font_paragraph_boundary(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index + 2 < nodes.len() {
-        let matches_boundary = matches!(
-            (&nodes[index], &nodes[index + 1], &nodes[index + 2]),
-            (Node::Element(font), Node::Element(first_paragraph), Node::Element(second_paragraph))
-                if font.name == "font"
-                    && font.children.is_empty()
-                    && first_paragraph.name == "p"
-                    && first_paragraph.children.len() == 1
-                    && matches!(
-                        first_paragraph.children.first(),
-                        Some(Node::Element(child_font))
-                            if child_font.name == "font" && child_font.children.is_empty()
-                    )
-                    && second_paragraph.name == "p"
-                    && second_paragraph
-                        .children
-                        .first()
-                        .is_some_and(|child| matches!(child, Node::Element(element) if element.name == "meta"))
-        );
-        if !matches_boundary {
-            index += 1;
-            continue;
-        }
-
-        let mut second_paragraph = nodes.remove(index + 2);
-        let mut first_paragraph = nodes.remove(index + 1);
-        let Some(Node::Element(font)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        if let Node::Element(first_paragraph_element) = &mut first_paragraph {
-            first_paragraph_element.children.clear();
-        }
-        font.children.push(first_paragraph);
-
-        let Node::Element(second_paragraph_element) = &mut second_paragraph else {
-            index += 1;
-            continue;
-        };
-        let mut reconstructed_font = Node::element("font".to_string(), Vec::new());
-        if let Node::Element(element) = &mut reconstructed_font {
-            element.children = std::mem::take(&mut second_paragraph_element.children);
-        }
-        second_paragraph_element.children.push(reconstructed_font);
-        nodes.insert(index + 1, second_paragraph);
-        index += 2;
     }
 }
 
@@ -30851,6 +30804,29 @@ mod tests {
         let following_anchor = element(&center.children[1]);
         assert_eq!(following_anchor.name, "a");
         assert!(following_anchor.children.is_empty());
+    }
+
+    #[test]
+    fn paragraph_end_recovery_keeps_formatting_context_for_next_paragraph() {
+        let document = parse_html("<font></p><p><meta><title></title></font>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_font = element(&body.children[0]);
+        assert_eq!(outer_font.name, "font");
+        assert_eq!(outer_font.children.len(), 1);
+        assert_eq!(element(&outer_font.children[0]).name, "p");
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children.len(), 1);
+
+        let reconstructed_font = element(&paragraph.children[0]);
+        assert_eq!(reconstructed_font.name, "font");
+        assert_eq!(reconstructed_font.children.len(), 2);
+        assert_eq!(element(&reconstructed_font.children[0]).name, "meta");
+        assert_eq!(element(&reconstructed_font.children[1]).name, "title");
     }
 
     #[test]
