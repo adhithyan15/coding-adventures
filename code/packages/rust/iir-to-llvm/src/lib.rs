@@ -268,10 +268,11 @@ const SUPPORTED_OPS: &[&str] = &[
     // (`@llvm.trunc.f64`/`@llvm.floor.f64`), range-check (trap on
     // NaN/∞/out-of-i64-range, matching the VM), then `fptosi double → i64`.
     "int_to_real", "real_to_int_trunc", "real_to_int_floor",
-    // LANG-FULL E4 — string literal output foothold for the static LLVM column.
-    // `str_const` materialises a length-prefixed private constant and `print_str`
+    // LANG-FULL E4 — string literal foothold for the static LLVM column.
+    // `str_const` materialises a length-prefixed private constant, `str_len`
+    // reads the literal byte count from compile-time metadata, and `print_str`
     // calls the generic C runtime. Richer byte-string ops remain unsupported.
-    "str_const", "print_str",
+    "str_const", "str_len", "print_str",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -393,6 +394,10 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
                 validate_str_const(func, instr, &mut errors);
                 continue;
             }
+            if instr.op == "str_len" {
+                validate_str_len(func, instr, &mut errors);
+                continue;
+            }
             if instr.op == "print_str" {
                 validate_print_str(func, instr, &mut errors);
                 continue;
@@ -460,6 +465,28 @@ fn validate_print_str(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<Str
         [Operand::Var(_)] => {}
         _ => errors.push(format!(
             "InvalidOperand: function {:?}, print_str requires exactly one Operand::Var",
+            func.name
+        )),
+    }
+}
+
+fn validate_str_len(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_len requires a dest",
+            func.name
+        ));
+    }
+    if llvm_type_for(&instr.type_hint, &func.name).is_err() {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_len result type {:?} is not supported",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_len requires exactly one Operand::Var",
             func.name
         )),
     }
@@ -628,10 +655,10 @@ pub fn lower_iir_to_llvm(
     //
     // Static backends use the unmanaged string layout from `lang-full-e4-strings`:
     // an `i64` byte-length header followed by the bytes. `str_const` binds a
-    // pointer to this header, and `print_str` passes `header+8,len` to the C
-    // runtime. Richer ops (`str_len`, `str_index`, `str_concat`, `str_eq`) remain
-    // outside this slice, but this representation leaves the header in place for
-    // those later loads/checks.
+    // pointer to this header, `str_len` materialises the literal byte count, and
+    // `print_str` passes `header+8,len` to the C runtime. Richer ops
+    // (`str_index`, `str_concat`, `str_eq`) remain outside this slice, but this
+    // representation leaves the header in place for those later loads/checks.
     let (string_defs, string_literals) = collect_string_literals(module);
     if !string_defs.is_empty() {
         out.push('\n');
@@ -1254,6 +1281,7 @@ fn lower_instr(
 
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
+        "str_len" => lower_str_len(instr, state),
         "print_str" => lower_print_str(instr, state, out),
 
         other => Err(IIRLlvmError::UnsupportedOp {
@@ -1325,6 +1353,30 @@ fn lower_print_str(
         "  {bytes} = getelementptr inbounds i8, ptr {base}, i64 8\n"
     ));
     out.push_str(&format!("  call void @__print_str(ptr {bytes}, i64 {len})\n"));
+    Ok(())
+}
+
+fn lower_str_len(
+    instr: &IIRInstr,
+    state: &mut FnState,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_len", state.fn_name)?.to_string();
+    let src = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_len requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let len = state.str_lens.get(src).copied().ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_len source {src:?} is not a string literal value"),
+        }
+    })?;
+    state.env.insert(dest, len.to_string());
     Ok(())
 }
 

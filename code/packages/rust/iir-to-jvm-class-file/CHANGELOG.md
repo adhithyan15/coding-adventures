@@ -3,6 +3,20 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.20.0] — 2026-06-27 (literal string length — LANG-FULL E4)
+
+The JVM backend now lowers the literal `str_len` shape:
+
+- `str_len` loads the direct `String` local, calls
+  `java/lang/String.length()I`, and widens with `i2l` when the IIR destination is
+  `i64`.
+- This is enough for Twig `(string-length "HELLO")` to run on real `java` while
+  keeping the backend's representation a host `String`.
+- Byte-oriented string operations (`str_index`, `str_concat`, `str_eq`) remain
+  rejected until the backend owns the shared UTF-8 byte semantics.
+- Tests assert both validator acceptance and the emitted
+  `java/lang/String.length:()I` method reference.
+
 ## [0.19.0] — 2026-06-27 (string literal PRINT foothold — LANG-FULL E4 / BA4)
 
 The JVM backend now lowers the first E4 string shape:

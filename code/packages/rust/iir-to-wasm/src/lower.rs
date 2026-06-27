@@ -889,6 +889,42 @@ fn emit_instr(
             code.extend(encode_local_set(rd));
         }
 
+        // ── str_len → literal byte count ─────────────────────────────────────
+        //
+        // Direct literal strings carry their byte count in the same table that
+        // `print_str` uses. The E4 v1 WASM slice deliberately keeps this
+        // literal-only; dynamic string algebra is still rejected by validation.
+        "str_len" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_len must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let val_var = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_len requires Operand::Var(str)".to_string(),
+                }),
+            };
+            let lit = string_literals.get(val_var).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!(
+                    "str_len currently supports only direct str_const locals, got {val_var:?}"
+                ),
+            })?;
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_const(lit.len as i64));
+            } else {
+                let len = i32::try_from(lit.len).map_err(|_| IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: format!("str_len literal length {} does not fit i32", lit.len),
+                })?;
+                code.extend(encode_i32_const(len));
+            }
+            code.extend(encode_local_set(rd));
+        }
+
         // ── print_str → call $__print_str(ptr, len) ──────────────────────────
         //
         // `print_str Var("%s")` writes the literal bytes through the host
@@ -3208,7 +3244,10 @@ pub fn lower_iir_to_wasm(
     // the buffer.  Modules that don't use `load_mem`/`store_mem` get no
     // memory section, preserving binary compatibility with the existing
     // non-BF callers (Twig, BASIC, Oct, Nib, Lispy).
-    let memories: Vec<wasm_types::MemoryType> = if uses_memory || uses_print_str {
+    let memories: Vec<wasm_types::MemoryType> = if uses_memory
+        || uses_print_str
+        || !string_data.is_empty()
+    {
         vec![wasm_types::MemoryType {
             limits: wasm_types::Limits { min: 1, max: Some(1) },
         }]

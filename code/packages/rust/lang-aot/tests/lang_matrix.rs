@@ -142,6 +142,21 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 literal `string-length`. The compiler lowers
+    // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
+    // dynamic `call_builtin "string-length"` path that codegen validators reject.
+    // Native AOT folds the direct literal to a normal integer const; LLVM and
+    // WASM use their literal side tables; JVM/CLR call their managed
+    // `String.length` / `String.Length` APIs. The VM/JIT use vm-core's byte-count
+    // reference implementation. ASCII keeps managed char length equal to E4 byte
+    // length for this foothold.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(string-length \"HELLO\")",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =

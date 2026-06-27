@@ -1919,9 +1919,10 @@ fn lower_function(
             // ── LANG-FULL E4: string literal output foothold ────────────────
             //
             // Dartmouth BASIC `PRINT "..."` lowers to `str_const` +
-            // `print_str`. Use Java's native `String` only for this
-            // literal-output shape; byte-oriented string algebra remains
-            // rejected by the validator until the JVM representation owns those
+            // `print_str`, and literal Twig `string-length` lowers to
+            // `str_len`. Use Java's native `String` only for this literal
+            // foothold; richer byte-oriented string algebra remains rejected
+            // by the validator until the JVM representation owns those
             // semantics explicitly.
             "str_const" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
@@ -1948,6 +1949,44 @@ fn lower_function(
                 let idx = cp.add_string(literal);
                 emit_ldc_index(&mut code, idx);
                 emit_astore(&mut code, dest_slot);
+            }
+
+            "str_len" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_len instruction has no dest".to_string(),
+                })?;
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_len expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                if src_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, src_slot);
+                let length_ref = cp.add_methodref("java/lang/String", "length", "()I");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&length_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
             }
 
             "print_str" => {

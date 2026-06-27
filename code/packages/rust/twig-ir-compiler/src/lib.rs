@@ -1458,6 +1458,23 @@ mod tests {
         assert_eq!(result.is_ok(), baseline.is_ok());
     }
 
+    #[test]
+    fn string_length_literal_uses_e4_str_len() {
+        let m = compile_source("(string-length \"HELLO\")", "string_len")
+            .expect("literal string-length should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string-length should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
     // =========================================================================
     // LANG51: String literal tests
     // =========================================================================

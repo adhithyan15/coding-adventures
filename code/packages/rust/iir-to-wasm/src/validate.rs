@@ -7,8 +7,8 @@
 //!
 //! - WASM has no "any" type — every local and stack slot must have a concrete
 //!   numeric type (`i32`, `i64`, `f32`, `f64`) or a known GC reference type.
-//! - WASM has only the E4 literal string-output foothold in this lowering:
-//!   `str_const` + `print_str`; richer string ops remain rejected.
+//! - WASM has only the E4 literal string foothold in this lowering:
+//!   `str_const` + `str_len` + `print_str`; richer string ops remain rejected.
 //! - Runtime / I/O opcodes have no WASM equivalent without a host import,
 //!   which this direct lowering does not provide.
 //!
@@ -276,7 +276,8 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
             // `"str"` — accepted only for the E4 literal-output foothold's
-            // `str_const`.  Richer string ops still fail explicitly below.
+            // `str_const`. `str_len` produces an integer, not a string value.
+            // Richer string ops still fail explicitly below.
             //
             // `"ref<X>"` — reference types require WasmGC.  We accept
             // `"ref<LispyPair>"` (the only struct type we define).  All
@@ -287,7 +288,7 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             if instr.type_hint == "str" && instr.op != "str_const" {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const + print_str literal output is supported in this WASM backend",
+                     only str_const + str_len + print_str literal output is supported in this WASM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -315,12 +316,12 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // unknown / unsafe builtins.
             if matches!(
                 instr.op.as_str(),
-                "str_len" | "str_index" | "str_concat" | "str_eq"
+                "str_index" | "str_concat" | "str_eq"
             ) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
-                     the WASM backend's E4 literal-output slice; only str_const \
-                     and print_str are supported",
+                     the WASM backend's E4 literal slice; only str_const, \
+                     str_len, and print_str are supported",
                     func.name, instr.op
                 ));
             } else if instr.op == "str_const" {
@@ -343,6 +344,19 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                         errors.push(format!(
                             "UnsupportedOp: function {:?}, op \"str_const\" requires \
                              a dest and srcs[0] = Operand::Str(literal)",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_len" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [interpreter_ir::Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — lower.rs materialises the direct literal's byte length.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_len\" requires \
+                             dest, one Operand::Var source, and i64/i32 result type",
                             func.name
                         ));
                     }
@@ -557,7 +571,7 @@ mod tests {
     }
 
     #[test]
-    fn richer_string_ops_still_rejected() {
+    fn e4_literal_str_len_accepted() {
         let errs = validate_for_wasm(&module_with(vec![
             IIRInstr::new(
                 "str_const",
@@ -569,8 +583,36 @@ mod tests {
             IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
         ]));
         assert!(
+            errs.is_empty(),
+            "str_len over a direct literal should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn richer_string_ops_still_rejected() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("A".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("B".into())],
+                "str",
+            ),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
             errs.iter().any(|e| e.contains("UnsupportedOp")),
-            "str_len must remain rejected in the literal-output slice; got: {:?}",
+            "richer string ops must remain rejected; got: {:?}",
             errs
         );
     }

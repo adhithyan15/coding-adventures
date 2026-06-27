@@ -128,6 +128,7 @@ assert_eq!(class_file.this_class_name, "MyClass");
 | `array_set`      | `aload handle; <idx>; [l2i]; <val>; <T>astore` — native bounds check (E5) |
 | `array_len`      | `aload handle; arraylength; [i2l]; store dest` — E5 |
 | `str_const`      | `ldc CONSTANT_String; astore dest` — ASCII literal-output foothold (E4) |
+| `str_len`        | `aload s; invokevirtual java/lang/String.length()I; [i2l]; store dest` — literal length foothold (E4) |
 | `print_str`      | `getstatic System.out; aload s; invokevirtual PrintStream.print(String)` — E4 |
 
 The byte-tape ops (`alloc_bytes`/`load_byte`/`store_byte`) are how Brainfuck runs on
@@ -136,9 +137,10 @@ index it (masking the sign-extended load back to an unsigned cell), and `.`/`,` 
 `env.BFRuntime` host class — the JVM sibling of the LLVM libc / wasm `env.putchar` I/O.
 
 The E4 string rows are intentionally a narrow literal-output slice: Dartmouth BASIC
-`PRINT "HELLO"` now runs on real `java`, but byte-oriented string operations
-(`str_len`/`str_index`/`str_concat`/`str_eq`) remain rejected until the JVM backend
-owns the shared UTF-8 byte semantics.
+`PRINT "HELLO"` now runs on real `java`, and Twig `(string-length "HELLO")`
+uses `String.length()`. Other byte-oriented string operations
+(`str_index`/`str_concat`/`str_eq`) remain rejected until the JVM backend owns
+the shared UTF-8 byte semantics.
 
 **Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2): narrow **unsigned**
 integers (`u4`/`u8`/`u16`/`u32`) use the JVM **`int` model** — `int` locals, `I` descriptors,

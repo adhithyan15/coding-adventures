@@ -104,12 +104,12 @@ explicit `cmp idx,len` + branch-to-trap.
 |---|---|---|---|---|---|---|---|
 | **vm-core** | (interp) | `Value::Str(Vec<u8>)` (new value variant) or a handle into `memory` | intern the literal bytes | `.len()` | range-checked byte index | allocate a new buffer | write bytes to the host stdout sink |
 | **jit-core** | (interp) | same as vm-core (CIR mirrors it) | — | — | — | — | — |
-| **JVM** | GC | `java.lang.String` for the landed literal-output slice; byte-string representation still under E4-managed | `ldc` string CP entry ✅ for ASCII literals | planned | planned | planned | `PrintStream.print(String)` ✅ |
-| **CLR** | GC | `System.String` for the landed literal-output slice; byte-string representation still under E4-managed | `ldstr "…"` ✅ for ASCII literals | planned | planned | planned | `Console.Write(string)` ✅ |
-| **WASM** | linear-memory foothold now; WasmGC later | `i32` pointer into a data segment for the landed literal-output slice; richer byte-string representation still under E4-managed | data segment ✅ for ASCII literals | planned | planned | planned | host import `env.__print_str(ptr,len)` ✅ |
-| **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | private `{len,bytes}` global ✅ for ASCII literals | planned | planned | planned | `@__print_str(i8* base+8, i64 len)` C-runtime ✅ |
-| **x86_64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | planned | planned | planned | `call __twig_print_string(ptr,len)` ✅ |
-| **aarch64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | planned | planned | planned | `bl __twig_print_string(ptr,len)` ✅ |
+| **JVM** | GC | `java.lang.String` for the landed literal-output/length slice; byte-string representation still under E4-managed | `ldc` string CP entry ✅ for ASCII literals | `String.length()` ✅ for ASCII literals | planned | planned | `PrintStream.print(String)` ✅ |
+| **CLR** | GC | `System.String` for the landed literal-output/length slice; byte-string representation still under E4-managed | `ldstr "…"` ✅ for ASCII literals | `String.Length` ✅ for ASCII literals | planned | planned | `Console.Write(string)` ✅ |
+| **WASM** | linear-memory foothold now; WasmGC later | `i32` pointer into a data segment for the landed literal-output/length slice; richer byte-string representation still under E4-managed | data segment ✅ for ASCII literals | literal side-table length ✅ | planned | planned | host import `env.__print_str(ptr,len)` ✅ |
+| **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | private `{len,bytes}` global ✅ for ASCII literals | literal side-table length ✅ | planned | planned | `@__print_str(i8* base+8, i64 len)` C-runtime ✅ |
+| **x86_64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | planned | planned | `call __twig_print_string(ptr,len)` ✅ |
+| **aarch64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | planned | planned | `bl __twig_print_string(ptr,len)` ✅ |
 
 **Unmanaged header layout** (LLVM / x86_64 / aarch64): identical to E5's array
 header — word 0 is the byte count, bytes start at offset 8. String literals are
@@ -118,10 +118,11 @@ emitted once into read-only data with that header; `str_concat` allocates a fres
 machinery. **No new allocator** — E4 reuses E5's.
 
 **Managed backends** (JVM/CLR/WASM): JVM/CLR currently use native `String`
-constant loads (`ldc`/`ldstr`) for the literal-output slice. WASM currently uses
-a linear-memory data segment and passes `(ptr,len)` to the host printer; a richer
-managed `(array i8)`/WasmGC representation remains the follow-up for byte-string
-ops.
+constant loads (`ldc`/`ldstr`) for the literal-output/length slice; because the
+landed proof is printable ASCII, managed character length equals E4 byte length.
+WASM currently uses a linear-memory data segment and side-table length metadata,
+passing `(ptr,len)` to the host printer; a richer managed `(array i8)`/WasmGC
+representation remains the follow-up for byte-string ops.
 
 **The print runtime** (`print_str`): the static backends share one
 `__print_str(const char* base_plus_8, long len)` C runtime (the string sibling of
@@ -199,17 +200,22 @@ merge before the next:
    WASM data segment +
    `env.__print_str(ptr,len)`, JVM/CLR `ldc`/`ldstr` + `PrintStream.print`/
    `Console.Write(string)`).
-3. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
+3. ✅ **E4-literal-length proof** — Twig lowers literal `(string-length "HELLO")`
+   to shared `str_const` + `str_len`; matrix `Prog` returns `5` on native-AOT +
+   VM + JIT + LLVM + WASM + JVM + CLR. This is deliberately still a direct-literal
+   foothold: native folds to an integer const, LLVM/WASM use literal side tables,
+   and JVM/CLR use managed `String` length for printable ASCII.
+4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
    diverge.)
-4. **E4-static-backends** — full native x86_64 + aarch64 byte-string ops
+5. **E4-static-backends** — full native x86_64 + aarch64 byte-string ops
    (length-prefixed rodata literals + heap `str_concat` + explicit `str_index`
    guard). Native literal output is already proven through the heap-byte foothold;
    this item is now the richer ops/representation slice.
-5. **E4-ops-proofs** — matrix programs for `str_concat`+`str_len` (⇒ `5`) and
+6. **E4-ops-proofs** — matrix programs for `str_concat`+`str_len` (⇒ `5`) and
    `str_eq` driving a branch, plus the `str_index` out-of-bounds **trap** proof,
    across every backend.
-6. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`; string
+7. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`; string
    *variables* and reassignment in each frontend; ALGOL `string` arrays; Unicode
    codepoint/grapheme semantics; the dynamic-`any` Twig string path (needs broader
    E6); string interpolation.

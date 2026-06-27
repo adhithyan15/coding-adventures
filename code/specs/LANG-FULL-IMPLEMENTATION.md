@@ -211,12 +211,15 @@ multiple languages; close an enabler before the features that depend on it.
   buffer on the static backends; native `String` / managed `(array i8)` on the managed
   backends), so E4 is the *byte-aggregate sibling of E5*, not a new allocator. The one new
   host primitive is `__print_str`/`printStr` (the string sibling of `print_i64`). The VM now
-  executes the shared ops directly (`tests/e4_strings.rs`), and Dartmouth BASIC `PRINT "HELLO"`
-  has a VM/JIT/WASM/JVM/CLR matrix proof. WASM owns the literal-output shape with a
-  linear-memory data segment + `env.__print_str(ptr,len)`, and JVM/CLR own it with
-  `ldc`/`ldstr` + `PrintStream.print(String)`/`Console.Write(string)`; richer string ops
-  and the native/LLVM static backend lowerings remain. Unlocks BASIC strings + string `PRINT` (BA4),
-  ALGOL strings/I-O (AL4), Twig strings (TW4).
+  executes the shared ops directly (`tests/e4_strings.rs`), Dartmouth BASIC
+  `PRINT "HELLO"` runs on all 7 backends, and Twig `(string-length "HELLO")`
+  proves direct literal `str_len` on all 7 backends. WASM owns the literal-output
+  shape with a linear-memory data segment + `env.__print_str(ptr,len)`, LLVM owns
+  the static private `{len,bytes}` global + `@__print_str` shape, native AOT owns
+  the heap-byte `alloc_bytes` + `store_byte` + `print_string` shape, and JVM/CLR
+  own it with `ldc`/`ldstr` + `PrintStream.print(String)`/`Console.Write(string)`;
+  richer string ops (`str_concat`, `str_index`, `str_eq`) and string variables remain.
+  Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR
   array model (`alloc_array`/`array_len`/`array_get`/`array_set`, `array<T>` type hint,
@@ -466,8 +469,8 @@ backend immediately) come before the enabler-dependent items.
   backends — verified by a straight-line array program (`DIM A(3); A(1)=40; A(2)=2;
   PRINT A(1)+A(2)` ⇒ `42`) in `lang-aot/tests/lang_matrix.rs`. (`dartmouth-basic-iir-compiler`
   0.7.0.) Undeclared subscript use is a clean `Unsupported` error.
-- ◑ **BA4** — string literal `PRINT` runs on VM/JIT/WASM/JVM/CLR via **E4**; string
-  variables, native/LLVM lowering, and richer string ops remain.
+- ◑ **BA4** — string literal `PRINT` runs on all 7 backends via **E4**; string
+  variables and richer string ops remain.
 - ✅ **BA5** — `DEF FN` single-line user functions. `DEF FNx(P) = expr` lowers to a
   sibling `IIRFunction` (one numeric param, `FullyTyped`) and `FNx(arg)` lowers to the
   shared IIR `call` — the same convention ALGOL's value procedures (AL3) run on every

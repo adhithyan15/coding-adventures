@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-wasm"
-version = "0.19.0"
+version = "0.20.0"
 edition = "2021"
-description = "IIR → WASM backend — lowers IIRModule to WasmModule.  v0.19.0 (LANG-FULL E4/BA4): str_const + print_str literal output via linear-memory data segments and env.__print_str(ptr,len).  v0.18.0 (LANG-FULL BA1-WASM): dispatch-loop fix — append a sentinel empty block when the last basic block contains jmp_if_true/jmp_if_false, so the GOSUB RETURN dispatch chain is in the second-to-last block where the loop-restart depth formula works correctly (eliminates the StackUnderflow trap).  v0.17.0 (E8 conversions): int_to_real/real_to_int_trunc/real_to_int_floor.  v0.16.0 (E5): array<T> over linear memory (length-prefixed, explicit bounds trap).  v0.15.0 (E2): narrow unsigned types ride the i64 register model + mask.  v0.13.0 (Brainfuck): byte-tape ops over linear memory."
+description = "IIR → WASM backend — lowers IIRModule to WasmModule.  v0.20.0 (LANG-FULL E4): str_len over a direct str_const materialises the literal byte count from string data metadata.  v0.19.0 (LANG-FULL E4/BA4): str_const + print_str literal output via linear-memory data segments and env.__print_str(ptr,len).  v0.18.0 (LANG-FULL BA1-WASM): dispatch-loop fix — append a sentinel empty block when the last basic block contains jmp_if_true/jmp_if_false, so the GOSUB RETURN dispatch chain is in the second-to-last block where the loop-restart depth formula works correctly (eliminates the StackUnderflow trap).  v0.17.0 (E8 conversions): int_to_real/real_to_int_trunc/real_to_int_floor.  v0.16.0 (E5): array<T> over linear memory (length-prefixed, explicit bounds trap).  v0.15.0 (E2): narrow unsigned types ride the i64 register model + mask.  v0.13.0 (Brainfuck): byte-tape ops over linear memory."
 
 [lib]
 name = "iir_to_wasm"

@@ -1,5 +1,16 @@
 # Changelog — twig-ir-compiler
 
+## [0.25.0] — 2026-06-27 (LANG-FULL E4 — literal `string-length`)
+
+Literal `(string-length "...")` now lowers to the shared E4 VM string ops:
+`str_const` for the literal and `str_len` for the integer result. This gives the
+code-gen backends a typed, language-neutral string-length proof while preserving
+the existing dynamic `call_builtin "string-length"` path for non-literal string
+values.
+
+Verified by compiler tests asserting the exact `str_const` + `str_len` + `ret`
+shape and by the cross-backend `lang-aot` matrix row.
+
 ## [0.24.0] — 2026-06-14 (Path A increment 4 — top-level value `define`, LANG-FULL TW2)
 
 ### Added — a `main`-only value `define` lowers to a typed local

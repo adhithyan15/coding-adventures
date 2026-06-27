@@ -568,11 +568,11 @@ fn emit_method(
             // str_const <dest> = Str(s)  ->  ldstr "..."; st<dest>
             //
             // LANG-FULL E4 first managed foothold: Dartmouth BASIC string
-            // literal PRINT lowers to `str_const` + `print_str`, which maps
-            // naturally to CoreCLR's `System.String` and `Console.Write(string)`.
-            // The richer byte-oriented string algebra (`str_len`/`str_index`)
-            // remains deliberately unsupported here until the representation is
-            // specified for non-ASCII and byte indexing.
+            // literal PRINT lowers to `str_const` + `print_str`, and literal
+            // string length lowers to `str_len`. Both map naturally to
+            // CoreCLR's `System.String`. The richer byte-oriented string
+            // algebra remains deliberately unsupported here until the
+            // representation is specified for non-ASCII and byte indexing.
             "str_const" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
@@ -588,6 +588,24 @@ fn emit_method(
                     }
                 };
                 let _ = writeln!(il, "    ldstr {literal}");
+                store_var(il, &regs, dest)?;
+            }
+            // str_len <dest>, <src>  ->  System.String::get_Length()
+            //
+            // The v1 literal slice accepts only printable ASCII strings, so
+            // CLR's UTF-16 character count is byte-identical to the E4 byte
+            // length.
+            "str_len" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_len must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "str_len")?;
+                load_var(il, &regs, src)?;
+                let _ = writeln!(
+                    il,
+                    "    callvirt instance int32 [System.Runtime]System.String::get_Length()"
+                );
                 store_var(il, &regs, dest)?;
             }
             // print_str <src>  ->  Console.Write(string)
@@ -1682,6 +1700,29 @@ mod tests {
         assert!(
             !launcher.contains("WriteLine"),
             "launcher must not print the entry result for print_str programs; got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_len_emits_string_length() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("ldstr \"HELLO\""), "str_const must emit ldstr; got:\n{il}");
+        assert!(
+            il.contains("callvirt instance int32 [System.Runtime]System.String::get_Length()"),
+            "str_len must call System.String::get_Length(); got:\n{il}"
         );
     }
 

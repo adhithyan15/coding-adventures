@@ -1368,6 +1368,29 @@ impl Compiler {
             }
 
             if is_builtin(&v.name) {
+                if v.name == "string-length" && expr.args.len() == 1 {
+                    if let Expr::StrLit(StrLit { value, .. }) = &expr.args[0] {
+                        let string_reg = ctx.fresh_var("s");
+                        ctx.emit(IIRInstr::new(
+                            "str_const",
+                            Some(string_reg.clone()),
+                            vec![Operand::Str(value.clone())],
+                            "str",
+                        ), loc);
+                        ctx.var_types.insert(string_reg.clone(), "str".to_string());
+
+                        let dest = ctx.fresh_var("r");
+                        ctx.emit(IIRInstr::new(
+                            "str_len",
+                            Some(dest.clone()),
+                            vec![Operand::Var(string_reg)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(dest.clone(), "i64".to_string());
+                        return Ok(dest);
+                    }
+                }
+
                 // Resolve every argument before deciding the lowering path.
                 let arg_regs: Vec<String> = expr
                     .args

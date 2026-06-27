@@ -3,6 +3,20 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.18.0] — 2026-06-27 — literal string length reaches LLVM (LANG-FULL E4)
+
+Extends the E4 literal-string foothold from output to direct literal length.
+
+- `str_len` is now accepted when its source is a `str_const` literal value in the
+  same function.
+- Lowering materialises the byte count from the existing private string-literal
+  side table, so `(string-length "HELLO")` returns `5` without needing a runtime
+  string API.
+- Validation remains fail-closed for dynamic string algebra: `str_index`,
+  `str_concat`, and `str_eq` are still outside this slice.
+- Backend tests assert the emitted function returns `ret i64 5` and that the
+  richer string-op rejection still fires.
+
 ## [0.17.0] — 2026-06-27 — BASIC string literal PRINT reaches LLVM (LANG-FULL E4 / BA4)
 
 Adds the static-backend literal-output foothold for `str_const` + `print_str`.

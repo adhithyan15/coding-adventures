@@ -2408,6 +2408,50 @@ fn e4_string_print_lowers_to_ldc_and_printstream_print() {
     assert_ne!(print_ref, 0, "constant pool must contain PrintStream.print(String)");
 }
 
+#[test]
+fn e4_string_len_lowers_to_string_length() {
+    let f = IIRFunction::new(
+        "len_hello",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal len should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "len_hello")
+        .expect("len_hello method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.contains(&0xB6),
+        "str_len must invokevirtual java/lang/String.length; got: {:?}",
+        code
+    );
+    assert!(
+        code.contains(&0x85),
+        "i64 str_len result must widen String.length()I with I2L; got: {:?}",
+        code
+    );
+
+    let length_ref = find_methodref_in_cp(&class.constant_pool, "java/lang/String", "length", "()I");
+    assert_ne!(length_ref, 0, "constant pool must contain java/lang/String.length()I");
+}
+
 /// McCarthy W3b: `box` lowers to `Integer.valueOf(I)` (invokestatic 0xB8) and
 /// `unbox` to `checkcast` (0xC0) + `Integer.intValue()` (invokevirtual 0xB6).
 #[test]

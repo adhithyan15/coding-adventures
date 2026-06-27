@@ -32,7 +32,7 @@
 //!
 //! `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`,
 //! `box`, `unbox`, `safepoint`, and the byte-oriented E4 string algebra beyond
-//! `str_const` + `print_str`.
+//! `str_const` + `str_len` + `print_str`.
 //!
 //! The following ops are now SUPPORTED via `Object[]` cons cells (Phase 2):
 //! `alloc` (when `type_hint == "ref<LispyPair>"`), `field_load`, `field_store`,
@@ -273,7 +273,8 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
             // `"str"` — The backend can now load an ASCII literal for
-            // `str_const`, enough for Dartmouth BASIC string `PRINT`. Other
+            // `str_const`, enough for Dartmouth BASIC string `PRINT`. `str_len`
+            // produces an integer. Other
             // string-typed producers still need a fuller byte-oriented
             // representation before Java `String` is safe for them.
             //
@@ -320,14 +321,27 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // unknown / unsafe builtins.
             if matches!(
                 instr.op.as_str(),
-                "str_len" | "str_index" | "str_concat" | "str_eq"
+                "str_index" | "str_concat" | "str_eq"
             ) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
-                     the JVM backend; only str_const + print_str are supported \
+                     the JVM backend; only str_const + str_len + print_str are supported \
                      for LANG-FULL E4 in this slice",
                     func.name, instr.op
                 ));
+            } else if instr.op == "str_len" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — lower.rs calls java/lang/String.length()I.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_len\" requires \
+                             dest, one Operand::Var source, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
             } else if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
@@ -497,8 +511,27 @@ mod tests {
     }
 
     #[test]
+    fn str_len_literal_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_len over a direct literal should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
     fn byte_string_algebra_still_rejected() {
-        for op in ["str_len", "str_index", "str_concat", "str_eq"] {
+        for op in ["str_index", "str_concat", "str_eq"] {
             let errs = validate_for_jvm(&single_fn_module(vec![
                 IIRInstr::new(
                     op,

@@ -22,6 +22,11 @@ Anonymous lambdas have their captured free variables prepended to the parameter 
 
 Top-level value defines lower one of two ways (TW2). A value define that is **not captured by any lambda** is read only from `main`, so its statically-typed (`i64`/`bool`) value is kept in a `main` register and reads return it directly — fully typed, accepted by every code-gen backend. A value define **captured by a closure** (read inside a lambda body, which compiles to a separate function) stays on the host global table via `call_builtin "global_set" name value` / `global_get`, as does a top-level forward reference.
 
+Literal `(string-length "...")` lowers to a typed E4 string pair:
+`str_const` for the literal and `str_len` for the `i64` byte-count result. The
+dynamic `call_builtin "string-length"` path remains in place for non-literal
+string values.
+
 All emitted instructions carry `type_hint = "any"` because Twig is dynamically typed. Functions therefore have `type_status = Untyped`. The vm-core profiler observes runtime types; the JIT specialises later.
 
 ## Apply-site dispatch

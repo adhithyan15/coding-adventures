@@ -1450,11 +1450,12 @@ fn strip_dead_string_consts(func: &mut IIRFunction) {
 ///
 /// The direct native backends already know how to allocate bytes, store bytes,
 /// and call the portable `__twig_print_string(ptr,len)` runtime helper. This
-/// pass reuses that path for `str_const` + `print_str`; richer string ops remain
-/// unsupported until the full byte-string runtime lands.
+/// pass reuses that path for `str_const` + `print_str` and folds direct
+/// literal `str_len`; richer string ops remain unsupported until the full
+/// byte-string runtime lands.
 fn lower_string_literals_for_aot(func: &mut IIRFunction) {
     let mut lowered = Vec::with_capacity(func.instructions.len());
-    let mut strings: HashMap<String, (String, String)> = HashMap::new();
+    let mut strings: HashMap<String, (String, String, usize)> = HashMap::new();
     let mut next = 0usize;
 
     for instr in std::mem::take(&mut func.instructions) {
@@ -1521,7 +1522,29 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                     "void",
                 ));
             }
-            strings.insert(dest, (buf_var, len_var));
+            strings.insert(dest, (buf_var, len_var, literal.len()));
+            continue;
+        }
+
+        if instr.op == "str_len" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some(Operand::Var(src)) = instr.srcs.first() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, len)) = strings.get(src).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(dest),
+                vec![Operand::Int(len as i64)],
+                &instr.type_hint,
+            ));
             continue;
         }
 
@@ -1530,7 +1553,7 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 lowered.push(instr);
                 continue;
             };
-            let Some((buf_var, len_var)) = strings.get(src).cloned() else {
+            let Some((buf_var, len_var, _)) = strings.get(src).cloned() else {
                 lowered.push(instr);
                 continue;
             };
@@ -1588,8 +1611,9 @@ fn default_any_to_i64(func: &mut IIRFunction) {
 ///     `"global_get"` to `global_store` / `global_load` (LANG39).
 ///     Must run first so the const-string look-back can see all instructions.
 ///  0a-string. `lower_string_literals_for_aot` — converts E4 literal-output
-///     `str_const` + `print_str` into existing native heap-byte I/O:
-///     `alloc_bytes`, `store_byte`, and `call_builtin "print_string"`.
+///     `str_const` + `print_str` into existing native heap-byte I/O
+///     (`alloc_bytes`, `store_byte`, and `call_builtin "print_string"`) and
+///     folds direct literal `str_len` to an integer constant.
 ///  0b. `strip_dead_string_consts` — removes `const %n = Var("name")`
 ///     instructions that are now dead after step 0.  Without this pass,
 ///     `aot_specialise` converts them to `const_str` which the ARM64 backend
@@ -2015,6 +2039,34 @@ mod tests {
                     && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "print_string")
             }),
             "print_str should lower to call_builtin print_string"
+        );
+    }
+
+    #[test]
+    fn string_literal_len_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HELLO".into())], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let len_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n"));
+        assert!(
+            matches!(len_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(5)]),
+            "str_len over a literal should fold to const 5: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_len"),
+            "native lowering should remove folded str_len: {:?}",
+            f.instructions
         );
     }
 
