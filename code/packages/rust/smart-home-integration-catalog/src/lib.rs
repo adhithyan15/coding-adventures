@@ -27070,6 +27070,184 @@ impl
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionRow
+{
+    pub sequence: usize,
+    pub protocol_evidence_package_handoff_execution_action_row_key: String,
+    pub protocol_evidence_package_handoff_execution_slot_sequence: usize,
+    pub protocol_evidence_package_handoff_execution_slot_key: String,
+    pub protocol_evidence_package_handoff_row_sequence: usize,
+    pub protocol_evidence_package_handoff_row_key: String,
+    pub protocol_evidence_package_key: String,
+    pub protocol_evidence_packet_key: String,
+    pub protocol: ProtocolFamily,
+    pub handoff_lane: IntegrationMeshReleaseDispatchTicketHandoffLane,
+    pub handoff_action_kind:
+        IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind,
+    pub total_substrate_rows: usize,
+    pub ready_substrate_rows: usize,
+    pub blocked_substrate_rows: usize,
+    pub total_handoff_action_evidence_rows: usize,
+    pub required_handoff_action_evidence_rows: usize,
+    pub release_blocking_handoff_action_evidence_rows: usize,
+    pub operator_required_handoff_action_evidence_rows: usize,
+    pub review_required_handoff_action_evidence_rows: usize,
+    pub dispatch_required_handoff_action_evidence_rows: usize,
+    pub execution_required_handoff_action_evidence_rows: usize,
+    pub release_handoff_evidence_rows: usize,
+    pub release_ready_handoff_action_evidence_rows: usize,
+    pub next_handoff_action_evidence_row_key: Option<String>,
+    pub next_blocked_substrate_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub handoff_action_evidence_ready: bool,
+    pub protocol_substrate_ready: bool,
+    pub protocol_evidence_packet_ready: bool,
+    pub protocol_evidence_package_ready: bool,
+    pub package_handoff_ready: bool,
+    pub protocol_evidence_package_handoff_ready: bool,
+    pub protocol_evidence_package_handoff_execution_slots_ready: bool,
+    pub package_handoff_execution_ready: bool,
+}
+
+impl
+    IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionRow
+{
+    pub fn from_execution_slot(
+        sequence: usize,
+        slot: &IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionSlot,
+        protocol_evidence_package_handoff_execution_slots_ready: bool,
+    ) -> Self {
+        let handoff_action_kind = if slot.ready_for_package_handoff_execution()
+            && protocol_evidence_package_handoff_execution_slots_ready
+        {
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::ReleaseHandoff
+        } else if slot.has_blockers() || slot.is_repair_slot() {
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::RepairHandoff
+        } else if slot.has_review_work() || slot.is_review_slot() {
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::ReviewHandoff
+        } else if slot.needs_operator() || slot.is_operator_slot() {
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::OperatorHandoff
+        } else if slot.requires_dispatch() {
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::DispatchHandoff
+        } else if slot.requires_execution() {
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::ExecuteHandoff
+        } else {
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::PreserveLineage
+        };
+
+        Self {
+            sequence,
+            protocol_evidence_package_handoff_execution_action_row_key: format!(
+                "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-protocol-evidence-package-handoff-execution-action-{sequence:02}-{}-{}",
+                handoff_action_kind.as_str(),
+                protocol_sort_token(&slot.protocol)
+            ),
+            protocol_evidence_package_handoff_execution_slot_sequence: slot.sequence,
+            protocol_evidence_package_handoff_execution_slot_key: slot
+                .protocol_evidence_package_handoff_execution_slot_key
+                .clone(),
+            protocol_evidence_package_handoff_row_sequence: slot
+                .protocol_evidence_package_handoff_row_sequence,
+            protocol_evidence_package_handoff_row_key: slot
+                .protocol_evidence_package_handoff_row_key
+                .clone(),
+            protocol_evidence_package_key: slot.protocol_evidence_package_key.clone(),
+            protocol_evidence_packet_key: slot.protocol_evidence_packet_key.clone(),
+            protocol: slot.protocol.clone(),
+            handoff_lane: slot.handoff_lane,
+            handoff_action_kind,
+            total_substrate_rows: slot.total_substrate_rows,
+            ready_substrate_rows: slot.ready_substrate_rows,
+            blocked_substrate_rows: slot.blocked_substrate_rows,
+            total_handoff_action_evidence_rows: slot.total_handoff_action_evidence_rows,
+            required_handoff_action_evidence_rows: slot.required_handoff_action_evidence_rows,
+            release_blocking_handoff_action_evidence_rows: slot
+                .release_blocking_handoff_action_evidence_rows,
+            operator_required_handoff_action_evidence_rows: slot
+                .operator_required_handoff_action_evidence_rows,
+            review_required_handoff_action_evidence_rows: slot
+                .review_required_handoff_action_evidence_rows,
+            dispatch_required_handoff_action_evidence_rows: slot
+                .dispatch_required_handoff_action_evidence_rows,
+            execution_required_handoff_action_evidence_rows: slot
+                .execution_required_handoff_action_evidence_rows,
+            release_handoff_evidence_rows: slot.release_handoff_evidence_rows,
+            release_ready_handoff_action_evidence_rows: slot
+                .release_ready_handoff_action_evidence_rows,
+            next_handoff_action_evidence_row_key: slot
+                .first_required_handoff_action_evidence_row_key
+                .clone(),
+            next_blocked_substrate_stage: slot.first_blocked_substrate_stage,
+            handoff_action_evidence_ready: slot.handoff_action_evidence_ready,
+            protocol_substrate_ready: slot.protocol_substrate_ready,
+            protocol_evidence_packet_ready: slot.protocol_evidence_packet_ready,
+            protocol_evidence_package_ready: slot.protocol_evidence_package_ready,
+            package_handoff_ready: slot.package_handoff_ready,
+            protocol_evidence_package_handoff_ready: slot.protocol_evidence_package_handoff_ready,
+            protocol_evidence_package_handoff_execution_slots_ready,
+            package_handoff_execution_ready: slot.ready_for_package_handoff_execution(),
+        }
+    }
+
+    pub fn blocks_release(&self) -> bool {
+        self.blocked_substrate_rows > 0 || self.release_blocking_handoff_action_evidence_rows > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_handoff_action_evidence_rows > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_handoff_action_evidence_rows > 0
+    }
+
+    pub fn requires_dispatch(&self) -> bool {
+        self.dispatch_required_handoff_action_evidence_rows > 0
+    }
+
+    pub fn requires_execution(&self) -> bool {
+        self.execution_required_handoff_action_evidence_rows > 0
+    }
+
+    pub fn is_repair_action(&self) -> bool {
+        self.handoff_action_kind
+            == IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::RepairHandoff
+    }
+
+    pub fn is_review_action(&self) -> bool {
+        self.handoff_action_kind
+            == IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::ReviewHandoff
+    }
+
+    pub fn is_release_handoff_action(&self) -> bool {
+        self.handoff_action_kind
+            == IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionKind::ReleaseHandoff
+    }
+
+    pub fn ready_for_package_handoff_execution_action(&self) -> bool {
+        self.is_release_handoff_action()
+            && self.protocol_evidence_package_handoff_execution_slots_ready
+            && self.package_handoff_execution_ready
+            && !self.requires_attention()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.blocks_release()
+            || self.needs_operator()
+            || self.has_review_work()
+            || self.requires_dispatch()
+            || self.requires_execution()
+            || !self.handoff_action_evidence_ready
+            || !self.protocol_substrate_ready
+            || !self.protocol_evidence_packet_ready
+            || !self.protocol_evidence_package_ready
+            || !self.package_handoff_ready
+            || !self.protocol_evidence_package_handoff_ready
+            || !self.protocol_evidence_package_handoff_execution_slots_ready
+            || !self.package_handoff_execution_ready
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewSummary {
     pub release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_summary:
         Box<IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceSummary>,
@@ -53007,6 +53185,58 @@ pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_
     )
 }
 
+pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_protocol_evidence_package_handoff_execution_action_rows_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionRow>
+{
+    let slot_summary =
+        mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_protocol_evidence_package_handoff_execution_slot_summary_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+    let slots_ready =
+        slot_summary.ready_for_release_ticket_handoff_protocol_evidence_package_handoff_execution();
+    let slots =
+        mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_protocol_evidence_package_handoff_execution_slots_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+
+    slots
+        .iter()
+        .enumerate()
+        .map(|(index, slot)| {
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionRow::from_execution_slot(
+                index + 1,
+                slot,
+                slots_ready,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_protocol_evidence_package_handoff_execution_action_rows(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionRow>
+{
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_protocol_evidence_package_handoff_execution_action_rows_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 pub fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_evidence_review_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -73937,6 +74167,164 @@ mod tests {
         assert!(!summary.requires_dispatch());
         assert!(!summary.requires_execution());
         assert!(!summary.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_protocol_evidence_package_handoff_execution_action_rows_surface_attention(
+    ) {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let action_rows =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_protocol_evidence_package_handoff_execution_action_rows(
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(action_rows.len(), 3);
+        assert_eq!(action_rows[0].protocol, ProtocolFamily::Zigbee);
+        assert_eq!(
+            action_rows[0].protocol_evidence_package_handoff_execution_action_row_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-protocol-evidence-package-handoff-execution-action-01-repair_handoff-Zigbee"
+        );
+        assert_eq!(
+            action_rows[0].protocol_evidence_package_handoff_execution_slot_sequence,
+            1
+        );
+        assert_eq!(
+            action_rows[0].protocol_evidence_package_handoff_execution_slot_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-protocol-evidence-package-handoff-execution-slot-01-Zigbee"
+        );
+        assert_eq!(
+            action_rows[0].protocol_evidence_package_handoff_row_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-protocol-evidence-package-handoff-row-01-Zigbee"
+        );
+        assert_eq!(
+            action_rows[0].handoff_lane,
+            IntegrationMeshReleaseDispatchTicketHandoffLane::Review
+        );
+        assert!(action_rows[0].is_repair_action());
+        assert!(!action_rows[0].is_release_handoff_action());
+        assert_eq!(action_rows[0].blocked_substrate_rows, 1);
+        assert_eq!(action_rows[0].required_handoff_action_evidence_rows, 5);
+        assert_eq!(
+            action_rows[0].release_blocking_handoff_action_evidence_rows,
+            3
+        );
+        assert_eq!(
+            action_rows[0].operator_required_handoff_action_evidence_rows,
+            4
+        );
+        assert_eq!(
+            action_rows[0].review_required_handoff_action_evidence_rows,
+            2
+        );
+        assert_eq!(
+            action_rows[0].dispatch_required_handoff_action_evidence_rows,
+            5
+        );
+        assert_eq!(
+            action_rows[0].execution_required_handoff_action_evidence_rows,
+            5
+        );
+        assert_eq!(
+            action_rows[0].next_handoff_action_evidence_row_key,
+            Some(
+                "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-evidence-01-repair_handoff-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            action_rows[0].next_blocked_substrate_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+        );
+        assert!(!action_rows[0].protocol_evidence_package_handoff_execution_slots_ready);
+        assert!(!action_rows[0].package_handoff_execution_ready);
+        assert!(action_rows[0].blocks_release());
+        assert!(action_rows[0].needs_operator());
+        assert!(action_rows[0].has_review_work());
+        assert!(action_rows[0].requires_dispatch());
+        assert!(action_rows[0].requires_execution());
+        assert!(action_rows[0].requires_attention());
+        assert!(!action_rows[0].ready_for_package_handoff_execution_action());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_protocol_evidence_package_handoff_execution_action_rows_mark_release_ready(
+    ) {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let action_rows =
+            mesh_release_ticket_handoff_readiness_evidence_review_disposition_action_readiness_execution_handoff_action_protocol_evidence_package_handoff_execution_action_rows_for_catalog(
+                &catalog,
+                all_primitive_families(),
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(action_rows.len(), 3);
+        assert_eq!(action_rows[0].protocol, ProtocolFamily::Zigbee);
+        assert_eq!(
+            action_rows[0].protocol_evidence_package_handoff_execution_action_row_key,
+            "release-ticket-handoff-readiness-evidence-review-disposition-action-readiness-handoff-action-protocol-evidence-package-handoff-execution-action-01-release_handoff-Zigbee"
+        );
+        assert_eq!(
+            action_rows[0].handoff_lane,
+            IntegrationMeshReleaseDispatchTicketHandoffLane::Release
+        );
+        assert!(action_rows[0].is_release_handoff_action());
+        assert!(!action_rows[0].is_repair_action());
+        assert!(!action_rows[0].is_review_action());
+        assert_eq!(action_rows[0].blocked_substrate_rows, 0);
+        assert_eq!(action_rows[0].required_handoff_action_evidence_rows, 0);
+        assert_eq!(
+            action_rows[0].release_blocking_handoff_action_evidence_rows,
+            0
+        );
+        assert_eq!(
+            action_rows[0].operator_required_handoff_action_evidence_rows,
+            0
+        );
+        assert_eq!(
+            action_rows[0].review_required_handoff_action_evidence_rows,
+            0
+        );
+        assert_eq!(
+            action_rows[0].dispatch_required_handoff_action_evidence_rows,
+            0
+        );
+        assert_eq!(
+            action_rows[0].execution_required_handoff_action_evidence_rows,
+            0
+        );
+        assert_eq!(action_rows[0].release_handoff_evidence_rows, 5);
+        assert_eq!(action_rows[0].release_ready_handoff_action_evidence_rows, 5);
+        assert_eq!(action_rows[0].next_handoff_action_evidence_row_key, None);
+        assert_eq!(action_rows[0].next_blocked_substrate_stage, None);
+        assert!(action_rows[0].handoff_action_evidence_ready);
+        assert!(action_rows[0].protocol_substrate_ready);
+        assert!(action_rows[0].protocol_evidence_packet_ready);
+        assert!(action_rows[0].protocol_evidence_package_ready);
+        assert!(action_rows[0].package_handoff_ready);
+        assert!(action_rows[0].protocol_evidence_package_handoff_ready);
+        assert!(action_rows[0].protocol_evidence_package_handoff_execution_slots_ready);
+        assert!(action_rows[0].package_handoff_execution_ready);
+        assert!(!action_rows[0].blocks_release());
+        assert!(!action_rows[0].needs_operator());
+        assert!(!action_rows[0].has_review_work());
+        assert!(!action_rows[0].requires_dispatch());
+        assert!(!action_rows[0].requires_execution());
+        assert!(!action_rows[0].requires_attention());
+        assert!(action_rows[0].ready_for_package_handoff_execution_action());
     }
 
     #[test]

@@ -98,6 +98,9 @@ All notable changes to this package will be documented in this file.
 - Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action summaries that combine action-row counts
   with next repair, review, and release handoff pointers.
+- Mesh release ticket handoff protocol-evidence package handoff execution
+  action rows that turn package execution slots into repair, review, operator,
+  dispatch, execution, and release handoff work.
 - Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence rows that preserve action
   lineage, release evidence, and handoff readiness flags.
