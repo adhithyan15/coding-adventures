@@ -3438,6 +3438,55 @@ mod tests {
     }
 
     #[test]
+    fn al4_output_two_string_variables_lowers_to_ordered_print_str() {
+        let module = compile_source(
+            "begin string s, t; s := 'O'; t := 'K'; output(s, t) end",
+            "test",
+        )
+        .expect("output variables compile");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        let s_slot = main
+            .instructions
+            .iter()
+            .find(|i| {
+                i.op == "str_const"
+                    && matches!(i.srcs.first(), Some(Operand::Str(s)) if s == "O")
+            })
+            .and_then(|i| i.dest.as_deref())
+            .expect("s literal slot");
+        let t_slot = main
+            .instructions
+            .iter()
+            .find(|i| {
+                i.op == "str_const"
+                    && matches!(i.srcs.first(), Some(Operand::Str(s)) if s == "K")
+            })
+            .and_then(|i| i.dest.as_deref())
+            .expect("t literal slot");
+        let print_s = main
+            .instructions
+            .iter()
+            .position(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == s_slot)
+            })
+            .expect("output should print s");
+        let print_t = main
+            .instructions
+            .iter()
+            .position(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == t_slot)
+            })
+            .expect("output should print t");
+        assert!(print_s < print_t, "output(s, t) should preserve actual order");
+    }
+
+    #[test]
     fn al4_print_numeric_argument_rejects_until_string_expressions_land() {
         let err = compile_source("begin print(42) end", "test")
             .expect_err("numeric print is outside the AL4 literal-string slice");

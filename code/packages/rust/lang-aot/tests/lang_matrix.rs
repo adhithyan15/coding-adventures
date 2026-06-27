@@ -659,6 +659,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — `output` preserves multiple literal-backed scalar string
+    // actuals. This proves the AL4 standard-output alias can consume two E4
+    // string slots in source order without adding separators or using dynamic
+    // procedure calls.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s, t; s := 'O'; t := 'K'; output(s, t) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — literal-backed scalar string copy. This keeps AL4 inside the
     // same immutable E4 shape BASIC now uses: `t := s` lowers through
     // `str_concat` with an empty suffix, then `print(t)` consumes the target

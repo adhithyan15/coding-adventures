@@ -1,8 +1,8 @@
 [package]
 name = "algol-iir-compiler"
-version = "0.14.0"
+version = "0.15.0"
 edition = "2021"
-description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.14.0 proves AL4 scalar string copy snapshot semantics: string s, t; s := 'OK'; t := s; s := 'NO'; print(t) still prints the copied target through E4 str_concat + print_str on every LANG backend."
+description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.15.0 proves AL4 multi-argument output over literal-backed scalar string slots on every LANG backend; v0.14.0 proved scalar string copy snapshots."
 
 [dependencies]
 coding-adventures-algol-parser = { path = "../algol-parser" }

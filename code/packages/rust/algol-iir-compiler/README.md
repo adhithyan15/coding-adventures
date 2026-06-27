@@ -83,9 +83,12 @@ Literal-backed scalar variables now use the same shape: `string s; s := 'HI'`
 materialises `s` with `str_const`, and `print(s)` consumes that direct slot.
 Literal-backed scalar copies now reuse E4 `str_concat` with an empty suffix:
 `string s, t; s := 'OK'; t := s; print(t)` writes `OK`, and `s := 'NO'`
-after the copy does not change the copied `t` slot. This is deliberately not a
-dynamic string model yet: unassigned string variables, captured/`own` strings,
-arrays, parameters, and non-literal string expressions still fail closed.
+after the copy does not change the copied `t` slot. Multi-argument output over
+literal-backed scalar string variables also stays on the same path:
+`string s, t; s := 'O'; t := 'K'; output(s, t)` emits ordered `print_str`
+calls and writes `OK`. This is deliberately not a dynamic string model yet:
+unassigned string variables, captured/`own` strings, arrays, parameters, and
+non-literal string expressions still fail closed.
 
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real

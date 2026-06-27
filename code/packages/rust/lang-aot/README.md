@@ -38,6 +38,8 @@ LANG VM chain.
 > The next ALGOL row proves literal-backed scalar string variables too:
 > `begin string s; s := 'HI'; print(s) end` produces stdout `HI` everywhere,
 > and `begin string s; s := 'OK'; output(s) end` proves the `output` alias;
+> `begin string s, t; s := 'O'; t := 'K'; output(s, t) end` proves
+> multi-argument output preserves ordered scalar string actuals;
 > `begin string s, t; s := 'OK'; t := s; print(t) end` now proves
 > literal-backed scalar string copy, and `s := 'NO'` after the copy leaves
 > `print(t)` at `OK`; captured strings and broader dynamic string storage remain
