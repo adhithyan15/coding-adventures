@@ -131,9 +131,15 @@ is text-primary, which is a different mode model.)
     (`itemize`/`enumerate`/`description`) with `\item`, operating on the document `Node` tree.
     Deferred because they need an extra column-spec field on the node; an unknown
     `\begin{…}` is rejected with a spanned error in the meantime, never mis-parsed.
-- **L4 — macros.** `\newcommand`/`\renewcommand`/`\def` with `#1`..`#9` and one optional
-  arg with default; expansion of user-defined and a built-in starter set. Recursion/loop
-  guard (bounded expansion depth → `Unsupported`/error, never hang).
+- **L4 — macros.** Split into sub-rungs:
+  - **L4a (shipped) — positional macros.** `\newcommand`/`\renewcommand`/`\providecommand`
+    with positional arity `[n]` and `#1`..`#9` bodies; opt-in `expand(Vec<Node>)` pass that
+    registers definitions (which then vanish) and replaces uses by substituted, recursively
+    expanded bodies. Recursion-depth + work-budget guards → spanned error, never hang.
+    Implemented in the `latex` crate (macros.rs).
+  - **L4b (later) — optional-arg defaults + `\def`.** `\newcommand{\x}[n][default]{…}` and
+    TeX-style `\def\x#1#2{…}` with arbitrary parameter text; `#n` inside math islands.
+  - **L4c (later) — built-in starter set** of common macros pre-registered.
 - **L5 — text-mode breadth.** Sectioning (`\section` …), font/style commands, text accents
   (`\'e`, `\"o`, `\~n`), `\verb`/`verbatim`, cross-refs (`\label`/`\ref`/`\cite` as nodes),
   `\documentclass`/`\usepackage` parsed structurally.

@@ -300,6 +300,12 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_summary`
   tool descriptors for read-only Chief maintenance disposition-action outcome
   rows derived from runtime work-order evidence review disposition actions.
+- `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness`
+  and
+  `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary`
+  tool descriptors for read-only Chief maintenance disposition-action outcome
+  readiness rows derived from runtime work-order evidence review disposition
+  action outcomes.
 - `smart_home.reconcile_desired_states` and `smart_home.run_supervision_tick`
   tool descriptors for authorized runtime supervision execution.
 - Health and command-result status helpers for shared supervision/read-side

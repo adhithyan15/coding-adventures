@@ -2,6 +2,31 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.5.0] — 2026-06-26
+
+### Added — LTX01 L4a: macro expansion
+
+- **`expand(nodes: Vec<Node>) -> Result<Vec<Node>, ParseError>`** — a new, opt-in pass over
+  the structural document tree (`parse` stays purely structural, so its round-trip is
+  preserved). It registers user macros and replaces their uses by substituted, recursively
+  expanded bodies; definitions vanish from the output (as in LaTeX).
+- **Definitions**: `\newcommand`/`\renewcommand`/`\providecommand` with positional arity
+  `[n]` and bodies referencing `#1`..`#9`. Handles L1's argument-capture quirk (it stops the
+  greedy `{…}` run at the `[n]` arity bracket) by re-scanning the definition's sibling nodes.
+- **Substitution** walks the tree (groups, command arguments, environment bodies) so `#n`
+  inside `\bar{#1}` works; `##` is a literal `#`; arguments are expanded call-by-value.
+- **Bounded & safe**: total, panic-free, spanned errors. Two guards stop runaway expansion —
+  a recursion-depth cap (`MAX_EXPANSION_DEPTH`) and a work-budget cap (`MAX_EXPANSION_STEPS`)
+  — so a self-recursive macro or an expansion bomb errors instead of hanging/overflowing.
+  Bad calls (too few args, parameter out of range, malformed definition, or an unsupported
+  `[n][default]` optional-with-default) are spanned errors.
+- **Honest scope (L4a)**: positional args only. Deferred: optional arguments with a default,
+  TeX-style `\def`, a built-in starter set, and `#n` substitution inside math islands.
+- +16 macro tests (zero/one/two-arg, reordering, macro-calls-macro, param-in-group,
+  redefinition, unknown-command pass-through, extra-group retention, `##`, recursion &
+  too-few-args & out-of-range & default-arg & malformed-definition errors). **80 unit + 1 doc
+  test** green; clippy `-D warnings` clean; no `unsafe`. Crate 0.4.0 → 0.5.0.
+
 ## [0.4.0] — 2026-06-26
 
 ### Added — LTX01 L3: math environments

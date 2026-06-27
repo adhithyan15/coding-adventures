@@ -364,6 +364,10 @@ pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSI
     &str = "smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcomes";
 pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_SUMMARY_TOOL_ID:
     &str = "smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_summary";
+pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_TOOL_ID:
+    &str = "smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness";
+pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_SUMMARY_TOOL_ID:
+    &str = "smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2641,6 +2645,32 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_TOOL_ID =>
+                {
+                    let query =
+                        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_query(
+                            &arguments,
+                        )?;
+                    list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_SUMMARY_TOOL_ID =>
+                {
+                    let query =
+                        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_query(
+                            &arguments,
+                        )?;
+                    get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6396,6 +6426,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_maintenance_work_order_evidence_review_disposition_action_summary_definition(),
         list_runtime_maintenance_work_order_evidence_review_disposition_action_outcomes_definition(),
         get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_summary_definition(),
+        list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_definition(),
+        get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -8078,6 +8110,75 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_sum
     )
 }
 
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_query_schema(
+) -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("window_kind", JsonSchema::String),
+            SchemaProperty::new("window_kinds", string_array_schema()),
+            SchemaProperty::new("remediation_kind", JsonSchema::String),
+            SchemaProperty::new("remediation_kinds", string_array_schema()),
+            SchemaProperty::new("ticket_status", JsonSchema::String),
+            SchemaProperty::new("ticket_statuses", string_array_schema()),
+            SchemaProperty::new("work_order_status", JsonSchema::String),
+            SchemaProperty::new("work_order_statuses", string_array_schema()),
+            SchemaProperty::new("guardrail_status", JsonSchema::String),
+            SchemaProperty::new("guardrail_statuses", string_array_schema()),
+            SchemaProperty::new("evidence_status", JsonSchema::String),
+            SchemaProperty::new("evidence_statuses", string_array_schema()),
+            SchemaProperty::new("review_status", JsonSchema::String),
+            SchemaProperty::new("review_statuses", string_array_schema()),
+            SchemaProperty::new("disposition_status", JsonSchema::String),
+            SchemaProperty::new("disposition_statuses", string_array_schema()),
+            SchemaProperty::new("action_status", JsonSchema::String),
+            SchemaProperty::new("action_statuses", string_array_schema()),
+            SchemaProperty::new("outcome_status", JsonSchema::String),
+            SchemaProperty::new("outcome_statuses", string_array_schema()),
+            SchemaProperty::new("readiness_status", JsonSchema::String),
+            SchemaProperty::new("readiness_statuses", string_array_schema()),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("recommended_tool", JsonSchema::String),
+            SchemaProperty::new("max_priority", JsonSchema::Integer),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_list_output_schema(
+) -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec![
+            "runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness",
+            "summary",
+            "count",
+        ],
+        false,
+    )
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_output_schema(
+) -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
 fn list_runtime_maintenance_work_order_evidence_review_dispositions_definition() -> ToolDefinition {
     read_definition(
         SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITIONS_TOOL_ID,
@@ -8140,6 +8241,28 @@ fn get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome
         "Summarize Chief-visible disposition action outcome rows derived from D23 runtime maintenance work-order evidence review disposition actions.",
         runtime_maintenance_work_order_evidence_review_disposition_action_outcome_query_schema(),
         runtime_maintenance_work_order_evidence_review_disposition_action_outcome_summary_output_schema(),
+    )
+}
+
+fn list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_definition(
+) -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_TOOL_ID,
+        "List smart-home runtime maintenance work-order evidence review disposition action outcome readiness",
+        "List Chief-visible disposition action outcome readiness rows derived from D23 runtime maintenance work-order evidence review disposition action outcomes without mutating the runtime.",
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_query_schema(),
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_list_output_schema(),
+    )
+}
+
+fn get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_definition(
+) -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_SUMMARY_TOOL_ID,
+        "Summarize smart-home runtime maintenance work-order evidence review disposition action outcome readiness",
+        "Summarize Chief-visible readiness rows derived from D23 runtime maintenance work-order evidence review disposition action outcomes.",
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_query_schema(),
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_output_schema(),
     )
 }
 
@@ -9838,6 +9961,39 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_que
             .into_iter()
             .map(|status| {
                 parse_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_status(
+                    &status,
+                )
+            })
+            .collect::<Result<Vec<_>, _>>()?,
+        },
+    )
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessQuery {
+    outcome_query: RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeQuery,
+    readiness_statuses: Vec<&'static str>,
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_query(
+    arguments: &JsonValue,
+) -> Result<
+    RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessQuery,
+    ToolCallError,
+> {
+    let outcome_query =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_query(arguments)?;
+    Ok(
+        RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessQuery {
+            outcome_query,
+            readiness_statuses: optional_string_list(
+                arguments,
+                "readiness_status",
+                "readiness_statuses",
+            )?
+            .into_iter()
+            .map(|status| {
+                parse_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_status(
                     &status,
                 )
             })
@@ -39488,6 +39644,182 @@ impl RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeSummary {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadiness {
+    readiness_id: String,
+    outcome_id: String,
+    action_id: String,
+    disposition_id: String,
+    review_id: String,
+    evidence_id: String,
+    guardrail_id: String,
+    work_order_id: String,
+    ticket_id: String,
+    plan_id: String,
+    window_id: String,
+    window_kind: RuntimeMaintenanceWindowKind,
+    priority: u8,
+    execution_order: usize,
+    readiness_status: &'static str,
+    readiness_kind: &'static str,
+    readiness_lane: &'static str,
+    recommended_readiness_action: &'static str,
+    outcome_status: &'static str,
+    outcome_kind: &'static str,
+    outcome_lane: &'static str,
+    recommended_outcome_action: &'static str,
+    action_status: &'static str,
+    action_kind: &'static str,
+    action_lane: &'static str,
+    recommended_action: &'static str,
+    recommended_tool: &'static str,
+    disposition_status: &'static str,
+    disposition_kind: &'static str,
+    disposition_lane: &'static str,
+    recommended_disposition_action: &'static str,
+    review_status: &'static str,
+    review_kind: &'static str,
+    reviewer_lane: &'static str,
+    recommended_review_action: &'static str,
+    evidence_status: &'static str,
+    evidence_kind: &'static str,
+    guardrail_status: &'static str,
+    work_order_status: &'static str,
+    source_recommended_action: &'static str,
+    action_count: usize,
+    blocked_action_count: usize,
+    requires_attention_count: usize,
+    overdue_action_count: usize,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    next_action_ids: Vec<String>,
+    remediation_ids: Vec<String>,
+    release_blocking: bool,
+    operator_required: bool,
+    lineage_complete: bool,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary {
+    total_readiness: usize,
+    blocked_readiness: usize,
+    operator_handoff_readiness: usize,
+    ready_to_close_readiness: usize,
+    lineage_gap_readiness: usize,
+    release_blocking_readiness: usize,
+    operator_required_readiness: usize,
+    lineage_complete_readiness: usize,
+    source_runtime_actions: usize,
+    blocked_runtime_actions: usize,
+    requires_attention_runtime_actions: usize,
+    overdue_runtime_actions: usize,
+    first_readiness_id: Option<String>,
+    first_blocked_readiness_id: Option<String>,
+    first_operator_readiness_id: Option<String>,
+    first_lineage_gap_readiness_id: Option<String>,
+    first_outcome_id: Option<String>,
+    first_action_id: Option<String>,
+    first_disposition_id: Option<String>,
+    first_review_id: Option<String>,
+    first_evidence_id: Option<String>,
+    first_work_order_id: Option<String>,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    highest_priority: Option<u8>,
+}
+
+impl RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary {
+    fn from_readiness(
+        readiness: &[RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadiness],
+    ) -> Self {
+        let mut summary = Self::default();
+
+        for readiness_row in readiness {
+            summary.total_readiness += 1;
+            summary.source_runtime_actions += readiness_row.action_count;
+            summary.blocked_runtime_actions += readiness_row.blocked_action_count;
+            summary.requires_attention_runtime_actions += readiness_row.requires_attention_count;
+            summary.overdue_runtime_actions += readiness_row.overdue_action_count;
+            summary.first_due_at_ms =
+                min_optional_u64(summary.first_due_at_ms, readiness_row.first_due_at_ms);
+            summary.max_overdue_by_ms =
+                max_optional_u64(summary.max_overdue_by_ms, readiness_row.max_overdue_by_ms);
+            summary.highest_priority =
+                min_optional_u8(summary.highest_priority, Some(readiness_row.priority));
+            summary
+                .first_readiness_id
+                .get_or_insert_with(|| readiness_row.readiness_id.clone());
+            summary
+                .first_outcome_id
+                .get_or_insert_with(|| readiness_row.outcome_id.clone());
+            summary
+                .first_action_id
+                .get_or_insert_with(|| readiness_row.action_id.clone());
+            summary
+                .first_disposition_id
+                .get_or_insert_with(|| readiness_row.disposition_id.clone());
+            summary
+                .first_review_id
+                .get_or_insert_with(|| readiness_row.review_id.clone());
+            summary
+                .first_evidence_id
+                .get_or_insert_with(|| readiness_row.evidence_id.clone());
+            summary
+                .first_work_order_id
+                .get_or_insert_with(|| readiness_row.work_order_id.clone());
+
+            if readiness_row.blocks_release() {
+                summary.blocked_readiness += 1;
+                summary
+                    .first_blocked_readiness_id
+                    .get_or_insert_with(|| readiness_row.readiness_id.clone());
+            }
+            if readiness_row.operator_handoff() {
+                summary.operator_handoff_readiness += 1;
+                summary
+                    .first_operator_readiness_id
+                    .get_or_insert_with(|| readiness_row.readiness_id.clone());
+            }
+            if readiness_row.ready_to_close() {
+                summary.ready_to_close_readiness += 1;
+            }
+            if readiness_row.lineage_gap() {
+                summary.lineage_gap_readiness += 1;
+                summary
+                    .first_lineage_gap_readiness_id
+                    .get_or_insert_with(|| readiness_row.readiness_id.clone());
+            }
+            if readiness_row.release_blocking {
+                summary.release_blocking_readiness += 1;
+            }
+            if readiness_row.operator_required {
+                summary.operator_required_readiness += 1;
+            }
+            if readiness_row.lineage_complete {
+                summary.lineage_complete_readiness += 1;
+            }
+        }
+
+        summary
+    }
+
+    fn has_readiness(&self) -> bool {
+        self.total_readiness > 0
+    }
+
+    fn has_readiness_work(&self) -> bool {
+        self.blocked_readiness > 0
+            || self.operator_handoff_readiness > 0
+            || self.lineage_gap_readiness > 0
+    }
+
+    fn readiness_ready(&self) -> bool {
+        self.total_readiness > 0
+            && self.ready_to_close_readiness == self.total_readiness
+            && self.lineage_complete_readiness == self.total_readiness
+    }
+}
+
 fn list_runtime_maintenance_work_order_evidence_reviews_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -39908,6 +40240,135 @@ fn get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome
     ))
 }
 
+fn list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut readiness, summary) =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness(
+            runtime,
+            principal_id,
+            now_ms,
+            &query,
+        )?;
+    if let Some(limit) = query
+        .outcome_query
+        .action_query
+        .disposition_query
+        .review_query
+        .evidence_query
+        .guardrail_query
+        .work_order_query
+        .limit
+    {
+        readiness.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness",
+            JsonValue::Array(
+                readiness
+                    .iter()
+                    .map(
+                        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_json,
+                    )
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_json(
+                &summary,
+            ),
+        ),
+        ("count", integer(readiness.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string(
+                    "list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness",
+                ),
+            ),
+            (
+                "evidence_review_disposition_action_outcome_readiness",
+                integer(readiness.len() as i64),
+            ),
+            (
+                "blocked_readiness",
+                integer(summary.blocked_readiness as i64),
+            ),
+            (
+                "operator_handoff_readiness",
+                integer(summary.operator_handoff_readiness as i64),
+            ),
+            (
+                "ready_to_close_readiness",
+                integer(summary.ready_to_close_readiness as i64),
+            ),
+            (
+                "readiness_ready",
+                JsonValue::Bool(summary.readiness_ready()),
+            ),
+        ]),
+    ))
+}
+
+fn get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness(
+            runtime,
+            principal_id,
+            now_ms,
+            &query,
+        )?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_json(
+            &summary,
+        ),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string(
+                    "get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary",
+                ),
+            ),
+            (
+                "total_readiness",
+                integer(summary.total_readiness as i64),
+            ),
+            (
+                "blocked_readiness",
+                integer(summary.blocked_readiness as i64),
+            ),
+            (
+                "operator_handoff_readiness",
+                integer(summary.operator_handoff_readiness as i64),
+            ),
+            (
+                "ready_to_close_readiness",
+                integer(summary.ready_to_close_readiness as i64),
+            ),
+            ("has_readiness", JsonValue::Bool(summary.has_readiness())),
+        ]),
+    ))
+}
+
 fn runtime_maintenance_work_order_evidence_reviews(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -40028,6 +40489,40 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcomes(
             &outcomes,
         );
     Ok((outcomes, summary))
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessQuery,
+) -> Result<
+    (
+        Vec<RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadiness>,
+        RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    ),
+    ToolCallError,
+> {
+    let (outcomes, _) = runtime_maintenance_work_order_evidence_review_disposition_action_outcomes(
+        runtime,
+        principal_id,
+        now_ms,
+        &query.outcome_query,
+    )?;
+    let readiness = outcomes
+        .iter()
+        .map(RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadiness::from_outcome)
+        .filter(|readiness| {
+            runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_matches(
+                readiness, query,
+            )
+        })
+        .collect::<Vec<_>>();
+    let summary =
+        RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary::from_readiness(
+            &readiness,
+        );
+    Ok((readiness, summary))
 }
 
 impl RuntimeMaintenanceWorkOrderEvidenceReview {
@@ -40381,6 +40876,106 @@ impl RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcome {
     }
 }
 
+impl RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadiness {
+    fn from_outcome(
+        outcome: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcome,
+    ) -> Self {
+        let readiness_status =
+            runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_status(
+                outcome,
+            );
+        Self {
+            readiness_id: format!(
+                "maintenance_work_order_evidence_review_disposition_action_outcome_readiness:{}",
+                outcome.outcome_id
+            ),
+            outcome_id: outcome.outcome_id.clone(),
+            action_id: outcome.action_id.clone(),
+            disposition_id: outcome.disposition_id.clone(),
+            review_id: outcome.review_id.clone(),
+            evidence_id: outcome.evidence_id.clone(),
+            guardrail_id: outcome.guardrail_id.clone(),
+            work_order_id: outcome.work_order_id.clone(),
+            ticket_id: outcome.ticket_id.clone(),
+            plan_id: outcome.plan_id.clone(),
+            window_id: outcome.window_id.clone(),
+            window_kind: outcome.window_kind,
+            priority: outcome.priority,
+            execution_order: outcome.execution_order,
+            readiness_status,
+            readiness_kind:
+                runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_kind(
+                    readiness_status,
+                ),
+            readiness_lane:
+                runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_lane(
+                    readiness_status,
+                ),
+            recommended_readiness_action:
+                runtime_maintenance_work_order_evidence_review_disposition_action_outcome_recommended_readiness_action(
+                    readiness_status,
+                ),
+            outcome_status: outcome.outcome_status,
+            outcome_kind: outcome.outcome_kind,
+            outcome_lane: outcome.outcome_lane,
+            recommended_outcome_action: outcome.recommended_outcome_action,
+            action_status: outcome.action_status,
+            action_kind: outcome.action_kind,
+            action_lane: outcome.action_lane,
+            recommended_action: outcome.recommended_action,
+            recommended_tool: outcome.recommended_tool,
+            disposition_status: outcome.disposition_status,
+            disposition_kind: outcome.disposition_kind,
+            disposition_lane: outcome.disposition_lane,
+            recommended_disposition_action: outcome.recommended_disposition_action,
+            review_status: outcome.review_status,
+            review_kind: outcome.review_kind,
+            reviewer_lane: outcome.reviewer_lane,
+            recommended_review_action: outcome.recommended_review_action,
+            evidence_status: outcome.evidence_status,
+            evidence_kind: outcome.evidence_kind,
+            guardrail_status: outcome.guardrail_status,
+            work_order_status: outcome.work_order_status,
+            source_recommended_action: outcome.source_recommended_action,
+            action_count: outcome.action_count,
+            blocked_action_count: outcome.blocked_action_count,
+            requires_attention_count: outcome.requires_attention_count,
+            overdue_action_count: outcome.overdue_action_count,
+            first_due_at_ms: outcome.first_due_at_ms,
+            max_overdue_by_ms: outcome.max_overdue_by_ms,
+            next_action_ids: outcome.next_action_ids.clone(),
+            remediation_ids: outcome.remediation_ids.clone(),
+            release_blocking: outcome.release_blocking,
+            operator_required: outcome.operator_required,
+            lineage_complete: outcome.lineage_complete,
+        }
+    }
+
+    fn requires_readiness_work(&self) -> bool {
+        self.readiness_status != "ready_to_close"
+    }
+
+    fn blocks_release(&self) -> bool {
+        self.readiness_status == "blocked"
+    }
+
+    fn operator_handoff(&self) -> bool {
+        self.readiness_status == "operator_handoff"
+    }
+
+    fn ready_to_close(&self) -> bool {
+        self.readiness_status == "ready_to_close"
+    }
+
+    fn lineage_gap(&self) -> bool {
+        self.readiness_status == "lineage_gap"
+    }
+
+    fn readiness_ready(&self) -> bool {
+        self.ready_to_close() && self.lineage_complete
+    }
+}
+
 fn runtime_maintenance_work_order_evidence_review_disposition_matches(
     disposition: &RuntimeMaintenanceWorkOrderEvidenceReviewDisposition,
     query: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionQuery,
@@ -40403,6 +40998,16 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_mat
     query: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeQuery,
 ) -> bool {
     query.outcome_statuses.is_empty() || query.outcome_statuses.contains(&outcome.outcome_status)
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_matches(
+    readiness: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadiness,
+    query: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessQuery,
+) -> bool {
+    query.readiness_statuses.is_empty()
+        || query
+            .readiness_statuses
+            .contains(&readiness.readiness_status)
 }
 
 fn runtime_maintenance_work_order_evidence_review_disposition_status(
@@ -40518,6 +41123,53 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_recommended
         "blocked" => "keep_release_hold",
         "operator_handoff" => "confirm_operator_handoff",
         _ => "record_action_acceptance",
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_status(
+    outcome: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcome,
+) -> &'static str {
+    if outcome.blocks_release() {
+        "blocked"
+    } else if outcome.operator_handoff() {
+        "operator_handoff"
+    } else if outcome.outcome_ready() {
+        "ready_to_close"
+    } else {
+        "lineage_gap"
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_kind(
+    readiness_status: &str,
+) -> &'static str {
+    match readiness_status {
+        "blocked" => "release_hold_readiness",
+        "operator_handoff" => "operator_handoff_readiness",
+        "ready_to_close" => "closure_ready_readiness",
+        _ => "lineage_gap_readiness",
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_lane(
+    readiness_status: &str,
+) -> &'static str {
+    match readiness_status {
+        "blocked" => "chief_release_decision",
+        "operator_handoff" => "runtime_operator_handoff",
+        "ready_to_close" => "execution_closeout",
+        _ => "evidence_lineage_repair",
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_recommended_readiness_action(
+    readiness_status: &str,
+) -> &'static str {
+    match readiness_status {
+        "blocked" => "keep_release_hold",
+        "operator_handoff" => "confirm_operator_handoff",
+        "ready_to_close" => "close_maintenance_outcome",
+        _ => "repair_outcome_lineage",
     }
 }
 
@@ -66157,6 +66809,300 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_sum
     ])
 }
 
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_json(
+    readiness: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadiness,
+) -> JsonValue {
+    object([
+        ("readiness_id", string(&readiness.readiness_id)),
+        ("outcome_id", string(&readiness.outcome_id)),
+        ("action_id", string(&readiness.action_id)),
+        ("disposition_id", string(&readiness.disposition_id)),
+        ("review_id", string(&readiness.review_id)),
+        ("evidence_id", string(&readiness.evidence_id)),
+        ("guardrail_id", string(&readiness.guardrail_id)),
+        ("work_order_id", string(&readiness.work_order_id)),
+        ("ticket_id", string(&readiness.ticket_id)),
+        ("plan_id", string(&readiness.plan_id)),
+        ("window_id", string(&readiness.window_id)),
+        (
+            "window_kind",
+            string(runtime_maintenance_window_kind_label(readiness.window_kind)),
+        ),
+        ("priority", integer(readiness.priority as i64)),
+        ("execution_order", integer(readiness.execution_order as i64)),
+        ("readiness_status", string(readiness.readiness_status)),
+        ("readiness_kind", string(readiness.readiness_kind)),
+        ("readiness_lane", string(readiness.readiness_lane)),
+        (
+            "recommended_readiness_action",
+            string(readiness.recommended_readiness_action),
+        ),
+        ("outcome_status", string(readiness.outcome_status)),
+        ("outcome_kind", string(readiness.outcome_kind)),
+        ("outcome_lane", string(readiness.outcome_lane)),
+        (
+            "recommended_outcome_action",
+            string(readiness.recommended_outcome_action),
+        ),
+        ("action_status", string(readiness.action_status)),
+        ("action_kind", string(readiness.action_kind)),
+        ("action_lane", string(readiness.action_lane)),
+        ("recommended_action", string(readiness.recommended_action)),
+        ("recommended_tool", string(readiness.recommended_tool)),
+        ("disposition_status", string(readiness.disposition_status)),
+        ("disposition_kind", string(readiness.disposition_kind)),
+        ("disposition_lane", string(readiness.disposition_lane)),
+        (
+            "recommended_disposition_action",
+            string(readiness.recommended_disposition_action),
+        ),
+        ("review_status", string(readiness.review_status)),
+        ("review_kind", string(readiness.review_kind)),
+        ("reviewer_lane", string(readiness.reviewer_lane)),
+        (
+            "recommended_review_action",
+            string(readiness.recommended_review_action),
+        ),
+        ("evidence_status", string(readiness.evidence_status)),
+        ("evidence_kind", string(readiness.evidence_kind)),
+        ("guardrail_status", string(readiness.guardrail_status)),
+        ("work_order_status", string(readiness.work_order_status)),
+        (
+            "source_recommended_action",
+            string(readiness.source_recommended_action),
+        ),
+        ("action_count", integer(readiness.action_count as i64)),
+        (
+            "blocked_action_count",
+            integer(readiness.blocked_action_count as i64),
+        ),
+        (
+            "requires_attention_count",
+            integer(readiness.requires_attention_count as i64),
+        ),
+        (
+            "overdue_action_count",
+            integer(readiness.overdue_action_count as i64),
+        ),
+        (
+            "first_due_at_ms",
+            readiness
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            readiness
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_action_ids",
+            JsonValue::Array(readiness.next_action_ids.iter().map(string).collect()),
+        ),
+        (
+            "remediation_ids",
+            JsonValue::Array(readiness.remediation_ids.iter().map(string).collect()),
+        ),
+        (
+            "release_blocking",
+            JsonValue::Bool(readiness.release_blocking),
+        ),
+        (
+            "operator_required",
+            JsonValue::Bool(readiness.operator_required),
+        ),
+        (
+            "lineage_complete",
+            JsonValue::Bool(readiness.lineage_complete),
+        ),
+        (
+            "requires_readiness_work",
+            JsonValue::Bool(readiness.requires_readiness_work()),
+        ),
+        (
+            "blocks_release",
+            JsonValue::Bool(readiness.blocks_release()),
+        ),
+        (
+            "is_operator_handoff",
+            JsonValue::Bool(readiness.operator_handoff()),
+        ),
+        (
+            "ready_to_close",
+            JsonValue::Bool(readiness.ready_to_close()),
+        ),
+        (
+            "readiness_ready",
+            JsonValue::Bool(readiness.readiness_ready()),
+        ),
+    ])
+}
+
+fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_json(
+    summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+) -> JsonValue {
+    object([
+        ("total_readiness", integer(summary.total_readiness as i64)),
+        (
+            "blocked_readiness",
+            integer(summary.blocked_readiness as i64),
+        ),
+        (
+            "operator_handoff_readiness",
+            integer(summary.operator_handoff_readiness as i64),
+        ),
+        (
+            "ready_to_close_readiness",
+            integer(summary.ready_to_close_readiness as i64),
+        ),
+        (
+            "lineage_gap_readiness",
+            integer(summary.lineage_gap_readiness as i64),
+        ),
+        (
+            "release_blocking_readiness",
+            integer(summary.release_blocking_readiness as i64),
+        ),
+        (
+            "operator_required_readiness",
+            integer(summary.operator_required_readiness as i64),
+        ),
+        (
+            "lineage_complete_readiness",
+            integer(summary.lineage_complete_readiness as i64),
+        ),
+        (
+            "source_runtime_actions",
+            integer(summary.source_runtime_actions as i64),
+        ),
+        (
+            "blocked_runtime_actions",
+            integer(summary.blocked_runtime_actions as i64),
+        ),
+        (
+            "requires_attention_runtime_actions",
+            integer(summary.requires_attention_runtime_actions as i64),
+        ),
+        (
+            "overdue_runtime_actions",
+            integer(summary.overdue_runtime_actions as i64),
+        ),
+        (
+            "first_readiness_id",
+            summary
+                .first_readiness_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_readiness_id",
+            summary
+                .first_blocked_readiness_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_readiness_id",
+            summary
+                .first_operator_readiness_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_lineage_gap_readiness_id",
+            summary
+                .first_lineage_gap_readiness_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_outcome_id",
+            summary
+                .first_outcome_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_id",
+            summary
+                .first_action_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_disposition_id",
+            summary
+                .first_disposition_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_id",
+            summary
+                .first_review_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_evidence_id",
+            summary
+                .first_evidence_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_work_order_id",
+            summary
+                .first_work_order_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_due_at_ms",
+            summary
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            summary
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_priority",
+            summary
+                .highest_priority
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("has_readiness", JsonValue::Bool(summary.has_readiness())),
+        (
+            "has_readiness_work",
+            JsonValue::Bool(summary.has_readiness_work()),
+        ),
+        (
+            "readiness_ready",
+            JsonValue::Bool(summary.readiness_ready()),
+        ),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -69194,6 +70140,28 @@ fn parse_runtime_maintenance_work_order_evidence_review_disposition_action_outco
         }
         _ => Err(validation_error(format!(
             "unsupported runtime maintenance work order evidence review disposition action outcome status `{value}`"
+        ))),
+    }
+}
+
+fn parse_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_status(
+    value: &str,
+) -> Result<&'static str, ToolCallError> {
+    match value {
+        "blocked" | "release_hold" | "release_hold_readiness" | "hold_release" => Ok("blocked"),
+        "operator_handoff"
+        | "operator_handoff_readiness"
+        | "handoff"
+        | "operator_required"
+        | "requires_operator" => Ok("operator_handoff"),
+        "ready_to_close" | "closure_ready" | "closure_ready_readiness" | "ready" | "accepted" => {
+            Ok("ready_to_close")
+        }
+        "lineage_gap" | "lineage_gap_readiness" | "incomplete_lineage" | "lineage_repair" => {
+            Ok("lineage_gap")
+        }
+        _ => Err(validation_error(format!(
+            "unsupported runtime maintenance work order evidence review disposition action outcome readiness status `{value}`"
         ))),
     }
 }
@@ -73036,7 +74004,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 278);
+        assert_eq!(definitions.len(), 280);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -73833,9 +74801,15 @@ mod tests {
         assert!(export.tool_ids().contains(
             &SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_SUMMARY_TOOL_ID
         ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_TOOL_ID
+        ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_SUMMARY_TOOL_ID
+        ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            270
+            272
         );
         assert_eq!(
             export
@@ -74753,11 +75727,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(278))
+            Some(&integer(280))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(270))
+            Some(&integer(272))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -90311,6 +91285,110 @@ mod tests {
             Some(&JsonValue::Bool(false))
         );
 
+        let readiness_list_request = request(
+            "call-list-runtime-maintenance-work-order-evidence-review-disposition-action-outcome-readiness",
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_TOOL_ID,
+            object([
+                ("readiness_status", string("blocked")),
+                ("outcome_status", string("blocked")),
+                ("action_status", string("required")),
+                ("disposition_status", string("blocked")),
+                ("review_status", string("release_blocker_review")),
+                ("evidence_status", string("blocked")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+                ("max_priority", integer(1)),
+                ("limit", integer(10)),
+            ]),
+            2_018,
+        );
+        let readiness_list_trace = tool_runtime.invoke_with_events(&readiness_list_request);
+        assert!(readiness_list_trace.result.ok);
+        assert_eq!(readiness_list_trace.summary().progress_event_count, 1);
+        let readiness_list_output = readiness_list_trace.result.output.as_ref().unwrap();
+        let readiness = field(
+            readiness_list_output,
+            "runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness",
+        )
+        .unwrap();
+        let readiness_summary = field(readiness_list_output, "summary").unwrap();
+        assert!(
+            array_len(readiness).unwrap() >= 3,
+            "maintenance evidence review disposition action outcome readiness should expose release-hold readiness"
+        );
+        assert!(integer_value(field(readiness_summary, "total_readiness").unwrap()).unwrap() >= 3);
+        assert!(
+            integer_value(field(readiness_summary, "blocked_readiness").unwrap()).unwrap() >= 3
+        );
+        assert_eq!(
+            field(readiness_summary, "readiness_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let JsonValue::Array(readiness_rows) = readiness else {
+            panic!(
+                "runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness should be an array"
+            );
+        };
+        assert!(readiness_rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("critical_recovery"))
+            && field(row, "readiness_status") == Some(&string("blocked"))
+            && field(row, "readiness_kind") == Some(&string("release_hold_readiness"))
+            && field(row, "recommended_readiness_action") == Some(&string("keep_release_hold"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID))
+            && field(row, "release_blocking") == Some(&JsonValue::Bool(true))
+            && field(row, "lineage_complete") == Some(&JsonValue::Bool(true))
+            && field(row, "readiness_ready") == Some(&JsonValue::Bool(false))
+            && integer_value(field(row, "blocked_action_count").unwrap()).unwrap() >= 2));
+        assert!(readiness_rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("desired_state_reconciliation"))
+            && field(row, "readiness_status") == Some(&string("blocked"))
+            && field(row, "outcome_status") == Some(&string("blocked"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID))
+            && field(row, "recommended_readiness_action") == Some(&string("keep_release_hold"))));
+
+        let readiness_summary_request = request(
+            "call-runtime-maintenance-work-order-evidence-review-disposition-action-outcome-readiness-summary",
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_SUMMARY_TOOL_ID,
+            object([
+                ("window_kind", string("desired_state_reconciliation")),
+                ("readiness_status", string("blocked")),
+                ("outcome_status", string("blocked")),
+                ("action_status", string("required")),
+                ("disposition_status", string("blocked")),
+                ("review_status", string("release_blocker_review")),
+                ("evidence_status", string("blocked")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+            ]),
+            2_019,
+        );
+        let readiness_summary_trace = tool_runtime.invoke_with_events(&readiness_summary_request);
+        assert!(readiness_summary_trace.result.ok);
+        assert_eq!(readiness_summary_trace.summary().progress_event_count, 1);
+        let readiness_summary_output = readiness_summary_trace.result.output.as_ref().unwrap();
+        let readiness_rollup = field(readiness_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(readiness_rollup, "total_readiness"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(readiness_rollup, "blocked_readiness"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(readiness_rollup, "source_runtime_actions"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(readiness_rollup, "readiness_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
         let mut journal = ToolExecutionJournal::new();
         journal.record_trace(list_request, list_trace);
         journal.record_trace(summary_request, summary_trace);
@@ -90333,13 +91411,15 @@ mod tests {
         journal.record_trace(action_summary_request, action_summary_trace);
         journal.record_trace(outcome_list_request, outcome_list_trace);
         journal.record_trace(outcome_summary_request, outcome_summary_trace);
+        journal.record_trace(readiness_list_request, readiness_list_trace);
+        journal.record_trace(readiness_summary_request, readiness_summary_trace);
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 18);
-        assert_eq!(journal_summary.completed_count, 18);
+        assert_eq!(journal_summary.invocation_count, 20);
+        assert_eq!(journal_summary.completed_count, 20);
         assert_eq!(
             runtime.borrow().registry().counts().authorization_decisions,
-            18,
-            "maintenance plan, ticket, work-order, guardrail, evidence, review, disposition, disposition action, and outcome reads authorize through runtime read tools"
+            20,
+            "maintenance plan, ticket, work-order, guardrail, evidence, review, disposition, disposition action, outcome, and outcome readiness reads authorize through runtime read tools"
         );
     }
 
