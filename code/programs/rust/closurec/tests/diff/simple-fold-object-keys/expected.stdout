@@ -1,0 +1,1 @@
+var a=[];var b=[];var c=[];var d=Object.keys({a:1});var e=Object.keys([]);report(a,b,c,d,e);
