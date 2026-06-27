@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   entity/capability registry records, room topology summaries, event-log
   replay, command-result audit, authorization-decision audit, and desired-state
   supervision targets.
+- Added device and bridge inventory routes with platform topology rollups for
+  local-controller dashboards.
 - Added a state-history read route over registry-backed device events with
   entity-alias, event-type, and timestamp filtering.
 - Added Home Assistant-style `/api/history/period` routes backed by the same

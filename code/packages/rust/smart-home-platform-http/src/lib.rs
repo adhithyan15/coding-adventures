@@ -9,10 +9,11 @@
 
 use serde_json::Value as JsonValue;
 use smart_home_core::{
-    AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Capability,
-    CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode, CommandResult, CommandStatus,
-    CommandType, DeviceEvent, DeviceEventType, Entity, EntityId, EntityKind, PrivilegeTier, Scene,
-    StateConfidence, StateDelta, StateSource, Value, ValueKind,
+    AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Bridge,
+    BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode,
+    CommandResult, CommandStatus, CommandType, Device, DeviceEvent, DeviceEventType, Entity,
+    EntityId, EntityKind, Health, PrivilegeTier, Scene, StateConfidence, StateDelta, StateSource,
+    Value, ValueKind,
 };
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
@@ -392,6 +393,34 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/devices", move |request| {
+            runtime_devices_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/devices/:device_id", move |request| {
+            runtime_device_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/bridges", move |request| {
+            runtime_bridges_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/bridges/:bridge_id", move |request| {
+            runtime_bridge_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/rooms", move |request| {
             runtime_rooms_response(&runtime, request)
         });
@@ -678,6 +707,84 @@ fn runtime_entity_response(
         }
     };
     WebResponse::json(entity_registry_json(entity, &runtime_guard, runtime.now_ms).into_bytes())
+}
+
+fn runtime_devices_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let devices = match runtime_devices(&runtime_guard, request) {
+        Ok(devices) => devices,
+        Err(error) => return api_error_response(error),
+    };
+    WebResponse::json(devices_registry_json(&devices, &runtime_guard, runtime.now_ms).into_bytes())
+}
+
+fn runtime_device_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(target) = request.route_params.get("device_id") else {
+        return json_error(400, "missing device_id");
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let device = match runtime_guard
+        .registry()
+        .devices()
+        .find(|device| device.device_id.as_str() == target)
+    {
+        Some(device) => device,
+        None => {
+            return api_error_response(ApiError::not_found(format!("device `{target}` not found")));
+        }
+    };
+    WebResponse::json(device_registry_json(device, &runtime_guard, runtime.now_ms).into_bytes())
+}
+
+fn runtime_bridges_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let bridges = match runtime_bridges(&runtime_guard, request) {
+        Ok(bridges) => bridges,
+        Err(error) => return api_error_response(error),
+    };
+    WebResponse::json(bridges_registry_json(&bridges, &runtime_guard, runtime.now_ms).into_bytes())
+}
+
+fn runtime_bridge_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(target) = request.route_params.get("bridge_id") else {
+        return json_error(400, "missing bridge_id");
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let bridge = match runtime_guard
+        .registry()
+        .bridges()
+        .find(|bridge| bridge.bridge_id.as_str() == target)
+    {
+        Some(bridge) => bridge,
+        None => {
+            return api_error_response(ApiError::not_found(format!("bridge `{target}` not found")));
+        }
+    };
+    WebResponse::json(bridge_registry_json(bridge, &runtime_guard, runtime.now_ms).into_bytes())
 }
 
 fn runtime_rooms_response(
@@ -1119,6 +1226,249 @@ fn entities_registry_json(entities: &[&Entity], runtime: &SmartHomeRuntime, now_
     )
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+struct EntityInventoryCounts {
+    total_entities: usize,
+    commandable_entities: usize,
+    stateful_entities: usize,
+    stale_entities: usize,
+    capability_count: usize,
+}
+
+impl EntityInventoryCounts {
+    fn add(&mut self, other: Self) {
+        self.total_entities += other.total_entities;
+        self.commandable_entities += other.commandable_entities;
+        self.stateful_entities += other.stateful_entities;
+        self.stale_entities += other.stale_entities;
+        self.capability_count += other.capability_count;
+    }
+}
+
+fn devices_registry_json(devices: &[&Device], runtime: &SmartHomeRuntime, now_ms: u64) -> String {
+    let mut entity_counts = EntityInventoryCounts::default();
+    for device in devices {
+        entity_counts.add(device_inventory_counts(device, runtime, now_ms));
+    }
+
+    format!(
+        "{{\"summary\":{{\"total_devices\":{},\"online_devices\":{},\"pairing_candidate_devices\":{},\"attention_devices\":{},\"total_entities\":{},\"commandable_entities\":{},\"stateful_entities\":{},\"stale_entities\":{},\"capability_count\":{}}},\"devices\":[{}]}}",
+        devices.len(),
+        devices
+            .iter()
+            .filter(|device| device.health.is_online())
+            .count(),
+        devices
+            .iter()
+            .filter(|device| device.health.is_pairing_candidate())
+            .count(),
+        devices
+            .iter()
+            .filter(|device| device.health.needs_attention())
+            .count(),
+        entity_counts.total_entities,
+        entity_counts.commandable_entities,
+        entity_counts.stateful_entities,
+        entity_counts.stale_entities,
+        entity_counts.capability_count,
+        devices
+            .iter()
+            .map(|device| device_registry_json(device, runtime, now_ms))
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn device_registry_json(device: &Device, runtime: &SmartHomeRuntime, now_ms: u64) -> String {
+    let entities = device_entities(device, runtime);
+    let entity_counts = entity_inventory_counts(&entities, now_ms);
+    let entity_ids = entities
+        .iter()
+        .map(|entity| entity.entity_id.as_str())
+        .collect::<Vec<_>>();
+    let home_assistant_entity_ids = entities
+        .iter()
+        .map(|entity| home_assistant_entity_id(entity))
+        .collect::<Vec<_>>();
+    let mut capability_ids = Vec::<String>::new();
+    for entity in &entities {
+        for capability in &entity.capabilities {
+            push_unique_string(&mut capability_ids, capability.capability_id.as_str());
+        }
+    }
+
+    format!(
+        "{{\"device_id\":{},\"bridge_id\":{},\"name\":{},\"manufacturer\":{},\"model\":{},\"serial\":{},\"firmware_version\":{},\"room_id\":{},\"health\":{},\"entity_count\":{},\"commandable_entities\":{},\"stateful_entities\":{},\"stale_entities\":{},\"capability_count\":{},\"entity_ids\":[{}],\"home_assistant_entity_ids\":[{}],\"capability_ids\":[{}]}}",
+        json_string(device.device_id.as_str()),
+        json_string(device.bridge_id.as_str()),
+        json_string(&device.name),
+        json_string(&device.manufacturer),
+        json_string(&device.model),
+        optional_str_json(device.serial.as_deref()),
+        optional_str_json(device.firmware_version.as_deref()),
+        optional_str_json(device.room_id.as_deref()),
+        json_string(health_label(device.health)),
+        entity_counts.total_entities,
+        entity_counts.commandable_entities,
+        entity_counts.stateful_entities,
+        entity_counts.stale_entities,
+        entity_counts.capability_count,
+        json_id_array(entity_ids),
+        json_string_array(&home_assistant_entity_ids),
+        json_string_array(&capability_ids),
+    )
+}
+
+fn bridges_registry_json(bridges: &[&Bridge], runtime: &SmartHomeRuntime, now_ms: u64) -> String {
+    let mut total_devices = 0usize;
+    let mut entity_counts = EntityInventoryCounts::default();
+    let mut room_ids = Vec::<String>::new();
+    for bridge in bridges {
+        let devices = bridge_devices(bridge, runtime);
+        total_devices += devices.len();
+        for device in devices {
+            if let Some(room_id) = &device.room_id {
+                push_unique_string(&mut room_ids, room_id);
+            }
+            entity_counts.add(device_inventory_counts(device, runtime, now_ms));
+        }
+    }
+    room_ids.sort();
+
+    format!(
+        "{{\"summary\":{{\"total_bridges\":{},\"online_bridges\":{},\"pairing_candidate_bridges\":{},\"attention_bridges\":{},\"total_devices\":{},\"total_entities\":{},\"commandable_entities\":{},\"stateful_entities\":{},\"stale_entities\":{},\"capability_count\":{},\"room_count\":{}}},\"bridges\":[{}]}}",
+        bridges.len(),
+        bridges
+            .iter()
+            .filter(|bridge| bridge.health.is_online())
+            .count(),
+        bridges
+            .iter()
+            .filter(|bridge| bridge.health.is_pairing_candidate())
+            .count(),
+        bridges
+            .iter()
+            .filter(|bridge| bridge.health.needs_attention())
+            .count(),
+        total_devices,
+        entity_counts.total_entities,
+        entity_counts.commandable_entities,
+        entity_counts.stateful_entities,
+        entity_counts.stale_entities,
+        entity_counts.capability_count,
+        room_ids.len(),
+        bridges
+            .iter()
+            .map(|bridge| bridge_registry_json(bridge, runtime, now_ms))
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn bridge_registry_json(bridge: &Bridge, runtime: &SmartHomeRuntime, now_ms: u64) -> String {
+    let devices = bridge_devices(bridge, runtime);
+    let mut entity_counts = EntityInventoryCounts::default();
+    let mut room_ids = Vec::<String>::new();
+    for device in &devices {
+        if let Some(room_id) = &device.room_id {
+            push_unique_string(&mut room_ids, room_id);
+        }
+        entity_counts.add(device_inventory_counts(device, runtime, now_ms));
+    }
+    room_ids.sort();
+    let device_ids = devices
+        .iter()
+        .map(|device| device.device_id.as_str())
+        .collect::<Vec<_>>();
+
+    format!(
+        "{{\"bridge_id\":{},\"integration_id\":{},\"transport\":{},\"address\":{},\"hardware_model\":{},\"firmware_version\":{},\"health\":{},\"last_seen_at_ms\":{},\"device_count\":{},\"online_devices\":{},\"pairing_candidate_devices\":{},\"attention_devices\":{},\"entity_count\":{},\"commandable_entities\":{},\"stateful_entities\":{},\"stale_entities\":{},\"capability_count\":{},\"room_count\":{},\"room_ids\":[{}],\"device_ids\":[{}]}}",
+        json_string(bridge.bridge_id.as_str()),
+        json_string(bridge.integration_id.as_str()),
+        json_string(bridge_transport_label(bridge.transport)),
+        optional_str_json(bridge.address.as_deref()),
+        optional_str_json(bridge.hardware_model.as_deref()),
+        optional_str_json(bridge.firmware_version.as_deref()),
+        json_string(health_label(bridge.health)),
+        optional_u64_json(bridge.last_seen_at_ms),
+        devices.len(),
+        devices
+            .iter()
+            .filter(|device| device.health.is_online())
+            .count(),
+        devices
+            .iter()
+            .filter(|device| device.health.is_pairing_candidate())
+            .count(),
+        devices
+            .iter()
+            .filter(|device| device.health.needs_attention())
+            .count(),
+        entity_counts.total_entities,
+        entity_counts.commandable_entities,
+        entity_counts.stateful_entities,
+        entity_counts.stale_entities,
+        entity_counts.capability_count,
+        room_ids.len(),
+        json_string_array(&room_ids),
+        json_id_array(device_ids),
+    )
+}
+
+fn bridge_devices<'a>(bridge: &Bridge, runtime: &'a SmartHomeRuntime) -> Vec<&'a Device> {
+    let mut devices = runtime
+        .registry()
+        .devices_for_bridge(&bridge.bridge_id)
+        .collect::<Vec<_>>();
+    devices.sort_by(|left, right| left.device_id.as_str().cmp(right.device_id.as_str()));
+    devices
+}
+
+fn device_entities<'a>(device: &Device, runtime: &'a SmartHomeRuntime) -> Vec<&'a Entity> {
+    let mut entities = runtime
+        .registry()
+        .entities_for_device(&device.device_id)
+        .collect::<Vec<_>>();
+    entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
+    entities
+}
+
+fn device_inventory_counts(
+    device: &Device,
+    runtime: &SmartHomeRuntime,
+    now_ms: u64,
+) -> EntityInventoryCounts {
+    let entities = device_entities(device, runtime);
+    entity_inventory_counts(&entities, now_ms)
+}
+
+fn entity_inventory_counts(entities: &[&Entity], now_ms: u64) -> EntityInventoryCounts {
+    EntityInventoryCounts {
+        total_entities: entities.len(),
+        commandable_entities: entities
+            .iter()
+            .filter(|entity| entity.capabilities.iter().any(capability_allows_command))
+            .count(),
+        stateful_entities: entities
+            .iter()
+            .filter(|entity| entity.state.is_some())
+            .count(),
+        stale_entities: entities
+            .iter()
+            .filter(|entity| {
+                entity
+                    .state
+                    .as_ref()
+                    .is_none_or(|snapshot| snapshot.is_stale_at(now_ms))
+            })
+            .count(),
+        capability_count: entities
+            .iter()
+            .map(|entity| entity.capabilities.len())
+            .sum(),
+    }
+}
+
 fn rooms_json(rooms: &[RuntimeRoomSummary], runtime: &SmartHomeRuntime) -> String {
     let topology = runtime.topology_summary();
     let state_gap_rooms = rooms.iter().filter(|room| room.has_state_gaps()).count();
@@ -1392,6 +1742,64 @@ fn runtime_entities<'a>(
     entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
     entities.truncate(limit);
     Ok(entities)
+}
+
+fn runtime_devices<'a>(
+    runtime: &'a SmartHomeRuntime,
+    request: &WebRequest,
+) -> Result<Vec<&'a Device>, ApiError> {
+    let bridge_id = query_string(request, "bridge_id");
+    let room_id = query_string(request, "room_id");
+    let manufacturer = query_string(request, "manufacturer");
+    let health = query_string(request, "health")
+        .map(health_from_label)
+        .transpose()?;
+    let limit = query_limit(request, 100, 1_000)?;
+
+    let mut devices = runtime
+        .registry()
+        .devices()
+        .filter(|device| bridge_id.is_none_or(|bridge_id| device.bridge_id.as_str() == bridge_id))
+        .filter(|device| room_id.is_none_or(|room_id| device.room_id.as_deref() == Some(room_id)))
+        .filter(|device| {
+            manufacturer
+                .is_none_or(|manufacturer| device.manufacturer.eq_ignore_ascii_case(manufacturer))
+        })
+        .filter(|device| health.is_none_or(|health| device.health == health))
+        .collect::<Vec<_>>();
+
+    devices.sort_by(|left, right| left.device_id.as_str().cmp(right.device_id.as_str()));
+    devices.truncate(limit);
+    Ok(devices)
+}
+
+fn runtime_bridges<'a>(
+    runtime: &'a SmartHomeRuntime,
+    request: &WebRequest,
+) -> Result<Vec<&'a Bridge>, ApiError> {
+    let integration_id = query_string(request, "integration_id");
+    let transport = query_string(request, "transport")
+        .map(bridge_transport_from_label)
+        .transpose()?;
+    let health = query_string(request, "health")
+        .map(health_from_label)
+        .transpose()?;
+    let limit = query_limit(request, 100, 1_000)?;
+
+    let mut bridges = runtime
+        .registry()
+        .bridges()
+        .filter(|bridge| {
+            integration_id
+                .is_none_or(|integration_id| bridge.integration_id.as_str() == integration_id)
+        })
+        .filter(|bridge| transport.is_none_or(|transport| bridge.transport == transport))
+        .filter(|bridge| health.is_none_or(|health| bridge.health == health))
+        .collect::<Vec<_>>();
+
+    bridges.sort_by(|left, right| left.bridge_id.as_str().cmp(right.bridge_id.as_str()));
+    bridges.truncate(limit);
+    Ok(bridges)
 }
 
 fn runtime_room_query(request: &WebRequest) -> Result<RuntimeRoomQuery, ApiError> {
@@ -2592,6 +3000,62 @@ fn value_kind_label(kind: ValueKind) -> &'static str {
     }
 }
 
+fn bridge_transport_label(transport: BridgeTransport) -> &'static str {
+    match transport {
+        BridgeTransport::LanHttp => "lan_http",
+        BridgeTransport::Mdns => "mdns",
+        BridgeTransport::Serial => "serial",
+        BridgeTransport::Ble => "ble",
+        BridgeTransport::Cloud => "cloud",
+        BridgeTransport::LocalProcess => "local_process",
+    }
+}
+
+fn bridge_transport_from_label(transport: &str) -> Result<BridgeTransport, ApiError> {
+    match transport {
+        "lan_http" | "lan-http" | "http" => Ok(BridgeTransport::LanHttp),
+        "mdns" => Ok(BridgeTransport::Mdns),
+        "serial" => Ok(BridgeTransport::Serial),
+        "ble" => Ok(BridgeTransport::Ble),
+        "cloud" => Ok(BridgeTransport::Cloud),
+        "local_process" | "local-process" => Ok(BridgeTransport::LocalProcess),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported bridge transport `{other}`"
+        ))),
+    }
+}
+
+fn health_label(health: Health) -> &'static str {
+    match health {
+        Health::Unknown => "unknown",
+        Health::Discoverable => "discoverable",
+        Health::Unpaired => "unpaired",
+        Health::Online => "online",
+        Health::Degraded => "degraded",
+        Health::Offline => "offline",
+        Health::AuthFailed => "auth_failed",
+        Health::Unsupported => "unsupported",
+        Health::Removed => "removed",
+    }
+}
+
+fn health_from_label(health: &str) -> Result<Health, ApiError> {
+    match health {
+        "unknown" => Ok(Health::Unknown),
+        "discoverable" => Ok(Health::Discoverable),
+        "unpaired" => Ok(Health::Unpaired),
+        "online" => Ok(Health::Online),
+        "degraded" => Ok(Health::Degraded),
+        "offline" => Ok(Health::Offline),
+        "auth_failed" | "auth-failed" => Ok(Health::AuthFailed),
+        "unsupported" => Ok(Health::Unsupported),
+        "removed" => Ok(Health::Removed),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported health `{other}`"
+        ))),
+    }
+}
+
 fn room_sort_from_label(sort: &str) -> Result<RuntimeRoomSort, ApiError> {
     match sort {
         "room_id" | "id" => Ok(RuntimeRoomSort::RoomId),
@@ -3316,6 +3780,79 @@ mod tests {
         assert!(body.contains(r#""scene_action_count":1"#));
         assert!(body.contains(r#""has_state_gaps":true"#));
         assert!(body.contains(r#""has_scene_actions":true"#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_ready_device_and_bridge_registry() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let devices = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/devices?bridge_id=bridge-1&room_id=kitchen&health=online",
+            ))
+            .into(),
+        );
+
+        assert!(devices.contains(r#""total_devices":1"#));
+        assert!(devices.contains(r#""online_devices":1"#));
+        assert!(devices.contains(r#""total_entities":2"#));
+        assert!(devices.contains(r#""commandable_entities":1"#));
+        assert!(devices.contains(r#""stale_entities":2"#));
+        assert!(devices.contains(r#""capability_count":4"#));
+        assert!(devices.contains(r#""device_id":"device-1""#));
+        assert!(devices.contains(r#""bridge_id":"bridge-1""#));
+        assert!(devices.contains(r#""name":"Kitchen""#));
+        assert!(devices.contains(r#""manufacturer":"Signify""#));
+        assert!(devices.contains(r#""model":"Hue bulb""#));
+        assert!(devices.contains(r#""serial":"device-native-1""#));
+        assert!(devices.contains(r#""firmware_version":"1.0.0""#));
+        assert!(devices.contains(r#""room_id":"kitchen""#));
+        assert!(devices.contains(r#""health":"online""#));
+        assert!(devices.contains(r#""entity_ids":["entity-light-1","entity-sensor-1"]"#));
+        assert!(devices.contains(
+            r#""home_assistant_entity_ids":["light.entity_light_1","sensor.entity_sensor_1"]"#
+        ));
+        assert!(devices.contains(r#""capability_ids":["light.on_off","light.brightness","light.color_temperature","sensor.occupancy"]"#));
+
+        let device_response: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/devices/device-1"))
+            .into();
+        let device = response_body(device_response.clone());
+        assert_eq!(device_response.status, 200);
+        assert!(device.contains(r#""device_id":"device-1""#));
+        assert!(device.contains(r#""entity_count":2"#));
+
+        let bridges = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/bridges?integration_id=hue&transport=lan_http&health=online",
+            ))
+            .into(),
+        );
+
+        assert!(bridges.contains(r#""total_bridges":1"#));
+        assert!(bridges.contains(r#""online_bridges":1"#));
+        assert!(bridges.contains(r#""total_devices":1"#));
+        assert!(bridges.contains(r#""room_count":1"#));
+        assert!(bridges.contains(r#""bridge_id":"bridge-1""#));
+        assert!(bridges.contains(r#""integration_id":"hue""#));
+        assert!(bridges.contains(r#""transport":"lan_http""#));
+        assert!(bridges.contains(r#""address":"https://192.0.2.10""#));
+        assert!(bridges.contains(r#""hardware_model":"BSB002""#));
+        assert!(bridges.contains(r#""firmware_version":"1.66.1960062030""#));
+        assert!(bridges.contains(r#""last_seen_at_ms":1000"#));
+        assert!(bridges.contains(r#""device_count":1"#));
+        assert!(bridges.contains(r#""entity_count":2"#));
+        assert!(bridges.contains(r#""room_ids":["kitchen"]"#));
+        assert!(bridges.contains(r#""device_ids":["device-1"]"#));
+
+        let bridge_response: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/bridges/bridge-1"))
+            .into();
+        let bridge = response_body(bridge_response.clone());
+        assert_eq!(bridge_response.status, 200);
+        assert!(bridge.contains(r#""bridge_id":"bridge-1""#));
+        assert!(bridge.contains(r#""commandable_entities":1"#));
     }
 
     #[test]
