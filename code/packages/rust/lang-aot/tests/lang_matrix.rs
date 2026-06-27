@@ -256,6 +256,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(67),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 lexical string locals feeding concat. This takes the local
+    // string path beyond indexing: two `let` string slots feed `str_concat`,
+    // then `str_len` observes the result. It proves local non-literal string
+    // operands without claiming captured or reassigned string variables.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =

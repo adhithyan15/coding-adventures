@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.128.0"
+version = "0.129.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.128.0 (LANG-FULL AL4/E4 — ALGOL scalar string copy): `tests/lang_matrix.rs` proves `string s, t; s := 'OK'; t := s; print(t)` via E4 `str_concat` on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.127.0 proved BASIC variable-backed concat assignment; v0.126.0 proved BASIC string IF expressions."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.129.0 (LANG-FULL E4/TW4 — Twig lexical string concat): `tests/lang_matrix.rs` proves `(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))` via E4 `str_concat`/`str_len` on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.128.0 proved ALGOL scalar string copy; v0.127.0 proved BASIC variable-backed concat assignment."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }

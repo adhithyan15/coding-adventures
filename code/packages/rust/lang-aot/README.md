@@ -4,7 +4,7 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.128.0):**
+> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.129.0):**
 > `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 > It also proves `10 LET A$ = "HI"; 20 PRINT A$` produces stdout `HI` on
 > the same seven backends, and `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
@@ -43,6 +43,9 @@ LANG VM chain.
 > `(define s "ABC") (string-ref s 2)` returns `67` everywhere.
 > Lexical Twig string locals now feed E4 too:
 > `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67` everywhere.
+> Local string concat now runs on the same path:
+> `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns
+> `5` everywhere.
 > The matrix also proves the bounds contract: `(string-ref "ABC" 3)` traps on
 > native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 > Native AOT lowers the literal to `alloc_bytes` + `store_byte` + `print_string`;

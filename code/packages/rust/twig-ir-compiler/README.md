@@ -28,8 +28,10 @@ metadata ops: `str_const` for each direct literal, then `str_len`, `str_index`,
 `str_eq`, or `str_concat` for the result path. The same E4 lowering also handles
 immutable top-level string values, so `(define s "ABC") (string-ref s 2)` and
 named-string `string-append`/`string=?` proofs avoid the dynamic builtin path.
-Reassignable strings, captured strings, and string slots introduced by `let`
-remain follow-up work.
+Lexical `let`/`let*` string literal bindings use the same typed registers, so
+local strings can feed `string-ref`, `string-length`, and `string-append`
+without dynamic builtins. Reassignable strings, captured strings, and broader
+dynamic string values remain follow-up work.
 
 All emitted instructions carry `type_hint = "any"` because Twig is dynamically typed. Functions therefore have `type_status = Untyped`. The vm-core profiler observes runtime types; the JIT specialises later.
 

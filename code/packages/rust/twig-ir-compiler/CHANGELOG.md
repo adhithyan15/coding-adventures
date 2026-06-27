@@ -1,5 +1,15 @@
 # Changelog — twig-ir-compiler
 
+## [0.29.0] — 2026-06-27 (LANG-FULL E4 — lexical string concat proof)
+
+Lexical string bindings now have an explicit compiler proof for non-literal E4
+concat: `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))`
+lowers to direct `str_const` locals, `str_concat`, and `str_len`, with no
+dynamic `call_builtin` path.
+
+This does not widen the representation boundary: captured/reassigned strings
+and broader dynamic string values remain follow-up E4 work.
+
 ## [0.28.0] — 2026-06-27 (LANG-FULL E4 — lexical string locals)
 
 Lexical `let` and `let*` string literal bindings now materialize as typed
