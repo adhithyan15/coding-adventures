@@ -233,7 +233,12 @@ resolved target sheet and registers a dependency edge `(target_sheet, addr)`, so
 cross-sheet dependency graph (`Node = (SheetId, CellAddress)`) recomputes a formula
 on one sheet when a precedent on another sheet changes. An unknown sheet name → `None`
 → `#REF!`, registering no precedent. Because edges are resolved when a formula is
-*set*, a forward reference to a not-yet-created sheet reads `#REF!` until re-entered.
+*set*, a forward reference to a not-yet-created sheet reads `#REF!` until re-entered
+— **except** on load: `deserialize` rebuilds the dependency graph after all sheets
+exist, so a workbook loaded with cross-sheet formulas (in any sheet order) is fully
+live. Sheet management — `rename_sheet` (rewrites every qualifier, keeps the id and
+values), `delete_sheet` (reindexes; inbound refs → permanent `#REF!`), `move_sheet`
+(reorders + reindexes), `sheet_names()` — rounds out the multi-sheet surface.
 
 ---
 
