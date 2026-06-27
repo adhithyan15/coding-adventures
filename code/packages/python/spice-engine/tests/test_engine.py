@@ -6891,7 +6891,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         op_execution.table
     )
     expected_output_plan_table = (
-        "Analysis\tDirective\tLine\tSourceName\tResultRows\tResultColumns\t"
+        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tResultRows\tResultColumns\t"
         "ResultColumnList\tOutputProbes\t"
         "OutputProbeList\tOutputProbeLines\tOutputProbeLineList\t"
         "OutputDirectives\tOutputDirectiveList\t"
@@ -6899,7 +6899,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "OutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\t"
         "OutputDirectiveLines\tOutputDirectiveLineList\t"
         "Tables\tTableList\n"
-        f"op\t.op\t{op_execution.plan.line_number}\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t"
+        f"op\t.op\t{op_execution.plan.line_number}\t\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t"
         f"1\t{save_line}\t1\t.save\t1\tsave\t1\tglobal\t1\t{save_line}\t3\t"
         "result;output-plan;run-artifact\n"
     )
@@ -6909,6 +6909,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
             "Directive": ".op",
             "Line": str(op_execution.plan.line_number),
             "SourceName": "",
+            "OutputNode": "",
             "ResultRows": "1",
             "ResultColumns": "2",
             "ResultColumnList": "Index;V(mid)",
@@ -6935,6 +6936,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert output_plan_artifact.directive == ".op"
     assert output_plan_artifact.line_number == op_execution.plan.line_number
     assert output_plan_artifact.source_name is None
+    assert output_plan_artifact.output_node is None
     assert output_plan_artifact.result_row_count == 1
     assert output_plan_artifact.result_columns == ["Index", "V(mid)"]
     assert output_plan_artifact.output_probes == ["V(mid)"]
@@ -6953,7 +6955,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         format_deck_output_plan_artifact_table(op_execution.output_plan_artifacts)
     )
     assert op_execution.output_plan_artifact_csv == (
-        "Analysis,Directive,Line,SourceName,ResultRows,ResultColumns,"
+        "Analysis,Directive,Line,SourceName,OutputNode,ResultRows,ResultColumns,"
         "ResultColumnList,OutputProbes,"
         "OutputProbeList,OutputProbeLines,OutputProbeLineList,"
         "OutputDirectives,OutputDirectiveList,"
@@ -6961,7 +6963,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,"
         "OutputDirectiveLines,OutputDirectiveLineList,"
         "Tables,TableList\n"
-        f"op,.op,{op_execution.plan.line_number},,1,2,Index;V(mid),1,V(mid),1,{save_line},1,.save,1,save,1,global,1,{save_line},3,"
+        f"op,.op,{op_execution.plan.line_number},,,1,2,Index;V(mid),1,V(mid),1,{save_line},1,.save,1,save,1,global,1,{save_line},3,"
         "result;output-plan;run-artifact\n"
     )
     assert op_execution.output_plan_artifact_csv == (
@@ -7164,10 +7166,12 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert dc_execution.output_directives == [".save", ".probe", ".print"]
     assert dc_execution.output_plan_artifacts[0].line_number == dc_execution.plan.line_number
     assert dc_execution.output_plan_artifacts[0].source_name == "V1"
+    assert dc_execution.output_plan_artifacts[0].output_node is None
     assert dc_execution.output_plan_artifact_records[0]["Line"] == str(
         dc_execution.plan.line_number
     )
     assert dc_execution.output_plan_artifact_records[0]["SourceName"] == "V1"
+    assert dc_execution.output_plan_artifact_records[0]["OutputNode"] == ""
     assert dc_execution.output_plan_artifacts[0].output_directive_kinds == [
         "save",
         "probe",
@@ -7267,6 +7271,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     ac_execution = run_deck_analysis(circuit, netlist, "ac")
     assert ac_execution.output_probes == ["V(mid)"]
     assert ac_execution.output_directives == [".save", ".plot"]
+    assert ac_execution.output_plan_artifacts[0].output_node is None
     assert ac_execution.output_plan_artifacts[0].output_directive_kinds == [
         "save",
         "plot",
@@ -7397,6 +7402,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tf_execution.result.output_impedance == pytest.approx(500.0)
     assert tf_execution.output_probes == ["V(mid)"]
     assert tf_execution.output_directives == []
+    assert tf_execution.output_plan_artifacts[0].output_node == "mid"
+    assert tf_execution.output_plan_artifact_records[0]["OutputNode"] == "mid"
     assert tf_execution.analysis_directives == [".tf"]
     assert tf_execution.table_count == 3
     assert tf_execution.tables == ["result", "output-plan", "run-artifact"]
@@ -7436,6 +7443,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert sens_execution.result.output_node == "mid"
     assert len(sens_execution.result.entries) == 3
     assert sens_execution.output_probes == ["V(mid)"]
+    assert sens_execution.output_plan_artifacts[0].output_node == "mid"
+    assert sens_execution.output_plan_artifact_records[0]["OutputNode"] == "mid"
     assert sens_execution.analysis_directives == [".sens"]
     assert sens_execution.table_count == 3
     assert sens_execution.tables == ["result", "output-plan", "run-artifact"]
@@ -7483,6 +7492,9 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert noise_execution.result.input_source == "V1"
     assert len(noise_execution.result.points) == 1
     assert noise_execution.output_probes == ["V(mid)"]
+    assert noise_execution.output_plan_artifacts[0].source_name == "V1"
+    assert noise_execution.output_plan_artifacts[0].output_node == "mid"
+    assert noise_execution.output_plan_artifact_records[0]["OutputNode"] == "mid"
     assert noise_execution.analysis_directives == [".noise"]
     assert noise_execution.table_count == 3
     assert noise_execution.tables == ["result", "output-plan", "run-artifact"]

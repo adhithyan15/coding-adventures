@@ -721,6 +721,7 @@ export interface DeckOutputPlanArtifact {
   readonly directive: DeckAnalysisPlan["directive"];
   readonly lineNumber: number;
   readonly sourceName?: string;
+  readonly outputNode?: string;
   readonly resultRowCount: number;
   readonly resultColumnCount: number;
   readonly resultColumns: readonly string[];
@@ -8413,6 +8414,7 @@ function deckOutputPlanArtifacts(
       directive: plan.directive,
       lineNumber: plan.lineNumber,
       sourceName: plan.sourceName,
+      outputNode: plan.outputNode,
       resultRowCount,
       resultColumnCount: resultColumns.length,
       resultColumns: [...resultColumns],
@@ -8458,6 +8460,7 @@ const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
   "Directive",
   "Line",
   "SourceName",
+  "OutputNode",
   "ResultRows",
   "ResultColumns",
   "ResultColumnList",
@@ -8483,6 +8486,7 @@ function deckOutputPlanArtifactCells(artifact: DeckOutputPlanArtifact): string[]
     artifact.directive,
     String(artifact.lineNumber),
     artifact.sourceName ?? "",
+    artifact.outputNode ?? "",
     String(artifact.resultRowCount),
     String(artifact.resultColumnCount),
     artifact.resultColumns.join(";"),

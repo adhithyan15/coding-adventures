@@ -2387,6 +2387,7 @@ class DeckOutputPlanArtifact:
     directive: str
     line_number: int
     source_name: str | None
+    output_node: str | None
     result_row_count: int
     result_column_count: int
     result_columns: list[str]
@@ -2917,6 +2918,7 @@ def _deck_output_plan_artifacts(
             directive=plan.directive,
             line_number=plan.line_number,
             source_name=plan.source_name,
+            output_node=plan.output_node,
             result_row_count=result_row_count,
             result_column_count=len(result_columns),
             result_columns=list(result_columns),
@@ -2945,6 +2947,7 @@ _DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
     "Directive",
     "Line",
     "SourceName",
+    "OutputNode",
     "ResultRows",
     "ResultColumns",
     "ResultColumnList",
@@ -2971,6 +2974,7 @@ def _deck_output_plan_artifact_cells(artifact: DeckOutputPlanArtifact) -> list[s
         artifact.directive,
         str(artifact.line_number),
         artifact.source_name or "",
+        artifact.output_node or "",
         str(artifact.result_row_count),
         str(artifact.result_column_count),
         ";".join(artifact.result_columns),
