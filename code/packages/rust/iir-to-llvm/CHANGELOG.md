@@ -3,6 +3,20 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.0] — 2026-06-27 — BASIC string literal PRINT reaches LLVM (LANG-FULL E4 / BA4)
+
+Adds the static-backend literal-output foothold for `str_const` + `print_str`.
+
+- `str_const` collects printable-ASCII string literals into private LLVM constants
+  with the unmanaged E4 layout: `{ i64 len, [len x i8] bytes }`.
+- `print_str` materialises `base + 8` with `getelementptr inbounds i8` and calls
+  the generic C runtime declaration `declare void @__print_str(ptr, i64)`.
+- Validation accepts only this literal-output subset; richer byte-string ops
+  (`str_len`, `str_index`, `str_concat`, `str_eq`) still fail closed until the
+  full string runtime lands.
+- Tests assert the length-prefixed global, runtime call, ASCII gate, and explicit
+  rejection of richer string ops.
+
 ## [0.16.0] — 2026-06-22 — numeric conversions integer↔real (LANG-FULL E8 PR-2)
 
 LLVM lowering for the three E8 conversion opcodes (vm-core 0.9.0 gave the

@@ -107,7 +107,7 @@ explicit `cmp idx,len` + branch-to-trap.
 | **JVM** | GC | `java.lang.String` for the landed literal-output slice; byte-string representation still under E4-managed | `ldc` string CP entry ✅ for ASCII literals | planned | planned | planned | `PrintStream.print(String)` ✅ |
 | **CLR** | GC | `System.String` for the landed literal-output slice; byte-string representation still under E4-managed | `ldstr "…"` ✅ for ASCII literals | planned | planned | planned | `Console.Write(string)` ✅ |
 | **WASM** | linear-memory foothold now; WasmGC later | `i32` pointer into a data segment for the landed literal-output slice; richer byte-string representation still under E4-managed | data segment ✅ for ASCII literals | planned | planned | planned | host import `env.__print_str(ptr,len)` ✅ |
-| **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | a `@.str.N` global + a header word | load header word | guard `icmp ult` → `br trap`; else `getelementptr`+`load i8` (zero-extended) | `@malloc(len_a+len_b+8)` + two `memcpy`s | `@__print_str(i8* base+8, i64 len)` C-runtime |
+| **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | private `{len,bytes}` global ✅ for ASCII literals | planned | planned | planned | `@__print_str(i8* base+8, i64 len)` C-runtime ✅ |
 | **x86_64** | static | length-prefixed `__twig_alloc_bytes` buffer; literals in `.rodata` | emit the literal into rodata, materialise its address | load header | `cmp`/`jae trap`; else `movzx [base+8+idx]` | alloc + `rep movsb` ×2 | `call __print_str` |
 | **aarch64** | static | length-prefixed buffer; literals in `__TEXT,__const` | `adrp`/`add` the literal address | load header | `cmp`/`b.hs trap`; else `ldrb [base+8+idx]` | alloc + copy | `bl __print_str` |
 
@@ -191,17 +191,18 @@ merge before the next:
    (needs a frontend), but a direct IIR unit test proves it runs.* The generic CIR
    JIT remains i64-only and cold-interprets/declines string-shaped functions
    until a string-capable tier is added.
-2. ✅ **E4-basic-frontend (VM/JIT/WASM/JVM/CLR proof)** — `dartmouth-basic-iir-compiler` lowers
+2. ✅ **E4-basic-frontend (VM/JIT/LLVM/WASM/JVM/CLR proof)** — `dartmouth-basic-iir-compiler` lowers
    `PRINT "…"` to `str_const` + `print_str`; matrix `Prog` (`PRINT "HELLO"` ⇒
-   stdout `HELLO`) runs on VM + JIT + WASM + JVM + CLR. The WASM/JVM/CLR slices
-   are deliberately literal-output footholds (WASM data segment +
+   stdout `HELLO`) runs on VM + JIT + LLVM + WASM + JVM + CLR. The LLVM/WASM/JVM/CLR slices
+   are deliberately literal-output footholds (LLVM private `{len,bytes}` global,
+   WASM data segment +
    `env.__print_str(ptr,len)`, JVM/CLR `ldc`/`ldstr` + `PrintStream.print`/
-   `Console.Write(string)`); the all-7 version waits for the native/LLVM
-   static backend lowering slices below.
+   `Console.Write(string)`); the all-7 version waits for the native
+   static backend lowering slice below.
 3. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
    diverge.)
-4. **E4-static-backends** — LLVM, then native x86_64 + aarch64 (length-prefixed
+4. **E4-static-backends** — native x86_64 + aarch64 (length-prefixed
    rodata literals + heap `str_concat` + the shared `__print_str` C runtime +
    explicit `str_index` guard); extend the matrix Prog to all 7. Native encodings
    byte-verified vs the system assembler (as for E3/E5-native).

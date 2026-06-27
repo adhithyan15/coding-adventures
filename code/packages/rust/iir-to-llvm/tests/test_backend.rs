@@ -968,6 +968,81 @@ fn call_builtin_unknown_name_is_unsupported_op() {
 }
 
 // ===========================================================================
+// LANG-FULL E4 — string literal output foothold
+// ===========================================================================
+
+#[test]
+fn e4_string_literal_print_emits_headered_constant_and_runtime_call() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HELLO".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string print should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("declare void @__print_str(ptr, i64)"),
+        "missing __print_str declaration:\n{ll}"
+    );
+    assert!(
+        ll.contains("@__twig_str_0 = private unnamed_addr constant { i64, [5 x i8] } { i64 5, [5 x i8] c\"\\48\\45\\4C\\4C\\4F\" }, align 8"),
+        "missing length-prefixed string literal:\n{ll}"
+    );
+    assert!(
+        ll.contains("getelementptr inbounds i8, ptr @__twig_str_0, i64 8"),
+        "print_str should pass the payload pointer, not the header:\n{ll}"
+    );
+    assert!(
+        ll.contains("call void @__print_str(ptr %__str1, i64 5)"),
+        "missing print_str runtime call:\n{ll}"
+    );
+}
+
+#[test]
+fn e4_richer_string_ops_still_fail_closed() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let errors = validate_for_llvm(&module_with(f));
+    assert!(
+        errors.iter().any(|e| e.contains("UnsupportedOp") && e.contains("str_len")),
+        "richer string ops should remain rejected; got {errors:?}"
+    );
+}
+
+#[test]
+fn e4_str_const_rejects_non_ascii_literal() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hé".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let errors = validate_for_llvm(&module_with(f));
+    assert!(
+        errors.iter().any(|e| e.contains("printable ASCII")),
+        "non-ASCII literal should be rejected in this foothold; got {errors:?}"
+    );
+}
+
+// ===========================================================================
 // 12. Error display (kept green from LLVM02)
 // ===========================================================================
 

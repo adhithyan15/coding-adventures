@@ -3,10 +3,10 @@
 IIR → textual LLVM IR backend.  Emits a `.ll` source string for an LLVM
 target triple, without depending on `llvm-sys` or a native LLVM install.
 
-**Status: v0.1.0 — skeleton (LLVM01).**  This release emits a valid empty
-module (a `; ModuleID` comment + a `target triple` directive) but does
-**not** lower IIR instructions.  Instruction lowering arrives in v0.2.0+
-(LLVM02–04).
+**Status: v0.17.0 — LANG-FULL E4 literal string output.**  The backend now
+lowers scalar control/data ops, Brainfuck byte-tape I/O, arrays, globals,
+numeric conversions, and the `str_const` + `print_str` literal-output slice.
+Richer byte-string ops remain outside this release.
 
 ## Where it fits
 
@@ -94,6 +94,7 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.13.0 | **`f64` variable slots** (LANG-FULL E3). An `f64` local gets an `alloca double` slot (`store/load double`); a float `cmp_*` result `zext i1 → i64` (not the invalid `→ double`); `f64` literals render as LLVM's exact hex double `0x…`. **ALGOL 60 reals run on LLVM.** |
 | v0.14.0 | **Bounds-checked arrays** (LANG-FULL E5, static model). `alloc_array`→length-prefixed `@calloc` `[i64 len][elems…]`; `array_get`/`array_set` emit an explicit `icmp uge idx, len` + `br` to a `call void @llvm.trap()` block (OOB → trap), then a typed `getelementptr`+`load`/`store`; `array_len` reads the header. Declares `@calloc`/`@llvm.trap` on demand. |
 | v0.15.0 | **Typed module globals** (LANG-FULL E6 layer 1). `global_load`/`global_store` lower: each distinct global name → a module-level `@__twig_global_N = internal global i64 0` (index-based, zero-init), with `load`/`store i64` at use sites — so a function reads/writes a global. Verified end-to-end on real `clang` (⇒ exit 42). |
+| v0.17.0 | **String literal output** (LANG-FULL E4 / BA4). `str_const` emits a private length-prefixed string constant and `print_str` calls `@__print_str(ptr,i64)` with the payload pointer plus byte length. Richer byte-string ops stay rejected. |
 | (later) | GC, debug info via `!dbg`. |
 
 ### Bounds-checked arrays (v0.14.0)

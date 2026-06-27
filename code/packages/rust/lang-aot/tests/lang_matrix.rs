@@ -858,17 +858,18 @@ const PROGRAMS: &[Prog] = &[
     },
     // Dartmouth BASIC — E4/BA4 first string-PRINT proof. The frontend lowers a
     // string literal item to shared `str_const` + `print_str`, and the existing
-    // BASIC PRINT machinery emits the trailing newline via `putchar`. WASM stores
-    // the literal bytes in linear memory and calls `env.__print_str(ptr,len)`;
-    // JVM uses `ldc` + `PrintStream.print(String)` and textual CIL uses `ldstr`
-    // + `Console.Write(string)`, while richer byte-string operations stay
-    // outside this slice.
+    // BASIC PRINT machinery emits the trailing newline via `putchar`. LLVM emits
+    // a length-prefixed private constant and calls the generic `__print_str`
+    // runtime with `(payload,len)`; WASM stores the literal bytes in linear memory
+    // and calls `env.__print_str(ptr,len)`; JVM uses `ldc` + `PrintStream.print(String)`
+    // and textual CIL uses `ldstr` + `Console.Write(string)`, while richer
+    // byte-string operations stay outside this slice.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT \"HELLO\"\n20 END\n",
         expect: Expect::Stdout("HELLO"),
-        backends: &[Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
@@ -1212,24 +1213,24 @@ fn clang_ok() -> bool {
         .unwrap_or(false)
 }
 
-/// A minimal C runtime providing the generic `__print_i64` primitive that
-/// `iir-to-llvm` emits for a `print_i64` builtin (Dartmouth BASIC's `PRINT` is the
-/// first user — the same convention as wasm's `env.__print_i64` / JVM's
-/// `BasicRuntime.println(J)V` / CLR's `Console.WriteLine(int64)`). It is *not*
-/// language-specific: any IIR that calls `print_i64` links it. Linked only when the
-/// emitted `.ll` actually references `@__print_i64`, so the bare expression-language
-/// programs still link a standalone `.ll`.
+/// A minimal C runtime providing the generic print primitives that `iir-to-llvm`
+/// emits for I/O languages. `__print_i64` backs scalar BASIC `PRINT`, and
+/// `__print_str` backs the E4 string literal-output foothold. It is not
+/// language-specific: any IIR that references either symbol links it. Linked only
+/// when the emitted `.ll` actually references one of the symbols, so the bare
+/// expression-language programs still link a standalone `.ll`.
 const PRINT_RUNTIME_C: &str =
-    "#include <stdio.h>\n#include <stdint.h>\nvoid __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n";
+    "#include <stdio.h>\n#include <stdint.h>\nvoid __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\nvoid __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n";
 
 /// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
 /// exact CLR-real/McCarthy strategy of handing symbolic code to the real toolchain.
 /// `None` when `clang` is absent or the build fails (skip).
 ///
 /// Handles both result kinds: the expression languages return an exit code from a
-/// bare `.ll`; an I/O language (Dartmouth BASIC) emits `call void @__print_i64(...)`,
-/// so when the `.ll` references that symbol the generic `PRINT_RUNTIME_C` is compiled
-/// in and the harness compares the program's **stdout**.
+/// bare `.ll`; an I/O language (Dartmouth BASIC) emits `@__print_i64` or
+/// `@__print_str`, so when the `.ll` references either symbol the generic
+/// `PRINT_RUNTIME_C` is compiled in and the harness compares the program's
+/// **stdout**.
 ///
 /// Same temp-file hardening as `run_native`: a fresh `tempfile::tempdir()` whose
 /// guard outlives the run, so the executed `prog` cannot be substituted (CWE-377/367).
@@ -1251,7 +1252,7 @@ fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
     let mut cmd = Command::new("clang");
     cmd.arg("-x").arg("ir").arg(&ll_path);
     // Link the generic print runtime iff the program actually prints.
-    if ll.contains("@__print_i64") {
+    if ll.contains("@__print_i64") || ll.contains("@__print_str") {
         let rt_path = dir.path().join("rt.c");
         std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
         cmd.arg("-x").arg("c").arg(&rt_path);
