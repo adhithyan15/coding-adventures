@@ -254,6 +254,15 @@ mod tests {
         assert!(find_rule(&ast, "variable"), "Expected variable node");
     }
 
+    #[test]
+    fn test_let_string_variable() {
+        let ast = parse_dartmouth_basic("10 LET A$ = \"HI\"\n");
+        assert_program_root(&ast);
+        assert!(find_rule(&ast, "let_stmt"), "Expected let_stmt node");
+        assert!(find_rule(&ast, "variable"), "Expected variable node");
+        assert!(find_rule(&ast, "primary"), "Expected string primary node");
+    }
+
     // -----------------------------------------------------------------------
     // Test group 2: PRINT statement
     // -----------------------------------------------------------------------
@@ -290,6 +299,14 @@ mod tests {
         assert_program_root(&ast);
         assert!(find_rule(&ast, "print_stmt"), "Expected print_stmt node");
         assert!(find_rule(&ast, "print_list"), "Expected print_list node");
+    }
+
+    #[test]
+    fn test_print_string_variable() {
+        let ast = parse_dartmouth_basic("10 PRINT A$\n");
+        assert_program_root(&ast);
+        assert!(find_rule(&ast, "print_stmt"), "Expected print_stmt node");
+        assert!(find_rule(&ast, "variable"), "Expected variable node");
     }
 
     #[test]
@@ -657,6 +674,13 @@ mod tests {
     fn test_expr_parentheses() {
         // Parentheses override precedence. (A + B) * C is different from A + B * C.
         let ast = parse_dartmouth_basic("10 LET X = (A + B) * C\n");
+        assert_program_root(&ast);
+        assert!(find_rule(&ast, "primary"), "Expected primary node");
+    }
+
+    #[test]
+    fn test_expr_string_literal_primary() {
+        let ast = parse_dartmouth_basic("10 LET A$ = \"HI\"\n");
         assert_program_root(&ast);
         assert!(find_rule(&ast, "primary"), "Expected primary node");
     }

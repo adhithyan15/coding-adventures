@@ -1458,6 +1458,225 @@ mod tests {
         assert_eq!(result.is_ok(), baseline.is_ok());
     }
 
+    #[test]
+    fn string_length_literal_uses_e4_str_len() {
+        let m = compile_source("(string-length \"HELLO\")", "string_len")
+            .expect("literal string-length should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string-length should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn string_ref_literal_uses_e4_str_index() {
+        let m = compile_source("(string-ref \"ABC\" 1)", "string_ref")
+            .expect("literal string-ref should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "const", "str_index", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string-ref should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.instructions[2].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn string_eq_literals_use_e4_str_eq() {
+        let m = compile_source("(string=? \"HELLO\" \"HELLO\")", "string_eq")
+            .expect("literal string=? should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_const", "str_eq", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string=? should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "str");
+        assert_eq!(main.instructions[2].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn string_append_literal_length_uses_e4_str_concat() {
+        let m = compile_source("(string-length (string-append \"AB\" \"CDE\"))", "string_concat_len")
+            .expect("literal string-append length should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_const", "str_concat", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string-append length should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "str");
+        assert_eq!(main.instructions[2].type_hint, "str");
+        assert_eq!(main.instructions[3].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn top_level_string_define_feeds_e4_string_length() {
+        let m = compile_source("(define s \"HELLO\") (string-length s)", "string_define_len")
+            .expect("top-level string define should feed E4 string-length");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "top-level string define should avoid dynamic globals/builtins: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn top_level_string_defines_feed_e4_concat_length() {
+        let m = compile_source(
+            "(define a \"AB\") (define b \"CDE\") (string-length (string-append a b))",
+            "string_define_concat_len",
+        )
+        .expect("top-level string defines should feed E4 string-append");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_const", "str_concat", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "top-level string concat should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[2].type_hint, "str");
+        assert_eq!(main.instructions[3].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn top_level_string_define_can_drive_e4_string_eq_branch() {
+        let m = compile_source(
+            "(define s \"HELLO\") (if (string=? s \"HELLO\") 42 0)",
+            "string_define_eq_branch",
+        )
+        .expect("top-level string define should feed E4 string equality");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"str_eq"), "expected str_eq in {ops:?}");
+        assert!(ops.contains(&"jmp_if_false"), "expected branch in {ops:?}");
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "top-level string equality branch should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn top_level_string_define_feeds_e4_string_ref() {
+        let m = compile_source("(define s \"ABC\") (string-ref s 2)", "string_define_ref")
+            .expect("top-level string define should feed E4 string-ref");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "const", "str_index", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "top-level string-ref should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[2].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn let_string_binding_feeds_e4_string_ref() {
+        let m = compile_source("(let ((s \"ABC\") (i 2)) (string-ref s i))", "string_let_ref")
+            .expect("let string binding should feed E4 string-ref");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["const", "str_const", "mov", "str_index", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let string-ref should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[1].dest.as_deref(), Some("s"));
+        assert_eq!(main.instructions[3].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn let_star_string_binding_feeds_e4_string_length() {
+        let m = compile_source("(let* ((s \"HELLO\")) (string-length s))", "string_let_star_len")
+            .expect("let* string binding should feed E4 string-length");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let* string-length should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].dest.as_deref(), Some("s"));
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn let_string_bindings_can_drive_e4_string_eq_branch() {
+        let m = compile_source(
+            "(let ((s \"OK\") (t \"OK\")) (if (string=? s t) 42 0))",
+            "string_let_eq_branch",
+        )
+        .expect("let string bindings should feed E4 string equality");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"str_eq"), "expected str_eq in {ops:?}");
+        assert!(ops.contains(&"jmp_if_false"), "expected branch in {ops:?}");
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let string equality branch should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn let_string_bindings_feed_e4_concat_length() {
+        let m = compile_source(
+            "(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))",
+            "string_let_concat_len",
+        )
+        .expect("let string bindings should feed E4 string-append");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_const", "str_concat", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let string concat should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].dest.as_deref(), Some("a"));
+        assert_eq!(main.instructions[1].dest.as_deref(), Some("b"));
+        assert_eq!(main.instructions[2].type_hint, "str");
+        assert_eq!(main.instructions[3].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
     // =========================================================================
     // LANG51: String literal tests
     // =========================================================================

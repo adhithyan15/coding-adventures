@@ -1,5 +1,298 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.28.0 — 2026-06-27 — BA4 variable-variable string PRINT concat proof
+
+String `PRINT` now has an explicit unit and matrix proof for concatenating two
+scalar string variables directly in the print expression:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = "K"
+30 PRINT A$ + B$
+```
+
+The compiler lowers the expression to E4 `str_concat` with
+`__basic_str_A` and `__basic_str_B` operands, then feeds the temporary result
+directly to `print_str`. `lang-aot` observes stdout `OK` on every LANG-FULL
+backend.
+
+## 0.27.0 — 2026-06-27 — BA4 chained string concatenation proof
+
+String expressions now have an explicit unit and matrix proof for chained
+left-associative concatenation with a variable operand:
+
+```basic
+10 LET A$ = "A"
+20 LET B$ = A$ + "B" + "C"
+30 PRINT B$
+```
+
+The compiler emits two E4 `str_concat` instructions, storing the final result
+directly into `__basic_str_B`; `PRINT B$` observes `ABC` on every LANG-FULL
+backend through `lang-aot`.
+
+## 0.26.0 — 2026-06-27 — integer-literal exponentiation (LANG-FULL BA-^)
+
+The compiler now lowers the backend-neutral subset of BASIC `^`: a
+nonnegative integer-valued literal exponent from 0 through 64. The frontend
+unrolls `base ^ n` to repeated `f64` `mul` instructions, so `6 ^ 2 + 6`
+prints `42` on native/LLVM/WASM/JVM/CLR/VM/JIT without adding a runtime math
+helper.
+
+General exponentiation remains intentionally unsupported for now: variable,
+nested, negative, fractional, and large exponents still report a clean
+`Unsupported` error because those need a cross-backend math runtime.
+
+## 0.25.0 — 2026-06-27 — BA4 comma-separated string PRINT sequencing
+
+String `PRINT` now has an explicit proof that BA2 comma separators compose with
+BA4/E4 string items:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = "K"
+30 PRINT A$, B$
+```
+
+The frontend emits `print_str(A$)`, then the existing comma separator
+`putchar(' ')`, then `print_str(B$)`. The all-backend matrix observes `O K`,
+proving string items do not detour through numeric formatting helpers.
+
+## 0.24.0 — 2026-06-27 — BA4 multi-item string PRINT sequencing
+
+String `PRINT` now has an explicit proof for multiple scalar string items in
+one statement:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = "K"
+30 PRINT A$; B$
+```
+
+The frontend emits two ordered `print_str` calls and does not route the
+string-only statement through numeric print helpers. The `;` separator keeps the
+output adjacent, so the all-backend matrix observes `OK`.
+
+## 0.23.0 — 2026-06-27 — BA4 copied string slots in IF equality
+
+String `IF` comparisons now have an explicit proof for comparing two scalar
+string slots after a copy:
+
+```basic
+10 LET A$ = "OK"
+20 LET B$ = A$
+30 IF B$ = A$ THEN 60
+40 PRINT "BAD"
+50 END
+60 PRINT "OK"
+```
+
+The relation path reuses E4 `str_eq` over `__basic_str_B` and `__basic_str_A`,
+then branches through the existing `jmp_if_true` line-control lowering.
+
+## 0.22.0 — 2026-06-27 — BA4 variable-backed string concat assignment
+
+String assignment now has an explicit proof for concat expressions whose left
+operand is a scalar string variable:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = A$ + "K"
+30 PRINT B$
+```
+
+The compiler stores the `str_concat` result directly into `__basic_str_B`,
+proving variable-backed expression assignment without widening into arrays,
+input, or a general mutable string store.
+
+## 0.21.0 — 2026-06-27 — BA4 string concat expressions in IF equality
+
+`IF` string comparisons now have an explicit regression proof for consuming a
+string expression result before `str_eq`:
+
+```basic
+10 LET A$ = "O"
+20 IF A$ + "K" = "OK" THEN 50
+30 PRINT "BAD"
+40 END
+50 PRINT "OK"
+```
+
+The existing BA4 relation path lowers `A$ + "K"` through E4 `str_concat`, feeds
+that temporary into `str_eq`, and branches with the existing line-control
+machinery.
+
+## 0.20.0 — 2026-06-27 — BA4 string concat expressions in PRINT
+
+`PRINT` now has an explicit regression proof for consuming a string expression
+result directly:
+
+```basic
+10 LET A$ = "O"
+20 PRINT A$ + "K"
+30 END
+```
+
+The existing BA4 helper lowers the expression through E4 `str_concat` into a
+temporary string slot, and `PRINT` consumes that slot with `print_str`. This
+extends the proof surface beyond assignment-target concat without adding new
+runtime string machinery.
+
+## 0.19.0 — 2026-06-27 — BA4 literal-backed scalar string copy
+
+Scalar string assignment now accepts a string variable RHS:
+
+```basic
+10 LET A$ = "OK"
+20 LET B$ = A$
+30 PRINT B$
+```
+
+The compiler lowers `B$ = A$` as E4 `str_concat B, A, ""`, materializing the
+empty suffix as `str_const`. This proves immutable string-copy semantics over
+the existing E4 opcode set without adding a dedicated copy opcode or claiming
+general dynamic byte-string storage, string arrays, or string `INPUT`.
+
+## 0.18.0 — 2026-06-27 — BA4 literal string concatenation
+
+BASIC string assignment now accepts literal-backed `+` concatenation:
+
+```basic
+10 LET A$ = "O" + "K"
+20 PRINT A$
+```
+
+The compiler lowers each literal to E4 `str_const`, emits `str_concat` directly
+into the safe backend-facing `__basic_str_A` slot, and `PRINT A$` consumes that
+slot through `print_str`. This proves the first BASIC string-expression shape
+without claiming string-to-string copies or general dynamic byte-string storage.
+
+## 0.17.0 — 2026-06-27 — BA4 string inequality control flow
+
+BASIC string `IF` now supports the standard `<>` relop in the literal-backed
+BA4 subset:
+
+```basic
+10 LET A$ = "N"
+20 IF A$ <> "Y" THEN 40
+30 PRINT "BAD"
+40 PRINT "OK"
+```
+
+The compiler still lowers the comparison to the shared E4 `str_eq` op, then
+uses `jmp_if_false` for the `THEN` target. This proves string inequality without
+adding a new string-compare opcode or widening into dynamic string storage.
+
+## 0.16.0 — 2026-06-27 — BA4 literal string reassignment
+
+The BA4 scalar string slice now proves that the latest literal assignment wins:
+
+```basic
+10 LET A$ = "NO"
+20 LET A$ = "OK"
+30 PRINT A$
+```
+
+The compiler rematerialises each literal into the same safe backend-facing
+`__basic_str_A` slot with E4 `str_const`, and `PRINT A$` consumes that slot with
+`print_str`. This closes literal reassignment without claiming string-to-string
+copies, string arrays, string `INPUT`, or dynamic byte-string storage.
+
+## 0.15.0 — 2026-06-27 — BA4 scalar string variables
+
+The first Dartmouth BASIC string-variable slice now lowers through E4:
+
+- `LET A$ = "literal"` materialises the literal directly into a safe
+  backend-facing string slot (`__basic_str_A`) instead of exposing `$` in IIR
+  register names.
+- `PRINT A$` emits `print_str` over that slot, reusing the all-backend E4 string
+  output path.
+- `IF A$ = "literal" THEN n` lowers to `str_eq` feeding the existing BASIC branch
+  machinery. Richer string expressions, string arrays, and string `INPUT` remain
+  follow-ups.
+
+## 0.14.0 — 2026-06-27 — BA4 string literal `PRINT` on VM/JIT
+
+The first E4 source-language proof is live:
+
+- `PRINT "literal"` now lowers to shared string ops: `str_const` materialises
+  the literal and `print_str` writes it without an implicit newline.
+- The existing BASIC `PRINT` separator/newline model is preserved: `;` joins
+  tightly, `,` emits a space before the next item, and the final newline still
+  comes from `putchar(10)`.
+- The VM/JIT capture harnesses register a `print_str` sink, and the lang matrix
+  now includes a VM/JIT-only `PRINT "HELLO"` proof. Managed/static backend
+  string lowering remains the next E4 work.
+
+## 0.13.0 — 2026-06-27 — BA7 historical real formatting
+
+BA7 real `PRINT` now implements the historical formatter tail instead of the
+three-fractional-digit foothold:
+
+- Real output rounds half-up to six significant digits and trims trailing
+  fractional zeroes (`1.234567` => `1.23457`, `.250000` => `.25`).
+- Magnitudes outside the fixed-decimal window use signed, at-least-two-digit
+  `E` notation (`123456789` => `1.23457E+08`, `0.0001234567` =>
+  `1.23457E-04`).
+- The formatter is split into small synthetic helpers for zero padding,
+  rounded fixed-decimal output, and exponent notation so direct native AArch64
+  stays under its frame-size limit.
+- Verified by frontend unit tests, a native `lang-aot --lang basic` smoke, and
+  the all-backend `lang_matrix` BA7-2b cell on native / LLVM / WASM / JVM / CLR
+  / VM / JIT.
+
+## 0.12.0 — 2026-06-27 — BA7 real `DATA` and arrays
+
+BA7 now carries Dartmouth BASIC's `f64` value model through aggregate storage,
+not just scalars and `PRINT`.
+
+- `DIM A(n)` allocates `array<f64>` elements. Subscripts remain the integer
+  structural boundary: index expressions lower as real values, then use E8
+  `real_to_int_trunc` before `array_get`/`array_set`.
+- `LET A(i) = expr` stores an `f64` element, and `A(i)` in an expression returns
+  an `f64` value.
+- `DATA` literals are gathered as finite `f64` values and materialised once at
+  the top of `main` as an `array<f64>` pool. `READ` fetches `f64` values into
+  either scalar variables or array elements; the read pointer remains `i64`, and
+  `RESTORE` still rewinds it to zero.
+- The native direct backends now accept 8-byte `array<f64>` elements, matching
+  the already-real-aware VM/JIT, LLVM, WASM, JVM, and CLR paths.
+- Verified by frontend unit tests and the `lang-aot` matrix on native / LLVM /
+  WASM / JVM / CLR / VM / JIT: `DATA 3.14, 0.25; READ A(0); READ B; PRINT A(0);
+  PRINT B` => `3.14` and `.25`.
+
+## 0.11.0 — 2026-06-27 — BA7 scalar real arithmetic + fixed-decimal `PRINT`
+
+BA7 moves Dartmouth BASIC's scalar numeric model onto `f64` while keeping the
+remaining integer boundaries explicit:
+
+- Numeric literals, including integer-spelled literals like `42`, now lower as
+  `Operand::Float` with an `f64` type hint instead of being silently truncated to
+  or preserved as `i64`.
+- Expression lowering carries `f64` through scalar arithmetic, `LET`, `IF`,
+  `FOR`/`NEXT`, `DEF FN`, and `PRINT`. Scalar variables default to real slots, so
+  a backend never sees the same BASIC scalar flip between integer and real
+  storage.
+- Integer-only boundaries in this scalar slice remained explicit: line numbers,
+  `DIM` bounds, the then-`i64` DATA pool, array subscripts/elements, and GOSUB
+  return stacks still used `i64`. Array subscripts and integer array elements used E8
+  `real_to_int_trunc` when fed a scalar real expression; 0.12.0 moves `DATA` and
+  array element storage to `f64`.
+- `READ` and `INPUT` still consume integer sources today, then widen into scalar
+  `f64` variables with E8 `int_to_real`.
+- `PRINT` chooses a new synthetic `__basic_print_real(x: f64)` helper for numeric
+  items. This BA7 helper implements whole-valued output by truncating with E8
+  `real_to_int_trunc` and delegating to the BA2 digit printer; BA7-2a adds the
+  fixed-decimal path for ordinary fractional values, including no-leading-zero
+  magnitudes below 1 and negative fractional values. That helper intentionally
+  kept a small fractional digit budget to stay within the direct AArch64
+  backend's frame limit; full six-significant-digit rounding and `E` notation
+  land in 0.13.0.
+- Verified by frontend unit tests, backend validator/encoder smokes, and executed
+  `lang-aot` matrix programs: `PRINT 42` and `PRINT 6.0 * 7.0` => `42`, plus
+  `PRINT 3.14`, `PRINT 1.0 / 4.0`, and `PRINT 0.0 - 2.5` => `3.14`, `.25`, and
+  `-2.5` on native / LLVM / WASM / JVM / CLR / VM / JIT.
+
 ## 0.10.0 — 2026-06-26 — `GOSUB` / `RETURN` (LANG-FULL BA1, enabler E7)
 
 `GOSUB` and `RETURN` were `UnsupportedStatement` rejections; they now lower onto
@@ -65,9 +358,10 @@ wrongly split `A` and `B` onto separate lines. BA2 moves BASIC to a
   - *Limitation:* the sign path negates with `0 - n`, which overflows only at
     `i64::MIN` — a value no BA2 program can express; a saturating negate is a
     later refinement.
-- **String `PRINT` items** still error (`need LANG77`) — they wait for BA4 /
-  enabler E4. **More relops** were already in place (the grammar and
-  `extract_relop_op` cover all six: `= < > <= >= <>`); BA2 adds no relop work.
+- **At this point in the history, string `PRINT` items still errored**; BA4 /
+  enabler E4 removes that limitation in 0.14.0. **More relops** were already in
+  place (the grammar and `extract_relop_op` cover all six: `= < > <= >= <>`);
+  BA2 adds no relop work.
 - Proven by two executed `lang-aot` matrix cells (`PRINT 0 - 12; 34` ⇒ `-1234`,
   `PRINT 5, 6` ⇒ `5 6`) that run on all 7 backends, plus six new frontend unit
   tests. The existing single-item BASIC matrix cells now route through `putchar`
@@ -397,7 +691,7 @@ and is not pluggable into the LANG VM chain.
 | Statement | Status |
 |-----------|--------|
 | `LET A = expr` | ✓ |
-| `PRINT expr`   | ✓ (numeric only — strings deferred to LANG77) |
+| `PRINT expr`   | ✓ (numeric in the initial release; string literal `PRINT` added in 0.14.0 for VM/JIT) |
 | `INPUT X`      | ✓ |
 | `IF cond THEN m` | ✓ |
 | `GOTO m`       | ✓ |

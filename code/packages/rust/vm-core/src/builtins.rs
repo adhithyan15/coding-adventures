@@ -10,7 +10,8 @@
 //! |------|-----------|
 //! | `"noop"` | No-op; returns `Null` |
 //! | `"assert_eq"` | Panics if `args[0] != args[1]`; returns `Null` |
-//! | `"print"` | Prints all args to stdout; returns `Null` |
+//! | `"print"` | Prints all args to stdout with a trailing newline; returns `Null` |
+//! | `"print_str"` | Prints one string to stdout with no implicit newline; returns `Null` |
 //!
 //! # Example
 //!
@@ -28,6 +29,7 @@
 //! ```
 
 use std::collections::HashMap;
+use std::io::{self, Write};
 use crate::errors::VMError;
 use crate::value::Value;
 
@@ -71,6 +73,22 @@ impl BuiltinRegistry {
         reg.register("print", |args| {
             let parts: Vec<String> = args.iter().map(|v| v.to_string()).collect();
             println!("{}", parts.join(" "));
+            Ok(Value::Null)
+        });
+
+        // print_str — writes a single string to stdout with no implicit newline.
+        reg.register("print_str", |args| {
+            let s = args.first()
+                .and_then(Value::as_str)
+                .ok_or_else(|| VMError::TypeError {
+                    expected: "str".into(),
+                    actual: args.first().map(Value::iir_type_name).unwrap_or("missing").into(),
+                    context: "print_str".into(),
+                })?;
+            print!("{s}");
+            io::stdout()
+                .flush()
+                .map_err(|e| VMError::Custom(format!("print_str flush failed: {e}")))?;
             Ok(Value::Null)
         });
 
@@ -157,5 +175,12 @@ mod tests {
             Ok(Value::Int(n * 2))
         });
         assert_eq!(reg.call("double", &[Value::Int(21)]).unwrap(), Value::Int(42));
+    }
+
+    #[test]
+    fn print_str_requires_a_string() {
+        let reg = BuiltinRegistry::new();
+        let err = reg.call("print_str", &[Value::Int(1)]).unwrap_err();
+        assert!(matches!(err, VMError::TypeError { .. }));
     }
 }

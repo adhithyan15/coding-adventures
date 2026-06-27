@@ -3,6 +3,60 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.21.0] — 2026-06-27 (literal string index — LANG-FULL E4)
+
+The JVM backend now lowers the direct-literal `str_index` shape:
+
+- `str_index` loads the direct `String` local and integer index, calls
+  `java/lang/String.charAt(I)C`, and widens with `i2l` when the IIR destination
+  is `i64`.
+- Twig `(string-ref "ABC" 1)` now returns `66` on real `java` alongside the
+  existing literal string length/equality/concat rows.
+- Non-literal string values and byte-exact non-ASCII semantics remain follow-up
+  representation work.
+
+## [0.20.0] — 2026-06-27 (literal string metadata — LANG-FULL E4)
+
+The JVM backend now lowers the literal `str_len`, `str_eq`, and `str_concat`
+shapes:
+
+- `str_len` loads the direct `String` local, calls
+  `java/lang/String.length()I`, and widens with `i2l` when the IIR destination is
+  `i64`.
+- `str_eq` loads two direct `String` locals, calls
+  `java/lang/String.equals(Ljava/lang/Object;)Z`, and widens with `i2l` when the
+  IIR destination is `i64`.
+- `str_concat` loads two direct `String` locals and calls
+  `java/lang/String.concat(Ljava/lang/String;)Ljava/lang/String;`, producing a
+  `String` local that the existing `str_len`/`str_eq`/`print_str` path can
+  consume.
+- This is enough for Twig `(string-length "HELLO")` and
+  `(string=? "HELLO" "HELLO")` plus
+  `(string-length (string-append "AB" "CDE"))` to run on real `java` while
+  keeping the backend's representation a host `String`.
+- Byte-oriented string operations (`str_index`) and non-literal string values
+  remain rejected until the backend owns shared UTF-8 byte semantics.
+- Tests assert both validator acceptance and the emitted
+  `java/lang/String.length:()I`, `String.equals(Object):Z`, and
+  `String.concat(String):String` method references.
+
+## [0.19.0] — 2026-06-27 (string literal PRINT foothold — LANG-FULL E4 / BA4)
+
+The JVM backend now lowers the first E4 string shape:
+
+- `str_const` with an ASCII `Operand::Str` literal → `CONSTANT_String` loaded
+  with `ldc`/`ldc_w` into a reference local.
+- `print_str` → `getstatic java/lang/System.out` +
+  `invokevirtual java/io/PrintStream.print(Ljava/lang/String;)V`.
+
+This is deliberately narrower than full E4: byte-oriented string operations
+(`str_len`, `str_index`, `str_concat`, `str_eq`) still fail closed until the JVM
+representation owns the shared UTF-8 byte semantics. The validator now admits
+only `str_const` + `print_str` and rejects the richer string algebra explicitly.
+
+Verified by backend tests plus the `lang-aot` matrix row:
+`10 PRINT "HELLO"` now runs on real `java` in the JVM column.
+
 ## [0.18.0] — 2026-06-23 (numeric conversions int ⇄ real — LANG-FULL E8 backend 4)
 
 The three IIR numeric-conversion ops now lower to JVM bytecode, the fourth

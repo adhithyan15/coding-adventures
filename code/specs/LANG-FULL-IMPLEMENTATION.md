@@ -9,12 +9,12 @@ program per language**, and each frontend is a **deliberate subset**:
 
 | Language | What the matrix actually runs end-to-end on the code-gen backends | The subset gap |
 |---|---|---|
-| Twig | `42` | rich Lisp frontend, but only typed int-arith/`if` clears the backend validators; lists/lambdas/strings/`print`/symbols need the VM only |
-| Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
-| Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
-| Dartmouth BASIC | `PRINT 42`, `GOSUB`/`RETURN`, arrays, data, functions | integer-only: strings, floating point, and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3), `READ`/`DATA`/`RESTORE` (BA6), and `GOSUB`/`RETURN` (BA1) all run on every backend |
-| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
+| Twig | `42`, variadic arithmetic, top-level value `define`, and typed E4 string literal/named/local proofs | rich Lisp frontend; lists/lambdas/dynamic globals/records/symbols still need E5/E6, and captured/reassigned strings stay on the dynamic path |
+| Nib | typed calls, `*`/`/`, `for`, bitwise, short-circuit logic, logical `!`, consts, const/static-expression folding, wrap/sat arithmetic, and module `static`s all run on all 7 backends | BCD semantics and Intel-4004 RAM mapping remain |
+| Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
+| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); richer string ops and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
+| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, and multi-argument string `output` ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -63,8 +63,8 @@ multiple languages; close an enabler before the features that depend on it.
   source→real-backend→execute for one `Prog` per language; this campaign adds many. No
   separate harness PR — every feature PR adds its executed `Prog`(s). *(Mechanism exists;
   enforced by the definition of done.)*
-- **E2 — Integer width & wrap semantics.** ◑ *In progress (approach B — each backend
-  masks narrow-typed arithmetic by `type_hint`, mirroring the byte-tape precedent).* Model
+- **E2 — Integer width & wrap semantics.** ✅ **COMPLETE** (approach B — each backend
+  masks narrow-typed arithmetic by `type_hint`, mirroring the byte-tape precedent). Model
   `u4`/`u8`/`u16`/`u32` wraparound (mod-2ⁿ) consistently across all backends, so Nib/Oct
   arithmetic and bitwise-NOT are *correct*, not "collapse to i64." (Brainfuck already proves
   the u8-tape pattern; this generalises it to register values.)
@@ -107,7 +107,7 @@ multiple languages; close an enabler before the features that depend on it.
       narrow + full-width untouched). **Executed proof on aarch64** — the generated ARM64 is
       installed via `jit-loader-macos` and *called*: `200u8+100u8=44`, `~0u8=255`, `1u8<<8=0`,
       `u32` mul wrap; x86_64 has structural mask tests + the lang-aot matrix on a Linux x86 runner.
-    - ◑ **Stack-backend rework (compute-wide + mask).** Wiring Nib to emit narrow `type_hint`s
+    - ✅ **Stack-backend rework (compute-wide + mask).** Wiring Nib to emit narrow `type_hint`s
       surfaced that the 3 *stack* backends typed the masking op at the narrow width (wasm→i32,
       jvm→int, cil→i32), which **requires narrow-width operands**. Real frontends carry every
       `const`/`let` as `i64` (module uniformity) and put the narrow width only on the op, so a
@@ -202,16 +202,45 @@ multiple languages; close an enabler before the features that depend on it.
     opcode change. **Executed proof on real `ilasm` + `dotnet`**: both ALGOL real programs run
     on the CLR matrix column. (The structured **bytecode** emitter keeps its own f64 guard — a
     later follow-up; the real-CLR path is textual.)
-- **E4 — Strings.** ◑ *Design pass complete — see
-  **[`lang-full-e4-strings.md`](lang-full-e4-strings.md)**; implementation gated on
-  sign-off.* An IIR string value model (six ops: `str_const`, `str_len`, `str_index`,
+- **E4 — Strings.** ◑ *IR + reference VM slice landed; see
+  **[`lang-full-e4-strings.md`](lang-full-e4-strings.md)** for the full backend plan.*
+  An IIR string value model (six ops: `str_const`, `str_len`, `str_index`,
   `str_concat`, `str_eq`, `print_str`) + per-backend support, lowered to all 7 backends and
   verified by RUNNING (observable via **stdout**). A v1 string is an **immutable,
   length-counted byte buffer** — it reuses the E5 array substrate (length-prefixed flat
   buffer on the static backends; native `String` / managed `(array i8)` on the managed
   backends), so E4 is the *byte-aggregate sibling of E5*, not a new allocator. The one new
-  host primitive is `__print_str`/`printStr` (the string sibling of `print_i64`). Unlocks
-  BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
+  host primitive is `__print_str`/`printStr` (the string sibling of `print_i64`). The VM now
+  executes the shared ops directly (`tests/e4_strings.rs`), Dartmouth BASIC
+  `PRINT "HELLO"` runs on all 7 backends, and Twig `(string-length "HELLO")`,
+  `(string-ref "ABC" 1)`, `(string=? "HELLO" "HELLO")`, plus
+  `(string-length (string-append "AB" "CDE"))` prove direct literal
+  `str_len`/`str_index`/`str_eq`/`str_concat` on all 7 backends. Twig immutable
+  top-level string value defines now also feed those same ops: named
+  `str_concat`+`str_len`, `str_eq` driving an `if`, and named `str_index` all run
+  on all 7 backends. Twig lexical `let` string locals now also run through E4:
+  `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`, and
+  `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`,
+  on all 7 backends. The
+  matrix now also proves the E4 bounds contract: `(string-ref "ABC" 3)` traps on
+  native-AOT + LLVM + WASM + JVM + CLR + VM + JIT. WASM owns the literal-output
+  shape with a linear-memory data segment + `env.__print_str(ptr,len)`, LLVM owns
+  the static private `{len,bytes}` global + `@__print_str` shape, native AOT owns
+  the heap-byte `alloc_bytes` + `store_byte` + `print_string` shape, and JVM/CLR
+  own it with `ldc`/`ldstr` + `PrintStream.print(String)`/`Console.Write(string)`
+  plus host string metadata/index calls. ALGOL now reuses the same output path:
+  `begin print('HI') end` (and `output`) lowers literal actuals to `str_const` +
+  `print_str` and runs on all 7 backends; `begin string s; s := 'HI'; print(s) end`
+  proves literal-backed scalar string variables through the same path, and
+  `begin string s, t; s := 'O'; t := 'K'; output(s, t) end` proves ordered
+  multi-argument string output.
+  ALGOL scalar string copies are snapshots (`begin string s, t; s := 'OK'; t := s;
+  s := 'NO'; print(t) end` still prints `OK`). BASIC also proves literal
+  reassignment (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`) through the same slot,
+  multi-item string `PRINT` (`PRINT A$; B$` and `PRINT A$, B$`), and copied-slot equality
+  (`LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...`) through `str_eq`.
+  Captured string variables and broader dynamic string values remain.
+  Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR
   array model (`alloc_array`/`array_len`/`array_get`/`array_set`, `array<T>` type hint,
@@ -241,8 +270,8 @@ multiple languages; close an enabler before the features that depend on it.
   computed-goto chain (`cmp_eq`+`jmp_if_true`). `dartmouth-basic-iir-compiler` 0.10.0
   added the frontend lowering, and `iir-to-wasm` 0.18.0 fixed the dispatch-loop edge
   case it exposed; both BA1 proof programs now run on all 7 backends.
-- **E8 — Numeric conversions (`integer` ↔ `real`).** ◑ *Spec signed off
-  ([`lang-full-e8-numeric-conversions.md`](lang-full-e8-numeric-conversions.md)); implementation in progress.*
+- **E8 — Numeric conversions (`integer` ↔ `real`).** ✅ **COMPLETE**
+  ([`lang-full-e8-numeric-conversions.md`](lang-full-e8-numeric-conversions.md)).
   Three ops (`int_to_real`, `real_to_int_trunc`, `real_to_int_floor`); `real→int`
   traps out-of-range. Unblocks **AL8 `entier`** (floor), int→real **coercion**,
   BASIC **`INT()`** / **BA7**.
@@ -326,7 +355,7 @@ backend immediately) come before the enabler-dependent items.
   Two fixes: `~` was being silently dropped (the single-child-wrapper passthrough counts only child
   *nodes*, so a `[TILDE, operand]` unary_expr looked like a transparent wrapper); and the textual
   CIL emitter had no unary-`not` arm (`iir-to-cil-bytecode` 0.21.0 adds it). Needed `iir-to-llvm`
-  0.12.0's `not` op. (Logical `!` still passthrough — boolean lowering is a separate item.)
+  0.12.0's `not` op. (Logical `!` is covered by N9.)
 - ✅ **N4** — `&&` / `||` short-circuit. `compile_short_circuit` lowers to a result slot
   guarded by `jmp_if_false`/`jmp`/`label` (portable subset — CLR textual path has no
   `jmp_if_true`); verified by RUNNING divide-by-zero short-circuit proofs (`1==2 && 84/0==0`
@@ -334,14 +363,38 @@ backend immediately) come before the enabler-dependent items.
 - ✅ **N5** — `const` declarations. Module-scoped integer-literal consts are collected and
   folded to their literal at each use (no runtime storage, runs everywhere); verified by
   RUNNING `const N: u8 = 42; … return N`→42 and `const A=30; const B=12; … A + B`→42 across
-  all backends. (Const-*expression* folding and mutable `static` deferred.)
-- ☐ **N6** — u4/u8 wrap semantics (needs **E2**).
+  all backends. Const-*expression* folding is covered by N10; mutable `static` is covered by N8.
+- ✅ **N6** — u4/u8 wrap semantics (`nib-iir-compiler` 0.14.0 + E2). Plain narrow
+  arithmetic now wraps mod-2^n before the value is observed: the matrix proves
+  `200u8 + 100u8` by comparing the in-register result to `44`, and keeps `6 * 7`
+  at `42` in a `u8` return context so the literal-typing guard cannot regress to
+  accidental u4 masking. Both programs run on all 7 backends.
 - ✅ **N7** — `+%` (wrap add) / `+?` (saturating add) (nib-iir-compiler 0.15.0). `+%` lowers to
   the narrow-typed `add` (E2 wraps it: `15u4 +% 1 = 0`, `200u8 +% 100 = 44`); `+?` lowers to a
   *wide* add + a clamp branch `min(sum, MAX)` (`15u4 +? 1 = 15`, `200u8 +? 100 = 255`,
   `3 +? 4 = 7`). Verified by RUNNING on all 7 backends (comparison-based matrix proofs) + a
   vm-core unit test. The grammar already had the `WRAP_ADD`/`SAT_ADD` tokens; no type-checker
   change (additive operators are type-inferred from operands).
+- ✅ **N8** — mutable module `static` globals (nib-type-checker 0.4.0,
+  nib-iir-compiler 0.17.0). Top-level `static NAME: type = integer-literal;`
+  declarations are visible in every function, seed shared IIR globals at `main`
+  entry (`const` + `global_store`), and unshadowed reads/writes lower to
+  `global_load`/`global_store` (the E6 substrate). Verified by RUNNING
+  `static counter: u8 = 40; bump(1); bump(1); return counter` → 42 across
+  native/LLVM/WASM/JVM/CLR/VM/JIT. Const/static-expression folding is covered by N10;
+  BCD storage semantics and Intel-4004 RAM mapping remain follow-ups.
+- ✅ **N9** — logical `!` (nib-type-checker 0.5.0, nib-iir-compiler 0.18.0).
+  `unary_expr` now types leading `!` as `bool` and lowers it through the existing
+  truthiness branch contract to a 0/1 scalar. Verified by RUNNING
+  `if !(1 == 2) { return 42; }` across native/LLVM/WASM/JVM/CLR/VM/JIT; the old
+  passthrough behavior would have returned 0.
+- ✅ **N10** — const/static expression folding (nib-type-checker 0.6.0,
+  nib-iir-compiler 0.19.0). Top-level `const` and `static` initializers now type
+  and fold deterministic integer/boolean expressions, including references to
+  previously declared consts. Calls and non-const names remain rejected in
+  initializer expressions. Verified by RUNNING
+  `const BASE: u8 = 6 * 7; static counter: u8 = BASE + 0; return counter` → 42
+  across native/LLVM/WASM/JVM/CLR/VM/JIT.
 
 ### Oct  (sister to Nib)
 > **Oct had no observable output** (void `main` → always exits 0), which made its value-level
@@ -369,8 +422,8 @@ backend immediately) come before the enabler-dependent items.
   RUNNING `out(1, ~0)`→`255` and `out(1, 200 + 100)`→`44` on native/LLVM/WASM/JVM/CLR/VM/JIT.
   Surfaced + fixed a JVM dual-model bug: Oct's *printing* programs keep the i64/long model, so
   a narrow op had `long` operands — `iir-to-jvm-class-file` 0.14.0 now masks those with
-  `i2l; land` (the int `iand` was unverifiable over longs → empty output). (Logical `!` still
-  deferred — a separate item; only `~` is in O2.)
+  `i2l; land` (the int `iand` was unverifiable over longs → empty output). (Logical `!` is
+  covered by O-! below; only `~` is in O2.)
 - ✅ **O3** — `static` module globals (LANG-FULL O3). Top-level `static` was silently
   dropped at IIR-gen; `oct-iir-compiler` 0.8.0 lowers it to the IIR module-global ops
   (`global_load`/`global_store`, the E6 substrate). A `static counter: u8 = 40` shared
@@ -380,6 +433,11 @@ backend immediately) come before the enabler-dependent items.
   frontend now emits a dest-less IIR `call` for a void callee (a named void call is
   malformed LLVM), and `iir-to-cil-bytecode` 0.25.0's textual emitter lowers `ret_void`
   → bare `ret`, a `void` return signature, and a `call void …` with no trailing store.
+- ✅ **O-!** — logical `!` (LANG-FULL O-!). `oct-iir-compiler` 0.9.0 now lowers unary
+  logical NOT through `jmp_if_false` / `jmp` / `label`, assigning a clean 0/1 bool result
+  instead of reusing bitwise `not` (`not 0` = -1, `not 1` = -2). Verified by RUNNING
+  `if !(1 == 2) { out(1, 42) } else { out(1, 0) }` on native/LLVM/WASM/JVM/CLR/VM/JIT
+  → stdout `42`.
 - ☐ **O4** — ⚠ Intel-8008 intrinsics (`in`/`out`/`adc`/`sbb`/`rlc`/`rrc`/`ral`/`rar`/`carry`/`parity`).
   These are hardware-specific; on general backends they need a host/IIR-builtin model or a
   defined semantics. **Decision point — surface to the user before implementing.**
@@ -444,17 +502,40 @@ backend immediately) come before the enabler-dependent items.
   backend already runs (`call`, integer `div`/`mul`/`sub`/`add`, `cmp_*`, `putchar`), BA2
   needed **zero** backend changes — verified by two executed matrix cells (`PRINT 0 - 12;
   34` ⇒ `-1234`, `PRINT 5, 6` ⇒ `5 6`) on all 7 backends. *More relops* were already done
-  (grammar + `extract_relop_op` cover all six `= < > <= >= <>`). Deferred: string `PRINT`
-  items (→ BA4/E4); true 14-column `,` print zones (a single space approximates them).
+  (grammar + `extract_relop_op` cover all six `= < > <= >= <>`). Deferred: string variables
+  and string code-gen backends (→ BA4/E4); true 14-column `,` print zones (a single space
+  approximates them).
 - ✅ **BA3** — arrays / `DIM` (enabler **E5**). `DIM A(n)` lowers to `alloc_array`
   (BASIC arrays are 0-based + inclusive, so `n + 1` elements); `LET A(i) = e` →
   `array_set` and `A(i)` rvalues → `array_get`, with the subscript used directly as
-  the 0-based index (no lower-bound subtraction, unlike ALGOL `[lo:hi]`). These are
-  the same shared array ops ALGOL's E5 arrays use, so BASIC arrays RUN on all 7
+  the 0-based index (no lower-bound subtraction, unlike ALGOL `[lo:hi]`). BA7-3
+  promotes the element storage to `array<f64>` while keeping subscripts as the
+  explicit `i64` boundary. These are the same shared array ops ALGOL's E5
+  arrays use, so BASIC arrays RUN on all 7
   backends — verified by a straight-line array program (`DIM A(3); A(1)=40; A(2)=2;
   PRINT A(1)+A(2)` ⇒ `42`) in `lang-aot/tests/lang_matrix.rs`. (`dartmouth-basic-iir-compiler`
   0.7.0.) Undeclared subscript use is a clean `Unsupported` error.
-- ☐ **BA4** — strings + string PRINT (needs **E4**).
+- ◑ **BA4** — string literal `PRINT` runs on all 7 backends via **E4**.
+  Literal-backed scalar string variables now run too: `LET A$ = "HI"; PRINT A$`
+  produces `HI`, `LET A$ = "NO"; LET A$ = "OK"; PRINT A$` produces `OK`,
+  `LET A$ = "O" + "K"; PRINT A$` proves literal `str_concat`,
+  `LET A$ = "OK"; LET B$ = A$; PRINT B$` proves scalar string copy,
+  `PRINT A$; B$` proves ordered repeated string output, and
+  `LET A$ = "O"; PRINT A$ + "K"` proves `PRINT` can consume a temporary string
+  expression result directly. `LET A$ = "O"; LET B$ = "K"; PRINT A$ + B$`
+  proves both concat operands can be scalar string slots in that direct-print path.
+  `LET A$ = "O"; IF A$ + "K" = "OK" THEN n`
+  proves that same expression path before `str_eq` line-control branching.
+  `LET A$ = "O"; LET B$ = A$ + "K"; PRINT B$` proves variable-backed concat
+  assignment into a second scalar string slot, and
+  `LET A$ = "A"; LET B$ = A$ + "B" + "C"; PRINT B$` proves left-associative
+  chained concat through repeated E4 `str_concat`.
+  `PRINT A$, B$` proves BA2's comma separator (`putchar(' ')`) composes with
+  ordered E4 `print_str` calls and produces `O K` on all seven backends.
+  `IF A$ = "Y" THEN n` / `IF A$ <> "Y" THEN n` lower to `str_eq` in the frontend
+  and now drive real line-control branching on all seven backends (`OK`/`BAD`
+  matrix proofs).
+  String arrays, string `INPUT`, and broader dynamic string expressions remain.
 - ✅ **BA5** — `DEF FN` single-line user functions. `DEF FNx(P) = expr` lowers to a
   sibling `IIRFunction` (one numeric param, `FullyTyped`) and `FNx(arg)` lowers to the
   shared IIR `call` — the same convention ALGOL's value procedures (AL3) run on every
@@ -468,24 +549,39 @@ backend immediately) come before the enabler-dependent items.
   i64), keeping cross-function call signatures consistent (lang-aot 0.94.0). **Limits:** one
   numeric parameter; body references its parameter only (globals need **E6**); built-in
   maths fns (`SIN`/`ABS`/…) need **E3**.
-- ✅ **BA6** — `READ` / `DATA` / `RESTORE` (`dartmouth-basic-iir-compiler` 0.8.0).
+- ✅ **BA6** — `READ` / `DATA` / `RESTORE` (`dartmouth-basic-iir-compiler` 0.8.0,
+  real-valued in 0.12.0).
   Lowers onto the **E5 array** substrate — no new IIR op, no enabler: a pre-pass
-  gathers all `DATA` integer literals (line order) into a pool materialised once at
-  the top of `main` as an `array<i64>` + a `__basic_data_ptr` register (a register,
-  not a global, since the program is one `main` function). `READ` does `array_get
+  gathers all finite `DATA` literals (line order) into a pool materialised once at
+  the top of `main` as an `array<f64>` + an `i64` `__basic_data_ptr` register (a
+  register, not a global, since the program is one `main` function). `READ` does `array_get
   pool, ptr` + `ptr := ptr + 1`; `RESTORE` resets `ptr := 0`; out-of-DATA traps via
   the bounds-checked `array_get`. **Runs on all 7 backends**: `DATA 21 / READ A /
   RESTORE / READ B / PRINT A+B` ⇒ 42 (proves sequential consumption + rewind).
-  Integer DATA only (real DATA = follow-up).
-- ☐ **BA7** — floating-point (needs **E3**, ✅). ◑ *Design spec **decision-complete***
-  ([`lang-full-ba7-floating-point.md`](lang-full-ba7-floating-point.md)) — §7 resolved
-  by historical Dartmouth BASIC fidelity (no sign-off gate). Cutover of BASIC's value
-  model from the V1 i64-truncation to **`f64` end-to-end** (real Dartmouth semantics —
-  every number is floating-point). Builds on E3 (f64 on all backends), E8
-  (`real_to_int_trunc` for array subscripts), and BA2 (the `putchar` digit substrate —
-  adds `__basic_print_real`). **No new backend op.** Slices: BA7-1 (value model +
-  arithmetic + whole-valued PRINT) → BA7-2 (fractional formatting + `E` notation,
-  6 significant digits, no leading zero) → BA7-3 (comparisons/FOR/arrays/DATA reals).
+  BA7-3 adds the fractional proof: `DATA 3.14, 0.25 / READ A(0) / READ B / PRINT
+  A(0) / PRINT B` ⇒ `3.14` and `.25` on all 7 backends.
+- ◑ **BA7** — floating-point (needs **E3**, ✅; **E8**, ✅). Design spec is
+  **decision-complete** ([`lang-full-ba7-floating-point.md`](lang-full-ba7-floating-point.md))
+  by historical Dartmouth BASIC fidelity (no sign-off gate). **BA7-1a/1b landed**
+  (`dartmouth-basic-iir-compiler` 0.11.0): decimal/exponent and integer-spelled
+  scalar literals now lower to `Operand::Float`; scalar arithmetic/variables,
+  `DEF FN`, `IF`, `FOR`, and `PRINT` run as `f64`; array/index integer
+  boundaries use `real_to_int_trunc`; and `PRINT` has a staged
+  `__basic_print_real(x: f64)` helper for whole-valued, rounded fixed-decimal,
+  and `E`-notation output. **Verified by RUNNING** `PRINT 42`, `PRINT 6.0 * 7.0`
+  ⇒ `42`, `3.14`/`.25`/`-2.5` fractional output, and `1.23457E+08` /
+  `1.23457E-04` formatter output on native/LLVM/WASM/JVM/CLR/VM/JIT. **BA7-3 landed** in
+  `dartmouth-basic-iir-compiler` 0.12.0: `DIM` arrays and `DATA` pools now store
+  `f64`, with index/read-pointer boundaries left as `i64`; fractional `DATA`
+  through array and scalar `READ` runs on native/LLVM/WASM/JVM/CLR/VM/JIT. BA7
+  numeric formatting completed in 0.13.0.
+- ✅ **BA-^** — integer-literal exponentiation (`dartmouth-basic-iir-compiler` 0.26.0).
+  The parser already supported right-associative `^`, but the compiler rejected it pending
+  a runtime math helper. The backend-neutral slice now recognizes nonnegative
+  integer-valued literal exponents `0..=64` and lowers `base ^ n` to repeated `f64`
+  `mul`, so no backend learns a new operation. Verified by RUNNING `PRINT 6 ^ 2 + 6`
+  on native/LLVM/WASM/JVM/CLR/VM/JIT → stdout `42`. General variable, nested, negative,
+  fractional, and large exponents still need a cross-backend runtime math helper.
 
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`
@@ -513,7 +609,15 @@ backend immediately) come before the enabler-dependent items.
   propagated its dead seed → only the JIT returned 0). **Limits (follow-ups):** typed
   procedures only — proper (void) procedures rejected (inert on this slice); bodies are
   lexically flat (no enclosing-scope access yet); `value` params only (by-name is AL7).
-- ☐ **AL4** — strings + `print`/`output` I/O (needs **E4**).
+- ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
+  **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
+  to `str_const` + `print_str`, and literal-backed scalar string variables
+  (`string s; s := 'HI'; print(s)`) now run the same way. The matrix also proves
+  the `output(s)` spelling, multi-argument `output(s, t)`, plus literal-backed
+  scalar copy snapshot semantics (`string s, t; s := 'OK'; t := s; s := 'NO';
+  print(t)`), all on
+  native/LLVM/WASM/JVM/CLR/VM/JIT. Captured/`own` strings, arrays, parameters,
+  and broader dynamic string expressions remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
   native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). `goto s[i]` lowers to a 1-based
@@ -534,16 +638,16 @@ backend immediately) come before the enabler-dependent items.
   has drifted ahead of the compiled grammar in other rules; resync is follow-up.)
 - ☐ **AL7** — ⚠ call-by-name (Jensen-style expression thunks). **Hardest item in the
   campaign — design pass + user check before implementing.**
-- ◑ **AL8** — standard functions (§3.2.4). **`abs` ✅** (algol-iir-compiler 0.8.0)
-  and **`sign` ✅** (0.9.0): both built-in, resolved by name (overridable by a user
-  `procedure`), lowered inline to compares + `jmp_if_false` + `mov`-into-one-slot
-  (store-per-branch, no phi). `abs(E)` = `if E<0 then -E else E` (preserves
-  `integer`/`real`); `sign(E)` = `if E>0 then 1 else if E<0 then -1 else 0` (always
-  `integer`). Verified by RUNNING `abs(0-42)`⇒42 and `43+sign(0-1)`⇒42 on
-  native/LLVM/WASM/JVM/CLR/VM/JIT. **Remaining:** `entier` (floor of a real → integer:
-  needs a float-floor+convert, not a portable IIR op — closer to the transcendentals
-  than to abs/sign), then `sqrt`/`sin`/`cos`/`ln`/`exp` (need a cross-backend runtime
-  math library).
+- ◑ **AL8** — standard functions (§3.2.4/§3.2.5). The pure-IIR/conversion-backed
+  functions are done: **`abs` ✅** (algol-iir-compiler 0.8.0), **`sign` ✅** (0.9.0),
+  and **`entier` ✅** (0.10.0). `abs`/`sign` are built-in, resolved by name
+  (overridable by a user `procedure`), and lower inline to compares +
+  `jmp_if_false` + `mov`-into-one-slot (store-per-branch, no phi). `entier(E)`
+  requires a `real` operand and lowers to the E8 `real_to_int_floor` conversion,
+  so `entier(0.0 - 2.7)` proves floor toward negative infinity rather than truncation.
+  Verified by RUNNING `abs(0-42)`⇒42, `43+sign(0-1)`⇒42, and
+  `45+entier(0.0-2.7)`⇒42 on native/LLVM/WASM/JVM/CLR/VM/JIT. **Remaining:**
+  `sqrt`/`sin`/`cos`/`ln`/`exp`, which need a cross-backend runtime math library.
 
 ### Twig
 - ✅ **TW1** — variadic arithmetic typed lowering. An all-`i64` `(+ a b c …)` /
@@ -562,7 +666,15 @@ backend immediately) come before the enabler-dependent items.
   **Limits:** a value captured by a closure, or a top-level forward reference, stays on
   the host global table (unchanged) — full mutable globals on code-gen backends need **E6**.
 - ☐ **TW3** — list / cons ops on code-gen backends (needs **E5**/**E6**).
-- ☐ **TW4** — strings on code-gen backends (needs **E4**).
+- ✅ **TW4** — typed E4 strings on code-gen backends. Direct literals,
+  immutable top-level string value defines, and lexical `let`/`let*` string
+  locals lower to shared `str_const`/`str_len`/`str_index`/`str_eq`/`str_concat`
+  ops instead of the dynamic `call_builtin` path. **Verified by running** literal
+  `string-length`/`string-ref`/`string=?`/`string-append`, named string
+  concat/equality/index, the `str_index` out-of-bounds trap, local string index,
+  `let*` string length, local string equality branches, and local string concat
+  across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). **Limits:** captured or reassigned strings and the
+  dynamic-`any` string path still need **E6**/dynamic representation work.
 - ☐ **TW5** — closures / lambdas / general `call_builtin` on code-gen backends (needs **E6**).
 - ☐ **TW6** — `match` / records / unions on code-gen backends (needs **E5**/**E6**).
 
@@ -574,16 +686,13 @@ backend immediately) come before the enabler-dependent items.
 
 ## Suggested global ordering
 
-1. **E2 / N6** — finish the narrow integer wrap lane so Nib's u4/u8 semantics are
-   execution-proven instead of only type-hinted.
-2. **BA7 / AL8 numeric tails** — use the E3/E8 conversion work to finish BASIC
-   floating point and ALGOL's remaining standard-function surface.
-3. **E4 strings** — unblock BASIC string `PRINT`, ALGOL string I/O, and Twig strings
-   with one shared string value model instead of per-frontend shortcuts.
-4. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
+1. **E4 dynamic string follow-ups** — continue beyond the typed immutable
+   scalar/local foothold into captured/reassigned strings, arrays/input/parameters,
+   and fuller byte-string representations without per-frontend shortcuts.
+2. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
    work and any frontend code that still needs shared state across functions.
-5. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, and **MC1 cons/symbol
-   values on the code-gen backends** — explicit user decision points.
+4. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, **AL8 transcendentals**,
+   and **MC1 cons/symbol values on the code-gen backends** — explicit user decision points.
 
 This roadmap is the contract; each ☐ becomes a `feat(lang-full): …` PR, checked off here as
 it merges.

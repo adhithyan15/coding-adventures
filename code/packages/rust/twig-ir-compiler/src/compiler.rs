@@ -305,6 +305,25 @@ impl FnCtx {
         self.var_types.insert(var.to_string(), ty.to_string());
     }
 
+    fn emit_str_const(&mut self, literal: &str, loc: SourceLoc) -> String {
+        let v = self.fresh_var("s");
+        self.emit_str_const_to(&v, literal, loc);
+        v
+    }
+
+    fn emit_str_const_to(&mut self, dest: &str, literal: &str, loc: SourceLoc) {
+        self.emit(
+            IIRInstr::new(
+                "str_const",
+                Some(dest.to_string()),
+                vec![Operand::Str(literal.to_string())],
+                "str",
+            ),
+            loc,
+        );
+        self.record_type(dest, "str");
+    }
+
     /// Look up the inferred type of `var`, returning the matching
     /// `&'static str` if known.  Returns `"any"` when nothing was
     /// inferred — which is the legacy default and a valid type hint
@@ -509,16 +528,28 @@ impl Compiler {
                 Form::Define(def) => {
                     // (define x value-expr) — evaluate at top level.
                     let loc = SourceLoc::new(def.line, def.column);
+                    if let Expr::StrLit(StrLit { value, .. }) = &def.expr {
+                        if !self.escaping_value_globals.contains(&def.name)
+                            && !self.forced_global_set.contains(&def.name)
+                        {
+                            let v = main_ctx.emit_str_const(value, loc);
+                            self.value_global_locals.insert(def.name.clone(), v);
+                            last_main_value = None;
+                            continue;
+                        }
+                    }
+
                     let v = self.compile_expr(&def.expr, &mut main_ctx)?;
 
-                    // TW2: when the value is statically typed (`i64` / `bool`)
+                    // TW2: when the value is statically typed (`i64` / `bool`
+                    // / main-only E4 `str`)
                     // and the name is neither captured by a lambda nor already
                     // forward-referenced, keep it in the register `v` and skip
                     // the dynamic `global_set` entirely.  Reads in `main` then
                     // return that register (see `compile_var_ref`), so the whole
                     // of `main` stays typed and clears every backend validator.
                     let ty = main_ctx.type_of(&v);
-                    let typed = ty == "i64" || ty == "bool";
+                    let typed = matches!(ty, "i64" | "bool" | "str");
                     if typed
                         && !self.escaping_value_globals.contains(&def.name)
                         && !self.forced_global_set.contains(&def.name)
@@ -1123,10 +1154,19 @@ impl Compiler {
 
     fn compile_let(&mut self, expr: &Let, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.line, expr.column);
+        enum BindingValue {
+            Reg(String),
+            StrLiteral(String, SourceLoc),
+        }
+
         // Compile RHSs in the OUTER scope (Scheme `let`, not `let*`).
-        let mut binding_values: Vec<(String, String)> = Vec::new();
+        let mut binding_values: Vec<(String, BindingValue)> = Vec::new();
         for (name, rhs) in &expr.bindings {
-            let v = self.compile_expr(rhs, ctx)?;
+            let v = if let Expr::StrLit(StrLit { value, .. }) = rhs {
+                BindingValue::StrLiteral(value.clone(), SourceLoc::new(rhs.pos().0, rhs.pos().1))
+            } else {
+                BindingValue::Reg(self.compile_expr(rhs, ctx)?)
+            };
             binding_values.push((name.clone(), v));
         }
 
@@ -1140,7 +1180,12 @@ impl Compiler {
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
-            ctx.emit_move(name, src, loc);
+            match src {
+                BindingValue::Reg(src) => ctx.emit_move(name, src, loc),
+                BindingValue::StrLiteral(value, value_loc) => {
+                    ctx.emit_str_const_to(name, value, *value_loc);
+                }
+            }
         }
 
         // Compile body — at least one expression (parser-enforced).
@@ -1179,6 +1224,14 @@ impl Compiler {
         for (name, rhs) in &expr.bindings {
             // Compile the RHS in the current scope (which already includes
             // all prior let* bindings).
+            if let Expr::StrLit(StrLit { value, .. }) = rhs {
+                if ctx.locals.insert(name.clone()) {
+                    added.push(name.clone());
+                }
+                ctx.emit_str_const_to(name, value, SourceLoc::new(rhs.pos().0, rhs.pos().1));
+                continue;
+            }
+
             let v = self.compile_expr(rhs, ctx)?;
 
             // Bind the name into locals BEFORE compiling the next binding.
@@ -1318,6 +1371,141 @@ impl Compiler {
         }
     }
 
+    fn is_known_main_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
+        matches!(self.value_global_locals.get(name), Some(reg) if ctx.type_of(reg) == ty)
+    }
+
+    fn is_known_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
+        self.is_known_main_value_type(name, ctx, ty)
+            || (ctx.locals.contains(name) && ctx.type_of(name) == ty)
+    }
+
+    fn can_compile_e4_string_expr(&self, expr: &Expr, ctx: &FnCtx) -> bool {
+        match expr {
+            Expr::StrLit(_) => true,
+            Expr::VarRef(v) => self.is_known_value_type(&v.name, ctx, "str"),
+            Expr::Apply(apply) => {
+                if let Expr::VarRef(f) = apply.fn_expr.as_ref() {
+                    f.name == "string-append"
+                        && apply.args.len() == 2
+                        && self.can_compile_e4_string_expr(&apply.args[0], ctx)
+                        && self.can_compile_e4_string_expr(&apply.args[1], ctx)
+                } else {
+                    false
+                }
+            }
+            _ => false,
+        }
+    }
+
+    fn can_compile_e4_index_expr(&self, expr: &Expr, ctx: &FnCtx) -> bool {
+        match expr {
+            Expr::IntLit(_) => true,
+            Expr::VarRef(v) => {
+                self.is_known_value_type(&v.name, ctx, "i64")
+                    || self.is_known_value_type(&v.name, ctx, "i32")
+            }
+            _ => false,
+        }
+    }
+
+    fn compile_e4_string_expr(&mut self, expr: &Expr, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let loc = SourceLoc::new(expr.pos().0, expr.pos().1);
+        if let Expr::StrLit(StrLit { value, .. }) = expr {
+            return Ok(ctx.emit_str_const(value, loc));
+        }
+        self.compile_expr(expr, ctx)
+    }
+
+    fn try_compile_e4_string_builtin(
+        &mut self,
+        name: &str,
+        args: &[Expr],
+        ctx: &mut FnCtx,
+        loc: SourceLoc,
+    ) -> Result<Option<String>, TwigCompileError> {
+        match name {
+            "string-length"
+                if args.len() == 1 && self.can_compile_e4_string_expr(&args[0], ctx) =>
+            {
+                let string_reg = self.compile_e4_string_expr(&args[0], ctx)?;
+                let dest = ctx.fresh_var("r");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_len",
+                        Some(dest.clone()),
+                        vec![Operand::Var(string_reg)],
+                        "i64",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "i64");
+                Ok(Some(dest))
+            }
+            "string-append"
+                if args.len() == 2
+                    && self.can_compile_e4_string_expr(&args[0], ctx)
+                    && self.can_compile_e4_string_expr(&args[1], ctx) =>
+            {
+                let left = self.compile_e4_string_expr(&args[0], ctx)?;
+                let right = self.compile_e4_string_expr(&args[1], ctx)?;
+                let dest = ctx.fresh_var("s");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_concat",
+                        Some(dest.clone()),
+                        vec![Operand::Var(left), Operand::Var(right)],
+                        "str",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "str");
+                Ok(Some(dest))
+            }
+            "string=?"
+                if args.len() == 2
+                    && self.can_compile_e4_string_expr(&args[0], ctx)
+                    && self.can_compile_e4_string_expr(&args[1], ctx) =>
+            {
+                let left = self.compile_e4_string_expr(&args[0], ctx)?;
+                let right = self.compile_e4_string_expr(&args[1], ctx)?;
+                let dest = ctx.fresh_var("r");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_eq",
+                        Some(dest.clone()),
+                        vec![Operand::Var(left), Operand::Var(right)],
+                        "i64",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "i64");
+                Ok(Some(dest))
+            }
+            "string-ref"
+                if args.len() == 2
+                    && self.can_compile_e4_string_expr(&args[0], ctx)
+                    && self.can_compile_e4_index_expr(&args[1], ctx) =>
+            {
+                let string_reg = self.compile_e4_string_expr(&args[0], ctx)?;
+                let idx_reg = self.compile_expr(&args[1], ctx)?;
+                let dest = ctx.fresh_var("r");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_index",
+                        Some(dest.clone()),
+                        vec![Operand::Var(string_reg), Operand::Var(idx_reg)],
+                        "i64",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "i64");
+                Ok(Some(dest))
+            }
+            _ => Ok(None),
+        }
+    }
+
     fn compile_apply(&mut self, expr: &Apply, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.line, expr.column);
         // ── LANG52: `and` / `or` short-circuit special forms ─────────────────
@@ -1368,6 +1556,156 @@ impl Compiler {
             }
 
             if is_builtin(&v.name) {
+                if let Some(result) =
+                    self.try_compile_e4_string_builtin(&v.name, &expr.args, ctx, loc)?
+                {
+                    return Ok(result);
+                }
+
+                if v.name == "string-length" && expr.args.len() == 1 {
+                    if let Expr::StrLit(StrLit { value, .. }) = &expr.args[0] {
+                        let string_reg = ctx.fresh_var("s");
+                        ctx.emit(IIRInstr::new(
+                            "str_const",
+                            Some(string_reg.clone()),
+                            vec![Operand::Str(value.clone())],
+                            "str",
+                        ), loc);
+                        ctx.var_types.insert(string_reg.clone(), "str".to_string());
+
+                        let dest = ctx.fresh_var("r");
+                        ctx.emit(IIRInstr::new(
+                            "str_len",
+                            Some(dest.clone()),
+                            vec![Operand::Var(string_reg)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(dest.clone(), "i64".to_string());
+                        return Ok(dest);
+                    }
+                    if let Expr::Apply(append) = &expr.args[0] {
+                        if let Expr::VarRef(append_fn) = append.fn_expr.as_ref() {
+                            if append_fn.name == "string-append" && append.args.len() == 2 {
+                                if let (
+                                    Expr::StrLit(StrLit { value: left, .. }),
+                                    Expr::StrLit(StrLit { value: right, .. }),
+                                ) = (&append.args[0], &append.args[1])
+                                {
+                                    let left_reg = ctx.fresh_var("s");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_const",
+                                        Some(left_reg.clone()),
+                                        vec![Operand::Str(left.clone())],
+                                        "str",
+                                    ), loc);
+                                    ctx.var_types.insert(left_reg.clone(), "str".to_string());
+
+                                    let right_reg = ctx.fresh_var("s");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_const",
+                                        Some(right_reg.clone()),
+                                        vec![Operand::Str(right.clone())],
+                                        "str",
+                                    ), loc);
+                                    ctx.var_types.insert(right_reg.clone(), "str".to_string());
+
+                                    let concat_reg = ctx.fresh_var("s");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_concat",
+                                        Some(concat_reg.clone()),
+                                        vec![
+                                            Operand::Var(left_reg),
+                                            Operand::Var(right_reg),
+                                        ],
+                                        "str",
+                                    ), loc);
+                                    ctx.var_types.insert(concat_reg.clone(), "str".to_string());
+
+                                    let dest = ctx.fresh_var("r");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_len",
+                                        Some(dest.clone()),
+                                        vec![Operand::Var(concat_reg)],
+                                        "i64",
+                                    ), loc);
+                                    ctx.var_types.insert(dest.clone(), "i64".to_string());
+                                    return Ok(dest);
+                                }
+                            }
+                        }
+                    }
+                }
+                if v.name == "string=?" && expr.args.len() == 2 {
+                    if let (
+                        Expr::StrLit(StrLit { value: left, .. }),
+                        Expr::StrLit(StrLit { value: right, .. }),
+                    ) = (&expr.args[0], &expr.args[1])
+                    {
+                        let left_reg = ctx.fresh_var("s");
+                        ctx.emit(IIRInstr::new(
+                            "str_const",
+                            Some(left_reg.clone()),
+                            vec![Operand::Str(left.clone())],
+                            "str",
+                        ), loc);
+                        ctx.var_types.insert(left_reg.clone(), "str".to_string());
+
+                        let right_reg = ctx.fresh_var("s");
+                        ctx.emit(IIRInstr::new(
+                            "str_const",
+                            Some(right_reg.clone()),
+                            vec![Operand::Str(right.clone())],
+                            "str",
+                        ), loc);
+                        ctx.var_types.insert(right_reg.clone(), "str".to_string());
+
+                        let dest = ctx.fresh_var("r");
+                        ctx.emit(IIRInstr::new(
+                            "str_eq",
+                            Some(dest.clone()),
+                            vec![Operand::Var(left_reg), Operand::Var(right_reg)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(dest.clone(), "i64".to_string());
+                        return Ok(dest);
+                    }
+                }
+                if v.name == "string-ref" && expr.args.len() == 2 {
+                    if let (
+                        Expr::StrLit(StrLit { value, .. }),
+                        Expr::IntLit(IntLit { value: idx, .. }),
+                    ) = (&expr.args[0], &expr.args[1])
+                    {
+                        let string_reg = ctx.fresh_var("s");
+                        ctx.emit(IIRInstr::new(
+                            "str_const",
+                            Some(string_reg.clone()),
+                            vec![Operand::Str(value.clone())],
+                            "str",
+                        ), loc);
+                        ctx.var_types.insert(string_reg.clone(), "str".to_string());
+
+                        let idx_reg = ctx.fresh_var("i");
+                        ctx.emit(IIRInstr::new(
+                            "const",
+                            Some(idx_reg.clone()),
+                            vec![Operand::Int(*idx)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(idx_reg.clone(), "i64".to_string());
+
+                        let dest = ctx.fresh_var("r");
+                        ctx.emit(IIRInstr::new(
+                            "str_index",
+                            Some(dest.clone()),
+                            vec![Operand::Var(string_reg), Operand::Var(idx_reg)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(dest.clone(), "i64".to_string());
+                        return Ok(dest);
+                    }
+                }
+
                 // Resolve every argument before deciding the lowering path.
                 let arg_regs: Vec<String> = expr
                     .args

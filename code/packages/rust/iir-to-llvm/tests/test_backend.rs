@@ -968,6 +968,270 @@ fn call_builtin_unknown_name_is_unsupported_op() {
 }
 
 // ===========================================================================
+// LANG-FULL E4 — string literal output foothold
+// ===========================================================================
+
+#[test]
+fn e4_string_literal_print_emits_headered_constant_and_runtime_call() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HELLO".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string print should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("declare void @__print_str(ptr, i64)"),
+        "missing __print_str declaration:\n{ll}"
+    );
+    assert!(
+        ll.contains("@__twig_str_0 = private unnamed_addr constant { i64, [5 x i8] } { i64 5, [5 x i8] c\"\\48\\45\\4C\\4C\\4F\" }, align 8"),
+        "missing length-prefixed string literal:\n{ll}"
+    );
+    assert!(
+        ll.contains("getelementptr inbounds i8, ptr @__twig_str_0, i64 8"),
+        "print_str should pass the payload pointer, not the header:\n{ll}"
+    );
+    assert!(
+        ll.contains("call void @__print_str(ptr %__str1, i64 5)"),
+        "missing print_str runtime call:\n{ll}"
+    );
+}
+
+#[test]
+fn e4_string_literal_len_folds_to_integer_return() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HELLO".into())], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string len should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("ret i64 5"),
+        "str_len over a literal should materialise the byte count:\n{ll}"
+    );
+    assert!(
+        !ll.contains("@__print_str"),
+        "str_len alone should not pull in the string print runtime:\n{ll}"
+    );
+}
+
+#[test]
+fn e4_string_literal_eq_folds_to_integer_return() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("HELLO".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("HELLO".into())], "str"),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string eq should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("ret i64 1"),
+        "str_eq over equal literals should materialise true as 1:\n{ll}"
+    );
+    assert!(
+        !ll.contains("@__print_str"),
+        "str_eq alone should not pull in the string print runtime:\n{ll}"
+    );
+}
+
+#[test]
+fn e4_string_literal_concat_len_folds_to_integer_return() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string concat len should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("ret i64 5"),
+        "str_len over a literal concat should materialise the byte count:\n{ll}"
+    );
+    assert!(
+        !ll.contains("@__print_str"),
+        "str_concat + str_len alone should not pull in the string print runtime:\n{ll}"
+    );
+}
+
+#[test]
+fn e4_string_literal_concat_print_emits_derived_constant_and_runtime_call() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("O".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("K".into())], "str"),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string concat print should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("@__twig_str_2 = private unnamed_addr constant { i64, [2 x i8] } { i64 2, [2 x i8] c\"\\4F\\4B\" }, align 8"),
+        "concat should materialise a derived length-prefixed string constant:\n{ll}"
+    );
+    assert!(
+        ll.contains("getelementptr inbounds i8, ptr @__twig_str_2, i64 8"),
+        "print_str should use the derived concat storage:\n{ll}"
+    );
+    assert!(
+        ll.contains("call void @__print_str(ptr %__str1, i64 2)"),
+        "concat print should call the string runtime with the derived byte length:\n{ll}"
+    );
+}
+
+#[test]
+fn e4_string_literal_index_folds_to_integer_return() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string index should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("ret i64 66"),
+        "str_index over a literal should materialise byte 66:\n{ll}"
+    );
+    assert!(
+        !ll.contains("@__print_str"),
+        "str_index alone should not pull in the string print runtime:\n{ll}"
+    );
+}
+
+#[test]
+fn e4_string_literal_index_out_of_bounds_traps() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(
+        validate_for_llvm(&module).is_empty(),
+        "literal OOB string index should validate and trap at runtime"
+    );
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("declare void @llvm.trap()"),
+        "str_index OOB should declare llvm.trap:\n{ll}"
+    );
+    assert!(
+        ll.contains("call void @llvm.trap()"),
+        "str_index OOB should emit a runtime trap:\n{ll}"
+    );
+}
+
+#[test]
+fn e4_unknown_string_ops_still_fail_closed() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("AB".into())], "str"),
+            IIRInstr::new("str_cmp", Some("c".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("s".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+        ],
+    );
+    let errors = validate_for_llvm(&module_with(f));
+    assert!(
+        errors.iter().any(|e| e.contains("UnsupportedOp") && e.contains("str_cmp")),
+        "unknown string ops should remain rejected; got {errors:?}"
+    );
+}
+
+#[test]
+fn e4_str_const_rejects_non_ascii_literal() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hé".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let errors = validate_for_llvm(&module_with(f));
+    assert!(
+        errors.iter().any(|e| e.contains("printable ASCII")),
+        "non-ASCII literal should be rejected in this foothold; got {errors:?}"
+    );
+}
+
+// ===========================================================================
 // 12. Error display (kept green from LLVM02)
 // ===========================================================================
 

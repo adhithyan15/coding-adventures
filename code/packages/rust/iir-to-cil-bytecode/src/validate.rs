@@ -39,12 +39,14 @@
 //! | `EmptyModule`           | Module has zero functions |
 //! | `EmptyFunction`         | A function has zero instructions |
 //! | `UntypedInstruction`    | `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType`       | `type_hint` is `"str"` or starts with `"ref<"` but is not `"ref<LispyPair>"` |
+//! | `UnsupportedType`       | `type_hint` is unsupported (`"str"` except `str_const`, or unsupported `ref<...>`) |
 //! | `UnsupportedType` (float const) | `op == "const"` and src is `Operand::Float` |
 //! | `UnsupportedOp`         | op is a runtime/memory/IO/GC opcode that hasn't been promoted (list below) |
 //!
 //! Remaining unsupported ops: `call_builtin`, `io_in`, `io_out`, `cast`,
-//! `load_mem`, `store_mem`, `box`, `unbox`, `safepoint`.
+//! `load_mem`, `store_mem`, `box`, `unbox`, `safepoint`, and the byte-oriented
+//! E4 string algebra beyond `str_const` + `str_len` + `str_index` +
+//! `str_eq` + `str_concat` + `print_str`.
 //! Previously unsupported but now accepted: `alloc` (LispyPair only),
 //! `field_load`, `field_store`, `is_null`.
 
@@ -331,8 +333,11 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
 
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
-            // `"str"` — String operations require System.String method calls;
-            // we do not emit them in v1.
+            // `"str"` — The textual CLR path can now load ASCII literals and
+            // concatenate them through `System.String` for the narrow E4
+            // foothold. `str_len` and `str_eq` produce integers. Other
+            // string-typed producers still need a fuller byte-oriented
+            // representation before we can map them to `System.String` safely.
             //
             // `"ref<…>"` — Heap pointer types require GC-managed references.
             // In Phase 2 we lower `ref<LispyPair>` to `object[]` cons cells.
@@ -350,10 +355,10 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             //   - `jmp_if_true` / `jmp_if_false` — used for pattern-match dispatch
             //
             // All other ops remain rejected for `ref<LispyPair>`.
-            if instr.type_hint == "str" {
+            if instr.type_hint == "str" && !matches!(instr.op.as_str(), "str_const" | "str_concat") {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     string operations are not supported in this CLR backend",
+                     only str_const and str_concat literals are supported in this CLR backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<") {
@@ -439,7 +444,59 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
             // `putchar` / `getchar` flow through while still rejecting
             // unknown / unsafe builtins.
-            if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
+            if instr.op == "str_len" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — il_text.rs calls System.String::get_Length().
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_len\" requires \
+                             dest, one Operand::Var source, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_concat" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "str") => {
+                        // Accepted — il_text.rs calls System.String::Concat(string,string).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_concat\" requires \
+                             dest, two Operand::Var sources, and str result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_index" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — il_text.rs calls System.String::get_Chars(int32).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_index\" requires \
+                             dest, string Operand::Var, index Operand::Var, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_eq" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — il_text.rs calls System.String::Equals(string,string).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_eq\" requires \
+                             dest, two Operand::Var sources, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the CLR backend; it requires a P/Invoke or .NET BCL call",
@@ -565,6 +622,140 @@ mod tests {
             IIRInstr::new("ret_void", None, vec![], "str"),
         ]));
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
+    }
+
+    #[test]
+    fn str_const_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "str_const + print_str should pass: {:?}", errs);
+    }
+
+    #[test]
+    fn str_len_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_len over a direct literal should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_eq_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_eq over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_concat_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("AB".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("CDE".into())],
+                "str",
+            ),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_concat over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_index_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_index over a direct literal should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn byte_string_algebra_still_rejected() {
+        for op in ["str_index"] {
+            let errs = validate_iir_for_clr(&single_fn_module(vec![
+                IIRInstr::new(
+                    op,
+                    Some("v".into()),
+                    vec![Operand::Var("s".into())],
+                    "i32",
+                ),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ]));
+            assert!(
+                errs.iter().any(|e| e.contains("UnsupportedOp")),
+                "{op} should require the literal-index shape: {:?}",
+                errs
+            );
+        }
     }
 
     #[test]

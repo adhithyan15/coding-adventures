@@ -37,7 +37,7 @@ native executable
 | Compiles                          | Doesn't                                   |
 |-----------------------------------|-------------------------------------------|
 | Arithmetic, bitwise, comparison   | `in` + arithmetic/rotation intrinsics     |
-| short-circuit `&&` / `||`         | Strings (no STRING token in Oct grammar)  |
+| short-circuit `&&` / `||` and `!` | Strings (no STRING token in Oct grammar)  |
 | `if` / `while` / `loop` / `break` | Body-level `static` (static-lifetime local) |
 | User fns (i64 + void returns)     | Floating-point (8008 doesn't have FP)     |
 | Local variables                   |                                           |
@@ -58,6 +58,11 @@ and arithmetic wraps modulo 256, so arithmetic/bitwise ops and unary `~` carry t
 (not 300) and `out(1, ~0)` prints `255` (not -1). Comparisons stay `i64` (their 0/1
 `bool` result is never masked). Because Oct has a single integer width, every integer
 op is u8 by construction — there is no per-expression type to track.
+
+**Logical NOT** (LANG-FULL O-!): unary `!` lowers through
+`jmp_if_false`/`jmp`/`label` and materialises a clean 0/1 bool. It intentionally
+does not share unary `~`'s bitwise `not` opcode (`not 0 = -1`, `not 1 = -2`),
+so `if !(1 == 2) { out(1, 42); }` prints `42` on all 7 backends.
 
 `out(port, value)` (LANG-FULL O-OUT) lowers to `call_builtin "print_i64"` — all 24
 8008 output ports collapse to stdout — giving Oct its first observable output (its

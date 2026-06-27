@@ -1,5 +1,82 @@
 # Changelog
 
+## 0.15.0 — 2026-06-27 — Multi-argument string output proof (LANG-FULL AL4 on E4)
+
+ALGOL 60 `output` now has an explicit proof for multiple literal-backed scalar
+string variables in one statement:
+
+```algol
+begin string s, t; s := 'O'; t := 'K'; output(s, t) end
+```
+
+The compiler preserves actual order by emitting two `print_str` calls over the
+literal-backed E4 string slots. The matrix observes `OK` on every LANG backend
+without adding an ALGOL-specific output hook or dynamic procedure call.
+
+## 0.14.0 — 2026-06-27 — Scalar string copy snapshot proof (LANG-FULL AL4 on E4)
+
+ALGOL 60 scalar string copy now has an explicit snapshot proof:
+
+```algol
+begin string s, t; s := 'OK'; t := s; s := 'NO'; print(t) end
+```
+
+The compiler still lowers `t := s` through E4 `str_concat` with an empty
+suffix. The new regression proves the copied target slot remains independently
+printable after the source slot is rematerialized with a later `str_const`.
+
+## 0.13.0 — 2026-06-27 — Literal-backed scalar string copies (LANG-FULL AL4 on E4)
+
+ALGOL 60 scalar string assignment now accepts a literal-backed string variable
+RHS:
+
+```algol
+begin string s, t; s := 'OK'; t := s; print(t) end
+```
+
+The compiler lowers `t := s` as E4 `str_concat t, s, ""`, materializing the
+empty suffix as `str_const`. The target is marked literal-backed so `print(t)`
+can consume it through `print_str`. Unassigned string sources still fail closed.
+
+## 0.12.0 — 2026-06-27 — Literal-backed string variables (LANG-FULL AL4 on E4)
+
+ALGOL 60 now supports the first scalar string-variable foothold:
+
+```algol
+begin string s; s := 'HI'; print(s) end
+```
+
+The `string` declaration records a `str` slot, assignment from a string literal
+emits `str_const` directly to that slot, and `print(s)` is accepted only when
+the slot is known to be literal-backed. That shape is important for the static
+backends: WASM/LLVM/native/JVM/CLR can all consume the same direct E4 producer
+metadata already proven by literal output.
+
+This is still intentionally fail-closed. Unassigned string variables,
+string-to-string copies, captured/`own` string globals, string procedures, and
+string arrays remain outside the dynamic string model and produce explicit
+errors.
+
+## 0.11.0 — 2026-06-27 — Literal string output (LANG-FULL AL4 on E4)
+
+ALGOL 60 now has an executable literal-output foothold for strings. Undeclared
+statement-position calls named `print` or `output` lower each string literal
+actual to the shared E4 pair:
+
+```text
+str_const <temp>, "HI" : str
+print_str <temp> : void
+```
+
+That keeps the backend story language-neutral: no ALGOL-specific code-gen hook,
+just the same `str_const` + `print_str` path Dartmouth BASIC already proved on
+all seven LANG backends. A program may still declare its own procedure named
+`print`/`output`; user procedures win over the standard output fallback.
+
+This slice is intentionally narrow and fail-closed. Non-literal arguments such
+as `print(42)` or `print(s)` still produce an explicit unsupported-feature error
+until full ALGOL string declarations/expressions land.
+
 ## 0.10.0 — 2026-06-23 — `entier` standard function (LANG-FULL E8 PR-7)
 
 The ALGOL 60 standard function **`entier`** (§3.2.5) — the largest integer not

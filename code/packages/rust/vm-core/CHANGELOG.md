@@ -1,5 +1,22 @@
 # Changelog — vm-core
 
+## [0.10.0] — 2026-06-27 (LANG-FULL E4 — reference string ops, VM slice)
+
+Reference VM semantics for the six shared E4 string opcodes:
+
+- **`str_const`** materialises an `Operand::Str` literal as `Value::Str`.
+- **`str_len`** returns the byte length.
+- **`str_index`** returns an unsigned byte and traps on negative/out-of-range
+  indexes.
+- **`str_concat`** produces a fresh immutable string.
+- **`str_eq`** returns the IIR integer-bool convention (`1` / `0`).
+- **`print_str`** writes through the built-in registry's `print_str` sink with
+  no implicit newline, so embedders/tests can capture output while the default
+  registry writes to stdout.
+
+Verified by `tests/e4_strings.rs`, covering byte length, concat+equality,
+indexing, the bounds trap, and sink-routed output capture.
+
 ## [0.9.0] — 2026-06-22 (LANG-FULL E8 — numeric conversions, PR-1)
 
 Reference VM semantics for the three `integer`↔`real` conversion opcodes

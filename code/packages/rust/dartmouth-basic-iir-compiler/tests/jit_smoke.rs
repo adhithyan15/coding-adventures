@@ -100,6 +100,14 @@ fn jit_execute_and_capture_prints(source: &str) -> String {
             Ok(Value::Null)
         });
     }
+    {
+        let printed = Arc::clone(&printed);
+        vm.builtins_mut().register("print_str", move |args| {
+            let s = args.first().and_then(Value::as_str).unwrap_or("");
+            printed.lock().unwrap().extend_from_slice(s.as_bytes());
+            Ok(Value::Null)
+        });
+    }
 
     let mut jit = JITCore::new(&mut vm, Box::new(DeferToInterpreterBackend));
     jit.execute_with_jit(&mut vm, &mut module, "main", &[])
@@ -120,6 +128,16 @@ fn jit_basic_print_42() {
     let got = jit_execute_and_capture_prints("10 PRINT 42\n20 END\n");
     assert_eq!(got, "42\n",
         "expected printed `42` + newline, got {got:?}");
+}
+
+/// E4/BA4 first frontend proof: a BASIC string literal lowers to
+/// `str_const` + `print_str`, then the normal PRINT newline comes from
+/// `putchar`.
+#[test]
+fn jit_basic_print_string_literal() {
+    let got = jit_execute_and_capture_prints("10 PRINT \"HELLO\"\n20 END\n");
+    assert_eq!(got, "HELLO\n",
+        "expected printed `HELLO` + newline, got {got:?}");
 }
 
 /// LET + arithmetic + PRINT: confirms that mov / add / `call_builtin`

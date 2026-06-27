@@ -2064,7 +2064,7 @@ fn lang36_real_jvm_closure_adder() {
 
         // Store the fieldref and methodref indices for the bytecode below.
         // We stash them in local bindings so the borrow on `cp` ends here.
-        drop(cp); // end the mutable borrow — we need immutable later
+        let _ = cp; // end the mutable borrow — we need immutable later
 
         // ── Find make_and_call Methodref CP index ─────────────────────────────
         let mac_ref = find_methodref_in_cp(
@@ -2341,6 +2341,277 @@ fn g3_print_i64_class_serializes_with_cafebabe_magic() {
         "serialized class must start with CAFEBABE magic; got: {:02X?}",
         &bytes[0..4]
     );
+}
+
+// ===========================================================================
+// LANG-FULL E4 — string literal output foothold
+// ===========================================================================
+
+fn string_print_module() -> IIRModule {
+    let f = IIRFunction::new(
+        "print_hello",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    module_with(f)
+}
+
+#[test]
+fn e4_string_print_lowers_to_ldc_and_printstream_print() {
+    let module = string_print_module();
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal print should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "print_hello")
+        .expect("print_hello method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.iter().any(|b| *b == 0x12 || *b == 0x13),
+        "str_const must load a CONSTANT_String with ldc/ldc_w; got: {:?}",
+        code
+    );
+    assert!(code.contains(&0xB2), "print_str must getstatic System.out; got: {:?}", code);
+    assert!(code.contains(&0xB6), "print_str must invokevirtual PrintStream.print; got: {:?}", code);
+
+    let has_hello_string = class.constant_pool.iter().any(|entry| {
+        let Some(JvmConstantPoolEntry::String { string_index }) = entry else {
+            return false;
+        };
+        matches!(
+            class.constant_pool.get(*string_index as usize),
+            Some(Some(JvmConstantPoolEntry::Utf8(s))) if s == "HELLO"
+        )
+    });
+    assert!(has_hello_string, "constant pool must contain CONSTANT_String HELLO");
+
+    let print_ref = find_methodref_in_cp(
+        &class.constant_pool,
+        "java/io/PrintStream",
+        "print",
+        "(Ljava/lang/String;)V",
+    );
+    assert_ne!(print_ref, 0, "constant pool must contain PrintStream.print(String)");
+}
+
+#[test]
+fn e4_string_len_lowers_to_string_length() {
+    let f = IIRFunction::new(
+        "len_hello",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal len should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "len_hello")
+        .expect("len_hello method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.contains(&0xB6),
+        "str_len must invokevirtual java/lang/String.length; got: {:?}",
+        code
+    );
+    assert!(
+        code.contains(&0x85),
+        "i64 str_len result must widen String.length()I with I2L; got: {:?}",
+        code
+    );
+
+    let length_ref = find_methodref_in_cp(&class.constant_pool, "java/lang/String", "length", "()I");
+    assert_ne!(length_ref, 0, "constant pool must contain java/lang/String.length()I");
+}
+
+#[test]
+fn e4_string_index_lowers_to_string_char_at() {
+    let f = IIRFunction::new(
+        "index_abc",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal index should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "index_abc")
+        .expect("index_abc method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.contains(&0xB6),
+        "str_index must invokevirtual java/lang/String.charAt; got: {:?}",
+        code
+    );
+    assert!(
+        code.contains(&0x85),
+        "i64 str_index result must widen String.charAt(I)C with I2L; got: {:?}",
+        code
+    );
+
+    let char_at_ref = find_methodref_in_cp(&class.constant_pool, "java/lang/String", "charAt", "(I)C");
+    assert_ne!(char_at_ref, 0, "constant pool must contain java/lang/String.charAt(I)C");
+}
+
+#[test]
+fn e4_string_concat_len_lowers_to_string_concat_and_length() {
+    let f = IIRFunction::new(
+        "concat_len",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("AB".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("CDE".into())],
+                "str",
+            ),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal concat len should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "concat_len")
+        .expect("concat_len method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.iter().filter(|&&b| b == 0xB6).count() >= 2,
+        "str_concat + str_len should use invokevirtual for concat and length; got: {:?}",
+        code
+    );
+
+    let concat_ref = find_methodref_in_cp(
+        &class.constant_pool,
+        "java/lang/String",
+        "concat",
+        "(Ljava/lang/String;)Ljava/lang/String;",
+    );
+    assert_ne!(concat_ref, 0, "constant pool must contain java/lang/String.concat(String)");
+    let length_ref = find_methodref_in_cp(&class.constant_pool, "java/lang/String", "length", "()I");
+    assert_ne!(length_ref, 0, "constant pool must contain java/lang/String.length()I");
+}
+
+#[test]
+fn e4_string_eq_lowers_to_string_equals() {
+    let f = IIRFunction::new(
+        "eq_hello",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal eq should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "eq_hello")
+        .expect("eq_hello method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.contains(&0xB6),
+        "str_eq must invokevirtual java/lang/String.equals; got: {:?}",
+        code
+    );
+    assert!(
+        code.contains(&0x85),
+        "i64 str_eq result must widen boolean int with I2L; got: {:?}",
+        code
+    );
+
+    let equals_ref = find_methodref_in_cp(
+        &class.constant_pool,
+        "java/lang/String",
+        "equals",
+        "(Ljava/lang/Object;)Z",
+    );
+    assert_ne!(equals_ref, 0, "constant pool must contain java/lang/String.equals(Object)");
 }
 
 /// McCarthy W3b: `box` lowers to `Integer.valueOf(I)` (invokestatic 0xB8) and

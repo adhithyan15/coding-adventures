@@ -15,7 +15,8 @@ The first slice supports scalar `integer`, `real`, and `boolean` programs with
 assignments, integer arithmetic (`+`, `-`, `*`, `div`, `mod`), **real (f64)
 arithmetic** (`+`, `-`, `*`, `/`), comparisons, `if`/`else`, compound
 statements, labels, `goto`, `for i := a step k until b do ...`, **typed
-procedures with `value` parameters**, and **switches** (computed goto):
+procedures with `value` parameters**, **switches** (computed goto), and
+literal string output:
 
 ```algol
 begin
@@ -74,6 +75,21 @@ its native floor-then-convert. A `real` argument is required (it is specifically
 the real→integer floor). The remaining standard functions (`sqrt`/`sin`/`cos`/…)
 are not implemented yet.
 
+Since **LANG-FULL AL4** the implementation-defined output procedures `print`
+and `output` are recognised in statement position when they are not user
+declared procedures. String literal actuals lower to shared E4 `str_const` +
+`print_str`, so `begin print('HI') end` writes `HI` on all seven LANG backends.
+Literal-backed scalar variables now use the same shape: `string s; s := 'HI'`
+materialises `s` with `str_const`, and `print(s)` consumes that direct slot.
+Literal-backed scalar copies now reuse E4 `str_concat` with an empty suffix:
+`string s, t; s := 'OK'; t := s; print(t)` writes `OK`, and `s := 'NO'`
+after the copy does not change the copied `t` slot. Multi-argument output over
+literal-backed scalar string variables also stays on the same path:
+`string s, t; s := 'O'; t := 'K'; output(s, t)` emits ordered `print_str`
+calls and writes `OK`. This is deliberately not a dynamic string model yet:
+unassigned string variables, captured/`own` strings, arrays, parameters, and
+non-literal string expressions still fail closed.
+
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real
 comparisons execute as IEEE-754 doubles. There is no implicit `integer`→`real`
@@ -92,7 +108,7 @@ the array ops yet; see the `E5-*` follow-ups in
 `code/specs/LANG-FULL-IMPLEMENTATION.md`.
 
 Unsupported ALGOL 60 features — **multidimensional** and non-numeric arrays,
-arrays as procedure parameters, strings, `own` variables, proper (void)
+arrays as procedure parameters, dynamic string variables/arrays, proper (void)
 procedures, by-name (non-`value`) parameters, parameterless-procedure calls (a
 bare name parses as a variable), enclosing-block **array** capture (only scalars
 are globalised so far), and conditional/nested switch-list elements — return

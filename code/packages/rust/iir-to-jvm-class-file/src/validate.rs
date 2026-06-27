@@ -21,7 +21,7 @@
 //! | `EmptyModule`       | Module has zero functions |
 //! | `EmptyFunction`     | A function has zero instructions |
 //! | `UntypedInstruction`| `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType`   | `type_hint` is `"str"` or starts with `"ref<"` |
+//! | `UnsupportedType`   | `type_hint` is unsupported (`"str"` except `str_const`, or unsupported `ref<...>`) |
 //! | `UnsupportedOp`     | op is a runtime/memory/IO/GC opcode (list below) |
 //!
 //! **Importantly, float type hints and float constant operands are SUPPORTED.**
@@ -31,7 +31,8 @@
 //! # Unsupported ops
 //!
 //! `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`,
-//! `box`, `unbox`, `safepoint`.
+//! `box`, `unbox`, `safepoint`, and the byte-oriented E4 string algebra beyond
+//! `str_const` + `str_len` + `str_index` + `str_eq` + `str_concat` + `print_str`.
 //!
 //! The following ops are now SUPPORTED via `Object[]` cons cells (Phase 2):
 //! `alloc` (when `type_hint == "ref<LispyPair>"`), `field_load`, `field_store`,
@@ -271,8 +272,11 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
 
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
-            // `"str"` — JVM has strings (`java.lang.String`), but there is no
-            // integer-arithmetic equivalent; we do not emit string handling code.
+            // `"str"` — The backend can now load ASCII literals and concatenate
+            // them through Java `String` for the narrow E4 foothold. `str_len`
+            // and `str_eq` produce integers. Other string-typed producers still
+            // need a fuller byte-oriented representation before Java `String`
+            // is safe for them.
             //
             // `"ref<…>"` — heap pointer types require `aload`/`astore` and GC
             // object references.  Phase 2 supports `"ref<LispyPair>"` via
@@ -281,10 +285,10 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // `"f32"` and `"f64"` are intentionally NOT rejected here.  The JVM
             // has first-class float/double operations (`fload`, `dload`, `fadd`,
             // `dadd`, etc.) that this backend emits.
-            if instr.type_hint == "str" {
+            if instr.type_hint == "str" && !matches!(instr.op.as_str(), "str_const" | "str_concat") {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     string operations are not supported in this JVM backend",
+                     only str_const and str_concat literals are supported in this JVM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -315,7 +319,59 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
             // `putchar` / `getchar` flow through while still rejecting
             // unknown / unsafe builtins.
-            if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
+            if instr.op == "str_len" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — lower.rs calls java/lang/String.length()I.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_len\" requires \
+                             dest, one Operand::Var source, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_concat" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "str") => {
+                        // Accepted — lower.rs calls java/lang/String.concat(String).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_concat\" requires \
+                             dest, two Operand::Var sources, and str result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_index" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — lower.rs calls java/lang/String.charAt(I)C.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_index\" requires \
+                             dest, string Operand::Var, index Operand::Var, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_eq" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — lower.rs calls java/lang/String.equals(Object).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_eq\" requires \
+                             dest, two Operand::Var sources, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the JVM backend; it requires a native method or Java standard-library call",
@@ -466,6 +522,140 @@ mod tests {
             IIRInstr::new("const", Some("v".into()), vec![], "str"),
         ]));
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
+    }
+
+    #[test]
+    fn str_const_literal_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "str_const + print_str should pass: {:?}", errs);
+    }
+
+    #[test]
+    fn str_len_literal_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_len over a direct literal should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_eq_literal_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_eq over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_concat_literal_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("AB".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("CDE".into())],
+                "str",
+            ),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_concat over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_index_literal_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_index over a direct literal should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn byte_string_algebra_still_rejected() {
+        for op in ["str_index"] {
+            let errs = validate_for_jvm(&single_fn_module(vec![
+                IIRInstr::new(
+                    op,
+                    Some("v".into()),
+                    vec![Operand::Var("s".into())],
+                    "i32",
+                ),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ]));
+            assert!(
+                errs.iter().any(|e| e.contains("UnsupportedOp")),
+                "{op} should require the literal-index shape: {:?}",
+                errs
+            );
+        }
     }
 
     #[test]

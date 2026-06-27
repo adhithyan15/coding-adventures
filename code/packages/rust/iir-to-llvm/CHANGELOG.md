@@ -3,6 +3,75 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.21.0] — 2026-06-27 — literal string concat can feed print_str (LANG-FULL E4)
+
+Literal-only `str_concat` now materializes its derived string in the same
+length-prefixed constant table used by `str_const`, and binds the concat
+destination to that storage. This lets `print_str` consume a concat result
+instead of failing with an undefined variable after the compile-time fold.
+
+The backend regression proves:
+
+```text
+str_const a "O"
+str_const b "K"
+str_concat s a b
+print_str s
+```
+
+lowers to a derived `@__twig_str_2` constant with byte length `2` and a
+runtime `@__print_str` call over the payload pointer.
+
+## [0.20.0] — 2026-06-27 — literal string index OOB traps (LANG-FULL E4)
+
+Direct-literal `str_index` now preserves the E4 trap contract when the index is
+statically out of range. Instead of rejecting the module during lowering, LLVM
+emits `call void @llvm.trap()` so the matrix can prove `(string-ref "ABC" 3)`
+fails at runtime.
+
+## [0.19.0] — 2026-06-27 — literal string index reaches LLVM (LANG-FULL E4)
+
+Extends the direct-literal E4 metadata foothold with `str_index`.
+
+- `str_index s, i` is accepted when both operands are variables.
+- Lowering folds the indexed byte from the existing literal string table when
+  `s` comes from a direct `str_const` and `i` is a constant integer in the same
+  function.
+- Twig `(string-ref "ABC" 1)` now lowers to `ret i64 66` on LLVM without a
+  runtime string API.
+- Dynamic string values and the out-of-bounds trap proof remain outside this
+  literal-only slice.
+
+## [0.18.0] — 2026-06-27 — literal string metadata reaches LLVM (LANG-FULL E4)
+
+Extends the E4 literal-string foothold from output to direct literal metadata.
+
+- `str_len`, `str_eq`, and literal `str_concat` are now accepted when their
+  operands are direct `str_const` literal values in the same function.
+- Lowering materialises the byte count, byte equality result, and concatenated
+  literal bytes from the existing private string-literal side table, so
+  `(string-length "HELLO")` returns `5`, `(string=? "HELLO" "HELLO")` returns
+  `1`, and `(string-length (string-append "AB" "CDE"))` returns `5` without
+  needing a runtime string API.
+- Validation remains fail-closed for dynamic string algebra: `str_index` and
+  non-literal string values are still outside this slice.
+- Backend tests assert the emitted functions return `ret i64 5` / `ret i64 1`
+  and that the richer string-op rejection still fires.
+
+## [0.17.0] — 2026-06-27 — BASIC string literal PRINT reaches LLVM (LANG-FULL E4 / BA4)
+
+Adds the static-backend literal-output foothold for `str_const` + `print_str`.
+
+- `str_const` collects printable-ASCII string literals into private LLVM constants
+  with the unmanaged E4 layout: `{ i64 len, [len x i8] bytes }`.
+- `print_str` materialises `base + 8` with `getelementptr inbounds i8` and calls
+  the generic C runtime declaration `declare void @__print_str(ptr, i64)`.
+- Validation accepts only this literal-output subset; richer byte-string ops
+  (`str_len`, `str_index`, `str_concat`, `str_eq`) still fail closed until the
+  full string runtime lands.
+- Tests assert the length-prefixed global, runtime call, ASCII gate, and explicit
+  rejection of richer string ops.
+
 ## [0.16.0] — 2026-06-22 — numeric conversions integer↔real (LANG-FULL E8 PR-2)
 
 LLVM lowering for the three E8 conversion opcodes (vm-core 0.9.0 gave the

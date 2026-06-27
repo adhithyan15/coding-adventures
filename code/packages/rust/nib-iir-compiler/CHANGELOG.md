@@ -1,5 +1,67 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.19.0 — 2026-06-27 — const/static expressions fold at compile time (LANG-FULL N10)
+
+Top-level `const` and `static` initializers now accept deterministic
+integer/boolean const-expressions:
+
+```nib
+const BASE: u8 = 6 * 7;
+static counter: u8 = BASE + 0;
+fn main() -> u8 { return counter; }
+```
+
+The compiler folds the initializer expressions before emitting function bodies.
+`const` references still lower to literal `const` instructions, while folded
+`static` initializers seed the shared E6 global storage at `main` entry. Calls
+and non-const names remain rejected in initializer expressions.
+
+The lang matrix proves the folded const-backed static reaches exit code `42` on
+native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+
+## 0.18.0 — 2026-06-27 — logical NOT lowers through truthiness branches (LANG-FULL N9)
+
+Unary `!` now lowers to a portable boolean inversion:
+
+```text
+dest = const 1
+jmp_if_false value, done
+dest = const 0
+done:
+```
+
+The old behavior passed the inner expression through unchanged, so `!(1 == 2)`
+behaved like `1 == 2`. The lang matrix now proves:
+
+```nib
+fn main() -> u8 { if !(1 == 2) { return 42; } return 0; }
+```
+
+Expected exit code is `42` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+
+## 0.17.0 — 2026-06-27 — mutable module statics lower to shared globals (LANG-FULL N8)
+
+Adds the first executed Nib `static` slice:
+
+- collects top-level `static NAME: type = integer-literal;` declarations,
+- emits each initializer at the top of `main` as `const` + `global_store`,
+- lowers unshadowed static reads to `global_load`, and
+- lowers assignments to `global_store`.
+
+This deliberately kept initializer support literal-only, matching the existing
+Nib `const` boundary. Const/static expression folding is closed by 0.19.0; BCD
+storage semantics and Intel-4004 RAM mapping remain explicit follow-ups.
+
+The lang matrix proves a shared counter:
+
+```nib
+static counter: u8 = 40;
+fn bump(step: u8) -> u8 { counter = counter + step; return counter; }
+fn main() -> u8 { let a: u8 = bump(1); let b: u8 = bump(1); return counter; }
+```
+
+Expected exit code is `42` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+
 ## 0.16.0 — 2026-06-16 — bitwise NOT (`~`) lowers to the IIR `not` op (LANG-FULL N3)
 
 Unary `~` now lowers to the shared IIR `not` op (bitwise complement). Two fixes
@@ -107,9 +169,9 @@ produced a dangling variable.
   storage** and run on every backend with no per-backend work. A `let`/parameter
   of the same name **shadows** the const (the fold only fires when the name isn't
   a local in scope).
-- V1 folds **integer-literal** consts (`INT_LIT`/`HEX_LIT`); a non-literal value
-  (`const N = 6 * 7;`) is a clear error (`const-expression folding is deferred`)
-  rather than a silent miscompile.
+- V1 folded **integer-literal** consts (`INT_LIT`/`HEX_LIT`); a non-literal value
+  (`const N = 6 * 7;`) was a clear error rather than a silent miscompile.
+  Const-expression folding is closed by 0.19.0.
 
 Verified by RUNNING on every backend: `lang-aot/tests/lang_matrix.rs` gains
 `const N: u8 = 42; … return N;` → 42 and `const A = 30; const B = 12; … A + B`

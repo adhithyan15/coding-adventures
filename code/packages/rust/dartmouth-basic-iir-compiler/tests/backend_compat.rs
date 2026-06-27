@@ -1,9 +1,9 @@
 //! Dartmouth BASIC → IIR-to-* backend acceptance tests.
 //!
-//! Proves BASIC's emitted IIR is accepted by every AOT backend
-//! (wasm / jvm / clr / beam).  Without these tests we could regress
-//! BASIC's IIR shape (e.g. emit an op no backend knows) without anyone
-//! noticing until users try to AOT-compile.
+//! Proves BASIC's emitted IIR is accepted by the LANG-FULL AOT backends
+//! (wasm / jvm / clr; BEAM only for no-float modules). Without these tests we
+//! could regress BASIC's IIR shape (e.g. emit an op no backend knows) without
+//! anyone noticing until users try to AOT-compile.
 //!
 //! Pattern mirrors `twig-ir-compiler/tests/backend_compat.rs` and
 //! `oct-iir-compiler/tests/backend_compat.rs`.
@@ -25,6 +25,20 @@ fn assert_accepted_by_every_backend(m: &interpreter_ir::IIRModule, label: &str) 
     }
 }
 
+/// BA7 scalar BASIC emits f64. BEAM still has no f64 lowering, and LANG-FULL's
+/// contract excludes BEAM; keep these checks on the f64-capable AOT validators.
+fn assert_accepted_by_lang_full_backends(m: &interpreter_ir::IIRModule, label: &str) {
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(m)),
+        ("jvm",  iir_to_jvm_class_file::validate::validate_for_jvm(m)),
+        ("clr",  iir_to_cil_bytecode::validate::validate_iir_for_clr(m)),
+    ] {
+        assert!(errs.is_empty(),
+            "[{name}] validator rejected BASIC {label}; got {} error(s): {errs:?}",
+            errs.len());
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Group 1: minimal shapes
 // ---------------------------------------------------------------------------
@@ -36,13 +50,13 @@ fn basic_minimal_end_accepted_by_every_backend() {
     assert_accepted_by_every_backend(&m, "`10 END`");
 }
 
-/// `LET` binding — exercises `const` + `mov` (typed i64).
+/// `LET` binding — exercises `const` + `mov` (BA7 typed f64 scalar).
 #[test]
 fn basic_let_binding_accepted_by_every_backend() {
     let src = "10 LET A = 42\n\
                20 END\n";
     let m = compile_source(src, "compat").expect("BASIC must compile");
-    assert_accepted_by_every_backend(&m, "`LET A = 42`");
+    assert_accepted_by_lang_full_backends(&m, "`LET A = 42`");
 }
 
 // ---------------------------------------------------------------------------
@@ -57,7 +71,7 @@ fn basic_typed_add_accepted_by_every_backend() {
                30 LET C = A + B\n\
                40 END\n";
     let m = compile_source(src, "compat").expect("BASIC must compile");
-    assert_accepted_by_every_backend(&m, "`C = A + B`");
+    assert_accepted_by_lang_full_backends(&m, "`C = A + B`");
 }
 
 /// Binary `*` — typed `mul`.
@@ -68,7 +82,7 @@ fn basic_typed_mul_accepted_by_every_backend() {
                30 LET C = A * B\n\
                40 END\n";
     let m = compile_source(src, "compat").expect("BASIC must compile");
-    assert_accepted_by_every_backend(&m, "`C = A * B`");
+    assert_accepted_by_lang_full_backends(&m, "`C = A * B`");
 }
 
 // ---------------------------------------------------------------------------
@@ -83,7 +97,7 @@ fn basic_if_then_goto_accepted_by_every_backend() {
                30 END\n\
                100 END\n";
     let m = compile_source(src, "compat").expect("BASIC must compile");
-    assert_accepted_by_every_backend(&m, "`IF A > 5 THEN 100`");
+    assert_accepted_by_lang_full_backends(&m, "`IF A > 5 THEN 100`");
 }
 
 /// `FOR … NEXT` loop — exercises backward `jmp` + counter mutation.
@@ -93,7 +107,7 @@ fn basic_for_next_loop_accepted_by_every_backend() {
                20 NEXT I\n\
                30 END\n";
     let m = compile_source(src, "compat").expect("BASIC must compile");
-    assert_accepted_by_every_backend(&m, "`FOR I = 1 TO 3 / NEXT I`");
+    assert_accepted_by_lang_full_backends(&m, "`FOR I = 1 TO 3 / NEXT I`");
 }
 
 /// `GOTO` — unconditional jump to a labeled line.
@@ -104,7 +118,7 @@ fn basic_goto_accepted_by_every_backend() {
                30 LET A = 999\n\
                100 END\n";
     let m = compile_source(src, "compat").expect("BASIC must compile");
-    assert_accepted_by_every_backend(&m, "`GOTO 100`");
+    assert_accepted_by_lang_full_backends(&m, "`GOTO 100`");
 }
 
 // ---------------------------------------------------------------------------

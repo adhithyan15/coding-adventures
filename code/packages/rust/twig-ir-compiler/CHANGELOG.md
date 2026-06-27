@@ -1,5 +1,81 @@
 # Changelog — twig-ir-compiler
 
+## [0.30.0] — 2026-06-27 (LANG-FULL E4 — lexical string equality branch proof)
+
+Lexical string bindings now have an explicit compiler proof for `string=?`
+driving control flow:
+
+```scheme
+(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))
+```
+
+The compiler lowers both locals to typed `str_const` registers, feeds them to
+E4 `str_eq`, and branches on the resulting i64 boolean without using the
+dynamic `call_builtin` path.
+
+## [0.29.0] — 2026-06-27 (LANG-FULL E4 — lexical string concat proof)
+
+Lexical string bindings now have an explicit compiler proof for non-literal E4
+concat: `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))`
+lowers to direct `str_const` locals, `str_concat`, and `str_len`, with no
+dynamic `call_builtin` path.
+
+This does not widen the representation boundary: captured/reassigned strings
+and broader dynamic string values remain follow-up E4 work.
+
+## [0.28.0] — 2026-06-27 (LANG-FULL E4 — lexical string locals)
+
+Lexical `let` and `let*` string literal bindings now materialize as typed
+`str_const` registers instead of legacy dynamic `const Operand::Str` values when
+they feed the E4 string-op path. The E4 recognizer now accepts known local
+typed `str` registers and local integer index registers, so `(let ((s "ABC")
+(i 2)) (string-ref s i))` lowers to shared `str_index` without `call_builtin`.
+
+This proves local string slots for the current literal-value foothold while still
+leaving captured/reassigned strings and broader dynamic string values to the
+future byte-string representation work.
+
+## [0.27.0] — 2026-06-27 (LANG-FULL E4 — named string values)
+
+Immutable top-level string value defines now lower to `str_const` registers when
+they are not captured by a lambda or forced through a forward reference. Reads of
+those names stay in `main`, so `string-length`, `string-append`, `string=?`, and
+`string-ref` can lower to the shared E4 `str_len`/`str_concat`/`str_eq`/
+`str_index` ops over named string values instead of falling back to dynamic
+globals or `call_builtin`.
+
+This deliberately does not claim full string variable semantics: `let`/reassignable
+string slots, captured strings, and dynamic string values still stay on their
+existing paths until the broader E4 string representation lands.
+
+Verified by compiler tests for named string length, concat length, equality in a
+branch, and indexing, plus new `lang-aot` matrix rows across all seven backends.
+
+## [0.26.0] — 2026-06-27 (LANG-FULL E4 — literal string index)
+
+Literal `(string-ref "..." i)` now lowers to the shared E4 `str_index` path:
+`str_const` for the direct literal, an integer `const` for the index, then
+`str_index` for the typed byte result. This adds the direct ASCII indexing
+foothold to the existing literal string metadata paths while preserving the
+dynamic `call_builtin` path for non-literal string values.
+
+Verified by a compiler test asserting the exact `str_const` + `const` +
+`str_index` + `ret` shape and by the cross-backend `lang-aot` matrix row.
+
+## [0.25.0] — 2026-06-27 (LANG-FULL E4 — literal string metadata)
+
+Literal `(string-length "...")`, `(string=? "..." "...")`, and
+`(string-length (string-append "..." "..."))` now lower to the shared E4 VM
+string ops: `str_const` for each direct literal, then `str_len`, `str_eq`, or
+`str_concat` for the typed result path. This gives the code-gen backends typed,
+language-neutral string-length, string-equality, and literal-append-length proofs
+while preserving the existing dynamic `call_builtin` paths for non-literal
+string values.
+
+Verified by compiler tests asserting the exact `str_const` +
+`str_len`/`str_eq`/`str_concat` + `ret` shapes and by the cross-backend
+`lang-aot` matrix rows.
+
 ## [0.24.0] — 2026-06-14 (Path A increment 4 — top-level value `define`, LANG-FULL TW2)
 
 ### Added — a `main`-only value `define` lowers to a typed local

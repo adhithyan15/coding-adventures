@@ -138,8 +138,8 @@ use std::collections::{HashMap, HashSet};
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use wasm_module_encoder::{GcInstruction, encode_gc_instruction};
 use wasm_types::{
-    ExternalKind, Export, FieldType, FuncType, FunctionBody, Global, GlobalType, Import,
-    ImportTypeInfo, StructType, ValueType, WasmModule,
+    DataSegment, ExternalKind, Export, FieldType, FuncType, FunctionBody, Global, GlobalType,
+    Import, ImportTypeInfo, StructType, ValueType, WasmModule,
 };
 
 use crate::codegen::{
@@ -164,6 +164,16 @@ use crate::validate::validate_for_wasm;
 /// module uses any array op; the `__` prefix keeps it out of any frontend's name
 /// space.
 const ARRAY_BUMP_GLOBAL: &str = "__array_bump";
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct WasmStringLiteral {
+    offset: u32,
+    len: u32,
+    bytes: Vec<u8>,
+}
+
+type FunctionStringLiterals = HashMap<String, WasmStringLiteral>;
+type ModuleStringLiterals = HashMap<String, FunctionStringLiterals>;
 
 // ---------------------------------------------------------------------------
 // Global opcode helpers (LANG32)
@@ -220,6 +230,12 @@ fn encode_i32_store8() -> Vec<u8> {
 /// effective address `base + idx` before an `i32.load8_u` / `i32.store8`.
 fn encode_i32_add() -> Vec<u8> {
     vec![0x6Au8]
+}
+
+fn encode_i64_global_init(value: i64) -> Vec<u8> {
+    let mut bytes = encode_i64_const(value);
+    bytes.push(END);
+    bytes
 }
 
 /// Emit `i32.wrap_i64` (0xA7) — truncate an i64 to i32 (drop the high 32 bits).
@@ -419,6 +435,10 @@ pub fn hint_to_value_type(hint: &str) -> Option<ValueType> {
         "i64" | "u64" => Some(ValueType::I64),
         "f32" => Some(ValueType::F32),
         "f64" => Some(ValueType::F64),
+        // LANG-FULL E4 literal-output foothold: a `str` local is a byte offset
+        // into module linear memory. Richer string ops still validate-fail until
+        // the full byte-string runtime lands.
+        "str" => Some(ValueType::I32),
         // LANG-FULL E5: an `array<T>` handle is a byte offset into linear memory,
         // carried in an `i64` register (like the Brainfuck tape base) and wrapped
         // to `i32` when used as a WASM address. The *element* type drives the
@@ -808,7 +828,9 @@ fn emit_instr(
     is_dispatch_loop: bool,
     lispy_pair_type_idx: Option<u32>,
     global_map: &HashMap<String, u32>,
+    string_literals: &FunctionStringLiterals,
     print_fn_idx: Option<u32>,
+    print_str_fn_idx: Option<u32>,
     putchar_fn_idx: Option<u32>,
     getchar_fn_idx: Option<u32>,
 ) -> Result<(), IIRWasmError> {
@@ -847,6 +869,206 @@ fn emit_instr(
     let ty = instr.type_hint.as_str();
 
     match instr.op.as_str() {
+        // ── str_const ────────────────────────────────────────────────────────
+        //
+        // E4 literal-output foothold for WASM: materialise a string literal as
+        // an i32 byte offset into the module's linear memory.  The companion
+        // length is compile-time metadata carried in `string_literals` and is
+        // consumed by `print_str`; `str_concat` below uses the same table for
+        // literal-only concatenation metadata.
+        "str_const" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_const must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let lit = string_literals.get(dest).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_const missing module string table entry for {dest:?}"),
+            })?;
+            code.extend(encode_i32_const(lit.offset as i32));
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── str_concat → literal data-segment metadata ───────────────────────
+        "str_concat" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_concat must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let lit = string_literals.get(dest).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_concat missing module string table entry for {dest:?}"),
+            })?;
+            code.extend(encode_i32_const(lit.offset as i32));
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── str_index → bounds-checked literal byte load ───────────────────────
+        "str_index" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_index must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let src = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_index requires srcs[0] = Operand::Var(str)".to_string(),
+                }),
+            };
+            let idx = match instr.srcs.get(1) {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_index requires srcs[1] = Operand::Var(idx)".to_string(),
+                }),
+            };
+            let src_slot = get_reg(src)?;
+            let idx_slot = get_reg(idx)?;
+            let lit = string_literals.get(src).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_index source {src:?} is not a direct str_const local"),
+            })?;
+
+            // Bounds: idx >=u len → unreachable. On i64 indices, a negative value
+            // becomes huge under the unsigned compare, matching E4's trap rule.
+            code.extend(encode_local_get(idx_slot));
+            if slot_is_i64(idx_slot) {
+                code.extend(encode_i64_const(lit.len as i64));
+                code.push(I64_GE_U);
+            } else {
+                let len = i32::try_from(lit.len).map_err(|_| IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: format!("str_index literal length {} does not fit i32", lit.len),
+                })?;
+                code.extend(encode_i32_const(len));
+                code.push(I32_GE_U);
+            }
+            code.push(IF);
+            code.push(BLOCK_EMPTY);
+            code.push(UNREACHABLE);
+            code.push(END);
+
+            code.extend(encode_local_get(src_slot));
+            code.extend(encode_local_get(idx_slot));
+            if slot_is_i64(idx_slot) {
+                code.extend(encode_i32_wrap_i64());
+            }
+            code.extend(encode_i32_add());
+            code.extend(encode_i32_load8_u());
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_extend_i32_u());
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── str_len → literal byte count ─────────────────────────────────────
+        //
+        // Direct literal strings carry their byte count in the same table that
+        // `print_str` uses. The E4 v1 WASM slice deliberately keeps this
+        // literal-only; dynamic string algebra is still rejected by validation.
+        "str_len" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_len must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let val_var = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_len requires Operand::Var(str)".to_string(),
+                }),
+            };
+            let lit = string_literals.get(val_var).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!(
+                    "str_len currently supports only direct str_const locals, got {val_var:?}"
+                ),
+            })?;
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_const(lit.len as i64));
+            } else {
+                let len = i32::try_from(lit.len).map_err(|_| IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: format!("str_len literal length {} does not fit i32", lit.len),
+                })?;
+                code.extend(encode_i32_const(len));
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── str_eq → literal byte equality ───────────────────────────────────
+        "str_eq" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_eq must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let left = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_eq requires srcs[0] = Operand::Var(str)".to_string(),
+                }),
+            };
+            let right = match instr.srcs.get(1) {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_eq requires srcs[1] = Operand::Var(str)".to_string(),
+                }),
+            };
+            let left_lit = string_literals.get(left).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_eq left source {left:?} is not a direct str_const local"),
+            })?;
+            let right_lit = string_literals.get(right).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_eq right source {right:?} is not a direct str_const local"),
+            })?;
+            let value = if left_lit.bytes == right_lit.bytes { 1 } else { 0 };
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_const(value));
+            } else {
+                code.extend(encode_i32_const(value as i32));
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── print_str → call $__print_str(ptr, len) ──────────────────────────
+        //
+        // `print_str Var("%s")` writes the literal bytes through the host
+        // import `env.__print_str(i32 ptr, i32 len)`.  The pointer is the local
+        // produced by `str_const`; the length is looked up from the same
+        // compile-time literal table.
+        "print_str" => {
+            let fn_idx = print_str_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                function: fn_name.to_string(),
+                op: "print_str: no $__print_str import registered (internal error)".to_string(),
+            })?;
+            let val_var = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "print_str requires Operand::Var(str)".to_string(),
+                }),
+            };
+            let val_slot = get_reg(val_var)?;
+            let lit = string_literals.get(val_var).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!(
+                    "print_str currently supports only direct str_const locals, got {val_var:?}"
+                ),
+            })?;
+            code.extend(encode_local_get(val_slot));
+            code.extend(encode_i32_const(lit.len as i32));
+            code.extend(encode_call(fn_idx));
+        }
+
         // ── const ────────────────────────────────────────────────────────────
         //
         // Load an immediate value (integer, float, bool, or nil ref) into a
@@ -2465,7 +2687,9 @@ fn lower_function(
     fn_map: &HashMap<String, u32>,
     lispy_pair_type_idx: Option<u32>,
     global_map: &HashMap<String, u32>,
+    string_literals: &FunctionStringLiterals,
     print_fn_idx: Option<u32>,
+    print_str_fn_idx: Option<u32>,
     putchar_fn_idx: Option<u32>,
     getchar_fn_idx: Option<u32>,
 ) -> Result<FunctionBody, IIRWasmError> {
@@ -2570,7 +2794,9 @@ fn lower_function(
                     true, // inside dispatch-loop
                     lispy_pair_type_idx,
                     global_map,
+                    string_literals,
                     print_fn_idx,
+                    print_str_fn_idx,
                     putchar_fn_idx,
                     getchar_fn_idx,
                 )?;
@@ -2627,7 +2853,9 @@ fn lower_function(
                 false,  // no dispatch loop
                 lispy_pair_type_idx,
                 global_map,
+                string_literals,
                 print_fn_idx,
+                print_str_fn_idx,
                 putchar_fn_idx,
                 getchar_fn_idx,
             )?;
@@ -2708,6 +2936,7 @@ fn make_lispy_pair_struct_type() -> StructType {
 /// |------------------|--------------------------------------|-----------------|
 /// | `global_names`   | `global_load` / `global_store`        | `Global` entries (one per name, i64, mutable) |
 /// | `uses_io_out`    | `io_out`                              | `env.__print_i64` import |
+/// | `uses_print_str` | `print_str`                           | `env.__print_str` import + linear memory |
 /// | `uses_putchar`   | `call_builtin` with name `"putchar"`  | `env.putchar` import   |
 /// | `uses_getchar`   | `call_builtin` with name `"getchar"`  | `env.getchar` import   |
 /// | `uses_memory`    | `load_mem` / `store_mem`              | A 1-page linear `Memory` |
@@ -2719,12 +2948,17 @@ struct ModuleFeatures {
     /// vec = WASM global-section index.
     global_names: Vec<String>,
     uses_io_out: bool,
+    uses_print_str: bool,
     uses_putchar: bool,
     uses_getchar: bool,
     /// True when the module reads or writes Brainfuck's tape memory.
     /// Triggers the addition of a single 1-page linear memory to the
     /// module's `Memory` section.
     uses_memory: bool,
+    /// Function-name -> string-local -> data-segment offset/length.
+    string_literals: ModuleStringLiterals,
+    /// Concatenated literal bytes for the active E4 string data segment.
+    string_data: Vec<u8>,
 }
 
 /// Walk the module once to collect everything the lowering needs to know
@@ -2737,9 +2971,12 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut global_names: Vec<String> = Vec::new();
     let mut global_names_seen: HashSet<String> = HashSet::new();
     let mut uses_io_out = false;
+    let mut uses_print_str = false;
     let mut uses_putchar = false;
     let mut uses_getchar = false;
     let mut uses_memory = false;
+    let mut string_literals: ModuleStringLiterals = HashMap::new();
+    let mut string_data: Vec<u8> = Vec::new();
     for fn_ in &module.functions {
         for instr in &fn_.instructions {
             match instr.op.as_str() {
@@ -2752,6 +2989,57 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                 }
                 "io_out" => {
                     uses_io_out = true;
+                }
+                "str_const" => {
+                    if let (Some(dest), Some(Operand::Str(s))) =
+                        (instr.dest.as_ref(), instr.srcs.first())
+                    {
+                        let offset = string_data.len() as u32;
+                        let len = s.len() as u32;
+                        string_data.extend_from_slice(s.as_bytes());
+                        string_literals
+                            .entry(fn_.name.clone())
+                            .or_default()
+                            .insert(dest.clone(), WasmStringLiteral {
+                                offset,
+                                len,
+                                bytes: s.as_bytes().to_vec(),
+                            });
+                    }
+                }
+                "str_concat" => {
+                    if let (Some(dest), [Operand::Var(left), Operand::Var(right)]) =
+                        (instr.dest.as_ref(), instr.srcs.as_slice())
+                    {
+                        let Some((left_lit, right_lit)) = string_literals
+                            .get(&fn_.name)
+                            .and_then(|fn_strings| {
+                                Some((
+                                    fn_strings.get(left)?.clone(),
+                                    fn_strings.get(right)?.clone(),
+                                ))
+                            })
+                        else {
+                            continue;
+                        };
+                        let mut bytes = left_lit.bytes;
+                        bytes.extend_from_slice(&right_lit.bytes);
+                        let offset = string_data.len() as u32;
+                        let len = bytes.len() as u32;
+                        string_data.extend_from_slice(&bytes);
+                        string_literals
+                            .entry(fn_.name.clone())
+                            .or_default()
+                            .insert(dest.clone(), WasmStringLiteral {
+                                offset,
+                                len,
+                                bytes,
+                            });
+                    }
+                }
+                "print_str" => {
+                    uses_print_str = true;
+                    uses_memory = true;
                 }
                 // `load_mem`/`store_mem` are the raw BF-frontend tape ops;
                 // `alloc_bytes`/`load_byte`/`store_byte` are the lowered AOT/LLVM
@@ -2800,9 +3088,12 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     ModuleFeatures {
         global_names,
         uses_io_out,
+        uses_print_str,
         uses_putchar,
         uses_getchar,
         uses_memory,
+        string_literals,
+        string_data,
     }
 }
 
@@ -2869,9 +3160,12 @@ pub fn lower_iir_to_wasm(
     let features = collect_module_features(module);
     let global_names = features.global_names.clone();
     let uses_io_out  = features.uses_io_out;
+    let uses_print_str = features.uses_print_str;
     let uses_putchar = features.uses_putchar;
     let uses_getchar = features.uses_getchar;
     let uses_memory  = features.uses_memory;
+    let string_literals = features.string_literals;
+    let string_data = features.string_data;
 
     // Map each global name to its WASM global section index.
     let global_map: HashMap<String, u32> = global_names
@@ -2887,10 +3181,14 @@ pub fn lower_iir_to_wasm(
     //
     // Import order (mirrored when building `imports` below):
     //   0. env.__print_i64   (if uses_io_out)
-    //   1. env.putchar       (if uses_putchar)
-    //   2. env.getchar       (if uses_getchar)
+    //   1. env.__print_str   (if uses_print_str)
+    //   2. env.putchar       (if uses_putchar)
+    //   3. env.getchar       (if uses_getchar)
     let mut next_import_idx: u32 = 0;
     let print_fn_idx: Option<u32> = if uses_io_out {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let print_str_fn_idx: Option<u32> = if uses_print_str {
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let putchar_fn_idx: Option<u32> = if uses_putchar {
@@ -2972,8 +3270,9 @@ pub fn lower_iir_to_wasm(
     // Imports are pushed to `host_imports` in the same order their
     // function indices were assigned earlier in Step 3:
     //   0. env.__print_i64   (if uses_io_out)
-    //   1. env.putchar       (if uses_putchar)
-    //   2. env.getchar       (if uses_getchar)
+    //   1. env.__print_str   (if uses_print_str)
+    //   2. env.putchar       (if uses_putchar)
+    //   3. env.getchar       (if uses_getchar)
     //
     // The function index that emit_instr uses is the one we assigned earlier
     // (print_fn_idx / putchar_fn_idx / getchar_fn_idx).  Here we just need
@@ -2987,6 +3286,20 @@ pub fn lower_iir_to_wasm(
         host_imports.push(Import {
             module_name: "env".to_string(),
             name: "__print_i64".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
+    if uses_print_str {
+        // env.__print_str(i32 ptr, i32 len) -> ()
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType {
+            params: vec![ValueType::I32, ValueType::I32],
+            results: vec![],
+        });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__print_str".to_string(),
             kind: ExternalKind::Function,
             type_info: ImportTypeInfo::Function(type_idx),
         });
@@ -3025,12 +3338,16 @@ pub fn lower_iir_to_wasm(
     //   0x0B = end opcode (terminates the constant expression)
     let wasm_globals: Vec<Global> = global_names
         .iter()
-        .map(|_| Global {
+        .map(|name| Global {
             global_type: GlobalType {
                 value_type: ValueType::I64,
                 mutable: true,
             },
-            init_expr: vec![0x42u8, 0x00u8, 0x0Bu8], // i64.const 0; end
+            init_expr: if name == ARRAY_BUMP_GLOBAL {
+                encode_i64_global_init(string_data.len() as i64)
+            } else {
+                encode_i64_global_init(0)
+            },
         })
         .collect();
 
@@ -3048,9 +3365,13 @@ pub fn lower_iir_to_wasm(
         // Lower the function body, passing GC type index, global map, and
         // the host-import indices (print / putchar / getchar) so emit_instr
         // can `call <import_idx>` directly.
+        let empty_string_literals = FunctionStringLiterals::new();
+        let fn_string_literals = string_literals
+            .get(&fn_.name)
+            .unwrap_or(&empty_string_literals);
         let body = lower_function(
-            fn_, &fn_map, lispy_pair_type_idx, &global_map,
-            print_fn_idx, putchar_fn_idx, getchar_fn_idx,
+            fn_, &fn_map, lispy_pair_type_idx, &global_map, fn_string_literals,
+            print_fn_idx, print_str_fn_idx, putchar_fn_idx, getchar_fn_idx,
         )?;
         code.push(body);
     }
@@ -3071,12 +3392,25 @@ pub fn lower_iir_to_wasm(
     // the buffer.  Modules that don't use `load_mem`/`store_mem` get no
     // memory section, preserving binary compatibility with the existing
     // non-BF callers (Twig, BASIC, Oct, Nib, Lispy).
-    let memories: Vec<wasm_types::MemoryType> = if uses_memory {
+    let memories: Vec<wasm_types::MemoryType> = if uses_memory
+        || uses_print_str
+        || !string_data.is_empty()
+    {
         vec![wasm_types::MemoryType {
             limits: wasm_types::Limits { min: 1, max: Some(1) },
         }]
     } else {
         vec![]
+    };
+
+    let data = if string_data.is_empty() {
+        vec![]
+    } else {
+        vec![DataSegment {
+            memory_index: 0,
+            offset_expr: vec![0x41u8, 0x00u8, 0x0Bu8], // i32.const 0; end
+            data: string_data,
+        }]
     };
 
     Ok(WasmModule {
@@ -3088,6 +3422,7 @@ pub fn lower_iir_to_wasm(
         globals: wasm_globals,
         exports,
         code,
+        data,
         ..Default::default()
     })
 }

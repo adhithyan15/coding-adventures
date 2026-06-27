@@ -32,7 +32,7 @@ writes to a temp file and hands to the system linker at compile time. It has
 two translation units:
 
 - `runtime/twig_runtime.c` — portable I/O + heap helpers (`__twig_print_i64`,
-  `__twig_putchar`, `__twig_alloc_bytes`, …).
+  `__twig_print_string`, `__twig_putchar`, `__twig_alloc_bytes`, …).
 - `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
   `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`truthy`/`make_symbol`/`nil`
   plus int box/unbox, implementing `lispy-runtime`'s 3-bit-tagged 64-bit
@@ -45,6 +45,16 @@ The C lisp runtime and the Rust `lispy-runtime` crate (used by the VM/JIT)
 are two implementations of one documented ABI. The `lispy_runtime_golden`
 unit test pins the C side to the Rust `pub const`s/constructors so they can
 never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
+
+LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
+preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
+`call_builtin "print_string"`, so source-level BASIC `PRINT "HELLO"` runs through
+the same object/link/runtime pipeline as byte-tape programs. Direct-literal
+`str_len`, `str_index`, `str_eq`, and literal `str_concat` metadata over direct
+literals fold before machine-code lowering, so Twig `(string-length "HELLO")`,
+`(string-ref "ABC" 1)`, `(string=? "HELLO" "HELLO")`, and
+`(string-length (string-append "AB" "CDE"))` run natively through the same
+preparation pass.
 
 As of 0.10.0, `prepare_module_for_aot` lowers a lisp frontend's `cons`/`car`/
 `cdr` to **calls into this runtime** (via

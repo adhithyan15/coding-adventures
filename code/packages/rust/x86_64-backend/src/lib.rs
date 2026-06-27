@@ -990,7 +990,7 @@ fn emit_instr(
         let i_src = instr.srcs.get(1).ok_or_else(|| {
             BackendError::MalformedInstr("array_get: needs srcs[1]=idx".into())
         })?;
-        native_array_elem_size(&instr.ty)?; // validate 8-byte element (i64)
+        native_array_elem_size(&instr.ty)?; // validate 8-byte element (i64/u64/f64)
         load_operand(asm, alloc, Reg::Rax, h_src);
         load_operand(asm, alloc, Reg::Rcx, i_src);
         asm.mov_r64_mem(Reg::Rdx, Reg::Rax, 0); // length
@@ -1021,7 +1021,7 @@ fn emit_instr(
         let v_src = instr.srcs.get(2).ok_or_else(|| {
             BackendError::MalformedInstr("array_set: needs srcs[2]=val".into())
         })?;
-        native_array_elem_size(&instr.ty)?; // validate 8-byte element (i64)
+        native_array_elem_size(&instr.ty)?; // validate 8-byte element (i64/u64/f64)
         load_operand(asm, alloc, Reg::Rax, h_src);
         load_operand(asm, alloc, Reg::Rcx, i_src);
         asm.mov_r64_mem(Reg::Rdx, Reg::Rax, 0); // length
@@ -1576,15 +1576,17 @@ fn require_dest(instr: &CIRInstr) -> Result<&str, BackendError> {
             format!("{} needs a dest", instr.op)))
 }
 
-/// The byte size of an E5 array element type on the native backend. Only 64-bit
-/// integer elements are supported here (the ALGOL `integer` array — `f64` arrays
-/// need SSE element moves the V1 native path doesn't carry), so a non-`i64`
-/// element produces a clear error rather than a silently wrong stride.
+/// The byte size of an E5 array element type on the native backend. 64-bit
+/// integer and `f64` elements share the same 8-byte memory representation here:
+/// the backend copies raw bits between stack slots and array storage, while f64
+/// arithmetic/comparisons load those bits through SSE when needed. Smaller
+/// element widths still produce a clear error rather than a silently wrong
+/// stride.
 fn native_array_elem_size(elem: &str) -> Result<i32, BackendError> {
     match elem {
-        "i64" | "u64" => Ok(8),
+        "i64" | "u64" | "f64" => Ok(8),
         other => Err(BackendError::MalformedInstr(format!(
-            "array element {other:?} not supported on the native backend (i64 only so far)"
+            "array element {other:?} not supported on the native backend (8-byte elements only so far)"
         ))),
     }
 }
@@ -1670,9 +1672,10 @@ mod tests {
         assert!(traps >= 2, "expected ≥2 ud2 bounds traps, got {traps} in {bytes:02X?}");
     }
 
-    /// A non-`i64` array element is cleanly rejected (native is i64-only so far).
+    /// `f64` array elements lower as raw 8-byte loads/stores; f64 math reads
+    /// the same bits from the destination slot through SSE later.
     #[test]
-    fn array_get_rejects_non_i64_element() {
+    fn array_get_accepts_f64_element() {
         let ctx = fn_ctx("arr", &[], "u64");
         let mut get = instr("array_get", Some("r"),
             vec![Op::Var("a".into()), Op::Var("i".into())]);
@@ -1684,8 +1687,8 @@ mod tests {
             get,
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
-        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_err(),
-            "f64 array element should be refused on the native backend");
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_ok(),
+            "f64 array element should lower as an 8-byte native load");
     }
 
     // ---- L3b: cons heap ops (alloc / field_store / field_load / is_null) ----

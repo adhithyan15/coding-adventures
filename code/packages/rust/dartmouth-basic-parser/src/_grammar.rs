@@ -320,6 +320,7 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"primary"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
+                GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
                 GrammarElement::Sequence { elements: vec![
                     GrammarElement::TokenReference { name: r#"BUILTIN_FN"#.to_string() },
                     GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },

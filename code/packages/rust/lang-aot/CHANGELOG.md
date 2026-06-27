@@ -1,5 +1,558 @@
 # Changelog — `lang-aot`
 
+## 0.143.0 — 2026-06-27 — BASIC variable-variable string PRINT concat runs on all seven backends (LANG-FULL BA4)
+
+The matrix now proves a BASIC string concat expression whose two operands are
+both scalar string variables and whose result is consumed directly by `PRINT`:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = "K"
+30 PRINT A$ + B$
+```
+
+Expected stdout is `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+`dartmouth-basic-iir-compiler` 0.28.0 lowers the expression to E4
+`str_concat` and feeds the temporary result directly to `print_str`.
+
+## 0.142.0 — 2026-06-27 — BASIC chained string concat runs on all seven backends (LANG-FULL BA4)
+
+The matrix now proves a left-associative BASIC string concat chain:
+
+```basic
+10 LET A$ = "A"
+20 LET B$ = A$ + "B" + "C"
+30 PRINT B$
+```
+
+Expected stdout is `ABC` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+`dartmouth-basic-iir-compiler` 0.27.0 lowers the chain to repeated E4
+`str_concat` instructions and stores the final value in the target scalar
+string slot.
+
+## 0.141.0 — 2026-06-27 — BASIC literal exponentiation runs on all seven backends (LANG-FULL BA-^)
+
+The matrix now proves the safe BASIC `^` subset:
+
+```basic
+10 PRINT 6 ^ 2 + 6
+20 END
+```
+
+Expected stdout is `42` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+`dartmouth-basic-iir-compiler` 0.26.0 lowers integer-valued literal exponents
+through repeated `f64` multiplication, avoiding a backend math runtime.
+
+## 0.140.0 — 2026-06-27 — Oct logical NOT runs on all seven backends (LANG-FULL O-!)
+
+The matrix now proves unary logical NOT for Oct:
+
+```oct
+fn main() { if !(1 == 2) { out(1, 42); } else { out(1, 0); } }
+```
+
+Expected stdout is `42` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+`oct-iir-compiler` 0.9.0 lowers `!` through the shared truthiness branch
+contract, materialising a clean 0/1 bool instead of reusing bitwise `not`.
+
+## 0.139.0 — 2026-06-27 — Nib const/static expression folding runs on all seven backends (LANG-FULL N10)
+
+The matrix now proves a folded Nib const expression feeding a folded static
+initializer:
+
+```nib
+const BASE: u8 = 6 * 7;
+static counter: u8 = BASE + 0;
+fn main() -> u8 { return counter; }
+```
+
+Expected exit code is `42` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+`nib-type-checker` 0.6.0 types the initializer expressions, and
+`nib-iir-compiler` 0.19.0 folds them before runtime code is emitted.
+
+## 0.138.0 — 2026-06-27 — Nib logical NOT runs on all seven backends (LANG-FULL N9)
+
+The matrix now proves unary logical NOT:
+
+```nib
+fn main() -> u8 { if !(1 == 2) { return 42; } return 0; }
+```
+
+Expected exit code is `42` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+`nib-type-checker` 0.5.0 types `!` as `bool`, and `nib-iir-compiler` 0.18.0
+lowers it through the shared truthiness branch contract.
+
+## 0.137.0 — 2026-06-27 — Nib static globals run on all seven backends (LANG-FULL N8)
+
+The matrix now proves module-scoped mutable Nib statics through the shared E6
+global substrate:
+
+```nib
+static counter: u8 = 40;
+fn bump(step: u8) -> u8 { counter = counter + step; return counter; }
+fn main() -> u8 { let a: u8 = bump(1); let b: u8 = bump(1); return counter; }
+```
+
+Expected exit code is `42` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+`nib-type-checker` 0.4.0 makes static names visible across functions, while
+`nib-iir-compiler` 0.17.0 seeds `main` with `global_store` and lowers reads/writes
+to `global_load`/`global_store`.
+
+## 0.136.0 — 2026-06-27 — Twig local string equality branches run on all seven backends (LANG-FULL E4/TW4)
+
+The Twig matrix now proves lexical string locals can feed E4 equality before
+control flow:
+
+```scheme
+(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))
+```
+
+Expected exit code is `42` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+The frontend emits local `str_const` slots, `str_eq`, and the existing branch
+shape instead of dynamic `string=?`.
+
+## 0.135.0 — 2026-06-27 — Twig `let*` string locals run on all seven backends (LANG-FULL E4/TW4)
+
+The Twig matrix now proves the sequential lexical binding form can feed E4
+string ops:
+
+```scheme
+(let* ((s "HELLO")) (string-length s))
+```
+
+Expected exit code is `5` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+This backs the existing `twig-ir-compiler` unit proof with an all-backend run:
+`let*` materializes a typed `str_const` local slot, then `str_len` consumes it
+without falling back to dynamic `string-length`.
+
+## 0.134.0 — 2026-06-27 — ALGOL multi-argument string output runs on all seven backends (LANG-FULL AL4/E4)
+
+The ALGOL matrix now proves multiple literal-backed scalar string actuals in one
+`output` statement:
+
+```algol
+begin string s, t; s := 'O'; t := 'K'; output(s, t) end
+```
+
+Expected stdout is `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+The compiler emits two ordered E4 `print_str` calls and avoids dynamic procedure
+dispatch, keeping the proof inside the current AL4 immutable scalar string
+foothold.
+
+## 0.133.0 — 2026-06-27 — BASIC comma-separated string PRINT runs on all seven backends (LANG-FULL BA4/E4)
+
+The BASIC matrix now proves BA2 comma separators compose with BA4/E4 string
+items:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = "K"
+30 PRINT A$, B$
+```
+
+Expected stdout is `O K` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+The compiler emits the existing comma separator as `putchar(' ')` between two
+ordered `print_str` calls, so string items remain on the shared E4 output path
+and do not route through numeric formatting helpers.
+
+## 0.132.0 — 2026-06-27 — BASIC multi-item string PRINT runs on all seven backends (LANG-FULL BA4/E4)
+
+The BASIC matrix now proves two scalar string slots in one `PRINT` statement:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = "K"
+30 PRINT A$; B$
+```
+
+The row expects stdout `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT,
+proving ordered repeated `print_str` calls for `;`-separated string items.
+
+## 0.131.0 — 2026-06-27 — ALGOL string copy snapshots run on all seven backends (LANG-FULL AL4/E4)
+
+The ALGOL matrix now proves scalar string copy snapshot semantics:
+
+```algol
+begin string s, t; s := 'OK'; t := s; s := 'NO'; print(t) end
+```
+
+The row expects stdout `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT,
+proving a later source-slot `str_const` does not change the copied target slot.
+
+## 0.130.0 — 2026-06-27 — BASIC copied string equality runs on all seven backends (LANG-FULL BA4/E4)
+
+The BASIC matrix now proves variable-to-variable string equality after a scalar
+string copy:
+
+```basic
+10 LET A$ = "OK"
+20 LET B$ = A$
+30 IF B$ = A$ THEN 60
+40 PRINT "BAD"
+50 END
+60 PRINT "OK"
+```
+
+The row expects stdout `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT,
+proving copied string slots can feed E4 `str_eq` before BASIC line-control
+branching.
+
+## 0.129.0 — 2026-06-27 — Twig lexical string concat runs on all seven backends (LANG-FULL E4/TW4)
+
+The Twig matrix now proves lexical string locals can feed E4 concat:
+
+```scheme
+(let ((a "AB") (b "CDE")) (string-length (string-append a b)))
+```
+
+The row expects exit `5` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT,
+proving local non-literal string operands can flow through `str_concat` and
+`str_len` without falling back to dynamic builtins.
+
+## 0.128.0 — 2026-06-27 — ALGOL scalar string copy runs on all seven backends (LANG-FULL AL4/E4)
+
+The ALGOL matrix now proves literal-backed scalar string copies:
+
+```algol
+begin string s, t; s := 'OK'; t := s; print(t) end
+```
+
+The row expects stdout `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT,
+proving the AL4 frontend can copy a literal-backed string slot through E4
+`str_concat` with an empty suffix before `print_str` consumes the target.
+
+## 0.127.0 — 2026-06-27 — BASIC variable-backed concat assignment runs on all seven backends (LANG-FULL BA4/E4)
+
+The BASIC matrix now proves a string expression assignment whose left operand is
+a scalar string variable:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = A$ + "K"
+30 PRINT B$
+40 END
+```
+
+The row expects stdout `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT,
+proving E4 `str_concat` can store directly into another BASIC scalar string
+slot before `print_str` consumes it.
+
+## 0.126.0 — 2026-06-27 — BASIC string expressions in IF run on all seven backends (LANG-FULL BA4/E4)
+
+The BASIC matrix now proves string expressions can feed line-control
+comparisons:
+
+```basic
+10 LET A$ = "O"
+20 IF A$ + "K" = "OK" THEN 50
+30 PRINT "BAD"
+40 END
+50 PRINT "OK"
+60 END
+```
+
+The row expects stdout `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT,
+proving E4 `str_concat` can feed `str_eq` before the existing `jmp_if_true`
+branch.
+
+## 0.125.0 — 2026-06-27 — BASIC string expressions in PRINT run on all seven backends (LANG-FULL BA4/E4)
+
+The BASIC matrix now proves `PRINT` can consume a temporary E4 string expression
+result directly:
+
+```basic
+10 LET A$ = "O"
+20 PRINT A$ + "K"
+30 END
+```
+
+The row expects stdout `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT,
+proving BA4 string-expression output without routing the concat through `LET`.
+
+## 0.124.0 — 2026-06-27 — BASIC scalar string copy runs on all seven backends (LANG-FULL BA4/E4)
+
+The BASIC matrix now proves literal-backed string-to-string assignment:
+
+```basic
+10 LET A$ = "OK"
+20 LET B$ = A$
+30 PRINT B$
+40 END
+```
+
+The frontend lowers the copy as E4 `str_concat` with an empty suffix, so the
+row expects stdout `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT
+without adding a dedicated string-copy opcode.
+
+## 0.123.0 — 2026-06-27 — BASIC literal string concatenation runs on all seven backends (LANG-FULL BA4/E4)
+
+The BASIC matrix now proves a source-level string expression over E4
+`str_concat`:
+
+```basic
+10 LET A$ = "O" + "K"
+20 PRINT A$
+30 END
+```
+
+The row expects stdout `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+The frontend materializes both literals, writes the concatenation into the safe
+`A$` string slot, and then prints that slot. Non-literal copies and dynamic
+byte-string storage remain follow-up BA4/E4 work. The LLVM leg is backed by
+`iir-to-llvm` 0.21.0, which binds derived literal concat constants so
+`str_concat` can feed `print_str`.
+
+## 0.122.0 — 2026-06-27 — BASIC string inequality drives control flow (LANG-FULL BA4/E4)
+
+The BASIC matrix now proves the other standard equality-family string branch:
+
+```basic
+10 LET A$ = "N"
+20 IF A$ <> "Y" THEN 50
+30 PRINT "BAD"
+40 END
+50 PRINT "OK"
+60 END
+```
+
+The frontend lowers `<>` by reusing E4 `str_eq` and branching with
+`jmp_if_false`, so stdout `OK` is produced on native-AOT + LLVM + WASM + JVM +
+CLR + VM + JIT without adding a bespoke `str_ne` opcode.
+
+## 0.121.0 — 2026-06-27 — BASIC literal string reassignment runs on all seven backends (LANG-FULL BA4/E4)
+
+The BASIC matrix now proves that a scalar string variable can be assigned more
+than once from literals and that the latest literal is the one printed:
+
+```basic
+10 LET A$ = "NO"
+20 LET A$ = "OK"
+30 PRINT A$
+40 END
+```
+
+The row expects stdout `OK` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+This stays inside the literal-backed E4 subset by re-emitting `str_const` into
+the same safe backend-facing slot; non-literal copies, string arrays, string
+`INPUT`, and dynamic byte-string storage remain follow-up BA4/E4 work.
+
+## 0.120.0 — 2026-06-27 — ALGOL `output` string alias runs on all seven backends (LANG-FULL AL4/E4)
+
+The ALGOL 60 matrix now executes:
+
+```algol
+begin string s; s := 'OK'; output(s) end
+```
+
+on **native-AOT + LLVM + WASM + JVM + CLR + VM + JIT**, producing stdout `OK`.
+
+This is the same literal-backed scalar string slot as the `print(s)` proof, but
+through the implementation-defined `output` spelling. It closes the current AL4
+output alias proof without widening into dynamic string values.
+
+## 0.119.0 — 2026-06-27 — BASIC string equality drives control flow (LANG-FULL BA4/E4)
+
+The Dartmouth BASIC matrix now executes:
+
+```basic
+10 LET A$ = "Y"
+20 IF A$ = "Y" THEN 50
+30 PRINT "BAD"
+40 END
+50 PRINT "OK"
+60 END
+```
+
+on **native-AOT + LLVM + WASM + JVM + CLR + VM + JIT**, producing stdout `OK`.
+
+This proves the BA4 string-variable slice beyond printing: `dartmouth-basic-iir-compiler`
+lowers `A$ = "Y"` in `IF` to shared E4 `str_eq`, and the resulting boolean feeds
+the existing line-control branch machinery on every backend.
+
+## 0.118.0 — 2026-06-27 — ALGOL string variables run on all seven backends (LANG-FULL AL4/E4)
+
+The ALGOL 60 matrix now executes:
+
+```algol
+begin string s; s := 'HI'; print(s) end
+```
+
+on **native-AOT + LLVM + WASM + JVM + CLR + VM + JIT**, producing stdout `HI`.
+
+`algol-iir-compiler` 0.12.0 lowers literal assignments to scalar string slots as
+direct E4 `str_const` producers and allows `print(s)` only for those
+literal-backed slots. Dynamic string values, string copies, captured/`own`
+strings, string arrays, and string parameters remain follow-up AL4 work.
+
+## 0.117.0 — 2026-06-27 — ALGOL literal string output runs on all seven backends (LANG-FULL AL4/E4)
+
+The ALGOL 60 matrix now executes:
+
+```algol
+begin print('HI') end
+```
+
+on **native-AOT + LLVM + WASM + JVM + CLR + VM + JIT**, producing stdout `HI`.
+
+`algol-iir-compiler` 0.11.0 recognises undeclared statement-position
+`print`/`output` calls as standard output procedures and lowers string literal
+actuals to shared E4 `str_const` + `print_str`. Full ALGOL string variables,
+string arrays, and non-literal string expressions remain follow-up AL4 work.
+
+## 0.116.0 — 2026-06-27 — BASIC string variables run on all seven backends (LANG-FULL BA4/E4)
+
+The Dartmouth BASIC matrix now executes:
+
+```basic
+10 LET A$ = "HI"
+20 PRINT A$
+30 END
+```
+
+on **native-AOT + LLVM + WASM + JVM + CLR + VM + JIT**, producing stdout `HI`.
+
+`coding-adventures-dartmouth-basic-lexer` 0.2.0 tokenizes `$`-suffixed names as
+single `NAME` tokens, `coding-adventures-dartmouth-basic-parser` 0.2.0 accepts
+`STRING` primaries, and `dartmouth-basic-iir-compiler` 0.15.0 lowers
+literal-backed string variables to safe E4 `str_const` slots consumed by
+`print_str`.
+
+## 0.115.0 — 2026-06-27 — Lexical Twig string locals run on all seven backends (LANG-FULL E4)
+
+The Twig matrix now executes `(let ((s "ABC") (i 2)) (string-ref s i))` on
+**native-AOT + LLVM + WASM + JVM + CLR + VM + JIT**, returning exit code `67`
+everywhere.
+
+`twig-ir-compiler` 0.28.0 materializes lexical `let`/`let*` string literal
+bindings as typed `str_const` registers and lets known local string/index
+registers feed the E4 string-op lowering. `twig-aot` 0.19.0 carries literal
+metadata through the local integer `mov` so the native column folds the same
+`str_index` as the other static backends. This closes the local string-slot proof
+for the current literal/named-value E4 foothold without claiming
+captured/reassigned strings or broader dynamic byte-string values.
+
+## 0.114.0 — 2026-06-27 — Twig string index OOB traps on all seven backends (LANG-FULL E4)
+
+The Twig matrix now treats runtime traps as a first-class expected result via
+`Expect::Trap`, and executes `(string-ref "ABC" 3)` on **native-AOT + LLVM +
+WASM + JVM + CLR + VM + JIT**. Every backend fails closed instead of returning a
+byte or silently skipping the cell.
+
+This closes the E4 `str_index` out-of-bounds proof for the current literal/named
+string foothold: WASM, VM, and JIT use their existing bounds checks; JVM/CLR use
+their managed string index exceptions; and native AOT plus LLVM now lower a
+compile-known literal OOB index to a runtime trap path instead of rejecting during
+lowering.
+
+## 0.113.0 — 2026-06-27 — Named Twig string values run on all seven backends (LANG-FULL E4)
+
+The Twig matrix now executes three named string value programs on **native-AOT +
+LLVM + WASM + JVM + CLR + VM + JIT**:
+
+- `(define a "AB") (define b "CDE") (string-length (string-append a b))`
+  returns exit code `5`.
+- `(define s "HELLO") (if (string=? s "HELLO") 42 0)` returns exit code `42`.
+- `(define s "ABC") (string-ref s 2)` returns exit code `67`.
+
+`twig-ir-compiler` 0.27.0 keeps non-escaping top-level string defines in `main`
+as typed `str_const` registers, so the existing E4 backend support can consume
+named string values without dynamic `global_set`/`global_get` or `call_builtin`
+paths. Reassignable string variables, captured strings, `let` string slots, and
+the out-of-bounds `str_index` trap proof remain follow-up E4 slices.
+
+## 0.112.0 — 2026-06-27 — Twig literal string index runs on all seven backends (LANG-FULL E4)
+
+The Twig matrix now executes `(string-ref "ABC" 1)` on **native-AOT + LLVM +
+WASM + JVM + CLR + VM + JIT**, returning exit code `66` everywhere.
+
+`twig-ir-compiler` 0.26.0 lowers direct-literal `string-ref` to typed
+`str_const` + integer `const` + `str_index`. Native AOT and LLVM fold from
+literal metadata, WASM emits a guarded `i32.load8_u` from its string data
+segment, JVM calls `String.charAt(I)`, and CLR calls
+`String::get_Chars(int32)`. This extends the all-backend E4 foothold to
+in-bounds ASCII indexing without claiming dynamic string variables or the
+out-of-bounds trap matrix proof yet.
+
+## 0.111.0 — 2026-06-27 — Twig literal string metadata runs on all seven backends (LANG-FULL E4)
+
+The Twig matrix now executes `(string-length "HELLO")`,
+`(string=? "HELLO" "HELLO")`, and
+`(string-length (string-append "AB" "CDE"))` on **native-AOT + LLVM + WASM +
+JVM + CLR + VM + JIT**, returning exit codes `5`, `1`, and `5` everywhere.
+
+`twig-ir-compiler` 0.25.0 lowers literal `string-length`, `string=?`, and
+`string-append`-feeding-`string-length` to typed `str_const` +
+`str_len`/`str_eq`/`str_concat`. The code-gen backends each keep the slice
+literal-only: native AOT folds to constants, LLVM/WASM read literal metadata,
+JVM calls `String.length()` / `String.equals(Object)` / `String.concat(String)`,
+and CLR calls `String::get_Length()` / `String::Equals(string,string)` /
+`String::Concat(string,string)`.
+
+This extends the all-backend E4 foothold beyond output without claiming full
+string algebra: `str_index`, non-literal `str_concat`/`str_eq`, and string
+variables remain follow-up work.
+
+## 0.110.0 — 2026-06-27 — BASIC string literal PRINT runs on all seven backends (LANG-FULL E4 / BA4)
+
+The Dartmouth BASIC `PRINT "HELLO"` matrix row now runs on **native-AOT + LLVM + WASM + JVM + CLR + VM + JIT**.
+`twig-aot` 0.15.0 lowers native `str_const` + `print_str` to the existing heap-byte
+runtime path (`alloc_bytes`, `store_byte`, `call_builtin "print_string"`), so the
+native executable links `__twig_print_string` from the existing AOT runtime archive.
+
+This completes the all-backend literal-output proof. Richer byte-string ops
+(`str_len`, `str_index`, `str_concat`, `str_eq`) and string variables remain
+follow-up E4/BA4 work.
+
+## 0.109.0 — 2026-06-27 — BASIC string literal PRINT reaches the LLVM column (LANG-FULL E4 / BA4)
+
+The Dartmouth BASIC `PRINT "HELLO"` matrix row now runs on **LLVM + WASM + JVM + CLR + VM + JIT**.
+`iir-to-llvm` 0.17.0 emits each printable-ASCII literal as a private unmanaged
+constant `{ i64 len, [len x i8] bytes }`, then lowers `print_str` to
+`@__print_str(payload,len)`. The LLVM matrix runner compiles the same generic C
+print runtime used for `__print_i64`, adding a `fwrite`-based `__print_str`.
+
+This remains the literal-output shape only; `str_len`, `str_index`, `str_concat`,
+and `str_eq` fail closed until the byte-string runtime lands. Native string
+lowering remains the last backend column for this BASIC string-print row.
+
+## 0.108.0 — 2026-06-27 — BASIC string literal PRINT reaches the WASM column (LANG-FULL E4 / BA4)
+
+The Dartmouth BASIC `PRINT "HELLO"` matrix row now runs on **WASM + JVM + CLR + VM + JIT**.
+This extends the managed/static literal-output foothold to the in-repo WASM runtime:
+`iir-to-wasm` stores printable ASCII string literals in a linear-memory data segment,
+materialises the `str` value as an `i32` pointer, and lowers `print_str` to the host
+import `env.__print_str(ptr,len)`. The existing BASIC newline still flows through
+`putchar`.
+
+This remains the literal-output shape only; `str_len`, `str_index`, `str_concat`,
+and `str_eq` fail closed until the byte-string runtime lands. Native and LLVM
+string lowering remain follow-up slices.
+
+## 0.107.0 — 2026-06-27 — BASIC string literal PRINT reaches the JVM column (LANG-FULL E4 / BA4)
+
+The Dartmouth BASIC `PRINT "HELLO"` matrix row now runs on **JVM + CLR + VM + JIT**.
+This extends the 0.106.0 CLR foothold to a second managed code-gen backend:
+the JVM backend maps `str_const` to `ldc` + `CONSTANT_String` and `print_str` to
+`PrintStream.print(String)`. The existing BASIC newline still flows through
+`putchar`.
+
+This is still the literal-output shape only; `str_len`, `str_index`, `str_concat`,
+and `str_eq` fail closed until the managed backends own byte-string semantics.
+WASM/native/LLVM string lowering remain follow-up slices.
+
+## 0.106.0 — 2026-06-27 — BASIC string literal PRINT reaches the CLR column (LANG-FULL E4 / BA4)
+
+The Dartmouth BASIC `PRINT "HELLO"` matrix row now runs on **CLR + VM + JIT**.
+This extends the E4/BA4 source-language proof beyond the interpreter columns:
+the CLR textual `.il` backend maps `str_const` to `ldstr` and `print_str` to
+`Console.Write(string)`, then the existing BASIC newline still flows through
+`putchar`.
+
+This is not full E4 backend coverage yet. CLR supports the literal-output shape
+only; `str_len`, `str_index`, `str_concat`, and `str_eq` still fail closed until
+the managed backend owns byte-string semantics. JVM/WASM/native/LLVM string
+lowering remain follow-up slices.
+
 ## 0.105.0 — 2026-06-26 — BA1-WASM: GOSUB/RETURN on all 7 backends (dispatch-loop fix)
 
 **LANG-FULL BA1** — both executed Dartmouth BASIC `GOSUB`/`RETURN` programs

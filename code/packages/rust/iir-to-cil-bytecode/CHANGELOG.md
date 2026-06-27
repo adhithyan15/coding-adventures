@@ -1,5 +1,54 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.29.0] — 2026-06-27 — textual CLR literal string index (LANG-FULL E4)
+
+The textual `.il` path now lowers direct-literal `str_index`:
+
+- `str_index` loads the `string` local and integer index, then calls
+  `System.String::get_Chars(int32)`.
+- Twig `(string-ref "ABC" 1)` now returns `66` on real CoreCLR alongside the
+  existing literal string length/equality/concat rows.
+- Non-literal string values and byte-exact non-ASCII semantics remain follow-up
+  representation work.
+
+## [0.28.0] — 2026-06-27 — textual CLR literal string metadata (LANG-FULL E4)
+
+The textual `.il` path now lowers `str_len`, `str_eq`, and `str_concat` for
+direct string literals:
+
+- `str_len` loads the `string` local and calls
+  `System.String::get_Length()`, storing the resulting integer.
+- `str_eq` loads two `string` locals and calls
+  `System.String::Equals(string, string)`, storing the resulting integer.
+- `str_concat` loads two `string` locals and calls
+  `System.String::Concat(string, string)`, storing the resulting string.
+- This proves Twig `(string-length "HELLO")` and
+  `(string=? "HELLO" "HELLO")` plus
+  `(string-length (string-append "AB" "CDE"))` on real CoreCLR alongside the
+  earlier BASIC `PRINT "HELLO"` literal-output row.
+- Richer byte-oriented string operations (`str_index`) and non-literal string
+  values still fail closed until the CLR representation owns shared UTF-8 byte
+  semantics.
+- Emitter and validator tests cover the new accepted shape.
+
+## [0.27.0] — 2026-06-27 — textual CLR string literal PRINT foothold (LANG-FULL E4 / BA4)
+
+The real-CoreCLR textual `.il` path now lowers the first E4 string shape:
+
+- `str_const` with an ASCII `Operand::Str` literal → `ldstr "..."` into a
+  `string` local.
+- `print_str` → `call void [System.Console]System.Console::Write(string)`.
+- The generated launcher treats `print_str` as side-effecting output, so it
+  discards the entry result instead of double-printing `0`.
+
+This is intentionally narrower than full E4: the byte-oriented string algebra
+(`str_len`, `str_index`, `str_concat`, `str_eq`) remains rejected until the CLR
+representation owns the shared UTF-8 byte semantics. The validator now documents
+that contract: `str_const` + `print_str` pass, richer string ops fail closed.
+
+Verified with emitter/validator tests plus the `lang-aot` BASIC matrix row:
+`10 PRINT "HELLO"` runs on real `ilasm` + `dotnet` in the CLR column.
+
 ## [0.26.0] — 2026-06-23 — numeric conversions int ⇄ real (LANG-FULL E8 backend 5)
 
 The textual `il_text` path (the cross-backend matrix's `ilasm` route) now lowers

@@ -268,6 +268,11 @@ const SUPPORTED_OPS: &[&str] = &[
     // (`@llvm.trunc.f64`/`@llvm.floor.f64`), range-check (trap on
     // NaN/∞/out-of-i64-range, matching the VM), then `fptosi double → i64`.
     "int_to_real", "real_to_int_trunc", "real_to_int_floor",
+    // LANG-FULL E4 — string literal foothold for the static LLVM column.
+    // `str_const` materialises a length-prefixed private constant. `str_index`,
+    // `str_concat`, `str_len`, and `str_eq` read literal metadata, and `print_str` calls the
+    // generic C runtime. Richer dynamic byte-string ops remain unsupported.
+    "str_const", "str_index", "str_concat", "str_len", "str_eq", "print_str",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -277,7 +282,9 @@ const SUPPORTED_OPS: &[&str] = &[
 /// `print_i64` is supported — the LLVM counterpart to wasm's
 /// `env.__print_i64` import (iir-to-wasm v0.8.0), JVM's
 /// `env/BasicRuntime.println(J)V` (iir-to-jvm-class-file v0.7.0), and CLR's
-/// `env.BasicRuntime::PrintI64(int64)` (iir-to-cil-bytecode v0.7.0).
+/// `env.BasicRuntime::PrintI64(int64)` (iir-to-cil-bytecode v0.7.0). E4 also
+/// adds `print_str`, which lowers to a separate `@__print_str(ptr, i64)` runtime
+/// call from the dedicated `print_str` opcode rather than through `call_builtin`.
 ///
 /// Convention: BASIC's PRINT lowers to `@__print_i64` in textual LLVM IR.
 /// We pick that name (rather than `@env.__print_i64` etc.) because LLVM
@@ -289,6 +296,18 @@ const SUPPORTED_OPS: &[&str] = &[
 /// the C standard library already provides, so no host-runtime shim is needed
 /// (unlike `print_i64`); `clang` links libc by default.
 const SUPPORTED_BUILTINS: &[&str] = &["print_i64", "putchar", "getchar"];
+
+#[derive(Debug, Clone)]
+struct LlvmStringLiteralDef {
+    symbol: String,
+    bytes: Vec<u8>,
+}
+
+#[derive(Debug, Clone)]
+struct LlvmStringLiteralRef {
+    symbol: String,
+    len: usize,
+}
 
 /// McCarthy W12b — the **tagged-word lisp** builtins the LLVM backend lowers to
 /// `call`s into the shared C runtime (`twig-aot/runtime/lispy_runtime.c`), the
@@ -371,6 +390,30 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
                     func.name, instr.op, SUPPORTED_OPS
                 ));
             }
+            if instr.op == "str_const" {
+                validate_str_const(func, instr, &mut errors);
+                continue;
+            }
+            if instr.op == "str_concat" {
+                validate_str_concat(func, instr, &mut errors);
+                continue;
+            }
+            if instr.op == "str_index" {
+                validate_str_index(func, instr, &mut errors);
+                continue;
+            }
+            if instr.op == "str_len" {
+                validate_str_len(func, instr, &mut errors);
+                continue;
+            }
+            if instr.op == "str_eq" {
+                validate_str_eq(func, instr, &mut errors);
+                continue;
+            }
+            if instr.op == "print_str" {
+                validate_print_str(func, instr, &mut errors);
+                continue;
+            }
             // `ret_void` carries type_hint "void"; everything else carries a
             // real type.  Both go through `llvm_type_for`. An `alloc_array`
             // carries an `array<T>` hint (LANG-FULL E5) — not a scalar LLVM type,
@@ -389,6 +432,147 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
     }
 
     errors
+}
+
+fn validate_str_const(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_const requires a dest",
+            func.name
+        ));
+    }
+    if instr.type_hint != "str" {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_const type_hint {:?} must be \"str\"",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Str(s)] if is_printable_ascii_str(s) => {}
+        [Operand::Str(_)] => errors.push(format!(
+            "InvalidOperand: function {:?}, str_const only supports printable ASCII plus tab/newline/carriage-return",
+            func.name
+        )),
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_const requires exactly one Operand::Str literal",
+            func.name
+        )),
+    }
+}
+
+fn validate_print_str(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_some() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, print_str must not have a dest",
+            func.name
+        ));
+    }
+    if instr.type_hint != "void" {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, print_str type_hint {:?} must be \"void\"",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, print_str requires exactly one Operand::Var",
+            func.name
+        )),
+    }
+}
+
+fn validate_str_len(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_len requires a dest",
+            func.name
+        ));
+    }
+    if llvm_type_for(&instr.type_hint, &func.name).is_err() {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_len result type {:?} is not supported",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_len requires exactly one Operand::Var",
+            func.name
+        )),
+    }
+}
+
+fn validate_str_concat(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_concat requires a dest",
+            func.name
+        ));
+    }
+    if instr.type_hint != "str" {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_concat result type {:?} must be \"str\"",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_), Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_concat requires exactly two Operand::Var sources",
+            func.name
+        )),
+    }
+}
+
+fn validate_str_index(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_index requires a dest",
+            func.name
+        ));
+    }
+    if llvm_type_for(&instr.type_hint, &func.name).is_err() {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_index result type {:?} is not supported",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_), Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_index requires exactly two Operand::Var sources",
+            func.name
+        )),
+    }
+}
+
+fn validate_str_eq(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_eq requires a dest",
+            func.name
+        ));
+    }
+    if llvm_type_for(&instr.type_hint, &func.name).is_err() {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_eq result type {:?} is not supported",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_), Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_eq requires exactly two Operand::Var sources",
+            func.name
+        )),
+    }
+}
+
+fn is_printable_ascii_str(s: &str) -> bool {
+    s.bytes()
+        .all(|b| matches!(b, b'\n' | b'\r' | b'\t' | 0x20..=0x7e))
 }
 
 // ===========================================================================
@@ -452,6 +636,7 @@ pub fn lower_iir_to_llvm(
     // Currently the only supported builtin is `print_i64` (LLVM convention
     // chosen for BASIC's PRINT — see `SUPPORTED_BUILTINS` doc above).
     let mut used_print_i64 = false;
+    let mut used_print_str = false;
     // LLVM05 — Brainfuck I/O + tape: libc `putchar`/`getchar` and the
     // allocator behind `alloc_bytes`. Declared once each, when used.
     let mut used_putchar = false;
@@ -460,6 +645,9 @@ pub fn lower_iir_to_llvm(
     // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
     // (the out-of-bounds trap). `is_array_op` covers alloc_array/array_*.
     let mut used_arrays = false;
+    // LANG-FULL E4: direct-literal `str_index` can emit `@llvm.trap` when a
+    // compile-known index is out of bounds.
+    let mut used_str_index = false;
     // LANG-FULL E8: the `real_to_int_*` conversions need `@llvm.trap` (the
     // out-of-range trap) plus the `@llvm.floor.f64`/`@llvm.trunc.f64` rounding
     // intrinsics. `is_conversion` covers int_to_real / real_to_int_{trunc,floor}.
@@ -472,8 +660,14 @@ pub fn lower_iir_to_llvm(
             if i.op == "alloc_bytes" {
                 used_alloc_bytes = true;
             }
+            if i.op == "print_str" {
+                used_print_str = true;
+            }
             if interpreter_ir::opcodes::is_array_op(&i.op) {
                 used_arrays = true;
+            }
+            if i.op == "str_index" {
+                used_str_index = true;
             }
             if interpreter_ir::opcodes::is_conversion(&i.op) {
                 used_conversions = true;
@@ -500,19 +694,23 @@ pub fn lower_iir_to_llvm(
         out.push('\n');
         out.push_str("declare void @__print_i64(i64)\n");
     }
+    if used_print_str {
+        out.push('\n');
+        out.push_str("declare void @__print_str(ptr, i64)\n");
+    }
     // LLVM05 — libc / allocator declarations for the Brainfuck tape & I/O.
     // `calloc(nmemb, size)` returns a zero-filled buffer (BF cells start at 0);
     // `putchar`/`getchar` are the libc character I/O the BF `.`/`,` map to.
-    if used_alloc_bytes || used_arrays || used_conversions || used_putchar || used_getchar {
+    if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
             out.push_str("declare ptr @calloc(i64, i64)\n");
         }
-        if used_arrays || used_conversions {
+        if used_arrays || used_conversions || used_str_index {
             // The trap target — out-of-bounds for arrays (LANG-FULL E5) and
-            // out-of-range for `real_to_int_*` (LANG-FULL E8). `llvm.trap` is an
-            // intrinsic — declaring it is harmless and keeps the module explicit.
-            // Declared once even when both arrays and conversions are present.
+            // `str_index`, and out-of-range for `real_to_int_*` (LANG-FULL E8).
+            // `llvm.trap` is an intrinsic — declaring it is harmless and keeps
+            // the module explicit. Declared once even when several users are present.
             out.push_str("declare void @llvm.trap()\n");
         }
         if used_conversions {
@@ -534,6 +732,27 @@ pub fn lower_iir_to_llvm(
         for (_iir_name, symbol, arity) in &used_lispy {
             let params = vec!["i64"; *arity].join(", ");
             out.push_str(&format!("declare i64 @{symbol}({params})\n"));
+        }
+    }
+
+    // ── String literal constants (LANG-FULL E4 literal-output foothold) ─────
+    //
+    // Static backends use the unmanaged string layout from `lang-full-e4-strings`:
+    // an `i64` byte-length header followed by the bytes. `str_const` binds a
+    // pointer to this header, `str_len`/`str_eq` materialise literal metadata,
+    // and `print_str` passes `header+8,len` to the C runtime. Richer ops
+    // (`str_index`, `str_concat`) remain literal-only in this slice, but this
+    // representation leaves the header in place for those later loads/checks.
+    let (string_defs, string_literals) = collect_string_literals(module);
+    if !string_defs.is_empty() {
+        out.push('\n');
+        for def in &string_defs {
+            let len = def.bytes.len();
+            let bytes = llvm_c_bytes(&def.bytes);
+            out.push_str(&format!(
+                "{} = private unnamed_addr constant {{ i64, [{} x i8] }} {{ i64 {}, [{} x i8] c\"{}\" }}, align 8\n",
+                def.symbol, len, len, len, bytes
+            ));
         }
     }
 
@@ -560,10 +779,76 @@ pub fn lower_iir_to_llvm(
     // ── Function bodies ───────────────────────────────────────────────────
     for func in &module.functions {
         out.push('\n');
-        lower_function(func, &callee_sigs, &globals, &mut out)?;
+        lower_function(func, &callee_sigs, &globals, &string_literals, &mut out)?;
     }
 
     Ok(out)
+}
+
+fn collect_string_literals(
+    module: &IIRModule,
+) -> (Vec<LlvmStringLiteralDef>, HashMap<String, LlvmStringLiteralRef>) {
+    let mut defs = Vec::new();
+    let mut map = HashMap::new();
+    fn intern_string_literal(
+        text: &str,
+        defs: &mut Vec<LlvmStringLiteralDef>,
+        map: &mut HashMap<String, LlvmStringLiteralRef>,
+    ) {
+        if map.contains_key(text) {
+            return;
+        }
+        let symbol = format!("@__twig_str_{}", defs.len());
+        let bytes = text.as_bytes().to_vec();
+        map.insert(text.to_string(), LlvmStringLiteralRef {
+            symbol: symbol.clone(),
+            len: bytes.len(),
+        });
+        defs.push(LlvmStringLiteralDef { symbol, bytes });
+    }
+    for func in &module.functions {
+        let mut fn_values: HashMap<String, String> = HashMap::new();
+        for instr in &func.instructions {
+            match instr.op.as_str() {
+                "str_const" => {
+                    let Some(Operand::Str(s)) = instr.srcs.first() else {
+                        continue;
+                    };
+                    intern_string_literal(s, &mut defs, &mut map);
+                    if let Some(dest) = instr.dest.as_ref() {
+                        fn_values.insert(dest.clone(), s.clone());
+                    }
+                }
+                "str_concat" => {
+                    let (Some(dest), Some(Operand::Var(left)), Some(Operand::Var(right))) = (
+                        instr.dest.as_ref(),
+                        instr.srcs.first(),
+                        instr.srcs.get(1),
+                    ) else {
+                        continue;
+                    };
+                    let (Some(left), Some(right)) = (fn_values.get(left), fn_values.get(right))
+                    else {
+                        continue;
+                    };
+                    let value = format!("{left}{right}");
+                    intern_string_literal(&value, &mut defs, &mut map);
+                    fn_values.insert(dest.clone(), value);
+                }
+                _ => {}
+            }
+        }
+    }
+    (defs, map)
+}
+
+fn llvm_c_bytes(bytes: &[u8]) -> String {
+    let mut out = String::with_capacity(bytes.len() * 3);
+    for b in bytes {
+        out.push('\\');
+        out.push_str(&format!("{:02X}", *b));
+    }
+    out
 }
 
 /// Collect every distinct module-global name (read or written) into a map
@@ -613,6 +898,12 @@ struct FnState<'a> {
     /// comparison.  `jmp_if_true` / `jmp_if_false` consume this directly
     /// without an extra `trunc` round-trip.
     env_i1: HashMap<String, String>,
+    /// IIR string var name → byte length. The pointer itself lives in `env`;
+    /// this sidecar lets `print_str` pass `(base+8,len)` without inventing a
+    /// general string value model for LLVM locals.
+    str_lens: HashMap<String, usize>,
+    /// IIR string var name → literal text for literal-only E4 folds (`str_eq`).
+    str_values: HashMap<String, String>,
     /// Per-function counter for synthesized SSA names — used both for
     /// post-cmp zext'd values and for fallthrough block labels.
     counter: u32,
@@ -625,6 +916,8 @@ struct FnState<'a> {
     /// (`@__twig_global_N`). Built once by `lower_iir_to_llvm` so the same name
     /// resolves to the same symbol across every function (LANG-FULL E6).
     globals: &'a HashMap<String, String>,
+    /// Module-wide map of source literal text → LLVM private constant metadata.
+    string_literals: &'a HashMap<String, LlvmStringLiteralRef>,
     /// Is the current LLVM basic block still **open** (no terminator yet)?
     /// LLVM requires every block to end in a terminator (`br`/`ret`/…). IIR
     /// blocks fall through to the next `label` implicitly, and a block whose
@@ -678,6 +971,7 @@ fn lower_function(
     func: &IIRFunction,
     callee_sigs: &HashMap<String, FnSig>,
     globals: &HashMap<String, String>,
+    string_literals: &HashMap<String, LlvmStringLiteralRef>,
     out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     // ── Header line: `define <ret> @<name>(<params>) {`
@@ -748,10 +1042,13 @@ fn lower_function(
     let mut state = FnState {
         env: HashMap::new(),
         env_i1: HashMap::new(),
+        str_lens: HashMap::new(),
+        str_values: HashMap::new(),
         counter: 0,
         fn_name: &func.name,
         callee_sigs,
         globals,
+        string_literals,
         block_open: true, // the entry block is open until its first terminator.
         slots,
         slot_types,
@@ -792,6 +1089,9 @@ fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
     }
     for instr in &func.instructions {
         if let Some(dest) = &instr.dest {
+            if instr.type_hint == "str" {
+                continue;
+            }
             *counts.entry(dest.as_str()).or_insert(0) += 1;
         }
     }
@@ -1095,11 +1395,247 @@ fn lower_instr(
         "real_to_int_trunc" => lower_real_to_int(instr, state, out, /*floor=*/ false),
         "real_to_int_floor" => lower_real_to_int(instr, state, out, /*floor=*/ true),
 
+        // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
+        "str_const" => lower_str_const(instr, state),
+        "str_concat" => lower_str_concat(instr, state),
+        "str_index" => lower_str_index(instr, state, out),
+        "str_len" => lower_str_len(instr, state),
+        "str_eq" => lower_str_eq(instr, state),
+        "print_str" => lower_print_str(instr, state, out),
+
         other => Err(IIRLlvmError::UnsupportedOp {
             function: fn_name.into(),
             op: other.into(),
         }),
     }
+}
+
+fn lower_str_const(
+    instr: &IIRInstr,
+    state: &mut FnState,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_const", state.fn_name)?.to_string();
+    let literal = match instr.srcs.first() {
+        Some(Operand::Str(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_const requires srcs[0] = Operand::Str(literal)".into(),
+            });
+        }
+    };
+    let info = state.string_literals.get(literal).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_const literal {literal:?} was not collected"),
+        }
+    })?;
+    state.env.insert(dest.clone(), info.symbol.clone());
+    state.str_lens.insert(dest.clone(), info.len);
+    state.str_values.insert(dest, literal.clone());
+    Ok(())
+}
+
+fn lower_print_str(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    if instr.dest.is_some() {
+        return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "print_str must not have a dest".into(),
+        });
+    }
+    let src = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "print_str requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let base = state.env.get(src).cloned().ok_or_else(|| {
+        IIRLlvmError::UndefinedVariable {
+            function: state.fn_name.into(),
+            name: src.clone(),
+        }
+    })?;
+    let len = state.str_lens.get(src).copied().ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("print_str source {src:?} is not a string literal value"),
+        }
+    })?;
+    let bytes = state.fresh("str");
+    out.push_str(&format!(
+        "  {bytes} = getelementptr inbounds i8, ptr {base}, i64 8\n"
+    ));
+    out.push_str(&format!("  call void @__print_str(ptr {bytes}, i64 {len})\n"));
+    Ok(())
+}
+
+fn lower_str_len(
+    instr: &IIRInstr,
+    state: &mut FnState,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_len", state.fn_name)?.to_string();
+    let src = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_len requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let len = state.str_lens.get(src).copied().ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_len source {src:?} is not a string literal value"),
+        }
+    })?;
+    state.env.insert(dest, len.to_string());
+    Ok(())
+}
+
+fn lower_str_concat(
+    instr: &IIRInstr,
+    state: &mut FnState,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_concat", state.fn_name)?.to_string();
+    let left = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_concat requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let right = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_concat requires srcs[1] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let left_value = state.str_values.get(left).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_concat left source {left:?} is not a string literal value"),
+        }
+    })?;
+    let right_value = state.str_values.get(right).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_concat right source {right:?} is not a string literal value"),
+        }
+    })?;
+    let value = format!("{left_value}{right_value}");
+    let info = state.string_literals.get(&value).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_concat value {value:?} was not collected"),
+        }
+    })?;
+    state.env.insert(dest.clone(), info.symbol.clone());
+    state.str_lens.insert(dest.clone(), info.len);
+    state.str_values.insert(dest, value);
+    Ok(())
+}
+
+fn lower_str_index(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_index", state.fn_name)?.to_string();
+    let src = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_index requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let idx = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_index requires srcs[1] = Operand::Var(idx)".into(),
+            });
+        }
+    };
+    let literal = state.str_values.get(src).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_index source {src:?} is not a string literal value"),
+        }
+    })?;
+    let idx_value = state
+        .env
+        .get(idx)
+        .and_then(|value| value.parse::<i64>().ok())
+        .ok_or_else(|| IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_index index {idx:?} is not a constant integer value"),
+        })?;
+    let Some(byte) = usize::try_from(idx_value)
+        .ok()
+        .and_then(|idx| literal.as_bytes().get(idx))
+        .copied()
+    else {
+        out.push_str("  call void @llvm.trap()\n");
+        state.env.insert(dest, "0".to_string());
+        return Ok(());
+    };
+    state.env.insert(dest, byte.to_string());
+    Ok(())
+}
+
+fn lower_str_eq(
+    instr: &IIRInstr,
+    state: &mut FnState,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_eq", state.fn_name)?.to_string();
+    let left = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_eq requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let right = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_eq requires srcs[1] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let left_value = state.str_values.get(left).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_eq left source {left:?} is not a string literal value"),
+        }
+    })?;
+    let right_value = state.str_values.get(right).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_eq right source {right:?} is not a string literal value"),
+        }
+    })?;
+    state.env.insert(dest, if left_value == right_value { "1" } else { "0" }.into());
+    Ok(())
 }
 
 /// Lower `int_to_real dest <- x` — widen an `i64` to `f64` with `sitofp`

@@ -3,6 +3,54 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.21.0] — 2026-06-27 (LANG-FULL E4 — literal string index on WASM)
+
+The WASM backend now accepts and lowers direct-literal `str_index`:
+
+- `str_index s, i` over a prior `str_const` emits a literal-length guard
+  (`idx >=u len` -> `unreachable`) and then loads the byte with `i32.load8_u`
+  from the string data segment.
+- `i64` results zero-extend the loaded byte with `i64.extend_i32_u`.
+- Twig `(string-ref "ABC" 1)` now returns `66` in the WASM matrix column.
+- Non-literal string values and broader dynamic string algebra remain outside
+  this slice.
+
+## [0.20.0] — 2026-06-27 (LANG-FULL E4 — literal string metadata on WASM)
+
+The WASM backend now accepts and lowers `str_len`, `str_eq`, and literal
+`str_concat` for direct string literals:
+
+- `str_len s` over a prior `str_const s = "..."` materialises the stored byte
+  length as an `i64.const`/`i32.const`, depending on the destination local type.
+- `str_eq a, b` over two prior literal `str_const` values materialises `1`/`0`
+  from the stored bytes, again matching the destination local type.
+- `str_concat a, b` over two prior literal `str_const` values creates another
+  string-data entry whose bytes can feed the same `str_len`, `str_eq`, or
+  `print_str` metadata path.
+- The lowering reuses the same linear-memory data metadata introduced for
+  `print_str`; no dynamic runtime string representation is exposed.
+- Richer string ops (`str_index`) and non-literal string values still fail
+  closed.
+- Unit coverage now locks the validator acceptance path, and the lang matrix
+  proves `(string-length "HELLO")` returns `5` and
+  `(string=? "HELLO" "HELLO")` returns `1`, and
+  `(string-length (string-append "AB" "CDE"))` returns `5` in the WASM column.
+
+## [0.19.0] — 2026-06-27 (LANG-FULL E4 / BA4 — BASIC string literal PRINT on WASM)
+
+The WASM backend now lowers the E4 literal-output pair:
+
+- `str_const` stores printable ASCII literal bytes in a linear-memory data
+  segment and materialises the string value as an `i32` byte pointer.
+- `print_str` calls the new host import `env.__print_str(i32 ptr, i32 len)`.
+- Modules using string output get a one-page linear memory; if E5 arrays share
+  that memory later, the `__array_bump` global starts after the string data.
+
+The literal-output scope is intentionally narrow. `str_len`, `str_index`,
+`str_concat`, and `str_eq` still fail closed until the full byte-string runtime
+lands. Verified by the backend tests and by RUNNING the lang matrix row
+`10 PRINT "HELLO"` on the in-repo `wasm-runtime`.
+
 ## [0.18.0] — 2026-06-26 (LANG-FULL BA1-WASM — GOSUB/RETURN dispatch-loop fix)
 
 **Root-cause fix:** the WASM dispatch-loop lowering used a depth formula that

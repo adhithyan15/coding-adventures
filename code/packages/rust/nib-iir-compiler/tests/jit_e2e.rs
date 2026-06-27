@@ -21,10 +21,11 @@ use vm_core::value::Value;
 /// `entry`'s call.  The interpreter path and JIT-compiled path yield
 /// the same observable value; we don't care which one fired here.
 fn run_nib_through_jit(source: &str, entry: &str) -> Value {
-    let mut module = compile_source(source, "nib_jit_e2e")
-        .expect("Nib source must compile");
+    let mut module = compile_source(source, "nib_jit_e2e").expect("Nib source must compile");
 
-    let entry_fn = module.functions.iter()
+    let entry_fn = module
+        .functions
+        .iter()
         .find(|f| f.name == entry)
         .unwrap_or_else(|| panic!("module must have function {entry:?}"));
     assert_eq!(
@@ -39,7 +40,8 @@ fn run_nib_through_jit(source: &str, entry: &str) -> Value {
     let error_handle = backend.error_handle();
 
     let mut jit = JITCore::new(&mut vm, Box::new(backend));
-    let result_opt = jit.execute_with_jit(&mut vm, &mut module, entry, &[])
+    let result_opt = jit
+        .execute_with_jit(&mut vm, &mut module, entry, &[])
         .expect("JIT execution must succeed");
 
     if let Some(e) = error_handle.lock().unwrap().clone() {
@@ -54,8 +56,11 @@ fn run_nib_through_jit(source: &str, entry: &str) -> Value {
 fn nib_jit_returns_constant_42() {
     let src = "fn main() -> u8 { return 42; }";
     let v = run_nib_through_jit(src, "main");
-    assert_eq!(v.as_i64(), Some(42),
-        "Nib fn main() -> u8 returning 42 should yield 42 via JIT; got: {v:?}");
+    assert_eq!(
+        v.as_i64(),
+        Some(42),
+        "Nib fn main() -> u8 returning 42 should yield 42 via JIT; got: {v:?}"
+    );
 }
 
 /// Arithmetic + return — exercises typed const + add + ret.
@@ -63,8 +68,11 @@ fn nib_jit_returns_constant_42() {
 fn nib_jit_inline_arithmetic() {
     let src = "fn main() -> u8 { return 30 + 12; }";
     let v = run_nib_through_jit(src, "main");
-    assert_eq!(v.as_i64(), Some(42),
-        "Nib fn main() returning 30+12 should yield 42 via JIT; got: {v:?}");
+    assert_eq!(
+        v.as_i64(),
+        Some(42),
+        "Nib fn main() returning 30+12 should yield 42 via JIT; got: {v:?}"
+    );
 }
 
 /// `let` bindings + arithmetic + return.
@@ -72,8 +80,11 @@ fn nib_jit_inline_arithmetic() {
 fn nib_jit_let_and_add() {
     let src = "fn main() -> u4 { let x: u4 = 7; return x; }";
     let v = run_nib_through_jit(src, "main");
-    assert_eq!(v.as_i64(), Some(7),
-        "Nib fn main() with let x = 7; return x should yield 7 via JIT; got: {v:?}");
+    assert_eq!(
+        v.as_i64(),
+        Some(7),
+        "Nib fn main() with let x = 7; return x should yield 7 via JIT; got: {v:?}"
+    );
 }
 
 /// `if`/`else` branches through the JIT.
@@ -81,6 +92,9 @@ fn nib_jit_let_and_add() {
 fn nib_jit_if_else() {
     let src = "fn main() -> u8 { if 1 == 1 { return 100; } else { return 200; } }";
     let v = run_nib_through_jit(src, "main");
-    assert_eq!(v.as_i64(), Some(100),
-        "Nib if 1==1 should take the then branch and return 100 via JIT; got: {v:?}");
+    assert_eq!(
+        v.as_i64(),
+        Some(100),
+        "Nib if 1==1 should take the then branch and return 100 via JIT; got: {v:?}"
+    );
 }
