@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `deviceModelBehaviorAuditFixtures` runnable one-device DC bias fixtures
+  with reference deck lines and stable probe-voltage windows for diode, BJT,
+  JFET, and Level-1 MOS model-depth audits, matching Python and Rust.
 - Add configurable nonlinear Newton damping through
   `dcOp(..., { newtonStepLimit })`, plus stable diagnostics for
   `newtonStepLimit`, `limitedNewtonSteps`, and `minimumDampingFactor`,

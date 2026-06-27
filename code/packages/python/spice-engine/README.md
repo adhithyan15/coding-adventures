@@ -199,7 +199,10 @@ disable the limiter.
 `mosfet_from_model_card()` provide the shared `.model` alias surface for diode,
 BJT, JFET, and Level-1 MOS cards. `device_model_audit_fixtures()` returns the
 canonical cross-language fixture cards used to keep the Python, Rust, and
-TypeScript ports aligned.
+TypeScript ports aligned. `device_model_behavior_audit_fixtures()` extends
+those cards into runnable one-device DC bias fixtures with reference deck lines
+and stable expected probe-voltage windows for diode, BJT, JFET, and Level-1 MOS
+model-depth audits.
 
 `DigitalEventStream`, `DigitalLogicLevels`, and `DigitalThresholds` provide the
 first mixed-signal bridge surface: digital event streams can drive finite-edge

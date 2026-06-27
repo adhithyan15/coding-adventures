@@ -330,9 +330,11 @@ from spice_engine.engine import (
     transient_with_digital_event_streams_corners,
 )
 from spice_engine.model_cards import (
+    DeviceModelBehaviorFixture,
     NormalizedModelCard,
     bjt_from_model_card,
     device_model_audit_fixtures,
+    device_model_behavior_audit_fixtures,
     diode_from_model_card,
     jfet_from_model_card,
     mosfet_from_model_card,
@@ -452,7 +454,9 @@ __all__ = [
     "DistortionPoint",
     "DistortionResult",
     "Element",
+    "DeviceModelBehaviorFixture",
     "device_model_audit_fixtures",
+    "device_model_behavior_audit_fixtures",
     "ExpWaveform",
     "FourierHarmonic",
     "FourierProbeResult",

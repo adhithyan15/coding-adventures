@@ -3,10 +3,10 @@ use spice_engine::{
     dc_corners_parallel, dc_initial_vector_from_conditions, dc_op, dc_op_with_initial_conditions,
     dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
     dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
-    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
-    format_corner_temperature_dc_table, format_dc_sweep_table, format_measurement_table,
-    format_temperature_dc_table, jfet_from_model_card, measure_dc_sweep_deck,
-    measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
+    device_model_behavior_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
+    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
+    format_measurement_table, format_temperature_dc_table, jfet_from_model_card,
+    measure_dc_sweep_deck, measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
     normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs,
     Ccvs, Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource,
     CustomModel, DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity,
@@ -126,6 +126,46 @@ fn model_card_audit_fixtures_cover_supported_device_families() {
     assert_close(*fixtures[1].parameters.get("BF").unwrap(), 125.0);
     assert_close(*fixtures[2].parameters.get("VTO").unwrap(), -1.8);
     assert_close(*fixtures[3].parameters.get("VT0").unwrap(), 0.55);
+}
+
+#[test]
+fn device_model_behavior_audit_fixtures_run_reference_bias_points() {
+    let fixtures = device_model_behavior_audit_fixtures().unwrap();
+    assert_eq!(
+        fixtures
+            .iter()
+            .map(|fixture| fixture.name.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "diode-forward-bias",
+            "bjt-emitter-follower",
+            "jfet-source-bias",
+            "mos-level1-common-source"
+        ]
+    );
+
+    for fixture in fixtures {
+        let result = dc_op(&fixture.circuit).unwrap();
+        let value = *result
+            .node_voltages
+            .get(&fixture.probe_node)
+            .expect("fixture probe node should be present");
+        assert!(result.converged);
+        assert!(
+            value >= fixture.expected_min && value <= fixture.expected_max,
+            "{} expected {} <= {} <= {}",
+            fixture.name,
+            fixture.expected_min,
+            value,
+            fixture.expected_max
+        );
+        assert!(fixture.deck_lines[0].starts_with("* device-model behavior fixture:"));
+        assert!(fixture.deck_lines.iter().any(|line| line == ".op"));
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line.starts_with(".model ")));
+    }
 }
 
 #[test]

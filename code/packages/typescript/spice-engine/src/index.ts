@@ -994,6 +994,17 @@ export interface NormalizedModelCard {
   readonly unsupportedParameters: readonly string[];
 }
 
+export interface DeviceModelBehaviorFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly circuit: Circuit;
+  readonly probeNode: string;
+  readonly expectedMin: number;
+  readonly expectedMax: number;
+  readonly deckLines: readonly string[];
+}
+
 export interface Vccs {
   readonly kind: "vccs";
   readonly name: string;
@@ -7028,6 +7039,136 @@ export function deviceModelAuditFixtures(): readonly NormalizedModelCard[] {
       NSUB: 1.6,
       CJD: 3.0e-13,
     }),
+  ];
+}
+
+function modelCardByName(models: readonly NormalizedModelCard[]): Map<string, NormalizedModelCard> {
+  return new Map(models.map((model) => [model.name, model]));
+}
+
+function requiredModel(
+  models: ReadonlyMap<string, NormalizedModelCard>,
+  name: string,
+): NormalizedModelCard {
+  const model = models.get(name);
+  if (model === undefined) {
+    throw invalidElement("deviceModelBehaviorAuditFixtures", `missing ${name} model fixture`);
+  }
+  return model;
+}
+
+export function deviceModelBehaviorAuditFixtures(): readonly DeviceModelBehaviorFixture[] {
+  const models = modelCardByName(deviceModelAuditFixtures());
+
+  const diodeModel = requiredModel(models, "Dfast");
+  const diodeCircuit = new Circuit();
+  diodeCircuit.add(voltageSource("Vbias", "vin", "0", 0.8));
+  diodeCircuit.add(resistor("Rlimit", "vin", "out", 1_000.0));
+  diodeCircuit.add(diodeFromModelCard("D1", "out", "0", diodeModel));
+
+  const bjtModel = requiredModel(models, "Qsmall");
+  const bjtCircuit = new Circuit();
+  bjtCircuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+  bjtCircuit.add(voltageSource("Vbase", "base", "0", 0.72));
+  bjtCircuit.add(resistor("Rload", "out", "0", 1_000.0));
+  bjtCircuit.add(bjtFromModelCard("Q1", "vcc", "base", "out", bjtModel));
+
+  const jfetModel = requiredModel(models, "Jn");
+  const jfetCircuit = new Circuit();
+  jfetCircuit.add(voltageSource("Vdd", "vdd", "0", 10.0));
+  jfetCircuit.add(voltageSource("Vg", "gate", "0", 0.0));
+  jfetCircuit.add(resistor("Rd", "vdd", "drain", 2_000.0));
+  jfetCircuit.add(resistor("Rs", "source", "0", 1_000.0));
+  jfetCircuit.add(jfetFromModelCard("J1", "drain", "gate", "source", jfetModel));
+
+  const mosModel = requiredModel(models, "Mn");
+  const mosCircuit = new Circuit();
+  mosCircuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
+  mosCircuit.add(voltageSource("Vgate", "gate", "0", 1.8));
+  mosCircuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+  mosCircuit.add(mosfetFromModelCard("M1", "out", "gate", "0", "0", mosModel));
+
+  return [
+    {
+      name: "diode-forward-bias",
+      kind: diodeModel.kind,
+      model: diodeModel,
+      circuit: diodeCircuit,
+      probeNode: "out",
+      expectedMin: 0.55,
+      expectedMax: 0.65,
+      deckLines: [
+        "* device-model behavior fixture: diode-forward-bias",
+        ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+        "Vbias vin 0 0.8",
+        "Rlimit vin out 1k",
+        "D1 out 0 Dfast",
+        ".op",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "bjt-emitter-follower",
+      kind: bjtModel.kind,
+      model: bjtModel,
+      circuit: bjtCircuit,
+      probeNode: "out",
+      expectedMin: 0.08,
+      expectedMax: 0.18,
+      deckLines: [
+        "* device-model behavior fixture: bjt-emitter-follower",
+        ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+        "Vcc vcc 0 5",
+        "Vbase base 0 0.72",
+        "Q1 vcc base out Qsmall",
+        "Rload out 0 1k",
+        ".op",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "jfet-source-bias",
+      kind: jfetModel.kind,
+      model: jfetModel,
+      circuit: jfetCircuit,
+      probeNode: "source",
+      expectedMin: 0.80,
+      expectedMax: 0.95,
+      deckLines: [
+        "* device-model behavior fixture: jfet-source-bias",
+        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+        "Vdd vdd 0 10",
+        "Vg gate 0 0",
+        "Rd vdd drain 2k",
+        "Rs source 0 1k",
+        "J1 drain gate source Jn",
+        ".op",
+        ".save V(source)",
+        ".end",
+      ],
+    },
+    {
+      name: "mos-level1-common-source",
+      kind: mosModel.kind,
+      model: mosModel,
+      circuit: mosCircuit,
+      probeNode: "out",
+      expectedMin: 0.55,
+      expectedMax: 0.85,
+      deckLines: [
+        "* device-model behavior fixture: mos-level1-common-source",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+        "Vdd vdd 0 1.8",
+        "Vgate gate 0 1.8",
+        "Rload vdd out 1k",
+        "M1 out gate 0 0 Mn",
+        ".op",
+        ".save V(out)",
+        ".end",
+      ],
+    },
   ];
 }
 
