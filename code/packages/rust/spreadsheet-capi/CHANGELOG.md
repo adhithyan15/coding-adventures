@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.0
+
+**Multi-sheet C ABI.** Expose the multi-sheet session through the C ABI:
+`sc_sheet_names` (heap char* JSON `{"sheets":[..],"active":i}`, free with
+`sc_string_free`), `sc_active_sheet` (u32), `sc_set_active_sheet`, `sc_add_sheet`,
+`sc_rename_sheet`, `sc_delete_sheet`, `sc_move_sheet` (int 1/0). Null-guarded;
+`include/spreadsheet.h` updated.
+
 ## 0.11.0
 
 **Find / replace — `sc_find_all` / `sc_replace_all`.**
