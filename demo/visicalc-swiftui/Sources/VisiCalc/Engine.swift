@@ -229,6 +229,51 @@ final class SpreadsheetSession {
     func replaceAll(_ query: String, _ replacement: String, _ matchCase: Bool) -> Int {
         Int(sc_replace_all(handle, query, replacement, matchCase ? 1 : 0))
     }
+
+    // MARK: - Multi-sheet workbook
+    // The workbook holds several sheets; bare-A1 ops address the ACTIVE one, while
+    // a formula reaches across with a qualifier (=Summary!A1). These manage the
+    // sheet set + the active sheet; the host re-reads cells/raw afterwards. The
+    // single-sheet path is unchanged — an unqualified A1 is the active sheet.
+
+    /// The sheet names in tab order plus the active 0-based index. A malformed
+    /// engine payload yields an empty workbook view (defensive, like `window`).
+    func sheetNames() -> (names: [String], active: Int) {
+        let json = take(sc_sheet_names(handle))
+        guard
+            let data = json.data(using: .utf8),
+            let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { return ([], 0) }
+        let names = obj["sheets"] as? [String] ?? []
+        let active = obj["active"] as? Int ?? 0
+        return (names, active)
+    }
+
+    /// The active sheet's 0-based index.
+    func activeSheet() -> Int { Int(sc_active_sheet(handle)) }
+
+    /// Switch the active sheet by 0-based index; false for an out-of-range index.
+    /// `index` is clamped to ≥ 0 before the UInt32 conversion (a negative would
+    /// otherwise trap); the engine validates the upper bound.
+    @discardableResult
+    func setActiveSheet(_ index: Int) -> Bool { sc_set_active_sheet(handle, UInt32(max(0, index))) != 0 }
+
+    /// Add a new sheet named `name` and make it active; false for an empty or
+    /// duplicate name.
+    @discardableResult
+    func addSheet(_ name: String) -> Bool { sc_add_sheet(handle, name) != 0 }
+
+    /// Rename the sheet at `index` to `newName` (the engine rewrites every
+    /// referencing formula's qualifier). False for a bad index / empty / duplicate.
+    @discardableResult
+    func renameSheet(_ index: Int, _ newName: String) -> Bool {
+        sc_rename_sheet(handle, UInt32(max(0, index)), newName) != 0
+    }
+
+    /// Delete the sheet at `index` (inbound references become `#REF!`). False for
+    /// a bad index or an attempt to delete the last remaining sheet.
+    @discardableResult
+    func deleteSheet(_ index: Int) -> Bool { sc_delete_sheet(handle, UInt32(max(0, index))) != 0 }
 }
 
 /// SwiftUI model: an engine-backed 5×5 spreadsheet. `@Published` properties

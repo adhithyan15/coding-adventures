@@ -279,4 +279,51 @@ final class WindowedModelTests: XCTestCase {
         XCTAssertEqual(m.replaceAll("H1", "H2"), 1)
         XCTAssertEqual(m.rowCells(3)[7], "25") // =H2+5
     }
+
+    // Multi-sheet workbook + cross-sheet references (the sheet tab bar drives
+    // sheetNames/activeSheet/selectSheet/addSheet/renameSheet/deleteSheet): the
+    // workbook holds several sheets; bare-A1 ops address the ACTIVE sheet, while a
+    // formula reaches ACROSS with a qualifier (=Summary!B3). This proves the
+    // Swift ↔ C ABI path drives sheet management + cross-sheet recompute.
+    func testMultiSheetCrossSheetReferences() {
+        let s = SpreadsheetSession()
+        XCTAssertEqual(s.sheetNames().names, ["Sheet1"])
+        XCTAssertTrue(s.addSheet("Summary"))
+        XCTAssertEqual(s.sheetNames().names, ["Sheet1", "Summary"])
+        // Edit the Summary sheet (index 1): B3 = A1+A2 = 300.
+        XCTAssertTrue(s.setActiveSheet(1))
+        XCTAssertEqual(s.activeSheet(), 1)
+        s.setCell("A1", "100"); s.setCell("A2", "200"); s.setCell("B3", "=A1+A2")
+        XCTAssertEqual(s.window(3, 2, 3, 2)[0][0], "300")
+        // Back on Sheet1, reach ACROSS with a qualifier.
+        XCTAssertTrue(s.setActiveSheet(0))
+        s.setCell("G1", "=Summary!B3")
+        XCTAssertEqual(s.window(1, 7, 1, 7)[0][0], "300")
+        // Editing a Summary input recomputes the cross-sheet dependent live.
+        s.setActiveSheet(1); s.setCell("A1", "150") // Summary!A1: 100 → 150, B3 = 350
+        s.setActiveSheet(0)
+        XCTAssertEqual(s.window(1, 7, 1, 7)[0][0], "350")
+        // Rename Summary → Totals; the qualifier in G1 is rewritten by the engine.
+        XCTAssertTrue(s.renameSheet(1, "Totals"))
+        XCTAssertEqual(s.sheetNames().names, ["Sheet1", "Totals"])
+        XCTAssertTrue(s.getRaw("G1").contains("Totals"))
+        XCTAssertEqual(s.window(1, 7, 1, 7)[0][0], "350")
+        // Delete the referenced sheet → the dangling cross-sheet ref becomes #REF!.
+        XCTAssertTrue(s.deleteSheet(1))
+        XCTAssertEqual(s.sheetNames().names, ["Sheet1"])
+        XCTAssertTrue(s.window(1, 7, 1, 7)[0][0].contains("#REF!"))
+        // The engine keeps at least one sheet: deleting the last one is a no-op.
+        XCTAssertFalse(s.deleteSheet(0))
+    }
+
+    // The WindowedSheetModel seed exposes Sheet1/Summary with a live cross-ref.
+    func testWindowedModelSeedsSummarySheet() {
+        let m = WindowedSheetModel()
+        XCTAssertEqual(m.sheetNames(), ["Sheet1", "Summary"])
+        XCTAssertEqual(m.activeSheet(), 0)
+        XCTAssertEqual(m.rowCells(1)[6], "300") // Sheet1!G1 (col 7, index 6)
+        m.selectSheet(1)
+        XCTAssertEqual(m.activeSheet(), 1)
+        XCTAssertEqual(m.rowCells(3)[1], "300") // Summary!B3 = A1+A2 = 100+200
+    }
 }
