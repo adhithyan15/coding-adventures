@@ -844,17 +844,11 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("Hi"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
-    // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
-    // and the harness compares stdout (LM-L BASIC). On WASM the same `PRINT` lowers to
-    // `call $__print_i64`, imported as `env.__print_i64 : (i64) -> ()`; `run_wasm`'s
-    // `PrintHost` resolves that import and captures the printed value (LM-W BASIC). On
-    // JVM `print_i64` lowers to `invokestatic env/BasicRuntime.println(J)V`; `run_jvm`
-    // compiles that host class with `javac`, discards the entry result, and captures
-    // `System.out` (LM-J BASIC). On CLR `print_i64` lowers to `Console.WriteLine(int32)`
-    // and the launcher discards (rather than re-prints) the entry result; `run_clr`
-    // captures `Console` (LM-C BASIC). On the VM, `run_vm` registers a `print_i64`
-    // builtin closure that captures the printed integer into a buffer (Phase V).
+    // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. BA7-1b makes even the
+    // integer-spelled literal a scalar `f64`, so this baseline cell now runs through
+    // `__basic_print_real` and the shared f64 backend tracks. The helper's current
+    // whole-valued contract truncates with E8 `real_to_int_trunc`, then reuses BA2's
+    // digit printer, keeping the observable output identical on all 7 backends.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
@@ -991,13 +985,11 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("5 6"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // Dartmouth BASIC — BA7-1 staged real arithmetic. A decimal spelling
-    // (`6.0`, `7.0`) now enters the IIR `f64` value path instead of being
-    // silently truncated during expression lowering; `*` is an `f64` multiply,
-    // and `PRINT` routes through `__basic_print_real`, whose current BA7-1
-    // contract is whole-valued output via E8 `real_to_int_trunc` plus the
-    // existing BA2 digit printer. Fractional formatting remains the next BA7
-    // slice, so this proof stays intentionally whole-valued: 6.0 * 7.0 => 42.
+    // Dartmouth BASIC — BA7-1 scalar real arithmetic. Decimal spellings (`6.0`,
+    // `7.0`) stay on the same `f64` value path as integer-spelled literals; `*`
+    // is an `f64` multiply, and `PRINT` routes through `__basic_print_real`.
+    // Fractional formatting remains the next BA7 slice, so this proof stays
+    // intentionally whole-valued: 6.0 * 7.0 => 42.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",

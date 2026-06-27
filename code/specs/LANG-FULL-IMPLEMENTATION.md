@@ -12,7 +12,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Twig | `42` | rich Lisp frontend, but only typed int-arith/`if` clears the backend validators; lists/lambdas/strings/`print`/symbols need the VM only |
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
-| Dartmouth BASIC | `PRINT 42`, `GOSUB`/`RETURN`, arrays, data, functions, staged real arithmetic | strings, fractional real formatting / real DATA+arrays, and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3), `READ`/`DATA`/`RESTORE` (BA6), `GOSUB`/`RETURN` (BA1), and BA7 decimal arithmetic all run on every backend |
+| Dartmouth BASIC | `PRINT 42`, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic | strings, fractional real formatting / real DATA+arrays, and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3), `READ`/`DATA`/`RESTORE` (BA6), `GOSUB`/`RETURN` (BA1), and BA7 scalar `f64` arithmetic all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
 
@@ -483,15 +483,15 @@ backend immediately) come before the enabler-dependent items.
   Integer DATA only (real DATA = follow-up).
 - ◑ **BA7** — floating-point (needs **E3**, ✅; **E8**, ✅). Design spec is
   **decision-complete** ([`lang-full-ba7-floating-point.md`](lang-full-ba7-floating-point.md))
-  by historical Dartmouth BASIC fidelity (no sign-off gate). **BA7-1a landed**
-  (`dartmouth-basic-iir-compiler` 0.11.0): decimal/exponent literals now lower to
-  `Operand::Float`, mixed integer/real arithmetic widens with E8 `int_to_real`,
-  scalar slots promote to `f64`, array/index integer boundaries use
-  `real_to_int_trunc`, and `PRINT` has a staged `__basic_print_real(x: f64)`
-  helper for whole-valued output. **Verified by RUNNING** `PRINT 6.0 * 7.0` ⇒
-  `42` on native/LLVM/WASM/JVM/CLR/VM/JIT. Remaining BA7 slices: full
-  all-`f64` value-model cutover; BA7-2 fractional formatting + `E` notation
-  (6 significant digits, no leading zero); BA7-3 real comparisons/FOR/arrays/DATA.
+  by historical Dartmouth BASIC fidelity (no sign-off gate). **BA7-1a/1b landed**
+  (`dartmouth-basic-iir-compiler` 0.11.0): decimal/exponent and integer-spelled
+  scalar literals now lower to `Operand::Float`; scalar arithmetic/variables,
+  `DEF FN`, `IF`, `FOR`, and `PRINT` run as `f64`; array/index integer
+  boundaries use `real_to_int_trunc`; and `PRINT` has a staged
+  `__basic_print_real(x: f64)` helper for whole-valued output. **Verified by
+  RUNNING** `PRINT 42` and `PRINT 6.0 * 7.0` ⇒ `42` on
+  native/LLVM/WASM/JVM/CLR/VM/JIT. Remaining BA7 slices: fractional formatting +
+  `E` notation (6 significant digits, no leading zero), and real `DATA`/arrays.
 
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`
@@ -580,9 +580,8 @@ backend immediately) come before the enabler-dependent items.
 
 ## Suggested global ordering
 
-1. **BA7 numeric tail** — finish BASIC floating point after the BA7-1a decimal
-   arithmetic foothold: fractional formatting, full all-`f64` cutover, and real
-   DATA/arrays/FOR coverage.
+1. **BA7 numeric tail** — finish BASIC floating point after the BA7-1a/1b scalar
+   cutover: fractional formatting, `E` notation, and real DATA/arrays.
 2. **E4 strings** — unblock BASIC string `PRINT`, ALGOL string I/O, and Twig strings
    with one shared string value model instead of per-frontend shortcuts.
 3. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record

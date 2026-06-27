@@ -1,28 +1,31 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
-## 0.11.0 — 2026-06-27 — staged BA7 real arithmetic + whole-valued `PRINT`
+## 0.11.0 — 2026-06-27 — BA7 scalar real arithmetic + whole-valued `PRINT`
 
-BA7 starts the Dartmouth BASIC numeric cutover without forcing every existing
-integer-oriented path to change in one blast:
+BA7 moves Dartmouth BASIC's scalar numeric model onto `f64` while keeping the
+remaining integer boundaries explicit:
 
-- Decimal/exponent literals (`6.0`, `1E3`) now lower as `Operand::Float` with an
-  `f64` type hint instead of being silently truncated to `i64`.
-- Expression lowering carries a typed value (`i64` or `f64`) through arithmetic,
-  `LET`, `IF`, `FOR`/`NEXT`, and `PRINT`. Mixed integer/real arithmetic widens
-  the integer side with E8 `int_to_real` and emits the arithmetic op at `f64`.
-  Integer-spelled programs still emit `i64`, so existing BA1/BA2/BA3/BA5/BA6
-  cells keep their old slot shape.
-- Scalar variables are promoted to real once a real value flows into them, so a
-  backend never sees the same BASIC scalar slot flip between `i64` and `f64`.
-  Integer-only boundaries remain explicit: array subscripts and integer array
-  elements use E8 `real_to_int_trunc` when fed a real expression; `DATA` remains
-  integer-only for now.
-- `PRINT` chooses a new synthetic `__basic_print_real(x: f64)` helper for real
+- Numeric literals, including integer-spelled literals like `42`, now lower as
+  `Operand::Float` with an `f64` type hint instead of being silently truncated to
+  or preserved as `i64`.
+- Expression lowering carries `f64` through scalar arithmetic, `LET`, `IF`,
+  `FOR`/`NEXT`, `DEF FN`, and `PRINT`. Scalar variables default to real slots, so
+  a backend never sees the same BASIC scalar flip between integer and real
+  storage.
+- Integer-only boundaries remain explicit: line numbers, `DIM` bounds, DATA
+  storage, array subscripts/elements, and GOSUB return stacks still use `i64`.
+  Array subscripts and integer array elements use E8 `real_to_int_trunc` when fed
+  a scalar real expression; real `DATA` and real array elements remain follow-up
+  BA7 work.
+- `READ` and `INPUT` still consume integer sources today, then widen into scalar
+  `f64` variables with E8 `int_to_real`.
+- `PRINT` chooses a new synthetic `__basic_print_real(x: f64)` helper for numeric
   items. This BA7-1 helper implements whole-valued output by truncating with E8
   `real_to_int_trunc` and delegating to the BA2 digit printer. Fractional
   formatting and `E` notation remain the next BA7 slice.
-- Verified by frontend unit tests and an executed `lang-aot` matrix program:
-  `PRINT 6.0 * 7.0` => `42` on native / LLVM / WASM / JVM / CLR / VM / JIT.
+- Verified by frontend unit tests, backend validator/encoder smokes, and executed
+  `lang-aot` matrix programs: `PRINT 42` and `PRINT 6.0 * 7.0` => `42` on native
+  / LLVM / WASM / JVM / CLR / VM / JIT.
 
 ## 0.10.0 — 2026-06-26 — `GOSUB` / `RETURN` (LANG-FULL BA1, enabler E7)
 

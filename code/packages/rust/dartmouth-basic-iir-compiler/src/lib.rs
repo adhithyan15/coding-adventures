@@ -14,15 +14,15 @@
 //!
 //! ## V1 scope
 //!
-//! Integer-first BASIC with a staged BA7 real path.  Integer-spelled programs
-//! still lower as `i64`, while decimal/exponent literals (`3.14`, `1E3`) and
-//! mixed arithmetic carry `f64` through `LET`/`IF`/`FOR`/`PRINT`.  Fractional
-//! real formatting, real `DATA`/arrays, and the final all-`f64` value-model
-//! cutover remain BA7 follow-ups.
+//! BA7 scalar BASIC uses the historical Dartmouth numeric model: scalar
+//! literals, variables, arithmetic, `DEF FN`, `FOR`, `IF`, and `PRINT` lower as
+//! `f64`.  Integer `i64` remains at structural boundaries: line numbers, `DIM`
+//! bounds, DATA storage, array subscripts/elements, and GOSUB return stacks.
+//! Fractional real formatting and real `DATA`/arrays remain BA7 follow-ups.
 //!
 //! | Statement     | Lowering |
 //! |---------------|----------|
-//! | `LET A = expr` | `<eval expr → t>; mov A = t` (`i64` or staged BA7 `f64`) |
+//! | `LET A = expr` | `<eval expr → t>; mov A = t` (`f64` scalar values; explicit `i64` boundaries) |
 //! | `PRINT a; b, c` | per item `<eval → v>; call "__basic_print_int"/"__basic_print_real", v`, with `;`=tight / `,`=space separators and a trailing `putchar(10)` newline (BA2/BA7) |
 //! | `INPUT X`      | `call_builtin "input_i64" -> X` |
 //! | `IF cond THEN m` | `<eval cond → c>; jmp_if_true c, "line_m"` |
@@ -237,10 +237,9 @@ struct Compiler {
     /// expression paths whether a subscripted `A(I)` is a real array
     /// access (→ `array_set`/`array_get`) or an undeclared use (an error).
     arrays: std::collections::HashSet<String>,
-    /// Scalar value types learned while lowering `main`.  BA7 starts the
-    /// BASIC real-value cutover incrementally: integer-only programs keep their
-    /// i64 slots, while decimal/exponent literals and any arithmetic fed by
-    /// them carry f64 slots through LET/IF/PRINT.
+    /// Scalar value types learned while lowering `main`.  BA7 makes BASIC
+    /// scalar values real (`f64`), while array/DATA/GOSUB structural storage
+    /// remains explicitly `i64` until those BA7 follow-ups land.
     scalar_types: std::collections::HashMap<String, BasicScalarType>,
     /// The `DATA` pool (BA6): every numeric literal from every `DATA`
     /// statement, gathered in line-number order by a pre-pass.  `READ`
@@ -549,12 +548,15 @@ impl Compiler {
 
         let var_name = scalar_variable_name(var_node)?;
         let val = self.emit_expr(expr_node)?;
-        let target_ty = match (self.scalar_types.get(&var_name).copied(), val.ty) {
-            (Some(BasicScalarType::Real), _) | (_, BasicScalarType::Real) => BasicScalarType::Real,
-            _ => BasicScalarType::Int,
+        let target_ty = self.scalar_types.get(&var_name).copied()
+            .unwrap_or(BasicScalarType::Real);
+        let target_ty = if val.ty == BasicScalarType::Real {
+            BasicScalarType::Real
+        } else {
+            target_ty
         };
         let val = self.coerce_value(val, target_ty);
-        // Scalar BASIC values can now be integer or real (BA7 staging).
+        // Scalar BASIC values are real in BA7; structural boundaries stay i64.
         self.emit("mov", Some(&var_name),
                   vec![Operand::Var(val.slot)], val.ty.iir());
         self.scalar_types.insert(var_name, val.ty);
@@ -714,7 +716,7 @@ impl Compiler {
                 let target = scalar_variable_name(var_node)?;
                 let value = ExprValue { slot: value, ty: BasicScalarType::Int };
                 let target_ty = self.scalar_types.get(&target).copied()
-                    .unwrap_or(BasicScalarType::Int);
+                    .unwrap_or(BasicScalarType::Real);
                 let value = self.coerce_value(value, target_ty);
                 self.emit("mov", Some(&target),
                     vec![Operand::Var(value.slot)], value.ty.iir());
@@ -855,7 +857,7 @@ impl Compiler {
                 "i64");
             let input = ExprValue { slot: input, ty: BasicScalarType::Int };
             let target_ty = self.scalar_types.get(&name).copied()
-                .unwrap_or(BasicScalarType::Int);
+                .unwrap_or(BasicScalarType::Real);
             let input = self.coerce_value(input, target_ty);
             self.emit("mov", Some(&name), vec![Operand::Var(input.slot)], input.ty.iir());
             self.scalar_types.insert(name, input.ty);
@@ -1289,22 +1291,15 @@ impl Compiler {
                 ASTNodeOrToken::Token(t) if t.effective_type_name() == "NUMBER" => {
                     let raw = t.value.trim();
                     let dest = self.fresh_temp();
-                    if number_spells_real(raw) {
-                        let v = raw.parse::<f64>().map_err(|_| CompileError::Malformed(
-                            format!("NUMBER literal `{raw}` is not a real value")))?;
-                        if !v.is_finite() {
-                            return Err(CompileError::Unsupported(format!(
-                                "non-finite real literal `{raw}`")));
-                        }
-                        self.emit("const", Some(&dest),
-                            vec![Operand::Float(v)], "f64");
-                        return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
+                    let v = raw.parse::<f64>().map_err(|_| CompileError::Malformed(
+                        format!("NUMBER literal `{raw}` is not a real value")))?;
+                    if !v.is_finite() {
+                        return Err(CompileError::Unsupported(format!(
+                            "non-finite real literal `{raw}`")));
                     }
-                    let v = raw.parse::<i64>().map_err(|_| CompileError::Malformed(
-                        format!("NUMBER literal `{raw}` is not an i64 integer")))?;
                     self.emit("const", Some(&dest),
-                        vec![Operand::Int(v)], "i64");
-                    return Ok(ExprValue { slot: dest, ty: BasicScalarType::Int });
+                        vec![Operand::Float(v)], "f64");
+                    return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
                 }
                 ASTNodeOrToken::Token(t) if t.effective_type_name() == "USER_FN" => {
                     // `USER_FN LPAREN expr RPAREN` — a call to a user-defined
@@ -1346,10 +1341,10 @@ impl Compiler {
                                  parameter `{param}` is in scope (global access \
                                  from a function needs enabler E6)")));
                         }
-                        return Ok(ExprValue { slot: name, ty: BasicScalarType::Int });
+                        return Ok(ExprValue { slot: name, ty: BasicScalarType::Real });
                     }
                     let ty = self.scalar_types.get(&name).copied()
-                        .unwrap_or(BasicScalarType::Int);
+                        .unwrap_or(BasicScalarType::Real);
                     return Ok(ExprValue { slot: name, ty });
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "expr" => {
@@ -1367,7 +1362,7 @@ impl Compiler {
     /// `name` is the `USER_FN` token value (`fns`, `fna`, …); `node` is the
     /// enclosing `primary` whose single `expr` child is the argument.  The
     /// emitted instruction is `call dest = [Var(name), Var(arg)]` with an
-    /// `i64` return hint — the calling convention every backend understands
+    /// `f64` return hint — the calling convention every backend understands
     /// (`srcs[0]` names the callee, the rest are argument slots).  This is
     /// the BASIC counterpart of ALGOL's value-procedure calls (AL3), which
     /// already run on native/LLVM/WASM/JVM/CLR/VM/JIT.
@@ -1384,11 +1379,11 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed(format!(
                 "user function call `{name}` missing argument expr")))?;
         let arg = self.emit_expr(arg_node)?;
-        let arg = self.coerce_value(arg, BasicScalarType::Int);
+        let arg = self.coerce_value(arg, BasicScalarType::Real);
         let dest = self.fresh_temp();
         self.emit("call", Some(&dest),
-            vec![Operand::Var(name.to_string()), Operand::Var(arg.slot)], "i64");
-        Ok(ExprValue { slot: dest, ty: BasicScalarType::Int })
+            vec![Operand::Var(name.to_string()), Operand::Var(arg.slot)], "f64");
+        Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
     }
 
     /// Pre-pass: record every `DEF FNx` name declared on `line` so a call
@@ -1410,7 +1405,7 @@ impl Compiler {
     /// a runtime statement.
     ///
     /// ```text
-    ///   10 DEF FNS(X) = X * X      ⇒   fn fns(X: i64) -> i64 { ret X * X }
+    ///   10 DEF FNS(X) = X * X      ⇒   fn fns(X: f64) -> f64 { ret X * X }
     /// ```
     ///
     /// The body is lowered in a swapped-in emission context (mirroring
@@ -1439,16 +1434,16 @@ impl Compiler {
         // name (`param`) and the body may reference only it (enforced in
         // `emit_primary`).
         let result = self.emit_expr(body)?;
-        let result = self.coerce_value(result, BasicScalarType::Int);
-        self.emit("ret", None, vec![Operand::Var(result.slot)], "i64");
+        let result = self.coerce_value(result, BasicScalarType::Real);
+        self.emit("ret", None, vec![Operand::Var(result.slot)], "f64");
 
         // ── assemble the function and restore main's context ────────────
         let body_instrs = std::mem::take(&mut self.instrs);
         let body_len = body_instrs.len();
         let mut func = IIRFunction::new(
             name,
-            vec![(param, "i64".to_string())],
-            "i64",
+            vec![(param, "f64".to_string())],
+            "f64",
             body_instrs,
         );
         func.type_status = FunctionTypeStatus::FullyTyped;
@@ -1674,13 +1669,6 @@ fn binary_op_name(op: &str) -> Option<&'static str> {
     }
 }
 
-/// Whether a BASIC numeric literal should enter the BA7 real path.  A decimal
-/// point or exponent marker is enough, even when the value is whole-valued
-/// (`6.0`, `1E3`), because the spelling carries the user's intent.
-fn number_spells_real(raw: &str) -> bool {
-    raw.contains('.') || raw.contains('e') || raw.contains('E')
-}
-
 /// The separator character carried by a `print_sep` node — `,` or `;`.
 /// (`print_sep = COMMA | SEMICOLON`, so the node has exactly one token
 /// child.)  Falls back to `;` (the tight, space-free join) if the token is
@@ -1839,18 +1827,19 @@ mod tests {
         assert!(ops.contains(&"ret"));
     }
 
-    /// `LET A = 42` followed by `END` should leave variable A holding 42.
+    /// `LET A = 42` followed by `END` should leave scalar A holding 42.0.
     #[test]
     fn compiles_let_then_end() {
         let m = compile("10 LET A = 42\n20 END\n").expect("ok");
         let body = &m.functions[0].instructions;
-        // mov_i64 A = _t0 (where _t0 was const 42)
+        // BA7: scalar BASIC numbers are f64, so A gets a real slot.
         let mov = body.iter().find(|i| i.op == "mov")
             .expect("LET produces a mov");
         assert_eq!(mov.dest.as_deref(), Some("A"));
-        // and a const 42 somewhere.
+        assert_eq!(mov.type_hint, "f64");
+        // and a real const 42.0 somewhere.
         assert!(body.iter().any(|i|
-            i.op == "const" && matches!(i.srcs.first(), Some(Operand::Int(42)))));
+            i.op == "const" && matches!(i.srcs.first(), Some(Operand::Float(v)) if (*v - 42.0).abs() < f64::EPSILON)));
     }
 
     /// Returns the callee name of the first `call`/`call_builtin` whose first
@@ -1863,14 +1852,14 @@ mod tests {
             }) == Some(name))
     }
 
-    /// BA2: `PRINT 42` lowers to a `call __basic_print_int(42)` (the
-    /// character-level helper) — *not* the old line-buffered `print_i64`.
+    /// BA7: `PRINT 42` lowers through `__basic_print_real` (which delegates to
+    /// BA2's digit helper for whole-valued output) — not the old `print_i64`.
     #[test]
     fn compiles_print_integer() {
         let m = compile("10 PRINT 42\n20 END\n").expect("ok");
         let body = &m.functions[0].instructions;
-        assert!(calls_named(body, "__basic_print_int"),
-            "expected call __basic_print_int in {body:?}");
+        assert!(calls_named(body, "__basic_print_real"),
+            "expected call __basic_print_real in {body:?}");
         // The old builtin must be gone — same-line printing replaced it.
         assert!(!calls_named(body, "print_i64"),
             "print_i64 should no longer be emitted");
@@ -1909,14 +1898,12 @@ mod tests {
             "module should include f64 real print helper");
     }
 
-    /// BA7-1: mixed integer/real arithmetic widens the integer operand rather
-    /// than truncating the real operand back to i64.
+    /// BA7-1b: integer-spelled scalar literals are real values too, so mixed
+    /// spellings compute directly on the f64 track.
     #[test]
-    fn mixed_int_real_arithmetic_widens_to_f64() {
+    fn integer_spelled_scalar_arithmetic_is_f64() {
         let m = compile("10 PRINT 40 + 2.0\n20 END\n").expect("ok");
         let body = &m.functions[0].instructions;
-        assert!(body.iter().any(|i| i.op == "int_to_real"),
-            "mixed arithmetic should widen the integer operand: {body:?}");
         assert!(body.iter().any(|i| i.op == "add" && i.type_hint == "f64"),
             "mixed arithmetic result should be f64");
         assert!(calls_named(body, "__basic_print_real"));
@@ -1931,7 +1918,7 @@ mod tests {
             "helpers must not be emitted when nothing prints");
     }
 
-    /// BA2: `PRINT 4; 2` (semicolon) joins tightly — two `__basic_print_int`
+    /// BA2/BA7: `PRINT 4; 2` (semicolon) joins tightly — two numeric helper
     /// calls, no separator space, and a single trailing newline.
     #[test]
     fn print_semicolon_joins_tight() {
@@ -1940,7 +1927,7 @@ mod tests {
         let prints = body.iter().filter(|i| i.op == "call"
             && i.srcs.first().and_then(|s| match s {
                 Operand::Var(n) => Some(n.as_str()), _ => None,
-            }) == Some("__basic_print_int")).count();
+            }) == Some("__basic_print_real")).count();
         assert_eq!(prints, 2, "two items ⇒ two helper calls");
         // No space (32) const between items for ';'.
         assert!(!body.iter().any(|i| i.op == "const"
@@ -2075,10 +2062,16 @@ mod tests {
         });
         assert_eq!(helper, Some("input_i64"));
         let dest = call.unwrap().dest.as_deref().expect("input has destination temp");
+        let widened = body.iter().find(|i|
+            i.op == "int_to_real"
+                && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == dest))
+            .and_then(|i| i.dest.as_deref())
+            .expect("BA7 scalar INPUT widens the integer host input to f64");
         assert!(body.iter().any(|i| i.op == "mov"
             && i.dest.as_deref() == Some("X")
-            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == dest)),
-            "expected input temp to move into X");
+            && i.type_hint == "f64"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == widened)),
+            "expected widened input temp to move into X");
     }
 
     /// String literals in PRINT are deferred → `Unsupported`.
@@ -2157,7 +2150,7 @@ mod tests {
     // ── DEF FN — user-defined single-line functions (BA5) ────────────
 
     /// `DEF FNS(X) = X * X` lowers to a sibling `IIRFunction` named `fns`
-    /// (one `i64` parameter `X`, body `mul X X` then `ret`), pushed after
+    /// (one `f64` parameter `X`, body `mul X X` then `ret`), pushed after
     /// `main`.  The `DEF` line itself emits nothing runtime into `main`.
     #[test]
     fn compiles_def_fn_into_sibling_function() {
@@ -2169,8 +2162,8 @@ mod tests {
         assert_eq!(m.functions[0].name, "main");
         let f = m.functions.iter().find(|f| f.name == "FNS")
             .expect("sibling function `FNS`");
-        assert_eq!(f.return_type, "i64");
-        assert_eq!(f.params, vec![("X".to_string(), "i64".to_string())]);
+        assert_eq!(f.return_type, "f64");
+        assert_eq!(f.params, vec![("X".to_string(), "f64".to_string())]);
         let ops: Vec<&str> = f.instructions.iter().map(|i| i.op.as_str()).collect();
         assert!(ops.contains(&"mul"), "fns body should multiply: {ops:?}");
         assert_eq!(ops.last(), Some(&"ret"), "fns body ends with ret: {ops:?}");
@@ -2298,10 +2291,10 @@ mod tests {
                    50 END\n";
         let m = compile(src).expect("ok");
         let body = &m.functions[0].instructions;
-        // Should have at least one `add` (the LET) and one `call` to the BA2
-        // print helper (PRINT now lowers to `call __basic_print_int`).
+        // Should have at least one `add` (the LET) and one `call` to the BA7
+        // print helper (scalar PRINT now lowers to `call __basic_print_real`).
         assert!(body.iter().any(|i| i.op == "add"));
-        assert!(calls_named(body, "__basic_print_int"));
+        assert!(calls_named(body, "__basic_print_real"));
     }
 
     // -----------------------------------------------------------------------
@@ -2411,11 +2404,15 @@ mod tests {
         assert_eq!(set.type_hint, "i64");
         assert_eq!(var_name(set.srcs.first()), Some("A"));
         assert_eq!(set.srcs.len(), 3, "array_set takes handle, index, value");
-        // The index register was `const 2`, used as-is (BASIC is 0-based).
+        // BA7 scalars are f64, then explicit array boundaries truncate to i64.
         let idx_reg = var_name(set.srcs.get(1)).expect("index reg");
         assert!(body.iter().any(|i|
-            i.op == "const" && i.dest.as_deref() == Some(idx_reg)
-                && matches!(i.srcs.first(), Some(Operand::Int(2)))));
+            i.op == "real_to_int_trunc" && i.dest.as_deref() == Some(idx_reg)),
+            "array index should be an explicit real_to_int_trunc result");
+        assert!(body.iter().any(|i|
+            i.op == "const" && i.type_hint == "f64"
+                && matches!(i.srcs.first(), Some(Operand::Float(v)) if (*v - 2.0).abs() < f64::EPSILON)),
+            "source subscript literal should be a scalar f64 const");
     }
 
     /// `LET X = A(2)` reads an element → `array_get A, idx → dest`.

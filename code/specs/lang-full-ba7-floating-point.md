@@ -1,9 +1,10 @@
 # LANG-FULL BA7 — Dartmouth BASIC floating-point (`f64`)
 
 **Status:** design spec — **decision-complete** (all §7 questions resolved by
-historical Dartmouth BASIC fidelity); **BA7-1a landed** (decimal/exponent
-literals, mixed `f64` arithmetic, and whole-valued real `PRINT`), remaining
-implementation proceeds in slices BA7-1b..3.
+historical Dartmouth BASIC fidelity); **BA7-1a/1b landed** (decimal/exponent
+literals, integer-spelled scalar literals, scalar `f64` arithmetic/variables,
+`DEF FN`, `IF`, `FOR`, and whole-valued real `PRINT`), remaining implementation
+proceeds in slices BA7-2..3.
 **Depends on:** **E3** (reals / `f64` — COMPLETE, every backend executes f64),
 **E8** (numeric conversions `int_to_real` / `real_to_int_trunc` — COMPLETE), and
 **BA2** (character-level `PRINT` via `putchar` — COMPLETE, the digit-printing
@@ -28,9 +29,8 @@ number to `i64`** (`f as i64`) and ran the whole language on an integer value
 model — a deliberate V1 limitation taken *"until the backends grow SSE2 support"*
 (the old module doc). E3 removed that limitation: every backend now executes
 `f64`. BA7 is the cutover — make BASIC's value model **`f64`, end to end**, the
-way the real language always was. BA7-1a has started that cutover for
-real-spelled literals and mixed arithmetic; the final all-`f64` model remains a
-follow-up slice.
+way the real language always was. BA7-1a/1b have completed the scalar cutover;
+real array elements and real DATA storage remain follow-up slices.
 
 This is a **whole-value-model change**, so it gets a spec before code.
 
@@ -159,17 +159,19 @@ BA7 is bigger than BA2, so it ships in focused slices rather than one mega-PR:
   output via E8 `real_to_int_trunc` and the BA2 digit helper. Matrix cell:
   `PRINT 6.0 * 7.0` ⇒ `42` on all 7 backends — proving the f64 path runs end to
   end while output is unchanged for whole values.
-- **BA7-1b — full value-model cutover.** Make integer-spelled numeric values use
-  the BASIC `f64` value model too, while keeping explicit integer boundaries for
-  line numbers, array subscripts, and future `INT(x)`.
+- **BA7-1b — scalar value-model cutover. ✅** Make integer-spelled scalar numeric
+  values use the BASIC `f64` value model too, while keeping explicit integer
+  boundaries for line numbers, `DIM` bounds, DATA storage, array
+  subscripts/elements, GOSUB return stacks, and future `INT(x)`.
 - **BA7-2 — fractional PRINT formatting + `E` notation.** Turn on the
   `.`-and-fraction path (6 significant digits, trailing-zero trim, round-half-up,
   no leading zero) and the out-of-range `E`-notation path (§7.3). Matrix cells:
   `PRINT 3.14` ⇒ `3.14`, `PRINT 1.0 / 4.0` ⇒ `.25`, `PRINT 0.0 - 2.5` ⇒ `-2.5`,
   plus an `E`-notation cell.
-- **BA7-3 — reals in the rest of the language.** `f64` comparisons (`IF A < 1.5`),
-  `FOR I = 1 TO 2 STEP 0.5`, `DIM`/array elements as `array<f64>` with
-  `real_to_int_trunc` subscripts, and `f64` `DATA`/`READ`. One matrix cell each.
+- **BA7-3 — reals in aggregate/input edges.** `DIM`/array elements as
+  `array<f64>` with `real_to_int_trunc` subscripts, and `f64` `DATA`/`READ`.
+  Add focused fractional-comparison/FOR matrix cells if BA7-2's formatter gives
+  them observable output. One matrix cell each.
 - **BA7-4 (optional) — `INT(x)` builtin** (`real_to_int_trunc`) and tidy-up.
 
 Each slice: bump `dartmouth-basic-iir-compiler` version + CHANGELOG + README,

@@ -36,12 +36,14 @@ just use `lang-aot foo.bas`, which does the routing for you).
 
 ## V1 scope
 
-Integer-first programs with a staged BA7 real path: decimal/exponent literals
-(`6.0`, `1E3`) and mixed integer/real arithmetic now carry `f64` through
-`LET`/`IF`/`FOR`/`PRINT`, and whole-valued real output (`PRINT 6.0 * 7.0`) runs
-through the shared E3/E8 backends. Fractional formatting, real `DATA`/arrays,
-and the final "every BASIC number is f64" cutover remain BA7 follow-ups; strings
-are deferred to LANG77.  See [CHANGELOG.md](CHANGELOG.md) for the full table.
+BA7 scalar BASIC now follows Dartmouth's real numeric model: numeric literals
+(including integer-spelled `42`), scalar variables, arithmetic, `DEF FN`,
+`IF`, `FOR`, and `PRINT` lower as `f64`, and whole-valued real output (`PRINT
+6.0 * 7.0`) runs through the shared E3/E8 backends. Integer `i64` remains
+explicit at structural boundaries: line numbers, `DIM` bounds, DATA storage,
+array subscripts/elements, and GOSUB return stacks. Fractional formatting and
+real `DATA`/arrays remain BA7 follow-ups; strings are deferred to LANG77.  See
+[CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`
 single-line user functions, `DIM` arrays, `READ`/`DATA`/`RESTORE`, and
@@ -72,12 +74,12 @@ runs, BA2 needed **zero** backend changes.  (String `PRINT` items still wait for
 LANG77 / E4; `,` is a single space rather than a true 14-column print zone — a
 documented, deferred approximation.)
 
-**BA7-1 staged real arithmetic** keeps existing integer programs on `i64` while
-letting real-spelled expressions widen to `f64`. `PRINT` chooses
-`__basic_print_real` for real items; that helper currently truncates whole-valued
-reals via E8 `real_to_int_trunc` and delegates to the BA2 digit printer. The
-matrix proof `PRINT 6.0 * 7.0` ⇒ `42` runs on native / LLVM / WASM / JVM / CLR /
-VM / JIT without adding backend ops.
+**BA7-1 scalar real arithmetic** makes scalar BASIC values `f64` even when the
+source spells them as integers. `PRINT` chooses `__basic_print_real` for numeric
+items; that helper currently truncates whole-valued reals via E8
+`real_to_int_trunc` and delegates to the BA2 digit printer. The matrix proofs
+for `PRINT 42` and `PRINT 6.0 * 7.0` ⇒ `42` run on native / LLVM / WASM / JVM /
+CLR / VM / JIT without adding backend ops.
 
 ## Spec
 
