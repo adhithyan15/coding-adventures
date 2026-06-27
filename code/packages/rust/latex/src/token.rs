@@ -82,6 +82,11 @@ pub enum TokenKind {
     /// are literal characters. `delim` is the chosen delimiter (e.g. `|`), `star` is the `*`
     /// variant, and `content` is the raw inner text.
     Verb { star: bool, delim: char, content: String },
+    /// A verbatim *environment* body: `\begin{verbatim}…\end{verbatim}` (or `verbatim*`). The
+    /// lexer reads everything between the opening `}` and the matching `\end{<env>}` **raw**
+    /// (catcodes suspended, newlines included). `env` is the environment name verbatim
+    /// (`verbatim` / `verbatim*`), `content` the raw body.
+    VerbatimEnv { env: String, content: String },
     /// End of input — always the final token.
     Eof,
 }

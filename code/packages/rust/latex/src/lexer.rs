@@ -36,6 +36,23 @@ enum Mode {
     Math { display: bool },
 }
 
+/// Peek (consuming nothing): does the source at `i` spell `{verbatim}` or `{verbatim*}`? Used
+/// right after `\begin` to decide whether to read a verbatim environment body raw. Only these
+/// two environment names divert to raw scanning; every other `\begin{…}` is parsed structurally.
+fn verbatim_env_at(chars: &[(usize, char)], i: usize) -> bool {
+    let n = chars.len();
+    if i >= n || chars[i].1 != '{' {
+        return false;
+    }
+    let name_start = i + 1;
+    let mut j = name_start;
+    while j < n && (catcode(chars[j].1) == Catcode::Letter || chars[j].1 == '*') {
+        j += 1;
+    }
+    let name: String = chars[name_start..j].iter().map(|&(_, ch)| ch).collect();
+    j < n && chars[j].1 == '}' && matches!(name.as_str(), "verbatim" | "verbatim*")
+}
+
 /// Tokenize a LaTeX string into a flat token stream ending in [`TokenKind::Eof`]. Returns
 /// a spanned [`LexError`] on a malformed control sequence (e.g. a trailing `\`); never
 /// panics.
@@ -119,6 +136,44 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, LexError> {
                             chars[body_start..i].iter().map(|&(_, ch)| ch).collect();
                         i += 1; // consume the closing delimiter
                         out.push(Token::new(TokenKind::Verb { star, delim, content }, start, off(i)));
+                    } else if name == "begin" && verbatim_env_at(&chars, i) {
+                        // `\begin{verbatim}` / `\begin{verbatim*}` — read the body **raw** up to
+                        // the matching `\end{<env>}`, catcodes suspended (newlines included),
+                        // exactly like `\verb` but block-level. We only divert when the env is a
+                        // verbatim one; every other `\begin{…}` stays a normal control word for
+                        // the structural parser.
+                        i += 1; // consume '{'
+                        let env_start = i;
+                        while i < n && (catcode(chars[i].1) == Catcode::Letter || chars[i].1 == '*') {
+                            i += 1;
+                        }
+                        let env: String = chars[env_start..i].iter().map(|&(_, ch)| ch).collect();
+                        i += 1; // consume '}' (presence guaranteed by verbatim_env_at)
+                        let body_start = i;
+                        let close: Vec<char> = format!("\\end{{{env}}}").chars().collect();
+                        // Scan for the matching close sequence. Each step advances `i`, so the
+                        // loop terminates at EOF (→ spanned error) — no runaway.
+                        let mut found = false;
+                        while i < n {
+                            if i + close.len() <= n
+                                && (0..close.len()).all(|m| chars[i + m].1 == close[m])
+                            {
+                                found = true;
+                                break;
+                            }
+                            i += 1;
+                        }
+                        if !found {
+                            return Err(LexError::new(
+                                format!("unterminated \\begin{{{env}}} (missing \\end{{{env}}})"),
+                                start,
+                                end,
+                            ));
+                        }
+                        let content: String =
+                            chars[body_start..i].iter().map(|&(_, ch)| ch).collect();
+                        i += close.len(); // consume the `\end{<env>}`
+                        out.push(Token::new(TokenKind::VerbatimEnv { env, content }, start, off(i)));
                     } else {
                         out.push(Token::new(TokenKind::ControlWord(name), start, off(i)));
                         // TeX absorbs the spaces (and tabs) following a control word.
@@ -436,5 +491,47 @@ mod tests {
         assert!(tokenize("\\verb|ab\ncd|").is_err()); // runs past end of line
         assert!(tokenize(r"\verb").is_err()); // no delimiter at EOF
         assert!(tokenize(r"\verb a|").is_err()); // delimiter may not be a space
+    }
+
+    #[test]
+    fn verbatim_environment_reads_body_raw() {
+        // catcodes suspended in the body: `{ } $ #` and newlines are literal.
+        assert_eq!(
+            kinds("\\begin{verbatim}a {b} $x\nc\\end{verbatim}"),
+            vec![VerbatimEnv { env: "verbatim".into(), content: "a {b} $x\nc".into() }]
+        );
+    }
+
+    #[test]
+    fn verbatim_star_environment() {
+        assert_eq!(
+            kinds(r"\begin{verbatim*}x y\end{verbatim*}"),
+            vec![VerbatimEnv { env: "verbatim*".into(), content: "x y".into() }]
+        );
+    }
+
+    #[test]
+    fn non_verbatim_begin_is_left_to_the_parser() {
+        // A normal environment stays a ControlWord("begin") + structural tokens.
+        assert_eq!(
+            kinds(r"\begin{itemize}"),
+            vec![ControlWord("begin".into()), BeginGroup, Char('i'), Char('t'), Char('e'),
+                 Char('m'), Char('i'), Char('z'), Char('e'), EndGroup]
+        );
+    }
+
+    #[test]
+    fn verbatim_inner_wrong_end_does_not_close() {
+        // `\end{foo}` inside the body is literal; only `\end{verbatim}` closes.
+        assert_eq!(
+            kinds(r"\begin{verbatim}\end{foo}\end{verbatim}"),
+            vec![VerbatimEnv { env: "verbatim".into(), content: r"\end{foo}".into() }]
+        );
+    }
+
+    #[test]
+    fn unterminated_verbatim_environment_errors() {
+        assert!(tokenize(r"\begin{verbatim}abc").is_err());
+        assert!(tokenize(r"\begin{verbatim}abc\end{verbatim*}").is_err()); // wrong close name
     }
 }
