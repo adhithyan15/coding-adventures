@@ -63,8 +63,8 @@ multiple languages; close an enabler before the features that depend on it.
   source→real-backend→execute for one `Prog` per language; this campaign adds many. No
   separate harness PR — every feature PR adds its executed `Prog`(s). *(Mechanism exists;
   enforced by the definition of done.)*
-- **E2 — Integer width & wrap semantics.** ◑ *In progress (approach B — each backend
-  masks narrow-typed arithmetic by `type_hint`, mirroring the byte-tape precedent).* Model
+- **E2 — Integer width & wrap semantics.** ✅ **COMPLETE** (approach B — each backend
+  masks narrow-typed arithmetic by `type_hint`, mirroring the byte-tape precedent). Model
   `u4`/`u8`/`u16`/`u32` wraparound (mod-2ⁿ) consistently across all backends, so Nib/Oct
   arithmetic and bitwise-NOT are *correct*, not "collapse to i64." (Brainfuck already proves
   the u8-tape pattern; this generalises it to register values.)
@@ -107,7 +107,7 @@ multiple languages; close an enabler before the features that depend on it.
       narrow + full-width untouched). **Executed proof on aarch64** — the generated ARM64 is
       installed via `jit-loader-macos` and *called*: `200u8+100u8=44`, `~0u8=255`, `1u8<<8=0`,
       `u32` mul wrap; x86_64 has structural mask tests + the lang-aot matrix on a Linux x86 runner.
-    - ◑ **Stack-backend rework (compute-wide + mask).** Wiring Nib to emit narrow `type_hint`s
+    - ✅ **Stack-backend rework (compute-wide + mask).** Wiring Nib to emit narrow `type_hint`s
       surfaced that the 3 *stack* backends typed the masking op at the narrow width (wasm→i32,
       jvm→int, cil→i32), which **requires narrow-width operands**. Real frontends carry every
       `const`/`let` as `i64` (module uniformity) and put the narrow width only on the op, so a
@@ -335,7 +335,11 @@ backend immediately) come before the enabler-dependent items.
   folded to their literal at each use (no runtime storage, runs everywhere); verified by
   RUNNING `const N: u8 = 42; … return N`→42 and `const A=30; const B=12; … A + B`→42 across
   all backends. (Const-*expression* folding and mutable `static` deferred.)
-- ☐ **N6** — u4/u8 wrap semantics (needs **E2**).
+- ✅ **N6** — u4/u8 wrap semantics (`nib-iir-compiler` 0.14.0 + E2). Plain narrow
+  arithmetic now wraps mod-2^n before the value is observed: the matrix proves
+  `200u8 + 100u8` by comparing the in-register result to `44`, and keeps `6 * 7`
+  at `42` in a `u8` return context so the literal-typing guard cannot regress to
+  accidental u4 masking. Both programs run on all 7 backends.
 - ✅ **N7** — `+%` (wrap add) / `+?` (saturating add) (nib-iir-compiler 0.15.0). `+%` lowers to
   the narrow-typed `add` (E2 wraps it: `15u4 +% 1 = 0`, `200u8 +% 100 = 44`); `+?` lowers to a
   *wide* add + a clamp branch `min(sum, MAX)` (`15u4 +? 1 = 15`, `200u8 +? 100 = 255`,
@@ -574,15 +578,13 @@ backend immediately) come before the enabler-dependent items.
 
 ## Suggested global ordering
 
-1. **E2 / N6** — finish the narrow integer wrap lane so Nib's u4/u8 semantics are
-   execution-proven instead of only type-hinted.
-2. **BA7 / AL8 numeric tails** — use the E3/E8 conversion work to finish BASIC
+1. **BA7 / AL8 numeric tails** — use the E3/E8 conversion work to finish BASIC
    floating point and ALGOL's remaining standard-function surface.
-3. **E4 strings** — unblock BASIC string `PRINT`, ALGOL string I/O, and Twig strings
+2. **E4 strings** — unblock BASIC string `PRINT`, ALGOL string I/O, and Twig strings
    with one shared string value model instead of per-frontend shortcuts.
-4. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
+3. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
    work and any frontend code that still needs shared state across functions.
-5. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, and **MC1 cons/symbol
+4. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, and **MC1 cons/symbol
    values on the code-gen backends** — explicit user decision points.
 
 This roadmap is the contract; each ☐ becomes a `feat(lang-full): …` PR, checked off here as
