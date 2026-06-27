@@ -77,6 +77,11 @@ pub enum TokenKind {
     Char(char),
     /// A comment from `%` to end of line (text kept, without the `%` or the newline).
     Comment(String),
+    /// Inline verbatim: `\verb<delim>…<delim>` (or `\verb*…` for the visible-space variant).
+    /// The lexer reads the body **raw** — catcodes are suspended inside it, so `{ $ # \` etc.
+    /// are literal characters. `delim` is the chosen delimiter (e.g. `|`), `star` is the `*`
+    /// variant, and `content` is the raw inner text.
+    Verb { star: bool, delim: char, content: String },
     /// End of input — always the final token.
     Eof,
 }
