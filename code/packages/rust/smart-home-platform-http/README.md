@@ -38,6 +38,7 @@ stable local API responses for:
 - `POST /api/smart_home/desired_states/:entity_id`
 - `DELETE /api/smart_home/desired_states/:entity_id`
 - `/api/smart_home/state_history`
+- `/api/smart_home/state_history/:event_id`
 
 `POST /api/services/:domain/:service` accepts Home Assistant-style JSON targets
 and dispatches through `SmartHomeRuntime::execute_command_tool`, so runtime
@@ -61,8 +62,9 @@ device and bridge inventory, room topology summaries, a dashboard overview,
 checkpointed event-log entries with detail lookups, command-result audit
 records with command-id lookups, indexed authorization decisions, and
 desired-state supervision targets. State-history reads expose registry-backed
-device events with Home Assistant entity aliases, state deltas, and timestamp
-filters; the Home Assistant-style history route accepts `filter_entity_id`.
+device events with Home Assistant entity aliases, state deltas, timestamp
+filters, and event-id detail lookups; the Home Assistant-style history route
+accepts `filter_entity_id`.
 
 ## Dependencies
 
@@ -100,6 +102,7 @@ curl 'http://127.0.0.1:8123/api/smart_home/events/0'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions/0'
 curl 'http://127.0.0.1:8123/api/smart_home/state_history?entity_id=light.entity_light_1'
+curl 'http://127.0.0.1:8123/api/smart_home/state_history/event-light-1-on'
 curl 'http://127.0.0.1:8123/api/history/period?filter_entity_id=light.entity_light_1'
 curl -X POST http://127.0.0.1:8123/api/services/light/turn_on \
   -H 'Content-Type: application/json' \

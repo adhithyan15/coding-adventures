@@ -12,8 +12,8 @@ use smart_home_core::{
     AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Bridge,
     BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode,
     CommandId, CommandResult, CommandStatus, CommandType, Device, DeviceEvent, DeviceEventType,
-    Entity, EntityId, EntityKind, Health, PrivilegeTier, Scene, StateConfidence, StateDelta,
-    StateSource, Value, ValueKind,
+    Entity, EntityId, EntityKind, EventId, Health, PrivilegeTier, Scene, StateConfidence,
+    StateDelta, StateSource, Value, ValueKind,
 };
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
@@ -518,6 +518,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
         let runtime = runtime.clone();
         app.get("/api/smart_home/state_history", move |request| {
             runtime_state_history_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/state_history/:event_id", move |request| {
+            runtime_state_history_event_response(&runtime, request)
         });
     }
 
@@ -1037,6 +1044,28 @@ fn runtime_state_history_response(
         Err(error) => return api_error_response(error),
     };
     WebResponse::json(state_history_json(&events, &runtime_guard).into_bytes())
+}
+
+fn runtime_state_history_event_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(event_id) = request.route_params.get("event_id") else {
+        return api_error_response(ApiError::bad_request("missing event_id"));
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let Some(event) = runtime_guard
+        .registry()
+        .event(&EventId::trusted(event_id.clone()))
+    else {
+        return api_error_response(ApiError::not_found(format!(
+            "state history event `{event_id}` not found"
+        )));
+    };
+    WebResponse::json(state_history_event_json(event, &runtime_guard).into_bytes())
 }
 
 fn home_assistant_history_response(
@@ -4793,6 +4822,25 @@ mod tests {
         assert!(body.contains(r#""event_type":"updated""#));
         assert!(body.contains(r#""capability_id":"light.on_off""#));
         assert!(body.contains(r#""value":true"#));
+
+        let detail = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history/event-light-1-on",
+            ))
+            .into(),
+        );
+        assert!(detail.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(detail.contains(r#""event_id":"event-light-1-on""#));
+        assert!(detail.contains(r#""event_type":"updated""#));
+
+        let missing_event: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/state_history/missing-event",
+            ))
+            .into();
+        assert_eq!(missing_event.status, 404);
     }
 
     #[test]

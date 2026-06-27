@@ -16,6 +16,8 @@ All notable changes to this package will be documented in this file.
   records so dashboard clients can drill into a specific audit row.
 - Added indexed authorization-decision audit rows and a matching detail lookup
   for dashboard drill-down flows.
+- Added a state-history event detail lookup for registry-backed event drill-down
+  by event id.
 - Added a dashboard overview route that composes runtime health, topology,
   inventory, desired-state, and audit summaries for local controllers.
 - Added a compact runtime health probe for local-controller readiness,
