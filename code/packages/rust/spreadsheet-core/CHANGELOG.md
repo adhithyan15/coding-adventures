@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.15.0
+
+**Sheet management + multi-sheet load fix (multi-sheet PR-4 — the last engine
+slice).** Rename / delete / reorder sheets, list them for a tab bar, and a fix so a
+loaded workbook's cross-sheet dependencies are live.
+
+- `Workbook::sheet_names() -> Vec<&str>` (tab order), `rename_sheet(id, new)`,
+  `delete_sheet(id)`, `move_sheet(id, to_index)`. Dense `SheetId`s are the sheet
+  `Vec`'s indices, so delete/move rebuild the `name → SheetId` index and the
+  dependency graph (`rebuild_sheet_index` helper); names — and therefore formula
+  qualifiers and computed values — are unaffected by a reorder.
+- **Rename** rewrites the qualifier in every formula that named the sheet
+  (`=Old!A1` → `=New!A1`, via `FormulaAst::rename_qualifier`); the `SheetId` and all
+  values are unchanged. Rejects an empty or duplicate name.
+- **Delete** refuses to remove the last sheet, reindexes the survivors, and rewrites
+  every inbound reference to the gone sheet to the `#REF!` literal
+  (`FormulaAst::sheet_refs_to_error`) — permanent, so re-adding a same-named sheet
+  doesn't resurrect it (Excel behaviour).
+- **Fix (`deserialize`)**: a workbook is loaded sheet-by-sheet in file order, so a
+  cross-sheet formula loaded *before* its target sheet couldn't resolve its
+  qualifier at `set_formula` time and its dependency edge was skipped — values were
+  right (a full `recalc_all` resolves names) but a later edit of the precedent didn't
+  recompute the dependent. `deserialize` now rebuilds the dependency graph after all
+  sheets exist, so a loaded cross-sheet formula is fully live.
+- Tests: rename rewrites qualifiers + keeps values + recomputes; delete reindexes,
+  inbound → `#REF!`, can't-delete-last; move reorders + preserves cross-sheet values;
+  multi-sheet serialize round-trip with a live cross-sheet formula.
+
 ## 0.14.0
 
 **Cross-sheet references — structural-edit / fill / sort propagation (multi-sheet

@@ -120,20 +120,28 @@ Three *different* transforms, now each correct for qualified refs:
 - **Rename / delete a sheet** ⇒ deferred to PR-4 (rename rewrites the stored
   qualifier in every referencing formula; delete → inbound qualified refs `#REF!`).
 
-### 2.5 Sheet-management API on `Workbook`
+### 2.5 Sheet-management API on `Workbook` — **DONE (PR-4)**
 
-Add the operations a host needs (some exist):
+Shipped:
 
-- `add_sheet(name) -> SheetId` (exists), `sheet_count`, `sheet_id`, `sheet_name`
-  (exist).
-- `rename_sheet(id, new_name) -> Result<(), _>` (reject duplicate/empty names),
-- `delete_sheet(id)` (inbound refs → `#REF!`; reject deleting the last sheet),
-- `move_sheet(id, to_index)` (reorder for the tab bar),
-- `sheet_names() -> Vec<&str>` in tab order.
+- `add_sheet(name) -> SheetId`, `sheet_count`, `sheet_id`, `sheet_name` (existed).
+- `sheet_names() -> Vec<&str>` in tab order (drives the tab bar).
+- `rename_sheet(id, new_name) -> Result<(), String>` — rejects empty/duplicate names;
+  rewrites the qualifier in every referencing formula (`=Old!A1` → `=New!A1`) but
+  keeps the `SheetId` and all values (a rename is cosmetic).
+- `delete_sheet(id) -> Result<(), String>` — refuses to remove the last sheet;
+  reindexes survivors (dense `SheetId` = `Vec` index) and rebuilds the graph; inbound
+  refs to the gone sheet become `#REF!` **permanently** (re-adding a same-named sheet
+  doesn't resurrect them).
+- `move_sheet(id, to_index) -> Result<(), String>` — reorders the tab; reindexes +
+  rebuilds the graph; names/values unaffected.
 
-`serialize`/`deserialize` already rebuild "the sheets in file order"; extend the
-document to carry **all** sheets' sources + formats + the tab order, and round-trip
-cross-sheet qualifiers.
+`serialize`/`deserialize` already carry **all** sheets' sources + formats + tab order
+and round-trip cross-sheet qualifiers (the qualifier rides in the stored formula
+text). **Load fix (PR-4):** `deserialize` now rebuilds the dependency graph *after*
+all sheets are loaded — a cross-sheet formula loaded before its target sheet (file
+order) previously registered no edge, so a later edit of the precedent didn't
+recompute it; the rebuild makes a loaded cross-sheet formula fully live.
 
 ### 2.6 Engine PR slicing (each its own PR, tests + spec sync)
 

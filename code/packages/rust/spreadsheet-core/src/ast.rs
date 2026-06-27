@@ -314,6 +314,71 @@ impl FormulaAst {
             },
         }
     }
+
+    /// Rewrite the **sheet qualifier** of every reference named `old` to `new`,
+    /// leaving the address untouched — the source-text side of renaming a sheet.
+    /// References to other sheets and unqualified references are unchanged. Pure.
+    pub fn rename_qualifier(&self, old: &str, new: &str) -> FormulaAst {
+        match self {
+            FormulaAst::Ref {
+                sheet: Some(name),
+                addr,
+            } if name == old => FormulaAst::sheet_cell(new, *addr),
+            FormulaAst::Range {
+                sheet: Some(name),
+                range,
+            } if name == old => FormulaAst::sheet_range(new, *range),
+            FormulaAst::Literal(_) | FormulaAst::Ref { .. } | FormulaAst::Range { .. } => {
+                self.clone()
+            }
+            FormulaAst::Unary { op, operand } => FormulaAst::Unary {
+                op: *op,
+                operand: Box::new(operand.rename_qualifier(old, new)),
+            },
+            FormulaAst::Binary { op, lhs, rhs } => FormulaAst::Binary {
+                op: *op,
+                lhs: Box::new(lhs.rename_qualifier(old, new)),
+                rhs: Box::new(rhs.rename_qualifier(old, new)),
+            },
+            FormulaAst::Percent(inner) => {
+                FormulaAst::Percent(Box::new(inner.rename_qualifier(old, new)))
+            }
+            FormulaAst::Call { name, args } => FormulaAst::Call {
+                name: name.clone(),
+                args: args.iter().map(|a| a.rename_qualifier(old, new)).collect(),
+            },
+        }
+    }
+
+    /// Replace every reference qualified with the sheet `name` by the `#REF!`
+    /// error literal — what deleting a sheet does to the references that pointed
+    /// into it (permanent, so re-adding a same-named sheet doesn't resurrect them,
+    /// matching Excel). Other references are unchanged. Pure.
+    pub fn sheet_refs_to_error(&self, name: &str) -> FormulaAst {
+        match self {
+            FormulaAst::Ref { sheet: Some(n), .. } if n == name => ref_error(),
+            FormulaAst::Range { sheet: Some(n), .. } if n == name => ref_error(),
+            FormulaAst::Literal(_) | FormulaAst::Ref { .. } | FormulaAst::Range { .. } => {
+                self.clone()
+            }
+            FormulaAst::Unary { op, operand } => FormulaAst::Unary {
+                op: *op,
+                operand: Box::new(operand.sheet_refs_to_error(name)),
+            },
+            FormulaAst::Binary { op, lhs, rhs } => FormulaAst::Binary {
+                op: *op,
+                lhs: Box::new(lhs.sheet_refs_to_error(name)),
+                rhs: Box::new(rhs.sheet_refs_to_error(name)),
+            },
+            FormulaAst::Percent(inner) => {
+                FormulaAst::Percent(Box::new(inner.sheet_refs_to_error(name)))
+            }
+            FormulaAst::Call { name: fname, args } => FormulaAst::Call {
+                name: fname.clone(),
+                args: args.iter().map(|a| a.sheet_refs_to_error(name)).collect(),
+            },
+        }
+    }
 }
 
 /// The `#REF!` error as a formula literal — what a reference shifted off the grid
