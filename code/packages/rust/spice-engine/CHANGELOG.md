@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Expose selected analysis output-node metadata in `run_deck_analysis`
+  output-plan artifacts beside line/source metadata, with stable table, CSV,
+  compact JSON, and header-keyed record exports, matching Python and
+  TypeScript.
 - Expose selected analysis line/source metadata in `run_deck_analysis`
   output-plan artifacts beside directive metadata, with stable table, CSV,
   compact JSON, and header-keyed record exports, matching Python and
