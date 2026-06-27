@@ -12,7 +12,7 @@ use smart_home_core::{
     AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Capability,
     CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode, CommandResult, CommandStatus,
     CommandType, DeviceEvent, DeviceEventType, Entity, EntityId, EntityKind, PrivilegeTier, Scene,
-    StateConfidence, StateDelta, StateSource, Value,
+    StateConfidence, StateDelta, StateSource, Value, ValueKind,
 };
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
@@ -378,6 +378,20 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/entities", move |request| {
+            runtime_entities_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/entities/:entity_id", move |request| {
+            runtime_entity_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/events", move |request| {
             runtime_events_response(&runtime, request)
         });
@@ -616,6 +630,47 @@ fn runtime_snapshot_response(runtime: &SmartHomePlatformHttpRuntime) -> WebRespo
     WebResponse::json(
         runtime_snapshot_json(&runtime_guard.read_snapshot_at(runtime.now_ms)).into_bytes(),
     )
+}
+
+fn runtime_entities_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let entities = match runtime_entities(&runtime_guard, request) {
+        Ok(entities) => entities,
+        Err(error) => return api_error_response(error),
+    };
+    WebResponse::json(
+        entities_registry_json(&entities, &runtime_guard, runtime.now_ms).into_bytes(),
+    )
+}
+
+fn runtime_entity_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(target) = request.route_params.get("entity_id") else {
+        return json_error(400, "missing entity_id");
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let entity = match runtime_guard
+        .registry()
+        .entities()
+        .find(|entity| entity_matches_external_id(entity, target))
+    {
+        Some(entity) => entity,
+        None => {
+            return api_error_response(ApiError::not_found(format!("entity `{target}` not found")));
+        }
+    };
+    WebResponse::json(entity_registry_json(entity, &runtime_guard, runtime.now_ms).into_bytes())
 }
 
 fn runtime_events_response(
@@ -1003,6 +1058,111 @@ fn authorization_subject_json(subject: &AuthorizationSubject) -> String {
     }
 }
 
+fn entities_registry_json(entities: &[&Entity], runtime: &SmartHomeRuntime, now_ms: u64) -> String {
+    let stateful_entities = entities
+        .iter()
+        .filter(|entity| entity.state.is_some())
+        .count();
+    let stale_entities = entities
+        .iter()
+        .filter(|entity| {
+            entity
+                .state
+                .as_ref()
+                .is_none_or(|snapshot| snapshot.is_stale_at(now_ms))
+        })
+        .count();
+    let commandable_entities = entities
+        .iter()
+        .filter(|entity| entity.capabilities.iter().any(capability_allows_command))
+        .count();
+    let capability_count = entities
+        .iter()
+        .map(|entity| entity.capabilities.len())
+        .sum::<usize>();
+
+    format!(
+        "{{\"summary\":{{\"total_entities\":{},\"stateful_entities\":{},\"stale_entities\":{},\"commandable_entities\":{},\"capability_count\":{}}},\"entities\":[{}]}}",
+        entities.len(),
+        stateful_entities,
+        stale_entities,
+        commandable_entities,
+        capability_count,
+        entities
+            .iter()
+            .map(|entity| entity_registry_json(entity, runtime, now_ms))
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn entity_registry_json(entity: &Entity, runtime: &SmartHomeRuntime, now_ms: u64) -> String {
+    let device = runtime.registry().device(&entity.device_id);
+    let bridge_id = device.map(|device| device.bridge_id.as_str());
+    let manufacturer = device.map(|device| device.manufacturer.as_str());
+    let model = device.map(|device| device.model.as_str());
+    let room_id = device.and_then(|device| device.room_id.as_deref());
+    let has_state = entity.state.is_some();
+    let stale = entity
+        .state
+        .as_ref()
+        .is_none_or(|snapshot| snapshot.is_stale_at(now_ms));
+    let state_confidence = entity
+        .state
+        .as_ref()
+        .map(|snapshot| json_string(state_confidence_label(snapshot.confidence)));
+    let summary = entity.capability_summary();
+
+    format!(
+        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"device_id\":{},\"bridge_id\":{},\"name\":{},\"domain\":{},\"entity_kind\":{},\"room_id\":{},\"manufacturer\":{},\"model\":{},\"has_state\":{},\"stale\":{},\"state_confidence\":{},\"capability_summary\":{{\"total\":{},\"observable\":{},\"commandable\":{},\"ranged\":{}}},\"capabilities\":[{}]}}",
+        json_string(entity.entity_id.as_str()),
+        json_string(home_assistant_entity_id(entity)),
+        json_string(entity.device_id.as_str()),
+        optional_str_json(bridge_id),
+        json_string(&entity.name),
+        json_string(entity_domain(entity.kind)),
+        json_string(entity_kind_label(entity.kind)),
+        optional_str_json(room_id),
+        optional_str_json(manufacturer),
+        optional_str_json(model),
+        has_state,
+        stale,
+        state_confidence.unwrap_or_else(|| "null".to_string()),
+        summary.total_capabilities,
+        summary.observable_capabilities(),
+        summary.commandable_capabilities(),
+        summary.ranged_capabilities,
+        entity
+            .capabilities
+            .iter()
+            .map(capability_json)
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn capability_json(capability: &Capability) -> String {
+    format!(
+        "{{\"capability_id\":{},\"mode\":{},\"value_kind\":{},\"unit\":{},\"min\":{},\"max\":{},\"step\":{},\"observable\":{},\"commandable\":{}}}",
+        json_string(capability.capability_id.as_str()),
+        json_string(capability_mode_label(capability.mode)),
+        json_string(value_kind_label(capability.value_kind)),
+        capability
+            .unit
+            .as_ref()
+            .map(json_string)
+            .unwrap_or_else(|| "null".to_string()),
+        optional_f64_json(capability.min),
+        optional_f64_json(capability.max),
+        optional_f64_json(capability.step),
+        matches!(
+            capability.mode,
+            CapabilityMode::Observe | CapabilityMode::ObserveAndCommand
+        ),
+        capability_allows_command(capability),
+    )
+}
+
 fn desired_states_json(
     desired_states: &[&DesiredEntityState],
     runtime: &SmartHomeRuntime,
@@ -1114,6 +1274,43 @@ fn desired_state_query(
         query = query.with_capability(CapabilityId::trusted(capability_id));
     }
     Ok(query)
+}
+
+fn runtime_entities<'a>(
+    runtime: &'a SmartHomeRuntime,
+    request: &WebRequest,
+) -> Result<Vec<&'a Entity>, ApiError> {
+    let domain = query_string(request, "domain");
+    let kind = query_string(request, "kind")
+        .map(entity_kind_from_label)
+        .transpose()?;
+    let capability_id = query_string(request, "capability_id");
+    let commandable = query_bool(request, "commandable")?;
+    let limit = query_limit(request, 100, 1_000)?;
+
+    let mut entities = runtime
+        .registry()
+        .entities()
+        .filter(|entity| domain.is_none_or(|domain| entity_domain(entity.kind) == domain))
+        .filter(|entity| kind.is_none_or(|kind| entity.kind == kind))
+        .filter(|entity| {
+            capability_id.is_none_or(|capability_id| {
+                entity
+                    .capabilities
+                    .iter()
+                    .any(|capability| capability.capability_id.as_str() == capability_id)
+            })
+        })
+        .filter(|entity| {
+            commandable.is_none_or(|commandable| {
+                entity.capabilities.iter().any(capability_allows_command) == commandable
+            })
+        })
+        .collect::<Vec<_>>();
+
+    entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
+    entities.truncate(limit);
+    Ok(entities)
 }
 
 fn state_history_events<'a>(
@@ -2196,6 +2393,16 @@ fn query_u64(request: &WebRequest, key: &str) -> Result<Option<u64>, ApiError> {
         .transpose()
 }
 
+fn query_bool(request: &WebRequest, key: &str) -> Result<Option<bool>, ApiError> {
+    query_string(request, key)
+        .map(|value| match value {
+            "true" | "1" => Ok(true),
+            "false" | "0" => Ok(false),
+            _ => Err(ApiError::bad_request(format!("{key} must be a boolean"))),
+        })
+        .transpose()
+}
+
 fn query_limit(request: &WebRequest, default: usize, max: usize) -> Result<usize, ApiError> {
     let Some(value) = query_string(request, "limit") else {
         return Ok(default.min(max));
@@ -2263,6 +2470,27 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::RecallScene => "recall_scene",
         CommandType::SetLock => "set_lock",
         CommandType::SetThermostatSetpoint => "set_thermostat_setpoint",
+    }
+}
+
+fn capability_mode_label(mode: CapabilityMode) -> &'static str {
+    match mode {
+        CapabilityMode::Observe => "observe",
+        CapabilityMode::Command => "command",
+        CapabilityMode::ObserveAndCommand => "observe_and_command",
+    }
+}
+
+fn value_kind_label(kind: ValueKind) -> &'static str {
+    match kind {
+        ValueKind::Null => "null",
+        ValueKind::Boolean => "boolean",
+        ValueKind::Integer => "integer",
+        ValueKind::Number => "number",
+        ValueKind::Percentage => "percentage",
+        ValueKind::Text => "text",
+        ValueKind::Object => "object",
+        ValueKind::Array => "array",
     }
 }
 
@@ -2431,6 +2659,25 @@ fn entity_kind_label(kind: EntityKind) -> &'static str {
     }
 }
 
+fn entity_kind_from_label(kind: &str) -> Result<EntityKind, ApiError> {
+    match kind {
+        "light" => Ok(EntityKind::Light),
+        "light_group" => Ok(EntityKind::LightGroup),
+        "switch" => Ok(EntityKind::Switch),
+        "sensor" => Ok(EntityKind::Sensor),
+        "lock" => Ok(EntityKind::Lock),
+        "thermostat" | "climate" => Ok(EntityKind::Thermostat),
+        "scene" => Ok(EntityKind::Scene),
+        "input" => Ok(EntityKind::Input),
+        "bridge_health" | "binary_sensor" => Ok(EntityKind::BridgeHealth),
+        "network_diagnostic" | "diagnostic" => Ok(EntityKind::NetworkDiagnostic),
+        "unknown" => Ok(EntityKind::Unknown),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported entity kind `{other}`"
+        ))),
+    }
+}
+
 fn state_source_label(source: StateSource) -> &'static str {
     match source {
         StateSource::EventStream => "event_stream",
@@ -2489,6 +2736,17 @@ fn optional_u64_json(value: Option<u64>) -> String {
     value
         .map(|value| value.to_string())
         .unwrap_or_else(|| "null".to_string())
+}
+
+fn optional_f64_json(value: Option<f64>) -> String {
+    match value {
+        Some(value) if value.is_finite() => value.to_string(),
+        _ => "null".to_string(),
+    }
+}
+
+fn optional_str_json(value: Option<&str>) -> String {
+    value.map(json_string).unwrap_or_else(|| "null".to_string())
 }
 
 fn json_string(value: impl AsRef<str>) -> String {
@@ -2880,6 +3138,45 @@ mod tests {
         assert!(decisions.contains(r#""allowed_decisions":2"#));
         assert!(decisions.contains(r#""principal_id":"agent:home-assistant-local-api""#));
         assert!(decisions.contains(r#""kind":"command""#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_ready_entity_registry() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/entities?domain=light&capability_id=light.brightness&commandable=true",
+            ))
+            .into(),
+        );
+
+        assert!(body.contains(r#""total_entities":1"#));
+        assert!(body.contains(r#""commandable_entities":1"#));
+        assert!(body.contains(r#""capability_count":3"#));
+        assert!(body.contains(r#""entity_id":"entity-light-1""#));
+        assert!(body.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(body.contains(r#""device_id":"device-1""#));
+        assert!(body.contains(r#""bridge_id":"bridge-1""#));
+        assert!(body.contains(r#""room_id":"kitchen""#));
+        assert!(body.contains(r#""manufacturer":"Signify""#));
+        assert!(body.contains(r#""model":"Hue bulb""#));
+        assert!(body.contains(r#""capability_id":"light.brightness""#));
+        assert!(body.contains(r#""mode":"observe_and_command""#));
+        assert!(body.contains(r#""value_kind":"percentage""#));
+        assert!(body.contains(r#""min":0"#));
+        assert!(body.contains(r#""max":100"#));
+
+        let one_response: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/entities/light.entity_light_1",
+            ))
+            .into();
+        let one_body = response_body(one_response.clone());
+        assert_eq!(one_response.status, 200);
+        assert!(one_body.contains(r#""name":"Kitchen Light""#));
+        assert!(one_body.contains(r#""domain":"light""#));
     }
 
     #[test]

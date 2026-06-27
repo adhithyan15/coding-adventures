@@ -9,8 +9,8 @@ All notable changes to this package will be documented in this file.
 - Added a live runtime-backed API constructor with `POST /api/services/:domain/:service`
   dispatch through runtime command authorization and command results.
 - Added dashboard-ready runtime read routes for snapshot pending work,
-  event-log replay, command-result audit, authorization-decision audit, and
-  desired-state supervision targets.
+  entity/capability registry records, event-log replay, command-result audit,
+  authorization-decision audit, and desired-state supervision targets.
 - Added a state-history read route over registry-backed device events with
   entity-alias, event-type, and timestamp filtering.
 - Added Home Assistant-style `/api/history/period` routes backed by the same
