@@ -27,6 +27,9 @@
 //!    [`MathNode`], with precedence and [`MathNode::to_latex`] round-tripping.
 //!    [`Node::parsed_math`] parses a [`Node::Math`] island on demand. **Implemented
 //!    (this release).**
+//! 4. [`expand`] — an opt-in **macro pass** over the document tree: registers
+//!    `\newcommand`/`\renewcommand`/`\providecommand` (positional `#1`..`#9`) and replaces
+//!    uses by their bounded, recursively-expanded bodies. **Implemented (L4a, this release).**
 //!
 //! ## Example
 //!
@@ -47,6 +50,7 @@ pub mod catcode;
 mod ast;
 mod error;
 mod lexer;
+mod macros;
 mod math;
 mod parser;
 mod token;
@@ -55,6 +59,7 @@ pub use ast::{document_to_latex, Node};
 pub use catcode::{catcode, Catcode};
 pub use error::{LexError, ParseError};
 pub use lexer::tokenize;
+pub use macros::expand;
 pub use math::{parse_math, MBinOp, MRelOp, MUnOp, MathNode};
 pub use parser::parse;
 pub use token::{Span, Token, TokenKind};
