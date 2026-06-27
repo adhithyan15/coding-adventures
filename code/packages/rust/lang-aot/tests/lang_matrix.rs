@@ -1383,7 +1383,12 @@ fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
             .collect::<Vec<_>>()
             .join("\n")
     } else {
-        String::from_utf8_lossy(&printed_bytes).to_string()
+        // `.trim()` to match the six sibling `run_*` columns (all trim): since
+        // BA2, BASIC's `PRINT` ends each line with a `putchar('\n')`, so the raw
+        // byte stream for `PRINT 42` is `"42\n"`. Without trimming the Wasm column
+        // alone disagreed with the others on every BASIC `Stdout` cell. Inner
+        // newlines (multi-line output) are preserved.
+        String::from_utf8_lossy(&printed_bytes).trim().to_string()
     };
     Some((code, stdout))
 }
@@ -1579,7 +1584,14 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
         // Pick the host class the program's I/O lowers to: Brainfuck's `.`/`,` +
         // tape use `env.BFRuntime`; Dartmouth BASIC's `PRINT` uses
         // `env.BasicRuntime`. Compile it onto the classpath with `javac`.
-        let (file, source) = if p.lang == Language::Brainfuck {
+        // Both Brainfuck's `.`/`,` and — since BA2 — Dartmouth BASIC's `PRINT`
+        // lower to the generic `putchar` builtin (`invokestatic
+        // env/BFRuntime.putchar(I)V`), so both need `env.BFRuntime` on the
+        // classpath. (The legacy `env.BasicRuntime.println` path is retained for
+        // any future language that lowers `print_i64`.)
+        let (file, source) = if p.lang == Language::Brainfuck
+            || p.lang == Language::DartmouthBasic
+        {
             ("BFRuntime.java", BF_RUNTIME_JAVA)
         } else {
             ("BasicRuntime.java", BASIC_RUNTIME_JAVA)
@@ -1752,7 +1764,9 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
             .collect::<Vec<_>>()
             .join("\n")
     } else {
-        String::from_utf8_lossy(&byte_buf).to_string()
+        // `.trim()` like the subprocess columns: BA2 BASIC `PRINT` ends each
+        // line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
+        String::from_utf8_lossy(&byte_buf).trim().to_string()
     };
     Some((code, stdout))
 }
@@ -1849,7 +1863,9 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
             .collect::<Vec<_>>()
             .join("\n")
     } else {
-        String::from_utf8_lossy(&byte_buf).to_string()
+        // `.trim()` like the subprocess columns: BA2 BASIC `PRINT` ends each
+        // line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
+        String::from_utf8_lossy(&byte_buf).trim().to_string()
     };
     Some((code, stdout))
 }
