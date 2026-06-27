@@ -386,6 +386,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/readiness", move |_| {
+            runtime_readiness_response(&runtime)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/dashboard", move |_| {
             runtime_dashboard_response(&runtime)
         });
@@ -1009,6 +1016,15 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/readiness",
+        category: "health",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/dashboard",
         category: "dashboard",
         surface: "smart_home",
@@ -1379,6 +1395,14 @@ fn runtime_health_response(runtime: &SmartHomePlatformHttpRuntime) -> WebRespons
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
     WebResponse::json(runtime_health_json(runtime, &runtime_guard).into_bytes())
+}
+
+fn runtime_readiness_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    WebResponse::json(runtime_readiness_json(runtime, &runtime_guard).into_bytes())
 }
 
 fn runtime_dashboard_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
@@ -2008,6 +2032,218 @@ fn runtime_health_json(
     )
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RuntimeReadinessCheck {
+    check_id: &'static str,
+    label: &'static str,
+    status: &'static str,
+    route: &'static str,
+    message: String,
+}
+
+fn runtime_readiness_json(
+    runtime: &SmartHomePlatformHttpRuntime,
+    runtime_guard: &SmartHomeRuntime,
+) -> String {
+    let checks = runtime_readiness_checks(runtime, runtime_guard);
+    let blocking_checks = checks
+        .iter()
+        .filter(|check| check.status == "blocked")
+        .count();
+    let attention_checks = checks
+        .iter()
+        .filter(|check| check.status == "attention")
+        .count();
+    let passing_checks = checks.iter().filter(|check| check.status == "ok").count();
+    let status = if blocking_checks > 0 {
+        "blocked"
+    } else if attention_checks > 0 {
+        "attention"
+    } else {
+        "ready"
+    };
+
+    format!(
+        "{{\"generated_at_ms\":{},\"status\":{},\"ready\":{},\"summary\":{{\"total_checks\":{},\"passing_checks\":{},\"attention_checks\":{},\"blocking_checks\":{}}},\"links\":{{\"health\":{},\"dashboard\":{},\"bootstrap\":{},\"api\":{},\"state_gaps\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"checks\":[{}]}}",
+        runtime.now_ms,
+        json_string(status),
+        blocking_checks == 0,
+        checks.len(),
+        passing_checks,
+        attention_checks,
+        blocking_checks,
+        json_string("/api/smart_home/health"),
+        json_string("/api/smart_home/dashboard"),
+        json_string("/api/smart_home/bootstrap"),
+        json_string("/api/smart_home/api"),
+        json_string("/api/smart_home/states?stale=true"),
+        json_string("/api/smart_home/command_results"),
+        json_string("/api/smart_home/authorization_decisions"),
+        checks
+            .iter()
+            .map(readiness_check_json)
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn runtime_readiness_checks(
+    runtime: &SmartHomePlatformHttpRuntime,
+    runtime_guard: &SmartHomeRuntime,
+) -> Vec<RuntimeReadinessCheck> {
+    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms);
+    let topology = runtime_guard.topology_summary();
+    let pending = snapshot.pending_work_summary();
+
+    vec![
+        readiness_check(
+            "registry",
+            "Registry",
+            if snapshot.registry_counts.entities == 0 {
+                "blocked"
+            } else {
+                "ok"
+            },
+            "/api/smart_home/runtime",
+            format!(
+                "{} bridges, {} devices, and {} entities are registered",
+                snapshot.registry_counts.bridges,
+                snapshot.registry_counts.devices,
+                snapshot.registry_counts.entities
+            ),
+        ),
+        readiness_check(
+            "topology",
+            "Topology",
+            if topology.bridges == 0 || topology.devices == 0 {
+                "blocked"
+            } else {
+                "ok"
+            },
+            "/api/smart_home/dashboard",
+            format!(
+                "{} devices are assigned to rooms and {} devices are missing rooms",
+                topology.devices_with_room, topology.devices_without_room
+            ),
+        ),
+        readiness_check(
+            "state_coverage",
+            "State Coverage",
+            if topology.has_state_gaps() {
+                "attention"
+            } else {
+                "ok"
+            },
+            "/api/smart_home/states?stale=true",
+            format!(
+                "{} entities have state and {} entities need state refresh",
+                topology.entities_with_state, topology.entities_without_state
+            ),
+        ),
+        readiness_check(
+            "event_bus",
+            "Event Bus",
+            if pending.has_event_backlog() {
+                "attention"
+            } else {
+                "ok"
+            },
+            "/api/smart_home/events",
+            format!(
+                "{} events are pending delivery across {} subscriptions",
+                pending.event_backlog_count, snapshot.event_bus.subscription_count
+            ),
+        ),
+        readiness_check(
+            "discovery",
+            "Discovery",
+            if pending.unhealthy_discovery_worker_count > 0 {
+                "blocked"
+            } else if pending.discovery_worker_due_count > 0 {
+                "attention"
+            } else {
+                "ok"
+            },
+            "/api/smart_home/bridges",
+            format!(
+                "{} discovery workers are due and {} are unhealthy",
+                pending.discovery_worker_due_count, pending.unhealthy_discovery_worker_count
+            ),
+        ),
+        readiness_check(
+            "supervisor",
+            "Supervisor",
+            if pending.unhealthy_worker_count > 0 {
+                "blocked"
+            } else if pending.restart_due_count > 0 {
+                "attention"
+            } else {
+                "ok"
+            },
+            "/api/smart_home/health",
+            format!(
+                "{} workers need restart and {} workers are unhealthy",
+                pending.restart_due_count, pending.unhealthy_worker_count
+            ),
+        ),
+        readiness_check(
+            "authorization",
+            "Authorization",
+            if snapshot.registry_counts.capability_grants == 0 {
+                "attention"
+            } else {
+                "ok"
+            },
+            "/api/smart_home/authorization_decisions",
+            format!(
+                "{} capability grants are available for runtime-authorized commands",
+                snapshot.registry_counts.capability_grants
+            ),
+        ),
+        readiness_check(
+            "desired_state",
+            "Desired State",
+            if snapshot.desired_state_count > 0 {
+                "attention"
+            } else {
+                "ok"
+            },
+            "/api/smart_home/desired_states",
+            format!(
+                "{} desired-state targets are active across {} capabilities",
+                snapshot.desired_state_count, snapshot.desired_capability_count
+            ),
+        ),
+    ]
+}
+
+fn readiness_check(
+    check_id: &'static str,
+    label: &'static str,
+    status: &'static str,
+    route: &'static str,
+    message: impl Into<String>,
+) -> RuntimeReadinessCheck {
+    RuntimeReadinessCheck {
+        check_id,
+        label,
+        status,
+        route,
+        message: message.into(),
+    }
+}
+
+fn readiness_check_json(check: &RuntimeReadinessCheck) -> String {
+    format!(
+        "{{\"check_id\":{},\"label\":{},\"status\":{},\"route\":{},\"message\":{}}}",
+        json_string(check.check_id),
+        json_string(check.label),
+        json_string(check.status),
+        json_string(check.route),
+        json_string(&check.message),
+    )
+}
+
 fn runtime_dashboard_json(
     runtime: &SmartHomePlatformHttpRuntime,
     runtime_guard: &SmartHomeRuntime,
@@ -2115,9 +2351,10 @@ fn runtime_bootstrap_json(
     let authorization_summary = runtime_guard.authorization_decision_summary(&authorization_query);
 
     format!(
-        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"dashboard\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
+        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
         runtime.now_ms,
         json_string(VERSION),
+        json_string("/api/smart_home/readiness"),
         json_string("/api/smart_home/dashboard"),
         json_string("/api/smart_home/api"),
         json_string("/api/smart_home/states"),
@@ -5747,6 +5984,32 @@ mod tests {
     }
 
     #[test]
+    fn runtime_web_app_serves_readiness_checklist() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let readiness = response_body(
+            app.handle(request("GET", "/api/smart_home/readiness"))
+                .into(),
+        );
+
+        assert!(readiness.contains(r#""generated_at_ms":5000"#));
+        assert!(readiness.contains(r#""status":"attention""#));
+        assert!(readiness.contains(r#""ready":true"#));
+        assert!(readiness.contains(r#""total_checks":8"#));
+        assert!(readiness.contains(r#""passing_checks":7"#));
+        assert!(readiness.contains(r#""attention_checks":1"#));
+        assert!(readiness.contains(r#""blocking_checks":0"#));
+        assert!(readiness.contains(r#""health":"/api/smart_home/health""#));
+        assert!(readiness.contains(r#""state_gaps":"/api/smart_home/states?stale=true""#));
+        assert!(readiness.contains(r#""check_id":"registry""#));
+        assert!(readiness.contains(r#""status":"ok""#));
+        assert!(readiness.contains(r#""check_id":"state_coverage""#));
+        assert!(readiness.contains(r#""route":"/api/smart_home/states?stale=true""#));
+        assert!(readiness.contains(r#"2 entities need state refresh"#));
+        assert!(readiness.contains(r#""check_id":"authorization""#));
+        assert!(readiness.contains(r#"1 capability grants are available"#));
+    }
+
+    #[test]
     fn runtime_web_app_serves_dashboard_overview() {
         let app = home_assistant_runtime_web_app(fixture_runtime(true));
         let response: web_core::WebResponse = app
@@ -5808,6 +6071,7 @@ mod tests {
 
         assert!(bootstrap.contains(r#""generated_at_ms":5000"#));
         assert!(bootstrap.contains(r#""version":"0.1.0""#));
+        assert!(bootstrap.contains(r#""readiness":"/api/smart_home/readiness""#));
         assert!(bootstrap.contains(r#""dashboard":"/api/smart_home/dashboard""#));
         assert!(bootstrap.contains(r#""states":"/api/smart_home/states""#));
         assert!(bootstrap.contains(r#""health":{"generated_at_ms":5000"#));
@@ -5826,6 +6090,7 @@ mod tests {
         let app = home_assistant_runtime_web_app(fixture_runtime(true));
 
         let catalog = response_body(app.handle(request("GET", "/api/smart_home/api")).into());
+        assert!(catalog.contains(r#""path":"/api/smart_home/readiness""#));
         assert!(catalog.contains(r#""path":"/api/smart_home/dashboard""#));
         assert!(catalog.contains(r#""path":"/api/services/:domain/:service""#));
         assert!(catalog

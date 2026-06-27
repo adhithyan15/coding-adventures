@@ -19,6 +19,7 @@ stable local API responses for:
 - `POST /api/states/:entity_id`
 - `/api/smart_home/runtime`
 - `/api/smart_home/health`
+- `/api/smart_home/readiness`
 - `/api/smart_home/dashboard`
 - `/api/smart_home/bootstrap`
 - `/api/smart_home/api`
@@ -66,19 +67,19 @@ tool.
 The `GET /api/smart_home/*` routes expose dashboard-ready read models for the
 same runtime: pending-work snapshot counts, entity and capability registry
 records, a compact health probe, a capability catalog grouped across entities,
-device and bridge inventory, room topology summaries, a dashboard overview, a
-bootstrap payload that composes startup links, route discovery, state gaps, and
-recent audit summaries, an API route catalog with surface/method/authorization
-filters, checkpointed event-log entries with detail lookups, a native service
-catalog for command affordances and Home Assistant target aliases, a native
-current-state registry with confidence/source/staleness filters and detail
-lookups, a scene registry with room/action projections, command-result audit
-records with command, bridge, correlation, status, and sort filters, indexed
-authorization decisions with principal, outcome, and sort filters, and
-desired-state supervision targets. State-history reads expose registry-backed
-device events with Home Assistant entity aliases, state deltas, timestamp
-filters, and event-id detail lookups; the Home Assistant-style history route
-accepts `filter_entity_id`.
+device and bridge inventory, room topology summaries, a readiness checklist
+with actionable links, a dashboard overview, a bootstrap payload that composes
+startup links, route discovery, state gaps, and recent audit summaries, an API
+route catalog with surface/method/authorization filters, checkpointed event-log
+entries with detail lookups, a native service catalog for command affordances
+and Home Assistant target aliases, a native current-state registry with
+confidence/source/staleness filters and detail lookups, a scene registry with
+room/action projections, command-result audit records with command, bridge,
+correlation, status, and sort filters, indexed authorization decisions with
+principal, outcome, and sort filters, and desired-state supervision targets.
+State-history reads expose registry-backed device events with Home Assistant
+entity aliases, state deltas, timestamp filters, and event-id detail lookups;
+the Home Assistant-style history route accepts `filter_entity_id`.
 
 ## Dependencies
 
@@ -106,6 +107,7 @@ Then query it from another shell:
 curl http://127.0.0.1:8123/api/
 curl http://127.0.0.1:8123/api/states
 curl http://127.0.0.1:8123/api/smart_home/health
+curl http://127.0.0.1:8123/api/smart_home/readiness
 curl http://127.0.0.1:8123/api/smart_home/dashboard
 curl http://127.0.0.1:8123/api/smart_home/bootstrap
 curl 'http://127.0.0.1:8123/api/smart_home/api?surface=home_assistant&method=POST'
