@@ -2482,7 +2482,30 @@ fn lower_function(
     local_types.push(ValueType::I32);
 
     let use_dispatch = has_control_flow(fn_);
-    let (blocks, label_to_block) = split_into_blocks(fn_);
+    let (mut blocks, label_to_block) = split_into_blocks(fn_);
+    // If the last basic block contains a conditional branch (jmp_if_true /
+    // jmp_if_false), it cannot restart the dispatch loop from inside the WASM
+    // dispatch-loop pattern.  When bb_{N-1} (the last block) is entered via
+    // the br_table, execute_branch truncates the label_stack to [$exit,
+    // $dispatch], then the matching END instruction pops $dispatch, leaving
+    // only [$exit].  A `jmp_if_true` inside an `if` block at depth 1 would
+    // exit $exit (terminating the function prematurely) instead of restarting
+    // $dispatch.  Fix: append a sentinel empty block so the block with the
+    // conditional branches is now the second-to-last (block_idx = N-1, with
+    // n_blocks = N+1), where the depth formula n_blocks-block_idx-1 correctly
+    // resolves to $dispatch depth 1.  The sentinel bb_N is never dispatched
+    // to (dispatch_reg is never set to N).
+    if blocks
+        .last()
+        .map(|b| {
+            b.instrs
+                .iter()
+                .any(|i| matches!(i.op.as_str(), "jmp_if_true" | "jmp_if_false"))
+        })
+        .unwrap_or(false)
+    {
+        blocks.push(BasicBlock { instrs: Vec::new() });
+    }
     let n_blocks = blocks.len();
 
     let mut code: Vec<u8> = Vec::new();

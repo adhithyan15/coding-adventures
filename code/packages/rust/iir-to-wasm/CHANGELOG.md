@@ -3,6 +3,29 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.18.0] — 2026-06-26 (LANG-FULL BA1-WASM — GOSUB/RETURN dispatch-loop fix)
+
+**Root-cause fix:** the WASM dispatch-loop lowering used a depth formula that
+assumed the last basic block never needs to restart the dispatch loop.  Dartmouth
+BASIC's `GOSUB`/`RETURN` lowers the return-address dispatch (`RETURN` → computed
+`goto`) via `jmp_if_true` chains, and those chains live in `line_N` — which the
+compiler emits last in the flat instruction stream, making it the last basic block.
+
+When `bb_{N-1}` (the last block) is entered via the `br_table`, `execute_branch`
+truncates the `label_stack` to `[$exit, $dispatch]`, then the matching `END`
+instruction pops `$dispatch`, leaving only `[$exit]`.  A `jmp_if_true` depth=1
+inside the `if` block exits `$exit` (terminating the function without pushing a
+return value), which causes `wasm-execution` to raise `StackUnderflow` when it
+tries to collect the `i64` return.
+
+**Fix:** in `lower_function`, after `split_into_blocks`, check whether the last
+basic block contains any `jmp_if_true` or `jmp_if_false`.  If so, append a
+sentinel empty block so the real last block is now `bb_{N-1}` (second-to-last),
+where the formula `n_blocks - block_idx - 1` correctly resolves to the `$dispatch`
+loop label.  The sentinel `bb_N` is unreachable — `dispatch_reg` is never set to
+`N`.  All 107 existing iir-to-wasm tests pass unchanged; the matrix guard
+`matrix_every_proven_cell_agrees` passes with Wasm added to both BA1 cells.
+
 ## [0.17.0] — 2026-06-23 (LANG-FULL E8 — numeric conversions integer↔real, PR-3)
 
 WASM lowering for the three E8 conversion opcodes (vm-core 0.9.0 gave the
