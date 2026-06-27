@@ -346,6 +346,10 @@ runtime and Chief of Staff tools a typed catalog for:
   disposition-action readiness execution handoff action protocol-evidence
   package handoff rows that project Zigbee, Z-Wave, and Thread packet
   readiness into package handoff work
+- mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence package handoff
+  summaries that combine package handoff rows with next actionable protocol
+  and evidence pointers
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work
