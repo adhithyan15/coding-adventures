@@ -2640,6 +2640,34 @@ mod tests {
     }
 
     #[test]
+    fn compiles_string_concat_if_expression_equality() {
+        let src = "10 LET A$ = \"O\"\n\
+                   20 IF A$ + \"K\" = \"OK\" THEN 50\n\
+                   30 PRINT \"BAD\"\n\
+                   40 END\n\
+                   50 PRINT \"OK\"\n\
+                   60 END\n";
+        let m = compile(src).expect("ok");
+        let body = &m.functions[0].instructions;
+        let concat_dest = body.iter()
+            .find(|i| i.op == "str_concat"
+                && matches!(i.srcs.as_slice(), [
+                    Operand::Var(left),
+                    Operand::Var(_right)
+                ] if left == "__basic_str_A"))
+            .and_then(|i| i.dest.as_deref())
+            .expect("IF A$ + literal should lower through str_concat");
+        assert!(body.iter().any(|i| i.op == "str_eq"
+            && matches!(i.srcs.as_slice(), [
+                Operand::Var(left),
+                Operand::Var(_right)
+            ] if left == concat_dest)),
+            "string expression IF should compare the temporary concat result");
+        assert!(body.iter().any(|i| i.op == "jmp_if_true"),
+            "string expression equality should branch on true");
+    }
+
+    #[test]
     fn compiles_string_variable_if_equality() {
         let src = "10 LET A$ = \"Y\"\n\
                    20 IF A$ = \"Y\" THEN 40\n\

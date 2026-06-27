@@ -1,5 +1,22 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.21.0 — 2026-06-27 — BA4 string concat expressions in IF equality
+
+`IF` string comparisons now have an explicit regression proof for consuming a
+string expression result before `str_eq`:
+
+```basic
+10 LET A$ = "O"
+20 IF A$ + "K" = "OK" THEN 50
+30 PRINT "BAD"
+40 END
+50 PRINT "OK"
+```
+
+The existing BA4 relation path lowers `A$ + "K"` through E4 `str_concat`, feeds
+that temporary into `str_eq`, and branches with the existing line-control
+machinery.
+
 ## 0.20.0 — 2026-06-27 — BA4 string concat expressions in PRINT
 
 `PRINT` now has an explicit regression proof for consuming a string expression

@@ -150,8 +150,9 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `LET A$ = "O" + "K"; PRINT A$` proves literal `str_concat`. `LET A$ = "OK";
   LET B$ = A$; PRINT B$` proves scalar string copy by lowering through
   `str_concat` with an empty suffix. `LET A$ = "O"; PRINT A$ + "K"` proves
-  `PRINT` can consume a temporary E4 string-expression result. String compares
-  in `IF A$ = "Y"` and
+  `PRINT` can consume a temporary E4 string-expression result, and
+  `IF A$ + "K" = "OK" THEN ...` proves the same temporary expression path before
+  `str_eq`. String compares in `IF A$ = "Y"` and
   `IF A$ <> "Y"` lower to `str_eq` (the latter branches with `jmp_if_false`) and
   now drive line-control branching on all seven backends; string arrays, string
   `INPUT`, and broader dynamic string expressions remain follow-ups.
@@ -231,8 +232,9 @@ merge before the next:
    stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Scalar copy
    `LET A$ = "OK"; LET B$ = A$; PRINT B$` now returns stdout `OK` on the same
    seven backends, and `LET A$ = "O"; PRINT A$ + "K"` proves `PRINT` of a
-   temporary concat expression. Richer dynamic string expressions, string arrays,
-   and string `INPUT` remain follow-ups. A second
+   temporary concat expression. `LET A$ = "O"; IF A$ + "K" = "OK" THEN ...`
+   proves that temporary expression before `str_eq`. Richer dynamic string
+   expressions, string arrays, and string `INPUT` remain follow-ups. A second
    matrix `Prog` proves `IF A$ = "Y" THEN ...` routes to `PRINT "OK"` through
    E4 `str_eq` on the same seven backends.
 2b. ✅ **AL4-literal-output proof** — `algol-iir-compiler` recognises
