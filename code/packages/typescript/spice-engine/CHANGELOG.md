@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `deviceModelCapacitanceAuditFixtures` runnable one-device AC fixtures
+  with `.ac` reference deck lines and stable high-frequency probe-magnitude
+  windows for diode, BJT, JFET, and Level-1 MOS model-depth audits, matching
+  Python and Rust.
 - Add `deviceModelTemperatureAuditFixtures` runnable one-device DC
   temperature-sweep fixtures with `.temp` reference deck lines and stable
   probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth

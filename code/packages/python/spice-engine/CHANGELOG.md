@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Device model capacitance audit fixtures** —
+  `device_model_capacitance_audit_fixtures()` now exposes runnable
+  one-device AC fixtures with `.ac` reference deck lines and stable
+  high-frequency probe-magnitude windows for diode, BJT, JFET, and Level-1 MOS
+  model-depth audits, matching Rust and TypeScript.
+
 - **Device model temperature audit fixtures** —
   `device_model_temperature_audit_fixtures()` now exposes runnable one-device
   DC temperature-sweep fixtures with `.temp` reference deck lines and stable

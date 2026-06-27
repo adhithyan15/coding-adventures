@@ -182,6 +182,7 @@ from spice_engine import (
     deck_table_records,
     device_model_audit_fixtures,
     device_model_behavior_audit_fixtures,
+    device_model_capacitance_audit_fixtures,
     device_model_temperature_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
     digital_event_streams_to_voltage_sources,
@@ -453,6 +454,37 @@ def test_device_model_temperature_audit_fixtures_run_reference_sweeps() -> None:
 
     jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
     assert jfet_fixture.temperature_behavior.startswith("JFET temperature scaling is intentionally")
+
+
+def test_device_model_capacitance_audit_fixtures_run_reference_ac_points() -> None:
+    fixtures = device_model_capacitance_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-capacitance-ac",
+        "bjt-capacitance-ac",
+        "jfet-capacitance-invariant-ac",
+        "mos-level1-capacitance-ac",
+    ]
+
+    for fixture in fixtures:
+        result = ac_sweep(
+            fixture.circuit,
+            f_start=fixture.frequency_hz,
+            f_stop=fixture.frequency_hz,
+            n_points=1,
+            sweep="lin",
+        )
+        value = abs(result.points[0].node_voltages[fixture.probe_node])
+        assert fixture.expected_magnitude_min <= value <= fixture.expected_magnitude_max, (
+            f"{fixture.name} expected {fixture.expected_magnitude_min} <= "
+            f"{value} <= {fixture.expected_magnitude_max}"
+        )
+        assert fixture.deck_lines[0].startswith("* device-model capacitance fixture:")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert any(line.startswith(".ac ") for line in fixture.deck_lines)
+        assert fixture.capacitance_behavior
+
+    jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
+    assert "intentionally unmodeled" in jfet_fixture.capacitance_behavior
 
 
 def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
