@@ -266,6 +266,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 lexical string locals can drive equality control flow too.
+    // Two local string slots feed `str_eq`, and the resulting i64 boolean flows
+    // into the existing `if` branch shape.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((s \"OK\") (t \"OK\")) (if (string=? s t) 42 0))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — E4 lexical string locals feeding concat. This takes the local
     // string path beyond indexing: two `let` string slots feed `str_concat`,
     // then `str_len` observes the result. It proves local non-literal string

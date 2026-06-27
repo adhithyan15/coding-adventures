@@ -56,6 +56,9 @@ LANG VM chain.
 > `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67` everywhere.
 > Sequential lexical Twig string locals also run:
 > `(let* ((s "HELLO")) (string-length s))` returns `5` everywhere.
+> Lexical local strings can drive equality branches too:
+> `(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))` returns `42`
+> everywhere.
 > Local string concat now runs on the same path:
 > `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns
 > `5` everywhere.

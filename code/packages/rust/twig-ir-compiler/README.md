@@ -29,7 +29,7 @@ metadata ops: `str_const` for each direct literal, then `str_len`, `str_index`,
 immutable top-level string values, so `(define s "ABC") (string-ref s 2)` and
 named-string `string-append`/`string=?` proofs avoid the dynamic builtin path.
 Lexical `let`/`let*` string literal bindings use the same typed registers, so
-local strings can feed `string-ref`, `string-length`, and `string-append`
+local strings can feed `string-ref`, `string-length`, `string=?`, and `string-append`
 without dynamic builtins. Reassignable strings, captured strings, and broader
 dynamic string values remain follow-up work.
 

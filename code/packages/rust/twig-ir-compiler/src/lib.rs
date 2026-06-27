@@ -1637,6 +1637,25 @@ mod tests {
     }
 
     #[test]
+    fn let_string_bindings_can_drive_e4_string_eq_branch() {
+        let m = compile_source(
+            "(let ((s \"OK\") (t \"OK\")) (if (string=? s t) 42 0))",
+            "string_let_eq_branch",
+        )
+        .expect("let string bindings should feed E4 string equality");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"str_eq"), "expected str_eq in {ops:?}");
+        assert!(ops.contains(&"jmp_if_false"), "expected branch in {ops:?}");
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let string equality branch should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
     fn let_string_bindings_feed_e4_concat_length() {
         let m = compile_source(
             "(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))",

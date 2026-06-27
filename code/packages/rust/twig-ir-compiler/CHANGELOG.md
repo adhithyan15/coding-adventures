@@ -1,5 +1,18 @@
 # Changelog — twig-ir-compiler
 
+## [0.30.0] — 2026-06-27 (LANG-FULL E4 — lexical string equality branch proof)
+
+Lexical string bindings now have an explicit compiler proof for `string=?`
+driving control flow:
+
+```scheme
+(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))
+```
+
+The compiler lowers both locals to typed `str_const` registers, feeds them to
+E4 `str_eq`, and branches on the resulting i64 boolean without using the
+dynamic `call_builtin` path.
+
 ## [0.29.0] — 2026-06-27 (LANG-FULL E4 — lexical string concat proof)
 
 Lexical string bindings now have an explicit compiler proof for non-literal E4

@@ -208,9 +208,10 @@ footholds also prove direct literal `str_len`, `str_index`, `str_eq`, and
 `str_concat`-feeding-`str_len` via exit codes `5`/`66`/`1`/`5`. The named-value
 proofs exercise immutable top-level string values with `str_concat` + `str_len`,
 `str_eq` driving an `if`, and `str_index` via exit codes `5`/`42`/`67` on every
-backend. Lexical string locals now run through indexing, `let*` length, and
-concat: `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`,
-`(let* ((s "HELLO")) (string-length s))` returns `5`, and
+backend. Lexical string locals now run through indexing, `let*` length, equality
+branches, and concat: `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`,
+`(let* ((s "HELLO")) (string-length s))` returns `5`,
+`(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))` returns `42`, and
 `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`
 everywhere. The matrix also covers the **bounds-trap** case: `(string-ref "ABC"
 3)` must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
@@ -300,9 +301,10 @@ merge before the next:
    and integer registers can feed E4 ops. Matrix `Prog`
    `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`, and
    `(let* ((s "HELLO")) (string-length s))` plus
-   `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` return `5`,
-   on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured/reassigned strings
-   still wait for the broader dynamic representation.
+   `(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))` return `5`/`42`, while
+   `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`,
+   on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured/reassigned
+   strings still wait for the broader dynamic representation.
 4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
    diverge.)
