@@ -23,6 +23,30 @@ New end-to-end fixture `tests/diff/simple-fold-isnan/` and integration test
 per-binding boolean folds (including the `ToNumber(" ")=+0` and `"Infinity"`
 cases), and a WHITESPACE_ONLY-fallback regression guard (zero `isNaN(` / zero
 `isFinite(` calls remain). Help-markdown regenerated to Version 0.200.0.
+## [0.204.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold legacy global `escape(…)` / `unescape(…)`
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses the legacy global string
+escapers `escape(str)` / `unescape(str)` (ECMAScript Annex B §B.2.1.1 / §B.2.1.2)
+to a string literal when the single argument is a string literal — via the new
+`escape_js` / `unescape_js` helpers in `closure-pass-constant-fold` 0.50.0.
+
+These operate on UTF-16 **code units** (not the UTF-8 bytes the `…URI` encoders
+use): `escape("a b")` → `"a%20b"`, `escape("~/@")` → `"%7E/@"` (`~` escaped, but
+`/` and `@` are unescaped marks), `escape("é")` → `"%E9"`, `escape("😀")` →
+`"%uD83D%uDE00"`; `unescape` is the inverse, decoding every escape (so
+`unescape("%2F")` → `"/"`, unlike `decodeURI`). `unescape` declines (the call is
+left intact) only when its result would contain an unpaired surrogate
+(`unescape("%uD83D")`).
+
+New end-to-end fixture `tests/diff/simple-fold-escape/` and integration test
+`tests/diff_simple_fold_escape.rs` assert byte-exact SIMPLE output, the
+per-binding folds (including the `%uXXXX` astral case and the declined
+unpaired-surrogate call), and a WHITESPACE_ONLY-fallback regression guard (zero
+`escape(` calls, exactly one `unescape(` call remain). Help-markdown regenerated
+to Version 0.199.0.
 ## [0.202.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold static `Number.parseInt/parseFloat(…)`

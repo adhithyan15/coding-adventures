@@ -220,6 +220,7 @@ members = [
     "lookup-core",
     "logic-engine",
     "math-frontend",
+    "latex",
     "adjudication-ir",
     "llm-cache",
     "llm-gateway",

@@ -31,6 +31,33 @@ never a member access (`window.isNaN`). Added nine unit tests (a V8-oracle
 classification table for `js_to_number`, exact-value checks, through-pass folds
 for both predicates, the number-literal and `"Infinity"`-string cases, and
 non-literal/second-arg/member guards).
+## [0.55.0] - 2026-06-26
+
+### Added — fold legacy global `escape(…)` / `unescape(…)` → string literal
+
+The legacy global string escapers now fold to a string literal when their single
+argument is a string literal (ECMAScript Annex B §B.2.1.1 / §B.2.1.2):
+
+- `escape("a b")` → `"a%20b"`, `escape("~")` → `"%7E"`, `escape("é")` →
+  `"%E9"`, `escape("中")` → `"%u4E2D"`, `escape("😀")` → `"%uD83D%uDE00"`;
+- `unescape("a%20b")` → `"a b"`, `unescape("%2F")` → `"/"`,
+  `unescape("%uD83D%uDE00")` → `"😀"`, `unescape("%")` → `"%"`.
+
+Unlike `encodeURIComponent`/`encodeURI`, `escape`/`unescape` operate on UTF-16
+**code units**, not UTF-8 bytes — so the new `escape_js` helper iterates
+`encode_utf16()`, emitting `%XX` for a unit below `0x100` and `%uXXXX` for a unit
+`0x100` and above. The unescaped set is the ASCII alphanumerics plus the seven
+marks `@ * _ + - . /` (note `~` is **not** unescaped here, unlike the `…URI`
+encoders). `unescape_js` is the inverse: `%uXXXX` → that code unit, `%XX` → that
+code unit, and any `%` not starting a complete escape passes through literally.
+
+Both are free identifiers, so only the bare `escape(...)`/`unescape(...)` callee
+folds — never a member access (`window.escape`). `unescape` **declines** (the
+call is left for the runtime) only when its result would contain an unpaired
+surrogate (e.g. `unescape("%uD83D")`), which has no Rust-`String` / string-literal
+representation; since `unescape` never throws, declining is always sound. Added
+nine unit tests (V8-oracle tables for both helpers, a round-trip, through-pass
+folds, the unpaired-surrogate decline, non-string/second-arg/member guards).
 ## [0.53.0] - 2026-06-26
 
 ### Added — fold static `Number.parseInt(…)` / `Number.parseFloat(…)` → numeric
