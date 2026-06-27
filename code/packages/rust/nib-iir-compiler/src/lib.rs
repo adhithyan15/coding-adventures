@@ -1275,9 +1275,49 @@ impl Compiler {
                 );
                 Ok(dest)
             }
-            // Logical NOT (`!`) needs boolean lowering (compare-to-zero) — a separate
-            // item; for now the inner value passes through unchanged (the prior V1
-            // behaviour). A bare operand (no operator) also passes through.
+            // LANG-FULL N9 — logical NOT (`!`) maps the same truthiness
+            // contract that conditions consume to a 0/1 scalar result. This
+            // branch form avoids relying on tagged equality between VM bools
+            // and integer zero while staying inside the common IIR branch set.
+            Some(("!", _)) | Some((_, "BANG")) => {
+                let result = self.fresh_var();
+                let end_lbl = self.fresh_label();
+
+                let one = self.fresh_var();
+                self.emit_to(
+                    out,
+                    IIRInstr::new("const", Some(one.clone()), vec![Operand::Int(1)], "i64"),
+                );
+                self.emit_to(
+                    out,
+                    IIRInstr::new("mov", Some(result.clone()), vec![Operand::Var(one)], "i64"),
+                );
+                self.emit_to(
+                    out,
+                    IIRInstr::new(
+                        "jmp_if_false",
+                        None,
+                        vec![Operand::Var(val), Operand::Var(end_lbl.clone())],
+                        "void",
+                    ),
+                );
+
+                let zero = self.fresh_var();
+                self.emit_to(
+                    out,
+                    IIRInstr::new("const", Some(zero.clone()), vec![Operand::Int(0)], "i64"),
+                );
+                self.emit_to(
+                    out,
+                    IIRInstr::new("mov", Some(result.clone()), vec![Operand::Var(zero)], "i64"),
+                );
+                self.emit_to(
+                    out,
+                    IIRInstr::new("label", None, vec![Operand::Var(end_lbl)], "void"),
+                );
+                Ok(result)
+            }
+            // A bare operand (no operator) passes through.
             _ => Ok(val),
         }
     }
@@ -1861,6 +1901,45 @@ mod tests {
         assert!(
             !ops.contains(&"call_builtin"),
             "|| must not leak a call_builtin; got {ops:?}"
+        );
+    }
+
+    #[test]
+    fn logical_not_lowers_to_truthiness_branch() {
+        // LANG-FULL N9: the old behavior passed the inner expression through,
+        // so `!(1 == 2)` behaved like `1 == 2`. The fixed lowering inverts via
+        // the same truthiness branch contract used by conditions.
+        let m = compile_source(
+            "fn main() -> u8 { if !(1 == 2) { return 42; } return 0; }",
+            "test",
+        )
+        .expect("ok");
+        let ops: Vec<&str> = m.functions[0]
+            .instructions
+            .iter()
+            .map(|instr| instr.op.as_str())
+            .collect();
+        assert!(
+            ops.contains(&"jmp_if_false"),
+            "`!` must branch on operand truthiness; got {ops:?}"
+        );
+        assert!(
+            m.functions[0]
+                .instructions
+                .iter()
+                .any(|instr| instr.op == "const"
+                    && matches!(instr.srcs.first(), Some(Operand::Int(1)))),
+            "`!` must materialise a true scalar; got {:?}",
+            m.functions[0].instructions
+        );
+        assert!(
+            m.functions[0]
+                .instructions
+                .iter()
+                .any(|instr| instr.op == "const"
+                    && matches!(instr.srcs.first(), Some(Operand::Int(0)))),
+            "`!` must materialise a false scalar; got {:?}",
+            m.functions[0].instructions
         );
     }
 

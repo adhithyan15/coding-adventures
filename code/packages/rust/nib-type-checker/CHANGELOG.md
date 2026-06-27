@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 — 2026-06-27 — logical NOT is typed as bool (LANG-FULL N9)
+
+`unary_expr` now recognizes leading `!` and types the expression as `Bool`
+instead of transparently passing through the operand type. This lets Nib accept
+logical-not conditions and bool bindings such as `if !(1 == 2) { ... }` and
+`let b: bool = !false;`.
+
 ## 0.4.0 — 2026-06-27 — module-scoped static names type-check across functions (LANG-FULL N8)
 
 Top-level `static NAME: type = literal;` declarations now seed a module-scope

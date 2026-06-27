@@ -1,5 +1,25 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.18.0 — 2026-06-27 — logical NOT lowers through truthiness branches (LANG-FULL N9)
+
+Unary `!` now lowers to a portable boolean inversion:
+
+```text
+dest = const 1
+jmp_if_false value, done
+dest = const 0
+done:
+```
+
+The old behavior passed the inner expression through unchanged, so `!(1 == 2)`
+behaved like `1 == 2`. The lang matrix now proves:
+
+```nib
+fn main() -> u8 { if !(1 == 2) { return 42; } return 0; }
+```
+
+Expected exit code is `42` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+
 ## 0.17.0 — 2026-06-27 — mutable module statics lower to shared globals (LANG-FULL N8)
 
 Adds the first executed Nib `static` slice:

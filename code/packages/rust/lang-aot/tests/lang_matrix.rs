@@ -424,6 +424,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — logical NOT (`!`, LANG-FULL N9). `1 == 2` is false, so
+    // `!(1 == 2)` must be true and take the 42 branch. The old passthrough
+    // behavior would return 0 here.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { if !(1 == 2) { return 42; } return 0; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Nib — module-scoped `const` (LANG-FULL N5). A top-level `const N: u8 = 42;` is folded
     // to its literal at each use, so referencing it in `main` needs no runtime storage and
     // runs on every backend.

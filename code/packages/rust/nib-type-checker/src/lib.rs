@@ -290,10 +290,12 @@ impl Checker {
         }
 
         let inferred = match node.rule_name.as_str() {
-            "expr" | "or_expr" | "and_expr" | "eq_expr" | "cmp_expr" | "bitwise_expr"
-            | "unary_expr" => child_nodes(node)
-                .first()
-                .and_then(|child| self.infer_expr(child, env, expected)),
+            "expr" | "or_expr" | "and_expr" | "eq_expr" | "cmp_expr" | "bitwise_expr" => {
+                child_nodes(node)
+                    .first()
+                    .and_then(|child| self.infer_expr(child, env, expected))
+            }
+            "unary_expr" => self.infer_unary_expr(node, env, expected),
             "add_expr" | "mul_expr" => {
                 let operands = child_nodes(node);
                 // The expected width flows to BOTH operands (an arithmetic op
@@ -335,6 +337,30 @@ impl Checker {
         inferred
     }
 
+    fn infer_unary_expr(
+        &mut self,
+        node: &GrammarASTNode,
+        env: &HashMap<String, NibType>,
+        expected: Option<&NibType>,
+    ) -> Option<NibType> {
+        let inner = child_nodes(node)
+            .into_iter()
+            .find(|child| is_expr_rule(&child.rule_name))?;
+        let op = node.children.iter().find_map(|child| match child {
+            ASTNodeOrToken::Token(token) => Some(token),
+            ASTNodeOrToken::Node(_) => None,
+        });
+
+        match op.map(|token| (token.value.as_str(), token.effective_type_name())) {
+            Some(("!", _)) | Some((_, "BANG")) => {
+                self.infer_expr(inner, env, None);
+                Some(NibType::Bool)
+            }
+            Some(("~", _)) | Some((_, "TILDE")) => self.infer_expr(inner, env, expected),
+            _ => self.infer_expr(inner, env, expected),
+        }
+    }
+
     fn error(&mut self, message: impl Into<String>, node: &GrammarASTNode) {
         self.errors.push(TypeErrorDiagnostic {
             message: message.into(),
@@ -352,6 +378,23 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
             ASTNodeOrToken::Token(_) => None,
         })
         .collect()
+}
+
+fn is_expr_rule(name: &str) -> bool {
+    matches!(
+        name,
+        "expr"
+            | "or_expr"
+            | "and_expr"
+            | "eq_expr"
+            | "cmp_expr"
+            | "add_expr"
+            | "mul_expr"
+            | "bitwise_expr"
+            | "unary_expr"
+            | "primary"
+            | "call_expr"
+    )
 }
 
 fn first_name(node: &GrammarASTNode) -> Option<String> {
@@ -516,5 +559,17 @@ mod tests {
             "expected static width error, got {:?}",
             result.errors
         );
+    }
+
+    #[test]
+    fn check_source_accepts_logical_not_condition() {
+        let result = check_source("fn main() -> u8 { if !(1 == 2) { return 42; } return 0; }");
+        assert!(result.ok, "expected success, got {:?}", result.errors);
+    }
+
+    #[test]
+    fn check_source_accepts_logical_not_bool_binding() {
+        let result = check_source("fn main() { let b: bool = !false; }");
+        assert!(result.ok, "expected success, got {:?}", result.errors);
     }
 }

@@ -1,8 +1,8 @@
 [package]
 name = "nib-iir-compiler"
-version = "0.17.0"
+version = "0.18.0"
 edition = "2021"
-description = "Compile Nib source to InterpreterIR (IIRModule), feeding the LANG-runtime AOT/JIT pipeline.  v0.17.0 (LANG-FULL N8 — static globals): top-level integer-literal `static` declarations seed shared IIR globals at `main` entry, unshadowed reads lower to `global_load`, and assignments lower to `global_store`; the lang matrix proves a cross-function counter reaches 42 on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.16.0 lowered unary `~` to shared IIR `not`.  v0.5.0 marks functions FullyTyped for JITCore."
+description = "Compile Nib source to InterpreterIR (IIRModule), feeding the LANG-runtime AOT/JIT pipeline.  v0.18.0 (LANG-FULL N9 — logical NOT): unary `!` lowers through the common truthiness branch contract, and the lang matrix proves `!(1 == 2)` reaches 42 on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.17.0 added static globals; v0.16.0 lowered unary `~` to shared IIR `not`."
 
 [dependencies]
 coding-adventures-nib-parser = { path = "../nib-parser" }

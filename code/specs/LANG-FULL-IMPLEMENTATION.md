@@ -10,7 +10,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Language | What the matrix actually runs end-to-end on the code-gen backends | The subset gap |
 |---|---|---|
 | Twig | `42`, variadic arithmetic, top-level value `define`, and typed E4 string literal/named/local proofs | rich Lisp frontend; lists/lambdas/dynamic globals/records/symbols still need E5/E6, and captured/reassigned strings stay on the dynamic path |
-| Nib | typed calls, `*`/`/`, `for`, bitwise, short-circuit logic, consts, wrap/sat arithmetic, and module `static`s all run on all 7 backends | logical `!`, const/static-expression folding, BCD semantics, and Intel-4004 RAM mapping remain |
+| Nib | typed calls, `*`/`/`, `for`, bitwise, short-circuit logic, logical `!`, consts, wrap/sat arithmetic, and module `static`s all run on all 7 backends | const/static-expression folding, BCD semantics, and Intel-4004 RAM mapping remain |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); richer string ops and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
@@ -383,6 +383,11 @@ backend immediately) come before the enabler-dependent items.
   `static counter: u8 = 40; bump(1); bump(1); return counter` → 42 across
   native/LLVM/WASM/JVM/CLR/VM/JIT. Const/static-expression folding, BCD storage
   semantics, and Intel-4004 RAM mapping remain follow-ups.
+- ✅ **N9** — logical `!` (nib-type-checker 0.5.0, nib-iir-compiler 0.18.0).
+  `unary_expr` now types leading `!` as `bool` and lowers it through the existing
+  truthiness branch contract to a 0/1 scalar. Verified by RUNNING
+  `if !(1 == 2) { return 42; }` across native/LLVM/WASM/JVM/CLR/VM/JIT; the old
+  passthrough behavior would have returned 0.
 
 ### Oct  (sister to Nib)
 > **Oct had no observable output** (void `main` → always exits 0), which made its value-level
