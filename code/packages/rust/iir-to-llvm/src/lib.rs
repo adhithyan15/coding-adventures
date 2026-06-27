@@ -790,24 +790,53 @@ fn collect_string_literals(
 ) -> (Vec<LlvmStringLiteralDef>, HashMap<String, LlvmStringLiteralRef>) {
     let mut defs = Vec::new();
     let mut map = HashMap::new();
+    fn intern_string_literal(
+        text: &str,
+        defs: &mut Vec<LlvmStringLiteralDef>,
+        map: &mut HashMap<String, LlvmStringLiteralRef>,
+    ) {
+        if map.contains_key(text) {
+            return;
+        }
+        let symbol = format!("@__twig_str_{}", defs.len());
+        let bytes = text.as_bytes().to_vec();
+        map.insert(text.to_string(), LlvmStringLiteralRef {
+            symbol: symbol.clone(),
+            len: bytes.len(),
+        });
+        defs.push(LlvmStringLiteralDef { symbol, bytes });
+    }
     for func in &module.functions {
+        let mut fn_values: HashMap<String, String> = HashMap::new();
         for instr in &func.instructions {
-            if instr.op != "str_const" {
-                continue;
+            match instr.op.as_str() {
+                "str_const" => {
+                    let Some(Operand::Str(s)) = instr.srcs.first() else {
+                        continue;
+                    };
+                    intern_string_literal(s, &mut defs, &mut map);
+                    if let Some(dest) = instr.dest.as_ref() {
+                        fn_values.insert(dest.clone(), s.clone());
+                    }
+                }
+                "str_concat" => {
+                    let (Some(dest), Some(Operand::Var(left)), Some(Operand::Var(right))) = (
+                        instr.dest.as_ref(),
+                        instr.srcs.first(),
+                        instr.srcs.get(1),
+                    ) else {
+                        continue;
+                    };
+                    let (Some(left), Some(right)) = (fn_values.get(left), fn_values.get(right))
+                    else {
+                        continue;
+                    };
+                    let value = format!("{left}{right}");
+                    intern_string_literal(&value, &mut defs, &mut map);
+                    fn_values.insert(dest.clone(), value);
+                }
+                _ => {}
             }
-            let Some(Operand::Str(s)) = instr.srcs.first() else {
-                continue;
-            };
-            if map.contains_key(s) {
-                continue;
-            }
-            let symbol = format!("@__twig_str_{}", defs.len());
-            let bytes = s.as_bytes().to_vec();
-            map.insert(s.clone(), LlvmStringLiteralRef {
-                symbol: symbol.clone(),
-                len: bytes.len(),
-            });
-            defs.push(LlvmStringLiteralDef { symbol, bytes });
         }
     }
     (defs, map)
@@ -1507,7 +1536,14 @@ fn lower_str_concat(
         }
     })?;
     let value = format!("{left_value}{right_value}");
-    state.str_lens.insert(dest.clone(), value.len());
+    let info = state.string_literals.get(&value).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_concat value {value:?} was not collected"),
+        }
+    })?;
+    state.env.insert(dest.clone(), info.symbol.clone());
+    state.str_lens.insert(dest.clone(), info.len);
     state.str_values.insert(dest, value);
     Ok(())
 }

@@ -3,6 +3,25 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.21.0] — 2026-06-27 — literal string concat can feed print_str (LANG-FULL E4)
+
+Literal-only `str_concat` now materializes its derived string in the same
+length-prefixed constant table used by `str_const`, and binds the concat
+destination to that storage. This lets `print_str` consume a concat result
+instead of failing with an undefined variable after the compile-time fold.
+
+The backend regression proves:
+
+```text
+str_const a "O"
+str_const b "K"
+str_concat s a b
+print_str s
+```
+
+lowers to a derived `@__twig_str_2` constant with byte length `2` and a
+runtime `@__print_str` call over the payload pointer.
+
 ## [0.20.0] — 2026-06-27 — literal string index OOB traps (LANG-FULL E4)
 
 Direct-literal `str_index` now preserves the E4 trap contract when the index is

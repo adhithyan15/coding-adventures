@@ -46,9 +46,10 @@ line numbers, `DIM` bounds, array subscripts, DATA read pointers, and GOSUB
 return stacks. String literal `PRINT`, literal-backed string variables
 (`LET A$ = "HI"` / `PRINT A$`), literal reassignment
 (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`), and `IF A$ = "Y"` / `IF A$ <> "Y"`
-string branches now lower through the shared E4 path on all seven matrix backends. Richer string
-expressions, string arrays, string `INPUT`, and non-literal string copies remain
-follow-ups. See
+string branches now lower through the shared E4 path on all seven matrix
+backends. Literal `+` concatenation (`LET A$ = "O" + "K"; PRINT A$`) uses E4
+`str_concat` on the same backends. Richer string expressions, string arrays,
+string `INPUT`, and non-literal string copies remain follow-ups. See
 [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`
@@ -77,7 +78,8 @@ synthetic recursive helper that renders digits one at a time via the universal
 inserts a space (`PRINT 4, 2` ⇒ `4 2`), and a trailing separator suppresses the
 line-ending newline.  Because the helpers reuse only ops every backend already
 runs, BA2 needed **zero** backend changes.  String literal/scalar string
-printing, equality/inequality branches, and literal reassignment now use E4 on all seven backends.
+printing, literal concat, equality/inequality branches, and literal reassignment
+now use E4 on all seven backends.
 (`,` is a single space rather than a true 14-column print zone — a documented,
 deferred approximation.)
 

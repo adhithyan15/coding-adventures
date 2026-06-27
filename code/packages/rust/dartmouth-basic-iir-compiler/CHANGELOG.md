@@ -1,5 +1,19 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.18.0 — 2026-06-27 — BA4 literal string concatenation
+
+BASIC string assignment now accepts literal-backed `+` concatenation:
+
+```basic
+10 LET A$ = "O" + "K"
+20 PRINT A$
+```
+
+The compiler lowers each literal to E4 `str_const`, emits `str_concat` directly
+into the safe backend-facing `__basic_str_A` slot, and `PRINT A$` consumes that
+slot through `print_str`. This proves the first BASIC string-expression shape
+without claiming string-to-string copies or general dynamic byte-string storage.
+
 ## 0.17.0 — 2026-06-27 — BA4 string inequality control flow
 
 BASIC string `IF` now supports the standard `<>` relop in the literal-backed

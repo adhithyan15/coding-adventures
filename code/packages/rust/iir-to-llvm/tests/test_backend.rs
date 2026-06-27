@@ -1093,6 +1093,41 @@ fn e4_string_literal_concat_len_folds_to_integer_return() {
 }
 
 #[test]
+fn e4_string_literal_concat_print_emits_derived_constant_and_runtime_call() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("O".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("K".into())], "str"),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string concat print should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("@__twig_str_2 = private unnamed_addr constant { i64, [2 x i8] } { i64 2, [2 x i8] c\"\\4F\\4B\" }, align 8"),
+        "concat should materialise a derived length-prefixed string constant:\n{ll}"
+    );
+    assert!(
+        ll.contains("getelementptr inbounds i8, ptr @__twig_str_2, i64 8"),
+        "print_str should use the derived concat storage:\n{ll}"
+    );
+    assert!(
+        ll.contains("call void @__print_str(ptr %__str1, i64 2)"),
+        "concat print should call the string runtime with the derived byte length:\n{ll}"
+    );
+}
+
+#[test]
 fn e4_string_literal_index_folds_to_integer_return() {
     let f = IIRFunction::new(
         "main",

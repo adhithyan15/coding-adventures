@@ -558,12 +558,11 @@ impl Compiler {
 
         let var_name = scalar_variable_name(var_node)?;
         if is_basic_string_name(&var_name) {
-            let Some(text) = expr_string_literal(expr_node) else {
-                return Err(CompileError::Unsupported(format!(
-                    "string variable `{var_name}` assignment currently supports a string literal RHS")));
-            };
             let slot = basic_string_slot(&var_name);
-            self.emit_str_const_to(&slot, text);
+            if self.emit_basic_string_expr_to(expr_node, Some(&slot))?.is_none() {
+                return Err(CompileError::Unsupported(format!(
+                    "string variable `{var_name}` assignment currently supports a string literal or `+` concatenation RHS")));
+            }
             return Ok(());
         }
         let val = self.emit_expr(expr_node)?;
@@ -821,9 +820,8 @@ impl Compiler {
                     let inner = child_nodes(child).into_iter().next();
                     match inner {
                         Some(expr_node) if expr_node.rule_name == "expr" => {
-                            if let Some(name) = expr_string_variable_name(expr_node)? {
-                                self.emit("print_str", None,
-                                    vec![Operand::Var(basic_string_slot(&name))], "void");
+                            if let Some(slot) = self.emit_basic_string_expr(expr_node)? {
+                                self.emit("print_str", None, vec![Operand::Var(slot)], "void");
                                 continue;
                             }
                             let v = self.emit_expr(expr_node)?;
@@ -1243,15 +1241,89 @@ impl Compiler {
     fn emit_basic_string_expr(&mut self, node: &GrammarASTNode)
         -> Result<Option<String>, CompileError>
     {
+        self.emit_basic_string_expr_to(node, None)
+    }
+
+    fn emit_basic_string_expr_to(
+        &mut self,
+        node: &GrammarASTNode,
+        target: Option<&str>,
+    ) -> Result<Option<String>, CompileError> {
         if let Some(text) = expr_string_literal(node) {
-            let dest = self.fresh_temp();
+            let dest = target
+                .map(str::to_string)
+                .unwrap_or_else(|| self.fresh_temp());
             self.emit_str_const_to(&dest, text);
             return Ok(Some(dest));
         }
         if let Some(name) = expr_string_variable_name(node)? {
+            if let Some(target) = target {
+                let src = basic_string_slot(&name);
+                if src == target {
+                    return Ok(Some(src));
+                }
+                return Err(CompileError::Unsupported(
+                    "string variable assignment currently supports literals and `+` concatenation, not string-to-string copies".into()));
+            }
             return Ok(Some(basic_string_slot(&name)));
         }
-        Ok(None)
+        if !matches!(node.rule_name.as_str(), "expr" | "term") || node.children.len() < 3 {
+            return Ok(None);
+        }
+
+        let mut operands: Vec<Option<String>> = Vec::new();
+        let mut ops: Vec<String> = Vec::new();
+        let mut iter = node.children.iter();
+        let Some(first) = iter.next() else { return Ok(None); };
+        let ASTNodeOrToken::Node(first_node) = first else { return Ok(None); };
+        operands.push(self.emit_basic_string_expr(first_node)?);
+
+        loop {
+            let Some(op) = iter.next() else { break; };
+            let ASTNodeOrToken::Token(op) = op else {
+                return Err(CompileError::Malformed(format!(
+                    "{}: expected operator token", node.rule_name)));
+            };
+            let Some(rhs) = iter.next() else {
+                return Err(CompileError::Malformed(format!(
+                    "{}: dangling operator", node.rule_name)));
+            };
+            let ASTNodeOrToken::Node(rhs_node) = rhs else {
+                return Err(CompileError::Malformed(format!(
+                    "{}: expected rhs expression", node.rule_name)));
+            };
+            ops.push(op.value.clone());
+            operands.push(self.emit_basic_string_expr(rhs_node)?);
+        }
+
+        if operands.iter().all(Option::is_none) {
+            return Ok(None);
+        }
+        if operands.iter().any(Option::is_none) {
+            return Err(CompileError::Unsupported(
+                "mixed string/numeric expressions in BASIC string concatenation".into()));
+        }
+        if ops.iter().any(|op| op != "+") {
+            return Err(CompileError::Unsupported(
+                "BASIC string expressions currently support `+` concatenation only".into()));
+        }
+
+        let mut acc = operands.remove(0).expect("checked string operand");
+        let last = operands.len().saturating_sub(1);
+        for (idx, rhs) in operands.into_iter().enumerate() {
+            let dest = if idx == last {
+                target
+                    .map(str::to_string)
+                    .unwrap_or_else(|| self.fresh_temp())
+            } else {
+                self.fresh_temp()
+            };
+            self.emit("str_concat", Some(&dest),
+                vec![Operand::Var(acc), Operand::Var(rhs.expect("checked string operand"))],
+                "str");
+            acc = dest;
+        }
+        Ok(Some(acc))
     }
 
     fn emit_left_assoc_chain(&mut self, node: &GrammarASTNode)
@@ -2503,6 +2575,28 @@ mod tests {
     }
 
     #[test]
+    fn compiles_string_literal_concat_assignment_and_print() {
+        let m = compile("10 LET A$ = \"O\" + \"K\"\n20 PRINT A$\n30 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        let literal_slots: Vec<&str> = body.iter()
+            .filter(|i| i.op == "str_const")
+            .filter_map(|i| i.dest.as_deref())
+            .collect();
+        assert_eq!(literal_slots.len(), 2, "concat should materialize both literals");
+        assert!(body.iter().any(|i| i.op == "str_concat"
+            && i.dest.as_deref() == Some("__basic_str_A")
+            && matches!(i.srcs.as_slice(), [
+                Operand::Var(left),
+                Operand::Var(right)
+            ] if literal_slots.contains(&left.as_str()) && literal_slots.contains(&right.as_str()))),
+            "literal concat should land directly in the safe string slot");
+        assert!(body.iter().any(|i| i.op == "print_str"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "__basic_str_A")),
+            "PRINT A$ should consume the concatenated string slot");
+    }
+
+    #[test]
     fn compiles_string_variable_if_equality() {
         let src = "10 LET A$ = \"Y\"\n\
                    20 IF A$ = \"Y\" THEN 40\n\
@@ -2545,8 +2639,8 @@ mod tests {
         let err = compile("10 LET A$ = \"HI\"\n20 PRINT A$ + 1\n30 END\n")
             .unwrap_err();
         match err {
-            CompileError::Unsupported(msg) => assert!(msg.contains("string variable")),
-            other => panic!("expected Unsupported(string variable...), got {other:?}"),
+            CompileError::Unsupported(msg) => assert!(msg.contains("mixed string/numeric")),
+            other => panic!("expected Unsupported(mixed string/numeric...), got {other:?}"),
         }
     }
 

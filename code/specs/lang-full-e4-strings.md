@@ -1,7 +1,7 @@
 # LANG-FULL E4 — Strings (design spec)
 
 **Status:** IR + reference VM slice implemented; BASIC literal output/scalar
-string variables/equality/inequality/literal reassignment, Twig literal metadata/index
+string variables/equality/inequality/literal concat/reassignment, Twig literal metadata/index
 proofs, and immutable top-level Twig string values run on all seven backends;
 richer frontend and backend string work remains.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
@@ -116,9 +116,10 @@ explicit `cmp idx,len` + branch-to-trap.
 
 **Unmanaged header layout** (LLVM / x86_64 / aarch64): identical to E5's array
 header — word 0 is the byte count, bytes start at offset 8. String literals are
-emitted once into read-only data with that header; `str_concat` allocates a fresh
-`8 + len_a + len_b` block via the existing `alloc_bytes`/`__twig_alloc_bytes`
-machinery. **No new allocator** — E4 reuses E5's.
+emitted once into read-only data with that header. The landed LLVM literal-only
+slice folds direct-literal `str_concat` into a derived read-only constant so
+`print_str` can consume the concat result; richer dynamic concat allocation
+remains future E4-managed/static work. **No new allocator** — E4 reuses E5's.
 
 **Managed backends** (JVM/CLR/WASM): JVM/CLR currently use native `String`
 constant loads (`ldc`/`ldstr`) for the literal-output/metadata/index slice;
@@ -145,7 +146,8 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `str_const` + `print_str` on all seven backends. `$` string variables now
   tokenize/parse as `NAME`s, and `LET A$ = "HI"; PRINT A$` lowers to a safe E4
   string slot plus `print_str`; `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
-  proves literal reassignment through that same slot. String compares in
+  proves literal reassignment through that same slot, and
+  `LET A$ = "O" + "K"; PRINT A$` proves literal `str_concat`. String compares in
   `IF A$ = "Y"` and `IF A$ <> "Y"` lower to `str_eq` (the latter branches with
   `jmp_if_false`) and now drive line-control branching on all seven backends;
   string arrays, string `INPUT`, non-literal string copies, and richer
