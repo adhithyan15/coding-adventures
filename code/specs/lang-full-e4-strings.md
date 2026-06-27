@@ -1,7 +1,7 @@
 # LANG-FULL E4 — Strings (design spec)
 
 **Status:** IR + reference VM slice implemented; BASIC literal output/scalar
-string variables/equality/literal reassignment, Twig literal metadata/index
+string variables/equality/inequality/literal reassignment, Twig literal metadata/index
 proofs, and immutable top-level Twig string values run on all seven backends;
 richer frontend and backend string work remains.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
@@ -145,10 +145,11 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `str_const` + `print_str` on all seven backends. `$` string variables now
   tokenize/parse as `NAME`s, and `LET A$ = "HI"; PRINT A$` lowers to a safe E4
   string slot plus `print_str`; `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
-  proves literal reassignment through that same slot. String compare in
-  `IF A$ = "Y"` lowers to `str_eq` and now drives line-control branching on all
-  seven backends; string arrays, string `INPUT`, non-literal string copies, and
-  richer expressions remain follow-ups.
+  proves literal reassignment through that same slot. String compares in
+  `IF A$ = "Y"` and `IF A$ <> "Y"` lower to `str_eq` (the latter branches with
+  `jmp_if_false`) and now drive line-control branching on all seven backends;
+  string arrays, string `INPUT`, non-literal string copies, and richer
+  expressions remain follow-ups.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
   produces string literals. The current foothold recognises undeclared
   statement-position `print`/`output` calls and lowers string literal actuals to

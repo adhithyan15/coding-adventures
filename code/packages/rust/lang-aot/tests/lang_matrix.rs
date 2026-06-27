@@ -1060,6 +1060,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 string inequality drives control flow too. The
+    // frontend reuses E4 `str_eq` but targets the THEN line with `jmp_if_false`,
+    // proving the standard `<>` relop without adding a new string-compare op.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"N\"\n20 IF A$ <> \"Y\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
     // backends could not run correctly until this slice (LLVM compared at `i1` width;

@@ -907,15 +907,19 @@ impl Compiler {
                 return Err(CompileError::Unsupported(
                     "mixed string/numeric IF comparison".into()));
             };
-            if cmp_op != "cmp_eq" {
-                return Err(CompileError::Unsupported(
-                    "string IF comparisons currently support `=` only".into()));
-            }
+            let branch_op = match cmp_op {
+                "cmp_eq" => "jmp_if_true",
+                "cmp_ne" => "jmp_if_false",
+                _ => {
+                    return Err(CompileError::Unsupported(
+                        "string IF comparisons currently support `=` and `<>` only".into()))
+                }
+            };
             let cond = self.fresh_temp();
             self.emit("str_eq", Some(&cond),
                 vec![Operand::Var(lhs), Operand::Var(rhs)], "i64");
             let target_line = extract_if_target(stmt)?;
-            self.emit("jmp_if_true", None,
+            self.emit(branch_op, None,
                 vec![Operand::Var(cond), Operand::Var(format!("line_{target_line}"))],
                 "void");
             return Ok(());
@@ -1657,7 +1661,7 @@ fn numeric_scalar_variable_name(var: &GrammarASTNode)
     let name = scalar_variable_name(var)?;
     if is_basic_string_name(&name) {
         return Err(CompileError::Unsupported(format!(
-            "string variable `{name}` is only supported in literal assignment, PRINT, and IF equality")));
+            "string variable `{name}` is only supported in literal assignment, PRINT, and IF equality/inequality")));
     }
     Ok(name)
 }
@@ -2515,6 +2519,25 @@ mod tests {
             "IF A$ = literal should lower to E4 str_eq");
         assert!(body.iter().any(|i| i.op == "jmp_if_true"),
             "string equality should feed the existing BASIC branch lowering");
+    }
+
+    #[test]
+    fn compiles_string_variable_if_inequality() {
+        let src = "10 LET A$ = \"N\"\n\
+                   20 IF A$ <> \"Y\" THEN 40\n\
+                   30 PRINT \"BAD\"\n\
+                   40 PRINT \"OK\"\n\
+                   50 END\n";
+        let m = compile(src).expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "str_eq"
+            && matches!(i.srcs.as_slice(), [
+                Operand::Var(lhs),
+                Operand::Var(_rhs)
+            ] if lhs == "__basic_str_A")),
+            "IF A$ <> literal should reuse E4 str_eq");
+        assert!(body.iter().any(|i| i.op == "jmp_if_false"),
+            "string inequality should branch when str_eq is false");
     }
 
     #[test]

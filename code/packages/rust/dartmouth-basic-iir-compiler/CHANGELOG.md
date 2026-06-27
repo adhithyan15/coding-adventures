@@ -1,5 +1,21 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.17.0 — 2026-06-27 — BA4 string inequality control flow
+
+BASIC string `IF` now supports the standard `<>` relop in the literal-backed
+BA4 subset:
+
+```basic
+10 LET A$ = "N"
+20 IF A$ <> "Y" THEN 40
+30 PRINT "BAD"
+40 PRINT "OK"
+```
+
+The compiler still lowers the comparison to the shared E4 `str_eq` op, then
+uses `jmp_if_false` for the `THEN` target. This proves string inequality without
+adding a new string-compare opcode or widening into dynamic string storage.
+
 ## 0.16.0 — 2026-06-27 — BA4 literal string reassignment
 
 The BA4 scalar string slice now proves that the latest literal assignment wins:

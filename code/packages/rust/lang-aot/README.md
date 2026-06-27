@@ -4,14 +4,15 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.121.0):**
+> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.122.0):**
 > `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 > It also proves `10 LET A$ = "HI"; 20 PRINT A$` produces stdout `HI` on
 > the same seven backends, and `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
 > produces `OK`, proving literal reassignment through the same E4 slot.
 > BASIC string equality now drives control flow too:
 > `IF A$ = "Y" THEN ...` routes to `PRINT "OK"` through E4 `str_eq` on every
-> backend.
+> backend, and `IF A$ <> "Y" THEN ...` proves the inequality branch by reusing
+> `str_eq` with `jmp_if_false`.
 > ALGOL 60 now proves `begin print('HI') end`, lowering the implementation-defined
 > `print`/`output` output procedures to the same E4 `str_const` + `print_str`
 > path and producing stdout `HI` everywhere.

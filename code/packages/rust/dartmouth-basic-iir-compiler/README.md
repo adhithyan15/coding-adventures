@@ -45,8 +45,8 @@ shared E3/E8 backends. Integer `i64` remains explicit at structural boundaries:
 line numbers, `DIM` bounds, array subscripts, DATA read pointers, and GOSUB
 return stacks. String literal `PRINT`, literal-backed string variables
 (`LET A$ = "HI"` / `PRINT A$`), literal reassignment
-(`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`), and `IF A$ = "Y"` equality now
-lower through the shared E4 path on all seven matrix backends. Richer string
+(`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`), and `IF A$ = "Y"` / `IF A$ <> "Y"`
+string branches now lower through the shared E4 path on all seven matrix backends. Richer string
 expressions, string arrays, string `INPUT`, and non-literal string copies remain
 follow-ups. See
 [CHANGELOG.md](CHANGELOG.md) for the full table.
@@ -77,7 +77,7 @@ synthetic recursive helper that renders digits one at a time via the universal
 inserts a space (`PRINT 4, 2` ⇒ `4 2`), and a trailing separator suppresses the
 line-ending newline.  Because the helpers reuse only ops every backend already
 runs, BA2 needed **zero** backend changes.  String literal/scalar string
-printing, equality, and literal reassignment now use E4 on all seven backends.
+printing, equality/inequality branches, and literal reassignment now use E4 on all seven backends.
 (`,` is a single space rather than a true 14-column print zone — a documented,
 deferred approximation.)
 
