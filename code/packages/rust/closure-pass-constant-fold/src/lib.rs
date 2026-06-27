@@ -1252,11 +1252,11 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
 
-                // ---- Number.isInteger / isFinite / isNaN (x) → boolean ----
+                // ---- Number.isInteger / isFinite / isNaN / isSafeInteger (x) → boolean ----
                 //
-                // The ES2015 static predicates (ECMAScript §21.1.2.2/.3/.4). UNLIKE
-                // the *global* `isNaN`/`isFinite`, these do **no** coercion: their
-                // argument must already BE a Number, otherwise the answer is
+                // The ES2015 static predicates (ECMAScript §21.1.2.2/.3/.4/.5).
+                // UNLIKE the *global* `isNaN`/`isFinite`, these do **no** coercion:
+                // their argument must already BE a Number, otherwise the answer is
                 // `false` with no `ToNumber` step (`Number.isNaN("NaN")` → `false`,
                 // `Number.isInteger("5")` → `false`). So:
                 //
@@ -1265,8 +1265,15 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                 //     `Number.isFinite(v)` = `v` is finite,
                 //     `Number.isInteger(v)` = `v` is finite AND has no fraction
                 //     (so `Number.isInteger(1e21)` → `true`, `…(3.5)` → `false`,
-                //     `…(Infinity)` → `false`);
-                //   * a STRING / BOOLEAN / NULL literal → `false` for all three
+                //     `…(Infinity)` → `false`),
+                //     `Number.isSafeInteger(v)` = `v` is an integer whose magnitude
+                //     does not exceed 2^53−1 (`Number.MAX_SAFE_INTEGER` =
+                //     9007199254740991, the largest integer the f64 mantissa
+                //     represents without colliding with a neighbour): so
+                //     `Number.isSafeInteger(7)` → `true`,
+                //     `…(9007199254740991)` → `true`, `…(9007199254740992)` (2^53)
+                //     → `false`, `…(3.5)` / `…(1e21)` / `…(Infinity)` → `false`;
+                //   * a STRING / BOOLEAN / NULL literal → `false` for all four
                 //     (it is provably not a Number, and there is no coercion).
                 //
                 // Any other argument (an identifier, an array/object, a missing or
@@ -1275,13 +1282,25 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                 // the `String.from*` statics (a member access, not a free
                 // identifier, so only the literal `Number.isX(...)` callee folds).
                 if obj.name == "Number"
-                    && matches!(prop.name.as_str(), "isInteger" | "isFinite" | "isNaN")
+                    && matches!(
+                        prop.name.as_str(),
+                        "isInteger" | "isFinite" | "isNaN" | "isSafeInteger"
+                    )
                     && arguments.len() == 1
                 {
                     let folded: Option<bool> = match arguments.first() {
                         Some(Expression::NumericLiteral(n)) => Some(match prop.name.as_str() {
                             "isNaN" => n.value.is_nan(),
                             "isFinite" => n.value.is_finite(),
+                            // A *safe* integer is a finite integer whose magnitude
+                            // is ≤ 2^53−1 (9007199254740991). Beyond that, distinct
+                            // mathematical integers share one f64, so `isSafeInteger`
+                            // is `false` even though `isInteger` stays `true`.
+                            "isSafeInteger" => {
+                                n.value.is_finite()
+                                    && n.value.fract() == 0.0
+                                    && n.value.abs() <= 9_007_199_254_740_991.0
+                            }
                             // Integer ⟺ finite with a zero fractional part. Every
                             // f64 magnitude ≥ 2^52 is integer-valued (`fract()==0`),
                             // matching V8 for large literals like `1e21`.
@@ -7235,6 +7254,67 @@ mod tests {
                 other => panic!("expected bool; got {:?}", other),
             }
         }
+    }
+
+    #[test]
+    fn fold_number_is_safe_integer() {
+        // Number.isSafeInteger — true iff the value is an integer with magnitude
+        // ≤ 2^53−1 (MAX_SAFE_INTEGER = 9007199254740991), with NO coercion.
+        // Every classification confirmed against V8.
+        for (v, expect) in [
+            (7.0, true),
+            (0.0, true),
+            (-7.0, true),
+            (9_007_199_254_740_991.0, true), // MAX_SAFE_INTEGER boundary
+            (-9_007_199_254_740_991.0, true), // −MAX_SAFE_INTEGER boundary
+            (9_007_199_254_740_992.0, false), // 2^53 — just past the safe range
+            (3.5, false),                     // not an integer
+            (1e21, false),                    // integer-valued but far past 2^53
+            (f64::INFINITY, false),
+            (f64::NAN, false),
+        ] {
+            let c = number_static_call("isSafeInteger", num(v, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "Number.isSafeInteger({v}) should fold");
+            match extract_expr(&out) {
+                Expression::BooleanLiteral(b) => {
+                    assert_eq!(b.value, expect, "Number.isSafeInteger({v})")
+                }
+                other => panic!("expected bool; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_number_is_safe_integer_on_non_number_literals_is_false() {
+        // Like the sibling predicates, a non-number literal is provably not a
+        // Number, so `isSafeInteger` is `false` with no `ToNumber` coercion.
+        let args = [
+            string("7", None),
+            Expression::BooleanLiteral(BooleanLiteral {
+                cv: None,
+                value: true,
+            }),
+            Expression::NullLiteral(NullLiteral { cv: None }),
+        ];
+        for arg in args {
+            let c = number_static_call("isSafeInteger", arg);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "Number.isSafeInteger(non-number) should fold to false");
+            match extract_expr(&out) {
+                Expression::BooleanLiteral(b) => assert!(!b.value, "→ false"),
+                other => panic!("expected false; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn number_is_safe_integer_identifier_does_not_fold() {
+        // An identifier's type is unknown at compile time — declined.
+        let c = number_static_call("isSafeInteger", ident("x"));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Number.isSafeInteger(x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
     #[test]
