@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.67.0] - 2026-06-26
+
+### Added — fold static `Array.of(v0, v1, …)` → array literal `[v0, v1, …]`
+
+The static `Array.of` (ECMAScript §23.1.2.3) now folds to an array literal
+whose elements are exactly its arguments, in order. Unlike the `Array(n)`
+constructor — where a single numeric argument sets the *length* (`Array(7)` is a
+length-7 hole array) — `Array.of(7)` is the one-element array `[7]`, so the fold
+is sound for any argument list:
+
+| call                | result      |
+|---------------------|-------------|
+| `Array.of()`        | `[]`        |
+| `Array.of(7)`       | `[7]`       |
+| `Array.of(1, 2, 3)` | `[1, 2, 3]` |
+| `Array.of(f(), x)`  | `[f(), x]`  |
+
+Every element expression is preserved in evaluation order, so no argument is
+dropped, duplicated, or reordered and all side effects are retained. Only the
+bare global `Array.of(...)` callee folds (never a shadowed `a.of(...)`). A
+spread argument would be declined, but the AST has no call-argument spread
+variant yet, so every argument is a plain expression and the fold always applies.
+
 ## [0.65.0] - 2026-06-26
 
 ### Added — fold static `JSON.stringify(…)` → string literal (primitive subset)
