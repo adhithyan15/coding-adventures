@@ -16,8 +16,10 @@ number / boolean / null). Identifier-name keys emit bare (`{a: 1}`), other keys
 quoted (`{"1": "x"}`); a duplicate key keeps its first position but takes its
 last value; the empty array folds to `{}`. We decline a non-global receiver
 (`o.fromEntries(...)`), wrong arity, a non-array argument, a non-pair element, a
-non-literal/boolean/null/identifier key, a non-literal value, and any array
-hole. New end-to-end fixture `tests/diff/simple-fold-object-fromentries/` plus
+non-literal/boolean/null/identifier key, a non-literal value, any array hole,
+and a `"__proto__"` key (whose own-property semantics differ from the object
+literal's prototype setter). New end-to-end fixture
+`tests/diff/simple-fold-object-fromentries/` plus
 integration test `tests/diff_simple_fold_object_fromentries.rs`.
 
 ## [0.216.0] - 2026-06-26

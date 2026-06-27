@@ -1508,7 +1508,11 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                 //     key is either a different string or not known statically);
                 //   * the pair's VALUE is a primitive literal (string / number / boolean
                 //     / null) — any non-literal value could carry side effects or an
-                //     unknown runtime value, so we decline.
+                //     unknown runtime value, so we decline;
+                //   * the key is NOT "__proto__" — `Object.fromEntries` makes an OWN
+                //     property named "__proto__", but `{__proto__: …}` in an object
+                //     literal is the §B.3.1 prototype setter, so folding it would
+                //     change semantics (see `fold_from_entries_pairs`).
                 //
                 // DUPLICATE keys follow the spec exactly: a repeated key keeps the
                 // POSITION of its FIRST occurrence but takes the value of its LAST
@@ -4267,6 +4271,18 @@ fn fold_from_entries_pairs(elements: &[Option<Expression>]) -> Option<Vec<Proper
             Expression::NumericLiteral(n) => format_js_number(n.value),
             _ => return None,
         };
+        // CRITICAL — decline `__proto__`. `Object.fromEntries` calls
+        // CreateDataPropertyOnObject, which makes an OWN enumerable property
+        // literally named "__proto__" and does NOT touch the prototype. But in
+        // an object literal a non-computed `__proto__:` (bare OR quoted) is the
+        // §B.3.1 prototype SETTER — it changes `[[Prototype]]` and creates no
+        // own property (and `{__proto__: null}` yields a null-prototype object).
+        // Folding here would silently change semantics, so we decline; the call
+        // is left intact. (A numeric key can never ToString to "__proto__", so
+        // only the string-key path can reach this.)
+        if key_string == "__proto__" {
+            return None;
+        }
         // VALUE must be a primitive literal — anything else is declined.
         let value: Expression = match value_expr {
             Expression::StringLiteral(_)
@@ -8101,6 +8117,20 @@ mod tests {
             let c = object_from_entries_call(array_lit(vec![p]));
             let (out, _, changed, _) = run_pass(program_with_expr(c, true));
             assert!(!changed, "non-string/numeric key must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn from_entries_proto_key_does_not_fold() {
+        // `Object.fromEntries([["__proto__", v]])` makes an OWN "__proto__"
+        // property, whereas the object literal `{__proto__: v}` is the §B.3.1
+        // prototype setter — so we must DECLINE rather than miscompile. Covers a
+        // primitive value (1) and the null-prototype trap (null).
+        for value in [num(1.0, None), null(None), string("p", None)] {
+            let c = object_from_entries_call(array_lit(vec![pair(string("__proto__", None), value)]));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "__proto__ key must not fold (prototype-setter trap)");
             assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
         }
     }

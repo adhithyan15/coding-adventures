@@ -19,12 +19,18 @@ call collapses to an object literal.
 | `Object.fromEntries([["a", 1], ["a", 2]])`    | `{a:2}`            | duplicate key → first pos, last value|
 | `Object.fromEntries([])`                      | `{}`               | empty input → empty object           |
 | `o.fromEntries([["a", 1]])`                    | `o.fromEntries(…)` | declined — not the bare global       |
+| `Object.fromEntries([["__proto__", 1]])`       | `Object.fromEntries(…)` | declined — own prop vs proto setter |
 
 Expected SIMPLE stdout:
 
 ```text
-var a={a:1,b:2};var b={"1":"x"};var c={a:2};var d={};var e=o.fromEntries([["a",1]]);report(a,b,c,d,e);
+var a={a:1,b:2};var b={"1":"x"};var c={a:2};var d={};var e=o.fromEntries([["a",1]]);var f=Object.fromEntries([["__proto__",1]]);report(a,b,c,d,e,f);
 ```
+
+`__proto__` is a deliberate decline: `Object.fromEntries([["__proto__", v]])`
+creates an OWN enumerable property named `"__proto__"`, but the object literal
+`{__proto__: v}` is the ECMAScript §B.3.1 prototype setter — folding it would
+silently change the program's semantics, so the call is left intact.
 
 Each result flows into `report(...)` so it stays referenced past
 remove-unused-vars and the fold is observable.

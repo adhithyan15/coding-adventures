@@ -27,7 +27,10 @@ value of its LAST (CreateDataPropertyOnObject overwrites in place). Keys that ar
 valid identifier names emit as bare identifiers (`{a: 1}`), others as quoted
 strings (`{"1": "x"}`). We DECLINE any other shape: wrong arity, a non-array
 argument, a non-pair element, a non-literal/boolean/null/identifier key, a
-non-literal value, or any hole. Only the bare global `Object.fromEntries(...)`
+non-literal value, or any hole. We also DECLINE a `"__proto__"` key —
+`Object.fromEntries` makes an OWN property named `"__proto__"`, whereas
+`{__proto__: …}` in an object literal is the §B.3.1 prototype setter, so folding
+it would silently change semantics. Only the bare global `Object.fromEntries(...)`
 callee folds (never a shadowed `o.fromEntries(...)`).
 
 ## [0.67.0] - 2026-06-26

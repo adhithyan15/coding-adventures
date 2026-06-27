@@ -10,6 +10,7 @@
 //   * Object.fromEntries([["a", 1], ["a", 2]]) → {a: 2}      (duplicate: last wins)
 //   * Object.fromEntries([])                   → {}
 //   * o.fromEntries([["a", 1]])                → declined (only bare global Object)
+//   * Object.fromEntries([["__proto__", 1]])  → declined (own-prop vs proto setter)
 //
 // Under WHITESPACE_ONLY every call survives; under SIMPLE the bare-global
 // Object.fromEntries calls collapse to object literals. Each value flows into
@@ -19,4 +20,5 @@ var b = Object.fromEntries([[1, "x"]]);
 var c = Object.fromEntries([["a", 1], ["a", 2]]);
 var d = Object.fromEntries([]);
 var e = o.fromEntries([["a", 1]]);
-report(a, b, c, d, e);
+var f = Object.fromEntries([["__proto__", 1]]);
+report(a, b, c, d, e, f);
