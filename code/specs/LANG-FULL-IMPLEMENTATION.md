@@ -12,7 +12,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Twig | `42` | rich Lisp frontend, but only typed int-arith/`if` clears the backend validators; lists/lambdas/strings/`print`/symbols need the VM only |
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
-| Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3), `READ`/`DATA`/`RESTORE` (BA6) — all run on every backend |
+| Dartmouth BASIC | `PRINT 42`, `GOSUB`/`RETURN`, arrays, data, functions | integer-only: strings, floating point, and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3), `READ`/`DATA`/`RESTORE` (BA6), and `GOSUB`/`RETURN` (BA1) all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
 
@@ -232,16 +232,15 @@ multiple languages; close an enabler before the features that depend on it.
     enclosing-scope-variable frontend + a matrix proof. Unblocks AL6 (`own`), O3 (Oct
     globals); foundation for closures. The general `any`-dispatch / closure layers
     stack on top.
-- **E7 — Subroutine / return-stack.** `GOSUB`/`RETURN` and procedure call/return.
-  ◑ *Design spec written, pending user sign-off*
-  ([`lang-full-e7-subroutine-return-stack.md`](lang-full-e7-subroutine-return-stack.md)).
-  **Confirmed:** structured procedure call/return is already done (`call`/`ret` —
-  ALGOL AL3, BASIC `DEF FN` BA5). BASIC `GOSUB`/`RETURN` is *unstructured* (the same
-  `RETURN` resumes at the dynamically most-recent `GOSUB`) and `call`/`ret` cannot
-  express it — but it needs **no new backend op**: lower it inside `main` as an E5
-  `array<i64>` return-PC stack + the AL5 computed-goto chain (`cmp`+`jmp_if_false`+`jmp`),
-  both already proven on all 7 backends. Pure frontend lowering (BA6-sized), one PR;
-  unblocks **BA1**.
+- **E7 — Subroutine / return-stack.** ✅ COMPLETE. `GOSUB`/`RETURN` and procedure
+  call/return ([`lang-full-e7-subroutine-return-stack.md`](lang-full-e7-subroutine-return-stack.md)).
+  Structured procedure call/return was already done (`call`/`ret` — ALGOL AL3,
+  BASIC `DEF FN` BA5). BASIC `GOSUB`/`RETURN` is *unstructured* (the same `RETURN`
+  resumes at the dynamically most-recent `GOSUB`) and `call`/`ret` cannot express it,
+  so BA1 lowers it inside `main` as an E5 `array<i64>` return-PC stack + the AL5
+  computed-goto chain (`cmp_eq`+`jmp_if_true`). `dartmouth-basic-iir-compiler` 0.10.0
+  added the frontend lowering, and `iir-to-wasm` 0.18.0 fixed the dispatch-loop edge
+  case it exposed; both BA1 proof programs now run on all 7 backends.
 - **E8 — Numeric conversions (`integer` ↔ `real`).** ◑ *Spec signed off
   ([`lang-full-e8-numeric-conversions.md`](lang-full-e8-numeric-conversions.md)); implementation in progress.*
   Three ops (`int_to_real`, `real_to_int_trunc`, `real_to_int_floor`); `real→int`
@@ -425,15 +424,16 @@ backend immediately) come before the enabler-dependent items.
   BASIC prints, so it keeps the i64 model.) Fix: comparison dests are typed `int`. **Verified on
   real `java`** — the BASIC `FOR` sum (`15`) and `IF` branch (`7`) now run on the JVM; both added
   to the matrix JVM column.
-- ◑ **BA1** — `GOSUB` / `RETURN` (enabler **E7**). `dartmouth-basic-iir-compiler` 0.10.0
+- ✅ **BA1** — `GOSUB` / `RETURN` (enabler **E7**). `dartmouth-basic-iir-compiler` 0.10.0
   lowers unstructured `GOSUB`/`RETURN` *inside* `main` per the E7 spec: a fixed-capacity
   `array<i64>` return-address stack + an AL5 computed-`goto` (`cmp_eq`+`jmp_if_true`)
   dispatch — **no new backend op**. The same `RETURN` resumes at the dynamically
   most-recent `GOSUB`. Proven by two executed matrix programs (`919` = one `RETURN`,
-  two call sites; `876` = nested LIFO) on **six** backends (native/LLVM/JVM/CLR/VM/JIT).
-  **BA1-WASM gap:** the computed-`goto` is an irreducible CFG that trips iir-to-wasm's
-  dispatch-loop with a runtime `StackUnderflow` (compiles, traps) — a focused
-  iir-to-wasm follow-up; the 7th backend lands with that fix.
+  two call sites; `876` = nested LIFO) on **all 7** backends
+  (native/LLVM/WASM/JVM/CLR/VM/JIT). The final WASM gap closed in `iir-to-wasm` 0.18.0:
+  when the last basic block contains conditional jumps, wasm lowering appends an
+  unreachable sentinel block so the dispatch chain can restart `$dispatch` instead of
+  falling out with a `StackUnderflow`.
 - ✅ **BA2** — multi-item `PRINT`, `;`/`,` separators (`dartmouth-basic-iir-compiler`
   0.9.0). `PRINT` now prints several items on ONE line: each numeric item lowers to a
   `call __basic_print_int` — a synthetic *recursive* helper that renders digits one at a
@@ -574,15 +574,16 @@ backend immediately) come before the enabler-dependent items.
 
 ## Suggested global ordering
 
-1. **Nib N1–N5** and **Oct O1, O3** — pure frontend wins, lower to existing IIR, immediate
-   cross-backend execution. Builds the executed-battery habit cheaply.
-2. **Brainfuck B1** and **BASIC BA0** — convert the biggest existing smoke-test gaps
-   (real programs that today run only on the VM) into real cross-backend execution.
-3. **Enabler E2** (int wrap) → unblocks Nib N6/N7, Oct O2.
-4. **Enabler E3** (reals) → unblocks ALGOL AL1/AL8, BASIC BA7.
-5. **Enablers E5 (arrays), E4 (strings), E6 (dynamic dispatch)** — the deep, fork-bearing
-   work; each gets a design pass and a user check, then unblocks the array/string/Twig items.
-6. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics** — explicit user decision points.
+1. **E2 / N6** — finish the narrow integer wrap lane so Nib's u4/u8 semantics are
+   execution-proven instead of only type-hinted.
+2. **BA7 / AL8 numeric tails** — use the E3/E8 conversion work to finish BASIC
+   floating point and ALGOL's remaining standard-function surface.
+3. **E4 strings** — unblock BASIC string `PRINT`, ALGOL string I/O, and Twig strings
+   with one shared string value model instead of per-frontend shortcuts.
+4. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
+   work and any frontend code that still needs shared state across functions.
+5. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, and **MC1 cons/symbol
+   values on the code-gen backends** — explicit user decision points.
 
 This roadmap is the contract; each ☐ becomes a `feat(lang-full): …` PR, checked off here as
 it merges.
