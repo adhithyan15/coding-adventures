@@ -12,7 +12,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Twig | `42` | rich Lisp frontend, but only typed int-arith/`if` clears the backend validators; lists/lambdas/strings/`print`/symbols need the VM only |
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
-| Dartmouth BASIC | `PRINT 42`, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, fixed-decimal fractional output | strings, historical 6-significant-digit / `E`-notation real formatting, and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 scalar `f64` arithmetic all run on every backend |
+| Dartmouth BASIC | `PRINT 42`, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | strings and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
 
@@ -492,14 +492,14 @@ backend immediately) come before the enabler-dependent items.
   scalar literals now lower to `Operand::Float`; scalar arithmetic/variables,
   `DEF FN`, `IF`, `FOR`, and `PRINT` run as `f64`; array/index integer
   boundaries use `real_to_int_trunc`; and `PRINT` has a staged
-  `__basic_print_real(x: f64)` helper for whole-valued and ordinary
-  fixed-decimal output. **Verified by RUNNING** `PRINT 42`, `PRINT 6.0 * 7.0` ⇒
-  `42`, and `3.14`/`.25`/`-2.5` fractional output on
-  native/LLVM/WASM/JVM/CLR/VM/JIT. **BA7-3 landed** in
+  `__basic_print_real(x: f64)` helper for whole-valued, rounded fixed-decimal,
+  and `E`-notation output. **Verified by RUNNING** `PRINT 42`, `PRINT 6.0 * 7.0`
+  ⇒ `42`, `3.14`/`.25`/`-2.5` fractional output, and `1.23457E+08` /
+  `1.23457E-04` formatter output on native/LLVM/WASM/JVM/CLR/VM/JIT. **BA7-3 landed** in
   `dartmouth-basic-iir-compiler` 0.12.0: `DIM` arrays and `DATA` pools now store
   `f64`, with index/read-pointer boundaries left as `i64`; fractional `DATA`
-  through array and scalar `READ` runs on native/LLVM/WASM/JVM/CLR/VM/JIT.
-  Remaining BA7 slice: 6-significant-digit rounding + `E` notation.
+  through array and scalar `READ` runs on native/LLVM/WASM/JVM/CLR/VM/JIT. BA7
+  numeric formatting completed in 0.13.0.
 
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`
@@ -588,12 +588,9 @@ backend immediately) come before the enabler-dependent items.
 
 ## Suggested global ordering
 
-1. **BA7 numeric tail** — finish BASIC floating point after the BA7-1a/1b scalar
-   cutover, BA7-2a fixed-decimal foothold, and BA7-3 real aggregates:
-   6-significant-digit rounding and `E` notation.
-2. **E4 strings** — unblock BASIC string `PRINT`, ALGOL string I/O, and Twig strings
+1. **E4 strings** — unblock BASIC string `PRINT`, ALGOL string I/O, and Twig strings
    with one shared string value model instead of per-frontend shortcuts.
-3. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
+2. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
    work and any frontend code that still needs shared state across functions.
 4. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, **AL8 transcendentals**,
    and **MC1 cons/symbol values on the code-gen backends** — explicit user decision points.

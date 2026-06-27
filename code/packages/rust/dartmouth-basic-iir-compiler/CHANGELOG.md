@@ -1,5 +1,22 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.13.0 — 2026-06-27 — BA7 historical real formatting
+
+BA7 real `PRINT` now implements the historical formatter tail instead of the
+three-fractional-digit foothold:
+
+- Real output rounds half-up to six significant digits and trims trailing
+  fractional zeroes (`1.234567` => `1.23457`, `.250000` => `.25`).
+- Magnitudes outside the fixed-decimal window use signed, at-least-two-digit
+  `E` notation (`123456789` => `1.23457E+08`, `0.0001234567` =>
+  `1.23457E-04`).
+- The formatter is split into small synthetic helpers for zero padding,
+  rounded fixed-decimal output, and exponent notation so direct native AArch64
+  stays under its frame-size limit.
+- Verified by frontend unit tests, a native `lang-aot --lang basic` smoke, and
+  the all-backend `lang_matrix` BA7-2b cell on native / LLVM / WASM / JVM / CLR
+  / VM / JIT.
+
 ## 0.12.0 — 2026-06-27 — BA7 real `DATA` and arrays
 
 BA7 now carries Dartmouth BASIC's `f64` value model through aggregate storage,
@@ -43,10 +60,10 @@ remaining integer boundaries explicit:
   items. This BA7 helper implements whole-valued output by truncating with E8
   `real_to_int_trunc` and delegating to the BA2 digit printer; BA7-2a adds the
   fixed-decimal path for ordinary fractional values, including no-leading-zero
-  magnitudes below 1 and negative fractional values. The current helper emits up
-  to three trimmed fractional digits to stay within the direct AArch64 backend's
-  frame limit. Full six-significant-digit rounding and `E` notation remain BA7
-  tail work.
+  magnitudes below 1 and negative fractional values. That helper intentionally
+  kept a small fractional digit budget to stay within the direct AArch64
+  backend's frame limit; full six-significant-digit rounding and `E` notation
+  land in 0.13.0.
 - Verified by frontend unit tests, backend validator/encoder smokes, and executed
   `lang-aot` matrix programs: `PRINT 42` and `PRINT 6.0 * 7.0` => `42`, plus
   `PRINT 3.14`, `PRINT 1.0 / 4.0`, and `PRINT 0.0 - 2.5` => `3.14`, `.25`, and

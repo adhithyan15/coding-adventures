@@ -1,12 +1,10 @@
 # LANG-FULL BA7 — Dartmouth BASIC floating-point (`f64`)
 
-**Status:** design spec — **decision-complete** (all §7 questions resolved by
-historical Dartmouth BASIC fidelity); **BA7-1a/1b, BA7-2a, and BA7-3 landed**
+**Status:** implemented — **BA7-1a/1b, BA7-2a/2b, and BA7-3 landed**
 (decimal/exponent literals, integer-spelled scalar literals, scalar `f64`
 arithmetic/variables, `DEF FN`, `IF`, `FOR`, whole-valued real `PRINT`, and an
-ordinary fixed-decimal fractional `PRINT` foothold, plus real `DATA`/`READ` and
-`array<f64>` storage), remaining implementation is BA7-2b formatter precision and
-`E` notation.
+ordinary fixed-decimal fractional `PRINT` foothold, six-significant-digit
+rounding plus `E` notation, real `DATA`/`READ`, and `array<f64>` storage).
 **Depends on:** **E3** (reals / `f64` — COMPLETE, every backend executes f64),
 **E8** (numeric conversions `int_to_real` / `real_to_int_trunc` — COMPLETE), and
 **BA2** (character-level `PRINT` via `putchar` — COMPLETE, the digit-printing
@@ -31,10 +29,9 @@ number to `i64`** (`f as i64`) and ran the whole language on an integer value
 model — a deliberate V1 limitation taken *"until the backends grow SSE2 support"*
 (the old module doc). E3 removed that limitation: every backend now executes
 `f64`. BA7 is the cutover — make BASIC's value model **`f64`, end to end**, the
-way the real language always was. BA7-1a/1b have completed the scalar cutover,
-BA7-2a has landed ordinary fixed-decimal fractional output, and BA7-3 has moved
-array elements plus `DATA`/`READ` pools to `f64`; full historical precision and
-`E` notation remain follow-up work.
+way the real language always was. BA7-1a/1b completed the scalar cutover, BA7-2
+landed historical fixed-decimal / `E`-notation formatting, and BA7-3 moved array
+elements plus `DATA`/`READ` pools to `f64`.
 
 This is a **whole-value-model change**, so it gets a spec before code.
 
@@ -173,10 +170,11 @@ BA7 is bigger than BA2, so it ships in focused slices rather than one mega-PR:
   within the direct AArch64 backend's frame limit. Matrix cell: `PRINT 3.14`,
   `PRINT 1.0 / 4.0`, `PRINT 0.0 - 2.5` ⇒ `3.14`, `.25`, `-2.5` on all 7
   backends.
-- **BA7-2b — historical precision + `E` notation.** Extend the formatter to 6
+- **BA7-2b — historical precision + `E` notation. ✅** Extend the formatter to 6
   significant digits with round-half-up and out-of-range `E` notation (§7.3),
-  likely by shrinking/reusing helper temporaries so direct native frame sizes
-  remain within backend limits. Add an `E`-notation matrix cell.
+  using split helpers so direct native frame sizes remain within backend limits.
+  Matrix cell: `1.234567`, `123456789`, `0.0001234567`, and `1.0 / 4.0` print
+  as `1.23457`, `1.23457E+08`, `1.23457E-04`, and `.25` on all 7 backends.
 - **BA7-3 — reals in aggregate edges. ✅** `DIM`/array elements now use
   `array<f64>` with `real_to_int_trunc` subscripts, and `DATA`/`READ` now move
   finite `f64` values through an `array<f64>` pool. Matrix cell: `DATA 3.14,
@@ -185,7 +183,8 @@ BA7 is bigger than BA2, so it ships in focused slices rather than one mega-PR:
 - **BA7-4 (optional) — `INT(x)` builtin** (`real_to_int_trunc`) and tidy-up.
 
 Each slice: bump `dartmouth-basic-iir-compiler` version + CHANGELOG + README,
-security-review (diff inline), push, babysit. BA7 marked ✅ when BA7-1..3 land.
+security-review (diff inline), push, babysit. BA7 is marked ✅ with BA7-1..3
+landed; BA7-4 is optional tidy-up.
 
 ---
 
@@ -207,13 +206,10 @@ sign-off needed — these are the spec.
    round-half-up on the last kept digit. (This is *significant* digits across the
    whole number, not 6 fractional digits: `123.456`, `1.23457`, `.000123457`.)
    The fractional-emit loop counts significant digits, not places.
-3. **Scientific notation — honored, sequenced to BA7-2.** The original DID switch
+3. **Scientific notation — honored, landed in BA7-2b.** The original DID switch
    to `E` notation for magnitudes outside roughly `1e-1 .. 1e6` (e.g.
-   `1.23457E+08`, `1.23457E-04`). We **honor it** — it is not dropped — but
-   implement it in **BA7-2** alongside the fractional formatter; **BA7-1** covers
-   whole-valued and in-range decimals (the common case, and what keeps the
-   existing matrix cells green). The roadmap notes E-notation as an explicit BA7-2
-   deliverable, not an open question.
+   `1.23457E+08`, `1.23457E-04`). We **honor it** — it is not dropped — and
+   BA7-2b implements it alongside the six-significant-digit formatter.
 4. **`real_to_int_trunc` trap on out-of-range — kept.** A subscript or `INT()` of
    a real beyond `i64` range traps (E8 semantics). The original BASIC errored on
    an out-of-range subscript, so the trap is the faithful behavior.

@@ -40,11 +40,10 @@ BA7 scalar BASIC now follows Dartmouth's real numeric model: numeric literals
 (including integer-spelled `42`), scalar variables, arithmetic, `DEF FN`,
 `IF`, `FOR`, `PRINT`, `DATA`, and arrays lower as `f64`. Whole-valued real
 output (`PRINT 6.0 * 7.0`) and ordinary fixed-decimal fractional output (`3.14`,
-`.25`, `-2.5`) run through the shared E3/E8 backends. Integer `i64` remains
-explicit at structural boundaries: line numbers, `DIM` bounds, array
-subscripts, DATA read pointers, and GOSUB return stacks. Full
-six-significant-digit rounding and `E` notation remain BA7 follow-ups; strings
-are deferred to LANG77.  See
+`.25`, `-2.5`), six-significant-digit rounding, and `E` notation run through the
+shared E3/E8 backends. Integer `i64` remains explicit at structural boundaries:
+line numbers, `DIM` bounds, array subscripts, DATA read pointers, and GOSUB
+return stacks. Strings are deferred to LANG77.  See
 [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`
@@ -76,16 +75,16 @@ runs, BA2 needed **zero** backend changes.  (String `PRINT` items still wait for
 LANG77 / E4; `,` is a single space rather than a true 14-column print zone — a
 documented, deferred approximation.)
 
-**BA7-1/2a/3 real values and fixed-decimal `PRINT`** makes BASIC values `f64`
+**BA7-1/2/3 real values and historical real `PRINT`** makes BASIC values `f64`
 even when the source spells them as integers. `PRINT` chooses
 `__basic_print_real` for numeric items; that helper truncates whole-valued reals
 via E8 `real_to_int_trunc`, delegates integer parts to the BA2 digit printer,
-and emits up to three trimmed fractional digits for ordinary fixed-decimal
-values. `DIM`/array elements and `DATA`/`READ` now use `array<f64>` storage while
-indices and read pointers remain `i64`. The matrix proofs for `PRINT 42`, `PRINT
-6.0 * 7.0` ⇒ `42`, `3.14`/`.25`/`-2.5` fractional output, and fractional
-`DATA` through an array + scalar `READ` run on native / LLVM / WASM / JVM / CLR /
-VM / JIT without adding backend ops.
+and emits rounded six-significant-digit decimal or `E` notation output. `DIM`/
+array elements and `DATA`/`READ` now use `array<f64>` storage while indices and
+read pointers remain `i64`. The matrix proofs for `PRINT 42`, `PRINT 6.0 * 7.0`
+⇒ `42`, `3.14`/`.25`/`-2.5` fractional output, `1.23457E+08` / `1.23457E-04`
+formatter output, and fractional `DATA` through an array + scalar `READ` run on
+native / LLVM / WASM / JVM / CLR / VM / JIT without adding backend ops.
 
 ## Spec
 

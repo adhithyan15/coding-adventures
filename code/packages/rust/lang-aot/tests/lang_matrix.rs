@@ -1002,14 +1002,24 @@ const PROGRAMS: &[Prog] = &[
     // handles ordinary fractional values without backend-specific code: an
     // integer part plus trimmed fractional digits (`3.14`), a magnitude below 1
     // with no leading zero (`.25`), and a negative fractional value (`-2.5`).
-    // Scientific notation and full six-significant-digit rounding remain the
-    // BA7 numeric tail; this cell proves the fractional path itself runs on all
-    // 7 backends.
+    // This cell keeps the ordinary fixed-decimal smoke; the next BA7 cell covers
+    // six-significant-digit rounding and `E` notation on all 7 backends.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 3.14\n20 PRINT 1.0 / 4.0\n30 PRINT 0.0 - 2.5\n40 END\n",
         expect: Expect::Stdout("3.14\n.25\n-2.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA7-2b historical real formatting. The helper now
+    // rounds to six significant digits (`1.234567` -> `1.23457`) and switches
+    // to signed, two-digit `E` notation for large and small magnitudes, while
+    // retaining the no-leading-zero rule below 1.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 1.234567\n20 PRINT 123456789\n30 PRINT 0.0001234567\n40 PRINT 1.0 / 4.0\n50 END\n",
+        expect: Expect::Stdout("1.23457\n1.23457E+08\n1.23457E-04\n.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — BA7-3 real aggregate storage. Fractional `DATA` values
