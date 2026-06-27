@@ -140,9 +140,18 @@ is text-primary, which is a different mode model.)
   - **L4b (later) — optional-arg defaults + `\def`.** `\newcommand{\x}[n][default]{…}` and
     TeX-style `\def\x#1#2{…}` with arbitrary parameter text; `#n` inside math islands.
   - **L4c (later) — built-in starter set** of common macros pre-registered.
-- **L5 — text-mode breadth.** Sectioning (`\section` …), font/style commands, text accents
-  (`\'e`, `\"o`, `\~n`), `\verb`/`verbatim`, cross-refs (`\label`/`\ref`/`\cite` as nodes),
-  `\documentclass`/`\usepackage` parsed structurally.
+- **L5 — text-mode breadth.** Split into sub-rungs:
+  - **L5a (shipped) — inline `\verb`.** `\verb<delim>…<delim>` and `\verb*` read raw at the
+    tokenizer (catcodes suspended) → `Node::Verb { star, delim, content }`, round-tripping;
+    spanned errors on unterminated / line-spanning / bad-delimiter. Implemented in
+    lexer.rs + parser.rs + ast.rs.
+  - **L5b (later) — `verbatim` environment** (`\begin{verbatim}…\end{verbatim}`, `verbatim*`)
+    read raw to the matching `\end`.
+  - **L5c (later) — text accents** (`\'e`, `\"o`, `\~n`, `\^o`, `\=`, `\u`, `\v`, `\c`, …)
+    recognized over the next char/group.
+  - **L5d (later) — sectioning/font recognition + cross-refs + preamble**: `\section`(+`*`),
+    font/style commands, `\label`/`\ref`/`\cite`, `\documentclass`/`\usepackage` as
+    recognized nodes (mostly classification over the generic Commands L1 already produces).
 - **L6 — `math-frontend` adapter.** Implement `MathFrontend` for `latex`: lift `Math`/`MathNode`
   subtrees to the neutral `MathExpr`; declare capabilities; register in the builtin registry.
   (This is where LaTeX becomes a *plugin*; [PFE01](PFE01-pluggable-parser-frontends.md)'s
