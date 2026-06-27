@@ -244,6 +244,101 @@ impl FormulaAst {
             },
         }
     }
+
+    /// Adjust this formula's references for a structural [`edit`] applied to a
+    /// **specific** sheet, identified by `edited_name` and whether it is this
+    /// formula's own (host) sheet (`edited_is_host`).
+    ///
+    /// A reference shifts (or collapses to `#REF!` if its band was deleted) **only
+    /// if it points into the edited sheet** — that is, an *unqualified* ref when
+    /// the formula's host sheet is the one edited, or a *qualified* ref whose name
+    /// matches `edited_name`. Every other reference (an unqualified ref on a
+    /// non-edited sheet, or a qualified ref to a different sheet) is left exactly
+    /// as-is. This is what lets an edit on sheet `S` ripple into inbound `S!…`
+    /// references that live on *other* sheets (the workbook walks every sheet and
+    /// calls this with `edited_is_host = false` for the non-edited ones), while a
+    /// formula's references into untouched sheets stay put.
+    ///
+    /// Pure: returns a new tree.
+    pub fn adjust_for_sheet_edit(
+        &self,
+        edit: StructuralEdit,
+        edited_is_host: bool,
+        edited_name: &str,
+    ) -> FormulaAst {
+        match self {
+            FormulaAst::Literal(_) => self.clone(),
+            // Unqualified ref → points into the host sheet; shifts iff that sheet
+            // is the one being edited.
+            FormulaAst::Ref { sheet: None, addr } => {
+                if edited_is_host {
+                    match addr.adjust(edit) {
+                        Some(a) => FormulaAst::cell(a),
+                        None => ref_error(),
+                    }
+                } else {
+                    self.clone()
+                }
+            }
+            FormulaAst::Range { sheet: None, range } => {
+                if edited_is_host {
+                    match range.adjust(edit) {
+                        Some(r) => FormulaAst::cell_range(r),
+                        None => ref_error(),
+                    }
+                } else {
+                    self.clone()
+                }
+            }
+            // Qualified ref → points into the named sheet; shifts iff that name is
+            // the edited sheet (a cross-sheet ref into `S` follows `S`'s edit).
+            FormulaAst::Ref {
+                sheet: Some(name),
+                addr,
+            } => {
+                if name == edited_name {
+                    match addr.adjust(edit) {
+                        Some(a) => FormulaAst::sheet_cell(name.clone(), a),
+                        None => ref_error(),
+                    }
+                } else {
+                    self.clone()
+                }
+            }
+            FormulaAst::Range {
+                sheet: Some(name),
+                range,
+            } => {
+                if name == edited_name {
+                    match range.adjust(edit) {
+                        Some(r) => FormulaAst::sheet_range(name.clone(), r),
+                        None => ref_error(),
+                    }
+                } else {
+                    self.clone()
+                }
+            }
+            FormulaAst::Unary { op, operand } => FormulaAst::Unary {
+                op: *op,
+                operand: Box::new(operand.adjust_for_sheet_edit(edit, edited_is_host, edited_name)),
+            },
+            FormulaAst::Binary { op, lhs, rhs } => FormulaAst::Binary {
+                op: *op,
+                lhs: Box::new(lhs.adjust_for_sheet_edit(edit, edited_is_host, edited_name)),
+                rhs: Box::new(rhs.adjust_for_sheet_edit(edit, edited_is_host, edited_name)),
+            },
+            FormulaAst::Percent(inner) => FormulaAst::Percent(Box::new(
+                inner.adjust_for_sheet_edit(edit, edited_is_host, edited_name),
+            )),
+            FormulaAst::Call { name, args } => FormulaAst::Call {
+                name: name.clone(),
+                args: args
+                    .iter()
+                    .map(|a| a.adjust_for_sheet_edit(edit, edited_is_host, edited_name))
+                    .collect(),
+            },
+        }
+    }
 }
 
 /// The `#REF!` error as a formula literal — what a reference to a deleted cell
@@ -265,6 +360,36 @@ mod tests {
     }
     fn r(a1: &str, a2: &str) -> CellRange {
         CellRange::new(a(a1), a(a2))
+    }
+
+    // ── adjust_for_sheet_edit (cross-sheet structural propagation) ──
+    #[test]
+    fn adjust_for_sheet_edit_targets_only_refs_into_the_edited_sheet() {
+        use crate::parser::parse;
+        let e = StructuralEdit::InsertRows { at: 1, count: 1 };
+        // On the edited sheet itself (edited_is_host = true): the unqualified ref
+        // shifts; a ref into another sheet ("Other") is left alone.
+        let host = parse("=A1+Other!A1").unwrap();
+        assert_eq!(
+            host.adjust_for_sheet_edit(e, true, "Summary").to_formula_string(),
+            "(A2+Other!A1)"
+        );
+        // On a DIFFERENT sheet (edited_is_host = false), only refs qualified with
+        // the edited sheet's name shift; the formula's own (unqualified) ref stays.
+        let inbound = parse("=A1+Summary!A1").unwrap();
+        assert_eq!(
+            inbound.adjust_for_sheet_edit(e, false, "Summary").to_formula_string(),
+            "(A1+Summary!A2)"
+        );
+        // A qualified ref to a deleted band becomes #REF!.
+        let del = StructuralEdit::DeleteRows { at: 1, count: 1 };
+        assert_eq!(
+            parse("=Summary!A1")
+                .unwrap()
+                .adjust_for_sheet_edit(del, false, "Summary")
+                .to_formula_string(),
+            "#REF!"
+        );
     }
 
     // ── Address: insert rows ────────────────────────────────────────
