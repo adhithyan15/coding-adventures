@@ -2622,6 +2622,24 @@ mod tests {
     }
 
     #[test]
+    fn compiles_string_concat_print_expression() {
+        let m = compile("10 LET A$ = \"O\"\n20 PRINT A$ + \"K\"\n30 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        let concat_dest = body.iter()
+            .find(|i| i.op == "str_concat"
+                && matches!(i.srcs.as_slice(), [
+                    Operand::Var(left),
+                    Operand::Var(_right)
+                ] if left == "__basic_str_A"))
+            .and_then(|i| i.dest.as_deref())
+            .expect("PRINT A$ + literal should lower through str_concat");
+        assert!(body.iter().any(|i| i.op == "print_str"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == concat_dest)),
+            "PRINT should consume the temporary string expression result");
+    }
+
+    #[test]
     fn compiles_string_variable_if_equality() {
         let src = "10 LET A$ = \"Y\"\n\
                    20 IF A$ = \"Y\" THEN 40\n\

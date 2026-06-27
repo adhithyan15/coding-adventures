@@ -1069,6 +1069,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 string expression in PRINT. This keeps concat out
+    // of an assignment target and proves `PRINT` can consume a temporary E4
+    // string expression result directly.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 PRINT A$ + \"K\"\n30 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — BA4 string equality drives control flow. `IF A$ = "Y"`
     // lowers to shared E4 `str_eq`, then the existing branch machinery chooses
     // the target line. The false path prints BAD and stops; the true path prints

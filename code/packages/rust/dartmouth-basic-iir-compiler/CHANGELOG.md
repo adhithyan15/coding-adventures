@@ -1,5 +1,21 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.20.0 — 2026-06-27 — BA4 string concat expressions in PRINT
+
+`PRINT` now has an explicit regression proof for consuming a string expression
+result directly:
+
+```basic
+10 LET A$ = "O"
+20 PRINT A$ + "K"
+30 END
+```
+
+The existing BA4 helper lowers the expression through E4 `str_concat` into a
+temporary string slot, and `PRINT` consumes that slot with `print_str`. This
+extends the proof surface beyond assignment-target concat without adding new
+runtime string machinery.
+
 ## 0.19.0 — 2026-06-27 — BA4 literal-backed scalar string copy
 
 Scalar string assignment now accepts a string variable RHS:

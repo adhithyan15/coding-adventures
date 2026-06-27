@@ -12,7 +12,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Twig | `42` | rich Lisp frontend, but only typed int-arith/`if` clears the backend validators; lists/lambdas/strings/`print`/symbols need the VM only |
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
-| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, literal-backed scalar string copy, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); richer string ops and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
+| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, `PRINT` string concat expressions, literal-backed scalar string copy, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); richer string ops and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, and literal-backed string variables ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
 
@@ -488,6 +488,8 @@ backend immediately) come before the enabler-dependent items.
   produces `HI`, `LET A$ = "NO"; LET A$ = "OK"; PRINT A$` produces `OK`,
   `LET A$ = "O" + "K"; PRINT A$` proves literal `str_concat`,
   `LET A$ = "OK"; LET B$ = A$; PRINT B$` proves scalar string copy, and
+  `LET A$ = "O"; PRINT A$ + "K"` proves `PRINT` can consume a temporary string
+  expression result directly.
   `IF A$ = "Y" THEN n` / `IF A$ <> "Y" THEN n` lower to `str_eq` in the frontend
   and now drive real line-control branching on all seven backends (`OK`/`BAD`
   matrix proofs).
