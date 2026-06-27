@@ -2,6 +2,20 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.3.0] — 2026-06-27
+
+### Added — rung 1 fractions/percent scaffold
+
+- **`rung1_fractions_percent/items.json`** — 20 fresh, self-authored MCQs covering
+  fraction-of quantities, terminating fraction arithmetic, percent, ratios, and unit
+  rates. The bank deliberately uses terminating fractions and integer percent results
+  so today's ADJ numeric path can verify the cached engine gate before exact-rational
+  engine work expands the rung.
+- **Rung-generic integrity and cached-engine tests.** The contamination gate and
+  cached Arm B end-to-end test now run against both self-contained starter rungs.
+- Docs now make the split explicit: this PR grows the ladder one small rung; arbitrary
+  fraction equality remains part of the exact-rational ADJ-REASON-MATH work.
+
 ## [0.2.0] — 2026-06-26
 
 ### Added — Gemma as the canonical local base target + first real two-arm number
