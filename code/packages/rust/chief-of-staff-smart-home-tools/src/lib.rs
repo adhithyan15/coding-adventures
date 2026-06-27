@@ -348,6 +348,10 @@ pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID: &str 
     "smart_home.list_runtime_maintenance_work_order_evidence";
 pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_runtime_maintenance_work_order_evidence_summary";
+pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEWS_TOOL_ID: &str =
+    "smart_home.list_runtime_maintenance_work_order_evidence_reviews";
+pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_runtime_maintenance_work_order_evidence_review_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2531,6 +2535,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_work_order_evidence_query(&arguments)?;
                     get_runtime_maintenance_work_order_evidence_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEWS_TOOL_ID => {
+                    let query = runtime_maintenance_work_order_evidence_review_query(&arguments)?;
+                    list_runtime_maintenance_work_order_evidence_reviews_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_SUMMARY_TOOL_ID => {
+                    let query = runtime_maintenance_work_order_evidence_review_query(&arguments)?;
+                    get_runtime_maintenance_work_order_evidence_review_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6278,6 +6300,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_maintenance_work_order_guardrail_summary_definition(),
         list_runtime_maintenance_work_order_evidence_definition(),
         get_runtime_maintenance_work_order_evidence_summary_definition(),
+        list_runtime_maintenance_work_order_evidence_reviews_definition(),
+        get_runtime_maintenance_work_order_evidence_review_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -7687,6 +7711,84 @@ fn get_runtime_maintenance_work_order_evidence_summary_definition() -> ToolDefin
         "Summarize Chief-visible evidence packets derived from D23 runtime maintenance work-order guardrails.",
         runtime_maintenance_work_order_evidence_query_schema(),
         runtime_maintenance_work_order_evidence_summary_output_schema(),
+    )
+}
+
+fn runtime_maintenance_work_order_evidence_review_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("window_kind", JsonSchema::String),
+            SchemaProperty::new("window_kinds", string_array_schema()),
+            SchemaProperty::new("remediation_kind", JsonSchema::String),
+            SchemaProperty::new("remediation_kinds", string_array_schema()),
+            SchemaProperty::new("ticket_status", JsonSchema::String),
+            SchemaProperty::new("ticket_statuses", string_array_schema()),
+            SchemaProperty::new("work_order_status", JsonSchema::String),
+            SchemaProperty::new("work_order_statuses", string_array_schema()),
+            SchemaProperty::new("guardrail_status", JsonSchema::String),
+            SchemaProperty::new("guardrail_statuses", string_array_schema()),
+            SchemaProperty::new("evidence_status", JsonSchema::String),
+            SchemaProperty::new("evidence_statuses", string_array_schema()),
+            SchemaProperty::new("review_status", JsonSchema::String),
+            SchemaProperty::new("review_statuses", string_array_schema()),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("recommended_tool", JsonSchema::String),
+            SchemaProperty::new("max_priority", JsonSchema::Integer),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn runtime_maintenance_work_order_evidence_review_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "runtime_maintenance_work_order_evidence_reviews",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec![
+            "runtime_maintenance_work_order_evidence_reviews",
+            "summary",
+            "count",
+        ],
+        false,
+    )
+}
+
+fn runtime_maintenance_work_order_evidence_review_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_runtime_maintenance_work_order_evidence_reviews_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEWS_TOOL_ID,
+        "List smart-home runtime maintenance work-order evidence reviews",
+        "List Chief-visible review rows derived from D23 runtime maintenance work-order evidence packets without mutating the runtime.",
+        runtime_maintenance_work_order_evidence_review_query_schema(),
+        runtime_maintenance_work_order_evidence_review_list_output_schema(),
+    )
+}
+
+fn get_runtime_maintenance_work_order_evidence_review_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_SUMMARY_TOOL_ID,
+        "Summarize smart-home runtime maintenance work-order evidence reviews",
+        "Summarize Chief-visible review rows derived from D23 runtime maintenance work-order evidence packets.",
+        runtime_maintenance_work_order_evidence_review_query_schema(),
+        runtime_maintenance_work_order_evidence_review_summary_output_schema(),
     )
 }
 
@@ -9289,6 +9391,25 @@ fn runtime_maintenance_work_order_evidence_query(
         evidence_statuses: optional_string_list(arguments, "evidence_status", "evidence_statuses")?
             .into_iter()
             .map(|status| parse_runtime_maintenance_work_order_evidence_status(&status))
+            .collect::<Result<Vec<_>, _>>()?,
+    })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RuntimeMaintenanceWorkOrderEvidenceReviewQuery {
+    evidence_query: RuntimeMaintenanceWorkOrderEvidenceQuery,
+    review_statuses: Vec<&'static str>,
+}
+
+fn runtime_maintenance_work_order_evidence_review_query(
+    arguments: &JsonValue,
+) -> Result<RuntimeMaintenanceWorkOrderEvidenceReviewQuery, ToolCallError> {
+    let evidence_query = runtime_maintenance_work_order_evidence_query(arguments)?;
+    Ok(RuntimeMaintenanceWorkOrderEvidenceReviewQuery {
+        evidence_query,
+        review_statuses: optional_string_list(arguments, "review_status", "review_statuses")?
+            .into_iter()
+            .map(|status| parse_runtime_maintenance_work_order_evidence_review_status(&status))
             .collect::<Result<Vec<_>, _>>()?,
     })
 }
@@ -38361,6 +38482,351 @@ fn runtime_maintenance_work_order_evidence_kind(
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct RuntimeMaintenanceWorkOrderEvidenceReview {
+    review_id: String,
+    evidence_id: String,
+    guardrail_id: String,
+    work_order_id: String,
+    ticket_id: String,
+    plan_id: String,
+    window_id: String,
+    window_kind: RuntimeMaintenanceWindowKind,
+    priority: u8,
+    execution_order: usize,
+    review_status: &'static str,
+    review_kind: &'static str,
+    reviewer_lane: &'static str,
+    recommended_review_action: &'static str,
+    evidence_status: &'static str,
+    evidence_kind: &'static str,
+    guardrail_status: &'static str,
+    work_order_status: &'static str,
+    recommended_tool: &'static str,
+    recommended_action: &'static str,
+    action_count: usize,
+    blocked_action_count: usize,
+    requires_attention_count: usize,
+    overdue_action_count: usize,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    next_action_ids: Vec<String>,
+    remediation_ids: Vec<String>,
+    release_blocking: bool,
+    operator_required: bool,
+    lineage_complete: bool,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct RuntimeMaintenanceWorkOrderEvidenceReviewSummary {
+    total_reviews: usize,
+    release_blocker_reviews: usize,
+    operator_handoff_reviews: usize,
+    clear_reviews: usize,
+    release_blocking_reviews: usize,
+    lineage_complete_reviews: usize,
+    total_actions: usize,
+    review_required_actions: usize,
+    blocked_actions: usize,
+    requires_attention_actions: usize,
+    overdue_actions: usize,
+    first_review_id: Option<String>,
+    first_release_blocker_review_id: Option<String>,
+    first_operator_review_id: Option<String>,
+    first_evidence_id: Option<String>,
+    first_work_order_id: Option<String>,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    highest_priority: Option<u8>,
+}
+
+impl RuntimeMaintenanceWorkOrderEvidenceReviewSummary {
+    fn from_reviews(reviews: &[RuntimeMaintenanceWorkOrderEvidenceReview]) -> Self {
+        let mut summary = Self::default();
+
+        for review in reviews {
+            summary.total_reviews += 1;
+            summary.total_actions += review.action_count;
+            summary.blocked_actions += review.blocked_action_count;
+            summary.requires_attention_actions += review.requires_attention_count;
+            summary.overdue_actions += review.overdue_action_count;
+            summary.first_due_at_ms =
+                min_optional_u64(summary.first_due_at_ms, review.first_due_at_ms);
+            summary.max_overdue_by_ms =
+                max_optional_u64(summary.max_overdue_by_ms, review.max_overdue_by_ms);
+            summary.highest_priority =
+                min_optional_u8(summary.highest_priority, Some(review.priority));
+            summary
+                .first_review_id
+                .get_or_insert_with(|| review.review_id.clone());
+            summary
+                .first_evidence_id
+                .get_or_insert_with(|| review.evidence_id.clone());
+            summary
+                .first_work_order_id
+                .get_or_insert_with(|| review.work_order_id.clone());
+
+            if review.requires_review() {
+                summary.review_required_actions += review.action_count;
+            }
+            if review.release_blocking {
+                summary.release_blocking_reviews += 1;
+            }
+            if review.lineage_complete {
+                summary.lineage_complete_reviews += 1;
+            }
+            if review.blocks_release() {
+                summary.release_blocker_reviews += 1;
+                summary
+                    .first_release_blocker_review_id
+                    .get_or_insert_with(|| review.review_id.clone());
+            }
+            if review.operator_handoff() {
+                summary.operator_handoff_reviews += 1;
+                summary
+                    .first_operator_review_id
+                    .get_or_insert_with(|| review.review_id.clone());
+            }
+            if review.review_clear() {
+                summary.clear_reviews += 1;
+            }
+        }
+
+        summary
+    }
+
+    fn has_reviews(&self) -> bool {
+        self.total_reviews > 0
+    }
+
+    fn has_review_work(&self) -> bool {
+        self.release_blocker_reviews > 0 || self.operator_handoff_reviews > 0
+    }
+
+    fn reviews_ready(&self) -> bool {
+        self.total_reviews > 0 && self.clear_reviews == self.total_reviews
+    }
+}
+
+fn list_runtime_maintenance_work_order_evidence_reviews_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWorkOrderEvidenceReviewQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut reviews, summary) =
+        runtime_maintenance_work_order_evidence_reviews(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.evidence_query.guardrail_query.work_order_query.limit {
+        reviews.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "runtime_maintenance_work_order_evidence_reviews",
+            JsonValue::Array(
+                reviews
+                    .iter()
+                    .map(runtime_maintenance_work_order_evidence_review_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            runtime_maintenance_work_order_evidence_review_summary_json(&summary),
+        ),
+        ("count", integer(reviews.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_runtime_maintenance_work_order_evidence_reviews"),
+            ),
+            ("evidence_reviews", integer(reviews.len() as i64)),
+            (
+                "release_blocker_reviews",
+                integer(summary.release_blocker_reviews as i64),
+            ),
+            (
+                "operator_handoff_reviews",
+                integer(summary.operator_handoff_reviews as i64),
+            ),
+            ("clear_reviews", integer(summary.clear_reviews as i64)),
+            ("reviews_ready", JsonValue::Bool(summary.reviews_ready())),
+        ]),
+    ))
+}
+
+fn get_runtime_maintenance_work_order_evidence_review_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWorkOrderEvidenceReviewQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) =
+        runtime_maintenance_work_order_evidence_reviews(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        runtime_maintenance_work_order_evidence_review_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_runtime_maintenance_work_order_evidence_review_summary"),
+            ),
+            ("total_reviews", integer(summary.total_reviews as i64)),
+            (
+                "release_blocker_reviews",
+                integer(summary.release_blocker_reviews as i64),
+            ),
+            (
+                "operator_handoff_reviews",
+                integer(summary.operator_handoff_reviews as i64),
+            ),
+            ("clear_reviews", integer(summary.clear_reviews as i64)),
+        ]),
+    ))
+}
+
+fn runtime_maintenance_work_order_evidence_reviews(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &RuntimeMaintenanceWorkOrderEvidenceReviewQuery,
+) -> Result<
+    (
+        Vec<RuntimeMaintenanceWorkOrderEvidenceReview>,
+        RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+    ),
+    ToolCallError,
+> {
+    let (packets, _) = runtime_maintenance_work_order_evidence_packets(
+        runtime,
+        principal_id,
+        now_ms,
+        &query.evidence_query,
+    )?;
+    let reviews = packets
+        .iter()
+        .map(RuntimeMaintenanceWorkOrderEvidenceReview::from_packet)
+        .filter(|review| runtime_maintenance_work_order_evidence_review_matches(review, query))
+        .collect::<Vec<_>>();
+    let summary = RuntimeMaintenanceWorkOrderEvidenceReviewSummary::from_reviews(&reviews);
+    Ok((reviews, summary))
+}
+
+impl RuntimeMaintenanceWorkOrderEvidenceReview {
+    fn from_packet(packet: &RuntimeMaintenanceWorkOrderEvidencePacket) -> Self {
+        let review_status = runtime_maintenance_work_order_evidence_review_status(packet);
+        let review_kind = runtime_maintenance_work_order_evidence_review_kind(packet);
+        Self {
+            review_id: format!(
+                "maintenance_work_order_evidence_review:{}",
+                packet.evidence_id
+            ),
+            evidence_id: packet.evidence_id.clone(),
+            guardrail_id: packet.guardrail_id.clone(),
+            work_order_id: packet.work_order_id.clone(),
+            ticket_id: packet.ticket_id.clone(),
+            plan_id: packet.plan_id.clone(),
+            window_id: packet.window_id.clone(),
+            window_kind: packet.window_kind,
+            priority: packet.priority,
+            execution_order: packet.execution_order,
+            review_status,
+            review_kind,
+            reviewer_lane: runtime_maintenance_work_order_evidence_review_lane(review_status),
+            recommended_review_action:
+                runtime_maintenance_work_order_evidence_recommended_review_action(review_status),
+            evidence_status: packet.evidence_status,
+            evidence_kind: packet.evidence_kind,
+            guardrail_status: packet.guardrail_status,
+            work_order_status: packet.work_order_status,
+            recommended_tool: packet.recommended_tool,
+            recommended_action: packet.recommended_action,
+            action_count: packet.action_count,
+            blocked_action_count: packet.blocked_action_count,
+            requires_attention_count: packet.requires_attention_count,
+            overdue_action_count: packet.overdue_action_count,
+            first_due_at_ms: packet.first_due_at_ms,
+            max_overdue_by_ms: packet.max_overdue_by_ms,
+            next_action_ids: packet.next_action_ids.clone(),
+            remediation_ids: packet.remediation_ids.clone(),
+            release_blocking: packet.blocks_release(),
+            operator_required: packet.requires_operator(),
+            lineage_complete: packet.lineage_complete,
+        }
+    }
+
+    fn requires_review(&self) -> bool {
+        self.review_status != "review_clear"
+    }
+
+    fn blocks_release(&self) -> bool {
+        self.review_status == "release_blocker_review"
+    }
+
+    fn operator_handoff(&self) -> bool {
+        self.review_status == "operator_handoff_review"
+    }
+
+    fn review_clear(&self) -> bool {
+        self.review_status == "review_clear"
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_matches(
+    review: &RuntimeMaintenanceWorkOrderEvidenceReview,
+    query: &RuntimeMaintenanceWorkOrderEvidenceReviewQuery,
+) -> bool {
+    query.review_statuses.is_empty() || query.review_statuses.contains(&review.review_status)
+}
+
+fn runtime_maintenance_work_order_evidence_review_status(
+    packet: &RuntimeMaintenanceWorkOrderEvidencePacket,
+) -> &'static str {
+    if packet.blocks_release() {
+        "release_blocker_review"
+    } else if packet.requires_operator() {
+        "operator_handoff_review"
+    } else {
+        "review_clear"
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_kind(
+    packet: &RuntimeMaintenanceWorkOrderEvidencePacket,
+) -> &'static str {
+    match packet.evidence_kind {
+        "blocked_action_trace" => "blocked_action_review",
+        "overdue_action_trace" => "overdue_action_review",
+        "attention_action_trace" => "attention_action_review",
+        _ => "ready_execution_review",
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_review_lane(review_status: &str) -> &'static str {
+    match review_status {
+        "release_blocker_review" => "chief_release_review",
+        "operator_handoff_review" => "runtime_operator_review",
+        _ => "execution_audit",
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_recommended_review_action(
+    review_status: &str,
+) -> &'static str {
+    match review_status {
+        "release_blocker_review" => "review_release_blocker",
+        "operator_handoff_review" => "prepare_operator_handoff",
+        _ => "record_execution_ready",
+    }
+}
+
 fn min_optional_u64(left: Option<u64>, right: Option<u64>) -> Option<u64> {
     match (left, right) {
         (Some(left), Some(right)) => Some(left.min(right)),
@@ -63118,6 +63584,185 @@ fn runtime_maintenance_work_order_evidence_summary_json(
     ])
 }
 
+fn runtime_maintenance_work_order_evidence_review_json(
+    review: &RuntimeMaintenanceWorkOrderEvidenceReview,
+) -> JsonValue {
+    object([
+        ("review_id", string(&review.review_id)),
+        ("evidence_id", string(&review.evidence_id)),
+        ("guardrail_id", string(&review.guardrail_id)),
+        ("work_order_id", string(&review.work_order_id)),
+        ("ticket_id", string(&review.ticket_id)),
+        ("plan_id", string(&review.plan_id)),
+        ("window_id", string(&review.window_id)),
+        (
+            "window_kind",
+            string(runtime_maintenance_window_kind_label(review.window_kind)),
+        ),
+        ("priority", integer(review.priority as i64)),
+        ("execution_order", integer(review.execution_order as i64)),
+        ("review_status", string(review.review_status)),
+        ("review_kind", string(review.review_kind)),
+        ("reviewer_lane", string(review.reviewer_lane)),
+        (
+            "recommended_review_action",
+            string(review.recommended_review_action),
+        ),
+        ("evidence_status", string(review.evidence_status)),
+        ("evidence_kind", string(review.evidence_kind)),
+        ("guardrail_status", string(review.guardrail_status)),
+        ("work_order_status", string(review.work_order_status)),
+        ("recommended_tool", string(review.recommended_tool)),
+        ("recommended_action", string(review.recommended_action)),
+        ("action_count", integer(review.action_count as i64)),
+        (
+            "blocked_action_count",
+            integer(review.blocked_action_count as i64),
+        ),
+        (
+            "requires_attention_count",
+            integer(review.requires_attention_count as i64),
+        ),
+        (
+            "overdue_action_count",
+            integer(review.overdue_action_count as i64),
+        ),
+        (
+            "first_due_at_ms",
+            review
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            review
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_action_ids",
+            JsonValue::Array(review.next_action_ids.iter().map(string).collect()),
+        ),
+        (
+            "remediation_ids",
+            JsonValue::Array(review.remediation_ids.iter().map(string).collect()),
+        ),
+        ("release_blocking", JsonValue::Bool(review.release_blocking)),
+        (
+            "operator_required",
+            JsonValue::Bool(review.operator_required),
+        ),
+        ("lineage_complete", JsonValue::Bool(review.lineage_complete)),
+        ("requires_review", JsonValue::Bool(review.requires_review())),
+        ("review_clear", JsonValue::Bool(review.review_clear())),
+    ])
+}
+
+fn runtime_maintenance_work_order_evidence_review_summary_json(
+    summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+) -> JsonValue {
+    object([
+        ("total_reviews", integer(summary.total_reviews as i64)),
+        (
+            "release_blocker_reviews",
+            integer(summary.release_blocker_reviews as i64),
+        ),
+        (
+            "operator_handoff_reviews",
+            integer(summary.operator_handoff_reviews as i64),
+        ),
+        ("clear_reviews", integer(summary.clear_reviews as i64)),
+        (
+            "release_blocking_reviews",
+            integer(summary.release_blocking_reviews as i64),
+        ),
+        (
+            "lineage_complete_reviews",
+            integer(summary.lineage_complete_reviews as i64),
+        ),
+        ("total_actions", integer(summary.total_actions as i64)),
+        (
+            "review_required_actions",
+            integer(summary.review_required_actions as i64),
+        ),
+        ("blocked_actions", integer(summary.blocked_actions as i64)),
+        (
+            "requires_attention_actions",
+            integer(summary.requires_attention_actions as i64),
+        ),
+        ("overdue_actions", integer(summary.overdue_actions as i64)),
+        (
+            "first_review_id",
+            summary
+                .first_review_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_release_blocker_review_id",
+            summary
+                .first_release_blocker_review_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_review_id",
+            summary
+                .first_operator_review_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_evidence_id",
+            summary
+                .first_evidence_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_work_order_id",
+            summary
+                .first_work_order_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_due_at_ms",
+            summary
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            summary
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_priority",
+            summary
+                .highest_priority
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("has_reviews", JsonValue::Bool(summary.has_reviews())),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        ("reviews_ready", JsonValue::Bool(summary.reviews_ready())),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -66073,6 +66718,24 @@ fn parse_runtime_maintenance_work_order_evidence_status(
         "verified" | "ready" | "ready_to_execute" => Ok("verified"),
         _ => Err(validation_error(format!(
             "unsupported runtime maintenance work order evidence status `{value}`"
+        ))),
+    }
+}
+
+fn parse_runtime_maintenance_work_order_evidence_review_status(
+    value: &str,
+) -> Result<&'static str, ToolCallError> {
+    match value {
+        "release_blocker_review" | "release_blocker" | "blocked" | "blocker" => {
+            Ok("release_blocker_review")
+        }
+        "operator_handoff_review"
+        | "operator_handoff"
+        | "operator_required"
+        | "requires_operator" => Ok("operator_handoff_review"),
+        "review_clear" | "clear" | "ready" | "verified" | "ready_to_execute" => Ok("review_clear"),
+        _ => Err(validation_error(format!(
+            "unsupported runtime maintenance work order evidence review status `{value}`"
         ))),
     }
 }
@@ -69915,7 +70578,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 270);
+        assert_eq!(definitions.len(), 272);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -70688,9 +71351,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEWS_TOOL_ID));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_SUMMARY_TOOL_ID
+        ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            262
+            264
         );
         assert_eq!(
             export
@@ -71358,6 +72027,14 @@ mod tests {
             SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID
         )
         .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEWS_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_SUMMARY_TOOL_ID
+        )
+        .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_COMPLETE_PAIRING_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_REPORT_EVENT_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
@@ -71592,11 +72269,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(270))
+            Some(&integer(272))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(262))
+            Some(&integer(264))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -86198,7 +86875,7 @@ mod tests {
     }
 
     #[test]
-    fn runtime_maintenance_plan_ticket_work_order_guardrail_and_evidence_tools_group_action_pressure_end_to_end(
+    fn runtime_maintenance_plan_ticket_work_order_guardrail_evidence_and_review_tools_group_action_pressure_end_to_end(
     ) {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime
@@ -86748,6 +87425,121 @@ mod tests {
             Some(&JsonValue::Bool(false))
         );
 
+        let evidence_review_list_request = request(
+            "call-list-runtime-maintenance-work-order-evidence-reviews",
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEWS_TOOL_ID,
+            object([
+                ("review_status", string("release_blocker_review")),
+                ("evidence_status", string("blocked")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+                ("max_priority", integer(1)),
+                ("limit", integer(10)),
+            ]),
+            2_010,
+        );
+        let evidence_review_list_trace =
+            tool_runtime.invoke_with_events(&evidence_review_list_request);
+        assert!(evidence_review_list_trace.result.ok);
+        assert_eq!(evidence_review_list_trace.summary().progress_event_count, 1);
+        let evidence_review_list_output =
+            evidence_review_list_trace.result.output.as_ref().unwrap();
+        let evidence_reviews = field(
+            evidence_review_list_output,
+            "runtime_maintenance_work_order_evidence_reviews",
+        )
+        .unwrap();
+        let evidence_review_summary = field(evidence_review_list_output, "summary").unwrap();
+        assert!(
+            array_len(evidence_reviews).unwrap() >= 3,
+            "maintenance evidence reviews should expose release-blocking runtime lanes"
+        );
+        assert!(
+            integer_value(field(evidence_review_summary, "total_reviews").unwrap()).unwrap() >= 3
+        );
+        assert!(
+            integer_value(field(evidence_review_summary, "release_blocker_reviews").unwrap())
+                .unwrap()
+                >= 3
+        );
+        assert_eq!(
+            field(evidence_review_summary, "reviews_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let JsonValue::Array(evidence_review_rows) = evidence_reviews else {
+            panic!("runtime_maintenance_work_order_evidence_reviews should be an array");
+        };
+        assert!(evidence_review_rows
+            .iter()
+            .any(
+                |row| field(row, "window_kind") == Some(&string("critical_recovery"))
+                    && field(row, "review_status") == Some(&string("release_blocker_review"))
+                    && field(row, "review_kind") == Some(&string("blocked_action_review"))
+                    && field(row, "recommended_review_action")
+                        == Some(&string("review_release_blocker"))
+                    && field(row, "recommended_tool")
+                        == Some(&string(SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID))
+                    && field(row, "release_blocking") == Some(&JsonValue::Bool(true))
+                    && field(row, "lineage_complete") == Some(&JsonValue::Bool(true))
+                    && integer_value(field(row, "blocked_action_count").unwrap()).unwrap() >= 2
+            ));
+        assert!(evidence_review_rows
+            .iter()
+            .any(
+                |row| field(row, "window_kind") == Some(&string("desired_state_reconciliation"))
+                    && field(row, "review_status") == Some(&string("release_blocker_review"))
+                    && field(row, "evidence_status") == Some(&string("blocked"))
+                    && field(row, "recommended_tool")
+                        == Some(&string(SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID))
+                    && field(row, "recommended_review_action")
+                        == Some(&string("review_release_blocker"))
+            ));
+
+        let evidence_review_summary_request = request(
+            "call-runtime-maintenance-work-order-evidence-review-summary",
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_SUMMARY_TOOL_ID,
+            object([
+                ("window_kind", string("desired_state_reconciliation")),
+                ("review_status", string("release_blocker_review")),
+                ("evidence_status", string("blocked")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+            ]),
+            2_011,
+        );
+        let evidence_review_summary_trace =
+            tool_runtime.invoke_with_events(&evidence_review_summary_request);
+        assert!(evidence_review_summary_trace.result.ok);
+        assert_eq!(
+            evidence_review_summary_trace.summary().progress_event_count,
+            1
+        );
+        let evidence_review_summary_output = evidence_review_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let evidence_review_rollup = field(evidence_review_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(evidence_review_rollup, "total_reviews"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(evidence_review_rollup, "release_blocker_reviews"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(evidence_review_rollup, "review_required_actions"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(evidence_review_rollup, "reviews_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
         let mut journal = ToolExecutionJournal::new();
         journal.record_trace(list_request, list_trace);
         journal.record_trace(summary_request, summary_trace);
@@ -86759,13 +87551,18 @@ mod tests {
         journal.record_trace(guardrail_summary_request, guardrail_summary_trace);
         journal.record_trace(evidence_list_request, evidence_list_trace);
         journal.record_trace(evidence_summary_request, evidence_summary_trace);
+        journal.record_trace(evidence_review_list_request, evidence_review_list_trace);
+        journal.record_trace(
+            evidence_review_summary_request,
+            evidence_review_summary_trace,
+        );
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 10);
-        assert_eq!(journal_summary.completed_count, 10);
+        assert_eq!(journal_summary.invocation_count, 12);
+        assert_eq!(journal_summary.completed_count, 12);
         assert_eq!(
             runtime.borrow().registry().counts().authorization_decisions,
-            10,
-            "maintenance plan, ticket, work-order, guardrail, and evidence reads authorize through runtime read tools"
+            12,
+            "maintenance plan, ticket, work-order, guardrail, evidence, and review reads authorize through runtime read tools"
         );
     }
 

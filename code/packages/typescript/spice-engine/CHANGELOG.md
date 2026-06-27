@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Include selected `runDeckAnalysis` output-plan tables in execution `tables`,
+  selected-run `TableList` metadata, and ordered `tableArtifacts` with stable
+  table, CSV, compact JSON, and header-keyed record payloads, matching Python
+  and Rust.
 - Expose selected `runDeckAnalysis` output-plan inventories as
   `outputPlanArtifacts` with stable result-column, output-probe,
   output-directive, and table lists plus table, CSV, compact JSON, and

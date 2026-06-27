@@ -36,12 +36,17 @@ just use `lang-aot foo.bas`, which does the routing for you).
 
 ## V1 scope
 
-Integer-only programs.  Floats truncate to i64; strings and GOSUB are
-deferred to V2.  See [CHANGELOG.md](CHANGELOG.md) for the full table.
+Integer-only programs.  Floats truncate to i64 (BA7 makes the value model `f64`);
+strings are deferred to LANG77.  See [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`
-single-line user functions, `DIM` arrays, and `READ`/`DATA`/`RESTORE` lower to the shared IIR and
-RUN on native / LLVM / WASM / JVM / CLR / VM / JIT.  LANG-FULL BA0 fixed the
+single-line user functions, `DIM` arrays, `READ`/`DATA`/`RESTORE`, and
+`GOSUB`/`RETURN` lower to the shared IIR and
+RUN on native / LLVM / WASM / JVM / CLR / VM / JIT.  **BA1** added unstructured
+`GOSUB`/`RETURN`: a return-address `array<i64>` stack + an AL5 computed-`goto`
+inside `main` (no new backend op), so the same `RETURN` resumes at the
+dynamically most-recent `GOSUB` — runs on six backends (the wasm computed-`goto`
+CFG is a tracked iir-to-wasm follow-up, BA1-WASM).  LANG-FULL BA0 fixed the
 comparison operand-width hint that had broken control flow on LLVM/WASM; BA5
 added `DEF FNx(X) = expr` (lowered to a sibling `IIRFunction` + `call`, like
 ALGOL's value procedures); **BA3** added one-dimensional integer arrays —
