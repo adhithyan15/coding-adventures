@@ -32,7 +32,9 @@
 //!    uses by their bounded, recursively-expanded bodies. **Implemented (L4a).**
 //! 5. **Verbatim** — `\verb`/`\verb*` ([`Node::Verb`]) and the `verbatim`/`verbatim*`
 //!    environment ([`Node::VerbatimEnv`]) read their bodies **raw** (catcodes suspended).
-//!    **Implemented (L5a/L5b).** Text accents, sectioning, and refs are later L5 sub-rungs.
+//!    **Implemented (L5a/L5b).**
+//! 6. [`recognize_accents`] — an opt-in pass folding text accents (`\'e`, `\c{c}`) into
+//!    [`Node::Accent`]. **Implemented (L5c).** Sectioning and refs are later L5 sub-rungs.
 //!
 //! ## Example
 //!
@@ -56,6 +58,7 @@ mod lexer;
 mod macros;
 mod math;
 mod parser;
+mod text;
 mod token;
 
 pub use ast::{document_to_latex, Node};
@@ -65,4 +68,5 @@ pub use lexer::tokenize;
 pub use macros::expand;
 pub use math::{parse_math, MBinOp, MRelOp, MUnOp, MathNode};
 pub use parser::parse;
+pub use text::recognize_accents;
 pub use token::{Span, Token, TokenKind};
