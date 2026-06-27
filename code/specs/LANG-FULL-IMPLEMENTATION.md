@@ -636,7 +636,7 @@ backend immediately) come before the enabler-dependent items.
   ops instead of the dynamic `call_builtin` path. **Verified by running** literal
   `string-length`/`string-ref`/`string=?`/`string-append`, named string
   concat/equality/index, the `str_index` out-of-bounds trap, local string index,
-  and local string concat across native/LLVM/WASM/JVM/CLR/VM/JIT
+  `let*` string length, and local string concat across native/LLVM/WASM/JVM/CLR/VM/JIT
   (`lang_matrix.rs`). **Limits:** captured or reassigned strings and the
   dynamic-`any` string path still need **E6**/dynamic representation work.
 - ☐ **TW5** — closures / lambdas / general `call_builtin` on code-gen backends (needs **E6**).

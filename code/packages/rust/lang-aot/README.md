@@ -54,6 +54,8 @@ LANG VM chain.
 > `(define s "ABC") (string-ref s 2)` returns `67` everywhere.
 > Lexical Twig string locals now feed E4 too:
 > `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67` everywhere.
+> Sequential lexical Twig string locals also run:
+> `(let* ((s "HELLO")) (string-length s))` returns `5` everywhere.
 > Local string concat now runs on the same path:
 > `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns
 > `5` everywhere.

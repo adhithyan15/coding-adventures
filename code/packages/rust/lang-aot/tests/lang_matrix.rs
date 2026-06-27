@@ -256,6 +256,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(67),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 lexical `let*` string locals. The sequential-binding form uses
+    // the same typed `str_const` local slot path as `let`, and `str_len`
+    // observes it without falling back to dynamic `string-length`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let* ((s \"HELLO\")) (string-length s))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — E4 lexical string locals feeding concat. This takes the local
     // string path beyond indexing: two `let` string slots feed `str_concat`,
     // then `str_len` observes the result. It proves local non-literal string

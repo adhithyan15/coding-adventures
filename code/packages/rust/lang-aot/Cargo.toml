@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.134.0"
+version = "0.135.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.134.0 (LANG-FULL AL4/E4 — ALGOL multi-argument string output): `tests/lang_matrix.rs` proves `string s, t; s := 'O'; t := 'K'; output(s, t)` on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.133.0 proved BASIC comma-separated string PRINT; v0.132.0 proved semicolon multi-item string PRINT."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.135.0 (LANG-FULL E4/TW4 — Twig let-star string locals): `tests/lang_matrix.rs` proves `(let* ((s \"HELLO\")) (string-length s))` on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.134.0 proved ALGOL multi-argument string output; v0.133.0 proved BASIC comma-separated string PRINT."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
