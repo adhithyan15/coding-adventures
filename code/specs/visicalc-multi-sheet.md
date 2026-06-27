@@ -74,18 +74,29 @@ Extend `parse_ident_or_ref` so a bareword (or a single-quoted name) **followed b
   The `!` settles it: anything immediately before a `!` is a **sheet name**, never a
   cell. (A sheet literally named `A1` is legal and quoting is optional.)
 
-### 2.3 Evaluation, dependencies, re-emit
+### 2.3 Evaluation, dependencies, re-emit — **DONE (PR-2)**
 
-- **Eval**: resolve `Ref { sheet, addr }` against `sheet.unwrap_or(host_sheet)`;
-  read that sheet's cached value. Same for ranges (and SUM-over-range).
-- **Dependencies**: the precedent extractor already yields `(SheetId, CellAddress)`
-  nodes; emit the *referenced* sheet's id for a qualified ref (and the host sheet's
-  for `None`). The cross-sheet DAG then dirties `Summary!B2`'s dependents on the
-  other sheet automatically — `changed_since` already spans sheets.
-- **Re-emit** (`to_a1` / source round-trip): a qualified ref prints
-  `SheetName!A1`, quoting the name iff it needs it (spaces/punctuation/leading
-  digit/looks-like-A1). This is what the formula bar shows and what `serialize`
-  stores, so the qualifier survives save/load.
+- **Eval** (shipped): `evaluate` / `collect_refs` take a `resolve: Fn(&str) ->
+  Option<SheetId>` callback. A qualified `Ref`/`Range` resolves its name to a
+  `SheetId` and reads that sheet via the existing `lookup(SheetId, addr)`; an
+  *unknown* name → `None` → `#REF!`. Unqualified refs resolve to `current_sheet`
+  (unchanged). The resolver is threaded through the lazy `IF`/`AND`/`OR`/`IFERROR`
+  helpers too.
+- **Dependencies** (shipped): `collect_refs` emits `(target_sheet, addr)` for a
+  qualified ref (and `(current_sheet, addr)` for `None`); an unknown sheet registers
+  nothing. The workbook wires `|name| self.sheet_by_name.get(name).copied()` at
+  `set_formula`, the graph rebuild, and `evaluate_cell`, so the cross-sheet DAG
+  dirties `Summary!B2`'s dependents on the other sheet automatically — `set_value` on
+  the target sheet recomputes the cross-sheet dependent (`changed_since` already
+  spans sheets).
+- **Re-emit** (shipped in PR-1): a qualified ref prints `SheetName!A1`, quoting the
+  name iff needed; the qualifier is also kept verbatim in the cell's stored source,
+  so it survives save/load.
+- **Forward-reference caveat**: because dependencies are resolved when a formula is
+  *set*, a formula typed *before* its target sheet exists registers no edge and reads
+  `#REF!` until re-entered (or until a sheet-add triggers a graph rebuild — a PR-4
+  refinement). Loading a serialized workbook is unaffected as long as sheets are
+  created before (or the graph is rebuilt after) the formulas load.
 
 ### 2.4 Structural-edit + fill/sort interaction (the subtle part)
 

@@ -27,6 +27,38 @@ runtime. Added five unit tests (a V8-oracle table over number literals incl.
 `Infinity`/`NaN`/`1e21`, the non-number-literal `false` cases, and
 non-literal/second-arg/non-`Number`-receiver guards).
 
+## [0.49.0] - 2026-06-26
+
+### Added — fold global `encodeURI(…)` / `decodeURI(…)` → string literal
+
+The whole-URI escapers `encodeURI(string)` and `decodeURI(string)` now fold to a
+string literal when their single argument is a string literal (ECMAScript
+§19.2.6.4 / §19.2.6.2). They are the siblings of `encodeURIComponent` /
+`decodeURIComponent`, differing only by their treatment of the URI
+reserved/structural delimiters `; , / ? : @ & = + $` and `#`:
+
+- `encode_uri` percent-escapes every UTF-8 byte that is not unreserved, but —
+  unlike the `…Component` variant — KEEPS the reserved delimiters intact, so an
+  already-assembled URI is not corrupted. `encodeURI("a b")` → `"a%20b"`,
+  `encodeURI("a/b?c=d")` → `"a/b?c=d"`, `encodeURI("é")` → `"%C3%A9"`,
+  `encodeURI("a<b>")` → `"a%3Cb%3E"`.
+- `decode_uri` is the inverse, and crucially KEEPS a `%XX` escape ENCODED when
+  the byte it would decode to is a reserved delimiter (so reserved structure
+  survives a round trip) — the one behavioural difference from
+  `decodeURIComponent`. `decodeURI("a%20b")` → `"a b"`, but `decodeURI("%2F")`
+  → `"%2F"` (`/` is reserved) where `decodeURIComponent("%2F")` would give `"/"`.
+
+Soundness mirrors the existing global-coercion folds: `encodeURI`/`decodeURI`
+are free identifiers a local could shadow, so we fold the **bare identifier**
+only — never a member access (`window.encodeURI` is left alone). A string
+literal's value is a Rust `&str` (whole Unicode scalars), so the bytes we emit
+are exactly the UTF-8 bytes V8 encodes; there is no lone-surrogate input (the
+only `encodeURI` throw) to hit. `decodeURI` DECLINES the fold on exactly the two
+`URIError` inputs — a malformed `%XX` escape and a `%`-decoded byte run that is
+not valid UTF-8 — so we never substitute a value where the runtime would throw.
+
+Added direct-oracle, round-trip, through-the-pass, decline, non-string-argument,
+extra-argument, and member-access unit tests, all V8-confirmed.
 ## [0.48.0] - 2026-06-26
 
 ### Added — fold global `encodeURIComponent(str)` / `decodeURIComponent(str)` over a string literal
