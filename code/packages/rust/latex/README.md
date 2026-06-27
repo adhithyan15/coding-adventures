@@ -35,7 +35,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L2 math** | math AST (frac, binom, roots, scripts, big ops, functions, accents, `\left\right` fences, relations), precedence-climbing parser, `to_latex()` round-trip | ✅ |
 | **L3 environments** | math env family — `matrix`/`pmatrix`/`bmatrix`/`vmatrix`/`cases`/`aligned`/`align` split on `&` and `\\` → `MathNode::Matrix`, round-trip; nesting + scripts | ✅ |
 | **L4 macros** | `\newcommand`/`\renewcommand`/`\providecommand` with positional `#1`..`#9`; bounded recursive expansion via `expand()` (L4a) | ✅ |
-| **L5 text breadth** | inline `\verb`/`\verb*` (L5a) + `verbatim`/`verbatim*` environment (L5b), both raw; accents, sectioning, refs to follow | 🚧 this release (L5b) |
+| **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c); sectioning/refs to follow | 🚧 this release (L5c) |
 | L6 frontend | implement `math-frontend::MathFrontend` (LaTeX becomes plugin #1) | ⏳ |
 
 ## Usage
@@ -139,8 +139,24 @@ assert!(matches!(doc[0], Node::VerbatimEnv { .. }));   // body kept literal, $/{
 
 Only `verbatim`/`verbatim*` divert to raw scanning; every other `\begin{…}` is parsed
 structurally. An unterminated `\verb` (or a `*`/space delimiter, or a body past the line end)
-and an unterminated `verbatim` environment are spanned errors — never a mis-parse. (Text
-accents, sectioning, and cross-refs arrive in later L5 sub-rungs.)
+and an unterminated `verbatim` environment are spanned errors — never a mis-parse.
+
+### Text accents (L5c)
+
+`recognize_accents` is an opt-in pass (like `expand`) that folds an accent control sequence
+and the character it accents into a `Node::Accent` — both spellings, `\'e` and `\'{e}`,
+recognize to the same node and round-trip:
+
+```rust
+use latex::{parse, recognize_accents, Node};
+
+let doc = recognize_accents(parse(r"caf\'e").unwrap());
+assert!(matches!(doc[1], Node::Accent { .. }));   // é over `e`; "caf" stays text
+```
+
+Recognized: `\'  \`  \^  \"  \~  \=  \.` and `\u \v \H \c \d \b \r \t`. A dangling accent (no
+accent-able char after it) is left as a plain command — never dropped. (Sectioning and
+cross-refs arrive in later L5 sub-rungs.)
 
 The low-level `tokenize` is also public. Tokens and errors carry half-open byte `Span`s;
 all of `parse`, `parse_math`, and `tokenize` return spanned errors rather than panicking,

@@ -149,8 +149,10 @@ is text-primary, which is a different mode model.)
     read raw to the matching `\end` (catcodes suspended, newlines kept) → `Node::VerbatimEnv`,
     round-tripping; lexer peeks after `\begin` and only diverts for these env names; spanned
     error on unterminated/wrong close. Implemented in lexer.rs + parser.rs + ast.rs.
-  - **L5c (later) — text accents** (`\'e`, `\"o`, `\~n`, `\^o`, `\=`, `\u`, `\v`, `\c`, …)
-    recognized over the next char/group.
+  - **L5c (shipped) — text accents** (`\'e`, `\"o`, `\~n`, `\^o`, `\=`, `\.`, `\u`, `\v`, `\H`,
+    `\c`, `\d`, `\b`, `\r`, `\t`) recognized over the next char/group → `Node::Accent`, via the
+    opt-in `recognize_accents` pass (mirrors `expand`; L1 round-trip preserved); `to_latex`
+    re-recognizes either spelling. Implemented in text.rs + ast.rs.
   - **L5d (later) — sectioning/font recognition + cross-refs + preamble**: `\section`(+`*`),
     font/style commands, `\label`/`\ref`/`\cite`, `\documentclass`/`\usepackage` as
     recognized nodes (mostly classification over the generic Commands L1 already produces).

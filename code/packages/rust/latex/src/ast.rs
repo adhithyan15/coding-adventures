@@ -49,6 +49,11 @@ pub enum Node {
     /// the **raw** inner text (catcodes suspended, newlines kept). `env` is the environment
     /// name verbatim, preserved so the node round-trips.
     VerbatimEnv { env: String, content: String },
+    /// A text accent applied to its argument (L5c): `\'e` → é, `\c{c}` → ç. `accent` is the
+    /// control-sequence name verbatim (`'`, `"`, `c`, `u`, …); `arg` is the accented content
+    /// (a single-character text run, or a braced group's nodes). Produced only by the opt-in
+    /// [`recognize_accents`](crate::recognize_accents) pass, not by L1.
+    Accent { accent: String, arg: Vec<Node> },
     /// An active character that acts like a command — `~`.
     Active(char),
     /// A construct deliberately out of scope (the TeX-programmability asymptote — e.g.
@@ -152,6 +157,15 @@ impl Node {
                 out.push_str(content);
                 out.push_str("\\end{");
                 out.push_str(env);
+                out.push('}');
+            }
+            Node::Accent { accent, arg } => {
+                // Render the braced form `\<accent>{arg}` — it re-recognizes to the same node
+                // whether the source wrote `\'e` or `\'{e}`.
+                out.push('\\');
+                out.push_str(accent);
+                out.push('{');
+                render_seq(arg, out);
                 out.push('}');
             }
             Node::Active(c) => out.push(*c),

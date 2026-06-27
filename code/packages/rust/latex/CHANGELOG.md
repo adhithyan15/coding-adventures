@@ -2,6 +2,26 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.8.0] — 2026-06-27
+
+### Added — LTX01 L5c: text accents
+
+- **`recognize_accents(Vec<Node>) -> Vec<Node>`** — a new, opt-in recognition pass (a sibling
+  of `expand`) that folds an accent control sequence and the character it accents into a new
+  `Node::Accent { accent, arg }`. `parse` (L1) is unchanged, so its round-trip is preserved.
+- Recognizes both spellings: control-symbol accents `\'  \`  \^  \"  \~  \=  \.` (which take no
+  L1 argument, so they pair with the next node) and control-word accents `\u \v \H \c \d \b
+  \r \t` (captured as `\c{e}`, or `\c e` where the lexer absorbed the space). The argument is
+  a single following character (`\'e` → é over `e`, the rest of the run kept as text) or a
+  braced group. Recurses into groups, command arguments, and environment bodies.
+- **`Node::Accent::to_latex`** renders the braced form `\'{e}`, so
+  `recognize_accents(parse(&n.to_latex())) == [n]` whether the source wrote `\'e` or `\'{e}`.
+- Total / panic-free: a dangling accent (nothing accent-able after it) is left as a plain
+  command, never dropped or mis-folded. No `unsafe`.
+- +9 tests (control-symbol over next char, first-char-only with remainder kept, braced arg,
+  control-word braced + bare, accent-in-group, non-accent untouched, dangling, round-trip
+  corpus). **103 unit + 1 doc test** green; clippy `-D warnings` clean. Crate 0.7.0 → 0.8.0.
+
 ## [0.7.0] — 2026-06-27
 
 ### Added — LTX01 L5b: `verbatim` environment
