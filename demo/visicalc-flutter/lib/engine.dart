@@ -88,6 +88,22 @@ typedef _FindAllD = Pointer<Uint8> Function(Pointer<Void>, Pointer<Uint8>, int, 
 typedef _ReplaceAllC = Int32 Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Int32);
 typedef _ReplaceAllD = int Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, int);
 
+// Multi-sheet workbook. sc_sheet_names(session) → char* JSON
+// {"sheets":[…],"active":i} (free with sc_string_free); sc_active_sheet → u32;
+// sc_set_active_sheet/sc_add_sheet/sc_rename_sheet/sc_delete_sheet → int 1/0.
+typedef _SheetNamesC = Pointer<Uint8> Function(Pointer<Void>);
+typedef _SheetNamesD = Pointer<Uint8> Function(Pointer<Void>);
+typedef _ActiveSheetC = Uint32 Function(Pointer<Void>);
+typedef _ActiveSheetD = int Function(Pointer<Void>);
+typedef _SetActiveSheetC = Int32 Function(Pointer<Void>, Uint32);
+typedef _SetActiveSheetD = int Function(Pointer<Void>, int);
+typedef _AddSheetC = Int32 Function(Pointer<Void>, Pointer<Uint8>);
+typedef _AddSheetD = int Function(Pointer<Void>, Pointer<Uint8>);
+typedef _RenameSheetC = Int32 Function(Pointer<Void>, Uint32, Pointer<Uint8>);
+typedef _RenameSheetD = int Function(Pointer<Void>, int, Pointer<Uint8>);
+typedef _DeleteSheetC = Int32 Function(Pointer<Void>, Uint32);
+typedef _DeleteSheetD = int Function(Pointer<Void>, int);
+
 // sc_insert_rows / sc_delete_rows / sc_insert_cols / sc_delete_cols(session, at,
 // count) → void. Structural edits at a 1-based position; the engine shifts
 // formula references across the band.
@@ -120,6 +136,12 @@ class SpreadsheetSession {
   late final _SortRangeD _sortRangeFn;
   late final _FindAllD _findAllFn;
   late final _ReplaceAllD _replaceAllFn;
+  late final _SheetNamesD _sheetNamesFn;
+  late final _ActiveSheetD _activeSheetFn;
+  late final _SetActiveSheetD _setActiveSheetFn;
+  late final _AddSheetD _addSheetFn;
+  late final _RenameSheetD _renameSheetFn;
+  late final _DeleteSheetD _deleteSheetFn;
   late final _ClipD _copyFn;
   late final _ClipD _cutFn;
   late final _PasteD _pasteFn;
@@ -159,6 +181,12 @@ class SpreadsheetSession {
     _sortRangeFn = _lib.lookupFunction<_SortRangeC, _SortRangeD>('sc_sort_range');
     _findAllFn = _lib.lookupFunction<_FindAllC, _FindAllD>('sc_find_all');
     _replaceAllFn = _lib.lookupFunction<_ReplaceAllC, _ReplaceAllD>('sc_replace_all');
+    _sheetNamesFn = _lib.lookupFunction<_SheetNamesC, _SheetNamesD>('sc_sheet_names');
+    _activeSheetFn = _lib.lookupFunction<_ActiveSheetC, _ActiveSheetD>('sc_active_sheet');
+    _setActiveSheetFn = _lib.lookupFunction<_SetActiveSheetC, _SetActiveSheetD>('sc_set_active_sheet');
+    _addSheetFn = _lib.lookupFunction<_AddSheetC, _AddSheetD>('sc_add_sheet');
+    _renameSheetFn = _lib.lookupFunction<_RenameSheetC, _RenameSheetD>('sc_rename_sheet');
+    _deleteSheetFn = _lib.lookupFunction<_DeleteSheetC, _DeleteSheetD>('sc_delete_sheet');
     _copyFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_copy');
     _cutFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_cut');
     _pasteFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_paste');
@@ -384,6 +412,42 @@ class SpreadsheetSession {
       _freeCString(rPtr);
     }
   }
+
+  // ── Multi-sheet workbook ───────────────────────────────────────────
+  // Bare-A1 ops address the ACTIVE sheet; a formula may reference another
+  // (=Summary!A1). sheetNames() → { 'sheets': [names…], 'active': index }.
+
+  // Defensive, like [window]/[usedRange]/[changedSince]: a malformed/empty
+  // engine payload yields an empty workbook view rather than a thrown cast.
+  Map<String, dynamic> sheetNames() {
+    final json = _takeString(_sheetNamesFn(_handle));
+    final Object? obj = json.isEmpty ? null : jsonDecode(json);
+    return obj is Map
+        ? obj.cast<String, dynamic>()
+        : <String, dynamic>{'sheets': <String>[], 'active': 0};
+  }
+
+  int activeSheet() => _activeSheetFn(_handle);
+  bool setActiveSheet(int index) => _setActiveSheetFn(_handle, _u32(index)) != 0;
+  bool addSheet(String name) {
+    final p = _toCString(name);
+    try {
+      return _addSheetFn(_handle, p) != 0;
+    } finally {
+      _freeCString(p);
+    }
+  }
+
+  bool renameSheet(int index, String newName) {
+    final p = _toCString(newName);
+    try {
+      return _renameSheetFn(_handle, _u32(index), p) != 0;
+    } finally {
+      _freeCString(p);
+    }
+  }
+
+  bool deleteSheet(int index) => _deleteSheetFn(_handle, _u32(index)) != 0;
 
   /// Structural edits: insert / delete [count] rows or columns at the 1-based
   /// position [at]. The engine shifts every formula reference at or after the
@@ -651,6 +715,18 @@ class InfiniteSheetModel {
     for (final f in formats) {
       _session.setFormat(f[0], f[1]);
     }
+
+    // A second sheet, "Summary", proves cross-sheet references compute live:
+    // its B3 sums two of its own cells, and back on the first sheet G1 reaches
+    // ACROSS with a qualifier (`=Summary!B3`) — identical seed to the web/Qt
+    // demos. The first sheet stays active (bare-A1 ops still address it).
+    _session.addSheet('Summary');
+    _session.setActiveSheet(1);
+    _session.setCell('A1', '100');
+    _session.setCell('A2', '200');
+    _session.setCell('B3', '=A1+A2'); // 300, on the Summary sheet
+    _session.setActiveSheet(0);
+    _session.setCell('G1', '=Summary!B3'); // 300, pulled across the sheets
   }
 
   /// Re-derive the virtual grid size from the engine's data extent plus a
@@ -821,5 +897,56 @@ class InfiniteSheetModel {
       formula = _session.getRaw(infAddress);
     }
     return ok;
+  }
+
+  // ── Multi-sheet workbook ───────────────────────────────────────────
+  // The workbook holds several sheets; bare-A1 ops address the ACTIVE one,
+  // while a formula may reach across with a qualifier (`=Summary!A1`). The
+  // tab bar reads [sheetNames]/[activeSheet] and drives the mutators below;
+  // each refreshes the extent + formula bar so the windowed view re-reads.
+
+  /// The sheet names in tab order.
+  List<String> get sheetNames {
+    final m = _session.sheetNames();
+    return (m['sheets'] as List?)?.cast<String>() ?? const [];
+  }
+
+  /// The active sheet's 0-based index.
+  int get activeSheet => _session.activeSheet();
+
+  /// Switch the active sheet (bare-A1 ops now address it). Reselects A1's
+  /// neighbourhood by re-priming the formula bar at the current cursor.
+  void selectSheet(int index) {
+    if (_session.setActiveSheet(index)) {
+      computeExtent();
+      selectInf(selRow, selCol);
+    }
+  }
+
+  /// Add a new empty sheet and switch to it.
+  void addSheet(String name) {
+    if (_session.addSheet(name)) {
+      _session.setActiveSheet(sheetNames.length - 1);
+      computeExtent();
+      selectInf(1, 1);
+    }
+  }
+
+  /// Rename a sheet by index; cross-sheet references that named it are
+  /// rewritten by the engine, so dependents stay live.
+  void renameSheet(int index, String newName) {
+    if (_session.renameSheet(index, newName)) {
+      computeExtent();
+      selectInf(selRow, selCol);
+    }
+  }
+
+  /// Delete a sheet by index. References into it become `#REF!`; the engine
+  /// keeps at least one sheet, so this is a no-op on the last one.
+  void deleteSheet(int index) {
+    if (_session.deleteSheet(index)) {
+      computeExtent();
+      selectInf(1, 1);
+    }
   }
 }
