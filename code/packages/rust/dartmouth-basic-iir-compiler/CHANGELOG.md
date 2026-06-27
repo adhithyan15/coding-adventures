@@ -1,5 +1,17 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.26.0 — 2026-06-27 — integer-literal exponentiation (LANG-FULL BA-^)
+
+The compiler now lowers the backend-neutral subset of BASIC `^`: a
+nonnegative integer-valued literal exponent from 0 through 64. The frontend
+unrolls `base ^ n` to repeated `f64` `mul` instructions, so `6 ^ 2 + 6`
+prints `42` on native/LLVM/WASM/JVM/CLR/VM/JIT without adding a runtime math
+helper.
+
+General exponentiation remains intentionally unsupported for now: variable,
+nested, negative, fractional, and large exponents still report a clean
+`Unsupported` error because those need a cross-backend math runtime.
+
 ## 0.25.0 — 2026-06-27 — BA4 comma-separated string PRINT sequencing
 
 String `PRINT` now has an explicit proof that BA2 comma separators compose with

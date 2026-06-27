@@ -1119,6 +1119,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — exponentiation with an integer-valued literal exponent
+    // (LANG-FULL BA-^). General `^` still needs a math runtime for variable or
+    // fractional exponents; this proof lowers `6 ^ 2` to repeated f64 `mul`,
+    // then adds 6 and prints 42 on every backend.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 6 ^ 2 + 6\n20 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — E4/BA4 first string-PRINT proof. The frontend lowers a
     // string literal item to shared `str_const` + `print_str`, and the existing
     // BASIC PRINT machinery emits the trailing newline via `putchar`. Native AOT

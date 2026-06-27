@@ -1381,9 +1381,10 @@ impl Compiler {
     fn emit_power(&mut self, node: &GrammarASTNode)
         -> Result<ExprValue, CompileError>
     {
-        // `power = unary [ CARET power ]` — right-associative.  V1 doesn't
-        // support exponentiation (would need a runtime helper or
-        // repeated mul); rejects with `Unsupported`.
+        // `power = unary [ CARET power ]` — right-associative.  BA-^ supports
+        // the backend-neutral subset where the exponent is a small
+        // nonnegative integer-valued literal; that lowers to repeated f64
+        // multiplication, avoiding a cross-backend math runtime.
         let kids = node.children.iter().collect::<Vec<_>>();
         if kids.len() == 1 {
             // Pass through to the single `unary` child.
@@ -1391,12 +1392,42 @@ impl Compiler {
                 return self.emit_expr(n);
             }
         }
-        // CARET present in children → exponentiation, deferred.
-        if kids.iter().any(|c| matches!(c, ASTNodeOrToken::Token(t)
-            if t.value == "^"))
+        if kids.len() == 3
+            && matches!(kids[1], ASTNodeOrToken::Token(t) if t.value == "^")
         {
+            let base_node = match kids[0] {
+                ASTNodeOrToken::Node(n) => n,
+                _ => return Err(CompileError::Malformed(
+                    "power lhs is not a node".into())),
+            };
+            let exponent_node = match kids[2] {
+                ASTNodeOrToken::Node(n) => n,
+                _ => return Err(CompileError::Malformed(
+                    "power rhs is not a node".into())),
+            };
+            let exponent = literal_integer_exponent(exponent_node)?
+                .ok_or_else(|| CompileError::Unsupported(
+                    "exponentiation (^) with non-literal exponent — needs runtime helper".into()))?;
+            let base = self.emit_expr(base_node)?;
+            let base = self.coerce_value(base, BasicScalarType::Real);
+            if exponent == 0 {
+                let dest = self.fresh_temp();
+                self.emit("const", Some(&dest), vec![Operand::Float(1.0)], "f64");
+                return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
+            }
+            let base_slot = base.slot.clone();
+            let mut acc = base.slot;
+            for _ in 1..exponent {
+                let dest = self.fresh_temp();
+                self.emit("mul", Some(&dest),
+                    vec![Operand::Var(acc), Operand::Var(base_slot.clone())], "f64");
+                acc = dest;
+            }
+            return Ok(ExprValue { slot: acc, ty: BasicScalarType::Real });
+        }
+        if kids.iter().any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "^")) {
             return Err(CompileError::Unsupported(
-                "exponentiation (^) — needs runtime helper".into()));
+                "exponentiation (^) shape — needs runtime helper".into()));
         }
         // Otherwise just unwrap the single Node child.
         for c in kids {
@@ -1675,6 +1706,11 @@ const BASIC_DATA_ARRAY: &str = "__basic_data";
 /// The IIR register holding the `READ`/`RESTORE` pointer into the pool (BA6).
 const BASIC_DATA_PTR: &str = "__basic_data_ptr";
 
+/// Largest exponent the frontend will unroll for `base ^ <literal>`.
+/// This is a deliberately small no-runtime-helper slice; larger/general
+/// exponents should use a real cross-backend math helper later.
+const MAX_LITERAL_EXPONENT: u32 = 64;
+
 /// The integer bound `n` in a `dim_decl = NAME LPAREN NUMBER RPAREN`.  The
 /// grammar pins the bound to a `NUMBER` literal (not an arbitrary expression),
 /// so we read it straight from the token rather than emitting code to compute
@@ -1707,6 +1743,50 @@ fn dim_decl_bound(decl: &GrammarASTNode) -> Result<i64, CompileError> {
         }
     }
     Err(CompileError::Malformed("DIM decl missing NUMBER bound".into()))
+}
+
+fn literal_integer_exponent(node: &GrammarASTNode) -> Result<Option<u32>, CompileError> {
+    let mut number: Option<&str> = None;
+    let mut unsupported_shape = false;
+
+    fn visit<'a>(node: &'a GrammarASTNode, number: &mut Option<&'a str>,
+                 unsupported_shape: &mut bool)
+    {
+        for c in &node.children {
+            match c {
+                ASTNodeOrToken::Node(n) => visit(n, number, unsupported_shape),
+                ASTNodeOrToken::Token(t) => match t.effective_type_name() {
+                    "NUMBER" => {
+                        if number.replace(t.value.trim()).is_some() {
+                            *unsupported_shape = true;
+                        }
+                    }
+                    "LPAREN" | "RPAREN" => {}
+                    _ => *unsupported_shape = true,
+                },
+            }
+        }
+    }
+
+    visit(node, &mut number, &mut unsupported_shape);
+    if unsupported_shape {
+        return Ok(None);
+    }
+    let Some(raw) = number else {
+        return Ok(None);
+    };
+    let value = raw.parse::<f64>().map_err(|_| CompileError::Malformed(
+        format!("exponent literal `{raw}` is not a real value")))?;
+    if !value.is_finite()
+        || value < 0.0
+        || value.fract() != 0.0
+        || value > MAX_LITERAL_EXPONENT as f64
+    {
+        return Err(CompileError::Unsupported(format!(
+            "exponentiation (^) supports only nonnegative integer-valued \
+             literal exponents 0..={MAX_LITERAL_EXPONENT}; got `{raw}`")));
+    }
+    Ok(Some(value as u32))
 }
 
 fn scalar_variable_name(var: &GrammarASTNode)
@@ -2348,6 +2428,26 @@ mod tests {
         assert!(body.iter().any(|i| i.op == "add" && i.type_hint == "f64"),
             "mixed arithmetic result should be f64");
         assert!(calls_named(body, "__basic_print_real"));
+    }
+
+    /// BA-^: small integer-valued literal exponents lower to repeated f64
+    /// multiplication, avoiding a cross-backend math runtime.
+    #[test]
+    fn literal_power_lowers_to_repeated_f64_mul() {
+        let m = compile("10 PRINT 6 ^ 2 + 6\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "mul" && i.type_hint == "f64"),
+            "`6 ^ 2` should lower to f64 repeated multiplication: {body:?}");
+        assert!(calls_named(body, "__basic_print_real"));
+    }
+
+    #[test]
+    fn variable_power_exponent_stays_unsupported() {
+        let err = compile("10 LET X = 2\n20 PRINT 6 ^ X\n30 END\n").unwrap_err();
+        match err {
+            CompileError::Unsupported(msg) => assert!(msg.contains("non-literal exponent")),
+            other => panic!("expected Unsupported(non-literal exponent), got {other:?}"),
+        }
     }
 
     /// BA2: a program with no value-printing `PRINT` carries no helper

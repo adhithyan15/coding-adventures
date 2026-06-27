@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.140.0"
+version = "0.141.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.140.0 (LANG-FULL O-!): `tests/lang_matrix.rs` proves Oct logical NOT prints 42 on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.139.0 proved folded Nib const/static initializers."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.141.0 (LANG-FULL BA-^): `tests/lang_matrix.rs` proves BASIC integer-literal exponentiation prints 42 on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.140.0 proved Oct logical NOT."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }

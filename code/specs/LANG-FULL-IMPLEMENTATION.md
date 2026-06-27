@@ -12,7 +12,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Twig | `42`, variadic arithmetic, top-level value `define`, and typed E4 string literal/named/local proofs | rich Lisp frontend; lists/lambdas/dynamic globals/records/symbols still need E5/E6, and captured/reassigned strings stay on the dynamic path |
 | Nib | typed calls, `*`/`/`, `for`, bitwise, short-circuit logic, logical `!`, consts, const/static-expression folding, wrap/sat arithmetic, and module `static`s all run on all 7 backends | BCD semantics and Intel-4004 RAM mapping remain |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
-| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); richer string ops and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
+| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); richer string ops and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, and multi-argument string `output` ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
 
@@ -571,6 +571,13 @@ backend immediately) come before the enabler-dependent items.
   `f64`, with index/read-pointer boundaries left as `i64`; fractional `DATA`
   through array and scalar `READ` runs on native/LLVM/WASM/JVM/CLR/VM/JIT. BA7
   numeric formatting completed in 0.13.0.
+- ✅ **BA-^** — integer-literal exponentiation (`dartmouth-basic-iir-compiler` 0.26.0).
+  The parser already supported right-associative `^`, but the compiler rejected it pending
+  a runtime math helper. The backend-neutral slice now recognizes nonnegative
+  integer-valued literal exponents `0..=64` and lowers `base ^ n` to repeated `f64`
+  `mul`, so no backend learns a new operation. Verified by RUNNING `PRINT 6 ^ 2 + 6`
+  on native/LLVM/WASM/JVM/CLR/VM/JIT → stdout `42`. General variable, nested, negative,
+  fractional, and large exponents still need a cross-backend runtime math helper.
 
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`

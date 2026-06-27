@@ -1,8 +1,8 @@
 [package]
 name = "dartmouth-basic-iir-compiler"
-version = "0.25.0"
+version = "0.26.0"
 edition = "2021"
-description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.25.0 proves comma-separated BA4 string PRINT on all seven E4 backends; v0.24.0 proved semicolon multi-item string PRINT sequencing."
+description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.26.0 proves integer-literal `^` exponentiation by repeated f64 multiplication on all seven backends; v0.25.0 proved comma-separated BA4 string PRINT."
 
 [dependencies]
 coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }

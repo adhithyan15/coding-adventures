@@ -43,7 +43,10 @@ output (`PRINT 6.0 * 7.0`) and ordinary fixed-decimal fractional output (`3.14`,
 `.25`, `-2.5`), six-significant-digit rounding, and `E` notation run through the
 shared E3/E8 backends. Integer `i64` remains explicit at structural boundaries:
 line numbers, `DIM` bounds, array subscripts, DATA read pointers, and GOSUB
-return stacks. String literal `PRINT`, literal-backed string variables
+return stacks. Integer-valued literal exponentiation (`6 ^ 2`) lowers to
+repeated `f64` multiplication and runs on all seven backends; variable,
+fractional, negative, nested, and large exponents still need a runtime math
+helper. String literal `PRINT`, literal-backed string variables
 (`LET A$ = "HI"` / `PRINT A$`), literal reassignment
 (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`), and `IF A$ = "Y"` / `IF A$ <> "Y"`
 string branches now lower through the shared E4 path on all seven matrix
