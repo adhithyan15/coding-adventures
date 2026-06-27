@@ -139,6 +139,10 @@ All notable changes to this package will be documented in this file.
   repair, review, operator, lineage, and release handoff pointers.
 - Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence review disposition action
+  readiness execution handoff action rows that turn handoff readiness into
+  repair, review, operator, and release actions.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review disposition action
   summaries that combine action rows with next repair, review, lineage, and
   release handoff pointers.
 - Mesh release ticket handoff readiness-evidence review disposition-action
