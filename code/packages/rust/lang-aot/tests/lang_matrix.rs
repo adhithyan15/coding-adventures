@@ -1089,6 +1089,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 string expression assignment with a variable
+    // operand. This proves a non-literal concat can be stored in another safe
+    // scalar string slot before printing.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = A$ + \"K\"\n30 PRINT B$\n40 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — BA4 string equality drives control flow. `IF A$ = "Y"`
     // lowers to shared E4 `str_eq`, then the existing branch machinery chooses
     // the target line. The false path prints BAD and stops; the true path prints

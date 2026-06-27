@@ -2668,6 +2668,23 @@ mod tests {
     }
 
     #[test]
+    fn compiles_string_variable_concat_assignment_and_print() {
+        let m = compile("10 LET A$ = \"O\"\n20 LET B$ = A$ + \"K\"\n30 PRINT B$\n40 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "str_concat"
+            && i.dest.as_deref() == Some("__basic_str_B")
+            && matches!(i.srcs.as_slice(), [
+                Operand::Var(left),
+                Operand::Var(_right)
+            ] if left == "__basic_str_A")),
+            "B$ = A$ + literal should store the concat directly in B$");
+        assert!(body.iter().any(|i| i.op == "print_str"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "__basic_str_B")),
+            "PRINT B$ should consume the assigned concat result");
+    }
+
+    #[test]
     fn compiles_string_variable_if_equality() {
         let src = "10 LET A$ = \"Y\"\n\
                    20 IF A$ = \"Y\" THEN 40\n\

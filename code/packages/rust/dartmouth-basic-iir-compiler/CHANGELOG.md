@@ -1,5 +1,20 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.22.0 — 2026-06-27 — BA4 variable-backed string concat assignment
+
+String assignment now has an explicit proof for concat expressions whose left
+operand is a scalar string variable:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = A$ + "K"
+30 PRINT B$
+```
+
+The compiler stores the `str_concat` result directly into `__basic_str_B`,
+proving variable-backed expression assignment without widening into arrays,
+input, or a general mutable string store.
+
 ## 0.21.0 — 2026-06-27 — BA4 string concat expressions in IF equality
 
 `IF` string comparisons now have an explicit regression proof for consuming a
