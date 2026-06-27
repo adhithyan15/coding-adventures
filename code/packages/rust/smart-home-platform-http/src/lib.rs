@@ -20,8 +20,8 @@ use smart_home_runtime::{
     RuntimeCommandResultQuery, RuntimeCommandResultRecord, RuntimeCommandResultSort,
     RuntimeCommandToolRequest, RuntimeError, RuntimeEvent, RuntimeEventCheckpoint,
     RuntimeEventFilter, RuntimeEventLogEntry, RuntimeEventQuery, RuntimeEventSort,
-    RuntimeReadSnapshot, RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest,
-    SmartHomeRuntime,
+    RuntimeReadSnapshot, RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary,
+    RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest, SmartHomeRuntime,
 };
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
@@ -392,6 +392,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/rooms", move |request| {
+            runtime_rooms_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/events", move |request| {
             runtime_events_response(&runtime, request)
         });
@@ -671,6 +678,22 @@ fn runtime_entity_response(
         }
     };
     WebResponse::json(entity_registry_json(entity, &runtime_guard, runtime.now_ms).into_bytes())
+}
+
+fn runtime_rooms_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let query = match runtime_room_query(request) {
+        Ok(query) => query,
+        Err(error) => return api_error_response(error),
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let rooms = runtime_guard.query_room_summaries_at(&query, runtime.now_ms);
+    WebResponse::json(rooms_json(&rooms, &runtime_guard).into_bytes())
 }
 
 fn runtime_events_response(
@@ -1096,6 +1119,64 @@ fn entities_registry_json(entities: &[&Entity], runtime: &SmartHomeRuntime, now_
     )
 }
 
+fn rooms_json(rooms: &[RuntimeRoomSummary], runtime: &SmartHomeRuntime) -> String {
+    let topology = runtime.topology_summary();
+    let state_gap_rooms = rooms.iter().filter(|room| room.has_state_gaps()).count();
+    let attention_rooms = rooms
+        .iter()
+        .filter(|room| room.has_attention_items())
+        .count();
+    let scene_rooms = rooms.iter().filter(|room| room.has_scene_actions()).count();
+
+    format!(
+        "{{\"summary\":{{\"total_rooms\":{},\"attention_rooms\":{},\"state_gap_rooms\":{},\"scene_rooms\":{},\"total_devices\":{},\"total_entities\":{},\"total_scenes\":{},\"topology_unique_rooms\":{}}},\"topology\":{{\"bridges\":{},\"devices\":{},\"entities\":{},\"scenes\":{},\"devices_with_room\":{},\"devices_without_room\":{},\"unique_rooms\":{},\"scene_actions\":{},\"room_scenes\":{}}},\"rooms\":[{}]}}",
+        rooms.len(),
+        attention_rooms,
+        state_gap_rooms,
+        scene_rooms,
+        rooms.iter().map(|room| room.device_count).sum::<usize>(),
+        rooms.iter().map(|room| room.entity_count).sum::<usize>(),
+        rooms.iter().map(|room| room.scene_count).sum::<usize>(),
+        topology.unique_rooms,
+        topology.bridges,
+        topology.devices,
+        topology.entities,
+        topology.scenes,
+        topology.devices_with_room,
+        topology.devices_without_room,
+        topology.unique_rooms,
+        topology.scene_actions,
+        topology.room_scenes,
+        rooms
+            .iter()
+            .map(room_json)
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn room_json(room: &RuntimeRoomSummary) -> String {
+    format!(
+        "{{\"room_id\":{},\"device_count\":{},\"online_devices\":{},\"pairing_candidate_devices\":{},\"attention_devices\":{},\"entity_count\":{},\"commandable_entities\":{},\"entities_with_state\":{},\"entities_without_state\":{},\"stale_entities\":{},\"state_gap_count\":{},\"scene_count\":{},\"scene_action_count\":{},\"has_attention\":{},\"has_state_gaps\":{},\"has_scene_actions\":{}}}",
+        json_string(&room.room_id),
+        room.device_count,
+        room.online_devices,
+        room.pairing_candidate_devices,
+        room.attention_devices,
+        room.entity_count,
+        room.commandable_entities,
+        room.entities_with_state,
+        room.entities_without_state,
+        room.stale_entities,
+        room.state_gap_count(),
+        room.scene_count,
+        room.scene_action_count,
+        room.has_attention_items(),
+        room.has_state_gaps(),
+        room.has_scene_actions(),
+    )
+}
+
 fn entity_registry_json(entity: &Entity, runtime: &SmartHomeRuntime, now_ms: u64) -> String {
     let device = runtime.registry().device(&entity.device_id);
     let bridge_id = device.map(|device| device.bridge_id.as_str());
@@ -1311,6 +1392,23 @@ fn runtime_entities<'a>(
     entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
     entities.truncate(limit);
     Ok(entities)
+}
+
+fn runtime_room_query(request: &WebRequest) -> Result<RuntimeRoomQuery, ApiError> {
+    let mut query = RuntimeRoomQuery::new().with_limit(query_limit(request, 100, 1_000)?);
+    if let Some(room_id) = query_string(request, "room_id") {
+        query = query.for_room(room_id);
+    }
+    if query_bool(request, "attention_only")?.unwrap_or(false) {
+        query = query.attention_only(true);
+    }
+    if query_bool(request, "state_gaps_only")?.unwrap_or(false) {
+        query = query.state_gaps_only(true);
+    }
+    if let Some(sort) = query_string(request, "sort") {
+        query = query.sorted_by(room_sort_from_label(sort)?);
+    }
+    Ok(query)
 }
 
 fn state_history_events<'a>(
@@ -2494,6 +2592,18 @@ fn value_kind_label(kind: ValueKind) -> &'static str {
     }
 }
 
+fn room_sort_from_label(sort: &str) -> Result<RuntimeRoomSort, ApiError> {
+    match sort {
+        "room_id" | "id" => Ok(RuntimeRoomSort::RoomId),
+        "attention" | "attention_desc" => Ok(RuntimeRoomSort::AttentionDesc),
+        "entity_count" | "entity_count_desc" => Ok(RuntimeRoomSort::EntityCountDesc),
+        "scene_count" | "scene_count_desc" => Ok(RuntimeRoomSort::SceneCountDesc),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported room sort `{other}`"
+        ))),
+    }
+}
+
 fn device_event_type_label(event_type: DeviceEventType) -> &'static str {
     match event_type {
         DeviceEventType::Discovered => "discovered",
@@ -3177,6 +3287,35 @@ mod tests {
         assert_eq!(one_response.status, 200);
         assert!(one_body.contains(r#""name":"Kitchen Light""#));
         assert!(one_body.contains(r#""domain":"light""#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_ready_room_summaries() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/rooms?room_id=kitchen&state_gaps_only=true&sort=scene_count",
+            ))
+            .into(),
+        );
+
+        assert!(body.contains(r#""total_rooms":1"#));
+        assert!(body.contains(r#""state_gap_rooms":1"#));
+        assert!(body.contains(r#""scene_rooms":1"#));
+        assert!(body.contains(r#""topology_unique_rooms":1"#));
+        assert!(body.contains(r#""devices_with_room":1"#));
+        assert!(body.contains(r#""room_id":"kitchen""#));
+        assert!(body.contains(r#""device_count":1"#));
+        assert!(body.contains(r#""online_devices":1"#));
+        assert!(body.contains(r#""entity_count":2"#));
+        assert!(body.contains(r#""commandable_entities":1"#));
+        assert!(body.contains(r#""entities_without_state":2"#));
+        assert!(body.contains(r#""state_gap_count":2"#));
+        assert!(body.contains(r#""scene_count":1"#));
+        assert!(body.contains(r#""scene_action_count":1"#));
+        assert!(body.contains(r#""has_state_gaps":true"#));
+        assert!(body.contains(r#""has_scene_actions":true"#));
     }
 
     #[test]

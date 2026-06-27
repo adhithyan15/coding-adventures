@@ -20,6 +20,7 @@ stable local API responses for:
 - `/api/smart_home/runtime`
 - `/api/smart_home/entities`
 - `/api/smart_home/entities/:entity_id`
+- `/api/smart_home/rooms`
 - `/api/smart_home/events`
 - `/api/smart_home/command_results`
 - `/api/smart_home/authorization_decisions`
@@ -45,11 +46,11 @@ tool.
 
 The `GET /api/smart_home/*` routes expose dashboard-ready read models for the
 same runtime: pending-work snapshot counts, entity and capability registry
-records, checkpointed event-log entries, command-result audit records,
-authorization decisions, and desired-state supervision targets. State-history
-reads expose registry-backed device events with Home Assistant entity aliases,
-state deltas, and timestamp filters; the Home Assistant-style history route
-accepts `filter_entity_id`.
+records, room topology summaries, checkpointed event-log entries,
+command-result audit records, authorization decisions, and desired-state
+supervision targets. State-history reads expose registry-backed device events
+with Home Assistant entity aliases, state deltas, and timestamp filters; the
+Home Assistant-style history route accepts `filter_entity_id`.
 
 ## Dependencies
 
@@ -77,6 +78,7 @@ Then query it from another shell:
 curl http://127.0.0.1:8123/api/
 curl http://127.0.0.1:8123/api/states
 curl 'http://127.0.0.1:8123/api/smart_home/entities?domain=light&commandable=true'
+curl 'http://127.0.0.1:8123/api/smart_home/rooms?sort=scene_count&state_gaps_only=true'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/state_history?entity_id=light.entity_light_1'
 curl 'http://127.0.0.1:8123/api/history/period?filter_entity_id=light.entity_light_1'
