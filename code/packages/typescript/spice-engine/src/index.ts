@@ -1,5 +1,6 @@
 const PIVOT_EPSILON = 1.0e-12;
 const SPARSE_SOLVER_THRESHOLD = 30;
+const DEFAULT_NEWTON_STEP_LIMIT = 5.0;
 const TWO_PI = Math.PI * 2.0;
 const BOLTZMANN = 1.380_649e-23;
 const ELECTRON_CHARGE = 1.602_176_634e-19;
@@ -1064,6 +1065,9 @@ export interface DcSolverDiagnostics {
   readonly tolerance: number;
   readonly maxDelta: number;
   readonly convergenceAid: DcConvergenceAid;
+  readonly newtonStepLimit?: number;
+  readonly limitedNewtonSteps: number;
+  readonly minimumDampingFactor: number;
   readonly solverProfile: LinearSolverProfile;
 }
 
@@ -1074,6 +1078,7 @@ export interface DcOpOptions {
   readonly pseudoTransientSteps?: number;
   readonly pseudoTransientConductance?: number;
   readonly pseudoTransientMaxIterations?: number;
+  readonly newtonStepLimit?: number | null;
 }
 
 export interface CornerOverride {
@@ -11375,6 +11380,11 @@ function dcDiagnosticsFromLinearSolution(
     tolerance,
     maxDelta: solution.maxDelta,
     convergenceAid,
+    ...(solution.newtonStepLimit === undefined
+      ? {}
+      : { newtonStepLimit: solution.newtonStepLimit }),
+    limitedNewtonSteps: solution.limitedNewtonSteps,
+    minimumDampingFactor: solution.minimumDampingFactor,
     solverProfile: solution.solverProfile,
   };
 }
@@ -13916,6 +13926,9 @@ interface LinearSolution {
   readonly iterations: number;
   readonly converged: boolean;
   readonly maxDelta: number;
+  readonly newtonStepLimit?: number;
+  readonly limitedNewtonSteps: number;
+  readonly minimumDampingFactor: number;
   readonly solverProfile: LinearSolverProfile;
 }
 
@@ -13929,6 +13942,7 @@ interface LinearSolveOptions {
   readonly tolerance: number;
   readonly initialVector?: readonly number[];
   readonly returnSingularAsUnconverged?: boolean;
+  readonly newtonStepLimit?: number;
 }
 
 interface ResolvedDcOpOptions {
@@ -13938,6 +13952,7 @@ interface ResolvedDcOpOptions {
   readonly pseudoTransientSteps: number;
   readonly pseudoTransientConductance: number;
   readonly pseudoTransientMaxIterations: number;
+  readonly newtonStepLimit?: number;
 }
 
 interface AcSolution {
@@ -13969,6 +13984,7 @@ function solveLinearCircuit(
     {
       maxIterations: 80,
       tolerance: 1.0e-9,
+      newtonStepLimit: undefined,
     },
   );
 }
@@ -13988,6 +14004,7 @@ function solveDcNewton(
       tolerance: options.tolerance,
       initialVector,
       returnSingularAsUnconverged: true,
+      newtonStepLimit: options.newtonStepLimit,
     },
   );
 }
@@ -14046,6 +14063,8 @@ function solveLinearCircuitWithOptions(
       iterations: 0,
       converged: true,
       maxDelta: 0.0,
+      limitedNewtonSteps: 0,
+      minimumDampingFactor: 1.0,
       solverProfile: emptySolverProfile(0),
     };
   }
@@ -14069,16 +14088,51 @@ function solveLinearCircuitWithOptions(
     operatingPoint,
     returnSingularAsUnconverged,
   );
+  const activeStepLimit = hasNonlinearElement ? options.newtonStepLimit : undefined;
+  let limitedNewtonSteps = 0;
+  let minimumDampingFactor = 1.0;
+  const applyNewtonStepLimit = (candidate: LinearSolution): LinearSolution => {
+    if (!candidate.converged) {
+      return {
+        ...candidate,
+        newtonStepLimit: activeStepLimit,
+        limitedNewtonSteps,
+        minimumDampingFactor,
+      };
+    }
+    const step = limitNewtonStep(operatingPoint, candidate.vector, activeStepLimit);
+    if (step.limited) {
+      limitedNewtonSteps += 1;
+      minimumDampingFactor = Math.min(minimumDampingFactor, step.dampingFactor);
+    }
+    return {
+      ...linearSolutionFromVector(
+        circuit,
+        inductorStates,
+        nodeIndices,
+        voltageSources,
+        nodeCount,
+        step.vector,
+        candidate.converged,
+        step.maxDelta,
+        candidate.solverProfile,
+      ),
+      newtonStepLimit: activeStepLimit,
+      limitedNewtonSteps,
+      minimumDampingFactor,
+    };
+  };
   if (!hasNonlinearElement) {
     return { ...solution, iterations: 1, converged: solution.converged };
   }
+  solution = applyNewtonStepLimit(solution);
 
   let iterations = 1;
   while (iterations < options.maxIterations) {
     if (!solution.converged) {
       return { ...solution, iterations, converged: false, maxDelta: Number.POSITIVE_INFINITY };
     }
-    const delta = maxVectorDelta(solution.vector, operatingPoint);
+    const delta = solution.maxDelta;
     operatingPoint = [...solution.vector];
     if (delta < options.tolerance) {
       return { ...solution, iterations, converged: true, maxDelta: delta };
@@ -14095,10 +14149,11 @@ function solveLinearCircuitWithOptions(
       operatingPoint,
       returnSingularAsUnconverged,
     );
+    solution = applyNewtonStepLimit(solution);
     iterations += 1;
   }
 
-  const delta = maxVectorDelta(solution.vector, operatingPoint);
+  const delta = solution.maxDelta;
   return { ...solution, iterations, converged: delta < options.tolerance, maxDelta: delta };
 }
 
@@ -14155,6 +14210,10 @@ function validatedDcOpOptions(options: DcOpOptions): ResolvedDcOpOptions {
   const pseudoTransientSteps = options.pseudoTransientSteps ?? 20;
   const pseudoTransientConductance = options.pseudoTransientConductance ?? 1.0e-3;
   const pseudoTransientMaxIterations = options.pseudoTransientMaxIterations ?? maxIterations;
+  const newtonStepLimit =
+    options.newtonStepLimit === null
+      ? undefined
+      : options.newtonStepLimit ?? DEFAULT_NEWTON_STEP_LIMIT;
   if (!Number.isInteger(maxIterations) || maxIterations < 1) {
     throw invalidElement("dcOp", "maxIterations must be a positive integer");
   }
@@ -14170,6 +14229,12 @@ function validatedDcOpOptions(options: DcOpOptions): ResolvedDcOpOptions {
   if (!Number.isInteger(pseudoTransientMaxIterations) || pseudoTransientMaxIterations < 1) {
     throw invalidElement("dcOp", "pseudoTransientMaxIterations must be a positive integer");
   }
+  if (
+    newtonStepLimit !== undefined &&
+    (!Number.isFinite(newtonStepLimit) || newtonStepLimit <= 0.0)
+  ) {
+    throw invalidElement("dcOp", "newtonStepLimit must be finite and positive");
+  }
   return {
     maxIterations,
     tolerance,
@@ -14177,6 +14242,7 @@ function validatedDcOpOptions(options: DcOpOptions): ResolvedDcOpOptions {
     pseudoTransientSteps,
     pseudoTransientConductance,
     pseudoTransientMaxIterations,
+    newtonStepLimit,
   };
 }
 
@@ -14807,6 +14873,8 @@ function linearSolutionFromVector(
     iterations: 1,
     converged,
     maxDelta,
+    limitedNewtonSteps: 0,
+    minimumDampingFactor: 1.0,
     solverProfile,
   };
 }
@@ -14817,6 +14885,63 @@ function maxVectorDelta(left: readonly number[], right: readonly number[]): numb
     max = Math.max(max, Math.abs(left[index] - right[index]));
   }
   return max;
+}
+
+interface NewtonStepLimitResult {
+  readonly vector: readonly number[];
+  readonly maxDelta: number;
+  readonly dampingFactor: number;
+  readonly limited: boolean;
+}
+
+function limitNewtonStep(
+  previous: readonly number[],
+  candidate: readonly number[],
+  stepLimit?: number,
+): NewtonStepLimitResult {
+  if (stepLimit === undefined) {
+    return {
+      vector: [...candidate],
+      maxDelta: maxVectorDelta(previous, candidate),
+      dampingFactor: 1.0,
+      limited: false,
+    };
+  }
+
+  const rawDelta = maxVectorDelta(previous, candidate);
+  if (rawDelta <= stepLimit) {
+    return {
+      vector: [...candidate],
+      maxDelta: rawDelta,
+      dampingFactor: 1.0,
+      limited: false,
+    };
+  }
+
+  if (!Number.isFinite(rawDelta)) {
+    return {
+      vector: candidate.map((value, index) => {
+        const delta = value - previous[index];
+        if (!Number.isFinite(delta)) {
+          return previous[index];
+        }
+        return previous[index] + Math.sign(delta) * stepLimit;
+      }),
+      maxDelta: stepLimit,
+      dampingFactor: 0.0,
+      limited: true,
+    };
+  }
+
+  const dampingFactor = stepLimit / rawDelta;
+  return {
+    vector: candidate.map(
+      (value, index) => previous[index] + (value - previous[index]) * dampingFactor,
+    ),
+    maxDelta: stepLimit,
+    dampingFactor,
+    limited: true,
+  };
 }
 
 function buildSmallSignalMatrix(
@@ -15119,6 +15244,8 @@ function makeDcResult(
     tolerance: 0.0,
     maxDelta: 0.0,
     convergenceAid,
+    limitedNewtonSteps: 0,
+    minimumDampingFactor: 1.0,
     solverProfile: emptySolverProfile(0),
   },
 ): DcResult {

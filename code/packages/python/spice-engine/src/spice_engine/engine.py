@@ -110,6 +110,8 @@ from spice_engine.elements import (
     waveform_period,
 )
 
+_DEFAULT_NEWTON_STEP_LIMIT = 5.0
+
 
 @dataclass
 class Circuit:
@@ -609,6 +611,9 @@ class DcSolverDiagnostics:
     tolerance: float
     max_delta: float
     convergence_aid: str
+    newton_step_limit: float | None = None
+    limited_newton_steps: int = 0
+    minimum_damping_factor: float = 1.0
     solver_profile: LinearSolverProfile = field(
         default_factory=lambda: LinearSolverProfile(
             matrix_size=0,
@@ -7308,6 +7313,9 @@ def _dc_diagnostics(
     max_delta: float,
     convergence_aid: str,
     solver_profile: LinearSolverProfile | None = None,
+    newton_step_limit: float | None = None,
+    limited_newton_steps: int = 0,
+    minimum_damping_factor: float = 1.0,
 ) -> DcSolverDiagnostics:
     return DcSolverDiagnostics(
         matrix_size=matrix_size,
@@ -7315,10 +7323,63 @@ def _dc_diagnostics(
         tolerance=tol,
         max_delta=max_delta,
         convergence_aid=convergence_aid,
+        newton_step_limit=newton_step_limit,
+        limited_newton_steps=limited_newton_steps,
+        minimum_damping_factor=minimum_damping_factor,
         solver_profile=solver_profile
         if solver_profile is not None
         else _empty_solver_profile(matrix_size),
     )
+
+
+def _has_nonlinear_element(circuit: Circuit) -> bool:
+    return any(
+        isinstance(el, (BSource, CustomModel, Diode, JFET, Mosfet, BJT))
+        for el in circuit.elements
+    )
+
+
+def _validate_newton_step_limit(value: float | None) -> float | None:
+    if value is None:
+        return None
+    if not math.isfinite(value) or value <= 0.0:
+        raise ValueError("newton_step_limit must be finite and positive")
+    return value
+
+
+def _limit_newton_step(
+    previous: list[float],
+    candidate: list[float],
+    step_limit: float | None,
+) -> tuple[list[float], float, float, bool]:
+    if step_limit is None or not previous:
+        max_delta = (
+            max(abs(a - bv) for a, bv in zip(previous, candidate, strict=False))
+            if previous
+            else 0.0
+        )
+        return candidate, max_delta, 1.0, False
+
+    raw_delta = max(abs(a - bv) for a, bv in zip(previous, candidate, strict=False))
+    if raw_delta <= step_limit:
+        return candidate, raw_delta, 1.0, False
+
+    if not math.isfinite(raw_delta):
+        limited = []
+        for old, new in zip(previous, candidate, strict=False):
+            delta = new - old
+            if math.isfinite(delta):
+                limited.append(old + math.copysign(step_limit, delta))
+            else:
+                limited.append(old)
+        return limited, step_limit, 0.0, True
+
+    damping_factor = step_limit / raw_delta
+    limited = [
+        old + (new - old) * damping_factor
+        for old, new in zip(previous, candidate, strict=False)
+    ]
+    return limited, step_limit, damping_factor, True
 
 
 # ---------------------------------------------------------------------------
@@ -7332,6 +7393,7 @@ def _dc_newton(
     max_iterations: int = 50,
     tol: float = 1e-6,
     x_init: list[float] | None = None,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult:
     """Run Newton-Raphson DC solve, optionally warm-started from *x_init*.
 
@@ -7359,6 +7421,13 @@ def _dc_newton(
     size = n + m
 
     x = list(x_init) if x_init is not None else [0.0] * size
+    active_step_limit = (
+        _validate_newton_step_limit(newton_step_limit)
+        if _has_nonlinear_element(circuit)
+        else None
+    )
+    limited_newton_steps = 0
+    minimum_damping_factor = 1.0
 
     max_delta = float("inf")
     for it in range(max_iterations):
@@ -7384,10 +7453,20 @@ def _dc_newton(
                     max_delta=float("inf"),
                     convergence_aid="newton",
                     solver_profile=solver_profile,
+                    newton_step_limit=active_step_limit,
+                    limited_newton_steps=limited_newton_steps,
+                    minimum_damping_factor=minimum_damping_factor,
                 ),
             )
 
-        max_delta = max(abs(a - bv) for a, bv in zip(x, x_new, strict=False)) if x else 0.0
+        x_new, max_delta, damping_factor, was_limited = _limit_newton_step(
+            x,
+            x_new,
+            active_step_limit,
+        )
+        if was_limited:
+            limited_newton_steps += 1
+            minimum_damping_factor = min(minimum_damping_factor, damping_factor)
         x = x_new
         if max_delta < tol:
             break
@@ -7405,6 +7484,9 @@ def _dc_newton(
             max_delta=max_delta,
             convergence_aid="newton",
             solver_profile=solver_profile,
+            newton_step_limit=active_step_limit,
+            limited_newton_steps=limited_newton_steps,
+            minimum_damping_factor=minimum_damping_factor,
         ),
     )
 
@@ -7440,6 +7522,7 @@ def _dc_gmin_step(
     tol: float = 1e-6,
     gmin_start: float = 1e-3,
     n_steps: int = 10,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult | None:
     """DC operating point via Gmin stepping (convergence aid #1).
 
@@ -7513,7 +7596,13 @@ def _dc_gmin_step(
             # Final step: original circuit, warm-started from the last Gmin solve.
             aug = circuit
 
-        result = _dc_newton(aug, max_iterations=max_iterations, tol=tol, x_init=x_init)
+        result = _dc_newton(
+            aug,
+            max_iterations=max_iterations,
+            tol=tol,
+            x_init=x_init,
+            newton_step_limit=newton_step_limit,
+        )
         if not result.converged:
             return None  # This step diverged — Gmin stepping has failed.
 
@@ -7531,6 +7620,7 @@ def _dc_source_step(
     max_iterations: int = 50,
     tol: float = 1e-6,
     n_steps: int = 10,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult | None:
     """DC operating point via source stepping (convergence aid #2).
 
@@ -7608,7 +7698,11 @@ def _dc_source_step(
         scaled_circuit = Circuit(elements=scaled_elements)
 
         result = _dc_newton(
-            scaled_circuit, max_iterations=max_iterations, tol=tol, x_init=x_init
+            scaled_circuit,
+            max_iterations=max_iterations,
+            tol=tol,
+            x_init=x_init,
+            newton_step_limit=newton_step_limit,
         )
         if not result.converged:
             return None  # This step diverged — source stepping has failed.
@@ -7628,6 +7722,7 @@ def _dc_pseudo_transient(
     tol: float = 1e-6,
     n_steps: int = 20,
     shunt_conductance: float = 1e-3,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult | None:
     """DC continuation through artificial backward-Euler node capacitors."""
     if n_steps <= 0 or not math.isfinite(shunt_conductance) or shunt_conductance <= 0.0:
@@ -7665,6 +7760,7 @@ def _dc_pseudo_transient(
             max_iterations=max_iterations,
             tol=tol,
             x_init=x_init,
+            newton_step_limit=newton_step_limit,
         )
         if not result.converged:
             return None
@@ -7758,6 +7854,7 @@ def dc_op(
     pseudo_transient_shunt_conductance: float = 1e-3,
     pseudo_transient_max_iterations: int | None = None,
     initial_vector: list[float] | None = None,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult:
     """Solve DC operating point via Newton-Raphson on a linearized MNA.
 
@@ -7803,9 +7900,13 @@ def dc_op(
     initial_vector:
         Optional MNA warm-start vector.  Prefer
         :func:`dc_op_with_initial_conditions` for parsed deck hints.
+    newton_step_limit:
+        Maximum absolute Newton update per unknown for nonlinear circuits.
+        Set to ``None`` to disable damping.
     """
     if initial_vector is not None:
         _validate_dc_initial_vector(circuit, initial_vector)
+    newton_step_limit = _validate_newton_step_limit(newton_step_limit)
 
     # Attempt 1: plain Newton-Raphson.
     result = _dc_newton(
@@ -7813,6 +7914,7 @@ def dc_op(
         max_iterations=max_iterations,
         tol=tol,
         x_init=initial_vector,
+        newton_step_limit=newton_step_limit,
     )
     if result.converged:
         return replace(
@@ -7828,7 +7930,12 @@ def dc_op(
         )
 
     # Attempt 2: Gmin stepping.
-    gmin_result = _dc_gmin_step(circuit, max_iterations=max_iterations, tol=tol)
+    gmin_result = _dc_gmin_step(
+        circuit,
+        max_iterations=max_iterations,
+        tol=tol,
+        newton_step_limit=newton_step_limit,
+    )
     if gmin_result is not None and gmin_result.converged:
         return replace(
             gmin_result,
@@ -7837,7 +7944,12 @@ def dc_op(
         )
 
     # Attempt 3: source stepping.
-    src_result = _dc_source_step(circuit, max_iterations=max_iterations, tol=tol)
+    src_result = _dc_source_step(
+        circuit,
+        max_iterations=max_iterations,
+        tol=tol,
+        newton_step_limit=newton_step_limit,
+    )
     if src_result is not None and src_result.converged:
         return replace(
             src_result,
@@ -7856,6 +7968,7 @@ def dc_op(
         tol=tol,
         n_steps=pseudo_transient_steps,
         shunt_conductance=pseudo_transient_shunt_conductance,
+        newton_step_limit=newton_step_limit,
     )
     if pseudo_result is not None and pseudo_result.converged:
         return replace(
@@ -7885,6 +7998,7 @@ def dc_op_with_initial_conditions(
     pseudo_transient_steps: int = 20,
     pseudo_transient_shunt_conductance: float = 1e-3,
     pseudo_transient_max_iterations: int | None = None,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult:
     """Solve DC operating point using parsed ``.ic``/``.nodeset`` node hints."""
 
@@ -7902,6 +8016,7 @@ def dc_op_with_initial_conditions(
         pseudo_transient_shunt_conductance=pseudo_transient_shunt_conductance,
         pseudo_transient_max_iterations=pseudo_transient_max_iterations,
         initial_vector=initial_vector,
+        newton_step_limit=newton_step_limit,
     )
 
 

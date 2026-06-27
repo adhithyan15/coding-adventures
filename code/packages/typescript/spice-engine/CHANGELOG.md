@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add configurable nonlinear Newton damping through
+  `dcOp(..., { newtonStepLimit })`, plus stable diagnostics for
+  `newtonStepLimit`, `limitedNewtonSteps`, and `minimumDampingFactor`,
+  matching Python and Rust.
 - Add `dcOp(...).diagnostics.solverProfile` with matrix size, solver kind,
   backend, structural nonzero count, density, peak fill-in, and fallback
   metadata for production sparse-solver audits, matching Python and Rust.

@@ -4,6 +4,7 @@ use std::thread;
 
 const PIVOT_EPSILON: f64 = 1.0e-12;
 const SPARSE_SOLVER_THRESHOLD: usize = 30;
+const DEFAULT_NEWTON_STEP_LIMIT: f64 = 5.0;
 const TWO_PI: f64 = std::f64::consts::PI * 2.0;
 const BOLTZMANN: f64 = 1.380_649e-23;
 const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
@@ -7943,6 +7944,9 @@ pub struct DcSolverDiagnostics {
     pub tolerance: f64,
     pub max_delta: f64,
     pub convergence_aid: DcConvergenceAid,
+    pub newton_step_limit: Option<f64>,
+    pub limited_newton_steps: usize,
+    pub minimum_damping_factor: f64,
     pub solver_profile: LinearSolverProfile,
 }
 
@@ -8029,6 +8033,7 @@ pub struct DcOpOptions {
     pub pseudo_transient_steps: usize,
     pub pseudo_transient_conductance: f64,
     pub pseudo_transient_max_iterations: usize,
+    pub newton_step_limit: Option<f64>,
 }
 
 impl Default for DcOpOptions {
@@ -8040,6 +8045,7 @@ impl Default for DcOpOptions {
             pseudo_transient_steps: 20,
             pseudo_transient_conductance: 1.0e-3,
             pseudo_transient_max_iterations: 80,
+            newton_step_limit: Some(DEFAULT_NEWTON_STEP_LIMIT),
         }
     }
 }
@@ -15174,6 +15180,9 @@ fn dc_result_from_linear_solution(
             tolerance,
             max_delta: solution.max_delta,
             convergence_aid,
+            newton_step_limit: solution.newton_step_limit,
+            limited_newton_steps: solution.limited_newton_steps,
+            minimum_damping_factor: solution.minimum_damping_factor,
             solver_profile: solution.solver_profile,
         },
     }
@@ -15205,6 +15214,14 @@ fn validate_dc_op_options(options: DcOpOptions) -> Result<(), SpiceError> {
             name: "dc_op".to_string(),
             reason: "pseudo_transient_max_iterations must be positive".to_string(),
         });
+    }
+    if let Some(limit) = options.newton_step_limit {
+        if !limit.is_finite() || limit <= 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: "dc_op".to_string(),
+                reason: "newton_step_limit must be finite and positive".to_string(),
+            });
+        }
     }
     Ok(())
 }
@@ -17735,6 +17752,9 @@ struct LinearSolution {
     iterations: usize,
     converged: bool,
     max_delta: f64,
+    newton_step_limit: Option<f64>,
+    limited_newton_steps: usize,
+    minimum_damping_factor: f64,
     solver_profile: LinearSolverProfile,
 }
 
@@ -17750,6 +17770,7 @@ struct LinearSolveOptions<'a> {
     tolerance: f64,
     initial_vector: Option<&'a [f64]>,
     return_singular_as_unconverged: bool,
+    newton_step_limit: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -17789,6 +17810,7 @@ fn solve_linear_circuit(
             tolerance: 1.0e-9,
             initial_vector: None,
             return_singular_as_unconverged: false,
+            newton_step_limit: None,
         },
     )
 }
@@ -17808,6 +17830,7 @@ fn solve_dc_newton(
             tolerance: options.tolerance,
             initial_vector,
             return_singular_as_unconverged: true,
+            newton_step_limit: options.newton_step_limit,
         },
     )
 }
@@ -17833,6 +17856,9 @@ fn solve_linear_circuit_with_options(
             iterations: 0,
             converged: true,
             max_delta: 0.0,
+            newton_step_limit: None,
+            limited_newton_steps: 0,
+            minimum_damping_factor: 1.0,
             solver_profile: empty_solver_profile(0),
         });
     }
@@ -17865,6 +17891,13 @@ fn solve_linear_circuit_with_options(
         &operating_point,
         return_singular_as_unconverged,
     )?;
+    let active_step_limit = if has_nonlinear {
+        options.newton_step_limit
+    } else {
+        None
+    };
+    let mut limited_newton_steps = 0;
+    let mut minimum_damping_factor: f64 = 1.0;
     if !has_nonlinear {
         return Ok(LinearSolution {
             iterations: 1,
@@ -17872,6 +17905,28 @@ fn solve_linear_circuit_with_options(
             ..solution
         });
     }
+    if solution.converged {
+        let step = limit_newton_step(&operating_point, &solution.vector, active_step_limit);
+        if step.limited {
+            limited_newton_steps += 1;
+            minimum_damping_factor = minimum_damping_factor.min(step.damping_factor);
+        }
+        let solver_profile = solution.solver_profile.clone();
+        solution = linear_solution_from_vector(
+            circuit,
+            inductor_states,
+            &node_indices,
+            &voltage_sources,
+            node_count,
+            &step.vector,
+            solution.converged,
+            step.max_delta,
+            solver_profile,
+        );
+    }
+    solution.newton_step_limit = active_step_limit;
+    solution.limited_newton_steps = limited_newton_steps;
+    solution.minimum_damping_factor = minimum_damping_factor;
 
     let mut iterations = 1;
     while iterations < options.max_iterations {
@@ -17880,16 +17935,22 @@ fn solve_linear_circuit_with_options(
                 iterations,
                 converged: false,
                 max_delta: f64::INFINITY,
+                newton_step_limit: active_step_limit,
+                limited_newton_steps,
+                minimum_damping_factor,
                 ..solution
             });
         }
-        let delta = max_vector_delta(&solution.vector, &operating_point);
+        let delta = solution.max_delta;
         operating_point = solution.vector.clone();
         if delta < options.tolerance {
             return Ok(LinearSolution {
                 iterations,
                 converged: true,
                 max_delta: delta,
+                newton_step_limit: active_step_limit,
+                limited_newton_steps,
+                minimum_damping_factor,
                 ..solution
             });
         }
@@ -17905,14 +17966,39 @@ fn solve_linear_circuit_with_options(
             &operating_point,
             return_singular_as_unconverged,
         )?;
+        if solution.converged {
+            let step = limit_newton_step(&operating_point, &solution.vector, active_step_limit);
+            if step.limited {
+                limited_newton_steps += 1;
+                minimum_damping_factor = minimum_damping_factor.min(step.damping_factor);
+            }
+            let solver_profile = solution.solver_profile.clone();
+            solution = linear_solution_from_vector(
+                circuit,
+                inductor_states,
+                &node_indices,
+                &voltage_sources,
+                node_count,
+                &step.vector,
+                solution.converged,
+                step.max_delta,
+                solver_profile,
+            );
+        }
+        solution.newton_step_limit = active_step_limit;
+        solution.limited_newton_steps = limited_newton_steps;
+        solution.minimum_damping_factor = minimum_damping_factor;
         iterations += 1;
     }
 
-    let delta = max_vector_delta(&solution.vector, &operating_point);
+    let delta = solution.max_delta;
     Ok(LinearSolution {
         iterations,
         converged: delta < options.tolerance,
         max_delta: delta,
+        newton_step_limit: active_step_limit,
+        limited_newton_steps,
+        minimum_damping_factor,
         ..solution
     })
 }
@@ -18120,6 +18206,9 @@ fn linear_solution_from_vector(
         iterations: 1,
         converged,
         max_delta,
+        newton_step_limit: None,
+        limited_newton_steps: 0,
+        minimum_damping_factor: 1.0,
         solver_profile,
     }
 }
@@ -18129,6 +18218,71 @@ fn max_vector_delta(left: &[f64], right: &[f64]) -> f64 {
         .zip(right.iter())
         .map(|(left, right)| (left - right).abs())
         .fold(0.0, f64::max)
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct NewtonStepLimitResult {
+    vector: Vec<f64>,
+    max_delta: f64,
+    damping_factor: f64,
+    limited: bool,
+}
+
+fn limit_newton_step(
+    previous: &[f64],
+    candidate: &[f64],
+    step_limit: Option<f64>,
+) -> NewtonStepLimitResult {
+    let Some(step_limit) = step_limit else {
+        return NewtonStepLimitResult {
+            vector: candidate.to_vec(),
+            max_delta: max_vector_delta(previous, candidate),
+            damping_factor: 1.0,
+            limited: false,
+        };
+    };
+    let raw_delta = max_vector_delta(previous, candidate);
+    if raw_delta <= step_limit {
+        return NewtonStepLimitResult {
+            vector: candidate.to_vec(),
+            max_delta: raw_delta,
+            damping_factor: 1.0,
+            limited: false,
+        };
+    }
+    if !raw_delta.is_finite() {
+        let vector = previous
+            .iter()
+            .zip(candidate.iter())
+            .map(|(old, new)| {
+                let delta = *new - *old;
+                if delta.is_finite() {
+                    *old + step_limit.copysign(delta)
+                } else {
+                    *old
+                }
+            })
+            .collect();
+        return NewtonStepLimitResult {
+            vector,
+            max_delta: step_limit,
+            damping_factor: 0.0,
+            limited: true,
+        };
+    }
+
+    let damping_factor = step_limit / raw_delta;
+    let vector = previous
+        .iter()
+        .zip(candidate.iter())
+        .map(|(old, new)| *old + (*new - *old) * damping_factor)
+        .collect();
+    NewtonStepLimitResult {
+        vector,
+        max_delta: step_limit,
+        damping_factor,
+        limited: true,
+    }
 }
 
 fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceError> {

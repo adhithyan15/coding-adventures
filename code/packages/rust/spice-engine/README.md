@@ -8,6 +8,8 @@ The initial slices implement:
   (MNA), with stable `DcResult::diagnostics` metadata for matrix size, selected
   real solver path, tolerance, convergence aid, final Newton delta, and a
   nested solver profile for backend, structural nonzeros, density, and fill-in.
+  Nonlinear operating points can bound Newton updates with
+  `DcOpOptions::newton_step_limit`, and diagnostics report limiter activity.
 - DC operating-point sweeps across explicit analysis temperatures, including
   named corner sweeps and order-preserving parallel named corner DC sweeps.
 - DC source sweeps over independent voltage and current sources, including
@@ -81,6 +83,10 @@ aliases, node voltages, and voltage source branch currents.
 Large real DC and complex AC matrix solves use native sparse-row solver paths
 when the matrix size reaches the package threshold. DC diagnostics expose the
 actual real-solver backend and matrix sparsity profile for production audits.
+For nonlinear DC solves, `DcOpOptions::newton_step_limit` bounds each Newton
+update per unknown. `DcResult::diagnostics` reports the active limit, clipped
+step count, and minimum damping factor; set the option to `None` to disable
+the limiter.
 
 ```rust
 use spice_engine::{

@@ -251,6 +251,9 @@ fn dc_large_resistor_ladder_uses_sparse_real_solver_path() {
     assert_eq!(result.diagnostics.convergence_aid, DcConvergenceAid::Newton);
     assert_close(result.diagnostics.tolerance, 1.0e-9);
     assert!(result.diagnostics.max_delta.is_finite());
+    assert_eq!(result.diagnostics.newton_step_limit, None);
+    assert_eq!(result.diagnostics.limited_newton_steps, 0);
+    assert_close(result.diagnostics.minimum_damping_factor, 1.0);
     assert_eq!(result.diagnostics.solver_profile.matrix_size, 36);
     assert_eq!(result.diagnostics.solver_profile.solver, "sparse_real");
     assert_eq!(
@@ -908,6 +911,43 @@ fn dc_op_reports_unconverged_nonlinear_result_when_aids_are_disabled() {
 }
 
 #[test]
+fn dc_op_newton_step_limit_reports_damped_nonlinear_step() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vs", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Diode(Diode::with_model(
+        "D1", "in", "out", 1.0e-15, 0.02585,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("Rload", "out", "0", 100.0)));
+
+    let result = dc_op_with_options(
+        &circuit,
+        DcOpOptions {
+            max_iterations: 1,
+            convergence_aids: false,
+            newton_step_limit: Some(0.25),
+            ..DcOpOptions::default()
+        },
+    )
+    .unwrap();
+
+    assert!(!result.converged);
+    assert_eq!(result.convergence_aid, DcConvergenceAid::None);
+    assert_eq!(result.diagnostics.newton_step_limit, Some(0.25));
+    assert_eq!(result.diagnostics.limited_newton_steps, 1);
+    assert!(result.diagnostics.minimum_damping_factor > 0.0);
+    assert!(result.diagnostics.minimum_damping_factor < 1.0);
+    assert_close(result.diagnostics.max_delta, 0.25);
+    let max_voltage = result
+        .node_voltages
+        .values()
+        .map(|value| value.abs())
+        .fold(0.0, f64::max);
+    assert!(max_voltage <= 0.25 + 1.0e-12);
+}
+
+#[test]
 fn dc_op_pseudo_transient_recovers_after_earlier_aids_fail() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
@@ -1152,6 +1192,17 @@ fn dc_op_rejects_invalid_options() {
         ),
         Err(SpiceError::InvalidElement { name, reason })
             if name == "dc_op" && reason == "tolerance must be finite and positive"
+    ));
+    assert!(matches!(
+        dc_op_with_options(
+            &circuit,
+            DcOpOptions {
+                newton_step_limit: Some(0.0),
+                ..DcOpOptions::default()
+            },
+        ),
+        Err(SpiceError::InvalidElement { name, reason })
+            if name == "dc_op" && reason == "newton_step_limit must be finite and positive"
     ));
 }
 
