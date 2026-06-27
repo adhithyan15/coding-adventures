@@ -18,3 +18,8 @@ math-frontend = { path = "../math-frontend", optional = true }
 # `--no-default-features` for the zero-dependency document/math parser alone.
 default = ["frontend"]
 frontend = ["dep:math-frontend"]
+
+[[bin]]
+name = "latex-math-to-adj"
+path = "src/bin/latex_math_to_adj.rs"
+required-features = ["frontend"]

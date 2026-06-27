@@ -63,6 +63,7 @@ arithmetic and the selection are the engine's.
 ```bash
 # 1. build the engine
 cargo build -p adj-lang-cli          # from code/packages/rust/
+cargo build -p latex --bin latex-math-to-adj  # optional: accepts Gemma's LaTeX formulas
 
 # 2. bank integrity (off the answer path)
 python3 contamination_check.py rung0_arithmetic
@@ -86,6 +87,7 @@ python3 ladder_eval.py rung0_arithmetic --model 'cmd:ollama run <model>'
 so a cached CI run never clobbers a committed two-arm headline).
 
 If the `adj-lang-cli` binary lives somewhere non-standard, point `ADJ_LANG_CLI` at it.
+If the LaTeX helper lives somewhere non-standard, point `LADDER_LATEX_HELPER` at it.
 
 ## Adding a rung
 

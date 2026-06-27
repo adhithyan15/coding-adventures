@@ -355,22 +355,68 @@ def decompose_prompt(item: dict) -> str:
 
 _FORMULA_OK = re.compile(r"^[\d\s+\-*/().]+$")
 _LABEL = re.compile(r"(?i)^\s*formula\s*[:=]?\s*")
+_LATEX_HINT = re.compile(r"(\\[A-Za-z]+|\\\(|\\\[|\$)")
+
+
+def _find_latex_helper() -> Path | None:
+    override = os.environ.get("LADDER_LATEX_HELPER")
+    if override and Path(override).exists():
+        return Path(override)
+    rust = HERE.parents[2] / "packages" / "rust"
+    candidates = [
+        rust / "target" / "debug" / "latex-math-to-adj",
+        rust / "target" / "release" / "latex-math-to-adj",
+    ]
+    for c in candidates:
+        if c.exists():
+            return c
+    return None
+
+
+_LATEX_HELPER = _find_latex_helper()
+
+
+def latex_to_adj_formula(text: str) -> str | None:
+    """Parse a LaTeX math expression with the repo's LaTeX frontend and lower the
+    arithmetic subset to ADJ's ASCII `let` formula syntax.
+
+    The helper is intentionally a Rust binary from `code/packages/rust/latex`: it
+    routes Gemma's LaTeX output through the actual parser/frontend stack instead of
+    teaching this Python harness a second, unofficial math parser. If the helper is
+    not built, or the expression is outside the arithmetic subset, the item abstains."""
+    if _LATEX_HELPER is None:
+        return None
+    if not _LATEX_HINT.search(text):
+        return None
+    try:
+        out = subprocess.run(
+            [str(_LATEX_HELPER), text],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    formula = out.stdout.strip()
+    return formula if formula and _FORMULA_OK.match(formula) else None
 
 
 def extract_formula(text: str) -> str | None:
-    """Take the model's reply and return the first line that is a plain ASCII
-    arithmetic expression — digits, the four operators + - * /, and parentheses.
-    Anything else → None (abstain).
+    """Take the model's reply and return the first usable arithmetic expression.
 
     The only cosmetic step is stripping a leading "Formula:" label the model may echo;
-    we never rewrite the math. In particular we do NOT normalize LaTeX or unicode math
-    glyphs here — that is a parsing concern owned by the engine (adj-lang understands
-    LaTeX math natively), not an ad-hoc regex in the eval harness. An expression the
-    engine can't yet parse is honestly abstained on, never silently repaired."""
+    plain ASCII arithmetic passes through directly. If the line looks like LaTeX math,
+    it is parsed by the Rust `latex` frontend helper and lowered to the same ASCII
+    subset. Unsupported notation still abstains — no ad-hoc regex repair here."""
     for raw in (text or "").splitlines():
         line = _LABEL.sub("", raw.strip()).rstrip(".")
         if line and _FORMULA_OK.match(line):
             return line
+        formula = latex_to_adj_formula(line)
+        if formula is not None:
+            return formula
     return None
 
 

@@ -182,11 +182,13 @@ of record (this file + ADJ-REASON-MATH + MLE-PASS). **No engine/grammar change.*
 
 **Verification (reproduce):**
 1. `cargo build -p adj-lang-cli`
-2. `python3 contamination_check.py rung0_arithmetic` → clean.
-3. `python3 ladder_eval.py rung0_arithmetic` → Arm B raw **100%**, wrong **0**
+2. Optional for model runs that emit LaTeX: `cargo build -p latex --bin latex-math-to-adj`
+   so Gemma formulas such as `\frac{12}{3}` go through the real LaTeX frontend.
+3. `python3 contamination_check.py rung0_arithmetic` → clean.
+4. `python3 ladder_eval.py rung0_arithmetic` → Arm B raw **100%**, wrong **0**
    (engine-correctness sanity; no model).
-4. `python3 -m pytest test_ladder_eval.py -q` → green.
-5. (where a local model exists) `python3 ladder_eval.py rung0_arithmetic --model
+5. `python3 -m pytest test_ladder_eval.py -q` → green.
+6. (where a local model exists) `python3 ladder_eval.py rung0_arithmetic --model
    mlx:<repo>` → the first real two-arm number + divergence.
 
 **Result — engine sanity (cached, no model):** rung-0 Arm B = **20/20 correct, 0
