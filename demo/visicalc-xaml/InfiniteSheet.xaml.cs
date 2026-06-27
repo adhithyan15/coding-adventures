@@ -77,6 +77,7 @@ public sealed partial class InfiniteSheet : UserControl
         BodyList.Width = _model.TotalCols * ColW;
 
         BuildHeader();
+        BuildSheetTabs();
         RefreshFormulaBar();
 
         Loaded += OnLoaded;
@@ -102,6 +103,131 @@ public sealed partial class InfiniteSheet : UserControl
         HeaderPanel.Children.Clear();
         for (int c = 1; c <= _model.TotalCols; c++)
             HeaderPanel.Children.Add(ChromeCell(ColW, HeadH, _model.ColumnLetters(c), _model.SelCol == c));
+    }
+
+    // ── Sheet tab bar (multi-sheet workbook) ─────────────────────────
+    // One chip per sheet; the active one tints to the accent. Click a tab to
+    // switch (bare-A1 ops then address it); the active tab carries inline ✎ rename
+    // and ✕ delete affordances. A formula like =Summary!B3 reaches across the
+    // tabs, so switching + editing updates every cross-sheet dependent live.
+    private void BuildSheetTabs()
+    {
+        SheetTabsPanel.Children.Clear();
+        IReadOnlyList<string> names = _model.SheetNames();
+        int active = _model.ActiveSheet();
+        for (int i = 0; i < names.Count; i++)
+            SheetTabsPanel.Children.Add(SheetTab(i, names[i], i == active));
+    }
+
+    /// One sheet tab chip: the name, plus (when active) inline ✎ rename and ✕
+    /// delete glyphs. The whole chip is tap-to-switch; the glyphs handle their own
+    /// tap (and mark it handled so they don't also switch).
+    private Border SheetTab(int index, string name, bool selected)
+    {
+        var row = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+        row.Children.Add(new TextBlock
+        {
+            Text = name,
+            Foreground = selected ? White : Ink,
+            FontSize = 12,
+            FontFamily = Mono,
+            FontWeight = selected ? FontWeights.SemiBold : FontWeights.Normal,
+            VerticalAlignment = VerticalAlignment.Center,
+        });
+        if (selected)
+        {
+            row.Children.Add(Glyph("✎", () => RenameSheetAsync(index)));
+            row.Children.Add(Glyph("✕", () => DeleteSheet(index)));
+        }
+
+        var chip = new Border
+        {
+            Background = selected ? Sel : New(0x21, 0x25, 0x2C),
+            BorderBrush = selected ? Accent : LineStrong,
+            BorderThickness = new Thickness(selected ? 2 : 1),
+            CornerRadius = new CornerRadius(6),
+            Padding = new Thickness(10, 5, 10, 5),
+            Margin = new Thickness(0, 0, 4, 0),
+            Child = row,
+        };
+        chip.Tapped += (_, _) => SwitchSheet(index);
+        return chip;
+    }
+
+    /// A small inline action glyph (✎ / ✕) inside the active sheet tab. Tapping it
+    /// runs `action` and marks the event handled so the parent chip's switch-tap
+    /// doesn't also fire.
+    private TextBlock Glyph(string text, Action action)
+    {
+        var tb = new TextBlock
+        {
+            Text = text,
+            Foreground = Muted,
+            FontSize = 12,
+            FontFamily = Mono,
+            Margin = new Thickness(8, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        tb.Tapped += (_, e) => { e.Handled = true; action(); };
+        return tb;
+    }
+
+    private void SwitchSheet(int index) { _model.SelectSheet(index); AfterSheetOp(); }
+    private void DeleteSheet(int index) { _model.DeleteSheet(index); AfterSheetOp(); }
+
+    private void AddSheetButton_Click(object sender, RoutedEventArgs e)
+    {
+        // Name the new sheet "SheetN" where N avoids a clash with existing names.
+        var existing = new HashSet<string>(_model.SheetNames());
+        int n = existing.Count + 1;
+        while (existing.Contains($"Sheet{n}")) n++;
+        _model.AddSheet($"Sheet{n}");
+        AfterSheetOp();
+    }
+
+    /// Rename the sheet at `index` via a small text dialog; the engine rewrites
+    /// every referencing formula's qualifier on commit.
+    private async void RenameSheetAsync(int index)
+    {
+        IReadOnlyList<string> names = _model.SheetNames();
+        if (index < 0 || index >= names.Count) return;
+        var input = new TextBox
+        {
+            Text = names[index],
+            FontFamily = Mono,
+            SelectionStart = 0,
+        };
+        var dialog = new ContentDialog
+        {
+            Title = "Rename sheet",
+            Content = input,
+            PrimaryButtonText = "Rename",
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Primary,
+            XamlRoot = XamlRoot,
+        };
+        var result = await dialog.ShowAsync();
+        if (result != ContentDialogResult.Primary) return;
+        string newName = input.Text.Trim();
+        if (newName.Length == 0) return;
+        _model.RenameSheet(index, newName);
+        AfterSheetOp();
+    }
+
+    /// After any sheet op (switch / add / rename / delete) the active sheet — and
+    /// thus the extent, the cells, and the selection — may have changed wholesale.
+    /// Rebuild the row-number source (the new sheet's extent), re-tile the header,
+    /// re-sync the formula bar, and rebuild the tab bar.
+    private void AfterSheetOp()
+    {
+        _rowNumbers = Enumerable.Range(1, _model.TotalRows).ToList();
+        BodyList.ItemsSource = _rowNumbers;
+        GutterList.ItemsSource = _rowNumbers;
+        BodyList.Width = _model.TotalCols * ColW;
+        BuildHeader();
+        BuildSheetTabs();
+        RefreshFormulaBar();
+        RepaintRealizedRows();
     }
 
     // ── Virtualized body + gutter population ─────────────────────────

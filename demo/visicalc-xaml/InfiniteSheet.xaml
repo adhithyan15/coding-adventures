@@ -70,6 +70,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Formula bar: a rounded panel holding the address pill, an `fx` marker,
@@ -290,9 +291,33 @@
             </ScrollViewer>
         </Grid>
 
+        <!-- Sheet tab bar (Excel-style, along the bottom): one chip per sheet, the
+             active one tinted to the accent (rebuilt in the code-behind). Click a
+             tab to switch; the active tab carries inline ✎ rename / ✕ delete
+             affordances, and "+ Sheet" adds one. A formula like =Summary!B3 reaches
+             across the tabs, so switching + editing updates cross-sheet dependents. -->
+        <Grid Grid.Row="3" Margin="10,4,10,0">
+            <Border Height="1" Background="#2C313A" VerticalAlignment="Top"/>
+            <Grid Margin="0,6,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ScrollViewer Grid.Column="0"
+                              HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="SheetTabsPanel" Orientation="Horizontal"/>
+                </ScrollViewer>
+                <Button x:Name="AddSheetButton" Grid.Column="1" Style="{StaticResource ToolChip}"
+                        Margin="6,0,0,0" Content="+ Sheet"
+                        ToolTipService.ToolTip="Add a new sheet"
+                        Click="AddSheetButton_Click"/>
+            </Grid>
+        </Grid>
+
         <!-- Status line: a hairline-separated footer echoing the live virtual-grid
              size and the per-edit revision clock (mirrors the sibling demos). -->
-        <StackPanel Grid.Row="3" Margin="10,0,10,10">
+        <StackPanel Grid.Row="4" Margin="10,0,10,10">
             <Border Height="1" Background="#2C313A"/>
             <TextBlock x:Name="StatusText" Margin="0,6,0,0"
                        Foreground="#9AA3B2" FontSize="12" FontFamily="Consolas"/>
