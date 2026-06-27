@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Expose selected output directive source line inventories in
+  `runDeckAnalysis` output-plan artifacts beside directive scope inventories,
+  with stable table, CSV, compact JSON, and header-keyed record exports,
+  matching Python and Rust.
 - Expose normalized selected output directive analysis scope inventories in
   `runDeckAnalysis` output-plan artifacts beside directive kind inventories,
   distinguishing global `.save` / `.probe` selections from scoped `.probe`,

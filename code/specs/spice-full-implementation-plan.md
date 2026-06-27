@@ -139,7 +139,9 @@ downstream tools to compare.
      host-native record exports, and selected output-plan artifacts now also
      expose normalized output directive analysis scope counts/lists that
      distinguish global `.save` / `.probe` selections from scoped `.probe`,
-     `.print`, and `.plot` selections in the same exports.
+     `.print`, and `.plot` selections in the same exports, and selected
+     output-plan artifacts now also expose selected output directive source
+     line counts/lists beside those directive provenance inventories.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1176,6 +1178,16 @@ downstream tools to compare.
     - Table, CSV, compact JSON, and host-native record exports distinguish
       global `.save` / `.probe` selections from scoped `.probe`, `.print`, and
       `.plot` selections without reparsing directive cards.
+
+108. Deck output-plan directive line artifacts.
+    - Status: completed in this deck output-plan directive line artifact
+      slice.
+    - Python, Rust, and TypeScript selected output-plan artifacts now expose
+      selected output directive source line counts/lists beside directive
+      scope inventories.
+    - Table, CSV, compact JSON, and host-native record exports make selected
+      `.save`, `.probe`, `.print`, and `.plot` provenance traceable back to
+      deck source lines without reparsing directive cards.
 
 ## Backlog
 
