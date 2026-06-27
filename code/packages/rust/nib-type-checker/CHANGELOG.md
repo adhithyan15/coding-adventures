@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 — 2026-06-27 — const/static initializer expressions are typed (LANG-FULL N10)
+
+Top-level `const` declarations now seed the module typing environment alongside
+`static`s. Const and static initializers are type-checked under their declared
+type, so deterministic initializer expressions such as `const N: u8 = 6 * 7;`
+and `static counter: u8 = N + 0;` type-check before the compiler folds them.
+
 ## 0.5.0 — 2026-06-27 — logical NOT is typed as bool (LANG-FULL N9)
 
 `unary_expr` now recognizes leading `!` and types the expression as `Bool`

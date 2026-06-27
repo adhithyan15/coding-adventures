@@ -141,13 +141,13 @@ struct Compiler {
     /// `&self`-style call sites in expression compilation from
     /// requiring a borrow-checker dance.
     current_loc: std::cell::Cell<SourceLoc>,
-    /// Top-level `const NAME: type = literal;` values, keyed by name.
+    /// Top-level `const NAME: type = const-expr;` values, keyed by name.
     /// Collected once before any function is compiled (consts are
     /// module-scoped — `top_decl`, like `fn`).  A reference to a const in a
     /// function body resolves to its literal value (a compile-time fold), so
     /// consts need no runtime storage and run on every backend.
     consts: HashMap<String, i64>,
-    /// Top-level mutable `static NAME: type = literal;` declarations, keyed by
+    /// Top-level mutable `static NAME: type = const-expr;` declarations, keyed by
     /// name. Unlike consts, statics live in runtime module globals: unshadowed
     /// reads lower to `global_load` and assignments lower to `global_store`.
     statics: HashMap<String, String>,
@@ -204,9 +204,9 @@ impl Compiler {
         module: &mut IIRModule,
     ) -> Result<(), CompileError> {
         // Collect module-scoped `const`s first, so a function body that
-        // references one resolves to its literal (see `compile_primary`).
+        // references one resolves to its folded value (see `compile_primary`).
         self.consts = collect_consts(root)?;
-        let static_inits = collect_static_inits(root)?;
+        let static_inits = collect_static_inits(root, &self.consts)?;
         self.statics = static_inits
             .iter()
             .map(|init| (init.name.clone(), init.ty.clone()))
@@ -1348,15 +1348,12 @@ struct StaticInit {
     value: i64,
 }
 
-/// Collect module-scoped `const NAME: type = literal;` declarations into a
+/// Collect module-scoped `const NAME: type = const-expr;` declarations into a
 /// `name → value` map.  Consts appear at the top level (`top_decl`), like `fn`.
 ///
-/// V1 supports **literal** const values (an integer or hex literal); the value
-/// expression is folded to an `i64` at compile time, so a const reference in a
-/// function body compiles to a plain `const` instruction and needs no runtime
-/// storage. A non-literal const value (e.g. `const N: u8 = 6 * 7;`) is rejected
-/// with a clear error rather than silently mis-lowered — const-expression
-/// folding is a follow-up.
+/// LANG-FULL N10 folds deterministic integer/boolean expressions at compile
+/// time, so a const reference in a function body compiles to a plain `const`
+/// instruction and needs no runtime storage.
 fn collect_consts(root: &GrammarASTNode) -> Result<HashMap<String, i64>, CompileError> {
     let mut consts = HashMap::new();
     for decl in child_nodes(root) {
@@ -1377,26 +1374,28 @@ fn collect_consts(root: &GrammarASTNode) -> Result<HashMap<String, i64>, Compile
 
         let name = first_name(cd)
             .ok_or_else(|| CompileError::Unsupported("const_decl missing name".into()))?;
+        let declared = child_nodes(cd)
+            .into_iter()
+            .find(|n| n.rule_name == "type")
+            .and_then(nib_type_from_node);
         let value_expr = child_nodes(cd)
             .into_iter()
             .find(|n| is_expr_rule(&n.rule_name))
             .ok_or_else(|| CompileError::Unsupported(format!("const `{name}` missing value")))?;
-        let value = const_literal_value(value_expr).ok_or_else(|| {
-            CompileError::Unsupported(format!(
-                "const `{name}` must be an integer literal (const-expression folding is deferred)"
-            ))
-        })?;
+        let value = const_expr_value(value_expr, &consts, declared.as_ref())
+            .map_err(|msg| CompileError::Unsupported(format!("const `{name}`: {msg}")))?;
         consts.insert(name, value);
     }
     Ok(consts)
 }
 
-/// Collect module-scoped `static NAME: type = literal;` declarations. This
-/// first Nib static slice deliberately mirrors `const`'s literal-only value
-/// rule: richer const-expression/static initializers need a separate folding
-/// pass, but a literal initializer is enough to exercise the shared E6 global
-/// storage path across every backend.
-fn collect_static_inits(root: &GrammarASTNode) -> Result<Vec<StaticInit>, CompileError> {
+/// Collect module-scoped `static NAME: type = const-expr;` declarations.
+/// Initializers fold at compile time, then seed the shared E6 global storage
+/// path at `main` entry.
+fn collect_static_inits(
+    root: &GrammarASTNode,
+    consts: &HashMap<String, i64>,
+) -> Result<Vec<StaticInit>, CompileError> {
     let mut statics = Vec::new();
     for decl in child_nodes(root) {
         // A `static_decl` may be wrapped in a generic `top_decl` node.
@@ -1421,32 +1420,215 @@ fn collect_static_inits(root: &GrammarASTNode) -> Result<Vec<StaticInit>, Compil
             .find(|n| n.rule_name == "type")
             .map(type_str_from_node)
             .unwrap_or_else(|| "i64".to_string());
+        let declared = child_nodes(sd)
+            .into_iter()
+            .find(|n| n.rule_name == "type")
+            .and_then(nib_type_from_node);
         let value_expr = child_nodes(sd)
             .into_iter()
             .find(|n| is_expr_rule(&n.rule_name))
             .ok_or_else(|| CompileError::Unsupported(format!("static `{name}` missing value")))?;
-        let value = const_literal_value(value_expr).ok_or_else(|| {
-            CompileError::Unsupported(format!(
-                "static `{name}` must be an integer literal (static-expression folding is deferred)"
-            ))
-        })?;
+        let value = const_expr_value(value_expr, consts, declared.as_ref())
+            .map_err(|msg| CompileError::Unsupported(format!("static `{name}`: {msg}")))?;
         statics.push(StaticInit { name, ty, value });
     }
     Ok(statics)
 }
 
-/// Fold a const's value expression to an `i64` when it is a single integer/hex
-/// literal.  Descends the single-child wrapper chain `expr → … → primary` that
-/// a bare literal produces, returning `None` for any non-literal expression.
-fn const_literal_value(expr: &GrammarASTNode) -> Option<i64> {
-    if let Some(v) = parse_literal(expr) {
-        return Some(v);
+fn const_expr_value(
+    expr: &GrammarASTNode,
+    consts: &HashMap<String, i64>,
+    declared: Option<&NibType>,
+) -> Result<i64, String> {
+    if let Some(v) = parse_const_literal(expr) {
+        return Ok(fold_width(v, declared));
     }
-    let kids = child_nodes(expr);
-    if kids.len() == 1 {
-        return const_literal_value(kids[0]);
+
+    match expr.rule_name.as_str() {
+        "expr" => fold_single_const_child(expr, consts, declared),
+        "or_expr" | "and_expr" | "eq_expr" | "cmp_expr" | "add_expr" | "mul_expr"
+        | "bitwise_expr" => fold_const_chain(expr, consts, declared),
+        "unary_expr" => fold_const_unary(expr, consts, declared),
+        "primary" => fold_const_primary(expr, consts, declared),
+        "call_expr" => Err("calls are not const-expressions".to_string()),
+        other => {
+            let kids = child_nodes(expr);
+            if kids.len() == 1 {
+                const_expr_value(kids[0], consts, declared)
+            } else {
+                Err(format!("unsupported const-expression node `{other}`"))
+            }
+        }
     }
-    None
+}
+
+fn fold_single_const_child(
+    node: &GrammarASTNode,
+    consts: &HashMap<String, i64>,
+    declared: Option<&NibType>,
+) -> Result<i64, String> {
+    child_nodes(node)
+        .into_iter()
+        .find(|child| is_expr_rule(&child.rule_name))
+        .ok_or_else(|| format!("empty `{}`", node.rule_name))
+        .and_then(|child| const_expr_value(child, consts, declared))
+}
+
+fn fold_const_chain(
+    node: &GrammarASTNode,
+    consts: &HashMap<String, i64>,
+    declared: Option<&NibType>,
+) -> Result<i64, String> {
+    let mut iter = node.children.iter();
+    let first = match iter.next() {
+        Some(ASTNodeOrToken::Node(child)) => const_expr_value(child, consts, declared)?,
+        Some(ASTNodeOrToken::Token(_)) => {
+            return Err(format!("`{}` starts with an operator", node.rule_name))
+        }
+        None => return Err(format!("empty `{}`", node.rule_name)),
+    };
+    let mut acc = first;
+
+    while let Some(next) = iter.next() {
+        let ASTNodeOrToken::Token(op) = next else {
+            return Err(format!("`{}` expected an operator", node.rule_name));
+        };
+        let rhs = match iter.next() {
+            Some(ASTNodeOrToken::Node(child)) => const_expr_value(child, consts, declared)?,
+            _ => return Err(format!("`{}` has a dangling operator", node.rule_name)),
+        };
+        acc = fold_const_binary(acc, rhs, &op.value, &op.effective_type_name(), declared)?;
+    }
+
+    Ok(fold_width(acc, declared))
+}
+
+fn fold_const_binary(
+    lhs: i64,
+    rhs: i64,
+    op_value: &str,
+    op_type: &str,
+    declared: Option<&NibType>,
+) -> Result<i64, String> {
+    let value = match (op_value, op_type) {
+        ("||", _) | (_, "LOR") => bool_int(truthy(lhs) || truthy(rhs)),
+        ("&&", _) | (_, "LAND") => bool_int(truthy(lhs) && truthy(rhs)),
+        ("+", _) | (_, "PLUS") | ("+%", _) | (_, "WRAP_ADD") => {
+            fold_width(lhs.wrapping_add(rhs), declared)
+        }
+        ("-", _) | (_, "MINUS") => fold_width(lhs.wrapping_sub(rhs), declared),
+        ("*", _) | (_, "STAR") => fold_width(lhs.wrapping_mul(rhs), declared),
+        ("/", _) | (_, "SLASH") => {
+            if rhs == 0 {
+                return Err("division by zero in const-expression".to_string());
+            }
+            fold_width(lhs / rhs, declared)
+        }
+        ("+?", _) | (_, "SAT_ADD") => {
+            let max = match declared {
+                Some(NibType::U4) => 0xF,
+                Some(NibType::U8) => 0xFF,
+                Some(NibType::Bcd) => 9,
+                _ => 0xFF,
+            };
+            lhs.saturating_add(rhs).min(max)
+        }
+        ("&", _) | (_, "AMP") => fold_width(lhs & rhs, declared),
+        ("|", _) | (_, "PIPE") => fold_width(lhs | rhs, declared),
+        ("^", _) | (_, "CARET") => fold_width(lhs ^ rhs, declared),
+        ("==", _) | (_, "EQ_EQ") => bool_int(lhs == rhs),
+        ("!=", _) | (_, "NEQ") => bool_int(lhs != rhs),
+        ("<", _) | (_, "LT") => bool_int(lhs < rhs),
+        (">", _) | (_, "GT") => bool_int(lhs > rhs),
+        ("<=", _) | (_, "LEQ") => bool_int(lhs <= rhs),
+        (">=", _) | (_, "GEQ") => bool_int(lhs >= rhs),
+        _ => {
+            return Err(format!(
+                "unsupported const-expression operator `{op_value}`"
+            ))
+        }
+    };
+    Ok(value)
+}
+
+fn fold_const_unary(
+    node: &GrammarASTNode,
+    consts: &HashMap<String, i64>,
+    declared: Option<&NibType>,
+) -> Result<i64, String> {
+    let inner = child_nodes(node)
+        .into_iter()
+        .find(|child| is_expr_rule(&child.rule_name))
+        .ok_or_else(|| "empty unary const-expression".to_string())?;
+    let value = const_expr_value(inner, consts, declared)?;
+    let op = node.children.iter().find_map(|child| match child {
+        ASTNodeOrToken::Token(token) => Some(token),
+        ASTNodeOrToken::Node(_) => None,
+    });
+
+    match op.map(|token| (token.value.as_str(), token.effective_type_name())) {
+        Some(("!", _)) | Some((_, "BANG")) => Ok(bool_int(!truthy(value))),
+        Some(("~", _)) | Some((_, "TILDE")) => Ok(fold_width(!value, declared)),
+        _ => Ok(value),
+    }
+}
+
+fn fold_const_primary(
+    node: &GrammarASTNode,
+    consts: &HashMap<String, i64>,
+    declared: Option<&NibType>,
+) -> Result<i64, String> {
+    if let Some(v) = parse_const_literal(node) {
+        return Ok(fold_width(v, declared));
+    }
+    if child_nodes(node)
+        .into_iter()
+        .any(|child| child.rule_name == "call_expr")
+    {
+        return Err("calls are not const-expressions".to_string());
+    }
+    if let Some(name) = direct_name(node) {
+        return consts
+            .get(&name)
+            .copied()
+            .ok_or_else(|| format!("unknown const `{name}` in const-expression"));
+    }
+    fold_single_const_child(node, consts, declared)
+}
+
+fn parse_const_literal(node: &GrammarASTNode) -> Option<i64> {
+    for child in &node.children {
+        if let ASTNodeOrToken::Token(token) = child {
+            if token.value == "true" {
+                return Some(1);
+            }
+            if token.value == "false" {
+                return Some(0);
+            }
+        }
+    }
+    parse_literal(node)
+}
+
+fn fold_width(value: i64, declared: Option<&NibType>) -> i64 {
+    match declared {
+        Some(NibType::U4) => value & 0xF,
+        Some(NibType::U8) => value & 0xFF,
+        Some(NibType::Bool) => bool_int(truthy(value)),
+        _ => value,
+    }
+}
+
+fn truthy(value: i64) -> bool {
+    value != 0
+}
+
+fn bool_int(value: bool) -> i64 {
+    if value {
+        1
+    } else {
+        0
+    }
 }
 
 fn function_nodes(root: &GrammarASTNode) -> Vec<&GrammarASTNode> {
@@ -1515,6 +1697,15 @@ fn first_name(node: &GrammarASTNode) -> Option<String> {
     None
 }
 
+fn direct_name(node: &GrammarASTNode) -> Option<String> {
+    node.children.iter().find_map(|child| match child {
+        ASTNodeOrToken::Token(token) if token.effective_type_name() == "NAME" => {
+            Some(token.value.clone())
+        }
+        _ => None,
+    })
+}
+
 fn lookup_name(node: &GrammarASTNode) -> Option<String> {
     first_name(node).or_else(|| child_nodes(node).into_iter().find_map(lookup_name))
 }
@@ -1568,6 +1759,21 @@ fn type_str_from_node(node: &GrammarASTNode) -> String {
         }
     }
     "any".to_string()
+}
+
+fn nib_type_from_node(node: &GrammarASTNode) -> Option<NibType> {
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            return match t.value.as_str() {
+                "u4" => Some(NibType::U4),
+                "u8" => Some(NibType::U8),
+                "bcd" => Some(NibType::Bcd),
+                "bool" => Some(NibType::Bool),
+                _ => None,
+            };
+        }
+    }
+    None
 }
 
 /// Map a raw Nib type name to the closest CIR-allowed type string.
@@ -2025,15 +2231,47 @@ mod tests {
     }
 
     #[test]
-    fn non_literal_const_is_rejected() {
-        // V1 only folds integer-literal consts; a const-expression is a clear error
-        // (not a silent miscompile). Folding `6 * 7` is a documented follow-up.
-        let err = compile_source("const N: u8 = 6 * 7; fn main() -> u8 { return N; }", "test")
-            .unwrap_err();
+    fn const_expression_folds_to_its_value() {
+        // LANG-FULL N10: const initializers may be deterministic expressions.
+        // The expression folds at compile time, so using N later emits a literal
+        // 42 and no runtime `mul`.
+        let m = compile_source("const N: u8 = 6 * 7; fn main() -> u8 { return N; }", "test")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(
+            body.iter()
+                .any(|i| i.op == "const" && matches!(i.srcs.first(), Some(Operand::Int(42)))),
+            "const N must fold to 42; got {body:?}"
+        );
+        assert!(
+            !body.iter().any(|i| i.op == "mul"),
+            "const initializer work must not run in main; got {body:?}"
+        );
+    }
+
+    #[test]
+    fn const_expression_can_reference_previous_const() {
+        let m = compile_source(
+            "const A: u8 = 40; const B: u8 = A + 2; fn main() -> u8 { return B; }",
+            "test",
+        )
+        .expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(
+            body.iter()
+                .any(|i| i.op == "const" && matches!(i.srcs.first(), Some(Operand::Int(42)))),
+            "const B must fold through A; got {body:?}"
+        );
+    }
+
+    #[test]
+    fn const_expression_rejects_calls() {
+        let err =
+            compile_source("const N: u8 = f(); fn f() -> u8 { return 1; }", "test").unwrap_err();
         let msg = format!("{err:?}");
         assert!(
-            msg.contains("integer literal"),
-            "expected a clear const-literal error; got {msg}"
+            msg.contains("calls are not const-expressions"),
+            "expected a clear const call error; got {msg}"
         );
     }
 
@@ -2131,16 +2369,26 @@ mod tests {
     }
 
     #[test]
-    fn non_literal_static_is_rejected() {
-        let err = compile_source(
-            "static counter: u8 = 40 + 2; fn main() -> u8 { return counter; }",
+    fn static_expression_initializer_folds_to_global_seed() {
+        let m = compile_source(
+            "const BASE: u8 = 40 + 1; \
+             static counter: u8 = BASE + 1; \
+             fn main() -> u8 { return counter; }",
             "test",
         )
-        .unwrap_err();
-        let msg = format!("{err:?}");
+        .expect("ok");
+        let main = m.functions.iter().find(|f| f.name == "main").expect("main");
         assert!(
-            msg.contains("integer literal"),
-            "expected a clear static-literal error; got {msg}"
+            main.instructions
+                .iter()
+                .any(|i| i.op == "const" && matches!(i.srcs.first(), Some(Operand::Int(42)))),
+            "static initializer must fold to 42; got {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|i| i.op == "global_store"),
+            "folded static initializer must still seed the global; got {:?}",
+            main.instructions
         );
     }
 

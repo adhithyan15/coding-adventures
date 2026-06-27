@@ -557,6 +557,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — const/static expression folding (LANG-FULL N10). `BASE` folds
+    // `6 * 7` at compile time, then the static initializer folds `BASE + 0`
+    // before seeding the shared module global. No runtime arithmetic is needed
+    // for the initializer, but every backend still observes the global value.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "const BASE: u8 = 6 * 7; static counter: u8 = BASE + 0; fn main() -> u8 { return counter; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,
