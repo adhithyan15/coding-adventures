@@ -116,6 +116,10 @@ enum ScalarType {
     /// the VM/JIT execute as doubles.
     Real,
     Boolean,
+    /// LANG-FULL AL4 literal-backed string scalar. This is not a full dynamic
+    /// ALGOL string model yet: a variable is printable only after a literal
+    /// assignment emits a direct E4 `str_const` to its slot.
+    String,
 }
 
 impl ScalarType {
@@ -124,6 +128,7 @@ impl ScalarType {
             Self::Integer => "i64",
             Self::Real => "f64",
             Self::Boolean => "bool",
+            Self::String => "str",
         }
     }
 
@@ -132,6 +137,7 @@ impl ScalarType {
             Self::Integer => Operand::Int(0),
             Self::Real => Operand::Float(0.0),
             Self::Boolean => Operand::Bool(false),
+            Self::String => Operand::Str(String::new()),
         }
     }
 
@@ -140,6 +146,7 @@ impl ScalarType {
             Self::Integer => "integer",
             Self::Real => "real",
             Self::Boolean => "boolean",
+            Self::String => "string",
         }
     }
 }
@@ -244,6 +251,10 @@ struct Compiler {
     /// a module global (`is_global`) so the procedure and the enclosing block
     /// share it.  Saved/restored around nested blocks.
     block_captured: HashSet<String>,
+    /// String slots known to be backed by a direct E4 `str_const` in the
+    /// current function. Static backends such as WASM use that producer table
+    /// for `print_str`, so AL4 only lets `print(s)` through after `s := '...'`.
+    literal_string_slots: HashSet<String>,
 }
 
 impl Default for Compiler {
@@ -263,6 +274,7 @@ impl Default for Compiler {
             proc_sigs: HashMap::new(),
             switches: HashMap::new(),
             block_captured: HashSet::new(),
+            literal_string_slots: HashSet::new(),
         }
     }
 }
@@ -283,6 +295,11 @@ impl Compiler {
             .and_then(|scope| scope.get("result"))
             .cloned()
         {
+            Some(binding) if binding.ty == ScalarType::String => {
+                return Err(CompileError::Unsupported(
+                    "string result variables as main return values".into(),
+                ));
+            }
             Some(binding) => (binding.ty.iir(), Operand::Var(binding.slot)),
             None => {
                 self.emit(IIRInstr::new(
@@ -473,6 +490,11 @@ impl Compiler {
             .filter(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
         {
+            if ty == ScalarType::String && (is_own || self.block_captured.contains(&name)) {
+                return Err(CompileError::Unsupported(
+                    "own/captured string variables".into(),
+                ));
+            }
             let slot = self.declare_var(&name, ty, is_own)?;
             // A global (an `own` variable, or an E6-captured block scalar) is
             // zero-initialised once at module load — exactly the `own`
@@ -482,7 +504,7 @@ impl Compiler {
             // level it would be a dead register write shadowing the global.
             // A plain (register) scalar keeps its zero-init `const`.
             let is_global = is_own || self.block_captured.contains(&name);
-            if !is_global {
+            if !is_global && ty != ScalarType::String {
                 self.emit(IIRInstr::new(
                     "const",
                     Some(slot),
@@ -669,7 +691,7 @@ impl Compiler {
             "integer" => Ok(ScalarType::Integer),
             "real" => Ok(ScalarType::Real),
             "boolean" => Ok(ScalarType::Boolean),
-            "string" => Err(CompileError::Unsupported("string scalars".into())),
+            "string" => Ok(ScalarType::String),
             other => Err(CompileError::Malformed(format!(
                 "unknown type token {other:?}"
             ))),
@@ -734,6 +756,9 @@ impl Compiler {
                 )))
             }
         };
+        if ret == ScalarType::String {
+            return Err(CompileError::Unsupported("string procedures".into()));
+        }
 
         // Parameter names, in call order, from `formal_params`.
         let param_names: Vec<String> = match first_direct_node(proc_decl, "formal_params") {
@@ -835,6 +860,7 @@ impl Compiler {
         let saved_defined = std::mem::take(&mut self.defined_labels);
         let saved_referenced = std::mem::take(&mut self.referenced_labels);
         let saved_switches = std::mem::take(&mut self.switches);
+        let saved_literal_string_slots = std::mem::take(&mut self.literal_string_slots);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
 
         // E6: a procedure body addresses an enclosing block scalar that was
@@ -923,6 +949,7 @@ impl Compiler {
         self.defined_labels = saved_defined;
         self.referenced_labels = saved_referenced;
         self.switches = saved_switches;
+        self.literal_string_slots = saved_literal_string_slots;
         self.scopes = saved_scopes;
 
         Ok(func)
@@ -974,24 +1001,48 @@ impl Compiler {
         }
 
         for actual in actuals {
-            let literal = expr_string_literal(actual).ok_or_else(|| {
-                CompileError::Unsupported(format!(
-                    "standard output procedure {name:?} currently supports string literal arguments only"
-                ))
-            })?;
-            let slot = self.fresh_temp();
-            self.emit(IIRInstr::new(
-                "str_const",
-                Some(slot.clone()),
-                vec![Operand::Str(literal)],
-                "str",
-            ));
-            self.emit(IIRInstr::new(
-                "print_str",
-                None,
-                vec![Operand::Var(slot)],
-                "void",
-            ));
+            if let Some(literal) = expr_string_literal(actual) {
+                let slot = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "str_const",
+                    Some(slot.clone()),
+                    vec![Operand::Str(literal)],
+                    "str",
+                ));
+                self.emit(IIRInstr::new(
+                    "print_str",
+                    None,
+                    vec![Operand::Var(slot)],
+                    "void",
+                ));
+                continue;
+            }
+
+            if let Some(var_name) = expr_variable_name(actual) {
+                let binding = self.require_var(&var_name)?;
+                if binding.ty != ScalarType::String {
+                    return Err(CompileError::Type(format!(
+                        "standard output procedure {name:?} cannot print {} variable {var_name:?}",
+                        binding.ty.name()
+                    )));
+                }
+                if !self.literal_string_slots.contains(&binding.slot) {
+                    return Err(CompileError::Unsupported(format!(
+                        "standard output procedure {name:?} requires literal-backed string variable {var_name:?}"
+                    )));
+                }
+                self.emit(IIRInstr::new(
+                    "print_str",
+                    None,
+                    vec![Operand::Var(binding.slot)],
+                    "void",
+                ));
+                continue;
+            }
+
+            return Err(CompileError::Unsupported(format!(
+                "standard output procedure {name:?} currently supports string literals and literal-backed string variables only"
+            )));
         }
 
         Ok(true)
@@ -1139,7 +1190,7 @@ impl Compiler {
         let value = self.emit_expr(actuals[0])?;
         let ty = match value.ty {
             ScalarType::Integer | ScalarType::Real => value.ty,
-            ScalarType::Boolean => {
+            ScalarType::Boolean | ScalarType::String => {
                 return Err(CompileError::Type(
                     "standard function abs requires a numeric argument".into(),
                 ))
@@ -1233,7 +1284,7 @@ impl Compiler {
         let value = self.emit_expr(actuals[0])?;
         let operand_ty = match value.ty {
             ScalarType::Integer | ScalarType::Real => value.ty,
-            ScalarType::Boolean => {
+            ScalarType::Boolean | ScalarType::String => {
                 return Err(CompileError::Type(
                     "standard function sign requires a numeric argument".into(),
                 ))
@@ -1443,6 +1494,57 @@ impl Compiler {
         }
         let expr = first_direct_node(node, "expression")
             .ok_or_else(|| CompileError::Malformed("assign_stmt has no expression".into()))?;
+
+        if let Some(literal) = expr_string_literal(expr) {
+            let mut saw_string_target = false;
+            for left in &left_parts {
+                let var_node = first_direct_node(left, "variable")
+                    .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
+                if array_subscripts(var_node).is_some() {
+                    return Err(CompileError::Unsupported(
+                        "string array assignments".into(),
+                    ));
+                }
+                let name = self.simple_variable_name(var_node)?;
+                let binding = self.require_var(&name)?;
+                if binding.ty != ScalarType::String {
+                    return Err(CompileError::Type(format!(
+                        "cannot assign string expression to {} variable {name:?}",
+                        binding.ty.name()
+                    )));
+                }
+                if binding.is_global {
+                    return Err(CompileError::Unsupported(
+                        "captured string assignments".into(),
+                    ));
+                }
+                saw_string_target = true;
+                self.emit(IIRInstr::new(
+                    "str_const",
+                    Some(binding.slot.clone()),
+                    vec![Operand::Str(literal.clone())],
+                    "str",
+                ));
+                self.literal_string_slots.insert(binding.slot);
+            }
+            if saw_string_target {
+                return Ok(());
+            }
+        } else {
+            for left in &left_parts {
+                let var_node = first_direct_node(left, "variable")
+                    .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
+                if array_subscripts(var_node).is_none() {
+                    let name = self.simple_variable_name(var_node)?;
+                    if self.require_var(&name)?.ty == ScalarType::String {
+                        return Err(CompileError::Unsupported(
+                            "string assignment currently supports literal RHS only".into(),
+                        ));
+                    }
+                }
+            }
+        }
+
         let rhs = self.emit_expr(expr)?;
 
         for left in left_parts {
@@ -2589,7 +2691,7 @@ impl Compiler {
         // the type, so a real negation lowers to an `f64` subtract → `fsub`).
         let ty = match value.ty {
             ScalarType::Integer | ScalarType::Real => value.ty,
-            ScalarType::Boolean => {
+            ScalarType::Boolean | ScalarType::String => {
                 return Err(CompileError::Type(
                     "unary minus requires a numeric operand".into(),
                 ))
@@ -2910,6 +3012,20 @@ fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
     let child_nodes = direct_nodes(node);
     if child_nodes.len() == 1 {
         return expr_string_literal(child_nodes[0]);
+    }
+
+    None
+}
+
+fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
+    let tokens = direct_tokens(node);
+    if tokens.len() == 1 && tokens[0].effective_type_name() == "NAME" {
+        return Some(tokens[0].value.clone());
+    }
+
+    let child_nodes = direct_nodes(node);
+    if child_nodes.len() == 1 {
+        return expr_variable_name(child_nodes[0]);
     }
 
     None
@@ -3268,7 +3384,51 @@ mod tests {
     fn al4_print_numeric_argument_rejects_until_string_expressions_land() {
         let err = compile_source("begin print(42) end", "test")
             .expect_err("numeric print is outside the AL4 literal-string slice");
-        assert!(format!("{err:?}").contains("string literal arguments only"));
+        assert!(format!("{err:?}").contains("string literals and literal-backed string variables"));
+    }
+
+    #[test]
+    fn al4_string_variable_assignment_and_print_lowers_to_direct_slot() {
+        let module = compile_source("begin string s; s := 'HI'; print(s) end", "test")
+            .expect("string variable compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "str_const"
+                    && i.dest.as_deref() == Some("s")
+                    && matches!(i.srcs.first(), Some(Operand::Str(text)) if text == "HI")
+            }),
+            "string assignment should materialize the variable slot with str_const"
+        );
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+            }),
+            "print(s) should consume the literal-backed string slot"
+        );
+        assert!(
+            !main.instructions.iter().any(|i| i.op == "mov" && i.type_hint == "str"),
+            "literal-backed string variables must stay direct str_const slots for static backends"
+        );
+    }
+
+    #[test]
+    fn al4_unassigned_string_variable_print_rejects() {
+        let err = compile_source("begin string s; print(s) end", "test")
+            .expect_err("unassigned string variables are not literal-backed");
+        assert!(format!("{err:?}").contains("literal-backed string variable"));
+    }
+
+    #[test]
+    fn al4_string_variable_copy_rejects_until_dynamic_strings_land() {
+        let err = compile_source("begin string s, t; s := 'HI'; t := s; print(t) end", "test")
+            .expect_err("string variable copies need dynamic string slots");
+        assert!(format!("{err:?}").contains("literal RHS only"));
     }
 
     // ── AL8 — standard functions (§3.2.4) ───────────────────────────────────

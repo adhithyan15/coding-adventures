@@ -149,8 +149,9 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
   produces string literals. The current foothold recognises undeclared
   statement-position `print`/`output` calls and lowers string literal actuals to
-  `str_const` + `print_str`; full `string` declarations/variables/arrays remain
-  follow-ups.
+  `str_const` + `print_str`. Literal-backed scalar string variables now lower
+  `s := 'HI'` to a direct `str_const` slot consumed by `print(s)`; dynamic
+  string copies, captured strings, arrays, and parameters remain follow-ups.
 - **Twig (TW4)** — Twig string literals + `print` lower to `str_const` +
   `print_str`; `++`/`string-append` to `str_concat`, `string=?` to `str_eq`. (The
   dynamic-`any` Twig path still needs broader E6; the *typed* string slice here is
@@ -224,8 +225,15 @@ merge before the next:
    undeclared statement-position `print`/`output` calls and lowers string literal
    actuals to E4 `str_const` + `print_str`. Matrix `Prog`
    `begin print('HI') end` returns stdout `HI` on native-AOT + VM + JIT + LLVM +
-   WASM + JVM + CLR. Full ALGOL `string` declarations, variables, arrays, and
-   non-literal string expressions remain follow-ups.
+   WASM + JVM + CLR. Scalar string variables are the follow-up proof below;
+   broader dynamic strings remain follow-up work.
+2c. ✅ **AL4-string-variable proof** — `algol-iir-compiler` accepts scalar
+   `string` declarations when assigned from a literal, materialising the variable
+   slot with E4 `str_const`; `print(s)` is accepted only for literal-backed
+   slots. Matrix `Prog` `begin string s; s := 'HI'; print(s) end` returns stdout
+   `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Dynamic string
+   copies, captured/`own` strings, string arrays, and string parameters remain
+   follow-ups.
 3. ✅ **E4-literal-metadata/index proofs** — Twig lowers literal
    `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
    `(string=? "HELLO" "HELLO")`, and

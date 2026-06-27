@@ -111,6 +111,19 @@ fn test_proc_stmt_string_literal_actual() {
     );
 }
 
+#[test]
+fn test_string_variable_assignment_and_print() {
+    let ast = parse_algol("begin string s; s := 'HI'; print(s) end");
+    assert_program_root(&ast);
+    assert!(find_rule(&ast, "type_decl"), "Expected string type declaration");
+    assert!(find_rule(&ast, "assign_stmt"), "Expected string assignment");
+    assert!(find_rule(&ast, "proc_stmt"), "Expected print procedure statement");
+    assert!(
+        find_token(&ast, "STRING_LIT", "'HI'"),
+        "Expected ALGOL string literal token"
+    );
+}
+
 /// A block with a single assignment using a real literal.
 #[test]
 fn test_program_real_assignment() {

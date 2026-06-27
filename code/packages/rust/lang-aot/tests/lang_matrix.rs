@@ -624,6 +624,19 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — scalar string variables in the current AL4 foothold. A
+    // `string` scalar may be assigned from a literal, which emits `str_const`
+    // directly to the variable slot; `print(s)` is accepted only because that
+    // slot is literal-backed. This deliberately avoids dynamic string copies or
+    // captured string globals while still proving source-level string variables
+    // through the same E4 `print_str` path on all seven backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s; s := 'HI'; print(s) end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — the `abs` **standard function** (§3.2.4, LANG-FULL AL8). `abs`
     // is built into the language, not a user procedure, so `algol-iir-compiler`
     // resolves it by name and lowers `abs(0 - 42)` inline to the value of

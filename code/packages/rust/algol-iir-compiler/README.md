@@ -79,8 +79,11 @@ Since **LANG-FULL AL4** the implementation-defined output procedures `print`
 and `output` are recognised in statement position when they are not user
 declared procedures. String literal actuals lower to shared E4 `str_const` +
 `print_str`, so `begin print('HI') end` writes `HI` on all seven LANG backends.
-This is deliberately a literal-output foothold: `string` declarations,
-variables, arrays, and non-literal string expressions still fail closed.
+Literal-backed scalar variables now use the same shape: `string s; s := 'HI'`
+materialises `s` with `str_const`, and `print(s)` consumes that direct slot.
+This is deliberately not a dynamic string model yet: unassigned string
+variables, string copies, captured/`own` strings, arrays, parameters, and
+non-literal string expressions still fail closed.
 
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real
@@ -100,7 +103,7 @@ the array ops yet; see the `E5-*` follow-ups in
 `code/specs/LANG-FULL-IMPLEMENTATION.md`.
 
 Unsupported ALGOL 60 features — **multidimensional** and non-numeric arrays,
-arrays as procedure parameters, full string variables/arrays, proper (void)
+arrays as procedure parameters, dynamic string variables/arrays, proper (void)
 procedures, by-name (non-`value`) parameters, parameterless-procedure calls (a
 bare name parses as a variable), enclosing-block **array** capture (only scalars
 are globalised so far), and conditional/nested switch-list elements — return

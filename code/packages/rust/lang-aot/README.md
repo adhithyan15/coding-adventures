@@ -11,6 +11,9 @@ LANG VM chain.
 > ALGOL 60 now proves `begin print('HI') end`, lowering the implementation-defined
 > `print`/`output` output procedures to the same E4 `str_const` + `print_str`
 > path and producing stdout `HI` everywhere.
+> The next ALGOL row proves literal-backed scalar string variables too:
+> `begin string s; s := 'HI'; print(s) end` produces stdout `HI` everywhere,
+> while dynamic string copies/captured strings remain follow-up work.
 > It also proves Twig `(string-length "HELLO")` returns exit code `5` and
 > `(string-ref "ABC" 1)` returns exit code `66`,
 > `(string=? "HELLO" "HELLO")` returns exit code `1`, plus
