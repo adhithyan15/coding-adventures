@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
-## [0.50.0] - 2026-06-26
+## [0.55.0] - 2026-06-26
 
 ### Added — fold legacy global `escape(…)` / `unescape(…)` → string literal
 

@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
-## [0.199.0] - 2026-06-26
+## [0.204.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold legacy global `escape(…)` / `unescape(…)`
 
