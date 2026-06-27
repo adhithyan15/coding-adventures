@@ -13,7 +13,7 @@ use smart_home_core::{
     BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode,
     CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceEvent,
     DeviceEventType, Entity, EntityId, EntityKind, EventId, Health, PrivilegeTier, Scene,
-    StateConfidence, StateDelta, StateSource, Value, ValueKind,
+    SceneScope, StateConfidence, StateDelta, StateSource, Value, ValueKind,
 };
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
@@ -461,6 +461,20 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
         let runtime = runtime.clone();
         app.get("/api/smart_home/rooms", move |request| {
             runtime_rooms_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/scenes", move |request| {
+            runtime_scenes_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/scenes/:scene_id", move |request| {
+            runtime_scene_response(&runtime, request)
         });
     }
 
@@ -1101,6 +1115,24 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/scenes",
+        category: "scenes",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["entity_id", "limit", "room_id", "scope"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/scenes/:scene_id",
+        category: "scenes",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/events",
         category: "events",
         surface: "smart_home",
@@ -1492,6 +1524,45 @@ fn runtime_rooms_response(
         .expect("smart-home runtime mutex should not be poisoned");
     let rooms = runtime_guard.query_room_summaries_at(&query, runtime.now_ms);
     WebResponse::json(rooms_json(&rooms, &runtime_guard).into_bytes())
+}
+
+fn runtime_scenes_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let scenes = match runtime_scenes(&runtime_guard, request) {
+        Ok(scenes) => scenes,
+        Err(error) => return api_error_response(error),
+    };
+    WebResponse::json(scenes_json(&scenes, &runtime_guard).into_bytes())
+}
+
+fn runtime_scene_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(target) = request.route_params.get("scene_id") else {
+        return json_error(400, "missing scene_id");
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let scene = match runtime_guard
+        .registry()
+        .scenes()
+        .find(|scene| scene_matches_external_id(scene, target))
+    {
+        Some(scene) => scene,
+        None => {
+            return api_error_response(ApiError::not_found(format!("scene `{target}` not found")));
+        }
+    };
+    WebResponse::json(scene_json(scene, &runtime_guard).into_bytes())
 }
 
 fn runtime_events_response(
@@ -2725,6 +2796,110 @@ fn room_json(room: &RuntimeRoomSummary) -> String {
     )
 }
 
+fn scenes_json(scenes: &[&Scene], runtime: &SmartHomeRuntime) -> String {
+    let action_count = scenes
+        .iter()
+        .map(|scene| scene.actions.len())
+        .sum::<usize>();
+    let mut room_ids = Vec::<String>::new();
+    for scene in scenes {
+        for room_id in scene_room_ids(scene, runtime) {
+            push_unique_string(&mut room_ids, &room_id);
+        }
+    }
+    room_ids.sort();
+    format!(
+        "{{\"summary\":{{\"total_scenes\":{},\"action_count\":{},\"room_count\":{}}},\"scenes\":[{}]}}",
+        scenes.len(),
+        action_count,
+        room_ids.len(),
+        scenes
+            .iter()
+            .map(|scene| scene_json(scene, runtime))
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn scene_json(scene: &Scene, runtime: &SmartHomeRuntime) -> String {
+    let room_ids = scene_room_ids(scene, runtime);
+    format!(
+        "{{\"scene_id\":{},\"home_assistant_scene_id\":{},\"scope\":{},\"native_ref\":{},\"room_ids\":[{}],\"action_count\":{},\"actions\":[{}],\"metadata\":[{}]}}",
+        json_string(scene.scene_id.as_str()),
+        json_string(home_assistant_scene_id(scene)),
+        json_string(scene_scope_label(scene.scope)),
+        scene_native_ref_json(scene),
+        json_string_array(&room_ids),
+        scene.actions.len(),
+        scene
+            .actions
+            .iter()
+            .map(|action| scene_action_json(action, runtime))
+            .collect::<Vec<_>>()
+            .join(","),
+        metadata_json(&scene.metadata),
+    )
+}
+
+fn scene_action_json(action: &smart_home_core::SceneAction, runtime: &SmartHomeRuntime) -> String {
+    let home_assistant_entity_id = runtime
+        .registry()
+        .entity(&action.entity_id)
+        .map(home_assistant_entity_id)
+        .unwrap_or_else(|| home_assistant_entity_id_for(&action.entity_id));
+    format!(
+        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"desired_state\":{}}}",
+        json_string(action.entity_id.as_str()),
+        json_string(home_assistant_entity_id),
+        value_json(&action.desired_state),
+    )
+}
+
+fn scene_native_ref_json(scene: &Scene) -> String {
+    scene
+        .native_ref
+        .as_ref()
+        .map(|native_ref| {
+            format!(
+                "{{\"family\":{},\"kind\":{},\"value\":{}}}",
+                json_string(native_ref.family.as_str()),
+                json_string(&native_ref.kind),
+                json_string(&native_ref.value),
+            )
+        })
+        .unwrap_or_else(|| "null".to_string())
+}
+
+fn scene_room_ids(scene: &Scene, runtime: &SmartHomeRuntime) -> Vec<String> {
+    let mut room_ids = Vec::<String>::new();
+    for action in &scene.actions {
+        let room_id = runtime
+            .registry()
+            .entity(&action.entity_id)
+            .and_then(|entity| runtime.registry().device(&entity.device_id))
+            .and_then(|device| device.room_id.as_ref());
+        if let Some(room_id) = room_id {
+            push_unique_string(&mut room_ids, room_id);
+        }
+    }
+    room_ids.sort();
+    room_ids
+}
+
+fn metadata_json(metadata: &[smart_home_core::Metadata]) -> String {
+    metadata
+        .iter()
+        .map(|metadata| {
+            format!(
+                "{{\"key\":{},\"value\":{}}}",
+                json_string(&metadata.key),
+                json_string(&metadata.value),
+            )
+        })
+        .collect::<Vec<_>>()
+        .join(",")
+}
+
 fn entity_registry_json(entity: &Entity, runtime: &SmartHomeRuntime, now_ms: u64) -> String {
     let device = runtime.registry().device(&entity.device_id);
     let bridge_id = device.map(|device| device.bridge_id.as_str());
@@ -3019,6 +3194,45 @@ fn runtime_entities<'a>(
     entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
     entities.truncate(limit);
     Ok(entities)
+}
+
+fn runtime_scenes<'a>(
+    runtime: &'a SmartHomeRuntime,
+    request: &WebRequest,
+) -> Result<Vec<&'a Scene>, ApiError> {
+    let scope = query_string(request, "scope")
+        .map(scene_scope_from_label)
+        .transpose()?;
+    let entity_id = query_string(request, "entity_id")
+        .map(|entity_id| runtime_entity_id(runtime, entity_id))
+        .transpose()?;
+    let room_id = query_string(request, "room_id");
+    let limit = query_limit(request, 100, 1_000)?;
+
+    let mut scenes = runtime
+        .registry()
+        .scenes()
+        .filter(|scene| scope.is_none_or(|scope| scene.scope == scope))
+        .filter(|scene| {
+            entity_id.as_ref().is_none_or(|entity_id| {
+                scene
+                    .actions
+                    .iter()
+                    .any(|action| &action.entity_id == entity_id)
+            })
+        })
+        .filter(|scene| {
+            room_id.is_none_or(|room_id| {
+                scene_room_ids(scene, runtime)
+                    .iter()
+                    .any(|candidate| candidate == room_id)
+            })
+        })
+        .collect::<Vec<_>>();
+
+    scenes.sort_by(|left, right| left.scene_id.as_str().cmp(right.scene_id.as_str()));
+    scenes.truncate(limit);
+    Ok(scenes)
 }
 
 fn runtime_devices<'a>(
@@ -4388,6 +4602,29 @@ fn room_sort_from_label(sort: &str) -> Result<RuntimeRoomSort, ApiError> {
     }
 }
 
+fn scene_scope_label(scope: SceneScope) -> &'static str {
+    match scope {
+        SceneScope::Room => "room",
+        SceneScope::Zone => "zone",
+        SceneScope::Home => "home",
+        SceneScope::Bridge => "bridge",
+        SceneScope::Custom => "custom",
+    }
+}
+
+fn scene_scope_from_label(scope: &str) -> Result<SceneScope, ApiError> {
+    match scope {
+        "room" => Ok(SceneScope::Room),
+        "zone" => Ok(SceneScope::Zone),
+        "home" => Ok(SceneScope::Home),
+        "bridge" => Ok(SceneScope::Bridge),
+        "custom" => Ok(SceneScope::Custom),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported scene scope `{other}`"
+        ))),
+    }
+}
+
 fn device_event_type_label(event_type: DeviceEventType) -> &'static str {
     match event_type {
         DeviceEventType::Discovered => "discovered",
@@ -5441,6 +5678,54 @@ mod tests {
         assert!(body.contains(r#""scene_action_count":1"#));
         assert!(body.contains(r#""has_state_gaps":true"#));
         assert!(body.contains(r#""has_scene_actions":true"#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_ready_scene_registry() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let scenes = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/scenes?room_id=kitchen&scope=room&entity_id=light.entity_light_1",
+            ))
+            .into(),
+        );
+
+        assert!(scenes.contains(r#""total_scenes":1"#));
+        assert!(scenes.contains(r#""action_count":1"#));
+        assert!(scenes.contains(r#""room_count":1"#));
+        assert!(scenes.contains(r#""scene_id":"scene-kitchen-bright""#));
+        assert!(scenes.contains(r#""home_assistant_scene_id":"scene.scene_kitchen_bright""#));
+        assert!(scenes.contains(r#""scope":"room""#));
+        assert!(scenes.contains(
+            r#""native_ref":{"family":"hue","kind":"scene","value":"scene-kitchen-bright"}"#
+        ));
+        assert!(scenes.contains(r#""room_ids":["kitchen"]"#));
+        assert!(scenes.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(scenes.contains(r#""light.on_off":true"#));
+        assert!(scenes.contains(r#""light.brightness":80"#));
+        assert!(scenes.contains(r#""key":"fixture.room_id","value":"kitchen""#));
+
+        let detail_response: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/scenes/scene.scene_kitchen_bright",
+            ))
+            .into();
+        let detail = response_body(detail_response.clone());
+        assert_eq!(detail_response.status, 200);
+        assert!(detail.contains(r#""scene_id":"scene-kitchen-bright""#));
+        assert!(detail.contains(r#""action_count":1"#));
+
+        let missing_scene: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/scenes/scene.missing"))
+            .into();
+        assert_eq!(missing_scene.status, 404);
+
+        let invalid_scope: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/scenes?scope=planet"))
+            .into();
+        assert_eq!(invalid_scope.status, 400);
     }
 
     #[test]

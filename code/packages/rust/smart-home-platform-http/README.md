@@ -31,6 +31,8 @@ stable local API responses for:
 - `/api/smart_home/bridges`
 - `/api/smart_home/bridges/:bridge_id`
 - `/api/smart_home/rooms`
+- `/api/smart_home/scenes`
+- `/api/smart_home/scenes/:scene_id`
 - `/api/smart_home/events`
 - `/api/smart_home/events/:sequence`
 - `/api/smart_home/command_results`
@@ -64,10 +66,10 @@ records, a compact health probe, a capability catalog grouped across entities,
 device and bridge inventory, room topology summaries, a dashboard overview, an
 API route catalog with surface/method/authorization filters, checkpointed
 event-log entries with detail lookups, a native service catalog for command
-affordances and Home Assistant target aliases, command-result audit records
-with command, bridge, correlation, status, and sort filters, indexed
-authorization decisions with principal, outcome, and sort filters, and
-desired-state supervision targets. State-history reads expose
+affordances and Home Assistant target aliases, a scene registry with room/action
+projections, command-result audit records with command, bridge, correlation,
+status, and sort filters, indexed authorization decisions with principal,
+outcome, and sort filters, and desired-state supervision targets. State-history reads expose
 registry-backed device events with Home Assistant entity aliases, state deltas,
 timestamp filters, and event-id detail lookups; the Home Assistant-style
 history route accepts `filter_entity_id`.
@@ -108,6 +110,8 @@ curl 'http://127.0.0.1:8123/api/smart_home/capabilities?domain=light&commandable
 curl 'http://127.0.0.1:8123/api/smart_home/devices?room_id=kitchen&health=online'
 curl 'http://127.0.0.1:8123/api/smart_home/bridges?integration_id=hue&transport=lan_http'
 curl 'http://127.0.0.1:8123/api/smart_home/rooms?sort=scene_count&state_gaps_only=true'
+curl 'http://127.0.0.1:8123/api/smart_home/scenes?room_id=kitchen&scope=room'
+curl 'http://127.0.0.1:8123/api/smart_home/scenes/scene.scene_kitchen_bright'
 curl 'http://127.0.0.1:8123/api/smart_home/events/0'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?bridge_id=bridge-1'

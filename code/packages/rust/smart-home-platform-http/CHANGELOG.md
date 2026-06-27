@@ -28,6 +28,8 @@ All notable changes to this package will be documented in this file.
   authorization filters for local-controller clients.
 - Added a native service catalog route with command affordances, Home
   Assistant target aliases, and service detail lookups for dashboards.
+- Added native scene registry routes with Home Assistant aliases, room/action
+  projections, metadata, and detail lookups.
 - Added a compact runtime health probe for local-controller readiness,
   pending-work, topology, and event-bus status checks.
 - Added a dashboard-ready capability catalog route that groups entity
