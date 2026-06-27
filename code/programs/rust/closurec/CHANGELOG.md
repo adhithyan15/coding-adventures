@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.206.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold static `JSON.stringify(…)` → string
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses the static `JSON.stringify(x)`
+(ECMAScript §25.5.2) to a string literal for the primitive literal arguments — via
+the new `MemberExpression`-arm dispatch in `closure-pass-constant-fold` 0.57.0.
+
+It folds the single-argument form for a NUMBER literal (`JSON.stringify(42)` →
+`"42"`, reusing `fold_string_of_number` so fractional/≥2⁵³ values decline), a
+BOOLEAN literal (`"true"`/`"false"`), and the NULL literal (`"null"`). A STRING
+literal is declined (JSON escaping left to the runtime), as are array/object
+literals (side effects + recursion), identifiers, and any call with a second
+`replacer`/`space` argument. Only the bare global `JSON.stringify(...)` folds.
+
+New end-to-end fixture `tests/diff/simple-fold-json-stringify/` and integration
+test `tests/diff_simple_fold_json_stringify.rs` assert byte-exact SIMPLE output,
+the per-binding string folds, the declined string + fractional calls, and a
+WHITESPACE_ONLY-fallback regression guard (exactly two `JSON.stringify(` calls
+remain). Help-markdown regenerated to Version 0.206.0.
+
 ## [0.202.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold static `Number.parseInt/parseFloat(…)`

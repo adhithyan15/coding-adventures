@@ -1309,6 +1309,55 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
                     }
                 }
+
+                // ---- JSON.stringify(x) → string literal (primitive subset) ----
+                //
+                // `JSON.stringify` (ECMAScript §25.5.2) serialises a value to JSON
+                // text. We fold ONLY the primitive literal arguments whose JSON
+                // text we can render exactly, and ONLY the single-argument form (a
+                // `replacer`/`space` second argument can change the result — a
+                // replacer function is invoked even on a primitive value):
+                //
+                //   * a NUMBER literal → its `ToString` (a JSON number is the same
+                //     spelling): `JSON.stringify(42)` → the string `"42"`. We reuse
+                //     `fold_string_of_number`, which declines fractional values and
+                //     magnitudes ≥ 2^53 (whose shortest-decimal / exponential
+                //     spelling could diverge), so those leave the call intact;
+                //   * a BOOLEAN literal → `"true"` / `"false"`;
+                //   * the NULL literal → `"null"`.
+                //
+                // We DECLINE a STRING literal (JSON escaping — quotes, backslashes,
+                // control characters, and the `U+2028`/`U+2029` edge cases — is
+                // subtle enough to leave to the runtime) and any array/object
+                // literal (its elements/properties may have side effects, and the
+                // serialisation recurses). An identifier or other non-literal is
+                // also declined. Same bare-global-`JSON` premise as the other
+                // statics — only the literal `JSON.stringify(...)` callee folds,
+                // never a shadowed receiver. The folded text is pure ASCII
+                // (digits / `true` / `false` / `null`), so it needs no escaping.
+                if obj.name == "JSON" && prop.name == "stringify" && arguments.len() == 1 {
+                    let folded: Option<String> = match arguments.first() {
+                        Some(Expression::NumericLiteral(n)) => fold_string_of_number(n.value),
+                        Some(Expression::BooleanLiteral(b)) => {
+                            Some(if b.value { "true" } else { "false" }.to_string())
+                        }
+                        Some(Expression::NullLiteral(_)) => Some("null".to_string()),
+                        _ => None,
+                    };
+                    if let Some(result) = folded {
+                        let parent = c.cv.clone();
+                        let arg_src = match arguments.first() {
+                            Some(Expression::NumericLiteral(n)) => format_js_number(n.value),
+                            Some(Expression::BooleanLiteral(b)) => b.value.to_string(),
+                            Some(Expression::NullLiteral(_)) => "null".to_string(),
+                            _ => "?".to_string(),
+                        };
+                        let before = format!("JSON.stringify({})", arg_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
             }
         }
     }
@@ -6598,6 +6647,123 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "n.parseInt(\"5\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- JSON.stringify (static) ---------------------
+
+    /// Build `JSON.stringify(<arg>)`.
+    fn json_stringify_call(arg: Expression) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("JSON"), "stringify")),
+            arguments: vec![arg],
+        })
+    }
+
+    #[test]
+    fn fold_json_stringify_primitives() {
+        // (arg, expected JSON text) — every result confirmed against V8's
+        // `JSON.stringify`; the folded value is that text AS a string literal.
+        let cases: [(Expression, &str); 6] = [
+            (num(42.0, None), "42"),
+            (num(-7.0, None), "-7"),
+            (num(0.0, None), "0"),
+            (
+                Expression::BooleanLiteral(BooleanLiteral {
+                    cv: None,
+                    value: true,
+                }),
+                "true",
+            ),
+            (
+                Expression::BooleanLiteral(BooleanLiteral {
+                    cv: None,
+                    value: false,
+                }),
+                "false",
+            ),
+            (Expression::NullLiteral(NullLiteral { cv: None }), "null"),
+        ];
+        for (arg, expect) in cases {
+            let c = json_stringify_call(arg);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "JSON.stringify(...) should fold to {expect:?}");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => assert_eq!(s.value, expect),
+                other => panic!("expected {expect:?}; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn json_stringify_string_literal_does_not_fold() {
+        // JSON escaping (quotes/backslash/controls) is declined — left to runtime.
+        let c = json_stringify_call(string("x", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "JSON.stringify(\"x\") must not fold (escaping)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn json_stringify_fractional_and_large_number_does_not_fold() {
+        // `fold_string_of_number` declines fractional / ≥2^53 — so does this fold
+        // (V8 renders 1e21 as "1e+21", a spelling we don't reproduce).
+        for v in [3.5, 1e21] {
+            let c = json_stringify_call(num(v, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "JSON.stringify({v}) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn json_stringify_array_object_or_identifier_does_not_fold() {
+        // Arrays/objects may have side effects and recurse; an identifier's type
+        // is unknown — all declined.
+        let args = [
+            Expression::ArrayExpression(ArrayExpression {
+                cv: None,
+                elements: vec![],
+            }),
+            Expression::ObjectExpression(ObjectExpression {
+                cv: None,
+                properties: vec![],
+            }),
+            ident("x"),
+        ];
+        for arg in args {
+            let c = json_stringify_call(arg);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "JSON.stringify(array/object/ident) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn json_stringify_second_argument_does_not_fold() {
+        // A `replacer`/`space` second argument can change the result (a replacer
+        // function is invoked even on a primitive) — decline.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("JSON"), "stringify")),
+            arguments: vec![num(42.0, None), ident("replacer")],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "JSON.stringify(42, replacer) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn json_stringify_on_non_json_receiver_does_not_fold() {
+        // Only the bare global `JSON` folds; `j.stringify(42)` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("j"), "stringify")),
+            arguments: vec![num(42.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "j.stringify(42) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
