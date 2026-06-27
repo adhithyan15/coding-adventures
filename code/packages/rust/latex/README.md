@@ -31,8 +31,8 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | Layer | Contents | Status |
 |-------|----------|--------|
 | **L0 tokenizer** | catcode state machine → flat `Token` stream w/ byte spans | ✅ |
-| **L1 structural** | groups, `\cmd[opt]{arg}`, `\begin{env}…\end{env}`, text runs, raw math islands, `to_latex()` round-trip | ✅ this release |
-| L2 math | full math AST (frac, scripts, big ops, accents, `\left\right`, …) | ⏳ |
+| **L1 structural** | groups, `\cmd[opt]{arg}`, `\begin{env}…\end{env}`, text runs, raw math islands, `to_latex()` round-trip | ✅ |
+| **L2 math** | math AST (frac, binom, roots, scripts, big ops, functions, accents, `\left\right` fences, relations), precedence-climbing parser, `to_latex()` round-trip | ✅ this release |
 | L3 environments | matrices / tabular / lists (`&`, `\\`) | ⏳ |
 | L4 macros | `\newcommand`/`\def` + expansion (bounded) | ⏳ |
 | L5 text breadth | sectioning, fonts, accents, `\verb`, refs | ⏳ |
@@ -50,8 +50,31 @@ assert!(doc.iter().any(|n| matches!(n, Node::Math { .. })));    // $x$
 assert_eq!(parse(&latex::document_to_latex(&doc)).unwrap(), doc);
 ```
 
+### Math (L2)
+
+Each `$…$` island keeps its **raw** inner source at L1; the math grammar parses it on
+demand into a `MathNode` tree with full operator precedence:
+
+```rust
+use latex::{parse_math, MathNode};
+
+// fractions, big operators with bounds, roots, scripts, fences — all supported
+let m = parse_math(r"\sum_{i=1}^{n} i").unwrap();
+assert!(matches!(m, MathNode::BigOp { .. }));
+
+// precedence-aware round-trip: re-parsing the rendered AST yields the same AST
+let e = parse_math(r"\left(\frac{a}{b}\right)^2").unwrap();
+assert_eq!(parse_math(&e.to_latex()).unwrap(), e);
+
+// parse an island found in a document directly
+let doc = parse(r"area is $\pi r^2$").unwrap();
+let area = doc.iter().find_map(|n| n.parsed_math()).unwrap().unwrap();
+assert!(matches!(area, MathNode::Bin(..)));   // π · r²  (implicit multiplication)
+```
+
 The low-level `tokenize` is also public. Tokens and errors carry half-open byte `Span`s;
-both `parse` and `tokenize` return spanned errors rather than panicking.
+all of `parse`, `parse_math`, and `tokenize` return spanned errors rather than panicking,
+and recursion is depth-guarded so adversarial nesting errors instead of overflowing.
 
 ## Tests
 
