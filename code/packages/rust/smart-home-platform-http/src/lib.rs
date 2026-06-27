@@ -395,6 +395,21 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/services", move |request| {
+            runtime_services_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get(
+            "/api/smart_home/services/:domain/:service",
+            move |request| runtime_service_response(&runtime, request),
+        );
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/entities", move |request| {
             runtime_entities_response(&runtime, request)
         });
@@ -694,6 +709,132 @@ fn service_json(service: &SmartHomePlatformService) -> String {
     )
 }
 
+fn service_catalog_items(
+    state: &SmartHomePlatformHttpState,
+    request: &WebRequest,
+) -> Result<Vec<SmartHomePlatformService>, ApiError> {
+    let mut services = platform_services(state);
+
+    if let Some(domain) = query_string(request, "domain") {
+        services.retain(|service| service.domain == domain);
+    }
+    if let Some(service_name) = query_string(request, "service") {
+        services.retain(|service| service.service == service_name);
+    }
+    if let Some(capability_id) = query_string(request, "capability_id") {
+        services.retain(|service| {
+            service
+                .capability_ids
+                .iter()
+                .any(|candidate| candidate == capability_id)
+        });
+    }
+    if let Some(entity_id) = query_string(request, "entity_id") {
+        services.retain(|service| {
+            service.target_entity_ids.iter().any(|candidate| {
+                candidate == entity_id
+                    || state
+                        .entities
+                        .iter()
+                        .find(|entity| entity.entity_id.as_str() == candidate)
+                        .is_some_and(|entity| home_assistant_entity_id(entity) == entity_id)
+            })
+        });
+    }
+    if let Some(scene_id) = query_string(request, "scene_id") {
+        services.retain(|service| {
+            service.target_scene_ids.iter().any(|candidate| {
+                candidate == scene_id
+                    || state
+                        .scenes
+                        .iter()
+                        .find(|scene| scene.scene_id.as_str() == candidate)
+                        .is_some_and(|scene| home_assistant_scene_id(scene) == scene_id)
+            })
+        });
+    }
+
+    let limit = query_limit(request, 100, 500)?;
+    services.truncate(limit);
+    Ok(services)
+}
+
+fn service_catalog_json(
+    services: &[SmartHomePlatformService],
+    state: &SmartHomePlatformHttpState,
+) -> String {
+    let mut domains = Vec::<String>::new();
+    let mut entity_ids = Vec::<String>::new();
+    let mut scene_ids = Vec::<String>::new();
+    for service in services {
+        push_unique_string(&mut domains, &service.domain);
+        for entity_id in &service.target_entity_ids {
+            push_unique_string(&mut entity_ids, entity_id);
+        }
+        for scene_id in &service.target_scene_ids {
+            push_unique_string(&mut scene_ids, scene_id);
+        }
+    }
+    format!(
+        "{{\"summary\":{{\"total_services\":{},\"domain_count\":{},\"target_entity_count\":{},\"target_scene_count\":{},\"runtime_authorized_services\":{}}},\"services\":[{}]}}",
+        services.len(),
+        domains.len(),
+        entity_ids.len(),
+        scene_ids.len(),
+        services.len(),
+        services
+            .iter()
+            .map(|service| service_catalog_item_json(service, state))
+            .collect::<Vec<_>>()
+            .join(",")
+    )
+}
+
+fn service_catalog_item_json(
+    service: &SmartHomePlatformService,
+    state: &SmartHomePlatformHttpState,
+) -> String {
+    let home_assistant_entity_ids = service
+        .target_entity_ids
+        .iter()
+        .map(|entity_id| {
+            state
+                .entities
+                .iter()
+                .find(|entity| entity.entity_id.as_str() == entity_id)
+                .map(home_assistant_entity_id)
+                .unwrap_or_else(|| {
+                    home_assistant_entity_id_for(&EntityId::trusted(entity_id.as_str()))
+                })
+        })
+        .collect::<Vec<_>>();
+    let home_assistant_scene_ids = service
+        .target_scene_ids
+        .iter()
+        .map(|scene_id| {
+            state
+                .scenes
+                .iter()
+                .find(|scene| scene.scene_id.as_str() == scene_id)
+                .map(home_assistant_scene_id)
+                .unwrap_or_else(|| format!("scene.{}", object_id(scene_id)))
+        })
+        .collect::<Vec<_>>();
+    format!(
+        "{{\"service_id\":{},\"domain\":{},\"service\":{},\"description\":{},\"home_assistant_path\":{},\"mutates_runtime\":true,\"runtime_authorized\":true,\"target_entity_ids\":[{}],\"home_assistant_entity_ids\":[{}],\"target_scene_ids\":[{}],\"home_assistant_scene_ids\":[{}],\"capability_ids\":[{}]}}",
+        json_string(format!("{}.{}", service.domain, service.service)),
+        json_string(&service.domain),
+        json_string(&service.service),
+        json_string(&service.description),
+        json_string(format!("/api/services/{}/{}", service.domain, service.service)),
+        json_string_array(&service.target_entity_ids),
+        json_string_array(&home_assistant_entity_ids),
+        json_string_array(&service.target_scene_ids),
+        json_string_array(&home_assistant_scene_ids),
+        json_string_array(&service.capability_ids),
+    )
+}
+
 fn events_json(event_types: &[String]) -> String {
     format!(
         "[{}]",
@@ -848,6 +989,31 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         mutates_runtime: false,
         runtime_authorized: false,
         query_params: &["authorized", "category", "method", "mutating", "surface"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/services",
+        category: "services",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[
+            "capability_id",
+            "domain",
+            "entity_id",
+            "limit",
+            "scene_id",
+            "service",
+        ],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/services/:domain/:service",
+        category: "services",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
     },
     ApiRouteDescriptor {
         method: "GET",
@@ -1140,6 +1306,41 @@ fn api_catalog_response(request: &WebRequest) -> WebResponse {
         Err(error) => return api_error_response(error),
     };
     WebResponse::json(api_catalog_json(&routes).into_bytes())
+}
+
+fn runtime_services_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let state = runtime.snapshot();
+    let services = match service_catalog_items(&state, request) {
+        Ok(services) => services,
+        Err(error) => return api_error_response(error),
+    };
+    WebResponse::json(service_catalog_json(&services, &state).into_bytes())
+}
+
+fn runtime_service_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(domain) = request.route_params.get("domain") else {
+        return api_error_response(ApiError::bad_request("missing domain"));
+    };
+    let Some(service) = request.route_params.get("service") else {
+        return api_error_response(ApiError::bad_request("missing service"));
+    };
+    let state = runtime.snapshot();
+    let services = platform_services(&state);
+    let Some(service_record) = services
+        .iter()
+        .find(|record| record.domain == *domain && record.service == *service)
+    else {
+        return api_error_response(ApiError::not_found(format!(
+            "service `{domain}.{service}` not found"
+        )));
+    };
+    WebResponse::json(service_catalog_item_json(service_record, &state).into_bytes())
 }
 
 fn runtime_entities_response(
@@ -5071,6 +5272,60 @@ mod tests {
             .handle(request("GET", "/api/smart_home/api?surface=unknown"))
             .into();
         assert_eq!(invalid_surface.status, 400);
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_ready_service_catalog() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+
+        let services = response_body(
+            app.handle(request("GET", "/api/smart_home/services?domain=light"))
+                .into(),
+        );
+        assert!(services.contains(r#""summary":{"total_services":4"#));
+        assert!(services.contains(r#""service_id":"light.turn_on""#));
+        assert!(services.contains(r#""home_assistant_path":"/api/services/light/turn_on""#));
+        assert!(services.contains(r#""runtime_authorized":true"#));
+        assert!(services.contains(r#""home_assistant_entity_ids":["light.entity_light_1"]"#));
+
+        let detail = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/services/light/set_brightness",
+            ))
+            .into(),
+        );
+        assert!(detail.contains(r#""service_id":"light.set_brightness""#));
+        assert!(detail.contains(r#""capability_ids":["light.brightness"]"#));
+
+        let entity_filtered = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/services?entity_id=light.entity_light_1&capability_id=light.on_off",
+            ))
+            .into(),
+        );
+        assert!(entity_filtered.contains(r#""total_services":2"#));
+        assert!(entity_filtered.contains(r#""service_id":"light.turn_on""#));
+        assert!(entity_filtered.contains(r#""service_id":"light.turn_off""#));
+        assert!(!entity_filtered.contains(r#""service_id":"light.set_brightness""#));
+
+        let scene_filtered = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/services?scene_id=scene.scene_kitchen_bright",
+            ))
+            .into(),
+        );
+        assert!(scene_filtered.contains(r#""service_id":"scene.turn_on""#));
+        assert!(
+            scene_filtered.contains(r#""home_assistant_scene_ids":["scene.scene_kitchen_bright"]"#)
+        );
+
+        let missing_service: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/services/light/missing"))
+            .into();
+        assert_eq!(missing_service.status, 404);
     }
 
     #[test]
