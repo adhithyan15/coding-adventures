@@ -213,15 +213,15 @@ multiple languages; close an enabler before the features that depend on it.
   host primitive is `__print_str`/`printStr` (the string sibling of `print_i64`). The VM now
   executes the shared ops directly (`tests/e4_strings.rs`), Dartmouth BASIC
   `PRINT "HELLO"` runs on all 7 backends, and Twig `(string-length "HELLO")`,
-  `(string=? "HELLO" "HELLO")`, plus
+  `(string-ref "ABC" 1)`, `(string=? "HELLO" "HELLO")`, plus
   `(string-length (string-append "AB" "CDE"))` prove direct literal
-  `str_len`/`str_eq`/`str_concat` on all 7 backends. WASM owns the literal-output
+  `str_len`/`str_index`/`str_eq`/`str_concat` on all 7 backends. WASM owns the literal-output
   shape with a linear-memory data segment + `env.__print_str(ptr,len)`, LLVM owns
   the static private `{len,bytes}` global + `@__print_str` shape, native AOT owns
   the heap-byte `alloc_bytes` + `store_byte` + `print_string` shape, and JVM/CLR
   own it with `ldc`/`ldstr` + `PrintStream.print(String)`/`Console.Write(string)`
-  plus host string metadata calls; richer string ops (`str_index`), non-literal
-  `str_concat`/`str_eq`, and string variables remain.
+  plus host string metadata/index calls; non-literal `str_index`/`str_concat`/
+  `str_eq`, the out-of-bounds trap matrix proof, and string variables remain.
   Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR

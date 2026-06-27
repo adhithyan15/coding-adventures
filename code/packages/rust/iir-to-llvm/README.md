@@ -3,12 +3,12 @@
 IIR → textual LLVM IR backend.  Emits a `.ll` source string for an LLVM
 target triple, without depending on `llvm-sys` or a native LLVM install.
 
-**Status: v0.18.0 — LANG-FULL E4 literal string metadata.**  The backend now
+**Status: v0.19.0 — LANG-FULL E4 literal string metadata.**  The backend now
 lowers scalar control/data ops, Brainfuck byte-tape I/O, arrays, globals,
 numeric conversions, and the `str_const` + `print_str` literal-output slice.
-It also materialises `str_len`, `str_eq`, and literal `str_concat` for direct
-literals from compile-time metadata. Dynamic byte-string ops remain outside this
-release.
+It also materialises `str_len`, `str_index`, `str_eq`, and literal `str_concat`
+for direct literals from compile-time metadata. Dynamic byte-string ops remain
+outside this release.
 
 ## Where it fits
 

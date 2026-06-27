@@ -1,5 +1,16 @@
 # Changelog — twig-ir-compiler
 
+## [0.26.0] — 2026-06-27 (LANG-FULL E4 — literal string index)
+
+Literal `(string-ref "..." i)` now lowers to the shared E4 `str_index` path:
+`str_const` for the direct literal, an integer `const` for the index, then
+`str_index` for the typed byte result. This adds the direct ASCII indexing
+foothold to the existing literal string metadata paths while preserving the
+dynamic `call_builtin` path for non-literal string values.
+
+Verified by a compiler test asserting the exact `str_const` + `const` +
+`str_index` + `ret` shape and by the cross-backend `lang-aot` matrix row.
+
 ## [0.25.0] — 2026-06-27 (LANG-FULL E4 — literal string metadata)
 
 Literal `(string-length "...")`, `(string=? "..." "...")`, and

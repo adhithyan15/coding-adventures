@@ -2453,6 +2453,54 @@ fn e4_string_len_lowers_to_string_length() {
 }
 
 #[test]
+fn e4_string_index_lowers_to_string_char_at() {
+    let f = IIRFunction::new(
+        "index_abc",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal index should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "index_abc")
+        .expect("index_abc method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.contains(&0xB6),
+        "str_index must invokevirtual java/lang/String.charAt; got: {:?}",
+        code
+    );
+    assert!(
+        code.contains(&0x85),
+        "i64 str_index result must widen String.charAt(I)C with I2L; got: {:?}",
+        code
+    );
+
+    let char_at_ref = find_methodref_in_cp(&class.constant_pool, "java/lang/String", "charAt", "(I)C");
+    assert_ne!(char_at_ref, 0, "constant pool must contain java/lang/String.charAt(I)C");
+}
+
+#[test]
 fn e4_string_concat_len_lowers_to_string_concat_and_length() {
     let f = IIRFunction::new(
         "concat_len",

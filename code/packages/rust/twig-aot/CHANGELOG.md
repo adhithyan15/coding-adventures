@@ -1,5 +1,13 @@
 # Changelog — `twig-aot`
 
+## 0.17.0 — 2026-06-27 — native literal string index lowering (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds direct-literal `str_index` when both the
+string value and index are statically known. Twig `(string-ref "ABC" 1)` now
+runs through the native AOT column and returns byte/codepoint `66`, matching the
+shared E4 byte-string semantics for printable ASCII. Dynamic string indexing and
+the out-of-bounds trap matrix proof remain follow-up runtime slices.
+
 ## 0.16.0 — 2026-06-27 — native literal string metadata lowering (LANG-FULL E4)
 
 `prepare_module_for_aot` now folds `str_len`, `str_eq`, and literal

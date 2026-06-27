@@ -2033,6 +2033,58 @@ fn lower_function(
                 emit_typed_store(&mut code, dest_slot, dest_type);
             }
 
+            "str_index" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_index instruction has no dest".to_string(),
+                })?;
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_index expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let idx = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_index expects an index variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                let (idx_slot, idx_type) = lookup_var(idx)?;
+                if src_type != JvmType::Ref || (idx_type != JvmType::Int && idx_type != JvmType::Long) {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str_index".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, src_slot);
+                emit_typed_load(&mut code, idx_slot, idx_type);
+                if idx_type == JvmType::Long {
+                    code.push(L2I);
+                }
+                let char_at_ref = cp.add_methodref("java/lang/String", "charAt", "(I)C");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&char_at_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
+            }
+
             "str_eq" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),

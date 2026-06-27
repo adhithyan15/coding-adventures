@@ -1,5 +1,16 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.29.0] — 2026-06-27 — textual CLR literal string index (LANG-FULL E4)
+
+The textual `.il` path now lowers direct-literal `str_index`:
+
+- `str_index` loads the `string` local and integer index, then calls
+  `System.String::get_Chars(int32)`.
+- Twig `(string-ref "ABC" 1)` now returns `66` on real CoreCLR alongside the
+  existing literal string length/equality/concat rows.
+- Non-literal string values and byte-exact non-ASCII semantics remain follow-up
+  representation work.
+
 ## [0.28.0] — 2026-06-27 — textual CLR literal string metadata (LANG-FULL E4)
 
 The textual `.il` path now lowers `str_len`, `str_eq`, and `str_concat` for

@@ -3,6 +3,18 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.21.0] — 2026-06-27 (literal string index — LANG-FULL E4)
+
+The JVM backend now lowers the direct-literal `str_index` shape:
+
+- `str_index` loads the direct `String` local and integer index, calls
+  `java/lang/String.charAt(I)C`, and widens with `i2l` when the IIR destination
+  is `i64`.
+- Twig `(string-ref "ABC" 1)` now returns `66` on real `java` alongside the
+  existing literal string length/equality/concat rows.
+- Non-literal string values and byte-exact non-ASCII semantics remain follow-up
+  representation work.
+
 ## [0.20.0] — 2026-06-27 (literal string metadata — LANG-FULL E4)
 
 The JVM backend now lowers the literal `str_len`, `str_eq`, and `str_concat`

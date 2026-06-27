@@ -1476,6 +1476,41 @@ impl Compiler {
                         return Ok(dest);
                     }
                 }
+                if v.name == "string-ref" && expr.args.len() == 2 {
+                    if let (
+                        Expr::StrLit(StrLit { value, .. }),
+                        Expr::IntLit(IntLit { value: idx, .. }),
+                    ) = (&expr.args[0], &expr.args[1])
+                    {
+                        let string_reg = ctx.fresh_var("s");
+                        ctx.emit(IIRInstr::new(
+                            "str_const",
+                            Some(string_reg.clone()),
+                            vec![Operand::Str(value.clone())],
+                            "str",
+                        ), loc);
+                        ctx.var_types.insert(string_reg.clone(), "str".to_string());
+
+                        let idx_reg = ctx.fresh_var("i");
+                        ctx.emit(IIRInstr::new(
+                            "const",
+                            Some(idx_reg.clone()),
+                            vec![Operand::Int(*idx)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(idx_reg.clone(), "i64".to_string());
+
+                        let dest = ctx.fresh_var("r");
+                        ctx.emit(IIRInstr::new(
+                            "str_index",
+                            Some(dest.clone()),
+                            vec![Operand::Var(string_reg), Operand::Var(idx_reg)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(dest.clone(), "i64".to_string());
+                        return Ok(dest);
+                    }
+                }
 
                 // Resolve every argument before deciding the lowering path.
                 let arg_regs: Vec<String> = expr

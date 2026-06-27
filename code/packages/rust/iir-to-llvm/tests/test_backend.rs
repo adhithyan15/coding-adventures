@@ -1093,14 +1093,14 @@ fn e4_string_literal_concat_len_folds_to_integer_return() {
 }
 
 #[test]
-fn e4_richer_string_ops_still_fail_closed() {
+fn e4_string_literal_index_folds_to_integer_return() {
     let f = IIRFunction::new(
         "main",
         vec![],
         "i64",
         vec![
-            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("AB".into())], "str"),
-            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
             IIRInstr::new("str_index", Some("b".into()), vec![
                 Operand::Var("s".into()),
                 Operand::Var("i".into()),
@@ -1108,10 +1108,39 @@ fn e4_richer_string_ops_still_fail_closed() {
             IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
         ],
     );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string index should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("ret i64 66"),
+        "str_index over a literal should materialise byte 66:\n{ll}"
+    );
+    assert!(
+        !ll.contains("@__print_str"),
+        "str_index alone should not pull in the string print runtime:\n{ll}"
+    );
+}
+
+#[test]
+fn e4_unknown_string_ops_still_fail_closed() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("AB".into())], "str"),
+            IIRInstr::new("str_cmp", Some("c".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("s".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+        ],
+    );
     let errors = validate_for_llvm(&module_with(f));
     assert!(
-        errors.iter().any(|e| e.contains("UnsupportedOp") && e.contains("str_index")),
-        "richer string ops should remain rejected; got {errors:?}"
+        errors.iter().any(|e| e.contains("UnsupportedOp") && e.contains("str_cmp")),
+        "unknown string ops should remain rejected; got {errors:?}"
     );
 }
 

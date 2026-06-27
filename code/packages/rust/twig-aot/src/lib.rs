@@ -1456,9 +1456,20 @@ fn strip_dead_string_consts(func: &mut IIRFunction) {
 fn lower_string_literals_for_aot(func: &mut IIRFunction) {
     let mut lowered = Vec::with_capacity(func.instructions.len());
     let mut strings: HashMap<String, (String, String, String)> = HashMap::new();
+    let mut ints: HashMap<String, i64> = HashMap::new();
     let mut next = 0usize;
 
     for instr in std::mem::take(&mut func.instructions) {
+        if instr.op == "const" {
+            if let (Some(dest), Some(Operand::Int(value))) =
+                (instr.dest.as_ref(), instr.srcs.first())
+            {
+                ints.insert(dest.clone(), *value);
+            }
+            lowered.push(instr);
+            continue;
+        }
+
         if instr.op == "str_const" {
             let dest = match instr.dest.clone() {
                 Some(dest) => dest,
@@ -1613,6 +1624,40 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 "const",
                 Some(dest),
                 vec![Operand::Int(literal.len() as i64)],
+                &instr.type_hint,
+            ));
+            continue;
+        }
+
+        if instr.op == "str_index" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let [Operand::Var(src), Operand::Var(idx)] = instr.srcs.as_slice() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, literal)) = strings.get(src).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some(idx) = ints.get(idx).copied() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some(byte) = usize::try_from(idx)
+                .ok()
+                .and_then(|idx| literal.as_bytes().get(idx))
+                .copied()
+            else {
+                lowered.push(instr);
+                continue;
+            };
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(dest),
+                vec![Operand::Int(byte as i64)],
                 &instr.type_hint,
             ));
             continue;
@@ -2162,6 +2207,38 @@ mod tests {
         assert!(
             f.instructions.iter().all(|i| i.op != "str_len"),
             "native lowering should remove folded str_len: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_index_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("str_index", Some("b".into()), vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("i".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
+        assert!(
+            matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(66)]),
+            "str_index over a literal should fold to byte 66: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_index"),
+            "native lowering should remove folded str_index: {:?}",
             f.instructions
         );
     }

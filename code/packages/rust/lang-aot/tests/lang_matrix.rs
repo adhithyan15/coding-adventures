@@ -157,6 +157,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 literal `string-ref`. The front-end emits `str_const` plus a
+    // typed integer index and `str_index`; ASCII keeps the byte-oriented E4
+    // result aligned with JVM/CLR host string char indexing for this foothold.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(string-ref \"ABC\" 1)",
+        expect: Expect::Exit(66),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — E4 literal `string-append` feeding `string-length`. This exercises
     // the shared `str_concat` op while staying on the direct-literal metadata
     // path: static backends carry the concatenated bytes as compile-time

@@ -3,6 +3,19 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.19.0] — 2026-06-27 — literal string index reaches LLVM (LANG-FULL E4)
+
+Extends the direct-literal E4 metadata foothold with `str_index`.
+
+- `str_index s, i` is accepted when both operands are variables.
+- Lowering folds the indexed byte from the existing literal string table when
+  `s` comes from a direct `str_const` and `i` is a constant integer in the same
+  function.
+- Twig `(string-ref "ABC" 1)` now lowers to `ret i64 66` on LLVM without a
+  runtime string API.
+- Dynamic string values and the out-of-bounds trap proof remain outside this
+  literal-only slice.
+
 ## [0.18.0] — 2026-06-27 — literal string metadata reaches LLVM (LANG-FULL E4)
 
 Extends the E4 literal-string foothold from output to direct literal metadata.

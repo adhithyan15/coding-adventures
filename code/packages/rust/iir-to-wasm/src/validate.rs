@@ -8,7 +8,8 @@
 //! - WASM has no "any" type — every local and stack slot must have a concrete
 //!   numeric type (`i32`, `i64`, `f32`, `f64`) or a known GC reference type.
 //! - WASM has only the E4 literal string foothold in this lowering:
-//!   `str_const` + `str_len` + `print_str`; richer string ops remain rejected.
+//!   `str_const` + `str_len` + `str_index` + `str_eq` + `str_concat` +
+//!   `print_str`; richer dynamic string ops remain rejected.
 //! - Runtime / I/O opcodes have no WASM equivalent without a host import,
 //!   which this direct lowering does not provide.
 //!
@@ -276,9 +277,9 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
             // `"str"` — accepted for the E4 literal-output/metadata foothold's
-            // direct string producers (`str_const`, `str_concat`). `str_len`
-            // and `str_eq` produce integers, not string values. Richer string
-            // ops still fail explicitly below.
+            // direct string producers (`str_const`, `str_concat`). `str_len`,
+            // `str_index`, and `str_eq` produce integers, not string values.
+            // Richer dynamic string ops still fail explicitly below.
             //
             // `"ref<X>"` — reference types require WasmGC.  We accept
             // `"ref<LispyPair>"` (the only struct type we define).  All
@@ -289,7 +290,7 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             if instr.type_hint == "str" && !matches!(instr.op.as_str(), "str_const" | "str_concat") {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const + str_concat + str_len + str_eq + print_str literal output is supported in this WASM backend",
+                     only str_const + str_concat + str_len + str_index + str_eq + print_str literal output is supported in this WASM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -315,17 +316,7 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
             // `putchar` / `getchar` flow through while still rejecting
             // unknown / unsafe builtins.
-            if matches!(
-                instr.op.as_str(),
-                "str_index"
-            ) {
-                errors.push(format!(
-                    "UnsupportedOp: function {:?}, op {:?} is not supported by \
-                     the WASM backend's E4 literal slice; only str_const, \
-                     str_concat, str_len, str_eq, and print_str are supported",
-                    func.name, instr.op
-                ));
-            } else if instr.op == "str_const" {
+            if instr.op == "str_const" {
                 match (instr.dest.as_ref(), instr.srcs.first()) {
                     (Some(_), Some(interpreter_ir::Operand::Str(s)))
                         if s.is_ascii()
@@ -365,6 +356,26 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                         errors.push(format!(
                             "UnsupportedOp: function {:?}, op \"str_concat\" requires \
                              dest, two Operand::Var sources, and str result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_index" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (
+                        Some(_),
+                        [
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                        ],
+                        "i64" | "i32",
+                    ) => {
+                        // Accepted — lower.rs bounds-checks and loads a literal byte.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_index\" requires \
+                             dest, string Operand::Var, index Operand::Var, and i64/i32 result type",
                             func.name
                         ));
                     }
@@ -688,6 +699,29 @@ mod tests {
     }
 
     #[test]
+    fn e4_literal_str_index_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_index over a direct literal should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
     fn richer_string_ops_still_rejected() {
         let errs = validate_for_wasm(&module_with(vec![
             IIRInstr::new(
@@ -696,16 +730,12 @@ mod tests {
                 vec![Operand::Str("A".into())],
                 "str",
             ),
-            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i64"),
-            IIRInstr::new("str_index", Some("b".into()), vec![
-                Operand::Var("s".into()),
-                Operand::Var("i".into()),
-            ], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![Operand::Var("s".into())], "i64"),
             IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
         ]));
         assert!(
             errs.iter().any(|e| e.contains("UnsupportedOp")),
-            "richer string ops must remain rejected; got: {:?}",
+            "malformed string ops must remain rejected; got: {:?}",
             errs
         );
     }

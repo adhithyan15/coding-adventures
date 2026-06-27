@@ -1476,6 +1476,24 @@ mod tests {
     }
 
     #[test]
+    fn string_ref_literal_uses_e4_str_index() {
+        let m = compile_source("(string-ref \"ABC\" 1)", "string_ref")
+            .expect("literal string-ref should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "const", "str_index", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string-ref should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.instructions[2].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
     fn string_eq_literals_use_e4_str_eq() {
         let m = compile_source("(string=? \"HELLO\" \"HELLO\")", "string_eq")
             .expect("literal string=? should compile");

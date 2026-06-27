@@ -269,10 +269,10 @@ const SUPPORTED_OPS: &[&str] = &[
     // NaN/∞/out-of-i64-range, matching the VM), then `fptosi double → i64`.
     "int_to_real", "real_to_int_trunc", "real_to_int_floor",
     // LANG-FULL E4 — string literal foothold for the static LLVM column.
-    // `str_const` materialises a length-prefixed private constant. `str_concat`,
-    // `str_len`, and `str_eq` read literal metadata, and `print_str` calls the
+    // `str_const` materialises a length-prefixed private constant. `str_index`,
+    // `str_concat`, `str_len`, and `str_eq` read literal metadata, and `print_str` calls the
     // generic C runtime. Richer dynamic byte-string ops remain unsupported.
-    "str_const", "str_concat", "str_len", "str_eq", "print_str",
+    "str_const", "str_index", "str_concat", "str_len", "str_eq", "print_str",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -398,6 +398,10 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
                 validate_str_concat(func, instr, &mut errors);
                 continue;
             }
+            if instr.op == "str_index" {
+                validate_str_index(func, instr, &mut errors);
+                continue;
+            }
             if instr.op == "str_len" {
                 validate_str_len(func, instr, &mut errors);
                 continue;
@@ -517,6 +521,28 @@ fn validate_str_concat(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<St
         [Operand::Var(_), Operand::Var(_)] => {}
         _ => errors.push(format!(
             "InvalidOperand: function {:?}, str_concat requires exactly two Operand::Var sources",
+            func.name
+        )),
+    }
+}
+
+fn validate_str_index(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_index requires a dest",
+            func.name
+        ));
+    }
+    if llvm_type_for(&instr.type_hint, &func.name).is_err() {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_index result type {:?} is not supported",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_), Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_index requires exactly two Operand::Var sources",
             func.name
         )),
     }
@@ -709,7 +735,7 @@ pub fn lower_iir_to_llvm(
     // an `i64` byte-length header followed by the bytes. `str_const` binds a
     // pointer to this header, `str_len`/`str_eq` materialise literal metadata,
     // and `print_str` passes `header+8,len` to the C runtime. Richer ops
-    // (`str_index`, `str_concat`) remain outside this slice, but this
+    // (`str_index`, `str_concat`) remain literal-only in this slice, but this
     // representation leaves the header in place for those later loads/checks.
     let (string_defs, string_literals) = collect_string_literals(module);
     if !string_defs.is_empty() {
@@ -1337,6 +1363,7 @@ fn lower_instr(
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
         "str_concat" => lower_str_concat(instr, state),
+        "str_index" => lower_str_index(instr, state),
         "str_len" => lower_str_len(instr, state),
         "str_eq" => lower_str_eq(instr, state),
         "print_str" => lower_print_str(instr, state, out),
@@ -1476,6 +1503,55 @@ fn lower_str_concat(
     let value = format!("{left_value}{right_value}");
     state.str_lens.insert(dest.clone(), value.len());
     state.str_values.insert(dest, value);
+    Ok(())
+}
+
+fn lower_str_index(
+    instr: &IIRInstr,
+    state: &mut FnState,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_index", state.fn_name)?.to_string();
+    let src = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_index requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let idx = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_index requires srcs[1] = Operand::Var(idx)".into(),
+            });
+        }
+    };
+    let literal = state.str_values.get(src).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_index source {src:?} is not a string literal value"),
+        }
+    })?;
+    let idx_value = state
+        .env
+        .get(idx)
+        .and_then(|value| value.parse::<i64>().ok())
+        .ok_or_else(|| IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_index index {idx:?} is not a constant integer value"),
+        })?;
+    let byte = usize::try_from(idx_value)
+        .ok()
+        .and_then(|idx| literal.as_bytes().get(idx))
+        .copied()
+        .ok_or_else(|| IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_index index {idx_value} is out of bounds for literal length {}", literal.len()),
+        })?;
+    state.env.insert(dest, byte.to_string());
     Ok(())
 }
 

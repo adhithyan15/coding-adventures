@@ -626,6 +626,25 @@ fn emit_method(
                 );
                 store_var(il, &regs, dest)?;
             }
+            // str_index <dest>, <src>, <idx>  ->  System.String::get_Chars(idx)
+            //
+            // The v1 literal slice accepts only printable ASCII strings, so CLR's
+            // UTF-16 char value is byte-identical to E4's indexed byte.
+            "str_index" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_index must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "str_index")?;
+                let idx = var_src(f, instr, 1, "str_index")?;
+                load_var(il, &regs, src)?;
+                load_var(il, &regs, idx)?;
+                let _ = writeln!(
+                    il,
+                    "    callvirt instance char [System.Runtime]System.String::get_Chars(int32)"
+                );
+                store_var(il, &regs, dest)?;
+            }
             // str_eq <dest>, <left>, <right>  ->  System.String::Equals(string,string)
             "str_eq" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
@@ -1757,6 +1776,33 @@ mod tests {
         assert!(
             il.contains("callvirt instance int32 [System.Runtime]System.String::get_Length()"),
             "str_len must call System.String::get_Length(); got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_index_emits_string_get_chars() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("ldstr \"ABC\""), "str_const must emit ldstr; got:\n{il}");
+        assert!(
+            il.contains("callvirt instance char [System.Runtime]System.String::get_Chars(int32)"),
+            "str_index must call System.String::get_Chars(int32); got:\n{il}"
         );
     }
 

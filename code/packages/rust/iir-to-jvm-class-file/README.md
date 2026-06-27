@@ -130,6 +130,7 @@ assert_eq!(class_file.this_class_name, "MyClass");
 | `str_const`      | `ldc CONSTANT_String; astore dest` — ASCII literal-output foothold (E4) |
 | `str_concat`     | `aload a; aload b; invokevirtual java/lang/String.concat(String); astore dest` — literal append foothold (E4) |
 | `str_len`        | `aload s; invokevirtual java/lang/String.length()I; [i2l]; store dest` — literal length foothold (E4) |
+| `str_index`      | `aload s; <idx>; invokevirtual java/lang/String.charAt(I)C; [i2l]; store dest` — literal index foothold (E4) |
 | `str_eq`         | `aload a; aload b; invokevirtual java/lang/String.equals(Object)Z; [i2l]; store dest` — literal equality foothold (E4) |
 | `print_str`      | `getstatic System.out; aload s; invokevirtual PrintStream.print(String)` — E4 |
 
@@ -140,11 +141,11 @@ index it (masking the sign-extended load back to an unsigned cell), and `.`/`,` 
 
 The E4 string rows are intentionally a narrow literal-output slice: Dartmouth BASIC
 `PRINT "HELLO"` now runs on real `java`, and Twig `(string-length "HELLO")`
-uses `String.length()` while `(string=? "HELLO" "HELLO")` uses
-`String.equals(Object)` and `(string-length (string-append "AB" "CDE"))` uses
-`String.concat(String)` plus `String.length()`. Other byte-oriented string
-operations (`str_index`) and non-literal string values remain rejected until the
-JVM backend owns the shared UTF-8 byte semantics.
+uses `String.length()`, `(string-ref "ABC" 1)` uses `String.charAt(I)`,
+`(string=? "HELLO" "HELLO")` uses `String.equals(Object)`, and
+`(string-length (string-append "AB" "CDE"))` uses `String.concat(String)` plus
+`String.length()`. Non-literal string values remain rejected until the JVM
+backend owns the shared UTF-8 byte semantics.
 
 **Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2): narrow **unsigned**
 integers (`u4`/`u8`/`u16`/`u32`) use the JVM **`int` model** — `int` locals, `I` descriptors,

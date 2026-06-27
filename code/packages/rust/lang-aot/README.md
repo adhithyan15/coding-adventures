@@ -4,9 +4,10 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-FULL E4 — literal string `PRINT`, `string-length`, `string=?`, and `string-append` length run on all 7 backends (v0.111.0):**
+> **LANG-FULL E4 — literal string `PRINT`, `string-length`, `string-ref`, `string=?`, and `string-append` length run on all 7 backends (v0.112.0):**
 > `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 > It also proves Twig `(string-length "HELLO")` returns exit code `5` and
+> `(string-ref "ABC" 1)` returns exit code `66`,
 > `(string=? "HELLO" "HELLO")` returns exit code `1`, plus
 > `(string-length (string-append "AB" "CDE"))` returns exit code `5`, on the same seven backends.
 > Native AOT lowers the literal to `alloc_bytes` + `store_byte` + `print_string`;
@@ -14,8 +15,8 @@ LANG VM chain.
 > WASM stores literal bytes in linear memory and calls `env.__print_str(ptr,len)`;
 > JVM maps `str_const` to `ldc` + `CONSTANT_String` and `print_str` to
 > `PrintStream.print(String)`; CLR maps them to `ldstr` and `Console.Write(string)`.
-> Literal length/equality/append metadata is folded/read from metadata on
-> native/LLVM/WASM and uses host string APIs on JVM/CLR. Richer byte-string ops,
+> Literal length/index/equality/append metadata is folded/read from metadata on
+> native/LLVM/WASM and uses host string APIs on JVM/CLR. Dynamic byte-string ops,
 > non-literal equality/concat, and string variables stay follow-up E4/BA4 slices.
 
 > **LANG-FULL O2 — Oct bitwise `~` + u8 wrap on all 7 backends (v0.92.0):**

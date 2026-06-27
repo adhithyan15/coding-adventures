@@ -143,16 +143,17 @@ as `call void [System.Console]System.Console::WriteLine(int32)`; for a program t
 prints, the `Run()` launcher discards the entry method's result (`pop`) instead of
 `Console.WriteLine`-ing it, so the program prints exactly once.
 
-As of 0.28.0 the textual `.il` path emits the **E4 literal string** foothold:
+As of 0.29.0 the textual `.il` path emits the **E4 literal string** foothold:
 `str_const` lowers to `ldstr` into a `string` local, `print_str` lowers to
 `Console.Write(string)`, and direct-literal `str_len` calls
-`String::get_Length()` while direct-literal `str_eq` calls
+`String::get_Length()` while direct-literal `str_index` calls
+`String::get_Chars(int32)`, direct-literal `str_eq` calls
 `String::Equals(string,string)`, and direct-literal `str_concat` calls
 `String::Concat(string,string)`. This proves Dartmouth BASIC `PRINT "HELLO"` plus
-Twig `(string-length "HELLO")`, `(string=? "HELLO" "HELLO")`, and
-`(string-length (string-append "AB" "CDE"))` on real CoreCLR while richer
-byte-oriented string ops (`str_index`) and non-literal string values remain
-rejected until the CLR representation owns the shared UTF-8 byte semantics.
+Twig `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
+`(string=? "HELLO" "HELLO")`, and `(string-length (string-append "AB" "CDE"))`
+on real CoreCLR while non-literal string values remain rejected until the CLR
+representation owns the shared UTF-8 byte semantics.
 
 As of 0.18.0 it emits the **Brainfuck byte-tape ops** (LANG-MATRIX LM-C Brainfuck — the
 last code-gen cell): `alloc_bytes` → `newarr [System.Runtime]System.Byte` into an

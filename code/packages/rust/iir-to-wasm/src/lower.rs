@@ -905,6 +905,66 @@ fn emit_instr(
             code.extend(encode_local_set(rd));
         }
 
+        // ── str_index → bounds-checked literal byte load ───────────────────────
+        "str_index" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_index must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let src = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_index requires srcs[0] = Operand::Var(str)".to_string(),
+                }),
+            };
+            let idx = match instr.srcs.get(1) {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_index requires srcs[1] = Operand::Var(idx)".to_string(),
+                }),
+            };
+            let src_slot = get_reg(src)?;
+            let idx_slot = get_reg(idx)?;
+            let lit = string_literals.get(src).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_index source {src:?} is not a direct str_const local"),
+            })?;
+
+            // Bounds: idx >=u len → unreachable. On i64 indices, a negative value
+            // becomes huge under the unsigned compare, matching E4's trap rule.
+            code.extend(encode_local_get(idx_slot));
+            if slot_is_i64(idx_slot) {
+                code.extend(encode_i64_const(lit.len as i64));
+                code.push(I64_GE_U);
+            } else {
+                let len = i32::try_from(lit.len).map_err(|_| IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: format!("str_index literal length {} does not fit i32", lit.len),
+                })?;
+                code.extend(encode_i32_const(len));
+                code.push(I32_GE_U);
+            }
+            code.push(IF);
+            code.push(BLOCK_EMPTY);
+            code.push(UNREACHABLE);
+            code.push(END);
+
+            code.extend(encode_local_get(src_slot));
+            code.extend(encode_local_get(idx_slot));
+            if slot_is_i64(idx_slot) {
+                code.extend(encode_i32_wrap_i64());
+            }
+            code.extend(encode_i32_add());
+            code.extend(encode_i32_load8_u());
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_extend_i32_u());
+            }
+            code.extend(encode_local_set(rd));
+        }
+
         // ── str_len → literal byte count ─────────────────────────────────────
         //
         // Direct literal strings carry their byte count in the same table that

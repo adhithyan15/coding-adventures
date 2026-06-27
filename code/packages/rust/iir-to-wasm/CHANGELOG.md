@@ -3,6 +3,18 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.21.0] — 2026-06-27 (LANG-FULL E4 — literal string index on WASM)
+
+The WASM backend now accepts and lowers direct-literal `str_index`:
+
+- `str_index s, i` over a prior `str_const` emits a literal-length guard
+  (`idx >=u len` -> `unreachable`) and then loads the byte with `i32.load8_u`
+  from the string data segment.
+- `i64` results zero-extend the loaded byte with `i64.extend_i32_u`.
+- Twig `(string-ref "ABC" 1)` now returns `66` in the WASM matrix column.
+- Non-literal string values and broader dynamic string algebra remain outside
+  this slice.
+
 ## [0.20.0] — 2026-06-27 (LANG-FULL E4 — literal string metadata on WASM)
 
 The WASM backend now accepts and lowers `str_len`, `str_eq`, and literal
