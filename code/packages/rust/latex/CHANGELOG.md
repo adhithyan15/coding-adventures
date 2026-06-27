@@ -2,6 +2,34 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.7.0] — 2026-06-27
+
+### Added — LTX01 L5b: `verbatim` environment
+
+- **`\begin{verbatim}…\end{verbatim}`** (and `verbatim*`) read their whole body **raw** —
+  catcodes suspended, newlines included — up to the matching `\end{<env>}`. New
+  `TokenKind::VerbatimEnv { env, content }` → `Node::VerbatimEnv { env, content }`, with a
+  round-tripping `to_latex`. The lexer peeks after `\begin` (consuming nothing) and only
+  diverts to raw scanning for `verbatim`/`verbatim*`; every other `\begin{…}` is still parsed
+  structurally. `\end{…}` for a different name inside the body stays literal.
+- Total / panic-free / spanned: an unterminated `verbatim` environment (or one closed with the
+  wrong name) is a spanned `LexError`; the raw scan advances one char per step and terminates
+  at EOF. No `unsafe`.
+
+### Fixed
+
+- Lowered the structural-parser nesting cap `MAX_DEPTH` 512 → 256. The new owned-`String`
+  token/AST variants enlarged recursive-descent frames enough that 512-deep pathological input
+  could overflow a small (2 MB) test-thread stack; 256 trips the spanned "nesting too deep"
+  guard well within it. Real documents never nest this deep.
+
+### Tests
+
+- +9 (lexer: verbatim-env raw body incl. `{}$#`+newline, `verbatim*`, non-verbatim `\begin`
+  left to the parser, inner wrong-`\end` stays literal, unterminated/wrong-close errors;
+  parser: `VerbatimEnv` node + 2 round-trips). **94 unit + 1 doc test** green; clippy
+  `-D warnings` clean; no `unsafe`. Crate 0.6.0 → 0.7.0.
+
 ## [0.6.0] — 2026-06-26
 
 ### Added — LTX01 L5a: inline `\verb` verbatim

@@ -29,7 +29,10 @@
 //!    (this release).**
 //! 4. [`expand`] — an opt-in **macro pass** over the document tree: registers
 //!    `\newcommand`/`\renewcommand`/`\providecommand` (positional `#1`..`#9`) and replaces
-//!    uses by their bounded, recursively-expanded bodies. **Implemented (L4a, this release).**
+//!    uses by their bounded, recursively-expanded bodies. **Implemented (L4a).**
+//! 5. **Verbatim** — `\verb`/`\verb*` ([`Node::Verb`]) and the `verbatim`/`verbatim*`
+//!    environment ([`Node::VerbatimEnv`]) read their bodies **raw** (catcodes suspended).
+//!    **Implemented (L5a/L5b).** Text accents, sectioning, and refs are later L5 sub-rungs.
 //!
 //! ## Example
 //!
