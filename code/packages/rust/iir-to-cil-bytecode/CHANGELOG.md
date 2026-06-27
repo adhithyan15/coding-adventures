@@ -1,5 +1,23 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.27.0] — 2026-06-27 — textual CLR string literal PRINT foothold (LANG-FULL E4 / BA4)
+
+The real-CoreCLR textual `.il` path now lowers the first E4 string shape:
+
+- `str_const` with an ASCII `Operand::Str` literal → `ldstr "..."` into a
+  `string` local.
+- `print_str` → `call void [System.Console]System.Console::Write(string)`.
+- The generated launcher treats `print_str` as side-effecting output, so it
+  discards the entry result instead of double-printing `0`.
+
+This is intentionally narrower than full E4: the byte-oriented string algebra
+(`str_len`, `str_index`, `str_concat`, `str_eq`) remains rejected until the CLR
+representation owns the shared UTF-8 byte semantics. The validator now documents
+that contract: `str_const` + `print_str` pass, richer string ops fail closed.
+
+Verified with emitter/validator tests plus the `lang-aot` BASIC matrix row:
+`10 PRINT "HELLO"` runs on real `ilasm` + `dotnet` in the CLR column.
+
 ## [0.26.0] — 2026-06-23 — numeric conversions int ⇄ real (LANG-FULL E8 backend 5)
 
 The textual `il_text` path (the cross-backend matrix's `ilasm` route) now lowers

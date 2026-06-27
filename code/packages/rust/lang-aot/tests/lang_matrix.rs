@@ -858,16 +858,16 @@ const PROGRAMS: &[Prog] = &[
     },
     // Dartmouth BASIC — E4/BA4 first string-PRINT proof. The frontend lowers a
     // string literal item to shared `str_const` + `print_str`, and the existing
-    // BASIC PRINT machinery emits the trailing newline via `putchar`. Only the
-    // VM/JIT columns are tagged here: managed/static backend string lowering is
-    // the next E4 work, so this cell proves the source-language lowering without
-    // pretending the code-gen columns are ready.
+    // BASIC PRINT machinery emits the trailing newline via `putchar`. CLR is the
+    // first managed code-gen column tagged here: textual CIL maps the literal to
+    // `ldstr` and `print_str` to `Console.Write(string)`, while richer byte-string
+    // operations stay outside this slice.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT \"HELLO\"\n20 END\n",
         expect: Expect::Stdout("HELLO"),
-        backends: &[Vm, Jit],
+        backends: &[Clr, Vm, Jit],
     },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM

@@ -39,12 +39,13 @@
 //! | `EmptyModule`           | Module has zero functions |
 //! | `EmptyFunction`         | A function has zero instructions |
 //! | `UntypedInstruction`    | `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType`       | `type_hint` is `"str"` or starts with `"ref<"` but is not `"ref<LispyPair>"` |
+//! | `UnsupportedType`       | `type_hint` is unsupported (`"str"` except `str_const`, or unsupported `ref<...>`) |
 //! | `UnsupportedType` (float const) | `op == "const"` and src is `Operand::Float` |
 //! | `UnsupportedOp`         | op is a runtime/memory/IO/GC opcode that hasn't been promoted (list below) |
 //!
 //! Remaining unsupported ops: `call_builtin`, `io_in`, `io_out`, `cast`,
-//! `load_mem`, `store_mem`, `box`, `unbox`, `safepoint`.
+//! `load_mem`, `store_mem`, `box`, `unbox`, `safepoint`, and the byte-oriented
+//! E4 string algebra beyond `str_const` + `print_str`.
 //! Previously unsupported but now accepted: `alloc` (LispyPair only),
 //! `field_load`, `field_store`, `is_null`.
 
@@ -331,8 +332,10 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
 
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
-            // `"str"` — String operations require System.String method calls;
-            // we do not emit them in v1.
+            // `"str"` — The textual CLR path can now load an ASCII literal for
+            // `str_const`, which is enough for Dartmouth BASIC string `PRINT`.
+            // Other string-typed producers still need a fuller byte-oriented
+            // representation before we can map them to `System.String` safely.
             //
             // `"ref<…>"` — Heap pointer types require GC-managed references.
             // In Phase 2 we lower `ref<LispyPair>` to `object[]` cons cells.
@@ -350,10 +353,10 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             //   - `jmp_if_true` / `jmp_if_false` — used for pattern-match dispatch
             //
             // All other ops remain rejected for `ref<LispyPair>`.
-            if instr.type_hint == "str" {
+            if instr.type_hint == "str" && instr.op != "str_const" {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     string operations are not supported in this CLR backend",
+                     only str_const literals are supported in this CLR backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<") {
@@ -439,7 +442,17 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
             // `putchar` / `getchar` flow through while still rejecting
             // unknown / unsafe builtins.
-            if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
+            if matches!(
+                instr.op.as_str(),
+                "str_len" | "str_index" | "str_concat" | "str_eq"
+            ) {
+                errors.push(format!(
+                    "UnsupportedOp: function {:?}, op {:?} is not supported by \
+                     the CLR backend; only str_const + print_str are supported \
+                     for LANG-FULL E4 in this slice",
+                    func.name, instr.op
+                ));
+            } else if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the CLR backend; it requires a P/Invoke or .NET BCL call",
@@ -565,6 +578,41 @@ mod tests {
             IIRInstr::new("ret_void", None, vec![], "str"),
         ]));
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
+    }
+
+    #[test]
+    fn str_const_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "str_const + print_str should pass: {:?}", errs);
+    }
+
+    #[test]
+    fn byte_string_algebra_still_rejected() {
+        for op in ["str_len", "str_index", "str_concat", "str_eq"] {
+            let errs = validate_iir_for_clr(&single_fn_module(vec![
+                IIRInstr::new(
+                    op,
+                    Some("v".into()),
+                    vec![Operand::Var("s".into())],
+                    if op == "str_concat" { "str" } else { "i32" },
+                ),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ]));
+            assert!(
+                errs.iter().any(|e| e.contains("UnsupportedOp")),
+                "{op} should remain unsupported until CLR owns byte string semantics: {:?}",
+                errs
+            );
+        }
     }
 
     #[test]

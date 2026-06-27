@@ -105,7 +105,7 @@ the program artifact whenever any `alloc_closure` instruction appears.
 | `EmptyFunction` | A function has no instructions |
 | `ClosureOpcode` | `alloc_closure` with i64/u64/f32/f64 capture — deferred to LANG38 |
 | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` (except `call_closure` which is exempt) |
-| `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` (except `ref<LispyPair>`) |
+| `UnsupportedType` | `type_hint` is unsupported (`"str"` except `str_const`, or unsupported `ref<...>`) |
 | `UnsupportedOp` | Any unsupported opcode (see below) |
 
 ## Supported IIR opcodes
@@ -123,6 +123,7 @@ the program artifact whenever any `alloc_closure` instruction appears.
 | Heap | `alloc` (`ref<LispyPair>` only), `field_load`, `field_store`, `is_null` |
 | Register | `load_reg`, `store_reg` |
 | Coercion | `type_assert` (becomes `nop`) |
+| Strings | `str_const`, `print_str` on the textual `.il` path (ASCII literal output foothold) |
 
 As of 0.16.0 the **textual `.il`** emitter (`emit_il`, the `ilasm`/`dotnet` path) also
 covers the integer **arithmetic** (`add`/`sub`/`mul`/`div`/`mod` → `add`/`sub`/`mul`/`div`/`rem`)
@@ -141,6 +142,13 @@ As of 0.17.0 it also emits the **`print_i64`** I/O primitive (Dartmouth BASIC's 
 as `call void [System.Console]System.Console::WriteLine(int32)`; for a program that
 prints, the `Run()` launcher discards the entry method's result (`pop`) instead of
 `Console.WriteLine`-ing it, so the program prints exactly once.
+
+As of 0.27.0 the textual `.il` path also emits the first **E4 string** I/O shape:
+`str_const` lowers to `ldstr` into a `string` local and `print_str` lowers to
+`Console.Write(string)`. This proves Dartmouth BASIC `PRINT "HELLO"` on real
+CoreCLR while the richer byte-oriented string ops (`str_len`/`str_index`/
+`str_concat`/`str_eq`) remain rejected until the CLR representation owns the
+shared UTF-8 byte semantics.
 
 As of 0.18.0 it emits the **Brainfuck byte-tape ops** (LANG-MATRIX LM-C Brainfuck — the
 last code-gen cell): `alloc_bytes` → `newarr [System.Runtime]System.Byte` into an

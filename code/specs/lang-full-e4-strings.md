@@ -105,7 +105,7 @@ explicit `cmp idx,len` + branch-to-trap.
 | **vm-core** | (interp) | `Value::Str(Vec<u8>)` (new value variant) or a handle into `memory` | intern the literal bytes | `.len()` | range-checked byte index | allocate a new buffer | write bytes to the host stdout sink |
 | **jit-core** | (interp) | same as vm-core (CIR mirrors it) | — | — | — | — | — |
 | **JVM** | GC | `java/lang/String` (or `byte[]`) | `ldc "…"` (constant pool `String`) | `invokevirtual String.length()` (or `arraylength`) | `String.charAt`/`bytes[i]` (native check) | `StringBuilder`/`String.concat` | `BasicRuntime.printStr(String)` → `System.out.print` |
-| **CLR** | GC | `System.String` | `ldstr "…"` | `callvirt String::get_Length` | `String::get_Chars` (native check) | `String::Concat` | `BasicRuntime::PrintStr` → `Console.Write` |
+| **CLR** | GC | `System.String` for the landed literal-output slice; byte-string representation still under E4-managed | `ldstr "…"` ✅ for ASCII literals | planned | planned | planned | `Console.Write(string)` ✅ |
 | **WASM** | GC | WasmGC `(array i8)` — or linear-memory buffer + length header if GC disabled | data segment / `array.new_data` | `array.len` | `array.get_u` (native trap) | `array.new` + copy | host import `env.__print_str(ptr,len)` |
 | **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | a `@.str.N` global + a header word | load header word | guard `icmp ult` → `br trap`; else `getelementptr`+`load i8` (zero-extended) | `@malloc(len_a+len_b+8)` + two `memcpy`s | `@__print_str(i8* base+8, i64 len)` C-runtime |
 | **x86_64** | static | length-prefixed `__twig_alloc_bytes` buffer; literals in `.rodata` | emit the literal into rodata, materialise its address | load header | `cmp`/`jae trap`; else `movzx [base+8+idx]` | alloc + `rep movsb` ×2 | `call __print_str` |
@@ -187,13 +187,15 @@ merge before the next:
    (needs a frontend), but a direct IIR unit test proves it runs.* The generic CIR
    JIT remains i64-only and cold-interprets/declines string-shaped functions
    until a string-capable tier is added.
-2. ✅ **E4-basic-frontend (VM/JIT proof)** — `dartmouth-basic-iir-compiler` lowers
+2. ✅ **E4-basic-frontend (VM/JIT/CLR proof)** — `dartmouth-basic-iir-compiler` lowers
    `PRINT "…"` to `str_const` + `print_str`; matrix `Prog` (`PRINT "HELLO"` ⇒
-   stdout `HELLO`) runs on VM + JIT. The all-7 version waits for the managed and
-   static backend lowering slices below.
-3. **E4-managed-backends** — JVM, CLR, WASM string lowering (native `String` /
-   managed `(array i8)` + the `printStr` runtime); extend the matrix Prog's
-   backend list. (May be one PR per backend if they diverge.)
+   stdout `HELLO`) runs on VM + JIT + CLR. The CLR slice is deliberately a
+   literal-output foothold (`ldstr` + `Console.Write(string)`); the all-7 version
+   waits for the remaining managed/static backend lowering slices below.
+3. **E4-managed-backends** — JVM and WASM string lowering (native `String` /
+   managed `(array i8)` + the `printStr` runtime), plus CLR's richer byte-string
+   ops once its representation owns UTF-8 byte semantics; extend the matrix
+   Prog's backend list. (May be one PR per backend if they diverge.)
 4. **E4-static-backends** — LLVM, then native x86_64 + aarch64 (length-prefixed
    rodata literals + heap `str_concat` + the shared `__print_str` C runtime +
    explicit `str_index` guard); extend the matrix Prog to all 7. Native encodings

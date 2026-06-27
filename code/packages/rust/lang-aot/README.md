@@ -4,6 +4,12 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
+> **LANG-FULL E4 / BA4 — BASIC string literal `PRINT` reaches CLR (v0.106.0):**
+> `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on CLR + VM + JIT. The CLR
+> textual `.il` path maps `str_const` to `ldstr` and `print_str` to
+> `Console.Write(string)`; richer byte-string ops and the other code-gen columns
+> remain follow-up E4 slices.
+
 > **LANG-FULL O2 — Oct bitwise `~` + u8 wrap on all 7 backends (v0.92.0):**
 > `tests/lang_matrix.rs` adds `out(1, ~0)` → `255` and `out(1, 200 + 100)` → `44` (wrap).
 > `oct-iir-compiler` 0.7.0 emits the `u8` hint on arithmetic/bitwise/`~` (Oct's only integer

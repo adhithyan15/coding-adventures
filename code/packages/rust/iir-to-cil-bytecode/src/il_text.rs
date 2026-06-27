@@ -111,6 +111,38 @@ fn int_src(f: &IIRFunction, instr: &IIRInstr, idx: usize, op: &str) -> Result<i3
     }
 }
 
+/// Quote a string literal for textual IL's `ldstr`.
+///
+/// This slice deliberately supports the ASCII BASIC literal path first. The shared
+/// E4 string VM defines strings as UTF-8 byte sequences; mapping every byte-level
+/// operation to `System.String` needs a fuller representation decision. For the
+/// source-language proof here, ASCII literals are exact and safe to embed.
+fn cil_string_literal(ctx: &str, s: &str) -> Result<String, IIRClrError> {
+    let mut out = String::with_capacity(s.len() + 2);
+    out.push('"');
+    for ch in s.chars() {
+        match ch {
+            '\\' => out.push_str("\\\\"),
+            '"' => out.push_str("\\\""),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if c.is_ascii_graphic() || c == ' ' => out.push(c),
+            c => {
+                return Err(IIRClrError::InvalidOperand {
+                    function: ctx.to_string(),
+                    detail: format!(
+                        "str_const literal contains unsupported non-printable/non-ASCII character U+{:04X}",
+                        c as u32
+                    ),
+                })
+            }
+        }
+    }
+    out.push('"');
+    Ok(out)
+}
+
 /// The CIL local type for an IIR register, from the producing instruction's
 /// `type_hint`. A cons cell (`ref<LispyPair>`) is a `System.Object[]`; a boxed
 /// atom or a loaded field (`ref<any>`) is a `System.Object`; everything else is a
@@ -131,6 +163,8 @@ fn cil_local_type(type_hint: &str) -> &'static str {
             Some((cil_array_ty, _, _, _)) => cil_array_ty,
             None => "object[]",
         }
+    } else if type_hint == "str" {
+        "string"
     } else if type_hint == "f64" {
         // ALGOL `real` (LANG-FULL E3): an IEEE-754 double. The `.locals`
         // declaration carries `float64`, and an `f64`-typed register is loaded/
@@ -407,9 +441,10 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
     // own output and its (meaningless) `int32` exit value (a double-print).
     let prints = module.functions.iter().any(|f| {
         f.instructions.iter().any(|i| {
-            i.op == "call_builtin"
-                && matches!(i.srcs.first(),
-                    Some(Operand::Var(n)) if n == "print_i64" || n == "putchar")
+            i.op == "print_str"
+                || (i.op == "call_builtin"
+                    && matches!(i.srcs.first(),
+                        Some(Operand::Var(n)) if n == "print_i64" || n == "putchar"))
         })
     });
     let _ = writeln!(il, "  .method public static void Run() cil managed {{");
@@ -530,6 +565,46 @@ fn emit_method(
 
     for instr in &f.instructions {
         match instr.op.as_str() {
+            // str_const <dest> = Str(s)  ->  ldstr "..."; st<dest>
+            //
+            // LANG-FULL E4 first managed foothold: Dartmouth BASIC string
+            // literal PRINT lowers to `str_const` + `print_str`, which maps
+            // naturally to CoreCLR's `System.String` and `Console.Write(string)`.
+            // The richer byte-oriented string algebra (`str_len`/`str_index`)
+            // remains deliberately unsupported here until the representation is
+            // specified for non-ASCII and byte indexing.
+            "str_const" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_const must have a dest".to_string(),
+                })?;
+                let literal = match instr.srcs.first() {
+                    Some(Operand::Str(s)) => cil_string_literal(&f.name, s)?,
+                    other => {
+                        return Err(IIRClrError::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("str_const expects a string literal, got {other:?}"),
+                        })
+                    }
+                };
+                let _ = writeln!(il, "    ldstr {literal}");
+                store_var(il, &regs, dest)?;
+            }
+            // print_str <src>  ->  Console.Write(string)
+            "print_str" => {
+                if instr.dest.is_some() {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: "print_str is a side-effecting op and must not have a dest".into(),
+                    });
+                }
+                let src = var_src(f, instr, 0, "print_str")?;
+                load_var(il, &regs, src)?;
+                let _ = writeln!(
+                    il,
+                    "    call void [System.Console]System.Console::Write(string)"
+                );
+            }
             // const <dest> = Int(n)  →  ldc.i4 n; st<dest>
             //
             // A `const` whose *result type* is a reference (`ref<…>`) is the
@@ -1574,6 +1649,40 @@ mod tests {
         );
         let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
         assert!(launcher.contains("pop"), "launcher discards the entry result; got:\n{il}");
+    }
+
+    #[test]
+    fn string_literal_print_emits_ldstr_console_write_and_discards_result() {
+        // Dartmouth BASIC `PRINT "HELLO"` lowers to this shape: the literal is a
+        // string local, `print_str` writes it with no implicit newline, and the
+        // normal PRINT newline comes later through `putchar`.
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("string V_"), "str_const must allocate a string local; got:\n{il}");
+        assert!(il.contains("ldstr \"HELLO\""), "str_const must emit ldstr; got:\n{il}");
+        assert!(
+            il.contains("call void [System.Console]System.Console::Write(string)"),
+            "print_str must call Console.Write(string); got:\n{il}"
+        );
+        let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
+        assert!(launcher.contains("pop"), "string-printing program discards result; got:\n{il}");
+        assert!(
+            !launcher.contains("WriteLine"),
+            "launcher must not print the entry result for print_str programs; got:\n{il}"
+        );
     }
 
     #[test]
