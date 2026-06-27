@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck output-plan inventory artifacts** —
+  selected `run_deck_analysis()` executions now expose
+  `output_plan_artifacts` with stable result-column, output-probe,
+  output-directive, and table inventories plus table, CSV, compact JSON, and
+  header-keyed record exports, matching Rust and TypeScript.
+
 - **Deck control policy table export artifacts** —
   selected `run_deck_analysis()` executions now include `control-policy` and
   `control-policy-summary` entries in `tables`, selected-run `TableList`

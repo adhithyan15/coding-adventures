@@ -178,6 +178,7 @@ from spice_engine import (
     dc_sweep_corners,
     dc_temperature_sweep,
     dc_temperature_sweep_corners,
+    deck_output_plan_artifact_records,
     deck_table_records,
     device_model_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
@@ -220,6 +221,9 @@ from spice_engine import (
     format_deck_dc_sweep_table,
     format_deck_noise_table,
     format_deck_op_table,
+    format_deck_output_plan_artifact_csv,
+    format_deck_output_plan_artifact_json,
+    format_deck_output_plan_artifact_table,
     format_deck_rawfile_artifact_csv,
     format_deck_rawfile_artifact_json,
     format_deck_rawfile_artifact_table,
@@ -6862,6 +6866,56 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
     assert op_execution.table_artifacts[0].records == deck_table_records(
         op_execution.table
+    )
+    expected_output_plan_table = (
+        "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\t"
+        "OutputProbeList\tOutputDirectives\tOutputDirectiveList\tTables\tTableList\n"
+        "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t2\tresult;run-artifact\n"
+    )
+    expected_output_plan_records = [
+        {
+            "Analysis": "op",
+            "Directive": ".op",
+            "ResultColumns": "2",
+            "ResultColumnList": "Index;V(mid)",
+            "OutputProbes": "1",
+            "OutputProbeList": "V(mid)",
+            "OutputDirectives": "1",
+            "OutputDirectiveList": ".save",
+            "Tables": "2",
+            "TableList": "result;run-artifact",
+        }
+    ]
+    assert op_execution.output_plan_artifact_count == 1
+    assert len(op_execution.output_plan_artifacts) == 1
+    output_plan_artifact = op_execution.output_plan_artifacts[0]
+    assert output_plan_artifact.analysis == "op"
+    assert output_plan_artifact.directive == ".op"
+    assert output_plan_artifact.result_columns == ["Index", "V(mid)"]
+    assert output_plan_artifact.output_probes == ["V(mid)"]
+    assert output_plan_artifact.output_directives == [".save"]
+    assert output_plan_artifact.tables == ["result", "run-artifact"]
+    assert op_execution.output_plan_artifact_table == expected_output_plan_table
+    assert op_execution.output_plan_artifact_table == (
+        format_deck_output_plan_artifact_table(op_execution.output_plan_artifacts)
+    )
+    assert op_execution.output_plan_artifact_csv == (
+        "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,"
+        "OutputProbeList,OutputDirectives,OutputDirectiveList,Tables,TableList\n"
+        "op,.op,2,Index;V(mid),1,V(mid),1,.save,2,result;run-artifact\n"
+    )
+    assert op_execution.output_plan_artifact_csv == (
+        format_deck_output_plan_artifact_csv(op_execution.output_plan_artifacts)
+    )
+    assert json.loads(op_execution.output_plan_artifact_json) == (
+        expected_output_plan_records
+    )
+    assert op_execution.output_plan_artifact_json == (
+        format_deck_output_plan_artifact_json(op_execution.output_plan_artifacts)
+    )
+    assert op_execution.output_plan_artifact_records == expected_output_plan_records
+    assert op_execution.output_plan_artifact_records == (
+        deck_output_plan_artifact_records(op_execution.output_plan_artifacts)
     )
     assert op_execution.run_artifacts[0].result_rows == 1
     assert op_execution.run_artifacts[0].result_column_count == 2

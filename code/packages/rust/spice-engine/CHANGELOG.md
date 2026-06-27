@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Expose selected `run_deck_analysis` output-plan inventories as
+  `output_plan_artifacts` with stable result-column, output-probe,
+  output-directive, and table lists plus table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and TypeScript.
 - Include policy-blocked `.control` row and summary tables in selected
   `run_deck_analysis` execution `tables`, selected-run `TableList` metadata,
   and ordered `table_artifacts` as `control-policy` and

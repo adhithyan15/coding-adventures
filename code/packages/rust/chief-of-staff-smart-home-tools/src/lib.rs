@@ -344,6 +344,10 @@ pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID: &st
     "smart_home.list_runtime_maintenance_work_order_guardrails";
 pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID: &str =
     "smart_home.get_runtime_maintenance_work_order_guardrail_summary";
+pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID: &str =
+    "smart_home.list_runtime_maintenance_work_order_evidence";
+pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_runtime_maintenance_work_order_evidence_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2509,6 +2513,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_work_order_guardrail_query(&arguments)?;
                     get_runtime_maintenance_work_order_guardrail_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID => {
+                    let query = runtime_maintenance_work_order_evidence_query(&arguments)?;
+                    list_runtime_maintenance_work_order_evidence_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID => {
+                    let query = runtime_maintenance_work_order_evidence_query(&arguments)?;
+                    get_runtime_maintenance_work_order_evidence_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6254,6 +6276,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_maintenance_work_order_summary_definition(),
         list_runtime_maintenance_work_order_guardrails_definition(),
         get_runtime_maintenance_work_order_guardrail_summary_definition(),
+        list_runtime_maintenance_work_order_evidence_definition(),
+        get_runtime_maintenance_work_order_evidence_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -7587,6 +7611,82 @@ fn get_runtime_maintenance_work_order_guardrail_summary_definition() -> ToolDefi
         "Summarize Chief-visible guardrails derived from D23 runtime maintenance work orders.",
         runtime_maintenance_work_order_guardrail_query_schema(),
         runtime_maintenance_work_order_guardrail_summary_output_schema(),
+    )
+}
+
+fn runtime_maintenance_work_order_evidence_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("window_kind", JsonSchema::String),
+            SchemaProperty::new("window_kinds", string_array_schema()),
+            SchemaProperty::new("remediation_kind", JsonSchema::String),
+            SchemaProperty::new("remediation_kinds", string_array_schema()),
+            SchemaProperty::new("ticket_status", JsonSchema::String),
+            SchemaProperty::new("ticket_statuses", string_array_schema()),
+            SchemaProperty::new("work_order_status", JsonSchema::String),
+            SchemaProperty::new("work_order_statuses", string_array_schema()),
+            SchemaProperty::new("guardrail_status", JsonSchema::String),
+            SchemaProperty::new("guardrail_statuses", string_array_schema()),
+            SchemaProperty::new("evidence_status", JsonSchema::String),
+            SchemaProperty::new("evidence_statuses", string_array_schema()),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("recommended_tool", JsonSchema::String),
+            SchemaProperty::new("max_priority", JsonSchema::Integer),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn runtime_maintenance_work_order_evidence_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "runtime_maintenance_work_order_evidence_packets",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec![
+            "runtime_maintenance_work_order_evidence_packets",
+            "summary",
+            "count",
+        ],
+        false,
+    )
+}
+
+fn runtime_maintenance_work_order_evidence_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_runtime_maintenance_work_order_evidence_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID,
+        "List smart-home runtime maintenance work-order evidence",
+        "List Chief-visible evidence packets derived from D23 runtime maintenance work-order guardrails without mutating the runtime.",
+        runtime_maintenance_work_order_evidence_query_schema(),
+        runtime_maintenance_work_order_evidence_list_output_schema(),
+    )
+}
+
+fn get_runtime_maintenance_work_order_evidence_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID,
+        "Summarize smart-home runtime maintenance work-order evidence",
+        "Summarize Chief-visible evidence packets derived from D23 runtime maintenance work-order guardrails.",
+        runtime_maintenance_work_order_evidence_query_schema(),
+        runtime_maintenance_work_order_evidence_summary_output_schema(),
     )
 }
 
@@ -9171,6 +9271,25 @@ fn runtime_maintenance_work_order_guardrail_query(
         .into_iter()
         .map(|status| parse_runtime_maintenance_work_order_guardrail_status(&status))
         .collect::<Result<Vec<_>, _>>()?,
+    })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RuntimeMaintenanceWorkOrderEvidenceQuery {
+    guardrail_query: RuntimeMaintenanceWorkOrderGuardrailQuery,
+    evidence_statuses: Vec<&'static str>,
+}
+
+fn runtime_maintenance_work_order_evidence_query(
+    arguments: &JsonValue,
+) -> Result<RuntimeMaintenanceWorkOrderEvidenceQuery, ToolCallError> {
+    let guardrail_query = runtime_maintenance_work_order_guardrail_query(arguments)?;
+    Ok(RuntimeMaintenanceWorkOrderEvidenceQuery {
+        guardrail_query,
+        evidence_statuses: optional_string_list(arguments, "evidence_status", "evidence_statuses")?
+            .into_iter()
+            .map(|status| parse_runtime_maintenance_work_order_evidence_status(&status))
+            .collect::<Result<Vec<_>, _>>()?,
     })
 }
 
@@ -37936,6 +38055,312 @@ fn runtime_maintenance_work_order_guardrail_kind(
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct RuntimeMaintenanceWorkOrderEvidencePacket {
+    evidence_id: String,
+    guardrail_id: String,
+    work_order_id: String,
+    ticket_id: String,
+    plan_id: String,
+    window_id: String,
+    window_kind: RuntimeMaintenanceWindowKind,
+    priority: u8,
+    execution_order: usize,
+    evidence_status: &'static str,
+    evidence_kind: &'static str,
+    guardrail_status: &'static str,
+    guardrail_kind: &'static str,
+    work_order_status: &'static str,
+    assignment_lane: &'static str,
+    recommended_tool: &'static str,
+    recommended_action: &'static str,
+    action_count: usize,
+    blocked_action_count: usize,
+    requires_attention_count: usize,
+    overdue_action_count: usize,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    next_action_ids: Vec<String>,
+    remediation_ids: Vec<String>,
+    lineage_complete: bool,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct RuntimeMaintenanceWorkOrderEvidenceSummary {
+    total_packets: usize,
+    blocking_packets: usize,
+    operator_required_packets: usize,
+    verified_packets: usize,
+    lineage_complete_packets: usize,
+    total_actions: usize,
+    blocked_actions: usize,
+    requires_attention_actions: usize,
+    overdue_actions: usize,
+    first_evidence_id: Option<String>,
+    first_blocking_evidence_id: Option<String>,
+    first_operator_evidence_id: Option<String>,
+    first_work_order_id: Option<String>,
+    first_guardrail_id: Option<String>,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    highest_priority: Option<u8>,
+}
+
+impl RuntimeMaintenanceWorkOrderEvidenceSummary {
+    fn from_packets(packets: &[RuntimeMaintenanceWorkOrderEvidencePacket]) -> Self {
+        let mut summary = Self::default();
+
+        for packet in packets {
+            summary.total_packets += 1;
+            summary.total_actions += packet.action_count;
+            summary.blocked_actions += packet.blocked_action_count;
+            summary.requires_attention_actions += packet.requires_attention_count;
+            summary.overdue_actions += packet.overdue_action_count;
+            summary.first_due_at_ms =
+                min_optional_u64(summary.first_due_at_ms, packet.first_due_at_ms);
+            summary.max_overdue_by_ms =
+                max_optional_u64(summary.max_overdue_by_ms, packet.max_overdue_by_ms);
+            summary.highest_priority =
+                min_optional_u8(summary.highest_priority, Some(packet.priority));
+            summary
+                .first_evidence_id
+                .get_or_insert_with(|| packet.evidence_id.clone());
+            summary
+                .first_work_order_id
+                .get_or_insert_with(|| packet.work_order_id.clone());
+            summary
+                .first_guardrail_id
+                .get_or_insert_with(|| packet.guardrail_id.clone());
+
+            if packet.lineage_complete {
+                summary.lineage_complete_packets += 1;
+            }
+            if packet.blocks_release() {
+                summary.blocking_packets += 1;
+                summary
+                    .first_blocking_evidence_id
+                    .get_or_insert_with(|| packet.evidence_id.clone());
+            }
+            if packet.requires_operator() {
+                summary.operator_required_packets += 1;
+                summary
+                    .first_operator_evidence_id
+                    .get_or_insert_with(|| packet.evidence_id.clone());
+            }
+            if packet.verified() {
+                summary.verified_packets += 1;
+            }
+        }
+
+        summary
+    }
+
+    fn has_packets(&self) -> bool {
+        self.total_packets > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocking_packets > 0
+    }
+
+    fn needs_operator(&self) -> bool {
+        self.operator_required_packets > 0
+    }
+
+    fn has_complete_lineage(&self) -> bool {
+        self.total_packets > 0 && self.lineage_complete_packets == self.total_packets
+    }
+
+    fn execution_evidence_ready(&self) -> bool {
+        self.total_packets > 0 && self.verified_packets == self.total_packets
+    }
+}
+
+fn list_runtime_maintenance_work_order_evidence_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWorkOrderEvidenceQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut packets, summary) =
+        runtime_maintenance_work_order_evidence_packets(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.guardrail_query.work_order_query.limit {
+        packets.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "runtime_maintenance_work_order_evidence_packets",
+            JsonValue::Array(
+                packets
+                    .iter()
+                    .map(runtime_maintenance_work_order_evidence_packet_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            runtime_maintenance_work_order_evidence_summary_json(&summary),
+        ),
+        ("count", integer(packets.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_runtime_maintenance_work_order_evidence"),
+            ),
+            ("evidence_packets", integer(packets.len() as i64)),
+            ("blocking_packets", integer(summary.blocking_packets as i64)),
+            (
+                "operator_required_packets",
+                integer(summary.operator_required_packets as i64),
+            ),
+            ("verified_packets", integer(summary.verified_packets as i64)),
+            (
+                "execution_evidence_ready",
+                JsonValue::Bool(summary.execution_evidence_ready()),
+            ),
+        ]),
+    ))
+}
+
+fn get_runtime_maintenance_work_order_evidence_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWorkOrderEvidenceQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) =
+        runtime_maintenance_work_order_evidence_packets(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        runtime_maintenance_work_order_evidence_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_runtime_maintenance_work_order_evidence_summary"),
+            ),
+            ("total_packets", integer(summary.total_packets as i64)),
+            ("blocking_packets", integer(summary.blocking_packets as i64)),
+            (
+                "operator_required_packets",
+                integer(summary.operator_required_packets as i64),
+            ),
+            ("verified_packets", integer(summary.verified_packets as i64)),
+        ]),
+    ))
+}
+
+fn runtime_maintenance_work_order_evidence_packets(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &RuntimeMaintenanceWorkOrderEvidenceQuery,
+) -> Result<
+    (
+        Vec<RuntimeMaintenanceWorkOrderEvidencePacket>,
+        RuntimeMaintenanceWorkOrderEvidenceSummary,
+    ),
+    ToolCallError,
+> {
+    let (guardrails, _) = runtime_maintenance_work_order_guardrail_rows(
+        runtime,
+        principal_id,
+        now_ms,
+        &query.guardrail_query,
+    )?;
+    let packets = guardrails
+        .iter()
+        .map(RuntimeMaintenanceWorkOrderEvidencePacket::from_guardrail)
+        .filter(|packet| runtime_maintenance_work_order_evidence_matches(packet, query))
+        .collect::<Vec<_>>();
+    let summary = RuntimeMaintenanceWorkOrderEvidenceSummary::from_packets(&packets);
+    Ok((packets, summary))
+}
+
+impl RuntimeMaintenanceWorkOrderEvidencePacket {
+    fn from_guardrail(row: &RuntimeMaintenanceWorkOrderGuardrailRow) -> Self {
+        let evidence_status = runtime_maintenance_work_order_evidence_status(row);
+        let evidence_kind = runtime_maintenance_work_order_evidence_kind(row);
+        Self {
+            evidence_id: format!("maintenance_work_order_evidence:{}", row.guardrail_id),
+            guardrail_id: row.guardrail_id.clone(),
+            work_order_id: row.work_order_id.clone(),
+            ticket_id: row.ticket_id.clone(),
+            plan_id: row.plan_id.clone(),
+            window_id: row.window_id.clone(),
+            window_kind: row.window_kind,
+            priority: row.priority,
+            execution_order: row.execution_order,
+            evidence_status,
+            evidence_kind,
+            guardrail_status: row.guardrail_status,
+            guardrail_kind: row.guardrail_kind,
+            work_order_status: row.work_order_status,
+            assignment_lane: row.assignment_lane,
+            recommended_tool: row.recommended_tool,
+            recommended_action: row.recommended_action,
+            action_count: row.action_count,
+            blocked_action_count: row.blocked_action_count,
+            requires_attention_count: row.requires_attention_count,
+            overdue_action_count: row.overdue_action_count,
+            first_due_at_ms: row.first_due_at_ms,
+            max_overdue_by_ms: row.max_overdue_by_ms,
+            next_action_ids: row.next_action_ids.clone(),
+            remediation_ids: row.remediation_ids.clone(),
+            lineage_complete: !row.remediation_ids.is_empty() && !row.next_action_ids.is_empty(),
+        }
+    }
+
+    fn blocks_release(&self) -> bool {
+        self.evidence_status == "blocked"
+    }
+
+    fn requires_operator(&self) -> bool {
+        self.evidence_status == "operator_required"
+    }
+
+    fn verified(&self) -> bool {
+        self.evidence_status == "verified"
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_matches(
+    packet: &RuntimeMaintenanceWorkOrderEvidencePacket,
+    query: &RuntimeMaintenanceWorkOrderEvidenceQuery,
+) -> bool {
+    query.evidence_statuses.is_empty() || query.evidence_statuses.contains(&packet.evidence_status)
+}
+
+fn runtime_maintenance_work_order_evidence_status(
+    row: &RuntimeMaintenanceWorkOrderGuardrailRow,
+) -> &'static str {
+    if row.release_blocker() {
+        "blocked"
+    } else if row.operator_handoff() {
+        "operator_required"
+    } else {
+        "verified"
+    }
+}
+
+fn runtime_maintenance_work_order_evidence_kind(
+    row: &RuntimeMaintenanceWorkOrderGuardrailRow,
+) -> &'static str {
+    match row.guardrail_kind {
+        "blocked_actions" => "blocked_action_trace",
+        "overdue_actions" => "overdue_action_trace",
+        "attention_actions" => "attention_action_trace",
+        _ => "ready_execution_trace",
+    }
+}
+
 fn min_optional_u64(left: Option<u64>, right: Option<u64>) -> Option<u64> {
     match (left, right) {
         (Some(left), Some(right)) => Some(left.min(right)),
@@ -62527,6 +62952,172 @@ fn runtime_maintenance_work_order_guardrail_summary_json(
     ])
 }
 
+fn runtime_maintenance_work_order_evidence_packet_json(
+    packet: &RuntimeMaintenanceWorkOrderEvidencePacket,
+) -> JsonValue {
+    object([
+        ("evidence_id", string(&packet.evidence_id)),
+        ("guardrail_id", string(&packet.guardrail_id)),
+        ("work_order_id", string(&packet.work_order_id)),
+        ("ticket_id", string(&packet.ticket_id)),
+        ("plan_id", string(&packet.plan_id)),
+        ("window_id", string(&packet.window_id)),
+        (
+            "window_kind",
+            string(runtime_maintenance_window_kind_label(packet.window_kind)),
+        ),
+        ("priority", integer(packet.priority as i64)),
+        ("execution_order", integer(packet.execution_order as i64)),
+        ("evidence_status", string(packet.evidence_status)),
+        ("evidence_kind", string(packet.evidence_kind)),
+        ("guardrail_status", string(packet.guardrail_status)),
+        ("guardrail_kind", string(packet.guardrail_kind)),
+        ("work_order_status", string(packet.work_order_status)),
+        ("assignment_lane", string(packet.assignment_lane)),
+        ("recommended_tool", string(packet.recommended_tool)),
+        ("recommended_action", string(packet.recommended_action)),
+        ("action_count", integer(packet.action_count as i64)),
+        (
+            "blocked_action_count",
+            integer(packet.blocked_action_count as i64),
+        ),
+        (
+            "requires_attention_count",
+            integer(packet.requires_attention_count as i64),
+        ),
+        (
+            "overdue_action_count",
+            integer(packet.overdue_action_count as i64),
+        ),
+        (
+            "first_due_at_ms",
+            packet
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            packet
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_action_ids",
+            JsonValue::Array(packet.next_action_ids.iter().map(string).collect()),
+        ),
+        (
+            "remediation_ids",
+            JsonValue::Array(packet.remediation_ids.iter().map(string).collect()),
+        ),
+        ("release_blocking", JsonValue::Bool(packet.blocks_release())),
+        (
+            "operator_required",
+            JsonValue::Bool(packet.requires_operator()),
+        ),
+        ("lineage_complete", JsonValue::Bool(packet.lineage_complete)),
+        ("verified", JsonValue::Bool(packet.verified())),
+    ])
+}
+
+fn runtime_maintenance_work_order_evidence_summary_json(
+    summary: &RuntimeMaintenanceWorkOrderEvidenceSummary,
+) -> JsonValue {
+    object([
+        ("total_packets", integer(summary.total_packets as i64)),
+        ("blocking_packets", integer(summary.blocking_packets as i64)),
+        (
+            "operator_required_packets",
+            integer(summary.operator_required_packets as i64),
+        ),
+        ("verified_packets", integer(summary.verified_packets as i64)),
+        (
+            "lineage_complete_packets",
+            integer(summary.lineage_complete_packets as i64),
+        ),
+        ("total_actions", integer(summary.total_actions as i64)),
+        ("blocked_actions", integer(summary.blocked_actions as i64)),
+        (
+            "requires_attention_actions",
+            integer(summary.requires_attention_actions as i64),
+        ),
+        ("overdue_actions", integer(summary.overdue_actions as i64)),
+        (
+            "first_evidence_id",
+            summary
+                .first_evidence_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocking_evidence_id",
+            summary
+                .first_blocking_evidence_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_evidence_id",
+            summary
+                .first_operator_evidence_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_work_order_id",
+            summary
+                .first_work_order_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_guardrail_id",
+            summary
+                .first_guardrail_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_due_at_ms",
+            summary
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            summary
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_priority",
+            summary
+                .highest_priority
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("has_packets", JsonValue::Bool(summary.has_packets())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("needs_operator", JsonValue::Bool(summary.needs_operator())),
+        (
+            "has_complete_lineage",
+            JsonValue::Bool(summary.has_complete_lineage()),
+        ),
+        (
+            "execution_evidence_ready",
+            JsonValue::Bool(summary.execution_evidence_ready()),
+        ),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -65469,6 +66060,19 @@ fn parse_runtime_maintenance_work_order_guardrail_status(
         "ready_to_execute" | "ready" => Ok("ready_to_execute"),
         _ => Err(validation_error(format!(
             "unsupported runtime maintenance work order guardrail status `{value}`"
+        ))),
+    }
+}
+
+fn parse_runtime_maintenance_work_order_evidence_status(
+    value: &str,
+) -> Result<&'static str, ToolCallError> {
+    match value {
+        "blocked" | "release_blocker" | "blocker" => Ok("blocked"),
+        "operator_required" | "operator_handoff" | "requires_operator" => Ok("operator_required"),
+        "verified" | "ready" | "ready_to_execute" => Ok("verified"),
+        _ => Err(validation_error(format!(
+            "unsupported runtime maintenance work order evidence status `{value}`"
         ))),
     }
 }
@@ -69311,7 +69915,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 268);
+        assert_eq!(definitions.len(), 270);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -70078,9 +70682,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            260
+            262
         );
         assert_eq!(
             export
@@ -70740,6 +71350,14 @@ mod tests {
             SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID
         )
         .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID
+        )
+        .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_COMPLETE_PAIRING_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_REPORT_EVENT_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
@@ -70974,11 +71592,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(268))
+            Some(&integer(270))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(260))
+            Some(&integer(262))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -85580,7 +86198,7 @@ mod tests {
     }
 
     #[test]
-    fn runtime_maintenance_plan_ticket_work_order_and_guardrail_tools_group_action_pressure_end_to_end(
+    fn runtime_maintenance_plan_ticket_work_order_guardrail_and_evidence_tools_group_action_pressure_end_to_end(
     ) {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime
@@ -86048,6 +86666,88 @@ mod tests {
             Some(&JsonValue::Bool(false))
         );
 
+        let evidence_list_request = request(
+            "call-list-runtime-maintenance-work-order-evidence",
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID,
+            object([
+                ("evidence_status", string("blocked")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+                ("max_priority", integer(1)),
+                ("limit", integer(10)),
+            ]),
+            2_008,
+        );
+        let evidence_list_trace = tool_runtime.invoke_with_events(&evidence_list_request);
+        assert!(evidence_list_trace.result.ok);
+        assert_eq!(evidence_list_trace.summary().progress_event_count, 1);
+        let evidence_list_output = evidence_list_trace.result.output.as_ref().unwrap();
+        let evidence_packets = field(
+            evidence_list_output,
+            "runtime_maintenance_work_order_evidence_packets",
+        )
+        .unwrap();
+        let evidence_summary = field(evidence_list_output, "summary").unwrap();
+        assert!(
+            array_len(evidence_packets).unwrap() >= 3,
+            "maintenance evidence should expose blocked runtime execution lanes"
+        );
+        assert!(integer_value(field(evidence_summary, "total_packets").unwrap()).unwrap() >= 3);
+        assert!(integer_value(field(evidence_summary, "blocking_packets").unwrap()).unwrap() >= 3);
+        assert_eq!(
+            field(evidence_summary, "execution_evidence_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let JsonValue::Array(evidence_rows) = evidence_packets else {
+            panic!("runtime_maintenance_work_order_evidence_packets should be an array");
+        };
+        assert!(evidence_rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("critical_recovery"))
+            && field(row, "evidence_status") == Some(&string("blocked"))
+            && field(row, "evidence_kind") == Some(&string("blocked_action_trace"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID))
+            && field(row, "release_blocking") == Some(&JsonValue::Bool(true))
+            && field(row, "lineage_complete") == Some(&JsonValue::Bool(true))
+            && integer_value(field(row, "blocked_action_count").unwrap()).unwrap() >= 2));
+        assert!(evidence_rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("desired_state_reconciliation"))
+            && field(row, "evidence_status") == Some(&string("blocked"))
+            && field(row, "work_order_status") == Some(&string("blocked"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID))
+            && field(row, "recommended_action") == Some(&string("reconcile_desired_state"))));
+
+        let evidence_summary_request = request(
+            "call-runtime-maintenance-work-order-evidence-summary",
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID,
+            object([
+                ("window_kind", string("desired_state_reconciliation")),
+                ("evidence_status", string("blocked")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+            ]),
+            2_009,
+        );
+        let evidence_summary_trace = tool_runtime.invoke_with_events(&evidence_summary_request);
+        assert!(evidence_summary_trace.result.ok);
+        assert_eq!(evidence_summary_trace.summary().progress_event_count, 1);
+        let evidence_summary_output = evidence_summary_trace.result.output.as_ref().unwrap();
+        let evidence_rollup = field(evidence_summary_output, "summary").unwrap();
+        assert_eq!(field(evidence_rollup, "total_packets"), Some(&integer(1)));
+        assert_eq!(
+            field(evidence_rollup, "blocking_packets"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(evidence_rollup, "blocked_actions"), Some(&integer(1)));
+        assert_eq!(
+            field(evidence_rollup, "execution_evidence_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
         let mut journal = ToolExecutionJournal::new();
         journal.record_trace(list_request, list_trace);
         journal.record_trace(summary_request, summary_trace);
@@ -86057,13 +86757,15 @@ mod tests {
         journal.record_trace(work_order_summary_request, work_order_summary_trace);
         journal.record_trace(guardrail_list_request, guardrail_list_trace);
         journal.record_trace(guardrail_summary_request, guardrail_summary_trace);
+        journal.record_trace(evidence_list_request, evidence_list_trace);
+        journal.record_trace(evidence_summary_request, evidence_summary_trace);
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 8);
-        assert_eq!(journal_summary.completed_count, 8);
+        assert_eq!(journal_summary.invocation_count, 10);
+        assert_eq!(journal_summary.completed_count, 10);
         assert_eq!(
             runtime.borrow().registry().counts().authorization_decisions,
-            8,
-            "maintenance plan, ticket, work-order, and guardrail reads authorize through runtime read tools"
+            10,
+            "maintenance plan, ticket, work-order, guardrail, and evidence reads authorize through runtime read tools"
         );
     }
 

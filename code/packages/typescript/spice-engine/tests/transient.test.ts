@@ -47,6 +47,10 @@ import {
   formatDeckControlPolicySummaryArtifactTable,
   formatDeckNoiseTable,
   formatDeckOpTable,
+  deckOutputPlanArtifactRecords,
+  formatDeckOutputPlanArtifactCsv,
+  formatDeckOutputPlanArtifactJson,
+  formatDeckOutputPlanArtifactTable,
   formatDeckRawfileArtifactCsv,
   formatDeckRawfileArtifactJson,
   formatDeckRawfileArtifactTable,
@@ -1532,6 +1536,56 @@ describe("transient", () => {
       json: formatDeckTableJson(opExecution.table),
       records: deckTableRecords(opExecution.table),
     });
+    const expectedOutputPlanRecords = [
+      {
+        Analysis: "op",
+        Directive: ".op",
+        ResultColumns: "2",
+        ResultColumnList: "Index;V(mid)",
+        OutputProbes: "1",
+        OutputProbeList: "V(mid)",
+        OutputDirectives: "1",
+        OutputDirectiveList: ".save",
+        Tables: "2",
+        TableList: "result;run-artifact",
+      },
+    ];
+    expect(opExecution.outputPlanArtifactCount).toBe(1);
+    expect(opExecution.outputPlanArtifacts).toHaveLength(1);
+    expect(opExecution.outputPlanArtifacts[0]).toMatchObject({
+      analysis: "op",
+      directive: ".op",
+      resultColumnCount: 2,
+      resultColumns: ["Index", "V(mid)"],
+      outputProbeCount: 1,
+      outputProbes: ["V(mid)"],
+      outputDirectiveCount: 1,
+      outputDirectives: [".save"],
+      tableCount: 2,
+      tables: ["result", "run-artifact"],
+    });
+    expect(opExecution.outputPlanArtifactTable).toBe(
+      "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tTables\tTableList\n" +
+        "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t2\tresult;run-artifact\n",
+    );
+    expect(opExecution.outputPlanArtifactTable).toBe(
+      formatDeckOutputPlanArtifactTable(opExecution.outputPlanArtifacts),
+    );
+    expect(opExecution.outputPlanArtifactCsv).toBe(
+      "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Tables,TableList\n" +
+        "op,.op,2,Index;V(mid),1,V(mid),1,.save,2,result;run-artifact\n",
+    );
+    expect(opExecution.outputPlanArtifactCsv).toBe(
+      formatDeckOutputPlanArtifactCsv(opExecution.outputPlanArtifacts),
+    );
+    expect(JSON.parse(opExecution.outputPlanArtifactJson)).toEqual(expectedOutputPlanRecords);
+    expect(opExecution.outputPlanArtifactJson).toBe(
+      formatDeckOutputPlanArtifactJson(opExecution.outputPlanArtifacts),
+    );
+    expect(opExecution.outputPlanArtifactRecords).toEqual(expectedOutputPlanRecords);
+    expect(opExecution.outputPlanArtifactRecords).toEqual(
+      deckOutputPlanArtifactRecords(opExecution.outputPlanArtifacts),
+    );
     expect(opExecution.runArtifacts[0]?.resultRows).toBe(1);
     expect(opExecution.runArtifacts[0]?.resultColumnCount).toBe(2);
     expect(opExecution.runArtifacts[0]?.resultColumns).toEqual(["Index", "V(mid)"]);

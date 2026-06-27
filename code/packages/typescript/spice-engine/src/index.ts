@@ -716,6 +716,19 @@ export interface DeckTableArtifact {
   readonly records: ReadonlyArray<Record<string, string>>;
 }
 
+export interface DeckOutputPlanArtifact {
+  readonly analysis: DeckAnalysisPlan["analysis"];
+  readonly directive: DeckAnalysisPlan["directive"];
+  readonly resultColumnCount: number;
+  readonly resultColumns: readonly string[];
+  readonly outputProbeCount: number;
+  readonly outputProbes: readonly string[];
+  readonly outputDirectiveCount: number;
+  readonly outputDirectives: readonly string[];
+  readonly tableCount: number;
+  readonly tables: readonly string[];
+}
+
 export interface DeckControlPolicyArtifact {
   readonly lineNumber: number;
   readonly category: "script" | "workdir" | "control-flow" | "variable";
@@ -769,6 +782,12 @@ export interface DeckAnalysisExecution {
   readonly outputProbes: readonly string[];
   readonly outputDirectives: readonly string[];
   readonly analysisDirectives: readonly string[];
+  readonly outputPlanArtifactCount: number;
+  readonly outputPlanArtifacts: readonly DeckOutputPlanArtifact[];
+  readonly outputPlanArtifactTable: string;
+  readonly outputPlanArtifactCsv: string;
+  readonly outputPlanArtifactJson: string;
+  readonly outputPlanArtifactRecords: ReadonlyArray<Record<string, string>>;
   readonly controlLineCount: number;
   readonly controlLines: readonly string[];
   readonly writeMarkerCount: number;
@@ -8288,6 +8307,126 @@ function deckRunArtifactRecord(artifact: DeckRunArtifact): DeckRunArtifactRecord
   ) as DeckRunArtifactRecord;
 }
 
+function deckOutputPlanArtifacts(
+  plan: DeckAnalysisPlan,
+  resultColumns: readonly string[],
+  outputProbes: readonly string[],
+  outputDirectives: readonly string[],
+  tables: readonly string[],
+): DeckOutputPlanArtifact[] {
+  return [
+    {
+      analysis: plan.analysis,
+      directive: plan.directive,
+      resultColumnCount: resultColumns.length,
+      resultColumns: [...resultColumns],
+      outputProbeCount: outputProbes.length,
+      outputProbes: [...outputProbes],
+      outputDirectiveCount: outputDirectives.length,
+      outputDirectives: [...outputDirectives],
+      tableCount: tables.length,
+      tables: [...tables],
+    },
+  ];
+}
+
+const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
+  "Analysis",
+  "Directive",
+  "ResultColumns",
+  "ResultColumnList",
+  "OutputProbes",
+  "OutputProbeList",
+  "OutputDirectives",
+  "OutputDirectiveList",
+  "Tables",
+  "TableList",
+] as const;
+
+function deckOutputPlanArtifactCells(artifact: DeckOutputPlanArtifact): string[] {
+  return [
+    artifact.analysis,
+    artifact.directive,
+    String(artifact.resultColumnCount),
+    artifact.resultColumns.join(";"),
+    String(artifact.outputProbeCount),
+    artifact.outputProbes.join(";"),
+    String(artifact.outputDirectiveCount),
+    artifact.outputDirectives.join(";"),
+    String(artifact.tableCount),
+    artifact.tables.join(";"),
+  ];
+}
+
+export function deckOutputPlanArtifactRecords(
+  artifacts: readonly DeckOutputPlanArtifact[],
+): ReadonlyArray<Record<string, string>> {
+  return artifacts.map((artifact) => {
+    const cells = deckOutputPlanArtifactCells(artifact);
+    return Object.fromEntries(
+      DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS.map((column, index) => [
+        column,
+        cells[index] ?? "",
+      ]),
+    );
+  });
+}
+
+export function formatDeckOutputPlanArtifactTable(
+  artifacts: readonly DeckOutputPlanArtifact[],
+): string {
+  const rows = [DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS.join("\t")];
+  for (const artifact of artifacts) {
+    rows.push(deckOutputPlanArtifactCells(artifact).join("\t"));
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+export function formatDeckOutputPlanArtifactCsv(
+  artifacts: readonly DeckOutputPlanArtifact[],
+): string {
+  const rows = [DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS.join(",")];
+  for (const artifact of artifacts) {
+    rows.push(deckOutputPlanArtifactCells(artifact).map(formatCsvCell).join(","));
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+export function formatDeckOutputPlanArtifactJson(
+  artifacts: readonly DeckOutputPlanArtifact[],
+): string {
+  return `${JSON.stringify(deckOutputPlanArtifactRecords(artifacts))}\n`;
+}
+
+function deckOutputPlanArtifactBundle(
+  plan: DeckAnalysisPlan,
+  resultTable: string,
+  outputProbes: readonly string[],
+  outputDirectives: readonly string[],
+  tables: readonly string[],
+): {
+  artifacts: DeckOutputPlanArtifact[];
+  table: string;
+  csv: string;
+  json: string;
+  records: ReadonlyArray<Record<string, string>>;
+} {
+  const artifacts = deckOutputPlanArtifacts(
+    plan,
+    deckTableColumns(resultTable),
+    outputProbes,
+    outputDirectives,
+    tables,
+  );
+  return {
+    artifacts,
+    table: formatDeckOutputPlanArtifactTable(artifacts),
+    csv: formatDeckOutputPlanArtifactCsv(artifacts),
+    json: formatDeckOutputPlanArtifactJson(artifacts),
+    records: deckOutputPlanArtifactRecords(artifacts),
+  };
+}
+
 function deckTableColumns(table: string): string[] {
   const header = table.split("\n", 1)[0] ?? "";
   return header.length === 0 ? [] : header.split("\t");
@@ -9044,7 +9183,14 @@ export function runDeckAnalysis(
       diagnosticCodes,
       controlPolicyArtifacts,
     );
-  const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
+    const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
+    const outputPlanArtifactBundle = deckOutputPlanArtifactBundle(
+      plan,
+      table,
+      outputProbes,
+      outputDirectives,
+      tables,
+    );
     const measurementTable = formatMeasurementTable(measurements);
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
@@ -9077,6 +9223,12 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
+      outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
+      outputPlanArtifactTable: outputPlanArtifactBundle.table,
+      outputPlanArtifactCsv: outputPlanArtifactBundle.csv,
+      outputPlanArtifactJson: outputPlanArtifactBundle.json,
+      outputPlanArtifactRecords: outputPlanArtifactBundle.records,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
       writeMarkerCount: writeMarkers.length,
@@ -9150,6 +9302,14 @@ export function runDeckAnalysis(
       controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
+
+    const outputPlanArtifactBundle = deckOutputPlanArtifactBundle(
+      plan,
+      table,
+      outputProbes,
+      outputDirectives,
+      tables,
+    );
     const measurementTable = formatMeasurementTable(measurements);
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
@@ -9182,6 +9342,12 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
+      outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
+      outputPlanArtifactTable: outputPlanArtifactBundle.table,
+      outputPlanArtifactCsv: outputPlanArtifactBundle.csv,
+      outputPlanArtifactJson: outputPlanArtifactBundle.json,
+      outputPlanArtifactRecords: outputPlanArtifactBundle.records,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
       writeMarkerCount: writeMarkers.length,
@@ -9266,6 +9432,14 @@ export function runDeckAnalysis(
       controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
+
+    const outputPlanArtifactBundle = deckOutputPlanArtifactBundle(
+      plan,
+      table,
+      outputProbes,
+      outputDirectives,
+      tables,
+    );
     const measurementTable = formatMeasurementTable(measurements);
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
@@ -9298,6 +9472,12 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
+      outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
+      outputPlanArtifactTable: outputPlanArtifactBundle.table,
+      outputPlanArtifactCsv: outputPlanArtifactBundle.csv,
+      outputPlanArtifactJson: outputPlanArtifactBundle.json,
+      outputPlanArtifactRecords: outputPlanArtifactBundle.records,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
       writeMarkerCount: writeMarkers.length,
@@ -9377,6 +9557,14 @@ export function runDeckAnalysis(
       controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
+
+    const outputPlanArtifactBundle = deckOutputPlanArtifactBundle(
+      plan,
+      table,
+      outputProbes,
+      outputDirectives,
+      tables,
+    );
     const measurementTable = formatMeasurementTable(measurements);
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
@@ -9409,6 +9597,12 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
+      outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
+      outputPlanArtifactTable: outputPlanArtifactBundle.table,
+      outputPlanArtifactCsv: outputPlanArtifactBundle.csv,
+      outputPlanArtifactJson: outputPlanArtifactBundle.json,
+      outputPlanArtifactRecords: outputPlanArtifactBundle.records,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
       writeMarkerCount: writeMarkers.length,
@@ -9478,6 +9672,14 @@ export function runDeckAnalysis(
       controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
+
+    const outputPlanArtifactBundle = deckOutputPlanArtifactBundle(
+      plan,
+      table,
+      outputProbes,
+      outputDirectives,
+      tables,
+    );
     const measurementTable = formatMeasurementTable(measurements);
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
@@ -9510,6 +9712,12 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
+      outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
+      outputPlanArtifactTable: outputPlanArtifactBundle.table,
+      outputPlanArtifactCsv: outputPlanArtifactBundle.csv,
+      outputPlanArtifactJson: outputPlanArtifactBundle.json,
+      outputPlanArtifactRecords: outputPlanArtifactBundle.records,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
       writeMarkerCount: writeMarkers.length,
@@ -9578,6 +9786,14 @@ export function runDeckAnalysis(
       controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
+
+    const outputPlanArtifactBundle = deckOutputPlanArtifactBundle(
+      plan,
+      table,
+      outputProbes,
+      outputDirectives,
+      tables,
+    );
     const measurementTable = formatMeasurementTable(measurements);
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
@@ -9610,6 +9826,12 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
+      outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
+      outputPlanArtifactTable: outputPlanArtifactBundle.table,
+      outputPlanArtifactCsv: outputPlanArtifactBundle.csv,
+      outputPlanArtifactJson: outputPlanArtifactBundle.json,
+      outputPlanArtifactRecords: outputPlanArtifactBundle.records,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
       writeMarkerCount: writeMarkers.length,
@@ -9688,6 +9910,14 @@ export function runDeckAnalysis(
       controlPolicyArtifacts,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
+
+    const outputPlanArtifactBundle = deckOutputPlanArtifactBundle(
+      plan,
+      table,
+      outputProbes,
+      outputDirectives,
+      tables,
+    );
     const measurementTable = formatMeasurementTable(measurements);
     const fourierTable = formatDeckFourierTable(fourier);
     const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
@@ -9720,6 +9950,12 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
+      outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
+      outputPlanArtifactTable: outputPlanArtifactBundle.table,
+      outputPlanArtifactCsv: outputPlanArtifactBundle.csv,
+      outputPlanArtifactJson: outputPlanArtifactBundle.json,
+      outputPlanArtifactRecords: outputPlanArtifactBundle.records,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
       writeMarkerCount: writeMarkers.length,

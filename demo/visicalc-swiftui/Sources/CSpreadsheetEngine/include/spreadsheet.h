@@ -85,6 +85,17 @@ int   sc_paste(ScSession *s, const char *dst_start);
 int   sc_sort_range(ScSession *s, const char *start, const char *end,
                     uint32_t key_col, int ascending);
 
+/* Find / replace. sc_find_all() returns a heap char* JSON object
+   {"matches":["A1",...]} of the A1 addresses whose text contains `query`, in
+   (row,col) order — free it with sc_string_free(). `in_formulas` is a flag
+   (non-zero searches each cell's source; 0 its computed display value);
+   `match_case` is a flag (0 folds ASCII case); an empty query → empty list.
+   sc_replace_all() replaces `query` with `replacement` in the source of every
+   matching cell (engine rewrites + recomputes) and returns the count of cells
+   changed (empty query → 0). The host re-reads via sc_get_window / sc_get_raw. */
+char *sc_find_all(ScSession *s, const char *query, int in_formulas, int match_case);
+int   sc_replace_all(ScSession *s, const char *query, const char *replacement, int match_case);
+
 /* Save / load. sc_serialize() returns a self-contained JSON document holding the
    workbook's SOURCE (formula text + typed literals) and per-cell formats — not the
    computed values, which recompute on load (small file, can't disagree with itself).

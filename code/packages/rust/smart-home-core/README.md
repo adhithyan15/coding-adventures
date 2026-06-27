@@ -184,6 +184,8 @@ Current scope:
   handoff over maintenance tickets
 - D18D runtime maintenance-work-order guardrail descriptors for Chief-visible
   release-blocker and operator-handoff checks
+- D18D runtime maintenance-work-order evidence descriptors for Chief-visible
+  release-blocking evidence packets
 - D18D supervision execution tool descriptors for authorized desired-state
   reconciliation and runtime supervision ticks
 - compact smart-home tool catalog summaries for read-side inspection

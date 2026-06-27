@@ -95,6 +95,9 @@ solver result, deck-selected output table, and normalized analysis directive,
 table count/name list, output probes, and output directives that produced the
 table, plus selected `.measure` results and
 a stable measurement table for `.dc`, `.ac`, and `.tran` executions.
+Execution `outputPlanArtifacts` summarize the selected result columns, output
+probes, output directives, and stable table names with table, CSV, compact JSON,
+and header-keyed record exports.
 Execution `tableArtifacts` preserve the same order as `tables` and carry each
 stable table's text, CSV, compact JSON, and header-keyed records. Selected
 `.tran` plans route
@@ -239,7 +242,7 @@ malformed deck-level analysis controls.
 deck execution helpers.
 `runDeckAnalysis` routes that selected plan into the matching solver and stable
 deck-selected table output with normalized table-inventory, output-probe, and
-output-directive artifacts, selected measurement artifacts, selected transient Fourier artifacts,
+output-directive artifacts, output-plan inventory artifacts, selected measurement artifacts, selected transient Fourier artifacts,
 selected-run artifact summaries with table, analysis-directive, output-probe, output-directive,
 measurement, Fourier probe, `.control` command, write-marker, rawfile-option, and
 control-policy diagnostic inventories, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and
