@@ -112,8 +112,8 @@ that produced the table, plus selected
 `.measure` results and a stable measurement table for `.dc`, `.ac`, and `.tran`
 executions. Execution `table_artifacts` preserve the same order as `tables` and
 carry each stable table's text, CSV, compact JSON, and header-keyed records.
-Execution `output_plan_artifacts` summarize the selected result columns,
-output probes, selected output probe source lines, output directives,
+Execution `output_plan_artifacts` summarize the selected result row count,
+result columns, output probes, selected output probe source lines, output directives,
 normalized output directive kinds, normalized directive analysis scopes,
 selected output directive source lines, and stable table names, and the
 `output-plan` entry in `table_artifacts` carries the same

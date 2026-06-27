@@ -6891,14 +6891,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         op_execution.table
     )
     expected_output_plan_table = (
-        "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\t"
+        "Analysis\tDirective\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\t"
         "OutputProbeList\tOutputProbeLines\tOutputProbeLineList\t"
         "OutputDirectives\tOutputDirectiveList\t"
         "OutputDirectiveKinds\tOutputDirectiveKindList\t"
         "OutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\t"
         "OutputDirectiveLines\tOutputDirectiveLineList\t"
         "Tables\tTableList\n"
-        "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t"
+        "op\t.op\t1\t2\tIndex;V(mid)\t1\tV(mid)\t"
         f"1\t{save_line}\t1\t.save\t1\tsave\t1\tglobal\t1\t{save_line}\t3\t"
         "result;output-plan;run-artifact\n"
     )
@@ -6906,6 +6906,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         {
             "Analysis": "op",
             "Directive": ".op",
+            "ResultRows": "1",
             "ResultColumns": "2",
             "ResultColumnList": "Index;V(mid)",
             "OutputProbes": "1",
@@ -6929,6 +6930,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     output_plan_artifact = op_execution.output_plan_artifacts[0]
     assert output_plan_artifact.analysis == "op"
     assert output_plan_artifact.directive == ".op"
+    assert output_plan_artifact.result_row_count == 1
     assert output_plan_artifact.result_columns == ["Index", "V(mid)"]
     assert output_plan_artifact.output_probes == ["V(mid)"]
     assert output_plan_artifact.output_probe_line_count == 1
@@ -6946,14 +6948,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         format_deck_output_plan_artifact_table(op_execution.output_plan_artifacts)
     )
     assert op_execution.output_plan_artifact_csv == (
-        "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,"
+        "Analysis,Directive,ResultRows,ResultColumns,ResultColumnList,OutputProbes,"
         "OutputProbeList,OutputProbeLines,OutputProbeLineList,"
         "OutputDirectives,OutputDirectiveList,"
         "OutputDirectiveKinds,OutputDirectiveKindList,"
         "OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,"
         "OutputDirectiveLines,OutputDirectiveLineList,"
         "Tables,TableList\n"
-        f"op,.op,2,Index;V(mid),1,V(mid),1,{save_line},1,.save,1,save,1,global,1,{save_line},3,"
+        f"op,.op,1,2,Index;V(mid),1,V(mid),1,{save_line},1,.save,1,save,1,global,1,{save_line},3,"
         "result;output-plan;run-artifact\n"
     )
     assert op_execution.output_plan_artifact_csv == (

@@ -299,5 +299,53 @@ using (var fr = new InfiniteSheetModel())
     Check("H3 recomputed live", fr.RowCells(3)[7], "25"); // =H2+5
 }
 
+// ── Multi-sheet workbook + cross-sheet references (the sheet tab bar drives
+// SheetNames/ActiveSheet/SelectSheet/AddSheet/RenameSheet/DeleteSheet): the
+// workbook holds several sheets; bare-A1 ops address the ACTIVE sheet, while a
+// formula reaches ACROSS with a qualifier (=Summary!B3). This proves the .NET ↔
+// P/Invoke ↔ C ABI path drives sheet management + cross-sheet recompute.
+using (var ms = new SpreadsheetSession())
+{
+    Check("ms initial sheets", string.Join(",", ms.SheetNames().names), "Sheet1");
+    Check("ms add Summary", ms.AddSheet("Summary").ToString(), "True");
+    Check("ms sheets after add", string.Join(",", ms.SheetNames().names), "Sheet1,Summary");
+    // Edit the Summary sheet (index 1): B3 = A1+A2 = 300.
+    Check("ms activate Summary", ms.SetActiveSheet(1).ToString(), "True");
+    Check("ms active index", ms.ActiveSheet().ToString(), "1");
+    ms.SetCell("A1", "100"); ms.SetCell("A2", "200"); ms.SetCell("B3", "=A1+A2");
+    Check("ms Summary B3", ms.Window(3, 2, 3, 2)[0][0], "300");
+    // Back on Sheet1, reach ACROSS with a qualifier.
+    Check("ms back to Sheet1", ms.SetActiveSheet(0).ToString(), "True");
+    ms.SetCell("G1", "=Summary!B3");
+    Check("ms cross-sheet G1", ms.Window(1, 7, 1, 7)[0][0], "300");
+    // Editing a Summary input recomputes the cross-sheet dependent live.
+    ms.SetActiveSheet(1); ms.SetCell("A1", "150"); // Summary!A1: 100 → 150, B3 = 350
+    ms.SetActiveSheet(0);
+    Check("ms cross-sheet live", ms.Window(1, 7, 1, 7)[0][0], "350");
+    // Rename Summary → Totals; the qualifier in G1 is rewritten by the engine.
+    Check("ms rename", ms.RenameSheet(1, "Totals").ToString(), "True");
+    Check("ms sheets after rename", string.Join(",", ms.SheetNames().names), "Sheet1,Totals");
+    Contains("ms G1 names Totals", ms.GetRaw("G1"), "Totals");
+    Check("ms cross-sheet after rename", ms.Window(1, 7, 1, 7)[0][0], "350");
+    // Delete the referenced sheet → the dangling cross-sheet ref becomes #REF!.
+    Check("ms delete", ms.DeleteSheet(1).ToString(), "True");
+    Check("ms sheets after delete", string.Join(",", ms.SheetNames().names), "Sheet1");
+    Contains("ms G1 #REF!", ms.Window(1, 7, 1, 7)[0][0], "#REF!");
+    // The engine keeps at least one sheet: deleting the last one is a no-op.
+    Check("ms cannot delete last", ms.DeleteSheet(0).ToString(), "False");
+}
+
+// The InfiniteSheetModel seed exposes Sheet1/Summary with a live cross-ref.
+using (var msm = new InfiniteSheetModel())
+{
+    Check("msm sheets", string.Join(",", msm.SheetNames()), "Sheet1,Summary");
+    Check("msm active", msm.ActiveSheet().ToString(), "0");
+    msm.SelectA1("G1");
+    Check("msm Sheet1 G1 cross-ref", msm.RowCells(1)[6], "300"); // col 7, index 6
+    msm.SelectSheet(1);
+    Check("msm switched to Summary", msm.ActiveSheet().ToString(), "1");
+    Check("msm Summary B3", msm.RowCells(3)[1], "300"); // B3 = A1+A2 = 100+200
+}
+
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;

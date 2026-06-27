@@ -289,6 +289,52 @@ fun main() {
     check("H3 recomputed live", fr.rowCells(3)[7], "25") // =H2+5
     fr.close()
 
+    // Multi-sheet workbook + cross-sheet references (the sheet tab bar drives
+    // sheetNames/activeSheet/selectSheet/addSheet/renameSheet/deleteSheet): the
+    // workbook holds several sheets; bare-A1 ops address the ACTIVE sheet, while a
+    // formula reaches ACROSS with a qualifier (=Summary!B3). This proves the
+    // Kotlin ↔ FFM ↔ C ABI path drives sheet management + cross-sheet recompute.
+    val ms = SpreadsheetSession()
+    check("ms initial sheets", ms.sheetNames().first.joinToString(","), "Sheet1")
+    check("ms add Summary", ms.addSheet("Summary").toString(), "true")
+    check("ms sheets after add", ms.sheetNames().first.joinToString(","), "Sheet1,Summary")
+    // Edit the Summary sheet (index 1): B3 = A1+A2 = 300.
+    check("ms activate Summary", ms.setActiveSheet(1).toString(), "true")
+    check("ms active index", ms.activeSheet().toString(), "1")
+    ms.setCell("A1", "100"); ms.setCell("A2", "200"); ms.setCell("B3", "=A1+A2")
+    check("ms Summary B3", ms.window(3, 2, 3, 2)[0][0], "300")
+    // Back on Sheet1, reach ACROSS with a qualifier.
+    check("ms back to Sheet1", ms.setActiveSheet(0).toString(), "true")
+    ms.setCell("G1", "=Summary!B3")
+    check("ms cross-sheet G1", ms.window(1, 7, 1, 7)[0][0], "300")
+    // Editing a Summary input recomputes the cross-sheet dependent live.
+    ms.setActiveSheet(1); ms.setCell("A1", "150") // Summary!A1: 100 → 150, B3 = 350
+    ms.setActiveSheet(0)
+    check("ms cross-sheet live", ms.window(1, 7, 1, 7)[0][0], "350")
+    // Rename Summary → Totals; the qualifier in G1 is rewritten by the engine.
+    check("ms rename", ms.renameSheet(1, "Totals").toString(), "true")
+    check("ms sheets after rename", ms.sheetNames().first.joinToString(","), "Sheet1,Totals")
+    checkContains("ms G1 names Totals", ms.getRaw("G1"), "Totals")
+    check("ms cross-sheet after rename", ms.window(1, 7, 1, 7)[0][0], "350")
+    // Delete the referenced sheet → the dangling cross-sheet ref becomes #REF!.
+    check("ms delete", ms.deleteSheet(1).toString(), "true")
+    check("ms sheets after delete", ms.sheetNames().first.joinToString(","), "Sheet1")
+    checkContains("ms G1 #REF!", ms.window(1, 7, 1, 7)[0][0], "#REF!")
+    // The engine keeps at least one sheet: deleting the last one is a no-op.
+    check("ms cannot delete last", ms.deleteSheet(0).toString(), "false")
+    ms.close()
+
+    // The InfiniteSheetModel seed exposes Sheet1/Summary with a live cross-ref.
+    val msm = InfiniteSheetModel()
+    check("msm sheets", msm.sheetNames().joinToString(","), "Sheet1,Summary")
+    check("msm active", msm.activeSheet().toString(), "0")
+    msm.selectA1("G1")
+    check("msm Sheet1 G1 cross-ref", msm.rowCells(1)[6], "300") // col 7, index 6
+    msm.selectSheet(1)
+    check("msm switched to Summary", msm.activeSheet().toString(), "1")
+    check("msm Summary B3", msm.rowCells(3)[1], "300") // B3 = A1+A2 = 100+200
+    msm.close()
+
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)
 }

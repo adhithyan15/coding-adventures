@@ -191,6 +191,21 @@ stays typed (`15`→`99` re-totals every dependent).
 `InfiniteSheetModel` (in `Engine.cs`, WinUI-free) seeds far-flung sparse cells
 (`Z1000`, `BA50`, `BB50`) and derives the extent from `UsedRange()` + a margin
 (saturated in `long` then clamped to `int`, guarding the u32-overflow case).
+The bottom **sheet tab bar** drives a multi-sheet **workbook**: the workbook
+holds several sheets and bare-`A1` ops address the *active* one, while a formula
+reaches **across** with a qualifier (`=Summary!B3`). Each tab is a chip (the
+active one tints to the accent); **click** to switch, the active tab carries
+inline **✎ rename** (a `ContentDialog`) and **✕ delete** affordances, and
+**+ Sheet** adds one (`InfiniteSheetModel.SelectSheet`/`AddSheet`/`RenameSheet`/
+`DeleteSheet` over the C ABI's `sc_set_active_sheet`/`sc_add_sheet`/
+`sc_rename_sheet`/`sc_delete_sheet`, with `sc_sheet_names`/`sc_active_sheet`
+reading the tab list). The seed adds a second sheet, **Summary** (`B3 = A1+A2 =
+300`), and `Sheet1!G1 = =Summary!B3` pulls that value across; editing a Summary
+input recomputes the cross-sheet dependent live. Renaming `Summary` rewrites
+every referencing qualifier; deleting a referenced sheet turns the dangling
+reference into `#REF!`, and the engine keeps at least one sheet (deleting the
+last is a no-op). The single-sheet path is byte-identical — an unqualified `A1`
+still means the active sheet.
 
 #### Visual design
 
@@ -236,6 +251,11 @@ locates the one literal (`A1`), a case-insensitive `FindAll("sum")` finds the to
 formulas, empty / no-match queries return nothing, `SelectA1("Z1000")` parses a far
 address, and `ReplaceAll` rewrites both a literal (`15`→`99` ⇒ E1 122.00) and a
 formula reference (`H1`→`H2` ⇒ `=H1+5` recomputes to 25) keeping each live.
+Finally a **multi-sheet** section proves the workbook over the C ABI: a
+cross-sheet `=Summary!B3` computes and stays live as its precedent changes (300
+→ 350), a rename rewrites the referencing qualifier (`Summary` → `Totals`),
+deleting a referenced sheet yields `#REF!` (and the last sheet can't be deleted),
+and the `InfiniteSheetModel` seed exposes `Sheet1`/`Summary` with a live cross-ref.
 
 ## Where this fits in the cross-backend demo plan
 

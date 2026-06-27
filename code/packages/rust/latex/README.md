@@ -32,8 +32,8 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 |-------|----------|--------|
 | **L0 tokenizer** | catcode state machine → flat `Token` stream w/ byte spans | ✅ |
 | **L1 structural** | groups, `\cmd[opt]{arg}`, `\begin{env}…\end{env}`, text runs, raw math islands, `to_latex()` round-trip | ✅ |
-| **L2 math** | math AST (frac, binom, roots, scripts, big ops, functions, accents, `\left\right` fences, relations), precedence-climbing parser, `to_latex()` round-trip | ✅ this release |
-| L3 environments | matrices / tabular / lists (`&`, `\\`) | ⏳ |
+| **L2 math** | math AST (frac, binom, roots, scripts, big ops, functions, accents, `\left\right` fences, relations), precedence-climbing parser, `to_latex()` round-trip | ✅ |
+| **L3 environments** | math env family — `matrix`/`pmatrix`/`bmatrix`/`vmatrix`/`cases`/`aligned`/`align` split on `&` and `\\` → `MathNode::Matrix`, round-trip; nesting + scripts | ✅ this release |
 | L4 macros | `\newcommand`/`\def` + expansion (bounded) | ⏳ |
 | L5 text breadth | sectioning, fonts, accents, `\verb`, refs | ⏳ |
 | L6 frontend | implement `math-frontend::MathFrontend` (LaTeX becomes plugin #1) | ⏳ |
@@ -71,6 +71,28 @@ let doc = parse(r"area is $\pi r^2$").unwrap();
 let area = doc.iter().find_map(|n| n.parsed_math()).unwrap().unwrap();
 assert!(matches!(area, MathNode::Bin(..)));   // π · r²  (implicit multiplication)
 ```
+
+### Environments (L3)
+
+The math environment family parses into `MathNode::Matrix { env, rows }` — `&` splits
+columns, `\\` splits rows. Supported: `matrix`/`pmatrix`/`bmatrix`/`Bmatrix`/`vmatrix`/
+`Vmatrix`/`smallmatrix`, `cases`, and the alignment environments (`aligned`/`align`/…).
+Cells hold arbitrary math, environments nest, and a matrix is an atom (so `…^2` attaches):
+
+```rust
+use latex::{parse_math, MathNode};
+
+let m = parse_math(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}").unwrap();
+if let MathNode::Matrix { env, rows } = &m {
+    assert_eq!(env, "pmatrix");
+    assert_eq!(rows.len(), 2);          // two rows
+    assert_eq!(rows[0].len(), 2);       // two columns
+}
+assert_eq!(parse_math(&m.to_latex()).unwrap(), m);   // round-trips
+```
+
+`array`/`tabular` (which take a column-spec argument) and document-mode list environments
+are a later layer; an unknown `\begin{…}` is rejected with a spanned error, never mis-parsed.
 
 The low-level `tokenize` is also public. Tokens and errors carry half-open byte `Span`s;
 all of `parse`, `parse_math`, and `tokenize` return spanned errors rather than panicking,

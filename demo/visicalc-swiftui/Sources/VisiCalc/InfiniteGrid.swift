@@ -75,6 +75,19 @@ final class WindowedSheetModel: ObservableObject {
             ("Z1000", "0.0%"), // 39 → "3900.0%": proves the format applies far off-origin
         ]
         for (a, code) in formats { session.setFormat(a, code) }
+
+        // A second sheet, "Summary", proves cross-sheet references compute live:
+        // its B3 sums two of its own cells, and back on the first sheet G1 reaches
+        // ACROSS with a qualifier (=Summary!B3) — identical seed to the
+        // web/Qt/Flutter/Compose/XAML demos. The first sheet stays active (bare-A1
+        // ops still address it).
+        session.addSheet("Summary")
+        session.setActiveSheet(1)
+        session.setCell("A1", "100")
+        session.setCell("A2", "200")
+        session.setCell("B3", "=A1+A2") // 300, on the Summary sheet
+        session.setActiveSheet(0)
+        session.setCell("G1", "=Summary!B3") // 300, pulled across the sheets
     }
 
     /// Size the virtual grid to the data extent plus a comfortable margin, and
@@ -330,6 +343,52 @@ final class WindowedSheetModel: ObservableObject {
         return ok
     }
 
+    // ── Multi-sheet workbook ──────────────────────────────────────────
+    // The workbook holds several sheets; bare-A1 ops address the ACTIVE one, while
+    // a formula reaches across with a qualifier (=Summary!A1). The tab bar reads
+    // `sheetNames`/`activeSheet` and drives the mutators below; each resizes the
+    // extent + re-primes the formula bar and bumps `revision` so the view re-reads.
+
+    /// The sheet names in tab order.
+    func sheetNames() -> [String] { session.sheetNames().names }
+
+    /// The active sheet's 0-based index.
+    func activeSheet() -> Int { session.activeSheet() }
+
+    /// Switch the active sheet (bare-A1 ops now address it); re-prime the bar.
+    func selectSheet(_ index: Int) {
+        guard session.setActiveSheet(index) else { return }
+        resize()
+        select(row: selectedRow, col: selectedCol)
+        revision += 1
+    }
+
+    /// Add a new empty sheet and switch to it.
+    func addSheet(_ name: String) {
+        guard session.addSheet(name) else { return }
+        resize()
+        select(row: 1, col: 1)
+        revision += 1
+    }
+
+    /// Rename a sheet by index; cross-sheet references that named it are rewritten
+    /// by the engine, so dependents stay live.
+    func renameSheet(_ index: Int, _ newName: String) {
+        guard session.renameSheet(index, newName) else { return }
+        resize()
+        select(row: selectedRow, col: selectedCol)
+        revision += 1
+    }
+
+    /// Delete a sheet by index. References into it become `#REF!`; the engine
+    /// keeps at least one sheet, so this is a no-op on the last one.
+    func deleteSheet(_ index: Int) {
+        guard session.deleteSheet(index) else { return }
+        resize()
+        select(row: 1, col: 1)
+        revision += 1
+    }
+
     /// Write `raw` into an explicit A1 cell and return the cells it dirtied.
     /// (Kept for the headless `WindowedModelTests`.)
     @discardableResult
@@ -352,6 +411,10 @@ struct InfiniteGridView: View {
     @State private var savedSnapshot = ""
     // Drives the formula field's accent focus ring.
     @FocusState private var formulaFocused: Bool
+    // Multi-sheet: the index being renamed (non-nil shows the rename alert) and
+    // the in-progress name.
+    @State private var renamingIndex: Int?
+    @State private var renameText = ""
 
     // Roomier geometry, to match the web reference.
     static let rowH: CGFloat = 26
@@ -393,9 +456,89 @@ struct InfiniteGridView: View {
                 }
             }
             .background(cBg)
+            sheetTabBar
             statusBar
         }
         .background(cBg)
+        .alert("Rename sheet", isPresented: Binding(
+            get: { renamingIndex != nil },
+            set: { if !$0 { renamingIndex = nil } }
+        )) {
+            TextField("Sheet name", text: $renameText)
+            Button("Cancel", role: .cancel) { renamingIndex = nil }
+            Button("Rename") {
+                if let i = renamingIndex {
+                    let name = renameText.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !name.isEmpty { model.renameSheet(i, name) }
+                }
+                renamingIndex = nil
+            }
+        }
+    }
+
+    // Sheet tab bar (Excel-style, along the bottom): one chip per sheet, the
+    // active one tinted to the accent. Tap a tab to switch (bare-A1 ops then
+    // address it); the active tab carries inline ✎ rename / ✕ delete buttons, and
+    // "+ Sheet" adds one. A formula like =Summary!B3 reaches across the tabs, so
+    // switching + editing here updates every cross-sheet dependent live.
+    private var sheetTabBar: some View {
+        let names = model.sheetNames()
+        let active = model.activeSheet()
+        return VStack(spacing: 0) {
+            Rectangle().fill(line).frame(height: 1)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 4) {
+                    ForEach(Array(names.enumerated()), id: \.offset) { i, name in
+                        sheetTab(index: i, name: name, selected: i == active)
+                    }
+                    Button("+ Sheet") {
+                        // Name the new sheet "SheetN", avoiding a clash.
+                        let existing = Set(model.sheetNames())
+                        var n = existing.count + 1
+                        while existing.contains("Sheet\(n)") { n += 1 }
+                        model.addSheet("Sheet\(n)")
+                    }
+                    .buttonStyle(ChipButtonStyle())
+                    .help("Add a new sheet")
+                }
+                .padding(.horizontal, 10)
+                .padding(.top, 6)
+            }
+        }
+    }
+
+    private func sheetTab(index: Int, name: String, selected: Bool) -> some View {
+        HStack(spacing: 6) {
+            Text(name)
+                .font(.system(size: 12, weight: selected ? .semibold : .regular, design: .monospaced))
+                .foregroundColor(selected ? .white : ink)
+            if selected {
+                // Inline rename / delete affordances on the active tab.
+                Button {
+                    renameText = name
+                    renamingIndex = index
+                } label: {
+                    Text("✎").font(.system(size: 12, design: .monospaced)).foregroundColor(muted)
+                }
+                .buttonStyle(.plain)
+                .help("Rename this sheet")
+                Button {
+                    model.deleteSheet(index)
+                } label: {
+                    Text("✕").font(.system(size: 12, design: .monospaced)).foregroundColor(muted)
+                }
+                .buttonStyle(.plain)
+                .help("Delete this sheet")
+            }
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(selected ? sel : cSurface)
+        .overlay(RoundedRectangle(cornerRadius: 6)
+            .stroke(selected ? accent : lineStrong, lineWidth: selected ? 2 : 1))
+        .cornerRadius(6)
+        .contentShape(Rectangle())
+        .onTapGesture { model.selectSheet(index) }
     }
 
     // Hairline-separated footer: the live virtual-grid size + per-edit revision

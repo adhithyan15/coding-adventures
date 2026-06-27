@@ -121,6 +121,20 @@ internal static class ScNative
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_column_letters(IntPtr s, uint index);
     [DllImport("spreadsheet_capi")] internal static extern ulong sc_current_revision(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_changed_since(IntPtr s, ulong since);
+    // Multi-sheet workbook. sc_sheet_names(session) → char* JSON
+    //   {"sheets":[<name>,...],"active":<i>}; sc_active_sheet(session) → u32;
+    //   sc_set_active_sheet/sc_delete_sheet(session, index) → int 1/0;
+    //   sc_add_sheet(session, name) → int; sc_rename_sheet(session, index, name) → int.
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_sheet_names(IntPtr s);
+    [DllImport("spreadsheet_capi")] internal static extern uint sc_active_sheet(IntPtr s);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_set_active_sheet(IntPtr s, uint index);
+    [DllImport("spreadsheet_capi")]
+    internal static extern int sc_add_sheet(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+    [DllImport("spreadsheet_capi")]
+    internal static extern int sc_rename_sheet(IntPtr s, uint index,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string newName);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_delete_sheet(IntPtr s, uint index);
 
     [DllImport("spreadsheet_capi")] internal static extern void sc_string_free(IntPtr p);
 
@@ -397,6 +411,54 @@ public sealed class SpreadsheetSession : IDisposable
     public int ReplaceAll(string query, string replacement, bool matchCase) =>
         ScNative.sc_replace_all(_handle, query, replacement, matchCase ? 1 : 0);
 
+    // ── Multi-sheet workbook ──────────────────────────────────────────
+    // The workbook holds several sheets; bare-A1 ops address the ACTIVE one,
+    // while a formula reaches across with a qualifier (=Summary!A1). These manage
+    // the sheet set + the active sheet; the host re-reads cells/raw afterwards.
+    // The single-sheet path is unchanged — an unqualified A1 is the active sheet.
+
+    /// The sheet names in tab order plus the active 0-based index. A malformed
+    /// engine payload yields an empty workbook view (defensive, like <see cref="Window"/>).
+    public (IReadOnlyList<string> names, int active) SheetNames()
+    {
+        string json = Take(ScNative.sc_sheet_names(_handle));
+        var names = new List<string>();
+        int active = 0;
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            var r = doc.RootElement;
+            if (r.TryGetProperty("sheets", out var arr))
+                foreach (var n in arr.EnumerateArray()) names.Add(n.GetString() ?? string.Empty);
+            if (r.TryGetProperty("active", out var a)) active = a.GetInt32();
+        }
+        catch (Exception ex) when (ex is JsonException or KeyNotFoundException or InvalidOperationException) { /* bad response → empty workbook view */ }
+        return (names, active);
+    }
+
+    /// The active sheet's 0-based index.
+    public int ActiveSheet() => (int)ScNative.sc_active_sheet(_handle);
+
+    /// Switch the active sheet by 0-based index; false for an out-of-range index.
+    /// `index` is clamped to ≥ 0 before the uint cast (a negative would otherwise
+    /// wrap to a huge unsigned index); the engine validates the upper bound.
+    public bool SetActiveSheet(int index) =>
+        ScNative.sc_set_active_sheet(_handle, (uint)Math.Max(0, index)) != 0;
+
+    /// Add a new sheet named `name` and make it active; false for an empty or
+    /// duplicate name.
+    public bool AddSheet(string name) => ScNative.sc_add_sheet(_handle, name) != 0;
+
+    /// Rename the sheet at `index` to `newName` (the engine rewrites every
+    /// referencing formula's qualifier). False for a bad index / empty / duplicate.
+    public bool RenameSheet(int index, string newName) =>
+        ScNative.sc_rename_sheet(_handle, (uint)Math.Max(0, index), newName) != 0;
+
+    /// Delete the sheet at `index` (inbound references become `#REF!`). False for
+    /// a bad index or an attempt to delete the last remaining sheet.
+    public bool DeleteSheet(int index) =>
+        ScNative.sc_delete_sheet(_handle, (uint)Math.Max(0, index)) != 0;
+
     public void Dispose()
     {
         if (_handle != IntPtr.Zero)
@@ -529,6 +591,19 @@ public sealed class InfiniteSheetModel : IDisposable
             ("Z1000", "0.0%"), // 39 → "3900.0%": proves the format applies far off-origin
         };
         foreach (var (a1, code) in formats) _session.SetFormat(a1, code);
+
+        // A second sheet, "Summary", proves cross-sheet references compute live:
+        // its B3 sums two of its own cells, and back on the first sheet G1 reaches
+        // ACROSS with a qualifier (=Summary!B3) — identical seed to the
+        // web/Qt/Flutter/Compose demos. The first sheet stays active (bare-A1 ops
+        // still address it).
+        _session.AddSheet("Summary");
+        _session.SetActiveSheet(1);
+        _session.SetCell("A1", "100");
+        _session.SetCell("A2", "200");
+        _session.SetCell("B3", "=A1+A2"); // 300, on the Summary sheet
+        _session.SetActiveSheet(0);
+        _session.SetCell("G1", "=Summary!B3"); // 300, pulled across the sheets
     }
 
     /// Re-derive the virtual grid size from the engine's data extent plus a
@@ -724,6 +799,61 @@ public sealed class InfiniteSheetModel : IDisposable
             Formula = _session.GetRaw(InfAddress);
         }
         return ok;
+    }
+
+    // ── Multi-sheet workbook ──────────────────────────────────────────
+    // The workbook holds several sheets; bare-A1 ops address the ACTIVE one,
+    // while a formula reaches across with a qualifier (=Summary!A1). The tab bar
+    // reads <see cref="SheetNames"/>/<see cref="ActiveSheet"/> and drives the
+    // mutators below; each refreshes the extent + re-primes the formula bar so the
+    // windowed view re-reads.
+
+    /// The sheet names in tab order.
+    public IReadOnlyList<string> SheetNames() => _session.SheetNames().names;
+
+    /// The active sheet's 0-based index.
+    public int ActiveSheet() => _session.ActiveSheet();
+
+    /// Switch the active sheet (bare-A1 ops now address it); re-prime the bar.
+    public void SelectSheet(int index)
+    {
+        if (_session.SetActiveSheet(index))
+        {
+            ComputeExtent();
+            SelectInf(SelRow, SelCol);
+        }
+    }
+
+    /// Add a new empty sheet and switch to it.
+    public void AddSheet(string name)
+    {
+        if (_session.AddSheet(name))
+        {
+            ComputeExtent();
+            SelectInf(1, 1);
+        }
+    }
+
+    /// Rename a sheet by index; cross-sheet references that named it are rewritten
+    /// by the engine, so dependents stay live.
+    public void RenameSheet(int index, string newName)
+    {
+        if (_session.RenameSheet(index, newName))
+        {
+            ComputeExtent();
+            SelectInf(SelRow, SelCol);
+        }
+    }
+
+    /// Delete a sheet by index. References into it become `#REF!`; the engine
+    /// keeps at least one sheet, so this is a no-op on the last one.
+    public void DeleteSheet(int index)
+    {
+        if (_session.DeleteSheet(index))
+        {
+            ComputeExtent();
+            SelectInf(1, 1);
+        }
     }
 
     public void Dispose() => _session.Dispose();

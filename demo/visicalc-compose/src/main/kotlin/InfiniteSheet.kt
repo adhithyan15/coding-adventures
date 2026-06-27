@@ -232,6 +232,42 @@ fun InfiniteSheet() {
         findStatus = "$n replaced"
     }
 
+    // ── Multi-sheet workbook ──
+    // `sheetRev` is bumped on every sheet op so the tab bar recomposes. After a
+    // switch/add/delete the model re-primes the selection, so we mirror it back
+    // into the Compose state. `renaming` (≥ 0) opens the rename dialog for that
+    // tab index; `renameText` holds the in-progress name.
+    var sheetRev by remember { mutableStateOf(0) }
+    var renaming by remember { mutableStateOf(-1) }
+    var renameText by remember { mutableStateOf("") }
+
+    fun syncFromModel() {
+        selRow = model.selRow
+        selCol = model.selCol
+        formula = model.formula
+        rev++
+        sheetRev++
+    }
+
+    fun switchSheet(i: Int) { model.selectSheet(i); syncFromModel() }
+    fun deleteSheet(i: Int) { model.deleteSheet(i); syncFromModel() }
+    fun addSheet() {
+        // Name the new sheet "SheetN" where N avoids a clash with existing names.
+        val existing = model.sheetNames().toSet()
+        var n = existing.size + 1
+        while (existing.contains("Sheet$n")) n++
+        model.addSheet("Sheet$n")
+        syncFromModel()
+    }
+    fun commitRename() {
+        val i = renaming
+        if (i >= 0 && renameText.isNotBlank()) {
+            model.renameSheet(i, renameText.trim())
+            syncFromModel()
+        }
+        renaming = -1
+    }
+
     Column(modifier = Modifier.fillMaxSize().background(BG)) {
         // ── Formula bar: a panel holding the address pill, an `fx` marker, the
         // editable source line (with an accent focus ring), and segmented button
@@ -385,6 +421,123 @@ fun InfiniteSheet() {
                                 dataCell(text, rowNum, selected) { select(rowNum, c) }
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        // ── Sheet tab bar (Excel-style, along the bottom) ──
+        // One chip per sheet; the active one tints to the accent. Click a tab to
+        // switch (bare-A1 ops then address it); the active tab carries inline
+        // ✎ rename and ✕ delete affordances, and "+ Sheet" adds one. A formula
+        // like `=Summary!B3` reaches across the tabs, so switching and editing
+        // here updates every cross-sheet dependent live. Reading `sheetRev`
+        // recomposes the bar after any sheet op.
+        val (sheetNames, activeSheet) = sheetRev.let { model.sheetNames() to model.activeSheet() }
+        Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp).height(1.dp).background(LINE))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(start = 10.dp, end = 10.dp, top = 6.dp),
+        ) {
+            sheetNames.forEachIndexed { i, name ->
+                val selected = i == activeSheet
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(if (selected) SEL else SURFACE)
+                        .border(
+                            if (selected) 2.dp else 1.dp,
+                            if (selected) ACCENT else LINE_STRONG,
+                            RoundedCornerShape(6.dp),
+                        )
+                        .clickable { switchSheet(i) }
+                        .padding(horizontal = 10.dp, vertical = 5.dp),
+                ) {
+                    androidx.compose.material.Text(
+                        name,
+                        color = if (selected) Color.White else INK,
+                        fontSize = 12.sp,
+                        fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                        fontFamily = MONO,
+                    )
+                    if (selected) {
+                        // Inline rename / delete affordances on the active tab.
+                        Spacer(Modifier.width(8.dp))
+                        androidx.compose.material.Text(
+                            "✎",
+                            color = MUTED,
+                            fontSize = 12.sp,
+                            fontFamily = MONO,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(3.dp))
+                                .clickable { renaming = i; renameText = name }
+                                .padding(horizontal = 3.dp),
+                        )
+                        Spacer(Modifier.width(2.dp))
+                        androidx.compose.material.Text(
+                            "✕",
+                            color = MUTED,
+                            fontSize = 12.sp,
+                            fontFamily = MONO,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(3.dp))
+                                .clickable { deleteSheet(i) }
+                                .padding(horizontal = 3.dp),
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.width(6.dp))
+            toolButton("+ Sheet") { addSheet() }
+        }
+
+        // Rename dialog — a small panel with a text field, opened when `renaming`
+        // ≥ 0 (the ✎ on the active tab). Enter or "Rename" commits; "Cancel"
+        // dismisses. The engine rewrites every referencing qualifier on commit.
+        if (renaming >= 0) {
+            androidx.compose.ui.window.Dialog(onDismissRequest = { renaming = -1 }) {
+                Column(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(PANEL)
+                        .border(1.dp, LINE, RoundedCornerShape(8.dp))
+                        .padding(16.dp),
+                ) {
+                    androidx.compose.material.Text(
+                        "Rename sheet", color = INK, fontSize = 14.sp, fontFamily = MONO,
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    Box(
+                        modifier = Modifier
+                            .width(220.dp)
+                            .height(30.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(FIELD)
+                            .border(1.dp, LINE_STRONG, RoundedCornerShape(5.dp))
+                            .padding(horizontal = 8.dp),
+                        contentAlignment = Alignment.CenterStart,
+                    ) {
+                        BasicTextField(
+                            value = renameText,
+                            onValueChange = { renameText = it },
+                            singleLine = true,
+                            textStyle = TextStyle(color = INK, fontSize = 13.sp, fontFamily = MONO),
+                            cursorBrush = androidx.compose.ui.graphics.SolidColor(ACCENT),
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                            keyboardActions = KeyboardActions(onDone = { commitRename() }),
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                    Spacer(Modifier.height(12.dp))
+                    Row {
+                        toolButton("Cancel") { renaming = -1 }
+                        Spacer(Modifier.width(8.dp))
+                        toolButton("Rename") { commitRename() }
                     }
                 }
             }
