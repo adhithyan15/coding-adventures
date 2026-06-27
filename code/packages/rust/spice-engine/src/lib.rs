@@ -2861,6 +2861,25 @@ pub struct DeviceModelCapacitanceBehaviorFixture {
     pub deck_lines: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelNoiseBehaviorFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub circuit: Circuit,
+    pub output_node: String,
+    pub input_source: String,
+    pub frequency_hz: f64,
+    pub expected_noise_element: String,
+    pub expected_noise_type: NoiseType,
+    pub expected_source_psd_min: f64,
+    pub expected_source_psd_max: f64,
+    pub expected_output_psd_min: f64,
+    pub expected_output_psd_max: f64,
+    pub noise_behavior: String,
+    pub deck_lines: Vec<String>,
+}
+
 fn model_type_key(text: &str) -> String {
     text.trim()
         .chars()
@@ -3636,6 +3655,205 @@ pub fn device_model_capacitance_audit_fixtures(
                 "M1 drain gate 0 0 Mn".to_string(),
                 ".ac lin 1 100k 100k".to_string(),
                 ".save V(drain)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+    ])
+}
+
+pub fn device_model_noise_audit_fixtures(
+) -> Result<Vec<DeviceModelNoiseBehaviorFixture>, SpiceError> {
+    let models = model_card_by_name(&device_model_audit_fixtures()?)?;
+    let frequency_hz = 1_000.0;
+
+    let diode_model = models
+        .get("Dfast")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_noise_audit_fixtures".to_string(),
+            reason: "missing Dfast model fixture".to_string(),
+        })?;
+    let mut diode_circuit = Circuit::new();
+    diode_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbias", "vin", "0", 0.8,
+    )));
+    diode_circuit.add(Element::Resistor(Resistor::new(
+        "Rlimit", "vin", "out", 1_000.0,
+    )));
+    diode_circuit.add(Element::Diode(diode_from_model_card(
+        "D1",
+        "out",
+        "0",
+        diode_model,
+    )?));
+
+    let bjt_model = models
+        .get("Qsmall")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_noise_audit_fixtures".to_string(),
+            reason: "missing Qsmall model fixture".to_string(),
+        })?;
+    let mut bjt_circuit = Circuit::new();
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.72,
+    )));
+    bjt_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+    bjt_circuit.add(Element::Bjt(bjt_from_model_card(
+        "Q1", "vcc", "base", "out", bjt_model,
+    )?));
+
+    let jfet_model = models.get("Jn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_noise_audit_fixtures".to_string(),
+        reason: "missing Jn model fixture".to_string(),
+    })?;
+    let mut jfet_circuit = Circuit::new();
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 10.0,
+    )));
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vg", "gate", "0", 0.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rd", "vdd", "drain", 2_000.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rs", "source", "0", 1_000.0,
+    )));
+    jfet_circuit.add(Element::Jfet(jfet_from_model_card(
+        "J1", "drain", "gate", "source", jfet_model,
+    )?));
+
+    let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_noise_audit_fixtures".to_string(),
+        reason: "missing Mn model fixture".to_string(),
+    })?;
+    let mut mos_circuit = Circuit::new();
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 1.8,
+    )));
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 1.8,
+    )));
+    mos_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    mos_circuit.add(Element::Mosfet(mosfet_from_model_card(
+        "M1", "out", "gate", "0", "0", mos_model,
+    )?));
+
+    Ok(vec![
+        DeviceModelNoiseBehaviorFixture {
+            name: "diode-shot-noise".to_string(),
+            kind: diode_model.kind,
+            model: diode_model.clone(),
+            circuit: diode_circuit,
+            output_node: "out".to_string(),
+            input_source: "Vbias".to_string(),
+            frequency_hz,
+            expected_noise_element: "D1".to_string(),
+            expected_noise_type: NoiseType::Shot,
+            expected_source_psd_min: 6.4e-23,
+            expected_source_psd_max: 6.7e-23,
+            expected_output_psd_min: 8.0e-19,
+            expected_output_psd_max: 8.5e-19,
+            noise_behavior: "diode forward current contributes junction shot noise".to_string(),
+            deck_lines: vec![
+                "* device-model noise fixture: diode-shot-noise".to_string(),
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)".to_string(),
+                "Vbias vin 0 0.8".to_string(),
+                "Rlimit vin out 1k".to_string(),
+                "D1 out 0 Dfast".to_string(),
+                ".noise V(out) Vbias lin 1 1k 1k".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelNoiseBehaviorFixture {
+            name: "bjt-shot-noise".to_string(),
+            kind: bjt_model.kind,
+            model: bjt_model.clone(),
+            circuit: bjt_circuit,
+            output_node: "out".to_string(),
+            input_source: "Vbase".to_string(),
+            frequency_hz,
+            expected_noise_element: "Q1".to_string(),
+            expected_noise_type: NoiseType::Shot,
+            expected_source_psd_min: 3.7e-23,
+            expected_source_psd_max: 3.9e-23,
+            expected_output_psd_min: 1.1e-18,
+            expected_output_psd_max: 1.3e-18,
+            noise_behavior: "BJT forward-active collector current contributes shot noise"
+                .to_string(),
+            deck_lines: vec![
+                "* device-model noise fixture: bjt-shot-noise".to_string(),
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)".to_string(),
+                "Vcc vcc 0 5".to_string(),
+                "Vbase base 0 0.72".to_string(),
+                "Q1 vcc base out Qsmall".to_string(),
+                "Rload out 0 1k".to_string(),
+                ".noise V(out) Vbase lin 1 1k 1k".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelNoiseBehaviorFixture {
+            name: "jfet-channel-noise".to_string(),
+            kind: jfet_model.kind,
+            model: jfet_model.clone(),
+            circuit: jfet_circuit,
+            output_node: "source".to_string(),
+            input_source: "Vdd".to_string(),
+            frequency_hz,
+            expected_noise_element: "J1".to_string(),
+            expected_noise_type: NoiseType::Thermal,
+            expected_source_psd_min: 2.0e-23,
+            expected_source_psd_max: 2.2e-23,
+            expected_output_psd_min: 2.3e-18,
+            expected_output_psd_max: 2.5e-18,
+            noise_behavior: "JFET transconductance contributes long-channel channel thermal noise"
+                .to_string(),
+            deck_lines: vec![
+                "* device-model noise fixture: jfet-channel-noise".to_string(),
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)".to_string(),
+                "Vdd vdd 0 10".to_string(),
+                "Vg gate 0 0".to_string(),
+                "Rd vdd drain 2k".to_string(),
+                "Rs source 0 1k".to_string(),
+                "J1 drain gate source Jn".to_string(),
+                ".noise V(source) Vdd lin 1 1k 1k".to_string(),
+                ".save V(source)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelNoiseBehaviorFixture {
+            name: "mos-level1-channel-noise".to_string(),
+            kind: mos_model.kind,
+            model: mos_model.clone(),
+            circuit: mos_circuit,
+            output_node: "out".to_string(),
+            input_source: "Vgate".to_string(),
+            frequency_hz,
+            expected_noise_element: "M1".to_string(),
+            expected_noise_type: NoiseType::Thermal,
+            expected_source_psd_min: 1.3e-23,
+            expected_source_psd_max: 1.4e-23,
+            expected_output_psd_min: 3.3e-18,
+            expected_output_psd_max: 3.5e-18,
+            noise_behavior: "Level-1 MOS gm contributes long-channel channel thermal noise"
+                .to_string(),
+            deck_lines: vec![
+                "* device-model noise fixture: mos-level1-channel-noise".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)".to_string(),
+                "Vdd vdd 0 1.8".to_string(),
+                "Vgate gate 0 1.8".to_string(),
+                "Rload vdd out 1k".to_string(),
+                "M1 out gate 0 0 Mn".to_string(),
+                ".noise V(out) Vgate lin 1 1k 1k".to_string(),
+                ".save V(out)".to_string(),
                 ".end".to_string(),
             ],
         },
@@ -8858,6 +9076,7 @@ pub struct CornerSParameterResult {
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum NoiseType {
     Thermal,
+    Shot,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -14396,6 +14615,7 @@ pub fn format_corner_fourier_table(result: &CornerFourierResult) -> String {
 fn format_noise_type(noise_type: NoiseType) -> &'static str {
     match noise_type {
         NoiseType::Thermal => "thermal",
+        NoiseType::Shot => "shot",
     }
 }
 
@@ -19359,6 +19579,74 @@ fn collect_noise_sources(
                     negative: node_index(node_indices, &resistor.n2),
                     source_psd: 4.0 * BOLTZMANN * temperature_kelvin / resistor.resistance_ohms,
                 });
+            }
+            Element::Diode(diode) => {
+                validate_diode(diode)?;
+                let anode = node_index(node_indices, &diode.anode);
+                let cathode = node_index(node_indices, &diode.cathode);
+                let anode_voltage = vector_voltage(operating_point, anode);
+                let cathode_voltage = vector_voltage(operating_point, cathode);
+                let (current, _) =
+                    diode_current_conductance(diode, anode_voltage - cathode_voltage);
+                sources.push(NoiseSource {
+                    element_name: diode.name.clone(),
+                    noise_type: NoiseType::Shot,
+                    positive: anode,
+                    negative: cathode,
+                    source_psd: 2.0 * ELECTRON_CHARGE * current.abs(),
+                });
+            }
+            Element::Bjt(bjt) => {
+                validate_bjt(bjt)?;
+                let base = node_index(node_indices, &bjt.base);
+                let emitter = node_index(node_indices, &bjt.emitter);
+                let base_voltage = vector_voltage(operating_point, base);
+                let emitter_voltage = vector_voltage(operating_point, emitter);
+                let junction_voltage = match bjt.polarity {
+                    BjtPolarity::Npn => base_voltage - emitter_voltage,
+                    BjtPolarity::Pnp => emitter_voltage - base_voltage,
+                };
+                let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+                let collector_current = bjt.saturation_current * (exponent.exp() - 1.0);
+                let (positive, negative) = match bjt.polarity {
+                    BjtPolarity::Npn => (base, emitter),
+                    BjtPolarity::Pnp => (emitter, base),
+                };
+                sources.push(NoiseSource {
+                    element_name: bjt.name.clone(),
+                    noise_type: NoiseType::Shot,
+                    positive,
+                    negative,
+                    source_psd: 2.0 * ELECTRON_CHARGE * collector_current.abs(),
+                });
+            }
+            Element::Jfet(jfet) => {
+                validate_jfet(jfet)?;
+                let drain = node_index(node_indices, &jfet.drain);
+                let gate = node_index(node_indices, &jfet.gate);
+                let source = node_index(node_indices, &jfet.source);
+                let drain_voltage = vector_voltage(operating_point, drain);
+                let gate_voltage = vector_voltage(operating_point, gate);
+                let source_voltage = vector_voltage(operating_point, source);
+                let result = evaluate_jfet(
+                    jfet,
+                    gate_voltage - source_voltage,
+                    drain_voltage - source_voltage,
+                );
+                let gm = result.gm.max(0.0);
+                if gm > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: jfet.name.clone(),
+                        noise_type: NoiseType::Thermal,
+                        positive: drain,
+                        negative: source,
+                        source_psd: 4.0
+                            * BOLTZMANN
+                            * temperature_kelvin
+                            * MOSFET_CHANNEL_NOISE_GAMMA
+                            * gm,
+                    });
+                }
             }
             Element::Mosfet(mosfet) => {
                 validate_mosfet(mosfet)?;

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `deviceModelNoiseAuditFixtures` runnable one-device `.noise` fixtures
+  with reference deck lines and stable source/output PSD windows for diode and
+  BJT shot noise plus JFET and Level-1 MOS channel thermal noise audits,
+  matching Python and Rust.
+- Fix TypeScript BJT small-signal and AC stamping to use the converged
+  operating-point junction voltage when deriving transconductance and diffusion
+  capacitance, matching Python and Rust.
 - Add `deviceModelCapacitanceAuditFixtures` runnable one-device AC fixtures
   with `.ac` reference deck lines and stable high-frequency probe-magnitude
   windows for diode, BJT, JFET, and Level-1 MOS model-depth audits, matching

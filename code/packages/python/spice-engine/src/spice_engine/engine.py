@@ -13965,6 +13965,18 @@ def _collect_noise_sources(
                 n_s = None if _is_ground(el.source) else node_to_idx[el.source]
                 sources.append((el.name, "thermal", n_d, n_s, psd))
 
+        elif isinstance(el, JFET):
+            Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+            Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
+            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            _, gm, _ = _eval_jfet(el, Vg - Vs, Vd - Vs)
+            gm = max(0.0, float(gm))
+            if gm > 0.0:
+                psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
+                n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
+                n_s = None if _is_ground(el.source) else node_to_idx[el.source]
+                sources.append((el.name, "thermal", n_d, n_s, psd))
+
         # Capacitors, Inductors, VoltageSources, CurrentSources: noiseless in
         # this first-order model.
 

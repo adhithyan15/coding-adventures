@@ -131,6 +131,9 @@ reference-deck metadata and stable per-temperature probe windows for those same
 fixture circuits. `device_model_capacitance_audit_fixtures` adds matching
 `.ac` reference-deck metadata and stable high-frequency probe magnitude windows
 for capacitance and current JFET invariant audits.
+`device_model_noise_audit_fixtures` adds matching `.noise` reference-deck
+metadata and stable source/output PSD windows for diode and BJT shot noise plus
+JFET and Level-1 MOS channel thermal noise audits.
 
 `analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
 module shape and rejects dynamic/event/system constructs; it is not a full

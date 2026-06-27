@@ -196,6 +196,9 @@ metadata and stable per-temperature probe windows for those same fixture
 circuits. `deviceModelCapacitanceAuditFixtures` adds matching `.ac`
 reference-deck metadata and stable high-frequency probe magnitude windows for
 capacitance and current JFET invariant audits.
+`deviceModelNoiseAuditFixtures` adds matching `.noise` reference-deck metadata
+and stable source/output PSD windows for diode and BJT shot noise plus JFET
+and Level-1 MOS channel thermal noise audits.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.

@@ -183,6 +183,7 @@ from spice_engine import (
     device_model_audit_fixtures,
     device_model_behavior_audit_fixtures,
     device_model_capacitance_audit_fixtures,
+    device_model_noise_audit_fixtures,
     device_model_temperature_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
     digital_event_streams_to_voltage_sources,
@@ -485,6 +486,37 @@ def test_device_model_capacitance_audit_fixtures_run_reference_ac_points() -> No
 
     jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
     assert "intentionally unmodeled" in jfet_fixture.capacitance_behavior
+
+
+def test_device_model_noise_audit_fixtures_run_reference_noise_points() -> None:
+    fixtures = device_model_noise_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-shot-noise",
+        "bjt-shot-noise",
+        "jfet-channel-noise",
+        "mos-level1-channel-noise",
+    ]
+
+    for fixture in fixtures:
+        result = noise_ac(
+            fixture.circuit,
+            fixture.output_node,
+            fixture.input_source,
+            freqs=[fixture.frequency_hz],
+        )
+        assert result.points
+        entry = next(
+            entry
+            for entry in result.points[0].entries
+            if entry.element_name == fixture.expected_noise_element
+        )
+        assert entry.noise_type == fixture.expected_noise_type
+        assert fixture.expected_source_psd_min <= entry.source_psd <= fixture.expected_source_psd_max
+        assert fixture.expected_output_psd_min <= entry.output_psd <= fixture.expected_output_psd_max
+        assert fixture.deck_lines[0].startswith("* device-model noise fixture:")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert any(line.startswith(".noise ") for line in fixture.deck_lines)
+        assert fixture.noise_behavior
 
 
 def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
