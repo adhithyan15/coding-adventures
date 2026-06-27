@@ -416,6 +416,65 @@ pub unsafe extern "C" fn replace_all(
     SESSION.with(|s| s.borrow_mut().replace_all(&query, &repl, match_case != 0)) as i32
 }
 
+// ── Multi-sheet workbook ─────────────────────────────────────────────
+//
+// Bare-A1 cell ops address the ACTIVE sheet; a formula may reference another
+// (`=Summary!A1`). These manage the sheet set + the active sheet. The mutators
+// return a flag-style i32 (1 success / 0 rejected); the host re-reads afterwards.
+
+/// `sheet_names()` → a packed JSON object `{"sheets":["Sheet1",…],"active":0}`
+/// (names in tab order + the active 0-based index). The host reads it via
+/// [`read_output`] and releases it with [`dealloc`].
+#[no_mangle]
+pub extern "C" fn sheet_names() -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().sheet_names()))
+}
+
+/// The active sheet's 0-based index.
+#[no_mangle]
+pub extern "C" fn active_sheet() -> u32 {
+    SESSION.with(|s| s.borrow().active_sheet())
+}
+
+/// Switch the active sheet by 0-based `index` (1 success / 0 out-of-range).
+#[no_mangle]
+pub extern "C" fn set_active_sheet(index: u32) -> i32 {
+    SESSION.with(|s| s.borrow_mut().set_active_sheet(index)) as i32
+}
+
+/// Add a new sheet named `name` and make it active (1 success / 0 empty-or-dup).
+///
+/// # Safety
+/// The `(ptr, len)` pair must describe a readable byte range (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn add_sheet(name_ptr: *const u8, name_len: usize) -> i32 {
+    let name = read_input(name_ptr, name_len);
+    SESSION.with(|s| s.borrow_mut().add_sheet(&name)) as i32
+}
+
+/// Rename the sheet at `index` to `new_name` (1 success / 0 bad-index-or-name).
+///
+/// # Safety
+/// The `(ptr, len)` pair must describe a readable byte range (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn rename_sheet(index: u32, name_ptr: *const u8, name_len: usize) -> i32 {
+    let name = read_input(name_ptr, name_len);
+    SESSION.with(|s| s.borrow_mut().rename_sheet(index, &name)) as i32
+}
+
+/// Delete the sheet at `index`; inbound refs → `#REF!` (1 success / 0 bad-index or
+/// last-sheet).
+#[no_mangle]
+pub extern "C" fn delete_sheet(index: u32) -> i32 {
+    SESSION.with(|s| s.borrow_mut().delete_sheet(index)) as i32
+}
+
+/// Move the sheet at `index` to 0-based `to_index`, clamped (1 success / 0 bad).
+#[no_mangle]
+pub extern "C" fn move_sheet(index: u32, to_index: u32) -> i32 {
+    SESSION.with(|s| s.borrow_mut().move_sheet(index, to_index)) as i32
+}
+
 // ── Save / load (serialize) ──────────────────────────────────────────
 
 /// `serialize()` → a packed JSON document holding the workbook's SOURCE (formula

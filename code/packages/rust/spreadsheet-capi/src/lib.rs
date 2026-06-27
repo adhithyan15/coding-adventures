@@ -434,6 +434,109 @@ pub unsafe extern "C" fn sc_replace_all(
     (*s).inner.replace_all(&query, &replacement, match_case != 0) as c_int
 }
 
+// ── Multi-sheet workbook ─────────────────────────────────────────────
+//
+// A session has one or more named sheets; bare-A1 cell ops address the ACTIVE
+// sheet, and a formula may reference another (`=Summary!A1`). These manage the
+// sheet set + the active sheet; the host re-reads cells/raw afterwards.
+
+/// `sheet_names()` → a heap `char*` JSON object
+/// `{"sheets":["Sheet1",…],"active":0}` (names in tab order + the active 0-based
+/// index). Free it with [`sc_string_free`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_sheet_names(s: *mut ScSession) -> *mut c_char {
+    if s.is_null() {
+        return into_cstr(String::from("{\"sheets\":[],\"active\":0}"));
+    }
+    into_cstr((*s).inner.sheet_names())
+}
+
+/// The active sheet's 0-based index (0 if `s` is null).
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_active_sheet(s: *mut ScSession) -> u32 {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.active_sheet()
+}
+
+/// Switch the active sheet by 0-based `index`. Returns 1 on success, 0 for an
+/// out-of-range index (or null session).
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_set_active_sheet(s: *mut ScSession, index: u32) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.set_active_sheet(index) as c_int
+}
+
+/// Add a new sheet named `name` and make it active. Returns 1 on success, 0 for
+/// an empty/duplicate name (or null session/string).
+///
+/// # Safety
+/// `s` must be a valid session; `name` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn sc_add_sheet(s: *mut ScSession, name: *const c_char) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    let name = read_cstr(name);
+    (*s).inner.add_sheet(&name) as c_int
+}
+
+/// Rename the sheet at `index` to `new_name` (rewrites referencing formulas'
+/// qualifiers). Returns 1 on success, 0 for a bad index / empty / duplicate name.
+///
+/// # Safety
+/// `s` must be a valid session; `new_name` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn sc_rename_sheet(
+    s: *mut ScSession,
+    index: u32,
+    new_name: *const c_char,
+) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    let new_name = read_cstr(new_name);
+    (*s).inner.rename_sheet(index, &new_name) as c_int
+}
+
+/// Delete the sheet at `index` (inbound refs → `#REF!`). Returns 1 on success, 0
+/// for a bad index or an attempt to delete the last sheet.
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_delete_sheet(s: *mut ScSession, index: u32) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.delete_sheet(index) as c_int
+}
+
+/// Move the sheet at `index` to 0-based `to_index` (clamped). Returns 1 on
+/// success, 0 for a bad index.
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_move_sheet(s: *mut ScSession, index: u32, to_index: u32) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.move_sheet(index, to_index) as c_int
+}
+
 /// `serialize()` → a self-contained JSON document capturing the workbook's
 /// source (formula text + typed literals) and per-cell formats — everything
 /// needed to reconstruct the sheet, but not the computed values (those recompute

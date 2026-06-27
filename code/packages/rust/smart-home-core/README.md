@@ -190,6 +190,8 @@ Current scope:
   Chief-visible release-blocker review rows
 - D18D runtime maintenance-work-order evidence-review disposition descriptors
   for Chief-visible release, handoff, and acceptance decisions
+- D18D runtime maintenance-work-order evidence-review disposition-action
+  descriptors for Chief-visible release-hold and handoff actions
 - D18D supervision execution tool descriptors for authorized desired-state
   reconciliation and runtime supervision ticks
 - compact smart-home tool catalog summaries for read-side inspection

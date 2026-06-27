@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.0
+
+**Multi-sheet WASM exports.** Linear-memory exports for the sheet ops:
+`sheet_names` (packed JSON), `active_sheet` (u32), `set_active_sheet`, `add_sheet`,
+`rename_sheet`, `delete_sheet`, `move_sheet` (flag i32). The web demo's JS loader
+gains `sheetNames`/`activeSheet`/`setActiveSheet`/`addSheet`/`renameSheet`/
+`deleteSheet`/`moveSheet` wrappers; the committed `.wasm` + bundle are rebuilt.
+
 ## 0.11.0
 
 **Find / replace exports.** `find_all(query_ptr, query_len, in_formulas, match_case)

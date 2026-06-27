@@ -1913,6 +1913,26 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 .measure tran mid_final final V(mid)
 .end
 ";
+    let save_line = netlist
+        .lines()
+        .position(|line| line.trim_start().starts_with(".save"))
+        .unwrap()
+        + 1;
+    let probe_dc_line = netlist
+        .lines()
+        .position(|line| line.trim_start().starts_with(".probe dc"))
+        .unwrap()
+        + 1;
+    let print_dc_line = netlist
+        .lines()
+        .position(|line| line.trim_start().starts_with(".print dc"))
+        .unwrap()
+        + 1;
+    let plot_ac_line = netlist
+        .lines()
+        .position(|line| line.trim_start().starts_with(".plot ac"))
+        .unwrap()
+        + 1;
 
     let op_execution = run_deck_analysis(&circuit, netlist, Some("op")).unwrap();
     assert_eq!(op_execution.plan.analysis, "op");
@@ -1993,6 +2013,8 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         output_plan_artifact.output_directive_analysis_kinds,
         vec!["global".to_string()]
     );
+    assert_eq!(output_plan_artifact.output_directive_line_count, 1);
+    assert_eq!(output_plan_artifact.output_directive_lines, vec![save_line]);
     assert_eq!(
         output_plan_artifact.tables,
         vec![
@@ -2003,7 +2025,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(
         op_execution.output_plan_artifact_table,
-        "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tTables\tTableList\nop\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t1\tglobal\t3\tresult;output-plan;run-artifact\n"
+        format!(
+            "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tOutputDirectiveLines\tOutputDirectiveLineList\tTables\tTableList\nop\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t1\tglobal\t1\t{}\t3\tresult;output-plan;run-artifact\n",
+            save_line
+        )
     );
     assert_eq!(
         op_execution.output_plan_artifact_table,
@@ -2011,7 +2036,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(
         op_execution.output_plan_artifact_csv,
-        "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,Tables,TableList\nop,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,1,global,3,result;output-plan;run-artifact\n"
+        format!(
+            "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,OutputDirectiveLines,OutputDirectiveLineList,Tables,TableList\nop,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,1,global,1,{},3,result;output-plan;run-artifact\n",
+            save_line
+        )
     );
     assert_eq!(
         op_execution.output_plan_artifact_csv,
@@ -2036,6 +2064,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             .get("OutputDirectiveAnalysisKindList")
             .map(String::as_str),
         Some("global")
+    );
+    let save_line_list = save_line.to_string();
+    assert_eq!(
+        op_execution.output_plan_artifact_records[0]
+            .get("OutputDirectiveLineList")
+            .map(String::as_str),
+        Some(save_line_list.as_str())
     );
     assert_eq!(
         op_execution.output_plan_artifact_records[0]
@@ -2259,11 +2294,27 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         dc_execution.output_plan_artifacts[0].output_directive_analysis_kinds,
         vec!["global".to_string(), "dc".to_string()]
     );
+    let dc_output_directive_lines = vec![save_line, probe_dc_line, print_dc_line];
+    assert_eq!(
+        dc_execution.output_plan_artifacts[0].output_directive_lines,
+        dc_output_directive_lines
+    );
+    let dc_output_directive_line_list = dc_output_directive_lines
+        .iter()
+        .map(usize::to_string)
+        .collect::<Vec<_>>()
+        .join(";");
     assert_eq!(
         dc_execution.output_plan_artifact_records[0]
             .get("OutputDirectiveAnalysisKindList")
             .map(String::as_str),
         Some("global;dc")
+    );
+    assert_eq!(
+        dc_execution.output_plan_artifact_records[0]
+            .get("OutputDirectiveLineList")
+            .map(String::as_str),
+        Some(dc_output_directive_line_list.as_str())
     );
     assert_eq!(dc_execution.analysis_directives, vec![".dc".to_string()]);
     assert_eq!(dc_execution.table_count, 4);
@@ -2394,11 +2445,27 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         ac_execution.output_plan_artifacts[0].output_directive_analysis_kinds,
         vec!["global".to_string(), "ac".to_string()]
     );
+    let ac_output_directive_lines = vec![save_line, plot_ac_line];
+    assert_eq!(
+        ac_execution.output_plan_artifacts[0].output_directive_lines,
+        ac_output_directive_lines
+    );
+    let ac_output_directive_line_list = ac_output_directive_lines
+        .iter()
+        .map(usize::to_string)
+        .collect::<Vec<_>>()
+        .join(";");
     assert_eq!(
         ac_execution.output_plan_artifact_records[0]
             .get("OutputDirectiveAnalysisKindList")
             .map(String::as_str),
         Some("global;ac")
+    );
+    assert_eq!(
+        ac_execution.output_plan_artifact_records[0]
+            .get("OutputDirectiveLineList")
+            .map(String::as_str),
+        Some(ac_output_directive_line_list.as_str())
     );
     assert_eq!(ac_execution.analysis_directives, vec![".ac".to_string()]);
     assert_eq!(ac_execution.table_count, 4);
@@ -2485,6 +2552,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
     assert_eq!(tran_execution.output_probes, vec!["V(mid)".to_string()]);
     assert_eq!(tran_execution.output_directives, vec![".save".to_string()]);
+    assert_eq!(
+        tran_execution.output_plan_artifacts[0].output_directive_lines,
+        vec![save_line]
+    );
     assert_eq!(
         tran_execution.analysis_directives,
         vec![".tran".to_string()]

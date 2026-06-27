@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
-## [0.205.0] - 2026-06-26
+## [0.209.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold global `isNaN(…)` / `isFinite(…)` → boolean
 
@@ -23,6 +23,29 @@ New end-to-end fixture `tests/diff/simple-fold-isnan/` and integration test
 per-binding boolean folds (including the `ToNumber(" ")=+0` and `"Infinity"`
 cases), and a WHITESPACE_ONLY-fallback regression guard (zero `isNaN(` / zero
 `isFinite(` calls remain). Help-markdown regenerated to Version 0.200.0.
+## [0.208.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold static `Object.keys/values/entries({})` → `[]`
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses the static `Object.keys(x)`
+/ `Object.values(x)` / `Object.entries(x)` (ECMAScript §20.1.2.16/.22/.5) to the
+empty array literal `[]` when the single argument is an empty object literal `{}`
+— via the new `MemberExpression`-arm dispatch in `closure-pass-constant-fold`
+0.59.0.
+
+An empty object has no own enumerable keys and `{}` has no side effect, so `[]`
+is exact for all three methods. A non-empty object literal is declined (its
+property values may have side effects, and the result is non-empty), as are
+arrays, primitives, identifiers, and any call with ≠1 argument. Only the bare
+global `Object.keys/values/entries(...)` folds, never a shadowed receiver.
+
+New end-to-end fixture `tests/diff/simple-fold-object-keys/` and integration test
+`tests/diff_simple_fold_object_keys.rs` assert byte-exact SIMPLE output, the
+three `[]` folds, the declined non-empty-object and array calls, and a
+WHITESPACE_ONLY-fallback regression guard (exactly two `Object.` calls remain).
+Help-markdown regenerated to Version 0.208.0.
+
 ## [0.204.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold legacy global `escape(…)` / `unescape(…)`

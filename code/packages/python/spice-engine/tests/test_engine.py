@@ -6838,6 +6838,27 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 .measure tran mid_final final V(mid)
 .end
 """
+    netlist_lines = netlist.splitlines()
+    save_line = next(
+        index
+        for index, line in enumerate(netlist_lines, start=1)
+        if line.strip().startswith(".save")
+    )
+    probe_dc_line = next(
+        index
+        for index, line in enumerate(netlist_lines, start=1)
+        if line.strip().startswith(".probe dc")
+    )
+    print_dc_line = next(
+        index
+        for index, line in enumerate(netlist_lines, start=1)
+        if line.strip().startswith(".print dc")
+    )
+    plot_ac_line = next(
+        index
+        for index, line in enumerate(netlist_lines, start=1)
+        if line.strip().startswith(".plot ac")
+    )
 
     op_execution = run_deck_analysis(circuit, netlist, "op")
     assert op_execution.plan.analysis == "op"
@@ -6874,9 +6895,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "OutputProbeList\tOutputDirectives\tOutputDirectiveList\t"
         "OutputDirectiveKinds\tOutputDirectiveKindList\t"
         "OutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\t"
+        "OutputDirectiveLines\tOutputDirectiveLineList\t"
         "Tables\tTableList\n"
         "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t"
-        "1\tglobal\t3\t"
+        f"1\tglobal\t1\t{save_line}\t3\t"
         "result;output-plan;run-artifact\n"
     )
     expected_output_plan_records = [
@@ -6893,6 +6915,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
             "OutputDirectiveKindList": "save",
             "OutputDirectiveAnalysisKinds": "1",
             "OutputDirectiveAnalysisKindList": "global",
+            "OutputDirectiveLines": "1",
+            "OutputDirectiveLineList": str(save_line),
             "Tables": "3",
             "TableList": "result;output-plan;run-artifact",
         }
@@ -6909,6 +6933,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert output_plan_artifact.output_directive_kinds == ["save"]
     assert output_plan_artifact.output_directive_analysis_kind_count == 1
     assert output_plan_artifact.output_directive_analysis_kinds == ["global"]
+    assert output_plan_artifact.output_directive_line_count == 1
+    assert output_plan_artifact.output_directive_lines == [save_line]
     assert output_plan_artifact.tables == ["result", "output-plan", "run-artifact"]
     assert op_execution.output_plan_artifact_table == expected_output_plan_table
     assert op_execution.output_plan_artifact_table == (
@@ -6919,8 +6945,9 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "OutputProbeList,OutputDirectives,OutputDirectiveList,"
         "OutputDirectiveKinds,OutputDirectiveKindList,"
         "OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,"
+        "OutputDirectiveLines,OutputDirectiveLineList,"
         "Tables,TableList\n"
-        "op,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,1,global,3,"
+        f"op,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,1,global,1,{save_line},3,"
         "result;output-plan;run-artifact\n"
     )
     assert op_execution.output_plan_artifact_csv == (
@@ -7133,9 +7160,17 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "global",
         "dc",
     ]
+    dc_output_directive_lines = [save_line, probe_dc_line, print_dc_line]
+    assert (
+        dc_execution.output_plan_artifacts[0].output_directive_lines
+        == dc_output_directive_lines
+    )
     assert dc_execution.output_plan_artifact_records[0][
         "OutputDirectiveAnalysisKindList"
     ] == "global;dc"
+    assert dc_execution.output_plan_artifact_records[0][
+        "OutputDirectiveLineList"
+    ] == ";".join(str(line) for line in dc_output_directive_lines)
     assert dc_execution.analysis_directives == [".dc"]
     assert dc_execution.table_count == 4
     assert dc_execution.tables == ["result", "measurement", "output-plan", "run-artifact"]
@@ -7215,9 +7250,17 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "global",
         "ac",
     ]
+    ac_output_directive_lines = [save_line, plot_ac_line]
+    assert (
+        ac_execution.output_plan_artifacts[0].output_directive_lines
+        == ac_output_directive_lines
+    )
     assert ac_execution.output_plan_artifact_records[0][
         "OutputDirectiveAnalysisKindList"
     ] == "global;ac"
+    assert ac_execution.output_plan_artifact_records[0][
+        "OutputDirectiveLineList"
+    ] == ";".join(str(line) for line in ac_output_directive_lines)
     assert ac_execution.analysis_directives == [".ac"]
     assert ac_execution.table_count == 4
     assert ac_execution.tables == ["result", "measurement", "output-plan", "run-artifact"]
@@ -7269,6 +7312,9 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
     assert tran_execution.output_probes == ["V(mid)"]
     assert tran_execution.output_directives == [".save"]
+    assert tran_execution.output_plan_artifacts[0].output_directive_lines == [
+        save_line
+    ]
     assert tran_execution.analysis_directives == [".tran"]
     assert tran_execution.table_count == 4
     assert tran_execution.tables == ["result", "measurement", "output-plan", "run-artifact"]

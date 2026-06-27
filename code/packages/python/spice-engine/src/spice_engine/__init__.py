@@ -46,6 +46,7 @@ from spice_engine.compatibility import (
     resolve_deck_sources,
     select_deck_analysis_plan,
     select_deck_output_directive_analysis_kinds,
+    select_deck_output_directive_lines,
     select_deck_output_directives,
     select_deck_output_probes,
 )
@@ -645,6 +646,7 @@ __all__ = [
     "run_deck_analysis",
     "select_deck_analysis_plan",
     "select_deck_output_directive_analysis_kinds",
+    "select_deck_output_directive_lines",
     "select_deck_output_directives",
     "select_deck_output_probes",
     "sens_dc",

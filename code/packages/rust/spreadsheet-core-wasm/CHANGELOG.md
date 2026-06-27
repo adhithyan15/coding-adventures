@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.12.0
+
+**Multi-sheet workbook.** `SpreadsheetSession` is now multi-sheet: bare-A1 ops
+address an ACTIVE sheet and a formula may reference another (`=Summary!A1`), on the
+engine's cross-sheet support. New methods: `sheet_names()` (JSON
+`{"sheets":[..],"active":i}`), `active_sheet`, `set_active_sheet`, `add_sheet`,
+`rename_sheet`, `delete_sheet`, `move_sheet` (mutators are undoable). Per-sheet raw
+echo: `raw` is the active sheet's typed-text map, inactive sheets in `other_raw`,
+swapped on `activate`. After any sheet op the echoes are rebuilt from the engine in
+one pass (`rebuild_all_raw_from_engine`), so a `SheetId` reindex (delete/move) or a
+qualifier rewrite (rename) can't leave them stale; the active sheet is tracked by
+name across the op. `load_snapshot` now rebuilds ALL sheets' echoes. The single-sheet
+path is byte-identical.
+
 ## 0.11.0
 
 **Find / replace facade.** `find_all(query, in_formulas, match_case) -> String`
