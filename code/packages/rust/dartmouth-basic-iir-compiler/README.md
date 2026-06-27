@@ -60,8 +60,10 @@ without numeric formatting helpers, and comma-separated string printing
 `PRINT A$ + "K"` also consumes a temporary E4 `str_concat` result directly, and
 `IF A$ + "K" = "OK" THEN ...` feeds the same expression path into `str_eq`
 line-control branching. `LET B$ = A$ + "K"; PRINT B$` stores the variable-backed
-concat directly into another scalar string slot. Richer dynamic string storage,
-string arrays, and string `INPUT` remain follow-ups. See
+concat directly into another scalar string slot, and
+`LET B$ = A$ + "B" + "C"; PRINT B$` proves chained left-associative concat
+through repeated E4 `str_concat`. Richer dynamic string storage, string arrays,
+and string `INPUT` remain follow-ups. See
 [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`

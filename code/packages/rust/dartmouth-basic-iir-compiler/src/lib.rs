@@ -2785,6 +2785,42 @@ mod tests {
     }
 
     #[test]
+    fn compiles_chained_string_variable_concat_assignment_and_print() {
+        let m = compile("10 LET A$ = \"A\"\n20 LET B$ = A$ + \"B\" + \"C\"\n30 PRINT B$\n40 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        let concat_positions: Vec<usize> = body.iter()
+            .enumerate()
+            .filter_map(|(idx, i)| (i.op == "str_concat").then_some(idx))
+            .collect();
+        assert_eq!(
+            concat_positions.len(),
+            2,
+            "three string operands should lower to two str_concat ops"
+        );
+        let first_dest = body[concat_positions[0]]
+            .dest
+            .as_deref()
+            .expect("first concat has a temp destination");
+        assert!(matches!(body[concat_positions[0]].srcs.as_slice(), [
+            Operand::Var(left),
+            Operand::Var(_right)
+        ] if left == "__basic_str_A"));
+        assert!(matches!(body[concat_positions[1]].srcs.as_slice(), [
+            Operand::Var(left),
+            Operand::Var(_right)
+        ] if left == first_dest));
+        assert_eq!(
+            body[concat_positions[1]].dest.as_deref(),
+            Some("__basic_str_B"),
+            "the final concat in a target assignment should land directly in B$"
+        );
+        assert!(body.iter().any(|i| i.op == "print_str"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "__basic_str_B")),
+            "PRINT B$ should consume the chained concat result");
+    }
+
+    #[test]
     fn compiles_multi_item_string_print_with_semicolon() {
         let m = compile("10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$; B$\n40 END\n")
             .expect("ok");

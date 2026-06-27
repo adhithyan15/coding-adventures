@@ -1,5 +1,20 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.27.0 — 2026-06-27 — BA4 chained string concatenation proof
+
+String expressions now have an explicit unit and matrix proof for chained
+left-associative concatenation with a variable operand:
+
+```basic
+10 LET A$ = "A"
+20 LET B$ = A$ + "B" + "C"
+30 PRINT B$
+```
+
+The compiler emits two E4 `str_concat` instructions, storing the final result
+directly into `__basic_str_B`; `PRINT B$` observes `ABC` on every LANG-FULL
+backend through `lang-aot`.
+
 ## 0.26.0 — 2026-06-27 — integer-literal exponentiation (LANG-FULL BA-^)
 
 The compiler now lowers the backend-neutral subset of BASIC `^`: a
