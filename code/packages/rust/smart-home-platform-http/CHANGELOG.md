@@ -24,6 +24,8 @@ All notable changes to this package will be documented in this file.
   by event id.
 - Added a dashboard overview route that composes runtime health, topology,
   inventory, desired-state, and audit summaries for local controllers.
+- Added a dashboard bootstrap route that bundles startup links, API discovery,
+  state-gap records, and recent audit summaries for local controllers.
 - Added a dashboard-ready API route catalog with surface, method, mutating, and
   authorization filters for local-controller clients.
 - Added a native service catalog route with command affordances, Home

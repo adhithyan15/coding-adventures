@@ -391,6 +391,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
         });
     }
 
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/bootstrap", move |_| {
+            runtime_bootstrap_response(&runtime)
+        });
+    }
+
     app.get("/api/smart_home/api", api_catalog_response);
 
     {
@@ -1011,6 +1018,15 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/bootstrap",
+        category: "dashboard",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/api",
         category: "api_catalog",
         surface: "smart_home",
@@ -1371,6 +1387,14 @@ fn runtime_dashboard_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResp
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
     WebResponse::json(runtime_dashboard_json(runtime, &runtime_guard).into_bytes())
+}
+
+fn runtime_bootstrap_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    WebResponse::json(runtime_bootstrap_json(runtime, &runtime_guard).into_bytes())
 }
 
 fn api_catalog_response(request: &WebRequest) -> WebResponse {
@@ -2067,6 +2091,43 @@ fn runtime_dashboard_json(
         capabilities_catalog_json(&capabilities),
         rooms_json(&rooms, runtime_guard),
         desired_states_json(&desired_states, runtime_guard),
+        runtime_event_summary_json(&event_summary),
+        command_result_summary_json(&command_summary),
+        authorization_decision_summary_json(&authorization_summary),
+    )
+}
+
+fn runtime_bootstrap_json(
+    runtime: &SmartHomePlatformHttpRuntime,
+    runtime_guard: &SmartHomeRuntime,
+) -> String {
+    let routes = API_ROUTE_CATALOG.iter().collect::<Vec<_>>();
+    let state_gaps = runtime_state_gap_entities(runtime_guard, runtime.now_ms, 25);
+    let event_query = RuntimeEventQuery::new()
+        .sorted_by(RuntimeEventSort::SequenceDesc)
+        .with_limit(25);
+    let event_summary = runtime_guard.event_bus().event_log_summary(&event_query);
+    let command_query = RuntimeCommandResultQuery::new()
+        .sorted_by(RuntimeCommandResultSort::SequenceDesc)
+        .with_limit(25);
+    let command_summary = runtime_guard.command_result_summary(&command_query);
+    let authorization_query = RuntimeAuthorizationDecisionQuery::new().with_limit(25);
+    let authorization_summary = runtime_guard.authorization_decision_summary(&authorization_query);
+
+    format!(
+        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"dashboard\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
+        runtime.now_ms,
+        json_string(VERSION),
+        json_string("/api/smart_home/dashboard"),
+        json_string("/api/smart_home/api"),
+        json_string("/api/smart_home/states"),
+        json_string("/api/smart_home/state_history"),
+        json_string("/api/smart_home/command_results"),
+        json_string("/api/smart_home/authorization_decisions"),
+        runtime_health_json(runtime, runtime_guard),
+        runtime_dashboard_json(runtime, runtime_guard),
+        api_catalog_json(&routes),
+        states_registry_json(&state_gaps, runtime_guard, runtime.now_ms),
         runtime_event_summary_json(&event_summary),
         command_result_summary_json(&command_summary),
         authorization_decision_summary_json(&authorization_summary),
@@ -3417,6 +3478,27 @@ fn runtime_state_entities<'a>(
     entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
     entities.truncate(limit);
     Ok(entities)
+}
+
+fn runtime_state_gap_entities(
+    runtime: &SmartHomeRuntime,
+    now_ms: u64,
+    limit: usize,
+) -> Vec<&Entity> {
+    let mut entities = runtime
+        .registry()
+        .entities()
+        .filter(|entity| {
+            entity
+                .state
+                .as_ref()
+                .is_none_or(|snapshot| snapshot.is_stale_at(now_ms))
+        })
+        .collect::<Vec<_>>();
+
+    entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
+    entities.truncate(limit);
+    entities
 }
 
 fn runtime_scenes<'a>(
@@ -5705,6 +5787,38 @@ mod tests {
         assert!(dashboard.contains(r#""events":{"summary":{"total_events":1"#));
         assert!(dashboard.contains(r#""command_results":{"summary":{"total_results":1"#));
         assert!(dashboard.contains(r#""authorization_decisions":{"summary":{"total_decisions":2"#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_bootstrap_payload() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/services/light/turn_on",
+                r#"{"entity_id":"entity-light-1"}"#,
+            ))
+            .into();
+        assert_eq!(response.status, 200);
+
+        let bootstrap = response_body(
+            app.handle(request("GET", "/api/smart_home/bootstrap"))
+                .into(),
+        );
+
+        assert!(bootstrap.contains(r#""generated_at_ms":5000"#));
+        assert!(bootstrap.contains(r#""version":"0.1.0""#));
+        assert!(bootstrap.contains(r#""dashboard":"/api/smart_home/dashboard""#));
+        assert!(bootstrap.contains(r#""states":"/api/smart_home/states""#));
+        assert!(bootstrap.contains(r#""health":{"generated_at_ms":5000"#));
+        assert!(bootstrap.contains(r#""dashboard":{"generated_at_ms":5000"#));
+        assert!(bootstrap.contains(r#""api":{"version":"0.1.0""#));
+        assert!(bootstrap.contains(r#""path":"/api/smart_home/bootstrap""#));
+        assert!(bootstrap.contains(r#""state_gaps":{"summary":{"total_entities":1"#));
+        assert!(bootstrap.contains(r#""entity_id":"entity-sensor-1""#));
+        assert!(bootstrap.contains(r#""recent_activity":{"events":{"summary":{"total_events":1"#));
+        assert!(bootstrap.contains(r#""command_results":{"summary":{"total_results":1"#));
+        assert!(bootstrap.contains(r#""authorization_decisions":{"summary":{"total_decisions":2"#));
     }
 
     #[test]
