@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | string variables, richer string ops, and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), and literal `print`/`output` string I/O ✅ (AL4 foothold); no call-by-name, full string variables/arrays, or multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -226,7 +226,9 @@ multiple languages; close an enabler before the features that depend on it.
   the static private `{len,bytes}` global + `@__print_str` shape, native AOT owns
   the heap-byte `alloc_bytes` + `store_byte` + `print_string` shape, and JVM/CLR
   own it with `ldc`/`ldstr` + `PrintStream.print(String)`/`Console.Write(string)`
-  plus host string metadata/index calls; reassignable/captured string variables
+  plus host string metadata/index calls. ALGOL now reuses the same output path:
+  `begin print('HI') end` (and `output`) lowers literal actuals to `str_const` +
+  `print_str` and runs on all 7 backends. Reassignable/captured string variables
   and broader dynamic string values remain.
   Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
@@ -549,7 +551,11 @@ backend immediately) come before the enabler-dependent items.
   propagated its dead seed → only the JIT returned 0). **Limits (follow-ups):** typed
   procedures only — proper (void) procedures rejected (inert on this slice); bodies are
   lexically flat (no enclosing-scope access yet); `value` params only (by-name is AL7).
-- ☐ **AL4** — strings + `print`/`output` I/O (needs **E4**).
+- ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
+  **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
+  to `str_const` + `print_str`, verified by `lang_matrix.rs` on native/LLVM/WASM/
+  JVM/CLR/VM/JIT. Full `string` declarations, variables, arrays, parameters, and
+  non-literal string expressions remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
   native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). `goto s[i]` lowers to a 1-based

@@ -609,6 +609,21 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — literal string output (LANG-FULL AL4 on E4). ALGOL leaves I/O
+    // implementation-defined, so this frontend recognises undeclared statement
+    // calls named `print`/`output` as standard output procedures. The narrow
+    // foothold is deliberately literal-only: `print('HI')` lowers to E4
+    // `str_const` + `print_str`, exactly the same shared string op pair BASIC
+    // string `PRINT` already proved. That makes stdout the observable result on
+    // native-AOT / LLVM / WASM / JVM / CLR / VM / JIT without adding any
+    // ALGOL-specific backend hooks.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin print('HI') end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — the `abs` **standard function** (§3.2.4, LANG-FULL AL8). `abs`
     // is built into the language, not a user procedure, so `algol-iir-compiler`
     // resolves it by name and lowers `abs(0 - 42)` inline to the value of

@@ -58,6 +58,24 @@ fn count_rule(node: &GrammarASTNode, target: &str) -> usize {
     count
 }
 
+/// Recursively search the AST for a token type/value pair.
+fn find_token(node: &GrammarASTNode, ty: &str, value: &str) -> bool {
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(token)
+                if token.effective_type_name() == ty && token.value == value =>
+            {
+                return true;
+            }
+            ASTNodeOrToken::Node(child_node) if find_token(child_node, ty, value) => {
+                return true;
+            }
+            _ => {}
+        }
+    }
+    false
+}
+
 // ===========================================================================
 // 1. Minimal programs
 // ===========================================================================
@@ -79,6 +97,18 @@ fn test_program_no_declarations() {
     let ast = parse_algol("begin halt end");
     assert_program_root(&ast);
     assert!(find_rule(&ast, "block"), "Expected 'block' rule");
+}
+
+#[test]
+fn test_proc_stmt_string_literal_actual() {
+    let ast = parse_algol("begin print('HI') end");
+    assert_program_root(&ast);
+    assert!(find_rule(&ast, "proc_stmt"), "Expected 'proc_stmt'");
+    assert!(find_rule(&ast, "actual_params"), "Expected actual parameters");
+    assert!(
+        find_token(&ast, "STRING_LIT", "'HI'"),
+        "Expected ALGOL string literal token"
+    );
 }
 
 /// A block with a single assignment using a real literal.

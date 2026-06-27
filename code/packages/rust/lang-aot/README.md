@@ -4,8 +4,13 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-FULL E4 — literal strings plus named/local Twig string values run on all 7 backends (v0.115.0):**
+> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.117.0):**
 > `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+> It also proves `10 LET A$ = "HI"; 20 PRINT A$` produces stdout `HI` on
+> the same seven backends.
+> ALGOL 60 now proves `begin print('HI') end`, lowering the implementation-defined
+> `print`/`output` output procedures to the same E4 `str_const` + `print_str`
+> path and producing stdout `HI` everywhere.
 > It also proves Twig `(string-length "HELLO")` returns exit code `5` and
 > `(string-ref "ABC" 1)` returns exit code `66`,
 > `(string=? "HELLO" "HELLO")` returns exit code `1`, plus

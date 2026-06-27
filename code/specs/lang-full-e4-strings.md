@@ -147,8 +147,10 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `str_eq`; string arrays, string `INPUT`, and richer expressions remain
   follow-ups.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
-  produces string literals. Lower `string` declarations to `str` slots and the
-  (to-be-added) `print`/`output` intrinsic to `print_str`.
+  produces string literals. The current foothold recognises undeclared
+  statement-position `print`/`output` calls and lowers string literal actuals to
+  `str_const` + `print_str`; full `string` declarations/variables/arrays remain
+  follow-ups.
 - **Twig (TW4)** — Twig string literals + `print` lower to `str_const` +
   `print_str`; `++`/`string-append` to `str_concat`, `string=?` to `str_eq`. (The
   dynamic-`any` Twig path still needs broader E6; the *typed* string slice here is
@@ -218,6 +220,12 @@ merge before the next:
    into a safe typed string slot consumed by `PRINT A$`. Matrix `Prog` returns
    stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Richer string
    expressions, string arrays, and string `INPUT` remain follow-ups.
+2b. ✅ **AL4-literal-output proof** — `algol-iir-compiler` recognises
+   undeclared statement-position `print`/`output` calls and lowers string literal
+   actuals to E4 `str_const` + `print_str`. Matrix `Prog`
+   `begin print('HI') end` returns stdout `HI` on native-AOT + VM + JIT + LLVM +
+   WASM + JVM + CLR. Full ALGOL `string` declarations, variables, arrays, and
+   non-literal string expressions remain follow-ups.
 3. ✅ **E4-literal-metadata/index proofs** — Twig lowers literal
    `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
    `(string=? "HELLO" "HELLO")`, and
