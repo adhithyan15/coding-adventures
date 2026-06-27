@@ -44,6 +44,369 @@ use coding_adventures_html_parser::{
 use serde::Deserialize;
 
 const BROWSER_READINESS_FIXTURE: &str = include_str!("fixtures/html-browser-readiness.json");
+const BROWSER_READINESS_TEST_SOURCE: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/tests/browser_readiness_test.rs"
+));
+const HTML_PARSER_SOURCE: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/src/lib.rs"));
+
+struct BrowserReadinessCompletionExpectation {
+    field: &'static str,
+    type_name: &'static str,
+    fixture_case: Option<&'static str>,
+    focused_tests: &'static [&'static str],
+}
+
+const BROWSER_READINESS_COMPLETION_SURFACE: &[BrowserReadinessCompletionExpectation] = &[
+    completion_fixture(
+        "event_handler_descriptors",
+        "BrowserEventHandlerDescriptor",
+        "event-handler-page",
+    ),
+    completion_tests(
+        "lifecycle_event_descriptors",
+        "BrowserLifecycleEventDescriptor",
+        &["browser_lifecycle_event_descriptors_track_load_and_error_recovery_hooks"],
+    ),
+    completion_tests(
+        "animation_interaction_descriptors",
+        "BrowserAnimationInteractionDescriptor",
+        &["browser_animation_interaction_descriptors_track_css_timeline_hooks"],
+    ),
+    completion_tests(
+        "fullscreen_interaction_descriptors",
+        "BrowserFullscreenInteractionDescriptor",
+        &["browser_fullscreen_interaction_descriptors_track_embedded_policy_hints"],
+    ),
+    completion_tests(
+        "context_menu_interaction_descriptors",
+        "BrowserContextMenuInteractionDescriptor",
+        &["browser_context_menu_interaction_descriptors_track_menu_invokers_and_handlers"],
+    ),
+    completion_fixture(
+        "script_execution_descriptors",
+        "BrowserScriptExecutionDescriptor",
+        "script-style-loading-page",
+    ),
+    completion_fixture(
+        "script_storage_access_descriptors",
+        "BrowserScriptStorageAccessDescriptor",
+        "script-storage-access-page",
+    ),
+    completion_fixture(
+        "script_worker_messaging_descriptors",
+        "BrowserScriptWorkerMessagingDescriptor",
+        "script-worker-messaging-page",
+    ),
+    completion_fixture(
+        "script_module_graph_descriptors",
+        "BrowserScriptModuleGraphDescriptor",
+        "script-module-graph-page",
+    ),
+    completion_fixture(
+        "stylesheet_planning_descriptors",
+        "BrowserStylesheetPlanningDescriptor",
+        "script-style-loading-page",
+    ),
+    completion_fixture(
+        "document_policy_descriptors",
+        "BrowserDocumentPolicyDescriptor",
+        "document-metadata-policy-page",
+    ),
+    completion_fixture(
+        "loading_hint_descriptors",
+        "BrowserLoadingHintDescriptor",
+        "link-resource-metadata-page",
+    ),
+    completion_fixture(
+        "fetch_policy_descriptors",
+        "BrowserFetchPolicyDescriptor",
+        "link-resource-metadata-page",
+    ),
+    completion_fixture(
+        "resource_endpoint_descriptors",
+        "BrowserResourceEndpointDescriptor",
+        "document-metadata-policy-page",
+    ),
+    completion_fixture(
+        "link_resource_descriptors",
+        "BrowserLinkResourceDescriptor",
+        "link-resource-metadata-page",
+    ),
+    completion_fixture(
+        "form_policy_descriptors",
+        "BrowserFormPolicyDescriptor",
+        "catalog-form-table-page",
+    ),
+    completion_tests(
+        "form_control_descriptors",
+        "BrowserFormControlDescriptor",
+        &[
+            "browser_form_control_descriptors_track_flat_control_inventory",
+            "browser_form_control_descriptors_track_missing_names_and_blockers",
+        ],
+    ),
+    completion_tests(
+        "form_association_descriptors",
+        "BrowserFormAssociationDescriptor",
+        &["browser_form_association_descriptors_track_flat_owner_and_label_links"],
+    ),
+    completion_tests(
+        "form_autofill_descriptors",
+        "BrowserFormAutofillDescriptor",
+        &["browser_form_autofill_descriptors_track_flat_autocomplete_hints_and_blockers"],
+    ),
+    completion_tests(
+        "form_submission_descriptors",
+        "BrowserFormSubmissionDescriptor",
+        &["browser_form_submission_descriptors_track_flat_successful_controls_and_submitters"],
+    ),
+    completion_tests(
+        "form_reset_descriptors",
+        "BrowserFormResetDescriptor",
+        &["browser_form_reset_descriptors_track_flat_resetters_and_controls"],
+    ),
+    completion_tests(
+        "form_validation_descriptors",
+        "BrowserFormValidationDescriptor",
+        &["browser_form_validation_descriptors_track_flat_candidates_and_bypass_hints"],
+    ),
+    completion_fixture(
+        "anchor_descriptors",
+        "BrowserAnchorDescriptor",
+        "legacy-directory-page",
+    ),
+    completion_fixture(
+        "heading_descriptors",
+        "BrowserHeadingDescriptor",
+        "legacy-directory-page",
+    ),
+    completion_fixture(
+        "text_semantic_descriptors",
+        "BrowserTextSemanticDescriptor",
+        "inline-semantic-metadata-page",
+    ),
+    completion_tests(
+        "text_flow_descriptors",
+        "BrowserTextFlowDescriptor",
+        &[
+            "browser_text_flow_descriptors_track_lists_quotes_and_preformatted_blocks",
+            "browser_text_flow_descriptors_track_empty_and_unresolved_blockers",
+        ],
+    ),
+    completion_fixture(
+        "navigation_target_descriptors",
+        "BrowserNavigationTargetDescriptor",
+        "legacy-directory-page",
+    ),
+    completion_fixture(
+        "navigation_group_descriptors",
+        "BrowserNavigationGroupDescriptor",
+        "navigation-menu-descriptor-page",
+    ),
+    completion_fixture(
+        "section_landmark_descriptors",
+        "BrowserSectionLandmarkDescriptor",
+        "document-outline-landmark-page",
+    ),
+    completion_fixture(
+        "activation_descriptors",
+        "BrowserActivationDescriptor",
+        "interactive-element-state-page",
+    ),
+    completion_tests(
+        "popover_descriptors",
+        "BrowserPopoverDescriptor",
+        &[
+            "browser_popover_descriptors_track_hosts_invokers_and_actions",
+            "browser_popover_descriptors_track_missing_and_invalid_blockers",
+        ],
+    ),
+    completion_fixture(
+        "aria_collections",
+        "BrowserAriaCollection",
+        "aria-collection-descriptor-page",
+    ),
+    completion_fixture(
+        "aria_collection_descriptors",
+        "BrowserAriaCollectionDescriptor",
+        "aria-collection-descriptor-page",
+    ),
+    completion_fixture(
+        "aria_ranges",
+        "BrowserAriaRange",
+        "aria-range-descriptor-page",
+    ),
+    completion_fixture(
+        "aria_live_regions",
+        "BrowserAriaLiveRegion",
+        "aria-live-region-descriptor-page",
+    ),
+    completion_fixture(
+        "aria_name_descriptors",
+        "BrowserAriaNameDescriptor",
+        "aria-name-descriptor-page",
+    ),
+    completion_fixture(
+        "aria_description_descriptors",
+        "BrowserAriaDescriptionDescriptor",
+        "aria-description-descriptor-page",
+    ),
+    completion_fixture(
+        "aria_relation_descriptors",
+        "BrowserAriaRelationDescriptor",
+        "aria-relation-descriptor-page",
+    ),
+    completion_fixture(
+        "image_candidate_descriptors",
+        "BrowserImageCandidateDescriptor",
+        "responsive-image-metadata-page",
+    ),
+    completion_fixture(
+        "image_map_descriptors",
+        "BrowserImageMapDescriptor",
+        "responsive-image-metadata-page",
+    ),
+    completion_fixture(
+        "media_playback_descriptors",
+        "BrowserMediaPlaybackDescriptor",
+        "media-playback-poster-page",
+    ),
+    completion_tests(
+        "media_resource_descriptors",
+        "BrowserMediaResourceDescriptor",
+        &[
+            "browser_media_resource_descriptors_track_source_and_text_track_candidates",
+            "browser_media_resource_descriptors_track_missing_sources_and_labels",
+        ],
+    ),
+    completion_fixture(
+        "embedded_policy_descriptors",
+        "BrowserEmbeddedPolicyDescriptor",
+        "embedded-resource-page",
+    ),
+    completion_fixture(
+        "focus_navigation_descriptors",
+        "BrowserFocusNavigationDescriptor",
+        "interactive-element-state-page",
+    ),
+    completion_fixture(
+        "keyboard_interaction_descriptors",
+        "BrowserKeyboardInteractionDescriptor",
+        "interactive-element-state-page",
+    ),
+    completion_fixture(
+        "input_planning_descriptors",
+        "BrowserInputPlanningDescriptor",
+        "form-accessibility-document-page",
+    ),
+    completion_fixture(
+        "drag_drop_descriptors",
+        "BrowserDragDropDescriptor",
+        "interactive-element-state-page",
+    ),
+    completion_fixture(
+        "clipboard_interaction_descriptors",
+        "BrowserClipboardInteractionDescriptor",
+        "interactive-element-state-page",
+    ),
+    completion_fixture(
+        "selection_interaction_descriptors",
+        "BrowserSelectionInteractionDescriptor",
+        "interactive-element-state-page",
+    ),
+    completion_tests(
+        "composition_interaction_descriptors",
+        "BrowserCompositionInteractionDescriptor",
+        &["browser_composition_interaction_descriptors_track_ime_and_input_hooks"],
+    ),
+    completion_fixture(
+        "pointer_interaction_descriptors",
+        "BrowserPointerInteractionDescriptor",
+        "interactive-element-state-page",
+    ),
+    completion_tests(
+        "scroll_interaction_descriptors",
+        "BrowserScrollInteractionDescriptor",
+        &["browser_scroll_interaction_descriptors_track_scrollbars_handlers_and_blockers"],
+    ),
+    completion_fixture(
+        "disclosure_state_descriptors",
+        "BrowserDisclosureStateDescriptor",
+        "interactive-element-state-page",
+    ),
+    completion_fixture(
+        "template_descriptors",
+        "BrowserTemplateDescriptor",
+        "component-template-page",
+    ),
+    completion_fixture(
+        "slot_descriptors",
+        "BrowserSlotDescriptor",
+        "component-template-page",
+    ),
+    completion_fixture(
+        "custom_element_descriptors",
+        "BrowserCustomElementDescriptor",
+        "component-template-page",
+    ),
+    completion_fixture(
+        "canvas_descriptors",
+        "BrowserCanvasDescriptor",
+        "component-template-page",
+    ),
+    completion_fixture(
+        "component_hydration_descriptors",
+        "BrowserComponentHydrationDescriptor",
+        "component-template-page",
+    ),
+    completion_fixture(
+        "data_attribute_descriptors",
+        "BrowserDataAttributeDescriptor",
+        "component-template-page",
+    ),
+    completion_fixture(
+        "global_state_descriptors",
+        "BrowserGlobalStateDescriptor",
+        "document-shell-global-state-page",
+    ),
+    completion_fixture(
+        "structured_data_descriptors",
+        "BrowserStructuredDataDescriptor",
+        "structured-data-microdata-page",
+    ),
+    completion_fixture(
+        "table_structure_descriptors",
+        "BrowserTableStructureDescriptor",
+        "table-cell-descriptor-page",
+    ),
+];
+
+const fn completion_fixture(
+    field: &'static str,
+    type_name: &'static str,
+    fixture_case: &'static str,
+) -> BrowserReadinessCompletionExpectation {
+    BrowserReadinessCompletionExpectation {
+        field,
+        type_name,
+        fixture_case: Some(fixture_case),
+        focused_tests: &[],
+    }
+}
+
+const fn completion_tests(
+    field: &'static str,
+    type_name: &'static str,
+    focused_tests: &'static [&'static str],
+) -> BrowserReadinessCompletionExpectation {
+    BrowserReadinessCompletionExpectation {
+        field,
+        type_name,
+        fixture_case: None,
+        focused_tests,
+    }
+}
 
 #[derive(Debug, Deserialize)]
 struct BrowserReadinessSuite {
@@ -4874,6 +5237,71 @@ fn browser_readiness_cases_extract_browser_document_facts() {
             actual, expected,
             "{} extracted browser facts should match",
             case.id
+        );
+    }
+}
+
+#[test]
+fn browser_readiness_completion_manifest_matches_public_surface() {
+    let fixture: serde_json::Value = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let cases = fixture["cases"]
+        .as_array()
+        .expect("browser readiness fixture should contain cases");
+
+    for expectation in BROWSER_READINESS_COMPLETION_SURFACE {
+        let document_field = format!("pub {}: Vec<{}>,", expectation.field, expectation.type_name);
+        assert!(
+            HTML_PARSER_SOURCE.contains(&document_field),
+            "BrowserDocument should expose `{}` as `{}`",
+            expectation.field,
+            expectation.type_name,
+        );
+
+        if let Some(case_id) = expectation.fixture_case {
+            let case = cases
+                .iter()
+                .find(|case| case["id"].as_str() == Some(case_id))
+                .unwrap_or_else(|| panic!("completion fixture case `{case_id}` should exist"));
+            let expected = case["expected"].as_object().unwrap_or_else(|| {
+                panic!("completion fixture case `{case_id}` should have expected facts")
+            });
+            let values = expected
+                .get(expectation.field)
+                .unwrap_or_else(|| {
+                    panic!(
+                        "completion fixture case `{case_id}` should pin `{}`",
+                        expectation.field
+                    )
+                })
+                .as_array()
+                .unwrap_or_else(|| {
+                    panic!(
+                        "completion fixture field `{}` should be an array",
+                        expectation.field
+                    )
+                });
+            assert!(
+                !values.is_empty(),
+                "completion fixture case `{case_id}` should pin non-empty `{}`",
+                expectation.field,
+            );
+        }
+
+        for test_name in expectation.focused_tests {
+            let test_signature = format!("fn {test_name}(");
+            assert!(
+                BROWSER_READINESS_TEST_SOURCE.contains(&test_signature),
+                "completion surface `{}` should be covered by focused test `{}`",
+                expectation.field,
+                test_name,
+            );
+        }
+
+        assert!(
+            expectation.fixture_case.is_some() || !expectation.focused_tests.is_empty(),
+            "completion surface `{}` should have fixture or focused-test evidence",
+            expectation.field,
         );
     }
 }
