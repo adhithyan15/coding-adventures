@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
-## [0.63.0] - 2026-06-26
+## [0.67.0] - 2026-06-26
 
 ### Added — fold static `Array.of(v0, v1, …)` → array literal `[v0, v1, …]`
 
@@ -25,6 +25,32 @@ bare global `Array.of(...)` callee folds (never a shadowed `a.of(...)`). A
 spread argument would be declined, but the AST has no call-argument spread
 variant yet, so every argument is a plain expression and the fold always applies.
 
+## [0.65.0] - 2026-06-26
+
+### Added — fold static `JSON.stringify(…)` → string literal (primitive subset)
+
+The static `JSON.stringify(x)` (ECMAScript §25.5.2) now folds to a string literal
+for the primitive literal arguments whose JSON text we can render exactly, and
+only the single-argument form (a `replacer`/`space` second argument can change
+the result — a replacer function is invoked even on a primitive):
+
+- a NUMBER literal → its `ToString`: `JSON.stringify(42)` → the string `"42"`,
+  `JSON.stringify(-7)` → `"-7"`, `JSON.stringify(0)` → `"0"`. Reuses
+  `fold_string_of_number`, which declines fractional values and magnitudes
+  ≥ 2⁵³ (whose shortest-decimal / exponential spelling could diverge), so those
+  leave the call intact (`JSON.stringify(1e21)` is `"1e+21"` in V8 — declined);
+- a BOOLEAN literal → `"true"` / `"false"`;
+- the NULL literal → `"null"`.
+
+A STRING literal is DECLINED (JSON escaping — quotes, backslashes, control chars,
+and the U+2028/U+2029 edge cases — is left to the runtime), as is any array/object
+literal (its elements/properties may have side effects, and serialisation
+recurses), an identifier, or any other non-literal. Dispatches through the
+`MemberExpression` callee arm (alongside the `String.from*` / `Number.isX`/`parseX`
+statics) — only the bare global `JSON.stringify(...)` folds, never a shadowed
+receiver. The folded text is pure ASCII, so it needs no escaping. Added six unit
+tests (the primitive V8-oracle table, and the string / fractional-and-large /
+array-object-identifier / second-argument / non-`JSON`-receiver declines).
 ## [0.62.0] - 2026-06-26
 
 ### Added — fold static `Array.isArray(…)` → boolean literal

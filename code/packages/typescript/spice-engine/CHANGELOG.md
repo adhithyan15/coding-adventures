@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose selected analysis line/source metadata in `runDeckAnalysis`
+  output-plan artifacts beside directive metadata, with stable table, CSV,
+  compact JSON, and header-keyed record exports, matching Python and Rust.
 - Expose selected result row counts in `runDeckAnalysis` output-plan artifacts
   beside result-column inventories, with stable table, CSV, compact JSON, and
   header-keyed record exports, matching Python and Rust.
