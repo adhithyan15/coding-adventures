@@ -120,6 +120,26 @@
     }
     .status b { color: var(--ink); font-weight: 600; }
 
+    /* ── Sheet tab bar ───────────────────────────────────────────────*/
+    .sheettabs {
+      display: flex; align-items: flex-end; gap: 2px; margin: 10px 0 0;
+      padding-bottom: 0; border-bottom: 1px solid var(--line);
+    }
+    .sheettab {
+      background: var(--surface); color: var(--muted);
+      border: 1px solid var(--line-strong); border-bottom: none;
+      border-top-left-radius: var(--r-sm); border-top-right-radius: var(--r-sm);
+      padding: 6px 12px; font-family: var(--ui); font-size: 12px; font-weight: 500;
+      cursor: pointer; white-space: nowrap; transition: background .12s, color .12s;
+    }
+    .sheettab:hover { background: var(--surface-hover); color: var(--ink); }
+    .sheettab.active {
+      background: var(--panel); color: var(--ink);
+      border-color: var(--line-strong); position: relative; z-index: 1;
+      box-shadow: inset 0 2px 0 var(--accent);
+    }
+    .sheettab.add { color: var(--muted); font-weight: 600; padding: 6px 10px; }
+
     /* ── Sheet panel ─────────────────────────────────────────────────
        The scroll container; its single child .canvas is sized to the (huge)
        virtual content, which gives the scrollbar its range. */
@@ -215,6 +235,12 @@
         <button id="redoBtn" title="Redo the last undone edit">↷ Redo</button>
       </div>
     </div>
+
+    <!-- Sheet tab bar: one tab per sheet, the active one highlighted. Click a tab
+         to switch (bare-A1 cell ops then address that sheet); a formula can still
+         reference another sheet by name (=Summary!A1). Double-click to rename,
+         right-click to delete, + to add. -->
+    <div class="sheettabs" id="sheettabs" role="tablist" aria-label="Sheets"></div>
 
     <div class="sheet" id="sheet">
       <div class="canvas" id="canvas">
@@ -574,11 +600,88 @@
       Z1000: "0.0%", // 39 -> "3900.0%": proves the format applies far off-origin
     };
 
+    // ── Sheet tab bar ───────────────────────────────────────────────
+    // One tab per sheet, the active one highlighted. Clicking a tab switches the
+    // sheet bare-A1 cell ops address; a formula can still reference another sheet
+    // by name (=Summary!A1) and recomputes live when that sheet changes.
+    var tabsEl = document.getElementById("sheettabs");
+    function renderTabs() {
+      var info = workbook.sheetNames(); // { sheets: [...], active: idx }
+      tabsEl.innerHTML = "";
+      info.sheets.forEach(function (name, i) {
+        var tab = document.createElement("button");
+        tab.className = "sheettab" + (i === info.active ? " active" : "");
+        tab.textContent = name;
+        tab.setAttribute("role", "tab");
+        tab.title = "Switch to " + name + " · double-click to rename · right-click to delete";
+        tab.addEventListener("click", function () { switchSheet(i); });
+        tab.addEventListener("dblclick", function () { renameSheet(i, name); });
+        tab.addEventListener("contextmenu", function (e) { e.preventDefault(); deleteSheet(i, name); });
+        tabsEl.appendChild(tab);
+      });
+      var add = document.createElement("button");
+      add.className = "sheettab add";
+      add.textContent = "+";
+      add.title = "Add a sheet";
+      add.addEventListener("click", addSheet);
+      tabsEl.appendChild(add);
+    }
+    // After any sheet op the grid re-reads the (new) active sheet from row 1, the
+    // formula bar re-syncs, and the tabs repaint.
+    function afterSheetOp() {
+      resize();
+      selectCell(1, 1);
+      renderTabs();
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+    }
+    function switchSheet(i) {
+      if (workbook.setActiveSheet(i)) afterSheetOp();
+    }
+    function addSheet() {
+      var name = prompt("New sheet name:", "Sheet" + (workbook.sheetNames().sheets.length + 1));
+      if (name == null) return;
+      if (!workbook.addSheet(name)) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; couldn't add sheet (empty or duplicate name)";
+        return;
+      }
+      afterSheetOp();
+      statusEl.innerHTML += " &nbsp;·&nbsp; added sheet " + esc(name);
+    }
+    function renameSheet(i, old) {
+      var name = prompt("Rename sheet:", old);
+      if (name == null || name === old) return;
+      if (!workbook.renameSheet(i, name)) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; couldn't rename (empty or duplicate name)";
+        return;
+      }
+      renderTabs();
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+      statusEl.innerHTML += " &nbsp;·&nbsp; renamed " + esc(old) + " → " + esc(name);
+    }
+    function deleteSheet(i, name) {
+      if (workbook.sheetNames().sheets.length <= 1) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; can't delete the last sheet";
+        return;
+      }
+      if (!confirm("Delete sheet " + name + "? References to it become #REF!.")) return;
+      if (!workbook.deleteSheet(i)) return;
+      afterSheetOp();
+      statusEl.innerHTML += " &nbsp;·&nbsp; deleted sheet " + esc(name);
+    }
+
     function boot() {
       var Engine = window.SpreadsheetEngine;
       workbook = Engine.createSpreadsheet();
       workbook.setCells(SEED);
       for (var key in FORMATS) workbook.setFormat(key, FORMATS[key]);
+      // Seed a second sheet so cross-sheet references are demoable: type
+      // =Summary!A3 on Sheet1 and it tracks Summary's running total.
+      workbook.addSheet("Summary");
+      workbook.setCells({ A1: "100", A2: "200", A3: "=A1+A2" });
+      workbook.setActiveSheet(0); // back to Sheet1 as the active tab
+      renderTabs();
       resize();
       selectCell(1, 1);
       sheet.addEventListener("scroll", onScroll, { passive: true });
