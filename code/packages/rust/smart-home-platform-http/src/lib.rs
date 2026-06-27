@@ -391,6 +391,8 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
         });
     }
 
+    app.get("/api/smart_home/api", api_catalog_response);
+
     {
         let runtime = runtime.clone();
         app.get("/api/smart_home/entities", move |request| {
@@ -709,6 +711,403 @@ fn events_json(event_types: &[String]) -> String {
     )
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct ApiRouteDescriptor {
+    method: &'static str,
+    path: &'static str,
+    category: &'static str,
+    surface: &'static str,
+    mutates_runtime: bool,
+    runtime_authorized: bool,
+    query_params: &'static [&'static str],
+}
+
+const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/",
+        category: "home_assistant",
+        surface: "home_assistant",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/config",
+        category: "home_assistant",
+        surface: "home_assistant",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/states",
+        category: "home_assistant",
+        surface: "home_assistant",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/states/:entity_id",
+        category: "home_assistant",
+        surface: "home_assistant",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "POST",
+        path: "/api/states/:entity_id",
+        category: "desired_state",
+        surface: "home_assistant",
+        mutates_runtime: true,
+        runtime_authorized: true,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/services",
+        category: "home_assistant",
+        surface: "home_assistant",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "POST",
+        path: "/api/services/:domain/:service",
+        category: "commands",
+        surface: "home_assistant",
+        mutates_runtime: true,
+        runtime_authorized: true,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/events",
+        category: "home_assistant",
+        surface: "home_assistant",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/history/period",
+        category: "state_history",
+        surface: "home_assistant",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["filter_entity_id", "minimal_response"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/history/period/:start_time",
+        category: "state_history",
+        surface: "home_assistant",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["end_time", "filter_entity_id", "minimal_response"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/runtime",
+        category: "runtime",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/health",
+        category: "health",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/dashboard",
+        category: "dashboard",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/api",
+        category: "api_catalog",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["authorized", "category", "method", "mutating", "surface"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/entities",
+        category: "entities",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["capability_id", "commandable", "domain", "kind", "limit"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/entities/:entity_id",
+        category: "entities",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/capabilities",
+        category: "capabilities",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[
+            "capability_id",
+            "commandable",
+            "domain",
+            "limit",
+            "observable",
+        ],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/devices",
+        category: "devices",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["bridge_id", "health", "limit", "manufacturer", "room_id"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/devices/:device_id",
+        category: "devices",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/bridges",
+        category: "bridges",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["health", "integration_id", "limit", "transport"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/bridges/:bridge_id",
+        category: "bridges",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/rooms",
+        category: "rooms",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[
+            "attention_only",
+            "limit",
+            "room_id",
+            "sort",
+            "state_gaps_only",
+        ],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/events",
+        category: "events",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["from_sequence", "kind", "limit", "sort"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/events/:sequence",
+        category: "events",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/command_results",
+        category: "command_results",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[
+            "bridge_id",
+            "command_id",
+            "correlation_id",
+            "from_sequence",
+            "limit",
+            "sort",
+            "status",
+        ],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/command_results/:command_id",
+        category: "command_results",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/authorization_decisions",
+        category: "authorization",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["limit", "outcome", "principal_id", "sort"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/authorization_decisions/:decision_index",
+        category: "authorization",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/desired_states",
+        category: "desired_state",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["capability_id", "entity_id", "limit", "requested_by"],
+    },
+    ApiRouteDescriptor {
+        method: "POST",
+        path: "/api/smart_home/desired_states/:entity_id",
+        category: "desired_state",
+        surface: "smart_home",
+        mutates_runtime: true,
+        runtime_authorized: true,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "DELETE",
+        path: "/api/smart_home/desired_states/:entity_id",
+        category: "desired_state",
+        surface: "smart_home",
+        mutates_runtime: true,
+        runtime_authorized: true,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/state_history",
+        category: "state_history",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[
+            "bridge_id",
+            "entity_id",
+            "event_type",
+            "from_ms",
+            "limit",
+            "to_ms",
+        ],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/state_history/:event_id",
+        category: "state_history",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+];
+
+fn api_catalog_routes(request: &WebRequest) -> Result<Vec<&'static ApiRouteDescriptor>, ApiError> {
+    let method = query_string(request, "method").map(str::to_ascii_uppercase);
+    let category = query_string(request, "category");
+    let surface = query_string(request, "surface");
+    let mutating = query_bool(request, "mutating")?;
+    let authorized = query_bool(request, "authorized")?;
+
+    if let Some(surface) = surface {
+        if !matches!(surface, "all" | "home_assistant" | "smart_home") {
+            return Err(ApiError::bad_request(format!(
+                "unsupported API surface `{surface}`"
+            )));
+        }
+    }
+
+    Ok(API_ROUTE_CATALOG
+        .iter()
+        .filter(|route| {
+            method
+                .as_deref()
+                .map_or(true, |method| route.method == method)
+        })
+        .filter(|route| category.map_or(true, |category| route.category == category))
+        .filter(|route| {
+            surface.map_or(true, |surface| surface == "all" || route.surface == surface)
+        })
+        .filter(|route| mutating.map_or(true, |mutating| route.mutates_runtime == mutating))
+        .filter(|route| {
+            authorized.map_or(true, |authorized| route.runtime_authorized == authorized)
+        })
+        .collect())
+}
+
+fn api_catalog_json(routes: &[&ApiRouteDescriptor]) -> String {
+    format!(
+        "{{\"version\":{},\"route_count\":{},\"routes\":[{}]}}",
+        json_string(VERSION),
+        routes.len(),
+        routes
+            .iter()
+            .map(|route| api_route_json(route))
+            .collect::<Vec<_>>()
+            .join(",")
+    )
+}
+
+fn api_route_json(route: &ApiRouteDescriptor) -> String {
+    format!(
+        "{{\"method\":{},\"path\":{},\"category\":{},\"surface\":{},\"mutates_runtime\":{},\"runtime_authorized\":{},\"query_params\":[{}]}}",
+        json_string(route.method),
+        json_string(route.path),
+        json_string(route.category),
+        json_string(route.surface),
+        route.mutates_runtime,
+        route.runtime_authorized,
+        json_id_array(route.query_params.iter().copied()),
+    )
+}
+
 fn runtime_snapshot_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
     let runtime_guard = runtime
         .runtime
@@ -733,6 +1132,14 @@ fn runtime_dashboard_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResp
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
     WebResponse::json(runtime_dashboard_json(runtime, &runtime_guard).into_bytes())
+}
+
+fn api_catalog_response(request: &WebRequest) -> WebResponse {
+    let routes = match api_catalog_routes(request) {
+        Ok(routes) => routes,
+        Err(error) => return api_error_response(error),
+    };
+    WebResponse::json(api_catalog_json(&routes).into_bytes())
 }
 
 fn runtime_entities_response(
@@ -4613,6 +5020,57 @@ mod tests {
         assert!(dashboard.contains(r#""events":{"summary":{"total_events":1"#));
         assert!(dashboard.contains(r#""command_results":{"summary":{"total_results":1"#));
         assert!(dashboard.contains(r#""authorization_decisions":{"summary":{"total_decisions":2"#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_ready_api_catalog() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+
+        let catalog = response_body(app.handle(request("GET", "/api/smart_home/api")).into());
+        assert!(catalog.contains(r#""path":"/api/smart_home/dashboard""#));
+        assert!(catalog.contains(r#""path":"/api/services/:domain/:service""#));
+        assert!(catalog
+            .contains(r#""query_params":["authorized","category","method","mutating","surface"]"#));
+        let catalog_json: JsonValue =
+            serde_json::from_str(&catalog).expect("API catalog response is JSON");
+        assert!(
+            catalog_json["route_count"].as_u64().unwrap_or_default() >= 30,
+            "catalog exposes the local controller route surface"
+        );
+
+        let mutating = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/api?mutating=true&authorized=true",
+            ))
+            .into(),
+        );
+        let mutating_json: JsonValue =
+            serde_json::from_str(&mutating).expect("mutating API catalog response is JSON");
+        assert_eq!(mutating_json["route_count"], 4);
+        for route in mutating_json["routes"]
+            .as_array()
+            .expect("mutating route list is an array")
+        {
+            assert_eq!(route["mutates_runtime"], true);
+            assert_eq!(route["runtime_authorized"], true);
+        }
+
+        let home_assistant_posts = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/api?surface=home_assistant&method=post",
+            ))
+            .into(),
+        );
+        assert!(home_assistant_posts.contains(r#""route_count":2"#));
+        assert!(home_assistant_posts.contains(r#""path":"/api/states/:entity_id""#));
+        assert!(home_assistant_posts.contains(r#""path":"/api/services/:domain/:service""#));
+
+        let invalid_surface: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/api?surface=unknown"))
+            .into();
+        assert_eq!(invalid_surface.status, 400);
     }
 
     #[test]

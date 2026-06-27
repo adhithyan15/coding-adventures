@@ -24,6 +24,8 @@ All notable changes to this package will be documented in this file.
   by event id.
 - Added a dashboard overview route that composes runtime health, topology,
   inventory, desired-state, and audit summaries for local controllers.
+- Added a dashboard-ready API route catalog with surface, method, mutating, and
+  authorization filters for local-controller clients.
 - Added a compact runtime health probe for local-controller readiness,
   pending-work, topology, and event-bus status checks.
 - Added a dashboard-ready capability catalog route that groups entity

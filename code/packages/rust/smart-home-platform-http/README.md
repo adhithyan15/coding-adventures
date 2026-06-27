@@ -20,6 +20,7 @@ stable local API responses for:
 - `/api/smart_home/runtime`
 - `/api/smart_home/health`
 - `/api/smart_home/dashboard`
+- `/api/smart_home/api`
 - `/api/smart_home/entities`
 - `/api/smart_home/entities/:entity_id`
 - `/api/smart_home/capabilities`
@@ -58,11 +59,12 @@ tool.
 The `GET /api/smart_home/*` routes expose dashboard-ready read models for the
 same runtime: pending-work snapshot counts, entity and capability registry
 records, a compact health probe, a capability catalog grouped across entities,
-device and bridge inventory, room topology summaries, a dashboard overview,
-checkpointed event-log entries with detail lookups, command-result audit
-records with command, bridge, correlation, status, and sort filters, indexed
-authorization decisions with principal, outcome, and sort filters, and
-desired-state supervision targets. State-history reads expose
+device and bridge inventory, room topology summaries, a dashboard overview, an
+API route catalog with surface/method/authorization filters, checkpointed
+event-log entries with detail lookups, command-result audit records with
+command, bridge, correlation, status, and sort filters, indexed authorization
+decisions with principal, outcome, and sort filters, and desired-state
+supervision targets. State-history reads expose
 registry-backed device events with Home Assistant entity aliases, state deltas,
 timestamp filters, and event-id detail lookups; the Home Assistant-style
 history route accepts `filter_entity_id`.
@@ -94,6 +96,8 @@ curl http://127.0.0.1:8123/api/
 curl http://127.0.0.1:8123/api/states
 curl http://127.0.0.1:8123/api/smart_home/health
 curl http://127.0.0.1:8123/api/smart_home/dashboard
+curl 'http://127.0.0.1:8123/api/smart_home/api?surface=home_assistant&method=POST'
+curl 'http://127.0.0.1:8123/api/smart_home/api?mutating=true&authorized=true'
 curl 'http://127.0.0.1:8123/api/smart_home/entities?domain=light&commandable=true'
 curl 'http://127.0.0.1:8123/api/smart_home/capabilities?domain=light&commandable=true'
 curl 'http://127.0.0.1:8123/api/smart_home/devices?room_id=kitchen&health=online'
