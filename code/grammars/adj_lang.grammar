@@ -31,6 +31,7 @@ statement   = prior_decl
             | query_decl
             | let_decl
             | symbol_decl
+            | constrain_latex_decl
             | constrain_decl
             | solve_decl
             | check_decl
@@ -148,9 +149,16 @@ expr      = term_expr { ( PLUS | MINUS ) term_expr } ;
 
 term_expr = factor { ( STAR | SLASH ) factor } ;
 
-factor    = agg | NUMBER | IDENT | LPAREN expr RPAREN ;
+factor    = latex_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
 
 agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
+
+# Native LaTeX math input. The model may write `latex "$5 \times 12$"` anywhere
+# an ADJ arithmetic expression is accepted; the adj-lang frontend parses the
+# string with the repo's LaTeX MathFrontend and lowers the arithmetic subset to
+# the same ExprAst used by ASCII formulas. Unsupported math is a compile error,
+# not a host-language fallback.
+latex_expr = "latex" STRING ;
 
 # ----------------------------------------------------------------
 # Constraint sublanguage (ADJ constraints track B1). The model
@@ -162,7 +170,11 @@ agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
 
 symbol_decl    = "symbol" IDENT COLON term ;
 
+constrain_latex_decl = "constrain" latex_relation ;
+
 constrain_decl = "constrain" expr relop expr ;
+
+latex_relation = "latex" STRING ;
 
 relop          = GE | LE | GT | LT | EQEQ | EQUALS | NE ;
 

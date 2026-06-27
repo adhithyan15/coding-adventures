@@ -53,7 +53,9 @@ contributes 1000000 from answer == 59 to opt_a
 ? opt_a … ? opt_e
 ```
 
-The engine computes `answer`, the matching predicate fires, and the decision returns
+The formula can be plain ADJ arithmetic or native ADJ LaTeX syntax such as
+`latex "$5 \times 12$"`; either way, `adj-lang-cli` owns parsing and execution. The
+engine computes `answer`, the matching predicate fires, and the decision returns
 `determinate` with `leader = opt_a` → **A**. No match (or a tie) → `kickback` →
 **abstain**. The harness supplies only the formula and the printed option values; the
 arithmetic and the selection are the engine's.
@@ -63,7 +65,6 @@ arithmetic and the selection are the engine's.
 ```bash
 # 1. build the engine
 cargo build -p adj-lang-cli          # from code/packages/rust/
-cargo build -p latex --bin latex-math-to-adj  # optional: accepts Gemma's LaTeX formulas
 
 # 2. bank integrity (off the answer path)
 python3 contamination_check.py rung0_arithmetic
@@ -87,7 +88,6 @@ python3 ladder_eval.py rung0_arithmetic --model 'cmd:ollama run <model>'
 so a cached CI run never clobbers a committed two-arm headline).
 
 If the `adj-lang-cli` binary lives somewhere non-standard, point `ADJ_LANG_CLI` at it.
-If the LaTeX helper lives somewhere non-standard, point `LADDER_LATEX_HELPER` at it.
 
 ## Adding a rung
 

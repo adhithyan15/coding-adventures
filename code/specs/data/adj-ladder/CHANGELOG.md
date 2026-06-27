@@ -15,25 +15,17 @@ All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
   defensibility **1.00**); **divergence +35% (+7 items)**. Arm B's single miss is a
   decompose error the engine caught and abstained on — zero fabrications.
   Artifact: `ladder-scorecard.gemma.json`.
-- **Formula extraction stays strict, now through the real LaTeX parser.** A few-shot
-  decompose prompt steers the model to plain ASCII arithmetic; `extract_formula` still
-  accepts a plain `+ - * / ()` line directly (stripping an echoed `Formula:` label).
-  When Gemma emits LaTeX math (`\times`, `\cdot`, `\frac`, `$...$`, `\(...\)`), the
-  harness calls the `latex` crate's `MathFrontend` adapter via `latex-math-to-adj` and
-  lowers only the supported arithmetic subset into ADJ's ASCII `let` syntax. Unsupported
-  math still **abstains**; the harness never regex-rewrites the model's math.
+- **Formula extraction stays strict.** A few-shot decompose prompt steers the model
+  to either plain ASCII arithmetic or ADJ's native LaTeX wrapper; `extract_formula`
+  accepts only a plain `+ - * / ()` line or native ADJ `latex "..."` expression
+  (stripping an echoed `Formula:` label) and **abstains** on anything else. Bare
+  LaTeX/unicode math is deliberately NOT normalized in the harness — the model must
+  emit ADJ syntax, and adj-lang owns parsing/solving.
 - **Per-model scorecards.** Model runs write `ladder-scorecard.<model>.json`; cached
   runs write `ladder-scorecard.json` — a cached CI run never clobbers a committed
   two-arm headline. Scorecard summary now records the `model`.
-- Tests: +5 (label stripping, LaTeX helper hook/integration, unsupported-math
-  abstention, alias resolution) → 23 total.
-
-### Added — LaTeX arithmetic bridge
-
-- **`latex-math-to-adj`** — a tiny binary in the `latex` crate that parses LaTeX math
-  with `latex::registry()` and lowers the arithmetic subset needed by rung 0 into ADJ
-  formulas (`\times`/`\cdot` → `*`, `\frac{a}{b}` → `a / b`, parentheses preserved).
-  This is the first direct consumer of the new LaTeX parser from the LADDER harness.
+- Tests: 24 total, including native ADJ LaTeX extraction and a harness-to-engine
+  `latex "$5 \times 12$"` smoke.
 
 ## [0.1.0] — 2026-06-26
 

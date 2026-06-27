@@ -209,6 +209,21 @@ fn solve_emits_roots_for_a_nonlinear_equation() {
 }
 
 #[test]
+fn solve_emits_roots_for_native_latex_equation() {
+    // The ADJ language owns LaTeX math input: the constraint parses through
+    // the LaTeX MathFrontend, lowers x^2 to the solver expression, and the
+    // existing native solver returns the roots.
+    let (ok, s) = run(
+        "adjcli_latex_quad.adj",
+        "symbol x : scalar\nconstrain latex \"$x^2 = 4$\"\nsolve for { x }\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"solved_roots\""), "{s}");
+    assert!(s.contains("\"var\":\"x\""), "{s}");
+    assert!(s.contains("\"roots\":[-2,2]"), "{s}");
+}
+
+#[test]
 fn solve_substitutes_observed_facts() {
     // base_rate is observed (not an unknown) → substituted as a constant, so
     // premium = base_rate + 300 = 1500. This is the realistic mixed case.

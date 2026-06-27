@@ -67,6 +67,18 @@ tree** back to the cited facts, so a reviewer can audit the arithmetic — the
 model never evaluates it. **Space your operators** (`a - 5`, not `a-5`): a `-`
 glued to a digit lexes as a negative literal.
 
+LaTeX math is native input, not a caller-side normalization step. Use
+`latex "<math>"` anywhere an arithmetic expression is expected:
+
+```
+let answer = latex "$5 \times 12$"
+let ratio  = latex "\frac{csf_glucose}{serum_glucose}"
+```
+
+The frontend parses the string with the repo's LaTeX `MathFrontend` and lowers
+the supported arithmetic subset into the same expression tree as ASCII ADJ.
+Unsupported math is a compile error, not a guessed rewrite.
+
 ### Constraints — `symbol` / `constrain` / `solve` / `check` (v0.7)
 
 The model extracts the policy's **unknowns and constraints**; the engine solves
@@ -89,6 +101,8 @@ solve for { premium }          % find a value satisfying the constraints
   operands are arithmetic exprs over symbols, observed slots, earlier `let`s,
   and numbers. Compare against a typed value by `observe`-ing it and using its
   name (constraint operands are arithmetic exprs, not term literals).
+- `constrain latex "<equation>"` parses a LaTeX relation directly, e.g.
+  `constrain latex "$x^2 = 4$"`, and feeds the native solver.
 - `solve for { … }` / `check` drive the solver. The lowerer builds a
   `ConstraintSystem` (on `LoweredProgram.constraints`) with each constraint's
   sides kept as unevaluated expression trees.

@@ -28,6 +28,7 @@
 //! program.
 
 use lexer::token::TokenType;
+use math_frontend::{BinOp, MathExpr, Number, RelOp as MathRelOp, UnaryOp};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
@@ -71,6 +72,12 @@ pub enum AdapterError {
     /// impossible if the grammar's `trust_tier` rule stays in sync
     /// with [`TrustTierName`].
     UnknownTrustTier { actual: String },
+    /// A `latex "<math>"` expression or `constrain latex "<equation>"`
+    /// could not be parsed by the repo's LaTeX MathFrontend.
+    LatexParse { source: String, detail: String },
+    /// LaTeX parsed successfully, but used math outside the ADJ arithmetic /
+    /// constraint subset this surface can lower faithfully.
+    UnsupportedLatexMath { source: String, detail: String },
 }
 
 /// Adapt the root `program` node.
@@ -115,6 +122,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "query_decl" => adapt_query(child),
         "let_decl" => adapt_let(child),
         "symbol_decl" => adapt_symbol(child),
+        "constrain_latex_decl" => adapt_constrain_latex(child),
         "constrain_decl" => adapt_constrain(child),
         "solve_decl" => adapt_solve(child),
         "check_decl" => Ok(Statement::Check),
@@ -125,7 +133,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "use_decl" => adapt_use(child),
         "import_decl" => adapt_import(child),
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl / optimize_decl / dictionary_decl / define_decl / rulebook_decl / use_decl / import_decl",
+            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_latex_decl / constrain_decl / solve_decl / check_decl / optimize_decl / dictionary_decl / define_decl / rulebook_decl / use_decl / import_decl",
             actual: other.to_string(),
         }),
     }
@@ -486,6 +494,29 @@ fn adapt_constrain(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     Ok(Statement::Constrain { lhs, op, rhs })
 }
 
+fn adapt_constrain_latex(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // constrain_latex_decl = "constrain" latex_relation
+    // latex_relation = "latex" STRING
+    let relation = first_named_child(node, "latex_relation").ok_or(AdapterError::MissingChild {
+        rule: "constrain_latex_decl".into(),
+        position: "latex relation",
+    })?;
+    let source = latex_string_from_node(relation, "latex_relation")?;
+    let math = parse_latex_math(&source)?;
+    let MathExpr::Rel(op, lhs, rhs) = math else {
+        return Err(AdapterError::UnsupportedLatexMath {
+            source,
+            detail: "expected a LaTeX relation such as x^2 = 4".into(),
+        });
+    };
+    let op = lower_latex_relop(op, &source)?;
+    Ok(Statement::Constrain {
+        lhs: latex_math_to_expr_ast(*lhs, &source)?,
+        op,
+        rhs: latex_math_to_expr_ast(*rhs, &source)?,
+    })
+}
+
 fn adapt_solve(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     // solve_decl = "solve" "for" LBRACE IDENT { COMMA IDENT } RBRACE
     // Every Name token except the `solve` / `for` keywords is a target.
@@ -791,6 +822,11 @@ fn fold_binary(
 fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     // A parsed `agg` or parenthesised `expr` appears as a named child node;
     // a bare NUMBER or IDENT appears as a token. Check nodes first.
+    if let Some(latex) = first_named_child(node, "latex_expr") {
+        let source = latex_string_from_node(latex, "latex_expr")?;
+        let math = parse_latex_math(&source)?;
+        return latex_math_to_expr_ast(math, &source);
+    }
     if let Some(agg) = first_named_child(node, "agg") {
         return adapt_agg(agg);
     }
@@ -809,8 +845,168 @@ fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     }
     Err(AdapterError::MissingChild {
         rule: "factor".into(),
-        position: "agg / number / identifier / parenthesised expr",
+        position: "latex / agg / number / identifier / parenthesised expr",
     })
+}
+
+fn latex_string_from_node(node: &GrammarASTNode, rule: &str) -> Result<String, AdapterError> {
+    node.children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => {
+                Some(unquote_latex_string(&t.value))
+            }
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: rule.into(),
+            position: "STRING",
+        })
+}
+
+fn parse_latex_math(source: &str) -> Result<MathExpr, AdapterError> {
+    let math = strip_math_delimiters(source);
+    let registry = latex::registry();
+    registry
+        .parse("latex", math)
+        .map_err(|e| AdapterError::LatexParse {
+            source: source.to_string(),
+            detail: e.message,
+        })
+}
+
+fn strip_math_delimiters(source: &str) -> &str {
+    let mut s = source.trim();
+    loop {
+        let next = if s.starts_with("\\(") && s.ends_with("\\)") && s.len() >= 4 {
+            Some(&s[2..s.len() - 2])
+        } else if s.starts_with("\\[") && s.ends_with("\\]") && s.len() >= 4 {
+            Some(&s[2..s.len() - 2])
+        } else if s.starts_with("$$") && s.ends_with("$$") && s.len() >= 4 {
+            Some(&s[2..s.len() - 2])
+        } else if s.starts_with('$') && s.ends_with('$') && s.len() >= 2 {
+            Some(&s[1..s.len() - 1])
+        } else {
+            None
+        };
+        match next {
+            Some(inner) => s = inner.trim(),
+            None => return s,
+        }
+    }
+}
+
+fn latex_math_to_expr_ast(expr: MathExpr, source: &str) -> Result<ExprAst, AdapterError> {
+    match expr {
+        MathExpr::Number(n) => number_to_lit(&n, source),
+        MathExpr::Symbol(name) => Ok(ExprAst::Ref(name)),
+        MathExpr::Group(inner) => latex_math_to_expr_ast(*inner, source),
+        MathExpr::Unary(UnaryOp::Pos, inner) => latex_math_to_expr_ast(*inner, source),
+        MathExpr::Unary(UnaryOp::Neg, inner) => Ok(ExprAst::Bin(
+            ArithOp::Sub,
+            Box::new(ExprAst::Lit(0.0)),
+            Box::new(latex_math_to_expr_ast(*inner, source)?),
+        )),
+        MathExpr::Bin(BinOp::Add, lhs, rhs) => latex_bin(ArithOp::Add, *lhs, *rhs, source),
+        MathExpr::Bin(BinOp::Sub, lhs, rhs) => latex_bin(ArithOp::Sub, *lhs, *rhs, source),
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) => latex_bin(ArithOp::Mul, *lhs, *rhs, source),
+        MathExpr::Bin(BinOp::Div, lhs, rhs) | MathExpr::Frac(lhs, rhs) => {
+            latex_bin(ArithOp::Div, *lhs, *rhs, source)
+        }
+        MathExpr::Bin(BinOp::Pow, base, exponent) => {
+            let n = latex_power_exponent(&exponent, source)?;
+            expand_power(*base, n, source)
+        }
+        MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: "relation-valued LaTeX is only valid in `constrain latex`".into(),
+        }),
+        other => Err(AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: format!("unsupported ADJ arithmetic subset: {other:?}"),
+        }),
+    }
+}
+
+fn latex_bin(
+    op: ArithOp,
+    lhs: MathExpr,
+    rhs: MathExpr,
+    source: &str,
+) -> Result<ExprAst, AdapterError> {
+    Ok(ExprAst::Bin(
+        op,
+        Box::new(latex_math_to_expr_ast(lhs, source)?),
+        Box::new(latex_math_to_expr_ast(rhs, source)?),
+    ))
+}
+
+fn number_to_lit(number: &Number, source: &str) -> Result<ExprAst, AdapterError> {
+    let value = number
+        .to_f64()
+        .ok_or_else(|| AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: format!(
+                "numeric literal is outside f64 range: {}",
+                number.as_written()
+            ),
+        })?;
+    if !value.is_finite() {
+        return Err(AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: format!("numeric literal is non-finite: {}", number.as_written()),
+        });
+    }
+    Ok(ExprAst::Lit(value))
+}
+
+fn latex_power_exponent(expr: &MathExpr, source: &str) -> Result<usize, AdapterError> {
+    let MathExpr::Number(n) = expr else {
+        return Err(AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: "only non-negative integer exponents are supported in ADJ arithmetic".into(),
+        });
+    };
+    let Some(v) = n.to_f64() else {
+        return Err(AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: format!("exponent is outside f64 range: {}", n.as_written()),
+        });
+    };
+    if !(v.is_finite() && v.fract() == 0.0 && v >= 0.0 && v <= 8.0) {
+        return Err(AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: "only integer exponents from 0 through 8 are supported".into(),
+        });
+    }
+    Ok(v as usize)
+}
+
+fn expand_power(base: MathExpr, exponent: usize, source: &str) -> Result<ExprAst, AdapterError> {
+    if exponent == 0 {
+        return Ok(ExprAst::Lit(1.0));
+    }
+    let base = latex_math_to_expr_ast(base, source)?;
+    let mut acc = base.clone();
+    for _ in 1..exponent {
+        acc = ExprAst::Bin(ArithOp::Mul, Box::new(acc), Box::new(base.clone()));
+    }
+    Ok(acc)
+}
+
+fn lower_latex_relop(op: MathRelOp, source: &str) -> Result<RelOp, AdapterError> {
+    match op {
+        MathRelOp::Eq => Ok(RelOp::Eq),
+        MathRelOp::Ne => Ok(RelOp::Ne),
+        MathRelOp::Lt => Ok(RelOp::Lt),
+        MathRelOp::Le => Ok(RelOp::Le),
+        MathRelOp::Gt => Ok(RelOp::Gt),
+        MathRelOp::Ge => Ok(RelOp::Ge),
+        MathRelOp::Approx | MathRelOp::Equiv => Err(AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: "approx/equiv relations are not solver constraints".into(),
+        }),
+    }
 }
 
 /// `agg = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN`.
@@ -1382,6 +1578,14 @@ mod tests {
     }
 
     #[test]
+    fn unquote_latex_string_preserves_latex_commands() {
+        assert_eq!(unquote_latex_string(r#""$5 \times 12$""#), r"$5 \times 12$");
+        assert_eq!(unquote_latex_string(r#""\frac{12}{3}""#), r"\frac{12}{3}");
+        assert_eq!(unquote_latex_string(r#""quote \" ok""#), "quote \" ok");
+        assert_eq!(unquote_latex_string(r#""\\times""#), r"\times");
+    }
+
+    #[test]
     fn source_annotation_carries_an_escaped_quote_verbatim() {
         // End-to-end through the lexer + parser + adapter: a provenance span
         // containing a literal double quote survives as real bytes.
@@ -1452,6 +1656,37 @@ fn unquote_string(raw: &str) -> String {
             } else {
                 // Dangling backslash at end of string — keep it verbatim.
                 out.push('\\');
+            }
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
+
+/// Strip surrounding double quotes for `latex "..."` strings.
+///
+/// Unlike provenance strings, LaTeX strings must preserve command backslashes:
+/// `\times` and `\frac` are math syntax, not `\t`/`\f` escapes. Only quote and
+/// backslash escaping are interpreted here; every other backslash sequence is
+/// passed through to the LaTeX parser verbatim.
+fn unquote_latex_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('"')
+        .and_then(|s| s.strip_suffix('"'))
+        .unwrap_or(raw);
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            match chars.next() {
+                Some('"') => out.push('"'),
+                Some('\\') => out.push('\\'),
+                Some(other) => {
+                    out.push('\\');
+                    out.push(other);
+                }
+                None => out.push('\\'),
             }
         } else {
             out.push(c);

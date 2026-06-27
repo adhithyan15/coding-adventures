@@ -1700,6 +1700,31 @@ mod tests {
     }
 
     #[test]
+    fn native_latex_expr_computes_inside_let() {
+        let d = crate::compile_and_decide(
+            r#"let answer = latex "$5 \times 12$"
+prior 0.10 for correct
+contributes 1000000 from answer == 60 to correct
+? correct
+"#,
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_relation_lowers_to_constraint() {
+        let lowered =
+            compile("symbol x : scalar\nconstrain latex \"$x^2 = 4$\"\nsolve for { x }\n").unwrap();
+        let c = &lowered.constraints.constraints[0];
+        assert_eq!(c.op, crate::ast::RelOp::Eq);
+        assert!(matches!(
+            c.lhs,
+            logic_engine::ComputeExpr::Bin(logic_engine::ComputeOp::Mul, _, _)
+        ));
+    }
+
+    #[test]
     fn all_relational_operators_parse() {
         for (src, want) in [
             ("constrain a >= 1", crate::ast::RelOp::Ge),
