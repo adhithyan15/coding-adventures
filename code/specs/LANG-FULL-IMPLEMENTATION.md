@@ -241,8 +241,8 @@ multiple languages; close an enabler before the features that depend on it.
   computed-goto chain (`cmp_eq`+`jmp_if_true`). `dartmouth-basic-iir-compiler` 0.10.0
   added the frontend lowering, and `iir-to-wasm` 0.18.0 fixed the dispatch-loop edge
   case it exposed; both BA1 proof programs now run on all 7 backends.
-- **E8 — Numeric conversions (`integer` ↔ `real`).** ◑ *Spec signed off
-  ([`lang-full-e8-numeric-conversions.md`](lang-full-e8-numeric-conversions.md)); implementation in progress.*
+- **E8 — Numeric conversions (`integer` ↔ `real`).** ✅ **COMPLETE**
+  ([`lang-full-e8-numeric-conversions.md`](lang-full-e8-numeric-conversions.md)).
   Three ops (`int_to_real`, `real_to_int_trunc`, `real_to_int_floor`); `real→int`
   traps out-of-range. Unblocks **AL8 `entier`** (floor), int→real **coercion**,
   BASIC **`INT()`** / **BA7**.
@@ -538,16 +538,16 @@ backend immediately) come before the enabler-dependent items.
   has drifted ahead of the compiled grammar in other rules; resync is follow-up.)
 - ☐ **AL7** — ⚠ call-by-name (Jensen-style expression thunks). **Hardest item in the
   campaign — design pass + user check before implementing.**
-- ◑ **AL8** — standard functions (§3.2.4). **`abs` ✅** (algol-iir-compiler 0.8.0)
-  and **`sign` ✅** (0.9.0): both built-in, resolved by name (overridable by a user
-  `procedure`), lowered inline to compares + `jmp_if_false` + `mov`-into-one-slot
-  (store-per-branch, no phi). `abs(E)` = `if E<0 then -E else E` (preserves
-  `integer`/`real`); `sign(E)` = `if E>0 then 1 else if E<0 then -1 else 0` (always
-  `integer`). Verified by RUNNING `abs(0-42)`⇒42 and `43+sign(0-1)`⇒42 on
-  native/LLVM/WASM/JVM/CLR/VM/JIT. **Remaining:** `entier` (floor of a real → integer:
-  needs a float-floor+convert, not a portable IIR op — closer to the transcendentals
-  than to abs/sign), then `sqrt`/`sin`/`cos`/`ln`/`exp` (need a cross-backend runtime
-  math library).
+- ◑ **AL8** — standard functions (§3.2.4/§3.2.5). The pure-IIR/conversion-backed
+  functions are done: **`abs` ✅** (algol-iir-compiler 0.8.0), **`sign` ✅** (0.9.0),
+  and **`entier` ✅** (0.10.0). `abs`/`sign` are built-in, resolved by name
+  (overridable by a user `procedure`), and lower inline to compares +
+  `jmp_if_false` + `mov`-into-one-slot (store-per-branch, no phi). `entier(E)`
+  requires a `real` operand and lowers to the E8 `real_to_int_floor` conversion,
+  so `entier(0.0 - 2.7)` proves floor toward negative infinity rather than truncation.
+  Verified by RUNNING `abs(0-42)`⇒42, `43+sign(0-1)`⇒42, and
+  `45+entier(0.0-2.7)`⇒42 on native/LLVM/WASM/JVM/CLR/VM/JIT. **Remaining:**
+  `sqrt`/`sin`/`cos`/`ln`/`exp`, which need a cross-backend runtime math library.
 
 ### Twig
 - ✅ **TW1** — variadic arithmetic typed lowering. An all-`i64` `(+ a b c …)` /
@@ -578,14 +578,14 @@ backend immediately) come before the enabler-dependent items.
 
 ## Suggested global ordering
 
-1. **BA7 / AL8 numeric tails** — use the E3/E8 conversion work to finish BASIC
-   floating point and ALGOL's remaining standard-function surface.
+1. **BA7 numeric tail** — use the E3/E8 conversion work to finish BASIC
+   floating point.
 2. **E4 strings** — unblock BASIC string `PRINT`, ALGOL string I/O, and Twig strings
    with one shared string value model instead of per-frontend shortcuts.
 3. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
    work and any frontend code that still needs shared state across functions.
-4. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, and **MC1 cons/symbol
-   values on the code-gen backends** — explicit user decision points.
+4. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, **AL8 transcendentals**,
+   and **MC1 cons/symbol values on the code-gen backends** — explicit user decision points.
 
 This roadmap is the contract; each ☐ becomes a `feat(lang-full): …` PR, checked off here as
 it merges.
