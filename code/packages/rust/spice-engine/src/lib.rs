@@ -2826,6 +2826,27 @@ pub struct DeviceModelBehaviorFixture {
     pub deck_lines: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelTemperaturePoint {
+    pub temperature_kelvin: f64,
+    pub expected_min: f64,
+    pub expected_max: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelTemperatureBehaviorFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub circuit: Circuit,
+    pub probe_node: String,
+    pub nominal_temperature_kelvin: f64,
+    pub energy_gap_electron_volts: f64,
+    pub temperature_behavior: String,
+    pub temperature_points: Vec<DeviceModelTemperaturePoint>,
+    pub deck_lines: Vec<String>,
+}
+
 fn model_type_key(text: &str) -> String {
     text.trim()
         .chars()
@@ -3321,6 +3342,104 @@ pub fn device_model_behavior_audit_fixtures() -> Result<Vec<DeviceModelBehaviorF
             ],
         },
     ])
+}
+
+fn device_model_temperature_points(
+    name: &str,
+) -> Result<Vec<DeviceModelTemperaturePoint>, SpiceError> {
+    let windows: &[(f64, f64, f64)] = match name {
+        "diode-forward-bias" => &[
+            (260.15, 0.63, 0.70),
+            (300.15, 0.55, 0.65),
+            (340.15, 0.49, 0.56),
+        ],
+        "bjt-emitter-follower" => &[
+            (260.15, 0.03, 0.09),
+            (300.15, 0.08, 0.18),
+            (340.15, 0.15, 0.22),
+        ],
+        "jfet-source-bias" => &[
+            (260.15, 0.86, 0.90),
+            (300.15, 0.86, 0.90),
+            (340.15, 0.86, 0.90),
+        ],
+        "mos-level1-common-source" => &[
+            (260.15, 0.58, 0.68),
+            (300.15, 0.55, 0.85),
+            (340.15, 0.70, 0.82),
+        ],
+        _ => {
+            return Err(SpiceError::InvalidElement {
+                name: "device_model_temperature_audit_fixtures".to_string(),
+                reason: format!("missing temperature windows for {name}"),
+            })
+        }
+    };
+    Ok(windows
+        .iter()
+        .map(
+            |(temperature_kelvin, expected_min, expected_max)| DeviceModelTemperaturePoint {
+                temperature_kelvin: *temperature_kelvin,
+                expected_min: *expected_min,
+                expected_max: *expected_max,
+            },
+        )
+        .collect())
+}
+
+fn device_model_temperature_behavior(name: &str) -> Result<String, SpiceError> {
+    match name {
+        "diode-forward-bias" => {
+            Ok("diode saturation current and thermal voltage scale with temperature".to_string())
+        }
+        "bjt-emitter-follower" => {
+            Ok("BJT saturation current and thermal voltage scale with temperature".to_string())
+        }
+        "jfet-source-bias" => Ok(
+            "JFET temperature scaling is intentionally invariant until a policy lands".to_string(),
+        ),
+        "mos-level1-common-source" => {
+            Ok("Level-1 MOS threshold and transconductance scale with temperature".to_string())
+        }
+        _ => Err(SpiceError::InvalidElement {
+            name: "device_model_temperature_audit_fixtures".to_string(),
+            reason: format!("missing temperature behavior for {name}"),
+        }),
+    }
+}
+
+fn device_model_temperature_deck_lines(fixture: &DeviceModelBehaviorFixture) -> Vec<String> {
+    let mut lines = fixture.deck_lines.clone();
+    if let Some(first) = lines.first_mut() {
+        *first = format!("* device-model temperature fixture: {}", fixture.name);
+    }
+    let op_index = lines
+        .iter()
+        .position(|line| line == ".op")
+        .unwrap_or(lines.len());
+    lines.insert(op_index, ".temp 260.15 300.15 340.15".to_string());
+    lines
+}
+
+pub fn device_model_temperature_audit_fixtures(
+) -> Result<Vec<DeviceModelTemperatureBehaviorFixture>, SpiceError> {
+    device_model_behavior_audit_fixtures()?
+        .into_iter()
+        .map(|fixture| {
+            Ok(DeviceModelTemperatureBehaviorFixture {
+                name: fixture.name.clone(),
+                kind: fixture.kind,
+                model: fixture.model.clone(),
+                circuit: fixture.circuit.clone(),
+                probe_node: fixture.probe_node.clone(),
+                nominal_temperature_kelvin: 300.15,
+                energy_gap_electron_volts: 1.11,
+                temperature_behavior: device_model_temperature_behavior(&fixture.name)?,
+                temperature_points: device_model_temperature_points(&fixture.name)?,
+                deck_lines: device_model_temperature_deck_lines(&fixture),
+            })
+        })
+        .collect()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

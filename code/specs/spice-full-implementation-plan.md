@@ -15,18 +15,17 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Device model behavior audit fixtures.
+1. Device model temperature audit fixtures.
    - Status: current PR completion candidate.
-   - Python, Rust, and TypeScript now expose matching runnable
-     `device_model_behavior_audit_fixtures` /
-     `deviceModelBehaviorAuditFixtures` one-device DC bias fixtures for diode,
-     BJT, JFET, and Level-1 MOS models.
-   - Each fixture carries the normalized model card, a constructed executable
-     circuit, reference deck lines, selected probe node, and stable expected
-     probe-voltage window so device-depth audits can compare behavior rather
-     than only model-card aliases.
-   - Cross-language tests execute every fixture through DC operating-point
-     solving and verify the probe window plus reference-deck metadata.
+   - Python, Rust, and TypeScript now expose matching
+     `device_model_temperature_audit_fixtures` /
+     `deviceModelTemperatureAuditFixtures` one-device DC temperature-sweep
+     fixtures for diode, BJT, JFET, and Level-1 MOS models.
+   - Each fixture carries `.temp` reference deck lines, nominal temperature,
+     energy-gap metadata, temperature-behavior notes, selected probe node, and
+     stable per-temperature probe-voltage windows for model-depth audits.
+   - Cross-language tests execute every fixture through DC temperature sweeps
+     and verify the probe windows plus reference-deck metadata.
 
 ## Completed Slices
 
@@ -1147,6 +1146,19 @@ downstream tools to compare.
      convergence is auditable without reparsing iteration traces.
    - Cross-language tests cover both the inactive linear sparse-ladder path and
      a damped nonlinear first-step solve with convergence aids disabled.
+
+116. Device model behavior audit fixtures.
+   - Status: completed in this device model behavior audit fixture slice.
+   - Python, Rust, and TypeScript now expose matching runnable
+     `device_model_behavior_audit_fixtures` /
+     `deviceModelBehaviorAuditFixtures` one-device DC bias fixtures for diode,
+     BJT, JFET, and Level-1 MOS models.
+   - Each fixture carries the normalized model card, a constructed executable
+     circuit, reference deck lines, selected probe node, and stable expected
+     probe-voltage window so device-depth audits can compare behavior rather
+     than only model-card aliases.
+   - Cross-language tests execute every fixture through DC operating-point
+     solving and verify the probe window plus reference-deck metadata.
 
 ## Backlog
 

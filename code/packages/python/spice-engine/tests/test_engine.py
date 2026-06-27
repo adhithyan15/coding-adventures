@@ -182,6 +182,7 @@ from spice_engine import (
     deck_table_records,
     device_model_audit_fixtures,
     device_model_behavior_audit_fixtures,
+    device_model_temperature_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
     digital_event_streams_to_voltage_sources,
     digital_events_to_pwl_waveform,
@@ -423,6 +424,35 @@ def test_device_model_behavior_audit_fixtures_run_reference_bias_points() -> Non
         assert fixture.deck_lines[0].startswith("* device-model behavior fixture:")
         assert ".op" in fixture.deck_lines
         assert any(line.startswith(".model ") for line in fixture.deck_lines)
+
+
+def test_device_model_temperature_audit_fixtures_run_reference_sweeps() -> None:
+    fixtures = device_model_temperature_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-forward-bias",
+        "bjt-emitter-follower",
+        "jfet-source-bias",
+        "mos-level1-common-source",
+    ]
+
+    for fixture in fixtures:
+        result = dc_temperature_sweep(
+            fixture.circuit,
+            [point.temperature_kelvin for point in fixture.temperature_points],
+            nominal_temperature_kelvin=fixture.nominal_temperature_kelvin,
+            energy_gap_ev=fixture.energy_gap_ev,
+        )
+        assert ".temp 260.15 300.15 340.15" in fixture.deck_lines
+        assert fixture.deck_lines[0].startswith("* device-model temperature fixture:")
+        assert len(result.points) == len(fixture.temperature_points)
+        for actual, expected in zip(result.points, fixture.temperature_points, strict=True):
+            value = actual.result.node_voltages[fixture.probe_node]
+            assert actual.result.converged
+            assert actual.temperature_kelvin == pytest.approx(expected.temperature_kelvin)
+            assert expected.expected_min <= value <= expected.expected_max
+
+    jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
+    assert jfet_fixture.temperature_behavior.startswith("JFET temperature scaling is intentionally")
 
 
 def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
