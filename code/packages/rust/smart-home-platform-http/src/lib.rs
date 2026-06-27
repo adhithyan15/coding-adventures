@@ -228,6 +228,16 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       margin-top: 10px;
     }
 
+    .range-control {
+      display: grid;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .range-control input {
+      width: 100%;
+    }
+
     .log {
       max-height: 170px;
       overflow: auto;
@@ -359,6 +369,16 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     const deltasText = (deltas) => (deltas || [])
       .map((delta) => `${delta.capability_id}: ${valueText(delta.value)}`)
       .join(", ") || "No targets";
+    const capability = (entity, capabilityId) => (entity.capabilities || [])
+      .find((item) => item.capability_id === capabilityId);
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+    const brightnessValue = (entity, min, max) => {
+      const value = entity.value;
+      const raw = value && typeof value === "object" ? value["light.brightness"] : undefined;
+      return clamp(typeof raw === "number" ? raw : max, min, max);
+    };
+    const brightnessInputFor = (entityId) => Array.from(document.querySelectorAll("[data-brightness-input]"))
+      .find((input) => input.dataset.brightnessInput === entityId);
     const observedText = (ms) => {
       if (typeof ms !== "number") {
         return "";
@@ -405,6 +425,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       els.entities.innerHTML = states.states.map((entity) => {
         const value = entity.value === null ? "No state" : JSON.stringify(entity.value);
         const canToggle = entity.domain === "light";
+        const brightness = capability(entity, "light.brightness");
+        const canSetBrightness = canToggle && brightness && brightness.commandable;
+        const brightnessMin = Number.isFinite(brightness?.min) ? brightness.min : 0;
+        const brightnessMax = Number.isFinite(brightness?.max) ? brightness.max : 100;
+        const brightnessStep = Number.isFinite(brightness?.step) && brightness.step > 0 ? brightness.step : 1;
+        const brightnessCurrent = brightnessValue(entity, brightnessMin, brightnessMax);
         return `
           <article class="entity-card">
             <div class="row" style="justify-content: space-between;">
@@ -418,6 +444,13 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             <div class="actions row">
               ${canToggle ? `<button type="button" data-service="turn_on" data-entity="${entity.home_assistant_entity_id}">Turn on</button><button type="button" data-service="turn_off" data-entity="${entity.home_assistant_entity_id}">Turn off</button>` : ""}
             </div>
+            ${canSetBrightness ? `
+              <label class="range-control">
+                <span class="muted">Brightness <strong data-brightness-value="${entity.home_assistant_entity_id}">${brightnessCurrent}%</strong></span>
+                <input type="range" min="${brightnessMin}" max="${brightnessMax}" step="${brightnessStep}" value="${brightnessCurrent}" data-brightness-input="${entity.home_assistant_entity_id}">
+                <button type="button" data-service="set_brightness" data-entity="${entity.home_assistant_entity_id}" data-brightness-for="${entity.home_assistant_entity_id}">Set brightness</button>
+              </label>
+            ` : ""}
           </article>
         `;
       }).join("");
@@ -503,6 +536,17 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }
     };
 
+    document.addEventListener("input", (event) => {
+      const input = event.target.closest("input[data-brightness-input]");
+      if (!input) {
+        return;
+      }
+      const value = document.querySelector(`[data-brightness-value="${input.dataset.brightnessInput}"]`);
+      if (value) {
+        value.textContent = `${input.value}%`;
+      }
+    });
+
     document.addEventListener("click", async (event) => {
       const serviceButton = event.target.closest("button[data-service]");
       const sceneButton = event.target.closest("button[data-scene]");
@@ -514,10 +558,15 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       button.disabled = true;
       try {
         if (serviceButton) {
+          const body = {entity_id: serviceButton.dataset.entity};
+          if (serviceButton.dataset.service === "set_brightness") {
+            const input = brightnessInputFor(serviceButton.dataset.brightnessFor);
+            body.brightness_pct = input ? Number(input.value) : 100;
+          }
           await json(`/api/services/light/${serviceButton.dataset.service}`, {
             method: "POST",
             headers: {"content-type": "application/json"},
-            body: JSON.stringify({entity_id: serviceButton.dataset.entity})
+            body: JSON.stringify(body)
           });
           log(`${serviceButton.dataset.service} accepted for ${serviceButton.dataset.entity}`);
         } else if (sceneButton) {
@@ -6287,6 +6336,8 @@ mod tests {
             assert!(body.contains("json(\"/api/smart_home/desired_states?limit=12\")"));
             assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
             assert!(body.contains("/api/services/light/"));
+            assert!(body.contains("data-service=\"set_brightness\""));
+            assert!(body.contains("brightness_pct"));
             assert!(body.contains("/api/services/scene/turn_on"));
             assert!(body.contains("/api/smart_home/desired_states/"));
         }
@@ -7317,6 +7368,8 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/desired_states?limit=12\")"));
         assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
         assert!(body.contains("/api/services/light/"));
+        assert!(body.contains("data-brightness-input"));
+        assert!(body.contains("brightness_pct"));
         assert!(body.contains("/api/services/scene/turn_on"));
         assert!(body.contains("/api/smart_home/desired_states/"));
     }

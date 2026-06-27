@@ -87,9 +87,9 @@ the Home Assistant-style history route accepts `filter_entity_id`.
 The browser routes serve an embedded local dashboard shell over the same
 `web-core::WebApp`. The shell loads bootstrap, readiness, state, scene,
 desired-state, state-history, and audit data from the native API routes and
-sends light, scene, and desired-state actions through the existing
-Home Assistant-compatible and native service endpoints, preserving runtime
-authorization.
+sends light on/off, light brightness, scene, and desired-state actions through
+the existing Home Assistant-compatible and native service endpoints, preserving
+runtime authorization.
 
 ## Dependencies
 

@@ -29,6 +29,9 @@ All notable changes to this package will be documented in this file.
 - Extended the embedded dashboard shell with scene activation,
   desired-state clearing, and recent state-history previews over existing
   runtime-authorized API routes.
+- Added browser dashboard light brightness controls that discover commandable
+  ranged capabilities and dispatch through the existing `set_brightness`
+  service path.
 - Added a native readiness checklist route with actionable links for registry,
   topology, state coverage, event bus, discovery, supervisor, authorization,
   and desired-state checks.
