@@ -2343,6 +2343,71 @@ fn g3_print_i64_class_serializes_with_cafebabe_magic() {
     );
 }
 
+// ===========================================================================
+// LANG-FULL E4 — string literal output foothold
+// ===========================================================================
+
+fn string_print_module() -> IIRModule {
+    let f = IIRFunction::new(
+        "print_hello",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    module_with(f)
+}
+
+#[test]
+fn e4_string_print_lowers_to_ldc_and_printstream_print() {
+    let module = string_print_module();
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal print should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "print_hello")
+        .expect("print_hello method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.iter().any(|b| *b == 0x12 || *b == 0x13),
+        "str_const must load a CONSTANT_String with ldc/ldc_w; got: {:?}",
+        code
+    );
+    assert!(code.contains(&0xB2), "print_str must getstatic System.out; got: {:?}", code);
+    assert!(code.contains(&0xB6), "print_str must invokevirtual PrintStream.print; got: {:?}", code);
+
+    let has_hello_string = class.constant_pool.iter().any(|entry| {
+        let Some(JvmConstantPoolEntry::String { string_index }) = entry else {
+            return false;
+        };
+        matches!(
+            class.constant_pool.get(*string_index as usize),
+            Some(Some(JvmConstantPoolEntry::Utf8(s))) if s == "HELLO"
+        )
+    });
+    assert!(has_hello_string, "constant pool must contain CONSTANT_String HELLO");
+
+    let print_ref = find_methodref_in_cp(
+        &class.constant_pool,
+        "java/io/PrintStream",
+        "print",
+        "(Ljava/lang/String;)V",
+    );
+    assert_ne!(print_ref, 0, "constant pool must contain PrintStream.print(String)");
+}
+
 /// McCarthy W3b: `box` lowers to `Integer.valueOf(I)` (invokestatic 0xB8) and
 /// `unbox` to `checkcast` (0xC0) + `Integer.intValue()` (invokevirtual 0xB6).
 #[test]

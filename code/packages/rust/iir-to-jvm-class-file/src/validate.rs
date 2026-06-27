@@ -21,7 +21,7 @@
 //! | `EmptyModule`       | Module has zero functions |
 //! | `EmptyFunction`     | A function has zero instructions |
 //! | `UntypedInstruction`| `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType`   | `type_hint` is `"str"` or starts with `"ref<"` |
+//! | `UnsupportedType`   | `type_hint` is unsupported (`"str"` except `str_const`, or unsupported `ref<...>`) |
 //! | `UnsupportedOp`     | op is a runtime/memory/IO/GC opcode (list below) |
 //!
 //! **Importantly, float type hints and float constant operands are SUPPORTED.**
@@ -31,7 +31,8 @@
 //! # Unsupported ops
 //!
 //! `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`,
-//! `box`, `unbox`, `safepoint`.
+//! `box`, `unbox`, `safepoint`, and the byte-oriented E4 string algebra beyond
+//! `str_const` + `print_str`.
 //!
 //! The following ops are now SUPPORTED via `Object[]` cons cells (Phase 2):
 //! `alloc` (when `type_hint == "ref<LispyPair>"`), `field_load`, `field_store`,
@@ -271,8 +272,10 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
 
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
-            // `"str"` — JVM has strings (`java.lang.String`), but there is no
-            // integer-arithmetic equivalent; we do not emit string handling code.
+            // `"str"` — The backend can now load an ASCII literal for
+            // `str_const`, enough for Dartmouth BASIC string `PRINT`. Other
+            // string-typed producers still need a fuller byte-oriented
+            // representation before Java `String` is safe for them.
             //
             // `"ref<…>"` — heap pointer types require `aload`/`astore` and GC
             // object references.  Phase 2 supports `"ref<LispyPair>"` via
@@ -281,10 +284,10 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // `"f32"` and `"f64"` are intentionally NOT rejected here.  The JVM
             // has first-class float/double operations (`fload`, `dload`, `fadd`,
             // `dadd`, etc.) that this backend emits.
-            if instr.type_hint == "str" {
+            if instr.type_hint == "str" && instr.op != "str_const" {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     string operations are not supported in this JVM backend",
+                     only str_const literals are supported in this JVM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -315,7 +318,17 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
             // `putchar` / `getchar` flow through while still rejecting
             // unknown / unsafe builtins.
-            if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
+            if matches!(
+                instr.op.as_str(),
+                "str_len" | "str_index" | "str_concat" | "str_eq"
+            ) {
+                errors.push(format!(
+                    "UnsupportedOp: function {:?}, op {:?} is not supported by \
+                     the JVM backend; only str_const + print_str are supported \
+                     for LANG-FULL E4 in this slice",
+                    func.name, instr.op
+                ));
+            } else if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the JVM backend; it requires a native method or Java standard-library call",
@@ -466,6 +479,41 @@ mod tests {
             IIRInstr::new("const", Some("v".into()), vec![], "str"),
         ]));
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
+    }
+
+    #[test]
+    fn str_const_literal_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "str_const + print_str should pass: {:?}", errs);
+    }
+
+    #[test]
+    fn byte_string_algebra_still_rejected() {
+        for op in ["str_len", "str_index", "str_concat", "str_eq"] {
+            let errs = validate_for_jvm(&single_fn_module(vec![
+                IIRInstr::new(
+                    op,
+                    Some("v".into()),
+                    vec![Operand::Var("s".into())],
+                    if op == "str_concat" { "str" } else { "i32" },
+                ),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ]));
+            assert!(
+                errs.iter().any(|e| e.contains("UnsupportedOp")),
+                "{op} should remain unsupported until JVM owns byte string semantics: {:?}",
+                errs
+            );
+        }
     }
 
     #[test]

@@ -3,6 +3,23 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.19.0] — 2026-06-27 (string literal PRINT foothold — LANG-FULL E4 / BA4)
+
+The JVM backend now lowers the first E4 string shape:
+
+- `str_const` with an ASCII `Operand::Str` literal → `CONSTANT_String` loaded
+  with `ldc`/`ldc_w` into a reference local.
+- `print_str` → `getstatic java/lang/System.out` +
+  `invokevirtual java/io/PrintStream.print(Ljava/lang/String;)V`.
+
+This is deliberately narrower than full E4: byte-oriented string operations
+(`str_len`, `str_index`, `str_concat`, `str_eq`) still fail closed until the JVM
+representation owns the shared UTF-8 byte semantics. The validator now admits
+only `str_const` + `print_str` and rejects the richer string algebra explicitly.
+
+Verified by backend tests plus the `lang-aot` matrix row:
+`10 PRINT "HELLO"` now runs on real `java` in the JVM column.
+
 ## [0.18.0] — 2026-06-23 (numeric conversions int ⇄ real — LANG-FULL E8 backend 4)
 
 The three IIR numeric-conversion ops now lower to JVM bytecode, the fourth
