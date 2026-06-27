@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added D18D handlers for Chief-visible smart-home runtime maintenance outcome
+  readiness handoff packages:
+  `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoffs`
+  and
+  `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_summary`.
 - Added D18D handlers for the D23A smart-home integration catalog tools:
   `smart_home.list_integrations`, `smart_home.describe_integration`,
   `smart_home.list_primitives`, and `smart_home.describe_primitive`.
