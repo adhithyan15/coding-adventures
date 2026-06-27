@@ -317,17 +317,36 @@ impl<'a> MathParser<'a> {
     }
 
     fn parse_unary(&mut self) -> Result<MathNode, ParseError> {
-        match &self.peek().kind {
-            TokenKind::Char('+') => {
-                self.bump();
-                Ok(MathNode::Unary(MUnOp::Pos, Box::new(self.parse_unary()?)))
+        // Collect a run of leading signs *iteratively* (not by self-recursion): a chain
+        // like `----x` is driven directly by input length, so recursing one stack frame
+        // per sign would let adversarial input (thousands of `-`) overflow the stack
+        // before any depth guard fires. We gather the signs, parse one operand, then fold
+        // the operators back on from the inside out.
+        let mut ops = Vec::new();
+        loop {
+            match &self.peek().kind {
+                TokenKind::Char('+') => {
+                    self.bump();
+                    ops.push(MUnOp::Pos);
+                }
+                TokenKind::Char('-') => {
+                    self.bump();
+                    ops.push(MUnOp::Neg);
+                }
+                _ => break,
             }
-            TokenKind::Char('-') => {
-                self.bump();
-                Ok(MathNode::Unary(MUnOp::Neg, Box::new(self.parse_unary()?)))
-            }
-            _ => self.parse_postfix(),
+            // The sign run is part of one nesting level; guard it so a multi-megabyte
+            // string of signs errors instead of allocating without bound.
+            self.enter()?;
         }
+        let mut node = self.parse_postfix()?;
+        // We `enter()`ed once per sign above; balance the depth counter back out now that
+        // the run is fully consumed (the operand parse has its own guarded descent).
+        self.depth -= ops.len();
+        for op in ops.into_iter().rev() {
+            node = MathNode::Unary(op, Box::new(node));
+        }
+        Ok(node)
     }
 
     /// An atom plus any trailing `^`/`_` scripts.
@@ -945,6 +964,18 @@ mod tests {
     fn deep_nesting_is_bounded() {
         let deep = "(".repeat(5000);
         assert!(parse_math(&deep).is_err());
+    }
+
+    #[test]
+    fn long_sign_chain_is_bounded_not_overflow() {
+        // A run of leading signs is driven by input length; it must error (depth-guarded)
+        // rather than recurse a stack frame per sign and overflow.
+        let signs = "-".repeat(100_000);
+        assert!(parse_math(&format!("{signs}1")).is_err());
+        // A short, legal sign run still parses and round-trips.
+        assert!(matches!(parse_math("--x").unwrap(), MathNode::Unary(MUnOp::Neg, _)));
+        round_trips("-x");
+        round_trips("--x");
     }
 
     #[test]
