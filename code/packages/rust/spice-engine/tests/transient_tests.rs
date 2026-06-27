@@ -1996,6 +1996,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         op_execution.plan.line_number
     );
     assert_eq!(output_plan_artifact.source_name, None);
+    assert_eq!(output_plan_artifact.output_node, None);
     assert_eq!(output_plan_artifact.result_row_count, 1);
     assert_eq!(
         output_plan_artifact.result_columns,
@@ -2034,7 +2035,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         op_execution.output_plan_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputProbeLines\tOutputProbeLineList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tOutputDirectiveLines\tOutputDirectiveLineList\tTables\tTableList\nop\t.op\t{}\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t1\t{}\t1\t.save\t1\tsave\t1\tglobal\t1\t{}\t3\tresult;output-plan;run-artifact\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputProbeLines\tOutputProbeLineList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tOutputDirectiveLines\tOutputDirectiveLineList\tTables\tTableList\nop\t.op\t{}\t\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t1\t{}\t1\t.save\t1\tsave\t1\tglobal\t1\t{}\t3\tresult;output-plan;run-artifact\n",
             op_execution.plan.line_number, save_line, save_line
         )
     );
@@ -2045,8 +2046,8 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         op_execution.output_plan_artifact_csv,
         format!(
-            "Analysis,Directive,Line,SourceName,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputProbeLines,OutputProbeLineList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,OutputDirectiveLines,OutputDirectiveLineList,Tables,TableList\nop,.op,{},,1,2,Index;V(mid),1,V(mid),1,{},1,.save,1,save,1,global,1,{},3,result;output-plan;run-artifact\n",
-            op_execution.plan.line_number, save_line, save_line
+            "Analysis,Directive,Line,SourceName,OutputNode,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputProbeLines,OutputProbeLineList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,OutputDirectiveLines,OutputDirectiveLineList,Tables,TableList\nop,.op,{0},,,1,2,Index;V(mid),1,V(mid),1,{1},1,.save,1,save,1,global,1,{1},3,result;output-plan;run-artifact\n",
+            op_execution.plan.line_number, save_line
         )
     );
     assert_eq!(
@@ -2067,6 +2068,12 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             .get("Line")
             .map(String::as_str),
         Some(op_line.as_str())
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_records[0]
+            .get("OutputNode")
+            .map(String::as_str),
+        Some("")
     );
     assert_eq!(
         op_execution.output_plan_artifact_records[0]
@@ -2321,6 +2328,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         dc_execution.output_plan_artifacts[0].source_name.as_deref(),
         Some("V1")
     );
+    assert_eq!(dc_execution.output_plan_artifacts[0].output_node, None);
     let dc_line = dc_execution.plan.line_number.to_string();
     assert_eq!(
         dc_execution.output_plan_artifact_records[0]
@@ -2333,6 +2341,12 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             .get("SourceName")
             .map(String::as_str),
         Some("V1")
+    );
+    assert_eq!(
+        dc_execution.output_plan_artifact_records[0]
+            .get("OutputNode")
+            .map(String::as_str),
+        Some("")
     );
     assert_eq!(
         dc_execution.output_plan_artifacts[0].output_directive_kinds,
@@ -2501,6 +2515,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         ac_execution.output_directives,
         vec![".save".to_string(), ".plot".to_string()]
     );
+    assert_eq!(ac_execution.output_plan_artifacts[0].output_node, None);
     assert_eq!(
         ac_execution.output_plan_artifacts[0].output_directive_kinds,
         vec!["save".to_string(), "plot".to_string()]
@@ -2726,6 +2741,16 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     }
     assert_eq!(tf_execution.output_probes, vec!["V(mid)".to_string()]);
     assert!(tf_execution.output_directives.is_empty());
+    assert_eq!(
+        tf_execution.output_plan_artifacts[0].output_node.as_deref(),
+        Some("mid")
+    );
+    assert_eq!(
+        tf_execution.output_plan_artifact_records[0]
+            .get("OutputNode")
+            .map(String::as_str),
+        Some("mid")
+    );
     assert_eq!(tf_execution.analysis_directives, vec![".tf".to_string()]);
     assert_eq!(tf_execution.table_count, 3);
     assert_eq!(
@@ -2801,6 +2826,18 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         other => panic!("expected sensitivity result, got {other:?}"),
     }
     assert_eq!(sens_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert_eq!(
+        sens_execution.output_plan_artifacts[0]
+            .output_node
+            .as_deref(),
+        Some("mid")
+    );
+    assert_eq!(
+        sens_execution.output_plan_artifact_records[0]
+            .get("OutputNode")
+            .map(String::as_str),
+        Some("mid")
+    );
     assert_eq!(
         sens_execution.analysis_directives,
         vec![".sens".to_string()]
@@ -2885,6 +2922,24 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         other => panic!("expected noise result, got {other:?}"),
     }
     assert_eq!(noise_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert_eq!(
+        noise_execution.output_plan_artifacts[0]
+            .source_name
+            .as_deref(),
+        Some("V1")
+    );
+    assert_eq!(
+        noise_execution.output_plan_artifacts[0]
+            .output_node
+            .as_deref(),
+        Some("mid")
+    );
+    assert_eq!(
+        noise_execution.output_plan_artifact_records[0]
+            .get("OutputNode")
+            .map(String::as_str),
+        Some("mid")
+    );
     assert_eq!(
         noise_execution.analysis_directives,
         vec![".noise".to_string()]

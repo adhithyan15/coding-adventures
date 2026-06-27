@@ -15,6 +15,19 @@ alongside the existing `Number.isInteger` / `isFinite` / `isNaN`. It returns
 literal is `false`), and declines an identifier / non-literal. New end-to-end
 fixture `tests/diff/simple-fold-number-issafeinteger/` plus integration test
 `tests/diff_simple_fold_number_issafeinteger.rs`.
+## [0.216.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold static `Array.of(...)` → array literal `[...]`
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static `Array.of(v0, v1,
+…)` call (ECMAScript §23.1.2.3) to the array literal `[v0, v1, …]`. Unlike the
+`Array(n)` constructor — where a single numeric argument sets the *length* —
+`Array.of(7)` is the one-element array `[7]`, so the fold is sound for any
+argument list and preserves every element expression in evaluation order. Only
+the bare global `Array.of(...)` callee folds (never a shadowed `q.of(...)`).
+New end-to-end fixture `tests/diff/simple-fold-array-of/` plus integration test
+`tests/diff_simple_fold_array_of.rs`.
 
 ## [0.214.0] - 2026-06-26
 
