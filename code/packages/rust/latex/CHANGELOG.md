@@ -2,6 +2,24 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.6.0] — 2026-06-26
+
+### Added — LTX01 L5a: inline `\verb` verbatim
+
+- **Inline verbatim** `\verb<delim>…<delim>` and the `\verb*` visible-space variant. The
+  tokenizer now intercepts `\verb` and reads its body **raw** — catcodes are suspended, so
+  `{ } $ # \` etc. are literal characters (previously L1 mis-tokenized them). New
+  `TokenKind::Verb { star, delim, content }` → `Node::Verb { star, delim, content }`, with a
+  round-tripping `to_latex`.
+- Total / panic-free / spanned: an unterminated `\verb`, a body that runs past the end of the
+  line, `\verb` at end of input, or a `*`/space delimiter each return a spanned `LexError` —
+  never a panic or a mis-parse. The body is bounded by the input (single line).
+- +7 tests (lexer: raw body with `{}$#\`, `\verb*`, the error family; parser: `Verb` node,
+  surrounding text undisturbed; +2 round-trip-corpus entries). **87 unit + 1 doc test** green;
+  clippy `-D warnings` clean; no `unsafe`. Crate 0.5.0 → 0.6.0.
+- Scope: this is L5a. The `verbatim` environment, text accents (`\'e`…), sectioning/font
+  recognition, and cross-refs are later L5 sub-rungs (spec §5).
+
 ## [0.5.0] — 2026-06-26
 
 ### Added — LTX01 L4a: macro expansion

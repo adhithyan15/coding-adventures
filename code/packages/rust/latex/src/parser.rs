@@ -164,6 +164,10 @@ impl<'a> Parser<'a> {
                 self.bump();
                 Ok(Node::Active(c))
             }
+            TokenKind::Verb { star, delim, content } => {
+                self.bump();
+                Ok(Node::Verb { star, delim, content })
+            }
             // In text mode these four are literal characters; they only carry structural
             // meaning inside math/environments, which are handled elsewhere (L2/L3).
             TokenKind::AlignTab => { self.bump(); Ok(Node::Text("&".into())) }
@@ -504,8 +508,36 @@ mod tests {
             r"\begin{tabular}{cc}a&b\end{tabular}",
             r"a~b and \, thin",
             r"nested {groups {deep}} ok",
+            r"use \verb|x{y}$z| inline",
+            r"\verb*+two words+ here",
         ] {
             assert_round_trips(src);
         }
+    }
+
+    #[test]
+    fn verb_is_a_node_with_raw_body() {
+        // `\verb|...|` becomes a Verb node whose body keeps catcode-significant chars literal.
+        assert_eq!(
+            p(r"\verb|a{b}$c|"),
+            vec![Verb { star: false, delim: '|', content: "a{b}$c".into() }]
+        );
+        // starred variant
+        assert_eq!(
+            p(r"\verb*!x!"),
+            vec![Verb { star: true, delim: '!', content: "x".into() }]
+        );
+    }
+
+    #[test]
+    fn verb_does_not_disturb_surrounding_text() {
+        assert_eq!(
+            p(r"a\verb|b|c"),
+            vec![
+                Text("a".into()),
+                Verb { star: false, delim: '|', content: "b".into() },
+                Text("c".into()),
+            ]
+        );
     }
 }
