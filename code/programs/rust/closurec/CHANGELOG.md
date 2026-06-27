@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.202.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold static `Number.parseInt/parseFloat(…)`
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses the ES2015 static methods
+`Number.parseInt(string[, radix])` / `Number.parseFloat(string)` (ECMAScript
+§21.1.2.12/.13) to a numeric literal — via the new `MemberExpression`-arm
+dispatch in `closure-pass-constant-fold` 0.53.0.
+
+These are the *same functions* as the global `parseInt`/`parseFloat`
+(`Number.parseInt === parseInt`), so the fold reuses the existing
+`fold_parse_int`/`fold_parse_float` helpers: `Number.parseInt("12px")` → `12`,
+`Number.parseInt("FF", 16)` → `255`, `Number.parseInt("0x1F")` → `31`,
+`Number.parseFloat("3.14e2abc")` → `314`. Only the bare global `Number.parseX(...)`
+folds (never a shadowed receiver), and a `NaN`/`±Infinity` result is declined
+(`Number.parseInt("")` is left intact).
+
+New end-to-end fixture `tests/diff/simple-fold-number-parse/` and integration
+test `tests/diff_simple_fold_number_parse.rs` assert byte-exact SIMPLE output,
+the per-binding numeric folds (incl. an explicit radix and the `0x` prefix), the
+declined `NaN` call, and a WHITESPACE_ONLY-fallback regression guard (exactly one
+`Number.parse…(` call remains). Help-markdown regenerated to Version 0.202.0.
+
 ## [0.198.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold global `encodeURI(…)` / `decodeURI(…)` → string
