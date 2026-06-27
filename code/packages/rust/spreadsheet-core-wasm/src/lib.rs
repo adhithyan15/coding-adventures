@@ -67,10 +67,21 @@ use spreadsheet_core::{
 /// later without changing this one.
 pub struct SpreadsheetSession {
     wb: Workbook,
+    /// The **active** sheet — the one bare-A1 reads/writes address. Switched by
+    /// [`set_active_sheet`](Self::set_active_sheet); the sheet-management methods
+    /// keep it valid across reorders/deletes.
     sheet: SheetId,
-    /// What was literally typed into each cell — the source of truth for
-    /// [`get_raw`](Self::get_raw), independent of the engine's internals.
+    /// What was literally typed into each cell of the **active** sheet — the
+    /// source of truth for [`get_raw`](Self::get_raw), independent of the engine's
+    /// internals. Inactive sheets' echoes live in [`other_raw`](Self::other_raw);
+    /// switching the active sheet swaps the two.
     raw: HashMap<CellAddress, String>,
+    /// Per-sheet raw echoes for every **non-active** sheet, keyed by `SheetId`.
+    /// On [`set_active_sheet`](Self::set_active_sheet) the current `raw` is stashed
+    /// here and the target sheet's map is taken out into `raw`. After a structural
+    /// sheet op (add/rename/delete/move) that can reindex `SheetId`s, all echoes
+    /// are rebuilt from the engine in one pass (`rebuild_all_raw_from_engine`).
+    other_raw: HashMap<SheetId, HashMap<CellAddress, String>>,
     /// A facade-side mirror of the engine's clipboard, holding the *raw* (typed)
     /// source of each copied/cut cell so [`paste`](Self::paste) can keep the
     /// `raw` echo map in step — the engine stores parsed content, not the
@@ -119,9 +130,177 @@ impl SpreadsheetSession {
             wb,
             sheet,
             raw: HashMap::new(),
+            other_raw: HashMap::new(),
             clip: None,
             undo_stack: Vec::new(),
             redo_stack: Vec::new(),
+        }
+    }
+
+    // ── Multi-sheet workbook ─────────────────────────────────────────
+    //
+    // The facade addresses cells on one *active* sheet by bare A1; these methods
+    // manage the set of sheets and which one is active. The underlying engine is
+    // multi-sheet and cross-sheet-aware, so a formula on one sheet can reference
+    // another (`=Summary!A1`) and recompute when that sheet changes — see the
+    // engine's `spreadsheet-core`. Dense `SheetId`s are sheet indices, so a delete
+    // or move reindexes them; after any such op the per-sheet raw echoes are
+    // rebuilt from the engine in one pass so they can't go stale.
+
+    /// The sheet names in tab order plus the active index, as JSON:
+    /// `{"sheets":["Sheet1","Summary"],"active":0}`.
+    pub fn sheet_names(&self) -> String {
+        let names: Vec<&str> = self.wb.sheet_names();
+        json!({ "sheets": names, "active": self.sheet.0 }).to_string()
+    }
+
+    /// The active sheet's 0-based index.
+    pub fn active_sheet(&self) -> u32 {
+        self.sheet.0
+    }
+
+    /// Switch the active sheet by 0-based index. The current sheet's raw echo is
+    /// stashed and the target's taken out, so bare-A1 reads/writes now address the
+    /// new sheet. Out-of-range index → no-op (`false`).
+    pub fn set_active_sheet(&mut self, index: u32) -> bool {
+        if index as usize >= self.wb.sheet_count() {
+            return false;
+        }
+        self.activate(SheetId(index));
+        true
+    }
+
+    /// Swap the active-sheet raw echo so `self.raw` is `target`'s map.
+    fn activate(&mut self, target: SheetId) {
+        if target == self.sheet {
+            return;
+        }
+        let current = std::mem::take(&mut self.raw);
+        self.other_raw.insert(self.sheet, current);
+        self.raw = self.other_raw.remove(&target).unwrap_or_default();
+        self.sheet = target;
+    }
+
+    /// Add a new sheet with `name` and make it active. Rejects a duplicate or
+    /// empty name (`false`). Undoable.
+    pub fn add_sheet(&mut self, name: &str) -> bool {
+        if name.is_empty() || self.wb.sheet_id(name).is_some() {
+            return false;
+        }
+        let name = name.to_string();
+        self.mutate(|s| {
+            let id = s.wb.add_sheet(name.clone());
+            s.activate(id);
+            true
+        })
+    }
+
+    /// Rename the sheet at `index`. Rewrites the qualifier in every referencing
+    /// formula (engine-side) and rebuilds the raw echoes so the formula bar shows
+    /// the new name. Rejects empty/duplicate names or a bad index (`false`).
+    pub fn rename_sheet(&mut self, index: u32, new_name: &str) -> bool {
+        if index as usize >= self.wb.sheet_count() {
+            return false;
+        }
+        let new_name = new_name.to_string();
+        self.mutate(|s| {
+            if s.wb.rename_sheet(SheetId(index), new_name.clone()).is_err() {
+                return false;
+            }
+            s.rebuild_all_raw_from_engine();
+            true
+        })
+    }
+
+    /// Delete the sheet at `index`. Inbound references to it become `#REF!`; the
+    /// remaining sheets are reindexed and the active sheet is kept valid (it
+    /// follows its sheet, or falls to a neighbour if it was the one deleted).
+    /// Refuses to delete the last sheet or a bad index (`false`). Undoable.
+    pub fn delete_sheet(&mut self, index: u32) -> bool {
+        let count = self.wb.sheet_count();
+        if index as usize >= count || count <= 1 {
+            return false;
+        }
+        let active_name = self.wb.sheet_name(self.sheet).map(str::to_string);
+        self.mutate(|s| {
+            if s.wb.delete_sheet(SheetId(index)).is_err() {
+                return false;
+            }
+            // Re-resolve the active sheet: by name if it survived, else clamp to a
+            // neighbour of the deleted position.
+            // The active sheet survived → find it by name; otherwise (it was the
+            // deleted one) clamp to the neighbour now at the deleted position.
+            let last = s.wb.sheet_count() as u32 - 1;
+            s.sheet = active_name
+                .as_deref()
+                .and_then(|n| s.wb.sheet_id(n))
+                .unwrap_or(SheetId(index.min(last)));
+            s.rebuild_all_raw_from_engine();
+            true
+        })
+    }
+
+    /// Move the sheet at `index` to 0-based `to_index` (clamped). The active sheet
+    /// follows its tab. Bad index → no-op (`false`). Undoable.
+    pub fn move_sheet(&mut self, index: u32, to_index: u32) -> bool {
+        if index as usize >= self.wb.sheet_count() {
+            return false;
+        }
+        let active_name = self.wb.sheet_name(self.sheet).map(str::to_string);
+        self.mutate(|s| {
+            if s.wb.move_sheet(SheetId(index), to_index as usize).is_err() {
+                return false;
+            }
+            s.sheet = active_name
+                .as_deref()
+                .and_then(|n| s.wb.sheet_id(n))
+                .unwrap_or(SheetId(0));
+            s.rebuild_all_raw_from_engine();
+            true
+        })
+    }
+
+    /// Rebuild every sheet's raw echo from the engine's serialized document — used
+    /// after a sheet op that can reindex `SheetId`s or rewrite qualifiers. The
+    /// active sheet's map lands in `raw`, the rest in `other_raw`. Cell sources
+    /// come from the engine's current text (re-emitted where the op rewrote a
+    /// formula), the same normalization a structural edit already applies.
+    fn rebuild_all_raw_from_engine(&mut self) {
+        self.raw.clear();
+        self.other_raw.clear();
+        let doc = self.wb.serialize();
+        let Ok(root) = serde_json::from_str::<Value>(&doc) else {
+            return;
+        };
+        let Some(sheets) = root.get("sheets").and_then(Value::as_array) else {
+            return;
+        };
+        for (i, sj) in sheets.iter().enumerate() {
+            let mut map = HashMap::new();
+            if let Some(cells) = sj.get("cells").and_then(Value::as_array) {
+                for c in cells {
+                    let Some(a1) = c.get("a1").and_then(Value::as_str) else {
+                        continue;
+                    };
+                    let Ok(addr) = CellAddress::parse(a1) else {
+                        continue;
+                    };
+                    let raw = if let Some(f) = c.get("formula").and_then(Value::as_str) {
+                        f.to_string()
+                    } else if let Some(vj) = c.get("value") {
+                        raw_from_value_json(vj)
+                    } else {
+                        continue;
+                    };
+                    map.insert(addr, raw);
+                }
+            }
+            let sid = SheetId(i as u32);
+            if sid == self.sheet {
+                self.raw = map;
+            } else {
+                self.other_raw.insert(sid, map);
+            }
         }
     }
 
@@ -652,43 +831,18 @@ impl SpreadsheetSession {
         if self.wb.deserialize(data).is_err() {
             return false;
         }
-        // Re-bind the pinned sheet: the engine rebuilt sheets in file order, so
-        // SheetId(0) is the first sheet — unless the file had none, in which case
-        // give the facade a fresh sheet rather than leaving it pointing at a hole.
+        // Re-bind the active sheet to the first loaded sheet (file order →
+        // SheetId(0)), or a fresh "Sheet1" if the file had none, rather than
+        // leaving it pointing at a hole.
         self.sheet = if self.wb.sheet_count() == 0 {
             self.wb.add_sheet("Sheet1")
         } else {
             SheetId(0)
         };
-        // Rebuild the raw echo from the just-loaded JSON (the engine doesn't keep
-        // the user's typed text). Single-sheet facade → the first sheet's cells.
-        self.raw.clear();
-        if let Ok(root) = serde_json::from_str::<Value>(data) {
-            if let Some(cells) = root
-                .get("sheets")
-                .and_then(Value::as_array)
-                .and_then(|s| s.first())
-                .and_then(|s| s.get("cells"))
-                .and_then(Value::as_array)
-            {
-                for c in cells {
-                    let Some(a1) = c.get("a1").and_then(Value::as_str) else {
-                        continue;
-                    };
-                    let Ok(addr) = CellAddress::parse(a1) else {
-                        continue;
-                    };
-                    let raw = if let Some(f) = c.get("formula").and_then(Value::as_str) {
-                        f.to_string()
-                    } else if let Some(vj) = c.get("value") {
-                        raw_from_value_json(vj)
-                    } else {
-                        continue;
-                    };
-                    self.raw.insert(addr, raw);
-                }
-            }
-        }
+        // Rebuild every sheet's raw echo from the engine (the engine doesn't keep
+        // the user's typed text). Resets `other_raw` too, so a load of a different
+        // sheet count can't leave stale inactive echoes behind.
+        self.rebuild_all_raw_from_engine();
         true
     }
 
@@ -1019,6 +1173,70 @@ mod tests {
         // Change a precedent → the total recomputes.
         s.set_cell("B1", "115");
         assert_eq!(s.get_value("B6"), r#"{"kind":"number","value":146.0}"#);
+    }
+
+    // ── Multi-sheet workbook ────────────────────────────────────────
+
+    #[test]
+    fn multi_sheet_add_switch_cross_sheet_and_per_sheet_raw() {
+        let mut s = SpreadsheetSession::new(); // active = Sheet1
+        assert_eq!(s.sheet_names(), r#"{"active":0,"sheets":["Sheet1"]}"#);
+        // Add a Summary sheet, put a value on it, switch back, reference it.
+        assert!(s.add_sheet("Summary")); // now active = Summary (index 1)
+        assert_eq!(s.active_sheet(), 1);
+        s.set_cell("A1", "10"); // Summary!A1
+        assert!(s.set_active_sheet(0)); // back to Sheet1
+        s.set_cell("B1", "=Summary!A1*2"); // cross-sheet formula
+        assert_eq!(s.get_value("B1"), r#"{"kind":"number","value":20.0}"#);
+        // Per-sheet raw echo: Sheet1!B1 shows its source; Summary!A1 is on the
+        // other sheet (switch to see it; Sheet1 has no A1).
+        assert_eq!(s.get_raw("B1"), "=Summary!A1*2");
+        assert_eq!(s.get_raw("A1"), ""); // Sheet1!A1 is empty
+        s.set_active_sheet(1);
+        assert_eq!(s.get_raw("A1"), "10"); // Summary!A1's echo
+        // Edit Summary!A1 → the Sheet1 dependent recomputes (cross-sheet live).
+        s.set_cell("A1", "50");
+        s.set_active_sheet(0);
+        assert_eq!(s.get_value("B1"), r#"{"kind":"number","value":100.0}"#);
+    }
+
+    #[test]
+    fn multi_sheet_rename_delete_move_and_load() {
+        let mut s = SpreadsheetSession::new();
+        s.add_sheet("Summary");
+        s.set_cell("A1", "7"); // Summary!A1
+        s.set_active_sheet(0);
+        s.set_cell("B1", "=Summary!A1"); // 7
+
+        // Rename Summary → Totals: the qualifier follows, value holds.
+        assert!(s.rename_sheet(1, "Totals"));
+        assert_eq!(s.sheet_names(), r#"{"active":0,"sheets":["Sheet1","Totals"]}"#);
+        assert_eq!(s.get_value("B1"), r#"{"kind":"number","value":7.0}"#);
+
+        // Save/load round-trips both sheets + the live cross-sheet formula.
+        let doc = s.serialize();
+        let mut t = SpreadsheetSession::new();
+        assert!(t.deserialize(&doc));
+        assert_eq!(t.sheet_names(), r#"{"active":0,"sheets":["Sheet1","Totals"]}"#);
+        assert_eq!(t.get_value("B1"), r#"{"kind":"number","value":7.0}"#);
+        t.set_active_sheet(1);
+        t.set_cell("A1", "9"); // Totals!A1
+        t.set_active_sheet(0);
+        assert_eq!(t.get_value("B1"), r#"{"kind":"number","value":9.0}"#); // live after load
+
+        // Delete Totals: the inbound ref becomes #REF!, only Sheet1 remains.
+        assert!(t.delete_sheet(1));
+        assert_eq!(t.sheet_names(), r#"{"active":0,"sheets":["Sheet1"]}"#);
+        assert_eq!(t.get_value("B1"), r##"{"code":"#REF!","kind":"error"}"##);
+        assert!(!t.delete_sheet(0)); // can't delete the last sheet
+
+        // Move: with three sheets, move the first to the end.
+        let mut m = SpreadsheetSession::new();
+        m.add_sheet("B");
+        m.add_sheet("C");
+        m.set_active_sheet(0); // active = Sheet1
+        assert!(m.move_sheet(0, 2));
+        assert_eq!(m.sheet_names(), r#"{"active":2,"sheets":["B","C","Sheet1"]}"#);
     }
 
     // ── Structural edits: insert / delete rows & columns ────────────
