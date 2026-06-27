@@ -15,6 +15,7 @@ import {
   resolveDeckParameters,
   resolveDeckSources,
   selectDeckAnalysisPlan,
+  selectDeckOutputProbeLines,
   selectDeckOutputProbes,
 } from "../src/index.js";
 
@@ -855,6 +856,17 @@ V1 in 0 DC 1
         "transient",
       ),
     ).toStrictEqual(["V(out)", "I(V1)", "V(clk)", "I(V2)", "V(extra)"]);
+    expect(
+      selectDeckOutputProbeLines(
+        [
+          ".save V(out)",
+          ".print dc V(out) I(V1)",
+          ".probe ac V(freq)",
+          ".end",
+        ].join("\n"),
+        "dc",
+      ),
+    ).toStrictEqual([1, 2]);
   });
 
   it("reports invalid .save, .probe, .print, and .plot output cards", () => {
@@ -886,6 +898,7 @@ V1 in 0 DC 1
     ]);
     expect(summary.selections[0].probes).toStrictEqual(["V(out)"]);
     expect(() => selectDeckOutputProbes("\n.save\n.end\n", "dc")).toThrow(/line 2/);
+    expect(() => selectDeckOutputProbeLines("\n.save\n.end\n", "dc")).toThrow(/line 2/);
   });
 
   it("extracts supported deck analysis cards", () => {

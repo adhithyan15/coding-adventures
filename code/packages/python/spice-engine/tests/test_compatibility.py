@@ -18,6 +18,7 @@ from spice_engine import (
     resolve_deck_parameters,
     resolve_deck_sources,
     select_deck_analysis_plan,
+    select_deck_output_probe_lines,
     select_deck_output_probes,
 )
 
@@ -797,6 +798,17 @@ V1 in 0 DC 1
 """,
         "transient",
     ) == ["V(out)", "I(V1)", "V(clk)", "I(V2)", "V(extra)"]
+    assert select_deck_output_probe_lines(
+        "\n".join(
+            [
+                ".save V(out)",
+                ".print dc V(out) I(V1)",
+                ".probe ac V(freq)",
+                ".end",
+            ]
+        ),
+        "dc",
+    ) == [1, 2]
 
 
 def test_resolve_deck_analyses_extracts_supported_cards() -> None:
@@ -1040,6 +1052,14 @@ def test_resolve_deck_outputs_reports_invalid_cards() -> None:
 
     with pytest.raises(ValueError, match=r"line 2: \.save requires"):
         select_deck_output_probes(
+            """
+.save
+.end
+""",
+            "dc",
+        )
+    with pytest.raises(ValueError, match=r"line 2: \.save requires"):
+        select_deck_output_probe_lines(
             """
 .save
 .end
