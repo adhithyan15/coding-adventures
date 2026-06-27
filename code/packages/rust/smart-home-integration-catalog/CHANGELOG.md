@@ -179,6 +179,10 @@ All notable changes to this package will be documented in this file.
   readiness execution handoff action protocol-evidence package handoff
   summaries that combine package handoff rows with next actionable protocol
   and evidence pointers.
+- Low-level mesh release ticket handoff readiness-evidence review
+  disposition-action readiness execution handoff action protocol-evidence
+  package handoff execution slots that order Zigbee, Z-Wave, and Thread
+  package handoff work into deterministic release lanes.
 - Virtual alias entries for product lines supported by another integration or
   standard.
 - Read-only D18D tool descriptors for listing/describing integrations and
