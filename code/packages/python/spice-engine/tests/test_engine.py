@@ -6824,6 +6824,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     netlist = """
 .save V(mid)
 .probe dc I(V1)
+.print dc V(mid)
+.plot ac V(mid)
 .op
 .dc V1 0 1 1
 .ac dec 1 1k 1k
@@ -6869,8 +6871,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
     expected_output_plan_table = (
         "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\t"
-        "OutputProbeList\tOutputDirectives\tOutputDirectiveList\tTables\tTableList\n"
-        "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t3\tresult;output-plan;run-artifact\n"
+        "OutputProbeList\tOutputDirectives\tOutputDirectiveList\t"
+        "OutputDirectiveKinds\tOutputDirectiveKindList\tTables\tTableList\n"
+        "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t3\t"
+        "result;output-plan;run-artifact\n"
     )
     expected_output_plan_records = [
         {
@@ -6882,6 +6886,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
             "OutputProbeList": "V(mid)",
             "OutputDirectives": "1",
             "OutputDirectiveList": ".save",
+            "OutputDirectiveKinds": "1",
+            "OutputDirectiveKindList": "save",
             "Tables": "3",
             "TableList": "result;output-plan;run-artifact",
         }
@@ -6894,6 +6900,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert output_plan_artifact.result_columns == ["Index", "V(mid)"]
     assert output_plan_artifact.output_probes == ["V(mid)"]
     assert output_plan_artifact.output_directives == [".save"]
+    assert output_plan_artifact.output_directive_kind_count == 1
+    assert output_plan_artifact.output_directive_kinds == ["save"]
     assert output_plan_artifact.tables == ["result", "output-plan", "run-artifact"]
     assert op_execution.output_plan_artifact_table == expected_output_plan_table
     assert op_execution.output_plan_artifact_table == (
@@ -6901,8 +6909,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
     assert op_execution.output_plan_artifact_csv == (
         "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,"
-        "OutputProbeList,OutputDirectives,OutputDirectiveList,Tables,TableList\n"
-        "op,.op,2,Index;V(mid),1,V(mid),1,.save,3,result;output-plan;run-artifact\n"
+        "OutputProbeList,OutputDirectives,OutputDirectiveList,"
+        "OutputDirectiveKinds,OutputDirectiveKindList,Tables,TableList\n"
+        "op,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,3,"
+        "result;output-plan;run-artifact\n"
     )
     assert op_execution.output_plan_artifact_csv == (
         format_deck_output_plan_artifact_csv(op_execution.output_plan_artifacts)
@@ -7101,7 +7111,15 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     dc_execution = run_deck_analysis(circuit, netlist, "dc")
     assert dc_execution.plan.source_name == "V1"
     assert dc_execution.output_probes == ["V(mid)", "I(V1)"]
-    assert dc_execution.output_directives == [".save", ".probe"]
+    assert dc_execution.output_directives == [".save", ".probe", ".print"]
+    assert dc_execution.output_plan_artifacts[0].output_directive_kinds == [
+        "save",
+        "probe",
+        "print",
+    ]
+    assert dc_execution.output_plan_artifact_records[0][
+        "OutputDirectiveKindList"
+    ] == "save;probe;print"
     assert dc_execution.analysis_directives == [".dc"]
     assert dc_execution.table_count == 4
     assert dc_execution.tables == ["result", "measurement", "output-plan", "run-artifact"]
@@ -7154,18 +7172,29 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert dc_execution.run_artifacts[0].step_time is None
     assert dc_execution.run_artifacts[0].use_initial_conditions is None
     assert dc_execution.run_artifacts[0].output_probes == ["V(mid)", "I(V1)"]
-    assert dc_execution.run_artifacts[0].output_directives == [".save", ".probe"]
+    assert dc_execution.run_artifacts[0].output_directives == [
+        ".save",
+        ".probe",
+        ".print",
+    ]
     assert dc_execution.run_artifacts[0].analysis_directives == [".dc"]
     assert dc_execution.run_artifacts[0].measurement_names == ["mid_avg"]
     assert dc_execution.run_artifacts[0].fourier_probes == []
     assert dc_execution.run_artifact_table == (
         "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"dc\t.dc\t1\t.dc\t{dc_execution.plan.line_number}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t5\tIndex;Source;Value;V(mid);I(V1)\t4\tresult;measurement;output-plan;run-artifact\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+        f"dc\t.dc\t1\t.dc\t{dc_execution.plan.line_number}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t5\tIndex;Source;Value;V(mid);I(V1)\t4\tresult;measurement;output-plan;run-artifact\t2\tV(mid);I(V1)\t3\t.save;.probe;.print\t1\tmid_avg\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
     )
 
     ac_execution = run_deck_analysis(circuit, netlist, "ac")
     assert ac_execution.output_probes == ["V(mid)"]
-    assert ac_execution.output_directives == [".save"]
+    assert ac_execution.output_directives == [".save", ".plot"]
+    assert ac_execution.output_plan_artifacts[0].output_directive_kinds == [
+        "save",
+        "plot",
+    ]
+    assert ac_execution.output_plan_artifact_records[0][
+        "OutputDirectiveKindList"
+    ] == "save;plot"
     assert ac_execution.analysis_directives == [".ac"]
     assert ac_execution.table_count == 4
     assert ac_execution.tables == ["result", "measurement", "output-plan", "run-artifact"]
@@ -7206,12 +7235,12 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     ]
     assert ac_execution.run_artifacts[0].step_time is None
     assert ac_execution.run_artifacts[0].use_initial_conditions is None
-    assert ac_execution.run_artifacts[0].output_directives == [".save"]
+    assert ac_execution.run_artifacts[0].output_directives == [".save", ".plot"]
     assert ac_execution.run_artifacts[0].measurement_names == ["mid_peak"]
     assert ac_execution.run_artifacts[0].fourier_probes == []
     assert ac_execution.run_artifact_table == (
         "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"ac\t.ac\t1\t.ac\t{ac_execution.plan.line_number}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t7\tIndex;Frequency;Probe;Real;Imaginary;Magnitude;Phase\t4\tresult;measurement;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+        f"ac\t.ac\t1\t.ac\t{ac_execution.plan.line_number}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t7\tIndex;Frequency;Probe;Real;Imaginary;Magnitude;Phase\t4\tresult;measurement;output-plan;run-artifact\t1\tV(mid)\t2\t.save;.plot\t1\tmid_peak\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
     )
 
     tran_execution = run_deck_analysis(circuit, netlist, "tran")

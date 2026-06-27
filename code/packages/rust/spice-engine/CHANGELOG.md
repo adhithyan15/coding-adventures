@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Expose normalized selected output directive kind inventories in
+  `run_deck_analysis` output-plan artifacts beside the selected directive
+  tokens, with stable table, CSV, compact JSON, and header-keyed record exports,
+  matching Python and TypeScript.
 - Include selected `run_deck_analysis` output-plan tables in execution
   `tables`, selected-run `TableList` metadata, and ordered `table_artifacts`
   with stable table, CSV, compact JSON, and header-keyed record payloads,
