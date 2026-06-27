@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck output-plan analysis source artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose the selected
+  analysis line number and source name beside directive metadata in table, CSV,
+  compact JSON, and header-keyed record exports, matching Rust and TypeScript.
+
 - **Deck output-plan result row artifacts** —
   selected `run_deck_analysis()` output-plan artifacts now expose selected
   result row counts beside result-column inventories in table, CSV, compact
