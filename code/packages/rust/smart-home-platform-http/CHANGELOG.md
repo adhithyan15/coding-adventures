@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   entity/capability registry records, room topology summaries, event-log
   replay, command-result audit, authorization-decision audit, and desired-state
   supervision targets.
+- Added detail lookups for runtime event-log entries and command-result audit
+  records so dashboard clients can drill into a specific audit row.
 - Added a dashboard overview route that composes runtime health, topology,
   inventory, desired-state, and audit summaries for local controllers.
 - Added a compact runtime health probe for local-controller readiness,

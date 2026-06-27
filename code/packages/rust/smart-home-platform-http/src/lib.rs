@@ -11,9 +11,9 @@ use serde_json::Value as JsonValue;
 use smart_home_core::{
     AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Bridge,
     BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode,
-    CommandResult, CommandStatus, CommandType, Device, DeviceEvent, DeviceEventType, Entity,
-    EntityId, EntityKind, Health, PrivilegeTier, Scene, StateConfidence, StateDelta, StateSource,
-    Value, ValueKind,
+    CommandId, CommandResult, CommandStatus, CommandType, Device, DeviceEvent, DeviceEventType,
+    Entity, EntityId, EntityKind, Health, PrivilegeTier, Scene, StateConfidence, StateDelta,
+    StateSource, Value, ValueKind,
 };
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
@@ -456,9 +456,24 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/events/:sequence", move |request| {
+            runtime_event_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/command_results", move |request| {
             runtime_command_results_response(&runtime, request)
         });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get(
+            "/api/smart_home/command_results/:command_id",
+            move |request| runtime_command_result_response(&runtime, request),
+        );
     }
 
     {
@@ -873,6 +888,30 @@ fn runtime_events_response(
     WebResponse::json(runtime_event_log_json(&entries, &summary).into_bytes())
 }
 
+fn runtime_event_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let sequence = match route_u64(request, "sequence") {
+        Ok(sequence) => sequence,
+        Err(error) => return api_error_response(error),
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let query = RuntimeEventQuery::new()
+        .from_checkpoint(RuntimeEventCheckpoint::from_next_sequence(sequence))
+        .with_limit(1);
+    let entries = runtime_guard.event_bus().query_events(&query);
+    let Some(entry) = entries.first().filter(|entry| entry.sequence == sequence) else {
+        return api_error_response(ApiError::not_found(format!(
+            "event sequence `{sequence}` not found"
+        )));
+    };
+    WebResponse::json(runtime_event_entry_json(entry).into_bytes())
+}
+
 fn runtime_command_results_response(
     runtime: &SmartHomePlatformHttpRuntime,
     request: &WebRequest,
@@ -888,6 +927,29 @@ fn runtime_command_results_response(
     let records = runtime_guard.query_command_results(&query);
     let summary = runtime_guard.command_result_summary(&query);
     WebResponse::json(command_results_audit_json(&records, &summary).into_bytes())
+}
+
+fn runtime_command_result_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(command_id) = request.route_params.get("command_id") else {
+        return api_error_response(ApiError::bad_request("missing command_id"));
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let query = RuntimeCommandResultQuery::new()
+        .for_command(CommandId::trusted(command_id.clone()))
+        .with_limit(1);
+    let records = runtime_guard.query_command_results(&query);
+    let Some(record) = records.first() else {
+        return api_error_response(ApiError::not_found(format!(
+            "command result `{command_id}` not found"
+        )));
+    };
+    WebResponse::json(command_result_record_json(record).into_bytes())
 }
 
 fn runtime_authorization_decisions_response(
@@ -1325,16 +1387,18 @@ fn command_results_audit_json(
         command_result_summary_json(summary),
         records
             .iter()
-            .map(|record| {
-                format!(
-                    "{{\"sequence\":{},\"next_sequence\":{},\"result\":{}}}",
-                    record.sequence,
-                    record.next_checkpoint.next_sequence(),
-                    command_result_json(&record.result),
-                )
-            })
+            .map(command_result_record_json)
             .collect::<Vec<_>>()
             .join(",")
+    )
+}
+
+fn command_result_record_json(record: &RuntimeCommandResultRecord) -> String {
+    format!(
+        "{{\"sequence\":{},\"next_sequence\":{},\"result\":{}}}",
+        record.sequence,
+        record.next_checkpoint.next_sequence(),
+        command_result_json(&record.result),
     )
 }
 
@@ -3390,6 +3454,15 @@ fn query_u64(request: &WebRequest, key: &str) -> Result<Option<u64>, ApiError> {
         .transpose()
 }
 
+fn route_u64(request: &WebRequest, key: &str) -> Result<u64, ApiError> {
+    let Some(value) = request.route_params.get(key) else {
+        return Err(ApiError::bad_request(format!("missing {key}")));
+    };
+    value
+        .parse::<u64>()
+        .map_err(|_| ApiError::bad_request(format!("{key} must be an unsigned integer")))
+}
+
 fn query_bool(request: &WebRequest, key: &str) -> Result<Option<bool>, ApiError> {
     query_string(request, key)
         .map(|value| match value {
@@ -4182,6 +4255,16 @@ mod tests {
         assert!(command_results.contains(r#""total_results":1"#));
         assert!(command_results.contains(r#""status":"accepted""#));
         assert!(command_results.contains(r#""sequence":0"#));
+        let command_results_json: JsonValue =
+            serde_json::from_str(&command_results).expect("command results response is JSON");
+        let command_id = command_results_json["results"][0]["result"]["command_id"]
+            .as_str()
+            .expect("command result exposes command_id");
+
+        let command_detail_path = format!("/api/smart_home/command_results/{command_id}");
+        let command_detail = response_body(app.handle(request("GET", &command_detail_path)).into());
+        assert!(command_detail.contains(r#""sequence":0"#));
+        assert!(command_detail.contains(&format!(r#""command_id":"{command_id}""#)));
 
         let events = response_body(
             app.handle(request(
@@ -4192,6 +4275,26 @@ mod tests {
         );
         assert!(events.contains(r#""command_results":1"#));
         assert!(events.contains(r#""kind":"command_result""#));
+
+        let event_detail = response_body(
+            app.handle(request("GET", "/api/smart_home/events/0"))
+                .into(),
+        );
+        assert!(event_detail.contains(r#""sequence":0"#));
+        assert!(event_detail.contains(r#""kind":"command_result""#));
+
+        let missing_event: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/events/999"))
+            .into();
+        assert_eq!(missing_event.status, 404);
+
+        let missing_command: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/command_results/missing-command",
+            ))
+            .into();
+        assert_eq!(missing_command.status, 404);
 
         let decisions = response_body(
             app.handle(request(
