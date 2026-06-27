@@ -119,9 +119,18 @@ is text-primary, which is a different mode model.)
   `\left\right` fences, infix ops, unary, implicit multiplication, `\frac`/`\binom`,
   `\sqrt[n]{}`, scripts `^`/`_`, functions, big operators with bounds, accents,
   greek/constants/symbols, relations.
-- **L3 — environment semantics.** Row/column structure for `tabular`/`array` and the math
-  matrix family (`matrix`/`pmatrix`/`bmatrix`/`vmatrix`/`cases`/`aligned`/`align`) via `&`
-  and `\\`; list environments (`itemize`/`enumerate`/`description`) with `\item`.
+- **L3 — environment semantics.** Split into two sub-rungs:
+  - **L3a (shipped) — math environment family.** The matrix family
+    (`matrix`/`pmatrix`/`bmatrix`/`Bmatrix`/`vmatrix`/`Vmatrix`/`smallmatrix`), `cases`,
+    and the alignment environments (`aligned`/`gathered`/`align`/`align*`/`split`) parsed
+    inside math islands via `&` (columns) and `\\` (rows) → `MathNode::Matrix { env, rows }`,
+    with `to_latex` round-trip, nesting, and postfix scripts. Empty cells are a documented
+    limitation (spanned error). Implemented in the `latex` crate (math.rs).
+  - **L3b (later) — document-mode tables & lists.** Row/column structure for `tabular`/`array`
+    (which take a mandatory column-spec argument) and list environments
+    (`itemize`/`enumerate`/`description`) with `\item`, operating on the document `Node` tree.
+    Deferred because they need an extra column-spec field on the node; an unknown
+    `\begin{…}` is rejected with a spanned error in the meantime, never mis-parsed.
 - **L4 — macros.** `\newcommand`/`\renewcommand`/`\def` with `#1`..`#9` and one optional
   arg with default; expansion of user-defined and a built-in starter set. Recursion/loop
   guard (bounded expansion depth → `Unsupported`/error, never hang).

@@ -22,7 +22,8 @@
 //!    (`\cmd[opt]{arg}`), environments (`\begin…\end`), and raw math islands → a [`Node`]
 //!    tree, with [`Node::to_latex`] round-tripping. **Implemented (this release).**
 //! 3. [`parse_math`] — the **math grammar** over each island's raw content: fractions,
-//!    roots, scripts, big operators, functions, fenced groups, relations →
+//!    roots, scripts, big operators, functions, fenced groups, relations, and **math
+//!    environments** (`matrix`/`pmatrix`/`cases`/`aligned`/… with `&` and `\\`) →
 //!    [`MathNode`], with precedence and [`MathNode::to_latex`] round-tripping.
 //!    [`Node::parsed_math`] parses a [`Node::Math`] island on demand. **Implemented
 //!    (this release).**
@@ -37,6 +38,9 @@
 //!
 //! let m = parse_math(r"\frac{12 \times 15}{3}").unwrap();
 //! assert!(matches!(m, MathNode::Frac(..)));
+//!
+//! let grid = parse_math(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}").unwrap();
+//! assert!(matches!(grid, MathNode::Matrix { .. }));
 //! ```
 
 pub mod catcode;
