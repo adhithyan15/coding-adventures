@@ -4531,7 +4531,6 @@ impl HtmlParser {
         repair_anchor_center_boundary(&mut document.children);
         repair_em_aside_continuation(&mut document.children, self.explicit_em_end_seen);
         repair_svg_title_tail_text(&mut document.children);
-        repair_select_button_selectedcontent(&mut document.children);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
         }
@@ -4585,7 +4584,10 @@ impl HtmlParser {
                             force_quirks,
                         }));
                     }
-                    Token::Eof => self.open_elements.clear(),
+                    Token::Eof => {
+                        self.populate_selectedcontent_for_open_selects();
+                        self.open_elements.clear();
+                    }
                     Token::Text(_) => unreachable!("text token handled before clearing LF state"),
                 }
             }
@@ -6456,6 +6458,9 @@ impl HtmlParser {
             if matches!(name, "div" | "p" | "select") {
                 self.capture_formatting_above(index);
             }
+            if name == "select" {
+                self.populate_selectedcontent_for_select_path(&path);
+            }
             self.open_elements.truncate(index);
             if remove_empty_reconstructed_formatting {
                 self.remove_reconstructed_formatting_node(&path);
@@ -6912,8 +6917,36 @@ impl HtmlParser {
         if should_capture_formatting {
             self.capture_formatting_above(index);
         }
+        let closing_path = self.open_elements[index].clone();
+        if element_at_path(&self.document, &closing_path).is_some_and(|name| name == "select") {
+            self.populate_selectedcontent_for_select_path(&closing_path);
+        }
         self.open_elements.truncate(index);
         true
+    }
+
+    fn populate_selectedcontent_for_open_selects(&mut self) {
+        let select_paths = self
+            .open_elements
+            .iter()
+            .filter(|path| {
+                element_at_path(&self.document, path).is_some_and(|name| name == "select")
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+
+        for path in select_paths {
+            self.populate_selectedcontent_for_select_path(&path);
+        }
+    }
+
+    fn populate_selectedcontent_for_select_path(&mut self, path: &[usize]) {
+        let Some(select) = element_at_path_mut(&mut self.document, path) else {
+            return;
+        };
+        if select.name == "select" {
+            populate_select_selectedcontent(select);
+        }
     }
 
     fn close_open_element_without_scope_checks(&mut self, name: &str) {
@@ -8496,64 +8529,45 @@ fn take_svg_title_tail_text(element: &mut Element) -> Option<String> {
     Some(data)
 }
 
-fn repair_select_button_selectedcontent(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_select_button_selectedcontent(&mut element.children);
-    }
-
-    for node in nodes {
-        let Node::Element(select) = node else {
-            continue;
-        };
-        if select.name != "select" {
-            continue;
-        }
-        let option_children = select
-            .children
-            .iter()
-            .find_map(|child| match child {
-                Node::Element(option)
-                    if option.name == "option"
-                        && option.attribute("selected").is_some()
-                        && !option.children.is_empty() =>
-                {
+fn populate_select_selectedcontent(select: &mut Element) {
+    let option_children = select
+        .children
+        .iter()
+        .find_map(|child| match child {
+            Node::Element(option)
+                if option.name == "option"
+                    && option.attribute("selected").is_some()
+                    && !option.children.is_empty() =>
+            {
+                Some(option.children.clone())
+            }
+            _ => None,
+        })
+        .or_else(|| {
+            select.children.iter().find_map(|child| match child {
+                Node::Element(option) if option.name == "option" && !option.children.is_empty() => {
                     Some(option.children.clone())
                 }
                 _ => None,
             })
-            .or_else(|| {
-                select.children.iter().find_map(|child| match child {
-                    Node::Element(option)
-                        if option.name == "option" && !option.children.is_empty() =>
-                    {
-                        Some(option.children.clone())
-                    }
-                    _ => None,
-                })
-            });
-        let Some(option_children) = option_children else {
+        });
+    let Some(option_children) = option_children else {
+        return;
+    };
+    for child in &mut select.children {
+        let Node::Element(button) = child else {
             continue;
         };
-        for child in &mut select.children {
-            let Node::Element(button) = child else {
-                continue;
-            };
-            if button.name != "button" {
-                continue;
-            }
-            let Some(Node::Element(selectedcontent)) = button
-                .children
-                .iter_mut()
-                .find(|child| matches!(child, Node::Element(element) if element.name == "selectedcontent"))
-            else {
-                continue;
-            };
-            if selectedcontent.children.is_empty() {
-                selectedcontent.children = option_children.clone();
-            }
+        if button.name != "button" {
+            continue;
+        }
+        let Some(Node::Element(selectedcontent)) = button.children.iter_mut().find(
+            |child| matches!(child, Node::Element(element) if element.name == "selectedcontent"),
+        ) else {
+            continue;
+        };
+        if selectedcontent.children.is_empty() {
+            selectedcontent.children = option_children.clone();
         }
     }
 }
