@@ -4529,7 +4529,6 @@ impl HtmlParser {
         repair_font_paragraph_boundary(&mut document.children);
         repair_anchor_center_boundary(&mut document.children);
         repair_em_aside_continuation(&mut document.children, self.explicit_em_end_seen);
-        repair_svg_title_tail_text(&mut document.children);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
         }
@@ -6185,6 +6184,7 @@ impl HtmlParser {
             && name != "p"
             && !self.current_element_is(name)
             && !is_table_context_element(name)
+            && !(self.current_namespace().is_some() && self.has_open_element(name))
         {
             return;
         }
@@ -8445,54 +8445,6 @@ fn foo_chain_depth(element: &Element) -> usize {
             _ => None,
         })
         .unwrap_or(0)
-}
-
-fn repair_svg_title_tail_text(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        let tail_text = match nodes.get_mut(index) {
-            Some(Node::Element(element)) => {
-                repair_svg_title_tail_text(&mut element.children);
-                take_svg_title_tail_text(element)
-            }
-            _ => None,
-        };
-        if let Some(text) = tail_text {
-            nodes.insert(index + 1, Node::text(text));
-            index += 1;
-        }
-        index += 1;
-    }
-}
-
-fn take_svg_title_tail_text(element: &mut Element) -> Option<String> {
-    if element.name != "svg" || element.namespace.as_deref() != Some("svg") {
-        return None;
-    }
-    if !element.children.iter().any(|child| {
-        matches!(
-            child,
-            Node::Element(child)
-                if child.name == "foreignObject" && child.namespace.as_deref() == Some("svg")
-        )
-    }) {
-        return None;
-    }
-    let Some(Node::Element(title)) = element.children.last_mut() else {
-        return None;
-    };
-    if title.name != "title" || title.namespace.as_deref() != Some("svg") {
-        return None;
-    }
-    let Some(Node::Text(text)) = title.children.first() else {
-        return None;
-    };
-    let data = text.data.clone();
-    if data.is_empty() {
-        return None;
-    }
-    title.children.clear();
-    Some(data)
 }
 
 fn populate_select_selectedcontent(select: &mut Element) {
@@ -31931,6 +31883,30 @@ mod tests {
         let paragraph = element(&body(&document).children[1]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn closes_svg_title_integration_point_on_foreign_ancestor_end_tag() {
+        let document = parse_html("<svg><foreignObject></foreignObject><title></svg>foo").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let svg = element(&body.children[0]);
+        assert_eq!(svg.name, "svg");
+        assert_eq!(svg.namespace.as_deref(), Some("svg"));
+        assert_eq!(svg.children.len(), 2);
+
+        let foreign_object = element(&svg.children[0]);
+        assert_eq!(foreign_object.name, "foreignObject");
+        assert_eq!(foreign_object.namespace.as_deref(), Some("svg"));
+
+        let title = element(&svg.children[1]);
+        assert_eq!(title.name, "title");
+        assert_eq!(title.namespace.as_deref(), Some("svg"));
+        assert!(title.children.is_empty());
+
+        assert_eq!(body.children[1], Node::text("foo"));
     }
 
     #[test]
