@@ -1143,13 +1143,21 @@ downstream tools to compare.
       host and browser integrations audit the output plan without reparsing
       selected result tables or selected-run artifact rows.
 
+105. Deck output-plan table export artifacts.
+    - Status: completed in this deck output-plan table export artifact slice.
+    - Python, Rust, and TypeScript selected executions now include
+      `output-plan` in stable table inventories and selected-run `TableList`
+      metadata.
+    - Ordered table export artifacts now carry the output-plan table with
+      stable table, CSV, compact JSON, and host-native record payloads beside
+      result, optional side tables, and selected-run artifact exports.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
      including richer deck-owned run artifacts beyond selected table inventory, output,
-     output-directive, measurement, Fourier, and transfer-function probe lists,
-     plus output-plan integration beyond stable table routing.
+     output-directive, measurement, Fourier, and transfer-function probe lists.
    - Expand deck-controlled output-plan integration beyond stable table
      routing and scoped `.save`, `.probe`, `.print`, `.plot`, and `.four`
      selection toward full SPICE compatibility.

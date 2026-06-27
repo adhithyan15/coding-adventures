@@ -1923,10 +1923,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
     assert_eq!(op_execution.output_directives, vec![".save".to_string()]);
     assert_eq!(op_execution.analysis_directives, vec![".op".to_string()]);
-    assert_eq!(op_execution.table_count, 2);
+    assert_eq!(op_execution.table_count, 3);
     assert_eq!(
         op_execution.tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert_eq!(
         format_deck_table_csv(&op_execution.table),
@@ -1949,7 +1953,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             .iter()
             .map(|artifact| artifact.name.as_str())
             .collect::<Vec<_>>(),
-        vec!["result", "run-artifact"]
+        vec!["result", "output-plan", "run-artifact"]
     );
     assert_eq!(op_execution.table_artifacts[0].table, op_execution.table);
     assert_eq!(
@@ -1979,11 +1983,15 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(
         output_plan_artifact.tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert_eq!(
         op_execution.output_plan_artifact_table,
-        "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tTables\tTableList\nop\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t2\tresult;run-artifact\n"
+        "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tTables\tTableList\nop\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t3\tresult;output-plan;run-artifact\n"
     );
     assert_eq!(
         op_execution.output_plan_artifact_table,
@@ -1991,7 +1999,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(
         op_execution.output_plan_artifact_csv,
-        "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Tables,TableList\nop,.op,2,Index;V(mid),1,V(mid),1,.save,2,result;run-artifact\n"
+        "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Tables,TableList\nop,.op,2,Index;V(mid),1,V(mid),1,.save,3,result;output-plan;run-artifact\n"
     );
     assert_eq!(
         op_execution.output_plan_artifact_csv,
@@ -2021,7 +2029,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         op_execution.output_plan_artifact_records[0]
             .get("TableList")
             .map(String::as_str),
-        Some("result;run-artifact")
+        Some("result;output-plan;run-artifact")
     );
     assert_eq!(op_execution.run_artifacts[0].result_rows, 1);
     assert_eq!(op_execution.run_artifacts[0].result_column_count, 2);
@@ -2029,10 +2037,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         op_execution.run_artifacts[0].result_columns,
         vec!["Index".to_string(), "V(mid)".to_string()]
     );
-    assert_eq!(op_execution.run_artifacts[0].table_count, 2);
+    assert_eq!(op_execution.run_artifacts[0].table_count, 3);
     assert_eq!(
         op_execution.run_artifacts[0].tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert_eq!(op_execution.run_artifacts[0].source_name, None);
     assert_eq!(op_execution.run_artifacts[0].output_node, None);
@@ -2064,7 +2076,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         op_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\nop\t.op\t1\t.op\t{}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t2\tresult;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
+            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\nop\t.op\t1\t.op\t{}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
             op_execution.plan.line_number
         )
     );
@@ -2077,15 +2089,32 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         format_deck_run_artifact_json(&op_execution.run_artifacts)
     );
     let artifact_records = deck_table_records(&op_execution.run_artifact_table);
+    assert_eq!(op_execution.table_artifacts[1].name.as_str(), "output-plan");
     assert_eq!(
-        op_execution.table_artifacts[1].name.as_str(),
+        op_execution.table_artifacts[1].table,
+        op_execution.output_plan_artifact_table
+    );
+    assert_eq!(
+        op_execution.table_artifacts[1].csv,
+        op_execution.output_plan_artifact_csv
+    );
+    assert_eq!(
+        op_execution.table_artifacts[1].json,
+        op_execution.output_plan_artifact_json
+    );
+    assert_eq!(
+        &op_execution.table_artifacts[1].records,
+        &op_execution.output_plan_artifact_records
+    );
+    assert_eq!(
+        op_execution.table_artifacts[2].name.as_str(),
         "run-artifact"
     );
     assert_eq!(
-        op_execution.table_artifacts[1].table,
+        op_execution.table_artifacts[2].table,
         op_execution.run_artifact_table
     );
-    assert_eq!(&op_execution.table_artifacts[1].records, &artifact_records);
+    assert_eq!(&op_execution.table_artifacts[2].records, &artifact_records);
     assert_eq!(artifact_records.len(), 1);
     assert_eq!(
         artifact_records[0].get("Analysis").map(String::as_str),
@@ -2099,7 +2128,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(
         artifact_records[0].get("TableList").map(String::as_str),
-        Some("result;run-artifact")
+        Some("result;output-plan;run-artifact")
     );
     assert_eq!(
         artifact_records[0]
@@ -2116,7 +2145,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         format_deck_run_artifact_csv(&op_execution.run_artifacts),
         format!(
-            "Analysis,Directive,AnalysisDirectives,AnalysisDirectiveList,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,Tables,TableList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,ControlLines,ControlLineList,WriteMarkers,WriteMarkerList,RawfileOptions,RawfileOptionList,ControlPolicyArtifacts,ControlPolicyCategoryList,ControlPolicyCodeList,ControlPolicySeverityList,Diagnostics,DiagnosticCodeList\nop,.op,1,.op,{},,,,,,,,,,,,,,,1,2,Index;V(mid),2,result;run-artifact,1,V(mid),1,.save,0,,0,,0,,0,,0,,0,,,,0,\n",
+            "Analysis,Directive,AnalysisDirectives,AnalysisDirectiveList,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,Tables,TableList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,ControlLines,ControlLineList,WriteMarkers,WriteMarkerList,RawfileOptions,RawfileOptionList,ControlPolicyArtifacts,ControlPolicyCategoryList,ControlPolicyCodeList,ControlPolicySeverityList,Diagnostics,DiagnosticCodeList\nop,.op,1,.op,{},,,,,,,,,,,,,,,1,2,Index;V(mid),3,result;output-plan;run-artifact,1,V(mid),1,.save,0,,0,,0,,0,,0,,0,,,,0,\n",
             op_execution.plan.line_number
         )
     );
@@ -2140,7 +2169,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         op_execution.plan.line_number
     )));
     assert!(artifact_json.contains("\"ResultColumnList\":\"Index;V(mid)\""));
-    assert!(artifact_json.contains("\"TableList\":\"result;run-artifact\""));
+    assert!(artifact_json.contains("\"TableList\":\"result;output-plan;run-artifact\""));
     assert!(artifact_json.contains("\"OutputProbeList\":\"V(mid)\""));
     assert!(artifact_json.ends_with(
         "\"ControlLines\":\"0\",\"ControlLineList\":\"\",\"WriteMarkers\":\"0\",\"WriteMarkerList\":\"\",\"RawfileOptions\":\"0\",\"RawfileOptionList\":\"\",\"ControlPolicyArtifacts\":\"0\",\"ControlPolicyCategoryList\":\"\",\"ControlPolicyCodeList\":\"\",\"ControlPolicySeverityList\":\"\",\"Diagnostics\":\"0\",\"DiagnosticCodeList\":\"\"}]\n"
@@ -2189,12 +2218,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         vec![".save".to_string(), ".probe".to_string()]
     );
     assert_eq!(dc_execution.analysis_directives, vec![".dc".to_string()]);
-    assert_eq!(dc_execution.table_count, 3);
+    assert_eq!(dc_execution.table_count, 4);
     assert_eq!(
         dc_execution.tables,
         vec![
             "result".to_string(),
             "measurement".to_string(),
+            "output-plan".to_string(),
             "run-artifact".to_string()
         ]
     );
@@ -2209,7 +2239,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             .iter()
             .map(|artifact| artifact.name.as_str())
             .collect::<Vec<_>>(),
-        vec!["result", "measurement", "run-artifact"]
+        vec!["result", "measurement", "output-plan", "run-artifact"]
     );
     assert_eq!(
         dc_execution.table_artifacts[1].table,
@@ -2255,12 +2285,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             "I(V1)".to_string()
         ]
     );
-    assert_eq!(dc_execution.run_artifacts[0].table_count, 3);
+    assert_eq!(dc_execution.run_artifacts[0].table_count, 4);
     assert_eq!(
         dc_execution.run_artifacts[0].tables,
         vec![
             "result".to_string(),
             "measurement".to_string(),
+            "output-plan".to_string(),
             "run-artifact".to_string()
         ]
     );
@@ -2286,7 +2317,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         dc_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\ndc\t.dc\t1\t.dc\t{}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t5\tIndex;Source;Value;V(mid);I(V1)\t3\tresult;measurement;run-artifact\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
+            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\ndc\t.dc\t1\t.dc\t{}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t5\tIndex;Source;Value;V(mid);I(V1)\t4\tresult;measurement;output-plan;run-artifact\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
             dc_execution.plan.line_number
         )
     );
@@ -2295,12 +2326,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(ac_execution.output_probes, vec!["V(mid)".to_string()]);
     assert_eq!(ac_execution.output_directives, vec![".save".to_string()]);
     assert_eq!(ac_execution.analysis_directives, vec![".ac".to_string()]);
-    assert_eq!(ac_execution.table_count, 3);
+    assert_eq!(ac_execution.table_count, 4);
     assert_eq!(
         ac_execution.tables,
         vec![
             "result".to_string(),
             "measurement".to_string(),
+            "output-plan".to_string(),
             "run-artifact".to_string()
         ]
     );
@@ -2346,12 +2378,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             "Phase".to_string()
         ]
     );
-    assert_eq!(ac_execution.run_artifacts[0].table_count, 3);
+    assert_eq!(ac_execution.run_artifacts[0].table_count, 4);
     assert_eq!(
         ac_execution.run_artifacts[0].tables,
         vec![
             "result".to_string(),
             "measurement".to_string(),
+            "output-plan".to_string(),
             "run-artifact".to_string()
         ]
     );
@@ -2369,7 +2402,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         ac_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\nac\t.ac\t1\t.ac\t{}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t7\tIndex;Frequency;Probe;Real;Imaginary;Magnitude;Phase\t3\tresult;measurement;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
+            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\nac\t.ac\t1\t.ac\t{}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t7\tIndex;Frequency;Probe;Real;Imaginary;Magnitude;Phase\t4\tresult;measurement;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
             ac_execution.plan.line_number
         )
     );
@@ -2381,12 +2414,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         tran_execution.analysis_directives,
         vec![".tran".to_string()]
     );
-    assert_eq!(tran_execution.table_count, 3);
+    assert_eq!(tran_execution.table_count, 4);
     assert_eq!(
         tran_execution.tables,
         vec![
             "result".to_string(),
             "measurement".to_string(),
+            "output-plan".to_string(),
             "run-artifact".to_string()
         ]
     );
@@ -2420,12 +2454,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             "V(mid)".to_string()
         ]
     );
-    assert_eq!(tran_execution.run_artifacts[0].table_count, 3);
+    assert_eq!(tran_execution.run_artifacts[0].table_count, 4);
     assert_eq!(
         tran_execution.run_artifacts[0].tables,
         vec![
             "result".to_string(),
             "measurement".to_string(),
+            "output-plan".to_string(),
             "run-artifact".to_string()
         ]
     );
@@ -2449,7 +2484,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tran_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\ntran\t.tran\t1\t.tran\t{}\t\t\t\t\t\t\t\t\t\t1.000000e-03\t1.000000e-03\t\t\tfalse\t1\t3\tIndex;Time;V(mid)\t3\tresult;measurement;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
+            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\ntran\t.tran\t1\t.tran\t{}\t\t\t\t\t\t\t\t\t\t1.000000e-03\t1.000000e-03\t\t\tfalse\t1\t3\tIndex;Time;V(mid)\t4\tresult;measurement;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
             tran_execution.plan.line_number
         )
     );
@@ -2468,10 +2503,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(tf_execution.output_probes, vec!["V(mid)".to_string()]);
     assert!(tf_execution.output_directives.is_empty());
     assert_eq!(tf_execution.analysis_directives, vec![".tf".to_string()]);
-    assert_eq!(tf_execution.table_count, 2);
+    assert_eq!(tf_execution.table_count, 3);
     assert_eq!(
         tf_execution.tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert!(tf_execution.measurements.is_empty());
     assert_eq!(
@@ -2501,10 +2540,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             "OutputImpedance".to_string()
         ]
     );
-    assert_eq!(tf_execution.run_artifacts[0].table_count, 2);
+    assert_eq!(tf_execution.run_artifacts[0].table_count, 3);
     assert_eq!(
         tf_execution.run_artifacts[0].tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert_eq!(tf_execution.run_artifacts[0].step_time, None);
     assert_eq!(tf_execution.run_artifacts[0].use_initial_conditions, None);
@@ -2518,7 +2561,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tf_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\ntf\t.tf\t1\t.tf\t{}\tV1\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t3\tTransferRatio;InputImpedance;OutputImpedance\t2\tresult;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
+            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\ntf\t.tf\t1\t.tf\t{}\tV1\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t3\tTransferRatio;InputImpedance;OutputImpedance\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
             tf_execution.plan.line_number
         )
     );
@@ -2538,10 +2581,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         sens_execution.analysis_directives,
         vec![".sens".to_string()]
     );
-    assert_eq!(sens_execution.table_count, 2);
+    assert_eq!(sens_execution.table_count, 3);
     assert_eq!(
         sens_execution.tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert!(sens_execution.measurements.is_empty());
     assert_eq!(
@@ -2571,10 +2618,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             "RelativeSensitivity".to_string()
         ]
     );
-    assert_eq!(sens_execution.run_artifacts[0].table_count, 2);
+    assert_eq!(sens_execution.run_artifacts[0].table_count, 3);
     assert_eq!(
         sens_execution.run_artifacts[0].tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert_eq!(sens_execution.run_artifacts[0].step_time, None);
     assert_eq!(sens_execution.run_artifacts[0].use_initial_conditions, None);
@@ -2588,7 +2639,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         sens_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\nsens\t.sens\t1\t.sens\t{}\t\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t7\tOutputNode;NominalVoltage;Element;Parameter;NominalValue;Sensitivity;RelativeSensitivity\t2\tresult;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
+            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\nsens\t.sens\t1\t.sens\t{}\t\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t7\tOutputNode;NominalVoltage;Element;Parameter;NominalValue;Sensitivity;RelativeSensitivity\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
             sens_execution.plan.line_number
         )
     );
@@ -2614,10 +2665,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         noise_execution.analysis_directives,
         vec![".noise".to_string()]
     );
-    assert_eq!(noise_execution.table_count, 2);
+    assert_eq!(noise_execution.table_count, 3);
     assert_eq!(
         noise_execution.tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert!(noise_execution.measurements.is_empty());
     assert_eq!(
@@ -2666,10 +2721,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             "ContributionPSD".to_string()
         ]
     );
-    assert_eq!(noise_execution.run_artifacts[0].table_count, 2);
+    assert_eq!(noise_execution.run_artifacts[0].table_count, 3);
     assert_eq!(
         noise_execution.run_artifacts[0].tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert_eq!(noise_execution.run_artifacts[0].step_time, None);
     assert_eq!(
@@ -2690,7 +2749,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         noise_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\nnoise\t.noise\t1\t.noise\t{}\tV1\tmid\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t10\tIndex;Frequency;OutputNode;InputSource;OutputPSD;InputReferredPSD;Element;Type;SourcePSD;ContributionPSD\t2\tresult;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
+            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\nnoise\t.noise\t1\t.noise\t{}\tV1\tmid\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t10\tIndex;Frequency;OutputNode;InputSource;OutputPSD;InputReferredPSD;Element;Type;SourcePSD;ContributionPSD\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
             noise_execution.plan.line_number
         )
     );
@@ -2736,15 +2795,23 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             "V(mid)".to_string()
         ]
     );
-    assert_eq!(tran_window_execution.run_artifacts[0].table_count, 2);
+    assert_eq!(tran_window_execution.run_artifacts[0].table_count, 3);
     assert_eq!(
         tran_window_execution.run_artifacts[0].tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
-    assert_eq!(tran_window_execution.table_count, 2);
+    assert_eq!(tran_window_execution.table_count, 3);
     assert_eq!(
         tran_window_execution.tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert_eq!(
         tran_window_execution.output_probes,
@@ -2767,7 +2834,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tran_window_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\ntran\t.tran\t1\t.tran\t{}\t\t\t\t\t\t\t\t\t\t2.000000e-03\t6.000000e-03\t2.000000e-03\t1.000000e-03\ttrue\t3\t3\tIndex;Time;V(mid)\t2\tresult;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
+            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\ntran\t.tran\t1\t.tran\t{}\t\t\t\t\t\t\t\t\t\t2.000000e-03\t6.000000e-03\t2.000000e-03\t1.000000e-03\ttrue\t3\t3\tIndex;Time;V(mid)\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
             tran_window_execution.plan.line_number
         )
     );
@@ -2882,6 +2949,7 @@ let gain = 2
         "result".to_string(),
         "control-policy".to_string(),
         "control-policy-summary".to_string(),
+        "output-plan".to_string(),
         "run-artifact".to_string(),
     ];
     let table_list = expected_table_names.join(";");
@@ -3340,7 +3408,7 @@ let gain = 2
             .collect::<Vec<_>>(),
         expected_table_names
     );
-    let policy_table_artifact = &execution.table_artifacts[execution.table_artifacts.len() - 3];
+    let policy_table_artifact = &execution.table_artifacts[execution.table_artifacts.len() - 4];
     assert_eq!(policy_table_artifact.name, "control-policy");
     assert_eq!(
         policy_table_artifact.table,
@@ -3358,7 +3426,7 @@ let gain = 2
         policy_table_artifact.records,
         execution.control_policy_artifact_records
     );
-    let summary_table_artifact = &execution.table_artifacts[execution.table_artifacts.len() - 2];
+    let summary_table_artifact = &execution.table_artifacts[execution.table_artifacts.len() - 3];
     assert_eq!(summary_table_artifact.name, "control-policy-summary");
     assert_eq!(
         summary_table_artifact.table,
@@ -3375,6 +3443,25 @@ let gain = 2
     assert_eq!(
         summary_table_artifact.records,
         execution.control_policy_summary_artifact_records
+    );
+    let output_plan_table_artifact =
+        &execution.table_artifacts[execution.table_artifacts.len() - 2];
+    assert_eq!(output_plan_table_artifact.name, "output-plan");
+    assert_eq!(
+        output_plan_table_artifact.table,
+        execution.output_plan_artifact_table
+    );
+    assert_eq!(
+        output_plan_table_artifact.csv,
+        execution.output_plan_artifact_csv
+    );
+    assert_eq!(
+        output_plan_table_artifact.json,
+        execution.output_plan_artifact_json
+    );
+    assert_eq!(
+        output_plan_table_artifact.records,
+        execution.output_plan_artifact_records
     );
     assert_eq!(
         execution.run_artifacts[0].control_line_count,
@@ -3427,7 +3514,7 @@ let gain = 2
     );
     assert_eq!(execution.run_artifacts[0].diagnostic_codes, expected_codes);
     let records = deck_table_records(&execution.run_artifact_table);
-    assert_eq!(records[0].get("Tables").map(String::as_str), Some("4"));
+    assert_eq!(records[0].get("Tables").map(String::as_str), Some("5"));
     assert_eq!(
         records[0].get("TableList").map(String::as_str),
         Some(table_list.as_str())
@@ -3556,20 +3643,25 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     let op_execution = run_deck_analysis(&circuit, netlist, Some("op")).unwrap();
     assert!(op_execution.fourier.is_empty());
     assert_eq!(op_execution.fourier_table, "");
-    assert_eq!(op_execution.table_count, 2);
+    assert_eq!(op_execution.table_count, 3);
     assert_eq!(
         op_execution.tables,
-        vec!["result".to_string(), "run-artifact".to_string()]
+        vec![
+            "result".to_string(),
+            "output-plan".to_string(),
+            "run-artifact".to_string()
+        ]
     );
 
     let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
     assert_eq!(tran_execution.fourier.len(), 1);
-    assert_eq!(tran_execution.table_count, 3);
+    assert_eq!(tran_execution.table_count, 4);
     assert_eq!(
         tran_execution.tables,
         vec![
             "result".to_string(),
             "fourier".to_string(),
+            "output-plan".to_string(),
             "run-artifact".to_string()
         ]
     );
@@ -3579,7 +3671,7 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
             .iter()
             .map(|artifact| artifact.name.as_str())
             .collect::<Vec<_>>(),
-        vec!["result", "fourier", "run-artifact"]
+        vec!["result", "fourier", "output-plan", "run-artifact"]
     );
     let result = &tran_execution.fourier[0];
     assert!((result.fundamental_frequency_hz - 2_000.0).abs() < 1.0e-12);
@@ -3616,12 +3708,13 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
             "V(mid)".to_string()
         ]
     );
-    assert_eq!(tran_execution.run_artifacts[0].table_count, 3);
+    assert_eq!(tran_execution.run_artifacts[0].table_count, 4);
     assert_eq!(
         tran_execution.run_artifacts[0].tables,
         vec![
             "result".to_string(),
             "fourier".to_string(),
+            "output-plan".to_string(),
             "run-artifact".to_string()
         ]
     );
@@ -3647,7 +3740,7 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     assert_eq!(
         tran_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\ntran\t.tran\t1\t.tran\t{}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t2\t3\tIndex;Time;V(mid)\t3\tresult;fourier;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
+            "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\ntran\t.tran\t1\t.tran\t{}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t2\t3\tIndex;Time;V(mid)\t4\tresult;fourier;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n",
             tran_execution.plan.line_number
         )
     );
