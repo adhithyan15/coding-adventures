@@ -153,9 +153,27 @@ is text-primary, which is a different mode model.)
     `\c`, `\d`, `\b`, `\r`, `\t`) recognized over the next char/group → `Node::Accent`, via the
     opt-in `recognize_accents` pass (mirrors `expand`; L1 round-trip preserved); `to_latex`
     re-recognizes either spelling. Implemented in text.rs + ast.rs.
-  - **L5d (later) — sectioning/font recognition + cross-refs + preamble**: `\section`(+`*`),
-    font/style commands, `\label`/`\ref`/`\cite`, `\documentclass`/`\usepackage` as
-    recognized nodes (mostly classification over the generic Commands L1 already produces).
+  - **L5d (shipped) — sectioning/font recognition + cross-refs + preamble.** The opt-in
+    `recognize_structure` pass (mirrors `recognize_accents`/`expand`; L1 round-trip preserved)
+    classifies the generic `Command` nodes L1 already produces into semantic nodes:
+    - `Node::Section { level, starred, short, title }` — `\part`/`\chapter`/`\section`/
+      `\subsection`/`\subsubsection`/`\paragraph`/`\subparagraph`, the starred form
+      (`\section*{T}` — the intervening `Text("*")` sibling is folded), and the optional short
+      TOC title (`\section[short]{Title}`);
+    - `Node::CrossRef { command, note, target }` — `\label`/`\ref`/`\eqref`/`\pageref`/
+      `\autoref`/`\nameref`/`\cite`/`\citep`/`\citet` (the `\cite[note]{key}` optional kept);
+    - `Node::Preamble { command, options, name }` — `\documentclass`/`\usepackage`/
+      `\RequirePackage` with their `[options]`;
+    - `Node::Styled { command, content }` — the argument-form text font commands
+      (`\textbf`/`\textit`/`\texttt`/`\emph`/`\underline`/…).
+
+    A command that does not match its expected shape (a sectioning command with no title, a
+    cross-ref with no key, …) is left as a plain `Command` — never dropped or mis-folded. Font
+    *declarations* (`\bfseries`, `\itshape`, `\large`, …) stay plain commands: their effect is
+    positional (until end of group), so wrapping them in an argument node would misrepresent
+    them. `to_latex` re-renders each recognized node to a form that re-recognizes to the same
+    node, so `recognize_structure(parse(&n.to_latex())) == [n]`. Implemented in structure.rs +
+    ast.rs.
 - **L6 — `math-frontend` adapter.** Implement `MathFrontend` for `latex`: lift `Math`/`MathNode`
   subtrees to the neutral `MathExpr`; declare capabilities; register in the builtin registry.
   (This is where LaTeX becomes a *plugin*; [PFE01](PFE01-pluggable-parser-frontends.md)'s

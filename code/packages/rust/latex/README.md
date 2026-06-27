@@ -35,7 +35,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L2 math** | math AST (frac, binom, roots, scripts, big ops, functions, accents, `\left\right` fences, relations), precedence-climbing parser, `to_latex()` round-trip | ✅ |
 | **L3 environments** | math env family — `matrix`/`pmatrix`/`bmatrix`/`vmatrix`/`cases`/`aligned`/`align` split on `&` and `\\` → `MathNode::Matrix`, round-trip; nesting + scripts | ✅ |
 | **L4 macros** | `\newcommand`/`\renewcommand`/`\providecommand` with positional `#1`..`#9`; bounded recursive expansion via `expand()` (L4a) | ✅ |
-| **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c); sectioning/refs to follow | 🚧 this release (L5c) |
+| **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c) + sectioning/refs/preamble/font via `recognize_structure` (L5d) | ✅ |
 | L6 frontend | implement `math-frontend::MathFrontend` (LaTeX becomes plugin #1) | ⏳ |
 
 ## Usage
@@ -155,8 +155,40 @@ assert!(matches!(doc[1], Node::Accent { .. }));   // é over `e`; "caf" stays te
 ```
 
 Recognized: `\'  \`  \^  \"  \~  \=  \.` and `\u \v \H \c \d \b \r \t`. A dangling accent (no
-accent-able char after it) is left as a plain command — never dropped. (Sectioning and
-cross-refs arrive in later L5 sub-rungs.)
+accent-able char after it) is left as a plain command — never dropped.
+
+### Document structure (L5d)
+
+`recognize_structure` is the second opt-in classification pass (like `recognize_accents`). It
+turns the *generic* commands L1 produces into **semantic** structure nodes — headings,
+cross-references, preamble directives, and argument-form font commands — while leaving L1's
+round-trip intact:
+
+```rust
+use latex::{parse, recognize_structure, Node, SectionLevel};
+
+let doc = recognize_structure(parse(r"\section*{Intro} see \ref{fig:1}").unwrap());
+assert!(matches!(doc[0], Node::Section { level: SectionLevel::Section, starred: true, .. }));
+assert!(doc.iter().any(|n| matches!(n, Node::CrossRef { .. })));   // \ref{fig:1}
+```
+
+Recognized:
+
+- **`Node::Section`** — `\part`/`\chapter`/`\section`/`\subsection`/`\subsubsection`/
+  `\paragraph`/`\subparagraph`, the starred `\section*{…}` form (the `*` sibling is folded),
+  and the optional short TOC title `\section[Short]{Title}`;
+- **`Node::CrossRef`** — `\label`/`\ref`/`\eqref`/`\pageref`/`\autoref`/`\nameref`/`\cite`/
+  `\citep`/`\citet` (the `\cite[note]{key}` optional is kept);
+- **`Node::Preamble`** — `\documentclass`/`\usepackage`/`\RequirePackage` with `[options]`;
+- **`Node::Styled`** — argument-form font commands (`\textbf`, `\textit`, `\texttt`, `\emph`,
+  `\underline`, …).
+
+A command that does not match its expected shape (a sectioning command with no title, a
+cross-ref with no key) is left as a plain command — never dropped or mis-folded. Font
+*declarations* (`\bfseries`, `\itshape`, `\large`, …) also stay plain commands: their effect is
+positional (until end of group), so wrapping them in an argument node would misrepresent them.
+The pass is idempotent and round-trips: `recognize_structure(parse(&n.to_latex())) == [n]`.
+(The two passes — `recognize_accents` and `recognize_structure` — are independent and compose.)
 
 The low-level `tokenize` is also public. Tokens and errors carry half-open byte `Span`s;
 all of `parse`, `parse_math`, and `tokenize` return spanned errors rather than panicking,

@@ -2,6 +2,40 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.9.0] — 2026-06-27
+
+### Added — LTX01 L5d: document-structure recognition
+
+- **`recognize_structure(Vec<Node>) -> Vec<Node>`** — a new, opt-in recognition pass (a sibling
+  of `expand` / `recognize_accents`) that classifies the *generic* `Node::Command`s produced by
+  `parse` (L1) into **semantic** structure nodes. `parse` (L1) is unchanged, so its round-trip
+  is preserved; run the pass, or don't.
+- Four new `Node` variants (+ a `SectionLevel` enum):
+  - **`Node::Section { level, starred, short, title }`** — `\part`/`\chapter`/`\section`/
+    `\subsection`/`\subsubsection`/`\paragraph`/`\subparagraph`, including the starred form
+    `\section*{T}` (the intervening `Text("*")` sibling is folded) and the optional short TOC
+    title `\section[Short]{Title}`.
+  - **`Node::CrossRef { command, note, target }`** — `\label`/`\ref`/`\eqref`/`\pageref`/
+    `\autoref`/`\nameref`/`\cite`/`\citep`/`\citet`, keeping the `\cite[note]{key}` optional.
+  - **`Node::Preamble { command, options, name }`** — `\documentclass`/`\usepackage`/
+    `\RequirePackage` with their `[options]`.
+  - **`Node::Styled { command, content }`** — argument-form text font commands (`\textbf`,
+    `\textit`, `\texttt`, `\emph`, `\underline`, …). Font *declarations* (`\bfseries`,
+    `\itshape`, …) stay plain `Command`s — their effect is positional, not a wrapped argument.
+- **`to_latex`** renders each recognized node back to the exact shape the pass folds, so
+  `recognize_structure(parse(&n.to_latex())) == [n]`. The pass recurses into groups, command
+  arguments, environment bodies, and the parts of already-recognized nodes, so it is idempotent
+  and composes with itself.
+- Total / panic-free: a command that does not match its expected shape (a sectioning command
+  with no title, a cross-ref with no key, a styled command with the wrong argument count) is
+  left as a plain `Command`, never dropped or mis-folded. Recursion is bounded by the L1 tree
+  depth (`MAX_DEPTH`). No `unsafe`; no `MAX_DEPTH` change (Node size still dominated by
+  `Environment`).
+- +14 tests (plain/starred/short sectioning, all seven levels, title-less command left alone,
+  cross-refs, citation note, preamble, styled, declaration-stays-command, recursion into
+  titles, surrounding text preserved, idempotence, round-trip corpus). **117 unit + 1 doc
+  test** green; clippy `-D warnings` clean. Crate 0.8.0 → 0.9.0.
+
 ## [0.8.0] — 2026-06-27
 
 ### Added — LTX01 L5c: text accents
