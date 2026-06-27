@@ -1,0 +1,1 @@
+var a=true;var b=false;var c=false;var d=false;var e=false;var f=Array.isArray([1,2]);report(a,b,c,d,e,f);

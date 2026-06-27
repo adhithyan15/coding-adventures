@@ -2,6 +2,30 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.4.0] — 2026-06-26
+
+### Added — LTX01 L3: math environments
+
+- **`MathNode::Matrix { env, rows: Vec<Vec<MathNode>> }`** — math environments with
+  row/column structure. `parse_math` now handles `\begin{env} … \end{env}` inside a math
+  island: `&` separates columns, `\\` separates rows, and each cell is a full math
+  expression. Supported environments (case-sensitive — `bmatrix` ≠ `Bmatrix`): `matrix`,
+  `pmatrix`, `bmatrix`, `Bmatrix`, `vmatrix`, `Vmatrix`, `smallmatrix`, `cases`, `dcases`,
+  `aligned`, `gathered`, `align`, `align*`, `split`.
+- Environments **nest** (a cell may itself be an environment — depth-guarded via the
+  enclosing atom), and a `Matrix` is an **atom**, so postfix scripts attach
+  (`\begin{pmatrix}…\end{pmatrix}^2`).
+- **`MathNode::to_latex`** renders the grid back and **round-trips**
+  (`parse_math(&m.to_latex()) == m`); a trailing `\\` before `\end` is tolerated and does
+  not create an empty final row.
+- Total / panic-free / spanned: `\begin`/`\end` name mismatch, unterminated environment,
+  unknown environment, a missing `{` after `\begin`, and a stray `\end` each return a
+  spanned `ParseError`. Empty cells (`a & & b`) are a documented limitation (spanned error,
+  never a silent empty node), as are `array`/`tabular` column-specs and document-mode list
+  environments — those arrive in a later layer.
+- +9 environment tests + 5 round-trip-corpus entries; **64 unit + 1 doc test** green;
+  clippy `-D warnings` clean; no `unsafe`.
+
 ## [0.3.0] — 2026-06-26
 
 ### Added — LTX01 L2: math grammar

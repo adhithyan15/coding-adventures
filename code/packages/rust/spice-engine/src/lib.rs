@@ -3466,6 +3466,7 @@ pub struct DeckTableArtifact {
 pub struct DeckOutputPlanArtifact {
     pub analysis: String,
     pub directive: String,
+    pub result_row_count: usize,
     pub result_column_count: usize,
     pub result_columns: Vec<String>,
     pub output_probe_count: usize,
@@ -10458,6 +10459,7 @@ fn deck_run_artifacts(
 
 fn deck_output_plan_artifacts(
     plan: &DeckAnalysisPlan,
+    result_row_count: usize,
     result_columns: &[String],
     output_probes: &[String],
     output_probe_lines: &[usize],
@@ -10470,6 +10472,7 @@ fn deck_output_plan_artifacts(
     vec![DeckOutputPlanArtifact {
         analysis: plan.analysis.clone(),
         directive: plan.directive.clone(),
+        result_row_count,
         result_column_count: result_columns.len(),
         result_columns: result_columns.to_vec(),
         output_probe_count: output_probes.len(),
@@ -10515,6 +10518,7 @@ fn deck_output_directive_kinds(output_directives: &[String]) -> Vec<String> {
 const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS: &[&str] = &[
     "Analysis",
     "Directive",
+    "ResultRows",
     "ResultColumns",
     "ResultColumnList",
     "OutputProbes",
@@ -10537,6 +10541,7 @@ fn deck_output_plan_artifact_cells(artifact: &DeckOutputPlanArtifact) -> Vec<Str
     vec![
         artifact.analysis.clone(),
         artifact.directive.clone(),
+        artifact.result_row_count.to_string(),
         artifact.result_column_count.to_string(),
         artifact.result_columns.join(";"),
         artifact.output_probe_count.to_string(),
@@ -10644,6 +10649,7 @@ fn deck_output_plan_artifact_bundle(
 ) {
     let artifacts = deck_output_plan_artifacts(
         plan,
+        deck_table_row_count(result_table),
         &deck_table_columns(result_table),
         output_probes,
         output_probe_lines,
@@ -10852,6 +10858,15 @@ fn deck_table_columns(table: &str) -> Vec<String> {
                 .collect()
         })
         .unwrap_or_default()
+}
+
+fn deck_table_row_count(table: &str) -> usize {
+    let mut lines = table.lines();
+    if lines.next().is_none() {
+        0
+    } else {
+        lines.count()
+    }
 }
 
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {

@@ -2385,6 +2385,7 @@ class DeckOutputPlanArtifact:
 
     analysis: str
     directive: str
+    result_row_count: int
     result_column_count: int
     result_columns: list[str]
     output_probe_count: int
@@ -2898,6 +2899,7 @@ def _deck_run_artifacts(
 
 def _deck_output_plan_artifacts(
     plan: DeckAnalysisPlan,
+    result_row_count: int,
     result_columns: list[str],
     output_probes: list[str],
     output_probe_lines: list[int],
@@ -2911,6 +2913,7 @@ def _deck_output_plan_artifacts(
         DeckOutputPlanArtifact(
             analysis=plan.analysis,
             directive=plan.directive,
+            result_row_count=result_row_count,
             result_column_count=len(result_columns),
             result_columns=list(result_columns),
             output_probe_count=len(output_probes),
@@ -2936,6 +2939,7 @@ def _deck_output_plan_artifacts(
 _DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
     "Analysis",
     "Directive",
+    "ResultRows",
     "ResultColumns",
     "ResultColumnList",
     "OutputProbes",
@@ -2959,6 +2963,7 @@ def _deck_output_plan_artifact_cells(artifact: DeckOutputPlanArtifact) -> list[s
     return [
         artifact.analysis,
         artifact.directive,
+        str(artifact.result_row_count),
         str(artifact.result_column_count),
         ";".join(artifact.result_columns),
         str(artifact.output_probe_count),
@@ -3045,6 +3050,7 @@ def _deck_output_plan_artifact_bundle(
 ) -> tuple[list[DeckOutputPlanArtifact], str, str, str, list[dict[str, str]]]:
     artifacts = _deck_output_plan_artifacts(
         plan,
+        _deck_table_row_count(result_table),
         _deck_table_columns(result_table),
         output_probes,
         output_probe_lines,
@@ -3060,6 +3066,11 @@ def _deck_output_plan_artifact_bundle(
         format_deck_output_plan_artifact_json(artifacts),
         deck_output_plan_artifact_records(artifacts),
     )
+
+
+def _deck_table_row_count(table: str) -> int:
+    rows = table.splitlines()
+    return max(len(rows) - 1, 0) if rows else 0
 
 
 def _deck_analysis_diagnostic_codes(

@@ -1549,6 +1549,7 @@ describe("transient", () => {
       {
         Analysis: "op",
         Directive: ".op",
+        ResultRows: "1",
         ResultColumns: "2",
         ResultColumnList: "Index;V(mid)",
         OutputProbes: "1",
@@ -1572,6 +1573,7 @@ describe("transient", () => {
     expect(opExecution.outputPlanArtifacts[0]).toMatchObject({
       analysis: "op",
       directive: ".op",
+      resultRowCount: 1,
       resultColumnCount: 2,
       resultColumns: ["Index", "V(mid)"],
       outputProbeCount: 1,
@@ -1590,15 +1592,15 @@ describe("transient", () => {
       tables: ["result", "output-plan", "run-artifact"],
     });
     expect(opExecution.outputPlanArtifactTable).toBe(
-      "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputProbeLines\tOutputProbeLineList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tOutputDirectiveLines\tOutputDirectiveLineList\tTables\tTableList\n" +
-        `op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t${saveLine}\t1\t.save\t1\tsave\t1\tglobal\t1\t${saveLine}\t3\tresult;output-plan;run-artifact\n`,
+      "Analysis\tDirective\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputProbeLines\tOutputProbeLineList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tOutputDirectiveLines\tOutputDirectiveLineList\tTables\tTableList\n" +
+        `op\t.op\t1\t2\tIndex;V(mid)\t1\tV(mid)\t1\t${saveLine}\t1\t.save\t1\tsave\t1\tglobal\t1\t${saveLine}\t3\tresult;output-plan;run-artifact\n`,
     );
     expect(opExecution.outputPlanArtifactTable).toBe(
       formatDeckOutputPlanArtifactTable(opExecution.outputPlanArtifacts),
     );
     expect(opExecution.outputPlanArtifactCsv).toBe(
-      "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputProbeLines,OutputProbeLineList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,OutputDirectiveLines,OutputDirectiveLineList,Tables,TableList\n" +
-        `op,.op,2,Index;V(mid),1,V(mid),1,${saveLine},1,.save,1,save,1,global,1,${saveLine},3,result;output-plan;run-artifact\n`,
+      "Analysis,Directive,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputProbeLines,OutputProbeLineList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,OutputDirectiveLines,OutputDirectiveLineList,Tables,TableList\n" +
+        `op,.op,1,2,Index;V(mid),1,V(mid),1,${saveLine},1,.save,1,save,1,global,1,${saveLine},3,result;output-plan;run-artifact\n`,
     );
     expect(opExecution.outputPlanArtifactCsv).toBe(
       formatDeckOutputPlanArtifactCsv(opExecution.outputPlanArtifacts),

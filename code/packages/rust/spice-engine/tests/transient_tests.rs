@@ -1991,6 +1991,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     let output_plan_artifact = &op_execution.output_plan_artifacts[0];
     assert_eq!(output_plan_artifact.analysis, "op");
     assert_eq!(output_plan_artifact.directive, ".op");
+    assert_eq!(output_plan_artifact.result_row_count, 1);
     assert_eq!(
         output_plan_artifact.result_columns,
         vec!["Index".to_string(), "V(mid)".to_string()]
@@ -2028,7 +2029,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         op_execution.output_plan_artifact_table,
         format!(
-            "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputProbeLines\tOutputProbeLineList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tOutputDirectiveLines\tOutputDirectiveLineList\tTables\tTableList\nop\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t{}\t1\t.save\t1\tsave\t1\tglobal\t1\t{}\t3\tresult;output-plan;run-artifact\n",
+            "Analysis\tDirective\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputProbeLines\tOutputProbeLineList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tOutputDirectiveLines\tOutputDirectiveLineList\tTables\tTableList\nop\t.op\t1\t2\tIndex;V(mid)\t1\tV(mid)\t1\t{}\t1\t.save\t1\tsave\t1\tglobal\t1\t{}\t3\tresult;output-plan;run-artifact\n",
             save_line, save_line
         )
     );
@@ -2039,7 +2040,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         op_execution.output_plan_artifact_csv,
         format!(
-            "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputProbeLines,OutputProbeLineList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,OutputDirectiveLines,OutputDirectiveLineList,Tables,TableList\nop,.op,2,Index;V(mid),1,V(mid),1,{},1,.save,1,save,1,global,1,{},3,result;output-plan;run-artifact\n",
+            "Analysis,Directive,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputProbeLines,OutputProbeLineList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,OutputDirectiveLines,OutputDirectiveLineList,Tables,TableList\nop,.op,1,2,Index;V(mid),1,V(mid),1,{},1,.save,1,save,1,global,1,{},3,result;output-plan;run-artifact\n",
             save_line, save_line
         )
     );
@@ -2054,6 +2055,12 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         op_execution.output_plan_artifact_records,
         deck_output_plan_artifact_records(&op_execution.output_plan_artifacts)
+    );
+    assert_eq!(
+        op_execution.output_plan_artifact_records[0]
+            .get("ResultRows")
+            .map(String::as_str),
+        Some("1")
     );
     assert_eq!(
         op_execution.output_plan_artifact_records[0]
