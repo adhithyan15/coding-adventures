@@ -45,6 +45,10 @@ pub enum Node {
     /// text (catcodes suspended), kept verbatim. `star` is the visible-space variant; `delim`
     /// is the chosen delimiter, preserved so the node round-trips.
     Verb { star: bool, delim: char, content: String },
+    /// A verbatim *environment* (`\begin{verbatim}…\end{verbatim}` / `verbatim*`): the body is
+    /// the **raw** inner text (catcodes suspended, newlines kept). `env` is the environment
+    /// name verbatim, preserved so the node round-trips.
+    VerbatimEnv { env: String, content: String },
     /// An active character that acts like a command — `~`.
     Active(char),
     /// A construct deliberately out of scope (the TeX-programmability asymptote — e.g.
@@ -140,6 +144,15 @@ impl Node {
                 out.push(*delim);
                 out.push_str(content);
                 out.push(*delim);
+            }
+            Node::VerbatimEnv { env, content } => {
+                out.push_str("\\begin{");
+                out.push_str(env);
+                out.push('}');
+                out.push_str(content);
+                out.push_str("\\end{");
+                out.push_str(env);
+                out.push('}');
             }
             Node::Active(c) => out.push(*c),
             Node::Unsupported { construct, .. } => out.push_str(construct),
