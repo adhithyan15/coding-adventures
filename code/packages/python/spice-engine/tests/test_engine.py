@@ -181,6 +181,7 @@ from spice_engine import (
     deck_output_plan_artifact_records,
     deck_table_records,
     device_model_audit_fixtures,
+    device_model_behavior_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
     digital_event_streams_to_voltage_sources,
     digital_events_to_pwl_waveform,
@@ -403,6 +404,25 @@ def test_model_card_audit_fixtures_cover_supported_device_families() -> None:
     assert fixtures[1].parameters["BF"] == pytest.approx(125.0)
     assert fixtures[2].parameters["VTO"] == pytest.approx(-1.8)
     assert fixtures[3].parameters["VT0"] == pytest.approx(0.55)
+
+
+def test_device_model_behavior_audit_fixtures_run_reference_bias_points() -> None:
+    fixtures = device_model_behavior_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-forward-bias",
+        "bjt-emitter-follower",
+        "jfet-source-bias",
+        "mos-level1-common-source",
+    ]
+
+    for fixture in fixtures:
+        result = dc_op(fixture.circuit)
+        value = result.node_voltages[fixture.probe_node]
+        assert result.converged
+        assert fixture.expected_min <= value <= fixture.expected_max
+        assert fixture.deck_lines[0].startswith("* device-model behavior fixture:")
+        assert ".op" in fixture.deck_lines
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
 
 
 def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:

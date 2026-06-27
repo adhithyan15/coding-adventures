@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Device model behavior audit fixtures** —
+  `device_model_behavior_audit_fixtures()` now exposes runnable one-device DC
+  bias fixtures with reference deck lines and stable probe-voltage windows for
+  diode, BJT, JFET, and Level-1 MOS model-depth audits, matching Rust and
+  TypeScript.
+
 - **Nonlinear Newton damping diagnostics** —
   `dc_op()` now applies a configurable `newton_step_limit` to nonlinear
   Newton updates and reports `newton_step_limit`, `limited_newton_steps`, and

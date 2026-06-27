@@ -2814,6 +2814,18 @@ pub struct NormalizedModelCard {
     pub unsupported_parameters: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelBehaviorFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub circuit: Circuit,
+    pub probe_node: String,
+    pub expected_min: f64,
+    pub expected_max: f64,
+    pub deck_lines: Vec<String>,
+}
+
 fn model_type_key(text: &str) -> String {
     text.trim()
         .chars()
@@ -3132,6 +3144,182 @@ pub fn device_model_audit_fixtures() -> Result<Vec<NormalizedModelCard>, SpiceEr
                 ("CJD", 3.0e-13),
             ],
         )?,
+    ])
+}
+
+fn model_card_by_name(
+    models: &[NormalizedModelCard],
+) -> Result<BTreeMap<String, NormalizedModelCard>, SpiceError> {
+    Ok(models
+        .iter()
+        .map(|model| (model.name.clone(), model.clone()))
+        .collect())
+}
+
+pub fn device_model_behavior_audit_fixtures() -> Result<Vec<DeviceModelBehaviorFixture>, SpiceError>
+{
+    let models = model_card_by_name(&device_model_audit_fixtures()?)?;
+
+    let diode_model = models
+        .get("Dfast")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_behavior_audit_fixtures".to_string(),
+            reason: "missing Dfast model fixture".to_string(),
+        })?;
+    let mut diode_circuit = Circuit::new();
+    diode_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbias", "vin", "0", 0.8,
+    )));
+    diode_circuit.add(Element::Resistor(Resistor::new(
+        "Rlimit", "vin", "out", 1_000.0,
+    )));
+    diode_circuit.add(Element::Diode(diode_from_model_card(
+        "D1",
+        "out",
+        "0",
+        diode_model,
+    )?));
+
+    let bjt_model = models
+        .get("Qsmall")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_behavior_audit_fixtures".to_string(),
+            reason: "missing Qsmall model fixture".to_string(),
+        })?;
+    let mut bjt_circuit = Circuit::new();
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.72,
+    )));
+    bjt_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+    bjt_circuit.add(Element::Bjt(bjt_from_model_card(
+        "Q1", "vcc", "base", "out", bjt_model,
+    )?));
+
+    let jfet_model = models.get("Jn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_behavior_audit_fixtures".to_string(),
+        reason: "missing Jn model fixture".to_string(),
+    })?;
+    let mut jfet_circuit = Circuit::new();
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 10.0,
+    )));
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vg", "gate", "0", 0.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rd", "vdd", "drain", 2_000.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rs", "source", "0", 1_000.0,
+    )));
+    jfet_circuit.add(Element::Jfet(jfet_from_model_card(
+        "J1", "drain", "gate", "source", jfet_model,
+    )?));
+
+    let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_behavior_audit_fixtures".to_string(),
+        reason: "missing Mn model fixture".to_string(),
+    })?;
+    let mut mos_circuit = Circuit::new();
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 1.8,
+    )));
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 1.8,
+    )));
+    mos_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    mos_circuit.add(Element::Mosfet(mosfet_from_model_card(
+        "M1", "out", "gate", "0", "0", mos_model,
+    )?));
+
+    Ok(vec![
+        DeviceModelBehaviorFixture {
+            name: "diode-forward-bias".to_string(),
+            kind: diode_model.kind,
+            model: diode_model.clone(),
+            circuit: diode_circuit,
+            probe_node: "out".to_string(),
+            expected_min: 0.55,
+            expected_max: 0.65,
+            deck_lines: vec![
+                "* device-model behavior fixture: diode-forward-bias".to_string(),
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)".to_string(),
+                "Vbias vin 0 0.8".to_string(),
+                "Rlimit vin out 1k".to_string(),
+                "D1 out 0 Dfast".to_string(),
+                ".op".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelBehaviorFixture {
+            name: "bjt-emitter-follower".to_string(),
+            kind: bjt_model.kind,
+            model: bjt_model.clone(),
+            circuit: bjt_circuit,
+            probe_node: "out".to_string(),
+            expected_min: 0.08,
+            expected_max: 0.18,
+            deck_lines: vec![
+                "* device-model behavior fixture: bjt-emitter-follower".to_string(),
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)".to_string(),
+                "Vcc vcc 0 5".to_string(),
+                "Vbase base 0 0.72".to_string(),
+                "Q1 vcc base out Qsmall".to_string(),
+                "Rload out 0 1k".to_string(),
+                ".op".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelBehaviorFixture {
+            name: "jfet-source-bias".to_string(),
+            kind: jfet_model.kind,
+            model: jfet_model.clone(),
+            circuit: jfet_circuit,
+            probe_node: "source".to_string(),
+            expected_min: 0.80,
+            expected_max: 0.95,
+            deck_lines: vec![
+                "* device-model behavior fixture: jfet-source-bias".to_string(),
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)".to_string(),
+                "Vdd vdd 0 10".to_string(),
+                "Vg gate 0 0".to_string(),
+                "Rd vdd drain 2k".to_string(),
+                "Rs source 0 1k".to_string(),
+                "J1 drain gate source Jn".to_string(),
+                ".op".to_string(),
+                ".save V(source)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelBehaviorFixture {
+            name: "mos-level1-common-source".to_string(),
+            kind: mos_model.kind,
+            model: mos_model.clone(),
+            circuit: mos_circuit,
+            probe_node: "out".to_string(),
+            expected_min: 0.55,
+            expected_max: 0.85,
+            deck_lines: vec![
+                "* device-model behavior fixture: mos-level1-common-source".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)".to_string(),
+                "Vdd vdd 0 1.8".to_string(),
+                "Vgate gate 0 1.8".to_string(),
+                "Rload vdd out 1k".to_string(),
+                "M1 out gate 0 0 Mn".to_string(),
+                ".op".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
     ])
 }
 

@@ -15,16 +15,18 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Nonlinear convergence hardening.
+1. Device model behavior audit fixtures.
    - Status: current PR completion candidate.
-   - Python, Rust, and TypeScript DC operating-point solves now apply a
-     configurable Newton update limit only when nonlinear devices are present,
-     keeping linear one-pass solves unchanged.
-   - `DcResult.diagnostics` now reports the active Newton step limit, clipped
-     Newton-step count, and minimum damping factor so difficult deck
-     convergence is auditable without reparsing iteration traces.
-   - Cross-language tests cover both the inactive linear sparse-ladder path and
-     a damped nonlinear first-step solve with convergence aids disabled.
+   - Python, Rust, and TypeScript now expose matching runnable
+     `device_model_behavior_audit_fixtures` /
+     `deviceModelBehaviorAuditFixtures` one-device DC bias fixtures for diode,
+     BJT, JFET, and Level-1 MOS models.
+   - Each fixture carries the normalized model card, a constructed executable
+     circuit, reference deck lines, selected probe node, and stable expected
+     probe-voltage window so device-depth audits can compare behavior rather
+     than only model-card aliases.
+   - Cross-language tests execute every fixture through DC operating-point
+     solving and verify the probe window plus reference-deck metadata.
 
 ## Completed Slices
 
@@ -1135,6 +1137,17 @@ downstream tools to compare.
       selected-run artifact now carries whole-deck analysis kind/directive
       inventories beside the selected analysis directive metadata.
 
+115. Nonlinear convergence hardening.
+   - Status: completed in this nonlinear convergence hardening slice.
+   - Python, Rust, and TypeScript DC operating-point solves now apply a
+     configurable Newton update limit only when nonlinear devices are present,
+     keeping linear one-pass solves unchanged.
+   - `DcResult.diagnostics` now reports the active Newton step limit, clipped
+     Newton-step count, and minimum damping factor so difficult deck
+     convergence is auditable without reparsing iteration traces.
+   - Cross-language tests cover both the inactive linear sparse-ladder path and
+     a damped nonlinear first-step solve with convergence aids disabled.
+
 ## Backlog
 
 1. Deck compatibility follow-up.
@@ -1189,6 +1202,6 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Nonlinear convergence hardening.
-2. Device model depth.
-3. Analysis completion.
+1. Device model depth.
+2. Analysis completion.
+3. Mixed-signal integration.

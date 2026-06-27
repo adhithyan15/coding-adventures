@@ -123,6 +123,9 @@ BJT, and Level-1 MOSFET models before running an analysis.
 `.model` alias surface for diode, BJT, JFET, and Level-1 MOS cards.
 `device_model_audit_fixtures` returns the canonical cross-language fixture
 cards used to keep the Rust, Python, and TypeScript ports aligned.
+`device_model_behavior_audit_fixtures` extends those cards into runnable
+one-device DC bias fixtures with reference deck lines and stable expected
+probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth audits.
 
 `analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
 module shape and rejects dynamic/event/system constructs; it is not a full

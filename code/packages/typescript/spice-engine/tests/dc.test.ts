@@ -22,6 +22,7 @@ import {
   dcTemperatureSweep,
   dcTemperatureSweepCorners,
   deviceModelAuditFixtures,
+  deviceModelBehaviorAuditFixtures,
   diode,
   diodeFromModelCard,
   formatCornerDcSweepTable,
@@ -120,6 +121,28 @@ describe("dcOp", () => {
     expectClose(fixtures[1]!.parameters.BF, 125.0);
     expectClose(fixtures[2]!.parameters.VTO, -1.8);
     expectClose(fixtures[3]!.parameters.VT0, 0.55);
+  });
+
+  it("runs device model behavior audit fixtures as reference bias points", () => {
+    const fixtures = deviceModelBehaviorAuditFixtures();
+    expect(fixtures.map((fixture) => fixture.name)).toStrictEqual([
+      "diode-forward-bias",
+      "bjt-emitter-follower",
+      "jfet-source-bias",
+      "mos-level1-common-source",
+    ]);
+
+    for (const fixture of fixtures) {
+      const result = dcOp(fixture.circuit);
+      const value = result.voltage(fixture.probeNode);
+      expect(result.converged).toBe(true);
+      expect(value).not.toBeUndefined();
+      expect(value!).toBeGreaterThanOrEqual(fixture.expectedMin);
+      expect(value!).toBeLessThanOrEqual(fixture.expectedMax);
+      expect(fixture.deckLines[0]!.startsWith("* device-model behavior fixture:")).toBe(true);
+      expect(fixture.deckLines).toContain(".op");
+      expect(fixture.deckLines.some((line) => line.startsWith(".model "))).toBe(true);
+    }
   });
 
   it("rejects non-Level-1 MOS model cards explicitly", () => {
