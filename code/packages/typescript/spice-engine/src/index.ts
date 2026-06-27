@@ -666,6 +666,10 @@ export interface DeckRunArtifact {
   readonly directive: DeckAnalysisPlan["directive"];
   readonly analysisDirectiveCount: number;
   readonly analysisDirectives: readonly string[];
+  readonly deckAnalysisKindCount: number;
+  readonly deckAnalysisKinds: readonly string[];
+  readonly deckAnalysisDirectiveCount: number;
+  readonly deckAnalysisDirectives: readonly string[];
   readonly lineNumber: number;
   readonly sourceName?: string;
   readonly outputNode?: string;
@@ -806,6 +810,10 @@ export interface DeckAnalysisExecution {
   readonly outputProbes: readonly string[];
   readonly outputDirectives: readonly string[];
   readonly analysisDirectives: readonly string[];
+  readonly deckAnalysisKindCount: number;
+  readonly deckAnalysisKinds: readonly string[];
+  readonly deckAnalysisDirectiveCount: number;
+  readonly deckAnalysisDirectives: readonly string[];
   readonly outputPlanArtifactCount: number;
   readonly outputPlanArtifacts: readonly DeckOutputPlanArtifact[];
   readonly outputPlanArtifactTable: string;
@@ -853,6 +861,19 @@ export interface DeckAnalysisExecution {
   readonly fourierTable: string;
   readonly runArtifacts: readonly DeckRunArtifact[];
   readonly runArtifactTable: string;
+}
+
+export interface DeckExecution {
+  readonly executionCount: number;
+  readonly analysisOrder: readonly string[];
+  readonly analysisDirectives: readonly string[];
+  readonly executions: readonly DeckAnalysisExecution[];
+  readonly runArtifactCount: number;
+  readonly runArtifacts: readonly DeckRunArtifact[];
+  readonly runArtifactTable: string;
+  readonly runArtifactCsv: string;
+  readonly runArtifactJson: string;
+  readonly runArtifactRecords: ReadonlyArray<Record<string, string>>;
 }
 
 export interface ReleaseReadinessIssue {
@@ -8175,10 +8196,12 @@ function deckRunArtifacts(
   rawfileOptions: readonly string[],
   diagnosticCodes: readonly string[],
   controlPolicyArtifacts: readonly DeckControlPolicyArtifact[],
+  deckAnalysisKinds: readonly string[],
+  deckAnalysisDirectiveInventory: readonly string[],
 ): DeckRunArtifact[] {
   const isTransient = plan.analysis === "tran";
   const analysisDirectives = deckAnalysisDirectives(plan);
-    const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
+  const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
   const controlPolicySummaries = deckControlPolicySummaryArtifacts(controlPolicyArtifacts);
   const controlPolicyCategories = controlPolicySummaries.map((artifact) => artifact.category);
   const controlPolicyCodes = controlPolicySummaries.flatMap((artifact) => artifact.codes);
@@ -8194,6 +8217,10 @@ function deckRunArtifacts(
       directive: plan.directive,
       analysisDirectiveCount: analysisDirectives.length,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       lineNumber: plan.lineNumber,
       sourceName: plan.sourceName,
       outputNode: plan.outputNode,
@@ -8240,6 +8267,23 @@ function deckRunArtifacts(
 
 function deckAnalysisDirectives(plan: DeckAnalysisPlan): string[] {
   return plan.directive.length === 0 ? [] : [plan.directive];
+}
+
+function deckAnalysisInventory(netlist: string): {
+  analysisKinds: string[];
+  directives: string[];
+} {
+  const analysisKinds: string[] = [];
+  const directives: string[] = [];
+  for (const plan of resolveDeckAnalyses(netlist).analyses) {
+    if (plan.analysis.length > 0) {
+      pushUniqueString(analysisKinds, plan.analysis);
+    }
+    if (plan.directive.length > 0) {
+      directives.push(plan.directive);
+    }
+  }
+  return { analysisKinds, directives };
 }
 
 function deckStableTables(
@@ -8348,6 +8392,10 @@ const DECK_RUN_ARTIFACT_COLUMNS = [
   "ControlPolicySeverityList",
   "Diagnostics",
   "DiagnosticCodeList",
+  "DeckAnalysisKinds",
+  "DeckAnalysisKindList",
+  "DeckAnalysisDirectives",
+  "DeckAnalysisDirectiveList",
 ] as const;
 
 function deckRunArtifactCells(artifact: DeckRunArtifact): string[] {
@@ -8396,6 +8444,10 @@ function deckRunArtifactCells(artifact: DeckRunArtifact): string[] {
     artifact.controlPolicySeverities.join(";"),
     String(artifact.diagnosticCount),
     artifact.diagnosticCodes.join(";"),
+    String(artifact.deckAnalysisKindCount),
+    artifact.deckAnalysisKinds.join(";"),
+    String(artifact.deckAnalysisDirectiveCount),
+    artifact.deckAnalysisDirectives.join(";"),
   ];
 }
 
@@ -8406,6 +8458,12 @@ function deckRunArtifactRecord(artifact: DeckRunArtifact): DeckRunArtifactRecord
   return Object.fromEntries(
     DECK_RUN_ARTIFACT_COLUMNS.map((column, index) => [column, cells[index] ?? ""]),
   ) as DeckRunArtifactRecord;
+}
+
+export function deckRunArtifactRecords(
+  artifacts: readonly DeckRunArtifact[],
+): DeckRunArtifactRecord[] {
+  return artifacts.map(deckRunArtifactRecord);
 }
 
 function deckOutputPlanArtifacts(
@@ -9323,7 +9381,7 @@ export function formatDeckRunArtifactCsv(artifacts: readonly DeckRunArtifact[]):
 }
 
 export function formatDeckRunArtifactJson(artifacts: readonly DeckRunArtifact[]): string {
-  return `${JSON.stringify(artifacts.map(deckRunArtifactRecord))}\n`;
+  return `${JSON.stringify(deckRunArtifactRecords(artifacts))}\n`;
 }
 
 function selectDeckMeasurementCardsForAnalysis(
@@ -9365,6 +9423,52 @@ export function runDeckAnalysis(
   analysis?: string,
 ): DeckAnalysisExecution {
   const plan = selectDeckAnalysisPlan(netlist, analysis);
+  return runDeckAnalysisPlan(circuit, netlist, plan);
+}
+
+export function runDeck(circuit: Circuit, netlist: string): DeckExecution {
+  const plans = deckAnalysisPlansForExecution(netlist, "runDeck");
+  const executions = plans.map((plan) => runDeckAnalysisPlan(circuit, netlist, plan));
+  const runArtifacts = executions.flatMap((execution) => execution.runArtifacts);
+  return {
+    executionCount: executions.length,
+    analysisOrder: plans.map((plan) => plan.analysis),
+    analysisDirectives: plans.map((plan) => plan.directive),
+    executions,
+    runArtifactCount: runArtifacts.length,
+    runArtifacts,
+    runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    runArtifactCsv: formatDeckRunArtifactCsv(runArtifacts),
+    runArtifactJson: formatDeckRunArtifactJson(runArtifacts),
+    runArtifactRecords: deckRunArtifactRecords(runArtifacts),
+  };
+}
+
+function deckAnalysisPlansForExecution(netlist: string, context: string): DeckAnalysisPlan[] {
+  const summary = resolveDeckAnalyses(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0]!;
+    throw invalidElement(
+      context,
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  if (summary.analyses.length === 0) {
+    return [{
+      directive: ".op",
+      analysis: "op",
+      lineNumber: 0,
+      useInitialConditions: false,
+    }];
+  }
+  return [...summary.analyses];
+}
+
+function runDeckAnalysisPlan(
+  circuit: Circuit,
+  netlist: string,
+  plan: DeckAnalysisPlan,
+): DeckAnalysisExecution {
   const diagnosticCodes = deckRunDiagnosticCodes(netlist, plan);
   const controlLines = deckControlLines(netlist);
   const writeMarkers = deckControlWriteMarkers(netlist);
@@ -9388,6 +9492,10 @@ export function runDeckAnalysis(
     controlPolicySummaryArtifacts,
   );
   const analysisDirectives = deckAnalysisDirectives(plan);
+  const {
+    analysisKinds: deckAnalysisKinds,
+    directives: deckAnalysisDirectiveInventory,
+  } = deckAnalysisInventory(netlist);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
     const table = formatDeckOpTable(result, netlist);
@@ -9416,6 +9524,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
     const outputPlanArtifactBundle = deckOutputPlanArtifactBundle(
@@ -9467,6 +9577,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -9550,6 +9664,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -9602,6 +9718,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -9696,6 +9816,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -9748,6 +9870,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -9837,6 +9963,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -9889,6 +10017,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -9965,6 +10097,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -10017,6 +10151,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -10092,6 +10230,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -10144,6 +10284,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -10229,6 +10373,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -10281,6 +10427,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,

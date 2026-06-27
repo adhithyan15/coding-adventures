@@ -21,8 +21,9 @@ correlation output,
 stable text tables for selected node voltages, branch currents, AC phasors,
 Fourier harmonics, transfer-function results, pole-zero entries, and
 distortion harmonics, parsed `.save` / `.probe` / `.print` / `.plot`
-deck-selected output tables, and backward-Euler reactive-element companion
-models.
+deck-selected output tables, source-order `runDeck` whole-deck execution for
+parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`, `.sens`, and `.noise` cards, and
+backward-Euler reactive-element companion models.
 
 ```ts
 import {
@@ -116,6 +117,13 @@ artifact summaries plus `formatDeckRunArtifactTable` and
 result-row, table, analysis-directive, output-probe, output-directive,
 measurement, Fourier, control-command, write-marker, rawfile-option, and
 diagnostic count/name lists.
+`runDeck` executes every parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`, `.sens`,
+and `.noise` card in source order, preserves duplicate analysis directives,
+and defaults analysis-less decks to an implicit `.op`. Its whole-run result
+returns ordered selected executions plus aggregate selected-run artifact table,
+CSV, compact JSON, and header-keyed records, and each selected-run artifact
+carries the deck-wide analysis kind/directive inventories beside the selected
+analysis directive metadata.
 Normalized accepted `.control` commands are surfaced separately in
 `controlLineCount` / `controlLines` execution fields and in
 `ControlLines` / `ControlLineList` artifact fields.

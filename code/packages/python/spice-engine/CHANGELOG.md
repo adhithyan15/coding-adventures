@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck whole-run analysis execution** —
+  `run_deck()` now executes every parsed `.op`, `.dc`, `.ac`, `.tran`,
+  `.tf`, `.sens`, and `.noise` card in source order, preserves duplicate
+  analysis directives, defaults analysis-less decks to an implicit `.op`, and
+  returns aggregate run-artifact table, CSV, compact JSON, and header-keyed
+  record exports, matching Rust and TypeScript.
+
 - **Deck output-plan analysis sweep artifacts** —
   selected `run_deck_analysis()` output-plan artifacts now expose selected
   sweep, frequency, transient timing, and `UIC` metadata in table, CSV, compact

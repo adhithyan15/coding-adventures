@@ -2326,6 +2326,10 @@ class DeckRunArtifact:
     directive: str
     analysis_directive_count: int
     analysis_directives: list[str]
+    deck_analysis_kind_count: int
+    deck_analysis_kinds: list[str]
+    deck_analysis_directive_count: int
+    deck_analysis_directives: list[str]
     line_number: int
     source_name: str | None
     output_node: str | None
@@ -2487,6 +2491,10 @@ class DeckAnalysisExecution:
     output_probes: list[str]
     output_directives: list[str]
     analysis_directives: list[str]
+    deck_analysis_kind_count: int
+    deck_analysis_kinds: list[str]
+    deck_analysis_directive_count: int
+    deck_analysis_directives: list[str]
     output_plan_artifact_count: int
     output_plan_artifacts: list[DeckOutputPlanArtifact]
     output_plan_artifact_table: str
@@ -2689,6 +2697,22 @@ class DeckAnalysisExecution:
         )
 
 
+@dataclass(frozen=True)
+class DeckExecution:
+    """A full deck execution sequence in source analysis order."""
+
+    execution_count: int
+    analysis_order: list[str]
+    analysis_directives: list[str]
+    executions: list[DeckAnalysisExecution]
+    run_artifact_count: int
+    run_artifacts: list[DeckRunArtifact]
+    run_artifact_table: str
+    run_artifact_csv: str
+    run_artifact_json: str
+    run_artifact_records: list[dict[str, str]]
+
+
 def _select_deck_measurement_cards_for_analysis(
     netlist: str,
     analysis: str,
@@ -2781,6 +2805,10 @@ _DECK_RUN_ARTIFACT_COLUMNS = [
     "ControlPolicySeverityList",
     "Diagnostics",
     "DiagnosticCodeList",
+    "DeckAnalysisKinds",
+    "DeckAnalysisKindList",
+    "DeckAnalysisDirectives",
+    "DeckAnalysisDirectiveList",
 ]
 
 
@@ -2791,6 +2819,20 @@ def _deck_table_columns(table: str) -> list[str]:
 
 def _deck_analysis_directives(plan: DeckAnalysisPlan) -> list[str]:
     return [plan.directive] if plan.directive else []
+
+
+def _deck_analysis_inventory(netlist: str) -> tuple[list[str], list[str]]:
+    summary = resolve_deck_analyses(netlist)
+    analysis_kinds: list[str] = []
+    seen_kinds: set[str] = set()
+    directives: list[str] = []
+    for plan in summary.analyses:
+        if plan.analysis and plan.analysis not in seen_kinds:
+            seen_kinds.add(plan.analysis)
+            analysis_kinds.append(plan.analysis)
+        if plan.directive:
+            directives.append(plan.directive)
+    return analysis_kinds, directives
 
 
 def _deck_stable_tables(
@@ -2840,6 +2882,8 @@ def _deck_run_artifacts(
     rawfile_options: list[str],
     diagnostic_codes: list[str],
     control_policy_artifacts: list[DeckControlPolicyArtifact],
+    deck_analysis_kinds: list[str],
+    deck_analysis_directives: list[str],
 ) -> list[DeckRunArtifact]:
     is_transient = plan.analysis == "tran"
     analysis_directives = _deck_analysis_directives(plan)
@@ -2864,6 +2908,10 @@ def _deck_run_artifacts(
             directive=plan.directive,
             analysis_directive_count=len(analysis_directives),
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             line_number=plan.line_number,
             source_name=plan.source_name,
             output_node=plan.output_node,
@@ -3232,6 +3280,10 @@ def _deck_run_artifact_cells(artifact: DeckRunArtifact) -> list[str]:
         ";".join(artifact.control_policy_severities),
         str(artifact.diagnostic_count),
         ";".join(artifact.diagnostic_codes),
+        str(artifact.deck_analysis_kind_count),
+        ";".join(artifact.deck_analysis_kinds),
+        str(artifact.deck_analysis_directive_count),
+        ";".join(artifact.deck_analysis_directives),
     ]
 
 
@@ -3243,6 +3295,14 @@ def _deck_run_artifact_record(artifact: DeckRunArtifact) -> dict[str, str]:
             strict=True,
         )
     )
+
+
+def deck_run_artifact_records(
+    artifacts: Iterable[DeckRunArtifact],
+) -> list[dict[str, str]]:
+    """Return stable run-artifact records keyed by exported column name."""
+
+    return [_deck_run_artifact_record(artifact) for artifact in artifacts]
 
 
 def _format_csv_cell(value: str) -> str:
@@ -4009,6 +4069,53 @@ def run_deck_analysis(
     """Select one deck analysis card, execute it, and format deck-selected output."""
 
     plan = select_deck_analysis_plan(netlist, analysis)
+    return _run_deck_analysis_plan(circuit, netlist, plan)
+
+
+def run_deck(circuit: Circuit, netlist: str) -> DeckExecution:
+    """Execute every parsed deck analysis card in source order."""
+
+    plans = _deck_analysis_plans_for_execution(netlist, "run_deck")
+    executions = [
+        _run_deck_analysis_plan(circuit, netlist, plan) for plan in plans
+    ]
+    run_artifacts = [
+        artifact for execution in executions for artifact in execution.run_artifacts
+    ]
+    return DeckExecution(
+        execution_count=len(executions),
+        analysis_order=[plan.analysis for plan in plans],
+        analysis_directives=[plan.directive for plan in plans if plan.directive],
+        executions=executions,
+        run_artifact_count=len(run_artifacts),
+        run_artifacts=run_artifacts,
+        run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+        run_artifact_csv=format_deck_run_artifact_csv(run_artifacts),
+        run_artifact_json=format_deck_run_artifact_json(run_artifacts),
+        run_artifact_records=deck_run_artifact_records(run_artifacts),
+    )
+
+
+def _deck_analysis_plans_for_execution(
+    netlist: str,
+    context: str,
+) -> list[DeckAnalysisPlan]:
+    summary = resolve_deck_analyses(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"{context}: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    return list(summary.analyses) or [DeckAnalysisPlan(".op", "op", 0)]
+
+
+def _run_deck_analysis_plan(
+    circuit: Circuit,
+    netlist: str,
+    plan: DeckAnalysisPlan,
+) -> DeckAnalysisExecution:
+    """Execute an already resolved deck analysis plan."""
+
     diagnostic_codes = _deck_run_diagnostic_codes(netlist, plan)
     control_lines = _deck_control_lines(netlist)
     write_markers = _deck_control_write_markers(netlist)
@@ -4026,6 +4133,7 @@ def run_deck_analysis(
         )
     )
     analysis_directives = _deck_analysis_directives(plan)
+    deck_analysis_kinds, deck_analysis_directives = _deck_analysis_inventory(netlist)
     if plan.analysis == "op":
         result = dc_op(circuit)
         table = format_deck_op_table(result, netlist)
@@ -4057,6 +4165,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4108,6 +4218,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4170,6 +4284,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4221,6 +4337,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4285,6 +4405,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4336,6 +4458,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4406,6 +4532,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4457,6 +4585,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4509,6 +4641,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4560,6 +4694,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4611,6 +4749,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4662,6 +4802,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4732,6 +4876,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4783,6 +4929,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
