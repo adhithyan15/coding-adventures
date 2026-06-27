@@ -146,9 +146,13 @@ let_decl  = "let" IDENT EQUALS expr ;
 
 expr      = term_expr { ( PLUS | MINUS ) term_expr } ;
 
-term_expr = factor { ( STAR | SLASH ) factor } ;
+# `*` and `\times`/`\cdot` are the same multiply; `/` and `\div` the same
+# divide — the LaTeX operators sit at this precedence and lower identically.
+term_expr = factor { ( STAR | SLASH | LTIMES | LCDOT | LDIV ) factor } ;
 
-factor    = agg | NUMBER | IDENT | LPAREN expr RPAREN ;
+# `\frac{A}{B}` is sugar for `A / B` (the adapter lowers it to the same Div).
+factor    = agg | NUMBER | IDENT | LPAREN expr RPAREN
+          | LFRAC LBRACE expr RBRACE LBRACE expr RBRACE ;
 
 agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
 

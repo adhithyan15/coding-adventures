@@ -130,6 +130,31 @@ SLASH             = "/"
 EQUALS            = "="
 
 # ----------------------------------------------------------------
+# LaTeX math commands. Math-tuned models (Gemma, etc.) routinely write
+# arithmetic as LaTeX — `a \times b`, `a \cdot b`, `a \div b`,
+# `\frac{a}{b}`. adj-lang understands these NATIVELY: they lex to their
+# own tokens and lower to the SAME multiply/divide as `*` and `/`
+# (identical computed value AND provenance), so a decomposed formula
+# never has to be "normalised" by an upstream regex in some tool — the
+# language owns the syntax.
+#
+# Written in REGEX form (not a quoted literal) so the leading backslash
+# is matched literally and never escape-processed (a quoted "\times"
+# risks `\t` → TAB). Nothing else starts with `\`, so there is no
+# collision with IDENT (`[a-z_]…`) or any operator above. `\frac` reuses
+# the existing LBRACE/RBRACE for its `{…}{…}` arguments.
+#
+# (`$` is the VAR sigil — see VAR above — so LaTeX `$…$` display
+# delimiters are intentionally NOT tokens; the supported form is the
+# bare `a \times b`, which is what decomposers emit anyway.)
+# ----------------------------------------------------------------
+
+LTIMES            = /\\times/
+LCDOT             = /\\cdot/
+LDIV              = /\\div/
+LFRAC             = /\\frac/
+
+# ----------------------------------------------------------------
 # Keywords — recognised at the lexer level so the parser grammar
 # can match by token kind rather than by value.
 # ----------------------------------------------------------------

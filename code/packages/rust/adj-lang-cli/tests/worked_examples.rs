@@ -63,6 +63,17 @@ fn proration_computes_and_clears_the_floor() {
 }
 
 #[test]
+fn latex_math_computes_a_weight_based_dose() {
+    let (ok, s) = run_example("latex_math.adj");
+    assert!(ok, "non-zero exit: {s}");
+    // per_dose = \frac{12 \times 15}{3} = 180 / 3 = 60 — the LaTeX lowers to the
+    // same Mul/Div as plain arithmetic, so the engine computes 60 and selects it.
+    assert!(s.contains("\"slot\":\"per_dose\""), "{s}");
+    assert!(s.contains("\"observed\":60"), "{s}");
+    assert!(s.contains("\"leader\":\"dose_60\""), "{s}");
+}
+
+#[test]
 fn break_even_solves_for_the_unit_price() {
     let (ok, s) = run_example("break_even.adj");
     assert!(ok, "non-zero exit: {s}");

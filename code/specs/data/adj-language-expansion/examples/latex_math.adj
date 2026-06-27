@@ -1,0 +1,25 @@
+% Worked example — LaTeX math in a `let` formula (adj-lang understands it natively).
+%
+% Math-tuned models (Gemma, etc.) routinely emit arithmetic as LaTeX. adj-lang
+% reads `\times`, `\cdot`, `\div`, and `\frac{A}{B}` directly: they lex to their
+% own tokens and lower to the SAME multiply/divide as `*` and `/`, so the engine
+% computes them identically and the proof tree is the same. No upstream regex ever
+% rewrites the model's formula — the language owns the syntax.
+%
+% Here a weight-based pediatric dose: 12 mg/kg for a 15 kg child, given in 3 equal
+% divided doses. The model wrote the formula in LaTeX; the ENGINE computes it on the
+% CPU into 60, and the predicate `per_dose == 60` selects the matching option.
+%
+% Expected: per_dose = \frac{12 \times 15}{3} = 180 / 3 = 60 → dose_60 ≈ 1.0.
+
+prior 0.001 for dose_60
+prior 0.001 for dose_45
+
+let per_dose = \frac{12 \times 15}{3}
+
+contributes 1000000 from per_dose == 60 to dose_60
+  source "weight-based dosing: 12 mg/kg × 15 kg ÷ 3 divided doses" trust authoritative
+contributes 1000000 from per_dose == 45 to dose_45
+
+? dose_60
+? dose_45

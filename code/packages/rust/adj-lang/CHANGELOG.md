@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.18.0] - 2026-06-26 — native LaTeX math in `let` expressions
+
+### Added
+
+- **LaTeX math operators in `let`/compute expressions.** Math-tuned models (Gemma,
+  etc.) routinely emit arithmetic as LaTeX; adj-lang now reads it NATIVELY rather
+  than relying on an upstream regex to "normalise" a decomposed formula:
+  - `\times` and `\cdot` → multiplication (same as `*`)
+  - `\div` → division (same as `/`)
+  - `\frac{A}{B}` → `A / B` (the brace groups may themselves be full expressions,
+    e.g. `\frac{12 \times 2}{6}`)
+
+  All forms lex to their own tokens (`LTIMES`/`LCDOT`/`LDIV`/`LFRAC`) and **lower
+  to the same `ArithOp::{Mul,Div}`**, so they compute to identical values with an
+  identical proof tree — the engine never sees a difference between `7 * 8` and
+  `7 \times 8`. Grammar: `term_expr` gains the three LaTeX infix operators;
+  `factor` gains the `\frac{…}{…}` alternative. Adapter: `arith_op_from_value`
+  maps the LaTeX spellings; `adapt_factor` lowers `\frac` to `Div`.
+- New worked example `code/specs/data/adj-language-expansion/examples/latex_math.adj`
+  (weight-based pediatric dose `\frac{12 \times 15}{3} = 60`).
+- New adapter tests: `latex_times_and_cdot_are_multiplication`,
+  `latex_div_is_division`, `latex_frac_is_division_of_its_two_groups`,
+  `latex_frac_args_may_themselves_be_expressions`,
+  `latex_and_ascii_operators_mix_in_one_formula`.
+
+### Notes
+
+- `$…$` display delimiters are intentionally NOT tokens — `$` is the VAR sigil
+  (`$Var`), so the supported form is the bare `a \times b`, which is what
+  decomposers emit. `^`/power is deferred (the compute engine has no `Pow` op yet
+  and exponent dimensionality, e.g. `m^2`, needs its own design).
+- Generated `_lexer_grammar.rs` / `_parser_grammar.rs` regenerated via
+  `cargo run -p adj-lang --bin regen_grammars`.
+
 ## [0.17.0] - 2026-06-21 — multi-source corroboration (`cites … locator …`, ADJ-A9)
 
 ### Added

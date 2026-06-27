@@ -787,12 +787,46 @@ fn fold_binary(
     })
 }
 
-/// `factor = agg | NUMBER | IDENT | LPAREN expr RPAREN`.
+/// `factor = agg | NUMBER | IDENT | LPAREN expr RPAREN
+///         | LFRAC LBRACE expr RBRACE LBRACE expr RBRACE`.
 fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     // A parsed `agg` or parenthesised `expr` appears as a named child node;
     // a bare NUMBER or IDENT appears as a token. Check nodes first.
     if let Some(agg) = first_named_child(node, "agg") {
         return adapt_agg(agg);
+    }
+    // `\frac{A}{B}` → `A / B`. Detected BEFORE the single-`expr` paren branch
+    // below, because a frac factor carries TWO `expr` children (numerator and
+    // denominator) and we must bind both, not just the first. It lowers to the
+    // same Div as `/`, so the engine computes and proves it identically.
+    if node
+        .children
+        .iter()
+        .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "\\frac"))
+    {
+        let exprs: Vec<&GrammarASTNode> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expr" => Some(n),
+                _ => None,
+            })
+            .collect();
+        match (exprs.first(), exprs.get(1)) {
+            (Some(num), Some(den)) => {
+                return Ok(ExprAst::Bin(
+                    ArithOp::Div,
+                    Box::new(adapt_expr(num)?),
+                    Box::new(adapt_expr(den)?),
+                ));
+            }
+            _ => {
+                return Err(AdapterError::MissingChild {
+                    rule: "factor".into(),
+                    position: "\\frac numerator and denominator",
+                });
+            }
+        }
     }
     if let Some(inner) = first_named_child(node, "expr") {
         return adapt_expr(inner);
@@ -846,8 +880,11 @@ fn arith_op_from_value(v: &str) -> Option<ArithOp> {
     match v {
         "+" => Some(ArithOp::Add),
         "-" => Some(ArithOp::Sub),
-        "*" => Some(ArithOp::Mul),
-        "/" => Some(ArithOp::Div),
+        // `*`, `\times`, `\cdot` all denote multiplication; `/`, `\div` division.
+        // The LaTeX spellings lower to the SAME ArithOp, so they compute and prove
+        // identically — the engine never sees a difference (see adj_lang.tokens).
+        "*" | "\\times" | "\\cdot" => Some(ArithOp::Mul),
+        "/" | "\\div" => Some(ArithOp::Div),
         _ => None,
     }
 }
@@ -1148,6 +1185,69 @@ mod tests {
             .into_iter()
             .next()
             .expect("at least one statement")
+    }
+
+    /// Parse a single `let name = <expr>` and return its expression AST.
+    fn parse_let_expr(src: &str) -> ExprAst {
+        match parse_one(src) {
+            Statement::Let { expr, .. } => expr,
+            other => panic!("expected Let, got {other:?}"),
+        }
+    }
+
+    // ---- LaTeX math: lexes to its own tokens, lowers to the SAME ArithOp -------
+    // Math-tuned models emit `\times`/`\cdot`/`\div`/`\frac`; the language reads them
+    // natively so no upstream regex ever has to rewrite a decomposed formula.
+
+    #[test]
+    fn latex_times_and_cdot_are_multiplication() {
+        // `\times` and `\cdot` must produce the identical AST to `*`.
+        let plain = parse_let_expr("let a = 7 * 8");
+        assert_eq!(parse_let_expr(r"let a = 7 \times 8"), plain);
+        assert_eq!(parse_let_expr(r"let a = 7 \cdot 8"), plain);
+        assert!(matches!(plain, ExprAst::Bin(ArithOp::Mul, _, _)));
+    }
+
+    #[test]
+    fn latex_div_is_division() {
+        assert_eq!(parse_let_expr(r"let a = 56 \div 8"), parse_let_expr("let a = 56 / 8"));
+        assert!(matches!(parse_let_expr(r"let a = 56 \div 8"), ExprAst::Bin(ArithOp::Div, _, _)));
+    }
+
+    #[test]
+    fn latex_frac_is_division_of_its_two_groups() {
+        // `\frac{A}{B}` lowers to `A / B` — here `\frac{100}{4}`.
+        match parse_let_expr(r"let a = \frac{100}{4}") {
+            ExprAst::Bin(ArithOp::Div, num, den) => {
+                assert_eq!(*num, ExprAst::Lit(100.0));
+                assert_eq!(*den, ExprAst::Lit(4.0));
+            }
+            other => panic!("expected Div, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn latex_frac_args_may_themselves_be_expressions() {
+        // `\frac{12 \times 2}{6}` → (12*2) / 6 — LaTeX nested inside the braces.
+        match parse_let_expr(r"let a = \frac{12 \times 2}{6}") {
+            ExprAst::Bin(ArithOp::Div, num, den) => {
+                assert!(matches!(*num, ExprAst::Bin(ArithOp::Mul, _, _)));
+                assert_eq!(*den, ExprAst::Lit(6.0));
+            }
+            other => panic!("expected Div, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn latex_and_ascii_operators_mix_in_one_formula() {
+        // `3 \cdot 6 + \frac{20}{5}` parses as (3*6) + (20/5).
+        match parse_let_expr(r"let a = 3 \cdot 6 + \frac{20}{5}") {
+            ExprAst::Bin(ArithOp::Add, lhs, rhs) => {
+                assert!(matches!(*lhs, ExprAst::Bin(ArithOp::Mul, _, _)));
+                assert!(matches!(*rhs, ExprAst::Bin(ArithOp::Div, _, _)));
+            }
+            other => panic!("expected Add at the root, got {other:?}"),
+        }
     }
 
     #[test]
