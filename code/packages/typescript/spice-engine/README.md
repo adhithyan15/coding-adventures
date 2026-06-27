@@ -98,8 +98,8 @@ a stable measurement table for `.dc`, `.ac`, and `.tran` executions.
 Execution `outputPlanArtifacts` summarize the selected result columns, output
 probes, selected output probe source lines, output directives, normalized
 output directive kinds, normalized directive analysis scopes, selected output
-directive source lines, and stable table names with table, CSV, compact JSON,
-and header-keyed record exports.
+directive source lines, selected result row counts, and stable table names with
+table, CSV, compact JSON, and header-keyed record exports.
 Execution `tableArtifacts` preserve the same order as `tables` and carry each
 stable table's text, CSV, compact JSON, and header-keyed records.
 The `output-plan` entry in `tableArtifacts` carries the same

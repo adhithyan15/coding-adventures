@@ -719,6 +719,7 @@ export interface DeckTableArtifact {
 export interface DeckOutputPlanArtifact {
   readonly analysis: DeckAnalysisPlan["analysis"];
   readonly directive: DeckAnalysisPlan["directive"];
+  readonly resultRowCount: number;
   readonly resultColumnCount: number;
   readonly resultColumns: readonly string[];
   readonly outputProbeCount: number;
@@ -8394,6 +8395,7 @@ function deckRunArtifactRecord(artifact: DeckRunArtifact): DeckRunArtifactRecord
 
 function deckOutputPlanArtifacts(
   plan: DeckAnalysisPlan,
+  resultRowCount: number,
   resultColumns: readonly string[],
   outputProbes: readonly string[],
   outputProbeLines: readonly number[],
@@ -8407,6 +8409,7 @@ function deckOutputPlanArtifacts(
     {
       analysis: plan.analysis,
       directive: plan.directive,
+      resultRowCount,
       resultColumnCount: resultColumns.length,
       resultColumns: [...resultColumns],
       outputProbeCount: outputProbes.length,
@@ -8449,6 +8452,7 @@ function deckOutputDirectiveKinds(outputDirectives: readonly string[]): string[]
 const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
   "Analysis",
   "Directive",
+  "ResultRows",
   "ResultColumns",
   "ResultColumnList",
   "OutputProbes",
@@ -8471,6 +8475,7 @@ function deckOutputPlanArtifactCells(artifact: DeckOutputPlanArtifact): string[]
   return [
     artifact.analysis,
     artifact.directive,
+    String(artifact.resultRowCount),
     String(artifact.resultColumnCount),
     artifact.resultColumns.join(";"),
     String(artifact.outputProbeCount),
@@ -8548,6 +8553,7 @@ function deckOutputPlanArtifactBundle(
 } {
   const artifacts = deckOutputPlanArtifacts(
     plan,
+    deckTableRowCount(resultTable),
     deckTableColumns(resultTable),
     outputProbes,
     outputProbeLines,
@@ -8568,6 +8574,11 @@ function deckOutputPlanArtifactBundle(
 function deckTableColumns(table: string): string[] {
   const header = table.split("\n", 1)[0] ?? "";
   return header.length === 0 ? [] : header.split("\t");
+}
+
+function deckTableRowCount(table: string): number {
+  const rows = deckTableRows(table);
+  return rows.length === 0 ? 0 : rows.length - 1;
 }
 
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
