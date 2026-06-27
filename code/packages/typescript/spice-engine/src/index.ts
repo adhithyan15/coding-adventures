@@ -725,6 +725,8 @@ export interface DeckOutputPlanArtifact {
   readonly outputProbes: readonly string[];
   readonly outputDirectiveCount: number;
   readonly outputDirectives: readonly string[];
+  readonly outputDirectiveKindCount: number;
+  readonly outputDirectiveKinds: readonly string[];
   readonly tableCount: number;
   readonly tables: readonly string[];
 }
@@ -8315,6 +8317,7 @@ function deckOutputPlanArtifacts(
   outputDirectives: readonly string[],
   tables: readonly string[],
 ): DeckOutputPlanArtifact[] {
+  const outputDirectiveKinds = deckOutputDirectiveKinds(outputDirectives);
   return [
     {
       analysis: plan.analysis,
@@ -8325,10 +8328,31 @@ function deckOutputPlanArtifacts(
       outputProbes: [...outputProbes],
       outputDirectiveCount: outputDirectives.length,
       outputDirectives: [...outputDirectives],
+      outputDirectiveKindCount: outputDirectiveKinds.length,
+      outputDirectiveKinds,
       tableCount: tables.length,
       tables: [...tables],
     },
   ];
+}
+
+function deckOutputDirectiveKind(directive: string): string {
+  const token = directive.trim().split(/\s+/u)[0]?.toLowerCase() ?? "";
+  return token.startsWith(".") ? token.slice(1) : token;
+}
+
+function deckOutputDirectiveKinds(outputDirectives: readonly string[]): string[] {
+  const selected: string[] = [];
+  const seen = new Set<string>();
+  for (const directive of outputDirectives) {
+    const kind = deckOutputDirectiveKind(directive);
+    if (kind.length === 0 || seen.has(kind)) {
+      continue;
+    }
+    seen.add(kind);
+    selected.push(kind);
+  }
+  return selected;
 }
 
 const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
@@ -8340,6 +8364,8 @@ const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
   "OutputProbeList",
   "OutputDirectives",
   "OutputDirectiveList",
+  "OutputDirectiveKinds",
+  "OutputDirectiveKindList",
   "Tables",
   "TableList",
 ] as const;
@@ -8354,6 +8380,8 @@ function deckOutputPlanArtifactCells(artifact: DeckOutputPlanArtifact): string[]
     artifact.outputProbes.join(";"),
     String(artifact.outputDirectiveCount),
     artifact.outputDirectives.join(";"),
+    String(artifact.outputDirectiveKindCount),
+    artifact.outputDirectiveKinds.join(";"),
     String(artifact.tableCount),
     artifact.tables.join(";"),
   ];

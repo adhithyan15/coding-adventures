@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.13.0
+
+**Cross-sheet references — evaluation + dependencies (multi-sheet PR-2).** A
+cross-sheet reference (`=Summary!A1`) now **resolves and reads the target sheet**,
+and editing a cell on one sheet recomputes a formula on another through the
+already-cross-sheet dependency graph. (PR-1 added parse/represent/re-emit; this is
+the slice where a qualified reference computes a real value instead of `#REF!`.)
+
+- `evaluate` / `collect_refs` (`recalc.rs`) take a `resolve: Fn(&str) ->
+  Option<SheetId>` callback (threaded through the lazy `IF`/`AND`/`OR`/`IFERROR`
+  helpers). A qualified ref resolves its sheet name to a `SheetId` and reads/depends
+  on that sheet; an **unknown** sheet name resolves to `None` → `#REF!` and registers
+  no precedent. Unqualified refs are unchanged (resolve to the current sheet).
+- The workbook wires the resolver as `|name| self.sheet_by_name.get(name).copied()`
+  at every eval and dependency-collection site (`set_formula`, the dependency-graph
+  rebuild, and `evaluate_cell`). So a cross-sheet edge is registered when the formula
+  is set, and `set_value` on the target sheet recomputes the cross-sheet dependent.
+- Tests: cross-sheet read + recompute across two sheets (`Summary!A1` edit ⇒ a
+  `Sheet1` formula updates), `SUM(Summary!A1:A3)` over a range on another sheet, an
+  unknown sheet → `#REF!`, and cross-sheet precedents registered against the *target*
+  sheet in `collect_refs`.
+
 ## 0.12.0
 
 **Cross-sheet references — formula layer (multi-sheet workbooks, PR-1 of the arc).**
