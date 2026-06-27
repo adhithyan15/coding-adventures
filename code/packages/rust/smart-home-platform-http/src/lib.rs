@@ -379,6 +379,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/dashboard", move |_| {
+            runtime_dashboard_response(&runtime)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/entities", move |request| {
             runtime_entities_response(&runtime, request)
         });
@@ -668,6 +675,14 @@ fn runtime_snapshot_response(runtime: &SmartHomePlatformHttpRuntime) -> WebRespo
     )
 }
 
+fn runtime_dashboard_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    WebResponse::json(runtime_dashboard_json(runtime, &runtime_guard).into_bytes())
+}
+
 fn runtime_entities_response(
     runtime: &SmartHomePlatformHttpRuntime,
     request: &WebRequest,
@@ -944,6 +959,92 @@ fn runtime_snapshot_json(snapshot: &RuntimeReadSnapshot) -> String {
         pending.expiring_pairing_session_count,
         pending.stale_optimistic_state_count,
         pending.state_refresh_target_count,
+    )
+}
+
+fn runtime_dashboard_json(
+    runtime: &SmartHomePlatformHttpRuntime,
+    runtime_guard: &SmartHomeRuntime,
+) -> String {
+    let state = SmartHomePlatformHttpState::from_runtime(
+        runtime_guard,
+        runtime.config.clone(),
+        runtime.event_types.clone(),
+        runtime.now_ms,
+    );
+    let state_summary = state.summary();
+    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms);
+    let topology = runtime_guard.topology_summary();
+    let pending = snapshot.pending_work_summary();
+    let rooms = runtime_guard.query_room_summaries_at(
+        &RuntimeRoomQuery::new()
+            .sorted_by(RuntimeRoomSort::AttentionDesc)
+            .with_limit(50),
+        runtime.now_ms,
+    );
+    let mut bridges = runtime_guard.registry().bridges().collect::<Vec<_>>();
+    let mut devices = runtime_guard.registry().devices().collect::<Vec<_>>();
+    let mut entities = runtime_guard.registry().entities().collect::<Vec<_>>();
+    let desired_query = DesiredStateQuery::new().with_limit(50);
+    let desired_states = runtime_guard.query_desired_states(&desired_query);
+    let event_query = RuntimeEventQuery::new();
+    let event_summary = runtime_guard.event_bus().event_log_summary(&event_query);
+    let command_query = RuntimeCommandResultQuery::new()
+        .sorted_by(RuntimeCommandResultSort::SequenceDesc)
+        .with_limit(50);
+    let command_summary = runtime_guard.command_result_summary(&command_query);
+    let authorization_query = RuntimeAuthorizationDecisionQuery::new().with_limit(50);
+    let authorization_summary = runtime_guard.authorization_decision_summary(&authorization_query);
+
+    bridges.sort_by(|left, right| left.bridge_id.as_str().cmp(right.bridge_id.as_str()));
+    devices.sort_by(|left, right| left.device_id.as_str().cmp(right.device_id.as_str()));
+    entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
+
+    format!(
+        "{{\"generated_at_ms\":{},\"config\":{},\"summary\":{{\"state_count\":{},\"known_state_count\":{},\"unknown_state_count\":{},\"stale_state_count\":{},\"optimistic_state_count\":{},\"service_count\":{},\"event_type_count\":{},\"bridge_count\":{},\"device_count\":{},\"entity_count\":{},\"room_count\":{},\"scene_count\":{},\"desired_state_count\":{},\"pending_work_total\":{},\"has_attention\":{},\"has_state_gaps\":{},\"has_pairing_candidates\":{}}},\"runtime\":{},\"topology\":{{\"bridges\":{},\"devices\":{},\"entities\":{},\"scenes\":{},\"online_bridges\":{},\"attention_bridges\":{},\"online_devices\":{},\"attention_devices\":{},\"devices_with_room\":{},\"devices_without_room\":{},\"unique_rooms\":{},\"entities_with_state\":{},\"entities_without_state\":{},\"total_capabilities\":{},\"scene_actions\":{}}},\"bridges\":{},\"devices\":{},\"entities\":{},\"rooms\":{},\"desired_states\":{},\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}",
+        runtime.now_ms,
+        config_json(&state),
+        state_summary.state_count,
+        state_summary.known_state_count,
+        state_summary.unknown_state_count,
+        state_summary.stale_state_count,
+        state_summary.optimistic_state_count,
+        state_summary.service_count,
+        state_summary.event_type_count,
+        topology.bridges,
+        topology.devices,
+        topology.entities,
+        topology.unique_rooms,
+        topology.scenes,
+        snapshot.desired_state_count,
+        pending.total_pending_work_count(),
+        topology.has_attention_items(),
+        pending.state_refresh_target_count > 0,
+        topology.has_pairing_candidates(),
+        runtime_snapshot_json(&snapshot),
+        topology.bridges,
+        topology.devices,
+        topology.entities,
+        topology.scenes,
+        topology.online_bridges,
+        topology.attention_bridges,
+        topology.online_devices,
+        topology.attention_devices,
+        topology.devices_with_room,
+        topology.devices_without_room,
+        topology.unique_rooms,
+        topology.entities_with_state,
+        topology.entities_without_state,
+        topology.total_capabilities,
+        topology.scene_actions,
+        bridges_registry_json(&bridges, runtime_guard, runtime.now_ms),
+        devices_registry_json(&devices, runtime_guard, runtime.now_ms),
+        entities_registry_json(&entities, runtime_guard, runtime.now_ms),
+        rooms_json(&rooms, runtime_guard),
+        desired_states_json(&desired_states, runtime_guard),
+        runtime_event_summary_json(&event_summary),
+        command_result_summary_json(&command_summary),
+        authorization_decision_summary_json(&authorization_summary),
     )
 }
 
@@ -3712,6 +3813,45 @@ mod tests {
         assert!(decisions.contains(r#""allowed_decisions":2"#));
         assert!(decisions.contains(r#""principal_id":"agent:home-assistant-local-api""#));
         assert!(decisions.contains(r#""kind":"command""#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_dashboard_overview() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/services/light/turn_on",
+                r#"{"entity_id":"entity-light-1"}"#,
+            ))
+            .into();
+        assert_eq!(response.status, 200);
+
+        let dashboard = response_body(
+            app.handle(request("GET", "/api/smart_home/dashboard"))
+                .into(),
+        );
+
+        assert!(dashboard.contains(r#""generated_at_ms":5000"#));
+        assert!(dashboard.contains(r#""config":{"location_name":"Codex Home""#));
+        assert!(dashboard.contains(r#""summary":{"state_count":2"#));
+        assert!(dashboard.contains(r#""bridge_count":1"#));
+        assert!(dashboard.contains(r#""device_count":1"#));
+        assert!(dashboard.contains(r#""entity_count":2"#));
+        assert!(dashboard.contains(r#""room_count":1"#));
+        assert!(dashboard.contains(r#""scene_count":1"#));
+        assert!(dashboard.contains(r#""pending_work_total":"#));
+        assert!(dashboard.contains(r#""has_state_gaps":true"#));
+        assert!(dashboard.contains(r#""runtime":{"generated_at_ms":5000"#));
+        assert!(dashboard.contains(r#""topology":{"bridges":1"#));
+        assert!(dashboard.contains(r#""bridges":{"summary":{"total_bridges":1"#));
+        assert!(dashboard.contains(r#""devices":{"summary":{"total_devices":1"#));
+        assert!(dashboard.contains(r#""entities":{"summary":{"total_entities":2"#));
+        assert!(dashboard.contains(r#""rooms":{"summary":{"total_rooms":1"#));
+        assert!(dashboard.contains(r#""desired_states":{"summary":{"total_desired_states":0"#));
+        assert!(dashboard.contains(r#""events":{"summary":{"total_events":1"#));
+        assert!(dashboard.contains(r#""command_results":{"summary":{"total_results":1"#));
+        assert!(dashboard.contains(r#""authorization_decisions":{"summary":{"total_decisions":2"#));
     }
 
     #[test]
