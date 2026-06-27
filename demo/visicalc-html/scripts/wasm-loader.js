@@ -194,6 +194,28 @@
             return n >>> 0;
           },
 
+          // Multi-sheet workbook: bare-A1 cell ops address the ACTIVE sheet; a
+          // formula may reference another (=Summary!A1). sheetNames returns
+          // {sheets:[...], active:idx}; the mutators return true/false. Re-read
+          // the grid (and selection) after a sheet op.
+          sheetNames: () => JSON.parse(call0("sheet_names")),
+          activeSheet: () => ex.active_sheet() >>> 0,
+          setActiveSheet: (index) => ex.set_active_sheet(index >>> 0) === 1,
+          addSheet: (name) => {
+            const [np, nl] = writeStr(String(name));
+            const ok = ex.add_sheet(np, nl);
+            freeInput(np, nl);
+            return ok === 1;
+          },
+          renameSheet: (index, newName) => {
+            const [np, nl] = writeStr(String(newName));
+            const ok = ex.rename_sheet(index >>> 0, np, nl);
+            freeInput(np, nl);
+            return ok === 1;
+          },
+          deleteSheet: (index) => ex.delete_sheet(index >>> 0) === 1,
+          moveSheet: (index, toIndex) => ex.move_sheet(index >>> 0, toIndex >>> 0) === 1,
+
           // Save / load: serialize the workbook's SOURCE (formula text + typed
           // literals) + formats to a JSON string, and restore from one. Computed
           // values recompute on load, so a loaded formula stays live.

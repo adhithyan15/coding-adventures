@@ -291,5 +291,46 @@ ok(wfr.getDisplayWindow(1, 2, 1, 2).cells[0][0] === "8", `B1 recomputed: ${wfr.g
 ok(wfr.replaceAll("zzz", "q", true) === 0, "no-match replace → 0");
 ok(wfr.replaceAll("", "q", true) === 0, "empty-query replace → 0");
 
+// ── Multi-sheet workbook + cross-sheet references ──────────────────────
+const wms = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+ok(JSON.stringify(wms.sheetNames()) === '{"active":0,"sheets":["Sheet1"]}',
+  `initial sheetNames: ${JSON.stringify(wms.sheetNames())}`);
+ok(wms.addSheet("Summary") === true, "addSheet Summary");
+ok(wms.activeSheet() === 1, `active after add: ${wms.activeSheet()}`);
+wms.setCell("A1", "10"); // Summary!A1
+ok(wms.setActiveSheet(0) === true, "switch back to Sheet1");
+wms.setCell("B1", "=Summary!A1*2"); // cross-sheet formula
+ok(wms.getDisplayWindow(1, 2, 1, 2).cells[0][0] === "20", "cross-sheet B1 = 20");
+// Per-sheet raw echo: Sheet1!B1 shows its source; Sheet1!A1 is empty.
+ok(wms.getRaw("B1") === "=Summary!A1*2", `Sheet1!B1 raw: ${wms.getRaw("B1")}`);
+ok(wms.getRaw("A1") === "", "Sheet1!A1 empty (Summary has the 10)");
+wms.setActiveSheet(1);
+ok(wms.getRaw("A1") === "10", `Summary!A1 raw: ${wms.getRaw("A1")}`);
+// Edit Summary!A1 → the Sheet1 dependent recomputes live across sheets.
+wms.setCell("A1", "50");
+wms.setActiveSheet(0);
+ok(wms.getDisplayWindow(1, 2, 1, 2).cells[0][0] === "100", "cross-sheet recompute → 100");
+// Rename Summary → Totals: qualifier follows, value holds.
+ok(wms.renameSheet(1, "Totals") === true, "renameSheet → Totals");
+ok(JSON.stringify(wms.sheetNames().sheets) === '["Sheet1","Totals"]', "names after rename");
+ok(wms.getDisplayWindow(1, 2, 1, 2).cells[0][0] === "100", "value held after rename");
+// Save/load round-trips both sheets + the live cross-sheet formula.
+const msdoc = wms.serialize();
+const wms2 = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+ok(wms2.deserialize(msdoc) === true, "load multi-sheet doc");
+ok(JSON.stringify(wms2.sheetNames().sheets) === '["Sheet1","Totals"]', "names after load");
+wms2.setActiveSheet(1); wms2.setCell("A1", "9"); wms2.setActiveSheet(0);
+ok(wms2.getDisplayWindow(1, 2, 1, 2).cells[0][0] === "18", "loaded cross-sheet formula live");
+// Delete Totals → inbound ref becomes #REF!; can't delete the last sheet.
+ok(wms2.deleteSheet(1) === true, "deleteSheet Totals");
+ok(wms2.getValue("B1").code === "#REF!", `inbound ref → #REF!: ${JSON.stringify(wms2.getValue("B1"))}`);
+ok(wms2.deleteSheet(0) === false, "can't delete the last sheet");
+// Move with three sheets: Sheet1 to the end.
+const wmv = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+wmv.addSheet("B"); wmv.addSheet("C"); wmv.setActiveSheet(0);
+ok(wmv.moveSheet(0, 2) === true, "moveSheet Sheet1 → end");
+ok(JSON.stringify(wmv.sheetNames()) === '{"active":2,"sheets":["B","C","Sheet1"]}',
+  `sheetNames after move: ${JSON.stringify(wmv.sheetNames())}`);
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);
