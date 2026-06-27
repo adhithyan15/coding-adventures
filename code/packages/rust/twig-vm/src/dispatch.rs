@@ -3435,37 +3435,54 @@ mod tests {
 
     #[test]
     fn deep_recursion_surfaces_depth_exceeded() {
-        // Self-recursion that never terminates — should hit the depth cap
-        // rather than blowing the host stack.  We don't assert the exact
-        // depth (the limit is intentionally generous for the self-hosted
-        // compiler's lex-loop), only that we get the right error variant.
-        //
-        // With MAX_DISPATCH_DEPTH = 65536 (LANG64), infinite recursion needs
-        // 65537 nested Rust `dispatch` frames before the guard fires.  The
-        // default test-thread stack (8 MiB on macOS/Linux) is too small for
-        // that, so we spawn a dedicated thread with 1 GiB of stack.  Each
-        // dispatch frame is conservatively ≤ 10 KiB, so 65536 frames ≤
-        // 640 MiB — well within the 1 GiB budget.  (In practice frames are
-        // much smaller; the 10 KiB upper bound is a worst-case estimate.)
-        let result = std::thread::Builder::new()
-            .stack_size(1024 * 1024 * 1024) // 1 GiB
-            .spawn(|| {
-                let src = "
-                    (define (loop n) (loop (+ n 1)))
-                    (loop 0)
-                ";
-                run_source(src).unwrap_err()
-            })
-            .expect("thread spawn failed")
-            .join()
-            .expect("thread panicked");
+        // Exercise the dispatcher guard directly instead of building
+        // 131k native stack frames.  The self-hosted compiler needs the
+        // large production depth limit, but the test only needs to prove
+        // that a frame past the ceiling returns a VM error before doing
+        // any more work.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
 
-        // Depth or instruction limit — both are acceptable termination
-        // signals for an infinite-recursion test.
-        assert!(
-            matches!(result, RunError::DepthExceeded | RunError::InstructionLimitExceeded),
-            "expected DepthExceeded or InstructionLimitExceeded, got {result:?}",
-        );
+        let entry = IIRFunction {
+            name: "loop".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 0,
+            instructions: vec![],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![entry],
+            entry_point: Some("loop".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let mut budget = ExecutionBudget::new();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        let mut debug = None;
+
+        let err = dispatch(
+            &module,
+            &module.functions[0],
+            &[],
+            MAX_DISPATCH_DEPTH + 1,
+            &mut budget,
+            &mut globals,
+            &mut ic_table,
+            &mut profile,
+            &mut debug,
+        )
+        .unwrap_err();
+
+        assert!(matches!(err, RunError::DepthExceeded));
     }
 
     // ── Internal helpers ────────────────────────────────────────────
