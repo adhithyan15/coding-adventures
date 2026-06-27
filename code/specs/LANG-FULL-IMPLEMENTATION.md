@@ -9,7 +9,7 @@ program per language**, and each frontend is a **deliberate subset**:
 
 | Language | What the matrix actually runs end-to-end on the code-gen backends | The subset gap |
 |---|---|---|
-| Twig | `42` | rich Lisp frontend, but only typed int-arith/`if` clears the backend validators; lists/lambdas/strings/`print`/symbols need the VM only |
+| Twig | `42`, variadic arithmetic, top-level value `define`, and typed E4 string literal/named/local proofs | rich Lisp frontend; lists/lambdas/dynamic globals/records/symbols still need E5/E6, and captured/reassigned strings stay on the dynamic path |
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT`, literal-backed scalar string copy, copied-slot string equality, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); richer string ops and `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
@@ -625,7 +625,15 @@ backend immediately) come before the enabler-dependent items.
   **Limits:** a value captured by a closure, or a top-level forward reference, stays on
   the host global table (unchanged) — full mutable globals on code-gen backends need **E6**.
 - ☐ **TW3** — list / cons ops on code-gen backends (needs **E5**/**E6**).
-- ☐ **TW4** — strings on code-gen backends (needs **E4**).
+- ✅ **TW4** — typed E4 strings on code-gen backends. Direct literals,
+  immutable top-level string value defines, and lexical `let`/`let*` string
+  locals lower to shared `str_const`/`str_len`/`str_index`/`str_eq`/`str_concat`
+  ops instead of the dynamic `call_builtin` path. **Verified by running** literal
+  `string-length`/`string-ref`/`string=?`/`string-append`, named string
+  concat/equality/index, the `str_index` out-of-bounds trap, local string index,
+  and local string concat across native/LLVM/WASM/JVM/CLR/VM/JIT
+  (`lang_matrix.rs`). **Limits:** captured or reassigned strings and the
+  dynamic-`any` string path still need **E6**/dynamic representation work.
 - ☐ **TW5** — closures / lambdas / general `call_builtin` on code-gen backends (needs **E6**).
 - ☐ **TW6** — `match` / records / unions on code-gen backends (needs **E5**/**E6**).
 
@@ -637,9 +645,9 @@ backend immediately) come before the enabler-dependent items.
 
 ## Suggested global ordering
 
-1. **E4 strings** — continue beyond the literal/named-value foothold into
-   dynamic byte-string representations, then unblock ALGOL string I/O and fuller
-   Twig strings with one shared string value model instead of per-frontend shortcuts.
+1. **E4 dynamic string follow-ups** — continue beyond the typed immutable
+   scalar/local foothold into captured/reassigned strings, arrays/input/parameters,
+   and fuller byte-string representations without per-frontend shortcuts.
 2. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
    work and any frontend code that still needs shared state across functions.
 4. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, **AL8 transcendentals**,
