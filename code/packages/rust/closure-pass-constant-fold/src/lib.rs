@@ -1361,6 +1361,40 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
                     }
                 }
+                // ---- Object.keys / values / entries ({}) → [] ----
+                //
+                // The static `Object.keys`/`values`/`entries` (ECMAScript
+                // §20.1.2.16/.22/.5) enumerate an object's own enumerable string
+                // keys. For an EMPTY object literal `{}` the result is ALWAYS the
+                // empty array `[]` — there are no keys, and evaluating `{}` has no
+                // observable side effect, so collapsing the call to `[]` is sound.
+                //
+                // We fold ONLY the empty-object-literal case. A NON-empty object
+                // literal is declined: its property *values* (and computed keys /
+                // spreads) may have side effects that collapsing to `[]` would
+                // drop, and the result is non-empty anyway. An array literal, a
+                // primitive (`Object.keys("ab")` → `["0","1"]`), an identifier, or
+                // a call with ≠1 argument is also declined (the result isn't a
+                // known empty array, or the type is unknown at compile time). Same
+                // bare-global-`Object` premise as the other statics — only the
+                // literal `Object.keys(...)` callee folds, never a shadowed
+                // receiver (`o.keys(...)` is left alone).
+                if obj.name == "Object"
+                    && matches!(prop.name.as_str(), "keys" | "values" | "entries")
+                    && arguments.len() == 1
+                {
+                    if let Some(Expression::ObjectExpression(o)) = arguments.first() {
+                        if o.properties.is_empty() {
+                            let parent = c.cv.clone();
+                            let before = format!("Object.{}({{}})", prop.name);
+                            let new_cv = st.fork_cv(&parent, &before, "[]");
+                            return Expression::ArrayExpression(ArrayExpression {
+                                cv: new_cv,
+                                elements: vec![],
+                            });
+                        }
+                    }
+                }
             }
         }
     }
@@ -6970,6 +7004,17 @@ mod tests {
         })
     }
 
+    // ------------------- Object.keys/values/entries (static) ---------
+
+    /// Build `Object.<method>(<arg>)`.
+    fn object_static_call(method: &str, arg: Expression) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Object"), method)),
+            arguments: vec![arg],
+        })
+    }
+
     fn empty_array() -> Expression {
         Expression::ArrayExpression(ArrayExpression {
             cv: None,
@@ -7065,6 +7110,93 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "a.isArray([]) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn fold_object_keys_values_entries_empty_object_to_empty_array() {
+        // `Object.keys/values/entries({})` → `[]` for all three methods.
+        for method in ["keys", "values", "entries"] {
+            let c = object_static_call(method, empty_object());
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "Object.{method}({{}}) should fold to []");
+            match extract_expr(&out) {
+                Expression::ArrayExpression(a) => {
+                    assert!(a.elements.is_empty(), "Object.{method}({{}}) → []")
+                }
+                other => panic!("expected []; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn object_static_non_empty_object_does_not_fold() {
+        // A non-empty object literal is declined — its property values may have
+        // side effects, and the result is non-empty anyway.
+        let obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![Property {
+                cv: None,
+                kind: coding_adventures_javascript_ast::PropertyKind::Init,
+                key: PropertyKey::Identifier(coding_adventures_javascript_ast::Identifier {
+                    cv: None,
+                    name: "a".to_string(),
+                }),
+                value: Box::new(num(1.0, None)),
+                shorthand: false,
+                computed: false,
+                method: false,
+            }],
+        });
+        let c = object_static_call("keys", obj);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Object.keys({{a:1}}) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn object_static_array_primitive_or_identifier_does_not_fold() {
+        // An array, a primitive (Object.keys("ab")→["0","1"]), and an identifier
+        // are all declined.
+        let args = [
+            Expression::ArrayExpression(ArrayExpression {
+                cv: None,
+                elements: vec![],
+            }),
+            string("ab", None),
+            ident("x"),
+        ];
+        for arg in args {
+            let c = object_static_call("keys", arg);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "Object.keys(array/primitive/ident) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn object_static_second_argument_does_not_fold() {
+        // We model only the single-argument form.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Object"), "keys")),
+            arguments: vec![empty_object(), ident("y")],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Object.keys({{}}, y) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn object_static_on_non_object_receiver_does_not_fold() {
+        // Only the bare global `Object` folds; `o.keys({})` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("o"), "keys")),
+            arguments: vec![empty_object()],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "o.keys({{}}) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

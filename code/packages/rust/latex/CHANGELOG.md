@@ -2,6 +2,31 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.2.0] — 2026-06-26
+
+### Added — LTX01 L1: structural document parser
+
+- **`parse(&str) -> Result<Vec<Node>, ParseError>`** — a recursive-descent parser that
+  turns the L0 token stream into a document tree:
+  - ordinary characters coalesced into `Text`; `Space`/`Par`;
+  - `{ … }` → `Group`;
+  - `\cmd[opt]{arg}…` → `Command` (one optional `[…]` if it immediately follows, then a
+    greedy run of mandatory `{…}` groups — generic capture; per-command arity is a later
+    layer, so `\textbf{a}{b}` captures two args, and a space breaks the run);
+  - control symbols (`\,`, `\\`, `\{`) → argless `Command`;
+  - `\begin{env}[opt]{arg}… body \end{env}` → `Environment` with a **matched** close
+    (a `\begin{a}…\end{b}` mismatch is a spanned error); environments nest;
+  - math islands (`$…$`, `$$…$$`, `\(…\)`, `\[…\]`) → `Math { display, content }` keeping
+    the **raw inner source** for L2;
+  - comments, active `~`; in text mode `& # ^ _` are literal characters.
+- **`Node` AST** (`ast.rs`) with **`Node::to_latex`** / `document_to_latex` — round-trips:
+  `parse(&render(ast)) == ast` (AST-equality; surface spacing and `$`/`\(` delimiter
+  choice are normalized). Reserves an `Unsupported { construct, span }` variant for the
+  TeX-programmability asymptote (not produced at L1).
+- **`ParseError`** — spanned; structural errors (unbalanced braces, env mismatch,
+  unterminated env/math) never panic.
+- +19 tests (39 unit + 1 doc total), incl. a round-trip corpus; clippy `-D warnings` clean.
+
 ## [0.1.0] — 2026-06-26
 
 ### Added — LTX01 L0: crate scaffold + catcode tokenizer

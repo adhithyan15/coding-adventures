@@ -1708,6 +1708,8 @@ pub enum SmartHomeTool {
     GetRuntimeMaintenanceWorkOrderEvidenceReviewSummary,
     ListRuntimeMaintenanceWorkOrderEvidenceReviewDispositions,
     GetRuntimeMaintenanceWorkOrderEvidenceReviewDispositionSummary,
+    ListRuntimeMaintenanceWorkOrderEvidenceReviewDispositionActions,
+    GetRuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionSummary,
     SetDesiredState,
     ClearDesiredState,
     ListPairingSessions,
@@ -2461,6 +2463,12 @@ impl SmartHomeTool {
             }
             Self::GetRuntimeMaintenanceWorkOrderEvidenceReviewDispositionSummary => {
                 read_tool("smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_summary")
+            }
+            Self::ListRuntimeMaintenanceWorkOrderEvidenceReviewDispositionActions => {
+                read_tool("smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_actions")
+            }
+            Self::GetRuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionSummary => {
+                read_tool("smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_summary")
             }
             Self::SetDesiredState => ToolDescriptor {
                 tool_id: "smart_home.set_desired_state",
@@ -3275,6 +3283,8 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetRuntimeMaintenanceWorkOrderEvidenceReviewSummary,
         SmartHomeTool::ListRuntimeMaintenanceWorkOrderEvidenceReviewDispositions,
         SmartHomeTool::GetRuntimeMaintenanceWorkOrderEvidenceReviewDispositionSummary,
+        SmartHomeTool::ListRuntimeMaintenanceWorkOrderEvidenceReviewDispositionActions,
+        SmartHomeTool::GetRuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionSummary,
         SmartHomeTool::SetDesiredState,
         SmartHomeTool::ClearDesiredState,
         SmartHomeTool::ListPairingSessions,
@@ -4081,7 +4091,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 274);
+        assert_eq!(catalog.len(), 276);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_command_risk_audit"
@@ -4194,6 +4204,14 @@ mod tests {
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
             == "smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_actions"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_summary"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog
@@ -5162,15 +5180,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 274);
-        assert_eq!(summary.read_tools, 266);
+        assert_eq!(summary.total_tools, 276);
+        assert_eq!(summary.read_tools, 268);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 266);
+        assert_eq!(summary.read_only_tier_tools, 268);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 274);
+        assert_eq!(summary.total_required_capabilities, 276);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());

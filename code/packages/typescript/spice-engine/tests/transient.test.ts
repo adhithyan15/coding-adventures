@@ -1510,6 +1510,13 @@ describe("transient", () => {
 .measure tran mid_final final V(mid)
 .end
 `;
+    const netlistLines = netlist.split(/\r?\n/u);
+    const directiveLine = (prefix: string) =>
+      netlistLines.findIndex((line) => line.trimStart().startsWith(prefix)) + 1;
+    const saveLine = directiveLine(".save");
+    const probeDcLine = directiveLine(".probe dc");
+    const printDcLine = directiveLine(".print dc");
+    const plotAcLine = directiveLine(".plot ac");
 
     const opExecution = runDeckAnalysis(circuit, netlist, "op");
     expect(opExecution.plan.analysis).toBe("op");
@@ -1552,6 +1559,8 @@ describe("transient", () => {
         OutputDirectiveKindList: "save",
         OutputDirectiveAnalysisKinds: "1",
         OutputDirectiveAnalysisKindList: "global",
+        OutputDirectiveLines: "1",
+        OutputDirectiveLineList: String(saveLine),
         Tables: "3",
         TableList: "result;output-plan;run-artifact",
       },
@@ -1571,19 +1580,21 @@ describe("transient", () => {
       outputDirectiveKinds: ["save"],
       outputDirectiveAnalysisKindCount: 1,
       outputDirectiveAnalysisKinds: ["global"],
+      outputDirectiveLineCount: 1,
+      outputDirectiveLines: [saveLine],
       tableCount: 3,
       tables: ["result", "output-plan", "run-artifact"],
     });
     expect(opExecution.outputPlanArtifactTable).toBe(
-      "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tTables\tTableList\n" +
-        "op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t1\tglobal\t3\tresult;output-plan;run-artifact\n",
+      "Analysis\tDirective\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tOutputDirectiveKinds\tOutputDirectiveKindList\tOutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\tOutputDirectiveLines\tOutputDirectiveLineList\tTables\tTableList\n" +
+        `op\t.op\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t1\tsave\t1\tglobal\t1\t${saveLine}\t3\tresult;output-plan;run-artifact\n`,
     );
     expect(opExecution.outputPlanArtifactTable).toBe(
       formatDeckOutputPlanArtifactTable(opExecution.outputPlanArtifacts),
     );
     expect(opExecution.outputPlanArtifactCsv).toBe(
-      "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,Tables,TableList\n" +
-        "op,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,1,global,3,result;output-plan;run-artifact\n",
+      "Analysis,Directive,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,OutputDirectiveKinds,OutputDirectiveKindList,OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,OutputDirectiveLines,OutputDirectiveLineList,Tables,TableList\n" +
+        `op,.op,2,Index;V(mid),1,V(mid),1,.save,1,save,1,global,1,${saveLine},3,result;output-plan;run-artifact\n`,
     );
     expect(opExecution.outputPlanArtifactCsv).toBe(
       formatDeckOutputPlanArtifactCsv(opExecution.outputPlanArtifacts),
@@ -1795,8 +1806,15 @@ describe("transient", () => {
       "global",
       "dc",
     ]);
+    const dcOutputDirectiveLines = [saveLine, probeDcLine, printDcLine];
+    expect(dcExecution.outputPlanArtifacts[0]?.outputDirectiveLines).toEqual(
+      dcOutputDirectiveLines,
+    );
     expect(dcExecution.outputPlanArtifactRecords[0]?.OutputDirectiveAnalysisKindList).toBe(
       "global;dc",
+    );
+    expect(dcExecution.outputPlanArtifactRecords[0]?.OutputDirectiveLineList).toBe(
+      dcOutputDirectiveLines.join(";"),
     );
     expect(dcExecution.analysisDirectives).toEqual([".dc"]);
     expect(dcExecution.tableCount).toBe(4);
@@ -1873,8 +1891,15 @@ describe("transient", () => {
       "global",
       "ac",
     ]);
+    const acOutputDirectiveLines = [saveLine, plotAcLine];
+    expect(acExecution.outputPlanArtifacts[0]?.outputDirectiveLines).toEqual(
+      acOutputDirectiveLines,
+    );
     expect(acExecution.outputPlanArtifactRecords[0]?.OutputDirectiveAnalysisKindList).toBe(
       "global;ac",
+    );
+    expect(acExecution.outputPlanArtifactRecords[0]?.OutputDirectiveLineList).toBe(
+      acOutputDirectiveLines.join(";"),
     );
     expect(acExecution.analysisDirectives).toEqual([".ac"]);
     expect(acExecution.tableCount).toBe(4);
@@ -1926,6 +1951,7 @@ describe("transient", () => {
     const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
     expect(tranExecution.outputProbes).toEqual(["V(mid)"]);
     expect(tranExecution.outputDirectives).toEqual([".save"]);
+    expect(tranExecution.outputPlanArtifacts[0]?.outputDirectiveLines).toEqual([saveLine]);
     expect(tranExecution.analysisDirectives).toEqual([".tran"]);
     expect(tranExecution.tableCount).toBe(4);
     expect(tranExecution.tables).toEqual(["result", "measurement", "output-plan", "run-artifact"]);
