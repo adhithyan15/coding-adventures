@@ -330,6 +330,14 @@ runtime and Chief of Staff tools a typed catalog for:
 - mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence summaries that combine evidence
   rows with next repair, review, and release handoff pointers
+- low-level mesh release ticket handoff readiness-evidence review
+  disposition-action readiness execution handoff action protocol-evidence
+  packet rows that join Zigbee, Z-Wave, and Thread substrate readiness with
+  handoff-action evidence state
+- mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence packet summaries that
+  combine packet readiness, substrate blockers, and first actionable evidence
+  pointers
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work
