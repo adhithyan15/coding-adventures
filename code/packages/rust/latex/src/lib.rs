@@ -34,7 +34,11 @@
 //!    environment ([`Node::VerbatimEnv`]) read their bodies **raw** (catcodes suspended).
 //!    **Implemented (L5a/L5b).**
 //! 6. [`recognize_accents`] — an opt-in pass folding text accents (`\'e`, `\c{c}`) into
-//!    [`Node::Accent`]. **Implemented (L5c).** Sectioning and refs are later L5 sub-rungs.
+//!    [`Node::Accent`]. **Implemented (L5c).**
+//! 7. [`recognize_structure`] — an opt-in pass classifying generic commands into structure
+//!    nodes: sectioning ([`Node::Section`]), cross-refs/citations ([`Node::CrossRef`]),
+//!    preamble directives ([`Node::Preamble`]), and argument-form font commands
+//!    ([`Node::Styled`]). **Implemented (L5d).**
 //!
 //! ## Example
 //!
@@ -58,15 +62,17 @@ mod lexer;
 mod macros;
 mod math;
 mod parser;
+mod structure;
 mod text;
 mod token;
 
-pub use ast::{document_to_latex, Node};
+pub use ast::{document_to_latex, Node, SectionLevel};
 pub use catcode::{catcode, Catcode};
 pub use error::{LexError, ParseError};
 pub use lexer::tokenize;
 pub use macros::expand;
 pub use math::{parse_math, MBinOp, MRelOp, MUnOp, MathNode};
 pub use parser::parse;
+pub use structure::recognize_structure;
 pub use text::recognize_accents;
 pub use token::{Span, Token, TokenKind};
