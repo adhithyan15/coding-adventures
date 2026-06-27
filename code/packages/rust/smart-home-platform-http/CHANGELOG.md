@@ -32,6 +32,8 @@ All notable changes to this package will be documented in this file.
 - Added browser dashboard light brightness controls that discover commandable
   ranged capabilities and dispatch through the existing `set_brightness`
   service path.
+- Added browser dashboard service and authorized API catalog panels backed by
+  the native local-controller discovery routes.
 - Added a native readiness checklist route with actionable links for registry,
   topology, state coverage, event bus, discovery, supervisor, authorization,
   and desired-state checks.
