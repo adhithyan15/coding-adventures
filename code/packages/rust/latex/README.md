@@ -30,8 +30,8 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 
 | Layer | Contents | Status |
 |-------|----------|--------|
-| **L0 tokenizer** | catcode state machine → flat `Token` stream w/ byte spans | ✅ this release |
-| L1 structural | groups, `\cmd[opt]{arg}`, `\begin{env}…\end{env}`, text runs | ⏳ |
+| **L0 tokenizer** | catcode state machine → flat `Token` stream w/ byte spans | ✅ |
+| **L1 structural** | groups, `\cmd[opt]{arg}`, `\begin{env}…\end{env}`, text runs, raw math islands, `to_latex()` round-trip | ✅ this release |
 | L2 math | full math AST (frac, scripts, big ops, accents, `\left\right`, …) | ⏳ |
 | L3 environments | matrices / tabular / lists (`&`, `\\`) | ⏳ |
 | L4 macros | `\newcommand`/`\def` + expansion (bounded) | ⏳ |
@@ -41,15 +41,17 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 ## Usage
 
 ```rust
-use latex::{tokenize, TokenKind};
+use latex::{parse, Node};
 
-let toks = tokenize(r"Let $x$ be.").unwrap();
-assert_eq!(toks[0].kind, TokenKind::Char('L'));
-assert!(toks.iter().any(|t| matches!(t.kind, TokenKind::MathOn { .. })));
+let doc = parse(r"Let $x$ be \textbf{bold}.").unwrap();
+assert!(matches!(doc[0], Node::Text(_)));                       // "Let"
+assert!(doc.iter().any(|n| matches!(n, Node::Math { .. })));    // $x$
+// round-trips: parsing the rendered AST yields the same AST
+assert_eq!(parse(&latex::document_to_latex(&doc)).unwrap(), doc);
 ```
 
-Every token carries a half-open byte `Span`; `tokenize` returns a spanned `LexError` on
-malformed input rather than panicking.
+The low-level `tokenize` is also public. Tokens and errors carry half-open byte `Span`s;
+both `parse` and `tokenize` return spanned errors rather than panicking.
 
 ## Tests
 
