@@ -25,6 +25,32 @@ bare global `Array.of(...)` callee folds (never a shadowed `a.of(...)`). A
 spread argument would be declined, but the AST has no call-argument spread
 variant yet, so every argument is a plain expression and the fold always applies.
 
+## [0.62.0] - 2026-06-26
+
+### Added — fold static `Array.isArray(…)` → boolean literal
+
+The static `Array.isArray(x)` (ECMAScript §22.1.2.2) now folds to a boolean
+literal for the literal argument shapes whose evaluation has **no observable side
+effect to drop**:
+
+- an EMPTY array literal `Array.isArray([])` → `true` (the only literal that IS
+  an Array);
+- an EMPTY object literal `Array.isArray({})` → `false`;
+- a primitive literal — `Array.isArray("x")` / `Array.isArray(42)` /
+  `Array.isArray(true)` / `Array.isArray(null)` → `false`.
+
+A **non-empty** array/object literal is DECLINED: replacing the call with a
+boolean would discard the element/property expressions and drop any side effect
+they evaluate (`Array.isArray([f()])` must still call `f`). An identifier or any
+other non-literal argument (unknown type at compile time), or a call with ≠1
+argument, is also left for the runtime.
+
+Dispatches through the `MemberExpression` callee arm (alongside the
+`String.from*` and `Number.isX`/`parseX` statics) — only the bare global
+`Array.isArray(...)` folds, never a shadowed receiver (`a.isArray(...)`). Added
+six unit tests (the empty-array `true`, the non-array-literal `false` set, the
+non-empty-array decline, and the identifier / second-argument / non-`Array`-
+receiver guards).
 ## [0.60.0] - 2026-06-26
 
 ### Added — fold global `isNaN(…)` / `isFinite(…)` → boolean literal

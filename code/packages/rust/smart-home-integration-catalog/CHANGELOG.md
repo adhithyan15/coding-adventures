@@ -123,6 +123,10 @@ All notable changes to this package will be documented in this file.
   lineage, operator, and release handoff pointers.
 - Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence review disposition action
+  readiness execution slots that sequence readiness rows into deterministic
+  repair, review, operator, and release handoff work.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review disposition action
   summaries that combine action rows with next repair, review, lineage, and
   release handoff pointers.
 - Mesh release ticket handoff readiness-evidence review disposition-action

@@ -117,6 +117,20 @@ pub enum MathNode {
     Text(String),
     /// A relation: `a = b`, `x \le y`.
     Rel(MRelOp, Box<MathNode>, Box<MathNode>),
+    /// A math environment with row/column structure (L3): the `matrix` family
+    /// (`matrix`/`pmatrix`/`bmatrix`/`vmatrix`/…), `cases`, and the alignment environments
+    /// (`aligned`/`align`). `rows` is a list of rows; each row is a list of cells, split on
+    /// `&` (columns) and `\\` (rows). `env` is the environment name verbatim (case-sensitive,
+    /// so `bmatrix` ≠ `Bmatrix`), which also fixes the delimiters when rendered.
+    ///
+    /// ```text
+    ///   \begin{pmatrix} a & b \\ c & d \end{pmatrix}
+    ///   → Matrix { env: "pmatrix", rows: [[a, b], [c, d]] }
+    /// ```
+    Matrix {
+        env: String,
+        rows: Vec<Vec<MathNode>>,
+    },
 }
 
 /// Parse LaTeX math-mode source (the inner content of an island) into a [`MathNode`].
@@ -190,6 +204,30 @@ fn is_text(name: &str) -> bool {
         name,
         "text" | "mathrm" | "mathbf" | "mathit" | "mathsf" | "mathtt" | "mathcal"
             | "mathbb" | "operatorname"
+    )
+}
+/// Math environments with `&`/`\\` row/column structure (L3). Case-sensitive — `bmatrix`
+/// (square brackets) and `Bmatrix` (braces) are different environments. The `array`/`tabular`
+/// family (which take a mandatory column-spec argument) and document-mode list environments
+/// are deliberately **not** here — they need an extra field on the node and arrive in a
+/// later layer; an unknown `\begin{…}` is rejected with a spanned error, never mis-parsed.
+fn is_math_env(name: &str) -> bool {
+    matches!(
+        name,
+        "matrix"
+            | "pmatrix"
+            | "bmatrix"
+            | "Bmatrix"
+            | "vmatrix"
+            | "Vmatrix"
+            | "smallmatrix"
+            | "cases"
+            | "dcases"
+            | "aligned"
+            | "gathered"
+            | "align"
+            | "align*"
+            | "split"
     )
 }
 
@@ -495,6 +533,14 @@ impl<'a> MathParser<'a> {
             let _ = rel;
             return self.err(format!("unexpected relation \\{name}"));
         }
+        if name == "begin" {
+            return self.parse_environment();
+        }
+        if name == "end" {
+            // `\end` only ever closes an environment opened by `parse_environment`; reaching
+            // it here means there was no matching `\begin`.
+            return self.err("unexpected \\end without matching \\begin");
+        }
         if is_frac(name) {
             self.bump();
             let num = self.read_arg()?;
@@ -628,6 +674,92 @@ impl<'a> MathParser<'a> {
                 other => {
                     return self.err(format!("unsupported token in \\text: {other:?}"));
                 }
+            }
+        }
+    }
+
+    // ---- environments (L3) ----------------------------------------------------
+
+    /// Parse `\begin{env} … \end{env}` into [`MathNode::Matrix`]. Called with the cursor on
+    /// the `\begin` control word. The body is a grid of cells: `&` separates columns, `\\`
+    /// separates rows. Nested environments work because each cell is parsed recursively (the
+    /// inner `\begin…\end` is consumed by its own call), and the whole descent is
+    /// depth-guarded by the enclosing [`Self::parse_atom`].
+    fn parse_environment(&mut self) -> Result<MathNode, ParseError> {
+        self.bump(); // \begin
+        let env = self.read_env_name()?;
+        if !is_math_env(&env) {
+            return self.err(format!("unsupported environment: {env}"));
+        }
+        let rows = self.parse_env_rows(&env)?;
+        Ok(MathNode::Matrix { env, rows })
+    }
+
+    /// Read an environment name from the `{…}` after `\begin`/`\end`. Names are letters with
+    /// an optional trailing `*` (`align*`).
+    fn read_env_name(&mut self) -> Result<String, ParseError> {
+        if !matches!(self.peek().kind, TokenKind::BeginGroup) {
+            return self.err("expected '{' after \\begin/\\end");
+        }
+        self.bump(); // {
+        let mut s = String::new();
+        loop {
+            match self.peek().kind.clone() {
+                TokenKind::EndGroup => {
+                    self.bump();
+                    return Ok(s);
+                }
+                TokenKind::Char(c) => {
+                    s.push(c);
+                    self.bump();
+                }
+                TokenKind::Eof => return self.err("unterminated environment name"),
+                other => return self.err(format!("unexpected token in environment name: {other:?}")),
+            }
+        }
+    }
+
+    /// Parse the grid body up to the matching `\end{env}`. Each cell is one math expression;
+    /// truly-empty cells (e.g. `a & & b`) are a documented limitation and produce a spanned
+    /// error rather than a silent empty node.
+    fn parse_env_rows(&mut self, env: &str) -> Result<Vec<Vec<MathNode>>, ParseError> {
+        let mut rows: Vec<Vec<MathNode>> = Vec::new();
+        let mut row: Vec<MathNode> = Vec::new();
+        loop {
+            // Terminator: \end{name} — verify the name matches the open.
+            if matches!(&self.peek().kind, TokenKind::ControlWord(w) if w == "end") {
+                self.bump(); // \end
+                let close = self.read_env_name()?;
+                if close != env {
+                    return self.err(format!("\\begin{{{env}}} closed by \\end{{{close}}}"));
+                }
+                if !row.is_empty() {
+                    rows.push(row);
+                }
+                return Ok(rows);
+            }
+            if matches!(self.peek().kind, TokenKind::Eof) {
+                return self.err(format!("unterminated environment \\begin{{{env}}}"));
+            }
+            // A cell. `parse_relation` stops at `&`, `\\`, and `\end` (none of them start an
+            // atom), so it consumes exactly one cell and always makes progress.
+            let cell = self.parse_relation()?;
+            row.push(cell);
+            // The separator that follows the cell.
+            match &self.peek().kind {
+                TokenKind::AlignTab => {
+                    self.bump(); // & → next column in this row
+                }
+                TokenKind::ControlSymbol('\\') => {
+                    self.bump(); // \\ → end this row, start a new one
+                    rows.push(std::mem::take(&mut row));
+                }
+                // \end on the next turn closes the environment (handled at loop top).
+                TokenKind::ControlWord(w) if w == "end" => {}
+                TokenKind::Eof => {
+                    return self.err(format!("unterminated environment \\begin{{{env}}}"));
+                }
+                _ => return self.err("expected '&', '\\\\', or \\end in environment"),
             }
         }
     }
@@ -812,6 +944,25 @@ impl MathNode {
                 out.push_str(opstr);
                 Self::write_child(b, out, 2);
             }
+            MathNode::Matrix { env, rows } => {
+                out.push_str("\\begin{");
+                out.push_str(env);
+                out.push('}');
+                for (ri, row) in rows.iter().enumerate() {
+                    if ri > 0 {
+                        out.push_str(" \\\\ ");
+                    }
+                    for (ci, cell) in row.iter().enumerate() {
+                        if ci > 0 {
+                            out.push_str(" & ");
+                        }
+                        cell.write(out, 0);
+                    }
+                }
+                out.push_str("\\end{");
+                out.push_str(env);
+                out.push('}');
+            }
         }
     }
 }
@@ -994,8 +1145,133 @@ mod tests {
             "x \\le y",
             "\\hat{x} + \\bar{y}",
             "\\pi r^2",
+            "\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}",
+            "\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}",
+            "\\begin{cases} 1 & x > 0 \\\\ 0 & x \\le 0 \\end{cases}",
+            "\\begin{matrix} a \\\\ b \\\\ c \\end{matrix}",
+            "\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}^2",
         ] {
             round_trips(s);
         }
+    }
+
+    // ---- L3: environments -----------------------------------------------------
+
+    #[test]
+    fn pmatrix_two_by_two() {
+        let n = parse_math(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}").unwrap();
+        match n {
+            MathNode::Matrix { env, rows } => {
+                assert_eq!(env, "pmatrix");
+                assert_eq!(
+                    rows,
+                    vec![
+                        vec![sym("a"), sym("b")],
+                        vec![sym("c"), sym("d")],
+                    ]
+                );
+            }
+            other => panic!("expected Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bracket_delimiters_are_case_sensitive() {
+        // bmatrix (square) vs Bmatrix (braces) are distinct environments.
+        assert!(matches!(
+            parse_math(r"\begin{bmatrix} 1 \end{bmatrix}").unwrap(),
+            MathNode::Matrix { ref env, .. } if env == "bmatrix"
+        ));
+        assert!(matches!(
+            parse_math(r"\begin{Bmatrix} 1 \end{Bmatrix}").unwrap(),
+            MathNode::Matrix { ref env, .. } if env == "Bmatrix"
+        ));
+    }
+
+    #[test]
+    fn cases_with_conditions() {
+        // \begin{cases} f & cond \\ g & cond \end{cases}
+        let n = parse_math(r"\begin{cases} 1 & x > 0 \\ 0 & x \le 0 \end{cases}").unwrap();
+        match n {
+            MathNode::Matrix { env, rows } => {
+                assert_eq!(env, "cases");
+                assert_eq!(rows.len(), 2);
+                assert_eq!(rows[0].len(), 2);
+                assert!(matches!(rows[0][1], MathNode::Rel(MRelOp::Gt, ..)));
+                assert!(matches!(rows[1][1], MathNode::Rel(MRelOp::Le, ..)));
+            }
+            other => panic!("expected Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn cells_hold_full_expressions() {
+        let n = parse_math(r"\begin{matrix} \frac{a}{b} & x^2 \\ 1+1 & c \end{matrix}").unwrap();
+        match n {
+            MathNode::Matrix { rows, .. } => {
+                assert!(matches!(rows[0][0], MathNode::Frac(..)));
+                assert!(matches!(rows[0][1], MathNode::Script { .. }));
+                assert!(matches!(rows[1][0], MathNode::Bin(MBinOp::Add, ..)));
+            }
+            other => panic!("expected Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn single_column_multiple_rows() {
+        let n = parse_math(r"\begin{matrix} a \\ b \\ c \end{matrix}").unwrap();
+        match n {
+            MathNode::Matrix { rows, .. } => {
+                assert_eq!(rows, vec![vec![sym("a")], vec![sym("b")], vec![sym("c")]]);
+            }
+            other => panic!("expected Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn trailing_row_separator_is_tolerated() {
+        // A trailing `\\` before `\end` does not create an empty final row.
+        let n = parse_math(r"\begin{matrix} a \\ b \\ \end{matrix}").unwrap();
+        match n {
+            MathNode::Matrix { rows, .. } => assert_eq!(rows.len(), 2),
+            other => panic!("expected Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn nested_environments() {
+        let n = parse_math(
+            r"\begin{pmatrix} \begin{pmatrix} a \end{pmatrix} & b \\ c & d \end{pmatrix}",
+        )
+        .unwrap();
+        match n {
+            MathNode::Matrix { rows, .. } => {
+                assert!(matches!(rows[0][0], MathNode::Matrix { .. }));
+            }
+            other => panic!("expected nested Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn matrix_can_be_scripted() {
+        // \begin{pmatrix}…\end{pmatrix}^2 — a matrix is an atom, so postfix scripts attach.
+        let n = parse_math(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}^2").unwrap();
+        match n {
+            MathNode::Script { base, sup, .. } => {
+                assert!(matches!(*base, MathNode::Matrix { .. }));
+                assert_eq!(sup.as_deref(), Some(&num("2")));
+            }
+            other => panic!("expected Script over Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn environment_errors_are_spanned_not_panics() {
+        assert!(parse_math(r"\begin{matrix} a \end{pmatrix}").is_err()); // begin/end mismatch
+        assert!(parse_math(r"\begin{matrix} a & b").is_err()); // unterminated
+        assert!(parse_math(r"\begin{foobar} a \end{foobar}").is_err()); // unsupported env
+        assert!(parse_math(r"\begin{matrix} & b \end{matrix}").is_err()); // empty cell (limitation)
+        assert!(parse_math(r"\end{matrix}").is_err()); // stray \end
+        assert!(parse_math(r"\begin matrix").is_err()); // missing { after \begin
     }
 }
