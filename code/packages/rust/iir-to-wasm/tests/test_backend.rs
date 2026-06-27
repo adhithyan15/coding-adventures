@@ -17,7 +17,7 @@
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_wasm::{encode_module, lower_iir_to_wasm, validate_for_wasm, IIRWasmConfig, IIRWasmError};
-use wasm_types::{ExternalKind, ValueType};
+use wasm_types::{ExternalKind, ImportTypeInfo, ValueType};
 
 // ---------------------------------------------------------------------------
 // Helper builders
@@ -1617,6 +1617,76 @@ fn g2_unknown_builtin_still_rejected() {
     let errs = validate_for_wasm(&m);
     assert!(!errs.is_empty(),
         "G2: unknown builtin must still be rejected; got no errors");
+}
+
+#[test]
+fn e4_string_print_lowers_to_data_memory_and_host_import() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("HELLO".into())],
+            "str",
+        ),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_const + print_str should lower");
+    let import = wm
+        .imports
+        .iter()
+        .find(|i| i.module_name == "env" && i.name == "__print_str")
+        .expect("E4: print_str must inject env.__print_str");
+    let ImportTypeInfo::Function(type_idx) = import.type_info else {
+        panic!("E4: __print_str import should be a function");
+    };
+    assert_eq!(wm.types[type_idx as usize].params, vec![ValueType::I32, ValueType::I32]);
+    assert_eq!(wm.types[type_idx as usize].results, Vec::<ValueType>::new());
+    assert_eq!(wm.memories.len(), 1, "E4: string bytes live in linear memory");
+    assert_eq!(wm.data.len(), 1, "E4: literal should be emitted as one data segment");
+    assert_eq!(wm.data[0].data, b"HELLO");
+    assert!(
+        wm.code[0].code.contains(&0x10),
+        "E4: function body should call env.__print_str"
+    );
+
+    let bytes = encode_module(&wm).expect("encode");
+    assert_eq!(&bytes[..4], &[0x00, 0x61, 0x73, 0x6D], "wasm magic prefix");
+}
+
+#[test]
+fn e4_string_print_coexists_with_putchar_newline_import() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("HELLO".into())],
+            "str",
+        ),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("const", Some("nl".into()), vec![Operand::Int(10)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![Operand::Var("putchar".into()), Operand::Var("nl".into())],
+            "void",
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: string print plus putchar should lower");
+    assert!(
+        wm.imports.iter().any(|i| i.module_name == "env" && i.name == "__print_str"),
+        "expected env.__print_str import"
+    );
+    assert!(
+        wm.imports.iter().any(|i| i.module_name == "env" && i.name == "putchar"),
+        "expected env.putchar import"
+    );
+    assert_eq!(wm.data[0].data, b"HELLO");
 }
 
 // ---------------------------------------------------------------------------

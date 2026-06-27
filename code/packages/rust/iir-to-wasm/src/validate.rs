@@ -7,7 +7,8 @@
 //!
 //! - WASM has no "any" type — every local and stack slot must have a concrete
 //!   numeric type (`i32`, `i64`, `f32`, `f64`) or a known GC reference type.
-//! - WASM has no strings or raw heap-pointer indirection in this lowering.
+//! - WASM has only the E4 literal string-output foothold in this lowering:
+//!   `str_const` + `print_str`; richer string ops remain rejected.
 //! - Runtime / I/O opcodes have no WASM equivalent without a host import,
 //!   which this direct lowering does not provide.
 //!
@@ -42,7 +43,7 @@
 //! | `EmptyModule` | Module has zero functions |
 //! | `EmptyFunction` | A function has zero instructions |
 //! | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType` | `type_hint` is `"str"` or is an unsupported `"ref<X>"` |
+//! | `UnsupportedType` | `type_hint` is `"str"` outside `str_const` or is an unsupported `"ref<X>"` |
 //! | `UnsupportedOp` | op is any runtime / I/O / unsupported GC opcode |
 
 use interpreter_ir::IIRModule;
@@ -274,7 +275,8 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
 
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
-            // `"str"` — we produce no string data section and no string ops.
+            // `"str"` — accepted only for the E4 literal-output foothold's
+            // `str_const`.  Richer string ops still fail explicitly below.
             //
             // `"ref<X>"` — reference types require WasmGC.  We accept
             // `"ref<LispyPair>"` (the only struct type we define).  All
@@ -282,10 +284,10 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             //
             // NOTE: float types (`"f32"`, `"f64"`) are NOT rejected here.
             // WASM has native float arithmetic, so they are fully supported.
-            if instr.type_hint == "str" {
+            if instr.type_hint == "str" && instr.op != "str_const" {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     string operations are not supported in this WASM backend",
+                     only str_const + print_str literal output is supported in this WASM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -311,7 +313,54 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
             // `putchar` / `getchar` flow through while still rejecting
             // unknown / unsafe builtins.
-            if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
+            if matches!(
+                instr.op.as_str(),
+                "str_len" | "str_index" | "str_concat" | "str_eq"
+            ) {
+                errors.push(format!(
+                    "UnsupportedOp: function {:?}, op {:?} is not supported by \
+                     the WASM backend's E4 literal-output slice; only str_const \
+                     and print_str are supported",
+                    func.name, instr.op
+                ));
+            } else if instr.op == "str_const" {
+                match (instr.dest.as_ref(), instr.srcs.first()) {
+                    (Some(_), Some(interpreter_ir::Operand::Str(s)))
+                        if s.is_ascii()
+                            && s.bytes()
+                                .all(|b| b >= 0x20 || matches!(b, b'\n' | b'\r' | b'\t')) =>
+                    {
+                        // Accepted — lower.rs puts the literal in a data segment.
+                    }
+                    (Some(_), Some(interpreter_ir::Operand::Str(_))) => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_const\" only supports \
+                             printable ASCII string literals in the WASM literal-output slice",
+                            func.name
+                        ));
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_const\" requires \
+                             a dest and srcs[0] = Operand::Str(literal)",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "print_str" {
+                match (instr.type_hint.as_str(), instr.srcs.first()) {
+                    ("void", Some(interpreter_ir::Operand::Var(_))) => {
+                        // Accepted — lower.rs calls env.__print_str(ptr, len).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"print_str\" requires \
+                             type_hint \"void\" and srcs[0] = Operand::Var(str)",
+                            func.name
+                        ));
+                    }
+                }
+            } else if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the WASM backend; it requires a host import or runtime support",
@@ -486,6 +535,44 @@ mod tests {
             "str",
         )]));
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
+    }
+
+    #[test]
+    fn e4_literal_print_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_const + print_str should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn richer_string_ops_still_rejected() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.iter().any(|e| e.contains("UnsupportedOp")),
+            "str_len must remain rejected in the literal-output slice; got: {:?}",
+            errs
+        );
     }
 
     #[test]

@@ -858,17 +858,17 @@ const PROGRAMS: &[Prog] = &[
     },
     // Dartmouth BASIC — E4/BA4 first string-PRINT proof. The frontend lowers a
     // string literal item to shared `str_const` + `print_str`, and the existing
-    // BASIC PRINT machinery emits the trailing newline via `putchar`. JVM/CLR are
-    // the first managed code-gen columns tagged here: JVM uses `ldc` +
-    // `PrintStream.print(String)` and textual CIL uses `ldstr` +
-    // `Console.Write(string)`, while richer byte-string operations stay outside
-    // this slice.
+    // BASIC PRINT machinery emits the trailing newline via `putchar`. WASM stores
+    // the literal bytes in linear memory and calls `env.__print_str(ptr,len)`;
+    // JVM uses `ldc` + `PrintStream.print(String)` and textual CIL uses `ldstr`
+    // + `Console.Write(string)`, while richer byte-string operations stay
+    // outside this slice.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT \"HELLO\"\n20 END\n",
         expect: Expect::Stdout("HELLO"),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
@@ -1349,6 +1349,56 @@ impl wasm_execution::HostFunction for PutcharFunc {
     }
 }
 
+struct PrintStrFunc {
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+}
+
+impl wasm_execution::HostFunction for PrintStrFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32, wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let ptr = args
+            .first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: missing ptr"))?
+            .as_i32()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        let len = args
+            .get(1)
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: missing len"))?
+            .as_i32()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        if ptr < 0 || len < 0 {
+            return Err(wasm_execution::TrapError::new("__print_str: negative ptr/len"));
+        }
+        let memory = memory
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: no linear memory"))?;
+        let start = usize::try_from(ptr)
+            .map_err(|_| wasm_execution::TrapError::new("__print_str: ptr overflow"))?;
+        let len = usize::try_from(len)
+            .map_err(|_| wasm_execution::TrapError::new("__print_str: len overflow"))?;
+        let mut chunk = Vec::with_capacity(len);
+        for offset in 0..len {
+            chunk.push(memory.load_i32_8u(start + offset)? as u8);
+        }
+        self.bytes
+            .lock()
+            .expect("lang-matrix print_str buffer poisoned")
+            .extend_from_slice(&chunk);
+        Ok(vec![])
+    }
+}
+
 /// Brainfuck's `,` lowers to `call $getchar`, imported as `env.getchar : () -> i32`
 /// (the wasm sibling of libc `@getchar`). Each call pops the next byte from the program's
 /// stdin buffer (seeded by `run_wasm` from `program_stdin`); when the buffer is drained it
@@ -1386,9 +1436,10 @@ impl wasm_execution::HostFunction for GetcharFunc {
 }
 
 /// The host interface the matrix runs wasm under: it resolves the generic
-/// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC), and the
-/// Brainfuck I/O imports `env.putchar`/`env.getchar` to a `PutcharFunc` (byte capture)
-/// / `GetcharFunc` (EOF). Everything else resolves to nothing (the expression languages
+/// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC),
+/// `env.__print_str` to a memory-reading byte capture, and the Brainfuck I/O
+/// imports `env.putchar`/`env.getchar` to a `PutcharFunc` (byte capture) /
+/// `GetcharFunc` (EOF). Everything else resolves to nothing (the expression languages
 /// import no host functions, so the host is never consulted for them and behaviour is
 /// identical to `WasmRuntime::new`).
 struct PrintHost {
@@ -1406,6 +1457,9 @@ impl wasm_execution::HostInterface for PrintHost {
         match (module_name, name) {
             ("env", "__print_i64") => Some(Box::new(PrintFunc {
                 captured: std::sync::Arc::clone(&self.captured),
+            })),
+            ("env", "__print_str") => Some(Box::new(PrintStrFunc {
+                bytes: std::sync::Arc::clone(&self.bytes),
             })),
             ("env", "putchar") => Some(Box::new(PutcharFunc {
                 bytes: std::sync::Arc::clone(&self.bytes),

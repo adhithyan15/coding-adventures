@@ -4,11 +4,12 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-FULL E4 / BA4 — BASIC string literal `PRINT` reaches JVM + CLR (v0.107.0):**
-> `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on JVM + CLR + VM + JIT.
+> **LANG-FULL E4 / BA4 — BASIC string literal `PRINT` reaches WASM + JVM + CLR (v0.108.0):**
+> `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on WASM + JVM + CLR + VM + JIT.
+> WASM stores literal bytes in linear memory and calls `env.__print_str(ptr,len)`;
 > JVM maps `str_const` to `ldc` + `CONSTANT_String` and `print_str` to
 > `PrintStream.print(String)`; CLR maps them to `ldstr` and `Console.Write(string)`.
-> Richer byte-string ops and the remaining code-gen columns stay follow-up E4 slices.
+> Richer byte-string ops and the remaining native/LLVM columns stay follow-up E4 slices.
 
 > **LANG-FULL O2 — Oct bitwise `~` + u8 wrap on all 7 backends (v0.92.0):**
 > `tests/lang_matrix.rs` adds `out(1, ~0)` → `255` and `out(1, 200 + 100)` → `44` (wrap).

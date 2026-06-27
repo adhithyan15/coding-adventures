@@ -3,6 +3,21 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.19.0] — 2026-06-27 (LANG-FULL E4 / BA4 — BASIC string literal PRINT on WASM)
+
+The WASM backend now lowers the E4 literal-output pair:
+
+- `str_const` stores printable ASCII literal bytes in a linear-memory data
+  segment and materialises the string value as an `i32` byte pointer.
+- `print_str` calls the new host import `env.__print_str(i32 ptr, i32 len)`.
+- Modules using string output get a one-page linear memory; if E5 arrays share
+  that memory later, the `__array_bump` global starts after the string data.
+
+The literal-output scope is intentionally narrow. `str_len`, `str_index`,
+`str_concat`, and `str_eq` still fail closed until the full byte-string runtime
+lands. Verified by the backend tests and by RUNNING the lang matrix row
+`10 PRINT "HELLO"` on the in-repo `wasm-runtime`.
+
 ## [0.18.0] — 2026-06-26 (LANG-FULL BA1-WASM — GOSUB/RETURN dispatch-loop fix)
 
 **Root-cause fix:** the WASM dispatch-loop lowering used a depth formula that
