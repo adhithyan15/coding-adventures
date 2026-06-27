@@ -25,6 +25,30 @@ test `tests/diff_simple_fold_number_parse.rs` assert byte-exact SIMPLE output,
 the per-binding numeric folds (incl. an explicit radix and the `0x` prefix), the
 declined `NaN` call, and a WHITESPACE_ONLY-fallback regression guard (exactly one
 `Number.parse…(` call remains). Help-markdown regenerated to Version 0.202.0.
+## [0.201.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold static `Number.isInteger/isFinite/isNaN(…)`
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses the ES2015 static numeric
+predicates `Number.isInteger(x)` / `Number.isFinite(x)` / `Number.isNaN(x)`
+(ECMAScript §21.1.2.2/.3/.4) to a boolean literal — via the new
+`MemberExpression`-arm dispatch in `closure-pass-constant-fold` 0.52.0.
+
+Unlike the *global* `isNaN`/`isFinite`, these do **no** coercion: a NUMBER
+literal classifies its value directly (`Number.isInteger(42)` → `true`,
+`Number.isInteger(3.5)` → `false`, `Number.isInteger(1e21)` → `true`,
+`Number.isFinite(42)` → `true`, `Number.isNaN(42)` → `false`), while a STRING /
+BOOLEAN / NULL literal is provably not a Number and folds to `false`
+(`Number.isInteger("42")` → `false`, `Number.isFinite(null)` → `false`). Only
+the bare global `Number.isX(...)` folds — never a shadowed receiver.
+
+New end-to-end fixture `tests/diff/simple-fold-number-static/` and integration
+test `tests/diff_simple_fold_number_static.rs` assert byte-exact SIMPLE output,
+the per-binding boolean folds (incl. the no-coercion `isInteger("42")` and
+large-integer `isInteger(1e21)` cases), and a WHITESPACE_ONLY-fallback
+regression guard (zero `Number.is…(` calls remain). Help-markdown regenerated to
+Version 0.201.0.
 
 ## [0.198.0] - 2026-06-26
 

@@ -1251,6 +1251,64 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         }
                     }
                 }
+
+                // ---- Number.isInteger / isFinite / isNaN (x) → boolean ----
+                //
+                // The ES2015 static predicates (ECMAScript §21.1.2.2/.3/.4). UNLIKE
+                // the *global* `isNaN`/`isFinite`, these do **no** coercion: their
+                // argument must already BE a Number, otherwise the answer is
+                // `false` with no `ToNumber` step (`Number.isNaN("NaN")` → `false`,
+                // `Number.isInteger("5")` → `false`). So:
+                //
+                //   * a NUMBER literal → classify its value directly —
+                //     `Number.isNaN(v)` = `v` is `NaN` (never, for a literal),
+                //     `Number.isFinite(v)` = `v` is finite,
+                //     `Number.isInteger(v)` = `v` is finite AND has no fraction
+                //     (so `Number.isInteger(1e21)` → `true`, `…(3.5)` → `false`,
+                //     `…(Infinity)` → `false`);
+                //   * a STRING / BOOLEAN / NULL literal → `false` for all three
+                //     (it is provably not a Number, and there is no coercion).
+                //
+                // Any other argument (an identifier, an array/object, a missing or
+                // extra argument) is left for the runtime — we can't prove its type
+                // at compile time. Same bare-global-`Number` soundness premise as
+                // the `String.from*` statics (a member access, not a free
+                // identifier, so only the literal `Number.isX(...)` callee folds).
+                if obj.name == "Number"
+                    && matches!(prop.name.as_str(), "isInteger" | "isFinite" | "isNaN")
+                    && arguments.len() == 1
+                {
+                    let folded: Option<bool> = match arguments.first() {
+                        Some(Expression::NumericLiteral(n)) => Some(match prop.name.as_str() {
+                            "isNaN" => n.value.is_nan(),
+                            "isFinite" => n.value.is_finite(),
+                            // Integer ⟺ finite with a zero fractional part. Every
+                            // f64 magnitude ≥ 2^52 is integer-valued (`fract()==0`),
+                            // matching V8 for large literals like `1e21`.
+                            _ => n.value.is_finite() && n.value.fract() == 0.0,
+                        }),
+                        // A non-number literal is provably not a Number — all three
+                        // predicates are `false`, with no coercion.
+                        Some(Expression::StringLiteral(_))
+                        | Some(Expression::BooleanLiteral(_))
+                        | Some(Expression::NullLiteral(_)) => Some(false),
+                        _ => None,
+                    };
+                    if let Some(value) = folded {
+                        let parent = c.cv.clone();
+                        let arg_src = match arguments.first() {
+                            Some(Expression::NumericLiteral(n)) => format_js_number(n.value),
+                            Some(Expression::StringLiteral(s)) => format!("\"{}\"", s.value),
+                            Some(Expression::BooleanLiteral(b)) => b.value.to_string(),
+                            Some(Expression::NullLiteral(_)) => "null".to_string(),
+                            _ => "?".to_string(),
+                        };
+                        let before = format!("Number.{}({})", prop.name, arg_src);
+                        let after = if value { "!0" } else { "!1" };
+                        let new_cv = st.fork_cv(&parent, &before, after);
+                        return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
+                    }
+                }
             }
         }
     }
@@ -6398,6 +6456,17 @@ mod tests {
         })
     }
 
+    // ------------------- Number.isInteger/isFinite/isNaN (static) ----
+
+    /// Build `Number.<method>(<arg>)`.
+    fn number_static_call(method: &str, arg: Expression) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Number"), method)),
+            arguments: vec![arg],
+        })
+    }
+
     #[test]
     fn fold_number_parse_int_through_pass() {
         // `Number.parseInt` is the same function as the global `parseInt`.
@@ -6419,6 +6488,36 @@ mod tests {
     }
 
     #[test]
+    fn fold_number_static_on_number_literals() {
+        // (method, value, expected) — every classification confirmed against V8's
+        // `Number.isInteger` / `Number.isFinite` / `Number.isNaN` (NO coercion).
+        for (method, v, expect) in [
+            ("isInteger", 42.0, true),
+            ("isInteger", -7.0, true),
+            ("isInteger", 0.0, true),
+            ("isInteger", 3.5, false),
+            ("isInteger", 1e21, true), // huge but integer-valued f64 (≥ 2^52)
+            ("isInteger", f64::INFINITY, false),
+            ("isInteger", f64::NAN, false),
+            ("isFinite", 42.0, true),
+            ("isFinite", 3.5, true),
+            ("isFinite", f64::INFINITY, false),
+            ("isFinite", f64::NAN, false),
+            ("isNaN", f64::NAN, true),
+            ("isNaN", 42.0, false),
+            ("isNaN", f64::INFINITY, false), // Infinity is a number, not NaN
+        ] {
+            let c = number_static_call(method, num(v, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "Number.{method}({v}) should fold");
+            match extract_expr(&out) {
+                Expression::BooleanLiteral(b) => assert_eq!(b.value, expect, "Number.{method}({v})"),
+                other => panic!("expected bool; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
     fn fold_number_parse_float_through_pass() {
         // `Number.parseFloat` is the same function as the global `parseFloat`.
         for (recv, expect) in [("3.14abc", 3.14), ("1e3", 1000.0), ("-2.5", -2.5)] {
@@ -6428,6 +6527,33 @@ mod tests {
             match extract_expr(&out) {
                 Expression::NumericLiteral(n) => assert_eq!(n.value, expect),
                 other => panic!("expected {expect}; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_number_static_on_non_number_literals_is_false() {
+        // A non-number literal is provably NOT a Number — all three predicates
+        // are `false`, with no `ToNumber` coercion (Number.isNaN("NaN") === false).
+        for method in ["isInteger", "isFinite", "isNaN"] {
+            let args = [
+                string("42", None),
+                Expression::BooleanLiteral(BooleanLiteral {
+                    cv: None,
+                    value: true,
+                }),
+                Expression::NullLiteral(NullLiteral { cv: None }),
+            ];
+            for arg in args {
+                let c = number_static_call(method, arg);
+                let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+                assert!(changed, "Number.{method}(non-number-literal) should fold to false");
+                match extract_expr(&out) {
+                    Expression::BooleanLiteral(b) => {
+                        assert!(!b.value, "Number.{method}(non-number) → false")
+                    }
+                    other => panic!("expected false; got {:?}", other),
+                }
             }
         }
     }
@@ -6472,6 +6598,41 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "n.parseInt(\"5\") must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn number_static_non_literal_argument_does_not_fold() {
+        // An identifier arg has unknown runtime type — we cannot prove the class.
+        let c = number_static_call("isInteger", ident("x"));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Number.isInteger(x) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn number_static_second_argument_does_not_fold() {
+        // We model only the single-argument form; `Number.isInteger(5, y)` is left.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Number"), "isInteger")),
+            arguments: vec![num(5.0, None), ident("y")],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Number.isInteger(5, y) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn number_static_on_non_number_receiver_does_not_fold() {
+        // Only the bare global `Number` folds; `n.isInteger(5)` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("n"), "isInteger")),
+            arguments: vec![num(5.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "n.isInteger(5) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
