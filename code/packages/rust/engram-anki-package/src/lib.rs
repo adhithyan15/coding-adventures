@@ -480,7 +480,13 @@ pub fn v11_collection_to_engram_state(
     let card_progress = collection
         .cards
         .iter()
-        .filter_map(|card| map_v11_card_progress(card, &last_reviewed_at_by_card))
+        .filter_map(|card| {
+            map_v11_card_progress(
+                card,
+                collection.metadata.created_at_days,
+                &last_reviewed_at_by_card,
+            )
+        })
         .collect::<Vec<_>>();
 
     let deck_by_card_id: HashMap<i64, String> = collection
@@ -686,6 +692,7 @@ fn card_note_type_id(note: &Note) -> i64 {
 
 fn map_v11_card_progress(
     card: &AnkiV11Card,
+    collection_created_at_days: i64,
     last_reviewed_at_by_card: &BTreeMap<i64, u64>,
 ) -> Option<CardProgress> {
     if card.queue == 0 {
@@ -701,10 +708,10 @@ fn map_v11_card_progress(
             _ => CardState::Review,
         },
     };
-    let next_due_at = if matches!(card.queue, 1 | 3) {
+    let next_due_at = if card.queue == 1 {
         anki_seconds_to_millis(card.due)
     } else {
-        anki_days_to_millis(card.due)
+        anki_due_day_to_millis(collection_created_at_days, card.due)
     };
     let last_seen_at = last_reviewed_at_by_card
         .get(&card.id)
@@ -858,6 +865,10 @@ fn anki_seconds_to_millis(seconds: i64) -> u64 {
 
 fn anki_days_to_millis(days: i64) -> u64 {
     i64_to_u64(days).saturating_mul(ONE_DAY_MS)
+}
+
+fn anki_due_day_to_millis(collection_created_at_days: i64, due_day: i64) -> u64 {
+    i64_to_u64(collection_created_at_days.saturating_add(due_day)).saturating_mul(ONE_DAY_MS)
 }
 
 fn i64_to_u32(value: i64) -> u32 {
@@ -1697,6 +1708,7 @@ CREATE TABLE graves (
         assert_eq!(progress.state, CardState::Review);
         assert_eq!(progress.interval, 7);
         assert_eq!(progress.ease_factor, 2.5);
+        assert_eq!(progress.next_due_at, (19_000 + 42) * ONE_DAY_MS);
         assert_eq!(progress.times_seen, 3);
         assert_eq!(progress.times_correct, 2);
         assert_eq!(progress.times_incorrect, 1);
@@ -1715,6 +1727,42 @@ CREATE TABLE graves (
         assert_eq!(state.sessions[0].status, SessionStatus::Completed);
         assert_eq!(state.sessions[0].cards_reviewed, 1);
         assert_eq!(state.sessions[0].cards_correct, 1);
+    }
+
+    #[test]
+    fn maps_v11_due_values_with_collection_day_offset() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+
+        let review_state = v11_collection_to_engram_state(&collection).unwrap();
+        assert_eq!(
+            review_state.card_progress[0].next_due_at,
+            (19_000 + 42) * ONE_DAY_MS
+        );
+
+        let mut intraday_learning = collection.clone();
+        intraday_learning.cards[0].kind = 1;
+        intraday_learning.cards[0].queue = 1;
+        intraday_learning.cards[0].due = 1_700_000_300;
+        let intraday_state = v11_collection_to_engram_state(&intraday_learning).unwrap();
+        assert_eq!(intraday_state.card_progress[0].state, CardState::Learning);
+        assert_eq!(
+            intraday_state.card_progress[0].next_due_at,
+            1_700_000_300_000
+        );
+
+        let mut day_learning = collection.clone();
+        day_learning.cards[0].kind = 1;
+        day_learning.cards[0].queue = 3;
+        day_learning.cards[0].due = 43;
+        let day_learning_state = v11_collection_to_engram_state(&day_learning).unwrap();
+        assert_eq!(
+            day_learning_state.card_progress[0].state,
+            CardState::Learning
+        );
+        assert_eq!(
+            day_learning_state.card_progress[0].next_due_at,
+            (19_000 + 43) * ONE_DAY_MS
+        );
     }
 
     #[test]

@@ -270,6 +270,8 @@ Next APKG SQLite milestone:
   `notes.flds`/`notes.tags`, card lineage from `cards.nid`/`cards.ord`, card
   progress from `cards`, and review history from `revlog.ease`/`revlog.id` now
   map into `engram-core::AppState`.
+- V11 due values now preserve Anki's distinction between intraday learning
+  timestamps and collection-day-based review/day-learning due dates.
 - `engram-capi` now exposes `eg_parse_anki_apkg` for native import previews and
   `eg_import_anki_apkg` for applying supported APKG bytes into the shared
   session state. Both functions use the same JSON `{ ok, state/error }`
