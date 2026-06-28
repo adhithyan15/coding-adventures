@@ -37,6 +37,7 @@ This crate owns:
 - card browser search/filter evaluation
 - versioned Engram JSON backup snapshots
 - round-trippable card CSV import/export helpers
+- Anki-compatible Basic TSV card export
 - active review-session progress counts
 - deck-scoped review-history summaries
 - pure state transitions
@@ -78,6 +79,9 @@ backup shape. Backups include durable collection data and clear any live
 format with the header `id,deckId,front,back,createdAt`. `import_basic_cards_csv`
 accepts simpler `front,back` rows and uses host-supplied deck/timestamp/ID
 prefix options to create deterministic cards.
+`export_cards_anki_basic_tsv` emits Anki text-import headers for Basic
+front/back cards (`#separator:tab`, `#html`, `#notetype`, `#deck`, and
+`#columns`) and quotes fields containing tabs, newlines, or quotes.
 
 `get_active_session_progress` derives the shared review UI counters from
 `AppState`: total cards, one-based current position, remaining cards, reviewed

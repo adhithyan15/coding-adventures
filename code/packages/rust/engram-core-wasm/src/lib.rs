@@ -10,10 +10,12 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
     build_session_queue, build_session_queue_with_daily_limits, create_engram_snapshot,
-    export_cards_csv, generate_cards_for_note, get_active_session_progress,
-    get_daily_study_limit_usage, get_deck_stats, import_basic_cards_csv, import_cards_csv, reduce,
-    restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history, AppState,
-    BasicCardCsvImportOptions, Card, CardFlag, CardLineage, DeckOptions, EngramSnapshot, Rating,
+    export_cards_anki_basic_tsv, export_cards_csv, generate_cards_for_note,
+    get_active_session_progress, get_daily_study_limit_usage, get_deck_stats,
+    import_basic_cards_csv, import_cards_csv, reduce, restore_engram_snapshot,
+    search_cards as search_core_cards, summarize_review_history, AnkiBasicTsvExportOptions,
+    AppState, BasicCardCsvImportOptions, Card, CardFlag, CardLineage, DeckOptions, EngramSnapshot,
+    Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -186,6 +188,34 @@ impl EngramSession {
                 .cloned()
                 .collect();
             Ok(ok_with("csv", &export_cards_csv(&cards)))
+        })
+    }
+
+    pub fn export_anki_basic_tsv(
+        &self,
+        deck_id: &str,
+        deck_name: &str,
+        note_type_name: &str,
+        html: bool,
+    ) -> String {
+        catch_json(|| {
+            let cards: Vec<Card> = self
+                .state
+                .cards
+                .iter()
+                .filter(|card| card.deck_id == deck_id)
+                .cloned()
+                .collect();
+            let options = AnkiBasicTsvExportOptions {
+                deck_name: deck_name.to_string(),
+                note_type_name: note_type_name.to_string(),
+                html,
+                include_headers: true,
+            };
+            Ok(ok_with(
+                "tsv",
+                &export_cards_anki_basic_tsv(&cards, &options),
+            ))
         })
     }
 
@@ -1038,6 +1068,39 @@ mod tests {
             serde_json::from_str(&session.parse_cards_csv("front,back\nx,y\n")).unwrap();
         assert_eq!(error["ok"], false);
         assert_eq!(error["row"], 1);
+    }
+
+    #[test]
+    fn export_anki_basic_tsv_uses_anki_text_headers() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"card","deckId":"deck","front":"letter\t\"a\"","back":"line one\nline two","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let exported: Value = serde_json::from_str(&session.export_anki_basic_tsv(
+            "deck",
+            "Tamil::Script",
+            "Basic",
+            false,
+        ))
+        .unwrap();
+
+        assert_eq!(exported["ok"], true);
+        let tsv = exported["tsv"].as_str().unwrap();
+        assert!(tsv.starts_with(
+            "#separator:tab\n#html:false\n#notetype:Basic\n#deck:Tamil::Script\n#columns:Front\tBack\n"
+        ));
+        assert!(tsv.contains("\"letter\t\"\"a\"\"\"\t\"line one\nline two\"\n"));
     }
 
     #[test]

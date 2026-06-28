@@ -19,7 +19,8 @@ mod snapshot;
 mod template;
 
 pub use csv::{
-    export_cards_csv, import_basic_cards_csv, import_cards_csv, BasicCardCsvImportOptions, CsvError,
+    export_cards_anki_basic_tsv, export_cards_csv, import_basic_cards_csv, import_cards_csv,
+    AnkiBasicTsvExportOptions, BasicCardCsvImportOptions, CsvError,
 };
 pub use history::summarize_review_history;
 pub use model::{

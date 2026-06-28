@@ -103,6 +103,9 @@ Current reducer integration:
 - `import_basic_cards_csv` accepts simpler `front,back` CSV and uses
   host-supplied deck/timestamp/ID prefix options for deterministic generated
   cards.
+- `export_cards_anki_basic_tsv` emits Anki-compatible Basic text-import files
+  with tab separator headers and quoted fields, and is exposed through the JSON
+  facade and C ABI.
 - `summarize_review_history` derives deck-scoped review-log summaries for a
   timestamp range and is exposed through the JSON facade and C ABI.
 - `get_daily_study_limit_usage` and
@@ -204,7 +207,8 @@ Formats:
   exists and accepts the current web backup shape.
 - CSV deck import/export. Initial Rust support exists for full card CSV
   round-trips and simpler generated-ID `front,back` imports.
-- Anki TSV text export compatibility
+- Anki TSV text export compatibility. Basic front/back export exists in core,
+  JSON facade, and C ABI; richer note-type/media export remains.
 - APKG import/export eventually, via a dedicated facade or package crate
 
 Tests:

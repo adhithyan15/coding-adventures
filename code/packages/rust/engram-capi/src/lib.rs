@@ -209,6 +209,24 @@ pub unsafe extern "C" fn eg_export_cards_csv(
 }
 
 /// # Safety
+/// `session` must be valid; strings must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_export_anki_basic_tsv(
+    session: *mut EgSession,
+    deck_id: *const c_char,
+    deck_name: *const c_char,
+    note_type_name: *const c_char,
+    html: u8,
+) -> *mut c_char {
+    let deck_id = read_cstr(deck_id);
+    let deck_name = read_cstr(deck_name);
+    let note_type_name = read_cstr(note_type_name);
+    with_session(session, |session| {
+        session.export_anki_basic_tsv(&deck_id, &deck_name, &note_type_name, html != 0)
+    })
+}
+
+/// # Safety
 /// `session` must be valid; `csv` must be null or a valid C string.
 #[no_mangle]
 pub unsafe extern "C" fn eg_parse_cards_csv(
@@ -326,6 +344,19 @@ mod tests {
             let deck_id = cstr("deck");
             let csv = take(eg_export_cards_csv(session, deck_id.as_ptr()));
             assert!(csv.contains("id,deckId,front,back,createdAt"));
+
+            let deck_name = cstr("Tamil::Script");
+            let note_type = cstr("Basic");
+            let tsv = take(eg_export_anki_basic_tsv(
+                session,
+                deck_id.as_ptr(),
+                deck_name.as_ptr(),
+                note_type.as_ptr(),
+                0,
+            ));
+            assert!(tsv.contains("#separator:tab"));
+            assert!(tsv.contains("#deck:Tamil::Script"));
+            assert!(tsv.contains(r#"letter-a\ta"#));
 
             let basic = cstr("front,back\nletter-aa,aa\n");
             let imported = take(eg_parse_basic_cards_csv(

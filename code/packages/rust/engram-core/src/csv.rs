@@ -22,6 +22,25 @@ pub struct BasicCardCsvImportOptions {
     pub created_at: u64,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AnkiBasicTsvExportOptions {
+    pub deck_name: String,
+    pub note_type_name: String,
+    pub html: bool,
+    pub include_headers: bool,
+}
+
+impl Default for AnkiBasicTsvExportOptions {
+    fn default() -> Self {
+        Self {
+            deck_name: "Engram".to_string(),
+            note_type_name: "Basic".to_string(),
+            html: false,
+            include_headers: true,
+        }
+    }
+}
+
 pub fn export_cards_csv(cards: &[Card]) -> String {
     let mut output = String::new();
     output.push_str(&CARD_CSV_HEADER.join(","));
@@ -40,6 +59,31 @@ pub fn export_cards_csv(cards: &[Card]) -> String {
             ],
         );
         output.push('\n');
+    }
+
+    output
+}
+
+pub fn export_cards_anki_basic_tsv(cards: &[Card], options: &AnkiBasicTsvExportOptions) -> String {
+    let mut output = String::new();
+    if options.include_headers {
+        output.push_str("#separator:tab\n");
+        output.push_str(if options.html {
+            "#html:true\n"
+        } else {
+            "#html:false\n"
+        });
+        output.push_str("#notetype:");
+        output.push_str(&header_value(&options.note_type_name));
+        output.push('\n');
+        output.push_str("#deck:");
+        output.push_str(&header_value(&options.deck_name));
+        output.push('\n');
+        output.push_str("#columns:Front\tBack\n");
+    }
+
+    for card in cards {
+        write_tsv_row(&mut output, &[card.front.as_str(), card.back.as_str()]);
     }
 
     output
@@ -128,6 +172,35 @@ fn write_csv_field(output: &mut String, field: &str) {
     } else {
         output.push_str(field);
     }
+}
+
+fn write_tsv_row(output: &mut String, fields: &[&str]) {
+    for (index, field) in fields.iter().enumerate() {
+        if index > 0 {
+            output.push('\t');
+        }
+        write_tsv_field(output, field);
+    }
+    output.push('\n');
+}
+
+fn write_tsv_field(output: &mut String, field: &str) {
+    if field.contains(['\t', '"', '\r', '\n']) {
+        output.push('"');
+        for ch in field.chars() {
+            if ch == '"' {
+                output.push('"');
+            }
+            output.push(ch);
+        }
+        output.push('"');
+    } else {
+        output.push_str(field);
+    }
+}
+
+fn header_value(value: &str) -> String {
+    value.replace(['\r', '\n'], " ")
 }
 
 fn parse_csv_records(input: &str) -> Result<Vec<Vec<String>>, CsvError> {
@@ -316,6 +389,39 @@ mod tests {
         assert_eq!(restored, cards);
         assert!(csv.contains("\"hello, \"\"friend\"\"\""));
         assert!(csv.contains("\"line one\nline two\""));
+    }
+
+    #[test]
+    fn anki_basic_tsv_export_uses_headers_and_quoted_fields() {
+        let cards = vec![
+            card("card-1", "letter-a", "a"),
+            card("card-2", "hello\t\"friend\"", "line one\nline two"),
+        ];
+        let options = AnkiBasicTsvExportOptions {
+            deck_name: "Tamil::Script".to_string(),
+            ..AnkiBasicTsvExportOptions::default()
+        };
+
+        let tsv = export_cards_anki_basic_tsv(&cards, &options);
+
+        assert!(tsv.starts_with(
+            "#separator:tab\n#html:false\n#notetype:Basic\n#deck:Tamil::Script\n#columns:Front\tBack\n"
+        ));
+        assert!(tsv.contains("letter-a\ta\n"));
+        assert!(tsv.contains("\"hello\t\"\"friend\"\"\"\t\"line one\nline two\"\n"));
+    }
+
+    #[test]
+    fn anki_basic_tsv_export_can_omit_headers() {
+        let cards = vec![card("card-1", "front", "back")];
+        let options = AnkiBasicTsvExportOptions {
+            include_headers: false,
+            ..AnkiBasicTsvExportOptions::default()
+        };
+
+        let tsv = export_cards_anki_basic_tsv(&cards, &options);
+
+        assert_eq!(tsv, "front\tback\n");
     }
 
     #[test]

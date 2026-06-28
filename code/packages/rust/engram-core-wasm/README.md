@@ -40,6 +40,7 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `generated_cards(note_type_id, note_id)`
 - `search_cards(query, now)`
 - `export_cards_csv(deck_id)`
+- `export_anki_basic_tsv(deck_id, deck_name, note_type_name, html)`
 - `parse_cards_csv(csv)`
 - `parse_basic_cards_csv(csv, deck_id, id_prefix, created_at)`
 
@@ -95,5 +96,7 @@ collection data, clearing any live active session.
 `export_cards_csv` and `parse_cards_csv` expose the shared card CSV helpers.
 Hosts still own file picking, conflict handling, and whether parsed cards are
 inserted, merged, or previewed.
+`export_anki_basic_tsv` exposes Anki-compatible Basic front/back text export
+with Anki import headers and quoted tab/newline fields.
 `parse_basic_cards_csv` supports simpler `front,back` files and deterministic
 ID generation from host-supplied import options.

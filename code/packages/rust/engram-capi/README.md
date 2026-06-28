@@ -32,6 +32,8 @@ review screens that need total/current/remaining/correct counters.
 views that need deck-scoped review-log summaries over a timestamp range.
 `eg_daily_limit_usage` and `eg_build_queue_with_daily_limits` expose the shared
 daily limit accounting and queue builder for native review screens.
+`eg_export_anki_basic_tsv` exposes the shared Anki-compatible Basic front/back
+text export for native file-save flows.
 Native shells can send review-control commands such as `buryCardSiblings`
 through `eg_dispatch`, using the same JSON contract as web and Mosaic hosts.
 
