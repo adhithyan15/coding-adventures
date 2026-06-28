@@ -15,19 +15,21 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Diode model-card transient charge stamping.
+1. BJT model-card transient charge stamping.
    - Status: current PR completion candidate.
-   - Python, Rust, and TypeScript transient solvers now stamp diode
-     model-card `CJO` / `junction_capacitance` / `junctionCapacitance` and
-     `TT` / `transit_time` / `transitTime` as an anode-cathode storage
-     companion.
-   - The transient companion uses the previous diode bias to derive
-     `C = Cjo + Tt * gd`, reuses the existing Euler/trapezoidal/Gear-2
-     capacitor history policy, and seeds the synthetic diode charge state from
-     the initial operating point.
-   - Cross-language tests cover both junction-capacitance current-step delay
-     and transit-time forward-charge retention after turnoff.
-   - BJT, JFET, and Level-1 MOS charge storage remain audited through explicit
+   - Python, Rust, and TypeScript transient solvers now stamp BJT model-card
+     `CJE` / `base_emitter_capacitance` / `baseEmitterCapacitance`,
+     `CJC` / `base_collector_capacitance` / `baseCollectorCapacitance`,
+     `TF` / `forward_transit_time` / `forwardTransitTime`, and
+     `TR` / `reverse_transit_time` / `reverseTransitTime` as base-emitter and
+     base-collector storage companions.
+   - The companions use the previous junction bias to derive
+     `Cbe = Cje + Tf * gm_forward` and `Cbc = Cjc + Tr * gm_reverse`, reuse the
+     existing Euler/trapezoidal/Gear-2 capacitor history policy, and seed the
+     synthetic BJT charge states from the initial operating point.
+   - Cross-language tests cover base-emitter capacitance current-step delay and
+     forward transit-time charge retention after turnoff.
+   - JFET and Level-1 MOS charge storage remain audited through explicit
      terminal storage capacitors until their nonlinear charge policies land.
 
 ## Completed Slices
@@ -1221,11 +1223,25 @@ downstream tools to compare.
      `.tran` reference deck lines, selected probe node, timestep, stoptime,
      explicit terminal storage capacitance, stable first/final probe-voltage
      windows, and a short charge-behavior note.
-   - The fixtures deliberately audit charge storage through explicit terminal
-     capacitors, recording that BJT, JFET, and MOS model-card charge remains
-     explicit-storage-only until nonlinear transient charge policies land.
+   - The fixtures deliberately keep explicit terminal capacitors for comparable
+     probe windows while recording which model-card charge terms are
+     transient-stamped and which JFET/MOS charge policies remain
+     explicit-storage-only.
    - Cross-language tests execute every fixture through transient solving and
      verify the probe windows plus reference-deck metadata.
+
+121. Diode model-card transient charge stamping.
+   - Status: completed in PR 6798.
+   - Python, Rust, and TypeScript transient solvers now stamp diode
+     model-card `CJO` / `junction_capacitance` / `junctionCapacitance` and
+     `TT` / `transit_time` / `transitTime` as an anode-cathode storage
+     companion.
+   - The transient companion uses the previous diode bias to derive
+     `C = Cjo + Tt * gd`, reuses the existing Euler/trapezoidal/Gear-2
+     capacitor history policy, and seeds the synthetic diode charge state from
+     the initial operating point.
+   - Cross-language tests cover both junction-capacitance current-step delay
+     and transit-time forward-charge retention after turnoff.
 
 ## Backlog
 

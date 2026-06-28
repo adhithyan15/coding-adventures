@@ -4,6 +4,12 @@
 
 ### Added
 
+- **BJT transient charge stamping** —
+  BJT `Cje`/`Cjc`/`Tf`/`Tr` model-card storage now stamps transient
+  base-emitter and base-collector companions, matching Rust and TypeScript,
+  with regression coverage for base current-step delay and forward transit-time
+  turnoff charge.
+
 - **Diode transient charge stamping** —
   Diode `Cjo`/`Tt` model-card storage now stamps transient anode-cathode
   companions, matching Rust and TypeScript, with regression coverage for

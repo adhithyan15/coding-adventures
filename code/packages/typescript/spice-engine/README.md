@@ -202,9 +202,10 @@ and Level-1 MOS channel thermal noise audits.
 `deviceModelChargeAuditFixtures` adds matching `.tran` reference-deck metadata,
 explicit terminal storage capacitance metadata, stable first/final
 probe-voltage windows, and charge-behavior notes for diode, BJT, JFET, and
-Level-1 MOS charge audits. Diode `junctionCapacitance` and `transitTime`
-model-card parameters also stamp transient anode-cathode storage, matching
-their small-signal AC capacitance semantics.
+Level-1 MOS charge audits. Diode `junctionCapacitance` / `transitTime` and BJT
+`baseEmitterCapacitance` / `baseCollectorCapacitance` / `forwardTransitTime` /
+`reverseTransitTime` model-card parameters also stamp transient storage,
+matching their small-signal AC capacitance semantics.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.

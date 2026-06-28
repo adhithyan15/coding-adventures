@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Stamp BJT `baseEmitterCapacitance`, `baseCollectorCapacitance`,
+  `forwardTransitTime`, and `reverseTransitTime` model-card storage as
+  transient base-emitter and base-collector companions, matching Python and
+  Rust, with regression coverage for base current-step delay and forward
+  transit-time turnoff charge.
 - Stamp diode `junctionCapacitance` and `transitTime` model-card storage as
   transient anode-cathode companions, matching Python and Rust, with regression
   coverage for current-step delay and turnoff charge retention.

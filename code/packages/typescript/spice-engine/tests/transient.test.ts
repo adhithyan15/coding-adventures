@@ -16,6 +16,7 @@ import {
   SpiceError,
   capacitor,
   capacitorWithInitialVoltage,
+  bjt,
   cccs,
   ccvs,
   currentSource,
@@ -265,6 +266,84 @@ describe("transient", () => {
     expectClose(noStorage[0].voltage("out"), 0.0);
     expect(stored[0].voltage("out")!).toBeGreaterThan(0.6);
     expect(stored[stored.length - 1].voltage("out")!).toBeLessThan(stored[0].voltage("out")!);
+  });
+
+  it("uses BJT base-emitter capacitance during transient base current steps", () => {
+    function run(baseEmitterCapacitance: number): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcc", "collector", "0", 5.0));
+      circuit.add(currentSourceWithWaveform(
+        "Istep",
+        "0",
+        "base",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [1.0e-9, 1.0e-6],
+          [5.0e-9, 1.0e-6],
+        ]),
+      ));
+      circuit.add(resistor("Rshunt", "base", "0", 1.0e12));
+      circuit.add(bjt(
+        "Q1",
+        "collector",
+        "base",
+        "0",
+        "NPN",
+        1.0e-15,
+        100.0,
+        0.02585,
+        baseEmitterCapacitance,
+      ));
+      return transient(circuit, 1.0e-9, 5.0e-9);
+    }
+
+    const unchargedFirst = run(0.0)[0].voltage("base");
+    const chargedFirst = run(1.0e-12)[0].voltage("base");
+    expect(unchargedFirst).not.toBeUndefined();
+    expect(chargedFirst).not.toBeUndefined();
+    expect(unchargedFirst!).toBeGreaterThan(0.5);
+    expect(chargedFirst!).toBeLessThan(0.01);
+    expect(chargedFirst!).toBeLessThan(unchargedFirst!);
+  });
+
+  it("uses BJT forward transit time to hold base charge on turnoff", () => {
+    function run(forwardTransitTime: number): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcc", "collector", "0", 5.0));
+      circuit.add(currentSourceWithWaveform(
+        "Istep",
+        "0",
+        "base",
+        0.0,
+        new PwlWaveform([
+          [0.0, 1.0e-3],
+          [1.0e-9, 0.0],
+          [5.0e-9, 0.0],
+        ]),
+      ));
+      circuit.add(resistor("Rshunt", "base", "0", 1.0e12));
+      circuit.add(bjt(
+        "Q1",
+        "collector",
+        "base",
+        "0",
+        "NPN",
+        1.0e-15,
+        100.0,
+        0.02585,
+        0.0,
+        0.0,
+        forwardTransitTime,
+      ));
+      return transient(circuit, 1.0e-9, 5.0e-9);
+    }
+
+    const noStorage = run(0.0);
+    const stored = run(1.0e-9);
+    expectClose(noStorage[0].voltage("base"), 0.0);
+    expect(stored[0].voltage("base")!).toBeGreaterThan(0.6);
+    expect(stored[stored.length - 1].voltage("base")!).toBeLessThan(stored[0].voltage("base")!);
   });
 
   it("reports periods for periodic source waveforms", () => {

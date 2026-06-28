@@ -36,17 +36,17 @@ use spice_engine::{
     transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
     transient_with_digital_event_streams, transient_with_digital_event_streams_corners,
-    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
-    Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec,
-    CurrentSource, DeckAnalysisExecution, DeckAnalysisExecutionResult, DigitalBridgeSchedule,
-    DigitalEvent, DigitalEventStream, DigitalLogicLevels, DigitalState, DigitalThresholds, Diode,
-    DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic,
-    FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry,
-    PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult,
-    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
-    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, SpiceError, TransientMethod, TransientPoint, TransmissionLine, VoltageSource,
-    Waveform,
+    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Bjt, BjtPolarity,
+    Capacitor, Cccs, Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride,
+    CornerSpec, CurrentSource, DeckAnalysisExecution, DeckAnalysisExecutionResult,
+    DigitalBridgeSchedule, DigitalEvent, DigitalEventStream, DigitalLogicLevels, DigitalState,
+    DigitalThresholds, Diode, DistortionHarmonic, DistortionPoint, DistortionResult, Element,
+    ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity,
+    MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology,
+    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
+    TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -268,6 +268,114 @@ fn transient_diode_transit_time_holds_forward_charge_on_turnoff() {
     assert_close(no_storage_first, 0.0);
     assert!(stored_first > 0.6);
     assert!(stored_last < stored_first);
+}
+
+#[test]
+fn transient_bjt_base_emitter_capacitance_slows_base_current_step() {
+    fn run(base_emitter_capacitance: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcc",
+            "collector",
+            "0",
+            5.0,
+        )));
+        circuit.add(Element::CurrentSource(CurrentSource::with_waveform(
+            "Istep",
+            "0",
+            "base",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (1.0e-9, 1.0e-6),
+                (5.0e-9, 1.0e-6),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rshunt", "base", "0", 1.0e12,
+        )));
+        circuit.add(Element::Bjt(Bjt::with_model(
+            "Q1",
+            "collector",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            1.0e-15,
+            100.0,
+            0.02585,
+            base_emitter_capacitance,
+            0.0,
+            0.0,
+            0.0,
+        )));
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()
+    }
+
+    let uncharged = run(0.0);
+    let charged = run(1.0e-12);
+    let uncharged_first = uncharged[0].voltage("base").unwrap();
+    let charged_first = charged[0].voltage("base").unwrap();
+
+    assert!(uncharged_first > 0.5);
+    assert!(charged_first < 0.01);
+    assert!(charged_first < uncharged_first);
+}
+
+#[test]
+fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
+    fn run(forward_transit_time: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcc",
+            "collector",
+            "0",
+            5.0,
+        )));
+        circuit.add(Element::CurrentSource(CurrentSource::with_waveform(
+            "Istep",
+            "0",
+            "base",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 1.0e-3),
+                (1.0e-9, 0.0),
+                (5.0e-9, 0.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rshunt", "base", "0", 1.0e12,
+        )));
+        circuit.add(Element::Bjt(Bjt::with_model(
+            "Q1",
+            "collector",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            1.0e-15,
+            100.0,
+            0.02585,
+            0.0,
+            0.0,
+            forward_transit_time,
+            0.0,
+        )));
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()
+    }
+
+    let no_storage = run(0.0);
+    let stored = run(1.0e-9);
+    let no_storage_first = no_storage[0].voltage("base").unwrap();
+    let stored_first = stored[0].voltage("base").unwrap();
+
+    assert_close(no_storage_first, 0.0);
+    assert!(stored_first > 0.6);
+    assert!(
+        stored
+            .last()
+            .and_then(|point| point.voltage("base"))
+            .unwrap()
+            < stored_first
+    );
 }
 
 #[test]

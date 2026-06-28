@@ -4028,7 +4028,7 @@ pub fn device_model_charge_audit_fixtures(
             expected_initial_max: 1.0,
             expected_final_min: 0.10,
             expected_final_max: 0.14,
-            charge_behavior: "BJT terminal charge is conserved through explicit Cstore; CJE/CJC/TF/TR remain AC-only until nonlinear charge stamping lands".to_string(),
+            charge_behavior: "BJT CJE/CJC/TF/TR contribute transient base-emitter and base-collector storage; explicit Cstore keeps the fixture comparable with other charge audits".to_string(),
             deck_lines: vec![
                 "* device-model charge fixture: bjt-storage-charge".to_string(),
                 ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)".to_string(),
@@ -17513,7 +17513,7 @@ pub fn transient_with_method(
         &inductor_states,
         Some(0.0),
     )?;
-    seed_diode_capacitor_states(
+    seed_device_capacitor_states(
         circuit,
         &initial_solution.node_voltages,
         &mut capacitor_states,
@@ -17653,7 +17653,7 @@ pub fn transient_adaptive(
         &inductor_states,
         Some(0.0),
     )?;
-    seed_diode_capacitor_states(
+    seed_device_capacitor_states(
         circuit,
         &initial_solution.node_voltages,
         &mut capacitor_states,
@@ -19114,9 +19114,14 @@ fn solve_linear_circuit_at_operating_point(
             Element::Jfet(jfet) => {
                 stamp_jfet(jfet, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
-            Element::Bjt(bjt) => {
-                stamp_bjt(bjt, node_indices, &mut matrix, &mut rhs, operating_point)?
-            }
+            Element::Bjt(bjt) => stamp_bjt(
+                bjt,
+                capacitor_states,
+                node_indices,
+                &mut matrix,
+                &mut rhs,
+                operating_point,
+            )?,
             Element::Mosfet(mosfet) => {
                 stamp_mosfet(mosfet, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
@@ -20305,6 +20310,7 @@ fn stamp_diode_charge(
 
 fn stamp_bjt(
     bjt: &Bjt,
+    capacitor_states: &[CapacitorState],
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
@@ -20341,6 +20347,51 @@ fn stamp_bjt(
             stamp_transconductance(matrix, emitter, collector, emitter, base, gm);
             stamp_equivalent_current_source(rhs, emitter, base, equivalent_base_current);
             stamp_equivalent_current_source(rhs, emitter, collector, equivalent_collector_current);
+        }
+    }
+    stamp_bjt_charge(bjt, capacitor_states, node_indices, matrix, rhs)?;
+    Ok(())
+}
+
+fn stamp_bjt_charge(
+    bjt: &Bjt,
+    capacitor_states: &[CapacitorState],
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) -> Result<(), SpiceError> {
+    for spec in bjt_charge_state_specs(bjt) {
+        let Some(state) = capacitor_states
+            .iter()
+            .find(|state| state.name == spec.name)
+        else {
+            continue;
+        };
+        let capacitance = bjt_charge_dynamic_capacitance(bjt, spec.kind, state.previous_voltage);
+        if capacitance <= 0.0 {
+            continue;
+        }
+        let conductance = match state.method {
+            TransientMethod::Trap => 2.0 * capacitance / state.time_step,
+            TransientMethod::Gear2 => 3.0 * capacitance / (2.0 * state.time_step),
+            TransientMethod::Euler => capacitance / state.time_step,
+        };
+        let history_current = match state.method {
+            TransientMethod::Trap => conductance * state.previous_voltage + state.previous_current,
+            TransientMethod::Gear2 => {
+                capacitance * (4.0 * state.previous_voltage - state.previous_previous_voltage)
+                    / (2.0 * state.time_step)
+            }
+            TransientMethod::Euler => conductance * state.previous_voltage,
+        };
+        let positive = node_index(node_indices, spec.positive);
+        let negative = node_index(node_indices, spec.negative);
+        stamp_conductance(matrix, positive, negative, conductance);
+        if let Some(index) = positive {
+            rhs[index] += history_current;
+        }
+        if let Some(index) = negative {
+            rhs[index] -= history_current;
         }
     }
     Ok(())
@@ -20844,6 +20895,80 @@ fn diode_charge_voltage(diode: &Diode, node_voltages: &BTreeMap<String, f64>) ->
     voltage_at(node_voltages, &diode.anode) - voltage_at(node_voltages, &diode.cathode)
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+enum BjtChargeStateKind {
+    BaseEmitter,
+    BaseCollector,
+}
+
+struct BjtChargeStateSpec<'a> {
+    name: String,
+    positive: &'a str,
+    negative: &'a str,
+    kind: BjtChargeStateKind,
+}
+
+fn bjt_base_emitter_charge_state_name(bjt: &Bjt) -> String {
+    format!("_Q_{}_be_charge", bjt.name)
+}
+
+fn bjt_base_collector_charge_state_name(bjt: &Bjt) -> String {
+    format!("_Q_{}_bc_charge", bjt.name)
+}
+
+fn bjt_junction_transconductance(bjt: &Bjt, voltage: f64) -> f64 {
+    bjt.saturation_current / bjt.thermal_voltage
+        * (voltage / bjt.thermal_voltage).clamp(-40.0, 40.0).exp()
+}
+
+fn bjt_charge_dynamic_capacitance(bjt: &Bjt, kind: BjtChargeStateKind, voltage: f64) -> f64 {
+    let conductance = bjt_junction_transconductance(bjt, voltage);
+    match kind {
+        BjtChargeStateKind::BaseEmitter => {
+            bjt.base_emitter_capacitance + bjt.forward_transit_time * conductance
+        }
+        BjtChargeStateKind::BaseCollector => {
+            bjt.base_collector_capacitance + bjt.reverse_transit_time * conductance
+        }
+    }
+}
+
+fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec<'_>> {
+    let mut specs = Vec::new();
+    if bjt.base_emitter_capacitance > 0.0 || bjt.forward_transit_time > 0.0 {
+        let (positive, negative) = match bjt.polarity {
+            BjtPolarity::Npn => (bjt.base.as_str(), bjt.emitter.as_str()),
+            BjtPolarity::Pnp => (bjt.emitter.as_str(), bjt.base.as_str()),
+        };
+        specs.push(BjtChargeStateSpec {
+            name: bjt_base_emitter_charge_state_name(bjt),
+            positive,
+            negative,
+            kind: BjtChargeStateKind::BaseEmitter,
+        });
+    }
+    if bjt.base_collector_capacitance > 0.0 || bjt.reverse_transit_time > 0.0 {
+        let (positive, negative) = match bjt.polarity {
+            BjtPolarity::Npn => (bjt.base.as_str(), bjt.collector.as_str()),
+            BjtPolarity::Pnp => (bjt.collector.as_str(), bjt.base.as_str()),
+        };
+        specs.push(BjtChargeStateSpec {
+            name: bjt_base_collector_charge_state_name(bjt),
+            positive,
+            negative,
+            kind: BjtChargeStateKind::BaseCollector,
+        });
+    }
+    specs
+}
+
+fn bjt_charge_state_voltage(
+    spec: &BjtChargeStateSpec<'_>,
+    node_voltages: &BTreeMap<String, f64>,
+) -> f64 {
+    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+}
+
 fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
     if !diode.saturation_current.is_finite() || diode.saturation_current <= 0.0 {
         return Err(SpiceError::InvalidElement {
@@ -21089,11 +21214,10 @@ fn initial_capacitor_states(
     time_step: f64,
     method: TransientMethod,
 ) -> Vec<CapacitorState> {
-    circuit
-        .elements()
-        .iter()
-        .filter_map(|element| match element {
-            Element::Capacitor(capacitor) => Some(CapacitorState {
+    let mut states = Vec::new();
+    for element in circuit.elements() {
+        match element {
+            Element::Capacitor(capacitor) => states.push(CapacitorState {
                 name: capacitor.name.clone(),
                 previous_voltage: capacitor.initial_voltage,
                 previous_previous_voltage: capacitor.initial_voltage,
@@ -21101,17 +21225,32 @@ fn initial_capacitor_states(
                 time_step,
                 method,
             }),
-            Element::Diode(diode) if diode_has_charge_storage(diode) => Some(CapacitorState {
-                name: diode_charge_state_name(diode),
-                previous_voltage: 0.0,
-                previous_previous_voltage: 0.0,
-                previous_current: 0.0,
-                time_step,
-                method,
-            }),
-            _ => None,
-        })
-        .collect()
+            Element::Diode(diode) if diode_has_charge_storage(diode) => {
+                states.push(CapacitorState {
+                    name: diode_charge_state_name(diode),
+                    previous_voltage: 0.0,
+                    previous_previous_voltage: 0.0,
+                    previous_current: 0.0,
+                    time_step,
+                    method,
+                });
+            }
+            Element::Bjt(bjt) => {
+                for spec in bjt_charge_state_specs(bjt) {
+                    states.push(CapacitorState {
+                        name: spec.name,
+                        previous_voltage: 0.0,
+                        previous_previous_voltage: 0.0,
+                        previous_current: 0.0,
+                        time_step,
+                        method,
+                    });
+                }
+            }
+            _ => {}
+        }
+    }
+    states
 }
 
 fn initial_inductor_states(
@@ -21166,21 +21305,34 @@ fn capacitor_voltages(
     circuit: &Circuit,
     node_voltages: &BTreeMap<String, f64>,
 ) -> BTreeMap<String, f64> {
-    circuit
-        .elements()
-        .iter()
-        .filter_map(|element| match element {
-            Element::Capacitor(capacitor) => Some((
-                capacitor.name.clone(),
-                voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2),
-            )),
-            Element::Diode(diode) if diode_has_charge_storage(diode) => Some((
-                diode_charge_state_name(diode),
-                diode_charge_voltage(diode, node_voltages),
-            )),
-            _ => None,
-        })
-        .collect()
+    let mut voltages = BTreeMap::new();
+    for element in circuit.elements() {
+        match element {
+            Element::Capacitor(capacitor) => {
+                voltages.insert(
+                    capacitor.name.clone(),
+                    voltage_at(node_voltages, &capacitor.n1)
+                        - voltage_at(node_voltages, &capacitor.n2),
+                );
+            }
+            Element::Diode(diode) if diode_has_charge_storage(diode) => {
+                voltages.insert(
+                    diode_charge_state_name(diode),
+                    diode_charge_voltage(diode, node_voltages),
+                );
+            }
+            Element::Bjt(bjt) => {
+                for spec in bjt_charge_state_specs(bjt) {
+                    voltages.insert(
+                        spec.name.clone(),
+                        bjt_charge_state_voltage(&spec, node_voltages),
+                    );
+                }
+            }
+            _ => {}
+        }
+    }
+    voltages
 }
 
 fn transient_lte_estimate(
@@ -21189,10 +21341,9 @@ fn transient_lte_estimate(
     previous_voltages: &BTreeMap<String, f64>,
     previous_previous_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
-    circuit
-        .elements()
-        .iter()
-        .filter_map(|element| match element {
+    let mut max_lte = 0.0_f64;
+    for element in circuit.elements() {
+        match element {
             Element::Capacitor(capacitor) => {
                 let current = current_voltages
                     .get(&capacitor.name)
@@ -21206,7 +21357,7 @@ fn transient_lte_estimate(
                     .get(&capacitor.name)
                     .copied()
                     .unwrap_or(capacitor.initial_voltage);
-                Some((current - 2.0 * previous + previous_previous).abs() / 2.0)
+                max_lte = max_lte.max((current - 2.0 * previous + previous_previous).abs() / 2.0);
             }
             Element::Diode(diode) if diode_has_charge_storage(diode) => {
                 let state_name = diode_charge_state_name(diode);
@@ -21216,11 +21367,24 @@ fn transient_lte_estimate(
                     .get(&state_name)
                     .copied()
                     .unwrap_or(0.0);
-                Some((current - 2.0 * previous + previous_previous).abs() / 2.0)
+                max_lte = max_lte.max((current - 2.0 * previous + previous_previous).abs() / 2.0);
             }
-            _ => None,
-        })
-        .fold(0.0, f64::max)
+            Element::Bjt(bjt) => {
+                for spec in bjt_charge_state_specs(bjt) {
+                    let current = current_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous = previous_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous_previous = previous_previous_voltages
+                        .get(&spec.name)
+                        .copied()
+                        .unwrap_or(0.0);
+                    max_lte =
+                        max_lte.max((current - 2.0 * previous + previous_previous).abs() / 2.0);
+                }
+            }
+            _ => {}
+        }
+    }
+    max_lte
 }
 
 fn initial_transmission_line_states(circuit: &Circuit) -> Vec<TransmissionLineState> {
@@ -21402,6 +21566,15 @@ fn update_capacitor_states(
                 diode_charge_voltage(diode, node_voltages),
                 diode_dynamic_capacitance(diode, state.previous_voltage),
             )),
+            Element::Bjt(bjt) => bjt_charge_state_specs(bjt)
+                .into_iter()
+                .find(|spec| spec.name == state.name)
+                .map(|spec| {
+                    (
+                        bjt_charge_state_voltage(&spec, node_voltages),
+                        bjt_charge_dynamic_capacitance(bjt, spec.kind, state.previous_voltage),
+                    )
+                }),
             _ => None,
         });
         let Some((voltage, capacitance)) = update else {
@@ -21426,24 +21599,39 @@ fn update_capacitor_states(
     }
 }
 
-fn seed_diode_capacitor_states(
+fn seed_device_capacitor_states(
     circuit: &Circuit,
     node_voltages: &BTreeMap<String, f64>,
     capacitor_states: &mut [CapacitorState],
 ) {
     for element in circuit.elements() {
-        let Element::Diode(diode) = element else {
-            continue;
-        };
-        let state_name = diode_charge_state_name(diode);
-        if let Some(state) = capacitor_states
-            .iter_mut()
-            .find(|state| state.name == state_name)
-        {
-            let voltage = diode_charge_voltage(diode, node_voltages);
-            state.previous_voltage = voltage;
-            state.previous_previous_voltage = voltage;
-            state.previous_current = 0.0;
+        match element {
+            Element::Diode(diode) => {
+                let state_name = diode_charge_state_name(diode);
+                if let Some(state) = capacitor_states
+                    .iter_mut()
+                    .find(|state| state.name == state_name)
+                {
+                    let voltage = diode_charge_voltage(diode, node_voltages);
+                    state.previous_voltage = voltage;
+                    state.previous_previous_voltage = voltage;
+                    state.previous_current = 0.0;
+                }
+            }
+            Element::Bjt(bjt) => {
+                for spec in bjt_charge_state_specs(bjt) {
+                    if let Some(state) = capacitor_states
+                        .iter_mut()
+                        .find(|state| state.name == spec.name)
+                    {
+                        let voltage = bjt_charge_state_voltage(&spec, node_voltages);
+                        state.previous_voltage = voltage;
+                        state.previous_previous_voltage = voltage;
+                        state.previous_current = 0.0;
+                    }
+                }
+            }
+            _ => {}
         }
     }
 }

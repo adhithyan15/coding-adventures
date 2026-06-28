@@ -7663,7 +7663,7 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
       expectedFinalMin: 0.10,
       expectedFinalMax: 0.14,
       chargeBehavior:
-        "BJT terminal charge is conserved through explicit Cstore; CJE/CJC/TF/TR remain AC-only until nonlinear charge stamping lands",
+        "BJT CJE/CJC/TF/TR contribute transient base-emitter and base-collector storage; explicit Cstore keeps the fixture comparable with other charge audits",
       deckLines: [
         "* device-model charge fixture: bjt-storage-charge",
         ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
@@ -12816,7 +12816,7 @@ export function transient(
     inductorStates,
     0.0,
   );
-  seedDiodeCapacitorStates(circuit, initialSolution.nodeVoltages, capacitorStates);
+  seedDeviceCapacitorStates(circuit, initialSolution.nodeVoltages, capacitorStates);
   updateTransmissionLineStates(circuit, initialSolution.nodeVoltages, lineStates, 0.0);
   const points: TransientPoint[] = [];
   for (let time = timeStep; time <= stopTime + timeStep * 1.0e-9; time += timeStep) {
@@ -13120,7 +13120,7 @@ export function transientAdaptive(
     inductorStates,
     0.0,
   );
-  seedDiodeCapacitorStates(circuit, initialSolution.nodeVoltages, capacitorStates);
+  seedDeviceCapacitorStates(circuit, initialSolution.nodeVoltages, capacitorStates);
   updateTransmissionLineStates(circuit, initialSolution.nodeVoltages, lineStates, 0.0);
 
   const points: TransientPoint[] = [];
@@ -15498,7 +15498,7 @@ function solveLinearCircuitAtOperatingPoint(
         stampJfet(element, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "bjt":
-        stampBjt(element, nodeIndices, matrix, rhs, operatingPoint);
+        stampBjt(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "mosfet":
         stampMosfet(element, nodeIndices, matrix, rhs, operatingPoint);
@@ -16768,6 +16768,7 @@ function stampDiodeCharge(
 
 function stampBjt(
   element: Bjt,
+  capacitorStates: readonly CapacitorState[],
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
   rhs: number[],
@@ -16805,6 +16806,49 @@ function stampBjt(
     stampTransconductance(matrix, emitter, collector, emitter, base, transconductance);
     stampCurrentSourceEquivalent(rhs, emitter, base, equivalentBaseCurrent);
     stampCurrentSourceEquivalent(rhs, emitter, collector, equivalentCollectorCurrent);
+  }
+  stampBjtCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+}
+
+function stampBjtCharge(
+  element: Bjt,
+  capacitorStates: readonly CapacitorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  for (const spec of bjtChargeStateSpecs(element)) {
+    const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+    if (state === undefined) {
+      continue;
+    }
+    const capacitance = bjtChargeDynamicCapacitance(element, spec.kind, state.previousVoltage);
+    if (capacitance <= 0.0) {
+      continue;
+    }
+    const conductance =
+      state.method === "trap"
+        ? (2.0 * capacitance) / state.timeStep
+        : state.method === "gear2"
+          ? (3.0 * capacitance) / (2.0 * state.timeStep)
+          : capacitance / state.timeStep;
+    const historyCurrent =
+      state.method === "trap"
+        ? conductance * state.previousVoltage + state.previousCurrent
+        : state.method === "gear2"
+          ? capacitance *
+            (4.0 * state.previousVoltage - state.previousPreviousVoltage) /
+            (2.0 * state.timeStep)
+          : conductance * state.previousVoltage;
+    const positive = nodeIndex(nodeIndices, spec.positive);
+    const negative = nodeIndex(nodeIndices, spec.negative);
+    stampConductance(matrix, positive, negative, conductance);
+    if (positive !== undefined) {
+      rhs[positive] += historyCurrent;
+    }
+    if (negative !== undefined) {
+      rhs[negative] -= historyCurrent;
+    }
   }
 }
 
@@ -17127,6 +17171,76 @@ function diodeChargeVoltage(element: Diode, nodeVoltages: ReadonlyMap<string, nu
   return voltageAt(nodeVoltages, element.anode) - voltageAt(nodeVoltages, element.cathode);
 }
 
+type BjtChargeStateKind = "base-emitter" | "base-collector";
+
+interface BjtChargeStateSpec {
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly kind: BjtChargeStateKind;
+}
+
+function bjtBaseEmitterChargeStateName(element: Bjt): string {
+  return `_Q_${element.name}_be_charge`;
+}
+
+function bjtBaseCollectorChargeStateName(element: Bjt): string {
+  return `_Q_${element.name}_bc_charge`;
+}
+
+function bjtJunctionTransconductance(element: Bjt, voltage: number): number {
+  const exponent = Math.max(-40.0, Math.min(40.0, voltage / element.thermalVoltage));
+  return (element.saturationCurrent / element.thermalVoltage) * Math.exp(exponent);
+}
+
+function bjtChargeDynamicCapacitance(
+  element: Bjt,
+  kind: BjtChargeStateKind,
+  voltage: number,
+): number {
+  const conductance = bjtJunctionTransconductance(element, voltage);
+  if (kind === "base-emitter") {
+    return element.baseEmitterCapacitance + element.forwardTransitTime * conductance;
+  }
+  return element.baseCollectorCapacitance + element.reverseTransitTime * conductance;
+}
+
+function bjtChargeStateSpecs(element: Bjt): BjtChargeStateSpec[] {
+  const specs: BjtChargeStateSpec[] = [];
+  if (element.baseEmitterCapacitance > 0.0 || element.forwardTransitTime > 0.0) {
+    const [positive, negative] =
+      element.polarity === "NPN"
+        ? [element.base, element.emitter]
+        : [element.emitter, element.base];
+    specs.push({
+      name: bjtBaseEmitterChargeStateName(element),
+      positive,
+      negative,
+      kind: "base-emitter",
+    });
+  }
+  if (element.baseCollectorCapacitance > 0.0 || element.reverseTransitTime > 0.0) {
+    const [positive, negative] =
+      element.polarity === "NPN"
+        ? [element.base, element.collector]
+        : [element.collector, element.base];
+    specs.push({
+      name: bjtBaseCollectorChargeStateName(element),
+      positive,
+      negative,
+      kind: "base-collector",
+    });
+  }
+  return specs;
+}
+
+function bjtChargeStateVoltage(
+  spec: BjtChargeStateSpec,
+  nodeVoltages: ReadonlyMap<string, number>,
+): number {
+  return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
+}
+
 function validateBjt(element: Bjt): void {
   if (element.polarity !== "NPN" && element.polarity !== "PNP") {
     throw invalidElement(element.name, "BJT polarity must be NPN or PNP");
@@ -17230,6 +17344,17 @@ function initialCapacitorStates(
         timeStep,
         method,
       });
+    } else if (element.kind === "bjt") {
+      for (const spec of bjtChargeStateSpecs(element)) {
+        states.push({
+          name: spec.name,
+          previousVoltage: 0.0,
+          previousPreviousVoltage: 0.0,
+          previousCurrent: 0.0,
+          timeStep,
+          method,
+        });
+      }
     }
   }
   return states;
@@ -17295,6 +17420,10 @@ function capacitorVoltages(
       );
     } else if (element.kind === "diode" && diodeHasChargeStorage(element)) {
       voltages.set(diodeChargeStateName(element), diodeChargeVoltage(element, nodeVoltages));
+    } else if (element.kind === "bjt") {
+      for (const spec of bjtChargeStateSpecs(element)) {
+        voltages.set(spec.name, bjtChargeStateVoltage(spec, nodeVoltages));
+      }
     }
   }
   return voltages;
@@ -17315,6 +17444,13 @@ function transientLteEstimate(
         const previous = previousVoltages.get(stateName) ?? 0.0;
         const previousPrevious = previousPreviousVoltages.get(stateName) ?? 0.0;
         maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
+      } else if (element.kind === "bjt") {
+        for (const spec of bjtChargeStateSpecs(element)) {
+          const current = currentVoltages.get(spec.name) ?? 0.0;
+          const previous = previousVoltages.get(spec.name) ?? 0.0;
+          const previousPrevious = previousPreviousVoltages.get(spec.name) ?? 0.0;
+          maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
+        }
       }
       continue;
     }
@@ -17479,7 +17615,21 @@ function updateCapacitorStates(
                 candidate.kind === "diode" && diodeChargeStateName(candidate) === state.name,
             )
         : undefined;
-    if (capacitorElement === undefined && diodeElement === undefined) {
+    const bjtElement =
+      capacitorElement === undefined && diodeElement === undefined
+        ? circuit
+            .elements()
+            .find(
+              (candidate): candidate is Bjt =>
+                candidate.kind === "bjt" &&
+                bjtChargeStateSpecs(candidate).some((spec) => spec.name === state.name),
+            )
+        : undefined;
+    const bjtSpec =
+      bjtElement === undefined
+        ? undefined
+        : bjtChargeStateSpecs(bjtElement).find((spec) => spec.name === state.name);
+    if (capacitorElement === undefined && diodeElement === undefined && bjtSpec === undefined) {
       continue;
     }
     const previousVoltage = state.previousVoltage;
@@ -17487,11 +17637,15 @@ function updateCapacitorStates(
     const voltage =
       capacitorElement !== undefined
         ? voltageAt(nodeVoltages, capacitorElement.n1) - voltageAt(nodeVoltages, capacitorElement.n2)
-        : diodeChargeVoltage(diodeElement!, nodeVoltages);
+        : diodeElement !== undefined
+          ? diodeChargeVoltage(diodeElement, nodeVoltages)
+          : bjtChargeStateVoltage(bjtSpec!, nodeVoltages);
     const capacitance =
       capacitorElement !== undefined
         ? capacitorElement.capacitanceFarads
-        : diodeDynamicCapacitance(diodeElement!, previousVoltage);
+        : diodeElement !== undefined
+          ? diodeDynamicCapacitance(diodeElement, previousVoltage)
+          : bjtChargeDynamicCapacitance(bjtElement!, bjtSpec!.kind, previousVoltage);
     if (state.method === "trap") {
       const conductance = (2.0 * capacitance) / state.timeStep;
       state.previousCurrent = conductance * (voltage - previousVoltage) - previousCurrent;
@@ -17509,25 +17663,35 @@ function updateCapacitorStates(
   }
 }
 
-function seedDiodeCapacitorStates(
+function seedDeviceCapacitorStates(
   circuit: Circuit,
   nodeVoltages: ReadonlyMap<string, number>,
   capacitorStates: CapacitorState[],
 ): void {
   for (const element of circuit.elements()) {
-    if (element.kind !== "diode") {
-      continue;
+    if (element.kind === "diode") {
+      const state = capacitorStates.find(
+        (candidate) => candidate.name === diodeChargeStateName(element),
+      );
+      if (state === undefined) {
+        continue;
+      }
+      const voltage = diodeChargeVoltage(element, nodeVoltages);
+      state.previousVoltage = voltage;
+      state.previousPreviousVoltage = voltage;
+      state.previousCurrent = 0.0;
+    } else if (element.kind === "bjt") {
+      for (const spec of bjtChargeStateSpecs(element)) {
+        const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+        if (state === undefined) {
+          continue;
+        }
+        const voltage = bjtChargeStateVoltage(spec, nodeVoltages);
+        state.previousVoltage = voltage;
+        state.previousPreviousVoltage = voltage;
+        state.previousCurrent = 0.0;
+      }
     }
-    const state = capacitorStates.find(
-      (candidate) => candidate.name === diodeChargeStateName(element),
-    );
-    if (state === undefined) {
-      continue;
-    }
-    const voltage = diodeChargeVoltage(element, nodeVoltages);
-    state.previousVoltage = voltage;
-    state.previousPreviousVoltage = voltage;
-    state.previousCurrent = 0.0;
   }
 }
 
