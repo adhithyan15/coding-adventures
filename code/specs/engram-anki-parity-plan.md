@@ -100,6 +100,8 @@ Current reducer integration:
 - `import_basic_cards_csv` accepts simpler `front,back` CSV and uses
   host-supplied deck/timestamp/ID prefix options for deterministic generated
   cards.
+- `summarize_review_history` derives deck-scoped review-log summaries for a
+  timestamp range and is exposed through the JSON facade and C ABI.
 
 ### 1.2 Notes and Card Templates
 
@@ -143,6 +145,8 @@ at least:
 - deck options
 - daily limits
 - review history log
+- review history summaries for deck/date ranges. Core, JSON facade, and C ABI
+  support exists; richer graphing and browser UI still need to bind to it.
 
 Possible later track:
 

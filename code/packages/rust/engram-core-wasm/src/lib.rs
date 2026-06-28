@@ -11,7 +11,7 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 use engram_core::{
     build_session_queue, create_engram_snapshot, export_cards_csv, generate_cards_for_note,
     get_active_session_progress, get_deck_stats, import_basic_cards_csv, import_cards_csv, reduce,
-    restore_engram_snapshot, search_cards as search_core_cards, AppState,
+    restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history, AppState,
     BasicCardCsvImportOptions, Card, CardFlag, DeckOptions, EngramSnapshot, Rating,
 };
 use serde::Deserialize;
@@ -96,6 +96,19 @@ impl EngramSession {
         catch_json(|| {
             let progress = get_active_session_progress(&self.state);
             Ok(ok_with("progress", &progress))
+        })
+    }
+
+    pub fn review_history(
+        &self,
+        deck_id: &str,
+        reviewed_after: u64,
+        reviewed_before: u64,
+    ) -> String {
+        catch_json(|| {
+            let summary =
+                summarize_review_history(&self.state, deck_id, reviewed_after, reviewed_before);
+            Ok(ok_with("history", &summary))
         })
     }
 
@@ -636,6 +649,67 @@ mod tests {
         assert_eq!(value["progress"]["cardsCorrect"], 1);
         assert_eq!(value["progress"]["revealed"], false);
         assert_eq!(value["progress"]["completed"], false);
+    }
+
+    #[test]
+    fn review_history_reports_rating_summary_for_range() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [
+                {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"other","name":"Spanish","description":"Words","createdAt":1700000000000}
+            ],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                {"id":"other-card","deckId":"other","front":"hola","back":"hello","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                "startedAt": 1700000000000
+            }"#,
+        );
+        for (review_id, card_id, rating, reviewed_at) in [
+            ("again", "card", "again", NOW + 10),
+            ("good", "card", "good", NOW + 20),
+            ("easy-other", "other-card", "easy", NOW + 30),
+        ] {
+            session.dispatch(&format!(
+                r#"{{
+                    "type": "rateCard",
+                    "reviewId": "{review_id}",
+                    "sessionId": "session",
+                    "cardId": "{card_id}",
+                    "rating": "{rating}",
+                    "reviewedAt": {reviewed_at}
+                }}"#
+            ));
+        }
+
+        let value: Value =
+            serde_json::from_str(&session.review_history("deck", NOW, NOW + 30)).unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["history"]["deckId"], "deck");
+        assert_eq!(value["history"]["totalReviews"], 2);
+        assert_eq!(value["history"]["correctReviews"], 1);
+        assert_eq!(value["history"]["uniqueCards"], 1);
+        assert_eq!(value["history"]["ratingCounts"]["again"], 1);
+        assert_eq!(value["history"]["ratingCounts"]["good"], 1);
+        assert_eq!(value["history"]["firstReviewedAt"], NOW + 10);
+        assert_eq!(value["history"]["lastReviewedAt"], NOW + 20);
     }
 
     #[test]

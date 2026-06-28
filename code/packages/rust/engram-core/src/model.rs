@@ -196,6 +196,31 @@ pub struct Review {
     pub resulting_progress: Option<CardProgress>,
 }
 
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct RatingCounts {
+    pub again: usize,
+    pub hard: usize,
+    pub good: usize,
+    pub easy: usize,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct ReviewHistorySummary {
+    pub deck_id: String,
+    pub reviewed_after: u64,
+    pub reviewed_before: u64,
+    pub total_reviews: usize,
+    pub correct_reviews: usize,
+    pub unique_cards: usize,
+    pub rating_counts: RatingCounts,
+    pub first_reviewed_at: Option<u64>,
+    pub last_reviewed_at: Option<u64>,
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]

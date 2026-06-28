@@ -121,6 +121,21 @@ pub unsafe extern "C" fn eg_session_progress(session: *mut EgSession) -> *mut c_
 }
 
 /// # Safety
+/// `session` must be valid; `deck_id` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn eg_review_history(
+    session: *mut EgSession,
+    deck_id: *const c_char,
+    reviewed_after: u64,
+    reviewed_before: u64,
+) -> *mut c_char {
+    let deck_id = read_cstr(deck_id);
+    with_session(session, |session| {
+        session.review_history(&deck_id, reviewed_after, reviewed_before)
+    })
+}
+
+/// # Safety
 /// `session` must be valid; arguments must be null or valid C strings.
 #[no_mangle]
 pub unsafe extern "C" fn eg_generated_cards(
@@ -324,6 +339,57 @@ mod tests {
             assert!(progress.contains(r#""progress":{"#));
             assert!(progress.contains(r#""totalCards":1"#));
             assert!(progress.contains(r#""remainingCards":1"#));
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_review_history_returns_json() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "noteTypes": [],
+                    "notes": [],
+                    "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            take(eg_load_snapshot(session, snapshot.as_ptr()));
+
+            let start_session = cstr(
+                r#"{
+                    "type": "startSession",
+                    "sessionId": "session",
+                    "deckId": "deck",
+                    "queue": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                    "startedAt": 1700000000000
+                }"#,
+            );
+            take(eg_dispatch(session, start_session.as_ptr()));
+
+            let command = cstr(
+                r#"{
+                    "type": "rateCard",
+                    "reviewId": "review",
+                    "sessionId": "session",
+                    "cardId": "card",
+                    "rating": "easy",
+                    "reviewedAt": 1700000000010
+                }"#,
+            );
+            take(eg_dispatch(session, command.as_ptr()));
+
+            let deck_id = cstr("deck");
+            let history = take(eg_review_history(session, deck_id.as_ptr(), NOW, NOW + 100));
+            assert!(history.contains(r#""history":{"#));
+            assert!(history.contains(r#""totalReviews":1"#));
+            assert!(history.contains(r#""easy":1"#));
 
             eg_session_free(session);
         }

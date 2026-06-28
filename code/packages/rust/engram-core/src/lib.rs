@@ -7,6 +7,7 @@
 #![forbid(unsafe_code)]
 
 mod csv;
+mod history;
 mod model;
 mod queue;
 mod reducer;
@@ -20,10 +21,11 @@ mod template;
 pub use csv::{
     export_cards_csv, import_basic_cards_csv, import_cards_csv, BasicCardCsvImportOptions, CsvError,
 };
+pub use history::summarize_review_history;
 pub use model::{
     ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardState, CardTemplate, Deck,
-    DeckStats, FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating, Review, Session,
-    SessionProgress, SessionStatus,
+    DeckStats, FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating, RatingCounts,
+    Review, ReviewHistorySummary, Session, SessionProgress, SessionStatus,
 };
 pub use queue::{
     build_session_queue, build_session_queue_with_options, get_deck_stats, is_deck_caught_up,

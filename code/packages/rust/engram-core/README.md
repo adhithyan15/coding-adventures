@@ -36,6 +36,7 @@ This crate owns:
 - versioned Engram JSON backup snapshots
 - round-trippable card CSV import/export helpers
 - active review-session progress counts
+- deck-scoped review-history summaries
 - pure state transitions
 - derived study stats
 
@@ -74,6 +75,11 @@ prefix options to create deterministic cards.
 `AppState`: total cards, one-based current position, remaining cards, reviewed
 and correct counts, reveal state, and completion. Hosts should render these
 counts instead of recomputing progress differently per platform.
+
+`summarize_review_history` derives deck-scoped review history for a timestamp
+range from the durable review log. It returns total reviews, correct reviews,
+unique reviewed cards, per-rating counts, and first/last review timestamps so
+web and native shells can render stats without reimplementing log aggregation.
 
 This crate does not own:
 

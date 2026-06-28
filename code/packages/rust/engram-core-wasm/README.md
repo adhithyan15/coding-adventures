@@ -34,6 +34,7 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `build_queue(deck_id, now)`
 - `deck_stats(deck_id, now)`
 - `session_progress()`
+- `review_history(deck_id, reviewed_after, reviewed_before)`
 - `generated_cards(note_type_id, note_id)`
 - `search_cards(query, now)`
 - `export_cards_csv(deck_id)`
@@ -71,6 +72,10 @@ parser diagnostics.
 without an active session or contains shared review counters such as
 `totalCards`, `currentPosition`, `remainingCards`, `cardsReviewed`,
 `cardsCorrect`, `revealed`, and `completed`.
+
+`review_history` returns `{ ok: true, history }` with deck-scoped counts for a
+half-open timestamp range: total reviews, correct reviews, unique cards,
+per-rating counts, and first/last review timestamps.
 
 `export_backup` and `import_backup` expose the versioned Engram JSON backup
 shape. Backup import validates the app/version fields and restores only durable
