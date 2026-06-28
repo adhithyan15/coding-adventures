@@ -181,9 +181,34 @@ button:disabled {
 }
 
 .deck-list__header {
+  align-items: flex-start;
   display: flex;
+  gap: var(--spacing-sm);
   justify-content: flex-end;
   margin-bottom: var(--spacing-sm);
+}
+
+.collection-tools {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.collection-tools__actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.collection-tools__file {
+  display: none;
+}
+
+.collection-tools__status {
+  color: var(--tab-text, #8899aa);
+  font-size: 0.8rem;
+  margin: 0;
+  text-align: right;
 }
 
 .deck-list__empty {
@@ -434,11 +459,26 @@ button:disabled {
   }
 
   .deck-list__header {
+    align-items: stretch;
+    flex-direction: column;
     justify-content: stretch;
   }
 
   .deck-list__header > button {
     width: 100%;
+  }
+
+  .collection-tools {
+    align-items: stretch;
+  }
+
+  .collection-tools__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .collection-tools__status {
+    text-align: left;
   }
 
   .deck-card,
