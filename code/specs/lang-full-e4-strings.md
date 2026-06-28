@@ -5,8 +5,9 @@ strings, reassignment, equality/inequality, lexical ordering, copied-slot
 equality, literal and variable-backed concat, expression concat in `PRINT`/`IF`,
 and multi-item string `PRINT` with `;` and `,` run on all seven backends,
 including `PRINT A$ + B$` over two scalar string slots. ALGOL AL4 literal output,
-`output`, multi-argument `output`, scalar variables, scalar copies, and copy
-snapshots run on all seven backends. Twig
+`output`, multi-argument `output`, scalar variables, scalar copies, copy
+snapshots, and literal-backed string equality/ordering predicates run on all
+seven backends. Twig
 literal, immutable top-level, and lexical-local string ops run on all seven
 backends, including `str_concat` feeding `str_index`. Captured/dynamic strings, arrays/input/parameters, and fuller backend
 byte-string representations remain.
@@ -182,8 +183,11 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   suffix. Reassigning the source after a copy leaves the target printable as a
   snapshot, matching the immutable E4 value model. `output(s, t)` over two
   literal-backed scalar strings preserves actual order through two E4
-  `print_str` calls. Captured/`own` strings, arrays, parameters, and broader
-  dynamic strings remain follow-ups.
+  `print_str` calls. Literal-backed scalar string predicates lower through E4
+  too: `s = 'OK'` / `s != 'NO'` use `str_eq` plus typed zero comparisons, while
+  `s < 'BETA'` / `'BETA' > s` use `str_cmp` plus typed zero comparisons before
+  the normal ALGOL conditional branch. Captured/`own` strings, arrays,
+  parameters, and broader dynamic strings remain follow-ups.
 - **Twig (TW4)** — Twig string literals + `print` lower to `str_const` +
   `print_str`; `++`/`string-append` to `str_concat`, `string=?` to `str_eq`,
   `string<?`/`string>?` to `str_cmp` plus typed comparisons, and `string-ref`
@@ -235,7 +239,18 @@ copy, copied-slot equality, literal/variable-backed concat, concat expressions i
 `PRINT`/`IF` including `PRINT A$ + B$`, equality/inequality branches, and multi-item string `PRINT` with
 both `;` and `,` on all seven backends. ALGOL proves literal output, the
 `output` alias, multi-argument `output`, scalar string variables, scalar copies,
-and copy snapshots on the same all-seven E4 path.
+copy snapshots, and literal-backed scalar string predicates on the same
+all-seven E4 path:
+
+```algol
+begin string s; s := 'ALPHA';
+  if (s = 'ALPHA' and s != 'OMEGA') and
+     (s < 'BETA' and 'BETA' > s) then print('OK') else print('BAD')
+end
+```
+
+The program writes `OK` through native-AOT + LLVM + WASM + JVM + CLR + VM +
+JIT.
 Follow-up proofs now focus on string arrays/input/parameters, captured or
 reassigned dynamic strings, and runtime byte-string operations beyond the current
 immutable scalar/local subset.

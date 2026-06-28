@@ -2428,7 +2428,20 @@ impl Compiler {
                     ty: ScalarType::Real,
                 })
             }
-            ("STRING_LIT", _) => Err(CompileError::Unsupported("string literals".into())),
+            ("STRING_LIT", _) => {
+                let slot = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "str_const",
+                    Some(slot.clone()),
+                    vec![Operand::Str(unquote_algol_string(&token.value))],
+                    "str",
+                ));
+                self.literal_string_slots.insert(slot.clone());
+                Ok(ExprValue {
+                    slot,
+                    ty: ScalarType::String,
+                })
+            }
             ("KEYWORD", "true") => {
                 let slot = self.emit_const(ScalarType::Boolean, Operand::Bool(true));
                 Ok(ExprValue {
@@ -2635,6 +2648,75 @@ impl Compiler {
                         lhs.ty.name(),
                         rhs.ty.name()
                     )));
+                }
+                if lhs.ty == ScalarType::String {
+                    if !self.literal_string_slots.contains(&lhs.slot)
+                        || !self.literal_string_slots.contains(&rhs.slot)
+                    {
+                        return Err(CompileError::Unsupported(
+                            "string comparisons require literal-backed string operands".into(),
+                        ));
+                    }
+                    let dest = self.fresh_temp();
+                    match op {
+                        "=" | "!=" | "<>" => {
+                            let equal = self.fresh_temp();
+                            self.emit(IIRInstr::new(
+                                "str_eq",
+                                Some(equal.clone()),
+                                vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
+                                "i64",
+                            ));
+                            let zero = self.fresh_temp();
+                            self.emit(IIRInstr::new(
+                                "const",
+                                Some(zero.clone()),
+                                vec![Operand::Int(0)],
+                                "i64",
+                            ));
+                            let cmp_op = if op == "=" { "cmp_ne" } else { "cmp_eq" };
+                            self.emit(IIRInstr::new(
+                                cmp_op,
+                                Some(dest.clone()),
+                                vec![Operand::Var(equal), Operand::Var(zero)],
+                                "i64",
+                            ));
+                        }
+                        "<" | "<=" | ">" | ">=" => {
+                            let ordering = self.fresh_temp();
+                            self.emit(IIRInstr::new(
+                                "str_cmp",
+                                Some(ordering.clone()),
+                                vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
+                                "i64",
+                            ));
+                            let zero = self.fresh_temp();
+                            self.emit(IIRInstr::new(
+                                "const",
+                                Some(zero.clone()),
+                                vec![Operand::Int(0)],
+                                "i64",
+                            ));
+                            let cmp_op = match op {
+                                "<" => "cmp_lt",
+                                "<=" => "cmp_le",
+                                ">" => "cmp_gt",
+                                ">=" => "cmp_ge",
+                                _ => unreachable!(),
+                            };
+                            self.emit(IIRInstr::new(
+                                cmp_op,
+                                Some(dest.clone()),
+                                vec![Operand::Var(ordering), Operand::Var(zero)],
+                                "i64",
+                            ));
+                        }
+                        _ => unreachable!(),
+                    }
+                    return Ok(ExprValue {
+                        slot: dest,
+                        ty: ScalarType::Boolean,
+                    });
                 }
                 if lhs.ty == ScalarType::Boolean && !matches!(op, "=" | "!=" | "<>") {
                     return Err(CompileError::Type(
@@ -3607,6 +3689,60 @@ mod tests {
         let err = compile_source("begin string s, t; t := s; print(t) end", "test")
             .expect_err("unassigned string variable copies are not literal-backed");
         assert!(format!("{err:?}").contains("literal-backed string variable"));
+    }
+
+    #[test]
+    fn al4_string_equality_lowers_to_str_eq_zero_comparisons() {
+        let module = compile_source(
+            "begin string s; s := 'OK'; if s = 'OK' and s != 'NO' then print('YES') else print('NO') end",
+            "test",
+        )
+        .expect("literal-backed string equality compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        assert_eq!(
+            main.instructions.iter().filter(|i| i.op == "str_eq").count(),
+            2,
+            "equality and inequality should both lower through E4 str_eq"
+        );
+        assert!(
+            main.instructions.iter().any(|i| i.op == "cmp_ne" && i.type_hint == "i64"),
+            "string equality should compare str_eq output against zero"
+        );
+        assert!(
+            main.instructions.iter().any(|i| i.op == "cmp_eq" && i.type_hint == "i64"),
+            "string inequality should compare str_eq output against zero"
+        );
+    }
+
+    #[test]
+    fn al4_string_ordering_lowers_to_str_cmp_zero_comparisons() {
+        let module = compile_source(
+            "begin string s; s := 'ALPHA'; if s < 'BETA' and 'BETA' > s then print('OK') else print('BAD') end",
+            "test",
+        )
+        .expect("literal-backed string ordering compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        assert_eq!(
+            main.instructions.iter().filter(|i| i.op == "str_cmp").count(),
+            2,
+            "strict ordering in both operand orders should lower through E4 str_cmp"
+        );
+        assert!(
+            main.instructions.iter().any(|i| i.op == "cmp_lt" && i.type_hint == "i64"),
+            "s < literal should compare str_cmp output against zero"
+        );
+        assert!(
+            main.instructions.iter().any(|i| i.op == "cmp_gt" && i.type_hint == "i64"),
+            "literal > s should compare str_cmp output against zero"
+        );
     }
 
     // ── AL8 — standard functions (§3.2.4) ───────────────────────────────────
