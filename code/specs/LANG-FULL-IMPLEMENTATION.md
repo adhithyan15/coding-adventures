@@ -9,12 +9,12 @@ program per language**, and each frontend is a **deliberate subset**:
 
 | Language | What the matrix actually runs end-to-end on the code-gen backends | The subset gap |
 |---|---|---|
-| Twig | `42`, variadic arithmetic, top-level value `define`, and typed E4 string literal/named/local proofs | rich Lisp frontend; lists/lambdas/dynamic globals/records/symbols still need E5/E6, and captured/reassigned strings stay on the dynamic path |
+| Twig | `42`, variadic arithmetic, top-level value `define`, and typed E4 string literal/named/local proofs, including substring/index and lexical ordering | rich Lisp frontend; lists/lambdas/dynamic globals/records/symbols still need E5/E6, and captured/reassigned strings stay on the dynamic path |
 | Nib | typed calls, `*`/`/`, `for`, bitwise, short-circuit logic, logical `!`, consts, const/static-expression folding, wrap/sat arithmetic, and module `static`s all run on all 7 backends | BCD semantics and Intel-4004 RAM mapping remain |
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
-| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and `IF A$ =/<> "Y"` string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); richer string ops and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
+| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, and multi-argument string `output` ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, and literal-backed string equality/ordering predicates ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -204,8 +204,8 @@ multiple languages; close an enabler before the features that depend on it.
     later follow-up; the real-CLR path is textual.)
 - **E4 — Strings.** ◑ *IR + reference VM slice landed; see
   **[`lang-full-e4-strings.md`](lang-full-e4-strings.md)** for the full backend plan.*
-  An IIR string value model (six ops: `str_const`, `str_len`, `str_index`,
-  `str_concat`, `str_eq`, `print_str`) + per-backend support, lowered to all 7 backends and
+  An IIR string value model (`str_const`, `str_len`, `str_index`, `str_concat`,
+  `str_slice`, `str_eq`, `str_cmp`, `print_str`) + per-backend support, lowered to all 7 backends and
   verified by RUNNING (observable via **stdout**). A v1 string is an **immutable,
   length-counted byte buffer** — it reuses the E5 array substrate (length-prefixed flat
   buffer on the static backends; native `String` / managed `(array i8)` on the managed
@@ -224,7 +224,9 @@ multiple languages; close an enabler before the features that depend on it.
   while `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
   returns `68` by feeding a concat temporary into `str_index`, and
   `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns `69`
-  by feeding `str_len` through typed arithmetic into `str_index`, on all 7 backends. The
+  by feeding `str_len` through typed arithmetic into `str_index`, and
+  `(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` returns `67` by
+  feeding `str_slice` into `str_index`, on all 7 backends. The
   matrix now also proves the E4 bounds contract: `(string-ref "ABC" 3)` traps on
   native-AOT + LLVM + WASM + JVM + CLR + VM + JIT. WASM owns the literal-output
   shape with a linear-memory data segment + `env.__print_str(ptr,len)`, LLVM owns
@@ -238,10 +240,12 @@ multiple languages; close an enabler before the features that depend on it.
   `begin string s, t; s := 'O'; t := 'K'; output(s, t) end` proves ordered
   multi-argument string output.
   ALGOL scalar string copies are snapshots (`begin string s, t; s := 'OK'; t := s;
-  s := 'NO'; print(t) end` still prints `OK`). BASIC also proves literal
+  s := 'NO'; print(t) end` still prints `OK`). ALGOL literal-backed scalar string
+  predicates lower through `str_eq`/`str_cmp` and run on every backend. BASIC also proves literal
   reassignment (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`) through the same slot,
   multi-item string `PRINT` (`PRINT A$; B$` and `PRINT A$, B$`), and copied-slot equality
-  (`LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...`) through `str_eq`.
+  (`LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...`) through `str_eq`, plus
+  lexical string ordering branches through `str_cmp`.
   Captured string variables and broader dynamic string values remain.
   Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
@@ -544,6 +548,8 @@ backend immediately) come before the enabler-dependent items.
   `IF A$ = "Y" THEN n` / `IF A$ <> "Y" THEN n` lower to `str_eq` in the frontend
   and now drive real line-control branching on all seven backends (`OK`/`BAD`
   matrix proofs).
+  `IF A$ < "B" THEN n` / `IF "B" > A$ THEN n` lower through `str_cmp` plus typed
+  zero comparisons and also run on every backend.
   String arrays, string `INPUT`, and broader dynamic string expressions remain.
 - ✅ **BA5** — `DEF FN` single-line user functions. `DEF FNx(P) = expr` lowers to a
   sibling `IIRFunction` (one numeric param, `FullyTyped`) and `FNx(arg)` lowers to the
@@ -624,7 +630,7 @@ backend immediately) come before the enabler-dependent items.
   (`string s; s := 'HI'; print(s)`) now run the same way. The matrix also proves
   the `output(s)` spelling, multi-argument `output(s, t)`, plus literal-backed
   scalar copy snapshot semantics (`string s, t; s := 'OK'; t := s; s := 'NO';
-  print(t)`), all on
+  print(t)`), plus string equality/inequality and lexical ordering predicates, all on
   native/LLVM/WASM/JVM/CLR/VM/JIT. Captured/`own` strings, arrays, parameters,
   and broader dynamic string expressions remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
@@ -677,13 +683,14 @@ backend immediately) come before the enabler-dependent items.
 - ☐ **TW3** — list / cons ops on code-gen backends (needs **E5**/**E6**).
 - ✅ **TW4** — typed E4 strings on code-gen backends. Direct literals,
   immutable top-level string value defines, and lexical `let`/`let*` string
-  locals lower to shared `str_const`/`str_len`/`str_index`/`str_eq`/`str_concat`
+  locals lower to shared `str_const`/`str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`
   ops instead of the dynamic `call_builtin` path. **Verified by running** literal
   `string-length`/`string-ref`/`string=?`/`string-append`, named string
   concat/equality/index, the `str_index` out-of-bounds trap, local string index,
   `let*` string length, local string equality branches, and local string concat
-  plus local concat and computed `string-length` indexes feeding string indexing
-  across native/LLVM/WASM/JVM/CLR/VM/JIT
+  plus local concat, `substring`, computed `string-length` indexes feeding string
+  indexing, and lexical `string<?`/`string>?` ordering across
+  native/LLVM/WASM/JVM/CLR/VM/JIT
   (`lang_matrix.rs`). **Limits:** captured or reassigned strings and the
   dynamic-`any` string path still need **E6**/dynamic representation work.
 - ☐ **TW5** — closures / lambdas / general `call_builtin` on code-gen backends (needs **E6**).

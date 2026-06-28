@@ -9,7 +9,8 @@ including `PRINT A$ + B$` over two scalar string slots. ALGOL AL4 literal output
 snapshots, and literal-backed string equality/ordering predicates run on all
 seven backends. Twig
 literal, immutable top-level, and lexical-local string ops run on all seven
-backends, including `str_concat` feeding `str_index`. Captured/dynamic strings, arrays/input/parameters, and fuller backend
+backends, including `str_concat` and `str_slice` feeding `str_index`.
+Captured/dynamic strings, arrays/input/parameters, and fuller backend
 byte-string representations remain.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
 **Unlocks:** Dartmouth BASIC strings + string `PRINT` (BA4), ALGOL 60 strings +
@@ -66,7 +67,7 @@ representation that is natural and safe for its target.
 
 ## 2. IIR surface
 
-Seven new ops. A string value rides the `type_hint` `str`; it flows as a `Var`
+Eight string ops. A string value rides the `type_hint` `str`; it flows as a `Var`
 (a managed reference or a fat handle), exactly like an `array<T>` value.
 
 | Op | Form | Result | Semantics |
@@ -75,6 +76,7 @@ Seven new ops. A string value rides the `type_hint` `str`; it flows as a `Var`
 | `str_len` | `dest <- s` | `i64` | The **byte** length of `s`. |
 | `str_concat` | `dest <- a, b` | `str` | A new string = bytes of `a` followed by bytes of `b`. Neither input is mutated. |
 | `str_index` | `dest <- s, idx` | `i64` | **Bounds-checked** byte load: if `idx < 0 \|\| idx >= str_len(s)` → **trap**; else `dest` = the unsigned byte value `s[idx]` (0–255). |
+| `str_slice` | `dest <- s, start, end` | `str` | **Bounds-checked** byte slice `[start,end)`: invalid ranges trap; valid ranges produce a new immutable string. |
 | `str_eq` | `dest <- a, b` | `i64` (bool) | `1` if `a` and `b` have identical bytes, else `0`. |
 | `str_cmp` | `dest <- a, b` | `i64` | Lexicographic byte ordering: `-1` if `a < b`, `0` if equal, `1` if `a > b`. |
 | `print_str` | `s` | — | Write the bytes of `s` to stdout (no implicit newline). The text-I/O primitive — the string sibling of `call_builtin "print_i64"`. |
@@ -110,16 +112,16 @@ explicit `cmp idx,len` + branch-to-trap.
 
 ## 3. Per-backend representation
 
-| Backend | Family | Representation | `str_const` | `str_len` | `str_eq` | `str_cmp` | `str_index` | `str_concat` | `print_str` |
-|---|---|---|---|---|---|---|---|---|---|
-| **vm-core** | (interp) | `Value::Str(Vec<u8>)` (new value variant) or a handle into `memory` | intern the literal bytes | `.len()` | byte equality | byte ordering | range-checked byte index | allocate a new buffer | write bytes to the host stdout sink |
-| **jit-core** | (interp) | same as vm-core (CIR mirrors it) | — | — | — | — | — | — | — |
-| **JVM** | GC | `java.lang.String` for the landed literal-output/metadata/index slice; byte-string representation still under E4-managed | `ldc` string CP entry ✅ for ASCII literals | `String.length()` ✅ for ASCII literals | `String.equals(Object)` ✅ for ASCII literals | `String.compareTo` + `Integer.signum` ✅ | `String.charAt(I)` ✅ for ASCII literals | `String.concat(String)` ✅ for ASCII literals | `PrintStream.print(String)` ✅ |
-| **CLR** | GC | `System.String` for the landed literal-output/metadata/index slice; byte-string representation still under E4-managed | `ldstr "…"` ✅ for ASCII literals | `String.Length` ✅ for ASCII literals | `String.Equals(string,string)` ✅ for ASCII literals | `String.CompareOrdinal` + `Math.Sign` ✅ | `String.get_Chars(int32)` ✅ for ASCII literals | `String.Concat(string,string)` ✅ for ASCII literals | `Console.Write(string)` ✅ |
-| **WASM** | linear-memory foothold now; WasmGC later | `i32` pointer into a data segment for the landed literal-output/metadata/index slice; richer byte-string representation still under E4-managed | data segment ✅ for ASCII literals | literal side-table length ✅ | literal side-table byte equality ✅ | literal side-table ordering ✅ | guarded `i32.load8_u` ✅ for ASCII literals | literal data entry ✅ | host import `env.__print_str(ptr,len)` ✅ |
-| **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | private `{len,bytes}` global ✅ for ASCII literals | literal side-table length ✅ | literal side-table byte equality ✅ | literal side-table ordering ✅ | folded literal byte ✅ | literal metadata ✅ | `@__print_str(i8* base+8, i64 len)` C-runtime ✅ |
-| **x86_64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | folded literal equality ✅ | folded literal ordering ✅ | folded literal byte ✅ | folded literal concat ✅ | `call __twig_print_string(ptr,len)` ✅ |
-| **aarch64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | folded literal equality ✅ | folded literal ordering ✅ | folded literal byte ✅ | folded literal concat ✅ | `bl __twig_print_string(ptr,len)` ✅ |
+| Backend | Family | Representation | `str_const` | `str_len` | `str_eq` | `str_cmp` | `str_index` | `str_concat` | `str_slice` | `print_str` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **vm-core** | (interp) | `Value::Str(Vec<u8>)` (new value variant) or a handle into `memory` | intern the literal bytes | `.len()` | byte equality | byte ordering | range-checked byte index | allocate a new buffer | allocate a sliced buffer | write bytes to the host stdout sink |
+| **jit-core** | (interp) | same as vm-core (CIR mirrors it) | — | — | — | — | — | — | — | — |
+| **JVM** | GC | `java.lang.String` for the landed literal-output/metadata/index slice; byte-string representation still under E4-managed | `ldc` string CP entry ✅ for ASCII literals | `String.length()` ✅ for ASCII literals | `String.equals(Object)` ✅ for ASCII literals | `String.compareTo` + `Integer.signum` ✅ | `String.charAt(I)` ✅ for ASCII literals | `String.concat(String)` ✅ for ASCII literals | `String.substring(II)` ✅ for ASCII literals | `PrintStream.print(String)` ✅ |
+| **CLR** | GC | `System.String` for the landed literal-output/metadata/index slice; byte-string representation still under E4-managed | `ldstr "…"` ✅ for ASCII literals | `String.Length` ✅ for ASCII literals | `String.Equals(string,string)` ✅ for ASCII literals | `String.CompareOrdinal` + `Math.Sign` ✅ | `String.get_Chars(int32)` ✅ for ASCII literals | `String.Concat(string,string)` ✅ for ASCII literals | `String.Substring(int32,int32)` ✅ for ASCII literals | `Console.Write(string)` ✅ |
+| **WASM** | linear-memory foothold now; WasmGC later | `i32` pointer into a data segment for the landed literal-output/metadata/index slice; richer byte-string representation still under E4-managed | data segment ✅ for ASCII literals | literal side-table length ✅ | literal side-table byte equality ✅ | literal side-table ordering ✅ | guarded `i32.load8_u` ✅ for ASCII literals | literal data entry ✅ | literal side-table slice ✅ | host import `env.__print_str(ptr,len)` ✅ |
+| **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | private `{len,bytes}` global ✅ for ASCII literals | literal side-table length ✅ | literal side-table byte equality ✅ | literal side-table ordering ✅ | folded literal byte ✅ | literal metadata ✅ | literal metadata slice ✅ | `@__print_str(i8* base+8, i64 len)` C-runtime ✅ |
+| **x86_64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | folded literal equality ✅ | folded literal ordering ✅ | folded literal byte ✅ | folded literal concat ✅ | folded literal slice ✅ | `call __twig_print_string(ptr,len)` ✅ |
+| **aarch64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | folded literal equality ✅ | folded literal ordering ✅ | folded literal byte ✅ | folded literal concat ✅ | folded literal slice ✅ | `bl __twig_print_string(ptr,len)` ✅ |
 
 **Unmanaged header layout** (LLVM / x86_64 / aarch64): identical to E5's array
 header — word 0 is the byte count, bytes start at offset 8. String literals are
@@ -193,7 +195,8 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `string<?`/`string>?` to `str_cmp` plus typed comparisons, and `string-ref`
   to `str_index`. Direct literals, immutable top-level values, and
   lexical `let`/`let*` locals can now feed `str_len`, `str_index`, `str_eq`, `str_cmp`, and
-  `str_concat` on all seven backends; local `string-append` results can also feed
+  `str_concat` on all seven backends; local `substring` lowers to `str_slice`,
+  and local `string-append` results can also feed
   `string-ref` directly through `str_concat` followed by `str_index`, and
   local `string-length` results can compute `string-ref` indexes through typed
   arithmetic. The dynamic-`any`, captured, and reassigned
@@ -201,7 +204,7 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   string slice here is the statically-typed subset that clears the code-gen
   validators, mirroring how E5/E6 carved a typed slice out of Twig.
 
-The frontends emit `str` values and the six ops; no backend learns anything
+The frontends emit `str` values and the shared E4 string ops; no backend learns anything
 language-specific.
 
 ---
@@ -230,7 +233,9 @@ branches, and concat: `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`,
 everywhere; `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
 returns `68`, proving a concat temporary can feed byte indexing, and
 `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns `69`,
-proving `str_len` can compute a byte-index operand. `(if (string<? "ALPHA"
+proving `str_len` can compute a byte-index operand.
+`(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` returns `67`,
+proving `str_slice` can feed byte indexing. `(if (string<? "ALPHA"
 "BETA") (if (string>? "BETA" "ALPHA") 42 0) 0)` returns `42`, proving lexical
 ordering through `str_cmp`. The matrix also covers the **bounds-trap** case: `(string-ref "ABC"
 3)` must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
@@ -267,7 +272,7 @@ E4 is large, so it ships as a sequence, each a `feat(lang-full): …` PR babysat
 merge before the next:
 
 0. **E4-spec** (this document) — committed specs-first, for design sign-off.
-1. ✅ **E4-ir + vm** — define the six ops + the `str` type helper in
+1. ✅ **E4-ir + vm** — define the string ops + the `str` type helper in
    `interpreter-ir`; implement them in `vm-core`: a string value model,
    `str_len`/`str_index` (bounds-checked)/`str_concat`/`str_eq`, and `print_str`
    to the host sink. Unit tests incl. an out-of-bounds trap. *No matrix Prog yet
@@ -339,6 +344,7 @@ merge before the next:
    and `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
    returns `68`, and
    `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns `69`,
+   `(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` returns `67`,
    on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured/reassigned
    strings still wait for the broader dynamic representation.
 4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
@@ -350,11 +356,11 @@ merge before the next:
    this item is now the richer ops/representation slice.
 6. ✅ **E4-ops-proofs** — named-value `str_concat`+`str_len`, `str_eq` driving a
    branch, named/local `str_index`, local `str_concat` feeding `str_index`, and
-   local `str_len` computing a `str_index` operand, `str_cmp` driving lexical
-   predicates, plus the `str_index` out-of-bounds **trap** proof now run across
-   every backend.
-7. **Follow-ups beyond v1** `str_substr`;
-   captured/reassigned dynamic strings, string arrays/input/parameters in each
+   local `str_len` computing a `str_index` operand, `str_slice` feeding
+   `str_index`, `str_cmp` driving lexical predicates, plus the `str_index`
+   out-of-bounds **trap** proof now run across every backend.
+7. **Follow-ups beyond v1** captured/reassigned dynamic strings,
+   string arrays/input/parameters in each
    frontend, runtime byte-string allocation beyond the current immutable scalar
    foothold, Unicode codepoint/grapheme semantics, the dynamic-`any` Twig string
    path (needs broader E6), and string interpolation.

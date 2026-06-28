@@ -209,11 +209,12 @@ pub fn is_array_op(op: &str) -> bool {
 // String opcode helpers (LANG-FULL E4)
 // ---------------------------------------------------------------------------
 //
-// A v1 string is an immutable byte sequence. `str_index` and `str_len` operate
-// on byte positions/counts, `str_eq` returns an i64-style truth value (1/0), and
-// `print_str` is a side-effecting stdout primitive with no implicit newline.
+// A v1 string is an immutable byte sequence. `str_index`, `str_slice`, and
+// `str_len` operate on byte positions/counts, `str_eq` returns an i64-style
+// truth value (1/0), `str_cmp` returns a normalized lexical ordering (-1/0/1),
+// and `print_str` is a side-effecting stdout primitive with no implicit newline.
 
-/// Return `true` if `op` is one of the six LANG-FULL E4 string opcodes.
+/// Return `true` if `op` is one of the LANG-FULL E4 string opcodes.
 ///
 /// ```
 /// use interpreter_ir::opcodes::is_string_op;
@@ -223,7 +224,8 @@ pub fn is_array_op(op: &str) -> bool {
 pub fn is_string_op(op: &str) -> bool {
     matches!(
         op,
-        "str_const" | "str_len" | "str_index" | "str_concat" | "str_eq" | "print_str"
+        "str_const" | "str_len" | "str_index" | "str_concat" | "str_slice"
+            | "str_eq" | "str_cmp" | "print_str"
     )
 }
 
@@ -412,7 +414,9 @@ pub fn is_value_producing(op: &str) -> bool {
                 | "str_len"
                 | "str_index"
                 | "str_concat"
+                | "str_slice"
                 | "str_eq"
+                | "str_cmp"
                 // Global variable read (LANG32)
                 | "global_load"
                 // Numeric conversions integer↔real (LANG-FULL E8)
@@ -512,6 +516,7 @@ pub fn is_allocating(op: &str) -> bool {
         "alloc" | "box" | "safepoint"
             // Runtime-built strings allocate a fresh immutable byte buffer.
             | "str_concat"
+            | "str_slice"
             // Array allocation (LANG-FULL E5)
             | "alloc_array"
             // Closure allocation (LANG34)
@@ -949,7 +954,15 @@ mod tests {
 
     #[test]
     fn string_ops_are_classified() {
-        for op in &["str_const", "str_len", "str_index", "str_concat", "str_eq"] {
+        for op in &[
+            "str_const",
+            "str_len",
+            "str_index",
+            "str_concat",
+            "str_slice",
+            "str_eq",
+            "str_cmp",
+        ] {
             assert!(is_string_op(op), "{op}");
             assert!(is_value_producing(op), "{op}");
             assert!(is_known_op(op), "{op}");
@@ -958,6 +971,7 @@ mod tests {
         assert!(has_side_effects("print_str"));
         assert!(!is_value_producing("print_str"));
         assert!(is_allocating("str_concat"));
+        assert!(is_allocating("str_slice"));
         assert!(is_str_type(STR_TYPE));
         assert!(!is_str_type("array<u8>"));
     }
