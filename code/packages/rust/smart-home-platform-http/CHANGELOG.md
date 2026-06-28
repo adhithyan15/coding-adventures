@@ -45,6 +45,8 @@ All notable changes to this package will be documented in this file.
   runtime event stream route.
 - Added browser dashboard detail actions for history, event-log,
   command-result, and authorization audit rows.
+- Added browser dashboard filters for entity state, event-log, command-result,
+  and authorization audit views, plus local text search across dashboard rows.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe
