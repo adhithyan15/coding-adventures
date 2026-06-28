@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `device_model_reference_deck_audit_analysis_summary`,
+  `format_device_model_reference_deck_audit_analysis_summary_table`,
+  `device_model_reference_deck_audit_analysis_summary_records`,
+  `format_device_model_reference_deck_audit_analysis_summary_csv`, and
+  `format_device_model_reference_deck_audit_analysis_summary_json`, stable
+  per-analysis coverage summaries for the reference-deck audit matrix,
+  matching Python and TypeScript.
 - Add `device_model_reference_deck_audit_summary`,
   `format_device_model_reference_deck_audit_summary_table`,
   `device_model_reference_deck_audit_summary_records`,

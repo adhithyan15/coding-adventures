@@ -2971,6 +2971,16 @@ pub struct DeviceModelReferenceDeckAuditSummary {
     pub references: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeviceModelReferenceDeckAuditAnalysisSummary {
+    pub analysis: String,
+    pub fixture_count: usize,
+    pub kinds: Vec<String>,
+    pub missing_kinds: Vec<String>,
+    pub deck_line_count: usize,
+    pub references: Vec<String>,
+}
+
 const REFERENCE_DECK_AUDIT_EXPECTED_KINDS: &[ModelCardKind] = &[
     ModelCardKind::Diode,
     ModelCardKind::Npn,
@@ -4455,6 +4465,122 @@ pub fn format_device_model_reference_deck_audit_summary_json(
     format_deck_table_json(&format_device_model_reference_deck_audit_summary_table(
         fixtures,
     ))
+}
+
+pub fn device_model_reference_deck_audit_analysis_summary(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> Vec<DeviceModelReferenceDeckAuditAnalysisSummary> {
+    let expected_kinds = REFERENCE_DECK_AUDIT_EXPECTED_KINDS
+        .iter()
+        .map(|kind| kind.as_str().to_string())
+        .collect::<Vec<_>>();
+    let expected_analyses = REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES
+        .iter()
+        .map(|analysis| analysis.to_string())
+        .collect::<Vec<_>>();
+    let mut analyses = expected_analyses.clone();
+    for analysis in fixtures
+        .iter()
+        .map(|fixture| fixture.analysis.clone())
+        .collect::<BTreeSet<_>>()
+    {
+        if !analyses.contains(&analysis) {
+            analyses.push(analysis);
+        }
+    }
+
+    analyses
+        .into_iter()
+        .map(|analysis| {
+            let analysis_rows = fixtures
+                .iter()
+                .filter(|fixture| fixture.analysis == analysis)
+                .collect::<Vec<_>>();
+            let row_kinds = analysis_rows
+                .iter()
+                .map(|fixture| fixture.kind.as_str().to_string())
+                .collect::<BTreeSet<_>>();
+            let mut kinds = expected_kinds
+                .iter()
+                .filter(|kind| row_kinds.contains(*kind))
+                .cloned()
+                .collect::<Vec<_>>();
+            kinds.extend(
+                row_kinds
+                    .iter()
+                    .filter(|kind| !expected_kinds.contains(kind))
+                    .cloned(),
+            );
+            let missing_kinds = if expected_analyses.contains(&analysis) {
+                expected_kinds
+                    .iter()
+                    .filter(|kind| !row_kinds.contains(*kind))
+                    .cloned()
+                    .collect::<Vec<_>>()
+            } else {
+                Vec::new()
+            };
+            let mut references = Vec::new();
+            for fixture in &analysis_rows {
+                if !fixture.reference.is_empty() && !references.contains(&fixture.reference) {
+                    references.push(fixture.reference.clone());
+                }
+            }
+
+            DeviceModelReferenceDeckAuditAnalysisSummary {
+                analysis,
+                fixture_count: analysis_rows.len(),
+                kinds,
+                missing_kinds,
+                deck_line_count: analysis_rows
+                    .iter()
+                    .map(|fixture| fixture.deck_lines.len())
+                    .sum(),
+                references,
+            }
+        })
+        .collect()
+}
+
+pub fn format_device_model_reference_deck_audit_analysis_summary_table(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    let mut lines =
+        vec!["analysis\tfixture_count\tkinds\tmissing_kinds\tdeck_lines\treferences".to_string()];
+    for summary in device_model_reference_deck_audit_analysis_summary(fixtures) {
+        lines.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}",
+            summary.analysis,
+            summary.fixture_count,
+            summary.kinds.join(","),
+            summary.missing_kinds.join(","),
+            summary.deck_line_count,
+            summary.references.join(",")
+        ));
+    }
+    lines.join("\n")
+}
+
+pub fn device_model_reference_deck_audit_analysis_summary_records(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_device_model_reference_deck_audit_analysis_summary_table(fixtures))
+}
+
+pub fn format_device_model_reference_deck_audit_analysis_summary_csv(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    format_deck_table_csv(
+        &format_device_model_reference_deck_audit_analysis_summary_table(fixtures),
+    )
+}
+
+pub fn format_device_model_reference_deck_audit_analysis_summary_json(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    format_deck_table_json(
+        &format_device_model_reference_deck_audit_analysis_summary_table(fixtures),
+    )
 }
 
 pub fn device_model_reference_deck_audit_gate(

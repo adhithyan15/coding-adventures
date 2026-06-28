@@ -1109,6 +1109,15 @@ export interface DeviceModelReferenceDeckAuditSummary {
   readonly references: readonly string[];
 }
 
+export interface DeviceModelReferenceDeckAuditAnalysisSummary {
+  readonly analysis: string;
+  readonly fixtureCount: number;
+  readonly kinds: readonly (ModelCardKind | string)[];
+  readonly missingKinds: readonly ModelCardKind[];
+  readonly deckLineCount: number;
+  readonly references: readonly string[];
+}
+
 const REFERENCE_DECK_AUDIT_EXPECTED_KINDS: readonly ModelCardKind[] = [
   "D",
   "NPN",
@@ -7997,6 +8006,82 @@ export function formatDeviceModelReferenceDeckAuditSummaryJson(
   fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
 ): string {
   return formatDeckTableJson(formatDeviceModelReferenceDeckAuditSummaryTable(fixtures));
+}
+
+export function deviceModelReferenceDeckAuditAnalysisSummary(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): readonly DeviceModelReferenceDeckAuditAnalysisSummary[] {
+  const expectedKinds = REFERENCE_DECK_AUDIT_EXPECTED_KINDS as readonly string[];
+  const expectedAnalyses = REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES as readonly string[];
+  const analyses = [...expectedAnalyses];
+  for (const analysis of [...new Set(fixtures.map((fixture) => fixture.analysis))].sort()) {
+    if (!analyses.includes(analysis)) {
+      analyses.push(analysis);
+    }
+  }
+
+  return analyses.map((analysis) => {
+    const rows = fixtures.filter((fixture) => fixture.analysis === analysis);
+    const rowKinds = new Set(rows.map((fixture) => fixture.kind));
+    const kinds = [
+      ...REFERENCE_DECK_AUDIT_EXPECTED_KINDS.filter((kind) => rowKinds.has(kind)),
+      ...[...rowKinds]
+        .filter((kind) => !(REFERENCE_DECK_AUDIT_EXPECTED_KINDS as readonly string[]).includes(kind))
+        .sort(),
+    ];
+    const missingKinds = expectedAnalyses.includes(analysis)
+      ? REFERENCE_DECK_AUDIT_EXPECTED_KINDS.filter((kind) => !rowKinds.has(kind))
+      : [];
+    const references: string[] = [];
+    for (const fixture of rows) {
+      if (fixture.reference.length > 0 && !references.includes(fixture.reference)) {
+        references.push(fixture.reference);
+      }
+    }
+    return {
+      analysis,
+      fixtureCount: rows.length,
+      kinds,
+      missingKinds,
+      deckLineCount: rows.reduce((total, fixture) => total + fixture.deckLines.length, 0),
+      references,
+    };
+  });
+}
+
+export function formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  const lines = ["analysis\tfixture_count\tkinds\tmissing_kinds\tdeck_lines\treferences"];
+  for (const summary of deviceModelReferenceDeckAuditAnalysisSummary(fixtures)) {
+    lines.push([
+      summary.analysis,
+      summary.fixtureCount.toString(),
+      summary.kinds.join(","),
+      summary.missingKinds.join(","),
+      summary.deckLineCount.toString(),
+      summary.references.join(","),
+    ].join("\t"));
+  }
+  return lines.join("\n");
+}
+
+export function deviceModelReferenceDeckAuditAnalysisSummaryRecords(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditAnalysisSummaryCsv(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableCsv(formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditAnalysisSummaryJson(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableJson(formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(fixtures));
 }
 
 export function deviceModelReferenceDeckAuditGate(
