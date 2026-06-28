@@ -15,21 +15,18 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Device model reference-deck audit record exports.
+1. Device model reference-deck audit summaries.
    - Status: current PR completion candidate.
    - Python, Rust, and TypeScript now expose
-     `device_model_reference_deck_audit_records` /
-     `deviceModelReferenceDeckAuditRecords` helpers plus stable
-     `format_device_model_reference_deck_audit_csv` /
-     `formatDeviceModelReferenceDeckAuditCsv` and
-     `format_device_model_reference_deck_audit_json` /
-     `formatDeviceModelReferenceDeckAuditJson` output.
-   - The exports reuse the reference-deck audit table contract to provide
-     header-keyed records plus browser/release-friendly CSV and compact JSON
-     for dashboards, release automation, and reference-deck comparison tools.
-   - Cross-language tests lock the first diode operating-point row, final
-     Level-1 MOS transient-storage row metadata, CSV comma escaping, and JSON
-     parseability so downstream consumers can rely on the audit matrix shape.
+     `device_model_reference_deck_audit_summary` /
+     `deviceModelReferenceDeckAuditSummary` helpers plus stable
+     summary table, header-keyed records, CSV, and compact JSON output.
+   - The summary condenses the reference-deck audit matrix by model family,
+     preserving expected analysis order, missing-analysis gaps, total deck-line
+     counts, and reference labels for release dashboards and coverage reviews.
+   - Cross-language tests lock the four expected summary rows, CSV/JSON
+     exports, and a negative missing `NMOS:tran` summary case so downstream
+     consumers can audit coverage without scanning every fixture row.
 
 ## Completed Slices
 
@@ -1356,6 +1353,22 @@ downstream tools to compare.
    - Cross-language tests lock the passing report header/body and a negative
      missing `NMOS:tran` coverage issue so the audit matrix is enforceable by
      release automation.
+
+130. Device model reference-deck audit record exports.
+   - Status: completed in PR 6844.
+   - Python, Rust, and TypeScript now expose
+     `device_model_reference_deck_audit_records` /
+     `deviceModelReferenceDeckAuditRecords` helpers plus stable
+     `format_device_model_reference_deck_audit_csv` /
+     `formatDeviceModelReferenceDeckAuditCsv` and
+     `format_device_model_reference_deck_audit_json` /
+     `formatDeviceModelReferenceDeckAuditJson` output.
+   - The exports reuse the reference-deck audit table contract to provide
+     header-keyed records plus browser/release-friendly CSV and compact JSON
+     for dashboards, release automation, and reference-deck comparison tools.
+   - Cross-language tests lock the first diode operating-point row, final
+     Level-1 MOS transient-storage row metadata, CSV comma escaping, and JSON
+     parseability so downstream consumers can rely on the audit matrix shape.
 
 ## Backlog
 

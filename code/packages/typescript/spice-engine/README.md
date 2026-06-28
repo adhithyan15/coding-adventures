@@ -218,6 +218,12 @@ tab-separated audit table for release and reference-deck comparisons.
 `formatDeviceModelReferenceDeckAuditCsv`, and
 `formatDeviceModelReferenceDeckAuditJson` expose the same matrix as
 header-keyed records and browser/release-friendly CSV or compact JSON.
+`deviceModelReferenceDeckAuditSummary`,
+`formatDeviceModelReferenceDeckAuditSummaryTable`,
+`deviceModelReferenceDeckAuditSummaryRecords`,
+`formatDeviceModelReferenceDeckAuditSummaryCsv`, and
+`formatDeviceModelReferenceDeckAuditSummaryJson` expose stable per-kind
+coverage summaries with missing-analysis and deck-line totals.
 `deviceModelReferenceDeckAuditGate` and
 `formatDeviceModelReferenceDeckAuditGateReport` validate the required
 kind-by-analysis coverage matrix and emit a stable pass/fail gate report.

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add `deviceModelReferenceDeckAuditSummary`,
+  `formatDeviceModelReferenceDeckAuditSummaryTable`,
+  `deviceModelReferenceDeckAuditSummaryRecords`,
+  `formatDeviceModelReferenceDeckAuditSummaryCsv`, and
+  `formatDeviceModelReferenceDeckAuditSummaryJson`, stable per-kind coverage
+  summaries for the reference-deck audit matrix, matching Python and Rust.
 - Add `deviceModelReferenceDeckAuditRecords`,
   `formatDeviceModelReferenceDeckAuditCsv`, and
   `formatDeviceModelReferenceDeckAuditJson`, stable record-oriented exports

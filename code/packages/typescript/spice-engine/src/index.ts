@@ -1100,6 +1100,15 @@ export interface DeviceModelReferenceDeckAuditGateReport {
   readonly issues: readonly DeviceModelReferenceDeckAuditIssue[];
 }
 
+export interface DeviceModelReferenceDeckAuditSummary {
+  readonly kind: ModelCardKind | string;
+  readonly fixtureCount: number;
+  readonly analyses: readonly string[];
+  readonly missingAnalyses: readonly string[];
+  readonly deckLineCount: number;
+  readonly references: readonly string[];
+}
+
 const REFERENCE_DECK_AUDIT_EXPECTED_KINDS: readonly ModelCardKind[] = [
   "D",
   "NPN",
@@ -7913,6 +7922,81 @@ export function formatDeviceModelReferenceDeckAuditJson(
   fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
 ): string {
   return formatDeckTableJson(formatDeviceModelReferenceDeckAuditTable(fixtures));
+}
+
+export function deviceModelReferenceDeckAuditSummary(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): readonly DeviceModelReferenceDeckAuditSummary[] {
+  const expectedKinds = REFERENCE_DECK_AUDIT_EXPECTED_KINDS as readonly string[];
+  const kinds = [...expectedKinds];
+  for (const kind of [...new Set(fixtures.map((fixture) => fixture.kind))].sort()) {
+    if (!kinds.includes(kind)) {
+      kinds.push(kind);
+    }
+  }
+
+  return kinds.map((kind) => {
+    const rows = fixtures.filter((fixture) => fixture.kind === kind);
+    const rowAnalyses = new Set(rows.map((fixture) => fixture.analysis));
+    const analyses = [
+      ...REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES.filter((analysis) => rowAnalyses.has(analysis)),
+      ...[...rowAnalyses]
+        .filter((analysis) => !(REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES as readonly string[]).includes(analysis))
+        .sort(),
+    ];
+    const missingAnalyses = expectedKinds.includes(kind)
+      ? REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES.filter((analysis) => !rowAnalyses.has(analysis))
+      : [];
+    const references: string[] = [];
+    for (const fixture of rows) {
+      if (fixture.reference.length > 0 && !references.includes(fixture.reference)) {
+        references.push(fixture.reference);
+      }
+    }
+    return {
+      kind,
+      fixtureCount: rows.length,
+      analyses,
+      missingAnalyses,
+      deckLineCount: rows.reduce((total, fixture) => total + fixture.deckLines.length, 0),
+      references,
+    };
+  });
+}
+
+export function formatDeviceModelReferenceDeckAuditSummaryTable(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  const lines = ["kind\tfixture_count\tanalyses\tmissing_analyses\tdeck_lines\treferences"];
+  for (const summary of deviceModelReferenceDeckAuditSummary(fixtures)) {
+    lines.push([
+      summary.kind,
+      summary.fixtureCount.toString(),
+      summary.analyses.join(","),
+      summary.missingAnalyses.join(","),
+      summary.deckLineCount.toString(),
+      summary.references.join(","),
+    ].join("\t"));
+  }
+  return lines.join("\n");
+}
+
+export function deviceModelReferenceDeckAuditSummaryRecords(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatDeviceModelReferenceDeckAuditSummaryTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditSummaryCsv(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableCsv(formatDeviceModelReferenceDeckAuditSummaryTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditSummaryJson(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableJson(formatDeviceModelReferenceDeckAuditSummaryTable(fixtures));
 }
 
 export function deviceModelReferenceDeckAuditGate(

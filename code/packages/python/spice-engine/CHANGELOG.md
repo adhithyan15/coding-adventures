@@ -4,6 +4,15 @@
 
 ### Added
 
+- **Device model reference-deck audit summaries** —
+  `device_model_reference_deck_audit_summary()`,
+  `format_device_model_reference_deck_audit_summary_table()`,
+  `device_model_reference_deck_audit_summary_records()`,
+  `format_device_model_reference_deck_audit_summary_csv()`, and
+  `format_device_model_reference_deck_audit_summary_json()` now expose stable
+  per-kind coverage summaries for the reference-deck audit matrix, matching
+  Rust and TypeScript.
+
 - **Device model reference-deck audit record exports** —
   `device_model_reference_deck_audit_records()`,
   `format_device_model_reference_deck_audit_csv()`, and

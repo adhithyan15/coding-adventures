@@ -26,6 +26,8 @@ import {
   deviceModelReferenceDeckAuditFixtures,
   deviceModelReferenceDeckAuditGate,
   deviceModelReferenceDeckAuditRecords,
+  deviceModelReferenceDeckAuditSummary,
+  deviceModelReferenceDeckAuditSummaryRecords,
   deviceModelTemperatureAuditFixtures,
   diode,
   diodeFromModelCard,
@@ -37,6 +39,9 @@ import {
   formatDeviceModelReferenceDeckAuditCsv,
   formatDeviceModelReferenceDeckAuditGateReport,
   formatDeviceModelReferenceDeckAuditJson,
+  formatDeviceModelReferenceDeckAuditSummaryCsv,
+  formatDeviceModelReferenceDeckAuditSummaryJson,
+  formatDeviceModelReferenceDeckAuditSummaryTable,
   formatDeviceModelReferenceDeckAuditTable,
   formatMeasurementTable,
   formatTemperatureDcTable,
@@ -264,6 +269,60 @@ describe("dcOp", () => {
     );
 
     expect(JSON.parse(formatDeviceModelReferenceDeckAuditJson())).toStrictEqual(records);
+  });
+
+  it("formats stable device model reference deck audit summary records", () => {
+    const summary = deviceModelReferenceDeckAuditSummary();
+    expect(summary).toHaveLength(4);
+    expect(summary[0]).toStrictEqual({
+      kind: "D",
+      fixtureCount: 5,
+      analyses: ["op", "temperature", "ac", "noise", "tran"],
+      missingAnalyses: [],
+      deckLineCount: 42,
+      references: ["SPICE2/SPICE3-style local model-depth fixture"],
+    });
+
+    expect(formatDeviceModelReferenceDeckAuditSummaryTable()).toBe(
+      [
+        "kind\tfixture_count\tanalyses\tmissing_analyses\tdeck_lines\treferences",
+        "D\t5\top,temperature,ac,noise,tran\t\t42\tSPICE2/SPICE3-style local model-depth fixture",
+        "NPN\t5\top,temperature,ac,noise,tran\t\t47\tSPICE2/SPICE3-style local model-depth fixture",
+        "NJF\t5\top,temperature,ac,noise,tran\t\t52\tSPICE2/SPICE3-style local model-depth fixture",
+        "NMOS\t5\top,temperature,ac,noise,tran\t\t47\tSPICE2/SPICE3-style local model-depth fixture",
+      ].join("\n"),
+    );
+
+    const records = deviceModelReferenceDeckAuditSummaryRecords();
+    expect(records[0]).toStrictEqual({
+      kind: "D",
+      fixture_count: "5",
+      analyses: "op,temperature,ac,noise,tran",
+      missing_analyses: "",
+      deck_lines: "42",
+      references: "SPICE2/SPICE3-style local model-depth fixture",
+    });
+    expect(formatDeviceModelReferenceDeckAuditSummaryCsv().split(/\r?\n/u)[1]).toBe(
+      'D,5,"op,temperature,ac,noise,tran",,42,SPICE2/SPICE3-style local model-depth fixture',
+    );
+    expect(JSON.parse(formatDeviceModelReferenceDeckAuditSummaryJson())).toStrictEqual(records);
+  });
+
+  it("reports missing device model reference deck audit summary analyses", () => {
+    const fixtures = deviceModelReferenceDeckAuditFixtures().filter(
+      (fixture) => !(fixture.kind === "NMOS" && fixture.analysis === "tran"),
+    );
+
+    const summary = deviceModelReferenceDeckAuditSummary(fixtures);
+    const nmos = summary.find((row) => row.kind === "NMOS");
+
+    expect(nmos?.fixtureCount).toBe(4);
+    expect(nmos?.analyses).toStrictEqual(["op", "temperature", "ac", "noise"]);
+    expect(nmos?.missingAnalyses).toStrictEqual(["tran"]);
+    expect(nmos?.deckLineCount).toBe(37);
+    expect(formatDeviceModelReferenceDeckAuditSummaryTable(fixtures)).toContain(
+      "NMOS\t4\top,temperature,ac,noise\ttran\t37\tSPICE2/SPICE3-style local model-depth fixture",
+    );
   });
 
   it("formats a stable device model reference deck audit gate report", () => {

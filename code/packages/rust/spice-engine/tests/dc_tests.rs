@@ -5,13 +5,18 @@ use spice_engine::{
     dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
     device_model_behavior_audit_fixtures, device_model_reference_deck_audit_fixtures,
     device_model_reference_deck_audit_gate, device_model_reference_deck_audit_records,
+    device_model_reference_deck_audit_summary, device_model_reference_deck_audit_summary_records,
     device_model_temperature_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
     format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
     format_device_model_reference_deck_audit_csv,
     format_device_model_reference_deck_audit_gate_report,
-    format_device_model_reference_deck_audit_json, format_device_model_reference_deck_audit_table,
-    format_measurement_table, format_temperature_dc_table, jfet_from_model_card,
-    measure_dc_sweep_deck, measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
+    format_device_model_reference_deck_audit_json,
+    format_device_model_reference_deck_audit_summary_csv,
+    format_device_model_reference_deck_audit_summary_json,
+    format_device_model_reference_deck_audit_summary_table,
+    format_device_model_reference_deck_audit_table, format_measurement_table,
+    format_temperature_dc_table, jfet_from_model_card, measure_dc_sweep_deck,
+    measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
     normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs,
     Ccvs, Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource,
     CustomModel, DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity,
@@ -365,6 +370,87 @@ fn device_model_reference_deck_audit_record_exports_are_stable() {
     assert!(json.starts_with("[{\"name\":\"diode-forward-bias:op\""));
     assert!(json.contains("\"deck_lines\":\"10\""));
     assert!(json.ends_with("]\n"));
+}
+
+#[test]
+fn device_model_reference_deck_audit_summary_exports_are_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let summary = device_model_reference_deck_audit_summary(&fixtures);
+
+    assert_eq!(summary.len(), 4);
+    assert_eq!(summary[0].kind, "D");
+    assert_eq!(summary[0].fixture_count, 5);
+    assert_eq!(
+        summary[0].analyses,
+        vec!["op", "temperature", "ac", "noise", "tran"]
+    );
+    assert!(summary[0].missing_analyses.is_empty());
+    assert_eq!(summary[0].deck_line_count, 42);
+    assert_eq!(
+        summary[0].references,
+        vec!["SPICE2/SPICE3-style local model-depth fixture"]
+    );
+
+    let table = format_device_model_reference_deck_audit_summary_table(&fixtures);
+    assert_eq!(
+        table,
+        concat!(
+            "kind\tfixture_count\tanalyses\tmissing_analyses\tdeck_lines\treferences\n",
+            "D\t5\top,temperature,ac,noise,tran\t\t42\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "NPN\t5\top,temperature,ac,noise,tran\t\t47\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "NJF\t5\top,temperature,ac,noise,tran\t\t52\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "NMOS\t5\top,temperature,ac,noise,tran\t\t47\tSPICE2/SPICE3-style local model-depth fixture"
+        )
+    );
+
+    let records = device_model_reference_deck_audit_summary_records(&fixtures);
+    assert_eq!(records[0].get("kind").map(String::as_str), Some("D"));
+    assert_eq!(
+        records[0].get("fixture_count").map(String::as_str),
+        Some("5")
+    );
+    assert_eq!(
+        records[0].get("analyses").map(String::as_str),
+        Some("op,temperature,ac,noise,tran")
+    );
+    assert_eq!(
+        records[0].get("missing_analyses").map(String::as_str),
+        Some("")
+    );
+    assert_eq!(records[0].get("deck_lines").map(String::as_str), Some("42"));
+    assert_eq!(
+        format_device_model_reference_deck_audit_summary_csv(&fixtures)
+            .lines()
+            .nth(1),
+        Some("D,5,\"op,temperature,ac,noise,tran\",,42,SPICE2/SPICE3-style local model-depth fixture")
+    );
+    let json = format_device_model_reference_deck_audit_summary_json(&fixtures);
+    assert!(json.starts_with("[{\"kind\":\"D\""));
+    assert!(json.contains("\"deck_lines\":\"47\""));
+    assert!(json.ends_with("]\n"));
+}
+
+#[test]
+fn device_model_reference_deck_audit_summary_reports_missing_analysis() {
+    let fixtures = device_model_reference_deck_audit_fixtures()
+        .unwrap()
+        .into_iter()
+        .filter(|fixture| !(fixture.kind == ModelCardKind::Nmos && fixture.analysis == "tran"))
+        .collect::<Vec<_>>();
+
+    let summary = device_model_reference_deck_audit_summary(&fixtures);
+    let nmos = summary
+        .iter()
+        .find(|row| row.kind == "NMOS")
+        .expect("NMOS summary row should exist");
+
+    assert_eq!(nmos.fixture_count, 4);
+    assert_eq!(nmos.analyses, vec!["op", "temperature", "ac", "noise"]);
+    assert_eq!(nmos.missing_analyses, vec!["tran"]);
+    assert_eq!(nmos.deck_line_count, 37);
+    assert!(format_device_model_reference_deck_audit_summary_table(&fixtures).contains(
+        "NMOS\t4\top,temperature,ac,noise\ttran\t37\tSPICE2/SPICE3-style local model-depth fixture"
+    ));
 }
 
 #[test]
