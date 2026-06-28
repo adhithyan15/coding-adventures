@@ -35,3 +35,8 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 
 All JSON uses camelCase field names to match the existing TypeScript Engram app
 and keep generated bindings idiomatic.
+
+`rateCard` remains backward-compatible with the original command shape. Hosts
+may also include a `deckOptions` object to drive the Rust scheduler with custom
+learning steps, relearning steps, daily limits, graduation intervals, and lapse
+behavior. When `deckOptions` is omitted, the core applies `DeckOptions::default()`.

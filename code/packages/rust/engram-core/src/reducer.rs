@@ -1,7 +1,7 @@
 use crate::model::{
     ActiveSessionState, AppState, Card, CardProgress, Deck, Rating, Review, Session, SessionStatus,
 };
-use crate::sm2::{create_initial_progress, update_card_progress};
+use crate::scheduler::{schedule_review, DeckOptions};
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum EngramCommand {
@@ -48,6 +48,14 @@ pub enum EngramCommand {
         card_id: String,
         rating: Rating,
         reviewed_at: u64,
+    },
+    RateCardWithOptions {
+        review_id: String,
+        session_id: String,
+        card_id: String,
+        rating: Rating,
+        reviewed_at: u64,
+        deck_options: DeckOptions,
     },
     AdvanceSession,
     CompleteSession {
@@ -236,40 +244,31 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             card_id,
             rating,
             reviewed_at,
-        } => {
-            if state.active_session.is_none() {
-                return state.clone();
-            }
-
-            let existing = state
-                .card_progress
-                .iter()
-                .find(|progress| progress.card_id == card_id);
-            let new_progress = match existing {
-                Some(progress) => update_card_progress(progress, rating, reviewed_at),
-                None => create_initial_progress(card_id.clone(), rating, reviewed_at),
-            };
-
-            let mut next = state.clone();
-            upsert_progress(&mut next.card_progress, new_progress);
-            next.reviews.push(Review {
-                id: review_id,
-                session_id: session_id.clone(),
-                card_id,
-                rating,
-                reviewed_at,
-            });
-            for session in &mut next.sessions {
-                if session.id == session_id {
-                    session.cards_reviewed += 1;
-                    if rating != Rating::Again {
-                        session.cards_correct += 1;
-                    }
-                    break;
-                }
-            }
-            next
-        }
+        } => reduce_rate_card(
+            state,
+            review_id,
+            session_id,
+            card_id,
+            rating,
+            reviewed_at,
+            &DeckOptions::default(),
+        ),
+        EngramCommand::RateCardWithOptions {
+            review_id,
+            session_id,
+            card_id,
+            rating,
+            reviewed_at,
+            deck_options,
+        } => reduce_rate_card(
+            state,
+            review_id,
+            session_id,
+            card_id,
+            rating,
+            reviewed_at,
+            &deck_options,
+        ),
         EngramCommand::AdvanceSession => {
             let mut next = state.clone();
             if let Some(active_session) = &mut next.active_session {
@@ -296,6 +295,47 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
     }
 }
 
+fn reduce_rate_card(
+    state: &AppState,
+    review_id: String,
+    session_id: String,
+    card_id: String,
+    rating: Rating,
+    reviewed_at: u64,
+    deck_options: &DeckOptions,
+) -> AppState {
+    if state.active_session.is_none() {
+        return state.clone();
+    }
+
+    let existing = state
+        .card_progress
+        .iter()
+        .find(|progress| progress.card_id == card_id);
+    let new_progress =
+        schedule_review(existing, card_id.clone(), rating, deck_options, reviewed_at);
+
+    let mut next = state.clone();
+    upsert_progress(&mut next.card_progress, new_progress);
+    next.reviews.push(Review {
+        id: review_id,
+        session_id: session_id.clone(),
+        card_id,
+        rating,
+        reviewed_at,
+    });
+    for session in &mut next.sessions {
+        if session.id == session_id {
+            session.cards_reviewed += 1;
+            if rating != Rating::Again {
+                session.cards_correct += 1;
+            }
+            break;
+        }
+    }
+    next
+}
+
 fn upsert_progress(progress: &mut Vec<CardProgress>, new_progress: CardProgress) {
     match progress
         .iter_mut()
@@ -310,7 +350,7 @@ fn upsert_progress(progress: &mut Vec<CardProgress>, new_progress: CardProgress)
 mod tests {
     use super::*;
     use crate::model::CardState;
-    use crate::sm2::ONE_DAY_MS;
+    use crate::scheduler::ONE_MINUTE_MS;
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -367,10 +407,47 @@ mod tests {
 
         assert_eq!(next.card_progress.len(), 1);
         assert_eq!(next.card_progress[0].times_seen, 1);
-        assert_eq!(next.card_progress[0].next_due_at, NOW + 3 * ONE_DAY_MS);
+        assert_eq!(next.card_progress[0].state, CardState::Learning);
+        assert_eq!(next.card_progress[0].learning_step_index, Some(1));
+        assert_eq!(next.card_progress[0].next_due_at, NOW + 10 * ONE_MINUTE_MS);
         assert_eq!(next.reviews.len(), 1);
         assert_eq!(next.sessions[0].cards_reviewed, 1);
         assert_eq!(next.sessions[0].cards_correct, 1);
+    }
+
+    #[test]
+    fn rate_card_with_options_honors_custom_learning_steps() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card")],
+                started_at: NOW,
+            },
+        );
+        let deck_options = DeckOptions {
+            learning_steps_minutes: vec![3, 30],
+            ..DeckOptions::default()
+        };
+
+        let next = reduce(
+            &state,
+            EngramCommand::RateCardWithOptions {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: NOW,
+                deck_options,
+            },
+        );
+
+        assert_eq!(next.card_progress[0].state, CardState::Learning);
+        assert_eq!(next.card_progress[0].learning_step_index, Some(1));
+        assert_eq!(next.card_progress[0].next_due_at, NOW + 30 * ONE_MINUTE_MS);
     }
 
     #[test]

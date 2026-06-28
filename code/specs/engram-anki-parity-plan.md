@@ -75,6 +75,15 @@ storage, IDs, timestamps, file pickers, audio playback, and sync transport.
 
 Status: in progress.
 
+Current reducer integration:
+
+- `EngramCommand::RateCard` routes through the scheduler state machine with
+  `DeckOptions::default()`.
+- `EngramCommand::RateCardWithOptions` lets host shells pass deck-specific
+  learning steps, review limits, graduation intervals, and lapse behavior.
+- `engram-core-wasm` keeps the original `rateCard` JSON command compatible and
+  accepts optional `deckOptions`.
+
 ### 1.2 Notes and Card Templates
 
 Anki's core abstraction is a note, not a card. A note contains fields and a

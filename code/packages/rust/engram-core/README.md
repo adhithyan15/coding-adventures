@@ -1,7 +1,7 @@
 # engram-core
 
 `engram-core` is the headless Rust engine for Engram-style study apps. It owns
-the durable learning model, SM-2 scheduling, session queues, session reducers,
+the durable learning model, Anki-style scheduler state transitions, session queues, session reducers,
 and deck statistics. It does not own UI, persistence, platform storage,
 timestamps, random IDs, Mosaic components, or native shell code.
 
@@ -30,10 +30,16 @@ to exchange JSON snapshots with JavaScript or native host code.
 This crate owns:
 
 - decks, cards, progress, sessions, and reviews
-- SM-2 review scheduling
+- Anki-style review scheduling over new, learning, review, and relearning states
 - due/new card queue assembly
 - pure state transitions
 - derived study stats
+
+`EngramCommand::RateCard` uses `DeckOptions::default()` and routes through the
+scheduler state machine. Hosts that already expose deck-specific options can
+dispatch `EngramCommand::RateCardWithOptions` to provide learning steps,
+graduating/easy intervals, review limits, and lapse behavior without forking the
+review logic.
 
 This crate does not own:
 

@@ -9,7 +9,8 @@
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
-    build_session_queue, generate_cards_for_note, get_deck_stats, reduce, AppState, Card, Rating,
+    build_session_queue, generate_cards_for_note, get_deck_stats, reduce, AppState, Card,
+    DeckOptions, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -144,6 +145,8 @@ enum FacadeCommand {
         card_id: String,
         rating: Rating,
         reviewed_at: u64,
+        #[serde(default)]
+        deck_options: Option<DeckOptions>,
     },
     AdvanceSession,
     CompleteSession {
@@ -218,12 +221,23 @@ impl FacadeCommand {
                 card_id,
                 rating,
                 reviewed_at,
-            } => engram_core::EngramCommand::RateCard {
-                review_id,
-                session_id,
-                card_id,
-                rating,
-                reviewed_at,
+                deck_options,
+            } => match deck_options {
+                Some(deck_options) => engram_core::EngramCommand::RateCardWithOptions {
+                    review_id,
+                    session_id,
+                    card_id,
+                    rating,
+                    reviewed_at,
+                    deck_options,
+                },
+                None => engram_core::EngramCommand::RateCard {
+                    review_id,
+                    session_id,
+                    card_id,
+                    rating,
+                    reviewed_at,
+                },
             },
             Self::AdvanceSession => engram_core::EngramCommand::AdvanceSession,
             Self::CompleteSession {
@@ -376,6 +390,60 @@ mod tests {
         assert_eq!(value["ok"], true);
         assert_eq!(value["cards"][0]["front"], "letter-a");
         assert_eq!(value["cards"][0]["back"], "a");
+    }
+
+    #[test]
+    fn dispatch_rate_card_accepts_deck_options() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                "startedAt": 1700000000000
+            }"#,
+        );
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "rateCard",
+                    "reviewId": "review",
+                    "sessionId": "session",
+                    "cardId": "card",
+                    "rating": "good",
+                    "reviewedAt": 1700000000000,
+                    "deckOptions": {
+                        "newCardsPerDay": 20,
+                        "reviewsPerDay": 200,
+                        "learningStepsMinutes": [2, 20],
+                        "relearningStepsMinutes": [10],
+                        "graduatingIntervalDays": 1,
+                        "easyIntervalDays": 4,
+                        "lapseIntervalMultiplier": 0.0
+                    }
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["state"]["cardProgress"][0]["state"], "learning");
+        assert_eq!(value["state"]["cardProgress"][0]["learningStepIndex"], 1);
+        assert_eq!(
+            value["state"]["cardProgress"][0]["nextDueAt"],
+            NOW + 20 * 60 * 1000
+        );
     }
 
     #[test]
