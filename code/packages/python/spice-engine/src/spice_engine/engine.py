@@ -8659,6 +8659,23 @@ def _diode_current_conductance(el: Diode, vd: float, *, clamp_forward: bool = Tr
     return current, conductance
 
 
+def _diode_charge_state_name(el: Diode) -> str:
+    return f"_D_{el.name}_charge"
+
+
+def _diode_has_charge_storage(el: Diode) -> bool:
+    return el.Cjo > 0.0 or el.Tt > 0.0
+
+
+def _diode_dynamic_capacitance(el: Diode, vd: float) -> float:
+    _, gd = _diode_current_conductance(el, vd)
+    return el.Cjo + el.Tt * gd
+
+
+def _diode_charge_voltage(el: Diode, node_voltages: dict[str, float]) -> float:
+    return _node_voltage(el.anode, node_voltages) - _node_voltage(el.cathode, node_voltages)
+
+
 def _stamp_mosfet(
     G: list[list[float]],
     b: list[float],
@@ -9541,6 +9558,36 @@ def _build_transient_companions(
                 current=I_eq,
             ))
 
+        # ---- Diode model-card charge companion ----------------------------
+        elif isinstance(el, Diode) and _diode_has_charge_storage(el):
+            state_name = _diode_charge_state_name(el)
+            v_prev = cap_voltages.get(state_name, 0.0)
+            capacitance = _diode_dynamic_capacitance(el, v_prev)
+            if capacitance > 0.0:
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_eq = g_eq * v_prev + cap_currents.get(state_name, 0.0)
+                elif method == "gear2":
+                    v_older = cap_voltages_older.get(state_name, v_prev)
+                    g_eq = 3.0 * capacitance / (2.0 * h)
+                    I_eq = capacitance * (4.0 * v_prev - v_older) / (2.0 * h)
+                else:
+                    g_eq = capacitance / h
+                    I_eq = g_eq * v_prev
+
+                aug.elements.append(Resistor(
+                    name=f"_D_{el.name}_charge_R",
+                    n_plus=el.anode,
+                    n_minus=el.cathode,
+                    resistance=1.0 / g_eq,
+                ))
+                aug.elements.append(CurrentSource(
+                    name=f"_D_{el.name}_charge_I",
+                    n_plus=el.cathode,
+                    n_minus=el.anode,
+                    current=I_eq,
+                ))
+
         # ---- Inductor companion ------------------------------------------
         elif isinstance(el, Inductor) and el.name not in coupled_names:
             I_prev = ind_currents.get(el.name, 0.0)
@@ -9674,6 +9721,30 @@ def _update_reactive_state(
             cap_voltages_older[el.name] = v_prev
             cap_voltages[el.name] = v_new
 
+        elif isinstance(el, Diode) and _diode_has_charge_storage(el):
+            state_name = _diode_charge_state_name(el)
+            v_new = _diode_charge_voltage(el, op.node_voltages)
+            v_prev = cap_voltages.get(state_name, v_new)
+            v_older = cap_voltages_older.get(state_name, v_prev)
+            capacitance = _diode_dynamic_capacitance(el, v_prev)
+
+            if capacitance > 0.0:
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_prev = cap_currents.get(state_name, 0.0)
+                    cap_currents[state_name] = g_eq * (v_new - v_prev) - I_prev
+                elif method == "gear2":
+                    cap_currents[state_name] = (
+                        capacitance * (3.0 * v_new - 4.0 * v_prev + v_older)
+                        / (2.0 * h)
+                    )
+                else:
+                    g_eq = capacitance / h
+                    cap_currents[state_name] = g_eq * (v_new - v_prev)
+
+            cap_voltages_older[state_name] = v_prev
+            cap_voltages[state_name] = v_new
+
         elif isinstance(el, Inductor) and el.name not in coupled_names:
             v_plus = _node_voltage(el.n_plus, op.node_voltages)
             v_minus = _node_voltage(el.n_minus, op.node_voltages)
@@ -9727,6 +9798,14 @@ def _lte_estimate(
             v1 = cap_voltages_now.get(el.name, 0.0)
             v0 = cap_voltages_prev.get(el.name, el.initial_voltage)
             vm1 = cap_voltages_prev2.get(el.name, el.initial_voltage)
+            lte_c = abs(v1 - 2.0 * v0 + vm1) / 2.0
+            if lte_c > max_lte:
+                max_lte = lte_c
+        elif isinstance(el, Diode) and _diode_has_charge_storage(el):
+            state_name = _diode_charge_state_name(el)
+            v1 = cap_voltages_now.get(state_name, 0.0)
+            v0 = cap_voltages_prev.get(state_name, 0.0)
+            vm1 = cap_voltages_prev2.get(state_name, 0.0)
             lte_c = abs(v1 - 2.0 * v0 + vm1) / 2.0
             if lte_c > max_lte:
                 max_lte = lte_c
@@ -9890,10 +9969,16 @@ def transient(
         el.name: el.initial_voltage
         for el in circuit.elements if isinstance(el, Capacitor)
     }
+    for el in circuit.elements:
+        if isinstance(el, Diode) and _diode_has_charge_storage(el):
+            cap_voltages[_diode_charge_state_name(el)] = _diode_charge_voltage(el, op.node_voltages)
     cap_currents: dict[str, float] = {
         el.name: 0.0
         for el in circuit.elements if isinstance(el, Capacitor)
     }
+    for el in circuit.elements:
+        if isinstance(el, Diode) and _diode_has_charge_storage(el):
+            cap_currents[_diode_charge_state_name(el)] = 0.0
     cap_voltages_older: dict[str, float] = dict(cap_voltages)
     ind_currents: dict[str, float] = {
         el.name: el.initial_current
@@ -9958,6 +10043,11 @@ def transient(
                     v_plus = _node_voltage(el.n_plus, op.node_voltages)
                     v_minus = _node_voltage(el.n_minus, op.node_voltages)
                     cap_voltages_new[el.name] = v_plus - v_minus
+                elif isinstance(el, Diode) and _diode_has_charge_storage(el):
+                    cap_voltages_new[_diode_charge_state_name(el)] = _diode_charge_voltage(
+                        el,
+                        op.node_voltages,
+                    )
 
             lte = _lte_estimate(circuit, cap_voltages_new,
                                  cap_voltages, cap_voltages_prev)

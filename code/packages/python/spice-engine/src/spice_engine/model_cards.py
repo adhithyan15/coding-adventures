@@ -880,10 +880,9 @@ def device_model_noise_audit_fixtures() -> tuple[DeviceModelNoiseBehaviorFixture
 def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixture, ...]:
     """Return runnable transient storage fixtures for charge model-depth audits.
 
-    The current nonlinear diode/BJT/JFET/MOS charge state is intentionally
-    audited through explicit terminal storage capacitors.  Model-card
-    capacitance parameters remain AC small-signal inputs until a nonlinear
-    transient charge-stamping policy lands.
+    Diode CJO/TT model-card storage is transient-stamped by the simulator.
+    BJT, JFET, and MOS charge state is still audited through explicit terminal
+    storage capacitors until their nonlinear charge policies land.
     """
 
     models = _model_card_by_name()
@@ -934,8 +933,8 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
             expected_final_min=0.58,
             expected_final_max=0.61,
             charge_behavior=(
-                "diode terminal charge is conserved through explicit Cstore; "
-                "CJO/TT remain AC-only until nonlinear charge stamping lands"
+                "diode CJO/TT contribute transient anode-cathode storage; "
+                "explicit Cstore keeps the fixture comparable with other charge audits"
             ),
             deck_lines=(
                 "* device-model charge fixture: diode-storage-charge",

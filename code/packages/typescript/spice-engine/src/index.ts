@@ -7636,7 +7636,7 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
       expectedFinalMin: 0.58,
       expectedFinalMax: 0.61,
       chargeBehavior:
-        "diode terminal charge is conserved through explicit Cstore; CJO/TT remain AC-only until nonlinear charge stamping lands",
+        "diode CJO/TT contribute transient anode-cathode storage; explicit Cstore keeps the fixture comparable with other charge audits",
       deckLines: [
         "* device-model charge fixture: diode-storage-charge",
         ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
@@ -12816,6 +12816,7 @@ export function transient(
     inductorStates,
     0.0,
   );
+  seedDiodeCapacitorStates(circuit, initialSolution.nodeVoltages, capacitorStates);
   updateTransmissionLineStates(circuit, initialSolution.nodeVoltages, lineStates, 0.0);
   const points: TransientPoint[] = [];
   for (let time = timeStep; time <= stopTime + timeStep * 1.0e-9; time += timeStep) {
@@ -13119,6 +13120,7 @@ export function transientAdaptive(
     inductorStates,
     0.0,
   );
+  seedDiodeCapacitorStates(circuit, initialSolution.nodeVoltages, capacitorStates);
   updateTransmissionLineStates(circuit, initialSolution.nodeVoltages, lineStates, 0.0);
 
   const points: TransientPoint[] = [];
@@ -15490,7 +15492,7 @@ function solveLinearCircuitAtOperatingPoint(
         stampCustomModel(element, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "diode":
-        stampDiode(element, nodeIndices, matrix, rhs, operatingPoint);
+        stampDiode(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "jfet":
         stampJfet(element, nodeIndices, matrix, rhs, operatingPoint);
@@ -16697,6 +16699,7 @@ function customModelConductance(
 
 function stampDiode(
   element: Diode,
+  capacitorStates: readonly CapacitorState[],
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
   rhs: number[],
@@ -16717,6 +16720,49 @@ function stampDiode(
   }
   if (cathode !== undefined) {
     rhs[cathode] += equivalentCurrent;
+  }
+  stampDiodeCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+}
+
+function stampDiodeCharge(
+  element: Diode,
+  capacitorStates: readonly CapacitorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  const state = capacitorStates.find(
+    (candidate) => candidate.name === diodeChargeStateName(element),
+  );
+  if (state === undefined) {
+    return;
+  }
+  const capacitance = diodeDynamicCapacitance(element, state.previousVoltage);
+  if (capacitance <= 0.0) {
+    return;
+  }
+  const conductance =
+    state.method === "trap"
+      ? (2.0 * capacitance) / state.timeStep
+      : state.method === "gear2"
+        ? (3.0 * capacitance) / (2.0 * state.timeStep)
+        : capacitance / state.timeStep;
+  const historyCurrent =
+    state.method === "trap"
+      ? conductance * state.previousVoltage + state.previousCurrent
+      : state.method === "gear2"
+        ? capacitance *
+          (4.0 * state.previousVoltage - state.previousPreviousVoltage) /
+          (2.0 * state.timeStep)
+        : conductance * state.previousVoltage;
+  const anode = nodeIndex(nodeIndices, element.anode);
+  const cathode = nodeIndex(nodeIndices, element.cathode);
+  stampConductance(matrix, anode, cathode, conductance);
+  if (anode !== undefined) {
+    rhs[anode] += historyCurrent;
+  }
+  if (cathode !== undefined) {
+    rhs[cathode] -= historyCurrent;
   }
 }
 
@@ -17064,6 +17110,23 @@ function diodeCurrentConductance(element: Diode, voltage: number): [number, numb
   return [current, conductance];
 }
 
+function diodeChargeStateName(element: Diode): string {
+  return `_D_${element.name}_charge`;
+}
+
+function diodeHasChargeStorage(element: Diode): boolean {
+  return element.junctionCapacitance > 0.0 || element.transitTime > 0.0;
+}
+
+function diodeDynamicCapacitance(element: Diode, voltage: number): number {
+  const [, conductance] = diodeCurrentConductance(element, voltage);
+  return element.junctionCapacitance + element.transitTime * conductance;
+}
+
+function diodeChargeVoltage(element: Diode, nodeVoltages: ReadonlyMap<string, number>): number {
+  return voltageAt(nodeVoltages, element.anode) - voltageAt(nodeVoltages, element.cathode);
+}
+
 function validateBjt(element: Bjt): void {
   if (element.polarity !== "NPN" && element.polarity !== "PNP") {
     throw invalidElement(element.name, "BJT polarity must be NPN or PNP");
@@ -17158,6 +17221,15 @@ function initialCapacitorStates(
         timeStep,
         method,
       });
+    } else if (element.kind === "diode" && diodeHasChargeStorage(element)) {
+      states.push({
+        name: diodeChargeStateName(element),
+        previousVoltage: 0.0,
+        previousPreviousVoltage: 0.0,
+        previousCurrent: 0.0,
+        timeStep,
+        method,
+      });
     }
   }
   return states;
@@ -17221,6 +17293,8 @@ function capacitorVoltages(
         element.name,
         voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2),
       );
+    } else if (element.kind === "diode" && diodeHasChargeStorage(element)) {
+      voltages.set(diodeChargeStateName(element), diodeChargeVoltage(element, nodeVoltages));
     }
   }
   return voltages;
@@ -17235,6 +17309,13 @@ function transientLteEstimate(
   let maxLte = 0.0;
   for (const element of circuit.elements()) {
     if (element.kind !== "capacitor") {
+      if (element.kind === "diode" && diodeHasChargeStorage(element)) {
+        const stateName = diodeChargeStateName(element);
+        const current = currentVoltages.get(stateName) ?? 0.0;
+        const previous = previousVoltages.get(stateName) ?? 0.0;
+        const previousPrevious = previousPreviousVoltages.get(stateName) ?? 0.0;
+        maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
+      }
       continue;
     }
     const current = currentVoltages.get(element.name) ?? element.initialVoltage;
@@ -17383,33 +17464,70 @@ function updateCapacitorStates(
   capacitorStates: CapacitorState[],
 ): void {
   for (const state of capacitorStates) {
-    const element = circuit
+    const capacitorElement = circuit
       .elements()
       .find(
         (candidate): candidate is Capacitor =>
           candidate.kind === "capacitor" && candidate.name === state.name,
       );
-    if (element === undefined) {
+    const diodeElement =
+      capacitorElement === undefined
+        ? circuit
+            .elements()
+            .find(
+              (candidate): candidate is Diode =>
+                candidate.kind === "diode" && diodeChargeStateName(candidate) === state.name,
+            )
+        : undefined;
+    if (capacitorElement === undefined && diodeElement === undefined) {
       continue;
     }
     const previousVoltage = state.previousVoltage;
     const previousCurrent = state.previousCurrent;
     const voltage =
-      voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
+      capacitorElement !== undefined
+        ? voltageAt(nodeVoltages, capacitorElement.n1) - voltageAt(nodeVoltages, capacitorElement.n2)
+        : diodeChargeVoltage(diodeElement!, nodeVoltages);
+    const capacitance =
+      capacitorElement !== undefined
+        ? capacitorElement.capacitanceFarads
+        : diodeDynamicCapacitance(diodeElement!, previousVoltage);
     if (state.method === "trap") {
-      const conductance = (2.0 * element.capacitanceFarads) / state.timeStep;
+      const conductance = (2.0 * capacitance) / state.timeStep;
       state.previousCurrent = conductance * (voltage - previousVoltage) - previousCurrent;
     } else if (state.method === "gear2") {
       state.previousCurrent =
-        element.capacitanceFarads *
+        capacitance *
         (3.0 * voltage - 4.0 * previousVoltage + state.previousPreviousVoltage) /
         (2.0 * state.timeStep);
     } else {
       state.previousCurrent =
-        (element.capacitanceFarads / state.timeStep) * (voltage - previousVoltage);
+        (capacitance / state.timeStep) * (voltage - previousVoltage);
     }
     state.previousVoltage = voltage;
     state.previousPreviousVoltage = previousVoltage;
+  }
+}
+
+function seedDiodeCapacitorStates(
+  circuit: Circuit,
+  nodeVoltages: ReadonlyMap<string, number>,
+  capacitorStates: CapacitorState[],
+): void {
+  for (const element of circuit.elements()) {
+    if (element.kind !== "diode") {
+      continue;
+    }
+    const state = capacitorStates.find(
+      (candidate) => candidate.name === diodeChargeStateName(element),
+    );
+    if (state === undefined) {
+      continue;
+    }
+    const voltage = diodeChargeVoltage(element, nodeVoltages);
+    state.previousVoltage = voltage;
+    state.previousPreviousVoltage = voltage;
+    state.previousCurrent = 0.0;
   }
 }
 

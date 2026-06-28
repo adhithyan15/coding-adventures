@@ -554,6 +554,56 @@ def test_device_model_charge_audit_fixtures_run_reference_transients() -> None:
     assert "external-only" in jfet_fixture.charge_behavior
 
 
+def test_transient_diode_junction_capacitance_slows_current_step() -> None:
+    def run(cjo: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(CurrentSource(
+            "Istep",
+            "0",
+            "out",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0e-6), (5.0e-9, 1.0e-6))),
+        ))
+        circuit.add(Resistor("Rshunt", "out", "0", 1.0e12))
+        circuit.add(Diode("D1", "out", "0", Is=1.0e-15, Vt=0.02585, Cjo=cjo))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-12)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["out"]
+    charged_first = charged.points[1].node_voltages["out"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_diode_transit_time_holds_forward_charge_on_turnoff() -> None:
+    def run(transit_time: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(CurrentSource(
+            "Istep",
+            "0",
+            "out",
+            0.0,
+            waveform=PwlWaveform(((0.0, 1.0e-3), (1.0e-9, 0.0), (5.0e-9, 0.0))),
+        ))
+        circuit.add(Resistor("Rshunt", "out", "0", 1.0e12))
+        circuit.add(Diode("D1", "out", "0", Is=1.0e-15, Vt=0.02585, Tt=transit_time))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    no_storage = run(0.0)
+    stored = run(1.0e-9)
+
+    assert no_storage.converged
+    assert stored.converged
+    assert no_storage.points[1].node_voltages["out"] == pytest.approx(0.0, abs=1.0e-12)
+    assert stored.points[1].node_voltages["out"] > 0.6
+    assert stored.points[1].node_voltages["out"] < stored.points[0].node_voltages["out"]
+
+
 def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
     with pytest.raises(ValueError, match="only MOS LEVEL=1"):
         normalize_model_card("Mbad", "nmos", {"LEVEL": 2.0})

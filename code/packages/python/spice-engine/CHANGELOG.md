@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Diode transient charge stamping** —
+  Diode `Cjo`/`Tt` model-card storage now stamps transient anode-cathode
+  companions, matching Rust and TypeScript, with regression coverage for
+  junction-capacitance current-step delay and transit-time turnoff charge.
+
 - **Device model charge audit fixtures** —
   `device_model_charge_audit_fixtures()` now exposes runnable one-device
   `.tran` fixtures with reference deck lines, explicit terminal storage
