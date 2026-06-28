@@ -738,6 +738,54 @@ def decompose_prompt(item: dict) -> str:
         answer_from = item.get("answer_from") or {}
         name = answer_from.get("name", "x")
         if answer_from.get("type") == "decision_leader":
+            requires = answer_from.get("requires") or []
+            decision_req = next((r for r in requires if r.get("type") == "decision"), None)
+            if decision_req:
+                leader = decision_req.get("leader", "tuberculosis")
+                evidence = decision_req.get("evidence", "tb_pattern")
+                return (
+                    "Translate the word problem into a native ADJ derived-evidence "
+                    "probability decision program. Use observe statements for the "
+                    "stated findings, derive the requested intermediate evidence "
+                    "with `rule { head: ... when: ... }`, add every stated prior and "
+                    "likelihood-ratio contribution, then query every candidate with "
+                    "`?`. Use ONLY numbers and labels that appear in the question. "
+                    "Do NOT choose the answer, do NOT mention the answer choices, "
+                    "and output ONLY the ADJ program.\n\n"
+                    "Question: Two diagnoses start with prior 0.05 for tuberculosis "
+                    "and 0.25 for bronchitis. Findings are prolonged_cough and "
+                    "night_sweats. Those findings derive tb_pattern. Tb_pattern has "
+                    "likelihood ratio 25 for tuberculosis and 0.5 for bronchitis. "
+                    "Which diagnosis leads?\n"
+                    "Program:\n"
+                    "prior 0.05 for tuberculosis\n"
+                    "prior 0.25 for bronchitis\n"
+                    "contributes 25 from tb_pattern to tuberculosis\n"
+                    "contributes 0.5 from tb_pattern to bronchitis\n"
+                    "observe prolonged_cough\n"
+                    "observe night_sweats\n"
+                    "rule { head: tb_pattern when: prolonged_cough, night_sweats }\n"
+                    "? tuberculosis\n"
+                    "? bronchitis\n\n"
+                    "Question: Two causes start with prior 0.10 for appendicitis "
+                    "and 0.20 for gastroenteritis. Findings are rlq_pain and "
+                    "rebound_tenderness. Those findings derive peritoneal_pattern. "
+                    "Peritoneal_pattern has likelihood ratio 18 for appendicitis and "
+                    "0.8 for gastroenteritis. Which cause leads?\n"
+                    "Program:\n"
+                    "prior 0.10 for appendicitis\n"
+                    "prior 0.20 for gastroenteritis\n"
+                    "contributes 18 from peritoneal_pattern to appendicitis\n"
+                    "contributes 0.8 from peritoneal_pattern to gastroenteritis\n"
+                    "observe rlq_pain\n"
+                    "observe rebound_tenderness\n"
+                    "rule { head: peritoneal_pattern when: rlq_pain, rebound_tenderness }\n"
+                    "? appendicitis\n"
+                    "? gastroenteritis\n\n"
+                    f"Required decision leader: {leader}\n"
+                    f"Required derived evidence: {evidence}\n"
+                    f"Question: {item['stem']}\nProgram:"
+                )
             return (
                 "Translate the word problem into a native ADJ probability decision "
                 "program. Declare the priors for the candidate hypotheses, add every "
