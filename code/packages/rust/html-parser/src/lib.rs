@@ -5110,6 +5110,17 @@ impl HtmlParser {
             return;
         }
 
+        if !in_foreign_content && name == "img" && self.current_element_is_table_structure() {
+            if let Some(path) =
+                self.insert_node_before_open_table_inside_previous_center_font_context(
+                    Node::element(name.clone(), attributes.clone()),
+                )
+            {
+                self.open_elements.push(path);
+                return;
+            }
+        }
+
         if !in_foreign_content
             && name == "select"
             && self.has_open_element("template")
@@ -6117,6 +6128,38 @@ impl HtmlParser {
         let mut inserted_path = parent_path.to_vec();
         inserted_path.push(table_index);
         Some(inserted_path)
+    }
+
+    fn insert_node_before_open_table_inside_previous_center_font_context(
+        &mut self,
+        node: Node,
+    ) -> Option<Vec<usize>> {
+        let table_path = self
+            .open_elements
+            .iter()
+            .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
+            .cloned()?;
+        let (&table_index, parent_path) = table_path.split_last()?;
+        let previous_index = table_index.checked_sub(1)?;
+        let siblings = children_at_path_mut(&mut self.document.children, parent_path)?;
+        let previous_center_has_font = matches!(
+            siblings.get(previous_index),
+            Some(Node::Element(center))
+                if center.name == "center"
+                    && center
+                        .children
+                        .iter()
+                        .any(|child| matches!(child, Node::Element(child) if child.name == "font"))
+        );
+        if !previous_center_has_font {
+            return None;
+        }
+
+        let mut font = Node::element("font".to_string(), Vec::new());
+        if let Node::Element(font_element) = &mut font {
+            font_element.children.push(node);
+        }
+        self.insert_node_before_open_table(font)
     }
 
     fn close_fostered_formatting_before_table_context(&mut self, incoming_name: &str) {
@@ -8338,7 +8381,6 @@ fn repair_split_div_nobr_adoption(document: &mut Document) {
 
 fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_tricky_adoption_agency_in(&mut document.children);
-    repair_table_font_fostered_image(&mut document.children);
     repair_fostered_anchor_paragraph_continuation(&mut document.children);
     repair_insanely_badly_nested_table_sequence(&mut document.children);
 }
@@ -8718,54 +8760,6 @@ fn previous_sibling_carries_font_size_seven_context(node: Option<&Node>) -> bool
                     if child.name == "font" && child.attribute("size") == Some("7")
             )
         })
-}
-
-fn repair_table_font_fostered_image(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_table_font_fostered_image(&mut element.children);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_center_had_font = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(center))
-                if center.name == "center"
-                    && center
-                        .children
-                        .iter()
-                        .any(|child| matches!(child, Node::Element(child) if child.name == "font"))
-        );
-        if !previous_center_had_font {
-            index += 1;
-            continue;
-        }
-
-        let Some(Node::Element(table)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        if table.name != "table"
-            || table.children.len() < 4
-            || !matches!(table.children.first(), Some(Node::Text(text)) if text.data == " ")
-            || !matches!(table.children.get(1), Some(Node::Element(element)) if element.name == "img")
-            || !matches!(table.children.get(2), Some(Node::Text(text)) if text.data == " ")
-        {
-            index += 1;
-            continue;
-        }
-
-        let fostered = table.children.drain(1..3).collect::<Vec<_>>();
-        let mut font = Node::element("font".to_string(), Vec::new());
-        if let Node::Element(element) = &mut font {
-            element.children = fostered;
-        }
-        nodes.insert(index, font);
-        index += 2;
-    }
 }
 
 fn repair_fostered_anchor_paragraph_continuation(nodes: &mut Vec<Node>) {
