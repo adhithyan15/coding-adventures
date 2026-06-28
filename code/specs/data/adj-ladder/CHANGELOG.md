@@ -2,6 +2,19 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.7.0] — 2026-06-28
+
+### Added — rung 3 quadratic roots scaffold
+
+- **`rung3_quadratic_roots/items.json`** — 20 fresh algebra MCQs where the gold
+  decomposition is a native ADJ root-solving program. Several items use native
+  `latex "..."` constraints, so the ladder exercises ADJ's LaTeX math path directly.
+- Program-backed items can now declare `answer_from: {"type": "solve_roots"}`. The
+  engine returns `solve.outcome = solved_roots`; the harness only compares that root
+  set to the printed root-set options.
+- The bank-integrity gate now accepts distinct root-set option values while keeping
+  formula rungs on numeric options.
+
 ## [0.6.0] — 2026-06-28
 
 ### Added — mixed derived-premise + solve rung
