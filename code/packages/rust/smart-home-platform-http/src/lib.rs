@@ -610,6 +610,18 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     };
     const inspectButton = (url, label) =>
       `<button type="button" data-inspect-url="${url}" data-inspect-label="${label}">View</button>`;
+    const stateDetailUrl = (entity) =>
+      `/api/smart_home/states/${encodeURIComponent(entity.home_assistant_entity_id || entity.entity_id)}`;
+    const entityDetailUrl = (entity) =>
+      `/api/smart_home/entities/${encodeURIComponent(entity.home_assistant_entity_id || entity.entity_id)}`;
+    const sceneDetailUrl = (scene) =>
+      `/api/smart_home/scenes/${encodeURIComponent(scene.home_assistant_scene_id || scene.scene_id)}`;
+    const serviceDetailUrl = (service) => {
+      const [domain, serviceName] = String(service.service_id || "").split(".");
+      return domain && serviceName
+        ? `/api/smart_home/services/${encodeURIComponent(domain)}/${encodeURIComponent(serviceName)}`
+        : "/api/smart_home/services";
+    };
 
     const log = (message) => {
       const at = new Date().toLocaleTimeString();
@@ -640,6 +652,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <p>${scene.action_count} actions${scene.room_ids.length ? ` | ${scene.room_ids.join(", ")}` : ""}</p>
           <div class="actions row">
             <button type="button" data-scene="${scene.home_assistant_scene_id}">Run</button>
+            ${inspectButton(sceneDetailUrl(scene), "scene detail")}
           </div>
         </article>
       `).join("") || `<p class="muted">No scenes</p>`;
@@ -653,9 +666,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             <h3>${service.service_id}</h3>
             <p class="muted">${service.home_assistant_path}</p>
           </div>
-          <span class="${statusClass(service.runtime_authorized ? "ready" : "attention")}">
-            ${service.home_assistant_entity_ids.length + service.home_assistant_scene_ids.length}
-          </span>
+          <div class="row">
+            <span class="${statusClass(service.runtime_authorized ? "ready" : "attention")}">
+              ${service.home_assistant_entity_ids.length + service.home_assistant_scene_ids.length}
+            </span>
+            ${inspectButton(serviceDetailUrl(service), "service detail")}
+          </div>
         </div>
       `).join("") || `<p class="muted">No services</p>`;
     };
@@ -702,6 +718,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <p class="muted">${device.device_id} | ${device.bridge_id}</p>
           <p>${device.entity_count} entities | ${device.capability_count} capabilities</p>
           <p class="muted">${device.room_id || "unassigned"} | ${device.manufacturer} ${device.model}</p>
+          <div class="actions row">${inspectButton(`/api/smart_home/devices/${encodeURIComponent(device.device_id)}`, "device detail")}</div>
         </article>
       `).join("") || `<p class="muted">No devices</p>`;
     };
@@ -716,6 +733,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           </div>
           <p>${bridge.integration_id} | ${bridge.transport}</p>
           <p class="muted">${bridge.device_count} devices | ${bridge.entity_count} entities | ${bridge.room_count} rooms</p>
+          <div class="actions row">${inspectButton(`/api/smart_home/bridges/${encodeURIComponent(bridge.bridge_id)}`, "bridge detail")}</div>
         </article>
       `).join("") || `<p class="muted">No bridges</p>`;
     };
@@ -747,6 +765,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             <p class="muted">${entity.home_assistant_entity_id}</p>
             <p>${value}</p>
             <div class="actions row">
+              ${inspectButton(stateDetailUrl(entity), "state detail")}
+              ${inspectButton(entityDetailUrl(entity), "entity detail")}
               ${canToggle ? `<button type="button" data-service="turn_on" data-entity="${entity.home_assistant_entity_id}">Turn on</button><button type="button" data-service="turn_off" data-entity="${entity.home_assistant_entity_id}">Turn off</button>` : ""}
               ${canToggle ? `<button type="button" data-desired-action="on" data-entity="${entity.home_assistant_entity_id}">Target on</button><button type="button" data-desired-action="off" data-entity="${entity.home_assistant_entity_id}">Target off</button>` : ""}
             </div>
@@ -7120,6 +7140,16 @@ mod tests {
             assert!(body.contains("filterRows(history.events || [], filters)"));
             assert!(body.contains("<tbody id=\"events\"></tbody>"));
             assert!(body.contains("data-inspect-url"));
+            assert!(body.contains("stateDetailUrl(entity)"));
+            assert!(body.contains("entityDetailUrl(entity)"));
+            assert!(body.contains("sceneDetailUrl(scene)"));
+            assert!(body.contains("serviceDetailUrl(service)"));
+            assert!(
+                body.contains("/api/smart_home/devices/${encodeURIComponent(device.device_id)}")
+            );
+            assert!(
+                body.contains("/api/smart_home/bridges/${encodeURIComponent(bridge.bridge_id)}")
+            );
             assert!(body.contains("/api/smart_home/state_history/"));
             assert!(body.contains("/api/smart_home/events/${entry.sequence}"));
             assert!(body.contains("/api/smart_home/command_results/"));
@@ -8203,6 +8233,9 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
         assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
         assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
+        assert!(body.contains("stateDetailUrl(entity)"));
+        assert!(body.contains("serviceDetailUrl(service)"));
+        assert!(body.contains("/api/smart_home/devices/${encodeURIComponent(device.device_id)}"));
         assert!(body.contains("/api/services/light/"));
         assert!(body.contains("data-brightness-input"));
         assert!(body.contains("brightness_pct"));

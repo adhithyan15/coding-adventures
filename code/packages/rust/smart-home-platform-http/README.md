@@ -98,9 +98,10 @@ runtime event-log, authorization audit, service catalog, API catalog, and audit
 summary data from the native API routes and sends light on/off, light brightness,
 scene, and desired-state set/clear actions through the existing Home
 Assistant-compatible and native service endpoints, preserving runtime
-authorization. History, event-log, command-result, and authorization rows expose
-read-only detail buttons that fetch the matching native detail route and show
-the response in the dashboard log. The browser shell also exposes filters for
+authorization. Entity, service, scene, device, bridge, history, event-log,
+command-result, and authorization rows/cards expose read-only detail buttons
+that fetch the matching native detail route and show the response in the
+dashboard log. The browser shell also exposes filters for
 entity domain/state/control status, runtime event kind, command-result status,
 and authorization outcome, with local text search across the rendered dashboard
 rows.
