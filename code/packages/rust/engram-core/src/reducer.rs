@@ -309,6 +309,7 @@ fn upsert_progress(progress: &mut Vec<CardProgress>, new_progress: CardProgress)
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::model::CardState;
     use crate::sm2::ONE_DAY_MS;
 
     const NOW: u64 = 1_700_000_000_000;
@@ -386,9 +387,13 @@ mod tests {
             cards: vec![card("card")],
             card_progress: vec![CardProgress {
                 card_id: "card".to_string(),
+                state: CardState::Review,
                 interval: 1,
                 ease_factor: 2.5,
                 next_due_at: NOW,
+                learning_step_index: None,
+                buried_until: None,
+                suspended_at: None,
                 times_seen: 1,
                 times_correct: 1,
                 times_incorrect: 0,

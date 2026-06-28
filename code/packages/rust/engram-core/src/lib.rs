@@ -9,15 +9,20 @@
 mod model;
 mod queue;
 mod reducer;
+mod scheduler;
 mod sm2;
 mod template;
 
 pub use model::{
-    ActiveSessionState, AppState, Card, CardProgress, CardTemplate, Deck, DeckStats, FieldDef,
-    GeneratedCard, Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
+    ActiveSessionState, AppState, Card, CardProgress, CardState, CardTemplate, Deck, DeckStats,
+    FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating, Review, Session,
+    SessionStatus,
 };
-pub use queue::{build_session_queue, get_deck_stats, is_deck_caught_up};
+pub use queue::{
+    build_session_queue, build_session_queue_with_options, get_deck_stats, is_deck_caught_up,
+};
 pub use reducer::{reduce, EngramCommand};
+pub use scheduler::{schedule_review, DeckOptions};
 pub use sm2::{
     create_initial_progress, update_card_progress, INITIAL_EASE_FACTOR, MAX_EASE_FACTOR,
     MIN_EASE_FACTOR, ONE_DAY_MS,

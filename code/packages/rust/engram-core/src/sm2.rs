@@ -1,4 +1,4 @@
-use crate::model::{CardProgress, Rating};
+use crate::model::{CardProgress, CardState, Rating};
 
 pub const INITIAL_EASE_FACTOR: f64 = 2.5;
 pub const MIN_EASE_FACTOR: f64 = 1.3;
@@ -12,9 +12,13 @@ pub fn create_initial_progress(
 ) -> CardProgress {
     let initial = CardProgress {
         card_id: card_id.into(),
+        state: CardState::Review,
         interval: 1,
         ease_factor: INITIAL_EASE_FACTOR,
         next_due_at: now + ONE_DAY_MS,
+        learning_step_index: None,
+        buried_until: None,
+        suspended_at: None,
         times_seen: 0,
         times_correct: 0,
         times_incorrect: 0,
@@ -49,9 +53,13 @@ pub fn update_card_progress(progress: &CardProgress, rating: Rating, now: u64) -
 
     CardProgress {
         card_id: progress.card_id.clone(),
+        state: progress.state,
         interval,
         ease_factor,
         next_due_at: now + u64::from(interval) * ONE_DAY_MS,
+        learning_step_index: progress.learning_step_index,
+        buried_until: progress.buried_until,
+        suspended_at: progress.suspended_at,
         times_seen: progress.times_seen + 1,
         times_correct: progress.times_correct + u32::from(is_correct),
         times_incorrect: progress.times_incorrect + u32::from(!is_correct),
@@ -68,9 +76,13 @@ mod tests {
     fn progress() -> CardProgress {
         CardProgress {
             card_id: "card-1".to_string(),
+            state: CardState::Review,
             interval: 1,
             ease_factor: INITIAL_EASE_FACTOR,
             next_due_at: 0,
+            learning_step_index: None,
+            buried_until: None,
+            suspended_at: None,
             times_seen: 0,
             times_correct: 0,
             times_incorrect: 0,

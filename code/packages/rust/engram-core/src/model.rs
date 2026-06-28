@@ -84,13 +84,28 @@ pub struct GeneratedCard {
     pub tags: Vec<String>,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum CardState {
+    Learning,
+    Review,
+    Relearning,
+    Suspended,
+    Buried,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct CardProgress {
     pub card_id: String,
+    pub state: CardState,
     pub interval: u32,
     pub ease_factor: f64,
     pub next_due_at: u64,
+    pub learning_step_index: Option<u32>,
+    pub buried_until: Option<u64>,
+    pub suspended_at: Option<u64>,
     pub times_seen: u32,
     pub times_correct: u32,
     pub times_incorrect: u32,
