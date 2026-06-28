@@ -45,6 +45,8 @@ adj-ladder/
     items.json              20 MCQs requiring a derived setup premise + native solve
   rung3_linear_systems/
     items.json              20 two-variable linear-system MCQs backed by native ADJ solve
+  rung3_linear_optimization/
+    items.json              20 linear-optimization MCQs backed by native ADJ optimize
   rung3_quadratic_roots/
     items.json              20 algebra MCQs backed by native ADJ solved_roots
   rung3_cubic_roots/
@@ -89,6 +91,7 @@ python3 contamination_check.py rung1_fractions_percent
 python3 contamination_check.py rung2_prealgebra_solve
 python3 contamination_check.py rung2_derived_solve
 python3 contamination_check.py rung3_linear_systems
+python3 contamination_check.py rung3_linear_optimization
 python3 contamination_check.py rung3_quadratic_roots
 python3 contamination_check.py rung3_cubic_roots
 python3 contamination_check.py rung3_quartic_roots
@@ -100,6 +103,7 @@ python3 ladder_eval.py rung1_fractions_percent
 python3 ladder_eval.py rung2_prealgebra_solve
 python3 ladder_eval.py rung2_derived_solve
 python3 ladder_eval.py rung3_linear_systems
+python3 ladder_eval.py rung3_linear_optimization
 python3 ladder_eval.py rung3_quadratic_roots
 python3 ladder_eval.py rung3_cubic_roots
 python3 ladder_eval.py rung3_quartic_roots
@@ -146,6 +150,9 @@ observed quantities.
 `rung3_linear_systems` takes the next native solve step: ADJ solves two-variable
 linear systems, including native LaTeX constraints, and the ladder maps one requested
 engine assignment to the printed options without solving the system in Python.
+`rung3_linear_optimization` adds the first optimization rung: local models emit
+native ADJ `maximize`/`minimize` programs, ADJ returns `optimize.value`, and the
+ladder maps only that engine optimum to the printed options.
 `rung3_quadratic_roots` starts the algebra rung: ADJ solves `x^2 = n` programs,
 including native LaTeX constraints, and the harness maps the engine's returned
 `solved_roots` set to the printed root-set options without computing the roots.
