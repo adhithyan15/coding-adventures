@@ -207,7 +207,7 @@ fn adapt_evidence(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
 }
 
 fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
-    // predicate = IDENT ( GE | LE | GT | LT | EQEQ ) NUMBER
+    // predicate = IDENT ( GE | LE | GT | LT | EQEQ ) expr
     //
     // The slot IDENT and the operator are both lexed as TokenType::Name
     // (the operator carries a custom type_name like "GE"), so we
@@ -215,7 +215,6 @@ fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
     // comparison symbols; everything else Name-typed is the slot.
     let mut slot: Option<String> = None;
     let mut op: Option<CmpOp> = None;
-    let mut value: Option<f64> = None;
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
             match t.value.as_str() {
@@ -224,9 +223,6 @@ fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
                 ">" => op = Some(CmpOp::Gt),
                 "<" => op = Some(CmpOp::Lt),
                 "==" => op = Some(CmpOp::Eq),
-                _ if t.type_ == TokenType::Number => {
-                    value = Some(parse_finite(&t.value, t.type_, "predicate")?);
-                }
                 _ if t.type_ == TokenType::Name && slot.is_none() => {
                     slot = Some(t.value.clone());
                 }
@@ -242,11 +238,26 @@ fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
         rule: "predicate".into(),
         position: "comparison operator",
     })?;
-    let value = value.ok_or(AdapterError::MissingChild {
-        rule: "predicate".into(),
-        position: "threshold NUMBER",
-    })?;
-    Ok(Evidence::Predicate { slot, op, value })
+    let rhs = if let Some(expr) = first_named_child(node, "expr") {
+        adapt_expr(expr)?
+    } else {
+        // Bootstrap compatibility while regenerating from the previous grammar,
+        // whose predicate RHS was a direct NUMBER token.
+        node.children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
+                    Some(parse_finite(&t.value, t.type_, "predicate").map(ExprAst::Lit))
+                }
+                _ => None,
+            })
+            .transpose()?
+            .ok_or(AdapterError::MissingChild {
+                rule: "predicate".into(),
+                position: "right-hand expression",
+            })?
+    };
+    Ok(Evidence::Predicate { slot, op, rhs })
 }
 
 fn adapt_interacts(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
@@ -1404,10 +1415,10 @@ mod tests {
             } => {
                 assert_eq!(lr, 1_000_000.0);
                 match evidence {
-                    Evidence::Predicate { slot, op, value } => {
+                    Evidence::Predicate { slot, op, rhs } => {
                         assert_eq!(slot, "gross_income");
                         assert_eq!(op, CmpOp::Ge);
-                        assert_eq!(value, 14600.0);
+                        assert!(matches!(rhs, ExprAst::Lit(v) if v == 14600.0));
                     }
                     other => panic!("expected predicate evidence, got {other:?}"),
                 }
@@ -1429,15 +1440,31 @@ mod tests {
             let src = format!("contributes 2.0 from age {sym} 18 to adult");
             match parse_one(&src) {
                 Statement::Contributes {
-                    evidence: Evidence::Predicate { op, value, slot },
+                    evidence: Evidence::Predicate { op, rhs, slot },
                     ..
                 } => {
                     assert_eq!(op, *expected, "operator {sym}");
-                    assert_eq!(value, 18.0);
+                    assert!(matches!(rhs, ExprAst::Lit(v) if v == 18.0));
                     assert_eq!(slot, "age");
                 }
                 other => panic!("expected predicate Contributes for {sym}, got {other:?}"),
             }
+        }
+    }
+
+    #[test]
+    fn predicate_rhs_can_be_an_arithmetic_expression() {
+        let src = "contributes 1000000 from answer == 3 / 10 to opt_a";
+        match parse_one(src) {
+            Statement::Contributes {
+                evidence: Evidence::Predicate { slot, op, rhs },
+                ..
+            } => {
+                assert_eq!(slot, "answer");
+                assert_eq!(op, CmpOp::Eq);
+                assert!(matches!(rhs, ExprAst::Bin(ArithOp::Div, _, _)));
+            }
+            other => panic!("expected predicate Contributes, got {other:?}"),
         }
     }
 

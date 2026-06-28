@@ -104,6 +104,7 @@ import sys
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Union
 
 HERE = Path(__file__).resolve().parent
 
@@ -140,21 +141,36 @@ _LETTER = re.compile(r"\b([A-E])\b")
 # ----------------------------------------------------------------------------------
 # Arm B — build the ADJ program and read the engine's selection.
 # ----------------------------------------------------------------------------------
-def build_arm_b_program(formula: str, options: dict[str, float]) -> str:
+OptionValue = Union[int, float, str]
+
+
+def _render_option_expr(value: OptionValue) -> str:
+    if isinstance(value, str):
+        value = value.strip()
+        if not value:
+            raise ValueError("option expression must not be empty")
+        return value
+    v = float(value)
+    return str(int(v)) if v.is_integer() else str(value)
+
+
+def build_arm_b_program(formula: str, options: dict[str, OptionValue]) -> str:
     """Render the option-selection ADJ program described in the module docstring.
 
-    `options` maps letters (A..E) to their numeric value as printed in the question.
-    We declare one equal-prior hypothesis per option and one `contributes` predicate
-    that fires when the engine-computed `answer` equals that option's value. The huge
-    likelihood ratio (1e6) makes a single matching option dominate decisively; if
-    none match, the hypotheses stay tied and the engine returns a kickback."""
+    `options` maps letters (A..E) to their numeric value or ADJ arithmetic expression
+    as printed in the question. We declare one equal-prior hypothesis per option and
+    one `contributes` predicate that fires when the engine-computed `answer` equals
+    that option's value. The huge likelihood ratio (1e6) makes a single matching
+    option dominate decisively; if none match, the hypotheses stay tied and the
+    engine returns a kickback."""
     lines = [f"prior 0.0001 for opt_{ltr.lower()}" for ltr in options]
     lines.append(f"let answer = {formula}")
     for ltr, val in options.items():
-        # Render whole-valued floats as ints so the predicate threshold reads cleanly
-        # (59 not 59.0); the engine compares numerically either way.
-        v = int(val) if float(val).is_integer() else val
-        lines.append(f"contributes 1000000 from answer == {v} to opt_{ltr.lower()}")
+        # Render whole-valued floats as ints so the predicate reads cleanly (59 not
+        # 59.0). String values are already ADJ expressions such as `3 / 10`.
+        lines.append(
+            f"contributes 1000000 from answer == {_render_option_expr(val)} to opt_{ltr.lower()}"
+        )
     lines += [f"? opt_{ltr.lower()}" for ltr in options]
     return "\n".join(lines) + "\n"
 

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.24.0] - 2026-06-27 — exact rational predicate comparisons
+
+### Added
+
+- `compute::ExactRational` sidecars for integer/rational arithmetic. `compute`
+  still exposes `f64` magnitudes for compatibility, but derived values now keep
+  an exact value when literals, references, and binary arithmetic stay inside
+  exact integer/rational operations.
+- `PredicateContributionClause::from_lr_expr` and `CmpOp::eval_values`, allowing
+  predicate gates to compare against a computed right-hand expression and use
+  exact rational equality when both sides carry exact values.
+- `KnowledgeBase::observed_numeric` and `observed_exact_value_with_fact` so
+  predicate gates can read observed or derived magnitudes with their exact
+  sidecars when available.
+
 ## [0.23.0] - 2026-06-21 — multi-source corroboration on `Provenance` (ADJ-A9)
 
 ### Added

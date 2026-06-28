@@ -816,6 +816,24 @@ impl KnowledgeBase {
             .or_else(|| self.derived_for(slot).map(|d| d.value))
     }
 
+    /// Read an observed or derived numeric value together with its exact
+    /// rational sidecar when one is available. This is used by equality-heavy
+    /// predicate gates such as `answer == 3 / 10`: the public magnitude remains
+    /// `f64`, but exact integer/rational arithmetic can avoid float artifacts.
+    pub fn observed_numeric(
+        &self,
+        slot: &str,
+    ) -> Option<(f64, Option<crate::compute::ExactRational>)> {
+        self.observed_value_with_fact(slot)
+            .map(|(v, id)| {
+                let exact = self
+                    .observed_exact_value_with_fact(slot)
+                    .and_then(|(x, exact_id)| if exact_id == id { Some(x) } else { None });
+                (v, exact)
+            })
+            .or_else(|| self.derived_for(slot).map(|d| (d.value, d.exact)))
+    }
+
     /// Like [`observed_value`](Self::observed_value) but also returns the
     /// [`FactId`] of the winning observation — used by
     /// [`compute`](crate::compute) so a derivation-tree leaf can cite the byte-
@@ -834,6 +852,27 @@ impl KnowledgeBase {
             })
             // Largest FactId wins — facts are inserted in program order,
             // so a later `observe` of the same slot supersedes an earlier.
+            .max_by_key(|(id, _)| id.0)
+            .map(|(id, v)| (v, id))
+    }
+
+    /// Exact counterpart to [`observed_value_with_fact`](Self::observed_value_with_fact).
+    /// Returns a value only when the fact's leading magnitude is exactly
+    /// representable as an integer/rational sidecar.
+    pub fn observed_exact_value_with_fact(
+        &self,
+        slot: &str,
+    ) -> Option<(crate::compute::ExactRational, FactId)> {
+        self.facts
+            .values()
+            .flatten()
+            .filter(|f| f.probability == Probability::Certain)
+            .filter_map(|f| match &f.term {
+                Term::Compound { functor, args } if functor == slot && args.len() == 1 => {
+                    numeric_exact_magnitude(&args[0]).map(|v| (f.id, v))
+                }
+                _ => None,
+            })
             .max_by_key(|(id, _)| id.0)
             .map(|(id, v)| (v, id))
     }
@@ -984,6 +1023,27 @@ pub fn numeric_magnitude(value: &Term) -> Option<f64> {
         Term::Compound { args, .. } => match args.first() {
             Some(Term::Num(Number::Int(i))) => Some(*i as f64),
             Some(Term::Num(Number::Float(x))) => Some(*x),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
+/// Exact counterpart to [`numeric_magnitude`]. It intentionally returns `None`
+/// for non-integral floats; exact decimal parsing belongs at the language
+/// adapter layer, while this engine helper only trusts values that arrived as
+/// integer terms or integer-valued floats.
+pub fn numeric_exact_magnitude(value: &Term) -> Option<crate::compute::ExactRational> {
+    match value {
+        Term::Num(Number::Int(i)) => Some(crate::compute::ExactRational::from_i128(*i as i128)),
+        Term::Num(Number::Float(x)) => crate::compute::ExactRational::from_integer_f64(*x),
+        Term::Compound { args, .. } => match args.first() {
+            Some(Term::Num(Number::Int(i))) => {
+                Some(crate::compute::ExactRational::from_i128(*i as i128))
+            }
+            Some(Term::Num(Number::Float(x))) => {
+                crate::compute::ExactRational::from_integer_f64(*x)
+            }
             _ => None,
         },
         _ => None,

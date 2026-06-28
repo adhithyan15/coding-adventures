@@ -49,7 +49,7 @@ giving it a derivation trail**.
 |---|---|---|
 | `prior N for T` | `:50` | Seeds LR log-odds prior (`PriorClause`) |
 | `contributes N from <evidence> to T` | `:52` | Single-source likelihood ratio; `evidence = predicate \| term` (`:62`) |
-| `predicate = IDENT (GE\|LE\|GT\|LT\|EQEQ) NUMBER` | `:64` | **Predicate-gated** (deterministic = saturating LR over a CPU comparison) |
+| `predicate = IDENT (GE\|LE\|GT\|LT\|EQEQ) expr` | `:64` | **Predicate-gated** (deterministic = saturating LR over a CPU comparison; RHS can be arithmetic/LaTeX) |
 | `interacts N when T and T … for T` | `:66` | Joint/synergy/explaining-away LR |
 | `uncertain {T,…} for T` | `:68` | Uncertainty marker (what would shift the answer) |
 | `observe T` | `:70` | Assert a `Certain` Fact |

@@ -49,6 +49,99 @@
 use crate::dimension::{DimOp, Dimension};
 use crate::{FactId, KnowledgeBase};
 
+/// An exact rational sidecar for CPU arithmetic whose operands are exact
+/// integers/rationals. The public engine still exposes `f64` magnitudes for
+/// compatibility, but equality-sensitive consumers can use this when present.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ExactRational {
+    pub num: i128,
+    pub den: i128,
+}
+
+impl ExactRational {
+    pub fn new(num: i128, den: i128) -> Option<Self> {
+        if den == 0 || num == i128::MIN || den == i128::MIN {
+            return None;
+        }
+        let (mut n, mut d) = (num, den);
+        if d < 0 {
+            n = n.checked_neg()?;
+            d = d.checked_neg()?;
+        }
+        let g = gcd_i128(n.unsigned_abs(), d.unsigned_abs()) as i128;
+        Some(Self {
+            num: n / g,
+            den: d / g,
+        })
+    }
+
+    pub fn from_i128(n: i128) -> Self {
+        Self { num: n, den: 1 }
+    }
+
+    pub fn from_integer_f64(value: f64) -> Option<Self> {
+        if value.is_finite()
+            && value.fract() == 0.0
+            && value >= i64::MIN as f64
+            && value <= i64::MAX as f64
+        {
+            Some(Self::from_i128(value as i64 as i128))
+        } else {
+            None
+        }
+    }
+
+    pub fn add(self, rhs: Self) -> Option<Self> {
+        let left = self.num.checked_mul(rhs.den)?;
+        let right = rhs.num.checked_mul(self.den)?;
+        let num = left.checked_add(right)?;
+        let den = self.den.checked_mul(rhs.den)?;
+        Self::new(num, den)
+    }
+
+    pub fn sub(self, rhs: Self) -> Option<Self> {
+        let left = self.num.checked_mul(rhs.den)?;
+        let right = rhs.num.checked_mul(self.den)?;
+        let num = left.checked_sub(right)?;
+        let den = self.den.checked_mul(rhs.den)?;
+        Self::new(num, den)
+    }
+
+    pub fn mul(self, rhs: Self) -> Option<Self> {
+        Self::new(
+            self.num.checked_mul(rhs.num)?,
+            self.den.checked_mul(rhs.den)?,
+        )
+    }
+
+    pub fn div(self, rhs: Self) -> Option<Self> {
+        if rhs.num == 0 {
+            return None;
+        }
+        Self::new(
+            self.num.checked_mul(rhs.den)?,
+            self.den.checked_mul(rhs.num)?,
+        )
+    }
+
+    pub fn to_f64(self) -> f64 {
+        self.num as f64 / self.den as f64
+    }
+}
+
+fn gcd_i128(a: u128, b: u128) -> u128 {
+    let (mut a, mut b) = (a, b);
+    if a == 0 && b == 0 {
+        return 1;
+    }
+    while b != 0 {
+        let t = b;
+        b = a % b;
+        a = t;
+    }
+    a.max(1)
+}
+
 /// A computation operator. Binary ops (`Add`/`Sub`/`Mul`/`Div`) take two
 /// operands; aggregation ops (`Sum`/`Count`/`Min`/`Max`/`Avg`) reduce a list
 /// of same-slot observations.
@@ -144,6 +237,8 @@ impl DerivationNode {
 pub struct Derived {
     pub name: String,
     pub value: f64,
+    /// Exact value when the expression stayed inside integer/rational arithmetic.
+    pub exact: Option<ExactRational>,
     pub dim: Dimension,
     pub tree: DerivationNode,
 }
@@ -202,11 +297,12 @@ pub fn compute(
     expr: &ComputeExpr,
     kb: &KnowledgeBase,
 ) -> Result<Derived, ComputeError> {
-    let (tree, dim) = eval(expr, kb, 0)?;
+    let (tree, dim, exact) = eval(expr, kb, 0)?;
     let value = tree.value();
     Ok(Derived {
         name: name.into(),
         value,
+        exact,
         dim,
         tree,
     })
@@ -234,7 +330,7 @@ fn eval(
     expr: &ComputeExpr,
     kb: &KnowledgeBase,
     depth: usize,
-) -> Result<(DerivationNode, Dimension), ComputeError> {
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
     if depth >= MAX_EVAL_DEPTH {
         return Err(ComputeError::TooDeep {
             limit: MAX_EVAL_DEPTH,
@@ -243,12 +339,23 @@ fn eval(
     match expr {
         // A literal is dimensionless (Scalar). The no-magic-numbers gate (3d)
         // will check it's a declared constant; dimensionally it's the identity.
-        ComputeExpr::Lit(x) => Ok((DerivationNode::Lit { value: *x }, Dimension::Scalar)),
+        ComputeExpr::Lit(x) => Ok((
+            DerivationNode::Lit { value: *x },
+            Dimension::Scalar,
+            ExactRational::from_integer_f64(*x),
+        )),
 
         ComputeExpr::Ref(slot) => {
             // Observed fact first (carries a FactId for byte provenance + its
             // dimension); then a previously-bound derived value (with its dim).
             if let Some((d, fact_id)) = kb.observed_dimensioned(slot) {
+                let exact = kb.observed_exact_value_with_fact(slot).and_then(|(x, id)| {
+                    if id == fact_id {
+                        Some(x)
+                    } else {
+                        None
+                    }
+                });
                 Ok((
                     DerivationNode::Leaf {
                         slot: slot.clone(),
@@ -256,6 +363,7 @@ fn eval(
                         fact_id,
                     },
                     d.dim,
+                    exact,
                 ))
             } else if let Some(derived) = kb.derived_for(slot) {
                 Ok((
@@ -264,6 +372,7 @@ fn eval(
                         value: derived.value,
                     },
                     derived.dim.clone(),
+                    derived.exact,
                 ))
             } else {
                 Err(ComputeError::UnknownSlot { slot: slot.clone() })
@@ -271,23 +380,18 @@ fn eval(
         }
 
         ComputeExpr::Bin(op, a, b) => {
-            let (lhs, dim_l) = eval(a, kb, depth + 1)?;
-            let (rhs, dim_r) = eval(b, kb, depth + 1)?;
+            let (lhs, dim_l, exact_l) = eval(a, kb, depth + 1)?;
+            let (rhs, dim_r, exact_r) = eval(b, kb, depth + 1)?;
             // Dimensional check FIRST: usd + days is a category error regardless
             // of the magnitudes.
             let dimop = dim_op(*op).ok_or(ComputeError::MalformedExpr {
                 detail: "aggregation operator in binary position",
             })?;
-            let result_dim =
-                Dimension::combine(dimop, &dim_l, &dim_r).map_err(|e| match e {
-                    crate::DimError::Mismatch { lhs, rhs, .. } => {
-                        ComputeError::DimensionMismatch {
-                            op: *op,
-                            lhs,
-                            rhs,
-                        }
-                    }
-                })?;
+            let result_dim = Dimension::combine(dimop, &dim_l, &dim_r).map_err(|e| match e {
+                crate::DimError::Mismatch { lhs, rhs, .. } => {
+                    ComputeError::DimensionMismatch { op: *op, lhs, rhs }
+                }
+            })?;
             let (x, y) = (lhs.value(), rhs.value());
             let result = match op {
                 ComputeOp::Add => x + y,
@@ -304,6 +408,16 @@ fn eval(
             if !result.is_finite() {
                 return Err(ComputeError::NonFinite { op: *op });
             }
+            let exact = match (exact_l, exact_r) {
+                (Some(a), Some(b)) => match op {
+                    ComputeOp::Add => a.add(b),
+                    ComputeOp::Sub => a.sub(b),
+                    ComputeOp::Mul => a.mul(b),
+                    ComputeOp::Div => a.div(b),
+                    _ => None,
+                },
+                _ => None,
+            };
             Ok((
                 DerivationNode::Op {
                     op: *op,
@@ -311,6 +425,7 @@ fn eval(
                     result,
                 },
                 result_dim,
+                exact,
             ))
         }
 
@@ -362,6 +477,7 @@ fn eval(
                     result,
                 },
                 result_dim,
+                None,
             ))
         }
     }
@@ -384,7 +500,10 @@ mod tests {
     // ---- the dimensional faithfulness gate (track A4) ----
 
     fn money(slot: &str, amount: i64, ccy: &str) -> crate::Fact {
-        crate::Fact::certain(compound(slot, vec![compound("money", vec![int(amount), atom(ccy)])]))
+        crate::Fact::certain(compound(
+            slot,
+            vec![compound("money", vec![int(amount), atom(ccy)])],
+        ))
     }
     fn refexpr(slot: &str) -> ComputeExpr {
         ComputeExpr::Ref(slot.into())
@@ -396,7 +515,12 @@ mod tests {
     #[test]
     fn same_currency_add_is_allowed_and_keeps_the_dimension() {
         let kb = kb_with(vec![money("a", 100, "usd"), money("b", 50, "usd")]);
-        let d = compute("total", &bin(ComputeOp::Add, refexpr("a"), refexpr("b")), &kb).unwrap();
+        let d = compute(
+            "total",
+            &bin(ComputeOp::Add, refexpr("a"), refexpr("b")),
+            &kb,
+        )
+        .unwrap();
         assert_eq!(d.value, 150.0);
         assert_eq!(d.dim, Dimension::Money("usd".into()));
     }
@@ -407,7 +531,10 @@ mod tests {
         let err = compute("x", &bin(ComputeOp::Add, refexpr("a"), refexpr("b")), &kb).unwrap_err();
         assert!(matches!(
             err,
-            ComputeError::DimensionMismatch { op: ComputeOp::Add, .. }
+            ComputeError::DimensionMismatch {
+                op: ComputeOp::Add,
+                ..
+            }
         ));
     }
 
@@ -415,18 +542,38 @@ mod tests {
     fn money_plus_days_is_a_category_error() {
         let kb = kb_with(vec![
             money("price", 100, "usd"),
-            Fact::certain(compound("age", vec![compound("duration", vec![int(5), atom("days")])])),
+            Fact::certain(compound(
+                "age",
+                vec![compound("duration", vec![int(5), atom("days")])],
+            )),
         ]);
-        let err = compute("x", &bin(ComputeOp::Add, refexpr("price"), refexpr("age")), &kb).unwrap_err();
+        let err = compute(
+            "x",
+            &bin(ComputeOp::Add, refexpr("price"), refexpr("age")),
+            &kb,
+        )
+        .unwrap_err();
         assert!(matches!(err, ComputeError::DimensionMismatch { .. }));
     }
 
     #[test]
     fn money_over_money_is_a_dimensionless_ratio() {
-        let kb = kb_with(vec![money("debt", 3000, "usd"), money("income", 10000, "usd")]);
-        let d = compute("dti", &bin(ComputeOp::Div, refexpr("debt"), refexpr("income")), &kb).unwrap();
+        let kb = kb_with(vec![
+            money("debt", 3000, "usd"),
+            money("income", 10000, "usd"),
+        ]);
+        let d = compute(
+            "dti",
+            &bin(ComputeOp::Div, refexpr("debt"), refexpr("income")),
+            &kb,
+        )
+        .unwrap();
         assert!((d.value - 0.3).abs() < 1e-12);
-        assert_eq!(d.dim, Dimension::Scalar, "a ratio of like dimensions is dimensionless");
+        assert_eq!(
+            d.dim,
+            Dimension::Scalar,
+            "a ratio of like dimensions is dimensionless"
+        );
     }
 
     #[test]
@@ -490,6 +637,27 @@ mod tests {
             }
             other => panic!("expected an Op node, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn integer_fraction_arithmetic_carries_exact_rational_sidecar() {
+        let kb = KnowledgeBase::new();
+        let expr = ComputeExpr::Bin(
+            ComputeOp::Add,
+            Box::new(ComputeExpr::Bin(
+                ComputeOp::Div,
+                Box::new(ComputeExpr::Lit(1.0)),
+                Box::new(ComputeExpr::Lit(10.0)),
+            )),
+            Box::new(ComputeExpr::Bin(
+                ComputeOp::Div,
+                Box::new(ComputeExpr::Lit(2.0)),
+                Box::new(ComputeExpr::Lit(10.0)),
+            )),
+        );
+        let d = compute("answer", &expr, &kb).unwrap();
+        assert!((d.value - 0.3).abs() < 1e-12);
+        assert_eq!(d.exact, ExactRational::new(3, 10));
     }
 
     #[test]
@@ -620,7 +788,9 @@ mod tests {
         }
         assert_eq!(
             compute("deep", &e, &kb).unwrap_err(),
-            ComputeError::TooDeep { limit: MAX_EVAL_DEPTH }
+            ComputeError::TooDeep {
+                limit: MAX_EVAL_DEPTH
+            }
         );
     }
 

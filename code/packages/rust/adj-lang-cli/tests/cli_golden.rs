@@ -131,6 +131,27 @@ fn let_computed_value_drives_a_predicate() {
 }
 
 #[test]
+fn predicate_rhs_expression_matches_fraction_result() {
+    // Rung-1 hardening: the option predicate can compare a computed answer
+    // against another ADJ arithmetic expression, so a model can emit
+    // `answer == 3 / 10` instead of relying on a decimal literal.
+    let (ok, s) = run(
+        "adjcli_fraction_rhs.adj",
+        "let answer = 1 / 10 + 2 / 10\n\
+         prior 0.10 for opt_a\n\
+         contributes 1000000 from answer == 3 / 10 to opt_a\n\
+         ? opt_a\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"kind\":\"predicate\""), "{s}");
+    assert!(s.contains("\"slot\":\"answer\""), "{s}");
+    assert!(
+        s.contains("\"posterior\":0.99") || s.contains("\"posterior\":1"),
+        "fraction expression predicate should fire: {s}"
+    );
+}
+
+#[test]
 fn predicate_below_threshold_does_not_fire() {
     // Income under the threshold: the predicate step never appears, and the
     // posterior stays at the prior.

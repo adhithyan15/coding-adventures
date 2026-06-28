@@ -41,6 +41,7 @@ pub enum Term {
 ///
 /// `from pmh(hypertension) to acs`  →  [`Evidence::Term`]
 /// `from gross_income >= 14600 to required_to_file`  →  [`Evidence::Predicate`]
+/// `from answer == 3 / 10 to opt_a`  →  [`Evidence::Predicate`]
 ///
 /// The predicate form is the surface syntax for a deterministic rule:
 /// it lowers to a predicate-gated contribution whose likelihood ratio
@@ -50,7 +51,11 @@ pub enum Term {
 #[derive(Debug, Clone, PartialEq)]
 pub enum Evidence {
     Term(Term),
-    Predicate { slot: String, op: CmpOp, value: f64 },
+    Predicate {
+        slot: String,
+        op: CmpOp,
+        rhs: ExprAst,
+    },
 }
 
 /// A numeric comparison operator in a predicate. Mirrors

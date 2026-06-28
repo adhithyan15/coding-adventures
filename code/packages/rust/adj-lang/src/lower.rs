@@ -225,12 +225,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     // Numeric predicate evidence → predicate-gated contribution.
                     // The comparison is evaluated on the CPU at decision time;
                     // a saturating `lr` makes the rule deterministic.
-                    Evidence::Predicate { slot, op, value } => {
-                        let clause = PredicateContributionClause::from_lr(
+                    Evidence::Predicate { slot, op, rhs } => {
+                        let clause = PredicateContributionClause::from_lr_expr(
                             lower_term(conclusion),
                             slot.clone(),
                             lower_cmp_op(*op),
-                            *value,
+                            lower_expr(rhs),
                             *lr,
                         )
                         .with_provenance(prov);
@@ -1380,6 +1380,19 @@ mod tests {
             }
             other => panic!("expected LRAggregateResult, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn predicate_rhs_expression_fires_over_fraction_result() {
+        let d = crate::compile_and_decide(
+            r#"let answer = 1 / 10 + 2 / 10
+prior 0.10 for opt_a
+contributes 1000000 from answer == 3 / 10 to opt_a
+? opt_a
+"#,
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
     }
 
     #[test]
