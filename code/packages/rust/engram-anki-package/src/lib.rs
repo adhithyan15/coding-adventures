@@ -3363,6 +3363,53 @@ CREATE TABLE graves (
         std::fs::read(sqlite.path()).unwrap()
     }
 
+    fn golden_v11_apkg_fixture_bytes() -> Vec<u8> {
+        let sqlite = tempfile::NamedTempFile::new().unwrap();
+        std::fs::write(sqlite.path(), v11_sqlite_collection_bytes()).unwrap();
+        {
+            let connection = Connection::open(sqlite.path()).unwrap();
+            let decks = r#"{
+  "1": {"id": 1, "name": "Default", "desc": "Root deck"},
+  "2": {"id": 2, "name": "Spanish::Latin", "desc": "Story deck", "conf": 1},
+  "3": {"id": 3, "name": "Filtered::Today", "desc": "Filtered cram deck", "dyn": 1, "conf": 1, "terms": [["deck:Spanish", 10, 0]], "resched": true}
+}"#;
+            connection
+                .execute("UPDATE col SET decks = ?1", rusqlite::params![decks])
+                .unwrap();
+            connection
+                .execute(
+                    "UPDATE notes SET flds = ?1, tags = ?2, data = ?3 WHERE id = 1000",
+                    rusqlite::params![
+                        "hola [sound:audio/hola.mp3]\u{1f}hello <img src=\"images/card.png\">",
+                        " spanish media filtered ",
+                        "golden-note"
+                    ],
+                )
+                .unwrap();
+            connection
+                .execute(
+                    "UPDATE cards SET did = ?1, odue = ?2, odid = ?3, data = ?4 WHERE id = 2000",
+                    rusqlite::params![3_i64, 42_i64, 2_i64, "filtered-card"],
+                )
+                .unwrap();
+        }
+
+        let collection = std::fs::read(sqlite.path()).unwrap();
+        write_legacy_apkg(
+            &collection,
+            &[
+                MediaAsset {
+                    filename: "audio/hola.mp3",
+                    data: b"mp3",
+                },
+                MediaAsset {
+                    filename: "images/card.png",
+                    data: b"png",
+                },
+            ],
+        )
+    }
+
     #[test]
     fn inspects_legacy_apkg_collection_and_media_map() {
         let media = br#"{"0":"audio/hola.mp3","1":"images/card.png","3":"missing.wav"}"#;
@@ -3889,6 +3936,80 @@ CREATE TABLE graves (
 
         assert_eq!(state.cards[0].front, "hola");
         assert_eq!(state.cards[0].back, "hello");
+    }
+
+    #[test]
+    fn golden_v11_apkg_fixture_round_trips_filtered_deck_and_media() {
+        let apkg = golden_v11_apkg_fixture_bytes();
+
+        let manifest = inspect_apkg(&apkg).unwrap();
+        assert_eq!(manifest.collection.name, LEGACY_COLLECTION);
+        assert_eq!(manifest.media.media_files.len(), 2);
+        assert!(manifest.media.missing_files.is_empty());
+        assert!(manifest.media.unmapped_files.is_empty());
+
+        let collection = read_v11_collection(&apkg).unwrap();
+        let filtered_deck = collection.decks.iter().find(|deck| deck.id == 3).unwrap();
+        assert_eq!(filtered_deck.name, "Filtered::Today");
+        assert_eq!(filtered_deck.raw["dyn"], 1);
+        assert_eq!(filtered_deck.raw["resched"], true);
+        assert_eq!(
+            collection.notes[0].tags,
+            vec!["spanish", "media", "filtered"]
+        );
+        assert!(collection.notes[0].field_values[0].contains("[sound:audio/hola.mp3]"));
+        assert!(collection.notes[0].field_values[1].contains("images/card.png"));
+        assert_eq!(collection.cards[0].deck_id, 3);
+        assert_eq!(collection.cards[0].original_due, 42);
+        assert_eq!(collection.cards[0].original_deck_id, 2);
+        assert_eq!(collection.cards[0].data, "filtered-card");
+
+        let state = read_v11_collection_as_engram_state(&apkg).unwrap();
+        assert_eq!(state.media_assets.len(), 2);
+        assert_eq!(state.cards[0].deck_id, "3");
+        assert!(state.cards[0].front.contains("[sound:audio/hola.mp3]"));
+        assert!(state.cards[0].back.contains("images/card.png"));
+        assert!(state.external_sources.iter().any(|source| {
+            source.source == ANKI_V11_SOURCE
+                && source.target == ExternalSourceTarget::Card
+                && source.target_id == "2000"
+                && source.data.get("originalDeckId").map(String::as_str) == Some("2")
+                && source.data.get("originalDue").map(String::as_str) == Some("42")
+                && source.data.get("data").map(String::as_str) == Some("filtered-card")
+        }));
+
+        let media_analysis = analyze_engram_media_references(&state);
+        assert_eq!(
+            media_analysis.referenced_filenames,
+            vec!["audio/hola.mp3".to_string(), "images/card.png".to_string()]
+        );
+        assert_eq!(
+            media_analysis.referenced_asset_ids,
+            vec!["anki-media:0".to_string(), "anki-media:1".to_string()]
+        );
+        assert!(media_analysis.missing_filenames.is_empty());
+        assert!(media_analysis.unreferenced_asset_ids.is_empty());
+
+        let exported = write_legacy_apkg_from_engram_state(&state, &[]).unwrap();
+        let exported_collection = read_v11_collection(&exported).unwrap();
+        let exported_filtered_deck = exported_collection
+            .decks
+            .iter()
+            .find(|deck| deck.id == 3)
+            .unwrap();
+        assert_eq!(exported_filtered_deck.raw["dyn"], 1);
+        assert_eq!(exported_filtered_deck.raw["terms"][0][0], "deck:Spanish");
+        assert_eq!(exported_collection.cards[0].deck_id, 3);
+        assert_eq!(exported_collection.cards[0].original_due, 42);
+        assert_eq!(exported_collection.cards[0].original_deck_id, 2);
+        assert_eq!(exported_collection.cards[0].data, "filtered-card");
+
+        let exported_manifest = inspect_apkg(&exported).unwrap();
+        assert_eq!(exported_manifest.media.mapping["0"], "audio/hola.mp3");
+        assert_eq!(exported_manifest.media.mapping["1"], "images/card.png");
+        let audio = read_media_file(&exported, "0").unwrap();
+        assert_eq!(audio.filename.as_deref(), Some("audio/hola.mp3"));
+        assert_eq!(audio.data, b"mp3");
     }
 
     #[test]
