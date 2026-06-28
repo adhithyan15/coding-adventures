@@ -44,6 +44,14 @@ enum SearchClauseKind {
     Marked(bool),
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum SearchExpr {
+    Clause(SearchClause),
+    And(Vec<SearchExpr>),
+    Or(Vec<SearchExpr>),
+    Not(Box<SearchExpr>),
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum CardSearchState {
     New,
@@ -67,7 +75,7 @@ pub fn search_cards(
     query: &str,
     now: u64,
 ) -> Result<Vec<CardSearchResult>, SearchError> {
-    let clause_groups = parse_query(query)?;
+    let expression = parse_query(query)?;
     let progress_by_card: HashMap<&str, &CardProgress> = state
         .card_progress
         .iter()
@@ -99,11 +107,7 @@ pub fn search_cards(
             let note_type = note
                 .and_then(|note| note_types_by_id.get(note.note_type_id.as_str()))
                 .copied();
-            clause_groups.iter().any(|clauses| {
-                clauses.iter().all(|clause| {
-                    clause_matches(clause, card, progress, deck, note, note_type, now)
-                })
-            })
+            expression_matches(&expression, card, progress, deck, note, note_type, now)
         })
         .map(|card| CardSearchResult {
             card: card.clone(),
@@ -116,41 +120,23 @@ pub fn search_cards(
     Ok(results)
 }
 
-fn parse_query(query: &str) -> Result<Vec<Vec<SearchClause>>, SearchError> {
-    let mut groups = vec![Vec::new()];
-    let mut saw_or = false;
+fn parse_query(query: &str) -> Result<SearchExpr, SearchError> {
+    let tokens = tokenize(query)?;
+    let mut parser = SearchParser::new(tokens);
+    let expression = parser.parse_or()?;
 
-    for token in tokenize(query)? {
-        if token.eq_ignore_ascii_case("and") {
-            continue;
-        }
-        if token.eq_ignore_ascii_case("or") {
-            if groups.last().is_some_and(Vec::is_empty) {
-                return Err(SearchError {
-                    message: "OR operator is missing a left-hand clause".to_string(),
-                    token,
-                });
-            }
-            groups.push(Vec::new());
-            saw_or = true;
-            continue;
-        }
-
-        let clause = parse_clause(&token)?;
-        groups
-            .last_mut()
-            .expect("search parser always keeps a current group")
-            .push(clause);
-    }
-
-    if saw_or && groups.last().is_some_and(Vec::is_empty) {
+    if let Some(token) = parser.peek() {
         return Err(SearchError {
-            message: "OR operator is missing a right-hand clause".to_string(),
-            token: "OR".to_string(),
+            message: if token == ")" {
+                "unexpected closing parenthesis".to_string()
+            } else {
+                "unexpected search token".to_string()
+            },
+            token: token.to_string(),
         });
     }
 
-    Ok(groups)
+    Ok(expression)
 }
 
 fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
@@ -169,6 +155,13 @@ fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
         match ch {
             '\\' if in_quotes => escaping = true,
             '"' => in_quotes = !in_quotes,
+            '(' | ')' if !in_quotes => {
+                if !current.is_empty() {
+                    tokens.push(current);
+                    current = String::new();
+                }
+                tokens.push(ch.to_string());
+            }
             ch if ch.is_whitespace() && !in_quotes => {
                 if !current.is_empty() {
                     tokens.push(current);
@@ -193,6 +186,180 @@ fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
     }
 
     Ok(tokens)
+}
+
+struct SearchParser {
+    tokens: Vec<String>,
+    position: usize,
+}
+
+impl SearchParser {
+    fn new(tokens: Vec<String>) -> Self {
+        Self {
+            tokens,
+            position: 0,
+        }
+    }
+
+    fn parse_or(&mut self) -> Result<SearchExpr, SearchError> {
+        let left = self.parse_and()?;
+        if self
+            .peek()
+            .is_some_and(|token| token.eq_ignore_ascii_case("or"))
+            && expression_is_empty(&left)
+        {
+            let token = self.next().expect("peeked token exists");
+            return Err(SearchError {
+                message: "OR operator is missing a left-hand clause".to_string(),
+                token,
+            });
+        }
+
+        let mut expressions = vec![left];
+        while self
+            .peek()
+            .is_some_and(|token| token.eq_ignore_ascii_case("or"))
+        {
+            let operator = self.next().expect("peeked token exists");
+            let right = self.parse_and()?;
+            if expression_is_empty(&right) {
+                return Err(SearchError {
+                    message: "OR operator is missing a right-hand clause".to_string(),
+                    token: operator,
+                });
+            }
+            expressions.push(right);
+        }
+
+        Ok(fold_or(expressions))
+    }
+
+    fn parse_and(&mut self) -> Result<SearchExpr, SearchError> {
+        let mut expressions = Vec::new();
+
+        loop {
+            let Some(token) = self.peek() else {
+                break;
+            };
+            if token == ")" || token.eq_ignore_ascii_case("or") {
+                break;
+            }
+            if token.eq_ignore_ascii_case("and") {
+                let operator = self.next().expect("peeked token exists");
+                if expressions.is_empty() {
+                    return Err(SearchError {
+                        message: "AND operator is missing a left-hand clause".to_string(),
+                        token: operator,
+                    });
+                }
+                if self.peek().is_none_or(|token| {
+                    token == ")"
+                        || token.eq_ignore_ascii_case("or")
+                        || token.eq_ignore_ascii_case("and")
+                }) {
+                    return Err(SearchError {
+                        message: "AND operator is missing a right-hand clause".to_string(),
+                        token: "AND".to_string(),
+                    });
+                }
+                continue;
+            }
+
+            expressions.push(self.parse_unary()?);
+        }
+
+        Ok(fold_and(expressions))
+    }
+
+    fn parse_unary(&mut self) -> Result<SearchExpr, SearchError> {
+        if self.peek().is_some_and(|token| token == "-") {
+            let operator = self.next().expect("peeked token exists");
+            if self.peek().is_none_or(|token| {
+                token == ")"
+                    || token.eq_ignore_ascii_case("or")
+                    || token.eq_ignore_ascii_case("and")
+            }) {
+                return Err(SearchError {
+                    message: "negation is missing a clause".to_string(),
+                    token: operator,
+                });
+            }
+            return Ok(SearchExpr::Not(Box::new(self.parse_unary()?)));
+        }
+
+        self.parse_primary()
+    }
+
+    fn parse_primary(&mut self) -> Result<SearchExpr, SearchError> {
+        let token = self.next().ok_or_else(|| SearchError {
+            message: "search expression is missing a clause".to_string(),
+            token: String::new(),
+        })?;
+
+        if token == "(" {
+            let expression = self.parse_or()?;
+            if expression_is_empty(&expression) {
+                return Err(SearchError {
+                    message: "parenthesized search expression is empty".to_string(),
+                    token,
+                });
+            }
+            match self.next() {
+                Some(closing) if closing == ")" => Ok(expression),
+                Some(unexpected) => Err(SearchError {
+                    message: "expected closing parenthesis".to_string(),
+                    token: unexpected,
+                }),
+                None => Err(SearchError {
+                    message: "missing closing parenthesis".to_string(),
+                    token,
+                }),
+            }
+        } else if token == ")" {
+            Err(SearchError {
+                message: "unexpected closing parenthesis".to_string(),
+                token,
+            })
+        } else {
+            parse_clause(&token).map(SearchExpr::Clause)
+        }
+    }
+
+    fn peek(&self) -> Option<&str> {
+        self.tokens.get(self.position).map(String::as_str)
+    }
+
+    fn next(&mut self) -> Option<String> {
+        let token = self.tokens.get(self.position).cloned()?;
+        self.position += 1;
+        Some(token)
+    }
+}
+
+fn fold_and(expressions: Vec<SearchExpr>) -> SearchExpr {
+    match expressions.len() {
+        0 => SearchExpr::And(expressions),
+        1 => expressions
+            .into_iter()
+            .next()
+            .expect("one expression exists"),
+        _ => SearchExpr::And(expressions),
+    }
+}
+
+fn fold_or(expressions: Vec<SearchExpr>) -> SearchExpr {
+    match expressions.len() {
+        0 => SearchExpr::Or(expressions),
+        1 => expressions
+            .into_iter()
+            .next()
+            .expect("one expression exists"),
+        _ => SearchExpr::Or(expressions),
+    }
+}
+
+fn expression_is_empty(expression: &SearchExpr) -> bool {
+    matches!(expression, SearchExpr::And(items) if items.is_empty())
 }
 
 fn parse_clause(token: &str) -> Result<SearchClause, SearchError> {
@@ -291,6 +458,31 @@ fn parse_bool_filter(token: &str, value: &str) -> Result<bool, SearchError> {
             message: "boolean search filter must be true or false".to_string(),
             token: token.to_string(),
         }),
+    }
+}
+
+fn expression_matches(
+    expression: &SearchExpr,
+    card: &Card,
+    progress: Option<&CardProgress>,
+    deck: Option<&Deck>,
+    note: Option<&Note>,
+    note_type: Option<&NoteType>,
+    now: u64,
+) -> bool {
+    match expression {
+        SearchExpr::Clause(clause) => {
+            clause_matches(clause, card, progress, deck, note, note_type, now)
+        }
+        SearchExpr::And(expressions) => expressions.iter().all(|expression| {
+            expression_matches(expression, card, progress, deck, note, note_type, now)
+        }),
+        SearchExpr::Or(expressions) => expressions.iter().any(|expression| {
+            expression_matches(expression, card, progress, deck, note, note_type, now)
+        }),
+        SearchExpr::Not(expression) => {
+            !expression_matches(expression, card, progress, deck, note, note_type, now)
+        }
     }
 }
 
@@ -596,6 +788,22 @@ mod tests {
     }
 
     #[test]
+    fn parenthesized_groups_compose_with_implicit_and_and_negation() {
+        assert_eq!(
+            ids_for("deck:spanish (front:hola OR front:adios)"),
+            vec!["suspended", "new"]
+        );
+        assert_eq!(
+            ids_for("deck:tamil -(front:nandri OR is:due)"),
+            vec!["note::forward"]
+        );
+        assert_eq!(
+            ids_for("(deck:tamil tag:script) OR (deck:spanish is:new)"),
+            vec!["note::forward", "new"]
+        );
+    }
+
+    #[test]
     fn parser_reports_unknown_filters_and_unclosed_quotes() {
         let error = search_cards(&state(), "kind:review", NOW).unwrap_err();
         assert_eq!(error.token, "kind:review");
@@ -608,5 +816,11 @@ mod tests {
 
         let error = search_cards(&state(), "deck:tamil OR", NOW).unwrap_err();
         assert_eq!(error.message, "OR operator is missing a right-hand clause");
+
+        let error = search_cards(&state(), "(deck:tamil OR is:due", NOW).unwrap_err();
+        assert_eq!(error.message, "missing closing parenthesis");
+
+        let error = search_cards(&state(), "deck:tamil)", NOW).unwrap_err();
+        assert_eq!(error.message, "unexpected closing parenthesis");
     }
 }

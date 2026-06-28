@@ -89,7 +89,7 @@ Current reducer integration:
   `MarkCard`, `UnmarkCard`) and are exposed through the JSON facade.
 - `search_cards` provides the first shared collection-browser query engine with
   text, deck, note type, field-side, tag, state, due, suspended, buried, flag,
-  marked, negation, and `OR` filters.
+  marked, negation, parenthesized grouping, and `OR` filters.
 - Reviews carry optional previous/resulting progress snapshots so
   `UndoLastReview` can restore card progress, review history, and session
   counters without host-specific logic.
@@ -212,7 +212,7 @@ Support:
 - tag filters
 - suspended/buried flags
 - flag/mark filters
-- simple boolean operators (`OR`, implicit AND, and negation)
+- simple boolean operators (`OR`, implicit AND, negation, and parentheses)
 
 Tests:
 
@@ -220,8 +220,8 @@ Tests:
   unterminated quotes.
 - Search result stability. Initial core tests preserve source card order.
 - Tag, deck, and note type filters compose with text filters. Initial core
-  support exists for implicit AND, `OR`, and negation; parentheses and richer
-  expressions remain.
+  support exists for implicit AND, `OR`, negation, and parenthesized groups;
+  richer expressions remain.
 - Hidden-card stats. Deck stats now report suspended and buried counts from the
   same logic used by queues.
 
@@ -247,6 +247,24 @@ Formats:
   resolve media payloads or write deterministic legacy package envelopes from
   existing `collection.anki2` bytes plus media assets; SQLite collection
   import/export remains.
+
+Next APKG SQLite milestone:
+
+- Target Anki legacy/V11 collection files first (`collection.anki2` and
+  `collection.anki21`), mapping `col`, `notes`, `cards`, `revlog`, and
+  `graves` into `engram-core::AppState`.
+- Keep `collection.anki21b` detected but explicitly unsupported until Engram
+  adds modern package handling for V18, zstd-compressed collection payloads, and
+  protobuf media entries.
+- Add a real SQLite-file dependency in `engram-anki-package`; do not move
+  APKG-specific parsing into `engram-core`.
+- Import V11 decks from `col.decks`, models from `col.models`, notes from
+  `notes.flds`/`notes.tags`, card lineage from `cards.nid`/`cards.ord`, and
+  review history from `revlog.ease`/`revlog.id`.
+- Export the first APKG as a deterministic legacy package with reset scheduling
+  before attempting full scheduling fidelity.
+- Test with SQL-built V11 fixtures, package round-trips through the existing ZIP
+  envelope helpers, and a small checked-in Anki-generated golden fixture.
 
 Tests:
 
