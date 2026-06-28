@@ -282,6 +282,10 @@ Next APKG SQLite milestone:
   note-field text, tags, and note-type filters.
 - Search accepts additional Anki-style aliases including `is:learn`,
   `state:relearn`, and numeric `flag:1` through `flag:7` alongside color names.
+- Search now supports Anki-style recent-event and property filters backed by
+  shared Engram state: `added:N`, `edited:N`, `introduced:N`, `rated:N[:rating]`,
+  and `prop:` comparisons for interval, due offset, repetitions, lapses, ease,
+  and rated review days.
 - Template rendering now supports simple Anki-style conditional/inverted
   sections, `{{FrontSide}}` for generated/imported card backs, and `hint:` /
   `type:` field prefixes. APKG import now infers required fields from imported

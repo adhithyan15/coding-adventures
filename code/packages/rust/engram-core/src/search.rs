@@ -1,7 +1,10 @@
 use std::collections::HashMap;
 
-use crate::model::{AppState, Card, CardFlag, CardProgress, CardState, Deck, Note, NoteType};
+use crate::model::{
+    AppState, Card, CardFlag, CardProgress, CardState, Deck, Note, NoteType, Rating, Review,
+};
 use crate::queue::{is_new_progress_overlay, is_reviewable};
+use crate::sm2::ONE_DAY_MS as MS_PER_DAY;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -25,13 +28,13 @@ pub struct SearchError {
     pub token: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 struct SearchClause {
     kind: SearchClauseKind,
     negated: bool,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 enum SearchClauseKind {
     Text(String),
     Front(String),
@@ -42,9 +45,14 @@ enum SearchClauseKind {
     State(CardSearchState),
     Flag(FlagFilter),
     Marked(bool),
+    Property(CardPropertyFilter),
+    Added(RecentDaysFilter),
+    Edited(RecentDaysFilter),
+    Introduced(RecentDaysFilter),
+    Rated(RatedFilter),
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 enum SearchExpr {
     Clause(SearchClause),
     And(Vec<SearchExpr>),
@@ -68,6 +76,44 @@ enum FlagFilter {
     Any,
     None,
     Color(CardFlag),
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum ComparisonOperator {
+    Equal,
+    NotEqual,
+    LessThan,
+    LessThanOrEqual,
+    GreaterThan,
+    GreaterThanOrEqual,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum CardProperty {
+    Interval,
+    Due,
+    Repetitions,
+    Lapses,
+    Ease,
+    Rated,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+struct CardPropertyFilter {
+    property: CardProperty,
+    operator: ComparisonOperator,
+    value: f64,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct RecentDaysFilter {
+    days: u32,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct RatedFilter {
+    days: u32,
+    rating: Option<Rating>,
 }
 
 pub fn search_cards(
@@ -96,6 +142,13 @@ pub fn search_cards(
         .iter()
         .map(|note_type| (note_type.id.as_str(), note_type))
         .collect();
+    let mut reviews_by_card: HashMap<&str, Vec<&Review>> = HashMap::new();
+    for review in &state.reviews {
+        reviews_by_card
+            .entry(review.card_id.as_str())
+            .or_default()
+            .push(review);
+    }
 
     let results = state
         .cards
@@ -107,7 +160,19 @@ pub fn search_cards(
             let note_type = note
                 .and_then(|note| note_types_by_id.get(note.note_type_id.as_str()))
                 .copied();
-            expression_matches(&expression, card, progress, deck, note, note_type, now)
+            let reviews = reviews_by_card
+                .get(card.id.as_str())
+                .map_or(&[] as &[&Review], Vec::as_slice);
+            expression_matches(
+                &expression,
+                card,
+                progress,
+                deck,
+                note,
+                note_type,
+                reviews,
+                now,
+            )
         })
         .map(|card| CardSearchResult {
             card: card.clone(),
@@ -399,6 +464,11 @@ fn parse_keyed_clause(
         "is" => parse_is_filter(token, &value),
         "flag" => parse_flag_filter(token, &value).map(SearchClauseKind::Flag),
         "marked" => parse_bool_filter(token, &value).map(SearchClauseKind::Marked),
+        "prop" => parse_property_filter(token, &value).map(SearchClauseKind::Property),
+        "added" => parse_recent_days_filter(token, &value).map(SearchClauseKind::Added),
+        "edited" => parse_recent_days_filter(token, &value).map(SearchClauseKind::Edited),
+        "introduced" => parse_recent_days_filter(token, &value).map(SearchClauseKind::Introduced),
+        "rated" => parse_rated_filter(token, &value).map(SearchClauseKind::Rated),
         _ => Err(SearchError {
             message: "unknown search filter".to_string(),
             token: token.to_string(),
@@ -461,6 +531,116 @@ fn parse_bool_filter(token: &str, value: &str) -> Result<bool, SearchError> {
     }
 }
 
+fn parse_property_filter(token: &str, value: &str) -> Result<CardPropertyFilter, SearchError> {
+    let Some((property, operator, expected)) = split_property_comparison(value) else {
+        return Err(SearchError {
+            message: "property search must include a comparison operator".to_string(),
+            token: token.to_string(),
+        });
+    };
+    if property.is_empty() || expected.is_empty() {
+        return Err(SearchError {
+            message: "property search is missing a property or value".to_string(),
+            token: token.to_string(),
+        });
+    }
+
+    let property = match property {
+        "ivl" | "interval" => CardProperty::Interval,
+        "due" => CardProperty::Due,
+        "reps" | "reviews" => CardProperty::Repetitions,
+        "lapses" => CardProperty::Lapses,
+        "ease" => CardProperty::Ease,
+        "rated" => CardProperty::Rated,
+        _ => {
+            return Err(SearchError {
+                message: "unknown card property filter".to_string(),
+                token: token.to_string(),
+            });
+        }
+    };
+    let value = expected.parse::<f64>().map_err(|_| SearchError {
+        message: "property search value must be numeric".to_string(),
+        token: token.to_string(),
+    })?;
+
+    Ok(CardPropertyFilter {
+        property,
+        operator,
+        value,
+    })
+}
+
+fn split_property_comparison(value: &str) -> Option<(&str, ComparisonOperator, &str)> {
+    const OPERATORS: [(&str, ComparisonOperator); 6] = [
+        (">=", ComparisonOperator::GreaterThanOrEqual),
+        ("<=", ComparisonOperator::LessThanOrEqual),
+        ("!=", ComparisonOperator::NotEqual),
+        (">", ComparisonOperator::GreaterThan),
+        ("<", ComparisonOperator::LessThan),
+        ("=", ComparisonOperator::Equal),
+    ];
+
+    OPERATORS.iter().find_map(|(symbol, operator)| {
+        value.find(symbol).map(|index| {
+            let expected_start = index + symbol.len();
+            (&value[..index], *operator, &value[expected_start..])
+        })
+    })
+}
+
+fn parse_recent_days_filter(token: &str, value: &str) -> Result<RecentDaysFilter, SearchError> {
+    let days = value.parse::<u32>().map_err(|_| SearchError {
+        message: "recent-event search value must be a whole number of days".to_string(),
+        token: token.to_string(),
+    })?;
+
+    Ok(RecentDaysFilter { days })
+}
+
+fn parse_rated_filter(token: &str, value: &str) -> Result<RatedFilter, SearchError> {
+    let mut parts = value.split(':');
+    let days = parts
+        .next()
+        .expect("split always returns at least one item")
+        .parse::<u32>()
+        .map_err(|_| SearchError {
+            message: "rated search value must start with a whole number of days".to_string(),
+            token: token.to_string(),
+        })?;
+    let rating = match parts.next() {
+        Some(raw_rating) if raw_rating.is_empty() => {
+            return Err(SearchError {
+                message: "rated search rating is missing".to_string(),
+                token: token.to_string(),
+            });
+        }
+        Some(raw_rating) => Some(parse_rating_filter(token, raw_rating)?),
+        None => None,
+    };
+    if parts.next().is_some() {
+        return Err(SearchError {
+            message: "rated search has too many parts".to_string(),
+            token: token.to_string(),
+        });
+    }
+
+    Ok(RatedFilter { days, rating })
+}
+
+fn parse_rating_filter(token: &str, value: &str) -> Result<Rating, SearchError> {
+    match value {
+        "1" | "again" => Ok(Rating::Again),
+        "2" | "hard" => Ok(Rating::Hard),
+        "3" | "good" => Ok(Rating::Good),
+        "4" | "easy" => Ok(Rating::Easy),
+        _ => Err(SearchError {
+            message: "rated search rating must be 1-4 or again/hard/good/easy".to_string(),
+            token: token.to_string(),
+        }),
+    }
+}
+
 fn expression_matches(
     expression: &SearchExpr,
     card: &Card,
@@ -468,21 +648,26 @@ fn expression_matches(
     deck: Option<&Deck>,
     note: Option<&Note>,
     note_type: Option<&NoteType>,
+    reviews: &[&Review],
     now: u64,
 ) -> bool {
     match expression {
         SearchExpr::Clause(clause) => {
-            clause_matches(clause, card, progress, deck, note, note_type, now)
+            clause_matches(clause, card, progress, deck, note, note_type, reviews, now)
         }
         SearchExpr::And(expressions) => expressions.iter().all(|expression| {
-            expression_matches(expression, card, progress, deck, note, note_type, now)
+            expression_matches(
+                expression, card, progress, deck, note, note_type, reviews, now,
+            )
         }),
         SearchExpr::Or(expressions) => expressions.iter().any(|expression| {
-            expression_matches(expression, card, progress, deck, note, note_type, now)
+            expression_matches(
+                expression, card, progress, deck, note, note_type, reviews, now,
+            )
         }),
-        SearchExpr::Not(expression) => {
-            !expression_matches(expression, card, progress, deck, note, note_type, now)
-        }
+        SearchExpr::Not(expression) => !expression_matches(
+            expression, card, progress, deck, note, note_type, reviews, now,
+        ),
     }
 }
 
@@ -493,6 +678,7 @@ fn clause_matches(
     deck: Option<&Deck>,
     note: Option<&Note>,
     note_type: Option<&NoteType>,
+    reviews: &[&Review],
     now: u64,
 ) -> bool {
     let matched = match &clause.kind {
@@ -511,6 +697,13 @@ fn clause_matches(
         SearchClauseKind::Marked(expected) => {
             progress.is_some_and(|progress| progress.marked_at.is_some()) == *expected
         }
+        SearchClauseKind::Property(filter) => property_matches(filter, progress, reviews, now),
+        SearchClauseKind::Added(filter) => happened_recently(card.created_at, filter.days, now),
+        SearchClauseKind::Edited(filter) => {
+            note.is_some_and(|note| happened_recently(note.updated_at, filter.days, now))
+        }
+        SearchClauseKind::Introduced(filter) => first_reviewed_within(reviews, filter.days, now),
+        SearchClauseKind::Rated(filter) => rated_matches(reviews, *filter, now),
     };
 
     if clause.negated {
@@ -582,6 +775,87 @@ fn flag_matches(filter: FlagFilter, progress: Option<&CardProgress>) -> bool {
     }
 }
 
+fn property_matches(
+    filter: &CardPropertyFilter,
+    progress: Option<&CardProgress>,
+    reviews: &[&Review],
+    now: u64,
+) -> bool {
+    match filter.property {
+        CardProperty::Interval => compare_number(
+            progress.map_or(0.0, |progress| f64::from(progress.interval)),
+            filter.operator,
+            filter.value,
+        ),
+        CardProperty::Due => progress.is_some_and(|progress| {
+            compare_number(
+                f64::from(relative_day_bucket(progress.next_due_at, now)),
+                filter.operator,
+                filter.value,
+            )
+        }),
+        CardProperty::Repetitions => compare_number(
+            progress.map_or(0.0, |progress| f64::from(progress.times_seen)),
+            filter.operator,
+            filter.value,
+        ),
+        CardProperty::Lapses => compare_number(
+            progress.map_or(0.0, |progress| f64::from(progress.times_incorrect)),
+            filter.operator,
+            filter.value,
+        ),
+        CardProperty::Ease => progress.is_some_and(|progress| {
+            compare_number(progress.ease_factor, filter.operator, filter.value)
+        }),
+        CardProperty::Rated => reviews.iter().any(|review| {
+            compare_number(
+                f64::from(relative_day_bucket(review.reviewed_at, now)),
+                filter.operator,
+                filter.value,
+            )
+        }),
+    }
+}
+
+fn rated_matches(reviews: &[&Review], filter: RatedFilter, now: u64) -> bool {
+    reviews.iter().any(|review| {
+        filter.rating.map_or(true, |rating| review.rating == rating)
+            && happened_recently(review.reviewed_at, filter.days, now)
+    })
+}
+
+fn first_reviewed_within(reviews: &[&Review], days: u32, now: u64) -> bool {
+    reviews
+        .iter()
+        .map(|review| review.reviewed_at)
+        .min()
+        .is_some_and(|reviewed_at| happened_recently(reviewed_at, days, now))
+}
+
+fn happened_recently(timestamp: u64, days: u32, now: u64) -> bool {
+    timestamp <= now && now.saturating_sub(timestamp) <= recent_window_ms(days)
+}
+
+fn recent_window_ms(days: u32) -> u64 {
+    u64::from(days).saturating_mul(MS_PER_DAY)
+}
+
+fn relative_day_bucket(timestamp: u64, now: u64) -> i32 {
+    let diff = timestamp as i128 - now as i128;
+    (diff / i128::from(MS_PER_DAY)) as i32
+}
+
+fn compare_number(actual: f64, operator: ComparisonOperator, expected: f64) -> bool {
+    match operator {
+        ComparisonOperator::Equal => actual == expected,
+        ComparisonOperator::NotEqual => actual != expected,
+        ComparisonOperator::LessThan => actual < expected,
+        ComparisonOperator::LessThanOrEqual => actual <= expected,
+        ComparisonOperator::GreaterThan => actual > expected,
+        ComparisonOperator::GreaterThanOrEqual => actual >= expected,
+    }
+}
+
 fn is_suspended(progress: &CardProgress) -> bool {
     progress.suspended_at.is_some() || progress.state == CardState::Suspended
 }
@@ -612,7 +886,9 @@ fn note_for_card<'a>(card: &Card, notes_by_id: &'a HashMap<&str, &Note>) -> Opti
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::{CardLineage, CardTemplate, Deck, FieldDef, NoteFieldValue, NoteType};
+    use crate::model::{
+        CardLineage, CardTemplate, Deck, FieldDef, NoteFieldValue, NoteType, Review,
+    };
     use crate::sm2::{INITIAL_EASE_FACTOR, ONE_DAY_MS};
 
     const NOW: u64 = 1_700_000_000_000;
@@ -676,6 +952,20 @@ mod tests {
             last_seen_at: NOW,
             flag: Some(CardFlag::Red),
             marked_at: Some(NOW),
+        }
+    }
+
+    fn review(id: &str, card_id: &str, rating: Rating, reviewed_at: u64) -> Review {
+        Review {
+            id: id.to_string(),
+            session_id: "session".to_string(),
+            card_id: card_id.to_string(),
+            rating,
+            reviewed_at,
+            previous_progress: None,
+            resulting_progress: None,
+            previous_active_session: None,
+            sibling_progress_snapshots: Vec::new(),
         }
     }
 
@@ -849,6 +1139,91 @@ mod tests {
         assert_eq!(ids_for("tag:script"), vec!["note::forward"]);
         assert_eq!(ids_for("note:basic"), vec!["note::forward"]);
         assert_eq!(ids_for("noteType:basic"), vec!["note::forward"]);
+    }
+
+    #[test]
+    fn property_filters_match_progress_metrics() {
+        let mut state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("new", "tamil", "new", "new"),
+                card("due", "tamil", "due", "due"),
+                card("lapsed", "tamil", "lapsed", "lapsed"),
+                card("low-ease", "tamil", "ease", "ease"),
+            ],
+            card_progress: vec![
+                {
+                    let mut progress = progress("due", CardState::Review, NOW - 2 * ONE_DAY_MS);
+                    progress.interval = 12;
+                    progress.times_seen = 5;
+                    progress
+                },
+                {
+                    let mut progress = progress("lapsed", CardState::Review, NOW + ONE_DAY_MS);
+                    progress.interval = 3;
+                    progress.times_seen = 8;
+                    progress.times_incorrect = 2;
+                    progress
+                },
+                {
+                    let mut progress = progress("low-ease", CardState::Review, NOW);
+                    progress.interval = 1;
+                    progress.ease_factor = 2.1;
+                    progress
+                },
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |state: &AppState, query: &str| {
+            search_cards(state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for(&state, "prop:ivl>=10"), vec!["due"]);
+        assert_eq!(ids_for(&state, "prop:due<0"), vec!["due"]);
+        assert_eq!(ids_for(&state, "prop:reps=0"), vec!["new"]);
+        assert_eq!(ids_for(&state, "prop:lapses>1"), vec!["lapsed"]);
+        assert_eq!(ids_for(&state, "prop:ease<2.5"), vec!["low-ease"]);
+
+        state.reviews = vec![
+            review("recent", "due", Rating::Good, NOW - ONE_DAY_MS / 2),
+            review("older", "lapsed", Rating::Again, NOW - 3 * ONE_DAY_MS),
+        ];
+        assert_eq!(ids_for(&state, "prop:rated=0"), vec!["due"]);
+        assert_eq!(ids_for(&state, "prop:rated<-1"), vec!["lapsed"]);
+    }
+
+    #[test]
+    fn recent_event_filters_match_added_edited_introduced_and_rated_cards() {
+        let mut state = state();
+        state.cards[1].created_at = NOW - 3 * ONE_DAY_MS;
+        state.notes[0].updated_at = NOW - ONE_DAY_MS / 2;
+        state.reviews = vec![
+            review("recent-good", "due", Rating::Good, NOW - ONE_DAY_MS / 2),
+            review("older-again", "future", Rating::Again, NOW - 3 * ONE_DAY_MS),
+            review("older-easy", "buried", Rating::Easy, NOW - 2 * ONE_DAY_MS),
+        ];
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(
+            ids_for("added:1"),
+            vec!["note::forward", "future", "suspended", "buried", "new"]
+        );
+        assert_eq!(ids_for("edited:1"), vec!["note::forward"]);
+        assert_eq!(ids_for("introduced:1"), vec!["due"]);
+        assert_eq!(ids_for("rated:1:3"), vec!["due"]);
+        assert_eq!(ids_for("rated:4:again"), vec!["future"]);
     }
 
     #[test]
