@@ -151,6 +151,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - mesh protocol-evidence package handoff execution action evidence summaries
   that combine evidence-row counts with next blocker, protocol, and release
   handoff pointers
+- mesh protocol-evidence package handoff execution action evidence review
+  summaries that combine review counts with next blocker, protocol, and
+  release handoff pointers
 - low-level mesh release ticket handoff execution work-order guardrail audit
   rows that expose release blockers, operator handoffs, review gates, and
   ready-to-execute checks for audit/release coordination
