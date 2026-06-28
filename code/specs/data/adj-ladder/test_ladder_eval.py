@@ -27,6 +27,7 @@ SELF_CONTAINED_RUNGS = (
     "rung2_derived_solve",
     "rung3_linear_systems",
     "rung3_constraint_feasibility",
+    "rung3_probability_decisions",
     "rung3_linear_optimization",
     "rung3_optimization_witness",
     "rung3_quadratic_roots",
@@ -86,6 +87,32 @@ def test_program_faithfulness_ignores_structural_weights_only():
     stem = "There are 9 rows with 6 chairs in each row, and 3 chairs are added."
     assert le.formula_is_faithful(program, stem, program=True)
     assert not le.formula_is_faithful(program + "\nconstrain x = 57", stem, program=True)
+
+
+def test_probability_program_faithfulness_checks_priors_and_lrs_when_requested():
+    program = "\n".join([
+        "prior 0.30 for bacterial",
+        "prior 0.30 for viral",
+        "contributes 15 from csf(neutrophilic) to bacterial",
+        "contributes 1.2 from csf(neutrophilic) to viral",
+        "observe csf(neutrophilic)",
+        "? bacterial",
+        "? viral",
+    ])
+    stem = (
+        "Two diagnoses start with prior 0.30 each. Evidence csf(neutrophilic) "
+        "has likelihood ratio 15 for bacterial and 1.2 for viral."
+    )
+    assert le.formula_is_faithful(
+        program, stem, program=True, structural_weights=False
+    )
+    leaked_stem = (
+        "Two diagnoses start with prior 0.30 each. Evidence csf(neutrophilic) "
+        "has likelihood ratio 1.2 for viral."
+    )
+    assert not le.formula_is_faithful(
+        program, leaked_stem, program=True, structural_weights=False
+    )
 
 
 # ---- decision → letter --------------------------------------------------------
@@ -219,6 +246,30 @@ def test_decompose_prompt_mentions_native_check_program():
     assert "constrain x >= 3" in prompt
     assert "check" in prompt
     assert "Do NOT decide feasibility" in prompt
+
+
+def test_decompose_prompt_mentions_native_probability_decision_program():
+    prompt = le.decompose_prompt({
+        "stem": (
+            "Two diagnoses start with prior 0.30 each: bacterial and viral. "
+            "Observed evidence is csf(neutrophilic). That evidence has likelihood "
+            "ratio 15 for bacterial and 1.2 for viral. Which diagnosis leads?"
+        ),
+        "program": (
+            "prior 0.30 for bacterial\n"
+            "prior 0.30 for viral\n"
+            "contributes 15 from csf(neutrophilic) to bacterial\n"
+            "contributes 1.2 from csf(neutrophilic) to viral\n"
+            "observe csf(neutrophilic)\n"
+            "? bacterial\n"
+            "? viral\n"
+        ),
+        "answer_from": {"type": "decision_leader", "structural_weights": False},
+    })
+    assert "probability decision program" in prompt
+    assert "prior 0.30 for bacterial" in prompt
+    assert "contributes 15 from csf(neutrophilic) to bacterial" in prompt
+    assert "Do NOT choose the answer" in prompt
 
 
 def test_decompose_prompt_mentions_native_optimization_witness_program():
@@ -556,6 +607,31 @@ def test_check_program_maps_unsat_to_label_option():
     ) == "B"
 
 
+def test_probability_decision_program_maps_engine_leader_to_label_option():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    doc = le.run_program(
+        "prior 0.30 for bacterial\n"
+        "prior 0.30 for viral\n"
+        "contributes 15 from csf(neutrophilic) to bacterial\n"
+        "contributes 1.2 from csf(neutrophilic) to viral\n"
+        "observe csf(neutrophilic)\n"
+        "? bacterial\n"
+        "? viral\n"
+    )
+    assert le.program_answer_to_letter(
+        doc,
+        {"type": "decision_leader"},
+        {
+            "A": "bacterial",
+            "B": "viral",
+            "C": "fungal",
+            "D": "migraine",
+            "E": "unknown",
+        },
+    ) == "A"
+
+
 # ---- bank integrity -----------------------------------------------------------
 @pytest.mark.parametrize("rung", SELF_CONTAINED_RUNGS)
 def test_contamination_check_clean(rung):
@@ -597,6 +673,40 @@ def test_contamination_check_accepts_check_outcome_labels(tmp_path, monkeypatch)
     }]}) + "\n")
     monkeypatch.setattr(cc, "HERE", tmp_path)
     assert cc.check("check_labels") == []
+
+
+def test_contamination_check_accepts_decision_leader_labels(tmp_path, monkeypatch):
+    rung = tmp_path / "decision_labels"
+    rung.mkdir()
+    (rung / "items.json").write_text(json.dumps({"items": [{
+        "id": "decision_label_001",
+        "qtype": "probability_decision",
+        "stem": (
+            "Two diagnoses start with prior 0.30 each: bacterial and viral. "
+            "Evidence csf(neutrophilic) has likelihood ratio 15 for bacterial "
+            "and 1.2 for viral."
+        ),
+        "program": (
+            "prior 0.30 for bacterial\n"
+            "prior 0.30 for viral\n"
+            "contributes 15 from csf(neutrophilic) to bacterial\n"
+            "contributes 1.2 from csf(neutrophilic) to viral\n"
+            "observe csf(neutrophilic)\n"
+            "? bacterial\n"
+            "? viral\n"
+        ),
+        "answer_from": {"type": "decision_leader", "structural_weights": False},
+        "options": {
+            "A": "bacterial",
+            "B": "viral",
+            "C": "fungal",
+            "D": "migraine",
+            "E": "unknown",
+        },
+        "gold_letter": "A",
+    }]}) + "\n")
+    monkeypatch.setattr(cc, "HERE", tmp_path)
+    assert cc.check("decision_labels") == []
 
 
 def test_safe_eval_rejects_code():

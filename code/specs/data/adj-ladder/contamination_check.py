@@ -113,7 +113,7 @@ def check(rung: str) -> list[str]:
         numeric_opts: dict[str, float] = {}
         option_keys = {}
         answer_type = (it.get("answer_from") or {}).get("type")
-        label_options = "program" in it and answer_type == "check_outcome"
+        label_options = "program" in it and answer_type in {"check_outcome", "decision_leader"}
         for ltr, value in opts.items():
             try:
                 if label_options:
@@ -166,8 +166,13 @@ def check(rung: str) -> list[str]:
             program_decomposition = False
 
         stem_nums = set(_NUM.findall(it.get("stem", "")))
+        structural_weights = (it.get("answer_from") or {}).get("structural_weights", True)
         leaked = [
-            n for n in le.decomposition_numbers(decomposition, program=program_decomposition)
+            n for n in le.decomposition_numbers(
+                decomposition,
+                program=program_decomposition,
+                structural_weights=structural_weights,
+            )
             if n not in stem_nums
         ]
         if leaked:

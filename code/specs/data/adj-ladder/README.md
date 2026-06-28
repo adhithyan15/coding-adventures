@@ -47,6 +47,8 @@ adj-ladder/
     items.json              20 two-variable linear-system MCQs backed by native ADJ solve
   rung3_constraint_feasibility/
     items.json              20 feasibility MCQs backed by native ADJ check
+  rung3_probability_decisions/
+    items.json              20 diagnosis/decision MCQs backed by native ADJ priors/LRs
   rung3_linear_optimization/
     items.json              20 linear-optimization MCQs backed by native ADJ optimize
   rung3_optimization_witness/
@@ -96,6 +98,7 @@ python3 contamination_check.py rung2_prealgebra_solve
 python3 contamination_check.py rung2_derived_solve
 python3 contamination_check.py rung3_linear_systems
 python3 contamination_check.py rung3_constraint_feasibility
+python3 contamination_check.py rung3_probability_decisions
 python3 contamination_check.py rung3_linear_optimization
 python3 contamination_check.py rung3_optimization_witness
 python3 contamination_check.py rung3_quadratic_roots
@@ -110,6 +113,7 @@ python3 ladder_eval.py rung2_prealgebra_solve
 python3 ladder_eval.py rung2_derived_solve
 python3 ladder_eval.py rung3_linear_systems
 python3 ladder_eval.py rung3_constraint_feasibility
+python3 ladder_eval.py rung3_probability_decisions
 python3 ladder_eval.py rung3_linear_optimization
 python3 ladder_eval.py rung3_optimization_witness
 python3 ladder_eval.py rung3_quadratic_roots
@@ -161,6 +165,10 @@ engine assignment to the printed options without solving the system in Python.
 `rung3_constraint_feasibility` adds native feasibility checks: local models emit
 `symbol` / `constrain` / `check` programs, ADJ returns `check.outcome`, and the
 ladder maps that categorical verdict to printed feasibility options.
+`rung3_probability_decisions` returns to the native evidence calculus directly:
+local models emit `prior` / `contributes` / `observe` / `?` programs, ADJ computes
+the posterior ranking, and the ladder maps only `decision.leader` to the printed
+diagnosis or decision options.
 `rung3_linear_optimization` adds the first optimization rung: local models emit
 native ADJ `maximize`/`minimize` programs, ADJ returns `optimize.value`, and the
 ladder maps only that engine optimum to the printed options.
