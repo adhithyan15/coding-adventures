@@ -98,7 +98,7 @@ use std::collections::HashMap;
 use std::fmt::Write as _;
 
 use mosmodel_compiler::{
-    EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
+    EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
 use mosstyle_compiler::{StyleDef, StyleProp};
@@ -220,7 +220,7 @@ pub struct ProjectFiles {
     /// source.
     pub package_swift: String,
     /// `Sources/App/App.swift` — SwiftUI `@main App` + `WindowGroup`
-    /// shell that mounts `{Component}View()` as the root view.
+    /// shell that mounts `{Component}View(...)` as the root view.
     /// Imports the component sibling-relative (via SwiftPM target
     /// dependency or `#include`-equivalent — for v1, the component
     /// .swift sits in the same `Sources/App/` directory).
@@ -294,7 +294,7 @@ pub fn from_pipeline_with_options(
     let component = from_pipeline(interface, layout, style)?;
 
     let project = if options.emit_project {
-        Some(build_swiftui_project_files(&component.component_name, options)?)
+        Some(build_swiftui_project_files(interface, options)?)
     } else {
         None
     };
@@ -313,9 +313,10 @@ pub fn from_pipeline_with_options(
 /// `Protocol`, `Actor`, `Self`, `Any`, `Type`, etc.) must be
 /// rejected to avoid backtick-quoting in identifier positions.
 fn build_swiftui_project_files(
-    name: &str,
+    interface: &MosmodelComponent,
     options: &EmitOptions,
 ) -> Result<ProjectFiles, ProjectShellError> {
+    let name = &interface.component;
     if !is_safe_swift_identifier(name) {
         return Err(ProjectShellError::InvalidSwiftIdentifier(name.to_string()));
     }
@@ -325,7 +326,7 @@ fn build_swiftui_project_files(
 
     Ok(ProjectFiles {
         package_swift: build_package_swift(options),
-        app_swift: build_app_swift(name),
+        app_swift: build_app_swift(name, &interface.slots),
         readme: build_swiftui_readme(name),
     })
 }
@@ -359,18 +360,71 @@ fn build_package_swift(options: &EmitOptions) -> String {
     )
 }
 
-fn build_app_swift(component_name: &str) -> String {
+fn build_app_swift(component_name: &str, slots: &[SlotDecl]) -> String {
     // The Mosaic SwiftUI emitter produces a `View` struct named
     // `{component_name}View` (per pipeline.rs:120 doc comment), so
     // mount that here.
+    let root_view = build_root_view_initializer(component_name, slots);
     format!(
-        "{BANNER_SWIFT}import SwiftUI\n\n@main\nstruct MosaicApp: App {{\n  var body: some Scene {{\n    WindowGroup(\"{component_name}\") {{\n      {component_name}View()\n    }}\n  }}\n}}\n"
+        "{BANNER_SWIFT}import SwiftUI\n\n@main\nstruct MosaicApp: App {{\n  var body: some Scene {{\n    WindowGroup(\"{component_name}\") {{\n      {root_view}\n    }}\n  }}\n}}\n"
     )
+}
+
+fn build_root_view_initializer(component_name: &str, slots: &[SlotDecl]) -> String {
+    let mut out = format!("{component_name}View(\n");
+    for slot in slots {
+        let field = to_camel_case_first_lower(&slot.name);
+        let value = sample_value_for_slot(slot);
+        writeln!(out, "        {field}: {value},").unwrap();
+    }
+    out.push_str("        dispatch: { event in\n");
+    out.push_str("          print(\"Mosaic dispatch: \\(event)\")\n");
+    out.push_str("        }\n");
+    out.push_str("      )");
+    out
+}
+
+fn sample_value_for_slot(slot: &SlotDecl) -> String {
+    match &slot.default {
+        Some(SlotDefault::Text(value)) => format!("\"{}\"", escape_swift_string(value)),
+        Some(SlotDefault::Number(value)) if value.is_finite() => value.to_string(),
+        Some(SlotDefault::Number(_)) => "0".to_string(),
+        Some(SlotDefault::Bool(value)) => value.to_string(),
+        None => sample_value_for_slot_type(&slot.r#type, &slot.name),
+    }
+}
+
+fn sample_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> String {
+    match slot_type {
+        SlotType::Text => format!("\"Sample {}\"", kebab_to_pascal_case_for_label(slot_name)),
+        SlotType::Number => "0".to_string(),
+        SlotType::Bool => "false".to_string(),
+        SlotType::Image => "\"sample-image\"".to_string(),
+        SlotType::Color => "\"#808080\"".to_string(),
+        SlotType::Node | SlotType::Component(_) => "AnyView(EmptyView())".to_string(),
+        SlotType::List(_) => "[]".to_string(),
+    }
+}
+
+fn kebab_to_pascal_case_for_label(s: &str) -> String {
+    let mut out = String::new();
+    for part in s.split('-').filter(|part| !part.is_empty()) {
+        let mut chars = part.chars();
+        if let Some(first) = chars.next() {
+            out.push(first.to_ascii_uppercase());
+            out.extend(chars);
+        }
+    }
+    if out.is_empty() {
+        "Value".to_string()
+    } else {
+        out
+    }
 }
 
 fn build_swiftui_readme(component_name: &str) -> String {
     format!(
-        "{BANNER_MD}# {component_name} — SwiftUI macOS shell\n\nAuto-generated by `mosaic-compile --backend swiftui --emit-project`.\n\n## Prerequisites\n\n- Swift 5.10+ (Xcode 15.3+ or the standalone Swift toolchain).\n- macOS 13 (Ventura) or later target machine.\n\n## Run\n\n```sh\nswift run\n```\n\nThis builds and launches a SwiftUI app with a single window hosting `{component_name}View()`. The first run downloads no dependencies — the package only depends on the SwiftUI system framework.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.swift` | The Mosaic-compiled SwiftUI component. Place inside `Sources/App/` for SwiftPM to pick it up. |\n| `Package.swift` | SwiftPM manifest. Pinned swift-tools-version per UI32 spec §3.6.3. |\n| `Sources/App/App.swift` | `@main App` with `WindowGroup` mounting `{component_name}View()`. |\n| `README.md` | This file. |\n\n## Layout\n\nFor SwiftPM to compile the component, move `{component_name}.swift` into `Sources/App/` (next to `App.swift`):\n\n```sh\nmkdir -p Sources/App\nmv {component_name}.swift Sources/App/\nswift run\n```\n\n## Editing\n\nEvery file except `{component_name}.swift` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+        "{BANNER_MD}# {component_name} — SwiftUI macOS shell\n\nAuto-generated by `mosaic-compile --backend swiftui --emit-project`.\n\n## Prerequisites\n\n- Swift 5.10+ (Xcode 15.3+ or the standalone Swift toolchain).\n- macOS 13 (Ventura) or later target machine.\n\n## Run\n\n```sh\nswift run\n```\n\nThis builds and launches a SwiftUI app with a single window hosting `{component_name}View(...)`. The first run downloads no dependencies — the package only depends on the SwiftUI system framework.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.swift` | The Mosaic-compiled SwiftUI component. Place inside `Sources/App/` for SwiftPM to pick it up. |\n| `Package.swift` | SwiftPM manifest. Pinned swift-tools-version per UI32 spec §3.6.3. |\n| `Sources/App/App.swift` | `@main App` with `WindowGroup` mounting `{component_name}View(...)` with sample slot values and a dispatch closure. |\n| `README.md` | This file. |\n\n## Layout\n\nFor SwiftPM to compile the component, move `{component_name}.swift` into `Sources/App/` (next to `App.swift`):\n\n```sh\nmkdir -p Sources/App\nmv {component_name}.swift Sources/App/\nswift run\n```\n\n## Editing\n\nEvery file except `{component_name}.swift` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
     )
 }
 
@@ -6353,8 +6407,8 @@ mod tests {
             .unwrap()
             .project
             .unwrap();
-        // Must use @main App + WindowGroup + the {Component}View()
-        // constructor.
+        // Must use @main App + WindowGroup + the {Component}View
+        // initializer.
         assert!(
             proj.app_swift.contains("@main"),
             "App.swift must declare @main"
@@ -6364,8 +6418,75 @@ mod tests {
             "App.swift must wrap in WindowGroup titled with component name"
         );
         assert!(
-            proj.app_swift.contains("MyWidgetView()"),
-            "App.swift must instantiate MyWidgetView()"
+            proj.app_swift.contains("MyWidgetView("),
+            "App.swift must instantiate MyWidgetView"
+        );
+        assert!(
+            proj.app_swift.contains("dispatch: { event in"),
+            "App.swift must provide a dispatch closure"
+        );
+    }
+
+    #[test]
+    fn ui32_app_swift_passes_sample_slot_values_to_component_view() {
+        let mut display_name = slot("display-name", SlotType::Text, false);
+        display_name.default = Some(SlotDefault::Text("Ada".to_string()));
+        let m = component(
+            "ProfileCard",
+            vec![
+                display_name,
+                slot("age", SlotType::Number, true),
+                slot("is-active", SlotType::Bool, true),
+                slot("avatar-url", SlotType::Image, true),
+                slot("accent", SlotType::Color, true),
+                slot(
+                    "tags",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+            ],
+            vec![],
+        );
+        let l = layout_with("ProfileCard", container_node("Box", vec![]));
+        let s = empty_style("ProfileCard");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+
+        assert!(
+            proj.app_swift.contains("ProfileCardView("),
+            "App.swift must instantiate ProfileCardView"
+        );
+        assert!(
+            proj.app_swift.contains("displayName: \"Ada\","),
+            "text defaults should flow into the generated initializer"
+        );
+        assert!(
+            proj.app_swift.contains("age: 0,"),
+            "number slots need a sample value"
+        );
+        assert!(
+            proj.app_swift.contains("isActive: false,"),
+            "bool slots need a sample value"
+        );
+        assert!(
+            proj.app_swift.contains("avatarUrl: \"sample-image\","),
+            "image slots need a sample value"
+        );
+        assert!(
+            proj.app_swift.contains("accent: \"#808080\","),
+            "color slots need a sample value"
+        );
+        assert!(
+            proj.app_swift.contains("tags: [],"),
+            "list slots need an empty sample value"
+        );
+        assert!(
+            proj.app_swift.contains("dispatch: { event in"),
+            "the generated initializer must pass dispatch last"
         );
     }
 

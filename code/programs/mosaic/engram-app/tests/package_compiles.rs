@@ -306,6 +306,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
     assert_contains(&swift, "let answerVisible: Bool");
+    let swift_app = fs::read_to_string(
+        tmp.path()
+            .join("swiftui")
+            .join("Sources")
+            .join("App")
+            .join("App.swift"),
+    )
+    .expect("Sources/App/App.swift");
+    assert_contains(&swift_app, "EngramAppView(");
+    assert_contains(&swift_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(&swift_app, "answerVisible: false,");
+    assert_contains(&swift_app, "dispatch: { event in");
 
     let xaml_code_behind = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.xaml.cs"))
         .expect("EngramApp.xaml.cs");
