@@ -613,6 +613,11 @@ def decompose_prompt(item: dict) -> str:
                 "symbol x : scalar\n"
                 "constrain x * x * x * x - 10 * x * x * x + 35 * x * x - 50 * x + 24 = 0\n"
                 "solve for { x }\n\n"
+                "Question: What real values of x solve (x - 2)(x - 5) = 0?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain (x - 2) * (x - 5) = 0\n"
+                "solve for { x }\n\n"
                 f"Question: {item['stem']}\nProgram:"
             )
         requires = answer_from.get("requires") or []
