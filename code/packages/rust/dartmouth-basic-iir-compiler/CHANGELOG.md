@@ -1,5 +1,25 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.30.0 — 2026-06-28 — BA4 variable-variable string concat in IF equality
+
+String `IF` now has an explicit unit and matrix proof for a concatenation
+expression whose operands are both scalar string variables and whose result
+feeds the standard `=` relop:
+
+```basic
+10 LET A$ = "O"
+20 LET B$ = "K"
+30 IF A$ + B$ = "OK" THEN 60
+40 PRINT "BAD"
+50 END
+60 PRINT "OK"
+70 END
+```
+
+The compiler still lowers through E4 `str_concat` plus `str_eq`; the equality
+path branches with `jmp_if_true`, proving the true-equality branch for a
+variable-variable string expression without adding a new string-compare opcode.
+
 ## 0.29.0 — 2026-06-27 — BA4 variable-variable string concat in IF inequality
 
 String `IF` now has an explicit unit and matrix proof for a concatenation

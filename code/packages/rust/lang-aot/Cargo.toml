@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.144.0"
+version = "0.145.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.144.0 (LANG-FULL BA4): `tests/lang_matrix.rs` proves BASIC variable-variable string concat in IF inequality on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.143.0 proved variable-variable string concat in PRINT."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.145.0 (LANG-FULL BA4): `tests/lang_matrix.rs` proves BASIC variable-variable string concat in IF equality on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.144.0 proved variable-variable string concat in IF inequality."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }

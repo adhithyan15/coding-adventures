@@ -526,6 +526,9 @@ backend immediately) come before the enabler-dependent items.
   proves both concat operands can be scalar string slots in that direct-print path.
   `LET A$ = "O"; IF A$ + "K" = "OK" THEN n`
   proves that same expression path before `str_eq` line-control branching.
+  `LET A$ = "O"; LET B$ = "K"; IF A$ + B$ = "OK" THEN n` proves the
+  variable-variable concat expression also feeds the standard equality branch
+  path (`str_eq` plus `jmp_if_true`).
   `LET A$ = "O"; LET B$ = "K"; IF A$ + B$ <> "NO" THEN n` proves the
   variable-variable concat expression also feeds the standard inequality branch
   path (`str_eq` plus `jmp_if_false`).
