@@ -1,0 +1,184 @@
+{
+  "items": [
+    {
+      "id": "r3ls-01",
+      "qtype": "linear_system_solve",
+      "stem": "Two numbers x and y have sum 10 and difference 2, with x - y = 2. What is x?",
+      "program": "symbol x : scalar\nsymbol y : scalar\nconstrain x + y = 10\nconstrain x - y = 2\nsolve for { x, y }\n",
+      "answer_from": {"type": "solve_assignment", "name": "x"},
+      "options": {"A": 4, "B": 5, "C": 6, "D": 7, "E": 8},
+      "gold_letter": "C"
+    },
+    {
+      "id": "r3ls-02",
+      "qtype": "linear_system_solve",
+      "stem": "Two numbers x and y have sum 18 and difference 4, with x - y = 4. What is x?",
+      "program": "symbol x : scalar\nsymbol y : scalar\nconstrain latex \"$x + y = 18$\"\nconstrain latex \"$x - y = 4$\"\nsolve for { x, y }\n",
+      "answer_from": {"type": "solve_assignment", "name": "x"},
+      "options": {"A": 8, "B": 9, "C": 10, "D": 11, "E": 12},
+      "gold_letter": "D"
+    },
+    {
+      "id": "r3ls-03",
+      "qtype": "linear_system_solve",
+      "stem": "Two numbers x and y have sum 30 and difference 6, with x - y = 6. What is y?",
+      "program": "symbol x : scalar\nsymbol y : scalar\nconstrain x + y = 30\nconstrain x - y = 6\nsolve for { x, y }\n",
+      "answer_from": {"type": "solve_assignment", "name": "y"},
+      "options": {"A": 10, "B": 12, "C": 14, "D": 16, "E": 18},
+      "gold_letter": "B"
+    },
+    {
+      "id": "r3ls-04",
+      "qtype": "linear_system_solve",
+      "stem": "Two numbers x and y have sum 26 and difference 8, with x - y = 8. What is y?",
+      "program": "symbol x : scalar\nsymbol y : scalar\nconstrain x + y = 26\nconstrain x - y = 8\nsolve for { x, y }\n",
+      "answer_from": {"type": "solve_assignment", "name": "y"},
+      "options": {"A": 5, "B": 6, "C": 7, "D": 8, "E": 9},
+      "gold_letter": "E"
+    },
+    {
+      "id": "r3ls-05",
+      "qtype": "linear_system_solve",
+      "stem": "Two numbers x and y have sum 45 and difference 15, with x - y = 15. What is x?",
+      "program": "symbol x : scalar\nsymbol y : scalar\nconstrain x + y = 45\nconstrain x - y = 15\nsolve for { x, y }\n",
+      "answer_from": {"type": "solve_assignment", "name": "x"},
+      "options": {"A": 30, "B": 31, "C": 32, "D": 33, "E": 34},
+      "gold_letter": "A"
+    },
+    {
+      "id": "r3ls-06",
+      "qtype": "linear_system_solve",
+      "stem": "A rectangle's length l plus width w is 18, and l - w = 4. What is w?",
+      "program": "symbol l : scalar\nsymbol w : scalar\nconstrain l + w = 18\nconstrain l - w = 4\nsolve for { l, w }\n",
+      "answer_from": {"type": "solve_assignment", "name": "w"},
+      "options": {"A": 6, "B": 7, "C": 8, "D": 9, "E": 11},
+      "gold_letter": "B"
+    },
+    {
+      "id": "r3ls-07",
+      "qtype": "linear_system_solve",
+      "stem": "A rectangle's length l plus width w is 32, and l - w = 10. What is l?",
+      "program": "symbol l : scalar\nsymbol w : scalar\nconstrain l + w = 32\nconstrain l - w = 10\nsolve for { l, w }\n",
+      "answer_from": {"type": "solve_assignment", "name": "l"},
+      "options": {"A": 16, "B": 18, "C": 20, "D": 21, "E": 22},
+      "gold_letter": "D"
+    },
+    {
+      "id": "r3ls-08",
+      "qtype": "linear_system_solve",
+      "stem": "A theater sells 40 tickets. Adult tickets cost 12 dollars, student tickets cost 8 dollars, and the total is 400 dollars. How many adult tickets a were sold?",
+      "program": "symbol a : scalar\nsymbol s : scalar\nconstrain a + s = 40\nconstrain 12 * a + 8 * s = 400\nsolve for { a, s }\n",
+      "answer_from": {"type": "solve_assignment", "name": "a"},
+      "options": {"A": 16, "B": 18, "C": 20, "D": 22, "E": 24},
+      "gold_letter": "C"
+    },
+    {
+      "id": "r3ls-09",
+      "qtype": "linear_system_solve",
+      "stem": "A concert sells 50 tickets. Premium tickets p cost 15 dollars, regular tickets r cost 9 dollars, and total sales are 570 dollars. How many regular tickets r were sold?",
+      "program": "symbol p : scalar\nsymbol r : scalar\nconstrain p + r = 50\nconstrain 15 * p + 9 * r = 570\nsolve for { p, r }\n",
+      "answer_from": {"type": "solve_assignment", "name": "r"},
+      "options": {"A": 18, "B": 24, "C": 27, "D": 30, "E": 36},
+      "gold_letter": "D"
+    },
+    {
+      "id": "r3ls-10",
+      "qtype": "linear_system_solve",
+      "stem": "A pen has 14 animals made of 2-legged chickens k and 4-legged cows c, with 40 legs total. How many cows c are there?",
+      "program": "symbol k : scalar\nsymbol c : scalar\nconstrain k + c = 14\nconstrain 2 * k + 4 * c = 40\nsolve for { k, c }\n",
+      "answer_from": {"type": "solve_assignment", "name": "c"},
+      "options": {"A": 5, "B": 6, "C": 7, "D": 8, "E": 9},
+      "gold_letter": "B"
+    },
+    {
+      "id": "r3ls-11",
+      "qtype": "linear_system_solve",
+      "stem": "A lot has 12 vehicles made of 4-wheeled cars c and 2-wheeled motorcycles m, with 34 wheels total. How many cars c are there?",
+      "program": "symbol c : scalar\nsymbol m : scalar\nconstrain c + m = 12\nconstrain 4 * c + 2 * m = 34\nsolve for { c, m }\n",
+      "answer_from": {"type": "solve_assignment", "name": "c"},
+      "options": {"A": 5, "B": 6, "C": 7, "D": 8, "E": 9},
+      "gold_letter": "A"
+    },
+    {
+      "id": "r3ls-12",
+      "qtype": "linear_system_solve",
+      "stem": "A jar has 30 coins made of 5-cent nickels n and 10-cent dimes d, worth 220 cents total. How many dimes d are there?",
+      "program": "symbol n : scalar\nsymbol d : scalar\nconstrain n + d = 30\nconstrain 5 * n + 10 * d = 220\nsolve for { n, d }\n",
+      "answer_from": {"type": "solve_assignment", "name": "d"},
+      "options": {"A": 8, "B": 10, "C": 12, "D": 14, "E": 16},
+      "gold_letter": "D"
+    },
+    {
+      "id": "r3ls-13",
+      "qtype": "linear_system_solve",
+      "stem": "A jar has 28 coins made of 25-cent quarters q and 10-cent dimes d, worth 520 cents total. How many quarters q are there?",
+      "program": "symbol q : scalar\nsymbol d : scalar\nconstrain q + d = 28\nconstrain 25 * q + 10 * d = 520\nsolve for { q, d }\n",
+      "answer_from": {"type": "solve_assignment", "name": "q"},
+      "options": {"A": 14, "B": 16, "C": 18, "D": 20, "E": 22},
+      "gold_letter": "B"
+    },
+    {
+      "id": "r3ls-14",
+      "qtype": "linear_system_solve",
+      "stem": "A stand sells 34 fruits: apples a cost 3 dollars each, oranges o cost 2 dollars each, and sales total 84 dollars. How many oranges o were sold?",
+      "program": "symbol a : scalar\nsymbol o : scalar\nconstrain a + o = 34\nconstrain 3 * a + 2 * o = 84\nsolve for { a, o }\n",
+      "answer_from": {"type": "solve_assignment", "name": "o"},
+      "options": {"A": 10, "B": 12, "C": 14, "D": 16, "E": 18},
+      "gold_letter": "E"
+    },
+    {
+      "id": "r3ls-15",
+      "qtype": "linear_system_solve",
+      "stem": "A supply order has 25 items: notebooks n cost 5 dollars each, pens p cost 2 dollars each, and the total is 83 dollars. How many notebooks n were ordered?",
+      "program": "symbol n : scalar\nsymbol p : scalar\nconstrain n + p = 25\nconstrain 5 * n + 2 * p = 83\nsolve for { n, p }\n",
+      "answer_from": {"type": "solve_assignment", "name": "n"},
+      "options": {"A": 9, "B": 10, "C": 11, "D": 12, "E": 13},
+      "gold_letter": "C"
+    },
+    {
+      "id": "r3ls-16",
+      "qtype": "linear_system_solve",
+      "stem": "A room has 36 pieces: tables t and chairs c. Each table seats 4 people, each chair seats 1 person, and total seating is 75. How many tables t are there?",
+      "program": "symbol t : scalar\nsymbol c : scalar\nconstrain t + c = 36\nconstrain 4 * t + c = 75\nsolve for { t, c }\n",
+      "answer_from": {"type": "solve_assignment", "name": "t"},
+      "options": {"A": 13, "B": 14, "C": 15, "D": 16, "E": 17},
+      "gold_letter": "A"
+    },
+    {
+      "id": "r3ls-17",
+      "qtype": "linear_system_solve",
+      "stem": "A schedule has 22 shifts. Day shifts d pay 90 dollars, evening shifts e pay 60 dollars, and total pay is 1680 dollars. How many evening shifts e are there?",
+      "program": "symbol d : scalar\nsymbol e : scalar\nconstrain d + e = 22\nconstrain 90 * d + 60 * e = 1680\nsolve for { d, e }\n",
+      "answer_from": {"type": "solve_assignment", "name": "e"},
+      "options": {"A": 6, "B": 7, "C": 8, "D": 9, "E": 10},
+      "gold_letter": "E"
+    },
+    {
+      "id": "r3ls-18",
+      "qtype": "linear_system_solve",
+      "stem": "An aquarium has 16 tanks. Small tanks s hold 8 fish, large tanks l hold 14 fish, and capacity is 170 fish total. How many large tanks l are there?",
+      "program": "symbol s : scalar\nsymbol l : scalar\nconstrain s + l = 16\nconstrain 8 * s + 14 * l = 170\nsolve for { s, l }\n",
+      "answer_from": {"type": "solve_assignment", "name": "l"},
+      "options": {"A": 6, "B": 7, "C": 8, "D": 9, "E": 10},
+      "gold_letter": "B"
+    },
+    {
+      "id": "r3ls-19",
+      "qtype": "linear_system_solve",
+      "stem": "For x and y, x + 2y = 23 and x + y = 14. What is y?",
+      "program": "symbol x : scalar\nsymbol y : scalar\nconstrain latex \"$x + 2y = 23$\"\nconstrain latex \"$x + y = 14$\"\nsolve for { x, y }\n",
+      "answer_from": {"type": "solve_assignment", "name": "y"},
+      "options": {"A": 3, "B": 5, "C": 7, "D": 9, "E": 11},
+      "gold_letter": "D"
+    },
+    {
+      "id": "r3ls-20",
+      "qtype": "linear_system_solve",
+      "stem": "For x and y, 3x + y = 31 and x + y = 15. What is x?",
+      "program": "symbol x : scalar\nsymbol y : scalar\nconstrain latex \"$3x + y = 31$\"\nconstrain latex \"$x + y = 15$\"\nsolve for { x, y }\n",
+      "answer_from": {"type": "solve_assignment", "name": "x"},
+      "options": {"A": 8, "B": 9, "C": 10, "D": 11, "E": 12},
+      "gold_letter": "A"
+    }
+  ]
+}
