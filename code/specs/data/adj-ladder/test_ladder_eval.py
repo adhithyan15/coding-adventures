@@ -26,6 +26,7 @@ SELF_CONTAINED_RUNGS = (
     "rung2_prealgebra_solve",
     "rung2_derived_solve",
     "rung3_linear_systems",
+    "rung3_constraint_feasibility",
     "rung3_linear_optimization",
     "rung3_optimization_witness",
     "rung3_quadratic_roots",
@@ -206,6 +207,18 @@ def test_decompose_prompt_mentions_native_optimization_program():
     assert "maximize 3 * x + 2 * y" in prompt
     assert "minimize x + y" in prompt
     assert "Do NOT compute the optimum" in prompt
+
+
+def test_decompose_prompt_mentions_native_check_program():
+    prompt = le.decompose_prompt({
+        "stem": "Is there a value of x with x >= 3 and x <= 5?",
+        "program": "symbol x : scalar\nconstrain x >= 3\nconstrain x <= 5\ncheck\n",
+        "answer_from": {"type": "check_outcome"},
+    })
+    assert "constraint feasibility program" in prompt
+    assert "constrain x >= 3" in prompt
+    assert "check" in prompt
+    assert "Do NOT decide feasibility" in prompt
 
 
 def test_decompose_prompt_mentions_native_optimization_witness_program():
@@ -509,6 +522,40 @@ def test_optimize_program_maps_engine_witness_to_option():
     ) == "C"
 
 
+def test_check_program_maps_engine_outcome_to_label_option():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    doc = le.run_program("symbol x : scalar\nconstrain x >= 3\nconstrain x <= 5\ncheck\n")
+    assert le.program_answer_to_letter(
+        doc,
+        {"type": "check_outcome"},
+        {
+            "A": "feasible",
+            "B": "infeasible",
+            "C": "unbounded",
+            "D": "optimal",
+            "E": "unknown",
+        },
+    ) == "A"
+
+
+def test_check_program_maps_unsat_to_label_option():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    doc = le.run_program("symbol x : scalar\nconstrain x >= 5\nconstrain x <= 3\ncheck\n")
+    assert le.program_answer_to_letter(
+        doc,
+        {"type": "check_outcome"},
+        {
+            "A": "feasible",
+            "B": "infeasible",
+            "C": "unbounded",
+            "D": "optimal",
+            "E": "unknown",
+        },
+    ) == "B"
+
+
 # ---- bank integrity -----------------------------------------------------------
 @pytest.mark.parametrize("rung", SELF_CONTAINED_RUNGS)
 def test_contamination_check_clean(rung):
@@ -528,6 +575,28 @@ def test_contamination_check_accepts_option_expressions(tmp_path, monkeypatch):
     }]}) + "\n")
     monkeypatch.setattr(cc, "HERE", tmp_path)
     assert cc.check("expr_options") == []
+
+
+def test_contamination_check_accepts_check_outcome_labels(tmp_path, monkeypatch):
+    rung = tmp_path / "check_labels"
+    rung.mkdir()
+    (rung / "items.json").write_text(json.dumps({"items": [{
+        "id": "check_label_001",
+        "qtype": "constraint_feasibility",
+        "stem": "Is there a value of x with x >= 3 and x <= 5?",
+        "program": "symbol x : scalar\nconstrain x >= 3\nconstrain x <= 5\ncheck\n",
+        "answer_from": {"type": "check_outcome"},
+        "options": {
+            "A": "feasible",
+            "B": "infeasible",
+            "C": "unbounded",
+            "D": "optimal",
+            "E": "unknown",
+        },
+        "gold_letter": "A",
+    }]}) + "\n")
+    monkeypatch.setattr(cc, "HERE", tmp_path)
+    assert cc.check("check_labels") == []
 
 
 def test_safe_eval_rejects_code():

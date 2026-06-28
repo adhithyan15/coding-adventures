@@ -88,6 +88,15 @@ def option_signature(value):
     return ("number", round(option_value(value), 9))
 
 
+def label_option_signature(value):
+    if not isinstance(value, str):
+        raise ValueError(f"unsupported label option value {value!r}")
+    label = value.strip().lower()
+    if not label:
+        raise ValueError("label option must not be empty")
+    return ("label", label)
+
+
 def check(rung: str) -> list[str]:
     items = json.loads((HERE / rung / "items.json").read_text())["items"]
     errors: list[str] = []
@@ -103,9 +112,14 @@ def check(rung: str) -> list[str]:
             errors.append(f"{iid}: options must be exactly A..E, got {sorted(opts)}")
         numeric_opts: dict[str, float] = {}
         option_keys = {}
+        answer_type = (it.get("answer_from") or {}).get("type")
+        label_options = "program" in it and answer_type == "check_outcome"
         for ltr, value in opts.items():
             try:
-                option_keys[ltr] = option_signature(value)
+                if label_options:
+                    option_keys[ltr] = label_option_signature(value)
+                else:
+                    option_keys[ltr] = option_signature(value)
                 if option_keys[ltr][0] == "number":
                     numeric_opts[ltr] = option_keys[ltr][1]
             except (ValueError, SyntaxError, ZeroDivisionError) as e:

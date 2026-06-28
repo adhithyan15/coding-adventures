@@ -227,9 +227,12 @@ constraint solver computes the unknown, and the ladder maps that engine value to
 printed options. The next rung now mixes that solve path with rule-derived premises:
 the program derives a setup atom, uses it as evidence for a queried readiness
 decision, and then solves the numeric unknown in the same native ADJ run. Rung 3 now
-also exercises native constraint optimization: ADJ returns `optimize.value` for
-linear `maximize`/`minimize` programs and `optimize.assignments` for requested
-witness variables; the ladder maps those engine outputs to printed options without
+also exercises native constraint feasibility: ADJ returns `check.outcome` for
+linear `symbol` / `constrain` / `check` programs, and the ladder maps that verdict
+to printed feasible/infeasible options without host-side solving. It exercises
+native constraint optimization too: ADJ returns `optimize.value` for linear
+`maximize`/`minimize` programs and `optimize.assignments` for requested witness
+variables; the ladder maps those engine outputs to printed options without
 host-side solving. It then climbs through native polynomial root solving: ADJ
 returns `solved_roots` for quadratic, cubic, quartic, and factored-polynomial
 programs, and the ladder maps those root sets to printed options without host-side

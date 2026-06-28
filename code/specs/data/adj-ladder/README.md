@@ -45,6 +45,8 @@ adj-ladder/
     items.json              20 MCQs requiring a derived setup premise + native solve
   rung3_linear_systems/
     items.json              20 two-variable linear-system MCQs backed by native ADJ solve
+  rung3_constraint_feasibility/
+    items.json              20 feasibility MCQs backed by native ADJ check
   rung3_linear_optimization/
     items.json              20 linear-optimization MCQs backed by native ADJ optimize
   rung3_optimization_witness/
@@ -93,6 +95,7 @@ python3 contamination_check.py rung1_fractions_percent
 python3 contamination_check.py rung2_prealgebra_solve
 python3 contamination_check.py rung2_derived_solve
 python3 contamination_check.py rung3_linear_systems
+python3 contamination_check.py rung3_constraint_feasibility
 python3 contamination_check.py rung3_linear_optimization
 python3 contamination_check.py rung3_optimization_witness
 python3 contamination_check.py rung3_quadratic_roots
@@ -106,6 +109,7 @@ python3 ladder_eval.py rung1_fractions_percent
 python3 ladder_eval.py rung2_prealgebra_solve
 python3 ladder_eval.py rung2_derived_solve
 python3 ladder_eval.py rung3_linear_systems
+python3 ladder_eval.py rung3_constraint_feasibility
 python3 ladder_eval.py rung3_linear_optimization
 python3 ladder_eval.py rung3_optimization_witness
 python3 ladder_eval.py rung3_quadratic_roots
@@ -154,6 +158,9 @@ observed quantities.
 `rung3_linear_systems` takes the next native solve step: ADJ solves two-variable
 linear systems, including native LaTeX constraints, and the ladder maps one requested
 engine assignment to the printed options without solving the system in Python.
+`rung3_constraint_feasibility` adds native feasibility checks: local models emit
+`symbol` / `constrain` / `check` programs, ADJ returns `check.outcome`, and the
+ladder maps that categorical verdict to printed feasibility options.
 `rung3_linear_optimization` adds the first optimization rung: local models emit
 native ADJ `maximize`/`minimize` programs, ADJ returns `optimize.value`, and the
 ladder maps only that engine optimum to the printed options.

@@ -189,6 +189,15 @@ def _option_number(value: OptionValue) -> float:
     raise ValueError(f"unsupported option value {value!r}")
 
 
+def _option_label(value: OptionValue) -> str:
+    if not isinstance(value, str):
+        raise ValueError(f"unsupported label option value {value!r}")
+    label = value.strip().lower()
+    if not label:
+        raise ValueError("label option must not be empty")
+    return label
+
+
 def _option_roots(value: OptionValue) -> tuple[float, ...]:
     if not isinstance(value, list) or not value:
         raise ValueError(f"unsupported root-set option value {value!r}")
@@ -288,6 +297,18 @@ def _letter_for_engine_roots(roots: list[float], options: dict[str, OptionValue]
             abs(a - b) <= 1e-9 for a, b in zip(root_set, option_roots)
         ):
             matches.append(ltr)
+    return matches[0] if len(matches) == 1 else None
+
+
+def _letter_for_engine_label(label: str, options: dict[str, OptionValue]) -> str | None:
+    label = label.strip().lower()
+    matches = []
+    for ltr, option in options.items():
+        try:
+            if _option_label(option) == label:
+                matches.append(ltr)
+        except ValueError:
+            return None
     return matches[0] if len(matches) == 1 else None
 
 
@@ -460,6 +481,37 @@ def optimize_assignment_to_letter(
         return None
 
 
+def check_outcome_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ feasibility verdict to an option letter.
+
+    Constraint-feasibility rungs ask the model to emit only variables,
+    constraints, and `check`. ADJ decides whether the system is feasible over the
+    supported domain; the harness only maps `check.outcome` to printed categorical
+    choices such as "feasible" or "infeasible".
+    """
+    if not doc or not answer_from or answer_from.get("type") != "check_outcome":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    check = doc.get("check")
+    if not isinstance(check, dict):
+        return None
+    outcome = check.get("outcome")
+    labels = {
+        "sat": "feasible",
+        "sat_real": "feasible",
+        "unsat": "infeasible",
+        "unknown": "unknown",
+    }
+    labels.update(answer_from.get("labels") or {})
+    label = labels.get(outcome)
+    if not isinstance(label, str):
+        return None
+    return _letter_for_engine_label(label, options)
+
+
 def program_answer_to_letter(
     doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
 ) -> str | None:
@@ -473,6 +525,8 @@ def program_answer_to_letter(
         return optimize_value_to_letter(doc, answer_from, options)
     if answer_from.get("type") == "optimize_assignment":
         return optimize_assignment_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "check_outcome":
+        return check_outcome_to_letter(doc, answer_from, options)
     return None
 
 
@@ -640,6 +694,36 @@ def decompose_prompt(item: dict) -> str:
     if "program" in item:
         answer_from = item.get("answer_from") or {}
         name = answer_from.get("name", "x")
+        if answer_from.get("type") == "check_outcome":
+            return (
+                "Translate the word problem into a native ADJ constraint "
+                "feasibility program. Declare the variables, add every stated "
+                "constraint, then end with `check`. Use ONLY numbers that appear "
+                "in the question. Do NOT decide feasibility, do NOT mention the "
+                "answer choices, and output ONLY the ADJ program.\n\n"
+                "Question: Is there a value of x with x >= 3 and x <= 5?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain x >= 3\n"
+                "constrain x <= 5\n"
+                "check\n\n"
+                "Question: Is there a value of x with x >= 5 and x <= 3?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain x >= 5\n"
+                "constrain x <= 3\n"
+                "check\n\n"
+                "Question: Are there values x and y with x + y = 10, x >= 4, "
+                "and y >= 4?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "symbol y : scalar\n"
+                "constrain x + y = 10\n"
+                "constrain x >= 4\n"
+                "constrain y >= 4\n"
+                "check\n\n"
+                f"Question: {item['stem']}\nProgram:"
+            )
         if answer_from.get("type") in {"optimize_value", "optimize_assignment"}:
             target = (
                 "the optimum value"

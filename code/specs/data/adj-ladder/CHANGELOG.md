@@ -2,6 +2,18 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.14.0] — 2026-06-28
+
+### Added — rung 3 constraint feasibility scaffold
+
+- **`rung3_constraint_feasibility/items.json`** — 20 fresh MCQs where the gold
+  decomposition is a native ADJ `check` program over linear constraints.
+- Program-backed items can now declare `answer_from: {"type": "check_outcome"}`.
+  The engine returns `check.outcome`; the harness only maps `sat` / `sat_real` to
+  "feasible" and `unsat` to "infeasible" printed options.
+- The model-mode decomposition prompt now includes native `check` examples, so
+  local models can emit feasibility programs without deciding feasibility in-model.
+
 ## [0.13.0] — 2026-06-28
 
 ### Added — rung 3 optimization witness scaffold
