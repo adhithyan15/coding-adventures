@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `device_model_reference_deck_audit_gate` and
+  `format_device_model_reference_deck_audit_gate_report`, a stable pass/fail
+  gate for the required device-model reference-deck audit coverage matrix,
+  matching Python and TypeScript.
 - Add `format_device_model_reference_deck_audit_table`, a stable
   tab-separated summary for the device-model reference-deck audit matrix,
   matching Python and TypeScript.

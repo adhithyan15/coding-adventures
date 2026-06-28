@@ -2945,6 +2945,31 @@ pub struct DeviceModelReferenceDeckAuditFixture {
     pub deck_lines: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeviceModelReferenceDeckAuditIssue {
+    pub fixture_name: String,
+    pub field: String,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeviceModelReferenceDeckAuditGateReport {
+    pub passed: bool,
+    pub fixture_count: usize,
+    pub expected_kinds: Vec<String>,
+    pub expected_analyses: Vec<String>,
+    pub issues: Vec<DeviceModelReferenceDeckAuditIssue>,
+}
+
+const REFERENCE_DECK_AUDIT_EXPECTED_KINDS: &[ModelCardKind] = &[
+    ModelCardKind::Diode,
+    ModelCardKind::Npn,
+    ModelCardKind::Njf,
+    ModelCardKind::Nmos,
+];
+const REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES: &[&str] =
+    &["op", "temperature", "ac", "noise", "tran"];
+
 fn model_type_key(text: &str) -> String {
     text.trim()
         .chars()
@@ -4284,6 +4309,178 @@ pub fn format_device_model_reference_deck_audit_table(
             fixture.expected_behavior,
             fixture.deck_lines.len()
         ));
+    }
+    lines.join("\n")
+}
+
+pub fn device_model_reference_deck_audit_gate(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> DeviceModelReferenceDeckAuditGateReport {
+    let expected_kinds = REFERENCE_DECK_AUDIT_EXPECTED_KINDS
+        .iter()
+        .map(|kind| kind.as_str().to_string())
+        .collect::<Vec<_>>();
+    let expected_analyses = REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES
+        .iter()
+        .map(|analysis| analysis.to_string())
+        .collect::<Vec<_>>();
+    let mut issues = Vec::new();
+    let mut seen_names = HashSet::new();
+    let mut seen_pairs = HashSet::new();
+
+    if fixtures.is_empty() {
+        issues.push(DeviceModelReferenceDeckAuditIssue {
+            fixture_name: "audit_matrix".to_string(),
+            field: "fixture_count".to_string(),
+            message: "audit matrix must contain at least one reference-deck row".to_string(),
+        });
+    }
+
+    for fixture in fixtures {
+        let fixture_name = if fixture.name.is_empty() {
+            "<missing>".to_string()
+        } else {
+            fixture.name.clone()
+        };
+
+        if !seen_names.insert(fixture.name.clone()) {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "name".to_string(),
+                message: "reference-deck audit fixture names must be unique".to_string(),
+            });
+        }
+        if fixture.name.trim().is_empty() {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "name".to_string(),
+                message: "field must be documented and non-empty".to_string(),
+            });
+        }
+        if !REFERENCE_DECK_AUDIT_EXPECTED_KINDS.contains(&fixture.kind) {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "kind".to_string(),
+                message: format!(
+                    "unsupported reference-deck audit kind {:?}",
+                    fixture.kind.as_str()
+                ),
+            });
+        }
+        if !REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES.contains(&fixture.analysis.as_str()) {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "analysis".to_string(),
+                message: format!(
+                    "unsupported reference-deck audit analysis {:?}",
+                    fixture.analysis
+                ),
+            });
+        }
+        seen_pairs.insert((fixture.kind.as_str().to_string(), fixture.analysis.clone()));
+        if fixture.model.name.trim().is_empty() {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "model.name".to_string(),
+                message: "field must be documented and non-empty".to_string(),
+            });
+        }
+        if fixture.reference.trim().is_empty() {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "reference".to_string(),
+                message: "field must be documented and non-empty".to_string(),
+            });
+        }
+        if fixture.expected_behavior.trim().is_empty() {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "expected_behavior".to_string(),
+                message: "field must be documented and non-empty".to_string(),
+            });
+        }
+        if fixture.deck_lines.is_empty() {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "deck_lines".to_string(),
+                message: "reference deck must contain active deck lines".to_string(),
+            });
+        } else {
+            if !fixture.deck_lines[0].starts_with("* device-model ") {
+                issues.push(DeviceModelReferenceDeckAuditIssue {
+                    fixture_name: fixture_name.clone(),
+                    field: "deck_lines[0]".to_string(),
+                    message: "reference deck must start with a device-model comment".to_string(),
+                });
+            }
+            if !fixture
+                .deck_lines
+                .iter()
+                .any(|line| line.starts_with(".model "))
+            {
+                issues.push(DeviceModelReferenceDeckAuditIssue {
+                    fixture_name: fixture_name.clone(),
+                    field: "deck_lines".to_string(),
+                    message: "reference deck must include a .model card".to_string(),
+                });
+            }
+            if fixture.deck_lines.last().map(String::as_str) != Some(".end") {
+                issues.push(DeviceModelReferenceDeckAuditIssue {
+                    fixture_name: fixture_name.clone(),
+                    field: "deck_lines[-1]".to_string(),
+                    message: "reference deck must end with .end".to_string(),
+                });
+            }
+        }
+    }
+
+    for kind in REFERENCE_DECK_AUDIT_EXPECTED_KINDS {
+        for analysis in REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES {
+            let kind_text = kind.as_str();
+            if !seen_pairs.contains(&(kind_text.to_string(), analysis.to_string())) {
+                issues.push(DeviceModelReferenceDeckAuditIssue {
+                    fixture_name: format!("{}:{}", kind_text, analysis),
+                    field: "coverage".to_string(),
+                    message: format!(
+                        "missing required {} {} reference-deck audit row",
+                        kind_text, analysis
+                    ),
+                });
+            }
+        }
+    }
+
+    DeviceModelReferenceDeckAuditGateReport {
+        passed: issues.is_empty(),
+        fixture_count: fixtures.len(),
+        expected_kinds,
+        expected_analyses,
+        issues,
+    }
+}
+
+pub fn format_device_model_reference_deck_audit_gate_report(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    let mut lines = vec![
+        "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count".to_string(),
+        format!(
+            "{}\t{}\t{}\t{}\t{}",
+            report.passed,
+            report.fixture_count,
+            report.expected_kinds.join(","),
+            report.expected_analyses.join(","),
+            report.issues.len()
+        ),
+    ];
+    if !report.issues.is_empty() {
+        lines.push("fixture_name\tfield\tmessage".to_string());
+        for issue in &report.issues {
+            lines.push(format!(
+                "{}\t{}\t{}",
+                issue.fixture_name, issue.field, issue.message
+            ));
+        }
     }
     lines.join("\n")
 }

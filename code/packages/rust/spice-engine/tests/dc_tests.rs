@@ -4,8 +4,10 @@ use spice_engine::{
     dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
     dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
     device_model_behavior_audit_fixtures, device_model_reference_deck_audit_fixtures,
-    device_model_temperature_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
-    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
+    device_model_reference_deck_audit_gate, device_model_temperature_audit_fixtures,
+    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
+    format_corner_temperature_dc_table, format_dc_sweep_table,
+    format_device_model_reference_deck_audit_gate_report,
     format_device_model_reference_deck_audit_table, format_measurement_table,
     format_temperature_dc_table, jfet_from_model_card, measure_dc_sweep_deck,
     measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
@@ -309,6 +311,47 @@ fn device_model_reference_deck_audit_table_is_stable() {
     assert_eq!(
         lines.last().copied().unwrap(),
         "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\tSPICE2/SPICE3-style local model-depth fixture\tLevel-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits\t10"
+    );
+}
+
+#[test]
+fn device_model_reference_deck_audit_gate_report_is_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let report = device_model_reference_deck_audit_gate(&fixtures);
+
+    assert!(report.passed);
+    assert_eq!(report.fixture_count, 20);
+    assert_eq!(report.expected_kinds, vec!["D", "NPN", "NJF", "NMOS"]);
+    assert_eq!(
+        report.expected_analyses,
+        vec!["op", "temperature", "ac", "noise", "tran"]
+    );
+    assert!(report.issues.is_empty());
+    assert_eq!(
+        format_device_model_reference_deck_audit_gate_report(&report),
+        "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count\ntrue\t20\tD,NPN,NJF,NMOS\top,temperature,ac,noise,tran\t0"
+    );
+}
+
+#[test]
+fn device_model_reference_deck_audit_gate_reports_missing_coverage() {
+    let fixtures = device_model_reference_deck_audit_fixtures()
+        .unwrap()
+        .into_iter()
+        .filter(|fixture| !(fixture.kind == ModelCardKind::Nmos && fixture.analysis == "tran"))
+        .collect::<Vec<_>>();
+
+    let report = device_model_reference_deck_audit_gate(&fixtures);
+    let table = format_device_model_reference_deck_audit_gate_report(&report);
+
+    assert!(!report.passed);
+    assert!(report
+        .issues
+        .iter()
+        .any(|issue| issue.fixture_name == "NMOS:tran" && issue.field == "coverage"));
+    assert!(table.contains("fixture_name\tfield\tmessage"));
+    assert!(
+        table.contains("NMOS:tran\tcoverage\tmissing required NMOS tran reference-deck audit row")
     );
 }
 

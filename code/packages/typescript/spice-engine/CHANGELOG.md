@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `deviceModelReferenceDeckAuditGate` and
+  `formatDeviceModelReferenceDeckAuditGateReport`, a stable pass/fail gate for
+  the required device-model reference-deck audit coverage matrix, matching
+  Python and Rust.
 - Add `formatDeviceModelReferenceDeckAuditTable`, a stable tab-separated
   summary for the device-model reference-deck audit matrix, matching Python
   and Rust.

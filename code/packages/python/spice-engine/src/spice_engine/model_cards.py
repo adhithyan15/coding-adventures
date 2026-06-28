@@ -144,6 +144,36 @@ class DeviceModelReferenceDeckAuditFixture:
     deck_lines: tuple[str, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class DeviceModelReferenceDeckAuditIssue:
+    """A release-gate issue for the device-model reference-deck audit matrix."""
+
+    fixture_name: str
+    field: str
+    message: str
+
+
+@dataclass(frozen=True, slots=True)
+class DeviceModelReferenceDeckAuditGateReport:
+    """Release-gate summary for device-model reference-deck audit coverage."""
+
+    passed: bool
+    fixture_count: int
+    expected_kinds: tuple[str, ...]
+    expected_analyses: tuple[str, ...]
+    issues: tuple[DeviceModelReferenceDeckAuditIssue, ...]
+
+
+_REFERENCE_DECK_AUDIT_EXPECTED_KINDS = ("D", "NPN", "NJF", "NMOS")
+_REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES = (
+    "op",
+    "temperature",
+    "ac",
+    "noise",
+    "tran",
+)
+
+
 _MODEL_TYPE_ALIASES: dict[str, str] = {
     "D": "D",
     "DIODE": "D",
@@ -1188,5 +1218,166 @@ def format_device_model_reference_deck_audit_table(
                     str(len(fixture.deck_lines)),
                 ]
             )
+        )
+    return "\n".join(lines)
+
+
+def device_model_reference_deck_audit_gate(
+    fixtures: Sequence[DeviceModelReferenceDeckAuditFixture] | None = None,
+) -> DeviceModelReferenceDeckAuditGateReport:
+    """Validate that reference-deck audit rows cover the release matrix."""
+
+    rows = (
+        device_model_reference_deck_audit_fixtures()
+        if fixtures is None
+        else tuple(fixtures)
+    )
+    issues: list[DeviceModelReferenceDeckAuditIssue] = []
+    seen_names: set[str] = set()
+    seen_pairs: set[tuple[str, str]] = set()
+    expected_kinds = _REFERENCE_DECK_AUDIT_EXPECTED_KINDS
+    expected_analyses = _REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES
+
+    if not rows:
+        issues.append(
+            DeviceModelReferenceDeckAuditIssue(
+                "audit_matrix",
+                "fixture_count",
+                "audit matrix must contain at least one reference-deck row",
+            )
+        )
+
+    for fixture in rows:
+        fixture_name = fixture.name or "<missing>"
+        if fixture.name in seen_names:
+            issues.append(
+                DeviceModelReferenceDeckAuditIssue(
+                    fixture_name,
+                    "name",
+                    "reference-deck audit fixture names must be unique",
+                )
+            )
+        seen_names.add(fixture.name)
+        if not fixture.name.strip():
+            issues.append(
+                DeviceModelReferenceDeckAuditIssue(
+                    fixture_name,
+                    "name",
+                    "field must be documented and non-empty",
+                )
+            )
+        if fixture.kind not in expected_kinds:
+            issues.append(
+                DeviceModelReferenceDeckAuditIssue(
+                    fixture_name,
+                    "kind",
+                    f"unsupported reference-deck audit kind {fixture.kind!r}",
+                )
+            )
+        if fixture.analysis not in expected_analyses:
+            issues.append(
+                DeviceModelReferenceDeckAuditIssue(
+                    fixture_name,
+                    "analysis",
+                    f"unsupported reference-deck audit analysis {fixture.analysis!r}",
+                )
+            )
+        seen_pairs.add((fixture.kind, fixture.analysis))
+        if not fixture.model.name.strip():
+            issues.append(
+                DeviceModelReferenceDeckAuditIssue(
+                    fixture_name,
+                    "model.name",
+                    "field must be documented and non-empty",
+                )
+            )
+        if not fixture.reference.strip():
+            issues.append(
+                DeviceModelReferenceDeckAuditIssue(
+                    fixture_name,
+                    "reference",
+                    "field must be documented and non-empty",
+                )
+            )
+        if not fixture.expected_behavior.strip():
+            issues.append(
+                DeviceModelReferenceDeckAuditIssue(
+                    fixture_name,
+                    "expected_behavior",
+                    "field must be documented and non-empty",
+                )
+            )
+        if not fixture.deck_lines:
+            issues.append(
+                DeviceModelReferenceDeckAuditIssue(
+                    fixture_name,
+                    "deck_lines",
+                    "reference deck must contain active deck lines",
+                )
+            )
+        else:
+            if not fixture.deck_lines[0].startswith("* device-model "):
+                issues.append(
+                    DeviceModelReferenceDeckAuditIssue(
+                        fixture_name,
+                        "deck_lines[0]",
+                        "reference deck must start with a device-model comment",
+                    )
+                )
+            if not any(line.startswith(".model ") for line in fixture.deck_lines):
+                issues.append(
+                    DeviceModelReferenceDeckAuditIssue(
+                        fixture_name,
+                        "deck_lines",
+                        "reference deck must include a .model card",
+                    )
+                )
+            if fixture.deck_lines[-1] != ".end":
+                issues.append(
+                    DeviceModelReferenceDeckAuditIssue(
+                        fixture_name,
+                        "deck_lines[-1]",
+                        "reference deck must end with .end",
+                    )
+                )
+
+    for kind in expected_kinds:
+        for analysis in expected_analyses:
+            if (kind, analysis) not in seen_pairs:
+                issues.append(
+                    DeviceModelReferenceDeckAuditIssue(
+                        f"{kind}:{analysis}",
+                        "coverage",
+                        f"missing required {kind} {analysis} reference-deck audit row",
+                    )
+                )
+
+    return DeviceModelReferenceDeckAuditGateReport(
+        passed=not issues,
+        fixture_count=len(rows),
+        expected_kinds=expected_kinds,
+        expected_analyses=expected_analyses,
+        issues=tuple(issues),
+    )
+
+
+def format_device_model_reference_deck_audit_gate_report(
+    report: DeviceModelReferenceDeckAuditGateReport,
+) -> str:
+    """Return a stable tab-separated device-model audit gate report."""
+
+    lines = [
+        "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count",
+        (
+            f"{str(report.passed).lower()}\t{report.fixture_count}\t"
+            f"{','.join(report.expected_kinds)}\t"
+            f"{','.join(report.expected_analyses)}\t{len(report.issues)}"
+        ),
+    ]
+    if report.issues:
+        lines.append("fixture_name\tfield\tmessage")
+        lines.extend(
+            f"{issue.fixture_name}\t{issue.field}\t{issue.message}"
+            for issue in report.issues
         )
     return "\n".join(lines)

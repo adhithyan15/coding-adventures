@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Device model reference-deck audit release gate** —
+  `device_model_reference_deck_audit_gate()` and
+  `format_device_model_reference_deck_audit_gate_report()` now validate the
+  required kind-by-analysis coverage matrix and emit a stable pass/fail gate
+  report, matching Rust and TypeScript.
+
 - **Device model reference-deck audit table** —
   `format_device_model_reference_deck_audit_table()` now emits a stable
   tab-separated summary for the device-model reference-deck audit matrix,
