@@ -28,6 +28,7 @@ pub enum EngramCommand {
         front: String,
         back: String,
         created_at: u64,
+        lineage: Option<crate::model::CardLineage>,
     },
     UpdateCard {
         card_id: String,
@@ -45,6 +46,11 @@ pub enum EngramCommand {
         card_id: String,
     },
     BuryCard {
+        card_id: String,
+        buried_at: u64,
+        buried_until: u64,
+    },
+    BuryCardSiblings {
         card_id: String,
         buried_at: u64,
         buried_until: u64,
@@ -197,6 +203,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             front,
             back,
             created_at,
+            lineage,
         } => {
             let mut next = state.clone();
             next.cards.push(Card {
@@ -205,6 +212,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 front,
                 back,
                 created_at,
+                lineage,
             });
             next
         }
@@ -278,6 +286,11 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             next.active_session = remove_card_from_active_session(next.active_session, &card_id);
             next
         }
+        EngramCommand::BuryCardSiblings {
+            card_id,
+            buried_at,
+            buried_until,
+        } => bury_card_siblings(state, &card_id, buried_at, buried_until),
         EngramCommand::UnburyCard { card_id } => {
             let mut next = state.clone();
             if let Some(index) = next
@@ -425,6 +438,50 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             next
         }
     }
+}
+
+fn bury_card_siblings(
+    state: &AppState,
+    card_id: &str,
+    buried_at: u64,
+    buried_until: u64,
+) -> AppState {
+    let Some(note_id) = state
+        .cards
+        .iter()
+        .find(|card| card.id == card_id)
+        .and_then(|card| card.lineage.as_ref())
+        .map(|lineage| lineage.note_id.clone())
+    else {
+        return state.clone();
+    };
+
+    let sibling_ids: Vec<String> = state
+        .cards
+        .iter()
+        .filter(|card| card.id != card_id)
+        .filter(|card| {
+            card.lineage
+                .as_ref()
+                .is_some_and(|lineage| lineage.note_id == note_id)
+        })
+        .map(|card| card.id.clone())
+        .collect();
+
+    if sibling_ids.is_empty() {
+        return state.clone();
+    }
+
+    let mut next = state.clone();
+    for sibling_id in &sibling_ids {
+        let progress =
+            ensure_progress_overlay(&mut next.card_progress, sibling_id.clone(), buried_at);
+        progress.buried_until = Some(buried_until);
+    }
+    for sibling_id in sibling_ids {
+        next.active_session = remove_card_from_active_session(next.active_session, &sibling_id);
+    }
+    next
 }
 
 fn reduce_rate_card(
@@ -630,7 +687,7 @@ fn upsert_progress(progress: &mut Vec<CardProgress>, new_progress: CardProgress)
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::CardState;
+    use crate::model::{CardLineage, CardState};
     use crate::queue::build_session_queue;
     use crate::scheduler::ONE_MINUTE_MS;
     use crate::sm2::ONE_DAY_MS;
@@ -644,7 +701,19 @@ mod tests {
             front: "front".to_string(),
             back: "back".to_string(),
             created_at: NOW,
+            lineage: None,
         }
+    }
+
+    fn card_with_note(id: &str, note_id: &str, ordinal: u32) -> Card {
+        let mut card = card(id);
+        card.lineage = Some(CardLineage {
+            note_id: note_id.to_string(),
+            note_type_id: "basic-and-reversed".to_string(),
+            template_id: id.to_string(),
+            ordinal,
+        });
+        card
     }
 
     fn progress(card_id: &str) -> CardProgress {
@@ -961,6 +1030,83 @@ mod tests {
         assert_eq!(unburied.card_progress[0].buried_until, None);
         let queue = build_session_queue(&unburied.cards, &unburied.card_progress, "deck", NOW);
         assert_eq!(queue[0].id, "card");
+    }
+
+    #[test]
+    fn bury_card_siblings_hides_same_note_cards_until_boundary() {
+        let target = card_with_note("note::forward", "note", 0);
+        let sibling = card_with_note("note::reverse", "note", 1);
+        let unrelated = card_with_note("other::forward", "other", 0);
+        let mut state = AppState {
+            cards: vec![target.clone(), sibling.clone(), unrelated.clone()],
+            ..AppState::default()
+        };
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![target.clone(), sibling.clone(), unrelated.clone()],
+                started_at: NOW,
+            },
+        );
+
+        let buried = reduce(
+            &state,
+            EngramCommand::BuryCardSiblings {
+                card_id: target.id.clone(),
+                buried_at: NOW,
+                buried_until: NOW + ONE_DAY_MS,
+            },
+        );
+
+        assert_eq!(buried.card_progress.len(), 1);
+        assert_eq!(buried.card_progress[0].card_id, sibling.id);
+        assert_eq!(buried.card_progress[0].buried_until, Some(NOW + ONE_DAY_MS));
+        let active_ids: Vec<_> = buried
+            .active_session
+            .as_ref()
+            .unwrap()
+            .queue
+            .iter()
+            .map(|card| card.id.as_str())
+            .collect();
+        assert_eq!(active_ids, vec!["note::forward", "other::forward"]);
+
+        let hidden_queue = build_session_queue(&buried.cards, &buried.card_progress, "deck", NOW);
+        let hidden_ids: Vec<_> = hidden_queue.iter().map(|card| card.id.as_str()).collect();
+        assert_eq!(hidden_ids, vec!["note::forward", "other::forward"]);
+
+        let restored_queue = build_session_queue(
+            &buried.cards,
+            &buried.card_progress,
+            "deck",
+            NOW + ONE_DAY_MS,
+        );
+        let restored_ids: Vec<_> = restored_queue.iter().map(|card| card.id.as_str()).collect();
+        assert_eq!(
+            restored_ids,
+            vec!["note::reverse", "note::forward", "other::forward"]
+        );
+    }
+
+    #[test]
+    fn bury_card_siblings_without_lineage_is_noop() {
+        let state = AppState {
+            cards: vec![card("card"), card("other")],
+            ..AppState::default()
+        };
+
+        let buried = reduce(
+            &state,
+            EngramCommand::BuryCardSiblings {
+                card_id: "card".to_string(),
+                buried_at: NOW,
+                buried_until: NOW + ONE_DAY_MS,
+            },
+        );
+
+        assert_eq!(buried, state);
     }
 
     #[test]

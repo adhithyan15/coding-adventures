@@ -32,6 +32,7 @@ This crate owns:
 - decks, cards, progress, sessions, and reviews
 - Anki-style review scheduling over new, learning, review, and relearning states
 - due/new card queue assembly
+- optional note/template lineage on durable cards
 - card browser search/filter evaluation
 - versioned Engram JSON backup snapshots
 - round-trippable card CSV import/export helpers
@@ -47,9 +48,10 @@ graduating/easy intervals, review limits, and lapse behavior without forking the
 review logic.
 
 Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`,
-`UnburyCard`, `SetCardFlag`, `MarkCard`, and `UnmarkCard` also live here. They
-hide cards from queues and active sessions or store review metadata in the core
-reducer so web, Mosaic, and native shells all share the same behavior.
+`BuryCardSiblings`, `UnburyCard`, `SetCardFlag`, `MarkCard`, and `UnmarkCard`
+also live here. They hide cards from queues and active sessions or store review
+metadata in the core reducer so web, Mosaic, and native shells all share the
+same behavior.
 
 Reviews carry optional previous/resulting progress snapshots. `UndoLastReview`
 uses those snapshots to remove the newest snapshot-backed review in a session,
@@ -61,6 +63,11 @@ unchanged because there is no reliable prior progress to restore.
 supports plain text terms plus `deck:`, `note:`, `noteType:`, `front:`,
 `back:`, `tag:`, `state:`, `is:`, `flag:`, and `marked:` filters. Terms inside
 a group use implicit AND, `OR` joins groups, and leading `-` negates a term.
+
+`materialize_generated_card` turns a note-template `GeneratedCard` into a
+durable `Card` with note/template lineage. `BuryCardSiblings` uses that lineage
+to bury same-note sibling cards until a host-supplied boundary, matching the
+shared behavior Anki-like review screens need.
 
 `create_engram_snapshot` and `restore_engram_snapshot` own the portable Engram
 backup shape. Backups include durable collection data and clear any live

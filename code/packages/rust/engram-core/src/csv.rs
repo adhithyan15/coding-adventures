@@ -239,6 +239,7 @@ fn card_from_fields(row: usize, fields: Vec<String>) -> Result<Card, CsvError> {
         front,
         back,
         created_at,
+        lineage: None,
     })
 }
 
@@ -264,6 +265,7 @@ fn basic_card_from_fields(
         front,
         back,
         created_at: options.created_at,
+        lineage: None,
     })
 }
 
@@ -297,6 +299,7 @@ mod tests {
             front: front.to_string(),
             back: back.to_string(),
             created_at: 123,
+            lineage: None,
         }
     }
 

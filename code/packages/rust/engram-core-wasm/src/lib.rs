@@ -12,7 +12,7 @@ use engram_core::{
     build_session_queue, create_engram_snapshot, export_cards_csv, generate_cards_for_note,
     get_active_session_progress, get_deck_stats, import_basic_cards_csv, import_cards_csv, reduce,
     restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history, AppState,
-    BasicCardCsvImportOptions, Card, CardFlag, DeckOptions, EngramSnapshot, Rating,
+    BasicCardCsvImportOptions, Card, CardFlag, CardLineage, DeckOptions, EngramSnapshot, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -209,6 +209,8 @@ enum FacadeCommand {
         front: String,
         back: String,
         created_at: u64,
+        #[serde(default)]
+        lineage: Option<CardLineage>,
     },
     UpdateCard {
         card_id: String,
@@ -226,6 +228,11 @@ enum FacadeCommand {
         card_id: String,
     },
     BuryCard {
+        card_id: String,
+        buried_at: u64,
+        buried_until: u64,
+    },
+    BuryCardSiblings {
         card_id: String,
         buried_at: u64,
         buried_until: u64,
@@ -302,12 +309,14 @@ impl FacadeCommand {
                 front,
                 back,
                 created_at,
+                lineage,
             } => engram_core::EngramCommand::CreateCard {
                 id,
                 deck_id,
                 front,
                 back,
                 created_at,
+                lineage,
             },
             Self::UpdateCard {
                 card_id,
@@ -334,6 +343,15 @@ impl FacadeCommand {
                 buried_at,
                 buried_until,
             } => engram_core::EngramCommand::BuryCard {
+                card_id,
+                buried_at,
+                buried_until,
+            },
+            Self::BuryCardSiblings {
+                card_id,
+                buried_at,
+                buried_until,
+            } => engram_core::EngramCommand::BuryCardSiblings {
                 card_id,
                 buried_at,
                 buried_until,
@@ -1026,6 +1044,108 @@ mod tests {
             .as_array()
             .unwrap()
             .is_empty());
+    }
+
+    #[test]
+    fn dispatch_bury_card_siblings_uses_card_lineage() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {
+                    "id":"note::forward",
+                    "deckId":"deck",
+                    "front":"letter-a",
+                    "back":"a",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                },
+                {
+                    "id":"note::reverse",
+                    "deckId":"deck",
+                    "front":"a",
+                    "back":"letter-a",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"reverse","ordinal":1}
+                },
+                {
+                    "id":"other::forward",
+                    "deckId":"deck",
+                    "front":"letter-aa",
+                    "back":"aa",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"other","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                }
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [
+                    {
+                        "id":"note::forward",
+                        "deckId":"deck",
+                        "front":"letter-a",
+                        "back":"a",
+                        "createdAt":1700000000000,
+                        "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                    },
+                    {
+                        "id":"note::reverse",
+                        "deckId":"deck",
+                        "front":"a",
+                        "back":"letter-a",
+                        "createdAt":1700000000000,
+                        "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"reverse","ordinal":1}
+                    },
+                    {
+                        "id":"other::forward",
+                        "deckId":"deck",
+                        "front":"letter-aa",
+                        "back":"aa",
+                        "createdAt":1700000000000,
+                        "lineage":{"noteId":"other","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                    }
+                ],
+                "startedAt": 1700000000000
+            }"#,
+        );
+
+        let buried: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "buryCardSiblings",
+                "cardId": "note::forward",
+                "buriedAt": 1700000000000,
+                "buriedUntil": 1700086400000
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(buried["ok"], true);
+        assert_eq!(
+            buried["state"]["cardProgress"][0]["cardId"],
+            "note::reverse"
+        );
+        assert_eq!(
+            buried["state"]["cardProgress"][0]["buriedUntil"],
+            NOW + 86_400_000
+        );
+        let queue = buried["state"]["activeSession"]["queue"]
+            .as_array()
+            .unwrap();
+        assert_eq!(queue.len(), 2);
+        assert_eq!(queue[0]["id"], "note::forward");
+        assert_eq!(queue[1]["id"], "other::forward");
     }
 
     #[test]

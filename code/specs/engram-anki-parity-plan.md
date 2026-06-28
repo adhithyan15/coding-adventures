@@ -93,6 +93,9 @@ Current reducer integration:
 - Reviews carry optional previous/resulting progress snapshots so
   `UndoLastReview` can restore card progress, review history, and session
   counters without host-specific logic.
+- Durable cards can carry optional note/template lineage, and
+  `BuryCardSiblings` uses that lineage to bury same-note sibling cards until a
+  host-provided boundary.
 - `create_engram_snapshot` / `restore_engram_snapshot` define the versioned
   Engram JSON backup shape in Rust and are exposed through the JSON facade.
 - `export_cards_csv` / `import_cards_csv` define a strict round-trippable card
@@ -141,7 +144,9 @@ at least:
 - graduating interval
 - easy interval
 - lapse handling
-- bury siblings until next day
+- bury siblings until next day. Core and JSON facade support exists for
+  lineage-backed card siblings; UI controls and automatic scheduler integration
+  remain.
 - deck options
 - daily limits
 - review history log
@@ -308,7 +313,8 @@ Status:
 - Undo last review. Core and JSON facade support exists; web/native controls
   still need to bind to it.
 - Bury card/note. Card-level core commands exist; note-level sibling behavior
-  still needs note/card lineage on durable cards.
+  now has lineage-backed core and JSON facade support; web/native controls still
+  need to bind to it.
 - Suspend card/note. Card-level core commands exist; note-level bulk behavior
   remains a browser/editor workflow.
 - Flag/mark card. Core and JSON facade support exists; web/native controls and

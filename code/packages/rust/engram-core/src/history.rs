@@ -82,6 +82,7 @@ mod tests {
             front: format!("front-{id}"),
             back: format!("back-{id}"),
             created_at: NOW,
+            lineage: None,
         }
     }
 

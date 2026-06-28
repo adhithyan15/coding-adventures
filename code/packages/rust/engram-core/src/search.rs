@@ -440,6 +440,7 @@ mod tests {
             front: front.to_string(),
             back: back.to_string(),
             created_at: NOW,
+            lineage: None,
         }
     }
 

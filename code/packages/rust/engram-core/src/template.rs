@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::model::{GeneratedCard, Note, NoteType};
+use crate::model::{Card, CardLineage, GeneratedCard, Note, NoteType};
 
 pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<GeneratedCard> {
     if note.note_type_id != note_type.id {
@@ -75,6 +75,22 @@ pub fn render_template(template: &str, field_values: &HashMap<String, String>) -
 
     rendered.push_str(rest);
     rendered
+}
+
+pub fn materialize_generated_card(generated: &GeneratedCard, created_at: u64) -> Card {
+    Card {
+        id: generated.id.clone(),
+        deck_id: generated.deck_id.clone(),
+        front: generated.front.clone(),
+        back: generated.back.clone(),
+        created_at,
+        lineage: Some(CardLineage {
+            note_id: generated.note_id.clone(),
+            note_type_id: generated.note_type_id.clone(),
+            template_id: generated.template_id.clone(),
+            ordinal: generated.ordinal,
+        }),
+    }
 }
 
 fn generated_card_id(note_id: &str, template_id: &str) -> String {
@@ -179,6 +195,20 @@ mod tests {
         let after_ids: Vec<_> = after.into_iter().map(|card| card.id).collect();
 
         assert_eq!(before_ids, after_ids);
+    }
+
+    #[test]
+    fn materialized_generated_cards_retain_note_lineage() {
+        let generated = generate_cards_for_note(&basic_note_type(), &note("letter-a", "a"));
+        let card = materialize_generated_card(&generated[0], NOW);
+        let lineage = card.lineage.expect("generated cards carry lineage");
+
+        assert_eq!(card.id, "note-1::forward");
+        assert_eq!(card.deck_id, "deck-1");
+        assert_eq!(lineage.note_id, "note-1");
+        assert_eq!(lineage.note_type_id, "basic-and-reversed");
+        assert_eq!(lineage.template_id, "forward");
+        assert_eq!(lineage.ordinal, 0);
     }
 
     #[test]

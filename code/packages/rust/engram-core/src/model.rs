@@ -20,6 +20,21 @@ pub struct Card {
     pub front: String,
     pub back: String,
     pub created_at: u64,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub lineage: Option<CardLineage>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct CardLineage {
+    pub note_id: String,
+    pub note_type_id: String,
+    pub template_id: String,
+    pub ordinal: u32,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

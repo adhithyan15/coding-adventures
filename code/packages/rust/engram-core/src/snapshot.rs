@@ -134,6 +134,7 @@ mod tests {
                 front: "letter-a".to_string(),
                 back: "a".to_string(),
                 created_at: NOW,
+                lineage: None,
             }],
             card_progress: Vec::new(),
             sessions: vec![Session {

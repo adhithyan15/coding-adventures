@@ -23,9 +23,9 @@ pub use csv::{
 };
 pub use history::summarize_review_history;
 pub use model::{
-    ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardState, CardTemplate, Deck,
-    DeckStats, FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating, RatingCounts,
-    Review, ReviewHistorySummary, Session, SessionProgress, SessionStatus,
+    ActiveSessionState, AppState, Card, CardFlag, CardLineage, CardProgress, CardState,
+    CardTemplate, Deck, DeckStats, FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating,
+    RatingCounts, Review, ReviewHistorySummary, Session, SessionProgress, SessionStatus,
 };
 pub use queue::{
     build_session_queue, build_session_queue_with_options, get_deck_stats, is_deck_caught_up,
@@ -42,4 +42,4 @@ pub use snapshot::{
     create_engram_snapshot, restore_engram_snapshot, EngramSnapshot, SnapshotError,
     ENGRAM_SNAPSHOT_APP, ENGRAM_SNAPSHOT_VERSION,
 };
-pub use template::{generate_cards_for_note, render_template};
+pub use template::{generate_cards_for_note, materialize_generated_card, render_template};
