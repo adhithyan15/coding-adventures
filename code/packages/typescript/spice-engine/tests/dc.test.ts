@@ -99,6 +99,8 @@ describe("dcOp", () => {
       LAM: 0.04,
       NSUB: 1.6,
       CJD: 3.0e-13,
+      PB: 0.9,
+      MJ: 0.45,
     });
     const mosModel = mosfetFromModelCard("M1", "d", "g", "s", "b", mosCard);
     expect(mosCard.parameters).toStrictEqual({
@@ -107,12 +109,16 @@ describe("dcOp", () => {
       LAMBDA: 0.04,
       N_SUB: 1.6,
       CBD: 3.0e-13,
+      PB: 0.9,
+      MJ: 0.45,
     });
     expect(mosModel.type).toBe("NMOS");
     expectClose(mosModel.params.VT0, 0.55);
     expectClose(mosModel.params.LAMBDA, 0.04);
     expectClose(mosModel.params.N_SUB, 1.6);
     expectClose(mosModel.params.CBD, 3.0e-13);
+    expectClose(mosModel.params.PB, 0.9);
+    expectClose(mosModel.params.MJ, 0.45);
   });
 
   it("provides cross-language device model audit fixtures", () => {

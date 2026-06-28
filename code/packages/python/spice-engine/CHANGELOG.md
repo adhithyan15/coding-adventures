@@ -4,6 +4,13 @@
 
 ### Added
 
+- **MOS Level-1 bulk-junction depletion charge shaping** —
+  Level-1 MOS `PB`/`MJ` model-card parameters now shape reverse-biased
+  `CBS`/`CBD` bulk-junction capacitance for AC operating-point capacitance
+  reports and transient source-body / drain-body charge companions, matching
+  Rust and TypeScript, with regression coverage for reverse-biased drain-step
+  delay.
+
 - **MOS Level-1 transient bulk-junction charge stamping** —
   Level-1 MOS zero-bias bulk-junction `CBS`/`CBD` model-card storage now
   stamps transient source-body and drain-body companions, matching Rust and

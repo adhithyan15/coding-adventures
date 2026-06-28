@@ -93,6 +93,8 @@ fn model_card_aliases_build_device_instances() {
             ("LAM", 0.04),
             ("NSUB", 1.6),
             ("CJD", 3.0e-13),
+            ("PB", 0.9),
+            ("MJ", 0.45),
         ],
     )
     .unwrap();
@@ -101,11 +103,15 @@ fn model_card_aliases_build_device_instances() {
     assert_close(*mos_card.parameters.get("LAMBDA").unwrap(), 0.04);
     assert_close(*mos_card.parameters.get("N_SUB").unwrap(), 1.6);
     assert_close(*mos_card.parameters.get("CBD").unwrap(), 3.0e-13);
+    assert_close(*mos_card.parameters.get("PB").unwrap(), 0.9);
+    assert_close(*mos_card.parameters.get("MJ").unwrap(), 0.45);
     assert_eq!(mos_model.mosfet_type, MosfetType::Nmos);
     assert_close(mos_model.params.vt0, 0.55);
     assert_close(mos_model.params.lambda, 0.04);
     assert_close(mos_model.params.n_sub, 1.6);
     assert_close(mos_model.params.drain_bulk_capacitance, 3.0e-13);
+    assert_close(mos_model.params.bulk_junction_potential, 0.9);
+    assert_close(mos_model.params.bulk_junction_grading_coefficient, 0.45);
 }
 
 #[test]

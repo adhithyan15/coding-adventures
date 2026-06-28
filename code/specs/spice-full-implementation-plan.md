@@ -15,21 +15,22 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. MOS Level-1 transient bulk-junction charge stamping.
+1. MOS Level-1 bulk-junction depletion charge shaping.
    - Status: current PR completion candidate.
-   - Python, Rust, and TypeScript transient solvers now stamp Level-1 MOS
-     model-card `CBS` / `source_bulk_capacitance` / source-bulk
-     capacitance and `CBD` / `drain_bulk_capacitance` / drain-bulk
-     capacitance as zero-bias source-body and drain-body storage companions.
-   - The companions reuse the existing Euler/trapezoidal/Gear-2 capacitor
-     history policy and seed the synthetic MOS bulk-junction charge states
-     from the initial operating point.
-   - Cross-language tests cover drain-step delay through `CBD` bulk-junction
-     storage, and charge-audit fixtures now record the MOS bulk terms as
-     transient-stamped.
-   - Voltage-dependent MOS depletion-shaping parameters remain future
-     model-card depth work; this slice stamps the Level-1 zero-bias
-     capacitance terms already exposed by the package surfaces.
+   - Python, Rust, and TypeScript Level-1 MOS model-card parameters now include
+     `PB` / `bulk_junction_potential` / `PB` and `MJ` /
+     `bulk_junction_grading_coefficient` / `MJ` for bulk-junction depletion
+     shaping.
+   - AC operating-point capacitance reports and transient MOS source-body /
+     drain-body charge companions shape `CBS` / `source_bulk_capacitance` /
+     `CBS` and `CBD` / `drain_bulk_capacitance` / `CBD` under reverse
+     source-bulk and drain-bulk bias.
+   - Cross-language tests cover model-card alias propagation and a
+     reverse-biased drain-step transient where `MJ` reduces the effective
+     `CBD` companion relative to the zero-bias capacitance.
+   - Charge-audit fixtures now record MOS bulk-junction storage as
+     depletion-shaped while preserving the same runnable one-device `.tran`
+     fixture shape.
 
 ## Completed Slices
 
@@ -1281,6 +1282,19 @@ downstream tools to compare.
      initial operating point.
    - Cross-language tests cover MOS gate-step delay through `CGSO` overlap
      storage, and charge-audit fixtures now record the MOS overlap terms as
+     transient-stamped.
+
+125. MOS Level-1 transient bulk-junction charge stamping.
+   - Status: completed in PR 6822.
+   - Python, Rust, and TypeScript transient solvers now stamp Level-1 MOS
+     model-card `CBS` / `source_bulk_capacitance` / source-bulk
+     capacitance and `CBD` / `drain_bulk_capacitance` / drain-bulk
+     capacitance as zero-bias source-body and drain-body storage companions.
+   - The companions reuse the existing Euler/trapezoidal/Gear-2 capacitor
+     history policy and seed the synthetic MOS bulk-junction charge states
+     from the initial operating point.
+   - Cross-language tests cover drain-step delay through `CBD` bulk-junction
+     storage, and charge-audit fixtures now record the MOS bulk terms as
      transient-stamped.
 
 ## Backlog

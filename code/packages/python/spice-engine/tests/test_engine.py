@@ -382,7 +382,15 @@ def test_model_card_aliases_build_device_instances() -> None:
     mos_card = normalize_model_card(
         "Mn",
         "nmos",
-        {"LEVEL": 1.0, "VTO": 0.55, "LAM": 0.04, "NSUB": 1.6, "CJD": 3.0e-13},
+        {
+            "LEVEL": 1.0,
+            "VTO": 0.55,
+            "LAM": 0.04,
+            "NSUB": 1.6,
+            "CJD": 3.0e-13,
+            "PB": 0.9,
+            "MJ": 0.45,
+        },
     )
     mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", mos_card)
     assert mos_card.parameters == {
@@ -391,6 +399,8 @@ def test_model_card_aliases_build_device_instances() -> None:
         "LAMBDA": 0.04,
         "N_SUB": 1.6,
         "CBD": 3.0e-13,
+        "PB": 0.9,
+        "MJ": 0.45,
     }
     assert isinstance(mos_model.model, MOSFET)
     assert mos_model.model.type == MosfetType.NMOS
@@ -399,6 +409,8 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(0.04) == mos_model.model.model.params.LAMBDA
     assert pytest.approx(1.6) == mos_model.model.model.params.N_SUB
     assert pytest.approx(3.0e-13) == mos_model.model.model.params.CBD
+    assert pytest.approx(0.9) == mos_model.model.model.params.PB
+    assert pytest.approx(0.45) == mos_model.model.model.params.MJ
 
 
 def test_model_card_audit_fixtures_cover_supported_device_families() -> None:
@@ -681,6 +693,49 @@ def test_transient_mosfet_bulk_junction_capacitance_slows_drain_step() -> None:
     assert uncharged_first > 0.5
     assert charged_first < 0.01
     assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_bulk_junction_depletion_shaping_reduces_reverse_bias_capacitance() -> None:
+    def run(grading_coefficient: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            1.0,
+            waveform=PwlWaveform(((0.0, 1.0), (1.0e-9, 2.0), (5.0e-9, 2.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(
+                    KP=1.0e-12,
+                    W=1.0,
+                    L=1.0,
+                    CBD=1.0e-12,
+                    PB=1.0,
+                    MJ=grading_coefficient,
+                )),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    fixed = run(0.0)
+    shaped = run(0.5)
+
+    assert fixed.converged
+    assert shaped.converged
+    fixed_first = fixed.points[1].node_voltages["drain"]
+    shaped_first = shaped.points[1].node_voltages["drain"]
+    assert fixed_first == pytest.approx(1.5, rel=0.05)
+    assert shaped_first > fixed_first + 0.04
+    assert shaped_first < 1.7
 
 
 def test_transient_diode_transit_time_holds_forward_charge_on_turnoff() -> None:

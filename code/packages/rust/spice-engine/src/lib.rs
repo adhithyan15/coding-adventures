@@ -2738,6 +2738,8 @@ pub struct MosfetLevel1Params {
     pub gate_bulk_overlap_capacitance: f64,
     pub source_bulk_capacitance: f64,
     pub drain_bulk_capacitance: f64,
+    pub bulk_junction_potential: f64,
+    pub bulk_junction_grading_coefficient: f64,
 }
 
 impl Default for MosfetLevel1Params {
@@ -2758,6 +2760,8 @@ impl Default for MosfetLevel1Params {
             gate_bulk_overlap_capacitance: 0.0,
             source_bulk_capacitance: 0.0,
             drain_bulk_capacitance: 0.0,
+            bulk_junction_potential: 0.8,
+            bulk_junction_grading_coefficient: 0.5,
         }
     }
 }
@@ -3014,6 +3018,8 @@ fn model_card_parameter_alias(kind: ModelCardKind, key: &str) -> Option<&'static
             "CGBO" => Some("CGBO"),
             "CBS" | "CJS" => Some("CBS"),
             "CBD" | "CJD" => Some("CBD"),
+            "PB" => Some("PB"),
+            "MJ" => Some("MJ"),
             _ => None,
         },
     }
@@ -3212,6 +3218,12 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("CBD") {
         params.drain_bulk_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("PB") {
+        params.bulk_junction_potential = *value;
+    }
+    if let Some(value) = model.parameters.get("MJ") {
+        params.bulk_junction_grading_coefficient = *value;
     }
     Ok(Mosfet::with_model(
         name,
@@ -4044,6 +4056,8 @@ pub fn device_model_charge_audit_fixtures(
             ("CGBO", 1.0e-12),
             ("CBS", 4.0e-13),
             ("CBD", 3.0e-13),
+            ("PB", 0.9),
+            ("MJ", 0.45),
         ],
     )?;
     let mut mos_circuit = Circuit::new();
@@ -4161,10 +4175,10 @@ pub fn device_model_charge_audit_fixtures(
             expected_initial_max: 1.0,
             expected_final_min: 0.68,
             expected_final_max: 0.73,
-            charge_behavior: "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and zero-bias bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits".to_string(),
+            charge_behavior: "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits".to_string(),
             deck_lines: vec![
                 "* device-model charge fixture: mos-level1-storage-charge".to_string(),
-                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13)".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13 PB=0.9 MJ=0.45)".to_string(),
                 "Vdd vdd 0 1.8".to_string(),
                 "Vgate gate 0 1.8".to_string(),
                 "Rload vdd out 1k".to_string(),
@@ -20598,6 +20612,22 @@ struct MosfetDcResult {
     cbd: f64,
 }
 
+fn mosfet_bulk_junction_capacitance(
+    zero_bias_capacitance: f64,
+    junction_voltage: f64,
+    junction_potential: f64,
+    grading_coefficient: f64,
+) -> f64 {
+    if zero_bias_capacitance <= 0.0 {
+        return zero_bias_capacitance;
+    }
+    if junction_potential <= 0.0 || grading_coefficient == 0.0 {
+        return zero_bias_capacitance;
+    }
+    let reverse_scale = (-junction_voltage).max(0.0) / junction_potential;
+    zero_bias_capacitance / (1.0 + reverse_scale).powf(grading_coefficient)
+}
+
 struct JfetDcResult {
     drain_current: f64,
     gm: f64,
@@ -20779,7 +20809,7 @@ fn stamp_mosfet_charge(
         else {
             continue;
         };
-        let capacitance = spec.capacitance;
+        let capacitance = mosfet_charge_dynamic_capacitance(mosfet, &spec, state.previous_voltage);
         if capacitance <= 0.0 {
             continue;
         }
@@ -20840,6 +20870,18 @@ fn evaluate_nmos_level1(
     let cgd_overlap = params.gate_drain_overlap_capacitance * params.w;
     let cgb_overlap = params.gate_bulk_overlap_capacitance * params.l;
     let cgs_intrinsic = (2.0 / 3.0) * params.w * params.l * params.kp;
+    let cbs_bulk = mosfet_bulk_junction_capacitance(
+        params.source_bulk_capacitance,
+        vbs,
+        params.bulk_junction_potential,
+        params.bulk_junction_grading_coefficient,
+    );
+    let cbd_bulk = mosfet_bulk_junction_capacitance(
+        params.drain_bulk_capacitance,
+        vbs - vds,
+        params.bulk_junction_potential,
+        params.bulk_junction_grading_coefficient,
+    );
     let threshold = if params.phi - vbs >= 0.0 {
         params.vt0 + params.gamma * ((params.phi - vbs).sqrt() - params.phi.sqrt())
     } else {
@@ -20855,8 +20897,8 @@ fn evaluate_nmos_level1(
             cgs: cgs_overlap + cgs_intrinsic,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
-            cbs: params.source_bulk_capacitance,
-            cbd: params.drain_bulk_capacitance,
+            cbs: cbs_bulk,
+            cbd: cbd_bulk,
         };
     }
 
@@ -20877,8 +20919,8 @@ fn evaluate_nmos_level1(
             cgs: cgs_overlap + cgs_intrinsic / 2.0,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
-            cbs: params.source_bulk_capacitance,
-            cbd: params.drain_bulk_capacitance,
+            cbs: cbs_bulk,
+            cbd: cbd_bulk,
         };
     }
 
@@ -20892,8 +20934,8 @@ fn evaluate_nmos_level1(
         cgs: cgs_overlap + (2.0 / 3.0) * cgs_intrinsic,
         cgd: cgd_overlap,
         cgb: cgb_overlap,
-        cbs: params.source_bulk_capacitance,
-        cbd: params.drain_bulk_capacitance,
+        cbs: cbs_bulk,
+        cbd: cbd_bulk,
     }
 }
 
@@ -21205,11 +21247,19 @@ fn jfet_charge_state_voltage(
     voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
 }
 
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+enum MosfetChargeStateKind {
+    GateOverlap,
+    SourceBody,
+    DrainBody,
+}
+
 struct MosfetChargeStateSpec<'a> {
     name: String,
     positive: &'a str,
     negative: &'a str,
     capacitance: f64,
+    kind: MosfetChargeStateKind,
 }
 
 fn mosfet_gate_source_charge_state_name(mosfet: &Mosfet) -> String {
@@ -21246,6 +21296,7 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
             positive: mosfet.gate.as_str(),
             negative: mosfet.source.as_str(),
             capacitance: gate_source_capacitance,
+            kind: MosfetChargeStateKind::GateOverlap,
         });
     }
     if gate_drain_capacitance > 0.0 {
@@ -21254,6 +21305,7 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
             positive: mosfet.gate.as_str(),
             negative: mosfet.drain.as_str(),
             capacitance: gate_drain_capacitance,
+            kind: MosfetChargeStateKind::GateOverlap,
         });
     }
     if gate_body_capacitance > 0.0 {
@@ -21262,6 +21314,7 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
             positive: mosfet.gate.as_str(),
             negative: mosfet.body.as_str(),
             capacitance: gate_body_capacitance,
+            kind: MosfetChargeStateKind::GateOverlap,
         });
     }
     if source_body_capacitance > 0.0 {
@@ -21270,6 +21323,7 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
             positive: mosfet.source.as_str(),
             negative: mosfet.body.as_str(),
             capacitance: source_body_capacitance,
+            kind: MosfetChargeStateKind::SourceBody,
         });
     }
     if drain_body_capacitance > 0.0 {
@@ -21278,6 +21332,7 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
             positive: mosfet.drain.as_str(),
             negative: mosfet.body.as_str(),
             capacitance: drain_body_capacitance,
+            kind: MosfetChargeStateKind::DrainBody,
         });
     }
     specs
@@ -21288,6 +21343,29 @@ fn mosfet_charge_state_voltage(
     node_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
     voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+}
+
+fn mosfet_charge_dynamic_capacitance(
+    mosfet: &Mosfet,
+    spec: &MosfetChargeStateSpec<'_>,
+    state_voltage: f64,
+) -> f64 {
+    if !matches!(
+        spec.kind,
+        MosfetChargeStateKind::SourceBody | MosfetChargeStateKind::DrainBody
+    ) {
+        return spec.capacitance;
+    }
+    let junction_voltage = match mosfet.mosfet_type {
+        MosfetType::Pmos => state_voltage,
+        MosfetType::Nmos => -state_voltage,
+    };
+    mosfet_bulk_junction_capacitance(
+        spec.capacitance,
+        junction_voltage,
+        mosfet.params.bulk_junction_potential,
+        mosfet.params.bulk_junction_grading_coefficient,
+    )
 }
 
 fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
@@ -21436,6 +21514,8 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("CGBO", params.gate_bulk_overlap_capacitance),
         ("CBS", params.source_bulk_capacitance),
         ("CBD", params.drain_bulk_capacitance),
+        ("PB", params.bulk_junction_potential),
+        ("MJ", params.bulk_junction_grading_coefficient),
     ] {
         if !value.is_finite() {
             return Err(SpiceError::InvalidElement {
@@ -21466,6 +21546,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET IS, N_SUB, and T_NOM must be positive".to_string(),
+        });
+    }
+    if params.bulk_junction_potential <= 0.0 || params.bulk_junction_grading_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET PB must be positive and MJ must be non-negative".to_string(),
         });
     }
     if params.gate_source_overlap_capacitance < 0.0
@@ -21985,9 +22071,11 @@ fn update_capacitor_states(
                 .into_iter()
                 .find(|spec| spec.name == state.name)
                 .map(|spec| {
+                    let capacitance =
+                        mosfet_charge_dynamic_capacitance(mosfet, &spec, state.previous_voltage);
                     (
                         mosfet_charge_state_voltage(&spec, node_voltages),
-                        spec.capacitance,
+                        capacitance,
                     )
                 }),
             _ => None,
