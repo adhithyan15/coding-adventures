@@ -701,7 +701,19 @@ CREATE TABLE graves (
         }
 
         let sqlite_bytes = std::fs::read(sqlite.path()).unwrap();
-        write_legacy_apkg(&sqlite_bytes, &[])
+        write_legacy_apkg(
+            &sqlite_bytes,
+            &[
+                MediaAsset {
+                    filename: "audio/hola.mp3",
+                    data: b"mp3",
+                },
+                MediaAsset {
+                    filename: "images/card.png",
+                    data: b"png",
+                },
+            ],
+        )
     }
 
     fn media_apkg_fixture() -> Vec<u8> {
@@ -758,17 +770,49 @@ CREATE TABLE graves (
             assert_eq!(parsed["state"]["cards"][0]["front"], "hola");
             assert_eq!(parsed["state"]["cards"][0]["back"], "hello");
             assert_eq!(parsed["state"]["cardProgress"][0]["flag"], "blue");
+            assert_eq!(
+                parsed["state"]["mediaAssets"][0]["filename"],
+                "audio/hola.mp3"
+            );
+            assert_eq!(
+                parsed["state"]["mediaAssets"][0]["data"],
+                json!([109, 112, 51])
+            );
 
             let imported = take(eg_import_anki_apkg(session, apkg.as_ptr(), apkg.len()));
             let imported: Value = serde_json::from_str(&imported).unwrap();
             assert_eq!(imported["ok"], true);
             assert_eq!(imported["state"]["cards"][0]["id"], "2000");
             assert_eq!(imported["state"]["reviews"][0]["rating"], "good");
+            assert_eq!(
+                imported["state"]["mediaAssets"][1]["filename"],
+                "images/card.png"
+            );
 
             let snapshot = take(eg_snapshot(session));
             let snapshot: Value = serde_json::from_str(&snapshot).unwrap();
             assert_eq!(snapshot["state"]["cards"][0]["front"], "hola");
             assert_eq!(snapshot["state"]["sessions"][0]["status"], "completed");
+            assert_eq!(snapshot["state"]["mediaAssets"][0]["archiveName"], "0");
+
+            let exported = take(eg_export_anki_apkg(session));
+            let exported: Value = serde_json::from_str(&exported).unwrap();
+            let exported_apkg = exported["apkg"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|byte| byte.as_u64().unwrap() as u8)
+                .collect::<Vec<_>>();
+            let inspected = take(eg_inspect_anki_apkg(
+                session,
+                exported_apkg.as_ptr(),
+                exported_apkg.len(),
+            ));
+            let inspected: Value = serde_json::from_str(&inspected).unwrap();
+            assert_eq!(
+                inspected["manifest"]["media"]["mapping"]["0"],
+                "audio/hola.mp3"
+            );
 
             eg_session_free(session);
         }

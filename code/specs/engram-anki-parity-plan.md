@@ -293,6 +293,10 @@ Next APKG SQLite milestone:
   uses those records to preserve CSS/template extras, deck config, tags, note
   metadata, `odue`/`odid`, card data, and graves while still letting Engram's
   current fields win when edited.
+- `engram-core::AppState` also carries durable media assets. V11 APKG import
+  copies resolved media payloads into the shared state, snapshots preserve them,
+  and legacy APKG export includes state media automatically so C ABI/native
+  shells do not need to re-supply imported audio/images.
 - `engram-capi` now exposes `eg_parse_anki_apkg` for native import previews and
   `eg_import_anki_apkg` for applying supported APKG bytes into the shared
   session state. Both functions use the same JSON `{ ok, state/error }`
@@ -306,9 +310,9 @@ Next APKG SQLite milestone:
   imported numeric IDs when possible, allocates stable numeric IDs for
   Engram-native rows, writes decks/models/notes/cards/progress/revlog rows, and
   falls back to a synthetic Basic note type for standalone front/back cards.
-- Next export fidelity steps: export media payloads from durable state, map
-  Anki deck options into Engram scheduler presets, and add modern `.anki21b`
-  package writing after the V18 reader exists.
+- Next export fidelity steps: map Anki deck options into Engram scheduler
+  presets, add reference-aware media pruning/copy workflows, and add modern
+  `.anki21b` package writing after the V18 reader exists.
 - SQL-built V11 fixtures and package round-trips through the existing ZIP
   envelope helpers now cover the parser. Next: add a small checked-in
   Anki-generated golden fixture.

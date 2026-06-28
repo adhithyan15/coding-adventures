@@ -1,5 +1,6 @@
 use crate::model::{
-    AppState, Card, CardProgress, Deck, ExternalSourceRecord, Note, NoteType, Review, Session,
+    AppState, Card, CardProgress, Deck, ExternalSourceRecord, MediaAssetRecord, Note, NoteType,
+    Review, Session,
 };
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -25,6 +26,8 @@ pub struct EngramSnapshot {
     pub reviews: Vec<Review>,
     #[cfg_attr(feature = "serde", serde(default))]
     pub external_sources: Vec<ExternalSourceRecord>,
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub media_assets: Vec<MediaAssetRecord>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -46,6 +49,7 @@ impl EngramSnapshot {
             sessions: state.sessions.clone(),
             reviews: state.reviews.clone(),
             external_sources: state.external_sources.clone(),
+            media_assets: state.media_assets.clone(),
         }
     }
 
@@ -74,6 +78,7 @@ impl EngramSnapshot {
             sessions: self.sessions,
             reviews: self.reviews,
             external_sources: self.external_sources,
+            media_assets: self.media_assets,
             active_session: None,
         })
     }
@@ -164,6 +169,12 @@ mod tests {
                 original_id: Some("1000".to_string()),
                 data: BTreeMap::from([("guid".to_string(), "stable-guid".to_string())]),
             }],
+            media_assets: vec![MediaAssetRecord {
+                id: "media:0".to_string(),
+                archive_name: "0".to_string(),
+                filename: Some("audio/hola.mp3".to_string()),
+                data: b"mp3".to_vec(),
+            }],
             active_session: Some(ActiveSessionState {
                 session_id: "session".to_string(),
                 deck_id: "deck".to_string(),
@@ -186,6 +197,10 @@ mod tests {
         assert_eq!(snapshot.notes.len(), 1);
         assert_eq!(snapshot.external_sources.len(), 1);
         assert_eq!(snapshot.external_sources[0].source, "anki-v11");
+        assert_eq!(
+            snapshot.media_assets[0].filename.as_deref(),
+            Some("audio/hola.mp3")
+        );
     }
 
     #[test]
@@ -199,6 +214,7 @@ mod tests {
         assert_eq!(restored.note_types[0].id, "basic");
         assert_eq!(restored.notes[0].id, "note");
         assert_eq!(restored.external_sources[0].target_id, "note");
+        assert_eq!(restored.media_assets[0].data, b"mp3");
     }
 
     #[test]

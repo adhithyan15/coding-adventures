@@ -240,6 +240,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     })
                     .cloned()
                     .collect(),
+                media_assets: state.media_assets.clone(),
                 active_session: state
                     .active_session
                     .as_ref()
@@ -1565,6 +1566,7 @@ mod tests {
                 sibling_progress_snapshots: Vec::new(),
             }],
             external_sources: Vec::new(),
+            media_assets: Vec::new(),
             active_session: Some(ActiveSessionState {
                 session_id: "session".to_string(),
                 deck_id: "deck".to_string(),

@@ -747,6 +747,7 @@ mod tests {
             sessions: Vec::new(),
             reviews: Vec::new(),
             external_sources: Vec::new(),
+            media_assets: Vec::new(),
             active_session: None,
         }
     }
@@ -788,6 +789,7 @@ mod tests {
             sessions: Vec::new(),
             reviews: Vec::new(),
             external_sources: Vec::new(),
+            media_assets: Vec::new(),
             active_session: None,
         };
 

@@ -346,6 +346,20 @@ pub struct ExternalSourceRecord {
     pub data: BTreeMap<String, String>,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct MediaAssetRecord {
+    pub id: String,
+    pub archive_name: String,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub filename: Option<String>,
+    pub data: Vec<u8>,
+}
+
 #[derive(Clone, Debug, Default, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
@@ -359,6 +373,8 @@ pub struct AppState {
     pub reviews: Vec<Review>,
     #[cfg_attr(feature = "serde", serde(default))]
     pub external_sources: Vec<ExternalSourceRecord>,
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub media_assets: Vec<MediaAssetRecord>,
     pub active_session: Option<ActiveSessionState>,
 }
 

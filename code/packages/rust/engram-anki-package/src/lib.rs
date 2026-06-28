@@ -11,8 +11,8 @@ use coding_adventures_sha1::sum1;
 use engram_core::{
     render_template, render_template_with_front_side, AppState, Card, CardFlag, CardLineage,
     CardProgress, CardState, CardTemplate, Deck, ExternalSourceRecord, ExternalSourceTarget,
-    FieldDef, Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
-    INITIAL_EASE_FACTOR, ONE_DAY_MS,
+    FieldDef, MediaAssetRecord, Note, NoteFieldValue, NoteType, Rating, Review, Session,
+    SessionStatus, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
 use rusqlite::{Connection, OpenFlags};
 use serde::{Deserialize, Serialize};
@@ -375,7 +375,16 @@ pub fn write_legacy_apkg_from_engram_state(
     media_assets: &[MediaAsset<'_>],
 ) -> Result<Vec<u8>, ApkgError> {
     let collection = write_v11_collection_bytes_from_engram_state(state)?;
-    Ok(write_legacy_apkg(&collection, media_assets))
+    let mut state_media = state
+        .media_assets
+        .iter()
+        .map(|asset| MediaAsset {
+            filename: asset.filename.as_deref().unwrap_or(&asset.archive_name),
+            data: asset.data.as_slice(),
+        })
+        .collect::<Vec<_>>();
+    state_media.extend_from_slice(media_assets);
+    Ok(write_legacy_apkg(&collection, &state_media))
 }
 
 pub fn read_v11_collection(data: &[u8]) -> Result<AnkiV11Collection, ApkgError> {
@@ -422,7 +431,12 @@ pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, Apk
 
 pub fn read_v11_collection_as_engram_state(data: &[u8]) -> Result<AppState, ApkgError> {
     let collection = read_v11_collection(data)?;
-    v11_collection_to_engram_state(&collection)
+    let mut state = v11_collection_to_engram_state(&collection)?;
+    state.media_assets = read_media_files(data)?
+        .into_iter()
+        .map(media_asset_record_from_resolved)
+        .collect();
+    Ok(state)
 }
 
 pub fn v11_collection_to_engram_state(
@@ -554,8 +568,18 @@ pub fn v11_collection_to_engram_state(
         sessions,
         reviews,
         external_sources,
+        media_assets: Vec::new(),
         active_session: None,
     })
+}
+
+fn media_asset_record_from_resolved(media: ResolvedMediaFile) -> MediaAssetRecord {
+    MediaAssetRecord {
+        id: format!("anki-media:{}", media.archive_name),
+        archive_name: media.archive_name,
+        filename: media.filename,
+        data: media.data,
+    }
 }
 
 fn v11_external_sources(
@@ -3601,6 +3625,7 @@ CREATE TABLE graves (
                 sibling_progress_snapshots: Vec::new(),
             }],
             external_sources: Vec::new(),
+            media_assets: Vec::new(),
             active_session: None,
         };
 
@@ -3656,6 +3681,7 @@ CREATE TABLE graves (
             sessions: Vec::new(),
             reviews: Vec::new(),
             external_sources: Vec::new(),
+            media_assets: Vec::new(),
             active_session: None,
         };
 
@@ -3726,6 +3752,43 @@ CREATE TABLE graves (
         let audio = read_media_file(&apkg, "0").unwrap();
         assert_eq!(audio.filename.as_deref(), Some("audio/hola.mp3"));
         assert_eq!(audio.data, b"mp3");
+    }
+
+    #[test]
+    fn imports_and_exports_state_media_assets() {
+        let sqlite = v11_sqlite_collection_bytes();
+        let apkg = write_legacy_apkg(
+            &sqlite,
+            &[
+                MediaAsset {
+                    filename: "audio/hola.mp3",
+                    data: b"mp3",
+                },
+                MediaAsset {
+                    filename: "images/card.png",
+                    data: b"png",
+                },
+            ],
+        );
+
+        let state = read_v11_collection_as_engram_state(&apkg).unwrap();
+
+        assert_eq!(state.media_assets.len(), 2);
+        assert_eq!(state.media_assets[0].archive_name, "0");
+        assert_eq!(
+            state.media_assets[0].filename.as_deref(),
+            Some("audio/hola.mp3")
+        );
+        assert_eq!(state.media_assets[0].data, b"mp3");
+
+        let exported = write_legacy_apkg_from_engram_state(&state, &[]).unwrap();
+        let manifest = inspect_apkg(&exported).unwrap();
+        assert_eq!(manifest.media.mapping["0"], "audio/hola.mp3");
+        assert_eq!(manifest.media.mapping["1"], "images/card.png");
+
+        let image = read_media_file(&exported, "1").unwrap();
+        assert_eq!(image.filename.as_deref(), Some("images/card.png"));
+        assert_eq!(image.data, b"png");
     }
 
     #[test]
