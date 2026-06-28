@@ -8,7 +8,7 @@ use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::ptr;
 
-use engram_anki_package::read_v11_collection_as_engram_state;
+use engram_anki_package::{inspect_apkg, read_media_file, read_v11_collection_as_engram_state};
 use engram_core_wasm::EngramSession;
 use serde_json::{json, Value};
 
@@ -349,6 +349,43 @@ pub unsafe extern "C" fn eg_parse_anki_notes_tsv(
 /// # Safety
 /// `session` must be valid; `data` must point to `data_len` APKG bytes.
 #[no_mangle]
+pub unsafe extern "C" fn eg_inspect_anki_apkg(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+) -> *mut c_char {
+    if session.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr(match read_ffi_bytes(data, data_len) {
+        Ok(bytes) => inspect_anki_apkg_json(bytes),
+        Err(message) => error_json(&message),
+    })
+}
+
+/// # Safety
+/// `session` must be valid; `data` must point to `data_len` APKG bytes;
+/// `archive_name` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn eg_read_anki_apkg_media(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+    archive_name: *const c_char,
+) -> *mut c_char {
+    if session.is_null() {
+        return ptr::null_mut();
+    }
+    let archive_name = read_cstr(archive_name);
+    into_cstr(match read_ffi_bytes(data, data_len) {
+        Ok(bytes) => read_anki_apkg_media_json(bytes, &archive_name),
+        Err(message) => error_json(&message),
+    })
+}
+
+/// # Safety
+/// `session` must be valid; `data` must point to `data_len` APKG bytes.
+#[no_mangle]
 pub unsafe extern "C" fn eg_parse_anki_apkg(
     session: *mut EgSession,
     data: *const u8,
@@ -409,6 +446,23 @@ unsafe fn with_session(
     into_cstr(run(&mut (*session).inner))
 }
 
+fn inspect_anki_apkg_json(bytes: &[u8]) -> String {
+    match inspect_apkg(bytes) {
+        Ok(manifest) => ok_json_with(
+            "manifest",
+            serde_json::to_value(manifest).unwrap_or(Value::Null),
+        ),
+        Err(error) => error_json(&error.message),
+    }
+}
+
+fn read_anki_apkg_media_json(bytes: &[u8], archive_name: &str) -> String {
+    match read_media_file(bytes, archive_name) {
+        Ok(media) => ok_json_with("media", serde_json::to_value(media).unwrap_or(Value::Null)),
+        Err(error) => error_json(&error.message),
+    }
+}
+
 fn parse_anki_apkg_json(bytes: &[u8]) -> String {
     match read_v11_collection_as_engram_state(bytes) {
         Ok(state) => ok_json_with("state", serde_json::to_value(state).unwrap_or(Value::Null)),
@@ -447,7 +501,7 @@ fn into_cstr(value: String) -> *mut c_char {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use engram_anki_package::write_legacy_apkg;
+    use engram_anki_package::{write_legacy_apkg, MediaAsset};
     use rusqlite::Connection;
     use serde_json::Value;
 
@@ -618,6 +672,22 @@ CREATE TABLE graves (
         write_legacy_apkg(&sqlite_bytes, &[])
     }
 
+    fn media_apkg_fixture() -> Vec<u8> {
+        write_legacy_apkg(
+            b"sqlite collection",
+            &[
+                MediaAsset {
+                    filename: "audio/hola.mp3",
+                    data: b"mp3",
+                },
+                MediaAsset {
+                    filename: "images/card.png",
+                    data: b"png",
+                },
+            ],
+        )
+    }
+
     #[test]
     fn c_abi_dispatches_and_snapshots_state() {
         unsafe {
@@ -667,6 +737,46 @@ CREATE TABLE graves (
             let snapshot: Value = serde_json::from_str(&snapshot).unwrap();
             assert_eq!(snapshot["state"]["cards"][0]["front"], "hola");
             assert_eq!(snapshot["state"]["sessions"][0]["status"], "completed");
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_inspects_and_reads_anki_apkg_media() {
+        unsafe {
+            let session = eg_session_new();
+            let apkg = media_apkg_fixture();
+
+            let inspected = take(eg_inspect_anki_apkg(session, apkg.as_ptr(), apkg.len()));
+            let inspected: Value = serde_json::from_str(&inspected).unwrap();
+            assert_eq!(inspected["ok"], true);
+            assert_eq!(
+                inspected["manifest"]["collection"]["format"],
+                "legacySqlite"
+            );
+            assert_eq!(inspected["manifest"]["media"]["mapPresent"], true);
+            assert_eq!(
+                inspected["manifest"]["media"]["mapping"]["0"],
+                "audio/hola.mp3"
+            );
+            assert_eq!(
+                inspected["manifest"]["media"]["mediaFiles"][1]["filename"],
+                "images/card.png"
+            );
+
+            let archive_name = cstr("0");
+            let media = take(eg_read_anki_apkg_media(
+                session,
+                apkg.as_ptr(),
+                apkg.len(),
+                archive_name.as_ptr(),
+            ));
+            let media: Value = serde_json::from_str(&media).unwrap();
+            assert_eq!(media["ok"], true);
+            assert_eq!(media["media"]["archiveName"], "0");
+            assert_eq!(media["media"]["filename"], "audio/hola.mp3");
+            assert_eq!(media["media"]["data"], serde_json::json!([109, 112, 51]));
 
             eg_session_free(session);
         }

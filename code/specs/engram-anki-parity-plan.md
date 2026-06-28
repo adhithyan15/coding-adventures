@@ -274,6 +274,10 @@ Next APKG SQLite milestone:
   `eg_import_anki_apkg` for applying supported APKG bytes into the shared
   session state. Both functions use the same JSON `{ ok, state/error }`
   contract as the rest of the native facade.
+- Native package inspection and single-media extraction are available through
+  `eg_inspect_anki_apkg` and `eg_read_anki_apkg_media`, so SwiftUI/XAML/Qt
+  shells can inspect package contents and copy referenced audio/images without
+  duplicating ZIP/media-map parsing.
 - Export the first APKG as a deterministic legacy package with reset scheduling
   before attempting full scheduling fidelity.
 - SQL-built V11 fixtures and package round-trips through the existing ZIP
@@ -338,6 +342,9 @@ Status:
 - Native APKG byte-slice imports are now available through `eg_parse_anki_apkg`
   and `eg_import_anki_apkg`, backed by `engram-anki-package` and returning the
   same JSON result shape as other C ABI calls.
+- Native APKG manifest inspection and on-demand media extraction are exposed
+  through the C ABI as JSON helpers, keeping ZIP/media-map behavior out of
+  target-specific shells.
 
 ## Workstream 3: Engram Web App
 

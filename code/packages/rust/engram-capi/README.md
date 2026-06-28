@@ -41,6 +41,9 @@ and `eg_import_anki_apkg` applies that imported state to the session. These
 byte-slice APIs currently support `collection.anki2` and `collection.anki21`
 packages and return JSON errors for modern `collection.anki21b` packages until
 the modern Anki package reader lands.
+`eg_inspect_anki_apkg` returns collection/media manifest JSON, and
+`eg_read_anki_apkg_media` reads one archived media payload by archive name for
+native import flows that need to copy audio or images alongside imported cards.
 `eg_materialized_cards` mirrors the JSON facade's durable generated-card
 materialization for native note/template editors.
 Native shells can send review-control commands such as `buryCardSiblings`
