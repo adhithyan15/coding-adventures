@@ -49,6 +49,8 @@ adj-ladder/
     items.json              20 cubic algebra MCQs backed by native ADJ solved_roots
   rung3_quartic_roots/
     items.json              20 quartic algebra MCQs backed by native ADJ solved_roots
+  rung3_factored_roots/
+    items.json              20 factored-polynomial MCQs backed by native ADJ solved_roots
   ladder-scorecard.json     emitted artifact (per-arm metrics + divergence + buckets)
 ```
 
@@ -87,6 +89,7 @@ python3 contamination_check.py rung2_derived_solve
 python3 contamination_check.py rung3_quadratic_roots
 python3 contamination_check.py rung3_cubic_roots
 python3 contamination_check.py rung3_quartic_roots
+python3 contamination_check.py rung3_factored_roots
 
 # 3. engine-only (cached) run — expect Arm B 100%, wrong 0
 python3 ladder_eval.py rung0_arithmetic
@@ -96,6 +99,7 @@ python3 ladder_eval.py rung2_derived_solve
 python3 ladder_eval.py rung3_quadratic_roots
 python3 ladder_eval.py rung3_cubic_roots
 python3 ladder_eval.py rung3_quartic_roots
+python3 ladder_eval.py rung3_factored_roots
 
 # 4. tests
 python3 -m pytest test_ladder_eval.py -q
@@ -144,3 +148,6 @@ polynomial equations, including native LaTeX constraints, through the same
 `rung3_quartic_roots` finishes the current closed-form polynomial root scaffold:
 ADJ solves expanded quartic equations, including native LaTeX constraints, and the
 ladder still maps only the engine-returned real root set to the printed options.
+`rung3_factored_roots` keeps the same solver boundary but switches the decomposition
+shape to zero-product equations like `(x - 2)(x - 5) = 0`, so local models can emit
+the natural factored program and let ADJ expand and solve it.

@@ -270,6 +270,20 @@ fn solve_emits_roots_for_native_latex_equation() {
 }
 
 #[test]
+fn solve_emits_roots_for_native_latex_factored_equation() {
+    // Adjacent LaTeX factors stay on the native parser path; the solver expands
+    // the polynomial and returns the finite real roots.
+    let (ok, s) = run(
+        "adjcli_latex_factored.adj",
+        "symbol x : scalar\nconstrain latex \"$(x + 2)(x - 3)(x - 6) = 0$\"\nsolve for { x }\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"solved_roots\""), "{s}");
+    assert!(s.contains("\"var\":\"x\""), "{s}");
+    assert!(s.contains("\"roots\":[-2,3,6]"), "{s}");
+}
+
+#[test]
 fn solve_substitutes_observed_facts() {
     // base_rate is observed (not an unknown) → substituted as a constant, so
     // premium = base_rate + 300 = 1500. This is the realistic mixed case.

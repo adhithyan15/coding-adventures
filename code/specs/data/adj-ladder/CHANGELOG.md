@@ -2,6 +2,17 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.10.0] — 2026-06-28
+
+### Added — rung 3 factored roots scaffold
+
+- **`rung3_factored_roots/items.json`** — 20 fresh algebra MCQs where the gold
+  decomposition preserves a zero-product equation as a native ADJ solve program.
+- Several items use native `latex "..."` constraints, including adjacent factor
+  products, so factored LaTeX stays on the ADJ execution path.
+- The root-solve decomposition prompt now includes a factored example, giving local
+  models a shape that matches common algebra wording without computing roots in-model.
+
 ## [0.9.0] — 2026-06-28
 
 ### Added — rung 3 quartic roots scaffold
