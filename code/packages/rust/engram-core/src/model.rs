@@ -239,6 +239,19 @@ pub struct ReviewHistorySummary {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct DailyStudyLimitUsage {
+    pub deck_id: String,
+    pub day_start: u64,
+    pub day_end: u64,
+    pub new_cards_seen: usize,
+    pub review_cards_seen: usize,
+    pub remaining_new_cards: usize,
+    pub remaining_reviews: usize,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct ActiveSessionState {
     pub session_id: String,
     pub deck_id: String,

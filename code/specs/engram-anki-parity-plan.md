@@ -105,6 +105,10 @@ Current reducer integration:
   cards.
 - `summarize_review_history` derives deck-scoped review-log summaries for a
   timestamp range and is exposed through the JSON facade and C ABI.
+- `get_daily_study_limit_usage` and
+  `build_session_queue_with_daily_limits` subtract new/review reps already seen
+  in a day window from `DeckOptions` and are exposed through the JSON facade and
+  C ABI.
 
 ### 1.2 Notes and Card Templates
 
@@ -148,7 +152,8 @@ at least:
   lineage-backed card siblings; UI controls and automatic scheduler integration
   remain.
 - deck options
-- daily limits
+- daily limits. Core, JSON facade, and C ABI support exists for review-log-aware
+  daily queue limits; UI settings still need to bind to it.
 - review history log
 - review history summaries for deck/date ranges. Core, JSON facade, and C ABI
   support exists; richer graphing and browser UI still need to bind to it.

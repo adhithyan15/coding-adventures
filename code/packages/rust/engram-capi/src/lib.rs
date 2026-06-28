@@ -102,6 +102,41 @@ pub unsafe extern "C" fn eg_build_queue(
 }
 
 /// # Safety
+/// `session` must be valid; strings must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_daily_limit_usage(
+    session: *mut EgSession,
+    deck_id: *const c_char,
+    day_start: u64,
+    day_end: u64,
+    deck_options_json: *const c_char,
+) -> *mut c_char {
+    let deck_id = read_cstr(deck_id);
+    let deck_options_json = read_cstr(deck_options_json);
+    with_session(session, |session| {
+        session.daily_limit_usage(&deck_id, day_start, day_end, &deck_options_json)
+    })
+}
+
+/// # Safety
+/// `session` must be valid; strings must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_build_queue_with_daily_limits(
+    session: *mut EgSession,
+    deck_id: *const c_char,
+    now: u64,
+    day_start: u64,
+    day_end: u64,
+    deck_options_json: *const c_char,
+) -> *mut c_char {
+    let deck_id = read_cstr(deck_id);
+    let deck_options_json = read_cstr(deck_options_json);
+    with_session(session, |session| {
+        session.build_queue_with_daily_limits(&deck_id, now, day_start, day_end, &deck_options_json)
+    })
+}
+
+/// # Safety
 /// `session` must be valid; `deck_id` must be null or a valid C string.
 #[no_mangle]
 pub unsafe extern "C" fn eg_deck_stats(
@@ -390,6 +425,74 @@ mod tests {
             assert!(history.contains(r#""history":{"#));
             assert!(history.contains(r#""totalReviews":1"#));
             assert!(history.contains(r#""easy":1"#));
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_daily_limits_return_json() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "noteTypes": [],
+                    "notes": [],
+                    "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            take(eg_load_snapshot(session, snapshot.as_ptr()));
+
+            let start_session = cstr(
+                r#"{
+                    "type": "startSession",
+                    "sessionId": "session",
+                    "deckId": "deck",
+                    "queue": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                    "startedAt": 1700000000000
+                }"#,
+            );
+            take(eg_dispatch(session, start_session.as_ptr()));
+
+            let command = cstr(
+                r#"{
+                    "type": "rateCard",
+                    "reviewId": "review",
+                    "sessionId": "session",
+                    "cardId": "card",
+                    "rating": "good",
+                    "reviewedAt": 1700000000010
+                }"#,
+            );
+            take(eg_dispatch(session, command.as_ptr()));
+
+            let deck_id = cstr("deck");
+            let options = cstr(r#"{"newCardsPerDay":1,"reviewsPerDay":1}"#);
+            let usage = take(eg_daily_limit_usage(
+                session,
+                deck_id.as_ptr(),
+                NOW,
+                NOW + 100,
+                options.as_ptr(),
+            ));
+            assert!(usage.contains(r#""usage":{"#));
+            assert!(usage.contains(r#""newCardsSeen":1"#));
+            assert!(usage.contains(r#""remainingNewCards":0"#));
+
+            let queue = take(eg_build_queue_with_daily_limits(
+                session,
+                deck_id.as_ptr(),
+                NOW,
+                NOW,
+                NOW + 100,
+                options.as_ptr(),
+            ));
+            assert!(queue.contains(r#""queue":[]"#));
 
             eg_session_free(session);
         }

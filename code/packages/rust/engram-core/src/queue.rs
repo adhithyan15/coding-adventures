@@ -1,6 +1,6 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
-use crate::model::{Card, CardProgress, CardState, DeckStats};
+use crate::model::{AppState, Card, CardProgress, CardState, DailyStudyLimitUsage, DeckStats};
 use crate::scheduler::DeckOptions;
 
 pub const SESSION_SIZE: usize = 20;
@@ -42,6 +42,71 @@ pub fn build_session_queue_with_options(
         session_size,
         max_new,
         max_reviews,
+    )
+}
+
+pub fn get_daily_study_limit_usage(
+    state: &AppState,
+    deck_id: &str,
+    day_start: u64,
+    day_end: u64,
+    options: &DeckOptions,
+) -> DailyStudyLimitUsage {
+    let deck_card_ids: HashSet<&str> = state
+        .cards
+        .iter()
+        .filter(|card| card.deck_id == deck_id)
+        .map(|card| card.id.as_str())
+        .collect();
+    let mut new_card_ids: HashSet<&str> = HashSet::new();
+    let mut review_cards_seen = 0;
+
+    for review in &state.reviews {
+        if review.reviewed_at < day_start || review.reviewed_at >= day_end {
+            continue;
+        }
+        if !deck_card_ids.contains(review.card_id.as_str()) {
+            continue;
+        }
+
+        if review.previous_progress.is_none() {
+            new_card_ids.insert(review.card_id.as_str());
+        } else {
+            review_cards_seen += 1;
+        }
+    }
+
+    let new_cards_seen = new_card_ids.len();
+    DailyStudyLimitUsage {
+        deck_id: deck_id.to_string(),
+        day_start,
+        day_end,
+        new_cards_seen,
+        review_cards_seen,
+        remaining_new_cards: (options.new_cards_per_day as usize).saturating_sub(new_cards_seen),
+        remaining_reviews: (options.reviews_per_day as usize).saturating_sub(review_cards_seen),
+    }
+}
+
+pub fn build_session_queue_with_daily_limits(
+    state: &AppState,
+    deck_id: &str,
+    now: u64,
+    day_start: u64,
+    day_end: u64,
+    options: &DeckOptions,
+) -> Vec<Card> {
+    let usage = get_daily_study_limit_usage(state, deck_id, day_start, day_end, options);
+    let session_size = (usage.remaining_new_cards + usage.remaining_reviews).max(1);
+
+    build_session_queue_with_limits(
+        &state.cards,
+        &state.card_progress,
+        deck_id,
+        now,
+        session_size,
+        usage.remaining_new_cards,
+        usage.remaining_reviews,
     )
 }
 
@@ -181,6 +246,7 @@ pub fn get_deck_stats(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::model::{Rating, Review};
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -211,6 +277,23 @@ mod tests {
             last_seen_at: NOW - 10,
             flag: None,
             marked_at: None,
+        }
+    }
+
+    fn review(
+        id: &str,
+        card_id: &str,
+        reviewed_at: u64,
+        previous_progress: Option<CardProgress>,
+    ) -> Review {
+        Review {
+            id: id.to_string(),
+            session_id: "session".to_string(),
+            card_id: card_id.to_string(),
+            rating: Rating::Good,
+            reviewed_at,
+            previous_progress,
+            resulting_progress: None,
         }
     }
 
@@ -319,5 +402,78 @@ mod tests {
         let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
 
         assert_eq!(ids, vec!["due-1", "new-1"]);
+    }
+
+    #[test]
+    fn daily_limit_usage_counts_deck_reviews_in_day_window() {
+        let state = AppState {
+            cards: vec![card("new-today", "deck", 1), card("reviewed", "deck", 2)],
+            reviews: vec![
+                review("new", "new-today", NOW + 10, None),
+                review(
+                    "review",
+                    "reviewed",
+                    NOW + 20,
+                    Some(progress("reviewed", NOW - 100, 3)),
+                ),
+                review("before", "new-today", NOW - 1, None),
+                review("other-deck", "other", NOW + 30, None),
+            ],
+            ..AppState::default()
+        };
+        let options = DeckOptions {
+            new_cards_per_day: 3,
+            reviews_per_day: 2,
+            ..DeckOptions::default()
+        };
+
+        let usage = get_daily_study_limit_usage(&state, "deck", NOW, NOW + 100, &options);
+
+        assert_eq!(usage.deck_id, "deck");
+        assert_eq!(usage.new_cards_seen, 1);
+        assert_eq!(usage.review_cards_seen, 1);
+        assert_eq!(usage.remaining_new_cards, 2);
+        assert_eq!(usage.remaining_reviews, 1);
+    }
+
+    #[test]
+    fn daily_limit_queue_subtracts_reviews_already_seen_today() {
+        let mut new_already_seen = progress("new-1", NOW + 60_000, 0);
+        new_already_seen.times_seen = 1;
+        let state = AppState {
+            cards: vec![
+                card("due-1", "deck", 1),
+                card("reviewed-today", "deck", 2),
+                card("new-1", "deck", 3),
+                card("new-2", "deck", 4),
+                card("new-3", "deck", 5),
+            ],
+            card_progress: vec![
+                progress("due-1", NOW - 100, 3),
+                progress("reviewed-today", NOW + 60_000, 3),
+                new_already_seen,
+            ],
+            reviews: vec![
+                review("new", "new-1", NOW + 10, None),
+                review(
+                    "review",
+                    "reviewed-today",
+                    NOW + 20,
+                    Some(progress("reviewed-today", NOW - 100, 3)),
+                ),
+            ],
+            ..AppState::default()
+        };
+        let options = DeckOptions {
+            new_cards_per_day: 2,
+            reviews_per_day: 2,
+            ..DeckOptions::default()
+        };
+
+        let queue =
+            build_session_queue_with_daily_limits(&state, "deck", NOW, NOW, NOW + 100, &options);
+        let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
+
+        assert_eq!(ids, vec!["due-1", "new-2"]);
     }
 }

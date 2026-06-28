@@ -30,6 +30,8 @@ and web shells share one command and result contract.
 review screens that need total/current/remaining/correct counters.
 `eg_review_history` mirrors `EngramSession::review_history()` for native stats
 views that need deck-scoped review-log summaries over a timestamp range.
+`eg_daily_limit_usage` and `eg_build_queue_with_daily_limits` expose the shared
+daily limit accounting and queue builder for native review screens.
 Native shells can send review-control commands such as `buryCardSiblings`
 through `eg_dispatch`, using the same JSON contract as web and Mosaic hosts.
 

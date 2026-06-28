@@ -9,8 +9,9 @@
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
-    build_session_queue, create_engram_snapshot, export_cards_csv, generate_cards_for_note,
-    get_active_session_progress, get_deck_stats, import_basic_cards_csv, import_cards_csv, reduce,
+    build_session_queue, build_session_queue_with_daily_limits, create_engram_snapshot,
+    export_cards_csv, generate_cards_for_note, get_active_session_progress,
+    get_daily_study_limit_usage, get_deck_stats, import_basic_cards_csv, import_cards_csv, reduce,
     restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history, AppState,
     BasicCardCsvImportOptions, Card, CardFlag, CardLineage, DeckOptions, EngramSnapshot, Rating,
 };
@@ -71,6 +72,43 @@ impl EngramSession {
         catch_json(|| {
             let queue =
                 build_session_queue(&self.state.cards, &self.state.card_progress, deck_id, now);
+            Ok(ok_with("queue", &queue))
+        })
+    }
+
+    pub fn daily_limit_usage(
+        &self,
+        deck_id: &str,
+        day_start: u64,
+        day_end: u64,
+        deck_options_json: &str,
+    ) -> String {
+        catch_json(|| {
+            let options = parse_deck_options(deck_options_json)?;
+            let usage =
+                get_daily_study_limit_usage(&self.state, deck_id, day_start, day_end, &options);
+            Ok(ok_with("usage", &usage))
+        })
+    }
+
+    pub fn build_queue_with_daily_limits(
+        &self,
+        deck_id: &str,
+        now: u64,
+        day_start: u64,
+        day_end: u64,
+        deck_options_json: &str,
+    ) -> String {
+        catch_json(|| {
+            let options = parse_deck_options(deck_options_json)?;
+            let queue = build_session_queue_with_daily_limits(
+                &self.state,
+                deck_id,
+                now,
+                day_start,
+                day_end,
+                &options,
+            );
             Ok(ok_with("queue", &queue))
         })
     }
@@ -439,6 +477,14 @@ fn ok_with(key: &str, value: &impl serde::Serialize) -> String {
     Value::Object(object).to_string()
 }
 
+fn parse_deck_options(deck_options_json: &str) -> Result<DeckOptions, String> {
+    if deck_options_json.trim().is_empty() {
+        return Ok(DeckOptions::default());
+    }
+
+    serde_json::from_str(deck_options_json).map_err(|err| format!("invalid deck options: {err}"))
+}
+
 fn error_json(message: &str) -> String {
     json!({ "ok": false, "error": message }).to_string()
 }
@@ -606,6 +652,125 @@ mod tests {
 
         assert_eq!(value["ok"], true);
         assert_eq!(value["queue"][0]["id"], "card");
+    }
+
+    #[test]
+    fn daily_limits_report_usage_and_trim_queue() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"due-1","deckId":"deck","front":"due","back":"1","createdAt":1700000000000},
+                {"id":"reviewed-today","deckId":"deck","front":"seen","back":"review","createdAt":1700000000000},
+                {"id":"new-1","deckId":"deck","front":"seen","back":"new","createdAt":1700000000000},
+                {"id":"new-2","deckId":"deck","front":"fresh","back":"2","createdAt":1700000000000},
+                {"id":"new-3","deckId":"deck","front":"fresh","back":"3","createdAt":1700000000000}
+            ],
+            "cardProgress": [
+                {
+                    "cardId":"due-1",
+                    "state":"review",
+                    "interval":3,
+                    "easeFactor":2.5,
+                    "nextDueAt":1699999999900,
+                    "learningStepIndex":null,
+                    "buriedUntil":null,
+                    "suspendedAt":null,
+                    "timesSeen":1,
+                    "timesCorrect":1,
+                    "timesIncorrect":0,
+                    "lastSeenAt":1699999990000
+                },
+                {
+                    "cardId":"reviewed-today",
+                    "state":"review",
+                    "interval":3,
+                    "easeFactor":2.5,
+                    "nextDueAt":1700000060000,
+                    "learningStepIndex":null,
+                    "buriedUntil":null,
+                    "suspendedAt":null,
+                    "timesSeen":2,
+                    "timesCorrect":2,
+                    "timesIncorrect":0,
+                    "lastSeenAt":1700000000020
+                },
+                {
+                    "cardId":"new-1",
+                    "state":"learning",
+                    "interval":0,
+                    "easeFactor":2.5,
+                    "nextDueAt":1700000060000,
+                    "learningStepIndex":0,
+                    "buriedUntil":null,
+                    "suspendedAt":null,
+                    "timesSeen":1,
+                    "timesCorrect":1,
+                    "timesIncorrect":0,
+                    "lastSeenAt":1700000000010
+                }
+            ],
+            "sessions": [],
+            "reviews": [
+                {
+                    "id":"new",
+                    "sessionId":"session",
+                    "cardId":"new-1",
+                    "rating":"good",
+                    "reviewedAt":1700000000010
+                },
+                {
+                    "id":"review",
+                    "sessionId":"session",
+                    "cardId":"reviewed-today",
+                    "rating":"good",
+                    "reviewedAt":1700000000020,
+                    "previousProgress":{
+                        "cardId":"reviewed-today",
+                        "state":"review",
+                        "interval":3,
+                        "easeFactor":2.5,
+                        "nextDueAt":1699999999900,
+                        "learningStepIndex":null,
+                        "buriedUntil":null,
+                        "suspendedAt":null,
+                        "timesSeen":1,
+                        "timesCorrect":1,
+                        "timesIncorrect":0,
+                        "lastSeenAt":1699999990000
+                    }
+                }
+            ],
+            "activeSession": null
+        }"#;
+        let options = r#"{"newCardsPerDay":2,"reviewsPerDay":2}"#;
+
+        session.load_snapshot(snapshot);
+        let usage: Value =
+            serde_json::from_str(&session.daily_limit_usage("deck", NOW, NOW + 100, options))
+                .unwrap();
+
+        assert_eq!(usage["ok"], true);
+        assert_eq!(usage["usage"]["newCardsSeen"], 1);
+        assert_eq!(usage["usage"]["reviewCardsSeen"], 1);
+        assert_eq!(usage["usage"]["remainingNewCards"], 1);
+        assert_eq!(usage["usage"]["remainingReviews"], 1);
+
+        let queue: Value = serde_json::from_str(&session.build_queue_with_daily_limits(
+            "deck",
+            NOW,
+            NOW,
+            NOW + 100,
+            options,
+        ))
+        .unwrap();
+
+        assert_eq!(queue["ok"], true);
+        assert_eq!(queue["queue"][0]["id"], "due-1");
+        assert_eq!(queue["queue"][1]["id"], "new-2");
+        assert_eq!(queue["queue"].as_array().unwrap().len(), 2);
     }
 
     #[test]

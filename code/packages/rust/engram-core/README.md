@@ -32,6 +32,7 @@ This crate owns:
 - decks, cards, progress, sessions, and reviews
 - Anki-style review scheduling over new, learning, review, and relearning states
 - due/new card queue assembly
+- review-log-aware daily limit accounting
 - optional note/template lineage on durable cards
 - card browser search/filter evaluation
 - versioned Engram JSON backup snapshots
@@ -82,6 +83,12 @@ prefix options to create deterministic cards.
 `AppState`: total cards, one-based current position, remaining cards, reviewed
 and correct counts, reveal state, and completion. Hosts should render these
 counts instead of recomputing progress differently per platform.
+
+`get_daily_study_limit_usage` derives how many new-card introductions and
+review reps have already happened inside a host-provided day window.
+`build_session_queue_with_daily_limits` uses that usage to subtract from
+`DeckOptions` before assembling due and new cards, so daily limits are shared
+across web, Mosaic, and native shells.
 
 `summarize_review_history` derives deck-scoped review history for a timestamp
 range from the durable review log. It returns total reviews, correct reviews,

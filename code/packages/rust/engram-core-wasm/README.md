@@ -32,6 +32,8 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `import_backup(json)`
 - `dispatch(command_json)`
 - `build_queue(deck_id, now)`
+- `daily_limit_usage(deck_id, day_start, day_end, deck_options_json)`
+- `build_queue_with_daily_limits(deck_id, now, day_start, day_end, deck_options_json)`
 - `deck_stats(deck_id, now)`
 - `session_progress()`
 - `review_history(deck_id, reviewed_after, reviewed_before)`
@@ -75,6 +77,12 @@ parser diagnostics.
 without an active session or contains shared review counters such as
 `totalCards`, `currentPosition`, `remainingCards`, `cardsReviewed`,
 `cardsCorrect`, `revealed`, and `completed`.
+
+`daily_limit_usage` returns `{ ok: true, usage }` with new/review counts already
+seen in a host-provided day window and the remaining slots from `DeckOptions`.
+`build_queue_with_daily_limits` uses the same usage calculation before returning
+`{ ok: true, queue }`. Passing an empty `deck_options_json` uses default deck
+options; partial JSON option objects fill omitted fields from defaults.
 
 `review_history` returns `{ ok: true, history }` with deck-scoped counts for a
 half-open timestamp range: total reviews, correct reviews, unique cards,

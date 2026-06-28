@@ -7,7 +7,7 @@ pub const ONE_MINUTE_MS: u64 = 60 * 1000;
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase", default))]
 pub struct DeckOptions {
     pub new_cards_per_day: u32,
     pub reviews_per_day: u32,

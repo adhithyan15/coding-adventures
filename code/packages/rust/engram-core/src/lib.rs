@@ -24,11 +24,13 @@ pub use csv::{
 pub use history::summarize_review_history;
 pub use model::{
     ActiveSessionState, AppState, Card, CardFlag, CardLineage, CardProgress, CardState,
-    CardTemplate, Deck, DeckStats, FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating,
-    RatingCounts, Review, ReviewHistorySummary, Session, SessionProgress, SessionStatus,
+    CardTemplate, DailyStudyLimitUsage, Deck, DeckStats, FieldDef, GeneratedCard, Note,
+    NoteFieldValue, NoteType, Rating, RatingCounts, Review, ReviewHistorySummary, Session,
+    SessionProgress, SessionStatus,
 };
 pub use queue::{
-    build_session_queue, build_session_queue_with_options, get_deck_stats, is_deck_caught_up,
+    build_session_queue, build_session_queue_with_daily_limits, build_session_queue_with_options,
+    get_daily_study_limit_usage, get_deck_stats, is_deck_caught_up,
 };
 pub use reducer::{reduce, EngramCommand};
 pub use scheduler::{schedule_review, DeckOptions};

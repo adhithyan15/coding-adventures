@@ -19,6 +19,21 @@ char *eg_export_backup(EgSession *session, uint64_t exported_at);
 char *eg_import_backup(EgSession *session, const char *backup_json);
 char *eg_dispatch(EgSession *session, const char *command_json);
 char *eg_build_queue(EgSession *session, const char *deck_id, uint64_t now);
+char *eg_daily_limit_usage(
+    EgSession *session,
+    const char *deck_id,
+    uint64_t day_start,
+    uint64_t day_end,
+    const char *deck_options_json
+);
+char *eg_build_queue_with_daily_limits(
+    EgSession *session,
+    const char *deck_id,
+    uint64_t now,
+    uint64_t day_start,
+    uint64_t day_end,
+    const char *deck_options_json
+);
 char *eg_deck_stats(EgSession *session, const char *deck_id, uint64_t now);
 char *eg_session_progress(EgSession *session);
 char *eg_review_history(
