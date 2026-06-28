@@ -10,10 +10,11 @@ style EngramApp {
     color          : "#f8fafc" ;
     font-size      : 28 ;
     font-weight    : 700 ;
-    padding-bottom : 18 ;
+    padding-bottom : 14 ;
   }
 
   part review-region {
+    padding-top : 16 ;
     padding : 4 ;
   }
 }

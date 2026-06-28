@@ -9,6 +9,7 @@ exports = ["EngramApp"]
 
 [dependencies]
 mosaic-pkg-review-card = "0.1.0"
+mosaic-pkg-session-progress = "0.1.0"
 
 [kernel]
 version = "1"

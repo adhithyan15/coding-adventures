@@ -1,0 +1,15 @@
+// SessionProgress.mil - target-neutral review-session counters.
+//
+// Hosts compute progress from the Engram core facade and pass localized labels
+// plus formatted values into this component.
+
+component SessionProgress {
+  slot current-label : text ;
+  slot current-value : text ;
+  slot remaining-label : text ;
+  slot remaining-value : text ;
+  slot correct-label : text ;
+  slot correct-value : text ;
+  slot total-label : text ;
+  slot total-value : text ;
+}

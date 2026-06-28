@@ -13,6 +13,14 @@ component EngramApp {
   slot answer : text ;
   slot answer-visible : bool ;
   slot progress-label : text ;
+  slot current-label : text ;
+  slot current-value : text ;
+  slot remaining-label : text ;
+  slot remaining-value : text ;
+  slot correct-label : text ;
+  slot correct-value : text ;
+  slot total-label : text ;
+  slot total-value : text ;
 
   emit onReveal ;
   emit onAgain ;

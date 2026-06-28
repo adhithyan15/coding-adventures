@@ -474,6 +474,9 @@ Status:
 - `code/packages/mosaic-pkg-rating-controls` adds reusable
   Again/Hard/Good/Easy answer grading controls with label slots and review
   events.
+- `code/packages/mosaic-pkg-session-progress` adds reusable current,
+  remaining, correct, and total review-session counters with label/value slots
+  ready to bind to shared Engram core facade JSON.
 - Mosaic package artifact builds now inline nested package layouts and merge
   dependency package styles before backend emission. Dependency styles apply
   first and parent/app styles apply last, preserving reusable defaults while
@@ -483,9 +486,9 @@ Status:
   app package test verifies the `EngramApp -> ReviewCard -> RatingControls`
   chain through HTML, React, SwiftUI, XAML, Qt, and Flutter artifacts.
 - `code/programs/mosaic/engram-app` adds the Engram Mosaic app package. The
-  app exports `EngramApp`, declares a dependency on `mosaic-pkg-review-card`,
-  and mounts `pkg::mosaic-pkg-review-card::ReviewCard` rather than owning the
-  review-card component itself.
+  app exports `EngramApp`, declares dependencies on `mosaic-pkg-review-card`
+  and `mosaic-pkg-session-progress`, and mounts package components rather than
+  owning review-card or progress-counter component implementations itself.
 - Shared `SessionProgress` counters are available in `engram-core`,
   `engram-core-wasm`, and `engram-capi` for Mosaic/native review screens.
 - This split is the first concrete pivot point for moving Engram UI out of

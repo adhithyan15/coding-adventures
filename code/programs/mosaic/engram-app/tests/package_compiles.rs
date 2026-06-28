@@ -45,6 +45,10 @@ fn manifest_declares_app_package_boundary() {
         package.dependencies.get("mosaic-pkg-review-card"),
         Some(&"0.1.0".to_string())
     );
+    assert_eq!(
+        package.dependencies.get("mosaic-pkg-session-progress"),
+        Some(&"0.1.0".to_string())
+    );
     assert_eq!(package.kernel.version, "1");
 }
 
@@ -65,7 +69,9 @@ fn app_sources_compile_without_owning_review_card_component() {
 
     let source = read_source("EngramApp.mll");
     assert!(source.contains("pkg::mosaic-pkg-review-card::ReviewCard"));
+    assert!(source.contains("pkg::mosaic-pkg-session-progress::SessionProgress"));
     assert!(!source.contains("layout ReviewCard"));
+    assert!(!source.contains("layout SessionProgress"));
 }
 
 #[test]
@@ -83,6 +89,24 @@ fn app_manifest_resolves_review_card_dependency() {
             assert!(package_path.ends_with("mosaic-pkg-review-card"));
         }
         other => panic!("expected ReviewCard component resolution, got {other:?}"),
+    }
+}
+
+#[test]
+fn app_manifest_resolves_session_progress_dependency() {
+    let resolver = dependency_resolver();
+
+    match resolver.resolve("SessionProgress") {
+        Some(Resolution::Component {
+            package,
+            component,
+            package_path,
+        }) => {
+            assert_eq!(package, "mosaic-pkg-session-progress");
+            assert_eq!(component, "SessionProgress");
+            assert!(package_path.ends_with("mosaic-pkg-session-progress"));
+        }
+        other => panic!("expected SessionProgress component resolution, got {other:?}"),
     }
 }
 
@@ -119,6 +143,10 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert!(
         html.contains("#e94560"),
         "ReviewCard package styles should reach EngramApp HTML"
+    );
+    assert!(
+        html.contains("#0f766e"),
+        "SessionProgress package styles should reach EngramApp HTML"
     );
     assert!(
         html.contains("#f87171"),
