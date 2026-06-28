@@ -58,11 +58,12 @@ also live here. They hide cards from queues and active sessions or store review
 metadata in the core reducer so web, Mosaic, and native shells all share the
 same behavior.
 
-Reviews carry optional previous/resulting progress snapshots. `UndoLastReview`
-uses those snapshots to remove the newest snapshot-backed review in a session,
-restore the card's previous progress, adjust session counters, and return an
-active session to the reviewed card. Legacy reviews without snapshots are left
-unchanged because there is no reliable prior progress to restore.
+Reviews carry optional previous/resulting progress snapshots, sibling-progress
+snapshots, and active-session snapshots. `UndoLastReview` uses those snapshots
+to remove the newest snapshot-backed review in a session, restore card progress,
+adjust session counters, and return the active session to its pre-review queue.
+Legacy reviews without snapshots are left unchanged because there is no reliable
+prior progress to restore.
 
 `search_cards` provides the first shared collection-browser query layer. It
 supports plain text terms plus `deck:`, `note:`, `noteType:`, `front:`,
@@ -74,8 +75,10 @@ and leading `-` negates a term or group.
 durable `Card` with note/template lineage. Cloze templates using
 `{{cloze:Field}}` generate one card per Anki-style `{{c1::text::hint}}`
 ordinal and preserve the cloze ordinal in lineage. `BuryCardSiblings` uses
-lineage to bury same-note sibling cards until a host-supplied boundary,
-matching the shared behavior Anki-like review screens need.
+lineage to bury same-note sibling cards until a host-supplied boundary.
+`RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` apply that
+behavior atomically during review and record undo snapshots, matching the shared
+behavior Anki-like review screens need.
 `rename_note_type_field` and `EngramCommand::RenameNoteTypeField` keep field
 IDs stable while migrating template references, Cloze references, and
 required-field names to the new display name.

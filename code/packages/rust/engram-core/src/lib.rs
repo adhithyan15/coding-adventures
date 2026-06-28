@@ -25,8 +25,8 @@ pub use csv::{
 };
 pub use history::summarize_review_history;
 pub use model::{
-    ActiveSessionState, AppState, Card, CardFlag, CardLineage, CardProgress, CardState,
-    CardTemplate, DailyStudyLimitUsage, Deck, DeckStats, FieldDef, GeneratedCard, Note,
+    ActiveSessionState, AppState, Card, CardFlag, CardLineage, CardProgress, CardProgressSnapshot,
+    CardState, CardTemplate, DailyStudyLimitUsage, Deck, DeckStats, FieldDef, GeneratedCard, Note,
     NoteFieldValue, NoteType, Rating, RatingCounts, Review, ReviewHistorySummary, Session,
     SessionProgress, SessionStatus,
 };

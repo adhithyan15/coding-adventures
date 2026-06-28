@@ -53,6 +53,9 @@ and keep generated bindings idiomatic.
 may also include a `deckOptions` object to drive the Rust scheduler with custom
 learning steps, relearning steps, daily limits, graduation intervals, and lapse
 behavior. When `deckOptions` is omitted, the core applies `DeckOptions::default()`.
+Hosts may also include `burySiblingsUntil` to rate the current card and bury
+same-note siblings in the same reducer transition; the review log records enough
+snapshots for `undoLastReview` to restore the sibling state and active queue.
 
 The facade also exposes review-control commands:
 
@@ -66,9 +69,9 @@ The facade also exposes review-control commands:
 Those commands update the Rust state snapshot directly, including active-session
 queues, so host shells do not need their own suspend or bury reducers.
 `buryCardSiblings` uses optional `card.lineage.noteId` data to hide same-note
-siblings until the host-provided `buriedUntil` timestamp.
-`undoLastReview` restores the previous progress snapshot recorded on the review
-and rewinds session counters through the same shared reducer.
+siblings until the host-provided `buriedUntil` timestamp. `undoLastReview`
+restores previous review, sibling, and active-session snapshots and rewinds
+session counters through the same shared reducer.
 Flags and marks live on `CardProgress` as optional metadata so collection
 browsers can filter them without changing scheduling behavior.
 

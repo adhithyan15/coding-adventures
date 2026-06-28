@@ -444,6 +444,8 @@ enum FacadeCommand {
         reviewed_at: u64,
         #[serde(default)]
         deck_options: Option<DeckOptions>,
+        #[serde(default)]
+        bury_siblings_until: Option<u64>,
     },
     UndoLastReview {
         session_id: String,
@@ -577,8 +579,20 @@ impl FacadeCommand {
                 rating,
                 reviewed_at,
                 deck_options,
-            } => match deck_options {
-                Some(deck_options) => engram_core::EngramCommand::RateCardWithOptions {
+                bury_siblings_until,
+            } => match (deck_options, bury_siblings_until) {
+                (Some(deck_options), Some(buried_until)) => {
+                    engram_core::EngramCommand::RateCardWithOptionsAndBurySiblings {
+                        review_id,
+                        session_id,
+                        card_id,
+                        rating,
+                        reviewed_at,
+                        deck_options,
+                        buried_until,
+                    }
+                }
+                (Some(deck_options), None) => engram_core::EngramCommand::RateCardWithOptions {
                     review_id,
                     session_id,
                     card_id,
@@ -586,7 +600,15 @@ impl FacadeCommand {
                     reviewed_at,
                     deck_options,
                 },
-                None => engram_core::EngramCommand::RateCard {
+                (None, Some(buried_until)) => engram_core::EngramCommand::RateCardAndBurySiblings {
+                    review_id,
+                    session_id,
+                    card_id,
+                    rating,
+                    reviewed_at,
+                    buried_until,
+                },
+                (None, None) => engram_core::EngramCommand::RateCard {
                     review_id,
                     session_id,
                     card_id,
@@ -1087,6 +1109,7 @@ mod tests {
                 "startedAt": 1700000000000
             }"#,
         );
+        session.dispatch(r#"{"type": "revealCurrentCard"}"#);
         session.dispatch(
             r#"{
                 "type": "rateCard",
@@ -1869,6 +1892,97 @@ mod tests {
     }
 
     #[test]
+    fn dispatch_rate_card_can_bury_siblings_atomically() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {
+                    "id":"note::forward",
+                    "deckId":"deck",
+                    "front":"letter-a",
+                    "back":"a",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                },
+                {
+                    "id":"note::reverse",
+                    "deckId":"deck",
+                    "front":"a",
+                    "back":"letter-a",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"reverse","ordinal":1}
+                }
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [
+                    {
+                        "id":"note::forward",
+                        "deckId":"deck",
+                        "front":"letter-a",
+                        "back":"a",
+                        "createdAt":1700000000000,
+                        "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                    },
+                    {
+                        "id":"note::reverse",
+                        "deckId":"deck",
+                        "front":"a",
+                        "back":"letter-a",
+                        "createdAt":1700000000000,
+                        "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"reverse","ordinal":1}
+                    }
+                ],
+                "startedAt": 1700000000000
+            }"#,
+        );
+        session.dispatch(r#"{"type":"revealCurrentCard"}"#);
+
+        let reviewed: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "rateCard",
+                "reviewId": "review",
+                "sessionId": "session",
+                "cardId": "note::forward",
+                "rating": "good",
+                "reviewedAt": 1700000000000,
+                "burySiblingsUntil": 1700086400000
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(reviewed["ok"], true);
+        assert_eq!(
+            reviewed["state"]["reviews"][0]["siblingProgressSnapshots"][0]["cardId"],
+            "note::reverse"
+        );
+        assert_eq!(
+            reviewed["state"]["cardProgress"][1]["buriedUntil"],
+            NOW + 86_400_000
+        );
+        assert_eq!(
+            reviewed["state"]["activeSession"]["queue"]
+                .as_array()
+                .unwrap()
+                .len(),
+            1
+        );
+    }
+
+    #[test]
     fn dispatch_flag_and_mark_card() {
         let mut session = EngramSession::new();
         let snapshot = r#"{
@@ -1996,6 +2110,7 @@ mod tests {
                 "startedAt": 1700000000000
             }"#,
         );
+        session.dispatch(r#"{"type": "revealCurrentCard"}"#);
         session.dispatch(
             r#"{
                 "type": "rateCard",

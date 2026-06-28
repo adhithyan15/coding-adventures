@@ -91,11 +91,15 @@ Current reducer integration:
   text, deck, note type, field-side, tag, state, due, suspended, buried, flag,
   marked, negation, parenthesized grouping, and `OR` filters.
 - Reviews carry optional previous/resulting progress snapshots so
-  `UndoLastReview` can restore card progress, review history, and session
-  counters without host-specific logic.
+  `UndoLastReview` can restore card progress, sibling bury snapshots, active
+  queue state, review history, and session counters without host-specific
+  logic.
 - Durable cards can carry optional note/template lineage, and
   `BuryCardSiblings` uses that lineage to bury same-note sibling cards until a
   host-provided boundary.
+- `RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` let hosts
+  apply Anki-style sibling burying atomically during review; the JSON facade
+  exposes this as optional `burySiblingsUntil` on `rateCard`.
 - Generated note-template cards can be materialized into durable `Card` records
   with lineage through the JSON facade and C ABI.
 - Anki-style Cloze templates using `{{cloze:Field}}` now generate one card per
@@ -178,8 +182,8 @@ at least:
 - easy interval
 - lapse handling
 - bury siblings until next day. Core and JSON facade support exists for
-  lineage-backed card siblings; UI controls and automatic scheduler integration
-  remain.
+  lineage-backed sibling burying both as a direct command and as an atomic
+  `rateCard` option; UI controls/settings still need to bind to it.
 - deck options
 - daily limits. Core, JSON facade, and C ABI support exists for review-log-aware
   daily queue limits; UI settings still need to bind to it.

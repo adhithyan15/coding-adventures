@@ -309,6 +309,8 @@ mod tests {
             reviewed_at,
             previous_progress,
             resulting_progress: None,
+            previous_active_session: None,
+            sibling_progress_snapshots: Vec::new(),
         }
     }
 
