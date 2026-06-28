@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Stamp JFET `gate_source_capacitance` and `gate_drain_capacitance`
+  model-card storage as transient gate-source and gate-drain companions and AC
+  susceptance, matching Python and TypeScript, with regression coverage for
+  gate-step delay and high-frequency gate-drive shunting.
 - Stamp BJT `base_emitter_capacitance`, `base_collector_capacitance`,
   `forward_transit_time`, and `reverse_transit_time` model-card storage as
   transient base-emitter and base-collector companions, matching Python and
