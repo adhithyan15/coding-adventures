@@ -287,6 +287,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 `str_concat` feeding `str_index`. The prior local-string proof
+    // observed a concat result with `str_len`; this row makes the byte-indexing
+    // contract consume that same temporary string value. `AB` + `CDE` = `ABCDE`,
+    // and index 3 is byte `D` (68).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((a \"AB\") (b \"CDE\") (i 3)) (string-ref (string-append a b) i))",
+        expect: Expect::Exit(68),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =

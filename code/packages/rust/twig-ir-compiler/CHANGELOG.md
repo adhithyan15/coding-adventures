@@ -1,5 +1,19 @@
 # Changelog — twig-ir-compiler
 
+## [0.31.0] — 2026-06-28 (LANG-FULL E4 — local concat indexing proof)
+
+Lexical string bindings now have an explicit compiler proof that the result of
+`string-append` can feed `string-ref` through E4 without falling back to dynamic
+string builtins:
+
+```scheme
+(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))
+```
+
+The compiler lowers the local strings to typed `str_const` registers, emits
+`str_concat` for the append result, then consumes that temporary with
+`str_index`. The indexed byte is `68` (`D` in `ABCDE`).
+
 ## [0.30.0] — 2026-06-27 (LANG-FULL E4 — lexical string equality branch proof)
 
 Lexical string bindings now have an explicit compiler proof for `string=?`

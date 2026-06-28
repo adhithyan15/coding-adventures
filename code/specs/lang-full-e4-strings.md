@@ -8,7 +8,7 @@ over two scalar string slots. ALGOL AL4 literal output,
 `output`, multi-argument `output`, scalar variables, scalar copies, and copy
 snapshots run on all seven backends. Twig
 literal, immutable top-level, and lexical-local string ops run on all seven
-backends. Captured/dynamic strings, arrays/input/parameters, and fuller backend
+backends, including `str_concat` feeding `str_index`. Captured/dynamic strings, arrays/input/parameters, and fuller backend
 byte-string representations remain.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
 **Unlocks:** Dartmouth BASIC strings + string `PRINT` (BA4), ALGOL 60 strings +
@@ -187,7 +187,8 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `print_str`; `++`/`string-append` to `str_concat`, `string=?` to `str_eq`, and
   `string-ref` to `str_index`. Direct literals, immutable top-level values, and
   lexical `let`/`let*` locals can now feed `str_len`, `str_index`, `str_eq`, and
-  `str_concat` on all seven backends. The dynamic-`any`, captured, and reassigned
+  `str_concat` on all seven backends; local `string-append` results can also feed
+  `string-ref` directly through `str_concat` followed by `str_index`. The dynamic-`any`, captured, and reassigned
   Twig string paths still need broader E6/dynamic representation work; the *typed*
   string slice here is the statically-typed subset that clears the code-gen
   validators, mirroring how E5/E6 carved a typed slice out of Twig.
@@ -218,7 +219,8 @@ branches, and concat: `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`,
 `(let* ((s "HELLO")) (string-length s))` returns `5`,
 `(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))` returns `42`, and
 `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`
-everywhere. The matrix also covers the **bounds-trap** case: `(string-ref "ABC"
+everywhere; `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
+returns `68`, proving a concat temporary can feed byte indexing. The matrix also covers the **bounds-trap** case: `(string-ref "ABC"
 3)` must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 Dartmouth BASIC proves source-language string variables, reassignment, scalar
 copy, copied-slot equality, literal/variable-backed concat, concat expressions in
@@ -310,7 +312,8 @@ merge before the next:
    `(let* ((s "HELLO")) (string-length s))` plus
    `(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))` return `5`/`42`, while
    `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`,
-   on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured/reassigned
+   and `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
+   returns `68`, on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured/reassigned
    strings still wait for the broader dynamic representation.
 4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
@@ -320,8 +323,8 @@ merge before the next:
    guard). Native literal output is already proven through the heap-byte foothold;
    this item is now the richer ops/representation slice.
 6. ✅ **E4-ops-proofs** — named-value `str_concat`+`str_len`, `str_eq` driving a
-   branch, named/local `str_index`, and the `str_index` out-of-bounds **trap**
-   proof now run across every backend.
+   branch, named/local `str_index`, local `str_concat` feeding `str_index`, and
+   the `str_index` out-of-bounds **trap** proof now run across every backend.
 7. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`;
    captured/reassigned dynamic strings, string arrays/input/parameters in each
    frontend, runtime byte-string allocation beyond the current immutable scalar

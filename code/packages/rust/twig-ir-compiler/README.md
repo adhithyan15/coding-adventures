@@ -29,9 +29,10 @@ metadata ops: `str_const` for each direct literal, then `str_len`, `str_index`,
 immutable top-level string values, so `(define s "ABC") (string-ref s 2)` and
 named-string `string-append`/`string=?` proofs avoid the dynamic builtin path.
 Lexical `let`/`let*` string literal bindings use the same typed registers, so
-local strings can feed `string-ref`, `string-length`, `string=?`, and `string-append`
-without dynamic builtins. Reassignable strings, captured strings, and broader
-dynamic string values remain follow-up work.
+local strings can feed `string-ref`, `string-length`, `string=?`, and
+`string-append` without dynamic builtins; a `string-append` result can also feed
+`string-ref` directly through `str_concat` -> `str_index`. Reassignable strings,
+captured strings, and broader dynamic string values remain follow-up work.
 
 All emitted instructions carry `type_hint = "any"` because Twig is dynamically typed. Functions therefore have `type_status = Untyped`. The vm-core profiler observes runtime types; the JIT specialises later.
 
@@ -43,7 +44,7 @@ The compiler decides at compile time:
 |-----------------------------|---------------------------------------------|
 | Top-level user fn           | `call <name>, ...args`                      |
 | Typed arithmetic (`+`,`-`,`*`,`/`) on `i64` args | a chain of typed `add`/`sub`/`mul`/`div` |
-| Direct literal or immutable top-level string metadata (`string-length`, `string-ref`, `string=?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_eq`/`str_concat` |
+| Direct literal, immutable top-level, or lexical-local string metadata (`string-length`, `string-ref`, `string=?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_eq`/`str_concat` |
 | Builtin (`cons`, `<`, …)    | `call_builtin <name>, ...args`              |
 | Anything else (locals etc.) | `call_builtin "apply_closure", h, ...args`  |
 

@@ -221,7 +221,8 @@ multiple languages; close an enabler before the features that depend on it.
   on all 7 backends. Twig lexical `let` string locals now also run through E4:
   `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`, and
   `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`,
-  on all 7 backends. The
+  while `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
+  returns `68` by feeding a concat temporary into `str_index`, on all 7 backends. The
   matrix now also proves the E4 bounds contract: `(string-ref "ABC" 3)` traps on
   native-AOT + LLVM + WASM + JVM + CLR + VM + JIT. WASM owns the literal-output
   shape with a linear-memory data segment + `env.__print_str(ptr,len)`, LLVM owns
@@ -679,7 +680,8 @@ backend immediately) come before the enabler-dependent items.
   `string-length`/`string-ref`/`string=?`/`string-append`, named string
   concat/equality/index, the `str_index` out-of-bounds trap, local string index,
   `let*` string length, local string equality branches, and local string concat
-  across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). **Limits:** captured or reassigned strings and the
+  plus local concat feeding string indexing across native/LLVM/WASM/JVM/CLR/VM/JIT
+  (`lang_matrix.rs`). **Limits:** captured or reassigned strings and the
   dynamic-`any` string path still need **E6**/dynamic representation work.
 - ☐ **TW5** — closures / lambdas / general `call_builtin` on code-gen backends (needs **E6**).
 - ☐ **TW6** — `match` / records / unions on code-gen backends (needs **E5**/**E6**).
