@@ -8320,7 +8320,6 @@ fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_table_font_fostered_image(&mut document.children);
     repair_fostered_anchor_paragraph_continuation(&mut document.children);
     repair_insanely_badly_nested_table_sequence(&mut document.children);
-    remove_empty_text_nodes(&mut document.children);
 }
 
 fn repair_em_aside_continuation(nodes: &mut Vec<Node>, explicit_em_end_seen: bool) {
@@ -8961,16 +8960,6 @@ fn collapse_double_newline_text(node: &mut Node) {
         }
         _ => {}
     }
-}
-
-fn remove_empty_text_nodes(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        remove_empty_text_nodes(&mut element.children);
-    }
-    nodes.retain(|node| !matches!(node, Node::Text(text) if text.data.is_empty()));
 }
 
 fn repair_split_div_nobr_adoption_in(nodes: &mut Vec<Node>) {
