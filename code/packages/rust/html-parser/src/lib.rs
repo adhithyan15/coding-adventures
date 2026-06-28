@@ -7104,6 +7104,16 @@ impl HtmlParser {
         };
         let formatting_name = formatting_element.name.clone();
         let formatting_attributes = formatting_element.attributes.clone();
+        let pending_formatting_reconstruction = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .filter_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                (is_formatting_element(&element.name) && element.name != formatting_name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect::<Vec<_>>();
 
         let Some(paragraph_path) = self
             .open_elements
@@ -7156,6 +7166,10 @@ impl HtmlParser {
         let mut moved_paragraph_path = formatting_parent_path.to_vec();
         moved_paragraph_path.push(formatting_child_index + 1);
         self.open_elements.push(moved_paragraph_path);
+        if !pending_formatting_reconstruction.is_empty() {
+            self.pending_formatting_reconstruction =
+                trim_formatting_reconstruction_noah_ark(pending_formatting_reconstruction);
+        }
         true
     }
 
@@ -8413,11 +8427,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
             index += 1;
             continue;
         }
-        if repair_paragraph_trailing_italic_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-
         index += 1;
     }
 }
@@ -8750,31 +8759,6 @@ fn unwrap_following_empty_font_newline(nodes: &mut Vec<Node>, index: usize) -> b
         return false;
     }
     nodes[index] = Node::text("\n");
-    true
-}
-
-fn repair_paragraph_trailing_italic_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(paragraph)) = nodes.get_mut(index) else {
-        return false;
-    };
-    if paragraph.name != "p" {
-        return false;
-    }
-    let Some(Node::Text(text)) = paragraph.children.last_mut() else {
-        return false;
-    };
-    if text.data != " Italic" {
-        return false;
-    }
-    let text = text.data.clone();
-    paragraph.children.pop();
-    paragraph.children.push({
-        let mut italic = Node::element("i".to_string(), Vec::new());
-        if let Node::Element(element) = &mut italic {
-            element.children.push(Node::text(text));
-        }
-        italic
-    });
     true
 }
 
@@ -30423,6 +30407,32 @@ mod tests {
         assert_eq!(adopted_bold.name, "b");
         assert_eq!(adopted_bold.children, vec![Node::text(" jkl ")]);
         assert_eq!(adopted_italic.children[1], Node::text(" mno "));
+    }
+
+    #[test]
+    fn formatting_end_across_paragraph_reconstructs_inner_formatting_for_following_text() {
+        let document = parse_html("<b><p><i>Bold and Italic</b> Italic</p>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_bold = element(&body.children[0]);
+        assert_eq!(outer_bold.name, "b");
+        assert!(outer_bold.children.is_empty());
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children.len(), 2);
+
+        let adopted_bold = element(&paragraph.children[0]);
+        assert_eq!(adopted_bold.name, "b");
+        let adopted_italic = element(&adopted_bold.children[0]);
+        assert_eq!(adopted_italic.name, "i");
+        assert_eq!(adopted_italic.children, vec![Node::text("Bold and Italic")]);
+
+        let reconstructed_italic = element(&paragraph.children[1]);
+        assert_eq!(reconstructed_italic.name, "i");
+        assert_eq!(reconstructed_italic.children, vec![Node::text(" Italic")]);
     }
 
     #[test]
