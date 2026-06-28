@@ -41,6 +41,10 @@ dispatch `EngramCommand::RateCardWithOptions` to provide learning steps,
 graduating/easy intervals, review limits, and lapse behavior without forking the
 review logic.
 
+Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`, and
+`UnburyCard` also live here. They hide cards from queues and active sessions in
+the core reducer so web, Mosaic, and native shells all share the same behavior.
+
 This crate does not own:
 
 - IndexedDB, SQLite, files, or cloud sync

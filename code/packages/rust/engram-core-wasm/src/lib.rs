@@ -132,6 +132,21 @@ enum FacadeCommand {
     DeleteCard {
         card_id: String,
     },
+    SuspendCard {
+        card_id: String,
+        suspended_at: u64,
+    },
+    UnsuspendCard {
+        card_id: String,
+    },
+    BuryCard {
+        card_id: String,
+        buried_at: u64,
+        buried_until: u64,
+    },
+    UnburyCard {
+        card_id: String,
+    },
     StartSession {
         session_id: String,
         deck_id: String,
@@ -203,6 +218,26 @@ impl FacadeCommand {
                 back,
             },
             Self::DeleteCard { card_id } => engram_core::EngramCommand::DeleteCard { card_id },
+            Self::SuspendCard {
+                card_id,
+                suspended_at,
+            } => engram_core::EngramCommand::SuspendCard {
+                card_id,
+                suspended_at,
+            },
+            Self::UnsuspendCard { card_id } => {
+                engram_core::EngramCommand::UnsuspendCard { card_id }
+            }
+            Self::BuryCard {
+                card_id,
+                buried_at,
+                buried_until,
+            } => engram_core::EngramCommand::BuryCard {
+                card_id,
+                buried_at,
+                buried_until,
+            },
+            Self::UnburyCard { card_id } => engram_core::EngramCommand::UnburyCard { card_id },
             Self::StartSession {
                 session_id,
                 deck_id,
@@ -444,6 +479,95 @@ mod tests {
             value["state"]["cardProgress"][0]["nextDueAt"],
             NOW + 20 * 60 * 1000
         );
+    }
+
+    #[test]
+    fn dispatch_suspend_and_unsuspend_card() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let suspended: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "suspendCard",
+                    "cardId": "card",
+                    "suspendedAt": 1700000000000
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(suspended["ok"], true);
+        assert_eq!(suspended["state"]["cardProgress"][0]["cardId"], "card");
+        assert_eq!(suspended["state"]["cardProgress"][0]["suspendedAt"], NOW);
+
+        let unsuspended: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "unsuspendCard",
+                    "cardId": "card"
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(unsuspended["ok"], true);
+        assert!(unsuspended["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+    }
+
+    #[test]
+    fn dispatch_bury_and_unbury_card() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let buried: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "buryCard",
+                    "cardId": "card",
+                    "buriedAt": 1700000000000,
+                    "buriedUntil": 1700086400000
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(buried["ok"], true);
+        assert_eq!(
+            buried["state"]["cardProgress"][0]["buriedUntil"],
+            NOW + 86_400_000
+        );
+
+        let unburied: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "unburyCard",
+                    "cardId": "card"
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(unburied["ok"], true);
+        assert!(unburied["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .is_empty());
     }
 
     #[test]

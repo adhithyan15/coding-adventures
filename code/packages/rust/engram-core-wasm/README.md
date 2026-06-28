@@ -40,3 +40,11 @@ and keep generated bindings idiomatic.
 may also include a `deckOptions` object to drive the Rust scheduler with custom
 learning steps, relearning steps, daily limits, graduation intervals, and lapse
 behavior. When `deckOptions` is omitted, the core applies `DeckOptions::default()`.
+
+The facade also exposes review-control commands:
+
+- `suspendCard` / `unsuspendCard`
+- `buryCard` / `unburyCard`
+
+Those commands update the Rust state snapshot directly, including active-session
+queues, so host shells do not need their own suspend or bury reducers.

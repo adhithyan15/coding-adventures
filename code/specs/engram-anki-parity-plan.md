@@ -83,6 +83,8 @@ Current reducer integration:
   learning steps, review limits, graduation intervals, and lapse behavior.
 - `engram-core-wasm` keeps the original `rateCard` JSON command compatible and
   accepts optional `deckOptions`.
+- Suspend and bury are reducer-owned commands (`SuspendCard`, `UnsuspendCard`,
+  `BuryCard`, `UnburyCard`) and are exposed through the JSON facade.
 
 ### 1.2 Notes and Card Templates
 
@@ -270,8 +272,10 @@ Status:
 - Keyboard shortcuts.
 - Touch-friendly rating controls.
 - Undo last review.
-- Bury card/note.
-- Suspend card/note.
+- Bury card/note. Card-level core commands exist; note-level sibling behavior
+  still needs note/card lineage on durable cards.
+- Suspend card/note. Card-level core commands exist; note-level bulk behavior
+  remains a browser/editor workflow.
 - Flag/mark card.
 - Review remaining counts.
 

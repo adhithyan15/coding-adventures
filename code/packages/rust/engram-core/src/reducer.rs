@@ -2,6 +2,7 @@ use crate::model::{
     ActiveSessionState, AppState, Card, CardProgress, Deck, Rating, Review, Session, SessionStatus,
 };
 use crate::scheduler::{schedule_review, DeckOptions};
+use crate::sm2::INITIAL_EASE_FACTOR;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum EngramCommand {
@@ -33,6 +34,21 @@ pub enum EngramCommand {
         back: String,
     },
     DeleteCard {
+        card_id: String,
+    },
+    SuspendCard {
+        card_id: String,
+        suspended_at: u64,
+    },
+    UnsuspendCard {
+        card_id: String,
+    },
+    BuryCard {
+        card_id: String,
+        buried_at: u64,
+        buried_until: u64,
+    },
+    UnburyCard {
         card_id: String,
     },
     StartSession {
@@ -204,8 +220,64 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 .filter(|progress| progress.card_id != card_id)
                 .cloned()
                 .collect(),
+            active_session: remove_card_from_active_session(state.active_session.clone(), &card_id),
             ..state.clone()
         },
+        EngramCommand::SuspendCard {
+            card_id,
+            suspended_at,
+        } => {
+            let mut next = state.clone();
+            let progress =
+                ensure_progress_overlay(&mut next.card_progress, card_id.clone(), suspended_at);
+            progress.suspended_at = Some(suspended_at);
+            next.active_session = remove_card_from_active_session(next.active_session, &card_id);
+            next
+        }
+        EngramCommand::UnsuspendCard { card_id } => {
+            let mut next = state.clone();
+            if let Some(index) = next
+                .card_progress
+                .iter()
+                .position(|progress| progress.card_id == card_id)
+            {
+                let progress = &mut next.card_progress[index];
+                progress.suspended_at = None;
+                if progress.state == crate::model::CardState::Suspended {
+                    progress.state = crate::model::CardState::Review;
+                }
+                remove_clear_overlay(&mut next.card_progress, index);
+            }
+            next
+        }
+        EngramCommand::BuryCard {
+            card_id,
+            buried_at,
+            buried_until,
+        } => {
+            let mut next = state.clone();
+            let progress =
+                ensure_progress_overlay(&mut next.card_progress, card_id.clone(), buried_at);
+            progress.buried_until = Some(buried_until);
+            next.active_session = remove_card_from_active_session(next.active_session, &card_id);
+            next
+        }
+        EngramCommand::UnburyCard { card_id } => {
+            let mut next = state.clone();
+            if let Some(index) = next
+                .card_progress
+                .iter()
+                .position(|progress| progress.card_id == card_id)
+            {
+                let progress = &mut next.card_progress[index];
+                progress.buried_until = None;
+                if progress.state == crate::model::CardState::Buried {
+                    progress.state = crate::model::CardState::Review;
+                }
+                remove_clear_overlay(&mut next.card_progress, index);
+            }
+            next
+        }
         EngramCommand::StartSession {
             session_id,
             deck_id,
@@ -336,6 +408,76 @@ fn reduce_rate_card(
     next
 }
 
+fn ensure_progress_overlay(
+    progress: &mut Vec<CardProgress>,
+    card_id: String,
+    created_at: u64,
+) -> &mut CardProgress {
+    if let Some(index) = progress
+        .iter()
+        .position(|progress| progress.card_id == card_id)
+    {
+        return &mut progress[index];
+    }
+
+    progress.push(CardProgress {
+        card_id,
+        state: crate::model::CardState::Review,
+        interval: 0,
+        ease_factor: INITIAL_EASE_FACTOR,
+        next_due_at: created_at,
+        learning_step_index: None,
+        buried_until: None,
+        suspended_at: None,
+        times_seen: 0,
+        times_correct: 0,
+        times_incorrect: 0,
+        last_seen_at: created_at,
+    });
+    progress.last_mut().expect("just pushed overlay progress")
+}
+
+fn remove_clear_overlay(progress: &mut Vec<CardProgress>, index: usize) {
+    let should_remove = {
+        let item = &progress[index];
+        item.times_seen == 0
+            && item.times_correct == 0
+            && item.times_incorrect == 0
+            && item.interval == 0
+            && item.learning_step_index.is_none()
+            && item.buried_until.is_none()
+            && item.suspended_at.is_none()
+    };
+
+    if should_remove {
+        progress.remove(index);
+    }
+}
+
+fn remove_card_from_active_session(
+    active_session: Option<ActiveSessionState>,
+    card_id: &str,
+) -> Option<ActiveSessionState> {
+    active_session.map(|mut session| {
+        let old_index = session.current_index;
+        if let Some(removed_index) = session.queue.iter().position(|card| card.id == card_id) {
+            session.queue.remove(removed_index);
+            if session.queue.is_empty() {
+                session.current_index = 0;
+            } else if old_index > removed_index {
+                session.current_index = old_index - 1;
+            } else if old_index >= session.queue.len() {
+                session.current_index = session.queue.len() - 1;
+            }
+
+            if removed_index <= old_index {
+                session.revealed = false;
+            }
+        }
+        session
+    })
+}
+
 fn upsert_progress(progress: &mut Vec<CardProgress>, new_progress: CardProgress) {
     match progress
         .iter_mut()
@@ -350,7 +492,9 @@ fn upsert_progress(progress: &mut Vec<CardProgress>, new_progress: CardProgress)
 mod tests {
     use super::*;
     use crate::model::CardState;
+    use crate::queue::build_session_queue;
     use crate::scheduler::ONE_MINUTE_MS;
+    use crate::sm2::ONE_DAY_MS;
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -361,6 +505,23 @@ mod tests {
             front: "front".to_string(),
             back: "back".to_string(),
             created_at: NOW,
+        }
+    }
+
+    fn progress(card_id: &str) -> CardProgress {
+        CardProgress {
+            card_id: card_id.to_string(),
+            state: CardState::Review,
+            interval: 1,
+            ease_factor: 2.5,
+            next_due_at: NOW - 1,
+            learning_step_index: None,
+            buried_until: None,
+            suspended_at: None,
+            times_seen: 1,
+            times_correct: 1,
+            times_incorrect: 0,
+            last_seen_at: NOW - ONE_DAY_MS,
         }
     }
 
@@ -451,6 +612,95 @@ mod tests {
     }
 
     #[test]
+    fn suspend_new_card_creates_reversible_overlay_and_removes_it_from_session() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state.cards.push(card("other"));
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card"), card("other")],
+                started_at: NOW,
+            },
+        );
+
+        let suspended = reduce(
+            &state,
+            EngramCommand::SuspendCard {
+                card_id: "card".to_string(),
+                suspended_at: NOW,
+            },
+        );
+
+        assert_eq!(suspended.card_progress.len(), 1);
+        assert_eq!(suspended.card_progress[0].card_id, "card");
+        assert_eq!(suspended.card_progress[0].suspended_at, Some(NOW));
+        let active = suspended.active_session.as_ref().unwrap();
+        assert_eq!(active.queue.len(), 1);
+        assert_eq!(active.queue[0].id, "other");
+
+        let queue = build_session_queue(
+            &suspended.cards,
+            &suspended.card_progress,
+            "deck",
+            NOW + ONE_DAY_MS,
+        );
+        let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
+        assert_eq!(ids, vec!["other"]);
+
+        let unsuspended = reduce(
+            &suspended,
+            EngramCommand::UnsuspendCard {
+                card_id: "card".to_string(),
+            },
+        );
+
+        assert!(unsuspended.card_progress.is_empty());
+        let queue = build_session_queue(
+            &unsuspended.cards,
+            &unsuspended.card_progress,
+            "deck",
+            NOW + ONE_DAY_MS,
+        );
+        let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
+        assert_eq!(ids, vec!["card", "other"]);
+    }
+
+    #[test]
+    fn bury_existing_review_card_preserves_progress_and_can_be_unburied() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state.card_progress.push(progress("card"));
+
+        let buried = reduce(
+            &state,
+            EngramCommand::BuryCard {
+                card_id: "card".to_string(),
+                buried_at: NOW,
+                buried_until: NOW + ONE_DAY_MS,
+            },
+        );
+
+        assert_eq!(buried.card_progress[0].times_seen, 1);
+        assert_eq!(buried.card_progress[0].buried_until, Some(NOW + ONE_DAY_MS));
+        assert!(build_session_queue(&buried.cards, &buried.card_progress, "deck", NOW).is_empty());
+
+        let unburied = reduce(
+            &buried,
+            EngramCommand::UnburyCard {
+                card_id: "card".to_string(),
+            },
+        );
+
+        assert_eq!(unburied.card_progress[0].times_seen, 1);
+        assert_eq!(unburied.card_progress[0].buried_until, None);
+        let queue = build_session_queue(&unburied.cards, &unburied.card_progress, "deck", NOW);
+        assert_eq!(queue[0].id, "card");
+    }
+
+    #[test]
     fn delete_deck_cascades_related_records() {
         let state = AppState {
             decks: vec![Deck {
@@ -462,20 +712,7 @@ mod tests {
             note_types: Vec::new(),
             notes: Vec::new(),
             cards: vec![card("card")],
-            card_progress: vec![CardProgress {
-                card_id: "card".to_string(),
-                state: CardState::Review,
-                interval: 1,
-                ease_factor: 2.5,
-                next_due_at: NOW,
-                learning_step_index: None,
-                buried_until: None,
-                suspended_at: None,
-                times_seen: 1,
-                times_correct: 1,
-                times_incorrect: 0,
-                last_seen_at: NOW,
-            }],
+            card_progress: vec![progress("card")],
             sessions: vec![Session {
                 id: "session".to_string(),
                 deck_id: "deck".to_string(),
