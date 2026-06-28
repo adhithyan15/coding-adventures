@@ -187,6 +187,7 @@ from spice_engine import (
     device_model_noise_audit_fixtures,
     device_model_reference_deck_audit_fixtures,
     device_model_reference_deck_audit_gate,
+    device_model_reference_deck_audit_records,
     device_model_temperature_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
     digital_event_streams_to_voltage_sources,
@@ -244,7 +245,9 @@ from spice_engine import (
     format_deck_wrdata_artifact_json,
     format_deck_wrdata_artifact_table,
     format_deck_wrdata_ascii,
+    format_device_model_reference_deck_audit_csv,
     format_device_model_reference_deck_audit_gate_report,
+    format_device_model_reference_deck_audit_json,
     format_device_model_reference_deck_audit_table,
     format_digital_bridge_schedule_table,
     format_digital_event_stream_table,
@@ -613,6 +616,35 @@ def test_device_model_reference_deck_audit_table_is_stable() -> None:
         "gate-overlap and depletion-shaped bulk-junction storage; explicit "
         "Cstore keeps the fixture comparable with other charge audits\t10"
     )
+
+
+def test_device_model_reference_deck_audit_record_exports_are_stable() -> None:
+    records = device_model_reference_deck_audit_records()
+    assert len(records) == 20
+    assert records[0] == {
+        "name": "diode-forward-bias:op",
+        "kind": "D",
+        "analysis": "op",
+        "model": "Dfast",
+        "reference": "SPICE2/SPICE3-style local model-depth fixture",
+        "expected_behavior": "DC probe out remains in [0.55, 0.65] V",
+        "deck_lines": "8",
+    }
+    assert records[-1]["name"] == "mos-level1-storage-charge:tran"
+    assert records[-1]["deck_lines"] == "10"
+
+    csv_lines = format_device_model_reference_deck_audit_csv().splitlines()
+    assert csv_lines[0] == (
+        "name,kind,analysis,model,reference,expected_behavior,deck_lines"
+    )
+    assert csv_lines[1] == (
+        "diode-forward-bias:op,D,op,Dfast,"
+        "SPICE2/SPICE3-style local model-depth fixture,"
+        '"DC probe out remains in [0.55, 0.65] V",8'
+    )
+
+    parsed = json.loads(format_device_model_reference_deck_audit_json())
+    assert parsed == records
 
 
 def test_device_model_reference_deck_audit_gate_report_is_stable() -> None:

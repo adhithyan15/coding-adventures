@@ -153,6 +153,10 @@ coverage matrix for each supported diode, BJT, JFET, and Level-1 MOS model
 family.
 `format_device_model_reference_deck_audit_table` renders that matrix as a
 stable tab-separated audit table for release and reference-deck comparisons.
+`device_model_reference_deck_audit_records`,
+`format_device_model_reference_deck_audit_csv`, and
+`format_device_model_reference_deck_audit_json` expose the same matrix as
+header-keyed records and browser/release-friendly CSV or compact JSON.
 `device_model_reference_deck_audit_gate` and
 `format_device_model_reference_deck_audit_gate_report` validate the required
 kind-by-analysis coverage matrix and emit a stable pass/fail gate report.

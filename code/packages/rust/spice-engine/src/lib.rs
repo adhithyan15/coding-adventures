@@ -4313,6 +4313,24 @@ pub fn format_device_model_reference_deck_audit_table(
     lines.join("\n")
 }
 
+pub fn device_model_reference_deck_audit_records(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_device_model_reference_deck_audit_table(fixtures))
+}
+
+pub fn format_device_model_reference_deck_audit_csv(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    format_deck_table_csv(&format_device_model_reference_deck_audit_table(fixtures))
+}
+
+pub fn format_device_model_reference_deck_audit_json(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    format_deck_table_json(&format_device_model_reference_deck_audit_table(fixtures))
+}
+
 pub fn device_model_reference_deck_audit_gate(
     fixtures: &[DeviceModelReferenceDeckAuditFixture],
 ) -> DeviceModelReferenceDeckAuditGateReport {

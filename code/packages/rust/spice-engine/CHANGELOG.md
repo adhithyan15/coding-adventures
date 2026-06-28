@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add `device_model_reference_deck_audit_records`,
+  `format_device_model_reference_deck_audit_csv`, and
+  `format_device_model_reference_deck_audit_json`, stable record-oriented
+  exports for the device-model reference-deck audit matrix, matching Python
+  and TypeScript.
 - Add `device_model_reference_deck_audit_gate` and
   `format_device_model_reference_deck_audit_gate_report`, a stable pass/fail
   gate for the required device-model reference-deck audit coverage matrix,

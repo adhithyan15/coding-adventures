@@ -4,13 +4,14 @@ use spice_engine::{
     dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
     dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
     device_model_behavior_audit_fixtures, device_model_reference_deck_audit_fixtures,
-    device_model_reference_deck_audit_gate, device_model_temperature_audit_fixtures,
-    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
-    format_corner_temperature_dc_table, format_dc_sweep_table,
+    device_model_reference_deck_audit_gate, device_model_reference_deck_audit_records,
+    device_model_temperature_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
+    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
+    format_device_model_reference_deck_audit_csv,
     format_device_model_reference_deck_audit_gate_report,
-    format_device_model_reference_deck_audit_table, format_measurement_table,
-    format_temperature_dc_table, jfet_from_model_card, measure_dc_sweep_deck,
-    measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
+    format_device_model_reference_deck_audit_json, format_device_model_reference_deck_audit_table,
+    format_measurement_table, format_temperature_dc_table, jfet_from_model_card,
+    measure_dc_sweep_deck, measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
     normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs,
     Ccvs, Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource,
     CustomModel, DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity,
@@ -312,6 +313,58 @@ fn device_model_reference_deck_audit_table_is_stable() {
         lines.last().copied().unwrap(),
         "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\tSPICE2/SPICE3-style local model-depth fixture\tLevel-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits\t10"
     );
+}
+
+#[test]
+fn device_model_reference_deck_audit_record_exports_are_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let records = device_model_reference_deck_audit_records(&fixtures);
+
+    assert_eq!(records.len(), 20);
+    assert_eq!(
+        records[0].get("name").map(String::as_str),
+        Some("diode-forward-bias:op")
+    );
+    assert_eq!(records[0].get("kind").map(String::as_str), Some("D"));
+    assert_eq!(records[0].get("analysis").map(String::as_str), Some("op"));
+    assert_eq!(records[0].get("model").map(String::as_str), Some("Dfast"));
+    assert_eq!(
+        records[0].get("reference").map(String::as_str),
+        Some("SPICE2/SPICE3-style local model-depth fixture")
+    );
+    assert_eq!(
+        records[0].get("expected_behavior").map(String::as_str),
+        Some("DC probe out remains in [0.55, 0.65] V")
+    );
+    assert_eq!(records[0].get("deck_lines").map(String::as_str), Some("8"));
+    assert_eq!(
+        records.last().unwrap().get("name").map(String::as_str),
+        Some("mos-level1-storage-charge:tran")
+    );
+    assert_eq!(
+        records
+            .last()
+            .unwrap()
+            .get("deck_lines")
+            .map(String::as_str),
+        Some("10")
+    );
+
+    let csv = format_device_model_reference_deck_audit_csv(&fixtures);
+    let csv_lines = csv.lines().collect::<Vec<_>>();
+    assert_eq!(
+        csv_lines[0],
+        "name,kind,analysis,model,reference,expected_behavior,deck_lines"
+    );
+    assert_eq!(
+        csv_lines[1],
+        "diode-forward-bias:op,D,op,Dfast,SPICE2/SPICE3-style local model-depth fixture,\"DC probe out remains in [0.55, 0.65] V\",8"
+    );
+
+    let json = format_device_model_reference_deck_audit_json(&fixtures);
+    assert!(json.starts_with("[{\"name\":\"diode-forward-bias:op\""));
+    assert!(json.contains("\"deck_lines\":\"10\""));
+    assert!(json.ends_with("]\n"));
 }
 
 #[test]

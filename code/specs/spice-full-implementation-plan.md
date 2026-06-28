@@ -15,20 +15,21 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Device model reference-deck audit release gate.
+1. Device model reference-deck audit record exports.
    - Status: current PR completion candidate.
    - Python, Rust, and TypeScript now expose
-     `device_model_reference_deck_audit_gate` /
-     `deviceModelReferenceDeckAuditGate` helpers plus stable
-     `format_device_model_reference_deck_audit_gate_report` /
-     `formatDeviceModelReferenceDeckAuditGateReport` output.
-   - The release gate validates the required diode, BJT, JFET, and Level-1 MOS
-     by operating-point, temperature, AC, noise, and transient coverage matrix,
-     checks each row has documented model/reference/deck metadata, and reports
-     missing coverage as stable tab-separated issue rows.
-   - Cross-language tests lock the passing report header/body and a negative
-     missing `NMOS:tran` coverage issue so the audit matrix is enforceable by
-     release automation.
+     `device_model_reference_deck_audit_records` /
+     `deviceModelReferenceDeckAuditRecords` helpers plus stable
+     `format_device_model_reference_deck_audit_csv` /
+     `formatDeviceModelReferenceDeckAuditCsv` and
+     `format_device_model_reference_deck_audit_json` /
+     `formatDeviceModelReferenceDeckAuditJson` output.
+   - The exports reuse the reference-deck audit table contract to provide
+     header-keyed records plus browser/release-friendly CSV and compact JSON
+     for dashboards, release automation, and reference-deck comparison tools.
+   - Cross-language tests lock the first diode operating-point row, final
+     Level-1 MOS transient-storage row metadata, CSV comma escaping, and JSON
+     parseability so downstream consumers can rely on the audit matrix shape.
 
 ## Completed Slices
 
@@ -1340,6 +1341,21 @@ downstream tools to compare.
    - Cross-language tests lock the exact header, row count, and first/last rows
      for the diode operating-point and Level-1 MOS transient-storage audit
      entries.
+
+129. Device model reference-deck audit release gate.
+   - Status: completed in PR 6840.
+   - Python, Rust, and TypeScript now expose
+     `device_model_reference_deck_audit_gate` /
+     `deviceModelReferenceDeckAuditGate` helpers plus stable
+     `format_device_model_reference_deck_audit_gate_report` /
+     `formatDeviceModelReferenceDeckAuditGateReport` output.
+   - The release gate validates the required diode, BJT, JFET, and Level-1 MOS
+     by operating-point, temperature, AC, noise, and transient coverage matrix,
+     checks each row has documented model/reference/deck metadata, and reports
+     missing coverage as stable tab-separated issue rows.
+   - Cross-language tests lock the passing report header/body and a negative
+     missing `NMOS:tran` coverage issue so the audit matrix is enforceable by
+     release automation.
 
 ## Backlog
 

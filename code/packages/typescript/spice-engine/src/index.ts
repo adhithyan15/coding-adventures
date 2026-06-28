@@ -7897,6 +7897,24 @@ export function formatDeviceModelReferenceDeckAuditTable(
   return lines.join("\n");
 }
 
+export function deviceModelReferenceDeckAuditRecords(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatDeviceModelReferenceDeckAuditTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditCsv(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableCsv(formatDeviceModelReferenceDeckAuditTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditJson(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableJson(formatDeviceModelReferenceDeckAuditTable(fixtures));
+}
+
 export function deviceModelReferenceDeckAuditGate(
   fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
 ): DeviceModelReferenceDeckAuditGateReport {
