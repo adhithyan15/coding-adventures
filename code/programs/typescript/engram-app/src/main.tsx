@@ -38,16 +38,18 @@ import { stateLoadAction } from "./actions.js";
 import { createPersistenceMiddleware } from "./persistence.js";
 import { seedDeck } from "./seed.js";
 import { App } from "./App.js";
+import { installLatticeStyles } from "./styles/installLatticeStyles.js";
 import type { Deck, Card, CardProgress, Session, Review } from "./types.js";
 import "@coding-adventures/ui-components/src/styles/theme.css";
 import "@coding-adventures/ui-components/src/styles/accessibility.css";
 import "@coding-adventures/ui-components/src/styles/flash-card.css";
 import "@coding-adventures/ui-components/src/styles/rating-buttons.css";
 import "@coding-adventures/ui-components/src/styles/progress-bar.css";
-import "./styles/app.css";
 import en from "./i18n/locales/en.json";
 
 async function init() {
+  installLatticeStyles();
+
   // ── 1. Initialise i18n ──────────────────────────────────────────────────
   initI18n({ en });
 

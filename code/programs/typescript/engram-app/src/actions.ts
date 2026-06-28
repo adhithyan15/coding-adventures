@@ -112,6 +112,7 @@ export interface StateLoadAction extends Action {
   cardProgress: CardProgress[];
   sessions: Session[];
   reviews: Review[];
+  persist?: boolean;
 }
 
 export type AppAction =
@@ -251,6 +252,15 @@ export function stateLoadAction(
   cardProgress: CardProgress[],
   sessions: Session[],
   reviews: Review[],
+  persist = false,
 ): StateLoadAction {
-  return { type: STATE_LOAD, decks, cards, cardProgress, sessions, reviews };
+  return {
+    type: STATE_LOAD,
+    decks,
+    cards,
+    cardProgress,
+    sessions,
+    reviews,
+    persist,
+  };
 }

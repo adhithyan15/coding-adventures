@@ -1,0 +1,11 @@
+[package]
+name = "engram-core-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "String-in / JSON-out facade over engram-core for web, native, and Mosaic-generated shells."
+license = "MIT"
+
+[dependencies]
+engram-core = { path = "../engram-core", features = ["serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

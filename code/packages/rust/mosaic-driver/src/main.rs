@@ -8,7 +8,7 @@
 //!                                        │
 //! .mll  ──▶  moslayout-compiler ◀────────┤  ──▶  part-map JSON
 //!                                        │
-//! .msl  ──▶  mosstyle-compiler  ◀────────┘  ──▶  CSS string
+//! .msl  ──▶  mosstyle-compiler  ◀────────┘  ──▶  Lattice source
 //! ```
 //!
 //! ## Usage
@@ -24,7 +24,7 @@
 //!   Run only the layout stage (no .mil needed), print part-map JSON.
 //!
 //! mosaic --style Grid.msl
-//!   Run only the style stage (no .mil/.mll needed), print CSS.
+//!   Run only the style stage (no .mil/.mll needed), print Lattice.
 //! ```
 //!
 //! ## Output (stdout JSON)
@@ -34,7 +34,8 @@
 //!   "component": "Grid",
 //!   "interface": { "slots": [...], "emits": [...] },
 //!   "parts": [{ "name": "root", "primitive": "Column" }, ...],
-//!   "css": ".mos-Grid-root { background-color: #1e1e1e; ... }"
+//!   "lattice": ".mos-Grid-root { background-color: #1e1e1e; ... }",
+//!   "style_map_json": "{ \"component\": \"Grid\", ... }"
 //! }
 //! ```
 
@@ -61,7 +62,9 @@ fn main() {
             let path = require_arg(&args, 2, "--interface requires a .mil path");
             let src = read_file(&path);
             let out = mosmodel_compiler::compile(&src).unwrap_or_else(|errs| {
-                for e in &errs { eprintln!("mosmodel error: {e}"); }
+                for e in &errs {
+                    eprintln!("mosmodel error: {e}");
+                }
                 process::exit(1);
             });
             println!("{}", out.descriptor_json);
@@ -73,7 +76,9 @@ fn main() {
             let path = require_arg(&args, 2, "--layout requires a .mll path");
             let src = read_file(&path);
             let out = moslayout_compiler::compile(&src, None).unwrap_or_else(|errs| {
-                for e in &errs { eprintln!("moslayout error: {e}"); }
+                for e in &errs {
+                    eprintln!("moslayout error: {e}");
+                }
                 process::exit(1);
             });
             println!("{}", out.part_map_json);
@@ -85,10 +90,12 @@ fn main() {
             let path = require_arg(&args, 2, "--style requires a .msl path");
             let src = read_file(&path);
             let out = mosstyle_compiler::compile(&src, None).unwrap_or_else(|errs| {
-                for e in &errs { eprintln!("mosstyle error: {e}"); }
+                for e in &errs {
+                    eprintln!("mosstyle error: {e}");
+                }
                 process::exit(1);
             });
-            println!("{}", out.css);
+            println!("{}", out.lattice);
         }
 
         name => {
@@ -122,7 +129,9 @@ fn main() {
 
             // ── Stage 1: model ────────────────────────────────────────────
             let model_out = mosmodel_compiler::compile(&mil_src).unwrap_or_else(|errs| {
-                for e in &errs { eprintln!("mosmodel error in {mil_path}: {e}"); }
+                for e in &errs {
+                    eprintln!("mosmodel error in {mil_path}: {e}");
+                }
                 process::exit(1);
             });
 
@@ -132,39 +141,41 @@ fn main() {
             let layout_out =
                 moslayout_compiler::compile(&mll_src, Some(&model_out.descriptor_json))
                     .unwrap_or_else(|errs| {
-                        for e in &errs { eprintln!("moslayout error in {mll_path}: {e}"); }
+                        for e in &errs {
+                            eprintln!("moslayout error in {mll_path}: {e}");
+                        }
                         process::exit(1);
                     });
 
             // ── Stage 3: style ────────────────────────────────────────────
             // Pass the part-map JSON so the style compiler can validate that
             // every styled part was actually declared in the layout.
-            let style_out =
-                mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
-                    .unwrap_or_else(|errs| {
-                        for e in &errs { eprintln!("mosstyle error in {msl_path}: {e}"); }
-                        process::exit(1);
-                    });
+            let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
+                .unwrap_or_else(|errs| {
+                    for e in &errs {
+                        eprintln!("mosstyle error in {msl_path}: {e}");
+                    }
+                    process::exit(1);
+                });
 
             // ── Emit JSON summary ─────────────────────────────────────────
             // Deserialize descriptor_json and part_map_json so we can embed
             // them as structured JSON (not double-encoded strings).
             let interface: serde_json::Value =
-                serde_json::from_str(&model_out.descriptor_json)
-                    .unwrap_or(serde_json::Value::Null);
+                serde_json::from_str(&model_out.descriptor_json).unwrap_or(serde_json::Value::Null);
             let parts: serde_json::Value =
-                serde_json::from_str(&layout_out.part_map_json)
-                    .unwrap_or(serde_json::Value::Null);
+                serde_json::from_str(&layout_out.part_map_json).unwrap_or(serde_json::Value::Null);
 
             let summary = serde_json::json!({
                 "component": name,
                 "interface": interface,
                 "parts":     parts,
-                "css":       style_out.css,
+                "lattice":   style_out.lattice,
+                "style_map_json": style_out.style_map_json,
             });
 
             match serde_json::to_string_pretty(&summary) {
-                Ok(s)  => println!("{}", s),
+                Ok(s) => println!("{}", s),
                 Err(e) => {
                     eprintln!("Internal error serialising output: {e}");
                     process::exit(1);

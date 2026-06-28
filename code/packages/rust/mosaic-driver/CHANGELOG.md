@@ -1,17 +1,26 @@
-# Changelog — mosaic-driver
+# Changelog - mosaic-driver
 
-## [0.1.0] — 2026-05-11
+## [Unreleased]
+
+### Changed - mosstyle output prefers Lattice
+
+- `mosaic --style <path.msl>` now prints `CompileOutput.lattice` instead of
+  a CSS artifact.
+- Full pipeline JSON summaries now include `lattice` and `style_map_json`;
+  CSS is a downstream Lattice-transpiler concern for web targets.
+
+## [0.1.0] - 2026-05-11
 
 ### Added
 
 - Initial implementation of the `mosaic` CLI binary.
-- Full three-stage pipeline: `.mil` → mosmodel → `.mll` → moslayout → `.msl` → mosstyle.
-- `--interface <path.mil>` flag — run only the model stage.
-- `--layout <path.mll>` flag — run only the layout stage.
-- `--style <path.msl>` flag — run only the style stage.
-- Default mode: `mosaic <ComponentName>` — loads `<Name>.mil`, `<Name>.mll`, `<Name>.msl`
+- Full three-stage pipeline: `.mil` -> mosmodel -> `.mll` -> moslayout -> `.msl` -> mosstyle.
+- `--interface <path.mil>` flag - run only the model stage.
+- `--layout <path.mll>` flag - run only the layout stage.
+- `--style <path.msl>` flag - run only the style stage.
+- Default mode: `mosaic <ComponentName>` - loads `<Name>.mil`, `<Name>.mll`, `<Name>.msl`
   from the current directory, runs all three stages, and prints a JSON summary.
 - Passes `interface_json` from mosmodel to moslayout for slot-ref validation.
 - Passes `part_map_json` from moslayout to mosstyle for part-name validation.
 - JSON summary output embeds structured `interface` and `parts` objects (not
-  double-encoded strings) alongside the raw `css` string.
+  double-encoded strings) alongside the generated style text.
