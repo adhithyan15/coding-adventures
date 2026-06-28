@@ -889,9 +889,8 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
     """Return runnable transient storage fixtures for charge model-depth audits.
 
     Diode CJO/TT, BJT CJE/CJC/TF/TR, JFET fixed gate-source/gate-drain, and
-    Level-1 MOS fixed gate-overlap storage are transient-stamped by the
-    simulator. Level-1 MOS bulk junction charge is still audited through
-    explicit terminal storage capacitors until nonlinear charge policies land.
+    Level-1 MOS fixed gate-overlap plus zero-bias bulk-junction storage are
+    transient-stamped by the simulator.
     """
 
     models = _model_card_by_name()
@@ -936,6 +935,7 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
             "CGSO": 2.0e-11,
             "CGDO": 5.0e-12,
             "CGBO": 1.0e-12,
+            "CBS": 4.0e-13,
             "CBD": 3.0e-13,
         },
     )
@@ -1052,12 +1052,13 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
             expected_final_min=0.68,
             expected_final_max=0.73,
             charge_behavior=(
-                "Level-1 MOS CGSO/CGDO/CGBO contribute transient gate-overlap storage; "
-                "explicit Cstore keeps the fixture comparable while bulk junction charge remains AC-only"
+                "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient "
+                "gate-overlap and zero-bias bulk-junction storage; explicit "
+                "Cstore keeps the fixture comparable with other charge audits"
             ),
             deck_lines=(
                 "* device-model charge fixture: mos-level1-storage-charge",
-                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBD=3e-13)",
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13)",
                 "Vdd vdd 0 1.8",
                 "Vgate gate 0 1.8",
                 "Rload vdd out 1k",

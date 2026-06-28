@@ -4,12 +4,15 @@
 
 ### Added
 
+- **MOS Level-1 transient bulk-junction charge stamping** —
+  Level-1 MOS zero-bias bulk-junction `CBS`/`CBD` model-card storage now
+  stamps transient source-body and drain-body companions, matching Rust and
+  TypeScript, with regression coverage for drain-step delay.
+
 - **MOS Level-1 transient overlap charge stamping** —
   Level-1 MOS `CGSO`/`CGDO`/`CGBO` model-card storage now stamps transient
   gate-source, gate-drain, and gate-body companions, matching Rust and
-  TypeScript, with regression coverage for gate-step delay. Bulk junction
-  `CBS`/`CBD` storage remains AC-only until nonlinear junction-charge stamping
-  lands.
+  TypeScript, with regression coverage for gate-step delay.
 
 - **JFET transient charge stamping** —
   JFET `Cgs`/`Cgd` model-card storage now stamps transient gate-source and

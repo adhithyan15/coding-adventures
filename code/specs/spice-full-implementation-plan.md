@@ -15,21 +15,21 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. MOS Level-1 transient overlap charge stamping.
+1. MOS Level-1 transient bulk-junction charge stamping.
    - Status: current PR completion candidate.
    - Python, Rust, and TypeScript transient solvers now stamp Level-1 MOS
-     model-card `CGSO` / `gate_source_overlap_capacitance`, `CGDO` /
-     `gate_drain_overlap_capacitance`, and `CGBO` /
-     `gate_bulk_overlap_capacitance` as fixed gate-source, gate-drain, and
-     gate-body overlap storage companions.
+     model-card `CBS` / `source_bulk_capacitance` / source-bulk
+     capacitance and `CBD` / `drain_bulk_capacitance` / drain-bulk
+     capacitance as zero-bias source-body and drain-body storage companions.
    - The companions reuse the existing Euler/trapezoidal/Gear-2 capacitor
-     history policy and seed the synthetic MOS overlap charge states from the
-     initial operating point.
-   - Cross-language tests cover MOS gate-step delay through `CGSO` overlap
-     storage, and charge-audit fixtures now record the MOS overlap terms as
+     history policy and seed the synthetic MOS bulk-junction charge states
+     from the initial operating point.
+   - Cross-language tests cover drain-step delay through `CBD` bulk-junction
+     storage, and charge-audit fixtures now record the MOS bulk terms as
      transient-stamped.
-   - MOS `CBS` / `CBD` bulk junction charge remains AC-only until a nonlinear
-     junction-charge policy lands.
+   - Voltage-dependent MOS depletion-shaping parameters remain future
+     model-card depth work; this slice stamps the Level-1 zero-bias
+     capacitance terms already exposed by the package surfaces.
 
 ## Completed Slices
 
@@ -1268,6 +1268,20 @@ downstream tools to compare.
      operating point, and contribute matching small-signal AC susceptance.
    - Cross-language tests cover gate-step delay and high-frequency gate-drive
      shunting.
+
+124. MOS Level-1 transient overlap charge stamping.
+   - Status: completed in PR 6816.
+   - Python, Rust, and TypeScript transient solvers now stamp Level-1 MOS
+     model-card `CGSO` / `gate_source_overlap_capacitance`, `CGDO` /
+     `gate_drain_overlap_capacitance`, and `CGBO` /
+     `gate_bulk_overlap_capacitance` as fixed gate-source, gate-drain, and
+     gate-body overlap storage companions.
+   - The companions reuse the existing Euler/trapezoidal/Gear-2 capacitor
+     history policy and seed the synthetic MOS overlap charge states from the
+     initial operating point.
+   - Cross-language tests cover MOS gate-step delay through `CGSO` overlap
+     storage, and charge-audit fixtures now record the MOS overlap terms as
+     transient-stamped.
 
 ## Backlog
 
