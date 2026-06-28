@@ -25,6 +25,7 @@ import {
   deviceModelBehaviorAuditFixtures,
   deviceModelReferenceDeckAuditFixtures,
   deviceModelReferenceDeckAuditGate,
+  deviceModelReferenceDeckAuditRecords,
   deviceModelTemperatureAuditFixtures,
   diode,
   diodeFromModelCard,
@@ -33,7 +34,9 @@ import {
   formatCornerTemperatureDcTable,
   formatDeckDcSweepTable,
   formatDcSweepTable,
+  formatDeviceModelReferenceDeckAuditCsv,
   formatDeviceModelReferenceDeckAuditGateReport,
+  formatDeviceModelReferenceDeckAuditJson,
   formatDeviceModelReferenceDeckAuditTable,
   formatMeasurementTable,
   formatTemperatureDcTable,
@@ -237,6 +240,30 @@ describe("dcOp", () => {
     expect(lines.at(-1)).toBe(
       "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\tSPICE2/SPICE3-style local model-depth fixture\tLevel-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits\t10",
     );
+  });
+
+  it("formats stable device model reference deck audit records", () => {
+    const records = deviceModelReferenceDeckAuditRecords();
+    expect(records).toHaveLength(20);
+    expect(records[0]).toStrictEqual({
+      name: "diode-forward-bias:op",
+      kind: "D",
+      analysis: "op",
+      model: "Dfast",
+      reference: "SPICE2/SPICE3-style local model-depth fixture",
+      expected_behavior: "DC probe out remains in [0.55, 0.65] V",
+      deck_lines: "8",
+    });
+    expect(records.at(-1)?.name).toBe("mos-level1-storage-charge:tran");
+    expect(records.at(-1)?.deck_lines).toBe("10");
+
+    const csvLines = formatDeviceModelReferenceDeckAuditCsv().split(/\r?\n/u).filter(Boolean);
+    expect(csvLines[0]).toBe("name,kind,analysis,model,reference,expected_behavior,deck_lines");
+    expect(csvLines[1]).toBe(
+      'diode-forward-bias:op,D,op,Dfast,SPICE2/SPICE3-style local model-depth fixture,"DC probe out remains in [0.55, 0.65] V",8',
+    );
+
+    expect(JSON.parse(formatDeviceModelReferenceDeckAuditJson())).toStrictEqual(records);
   });
 
   it("formats a stable device model reference deck audit gate report", () => {

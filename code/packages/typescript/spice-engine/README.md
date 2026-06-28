@@ -214,6 +214,10 @@ noise, and transient fixture families into a stable reference-deck coverage
 matrix for each supported diode, BJT, JFET, and Level-1 MOS model family.
 `formatDeviceModelReferenceDeckAuditTable` renders that matrix as a stable
 tab-separated audit table for release and reference-deck comparisons.
+`deviceModelReferenceDeckAuditRecords`,
+`formatDeviceModelReferenceDeckAuditCsv`, and
+`formatDeviceModelReferenceDeckAuditJson` expose the same matrix as
+header-keyed records and browser/release-friendly CSV or compact JSON.
 `deviceModelReferenceDeckAuditGate` and
 `formatDeviceModelReferenceDeckAuditGateReport` validate the required
 kind-by-analysis coverage matrix and emit a stable pass/fail gate report.

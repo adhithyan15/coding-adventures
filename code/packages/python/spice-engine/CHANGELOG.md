@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Device model reference-deck audit record exports** —
+  `device_model_reference_deck_audit_records()`,
+  `format_device_model_reference_deck_audit_csv()`, and
+  `format_device_model_reference_deck_audit_json()` now expose the audit
+  matrix as stable header-keyed records plus CSV/JSON outputs, matching Rust
+  and TypeScript.
+
 - **Device model reference-deck audit release gate** —
   `device_model_reference_deck_audit_gate()` and
   `format_device_model_reference_deck_audit_gate_report()` now validate the

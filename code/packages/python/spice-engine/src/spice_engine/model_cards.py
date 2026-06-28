@@ -22,7 +22,12 @@ from spice_engine.elements import (
     Resistor,
     VoltageSource,
 )
-from spice_engine.engine import Circuit
+from spice_engine.engine import (
+    Circuit,
+    deck_table_records,
+    format_deck_table_csv,
+    format_deck_table_json,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -1220,6 +1225,30 @@ def format_device_model_reference_deck_audit_table(
             )
         )
     return "\n".join(lines)
+
+
+def device_model_reference_deck_audit_records(
+    fixtures: Sequence[DeviceModelReferenceDeckAuditFixture] | None = None,
+) -> list[dict[str, str]]:
+    """Return header-keyed records for the reference-deck audit matrix."""
+
+    return deck_table_records(format_device_model_reference_deck_audit_table(fixtures))
+
+
+def format_device_model_reference_deck_audit_csv(
+    fixtures: Sequence[DeviceModelReferenceDeckAuditFixture] | None = None,
+) -> str:
+    """Return the reference-deck audit matrix as RFC 4180-style CSV."""
+
+    return format_deck_table_csv(format_device_model_reference_deck_audit_table(fixtures))
+
+
+def format_device_model_reference_deck_audit_json(
+    fixtures: Sequence[DeviceModelReferenceDeckAuditFixture] | None = None,
+) -> str:
+    """Return compact JSON records for the reference-deck audit matrix."""
+
+    return format_deck_table_json(format_device_model_reference_deck_audit_table(fixtures))
 
 
 def device_model_reference_deck_audit_gate(
