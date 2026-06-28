@@ -28,6 +28,7 @@ SELF_CONTAINED_RUNGS = (
     "rung3_linear_systems",
     "rung3_constraint_feasibility",
     "rung3_probability_decisions",
+    "rung3_derived_probability_decisions",
     "rung3_linear_optimization",
     "rung3_optimization_witness",
     "rung3_quadratic_roots",
@@ -270,6 +271,41 @@ def test_decompose_prompt_mentions_native_probability_decision_program():
     assert "prior 0.30 for bacterial" in prompt
     assert "contributes 15 from csf(neutrophilic) to bacterial" in prompt
     assert "Do NOT choose the answer" in prompt
+
+
+def test_decompose_prompt_mentions_derived_probability_requirements():
+    prompt = le.decompose_prompt({
+        "stem": (
+            "Two diagnoses start with prior 0.05 for tuberculosis and 0.25 for "
+            "bronchitis. Findings are prolonged_cough and night_sweats. Those "
+            "findings derive tb_pattern. Tb_pattern has likelihood ratio 25 for "
+            "tuberculosis and 0.5 for bronchitis. Which diagnosis leads?"
+        ),
+        "program": (
+            "prior 0.05 for tuberculosis\n"
+            "prior 0.25 for bronchitis\n"
+            "contributes 25 from tb_pattern to tuberculosis\n"
+            "contributes 0.5 from tb_pattern to bronchitis\n"
+            "observe prolonged_cough\n"
+            "observe night_sweats\n"
+            "rule { head: tb_pattern when: prolonged_cough, night_sweats }\n"
+            "? tuberculosis\n"
+            "? bronchitis\n"
+        ),
+        "answer_from": {
+            "type": "decision_leader",
+            "structural_weights": False,
+            "requires": [{
+                "type": "decision",
+                "leader": "tuberculosis",
+                "evidence": "tb_pattern",
+            }],
+        },
+    })
+    assert "derived-evidence probability decision program" in prompt
+    assert "rule { head: tb_pattern when: prolonged_cough, night_sweats }" in prompt
+    assert "Required decision leader: tuberculosis" in prompt
+    assert "Required derived evidence: tb_pattern" in prompt
 
 
 def test_decompose_prompt_mentions_native_optimization_witness_program():
@@ -630,6 +666,43 @@ def test_probability_decision_program_maps_engine_leader_to_label_option():
             "E": "unknown",
         },
     ) == "A"
+
+
+def test_derived_probability_decision_requires_evidence_proof():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    program = (
+        "prior 0.05 for tuberculosis\n"
+        "prior 0.25 for bronchitis\n"
+        "contributes 25 from tb_pattern to tuberculosis\n"
+        "contributes 0.5 from tb_pattern to bronchitis\n"
+        "observe prolonged_cough\n"
+        "observe night_sweats\n"
+        "rule { head: tb_pattern when: prolonged_cough, night_sweats }\n"
+        "? tuberculosis\n"
+        "? bronchitis\n"
+    )
+    answer_from = {
+        "type": "decision_leader",
+        "requires": [{
+            "type": "decision",
+            "leader": "tuberculosis",
+            "evidence": "tb_pattern",
+        }],
+    }
+    doc = le.run_program(program)
+    assert le.program_requirements_hold(doc, answer_from)
+    assert le.program_answer_to_letter(
+        doc,
+        answer_from,
+        {
+            "A": "bronchitis",
+            "B": "tuberculosis",
+            "C": "asthma",
+            "D": "pneumonia",
+            "E": "unknown",
+        },
+    ) == "B"
 
 
 # ---- bank integrity -----------------------------------------------------------

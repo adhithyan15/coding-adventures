@@ -2,6 +2,21 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.16.0] — 2026-06-28
+
+### Added — rung 3 derived probability decision scaffold
+
+- **`rung3_derived_probability_decisions/items.json`** — 20 fresh MCQs where the
+  gold decomposition observes findings, derives an intermediate evidence atom with
+  `rule { ... }`, and lets that derived evidence drive native ADJ likelihood-ratio
+  contributions.
+- Decision-leader program items can now carry `answer_from.requires` proof checks,
+  so the ladder verifies that the winning decision used the requested derived
+  evidence proof before mapping `decision.leader` to an option.
+- The model-mode decomposition prompt now includes derived-evidence probability
+  examples, giving Gemma-style decomposers a native ADJ shape for multi-step
+  evidence reasoning without selecting the answer in-model.
+
 ## [0.15.0] — 2026-06-28
 
 ### Added — rung 3 probability decision scaffold

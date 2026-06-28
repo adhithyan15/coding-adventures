@@ -49,6 +49,8 @@ adj-ladder/
     items.json              20 feasibility MCQs backed by native ADJ check
   rung3_probability_decisions/
     items.json              20 diagnosis/decision MCQs backed by native ADJ priors/LRs
+  rung3_derived_probability_decisions/
+    items.json              20 MCQs combining native ADJ rules with priors/LRs
   rung3_linear_optimization/
     items.json              20 linear-optimization MCQs backed by native ADJ optimize
   rung3_optimization_witness/
@@ -99,6 +101,7 @@ python3 contamination_check.py rung2_derived_solve
 python3 contamination_check.py rung3_linear_systems
 python3 contamination_check.py rung3_constraint_feasibility
 python3 contamination_check.py rung3_probability_decisions
+python3 contamination_check.py rung3_derived_probability_decisions
 python3 contamination_check.py rung3_linear_optimization
 python3 contamination_check.py rung3_optimization_witness
 python3 contamination_check.py rung3_quadratic_roots
@@ -114,6 +117,7 @@ python3 ladder_eval.py rung2_derived_solve
 python3 ladder_eval.py rung3_linear_systems
 python3 ladder_eval.py rung3_constraint_feasibility
 python3 ladder_eval.py rung3_probability_decisions
+python3 ladder_eval.py rung3_derived_probability_decisions
 python3 ladder_eval.py rung3_linear_optimization
 python3 ladder_eval.py rung3_optimization_witness
 python3 ladder_eval.py rung3_quadratic_roots
@@ -169,6 +173,10 @@ ladder maps that categorical verdict to printed feasibility options.
 local models emit `prior` / `contributes` / `observe` / `?` programs, ADJ computes
 the posterior ranking, and the ladder maps only `decision.leader` to the printed
 diagnosis or decision options.
+`rung3_derived_probability_decisions` combines that probability path with the
+deduction bridge: local models emit observations plus a `rule`, ADJ proves the
+derived evidence atom, uses it to license an LR contribution, and the ladder requires
+that proof before mapping `decision.leader`.
 `rung3_linear_optimization` adds the first optimization rung: local models emit
 native ADJ `maximize`/`minimize` programs, ADJ returns `optimize.value`, and the
 ladder maps only that engine optimum to the printed options.
