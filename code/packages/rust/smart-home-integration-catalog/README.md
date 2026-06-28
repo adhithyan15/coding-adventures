@@ -145,6 +145,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - low-level mesh protocol-evidence package handoff execution action evidence
   rows that preserve action, slot, package, packet, blocker, and release
   evidence lineage
+- low-level mesh protocol-evidence package handoff execution action evidence
+  review rows that classify protocol evidence into blocker, operator, review,
+  lineage, and release-ready outcomes
 - mesh protocol-evidence package handoff execution action evidence summaries
   that combine evidence-row counts with next blocker, protocol, and release
   handoff pointers
