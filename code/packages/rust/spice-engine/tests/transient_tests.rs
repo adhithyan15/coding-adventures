@@ -2,14 +2,15 @@ use std::collections::BTreeMap;
 
 use spice_engine::{
     dc_op, deck_output_plan_artifact_records, deck_table_records,
-    digital_event_streams_to_voltage_sources, distortion_from_fourier, distortion_from_transient,
-    distortion_from_transient_corners, estimate_period, format_adaptive_digital_event_stream_table,
-    format_adaptive_transient_table, format_corner_adaptive_digital_event_stream_table,
-    format_corner_adaptive_transient_table, format_corner_digital_event_stream_table,
-    format_corner_distortion_table, format_corner_fourier_table, format_corner_pole_zero_table,
-    format_corner_pss_table, format_corner_transient_table, format_dc_table,
-    format_deck_control_policy_artifact_csv, format_deck_control_policy_artifact_json,
-    format_deck_control_policy_artifact_table, format_deck_control_policy_summary_artifact_csv,
+    device_model_charge_audit_fixtures, digital_event_streams_to_voltage_sources,
+    distortion_from_fourier, distortion_from_transient, distortion_from_transient_corners,
+    estimate_period, format_adaptive_digital_event_stream_table, format_adaptive_transient_table,
+    format_corner_adaptive_digital_event_stream_table, format_corner_adaptive_transient_table,
+    format_corner_digital_event_stream_table, format_corner_distortion_table,
+    format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
+    format_corner_transient_table, format_dc_table, format_deck_control_policy_artifact_csv,
+    format_deck_control_policy_artifact_json, format_deck_control_policy_artifact_table,
+    format_deck_control_policy_summary_artifact_csv,
     format_deck_control_policy_summary_artifact_json,
     format_deck_control_policy_summary_artifact_table, format_deck_noise_table,
     format_deck_output_plan_artifact_csv, format_deck_output_plan_artifact_json,
@@ -115,6 +116,68 @@ fn transient_jfet_source_follower_charges_output_capacitor() {
         final_out < 2.0,
         "expected source below gate plus threshold, got {final_out}"
     );
+}
+
+#[test]
+fn device_model_charge_audit_fixtures_run_reference_transients() {
+    let fixtures = device_model_charge_audit_fixtures().unwrap();
+    assert_eq!(
+        fixtures
+            .iter()
+            .map(|fixture| fixture.name.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "diode-storage-charge",
+            "bjt-storage-charge",
+            "jfet-storage-charge",
+            "mos-level1-storage-charge"
+        ]
+    );
+
+    for fixture in &fixtures {
+        let points = transient(&fixture.circuit, fixture.time_step_s, fixture.stop_time_s).unwrap();
+        assert!(!points.is_empty());
+        let initial = points[0]
+            .voltage(&fixture.probe_node)
+            .expect("fixture initial probe node should be present");
+        let final_value = points
+            .last()
+            .and_then(|point| point.voltage(&fixture.probe_node))
+            .expect("fixture final probe node should be present");
+        assert!(
+            fixture.expected_initial_min <= initial && initial <= fixture.expected_initial_max,
+            "{} expected {} <= initial {} <= {}",
+            fixture.name,
+            fixture.expected_initial_min,
+            initial,
+            fixture.expected_initial_max
+        );
+        assert!(
+            fixture.expected_final_min <= final_value && final_value <= fixture.expected_final_max,
+            "{} expected {} <= final {} <= {}",
+            fixture.name,
+            fixture.expected_final_min,
+            final_value,
+            fixture.expected_final_max
+        );
+        assert!(fixture.storage_capacitance_f > 0.0);
+        assert!(fixture.deck_lines[0].starts_with("* device-model charge fixture:"));
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line.starts_with(".model ")));
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line.starts_with(".tran ")));
+        assert!(!fixture.charge_behavior.is_empty());
+    }
+
+    let jfet_fixture = fixtures
+        .iter()
+        .find(|fixture| fixture.kind.as_str() == "NJF")
+        .expect("expected JFET charge fixture");
+    assert!(jfet_fixture.charge_behavior.contains("external-only"));
 }
 
 #[test]

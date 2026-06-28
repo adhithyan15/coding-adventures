@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `deviceModelChargeAuditFixtures` runnable one-device `.tran` fixtures
+  with reference deck lines, explicit terminal storage capacitance metadata,
+  stable first/final probe-voltage windows, and charge-behavior notes for
+  diode, BJT, JFET, and Level-1 MOS audits, matching Python and Rust.
 - Add `deviceModelNoiseAuditFixtures` runnable one-device `.noise` fixtures
   with reference deck lines and stable source/output PSD windows for diode and
   BJT shot noise plus JFET and Level-1 MOS channel thermal noise audits,

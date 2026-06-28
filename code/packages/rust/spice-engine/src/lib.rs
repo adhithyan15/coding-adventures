@@ -2880,6 +2880,24 @@ pub struct DeviceModelNoiseBehaviorFixture {
     pub deck_lines: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelChargeBehaviorFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub circuit: Circuit,
+    pub probe_node: String,
+    pub time_step_s: f64,
+    pub stop_time_s: f64,
+    pub storage_capacitance_f: f64,
+    pub expected_initial_min: f64,
+    pub expected_initial_max: f64,
+    pub expected_final_min: f64,
+    pub expected_final_max: f64,
+    pub charge_behavior: String,
+    pub deck_lines: Vec<String>,
+}
+
 fn model_type_key(text: &str) -> String {
     text.trim()
         .chars()
@@ -3853,6 +3871,228 @@ pub fn device_model_noise_audit_fixtures(
                 "Rload vdd out 1k".to_string(),
                 "M1 out gate 0 0 Mn".to_string(),
                 ".noise V(out) Vgate lin 1 1k 1k".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+    ])
+}
+
+pub fn device_model_charge_audit_fixtures(
+) -> Result<Vec<DeviceModelChargeBehaviorFixture>, SpiceError> {
+    let models = model_card_by_name(&device_model_audit_fixtures()?)?;
+    let time_step_s = 2.0e-8;
+    let stop_time_s = 2.0e-6;
+    let storage_capacitance_f = 1.0e-10;
+
+    let diode_model = models
+        .get("Dfast")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_charge_audit_fixtures".to_string(),
+            reason: "missing Dfast model fixture".to_string(),
+        })?;
+    let mut diode_circuit = Circuit::new();
+    diode_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbias", "vin", "0", 0.8,
+    )));
+    diode_circuit.add(Element::Resistor(Resistor::new(
+        "Rlimit", "vin", "out", 1_000.0,
+    )));
+    diode_circuit.add(Element::Diode(diode_from_model_card(
+        "D1",
+        "out",
+        "0",
+        diode_model,
+    )?));
+    diode_circuit.add(Element::Capacitor(Capacitor::new(
+        "Cstore",
+        "out",
+        "0",
+        storage_capacitance_f,
+    )));
+
+    let bjt_model = models
+        .get("Qsmall")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_charge_audit_fixtures".to_string(),
+            reason: "missing Qsmall model fixture".to_string(),
+        })?;
+    let mut bjt_circuit = Circuit::new();
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.72,
+    )));
+    bjt_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+    bjt_circuit.add(Element::Bjt(bjt_from_model_card(
+        "Q1", "vcc", "base", "out", bjt_model,
+    )?));
+    bjt_circuit.add(Element::Capacitor(Capacitor::new(
+        "Cstore",
+        "out",
+        "0",
+        storage_capacitance_f,
+    )));
+
+    let jfet_model = models.get("Jn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_charge_audit_fixtures".to_string(),
+        reason: "missing Jn model fixture".to_string(),
+    })?;
+    let mut jfet_circuit = Circuit::new();
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 10.0,
+    )));
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vg", "gate", "0", 0.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rd", "vdd", "drain", 2_000.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rs", "source", "0", 1_000.0,
+    )));
+    jfet_circuit.add(Element::Jfet(jfet_from_model_card(
+        "J1", "drain", "gate", "source", jfet_model,
+    )?));
+    jfet_circuit.add(Element::Capacitor(Capacitor::new(
+        "Cstore",
+        "source",
+        "0",
+        storage_capacitance_f,
+    )));
+
+    let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_charge_audit_fixtures".to_string(),
+        reason: "missing Mn model fixture".to_string(),
+    })?;
+    let mut mos_circuit = Circuit::new();
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 1.8,
+    )));
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 1.8,
+    )));
+    mos_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    mos_circuit.add(Element::Mosfet(mosfet_from_model_card(
+        "M1", "out", "gate", "0", "0", mos_model,
+    )?));
+    mos_circuit.add(Element::Capacitor(Capacitor::new(
+        "Cstore",
+        "out",
+        "0",
+        storage_capacitance_f,
+    )));
+
+    Ok(vec![
+        DeviceModelChargeBehaviorFixture {
+            name: "diode-storage-charge".to_string(),
+            kind: diode_model.kind,
+            model: diode_model.clone(),
+            circuit: diode_circuit,
+            probe_node: "out".to_string(),
+            time_step_s,
+            stop_time_s,
+            storage_capacitance_f,
+            expected_initial_min: -1.0e-9,
+            expected_initial_max: 1.0,
+            expected_final_min: 0.58,
+            expected_final_max: 0.61,
+            charge_behavior: "diode terminal charge is conserved through explicit Cstore; CJO/TT remain AC-only until nonlinear charge stamping lands".to_string(),
+            deck_lines: vec![
+                "* device-model charge fixture: diode-storage-charge".to_string(),
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)".to_string(),
+                "Vbias vin 0 0.8".to_string(),
+                "Rlimit vin out 1k".to_string(),
+                "D1 out 0 Dfast".to_string(),
+                "Cstore out 0 100p".to_string(),
+                ".tran 20n 2u".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelChargeBehaviorFixture {
+            name: "bjt-storage-charge".to_string(),
+            kind: bjt_model.kind,
+            model: bjt_model.clone(),
+            circuit: bjt_circuit,
+            probe_node: "out".to_string(),
+            time_step_s,
+            stop_time_s,
+            storage_capacitance_f,
+            expected_initial_min: -1.0e-9,
+            expected_initial_max: 1.0,
+            expected_final_min: 0.10,
+            expected_final_max: 0.14,
+            charge_behavior: "BJT terminal charge is conserved through explicit Cstore; CJE/CJC/TF/TR remain AC-only until nonlinear charge stamping lands".to_string(),
+            deck_lines: vec![
+                "* device-model charge fixture: bjt-storage-charge".to_string(),
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)".to_string(),
+                "Vcc vcc 0 5".to_string(),
+                "Vbase base 0 0.72".to_string(),
+                "Q1 vcc base out Qsmall".to_string(),
+                "Rload out 0 1k".to_string(),
+                "Cstore out 0 100p".to_string(),
+                ".tran 20n 2u".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelChargeBehaviorFixture {
+            name: "jfet-storage-charge".to_string(),
+            kind: jfet_model.kind,
+            model: jfet_model.clone(),
+            circuit: jfet_circuit,
+            probe_node: "source".to_string(),
+            time_step_s,
+            stop_time_s,
+            storage_capacitance_f,
+            expected_initial_min: -1.0e-9,
+            expected_initial_max: 1.0,
+            expected_final_min: 0.86,
+            expected_final_max: 0.90,
+            charge_behavior: "JFET transient charge is intentionally external-only; fixture records explicit source storage until a JFET capacitance policy lands".to_string(),
+            deck_lines: vec![
+                "* device-model charge fixture: jfet-storage-charge".to_string(),
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)".to_string(),
+                "Vdd vdd 0 10".to_string(),
+                "Vg gate 0 0".to_string(),
+                "Rd vdd drain 2k".to_string(),
+                "Rs source 0 1k".to_string(),
+                "J1 drain gate source Jn".to_string(),
+                "Cstore source 0 100p".to_string(),
+                ".tran 20n 2u".to_string(),
+                ".save V(source)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelChargeBehaviorFixture {
+            name: "mos-level1-storage-charge".to_string(),
+            kind: mos_model.kind,
+            model: mos_model.clone(),
+            circuit: mos_circuit,
+            probe_node: "out".to_string(),
+            time_step_s,
+            stop_time_s,
+            storage_capacitance_f,
+            expected_initial_min: -1.0e-9,
+            expected_initial_max: 1.0,
+            expected_final_min: 0.68,
+            expected_final_max: 0.73,
+            charge_behavior: "Level-1 MOS terminal charge is conserved through explicit Cstore; overlap and junction capacitances remain AC-only until nonlinear charge stamping lands".to_string(),
+            deck_lines: vec![
+                "* device-model charge fixture: mos-level1-storage-charge".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)".to_string(),
+                "Vdd vdd 0 1.8".to_string(),
+                "Vgate gate 0 1.8".to_string(),
+                "Rload vdd out 1k".to_string(),
+                "M1 out gate 0 0 Mn".to_string(),
+                "Cstore out 0 100p".to_string(),
+                ".tran 20n 2u".to_string(),
                 ".save V(out)".to_string(),
                 ".end".to_string(),
             ],

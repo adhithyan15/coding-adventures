@@ -15,24 +15,21 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Device model noise audit fixtures.
+1. Device model charge audit fixtures.
    - Status: current PR completion candidate.
    - Python, Rust, and TypeScript now expose matching runnable
-     `device_model_noise_audit_fixtures` /
-     `deviceModelNoiseAuditFixtures` one-device `.noise` fixtures for diode,
+     `device_model_charge_audit_fixtures` /
+     `deviceModelChargeAuditFixtures` one-device `.tran` fixtures for diode,
      BJT, JFET, and Level-1 MOS model cards.
    - Each fixture carries the normalized model card, an executable circuit,
-     `.noise` reference deck lines, output node, input source, frequency,
-     expected noise element/type, stable source/output PSD windows, and a
-     short noise-behavior note.
-   - Rust and TypeScript now include diode/BJT shot-noise sources and JFET
-     channel thermal-noise sources in addition to the existing resistor and
-     Level-1 MOS thermal noise coverage.
-   - TypeScript BJT small-signal and AC stamping now derive transconductance
-     and diffusion capacitance from the converged operating point, matching
-     Python and Rust.
-   - Cross-language tests execute every fixture through `.noise` solving and
-     verify the PSD windows plus reference-deck metadata.
+     `.tran` reference deck lines, selected probe node, timestep, stoptime,
+     explicit terminal storage capacitance, stable first/final probe-voltage
+     windows, and a short charge-behavior note.
+   - The fixtures deliberately audit charge storage through explicit terminal
+     capacitors, recording that model-card capacitances remain AC small-signal
+     inputs until nonlinear transient charge stamping lands.
+   - Cross-language tests execute every fixture through transient solving and
+     verify the probe windows plus reference-deck metadata.
 
 ## Completed Slices
 
@@ -1195,6 +1192,25 @@ downstream tools to compare.
      that policy is chosen.
    - Cross-language tests execute every fixture through AC sweep solving and
      verify the probe-magnitude window plus reference-deck metadata.
+
+119. Device model noise audit fixtures.
+   - Status: completed in this device model noise audit fixture slice.
+   - Python, Rust, and TypeScript now expose matching runnable
+     `device_model_noise_audit_fixtures` /
+     `deviceModelNoiseAuditFixtures` one-device `.noise` fixtures for diode,
+     BJT, JFET, and Level-1 MOS model cards.
+   - Each fixture carries the normalized model card, an executable circuit,
+     `.noise` reference deck lines, output node, input source, frequency,
+     expected noise element/type, stable source/output PSD windows, and a
+     short noise-behavior note.
+   - Rust and TypeScript now include diode/BJT shot-noise sources and JFET
+     channel thermal-noise sources in addition to the existing resistor and
+     Level-1 MOS thermal noise coverage.
+   - TypeScript BJT small-signal behavior and AC stamping now derive
+     transconductance and diffusion capacitance from the converged operating
+     point, matching Python and Rust.
+   - Cross-language tests execute every fixture through `.noise` solving and
+     verify the PSD windows plus reference-deck metadata.
 
 ## Backlog
 

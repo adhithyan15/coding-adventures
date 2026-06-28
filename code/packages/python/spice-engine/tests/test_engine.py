@@ -183,6 +183,7 @@ from spice_engine import (
     device_model_audit_fixtures,
     device_model_behavior_audit_fixtures,
     device_model_capacitance_audit_fixtures,
+    device_model_charge_audit_fixtures,
     device_model_noise_audit_fixtures,
     device_model_temperature_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
@@ -517,6 +518,40 @@ def test_device_model_noise_audit_fixtures_run_reference_noise_points() -> None:
         assert any(line.startswith(".model ") for line in fixture.deck_lines)
         assert any(line.startswith(".noise ") for line in fixture.deck_lines)
         assert fixture.noise_behavior
+
+
+def test_device_model_charge_audit_fixtures_run_reference_transients() -> None:
+    fixtures = device_model_charge_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-storage-charge",
+        "bjt-storage-charge",
+        "jfet-storage-charge",
+        "mos-level1-storage-charge",
+    ]
+
+    for fixture in fixtures:
+        result = transient(
+            fixture.circuit,
+            t_step=fixture.time_step_s,
+            t_stop=fixture.stop_time_s,
+        )
+        assert result.converged
+        assert result.points
+        initial = result.points[0].node_voltages[fixture.probe_node]
+        final = result.points[-1].node_voltages[fixture.probe_node]
+        assert fixture.expected_initial_min <= initial <= fixture.expected_initial_max
+        assert fixture.expected_final_min <= final <= fixture.expected_final_max, (
+            f"{fixture.name} expected {fixture.expected_final_min} <= "
+            f"{final} <= {fixture.expected_final_max}"
+        )
+        assert fixture.storage_capacitance_f > 0.0
+        assert fixture.deck_lines[0].startswith("* device-model charge fixture:")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert any(line.startswith(".tran ") for line in fixture.deck_lines)
+        assert fixture.charge_behavior
+
+    jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
+    assert "external-only" in jfet_fixture.charge_behavior
 
 
 def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:

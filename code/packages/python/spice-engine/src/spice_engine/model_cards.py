@@ -12,7 +12,16 @@ from dataclasses import dataclass, replace
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 
-from spice_engine.elements import BJT, JFET, AcSource, Diode, Mosfet, Resistor, VoltageSource
+from spice_engine.elements import (
+    BJT,
+    JFET,
+    AcSource,
+    Capacitor,
+    Diode,
+    Mosfet,
+    Resistor,
+    VoltageSource,
+)
 from spice_engine.engine import Circuit
 
 
@@ -99,6 +108,26 @@ class DeviceModelNoiseBehaviorFixture:
     expected_output_psd_min: float
     expected_output_psd_max: float
     noise_behavior: str
+    deck_lines: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class DeviceModelChargeBehaviorFixture:
+    """A runnable model-card transient storage fixture with stable probe windows."""
+
+    name: str
+    kind: str
+    model: NormalizedModelCard
+    circuit: Circuit
+    probe_node: str
+    time_step_s: float
+    stop_time_s: float
+    storage_capacitance_f: float
+    expected_initial_min: float
+    expected_initial_max: float
+    expected_final_min: float
+    expected_final_max: float
+    charge_behavior: str
     deck_lines: tuple[str, ...]
 
 
@@ -841,6 +870,172 @@ def device_model_noise_audit_fixtures() -> tuple[DeviceModelNoiseBehaviorFixture
                 "Rload vdd out 1k",
                 "M1 out gate 0 0 Mn",
                 ".noise V(out) Vgate lin 1 1k 1k",
+                ".save V(out)",
+                ".end",
+            ),
+        ),
+    )
+
+
+def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixture, ...]:
+    """Return runnable transient storage fixtures for charge model-depth audits.
+
+    The current nonlinear diode/BJT/JFET/MOS charge state is intentionally
+    audited through explicit terminal storage capacitors.  Model-card
+    capacitance parameters remain AC small-signal inputs until a nonlinear
+    transient charge-stamping policy lands.
+    """
+
+    models = _model_card_by_name()
+    time_step_s = 2.0e-8
+    stop_time_s = 2.0e-6
+    storage_capacitance_f = 1.0e-10
+
+    diode_circuit = Circuit()
+    diode_circuit.add(VoltageSource("Vbias", "vin", "0", 0.8))
+    diode_circuit.add(Resistor("Rlimit", "vin", "out", 1_000.0))
+    diode_circuit.add(diode_from_model_card("D1", "out", "0", models["Dfast"]))
+    diode_circuit.add(Capacitor("Cstore", "out", "0", storage_capacitance_f))
+
+    bjt_circuit = Circuit()
+    bjt_circuit.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+    bjt_circuit.add(VoltageSource("Vbase", "base", "0", 0.72))
+    bjt_circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+    bjt_circuit.add(bjt_from_model_card("Q1", "vcc", "base", "out", models["Qsmall"]))
+    bjt_circuit.add(Capacitor("Cstore", "out", "0", storage_capacitance_f))
+
+    jfet_circuit = Circuit()
+    jfet_circuit.add(VoltageSource("Vdd", "vdd", "0", 10.0))
+    jfet_circuit.add(VoltageSource("Vg", "gate", "0", 0.0))
+    jfet_circuit.add(Resistor("Rd", "vdd", "drain", 2_000.0))
+    jfet_circuit.add(Resistor("Rs", "source", "0", 1_000.0))
+    jfet_circuit.add(jfet_from_model_card("J1", "drain", "gate", "source", models["Jn"]))
+    jfet_circuit.add(Capacitor("Cstore", "source", "0", storage_capacitance_f))
+
+    mos_circuit = Circuit()
+    mos_circuit.add(VoltageSource("Vdd", "vdd", "0", 1.8))
+    mos_circuit.add(VoltageSource("Vgate", "gate", "0", 1.8))
+    mos_circuit.add(Resistor("Rload", "vdd", "out", 1_000.0))
+    mos_circuit.add(mosfet_from_model_card("M1", "out", "gate", "0", "0", models["Mn"]))
+    mos_circuit.add(Capacitor("Cstore", "out", "0", storage_capacitance_f))
+
+    return (
+        DeviceModelChargeBehaviorFixture(
+            name="diode-storage-charge",
+            kind=models["Dfast"].kind,
+            model=models["Dfast"],
+            circuit=diode_circuit,
+            probe_node="out",
+            time_step_s=time_step_s,
+            stop_time_s=stop_time_s,
+            storage_capacitance_f=storage_capacitance_f,
+            expected_initial_min=-1.0e-9,
+            expected_initial_max=1.0,
+            expected_final_min=0.58,
+            expected_final_max=0.61,
+            charge_behavior=(
+                "diode terminal charge is conserved through explicit Cstore; "
+                "CJO/TT remain AC-only until nonlinear charge stamping lands"
+            ),
+            deck_lines=(
+                "* device-model charge fixture: diode-storage-charge",
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+                "Vbias vin 0 0.8",
+                "Rlimit vin out 1k",
+                "D1 out 0 Dfast",
+                "Cstore out 0 100p",
+                ".tran 20n 2u",
+                ".save V(out)",
+                ".end",
+            ),
+        ),
+        DeviceModelChargeBehaviorFixture(
+            name="bjt-storage-charge",
+            kind=models["Qsmall"].kind,
+            model=models["Qsmall"],
+            circuit=bjt_circuit,
+            probe_node="out",
+            time_step_s=time_step_s,
+            stop_time_s=stop_time_s,
+            storage_capacitance_f=storage_capacitance_f,
+            expected_initial_min=-1.0e-9,
+            expected_initial_max=1.0,
+            expected_final_min=0.10,
+            expected_final_max=0.14,
+            charge_behavior=(
+                "BJT terminal charge is conserved through explicit Cstore; "
+                "CJE/CJC/TF/TR remain AC-only until nonlinear charge stamping lands"
+            ),
+            deck_lines=(
+                "* device-model charge fixture: bjt-storage-charge",
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+                "Vcc vcc 0 5",
+                "Vbase base 0 0.72",
+                "Q1 vcc base out Qsmall",
+                "Rload out 0 1k",
+                "Cstore out 0 100p",
+                ".tran 20n 2u",
+                ".save V(out)",
+                ".end",
+            ),
+        ),
+        DeviceModelChargeBehaviorFixture(
+            name="jfet-storage-charge",
+            kind=models["Jn"].kind,
+            model=models["Jn"],
+            circuit=jfet_circuit,
+            probe_node="source",
+            time_step_s=time_step_s,
+            stop_time_s=stop_time_s,
+            storage_capacitance_f=storage_capacitance_f,
+            expected_initial_min=-1.0e-9,
+            expected_initial_max=1.0,
+            expected_final_min=0.86,
+            expected_final_max=0.90,
+            charge_behavior=(
+                "JFET transient charge is intentionally external-only; "
+                "fixture records explicit source storage until a JFET capacitance policy lands"
+            ),
+            deck_lines=(
+                "* device-model charge fixture: jfet-storage-charge",
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+                "Vdd vdd 0 10",
+                "Vg gate 0 0",
+                "Rd vdd drain 2k",
+                "Rs source 0 1k",
+                "J1 drain gate source Jn",
+                "Cstore source 0 100p",
+                ".tran 20n 2u",
+                ".save V(source)",
+                ".end",
+            ),
+        ),
+        DeviceModelChargeBehaviorFixture(
+            name="mos-level1-storage-charge",
+            kind=models["Mn"].kind,
+            model=models["Mn"],
+            circuit=mos_circuit,
+            probe_node="out",
+            time_step_s=time_step_s,
+            stop_time_s=stop_time_s,
+            storage_capacitance_f=storage_capacitance_f,
+            expected_initial_min=-1.0e-9,
+            expected_initial_max=1.0,
+            expected_final_min=0.68,
+            expected_final_max=0.73,
+            charge_behavior=(
+                "Level-1 MOS terminal charge is conserved through explicit Cstore; "
+                "overlap and junction capacitances remain AC-only until nonlinear charge stamping lands"
+            ),
+            deck_lines=(
+                "* device-model charge fixture: mos-level1-storage-charge",
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+                "Vdd vdd 0 1.8",
+                "Vgate gate 0 1.8",
+                "Rload vdd out 1k",
+                "M1 out gate 0 0 Mn",
+                "Cstore out 0 100p",
+                ".tran 20n 2u",
                 ".save V(out)",
                 ".end",
             ),
