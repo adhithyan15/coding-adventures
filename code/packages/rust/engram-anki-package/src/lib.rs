@@ -8,8 +8,8 @@ use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
 
 use engram_core::{
-    render_template, AppState, Card, CardLineage, CardProgress, CardState, CardTemplate, Deck,
-    FieldDef, Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
+    render_template, AppState, Card, CardFlag, CardLineage, CardProgress, CardState, CardTemplate,
+    Deck, FieldDef, Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
     INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
 use rusqlite::{Connection, OpenFlags};
@@ -735,7 +735,7 @@ fn map_v11_card_progress(
         times_correct: i64_to_u32(card.repetitions.saturating_sub(card.lapses)),
         times_incorrect: i64_to_u32(card.lapses),
         last_seen_at,
-        flag: None,
+        flag: anki_card_flag(card.flags),
         marked_at: None,
     })
 }
@@ -824,6 +824,19 @@ fn rating_from_v11_ease(ease: i64) -> Rating {
         2 => Rating::Hard,
         4 => Rating::Easy,
         _ => Rating::Good,
+    }
+}
+
+fn anki_card_flag(flags: i64) -> Option<CardFlag> {
+    match flags & 0b111 {
+        1 => Some(CardFlag::Red),
+        2 => Some(CardFlag::Orange),
+        3 => Some(CardFlag::Green),
+        4 => Some(CardFlag::Blue),
+        5 => Some(CardFlag::Pink),
+        6 => Some(CardFlag::Turquoise),
+        7 => Some(CardFlag::Purple),
+        _ => None,
     }
 }
 
@@ -1500,7 +1513,7 @@ CREATE TABLE graves (
                         0_i64,
                         0_i64,
                         0_i64,
-                        0_i64,
+                        4_i64,
                         ""
                     ],
                 )
@@ -1688,6 +1701,7 @@ CREATE TABLE graves (
         assert_eq!(progress.times_correct, 2);
         assert_eq!(progress.times_incorrect, 1);
         assert_eq!(progress.last_seen_at, 3000);
+        assert_eq!(progress.flag, Some(CardFlag::Blue));
 
         assert_eq!(state.reviews.len(), 1);
         assert_eq!(state.reviews[0].id, "3000");
