@@ -54,7 +54,9 @@ the same object/link/runtime pipeline as byte-tape programs. Direct-literal
 literals fold before machine-code lowering, so Twig `(string-length "HELLO")`,
 `(string-ref "ABC" 1)`, `(string=? "HELLO" "HELLO")`, and
 `(string-length (string-append "AB" "CDE"))` run natively through the same
-preparation pass.
+preparation pass. Folded `str_len` metadata can also flow through typed integer
+arithmetic, so `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))`
+folds to byte `69` before native lowering.
 
 As of 0.10.0, `prepare_module_for_aot` lowers a lisp frontend's `cons`/`car`/
 `cdr` to **calls into this runtime** (via

@@ -1405,6 +1405,25 @@ impl Compiler {
                 self.is_known_value_type(&v.name, ctx, "i64")
                     || self.is_known_value_type(&v.name, ctx, "i32")
             }
+            Expr::Apply(apply) => {
+                let Expr::VarRef(f) = apply.fn_expr.as_ref() else {
+                    return false;
+                };
+                match f.name.as_str() {
+                    "string-length" => {
+                        apply.args.len() == 1
+                            && self.can_compile_e4_string_expr(&apply.args[0], ctx)
+                    }
+                    "+" | "-" | "*" | "/" => {
+                        apply.args.len() >= 2
+                            && apply
+                                .args
+                                .iter()
+                                .all(|arg| self.can_compile_e4_index_expr(arg, ctx))
+                    }
+                    _ => false,
+                }
+            }
             _ => false,
         }
     }

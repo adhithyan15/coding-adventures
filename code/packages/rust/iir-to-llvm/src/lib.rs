@@ -2143,6 +2143,19 @@ fn emit_narrow_wrapped(
     state.env.insert(dest.to_string(), format!("%{dest}"));
 }
 
+fn fold_i64_arith(iir_op: &str, a: &str, b: &str) -> Option<i64> {
+    let a = a.parse::<i64>().ok()?;
+    let b = b.parse::<i64>().ok()?;
+    match iir_op {
+        "add" => a.checked_add(b),
+        "sub" => a.checked_sub(b),
+        "mul" => a.checked_mul(b),
+        "div" if b != 0 => a.checked_div(b),
+        "mod" | "rem" if b != 0 => a.checked_rem(b),
+        _ => None,
+    }
+}
+
 fn lower_arith(
     iir_op: &str,
     instr: &IIRInstr,
@@ -2154,6 +2167,12 @@ fn lower_arith(
     let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
     let b = resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?;
     let llvm_op = llvm_arith_op(iir_op, &instr.type_hint);
+    if instr.type_hint == "i64" {
+        if let Some(value) = fold_i64_arith(iir_op, &a, &b) {
+            state.env.insert(dest, value.to_string());
+            return Ok(());
+        }
+    }
     // E2: a narrow unsigned op (u4/u8/u16/u32) flows through i64 slots, so
     // compute at i64 then mask the result into its width (200u8+100u8=44).
     if let Some(mask) = narrow_unsigned_width_mask(&instr.type_hint) {

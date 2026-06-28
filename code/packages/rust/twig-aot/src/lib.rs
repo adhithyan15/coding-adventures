@@ -1485,6 +1485,25 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             continue;
         }
 
+        if matches!(instr.op.as_str(), "add" | "sub" | "mul" | "div") {
+            if let Some(dest) = instr.dest.as_ref() {
+                let left = int_metadata_value(instr.srcs.first(), &ints);
+                let right = int_metadata_value(instr.srcs.get(1), &ints);
+                let value = match (instr.op.as_str(), left, right) {
+                    ("add", Some(left), Some(right)) => left.checked_add(right),
+                    ("sub", Some(left), Some(right)) => left.checked_sub(right),
+                    ("mul", Some(left), Some(right)) => left.checked_mul(right),
+                    ("div", Some(left), Some(right)) if right != 0 => left.checked_div(right),
+                    _ => None,
+                };
+                if let Some(value) = value {
+                    ints.insert(dest.clone(), value);
+                }
+            }
+            lowered.push(instr);
+            continue;
+        }
+
         if instr.op == "str_const" {
             let dest = match instr.dest.clone() {
                 Some(dest) => dest,
@@ -1635,6 +1654,7 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 lowered.push(instr);
                 continue;
             };
+            ints.insert(dest.clone(), literal.len() as i64);
             lowered.push(IIRInstr::new(
                 "const",
                 Some(dest),
@@ -1741,6 +1761,14 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
 fn is_printable_ascii_str(s: &str) -> bool {
     s.bytes()
         .all(|b| matches!(b, b'\n' | b'\r' | b'\t' | 0x20..=0x7e))
+}
+
+fn int_metadata_value(src: Option<&Operand>, ints: &HashMap<String, i64>) -> Option<i64> {
+    match src? {
+        Operand::Int(value) => Some(*value),
+        Operand::Var(name) => ints.get(name).copied(),
+        _ => None,
+    }
 }
 
 /// Step 3b: default any remaining `"any"` hints on arithmetic / move
@@ -2320,6 +2348,47 @@ mod tests {
         assert!(
             matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(67)]),
             "str_index should see integer metadata through mov: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_index_uses_computed_len_metadata() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new(
+                    "str_const",
+                    Some("s".into()),
+                    vec![Operand::Str("ABCDE".into())],
+                    "str",
+                ),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new(
+                    "sub",
+                    Some("i".into()),
+                    vec![Operand::Var("n".into()), Operand::Var("one".into())],
+                    "i64",
+                ),
+                IIRInstr::new(
+                    "str_index",
+                    Some("b".into()),
+                    vec![Operand::Var("s".into()), Operand::Var("i".into())],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
+        assert!(
+            matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(69)]),
+            "str_index should see integer metadata through str_len + sub: {:?}",
             f.instructions
         );
     }

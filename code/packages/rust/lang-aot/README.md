@@ -65,6 +65,9 @@ LANG VM chain.
 > Local concat results can feed byte indexing too:
 > `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
 > returns `68` (`D`) everywhere.
+> Local string lengths can compute byte indexes too:
+> `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns
+> `69` (`E`) everywhere.
 > The matrix also proves the bounds contract: `(string-ref "ABC" 3)` traps on
 > native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 > Native AOT lowers the literal to `alloc_bytes` + `store_byte` + `print_string`;

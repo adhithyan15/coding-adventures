@@ -188,7 +188,9 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `string-ref` to `str_index`. Direct literals, immutable top-level values, and
   lexical `let`/`let*` locals can now feed `str_len`, `str_index`, `str_eq`, and
   `str_concat` on all seven backends; local `string-append` results can also feed
-  `string-ref` directly through `str_concat` followed by `str_index`. The dynamic-`any`, captured, and reassigned
+  `string-ref` directly through `str_concat` followed by `str_index`, and
+  local `string-length` results can compute `string-ref` indexes through typed
+  arithmetic. The dynamic-`any`, captured, and reassigned
   Twig string paths still need broader E6/dynamic representation work; the *typed*
   string slice here is the statically-typed subset that clears the code-gen
   validators, mirroring how E5/E6 carved a typed slice out of Twig.
@@ -220,7 +222,9 @@ branches, and concat: `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`,
 `(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))` returns `42`, and
 `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`
 everywhere; `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
-returns `68`, proving a concat temporary can feed byte indexing. The matrix also covers the **bounds-trap** case: `(string-ref "ABC"
+returns `68`, proving a concat temporary can feed byte indexing, and
+`(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns `69`,
+proving `str_len` can compute a byte-index operand. The matrix also covers the **bounds-trap** case: `(string-ref "ABC"
 3)` must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 Dartmouth BASIC proves source-language string variables, reassignment, scalar
 copy, copied-slot equality, literal/variable-backed concat, concat expressions in
@@ -313,7 +317,9 @@ merge before the next:
    `(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))` return `5`/`42`, while
    `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`,
    and `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
-   returns `68`, on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured/reassigned
+   returns `68`, and
+   `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns `69`,
+   on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured/reassigned
    strings still wait for the broader dynamic representation.
 4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
@@ -324,7 +330,8 @@ merge before the next:
    this item is now the richer ops/representation slice.
 6. ✅ **E4-ops-proofs** — named-value `str_concat`+`str_len`, `str_eq` driving a
    branch, named/local `str_index`, local `str_concat` feeding `str_index`, and
-   the `str_index` out-of-bounds **trap** proof now run across every backend.
+   local `str_len` computing a `str_index` operand, plus the `str_index`
+   out-of-bounds **trap** proof now run across every backend.
 7. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`;
    captured/reassigned dynamic strings, string arrays/input/parameters in each
    frontend, runtime byte-string allocation beyond the current immutable scalar
