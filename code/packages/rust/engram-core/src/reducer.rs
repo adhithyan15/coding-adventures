@@ -1,8 +1,9 @@
 use crate::model::{
     ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, Deck,
-    ExternalSourceRecord, ExternalSourceTarget, Rating, Review, Session, SessionStatus,
+    DeckOptions, ExternalSourceRecord, ExternalSourceTarget, Rating, Review, Session,
+    SessionStatus,
 };
-use crate::scheduler::{schedule_review, DeckOptions};
+use crate::scheduler::schedule_review;
 use crate::sm2::INITIAL_EASE_FACTOR;
 use crate::template::rename_note_type_field;
 
@@ -218,6 +219,12 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     .reviews
                     .iter()
                     .filter(|review| !session_ids.contains(&review.session_id))
+                    .cloned()
+                    .collect(),
+                deck_options: state
+                    .deck_options
+                    .iter()
+                    .filter(|preset| preset.deck_id != deck_id)
                     .cloned()
                     .collect(),
                 external_sources: state
@@ -459,16 +466,19 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             card_id,
             rating,
             reviewed_at,
-        } => reduce_rate_card(
-            state,
-            review_id,
-            session_id,
-            card_id,
-            rating,
-            reviewed_at,
-            &DeckOptions::default(),
-            None,
-        ),
+        } => {
+            let deck_options = deck_options_for_card(state, &card_id);
+            reduce_rate_card(
+                state,
+                review_id,
+                session_id,
+                card_id,
+                rating,
+                reviewed_at,
+                &deck_options,
+                None,
+            )
+        }
         EngramCommand::RateCardAndBurySiblings {
             review_id,
             session_id,
@@ -476,16 +486,19 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             rating,
             reviewed_at,
             buried_until,
-        } => reduce_rate_card(
-            state,
-            review_id,
-            session_id,
-            card_id,
-            rating,
-            reviewed_at,
-            &DeckOptions::default(),
-            Some(buried_until),
-        ),
+        } => {
+            let deck_options = deck_options_for_card(state, &card_id);
+            reduce_rate_card(
+                state,
+                review_id,
+                session_id,
+                card_id,
+                rating,
+                reviewed_at,
+                &deck_options,
+                Some(buried_until),
+            )
+        }
         EngramCommand::RateCardWithOptions {
             review_id,
             session_id,
@@ -558,6 +571,21 @@ fn without_external_source_target(
         .filter(|source| source.target != target || source.target_id != target_id)
         .cloned()
         .collect()
+}
+
+fn deck_options_for_card(state: &AppState, card_id: &str) -> DeckOptions {
+    state
+        .cards
+        .iter()
+        .find(|card| card.id == card_id)
+        .and_then(|card| {
+            state
+                .deck_options
+                .iter()
+                .find(|preset| preset.deck_id == card.deck_id)
+        })
+        .map(|preset| preset.options.clone())
+        .unwrap_or_default()
 }
 
 fn bury_card_siblings(
@@ -1070,6 +1098,43 @@ mod tests {
     }
 
     #[test]
+    fn rate_card_uses_stored_deck_options() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state.deck_options.push(crate::model::DeckOptionsPreset {
+            deck_id: "deck".to_string(),
+            options: DeckOptions {
+                learning_steps_minutes: vec![4, 40],
+                ..DeckOptions::default()
+            },
+        });
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card")],
+                started_at: NOW,
+            },
+        );
+
+        let next = reduce(
+            &state,
+            EngramCommand::RateCard {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: NOW,
+            },
+        );
+
+        assert_eq!(next.card_progress[0].state, CardState::Learning);
+        assert_eq!(next.card_progress[0].learning_step_index, Some(1));
+        assert_eq!(next.card_progress[0].next_due_at, NOW + 40 * ONE_MINUTE_MS);
+    }
+
+    #[test]
     fn rate_card_and_bury_siblings_can_be_undone_atomically() {
         let target = card_with_note("note::forward", "note", 0);
         let sibling = card_with_note("note::reverse", "note", 1);
@@ -1565,6 +1630,7 @@ mod tests {
                 previous_active_session: None,
                 sibling_progress_snapshots: Vec::new(),
             }],
+            deck_options: Vec::new(),
             external_sources: Vec::new(),
             media_assets: Vec::new(),
             active_session: Some(ActiveSessionState {

@@ -641,7 +641,15 @@ CREATE TABLE graves (
                         r#"{}"#,
                         models,
                         decks,
-                        r#"{}"#,
+                        r#"{
+                            "1": {
+                                "id": 1,
+                                "name": "Default",
+                                "new": {"perDay": 12, "delays": [3, 12], "ints": [2, 5]},
+                                "rev": {"perDay": 80},
+                                "lapse": {"delays": [20], "mult": 0.5}
+                            }
+                        }"#,
                         r#"{}"#
                     ],
                 )
@@ -777,6 +785,10 @@ CREATE TABLE graves (
             assert_eq!(
                 parsed["state"]["mediaAssets"][0]["data"],
                 json!([109, 112, 51])
+            );
+            assert_eq!(
+                parsed["state"]["deckOptions"][0]["options"]["newCardsPerDay"],
+                12
             );
 
             let imported = take(eg_import_anki_apkg(session, apkg.as_ptr(), apkg.len()));

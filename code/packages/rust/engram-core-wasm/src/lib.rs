@@ -9,13 +9,14 @@
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
-    build_session_queue, build_session_queue_with_daily_limits, create_engram_snapshot,
-    export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv, generate_cards_for_note,
-    get_active_session_progress, get_daily_study_limit_usage, get_deck_stats,
-    import_anki_basic_tsv, import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv,
-    materialize_generated_card, reduce, restore_engram_snapshot, search_cards as search_core_cards,
-    summarize_review_history, AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState,
-    BasicCardCsvImportOptions, Card, CardFlag, CardLineage, DeckOptions, EngramSnapshot, Rating,
+    build_session_queue_with_daily_limits, build_session_queue_with_options,
+    create_engram_snapshot, deck_options_for_state, export_cards_anki_basic_tsv, export_cards_csv,
+    export_notes_anki_tsv, generate_cards_for_note, get_active_session_progress,
+    get_daily_study_limit_usage, get_deck_stats, import_anki_basic_tsv, import_anki_notes_tsv,
+    import_basic_cards_csv, import_cards_csv, materialize_generated_card, reduce,
+    restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history,
+    AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card,
+    CardFlag, CardLineage, DeckOptions, EngramSnapshot, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -76,8 +77,14 @@ impl EngramSession {
 
     pub fn build_queue(&self, deck_id: &str, now: u64) -> String {
         catch_json(|| {
-            let queue =
-                build_session_queue(&self.state.cards, &self.state.card_progress, deck_id, now);
+            let options = deck_options_for_state(&self.state, deck_id);
+            let queue = build_session_queue_with_options(
+                &self.state.cards,
+                &self.state.card_progress,
+                deck_id,
+                now,
+                &options,
+            );
             Ok(ok_with("queue", &queue))
         })
     }
@@ -90,7 +97,7 @@ impl EngramSession {
         deck_options_json: &str,
     ) -> String {
         catch_json(|| {
-            let options = parse_deck_options(deck_options_json)?;
+            let options = parse_deck_options(deck_options_json, &self.state, deck_id)?;
             let usage =
                 get_daily_study_limit_usage(&self.state, deck_id, day_start, day_end, &options);
             Ok(ok_with("usage", &usage))
@@ -106,7 +113,7 @@ impl EngramSession {
         deck_options_json: &str,
     ) -> String {
         catch_json(|| {
-            let options = parse_deck_options(deck_options_json)?;
+            let options = parse_deck_options(deck_options_json, &self.state, deck_id)?;
             let queue = build_session_queue_with_daily_limits(
                 &self.state,
                 deck_id,
@@ -745,9 +752,13 @@ fn ok_with(key: &str, value: &impl serde::Serialize) -> String {
     Value::Object(object).to_string()
 }
 
-fn parse_deck_options(deck_options_json: &str) -> Result<DeckOptions, String> {
+fn parse_deck_options(
+    deck_options_json: &str,
+    state: &AppState,
+    deck_id: &str,
+) -> Result<DeckOptions, String> {
     if deck_options_json.trim().is_empty() {
-        return Ok(DeckOptions::default());
+        return Ok(deck_options_for_state(state, deck_id));
     }
 
     serde_json::from_str(deck_options_json).map_err(|err| format!("invalid deck options: {err}"))
@@ -968,10 +979,25 @@ mod tests {
             "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
             "noteTypes": [],
             "notes": [],
-            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cards": [
+                {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                {"id":"card-2","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000001}
+            ],
             "cardProgress": [],
             "sessions": [],
             "reviews": [],
+            "deckOptions": [{
+                "deckId": "deck",
+                "options": {
+                    "newCardsPerDay": 1,
+                    "reviewsPerDay": 200,
+                    "learningStepsMinutes": [1, 10],
+                    "relearningStepsMinutes": [10],
+                    "graduatingIntervalDays": 1,
+                    "easyIntervalDays": 4,
+                    "lapseIntervalMultiplier": 0.0
+                }
+            }],
             "activeSession": null
         }"#;
 
@@ -980,6 +1006,7 @@ mod tests {
 
         assert_eq!(value["ok"], true);
         assert_eq!(value["queue"][0]["id"], "card");
+        assert_eq!(value["queue"].as_array().unwrap().len(), 1);
     }
 
     #[test]

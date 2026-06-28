@@ -26,17 +26,17 @@ pub use csv::{
 pub use history::summarize_review_history;
 pub use model::{
     ActiveSessionState, AppState, Card, CardFlag, CardLineage, CardProgress, CardProgressSnapshot,
-    CardState, CardTemplate, DailyStudyLimitUsage, Deck, DeckStats, ExternalSourceRecord,
-    ExternalSourceTarget, FieldDef, GeneratedCard, MediaAssetRecord, Note, NoteFieldValue,
-    NoteType, Rating, RatingCounts, Review, ReviewHistorySummary, Session, SessionProgress,
-    SessionStatus,
+    CardState, CardTemplate, DailyStudyLimitUsage, Deck, DeckOptions, DeckOptionsPreset, DeckStats,
+    ExternalSourceRecord, ExternalSourceTarget, FieldDef, GeneratedCard, MediaAssetRecord, Note,
+    NoteFieldValue, NoteType, Rating, RatingCounts, Review, ReviewHistorySummary, Session,
+    SessionProgress, SessionStatus,
 };
 pub use queue::{
     build_session_queue, build_session_queue_with_daily_limits, build_session_queue_with_options,
-    get_daily_study_limit_usage, get_deck_stats, is_deck_caught_up,
+    deck_options_for_state, get_daily_study_limit_usage, get_deck_stats, is_deck_caught_up,
 };
 pub use reducer::{reduce, EngramCommand};
-pub use scheduler::{schedule_review, DeckOptions};
+pub use scheduler::schedule_review;
 pub use search::{search_cards, CardSearchResult, SearchError};
 pub use session::get_active_session_progress;
 pub use sm2::{

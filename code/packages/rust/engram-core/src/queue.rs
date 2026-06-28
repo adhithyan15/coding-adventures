@@ -1,7 +1,8 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::model::{AppState, Card, CardProgress, CardState, DailyStudyLimitUsage, DeckStats};
-use crate::scheduler::DeckOptions;
+use crate::model::{
+    AppState, Card, CardProgress, CardState, DailyStudyLimitUsage, DeckOptions, DeckStats,
+};
 
 pub const SESSION_SIZE: usize = 20;
 pub const MAX_NEW_PER_SESSION: usize = 7;
@@ -43,6 +44,15 @@ pub fn build_session_queue_with_options(
         max_new,
         max_reviews,
     )
+}
+
+pub fn deck_options_for_state(state: &AppState, deck_id: &str) -> DeckOptions {
+    state
+        .deck_options
+        .iter()
+        .find(|preset| preset.deck_id == deck_id)
+        .map(|preset| preset.options.clone())
+        .unwrap_or_default()
 }
 
 pub fn get_daily_study_limit_usage(

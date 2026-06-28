@@ -1,36 +1,7 @@
-use crate::model::{CardProgress, CardState, Rating};
+use crate::model::{CardProgress, CardState, DeckOptions, Rating};
 use crate::sm2::{update_card_progress, INITIAL_EASE_FACTOR, MIN_EASE_FACTOR, ONE_DAY_MS};
-#[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
 
 pub const ONE_MINUTE_MS: u64 = 60 * 1000;
-
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(feature = "serde", serde(rename_all = "camelCase", default))]
-pub struct DeckOptions {
-    pub new_cards_per_day: u32,
-    pub reviews_per_day: u32,
-    pub learning_steps_minutes: Vec<u32>,
-    pub relearning_steps_minutes: Vec<u32>,
-    pub graduating_interval_days: u32,
-    pub easy_interval_days: u32,
-    pub lapse_interval_multiplier: f64,
-}
-
-impl Default for DeckOptions {
-    fn default() -> Self {
-        Self {
-            new_cards_per_day: 20,
-            reviews_per_day: 200,
-            learning_steps_minutes: vec![1, 10],
-            relearning_steps_minutes: vec![10],
-            graduating_interval_days: 1,
-            easy_interval_days: 4,
-            lapse_interval_multiplier: 0.0,
-        }
-    }
-}
 
 pub fn schedule_review(
     existing: Option<&CardProgress>,

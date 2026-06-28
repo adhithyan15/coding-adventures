@@ -10,9 +10,9 @@ use std::fmt;
 use coding_adventures_sha1::sum1;
 use engram_core::{
     render_template, render_template_with_front_side, AppState, Card, CardFlag, CardLineage,
-    CardProgress, CardState, CardTemplate, Deck, ExternalSourceRecord, ExternalSourceTarget,
-    FieldDef, MediaAssetRecord, Note, NoteFieldValue, NoteType, Rating, Review, Session,
-    SessionStatus, INITIAL_EASE_FACTOR, ONE_DAY_MS,
+    CardProgress, CardState, CardTemplate, Deck, DeckOptions, DeckOptionsPreset,
+    ExternalSourceRecord, ExternalSourceTarget, FieldDef, MediaAssetRecord, Note, NoteFieldValue,
+    NoteType, Rating, Review, Session, SessionStatus, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
 use rusqlite::{Connection, OpenFlags};
 use serde::{Deserialize, Serialize};
@@ -557,6 +557,7 @@ pub fn v11_collection_to_engram_state(
         })
         .collect::<Vec<_>>();
     let sessions = synthetic_import_sessions(&reviews, &deck_by_card_id, &default_deck_id);
+    let deck_options = v11_deck_options(collection);
     let external_sources = v11_external_sources(collection)?;
 
     Ok(AppState {
@@ -567,6 +568,7 @@ pub fn v11_collection_to_engram_state(
         card_progress,
         sessions,
         reviews,
+        deck_options,
         external_sources,
         media_assets: Vec::new(),
         active_session: None,
@@ -580,6 +582,55 @@ fn media_asset_record_from_resolved(media: ResolvedMediaFile) -> MediaAssetRecor
         filename: media.filename,
         data: media.data,
     }
+}
+
+fn v11_deck_options(collection: &AnkiV11Collection) -> Vec<DeckOptionsPreset> {
+    collection
+        .decks
+        .iter()
+        .map(|deck| DeckOptionsPreset {
+            deck_id: deck.id.to_string(),
+            options: v11_options_for_deck(deck, &collection.metadata.deck_config),
+        })
+        .collect()
+}
+
+fn v11_options_for_deck(deck: &AnkiV11Deck, deck_config: &Value) -> DeckOptions {
+    let config_id = json_i64(&deck.raw, "conf").unwrap_or(1);
+    let config = deck_config
+        .get(config_id.to_string())
+        .or_else(|| deck_config.get("1"));
+    let mut options = DeckOptions::default();
+
+    if let Some(config) = config {
+        options.new_cards_per_day = json_path_u32(config, &["new", "perDay"])
+            .or_else(|| json_path_u32(config, &["new", "perday"]))
+            .unwrap_or(options.new_cards_per_day);
+        options.reviews_per_day = json_path_u32(config, &["rev", "perDay"])
+            .or_else(|| json_path_u32(config, &["rev", "perday"]))
+            .unwrap_or(options.reviews_per_day);
+        options.learning_steps_minutes =
+            json_path_minutes(config, &["new", "delays"]).unwrap_or(options.learning_steps_minutes);
+        options.relearning_steps_minutes = json_path_minutes(config, &["lapse", "delays"])
+            .unwrap_or(options.relearning_steps_minutes);
+        if let Some(intervals) = json_path_u32_array(config, &["new", "ints"]) {
+            if let Some(graduating) = intervals.first() {
+                options.graduating_interval_days = (*graduating).max(1);
+            }
+            if let Some(easy) = intervals.get(1) {
+                options.easy_interval_days = (*easy).max(options.graduating_interval_days);
+            }
+        }
+        if let Some(multiplier) = json_path_f64(config, &["lapse", "mult"]) {
+            options.lapse_interval_multiplier = if multiplier > 10.0 {
+                multiplier / 100.0
+            } else {
+                multiplier
+            };
+        }
+    }
+
+    options
 }
 
 fn v11_external_sources(
@@ -816,6 +867,7 @@ struct ExportModel {
     cards: Vec<ExportCard>,
     reviews: Vec<Review>,
     progress_by_card: HashMap<String, CardProgress>,
+    deck_options: Vec<DeckOptionsPreset>,
     deck_ids: BTreeMap<String, i64>,
     note_type_ids: BTreeMap<String, i64>,
     note_ids: BTreeMap<String, i64>,
@@ -991,6 +1043,7 @@ impl ExportModel {
             cards,
             reviews: state.reviews.clone(),
             progress_by_card,
+            deck_options: state.deck_options.clone(),
             deck_ids,
             note_type_ids,
             note_ids,
@@ -1258,6 +1311,9 @@ fn export_decks_json(export: &ExportModel) -> Value {
         deck_object
             .entry("conf".to_string())
             .or_insert_with(|| Value::Number(1_i64.into()));
+        if let Some(config_id) = export_deck_option_config_id(export, &deck.key) {
+            deck_object.insert("conf".to_string(), Value::Number(config_id.into()));
+        }
         deck_object
             .entry("dyn".to_string())
             .or_insert_with(|| Value::Number(0_i64.into()));
@@ -1344,8 +1400,35 @@ fn export_collection_config_json(export: &ExportModel) -> Value {
 }
 
 fn export_collection_deck_config_json(export: &ExportModel) -> Value {
-    export_collection_json(export, "deckConfigJson")
-        .unwrap_or_else(|| serde_json::json!({ "1": { "id": 1, "name": "Default" } }))
+    let mut deck_config = export_collection_json(export, "deckConfigJson")
+        .unwrap_or_else(|| serde_json::json!({ "1": { "id": 1, "name": "Default" } }));
+    let object = ensure_json_object(&mut deck_config);
+    object.entry("1".to_string()).or_insert_with(|| {
+        serde_json::json!({
+            "id": 1,
+            "name": "Default",
+        })
+    });
+
+    for preset in &export.deck_options {
+        let Some(config_id) = export_deck_option_config_id(export, &preset.deck_id) else {
+            continue;
+        };
+        let mut config = object
+            .get(&config_id.to_string())
+            .cloned()
+            .unwrap_or_else(|| serde_json::json!({}));
+        let deck_name = export
+            .decks
+            .iter()
+            .find(|deck| deck.key == preset.deck_id)
+            .map(|deck| deck.name.as_str())
+            .unwrap_or("Engram");
+        merge_deck_options_json(&mut config, config_id, deck_name, &preset.options);
+        object.insert(config_id.to_string(), config);
+    }
+
+    deck_config
 }
 
 fn export_collection_graves(export: &ExportModel) -> Vec<AnkiV11Grave> {
@@ -1362,6 +1445,97 @@ fn export_collection_i64(export: &ExportModel, key: &str) -> Option<i64> {
 fn export_collection_json(export: &ExportModel, key: &str) -> Option<Value> {
     anki_source(export, ExternalSourceTarget::Collection, "collection")
         .and_then(|source| source_json(Some(source), key))
+}
+
+fn export_deck_option_config_id(export: &ExportModel, deck_key: &str) -> Option<i64> {
+    if !export
+        .deck_options
+        .iter()
+        .any(|preset| preset.deck_id == deck_key)
+    {
+        return None;
+    }
+
+    anki_source_json(export, ExternalSourceTarget::Deck, deck_key, "rawJson")
+        .as_ref()
+        .and_then(|raw| json_i64(raw, "conf"))
+        .filter(|config_id| *config_id > 0)
+        .or_else(|| export.deck_ids.get(deck_key).copied())
+        .or(Some(1))
+}
+
+fn merge_deck_options_json(
+    config: &mut Value,
+    config_id: i64,
+    deck_name: &str,
+    options: &DeckOptions,
+) {
+    let object = ensure_json_object(config);
+    object.insert("id".to_string(), Value::Number(config_id.into()));
+    object
+        .entry("name".to_string())
+        .or_insert_with(|| Value::String(format!("Engram {deck_name}")));
+
+    let mut new_section = object
+        .get("new")
+        .cloned()
+        .unwrap_or_else(|| serde_json::json!({}));
+    let new_object = ensure_json_object(&mut new_section);
+    new_object.insert(
+        "perDay".to_string(),
+        Value::Number(i64::from(options.new_cards_per_day).into()),
+    );
+    new_object.insert(
+        "delays".to_string(),
+        Value::Array(
+            options
+                .learning_steps_minutes
+                .iter()
+                .map(|minutes| Value::Number(i64::from(*minutes).into()))
+                .collect(),
+        ),
+    );
+    new_object.insert(
+        "ints".to_string(),
+        Value::Array(vec![
+            Value::Number(i64::from(options.graduating_interval_days).into()),
+            Value::Number(i64::from(options.easy_interval_days).into()),
+        ]),
+    );
+    object.insert("new".to_string(), new_section);
+
+    let mut review_section = object
+        .get("rev")
+        .cloned()
+        .unwrap_or_else(|| serde_json::json!({}));
+    ensure_json_object(&mut review_section).insert(
+        "perDay".to_string(),
+        Value::Number(i64::from(options.reviews_per_day).into()),
+    );
+    object.insert("rev".to_string(), review_section);
+
+    let mut lapse_section = object
+        .get("lapse")
+        .cloned()
+        .unwrap_or_else(|| serde_json::json!({}));
+    let lapse_object = ensure_json_object(&mut lapse_section);
+    lapse_object.insert(
+        "delays".to_string(),
+        Value::Array(
+            options
+                .relearning_steps_minutes
+                .iter()
+                .map(|minutes| Value::Number(i64::from(*minutes).into()))
+                .collect(),
+        ),
+    );
+    lapse_object.insert(
+        "mult".to_string(),
+        serde_json::Number::from_f64(options.lapse_interval_multiplier)
+            .map(Value::Number)
+            .unwrap_or_else(|| Value::Number(0_i64.into())),
+    );
+    object.insert("lapse".to_string(), lapse_section);
 }
 
 fn export_note_type_fields_json(note_type: &ExportNoteType, raw_fields: &Value) -> Vec<Value> {
@@ -2594,6 +2768,58 @@ fn json_string(value: &Value, key: &str) -> Option<String> {
     value.get(key).and_then(Value::as_str).map(str::to_string)
 }
 
+fn json_path<'a>(value: &'a Value, path: &[&str]) -> Option<&'a Value> {
+    let mut current = value;
+    for key in path {
+        current = current.get(*key)?;
+    }
+    Some(current)
+}
+
+fn json_path_u32(value: &Value, path: &[&str]) -> Option<u32> {
+    json_path(value, path).and_then(value_to_u32)
+}
+
+fn json_path_f64(value: &Value, path: &[&str]) -> Option<f64> {
+    json_path(value, path).and_then(Value::as_f64)
+}
+
+fn json_path_u32_array(value: &Value, path: &[&str]) -> Option<Vec<u32>> {
+    json_path(value, path).and_then(|value| {
+        value
+            .as_array()
+            .map(|values| values.iter().filter_map(value_to_u32).collect())
+    })
+}
+
+fn json_path_minutes(value: &Value, path: &[&str]) -> Option<Vec<u32>> {
+    json_path(value, path).and_then(|value| {
+        value.as_array().map(|values| {
+            values
+                .iter()
+                .filter_map(Value::as_f64)
+                .map(|minutes| minutes.max(0.0).round().clamp(0.0, u32::MAX as f64) as u32)
+                .collect()
+        })
+    })
+}
+
+fn value_to_u32(value: &Value) -> Option<u32> {
+    value
+        .as_u64()
+        .and_then(|value| u32::try_from(value).ok())
+        .or_else(|| {
+            value
+                .as_i64()
+                .and_then(|value| u32::try_from(value.max(0)).ok())
+        })
+        .or_else(|| {
+            value
+                .as_f64()
+                .map(|value| value.max(0.0).round().clamp(0.0, u32::MAX as f64) as u32)
+        })
+}
+
 fn split_anki_fields(fields: &str) -> Vec<String> {
     fields.split('\u{1f}').map(str::to_string).collect()
 }
@@ -2950,7 +3176,15 @@ CREATE TABLE graves (
                         r#"{"nextPos": 1}"#,
                         models,
                         decks,
-                        r#"{"1": {"name": "Default"}}"#,
+                        r#"{
+                            "1": {
+                                "id": 1,
+                                "name": "Default",
+                                "new": {"perDay": 12, "delays": [3, 12], "ints": [2, 5]},
+                                "rev": {"perDay": 80},
+                                "lapse": {"delays": [20], "mult": 0.5}
+                            }
+                        }"#,
                         r#"{"spanish": 1}"#
                     ],
                 )
@@ -3087,6 +3321,8 @@ CREATE TABLE graves (
 
         assert_eq!(collection.metadata.version, 11);
         assert_eq!(collection.metadata.config["nextPos"], 1);
+        assert_eq!(collection.metadata.deck_config["1"]["new"]["perDay"], 12);
+        assert_eq!(collection.metadata.deck_config["1"]["rev"]["perDay"], 80);
         assert_eq!(collection.decks.len(), 2);
         assert_eq!(collection.decks[1].name, "Spanish::Latin");
         assert_eq!(collection.decks[1].description, "Story deck");
@@ -3144,6 +3380,15 @@ CREATE TABLE graves (
         assert_eq!(state.decks.len(), 2);
         assert_eq!(state.decks[1].id, "2");
         assert_eq!(state.decks[1].name, "Spanish::Latin");
+        assert_eq!(state.deck_options.len(), 2);
+        let options = &state.deck_options[1].options;
+        assert_eq!(options.new_cards_per_day, 12);
+        assert_eq!(options.reviews_per_day, 80);
+        assert_eq!(options.learning_steps_minutes, vec![3, 12]);
+        assert_eq!(options.relearning_steps_minutes, vec![20]);
+        assert_eq!(options.graduating_interval_days, 2);
+        assert_eq!(options.easy_interval_days, 5);
+        assert_eq!(options.lapse_interval_multiplier, 0.5);
 
         assert_eq!(state.note_types.len(), 1);
         let note_type = &state.note_types[0];
@@ -3205,6 +3450,13 @@ CREATE TABLE graves (
         assert_eq!(exported.reviews[0].interval, 7);
         assert_eq!(exported.reviews[0].last_interval, 3);
         assert_eq!(exported.reviews[0].factor, 2500);
+        assert_eq!(exported.decks[1].raw["conf"], 2);
+        assert_eq!(exported.metadata.deck_config["2"]["new"]["perDay"], 12);
+        assert_eq!(
+            exported.metadata.deck_config["2"]["new"]["delays"],
+            serde_json::json!([3, 12])
+        );
+        assert_eq!(exported.metadata.deck_config["2"]["lapse"]["mult"], 0.5);
 
         assert_eq!(state.sessions.len(), 1);
         assert_eq!(state.sessions[0].id, "anki-import:2");
@@ -3624,6 +3876,7 @@ CREATE TABLE graves (
                 previous_active_session: None,
                 sibling_progress_snapshots: Vec::new(),
             }],
+            deck_options: Vec::new(),
             external_sources: Vec::new(),
             media_assets: Vec::new(),
             active_session: None,
@@ -3680,6 +3933,7 @@ CREATE TABLE graves (
             card_progress: Vec::new(),
             sessions: Vec::new(),
             reviews: Vec::new(),
+            deck_options: Vec::new(),
             external_sources: Vec::new(),
             media_assets: Vec::new(),
             active_session: None,

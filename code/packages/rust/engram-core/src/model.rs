@@ -360,6 +360,41 @@ pub struct MediaAssetRecord {
     pub data: Vec<u8>,
 }
 
+#[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase", default))]
+pub struct DeckOptions {
+    pub new_cards_per_day: u32,
+    pub reviews_per_day: u32,
+    pub learning_steps_minutes: Vec<u32>,
+    pub relearning_steps_minutes: Vec<u32>,
+    pub graduating_interval_days: u32,
+    pub easy_interval_days: u32,
+    pub lapse_interval_multiplier: f64,
+}
+
+impl Default for DeckOptions {
+    fn default() -> Self {
+        Self {
+            new_cards_per_day: 20,
+            reviews_per_day: 200,
+            learning_steps_minutes: vec![1, 10],
+            relearning_steps_minutes: vec![10],
+            graduating_interval_days: 1,
+            easy_interval_days: 4,
+            lapse_interval_multiplier: 0.0,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct DeckOptionsPreset {
+    pub deck_id: String,
+    pub options: DeckOptions,
+}
+
 #[derive(Clone, Debug, Default, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
@@ -371,6 +406,8 @@ pub struct AppState {
     pub card_progress: Vec<CardProgress>,
     pub sessions: Vec<Session>,
     pub reviews: Vec<Review>,
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub deck_options: Vec<DeckOptionsPreset>,
     #[cfg_attr(feature = "serde", serde(default))]
     pub external_sources: Vec<ExternalSourceRecord>,
     #[cfg_attr(feature = "serde", serde(default))]

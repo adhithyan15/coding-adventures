@@ -1,6 +1,6 @@
 use crate::model::{
-    AppState, Card, CardProgress, Deck, ExternalSourceRecord, MediaAssetRecord, Note, NoteType,
-    Review, Session,
+    AppState, Card, CardProgress, Deck, DeckOptionsPreset, ExternalSourceRecord, MediaAssetRecord,
+    Note, NoteType, Review, Session,
 };
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -25,6 +25,8 @@ pub struct EngramSnapshot {
     pub sessions: Vec<Session>,
     pub reviews: Vec<Review>,
     #[cfg_attr(feature = "serde", serde(default))]
+    pub deck_options: Vec<DeckOptionsPreset>,
+    #[cfg_attr(feature = "serde", serde(default))]
     pub external_sources: Vec<ExternalSourceRecord>,
     #[cfg_attr(feature = "serde", serde(default))]
     pub media_assets: Vec<MediaAssetRecord>,
@@ -48,6 +50,7 @@ impl EngramSnapshot {
             card_progress: state.card_progress.clone(),
             sessions: state.sessions.clone(),
             reviews: state.reviews.clone(),
+            deck_options: state.deck_options.clone(),
             external_sources: state.external_sources.clone(),
             media_assets: state.media_assets.clone(),
         }
@@ -77,6 +80,7 @@ impl EngramSnapshot {
             card_progress: self.card_progress,
             sessions: self.sessions,
             reviews: self.reviews,
+            deck_options: self.deck_options,
             external_sources: self.external_sources,
             media_assets: self.media_assets,
             active_session: None,
@@ -96,8 +100,8 @@ pub fn restore_engram_snapshot(snapshot: EngramSnapshot) -> Result<AppState, Sna
 mod tests {
     use super::*;
     use crate::model::{
-        ActiveSessionState, CardTemplate, ExternalSourceRecord, ExternalSourceTarget, FieldDef,
-        NoteFieldValue, SessionStatus,
+        ActiveSessionState, CardTemplate, DeckOptions, DeckOptionsPreset, ExternalSourceRecord,
+        ExternalSourceTarget, FieldDef, NoteFieldValue, SessionStatus,
     };
     use std::collections::BTreeMap;
 
@@ -162,6 +166,13 @@ mod tests {
                 cards_correct: 0,
             }],
             reviews: Vec::new(),
+            deck_options: vec![DeckOptionsPreset {
+                deck_id: "deck".to_string(),
+                options: DeckOptions {
+                    new_cards_per_day: 8,
+                    ..DeckOptions::default()
+                },
+            }],
             external_sources: vec![ExternalSourceRecord {
                 target: ExternalSourceTarget::Note,
                 target_id: "note".to_string(),
@@ -195,6 +206,7 @@ mod tests {
         assert_eq!(snapshot.decks.len(), 1);
         assert_eq!(snapshot.note_types.len(), 1);
         assert_eq!(snapshot.notes.len(), 1);
+        assert_eq!(snapshot.deck_options[0].options.new_cards_per_day, 8);
         assert_eq!(snapshot.external_sources.len(), 1);
         assert_eq!(snapshot.external_sources[0].source, "anki-v11");
         assert_eq!(
@@ -213,6 +225,7 @@ mod tests {
         assert_eq!(restored.decks[0].id, "deck");
         assert_eq!(restored.note_types[0].id, "basic");
         assert_eq!(restored.notes[0].id, "note");
+        assert_eq!(restored.deck_options[0].deck_id, "deck");
         assert_eq!(restored.external_sources[0].target_id, "note");
         assert_eq!(restored.media_assets[0].data, b"mp3");
     }
