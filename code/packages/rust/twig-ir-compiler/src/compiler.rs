@@ -25,10 +25,11 @@
 //!    Programs with no bare expressions return `nil` via
 //!    `call_builtin "make_nil"`.
 //!
-//! Every emitted instruction carries `type_hint = "any"` because Twig is
-//! dynamically typed — the function's `type_status` is therefore
-//! `Untyped`.  The vm-core profiler will fill in observed types at
-//! runtime; the JIT can specialise from those observations.
+//! Twig remains dynamically typed, so functions keep `type_status = Untyped`
+//! and dynamic paths still carry `type_hint = "any"`.  The LANG-FULL fast paths
+//! stamp concrete hints only where the source form makes the type unambiguous.
+//! The vm-core profiler will fill in observed types at runtime; the JIT can
+//! specialise from those observations.
 //!
 //! ## Apply-site dispatch (compile-time)
 //!
@@ -381,6 +382,10 @@ pub struct Compiler {
     /// Names of top-level defines whose RHS is a `Lambda` — direct
     /// callables.
     fn_globals: HashSet<String>,
+    /// Statically-known return types for top-level functions already lowered in
+    /// source order. Direct calls that appear after such a definition can carry
+    /// the concrete IIR type instead of falling back to `any`.
+    fn_return_types: HashMap<String, String>,
     /// Names of top-level defines whose RHS is *not* a lambda — looked
     /// up through `global_get` at use sites.
     value_globals: HashSet<String>,
@@ -417,6 +422,7 @@ impl Compiler {
     pub fn new() -> Self {
         Compiler {
             fn_globals: HashSet::new(),
+            fn_return_types: HashMap::new(),
             value_globals: HashSet::new(),
             escaping_value_globals: HashSet::new(),
             value_global_locals: HashMap::new(),
@@ -718,8 +724,9 @@ impl Compiler {
             line: lam.line,
             column: lam.column,
         })?;
+        let return_type = ctx.type_of(&last).to_string();
         ctx.emit(
-            IIRInstr::new("ret", None, vec![Operand::Var(last)], "any"),
+            IIRInstr::new("ret", None, vec![Operand::Var(last)], return_type.as_str()),
             lam_loc,
         );
 
@@ -745,7 +752,7 @@ impl Compiler {
         self.functions.push(IIRFunction {
             name: name.to_string(),
             params,
-            return_type: "any".into(),
+            return_type: return_type.clone(),
             register_count: count_registers(&ctx.instrs),
             instructions: ctx.instrs,
             type_status: FunctionTypeStatus::Untyped,
@@ -755,6 +762,7 @@ impl Compiler {
             param_refinements,
             return_refinement,
         });
+        self.fn_return_types.insert(name.to_string(), return_type);
         Ok(())
     }
 
@@ -1635,6 +1643,11 @@ impl Compiler {
         // compile time so the hot path stays a single `call`.
         if let Expr::VarRef(v) = expr.fn_expr.as_ref() {
             if self.fn_globals.contains(&v.name) {
+                let return_type = self
+                    .fn_return_types
+                    .get(&v.name)
+                    .cloned()
+                    .unwrap_or_else(|| "any".to_string());
                 let mut srcs: Vec<Operand> = vec![Operand::Var(v.name.clone())];
                 for a in &expr.args {
                     let r = self.compile_expr(a, ctx)?;
@@ -1645,8 +1658,11 @@ impl Compiler {
                     "call",
                     Some(dest.clone()),
                     srcs,
-                    "any",
+                    return_type.as_str(),
                 ), loc);
+                if return_type != "any" {
+                    ctx.record_type(&dest, return_type.as_str());
+                }
                 return Ok(dest);
             }
 

@@ -1,5 +1,18 @@
 # Changelog — twig-ir-compiler
 
+## [0.35.0] — 2026-06-28 (LANG-FULL E4 — top-level string function returns)
+
+Direct calls to top-level Twig functions now inherit the function's statically
+known return type when the function body already lowers to typed IIR. This lets a
+function-wrapped E4 string operation run through the code-gen backends:
+
+```scheme
+(define (strlen) (string-length "HELLO")) (strlen)
+```
+
+The function body emits `str_len [i64]`, its `ret` carries `i64`, and the caller's
+`call` result is typed `i64` rather than `any`.
+
 ## [0.34.0] — 2026-06-28 (LANG-FULL E4 — lexical string ordering predicates)
 
 Literal and known local `string<?` / `string>?` expressions now lower through

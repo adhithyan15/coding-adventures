@@ -330,6 +330,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 string ops inside a direct top-level function. The function body
+    // lowers `(string-length "HELLO")` to typed `str_const` + `str_len`, and the
+    // direct `(strlen)` call now carries the function's `i64` return type instead
+    // of falling back to `any`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen) (string-length \"HELLO\")) (strlen)",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =
