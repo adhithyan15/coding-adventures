@@ -419,9 +419,9 @@ fn parse_is_filter(token: &str, value: &str) -> Result<SearchClauseKind, SearchE
 fn parse_state_filter(token: &str, value: &str) -> Result<CardSearchState, SearchError> {
     match value {
         "new" => Ok(CardSearchState::New),
-        "learning" => Ok(CardSearchState::Learning),
+        "learn" | "learning" => Ok(CardSearchState::Learning),
         "review" => Ok(CardSearchState::Review),
-        "relearning" => Ok(CardSearchState::Relearning),
+        "relearn" | "relearning" => Ok(CardSearchState::Relearning),
         "due" => Ok(CardSearchState::Due),
         "suspended" => Ok(CardSearchState::Suspended),
         "buried" => Ok(CardSearchState::Buried),
@@ -436,13 +436,13 @@ fn parse_flag_filter(token: &str, value: &str) -> Result<FlagFilter, SearchError
     match value {
         "any" | "flagged" => Ok(FlagFilter::Any),
         "none" | "unflagged" => Ok(FlagFilter::None),
-        "red" => Ok(FlagFilter::Color(CardFlag::Red)),
-        "orange" => Ok(FlagFilter::Color(CardFlag::Orange)),
-        "green" => Ok(FlagFilter::Color(CardFlag::Green)),
-        "blue" => Ok(FlagFilter::Color(CardFlag::Blue)),
-        "pink" => Ok(FlagFilter::Color(CardFlag::Pink)),
-        "turquoise" => Ok(FlagFilter::Color(CardFlag::Turquoise)),
-        "purple" => Ok(FlagFilter::Color(CardFlag::Purple)),
+        "1" | "red" => Ok(FlagFilter::Color(CardFlag::Red)),
+        "2" | "orange" => Ok(FlagFilter::Color(CardFlag::Orange)),
+        "3" | "green" => Ok(FlagFilter::Color(CardFlag::Green)),
+        "4" | "blue" => Ok(FlagFilter::Color(CardFlag::Blue)),
+        "5" | "pink" => Ok(FlagFilter::Color(CardFlag::Pink)),
+        "6" | "turquoise" => Ok(FlagFilter::Color(CardFlag::Turquoise)),
+        "7" | "purple" => Ok(FlagFilter::Color(CardFlag::Purple)),
         _ => Err(SearchError {
             message: "unknown card flag filter".to_string(),
             token: token.to_string(),
@@ -777,6 +777,29 @@ mod tests {
         assert_eq!(ids_for("is:due"), vec!["due"]);
         assert_eq!(ids_for("is:suspended"), vec!["suspended"]);
         assert_eq!(ids_for("is:buried"), vec!["buried"]);
+
+        let mut state = state();
+        state
+            .card_progress
+            .push(progress("learning", CardState::Learning, NOW - 1));
+        state
+            .cards
+            .push(card("learning", "tamil", "learn", "learn"));
+        state
+            .card_progress
+            .push(progress("relearning", CardState::Relearning, NOW - 1));
+        state
+            .cards
+            .push(card("relearning", "tamil", "relearn", "relearn"));
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(ids_for("is:learn"), vec!["learning"]);
+        assert_eq!(ids_for("state:relearn"), vec!["relearning"]);
     }
 
     #[test]
@@ -805,6 +828,7 @@ mod tests {
 
         assert_eq!(ids_for("is:new"), vec!["flagged-new"]);
         assert_eq!(ids_for("flag:red"), vec!["flagged-new"]);
+        assert_eq!(ids_for("flag:1"), vec!["flagged-new"]);
         assert!(ids_for("is:due").is_empty());
         assert!(ids_for("is:review").is_empty());
     }
