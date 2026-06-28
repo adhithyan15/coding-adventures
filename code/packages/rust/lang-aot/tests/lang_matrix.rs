@@ -801,6 +801,20 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — literal-backed scalar string predicates. AL4 now lowers
+    // comparisons over string literals and literal-backed scalar variables
+    // through the shared E4 `str_eq` / `str_cmp` ops, then compares their
+    // integer results against typed zero before the normal `if` branch consumes
+    // the boolean. This row proves equality, inequality, and both ordering
+    // operand orders without widening into captured strings, arrays, or dynamic
+    // string storage.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s; s := 'ALPHA'; if (s = 'ALPHA' and s != 'OMEGA') and (s < 'BETA' and 'BETA' > s) then print('OK') else print('BAD') end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — the `abs` **standard function** (§3.2.4, LANG-FULL AL8). `abs`
     // is built into the language, not a user procedure, so `algol-iir-compiler`
     // resolves it by name and lowers `abs(0 - 42)` inline to the value of

@@ -86,9 +86,13 @@ Literal-backed scalar copies now reuse E4 `str_concat` with an empty suffix:
 after the copy does not change the copied `t` slot. Multi-argument output over
 literal-backed scalar string variables also stays on the same path:
 `string s, t; s := 'O'; t := 'K'; output(s, t)` emits ordered `print_str`
-calls and writes `OK`. This is deliberately not a dynamic string model yet:
-unassigned string variables, captured/`own` strings, arrays, parameters, and
-non-literal string expressions still fail closed.
+calls and writes `OK`. Literal-backed scalar string predicates now lower through
+the shared E4 comparison ops too: `s = 'OK'` / `s != 'NO'` use `str_eq` plus a
+typed zero comparison, while `s < 'BETA'` / `'BETA' > s` use `str_cmp` plus the
+corresponding typed zero comparison before the normal ALGOL conditional branch.
+This is deliberately not a dynamic string model yet: unassigned string
+variables, captured/`own` strings, arrays, parameters, and non-literal string
+expressions still fail closed.
 
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real
