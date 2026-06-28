@@ -15,22 +15,21 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. BJT model-card transient charge stamping.
+1. MOS Level-1 transient overlap charge stamping.
    - Status: current PR completion candidate.
-   - Python, Rust, and TypeScript transient solvers now stamp BJT model-card
-     `CJE` / `base_emitter_capacitance` / `baseEmitterCapacitance`,
-     `CJC` / `base_collector_capacitance` / `baseCollectorCapacitance`,
-     `TF` / `forward_transit_time` / `forwardTransitTime`, and
-     `TR` / `reverse_transit_time` / `reverseTransitTime` as base-emitter and
-     base-collector storage companions.
-   - The companions use the previous junction bias to derive
-     `Cbe = Cje + Tf * gm_forward` and `Cbc = Cjc + Tr * gm_reverse`, reuse the
-     existing Euler/trapezoidal/Gear-2 capacitor history policy, and seed the
-     synthetic BJT charge states from the initial operating point.
-   - Cross-language tests cover base-emitter capacitance current-step delay and
-     forward transit-time charge retention after turnoff.
-   - JFET and Level-1 MOS charge storage remain audited through explicit
-     terminal storage capacitors until their nonlinear charge policies land.
+   - Python, Rust, and TypeScript transient solvers now stamp Level-1 MOS
+     model-card `CGSO` / `gate_source_overlap_capacitance`, `CGDO` /
+     `gate_drain_overlap_capacitance`, and `CGBO` /
+     `gate_bulk_overlap_capacitance` as fixed gate-source, gate-drain, and
+     gate-body overlap storage companions.
+   - The companions reuse the existing Euler/trapezoidal/Gear-2 capacitor
+     history policy and seed the synthetic MOS overlap charge states from the
+     initial operating point.
+   - Cross-language tests cover MOS gate-step delay through `CGSO` overlap
+     storage, and charge-audit fixtures now record the MOS overlap terms as
+     transient-stamped.
+   - MOS `CBS` / `CBD` bulk junction charge remains AC-only until a nonlinear
+     junction-charge policy lands.
 
 ## Completed Slices
 
@@ -1242,6 +1241,33 @@ downstream tools to compare.
      the initial operating point.
    - Cross-language tests cover both junction-capacitance current-step delay
      and transit-time forward-charge retention after turnoff.
+
+122. BJT model-card transient charge stamping.
+   - Status: completed in PR 6803.
+   - Python, Rust, and TypeScript transient solvers now stamp BJT model-card
+     `CJE` / `base_emitter_capacitance` / `baseEmitterCapacitance`,
+     `CJC` / `base_collector_capacitance` / `baseCollectorCapacitance`,
+     `TF` / `forward_transit_time` / `forwardTransitTime`, and
+     `TR` / `reverse_transit_time` / `reverseTransitTime` as base-emitter and
+     base-collector storage companions.
+   - The companions use the previous junction bias to derive
+     `Cbe = Cje + Tf * gm_forward` and `Cbc = Cjc + Tr * gm_reverse`, reuse the
+     existing Euler/trapezoidal/Gear-2 capacitor history policy, and seed the
+     synthetic BJT charge states from the initial operating point.
+   - Cross-language tests cover base-emitter capacitance current-step delay and
+     forward transit-time charge retention after turnoff.
+
+123. JFET model-card transient charge stamping.
+   - Status: completed in PR 6812.
+   - Python, Rust, and TypeScript transient solvers now stamp JFET model-card
+     `CGS` / `gate_source_capacitance` / `gateSourceCapacitance` and `CGD` /
+     `gate_drain_capacitance` / `gateDrainCapacitance` as fixed gate-source and
+     gate-drain storage companions.
+   - The companions reuse the existing Euler/trapezoidal/Gear-2 capacitor
+     history policy, seed synthetic JFET charge states from the initial
+     operating point, and contribute matching small-signal AC susceptance.
+   - Cross-language tests cover gate-step delay and high-frequency gate-drive
+     shunting.
 
 ## Backlog
 

@@ -4031,10 +4031,20 @@ pub fn device_model_charge_audit_fixtures(
         storage_capacitance_f,
     )));
 
-    let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
-        name: "device_model_charge_audit_fixtures".to_string(),
-        reason: "missing Mn model fixture".to_string(),
-    })?;
+    let mos_model = normalize_model_card(
+        "Mn",
+        "NMOS",
+        &[
+            ("LEVEL", 1.0),
+            ("VTO", 0.55),
+            ("LAMBDA", 0.04),
+            ("NSUB", 1.6),
+            ("CGSO", 2.0e-11),
+            ("CGDO", 5.0e-12),
+            ("CGBO", 1.0e-12),
+            ("CBD", 3.0e-13),
+        ],
+    )?;
     let mut mos_circuit = Circuit::new();
     mos_circuit.add(Element::VoltageSource(VoltageSource::new(
         "Vdd", "vdd", "0", 1.8,
@@ -4046,7 +4056,7 @@ pub fn device_model_charge_audit_fixtures(
         "Rload", "vdd", "out", 1_000.0,
     )));
     mos_circuit.add(Element::Mosfet(mosfet_from_model_card(
-        "M1", "out", "gate", "0", "0", mos_model,
+        "M1", "out", "gate", "0", "0", &mos_model,
     )?));
     mos_circuit.add(Element::Capacitor(Capacitor::new(
         "Cstore",
@@ -4140,7 +4150,7 @@ pub fn device_model_charge_audit_fixtures(
         DeviceModelChargeBehaviorFixture {
             name: "mos-level1-storage-charge".to_string(),
             kind: mos_model.kind,
-            model: mos_model.clone(),
+            model: mos_model,
             circuit: mos_circuit,
             probe_node: "out".to_string(),
             time_step_s,
@@ -4150,10 +4160,10 @@ pub fn device_model_charge_audit_fixtures(
             expected_initial_max: 1.0,
             expected_final_min: 0.68,
             expected_final_max: 0.73,
-            charge_behavior: "Level-1 MOS terminal charge is conserved through explicit Cstore; overlap and junction capacitances remain AC-only until nonlinear charge stamping lands".to_string(),
+            charge_behavior: "Level-1 MOS CGSO/CGDO/CGBO contribute transient gate-overlap storage; explicit Cstore keeps the fixture comparable while bulk junction charge remains AC-only".to_string(),
             deck_lines: vec![
                 "* device-model charge fixture: mos-level1-storage-charge".to_string(),
-                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBD=3e-13)".to_string(),
                 "Vdd vdd 0 1.8".to_string(),
                 "Vgate gate 0 1.8".to_string(),
                 "Rload vdd out 1k".to_string(),
@@ -19194,9 +19204,14 @@ fn solve_linear_circuit_at_operating_point(
                 &mut rhs,
                 operating_point,
             )?,
-            Element::Mosfet(mosfet) => {
-                stamp_mosfet(mosfet, node_indices, &mut matrix, &mut rhs, operating_point)?
-            }
+            Element::Mosfet(mosfet) => stamp_mosfet(
+                mosfet,
+                capacitor_states,
+                node_indices,
+                &mut matrix,
+                &mut rhs,
+                operating_point,
+            )?,
             Element::Vccs(source) => stamp_vccs(source, node_indices, &mut matrix)?,
             Element::Vcvs(source) => stamp_vcvs(
                 source,
@@ -20719,6 +20734,7 @@ fn evaluate_njf(
 
 fn stamp_mosfet(
     mosfet: &Mosfet,
+    capacitor_states: &[CapacitorState],
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
@@ -20744,6 +20760,51 @@ fn stamp_mosfet(
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_transconductance(matrix, drain, source, body, source, result.gmb);
     stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
+    stamp_mosfet_charge(mosfet, capacitor_states, node_indices, matrix, rhs)?;
+    Ok(())
+}
+
+fn stamp_mosfet_charge(
+    mosfet: &Mosfet,
+    capacitor_states: &[CapacitorState],
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) -> Result<(), SpiceError> {
+    for spec in mosfet_charge_state_specs(mosfet) {
+        let Some(state) = capacitor_states
+            .iter()
+            .find(|state| state.name == spec.name)
+        else {
+            continue;
+        };
+        let capacitance = spec.capacitance;
+        if capacitance <= 0.0 {
+            continue;
+        }
+        let conductance = match state.method {
+            TransientMethod::Trap => 2.0 * capacitance / state.time_step,
+            TransientMethod::Gear2 => 3.0 * capacitance / (2.0 * state.time_step),
+            TransientMethod::Euler => capacitance / state.time_step,
+        };
+        let history_current = match state.method {
+            TransientMethod::Trap => conductance * state.previous_voltage + state.previous_current,
+            TransientMethod::Gear2 => {
+                capacitance * (4.0 * state.previous_voltage - state.previous_previous_voltage)
+                    / (2.0 * state.time_step)
+            }
+            TransientMethod::Euler => conductance * state.previous_voltage,
+        };
+        let positive = node_index(node_indices, spec.positive);
+        let negative = node_index(node_indices, spec.negative);
+        stamp_conductance(matrix, positive, negative, conductance);
+        if let Some(index) = positive {
+            rhs[index] += history_current;
+        }
+        if let Some(index) = negative {
+            rhs[index] -= history_current;
+        }
+    }
     Ok(())
 }
 
@@ -21143,6 +21204,65 @@ fn jfet_charge_state_voltage(
     voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
 }
 
+struct MosfetChargeStateSpec<'a> {
+    name: String,
+    positive: &'a str,
+    negative: &'a str,
+    capacitance: f64,
+}
+
+fn mosfet_gate_source_charge_state_name(mosfet: &Mosfet) -> String {
+    format!("_M_{}_gs_charge", mosfet.name)
+}
+
+fn mosfet_gate_drain_charge_state_name(mosfet: &Mosfet) -> String {
+    format!("_M_{}_gd_charge", mosfet.name)
+}
+
+fn mosfet_gate_body_charge_state_name(mosfet: &Mosfet) -> String {
+    format!("_M_{}_gb_charge", mosfet.name)
+}
+
+fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> {
+    let mut specs = Vec::new();
+    let params = mosfet.params;
+    let gate_source_capacitance = params.gate_source_overlap_capacitance * params.w;
+    let gate_drain_capacitance = params.gate_drain_overlap_capacitance * params.w;
+    let gate_body_capacitance = params.gate_bulk_overlap_capacitance * params.l;
+    if gate_source_capacitance > 0.0 {
+        specs.push(MosfetChargeStateSpec {
+            name: mosfet_gate_source_charge_state_name(mosfet),
+            positive: mosfet.gate.as_str(),
+            negative: mosfet.source.as_str(),
+            capacitance: gate_source_capacitance,
+        });
+    }
+    if gate_drain_capacitance > 0.0 {
+        specs.push(MosfetChargeStateSpec {
+            name: mosfet_gate_drain_charge_state_name(mosfet),
+            positive: mosfet.gate.as_str(),
+            negative: mosfet.drain.as_str(),
+            capacitance: gate_drain_capacitance,
+        });
+    }
+    if gate_body_capacitance > 0.0 {
+        specs.push(MosfetChargeStateSpec {
+            name: mosfet_gate_body_charge_state_name(mosfet),
+            positive: mosfet.gate.as_str(),
+            negative: mosfet.body.as_str(),
+            capacitance: gate_body_capacitance,
+        });
+    }
+    specs
+}
+
+fn mosfet_charge_state_voltage(
+    spec: &MosfetChargeStateSpec<'_>,
+    node_voltages: &BTreeMap<String, f64>,
+) -> f64 {
+    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+}
+
 fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
     if !diode.saturation_current.is_finite() || diode.saturation_current <= 0.0 {
         return Err(SpiceError::InvalidElement {
@@ -21445,6 +21565,18 @@ fn initial_capacitor_states(
                     });
                 }
             }
+            Element::Mosfet(mosfet) => {
+                for spec in mosfet_charge_state_specs(mosfet) {
+                    states.push(CapacitorState {
+                        name: spec.name,
+                        previous_voltage: 0.0,
+                        previous_previous_voltage: 0.0,
+                        previous_current: 0.0,
+                        time_step,
+                        method,
+                    });
+                }
+            }
             _ => {}
         }
     }
@@ -21535,6 +21667,14 @@ fn capacitor_voltages(
                     );
                 }
             }
+            Element::Mosfet(mosfet) => {
+                for spec in mosfet_charge_state_specs(mosfet) {
+                    voltages.insert(
+                        spec.name.clone(),
+                        mosfet_charge_state_voltage(&spec, node_voltages),
+                    );
+                }
+            }
             _ => {}
         }
     }
@@ -21589,6 +21729,18 @@ fn transient_lte_estimate(
             }
             Element::Jfet(jfet) => {
                 for spec in jfet_charge_state_specs(jfet) {
+                    let current = current_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous = previous_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous_previous = previous_previous_voltages
+                        .get(&spec.name)
+                        .copied()
+                        .unwrap_or(0.0);
+                    max_lte =
+                        max_lte.max((current - 2.0 * previous + previous_previous).abs() / 2.0);
+                }
+            }
+            Element::Mosfet(mosfet) => {
+                for spec in mosfet_charge_state_specs(mosfet) {
                     let current = current_voltages.get(&spec.name).copied().unwrap_or(0.0);
                     let previous = previous_voltages.get(&spec.name).copied().unwrap_or(0.0);
                     let previous_previous = previous_previous_voltages
@@ -21802,6 +21954,15 @@ fn update_capacitor_states(
                         spec.capacitance,
                     )
                 }),
+            Element::Mosfet(mosfet) => mosfet_charge_state_specs(mosfet)
+                .into_iter()
+                .find(|spec| spec.name == state.name)
+                .map(|spec| {
+                    (
+                        mosfet_charge_state_voltage(&spec, node_voltages),
+                        spec.capacitance,
+                    )
+                }),
             _ => None,
         });
         let Some((voltage, capacitance)) = update else {
@@ -21865,6 +22026,19 @@ fn seed_device_capacitor_states(
                         .find(|state| state.name == spec.name)
                     {
                         let voltage = jfet_charge_state_voltage(&spec, node_voltages);
+                        state.previous_voltage = voltage;
+                        state.previous_previous_voltage = voltage;
+                        state.previous_current = 0.0;
+                    }
+                }
+            }
+            Element::Mosfet(mosfet) => {
+                for spec in mosfet_charge_state_specs(mosfet) {
+                    if let Some(state) = capacitor_states
+                        .iter_mut()
+                        .find(|state| state.name == spec.name)
+                    {
+                        let voltage = mosfet_charge_state_voltage(&spec, node_voltages);
                         state.previous_voltage = voltage;
                         state.previous_previous_voltage = voltage;
                         state.previous_current = 0.0;

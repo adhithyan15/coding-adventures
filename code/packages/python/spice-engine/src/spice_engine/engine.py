@@ -8736,6 +8736,41 @@ def _jfet_charge_state_voltage(n_plus: str, n_minus: str, node_voltages: dict[st
     return _node_voltage(n_plus, node_voltages) - _node_voltage(n_minus, node_voltages)
 
 
+def _mosfet_gate_source_charge_state_name(el: Mosfet) -> str:
+    return f"_M_{el.name}_gs_charge"
+
+
+def _mosfet_gate_drain_charge_state_name(el: Mosfet) -> str:
+    return f"_M_{el.name}_gd_charge"
+
+
+def _mosfet_gate_body_charge_state_name(el: Mosfet) -> str:
+    return f"_M_{el.name}_gb_charge"
+
+
+def _mosfet_charge_state_specs(el: Mosfet) -> list[tuple[str, str, str, float]]:
+    params = getattr(getattr(el.model, "model", None), "params", None)
+    if params is None:
+        return []
+    width = getattr(params, "W", 0.0)
+    length = getattr(params, "L", 0.0)
+    specs: list[tuple[str, str, str, float]] = []
+    cgs = getattr(params, "CGSO", 0.0) * width
+    cgd = getattr(params, "CGDO", 0.0) * width
+    cgb = getattr(params, "CGBO", 0.0) * length
+    if cgs > 0.0:
+        specs.append((_mosfet_gate_source_charge_state_name(el), el.gate, el.source, cgs))
+    if cgd > 0.0:
+        specs.append((_mosfet_gate_drain_charge_state_name(el), el.gate, el.drain, cgd))
+    if cgb > 0.0:
+        specs.append((_mosfet_gate_body_charge_state_name(el), el.gate, el.body, cgb))
+    return specs
+
+
+def _mosfet_charge_state_voltage(n_plus: str, n_minus: str, node_voltages: dict[str, float]) -> float:
+    return _node_voltage(n_plus, node_voltages) - _node_voltage(n_minus, node_voltages)
+
+
 def _stamp_mosfet(
     G: list[list[float]],
     b: list[float],
@@ -9680,6 +9715,34 @@ def _build_transient_companions(
                     current=I_eq,
                 ))
 
+        # ---- MOS Level-1 overlap charge companions -------------------------
+        elif isinstance(el, Mosfet):
+            for state_name, n_plus, n_minus, capacitance in _mosfet_charge_state_specs(el):
+                v_prev = cap_voltages.get(state_name, 0.0)
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_eq = g_eq * v_prev + cap_currents.get(state_name, 0.0)
+                elif method == "gear2":
+                    v_older = cap_voltages_older.get(state_name, v_prev)
+                    g_eq = 3.0 * capacitance / (2.0 * h)
+                    I_eq = capacitance * (4.0 * v_prev - v_older) / (2.0 * h)
+                else:
+                    g_eq = capacitance / h
+                    I_eq = g_eq * v_prev
+
+                aug.elements.append(Resistor(
+                    name=f"{state_name}_R",
+                    n_plus=n_plus,
+                    n_minus=n_minus,
+                    resistance=1.0 / g_eq,
+                ))
+                aug.elements.append(CurrentSource(
+                    name=f"{state_name}_I",
+                    n_plus=n_minus,
+                    n_minus=n_plus,
+                    current=I_eq,
+                ))
+
         # ---- BJT model-card charge companions ------------------------------
         elif isinstance(el, BJT):
             for state_name, n_plus, n_minus, state_kind in _bjt_charge_state_specs(el):
@@ -9890,6 +9953,28 @@ def _update_reactive_state(
                 cap_voltages_older[state_name] = v_prev
                 cap_voltages[state_name] = v_new
 
+        elif isinstance(el, Mosfet):
+            for state_name, n_plus, n_minus, capacitance in _mosfet_charge_state_specs(el):
+                v_new = _mosfet_charge_state_voltage(n_plus, n_minus, op.node_voltages)
+                v_prev = cap_voltages.get(state_name, v_new)
+                v_older = cap_voltages_older.get(state_name, v_prev)
+
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_prev = cap_currents.get(state_name, 0.0)
+                    cap_currents[state_name] = g_eq * (v_new - v_prev) - I_prev
+                elif method == "gear2":
+                    cap_currents[state_name] = (
+                        capacitance * (3.0 * v_new - 4.0 * v_prev + v_older)
+                        / (2.0 * h)
+                    )
+                else:
+                    g_eq = capacitance / h
+                    cap_currents[state_name] = g_eq * (v_new - v_prev)
+
+                cap_voltages_older[state_name] = v_prev
+                cap_voltages[state_name] = v_new
+
         elif isinstance(el, BJT):
             for state_name, n_plus, n_minus, state_kind in _bjt_charge_state_specs(el):
                 v_new = _bjt_charge_state_voltage(n_plus, n_minus, op.node_voltages)
@@ -9980,6 +10065,14 @@ def _lte_estimate(
                 max_lte = lte_c
         elif isinstance(el, JFET):
             for state_name, _, _, _ in _jfet_charge_state_specs(el):
+                v1 = cap_voltages_now.get(state_name, 0.0)
+                v0 = cap_voltages_prev.get(state_name, 0.0)
+                vm1 = cap_voltages_prev2.get(state_name, 0.0)
+                lte_c = abs(v1 - 2.0 * v0 + vm1) / 2.0
+                if lte_c > max_lte:
+                    max_lte = lte_c
+        elif isinstance(el, Mosfet):
+            for state_name, _, _, _ in _mosfet_charge_state_specs(el):
                 v1 = cap_voltages_now.get(state_name, 0.0)
                 v0 = cap_voltages_prev.get(state_name, 0.0)
                 vm1 = cap_voltages_prev2.get(state_name, 0.0)
@@ -10164,6 +10257,13 @@ def transient(
                     n_minus,
                     op.node_voltages,
                 )
+        elif isinstance(el, Mosfet):
+            for state_name, n_plus, n_minus, _ in _mosfet_charge_state_specs(el):
+                cap_voltages[state_name] = _mosfet_charge_state_voltage(
+                    n_plus,
+                    n_minus,
+                    op.node_voltages,
+                )
         elif isinstance(el, BJT):
             for state_name, n_plus, n_minus, _ in _bjt_charge_state_specs(el):
                 cap_voltages[state_name] = _bjt_charge_state_voltage(
@@ -10180,6 +10280,9 @@ def transient(
             cap_currents[_diode_charge_state_name(el)] = 0.0
         elif isinstance(el, JFET):
             for state_name, _, _, _ in _jfet_charge_state_specs(el):
+                cap_currents[state_name] = 0.0
+        elif isinstance(el, Mosfet):
+            for state_name, _, _, _ in _mosfet_charge_state_specs(el):
                 cap_currents[state_name] = 0.0
         elif isinstance(el, BJT):
             for state_name, _, _, _ in _bjt_charge_state_specs(el):
@@ -10256,6 +10359,13 @@ def transient(
                 elif isinstance(el, JFET):
                     for state_name, n_plus, n_minus, _ in _jfet_charge_state_specs(el):
                         cap_voltages_new[state_name] = _jfet_charge_state_voltage(
+                            n_plus,
+                            n_minus,
+                            op.node_voltages,
+                        )
+                elif isinstance(el, Mosfet):
+                    for state_name, n_plus, n_minus, _ in _mosfet_charge_state_specs(el):
+                        cap_voltages_new[state_name] = _mosfet_charge_state_voltage(
                             n_plus,
                             n_minus,
                             op.node_voltages,

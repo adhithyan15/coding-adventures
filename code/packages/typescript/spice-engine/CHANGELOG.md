@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Stamp Level-1 MOS `CGSO`, `CGDO`, and `CGBO` model-card storage as
+  transient gate-source, gate-drain, and gate-body companions, matching Python
+  and Rust, with regression coverage for gate-step delay. Bulk junction
+  `CBS`/`CBD` storage remains AC-only until nonlinear junction-charge stamping
+  lands.
 - Stamp JFET `gateSourceCapacitance` and `gateDrainCapacitance` model-card
   storage as transient gate-source and gate-drain companions and AC
   susceptance, matching Python and Rust, with regression coverage for gate-step

@@ -7636,7 +7636,16 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
   jfetCircuit.add(jfetFromModelCard("J1", "drain", "gate", "source", jfetModel));
   jfetCircuit.add(capacitor("Cstore", "source", "0", storageCapacitanceFarads));
 
-  const mosModel = requiredModel(models, "Mn", helperName);
+  const mosModel = normalizeModelCard("Mn", "NMOS", {
+    LEVEL: 1.0,
+    VTO: 0.55,
+    LAMBDA: 0.04,
+    NSUB: 1.6,
+    CGSO: 2.0e-11,
+    CGDO: 5.0e-12,
+    CGBO: 1.0e-12,
+    CBD: 3.0e-13,
+  });
   const mosCircuit = new Circuit();
   mosCircuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
   mosCircuit.add(voltageSource("Vgate", "gate", "0", 1.8));
@@ -7743,10 +7752,10 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
       expectedFinalMin: 0.68,
       expectedFinalMax: 0.73,
       chargeBehavior:
-        "Level-1 MOS terminal charge is conserved through explicit Cstore; overlap and junction capacitances remain AC-only until nonlinear charge stamping lands",
+        "Level-1 MOS CGSO/CGDO/CGBO contribute transient gate-overlap storage; explicit Cstore keeps the fixture comparable while bulk junction charge remains AC-only",
       deckLines: [
         "* device-model charge fixture: mos-level1-storage-charge",
-        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBD=3e-13)",
         "Vdd vdd 0 1.8",
         "Vgate gate 0 1.8",
         "Rload vdd out 1k",
@@ -15524,7 +15533,7 @@ function solveLinearCircuitAtOperatingPoint(
         stampBjt(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "mosfet":
-        stampMosfet(element, nodeIndices, matrix, rhs, operatingPoint);
+        stampMosfet(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "vccs":
         stampVccs(element, nodeIndices, matrix);
@@ -17032,6 +17041,7 @@ function evaluateNjf(
 
 function stampMosfet(
   element: Mosfet,
+  capacitorStates: readonly CapacitorState[],
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
   rhs: number[],
@@ -17057,6 +17067,45 @@ function stampMosfet(
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
   stampTransconductance(matrix, drain, source, body, source, result.gmb);
   stampCurrentSourceEquivalent(rhs, drain, source, equivalentCurrent);
+  stampMosfetCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+}
+
+function stampMosfetCharge(
+  element: Mosfet,
+  capacitorStates: readonly CapacitorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  for (const spec of mosfetChargeStateSpecs(element)) {
+    const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+    if (state === undefined || spec.capacitance <= 0.0) {
+      continue;
+    }
+    const conductance =
+      state.method === "trap"
+        ? (2.0 * spec.capacitance) / state.timeStep
+        : state.method === "gear2"
+          ? (3.0 * spec.capacitance) / (2.0 * state.timeStep)
+          : spec.capacitance / state.timeStep;
+    const historyCurrent =
+      state.method === "trap"
+        ? conductance * state.previousVoltage + state.previousCurrent
+        : state.method === "gear2"
+          ? (spec.capacitance *
+              (4.0 * state.previousVoltage - state.previousPreviousVoltage)) /
+            (2.0 * state.timeStep)
+          : conductance * state.previousVoltage;
+    const positive = nodeIndex(nodeIndices, spec.positive);
+    const negative = nodeIndex(nodeIndices, spec.negative);
+    stampConductance(matrix, positive, negative, conductance);
+    if (positive !== undefined) {
+      rhs[positive] += historyCurrent;
+    }
+    if (negative !== undefined) {
+      rhs[negative] -= historyCurrent;
+    }
+  }
 }
 
 function evaluateMosfetLevel1(
@@ -17353,6 +17402,64 @@ function jfetChargeStateVoltage(
   return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
 }
 
+interface MosfetChargeStateSpec {
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly capacitance: number;
+}
+
+function mosfetGateSourceChargeStateName(element: Mosfet): string {
+  return `_M_${element.name}_gs_charge`;
+}
+
+function mosfetGateDrainChargeStateName(element: Mosfet): string {
+  return `_M_${element.name}_gd_charge`;
+}
+
+function mosfetGateBodyChargeStateName(element: Mosfet): string {
+  return `_M_${element.name}_gb_charge`;
+}
+
+function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
+  const specs: MosfetChargeStateSpec[] = [];
+  const gateSourceCapacitance = element.params.CGSO * element.params.W;
+  const gateDrainCapacitance = element.params.CGDO * element.params.W;
+  const gateBodyCapacitance = element.params.CGBO * element.params.L;
+  if (gateSourceCapacitance > 0.0) {
+    specs.push({
+      name: mosfetGateSourceChargeStateName(element),
+      positive: element.gate,
+      negative: element.source,
+      capacitance: gateSourceCapacitance,
+    });
+  }
+  if (gateDrainCapacitance > 0.0) {
+    specs.push({
+      name: mosfetGateDrainChargeStateName(element),
+      positive: element.gate,
+      negative: element.drain,
+      capacitance: gateDrainCapacitance,
+    });
+  }
+  if (gateBodyCapacitance > 0.0) {
+    specs.push({
+      name: mosfetGateBodyChargeStateName(element),
+      positive: element.gate,
+      negative: element.body,
+      capacitance: gateBodyCapacitance,
+    });
+  }
+  return specs;
+}
+
+function mosfetChargeStateVoltage(
+  spec: MosfetChargeStateSpec,
+  nodeVoltages: ReadonlyMap<string, number>,
+): number {
+  return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
+}
+
 function validateBjt(element: Bjt): void {
   if (element.polarity !== "NPN" && element.polarity !== "PNP") {
     throw invalidElement(element.name, "BJT polarity must be NPN or PNP");
@@ -17478,6 +17585,17 @@ function initialCapacitorStates(
           method,
         });
       }
+    } else if (element.kind === "mosfet") {
+      for (const spec of mosfetChargeStateSpecs(element)) {
+        states.push({
+          name: spec.name,
+          previousVoltage: 0.0,
+          previousPreviousVoltage: 0.0,
+          previousCurrent: 0.0,
+          timeStep,
+          method,
+        });
+      }
     }
   }
   return states;
@@ -17551,6 +17669,10 @@ function capacitorVoltages(
       for (const spec of jfetChargeStateSpecs(element)) {
         voltages.set(spec.name, jfetChargeStateVoltage(spec, nodeVoltages));
       }
+    } else if (element.kind === "mosfet") {
+      for (const spec of mosfetChargeStateSpecs(element)) {
+        voltages.set(spec.name, mosfetChargeStateVoltage(spec, nodeVoltages));
+      }
     }
   }
   return voltages;
@@ -17580,6 +17702,13 @@ function transientLteEstimate(
         }
       } else if (element.kind === "jfet") {
         for (const spec of jfetChargeStateSpecs(element)) {
+          const current = currentVoltages.get(spec.name) ?? 0.0;
+          const previous = previousVoltages.get(spec.name) ?? 0.0;
+          const previousPrevious = previousPreviousVoltages.get(spec.name) ?? 0.0;
+          maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
+        }
+      } else if (element.kind === "mosfet") {
+        for (const spec of mosfetChargeStateSpecs(element)) {
           const current = currentVoltages.get(spec.name) ?? 0.0;
           const previous = previousVoltages.get(spec.name) ?? 0.0;
           const previousPrevious = previousPreviousVoltages.get(spec.name) ?? 0.0;
@@ -17777,11 +17906,29 @@ function updateCapacitorStates(
       jfetElement === undefined
         ? undefined
         : jfetChargeStateSpecs(jfetElement).find((spec) => spec.name === state.name);
-    if (
+    const mosfetElement =
       capacitorElement === undefined &&
       diodeElement === undefined &&
       bjtSpec === undefined &&
       jfetSpec === undefined
+        ? circuit
+            .elements()
+            .find(
+              (candidate): candidate is Mosfet =>
+                candidate.kind === "mosfet" &&
+                mosfetChargeStateSpecs(candidate).some((spec) => spec.name === state.name),
+            )
+        : undefined;
+    const mosfetSpec =
+      mosfetElement === undefined
+        ? undefined
+        : mosfetChargeStateSpecs(mosfetElement).find((spec) => spec.name === state.name);
+    if (
+      capacitorElement === undefined &&
+      diodeElement === undefined &&
+      bjtSpec === undefined &&
+      jfetSpec === undefined &&
+      mosfetSpec === undefined
     ) {
       continue;
     }
@@ -17794,7 +17941,9 @@ function updateCapacitorStates(
           ? diodeChargeVoltage(diodeElement, nodeVoltages)
           : bjtSpec !== undefined
             ? bjtChargeStateVoltage(bjtSpec, nodeVoltages)
-            : jfetChargeStateVoltage(jfetSpec!, nodeVoltages);
+            : jfetSpec !== undefined
+              ? jfetChargeStateVoltage(jfetSpec, nodeVoltages)
+              : mosfetChargeStateVoltage(mosfetSpec!, nodeVoltages);
     const capacitance =
       capacitorElement !== undefined
         ? capacitorElement.capacitanceFarads
@@ -17802,7 +17951,9 @@ function updateCapacitorStates(
           ? diodeDynamicCapacitance(diodeElement, previousVoltage)
           : bjtSpec !== undefined
             ? bjtChargeDynamicCapacitance(bjtElement!, bjtSpec.kind, previousVoltage)
-            : jfetSpec!.capacitance;
+            : jfetSpec !== undefined
+              ? jfetSpec.capacitance
+              : mosfetSpec!.capacitance;
     if (state.method === "trap") {
       const conductance = (2.0 * capacitance) / state.timeStep;
       state.previousCurrent = conductance * (voltage - previousVoltage) - previousCurrent;
@@ -17855,6 +18006,17 @@ function seedDeviceCapacitorStates(
           continue;
         }
         const voltage = jfetChargeStateVoltage(spec, nodeVoltages);
+        state.previousVoltage = voltage;
+        state.previousPreviousVoltage = voltage;
+        state.previousCurrent = 0.0;
+      }
+    } else if (element.kind === "mosfet") {
+      for (const spec of mosfetChargeStateSpecs(element)) {
+        const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+        if (state === undefined) {
+          continue;
+        }
+        const voltage = mosfetChargeStateVoltage(spec, nodeVoltages);
         state.previousVoltage = voltage;
         state.previousPreviousVoltage = voltage;
         state.previousCurrent = 0.0;
