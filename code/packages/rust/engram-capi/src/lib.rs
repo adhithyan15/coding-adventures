@@ -1375,6 +1375,14 @@ CREATE TABLE graves (
             assert_eq!(props["props"]["deck-name"], "Tamil");
             assert_eq!(props["props"]["deck-total-value"], "1");
             assert_eq!(props["props"]["answer-visible"], false);
+            assert_eq!(props["props"]["action-undo-label"], "Undo");
+            assert_eq!(props["props"]["action-bury-card-label"], "Bury card");
+            assert_eq!(
+                props["props"]["action-bury-siblings-label"],
+                "Bury siblings"
+            );
+            assert_eq!(props["props"]["action-suspend-card-label"], "Suspend");
+            assert_eq!(props["props"]["action-mark-label"], "Mark");
 
             eg_session_free(session);
         }
@@ -1440,6 +1448,43 @@ CREATE TABLE graves (
             assert_eq!(rated["event"], "onGood");
             assert_eq!(rated["props"]["prompt"], "letter-aa");
             assert_eq!(rated["state"]["reviews"][0]["rating"], "good");
+
+            let undo = cstr("undo");
+            let undone = take(eg_handle_engram_app_event(
+                session,
+                undo.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 2,
+            ));
+            let undone: Value = serde_json::from_str(&undone).unwrap();
+            assert_eq!(undone["ok"], true);
+            assert_eq!(undone["event"], "onUndo");
+            assert!(undone["state"]["reviews"].as_array().unwrap().is_empty());
+            assert_eq!(undone["props"]["prompt"], "letter-a");
+
+            let mark = cstr("onToggleMark");
+            let marked = take(eg_handle_engram_app_event(
+                session,
+                mark.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 3,
+            ));
+            let marked: Value = serde_json::from_str(&marked).unwrap();
+            assert_eq!(marked["ok"], true);
+            assert_eq!(marked["event"], "onToggleMark");
+            assert_eq!(marked["props"]["action-mark-label"], "Unmark");
+
+            let bury = cstr("bury-card");
+            let buried = take(eg_handle_engram_app_event(
+                session,
+                bury.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 4,
+            ));
+            let buried: Value = serde_json::from_str(&buried).unwrap();
+            assert_eq!(buried["ok"], true);
+            assert_eq!(buried["event"], "onBuryCard");
+            assert_eq!(buried["props"]["prompt"], "letter-aa");
 
             eg_session_free(session);
         }

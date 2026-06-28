@@ -53,6 +53,10 @@ fn manifest_declares_app_package_boundary() {
         Some(&"0.1.0".to_string())
     );
     assert_eq!(
+        package.dependencies.get("mosaic-pkg-review-actions"),
+        Some(&"0.1.0".to_string())
+    );
+    assert_eq!(
         package.dependencies.get("mosaic-pkg-session-progress"),
         Some(&"0.1.0".to_string())
     );
@@ -77,9 +81,11 @@ fn app_sources_compile_without_owning_review_card_component() {
     let source = read_source("EngramApp.mll");
     assert!(source.contains("pkg::mosaic-pkg-deck-stats::DeckStatsPanel"));
     assert!(source.contains("pkg::mosaic-pkg-review-card::ReviewCard"));
+    assert!(source.contains("pkg::mosaic-pkg-review-actions::ReviewActions"));
     assert!(source.contains("pkg::mosaic-pkg-session-progress::SessionProgress"));
     assert!(!source.contains("layout DeckStatsPanel"));
     assert!(!source.contains("layout ReviewCard"));
+    assert!(!source.contains("layout ReviewActions"));
     assert!(!source.contains("layout SessionProgress"));
 }
 
@@ -146,6 +152,24 @@ fn app_manifest_resolves_review_card_dependency() {
 }
 
 #[test]
+fn app_manifest_resolves_review_actions_dependency() {
+    let resolver = dependency_resolver();
+
+    match resolver.resolve("ReviewActions") {
+        Some(Resolution::Component {
+            package,
+            component,
+            package_path,
+        }) => {
+            assert_eq!(package, "mosaic-pkg-review-actions");
+            assert_eq!(component, "ReviewActions");
+            assert!(package_path.ends_with("mosaic-pkg-review-actions"));
+        }
+        other => panic!("expected ReviewActions component resolution, got {other:?}"),
+    }
+}
+
+#[test]
 fn app_manifest_resolves_session_progress_dependency() {
     let resolver = dependency_resolver();
 
@@ -204,6 +228,10 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert!(
         html.contains("#0f766e"),
         "SessionProgress package styles should reach EngramApp HTML"
+    );
+    assert!(
+        html.contains("#7c3aed"),
+        "ReviewActions package styles should reach EngramApp HTML"
     );
     assert!(
         html.contains("#f87171"),
@@ -291,27 +319,22 @@ fn native_project_shells_expose_engram_host_contract() {
         .unwrap_or_else(|e| panic!("{backend:?} should emit EngramApp project shell: {e}"));
     }
 
-    let react_app = fs::read_to_string(
-        tmp.path()
-            .join("react")
-            .join("src")
-            .join("main.tsx"),
-    )
-    .expect("react/src/main.tsx");
+    let react_app = fs::read_to_string(tmp.path().join("react").join("src").join("main.tsx"))
+        .expect("react/src/main.tsx");
     assert_contains(&react_app, "<EngramApp");
     assert_contains(&react_app, "appTitle=\"Sample AppTitle\"");
     assert_contains(&react_app, "answerVisible={false}");
-    assert_contains(
-        &react_app,
-        "dispatch={(ev) => console.log(\"event:\", ev)}",
-    );
+    assert_contains(&react_app, "actionUndoLabel=\"Sample ActionUndoLabel\"");
+    assert_contains(&react_app, "actionMarkLabel=\"Sample ActionMarkLabel\"");
+    assert_contains(&react_app, "dispatch={(ev) => console.log(\"event:\", ev)}");
 
-    let flutter_app =
-        fs::read_to_string(tmp.path().join("flutter").join("lib").join("main.dart"))
-            .expect("flutter/lib/main.dart");
+    let flutter_app = fs::read_to_string(tmp.path().join("flutter").join("lib").join("main.dart"))
+        .expect("flutter/lib/main.dart");
     assert_contains(&flutter_app, "EngramApp(");
     assert_contains(&flutter_app, "appTitle: \"Sample AppTitle\",");
     assert_contains(&flutter_app, "answerVisible: false,");
+    assert_contains(&flutter_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
+    assert_contains(&flutter_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
     assert_contains(
         &flutter_app,
         "dispatch: (event) => debugPrint(\"event: $event\")",
@@ -326,6 +349,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal hard()");
     assert_contains(&qml, "signal good()");
     assert_contains(&qml, "signal easy()");
+    assert_contains(&qml, "signal undo()");
+    assert_contains(&qml, "signal buryCard()");
+    assert_contains(&qml, "signal burySiblings()");
+    assert_contains(&qml, "signal suspendCard()");
+    assert_contains(&qml, "signal toggleMark()");
 
     let swift = fs::read_to_string(tmp.path().join("swiftui").join("EngramApp.swift"))
         .expect("EngramApp.swift");
@@ -335,9 +363,16 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case hard");
     assert_contains(&swift, "case good");
     assert_contains(&swift, "case easy");
+    assert_contains(&swift, "case undo");
+    assert_contains(&swift, "case buryCard");
+    assert_contains(&swift, "case burySiblings");
+    assert_contains(&swift, "case suspendCard");
+    assert_contains(&swift, "case toggleMark");
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
     assert_contains(&swift, "let answerVisible: Bool");
+    assert_contains(&swift, "let actionUndoLabel: String");
+    assert_contains(&swift, "let actionMarkLabel: String");
     let swift_app = fs::read_to_string(
         tmp.path()
             .join("swiftui")
@@ -349,6 +384,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift_app, "EngramAppView(");
     assert_contains(&swift_app, "appTitle: \"Sample AppTitle\",");
     assert_contains(&swift_app, "answerVisible: false,");
+    assert_contains(&swift_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
+    assert_contains(&swift_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
     assert_contains(&swift_app, "dispatch: { event in");
 
     let xaml_code_behind = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.xaml.cs"))
@@ -360,6 +397,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty AnswerVisibleProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty ActionUndoLabelProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty ActionMarkLabelProperty",
     );
     assert_contains(
         &xaml_code_behind,
@@ -387,6 +432,26 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record Easy() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record Undo() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BuryCard() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BurySiblings() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record SuspendCard() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record ToggleMark() : EngramAppEvent;",
     );
 
     let capi_header = fs::read_to_string(

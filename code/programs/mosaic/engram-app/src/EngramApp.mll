@@ -47,5 +47,17 @@ layout EngramApp {
         onEasy : emit: onEasy
       )
     }
+    pkg::mosaic-pkg-review-actions::ReviewActions (
+      undo-label : slot: action-undo-label ,
+      bury-card-label : slot: action-bury-card-label ,
+      bury-siblings-label : slot: action-bury-siblings-label ,
+      suspend-card-label : slot: action-suspend-card-label ,
+      mark-label : slot: action-mark-label ,
+      onUndo : emit: onUndo ,
+      onBuryCard : emit: onBuryCard ,
+      onBurySiblings : emit: onBurySiblings ,
+      onSuspendCard : emit: onSuspendCard ,
+      onToggleMark : emit: onToggleMark
+    )
   }
 }

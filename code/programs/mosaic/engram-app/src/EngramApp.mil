@@ -32,10 +32,20 @@ component EngramApp {
   slot correct-value : text ;
   slot total-label : text ;
   slot total-value : text ;
+  slot action-undo-label : text ;
+  slot action-bury-card-label : text ;
+  slot action-bury-siblings-label : text ;
+  slot action-suspend-card-label : text ;
+  slot action-mark-label : text ;
 
   emit onReveal ;
   emit onAgain ;
   emit onHard ;
   emit onGood ;
   emit onEasy ;
+  emit onUndo ;
+  emit onBuryCard ;
+  emit onBurySiblings ;
+  emit onSuspendCard ;
+  emit onToggleMark ;
 }

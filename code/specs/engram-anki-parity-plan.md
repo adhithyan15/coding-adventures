@@ -527,6 +527,8 @@ Status:
 - `code/packages/mosaic-pkg-review-card` adds the first reusable
   `ReviewCard` component package. It now composes
   `mosaic-pkg-rating-controls` instead of owning the rating button row.
+- `code/packages/mosaic-pkg-review-actions` adds reusable Anki-style undo,
+  bury-card, bury-siblings, suspend-card, and mark/unmark review controls.
 - `code/packages/mosaic-pkg-rating-controls` adds reusable
   Again/Hard/Good/Easy answer grading controls with label slots and review
   events.
@@ -546,6 +548,9 @@ Status:
 - The Engram app smoke test now compares `EngramSession::engram_app_props`
   keys against the compiled `EngramApp.mil` slots, so shared core/facade
   bindings fail fast when the Mosaic app interface changes.
+- The Engram event bridge now handles generated review action events from the
+  Mosaic app (`onUndo`, `onBuryCard`, `onBurySiblings`, `onSuspendCard`, and
+  `onToggleMark`) by dispatching the existing shared Rust reducer commands.
 - `mosaic-package-artifact-builder` now emits XAML project-shell side files
   through the same package build path as React/HTML/Qt/SwiftUI/etc., and the
   Engram app smoke test verifies native project shells for Qt, SwiftUI, and

@@ -166,6 +166,69 @@ impl EngramSession {
                 EngramAppEvent::Reveal => {
                     self.state = reduce(&self.state, engram_core::EngramCommand::RevealCurrentCard);
                 }
+                EngramAppEvent::Undo => {
+                    let session_id = active_session_id(&self.state, "undo")?;
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::UndoLastReview { session_id },
+                    );
+                }
+                EngramAppEvent::BuryCard => {
+                    let card_id = current_active_card_id(&self.state, "bury")?;
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::BuryCard {
+                            card_id,
+                            buried_at: now,
+                            buried_until: now.saturating_add(engram_core::ONE_DAY_MS),
+                        },
+                    );
+                }
+                EngramAppEvent::BurySiblings => {
+                    let card_id = current_active_card_id(&self.state, "bury siblings")?;
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::BuryCardSiblings {
+                            card_id,
+                            buried_at: now,
+                            buried_until: now.saturating_add(engram_core::ONE_DAY_MS),
+                        },
+                    );
+                }
+                EngramAppEvent::SuspendCard => {
+                    let card_id = current_active_card_id(&self.state, "suspend")?;
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::SuspendCard {
+                            card_id,
+                            suspended_at: now,
+                        },
+                    );
+                }
+                EngramAppEvent::ToggleMark => {
+                    let card_id = current_active_card_id(&self.state, "mark")?;
+                    let is_marked = self
+                        .state
+                        .card_progress
+                        .iter()
+                        .find(|progress| progress.card_id == card_id)
+                        .and_then(|progress| progress.marked_at)
+                        .is_some();
+                    self.state = if is_marked {
+                        reduce(
+                            &self.state,
+                            engram_core::EngramCommand::UnmarkCard { card_id },
+                        )
+                    } else {
+                        reduce(
+                            &self.state,
+                            engram_core::EngramCommand::MarkCard {
+                                card_id,
+                                marked_at: now,
+                            },
+                        )
+                    };
+                }
                 EngramAppEvent::Rate(rating) => {
                     let active_session = self
                         .state
@@ -437,6 +500,20 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
         .active_session
         .as_ref()
         .and_then(|active| active.queue.get(active.current_index));
+    let active_progress = active_card.and_then(|card| {
+        state
+            .card_progress
+            .iter()
+            .find(|progress| progress.card_id == card.id)
+    });
+    let mark_label = if active_progress
+        .and_then(|progress| progress.marked_at)
+        .is_some()
+    {
+        "Unmark"
+    } else {
+        "Mark"
+    };
     let hidden_count = stats.suspended_count + stats.buried_count;
     let (current_value, remaining_value, correct_value, total_value, progress_label) =
         if let Some(progress) = &progress {
@@ -488,6 +565,11 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
         "correct-value": correct_value,
         "total-label": "Total",
         "total-value": total_value,
+        "action-undo-label": "Undo",
+        "action-bury-card-label": "Bury card",
+        "action-bury-siblings-label": "Bury siblings",
+        "action-suspend-card-label": "Suspend",
+        "action-mark-label": mark_label,
     })
 }
 
@@ -506,6 +588,11 @@ fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum EngramAppEvent {
     Reveal,
+    Undo,
+    BuryCard,
+    BurySiblings,
+    SuspendCard,
+    ToggleMark,
     Rate(Rating),
 }
 
@@ -513,6 +600,11 @@ impl EngramAppEvent {
     fn canonical_name(self) -> &'static str {
         match self {
             Self::Reveal => "onReveal",
+            Self::Undo => "onUndo",
+            Self::BuryCard => "onBuryCard",
+            Self::BurySiblings => "onBurySiblings",
+            Self::SuspendCard => "onSuspendCard",
+            Self::ToggleMark => "onToggleMark",
             Self::Rate(Rating::Again) => "onAgain",
             Self::Rate(Rating::Hard) => "onHard",
             Self::Rate(Rating::Good) => "onGood",
@@ -525,12 +617,40 @@ fn parse_engram_app_event(event: &str) -> Result<EngramAppEvent, String> {
     let lowered = event.trim().to_ascii_lowercase();
     match lowered.strip_prefix("on").unwrap_or(&lowered) {
         "reveal" => Ok(EngramAppEvent::Reveal),
+        "undo" => Ok(EngramAppEvent::Undo),
+        "burycard" | "bury-card" | "bury_card" => Ok(EngramAppEvent::BuryCard),
+        "burysiblings" | "bury-siblings" | "bury_siblings" | "burynote" | "bury-note"
+        | "bury_note" => Ok(EngramAppEvent::BurySiblings),
+        "suspendcard" | "suspend-card" | "suspend_card" | "suspend" => {
+            Ok(EngramAppEvent::SuspendCard)
+        }
+        "togglemark" | "toggle-mark" | "toggle_mark" | "mark" => Ok(EngramAppEvent::ToggleMark),
         "again" => Ok(EngramAppEvent::Rate(Rating::Again)),
         "hard" => Ok(EngramAppEvent::Rate(Rating::Hard)),
         "good" => Ok(EngramAppEvent::Rate(Rating::Good)),
         "easy" => Ok(EngramAppEvent::Rate(Rating::Easy)),
         _ => Err(format!("unknown Engram app event: {event}")),
     }
+}
+
+fn active_session_id(state: &AppState, action: &str) -> Result<String, String> {
+    state
+        .active_session
+        .as_ref()
+        .map(|active| active.session_id.clone())
+        .ok_or_else(|| format!("cannot {action} without an active session"))
+}
+
+fn current_active_card_id(state: &AppState, action: &str) -> Result<String, String> {
+    let active_session = state
+        .active_session
+        .as_ref()
+        .ok_or_else(|| format!("cannot {action} without an active session"))?;
+    active_session
+        .queue
+        .get(active_session.current_index)
+        .map(|card| card.id.clone())
+        .ok_or_else(|| format!("cannot {action} without a current card"))
 }
 
 fn rating_label(rating: Rating) -> &'static str {
@@ -1485,6 +1605,14 @@ mod tests {
         assert_eq!(value["props"]["current-value"], "1 / 2");
         assert_eq!(value["props"]["remaining-value"], "2");
         assert_eq!(value["props"]["total-value"], "2");
+        assert_eq!(value["props"]["action-undo-label"], "Undo");
+        assert_eq!(value["props"]["action-bury-card-label"], "Bury card");
+        assert_eq!(
+            value["props"]["action-bury-siblings-label"],
+            "Bury siblings"
+        );
+        assert_eq!(value["props"]["action-suspend-card-label"], "Suspend");
+        assert_eq!(value["props"]["action-mark-label"], "Mark");
     }
 
     #[test]
@@ -1538,6 +1666,143 @@ mod tests {
         assert_eq!(rated["state"]["reviews"][0]["rating"], "good");
         assert_eq!(rated["state"]["sessions"][0]["cardsReviewed"], 1);
         assert_eq!(rated["state"]["sessions"][0]["cardsCorrect"], 1);
+
+        let undone: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onUndo", "deck", NOW + 2))
+                .unwrap();
+        assert_eq!(undone["ok"], true);
+        assert_eq!(undone["event"], "onUndo");
+        assert!(undone["state"]["reviews"].as_array().unwrap().is_empty());
+        assert_eq!(undone["props"]["prompt"], "letter-a");
+        assert_eq!(undone["props"]["answer-visible"], true);
+        assert_eq!(undone["state"]["sessions"][0]["cardsReviewed"], 0);
+        assert_eq!(undone["state"]["sessions"][0]["cardsCorrect"], 0);
+    }
+
+    #[test]
+    fn handle_engram_app_review_actions_mark_bury_and_suspend_current_cards() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {
+                    "id":"note::forward",
+                    "deckId":"deck",
+                    "front":"letter-a",
+                    "back":"a",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                },
+                {
+                    "id":"note::reverse",
+                    "deckId":"deck",
+                    "front":"a",
+                    "back":"letter-a",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"reverse","ordinal":1}
+                },
+                {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [
+                    {
+                        "id":"note::forward",
+                        "deckId":"deck",
+                        "front":"letter-a",
+                        "back":"a",
+                        "createdAt":1700000000000,
+                        "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                    },
+                    {
+                        "id":"note::reverse",
+                        "deckId":"deck",
+                        "front":"a",
+                        "back":"letter-a",
+                        "createdAt":1700000000000,
+                        "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"reverse","ordinal":1}
+                    },
+                    {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+                ],
+                "startedAt": 1700000000000
+            }"#,
+        );
+
+        let marked: Value =
+            serde_json::from_str(&session.handle_engram_app_event("toggle-mark", "deck", NOW))
+                .unwrap();
+        assert_eq!(marked["ok"], true);
+        assert_eq!(marked["event"], "onToggleMark");
+        assert_eq!(
+            marked["state"]["cardProgress"][0]["cardId"],
+            "note::forward"
+        );
+        assert_eq!(marked["state"]["cardProgress"][0]["markedAt"], NOW);
+        assert_eq!(marked["props"]["action-mark-label"], "Unmark");
+
+        let buried_sibling: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBurySiblings",
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(buried_sibling["ok"], true);
+        assert_eq!(buried_sibling["event"], "onBurySiblings");
+        assert!(buried_sibling["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|progress| progress["cardId"] == "note::reverse"
+                && progress["buriedUntil"] == NOW + 1 + engram_core::ONE_DAY_MS));
+        let queue = buried_sibling["state"]["activeSession"]["queue"]
+            .as_array()
+            .unwrap();
+        assert_eq!(queue.len(), 2);
+        assert_eq!(queue[0]["id"], "note::forward");
+        assert_eq!(queue[1]["id"], "other");
+
+        let buried_current: Value =
+            serde_json::from_str(&session.handle_engram_app_event("bury-card", "deck", NOW + 2))
+                .unwrap();
+        assert_eq!(buried_current["ok"], true);
+        assert_eq!(buried_current["event"], "onBuryCard");
+        let queue = buried_current["state"]["activeSession"]["queue"]
+            .as_array()
+            .unwrap();
+        assert_eq!(queue.len(), 1);
+        assert_eq!(queue[0]["id"], "other");
+        assert_eq!(buried_current["props"]["prompt"], "letter-aa");
+
+        let suspended: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onSuspendCard",
+            "deck",
+            NOW + 3,
+        ))
+        .unwrap();
+        assert_eq!(suspended["ok"], true);
+        assert_eq!(suspended["event"], "onSuspendCard");
+        assert!(suspended["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|progress| progress["cardId"] == "other" && progress["suspendedAt"] == NOW + 3));
+        assert!(suspended["state"]["activeSession"]["queue"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+        assert_eq!(suspended["props"]["prompt"], "No cards queued");
     }
 
     #[test]

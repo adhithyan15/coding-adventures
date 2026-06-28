@@ -94,6 +94,12 @@ without an active session or contains shared review counters such as
 `totalCards`, `currentPosition`, `remainingCards`, `cardsReviewed`,
 `cardsCorrect`, `revealed`, and `completed`.
 
+`engram_app_props` includes Mosaic-slot-shaped labels for secondary review
+actions such as undo, bury card, bury siblings, suspend, and mark/unmark.
+`handle_engram_app_event` accepts those generated events (`onUndo`,
+`onBuryCard`, `onBurySiblings`, `onSuspendCard`, and `onToggleMark`) and routes
+them through the same core reducer commands used by direct JSON dispatch.
+
 `daily_limit_usage` returns `{ ok: true, usage }` with new/review counts already
 seen in a host-provided day window and the remaining slots from `DeckOptions`.
 `build_queue_with_daily_limits` uses the same usage calculation before returning

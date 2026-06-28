@@ -1,0 +1,19 @@
+// ReviewActions.mil - Anki-style review management controls.
+//
+// This component owns the target-neutral action strip for controls that are
+// not answer ratings: undo, bury, suspend, and mark. Hosts route emitted events
+// into the shared Engram core instead of reimplementing review mutations.
+
+component ReviewActions {
+  slot undo-label : text ;
+  slot bury-card-label : text ;
+  slot bury-siblings-label : text ;
+  slot suspend-card-label : text ;
+  slot mark-label : text ;
+
+  emit onUndo ;
+  emit onBuryCard ;
+  emit onBurySiblings ;
+  emit onSuspendCard ;
+  emit onToggleMark ;
+}
