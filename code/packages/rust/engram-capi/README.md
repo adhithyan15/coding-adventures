@@ -41,6 +41,10 @@ and `eg_import_anki_apkg` applies that imported state to the session. These
 byte-slice APIs currently support `collection.anki2` and `collection.anki21`
 packages and return JSON errors for modern `collection.anki21b` packages until
 the modern Anki package reader lands.
+`eg_export_anki_apkg` writes the current session as a deterministic legacy/V11
+APKG and returns the package bytes as a JSON byte array under `apkg`, keeping
+the native ABI string-shaped while target-specific shells decide how to save or
+share the bytes.
 `eg_inspect_anki_apkg` returns collection/media manifest JSON, and
 `eg_read_anki_apkg_media` reads one archived media payload by archive name for
 native import flows that need to copy audio or images alongside imported cards.

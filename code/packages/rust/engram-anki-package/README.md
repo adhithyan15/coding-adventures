@@ -7,7 +7,10 @@ member (`collection.anki2`, `collection.anki21`, or `collection.anki21b`), and
 parses the legacy JSON `media` map into archive-name to filename metadata.
 It can resolve media archive members into filename metadata plus byte payloads,
 and can also write a deterministic legacy package envelope from existing
-`collection.anki2` bytes plus media assets.
+`collection.anki2` bytes plus media assets. `write_v11_collection_bytes_from_engram_state`
+generates a legacy/V11 SQLite collection from `engram-core::AppState`, and
+`write_legacy_apkg_from_engram_state` wraps that collection in a deterministic
+APKG envelope.
 
 It also parses legacy/V11 SQLite collection files into an owned Anki
 representation. `read_v11_collection` accepts APKG bytes, extracts
@@ -21,11 +24,12 @@ Anki IDs as deterministic Engram IDs. Cloze note types render
 `[...]` / `[hint]` question behavior used by the core cloze generator.
 
 `read_collection_bytes` returns the detected collection member as raw bytes for
-inspection workflows. `read_v11_collection_bytes` is the import boundary for the
-next SQLite milestone: it accepts `collection.anki2` and `collection.anki21`,
+inspection workflows. `read_v11_collection_bytes` is the import boundary for
+legacy SQLite packages: it accepts `collection.anki2` and `collection.anki21`,
 but rejects `collection.anki21b` until Engram has modern Anki V18 package
 support.
 
-The crate still does not generate SQLite collections. Export can build on these
-V11 structs and the existing deterministic legacy APKG envelope writer without
-pushing ZIP, media, or Anki package-format concerns into `engram-core`.
+The export path preserves numeric Anki IDs when Engram state came from Anki,
+allocates deterministic numeric IDs for Engram-native rows, writes decks,
+models, notes, cards, progress, and review rows, and falls back to a synthetic
+Basic note type for standalone front/back cards.

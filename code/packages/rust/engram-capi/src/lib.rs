@@ -8,7 +8,10 @@ use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::ptr;
 
-use engram_anki_package::{inspect_apkg, read_media_file, read_v11_collection_as_engram_state};
+use engram_anki_package::{
+    inspect_apkg, read_media_file, read_v11_collection_as_engram_state,
+    write_legacy_apkg_from_engram_state,
+};
 use engram_core_wasm::EngramSession;
 use serde_json::{json, Value};
 
@@ -347,6 +350,16 @@ pub unsafe extern "C" fn eg_parse_anki_notes_tsv(
 }
 
 /// # Safety
+/// `session` must be a valid session pointer.
+#[no_mangle]
+pub unsafe extern "C" fn eg_export_anki_apkg(session: *mut EgSession) -> *mut c_char {
+    if session.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr(export_anki_apkg_json(&(*session).inner))
+}
+
+/// # Safety
 /// `session` must be valid; `data` must point to `data_len` APKG bytes.
 #[no_mangle]
 pub unsafe extern "C" fn eg_inspect_anki_apkg(
@@ -476,6 +489,13 @@ fn import_anki_apkg_json(session: &mut EngramSession, bytes: &[u8]) -> String {
             Ok(snapshot_json) => session.load_snapshot(&snapshot_json),
             Err(error) => error_json(&format!("failed to serialize imported Anki state: {error}")),
         },
+        Err(error) => error_json(&error.message),
+    }
+}
+
+fn export_anki_apkg_json(session: &EngramSession) -> String {
+    match write_legacy_apkg_from_engram_state(session.state(), &[]) {
+        Ok(apkg) => ok_json_with("apkg", serde_json::to_value(apkg).unwrap_or(Value::Null)),
         Err(error) => error_json(&error.message),
     }
 }
@@ -737,6 +757,87 @@ CREATE TABLE graves (
             let snapshot: Value = serde_json::from_str(&snapshot).unwrap();
             assert_eq!(snapshot["state"]["cards"][0]["front"], "hola");
             assert_eq!(snapshot["state"]["sessions"][0]["status"], "completed");
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_exports_anki_apkg_bytes() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"2","name":"Spanish::Latin","description":"Story deck","createdAt":1641600000000}],
+                    "noteTypes": [{
+                        "id":"100",
+                        "name":"Basic",
+                        "fields":[
+                            {"id":"100:field:0","name":"Front","required":true,"ordinal":0},
+                            {"id":"100:field:1","name":"Back","required":true,"ordinal":1}
+                        ],
+                        "templates":[{
+                            "id":"100:template:0",
+                            "name":"Card 1",
+                            "frontTemplate":"{{Front}}",
+                            "backTemplate":"{{Back}}",
+                            "requiredFieldNames":["Front"],
+                            "ordinal":0
+                        }],
+                        "createdAt":1641600000000,
+                        "updatedAt":1641600000000
+                    }],
+                    "notes": [{
+                        "id":"1000",
+                        "noteTypeId":"100",
+                        "deckId":"2",
+                        "fields":[
+                            {"fieldId":"100:field:0","value":"hola"},
+                            {"fieldId":"100:field:1","value":"hello"}
+                        ],
+                        "tags":["spanish"],
+                        "createdAt":1700000010000,
+                        "updatedAt":1700000010000
+                    }],
+                    "cards": [{
+                        "id":"2000",
+                        "deckId":"2",
+                        "front":"hola",
+                        "back":"hello",
+                        "createdAt":1700000020000,
+                        "lineage":{
+                            "noteId":"1000",
+                            "noteTypeId":"100",
+                            "templateId":"100:template:0",
+                            "ordinal":0,
+                            "clozeOrdinal":null
+                        }
+                    }],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            let loaded = take(eg_load_snapshot(session, snapshot.as_ptr()));
+            assert!(loaded.contains(r#""ok":true"#));
+
+            let exported = take(eg_export_anki_apkg(session));
+            let exported: Value = serde_json::from_str(&exported).unwrap();
+            assert_eq!(exported["ok"], true);
+            let apkg = exported["apkg"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|byte| byte.as_u64().unwrap() as u8)
+                .collect::<Vec<_>>();
+
+            let parsed = take(eg_parse_anki_apkg(session, apkg.as_ptr(), apkg.len()));
+            let parsed: Value = serde_json::from_str(&parsed).unwrap();
+            assert_eq!(parsed["ok"], true);
+            assert_eq!(parsed["state"]["decks"][0]["name"], "Spanish::Latin");
+            assert_eq!(parsed["state"]["cards"][0]["front"], "hola");
+            assert_eq!(parsed["state"]["cards"][0]["back"], "hello");
 
             eg_session_free(session);
         }

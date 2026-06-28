@@ -253,7 +253,9 @@ Formats:
   legacy/V11 SQLite collection bytes into owned Anki decks, note types, notes,
   cards, revlog rows, and graves, and maps them into `engram-core::AppState`
   with deterministic IDs, rendered card fronts/backs, cloze card rendering,
-  and preserved scheduled-card color flags.
+  and preserved scheduled-card color flags. The same crate now generates
+  deterministic legacy/V11 SQLite collection bytes from `AppState` and wraps
+  them in an APKG envelope for the first native export path.
 
 Next APKG SQLite milestone:
 
@@ -283,8 +285,14 @@ Next APKG SQLite milestone:
   `eg_inspect_anki_apkg` and `eg_read_anki_apkg_media`, so SwiftUI/XAML/Qt
   shells can inspect package contents and copy referenced audio/images without
   duplicating ZIP/media-map parsing.
-- Export the first APKG as a deterministic legacy package with reset scheduling
-  before attempting full scheduling fidelity.
+- `eg_export_anki_apkg` now exports the current session as a deterministic
+  legacy/V11 APKG JSON byte array for native shells. The writer preserves
+  imported numeric IDs when possible, allocates stable numeric IDs for
+  Engram-native rows, writes decks/models/notes/cards/progress/revlog rows, and
+  falls back to a synthetic Basic note type for standalone front/back cards.
+- Next export fidelity steps: preserve raw Anki model CSS/config/GUID/checksum
+  metadata in `AppState`, export media payloads from durable state, and add
+  modern `.anki21b` package writing after the V18 reader exists.
 - SQL-built V11 fixtures and package round-trips through the existing ZIP
   envelope helpers now cover the parser. Next: add a small checked-in
   Anki-generated golden fixture.
@@ -350,6 +358,8 @@ Status:
 - Native APKG manifest inspection and on-demand media extraction are exposed
   through the C ABI as JSON helpers, keeping ZIP/media-map behavior out of
   target-specific shells.
+- Native APKG export is exposed through `eg_export_anki_apkg`, returning a JSON
+  byte array for the generated legacy/V11 package.
 
 ## Workstream 3: Engram Web App
 

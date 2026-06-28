@@ -91,6 +91,7 @@ char *eg_parse_anki_notes_tsv(
     const char *note_id_prefix,
     uint64_t created_at
 );
+char *eg_export_anki_apkg(EgSession *session);
 char *eg_inspect_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
 char *eg_read_anki_apkg_media(
     EgSession *session,

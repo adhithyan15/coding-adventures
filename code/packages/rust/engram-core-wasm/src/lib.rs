@@ -30,6 +30,10 @@ impl EngramSession {
         Self::default()
     }
 
+    pub fn state(&self) -> &AppState {
+        &self.state
+    }
+
     pub fn snapshot(&self) -> String {
         ok_with("state", &self.state)
     }

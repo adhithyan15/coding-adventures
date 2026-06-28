@@ -7,6 +7,7 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
 
+use coding_adventures_sha1::sum1;
 use engram_core::{
     render_template, AppState, Card, CardFlag, CardLineage, CardProgress, CardState, CardTemplate,
     Deck, FieldDef, Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
@@ -343,6 +344,38 @@ pub fn write_legacy_apkg(collection_anki2: &[u8], media_assets: &[MediaAsset<'_>
     writer.finish()
 }
 
+pub fn write_v11_collection_bytes_from_engram_state(
+    state: &AppState,
+) -> Result<Vec<u8>, ApkgError> {
+    let export = ExportModel::from_state(state)?;
+    let sqlite_file = tempfile::NamedTempFile::new()
+        .map_err(|err| apkg_error(format!("failed to create temporary SQLite file: {err}")))?;
+
+    {
+        let connection = Connection::open(sqlite_file.path()).map_err(|err| {
+            apkg_error(format!(
+                "failed to open temporary Anki V11 SQLite collection: {err}"
+            ))
+        })?;
+        create_v11_export_schema(&connection)?;
+        write_v11_export_rows(&connection, &export)?;
+    }
+
+    std::fs::read(sqlite_file.path()).map_err(|err| {
+        apkg_error(format!(
+            "failed to read exported Anki V11 collection: {err}"
+        ))
+    })
+}
+
+pub fn write_legacy_apkg_from_engram_state(
+    state: &AppState,
+    media_assets: &[MediaAsset<'_>],
+) -> Result<Vec<u8>, ApkgError> {
+    let collection = write_v11_collection_bytes_from_engram_state(state)?;
+    Ok(write_legacy_apkg(&collection, media_assets))
+}
+
 pub fn read_v11_collection(data: &[u8]) -> Result<AnkiV11Collection, ApkgError> {
     let collection = read_v11_collection_bytes(data)?;
     parse_v11_collection_bytes(&collection)
@@ -519,6 +552,911 @@ pub fn v11_collection_to_engram_state(
         reviews,
         active_session: None,
     })
+}
+
+#[derive(Clone, Debug)]
+struct ExportDeck {
+    key: String,
+    name: String,
+    description: String,
+    created_at: u64,
+}
+
+#[derive(Clone, Debug)]
+struct ExportNoteType {
+    key: String,
+    name: String,
+    kind: i64,
+    fields: Vec<FieldDef>,
+    templates: Vec<CardTemplate>,
+    created_at: u64,
+    updated_at: u64,
+}
+
+#[derive(Clone, Debug)]
+struct ExportNote {
+    key: String,
+    note_type_key: String,
+    fields: Vec<NoteFieldValue>,
+    tags: Vec<String>,
+    created_at: u64,
+    updated_at: u64,
+}
+
+#[derive(Clone, Debug)]
+struct ExportCard {
+    key: String,
+    note_key: String,
+    deck_key: String,
+    template_ordinal: u32,
+    created_at: u64,
+}
+
+#[derive(Clone, Debug)]
+struct ExportModel {
+    created_at_days: i64,
+    modified_at_seconds: i64,
+    decks: Vec<ExportDeck>,
+    note_types: Vec<ExportNoteType>,
+    notes: Vec<ExportNote>,
+    cards: Vec<ExportCard>,
+    reviews: Vec<Review>,
+    progress_by_card: HashMap<String, CardProgress>,
+    deck_ids: BTreeMap<String, i64>,
+    note_type_ids: BTreeMap<String, i64>,
+    note_ids: BTreeMap<String, i64>,
+    card_ids: BTreeMap<String, i64>,
+}
+
+impl ExportModel {
+    fn from_state(state: &AppState) -> Result<Self, ApkgError> {
+        let default_deck_key = "1".to_string();
+        let notes_by_id: HashMap<&str, &Note> = state
+            .notes
+            .iter()
+            .map(|note| (note.id.as_str(), note))
+            .collect();
+        let note_types_by_id: HashMap<&str, &NoteType> = state
+            .note_types
+            .iter()
+            .map(|note_type| (note_type.id.as_str(), note_type))
+            .collect();
+        let progress_by_card: HashMap<String, CardProgress> = state
+            .card_progress
+            .iter()
+            .cloned()
+            .map(|progress| (progress.card_id.clone(), progress))
+            .collect();
+
+        let mut decks = state
+            .decks
+            .iter()
+            .map(|deck| ExportDeck {
+                key: deck.id.clone(),
+                name: deck.name.clone(),
+                description: deck.description.clone(),
+                created_at: deck.created_at,
+            })
+            .collect::<Vec<_>>();
+        let mut known_decks = decks
+            .iter()
+            .map(|deck| deck.key.clone())
+            .collect::<BTreeSet<_>>();
+        for deck_key in state
+            .cards
+            .iter()
+            .map(|card| fallback_deck_key(&card.deck_id, &default_deck_key))
+            .chain(
+                state
+                    .notes
+                    .iter()
+                    .map(|note| fallback_deck_key(&note.deck_id, &default_deck_key)),
+            )
+        {
+            if known_decks.insert(deck_key.clone()) {
+                decks.push(ExportDeck {
+                    key: deck_key.clone(),
+                    name: deck_key,
+                    description: String::new(),
+                    created_at: 0,
+                });
+            }
+        }
+        if decks.is_empty() {
+            decks.push(ExportDeck {
+                key: default_deck_key.clone(),
+                name: "Default".to_string(),
+                description: String::new(),
+                created_at: 0,
+            });
+        }
+
+        let needs_synthetic_basic = state
+            .cards
+            .iter()
+            .any(|card| !has_exportable_lineage(card, &notes_by_id, &note_types_by_id));
+        let mut note_types = state
+            .note_types
+            .iter()
+            .map(|note_type| ExportNoteType {
+                key: note_type.id.clone(),
+                name: note_type.name.clone(),
+                kind: note_type_kind(note_type),
+                fields: note_type.fields.clone(),
+                templates: note_type.templates.clone(),
+                created_at: note_type.created_at,
+                updated_at: note_type.updated_at,
+            })
+            .collect::<Vec<_>>();
+        if needs_synthetic_basic
+            && !note_types
+                .iter()
+                .any(|note_type| note_type.key == SYNTHETIC_BASIC_NOTE_TYPE)
+        {
+            note_types.push(synthetic_basic_note_type());
+        }
+
+        let mut notes = Vec::with_capacity(state.notes.len() + state.cards.len());
+        for note in &state.notes {
+            if !note_types_by_id.contains_key(note.note_type_id.as_str()) {
+                return Err(apkg_error(format!(
+                    "Engram note {} references missing note type {}",
+                    note.id, note.note_type_id
+                )));
+            }
+            notes.push(ExportNote {
+                key: note.id.clone(),
+                note_type_key: note.note_type_id.clone(),
+                fields: note.fields.clone(),
+                tags: note.tags.clone(),
+                created_at: note.created_at,
+                updated_at: note.updated_at,
+            });
+        }
+
+        let mut cards = Vec::with_capacity(state.cards.len());
+        for card in &state.cards {
+            if let Some(lineage) = card
+                .lineage
+                .as_ref()
+                .filter(|lineage| lineage_is_exportable(lineage, &notes_by_id, &note_types_by_id))
+            {
+                cards.push(ExportCard {
+                    key: card.id.clone(),
+                    note_key: lineage.note_id.clone(),
+                    deck_key: fallback_deck_key(&card.deck_id, &default_deck_key),
+                    template_ordinal: lineage.ordinal,
+                    created_at: card.created_at,
+                });
+            } else {
+                let note_key = synthetic_basic_note_key(&card.id);
+                notes.push(ExportNote {
+                    key: note_key.clone(),
+                    note_type_key: SYNTHETIC_BASIC_NOTE_TYPE.to_string(),
+                    fields: vec![
+                        NoteFieldValue {
+                            field_id: SYNTHETIC_BASIC_FRONT_FIELD.to_string(),
+                            value: card.front.clone(),
+                        },
+                        NoteFieldValue {
+                            field_id: SYNTHETIC_BASIC_BACK_FIELD.to_string(),
+                            value: card.back.clone(),
+                        },
+                    ],
+                    tags: Vec::new(),
+                    created_at: card.created_at,
+                    updated_at: card.created_at,
+                });
+                cards.push(ExportCard {
+                    key: card.id.clone(),
+                    note_key,
+                    deck_key: fallback_deck_key(&card.deck_id, &default_deck_key),
+                    template_ordinal: 0,
+                    created_at: card.created_at,
+                });
+            }
+        }
+
+        let created_at_days = export_created_at_days(state, &decks, &notes, &cards);
+        let modified_at_seconds = export_modified_at_seconds(state, &notes, &cards);
+        let deck_ids = assign_anki_ids(decks.iter().map(|deck| deck.key.as_str()), 1_000_000);
+        let note_type_ids = assign_anki_ids(
+            note_types.iter().map(|note_type| note_type.key.as_str()),
+            2_000_000,
+        );
+        let note_ids = assign_anki_ids(notes.iter().map(|note| note.key.as_str()), 3_000_000);
+        let card_ids = assign_anki_ids(cards.iter().map(|card| card.key.as_str()), 4_000_000);
+
+        Ok(Self {
+            created_at_days,
+            modified_at_seconds,
+            decks,
+            note_types,
+            notes,
+            cards,
+            reviews: state.reviews.clone(),
+            progress_by_card,
+            deck_ids,
+            note_type_ids,
+            note_ids,
+            card_ids,
+        })
+    }
+}
+
+const SYNTHETIC_BASIC_NOTE_TYPE: &str = "engram-basic";
+const SYNTHETIC_BASIC_FRONT_FIELD: &str = "engram-basic:field:0";
+const SYNTHETIC_BASIC_BACK_FIELD: &str = "engram-basic:field:1";
+const SYNTHETIC_BASIC_TEMPLATE: &str = "engram-basic:template:0";
+
+fn create_v11_export_schema(connection: &Connection) -> Result<(), ApkgError> {
+    connection
+        .execute_batch(
+            r#"
+PRAGMA user_version = 11;
+CREATE TABLE col (
+  id integer primary key,
+  crt integer not null,
+  mod integer not null,
+  scm integer not null,
+  ver integer not null,
+  dty integer not null,
+  usn integer not null,
+  ls integer not null,
+  conf text not null,
+  models text not null,
+  decks text not null,
+  dconf text not null,
+  tags text not null
+);
+CREATE TABLE notes (
+  id integer primary key,
+  guid text not null,
+  mid integer not null,
+  mod integer not null,
+  usn integer not null,
+  tags text not null,
+  flds text not null,
+  sfld text not null,
+  csum integer not null,
+  flags integer not null,
+  data text not null
+);
+CREATE TABLE cards (
+  id integer primary key,
+  nid integer not null,
+  did integer not null,
+  ord integer not null,
+  mod integer not null,
+  usn integer not null,
+  type integer not null,
+  queue integer not null,
+  due integer not null,
+  ivl integer not null,
+  factor integer not null,
+  reps integer not null,
+  lapses integer not null,
+  left integer not null,
+  odue integer not null,
+  odid integer not null,
+  flags integer not null,
+  data text not null
+);
+CREATE TABLE revlog (
+  id integer primary key,
+  cid integer not null,
+  usn integer not null,
+  ease integer not null,
+  ivl integer not null,
+  lastIvl integer not null,
+  factor integer not null,
+  time integer not null,
+  type integer not null
+);
+CREATE TABLE graves (
+  usn integer not null,
+  oid integer not null,
+  type integer not null
+);
+"#,
+        )
+        .map_err(|err| apkg_error(format!("failed to create Anki V11 export schema: {err}")))
+}
+
+fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Result<(), ApkgError> {
+    let decks_json = serde_json::to_string(&export_decks_json(export))
+        .map_err(|err| apkg_error(format!("failed to serialize Anki deck map: {err}")))?;
+    let models_json = serde_json::to_string(&export_note_types_json(export))
+        .map_err(|err| apkg_error(format!("failed to serialize Anki model map: {err}")))?;
+    let tags_json = serde_json::to_string(&export_tags_json(export))
+        .map_err(|err| apkg_error(format!("failed to serialize Anki tag map: {err}")))?;
+
+    connection
+        .execute(
+            "INSERT INTO col VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+            rusqlite::params![
+                1_i64,
+                export.created_at_days,
+                export.modified_at_seconds,
+                export.modified_at_seconds,
+                11_i64,
+                0_i64,
+                -1_i64,
+                0_i64,
+                serde_json::json!({ "nextPos": export.cards.len() }).to_string(),
+                models_json,
+                decks_json,
+                serde_json::json!({ "1": { "id": 1, "name": "Default" } }).to_string(),
+                tags_json,
+            ],
+        )
+        .map_err(|err| apkg_error(format!("failed to write Anki col row: {err}")))?;
+
+    for note in &export.notes {
+        let note_type = export
+            .note_types
+            .iter()
+            .find(|note_type| note_type.key == note.note_type_key)
+            .ok_or_else(|| {
+                apkg_error(format!(
+                    "Engram note {} references missing export note type {}",
+                    note.key, note.note_type_key
+                ))
+            })?;
+        let fields = export_note_field_values(note, note_type);
+        let field_join = fields.join("\u{1f}");
+        let sort_field = fields.first().cloned().unwrap_or_default();
+        connection
+            .execute(
+                "INSERT INTO notes VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+                rusqlite::params![
+                    export.note_ids[&note.key],
+                    export_note_guid(&note.key, export.note_ids[&note.key]),
+                    export.note_type_ids[&note.note_type_key],
+                    millis_to_anki_seconds(note.updated_at.max(note.created_at)),
+                    -1_i64,
+                    join_anki_tags(&note.tags),
+                    field_join,
+                    sort_field,
+                    anki_field_checksum(&fields.first().cloned().unwrap_or_default()),
+                    0_i64,
+                    "",
+                ],
+            )
+            .map_err(|err| apkg_error(format!("failed to write Anki note {}: {err}", note.key)))?;
+    }
+
+    for (index, card) in export.cards.iter().enumerate() {
+        let progress = export.progress_by_card.get(&card.key);
+        let scheduling = export_card_scheduling(progress, export.created_at_days, index);
+        connection
+            .execute(
+                "INSERT INTO cards VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18)",
+                rusqlite::params![
+                    export.card_ids[&card.key],
+                    export.note_ids[&card.note_key],
+                    export.deck_ids[&card.deck_key],
+                    i64::from(card.template_ordinal),
+                    export_card_modified_at(card, progress),
+                    -1_i64,
+                    scheduling.kind,
+                    scheduling.queue,
+                    scheduling.due,
+                    scheduling.interval,
+                    scheduling.factor,
+                    scheduling.repetitions,
+                    scheduling.lapses,
+                    scheduling.left,
+                    0_i64,
+                    0_i64,
+                    scheduling.flags,
+                    "",
+                ],
+            )
+            .map_err(|err| apkg_error(format!("failed to write Anki card {}: {err}", card.key)))?;
+    }
+
+    let mut used_review_ids = BTreeSet::new();
+    for review in &export.reviews {
+        let Some(card_id) = export.card_ids.get(&review.card_id) else {
+            return Err(apkg_error(format!(
+                "Engram review {} references missing card {}",
+                review.id, review.card_id
+            )));
+        };
+        let review_id = unique_review_id(review, &mut used_review_ids);
+        connection
+            .execute(
+                "INSERT INTO revlog VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+                rusqlite::params![
+                    review_id,
+                    card_id,
+                    -1_i64,
+                    rating_to_v11_ease(review.rating),
+                    review
+                        .resulting_progress
+                        .as_ref()
+                        .map(|progress| i64::from(progress.interval))
+                        .unwrap_or_default(),
+                    review
+                        .previous_progress
+                        .as_ref()
+                        .map(|progress| i64::from(progress.interval))
+                        .unwrap_or_default(),
+                    review
+                        .resulting_progress
+                        .as_ref()
+                        .map(progress_factor_to_anki)
+                        .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64),
+                    0_i64,
+                    review_kind(review),
+                ],
+            )
+            .map_err(|err| {
+                apkg_error(format!("failed to write Anki review {}: {err}", review.id))
+            })?;
+    }
+
+    Ok(())
+}
+
+fn export_decks_json(export: &ExportModel) -> Value {
+    let mut object = serde_json::Map::new();
+    for deck in &export.decks {
+        let id = export.deck_ids[&deck.key];
+        object.insert(
+            id.to_string(),
+            serde_json::json!({
+                "id": id,
+                "name": deck.name,
+                "desc": deck.description,
+                "mod": millis_to_anki_seconds(deck.created_at),
+                "usn": -1,
+                "conf": 1,
+                "dyn": 0,
+                "extendNew": 10,
+                "extendRev": 50,
+            }),
+        );
+    }
+    Value::Object(object)
+}
+
+fn export_note_types_json(export: &ExportModel) -> Value {
+    let mut object = serde_json::Map::new();
+    for note_type in &export.note_types {
+        let id = export.note_type_ids[&note_type.key];
+        let fields = note_type
+            .fields
+            .iter()
+            .map(|field| {
+                serde_json::json!({
+                    "name": field.name,
+                    "ord": field.ordinal,
+                    "sticky": false,
+                    "rtl": false,
+                    "font": "Arial",
+                    "size": 20,
+                })
+            })
+            .collect::<Vec<_>>();
+        let templates = note_type
+            .templates
+            .iter()
+            .map(|template| {
+                serde_json::json!({
+                    "name": template.name,
+                    "ord": template.ordinal,
+                    "qfmt": template.front_template,
+                    "afmt": template.back_template,
+                    "did": null,
+                    "bqfmt": "",
+                    "bafmt": "",
+                })
+            })
+            .collect::<Vec<_>>();
+        object.insert(
+            id.to_string(),
+            serde_json::json!({
+                "id": id,
+                "name": note_type.name,
+                "type": note_type.kind,
+                "mod": millis_to_anki_seconds(note_type.updated_at.max(note_type.created_at)),
+                "usn": -1,
+                "sortf": 0,
+                "did": null,
+                "css": ".card { font-family: arial; font-size: 20px; text-align: center; color: black; background-color: white; }",
+                "latexPre": "\\documentclass[12pt]{article}",
+                "latexPost": "\\end{document}",
+                "flds": fields,
+                "tmpls": templates,
+            }),
+        );
+    }
+    Value::Object(object)
+}
+
+fn export_tags_json(export: &ExportModel) -> Value {
+    let mut object = serde_json::Map::new();
+    for tag in export.notes.iter().flat_map(|note| note.tags.iter()) {
+        object.insert(tag.clone(), Value::Number(1.into()));
+    }
+    Value::Object(object)
+}
+
+fn export_note_field_values(note: &ExportNote, note_type: &ExportNoteType) -> Vec<String> {
+    let fields_by_id: HashMap<&str, &str> = note
+        .fields
+        .iter()
+        .map(|field| (field.field_id.as_str(), field.value.as_str()))
+        .collect();
+    let mut fields = note_type.fields.clone();
+    fields.sort_by_key(|field| field.ordinal);
+    fields
+        .iter()
+        .map(|field| {
+            fields_by_id
+                .get(field.id.as_str())
+                .copied()
+                .unwrap_or_default()
+                .to_string()
+        })
+        .collect()
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct ExportCardScheduling {
+    kind: i64,
+    queue: i64,
+    due: i64,
+    interval: i64,
+    factor: i64,
+    repetitions: i64,
+    lapses: i64,
+    left: i64,
+    flags: i64,
+}
+
+fn export_card_scheduling(
+    progress: Option<&CardProgress>,
+    collection_created_at_days: i64,
+    index: usize,
+) -> ExportCardScheduling {
+    let Some(progress) = progress else {
+        return ExportCardScheduling {
+            kind: 0,
+            queue: 0,
+            due: index.saturating_add(1) as i64,
+            interval: 0,
+            factor: (INITIAL_EASE_FACTOR * 1000.0).round() as i64,
+            repetitions: 0,
+            lapses: 0,
+            left: 0,
+            flags: 0,
+        };
+    };
+    if is_export_metadata_overlay(progress) {
+        return ExportCardScheduling {
+            kind: 0,
+            queue: 0,
+            due: index.saturating_add(1) as i64,
+            interval: 0,
+            factor: progress_factor_to_anki(progress),
+            repetitions: 0,
+            lapses: 0,
+            left: 0,
+            flags: progress.flag.map(card_flag_to_anki).unwrap_or_default(),
+        };
+    }
+
+    let (kind, queue, due) = match progress.state {
+        CardState::Learning => (1, 1, millis_to_anki_seconds(progress.next_due_at).max(1)),
+        CardState::Relearning => (3, 1, millis_to_anki_seconds(progress.next_due_at).max(1)),
+        CardState::Suspended => (
+            review_or_new_kind(progress),
+            -1,
+            millis_to_anki_due_day(collection_created_at_days, progress.next_due_at),
+        ),
+        CardState::Buried => (
+            review_or_new_kind(progress),
+            -2,
+            millis_to_anki_due_day(collection_created_at_days, progress.next_due_at),
+        ),
+        CardState::Review => (
+            review_or_new_kind(progress),
+            2,
+            millis_to_anki_due_day(collection_created_at_days, progress.next_due_at),
+        ),
+    };
+
+    ExportCardScheduling {
+        kind,
+        queue,
+        due,
+        interval: i64::from(progress.interval),
+        factor: progress_factor_to_anki(progress),
+        repetitions: i64::from(progress.times_seen),
+        lapses: i64::from(progress.times_incorrect),
+        left: progress
+            .learning_step_index
+            .map(i64::from)
+            .unwrap_or_default(),
+        flags: progress.flag.map(card_flag_to_anki).unwrap_or_default(),
+    }
+}
+
+fn review_or_new_kind(progress: &CardProgress) -> i64 {
+    if progress.times_seen == 0 && progress.interval == 0 {
+        0
+    } else {
+        2
+    }
+}
+
+fn is_export_metadata_overlay(progress: &CardProgress) -> bool {
+    progress.state == CardState::Review
+        && progress.interval == 0
+        && progress.learning_step_index.is_none()
+        && progress.buried_until.is_none()
+        && progress.suspended_at.is_none()
+        && progress.times_seen == 0
+        && progress.times_correct == 0
+        && progress.times_incorrect == 0
+}
+
+fn progress_factor_to_anki(progress: &CardProgress) -> i64 {
+    (progress.ease_factor * 1000.0)
+        .round()
+        .clamp(0.0, i64::MAX as f64) as i64
+}
+
+fn card_flag_to_anki(flag: CardFlag) -> i64 {
+    match flag {
+        CardFlag::Red => 1,
+        CardFlag::Orange => 2,
+        CardFlag::Green => 3,
+        CardFlag::Blue => 4,
+        CardFlag::Pink => 5,
+        CardFlag::Turquoise => 6,
+        CardFlag::Purple => 7,
+    }
+}
+
+fn export_card_modified_at(card: &ExportCard, progress: Option<&CardProgress>) -> i64 {
+    let timestamp = progress
+        .map(|progress| progress.last_seen_at.max(card.created_at))
+        .unwrap_or(card.created_at);
+    millis_to_anki_seconds(timestamp)
+}
+
+fn rating_to_v11_ease(rating: Rating) -> i64 {
+    match rating {
+        Rating::Again => 1,
+        Rating::Hard => 2,
+        Rating::Good => 3,
+        Rating::Easy => 4,
+    }
+}
+
+fn review_kind(review: &Review) -> i64 {
+    match review
+        .resulting_progress
+        .as_ref()
+        .map(|progress| progress.state)
+    {
+        Some(CardState::Learning) => 0,
+        Some(CardState::Relearning) => 2,
+        _ => 1,
+    }
+}
+
+fn unique_review_id(review: &Review, used: &mut BTreeSet<i64>) -> i64 {
+    let mut candidate = review
+        .id
+        .parse::<i64>()
+        .ok()
+        .filter(|id| *id > 0)
+        .unwrap_or_else(|| i64::try_from(review.reviewed_at).unwrap_or(i64::MAX));
+    if candidate <= 0 {
+        candidate = 1;
+    }
+    while !used.insert(candidate) {
+        candidate = candidate.saturating_add(1);
+    }
+    candidate
+}
+
+fn assign_anki_ids<'a>(
+    keys: impl IntoIterator<Item = &'a str>,
+    generated_base: i64,
+) -> BTreeMap<String, i64> {
+    let mut mapped = BTreeMap::new();
+    let mut used = BTreeSet::new();
+    let mut next_generated = generated_base.max(1);
+
+    for key in keys {
+        if mapped.contains_key(key) {
+            continue;
+        }
+        let id = key
+            .parse::<i64>()
+            .ok()
+            .filter(|id| *id > 0 && !used.contains(id))
+            .unwrap_or_else(|| {
+                while used.contains(&next_generated) {
+                    next_generated = next_generated.saturating_add(1);
+                }
+                let id = next_generated;
+                next_generated = next_generated.saturating_add(1);
+                id
+            });
+        used.insert(id);
+        mapped.insert(key.to_string(), id);
+    }
+
+    mapped
+}
+
+fn has_exportable_lineage(
+    card: &Card,
+    notes_by_id: &HashMap<&str, &Note>,
+    note_types_by_id: &HashMap<&str, &NoteType>,
+) -> bool {
+    card.lineage
+        .as_ref()
+        .is_some_and(|lineage| lineage_is_exportable(lineage, notes_by_id, note_types_by_id))
+}
+
+fn lineage_is_exportable(
+    lineage: &CardLineage,
+    notes_by_id: &HashMap<&str, &Note>,
+    note_types_by_id: &HashMap<&str, &NoteType>,
+) -> bool {
+    notes_by_id.contains_key(lineage.note_id.as_str())
+        && note_types_by_id
+            .get(lineage.note_type_id.as_str())
+            .is_some_and(|note_type| {
+                note_type
+                    .templates
+                    .iter()
+                    .any(|template| template.id == lineage.template_id)
+            })
+}
+
+fn note_type_kind(note_type: &NoteType) -> i64 {
+    if note_type.templates.iter().any(|template| {
+        template.front_template.contains("{{cloze:") || template.back_template.contains("{{cloze:")
+    }) {
+        1
+    } else {
+        0
+    }
+}
+
+fn synthetic_basic_note_type() -> ExportNoteType {
+    ExportNoteType {
+        key: SYNTHETIC_BASIC_NOTE_TYPE.to_string(),
+        name: "Engram Basic".to_string(),
+        kind: 0,
+        fields: vec![
+            FieldDef {
+                id: SYNTHETIC_BASIC_FRONT_FIELD.to_string(),
+                name: "Front".to_string(),
+                required: true,
+                ordinal: 0,
+            },
+            FieldDef {
+                id: SYNTHETIC_BASIC_BACK_FIELD.to_string(),
+                name: "Back".to_string(),
+                required: true,
+                ordinal: 1,
+            },
+        ],
+        templates: vec![CardTemplate {
+            id: SYNTHETIC_BASIC_TEMPLATE.to_string(),
+            name: "Card 1".to_string(),
+            front_template: "{{Front}}".to_string(),
+            back_template: "{{Back}}".to_string(),
+            required_field_names: vec!["Front".to_string()],
+            ordinal: 0,
+        }],
+        created_at: 0,
+        updated_at: 0,
+    }
+}
+
+fn synthetic_basic_note_key(card_id: &str) -> String {
+    format!("engram-basic-note:{card_id}")
+}
+
+fn fallback_deck_key(deck_id: &str, default_deck_key: &str) -> String {
+    if deck_id.is_empty() {
+        default_deck_key.to_string()
+    } else {
+        deck_id.to_string()
+    }
+}
+
+fn export_created_at_days(
+    state: &AppState,
+    decks: &[ExportDeck],
+    notes: &[ExportNote],
+    cards: &[ExportCard],
+) -> i64 {
+    let earliest = decks
+        .iter()
+        .map(|deck| deck.created_at)
+        .chain(notes.iter().map(|note| note.created_at))
+        .chain(cards.iter().map(|card| card.created_at))
+        .chain(
+            state
+                .card_progress
+                .iter()
+                .map(|progress| progress.last_seen_at),
+        )
+        .chain(state.reviews.iter().map(|review| review.reviewed_at))
+        .filter(|timestamp| *timestamp > 0)
+        .min()
+        .unwrap_or_default();
+    (earliest / ONE_DAY_MS) as i64
+}
+
+fn export_modified_at_seconds(state: &AppState, notes: &[ExportNote], cards: &[ExportCard]) -> i64 {
+    let latest = notes
+        .iter()
+        .map(|note| note.updated_at.max(note.created_at))
+        .chain(cards.iter().map(|card| card.created_at))
+        .chain(
+            state
+                .card_progress
+                .iter()
+                .map(|progress| progress.last_seen_at),
+        )
+        .chain(state.reviews.iter().map(|review| review.reviewed_at))
+        .max()
+        .unwrap_or_default();
+    millis_to_anki_seconds(latest)
+}
+
+fn millis_to_anki_seconds(millis: u64) -> i64 {
+    i64::try_from(millis / 1000).unwrap_or(i64::MAX)
+}
+
+fn millis_to_anki_due_day(collection_created_at_days: i64, millis: u64) -> i64 {
+    let absolute_day = i64::try_from(millis / ONE_DAY_MS).unwrap_or(i64::MAX);
+    absolute_day.saturating_sub(collection_created_at_days)
+}
+
+fn export_note_guid(note_key: &str, note_id: i64) -> String {
+    if note_key
+        .chars()
+        .all(|value| value.is_ascii_alphanumeric() || value == '_')
+        && note_key.len() <= 64
+    {
+        note_key.to_string()
+    } else {
+        format!("engram-{note_id}")
+    }
+}
+
+fn join_anki_tags(tags: &[String]) -> String {
+    let normalized = tags
+        .iter()
+        .filter_map(|tag| {
+            let tag = tag.trim();
+            (!tag.is_empty()).then_some(tag)
+        })
+        .collect::<Vec<_>>();
+    if normalized.is_empty() {
+        String::new()
+    } else {
+        format!(" {} ", normalized.join(" "))
+    }
+}
+
+fn anki_field_checksum(sort_field: &str) -> i64 {
+    let digest = sum1(sort_field.as_bytes());
+    u32::from_be_bytes([digest[0], digest[1], digest[2], digest[3]]) as i64
 }
 
 fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
@@ -1925,6 +2863,181 @@ CREATE TABLE graves (
 
         assert_eq!(state.cards[0].front, "hola");
         assert_eq!(state.cards[0].back, "hello");
+    }
+
+    #[test]
+    fn writes_v11_collection_from_engram_note_state() {
+        let state = AppState {
+            decks: vec![Deck {
+                id: "2".to_string(),
+                name: "Spanish::Latin".to_string(),
+                description: "Story deck".to_string(),
+                created_at: 1_641_600_000_000,
+            }],
+            note_types: vec![NoteType {
+                id: "100".to_string(),
+                name: "Basic".to_string(),
+                fields: vec![
+                    FieldDef {
+                        id: "100:field:0".to_string(),
+                        name: "Front".to_string(),
+                        required: true,
+                        ordinal: 0,
+                    },
+                    FieldDef {
+                        id: "100:field:1".to_string(),
+                        name: "Back".to_string(),
+                        required: true,
+                        ordinal: 1,
+                    },
+                ],
+                templates: vec![CardTemplate {
+                    id: "100:template:0".to_string(),
+                    name: "Card 1".to_string(),
+                    front_template: "{{Front}}".to_string(),
+                    back_template: "{{Back}}".to_string(),
+                    required_field_names: vec!["Front".to_string()],
+                    ordinal: 0,
+                }],
+                created_at: 1_641_600_000_000,
+                updated_at: 1_641_600_000_000,
+            }],
+            notes: vec![Note {
+                id: "1000".to_string(),
+                note_type_id: "100".to_string(),
+                deck_id: "2".to_string(),
+                fields: vec![
+                    NoteFieldValue {
+                        field_id: "100:field:0".to_string(),
+                        value: "hola".to_string(),
+                    },
+                    NoteFieldValue {
+                        field_id: "100:field:1".to_string(),
+                        value: "hello".to_string(),
+                    },
+                ],
+                tags: vec!["spanish".to_string(), "roots".to_string()],
+                created_at: 1_700_000_010_000,
+                updated_at: 1_700_000_010_000,
+            }],
+            cards: vec![Card {
+                id: "2000".to_string(),
+                deck_id: "2".to_string(),
+                front: "hola".to_string(),
+                back: "hello".to_string(),
+                created_at: 1_700_000_020_000,
+                lineage: Some(CardLineage {
+                    note_id: "1000".to_string(),
+                    note_type_id: "100".to_string(),
+                    template_id: "100:template:0".to_string(),
+                    ordinal: 0,
+                    cloze_ordinal: None,
+                }),
+            }],
+            card_progress: vec![CardProgress {
+                card_id: "2000".to_string(),
+                state: CardState::Review,
+                interval: 7,
+                ease_factor: 2.5,
+                next_due_at: 1_704_672_000_000,
+                learning_step_index: None,
+                buried_until: None,
+                suspended_at: None,
+                times_seen: 3,
+                times_correct: 2,
+                times_incorrect: 1,
+                last_seen_at: 1_700_000_030_000,
+                flag: Some(CardFlag::Blue),
+                marked_at: None,
+            }],
+            sessions: Vec::new(),
+            reviews: vec![Review {
+                id: "1700000030000".to_string(),
+                session_id: "session".to_string(),
+                card_id: "2000".to_string(),
+                rating: Rating::Good,
+                reviewed_at: 1_700_000_030_000,
+                previous_progress: None,
+                resulting_progress: None,
+                previous_active_session: None,
+                sibling_progress_snapshots: Vec::new(),
+            }],
+            active_session: None,
+        };
+
+        let collection = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+
+        assert_eq!(collection.decks[0].id, 2);
+        assert_eq!(collection.decks[0].name, "Spanish::Latin");
+        assert_eq!(collection.note_types[0].id, 100);
+        assert_eq!(collection.notes[0].id, 1000);
+        assert_eq!(collection.notes[0].tags, vec!["spanish", "roots"]);
+        assert_eq!(collection.cards[0].id, 2000);
+        assert_eq!(collection.cards[0].queue, 2);
+        assert_eq!(collection.cards[0].interval, 7);
+        assert_eq!(collection.cards[0].factor, 2500);
+        assert_eq!(collection.cards[0].flags, 4);
+        assert_eq!(collection.reviews[0].card_id, 2000);
+        assert_eq!(collection.reviews[0].ease, 3);
+
+        let apkg = write_legacy_apkg_from_engram_state(&state, &[]).unwrap();
+        let imported = read_v11_collection_as_engram_state(&apkg).unwrap();
+
+        assert_eq!(imported.decks[0].name, "Spanish::Latin");
+        assert_eq!(imported.notes[0].fields[0].value, "hola");
+        assert_eq!(imported.cards[0].front, "hola");
+        assert_eq!(imported.cards[0].back, "hello");
+        assert_eq!(imported.card_progress[0].interval, 7);
+        assert_eq!(imported.card_progress[0].flag, Some(CardFlag::Blue));
+    }
+
+    #[test]
+    fn writes_standalone_cards_as_synthetic_basic_notes() {
+        let state = AppState {
+            decks: vec![Deck {
+                id: "language".to_string(),
+                name: "Tamil".to_string(),
+                description: String::new(),
+                created_at: 1_700_000_000_000,
+            }],
+            note_types: Vec::new(),
+            notes: Vec::new(),
+            cards: vec![Card {
+                id: "card-alpha".to_string(),
+                deck_id: "language".to_string(),
+                front: "amma".to_string(),
+                back: "mother".to_string(),
+                created_at: 1_700_000_000_000,
+                lineage: None,
+            }],
+            card_progress: Vec::new(),
+            sessions: Vec::new(),
+            reviews: Vec::new(),
+            active_session: None,
+        };
+
+        let collection = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+
+        assert_eq!(collection.decks[0].name, "Tamil");
+        assert_eq!(collection.note_types[0].name, "Engram Basic");
+        assert_eq!(collection.note_types[0].fields[0].name, "Front");
+        assert_eq!(collection.notes[0].field_values, vec!["amma", "mother"]);
+        assert_eq!(collection.cards[0].queue, 0);
+        assert_eq!(collection.cards[0].due, 1);
+
+        let imported = read_v11_collection_as_engram_state(
+            &write_legacy_apkg_from_engram_state(&state, &[]).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(imported.cards[0].front, "amma");
+        assert_eq!(imported.cards[0].back, "mother");
+        assert!(imported.card_progress.is_empty());
     }
 
     #[test]
