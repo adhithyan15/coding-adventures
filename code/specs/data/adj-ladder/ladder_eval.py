@@ -263,6 +263,72 @@ def _letter_for_engine_value(value: float, options: dict[str, OptionValue]) -> s
     return matches[0] if len(matches) == 1 else None
 
 
+_PROGRAM_WEIGHT_LINE = re.compile(
+    r"^(\s*(?:prior|contributes|interacts)\s+)\d+(?:\.\d+)?"
+)
+
+
+def decomposition_numbers(decomposition: str, *, program: bool = False) -> list[str]:
+    """Return numeric literals that must be grounded in the stem.
+
+    Program-backed rungs may include structural confidence weights such as
+    `prior 0.001` or `contributes 1000000 ...`; those are not math facts from the
+    word problem. Strip just that leading weight and keep every number in observed
+    facts, constraints, and predicate thresholds under the no-result-literals gate.
+    """
+    if not program:
+        return _NUM.findall(decomposition)
+    nums: list[str] = []
+    for raw in decomposition.splitlines():
+        line = _PROGRAM_WEIGHT_LINE.sub(r"\1", raw)
+        nums.extend(_NUM.findall(line))
+    return nums
+
+
+def program_requirements_hold(doc: dict | None, answer_from: dict | None) -> bool:
+    """Check optional native-program requirements beyond the solved value.
+
+    The first mixed reasoning rung requires a rule-derived premise to fire a
+    queried decision before the numeric solve is accepted. This keeps Python out of
+    the reasoning path: it only inspects the CLI JSON for a determinate leader and,
+    when requested, the evidence proof ADJ produced for that leader.
+    """
+    if not answer_from:
+        return True
+    requirements = answer_from.get("requires") or []
+    if not requirements:
+        return True
+    if not doc:
+        return False
+    for req in requirements:
+        if req.get("type") != "decision":
+            return False
+        decision = doc.get("decision")
+        leader = req.get("leader")
+        if not leader or not isinstance(decision, dict):
+            return False
+        if decision.get("type") != "determinate" or decision.get("leader") != leader:
+            return False
+        evidence = req.get("evidence")
+        if evidence:
+            ranked = doc.get("ranked") or []
+            proof_steps = []
+            for entry in ranked:
+                if isinstance(entry, dict) and entry.get("hypothesis") == leader:
+                    proof_steps = entry.get("proof") or []
+                    break
+            matched = [
+                step for step in proof_steps
+                if isinstance(step, dict)
+                and step.get("kind") == "contribution"
+                and step.get("evidence") == evidence
+                and step.get("evidence_proof")
+            ]
+            if not matched:
+                return False
+    return True
+
+
 def solve_assignment_to_letter(
     doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
 ) -> str | None:
@@ -273,6 +339,8 @@ def solve_assignment_to_letter(
     option lookup against the printed choices, preserving the invariant that Python
     never solves the equation."""
     if not doc or not answer_from or answer_from.get("type") != "solve_assignment":
+        return None
+    if not program_requirements_hold(doc, answer_from):
         return None
     name = answer_from.get("name")
     solve = doc.get("solve")
@@ -288,14 +356,14 @@ def solve_assignment_to_letter(
         return None
 
 
-def formula_is_faithful(formula: str, stem: str) -> bool:
+def formula_is_faithful(formula: str, stem: str, *, program: bool = False) -> bool:
     """The no-result-literals gate: every number in the formula must also appear in
     the stem. This is what stops a model (in --model mode) from smuggling the answer
     into the "decomposition" — it may write `7 * 8 + 3` (all from the stem) but not
     `59`. The gold formulae in items.json are authored to satisfy this too; the test
     suite re-checks them, so the gate is exercised even in cached mode."""
     stem_nums = set(_NUM.findall(stem))
-    return all(tok in stem_nums for tok in _NUM.findall(formula))
+    return all(tok in stem_nums for tok in decomposition_numbers(formula, program=program))
 
 
 # ----------------------------------------------------------------------------------
@@ -413,7 +481,7 @@ def score_item(item: dict, gen) -> ItemResult:
         if "program" in item:
             formula = None
             program = extract_program(raw)
-            faithful = bool(program) and formula_is_faithful(program, item["stem"])
+            faithful = bool(program) and formula_is_faithful(program, item["stem"], program=True)
         else:
             program = None
             formula = extract_formula(raw)
@@ -452,6 +520,48 @@ def decompose_prompt(item: dict) -> str:
     if "program" in item:
         answer_from = item.get("answer_from") or {}
         name = answer_from.get("name", "x")
+        requires = answer_from.get("requires") or []
+        decision_req = next((r for r in requires if r.get("type") == "decision"), None)
+        if decision_req:
+            leader = decision_req.get("leader", "setup_ready")
+            evidence = decision_req.get("evidence", "repeated_groups_problem")
+            return (
+                "Translate the word problem into a native ADJ program. Use observe "
+                "statements for the given quantities, derive the setup premise with "
+                "`rule { head: ... when: ... }`, make the derived premise fire the "
+                f"`{leader}` decision, then solve for `{name}`. Use ONLY numbers that "
+                "appear in the question except structural prior/LR weights. Do NOT "
+                "compute the answer, do NOT mention the answer choices, and output "
+                "ONLY the ADJ program.\n\n"
+                "Question: There are 21 boxes with 22 pencils in each box. How many "
+                "pencils are there?\n"
+                "Program:\n"
+                "prior 0.001 for setup_ready\n"
+                "contributes 1000000 from repeated_groups_problem to setup_ready\n"
+                "observe groups(21)\n"
+                "observe per_group(22)\n"
+                "rule { head: repeated_groups_problem when: groups(21), per_group(22) }\n"
+                "? setup_ready\n"
+                "symbol x : scalar\n"
+                "constrain x = groups * per_group\n"
+                "solve for { x }\n\n"
+                "Question: There are 23 bags with 24 beads in each bag and 25 loose "
+                "beads. How many beads are there altogether?\n"
+                "Program:\n"
+                "prior 0.001 for setup_ready\n"
+                "contributes 1000000 from repeated_groups_with_extra to setup_ready\n"
+                "observe groups(23)\n"
+                "observe per_group(24)\n"
+                "observe extra(25)\n"
+                "rule { head: repeated_groups_with_extra when: groups(23), per_group(24), extra(25) }\n"
+                "? setup_ready\n"
+                "symbol x : scalar\n"
+                "constrain x = groups * per_group + extra\n"
+                "solve for { x }\n\n"
+                f"Required decision leader: {leader}\n"
+                f"Required derived evidence: {evidence}\n"
+                f"Question: {item['stem']}\nProgram:"
+            )
         return (
             "Translate the word problem into a native ADJ solve program. Name the "
             f"requested unknown `{name}`. Use ONLY numbers that appear in the "

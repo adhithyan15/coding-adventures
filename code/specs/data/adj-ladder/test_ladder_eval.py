@@ -20,7 +20,12 @@ import ladder_eval as le
 import pytest
 
 HERE = Path(__file__).resolve().parent
-SELF_CONTAINED_RUNGS = ("rung0_arithmetic", "rung1_fractions_percent", "rung2_prealgebra_solve")
+SELF_CONTAINED_RUNGS = (
+    "rung0_arithmetic",
+    "rung1_fractions_percent",
+    "rung2_prealgebra_solve",
+    "rung2_derived_solve",
+)
 
 
 # ---- Arm-B program building ---------------------------------------------------
@@ -59,6 +64,20 @@ def test_result_literal_is_rejected():
 
 def test_extra_number_rejected():
     assert not le.formula_is_faithful("7 * 8 + 5", "What is 7 * 8 + 3?")
+
+
+def test_program_faithfulness_ignores_structural_weights_only():
+    program = "\n".join([
+        "prior 0.001 for setup_ready",
+        "contributes 1000000 from repeated_groups_with_extra to setup_ready",
+        "observe groups(9)",
+        "observe per_group(6)",
+        "observe extra(3)",
+        "constrain x = groups * per_group + extra",
+    ])
+    stem = "There are 9 rows with 6 chairs in each row, and 3 chairs are added."
+    assert le.formula_is_faithful(program, stem, program=True)
+    assert not le.formula_is_faithful(program + "\nconstrain x = 57", stem, program=True)
 
 
 # ---- decision → letter --------------------------------------------------------
@@ -116,6 +135,35 @@ def test_decompose_prompt_mentions_native_solve_program():
     assert "Do NOT compute the answer" in prompt
 
 
+def test_decompose_prompt_mentions_derived_solve_requirements():
+    prompt = le.decompose_prompt({
+        "stem": "There are 7 boxes with 8 pencils in each box. How many pencils are there?",
+        "program": (
+            "prior 0.001 for setup_ready\n"
+            "contributes 1000000 from repeated_groups_problem to setup_ready\n"
+            "observe groups(7)\n"
+            "observe per_group(8)\n"
+            "rule { head: repeated_groups_problem when: groups(7), per_group(8) }\n"
+            "? setup_ready\n"
+            "symbol x : scalar\n"
+            "constrain x = groups * per_group\n"
+            "solve for { x }\n"
+        ),
+        "answer_from": {
+            "type": "solve_assignment",
+            "name": "x",
+            "requires": [{
+                "type": "decision",
+                "leader": "setup_ready",
+                "evidence": "repeated_groups_problem",
+            }],
+        },
+    })
+    assert "derive the setup premise" in prompt
+    assert "Required decision leader: setup_ready" in prompt
+    assert "Required derived evidence: repeated_groups_problem" in prompt
+
+
 def test_extract_formula_abstains_on_latex():
     # Bare LaTeX/unicode math is NOT normalized in the harness. The model must
     # emit native ADJ syntax (`latex "..."`) so adj-lang owns parsing.
@@ -132,6 +180,24 @@ solve for { x }
 ```
 """
     assert le.extract_program(text) == "symbol x : scalar\nconstrain x + 7 = 19\nsolve for { x }\n"
+
+
+def test_extract_program_accepts_derived_solve_block():
+    text = """```adj
+prior 0.001 for setup_ready
+contributes 1000000 from repeated_groups_problem to setup_ready
+observe groups(7)
+observe per_group(8)
+rule { head: repeated_groups_problem when: groups(7), per_group(8) }
+? setup_ready
+symbol x : scalar
+constrain x = groups * per_group
+solve for { x }
+```"""
+    program = le.extract_program(text)
+    assert program is not None
+    assert "rule { head: repeated_groups_problem" in program
+    assert "? setup_ready" in program
 
 
 def test_model_aliases_resolve():
@@ -206,6 +272,38 @@ def test_solve_assignment_program_maps_engine_value_to_option():
         doc,
         {"type": "solve_assignment", "name": "x"},
         {"A": 10, "B": 11, "C": 12, "D": 13, "E": 14},
+    ) == "C"
+
+
+def test_solve_assignment_requires_derived_decision_proof():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    program = (
+        "prior 0.001 for setup_ready\n"
+        "contributes 1000000 from repeated_groups_problem to setup_ready\n"
+        "observe groups(7)\n"
+        "observe per_group(8)\n"
+        "rule { head: repeated_groups_problem when: groups(7), per_group(8) }\n"
+        "? setup_ready\n"
+        "symbol x : scalar\n"
+        "constrain x = groups * per_group\n"
+        "solve for { x }\n"
+    )
+    answer_from = {
+        "type": "solve_assignment",
+        "name": "x",
+        "requires": [{
+            "type": "decision",
+            "leader": "setup_ready",
+            "evidence": "repeated_groups_problem",
+        }],
+    }
+    doc = le.run_program(program)
+    assert le.program_requirements_hold(doc, answer_from)
+    assert le.solve_assignment_to_letter(
+        doc,
+        answer_from,
+        {"A": 48, "B": 54, "C": 56, "D": 63, "E": 64},
     ) == "C"
 
 

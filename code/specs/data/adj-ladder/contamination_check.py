@@ -117,6 +117,7 @@ def check(rung: str) -> list[str]:
             if gold in numeric_opts and abs(computed - numeric_opts[gold]) > 1e-9:
                 errors.append(f"{iid}: gold {gold}={opts[gold]} ≠ formula value {computed}")
             decomposition = it["formula"]
+            program_decomposition = False
         elif "program" in it:
             if not isinstance(it.get("answer_from"), dict):
                 errors.append(f"{iid}: program items must declare answer_from")
@@ -128,12 +129,17 @@ def check(rung: str) -> list[str]:
                         f"{iid}: gold {gold}={opts[gold]} ≠ ADJ program selection {letter}"
                     )
             decomposition = it["program"]
+            program_decomposition = True
         else:
             errors.append(f"{iid}: item must include either formula or program")
             decomposition = ""
+            program_decomposition = False
 
         stem_nums = set(_NUM.findall(it.get("stem", "")))
-        leaked = [n for n in _NUM.findall(decomposition) if n not in stem_nums]
+        leaked = [
+            n for n in le.decomposition_numbers(decomposition, program=program_decomposition)
+            if n not in stem_nums
+        ]
         if leaked:
             errors.append(
                 f"{iid}: decomposition numbers {leaked} not present in stem (result-literal leak)"

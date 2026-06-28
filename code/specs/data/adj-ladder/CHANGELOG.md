@@ -2,6 +2,23 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.6.0] — 2026-06-28
+
+### Added — mixed derived-premise + solve rung
+
+- **`rung2_derived_solve/items.json`** — 20 fresh repeated-groups MCQs where the
+  gold decomposition is a native ADJ program that derives a setup premise with
+  `observe` + `rule`, fires a queried `setup_ready` decision through the
+  deduction→evidence bridge, then solves the requested unknown with
+  `symbol` / `constrain` / `solve for`.
+- Program-backed items can now declare optional `answer_from.requires` checks. The
+  first requirement type verifies that the CLI produced a determinate decision leader
+  and, when an `evidence` atom is named, that the contribution contains an
+  `evidence_proof`.
+- The no-result-literals gate now treats `prior`/`contributes`/`interacts` leading
+  weights as structural ADJ confidence weights for program items while continuing to
+  check every observed, constraint, and predicate-threshold number against the stem.
+
 ## [0.5.0] — 2026-06-28
 
 ### Added — rung 2 native solve-program scaffold
