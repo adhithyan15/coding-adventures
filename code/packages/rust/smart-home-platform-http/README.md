@@ -112,7 +112,16 @@ bash BUILD
 Run the deterministic Hue fixture controller locally:
 
 ```bash
-cargo run -p smart-home-platform-http --example hue_fixture_controller -- 127.0.0.1:8123
+cargo run -p smart-home-platform-http --example hue_fixture_controller
+```
+
+The controller defaults to `127.0.0.1:8123`, accepts either a positional bind
+address or `--bind`, and prints dashboard, health, readiness, API catalog, and
+smoke-test URLs after the repo HTTP server binds:
+
+```bash
+cargo run -p smart-home-platform-http --example hue_fixture_controller -- --bind 127.0.0.1:8123
+cargo run -p smart-home-platform-http --example hue_fixture_controller -- --help
 ```
 
 Then query it from another shell:
