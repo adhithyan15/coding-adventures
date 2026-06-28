@@ -63,7 +63,13 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field, replace
 from typing import Literal
 
-from mosfet_models import MOSFET, Level1Model, Level1Params
+from mosfet_models import (
+    MOSFET,
+    Level1Model,
+    Level1Params,
+    MosfetType,
+    bulk_junction_capacitance,
+)
 
 from spice_engine.compatibility import (
     DeckAnalysisPlan,
@@ -8785,6 +8791,36 @@ def _mosfet_charge_state_voltage(n_plus: str, n_minus: str, node_voltages: dict[
     return _node_voltage(n_plus, node_voltages) - _node_voltage(n_minus, node_voltages)
 
 
+def _mosfet_charge_dynamic_capacitance(
+    el: Mosfet,
+    state_name: str,
+    zero_bias_capacitance: float,
+    state_voltage: float,
+) -> float:
+    params = getattr(getattr(el.model, "model", None), "params", None)
+    if params is None or zero_bias_capacitance <= 0.0:
+        return zero_bias_capacitance
+    if state_name not in {
+        _mosfet_source_body_charge_state_name(el),
+        _mosfet_drain_body_charge_state_name(el),
+    }:
+        return zero_bias_capacitance
+    junction_potential = getattr(params, "PB", 0.8)
+    grading_coefficient = getattr(params, "MJ", 0.5)
+    if not math.isfinite(junction_potential) or junction_potential <= 0.0:
+        raise ValueError(f"{el.name}: MOSFET PB must be finite and positive")
+    if not math.isfinite(grading_coefficient) or grading_coefficient < 0.0:
+        raise ValueError(f"{el.name}: MOSFET MJ must be finite and non-negative")
+    mosfet_type = getattr(el.model, "type", None)
+    junction_voltage = state_voltage if mosfet_type == MosfetType.PMOS else -state_voltage
+    return bulk_junction_capacitance(
+        zero_bias_capacitance,
+        junction_voltage,
+        junction_potential,
+        grading_coefficient,
+    )
+
+
 def _stamp_mosfet(
     G: list[list[float]],
     b: list[float],
@@ -9733,6 +9769,14 @@ def _build_transient_companions(
         elif isinstance(el, Mosfet):
             for state_name, n_plus, n_minus, capacitance in _mosfet_charge_state_specs(el):
                 v_prev = cap_voltages.get(state_name, 0.0)
+                capacitance = _mosfet_charge_dynamic_capacitance(
+                    el,
+                    state_name,
+                    capacitance,
+                    v_prev,
+                )
+                if capacitance <= 0.0:
+                    continue
                 if method == "trap":
                     g_eq = 2.0 * capacitance / h
                     I_eq = g_eq * v_prev + cap_currents.get(state_name, 0.0)
@@ -9972,6 +10016,17 @@ def _update_reactive_state(
                 v_new = _mosfet_charge_state_voltage(n_plus, n_minus, op.node_voltages)
                 v_prev = cap_voltages.get(state_name, v_new)
                 v_older = cap_voltages_older.get(state_name, v_prev)
+                capacitance = _mosfet_charge_dynamic_capacitance(
+                    el,
+                    state_name,
+                    capacitance,
+                    v_prev,
+                )
+
+                if capacitance <= 0.0:
+                    cap_voltages_older[state_name] = v_prev
+                    cap_voltages[state_name] = v_new
+                    continue
 
                 if method == "trap":
                     g_eq = 2.0 * capacitance / h

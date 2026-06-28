@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Shape Level-1 MOS reverse-biased bulk-junction capacitance with `PB` and
+  `MJ` model-card parameters for AC operating-point capacitance reports and
+  transient source-body / drain-body companions, matching Python and Rust,
+  with regression coverage for reverse-biased drain-step delay.
 - Stamp Level-1 MOS zero-bias bulk-junction `CBS` and `CBD` model-card storage
   as transient source-body and drain-body companions, matching Python and
   Rust, with regression coverage for drain-step delay.

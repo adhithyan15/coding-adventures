@@ -371,6 +371,57 @@ fn transient_mosfet_bulk_junction_capacitance_slows_drain_step() {
 }
 
 #[test]
+fn transient_mosfet_bulk_junction_depletion_shaping_reduces_reverse_bias_capacitance() {
+    fn run(grading_coefficient: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            1.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 1.0),
+                (1.0e-9, 2.0),
+                (5.0e-9, 2.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "drain", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                drain_bulk_capacitance: 1.0e-12,
+                bulk_junction_potential: 1.0,
+                bulk_junction_grading_coefficient: grading_coefficient,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+        transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()
+    }
+
+    let fixed = run(0.0);
+    let shaped = run(0.5);
+    let fixed_first = fixed[0].voltage("drain").unwrap();
+    let shaped_first = shaped[0].voltage("drain").unwrap();
+
+    assert!(
+        (fixed_first - 1.25).abs() < 0.08,
+        "expected fixed first step near 1.25 V, got fixed={fixed_first}, shaped={shaped_first}"
+    );
+    assert!(shaped_first > fixed_first + 0.04);
+    assert!(shaped_first < 1.4);
+}
+
+#[test]
 fn transient_diode_transit_time_holds_forward_charge_on_turnoff() {
     fn run(transit_time: f64) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();

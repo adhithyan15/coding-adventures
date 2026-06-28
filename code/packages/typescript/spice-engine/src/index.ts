@@ -973,6 +973,8 @@ export interface MosfetLevel1Params {
   readonly CGBO: number;
   readonly CBS: number;
   readonly CBD: number;
+  readonly PB: number;
+  readonly MJ: number;
 }
 
 export interface Mosfet {
@@ -6824,6 +6826,8 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     CGBO: 0.0,
     CBS: 0.0,
     CBD: 0.0,
+    PB: 0.8,
+    MJ: 0.5,
   };
 }
 
@@ -6936,6 +6940,8 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CJS: "CBS",
   CBD: "CBD",
   CJD: "CBD",
+  PB: "PB",
+  MJ: "MJ",
 };
 
 function modelTypeKey(text: string): string {
@@ -7102,6 +7108,8 @@ export function mosfetFromModelCard(
     ...(p.CGBO !== undefined ? { CGBO: p.CGBO } : {}),
     ...(p.CBS !== undefined ? { CBS: p.CBS } : {}),
     ...(p.CBD !== undefined ? { CBD: p.CBD } : {}),
+    ...(p.PB !== undefined ? { PB: p.PB } : {}),
+    ...(p.MJ !== undefined ? { MJ: p.MJ } : {}),
   };
   return mosfet(name, drain, gate, source, body, model.kind, params);
 }
@@ -7646,6 +7654,8 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
     CGBO: 1.0e-12,
     CBS: 4.0e-13,
     CBD: 3.0e-13,
+    PB: 0.9,
+    MJ: 0.45,
   });
   const mosCircuit = new Circuit();
   mosCircuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
@@ -7753,10 +7763,10 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
       expectedFinalMin: 0.68,
       expectedFinalMax: 0.73,
       chargeBehavior:
-        "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and zero-bias bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits",
+        "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits",
       deckLines: [
         "* device-model charge fixture: mos-level1-storage-charge",
-        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13)",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13 PB=0.9 MJ=0.45)",
         "Vdd vdd 0 1.8",
         "Vgate gate 0 1.8",
         "Rload vdd out 1k",
@@ -16897,6 +16907,22 @@ interface MosfetDcResult {
   readonly cbd: number;
 }
 
+function mosfetBulkJunctionCapacitance(
+  zeroBiasCapacitance: number,
+  junctionVoltage: number,
+  junctionPotential: number,
+  gradingCoefficient: number,
+): number {
+  if (zeroBiasCapacitance <= 0.0) {
+    return zeroBiasCapacitance;
+  }
+  if (junctionPotential <= 0.0 || gradingCoefficient === 0.0) {
+    return zeroBiasCapacitance;
+  }
+  const reverseScale = Math.max(0.0, -junctionVoltage) / junctionPotential;
+  return zeroBiasCapacitance / ((1.0 + reverseScale) ** gradingCoefficient);
+}
+
 interface JfetDcResult {
   readonly drainCurrent: number;
   readonly gm: number;
@@ -17080,20 +17106,24 @@ function stampMosfetCharge(
 ): void {
   for (const spec of mosfetChargeStateSpecs(element)) {
     const state = capacitorStates.find((candidate) => candidate.name === spec.name);
-    if (state === undefined || spec.capacitance <= 0.0) {
+    if (state === undefined) {
+      continue;
+    }
+    const capacitance = mosfetChargeDynamicCapacitance(element, spec, state.previousVoltage);
+    if (capacitance <= 0.0) {
       continue;
     }
     const conductance =
       state.method === "trap"
-        ? (2.0 * spec.capacitance) / state.timeStep
+        ? (2.0 * capacitance) / state.timeStep
         : state.method === "gear2"
-          ? (3.0 * spec.capacitance) / (2.0 * state.timeStep)
-          : spec.capacitance / state.timeStep;
+          ? (3.0 * capacitance) / (2.0 * state.timeStep)
+          : capacitance / state.timeStep;
     const historyCurrent =
       state.method === "trap"
         ? conductance * state.previousVoltage + state.previousCurrent
         : state.method === "gear2"
-          ? (spec.capacitance *
+          ? (capacitance *
               (4.0 * state.previousVoltage - state.previousPreviousVoltage)) /
             (2.0 * state.timeStep)
           : conductance * state.previousVoltage;
@@ -17143,12 +17173,14 @@ function evaluateNmosLevel1(
   const cgdOverlap = params.CGDO * params.W;
   const cgbOverlap = params.CGBO * params.L;
   const cgsIntrinsic = (2.0 / 3.0) * params.W * params.L * params.KP;
+  const cbsBulk = mosfetBulkJunctionCapacitance(params.CBS, vbs, params.PB, params.MJ);
+  const cbdBulk = mosfetBulkJunctionCapacitance(params.CBD, vbs - vds, params.PB, params.MJ);
   const capacitances = {
     cgs: cgsOverlap + cgsIntrinsic,
     cgd: cgdOverlap,
     cgb: cgbOverlap,
-    cbs: params.CBS,
-    cbd: params.CBD,
+    cbs: cbsBulk,
+    cbd: cbdBulk,
   };
   const threshold =
     params.PHI - vbs >= 0.0
@@ -17174,8 +17206,8 @@ function evaluateNmosLevel1(
       cgs: cgsOverlap + cgsIntrinsic / 2.0,
       cgd: cgdOverlap,
       cgb: cgbOverlap,
-      cbs: params.CBS,
-      cbd: params.CBD,
+      cbs: cbsBulk,
+      cbd: cbdBulk,
     };
   }
   const current = 0.5 * beta * overdrive * overdrive * (1.0 + params.LAMBDA * vds);
@@ -17188,8 +17220,8 @@ function evaluateNmosLevel1(
     cgs: cgsOverlap + (2.0 / 3.0) * cgsIntrinsic,
     cgd: cgdOverlap,
     cgb: cgbOverlap,
-    cbs: params.CBS,
-    cbd: params.CBD,
+    cbs: cbsBulk,
+    cbd: cbdBulk,
   };
 }
 
@@ -17408,6 +17440,7 @@ interface MosfetChargeStateSpec {
   readonly positive: string;
   readonly negative: string;
   readonly capacitance: number;
+  readonly kind: "gate-overlap" | "source-body" | "drain-body";
 }
 
 function mosfetGateSourceChargeStateName(element: Mosfet): string {
@@ -17443,6 +17476,7 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
       positive: element.gate,
       negative: element.source,
       capacitance: gateSourceCapacitance,
+      kind: "gate-overlap",
     });
   }
   if (gateDrainCapacitance > 0.0) {
@@ -17451,6 +17485,7 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
       positive: element.gate,
       negative: element.drain,
       capacitance: gateDrainCapacitance,
+      kind: "gate-overlap",
     });
   }
   if (gateBodyCapacitance > 0.0) {
@@ -17459,6 +17494,7 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
       positive: element.gate,
       negative: element.body,
       capacitance: gateBodyCapacitance,
+      kind: "gate-overlap",
     });
   }
   if (sourceBodyCapacitance > 0.0) {
@@ -17467,6 +17503,7 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
       positive: element.source,
       negative: element.body,
       capacitance: sourceBodyCapacitance,
+      kind: "source-body",
     });
   }
   if (drainBodyCapacitance > 0.0) {
@@ -17475,6 +17512,7 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
       positive: element.drain,
       negative: element.body,
       capacitance: drainBodyCapacitance,
+      kind: "drain-body",
     });
   }
   return specs;
@@ -17485,6 +17523,23 @@ function mosfetChargeStateVoltage(
   nodeVoltages: ReadonlyMap<string, number>,
 ): number {
   return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
+}
+
+function mosfetChargeDynamicCapacitance(
+  element: Mosfet,
+  spec: MosfetChargeStateSpec,
+  stateVoltage: number,
+): number {
+  if (spec.kind !== "source-body" && spec.kind !== "drain-body") {
+    return spec.capacitance;
+  }
+  const junctionVoltage = element.type === "PMOS" ? stateVoltage : -stateVoltage;
+  return mosfetBulkJunctionCapacitance(
+    spec.capacitance,
+    junctionVoltage,
+    element.params.PB,
+    element.params.MJ,
+  );
 }
 
 function validateBjt(element: Bjt): void {
@@ -17535,6 +17590,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.IS <= 0.0 || params.N_SUB <= 0.0 || params.T_NOM <= 0.0) {
     throw invalidElement(element.name, "MOSFET IS, N_SUB, and T_NOM must be positive");
+  }
+  if (params.PB <= 0.0 || params.MJ < 0.0) {
+    throw invalidElement(element.name, "MOSFET PB must be positive and MJ must be non-negative");
   }
   if (
     params.CGSO < 0.0 ||
@@ -17980,7 +18038,11 @@ function updateCapacitorStates(
             ? bjtChargeDynamicCapacitance(bjtElement!, bjtSpec.kind, previousVoltage)
             : jfetSpec !== undefined
               ? jfetSpec.capacitance
-              : mosfetSpec!.capacitance;
+              : mosfetChargeDynamicCapacitance(
+                  mosfetElement!,
+                  mosfetSpec!,
+                  state.previousVoltage,
+                );
     if (state.method === "trap") {
       const conductance = (2.0 * capacitance) / state.timeStep;
       state.previousCurrent = conductance * (voltage - previousVoltage) - previousCurrent;

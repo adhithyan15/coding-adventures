@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Shape Level-1 MOS reverse-biased bulk-junction capacitance with
+  `bulk_junction_potential` and `bulk_junction_grading_coefficient`
+  model-card parameters (`PB`/`MJ`) for AC operating-point capacitance reports
+  and transient source-body / drain-body companions, matching Python and
+  TypeScript, with regression coverage for reverse-biased drain-step delay.
 - Stamp Level-1 MOS zero-bias bulk-junction
   `source_bulk_capacitance` and `drain_bulk_capacitance` model-card storage as
   transient source-body and drain-body companions, matching Python and

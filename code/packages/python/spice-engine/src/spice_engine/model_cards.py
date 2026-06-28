@@ -218,6 +218,8 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "CJS": "CBS",
     "CBD": "CBD",
     "CJD": "CBD",
+    "PB": "PB",
+    "MJ": "MJ",
 }
 
 
@@ -399,6 +401,8 @@ def mosfet_from_model_card(
         CGBO=p.get("CGBO", defaults.CGBO),
         CBS=p.get("CBS", defaults.CBS),
         CBD=p.get("CBD", defaults.CBD),
+        PB=p.get("PB", defaults.PB),
+        MJ=p.get("MJ", defaults.MJ),
     )
     mos_type = MosfetType.NMOS if model.kind == "NMOS" else MosfetType.PMOS
     return Mosfet(name, drain, gate, source, body, MOSFET(mos_type, Level1Model(params)))
@@ -937,6 +941,8 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
             "CGBO": 1.0e-12,
             "CBS": 4.0e-13,
             "CBD": 3.0e-13,
+            "PB": 0.9,
+            "MJ": 0.45,
         },
     )
     mos_circuit = Circuit()
@@ -1053,12 +1059,12 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
             expected_final_max=0.73,
             charge_behavior=(
                 "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient "
-                "gate-overlap and zero-bias bulk-junction storage; explicit "
+                "gate-overlap and depletion-shaped bulk-junction storage; explicit "
                 "Cstore keeps the fixture comparable with other charge audits"
             ),
             deck_lines=(
                 "* device-model charge fixture: mos-level1-storage-charge",
-                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13)",
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13 PB=0.9 MJ=0.45)",
                 "Vdd vdd 0 1.8",
                 "Vgate gate 0 1.8",
                 "Rload vdd out 1k",

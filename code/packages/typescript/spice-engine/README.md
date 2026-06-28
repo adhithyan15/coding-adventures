@@ -206,9 +206,9 @@ Level-1 MOS charge audits. Diode `junctionCapacitance` / `transitTime`, BJT
 `baseEmitterCapacitance` / `baseCollectorCapacitance` / `forwardTransitTime` /
 `reverseTransitTime`, and JFET `gateSourceCapacitance` /
 `gateDrainCapacitance` plus Level-1 MOS `CGSO` / `CGDO` / `CGBO` model-card
-parameters plus zero-bias bulk-junction `CBS` / `CBD` model-card parameters
-also stamp transient storage, matching their small-signal AC capacitance
-semantics.
+parameters plus bulk-junction `CBS` / `CBD` model-card parameters also stamp
+transient storage, with MOS `PB` / `MJ` shaping reverse-biased source-body and
+drain-body capacitance to match their small-signal AC semantics.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.

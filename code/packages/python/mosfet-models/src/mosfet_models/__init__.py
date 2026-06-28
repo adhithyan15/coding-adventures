@@ -7,6 +7,7 @@ subsets land in v0.2.0 alongside the SPICE engine integration.
 from mosfet_models.level1 import (
     Level1Params,
     MosResult,
+    bulk_junction_capacitance,
     evaluate_level1,
 )
 from mosfet_models.mosfet import MOSFET, Level1Model, MosfetModel, MosfetType
@@ -21,5 +22,6 @@ __all__ = [
     "MosfetModel",
     "MosfetType",
     "__version__",
+    "bulk_junction_capacitance",
     "evaluate_level1",
 ]

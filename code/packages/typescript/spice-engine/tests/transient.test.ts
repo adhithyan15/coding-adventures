@@ -352,6 +352,41 @@ describe("transient", () => {
     expect(chargedFirst!).toBeLessThan(unchargedFirst!);
   });
 
+  it("shapes MOSFET bulk junction transient capacitance under reverse bias", () => {
+    function run(gradingCoefficient: number): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vstep",
+        "in",
+        "0",
+        1.0,
+        new PwlWaveform([
+          [0.0, 1.0],
+          [1.0e-9, 2.0],
+          [5.0e-9, 2.0],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "drain", 1_000.0));
+      circuit.add(mosfet("M1", "drain", "0", "0", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        CBD: 1.0e-12,
+        PB: 1.0,
+        MJ: gradingCoefficient,
+      }));
+      return transient(circuit, 1.0e-9, 5.0e-9, "euler");
+    }
+
+    const fixedFirst = run(0.0)[0].voltage("drain");
+    const shapedFirst = run(0.5)[0].voltage("drain");
+    expect(fixedFirst).not.toBeUndefined();
+    expect(shapedFirst).not.toBeUndefined();
+    expect(fixedFirst!).toBeCloseTo(1.25, 1);
+    expect(shapedFirst!).toBeGreaterThan(fixedFirst! + 0.04);
+    expect(shapedFirst!).toBeLessThan(1.4);
+  });
+
   it("uses diode transit time to hold forward charge on turnoff", () => {
     function run(transitTime: number): TransientPoint[] {
       const circuit = new Circuit();

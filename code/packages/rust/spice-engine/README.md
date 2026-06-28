@@ -142,10 +142,11 @@ BJT `base_emitter_capacitance` / `base_collector_capacitance` /
 `forward_transit_time` / `reverse_transit_time`, and JFET
 `gate_source_capacitance` / `gate_drain_capacitance` plus Level-1 MOS
 `gate_source_overlap_capacitance`, `gate_drain_overlap_capacitance`,
-`gate_bulk_overlap_capacitance`, and zero-bias bulk-junction
+`gate_bulk_overlap_capacitance`, and bulk-junction
 `source_bulk_capacitance` / `drain_bulk_capacitance` model-card parameters
-also stamp transient storage, matching their small-signal AC capacitance
-semantics.
+also stamp transient storage, with MOS `bulk_junction_potential` /
+`bulk_junction_grading_coefficient` shaping reverse-biased source-body and
+drain-body capacitance to match their small-signal AC semantics.
 
 `analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
 module shape and rejects dynamic/event/system constructs; it is not a full
