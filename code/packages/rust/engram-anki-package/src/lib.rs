@@ -614,19 +614,45 @@ fn map_v11_card(
             ))
         })?;
     let field_values = field_value_map(note, anki_note_type);
+    let cloze_ordinal = if anki_note_type.kind == 1 {
+        Some(i64_to_u32(card.ordinal.saturating_add(1)))
+    } else {
+        None
+    };
+    let (front, back) = if let Some(cloze_ordinal) = cloze_ordinal {
+        (
+            render_anki_cloze_template(
+                &template.front_template,
+                &field_values,
+                cloze_ordinal,
+                AnkiClozeSide::Question,
+            ),
+            render_anki_cloze_template(
+                &template.back_template,
+                &field_values,
+                cloze_ordinal,
+                AnkiClozeSide::Answer,
+            ),
+        )
+    } else {
+        (
+            render_template(&template.front_template, &field_values),
+            render_template(&template.back_template, &field_values),
+        )
+    };
 
     Ok(Card {
         id: card.id.to_string(),
         deck_id: card.deck_id.to_string(),
-        front: render_template(&template.front_template, &field_values),
-        back: render_template(&template.back_template, &field_values),
+        front,
+        back,
         created_at: anki_seconds_to_millis(card.modified_at),
         lineage: Some(CardLineage {
             note_id: note.id.clone(),
             note_type_id: note.note_type_id.clone(),
             template_id: template.id.clone(),
             ordinal: i64_to_u32(card.ordinal),
-            cloze_ordinal: None,
+            cloze_ordinal,
         }),
     })
 }
@@ -1081,6 +1107,133 @@ fn split_anki_fields(fields: &str) -> Vec<String> {
 
 fn split_anki_tags(tags: &str) -> Vec<String> {
     tags.split_whitespace().map(str::to_string).collect()
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum AnkiClozeSide {
+    Question,
+    Answer,
+}
+
+fn render_anki_cloze_template(
+    template: &str,
+    field_values: &HashMap<String, String>,
+    cloze_ordinal: u32,
+    side: AnkiClozeSide,
+) -> String {
+    let mut rendered = String::with_capacity(template.len());
+    let mut rest = template;
+
+    while let Some(start) = rest.find("{{") {
+        let (prefix, after_start) = rest.split_at(start);
+        rendered.push_str(prefix);
+        let after_start = &after_start[2..];
+
+        match after_start.find("}}") {
+            Some(end) => {
+                let (field_name, after_end) = after_start.split_at(end);
+                let field_name = field_name.trim();
+                if let Some(field_name) = field_name.strip_prefix("cloze:") {
+                    if let Some(value) = field_values.get(field_name.trim()) {
+                        rendered.push_str(&render_anki_cloze_text(value, cloze_ordinal, side));
+                    }
+                } else if let Some(value) = field_values.get(field_name) {
+                    rendered.push_str(value);
+                }
+                rest = &after_end[2..];
+            }
+            None => {
+                rendered.push_str("{{");
+                rendered.push_str(after_start);
+                rest = "";
+            }
+        }
+    }
+
+    rendered.push_str(rest);
+    rendered
+}
+
+fn render_anki_cloze_text(value: &str, cloze_ordinal: u32, side: AnkiClozeSide) -> String {
+    let mut rendered = String::with_capacity(value.len());
+    let mut rest = value;
+
+    while let Some(start) = rest.find("{{c") {
+        let (prefix, candidate) = rest.split_at(start);
+        rendered.push_str(prefix);
+
+        if let Some(marker) = parse_anki_cloze_marker(candidate) {
+            if side == AnkiClozeSide::Question && marker.ordinal == cloze_ordinal {
+                match marker.hint.map(str::trim).filter(|hint| !hint.is_empty()) {
+                    Some(hint) => {
+                        rendered.push('[');
+                        rendered.push_str(hint);
+                        rendered.push(']');
+                    }
+                    None => rendered.push_str("[...]"),
+                }
+            } else {
+                rendered.push_str(&render_anki_cloze_text(
+                    marker.hidden,
+                    cloze_ordinal,
+                    AnkiClozeSide::Answer,
+                ));
+            }
+            rest = &candidate[marker.consumed..];
+        } else {
+            rendered.push_str("{{c");
+            rest = &candidate[3..];
+        }
+    }
+
+    rendered.push_str(rest);
+    rendered
+}
+
+#[derive(Debug, PartialEq, Eq)]
+struct AnkiClozeMarker<'a> {
+    ordinal: u32,
+    hidden: &'a str,
+    hint: Option<&'a str>,
+    consumed: usize,
+}
+
+fn parse_anki_cloze_marker(candidate: &str) -> Option<AnkiClozeMarker<'_>> {
+    if !candidate.starts_with("{{c") {
+        return None;
+    }
+
+    let after_prefix = &candidate[3..];
+    let digit_len = after_prefix
+        .find(|ch: char| !ch.is_ascii_digit())
+        .unwrap_or(after_prefix.len());
+    if digit_len == 0 {
+        return None;
+    }
+    let ordinal: u32 = after_prefix[..digit_len].parse().ok()?;
+    if ordinal == 0 {
+        return None;
+    }
+    let after_digits = &after_prefix[digit_len..];
+    if !after_digits.starts_with("::") {
+        return None;
+    }
+    let marker_body = &after_digits[2..];
+    let end = marker_body.find("}}")?;
+    let body = &marker_body[..end];
+    let consumed = 3 + digit_len + 2 + end + 2;
+
+    let (hidden, hint) = match body.split_once("::") {
+        Some((hidden, hint)) => (hidden, Some(hint)),
+        None => (body, None),
+    };
+
+    Some(AnkiClozeMarker {
+        ordinal,
+        hidden,
+        hint,
+        consumed,
+    })
 }
 
 fn sqlite_value_to_string(row: &rusqlite::Row<'_>, index: usize) -> rusqlite::Result<String> {
@@ -1548,6 +1701,104 @@ CREATE TABLE graves (
         assert_eq!(state.sessions[0].status, SessionStatus::Completed);
         assert_eq!(state.sessions[0].cards_reviewed, 1);
         assert_eq!(state.sessions[0].cards_correct, 1);
+    }
+
+    #[test]
+    fn maps_v11_cloze_cards_into_rendered_engram_cards() {
+        let collection = AnkiV11Collection {
+            metadata: AnkiV11CollectionMetadata {
+                id: 1,
+                created_at_days: 19_000,
+                modified_at: 0,
+                schema_modified_at: 0,
+                version: 11,
+                dirty: 0,
+                update_sequence_number: -1,
+                last_sync: 0,
+                config: serde_json::json!({}),
+                deck_config: serde_json::json!({}),
+                tags: serde_json::json!({}),
+            },
+            decks: vec![AnkiV11Deck {
+                id: 1,
+                name: "Cloze".to_string(),
+                description: String::new(),
+                raw: serde_json::json!({}),
+            }],
+            note_types: vec![AnkiV11NoteType {
+                id: 100,
+                name: "Cloze".to_string(),
+                kind: 1,
+                css: String::new(),
+                fields: vec![
+                    AnkiV11Field {
+                        ordinal: 0,
+                        name: "Text".to_string(),
+                    },
+                    AnkiV11Field {
+                        ordinal: 1,
+                        name: "Extra".to_string(),
+                    },
+                ],
+                templates: vec![AnkiV11Template {
+                    ordinal: 0,
+                    name: "Cloze".to_string(),
+                    question_format: "{{cloze:Text}}".to_string(),
+                    answer_format: "{{cloze:Text}}<hr>{{Extra}}".to_string(),
+                    deck_id: None,
+                }],
+                raw: serde_json::json!({}),
+            }],
+            notes: vec![AnkiV11Note {
+                id: 1000,
+                guid: "cloze-guid".to_string(),
+                note_type_id: 100,
+                modified_at: 1_700_000_010,
+                update_sequence_number: -1,
+                tags: vec!["roots".to_string()],
+                field_values: vec![
+                    "The word {{c1::night::old root}} travels.".to_string(),
+                    "Proto-Indo-European stories go here.".to_string(),
+                ],
+                sort_field: "The word night travels.".to_string(),
+                checksum: 0,
+                flags: 0,
+                data: String::new(),
+            }],
+            cards: vec![AnkiV11Card {
+                id: 2000,
+                note_id: 1000,
+                deck_id: 1,
+                ordinal: 0,
+                modified_at: 1_700_000_020,
+                update_sequence_number: -1,
+                kind: 0,
+                queue: 0,
+                due: 0,
+                interval: 0,
+                factor: 0,
+                repetitions: 0,
+                lapses: 0,
+                left: 0,
+                original_due: 0,
+                original_deck_id: 0,
+                flags: 0,
+                data: String::new(),
+            }],
+            reviews: Vec::new(),
+            graves: Vec::new(),
+        };
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        assert_eq!(state.cards[0].front, "The word [old root] travels.");
+        assert_eq!(
+            state.cards[0].back,
+            "The word night travels.<hr>Proto-Indo-European stories go here."
+        );
+        let lineage = state.cards[0].lineage.as_ref().unwrap();
+        assert_eq!(lineage.cloze_ordinal, Some(1));
+        assert!(state.card_progress.is_empty());
     }
 
     #[test]

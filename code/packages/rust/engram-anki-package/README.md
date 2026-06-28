@@ -16,7 +16,9 @@ representation. `read_v11_collection` accepts APKG bytes, extracts
 the same parser for raw SQLite collection bytes.
 `read_v11_collection_as_engram_state` and `v11_collection_to_engram_state`
 map that parsed representation into `engram-core::AppState` while preserving
-Anki IDs as deterministic Engram IDs.
+Anki IDs as deterministic Engram IDs. Cloze note types render
+`{{cloze:Field}}` templates into Engram card fronts/backs with the same
+`[...]` / `[hint]` question behavior used by the core cloze generator.
 
 `read_collection_bytes` returns the detected collection member as raw bytes for
 inspection workflows. `read_v11_collection_bytes` is the import boundary for the

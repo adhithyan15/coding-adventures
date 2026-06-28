@@ -252,7 +252,7 @@ Formats:
   existing `collection.anki2` bytes plus media assets. It also parses
   legacy/V11 SQLite collection bytes into owned Anki decks, note types, notes,
   cards, revlog rows, and graves, and maps them into `engram-core::AppState`
-  with deterministic IDs and rendered card fronts/backs.
+  with deterministic IDs, rendered card fronts/backs, and cloze card rendering.
 
 Next APKG SQLite milestone:
 
