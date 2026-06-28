@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — HTML Parser Formatting Adoption
+- `</b>` adoption across `<aside>` now preserves the html5lib `<em><foo><foo>`
+  continuation during tree construction, retiring the old finish-time
+  `<em>/<aside>` post-parse repair.
+
 ### Added — HTML Parser Browser Script Storage Access
 - Browser-readiness summaries now expose script storage-access descriptors for
   inline references to Web Storage, cookies, IndexedDB, CacheStorage/service
