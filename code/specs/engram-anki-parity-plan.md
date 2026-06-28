@@ -277,6 +277,9 @@ Next APKG SQLite milestone:
 - Card flags on new V11 cards now import as metadata-only progress overlays;
   shared queue, stats, and search logic still treat those cards as new while
   preserving their flag filters.
+- Search now follows `Card.lineage.note_id` before falling back to generated
+  `note::template` card IDs, so imported numeric Anki card IDs still match
+  note-field text, tags, and note-type filters.
 - `engram-capi` now exposes `eg_parse_anki_apkg` for native import previews and
   `eg_import_anki_apkg` for applying supported APKG bytes into the shared
   session state. Both functions use the same JSON `{ ok, state/error }`

@@ -598,6 +598,10 @@ fn contains_case_insensitive(value: &str, term: &str) -> bool {
 }
 
 fn note_for_card<'a>(card: &Card, notes_by_id: &'a HashMap<&str, &Note>) -> Option<&'a Note> {
+    if let Some(lineage) = &card.lineage {
+        return notes_by_id.get(lineage.note_id.as_str()).copied();
+    }
+
     let (note_id, _) = card.id.split_once("::")?;
     notes_by_id
         .get(note_id)
@@ -608,7 +612,7 @@ fn note_for_card<'a>(card: &Card, notes_by_id: &'a HashMap<&str, &Note>) -> Opti
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::{CardTemplate, Deck, FieldDef, NoteFieldValue, NoteType};
+    use crate::model::{CardLineage, CardTemplate, Deck, FieldDef, NoteFieldValue, NoteType};
     use crate::sm2::{INITIAL_EASE_FACTOR, ONE_DAY_MS};
 
     const NOW: u64 = 1_700_000_000_000;
@@ -815,6 +819,32 @@ mod tests {
         assert_eq!(ids_for("tag:script"), vec!["note::forward"]);
         assert_eq!(ids_for("note:basic"), vec!["note::forward"]);
         assert_eq!(ids_for("noteType:basic"), vec!["note::forward"]);
+    }
+
+    #[test]
+    fn imported_anki_cards_search_through_lineage_notes() {
+        let mut state = state();
+        let mut imported = card("2000", "spanish", "hola", "hello");
+        imported.lineage = Some(CardLineage {
+            note_id: "note".to_string(),
+            note_type_id: "basic".to_string(),
+            template_id: "forward".to_string(),
+            ordinal: 0,
+            cloze_ordinal: None,
+        });
+        state.cards = vec![imported];
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("tag:script"), vec!["2000"]);
+        assert_eq!(ids_for("note:basic"), vec!["2000"]);
+        assert_eq!(ids_for("uyir"), vec!["2000"]);
     }
 
     #[test]
