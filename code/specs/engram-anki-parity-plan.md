@@ -235,8 +235,9 @@ Formats:
   custom note-type/media export remains.
 - APKG import/export eventually, via a dedicated facade or package crate.
   `engram-anki-package` now provides the archive-inspection foundation for
-  legacy and modern collection members plus legacy JSON media maps; SQLite
-  collection import/export remains.
+  legacy and modern collection members plus legacy JSON media maps, and can
+  write deterministic legacy package envelopes from existing `collection.anki2`
+  bytes plus media assets; SQLite collection import/export remains.
 
 Tests:
 

@@ -8,7 +8,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
-use zip::ZipReader;
+use zip::{ZipReader, ZipWriter};
 
 const LEGACY_COLLECTION: &str = "collection.anki2";
 const SQLITE_21_COLLECTION: &str = "collection.anki21";
@@ -75,6 +75,12 @@ pub struct ApkgError {
     pub message: String,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct MediaAsset<'a> {
+    pub filename: &'a str,
+    pub data: &'a [u8],
+}
+
 impl fmt::Display for ApkgError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(&self.message)
@@ -103,6 +109,25 @@ pub fn read_collection_bytes(data: &[u8]) -> Result<Vec<u8>, ApkgError> {
     reader
         .read_by_name(&collection.name)
         .map_err(|err| apkg_error(format!("failed to read collection: {err}")))
+}
+
+pub fn write_legacy_apkg(collection_anki2: &[u8], media_assets: &[MediaAsset<'_>]) -> Vec<u8> {
+    let mut writer = ZipWriter::new();
+    writer.add_file(LEGACY_COLLECTION, collection_anki2, false);
+
+    let media_map: BTreeMap<String, String> = media_assets
+        .iter()
+        .enumerate()
+        .map(|(index, asset)| (index.to_string(), asset.filename.to_string()))
+        .collect();
+    let media_json = serde_json::to_vec(&media_map).unwrap_or_else(|_| b"{}".to_vec());
+    writer.add_file(MEDIA_MAP, &media_json, false);
+
+    for (index, asset) in media_assets.iter().enumerate() {
+        writer.add_file(&index.to_string(), asset.data, false);
+    }
+
+    writer.finish()
 }
 
 fn archive_entries(reader: &ZipReader<'_>) -> Vec<ArchiveEntry> {
@@ -196,7 +221,6 @@ fn apkg_error(message: impl Into<String>) -> ApkgError {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use zip::ZipWriter;
 
     fn package(entries: &[(&str, &[u8])]) -> Vec<u8> {
         let mut writer = ZipWriter::new();
@@ -246,6 +270,35 @@ mod tests {
         assert_eq!(manifest.collection.name, SQLITE_21B_COLLECTION);
         assert_eq!(manifest.collection.format, CollectionFormat::Sqlite21b);
         assert_eq!(collection, b"modern collection");
+    }
+
+    #[test]
+    fn writes_legacy_apkg_package_envelope() {
+        let apkg = write_legacy_apkg(
+            b"sqlite collection",
+            &[
+                MediaAsset {
+                    filename: "audio/hola.mp3",
+                    data: b"mp3",
+                },
+                MediaAsset {
+                    filename: "images/card.png",
+                    data: b"png",
+                },
+            ],
+        );
+
+        let manifest = inspect_apkg(&apkg).unwrap();
+        let collection = read_collection_bytes(&apkg).unwrap();
+
+        assert_eq!(manifest.collection.name, LEGACY_COLLECTION);
+        assert_eq!(collection, b"sqlite collection");
+        assert_eq!(manifest.media.map_present, true);
+        assert_eq!(manifest.media.mapping["0"], "audio/hola.mp3");
+        assert_eq!(manifest.media.mapping["1"], "images/card.png");
+        assert_eq!(manifest.media.media_files.len(), 2);
+        assert!(manifest.media.missing_files.is_empty());
+        assert!(manifest.media.unmapped_files.is_empty());
     }
 
     #[test]
