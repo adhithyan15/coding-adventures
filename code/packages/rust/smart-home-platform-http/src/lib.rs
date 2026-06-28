@@ -1250,6 +1250,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
         });
     }
 
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/smoke", move |_| {
+            runtime_smoke_response(&runtime)
+        });
+    }
+
     app.get("/api/smart_home/api", api_catalog_response);
 
     {
@@ -1915,6 +1922,15 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/smoke",
+        category: "smoke",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/api",
         category: "api_catalog",
         surface: "smart_home",
@@ -2296,6 +2312,14 @@ fn runtime_bootstrap_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResp
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
     WebResponse::json(runtime_bootstrap_json(runtime, &runtime_guard).into_bytes())
+}
+
+fn runtime_smoke_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    WebResponse::json(runtime_smoke_json(runtime, &runtime_guard).into_bytes())
 }
 
 fn api_catalog_response(request: &WebRequest) -> WebResponse {
@@ -2941,7 +2965,7 @@ fn runtime_readiness_json(
     };
 
     format!(
-        "{{\"generated_at_ms\":{},\"status\":{},\"ready\":{},\"summary\":{{\"total_checks\":{},\"passing_checks\":{},\"attention_checks\":{},\"blocking_checks\":{}}},\"links\":{{\"health\":{},\"dashboard\":{},\"bootstrap\":{},\"api\":{},\"state_gaps\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"checks\":[{}]}}",
+        "{{\"generated_at_ms\":{},\"status\":{},\"ready\":{},\"summary\":{{\"total_checks\":{},\"passing_checks\":{},\"attention_checks\":{},\"blocking_checks\":{}}},\"links\":{{\"health\":{},\"dashboard\":{},\"bootstrap\":{},\"smoke\":{},\"api\":{},\"state_gaps\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"checks\":[{}]}}",
         runtime.now_ms,
         json_string(status),
         blocking_checks == 0,
@@ -2952,6 +2976,7 @@ fn runtime_readiness_json(
         json_string("/api/smart_home/health"),
         json_string("/api/smart_home/dashboard"),
         json_string("/api/smart_home/bootstrap"),
+        json_string("/api/smart_home/smoke"),
         json_string("/api/smart_home/api"),
         json_string("/api/smart_home/states?stale=true"),
         json_string("/api/smart_home/command_results"),
@@ -3228,11 +3253,12 @@ fn runtime_bootstrap_json(
     let authorization_summary = runtime_guard.authorization_decision_summary(&authorization_query);
 
     format!(
-        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
+        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"smoke\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
         runtime.now_ms,
         json_string(VERSION),
         json_string("/api/smart_home/readiness"),
         json_string("/api/smart_home/dashboard"),
+        json_string("/api/smart_home/smoke"),
         json_string("/api/smart_home/api"),
         json_string("/api/smart_home/states"),
         json_string("/api/smart_home/state_history"),
@@ -3245,6 +3271,298 @@ fn runtime_bootstrap_json(
         runtime_event_summary_json(&event_summary),
         command_result_summary_json(&command_summary),
         authorization_decision_summary_json(&authorization_summary),
+    )
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RuntimeSmokeCheck {
+    check_id: &'static str,
+    label: &'static str,
+    method: &'static str,
+    path: String,
+    category: &'static str,
+    mutates_runtime: bool,
+    runtime_authorized: bool,
+    expected_status: u16,
+    request_body: Option<String>,
+    expected: String,
+}
+
+fn runtime_smoke_json(
+    runtime: &SmartHomePlatformHttpRuntime,
+    runtime_guard: &SmartHomeRuntime,
+) -> String {
+    let readiness_checks = runtime_readiness_checks(runtime, runtime_guard);
+    let blocking_checks = readiness_checks
+        .iter()
+        .filter(|check| check.status == "blocked")
+        .count();
+    let attention_checks = readiness_checks
+        .iter()
+        .filter(|check| check.status == "attention")
+        .count();
+    let status = if blocking_checks > 0 {
+        "blocked"
+    } else if attention_checks > 0 {
+        "attention"
+    } else {
+        "ready"
+    };
+    let checks = runtime_smoke_checks(runtime, runtime_guard);
+    let mutating_checks = checks.iter().filter(|check| check.mutates_runtime).count();
+    let runtime_authorized_checks = checks
+        .iter()
+        .filter(|check| check.runtime_authorized)
+        .count();
+    let safe_get_checks = checks
+        .iter()
+        .filter(|check| check.method == "GET" && !check.mutates_runtime)
+        .count();
+
+    format!(
+        "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_checks\":{},\"safe_get_checks\":{},\"mutating_checks\":{},\"runtime_authorized_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{}}},\"links\":{{\"self\":{},\"dashboard\":{},\"readiness\":{},\"bootstrap\":{},\"api\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"checks\":[{}]}}",
+        runtime.now_ms,
+        json_string(VERSION),
+        json_string(status),
+        blocking_checks == 0,
+        json_string(runtime.principal_id.as_str()),
+        checks.len(),
+        safe_get_checks,
+        mutating_checks,
+        runtime_authorized_checks,
+        blocking_checks,
+        attention_checks,
+        json_string("/api/smart_home/smoke"),
+        json_string("/"),
+        json_string("/api/smart_home/readiness"),
+        json_string("/api/smart_home/bootstrap"),
+        json_string("/api/smart_home/api"),
+        json_string("/api/smart_home/command_results"),
+        json_string("/api/smart_home/authorization_decisions"),
+        checks
+            .iter()
+            .map(runtime_smoke_check_json)
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn runtime_smoke_checks(
+    runtime: &SmartHomePlatformHttpRuntime,
+    runtime_guard: &SmartHomeRuntime,
+) -> Vec<RuntimeSmokeCheck> {
+    let state = SmartHomePlatformHttpState::from_runtime(
+        runtime_guard,
+        runtime.config.clone(),
+        runtime.event_types.clone(),
+        runtime.now_ms,
+    );
+    let mut checks = vec![
+        runtime_smoke_check(
+            "dashboard_shell",
+            "Dashboard shell",
+            "GET",
+            "/",
+            "browser",
+            false,
+            false,
+            200,
+            None,
+            "Embedded dashboard HTML is served by the repo HTTP stack.",
+        ),
+        runtime_smoke_check(
+            "bootstrap",
+            "Startup bundle",
+            "GET",
+            "/api/smart_home/bootstrap",
+            "dashboard",
+            false,
+            false,
+            200,
+            None,
+            "Bootstrap JSON includes startup links, API discovery, state gaps, and audit summaries.",
+        ),
+        runtime_smoke_check(
+            "readiness",
+            "Readiness",
+            "GET",
+            "/api/smart_home/readiness",
+            "health",
+            false,
+            false,
+            200,
+            None,
+            "Readiness JSON reports no blocking checks before local-controller control probes run.",
+        ),
+        runtime_smoke_check(
+            "state_registry",
+            "State registry",
+            "GET",
+            "/api/smart_home/states?limit=24",
+            "states",
+            false,
+            false,
+            200,
+            None,
+            "Native state registry returns dashboard-ready entity records and Home Assistant aliases.",
+        ),
+        runtime_smoke_check(
+            "service_catalog",
+            "Service catalog",
+            "GET",
+            "/api/smart_home/services?domain=light",
+            "services",
+            false,
+            false,
+            200,
+            None,
+            "Native service catalog exposes commandable light services and target aliases.",
+        ),
+        runtime_smoke_check(
+            "authorized_routes",
+            "Authorized routes",
+            "GET",
+            "/api/smart_home/api?mutating=true&authorized=true",
+            "api_catalog",
+            false,
+            false,
+            200,
+            None,
+            "API catalog lists mutating routes that still dispatch through runtime authorization.",
+        ),
+    ];
+    checks.push(runtime_smoke_command_probe(&state));
+    checks.extend([
+        runtime_smoke_check(
+            "command_audit",
+            "Command audit",
+            "GET",
+            "/api/smart_home/command_results?limit=10",
+            "command_results",
+            false,
+            false,
+            200,
+            None,
+            "Command-result audit route can confirm accepted command outcomes after the POST probe.",
+        ),
+        runtime_smoke_check(
+            "authorization_audit",
+            "Authorization audit",
+            "GET",
+            "/api/smart_home/authorization_decisions?limit=10",
+            "authorization",
+            false,
+            false,
+            200,
+            None,
+            "Authorization audit route can confirm the local API principal's runtime decision.",
+        ),
+        runtime_smoke_check(
+            "state_history",
+            "State history",
+            "GET",
+            "/api/smart_home/state_history?limit=12",
+            "state_history",
+            false,
+            false,
+            200,
+            None,
+            "State-history route exposes registry-backed events for dashboard drill-downs.",
+        ),
+    ]);
+    checks
+}
+
+fn runtime_smoke_command_probe(state: &SmartHomePlatformHttpState) -> RuntimeSmokeCheck {
+    let Some(target) = smoke_light_target(state) else {
+        return runtime_smoke_check(
+            "command_probe",
+            "Command probe",
+            "GET",
+            "/api/smart_home/services?domain=light",
+            "services",
+            false,
+            false,
+            200,
+            None,
+            "No commandable light target is available; inspect the service catalog before running a mutating smoke probe.",
+        );
+    };
+
+    runtime_smoke_check(
+        "command_probe",
+        "Command probe",
+        "POST",
+        "/api/services/light/turn_on",
+        "commands",
+        true,
+        true,
+        200,
+        Some(format!(
+            "{{\"entity_id\":{},\"brightness_pct\":75}}",
+            json_string(target)
+        )),
+        "Runs the Home Assistant-compatible light command through runtime authorization and records command/authorization audit rows.",
+    )
+}
+
+fn smoke_light_target(state: &SmartHomePlatformHttpState) -> Option<String> {
+    platform_services(state)
+        .into_iter()
+        .find(|service| service.domain == "light" && service.service == "turn_on")
+        .and_then(|service| service.target_entity_ids.into_iter().next())
+        .map(|entity_id| {
+            state
+                .entities
+                .iter()
+                .find(|entity| entity.entity_id.as_str() == entity_id)
+                .map(home_assistant_entity_id)
+                .unwrap_or(entity_id)
+        })
+}
+
+fn runtime_smoke_check(
+    check_id: &'static str,
+    label: &'static str,
+    method: &'static str,
+    path: impl Into<String>,
+    category: &'static str,
+    mutates_runtime: bool,
+    runtime_authorized: bool,
+    expected_status: u16,
+    request_body: Option<String>,
+    expected: impl Into<String>,
+) -> RuntimeSmokeCheck {
+    RuntimeSmokeCheck {
+        check_id,
+        label,
+        method,
+        path: path.into(),
+        category,
+        mutates_runtime,
+        runtime_authorized,
+        expected_status,
+        request_body,
+        expected: expected.into(),
+    }
+}
+
+fn runtime_smoke_check_json(check: &RuntimeSmokeCheck) -> String {
+    format!(
+        "{{\"check_id\":{},\"label\":{},\"method\":{},\"path\":{},\"category\":{},\"mutates_runtime\":{},\"runtime_authorized\":{},\"expected_status\":{},\"request_body\":{},\"expected\":{}}}",
+        json_string(check.check_id),
+        json_string(check.label),
+        json_string(check.method),
+        json_string(&check.path),
+        json_string(check.category),
+        check.mutates_runtime,
+        check.runtime_authorized,
+        check.expected_status,
+        check
+            .request_body
+            .as_deref()
+            .unwrap_or("null"),
+        json_string(&check.expected),
     )
 }
 
@@ -6922,6 +7240,7 @@ mod tests {
         assert!(readiness.contains(r#""attention_checks":1"#));
         assert!(readiness.contains(r#""blocking_checks":0"#));
         assert!(readiness.contains(r#""health":"/api/smart_home/health""#));
+        assert!(readiness.contains(r#""smoke":"/api/smart_home/smoke""#));
         assert!(readiness.contains(r#""state_gaps":"/api/smart_home/states?stale=true""#));
         assert!(readiness.contains(r#""check_id":"registry""#));
         assert!(readiness.contains(r#""status":"ok""#));
@@ -6996,6 +7315,7 @@ mod tests {
         assert!(bootstrap.contains(r#""version":"0.1.0""#));
         assert!(bootstrap.contains(r#""readiness":"/api/smart_home/readiness""#));
         assert!(bootstrap.contains(r#""dashboard":"/api/smart_home/dashboard""#));
+        assert!(bootstrap.contains(r#""smoke":"/api/smart_home/smoke""#));
         assert!(bootstrap.contains(r#""states":"/api/smart_home/states""#));
         assert!(bootstrap.contains(r#""health":{"generated_at_ms":5000"#));
         assert!(bootstrap.contains(r#""dashboard":{"generated_at_ms":5000"#));
@@ -7009,12 +7329,47 @@ mod tests {
     }
 
     #[test]
+    fn runtime_web_app_serves_fixture_controller_smoke_plan() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let smoke = response_body(app.handle(request("GET", "/api/smart_home/smoke")).into());
+
+        assert!(smoke.contains(r#""generated_at_ms":5000"#));
+        assert!(smoke.contains(r#""status":"attention""#));
+        assert!(smoke.contains(r#""ready":true"#));
+        assert!(smoke.contains(r#""principal_id":"agent:home-assistant-local-api""#));
+        assert!(smoke.contains(r#""self":"/api/smart_home/smoke""#));
+        assert!(smoke.contains(r#""check_id":"command_probe""#));
+        assert!(smoke.contains(r#""path":"/api/services/light/turn_on""#));
+        assert!(smoke.contains(r#""runtime_authorized":true"#));
+        assert!(smoke.contains(r#""entity_id":"light.entity_light_1""#));
+        assert!(smoke.contains(r#""brightness_pct":75"#));
+
+        let smoke_json: JsonValue =
+            serde_json::from_str(&smoke).expect("smoke plan response is JSON");
+        assert_eq!(smoke_json["summary"]["total_checks"], 10);
+        assert_eq!(smoke_json["summary"]["safe_get_checks"], 9);
+        assert_eq!(smoke_json["summary"]["mutating_checks"], 1);
+        assert_eq!(smoke_json["summary"]["runtime_authorized_checks"], 1);
+        assert_eq!(smoke_json["summary"]["blocking_readiness_checks"], 0);
+        assert_eq!(smoke_json["summary"]["attention_readiness_checks"], 1);
+        assert_eq!(
+            smoke_json["checks"][6]["request_body"]["entity_id"],
+            "light.entity_light_1"
+        );
+        assert_eq!(
+            smoke_json["checks"][6]["request_body"]["brightness_pct"],
+            75
+        );
+    }
+
+    #[test]
     fn runtime_web_app_serves_dashboard_ready_api_catalog() {
         let app = home_assistant_runtime_web_app(fixture_runtime(true));
 
         let catalog = response_body(app.handle(request("GET", "/api/smart_home/api")).into());
         assert!(catalog.contains(r#""path":"/api/smart_home/readiness""#));
         assert!(catalog.contains(r#""path":"/api/smart_home/dashboard""#));
+        assert!(catalog.contains(r#""path":"/api/smart_home/smoke""#));
         assert!(catalog.contains(r#""path":"/api/services/:domain/:service""#));
         assert!(catalog
             .contains(r#""query_params":["authorized","category","method","mutating","surface"]"#));

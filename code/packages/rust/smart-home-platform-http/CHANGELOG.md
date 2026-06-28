@@ -47,6 +47,9 @@ All notable changes to this package will be documented in this file.
   command-result, and authorization audit rows.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
+- Added a machine-readable local-controller smoke plan route that lists safe
+  HTTP probes plus a runtime-authorized command probe for fixture-controller
+  verification.
 - Added a native readiness checklist route with actionable links for registry,
   topology, state coverage, event bus, discovery, supervisor, authorization,
   and desired-state checks.

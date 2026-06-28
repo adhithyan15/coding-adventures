@@ -25,6 +25,7 @@ stable local API responses for:
 - `/api/smart_home/readiness`
 - `/api/smart_home/dashboard`
 - `/api/smart_home/bootstrap`
+- `/api/smart_home/smoke`
 - `/api/smart_home/api`
 - `/api/smart_home/states`
 - `/api/smart_home/states/:entity_id`
@@ -84,6 +85,12 @@ State-history reads expose registry-backed device events with Home Assistant
 entity aliases, state deltas, timestamp filters, and event-id detail lookups;
 the Home Assistant-style history route accepts `filter_entity_id`.
 
+`GET /api/smart_home/smoke` exposes a machine-readable local-controller smoke
+plan with safe GET probes and a single runtime-authorized Home Assistant-style
+command probe. It lets scripts discover the dashboard/API/readiness checks and
+the exact request body to use for fixture-controller verification without
+scraping launch text.
+
 The browser routes serve an embedded local dashboard shell over the same
 `web-core::WebApp`. The shell loads bootstrap, readiness, state, scene,
 desired-state, room, device, bridge, state-history, command-result audit,
@@ -134,6 +141,7 @@ curl http://127.0.0.1:8123/api/smart_home/health
 curl http://127.0.0.1:8123/api/smart_home/readiness
 curl http://127.0.0.1:8123/api/smart_home/dashboard
 curl http://127.0.0.1:8123/api/smart_home/bootstrap
+curl http://127.0.0.1:8123/api/smart_home/smoke
 curl 'http://127.0.0.1:8123/api/smart_home/api?surface=home_assistant&method=POST'
 curl 'http://127.0.0.1:8123/api/smart_home/api?mutating=true&authorized=true'
 curl 'http://127.0.0.1:8123/api/smart_home/states?domain=light&stale=true'
