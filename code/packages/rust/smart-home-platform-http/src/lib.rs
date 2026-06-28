@@ -622,6 +622,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         ? `/api/smart_home/services/${encodeURIComponent(domain)}/${encodeURIComponent(serviceName)}`
         : "/api/smart_home/services";
     };
+    const roomDetailUrl = (room) =>
+      `/api/smart_home/rooms/${encodeURIComponent(room.room_id)}`;
 
     const log = (message) => {
       const at = new Date().toLocaleTimeString();
@@ -703,6 +705,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           </div>
           <p>${room.device_count} devices | ${room.entity_count} entities | ${room.scene_count} scenes</p>
           <p class="muted">${room.online_devices} online, ${room.scene_action_count} scene actions</p>
+          <div class="actions row">${inspectButton(roomDetailUrl(room), "room detail")}</div>
         </article>
       `).join("") || `<p class="muted">No rooms</p>`;
     };
@@ -1538,6 +1541,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/rooms/:room_id", move |request| {
+            runtime_room_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/scenes", move |request| {
             runtime_scenes_response(&runtime, request)
         });
@@ -2268,6 +2278,15 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/rooms/:room_id",
+        category: "rooms",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/scenes",
         category: "scenes",
         surface: "smart_home",
@@ -2745,6 +2764,27 @@ fn runtime_rooms_response(
         .expect("smart-home runtime mutex should not be poisoned");
     let rooms = runtime_guard.query_room_summaries_at(&query, runtime.now_ms);
     WebResponse::json(rooms_json(&rooms, &runtime_guard).into_bytes())
+}
+
+fn runtime_room_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(room_id) = request.route_params.get("room_id") else {
+        return json_error(400, "missing room_id");
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let query = RuntimeRoomQuery::new()
+        .for_room(room_id.as_str())
+        .with_limit(1);
+    let rooms = runtime_guard.query_room_summaries_at(&query, runtime.now_ms);
+    let Some(room) = rooms.first() else {
+        return api_error_response(ApiError::not_found(format!("room `{room_id}` not found")));
+    };
+    WebResponse::json(room_json(room).into_bytes())
 }
 
 fn runtime_scenes_response(
@@ -7144,6 +7184,7 @@ mod tests {
             assert!(body.contains("entityDetailUrl(entity)"));
             assert!(body.contains("sceneDetailUrl(scene)"));
             assert!(body.contains("serviceDetailUrl(service)"));
+            assert!(body.contains("roomDetailUrl(room)"));
             assert!(
                 body.contains("/api/smart_home/devices/${encodeURIComponent(device.device_id)}")
             );
@@ -7583,6 +7624,7 @@ mod tests {
         assert!(catalog.contains(r#""path":"/api/smart_home/readiness""#));
         assert!(catalog.contains(r#""path":"/api/smart_home/dashboard""#));
         assert!(catalog.contains(r#""path":"/api/smart_home/smoke""#));
+        assert!(catalog.contains(r#""path":"/api/smart_home/rooms/:room_id""#));
         assert!(catalog.contains(r#""path":"/api/services/:domain/:service""#));
         assert!(catalog
             .contains(r#""query_params":["authorized","category","method","mutating","surface"]"#));
@@ -7866,6 +7908,20 @@ mod tests {
         assert!(body.contains(r#""scene_action_count":1"#));
         assert!(body.contains(r#""has_state_gaps":true"#));
         assert!(body.contains(r#""has_scene_actions":true"#));
+
+        let detail = response_body(
+            app.handle(request("GET", "/api/smart_home/rooms/kitchen"))
+                .into(),
+        );
+        assert!(detail.contains(r#""room_id":"kitchen""#));
+        assert!(detail.contains(r#""device_count":1"#));
+        assert!(detail.contains(r#""entity_count":2"#));
+        assert!(detail.contains(r#""scene_action_count":1"#));
+
+        let missing: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/rooms/missing"))
+            .into();
+        assert_eq!(missing.status, 404);
     }
 
     #[test]
@@ -8235,6 +8291,7 @@ mod tests {
         assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
         assert!(body.contains("stateDetailUrl(entity)"));
         assert!(body.contains("serviceDetailUrl(service)"));
+        assert!(body.contains("roomDetailUrl(room)"));
         assert!(body.contains("/api/smart_home/devices/${encodeURIComponent(device.device_id)}"));
         assert!(body.contains("/api/services/light/"));
         assert!(body.contains("data-brightness-input"));
