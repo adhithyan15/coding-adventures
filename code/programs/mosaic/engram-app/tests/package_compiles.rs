@@ -290,21 +290,29 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "property string appTitle");
     assert_contains(&qml, "property bool answerVisible");
     assert_contains(&qml, "signal reveal()");
+    assert_contains(&qml, "signal again()");
+    assert_contains(&qml, "signal hard()");
     assert_contains(&qml, "signal good()");
+    assert_contains(&qml, "signal easy()");
 
     let swift = fs::read_to_string(tmp.path().join("swiftui").join("EngramApp.swift"))
         .expect("EngramApp.swift");
     assert_contains(&swift, "enum EngramAppEvent {");
     assert_contains(&swift, "case reveal");
+    assert_contains(&swift, "case again");
+    assert_contains(&swift, "case hard");
     assert_contains(&swift, "case good");
+    assert_contains(&swift, "case easy");
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
     assert_contains(&swift, "let answerVisible: Bool");
 
-    let xaml_code_behind =
-        fs::read_to_string(tmp.path().join("xaml").join("EngramApp.xaml.cs"))
-            .expect("EngramApp.xaml.cs");
-    assert_contains(&xaml_code_behind, "public static readonly DependencyProperty AppTitleProperty");
+    let xaml_code_behind = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.xaml.cs"))
+        .expect("EngramApp.xaml.cs");
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty AppTitleProperty",
+    );
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty AnswerVisibleProperty",
@@ -316,8 +324,40 @@ fn native_project_shells_expose_engram_host_contract() {
 
     let xaml_events = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.Event.cs"))
         .expect("EngramApp.Event.cs");
-    assert_contains(&xaml_events, "public sealed record Reveal() : EngramAppEvent;");
-    assert_contains(&xaml_events, "public sealed record Good() : EngramAppEvent;");
+    assert_contains(
+        &xaml_events,
+        "public sealed record Reveal() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record Again() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record Hard() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record Good() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record Easy() : EngramAppEvent;",
+    );
+
+    let capi_header = fs::read_to_string(
+        package_root()
+            .join("..")
+            .join("..")
+            .join("..")
+            .join("packages")
+            .join("rust")
+            .join("engram-capi")
+            .join("include")
+            .join("engram.h"),
+    )
+    .expect("engram-capi header");
+    assert_contains(&capi_header, "eg_handle_engram_app_event");
 }
 
 fn assert_contains(haystack: &str, needle: &str) {

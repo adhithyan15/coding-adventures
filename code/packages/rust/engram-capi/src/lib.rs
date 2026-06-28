@@ -173,6 +173,22 @@ pub unsafe extern "C" fn eg_engram_app_props(
 }
 
 /// # Safety
+/// `session` must be valid; strings must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_handle_engram_app_event(
+    session: *mut EgSession,
+    event: *const c_char,
+    deck_id: *const c_char,
+    now: u64,
+) -> *mut c_char {
+    let event = read_cstr(event);
+    let deck_id = read_cstr(deck_id);
+    with_session(session, |session| {
+        session.handle_engram_app_event(&event, &deck_id, now)
+    })
+}
+
+/// # Safety
 /// `session` must be valid; `deck_id` must be null or a valid C string.
 #[no_mangle]
 pub unsafe extern "C" fn eg_review_history(
@@ -1318,6 +1334,71 @@ CREATE TABLE graves (
             assert_eq!(props["props"]["deck-name"], "Tamil");
             assert_eq!(props["props"]["deck-total-value"], "1");
             assert_eq!(props["props"]["answer-visible"], false);
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_handles_engram_app_events_for_native_shells() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "noteTypes": [],
+                    "notes": [],
+                    "cards": [
+                        {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                        {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+                    ],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            take(eg_load_snapshot(session, snapshot.as_ptr()));
+
+            let start_session = cstr(
+                r#"{
+                    "type": "startSession",
+                    "sessionId": "session",
+                    "deckId": "deck",
+                    "queue": [
+                        {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                        {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+                    ],
+                    "startedAt": 1700000000000
+                }"#,
+            );
+            take(eg_dispatch(session, start_session.as_ptr()));
+
+            let deck_id = cstr("deck");
+            let reveal = cstr("reveal");
+            let revealed = take(eg_handle_engram_app_event(
+                session,
+                reveal.as_ptr(),
+                deck_id.as_ptr(),
+                NOW,
+            ));
+            let revealed: Value = serde_json::from_str(&revealed).unwrap();
+            assert_eq!(revealed["ok"], true);
+            assert_eq!(revealed["event"], "onReveal");
+            assert_eq!(revealed["props"]["answer-visible"], true);
+
+            let good = cstr("onGood");
+            let rated = take(eg_handle_engram_app_event(
+                session,
+                good.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 1,
+            ));
+            let rated: Value = serde_json::from_str(&rated).unwrap();
+            assert_eq!(rated["ok"], true);
+            assert_eq!(rated["event"], "onGood");
+            assert_eq!(rated["props"]["prompt"], "letter-aa");
+            assert_eq!(rated["state"]["reviews"][0]["rating"], "good");
 
             eg_session_free(session);
         }

@@ -159,6 +159,56 @@ impl EngramSession {
         })
     }
 
+    pub fn handle_engram_app_event(&mut self, event: &str, deck_id: &str, now: u64) -> String {
+        catch_json(|| {
+            let event = parse_engram_app_event(event)?;
+            match event {
+                EngramAppEvent::Reveal => {
+                    self.state = reduce(&self.state, engram_core::EngramCommand::RevealCurrentCard);
+                }
+                EngramAppEvent::Rate(rating) => {
+                    let active_session = self
+                        .state
+                        .active_session
+                        .clone()
+                        .ok_or_else(|| "cannot rate without an active session".to_string())?;
+                    let card = active_session
+                        .queue
+                        .get(active_session.current_index)
+                        .ok_or_else(|| "cannot rate without a current card".to_string())?;
+                    let session_id = active_session.session_id;
+                    let card_id = card.id.clone();
+                    let review_id = format!(
+                        "engram-app::{}::{}::{now}::{}",
+                        session_id,
+                        card_id,
+                        rating_label(rating)
+                    );
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::RateCard {
+                            review_id,
+                            session_id,
+                            card_id,
+                            rating,
+                            reviewed_at: now,
+                        },
+                    );
+                    self.state = reduce(&self.state, engram_core::EngramCommand::AdvanceSession);
+                }
+            }
+
+            let props = engram_app_props_for_state(&self.state, deck_id, now);
+            Ok(json!({
+                "ok": true,
+                "event": event.canonical_name(),
+                "state": self.state,
+                "props": props,
+            })
+            .to_string())
+        })
+    }
+
     pub fn review_history(
         &self,
         deck_id: &str,
@@ -451,6 +501,45 @@ fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
         .map(|active| active.deck_id.clone())
         .or_else(|| state.decks.first().map(|deck| deck.id.clone()))
         .unwrap_or_default()
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum EngramAppEvent {
+    Reveal,
+    Rate(Rating),
+}
+
+impl EngramAppEvent {
+    fn canonical_name(self) -> &'static str {
+        match self {
+            Self::Reveal => "onReveal",
+            Self::Rate(Rating::Again) => "onAgain",
+            Self::Rate(Rating::Hard) => "onHard",
+            Self::Rate(Rating::Good) => "onGood",
+            Self::Rate(Rating::Easy) => "onEasy",
+        }
+    }
+}
+
+fn parse_engram_app_event(event: &str) -> Result<EngramAppEvent, String> {
+    let lowered = event.trim().to_ascii_lowercase();
+    match lowered.strip_prefix("on").unwrap_or(&lowered) {
+        "reveal" => Ok(EngramAppEvent::Reveal),
+        "again" => Ok(EngramAppEvent::Rate(Rating::Again)),
+        "hard" => Ok(EngramAppEvent::Rate(Rating::Hard)),
+        "good" => Ok(EngramAppEvent::Rate(Rating::Good)),
+        "easy" => Ok(EngramAppEvent::Rate(Rating::Easy)),
+        _ => Err(format!("unknown Engram app event: {event}")),
+    }
+}
+
+fn rating_label(rating: Rating) -> &'static str {
+    match rating {
+        Rating::Again => "again",
+        Rating::Hard => "hard",
+        Rating::Good => "good",
+        Rating::Easy => "easy",
+    }
 }
 
 #[derive(Deserialize)]
@@ -1305,6 +1394,74 @@ mod tests {
         assert_eq!(value["props"]["current-value"], "1 / 2");
         assert_eq!(value["props"]["remaining-value"], "2");
         assert_eq!(value["props"]["total-value"], "2");
+    }
+
+    #[test]
+    fn handle_engram_app_event_reveals_rates_and_advances_shared_props() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [
+                    {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                    {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+                ],
+                "startedAt": 1700000000000
+            }"#,
+        );
+
+        let revealed: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onReveal", "deck", NOW))
+                .unwrap();
+        assert_eq!(revealed["ok"], true);
+        assert_eq!(revealed["event"], "onReveal");
+        assert_eq!(revealed["props"]["prompt"], "letter-a");
+        assert_eq!(revealed["props"]["answer-visible"], true);
+
+        let rated: Value =
+            serde_json::from_str(&session.handle_engram_app_event("good", "deck", NOW + 1))
+                .unwrap();
+        assert_eq!(rated["ok"], true);
+        assert_eq!(rated["event"], "onGood");
+        assert_eq!(rated["props"]["prompt"], "letter-aa");
+        assert_eq!(rated["props"]["answer-visible"], false);
+        assert_eq!(rated["props"]["current-value"], "2 / 2");
+        assert_eq!(rated["state"]["reviews"][0]["cardId"], "card");
+        assert_eq!(rated["state"]["reviews"][0]["rating"], "good");
+        assert_eq!(rated["state"]["sessions"][0]["cardsReviewed"], 1);
+        assert_eq!(rated["state"]["sessions"][0]["cardsCorrect"], 1);
+    }
+
+    #[test]
+    fn handle_engram_app_event_rejects_unknown_events_and_missing_active_session() {
+        let mut session = EngramSession::new();
+
+        let unknown: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onDance", "", NOW)).unwrap();
+        assert_eq!(unknown["ok"], false);
+        assert_eq!(unknown["error"], "unknown Engram app event: onDance");
+
+        let rated: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onGood", "", NOW)).unwrap();
+        assert_eq!(rated["ok"], false);
+        assert_eq!(rated["error"], "cannot rate without an active session");
     }
 
     #[test]
