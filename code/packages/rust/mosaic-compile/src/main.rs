@@ -1202,12 +1202,27 @@ fn emit_single_file<E: std::fmt::Display>(
 // `pkg` subcommand — package-artifact build (UI29 §4.3)
 // ===========================================================================
 
+const PKG_BACKENDS: &str = "react|swiftui|qt|xaml|webcomponent|html|flutter";
+
+fn pkg_backend_from_str(value: &str) -> Option<Backend> {
+    match value {
+        "react" => Some(Backend::React),
+        "swiftui" => Some(Backend::SwiftUI),
+        "qt" => Some(Backend::Qt),
+        "xaml" => Some(Backend::Xaml),
+        "webcomponent" => Some(Backend::WebComponent),
+        "html" => Some(Backend::Html),
+        "flutter" => Some(Backend::Flutter),
+        _ => None,
+    }
+}
+
 /// Drive `mosaic_package_artifact_builder::build_package` from the CLI.
 ///
 /// Spec (mosaic-compile.json):
 ///
 /// ```text
-/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|swiftui|qt> --output <DIR>
+/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|swiftui|qt|xaml|webcomponent|html|flutter> --output <DIR> [--emit-project]
 /// ```
 ///
 /// Required: `package_root` positional, `--backend`, `--output`. cli-builder
@@ -1251,24 +1266,13 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
 
-    // Map the string to the typed `Backend`. The artifact builder accepts
-    // the un-wired variants too (so callers can type the API surface
-    // uniformly) but they return `UnsupportedBackend` immediately; we
-    // forward that as-is below.
-    let backend = match backend_str {
-        "react" => Backend::React,
-        "swiftui" => Backend::SwiftUI,
-        "qt" => Backend::Qt,
-        "webcomponent" => Backend::WebComponent,
-        "html" => Backend::Html,
-        other => {
-            eprintln!(
-                "mosaic-compile pkg: --backend must be one of \
-                 react|swiftui|qt|webcomponent|html, got '{other}'"
-            );
-            process::exit(1);
-        }
-    };
+    // Map the string to the typed `Backend`.
+    let backend = pkg_backend_from_str(backend_str).unwrap_or_else(|| {
+        eprintln!(
+            "mosaic-compile pkg: --backend must be one of {PKG_BACKENDS}, got '{backend_str}'"
+        );
+        process::exit(1);
+    });
 
     let opts = BuildOptions {
         package_root: PathBuf::from(package_root),
@@ -1355,6 +1359,21 @@ fn write_bytes_or_die(path: &str, content: &[u8]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn pkg_backend_mapping_exposes_native_and_web_package_backends() {
+        assert_eq!(pkg_backend_from_str("react"), Some(Backend::React));
+        assert_eq!(pkg_backend_from_str("swiftui"), Some(Backend::SwiftUI));
+        assert_eq!(pkg_backend_from_str("qt"), Some(Backend::Qt));
+        assert_eq!(pkg_backend_from_str("xaml"), Some(Backend::Xaml));
+        assert_eq!(
+            pkg_backend_from_str("webcomponent"),
+            Some(Backend::WebComponent)
+        );
+        assert_eq!(pkg_backend_from_str("html"), Some(Backend::Html));
+        assert_eq!(pkg_backend_from_str("flutter"), Some(Backend::Flutter));
+        assert_eq!(pkg_backend_from_str("paint"), None);
+    }
 
     /// `build_self_package_registry` returns None when no manifest
     /// path is provided.

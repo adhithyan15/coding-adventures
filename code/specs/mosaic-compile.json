@@ -111,7 +111,7 @@
           "id": "backend",
           "long": "backend",
           "short": "b",
-          "description": "Backend to compile for: 'react', 'swiftui', 'qt' (webcomponent / html return UnsupportedBackend)",
+          "description": "Backend to compile for: 'react', 'swiftui', 'qt', 'xaml', 'webcomponent', 'html', or 'flutter'",
           "type": "string",
           "required": true
         },
@@ -122,6 +122,13 @@
           "description": "Directory under which <backend>/ is created (mkdir -p applied)",
           "type": "string",
           "required": true
+        },
+        {
+          "id": "emit-project",
+          "long": "emit-project",
+          "description": "Also emit the selected backend's runnable project shell alongside the package artifacts",
+          "type": "boolean",
+          "required": false
         }
       ],
       "arguments": [

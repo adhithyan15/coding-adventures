@@ -86,9 +86,11 @@ emitter). The implementation lives in the new
 `mosaic-package-artifact-builder` crate; this CLI is a thin shell that
 maps argv to a `BuildOptions` and prints the resulting artifact paths.
 
-Wired backends: React (`.tsx`), SwiftUI (`.swift`), Qt (`.qml`).
-`webcomponent` and `html` return `UnsupportedBackend` pending their
-respective kernel-completion PRs.
+Wired package backends now match the package artifact builder: React (`.tsx`),
+SwiftUI (`.swift`), Qt (`.qml`), XAML (`.xaml` + code-behind), WebComponent
+(`.js`), HTML (`.html`), and Flutter (`.dart`). The package-scoped
+`--emit-project` flag forwards to the builder so app packages can emit runnable
+project shells, including XAML/WinUI output, from the normal CLI path.
 
 The root-level `--backend` flag is now `required: false` at the spec
 level so the new subcommand can declare its own scoped `--backend`. The
