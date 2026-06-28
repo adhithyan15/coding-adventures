@@ -1,5 +1,13 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.30.0] — 2026-06-28 — textual CLR literal string slice (LANG-FULL E4)
+
+The textual `.il` path now lowers `str_slice` by loading the source string,
+start, and end, computing `end - start`, and calling
+`System.String::Substring(int32, int32)`. The result is stored as a managed
+string local that can feed the existing `str_index`, `str_len`, and `str_eq`
+paths.
+
 ## [0.29.0] — 2026-06-27 — textual CLR literal string index (LANG-FULL E4)
 
 The textual `.il` path now lowers direct-literal `str_index`:

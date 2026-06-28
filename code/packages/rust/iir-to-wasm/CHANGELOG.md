@@ -3,6 +3,14 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.22.0] — 2026-06-28 (LANG-FULL E4 — literal string slice on WASM)
+
+The WASM backend now accepts and lowers literal-only `str_slice`. The module
+feature pass derives the sliced byte range from prior string metadata and
+constant start/end bounds, appends it to the string data segment, and binds the
+slice destination to that offset so downstream `str_index` still emits the same
+guarded `i32.load8_u` path.
+
 ## [0.21.0] — 2026-06-27 (LANG-FULL E4 — literal string index on WASM)
 
 The WASM backend now accepts and lowers direct-literal `str_index`:

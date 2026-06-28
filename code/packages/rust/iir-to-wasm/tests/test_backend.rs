@@ -1695,6 +1695,54 @@ fn e4_string_concat_len_lowers_to_literal_length() {
 }
 
 #[test]
+fn e4_string_slice_index_lowers_to_literal_byte_load() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("ABCDE".into())],
+            "str",
+        ),
+        IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+        IIRInstr::new(
+            "str_slice",
+            Some("sub".into()),
+            vec![
+                Operand::Var("s".into()),
+                Operand::Var("start".into()),
+                Operand::Var("end".into()),
+            ],
+            "str",
+        ),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new(
+            "str_index",
+            Some("b".into()),
+            vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+            "i64",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(
+        errs.is_empty(),
+        "E4: str_slice + str_index should validate: {errs:?}"
+    );
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_slice + str_index should lower");
+    assert_eq!(
+        wm.data[0].data, b"ABCDEBCD",
+        "E4: string data should contain the source and sliced literal"
+    );
+    assert!(
+        wm.code[0].code.contains(&0x2D),
+        "E4: str_index over a slice should still emit i32.load8_u"
+    );
+}
+
+#[test]
 fn e4_string_index_lowers_to_literal_byte_load() {
     let m = module_one("main", vec![], "i64", vec![
         IIRInstr::new(

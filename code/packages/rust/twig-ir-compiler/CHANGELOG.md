@@ -1,5 +1,18 @@
 # Changelog — twig-ir-compiler
 
+## [0.33.0] — 2026-06-28 (LANG-FULL E4 — substring feeds string-ref proof)
+
+Lexical string bindings can now feed `substring`, and the resulting string can
+feed `string-ref` through shared E4 ops:
+
+```scheme
+(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))
+```
+
+The compiler emits `str_slice` for `substring` when the source is a known E4
+string expression and both bounds are known E4 index expressions. The indexed
+byte is `67` (`C` in `BCD`), with no dynamic string builtin fallback.
+
 ## [0.32.0] — 2026-06-28 (LANG-FULL E4 — computed string index proof)
 
 Lexical string bindings can now compute a `string-ref` index with typed integer

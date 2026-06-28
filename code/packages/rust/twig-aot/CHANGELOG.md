@@ -1,5 +1,12 @@
 # Changelog — `twig-aot`
 
+## 0.21.0 — 2026-06-28 — native substring metadata folding (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds literal-only `str_slice` results into the
+same native byte-buffer metadata used by `str_const` and `str_concat`. This lets
+Twig `(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` fold the slice to
+`BCD` and the final `str_index` to byte `67` before direct native lowering.
+
 ## 0.20.0 — 2026-06-28 — native computed string index metadata (LANG-FULL E4)
 
 `prepare_module_for_aot` now records folded `str_len` results as integer

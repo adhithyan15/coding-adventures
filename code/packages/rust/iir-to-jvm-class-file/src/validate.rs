@@ -285,10 +285,12 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // `"f32"` and `"f64"` are intentionally NOT rejected here.  The JVM
             // has first-class float/double operations (`fload`, `dload`, `fadd`,
             // `dadd`, etc.) that this backend emits.
-            if instr.type_hint == "str" && !matches!(instr.op.as_str(), "str_const" | "str_concat") {
+            if instr.type_hint == "str"
+                && !matches!(instr.op.as_str(), "str_const" | "str_concat" | "str_slice")
+            {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const and str_concat literals are supported in this JVM backend",
+                     only str_const, str_concat, and str_slice literals are supported in this JVM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -341,6 +343,19 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
                         errors.push(format!(
                             "UnsupportedOp: function {:?}, op \"str_concat\" requires \
                              dest, two Operand::Var sources, and str result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_slice" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_), Operand::Var(_)], "str") => {
+                        // Accepted — lower.rs calls java/lang/String.substring(II).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_slice\" requires \
+                             dest, string/start/end Operand::Var sources, and str result type",
                             func.name
                         ));
                     }
@@ -611,6 +626,37 @@ mod tests {
         assert!(
             errs.is_empty(),
             "str_concat over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_slice_literal_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABCDE".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new(
+                "str_slice",
+                Some("sub".into()),
+                vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("start".into()),
+                    Operand::Var("end".into()),
+                ],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("sub".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_slice over direct literals should pass: {:?}",
             errs
         );
     }

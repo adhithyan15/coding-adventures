@@ -309,6 +309,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(69),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 `substring` feeding `string-ref`. This proves the shared
+    // `str_slice` op produces a string value that all seven proven columns can
+    // consume with the existing byte-indexing contract. `substring` 1..4 is
+    // `BCD`, and index 1 is byte `C` (67).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))",
+        expect: Expect::Exit(67),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =

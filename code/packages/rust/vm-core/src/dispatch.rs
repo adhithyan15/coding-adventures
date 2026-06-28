@@ -797,6 +797,40 @@ fn handle_str_concat(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<V
     Ok(Some(value))
 }
 
+fn handle_str_slice(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let value = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let s = string_src(frame, &instr.srcs, 0, "str_slice")?;
+        let start_value = resolve_src(frame, &instr.srcs, 1)?;
+        let end_value = resolve_src(frame, &instr.srcs, 2)?;
+        let start = start_value.as_i64().ok_or_else(|| VMError::TypeError {
+            expected: "i64".into(),
+            actual: start_value.iir_type_name().into(),
+            context: "str_slice".into(),
+        })?;
+        let end = end_value.as_i64().ok_or_else(|| VMError::TypeError {
+            expected: "i64".into(),
+            actual: end_value.iir_type_name().into(),
+            context: "str_slice".into(),
+        })?;
+        if start < 0 || end < start || end as usize > s.len() {
+            return Err(VMError::Custom(format!(
+                "str_slice: range {start}..{end} out of bounds for string of length {}",
+                s.len()
+            )));
+        }
+        let bytes = &s.as_bytes()[start as usize..end as usize];
+        let sliced = String::from_utf8(bytes.to_vec()).map_err(|_| {
+            VMError::Custom("str_slice: range does not preserve UTF-8 boundaries".into())
+        })?;
+        Value::Str(sliced)
+    };
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
 fn handle_str_eq(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let same = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -1328,6 +1362,7 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "str_len"      => Some(handle_str_len),
         "str_index"    => Some(handle_str_index),
         "str_concat"   => Some(handle_str_concat),
+        "str_slice"    => Some(handle_str_slice),
         "str_eq"       => Some(handle_str_eq),
         "print_str"    => Some(handle_print_str),
         "alloc_array"  => Some(handle_alloc_array),

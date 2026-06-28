@@ -1128,6 +1128,58 @@ fn e4_string_literal_concat_print_emits_derived_constant_and_runtime_call() {
 }
 
 #[test]
+fn e4_string_literal_slice_index_folds_to_integer_return() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABCDE".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new(
+                "str_slice",
+                Some("sub".into()),
+                vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("start".into()),
+                    Operand::Var("end".into()),
+                ],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "str_index",
+                Some("b".into()),
+                vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(
+        validate_for_llvm(&module).is_empty(),
+        "literal string slice/index should validate"
+    );
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("@__twig_str_1 = private unnamed_addr constant { i64, [3 x i8] } { i64 3, [3 x i8] c\"\\42\\43\\44\" }, align 8"),
+        "str_slice should materialise BCD metadata:\n{ll}"
+    );
+    assert!(
+        ll.contains("ret i64 67"),
+        "str_slice feeding str_index should materialise byte 67:\n{ll}"
+    );
+}
+
+#[test]
 fn e4_string_literal_index_folds_to_integer_return() {
     let f = IIRFunction::new(
         "main",

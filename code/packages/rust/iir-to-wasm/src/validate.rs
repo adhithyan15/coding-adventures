@@ -277,7 +277,7 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
             // `"str"` — accepted for the E4 literal-output/metadata foothold's
-            // direct string producers (`str_const`, `str_concat`). `str_len`,
+            // direct string producers (`str_const`, `str_concat`, `str_slice`). `str_len`,
             // `str_index`, and `str_eq` produce integers, not string values.
             // Richer dynamic string ops still fail explicitly below.
             //
@@ -287,10 +287,12 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             //
             // NOTE: float types (`"f32"`, `"f64"`) are NOT rejected here.
             // WASM has native float arithmetic, so they are fully supported.
-            if instr.type_hint == "str" && !matches!(instr.op.as_str(), "str_const" | "str_concat") {
+            if instr.type_hint == "str"
+                && !matches!(instr.op.as_str(), "str_const" | "str_concat" | "str_slice")
+            {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const + str_concat + str_len + str_index + str_eq + print_str literal output is supported in this WASM backend",
+                     only str_const + str_concat + str_slice + str_len + str_index + str_eq + print_str literal output is supported in this WASM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -356,6 +358,27 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                         errors.push(format!(
                             "UnsupportedOp: function {:?}, op \"str_concat\" requires \
                              dest, two Operand::Var sources, and str result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_slice" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (
+                        Some(_),
+                        [
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                        ],
+                        "str",
+                    ) => {
+                        // Accepted — lower.rs materialises literal slice metadata.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_slice\" requires \
+                             dest, string/start/end Operand::Var sources, and str result type",
                             func.name
                         ));
                     }
@@ -694,6 +717,43 @@ mod tests {
         assert!(
             errs.is_empty(),
             "str_concat + str_len over direct literals should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn e4_literal_str_slice_index_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABCDE".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new(
+                "str_slice",
+                Some("sub".into()),
+                vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("start".into()),
+                    Operand::Var("end".into()),
+                ],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "str_index",
+                Some("b".into()),
+                vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_slice + str_index over direct literals should be accepted; got: {:?}",
             errs
         );
     }

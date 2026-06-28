@@ -608,6 +608,27 @@ fn emit_method(
                 );
                 store_var(il, &regs, dest)?;
             }
+            // str_slice <dest>, <src>, <start>, <end>
+            //     -> System.String::Substring(start, end - start)
+            "str_slice" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_slice must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "str_slice")?;
+                let start = var_src(f, instr, 1, "str_slice")?;
+                let end = var_src(f, instr, 2, "str_slice")?;
+                load_var(il, &regs, src)?;
+                load_var(il, &regs, start)?;
+                load_var(il, &regs, end)?;
+                load_var(il, &regs, start)?;
+                let _ = writeln!(il, "    sub");
+                let _ = writeln!(
+                    il,
+                    "    callvirt instance string [System.Runtime]System.String::Substring(int32, int32)"
+                );
+                store_var(il, &regs, dest)?;
+            }
             // str_len <dest>, <src>  ->  System.String::get_Length()
             //
             // The v1 literal slice accepts only printable ASCII strings, so
@@ -1839,6 +1860,56 @@ mod tests {
         assert!(
             il.contains("callvirt instance int32 [System.Runtime]System.String::get_Length()"),
             "str_len must call System.String::get_Length(); got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_slice_index_emits_string_substring() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABCDE".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i32"),
+            IIRInstr::new(
+                "str_slice",
+                Some("sub".into()),
+                vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("start".into()),
+                    Operand::Var("end".into()),
+                ],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new(
+                "str_index",
+                Some("b".into()),
+                vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+                "i32",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(
+            il.contains("    sub"),
+            "str_slice must compute end-start for System.String::Substring; got:\n{il}"
+        );
+        assert!(
+            il.contains(
+                "callvirt instance string [System.Runtime]System.String::Substring(int32, int32)"
+            ),
+            "str_slice must call System.String::Substring(int32,int32); got:\n{il}"
+        );
+        assert!(
+            il.contains("callvirt instance char [System.Runtime]System.String::get_Chars(int32)"),
+            "str_index after str_slice must call System.String::get_Chars(int32); got:\n{il}"
         );
     }
 
