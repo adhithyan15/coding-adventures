@@ -6,6 +6,8 @@ description = "Component-reference resolver for Mosaic packages (UI29 §4.4)"
 
 [dependencies]
 mosaic-package-manifest = { path = "../mosaic-package-manifest" }
+moslayout-compiler = { path = "../moslayout-compiler" }
+mosmodel-compiler = { path = "../mosmodel-compiler" }
 
 [dev-dependencies]
 tempfile = "3"

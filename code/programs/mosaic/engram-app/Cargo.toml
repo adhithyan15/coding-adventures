@@ -17,8 +17,10 @@ publish     = false
 mosmodel-compiler       = { path = "../../../packages/rust/mosmodel-compiler" }
 moslayout-compiler      = { path = "../../../packages/rust/moslayout-compiler" }
 mosstyle-compiler       = { path = "../../../packages/rust/mosstyle-compiler" }
+mosaic-package-artifact-builder = { path = "../../../packages/rust/mosaic-package-artifact-builder" }
 mosaic-package-manifest = { path = "../../../packages/rust/mosaic-package-manifest" }
 mosaic-package-resolver = { path = "../../../packages/rust/mosaic-package-resolver" }
+tempfile                = "3"
 toml                    = "0.8"
 
 [[test]]

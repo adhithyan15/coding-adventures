@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Changed - shared package-reference resolver
+
+Pipeline mode now uses `mosaic-package-resolver::LayoutPackageResolver` for
+`pkg::P::C` layout inlining instead of carrying a private resolver copy inside
+the CLI crate.
+
 ### Added — pipeline mode for HTML / WebComponent / SwiftUI / Qt / Flutter (VC2-html bonus)
 
 Pre-existing: pipeline mode (`--interface --layout --style`) only

@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - package reference aware artifact builds
+
+`build_package` now resolves `pkg::P::C` layout references before style
+compilation and backend emission, using the shared `mosaic-package-resolver`
+layout inliner. This lets app packages compose reusable component packages and
+still emit backend artifacts from one app source tree.
+
+The builder also now honors themed style fallbacks such as
+`<Component>.dark.msl` when `<Component>.msl` is absent.
+
 All notable changes to `mosaic-package-artifact-builder` will be documented
 in this file.
 

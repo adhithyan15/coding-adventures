@@ -26,6 +26,7 @@ mosaic-emit-qt = { path = "../mosaic-emit-qt" }
 mosaic-emit-flutter = { path = "../mosaic-emit-flutter" }
 mosaic-emit-compose = { path = "../mosaic-emit-compose" }
 mosaic-package-manifest = { path = "../mosaic-package-manifest" }
+mosaic-package-resolver = { path = "../mosaic-package-resolver" }
 mosmodel-compiler = { path = "../mosmodel-compiler" }
 moslayout-compiler = { path = "../moslayout-compiler" }
 mosstyle-compiler = { path = "../mosstyle-compiler" }
