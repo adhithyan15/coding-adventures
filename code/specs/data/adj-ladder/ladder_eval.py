@@ -317,7 +317,9 @@ _PROGRAM_WEIGHT_LINE = re.compile(
 )
 
 
-def decomposition_numbers(decomposition: str, *, program: bool = False) -> list[str]:
+def decomposition_numbers(
+    decomposition: str, *, program: bool = False, structural_weights: bool = True
+) -> list[str]:
     """Return numeric literals that must be grounded in the stem.
 
     Program-backed rungs may include structural confidence weights such as
@@ -325,7 +327,7 @@ def decomposition_numbers(decomposition: str, *, program: bool = False) -> list[
     word problem. Strip just that leading weight and keep every number in observed
     facts, constraints, and predicate thresholds under the no-result-literals gate.
     """
-    if not program:
+    if not program or not structural_weights:
         return _NUM.findall(decomposition)
     nums: list[str] = []
     for raw in decomposition.splitlines():
@@ -512,6 +514,32 @@ def check_outcome_to_letter(
     return _letter_for_engine_label(label, options)
 
 
+def decision_leader_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ probabilistic decision leader to an option letter.
+
+    Probability-decision rungs ask the model to emit priors, likelihood-ratio
+    contributions, observations, and queries. ADJ owns the posterior ranking; the
+    harness only maps `decision.leader` to the printed categorical choices.
+    """
+    if not doc or not answer_from or answer_from.get("type") != "decision_leader":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    decision = doc.get("decision")
+    if not isinstance(decision, dict) or decision.get("type") != "determinate":
+        return None
+    leader = decision.get("leader")
+    if not isinstance(leader, str):
+        return None
+    labels = answer_from.get("labels") or {}
+    label = labels.get(leader, leader)
+    if not isinstance(label, str):
+        return None
+    return _letter_for_engine_label(label, options)
+
+
 def program_answer_to_letter(
     doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
 ) -> str | None:
@@ -527,17 +555,26 @@ def program_answer_to_letter(
         return optimize_assignment_to_letter(doc, answer_from, options)
     if answer_from.get("type") == "check_outcome":
         return check_outcome_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "decision_leader":
+        return decision_leader_to_letter(doc, answer_from, options)
     return None
 
 
-def formula_is_faithful(formula: str, stem: str, *, program: bool = False) -> bool:
+def formula_is_faithful(
+    formula: str, stem: str, *, program: bool = False, structural_weights: bool = True
+) -> bool:
     """The no-result-literals gate: every number in the formula must also appear in
     the stem. This is what stops a model (in --model mode) from smuggling the answer
     into the "decomposition" — it may write `7 * 8 + 3` (all from the stem) but not
     `59`. The gold formulae in items.json are authored to satisfy this too; the test
     suite re-checks them, so the gate is exercised even in cached mode."""
     stem_nums = set(_NUM.findall(stem))
-    return all(tok in stem_nums for tok in decomposition_numbers(formula, program=program))
+    return all(
+        tok in stem_nums
+        for tok in decomposition_numbers(
+            formula, program=program, structural_weights=structural_weights
+        )
+    )
 
 
 # ----------------------------------------------------------------------------------
@@ -655,7 +692,13 @@ def score_item(item: dict, gen) -> ItemResult:
         if "program" in item:
             formula = None
             program = extract_program(raw)
-            faithful = bool(program) and formula_is_faithful(program, item["stem"], program=True)
+            answer_from = item.get("answer_from") or {}
+            faithful = bool(program) and formula_is_faithful(
+                program,
+                item["stem"],
+                program=True,
+                structural_weights=answer_from.get("structural_weights", True),
+            )
         else:
             program = None
             formula = extract_formula(raw)
@@ -694,6 +737,44 @@ def decompose_prompt(item: dict) -> str:
     if "program" in item:
         answer_from = item.get("answer_from") or {}
         name = answer_from.get("name", "x")
+        if answer_from.get("type") == "decision_leader":
+            return (
+                "Translate the word problem into a native ADJ probability decision "
+                "program. Declare the priors for the candidate hypotheses, add every "
+                "stated likelihood-ratio contribution, observe the stated evidence, "
+                "then query every candidate with `?`. Use ONLY numbers and labels "
+                "that appear in the question. Do NOT choose the answer, do NOT "
+                "mention the answer choices, and output ONLY the ADJ program.\n\n"
+                "Question: Two diagnoses start with prior 0.30 each: bacterial and "
+                "viral. Observed evidence is csf(neutrophilic). That evidence has "
+                "likelihood ratio 15 for bacterial and 1.2 for viral. Which diagnosis "
+                "leads?\n"
+                "Program:\n"
+                "prior 0.30 for bacterial\n"
+                "prior 0.30 for viral\n"
+                "contributes 15 from csf(neutrophilic) to bacterial\n"
+                "contributes 1.2 from csf(neutrophilic) to viral\n"
+                "observe csf(neutrophilic)\n"
+                "? bacterial\n"
+                "? viral\n\n"
+                "Question: Two causes start with prior 0.20 each: asthma and panic. "
+                "Observed evidence is wheeze and inhaler_response. Wheeze has "
+                "likelihood ratio 10 for asthma and 0.8 for panic. Inhaler_response "
+                "has likelihood ratio 6 for asthma and 0.7 for panic. Which cause "
+                "leads?\n"
+                "Program:\n"
+                "prior 0.20 for asthma\n"
+                "prior 0.20 for panic\n"
+                "contributes 10 from wheeze to asthma\n"
+                "contributes 0.8 from wheeze to panic\n"
+                "contributes 6 from inhaler_response to asthma\n"
+                "contributes 0.7 from inhaler_response to panic\n"
+                "observe wheeze\n"
+                "observe inhaler_response\n"
+                "? asthma\n"
+                "? panic\n\n"
+                f"Question: {item['stem']}\nProgram:"
+            )
         if answer_from.get("type") == "check_outcome":
             return (
                 "Translate the word problem into a native ADJ constraint "

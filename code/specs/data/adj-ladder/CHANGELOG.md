@@ -2,6 +2,20 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.15.0] — 2026-06-28
+
+### Added — rung 3 probability decision scaffold
+
+- **`rung3_probability_decisions/items.json`** — 20 fresh MCQs where the gold
+  decomposition is a native ADJ prior / likelihood-ratio / observation / query
+  program.
+- Program-backed items can now declare `answer_from: {"type": "decision_leader"}`.
+  The engine returns `decision.leader`; the harness only maps that leader to the
+  printed categorical choices.
+- Probability-decision items can opt out of structural-weight stripping in the
+  no-result-literals gate, so priors and likelihood ratios must be grounded in the
+  question stem instead of treated as hidden scaffold constants.
+
 ## [0.14.0] — 2026-06-28
 
 ### Added — rung 3 constraint feasibility scaffold
