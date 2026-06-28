@@ -1599,6 +1599,31 @@ mod tests {
     }
 
     #[test]
+    fn parse_anki_notes_tsv_preserves_custom_note_type_columns() {
+        let session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
+            "#separator:tab\n#notetype:Basic Grammar Story\n#columns:Infinitive\tRoot\tCognate\tTags\nhablar\tfabl-\tfable\tspanish latin\n",
+            "deck",
+            "",
+            "",
+            "custom-note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["import"]["noteTypes"][0]["id"], "basic-grammar-story");
+        assert_eq!(
+            value["import"]["noteTypes"][0]["fields"][0]["id"],
+            "infinitive"
+        );
+        assert_eq!(value["import"]["noteTypes"][0]["fields"][1]["id"], "root");
+        assert_eq!(value["import"]["notes"][0]["fields"][0]["value"], "hablar");
+        assert_eq!(value["import"]["notes"][0]["tags"][0], "spanish");
+        assert!(value["import"]["cards"].as_array().unwrap().is_empty());
+    }
+
+    #[test]
     fn dispatch_rate_card_accepts_deck_options() {
         let mut session = EngramSession::new();
         let snapshot = r#"{

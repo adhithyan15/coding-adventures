@@ -40,7 +40,7 @@ This crate owns:
 - versioned Engram JSON backup snapshots
 - round-trippable card CSV import/export helpers
 - Anki-compatible Basic TSV card export
-- note-backed Anki Basic and Basic-and-reversed TSV import/export
+- note-backed Anki Basic, Basic-and-reversed, Cloze, and custom-field TSV import/export
 - active review-session progress counts
 - deck-scoped review-history summaries
 - pure state transitions
@@ -95,8 +95,9 @@ newlines, or quotes.
 instead: imported Basic rows produce `NoteType`, `Note`, and materialized
 lineage cards, Basic-and-reversed note types produce forward and reverse
 sibling cards, and Cloze rows produce cloze note models plus one generated card
-per cloze ordinal. The note-backed path also preserves Anki's Tags column as
-note tags.
+per cloze ordinal. Custom note-type rows preserve arbitrary field columns and
+Anki's Tags column as note data, but generate no cards until a real template is
+available because Anki text exports do not carry template definitions.
 
 `get_active_session_progress` derives the shared review UI counters from
 `AppState`: total cards, one-based current position, remaining cards, reviewed
