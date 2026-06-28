@@ -4,6 +4,7 @@ use crate::model::{
 };
 use crate::scheduler::{schedule_review, DeckOptions};
 use crate::sm2::INITIAL_EASE_FACTOR;
+use crate::template::rename_note_type_field;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum EngramCommand {
@@ -21,6 +22,12 @@ pub enum EngramCommand {
     },
     DeleteDeck {
         deck_id: String,
+    },
+    RenameNoteTypeField {
+        note_type_id: String,
+        field_id: String,
+        name: String,
+        updated_at: u64,
     },
     CreateCard {
         id: String,
@@ -196,6 +203,21 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     .filter(|session| session.deck_id != deck_id)
                     .cloned(),
             }
+        }
+        EngramCommand::RenameNoteTypeField {
+            note_type_id,
+            field_id,
+            name,
+            updated_at,
+        } => {
+            let mut next = state.clone();
+            for note_type in &mut next.note_types {
+                if note_type.id == note_type_id {
+                    *note_type = rename_note_type_field(note_type, &field_id, &name, updated_at);
+                    break;
+                }
+            }
+            next
         }
         EngramCommand::CreateCard {
             id,
@@ -687,10 +709,13 @@ fn upsert_progress(progress: &mut Vec<CardProgress>, new_progress: CardProgress)
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::{CardLineage, CardState};
+    use crate::model::{
+        CardLineage, CardState, CardTemplate, FieldDef, Note, NoteFieldValue, NoteType,
+    };
     use crate::queue::build_session_queue;
     use crate::scheduler::ONE_MINUTE_MS;
     use crate::sm2::ONE_DAY_MS;
+    use crate::template::generate_cards_for_note;
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -750,6 +775,82 @@ mod tests {
 
         assert_eq!(next.decks[0].id, "deck");
         assert_eq!(next.decks[0].created_at, NOW);
+    }
+
+    #[test]
+    fn rename_note_type_field_command_migrates_templates() {
+        let note_type = NoteType {
+            id: "basic".to_string(),
+            name: "Basic".to_string(),
+            fields: vec![
+                FieldDef {
+                    id: "front".to_string(),
+                    name: "Front".to_string(),
+                    required: true,
+                    ordinal: 0,
+                },
+                FieldDef {
+                    id: "back".to_string(),
+                    name: "Back".to_string(),
+                    required: true,
+                    ordinal: 1,
+                },
+            ],
+            templates: vec![CardTemplate {
+                id: "forward".to_string(),
+                name: "Forward".to_string(),
+                front_template: "{{Front}}".to_string(),
+                back_template: "{{Back}}".to_string(),
+                required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let note = Note {
+            id: "note".to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "deck".to_string(),
+            fields: vec![
+                NoteFieldValue {
+                    field_id: "front".to_string(),
+                    value: "hola".to_string(),
+                },
+                NoteFieldValue {
+                    field_id: "back".to_string(),
+                    value: "hello".to_string(),
+                },
+            ],
+            tags: Vec::new(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let state = AppState {
+            note_types: vec![note_type],
+            notes: vec![note.clone()],
+            ..AppState::default()
+        };
+
+        let next = reduce(
+            &state,
+            EngramCommand::RenameNoteTypeField {
+                note_type_id: "basic".to_string(),
+                field_id: "front".to_string(),
+                name: "Prompt".to_string(),
+                updated_at: NOW + 1,
+            },
+        );
+        let generated = generate_cards_for_note(&next.note_types[0], &note);
+
+        assert_eq!(next.note_types[0].fields[0].name, "Prompt");
+        assert_eq!(next.note_types[0].templates[0].front_template, "{{Prompt}}");
+        assert_eq!(
+            next.note_types[0].templates[0].required_field_names,
+            vec!["Prompt", "Back"]
+        );
+        assert_eq!(next.note_types[0].updated_at, NOW + 1);
+        assert_eq!(generated[0].id, "note::forward");
+        assert_eq!(generated[0].front, "hola");
     }
 
     #[test]

@@ -374,6 +374,12 @@ enum FacadeCommand {
     DeleteDeck {
         deck_id: String,
     },
+    RenameNoteTypeField {
+        note_type_id: String,
+        field_id: String,
+        name: String,
+        updated_at: u64,
+    },
     CreateCard {
         id: String,
         deck_id: String,
@@ -474,6 +480,17 @@ impl FacadeCommand {
                 description,
             },
             Self::DeleteDeck { deck_id } => engram_core::EngramCommand::DeleteDeck { deck_id },
+            Self::RenameNoteTypeField {
+                note_type_id,
+                field_id,
+                name,
+                updated_at,
+            } => engram_core::EngramCommand::RenameNoteTypeField {
+                note_type_id,
+                field_id,
+                name,
+                updated_at,
+            },
             Self::CreateCard {
                 id,
                 deck_id,
@@ -654,6 +671,66 @@ mod tests {
         assert_eq!(value["ok"], true);
         assert_eq!(value["state"]["decks"][0]["createdAt"], NOW);
         assert!(value["state"].get("cardProgress").is_some());
+    }
+
+    #[test]
+    fn dispatch_rename_note_type_field_migrates_templates() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [],
+                "noteTypes": [{
+                    "id": "basic",
+                    "name": "Basic",
+                    "fields": [
+                        {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                        {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                    ],
+                    "templates": [{
+                        "id": "forward",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "{{Back}}",
+                        "requiredFieldNames": ["Front", "Back"],
+                        "ordinal": 0
+                    }],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "notes": [],
+                "cards": [],
+                "cardProgress": [],
+                "sessions": [],
+                "reviews": [],
+                "activeSession": null
+            }"#,
+        );
+
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "renameNoteTypeField",
+                "noteTypeId": "basic",
+                "fieldId": "front",
+                "name": "Prompt",
+                "updatedAt": 1700000000001
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(
+            value["state"]["noteTypes"][0]["fields"][0]["name"],
+            "Prompt"
+        );
+        assert_eq!(
+            value["state"]["noteTypes"][0]["templates"][0]["frontTemplate"],
+            "{{Prompt}}"
+        );
+        assert_eq!(
+            value["state"]["noteTypes"][0]["templates"][0]["requiredFieldNames"][0],
+            "Prompt"
+        );
+        assert_eq!(value["state"]["noteTypes"][0]["updatedAt"], NOW + 1);
     }
 
     #[test]

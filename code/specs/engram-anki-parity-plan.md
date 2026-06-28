@@ -101,8 +101,10 @@ Current reducer integration:
 - Anki-style Cloze templates using `{{cloze:Field}}` now generate one card per
   `{{cN::text::hint}}` ordinal in Rust core, with cloze lineage exposed through
   the JSON facade and C ABI.
-- `rename_note_type_field` migrates normal template references, Cloze template
-  references, and required-field names while keeping note field IDs stable.
+- `rename_note_type_field` / `EngramCommand::RenameNoteTypeField` migrate
+  normal template references, Cloze template references, and required-field
+  names while keeping note field IDs stable; the command is exposed through the
+  JSON facade.
 - `create_engram_snapshot` / `restore_engram_snapshot` define the versioned
   Engram JSON backup shape in Rust and are exposed through the JSON facade.
 - `export_cards_csv` / `import_cards_csv` define a strict round-trippable card
@@ -154,7 +156,7 @@ Tests:
 - Empty required fields suppress invalid generated cards.
 - Renaming a field migrates template references where possible. Initial Rust
   core support covers normal and Cloze template references plus required-field
-  names.
+  names, with reducer and JSON facade command coverage.
 - Generated card IDs remain stable across harmless note edits.
 - Cloze note templates generate stable sibling cards per cloze ordinal. Initial
   support exists in core plus JSON/C facades.
