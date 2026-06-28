@@ -162,7 +162,7 @@ engine gap that blocks it, and every rung ships a two-arm divergence number.
 |------|---------|----------------------------|
 | **0** | grade-school arithmetic + 1-step word problems | **none** (value-math exists) — shipped |
 | **1** | fractions / percent | native predicate RHS expressions plus exact rational sidecars for fractional equality; harder banks climb from here |
-| **2** | pre-algebra / algebra word problems | native ADJ solve-program scaffold is climbing; multi-step deduction→evidence bridge (PR-1) + broader CAS solve trail (PR-6) |
+| **2** | pre-algebra / algebra word problems | native ADJ solve programs now mix with rule-derived setup premises; broader CAS solve trail (PR-6) |
 | 3 | algebra / calculus | CAS wiring (PR-6) + rewrite trail (PR-4) |
 | 4 | physics / chem with units | dimensional engine (exists) + exact compute (PR-3) |
 | 5 | clinical / MLE → **apex: pediatrics** | the **MLE-PASS** harness (shares the option-map); multi-hop→PR-1, calculation→PR-3/6 |
@@ -224,6 +224,8 @@ it probabilistically.
 After this bridge, rung 2 starts with native ADJ solve programs: a small model can
 emit `symbol` / `constrain` / `solve for` from a messy pre-algebra stem, the ADJ
 constraint solver computes the unknown, and the ladder maps that engine value to the
-printed options. Continue by mixing that solve path with rule-derived premises, then
+printed options. The next rung now mixes that solve path with rule-derived premises:
+the program derives a setup atom, uses it as evidence for a queried readiness
+decision, and then solves the numeric unknown in the same native ADJ run. From here,
 rungs 3→5 gate the CAS/dimensional/clinical slices in order, culminating in the
 MLE-PASS clinical rung and the pediatrics apex.

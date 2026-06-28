@@ -41,6 +41,8 @@ adj-ladder/
     items.json              20 fresh fractions/percent/ratio MCQs, self-contained
   rung2_prealgebra_solve/
     items.json              20 pre-algebra MCQs backed by native ADJ solve programs
+  rung2_derived_solve/
+    items.json              20 MCQs requiring a derived setup premise + native solve
   ladder-scorecard.json     emitted artifact (per-arm metrics + divergence + buckets)
 ```
 
@@ -75,11 +77,13 @@ cargo build -p adj-lang-cli          # from code/packages/rust/
 python3 contamination_check.py rung0_arithmetic
 python3 contamination_check.py rung1_fractions_percent
 python3 contamination_check.py rung2_prealgebra_solve
+python3 contamination_check.py rung2_derived_solve
 
 # 3. engine-only (cached) run — expect Arm B 100%, wrong 0
 python3 ladder_eval.py rung0_arithmetic
 python3 ladder_eval.py rung1_fractions_percent
 python3 ladder_eval.py rung2_prealgebra_solve
+python3 ladder_eval.py rung2_derived_solve
 
 # 4. tests
 python3 -m pytest test_ladder_eval.py -q
@@ -115,3 +119,7 @@ derive an intermediate premise with `rule { ... }`, then let that derived atom f
 native ADJ program (`symbol` / `constrain` / `solve for`) rather than a single
 arithmetic expression, and the harness maps the engine's solved variable to the
 printed options without solving the equation in Python.
+`rung2_derived_solve` mixes the two paths: the program first derives a setup premise
+with `observe` + `rule`, uses that derived atom to fire a queried `setup_ready`
+decision with an SLD `evidence_proof`, then solves the requested unknown from the
+observed quantities.
