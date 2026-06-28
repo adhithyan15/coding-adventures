@@ -272,6 +272,9 @@ Next APKG SQLite milestone:
   map into `engram-core::AppState`.
 - V11 due values now preserve Anki's distinction between intraday learning
   timestamps and collection-day-based review/day-learning due dates.
+- Card flags on new V11 cards now import as metadata-only progress overlays;
+  shared queue, stats, and search logic still treat those cards as new while
+  preserving their flag filters.
 - `engram-capi` now exposes `eg_parse_anki_apkg` for native import previews and
   `eg_import_anki_apkg` for applying supported APKG bytes into the shared
   session state. Both functions use the same JSON `{ ok, state/error }`

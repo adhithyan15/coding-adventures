@@ -696,7 +696,7 @@ fn map_v11_card_progress(
     last_reviewed_at_by_card: &BTreeMap<i64, u64>,
 ) -> Option<CardProgress> {
     if card.queue == 0 {
-        return None;
+        return anki_card_flag(card.flags).map(|flag| new_card_metadata_overlay(card, flag));
     }
 
     let state = match card.queue {
@@ -745,6 +745,26 @@ fn map_v11_card_progress(
         flag: anki_card_flag(card.flags),
         marked_at: None,
     })
+}
+
+fn new_card_metadata_overlay(card: &AnkiV11Card, flag: CardFlag) -> CardProgress {
+    let timestamp = anki_seconds_to_millis(card.modified_at);
+    CardProgress {
+        card_id: card.id.to_string(),
+        state: CardState::Review,
+        interval: 0,
+        ease_factor: INITIAL_EASE_FACTOR,
+        next_due_at: timestamp,
+        learning_step_index: None,
+        buried_until: None,
+        suspended_at: None,
+        times_seen: 0,
+        times_correct: 0,
+        times_incorrect: 0,
+        last_seen_at: timestamp,
+        flag: Some(flag),
+        marked_at: None,
+    }
 }
 
 fn map_v11_review(review: &AnkiV11Review, deck_id: &str) -> Review {
@@ -1762,6 +1782,39 @@ CREATE TABLE graves (
         assert_eq!(
             day_learning_state.card_progress[0].next_due_at,
             (19_000 + 43) * ONE_DAY_MS
+        );
+    }
+
+    #[test]
+    fn maps_v11_new_card_flags_as_metadata_overlays() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.cards[0].kind = 0;
+        collection.cards[0].queue = 0;
+        collection.cards[0].due = 1;
+        collection.cards[0].interval = 0;
+        collection.cards[0].repetitions = 0;
+        collection.cards[0].lapses = 0;
+        collection.cards[0].flags = 1;
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        assert_eq!(state.card_progress.len(), 1);
+        let progress = &state.card_progress[0];
+        assert_eq!(progress.card_id, "2000");
+        assert_eq!(progress.state, CardState::Review);
+        assert_eq!(progress.interval, 0);
+        assert_eq!(progress.times_seen, 0);
+        assert_eq!(progress.times_correct, 0);
+        assert_eq!(progress.times_incorrect, 0);
+        assert_eq!(progress.flag, Some(CardFlag::Red));
+
+        let queue = engram_core::build_session_queue(&state.cards, &state.card_progress, "2", 0);
+        assert_eq!(
+            queue
+                .iter()
+                .map(|card| card.id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["2000"]
         );
     }
 

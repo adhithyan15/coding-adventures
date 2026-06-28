@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::model::{AppState, Card, CardFlag, CardProgress, CardState, Deck, Note, NoteType};
-use crate::queue::is_reviewable;
+use crate::queue::{is_new_progress_overlay, is_reviewable};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -555,13 +555,14 @@ fn note_type_matches(term: &str, note: Option<&Note>, note_type: Option<&NoteTyp
 
 fn state_matches(state: CardSearchState, progress: Option<&CardProgress>, now: u64) -> bool {
     match state {
-        CardSearchState::New => progress.is_none(),
+        CardSearchState::New => progress.map_or(true, is_new_progress_overlay),
         CardSearchState::Due => progress.is_some_and(|progress| is_reviewable(progress, now)),
         CardSearchState::Learning => {
             progress.is_some_and(|progress| progress.state == CardState::Learning)
         }
         CardSearchState::Review => progress.is_some_and(|progress| {
             progress.state == CardState::Review
+                && !is_new_progress_overlay(progress)
                 && progress.suspended_at.is_none()
                 && !is_buried(progress, now)
         }),
@@ -652,6 +653,25 @@ mod tests {
             last_seen_at: NOW - ONE_DAY_MS,
             flag: None,
             marked_at: None,
+        }
+    }
+
+    fn metadata_overlay(card_id: &str) -> CardProgress {
+        CardProgress {
+            card_id: card_id.to_string(),
+            state: CardState::Review,
+            interval: 0,
+            ease_factor: INITIAL_EASE_FACTOR,
+            next_due_at: NOW,
+            learning_step_index: None,
+            buried_until: None,
+            suspended_at: None,
+            times_seen: 0,
+            times_correct: 0,
+            times_incorrect: 0,
+            last_seen_at: NOW,
+            flag: Some(CardFlag::Red),
+            marked_at: Some(NOW),
         }
     }
 
@@ -750,6 +770,33 @@ mod tests {
         assert_eq!(ids_for("is:due"), vec!["due"]);
         assert_eq!(ids_for("is:suspended"), vec!["suspended"]);
         assert_eq!(ids_for("is:buried"), vec!["buried"]);
+    }
+
+    #[test]
+    fn metadata_only_progress_overlay_searches_as_new_and_flagged() {
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            note_types: Vec::new(),
+            notes: Vec::new(),
+            cards: vec![card("flagged-new", "tamil", "amma", "mother")],
+            card_progress: vec![metadata_overlay("flagged-new")],
+            sessions: Vec::new(),
+            reviews: Vec::new(),
+            active_session: None,
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("is:new"), vec!["flagged-new"]);
+        assert_eq!(ids_for("flag:red"), vec!["flagged-new"]);
+        assert!(ids_for("is:due").is_empty());
+        assert!(ids_for("is:review").is_empty());
     }
 
     #[test]
