@@ -152,7 +152,7 @@ pub enum Rating {
     Easy,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct Review {
@@ -161,6 +161,16 @@ pub struct Review {
     pub card_id: String,
     pub rating: Rating,
     pub reviewed_at: u64,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub previous_progress: Option<CardProgress>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub resulting_progress: Option<CardProgress>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

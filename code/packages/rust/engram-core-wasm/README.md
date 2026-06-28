@@ -45,6 +45,9 @@ The facade also exposes review-control commands:
 
 - `suspendCard` / `unsuspendCard`
 - `buryCard` / `unburyCard`
+- `undoLastReview`
 
 Those commands update the Rust state snapshot directly, including active-session
 queues, so host shells do not need their own suspend or bury reducers.
+`undoLastReview` restores the previous progress snapshot recorded on the review
+and rewinds session counters through the same shared reducer.

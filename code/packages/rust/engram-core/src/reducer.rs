@@ -73,6 +73,9 @@ pub enum EngramCommand {
         reviewed_at: u64,
         deck_options: DeckOptions,
     },
+    UndoLastReview {
+        session_id: String,
+    },
     AdvanceSession,
     CompleteSession {
         session_id: String,
@@ -341,6 +344,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             reviewed_at,
             &deck_options,
         ),
+        EngramCommand::UndoLastReview { session_id } => undo_last_review(state, &session_id),
         EngramCommand::AdvanceSession => {
             let mut next = state.clone();
             if let Some(active_session) = &mut next.active_session {
@@ -383,18 +387,26 @@ fn reduce_rate_card(
     let existing = state
         .card_progress
         .iter()
-        .find(|progress| progress.card_id == card_id);
-    let new_progress =
-        schedule_review(existing, card_id.clone(), rating, deck_options, reviewed_at);
+        .find(|progress| progress.card_id == card_id)
+        .cloned();
+    let new_progress = schedule_review(
+        existing.as_ref(),
+        card_id.clone(),
+        rating,
+        deck_options,
+        reviewed_at,
+    );
 
     let mut next = state.clone();
-    upsert_progress(&mut next.card_progress, new_progress);
+    upsert_progress(&mut next.card_progress, new_progress.clone());
     next.reviews.push(Review {
         id: review_id,
         session_id: session_id.clone(),
         card_id,
         rating,
         reviewed_at,
+        previous_progress: existing,
+        resulting_progress: Some(new_progress),
     });
     for session in &mut next.sessions {
         if session.id == session_id {
@@ -406,6 +418,73 @@ fn reduce_rate_card(
         }
     }
     next
+}
+
+fn undo_last_review(state: &AppState, session_id: &str) -> AppState {
+    let Some(review_index) = state
+        .reviews
+        .iter()
+        .rposition(|review| review.session_id == session_id)
+    else {
+        return state.clone();
+    };
+
+    let review = state.reviews[review_index].clone();
+    if review.resulting_progress.is_none() {
+        return state.clone();
+    }
+
+    let mut next = state.clone();
+    next.reviews.remove(review_index);
+
+    match review.previous_progress.clone() {
+        Some(previous_progress) => upsert_progress(&mut next.card_progress, previous_progress),
+        None => next
+            .card_progress
+            .retain(|progress| progress.card_id != review.card_id),
+    }
+
+    for session in &mut next.sessions {
+        if session.id == session_id {
+            session.cards_reviewed = session.cards_reviewed.saturating_sub(1);
+            if review.rating != Rating::Again {
+                session.cards_correct = session.cards_correct.saturating_sub(1);
+            }
+            break;
+        }
+    }
+
+    restore_active_session_to_reviewed_card(&mut next, session_id, &review.card_id);
+    next
+}
+
+fn restore_active_session_to_reviewed_card(state: &mut AppState, session_id: &str, card_id: &str) {
+    let Some(active_session) = &mut state.active_session else {
+        return;
+    };
+    if active_session.session_id != session_id {
+        return;
+    }
+
+    if let Some(index) = active_session
+        .queue
+        .iter()
+        .position(|card| card.id == card_id)
+    {
+        active_session.current_index = index;
+        active_session.revealed = true;
+        return;
+    }
+
+    if let Some(card) = state.cards.iter().find(|card| card.id == card_id).cloned() {
+        let insert_at = active_session
+            .current_index
+            .saturating_sub(1)
+            .min(active_session.queue.len());
+        active_session.queue.insert(insert_at, card);
+        active_session.current_index = insert_at;
+        active_session.revealed = true;
+    }
 }
 
 fn ensure_progress_overlay(
@@ -612,6 +691,128 @@ mod tests {
     }
 
     #[test]
+    fn undo_last_review_removes_first_review_progress_and_restores_session_cursor() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state.cards.push(card("other"));
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card"), card("other")],
+                started_at: NOW,
+            },
+        );
+        state = reduce(&state, EngramCommand::RevealCurrentCard);
+        state = reduce(
+            &state,
+            EngramCommand::RateCard {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: NOW,
+            },
+        );
+        state = reduce(&state, EngramCommand::AdvanceSession);
+
+        let undone = reduce(
+            &state,
+            EngramCommand::UndoLastReview {
+                session_id: "session".to_string(),
+            },
+        );
+
+        assert!(undone.card_progress.is_empty());
+        assert!(undone.reviews.is_empty());
+        assert_eq!(undone.sessions[0].cards_reviewed, 0);
+        assert_eq!(undone.sessions[0].cards_correct, 0);
+        let active = undone.active_session.as_ref().unwrap();
+        assert_eq!(active.current_index, 0);
+        assert!(active.revealed);
+    }
+
+    #[test]
+    fn undo_last_review_restores_existing_progress_snapshot() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state.card_progress.push(progress("card"));
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card")],
+                started_at: NOW,
+            },
+        );
+        let previous = state.card_progress[0].clone();
+        state = reduce(
+            &state,
+            EngramCommand::RateCard {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Easy,
+                reviewed_at: NOW,
+            },
+        );
+        assert_ne!(state.card_progress[0], previous);
+        assert_eq!(state.reviews[0].previous_progress, Some(previous.clone()));
+        assert_eq!(
+            state.reviews[0].resulting_progress,
+            Some(state.card_progress[0].clone())
+        );
+
+        let undone = reduce(
+            &state,
+            EngramCommand::UndoLastReview {
+                session_id: "session".to_string(),
+            },
+        );
+
+        assert_eq!(undone.card_progress[0], previous);
+        assert!(undone.reviews.is_empty());
+        assert_eq!(undone.sessions[0].cards_reviewed, 0);
+        assert_eq!(undone.sessions[0].cards_correct, 0);
+    }
+
+    #[test]
+    fn undo_last_review_without_progress_snapshot_is_noop() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state.card_progress.push(progress("card"));
+        state.sessions.push(Session {
+            id: "session".to_string(),
+            deck_id: "deck".to_string(),
+            status: SessionStatus::Active,
+            started_at: NOW,
+            ended_at: None,
+            cards_reviewed: 1,
+            cards_correct: 1,
+        });
+        state.reviews.push(Review {
+            id: "legacy-review".to_string(),
+            session_id: "session".to_string(),
+            card_id: "card".to_string(),
+            rating: Rating::Good,
+            reviewed_at: NOW,
+            previous_progress: None,
+            resulting_progress: None,
+        });
+
+        let undone = reduce(
+            &state,
+            EngramCommand::UndoLastReview {
+                session_id: "session".to_string(),
+            },
+        );
+
+        assert_eq!(undone, state);
+    }
+
+    #[test]
     fn suspend_new_card_creates_reversible_overlay_and_removes_it_from_session() {
         let mut state = AppState::default();
         state.cards.push(card("card"));
@@ -728,6 +929,8 @@ mod tests {
                 card_id: "card".to_string(),
                 rating: Rating::Good,
                 reviewed_at: NOW,
+                previous_progress: None,
+                resulting_progress: Some(progress("card")),
             }],
             active_session: Some(ActiveSessionState {
                 session_id: "session".to_string(),

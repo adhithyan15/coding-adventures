@@ -163,6 +163,9 @@ enum FacadeCommand {
         #[serde(default)]
         deck_options: Option<DeckOptions>,
     },
+    UndoLastReview {
+        session_id: String,
+    },
     AdvanceSession,
     CompleteSession {
         session_id: String,
@@ -274,6 +277,9 @@ impl FacadeCommand {
                     reviewed_at,
                 },
             },
+            Self::UndoLastReview { session_id } => {
+                engram_core::EngramCommand::UndoLastReview { session_id }
+            }
             Self::AdvanceSession => engram_core::EngramCommand::AdvanceSession,
             Self::CompleteSession {
                 session_id,
@@ -568,6 +574,61 @@ mod tests {
             .as_array()
             .unwrap()
             .is_empty());
+    }
+
+    #[test]
+    fn dispatch_undo_last_review_restores_previous_state() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                "startedAt": 1700000000000
+            }"#,
+        );
+        session.dispatch(
+            r#"{
+                "type": "rateCard",
+                "reviewId": "review",
+                "sessionId": "session",
+                "cardId": "card",
+                "rating": "good",
+                "reviewedAt": 1700000000000
+            }"#,
+        );
+        session.dispatch(r#"{"type": "advanceSession"}"#);
+
+        let undone: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "undoLastReview",
+                    "sessionId": "session"
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(undone["ok"], true);
+        assert!(undone["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+        assert!(undone["state"]["reviews"].as_array().unwrap().is_empty());
+        assert_eq!(undone["state"]["sessions"][0]["cardsReviewed"], 0);
+        assert_eq!(undone["state"]["activeSession"]["currentIndex"], 0);
+        assert_eq!(undone["state"]["activeSession"]["revealed"], true);
     }
 
     #[test]

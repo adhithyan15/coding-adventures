@@ -45,6 +45,12 @@ Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`, and
 `UnburyCard` also live here. They hide cards from queues and active sessions in
 the core reducer so web, Mosaic, and native shells all share the same behavior.
 
+Reviews carry optional previous/resulting progress snapshots. `UndoLastReview`
+uses those snapshots to remove the newest snapshot-backed review in a session,
+restore the card's previous progress, adjust session counters, and return an
+active session to the reviewed card. Legacy reviews without snapshots are left
+unchanged because there is no reliable prior progress to restore.
+
 This crate does not own:
 
 - IndexedDB, SQLite, files, or cloud sync
