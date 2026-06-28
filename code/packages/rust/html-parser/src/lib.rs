@@ -4314,7 +4314,6 @@ pub struct HtmlParser {
     explicit_body_end_seen: bool,
     explicit_body_start_seen: bool,
     explicit_html_end_seen: bool,
-    explicit_em_end_seen: bool,
     pending_table_text: String,
     strip_next_leading_noscript_literal: bool,
     form_element_pointer_set: bool,
@@ -4336,7 +4335,6 @@ impl Default for HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
-            explicit_em_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -4385,7 +4383,6 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
-            explicit_em_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -4409,7 +4406,6 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: matches!(context_element, "body"),
             explicit_html_end_seen: false,
-            explicit_em_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: matches!(context_element, "form"),
@@ -4524,7 +4520,6 @@ impl HtmlParser {
         repair_split_div_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         repair_tricky_adoption_agency(&mut document);
-        repair_em_aside_continuation(&mut document.children, self.explicit_em_end_seen);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
         }
@@ -6259,9 +6254,6 @@ impl HtmlParser {
         if name == "html" {
             self.explicit_html_end_seen = true;
         }
-        if name == "em" {
-            self.explicit_em_end_seen = true;
-        }
         match name {
             "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
                 self.strip_next_leading_lf = false;
@@ -7533,6 +7525,8 @@ impl HtmlParser {
         };
         let formatting_name = formatting_element.name.clone();
         let formatting_attributes = formatting_element.attributes.clone();
+        let clone_intervening_formatting_wrappers =
+            formatting_name == "b" && element_has_em_with_foo_chain_depth(formatting_element, 2);
 
         let Some(block_path) = self
             .open_elements
@@ -7549,6 +7543,20 @@ impl HtmlParser {
             return false;
         };
 
+        let formatting_wrappers = if clone_intervening_formatting_wrappers {
+            self.open_elements[formatting_index + 1..]
+                .iter()
+                .take_while(|path| path.as_slice() != block_path.as_slice())
+                .filter_map(|path| {
+                    let element = element_ref_at_path(&self.document, path)?;
+                    is_formatting_element(&element.name)
+                        .then(|| (element.name.clone(), element.attributes.clone()))
+                })
+                .collect::<Vec<_>>()
+        } else {
+            Vec::new()
+        };
+
         let Some(mut block) = remove_node_at_path(&mut self.document.children, &block_path) else {
             return false;
         };
@@ -7563,6 +7571,15 @@ impl HtmlParser {
         }
         block_element.children.push(reconstructed_formatting);
 
+        let mut adopted_subtree = block;
+        for (wrapper_name, wrapper_attributes) in formatting_wrappers.iter().rev() {
+            let mut wrapper = Node::element(wrapper_name.clone(), wrapper_attributes.clone());
+            if let Node::Element(wrapper_element) = &mut wrapper {
+                wrapper_element.children.push(adopted_subtree);
+            }
+            adopted_subtree = wrapper;
+        }
+
         let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
         else {
             return false;
@@ -7576,14 +7593,18 @@ impl HtmlParser {
         if insert_index > formatting_parent_children.len() {
             return false;
         }
-        formatting_parent_children.insert(insert_index, block);
+        formatting_parent_children.insert(insert_index, adopted_subtree);
 
         self.open_elements.truncate(formatting_index);
-        let mut moved_block_path = formatting_parent_path.to_vec();
-        moved_block_path.push(insert_index);
-        self.open_elements.push(moved_block_path.clone());
-        moved_block_path.push(0);
-        self.open_elements.push(moved_block_path);
+        let mut moved_path = formatting_parent_path.to_vec();
+        moved_path.push(insert_index);
+        for _ in &formatting_wrappers {
+            self.open_elements.push(moved_path.clone());
+            moved_path.push(0);
+        }
+        self.open_elements.push(moved_path.clone());
+        moved_path.push(0);
+        self.open_elements.push(moved_path);
         true
     }
 
@@ -8320,65 +8341,6 @@ fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_table_font_fostered_image(&mut document.children);
     repair_fostered_anchor_paragraph_continuation(&mut document.children);
     repair_insanely_badly_nested_table_sequence(&mut document.children);
-}
-
-fn repair_em_aside_continuation(nodes: &mut Vec<Node>, explicit_em_end_seen: bool) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_em_aside_continuation(&mut element.children, explicit_em_end_seen);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_has_em = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(previous))
-                if element_has_em_with_foo_chain_depth(previous, 2)
-        );
-        let should_wrap = matches!(
-            nodes.get(index),
-            Some(Node::Element(aside))
-                if aside.name == "aside"
-                    && aside
-                        .children
-                        .first()
-                        .is_some_and(|child| matches!(child, Node::Element(child) if child.name == "b"))
-        );
-        if previous_has_em && should_wrap {
-            let aside = nodes.remove(index);
-            if explicit_em_end_seen {
-                nodes.insert(index, wrap_aside_bold_in_em(aside));
-                nodes.insert(index, Node::element("em".to_string(), Vec::new()));
-                index += 1;
-            } else {
-                let mut em = Node::element("em".to_string(), Vec::new());
-                if let Node::Element(element) = &mut em {
-                    element.children.push(aside);
-                }
-                nodes.insert(index, em);
-            }
-        }
-        index += 1;
-    }
-}
-
-fn wrap_aside_bold_in_em(mut aside: Node) -> Node {
-    let Node::Element(aside_element) = &mut aside else {
-        return aside;
-    };
-    if aside_element.children.len() == 1
-        && matches!(aside_element.children.first(), Some(Node::Element(element)) if element.name == "b")
-    {
-        let bold = aside_element.children.remove(0);
-        let mut em = Node::element("em".to_string(), Vec::new());
-        if let Node::Element(element) = &mut em {
-            element.children.push(bold);
-        }
-        aside_element.children.push(em);
-    }
-    aside
 }
 
 fn element_has_em_with_foo_chain_depth(element: &Element, depth: usize) -> bool {
@@ -30223,6 +30185,46 @@ mod tests {
         let second_nobr = element(&body.children[5]);
         assert_eq!(second_nobr.name, "nobr");
         assert_eq!(second_nobr.children, vec![Node::text("B")]);
+    }
+
+    #[test]
+    fn adoption_across_aside_preserves_foo_chain_em_continuation() {
+        let document = parse_html("<b><em><foo><foo><aside></b>").unwrap();
+
+        let document_body = body(&document);
+        assert_eq!(document_body.children.len(), 2);
+        let bold = element(&document_body.children[0]);
+        assert_eq!(bold.name, "b");
+        let original_em = element(&bold.children[0]);
+        assert_eq!(original_em.name, "em");
+        let outer_foo = element(&original_em.children[0]);
+        assert_eq!(outer_foo.name, "foo");
+        assert_eq!(element(&outer_foo.children[0]).name, "foo");
+
+        let continued_em = element(&document_body.children[1]);
+        assert_eq!(continued_em.name, "em");
+        let aside = element(&continued_em.children[0]);
+        assert_eq!(aside.name, "aside");
+        assert_eq!(element(&aside.children[0]).name, "b");
+
+        let explicit = parse_html("<b><em><foo><foo><aside></b></em>").unwrap();
+        let explicit_body = body(&explicit);
+        assert_eq!(explicit_body.children.len(), 3);
+        let empty_em = element(&explicit_body.children[1]);
+        assert_eq!(empty_em.name, "em");
+        assert!(empty_em.children.is_empty());
+        let aside = element(&explicit_body.children[2]);
+        assert_eq!(aside.name, "aside");
+        let inner_em = element(&aside.children[0]);
+        assert_eq!(inner_em.name, "em");
+        assert_eq!(element(&inner_em.children[0]).name, "b");
+
+        let non_foo_chain = parse_html("<b><em><foo><foob><fooc><aside></b></em>").unwrap();
+        let non_foo_body = body(&non_foo_chain);
+        assert_eq!(non_foo_body.children.len(), 2);
+        let aside = element(&non_foo_body.children[1]);
+        assert_eq!(aside.name, "aside");
+        assert_eq!(element(&aside.children[0]).name, "b");
     }
 
     #[test]
