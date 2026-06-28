@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct Deck {
     pub id: String,
     pub name: String,
@@ -12,6 +13,7 @@ pub struct Deck {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct Card {
     pub id: String,
     pub deck_id: String,
@@ -22,6 +24,7 @@ pub struct Card {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct FieldDef {
     pub id: String,
     pub name: String,
@@ -31,6 +34,7 @@ pub struct FieldDef {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct CardTemplate {
     pub id: String,
     pub name: String,
@@ -42,6 +46,7 @@ pub struct CardTemplate {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct NoteType {
     pub id: String,
     pub name: String,
@@ -53,6 +58,7 @@ pub struct NoteType {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct NoteFieldValue {
     pub field_id: String,
     pub value: String,
@@ -60,6 +66,7 @@ pub struct NoteFieldValue {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct Note {
     pub id: String,
     pub note_type_id: String,
@@ -72,6 +79,7 @@ pub struct Note {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct GeneratedCard {
     pub id: String,
     pub note_id: String,
@@ -97,6 +105,7 @@ pub enum CardState {
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct CardProgress {
     pub card_id: String,
     pub state: CardState,
@@ -122,6 +131,7 @@ pub enum SessionStatus {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct Session {
     pub id: String,
     pub deck_id: String,
@@ -144,6 +154,7 @@ pub enum Rating {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct Review {
     pub id: String,
     pub session_id: String,
@@ -154,6 +165,7 @@ pub struct Review {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct ActiveSessionState {
     pub session_id: String,
     pub deck_id: String,
@@ -164,6 +176,7 @@ pub struct ActiveSessionState {
 
 #[derive(Clone, Debug, Default, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct AppState {
     pub decks: Vec<Deck>,
     pub note_types: Vec<NoteType>,
