@@ -9,9 +9,9 @@ use std::fmt;
 
 use coding_adventures_sha1::sum1;
 use engram_core::{
-    render_template, AppState, Card, CardFlag, CardLineage, CardProgress, CardState, CardTemplate,
-    Deck, FieldDef, Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
-    INITIAL_EASE_FACTOR, ONE_DAY_MS,
+    render_template, render_template_with_front_side, AppState, Card, CardFlag, CardLineage,
+    CardProgress, CardState, CardTemplate, Deck, FieldDef, Note, NoteFieldValue, NoteType, Rating,
+    Review, Session, SessionStatus, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
 use rusqlite::{Connection, OpenFlags};
 use serde::{Deserialize, Serialize};
@@ -1471,11 +1471,6 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
             ordinal: i64_to_u32(field.ordinal),
         })
         .collect::<Vec<_>>();
-    let required_field_names = note_type
-        .fields
-        .iter()
-        .map(|field| field.name.clone())
-        .collect::<Vec<_>>();
     let templates = note_type
         .templates
         .iter()
@@ -1484,7 +1479,7 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
             name: template.name.clone(),
             front_template: template.question_format.clone(),
             back_template: template.answer_format.clone(),
-            required_field_names: required_field_names.clone(),
+            required_field_names: required_field_names_for_anki_template(note_type, template),
             ordinal: i64_to_u32(template.ordinal),
         })
         .collect();
@@ -1497,6 +1492,64 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
         created_at: 0,
         updated_at: 0,
     }
+}
+
+fn required_field_names_for_anki_template(
+    note_type: &AnkiV11NoteType,
+    template: &AnkiV11Template,
+) -> Vec<String> {
+    let field_names = note_type
+        .fields
+        .iter()
+        .map(|field| field.name.as_str())
+        .collect::<BTreeSet<_>>();
+    let mut required = BTreeSet::new();
+    collect_anki_template_field_references(&template.question_format, &field_names, &mut required);
+    required.into_iter().map(str::to_string).collect()
+}
+
+fn collect_anki_template_field_references<'a>(
+    template: &str,
+    field_names: &BTreeSet<&'a str>,
+    required: &mut BTreeSet<&'a str>,
+) {
+    let mut rest = template;
+
+    while let Some(start) = rest.find("{{") {
+        let (_, after_start) = rest.split_at(start);
+        let after_start = &after_start[2..];
+        match after_start.find("}}") {
+            Some(end) => {
+                let (tag, after_end) = after_start.split_at(end);
+                if let Some(field_name) = normalize_anki_template_field_tag(tag.trim()) {
+                    if let Some(field_name) = field_names.get(field_name) {
+                        required.insert(*field_name);
+                    }
+                }
+                rest = &after_end[2..];
+            }
+            None => break,
+        }
+    }
+}
+
+fn normalize_anki_template_field_tag(tag: &str) -> Option<&str> {
+    if tag.starts_with('#') || tag.starts_with('^') || tag.starts_with('/') {
+        return None;
+    }
+
+    let tag = tag.trim();
+    if tag == "FrontSide" || tag.is_empty() {
+        return None;
+    }
+
+    Some(
+        tag.strip_prefix("cloze:")
+            .or_else(|| tag.strip_prefix("hint:"))
+            .or_else(|| tag.strip_prefix("type:"))
+            .unwrap_or(tag)
+            .trim(),
+    )
 }
 
 fn map_v11_note(note: &AnkiV11Note, note_type: &AnkiV11NoteType, deck_id: &str) -> Note {
@@ -1579,10 +1632,9 @@ fn map_v11_card(
             ),
         )
     } else {
-        (
-            render_template(&template.front_template, &field_values),
-            render_template(&template.back_template, &field_values),
-        )
+        let front = render_template(&template.front_template, &field_values);
+        let back = render_template_with_front_side(&template.back_template, &field_values, &front);
+        (front, back)
     };
 
     Ok(Card {
@@ -2721,6 +2773,29 @@ CREATE TABLE graves (
             day_learning_state.card_progress[0].next_due_at,
             (19_000 + 43) * ONE_DAY_MS
         );
+    }
+
+    #[test]
+    fn maps_v11_front_side_and_optional_template_sections() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.note_types[0].fields.push(AnkiV11Field {
+            ordinal: 2,
+            name: "Extra".to_string(),
+        });
+        collection.note_types[0].templates[0].question_format =
+            "{{Front}}{{#Extra}} has-extra{{/Extra}}".to_string();
+        collection.note_types[0].templates[0].answer_format =
+            "{{FrontSide}}<hr>{{hint:Back}}".to_string();
+        collection.notes[0].field_values.push(String::new());
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        assert_eq!(
+            state.note_types[0].templates[0].required_field_names,
+            vec!["Front"]
+        );
+        assert_eq!(state.cards[0].front, "hola");
+        assert_eq!(state.cards[0].back, "hola<hr>hello");
     }
 
     #[test]

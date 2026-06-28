@@ -280,6 +280,10 @@ Next APKG SQLite milestone:
 - Search now follows `Card.lineage.note_id` before falling back to generated
   `note::template` card IDs, so imported numeric Anki card IDs still match
   note-field text, tags, and note-type filters.
+- Template rendering now supports simple Anki-style conditional/inverted
+  sections, `{{FrontSide}}` for generated/imported card backs, and `hint:` /
+  `type:` field prefixes. APKG import now infers required fields from imported
+  template question formats instead of making every model field mandatory.
 - `engram-capi` now exposes `eg_parse_anki_apkg` for native import previews and
   `eg_import_anki_apkg` for applying supported APKG bytes into the shared
   session state. Both functions use the same JSON `{ ok, state/error }`

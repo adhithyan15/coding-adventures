@@ -44,6 +44,9 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
             cloze_field_names_for_template(&template.front_template, &template.back_template);
 
         if cloze_fields.is_empty() {
+            let front = render_template(&template.front_template, &field_values);
+            let back =
+                render_template_with_front_side(&template.back_template, &field_values, &front);
             generated.push(GeneratedCard {
                 id: generated_card_id(&note.id, &template.id),
                 note_id: note.id.clone(),
@@ -52,8 +55,8 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
                 deck_id: note.deck_id.clone(),
                 ordinal: template.ordinal,
                 cloze_ordinal: None,
-                front: render_template(&template.front_template, &field_values),
-                back: render_template(&template.back_template, &field_values),
+                front,
+                back,
                 tags: note.tags.clone(),
             });
             continue;
@@ -96,6 +99,14 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
 }
 
 pub fn render_template(template: &str, field_values: &HashMap<String, String>) -> String {
+    render_template_with_front_side(template, field_values, "")
+}
+
+pub fn render_template_with_front_side(
+    template: &str,
+    field_values: &HashMap<String, String>,
+    front_side: &str,
+) -> String {
     let mut rendered = String::with_capacity(template.len());
     let mut rest = template;
 
@@ -106,12 +117,28 @@ pub fn render_template(template: &str, field_values: &HashMap<String, String>) -
 
         match after_start.find("}}") {
             Some(end) => {
-                let (field_name, after_end) = after_start.split_at(end);
-                let field_name = field_name.trim();
-                if let Some(value) = field_values.get(field_name) {
-                    rendered.push_str(value);
+                let (tag, after_end) = after_start.split_at(end);
+                let tag = tag.trim();
+                let after_tag = &after_end[2..];
+
+                if let Some(section) = parse_section_tag(tag) {
+                    let close_tag = format!("{{{{/{}}}}}", section.field_name);
+                    if let Some(close_start) = after_tag.find(&close_tag) {
+                        let (body, after_body) = after_tag.split_at(close_start);
+                        if section_should_render(section, field_values) {
+                            rendered.push_str(&render_template_with_front_side(
+                                body,
+                                field_values,
+                                front_side,
+                            ));
+                        }
+                        rest = &after_body[close_tag.len()..];
+                        continue;
+                    }
                 }
-                rest = &after_end[2..];
+
+                rendered.push_str(&render_template_tag(tag, field_values, front_side));
+                rest = after_tag;
             }
             None => {
                 rendered.push_str("{{");
@@ -123,6 +150,56 @@ pub fn render_template(template: &str, field_values: &HashMap<String, String>) -
 
     rendered.push_str(rest);
     rendered
+}
+
+#[derive(Clone, Copy)]
+struct SectionTag<'a> {
+    field_name: &'a str,
+    inverted: bool,
+}
+
+fn parse_section_tag(tag: &str) -> Option<SectionTag<'_>> {
+    let (inverted, field_name) = if let Some(field_name) = tag.strip_prefix('#') {
+        (false, field_name.trim())
+    } else if let Some(field_name) = tag.strip_prefix('^') {
+        (true, field_name.trim())
+    } else {
+        return None;
+    };
+
+    (!field_name.is_empty()).then_some(SectionTag {
+        field_name,
+        inverted,
+    })
+}
+
+fn section_should_render(section: SectionTag<'_>, field_values: &HashMap<String, String>) -> bool {
+    let present = field_values
+        .get(section.field_name)
+        .is_some_and(|value| !value.trim().is_empty());
+    if section.inverted {
+        !present
+    } else {
+        present
+    }
+}
+
+fn render_template_tag(
+    tag: &str,
+    field_values: &HashMap<String, String>,
+    front_side: &str,
+) -> String {
+    if tag == "FrontSide" {
+        return front_side.to_string();
+    }
+
+    let field_name = tag
+        .strip_prefix("hint:")
+        .or_else(|| tag.strip_prefix("type:"))
+        .unwrap_or(tag)
+        .trim();
+
+    field_values.get(field_name).cloned().unwrap_or_default()
 }
 
 pub fn materialize_generated_card(generated: &GeneratedCard, created_at: u64) -> Card {
@@ -593,6 +670,38 @@ mod tests {
         let rendered = render_template("{{Known}} {{Missing}}", &values);
 
         assert_eq!(rendered, "value ");
+    }
+
+    #[test]
+    fn anki_style_sections_hints_and_front_side_render() {
+        let mut values = HashMap::new();
+        values.insert("Front".to_string(), "hola".to_string());
+        values.insert("Back".to_string(), "hello".to_string());
+        values.insert("Extra".to_string(), String::new());
+
+        assert_eq!(
+            render_template(
+                "{{#Back}}{{Back}}{{/Back}}{{^Extra}} no-extra{{/Extra}}",
+                &values
+            ),
+            "hello no-extra"
+        );
+        assert_eq!(render_template("{{hint:Back}}", &values), "hello");
+        assert_eq!(
+            render_template_with_front_side("{{FrontSide}}<hr>{{Back}}", &values, "hola"),
+            "hola<hr>hello"
+        );
+    }
+
+    #[test]
+    fn generated_cards_support_front_side_on_back_template() {
+        let mut note_type = basic_note_type();
+        note_type.templates[0].back_template = "{{FrontSide}}<hr>{{Back}}".to_string();
+
+        let cards = generate_cards_for_note(&note_type, &note("letter-a", "a"));
+
+        assert_eq!(cards[0].front, "letter-a");
+        assert_eq!(cards[0].back, "letter-a<hr>a");
     }
 
     #[test]

@@ -48,4 +48,5 @@ pub use snapshot::{
 };
 pub use template::{
     generate_cards_for_note, materialize_generated_card, rename_note_type_field, render_template,
+    render_template_with_front_side,
 };
