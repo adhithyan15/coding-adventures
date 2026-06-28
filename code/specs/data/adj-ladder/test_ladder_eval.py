@@ -25,6 +25,7 @@ SELF_CONTAINED_RUNGS = (
     "rung1_fractions_percent",
     "rung2_prealgebra_solve",
     "rung2_derived_solve",
+    "rung3_quadratic_roots",
 )
 
 
@@ -162,6 +163,17 @@ def test_decompose_prompt_mentions_derived_solve_requirements():
     assert "derive the setup premise" in prompt
     assert "Required decision leader: setup_ready" in prompt
     assert "Required derived evidence: repeated_groups_problem" in prompt
+
+
+def test_decompose_prompt_mentions_native_root_solve_program():
+    prompt = le.decompose_prompt({
+        "stem": "What real values of x solve x^2 = 4?",
+        "program": "symbol x : scalar\nconstrain x * x = 4\nsolve for { x }\n",
+        "answer_from": {"type": "solve_roots", "name": "x"},
+    })
+    assert "finds all real roots" in prompt
+    assert "constrain x * x = 121" in prompt
+    assert 'constrain latex "$x^2 = 144$"' in prompt
 
 
 def test_extract_formula_abstains_on_latex():
@@ -305,6 +317,28 @@ def test_solve_assignment_requires_derived_decision_proof():
         answer_from,
         {"A": 48, "B": 54, "C": 56, "D": 63, "E": 64},
     ) == "C"
+
+
+def test_solve_roots_program_maps_engine_roots_to_option():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    doc = le.run_program("symbol x : scalar\nconstrain x * x = 4\nsolve for { x }\n")
+    assert le.solve_roots_to_letter(
+        doc,
+        {"type": "solve_roots", "name": "x"},
+        {"A": [-3, 3], "B": [0, 2], "C": [-2, 2], "D": [2, 4], "E": [-4, 4]},
+    ) == "C"
+
+
+def test_solve_roots_program_maps_native_latex_roots_to_option():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    doc = le.run_program("symbol x : scalar\nconstrain latex \"$x^2 = 25$\"\nsolve for { x }\n")
+    assert le.program_answer_to_letter(
+        doc,
+        {"type": "solve_roots", "name": "x"},
+        {"A": [-6, 6], "B": [-25, 25], "C": [0, 5], "D": [5, 25], "E": [-5, 5]},
+    ) == "E"
 
 
 # ---- bank integrity -----------------------------------------------------------

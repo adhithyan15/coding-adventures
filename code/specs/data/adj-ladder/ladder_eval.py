@@ -143,7 +143,7 @@ _LETTER = re.compile(r"\b([A-E])\b")
 # ----------------------------------------------------------------------------------
 # Arm B — build the ADJ program and read the engine's selection.
 # ----------------------------------------------------------------------------------
-OptionValue = Union[int, float, str]
+OptionValue = Union[int, float, str, list[Union[int, float]]]
 
 _BINOPS = {
     ast.Add: operator.add,
@@ -155,6 +155,8 @@ _UNOPS = {ast.UAdd: operator.pos, ast.USub: operator.neg}
 
 
 def _render_option_expr(value: OptionValue) -> str:
+    if isinstance(value, list):
+        raise ValueError("root-set options are supported only by solve_roots items")
     if isinstance(value, str):
         value = value.strip()
         if not value:
@@ -185,6 +187,17 @@ def _option_number(value: OptionValue) -> float:
     if isinstance(value, str):
         return _safe_number_expr(value)
     raise ValueError(f"unsupported option value {value!r}")
+
+
+def _option_roots(value: OptionValue) -> tuple[float, ...]:
+    if not isinstance(value, list) or not value:
+        raise ValueError(f"unsupported root-set option value {value!r}")
+    roots = []
+    for root in value:
+        if not isinstance(root, (int, float)):
+            raise ValueError(f"unsupported root value {root!r}")
+        roots.append(float(root))
+    return tuple(sorted(roots))
 
 
 def build_arm_b_program(formula: str, options: dict[str, OptionValue]) -> str:
@@ -260,6 +273,21 @@ def _letter_for_engine_value(value: float, options: dict[str, OptionValue]) -> s
                 matches.append(ltr)
         except (ValueError, SyntaxError, ZeroDivisionError):
             return None
+    return matches[0] if len(matches) == 1 else None
+
+
+def _letter_for_engine_roots(roots: list[float], options: dict[str, OptionValue]) -> str | None:
+    root_set = tuple(sorted(float(r) for r in roots))
+    matches = []
+    for ltr, option in options.items():
+        try:
+            option_roots = _option_roots(option)
+        except (TypeError, ValueError):
+            return None
+        if len(root_set) == len(option_roots) and all(
+            abs(a - b) <= 1e-9 for a, b in zip(root_set, option_roots)
+        ):
+            matches.append(ltr)
     return matches[0] if len(matches) == 1 else None
 
 
@@ -354,6 +382,45 @@ def solve_assignment_to_letter(
         return _letter_for_engine_value(float(values[0]), options)
     except (TypeError, ValueError):
         return None
+
+
+def solve_roots_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ root solve to an option letter.
+
+    The engine owns the nonlinear solve and returns the real roots; the harness
+    only compares that returned root set to the printed multiple-choice root sets.
+    """
+    if not doc or not answer_from or answer_from.get("type") != "solve_roots":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    name = answer_from.get("name")
+    solve = doc.get("solve")
+    if not name or not isinstance(solve, dict) or solve.get("outcome") != "solved_roots":
+        return None
+    if solve.get("var") != name:
+        return None
+    roots = solve.get("roots")
+    if not isinstance(roots, list):
+        return None
+    try:
+        return _letter_for_engine_roots([float(r) for r in roots], options)
+    except (TypeError, ValueError):
+        return None
+
+
+def program_answer_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    if not answer_from:
+        return None
+    if answer_from.get("type") == "solve_assignment":
+        return solve_assignment_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "solve_roots":
+        return solve_roots_to_letter(doc, answer_from, options)
+    return None
 
 
 def formula_is_faithful(formula: str, stem: str, *, program: bool = False) -> bool:
@@ -489,7 +556,7 @@ def score_item(item: dict, gen) -> ItemResult:
     if not faithful:
         arm_b_letter = None                                  # decompose failed → abstain
     elif program:
-        arm_b_letter = solve_assignment_to_letter(
+        arm_b_letter = program_answer_to_letter(
             run_program(program), item.get("answer_from"), item["options"]
         )
     elif formula:
@@ -520,6 +587,24 @@ def decompose_prompt(item: dict) -> str:
     if "program" in item:
         answer_from = item.get("answer_from") or {}
         name = answer_from.get("name", "x")
+        if answer_from.get("type") == "solve_roots":
+            return (
+                "Translate the word problem into a native ADJ solve program that "
+                f"finds all real roots for `{name}`. Use ONLY numbers that appear "
+                "in the question. Do NOT compute the roots, do NOT mention the "
+                "answer choices, and output ONLY the ADJ program.\n\n"
+                "Question: What real values of x solve x^2 = 121?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain x * x = 121\n"
+                "solve for { x }\n\n"
+                "Question: What real values of x solve x^2 = 144?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain latex \"$x^2 = 144$\"\n"
+                "solve for { x }\n\n"
+                f"Question: {item['stem']}\nProgram:"
+            )
         requires = answer_from.get("requires") or []
         decision_req = next((r for r in requires if r.get("type") == "decision"), None)
         if decision_req:

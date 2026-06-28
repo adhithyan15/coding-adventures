@@ -75,6 +75,19 @@ def option_value(value) -> float:
     raise ValueError(f"unsupported option value {value!r}")
 
 
+def option_signature(value):
+    if isinstance(value, list):
+        if not value:
+            raise ValueError("root-set option must not be empty")
+        roots = []
+        for root in value:
+            if not isinstance(root, (int, float)):
+                raise ValueError(f"unsupported root value {root!r}")
+            roots.append(round(float(root), 9))
+        return ("roots", tuple(sorted(roots)))
+    return ("number", round(option_value(value), 9))
+
+
 def check(rung: str) -> list[str]:
     items = json.loads((HERE / rung / "items.json").read_text())["items"]
     errors: list[str] = []
@@ -89,16 +102,19 @@ def check(rung: str) -> list[str]:
         if sorted(opts) != list("ABCDE"):
             errors.append(f"{iid}: options must be exactly A..E, got {sorted(opts)}")
         numeric_opts: dict[str, float] = {}
+        option_keys = {}
         for ltr, value in opts.items():
             try:
-                numeric_opts[ltr] = option_value(value)
+                option_keys[ltr] = option_signature(value)
+                if option_keys[ltr][0] == "number":
+                    numeric_opts[ltr] = option_keys[ltr][1]
             except (ValueError, SyntaxError, ZeroDivisionError) as e:
                 errors.append(f"{iid}: option {ltr} value {value!r} did not evaluate: {e}")
         duplicates = [
             (a, b)
-            for i, (a, av) in enumerate(numeric_opts.items())
-            for b, bv in list(numeric_opts.items())[i + 1 :]
-            if abs(av - bv) <= 1e-9
+            for i, (a, av) in enumerate(option_keys.items())
+            for b, bv in list(option_keys.items())[i + 1 :]
+            if av == bv
         ]
         if duplicates:
             errors.append(f"{iid}: option values must be distinct, got duplicates {duplicates}")
@@ -123,7 +139,7 @@ def check(rung: str) -> list[str]:
                 errors.append(f"{iid}: program items must declare answer_from")
             doc = le.run_program(it["program"])
             if doc is not None:
-                letter = le.solve_assignment_to_letter(doc, it.get("answer_from"), opts)
+                letter = le.program_answer_to_letter(doc, it.get("answer_from"), opts)
                 if letter != gold:
                     errors.append(
                         f"{iid}: gold {gold}={opts[gold]} ≠ ADJ program selection {letter}"
