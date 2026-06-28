@@ -1,5 +1,12 @@
 # Changelog — vm-core
 
+## [0.11.0] — 2026-06-28 (LANG-FULL E4 — reference string slicing)
+
+The reference VM now implements shared E4 `str_slice` semantics over
+`Value::Str`: source string plus start/end integer bounds produce a fresh
+substring. The operation is byte-indexed, traps on negative, inverted, or
+out-of-bounds ranges, and rejects ranges that do not preserve UTF-8 boundaries.
+
 ## [0.10.0] — 2026-06-27 (LANG-FULL E4 — reference string ops, VM slice)
 
 Reference VM semantics for the six shared E4 string opcodes:

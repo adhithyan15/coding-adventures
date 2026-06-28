@@ -55,6 +55,56 @@ fn str_concat_and_eq_return_i64_bool() {
 }
 
 #[test]
+fn str_slice_produces_substring_value() {
+    let result = run(
+        vec![
+            ins("str_const", Some("s"), vec![Operand::Str("ABCDE".into())], "str"),
+            ins("const", Some("start"), vec![Operand::Int(1)], "i64"),
+            ins("const", Some("end"), vec![Operand::Int(4)], "i64"),
+            ins(
+                "str_slice",
+                Some("sub"),
+                vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("start".into()),
+                    Operand::Var("end".into()),
+                ],
+                "str",
+            ),
+            ins("str_len", Some("n"), vec![Operand::Var("sub".into())], "i64"),
+            ins("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+        "i64",
+    )
+    .unwrap();
+    assert_eq!(result, Some(Value::Int(3)));
+}
+
+#[test]
+fn str_slice_traps_out_of_bounds() {
+    let err = run(
+        vec![
+            ins("str_const", Some("s"), vec![Operand::Str("ABC".into())], "str"),
+            ins("const", Some("start"), vec![Operand::Int(2)], "i64"),
+            ins("const", Some("end"), vec![Operand::Int(4)], "i64"),
+            ins(
+                "str_slice",
+                Some("sub"),
+                vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("start".into()),
+                    Operand::Var("end".into()),
+                ],
+                "str",
+            ),
+        ],
+        "str",
+    )
+    .unwrap_err();
+    assert!(err.to_string().contains("str_slice"));
+}
+
+#[test]
 fn str_index_returns_unsigned_byte() {
     let result = run(
         vec![

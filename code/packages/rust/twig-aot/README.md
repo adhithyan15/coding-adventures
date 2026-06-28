@@ -50,10 +50,11 @@ LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
 preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
 `call_builtin "print_string"`, so source-level BASIC `PRINT "HELLO"` runs through
 the same object/link/runtime pipeline as byte-tape programs. Direct-literal
-`str_len`, `str_index`, `str_eq`, and literal `str_concat` metadata over direct
-literals fold before machine-code lowering, so Twig `(string-length "HELLO")`,
-`(string-ref "ABC" 1)`, `(string=? "HELLO" "HELLO")`, and
-`(string-length (string-append "AB" "CDE"))` run natively through the same
+`str_len`, `str_index`, `str_eq`, literal `str_concat`, and literal `str_slice`
+metadata over direct literals fold before machine-code lowering, so Twig
+`(string-length "HELLO")`, `(string-ref "ABC" 1)`,
+`(string=? "HELLO" "HELLO")`, `(string-length (string-append "AB" "CDE"))`,
+and `(string-ref (substring "ABCDE" 1 4) 1)` run natively through the same
 preparation pass. Folded `str_len` metadata can also flow through typed integer
 arithmetic, so `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))`
 folds to byte `69` before native lowering.

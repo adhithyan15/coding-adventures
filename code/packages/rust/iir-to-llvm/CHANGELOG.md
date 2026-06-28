@@ -3,6 +3,14 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.23.0] — 2026-06-28 — literal string slice metadata reaches LLVM (LANG-FULL E4)
+
+Literal-only `str_slice` now participates in the LLVM string metadata pass.
+When the source string and start/end bounds are constant, the backend interns
+the derived slice as a length-prefixed private constant and binds the slice
+destination to that metadata. This lets `str_slice` feed `str_index`, `str_len`,
+`str_eq`, or `print_str` without adding a runtime string API.
+
 ## [0.22.0] — 2026-06-28 — computed string index metadata reaches LLVM (LANG-FULL E4)
 
 Literal-only `str_len` results can now feed typed `i64` arithmetic in the LLVM

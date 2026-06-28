@@ -2557,6 +2557,86 @@ fn e4_string_concat_len_lowers_to_string_concat_and_length() {
 }
 
 #[test]
+fn e4_string_slice_index_lowers_to_string_substring_and_char_at() {
+    let f = IIRFunction::new(
+        "slice_index",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABCDE".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new(
+                "str_slice",
+                Some("sub".into()),
+                vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("start".into()),
+                    Operand::Var("end".into()),
+                ],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "str_index",
+                Some("b".into()),
+                vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    let errors = validate_for_jvm(&module);
+    assert!(
+        errors.is_empty(),
+        "string literal slice/index should validate: {:?}",
+        errors
+    );
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "slice_index")
+        .expect("slice_index method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.iter().filter(|&&b| b == 0xB6).count() >= 2,
+        "str_slice + str_index should use invokevirtual for substring and charAt; got: {:?}",
+        code
+    );
+    assert!(
+        code.iter().filter(|&&b| b == 0x88).count() >= 3,
+        "i64 start/end/index operands should narrow with L2I; got: {:?}",
+        code
+    );
+
+    let substring_ref = find_methodref_in_cp(
+        &class.constant_pool,
+        "java/lang/String",
+        "substring",
+        "(II)Ljava/lang/String;",
+    );
+    assert_ne!(
+        substring_ref, 0,
+        "constant pool must contain java/lang/String.substring(II)"
+    );
+    let char_at_ref =
+        find_methodref_in_cp(&class.constant_pool, "java/lang/String", "charAt", "(I)C");
+    assert_ne!(
+        char_at_ref, 0,
+        "constant pool must contain java/lang/String.charAt(I)C"
+    );
+}
+
+#[test]
 fn e4_string_eq_lowers_to_string_equals() {
     let f = IIRFunction::new(
         "eq_hello",

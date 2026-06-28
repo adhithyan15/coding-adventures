@@ -3,6 +3,13 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.22.0] — 2026-06-28 (literal string slice — LANG-FULL E4)
+
+The JVM backend now lowers `str_slice` over managed `String` locals by loading
+the source, narrowing i64 start/end bounds with `l2i` when needed, and invoking
+`java/lang/String.substring(II)Ljava/lang/String;`. The resulting string local
+can feed the existing `str_index`, `str_len`, `str_eq`, and `print_str` paths.
+
 ## [0.21.0] — 2026-06-27 (literal string index — LANG-FULL E4)
 
 The JVM backend now lowers the direct-literal `str_index` shape:

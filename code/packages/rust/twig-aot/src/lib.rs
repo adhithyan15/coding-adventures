@@ -1453,6 +1453,58 @@ fn strip_dead_string_consts(func: &mut IIRFunction) {
 /// pass reuses that path for `str_const` + `print_str` and folds direct
 /// literal `str_len`/`str_eq`; richer string ops remain unsupported until the
 /// full byte-string runtime lands.
+fn push_aot_string_literal(
+    lowered: &mut Vec<IIRInstr>,
+    next: &mut usize,
+    literal: String,
+) -> (String, String, String) {
+    let base = format!("__aot_str{next}");
+    *next += 1;
+    let len_var = format!("{base}_len");
+    let buf_var = format!("{base}_buf");
+
+    lowered.push(IIRInstr::new(
+        "const",
+        Some(len_var.clone()),
+        vec![Operand::Int(literal.len() as i64)],
+        "i64",
+    ));
+    lowered.push(IIRInstr::new(
+        "alloc_bytes",
+        Some(buf_var.clone()),
+        vec![Operand::Var(len_var.clone())],
+        "i64",
+    ));
+    for (idx, byte) in literal.bytes().enumerate() {
+        let off_var = format!("{base}_off{idx}");
+        let byte_var = format!("{base}_byte{idx}");
+        lowered.push(IIRInstr::new(
+            "const",
+            Some(off_var.clone()),
+            vec![Operand::Int(idx as i64)],
+            "i64",
+        ));
+        lowered.push(IIRInstr::new(
+            "const",
+            Some(byte_var.clone()),
+            vec![Operand::Int(byte as i64)],
+            "i64",
+        ));
+        lowered.push(IIRInstr::new(
+            "store_byte",
+            None,
+            vec![
+                Operand::Var(buf_var.clone()),
+                Operand::Var(off_var),
+                Operand::Var(byte_var),
+            ],
+            "void",
+        ));
+    }
+
+    (buf_var, len_var, literal)
+}
+
 fn lower_string_literals_for_aot(func: &mut IIRFunction) {
     let mut lowered = Vec::with_capacity(func.instructions.len());
     let mut strings: HashMap<String, (String, String, String)> = HashMap::new();
@@ -1524,50 +1576,8 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 continue;
             }
 
-            let base = format!("__aot_str{next}");
-            next += 1;
-            let len_var = format!("{base}_len");
-            let buf_var = format!("{base}_buf");
-
-            lowered.push(IIRInstr::new(
-                "const",
-                Some(len_var.clone()),
-                vec![Operand::Int(literal.len() as i64)],
-                "i64",
-            ));
-            lowered.push(IIRInstr::new(
-                "alloc_bytes",
-                Some(buf_var.clone()),
-                vec![Operand::Var(len_var.clone())],
-                "i64",
-            ));
-            for (idx, byte) in literal.bytes().enumerate() {
-                let off_var = format!("{base}_off{idx}");
-                let byte_var = format!("{base}_byte{idx}");
-                lowered.push(IIRInstr::new(
-                    "const",
-                    Some(off_var.clone()),
-                    vec![Operand::Int(idx as i64)],
-                    "i64",
-                ));
-                lowered.push(IIRInstr::new(
-                    "const",
-                    Some(byte_var.clone()),
-                    vec![Operand::Int(byte as i64)],
-                    "i64",
-                ));
-                lowered.push(IIRInstr::new(
-                    "store_byte",
-                    None,
-                    vec![
-                        Operand::Var(buf_var.clone()),
-                        Operand::Var(off_var),
-                        Operand::Var(byte_var),
-                    ],
-                    "void",
-                ));
-            }
-            strings.insert(dest, (buf_var, len_var, literal));
+            let string = push_aot_string_literal(&mut lowered, &mut next, literal);
+            strings.insert(dest, string);
             continue;
         }
 
@@ -1594,50 +1604,47 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 continue;
             }
 
-            let base = format!("__aot_str{next}");
-            next += 1;
-            let len_var = format!("{base}_len");
-            let buf_var = format!("{base}_buf");
+            let string = push_aot_string_literal(&mut lowered, &mut next, literal);
+            strings.insert(dest, string);
+            continue;
+        }
 
-            lowered.push(IIRInstr::new(
-                "const",
-                Some(len_var.clone()),
-                vec![Operand::Int(literal.len() as i64)],
-                "i64",
-            ));
-            lowered.push(IIRInstr::new(
-                "alloc_bytes",
-                Some(buf_var.clone()),
-                vec![Operand::Var(len_var.clone())],
-                "i64",
-            ));
-            for (idx, byte) in literal.bytes().enumerate() {
-                let off_var = format!("{base}_off{idx}");
-                let byte_var = format!("{base}_byte{idx}");
-                lowered.push(IIRInstr::new(
-                    "const",
-                    Some(off_var.clone()),
-                    vec![Operand::Int(idx as i64)],
-                    "i64",
-                ));
-                lowered.push(IIRInstr::new(
-                    "const",
-                    Some(byte_var.clone()),
-                    vec![Operand::Int(byte as i64)],
-                    "i64",
-                ));
-                lowered.push(IIRInstr::new(
-                    "store_byte",
-                    None,
-                    vec![
-                        Operand::Var(buf_var.clone()),
-                        Operand::Var(off_var),
-                        Operand::Var(byte_var),
-                    ],
-                    "void",
-                ));
+        if instr.op == "str_slice" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let [Operand::Var(src), Operand::Var(start), Operand::Var(end)] = instr.srcs.as_slice()
+            else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, literal)) = strings.get(src).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let (Some(start), Some(end)) = (ints.get(start).copied(), ints.get(end).copied())
+            else {
+                lowered.push(instr);
+                continue;
+            };
+            if start < 0 || end < start || end as usize > literal.len() {
+                lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
+                let string = push_aot_string_literal(&mut lowered, &mut next, String::new());
+                strings.insert(dest, string);
+                continue;
             }
-            strings.insert(dest, (buf_var, len_var, literal));
+            let slice = literal.as_bytes()[start as usize..end as usize].to_vec();
+            let Ok(literal) = String::from_utf8(slice) else {
+                lowered.push(instr);
+                continue;
+            };
+            if !is_printable_ascii_str(&literal) {
+                lowered.push(instr);
+                continue;
+            }
+            let string = push_aot_string_literal(&mut lowered, &mut next, literal);
+            strings.insert(dest, string);
             continue;
         }
 
@@ -2422,6 +2429,62 @@ mod tests {
         assert!(
             f.instructions.iter().all(|i| i.op != "str_concat" && i.op != "str_len"),
             "native lowering should remove folded str_concat + str_len: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_slice_index_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new(
+                    "str_const",
+                    Some("s".into()),
+                    vec![Operand::Str("ABCDE".into())],
+                    "str",
+                ),
+                IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+                IIRInstr::new(
+                    "str_slice",
+                    Some("sub".into()),
+                    vec![
+                        Operand::Var("s".into()),
+                        Operand::Var("start".into()),
+                        Operand::Var("end".into()),
+                    ],
+                    "str",
+                ),
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new(
+                    "str_index",
+                    Some("b".into()),
+                    vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let byte_const = f
+            .instructions
+            .iter()
+            .find(|i| i.dest.as_deref() == Some("b"));
+        assert!(
+            matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(67)]),
+            "str_slice feeding str_index should fold to byte 67: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions
+                .iter()
+                .all(|i| i.op != "str_slice" && i.op != "str_index"),
+            "native lowering should remove folded str_slice + str_index: {:?}",
             f.instructions
         );
     }

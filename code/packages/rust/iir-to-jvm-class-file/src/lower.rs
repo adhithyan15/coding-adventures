@@ -1995,6 +1995,68 @@ fn lower_function(
                 emit_astore(&mut code, dest_slot);
             }
 
+            "str_slice" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_slice instruction has no dest".to_string(),
+                })?;
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_slice expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let start = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_slice expects a start variable, got {other:?}"),
+                        })
+                    }
+                };
+                let end = match instr.srcs.get(2) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_slice expects an end variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                let (start_slot, start_type) = lookup_var(start)?;
+                let (end_slot, end_type) = lookup_var(end)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if src_type != JvmType::Ref
+                    || dest_type != JvmType::Ref
+                    || (start_type != JvmType::Int && start_type != JvmType::Long)
+                    || (end_type != JvmType::Int && end_type != JvmType::Long)
+                {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str_slice".to_string(),
+                    });
+                }
+                emit_aload(&mut code, src_slot);
+                emit_typed_load(&mut code, start_slot, start_type);
+                if start_type == JvmType::Long {
+                    code.push(L2I);
+                }
+                emit_typed_load(&mut code, end_slot, end_type);
+                if end_type == JvmType::Long {
+                    code.push(L2I);
+                }
+                let substring_ref =
+                    cp.add_methodref("java/lang/String", "substring", "(II)Ljava/lang/String;");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&substring_ref.to_be_bytes());
+                emit_astore(&mut code, dest_slot);
+            }
+
             "str_len" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),

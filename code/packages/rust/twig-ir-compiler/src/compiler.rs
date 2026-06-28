@@ -1386,10 +1386,20 @@ impl Compiler {
             Expr::VarRef(v) => self.is_known_value_type(&v.name, ctx, "str"),
             Expr::Apply(apply) => {
                 if let Expr::VarRef(f) = apply.fn_expr.as_ref() {
-                    f.name == "string-append"
-                        && apply.args.len() == 2
-                        && self.can_compile_e4_string_expr(&apply.args[0], ctx)
-                        && self.can_compile_e4_string_expr(&apply.args[1], ctx)
+                    match f.name.as_str() {
+                        "string-append" => {
+                            apply.args.len() == 2
+                                && self.can_compile_e4_string_expr(&apply.args[0], ctx)
+                                && self.can_compile_e4_string_expr(&apply.args[1], ctx)
+                        }
+                        "substring" => {
+                            apply.args.len() == 3
+                                && self.can_compile_e4_string_expr(&apply.args[0], ctx)
+                                && self.can_compile_e4_index_expr(&apply.args[1], ctx)
+                                && self.can_compile_e4_index_expr(&apply.args[2], ctx)
+                        }
+                        _ => false,
+                    }
                 } else {
                     false
                 }
@@ -1519,6 +1529,32 @@ impl Compiler {
                     loc,
                 );
                 ctx.record_type(&dest, "i64");
+                Ok(Some(dest))
+            }
+            "substring"
+                if args.len() == 3
+                    && self.can_compile_e4_string_expr(&args[0], ctx)
+                    && self.can_compile_e4_index_expr(&args[1], ctx)
+                    && self.can_compile_e4_index_expr(&args[2], ctx) =>
+            {
+                let string_reg = self.compile_e4_string_expr(&args[0], ctx)?;
+                let start_reg = self.compile_expr(&args[1], ctx)?;
+                let end_reg = self.compile_expr(&args[2], ctx)?;
+                let dest = ctx.fresh_var("s");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_slice",
+                        Some(dest.clone()),
+                        vec![
+                            Operand::Var(string_reg),
+                            Operand::Var(start_reg),
+                            Operand::Var(end_reg),
+                        ],
+                        "str",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "str");
                 Ok(Some(dest))
             }
             _ => Ok(None),

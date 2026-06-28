@@ -1677,6 +1677,37 @@ mod tests {
         assert_eq!(main.return_type, "i64");
     }
 
+    #[test]
+    fn let_string_binding_feeds_e4_substring_ref() {
+        let m = compile_source(
+            "(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))",
+            "string_let_substring_ref",
+        )
+        .expect("let string binding should feed E4 substring");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(
+            ops,
+            vec![
+                "str_const",
+                "const",
+                "const",
+                "str_slice",
+                "const",
+                "str_index",
+                "ret"
+            ]
+        );
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let substring/ref should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[3].type_hint, "str");
+        assert_eq!(main.instructions[5].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
     // =========================================================================
     // LANG51: String literal tests
     // =========================================================================

@@ -905,6 +905,21 @@ fn emit_instr(
             code.extend(encode_local_set(rd));
         }
 
+        // ── str_slice → literal data-segment metadata ────────────────────────
+        "str_slice" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_slice must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let lit = string_literals.get(dest).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_slice missing module string table entry for {dest:?}"),
+            })?;
+            code.extend(encode_i32_const(lit.offset as i32));
+            code.extend(encode_local_set(rd));
+        }
+
         // ── str_index → bounds-checked literal byte load ───────────────────────
         "str_index" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
@@ -2978,6 +2993,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut string_literals: ModuleStringLiterals = HashMap::new();
     let mut string_data: Vec<u8> = Vec::new();
     for fn_ in &module.functions {
+        let mut fn_ints: HashMap<String, i64> = HashMap::new();
         for instr in &fn_.instructions {
             match instr.op.as_str() {
                 "global_load" | "global_store" => {
@@ -2989,6 +3005,13 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                 }
                 "io_out" => {
                     uses_io_out = true;
+                }
+                "const" => {
+                    if let (Some(dest), Some(Operand::Int(value))) =
+                        (instr.dest.as_ref(), instr.srcs.first())
+                    {
+                        fn_ints.insert(dest.clone(), *value);
+                    }
                 }
                 "str_const" => {
                     if let (Some(dest), Some(Operand::Str(s))) =
@@ -3024,6 +3047,79 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         };
                         let mut bytes = left_lit.bytes;
                         bytes.extend_from_slice(&right_lit.bytes);
+                        let offset = string_data.len() as u32;
+                        let len = bytes.len() as u32;
+                        string_data.extend_from_slice(&bytes);
+                        string_literals
+                            .entry(fn_.name.clone())
+                            .or_default()
+                            .insert(dest.clone(), WasmStringLiteral {
+                                offset,
+                                len,
+                                bytes,
+                            });
+                    }
+                }
+                "str_len" => {
+                    if let (Some(dest), [Operand::Var(src)]) =
+                        (instr.dest.as_ref(), instr.srcs.as_slice())
+                    {
+                        let Some(lit) = string_literals
+                            .get(&fn_.name)
+                            .and_then(|fn_strings| fn_strings.get(src))
+                        else {
+                            continue;
+                        };
+                        fn_ints.insert(dest.clone(), lit.len as i64);
+                    }
+                }
+                "add" | "sub" | "mul" | "div" => {
+                    if let (Some(dest), [Operand::Var(left), Operand::Var(right)]) =
+                        (instr.dest.as_ref(), instr.srcs.as_slice())
+                    {
+                        let (Some(left), Some(right)) =
+                            (fn_ints.get(left).copied(), fn_ints.get(right).copied())
+                        else {
+                            continue;
+                        };
+                        let value = match instr.op.as_str() {
+                            "add" => left.checked_add(right),
+                            "sub" => left.checked_sub(right),
+                            "mul" => left.checked_mul(right),
+                            "div" if right != 0 => left.checked_div(right),
+                            _ => None,
+                        };
+                        if let Some(value) = value {
+                            fn_ints.insert(dest.clone(), value);
+                        }
+                    }
+                }
+                "str_slice" => {
+                    if let (
+                        Some(dest),
+                        [Operand::Var(src), Operand::Var(start), Operand::Var(end)],
+                    ) = (instr.dest.as_ref(), instr.srcs.as_slice())
+                    {
+                        let Some(src_lit) = string_literals
+                            .get(&fn_.name)
+                            .and_then(|fn_strings| fn_strings.get(src))
+                        else {
+                            continue;
+                        };
+                        let (Some(start), Some(end)) =
+                            (fn_ints.get(start).copied(), fn_ints.get(end).copied())
+                        else {
+                            continue;
+                        };
+                        let (Ok(start), Ok(end)) =
+                            (usize::try_from(start), usize::try_from(end))
+                        else {
+                            continue;
+                        };
+                        if end < start || end > src_lit.bytes.len() {
+                            continue;
+                        }
+                        let bytes = src_lit.bytes[start..end].to_vec();
                         let offset = string_data.len() as u32;
                         let len = bytes.len() as u32;
                         string_data.extend_from_slice(&bytes);

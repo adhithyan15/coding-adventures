@@ -270,9 +270,10 @@ const SUPPORTED_OPS: &[&str] = &[
     "int_to_real", "real_to_int_trunc", "real_to_int_floor",
     // LANG-FULL E4 — string literal foothold for the static LLVM column.
     // `str_const` materialises a length-prefixed private constant. `str_index`,
-    // `str_concat`, `str_len`, and `str_eq` read literal metadata, and `print_str` calls the
-    // generic C runtime. Richer dynamic byte-string ops remain unsupported.
-    "str_const", "str_index", "str_concat", "str_len", "str_eq", "print_str",
+    // `str_concat`, `str_slice`, `str_len`, and `str_eq` read literal metadata,
+    // and `print_str` calls the generic C runtime. Richer dynamic byte-string
+    // ops remain unsupported.
+    "str_const", "str_index", "str_concat", "str_slice", "str_len", "str_eq", "print_str",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -398,6 +399,10 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
                 validate_str_concat(func, instr, &mut errors);
                 continue;
             }
+            if instr.op == "str_slice" {
+                validate_str_slice(func, instr, &mut errors);
+                continue;
+            }
             if instr.op == "str_index" {
                 validate_str_index(func, instr, &mut errors);
                 continue;
@@ -521,6 +526,28 @@ fn validate_str_concat(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<St
         [Operand::Var(_), Operand::Var(_)] => {}
         _ => errors.push(format!(
             "InvalidOperand: function {:?}, str_concat requires exactly two Operand::Var sources",
+            func.name
+        )),
+    }
+}
+
+fn validate_str_slice(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_slice requires a dest",
+            func.name
+        ));
+    }
+    if instr.type_hint != "str" {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_slice result type {:?} must be \"str\"",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_), Operand::Var(_), Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_slice requires string, start, and end Operand::Var sources",
             func.name
         )),
     }
@@ -808,8 +835,54 @@ fn collect_string_literals(
     }
     for func in &module.functions {
         let mut fn_values: HashMap<String, String> = HashMap::new();
+        let mut fn_ints: HashMap<String, i64> = HashMap::new();
         for instr in &func.instructions {
             match instr.op.as_str() {
+                "const" => {
+                    if let (Some(dest), Some(Operand::Int(value))) =
+                        (instr.dest.as_ref(), instr.srcs.first())
+                    {
+                        fn_ints.insert(dest.clone(), *value);
+                    }
+                }
+                "mov" => {
+                    let (Some(dest), Some(Operand::Var(src))) =
+                        (instr.dest.as_ref(), instr.srcs.first())
+                    else {
+                        continue;
+                    };
+                    if let Some(value) = fn_values.get(src).cloned() {
+                        fn_values.insert(dest.clone(), value);
+                    }
+                    if let Some(value) = fn_ints.get(src).copied() {
+                        fn_ints.insert(dest.clone(), value);
+                    }
+                }
+                "add" | "sub" | "mul" | "div" => {
+                    let Some(dest) = instr.dest.as_ref() else {
+                        continue;
+                    };
+                    let left = instr.srcs.first().and_then(|src| match src {
+                        Operand::Int(value) => Some(*value),
+                        Operand::Var(name) => fn_ints.get(name).copied(),
+                        _ => None,
+                    });
+                    let right = instr.srcs.get(1).and_then(|src| match src {
+                        Operand::Int(value) => Some(*value),
+                        Operand::Var(name) => fn_ints.get(name).copied(),
+                        _ => None,
+                    });
+                    let value = match (instr.op.as_str(), left, right) {
+                        ("add", Some(left), Some(right)) => left.checked_add(right),
+                        ("sub", Some(left), Some(right)) => left.checked_sub(right),
+                        ("mul", Some(left), Some(right)) => left.checked_mul(right),
+                        ("div", Some(left), Some(right)) if right != 0 => left.checked_div(right),
+                        _ => None,
+                    };
+                    if let Some(value) = value {
+                        fn_ints.insert(dest.clone(), value);
+                    }
+                }
                 "str_const" => {
                     let Some(Operand::Str(s)) = instr.srcs.first() else {
                         continue;
@@ -834,6 +907,47 @@ fn collect_string_literals(
                     let value = format!("{left}{right}");
                     intern_string_literal(&value, &mut defs, &mut map);
                     fn_values.insert(dest.clone(), value);
+                }
+                "str_slice" => {
+                    let (
+                        Some(dest),
+                        Some(Operand::Var(src)),
+                        Some(Operand::Var(start)),
+                        Some(Operand::Var(end)),
+                    ) = (
+                        instr.dest.as_ref(),
+                        instr.srcs.first(),
+                        instr.srcs.get(1),
+                        instr.srcs.get(2),
+                    ) else {
+                        continue;
+                    };
+                    let (Some(source), Some(start), Some(end)) = (
+                        fn_values.get(src),
+                        fn_ints.get(start).copied(),
+                        fn_ints.get(end).copied(),
+                    ) else {
+                        continue;
+                    };
+                    if start < 0 || end < start || end as usize > source.len() {
+                        continue;
+                    }
+                    let bytes = source.as_bytes()[start as usize..end as usize].to_vec();
+                    let Ok(value) = String::from_utf8(bytes) else {
+                        continue;
+                    };
+                    intern_string_literal(&value, &mut defs, &mut map);
+                    fn_values.insert(dest.clone(), value);
+                }
+                "str_len" => {
+                    let (Some(dest), Some(Operand::Var(src))) =
+                        (instr.dest.as_ref(), instr.srcs.first())
+                    else {
+                        continue;
+                    };
+                    if let Some(value) = fn_values.get(src) {
+                        fn_ints.insert(dest.clone(), value.len() as i64);
+                    }
                 }
                 _ => {}
             }
@@ -1398,6 +1512,7 @@ fn lower_instr(
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
         "str_concat" => lower_str_concat(instr, state),
+        "str_slice" => lower_str_slice(instr, state, out),
         "str_index" => lower_str_index(instr, state, out),
         "str_len" => lower_str_len(instr, state),
         "str_eq" => lower_str_eq(instr, state),
@@ -1540,6 +1655,87 @@ fn lower_str_concat(
         IIRLlvmError::InvalidOperand {
             function: state.fn_name.into(),
             detail: format!("str_concat value {value:?} was not collected"),
+        }
+    })?;
+    state.env.insert(dest.clone(), info.symbol.clone());
+    state.str_lens.insert(dest.clone(), info.len);
+    state.str_values.insert(dest, value);
+    Ok(())
+}
+
+fn lower_str_slice(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_slice", state.fn_name)?.to_string();
+    let src = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_slice requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let start = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_slice requires srcs[1] = Operand::Var(start)".into(),
+            });
+        }
+    };
+    let end = match instr.srcs.get(2) {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_slice requires srcs[2] = Operand::Var(end)".into(),
+            });
+        }
+    };
+    let literal = state.str_values.get(src).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_slice source {src:?} is not a string literal value"),
+        }
+    })?;
+    let start_value = state
+        .env
+        .get(start)
+        .and_then(|value| value.parse::<i64>().ok())
+        .ok_or_else(|| IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_slice start {start:?} is not a constant integer value"),
+        })?;
+    let end_value = state
+        .env
+        .get(end)
+        .and_then(|value| value.parse::<i64>().ok())
+        .ok_or_else(|| IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_slice end {end:?} is not a constant integer value"),
+        })?;
+    if start_value < 0 || end_value < start_value || end_value as usize > literal.len() {
+        out.push_str("  call void @llvm.trap()\n");
+        state.env.insert(dest.clone(), "null".to_string());
+        state.str_lens.insert(dest.clone(), 0);
+        state.str_values.insert(dest, String::new());
+        return Ok(());
+    }
+    let value = String::from_utf8(
+        literal.as_bytes()[start_value as usize..end_value as usize].to_vec(),
+    )
+    .map_err(|_| IIRLlvmError::InvalidOperand {
+        function: state.fn_name.into(),
+        detail: format!("str_slice range {start_value}..{end_value} does not preserve UTF-8"),
+    })?;
+    let info = state.string_literals.get(&value).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_slice value {value:?} was not collected"),
         }
     })?;
     state.env.insert(dest.clone(), info.symbol.clone());

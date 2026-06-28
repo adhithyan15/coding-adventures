@@ -5,7 +5,8 @@ use algol_iir_compiler::compile_source;
 const ALGOL_SUM: &str =
     "begin integer i, result; result := 0; for i := 1 step 1 until 6 do result := result + i end";
 
-const ALGOL_MOD: &str = "begin integer result; result := 17 mod 5 end";
+const ALGOL_MOD: &str =
+    "begin integer a, b, result; a := 17; b := 5; result := a mod b end";
 
 const ALGOL_BOOL_OPS: &str = "begin boolean a, b; integer result; a := true; b := false; if (a and not b) and ((b impl a) eqv (a or b)) then result := 42 else result := 1 end";
 
