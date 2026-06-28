@@ -5169,6 +5169,17 @@ impl HtmlParser {
             {
                 if !acknowledges_self_closing && !is_void {
                     self.open_elements.push(path);
+                    for (formatting_name, formatting_attributes) in formatting_inside {
+                        let child_index =
+                            self.append_node(Node::element(formatting_name, formatting_attributes));
+                        let mut path = self.current_parent_path().to_vec();
+                        path.push(child_index);
+                        if prunes_empty_formatting_inside {
+                            self.prunable_empty_reconstructed_formatting_paths
+                                .push(path.clone());
+                        }
+                        self.open_elements.push(path);
+                    }
                 }
             }
             return;
@@ -8434,7 +8445,6 @@ fn repair_div_fostered_nobr_adoption(document: &mut Document) {
 
 fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_tricky_adoption_agency_in(&mut document.children);
-    repair_fostered_anchor_paragraph_continuation(&mut document.children);
     repair_insanely_badly_nested_table_sequence(&mut document.children);
 }
 
@@ -8813,53 +8823,6 @@ fn previous_sibling_carries_font_size_seven_context(node: Option<&Node>) -> bool
                     if child.name == "font" && child.attribute("size") == Some("7")
             )
         })
-}
-
-fn repair_fostered_anchor_paragraph_continuation(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_fostered_anchor_paragraph_continuation(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index + 2 < nodes.len() {
-        let first_paragraph_has_empty_anchor = matches!(
-            nodes.get(index),
-            Some(Node::Element(paragraph))
-                if paragraph.name == "p"
-                    && paragraph.children.len() == 1
-                    && matches!(
-                        paragraph.children.first(),
-                        Some(Node::Element(anchor)) if anchor.name == "a" && anchor.children.is_empty()
-                    )
-        );
-        let next_is_plain_paragraph = matches!(
-            nodes.get(index + 1),
-            Some(Node::Element(paragraph))
-                if paragraph.name == "p"
-                    && !paragraph.children.is_empty()
-                    && !matches!(paragraph.children.first(), Some(Node::Element(anchor)) if anchor.name == "a")
-        );
-        let followed_by_table = matches!(
-            nodes.get(index + 2),
-            Some(Node::Element(table)) if table.name == "table"
-        );
-
-        if first_paragraph_has_empty_anchor && next_is_plain_paragraph && followed_by_table {
-            let Some(Node::Element(paragraph)) = nodes.get_mut(index + 1) else {
-                index += 1;
-                continue;
-            };
-            let mut anchor = Node::element("a".to_string(), Vec::new());
-            if let Node::Element(anchor_element) = &mut anchor {
-                anchor_element.children = std::mem::take(&mut paragraph.children);
-            }
-            paragraph.children.push(anchor);
-        }
-        index += 1;
-    }
 }
 
 fn repair_insanely_badly_nested_table_sequence(nodes: &mut Vec<Node>) {
