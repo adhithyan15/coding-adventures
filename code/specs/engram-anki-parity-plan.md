@@ -89,7 +89,7 @@ Current reducer integration:
   `MarkCard`, `UnmarkCard`) and are exposed through the JSON facade.
 - `search_cards` provides the first shared collection-browser query engine with
   text, deck, note type, field-side, tag, state, due, suspended, buried, flag,
-  and marked filters.
+  marked, negation, and `OR` filters.
 - Reviews carry optional previous/resulting progress snapshots so
   `UndoLastReview` can restore card progress, review history, and session
   counters without host-specific logic.
@@ -162,7 +162,7 @@ Support:
 - tag filters
 - suspended/buried flags
 - flag/mark filters
-- simple boolean operators
+- simple boolean operators (`OR`, implicit AND, and negation)
 
 Tests:
 
@@ -170,7 +170,8 @@ Tests:
   unterminated quotes.
 - Search result stability. Initial core tests preserve source card order.
 - Tag, deck, and note type filters compose with text filters. Initial core
-  support exists; richer boolean expressions remain.
+  support exists for implicit AND, `OR`, and negation; parentheses and richer
+  expressions remain.
 
 ### 1.5 Import/Export Model
 

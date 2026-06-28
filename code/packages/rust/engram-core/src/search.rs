@@ -67,7 +67,7 @@ pub fn search_cards(
     query: &str,
     now: u64,
 ) -> Result<Vec<CardSearchResult>, SearchError> {
-    let clauses = parse_query(query)?;
+    let clause_groups = parse_query(query)?;
     let progress_by_card: HashMap<&str, &CardProgress> = state
         .card_progress
         .iter()
@@ -99,9 +99,11 @@ pub fn search_cards(
             let note_type = note
                 .and_then(|note| note_types_by_id.get(note.note_type_id.as_str()))
                 .copied();
-            clauses
-                .iter()
-                .all(|clause| clause_matches(clause, card, progress, deck, note, note_type, now))
+            clause_groups.iter().any(|clauses| {
+                clauses.iter().all(|clause| {
+                    clause_matches(clause, card, progress, deck, note, note_type, now)
+                })
+            })
         })
         .map(|card| CardSearchResult {
             card: card.clone(),
@@ -114,12 +116,41 @@ pub fn search_cards(
     Ok(results)
 }
 
-fn parse_query(query: &str) -> Result<Vec<SearchClause>, SearchError> {
-    tokenize(query)?
-        .into_iter()
-        .filter(|token| !token.eq_ignore_ascii_case("and"))
-        .map(|token| parse_clause(&token))
-        .collect()
+fn parse_query(query: &str) -> Result<Vec<Vec<SearchClause>>, SearchError> {
+    let mut groups = vec![Vec::new()];
+    let mut saw_or = false;
+
+    for token in tokenize(query)? {
+        if token.eq_ignore_ascii_case("and") {
+            continue;
+        }
+        if token.eq_ignore_ascii_case("or") {
+            if groups.last().is_some_and(Vec::is_empty) {
+                return Err(SearchError {
+                    message: "OR operator is missing a left-hand clause".to_string(),
+                    token,
+                });
+            }
+            groups.push(Vec::new());
+            saw_or = true;
+            continue;
+        }
+
+        let clause = parse_clause(&token)?;
+        groups
+            .last_mut()
+            .expect("search parser always keeps a current group")
+            .push(clause);
+    }
+
+    if saw_or && groups.last().is_some_and(Vec::is_empty) {
+        return Err(SearchError {
+            message: "OR operator is missing a right-hand clause".to_string(),
+            token: "OR".to_string(),
+        });
+    }
+
+    Ok(groups)
 }
 
 fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
@@ -552,11 +583,29 @@ mod tests {
     }
 
     #[test]
+    fn or_groups_match_either_side_in_source_order() {
+        assert_eq!(
+            ids_for("deck:tamil OR is:buried"),
+            vec!["note::forward", "due", "future", "buried"]
+        );
+        assert_eq!(
+            ids_for("front:vanakkam OR back:goodbye"),
+            vec!["due", "new"]
+        );
+    }
+
+    #[test]
     fn parser_reports_unknown_filters_and_unclosed_quotes() {
         let error = search_cards(&state(), "kind:review", NOW).unwrap_err();
         assert_eq!(error.token, "kind:review");
 
         let error = search_cards(&state(), "\"vanakkam", NOW).unwrap_err();
         assert_eq!(error.message, "unterminated quoted string");
+
+        let error = search_cards(&state(), "OR deck:tamil", NOW).unwrap_err();
+        assert_eq!(error.message, "OR operator is missing a left-hand clause");
+
+        let error = search_cards(&state(), "deck:tamil OR", NOW).unwrap_err();
+        assert_eq!(error.message, "OR operator is missing a right-hand clause");
     }
 }

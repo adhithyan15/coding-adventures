@@ -55,8 +55,8 @@ unchanged because there is no reliable prior progress to restore.
 
 `search_cards` provides the first shared collection-browser query layer. It
 supports plain text terms plus `deck:`, `note:`, `noteType:`, `front:`,
-`back:`, `tag:`, `state:`, `is:`, `flag:`, and `marked:` filters with implicit
-AND semantics and leading `-` negation.
+`back:`, `tag:`, `state:`, `is:`, `flag:`, and `marked:` filters. Terms inside
+a group use implicit AND, `OR` joins groups, and leading `-` negates a term.
 
 This crate does not own:
 
