@@ -32,6 +32,7 @@ This crate owns:
 - decks, cards, progress, sessions, and reviews
 - Anki-style review scheduling over new, learning, review, and relearning states
 - due/new card queue assembly
+- card browser search/filter evaluation
 - pure state transitions
 - derived study stats
 
@@ -51,6 +52,11 @@ uses those snapshots to remove the newest snapshot-backed review in a session,
 restore the card's previous progress, adjust session counters, and return an
 active session to the reviewed card. Legacy reviews without snapshots are left
 unchanged because there is no reliable prior progress to restore.
+
+`search_cards` provides the first shared collection-browser query layer. It
+supports plain text terms plus `deck:`, `front:`, `back:`, `tag:`, `state:`,
+`is:`, `flag:`, and `marked:` filters with implicit AND semantics and leading
+`-` negation.
 
 This crate does not own:
 

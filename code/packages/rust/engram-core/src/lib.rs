@@ -10,6 +10,7 @@ mod model;
 mod queue;
 mod reducer;
 mod scheduler;
+mod search;
 mod sm2;
 mod template;
 
@@ -23,6 +24,7 @@ pub use queue::{
 };
 pub use reducer::{reduce, EngramCommand};
 pub use scheduler::{schedule_review, DeckOptions};
+pub use search::{search_cards, CardSearchResult, SearchError};
 pub use sm2::{
     create_initial_progress, update_card_progress, INITIAL_EASE_FACTOR, MAX_EASE_FACTOR,
     MIN_EASE_FACTOR, ONE_DAY_MS,

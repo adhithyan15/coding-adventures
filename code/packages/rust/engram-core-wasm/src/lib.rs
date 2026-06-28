@@ -9,8 +9,8 @@
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
-    build_session_queue, generate_cards_for_note, get_deck_stats, reduce, AppState, Card, CardFlag,
-    DeckOptions, Rating,
+    build_session_queue, generate_cards_for_note, get_deck_stats, reduce,
+    search_cards as search_core_cards, AppState, Card, CardFlag, DeckOptions, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -89,6 +89,13 @@ impl EngramSession {
                 .ok_or_else(|| format!("unknown note: {note_id}"))?;
             let cards = generate_cards_for_note(note_type, note);
             Ok(ok_with("cards", &cards))
+        })
+    }
+
+    pub fn search_cards(&self, query: &str, now: u64) -> String {
+        catch_json(|| match search_core_cards(&self.state, query, now) {
+            Ok(results) => Ok(ok_with("results", &results)),
+            Err(error) => Ok(error_json_with_token(&error.message, &error.token)),
         })
     }
 }
@@ -339,6 +346,10 @@ fn error_json(message: &str) -> String {
     json!({ "ok": false, "error": message }).to_string()
 }
 
+fn error_json_with_token(message: &str, token: &str) -> String {
+    json!({ "ok": false, "error": message, "token": token }).to_string()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -456,6 +467,62 @@ mod tests {
         assert_eq!(value["ok"], true);
         assert_eq!(value["cards"][0]["front"], "letter-a");
         assert_eq!(value["cards"][0]["back"], "a");
+    }
+
+    #[test]
+    fn search_cards_returns_core_browser_results() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [{
+                "id": "note",
+                "noteTypeId": "basic",
+                "deckId": "deck",
+                "fields": [{"fieldId": "front", "value": "uyir letter"}],
+                "tags": ["script", "tamil"],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "cards": [
+                {"id":"note::forward","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                {"id":"other","deckId":"deck","front":"number-one","back":"one","createdAt":1700000000000}
+            ],
+            "cardProgress": [{
+                "cardId": "note::forward",
+                "state": "review",
+                "interval": 1,
+                "easeFactor": 2.5,
+                "nextDueAt": 1699999999999,
+                "learningStepIndex": null,
+                "buriedUntil": null,
+                "suspendedAt": null,
+                "timesSeen": 1,
+                "timesCorrect": 1,
+                "timesIncorrect": 0,
+                "lastSeenAt": 1699913600000,
+                "flag": "blue",
+                "markedAt": 1700000000000
+            }],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let value: Value = serde_json::from_str(
+            &session.search_cards("deck:tamil tag:script is:due is:marked flag:blue", NOW),
+        )
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["results"][0]["card"]["id"], "note::forward");
+        assert_eq!(value["results"][0]["progress"]["flag"], "blue");
+
+        let error: Value = serde_json::from_str(&session.search_cards("kind:review", NOW)).unwrap();
+
+        assert_eq!(error["ok"], false);
+        assert_eq!(error["token"], "kind:review");
     }
 
     #[test]

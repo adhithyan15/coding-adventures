@@ -97,7 +97,7 @@ fn build_session_queue_with_limits(
         .collect()
 }
 
-fn is_reviewable(progress: &CardProgress, now: u64) -> bool {
+pub(crate) fn is_reviewable(progress: &CardProgress, now: u64) -> bool {
     if progress.suspended_at.is_some() || progress.state == CardState::Suspended {
         return false;
     }

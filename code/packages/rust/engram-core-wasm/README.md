@@ -32,6 +32,7 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `build_queue(deck_id, now)`
 - `deck_stats(deck_id, now)`
 - `generated_cards(note_type_id, note_id)`
+- `search_cards(query, now)`
 
 All JSON uses camelCase field names to match the existing TypeScript Engram app
 and keep generated bindings idiomatic.
@@ -55,3 +56,7 @@ queues, so host shells do not need their own suspend or bury reducers.
 and rewinds session counters through the same shared reducer.
 Flags and marks live on `CardProgress` as optional metadata so collection
 browsers can filter them without changing scheduling behavior.
+
+`search_cards` exposes the shared browser-query engine. It returns
+`{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for
+parser diagnostics.
