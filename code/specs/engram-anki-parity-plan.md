@@ -120,6 +120,9 @@ Current reducer integration:
 - Note-backed Anki TSV import/export now supports Basic and Basic-and-reversed
   rows as `NoteType`, `Note`, and generated lineage cards, including Tags
   column preservation through the JSON facade and C ABI.
+- Note-backed Anki TSV import also supports Cloze rows with `Text`, optional
+  `Extra`, and `Tags` columns, producing Cloze note models and cloze lineage
+  cards through the JSON facade.
 - `summarize_review_history` derives deck-scoped review-log summaries for a
   timestamp range and is exposed through the JSON facade and C ABI.
 - `get_daily_study_limit_usage` and
@@ -231,8 +234,9 @@ Formats:
   round-trips and simpler generated-ID `front,back` imports.
 - Anki TSV text compatibility. Basic front/back import/export exists in core,
   JSON facade, and C ABI; note-backed Basic and Basic-and-reversed TSV
-  import/export now creates notes, generated cards, and tag metadata. Richer
-  custom note-type/media export remains.
+  import/export now creates notes, generated cards, and tag metadata. Cloze TSV
+  import creates cloze note models and cards. Richer custom note-type/media
+  export remains.
 - APKG import/export eventually, via a dedicated facade or package crate.
   `engram-anki-package` now provides the archive-inspection foundation for
   legacy and modern collection members plus legacy JSON media maps, and can

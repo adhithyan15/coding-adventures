@@ -93,9 +93,10 @@ front/back text files with import headers (`#separator:tab`, `#html`,
 newlines, or quotes.
 `import_anki_notes_tsv` and `export_notes_anki_tsv` use the note/template model
 instead: imported Basic rows produce `NoteType`, `Note`, and materialized
-lineage cards, while Basic-and-reversed note types produce forward and reverse
-sibling cards. The note-backed path also preserves Anki's Tags column as note
-tags.
+lineage cards, Basic-and-reversed note types produce forward and reverse
+sibling cards, and Cloze rows produce cloze note models plus one generated card
+per cloze ordinal. The note-backed path also preserves Anki's Tags column as
+note tags.
 
 `get_active_session_progress` derives the shared review UI counters from
 `AppState`: total cards, one-based current position, remaining cards, reviewed

@@ -1572,6 +1572,33 @@ mod tests {
     }
 
     #[test]
+    fn parse_anki_notes_tsv_generates_cloze_model_and_cards() {
+        let session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
+            "#separator:tab\n#notetype:Cloze\n#columns:Text\tExtra\tTags\n\"A {{c1::root::base}} plus {{c2::suffix}}\"\tetymology\tgrammar\n",
+            "deck",
+            "",
+            "",
+            "cloze-note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["import"]["noteTypes"][0]["id"], "cloze");
+        assert_eq!(
+            value["import"]["noteTypes"][0]["templates"][0]["id"],
+            "cloze"
+        );
+        assert_eq!(value["import"]["notes"][0]["fields"][0]["fieldId"], "text");
+        assert_eq!(value["import"]["notes"][0]["fields"][1]["fieldId"], "extra");
+        assert_eq!(value["import"]["cards"].as_array().unwrap().len(), 2);
+        assert_eq!(value["import"]["cards"][0]["id"], "cloze-note-1::cloze::c1");
+        assert_eq!(value["import"]["cards"][0]["clozeOrdinal"], Value::Null);
+        assert_eq!(value["import"]["cards"][0]["lineage"]["clozeOrdinal"], 1);
+    }
+
+    #[test]
     fn dispatch_rate_card_accepts_deck_options() {
         let mut session = EngramSession::new();
         let snapshot = r#"{
