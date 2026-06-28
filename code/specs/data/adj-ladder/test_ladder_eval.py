@@ -26,6 +26,7 @@ SELF_CONTAINED_RUNGS = (
     "rung2_prealgebra_solve",
     "rung2_derived_solve",
     "rung3_quadratic_roots",
+    "rung3_cubic_roots",
 )
 
 
@@ -174,6 +175,7 @@ def test_decompose_prompt_mentions_native_root_solve_program():
     assert "finds all real roots" in prompt
     assert "constrain x * x = 121" in prompt
     assert 'constrain latex "$x^2 = 144$"' in prompt
+    assert "x * x * x - 6 * x * x + 11 * x - 6 = 0" in prompt
 
 
 def test_extract_formula_abstains_on_latex():
