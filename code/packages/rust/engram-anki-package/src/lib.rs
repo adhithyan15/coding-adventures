@@ -4,9 +4,14 @@
 //! Anki collection member and media mapping inside an `.apkg`/`.colpkg` zip
 //! archive, but leaves SQLite collection import/export to a later layer.
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
 
+use engram_core::{
+    render_template, AppState, Card, CardLineage, CardProgress, CardState, CardTemplate, Deck,
+    FieldDef, Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
+    INITIAL_EASE_FACTOR, ONE_DAY_MS,
+};
 use rusqlite::{Connection, OpenFlags};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -380,6 +385,450 @@ pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, Apk
     })
 }
 
+pub fn read_v11_collection_as_engram_state(data: &[u8]) -> Result<AppState, ApkgError> {
+    let collection = read_v11_collection(data)?;
+    v11_collection_to_engram_state(&collection)
+}
+
+pub fn v11_collection_to_engram_state(
+    collection: &AnkiV11Collection,
+) -> Result<AppState, ApkgError> {
+    let default_deck_id = collection
+        .decks
+        .first()
+        .map(|deck| deck.id.to_string())
+        .unwrap_or_else(|| "anki-default".to_string());
+    let decks = if collection.decks.is_empty() {
+        vec![Deck {
+            id: default_deck_id.clone(),
+            name: "Imported Anki Deck".to_string(),
+            description: String::new(),
+            created_at: anki_days_to_millis(collection.metadata.created_at_days),
+        }]
+    } else {
+        collection
+            .decks
+            .iter()
+            .map(|deck| Deck {
+                id: deck.id.to_string(),
+                name: deck.name.clone(),
+                description: deck.description.clone(),
+                created_at: anki_days_to_millis(collection.metadata.created_at_days),
+            })
+            .collect()
+    };
+
+    let note_types = collection
+        .note_types
+        .iter()
+        .map(map_v11_note_type)
+        .collect::<Vec<_>>();
+    let anki_note_types_by_id: HashMap<i64, &AnkiV11NoteType> = collection
+        .note_types
+        .iter()
+        .map(|note_type| (note_type.id, note_type))
+        .collect();
+    let note_types_by_id: HashMap<String, NoteType> = note_types
+        .iter()
+        .cloned()
+        .map(|note_type| (note_type.id.clone(), note_type))
+        .collect();
+
+    let mut deck_by_note_id = BTreeMap::new();
+    for card in &collection.cards {
+        deck_by_note_id
+            .entry(card.note_id)
+            .or_insert_with(|| card.deck_id.to_string());
+    }
+
+    let mut notes = Vec::with_capacity(collection.notes.len());
+    for note in &collection.notes {
+        let anki_note_type = anki_note_types_by_id
+            .get(&note.note_type_id)
+            .ok_or_else(|| {
+                apkg_error(format!(
+                    "Anki note {} references missing note type {}",
+                    note.id, note.note_type_id
+                ))
+            })?;
+        notes.push(map_v11_note(
+            note,
+            anki_note_type,
+            deck_by_note_id
+                .get(&note.id)
+                .map(String::as_str)
+                .unwrap_or(&default_deck_id),
+        ));
+    }
+    let notes_by_id: HashMap<String, Note> = notes
+        .iter()
+        .cloned()
+        .map(|note| (note.id.clone(), note))
+        .collect();
+
+    let mut cards = Vec::with_capacity(collection.cards.len());
+    for card in &collection.cards {
+        cards.push(map_v11_card(
+            card,
+            &notes_by_id,
+            &note_types_by_id,
+            &anki_note_types_by_id,
+        )?);
+    }
+
+    let last_reviewed_at_by_card = last_reviewed_at_by_card(&collection.reviews);
+    let card_progress = collection
+        .cards
+        .iter()
+        .filter_map(|card| map_v11_card_progress(card, &last_reviewed_at_by_card))
+        .collect::<Vec<_>>();
+
+    let deck_by_card_id: HashMap<i64, String> = collection
+        .cards
+        .iter()
+        .map(|card| (card.id, card.deck_id.to_string()))
+        .collect();
+    let reviews = collection
+        .reviews
+        .iter()
+        .map(|review| {
+            map_v11_review(
+                review,
+                deck_by_card_id
+                    .get(&review.card_id)
+                    .map(String::as_str)
+                    .unwrap_or(&default_deck_id),
+            )
+        })
+        .collect::<Vec<_>>();
+    let sessions = synthetic_import_sessions(&reviews, &deck_by_card_id, &default_deck_id);
+
+    Ok(AppState {
+        decks,
+        note_types,
+        notes,
+        cards,
+        card_progress,
+        sessions,
+        reviews,
+        active_session: None,
+    })
+}
+
+fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
+    let id = note_type.id.to_string();
+    let fields = note_type
+        .fields
+        .iter()
+        .map(|field| FieldDef {
+            id: field_id(note_type.id, field.ordinal),
+            name: field.name.clone(),
+            required: false,
+            ordinal: i64_to_u32(field.ordinal),
+        })
+        .collect::<Vec<_>>();
+    let required_field_names = note_type
+        .fields
+        .iter()
+        .map(|field| field.name.clone())
+        .collect::<Vec<_>>();
+    let templates = note_type
+        .templates
+        .iter()
+        .map(|template| CardTemplate {
+            id: template_id(note_type.id, template.ordinal),
+            name: template.name.clone(),
+            front_template: template.question_format.clone(),
+            back_template: template.answer_format.clone(),
+            required_field_names: required_field_names.clone(),
+            ordinal: i64_to_u32(template.ordinal),
+        })
+        .collect();
+
+    NoteType {
+        id,
+        name: note_type.name.clone(),
+        fields,
+        templates,
+        created_at: 0,
+        updated_at: 0,
+    }
+}
+
+fn map_v11_note(note: &AnkiV11Note, note_type: &AnkiV11NoteType, deck_id: &str) -> Note {
+    let fields = note_type
+        .fields
+        .iter()
+        .enumerate()
+        .map(|(index, field)| NoteFieldValue {
+            field_id: field_id(note_type.id, field.ordinal),
+            value: note.field_values.get(index).cloned().unwrap_or_default(),
+        })
+        .collect();
+
+    Note {
+        id: note.id.to_string(),
+        note_type_id: note.note_type_id.to_string(),
+        deck_id: deck_id.to_string(),
+        fields,
+        tags: note.tags.clone(),
+        created_at: anki_seconds_to_millis(note.modified_at),
+        updated_at: anki_seconds_to_millis(note.modified_at),
+    }
+}
+
+fn map_v11_card(
+    card: &AnkiV11Card,
+    notes_by_id: &HashMap<String, Note>,
+    note_types_by_id: &HashMap<String, NoteType>,
+    anki_note_types_by_id: &HashMap<i64, &AnkiV11NoteType>,
+) -> Result<Card, ApkgError> {
+    let note = notes_by_id.get(&card.note_id.to_string()).ok_or_else(|| {
+        apkg_error(format!(
+            "Anki card {} references missing note {}",
+            card.id, card.note_id
+        ))
+    })?;
+    let note_type = note_types_by_id.get(&note.note_type_id).ok_or_else(|| {
+        apkg_error(format!(
+            "Anki card {} references missing note type {}",
+            card.id, note.note_type_id
+        ))
+    })?;
+    let template = note_type
+        .templates
+        .iter()
+        .find(|template| template.ordinal == i64_to_u32(card.ordinal))
+        .ok_or_else(|| {
+            apkg_error(format!(
+                "Anki card {} references missing template ordinal {}",
+                card.id, card.ordinal
+            ))
+        })?;
+    let anki_note_type = anki_note_types_by_id
+        .get(&card_note_type_id(note))
+        .ok_or_else(|| {
+            apkg_error(format!(
+                "Anki card {} references missing raw note type {}",
+                card.id, note.note_type_id
+            ))
+        })?;
+    let field_values = field_value_map(note, anki_note_type);
+
+    Ok(Card {
+        id: card.id.to_string(),
+        deck_id: card.deck_id.to_string(),
+        front: render_template(&template.front_template, &field_values),
+        back: render_template(&template.back_template, &field_values),
+        created_at: anki_seconds_to_millis(card.modified_at),
+        lineage: Some(CardLineage {
+            note_id: note.id.clone(),
+            note_type_id: note.note_type_id.clone(),
+            template_id: template.id.clone(),
+            ordinal: i64_to_u32(card.ordinal),
+            cloze_ordinal: None,
+        }),
+    })
+}
+
+fn field_value_map(note: &Note, note_type: &AnkiV11NoteType) -> HashMap<String, String> {
+    let values_by_field_id: HashMap<&str, &str> = note
+        .fields
+        .iter()
+        .map(|field| (field.field_id.as_str(), field.value.as_str()))
+        .collect();
+    note_type
+        .fields
+        .iter()
+        .map(|field| {
+            let id = field_id(note_type.id, field.ordinal);
+            (
+                field.name.clone(),
+                values_by_field_id
+                    .get(id.as_str())
+                    .copied()
+                    .unwrap_or_default()
+                    .to_string(),
+            )
+        })
+        .collect()
+}
+
+fn card_note_type_id(note: &Note) -> i64 {
+    note.note_type_id.parse().unwrap_or_default()
+}
+
+fn map_v11_card_progress(
+    card: &AnkiV11Card,
+    last_reviewed_at_by_card: &BTreeMap<i64, u64>,
+) -> Option<CardProgress> {
+    if card.queue == 0 {
+        return None;
+    }
+
+    let state = match card.queue {
+        -3 | -2 => CardState::Buried,
+        -1 => CardState::Suspended,
+        _ => match card.kind {
+            1 => CardState::Learning,
+            3 => CardState::Relearning,
+            _ => CardState::Review,
+        },
+    };
+    let next_due_at = if matches!(card.queue, 1 | 3) {
+        anki_seconds_to_millis(card.due)
+    } else {
+        anki_days_to_millis(card.due)
+    };
+    let last_seen_at = last_reviewed_at_by_card
+        .get(&card.id)
+        .copied()
+        .unwrap_or_else(|| anki_seconds_to_millis(card.modified_at));
+
+    Some(CardProgress {
+        card_id: card.id.to_string(),
+        state,
+        interval: i64_to_u32(card.interval),
+        ease_factor: if card.factor > 0 {
+            card.factor as f64 / 1000.0
+        } else {
+            INITIAL_EASE_FACTOR
+        },
+        next_due_at,
+        learning_step_index: if matches!(state, CardState::Learning | CardState::Relearning)
+            && card.left > 0
+        {
+            Some(i64_to_u32(card.left))
+        } else {
+            None
+        },
+        buried_until: (state == CardState::Buried).then_some(next_due_at),
+        suspended_at: (state == CardState::Suspended)
+            .then_some(anki_seconds_to_millis(card.modified_at)),
+        times_seen: i64_to_u32(card.repetitions),
+        times_correct: i64_to_u32(card.repetitions.saturating_sub(card.lapses)),
+        times_incorrect: i64_to_u32(card.lapses),
+        last_seen_at,
+        flag: None,
+        marked_at: None,
+    })
+}
+
+fn map_v11_review(review: &AnkiV11Review, deck_id: &str) -> Review {
+    Review {
+        id: review.id.to_string(),
+        session_id: import_session_id(deck_id),
+        card_id: review.card_id.to_string(),
+        rating: rating_from_v11_ease(review.ease),
+        reviewed_at: i64_to_u64(review.id),
+        previous_progress: None,
+        resulting_progress: None,
+        previous_active_session: None,
+        sibling_progress_snapshots: Vec::new(),
+    }
+}
+
+#[derive(Default)]
+struct SessionAccumulator {
+    deck_id: String,
+    started_at: u64,
+    ended_at: u64,
+    cards_reviewed: u32,
+    cards_correct: u32,
+}
+
+fn synthetic_import_sessions(
+    reviews: &[Review],
+    deck_by_card_id: &HashMap<i64, String>,
+    default_deck_id: &str,
+) -> Vec<Session> {
+    let mut accumulators: BTreeMap<String, SessionAccumulator> = BTreeMap::new();
+    for review in reviews {
+        let card_id = review.card_id.parse::<i64>().unwrap_or_default();
+        let deck_id = deck_by_card_id
+            .get(&card_id)
+            .map(String::as_str)
+            .unwrap_or(default_deck_id);
+        let id = import_session_id(deck_id);
+        let entry = accumulators
+            .entry(id)
+            .or_insert_with(|| SessionAccumulator {
+                deck_id: deck_id.to_string(),
+                started_at: review.reviewed_at,
+                ended_at: review.reviewed_at,
+                cards_reviewed: 0,
+                cards_correct: 0,
+            });
+        entry.started_at = entry.started_at.min(review.reviewed_at);
+        entry.ended_at = entry.ended_at.max(review.reviewed_at);
+        entry.cards_reviewed = entry.cards_reviewed.saturating_add(1);
+        if review.rating != Rating::Again {
+            entry.cards_correct = entry.cards_correct.saturating_add(1);
+        }
+    }
+
+    accumulators
+        .into_iter()
+        .map(|(id, session)| Session {
+            id,
+            deck_id: session.deck_id,
+            status: SessionStatus::Completed,
+            started_at: session.started_at,
+            ended_at: Some(session.ended_at),
+            cards_reviewed: session.cards_reviewed,
+            cards_correct: session.cards_correct,
+        })
+        .collect()
+}
+
+fn last_reviewed_at_by_card(reviews: &[AnkiV11Review]) -> BTreeMap<i64, u64> {
+    let mut last_reviewed: BTreeMap<i64, u64> = BTreeMap::new();
+    for review in reviews {
+        last_reviewed
+            .entry(review.card_id)
+            .and_modify(|reviewed_at| *reviewed_at = (*reviewed_at).max(i64_to_u64(review.id)))
+            .or_insert_with(|| i64_to_u64(review.id));
+    }
+    last_reviewed
+}
+
+fn rating_from_v11_ease(ease: i64) -> Rating {
+    match ease {
+        1 => Rating::Again,
+        2 => Rating::Hard,
+        4 => Rating::Easy,
+        _ => Rating::Good,
+    }
+}
+
+fn field_id(note_type_id: i64, ordinal: i64) -> String {
+    format!("{note_type_id}:field:{ordinal}")
+}
+
+fn template_id(note_type_id: i64, ordinal: i64) -> String {
+    format!("{note_type_id}:template:{ordinal}")
+}
+
+fn import_session_id(deck_id: &str) -> String {
+    format!("anki-import:{deck_id}")
+}
+
+fn anki_seconds_to_millis(seconds: i64) -> u64 {
+    i64_to_u64(seconds).saturating_mul(1000)
+}
+
+fn anki_days_to_millis(days: i64) -> u64 {
+    i64_to_u64(days).saturating_mul(ONE_DAY_MS)
+}
+
+fn i64_to_u32(value: i64) -> u32 {
+    value.clamp(0, u32::MAX as i64) as u32
+}
+
+fn i64_to_u64(value: i64) -> u64 {
+    value.max(0) as u64
+}
+
 #[derive(Debug)]
 struct RawV11ColRow {
     id: i64,
@@ -519,7 +968,7 @@ fn read_v11_notes(connection: &Connection) -> Result<Vec<AnkiV11Note>, ApkgError
                 update_sequence_number: row.get(4)?,
                 tags: split_anki_tags(&tags),
                 field_values: split_anki_fields(&fields),
-                sort_field: row.get(7)?,
+                sort_field: sqlite_value_to_string(row, 7)?,
                 checksum: row.get(8)?,
                 flags: row.get(9)?,
                 data: row.get(10)?,
@@ -632,6 +1081,18 @@ fn split_anki_fields(fields: &str) -> Vec<String> {
 
 fn split_anki_tags(tags: &str) -> Vec<String> {
     tags.split_whitespace().map(str::to_string).collect()
+}
+
+fn sqlite_value_to_string(row: &rusqlite::Row<'_>, index: usize) -> rusqlite::Result<String> {
+    use rusqlite::types::ValueRef;
+
+    match row.get_ref(index)? {
+        ValueRef::Null => Ok(String::new()),
+        ValueRef::Integer(value) => Ok(value.to_string()),
+        ValueRef::Real(value) => Ok(value.to_string()),
+        ValueRef::Text(value) => Ok(String::from_utf8_lossy(value).into_owned()),
+        ValueRef::Blob(value) => Ok(String::from_utf8_lossy(value).into_owned()),
+    }
 }
 
 fn archive_entries(reader: &ZipReader<'_>) -> Vec<ArchiveEntry> {
@@ -764,7 +1225,7 @@ CREATE TABLE notes (
   usn integer not null,
   tags text not null,
   flds text not null,
-  sfld text not null,
+  sfld integer not null,
   csum integer not null,
   flags integer not null,
   data text not null
@@ -1027,6 +1488,77 @@ CREATE TABLE graves (
 
         assert_eq!(collection.note_types[0].name, "Basic");
         assert_eq!(collection.notes[0].field_values, vec!["hola", "hello"]);
+    }
+
+    #[test]
+    fn maps_v11_collection_into_engram_app_state() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        assert_eq!(state.decks.len(), 2);
+        assert_eq!(state.decks[1].id, "2");
+        assert_eq!(state.decks[1].name, "Spanish::Latin");
+
+        assert_eq!(state.note_types.len(), 1);
+        let note_type = &state.note_types[0];
+        assert_eq!(note_type.id, "100");
+        assert_eq!(note_type.fields[0].id, "100:field:0");
+        assert_eq!(note_type.fields[0].name, "Front");
+        assert_eq!(note_type.templates[0].id, "100:template:0");
+
+        assert_eq!(state.notes.len(), 1);
+        let note = &state.notes[0];
+        assert_eq!(note.id, "1000");
+        assert_eq!(note.deck_id, "2");
+        assert_eq!(note.fields[0].value, "hola");
+        assert_eq!(note.fields[1].value, "hello");
+        assert_eq!(note.tags, vec!["spanish", "core"]);
+
+        assert_eq!(state.cards.len(), 1);
+        let card = &state.cards[0];
+        assert_eq!(card.id, "2000");
+        assert_eq!(card.deck_id, "2");
+        assert_eq!(card.front, "hola");
+        assert_eq!(card.back, "hello");
+        let lineage = card.lineage.as_ref().unwrap();
+        assert_eq!(lineage.note_id, "1000");
+        assert_eq!(lineage.note_type_id, "100");
+        assert_eq!(lineage.template_id, "100:template:0");
+
+        assert_eq!(state.card_progress.len(), 1);
+        let progress = &state.card_progress[0];
+        assert_eq!(progress.card_id, "2000");
+        assert_eq!(progress.state, CardState::Review);
+        assert_eq!(progress.interval, 7);
+        assert_eq!(progress.ease_factor, 2.5);
+        assert_eq!(progress.times_seen, 3);
+        assert_eq!(progress.times_correct, 2);
+        assert_eq!(progress.times_incorrect, 1);
+        assert_eq!(progress.last_seen_at, 3000);
+
+        assert_eq!(state.reviews.len(), 1);
+        assert_eq!(state.reviews[0].id, "3000");
+        assert_eq!(state.reviews[0].session_id, "anki-import:2");
+        assert_eq!(state.reviews[0].rating, Rating::Good);
+        assert_eq!(state.reviews[0].reviewed_at, 3000);
+
+        assert_eq!(state.sessions.len(), 1);
+        assert_eq!(state.sessions[0].id, "anki-import:2");
+        assert_eq!(state.sessions[0].deck_id, "2");
+        assert_eq!(state.sessions[0].status, SessionStatus::Completed);
+        assert_eq!(state.sessions[0].cards_reviewed, 1);
+        assert_eq!(state.sessions[0].cards_correct, 1);
+    }
+
+    #[test]
+    fn reads_v11_apkg_directly_as_engram_app_state() {
+        let sqlite = v11_sqlite_collection_bytes();
+        let apkg = write_legacy_apkg(&sqlite, &[]);
+
+        let state = read_v11_collection_as_engram_state(&apkg).unwrap();
+
+        assert_eq!(state.cards[0].front, "hola");
+        assert_eq!(state.cards[0].back, "hello");
     }
 
     #[test]

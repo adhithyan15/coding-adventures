@@ -251,8 +251,8 @@ Formats:
   resolve media payloads or write deterministic legacy package envelopes from
   existing `collection.anki2` bytes plus media assets. It also parses
   legacy/V11 SQLite collection bytes into owned Anki decks, note types, notes,
-  cards, revlog rows, and graves; mapping those parsed structs into
-  `engram-core::AppState` remains.
+  cards, revlog rows, and graves, and maps them into `engram-core::AppState`
+  with deterministic IDs and rendered card fronts/backs.
 
 Next APKG SQLite milestone:
 
@@ -265,10 +265,10 @@ Next APKG SQLite milestone:
   protobuf media entries.
 - Added a real SQLite-file dependency in `engram-anki-package`; APKG-specific
   parsing remains outside `engram-core`.
-- Next: map parsed V11 decks from `col.decks`, models from `col.models`, notes
-  from `notes.flds`/`notes.tags`, card lineage from `cards.nid`/`cards.ord`,
-  and review history from `revlog.ease`/`revlog.id` into
-  `engram-core::AppState`.
+- Parsed V11 decks from `col.decks`, models from `col.models`, notes from
+  `notes.flds`/`notes.tags`, card lineage from `cards.nid`/`cards.ord`, card
+  progress from `cards`, and review history from `revlog.ease`/`revlog.id` now
+  map into `engram-core::AppState`.
 - Export the first APKG as a deterministic legacy package with reset scheduling
   before attempting full scheduling fidelity.
 - SQL-built V11 fixtures and package round-trips through the existing ZIP
