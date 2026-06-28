@@ -82,6 +82,7 @@
 
 use interpreter_ir::opcodes::array_elem_type;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt;
 
@@ -270,10 +271,11 @@ const SUPPORTED_OPS: &[&str] = &[
     "int_to_real", "real_to_int_trunc", "real_to_int_floor",
     // LANG-FULL E4 — string literal foothold for the static LLVM column.
     // `str_const` materialises a length-prefixed private constant. `str_index`,
-    // `str_concat`, `str_slice`, `str_len`, and `str_eq` read literal metadata,
+    // `str_concat`, `str_slice`, `str_len`, `str_eq`, and `str_cmp` read literal metadata,
     // and `print_str` calls the generic C runtime. Richer dynamic byte-string
     // ops remain unsupported.
-    "str_const", "str_index", "str_concat", "str_slice", "str_len", "str_eq", "print_str",
+    "str_const", "str_index", "str_concat", "str_slice", "str_len", "str_eq", "str_cmp",
+    "print_str",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -413,6 +415,10 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
             }
             if instr.op == "str_eq" {
                 validate_str_eq(func, instr, &mut errors);
+                continue;
+            }
+            if instr.op == "str_cmp" {
+                validate_str_cmp(func, instr, &mut errors);
                 continue;
             }
             if instr.op == "print_str" {
@@ -597,6 +603,28 @@ fn validate_str_eq(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String
     }
 }
 
+fn validate_str_cmp(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<String>) {
+    if instr.dest.is_none() {
+        errors.push(format!(
+            "InvalidOperand: function {:?}, str_cmp requires a dest",
+            func.name
+        ));
+    }
+    if llvm_type_for(&instr.type_hint, &func.name).is_err() {
+        errors.push(format!(
+            "UnsupportedType: function {:?}, str_cmp result type {:?} is not supported",
+            func.name, instr.type_hint
+        ));
+    }
+    match instr.srcs.as_slice() {
+        [Operand::Var(_), Operand::Var(_)] => {}
+        _ => errors.push(format!(
+            "InvalidOperand: function {:?}, str_cmp requires exactly two Operand::Var sources",
+            func.name
+        )),
+    }
+}
+
 fn is_printable_ascii_str(s: &str) -> bool {
     s.bytes()
         .all(|b| matches!(b, b'\n' | b'\r' | b'\t' | 0x20..=0x7e))
@@ -766,7 +794,7 @@ pub fn lower_iir_to_llvm(
     //
     // Static backends use the unmanaged string layout from `lang-full-e4-strings`:
     // an `i64` byte-length header followed by the bytes. `str_const` binds a
-    // pointer to this header, `str_len`/`str_eq` materialise literal metadata,
+    // pointer to this header, `str_len`/`str_eq`/`str_cmp` materialise literal metadata,
     // and `print_str` passes `header+8,len` to the C runtime. Richer ops
     // (`str_index`, `str_concat`) remain literal-only in this slice, but this
     // representation leaves the header in place for those later loads/checks.
@@ -1516,6 +1544,7 @@ fn lower_instr(
         "str_index" => lower_str_index(instr, state, out),
         "str_len" => lower_str_len(instr, state),
         "str_eq" => lower_str_eq(instr, state),
+        "str_cmp" => lower_str_cmp(instr, state),
         "print_str" => lower_print_str(instr, state, out),
 
         other => Err(IIRLlvmError::UnsupportedOp {
@@ -1831,6 +1860,47 @@ fn lower_str_eq(
         }
     })?;
     state.env.insert(dest, if left_value == right_value { "1" } else { "0" }.into());
+    Ok(())
+}
+
+fn lower_str_cmp(instr: &IIRInstr, state: &mut FnState) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "str_cmp", state.fn_name)?.to_string();
+    let left = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_cmp requires srcs[0] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let right = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: "str_cmp requires srcs[1] = Operand::Var(str)".into(),
+            });
+        }
+    };
+    let left_value = state.str_values.get(left).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_cmp left source {left:?} is not a string literal value"),
+        }
+    })?;
+    let right_value = state.str_values.get(right).ok_or_else(|| {
+        IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("str_cmp right source {right:?} is not a string literal value"),
+        }
+    })?;
+    let value = match left_value.as_bytes().cmp(right_value.as_bytes()) {
+        Ordering::Less => "-1",
+        Ordering::Equal => "0",
+        Ordering::Greater => "1",
+    };
+    state.env.insert(dest, value.into());
     Ok(())
 }
 

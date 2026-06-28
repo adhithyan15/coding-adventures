@@ -8,7 +8,7 @@
 //! - WASM has no "any" type — every local and stack slot must have a concrete
 //!   numeric type (`i32`, `i64`, `f32`, `f64`) or a known GC reference type.
 //! - WASM has only the E4 literal string foothold in this lowering:
-//!   `str_const` + `str_len` + `str_index` + `str_eq` + `str_concat` +
+//!   `str_const` + `str_len` + `str_index` + `str_eq` + `str_cmp` + `str_concat` +
 //!   `print_str`; richer dynamic string ops remain rejected.
 //! - Runtime / I/O opcodes have no WASM equivalent without a host import,
 //!   which this direct lowering does not provide.
@@ -278,7 +278,7 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             //
             // `"str"` — accepted for the E4 literal-output/metadata foothold's
             // direct string producers (`str_const`, `str_concat`, `str_slice`). `str_len`,
-            // `str_index`, and `str_eq` produce integers, not string values.
+            // `str_index`, `str_eq`, and `str_cmp` produce integers, not string values.
             // Richer dynamic string ops still fail explicitly below.
             //
             // `"ref<X>"` — reference types require WasmGC.  We accept
@@ -292,7 +292,7 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const + str_concat + str_slice + str_len + str_index + str_eq + print_str literal output is supported in this WASM backend",
+                     only str_const + str_concat + str_slice + str_len + str_index + str_eq + str_cmp + print_str literal output is supported in this WASM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -431,6 +431,26 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                     _ => {
                         errors.push(format!(
                             "UnsupportedOp: function {:?}, op \"str_eq\" requires \
+                             dest, two Operand::Var sources, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_cmp" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (
+                        Some(_),
+                        [
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                        ],
+                        "i64" | "i32",
+                    ) => {
+                        // Accepted — lower.rs materialises literal ordering.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_cmp\" requires \
                              dest, two Operand::Var sources, and i64/i32 result type",
                             func.name
                         ));
@@ -688,6 +708,34 @@ mod tests {
         assert!(
             errs.is_empty(),
             "str_eq over direct literals should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn e4_literal_str_cmp_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("ALPHA".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("BETA".into())],
+                "str",
+            ),
+            IIRInstr::new("str_cmp", Some("ord".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_cmp over direct literals should be accepted; got: {:?}",
             errs
         );
     }

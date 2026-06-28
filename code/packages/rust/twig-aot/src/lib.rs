@@ -50,6 +50,7 @@
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
@@ -1451,7 +1452,7 @@ fn strip_dead_string_consts(func: &mut IIRFunction) {
 /// The direct native backends already know how to allocate bytes, store bytes,
 /// and call the portable `__twig_print_string(ptr,len)` runtime helper. This
 /// pass reuses that path for `str_const` + `print_str` and folds direct
-/// literal `str_len`/`str_eq`; richer string ops remain unsupported until the
+/// literal `str_len`/`str_eq`/`str_cmp`; richer string ops remain unsupported until the
 /// full byte-string runtime lands.
 fn push_aot_string_literal(
     lowered: &mut Vec<IIRInstr>,
@@ -1732,6 +1733,38 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 "const",
                 Some(dest),
                 vec![Operand::Int((left_literal == right_literal) as i64)],
+                &instr.type_hint,
+            ));
+            continue;
+        }
+
+        if instr.op == "str_cmp" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let [Operand::Var(left), Operand::Var(right)] = instr.srcs.as_slice() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, left_literal)) = strings.get(left).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, right_literal)) = strings.get(right).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let value = match left_literal.as_bytes().cmp(right_literal.as_bytes()) {
+                Ordering::Less => -1,
+                Ordering::Equal => 0,
+                Ordering::Greater => 1,
+            };
+            ints.insert(dest.clone(), value);
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(dest),
+                vec![Operand::Int(value)],
                 &instr.type_hint,
             ));
             continue;
@@ -2517,6 +2550,38 @@ mod tests {
         assert!(
             f.instructions.iter().all(|i| i.op != "str_eq"),
             "native lowering should remove folded str_eq: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_cmp_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("ALPHA".into())], "str"),
+                IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("BETA".into())], "str"),
+                IIRInstr::new("str_cmp", Some("ord".into()), vec![
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let cmp_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("ord"));
+        assert!(
+            matches!(cmp_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(-1)]),
+            "str_cmp over ordered literals should fold to const -1: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_cmp"),
+            "native lowering should remove folded str_cmp: {:?}",
             f.instructions
         );
     }

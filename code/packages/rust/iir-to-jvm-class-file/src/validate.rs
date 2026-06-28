@@ -32,7 +32,8 @@
 //!
 //! `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`,
 //! `box`, `unbox`, `safepoint`, and the byte-oriented E4 string algebra beyond
-//! `str_const` + `str_len` + `str_index` + `str_eq` + `str_concat` + `print_str`.
+//! `str_const` + `str_len` + `str_index` + `str_eq` + `str_cmp` + `str_concat`
+//! + `print_str`.
 //!
 //! The following ops are now SUPPORTED via `Object[]` cons cells (Phase 2):
 //! `alloc` (when `type_hint == "ref<LispyPair>"`), `field_load`, `field_store`,
@@ -273,8 +274,8 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
             // `"str"` — The backend can now load ASCII literals and concatenate
-            // them through Java `String` for the narrow E4 foothold. `str_len`
-            // and `str_eq` produce integers. Other string-typed producers still
+            // them through Java `String` for the narrow E4 foothold. `str_len`,
+            // `str_eq`, and `str_cmp` produce integers. Other string-typed producers still
             // need a fuller byte-oriented representation before Java `String`
             // is safe for them.
             //
@@ -381,6 +382,19 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
                     _ => {
                         errors.push(format!(
                             "UnsupportedOp: function {:?}, op \"str_eq\" requires \
+                             dest, two Operand::Var sources, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_cmp" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — lower.rs calls java/lang/String.compareTo(String).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_cmp\" requires \
                              dest, two Operand::Var sources, and i64/i32 result type",
                             func.name
                         ));
@@ -597,6 +611,34 @@ mod tests {
         assert!(
             errs.is_empty(),
             "str_eq over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_cmp_literal_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("ALPHA".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("BETA".into())],
+                "str",
+            ),
+            IIRInstr::new("str_cmp", Some("ord".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_cmp over direct literals should pass: {:?}",
             errs
         );
     }

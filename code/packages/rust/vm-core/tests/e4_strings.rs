@@ -55,6 +55,25 @@ fn str_concat_and_eq_return_i64_bool() {
 }
 
 #[test]
+fn str_cmp_returns_three_way_order() {
+    let result = run(
+        vec![
+            ins("str_const", Some("a"), vec![Operand::Str("ALPHA".into())], "str"),
+            ins("str_const", Some("b"), vec![Operand::Str("BETA".into())], "str"),
+            ins("str_cmp", Some("lt"), vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
+            ins("str_cmp", Some("eq"), vec![Operand::Var("a".into()), Operand::Var("a".into())], "i64"),
+            ins("str_cmp", Some("gt"), vec![Operand::Var("b".into()), Operand::Var("a".into())], "i64"),
+            ins("add", Some("sum"), vec![Operand::Var("lt".into()), Operand::Var("eq".into())], "i64"),
+            ins("add", Some("sum2"), vec![Operand::Var("sum".into()), Operand::Var("gt".into())], "i64"),
+            ins("ret", None, vec![Operand::Var("sum2".into())], "i64"),
+        ],
+        "i64",
+    )
+    .unwrap();
+    assert_eq!(result, Some(Value::Int(0)));
+}
+
+#[test]
 fn str_slice_produces_substring_value() {
     let result = run(
         vec![

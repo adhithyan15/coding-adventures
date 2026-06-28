@@ -3,11 +3,11 @@
 IIR → textual LLVM IR backend.  Emits a `.ll` source string for an LLVM
 target triple, without depending on `llvm-sys` or a native LLVM install.
 
-**Status: v0.22.0 — LANG-FULL E4 literal string metadata.**  The backend now
+**Status: v0.24.0 — LANG-FULL E4 literal string comparison.**  The backend now
 lowers scalar control/data ops, Brainfuck byte-tape I/O, arrays, globals,
 numeric conversions, and the `str_const` + `print_str` literal-output slice.
-It also materialises `str_len`, `str_index`, `str_eq`, and literal `str_concat`
-for direct literals from compile-time metadata, including derived concat
+It also materialises `str_len`, `str_index`, `str_eq`, `str_cmp`, and literal
+`str_concat` for direct literals from compile-time metadata, including derived concat
 constants that feed `print_str` and `str_len`-computed indexes that feed
 `str_index`. Dynamic byte-string ops remain outside this release.
 
@@ -100,6 +100,7 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.17.0 | **String literal output** (LANG-FULL E4 / BA4). `str_const` emits a private length-prefixed string constant and `print_str` calls `@__print_str(ptr,i64)` with the payload pointer plus byte length. Richer byte-string ops stay rejected. |
 | v0.18.0 | **Literal string metadata** (LANG-FULL E4). `str_len`/`str_eq`/`str_concat` over direct `str_const` literals lower to compile-time results, proving `(string-length "HELLO")`, `(string=? "HELLO" "HELLO")`, and `(string-length (string-append "AB" "CDE"))` on LLVM while dynamic string algebra stays rejected. |
 | v0.22.0 | **Computed string indexes** (LANG-FULL E4). Literal-only `str_len` constants can flow through typed `i64` arithmetic and feed `str_index`. |
+| v0.24.0 | **Literal string comparison** (LANG-FULL E4). Literal-only `str_cmp` lowers to the shared `-1`/`0`/`1` ordering result. |
 | (later) | GC, debug info via `!dbg`. |
 
 ### Bounds-checked arrays (v0.14.0)

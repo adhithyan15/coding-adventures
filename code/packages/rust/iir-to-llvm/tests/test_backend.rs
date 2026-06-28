@@ -1278,24 +1278,32 @@ fn e4_string_literal_index_out_of_bounds_traps() {
 }
 
 #[test]
-fn e4_unknown_string_ops_still_fail_closed() {
+fn e4_string_literal_cmp_folds_to_integer_return() {
     let f = IIRFunction::new(
         "main",
         vec![],
         "i64",
         vec![
-            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("AB".into())], "str"),
-            IIRInstr::new("str_cmp", Some("c".into()), vec![
-                Operand::Var("s".into()),
-                Operand::Var("s".into()),
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("ALPHA".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("BETA".into())], "str"),
+            IIRInstr::new("str_cmp", Some("ord".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
             ], "i64"),
-            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
         ],
     );
-    let errors = validate_for_llvm(&module_with(f));
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "literal string cmp should validate");
+    let ll = lower(&module);
+
     assert!(
-        errors.iter().any(|e| e.contains("UnsupportedOp") && e.contains("str_cmp")),
-        "unknown string ops should remain rejected; got {errors:?}"
+        ll.contains("ret i64 -1"),
+        "str_cmp over ordered literals should materialise -1:\n{ll}"
+    );
+    assert!(
+        !ll.contains("@__print_str"),
+        "str_cmp alone should not pull in the string print runtime:\n{ll}"
     );
 }
 

@@ -2694,6 +2694,75 @@ fn e4_string_eq_lowers_to_string_equals() {
     assert_ne!(equals_ref, 0, "constant pool must contain java/lang/String.equals(Object)");
 }
 
+#[test]
+fn e4_string_cmp_lowers_to_compare_to_and_signum() {
+    let f = IIRFunction::new(
+        "cmp_hello",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("ALPHA".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("BETA".into())],
+                "str",
+            ),
+            IIRInstr::new("str_cmp", Some("ord".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "string literal cmp should validate: {:?}", errors);
+
+    let class = lower(&module);
+    let method = class
+        .methods
+        .iter()
+        .find(|m| m.name == "cmp_hello")
+        .expect("cmp_hello method must exist");
+    let code = &method.code_attribute().unwrap().code;
+
+    assert!(
+        code.contains(&0xB6),
+        "str_cmp must invokevirtual java/lang/String.compareTo; got: {:?}",
+        code
+    );
+    assert!(
+        code.contains(&0xB8),
+        "str_cmp must invokestatic java/lang/Integer.signum; got: {:?}",
+        code
+    );
+    assert!(
+        code.contains(&0x85),
+        "i64 str_cmp result must widen signum int with I2L; got: {:?}",
+        code
+    );
+
+    let compare_ref = find_methodref_in_cp(
+        &class.constant_pool,
+        "java/lang/String",
+        "compareTo",
+        "(Ljava/lang/String;)I",
+    );
+    assert_ne!(compare_ref, 0, "constant pool must contain java/lang/String.compareTo(String)");
+    let signum_ref =
+        find_methodref_in_cp(&class.constant_pool, "java/lang/Integer", "signum", "(I)I");
+    assert_ne!(
+        signum_ref, 0,
+        "constant pool must contain java/lang/Integer.signum(int)"
+    );
+}
+
 /// McCarthy W3b: `box` lowers to `Integer.valueOf(I)` (invokestatic 0xB8) and
 /// `unbox` to `checkcast` (0xC0) + `Integer.intValue()` (invokevirtual 0xB6).
 #[test]

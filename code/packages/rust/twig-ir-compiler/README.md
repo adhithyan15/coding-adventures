@@ -23,15 +23,17 @@ Anonymous lambdas have their captured free variables prepended to the parameter 
 Top-level value defines lower one of two ways (TW2/E4). A value define that is **not captured by any lambda** is read only from `main`, so its statically-typed (`i64`/`bool` and immutable top-level `str`) value is kept in a `main` register and reads return it directly — fully typed, accepted by every code-gen backend. A value define **captured by a closure** (read inside a lambda body, which compiles to a separate function) stays on the host global table via `call_builtin "global_set" name value` / `global_get`, as does a top-level forward reference.
 
 Literal `(string-length "...")`, `(string-ref "..." i)`, `(string=? "..." "...")`,
-`(substring "..." i j)`, and `(string-length (string-append "..." "..."))`
+`(string<? "..." "...")`, `(string>? "..." "...")`, `(substring "..." i j)`,
+and `(string-length (string-append "..." "..."))`
 lower to typed E4 string
 metadata ops: `str_const` for each direct literal, then `str_len`, `str_index`,
-`str_eq`, `str_slice`, or `str_concat` for the result path. The same E4
+`str_eq`, `str_cmp`, `str_slice`, or `str_concat` for the result path. The same E4
 lowering also handles immutable top-level string values, so `(define s "ABC")
 (string-ref s 2)` and named-string `string-append`/`string=?` proofs avoid the
 dynamic builtin path.
 Lexical `let`/`let*` string literal bindings use the same typed registers, so
-local strings can feed `string-ref`, `string-length`, `string=?`, and
+local strings can feed `string-ref`, `string-length`, `string=?`, `string<?`,
+`string>?`, and
 `string-append` without dynamic builtins; a `string-append` result can also feed
 `string-ref` directly through `str_concat` -> `str_index`, and `string-length`
 can compute a typed arithmetic index that feeds `str_index`. `substring` over a
@@ -49,7 +51,7 @@ The compiler decides at compile time:
 |-----------------------------|---------------------------------------------|
 | Top-level user fn           | `call <name>, ...args`                      |
 | Typed arithmetic (`+`,`-`,`*`,`/`) on `i64` args | a chain of typed `add`/`sub`/`mul`/`div` |
-| Direct literal, immutable top-level, or lexical-local string metadata (`string-length`, `string-ref`, `substring`, `string=?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_slice`/`str_eq`/`str_concat`, with typed index arithmetic for `string-ref` and `substring` bounds |
+| Direct literal, immutable top-level, or lexical-local string metadata (`string-length`, `string-ref`, `substring`, `string=?`, `string<?`, `string>?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`, with typed index arithmetic for `string-ref` and `substring` bounds |
 | Builtin (`cons`, `<`, …)    | `call_builtin <name>, ...args`              |
 | Anything else (locals etc.) | `call_builtin "apply_closure", h, ...args`  |
 

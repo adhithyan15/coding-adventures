@@ -3,6 +3,12 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.23.0] — 2026-06-28 (literal string comparison — LANG-FULL E4)
+
+The JVM backend now lowers `str_cmp` over managed `String` locals by invoking
+`java/lang/String.compareTo(String)` and normalizing the result with
+`java/lang/Integer.signum(int)`.
+
 ## [0.22.0] — 2026-06-28 (literal string slice — LANG-FULL E4)
 
 The JVM backend now lowers `str_slice` over managed `String` locals by loading

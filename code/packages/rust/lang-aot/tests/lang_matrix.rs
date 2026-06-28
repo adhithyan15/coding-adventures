@@ -320,6 +320,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(67),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 `str_cmp` driving lexical string predicates. The frontend lowers
+    // `string<?`/`string>?` to shared `str_cmp` followed by typed comparison
+    // against zero, so every proven column observes the same byte ordering.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (string<? \"ALPHA\" \"BETA\") (if (string>? \"BETA\" \"ALPHA\") 42 0) 0)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =

@@ -133,6 +133,7 @@
 //! local.set $dest_local
 //! ```
 
+use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
@@ -1046,6 +1047,48 @@ fn emit_instr(
                 detail: format!("str_eq right source {right:?} is not a direct str_const local"),
             })?;
             let value = if left_lit.bytes == right_lit.bytes { 1 } else { 0 };
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_const(value));
+            } else {
+                code.extend(encode_i32_const(value as i32));
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── str_cmp → literal byte ordering ─────────────────────────────────
+        "str_cmp" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "str_cmp must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let left = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_cmp requires srcs[0] = Operand::Var(str)".to_string(),
+                }),
+            };
+            let right = match instr.srcs.get(1) {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "str_cmp requires srcs[1] = Operand::Var(str)".to_string(),
+                }),
+            };
+            let left_lit = string_literals.get(left).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_cmp left source {left:?} is not a direct str_const local"),
+            })?;
+            let right_lit = string_literals.get(right).ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("str_cmp right source {right:?} is not a direct str_const local"),
+            })?;
+            let value = match left_lit.bytes.cmp(&right_lit.bytes) {
+                Ordering::Less => -1,
+                Ordering::Equal => 0,
+                Ordering::Greater => 1,
+            };
             if slot_is_i64(rd) {
                 code.extend(encode_i64_const(value));
             } else {

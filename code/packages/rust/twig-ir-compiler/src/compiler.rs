@@ -1511,6 +1511,46 @@ impl Compiler {
                 ctx.record_type(&dest, "i64");
                 Ok(Some(dest))
             }
+            "string<?" | "string>?"
+                if args.len() == 2
+                    && self.can_compile_e4_string_expr(&args[0], ctx)
+                    && self.can_compile_e4_string_expr(&args[1], ctx) =>
+            {
+                let left = self.compile_e4_string_expr(&args[0], ctx)?;
+                let right = self.compile_e4_string_expr(&args[1], ctx)?;
+                let cmp = ctx.fresh_var("r");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_cmp",
+                        Some(cmp.clone()),
+                        vec![Operand::Var(left), Operand::Var(right)],
+                        "i64",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&cmp, "i64");
+
+                let zero = ctx.fresh_var("n");
+                ctx.emit(
+                    IIRInstr::new("const", Some(zero.clone()), vec![Operand::Int(0)], "i64"),
+                    loc,
+                );
+                ctx.record_type(&zero, "i64");
+
+                let dest = ctx.fresh_var("r");
+                let op = if name == "string<?" { "cmp_lt" } else { "cmp_gt" };
+                ctx.emit(
+                    IIRInstr::new(
+                        op,
+                        Some(dest.clone()),
+                        vec![Operand::Var(cmp), Operand::Var(zero)],
+                        "i64",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "bool");
+                Ok(Some(dest))
+            }
             "string-ref"
                 if args.len() == 2
                     && self.can_compile_e4_string_expr(&args[0], ctx)
