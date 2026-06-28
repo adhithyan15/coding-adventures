@@ -10,9 +10,9 @@
   through HTML, React, SwiftUI, Qt, XAML, and Flutter while consuming
   `mosaic-pkg-deck-stats`, `mosaic-pkg-review-card`, and
   `mosaic-pkg-session-progress`.
-- Asserted that the generated SwiftPM shell mounts `EngramAppView(...)` with
-  sample slot values and a dispatch closure instead of a non-compiling empty
-  initializer.
+- Asserted that the generated React, SwiftPM, and Flutter shells mount
+  `EngramApp` with sample slot values and dispatch callbacks instead of
+  non-compiling empty initializers.
 - Asserted that nested package styles from `DeckStatsPanel`, `SessionProgress`,
   `ReviewCard`, and `RatingControls` reach the generated Engram HTML artifact.
 

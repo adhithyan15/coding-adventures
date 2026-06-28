@@ -275,7 +275,13 @@ fn app_package_emits_native_project_shells() {
 #[test]
 fn native_project_shells_expose_engram_host_contract() {
     let tmp = tempfile::tempdir().expect("temp dist root");
-    for backend in [Backend::Qt, Backend::SwiftUI, Backend::Xaml] {
+    for backend in [
+        Backend::React,
+        Backend::Flutter,
+        Backend::Qt,
+        Backend::SwiftUI,
+        Backend::Xaml,
+    ] {
         build_package(&BuildOptions {
             package_root: package_root(),
             output_root: tmp.path().to_path_buf(),
@@ -284,6 +290,32 @@ fn native_project_shells_expose_engram_host_contract() {
         })
         .unwrap_or_else(|e| panic!("{backend:?} should emit EngramApp project shell: {e}"));
     }
+
+    let react_app = fs::read_to_string(
+        tmp.path()
+            .join("react")
+            .join("src")
+            .join("main.tsx"),
+    )
+    .expect("react/src/main.tsx");
+    assert_contains(&react_app, "<EngramApp");
+    assert_contains(&react_app, "appTitle=\"Sample AppTitle\"");
+    assert_contains(&react_app, "answerVisible={false}");
+    assert_contains(
+        &react_app,
+        "dispatch={(ev) => console.log(\"event:\", ev)}",
+    );
+
+    let flutter_app =
+        fs::read_to_string(tmp.path().join("flutter").join("lib").join("main.dart"))
+            .expect("flutter/lib/main.dart");
+    assert_contains(&flutter_app, "EngramApp(");
+    assert_contains(&flutter_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(&flutter_app, "answerVisible: false,");
+    assert_contains(
+        &flutter_app,
+        "dispatch: (event) => debugPrint(\"event: $event\")",
+    );
 
     let qml =
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");

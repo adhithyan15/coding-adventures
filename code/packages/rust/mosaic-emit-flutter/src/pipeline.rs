@@ -67,7 +67,9 @@
 use std::collections::HashMap;
 use std::fmt::Write as _;
 
-use mosmodel_compiler::{EmitDecl, EmitPayloadType, MosmodelComponent, SlotDecl, SlotType};
+use mosmodel_compiler::{
+    EmitDecl, EmitPayloadType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
+};
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
 use mosstyle_compiler::{StyleDef, StyleProp};
 #[cfg(test)]
@@ -249,7 +251,7 @@ pub fn from_pipeline_with_options(
     let component = from_pipeline(interface, layout, style)?;
 
     let project = if options.emit_project {
-        Some(build_flutter_project_files(&component.component_name, options)?)
+        Some(build_flutter_project_files(interface, options)?)
     } else {
         None
     };
@@ -264,9 +266,10 @@ pub fn from_pipeline_with_options(
 /// Build the three Flutter app-shell side files for a single
 /// component.
 fn build_flutter_project_files(
-    name: &str,
+    interface: &MosmodelComponent,
     options: &EmitOptions,
 ) -> Result<ProjectFiles, ProjectShellError> {
+    let name = &interface.component;
     let pub_name = match &options.package_name {
         Some(p) => p.clone(),
         None => format!("mosaic_{}", pascal_to_snake_for_pub(name)),
@@ -277,7 +280,7 @@ fn build_flutter_project_files(
 
     Ok(ProjectFiles {
         pubspec_yaml: build_pubspec_yaml(&pub_name, options),
-        main_dart: build_main_dart(name),
+        main_dart: build_main_dart(name, &interface.slots),
         readme: build_flutter_readme(&pub_name, name),
     })
 }
@@ -324,15 +327,76 @@ fn build_pubspec_yaml(pub_name: &str, options: &EmitOptions) -> String {
     )
 }
 
-fn build_main_dart(component_name: &str) -> String {
+fn build_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
+    let root_widget = build_root_widget_constructor(component_name, slots);
     format!(
-        "{BANNER_DART}import 'package:flutter/material.dart';\nimport '../{component_name}.dart';\n\nvoid main() {{\n  runApp(const _MosaicApp());\n}}\n\nclass _MosaicApp extends StatelessWidget {{\n  const _MosaicApp();\n\n  @override\n  Widget build(BuildContext context) {{\n    return MaterialApp(\n      title: '{component_name}',\n      home: Scaffold(\n        appBar: AppBar(title: const Text('{component_name}')),\n        body: const Center(child: {component_name}()),\n      ),\n    );\n  }}\n}}\n"
+        "{BANNER_DART}import 'package:flutter/material.dart';\nimport '../{component_name}.dart';\n\nvoid main() {{\n  runApp(const _MosaicApp());\n}}\n\nclass _MosaicApp extends StatelessWidget {{\n  const _MosaicApp();\n\n  @override\n  Widget build(BuildContext context) {{\n    return MaterialApp(\n      title: '{component_name}',\n      home: Scaffold(\n        appBar: AppBar(title: const Text('{component_name}')),\n        body: Center(\n          child: {root_widget},\n        ),\n      ),\n    );\n  }}\n}}\n"
     )
+}
+
+fn build_root_widget_constructor(component_name: &str, slots: &[SlotDecl]) -> String {
+    let mut out = format!("{component_name}(\n");
+    for slot in slots {
+        let field = to_camel_case_first_lower(&slot.name);
+        let value = sample_value_for_slot(slot);
+        writeln!(out, "            {field}: {value},").unwrap();
+    }
+    out.push_str("            dispatch: (event) => debugPrint(\"event: $event\"),\n");
+    out.push_str("          )");
+    out
+}
+
+fn sample_value_for_slot(slot: &SlotDecl) -> String {
+    match &slot.default {
+        Some(SlotDefault::Text(value)) => format!("\"{}\"", escape_dart_string(value)),
+        Some(SlotDefault::Number(value)) if value.is_finite() => dart_double_literal(*value),
+        Some(SlotDefault::Number(_)) => "0.0".to_string(),
+        Some(SlotDefault::Bool(value)) => value.to_string(),
+        None => sample_value_for_slot_type(&slot.r#type, &slot.name),
+    }
+}
+
+fn sample_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> String {
+    match slot_type {
+        SlotType::Text => format!("\"Sample {}\"", kebab_to_pascal_case_for_label(slot_name)),
+        SlotType::Number => "0.0".to_string(),
+        SlotType::Bool => "false".to_string(),
+        SlotType::Image => "\"sample-image\"".to_string(),
+        SlotType::Color => "\"#808080\"".to_string(),
+        SlotType::Node => "const SizedBox.shrink()".to_string(),
+        SlotType::Component(_) => "throw UnimplementedError()".to_string(),
+        SlotType::List(_) => "const []".to_string(),
+    }
+}
+
+fn dart_double_literal(value: f64) -> String {
+    let text = value.to_string();
+    if text.contains('.') || text.contains('e') || text.contains('E') {
+        text
+    } else {
+        format!("{text}.0")
+    }
+}
+
+fn kebab_to_pascal_case_for_label(s: &str) -> String {
+    let mut out = String::new();
+    for part in s.split('-').filter(|part| !part.is_empty()) {
+        let mut chars = part.chars();
+        if let Some(first) = chars.next() {
+            out.push(first.to_ascii_uppercase());
+            out.extend(chars);
+        }
+    }
+    if out.is_empty() {
+        "Value".to_string()
+    } else {
+        out
+    }
 }
 
 fn build_flutter_readme(pub_name: &str, component_name: &str) -> String {
     format!(
-        "{BANNER_MD}# {component_name} — Flutter app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project`.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\n```sh\nflutter pub get\nflutter run -d <device-id>   # or `flutter run` to pick interactively\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.dart` | The Mosaic-compiled component. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | MaterialApp shell that mounts `{component_name}()` as `home`. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery file except `{component_name}.dart` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+        "{BANNER_MD}# {component_name} — Flutter app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project`.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\n```sh\nflutter pub get\nflutter run -d <device-id>   # or `flutter run` to pick interactively\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.dart` | The Mosaic-compiled component. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | MaterialApp shell that mounts `{component_name}(...)` with sample slot values and a dispatch callback. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery file except `{component_name}.dart` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
     )
 }
 
@@ -4113,7 +4177,7 @@ mod tests {
     }
 
     /// lib/main.dart mounts the component as the MaterialApp's
-    /// `home:` widget. Verify the relative import + constructor
+    /// home widget. Verify the relative import + constructor
     /// invocation.
     #[test]
     fn ui32_main_dart_mounts_component_in_material_app_home() {
@@ -4132,12 +4196,59 @@ mod tests {
             proj.main_dart
         );
         assert!(
-            proj.main_dart.contains("MyWidget()"),
-            "main.dart must invoke MyWidget() constructor"
+            proj.main_dart.contains("MyWidget("),
+            "main.dart must invoke MyWidget constructor"
+        );
+        assert!(
+            proj.main_dart
+                .contains("dispatch: (event) => debugPrint(\"event: $event\")"),
+            "main.dart must provide a dispatch callback"
         );
         assert!(
             proj.main_dart.contains("MaterialApp("),
             "main.dart must wrap in MaterialApp"
+        );
+    }
+
+    #[test]
+    fn ui32_main_dart_passes_sample_slot_values_to_component() {
+        let mut display_name = slot("display-name", SlotType::Text, false);
+        display_name.default = Some(SlotDefault::Text("Ada".to_string()));
+        let m = component(
+            "ProfileCard",
+            vec![
+                display_name,
+                slot("age", SlotType::Number, true),
+                slot("is-active", SlotType::Bool, true),
+                slot("avatar-url", SlotType::Image, true),
+                slot("accent", SlotType::Color, true),
+                slot(
+                    "tags",
+                    SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text)),
+                    true,
+                ),
+            ],
+            vec![],
+        );
+        let l = layout("ProfileCard", node("Box"));
+        let s = empty_style("ProfileCard");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+
+        assert!(proj.main_dart.contains("ProfileCard("));
+        assert!(proj.main_dart.contains("displayName: \"Ada\","));
+        assert!(proj.main_dart.contains("age: 0.0,"));
+        assert!(proj.main_dart.contains("isActive: false,"));
+        assert!(proj.main_dart.contains("avatarUrl: \"sample-image\","));
+        assert!(proj.main_dart.contains("accent: \"#808080\","));
+        assert!(proj.main_dart.contains("tags: const [],"));
+        assert!(
+            proj.main_dart
+                .contains("dispatch: (event) => debugPrint(\"event: $event\")")
         );
     }
 

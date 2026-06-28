@@ -92,7 +92,7 @@ use std::collections::HashMap;
 use std::fmt::Write as _;
 
 use mosmodel_compiler::{
-    EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
+    EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
 use mosstyle_compiler::{StyleDef, StyleProp};
@@ -302,7 +302,7 @@ pub fn from_pipeline_with_options(
     let component = from_pipeline(interface, layout, style)?;
 
     let project = if options.emit_project {
-        Some(build_react_project_files(&component.component_name, options)?)
+        Some(build_react_project_files(interface, options)?)
     } else {
         None
     };
@@ -316,9 +316,10 @@ pub fn from_pipeline_with_options(
 
 /// Build the five Vite-shell side files for a single component.
 fn build_react_project_files(
-    name: &str,
+    interface: &MosmodelComponent,
     options: &EmitOptions,
 ) -> Result<ProjectFiles, ProjectShellError> {
+    let name = &interface.component;
     let npm_name = match &options.package_name {
         Some(p) => p.clone(),
         None => format!("mosaic-{}", pascal_to_kebab_for_npm(name)),
@@ -331,7 +332,7 @@ fn build_react_project_files(
         package_json: build_package_json(&npm_name, options),
         vite_config: build_vite_config(),
         index_html: build_index_html(name),
-        main_tsx: build_main_tsx(name),
+        main_tsx: build_main_tsx(name, &interface.slots),
         readme: build_react_readme(&npm_name, name),
     })
 }
@@ -397,10 +398,63 @@ fn build_index_html(component_name: &str) -> String {
     )
 }
 
-fn build_main_tsx(component_name: &str) -> String {
+fn build_main_tsx(component_name: &str, slots: &[SlotDecl]) -> String {
+    let root_component = build_root_component_jsx(component_name, slots);
     format!(
-        "{BANNER_TS}import {{ StrictMode }} from \"react\";\nimport {{ createRoot }} from \"react-dom/client\";\nimport {{ {component_name} }} from \"../{component_name}\";\n\nconst rootEl = document.getElementById(\"root\");\nif (rootEl === null) {{\n  throw new Error(\"#root not found in index.html\");\n}}\n\ncreateRoot(rootEl).render(\n  <StrictMode>\n    <{component_name} dispatch={{(ev) => console.log(\"event:\", ev)}} />\n  </StrictMode>\n);\n"
+        "{BANNER_TS}import {{ StrictMode }} from \"react\";\nimport {{ createRoot }} from \"react-dom/client\";\nimport {{ {component_name} }} from \"../{component_name}\";\n\nconst rootEl = document.getElementById(\"root\");\nif (rootEl === null) {{\n  throw new Error(\"#root not found in index.html\");\n}}\n\ncreateRoot(rootEl).render(\n  <StrictMode>\n{root_component}\n  </StrictMode>\n);\n"
     )
+}
+
+fn build_root_component_jsx(component_name: &str, slots: &[SlotDecl]) -> String {
+    let mut out = format!("    <{component_name}\n");
+    for slot in slots {
+        let field = to_camel_case_first_lower(&slot.name);
+        let value = sample_value_for_slot(slot);
+        writeln!(out, "      {field}={value}").unwrap();
+    }
+    out.push_str("      dispatch={(ev) => console.log(\"event:\", ev)}\n");
+    out.push_str("    />");
+    out
+}
+
+fn sample_value_for_slot(slot: &SlotDecl) -> String {
+    match &slot.default {
+        Some(SlotDefault::Text(value)) => {
+            format!("\"{}\"", escape_for_jsx_double_quoted(value))
+        }
+        Some(SlotDefault::Number(value)) if value.is_finite() => format!("{{{value}}}"),
+        Some(SlotDefault::Number(_)) => "{0}".to_string(),
+        Some(SlotDefault::Bool(value)) => format!("{{{value}}}"),
+        None => sample_value_for_slot_type(&slot.r#type, &slot.name),
+    }
+}
+
+fn sample_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> String {
+    match slot_type {
+        SlotType::Text => format!("\"Sample {}\"", kebab_to_pascal_case_for_label(slot_name)),
+        SlotType::Number => "{0}".to_string(),
+        SlotType::Bool => "{false}".to_string(),
+        SlotType::Image => "\"sample-image\"".to_string(),
+        SlotType::Color => "\"#808080\"".to_string(),
+        SlotType::Node | SlotType::Component(_) => "{<></>}".to_string(),
+        SlotType::List(_) => "{[]}".to_string(),
+    }
+}
+
+fn kebab_to_pascal_case_for_label(s: &str) -> String {
+    let mut out = String::new();
+    for part in s.split('-').filter(|part| !part.is_empty()) {
+        let mut chars = part.chars();
+        if let Some(first) = chars.next() {
+            out.push(first.to_ascii_uppercase());
+            out.extend(chars);
+        }
+    }
+    if out.is_empty() {
+        "Value".to_string()
+    } else {
+        out
+    }
 }
 
 fn build_react_readme(npm_name: &str, component_name: &str) -> String {
@@ -4110,7 +4164,6 @@ mod tests {
     // Structural invariants from UI24 §3.3
     // -----------------------------------------------------------------
 
-    #[test]
     /// The auto-generated banner is always the first line. The
     /// React import is only emitted when the component generates a
     /// `React.*` type reference (slot types `node` or `<Component>`,
@@ -8189,6 +8242,44 @@ mod tests {
                 "emitted shell contains environment-specific fragment `{banned}`"
             );
         }
+    }
+
+    #[test]
+    fn ui32_main_tsx_passes_sample_slot_props_to_component() {
+        let mut display_name = slot("display-name", SlotType::Text, false);
+        display_name.default = Some(SlotDefault::Text("Ada".to_string()));
+        let m = component(
+            "ProfileCard",
+            vec![
+                display_name,
+                slot("age", SlotType::Number, true),
+                slot("is-active", SlotType::Bool, true),
+                slot("avatar-url", SlotType::Image, true),
+                slot("accent", SlotType::Color, true),
+                slot("tags", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        );
+        let l = single_box_layout("ProfileCard");
+        let s = empty_style("ProfileCard");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+
+        assert!(proj.main_tsx.contains("<ProfileCard"));
+        assert!(proj.main_tsx.contains("displayName=\"Ada\""));
+        assert!(proj.main_tsx.contains("age={0}"));
+        assert!(proj.main_tsx.contains("isActive={false}"));
+        assert!(proj.main_tsx.contains("avatarUrl=\"sample-image\""));
+        assert!(proj.main_tsx.contains("accent=\"#808080\""));
+        assert!(proj.main_tsx.contains("tags={[]}"));
+        assert!(
+            proj.main_tsx
+                .contains("dispatch={(ev) => console.log(\"event:\", ev)}")
+        );
     }
 
     #[test]

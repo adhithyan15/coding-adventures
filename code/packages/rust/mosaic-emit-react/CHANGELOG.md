@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - `--emit-project` Vite shell supplies component props
+
+`src/main.tsx` now mounts the generated component with deterministic sample
+values for every declared slot plus the dispatch callback. Previously the
+Vite shell only passed `dispatch`, so any component with required slots
+produced a project shell that failed TypeScript checking.
+
 ### Added — UI28-1 §6.3 — Automatic React keys for `For` iterations
 
 Every `For` body is now wrapped in a `<React.Fragment key={...}>` so
