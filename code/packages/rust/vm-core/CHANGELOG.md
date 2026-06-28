@@ -1,5 +1,10 @@
 # Changelog — vm-core
 
+## [0.12.0] — 2026-06-28 (LANG-FULL E4 — reference string comparison)
+
+The reference VM now implements `str_cmp`, returning the shared E4 three-way
+byte ordering convention: `-1`, `0`, or `1`.
+
 ## [0.11.0] — 2026-06-28 (LANG-FULL E4 — reference string slicing)
 
 The reference VM now implements shared E4 `str_slice` semantics over

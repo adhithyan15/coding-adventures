@@ -1512,6 +1512,26 @@ mod tests {
     }
 
     #[test]
+    fn string_order_literals_use_e4_str_cmp() {
+        let m = compile_source(
+            "(if (and (string<? \"ALPHA\" \"BETA\") (string>? \"BETA\" \"ALPHA\")) 42 0)",
+            "string_order_branch",
+        )
+        .expect("literal string ordering should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops.iter().filter(|op| **op == "str_cmp").count(), 2, "{ops:?}");
+        assert!(ops.contains(&"cmp_lt"), "expected cmp_lt in {ops:?}");
+        assert!(ops.contains(&"cmp_gt"), "expected cmp_gt in {ops:?}");
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string ordering should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
     fn string_append_literal_length_uses_e4_str_concat() {
         let m = compile_source("(string-length (string-append \"AB\" \"CDE\"))", "string_concat_len")
             .expect("literal string-append length should compile");

@@ -123,7 +123,7 @@ the program artifact whenever any `alloc_closure` instruction appears.
 | Heap | `alloc` (`ref<LispyPair>` only), `field_load`, `field_store`, `is_null` |
 | Register | `load_reg`, `store_reg` |
 | Coercion | `type_assert` (becomes `nop`) |
-| Strings | `str_const`, `str_concat`, `str_len`, `str_eq`, `print_str` on the textual `.il` path (ASCII literal foothold) |
+| Strings | `str_const`, `str_concat`, `str_slice`, `str_len`, `str_index`, `str_eq`, `str_cmp`, `print_str` on the textual `.il` path (ASCII literal foothold) |
 
 As of 0.16.0 the **textual `.il`** emitter (`emit_il`, the `ilasm`/`dotnet` path) also
 covers the integer **arithmetic** (`add`/`sub`/`mul`/`div`/`mod` → `add`/`sub`/`mul`/`div`/`rem`)
@@ -148,10 +148,12 @@ As of 0.29.0 the textual `.il` path emits the **E4 literal string** foothold:
 `Console.Write(string)`, and direct-literal `str_len` calls
 `String::get_Length()` while direct-literal `str_index` calls
 `String::get_Chars(int32)`, direct-literal `str_eq` calls
-`String::Equals(string,string)`, and direct-literal `str_concat` calls
+`String::Equals(string,string)`, direct-literal `str_cmp` calls
+`String::CompareOrdinal(string,string)` plus `Math::Sign(int32)`, and direct-literal `str_concat` calls
 `String::Concat(string,string)`. This proves Dartmouth BASIC `PRINT "HELLO"` plus
 Twig `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
-`(string=? "HELLO" "HELLO")`, and `(string-length (string-append "AB" "CDE"))`
+`(string=? "HELLO" "HELLO")`, `(string<? "ALPHA" "BETA")`, and
+`(string-length (string-append "AB" "CDE"))`
 on real CoreCLR while non-literal string values remain rejected until the CLR
 representation owns the shared UTF-8 byte semantics.
 

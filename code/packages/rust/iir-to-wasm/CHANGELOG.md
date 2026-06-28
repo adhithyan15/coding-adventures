@@ -3,6 +3,11 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.23.0] — 2026-06-28 (LANG-FULL E4 — literal string comparison on WASM)
+
+The WASM backend now accepts and lowers literal-only `str_cmp`, materialising
+`-1`, `0`, or `1` as an `i64.const`/`i32.const` from literal byte metadata.
+
 ## [0.22.0] — 2026-06-28 (LANG-FULL E4 — literal string slice on WASM)
 
 The WASM backend now accepts and lowers literal-only `str_slice`. The module

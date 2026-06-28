@@ -1,5 +1,10 @@
 # Changelog — twig-ir-compiler
 
+## [0.34.0] — 2026-06-28 (LANG-FULL E4 — lexical string ordering predicates)
+
+Literal and known local `string<?` / `string>?` expressions now lower through
+the shared `str_cmp` op followed by typed integer comparison against zero.
+
 ## [0.33.0] — 2026-06-28 (LANG-FULL E4 — substring feeds string-ref proof)
 
 Lexical string bindings can now feed `substring`, and the resulting string can

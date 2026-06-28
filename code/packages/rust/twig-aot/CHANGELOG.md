@@ -1,5 +1,10 @@
 # Changelog — `twig-aot`
 
+## 0.22.0 — 2026-06-28 — native string comparison metadata folding (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds literal-only `str_cmp` to the shared `-1`,
+`0`, or `1` integer convention before direct native lowering.
+
 ## 0.21.0 — 2026-06-28 — native substring metadata folding (LANG-FULL E4)
 
 `prepare_module_for_aot` now folds literal-only `str_slice` results into the

@@ -1,5 +1,11 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.31.0] — 2026-06-28 — textual CLR literal string comparison (LANG-FULL E4)
+
+The textual `.il` path now lowers `str_cmp` over managed string locals by
+calling `System.String::CompareOrdinal(string,string)` and
+`System.Math::Sign(int32)`.
+
 ## [0.30.0] — 2026-06-28 — textual CLR literal string slice (LANG-FULL E4)
 
 The textual `.il` path now lowers `str_slice` by loading the source string,

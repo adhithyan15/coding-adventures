@@ -3,6 +3,11 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.24.0] — 2026-06-28 — literal string comparison metadata reaches LLVM (LANG-FULL E4)
+
+Literal-only `str_cmp` now folds through the LLVM string metadata pass. The
+lowered value follows the shared E4 three-way ordering convention.
+
 ## [0.23.0] — 2026-06-28 — literal string slice metadata reaches LLVM (LANG-FULL E4)
 
 Literal-only `str_slice` now participates in the LLVM string metadata pass.

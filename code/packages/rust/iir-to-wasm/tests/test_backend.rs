@@ -1695,6 +1695,37 @@ fn e4_string_concat_len_lowers_to_literal_length() {
 }
 
 #[test]
+fn e4_string_cmp_lowers_to_literal_ordering() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("a".into()),
+            vec![Operand::Str("ALPHA".into())],
+            "str",
+        ),
+        IIRInstr::new(
+            "str_const",
+            Some("b".into()),
+            vec![Operand::Str("BETA".into())],
+            "str",
+        ),
+        IIRInstr::new("str_cmp", Some("ord".into()), vec![
+            Operand::Var("a".into()),
+            Operand::Var("b".into()),
+        ], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(), "E4: str_cmp should validate: {errs:?}");
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("E4: str_cmp should lower");
+    assert!(
+        wm.code[0].code.windows(2).any(|w| w == [0x42, 0x7f]),
+        "E4: str_cmp over ALPHA/BETA should emit i64.const -1"
+    );
+}
+
+#[test]
 fn e4_string_slice_index_lowers_to_literal_byte_load() {
     let m = module_one("main", vec![], "i64", vec![
         IIRInstr::new(

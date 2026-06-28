@@ -569,8 +569,8 @@ fn emit_method(
             //
             // LANG-FULL E4 first managed foothold: Dartmouth BASIC string
             // literal PRINT lowers to `str_const` + `print_str`; literal
-            // string length, equality, and append lower to `str_len`, `str_eq`,
-            // and `str_concat`. These map naturally to CoreCLR's
+            // string length, equality, ordering, and append lower to `str_len`,
+            // `str_eq`, `str_cmp`, and `str_concat`. These map naturally to CoreCLR's
             // `System.String`.
             // The richer byte-oriented string algebra remains deliberately
             // unsupported here until the representation is specified for
@@ -680,6 +680,24 @@ fn emit_method(
                     il,
                     "    call bool [System.Runtime]System.String::Equals(string, string)"
                 );
+                store_var(il, &regs, dest)?;
+            }
+            // str_cmp <dest>, <left>, <right>
+            //     -> Math.Sign(String.CompareOrdinal(left, right))
+            "str_cmp" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_cmp must have a dest".to_string(),
+                })?;
+                let left = var_src(f, instr, 0, "str_cmp")?;
+                let right = var_src(f, instr, 1, "str_cmp")?;
+                load_var(il, &regs, left)?;
+                load_var(il, &regs, right)?;
+                let _ = writeln!(
+                    il,
+                    "    call int32 [System.Runtime]System.String::CompareOrdinal(string, string)"
+                );
+                let _ = writeln!(il, "    call int32 [System.Runtime]System.Math::Sign(int32)");
                 store_var(il, &regs, dest)?;
             }
             // print_str <src>  ->  Console.Write(string)
@@ -1942,6 +1960,41 @@ mod tests {
         assert!(
             il.contains("call bool [System.Runtime]System.String::Equals(string, string)"),
             "str_eq must call System.String::Equals(string,string); got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_cmp_emits_compare_ordinal_and_sign() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("ALPHA".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("BETA".into())],
+                "str",
+            ),
+            IIRInstr::new("str_cmp", Some("ord".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(
+            il.contains("call int32 [System.Runtime]System.String::CompareOrdinal(string, string)"),
+            "str_cmp must call System.String::CompareOrdinal(string,string); got:\n{il}"
+        );
+        assert!(
+            il.contains("call int32 [System.Runtime]System.Math::Sign(int32)"),
+            "str_cmp must normalize via System.Math::Sign(int32); got:\n{il}"
         );
     }
 

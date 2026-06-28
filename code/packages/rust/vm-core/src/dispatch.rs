@@ -32,6 +32,7 @@
 //! is masked with `& 0xFF`.  The mask is applied inside each arithmetic handler,
 //! not in the dispatch loop.
 
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use crate::errors::VMError;
@@ -845,6 +846,24 @@ fn handle_str_eq(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value
     Ok(Some(value))
 }
 
+fn handle_str_cmp(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let ordering = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let a = string_src(frame, &instr.srcs, 0, "str_cmp")?;
+        let b = string_src(frame, &instr.srcs, 1, "str_cmp")?;
+        a.as_bytes().cmp(b.as_bytes())
+    };
+    let value = Value::Int(match ordering {
+        Ordering::Less => -1,
+        Ordering::Equal => 0,
+        Ordering::Greater => 1,
+    });
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
 fn handle_print_str(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let s = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -1364,6 +1383,7 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "str_concat"   => Some(handle_str_concat),
         "str_slice"    => Some(handle_str_slice),
         "str_eq"       => Some(handle_str_eq),
+        "str_cmp"      => Some(handle_str_cmp),
         "print_str"    => Some(handle_print_str),
         "alloc_array"  => Some(handle_alloc_array),
         "array_len"    => Some(handle_array_len),
