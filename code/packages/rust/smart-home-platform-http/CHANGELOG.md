@@ -43,6 +43,8 @@ All notable changes to this package will be documented in this file.
   the existing local-controller inventory routes.
 - Added a dashboard-ready room detail route and matching browser room inspect
   action.
+- Expanded the dashboard-ready room detail route with member devices, entities,
+  and scenes.
 - Added a browser dashboard event-log panel backed by the existing native
   runtime event stream route.
 - Added browser dashboard detail actions for history, event-log,

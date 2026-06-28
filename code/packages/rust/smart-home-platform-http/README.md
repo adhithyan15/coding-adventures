@@ -72,8 +72,8 @@ tool.
 The `GET /api/smart_home/*` routes expose dashboard-ready read models for the
 same runtime: pending-work snapshot counts, entity and capability registry
 records, a compact health probe, a capability catalog grouped across entities,
-device and bridge inventory, room topology summaries with detail lookups, a
-readiness checklist with actionable links, a dashboard overview, a bootstrap
+device and bridge inventory, room topology summaries with member detail lookups,
+a readiness checklist with actionable links, a dashboard overview, a bootstrap
 payload that composes startup links, route discovery, state gaps, and recent
 audit summaries, an API route catalog with surface/method/authorization filters,
 checkpointed event-log entries with detail lookups, a native service catalog for
