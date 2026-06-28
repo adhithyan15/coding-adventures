@@ -353,7 +353,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         <h2>History</h2>
         <table>
           <thead>
-            <tr><th>Entity</th><th>Event</th><th>State</th><th>Observed</th></tr>
+            <tr><th>Entity</th><th>Event</th><th>State</th><th>Observed</th><th></th></tr>
           </thead>
           <tbody id="history"></tbody>
         </table>
@@ -362,7 +362,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         <h2>Events</h2>
         <table>
           <thead>
-            <tr><th>Sequence</th><th>Kind</th><th>Subject</th><th>Status</th></tr>
+            <tr><th>Sequence</th><th>Kind</th><th>Subject</th><th>Status</th><th></th></tr>
           </thead>
           <tbody id="events"></tbody>
         </table>
@@ -371,7 +371,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         <h2>Commands</h2>
         <table>
           <thead>
-            <tr><th>Command</th><th>Status</th><th>Bridge</th><th>Sequence</th></tr>
+            <tr><th>Command</th><th>Status</th><th>Bridge</th><th>Sequence</th><th></th></tr>
           </thead>
           <tbody id="command-results"></tbody>
         </table>
@@ -380,7 +380,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         <h2>Authorization</h2>
         <table>
           <thead>
-            <tr><th>Principal</th><th>Subject</th><th>Outcome</th><th>Tier</th></tr>
+            <tr><th>Principal</th><th>Subject</th><th>Outcome</th><th>Tier</th><th></th></tr>
           </thead>
           <tbody id="authorization-decisions"></tbody>
         </table>
@@ -476,6 +476,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }
       return event.health || event.reason || event.event_type || event.kind || "event";
     };
+    const inspectButton = (url, label) =>
+      `<button type="button" data-inspect-url="${url}" data-inspect-label="${label}">View</button>`;
 
     const log = (message) => {
       const at = new Date().toLocaleTimeString();
@@ -650,15 +652,17 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       const events = history.events || [];
       els.history.innerHTML = events.map((row) => {
         const event = row.event || {};
+        const detailUrl = `/api/smart_home/state_history/${encodeURIComponent(event.event_id || "")}`;
         return `
           <tr>
             <td>${row.home_assistant_entity_id || event.entity_id || "unknown"}</td>
             <td>${event.event_type || event.kind || "event"}<br><span class="muted">${event.event_id || ""}</span></td>
             <td>${event.state_delta ? deltasText([event.state_delta]) : "No state delta"}</td>
             <td>${observedText(event.observed_at_ms)}</td>
+            <td>${event.event_id ? inspectButton(detailUrl, "history event") : ""}</td>
           </tr>
         `;
-      }).join("") || `<tr><td colspan="4" class="muted">No state history</td></tr>`;
+      }).join("") || `<tr><td colspan="5" class="muted">No state history</td></tr>`;
     };
 
     const renderEvents = (eventLog) => {
@@ -671,24 +675,27 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             <td>${event.kind || "event"}</td>
             <td>${eventSubject(event)}</td>
             <td><span class="${statusClass(eventStatus(event))}">${eventStatus(event)}</span></td>
+            <td>${inspectButton(`/api/smart_home/events/${entry.sequence}`, "runtime event")}</td>
           </tr>
         `;
-      }).join("") || `<tr><td colspan="4" class="muted">No runtime events</td></tr>`;
+      }).join("") || `<tr><td colspan="5" class="muted">No runtime events</td></tr>`;
     };
 
     const renderCommandResults = (audit) => {
       const results = audit.results || [];
       els.commandResults.innerHTML = results.map((record) => {
         const result = record.result || {};
+        const detailUrl = `/api/smart_home/command_results/${encodeURIComponent(result.command_id || "")}`;
         return `
           <tr>
             <td>${result.command_id || "unknown"}<br><span class="muted">${result.correlation_id || ""}</span></td>
             <td><span class="${statusClass(result.status || "ok")}">${result.status || "unknown"}</span></td>
             <td>${result.bridge_id || ""}</td>
             <td>${record.sequence}</td>
+            <td>${result.command_id ? inspectButton(detailUrl, "command result") : ""}</td>
           </tr>
         `;
-      }).join("") || `<tr><td colspan="4" class="muted">No command results</td></tr>`;
+      }).join("") || `<tr><td colspan="5" class="muted">No command results</td></tr>`;
     };
 
     const renderAuthorizationDecisions = (audit) => {
@@ -699,8 +706,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <td>${subjectText(record.subject)}</td>
           <td><span class="${statusClass(record.outcome || "ok")}">${record.outcome}</span></td>
           <td>${record.required_tier}</td>
+          <td>${inspectButton(`/api/smart_home/authorization_decisions/${record.decision_index}`, "authorization decision")}</td>
         </tr>
-      `).join("") || `<tr><td colspan="4" class="muted">No authorization decisions</td></tr>`;
+      `).join("") || `<tr><td colspan="5" class="muted">No authorization decisions</td></tr>`;
     };
 
     const render = async () => {
@@ -793,13 +801,17 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       const sceneButton = event.target.closest("button[data-scene]");
       const clearDesiredButton = event.target.closest("button[data-clear-desired]");
       const desiredButton = event.target.closest("button[data-desired-action]");
-      const button = serviceButton || sceneButton || clearDesiredButton || desiredButton;
+      const inspectDetailButton = event.target.closest("button[data-inspect-url]");
+      const button = serviceButton || sceneButton || clearDesiredButton || desiredButton || inspectDetailButton;
       if (!button) {
         return;
       }
       button.disabled = true;
       try {
-        if (serviceButton) {
+        if (inspectDetailButton) {
+          const detail = await json(inspectDetailButton.dataset.inspectUrl);
+          log(`${inspectDetailButton.dataset.inspectLabel}: ${JSON.stringify(detail).slice(0, 1200)}`);
+        } else if (serviceButton) {
           const body = {entity_id: serviceButton.dataset.entity};
           if (serviceButton.dataset.service === "set_brightness") {
             const input = brightnessInputFor(serviceButton.dataset.brightnessFor);
@@ -842,7 +854,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           });
           log(`desired ${desiredButton.dataset.desiredAction} target accepted for ${desiredButton.dataset.entity}`);
         }
-        await render();
+        if (!inspectDetailButton) {
+          await render();
+        }
       } catch (error) {
         log(error.message);
       } finally {
@@ -6604,6 +6618,13 @@ mod tests {
             assert!(body.contains("json(\"/api/smart_home/command_results?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/authorization_decisions?limit=8\")"));
             assert!(body.contains("<tbody id=\"events\"></tbody>"));
+            assert!(body.contains("data-inspect-url"));
+            assert!(body.contains("/api/smart_home/state_history/"));
+            assert!(body.contains("/api/smart_home/events/${entry.sequence}"));
+            assert!(body.contains("/api/smart_home/command_results/"));
+            assert!(
+                body.contains("/api/smart_home/authorization_decisions/${record.decision_index}")
+            );
             assert!(body.contains("/api/services/light/"));
             assert!(body.contains("data-service=\"set_brightness\""));
             assert!(body.contains("brightness_pct"));
