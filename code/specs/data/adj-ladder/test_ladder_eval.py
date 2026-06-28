@@ -27,6 +27,7 @@ SELF_CONTAINED_RUNGS = (
     "rung2_derived_solve",
     "rung3_quadratic_roots",
     "rung3_cubic_roots",
+    "rung3_quartic_roots",
 )
 
 
@@ -176,6 +177,7 @@ def test_decompose_prompt_mentions_native_root_solve_program():
     assert "constrain x * x = 121" in prompt
     assert 'constrain latex "$x^2 = 144$"' in prompt
     assert "x * x * x - 6 * x * x + 11 * x - 6 = 0" in prompt
+    assert "x * x * x * x - 10 * x * x * x + 35 * x * x - 50 * x + 24 = 0" in prompt
 
 
 def test_extract_formula_abstains_on_latex():
@@ -341,6 +343,28 @@ def test_solve_roots_program_maps_native_latex_roots_to_option():
         {"type": "solve_roots", "name": "x"},
         {"A": [-6, 6], "B": [-25, 25], "C": [0, 5], "D": [5, 25], "E": [-5, 5]},
     ) == "E"
+
+
+def test_solve_roots_program_maps_native_quartic_roots_to_option():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    program = (
+        "symbol x : scalar\n"
+        "constrain latex \"$x^4 - 10x^3 + 35x^2 - 50x + 24 = 0$\"\n"
+        "solve for { x }\n"
+    )
+    doc = le.run_program(program)
+    assert le.program_answer_to_letter(
+        doc,
+        {"type": "solve_roots", "name": "x"},
+        {
+            "A": [1, 2, 3, 5],
+            "B": [0, 2, 3, 4],
+            "C": [1, 2, 3, 4],
+            "D": [1, 3, 4, 10],
+            "E": [-1, 2, 3, 4],
+        },
+    ) == "C"
 
 
 # ---- bank integrity -----------------------------------------------------------
