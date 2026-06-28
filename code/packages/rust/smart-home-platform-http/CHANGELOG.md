@@ -43,6 +43,8 @@ All notable changes to this package will be documented in this file.
   the existing local-controller inventory routes.
 - Added a browser dashboard event-log panel backed by the existing native
   runtime event stream route.
+- Added browser dashboard detail actions for history, event-log,
+  command-result, and authorization audit rows.
 - Added a native readiness checklist route with actionable links for registry,
   topology, state coverage, event bus, discovery, supervisor, authorization,
   and desired-state checks.

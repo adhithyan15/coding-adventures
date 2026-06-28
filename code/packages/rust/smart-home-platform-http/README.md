@@ -91,7 +91,9 @@ runtime event-log, authorization audit, service catalog, API catalog, and audit
 summary data from the native API routes and sends light on/off, light brightness,
 scene, and desired-state set/clear actions through the existing Home
 Assistant-compatible and native service endpoints, preserving runtime
-authorization.
+authorization. History, event-log, command-result, and authorization rows expose
+read-only detail buttons that fetch the matching native detail route and show
+the response in the dashboard log.
 
 ## Dependencies
 
