@@ -3,11 +3,11 @@ use spice_engine::{
     dc_corners_parallel, dc_initial_vector_from_conditions, dc_op, dc_op_with_initial_conditions,
     dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
     dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
-    device_model_behavior_audit_fixtures, device_model_temperature_audit_fixtures,
-    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
-    format_corner_temperature_dc_table, format_dc_sweep_table, format_measurement_table,
-    format_temperature_dc_table, jfet_from_model_card, measure_dc_sweep_deck,
-    measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
+    device_model_behavior_audit_fixtures, device_model_reference_deck_audit_fixtures,
+    device_model_temperature_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
+    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
+    format_measurement_table, format_temperature_dc_table, jfet_from_model_card,
+    measure_dc_sweep_deck, measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
     normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs,
     Ccvs, Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource,
     CustomModel, DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity,
@@ -15,6 +15,7 @@ use spice_engine::{
     SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource,
     Waveform, XInstance,
 };
+use std::collections::{BTreeMap, BTreeSet};
 
 fn assert_close(actual: f64, expected: f64) {
     assert!(
@@ -238,6 +239,56 @@ fn device_model_temperature_audit_fixtures_run_reference_sweeps() {
     assert!(jfet_fixture
         .temperature_behavior
         .starts_with("JFET temperature scaling is intentionally"));
+}
+
+#[test]
+fn device_model_reference_deck_audit_fixtures_cover_model_depth_matrix() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    assert_eq!(fixtures.len(), 20);
+    assert_eq!(fixtures.first().unwrap().name, "diode-forward-bias:op");
+    assert_eq!(
+        fixtures.last().unwrap().name,
+        "mos-level1-storage-charge:tran"
+    );
+
+    let expected_analyses = BTreeSet::from([
+        "ac".to_string(),
+        "noise".to_string(),
+        "op".to_string(),
+        "temperature".to_string(),
+        "tran".to_string(),
+    ]);
+    let mut by_kind: BTreeMap<ModelCardKind, BTreeSet<String>> = BTreeMap::new();
+    for fixture in &fixtures {
+        by_kind
+            .entry(fixture.kind)
+            .or_default()
+            .insert(fixture.analysis.clone());
+        assert_eq!(
+            fixture.reference,
+            "SPICE2/SPICE3-style local model-depth fixture"
+        );
+        assert!(!fixture.expected_behavior.is_empty());
+        assert!(fixture.deck_lines[0].starts_with("* device-model "));
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line.starts_with(".model ")));
+        assert_eq!(fixture.deck_lines.last().unwrap(), ".end");
+    }
+
+    assert_eq!(
+        by_kind.keys().copied().collect::<BTreeSet<_>>(),
+        BTreeSet::from([
+            ModelCardKind::Diode,
+            ModelCardKind::Npn,
+            ModelCardKind::Njf,
+            ModelCardKind::Nmos,
+        ])
+    );
+    for analyses in by_kind.values() {
+        assert_eq!(analyses, &expected_analyses);
+    }
 }
 
 #[test]

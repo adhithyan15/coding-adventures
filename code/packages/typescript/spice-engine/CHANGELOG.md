@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `deviceModelReferenceDeckAuditFixtures`, a stable reference coverage
+  matrix across DC, temperature, AC, noise, and transient model-depth fixtures
+  for diode, BJT, JFET, and Level-1 MOS families, matching Python and Rust.
 - Shape Level-1 MOS reverse-biased bulk-junction capacitance with `PB` and
   `MJ` model-card parameters for AC operating-point capacitance reports and
   transient source-body / drain-body companions, matching Python and Rust,

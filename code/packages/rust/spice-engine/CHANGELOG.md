@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `device_model_reference_deck_audit_fixtures`, a stable reference coverage
+  matrix across DC, temperature, AC, noise, and transient model-depth fixtures
+  for diode, BJT, JFET, and Level-1 MOS families, matching Python and
+  TypeScript.
 - Shape Level-1 MOS reverse-biased bulk-junction capacitance with
   `bulk_junction_potential` and `bulk_junction_grading_coefficient`
   model-card parameters (`PB`/`MJ`) for AC operating-point capacitance reports

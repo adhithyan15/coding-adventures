@@ -2817,7 +2817,7 @@ impl Mosfet {
     }
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum ModelCardKind {
     Diode,
     Npn,
@@ -2931,6 +2931,17 @@ pub struct DeviceModelChargeBehaviorFixture {
     pub expected_final_min: f64,
     pub expected_final_max: f64,
     pub charge_behavior: String,
+    pub deck_lines: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelReferenceDeckAuditFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub analysis: String,
+    pub reference: String,
+    pub expected_behavior: String,
     pub deck_lines: Vec<String>,
 }
 
@@ -4190,6 +4201,71 @@ pub fn device_model_charge_audit_fixtures(
             ],
         },
     ])
+}
+
+pub fn device_model_reference_deck_audit_fixtures(
+) -> Result<Vec<DeviceModelReferenceDeckAuditFixture>, SpiceError> {
+    let reference = "SPICE2/SPICE3-style local model-depth fixture".to_string();
+    let mut fixtures = Vec::new();
+    for fixture in device_model_behavior_audit_fixtures()? {
+        fixtures.push(DeviceModelReferenceDeckAuditFixture {
+            name: format!("{}:op", fixture.name),
+            kind: fixture.kind,
+            model: fixture.model,
+            analysis: "op".to_string(),
+            reference: reference.clone(),
+            expected_behavior: format!(
+                "DC probe {} remains in [{}, {}] V",
+                fixture.probe_node, fixture.expected_min, fixture.expected_max
+            ),
+            deck_lines: fixture.deck_lines,
+        });
+    }
+    for fixture in device_model_temperature_audit_fixtures()? {
+        fixtures.push(DeviceModelReferenceDeckAuditFixture {
+            name: format!("{}:temperature", fixture.name),
+            kind: fixture.kind,
+            model: fixture.model,
+            analysis: "temperature".to_string(),
+            reference: reference.clone(),
+            expected_behavior: fixture.temperature_behavior,
+            deck_lines: fixture.deck_lines,
+        });
+    }
+    for fixture in device_model_capacitance_audit_fixtures()? {
+        fixtures.push(DeviceModelReferenceDeckAuditFixture {
+            name: format!("{}:ac", fixture.name),
+            kind: fixture.kind,
+            model: fixture.model,
+            analysis: "ac".to_string(),
+            reference: reference.clone(),
+            expected_behavior: fixture.capacitance_behavior,
+            deck_lines: fixture.deck_lines,
+        });
+    }
+    for fixture in device_model_noise_audit_fixtures()? {
+        fixtures.push(DeviceModelReferenceDeckAuditFixture {
+            name: format!("{}:noise", fixture.name),
+            kind: fixture.kind,
+            model: fixture.model,
+            analysis: "noise".to_string(),
+            reference: reference.clone(),
+            expected_behavior: fixture.noise_behavior,
+            deck_lines: fixture.deck_lines,
+        });
+    }
+    for fixture in device_model_charge_audit_fixtures()? {
+        fixtures.push(DeviceModelReferenceDeckAuditFixture {
+            name: format!("{}:tran", fixture.name),
+            kind: fixture.kind,
+            model: fixture.model,
+            analysis: "tran".to_string(),
+            reference: reference.clone(),
+            expected_behavior: fixture.charge_behavior,
+            deck_lines: fixture.deck_lines,
+        });
+    }
+    Ok(fixtures)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

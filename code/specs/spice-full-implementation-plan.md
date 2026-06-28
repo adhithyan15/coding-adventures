@@ -15,22 +15,20 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. MOS Level-1 bulk-junction depletion charge shaping.
+1. Device model reference-deck audit matrix.
    - Status: current PR completion candidate.
-   - Python, Rust, and TypeScript Level-1 MOS model-card parameters now include
-     `PB` / `bulk_junction_potential` / `PB` and `MJ` /
-     `bulk_junction_grading_coefficient` / `MJ` for bulk-junction depletion
-     shaping.
-   - AC operating-point capacitance reports and transient MOS source-body /
-     drain-body charge companions shape `CBS` / `source_bulk_capacitance` /
-     `CBS` and `CBD` / `drain_bulk_capacitance` / `CBD` under reverse
-     source-bulk and drain-bulk bias.
-   - Cross-language tests cover model-card alias propagation and a
-     reverse-biased drain-step transient where `MJ` reduces the effective
-     `CBD` companion relative to the zero-bias capacitance.
-   - Charge-audit fixtures now record MOS bulk-junction storage as
-     depletion-shaped while preserving the same runnable one-device `.tran`
-     fixture shape.
+   - Python, Rust, and TypeScript now expose a flattened
+     `device_model_reference_deck_audit_fixtures` /
+     `deviceModelReferenceDeckAuditFixtures` surface that summarizes the
+     runnable DC operating-point, temperature, AC capacitance, noise, and
+     transient charge fixture decks for every supported diode, BJT, JFET, and
+     Level-1 MOS model family.
+   - Each row carries the normalized model card, analysis kind, stable
+     reference label, expected behavior note, and reference deck lines so model
+     depth audits can compare coverage without re-discovering fixture families.
+   - Cross-language tests lock the four-family by five-analysis coverage matrix
+     and verify every row has model-card deck metadata, an `.end` boundary, and
+     a non-empty behavior note.
 
 ## Completed Slices
 
@@ -1296,6 +1294,23 @@ downstream tools to compare.
    - Cross-language tests cover drain-step delay through `CBD` bulk-junction
      storage, and charge-audit fixtures now record the MOS bulk terms as
      transient-stamped.
+
+126. MOS Level-1 bulk-junction depletion charge shaping.
+   - Status: completed in PR 6827.
+   - Python, Rust, and TypeScript Level-1 MOS model-card parameters now include
+     `PB` / `bulk_junction_potential` / `PB` and `MJ` /
+     `bulk_junction_grading_coefficient` / `MJ` for bulk-junction depletion
+     shaping.
+   - AC operating-point capacitance reports and transient MOS source-body /
+     drain-body charge companions shape `CBS` / `source_bulk_capacitance` /
+     `CBS` and `CBD` / `drain_bulk_capacitance` / `CBD` under reverse
+     source-bulk and drain-bulk bias.
+   - Cross-language tests cover model-card alias propagation and a
+     reverse-biased drain-step transient where `MJ` reduces the effective
+     `CBD` companion relative to the zero-bias capacitance.
+   - Charge-audit fixtures now record MOS bulk-junction storage as
+     depletion-shaped while preserving the same runnable one-device `.tran`
+     fixture shape.
 
 ## Backlog
 

@@ -131,6 +131,19 @@ class DeviceModelChargeBehaviorFixture:
     deck_lines: tuple[str, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class DeviceModelReferenceDeckAuditFixture:
+    """A reference-deck audit row for one model family and analysis kind."""
+
+    name: str
+    kind: str
+    model: NormalizedModelCard
+    analysis: str
+    reference: str
+    expected_behavior: str
+    deck_lines: tuple[str, ...]
+
+
 _MODEL_TYPE_ALIASES: dict[str, str] = {
     "D": "D",
     "DIODE": "D",
@@ -1076,3 +1089,74 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
             ),
         ),
     )
+
+
+def device_model_reference_deck_audit_fixtures() -> tuple[DeviceModelReferenceDeckAuditFixture, ...]:
+    """Return flattened reference-deck coverage rows for device-model audits."""
+
+    reference = "SPICE2/SPICE3-style local model-depth fixture"
+    rows: list[DeviceModelReferenceDeckAuditFixture] = []
+    for fixture in device_model_behavior_audit_fixtures():
+        rows.append(
+            DeviceModelReferenceDeckAuditFixture(
+                name=f"{fixture.name}:op",
+                kind=fixture.kind,
+                model=fixture.model,
+                analysis="op",
+                reference=reference,
+                expected_behavior=(
+                    f"DC probe {fixture.probe_node} remains in "
+                    f"[{fixture.expected_min:g}, {fixture.expected_max:g}] V"
+                ),
+                deck_lines=fixture.deck_lines,
+            )
+        )
+    for fixture in device_model_temperature_audit_fixtures():
+        rows.append(
+            DeviceModelReferenceDeckAuditFixture(
+                name=f"{fixture.name}:temperature",
+                kind=fixture.kind,
+                model=fixture.model,
+                analysis="temperature",
+                reference=reference,
+                expected_behavior=fixture.temperature_behavior,
+                deck_lines=fixture.deck_lines,
+            )
+        )
+    for fixture in device_model_capacitance_audit_fixtures():
+        rows.append(
+            DeviceModelReferenceDeckAuditFixture(
+                name=f"{fixture.name}:ac",
+                kind=fixture.kind,
+                model=fixture.model,
+                analysis="ac",
+                reference=reference,
+                expected_behavior=fixture.capacitance_behavior,
+                deck_lines=fixture.deck_lines,
+            )
+        )
+    for fixture in device_model_noise_audit_fixtures():
+        rows.append(
+            DeviceModelReferenceDeckAuditFixture(
+                name=f"{fixture.name}:noise",
+                kind=fixture.kind,
+                model=fixture.model,
+                analysis="noise",
+                reference=reference,
+                expected_behavior=fixture.noise_behavior,
+                deck_lines=fixture.deck_lines,
+            )
+        )
+    for fixture in device_model_charge_audit_fixtures():
+        rows.append(
+            DeviceModelReferenceDeckAuditFixture(
+                name=f"{fixture.name}:tran",
+                kind=fixture.kind,
+                model=fixture.model,
+                analysis="tran",
+                reference=reference,
+                expected_behavior=fixture.charge_behavior,
+                deck_lines=fixture.deck_lines,
+            )
+        )
+    return tuple(rows)

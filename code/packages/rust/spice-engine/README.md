@@ -147,6 +147,10 @@ BJT `base_emitter_capacitance` / `base_collector_capacitance` /
 also stamp transient storage, with MOS `bulk_junction_potential` /
 `bulk_junction_grading_coefficient` shaping reverse-biased source-body and
 drain-body capacitance to match their small-signal AC semantics.
+`device_model_reference_deck_audit_fixtures` flattens those DC, temperature,
+AC, noise, and transient fixture families into a stable reference-deck
+coverage matrix for each supported diode, BJT, JFET, and Level-1 MOS model
+family.
 
 `analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
 module shape and rejects dynamic/event/system constructs; it is not a full
