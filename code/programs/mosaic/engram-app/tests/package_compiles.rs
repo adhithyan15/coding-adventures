@@ -1,8 +1,11 @@
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::PathBuf;
 
+use engram_core_wasm::EngramSession;
 use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
 use mosaic_package_resolver::{Resolution, Resolver};
+use serde_json::Value;
 
 const COMPONENTS: &[&str] = &["EngramApp"];
 
@@ -78,6 +81,32 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert!(!source.contains("layout DeckStatsPanel"));
     assert!(!source.contains("layout ReviewCard"));
     assert!(!source.contains("layout SessionProgress"));
+}
+
+#[test]
+fn shared_engram_app_props_match_mosaic_slots() {
+    let mil = mosmodel_compiler::compile(&read_source("EngramApp.mil"))
+        .expect("EngramApp.mil should compile");
+    let expected_slots = mil
+        .component
+        .slots
+        .iter()
+        .map(|slot| slot.name.as_str())
+        .collect::<BTreeSet<_>>();
+
+    let session = EngramSession::new();
+    let props: Value = serde_json::from_str(&session.engram_app_props("", 0))
+        .expect("Engram app props should be valid JSON");
+    let prop_keys = props["props"]
+        .as_object()
+        .expect("props should be a JSON object")
+        .keys()
+        .map(String::as_str)
+        .collect::<BTreeSet<_>>();
+
+    assert_eq!(props["ok"], true);
+    assert_eq!(prop_keys, expected_slots);
+    assert_eq!(props["props"]["answer-visible"], false);
 }
 
 #[test]

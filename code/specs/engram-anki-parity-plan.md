@@ -355,6 +355,11 @@ Status:
 - `code/packages/rust/engram-capi` exposes the first native ABI over
   `engram-core-wasm`, including dispatch, snapshots/backups, queue/stats,
   generated cards, search, and CSV helpers.
+- `engram-core-wasm::EngramSession::engram_app_props` and
+  `eg_engram_app_props` return a flat props object keyed by the exact
+  `EngramApp.mil` Mosaic slots, giving HTML/React/native shells one shared
+  binding surface for deck stats, session progress, and the current review
+  card.
 - Native APKG byte-slice imports are now available through `eg_parse_anki_apkg`
   and `eg_import_anki_apkg`, backed by `engram-anki-package` and returning the
   same JSON result shape as other C ABI calls.
@@ -503,6 +508,9 @@ Status:
   `EngramApp -> SessionProgress`, and `EngramApp -> ReviewCard ->
   RatingControls` chains through HTML, React, SwiftUI, XAML, Qt, and Flutter
   artifacts.
+- The Engram app smoke test now compares `EngramSession::engram_app_props`
+  keys against the compiled `EngramApp.mil` slots, so shared core/facade
+  bindings fail fast when the Mosaic app interface changes.
 - `code/programs/mosaic/engram-app` adds the Engram Mosaic app package. The
   app exports `EngramApp`, declares dependencies on `mosaic-pkg-deck-stats`,
   `mosaic-pkg-review-card`, and `mosaic-pkg-session-progress`, and mounts

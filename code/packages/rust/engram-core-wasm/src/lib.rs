@@ -145,6 +145,13 @@ impl EngramSession {
         })
     }
 
+    pub fn engram_app_props(&self, deck_id: &str, now: u64) -> String {
+        catch_json(|| {
+            let props = engram_app_props_for_state(&self.state, deck_id, now);
+            Ok(ok_with("props", &props))
+        })
+    }
+
     pub fn review_history(
         &self,
         deck_id: &str,
@@ -352,6 +359,91 @@ impl EngramSession {
             }
         })
     }
+}
+
+fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Value {
+    let selected_deck_id = selected_deck_id(state, deck_id);
+    let deck = state.decks.iter().find(|deck| deck.id == selected_deck_id);
+    let deck_name = deck
+        .map(|deck| deck.name.clone())
+        .filter(|name| !name.is_empty())
+        .or_else(|| (!selected_deck_id.is_empty()).then(|| selected_deck_id.clone()))
+        .unwrap_or_else(|| "Deck".to_string());
+    let stats = get_deck_stats(
+        &state.cards,
+        &state.card_progress,
+        selected_deck_id.as_str(),
+        now,
+    );
+    let progress = get_active_session_progress(state);
+    let active_card = state
+        .active_session
+        .as_ref()
+        .and_then(|active| active.queue.get(active.current_index));
+    let hidden_count = stats.suspended_count + stats.buried_count;
+    let (current_value, remaining_value, correct_value, total_value, progress_label) =
+        if let Some(progress) = &progress {
+            (
+                format!("{} / {}", progress.current_position, progress.total_cards),
+                progress.remaining_cards.to_string(),
+                progress.cards_correct.to_string(),
+                progress.total_cards.to_string(),
+                format!(
+                    "Card {} of {}",
+                    progress.current_position, progress.total_cards
+                ),
+            )
+        } else {
+            (
+                "0 / 0".to_string(),
+                "0".to_string(),
+                "0".to_string(),
+                "0".to_string(),
+                "No active session".to_string(),
+            )
+        };
+
+    json!({
+        "app-title": "Engram",
+        "deck-name": deck_name,
+        "deck-stats-label": "Deck stats",
+        "deck-total-label": "Total",
+        "deck-total-value": stats.total.to_string(),
+        "deck-new-label": "New",
+        "deck-new-value": stats.new_count.to_string(),
+        "deck-due-label": "Due",
+        "deck-due-value": stats.due_count.to_string(),
+        "deck-learning-label": "Learning",
+        "deck-learning-value": stats.learning_count.to_string(),
+        "deck-hidden-label": "Hidden",
+        "deck-hidden-value": hidden_count.to_string(),
+        "prompt-label": "Prompt",
+        "prompt": active_card.map(|card| card.front.as_str()).unwrap_or("No cards queued"),
+        "answer-label": "Answer",
+        "answer": active_card.map(|card| card.back.as_str()).unwrap_or_default(),
+        "answer-visible": state.active_session.as_ref().is_some_and(|active| active.revealed),
+        "progress-label": progress_label,
+        "current-label": "Current",
+        "current-value": current_value,
+        "remaining-label": "Remaining",
+        "remaining-value": remaining_value,
+        "correct-label": "Correct",
+        "correct-value": correct_value,
+        "total-label": "Total",
+        "total-value": total_value,
+    })
+}
+
+fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
+    if !deck_id.is_empty() {
+        return deck_id.to_string();
+    }
+    state
+        .active_session
+        .as_ref()
+        .map(|active| active.deck_id.clone())
+        .or_else(|| state.decks.first().map(|deck| deck.id.clone()))
+        .unwrap_or_default()
 }
 
 #[derive(Deserialize)]
@@ -1139,6 +1231,53 @@ mod tests {
         assert_eq!(value["progress"]["cardsCorrect"], 1);
         assert_eq!(value["progress"]["revealed"], false);
         assert_eq!(value["progress"]["completed"], false);
+    }
+
+    #[test]
+    fn engram_app_props_shape_matches_mosaic_slots() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [
+                    {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                    {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+                ],
+                "startedAt": 1700000000000
+            }"#,
+        );
+        session.dispatch(r#"{"type": "revealCurrentCard"}"#);
+
+        let value: Value = serde_json::from_str(&session.engram_app_props("deck", NOW)).unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["props"]["app-title"], "Engram");
+        assert_eq!(value["props"]["deck-name"], "Tamil");
+        assert_eq!(value["props"]["deck-total-value"], "2");
+        assert_eq!(value["props"]["deck-new-value"], "2");
+        assert_eq!(value["props"]["prompt"], "letter-a");
+        assert_eq!(value["props"]["answer"], "a");
+        assert_eq!(value["props"]["answer-visible"], true);
+        assert_eq!(value["props"]["current-value"], "1 / 2");
+        assert_eq!(value["props"]["remaining-value"], "2");
+        assert_eq!(value["props"]["total-value"], "2");
     }
 
     #[test]

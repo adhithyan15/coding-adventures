@@ -37,6 +37,7 @@ char *eg_build_queue_with_daily_limits(
 );
 char *eg_deck_stats(EgSession *session, const char *deck_id, uint64_t now);
 char *eg_session_progress(EgSession *session);
+char *eg_engram_app_props(EgSession *session, const char *deck_id, uint64_t now);
 char *eg_review_history(
     EgSession *session,
     const char *deck_id,

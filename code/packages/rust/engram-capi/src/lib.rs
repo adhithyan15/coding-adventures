@@ -163,6 +163,18 @@ pub unsafe extern "C" fn eg_session_progress(session: *mut EgSession) -> *mut c_
 /// # Safety
 /// `session` must be valid; `deck_id` must be null or a valid C string.
 #[no_mangle]
+pub unsafe extern "C" fn eg_engram_app_props(
+    session: *mut EgSession,
+    deck_id: *const c_char,
+    now: u64,
+) -> *mut c_char {
+    let deck_id = read_cstr(deck_id);
+    with_session(session, |session| session.engram_app_props(&deck_id, now))
+}
+
+/// # Safety
+/// `session` must be valid; `deck_id` must be null or a valid C string.
+#[no_mangle]
 pub unsafe extern "C" fn eg_review_history(
     session: *mut EgSession,
     deck_id: *const c_char,
@@ -1136,6 +1148,38 @@ CREATE TABLE graves (
             assert!(progress.contains(r#""progress":{"#));
             assert!(progress.contains(r#""totalCards":1"#));
             assert!(progress.contains(r#""remainingCards":1"#));
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_engram_app_props_return_mosaic_slot_json() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "noteTypes": [],
+                    "notes": [],
+                    "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            take(eg_load_snapshot(session, snapshot.as_ptr()));
+
+            let deck_id = cstr("deck");
+            let props = take(eg_engram_app_props(session, deck_id.as_ptr(), NOW));
+            let props: Value = serde_json::from_str(&props).unwrap();
+
+            assert_eq!(props["ok"], true);
+            assert_eq!(props["props"]["app-title"], "Engram");
+            assert_eq!(props["props"]["deck-name"], "Tamil");
+            assert_eq!(props["props"]["deck-total-value"], "1");
+            assert_eq!(props["props"]["answer-visible"], false);
 
             eg_session_free(session);
         }
