@@ -239,6 +239,62 @@ fn twig_typed_let_star_with_arithmetic() {
     }
 }
 
+/// E4 op-composition proof: a typed `string-append` result can feed
+/// `string-ref` without falling back to the dynamic builtin path.
+#[test]
+fn twig_local_string_concat_can_feed_index() {
+    let m = compile_source(
+        "(let ((a \"AB\") (b \"CDE\") (i 3)) (string-ref (string-append a b) i))",
+        "compat",
+    )
+    .expect("Twig must compile");
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+
+    let concat = main
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_concat")
+        .expect("string-append should lower to str_concat");
+    let concat_dest = concat
+        .dest
+        .as_deref()
+        .expect("str_concat should write a string temp");
+    let index = main
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_index")
+        .expect("string-ref should lower to str_index");
+    assert!(
+        matches!(index.srcs.first(), Some(Operand::Var(v)) if v == concat_dest),
+        "str_index should consume the str_concat result; concat={concat:?}, index={index:?}",
+    );
+    assert!(
+        !main.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s)
+                    if s == "string-append" || s == "string-ref")
+        }),
+        "typed E4 string path must not use dynamic string builtins: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept local `str_concat` feeding `str_index`; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
 /// Path-A increment 5: `match` arms now use typed `mov` everywhere
 /// (scrutinee binding, nil-init, variant arm result merge, field
 /// extraction, body merge for variant / binding / wildcard arms).
