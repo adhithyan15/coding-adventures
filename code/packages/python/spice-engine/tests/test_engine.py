@@ -243,6 +243,7 @@ from spice_engine import (
     format_deck_wrdata_artifact_json,
     format_deck_wrdata_artifact_table,
     format_deck_wrdata_ascii,
+    format_device_model_reference_deck_audit_table,
     format_digital_bridge_schedule_table,
     format_digital_event_stream_table,
     format_digital_event_stream_vcd,
@@ -591,6 +592,25 @@ def test_device_model_reference_deck_audit_fixtures_cover_model_depth_matrix() -
         assert fixture.deck_lines[0].startswith("* device-model ")
         assert any(line.startswith(".model ") for line in fixture.deck_lines)
         assert fixture.deck_lines[-1] == ".end"
+
+
+def test_device_model_reference_deck_audit_table_is_stable() -> None:
+    table = format_device_model_reference_deck_audit_table()
+    lines = table.splitlines()
+    assert len(lines) == 21
+    assert lines[0] == "name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines"
+    assert lines[1] == (
+        "diode-forward-bias:op\tD\top\tDfast\t"
+        "SPICE2/SPICE3-style local model-depth fixture\t"
+        "DC probe out remains in [0.55, 0.65] V\t8"
+    )
+    assert lines[-1] == (
+        "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\t"
+        "SPICE2/SPICE3-style local model-depth fixture\t"
+        "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient "
+        "gate-overlap and depletion-shaped bulk-junction storage; explicit "
+        "Cstore keeps the fixture comparable with other charge audits\t10"
+    )
 
 
 def test_transient_diode_junction_capacitance_slows_current_step() -> None:

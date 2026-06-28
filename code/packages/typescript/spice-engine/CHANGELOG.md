@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `formatDeviceModelReferenceDeckAuditTable`, a stable tab-separated
+  summary for the device-model reference-deck audit matrix, matching Python
+  and Rust.
 - Add `deviceModelReferenceDeckAuditFixtures`, a stable reference coverage
   matrix across DC, temperature, AC, noise, and transient model-depth fixtures
   for diode, BJT, JFET, and Level-1 MOS families, matching Python and Rust.
