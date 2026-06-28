@@ -249,27 +249,31 @@ Formats:
   `engram-anki-package` now provides the archive-inspection foundation for
   legacy and modern collection members plus legacy JSON media maps, and can
   resolve media payloads or write deterministic legacy package envelopes from
-  existing `collection.anki2` bytes plus media assets; SQLite collection
-  import/export remains.
+  existing `collection.anki2` bytes plus media assets. It also parses
+  legacy/V11 SQLite collection bytes into owned Anki decks, note types, notes,
+  cards, revlog rows, and graves; mapping those parsed structs into
+  `engram-core::AppState` remains.
 
 Next APKG SQLite milestone:
 
 - Target Anki legacy/V11 collection files first (`collection.anki2` and
-  `collection.anki21`), mapping `col`, `notes`, `cards`, `revlog`, and
-  `graves` into `engram-core::AppState`. `engram-anki-package` now exposes
+  `collection.anki21`). `engram-anki-package` now exposes
+  `read_v11_collection`, `parse_v11_collection_bytes`, and
   `read_v11_collection_bytes` as the package boundary for this reader.
 - Keep `collection.anki21b` detected but explicitly unsupported until Engram
   adds modern package handling for V18, zstd-compressed collection payloads, and
   protobuf media entries.
-- Add a real SQLite-file dependency in `engram-anki-package`; do not move
-  APKG-specific parsing into `engram-core`.
-- Import V11 decks from `col.decks`, models from `col.models`, notes from
-  `notes.flds`/`notes.tags`, card lineage from `cards.nid`/`cards.ord`, and
-  review history from `revlog.ease`/`revlog.id`.
+- Added a real SQLite-file dependency in `engram-anki-package`; APKG-specific
+  parsing remains outside `engram-core`.
+- Next: map parsed V11 decks from `col.decks`, models from `col.models`, notes
+  from `notes.flds`/`notes.tags`, card lineage from `cards.nid`/`cards.ord`,
+  and review history from `revlog.ease`/`revlog.id` into
+  `engram-core::AppState`.
 - Export the first APKG as a deterministic legacy package with reset scheduling
   before attempting full scheduling fidelity.
-- Test with SQL-built V11 fixtures, package round-trips through the existing ZIP
-  envelope helpers, and a small checked-in Anki-generated golden fixture.
+- SQL-built V11 fixtures and package round-trips through the existing ZIP
+  envelope helpers now cover the parser. Next: add a small checked-in
+  Anki-generated golden fixture.
 
 Tests:
 
