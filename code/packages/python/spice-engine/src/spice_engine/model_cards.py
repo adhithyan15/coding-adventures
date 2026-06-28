@@ -888,11 +888,10 @@ def device_model_noise_audit_fixtures() -> tuple[DeviceModelNoiseBehaviorFixture
 def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixture, ...]:
     """Return runnable transient storage fixtures for charge model-depth audits.
 
-    Diode CJO/TT and BJT CJE/CJC/TF/TR model-card storage is
-    transient-stamped by the simulator. JFET fixed gate-source/gate-drain
-    storage is also transient-stamped; Level-1 MOS charge state is still
-    audited through explicit terminal storage capacitors until nonlinear charge
-    policies land.
+    Diode CJO/TT, BJT CJE/CJC/TF/TR, JFET fixed gate-source/gate-drain, and
+    Level-1 MOS fixed gate-overlap storage are transient-stamped by the
+    simulator. Level-1 MOS bulk junction charge is still audited through
+    explicit terminal storage capacitors until nonlinear charge policies land.
     """
 
     models = _model_card_by_name()
@@ -926,11 +925,25 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
     jfet_circuit.add(jfet_from_model_card("J1", "drain", "gate", "source", jfet_model))
     jfet_circuit.add(Capacitor("Cstore", "source", "0", storage_capacitance_f))
 
+    mos_model = normalize_model_card(
+        "Mn",
+        "NMOS",
+        {
+            "LEVEL": 1.0,
+            "VTO": 0.55,
+            "LAMBDA": 0.04,
+            "NSUB": 1.6,
+            "CGSO": 2.0e-11,
+            "CGDO": 5.0e-12,
+            "CGBO": 1.0e-12,
+            "CBD": 3.0e-13,
+        },
+    )
     mos_circuit = Circuit()
     mos_circuit.add(VoltageSource("Vdd", "vdd", "0", 1.8))
     mos_circuit.add(VoltageSource("Vgate", "gate", "0", 1.8))
     mos_circuit.add(Resistor("Rload", "vdd", "out", 1_000.0))
-    mos_circuit.add(mosfet_from_model_card("M1", "out", "gate", "0", "0", models["Mn"]))
+    mos_circuit.add(mosfet_from_model_card("M1", "out", "gate", "0", "0", mos_model))
     mos_circuit.add(Capacitor("Cstore", "out", "0", storage_capacitance_f))
 
     return (
@@ -1027,8 +1040,8 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
         ),
         DeviceModelChargeBehaviorFixture(
             name="mos-level1-storage-charge",
-            kind=models["Mn"].kind,
-            model=models["Mn"],
+            kind=mos_model.kind,
+            model=mos_model,
             circuit=mos_circuit,
             probe_node="out",
             time_step_s=time_step_s,
@@ -1039,12 +1052,12 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
             expected_final_min=0.68,
             expected_final_max=0.73,
             charge_behavior=(
-                "Level-1 MOS terminal charge is conserved through explicit Cstore; "
-                "overlap and junction capacitances remain AC-only until nonlinear charge stamping lands"
+                "Level-1 MOS CGSO/CGDO/CGBO contribute transient gate-overlap storage; "
+                "explicit Cstore keeps the fixture comparable while bulk junction charge remains AC-only"
             ),
             deck_lines=(
                 "* device-model charge fixture: mos-level1-storage-charge",
-                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBD=3e-13)",
                 "Vdd vdd 0 1.8",
                 "Vgate gate 0 1.8",
                 "Rload vdd out 1k",

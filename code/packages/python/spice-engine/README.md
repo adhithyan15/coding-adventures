@@ -215,8 +215,10 @@ JFET and Level-1 MOS channel thermal noise audits.
 metadata, explicit terminal storage capacitance metadata, stable first/final
 probe-voltage windows, and charge-behavior notes for diode, BJT, JFET, and
 Level-1 MOS charge audits. Diode `Cjo` / `Tt`, BJT `Cje` / `Cjc` / `Tf` /
-`Tr`, and JFET `Cgs` / `Cgd` model-card parameters also stamp transient
-storage, matching their small-signal AC capacitance semantics.
+`Tr`, JFET `Cgs` / `Cgd`, and Level-1 MOS `CGSO` / `CGDO` / `CGBO`
+model-card parameters also stamp transient storage, matching their
+small-signal AC capacitance semantics. MOS bulk junction `CBS` / `CBD` remains
+AC-only until nonlinear junction-charge stamping lands.
 
 `DigitalEventStream`, `DigitalLogicLevels`, and `DigitalThresholds` provide the
 first mixed-signal bridge surface: digital event streams can drive finite-edge

@@ -552,6 +552,8 @@ def test_device_model_charge_audit_fixtures_run_reference_transients() -> None:
 
     jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
     assert "CGS/CGD" in jfet_fixture.charge_behavior
+    mos_fixture = next(fixture for fixture in fixtures if fixture.kind == "NMOS")
+    assert "CGSO/CGDO/CGBO" in mos_fixture.charge_behavior
 
 
 def test_transient_diode_junction_capacitance_slows_current_step() -> None:
@@ -593,6 +595,43 @@ def test_transient_jfet_gate_source_capacitance_slows_gate_step() -> None:
         circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
         circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
         circuit.add(JFET("J1", "drain", "gate", "0", beta=1.0e-12, vto=-2.0, Cgs=cgs))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["gate"]
+    charged_first = charged.points[1].node_voltages["gate"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_overlap_capacitance_slows_gate_step() -> None:
+    def run(cgso: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
+        circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "gate",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CGSO=cgso)),
+            ),
+        ))
         return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
 
     uncharged = run(0.0)

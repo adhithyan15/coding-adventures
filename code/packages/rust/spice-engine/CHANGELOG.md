@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Stamp Level-1 MOS `gate_source_overlap_capacitance`,
+  `gate_drain_overlap_capacitance`, and `gate_bulk_overlap_capacitance`
+  model-card storage as transient gate-source, gate-drain, and gate-body
+  companions, matching Python and TypeScript, with regression coverage for
+  gate-step delay. Bulk junction capacitance remains AC-only until nonlinear
+  junction-charge stamping lands.
 - Stamp JFET `gate_source_capacitance` and `gate_drain_capacitance`
   model-card storage as transient gate-source and gate-drain companions and AC
   susceptance, matching Python and TypeScript, with regression coverage for

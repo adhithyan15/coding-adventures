@@ -205,8 +205,10 @@ probe-voltage windows, and charge-behavior notes for diode, BJT, JFET, and
 Level-1 MOS charge audits. Diode `junctionCapacitance` / `transitTime`, BJT
 `baseEmitterCapacitance` / `baseCollectorCapacitance` / `forwardTransitTime` /
 `reverseTransitTime`, and JFET `gateSourceCapacitance` /
-`gateDrainCapacitance` model-card parameters also stamp transient storage,
-matching their small-signal AC capacitance semantics.
+`gateDrainCapacitance` plus Level-1 MOS `CGSO` / `CGDO` / `CGBO` model-card
+parameters also stamp transient storage, matching their small-signal AC
+capacitance semantics. MOS bulk junction `CBS` / `CBD` remains AC-only until
+nonlinear junction-charge stamping lands.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.
