@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Device model reference-deck audit fixtures** —
+  `device_model_reference_deck_audit_fixtures()` now exposes a stable
+  reference coverage matrix across DC, temperature, AC, noise, and transient
+  model-depth fixtures for diode, BJT, JFET, and Level-1 MOS families,
+  matching Rust and TypeScript.
+
 - **MOS Level-1 bulk-junction depletion charge shaping** —
   Level-1 MOS `PB`/`MJ` model-card parameters now shape reverse-biased
   `CBS`/`CBD` bulk-junction capacitance for AC operating-point capacitance

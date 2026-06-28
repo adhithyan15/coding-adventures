@@ -23,6 +23,7 @@ import {
   dcTemperatureSweepCorners,
   deviceModelAuditFixtures,
   deviceModelBehaviorAuditFixtures,
+  deviceModelReferenceDeckAuditFixtures,
   deviceModelTemperatureAuditFixtures,
   diode,
   diodeFromModelCard,
@@ -186,6 +187,40 @@ describe("dcOp", () => {
 
     const jfetFixture = fixtures.find((fixture) => fixture.kind === "NJF");
     expect(jfetFixture?.temperatureBehavior.startsWith("JFET temperature scaling is intentionally")).toBe(true);
+  });
+
+  it("summarizes device model reference deck audit fixture coverage", () => {
+    const fixtures = deviceModelReferenceDeckAuditFixtures();
+    expect(fixtures).toHaveLength(20);
+    expect(fixtures[0]!.name).toBe("diode-forward-bias:op");
+    expect(fixtures.at(-1)!.name).toBe("mos-level1-storage-charge:tran");
+
+    const expectedAnalyses = ["ac", "noise", "op", "temperature", "tran"];
+    expect([...new Set(fixtures.map((fixture) => fixture.kind))].sort()).toStrictEqual([
+      "D",
+      "NJF",
+      "NMOS",
+      "NPN",
+    ]);
+    for (const kind of ["D", "NPN", "NJF", "NMOS"]) {
+      expect(
+        [
+          ...new Set(
+            fixtures
+              .filter((fixture) => fixture.kind === kind)
+              .map((fixture) => fixture.analysis),
+          ),
+        ].sort(),
+      ).toStrictEqual(expectedAnalyses);
+    }
+
+    for (const fixture of fixtures) {
+      expect(fixture.reference).toBe("SPICE2/SPICE3-style local model-depth fixture");
+      expect(fixture.expectedBehavior.length).toBeGreaterThan(0);
+      expect(fixture.deckLines[0]!.startsWith("* device-model ")).toBe(true);
+      expect(fixture.deckLines.some((line) => line.startsWith(".model "))).toBe(true);
+      expect(fixture.deckLines.at(-1)).toBe(".end");
+    }
   });
 
   it("rejects non-Level-1 MOS model cards explicitly", () => {
