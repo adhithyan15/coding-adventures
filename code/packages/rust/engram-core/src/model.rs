@@ -20,6 +20,70 @@ pub struct Card {
     pub created_at: u64,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct FieldDef {
+    pub id: String,
+    pub name: String,
+    pub required: bool,
+    pub ordinal: u32,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct CardTemplate {
+    pub id: String,
+    pub name: String,
+    pub front_template: String,
+    pub back_template: String,
+    pub required_field_names: Vec<String>,
+    pub ordinal: u32,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct NoteType {
+    pub id: String,
+    pub name: String,
+    pub fields: Vec<FieldDef>,
+    pub templates: Vec<CardTemplate>,
+    pub created_at: u64,
+    pub updated_at: u64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct NoteFieldValue {
+    pub field_id: String,
+    pub value: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct Note {
+    pub id: String,
+    pub note_type_id: String,
+    pub deck_id: String,
+    pub fields: Vec<NoteFieldValue>,
+    pub tags: Vec<String>,
+    pub created_at: u64,
+    pub updated_at: u64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct GeneratedCard {
+    pub id: String,
+    pub note_id: String,
+    pub note_type_id: String,
+    pub template_id: String,
+    pub deck_id: String,
+    pub ordinal: u32,
+    pub front: String,
+    pub back: String,
+    pub tags: Vec<String>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct CardProgress {
@@ -87,6 +151,8 @@ pub struct ActiveSessionState {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct AppState {
     pub decks: Vec<Deck>,
+    pub note_types: Vec<NoteType>,
+    pub notes: Vec<Note>,
     pub cards: Vec<Card>,
     pub card_progress: Vec<CardProgress>,
     pub sessions: Vec<Session>,

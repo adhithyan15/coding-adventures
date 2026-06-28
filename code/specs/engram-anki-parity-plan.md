@@ -12,6 +12,12 @@ organization, media, search, review history, offline-first persistence, and
 large personal collections. The larger language-learning app can then use
 Engram as its memory substrate.
 
+Engram must remain one product codebase. XAML, SwiftUI for macOS and iOS,
+Electron, Qt, HTML, and any future shell should consume the same core model,
+commands, generated UI contracts, and fixture suite. Target-specific projects
+may own packaging and platform integration, but they must not fork product
+logic or manually reimplement study behavior.
+
 ## Architecture Direction
 
 Engram follows the same pattern as the VisiCalc demos:
@@ -19,7 +25,11 @@ Engram follows the same pattern as the VisiCalc demos:
 ```text
 React Engram app
 Mosaic-generated UI
-native shells
+HTML shell
+Electron shell
+XAML shell
+SwiftUI macOS/iOS shell
+Qt shell
         |
         v
 engram-wasm / engram-capi / platform facades
@@ -39,6 +49,9 @@ storage, IDs, timestamps, file pickers, audio playback, and sync transport.
 - Core learning logic lives in Rust.
 - Host apps pass timestamps and IDs into the core.
 - No UI dependencies in `engram-core`.
+- No target shell gets a private copy of scheduling, search, import/export, or
+  card-generation logic.
+- Cross-target behavior is verified by shared fixtures wherever possible.
 - Data migrations are explicit and tested.
 - Import/export is round-trippable wherever practical.
 - Mobile web is a first-class target, not an afterthought.
@@ -281,10 +294,16 @@ Emit React first, then validate one native target.
 
 Suggested order:
 
-1. React, because Engram already runs there.
-2. Flutter or Qt, because current Mosaic tests show practical backend coverage.
-3. Compose/SwiftUI as the native-mobile strategic targets.
-4. XAML after Windows shell needs are clearer.
+1. HTML/React, because Engram already runs there and Electron can wrap it.
+2. Qt and XAML, because current Mosaic tests show practical desktop backend
+   coverage.
+3. SwiftUI for macOS and iOS, because Apple-native support is a first-class
+   target.
+4. Flutter/Compose as additional mobile/runtime validation paths.
+
+Each target should consume generated components and the same `engram-core`
+facade contract. If a target needs special behavior, add the capability to the
+shared contract first, then let each shell bind to it.
 
 ## Initial Autonomous Loop
 
@@ -337,4 +356,3 @@ environment:
 set CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=link.exe
 cargo test -p engram-core
 ```
-

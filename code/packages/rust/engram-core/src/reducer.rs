@@ -113,6 +113,13 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     .filter(|deck| deck.id != deck_id)
                     .cloned()
                     .collect(),
+                note_types: state.note_types.clone(),
+                notes: state
+                    .notes
+                    .iter()
+                    .filter(|note| note.deck_id != deck_id)
+                    .cloned()
+                    .collect(),
                 cards: state
                     .cards
                     .iter()
@@ -374,6 +381,8 @@ mod tests {
                 description: String::new(),
                 created_at: NOW,
             }],
+            note_types: Vec::new(),
+            notes: Vec::new(),
             cards: vec![card("card")],
             card_progress: vec![CardProgress {
                 card_id: "card".to_string(),
