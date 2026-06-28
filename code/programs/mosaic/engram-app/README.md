@@ -24,6 +24,9 @@ binds them to the shared Rust business logic core through host shells.
 - `EngramApp.dark.msl` owns app-shell styling only.
 - Package artifact builds inline component-package styles through the full
   dependency chain.
+- Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
+  expose the same Engram host contract slots and review events as the shared
+  Rust `EngramSession::engram_app_props` facade.
 
 ## Running the smoke test
 

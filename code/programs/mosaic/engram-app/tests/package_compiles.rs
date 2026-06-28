@@ -273,6 +273,61 @@ fn app_package_emits_native_project_shells() {
 }
 
 #[test]
+fn native_project_shells_expose_engram_host_contract() {
+    let tmp = tempfile::tempdir().expect("temp dist root");
+    for backend in [Backend::Qt, Backend::SwiftUI, Backend::Xaml] {
+        build_package(&BuildOptions {
+            package_root: package_root(),
+            output_root: tmp.path().to_path_buf(),
+            backend,
+            emit_project: true,
+        })
+        .unwrap_or_else(|e| panic!("{backend:?} should emit EngramApp project shell: {e}"));
+    }
+
+    let qml =
+        fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");
+    assert_contains(&qml, "property string appTitle");
+    assert_contains(&qml, "property bool answerVisible");
+    assert_contains(&qml, "signal reveal()");
+    assert_contains(&qml, "signal good()");
+
+    let swift = fs::read_to_string(tmp.path().join("swiftui").join("EngramApp.swift"))
+        .expect("EngramApp.swift");
+    assert_contains(&swift, "enum EngramAppEvent {");
+    assert_contains(&swift, "case reveal");
+    assert_contains(&swift, "case good");
+    assert_contains(&swift, "struct EngramAppView: View");
+    assert_contains(&swift, "let appTitle: String");
+    assert_contains(&swift, "let answerVisible: Bool");
+
+    let xaml_code_behind =
+        fs::read_to_string(tmp.path().join("xaml").join("EngramApp.xaml.cs"))
+            .expect("EngramApp.xaml.cs");
+    assert_contains(&xaml_code_behind, "public static readonly DependencyProperty AppTitleProperty");
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty AnswerVisibleProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public event EventHandler<EngramAppEvent>? Dispatch;",
+    );
+
+    let xaml_events = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.Event.cs"))
+        .expect("EngramApp.Event.cs");
+    assert_contains(&xaml_events, "public sealed record Reveal() : EngramAppEvent;");
+    assert_contains(&xaml_events, "public sealed record Good() : EngramAppEvent;");
+}
+
+fn assert_contains(haystack: &str, needle: &str) {
+    assert!(
+        haystack.contains(needle),
+        "expected generated artifact to contain `{needle}`"
+    );
+}
+
+#[test]
 fn source_tree_has_expected_shape() {
     let expected = ["EngramApp.mil", "EngramApp.mll", "EngramApp.dark.msl"];
     for name in expected {
