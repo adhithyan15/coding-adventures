@@ -10,9 +10,9 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
     build_session_queue, create_engram_snapshot, export_cards_csv, generate_cards_for_note,
-    get_deck_stats, import_cards_csv, reduce, restore_engram_snapshot,
-    search_cards as search_core_cards, AppState, Card, CardFlag, DeckOptions, EngramSnapshot,
-    Rating,
+    get_deck_stats, import_basic_cards_csv, import_cards_csv, reduce, restore_engram_snapshot,
+    search_cards as search_core_cards, AppState, BasicCardCsvImportOptions, Card, CardFlag,
+    DeckOptions, EngramSnapshot, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -135,6 +135,26 @@ impl EngramSession {
         catch_json(|| match import_cards_csv(csv) {
             Ok(cards) => Ok(ok_with("cards", &cards)),
             Err(error) => Ok(error_json_with_row(&error.message, error.row)),
+        })
+    }
+
+    pub fn parse_basic_cards_csv(
+        &self,
+        csv: &str,
+        deck_id: &str,
+        id_prefix: &str,
+        created_at: u64,
+    ) -> String {
+        catch_json(|| {
+            let options = BasicCardCsvImportOptions {
+                deck_id: deck_id.to_string(),
+                id_prefix: id_prefix.to_string(),
+                created_at,
+            };
+            match import_basic_cards_csv(csv, &options) {
+                Ok(cards) => Ok(ok_with("cards", &cards)),
+                Err(error) => Ok(error_json_with_row(&error.message, error.row)),
+            }
         })
     }
 }
@@ -693,6 +713,34 @@ mod tests {
             serde_json::from_str(&session.parse_cards_csv("front,back\nx,y\n")).unwrap();
         assert_eq!(error["ok"], false);
         assert_eq!(error["row"], 1);
+    }
+
+    #[test]
+    fn parse_basic_cards_csv_generates_deterministic_cards() {
+        let session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.parse_basic_cards_csv(
+            "front,back\nletter-a,a\nletter-aa,aa\n",
+            "deck",
+            "import",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["cards"][0]["id"], "import-1");
+        assert_eq!(value["cards"][0]["deckId"], "deck");
+        assert_eq!(value["cards"][0]["createdAt"], NOW);
+        assert_eq!(value["cards"][1]["id"], "import-2");
+
+        let error: Value = serde_json::from_str(&session.parse_basic_cards_csv(
+            "front,back\nfront\n",
+            "deck",
+            "import",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(error["ok"], false);
+        assert_eq!(error["row"], 2);
     }
 
     #[test]

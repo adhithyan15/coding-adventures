@@ -97,6 +97,9 @@ Current reducer integration:
   Engram JSON backup shape in Rust and are exposed through the JSON facade.
 - `export_cards_csv` / `import_cards_csv` define a strict round-trippable card
   CSV shape and are exposed through JSON facade helpers for host preview flows.
+- `import_basic_cards_csv` accepts simpler `front,back` CSV and uses
+  host-supplied deck/timestamp/ID prefix options for deterministic generated
+  cards.
 
 ### 1.2 Notes and Card Templates
 
@@ -185,8 +188,8 @@ Formats:
 
 - Engram JSON collection snapshot. Initial Rust core and JSON facade support
   exists and accepts the current web backup shape.
-- CSV deck import/export. Initial Rust support exists for card CSV round-trips
-  with full IDs/timestamps; user-friendly generated-ID import remains.
+- CSV deck import/export. Initial Rust support exists for full card CSV
+  round-trips and simpler generated-ID `front,back` imports.
 - Anki TSV text export compatibility
 - APKG import/export eventually, via a dedicated facade or package crate
 
@@ -196,7 +199,8 @@ Tests:
   active-session clearing, web backup compatibility, and validation errors.
 - CSV escaping and line ending behavior. Initial core tests cover quoting,
   embedded newlines, CRLF, blank rows, and shape errors.
-- Import produces deterministic IDs when caller supplies an ID strategy.
+- Import produces deterministic IDs when caller supplies an ID strategy. Initial
+  support exists through `BasicCardCsvImportOptions`.
 
 ## Workstream 2: Facades
 

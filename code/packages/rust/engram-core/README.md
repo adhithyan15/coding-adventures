@@ -65,7 +65,9 @@ backup shape. Backups include durable collection data and clear any live
 `active_session` when restored.
 
 `export_cards_csv` and `import_cards_csv` provide a strict card CSV round-trip
-format with the header `id,deckId,front,back,createdAt`.
+format with the header `id,deckId,front,back,createdAt`. `import_basic_cards_csv`
+accepts simpler `front,back` rows and uses host-supplied deck/timestamp/ID
+prefix options to create deterministic cards.
 
 This crate does not own:
 

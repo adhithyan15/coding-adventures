@@ -37,6 +37,7 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `search_cards(query, now)`
 - `export_cards_csv(deck_id)`
 - `parse_cards_csv(csv)`
+- `parse_basic_cards_csv(csv, deck_id, id_prefix, created_at)`
 
 All JSON uses camelCase field names to match the existing TypeScript Engram app
 and keep generated bindings idiomatic.
@@ -72,3 +73,5 @@ collection data, clearing any live active session.
 `export_cards_csv` and `parse_cards_csv` expose the shared card CSV helpers.
 Hosts still own file picking, conflict handling, and whether parsed cards are
 inserted, merged, or previewed.
+`parse_basic_cards_csv` supports simpler `front,back` files and deterministic
+ID generation from host-supplied import options.
