@@ -43,6 +43,12 @@ char *eg_review_history(
     uint64_t reviewed_before
 );
 char *eg_generated_cards(EgSession *session, const char *note_type_id, const char *note_id);
+char *eg_materialized_cards(
+    EgSession *session,
+    const char *note_type_id,
+    const char *note_id,
+    uint64_t created_at
+);
 char *eg_search_cards(EgSession *session, const char *query, uint64_t now);
 char *eg_export_cards_csv(EgSession *session, const char *deck_id);
 char *eg_export_anki_basic_tsv(

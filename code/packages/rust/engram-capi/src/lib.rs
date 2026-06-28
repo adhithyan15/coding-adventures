@@ -186,6 +186,22 @@ pub unsafe extern "C" fn eg_generated_cards(
 }
 
 /// # Safety
+/// `session` must be valid; string arguments must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_materialized_cards(
+    session: *mut EgSession,
+    note_type_id: *const c_char,
+    note_id: *const c_char,
+    created_at: u64,
+) -> *mut c_char {
+    let note_type_id = read_cstr(note_type_id);
+    let note_id = read_cstr(note_id);
+    with_session(session, |session| {
+        session.materialized_cards(&note_type_id, &note_id, created_at)
+    })
+}
+
+/// # Safety
 /// `session` must be valid; `query` must be null or a valid C string.
 #[no_mangle]
 pub unsafe extern "C" fn eg_search_cards(
@@ -367,6 +383,70 @@ mod tests {
                 NOW,
             ));
             assert!(imported.contains(r#""id":"import-1""#));
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_materialized_cards_return_lineage_json() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "noteTypes": [{
+                        "id": "basic",
+                        "name": "Basic",
+                        "fields": [
+                            {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                            {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                        ],
+                        "templates": [{
+                            "id": "forward",
+                            "name": "Forward",
+                            "frontTemplate": "{{Front}}",
+                            "backTemplate": "{{Back}}",
+                            "requiredFieldNames": ["Front", "Back"],
+                            "ordinal": 0
+                        }],
+                        "createdAt": 1700000000000,
+                        "updatedAt": 1700000000000
+                    }],
+                    "notes": [{
+                        "id": "note",
+                        "noteTypeId": "basic",
+                        "deckId": "deck",
+                        "fields": [
+                            {"fieldId": "front", "value": "letter-a"},
+                            {"fieldId": "back", "value": "a"}
+                        ],
+                        "tags": ["tamil"],
+                        "createdAt": 1700000000000,
+                        "updatedAt": 1700000000000
+                    }],
+                    "cards": [],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            take(eg_load_snapshot(session, snapshot.as_ptr()));
+
+            let note_type_id = cstr("basic");
+            let note_id = cstr("note");
+            let cards = take(eg_materialized_cards(
+                session,
+                note_type_id.as_ptr(),
+                note_id.as_ptr(),
+                NOW + 1,
+            ));
+
+            assert!(cards.contains(r#""id":"note::forward""#));
+            assert!(cards.contains(r#""createdAt":1700000000001"#));
+            assert!(cards.contains(r#""lineage":{"#));
+            assert!(cards.contains(r#""templateId":"forward""#));
 
             eg_session_free(session);
         }

@@ -34,6 +34,8 @@ views that need deck-scoped review-log summaries over a timestamp range.
 daily limit accounting and queue builder for native review screens.
 `eg_export_anki_basic_tsv` exposes the shared Anki-compatible Basic front/back
 text export for native file-save flows.
+`eg_materialized_cards` mirrors the JSON facade's durable generated-card
+materialization for native note/template editors.
 Native shells can send review-control commands such as `buryCardSiblings`
 through `eg_dispatch`, using the same JSON contract as web and Mosaic hosts.
 

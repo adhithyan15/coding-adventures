@@ -38,6 +38,7 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `session_progress()`
 - `review_history(deck_id, reviewed_after, reviewed_before)`
 - `generated_cards(note_type_id, note_id)`
+- `materialized_cards(note_type_id, note_id, created_at)`
 - `search_cards(query, now)`
 - `export_cards_csv(deck_id)`
 - `export_anki_basic_tsv(deck_id, deck_name, note_type_name, html)`
@@ -73,6 +74,10 @@ browsers can filter them without changing scheduling behavior.
 `search_cards` exposes the shared browser-query engine. It returns
 `{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for
 parser diagnostics.
+
+`materialized_cards` returns generated note-template cards as durable `Card`
+records with `lineage`, ready for hosts to insert into snapshots and review
+queues without rebuilding note/template provenance per platform.
 
 `session_progress` returns `{ ok: true, progress }`, where `progress` is null
 without an active session or contains shared review counters such as

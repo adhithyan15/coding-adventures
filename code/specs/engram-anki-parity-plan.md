@@ -96,6 +96,8 @@ Current reducer integration:
 - Durable cards can carry optional note/template lineage, and
   `BuryCardSiblings` uses that lineage to bury same-note sibling cards until a
   host-provided boundary.
+- Generated note-template cards can be materialized into durable `Card` records
+  with lineage through the JSON facade and C ABI.
 - `create_engram_snapshot` / `restore_engram_snapshot` define the versioned
   Engram JSON backup shape in Rust and are exposed through the JSON facade.
 - `export_cards_csv` / `import_cards_csv` define a strict round-trippable card

@@ -12,10 +12,10 @@ use engram_core::{
     build_session_queue, build_session_queue_with_daily_limits, create_engram_snapshot,
     export_cards_anki_basic_tsv, export_cards_csv, generate_cards_for_note,
     get_active_session_progress, get_daily_study_limit_usage, get_deck_stats,
-    import_basic_cards_csv, import_cards_csv, reduce, restore_engram_snapshot,
-    search_cards as search_core_cards, summarize_review_history, AnkiBasicTsvExportOptions,
-    AppState, BasicCardCsvImportOptions, Card, CardFlag, CardLineage, DeckOptions, EngramSnapshot,
-    Rating,
+    import_basic_cards_csv, import_cards_csv, materialize_generated_card, reduce,
+    restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history,
+    AnkiBasicTsvExportOptions, AppState, BasicCardCsvImportOptions, Card, CardFlag, CardLineage,
+    DeckOptions, EngramSnapshot, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -167,6 +167,28 @@ impl EngramSession {
                 .find(|note| note.id == note_id)
                 .ok_or_else(|| format!("unknown note: {note_id}"))?;
             let cards = generate_cards_for_note(note_type, note);
+            Ok(ok_with("cards", &cards))
+        })
+    }
+
+    pub fn materialized_cards(&self, note_type_id: &str, note_id: &str, created_at: u64) -> String {
+        catch_json(|| {
+            let note_type = self
+                .state
+                .note_types
+                .iter()
+                .find(|note_type| note_type.id == note_type_id)
+                .ok_or_else(|| format!("unknown note type: {note_type_id}"))?;
+            let note = self
+                .state
+                .notes
+                .iter()
+                .find(|note| note.id == note_id)
+                .ok_or_else(|| format!("unknown note: {note_id}"))?;
+            let cards: Vec<Card> = generate_cards_for_note(note_type, note)
+                .iter()
+                .map(|generated| materialize_generated_card(generated, created_at))
+                .collect();
             Ok(ok_with("cards", &cards))
         })
     }
@@ -973,6 +995,15 @@ mod tests {
         assert_eq!(value["ok"], true);
         assert_eq!(value["cards"][0]["front"], "letter-a");
         assert_eq!(value["cards"][0]["back"], "a");
+
+        let materialized: Value =
+            serde_json::from_str(&session.materialized_cards("basic", "note", NOW + 1)).unwrap();
+
+        assert_eq!(materialized["ok"], true);
+        assert_eq!(materialized["cards"][0]["id"], "note::forward");
+        assert_eq!(materialized["cards"][0]["createdAt"], NOW + 1);
+        assert_eq!(materialized["cards"][0]["lineage"]["noteId"], "note");
+        assert_eq!(materialized["cards"][0]["lineage"]["templateId"], "forward");
     }
 
     #[test]
