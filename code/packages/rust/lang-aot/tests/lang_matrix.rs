@@ -298,6 +298,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(68),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 `str_len` computing a `str_index` operand. This keeps
+    // `string-length` on the shared `str_len` path, lowers `(- len 1)` as typed
+    // integer arithmetic, and feeds the computed register into `str_index`.
+    // `ABCDE` length 5 minus 1 is index 4, byte `E` (69).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((s \"ABCDE\")) (string-ref s (- (string-length s) 1)))",
+        expect: Expect::Exit(69),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =

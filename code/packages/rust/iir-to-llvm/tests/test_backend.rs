@@ -1158,6 +1158,41 @@ fn e4_string_literal_index_folds_to_integer_return() {
 }
 
 #[test]
+fn e4_string_literal_index_accepts_computed_len_index() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABCDE".into())], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("sub", Some("i".into()), vec![
+                Operand::Var("n".into()),
+                Operand::Var("one".into()),
+            ], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ],
+    );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty(), "computed string index should validate");
+    let ll = lower(&module);
+
+    assert!(
+        ll.contains("ret i64 69"),
+        "str_len + typed sub should compute byte index 4 for E in ABCDE:\n{ll}"
+    );
+    assert!(
+        !ll.contains("@__print_str"),
+        "computed string index alone should not pull in the string print runtime:\n{ll}"
+    );
+}
+
+#[test]
 fn e4_string_literal_index_out_of_bounds_traps() {
     let f = IIRFunction::new(
         "main",

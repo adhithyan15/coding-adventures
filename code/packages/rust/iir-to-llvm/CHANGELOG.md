@@ -3,6 +3,21 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.22.0] — 2026-06-28 — computed string index metadata reaches LLVM (LANG-FULL E4)
+
+Literal-only `str_len` results can now feed typed `i64` arithmetic in the LLVM
+lowering environment. That lets `str_index` consume a computed constant index
+for programs such as:
+
+```text
+str_const s "ABCDE"
+str_len n s
+sub i n 1
+str_index b s i
+```
+
+The lowered LLVM returns byte `69` without requiring a runtime string API.
+
 ## [0.21.0] — 2026-06-27 — literal string concat can feed print_str (LANG-FULL E4)
 
 Literal-only `str_concat` now materializes its derived string in the same

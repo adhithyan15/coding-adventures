@@ -295,6 +295,72 @@ fn twig_local_string_concat_can_feed_index() {
     }
 }
 
+/// E4 op-composition proof: `string-length` can compute a typed integer
+/// index that feeds `string-ref` without falling back to dynamic builtins.
+#[test]
+fn twig_local_string_length_can_compute_index() {
+    let m = compile_source(
+        "(let ((s \"ABCDE\")) (string-ref s (- (string-length s) 1)))",
+        "compat",
+    )
+    .expect("Twig must compile");
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+
+    let len = main
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_len")
+        .expect("string-length should lower to str_len");
+    let len_dest = len
+        .dest
+        .as_deref()
+        .expect("str_len should write an integer temp");
+    let sub = main
+        .instructions
+        .iter()
+        .find(|i| i.op == "sub" && i.type_hint == "i64")
+        .expect("computed index should lower to typed sub");
+    let sub_dest = sub.dest.as_deref().expect("sub should write an index temp");
+    assert!(
+        matches!(sub.srcs.first(), Some(Operand::Var(v)) if v == len_dest),
+        "sub should consume the str_len result; len={len:?}, sub={sub:?}",
+    );
+    let index = main
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_index")
+        .expect("string-ref should lower to str_index");
+    assert!(
+        matches!(index.srcs.get(1), Some(Operand::Var(v)) if v == sub_dest),
+        "str_index should consume the computed index; sub={sub:?}, index={index:?}",
+    );
+    assert!(
+        !main.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s)
+                    if s == "string-length" || s == "string-ref" || s == "-")
+        }),
+        "typed E4 computed-index path must not use dynamic builtins: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept `str_len` computing a `str_index` operand; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
 /// Path-A increment 5: `match` arms now use typed `mov` everywhere
 /// (scrutinee binding, nil-init, variant arm result merge, field
 /// extraction, body merge for variant / binding / wildcard arms).

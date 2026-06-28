@@ -1,5 +1,13 @@
 # Changelog — `twig-aot`
 
+## 0.20.0 — 2026-06-28 — native computed string index metadata (LANG-FULL E4)
+
+`prepare_module_for_aot` now records folded `str_len` results as integer
+metadata and propagates that metadata through typed integer arithmetic. This
+lets Twig `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` fold the
+native `str_index` to byte `69` instead of leaving an unsupported E4 string op
+for the direct native backend.
+
 ## 0.19.0 — 2026-06-27 — native string literal metadata through local moves (LANG-FULL E4)
 
 `prepare_module_for_aot` now propagates literal string and integer metadata

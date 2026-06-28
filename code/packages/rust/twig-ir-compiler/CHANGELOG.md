@@ -1,5 +1,19 @@
 # Changelog — twig-ir-compiler
 
+## [0.32.0] — 2026-06-28 (LANG-FULL E4 — computed string index proof)
+
+Lexical string bindings can now compute a `string-ref` index with typed integer
+arithmetic over `string-length`:
+
+```scheme
+(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))
+```
+
+The E4 recognizer accepts this statically-typed index expression, so the
+compiler emits `str_len`, typed `sub`, and `str_index` without falling back to
+dynamic `string-length`, `-`, or `string-ref` builtins. The indexed byte is
+`69` (`E` in `ABCDE`).
+
 ## [0.31.0] — 2026-06-28 (LANG-FULL E4 — local concat indexing proof)
 
 Lexical string bindings now have an explicit compiler proof that the result of
