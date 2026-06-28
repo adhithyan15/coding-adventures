@@ -1,0 +1,12 @@
+[package]
+name = "engram-capi"
+version = "0.1.0"
+edition = "2021"
+description = "Stable C ABI over the Engram JSON facade for native shells."
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+engram-core-wasm = { path = "../engram-core-wasm" }

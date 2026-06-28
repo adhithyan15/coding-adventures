@@ -148,6 +148,7 @@ members = [
     "heap",
     "hazard-detection",
     "dom-core",
+    "engram-capi",
     "engram-core",
     "engram-core-wasm",
     "html-lexer",

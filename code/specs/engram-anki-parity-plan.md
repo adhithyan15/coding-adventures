@@ -243,6 +243,12 @@ Consumers:
 - Qt
 - XAML
 
+Status:
+
+- `code/packages/rust/engram-capi` exposes the first native ABI over
+  `engram-core-wasm`, including dispatch, snapshots/backups, queue/stats,
+  generated cards, search, and CSV helpers.
+
 ## Workstream 3: Engram Web App
 
 ### 3.0 Lattice Shell Styling
