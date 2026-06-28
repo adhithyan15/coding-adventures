@@ -41,6 +41,12 @@ pub enum CollectionFormat {
     Sqlite21b,
 }
 
+impl CollectionFormat {
+    pub fn is_v11_sqlite(self) -> bool {
+        matches!(self, Self::LegacySqlite | Self::Sqlite21)
+    }
+}
+
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MediaManifest {
@@ -114,6 +120,22 @@ pub fn read_collection_bytes(data: &[u8]) -> Result<Vec<u8>, ApkgError> {
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
     let collection = collection_member(&entries)?;
+    reader
+        .read_by_name(&collection.name)
+        .map_err(|err| apkg_error(format!("failed to read collection: {err}")))
+}
+
+pub fn read_v11_collection_bytes(data: &[u8]) -> Result<Vec<u8>, ApkgError> {
+    let reader = ZipReader::new(data).map_err(apkg_error)?;
+    let entries = archive_entries(&reader);
+    let collection = collection_member(&entries)?;
+    if !collection.format.is_v11_sqlite() {
+        return Err(apkg_error(format!(
+            "{} uses Anki's modern package format; the V11 collection reader supports collection.anki2 and collection.anki21 only",
+            collection.name
+        )));
+    }
+
     reader
         .read_by_name(&collection.name)
         .map_err(|err| apkg_error(format!("failed to read collection: {err}")))
@@ -327,6 +349,28 @@ mod tests {
         assert_eq!(manifest.collection.name, SQLITE_21B_COLLECTION);
         assert_eq!(manifest.collection.format, CollectionFormat::Sqlite21b);
         assert_eq!(collection, b"modern collection");
+    }
+
+    #[test]
+    fn reads_v11_collection_members_and_rejects_modern_packages() {
+        let legacy = package(&[(LEGACY_COLLECTION, b"legacy collection")]);
+        let sqlite21 = package(&[(SQLITE_21_COLLECTION, b"v11 collection")]);
+        let modern = package(&[(SQLITE_21B_COLLECTION, b"modern collection")]);
+
+        assert_eq!(
+            read_v11_collection_bytes(&legacy).unwrap(),
+            b"legacy collection"
+        );
+        assert_eq!(
+            read_v11_collection_bytes(&sqlite21).unwrap(),
+            b"v11 collection"
+        );
+
+        let error = read_v11_collection_bytes(&modern).unwrap_err();
+        assert!(error.message.contains("modern package format"));
+        assert!(error
+            .message
+            .contains("collection.anki2 and collection.anki21"));
     }
 
     #[test]

@@ -252,7 +252,8 @@ Next APKG SQLite milestone:
 
 - Target Anki legacy/V11 collection files first (`collection.anki2` and
   `collection.anki21`), mapping `col`, `notes`, `cards`, `revlog`, and
-  `graves` into `engram-core::AppState`.
+  `graves` into `engram-core::AppState`. `engram-anki-package` now exposes
+  `read_v11_collection_bytes` as the package boundary for this reader.
 - Keep `collection.anki21b` detected but explicitly unsupported until Engram
   adds modern package handling for V18, zstd-compressed collection payloads, and
   protobuf media entries.
