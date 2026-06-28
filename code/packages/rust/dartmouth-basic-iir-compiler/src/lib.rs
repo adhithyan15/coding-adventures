@@ -2786,6 +2786,35 @@ mod tests {
     }
 
     #[test]
+    fn compiles_string_variable_concat_if_expression_inequality() {
+        let src = "10 LET A$ = \"O\"\n\
+                   20 LET B$ = \"K\"\n\
+                   30 IF A$ + B$ <> \"NO\" THEN 60\n\
+                   40 PRINT \"BAD\"\n\
+                   50 END\n\
+                   60 PRINT \"OK\"\n\
+                   70 END\n";
+        let m = compile(src).expect("ok");
+        let body = &m.functions[0].instructions;
+        let concat_dest = body.iter()
+            .find(|i| i.op == "str_concat"
+                && matches!(i.srcs.as_slice(), [
+                    Operand::Var(left),
+                    Operand::Var(right)
+                ] if left == "__basic_str_A" && right == "__basic_str_B"))
+            .and_then(|i| i.dest.as_deref())
+            .expect("IF A$ + B$ should lower through str_concat");
+        assert!(body.iter().any(|i| i.op == "str_eq"
+            && matches!(i.srcs.as_slice(), [
+                Operand::Var(left),
+                Operand::Var(_right)
+            ] if left == concat_dest)),
+            "string expression inequality should compare the concat temp");
+        assert!(body.iter().any(|i| i.op == "jmp_if_false"),
+            "string expression inequality should branch when str_eq is false");
+    }
+
+    #[test]
     fn compiles_string_variable_concat_assignment_and_print() {
         let m = compile("10 LET A$ = \"O\"\n20 LET B$ = A$ + \"K\"\n30 PRINT B$\n40 END\n")
             .expect("ok");

@@ -1241,6 +1241,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 string expression in IF inequality. This composes
+    // the variable-variable concat proof with the `<>` branch path: E4
+    // `str_eq` is still the only compare op, but the line-control jump is
+    // `jmp_if_false`, so stdout proves the false-equality path is taken.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 IF A$ + B$ <> \"NO\" THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — BA4 string expression assignment with a variable
     // operand. This proves a non-literal concat can be stored in another safe
     // scalar string slot before printing.
