@@ -10,12 +10,12 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
     build_session_queue, build_session_queue_with_daily_limits, create_engram_snapshot,
-    export_cards_anki_basic_tsv, export_cards_csv, generate_cards_for_note,
+    export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv, generate_cards_for_note,
     get_active_session_progress, get_daily_study_limit_usage, get_deck_stats,
-    import_anki_basic_tsv, import_basic_cards_csv, import_cards_csv, materialize_generated_card,
-    reduce, restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history,
-    AnkiBasicTsvExportOptions, AppState, BasicCardCsvImportOptions, Card, CardFlag, CardLineage,
-    DeckOptions, EngramSnapshot, Rating,
+    import_anki_basic_tsv, import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv,
+    materialize_generated_card, reduce, restore_engram_snapshot, search_cards as search_core_cards,
+    summarize_review_history, AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState,
+    BasicCardCsvImportOptions, Card, CardFlag, CardLineage, DeckOptions, EngramSnapshot, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -243,6 +243,41 @@ impl EngramSession {
         })
     }
 
+    pub fn export_anki_notes_tsv(
+        &self,
+        note_type_id: &str,
+        deck_id: &str,
+        deck_name: &str,
+        note_type_name: &str,
+        html: bool,
+    ) -> String {
+        catch_json(|| {
+            let note_type = self
+                .state
+                .note_types
+                .iter()
+                .find(|note_type| note_type.id == note_type_id)
+                .ok_or_else(|| format!("unknown note type: {note_type_id}"))?;
+            let notes: Vec<_> = self
+                .state
+                .notes
+                .iter()
+                .filter(|note| note.note_type_id == note_type_id && note.deck_id == deck_id)
+                .cloned()
+                .collect();
+            let options = AnkiBasicTsvExportOptions {
+                deck_name: deck_name.to_string(),
+                note_type_name: note_type_name.to_string(),
+                html,
+                include_headers: true,
+            };
+            Ok(ok_with(
+                "tsv",
+                &export_notes_anki_tsv(note_type, &notes, &options),
+            ))
+        })
+    }
+
     pub fn parse_cards_csv(&self, csv: &str) -> String {
         catch_json(|| match import_cards_csv(csv) {
             Ok(cards) => Ok(ok_with("cards", &cards)),
@@ -285,6 +320,30 @@ impl EngramSession {
             };
             match import_anki_basic_tsv(tsv, &options) {
                 Ok(cards) => Ok(ok_with("cards", &cards)),
+                Err(error) => Ok(error_json_with_row(&error.message, error.row)),
+            }
+        })
+    }
+
+    pub fn parse_anki_notes_tsv(
+        &self,
+        tsv: &str,
+        deck_id: &str,
+        note_type_id: &str,
+        note_type_name: &str,
+        note_id_prefix: &str,
+        created_at: u64,
+    ) -> String {
+        catch_json(|| {
+            let options = AnkiNoteTsvImportOptions {
+                deck_id: deck_id.to_string(),
+                note_type_id: note_type_id.to_string(),
+                note_type_name: note_type_name.to_string(),
+                note_id_prefix: note_id_prefix.to_string(),
+                created_at,
+            };
+            match import_anki_notes_tsv(tsv, &options) {
+                Ok(imported) => Ok(ok_with("import", &imported)),
                 Err(error) => Ok(error_json_with_row(&error.message, error.row)),
             }
         })
@@ -1289,6 +1348,66 @@ mod tests {
     }
 
     #[test]
+    fn export_anki_notes_tsv_uses_note_fields_and_tags() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [{
+                "id": "basic",
+                "name": "Basic",
+                "fields": [
+                    {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                    {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                ],
+                "templates": [{
+                    "id": "forward",
+                    "name": "Forward",
+                    "frontTemplate": "{{Front}}",
+                    "backTemplate": "{{Back}}",
+                    "requiredFieldNames": ["Front", "Back"],
+                    "ordinal": 0
+                }],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "notes": [{
+                "id": "note",
+                "noteTypeId": "basic",
+                "deckId": "deck",
+                "fields": [
+                    {"fieldId": "front", "value": "letter\t\"a\""},
+                    {"fieldId": "back", "value": "line one\nline two"}
+                ],
+                "tags": ["tamil", "script"],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "cards": [],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let exported: Value = serde_json::from_str(&session.export_anki_notes_tsv(
+            "basic",
+            "deck",
+            "Tamil::Script",
+            "",
+            false,
+        ))
+        .unwrap();
+
+        assert_eq!(exported["ok"], true);
+        let tsv = exported["tsv"].as_str().unwrap();
+        assert!(tsv.starts_with(
+            "#separator:tab\n#html:false\n#notetype:Basic\n#deck:Tamil::Script\n#columns:Front\tBack\tTags\n"
+        ));
+        assert!(tsv.contains("\"letter\t\"\"a\"\"\"\t\"line one\nline two\"\ttamil script\n"));
+    }
+
+    #[test]
     fn parse_basic_cards_csv_generates_deterministic_cards() {
         let session = EngramSession::new();
         let value: Value = serde_json::from_str(&session.parse_basic_cards_csv(
@@ -1333,6 +1452,46 @@ mod tests {
         assert_eq!(value["cards"][1]["id"], "anki-2");
         assert_eq!(value["cards"][1]["front"], "hello\tfriend");
         assert_eq!(value["cards"][1]["back"], "line one\nline two");
+    }
+
+    #[test]
+    fn parse_anki_notes_tsv_generates_note_model_and_cards() {
+        let session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
+            "#separator:tab\n#notetype:Basic (and reversed card)\n#columns:Front\tBack\tTags\nhola\thello\tspanish common\n",
+            "deck",
+            "basic-reversed",
+            "",
+            "note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["import"]["noteTypes"][0]["id"], "basic-reversed");
+        assert_eq!(
+            value["import"]["noteTypes"][0]["name"],
+            "Basic (and reversed card)"
+        );
+        assert_eq!(value["import"]["notes"][0]["id"], "note-1");
+        assert_eq!(value["import"]["notes"][0]["tags"][0], "spanish");
+        assert_eq!(value["import"]["cards"].as_array().unwrap().len(), 2);
+        assert_eq!(value["import"]["cards"][0]["id"], "note-1::forward");
+        assert_eq!(value["import"]["cards"][1]["id"], "note-1::reverse");
+        assert_eq!(value["import"]["cards"][1]["lineage"]["noteId"], "note-1");
+
+        let error: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
+            "#separator:tab\n#columns:Front\tTags\nhola\tspanish\n",
+            "deck",
+            "basic",
+            "Basic",
+            "note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(error["ok"], false);
+        assert_eq!(error["row"], 1);
     }
 
     #[test]

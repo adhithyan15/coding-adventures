@@ -39,6 +39,7 @@ This crate owns:
 - versioned Engram JSON backup snapshots
 - round-trippable card CSV import/export helpers
 - Anki-compatible Basic TSV card export
+- note-backed Anki Basic and Basic-and-reversed TSV import/export
 - active review-session progress counts
 - deck-scoped review-history summaries
 - pure state transitions
@@ -86,6 +87,11 @@ prefix options to create deterministic cards.
 front/back text files with import headers (`#separator:tab`, `#html`,
 `#notetype`, `#deck`, and `#columns`) and quoted fields containing tabs,
 newlines, or quotes.
+`import_anki_notes_tsv` and `export_notes_anki_tsv` use the note/template model
+instead: imported Basic rows produce `NoteType`, `Note`, and materialized
+lineage cards, while Basic-and-reversed note types produce forward and reverse
+sibling cards. The note-backed path also preserves Anki's Tags column as note
+tags.
 
 `get_active_session_progress` derives the shared review UI counters from
 `AppState`: total cards, one-based current position, remaining cards, reviewed

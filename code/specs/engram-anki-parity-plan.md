@@ -113,6 +113,9 @@ Current reducer integration:
   facade and C ABI.
 - `import_anki_basic_tsv` parses Anki Basic front/back text files with headers
   and quoted fields, and is exposed through the JSON facade and C ABI.
+- Note-backed Anki TSV import/export now supports Basic and Basic-and-reversed
+  rows as `NoteType`, `Note`, and generated lineage cards, including Tags
+  column preservation through the JSON facade and C ABI.
 - `summarize_review_history` derives deck-scoped review-log summaries for a
   timestamp range and is exposed through the JSON facade and C ABI.
 - `get_daily_study_limit_usage` and
@@ -221,7 +224,9 @@ Formats:
 - CSV deck import/export. Initial Rust support exists for full card CSV
   round-trips and simpler generated-ID `front,back` imports.
 - Anki TSV text compatibility. Basic front/back import/export exists in core,
-  JSON facade, and C ABI; richer note-type/media export remains.
+  JSON facade, and C ABI; note-backed Basic and Basic-and-reversed TSV
+  import/export now creates notes, generated cards, and tag metadata. Richer
+  custom note-type/media export remains.
 - APKG import/export eventually, via a dedicated facade or package crate
 
 Tests:

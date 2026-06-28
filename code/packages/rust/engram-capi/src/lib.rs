@@ -243,6 +243,32 @@ pub unsafe extern "C" fn eg_export_anki_basic_tsv(
 }
 
 /// # Safety
+/// `session` must be valid; strings must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_export_anki_notes_tsv(
+    session: *mut EgSession,
+    note_type_id: *const c_char,
+    deck_id: *const c_char,
+    deck_name: *const c_char,
+    note_type_name: *const c_char,
+    html: u8,
+) -> *mut c_char {
+    let note_type_id = read_cstr(note_type_id);
+    let deck_id = read_cstr(deck_id);
+    let deck_name = read_cstr(deck_name);
+    let note_type_name = read_cstr(note_type_name);
+    with_session(session, |session| {
+        session.export_anki_notes_tsv(
+            &note_type_id,
+            &deck_id,
+            &deck_name,
+            &note_type_name,
+            html != 0,
+        )
+    })
+}
+
+/// # Safety
 /// `session` must be valid; `csv` must be null or a valid C string.
 #[no_mangle]
 pub unsafe extern "C" fn eg_parse_cards_csv(
@@ -286,6 +312,35 @@ pub unsafe extern "C" fn eg_parse_anki_basic_tsv(
     let id_prefix = read_cstr(id_prefix);
     with_session(session, |session| {
         session.parse_anki_basic_tsv(&tsv, &deck_id, &id_prefix, created_at)
+    })
+}
+
+/// # Safety
+/// `session` must be valid; string arguments must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_parse_anki_notes_tsv(
+    session: *mut EgSession,
+    tsv: *const c_char,
+    deck_id: *const c_char,
+    note_type_id: *const c_char,
+    note_type_name: *const c_char,
+    note_id_prefix: *const c_char,
+    created_at: u64,
+) -> *mut c_char {
+    let tsv = read_cstr(tsv);
+    let deck_id = read_cstr(deck_id);
+    let note_type_id = read_cstr(note_type_id);
+    let note_type_name = read_cstr(note_type_name);
+    let note_id_prefix = read_cstr(note_id_prefix);
+    with_session(session, |session| {
+        session.parse_anki_notes_tsv(
+            &tsv,
+            &deck_id,
+            &note_type_id,
+            &note_type_name,
+            &note_id_prefix,
+            created_at,
+        )
     })
 }
 
@@ -413,6 +468,23 @@ mod tests {
             assert!(anki_imported.contains(r#""id":"anki-1""#));
             assert!(anki_imported.contains(r#""front":"letter-aa""#));
 
+            let anki_notes = cstr(
+                "#separator:tab\n#notetype:Basic (and reversed card)\n#columns:Front\tBack\tTags\nhola\thello\tspanish common\n",
+            );
+            let note_imported = take(eg_parse_anki_notes_tsv(
+                session,
+                anki_notes.as_ptr(),
+                deck_id.as_ptr(),
+                cstr("basic-reversed").as_ptr(),
+                cstr("").as_ptr(),
+                cstr("note").as_ptr(),
+                NOW,
+            ));
+            assert!(note_imported.contains(r#""noteTypes":["#));
+            assert!(note_imported.contains(r#""id":"basic-reversed""#));
+            assert!(note_imported.contains(r#""id":"note-1::forward""#));
+            assert!(note_imported.contains(r#""id":"note-1::reverse""#));
+
             eg_session_free(session);
         }
     }
@@ -476,6 +548,17 @@ mod tests {
             assert!(cards.contains(r#""createdAt":1700000000001"#));
             assert!(cards.contains(r#""lineage":{"#));
             assert!(cards.contains(r#""templateId":"forward""#));
+
+            let exported = take(eg_export_anki_notes_tsv(
+                session,
+                note_type_id.as_ptr(),
+                cstr("deck").as_ptr(),
+                cstr("Tamil::Script").as_ptr(),
+                cstr("").as_ptr(),
+                0,
+            ));
+            assert!(exported.contains(r#"#columns:Front\tBack\tTags"#));
+            assert!(exported.contains(r#"letter-a\ta\ttamil"#));
 
             eg_session_free(session);
         }

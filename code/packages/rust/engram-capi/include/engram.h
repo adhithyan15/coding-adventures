@@ -58,6 +58,14 @@ char *eg_export_anki_basic_tsv(
     const char *note_type_name,
     uint8_t html
 );
+char *eg_export_anki_notes_tsv(
+    EgSession *session,
+    const char *note_type_id,
+    const char *deck_id,
+    const char *deck_name,
+    const char *note_type_name,
+    uint8_t html
+);
 char *eg_parse_cards_csv(EgSession *session, const char *csv);
 char *eg_parse_basic_cards_csv(
     EgSession *session,
@@ -71,6 +79,15 @@ char *eg_parse_anki_basic_tsv(
     const char *tsv,
     const char *deck_id,
     const char *id_prefix,
+    uint64_t created_at
+);
+char *eg_parse_anki_notes_tsv(
+    EgSession *session,
+    const char *tsv,
+    const char *deck_id,
+    const char *note_type_id,
+    const char *note_type_name,
+    const char *note_id_prefix,
     uint64_t created_at
 );
 
