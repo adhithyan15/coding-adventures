@@ -2784,7 +2784,7 @@ fn runtime_room_response(
     let Some(room) = rooms.first() else {
         return api_error_response(ApiError::not_found(format!("room `{room_id}` not found")));
     };
-    WebResponse::json(room_json(room).into_bytes())
+    WebResponse::json(room_detail_json(room, &runtime_guard, runtime.now_ms).into_bytes())
 }
 
 fn runtime_scenes_response(
@@ -4676,6 +4676,74 @@ fn room_json(room: &RuntimeRoomSummary) -> String {
         room.has_state_gaps(),
         room.has_scene_actions(),
     )
+}
+
+fn room_detail_json(room: &RuntimeRoomSummary, runtime: &SmartHomeRuntime, now_ms: u64) -> String {
+    let devices = runtime_room_devices(runtime, &room.room_id);
+    let entities = runtime_room_entities(runtime, &room.room_id);
+    let scenes = runtime_room_scenes(runtime, &room.room_id);
+    format!(
+        "{{\"room\":{},\"members\":{{\"device_count\":{},\"entity_count\":{},\"scene_count\":{},\"devices\":[{}],\"entities\":[{}],\"scenes\":[{}]}}}}",
+        room_json(room),
+        devices.len(),
+        entities.len(),
+        scenes.len(),
+        devices
+            .iter()
+            .map(|device| device_registry_json(device, runtime, now_ms))
+            .collect::<Vec<_>>()
+            .join(","),
+        entities
+            .iter()
+            .map(|entity| entity_registry_json(entity, runtime, now_ms))
+            .collect::<Vec<_>>()
+            .join(","),
+        scenes
+            .iter()
+            .map(|scene| scene_json(scene, runtime))
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn runtime_room_devices<'a>(runtime: &'a SmartHomeRuntime, room_id: &str) -> Vec<&'a Device> {
+    let mut devices = runtime
+        .registry()
+        .devices()
+        .filter(|device| device.room_id.as_deref() == Some(room_id))
+        .collect::<Vec<_>>();
+    devices.sort_by(|left, right| left.device_id.as_str().cmp(right.device_id.as_str()));
+    devices
+}
+
+fn runtime_room_entities<'a>(runtime: &'a SmartHomeRuntime, room_id: &str) -> Vec<&'a Entity> {
+    let mut entities = runtime
+        .registry()
+        .entities()
+        .filter(|entity| {
+            runtime
+                .registry()
+                .device(&entity.device_id)
+                .and_then(|device| device.room_id.as_deref())
+                == Some(room_id)
+        })
+        .collect::<Vec<_>>();
+    entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
+    entities
+}
+
+fn runtime_room_scenes<'a>(runtime: &'a SmartHomeRuntime, room_id: &str) -> Vec<&'a Scene> {
+    let mut scenes = runtime
+        .registry()
+        .scenes()
+        .filter(|scene| {
+            scene_room_ids(scene, runtime)
+                .iter()
+                .any(|candidate| candidate == room_id)
+        })
+        .collect::<Vec<_>>();
+    scenes.sort_by(|left, right| left.scene_id.as_str().cmp(right.scene_id.as_str()));
+    scenes
 }
 
 fn scenes_json(scenes: &[&Scene], runtime: &SmartHomeRuntime) -> String {
@@ -7917,6 +7985,16 @@ mod tests {
         assert!(detail.contains(r#""device_count":1"#));
         assert!(detail.contains(r#""entity_count":2"#));
         assert!(detail.contains(r#""scene_action_count":1"#));
+        assert!(detail.contains(r#""room":{"room_id":"kitchen""#));
+        assert!(detail.contains(r#""members":{"device_count":1,"entity_count":2,"scene_count":1"#));
+        assert!(detail.contains(r#""devices":[{"device_id":"device-1""#));
+        assert!(detail.contains(
+            r#""entities":[{"entity_id":"entity-light-1","home_assistant_entity_id":"light.entity_light_1""#
+        ));
+        assert!(detail.contains(r#""entity_id":"entity-sensor-1""#));
+        assert!(detail.contains(r#""scenes":[{"scene_id":"scene-kitchen-bright""#));
+        assert!(detail.contains(r#""home_assistant_scene_id":"scene.scene_kitchen_bright""#));
+        assert!(detail.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
 
         let missing: web_core::WebResponse = app
             .handle(request("GET", "/api/smart_home/rooms/missing"))
