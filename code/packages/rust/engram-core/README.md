@@ -95,6 +95,10 @@ review reps have already happened inside a host-provided day window.
 `DeckOptions` before assembling due and new cards, so daily limits are shared
 across web, Mosaic, and native shells.
 
+`get_deck_stats` includes due, new, learning, mastered, suspended, and buried
+counts so deck overviews and collection browsers can render hidden-card state
+from the same core calculation.
+
 `summarize_review_history` derives deck-scoped review history for a timestamp
 range from the durable review log. It returns total reviews, correct reviews,
 unique reviewed cards, per-rating counts, and first/last review timestamps so

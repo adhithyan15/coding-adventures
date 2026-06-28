@@ -91,6 +91,9 @@ seen in a host-provided day window and the remaining slots from `DeckOptions`.
 `{ ok: true, queue }`. Passing an empty `deck_options_json` uses default deck
 options; partial JSON option objects fill omitted fields from defaults.
 
+`deck_stats` includes `suspendedCount` and `buriedCount` alongside due/new and
+learning/mastered counts.
+
 `review_history` returns `{ ok: true, history }` with deck-scoped counts for a
 half-open timestamp range: total reviews, correct reviews, unique cards,
 per-rating counts, and first/last review timestamps.

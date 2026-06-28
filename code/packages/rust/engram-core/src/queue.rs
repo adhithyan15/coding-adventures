@@ -163,18 +163,7 @@ fn build_session_queue_with_limits(
 }
 
 pub(crate) fn is_reviewable(progress: &CardProgress, now: u64) -> bool {
-    if progress.suspended_at.is_some() || progress.state == CardState::Suspended {
-        return false;
-    }
-    if progress.state == CardState::Buried {
-        match progress.buried_until {
-            Some(buried_until) if buried_until <= now => {}
-            _ => return false,
-        }
-    } else if progress
-        .buried_until
-        .is_some_and(|buried_until| buried_until > now)
-    {
+    if is_suspended(progress) || is_currently_buried(progress, now) {
         return false;
     }
 
@@ -182,6 +171,24 @@ pub(crate) fn is_reviewable(progress: &CardProgress, now: u64) -> bool {
         progress.state,
         CardState::Learning | CardState::Review | CardState::Relearning | CardState::Buried
     ) && progress.next_due_at <= now
+}
+
+fn is_suspended(progress: &CardProgress) -> bool {
+    progress.suspended_at.is_some() || progress.state == CardState::Suspended
+}
+
+fn is_currently_buried(progress: &CardProgress, now: u64) -> bool {
+    if progress
+        .buried_until
+        .is_some_and(|buried_until| buried_until > now)
+    {
+        return true;
+    }
+
+    progress.state == CardState::Buried
+        && !progress
+            .buried_until
+            .is_some_and(|buried_until| buried_until <= now)
 }
 
 pub fn is_deck_caught_up(
@@ -210,6 +217,8 @@ pub fn get_deck_stats(
         learning_count: 0,
         mastered_count: 0,
         due_count: 0,
+        suspended_count: 0,
+        buried_count: 0,
         average_ease_factor: 0.0,
     };
     let mut ease_sum = 0.0;
@@ -219,6 +228,12 @@ pub fn get_deck_stats(
         stats.total += 1;
         match progress_by_card.get(card.id.as_str()) {
             Some(progress) => {
+                if is_suspended(progress) {
+                    stats.suspended_count += 1;
+                }
+                if is_currently_buried(progress, now) {
+                    stats.buried_count += 1;
+                }
                 if progress.interval > 21 {
                     stats.mastered_count += 1;
                 } else {
@@ -329,19 +344,34 @@ mod tests {
             card("new", "deck", 1),
             card("learning", "deck", 2),
             card("mastered", "deck", 3),
+            card("suspended", "deck", 4),
+            card("buried", "deck", 5),
+            card("expired-buried", "deck", 6),
         ];
+        let mut suspended = progress("suspended", NOW - 1, 3);
+        suspended.suspended_at = Some(NOW - 10);
+        let mut buried = progress("buried", NOW - 1, 3);
+        buried.buried_until = Some(NOW + 1000);
+        let mut expired_buried = progress("expired-buried", NOW - 1, 3);
+        expired_buried.state = CardState::Buried;
+        expired_buried.buried_until = Some(NOW - 1);
         let progress = vec![
             progress("learning", NOW - 1, 3),
             progress("mastered", NOW + 1000, 22),
+            suspended,
+            buried,
+            expired_buried,
         ];
 
         let stats = get_deck_stats(&cards, &progress, "deck", NOW);
 
-        assert_eq!(stats.total, 3);
+        assert_eq!(stats.total, 6);
         assert_eq!(stats.new_count, 1);
-        assert_eq!(stats.learning_count, 1);
+        assert_eq!(stats.learning_count, 4);
         assert_eq!(stats.mastered_count, 1);
-        assert_eq!(stats.due_count, 1);
+        assert_eq!(stats.due_count, 2);
+        assert_eq!(stats.suspended_count, 1);
+        assert_eq!(stats.buried_count, 1);
         assert_eq!(stats.average_ease_factor, 2.5);
     }
 

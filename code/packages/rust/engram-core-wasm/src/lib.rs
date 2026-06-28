@@ -126,6 +126,8 @@ impl EngramSession {
                     "learningCount": stats.learning_count,
                     "masteredCount": stats.mastered_count,
                     "dueCount": stats.due_count,
+                    "suspendedCount": stats.suspended_count,
+                    "buriedCount": stats.buried_count,
                     "averageEaseFactor": stats.average_ease_factor,
                 }),
             ))
@@ -724,6 +726,76 @@ mod tests {
 
         assert_eq!(value["ok"], true);
         assert_eq!(value["queue"][0]["id"], "card");
+    }
+
+    #[test]
+    fn deck_stats_reports_suspended_and_buried_counts() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"due","deckId":"deck","front":"due","back":"1","createdAt":1700000000000},
+                {"id":"suspended","deckId":"deck","front":"hidden","back":"s","createdAt":1700000000000},
+                {"id":"buried","deckId":"deck","front":"hidden","back":"b","createdAt":1700000000000}
+            ],
+            "cardProgress": [
+                {
+                    "cardId":"due",
+                    "state":"review",
+                    "interval":3,
+                    "easeFactor":2.5,
+                    "nextDueAt":1699999999900,
+                    "learningStepIndex":null,
+                    "buriedUntil":null,
+                    "suspendedAt":null,
+                    "timesSeen":1,
+                    "timesCorrect":1,
+                    "timesIncorrect":0,
+                    "lastSeenAt":1699999990000
+                },
+                {
+                    "cardId":"suspended",
+                    "state":"review",
+                    "interval":3,
+                    "easeFactor":2.5,
+                    "nextDueAt":1699999999900,
+                    "learningStepIndex":null,
+                    "buriedUntil":null,
+                    "suspendedAt":1700000000000,
+                    "timesSeen":1,
+                    "timesCorrect":1,
+                    "timesIncorrect":0,
+                    "lastSeenAt":1699999990000
+                },
+                {
+                    "cardId":"buried",
+                    "state":"review",
+                    "interval":3,
+                    "easeFactor":2.5,
+                    "nextDueAt":1699999999900,
+                    "learningStepIndex":null,
+                    "buriedUntil":1700000060000,
+                    "suspendedAt":null,
+                    "timesSeen":1,
+                    "timesCorrect":1,
+                    "timesIncorrect":0,
+                    "lastSeenAt":1699999990000
+                }
+            ],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let value: Value = serde_json::from_str(&session.deck_stats("deck", NOW)).unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["stats"]["dueCount"], 1);
+        assert_eq!(value["stats"]["suspendedCount"], 1);
+        assert_eq!(value["stats"]["buriedCount"], 1);
     }
 
     #[test]

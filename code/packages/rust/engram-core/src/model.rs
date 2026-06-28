@@ -297,5 +297,7 @@ pub struct DeckStats {
     pub learning_count: usize,
     pub mastered_count: usize,
     pub due_count: usize,
+    pub suspended_count: usize,
+    pub buried_count: usize,
     pub average_ease_factor: f64,
 }

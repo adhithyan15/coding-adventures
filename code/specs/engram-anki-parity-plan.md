@@ -116,6 +116,8 @@ Current reducer integration:
   `build_session_queue_with_daily_limits` subtract new/review reps already seen
   in a day window from `DeckOptions` and are exposed through the JSON facade and
   C ABI.
+- `get_deck_stats` reports suspended and buried counts from the shared core
+  hidden-card logic.
 
 ### 1.2 Notes and Card Templates
 
@@ -200,6 +202,8 @@ Tests:
 - Tag, deck, and note type filters compose with text filters. Initial core
   support exists for implicit AND, `OR`, and negation; parentheses and richer
   expressions remain.
+- Hidden-card stats. Deck stats now report suspended and buried counts from the
+  same logic used by queues.
 
 ### 1.5 Import/Export Model
 
