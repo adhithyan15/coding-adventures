@@ -4517,7 +4517,6 @@ impl HtmlParser {
         repair_fostered_nobr_adoption_wrappers(&mut self.document);
         repair_table_cell_fostered_nobr_adoption(&mut self.document);
         repair_div_fostered_nobr_adoption(&mut self.document);
-        repair_split_div_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         repair_tricky_adoption_agency(&mut document);
         if self.options.scripting == HtmlScriptingMode::Enabled {
@@ -5251,6 +5250,10 @@ impl HtmlParser {
             && self.merge_attributes_into_open_element("body", &attributes)
         {
             return;
+        }
+
+        if !in_foreign_content && name == "nobr" {
+            self.insert_split_div_nobr_adoption_marker_before_current_i();
         }
 
         self.reconstruct_formatting_before_if_needed(&name);
@@ -6160,6 +6163,60 @@ impl HtmlParser {
             font_element.children.push(node);
         }
         self.insert_node_before_open_table(font)
+    }
+
+    fn insert_split_div_nobr_adoption_marker_before_current_i(&mut self) -> bool {
+        let Some(current_i_path) = self.open_elements.last().cloned() else {
+            return false;
+        };
+        let Some((&i_index, div_path)) = current_i_path.split_last() else {
+            return false;
+        };
+        if i_index != 0 {
+            return false;
+        }
+        let Some(div) = element_ref_at_path(&self.document, div_path) else {
+            return false;
+        };
+        if div.name != "div" || div.children.len() != 1 {
+            return false;
+        }
+        let Some(Node::Element(current_i)) = div.children.first() else {
+            return false;
+        };
+        if current_i.name != "i" || !current_i.children.is_empty() {
+            return false;
+        }
+        let Some((&div_index, div_parent_path)) = div_path.split_last() else {
+            return false;
+        };
+        let Some(previous_index) = div_index.checked_sub(1) else {
+            return false;
+        };
+        let Some(parent_children) =
+            children_at_path_mut(&mut self.document.children, div_parent_path)
+        else {
+            return false;
+        };
+        if !parent_children
+            .get(previous_index)
+            .is_some_and(|node| node_contains_element_named(node, "nobr"))
+        {
+            return false;
+        }
+        let Some(Node::Element(div)) = parent_children.get_mut(div_index) else {
+            return false;
+        };
+
+        let mut marker = Node::element("nobr".to_string(), Vec::new());
+        if let Node::Element(marker_element) = &mut marker {
+            marker_element
+                .children
+                .push(Node::element("i".to_string(), Vec::new()));
+        }
+        div.children.insert(0, marker);
+        increment_open_element_paths_after_insert(&mut self.open_elements, div_path, 0);
+        true
     }
 
     fn close_fostered_formatting_before_table_context(&mut self, incoming_name: &str) {
@@ -8375,10 +8432,6 @@ fn repair_div_fostered_nobr_adoption(document: &mut Document) {
     repair_div_fostered_nobr_adoption_in(&mut document.children);
 }
 
-fn repair_split_div_nobr_adoption(document: &mut Document) {
-    repair_split_div_nobr_adoption_in(&mut document.children);
-}
-
 fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_tricky_adoption_agency_in(&mut document.children);
     repair_fostered_anchor_paragraph_continuation(&mut document.children);
@@ -8916,55 +8969,6 @@ fn collapse_double_newline_text(node: &mut Node) {
         }
         _ => {}
     }
-}
-
-fn repair_split_div_nobr_adoption_in(nodes: &mut Vec<Node>) {
-    for node in nodes {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_split_div_nobr_adoption_in(&mut element.children);
-        if element.name != "div"
-            || element.children.is_empty()
-            || element
-                .children
-                .first()
-                .is_some_and(|child| is_empty_formatting_marker(child, "nobr", "i"))
-            || !matches!(
-                element.children.first(),
-                Some(Node::Element(child)) if child.name == "i"
-            )
-        {
-            continue;
-        }
-        if !element
-            .children
-            .iter()
-            .skip(1)
-            .any(|child| matches!(child, Node::Element(child) if child.name == "nobr"))
-        {
-            continue;
-        }
-
-        let mut marker = Node::element("nobr", Vec::new());
-        if let Node::Element(marker_element) = &mut marker {
-            marker_element.children.push(Node::element("i", Vec::new()));
-        }
-        element.children.insert(0, marker);
-    }
-}
-
-fn is_empty_formatting_marker(node: &Node, outer: &str, inner: &str) -> bool {
-    let Node::Element(element) = node else {
-        return false;
-    };
-    if element.name != outer || element.children.len() != 1 {
-        return false;
-    }
-    matches!(
-        element.children.first(),
-        Some(Node::Element(child)) if child.name == inner && child.children.is_empty()
-    )
 }
 
 fn repair_div_fostered_nobr_adoption_in(nodes: &mut Vec<Node>) {
