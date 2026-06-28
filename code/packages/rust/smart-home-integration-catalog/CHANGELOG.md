@@ -107,6 +107,9 @@ All notable changes to this package will be documented in this file.
 - Mesh release ticket handoff protocol-evidence package handoff execution
   action evidence rows that preserve action, slot, package, packet, blocker,
   and release evidence lineage.
+- Mesh release ticket handoff protocol-evidence package handoff execution
+  action evidence summaries that combine evidence-row counts with next
+  blocker, protocol, and release handoff pointers.
 - Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence rows that preserve action
   lineage, release evidence, and handoff readiness flags.
