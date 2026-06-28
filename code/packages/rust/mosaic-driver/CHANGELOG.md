@@ -5,9 +5,9 @@
 ### Changed - mosstyle output prefers Lattice
 
 - `mosaic --style <path.msl>` now prints `CompileOutput.lattice` instead of
-  the compatibility CSS artifact.
-- Full pipeline JSON summaries now include `lattice` alongside `css` so
-  Mosaic tooling can pivot toward Lattice without breaking existing consumers.
+  a CSS artifact.
+- Full pipeline JSON summaries now include `lattice` and `style_map_json`;
+  CSS is a downstream Lattice-transpiler concern for web targets.
 
 ## [0.1.0] - 2026-05-11
 
@@ -23,4 +23,4 @@
 - Passes `interface_json` from mosmodel to moslayout for slot-ref validation.
 - Passes `part_map_json` from moslayout to mosstyle for part-name validation.
 - JSON summary output embeds structured `interface` and `parts` objects (not
-  double-encoded strings) alongside the raw `css` string.
+  double-encoded strings) alongside the generated style text.

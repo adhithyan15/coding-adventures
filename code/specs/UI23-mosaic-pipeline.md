@@ -1185,9 +1185,9 @@ export function Grid({
 }
 ```
 
-Generated CSS (written to `generated/react/desktop/Grid.css`):
+Generated Lattice (written to `generated/react/desktop/Grid.lattice`):
 
-```css
+```scss
 /* Auto-generated — do not edit */
 .mos-Grid-root {
   background: #1e1e1e;

@@ -6,7 +6,6 @@ Compiles `.msl` (Mosaic Style Language) files into scoped Lattice source.
 
 ```text
 .msl -> mosstyle-compiler -> Lattice source
-                         \-> compatibility CSS
                          \-> resolved style map JSON
 ```
 
@@ -44,7 +43,7 @@ planned for a later pass.
 
 Class names follow the `.mos-{ComponentName}-{part-name}` convention:
 
-```css
+```scss
 .mos-Grid-root {
   background-color: #1e1e1e;
   border-radius: 6px;
@@ -60,8 +59,8 @@ Class names follow the `.mos-{ComponentName}-{part-name}` convention:
 ```
 
 The current emitter writes CSS-compatible Lattice, which the repo's Lattice
-transpiler accepts directly. `CompileOutput.css` remains available as a
-compatibility artifact for existing DOM and React callers.
+transpiler accepts directly. Mosaic itself emits Lattice from the style stage;
+web backends can compile that Lattice to CSS at their platform boundary.
 
 ## State Selector Mapping
 

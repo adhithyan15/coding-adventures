@@ -5,12 +5,11 @@
 ### Added - Lattice style emission
 
 - `CompileOutput` now includes `lattice`, a first-class scoped Lattice source
-  artifact generated from the same resolved `StyleDef` as the compatibility
-  CSS output.
+  artifact generated from the resolved `StyleDef`.
 - Added `emit_lattice(&StyleDef)` and tests that pass the generated source
   through the Rust Lattice transpiler.
-- `CompileOutput.css` and `emit_css()` remain for existing DOM and React
-  callers while Mosaic-generated style artifacts pivot toward Lattice.
+- `CompileOutput` no longer returns CSS. Web callers that need CSS should
+  compile `CompileOutput.lattice` through `lattice-transpiler`.
 
 ### Added — structural states (`even`, `odd`) for row-stripe sub-parts
 
@@ -36,13 +35,13 @@
 - `parse_style()` — wraps `GrammarParser` with the embedded parser grammar.
 - `analyze()` — converts the raw `GrammarASTNode` into typed `StyleDef` IR.
 - `validate()` — checks part-name existence against the optional part-map JSON.
-- `emit_css()` — produces scoped CSS using `.mos-{Component}-{part}` class names.
+- `emit_lattice()` - produces scoped Lattice using `.mos-{Component}-{part}` class names.
 - `compile()` — convenience function running all stages.
 - **Default dark token palette** — `$color-surface`, `$color-text-primary`, etc. resolve
   to hex literals at compile time (UI15 §1 palette).
 - **State selectors**: `hover`→`:hover`, `pressed`→`:active`, `focused`→`:focus-visible`,
   `disabled`/`selected`/`editing`/`error` → class-name selectors.
-- 17 unit tests covering tokenizer, CSS emission, token resolution, state blocks, and validation.
+- Unit tests cover tokenizer, Lattice emission, token resolution, state blocks, and validation.
 
 ### Grammar
 

@@ -2,7 +2,7 @@
 name = "mosstyle-compiler"
 version = "0.1.0"
 edition = "2021"
-description = "Compiles .msl component style files to Lattice, CSS, and a resolved style map"
+description = "Compiles .msl component style files to Lattice and a resolved style map"
 
 [dependencies]
 grammar-tools  = { path = "../grammar-tools" }

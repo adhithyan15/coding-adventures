@@ -13,8 +13,8 @@ a single end-to-end pipeline.
 .msl -> mosstyle-compiler  <-+-> Lattice source
 ```
 
-`mosstyle-compiler` still exposes compatibility CSS for callers that need it,
-but new Mosaic style output should prefer the Lattice artifact.
+Web targets that need CSS should compile the generated Lattice through the
+Lattice transpiler. Mosaic's style-stage artifact is Lattice, not CSS.
 
 ## Usage
 
@@ -51,7 +51,7 @@ mosaic --style      Grid.msl     # print Lattice
     ]
   },
   "lattice": ".mos-Grid-root { ... }\n.mos-Grid-cell-grid { ... }",
-  "css": ".mos-Grid-root { ... }\n.mos-Grid-cell-grid { ... }"
+  "style_map_json": "{\n  \"component\": \"Grid\",\n  \"parts\": [ ... ]\n}"
 }
 ```
 

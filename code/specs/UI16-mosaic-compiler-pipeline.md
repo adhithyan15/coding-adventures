@@ -150,7 +150,8 @@ Parses a `.msl` file. Optionally receives `part_map_json` from stage 2.
   the declared part map. Unknown part names are hard errors.
 - Produces **`style_map_json`** — serde_json serialisation of `StyleDef`.
   All design tokens are resolved to concrete values at compile time.
-- Produces **`css`** — scoped CSS string (for DOM / React backends).
+- Produces **`lattice`** — scoped Lattice source. DOM / React backends that
+  need CSS compile this artifact through the Lattice transpiler.
 
 Design tokens are resolved in this priority order:
 
@@ -273,12 +274,12 @@ The v1 model uses `list<text>` for rows: each row is a single string displayed
 in a single `<td>`. Multi-column rows (`list<list<text>>`) require a grammar
 extension in `mosmodel-compiler` and are deferred to v2.
 
-**CSS class injection:**
+**Style class injection:**
 
 When `mosstyle-compiler` has run, each primitive node that has a matching
 `part` style block receives a `className` set to `.mos-{Component}-{part}`.
-The generated CSS is emitted as a separate `<Component>.css` file (v2; in v1
-it is returned as a string in the driver's JSON summary).
+The generated Lattice is emitted as the style-stage artifact. Web targets
+compile that Lattice to CSS at their platform boundary.
 
 ---
 
@@ -547,7 +548,7 @@ export function Grid({ columnHeaders, viewportRows }: GridProps) {
 | Lattice token override files | Token file compiler not wired up |
 | `--target skia / cairo` in mosaic-driver | Depends on paint-vm-skia / paint-vm-cairo |
 | mosaic-emit-skia, mosaic-emit-cairo crates | Depends on paint-vm-skia / paint-vm-cairo |
-| CSS file output (separate `.css` file) | Currently returned as JSON string |
+| Lattice token override files in package builds | Token file compiler not wired up |
 | `MosaicEmitter` trait in mosaic-vm | React backend still uses `MosaicRenderer` |
 | Stale-check CI for `_grammar.rs` | Grammar-tools CI integration |
 
