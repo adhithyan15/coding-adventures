@@ -152,6 +152,31 @@ fn predicate_rhs_expression_matches_fraction_result() {
 }
 
 #[test]
+fn rule_derived_evidence_drives_contribution() {
+    // The model can emit observations + a Horn rule; the engine proves the
+    // derived evidence term and uses that proof to license the LR contribution.
+    let (ok, s) = run(
+        "adjcli_derived_evidence.adj",
+        "prior 0.10 for bacterial\n  source \"base rate\" trust empirical\n\
+         contributes 10 from infection_present to bacterial\n  source \"clinical LR\" trust authoritative\n\
+         observe fever\n\
+         observe positive_culture\n\
+         rule { head: infection_present when: fever, positive_culture\n\
+                source \"case decomposition\" trust inferred }\n\
+         ? bacterial\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"kind\":\"contribution\""), "{s}");
+    assert!(s.contains("\"evidence\":\"infection_present\""), "{s}");
+    assert!(s.contains("\"evidence_proof\""), "{s}");
+    assert!(s.contains("\"kind\":\"rule\""), "{s}");
+    assert!(s.contains("\"goal\":\"infection_present\""), "{s}");
+    assert!(s.contains("\"source\":\"case decomposition\""), "{s}");
+    // prior odds 1/9, LR 10 => posterior 10/19 ≈ 0.526.
+    assert!(s.contains("\"posterior\":0.526"), "{s}");
+}
+
+#[test]
 fn predicate_below_threshold_does_not_fire() {
     // Income under the threshold: the predicate step never appears, and the
     // posterior stays at the prior.

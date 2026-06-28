@@ -38,7 +38,7 @@ use logic_core::{atom, LogicVar, Term};
 use logic_engine::govern::Standing;
 use logic_engine::{
     enumerate_all, enumerate_governing, DerivationOrigin, DifferentialDecision, Fact, GovernStatus,
-    KnowledgeBase, LRAggregateResult, Provenance, TrustTier,
+    KnowledgeBase, LRAggregateResult, Proof, Provenance, TrustTier,
 };
 
 const SPEC: &str = r#"{
@@ -117,6 +117,41 @@ fn prov(p: &Provenance) -> String {
     )
 }
 
+fn sld_proof_json(proof: &Proof, kb: &KnowledgeBase) -> String {
+    let mut steps = Vec::new();
+    for st in &proof.steps {
+        match &st.origin {
+            DerivationOrigin::FromFact(id) => {
+                let pv = kb.fact(*id).map(|f| prov(&f.provenance)).unwrap_or_else(|| {
+                    "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\",\"corroborations\":[]"
+                        .to_string()
+                });
+                steps.push(format!(
+                    "{{\"kind\":\"fact\",\"goal\":\"{}\",{}}}",
+                    esc(&format!("{}", st.goal)),
+                    pv
+                ));
+            }
+            DerivationOrigin::FromRule(id) => {
+                let pv = kb
+                    .find_rule_by_id(*id)
+                    .map(|r| prov(&r.provenance))
+                    .unwrap_or_else(|| {
+                        "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\",\"corroborations\":[]"
+                            .to_string()
+                    });
+                steps.push(format!(
+                    "{{\"kind\":\"rule\",\"goal\":\"{}\",{}}}",
+                    esc(&format!("{}", st.goal)),
+                    pv
+                ));
+            }
+            _ => {}
+        }
+    }
+    format!("[{}]", steps.join(","))
+}
+
 /// Serialize the proof DAG for one hypothesis: walk each step and join its
 /// `clause_id` back to the firing clause's evidence term + cited provenance.
 /// `certs` maps a constraint STATUS atom to its solver certificate JSON (E3); a
@@ -150,6 +185,7 @@ fn proof_json(
                 DerivationOrigin::FromContribution {
                     clause_id,
                     logit_delta,
+                    evidence_proof,
                     ..
                 } => {
                     if let Some(c) = contribs.iter().find(|c| c.id == *clause_id) {
@@ -161,11 +197,18 @@ fn proof_json(
                             .find(|(k, _)| *k == ev.as_str())
                             .map(|(_, cert)| format!(",\"solver\":{}", cert))
                             .unwrap_or_default();
+                        let evidence_proof = evidence_proof
+                            .as_ref()
+                            .map(|proof| {
+                                format!(",\"evidence_proof\":{}", sld_proof_json(proof, kb))
+                            })
+                            .unwrap_or_default();
                         steps.push(format!(
-                            "{{\"kind\":\"contribution\",\"evidence\":\"{}\",\"logit\":{},{}{}}}",
+                            "{{\"kind\":\"contribution\",\"evidence\":\"{}\",\"logit\":{},{}{}{}}}",
                             esc(&ev),
                             jnum(*logit_delta),
                             prov(&c.provenance),
+                            evidence_proof,
                             solver
                         ));
                     }
@@ -173,6 +216,7 @@ fn proof_json(
                 DerivationOrigin::FromJointContribution {
                     clause_id,
                     joint_logit_delta,
+                    evidence_proofs,
                     ..
                 } => {
                     if let Some(j) = joints.iter().find(|j| j.id == *clause_id) {
@@ -181,11 +225,24 @@ fn proof_json(
                             .iter()
                             .map(|t| format!("\"{}\"", esc(&format!("{}", t))))
                             .collect();
+                        let evidence_proofs = if evidence_proofs.is_empty() {
+                            String::new()
+                        } else {
+                            format!(
+                                ",\"evidence_proofs\":[{}]",
+                                evidence_proofs
+                                    .iter()
+                                    .map(|proof| sld_proof_json(proof, kb))
+                                    .collect::<Vec<_>>()
+                                    .join(",")
+                            )
+                        };
                         steps.push(format!(
-                            "{{\"kind\":\"interaction\",\"evidence\":[{}],\"logit\":{},{}}}",
+                            "{{\"kind\":\"interaction\",\"evidence\":[{}],\"logit\":{},{}{}}}",
                             ev.join(","),
                             jnum(*joint_logit_delta),
-                            prov(&j.provenance)
+                            prov(&j.provenance),
+                            evidence_proofs
                         ));
                     }
                 }
@@ -244,7 +301,7 @@ fn status_certificates(
     optimize: &Option<OptimizeOutcome>,
 ) -> Vec<(&'static str, String)> {
     let mut out: Vec<(&'static str, String)> = Vec::new();
-    let mut add = |out: &mut Vec<(&'static str, String)>, s: &'static str, cert: String| {
+    let add = |out: &mut Vec<(&'static str, String)>, s: &'static str, cert: String| {
         if !out.iter().any(|(k, _)| *k == s) {
             out.push((s, cert));
         }

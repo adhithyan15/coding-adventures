@@ -55,11 +55,14 @@ pub enum DerivationOrigin {
     FromContribution {
         clause_id: ContributionClauseId,
         /// FactIds for every Fact that satisfied the evidence term.
-        /// Empty if the evidence was satisfied by a Rule head — the
-        /// engine does not currently expose Rule provenance for
-        /// LR-aggregation evidence; v0.2 will route Rule-derived
-        /// evidence through this field too.
+        /// Directly observed facts appear here, and rule-derived
+        /// evidence also repeats the proof's leaf facts so the
+        /// aggregate proof can expose a flat fact index.
         evidence_fact_ids: Vec<FactId>,
+        /// If the evidence term was not directly observed but was
+        /// proved by SLD resolution, this is the derivation that
+        /// licensed the contribution.
+        evidence_proof: Option<Box<Proof>>,
         /// log(LR) for this contribution. Inline for the same audit
         /// reason as `prior_logit`.
         logit_delta: f64,
@@ -72,6 +75,9 @@ pub enum DerivationOrigin {
         /// Union of FactIds satisfying every evidence term in the
         /// joint set.
         evidence_fact_ids: Vec<FactId>,
+        /// SLD derivations for any joint evidence terms that were
+        /// rule-derived rather than directly observed.
+        evidence_proofs: Vec<Proof>,
         /// log(joint LR). Inline.
         joint_logit_delta: f64,
     },
@@ -190,17 +196,32 @@ pub(crate) fn collect_ids(steps: &[ProofStep]) -> (Vec<FactId>, Vec<RuleId>) {
         match &s.origin {
             DerivationOrigin::FromFact(f) => facts.push(*f),
             DerivationOrigin::FromRule(r) => rules.push(*r),
-            // The LR-aggregation variants carry their evidence Fact
-            // ids inline so that the via_facts list of an
-            // LR-aggregated Proof can be reconstructed from the
-            // steps. (Rules don't contribute to LR proofs.)
+            // The LR-aggregation variants carry their direct evidence
+            // Fact ids inline. If evidence was rule-derived, the nested
+            // SLD proof carries the facts and rules that licensed it.
             DerivationOrigin::FromPrior { .. } => {}
             DerivationOrigin::FromContribution {
-                evidence_fact_ids, ..
-            } => facts.extend(evidence_fact_ids.iter().copied()),
+                evidence_fact_ids,
+                evidence_proof,
+                ..
+            } => {
+                facts.extend(evidence_fact_ids.iter().copied());
+                if let Some(proof) = evidence_proof {
+                    facts.extend(proof.via_facts.iter().copied());
+                    rules.extend(proof.via_rules.iter().copied());
+                }
+            }
             DerivationOrigin::FromJointContribution {
-                evidence_fact_ids, ..
-            } => facts.extend(evidence_fact_ids.iter().copied()),
+                evidence_fact_ids,
+                evidence_proofs,
+                ..
+            } => {
+                facts.extend(evidence_fact_ids.iter().copied());
+                for proof in evidence_proofs {
+                    facts.extend(proof.via_facts.iter().copied());
+                    rules.extend(proof.via_rules.iter().copied());
+                }
+            }
             // Predicate-gated contributions read a Certain valued slot
             // on CPU; the fired comparison (observed/op/threshold) is the
             // provenance carried inline on the step. They contribute no

@@ -246,6 +246,15 @@ licensed it. This is the unification that makes deduction + probability one quer
 **Cost:** small, localized to `lib.rs:943` + `lr_aggregate.rs` evidence lookup +
 `proof_dag.rs` (one optional field). High risk-adjusted leverage.
 
+**Implementation note (2026-06-28):** the core bridge is now implemented in
+`logic-engine`: direct `Certain` facts remain the fast path, otherwise
+`observed_evidence` enumerates SLD proofs, selects the strongest proof, attenuates
+the LR delta by the fact/rule probability product, and stores the nested proof under
+the LR step. `adj-lang-cli` renders that nested `"evidence_proof"` so the `.adj`
+program path can show the deduction that licensed the probabilistic contribution.
+The later unified-proof pass can still collapse trust-tier summaries and verifier
+checks across SLD + LR + solver/CAS steps.
+
 ### B. Symbolic algebra as first-class ADJ — **wiring + new trail (CAS already exists)**
 
 **B1 — surface.** Add statements that name the existing CAS operations. New grammar

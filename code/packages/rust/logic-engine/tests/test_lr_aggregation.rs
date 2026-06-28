@@ -3,10 +3,10 @@
 //! semantically — what the rulebook says directly, not the ADJ46
 //! awkward synthetic-`contrib`-marker workaround.
 
-use logic_core::{atom, compound, Term};
+use logic_core::{atom, compound};
 use logic_engine::{
-    counterfactual, search, source_disagreements, ContributionClause, Fact,
-    JointContributionClause, KnowledgeBase, LrAggregateWarning, PriorClause, Provenance,
+    counterfactual, search, source_disagreements, BodyLiteral, ContributionClause, Fact,
+    JointContributionClause, KnowledgeBase, LrAggregateWarning, PriorClause, Provenance, Rule,
     SearchMode, SearchResult, TrustTier, UncertaintyMarker,
 };
 
@@ -195,11 +195,7 @@ fn missing_prior_produces_uniform_posterior_with_warning() {
     let mut kb = KnowledgeBase::new();
     // Contribution without a prior — algorithm proceeds at P=0.5
     // and emits a NoPriorDeclared warning per LP19e §"Edge cases."
-    kb.add_contribution(ContributionClause::from_lr(
-        atom("c"),
-        atom("ev"),
-        3.0,
-    ));
+    kb.add_contribution(ContributionClause::from_lr(atom("c"), atom("ev"), 3.0));
     kb.add_fact(Fact::certain(atom("ev")));
 
     let result = search(&atom("c"), &kb, SearchMode::LRAggregate);
@@ -250,6 +246,98 @@ fn proof_dag_carries_evidence_fact_ids_through_lr_steps() {
 }
 
 #[test]
+fn rule_derived_evidence_gates_contribution_and_carries_proof() {
+    use logic_engine::DerivationOrigin;
+
+    let mut kb = KnowledgeBase::new();
+    kb.add_prior(PriorClause::from_probability(atom("bacterial"), 0.10))
+        .unwrap();
+    kb.add_contribution(ContributionClause::from_lr(
+        atom("bacterial"),
+        atom("infection_present"),
+        10.0,
+    ));
+    let fever_id = kb.add_fact(Fact::certain(atom("fever")));
+    let culture_id = kb.add_fact(Fact::certain(atom("positive_culture")));
+    let rule_id = kb.add_rule(Rule::certain(
+        atom("infection_present"),
+        vec![
+            BodyLiteral::Pos(atom("fever")),
+            BodyLiteral::Pos(atom("positive_culture")),
+        ],
+    ));
+
+    let result = search(&atom("bacterial"), &kb, SearchMode::LRAggregate);
+    if let SearchResult::LRAggregateResult { dag, posterior, .. } = result {
+        // prior odds 1/9, LR 10 => odds 10/9 => posterior 10/19.
+        assert!(approx_eq(posterior, 10.0 / 19.0, 1e-12));
+        let proof = &dag.proofs[0];
+        assert!(proof.via_facts.contains(&fever_id));
+        assert!(proof.via_facts.contains(&culture_id));
+        assert!(proof.via_rules.contains(&rule_id));
+        let contribution_step = proof
+            .steps
+            .iter()
+            .find(|s| matches!(s.origin, DerivationOrigin::FromContribution { .. }))
+            .expect("a contribution step should be present");
+        if let DerivationOrigin::FromContribution {
+            evidence_fact_ids,
+            evidence_proof,
+            logit_delta,
+            ..
+        } = &contribution_step.origin
+        {
+            assert!(evidence_fact_ids.contains(&fever_id));
+            assert!(evidence_fact_ids.contains(&culture_id));
+            let evidence_proof = evidence_proof
+                .as_ref()
+                .expect("rule-derived evidence should carry its SLD proof");
+            assert!(evidence_proof.via_rules.contains(&rule_id));
+            assert!(approx_eq(*logit_delta, 10.0_f64.ln(), 1e-12));
+        }
+    } else {
+        panic!("expected LRAggregateResult");
+    }
+}
+
+#[test]
+fn probabilistic_rule_derived_evidence_attenuates_contribution() {
+    use logic_engine::DerivationOrigin;
+
+    let mut kb = KnowledgeBase::new();
+    kb.add_prior(PriorClause::from_probability(atom("bacterial"), 0.10))
+        .unwrap();
+    kb.add_contribution(ContributionClause::from_lr(
+        atom("bacterial"),
+        atom("infection_present"),
+        16.0,
+    ));
+    kb.add_fact(Fact::certain(atom("fever")));
+    let rule_id = kb.add_rule(Rule::with_probability(
+        atom("infection_present"),
+        vec![BodyLiteral::Pos(atom("fever"))],
+        0.5,
+    ));
+
+    let result = search(&atom("bacterial"), &kb, SearchMode::LRAggregate);
+    if let SearchResult::LRAggregateResult { dag, posterior, .. } = result {
+        // ln(16) attenuated by rule confidence 0.5 is ln(4).
+        assert!(approx_eq(posterior, 4.0 / 13.0, 1e-12));
+        assert!(dag.proofs[0].via_rules.contains(&rule_id));
+        let contribution_step = dag.proofs[0]
+            .steps
+            .iter()
+            .find(|s| matches!(s.origin, DerivationOrigin::FromContribution { .. }))
+            .expect("a contribution step should be present");
+        if let DerivationOrigin::FromContribution { logit_delta, .. } = &contribution_step.origin {
+            assert!(approx_eq(*logit_delta, 16.0_f64.ln() * 0.5, 1e-12));
+        }
+    } else {
+        panic!("expected LRAggregateResult");
+    }
+}
+
+#[test]
 fn term_equality_on_compounds_works_for_contribution_lookup() {
     // Confirms the linear-scan KB representation (Vec, not HashMap)
     // is correct for compound-term contributions.
@@ -290,10 +378,9 @@ fn provenance_is_recoverable_from_kb_after_aggregation() {
     let mut kb = KnowledgeBase::new();
     let prior_id = kb
         .add_prior(
-            PriorClause::from_probability(atom("acs"), 0.10)
-                .with_provenance(Provenance::cited(
-                    "Pope JH et al., NEJM 1995;342(16):1163-70",
-                )),
+            PriorClause::from_probability(atom("acs"), 0.10).with_provenance(Provenance::cited(
+                "Pope JH et al., NEJM 1995;342(16):1163-70",
+            )),
         )
         .unwrap();
     let contrib_id = kb.add_contribution(
@@ -324,7 +411,10 @@ fn provenance_is_recoverable_from_kb_after_aggregation() {
                 assert_eq!(*clause_id, prior_id);
                 let p = kb.prior_for(&atom("acs")).unwrap();
                 assert_eq!(p.provenance.trust_tier, TrustTier::Authoritative);
-                assert_eq!(p.provenance.source, "Pope JH et al., NEJM 1995;342(16):1163-70");
+                assert_eq!(
+                    p.provenance.source,
+                    "Pope JH et al., NEJM 1995;342(16):1163-70"
+                );
             }
             DerivationOrigin::FromContribution { clause_id, .. } => {
                 assert_eq!(*clause_id, contrib_id);
@@ -454,7 +544,8 @@ fn uncertainty_marker_with_no_matching_contributions_has_zero_voi() {
     // but every if_observed_logit_delta is 0.0 and VOI is 0.0 —
     // a "rulebook gap" the modeller should know about.
     let mut kb = KnowledgeBase::new();
-    kb.add_prior(PriorClause::from_probability(atom("c"), 0.10)).unwrap();
+    kb.add_prior(PriorClause::from_probability(atom("c"), 0.10))
+        .unwrap();
     kb.add_contribution(ContributionClause::from_lr(
         atom("c"),
         atom("some_evidence"),
@@ -470,10 +561,7 @@ fn uncertainty_marker_with_no_matching_contributions_has_zero_voi() {
     let result = search(&atom("c"), &kb, SearchMode::LRAggregate);
     if let SearchResult::LRAggregateResult { uncertainties, .. } = result {
         assert_eq!(uncertainties.len(), 1);
-        assert_eq!(
-            uncertainties[0].if_observed_logit_delta,
-            vec![0.0, 0.0]
-        );
+        assert_eq!(uncertainties[0].if_observed_logit_delta, vec![0.0, 0.0]);
         assert_eq!(uncertainties[0].voi_logit_range, 0.0);
     } else {
         panic!("expected LRAggregateResult");
