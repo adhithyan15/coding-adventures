@@ -1,5 +1,6 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -313,6 +314,38 @@ pub struct SessionProgress {
     pub completed: bool,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum ExternalSourceTarget {
+    Collection,
+    Deck,
+    NoteType,
+    Note,
+    Card,
+    Review,
+    Session,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct ExternalSourceRecord {
+    pub target: ExternalSourceTarget,
+    pub target_id: String,
+    pub source: String,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub original_id: Option<String>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "BTreeMap::is_empty")
+    )]
+    pub data: BTreeMap<String, String>,
+}
+
 #[derive(Clone, Debug, Default, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
@@ -324,6 +357,8 @@ pub struct AppState {
     pub card_progress: Vec<CardProgress>,
     pub sessions: Vec<Session>,
     pub reviews: Vec<Review>,
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub external_sources: Vec<ExternalSourceRecord>,
     pub active_session: Option<ActiveSessionState>,
 }
 

@@ -26,9 +26,9 @@ pub use csv::{
 pub use history::summarize_review_history;
 pub use model::{
     ActiveSessionState, AppState, Card, CardFlag, CardLineage, CardProgress, CardProgressSnapshot,
-    CardState, CardTemplate, DailyStudyLimitUsage, Deck, DeckStats, FieldDef, GeneratedCard, Note,
-    NoteFieldValue, NoteType, Rating, RatingCounts, Review, ReviewHistorySummary, Session,
-    SessionProgress, SessionStatus,
+    CardState, CardTemplate, DailyStudyLimitUsage, Deck, DeckStats, ExternalSourceRecord,
+    ExternalSourceTarget, FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating,
+    RatingCounts, Review, ReviewHistorySummary, Session, SessionProgress, SessionStatus,
 };
 pub use queue::{
     build_session_queue, build_session_queue_with_daily_limits, build_session_queue_with_options,

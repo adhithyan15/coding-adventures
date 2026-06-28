@@ -1,6 +1,6 @@
 use crate::model::{
-    ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, Deck, Rating,
-    Review, Session, SessionStatus,
+    ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, Deck,
+    ExternalSourceRecord, ExternalSourceTarget, Rating, Review, Session, SessionStatus,
 };
 use crate::scheduler::{schedule_review, DeckOptions};
 use crate::sm2::INITIAL_EASE_FACTOR;
@@ -169,6 +169,12 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 .filter(|card| card.deck_id == deck_id)
                 .map(|card| card.id.clone())
                 .collect();
+            let note_ids: Vec<String> = state
+                .notes
+                .iter()
+                .filter(|note| note.deck_id == deck_id)
+                .map(|note| note.id.clone())
+                .collect();
             let session_ids: Vec<String> = state
                 .sessions
                 .iter()
@@ -212,6 +218,26 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     .reviews
                     .iter()
                     .filter(|review| !session_ids.contains(&review.session_id))
+                    .cloned()
+                    .collect(),
+                external_sources: state
+                    .external_sources
+                    .iter()
+                    .filter(|source| {
+                        source.target != ExternalSourceTarget::Deck || source.target_id != deck_id
+                    })
+                    .filter(|source| {
+                        source.target != ExternalSourceTarget::Card
+                            || !card_ids.contains(&source.target_id)
+                    })
+                    .filter(|source| {
+                        source.target != ExternalSourceTarget::Note
+                            || !note_ids.contains(&source.target_id)
+                    })
+                    .filter(|source| {
+                        source.target != ExternalSourceTarget::Session
+                            || !session_ids.contains(&source.target_id)
+                    })
                     .cloned()
                     .collect(),
                 active_session: state
@@ -283,6 +309,11 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 .filter(|progress| progress.card_id != card_id)
                 .cloned()
                 .collect(),
+            external_sources: without_external_source_target(
+                &state.external_sources,
+                ExternalSourceTarget::Card,
+                &card_id,
+            ),
             active_session: remove_card_from_active_session(state.active_session.clone(), &card_id),
             ..state.clone()
         },
@@ -514,6 +545,18 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             next
         }
     }
+}
+
+fn without_external_source_target(
+    sources: &[ExternalSourceRecord],
+    target: ExternalSourceTarget,
+    target_id: &str,
+) -> Vec<ExternalSourceRecord> {
+    sources
+        .iter()
+        .filter(|source| source.target != target || source.target_id != target_id)
+        .cloned()
+        .collect()
 }
 
 fn bury_card_siblings(
@@ -1521,6 +1564,7 @@ mod tests {
                 previous_active_session: None,
                 sibling_progress_snapshots: Vec::new(),
             }],
+            external_sources: Vec::new(),
             active_session: Some(ActiveSessionState {
                 session_id: "session".to_string(),
                 deck_id: "deck".to_string(),

@@ -746,6 +746,7 @@ mod tests {
             ],
             sessions: Vec::new(),
             reviews: Vec::new(),
+            external_sources: Vec::new(),
             active_session: None,
         }
     }
@@ -786,6 +787,7 @@ mod tests {
             card_progress: vec![metadata_overlay("flagged-new")],
             sessions: Vec::new(),
             reviews: Vec::new(),
+            external_sources: Vec::new(),
             active_session: None,
         };
 

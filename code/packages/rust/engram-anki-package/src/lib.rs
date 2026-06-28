@@ -10,8 +10,9 @@ use std::fmt;
 use coding_adventures_sha1::sum1;
 use engram_core::{
     render_template, render_template_with_front_side, AppState, Card, CardFlag, CardLineage,
-    CardProgress, CardState, CardTemplate, Deck, FieldDef, Note, NoteFieldValue, NoteType, Rating,
-    Review, Session, SessionStatus, INITIAL_EASE_FACTOR, ONE_DAY_MS,
+    CardProgress, CardState, CardTemplate, Deck, ExternalSourceRecord, ExternalSourceTarget,
+    FieldDef, Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
+    INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
 use rusqlite::{Connection, OpenFlags};
 use serde::{Deserialize, Serialize};
@@ -22,6 +23,7 @@ const LEGACY_COLLECTION: &str = "collection.anki2";
 const SQLITE_21_COLLECTION: &str = "collection.anki21";
 const SQLITE_21B_COLLECTION: &str = "collection.anki21b";
 const MEDIA_MAP: &str = "media";
+const ANKI_V11_SOURCE: &str = "anki-v11";
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -541,6 +543,7 @@ pub fn v11_collection_to_engram_state(
         })
         .collect::<Vec<_>>();
     let sessions = synthetic_import_sessions(&reviews, &deck_by_card_id, &default_deck_id);
+    let external_sources = v11_external_sources(collection)?;
 
     Ok(AppState {
         decks,
@@ -550,8 +553,195 @@ pub fn v11_collection_to_engram_state(
         card_progress,
         sessions,
         reviews,
+        external_sources,
         active_session: None,
     })
+}
+
+fn v11_external_sources(
+    collection: &AnkiV11Collection,
+) -> Result<Vec<ExternalSourceRecord>, ApkgError> {
+    let mut sources = Vec::new();
+
+    let mut collection_data = BTreeMap::new();
+    insert_i64(&mut collection_data, "id", collection.metadata.id);
+    insert_i64(
+        &mut collection_data,
+        "createdAtDays",
+        collection.metadata.created_at_days,
+    );
+    insert_i64(
+        &mut collection_data,
+        "modifiedAt",
+        collection.metadata.modified_at,
+    );
+    insert_i64(
+        &mut collection_data,
+        "schemaModifiedAt",
+        collection.metadata.schema_modified_at,
+    );
+    insert_i64(&mut collection_data, "version", collection.metadata.version);
+    insert_i64(&mut collection_data, "dirty", collection.metadata.dirty);
+    insert_i64(
+        &mut collection_data,
+        "updateSequenceNumber",
+        collection.metadata.update_sequence_number,
+    );
+    insert_i64(
+        &mut collection_data,
+        "lastSync",
+        collection.metadata.last_sync,
+    );
+    insert_json(
+        &mut collection_data,
+        "configJson",
+        &collection.metadata.config,
+        "col.conf",
+    )?;
+    insert_json(
+        &mut collection_data,
+        "deckConfigJson",
+        &collection.metadata.deck_config,
+        "col.dconf",
+    )?;
+    insert_json(
+        &mut collection_data,
+        "tagsJson",
+        &collection.metadata.tags,
+        "col.tags",
+    )?;
+    insert_serialized_json(
+        &mut collection_data,
+        "gravesJson",
+        &collection.graves,
+        "Anki graves",
+    )?;
+    sources.push(source_record(
+        ExternalSourceTarget::Collection,
+        "collection",
+        Some(collection.metadata.id.to_string()),
+        collection_data,
+    ));
+
+    for deck in &collection.decks {
+        let mut data = BTreeMap::new();
+        insert_json(&mut data, "rawJson", &deck.raw, "Anki deck JSON")?;
+        sources.push(source_record(
+            ExternalSourceTarget::Deck,
+            deck.id.to_string(),
+            Some(deck.id.to_string()),
+            data,
+        ));
+    }
+
+    for note_type in &collection.note_types {
+        let mut data = BTreeMap::new();
+        insert_json(&mut data, "rawJson", &note_type.raw, "Anki model JSON")?;
+        sources.push(source_record(
+            ExternalSourceTarget::NoteType,
+            note_type.id.to_string(),
+            Some(note_type.id.to_string()),
+            data,
+        ));
+    }
+
+    for note in &collection.notes {
+        let mut data = BTreeMap::new();
+        insert_string(&mut data, "guid", &note.guid);
+        insert_i64(&mut data, "modifiedAt", note.modified_at);
+        insert_i64(
+            &mut data,
+            "updateSequenceNumber",
+            note.update_sequence_number,
+        );
+        insert_string(&mut data, "sortField", &note.sort_field);
+        insert_i64(&mut data, "checksum", note.checksum);
+        insert_i64(&mut data, "flags", note.flags);
+        insert_string(&mut data, "data", &note.data);
+        sources.push(source_record(
+            ExternalSourceTarget::Note,
+            note.id.to_string(),
+            Some(note.id.to_string()),
+            data,
+        ));
+    }
+
+    for card in &collection.cards {
+        let mut data = BTreeMap::new();
+        insert_i64(&mut data, "noteId", card.note_id);
+        insert_i64(&mut data, "deckId", card.deck_id);
+        insert_i64(&mut data, "ordinal", card.ordinal);
+        insert_i64(&mut data, "modifiedAt", card.modified_at);
+        insert_i64(
+            &mut data,
+            "updateSequenceNumber",
+            card.update_sequence_number,
+        );
+        insert_i64(&mut data, "kind", card.kind);
+        insert_i64(&mut data, "queue", card.queue);
+        insert_i64(&mut data, "due", card.due);
+        insert_i64(&mut data, "interval", card.interval);
+        insert_i64(&mut data, "factor", card.factor);
+        insert_i64(&mut data, "repetitions", card.repetitions);
+        insert_i64(&mut data, "lapses", card.lapses);
+        insert_i64(&mut data, "left", card.left);
+        insert_i64(&mut data, "originalDue", card.original_due);
+        insert_i64(&mut data, "originalDeckId", card.original_deck_id);
+        insert_i64(&mut data, "flags", card.flags);
+        insert_string(&mut data, "data", &card.data);
+        sources.push(source_record(
+            ExternalSourceTarget::Card,
+            card.id.to_string(),
+            Some(card.id.to_string()),
+            data,
+        ));
+    }
+
+    Ok(sources)
+}
+
+fn source_record(
+    target: ExternalSourceTarget,
+    target_id: impl Into<String>,
+    original_id: Option<String>,
+    data: BTreeMap<String, String>,
+) -> ExternalSourceRecord {
+    ExternalSourceRecord {
+        target,
+        target_id: target_id.into(),
+        source: ANKI_V11_SOURCE.to_string(),
+        original_id,
+        data,
+    }
+}
+
+fn insert_i64(data: &mut BTreeMap<String, String>, key: &str, value: i64) {
+    data.insert(key.to_string(), value.to_string());
+}
+
+fn insert_string(data: &mut BTreeMap<String, String>, key: &str, value: &str) {
+    data.insert(key.to_string(), value.to_string());
+}
+
+fn insert_json(
+    data: &mut BTreeMap<String, String>,
+    key: &str,
+    value: &Value,
+    label: &str,
+) -> Result<(), ApkgError> {
+    insert_serialized_json(data, key, value, label)
+}
+
+fn insert_serialized_json<T: Serialize>(
+    data: &mut BTreeMap<String, String>,
+    key: &str,
+    value: &T,
+    label: &str,
+) -> Result<(), ApkgError> {
+    let json = serde_json::to_string(value)
+        .map_err(|err| apkg_error(format!("failed to serialize {label}: {err}")))?;
+    data.insert(key.to_string(), json);
+    Ok(())
 }
 
 #[derive(Clone, Debug)]
@@ -606,6 +796,7 @@ struct ExportModel {
     note_type_ids: BTreeMap<String, i64>,
     note_ids: BTreeMap<String, i64>,
     card_ids: BTreeMap<String, i64>,
+    external_sources: Vec<ExternalSourceRecord>,
 }
 
 impl ExportModel {
@@ -780,6 +971,7 @@ impl ExportModel {
             note_type_ids,
             note_ids,
             card_ids,
+            external_sources: state.external_sources.clone(),
         })
     }
 }
@@ -868,6 +1060,10 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
         .map_err(|err| apkg_error(format!("failed to serialize Anki deck map: {err}")))?;
     let models_json = serde_json::to_string(&export_note_types_json(export))
         .map_err(|err| apkg_error(format!("failed to serialize Anki model map: {err}")))?;
+    let config_json = serde_json::to_string(&export_collection_config_json(export))
+        .map_err(|err| apkg_error(format!("failed to serialize Anki config map: {err}")))?;
+    let deck_config_json = serde_json::to_string(&export_collection_deck_config_json(export))
+        .map_err(|err| apkg_error(format!("failed to serialize Anki deck config map: {err}")))?;
     let tags_json = serde_json::to_string(&export_tags_json(export))
         .map_err(|err| apkg_error(format!("failed to serialize Anki tag map: {err}")))?;
 
@@ -875,18 +1071,18 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
         .execute(
             "INSERT INTO col VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
             rusqlite::params![
-                1_i64,
+                export_collection_i64(export, "id").unwrap_or(1_i64),
                 export.created_at_days,
                 export.modified_at_seconds,
                 export.modified_at_seconds,
                 11_i64,
-                0_i64,
-                -1_i64,
-                0_i64,
-                serde_json::json!({ "nextPos": export.cards.len() }).to_string(),
+                export_collection_i64(export, "dirty").unwrap_or(0_i64),
+                export_collection_i64(export, "updateSequenceNumber").unwrap_or(-1_i64),
+                export_collection_i64(export, "lastSync").unwrap_or(0_i64),
+                config_json,
                 models_json,
                 decks_json,
-                serde_json::json!({ "1": { "id": 1, "name": "Default" } }).to_string(),
+                deck_config_json,
                 tags_json,
             ],
         )
@@ -906,21 +1102,23 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
         let fields = export_note_field_values(note, note_type);
         let field_join = fields.join("\u{1f}");
         let sort_field = fields.first().cloned().unwrap_or_default();
+        let source = anki_source(export, ExternalSourceTarget::Note, &note.key);
         connection
             .execute(
                 "INSERT INTO notes VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
                 rusqlite::params![
                     export.note_ids[&note.key],
-                    export_note_guid(&note.key, export.note_ids[&note.key]),
+                    source_string(source, "guid")
+                        .unwrap_or_else(|| export_note_guid(&note.key, export.note_ids[&note.key])),
                     export.note_type_ids[&note.note_type_key],
                     millis_to_anki_seconds(note.updated_at.max(note.created_at)),
-                    -1_i64,
+                    source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
                     join_anki_tags(&note.tags),
                     field_join,
                     sort_field,
-                    anki_field_checksum(&fields.first().cloned().unwrap_or_default()),
-                    0_i64,
-                    "",
+                    export_note_checksum(source, &fields.first().cloned().unwrap_or_default()),
+                    source_i64(source, "flags").unwrap_or_default(),
+                    source_string(source, "data").unwrap_or_default(),
                 ],
             )
             .map_err(|err| apkg_error(format!("failed to write Anki note {}: {err}", note.key)))?;
@@ -928,7 +1126,8 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
 
     for (index, card) in export.cards.iter().enumerate() {
         let progress = export.progress_by_card.get(&card.key);
-        let scheduling = export_card_scheduling(progress, export.created_at_days, index);
+        let source = anki_source(export, ExternalSourceTarget::Card, &card.key);
+        let scheduling = export_card_scheduling(progress, export.created_at_days, index, source);
         connection
             .execute(
                 "INSERT INTO cards VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18)",
@@ -938,7 +1137,7 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     export.deck_ids[&card.deck_key],
                     i64::from(card.template_ordinal),
                     export_card_modified_at(card, progress),
-                    -1_i64,
+                    source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
                     scheduling.kind,
                     scheduling.queue,
                     scheduling.due,
@@ -947,10 +1146,10 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     scheduling.repetitions,
                     scheduling.lapses,
                     scheduling.left,
-                    0_i64,
-                    0_i64,
+                    source_i64(source, "originalDue").unwrap_or_default(),
+                    source_i64(source, "originalDeckId").unwrap_or_default(),
                     scheduling.flags,
-                    "",
+                    source_string(source, "data").unwrap_or_default(),
                 ],
             )
             .map_err(|err| apkg_error(format!("failed to write Anki card {}: {err}", card.key)))?;
@@ -997,6 +1196,20 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
             })?;
     }
 
+    for grave in export_collection_graves(export) {
+        connection
+            .execute(
+                "INSERT INTO graves VALUES (?1, ?2, ?3)",
+                rusqlite::params![grave.update_sequence_number, grave.object_id, grave.kind],
+            )
+            .map_err(|err| {
+                apkg_error(format!(
+                    "failed to write Anki grave {}:{}: {err}",
+                    grave.kind, grave.object_id
+                ))
+            })?;
+    }
+
     Ok(())
 }
 
@@ -1004,20 +1217,33 @@ fn export_decks_json(export: &ExportModel) -> Value {
     let mut object = serde_json::Map::new();
     for deck in &export.decks {
         let id = export.deck_ids[&deck.key];
-        object.insert(
-            id.to_string(),
-            serde_json::json!({
-                "id": id,
-                "name": deck.name,
-                "desc": deck.description,
-                "mod": millis_to_anki_seconds(deck.created_at),
-                "usn": -1,
-                "conf": 1,
-                "dyn": 0,
-                "extendNew": 10,
-                "extendRev": 50,
-            }),
+        let mut deck_json =
+            anki_source_json(export, ExternalSourceTarget::Deck, &deck.key, "rawJson")
+                .unwrap_or_else(|| serde_json::json!({}));
+        let deck_object = ensure_json_object(&mut deck_json);
+        deck_object.insert("id".to_string(), Value::Number(id.into()));
+        deck_object.insert("name".to_string(), Value::String(deck.name.clone()));
+        deck_object.insert("desc".to_string(), Value::String(deck.description.clone()));
+        deck_object.insert(
+            "mod".to_string(),
+            Value::Number(millis_to_anki_seconds(deck.created_at).into()),
         );
+        deck_object
+            .entry("usn".to_string())
+            .or_insert_with(|| Value::Number((-1_i64).into()));
+        deck_object
+            .entry("conf".to_string())
+            .or_insert_with(|| Value::Number(1_i64.into()));
+        deck_object
+            .entry("dyn".to_string())
+            .or_insert_with(|| Value::Number(0_i64.into()));
+        deck_object
+            .entry("extendNew".to_string())
+            .or_insert_with(|| Value::Number(10_i64.into()));
+        deck_object
+            .entry("extendRev".to_string())
+            .or_insert_with(|| Value::Number(50_i64.into()));
+        object.insert(id.to_string(), deck_json);
     }
     Value::Object(object)
 }
@@ -1026,62 +1252,223 @@ fn export_note_types_json(export: &ExportModel) -> Value {
     let mut object = serde_json::Map::new();
     for note_type in &export.note_types {
         let id = export.note_type_ids[&note_type.key];
-        let fields = note_type
-            .fields
-            .iter()
-            .map(|field| {
-                serde_json::json!({
-                    "name": field.name,
-                    "ord": field.ordinal,
-                    "sticky": false,
-                    "rtl": false,
-                    "font": "Arial",
-                    "size": 20,
-                })
-            })
-            .collect::<Vec<_>>();
-        let templates = note_type
-            .templates
-            .iter()
-            .map(|template| {
-                serde_json::json!({
-                    "name": template.name,
-                    "ord": template.ordinal,
-                    "qfmt": template.front_template,
-                    "afmt": template.back_template,
-                    "did": null,
-                    "bqfmt": "",
-                    "bafmt": "",
-                })
-            })
-            .collect::<Vec<_>>();
-        object.insert(
-            id.to_string(),
-            serde_json::json!({
-                "id": id,
-                "name": note_type.name,
-                "type": note_type.kind,
-                "mod": millis_to_anki_seconds(note_type.updated_at.max(note_type.created_at)),
-                "usn": -1,
-                "sortf": 0,
-                "did": null,
-                "css": ".card { font-family: arial; font-size: 20px; text-align: center; color: black; background-color: white; }",
-                "latexPre": "\\documentclass[12pt]{article}",
-                "latexPost": "\\end{document}",
-                "flds": fields,
-                "tmpls": templates,
-            }),
+        let mut model_json = anki_source_json(
+            export,
+            ExternalSourceTarget::NoteType,
+            &note_type.key,
+            "rawJson",
+        )
+        .unwrap_or_else(|| serde_json::json!({}));
+        let raw_fields = model_json.get("flds").cloned().unwrap_or(Value::Null);
+        let raw_templates = model_json.get("tmpls").cloned().unwrap_or(Value::Null);
+        let fields = export_note_type_fields_json(note_type, &raw_fields);
+        let templates = export_note_type_templates_json(note_type, &raw_templates);
+        let model_object = ensure_json_object(&mut model_json);
+        model_object.insert("id".to_string(), Value::Number(id.into()));
+        model_object.insert("name".to_string(), Value::String(note_type.name.clone()));
+        model_object.insert("type".to_string(), Value::Number(note_type.kind.into()));
+        model_object.insert(
+            "mod".to_string(),
+            Value::Number(
+                millis_to_anki_seconds(note_type.updated_at.max(note_type.created_at)).into(),
+            ),
         );
+        model_object
+            .entry("usn".to_string())
+            .or_insert_with(|| Value::Number((-1_i64).into()));
+        model_object
+            .entry("sortf".to_string())
+            .or_insert_with(|| Value::Number(0_i64.into()));
+        model_object.entry("did".to_string()).or_insert(Value::Null);
+        model_object.entry("css".to_string()).or_insert_with(|| {
+            Value::String(
+                ".card { font-family: arial; font-size: 20px; text-align: center; color: black; background-color: white; }"
+                    .to_string(),
+            )
+        });
+        model_object
+            .entry("latexPre".to_string())
+            .or_insert_with(|| Value::String("\\documentclass[12pt]{article}".to_string()));
+        model_object
+            .entry("latexPost".to_string())
+            .or_insert_with(|| Value::String("\\end{document}".to_string()));
+        model_object.insert("flds".to_string(), Value::Array(fields));
+        model_object.insert("tmpls".to_string(), Value::Array(templates));
+        object.insert(id.to_string(), model_json);
     }
     Value::Object(object)
 }
 
 fn export_tags_json(export: &ExportModel) -> Value {
-    let mut object = serde_json::Map::new();
+    let mut object = export_collection_json(export, "tagsJson")
+        .and_then(|value| value.as_object().cloned())
+        .unwrap_or_default();
     for tag in export.notes.iter().flat_map(|note| note.tags.iter()) {
         object.insert(tag.clone(), Value::Number(1.into()));
     }
     Value::Object(object)
+}
+
+fn export_collection_config_json(export: &ExportModel) -> Value {
+    let mut config =
+        export_collection_json(export, "configJson").unwrap_or_else(|| serde_json::json!({}));
+    ensure_json_object(&mut config).insert(
+        "nextPos".to_string(),
+        Value::Number(i64::try_from(export.cards.len()).unwrap_or(i64::MAX).into()),
+    );
+    config
+}
+
+fn export_collection_deck_config_json(export: &ExportModel) -> Value {
+    export_collection_json(export, "deckConfigJson")
+        .unwrap_or_else(|| serde_json::json!({ "1": { "id": 1, "name": "Default" } }))
+}
+
+fn export_collection_graves(export: &ExportModel) -> Vec<AnkiV11Grave> {
+    export_collection_json(export, "gravesJson")
+        .and_then(|value| serde_json::from_value(value).ok())
+        .unwrap_or_default()
+}
+
+fn export_collection_i64(export: &ExportModel, key: &str) -> Option<i64> {
+    anki_source(export, ExternalSourceTarget::Collection, "collection")
+        .and_then(|source| source_i64(Some(source), key))
+}
+
+fn export_collection_json(export: &ExportModel, key: &str) -> Option<Value> {
+    anki_source(export, ExternalSourceTarget::Collection, "collection")
+        .and_then(|source| source_json(Some(source), key))
+}
+
+fn export_note_type_fields_json(note_type: &ExportNoteType, raw_fields: &Value) -> Vec<Value> {
+    let raw_by_ordinal = raw_values_by_ordinal(raw_fields);
+    let mut fields = note_type.fields.clone();
+    fields.sort_by_key(|field| field.ordinal);
+    fields
+        .into_iter()
+        .map(|field| {
+            let mut field_json = raw_by_ordinal
+                .get(&(i64::from(field.ordinal)))
+                .cloned()
+                .unwrap_or_else(|| serde_json::json!({}));
+            let object = ensure_json_object(&mut field_json);
+            object.insert("name".to_string(), Value::String(field.name));
+            object.insert(
+                "ord".to_string(),
+                Value::Number(i64::from(field.ordinal).into()),
+            );
+            object
+                .entry("sticky".to_string())
+                .or_insert(Value::Bool(false));
+            object
+                .entry("rtl".to_string())
+                .or_insert(Value::Bool(false));
+            object
+                .entry("font".to_string())
+                .or_insert_with(|| Value::String("Arial".to_string()));
+            object
+                .entry("size".to_string())
+                .or_insert_with(|| Value::Number(20_i64.into()));
+            field_json
+        })
+        .collect()
+}
+
+fn export_note_type_templates_json(
+    note_type: &ExportNoteType,
+    raw_templates: &Value,
+) -> Vec<Value> {
+    let raw_by_ordinal = raw_values_by_ordinal(raw_templates);
+    let mut templates = note_type.templates.clone();
+    templates.sort_by_key(|template| template.ordinal);
+    templates
+        .into_iter()
+        .map(|template| {
+            let mut template_json = raw_by_ordinal
+                .get(&(i64::from(template.ordinal)))
+                .cloned()
+                .unwrap_or_else(|| serde_json::json!({}));
+            let object = ensure_json_object(&mut template_json);
+            object.insert("name".to_string(), Value::String(template.name));
+            object.insert(
+                "ord".to_string(),
+                Value::Number(i64::from(template.ordinal).into()),
+            );
+            object.insert("qfmt".to_string(), Value::String(template.front_template));
+            object.insert("afmt".to_string(), Value::String(template.back_template));
+            object.entry("did".to_string()).or_insert(Value::Null);
+            object
+                .entry("bqfmt".to_string())
+                .or_insert_with(|| Value::String(String::new()));
+            object
+                .entry("bafmt".to_string())
+                .or_insert_with(|| Value::String(String::new()));
+            template_json
+        })
+        .collect()
+}
+
+fn raw_values_by_ordinal(value: &Value) -> BTreeMap<i64, Value> {
+    value
+        .as_array()
+        .into_iter()
+        .flatten()
+        .enumerate()
+        .map(|(index, raw)| (json_i64(raw, "ord").unwrap_or(index as i64), raw.clone()))
+        .collect()
+}
+
+fn ensure_json_object(value: &mut Value) -> &mut serde_json::Map<String, Value> {
+    if !value.is_object() {
+        *value = Value::Object(serde_json::Map::new());
+    }
+    value
+        .as_object_mut()
+        .expect("value was just made an object")
+}
+
+fn anki_source<'a>(
+    export: &'a ExportModel,
+    target: ExternalSourceTarget,
+    target_id: &str,
+) -> Option<&'a ExternalSourceRecord> {
+    export.external_sources.iter().find(|source| {
+        source.source == ANKI_V11_SOURCE && source.target == target && source.target_id == target_id
+    })
+}
+
+fn anki_source_json(
+    export: &ExportModel,
+    target: ExternalSourceTarget,
+    target_id: &str,
+    key: &str,
+) -> Option<Value> {
+    anki_source(export, target, target_id).and_then(|source| source_json(Some(source), key))
+}
+
+fn source_string(source: Option<&ExternalSourceRecord>, key: &str) -> Option<String> {
+    source.and_then(|source| source.data.get(key).cloned())
+}
+
+fn source_i64(source: Option<&ExternalSourceRecord>, key: &str) -> Option<i64> {
+    source
+        .and_then(|source| source.data.get(key))
+        .and_then(|value| value.parse().ok())
+}
+
+fn source_json(source: Option<&ExternalSourceRecord>, key: &str) -> Option<Value> {
+    source
+        .and_then(|source| source.data.get(key))
+        .and_then(|value| serde_json::from_str(value).ok())
+}
+
+fn export_note_checksum(source: Option<&ExternalSourceRecord>, sort_field: &str) -> i64 {
+    let source_sort_field = source_string(source, "sortField");
+    if source_sort_field.as_deref() == Some(sort_field) {
+        source_i64(source, "checksum").unwrap_or_else(|| anki_field_checksum(sort_field))
+    } else {
+        anki_field_checksum(sort_field)
+    }
 }
 
 fn export_note_field_values(note: &ExportNote, note_type: &ExportNoteType) -> Vec<String> {
@@ -1121,31 +1508,37 @@ fn export_card_scheduling(
     progress: Option<&CardProgress>,
     collection_created_at_days: i64,
     index: usize,
+    source: Option<&ExternalSourceRecord>,
 ) -> ExportCardScheduling {
     let Some(progress) = progress else {
         return ExportCardScheduling {
-            kind: 0,
-            queue: 0,
-            due: index.saturating_add(1) as i64,
-            interval: 0,
-            factor: (INITIAL_EASE_FACTOR * 1000.0).round() as i64,
-            repetitions: 0,
-            lapses: 0,
-            left: 0,
-            flags: 0,
+            kind: source_i64(source, "kind").unwrap_or(0),
+            queue: source_i64(source, "queue").unwrap_or(0),
+            due: source_i64(source, "due").unwrap_or(index.saturating_add(1) as i64),
+            interval: source_i64(source, "interval").unwrap_or(0),
+            factor: source_i64(source, "factor")
+                .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64),
+            repetitions: source_i64(source, "repetitions").unwrap_or(0),
+            lapses: source_i64(source, "lapses").unwrap_or(0),
+            left: source_i64(source, "left").unwrap_or(0),
+            flags: source_i64(source, "flags").unwrap_or(0),
         };
     };
     if is_export_metadata_overlay(progress) {
         return ExportCardScheduling {
-            kind: 0,
-            queue: 0,
-            due: index.saturating_add(1) as i64,
+            kind: source_i64(source, "kind").unwrap_or(0),
+            queue: source_i64(source, "queue").unwrap_or(0),
+            due: source_i64(source, "due").unwrap_or(index.saturating_add(1) as i64),
             interval: 0,
             factor: progress_factor_to_anki(progress),
             repetitions: 0,
             lapses: 0,
-            left: 0,
-            flags: progress.flag.map(card_flag_to_anki).unwrap_or_default(),
+            left: source_i64(source, "left").unwrap_or(0),
+            flags: progress
+                .flag
+                .map(card_flag_to_anki)
+                .or_else(|| source_i64(source, "flags"))
+                .unwrap_or_default(),
         };
     }
 
@@ -1180,8 +1573,12 @@ fn export_card_scheduling(
         left: progress
             .learning_step_index
             .map(i64::from)
+            .unwrap_or_else(|| source_i64(source, "left").unwrap_or_default()),
+        flags: progress
+            .flag
+            .map(card_flag_to_anki)
+            .or_else(|| source_i64(source, "flags"))
             .unwrap_or_default(),
-        flags: progress.flag.map(card_flag_to_anki).unwrap_or_default(),
     }
 }
 
@@ -2886,6 +3283,118 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn imported_v11_source_metadata_round_trips_on_export() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.metadata.config = serde_json::json!({
+            "nextPos": 99,
+            "customStudy": true,
+        });
+        collection.metadata.deck_config = serde_json::json!({
+            "2": { "id": 2, "name": "Story defaults" },
+        });
+        collection.metadata.tags = serde_json::json!({
+            "spanish": 1,
+            "imported": 2,
+        });
+        collection.decks[1].raw = serde_json::json!({
+            "id": 2,
+            "name": "Spanish::Latin",
+            "desc": "Story deck",
+            "conf": 7,
+            "dyn": 1,
+            "extendNew": 25,
+            "extendRev": 75,
+            "collapsed": true,
+        });
+        collection.note_types[0].raw = serde_json::json!({
+            "id": 100,
+            "name": "Basic",
+            "type": 0,
+            "css": ".card { color: teal; }",
+            "sortf": 1,
+            "latexPre": "custom pre",
+            "latexPost": "custom post",
+            "flds": [
+                { "name": "Front", "ord": 0, "font": "Noto Sans", "sticky": true },
+                { "name": "Back", "ord": 1, "rtl": true, "size": 24 }
+            ],
+            "tmpls": [
+                {
+                    "name": "Card 1",
+                    "ord": 0,
+                    "qfmt": "{{Front}}",
+                    "afmt": "{{Back}}",
+                    "did": 2,
+                    "bqfmt": "browser question"
+                }
+            ]
+        });
+        collection.notes[0].guid = "stable-guid".to_string();
+        collection.notes[0].update_sequence_number = 17;
+        collection.notes[0].checksum = 4242;
+        collection.notes[0].flags = 5;
+        collection.notes[0].data = "note-data".to_string();
+        collection.cards[0].update_sequence_number = 23;
+        collection.cards[0].original_due = 777;
+        collection.cards[0].original_deck_id = 1;
+        collection.cards[0].data = "card-data".to_string();
+        collection.graves = vec![AnkiV11Grave {
+            update_sequence_number: 31,
+            object_id: 9001,
+            kind: 2,
+        }];
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+        assert!(state.external_sources.iter().any(|source| {
+            source.source == ANKI_V11_SOURCE
+                && source.target == ExternalSourceTarget::NoteType
+                && source.target_id == "100"
+        }));
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+
+        assert_eq!(exported.metadata.config["customStudy"], true);
+        assert_eq!(exported.metadata.config["nextPos"], 1);
+        assert_eq!(exported.metadata.deck_config["2"]["name"], "Story defaults");
+        assert_eq!(exported.metadata.tags["imported"], 2);
+        assert_eq!(exported.graves[0].object_id, 9001);
+        assert_eq!(exported.graves[0].kind, 2);
+
+        let deck = exported.decks.iter().find(|deck| deck.id == 2).unwrap();
+        assert_eq!(deck.raw["conf"], 7);
+        assert_eq!(deck.raw["dyn"], 1);
+        assert_eq!(deck.raw["collapsed"], true);
+        assert_eq!(deck.name, "Spanish::Latin");
+
+        let note_type = &exported.note_types[0];
+        assert_eq!(note_type.css, ".card { color: teal; }");
+        assert_eq!(note_type.raw["sortf"], 1);
+        assert_eq!(note_type.raw["latexPre"], "custom pre");
+        assert_eq!(note_type.raw["flds"][0]["font"], "Noto Sans");
+        assert_eq!(note_type.raw["flds"][0]["sticky"], true);
+        assert_eq!(note_type.raw["flds"][1]["rtl"], true);
+        assert_eq!(note_type.raw["flds"][1]["size"], 24);
+        assert_eq!(note_type.templates[0].deck_id, Some(2));
+        assert_eq!(note_type.raw["tmpls"][0]["bqfmt"], "browser question");
+
+        let note = &exported.notes[0];
+        assert_eq!(note.guid, "stable-guid");
+        assert_eq!(note.update_sequence_number, 17);
+        assert_eq!(note.checksum, 4242);
+        assert_eq!(note.flags, 5);
+        assert_eq!(note.data, "note-data");
+
+        let card = &exported.cards[0];
+        assert_eq!(card.update_sequence_number, 23);
+        assert_eq!(card.original_due, 777);
+        assert_eq!(card.original_deck_id, 1);
+        assert_eq!(card.data, "card-data");
+    }
+
+    #[test]
     fn maps_v11_cloze_cards_into_rendered_engram_cards() {
         let collection = AnkiV11Collection {
             metadata: AnkiV11CollectionMetadata {
@@ -3091,6 +3600,7 @@ CREATE TABLE graves (
                 previous_active_session: None,
                 sibling_progress_snapshots: Vec::new(),
             }],
+            external_sources: Vec::new(),
             active_session: None,
         };
 
@@ -3145,6 +3655,7 @@ CREATE TABLE graves (
             card_progress: Vec::new(),
             sessions: Vec::new(),
             reviews: Vec::new(),
+            external_sources: Vec::new(),
             active_session: None,
         };
 
