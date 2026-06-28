@@ -6,7 +6,7 @@ A two-arm proof is only worth anything if the question bank is honest. This gate
 result legible. It is QA on the BANK — it is NOT on the answer path (the engine still
 does every bit of the actual reasoning at eval time).
 
-Checks performed (self-authored arithmetic rungs):
+Checks performed (self-authored starter rungs):
 
   1. Unique ids                — no item counted twice.
   2. Five distinct options     — each item has options A..E with DISTINCT values, so
@@ -14,15 +14,14 @@ Checks performed (self-authored arithmetic rungs):
                                  (a duplicate value would make a correct compute tie
                                  and abstain — a measurement artifact, not a miss).
   3. Gold points at an option  — gold_letter ∈ options.
-  4. Gold is internally correct— evaluating the item's `formula` (a restricted, safe
-                                 arithmetic eval — digits and + - * / () only) equals
-                                 the gold option's value. This catches authoring slips
-                                 in the key. It is the ONLY place the bank's answer is
-                                 computed in Python, and it exists to validate the key,
-                                 never to answer a question.
-  5. No-result-literals        — every number in `formula` also appears in `stem`, so
-                                 the gold decomposition itself never smuggles the
-                                 answer in (the same gate Arm B applies to the model).
+  4. Gold is internally correct— formula items use a restricted, safe arithmetic eval
+                                 (digits and + - * / () only). Program items run the
+                                 native ADJ CLI and check that its solved value maps
+                                 to gold. This is bank QA, never the answer path.
+  5. No-result-literals        — every number in `formula` or `program` also appears
+                                 in `stem`, so the gold decomposition itself never
+                                 smuggles the answer in (the same gate Arm B applies
+                                 to the model).
   6. No external provenance    — these starter rungs are self-contained: items carry
                                  no `source` / library import, so contamination
                                  against an external bank is structurally impossible
@@ -40,6 +39,8 @@ import operator
 import re
 import sys
 from pathlib import Path
+
+import ladder_eval as le
 
 HERE = Path(__file__).resolve().parent
 _NUM = re.compile(r"\d+(?:\.\d+)?")
@@ -107,18 +108,36 @@ def check(rung: str) -> list[str]:
             errors.append(f"{iid}: gold_letter {gold!r} not among options")
             continue
 
-        try:
-            computed = safe_eval(it["formula"])
-        except (ValueError, SyntaxError, ZeroDivisionError) as e:
-            errors.append(f"{iid}: formula {it['formula']!r} did not evaluate: {e}")
-            continue
-        if gold in numeric_opts and abs(computed - numeric_opts[gold]) > 1e-9:
-            errors.append(f"{iid}: gold {gold}={opts[gold]} ≠ formula value {computed}")
+        if "formula" in it:
+            try:
+                computed = safe_eval(it["formula"])
+            except (ValueError, SyntaxError, ZeroDivisionError) as e:
+                errors.append(f"{iid}: formula {it['formula']!r} did not evaluate: {e}")
+                continue
+            if gold in numeric_opts and abs(computed - numeric_opts[gold]) > 1e-9:
+                errors.append(f"{iid}: gold {gold}={opts[gold]} ≠ formula value {computed}")
+            decomposition = it["formula"]
+        elif "program" in it:
+            if not isinstance(it.get("answer_from"), dict):
+                errors.append(f"{iid}: program items must declare answer_from")
+            doc = le.run_program(it["program"])
+            if doc is not None:
+                letter = le.solve_assignment_to_letter(doc, it.get("answer_from"), opts)
+                if letter != gold:
+                    errors.append(
+                        f"{iid}: gold {gold}={opts[gold]} ≠ ADJ program selection {letter}"
+                    )
+            decomposition = it["program"]
+        else:
+            errors.append(f"{iid}: item must include either formula or program")
+            decomposition = ""
 
         stem_nums = set(_NUM.findall(it.get("stem", "")))
-        leaked = [n for n in _NUM.findall(it["formula"]) if n not in stem_nums]
+        leaked = [n for n in _NUM.findall(decomposition) if n not in stem_nums]
         if leaked:
-            errors.append(f"{iid}: formula numbers {leaked} not present in stem (result-literal leak)")
+            errors.append(
+                f"{iid}: decomposition numbers {leaked} not present in stem (result-literal leak)"
+            )
 
         if "source" in it or "import" in it:
             errors.append(f"{iid}: starter rung items must be self-contained (no external source/import)")
@@ -138,7 +157,7 @@ def main(argv: list[str]) -> int:
         return 1
     n = len(json.loads((HERE / rung / "items.json").read_text())["items"])
     print(f"contamination_check {rung}: ✓ {n} items clean "
-          "(unique, distinct options, gold matches formula, no result-literal leak, self-contained)")
+          "(unique, distinct options, gold matches decomposition, no result-literal leak, self-contained)")
     return 0
 
 

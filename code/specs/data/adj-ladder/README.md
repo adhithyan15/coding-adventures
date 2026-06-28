@@ -39,6 +39,8 @@ adj-ladder/
     items.json              20 fresh grade-school MCQs {id,stem,formula,options,gold_letter}
   rung1_fractions_percent/
     items.json              20 fresh fractions/percent/ratio MCQs, self-contained
+  rung2_prealgebra_solve/
+    items.json              20 pre-algebra MCQs backed by native ADJ solve programs
   ladder-scorecard.json     emitted artifact (per-arm metrics + divergence + buckets)
 ```
 
@@ -72,10 +74,12 @@ cargo build -p adj-lang-cli          # from code/packages/rust/
 # 2. bank integrity (off the answer path)
 python3 contamination_check.py rung0_arithmetic
 python3 contamination_check.py rung1_fractions_percent
+python3 contamination_check.py rung2_prealgebra_solve
 
 # 3. engine-only (cached) run — expect Arm B 100%, wrong 0
 python3 ladder_eval.py rung0_arithmetic
 python3 ladder_eval.py rung1_fractions_percent
+python3 ladder_eval.py rung2_prealgebra_solve
 
 # 4. tests
 python3 -m pytest test_ladder_eval.py -q
@@ -107,3 +111,7 @@ rational sidecars carrying integer/rational arithmetic through predicate equalit
 The next climb connects multi-step deductions into probabilistic evidence: ADJ can
 derive an intermediate premise with `rule { ... }`, then let that derived atom fire a
 `contributes ... from <premise>` clause with the SLD proof attached to the audit trail.
+`rung2_prealgebra_solve` starts the next step upward: the gold decomposition is now a
+native ADJ program (`symbol` / `constrain` / `solve for`) rather than a single
+arithmetic expression, and the harness maps the engine's solved variable to the
+printed options without solving the equation in Python.

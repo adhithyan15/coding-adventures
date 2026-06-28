@@ -2,6 +2,23 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.5.0] — 2026-06-28
+
+### Added — rung 2 native solve-program scaffold
+
+- **`rung2_prealgebra_solve/items.json`** — 20 fresh, self-authored pre-algebra MCQs
+  where the gold decomposition is a native ADJ program (`symbol` / `constrain` /
+  `solve for`) instead of a single arithmetic expression.
+- `ladder_eval.py` can now run program-backed items, read an ADJ solver assignment,
+  and map the engine-computed value to the printed options. Python still never solves
+  the equation; it only performs option lookup against the engine's answer.
+- The model-mode decomposition prompt can ask for a native ADJ solve program, and the
+  same no-result-literals gate rejects model programs whose numeric literals do not
+  appear in the stem.
+- The contamination gate now understands formula-backed and program-backed rungs. When
+  `adj-lang-cli` is built, it validates a program-backed gold key by running the native
+  ADJ program and checking that the solved value maps to `gold_letter`.
+
 ## [0.4.0] — 2026-06-28
 
 ### Added — PR-1 deduction to evidence bridge

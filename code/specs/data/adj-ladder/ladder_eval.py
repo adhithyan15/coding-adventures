@@ -96,7 +96,9 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import ast
 import json
+import operator
 import os
 import re
 import subprocess
@@ -143,6 +145,14 @@ _LETTER = re.compile(r"\b([A-E])\b")
 # ----------------------------------------------------------------------------------
 OptionValue = Union[int, float, str]
 
+_BINOPS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+}
+_UNOPS = {ast.UAdd: operator.pos, ast.USub: operator.neg}
+
 
 def _render_option_expr(value: OptionValue) -> str:
     if isinstance(value, str):
@@ -152,6 +162,29 @@ def _render_option_expr(value: OptionValue) -> str:
         return value
     v = float(value)
     return str(int(v)) if v.is_integer() else str(value)
+
+
+def _safe_number_expr(expr: str) -> float:
+    def ev(node):
+        if isinstance(node, ast.Expression):
+            return ev(node.body)
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return float(node.value)
+        if isinstance(node, ast.BinOp) and type(node.op) in _BINOPS:
+            return _BINOPS[type(node.op)](ev(node.left), ev(node.right))
+        if isinstance(node, ast.UnaryOp) and type(node.op) in _UNOPS:
+            return _UNOPS[type(node.op)](ev(node.operand))
+        raise ValueError(f"disallowed option expression element: {ast.dump(node)}")
+
+    return ev(ast.parse(expr, mode="eval"))
+
+
+def _option_number(value: OptionValue) -> float:
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        return _safe_number_expr(value)
+    raise ValueError(f"unsupported option value {value!r}")
 
 
 def build_arm_b_program(formula: str, options: dict[str, OptionValue]) -> str:
@@ -175,9 +208,12 @@ def build_arm_b_program(formula: str, options: dict[str, OptionValue]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def run_decision(program: str) -> dict | None:
-    """Write the program to a temp .adj, run the native CLI, return its `decision`
-    dict (or None if the CLI is unavailable or the program failed to compile)."""
+def run_program(program: str) -> dict | None:
+    """Write a native ADJ program to a temp .adj and run the CLI.
+
+    Formula rungs inspect only the `decision`; solve-backed rungs inspect the `solve`
+    section. In both cases the native CLI is the only component that executes the
+    math/reasoning program."""
     if _CLI is None:
         return None
     fd, path = tempfile.mkstemp(suffix=".adj", prefix=".ladder_")
@@ -193,6 +229,12 @@ def run_decision(program: str) -> dict | None:
             os.unlink(path)
         except OSError:
             pass
+    return doc if isinstance(doc, dict) else None
+
+
+def run_decision(program: str) -> dict | None:
+    """Run a program and return its `decision` dict, or None on compile/runtime miss."""
+    doc = run_program(program)
     return doc.get("decision") if isinstance(doc, dict) else None
 
 
@@ -208,6 +250,42 @@ def decision_to_letter(decision: dict | None) -> str | None:
     if leader.startswith("opt_") and len(leader) == 5:
         return leader[-1].upper()
     return None
+
+
+def _letter_for_engine_value(value: float, options: dict[str, OptionValue]) -> str | None:
+    matches = []
+    for ltr, option in options.items():
+        try:
+            if abs(float(value) - _option_number(option)) <= 1e-9:
+                matches.append(ltr)
+        except (ValueError, SyntaxError, ZeroDivisionError):
+            return None
+    return matches[0] if len(matches) == 1 else None
+
+
+def solve_assignment_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ solver assignment to an option letter.
+
+    A rung-2 item can carry a full ADJ program such as `symbol x; constrain ...;
+    solve for { x }`. The engine returns the solved value; this helper only performs
+    option lookup against the printed choices, preserving the invariant that Python
+    never solves the equation."""
+    if not doc or not answer_from or answer_from.get("type") != "solve_assignment":
+        return None
+    name = answer_from.get("name")
+    solve = doc.get("solve")
+    if not name or not isinstance(solve, dict) or solve.get("outcome") != "solved":
+        return None
+    assignments = solve.get("assignments") or []
+    values = [a.get("value") for a in assignments if isinstance(a, dict) and a.get("name") == name]
+    if len(values) != 1:
+        return None
+    try:
+        return _letter_for_engine_value(float(values[0]), options)
+    except (TypeError, ValueError):
+        return None
 
 
 def formula_is_faithful(formula: str, stem: str) -> bool:
@@ -327,17 +405,31 @@ def score_item(item: dict, gen) -> ItemResult:
 
     # --- Arm B: decompose → engine selects ---
     if gen is None:
-        formula, faithful = item["formula"], True            # cached: trust the gold
+        formula = item.get("formula")
+        program = item.get("program")
+        faithful = True                                     # cached: trust the gold
     else:
         raw = gen(decompose_prompt(item))
-        formula = extract_formula(raw)
-        faithful = bool(formula) and formula_is_faithful(formula, item["stem"])
-    if not formula or not faithful:
+        if "program" in item:
+            formula = None
+            program = extract_program(raw)
+            faithful = bool(program) and formula_is_faithful(program, item["stem"])
+        else:
+            program = None
+            formula = extract_formula(raw)
+            faithful = bool(formula) and formula_is_faithful(formula, item["stem"])
+    if not faithful:
         arm_b_letter = None                                  # decompose failed → abstain
-    else:
+    elif program:
+        arm_b_letter = solve_assignment_to_letter(
+            run_program(program), item.get("answer_from"), item["options"]
+        )
+    elif formula:
         arm_b_letter = decision_to_letter(
             run_decision(build_arm_b_program(formula, item["options"]))
         )
+    else:
+        arm_b_letter = None
     arm_b_out = outcome(arm_b_letter, gold)
 
     # --- Arm A: model alone (skipped in cached mode) ---
@@ -357,6 +449,27 @@ def score_item(item: dict, gen) -> ItemResult:
 # Model decomposition (only used in --model mode).
 # ----------------------------------------------------------------------------------
 def decompose_prompt(item: dict) -> str:
+    if "program" in item:
+        answer_from = item.get("answer_from") or {}
+        name = answer_from.get("name", "x")
+        return (
+            "Translate the word problem into a native ADJ solve program. Name the "
+            f"requested unknown `{name}`. Use ONLY numbers that appear in the "
+            "question. Do NOT compute the answer, do NOT mention the answer choices, "
+            "and output ONLY the ADJ program.\n\n"
+            "Question: A number plus 5 is 17. What is the number?\n"
+            "Program:\n"
+            "symbol x : scalar\n"
+            "constrain x + 5 = 17\n"
+            "solve for { x }\n\n"
+            "Question: 3 times a number is 24. What is the number?\n"
+            "Program:\n"
+            "symbol x : scalar\n"
+            "constrain 3 * x = 24\n"
+            "solve for { x }\n\n"
+            f"Question: {item['stem']}\nProgram:"
+        )
+
     # Two worked examples (a bare expression and a one-step word problem) give a small
     # model a fair shot at the FORMAT — we are measuring its decomposition ability, not
     # its prompt-guessing. The examples carry no overlap with any bank item's numbers.
@@ -373,7 +486,25 @@ def decompose_prompt(item: dict) -> str:
 
 _FORMULA_OK = re.compile(r"^[\d\s+\-*/().]+$")
 _LABEL = re.compile(r"(?i)^\s*formula\s*[:=]?\s*")
+_PROGRAM_LABEL = re.compile(r"(?i)^\s*program\s*[:=]?\s*")
 _NATIVE_LATEX_EXPR = re.compile(r'^latex\s+"([^"\\]|\\.)*"$')
+_CODE_FENCE = re.compile(r"```(?:adj|adj-lang)?\s*(.*?)```", re.IGNORECASE | re.DOTALL)
+_ADJ_LINE_PREFIXES = (
+    "symbol ",
+    "observe ",
+    "constrain ",
+    "solve ",
+    "check",
+    "minimize ",
+    "maximize ",
+    "let ",
+    "prior ",
+    "contributes ",
+    "interacts ",
+    "rule ",
+    "relate ",
+    "? ",
+)
 
 
 def extract_formula(text: str) -> str | None:
@@ -389,6 +520,28 @@ def extract_formula(text: str) -> str | None:
         if line and (_FORMULA_OK.match(line) or _NATIVE_LATEX_EXPR.match(line)):
             return line
     return None
+
+
+def extract_program(text: str) -> str | None:
+    """Extract a small native ADJ program from a model response.
+
+    For the first solve-backed rung we keep this conservative: prose is ignored,
+    code fences are accepted, and only known ADJ statement prefixes are retained."""
+    if not text:
+        return None
+    m = _CODE_FENCE.search(text)
+    body = m.group(1) if m else text
+    lines: list[str] = []
+    for raw in body.splitlines():
+        line = _PROGRAM_LABEL.sub("", raw.strip())
+        if not line or line.startswith("#") or line.startswith("```"):
+            continue
+        if line.startswith(_ADJ_LINE_PREFIXES):
+            lines.append(line)
+    program = "\n".join(lines).strip()
+    if not program:
+        return None
+    return program + "\n"
 
 
 # Gemma is the canonical base target for the ladder: a small, fully-LOCAL, non-frontier

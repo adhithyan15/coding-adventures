@@ -20,7 +20,7 @@ import ladder_eval as le
 import pytest
 
 HERE = Path(__file__).resolve().parent
-SELF_CONTAINED_RUNGS = ("rung0_arithmetic", "rung1_fractions_percent")
+SELF_CONTAINED_RUNGS = ("rung0_arithmetic", "rung1_fractions_percent", "rung2_prealgebra_solve")
 
 
 # ---- Arm-B program building ---------------------------------------------------
@@ -105,11 +105,33 @@ def test_decompose_prompt_mentions_native_adj_latex_expr():
     assert 'latex "$5 \\times 12$"' in prompt
 
 
+def test_decompose_prompt_mentions_native_solve_program():
+    prompt = le.decompose_prompt({
+        "stem": "A number plus 7 equals 19. What is the number?",
+        "program": "symbol x : scalar\nconstrain x + 7 = 19\nsolve for { x }\n",
+        "answer_from": {"type": "solve_assignment", "name": "x"},
+    })
+    assert "symbol x : scalar" in prompt
+    assert "solve for { x }" in prompt
+    assert "Do NOT compute the answer" in prompt
+
+
 def test_extract_formula_abstains_on_latex():
     # Bare LaTeX/unicode math is NOT normalized in the harness. The model must
     # emit native ADJ syntax (`latex "..."`) so adj-lang owns parsing.
     assert le.extract_formula("$5 \\times 12$") is None
     assert le.extract_formula("5 × 12") is None
+
+
+def test_extract_program_accepts_native_adj_solve_block():
+    text = """Here is the program:
+```adj
+symbol x : scalar
+constrain x + 7 = 19
+solve for { x }
+```
+"""
+    assert le.extract_program(text) == "symbol x : scalar\nconstrain x + 7 = 19\nsolve for { x }\n"
 
 
 def test_model_aliases_resolve():
@@ -174,6 +196,17 @@ def test_option_expression_predicate_runs_through_engine():
         le.build_arm_b_program("1 / 10 + 2 / 10", {"A": "3 / 10", "B": "1 / 2"})
     )
     assert le.decision_to_letter(decision) == "A"
+
+
+def test_solve_assignment_program_maps_engine_value_to_option():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    doc = le.run_program("symbol x : scalar\nconstrain x + 7 = 19\nsolve for { x }\n")
+    assert le.solve_assignment_to_letter(
+        doc,
+        {"type": "solve_assignment", "name": "x"},
+        {"A": 10, "B": 11, "C": 12, "D": 13, "E": 14},
+    ) == "C"
 
 
 # ---- bank integrity -----------------------------------------------------------
