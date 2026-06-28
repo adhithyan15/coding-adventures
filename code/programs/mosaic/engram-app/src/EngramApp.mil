@@ -1,0 +1,22 @@
+// EngramApp.mil - Engram's Mosaic app/root surface.
+//
+// Engram is an app, so it owns the product-level interface here. Reusable UI
+// building blocks live in component packages and are referenced from the app
+// layout instead of being named after the product.
+
+component EngramApp {
+  slot app-title : text ;
+  slot deck-name : text ;
+  slot prompt-label : text ;
+  slot prompt : text ;
+  slot answer-label : text ;
+  slot answer : text ;
+  slot answer-visible : bool ;
+  slot progress-label : text ;
+
+  emit onReveal ;
+  emit onAgain ;
+  emit onHard ;
+  emit onGood ;
+  emit onEasy ;
+}

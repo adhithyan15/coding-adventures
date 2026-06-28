@@ -50,7 +50,7 @@ fn manifest_declares_expected_exports() {
         .and_then(|p| p.get("name"))
         .and_then(|n| n.as_str())
         .expect("[package].name must be set");
-    assert_eq!(name, "mosaic-pkg-engram");
+    assert_eq!(name, "mosaic-pkg-review-card");
 
     let exports = value
         .get("components")
@@ -98,7 +98,7 @@ fn review_card_frontend_sources_compile() {
 }
 
 #[test]
-fn review_card_layout_keeps_engram_interaction_semantics() {
+fn review_card_layout_keeps_review_interaction_semantics() {
     let source = read_source("ReviewCard.mll");
 
     assert!(source.contains("If ( when: slot: answer-visible )"));

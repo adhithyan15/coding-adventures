@@ -1,0 +1,26 @@
+# Cargo.toml - smoke-test harness for the Engram Mosaic app package.
+#
+# The Mosaic sources in this directory describe the Engram app/root surface.
+# This Cargo project exists only to test the app package contract.
+
+[workspace]
+# Intentionally empty: opt out of the parent Rust workspace.
+
+[package]
+name        = "engram-mosaic-app-smoke"
+version     = "0.1.0"
+edition     = "2021"
+description = "Smoke-test harness for the Engram Mosaic app package"
+publish     = false
+
+[dev-dependencies]
+mosmodel-compiler       = { path = "../../../packages/rust/mosmodel-compiler" }
+moslayout-compiler      = { path = "../../../packages/rust/moslayout-compiler" }
+mosstyle-compiler       = { path = "../../../packages/rust/mosstyle-compiler" }
+mosaic-package-manifest = { path = "../../../packages/rust/mosaic-package-manifest" }
+mosaic-package-resolver = { path = "../../../packages/rust/mosaic-package-resolver" }
+toml                    = "0.8"
+
+[[test]]
+name = "package_compiles"
+path = "tests/package_compiles.rs"
