@@ -359,6 +359,15 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         </table>
       </div>
       <div class="panel">
+        <h2>Events</h2>
+        <table>
+          <thead>
+            <tr><th>Sequence</th><th>Kind</th><th>Subject</th><th>Status</th></tr>
+          </thead>
+          <tbody id="events"></tbody>
+        </table>
+      </div>
+      <div class="panel">
         <h2>Commands</h2>
         <table>
           <thead>
@@ -392,6 +401,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       desired: document.querySelector("#desired"),
       devices: document.querySelector("#devices"),
       entities: document.querySelector("#entities"),
+      events: document.querySelector("#events"),
       gaps: document.querySelector("#gaps"),
       history: document.querySelector("#history"),
       location: document.querySelector("#location"),
@@ -447,6 +457,24 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         return subject.tool_id || "tool";
       }
       return [subject.command_type, subject.entity_id].filter(Boolean).join(" ") || subject.kind || "subject";
+    };
+    const eventSubject = (event) => {
+      if (!event) {
+        return "unknown";
+      }
+      if (event.kind === "command_result") {
+        return event.result?.command_id || event.result?.bridge_id || "command";
+      }
+      return event.entity_id || event.device_id || event.bridge_id || event.integration_id || event.event_id || "runtime";
+    };
+    const eventStatus = (event) => {
+      if (!event) {
+        return "unknown";
+      }
+      if (event.kind === "command_result") {
+        return event.result?.status || "command";
+      }
+      return event.health || event.reason || event.event_type || event.kind || "event";
     };
 
     const log = (message) => {
@@ -633,6 +661,21 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }).join("") || `<tr><td colspan="4" class="muted">No state history</td></tr>`;
     };
 
+    const renderEvents = (eventLog) => {
+      const entries = eventLog.events || [];
+      els.events.innerHTML = entries.map((entry) => {
+        const event = entry.event || {};
+        return `
+          <tr>
+            <td>${entry.sequence}<br><span class="muted">next ${entry.next_sequence}</span></td>
+            <td>${event.kind || "event"}</td>
+            <td>${eventSubject(event)}</td>
+            <td><span class="${statusClass(eventStatus(event))}">${eventStatus(event)}</span></td>
+          </tr>
+        `;
+      }).join("") || `<tr><td colspan="4" class="muted">No runtime events</td></tr>`;
+    };
+
     const renderCommandResults = (audit) => {
       const results = audit.results || [];
       els.commandResults.innerHTML = results.map((record) => {
@@ -675,6 +718,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           rooms,
           devices,
           bridges,
+          events,
           commandResults,
           authorizationDecisions
         ] = await Promise.all([
@@ -689,6 +733,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           json("/api/smart_home/rooms?sort=scene_count"),
           json("/api/smart_home/devices?limit=8"),
           json("/api/smart_home/bridges?limit=8"),
+          json("/api/smart_home/events?limit=12"),
           json("/api/smart_home/command_results?limit=8"),
           json("/api/smart_home/authorization_decisions?limit=8")
         ]);
@@ -719,6 +764,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         renderDesiredStates(desiredStates);
         renderGaps(bootstrap.state_gaps);
         renderHistory(history);
+        renderEvents(events);
         renderCommandResults(commandResults);
         renderAuthorizationDecisions(authorizationDecisions);
         log("Dashboard refreshed");
@@ -6554,8 +6600,10 @@ mod tests {
             assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
             assert!(body.contains("json(\"/api/smart_home/devices?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
+            assert!(body.contains("json(\"/api/smart_home/events?limit=12\")"));
             assert!(body.contains("json(\"/api/smart_home/command_results?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/authorization_decisions?limit=8\")"));
+            assert!(body.contains("<tbody id=\"events\"></tbody>"));
             assert!(body.contains("/api/services/light/"));
             assert!(body.contains("data-service=\"set_brightness\""));
             assert!(body.contains("brightness_pct"));

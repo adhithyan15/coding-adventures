@@ -41,6 +41,8 @@ All notable changes to this package will be documented in this file.
   panels backed by the existing local-controller audit routes.
 - Added browser dashboard room, device, and bridge topology panels backed by
   the existing local-controller inventory routes.
+- Added a browser dashboard event-log panel backed by the existing native
+  runtime event stream route.
 - Added a native readiness checklist route with actionable links for registry,
   topology, state coverage, event bus, discovery, supervisor, authorization,
   and desired-state checks.
