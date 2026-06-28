@@ -87,10 +87,11 @@ the Home Assistant-style history route accepts `filter_entity_id`.
 The browser routes serve an embedded local dashboard shell over the same
 `web-core::WebApp`. The shell loads bootstrap, readiness, state, scene,
 desired-state, room, device, bridge, state-history, command-result audit,
-authorization audit, service catalog, API catalog, and audit summary data from
-the native API routes and sends light on/off, light brightness, scene, and
-desired-state set/clear actions through the existing Home Assistant-compatible
-and native service endpoints, preserving runtime authorization.
+runtime event-log, authorization audit, service catalog, API catalog, and audit
+summary data from the native API routes and sends light on/off, light brightness,
+scene, and desired-state set/clear actions through the existing Home
+Assistant-compatible and native service endpoints, preserving runtime
+authorization.
 
 ## Dependencies
 
@@ -135,6 +136,7 @@ curl 'http://127.0.0.1:8123/api/smart_home/bridges?integration_id=hue&transport=
 curl 'http://127.0.0.1:8123/api/smart_home/rooms?sort=scene_count&state_gaps_only=true'
 curl 'http://127.0.0.1:8123/api/smart_home/scenes?room_id=kitchen&scope=room'
 curl 'http://127.0.0.1:8123/api/smart_home/scenes/scene.scene_kitchen_bright'
+curl 'http://127.0.0.1:8123/api/smart_home/events?limit=12'
 curl 'http://127.0.0.1:8123/api/smart_home/events/0'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?bridge_id=bridge-1'
