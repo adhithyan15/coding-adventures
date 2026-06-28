@@ -35,6 +35,7 @@ This crate owns:
 - review-log-aware daily limit accounting
 - optional note/template lineage on durable cards
 - Anki-style Cloze note generation from `{{cloze:Field}}` templates
+- note-type field rename migration for templates and required fields
 - card browser search/filter evaluation
 - versioned Engram JSON backup snapshots
 - round-trippable card CSV import/export helpers
@@ -74,6 +75,8 @@ durable `Card` with note/template lineage. Cloze templates using
 ordinal and preserve the cloze ordinal in lineage. `BuryCardSiblings` uses
 lineage to bury same-note sibling cards until a host-supplied boundary,
 matching the shared behavior Anki-like review screens need.
+`rename_note_type_field` keeps field IDs stable while migrating template
+references, Cloze references, and required-field names to the new display name.
 
 `create_engram_snapshot` and `restore_engram_snapshot` own the portable Engram
 backup shape. Backups include durable collection data and clear any live

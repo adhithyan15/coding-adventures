@@ -46,4 +46,6 @@ pub use snapshot::{
     create_engram_snapshot, restore_engram_snapshot, EngramSnapshot, SnapshotError,
     ENGRAM_SNAPSHOT_APP, ENGRAM_SNAPSHOT_VERSION,
 };
-pub use template::{generate_cards_for_note, materialize_generated_card, render_template};
+pub use template::{
+    generate_cards_for_note, materialize_generated_card, rename_note_type_field, render_template,
+};

@@ -142,12 +142,103 @@ pub fn materialize_generated_card(generated: &GeneratedCard, created_at: u64) ->
     }
 }
 
+pub fn rename_note_type_field(
+    note_type: &NoteType,
+    field_id: &str,
+    new_name: &str,
+    updated_at: u64,
+) -> NoteType {
+    let new_name = new_name.trim();
+    if new_name.is_empty() {
+        return note_type.clone();
+    }
+
+    let Some(old_name) = note_type
+        .fields
+        .iter()
+        .find(|field| field.id == field_id)
+        .map(|field| field.name.as_str())
+    else {
+        return note_type.clone();
+    };
+
+    if old_name == new_name {
+        return note_type.clone();
+    }
+
+    let mut renamed = note_type.clone();
+    for field in &mut renamed.fields {
+        if field.id == field_id {
+            field.name = new_name.to_string();
+        }
+    }
+    for template in &mut renamed.templates {
+        template.front_template =
+            rename_template_field_references(&template.front_template, old_name, new_name);
+        template.back_template =
+            rename_template_field_references(&template.back_template, old_name, new_name);
+        for required_field_name in &mut template.required_field_names {
+            if required_field_name == old_name {
+                *required_field_name = new_name.to_string();
+            }
+        }
+    }
+    renamed.updated_at = updated_at;
+    renamed
+}
+
 fn generated_card_id(note_id: &str, template_id: &str) -> String {
     format!("{note_id}::{template_id}")
 }
 
 fn generated_cloze_card_id(note_id: &str, template_id: &str, cloze_ordinal: u32) -> String {
     format!("{note_id}::{template_id}::c{cloze_ordinal}")
+}
+
+fn rename_template_field_references(template: &str, old_name: &str, new_name: &str) -> String {
+    let mut renamed = String::with_capacity(template.len());
+    let mut rest = template;
+
+    while let Some(start) = rest.find("{{") {
+        let (prefix, after_start) = rest.split_at(start);
+        renamed.push_str(prefix);
+        let after_start = &after_start[2..];
+
+        match after_start.find("}}") {
+            Some(end) => {
+                let (field_name, after_end) = after_start.split_at(end);
+                let trimmed = field_name.trim();
+                if trimmed == old_name {
+                    renamed.push_str("{{");
+                    renamed.push_str(new_name);
+                    renamed.push_str("}}");
+                } else if let Some(cloze_name) = trimmed.strip_prefix("cloze:") {
+                    if cloze_name.trim() == old_name {
+                        renamed.push_str("{{cloze:");
+                        renamed.push_str(new_name);
+                        renamed.push_str("}}");
+                    } else {
+                        renamed.push_str("{{");
+                        renamed.push_str(field_name);
+                        renamed.push_str("}}");
+                    }
+                } else {
+                    renamed.push_str("{{");
+                    renamed.push_str(field_name);
+                    renamed.push_str("}}");
+                }
+                rest = &after_end[2..];
+            }
+            None => {
+                renamed.push_str("{{");
+                renamed.push_str(after_start);
+                rest = "";
+            }
+        }
+    }
+
+    renamed.push_str(rest);
+    renamed
 }
 
 fn cloze_field_names_for_template(front_template: &str, back_template: &str) -> BTreeSet<String> {
@@ -502,6 +593,60 @@ mod tests {
         let rendered = render_template("{{Known}} {{Missing}}", &values);
 
         assert_eq!(rendered, "value ");
+    }
+
+    #[test]
+    fn renaming_note_type_field_migrates_templates_and_required_fields() {
+        let note_type = basic_note_type();
+        let renamed = rename_note_type_field(&note_type, "front", "Prompt", NOW + 1);
+        let cards = generate_cards_for_note(&renamed, &note("letter-a", "a"));
+
+        assert_eq!(renamed.fields[0].name, "Prompt");
+        assert_eq!(renamed.updated_at, NOW + 1);
+        assert_eq!(renamed.templates[0].front_template, "{{Prompt}}");
+        assert_eq!(
+            renamed.templates[0].required_field_names,
+            vec!["Prompt", "Back"]
+        );
+        assert_eq!(cards[0].id, "note-1::forward");
+        assert_eq!(cards[0].front, "letter-a");
+        assert_eq!(cards[1].id, "note-1::reverse");
+        assert_eq!(cards[1].back, "letter-a");
+    }
+
+    #[test]
+    fn renaming_cloze_field_migrates_cloze_template_references() {
+        let note_type = cloze_note_type();
+        let renamed = rename_note_type_field(&note_type, "text", "Sentence", NOW + 1);
+        let cards = generate_cards_for_note(
+            &renamed,
+            &cloze_note("A {{c1::root::base}} carries meaning.", "etymology"),
+        );
+
+        assert_eq!(renamed.fields[0].name, "Sentence");
+        assert_eq!(renamed.templates[0].front_template, "{{cloze:Sentence}}");
+        assert_eq!(
+            renamed.templates[0].back_template,
+            "{{cloze:Sentence}}<hr>{{Extra}}"
+        );
+        assert_eq!(renamed.templates[0].required_field_names, vec!["Sentence"]);
+        assert_eq!(cards.len(), 1);
+        assert_eq!(cards[0].id, "cloze-note::cloze::c1");
+        assert_eq!(cards[0].front, "A [base] carries meaning.");
+    }
+
+    #[test]
+    fn renaming_unknown_or_blank_field_is_noop() {
+        let note_type = basic_note_type();
+
+        assert_eq!(
+            rename_note_type_field(&note_type, "missing", "Prompt", NOW + 1),
+            note_type
+        );
+        assert_eq!(
+            rename_note_type_field(&note_type, "front", "   ", NOW + 1),
+            note_type
+        );
     }
 
     #[test]
