@@ -361,6 +361,75 @@ fn twig_local_string_length_can_compute_index() {
     }
 }
 
+/// E4 function-call proof: a direct top-level Twig function whose body already
+/// lowers to typed E4 string ops should carry that return type through the
+/// caller's `call` instruction instead of falling back to `any`.
+#[test]
+fn twig_top_level_string_length_function_call_is_typed() {
+    let m = compile_source(
+        "(define (strlen) (string-length \"HELLO\")) (strlen)",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let strlen = m
+        .functions
+        .iter()
+        .find(|f| f.name == "strlen")
+        .expect("module should contain the top-level function");
+    assert_eq!(strlen.return_type, "i64");
+    assert!(
+        strlen
+            .instructions
+            .iter()
+            .any(|i| i.op == "str_len" && i.type_hint == "i64"),
+        "function body should lower string-length to typed str_len: {:?}",
+        strlen.instructions,
+    );
+    assert!(
+        strlen
+            .instructions
+            .iter()
+            .any(|i| i.op == "ret" && i.type_hint == "i64"),
+        "function ret should carry the inferred i64 type: {:?}",
+        strlen.instructions,
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    assert!(
+        main.instructions.iter().any(|i| {
+            i.op == "call"
+                && i.type_hint == "i64"
+                && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "strlen")
+        }),
+        "direct call should inherit strlen's concrete return type: {:?}",
+        main.instructions,
+    );
+    assert!(
+        !m.functions.iter().flat_map(|f| f.instructions.iter()).any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s) if s == "string-length")
+        }),
+        "typed E4 function path must not use dynamic string builtins",
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept typed E4 string ops inside a direct top-level function; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
 /// Path-A increment 5: `match` arms now use typed `mov` everywhere
 /// (scrutinee binding, nil-init, variant arm result merge, field
 /// extraction, body merge for variant / binding / wildcard arms).

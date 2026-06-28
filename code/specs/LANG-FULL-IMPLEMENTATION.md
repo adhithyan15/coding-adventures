@@ -9,7 +9,7 @@ program per language**, and each frontend is a **deliberate subset**:
 
 | Language | What the matrix actually runs end-to-end on the code-gen backends | The subset gap |
 |---|---|---|
-| Twig | `42`, variadic arithmetic, top-level value `define`, and typed E4 string literal/named/local proofs, including substring/index and lexical ordering | rich Lisp frontend; lists/lambdas/dynamic globals/records/symbols still need E5/E6, and captured/reassigned strings stay on the dynamic path |
+| Twig | `42`, variadic arithmetic, top-level value `define`, and typed E4 string literal/named/local/function-call proofs, including substring/index and lexical ordering | rich Lisp frontend; lists/lambdas/dynamic globals/records/symbols still need E5/E6, and captured/reassigned/parameter-derived strings stay on the dynamic path |
 | Nib | typed calls, `*`/`/`, `for`, bitwise, short-circuit logic, logical `!`, consts, const/static-expression folding, wrap/sat arithmetic, and module `static`s all run on all 7 backends | BCD semantics and Intel-4004 RAM mapping remain |
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
@@ -226,7 +226,10 @@ multiple languages; close an enabler before the features that depend on it.
   `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns `69`
   by feeding `str_len` through typed arithmetic into `str_index`, and
   `(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` returns `67` by
-  feeding `str_slice` into `str_index`, on all 7 backends. The
+  feeding `str_slice` into `str_index`, and
+  `(define (strlen) (string-length "HELLO")) (strlen)` returns `5` by
+  preserving the top-level function's typed E4 string-op return through a
+  direct `call`, on all 7 backends. The
   matrix now also proves the E4 bounds contract: `(string-ref "ABC" 3)` traps on
   native-AOT + LLVM + WASM + JVM + CLR + VM + JIT. WASM owns the literal-output
   shape with a linear-memory data segment + `env.__print_str(ptr,len)`, LLVM owns
@@ -246,7 +249,8 @@ multiple languages; close an enabler before the features that depend on it.
   multi-item string `PRINT` (`PRINT A$; B$` and `PRINT A$, B$`), and copied-slot equality
   (`LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...`) through `str_eq`, plus
   lexical string ordering branches through `str_cmp`.
-  Captured string variables and broader dynamic string values remain.
+  Captured, reassigned, and parameter-derived string values plus broader
+  dynamic string values remain.
   Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR

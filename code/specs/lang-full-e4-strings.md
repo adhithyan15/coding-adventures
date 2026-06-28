@@ -7,11 +7,11 @@ and multi-item string `PRINT` with `;` and `,` run on all seven backends,
 including `PRINT A$ + B$` over two scalar string slots. ALGOL AL4 literal output,
 `output`, multi-argument `output`, scalar variables, scalar copies, copy
 snapshots, and literal-backed string equality/ordering predicates run on all
-seven backends. Twig
-literal, immutable top-level, and lexical-local string ops run on all seven
-backends, including `str_concat` and `str_slice` feeding `str_index`.
-Captured/dynamic strings, arrays/input/parameters, and fuller backend
-byte-string representations remain.
+seven backends. Twig literal, immutable top-level, lexical-local, and direct
+top-level-function string-op proofs run on all seven backends, including
+`str_concat` and `str_slice` feeding `str_index`, lexical ordering predicates,
+and a function-wrapped `string-length` direct call. Captured/dynamic strings,
+arrays/input/parameters, and fuller backend byte-string representations remain.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
 **Unlocks:** Dartmouth BASIC strings + string `PRINT` (BA4), ALGOL 60 strings +
 `print`/`output` I/O (AL4), Twig strings on the code-gen backends (TW4), and any
@@ -199,10 +199,13 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   and local `string-append` results can also feed
   `string-ref` directly through `str_concat` followed by `str_index`, and
   local `string-length` results can compute `string-ref` indexes through typed
-  arithmetic. The dynamic-`any`, captured, and reassigned
-  Twig string paths still need broader E6/dynamic representation work; the *typed*
-  string slice here is the statically-typed subset that clears the code-gen
-  validators, mirroring how E5/E6 carved a typed slice out of Twig.
+  arithmetic. Direct top-level functions whose body ends in one of those typed
+  E4 string-op results now preserve the concrete return type through a later
+  direct `call`; `(define (strlen) (string-length "HELLO")) (strlen)` returns `5`
+  on all seven backends. The dynamic-`any`, captured, reassigned, and
+  parameter-derived Twig string paths still need broader E6/dynamic representation
+  work; the *typed* string slice here is the statically-typed subset that clears
+  the code-gen validators, mirroring how E5/E6 carved a typed slice out of Twig.
 
 The frontends emit `str` values and the shared E4 string ops; no backend learns anything
 language-specific.
@@ -237,7 +240,10 @@ proving `str_len` can compute a byte-index operand.
 `(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` returns `67`,
 proving `str_slice` can feed byte indexing. `(if (string<? "ALPHA"
 "BETA") (if (string>? "BETA" "ALPHA") 42 0) 0)` returns `42`, proving lexical
-ordering through `str_cmp`. The matrix also covers the **bounds-trap** case: `(string-ref "ABC"
+ordering through `str_cmp`. `(define (strlen) (string-length "HELLO")) (strlen)`
+returns `5`, proving a direct top-level function can wrap a typed E4 string op
+and propagate its `i64` return through the caller's `call`. The matrix also
+covers the **bounds-trap** case: `(string-ref "ABC"
 3)` must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 Dartmouth BASIC proves source-language string variables, reassignment, scalar
 copy, copied-slot equality, literal/variable-backed concat, concat expressions in
@@ -345,8 +351,10 @@ merge before the next:
    returns `68`, and
    `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns `69`,
    `(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` returns `67`,
-   on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured/reassigned
-   strings still wait for the broader dynamic representation.
+   and `(define (strlen) (string-length "HELLO")) (strlen)` returns `5`
+   through a typed direct `call [i64]`, on native-AOT + VM + JIT + LLVM + WASM +
+   JVM + CLR. Captured/reassigned/parameter-derived strings still wait for the
+   broader dynamic representation.
 4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
    diverge.)
@@ -357,7 +365,8 @@ merge before the next:
 6. ✅ **E4-ops-proofs** — named-value `str_concat`+`str_len`, `str_eq` driving a
    branch, named/local `str_index`, local `str_concat` feeding `str_index`, and
    local `str_len` computing a `str_index` operand, `str_slice` feeding
-   `str_index`, `str_cmp` driving lexical predicates, plus the `str_index`
+   `str_index`, `str_cmp` driving lexical predicates, direct top-level
+   function-call return typing for E4 string ops, plus the `str_index`
    out-of-bounds **trap** proof now run across every backend.
 7. **Follow-ups beyond v1** captured/reassigned dynamic strings,
    string arrays/input/parameters in each
