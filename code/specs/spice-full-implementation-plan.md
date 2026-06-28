@@ -15,21 +15,20 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Device model charge audit fixtures.
+1. Diode model-card transient charge stamping.
    - Status: current PR completion candidate.
-   - Python, Rust, and TypeScript now expose matching runnable
-     `device_model_charge_audit_fixtures` /
-     `deviceModelChargeAuditFixtures` one-device `.tran` fixtures for diode,
-     BJT, JFET, and Level-1 MOS model cards.
-   - Each fixture carries the normalized model card, an executable circuit,
-     `.tran` reference deck lines, selected probe node, timestep, stoptime,
-     explicit terminal storage capacitance, stable first/final probe-voltage
-     windows, and a short charge-behavior note.
-   - The fixtures deliberately audit charge storage through explicit terminal
-     capacitors, recording that model-card capacitances remain AC small-signal
-     inputs until nonlinear transient charge stamping lands.
-   - Cross-language tests execute every fixture through transient solving and
-     verify the probe windows plus reference-deck metadata.
+   - Python, Rust, and TypeScript transient solvers now stamp diode
+     model-card `CJO` / `junction_capacitance` / `junctionCapacitance` and
+     `TT` / `transit_time` / `transitTime` as an anode-cathode storage
+     companion.
+   - The transient companion uses the previous diode bias to derive
+     `C = Cjo + Tt * gd`, reuses the existing Euler/trapezoidal/Gear-2
+     capacitor history policy, and seeds the synthetic diode charge state from
+     the initial operating point.
+   - Cross-language tests cover both junction-capacitance current-step delay
+     and transit-time forward-charge retention after turnoff.
+   - BJT, JFET, and Level-1 MOS charge storage remain audited through explicit
+     terminal storage capacitors until their nonlinear charge policies land.
 
 ## Completed Slices
 
@@ -1211,6 +1210,22 @@ downstream tools to compare.
      point, matching Python and Rust.
    - Cross-language tests execute every fixture through `.noise` solving and
      verify the PSD windows plus reference-deck metadata.
+
+120. Device model charge audit fixtures.
+   - Status: completed in PR 6794.
+   - Python, Rust, and TypeScript now expose matching runnable
+     `device_model_charge_audit_fixtures` /
+     `deviceModelChargeAuditFixtures` one-device `.tran` fixtures for diode,
+     BJT, JFET, and Level-1 MOS model cards.
+   - Each fixture carries the normalized model card, an executable circuit,
+     `.tran` reference deck lines, selected probe node, timestep, stoptime,
+     explicit terminal storage capacitance, stable first/final probe-voltage
+     windows, and a short charge-behavior note.
+   - The fixtures deliberately audit charge storage through explicit terminal
+     capacitors, recording that BJT, JFET, and MOS model-card charge remains
+     explicit-storage-only until nonlinear transient charge policies land.
+   - Cross-language tests execute every fixture through transient solving and
+     verify the probe windows plus reference-deck metadata.
 
 ## Backlog
 

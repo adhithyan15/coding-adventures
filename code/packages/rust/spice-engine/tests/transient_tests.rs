@@ -39,7 +39,7 @@ use spice_engine::{
     transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
     Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec,
     CurrentSource, DeckAnalysisExecution, DeckAnalysisExecutionResult, DigitalBridgeSchedule,
-    DigitalEvent, DigitalEventStream, DigitalLogicLevels, DigitalState, DigitalThresholds,
+    DigitalEvent, DigitalEventStream, DigitalLogicLevels, DigitalState, DigitalThresholds, Diode,
     DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic,
     FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry,
     PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult,
@@ -178,6 +178,96 @@ fn device_model_charge_audit_fixtures_run_reference_transients() {
         .find(|fixture| fixture.kind.as_str() == "NJF")
         .expect("expected JFET charge fixture");
     assert!(jfet_fixture.charge_behavior.contains("external-only"));
+}
+
+#[test]
+fn transient_diode_junction_capacitance_slows_current_step() {
+    fn run(junction_capacitance: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::CurrentSource(CurrentSource::with_waveform(
+            "Istep",
+            "0",
+            "out",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (1.0e-9, 1.0e-6),
+                (5.0e-9, 1.0e-6),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rshunt", "out", "0", 1.0e12,
+        )));
+        circuit.add(Element::Diode(Diode::with_model_and_breakdown(
+            "D1",
+            "out",
+            "0",
+            1.0e-15,
+            0.02585,
+            1.0,
+            None,
+            1.0e-3,
+            junction_capacitance,
+            0.0,
+        )));
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()
+    }
+
+    let uncharged = run(0.0);
+    let charged = run(1.0e-12);
+    let uncharged_first = uncharged[0].voltage("out").unwrap();
+    let charged_first = charged[0].voltage("out").unwrap();
+
+    assert!(uncharged_first > 0.5);
+    assert!(charged_first < 0.01);
+    assert!(charged_first < uncharged_first);
+}
+
+#[test]
+fn transient_diode_transit_time_holds_forward_charge_on_turnoff() {
+    fn run(transit_time: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::CurrentSource(CurrentSource::with_waveform(
+            "Istep",
+            "0",
+            "out",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 1.0e-3),
+                (1.0e-9, 0.0),
+                (5.0e-9, 0.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rshunt", "out", "0", 1.0e12,
+        )));
+        circuit.add(Element::Diode(Diode::with_model_and_breakdown(
+            "D1",
+            "out",
+            "0",
+            1.0e-15,
+            0.02585,
+            1.0,
+            None,
+            1.0e-3,
+            0.0,
+            transit_time,
+        )));
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()
+    }
+
+    let no_storage = run(0.0);
+    let stored = run(1.0e-9);
+    let no_storage_first = no_storage[0].voltage("out").unwrap();
+    let stored_first = stored[0].voltage("out").unwrap();
+    let stored_last = stored
+        .last()
+        .and_then(|point| point.voltage("out"))
+        .unwrap();
+
+    assert_close(no_storage_first, 0.0);
+    assert!(stored_first > 0.6);
+    assert!(stored_last < stored_first);
 }
 
 #[test]

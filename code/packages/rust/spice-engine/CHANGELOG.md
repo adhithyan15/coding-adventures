@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Stamp diode `junction_capacitance` and `transit_time` model-card storage as
+  transient anode-cathode companions, matching Python and TypeScript, with
+  regression coverage for current-step delay and turnoff charge retention.
 - Add `device_model_charge_audit_fixtures` runnable one-device `.tran`
   fixtures with reference deck lines, explicit terminal storage capacitance
   metadata, stable first/final probe-voltage windows, and charge-behavior notes

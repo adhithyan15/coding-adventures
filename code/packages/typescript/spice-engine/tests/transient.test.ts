@@ -22,6 +22,7 @@ import {
   currentSourceWithWaveform,
   dcOp,
   deviceModelChargeAuditFixtures,
+  diode,
   digitalEventStreamsToBridgeSchedule,
   digitalEventStreamsToVoltageSources,
   digitalEventsToPwlWaveform,
@@ -210,6 +211,60 @@ describe("transient", () => {
 
     const jfetFixture = fixtures.find((fixture) => fixture.kind === "NJF");
     expect(jfetFixture?.chargeBehavior).toContain("external-only");
+  });
+
+  it("uses diode junction capacitance during transient current steps", () => {
+    function run(junctionCapacitance: number): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(currentSourceWithWaveform(
+        "Istep",
+        "0",
+        "out",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [1.0e-9, 1.0e-6],
+          [5.0e-9, 1.0e-6],
+        ]),
+      ));
+      circuit.add(resistor("Rshunt", "out", "0", 1.0e12));
+      circuit.add(diode("D1", "out", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, junctionCapacitance));
+      return transient(circuit, 1.0e-9, 5.0e-9);
+    }
+
+    const unchargedFirst = run(0.0)[0].voltage("out");
+    const chargedFirst = run(1.0e-12)[0].voltage("out");
+    expect(unchargedFirst).not.toBeUndefined();
+    expect(chargedFirst).not.toBeUndefined();
+    expect(unchargedFirst!).toBeGreaterThan(0.5);
+    expect(chargedFirst!).toBeLessThan(0.01);
+    expect(chargedFirst!).toBeLessThan(unchargedFirst!);
+  });
+
+  it("uses diode transit time to hold forward charge on turnoff", () => {
+    function run(transitTime: number): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(currentSourceWithWaveform(
+        "Istep",
+        "0",
+        "out",
+        0.0,
+        new PwlWaveform([
+          [0.0, 1.0e-3],
+          [1.0e-9, 0.0],
+          [5.0e-9, 0.0],
+        ]),
+      ));
+      circuit.add(resistor("Rshunt", "out", "0", 1.0e12));
+      circuit.add(diode("D1", "out", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 0.0, transitTime));
+      return transient(circuit, 1.0e-9, 5.0e-9);
+    }
+
+    const noStorage = run(0.0);
+    const stored = run(1.0e-9);
+    expectClose(noStorage[0].voltage("out"), 0.0);
+    expect(stored[0].voltage("out")!).toBeGreaterThan(0.6);
+    expect(stored[stored.length - 1].voltage("out")!).toBeLessThan(stored[0].voltage("out")!);
   });
 
   it("reports periods for periodic source waveforms", () => {

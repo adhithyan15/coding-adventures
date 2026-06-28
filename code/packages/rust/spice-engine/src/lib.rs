@@ -4002,7 +4002,7 @@ pub fn device_model_charge_audit_fixtures(
             expected_initial_max: 1.0,
             expected_final_min: 0.58,
             expected_final_max: 0.61,
-            charge_behavior: "diode terminal charge is conserved through explicit Cstore; CJO/TT remain AC-only until nonlinear charge stamping lands".to_string(),
+            charge_behavior: "diode CJO/TT contribute transient anode-cathode storage; explicit Cstore keeps the fixture comparable with other charge audits".to_string(),
             deck_lines: vec![
                 "* device-model charge fixture: diode-storage-charge".to_string(),
                 ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)".to_string(),
@@ -17513,6 +17513,11 @@ pub fn transient_with_method(
         &inductor_states,
         Some(0.0),
     )?;
+    seed_diode_capacitor_states(
+        circuit,
+        &initial_solution.node_voltages,
+        &mut capacitor_states,
+    );
     update_transmission_line_states(
         circuit,
         &initial_solution.node_voltages,
@@ -17648,6 +17653,11 @@ pub fn transient_adaptive(
         &inductor_states,
         Some(0.0),
     )?;
+    seed_diode_capacitor_states(
+        circuit,
+        &initial_solution.node_voltages,
+        &mut capacitor_states,
+    );
     update_transmission_line_states(
         circuit,
         &initial_solution.node_voltages,
@@ -19093,9 +19103,14 @@ fn solve_linear_circuit_at_operating_point(
             Element::CustomModel(model) => {
                 stamp_custom_model(model, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
-            Element::Diode(diode) => {
-                stamp_diode(diode, node_indices, &mut matrix, &mut rhs, operating_point)?
-            }
+            Element::Diode(diode) => stamp_diode(
+                diode,
+                capacitor_states,
+                node_indices,
+                &mut matrix,
+                &mut rhs,
+                operating_point,
+            )?,
             Element::Jfet(jfet) => {
                 stamp_jfet(jfet, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
@@ -20219,6 +20234,7 @@ fn stamp_custom_model(
 
 fn stamp_diode(
     diode: &Diode,
+    capacitor_states: &[CapacitorState],
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
@@ -20238,6 +20254,51 @@ fn stamp_diode(
     }
     if let Some(index) = cathode {
         rhs[index] += equivalent_current;
+    }
+    stamp_diode_charge(diode, capacitor_states, node_indices, matrix, rhs)?;
+    Ok(())
+}
+
+fn stamp_diode_charge(
+    diode: &Diode,
+    capacitor_states: &[CapacitorState],
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) -> Result<(), SpiceError> {
+    let state_name = diode_charge_state_name(diode);
+    let Some(state) = capacitor_states
+        .iter()
+        .find(|state| state.name == state_name)
+    else {
+        return Ok(());
+    };
+    let capacitance = diode_dynamic_capacitance(diode, state.previous_voltage);
+    if capacitance <= 0.0 {
+        return Ok(());
+    }
+
+    let conductance = match state.method {
+        TransientMethod::Trap => 2.0 * capacitance / state.time_step,
+        TransientMethod::Gear2 => 3.0 * capacitance / (2.0 * state.time_step),
+        TransientMethod::Euler => capacitance / state.time_step,
+    };
+    let history_current = match state.method {
+        TransientMethod::Trap => conductance * state.previous_voltage + state.previous_current,
+        TransientMethod::Gear2 => {
+            capacitance * (4.0 * state.previous_voltage - state.previous_previous_voltage)
+                / (2.0 * state.time_step)
+        }
+        TransientMethod::Euler => conductance * state.previous_voltage,
+    };
+    let anode = node_index(node_indices, &diode.anode);
+    let cathode = node_index(node_indices, &diode.cathode);
+    stamp_conductance(matrix, anode, cathode, conductance);
+    if let Some(index) = anode {
+        rhs[index] += history_current;
+    }
+    if let Some(index) = cathode {
+        rhs[index] -= history_current;
     }
     Ok(())
 }
@@ -20766,6 +20827,23 @@ fn diode_current_conductance(diode: &Diode, voltage: f64) -> (f64, f64) {
     (current, conductance)
 }
 
+fn diode_charge_state_name(diode: &Diode) -> String {
+    format!("_D_{}_charge", diode.name)
+}
+
+fn diode_has_charge_storage(diode: &Diode) -> bool {
+    diode.junction_capacitance > 0.0 || diode.transit_time > 0.0
+}
+
+fn diode_dynamic_capacitance(diode: &Diode, voltage: f64) -> f64 {
+    let (_, conductance) = diode_current_conductance(diode, voltage);
+    diode.junction_capacitance + diode.transit_time * conductance
+}
+
+fn diode_charge_voltage(diode: &Diode, node_voltages: &BTreeMap<String, f64>) -> f64 {
+    voltage_at(node_voltages, &diode.anode) - voltage_at(node_voltages, &diode.cathode)
+}
+
 fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
     if !diode.saturation_current.is_finite() || diode.saturation_current <= 0.0 {
         return Err(SpiceError::InvalidElement {
@@ -21023,6 +21101,14 @@ fn initial_capacitor_states(
                 time_step,
                 method,
             }),
+            Element::Diode(diode) if diode_has_charge_storage(diode) => Some(CapacitorState {
+                name: diode_charge_state_name(diode),
+                previous_voltage: 0.0,
+                previous_previous_voltage: 0.0,
+                previous_current: 0.0,
+                time_step,
+                method,
+            }),
             _ => None,
         })
         .collect()
@@ -21088,6 +21174,10 @@ fn capacitor_voltages(
                 capacitor.name.clone(),
                 voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2),
             )),
+            Element::Diode(diode) if diode_has_charge_storage(diode) => Some((
+                diode_charge_state_name(diode),
+                diode_charge_voltage(diode, node_voltages),
+            )),
             _ => None,
         })
         .collect()
@@ -21116,6 +21206,16 @@ fn transient_lte_estimate(
                     .get(&capacitor.name)
                     .copied()
                     .unwrap_or(capacitor.initial_voltage);
+                Some((current - 2.0 * previous + previous_previous).abs() / 2.0)
+            }
+            Element::Diode(diode) if diode_has_charge_storage(diode) => {
+                let state_name = diode_charge_state_name(diode);
+                let current = current_voltages.get(&state_name).copied().unwrap_or(0.0);
+                let previous = previous_voltages.get(&state_name).copied().unwrap_or(0.0);
+                let previous_previous = previous_previous_voltages
+                    .get(&state_name)
+                    .copied()
+                    .unwrap_or(0.0);
                 Some((current - 2.0 * previous + previous_previous).abs() / 2.0)
             }
             _ => None,
@@ -21293,32 +21393,58 @@ fn update_capacitor_states(
     capacitor_states: &mut [CapacitorState],
 ) {
     for state in capacitor_states {
-        let Some(capacitor) = circuit.elements().iter().find_map(|element| match element {
-            Element::Capacitor(capacitor) if capacitor.name == state.name => Some(capacitor),
+        let update = circuit.elements().iter().find_map(|element| match element {
+            Element::Capacitor(capacitor) if capacitor.name == state.name => Some((
+                voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2),
+                capacitor.capacitance_farads,
+            )),
+            Element::Diode(diode) if diode_charge_state_name(diode) == state.name => Some((
+                diode_charge_voltage(diode, node_voltages),
+                diode_dynamic_capacitance(diode, state.previous_voltage),
+            )),
             _ => None,
-        }) else {
+        });
+        let Some((voltage, capacitance)) = update else {
             continue;
         };
         let previous_voltage = state.previous_voltage;
         let previous_current = state.previous_current;
-        let voltage =
-            voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2);
         state.previous_current = match state.method {
             TransientMethod::Trap => {
-                let conductance = 2.0 * capacitor.capacitance_farads / state.time_step;
+                let conductance = 2.0 * capacitance / state.time_step;
                 conductance * (voltage - previous_voltage) - previous_current
             }
             TransientMethod::Gear2 => {
-                capacitor.capacitance_farads
+                capacitance
                     * (3.0 * voltage - 4.0 * previous_voltage + state.previous_previous_voltage)
                     / (2.0 * state.time_step)
             }
-            TransientMethod::Euler => {
-                capacitor.capacitance_farads * (voltage - previous_voltage) / state.time_step
-            }
+            TransientMethod::Euler => capacitance * (voltage - previous_voltage) / state.time_step,
         };
         state.previous_voltage = voltage;
         state.previous_previous_voltage = previous_voltage;
+    }
+}
+
+fn seed_diode_capacitor_states(
+    circuit: &Circuit,
+    node_voltages: &BTreeMap<String, f64>,
+    capacitor_states: &mut [CapacitorState],
+) {
+    for element in circuit.elements() {
+        let Element::Diode(diode) = element else {
+            continue;
+        };
+        let state_name = diode_charge_state_name(diode);
+        if let Some(state) = capacitor_states
+            .iter_mut()
+            .find(|state| state.name == state_name)
+        {
+            let voltage = diode_charge_voltage(diode, node_voltages);
+            state.previous_voltage = voltage;
+            state.previous_previous_voltage = voltage;
+            state.previous_current = 0.0;
+        }
     }
 }
 
