@@ -2,6 +2,17 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.9.0] — 2026-06-28
+
+### Added — rung 3 quartic roots scaffold
+
+- **`rung3_quartic_roots/items.json`** — 20 fresh algebra MCQs where the gold
+  decomposition is a native ADJ quartic root-solving program.
+- Several items use native `latex "..."` constraints, so quartic LaTeX input stays
+  on the ADJ execution path and returns `solved_roots`.
+- The root-solve decomposition prompt now includes a quartic example, giving local
+  models a native ADJ shape for degree-4 equations without computing roots in-model.
+
 ## [0.8.0] — 2026-06-28
 
 ### Added — rung 3 cubic roots scaffold
