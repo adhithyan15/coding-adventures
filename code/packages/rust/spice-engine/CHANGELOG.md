@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `format_device_model_reference_deck_audit_table`, a stable
+  tab-separated summary for the device-model reference-deck audit matrix,
+  matching Python and TypeScript.
 - Add `device_model_reference_deck_audit_fixtures`, a stable reference coverage
   matrix across DC, temperature, AC, noise, and transient model-depth fixtures
   for diode, BJT, JFET, and Level-1 MOS families, matching Python and

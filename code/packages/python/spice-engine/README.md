@@ -223,6 +223,8 @@ drain-body capacitance to match their small-signal AC semantics.
 temperature, AC, noise, and transient fixture families into a stable
 reference-deck coverage matrix for each supported diode, BJT, JFET, and
 Level-1 MOS model family.
+`format_device_model_reference_deck_audit_table()` renders that matrix as a
+stable tab-separated audit table for release and reference-deck comparisons.
 
 `DigitalEventStream`, `DigitalLogicLevels`, and `DigitalThresholds` provide the
 first mixed-signal bridge surface: digital event streams can drive finite-edge

@@ -7,7 +7,7 @@ duplicating diode, BJT, JFET, and Level-1 MOS parameter mapping logic.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
@@ -1160,3 +1160,33 @@ def device_model_reference_deck_audit_fixtures() -> tuple[DeviceModelReferenceDe
             )
         )
     return tuple(rows)
+
+
+def format_device_model_reference_deck_audit_table(
+    fixtures: Sequence[DeviceModelReferenceDeckAuditFixture] | None = None,
+) -> str:
+    """Return a stable tab-separated summary of reference-deck audit coverage."""
+
+    rows = (
+        device_model_reference_deck_audit_fixtures()
+        if fixtures is None
+        else tuple(fixtures)
+    )
+    lines = [
+        "name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines",
+    ]
+    for fixture in rows:
+        lines.append(
+            "\t".join(
+                [
+                    fixture.name,
+                    fixture.kind,
+                    fixture.analysis,
+                    fixture.model.name,
+                    fixture.reference,
+                    fixture.expected_behavior,
+                    str(len(fixture.deck_lines)),
+                ]
+            )
+        )
+    return "\n".join(lines)

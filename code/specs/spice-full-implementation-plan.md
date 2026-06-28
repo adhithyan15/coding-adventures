@@ -15,20 +15,19 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Device model reference-deck audit matrix.
+1. Device model reference-deck audit table.
    - Status: current PR completion candidate.
-   - Python, Rust, and TypeScript now expose a flattened
-     `device_model_reference_deck_audit_fixtures` /
-     `deviceModelReferenceDeckAuditFixtures` surface that summarizes the
-     runnable DC operating-point, temperature, AC capacitance, noise, and
-     transient charge fixture decks for every supported diode, BJT, JFET, and
-     Level-1 MOS model family.
-   - Each row carries the normalized model card, analysis kind, stable
-     reference label, expected behavior note, and reference deck lines so model
-     depth audits can compare coverage without re-discovering fixture families.
-   - Cross-language tests lock the four-family by five-analysis coverage matrix
-     and verify every row has model-card deck metadata, an `.end` boundary, and
-     a non-empty behavior note.
+   - Python, Rust, and TypeScript now expose stable
+     `format_device_model_reference_deck_audit_table` /
+     `formatDeviceModelReferenceDeckAuditTable` helpers for the flattened
+     reference-deck audit matrix.
+   - The tab-separated table locks `name`, `kind`, `analysis`, `model`,
+     `reference`, `expected_behavior`, and `deck_lines` columns so release
+     checks and reference-deck comparisons can diff model-depth coverage
+     without inspecting every fixture object.
+   - Cross-language tests lock the exact header, row count, and first/last rows
+     for the diode operating-point and Level-1 MOS transient-storage audit
+     entries.
 
 ## Completed Slices
 
@@ -1311,6 +1310,21 @@ downstream tools to compare.
    - Charge-audit fixtures now record MOS bulk-junction storage as
      depletion-shaped while preserving the same runnable one-device `.tran`
      fixture shape.
+
+127. Device model reference-deck audit matrix.
+   - Status: completed in PR 6832.
+   - Python, Rust, and TypeScript now expose a flattened
+     `device_model_reference_deck_audit_fixtures` /
+     `deviceModelReferenceDeckAuditFixtures` surface that summarizes the
+     runnable DC operating-point, temperature, AC capacitance, noise, and
+     transient charge fixture decks for every supported diode, BJT, JFET, and
+     Level-1 MOS model family.
+   - Each row carries the normalized model card, analysis kind, stable
+     reference label, expected behavior note, and reference deck lines so model
+     depth audits can compare coverage without re-discovering fixture families.
+   - Cross-language tests lock the four-family by five-analysis coverage matrix
+     and verify every row has model-card deck metadata, an `.end` boundary, and
+     a non-empty behavior note.
 
 ## Backlog
 

@@ -7851,6 +7851,24 @@ export function deviceModelReferenceDeckAuditFixtures(): readonly DeviceModelRef
   return rows;
 }
 
+export function formatDeviceModelReferenceDeckAuditTable(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  const lines = ["name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines"];
+  for (const fixture of fixtures) {
+    lines.push([
+      fixture.name,
+      fixture.kind,
+      fixture.analysis,
+      fixture.model.name,
+      fixture.reference,
+      fixture.expectedBehavior,
+      fixture.deckLines.length.toString(),
+    ].join("\t"));
+  }
+  return lines.join("\n");
+}
+
 export function vccs(
   name: string,
   positive: string,

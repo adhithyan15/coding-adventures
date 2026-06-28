@@ -4268,6 +4268,26 @@ pub fn device_model_reference_deck_audit_fixtures(
     Ok(fixtures)
 }
 
+pub fn format_device_model_reference_deck_audit_table(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    let mut lines =
+        vec!["name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines".to_string()];
+    for fixture in fixtures {
+        lines.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            fixture.name,
+            fixture.kind.as_str(),
+            fixture.analysis,
+            fixture.model.name,
+            fixture.reference,
+            fixture.expected_behavior,
+            fixture.deck_lines.len()
+        ));
+    }
+    lines.join("\n")
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CompatibilityOracle {
     pub reference: String,

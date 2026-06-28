@@ -32,6 +32,7 @@ import {
   formatCornerTemperatureDcTable,
   formatDeckDcSweepTable,
   formatDcSweepTable,
+  formatDeviceModelReferenceDeckAuditTable,
   formatMeasurementTable,
   formatTemperatureDcTable,
   inductor,
@@ -221,6 +222,19 @@ describe("dcOp", () => {
       expect(fixture.deckLines.some((line) => line.startsWith(".model "))).toBe(true);
       expect(fixture.deckLines.at(-1)).toBe(".end");
     }
+  });
+
+  it("formats a stable device model reference deck audit table", () => {
+    const table = formatDeviceModelReferenceDeckAuditTable();
+    const lines = table.split("\n");
+    expect(lines).toHaveLength(21);
+    expect(lines[0]).toBe("name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines");
+    expect(lines[1]).toBe(
+      "diode-forward-bias:op\tD\top\tDfast\tSPICE2/SPICE3-style local model-depth fixture\tDC probe out remains in [0.55, 0.65] V\t8",
+    );
+    expect(lines.at(-1)).toBe(
+      "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\tSPICE2/SPICE3-style local model-depth fixture\tLevel-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits\t10",
+    );
   });
 
   it("rejects non-Level-1 MOS model cards explicitly", () => {

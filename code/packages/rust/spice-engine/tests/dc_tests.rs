@@ -6,8 +6,9 @@ use spice_engine::{
     device_model_behavior_audit_fixtures, device_model_reference_deck_audit_fixtures,
     device_model_temperature_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
     format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
-    format_measurement_table, format_temperature_dc_table, jfet_from_model_card,
-    measure_dc_sweep_deck, measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
+    format_device_model_reference_deck_audit_table, format_measurement_table,
+    format_temperature_dc_table, jfet_from_model_card, measure_dc_sweep_deck,
+    measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
     normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs,
     Ccvs, Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource,
     CustomModel, DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity,
@@ -289,6 +290,26 @@ fn device_model_reference_deck_audit_fixtures_cover_model_depth_matrix() {
     for analyses in by_kind.values() {
         assert_eq!(analyses, &expected_analyses);
     }
+}
+
+#[test]
+fn device_model_reference_deck_audit_table_is_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let table = format_device_model_reference_deck_audit_table(&fixtures);
+    let lines = table.lines().collect::<Vec<_>>();
+    assert_eq!(lines.len(), 21);
+    assert_eq!(
+        lines[0],
+        "name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines"
+    );
+    assert_eq!(
+        lines[1],
+        "diode-forward-bias:op\tD\top\tDfast\tSPICE2/SPICE3-style local model-depth fixture\tDC probe out remains in [0.55, 0.65] V\t8"
+    );
+    assert_eq!(
+        lines.last().copied().unwrap(),
+        "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\tSPICE2/SPICE3-style local model-depth fixture\tLevel-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits\t10"
+    );
 }
 
 #[test]

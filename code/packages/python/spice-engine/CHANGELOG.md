@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Device model reference-deck audit table** —
+  `format_device_model_reference_deck_audit_table()` now emits a stable
+  tab-separated summary for the device-model reference-deck audit matrix,
+  matching Rust and TypeScript.
+
 - **Device model reference-deck audit fixtures** —
   `device_model_reference_deck_audit_fixtures()` now exposes a stable
   reference coverage matrix across DC, temperature, AC, noise, and transient
