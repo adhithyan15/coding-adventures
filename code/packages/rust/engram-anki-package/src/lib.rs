@@ -62,6 +62,14 @@ pub struct MediaFile {
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct ResolvedMediaFile {
+    pub archive_name: String,
+    pub filename: Option<String>,
+    pub data: Vec<u8>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ArchiveEntry {
     pub name: String,
     pub size: u32,
@@ -109,6 +117,55 @@ pub fn read_collection_bytes(data: &[u8]) -> Result<Vec<u8>, ApkgError> {
     reader
         .read_by_name(&collection.name)
         .map_err(|err| apkg_error(format!("failed to read collection: {err}")))
+}
+
+pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaFile, ApkgError> {
+    let reader = ZipReader::new(data).map_err(apkg_error)?;
+    let entries = archive_entries(&reader);
+    collection_member(&entries)?;
+    let manifest = media_manifest(&reader)?;
+    let media = manifest
+        .media_files
+        .into_iter()
+        .find(|media| media.archive_name == archive_name)
+        .ok_or_else(|| apkg_error(format!("media file '{archive_name}' not found")))?;
+    let data = reader.read_by_name(&media.archive_name).map_err(|err| {
+        apkg_error(format!(
+            "failed to read media file '{}': {err}",
+            media.archive_name
+        ))
+    })?;
+
+    Ok(ResolvedMediaFile {
+        archive_name: media.archive_name,
+        filename: media.filename,
+        data,
+    })
+}
+
+pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError> {
+    let reader = ZipReader::new(data).map_err(apkg_error)?;
+    let entries = archive_entries(&reader);
+    collection_member(&entries)?;
+    let manifest = media_manifest(&reader)?;
+
+    manifest
+        .media_files
+        .into_iter()
+        .map(|media| {
+            let data = reader.read_by_name(&media.archive_name).map_err(|err| {
+                apkg_error(format!(
+                    "failed to read media file '{}': {err}",
+                    media.archive_name
+                ))
+            })?;
+            Ok(ResolvedMediaFile {
+                archive_name: media.archive_name,
+                filename: media.filename,
+                data,
+            })
+        })
+        .collect()
 }
 
 pub fn write_legacy_apkg(collection_anki2: &[u8], media_assets: &[MediaAsset<'_>]) -> Vec<u8> {
@@ -270,6 +327,52 @@ mod tests {
         assert_eq!(manifest.collection.name, SQLITE_21B_COLLECTION);
         assert_eq!(manifest.collection.format, CollectionFormat::Sqlite21b);
         assert_eq!(collection, b"modern collection");
+    }
+
+    #[test]
+    fn reads_resolved_media_payloads() {
+        let apkg = write_legacy_apkg(
+            b"sqlite collection",
+            &[
+                MediaAsset {
+                    filename: "audio/hola.mp3",
+                    data: b"mp3",
+                },
+                MediaAsset {
+                    filename: "images/card.png",
+                    data: b"png",
+                },
+            ],
+        );
+
+        let media_files = read_media_files(&apkg).unwrap();
+        assert_eq!(
+            media_files,
+            vec![
+                ResolvedMediaFile {
+                    archive_name: "0".to_string(),
+                    filename: Some("audio/hola.mp3".to_string()),
+                    data: b"mp3".to_vec(),
+                },
+                ResolvedMediaFile {
+                    archive_name: "1".to_string(),
+                    filename: Some("images/card.png".to_string()),
+                    data: b"png".to_vec(),
+                },
+            ]
+        );
+
+        let audio = read_media_file(&apkg, "0").unwrap();
+        assert_eq!(audio.filename.as_deref(), Some("audio/hola.mp3"));
+        assert_eq!(audio.data, b"mp3");
+    }
+
+    #[test]
+    fn rejects_unknown_media_payloads() {
+        let apkg = write_legacy_apkg(b"sqlite collection", &[]);
+        let error = read_media_file(&apkg, "0").unwrap_err();
+
+        assert!(error.message.contains("media file '0' not found"));
     }
 
     #[test]
