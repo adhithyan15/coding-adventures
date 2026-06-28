@@ -208,6 +208,8 @@ mod tests {
             times_correct: 1,
             times_incorrect: 0,
             last_seen_at: NOW - 10,
+            flag: None,
+            marked_at: None,
         }
     }
 

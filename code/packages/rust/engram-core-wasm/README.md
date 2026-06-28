@@ -45,9 +45,13 @@ The facade also exposes review-control commands:
 
 - `suspendCard` / `unsuspendCard`
 - `buryCard` / `unburyCard`
+- `setCardFlag`
+- `markCard` / `unmarkCard`
 - `undoLastReview`
 
 Those commands update the Rust state snapshot directly, including active-session
 queues, so host shells do not need their own suspend or bury reducers.
 `undoLastReview` restores the previous progress snapshot recorded on the review
 and rewinds session counters through the same shared reducer.
+Flags and marks live on `CardProgress` as optional metadata so collection
+browsers can filter them without changing scheduling behavior.

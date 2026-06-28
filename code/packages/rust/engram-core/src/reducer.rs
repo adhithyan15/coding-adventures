@@ -1,5 +1,6 @@
 use crate::model::{
-    ActiveSessionState, AppState, Card, CardProgress, Deck, Rating, Review, Session, SessionStatus,
+    ActiveSessionState, AppState, Card, CardFlag, CardProgress, Deck, Rating, Review, Session,
+    SessionStatus,
 };
 use crate::scheduler::{schedule_review, DeckOptions};
 use crate::sm2::INITIAL_EASE_FACTOR;
@@ -49,6 +50,18 @@ pub enum EngramCommand {
         buried_until: u64,
     },
     UnburyCard {
+        card_id: String,
+    },
+    SetCardFlag {
+        card_id: String,
+        flag: Option<CardFlag>,
+        flagged_at: u64,
+    },
+    MarkCard {
+        card_id: String,
+        marked_at: u64,
+    },
+    UnmarkCard {
         card_id: String,
     },
     StartSession {
@@ -277,6 +290,49 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 if progress.state == crate::model::CardState::Buried {
                     progress.state = crate::model::CardState::Review;
                 }
+                remove_clear_overlay(&mut next.card_progress, index);
+            }
+            next
+        }
+        EngramCommand::SetCardFlag {
+            card_id,
+            flag,
+            flagged_at,
+        } => {
+            let mut next = state.clone();
+            match flag {
+                Some(flag) => {
+                    let progress =
+                        ensure_progress_overlay(&mut next.card_progress, card_id, flagged_at);
+                    progress.flag = Some(flag);
+                }
+                None => {
+                    if let Some(index) = next
+                        .card_progress
+                        .iter()
+                        .position(|progress| progress.card_id == card_id)
+                    {
+                        next.card_progress[index].flag = None;
+                        remove_clear_overlay(&mut next.card_progress, index);
+                    }
+                }
+            }
+            next
+        }
+        EngramCommand::MarkCard { card_id, marked_at } => {
+            let mut next = state.clone();
+            let progress = ensure_progress_overlay(&mut next.card_progress, card_id, marked_at);
+            progress.marked_at = Some(marked_at);
+            next
+        }
+        EngramCommand::UnmarkCard { card_id } => {
+            let mut next = state.clone();
+            if let Some(index) = next
+                .card_progress
+                .iter()
+                .position(|progress| progress.card_id == card_id)
+            {
+                next.card_progress[index].marked_at = None;
                 remove_clear_overlay(&mut next.card_progress, index);
             }
             next
@@ -512,6 +568,8 @@ fn ensure_progress_overlay(
         times_correct: 0,
         times_incorrect: 0,
         last_seen_at: created_at,
+        flag: None,
+        marked_at: None,
     });
     progress.last_mut().expect("just pushed overlay progress")
 }
@@ -526,6 +584,8 @@ fn remove_clear_overlay(progress: &mut Vec<CardProgress>, index: usize) {
             && item.learning_step_index.is_none()
             && item.buried_until.is_none()
             && item.suspended_at.is_none()
+            && item.flag.is_none()
+            && item.marked_at.is_none()
     };
 
     if should_remove {
@@ -601,6 +661,8 @@ mod tests {
             times_correct: 1,
             times_incorrect: 0,
             last_seen_at: NOW - ONE_DAY_MS,
+            flag: None,
+            marked_at: None,
         }
     }
 
@@ -899,6 +961,98 @@ mod tests {
         assert_eq!(unburied.card_progress[0].buried_until, None);
         let queue = build_session_queue(&unburied.cards, &unburied.card_progress, "deck", NOW);
         assert_eq!(queue[0].id, "card");
+    }
+
+    #[test]
+    fn flag_and_mark_new_card_create_reversible_overlay() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+
+        let flagged = reduce(
+            &state,
+            EngramCommand::SetCardFlag {
+                card_id: "card".to_string(),
+                flag: Some(CardFlag::Purple),
+                flagged_at: NOW,
+            },
+        );
+
+        assert_eq!(flagged.card_progress.len(), 1);
+        assert_eq!(flagged.card_progress[0].flag, Some(CardFlag::Purple));
+        assert_eq!(flagged.card_progress[0].marked_at, None);
+
+        let marked = reduce(
+            &flagged,
+            EngramCommand::MarkCard {
+                card_id: "card".to_string(),
+                marked_at: NOW + 1,
+            },
+        );
+
+        assert_eq!(marked.card_progress.len(), 1);
+        assert_eq!(marked.card_progress[0].flag, Some(CardFlag::Purple));
+        assert_eq!(marked.card_progress[0].marked_at, Some(NOW + 1));
+
+        let unflagged = reduce(
+            &marked,
+            EngramCommand::SetCardFlag {
+                card_id: "card".to_string(),
+                flag: None,
+                flagged_at: NOW + 2,
+            },
+        );
+
+        assert_eq!(unflagged.card_progress.len(), 1);
+        assert_eq!(unflagged.card_progress[0].flag, None);
+        assert_eq!(unflagged.card_progress[0].marked_at, Some(NOW + 1));
+
+        let unmarked = reduce(
+            &unflagged,
+            EngramCommand::UnmarkCard {
+                card_id: "card".to_string(),
+            },
+        );
+
+        assert!(unmarked.card_progress.is_empty());
+    }
+
+    #[test]
+    fn rate_card_preserves_flag_and_mark_metadata() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state.card_progress.push(progress("card"));
+        state.card_progress[0].flag = Some(CardFlag::Blue);
+        state.card_progress[0].marked_at = Some(NOW - 5);
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card")],
+                started_at: NOW,
+            },
+        );
+
+        let reviewed = reduce(
+            &state,
+            EngramCommand::RateCard {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: NOW,
+            },
+        );
+
+        assert_eq!(reviewed.card_progress[0].flag, Some(CardFlag::Blue));
+        assert_eq!(reviewed.card_progress[0].marked_at, Some(NOW - 5));
+        assert_eq!(
+            reviewed.reviews[0]
+                .previous_progress
+                .as_ref()
+                .and_then(|progress| progress.flag),
+            Some(CardFlag::Blue)
+        );
     }
 
     #[test]

@@ -9,7 +9,7 @@
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
-    build_session_queue, generate_cards_for_note, get_deck_stats, reduce, AppState, Card,
+    build_session_queue, generate_cards_for_note, get_deck_stats, reduce, AppState, Card, CardFlag,
     DeckOptions, Rating,
 };
 use serde::Deserialize;
@@ -147,6 +147,18 @@ enum FacadeCommand {
     UnburyCard {
         card_id: String,
     },
+    SetCardFlag {
+        card_id: String,
+        flag: Option<CardFlag>,
+        flagged_at: u64,
+    },
+    MarkCard {
+        card_id: String,
+        marked_at: u64,
+    },
+    UnmarkCard {
+        card_id: String,
+    },
     StartSession {
         session_id: String,
         deck_id: String,
@@ -241,6 +253,19 @@ impl FacadeCommand {
                 buried_until,
             },
             Self::UnburyCard { card_id } => engram_core::EngramCommand::UnburyCard { card_id },
+            Self::SetCardFlag {
+                card_id,
+                flag,
+                flagged_at,
+            } => engram_core::EngramCommand::SetCardFlag {
+                card_id,
+                flag,
+                flagged_at,
+            },
+            Self::MarkCard { card_id, marked_at } => {
+                engram_core::EngramCommand::MarkCard { card_id, marked_at }
+            }
+            Self::UnmarkCard { card_id } => engram_core::EngramCommand::UnmarkCard { card_id },
             Self::StartSession {
                 session_id,
                 deck_id,
@@ -574,6 +599,110 @@ mod tests {
             .as_array()
             .unwrap()
             .is_empty());
+    }
+
+    #[test]
+    fn dispatch_flag_and_mark_card() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let flagged: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "setCardFlag",
+                    "cardId": "card",
+                    "flag": "turquoise",
+                    "flaggedAt": 1700000000000
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(flagged["ok"], true);
+        assert_eq!(flagged["state"]["cardProgress"][0]["flag"], "turquoise");
+
+        let marked: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "markCard",
+                    "cardId": "card",
+                    "markedAt": 1700000000001
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(marked["ok"], true);
+        assert_eq!(marked["state"]["cardProgress"][0]["flag"], "turquoise");
+        assert_eq!(marked["state"]["cardProgress"][0]["markedAt"], NOW + 1);
+
+        let unflagged: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "setCardFlag",
+                    "cardId": "card",
+                    "flag": null,
+                    "flaggedAt": 1700000000002
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(unflagged["ok"], true);
+        assert!(unflagged["state"]["cardProgress"][0].get("flag").is_none());
+        assert_eq!(unflagged["state"]["cardProgress"][0]["markedAt"], NOW + 1);
+
+        let unmarked: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "unmarkCard",
+                    "cardId": "card"
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(unmarked["ok"], true);
+        assert!(unmarked["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+    }
+
+    #[test]
+    fn load_snapshot_accepts_progress_without_flag_or_mark_fields() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cardProgress": [{
+                "cardId": "card",
+                "state": "review",
+                "interval": 1,
+                "easeFactor": 2.5,
+                "nextDueAt": 1700000000000,
+                "learningStepIndex": null,
+                "buriedUntil": null,
+                "suspendedAt": null,
+                "timesSeen": 1,
+                "timesCorrect": 1,
+                "timesIncorrect": 0,
+                "lastSeenAt": 1699913600000
+            }],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        let loaded: Value = serde_json::from_str(&session.load_snapshot(snapshot)).unwrap();
+
+        assert_eq!(loaded["ok"], true);
+        assert!(loaded["state"]["cardProgress"][0].get("flag").is_none());
+        assert!(loaded["state"]["cardProgress"][0].get("markedAt").is_none());
     }
 
     #[test]

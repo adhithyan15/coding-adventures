@@ -85,6 +85,8 @@ Current reducer integration:
   accepts optional `deckOptions`.
 - Suspend and bury are reducer-owned commands (`SuspendCard`, `UnsuspendCard`,
   `BuryCard`, `UnburyCard`) and are exposed through the JSON facade.
+- Card flags and marks are reducer-owned metadata commands (`SetCardFlag`,
+  `MarkCard`, `UnmarkCard`) and are exposed through the JSON facade.
 - Reviews carry optional previous/resulting progress snapshots so
   `UndoLastReview` can restore card progress, review history, and session
   counters without host-specific logic.
@@ -280,7 +282,8 @@ Status:
   still needs note/card lineage on durable cards.
 - Suspend card/note. Card-level core commands exist; note-level bulk behavior
   remains a browser/editor workflow.
-- Flag/mark card.
+- Flag/mark card. Core and JSON facade support exists; web/native controls and
+  browser filters still need to bind to it.
 - Review remaining counts.
 
 ## Workstream 4: Language Learning App Foundation

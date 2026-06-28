@@ -59,6 +59,8 @@ fn schedule_new(card_id: String, rating: Rating, options: &DeckOptions, now: u64
         times_correct: 0,
         times_incorrect: 0,
         last_seen_at: now,
+        flag: None,
+        marked_at: None,
     };
 
     schedule_learning(&base, rating, options, now, false)
@@ -222,6 +224,8 @@ mod tests {
             times_correct: 3,
             times_incorrect: 0,
             last_seen_at: NOW - ONE_DAY_MS,
+            flag: None,
+            marked_at: None,
         }
     }
 

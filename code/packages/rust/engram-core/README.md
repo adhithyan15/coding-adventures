@@ -41,9 +41,10 @@ dispatch `EngramCommand::RateCardWithOptions` to provide learning steps,
 graduating/easy intervals, review limits, and lapse behavior without forking the
 review logic.
 
-Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`, and
-`UnburyCard` also live here. They hide cards from queues and active sessions in
-the core reducer so web, Mosaic, and native shells all share the same behavior.
+Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`,
+`UnburyCard`, `SetCardFlag`, `MarkCard`, and `UnmarkCard` also live here. They
+hide cards from queues and active sessions or store review metadata in the core
+reducer so web, Mosaic, and native shells all share the same behavior.
 
 Reviews carry optional previous/resulting progress snapshots. `UndoLastReview`
 uses those snapshots to remove the newest snapshot-backed review in a session,

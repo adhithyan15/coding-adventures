@@ -14,8 +14,8 @@ mod sm2;
 mod template;
 
 pub use model::{
-    ActiveSessionState, AppState, Card, CardProgress, CardState, CardTemplate, Deck, DeckStats,
-    FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating, Review, Session,
+    ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardState, CardTemplate, Deck,
+    DeckStats, FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating, Review, Session,
     SessionStatus,
 };
 pub use queue::{

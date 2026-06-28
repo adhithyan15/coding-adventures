@@ -103,6 +103,19 @@ pub enum CardState {
     Buried,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum CardFlag {
+    Red,
+    Orange,
+    Green,
+    Blue,
+    Pink,
+    Turquoise,
+    Purple,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
@@ -119,6 +132,16 @@ pub struct CardProgress {
     pub times_correct: u32,
     pub times_incorrect: u32,
     pub last_seen_at: u64,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub flag: Option<CardFlag>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub marked_at: Option<u64>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
