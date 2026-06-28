@@ -2,6 +2,18 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.11.0] — 2026-06-28
+
+### Added — rung 3 linear systems scaffold
+
+- **`rung3_linear_systems/items.json`** — 20 fresh algebra MCQs where the gold
+  decomposition is a native ADJ two-variable linear-system program.
+- The rung includes word problems and symbolic systems; several items use native
+  `latex "..."` constraints, keeping natural algebra notation on ADJ's execution path.
+- The solve-program decomposition prompt now includes ASCII and LaTeX two-variable
+  examples, so local models can emit `symbol x`, `symbol y`, multiple constraints,
+  and `solve for { x, y }` while the harness maps only the engine-returned assignment.
+
 ## [0.10.0] — 2026-06-28
 
 ### Added — rung 3 factored roots scaffold
