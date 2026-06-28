@@ -5279,6 +5279,15 @@ impl HtmlParser {
         {
             self.reconstruct_pending_formatting();
         }
+        if namespace.is_none()
+            && name == "dd"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
+            self.reconstruct_pending_formatting();
+        }
 
         for (formatting_name, formatting_attributes) in formatting_inside {
             let child_index =
@@ -5862,6 +5871,14 @@ impl HtmlParser {
             return;
         }
         if incoming_name == "div"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
+            return;
+        }
+        if incoming_name == "dd"
             && self
                 .pending_formatting_reconstruction
                 .iter()
@@ -6479,7 +6496,7 @@ impl HtmlParser {
                 self.open_elements.remove(index);
                 return;
             }
-            if matches!(name, "div" | "p" | "select") {
+            if matches!(name, "div" | "p" | "select" | "dl" | "dt" | "dd") {
                 self.capture_formatting_above(index);
             }
             if name == "select" {
@@ -6962,7 +6979,7 @@ impl HtmlParser {
             .open_elements
             .get(index)
             .and_then(|path| element_at_path(&self.document, path))
-            .is_some_and(|name| matches!(name, "p" | "select"));
+            .is_some_and(|name| matches!(name, "p" | "select" | "dl" | "dt" | "dd"));
         if should_capture_formatting {
             self.capture_formatting_above(index);
         }
@@ -8217,7 +8234,6 @@ fn repair_split_div_nobr_adoption(document: &mut Document) {
 
 fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_tricky_adoption_agency_in(&mut document.children);
-    repair_definition_list_bold_continuation(&mut document.children);
     repair_table_font_fostered_image(&mut document.children);
     repair_fostered_anchor_paragraph_continuation(&mut document.children);
     repair_insanely_badly_nested_table_sequence(&mut document.children);
@@ -8793,74 +8809,6 @@ fn unwrap_empty_font_newline_after_font(nodes: &mut Vec<Node>) {
         }
         index += 1;
     }
-}
-
-fn repair_definition_list_bold_continuation(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_definition_list_bold_continuation(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index < nodes.len() {
-        let repaired_dl = match nodes.get_mut(index) {
-            Some(Node::Element(element)) if element.name == "dl" => {
-                repair_definition_list_bold_children(&mut element.children)
-            }
-            _ => false,
-        };
-        if repaired_dl
-            && matches!(
-                nodes.get(index + 1),
-                Some(Node::Text(text)) if text.data == "\n"
-            )
-        {
-            let Node::Text(text) = nodes.remove(index + 1) else {
-                continue;
-            };
-            let mut bold = Node::element("b".to_string(), Vec::new());
-            if let Node::Element(element) = &mut bold {
-                element.children.push(Node::text(text.data));
-            }
-            nodes.insert(index + 1, bold);
-        }
-        index += 1;
-    }
-}
-
-fn repair_definition_list_bold_children(children: &mut [Node]) -> bool {
-    let mut previous_dt_had_bold = false;
-    let mut repaired = false;
-    for child in children {
-        let Node::Element(element) = child else {
-            continue;
-        };
-        match element.name.as_str() {
-            "dt" => {
-                previous_dt_had_bold = element
-                    .children
-                    .iter()
-                    .any(|child| matches!(child, Node::Element(child) if child.name == "b"));
-            }
-            "dd" if previous_dt_had_bold => {
-                let already_bold = element.children.first().is_some_and(
-                    |child| matches!(child, Node::Element(child) if child.name == "b"),
-                );
-                if !already_bold {
-                    let mut bold = Node::element("b".to_string(), Vec::new());
-                    if let Node::Element(bold_element) = &mut bold {
-                        bold_element.children = std::mem::take(&mut element.children);
-                    }
-                    element.children.push(bold);
-                    repaired = true;
-                }
-            }
-            _ => {}
-        }
-    }
-    repaired
 }
 
 fn repair_table_font_fostered_image(nodes: &mut Vec<Node>) {
@@ -30256,7 +30204,10 @@ mod tests {
         assert_eq!(element(&term.children[0]).children, vec![Node::text("T")]);
         let description = element(&definitions.children[1]);
         assert_eq!(description.name, "dd");
-        assert_eq!(description.children, vec![Node::text("D")]);
+        assert_eq!(
+            element(&description.children[0]).children,
+            vec![Node::text("D")]
+        );
 
         let select = element(&body.children[4]);
         assert_eq!(select.name, "select");
@@ -30805,6 +30756,34 @@ mod tests {
         assert_eq!(nobr.name, "nobr");
         assert_eq!(nobr.children, vec![Node::text("a")]);
         assert_eq!(element(&reconstructed_bold.children[1]).name, "nobr");
+    }
+
+    #[test]
+    fn definition_description_start_reconstructs_pending_bold_inside_item() {
+        let document = parse_html("<dl><dt><b>term<dd>definition</dl>\n").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let list = element(&body.children[0]);
+        assert_eq!(list.name, "dl");
+        assert_eq!(list.children.len(), 2);
+
+        let term = element(&list.children[0]);
+        assert_eq!(term.name, "dt");
+        let term_bold = element(&term.children[0]);
+        assert_eq!(term_bold.name, "b");
+        assert_eq!(term_bold.children, vec![Node::text("term")]);
+
+        let description = element(&list.children[1]);
+        assert_eq!(description.name, "dd");
+        let description_bold = element(&description.children[0]);
+        assert_eq!(description_bold.name, "b");
+        assert_eq!(description_bold.children, vec![Node::text("definition")]);
+
+        let trailing_bold = element(&body.children[1]);
+        assert_eq!(trailing_bold.name, "b");
+        assert_eq!(trailing_bold.children, vec![Node::text("\n")]);
     }
 
     #[test]
