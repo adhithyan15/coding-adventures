@@ -76,6 +76,6 @@ This crate does not own:
 - ID generation or wall-clock access
 - authored language content graphs
 
-The larger language app should add a sibling `language-core` for scripts,
+The larger language app uses the sibling `language-core` crate for scripts,
 lexemes, grammar concepts, etymology edges, and lesson graphs, while this crate
 remains the memory/review engine those learning items can use.

@@ -340,6 +340,14 @@ Early language focus:
 - Telugu
 - Spanish with Latin/English/French cognate stories
 
+Status:
+
+- `code/packages/rust/language-core` adds the first Rust-owned language learning
+  model for languages, scripts, graphemes, phonemes, lexemes, etymology links,
+  lesson nodes, exercises, and Engram review bindings.
+- Initial helpers cover etymology paths, shared-ancestor story candidates, and
+  lesson-to-Engram card bindings.
+
 ## Workstream 5: Mosaic and Native
 
 ### 5.1 Mosaic Component Pilot

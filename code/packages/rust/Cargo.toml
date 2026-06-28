@@ -193,6 +193,7 @@ members = [
     "jvm-class-file",
     "jvm-simulator",
     "lexer",
+    "language-core",
     "lisp-compiler",
     "lisp-lexer",
     "lisp-parser",
