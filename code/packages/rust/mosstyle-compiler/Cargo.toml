@@ -2,7 +2,7 @@
 name = "mosstyle-compiler"
 version = "0.1.0"
 edition = "2021"
-description = "Compiles .msl component style files to a resolved style map and CSS"
+description = "Compiles .msl component style files to Lattice, CSS, and a resolved style map"
 
 [dependencies]
 grammar-tools  = { path = "../grammar-tools" }
@@ -12,3 +12,6 @@ parser         = { path = "../parser" }
 state-machine  = { path = "../state-machine" }
 serde          = { version = "1", features = ["derive"] }
 serde_json     = "1"
+
+[dev-dependencies]
+coding-adventures-lattice-transpiler = { path = "../lattice-transpiler" }

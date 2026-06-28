@@ -1,15 +1,17 @@
 # mosstyle-compiler
 
-Compiles `.msl` (Mosaic Style Language) files into scoped CSS.
+Compiles `.msl` (Mosaic Style Language) files into scoped Lattice source.
 
-## Role in the Mosaic stack
+## Role In The Mosaic Stack
 
+```text
+.msl -> mosstyle-compiler -> Lattice source
+                         \-> compatibility CSS
+                         \-> resolved style map JSON
 ```
-.msl  ──▶  mosstyle-compiler  ──▶  CSS string
-```
 
-A `.msl` file answers exactly one question: *what do the parts of a component
-look like?*  It maps part names (declared in the `.mll` layout file) to CSS
+A `.msl` file answers exactly one question: what do the parts of a component
+look like? It maps part names declared in the `.mll` layout file to Lattice
 property declarations, with optional state selectors.
 
 ## Syntax
@@ -34,11 +36,11 @@ style Grid {
 }
 ```
 
-**Design tokens** — `$token-name` references resolve to hex literals using the
-UI15 dark-mode palette baked into the compiler.  No runtime CSS variable lookup
-is needed for static rendering.  Full Lattice token file support is planned for v2.
+Design tokens such as `$token-name` resolve to literal values using the UI15
+dark-mode palette baked into the compiler. Full Lattice token file support is
+planned for a later pass.
 
-## CSS output
+## Lattice Output
 
 Class names follow the `.mos-{ComponentName}-{part-name}` convention:
 
@@ -57,33 +59,39 @@ Class names follow the `.mos-{ComponentName}-{part-name}` convention:
 }
 ```
 
-**State → CSS selector mapping:**
+The current emitter writes CSS-compatible Lattice, which the repo's Lattice
+transpiler accepts directly. `CompileOutput.css` remains available as a
+compatibility artifact for existing DOM and React callers.
 
-| State      | CSS selector             |
-|------------|--------------------------|
-| `hover`    | `:hover`                 |
-| `pressed`  | `:active`                |
-| `focused`  | `:focus-visible`         |
-| `disabled` | `.disabled` (class)      |
-| `selected` | `.selected` (class)      |
-| `editing`  | `.editing` (class)       |
-| `error`    | `.error` (class)         |
+## State Selector Mapping
+
+| State | CSS selector |
+| --- | --- |
+| `hover` | `:hover` |
+| `pressed` | `:active` |
+| `focused` | `:focus-visible` |
+| `disabled` | `.disabled` class |
+| `selected` | `.selected` class |
+| `editing` | `.editing` class |
+| `error` | `.error` class |
 
 ## API
 
 ```rust
-use mosstyle_compiler::{compile, CompileOutput};
+use mosstyle_compiler::compile;
 
-let css = compile(src, None).expect("compile failed").css;
-println!("{css}");
+let lattice = compile(src, None).expect("compile failed").lattice;
+println!("{lattice}");
 ```
 
 `compile(source, part_map_json)`:
-- `source` — raw `.msl` source text
-- `part_map_json` — optional JSON from `moslayout-compiler`; when supplied,
-  every `part` name in the style is validated against the layout's declared parts.
 
-## Running tests
+- `source`: raw `.msl` source text.
+- `part_map_json`: optional JSON from `moslayout-compiler`; when supplied,
+  every `part` name in the style is validated against the layout's declared
+  parts.
+
+## Running Tests
 
 ```sh
 cargo test -p mosstyle-compiler -- --nocapture

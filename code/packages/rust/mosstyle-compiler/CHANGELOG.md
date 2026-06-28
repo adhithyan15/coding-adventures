@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added - Lattice style emission
+
+- `CompileOutput` now includes `lattice`, a first-class scoped Lattice source
+  artifact generated from the same resolved `StyleDef` as the compatibility
+  CSS output.
+- Added `emit_lattice(&StyleDef)` and tests that pass the generated source
+  through the Rust Lattice transpiler.
+- `CompileOutput.css` and `emit_css()` remain for existing DOM and React
+  callers while Mosaic-generated style artifacts pivot toward Lattice.
+
 ### Added — structural states (`even`, `odd`) for row-stripe sub-parts
 
 - `VALID_STATES` now includes `even` and `odd` alongside the existing

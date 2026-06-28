@@ -8,7 +8,7 @@
 //!                                        │
 //! .mll  ──▶  moslayout-compiler ◀────────┤  ──▶  part-map JSON
 //!                                        │
-//! .msl  ──▶  mosstyle-compiler  ◀────────┘  ──▶  CSS string
+//! .msl  ──▶  mosstyle-compiler  ◀────────┘  ──▶  Lattice source
 //! ```
 //!
 //! ## Usage
@@ -24,7 +24,7 @@
 //!   Run only the layout stage (no .mil needed), print part-map JSON.
 //!
 //! mosaic --style Grid.msl
-//!   Run only the style stage (no .mil/.mll needed), print CSS.
+//!   Run only the style stage (no .mil/.mll needed), print Lattice.
 //! ```
 //!
 //! ## Output (stdout JSON)
@@ -34,6 +34,7 @@
 //!   "component": "Grid",
 //!   "interface": { "slots": [...], "emits": [...] },
 //!   "parts": [{ "name": "root", "primitive": "Column" }, ...],
+//!   "lattice": ".mos-Grid-root { background-color: #1e1e1e; ... }",
 //!   "css": ".mos-Grid-root { background-color: #1e1e1e; ... }"
 //! }
 //! ```
@@ -88,7 +89,7 @@ fn main() {
                 for e in &errs { eprintln!("mosstyle error: {e}"); }
                 process::exit(1);
             });
-            println!("{}", out.css);
+            println!("{}", out.lattice);
         }
 
         name => {
@@ -160,6 +161,7 @@ fn main() {
                 "component": name,
                 "interface": interface,
                 "parts":     parts,
+                "lattice":   style_out.lattice,
                 "css":       style_out.css,
             });
 
