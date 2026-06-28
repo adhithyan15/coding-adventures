@@ -1,5 +1,24 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.31.0 — 2026-06-28 — BA4 lexical string ordering in IF branches
+
+String `IF` now lowers the standard lexical ordering relops through the shared
+E4 `str_cmp` op:
+
+```basic
+10 LET A$ = "ALPHA"
+20 IF A$ < "BETA" THEN 40
+30 END
+40 IF "BETA" > A$ THEN 60
+50 END
+60 PRINT "OK"
+```
+
+The compiler compares the `str_cmp` result with zero using the existing typed
+`cmp_lt` / `cmp_gt` / `cmp_le` / `cmp_ge` instructions, then reuses the normal
+`jmp_if_true` line-control path. Equality and inequality continue to use
+`str_eq` plus `jmp_if_true` / `jmp_if_false`.
+
 ## 0.30.0 — 2026-06-28 — BA4 variable-variable string concat in IF equality
 
 String `IF` now has an explicit unit and matrix proof for a concatenation

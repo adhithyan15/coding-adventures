@@ -50,7 +50,9 @@ helper. String literal `PRINT`, literal-backed string variables
 (`LET A$ = "HI"` / `PRINT A$`), literal reassignment
 (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`), and `IF A$ = "Y"` / `IF A$ <> "Y"`
 string branches now lower through the shared E4 path on all seven matrix
-backends. Literal `+` concatenation (`LET A$ = "O" + "K"; PRINT A$`) uses E4
+backends. Lexical string ordering in `IF` (`A$ < "B"` / `"B" > A$`) lowers
+through E4 `str_cmp` plus typed zero comparisons on the same targets. Literal
+`+` concatenation (`LET A$ = "O" + "K"; PRINT A$`) uses E4
 `str_concat` on the same backends, and literal-backed scalar string copies
 (`LET A$ = "OK"; LET B$ = A$; PRINT B$`) reuse that E4 path with an empty
 suffix. Copied slots can participate in control flow too (`IF B$ = A$ THEN ...`).
@@ -95,8 +97,8 @@ synthetic recursive helper that renders digits one at a time via the universal
 inserts a space (`PRINT 4, 2` ⇒ `4 2`), and a trailing separator suppresses the
 line-ending newline.  Because the helpers reuse only ops every backend already
 runs, BA2 needed **zero** backend changes.  String literal/scalar string
-printing, literal concat, equality/inequality branches, and literal reassignment
-now use E4 on all seven backends.
+printing, literal concat, equality/inequality/order branches, and literal
+reassignment now use E4 on all seven backends.
 (`,` is a single space rather than a true 14-column print zone — a documented,
 deferred approximation.)
 

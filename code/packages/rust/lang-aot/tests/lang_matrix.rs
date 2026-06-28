@@ -1358,6 +1358,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — BA4 lexical string ordering drives control flow. The
+    // frontend lowers `$` string `<` / `>` relops through E4 `str_cmp`, compares
+    // the ordering result with zero using typed `cmp_lt` / `cmp_gt`, and then
+    // uses the existing line-control `jmp_if_true` path.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"ALPHA\"\n20 IF A$ < \"BETA\" THEN 40\n30 END\n40 IF \"BETA\" > A$ THEN 60\n50 END\n60 PRINT \"OK\"\n70 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
     // backends could not run correctly until this slice (LLVM compared at `i1` width;
