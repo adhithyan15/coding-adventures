@@ -8,7 +8,9 @@ use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::ptr;
 
+use engram_anki_package::read_v11_collection_as_engram_state;
 use engram_core_wasm::EngramSession;
+use serde_json::{json, Value};
 
 pub struct EgSession {
     inner: EngramSession,
@@ -344,11 +346,57 @@ pub unsafe extern "C" fn eg_parse_anki_notes_tsv(
     })
 }
 
+/// # Safety
+/// `session` must be valid; `data` must point to `data_len` APKG bytes.
+#[no_mangle]
+pub unsafe extern "C" fn eg_parse_anki_apkg(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+) -> *mut c_char {
+    if session.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr(match read_ffi_bytes(data, data_len) {
+        Ok(bytes) => parse_anki_apkg_json(bytes),
+        Err(message) => error_json(&message),
+    })
+}
+
+/// # Safety
+/// `session` must be valid; `data` must point to `data_len` APKG bytes.
+#[no_mangle]
+pub unsafe extern "C" fn eg_import_anki_apkg(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+) -> *mut c_char {
+    if session.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr(match read_ffi_bytes(data, data_len) {
+        Ok(bytes) => import_anki_apkg_json(&mut (*session).inner, bytes),
+        Err(message) => error_json(&message),
+    })
+}
+
 unsafe fn read_cstr(value: *const c_char) -> String {
     if value.is_null() {
         return String::new();
     }
     CStr::from_ptr(value).to_string_lossy().into_owned()
+}
+
+unsafe fn read_ffi_bytes<'a>(data: *const u8, data_len: usize) -> Result<&'a [u8], String> {
+    if data.is_null() {
+        if data_len == 0 {
+            Ok(&[])
+        } else {
+            Err("APKG data pointer is null".to_string())
+        }
+    } else {
+        Ok(std::slice::from_raw_parts(data, data_len))
+    }
 }
 
 unsafe fn with_session(
@@ -361,6 +409,34 @@ unsafe fn with_session(
     into_cstr(run(&mut (*session).inner))
 }
 
+fn parse_anki_apkg_json(bytes: &[u8]) -> String {
+    match read_v11_collection_as_engram_state(bytes) {
+        Ok(state) => ok_json_with("state", serde_json::to_value(state).unwrap_or(Value::Null)),
+        Err(error) => error_json(&error.message),
+    }
+}
+
+fn import_anki_apkg_json(session: &mut EngramSession, bytes: &[u8]) -> String {
+    match read_v11_collection_as_engram_state(bytes) {
+        Ok(state) => match serde_json::to_string(&state) {
+            Ok(snapshot_json) => session.load_snapshot(&snapshot_json),
+            Err(error) => error_json(&format!("failed to serialize imported Anki state: {error}")),
+        },
+        Err(error) => error_json(&error.message),
+    }
+}
+
+fn ok_json_with(key: &str, value: Value) -> String {
+    let mut object = serde_json::Map::new();
+    object.insert("ok".to_string(), Value::Bool(true));
+    object.insert(key.to_string(), value);
+    Value::Object(object).to_string()
+}
+
+fn error_json(message: &str) -> String {
+    json!({ "ok": false, "error": message }).to_string()
+}
+
 fn into_cstr(value: String) -> *mut c_char {
     match CString::new(value) {
         Ok(value) => value.into_raw(),
@@ -371,6 +447,9 @@ fn into_cstr(value: String) -> *mut c_char {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use engram_anki_package::write_legacy_apkg;
+    use rusqlite::Connection;
+    use serde_json::Value;
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -382,6 +461,161 @@ mod tests {
 
     fn cstr(value: &str) -> CString {
         CString::new(value).unwrap()
+    }
+
+    fn v11_apkg_fixture() -> Vec<u8> {
+        let sqlite = tempfile::NamedTempFile::new().unwrap();
+        {
+            let connection = Connection::open(sqlite.path()).unwrap();
+            connection
+                .execute_batch(
+                    r#"
+CREATE TABLE col (
+  id integer primary key,
+  crt integer not null,
+  mod integer not null,
+  scm integer not null,
+  ver integer not null,
+  dty integer not null,
+  usn integer not null,
+  ls integer not null,
+  conf text not null,
+  models text not null,
+  decks text not null,
+  dconf text not null,
+  tags text not null
+);
+CREATE TABLE notes (
+  id integer primary key,
+  guid text not null,
+  mid integer not null,
+  mod integer not null,
+  usn integer not null,
+  tags text not null,
+  flds text not null,
+  sfld integer not null,
+  csum integer not null,
+  flags integer not null,
+  data text not null
+);
+CREATE TABLE cards (
+  id integer primary key,
+  nid integer not null,
+  did integer not null,
+  ord integer not null,
+  mod integer not null,
+  usn integer not null,
+  type integer not null,
+  queue integer not null,
+  due integer not null,
+  ivl integer not null,
+  factor integer not null,
+  reps integer not null,
+  lapses integer not null,
+  left integer not null,
+  odue integer not null,
+  odid integer not null,
+  flags integer not null,
+  data text not null
+);
+CREATE TABLE revlog (
+  id integer primary key,
+  cid integer not null,
+  usn integer not null,
+  ease integer not null,
+  ivl integer not null,
+  lastIvl integer not null,
+  factor integer not null,
+  time integer not null,
+  type integer not null
+);
+CREATE TABLE graves (
+  usn integer not null,
+  oid integer not null,
+  type integer not null
+);
+"#,
+                )
+                .unwrap();
+
+            let decks = r#"{"2":{"id":2,"name":"Spanish::Latin","desc":"Story deck"}}"#;
+            let models = r#"{"100":{"id":100,"name":"Basic","type":0,"css":"","flds":[{"name":"Front","ord":0},{"name":"Back","ord":1}],"tmpls":[{"name":"Card 1","ord":0,"qfmt":"{{Front}}","afmt":"{{Back}}","did":2}]}}"#;
+            connection
+                .execute(
+                    "INSERT INTO col VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+                    rusqlite::params![
+                        1_i64,
+                        19_000_i64,
+                        1_700_000_000_i64,
+                        1_700_000_001_i64,
+                        11_i64,
+                        0_i64,
+                        -1_i64,
+                        1_700_000_002_i64,
+                        r#"{}"#,
+                        models,
+                        decks,
+                        r#"{}"#,
+                        r#"{}"#
+                    ],
+                )
+                .unwrap();
+            connection
+                .execute(
+                    "INSERT INTO notes VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+                    rusqlite::params![
+                        1000_i64,
+                        "guid-1000",
+                        100_i64,
+                        1_700_000_010_i64,
+                        -1_i64,
+                        " spanish roots ",
+                        "hola\u{1f}hello",
+                        "hola",
+                        123_i64,
+                        0_i64,
+                        ""
+                    ],
+                )
+                .unwrap();
+            connection
+                .execute(
+                    "INSERT INTO cards VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18)",
+                    rusqlite::params![
+                        2000_i64,
+                        1000_i64,
+                        2_i64,
+                        0_i64,
+                        1_700_000_020_i64,
+                        -1_i64,
+                        2_i64,
+                        2_i64,
+                        42_i64,
+                        7_i64,
+                        2500_i64,
+                        3_i64,
+                        1_i64,
+                        0_i64,
+                        0_i64,
+                        0_i64,
+                        4_i64,
+                        ""
+                    ],
+                )
+                .unwrap();
+            connection
+                .execute(
+                    "INSERT INTO revlog VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+                    rusqlite::params![
+                        3000_i64, 2000_i64, -1_i64, 3_i64, 7_i64, 3_i64, 2500_i64, 12_000_i64,
+                        1_i64
+                    ],
+                )
+                .unwrap();
+        }
+
+        let sqlite_bytes = std::fs::read(sqlite.path()).unwrap();
+        write_legacy_apkg(&sqlite_bytes, &[])
     }
 
     #[test]
@@ -403,6 +637,36 @@ mod tests {
 
             let snapshot = take(eg_snapshot(session));
             assert!(snapshot.contains(r#""id":"deck""#));
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_parses_and_imports_anki_apkg_state() {
+        unsafe {
+            let session = eg_session_new();
+            let apkg = v11_apkg_fixture();
+
+            let parsed = take(eg_parse_anki_apkg(session, apkg.as_ptr(), apkg.len()));
+            let parsed: Value = serde_json::from_str(&parsed).unwrap();
+            assert_eq!(parsed["ok"], true);
+            assert_eq!(parsed["state"]["decks"][0]["id"], "2");
+            assert_eq!(parsed["state"]["decks"][0]["name"], "Spanish::Latin");
+            assert_eq!(parsed["state"]["cards"][0]["front"], "hola");
+            assert_eq!(parsed["state"]["cards"][0]["back"], "hello");
+            assert_eq!(parsed["state"]["cardProgress"][0]["flag"], "blue");
+
+            let imported = take(eg_import_anki_apkg(session, apkg.as_ptr(), apkg.len()));
+            let imported: Value = serde_json::from_str(&imported).unwrap();
+            assert_eq!(imported["ok"], true);
+            assert_eq!(imported["state"]["cards"][0]["id"], "2000");
+            assert_eq!(imported["state"]["reviews"][0]["rating"], "good");
+
+            let snapshot = take(eg_snapshot(session));
+            let snapshot: Value = serde_json::from_str(&snapshot).unwrap();
+            assert_eq!(snapshot["state"]["cards"][0]["front"], "hola");
+            assert_eq!(snapshot["state"]["sessions"][0]["status"], "completed");
 
             eg_session_free(session);
         }

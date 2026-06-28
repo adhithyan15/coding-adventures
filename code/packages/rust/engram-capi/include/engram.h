@@ -1,6 +1,7 @@
 #ifndef ENGRAM_CAPI_H
 #define ENGRAM_CAPI_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -90,6 +91,8 @@ char *eg_parse_anki_notes_tsv(
     const char *note_id_prefix,
     uint64_t created_at
 );
+char *eg_parse_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
+char *eg_import_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
 
 #ifdef __cplusplus
 }

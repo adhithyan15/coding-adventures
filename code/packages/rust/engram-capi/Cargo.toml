@@ -9,4 +9,10 @@ license = "MIT"
 crate-type = ["cdylib", "staticlib", "rlib"]
 
 [dependencies]
+engram-anki-package = { path = "../engram-anki-package" }
 engram-core-wasm = { path = "../engram-core-wasm" }
+serde_json = "1"
+
+[dev-dependencies]
+rusqlite = { version = "0.32", features = ["bundled"] }
+tempfile = "3"

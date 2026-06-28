@@ -252,7 +252,8 @@ Formats:
   existing `collection.anki2` bytes plus media assets. It also parses
   legacy/V11 SQLite collection bytes into owned Anki decks, note types, notes,
   cards, revlog rows, and graves, and maps them into `engram-core::AppState`
-  with deterministic IDs, rendered card fronts/backs, and cloze card rendering.
+  with deterministic IDs, rendered card fronts/backs, cloze card rendering,
+  and preserved scheduled-card color flags.
 
 Next APKG SQLite milestone:
 
@@ -269,6 +270,10 @@ Next APKG SQLite milestone:
   `notes.flds`/`notes.tags`, card lineage from `cards.nid`/`cards.ord`, card
   progress from `cards`, and review history from `revlog.ease`/`revlog.id` now
   map into `engram-core::AppState`.
+- `engram-capi` now exposes `eg_parse_anki_apkg` for native import previews and
+  `eg_import_anki_apkg` for applying supported APKG bytes into the shared
+  session state. Both functions use the same JSON `{ ok, state/error }`
+  contract as the rest of the native facade.
 - Export the first APKG as a deterministic legacy package with reset scheduling
   before attempting full scheduling fidelity.
 - SQL-built V11 fixtures and package round-trips through the existing ZIP
@@ -330,6 +335,9 @@ Status:
 - `code/packages/rust/engram-capi` exposes the first native ABI over
   `engram-core-wasm`, including dispatch, snapshots/backups, queue/stats,
   generated cards, search, and CSV helpers.
+- Native APKG byte-slice imports are now available through `eg_parse_anki_apkg`
+  and `eg_import_anki_apkg`, backed by `engram-anki-package` and returning the
+  same JSON result shape as other C ABI calls.
 
 ## Workstream 3: Engram Web App
 

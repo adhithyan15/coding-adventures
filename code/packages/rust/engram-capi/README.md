@@ -14,6 +14,8 @@ engram-core-wasm     JSON facade
         |
         v
 engram-core          study model, scheduling, search, import/export
+
+engram-anki-package  APKG/V11 SQLite import bridge for native file-open flows
 ```
 
 ## API
@@ -34,6 +36,11 @@ views that need deck-scoped review-log summaries over a timestamp range.
 daily limit accounting and queue builder for native review screens.
 `eg_export_anki_basic_tsv` and `eg_parse_anki_basic_tsv` expose the shared
 Anki-compatible Basic front/back text path for native file-open/save flows.
+`eg_parse_anki_apkg` previews a legacy/V11 APKG import as Engram state JSON,
+and `eg_import_anki_apkg` applies that imported state to the session. These
+byte-slice APIs currently support `collection.anki2` and `collection.anki21`
+packages and return JSON errors for modern `collection.anki21b` packages until
+the modern Anki package reader lands.
 `eg_materialized_cards` mirrors the JSON facade's durable generated-card
 materialization for native note/template editors.
 Native shells can send review-control commands such as `buryCardSiblings`
