@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::model::{AppState, Card, CardFlag, CardProgress, CardState, Deck, Note};
+use crate::model::{AppState, Card, CardFlag, CardProgress, CardState, Deck, Note, NoteType};
 use crate::queue::is_reviewable;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -37,6 +37,7 @@ enum SearchClauseKind {
     Front(String),
     Back(String),
     Deck(String),
+    NoteType(String),
     Tag(String),
     State(CardSearchState),
     Flag(FlagFilter),
@@ -82,6 +83,11 @@ pub fn search_cards(
         .iter()
         .map(|note| (note.id.as_str(), note))
         .collect();
+    let note_types_by_id: HashMap<&str, &NoteType> = state
+        .note_types
+        .iter()
+        .map(|note_type| (note_type.id.as_str(), note_type))
+        .collect();
 
     let results = state
         .cards
@@ -90,9 +96,12 @@ pub fn search_cards(
             let progress = progress_by_card.get(card.id.as_str()).copied();
             let deck = decks_by_id.get(card.deck_id.as_str()).copied();
             let note = note_for_card(card, &notes_by_id);
+            let note_type = note
+                .and_then(|note| note_types_by_id.get(note.note_type_id.as_str()))
+                .copied();
             clauses
                 .iter()
-                .all(|clause| clause_matches(clause, card, progress, deck, note, now))
+                .all(|clause| clause_matches(clause, card, progress, deck, note, note_type, now))
         })
         .map(|card| CardSearchResult {
             card: card.clone(),
@@ -186,6 +195,7 @@ fn parse_keyed_clause(
         "front" => Ok(SearchClauseKind::Front(value)),
         "back" => Ok(SearchClauseKind::Back(value)),
         "deck" => Ok(SearchClauseKind::Deck(value)),
+        "note" | "notetype" | "note_type" | "note-type" => Ok(SearchClauseKind::NoteType(value)),
         "tag" => Ok(SearchClauseKind::Tag(value)),
         "state" => parse_state_filter(token, &value).map(SearchClauseKind::State),
         "is" => parse_is_filter(token, &value),
@@ -259,6 +269,7 @@ fn clause_matches(
     progress: Option<&CardProgress>,
     deck: Option<&Deck>,
     note: Option<&Note>,
+    note_type: Option<&NoteType>,
     now: u64,
 ) -> bool {
     let matched = match &clause.kind {
@@ -266,6 +277,7 @@ fn clause_matches(
         SearchClauseKind::Front(term) => contains_case_insensitive(&card.front, term),
         SearchClauseKind::Back(term) => contains_case_insensitive(&card.back, term),
         SearchClauseKind::Deck(term) => deck_matches(term, card, deck),
+        SearchClauseKind::NoteType(term) => note_type_matches(term, note, note_type),
         SearchClauseKind::Tag(tag) => note.is_some_and(|note| {
             note.tags
                 .iter()
@@ -307,6 +319,14 @@ fn deck_matches(term: &str, card: &Card, deck: Option<&Deck>) -> bool {
     contains_case_insensitive(&card.deck_id, term)
         || deck.is_some_and(|deck| {
             contains_case_insensitive(&deck.id, term) || contains_case_insensitive(&deck.name, term)
+        })
+}
+
+fn note_type_matches(term: &str, note: Option<&Note>, note_type: Option<&NoteType>) -> bool {
+    note.is_some_and(|note| contains_case_insensitive(&note.note_type_id, term))
+        || note_type.is_some_and(|note_type| {
+            contains_case_insensitive(&note_type.id, term)
+                || contains_case_insensitive(&note_type.name, term)
         })
 }
 
@@ -522,6 +542,8 @@ mod tests {
         assert_eq!(ids, vec!["due"]);
 
         assert_eq!(ids_for("tag:script"), vec!["note::forward"]);
+        assert_eq!(ids_for("note:basic"), vec!["note::forward"]);
+        assert_eq!(ids_for("noteType:basic"), vec!["note::forward"]);
     }
 
     #[test]

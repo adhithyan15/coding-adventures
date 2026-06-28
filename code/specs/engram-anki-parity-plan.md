@@ -88,8 +88,8 @@ Current reducer integration:
 - Card flags and marks are reducer-owned metadata commands (`SetCardFlag`,
   `MarkCard`, `UnmarkCard`) and are exposed through the JSON facade.
 - `search_cards` provides the first shared collection-browser query engine with
-  text, deck, field-side, tag, state, due, suspended, buried, flag, and marked
-  filters.
+  text, deck, note type, field-side, tag, state, due, suspended, buried, flag,
+  and marked filters.
 - Reviews carry optional previous/resulting progress snapshots so
   `UndoLastReview` can restore card progress, review history, and session
   counters without host-specific logic.
@@ -169,8 +169,8 @@ Tests:
 - Query parser diagnostics. Initial core support exists for unknown filters and
   unterminated quotes.
 - Search result stability. Initial core tests preserve source card order.
-- Tag and deck filters compose with text filters. Initial core support exists;
-  note type filters and richer boolean expressions remain.
+- Tag, deck, and note type filters compose with text filters. Initial core
+  support exists; richer boolean expressions remain.
 
 ### 1.5 Import/Export Model
 
