@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Stamp BJT `base_emitter_capacitance`, `base_collector_capacitance`,
+  `forward_transit_time`, and `reverse_transit_time` model-card storage as
+  transient base-emitter and base-collector companions, matching Python and
+  TypeScript, with regression coverage for base current-step delay and forward
+  transit-time turnoff charge.
 - Stamp diode `junction_capacitance` and `transit_time` model-card storage as
   transient anode-cathode companions, matching Python and TypeScript, with
   regression coverage for current-step delay and turnoff charge retention.
