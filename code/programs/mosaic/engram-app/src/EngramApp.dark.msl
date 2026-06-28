@@ -13,6 +13,10 @@ style EngramApp {
     padding-bottom : 14 ;
   }
 
+  part stats-region {
+    padding-bottom : 14 ;
+  }
+
   part review-region {
     padding-top : 16 ;
     padding : 4 ;

@@ -8,6 +8,7 @@ license = "MIT OR Apache-2.0"
 exports = ["EngramApp"]
 
 [dependencies]
+mosaic-pkg-deck-stats = "0.1.0"
 mosaic-pkg-review-card = "0.1.0"
 mosaic-pkg-session-progress = "0.1.0"
 

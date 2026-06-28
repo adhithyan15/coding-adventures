@@ -468,6 +468,9 @@ Emit React first, then validate one native target.
 
 Status:
 
+- `code/packages/mosaic-pkg-deck-stats` adds reusable total, new, due,
+  learning, and hidden deck counters with label/value slots ready to bind to
+  shared Engram core deck-stat JSON.
 - `code/packages/mosaic-pkg-review-card` adds the first reusable
   `ReviewCard` component package. It now composes
   `mosaic-pkg-rating-controls` instead of owning the rating button row.
@@ -483,12 +486,15 @@ Status:
   allowing deliberate overrides.
 - The component package tests compile the same `.mil/.mll/.msl` sources
   through React, HTML, SwiftUI, XAML, Qt, Compose, and Flutter paths, and the
-  app package test verifies the `EngramApp -> ReviewCard -> RatingControls`
-  chain through HTML, React, SwiftUI, XAML, Qt, and Flutter artifacts.
+  app package test verifies the `EngramApp -> DeckStatsPanel`,
+  `EngramApp -> SessionProgress`, and `EngramApp -> ReviewCard ->
+  RatingControls` chains through HTML, React, SwiftUI, XAML, Qt, and Flutter
+  artifacts.
 - `code/programs/mosaic/engram-app` adds the Engram Mosaic app package. The
-  app exports `EngramApp`, declares dependencies on `mosaic-pkg-review-card`
-  and `mosaic-pkg-session-progress`, and mounts package components rather than
-  owning review-card or progress-counter component implementations itself.
+  app exports `EngramApp`, declares dependencies on `mosaic-pkg-deck-stats`,
+  `mosaic-pkg-review-card`, and `mosaic-pkg-session-progress`, and mounts
+  package components rather than owning deck-stat, review-card, or
+  progress-counter component implementations itself.
 - Shared `SessionProgress` counters are available in `engram-core`,
   `engram-core-wasm`, and `engram-capi` for Mosaic/native review screens.
 - This split is the first concrete pivot point for moving Engram UI out of

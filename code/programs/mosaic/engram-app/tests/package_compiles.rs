@@ -42,6 +42,10 @@ fn manifest_declares_app_package_boundary() {
     assert_eq!(package.package.name, "engram-app");
     assert_eq!(package.components.exports, COMPONENTS);
     assert_eq!(
+        package.dependencies.get("mosaic-pkg-deck-stats"),
+        Some(&"0.1.0".to_string())
+    );
+    assert_eq!(
         package.dependencies.get("mosaic-pkg-review-card"),
         Some(&"0.1.0".to_string())
     );
@@ -68,10 +72,30 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert_eq!(msl.def.component_name, "EngramApp");
 
     let source = read_source("EngramApp.mll");
+    assert!(source.contains("pkg::mosaic-pkg-deck-stats::DeckStatsPanel"));
     assert!(source.contains("pkg::mosaic-pkg-review-card::ReviewCard"));
     assert!(source.contains("pkg::mosaic-pkg-session-progress::SessionProgress"));
+    assert!(!source.contains("layout DeckStatsPanel"));
     assert!(!source.contains("layout ReviewCard"));
     assert!(!source.contains("layout SessionProgress"));
+}
+
+#[test]
+fn app_manifest_resolves_deck_stats_dependency() {
+    let resolver = dependency_resolver();
+
+    match resolver.resolve("DeckStatsPanel") {
+        Some(Resolution::Component {
+            package,
+            component,
+            package_path,
+        }) => {
+            assert_eq!(package, "mosaic-pkg-deck-stats");
+            assert_eq!(component, "DeckStatsPanel");
+            assert!(package_path.ends_with("mosaic-pkg-deck-stats"));
+        }
+        other => panic!("expected DeckStatsPanel component resolution, got {other:?}"),
+    }
 }
 
 #[test]
@@ -140,6 +164,10 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
 
     let html = fs::read_to_string(tmp.path().join("html").join("EngramApp.html"))
         .expect("EngramApp HTML artifact should be readable");
+    assert!(
+        html.contains("#2563eb"),
+        "DeckStatsPanel package styles should reach EngramApp HTML"
+    );
     assert!(
         html.contains("#e94560"),
         "ReviewCard package styles should reach EngramApp HTML"
