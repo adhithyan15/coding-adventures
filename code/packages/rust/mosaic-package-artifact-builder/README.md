@@ -25,6 +25,11 @@ backend emission. Styles from referenced packages are compiled and merged first,
 then the consuming package's style is applied, so apps get reusable component
 defaults plus local override points.
 
+Set `BuildOptions::emit_project` to `true` to write backend project shells
+beside the component artifacts. React, HTML, WebComponent, Flutter, Qt,
+SwiftUI, and XAML all produce their shell side files from the same package
+source tree.
+
 ## Boundaries
 
 - Cross-package layout inlining lives in `mosaic-package-resolver`; this crate

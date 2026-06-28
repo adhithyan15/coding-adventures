@@ -15,6 +15,11 @@ can intentionally override a named part while keeping default package styling.
 The builder also now honors themed style fallbacks such as
 `<Component>.dark.msl` when `<Component>.msl` is absent.
 
+`BuildOptions::emit_project` now writes XAML project shells through
+`mosaic-emit-xaml` as well, producing `<Component>.csproj`, `App.xaml`,
+`MainWindow.xaml`, `app.manifest`, `build.ps1`, and README side files beside
+the package's component XAML triple and `MosaicPackage.props` fragment.
+
 All notable changes to `mosaic-package-artifact-builder` will be documented
 in this file.
 
@@ -29,7 +34,7 @@ New API:
 - `pub struct BuildOptions { ..existing.., emit_project: bool }`
 - `fn emit_project_shell(component, src_dir, backend_dir, backend) -> Result<Vec<PathBuf>, BuildError>` — re-parses the first component's `.mil`/`.mll`/`.msl` triple and routes through the matching emitter's `from_pipeline_with_options(emit_project: true)`. Writes the resulting `ProjectFiles` into `backend_dir` at the fixed §2.2 paths.
 
-Per-backend dispatch covers React, HTML, WebComponent, Flutter, Qt, SwiftUI. **XAML intentionally no-ops at the artifact-builder layer in v1**: its own `EmitOptions::emit_project` mechanism (PR #3917) runs through `mosaic-compile` directly, bypassing the artifact-builder. Unifying the two paths is queued as UI32-M.1.
+Per-backend dispatch covers React, HTML, WebComponent, Flutter, Qt, SwiftUI, and XAML. XAML shells reuse `mosaic-emit-xaml`'s `EmitOptions::emit_project` path and are written by the artifact-builder beside the component triple.
 
 **v1 scope (documented deviation):** only the FIRST component in `[components].exports` is mounted as the shell root. Per UI32 spec §5 open question 1's first-export-default policy. Multi-component routing/tabs UI (TabView on SwiftUI, MaterialApp routes on Flutter, etc.) is deferred to UI32-M.1.
 
@@ -37,8 +42,8 @@ Per-backend dispatch covers React, HTML, WebComponent, Flutter, Qt, SwiftUI. **X
 
 - `ui32_m_emit_project_false_does_not_emit_shell_side_files` (§3.4 back-compat)
 - `ui32_m_emit_project_true_writes_react_vite_shell` (positive: full L2 shell present, banner intact, artifacts list includes shell files)
-- `ui32_m_emit_project_true_produces_expected_shell_per_backend` (cross-backend: 6 backends × expected file enumeration)
-- `ui32_m_emit_project_true_xaml_is_currently_a_noop_at_builder_layer` (v1 deviation explicitly verified)
+- `ui32_m_emit_project_true_produces_expected_shell_per_backend` (cross-backend: 7 backends × expected file enumeration)
+- `ui32_m_emit_project_true_xaml_writes_project_shell` (positive: full WinUI host shell present)
 - `ui32_m_emit_project_shell_is_byte_deterministic` (§3.1 across two tmpdir runs)
 
 All 33 existing tests + 1 doctest pass unchanged. Total tests: 38 (was 33, +5).

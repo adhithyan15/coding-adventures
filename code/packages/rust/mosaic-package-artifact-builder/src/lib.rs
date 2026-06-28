@@ -440,10 +440,8 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     //     packages who want a tab/route bar between components hit
     //     this limitation; the spec §5 open question 1 picks
     //     "first-export-default" as the v1 policy.
-    //   - XAML is excluded — it already has its own `--emit-project`
-    //     mechanism via `EmitOptions::emit_project` in the emitter
-    //     itself (PR #3917), bypassing the artifact-builder. UI32-M.1
-    //     unifies the two paths.
+    //   - Every backend, including XAML, now flows through this same
+    //     artifact-builder project-shell path.
     //
     // The shell side-files (package.json, vite.config.ts, etc.) are
     // written into `backend_dir` alongside the per-component
@@ -707,14 +705,38 @@ fn emit_project_shell(
             }
         }
         Backend::Xaml => {
-            // XAML's project shell flows through its own
-            // `EmitOptions::emit_project` from PR #3917, which is
-            // wired in `mosaic-compile`'s xaml branch (not in the
-            // artifact-builder). For UI32-M v1 the artifact-builder
-            // path silently no-ops for XAML — invoking
-            // `--backend xaml --emit-project` through `build_package`
-            // does nothing extra. UI32-M.1 unifies the two paths so
-            // this branch becomes a wired call like the others.
+            let mut xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions::default();
+            xaml_opts.emit_project = true;
+            let r = mosaic_emit_xaml::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                None,
+                &xaml_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: Vec<(String, &str)> = vec![
+                    (format!("{component}.csproj"), &proj.csproj),
+                    ("App.xaml".to_string(), &proj.app_xaml),
+                    ("App.xaml.cs".to_string(), &proj.app_xaml_cs),
+                    ("MainWindow.xaml".to_string(), &proj.main_window_xaml),
+                    ("MainWindow.xaml.cs".to_string(), &proj.main_window_cs),
+                    ("app.manifest".to_string(), &proj.package_manifest),
+                    ("build.ps1".to_string(), &proj.build_script),
+                    ("README.md".to_string(), &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+            }
+            for side_file in r.for_view_models.iter().chain(r.if_helpers.iter()) {
+                let p = backend_dir.join(&side_file.filename);
+                write_file(&p, side_file.source.as_bytes())?;
+                written.push(p);
+            }
         }
     }
     Ok(written)
@@ -2903,8 +2925,8 @@ version = "1"
         );
     }
 
-    /// Per-backend smoke test: each non-XAML backend produces its
-    /// expected shell side-files when emit_project is true. Doesn't
+    /// Per-backend smoke test: each backend produces its expected
+    /// shell side-files when emit_project is true. Doesn't
     /// re-test the banner/pinning/etc. contracts (the per-emitter
     /// L2-L7 PRs do that); just confirms the artifact-builder
     /// routes correctly.
@@ -2935,6 +2957,19 @@ version = "1"
                 Backend::SwiftUI,
                 vec!["Package.swift", "README.md", "Sources/App/App.swift"],
             ),
+            (
+                Backend::Xaml,
+                vec![
+                    "Grid.csproj",
+                    "App.xaml",
+                    "App.xaml.cs",
+                    "MainWindow.xaml",
+                    "MainWindow.xaml.cs",
+                    "app.manifest",
+                    "build.ps1",
+                    "README.md",
+                ],
+            ),
         ] {
             let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
             let out = TempDir::new().unwrap();
@@ -2955,12 +2990,11 @@ version = "1"
         }
     }
 
-    /// XAML's --emit-project is wired through its own emitter
-    /// EmitOptions (PR #3917), bypassing the artifact-builder. v1
-    /// of UI32-M intentionally no-ops on XAML at this layer.
-    /// Documented as a deviation; UI32-M.1 unifies the paths.
+    /// XAML's --emit-project path writes a full WinUI host shell via
+    /// the package artifact builder, alongside the component triple
+    /// and package props fragment.
     #[test]
-    fn ui32_m_emit_project_true_xaml_is_currently_a_noop_at_builder_layer() {
+    fn ui32_m_emit_project_true_xaml_writes_project_shell() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
         let out = TempDir::new().unwrap();
         build_package(&BuildOptions {
@@ -2969,16 +3003,15 @@ version = "1"
             backend: Backend::Xaml,
             emit_project: true,
         })
-        .expect("xaml build (emit_project: true) must not error even though shell is no-op'd");
-        // The xaml/ dir has the per-component triple + MosaicPackage.props
-        // but NOT the .csproj/App.xaml/MainWindow.xaml — those come
-        // from the XAML emitter's own --emit-project (PR #3917)
-        // accessed via mosaic-compile, not build_package, in v1.
+        .expect("xaml build with emit_project: true");
         let dir = out.path().join("xaml");
         assert!(dir.join("Grid.xaml").exists());
-        assert!(!dir.join("Grid.csproj").exists());
-        assert!(!dir.join("App.xaml").exists());
-        assert!(!dir.join("MainWindow.xaml").exists());
+        assert!(dir.join("Grid.xaml.cs").exists());
+        assert!(dir.join("Grid.Event.cs").exists());
+        assert!(dir.join("MosaicPackage.props").exists());
+        assert!(dir.join("Grid.csproj").exists());
+        assert!(dir.join("App.xaml").exists());
+        assert!(dir.join("MainWindow.xaml").exists());
     }
 
     /// §3.1 Reproducible: two emit_project builds against the same

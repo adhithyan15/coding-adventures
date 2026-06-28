@@ -212,6 +212,67 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
 }
 
 #[test]
+fn app_package_emits_native_project_shells() {
+    let tmp = tempfile::tempdir().expect("temp dist root");
+    let shells = [
+        (
+            Backend::Qt,
+            "qt",
+            vec![
+                "EngramApp.qml",
+                "CMakeLists.txt",
+                "main.cpp",
+                "qmldir",
+                "README.md",
+            ],
+        ),
+        (
+            Backend::SwiftUI,
+            "swiftui",
+            vec![
+                "EngramApp.swift",
+                "Package.swift",
+                "README.md",
+                "Sources/App/App.swift",
+            ],
+        ),
+        (
+            Backend::Xaml,
+            "xaml",
+            vec![
+                "EngramApp.xaml",
+                "EngramApp.xaml.cs",
+                "EngramApp.Event.cs",
+                "MosaicPackage.props",
+                "EngramApp.csproj",
+                "App.xaml",
+                "MainWindow.xaml",
+                "build.ps1",
+            ],
+        ),
+    ];
+
+    for (backend, dir_name, expected_files) in shells {
+        let result = build_package(&BuildOptions {
+            package_root: package_root(),
+            output_root: tmp.path().to_path_buf(),
+            backend,
+            emit_project: true,
+        })
+        .unwrap_or_else(|e| panic!("{backend:?} should emit EngramApp project shell: {e}"));
+
+        assert_eq!(result.components_built, vec!["EngramApp"]);
+        let backend_dir = tmp.path().join(dir_name);
+        for file in expected_files {
+            assert!(
+                backend_dir.join(file).exists(),
+                "{backend:?} project shell did not write {file}"
+            );
+        }
+    }
+}
+
+#[test]
 fn source_tree_has_expected_shape() {
     let expected = ["EngramApp.mil", "EngramApp.mll", "EngramApp.dark.msl"];
     for name in expected {
