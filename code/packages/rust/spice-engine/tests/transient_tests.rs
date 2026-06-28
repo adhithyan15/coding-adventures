@@ -177,7 +177,7 @@ fn device_model_charge_audit_fixtures_run_reference_transients() {
         .iter()
         .find(|fixture| fixture.kind.as_str() == "NJF")
         .expect("expected JFET charge fixture");
-    assert!(jfet_fixture.charge_behavior.contains("external-only"));
+    assert!(jfet_fixture.charge_behavior.contains("CGS/CGD"));
 }
 
 #[test]
@@ -217,6 +217,52 @@ fn transient_diode_junction_capacitance_slows_current_step() {
     let charged = run(1.0e-12);
     let uncharged_first = uncharged[0].voltage("out").unwrap();
     let charged_first = charged[0].voltage("out").unwrap();
+
+    assert!(uncharged_first > 0.5);
+    assert!(charged_first < 0.01);
+    assert!(charged_first < uncharged_first);
+}
+
+#[test]
+fn transient_jfet_gate_source_capacitance_slows_gate_step() {
+    fn run(gate_source_capacitance: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (1.0e-9, 1.0),
+                (5.0e-9, 1.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "gate", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rdrain", "drain", "0", 1_000.0,
+        )));
+        circuit.add(Element::Jfet(Jfet::with_model_and_capacitance(
+            "J1",
+            "drain",
+            "gate",
+            "0",
+            JfetPolarity::Njf,
+            1.0e-12,
+            -2.0,
+            0.0,
+            gate_source_capacitance,
+            0.0,
+        )));
+        transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()
+    }
+
+    let uncharged = run(0.0);
+    let charged = run(1.0e-9);
+    let uncharged_first = uncharged[0].voltage("gate").unwrap();
+    let charged_first = charged[0].voltage("gate").unwrap();
 
     assert!(uncharged_first > 0.5);
     assert!(charged_first < 0.01);

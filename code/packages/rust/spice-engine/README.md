@@ -130,7 +130,7 @@ probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth audits.
 reference-deck metadata and stable per-temperature probe windows for those same
 fixture circuits. `device_model_capacitance_audit_fixtures` adds matching
 `.ac` reference-deck metadata and stable high-frequency probe magnitude windows
-for capacitance and current JFET invariant audits.
+for diode, BJT, JFET `CGS`/`CGD`, and Level-1 MOS capacitance audits.
 `device_model_noise_audit_fixtures` adds matching `.noise` reference-deck
 metadata and stable source/output PSD windows for diode and BJT shot noise plus
 JFET and Level-1 MOS channel thermal noise audits.
@@ -139,8 +139,10 @@ metadata, explicit terminal storage capacitance metadata, stable first/final
 probe-voltage windows, and charge-behavior notes for diode, BJT, JFET, and
 Level-1 MOS charge audits. Diode `junction_capacitance` / `transit_time` and
 BJT `base_emitter_capacitance` / `base_collector_capacitance` /
-`forward_transit_time` / `reverse_transit_time` model-card parameters also
-stamp transient storage, matching their small-signal AC capacitance semantics.
+`forward_transit_time` / `reverse_transit_time`, and JFET
+`gate_source_capacitance` / `gate_drain_capacitance` model-card parameters
+also stamp transient storage, matching their small-signal AC capacitance
+semantics.
 
 `analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
 module shape and rejects dynamic/event/system constructs; it is not a full

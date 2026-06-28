@@ -188,6 +188,10 @@ _JFET_PARAMETER_ALIASES: dict[str, str] = {
     "VTH": "VTO",
     "LAMBDA": "LAMBDA",
     "LAM": "LAMBDA",
+    "CGS": "CGS",
+    "CGS0": "CGS",
+    "CGD": "CGD",
+    "CGD0": "CGD",
 }
 
 _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
@@ -359,6 +363,8 @@ def jfet_from_model_card(
         beta=p.get("BETA", 1.0e-4),
         vto=p.get("VTO", -2.0 if model.kind == "NJF" else 2.0),
         lambda_=p.get("LAMBDA", 0.0),
+        Cgs=p.get("CGS", 0.0),
+        Cgd=p.get("CGD", 0.0),
     )
 
 
@@ -627,12 +633,17 @@ def device_model_capacitance_audit_fixtures() -> tuple[DeviceModelCapacitanceBeh
     bjt_circuit.add(Resistor("Rc", "col", "0", 1_000.0))
     bjt_circuit.add(bjt_from_model_card("Q1", "col", "base", "0", models["Qsmall"]))
 
+    jfet_model = normalize_model_card(
+        "Jn",
+        "NJF",
+        {"BETA": 9.0e-4, "VTO": -1.8, "LAMBDA": 0.02, "CGS": 2.0e-9, "CGD": 1.0e-10},
+    )
     jfet_circuit = Circuit()
     jfet_circuit.add(VoltageSource("Vdrive", "in", "0", 0.0, ac=AcSource(1.0)))
     jfet_circuit.add(Resistor("Rin", "in", "source", 1_000.0))
     jfet_circuit.add(Resistor("Rd", "drain", "0", 2_000.0))
     jfet_circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
-    jfet_circuit.add(jfet_from_model_card("J1", "drain", "gate", "source", models["Jn"]))
+    jfet_circuit.add(jfet_from_model_card("J1", "drain", "gate", "source", jfet_model))
 
     mos_circuit = Circuit()
     mos_circuit.add(VoltageSource("Vdrive", "in", "0", 0.0, ac=AcSource(1.0)))
@@ -685,21 +696,18 @@ def device_model_capacitance_audit_fixtures() -> tuple[DeviceModelCapacitanceBeh
             ),
         ),
         DeviceModelCapacitanceBehaviorFixture(
-            name="jfet-capacitance-invariant-ac",
-            kind=models["Jn"].kind,
-            model=models["Jn"],
+            name="jfet-capacitance-ac",
+            kind=jfet_model.kind,
+            model=jfet_model,
             circuit=jfet_circuit,
             probe_node="source",
             frequency_hz=frequency_hz,
-            expected_magnitude_min=0.69,
-            expected_magnitude_max=0.71,
-            capacitance_behavior=(
-                "JFET capacitance is intentionally unmodeled; fixture records "
-                "conductance-only AC response"
-            ),
+            expected_magnitude_min=0.50,
+            expected_magnitude_max=0.54,
+            capacitance_behavior="JFET CGS/CGD contribute high-frequency gate-channel capacitance",
             deck_lines=(
-                "* device-model capacitance fixture: jfet-capacitance-invariant-ac",
-                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+                "* device-model capacitance fixture: jfet-capacitance-ac",
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02 CGS=2n CGD=100p)",
                 "Vdrive in 0 0 AC 1",
                 "Rin in source 1k",
                 "Rd drain 0 2k",
@@ -881,9 +889,10 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
     """Return runnable transient storage fixtures for charge model-depth audits.
 
     Diode CJO/TT and BJT CJE/CJC/TF/TR model-card storage is
-    transient-stamped by the simulator. JFET and MOS charge state is still
-    audited through explicit terminal storage capacitors until their nonlinear
-    charge policies land.
+    transient-stamped by the simulator. JFET fixed gate-source/gate-drain
+    storage is also transient-stamped; Level-1 MOS charge state is still
+    audited through explicit terminal storage capacitors until nonlinear charge
+    policies land.
     """
 
     models = _model_card_by_name()
@@ -904,12 +913,17 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
     bjt_circuit.add(bjt_from_model_card("Q1", "vcc", "base", "out", models["Qsmall"]))
     bjt_circuit.add(Capacitor("Cstore", "out", "0", storage_capacitance_f))
 
+    jfet_model = normalize_model_card(
+        "Jn",
+        "NJF",
+        {"BETA": 9.0e-4, "VTO": -1.8, "LAMBDA": 0.02, "CGS": 2.0e-11, "CGD": 5.0e-12},
+    )
     jfet_circuit = Circuit()
     jfet_circuit.add(VoltageSource("Vdd", "vdd", "0", 10.0))
     jfet_circuit.add(VoltageSource("Vg", "gate", "0", 0.0))
     jfet_circuit.add(Resistor("Rd", "vdd", "drain", 2_000.0))
     jfet_circuit.add(Resistor("Rs", "source", "0", 1_000.0))
-    jfet_circuit.add(jfet_from_model_card("J1", "drain", "gate", "source", models["Jn"]))
+    jfet_circuit.add(jfet_from_model_card("J1", "drain", "gate", "source", jfet_model))
     jfet_circuit.add(Capacitor("Cstore", "source", "0", storage_capacitance_f))
 
     mos_circuit = Circuit()
@@ -982,8 +996,8 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
         ),
         DeviceModelChargeBehaviorFixture(
             name="jfet-storage-charge",
-            kind=models["Jn"].kind,
-            model=models["Jn"],
+            kind=jfet_model.kind,
+            model=jfet_model,
             circuit=jfet_circuit,
             probe_node="source",
             time_step_s=time_step_s,
@@ -994,12 +1008,12 @@ def device_model_charge_audit_fixtures() -> tuple[DeviceModelChargeBehaviorFixtu
             expected_final_min=0.86,
             expected_final_max=0.90,
             charge_behavior=(
-                "JFET transient charge is intentionally external-only; "
-                "fixture records explicit source storage until a JFET capacitance policy lands"
+                "JFET CGS/CGD contribute transient gate-source and gate-drain storage; "
+                "explicit Cstore keeps the fixture comparable with other charge audits"
             ),
             deck_lines=(
                 "* device-model charge fixture: jfet-storage-charge",
-                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02 CGS=20p CGD=5p)",
                 "Vdd vdd 0 10",
                 "Vg gate 0 0",
                 "Rd vdd drain 2k",

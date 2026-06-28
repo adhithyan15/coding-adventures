@@ -463,7 +463,7 @@ def test_device_model_capacitance_audit_fixtures_run_reference_ac_points() -> No
     assert [fixture.name for fixture in fixtures] == [
         "diode-capacitance-ac",
         "bjt-capacitance-ac",
-        "jfet-capacitance-invariant-ac",
+        "jfet-capacitance-ac",
         "mos-level1-capacitance-ac",
     ]
 
@@ -486,7 +486,7 @@ def test_device_model_capacitance_audit_fixtures_run_reference_ac_points() -> No
         assert fixture.capacitance_behavior
 
     jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
-    assert "intentionally unmodeled" in jfet_fixture.capacitance_behavior
+    assert "CGS/CGD" in jfet_fixture.capacitance_behavior
 
 
 def test_device_model_noise_audit_fixtures_run_reference_noise_points() -> None:
@@ -551,7 +551,7 @@ def test_device_model_charge_audit_fixtures_run_reference_transients() -> None:
         assert fixture.charge_behavior
 
     jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
-    assert "external-only" in jfet_fixture.charge_behavior
+    assert "CGS/CGD" in jfet_fixture.charge_behavior
 
 
 def test_transient_diode_junction_capacitance_slows_current_step() -> None:
@@ -575,6 +575,33 @@ def test_transient_diode_junction_capacitance_slows_current_step() -> None:
     assert charged.converged
     uncharged_first = uncharged.points[1].node_voltages["out"]
     charged_first = charged.points[1].node_voltages["out"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_jfet_gate_source_capacitance_slows_gate_step() -> None:
+    def run(cgs: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
+        circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        circuit.add(JFET("J1", "drain", "gate", "0", beta=1.0e-12, vto=-2.0, Cgs=cgs))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["gate"]
+    charged_first = charged.points[1].node_voltages["gate"]
     assert uncharged_first > 0.5
     assert charged_first < 0.01
     assert charged_first < uncharged_first
@@ -2049,6 +2076,25 @@ def test_jfet_common_source_ac_gain_from_bias_point() -> None:
     out = result.points[0].node_voltages["drain"]
     assert out.real == pytest.approx(-4.0, abs=1.0e-6)
     assert out.imag == pytest.approx(0.0, abs=1.0e-12)
+
+
+def test_ac_jfet_gate_source_capacitance_shunts_high_frequency_gate_drive() -> None:
+    """JFET CGS contributes gate-source AC susceptance."""
+
+    def gate_amplitude(cgs: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "gate", 1_000.0))
+        c.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        c.add(JFET("J1", "drain", "gate", "0", beta=1.0e-12, vto=-2.0, Cgs=cgs))
+        result = ac_sweep(c, f_start=100_000.0, f_stop=100_000.0, n_points=1)
+        return abs(result.points[0].node_voltages["gate"])
+
+    without_capacitance = gate_amplitude(0.0)
+    with_capacitance = gate_amplitude(1.0e-6)
+
+    assert without_capacitance > 0.9
+    assert with_capacitance < without_capacitance / 100.0
 
 
 def test_jfet_transient_source_follower_charges_output_capacitor() -> None:

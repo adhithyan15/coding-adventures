@@ -392,7 +392,7 @@ fn clone_subckt_element(
             element.junction_capacitance,
             element.transit_time,
         )),
-        Element::Jfet(element) => Element::Jfet(Jfet::with_model(
+        Element::Jfet(element) => Element::Jfet(Jfet::with_model_and_capacitance(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.drain, instance_name, node_map),
             map_subckt_node(&element.gate, instance_name, node_map),
@@ -401,6 +401,8 @@ fn clone_subckt_element(
             element.beta,
             element.threshold_voltage,
             element.channel_length_modulation,
+            element.gate_source_capacitance,
+            element.gate_drain_capacitance,
         )),
         Element::Bjt(element) => Element::Bjt(Bjt::with_model(
             format!("{instance_name}.{}", element.name),
@@ -2563,6 +2565,8 @@ pub struct Jfet {
     pub beta: f64,
     pub threshold_voltage: f64,
     pub channel_length_modulation: f64,
+    pub gate_source_capacitance: f64,
+    pub gate_drain_capacitance: f64,
 }
 
 impl Jfet {
@@ -2594,6 +2598,32 @@ impl Jfet {
         threshold_voltage: f64,
         channel_length_modulation: f64,
     ) -> Self {
+        Self::with_model_and_capacitance(
+            name,
+            drain,
+            gate,
+            source,
+            polarity,
+            beta,
+            threshold_voltage,
+            channel_length_modulation,
+            0.0,
+            0.0,
+        )
+    }
+
+    pub fn with_model_and_capacitance(
+        name: impl Into<String>,
+        drain: impl Into<String>,
+        gate: impl Into<String>,
+        source: impl Into<String>,
+        polarity: JfetPolarity,
+        beta: f64,
+        threshold_voltage: f64,
+        channel_length_modulation: f64,
+        gate_source_capacitance: f64,
+        gate_drain_capacitance: f64,
+    ) -> Self {
         Self {
             name: name.into(),
             drain: drain.into(),
@@ -2603,6 +2633,8 @@ impl Jfet {
             beta,
             threshold_voltage,
             channel_length_modulation,
+            gate_source_capacitance,
+            gate_drain_capacitance,
         }
     }
 }
@@ -2961,6 +2993,8 @@ fn model_card_parameter_alias(kind: ModelCardKind, key: &str) -> Option<&'static
             "BETA" | "BET" => Some("BETA"),
             "VTO" | "VT0" | "VTH" => Some("VTO"),
             "LAMBDA" | "LAM" => Some("LAMBDA"),
+            "CGS" | "CGS0" => Some("CGS"),
+            "CGD" | "CGD0" => Some("CGD"),
             _ => None,
         },
         ModelCardKind::Nmos | ModelCardKind::Pmos => match key {
@@ -3097,7 +3131,7 @@ pub fn jfet_from_model_card(
         ModelCardKind::Pjf => JfetPolarity::Pjf,
         _ => return Err(model_card_kind_error(&name, "JFET", model.kind)),
     };
-    Ok(Jfet::with_model(
+    Ok(Jfet::with_model_and_capacitance(
         name,
         drain,
         gate,
@@ -3114,6 +3148,8 @@ pub fn jfet_from_model_card(
             },
         ),
         model_card_value(model, "LAMBDA", 0.0),
+        model_card_value(model, "CGS", 0.0),
+        model_card_value(model, "CGD", 0.0),
     ))
 }
 
@@ -3290,7 +3326,11 @@ pub fn device_model_behavior_audit_fixtures() -> Result<Vec<DeviceModelBehaviorF
         "Rs", "source", "0", 1_000.0,
     )));
     jfet_circuit.add(Element::Jfet(jfet_from_model_card(
-        "J1", "drain", "gate", "source", jfet_model,
+        "J1",
+        "drain",
+        "gate",
+        "source",
+        &jfet_model,
     )?));
 
     let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
@@ -3542,10 +3582,17 @@ pub fn device_model_capacitance_audit_fixtures(
         "Q1", "col", "base", "0", bjt_model,
     )?));
 
-    let jfet_model = models.get("Jn").ok_or_else(|| SpiceError::InvalidElement {
-        name: "device_model_capacitance_audit_fixtures".to_string(),
-        reason: "missing Jn model fixture".to_string(),
-    })?;
+    let jfet_model = normalize_model_card(
+        "Jn",
+        "NJF",
+        &[
+            ("BETA", 9.0e-4),
+            ("VTO", -1.8),
+            ("LAMBDA", 0.02),
+            ("CGS", 2.0e-9),
+            ("CGD", 1.0e-10),
+        ],
+    )?;
     let mut jfet_circuit = Circuit::new();
     jfet_circuit.add(Element::VoltageSource(VoltageSource::with_ac(
         "Vdrive", "in", "0", 0.0, 1.0, 0.0,
@@ -3560,7 +3607,11 @@ pub fn device_model_capacitance_audit_fixtures(
         "Vgate", "gate", "0", 0.0,
     )));
     jfet_circuit.add(Element::Jfet(jfet_from_model_card(
-        "J1", "drain", "gate", "source", jfet_model,
+        "J1",
+        "drain",
+        "gate",
+        "source",
+        &jfet_model,
     )?));
 
     let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
@@ -3594,8 +3645,8 @@ pub fn device_model_capacitance_audit_fixtures(
             frequency_hz,
             expected_magnitude_min: 0.72,
             expected_magnitude_max: 0.74,
-            capacitance_behavior:
-                "diode CJO and TT contribute high-frequency shunt capacitance".to_string(),
+            capacitance_behavior: "diode CJO and TT contribute high-frequency shunt capacitance"
+                .to_string(),
             deck_lines: vec![
                 "* device-model capacitance fixture: diode-capacitance-ac".to_string(),
                 ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)".to_string(),
@@ -3616,8 +3667,8 @@ pub fn device_model_capacitance_audit_fixtures(
             frequency_hz,
             expected_magnitude_min: 0.61,
             expected_magnitude_max: 0.64,
-            capacitance_behavior:
-                "BJT CJE and TF contribute base-emitter AC capacitance".to_string(),
+            capacitance_behavior: "BJT CJE and TF contribute base-emitter AC capacitance"
+                .to_string(),
             deck_lines: vec![
                 "* device-model capacitance fixture: bjt-capacitance-ac".to_string(),
                 ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)".to_string(),
@@ -3631,18 +3682,19 @@ pub fn device_model_capacitance_audit_fixtures(
             ],
         },
         DeviceModelCapacitanceBehaviorFixture {
-            name: "jfet-capacitance-invariant-ac".to_string(),
+            name: "jfet-capacitance-ac".to_string(),
             kind: jfet_model.kind,
             model: jfet_model.clone(),
             circuit: jfet_circuit,
             probe_node: "source".to_string(),
             frequency_hz,
-            expected_magnitude_min: 0.69,
-            expected_magnitude_max: 0.71,
-            capacitance_behavior: "JFET capacitance is intentionally unmodeled; fixture records conductance-only AC response".to_string(),
+            expected_magnitude_min: 0.50,
+            expected_magnitude_max: 0.54,
+            capacitance_behavior: "JFET CGS/CGD contribute high-frequency gate-channel capacitance"
+                .to_string(),
             deck_lines: vec![
-                "* device-model capacitance fixture: jfet-capacitance-invariant-ac".to_string(),
-                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)".to_string(),
+                "* device-model capacitance fixture: jfet-capacitance-ac".to_string(),
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02 CGS=2n CGD=100p)".to_string(),
                 "Vdrive in 0 0 AC 1".to_string(),
                 "Rin in source 1k".to_string(),
                 "Rd drain 0 2k".to_string(),
@@ -3662,8 +3714,8 @@ pub fn device_model_capacitance_audit_fixtures(
             frequency_hz,
             expected_magnitude_min: 0.72,
             expected_magnitude_max: 0.74,
-            capacitance_behavior:
-                "Level-1 MOS CBD contributes drain-bulk AC capacitance".to_string(),
+            capacitance_behavior: "Level-1 MOS CBD contributes drain-bulk AC capacitance"
+                .to_string(),
             deck_lines: vec![
                 "* device-model capacitance fixture: mos-level1-capacitance-ac".to_string(),
                 ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)".to_string(),
@@ -3742,7 +3794,11 @@ pub fn device_model_noise_audit_fixtures(
         "Rs", "source", "0", 1_000.0,
     )));
     jfet_circuit.add(Element::Jfet(jfet_from_model_card(
-        "J1", "drain", "gate", "source", jfet_model,
+        "J1",
+        "drain",
+        "gate",
+        "source",
+        &jfet_model,
     )?));
 
     let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
@@ -3937,10 +3993,17 @@ pub fn device_model_charge_audit_fixtures(
         storage_capacitance_f,
     )));
 
-    let jfet_model = models.get("Jn").ok_or_else(|| SpiceError::InvalidElement {
-        name: "device_model_charge_audit_fixtures".to_string(),
-        reason: "missing Jn model fixture".to_string(),
-    })?;
+    let jfet_model = normalize_model_card(
+        "Jn",
+        "NJF",
+        &[
+            ("BETA", 9.0e-4),
+            ("VTO", -1.8),
+            ("LAMBDA", 0.02),
+            ("CGS", 2.0e-11),
+            ("CGD", 5.0e-12),
+        ],
+    )?;
     let mut jfet_circuit = Circuit::new();
     jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
         "Vdd", "vdd", "0", 10.0,
@@ -3955,7 +4018,11 @@ pub fn device_model_charge_audit_fixtures(
         "Rs", "source", "0", 1_000.0,
     )));
     jfet_circuit.add(Element::Jfet(jfet_from_model_card(
-        "J1", "drain", "gate", "source", jfet_model,
+        "J1",
+        "drain",
+        "gate",
+        "source",
+        &jfet_model,
     )?));
     jfet_circuit.add(Element::Capacitor(Capacitor::new(
         "Cstore",
@@ -4055,10 +4122,10 @@ pub fn device_model_charge_audit_fixtures(
             expected_initial_max: 1.0,
             expected_final_min: 0.86,
             expected_final_max: 0.90,
-            charge_behavior: "JFET transient charge is intentionally external-only; fixture records explicit source storage until a JFET capacitance policy lands".to_string(),
+            charge_behavior: "JFET CGS/CGD contribute transient gate-source and gate-drain storage; explicit Cstore keeps the fixture comparable with other charge audits".to_string(),
             deck_lines: vec![
                 "* device-model charge fixture: jfet-storage-charge".to_string(),
-                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)".to_string(),
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02 CGS=20p CGD=5p)".to_string(),
                 "Vdd vdd 0 10".to_string(),
                 "Vg gate 0 0".to_string(),
                 "Rd vdd drain 2k".to_string(),
@@ -19111,9 +19178,14 @@ fn solve_linear_circuit_at_operating_point(
                 &mut rhs,
                 operating_point,
             )?,
-            Element::Jfet(jfet) => {
-                stamp_jfet(jfet, node_indices, &mut matrix, &mut rhs, operating_point)?
-            }
+            Element::Jfet(jfet) => stamp_jfet(
+                jfet,
+                capacitor_states,
+                node_indices,
+                &mut matrix,
+                &mut rhs,
+                operating_point,
+            )?,
             Element::Bjt(bjt) => stamp_bjt(
                 bjt,
                 capacitor_states,
@@ -19423,7 +19495,7 @@ fn build_ac_matrix(
                 );
             }
             Element::Jfet(jfet) => {
-                stamp_ac_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point)?
+                stamp_ac_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point, omega)?
             }
             Element::Bjt(bjt) => {
                 stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point, omega)?
@@ -20518,6 +20590,7 @@ struct JfetDcResult {
 
 fn stamp_jfet(
     jfet: &Jfet,
+    capacitor_states: &[CapacitorState],
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
@@ -20538,6 +20611,51 @@ fn stamp_jfet(
     stamp_conductance(matrix, drain, source, result.gds);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
+    stamp_jfet_charge(jfet, capacitor_states, node_indices, matrix, rhs)?;
+    Ok(())
+}
+
+fn stamp_jfet_charge(
+    jfet: &Jfet,
+    capacitor_states: &[CapacitorState],
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) -> Result<(), SpiceError> {
+    for spec in jfet_charge_state_specs(jfet) {
+        let Some(state) = capacitor_states
+            .iter()
+            .find(|state| state.name == spec.name)
+        else {
+            continue;
+        };
+        let capacitance = spec.capacitance;
+        if capacitance <= 0.0 {
+            continue;
+        }
+        let conductance = match state.method {
+            TransientMethod::Trap => 2.0 * capacitance / state.time_step,
+            TransientMethod::Gear2 => 3.0 * capacitance / (2.0 * state.time_step),
+            TransientMethod::Euler => capacitance / state.time_step,
+        };
+        let history_current = match state.method {
+            TransientMethod::Trap => conductance * state.previous_voltage + state.previous_current,
+            TransientMethod::Gear2 => {
+                capacitance * (4.0 * state.previous_voltage - state.previous_previous_voltage)
+                    / (2.0 * state.time_step)
+            }
+            TransientMethod::Euler => conductance * state.previous_voltage,
+        };
+        let positive = node_index(node_indices, spec.positive);
+        let negative = node_index(node_indices, spec.negative);
+        stamp_conductance(matrix, positive, negative, conductance);
+        if let Some(index) = positive {
+            rhs[index] += history_current;
+        }
+        if let Some(index) = negative {
+            rhs[index] -= history_current;
+        }
+    }
     Ok(())
 }
 
@@ -20819,6 +20937,7 @@ fn stamp_ac_jfet_small_signal(
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<Complex>],
     operating_point: &[f64],
+    omega: f64,
 ) -> Result<(), SpiceError> {
     validate_jfet(jfet)?;
     let drain = node_index(node_indices, &jfet.drain);
@@ -20833,6 +20952,18 @@ fn stamp_ac_jfet_small_signal(
         drain_voltage - source_voltage,
     );
     stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
+    stamp_complex_conductance(
+        matrix,
+        gate,
+        source,
+        Complex::new(0.0, omega * jfet.gate_source_capacitance),
+    );
+    stamp_complex_conductance(
+        matrix,
+        gate,
+        drain,
+        Complex::new(0.0, omega * jfet.gate_drain_capacitance),
+    );
     stamp_complex_transconductance(
         matrix,
         drain,
@@ -20969,6 +21100,49 @@ fn bjt_charge_state_voltage(
     voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
 }
 
+struct JfetChargeStateSpec<'a> {
+    name: String,
+    positive: &'a str,
+    negative: &'a str,
+    capacitance: f64,
+}
+
+fn jfet_gate_source_charge_state_name(jfet: &Jfet) -> String {
+    format!("_J_{}_gs_charge", jfet.name)
+}
+
+fn jfet_gate_drain_charge_state_name(jfet: &Jfet) -> String {
+    format!("_J_{}_gd_charge", jfet.name)
+}
+
+fn jfet_charge_state_specs(jfet: &Jfet) -> Vec<JfetChargeStateSpec<'_>> {
+    let mut specs = Vec::new();
+    if jfet.gate_source_capacitance > 0.0 {
+        specs.push(JfetChargeStateSpec {
+            name: jfet_gate_source_charge_state_name(jfet),
+            positive: jfet.gate.as_str(),
+            negative: jfet.source.as_str(),
+            capacitance: jfet.gate_source_capacitance,
+        });
+    }
+    if jfet.gate_drain_capacitance > 0.0 {
+        specs.push(JfetChargeStateSpec {
+            name: jfet_gate_drain_charge_state_name(jfet),
+            positive: jfet.gate.as_str(),
+            negative: jfet.drain.as_str(),
+            capacitance: jfet.gate_drain_capacitance,
+        });
+    }
+    specs
+}
+
+fn jfet_charge_state_voltage(
+    spec: &JfetChargeStateSpec<'_>,
+    node_voltages: &BTreeMap<String, f64>,
+) -> f64 {
+    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+}
+
 fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
     if !diode.saturation_current.is_finite() || diode.saturation_current <= 0.0 {
         return Err(SpiceError::InvalidElement {
@@ -21080,6 +21254,18 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "channel length modulation must be finite".to_string(),
+        });
+    }
+    if !jfet.gate_source_capacitance.is_finite() || jfet.gate_source_capacitance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "gate-source capacitance must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.gate_drain_capacitance.is_finite() || jfet.gate_drain_capacitance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "gate-drain capacitance must be finite and non-negative".to_string(),
         });
     }
     Ok(())
@@ -21247,6 +21433,18 @@ fn initial_capacitor_states(
                     });
                 }
             }
+            Element::Jfet(jfet) => {
+                for spec in jfet_charge_state_specs(jfet) {
+                    states.push(CapacitorState {
+                        name: spec.name,
+                        previous_voltage: 0.0,
+                        previous_previous_voltage: 0.0,
+                        previous_current: 0.0,
+                        time_step,
+                        method,
+                    });
+                }
+            }
             _ => {}
         }
     }
@@ -21329,6 +21527,14 @@ fn capacitor_voltages(
                     );
                 }
             }
+            Element::Jfet(jfet) => {
+                for spec in jfet_charge_state_specs(jfet) {
+                    voltages.insert(
+                        spec.name.clone(),
+                        jfet_charge_state_voltage(&spec, node_voltages),
+                    );
+                }
+            }
             _ => {}
         }
     }
@@ -21371,6 +21577,18 @@ fn transient_lte_estimate(
             }
             Element::Bjt(bjt) => {
                 for spec in bjt_charge_state_specs(bjt) {
+                    let current = current_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous = previous_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous_previous = previous_previous_voltages
+                        .get(&spec.name)
+                        .copied()
+                        .unwrap_or(0.0);
+                    max_lte =
+                        max_lte.max((current - 2.0 * previous + previous_previous).abs() / 2.0);
+                }
+            }
+            Element::Jfet(jfet) => {
+                for spec in jfet_charge_state_specs(jfet) {
                     let current = current_voltages.get(&spec.name).copied().unwrap_or(0.0);
                     let previous = previous_voltages.get(&spec.name).copied().unwrap_or(0.0);
                     let previous_previous = previous_previous_voltages
@@ -21575,6 +21793,15 @@ fn update_capacitor_states(
                         bjt_charge_dynamic_capacitance(bjt, spec.kind, state.previous_voltage),
                     )
                 }),
+            Element::Jfet(jfet) => jfet_charge_state_specs(jfet)
+                .into_iter()
+                .find(|spec| spec.name == state.name)
+                .map(|spec| {
+                    (
+                        jfet_charge_state_voltage(&spec, node_voltages),
+                        spec.capacitance,
+                    )
+                }),
             _ => None,
         });
         let Some((voltage, capacitance)) = update else {
@@ -21625,6 +21852,19 @@ fn seed_device_capacitor_states(
                         .find(|state| state.name == spec.name)
                     {
                         let voltage = bjt_charge_state_voltage(&spec, node_voltages);
+                        state.previous_voltage = voltage;
+                        state.previous_previous_voltage = voltage;
+                        state.previous_current = 0.0;
+                    }
+                }
+            }
+            Element::Jfet(jfet) => {
+                for spec in jfet_charge_state_specs(jfet) {
+                    if let Some(state) = capacitor_states
+                        .iter_mut()
+                        .find(|state| state.name == spec.name)
+                    {
+                        let voltage = jfet_charge_state_voltage(&spec, node_voltages);
                         state.previous_voltage = voltage;
                         state.previous_previous_voltage = voltage;
                         state.previous_current = 0.0;

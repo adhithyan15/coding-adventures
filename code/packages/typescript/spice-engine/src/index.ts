@@ -933,6 +933,8 @@ export interface Jfet {
   readonly beta: number;
   readonly thresholdVoltage: number;
   readonly channelLengthModulation: number;
+  readonly gateSourceCapacitance: number;
+  readonly gateDrainCapacitance: number;
 }
 
 export type BjtPolarity = "NPN" | "PNP";
@@ -2653,7 +2655,7 @@ function cloneSubcktElement(
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime);
     case "jfet":
-      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation);
+      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
       return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime);
     case "mosfet":
@@ -6756,6 +6758,8 @@ export function jfet(
   beta = 1.0e-4,
   thresholdVoltage = polarity === "NJF" ? -2.0 : 2.0,
   channelLengthModulation = 0.0,
+  gateSourceCapacitance = 0.0,
+  gateDrainCapacitance = 0.0,
 ): Jfet {
   return {
     kind: "jfet",
@@ -6767,6 +6771,8 @@ export function jfet(
     beta,
     thresholdVoltage,
     channelLengthModulation,
+    gateSourceCapacitance,
+    gateDrainCapacitance,
   };
 }
 
@@ -6900,6 +6906,10 @@ const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   VTH: "VTO",
   LAMBDA: "LAMBDA",
   LAM: "LAMBDA",
+  CGS: "CGS",
+  CGS0: "CGS",
+  CGD: "CGD",
+  CGD0: "CGD",
 };
 
 const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -7059,6 +7069,8 @@ export function jfetFromModelCard(
     p.BETA ?? 1.0e-4,
     p.VTO ?? (model.kind === "NJF" ? -2.0 : 2.0),
     p.LAMBDA ?? 0.0,
+    p.CGS ?? 0.0,
+    p.CGD ?? 0.0,
   );
 }
 
@@ -7329,7 +7341,13 @@ export function deviceModelCapacitanceAuditFixtures(): readonly DeviceModelCapac
   bjtCircuit.add(resistor("Rc", "col", "0", 1_000.0));
   bjtCircuit.add(bjtFromModelCard("Q1", "col", "base", "0", bjtModel));
 
-  const jfetModel = requiredModel(models, "Jn", helperName);
+  const jfetModel = normalizeModelCard("Jn", "NJF", {
+    BETA: 9.0e-4,
+    VTO: -1.8,
+    LAMBDA: 0.02,
+    CGS: 2.0e-9,
+    CGD: 1.0e-10,
+  });
   const jfetCircuit = new Circuit();
   jfetCircuit.add(voltageSourceWithAc("Vdrive", "in", "0", 0.0, 1.0, 0.0));
   jfetCircuit.add(resistor("Rin", "in", "source", 1_000.0));
@@ -7389,19 +7407,18 @@ export function deviceModelCapacitanceAuditFixtures(): readonly DeviceModelCapac
       ],
     },
     {
-      name: "jfet-capacitance-invariant-ac",
+      name: "jfet-capacitance-ac",
       kind: jfetModel.kind,
       model: jfetModel,
       circuit: jfetCircuit,
       probeNode: "source",
       frequencyHz,
-      expectedMagnitudeMin: 0.69,
-      expectedMagnitudeMax: 0.71,
-      capacitanceBehavior:
-        "JFET capacitance is intentionally unmodeled; fixture records conductance-only AC response",
+      expectedMagnitudeMin: 0.50,
+      expectedMagnitudeMax: 0.54,
+      capacitanceBehavior: "JFET CGS/CGD contribute high-frequency gate-channel capacitance",
       deckLines: [
-        "* device-model capacitance fixture: jfet-capacitance-invariant-ac",
-        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+        "* device-model capacitance fixture: jfet-capacitance-ac",
+        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02 CGS=2n CGD=100p)",
         "Vdrive in 0 0 AC 1",
         "Rin in source 1k",
         "Rd drain 0 2k",
@@ -7604,7 +7621,13 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
   bjtCircuit.add(bjtFromModelCard("Q1", "vcc", "base", "out", bjtModel));
   bjtCircuit.add(capacitor("Cstore", "out", "0", storageCapacitanceFarads));
 
-  const jfetModel = requiredModel(models, "Jn", helperName);
+  const jfetModel = normalizeModelCard("Jn", "NJF", {
+    BETA: 9.0e-4,
+    VTO: -1.8,
+    LAMBDA: 0.02,
+    CGS: 2.0e-11,
+    CGD: 5.0e-12,
+  });
   const jfetCircuit = new Circuit();
   jfetCircuit.add(voltageSource("Vdd", "vdd", "0", 10.0));
   jfetCircuit.add(voltageSource("Vg", "gate", "0", 0.0));
@@ -7691,10 +7714,10 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
       expectedFinalMin: 0.86,
       expectedFinalMax: 0.90,
       chargeBehavior:
-        "JFET transient charge is intentionally external-only; fixture records explicit source storage until a JFET capacitance policy lands",
+        "JFET CGS/CGD contribute transient gate-source and gate-drain storage; explicit Cstore keeps the fixture comparable with other charge audits",
       deckLines: [
         "* device-model charge fixture: jfet-storage-charge",
-        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02 CGS=20p CGD=5p)",
         "Vdd vdd 0 10",
         "Vg gate 0 0",
         "Rd vdd drain 2k",
@@ -15495,7 +15518,7 @@ function solveLinearCircuitAtOperatingPoint(
         stampDiode(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "jfet":
-        stampJfet(element, nodeIndices, matrix, rhs, operatingPoint);
+        stampJfet(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "bjt":
         stampBjt(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
@@ -15902,7 +15925,7 @@ function buildAcMatrix(
         );
         break;
       case "jfet":
-        stampAcJfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
+        stampAcJfetSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
         break;
       case "bjt":
         stampAcBjtSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
@@ -16880,10 +16903,17 @@ function validateJfet(element: Jfet): void {
   if (!Number.isFinite(element.channelLengthModulation)) {
     throw invalidElement(element.name, "channel length modulation must be finite");
   }
+  if (!Number.isFinite(element.gateSourceCapacitance) || element.gateSourceCapacitance < 0.0) {
+    throw invalidElement(element.name, "gate-source capacitance must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.gateDrainCapacitance) || element.gateDrainCapacitance < 0.0) {
+    throw invalidElement(element.name, "gate-drain capacitance must be finite and non-negative");
+  }
 }
 
 function stampJfet(
   element: Jfet,
+  capacitorStates: readonly CapacitorState[],
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
   rhs: number[],
@@ -16905,6 +16935,45 @@ function stampJfet(
   stampConductance(matrix, drain, source, result.gds);
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
   stampCurrentSourceEquivalent(rhs, drain, source, equivalentCurrent);
+  stampJfetCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+}
+
+function stampJfetCharge(
+  element: Jfet,
+  capacitorStates: readonly CapacitorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  for (const spec of jfetChargeStateSpecs(element)) {
+    const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+    if (state === undefined || spec.capacitance <= 0.0) {
+      continue;
+    }
+    const conductance =
+      state.method === "trap"
+        ? (2.0 * spec.capacitance) / state.timeStep
+        : state.method === "gear2"
+          ? (3.0 * spec.capacitance) / (2.0 * state.timeStep)
+          : spec.capacitance / state.timeStep;
+    const historyCurrent =
+      state.method === "trap"
+        ? conductance * state.previousVoltage + state.previousCurrent
+        : state.method === "gear2"
+          ? (spec.capacitance *
+              (4.0 * state.previousVoltage - state.previousPreviousVoltage)) /
+            (2.0 * state.timeStep)
+          : conductance * state.previousVoltage;
+    const positive = nodeIndex(nodeIndices, spec.positive);
+    const negative = nodeIndex(nodeIndices, spec.negative);
+    stampConductance(matrix, positive, negative, conductance);
+    if (positive !== undefined) {
+      rhs[positive] += historyCurrent;
+    }
+    if (negative !== undefined) {
+      rhs[negative] -= historyCurrent;
+    }
+  }
 }
 
 function evaluateJfet(element: Jfet, vgs: number, vds: number): JfetDcResult {
@@ -17241,6 +17310,49 @@ function bjtChargeStateVoltage(
   return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
 }
 
+interface JfetChargeStateSpec {
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly capacitance: number;
+}
+
+function jfetGateSourceChargeStateName(element: Jfet): string {
+  return `_J_${element.name}_gs_charge`;
+}
+
+function jfetGateDrainChargeStateName(element: Jfet): string {
+  return `_J_${element.name}_gd_charge`;
+}
+
+function jfetChargeStateSpecs(element: Jfet): JfetChargeStateSpec[] {
+  const specs: JfetChargeStateSpec[] = [];
+  if (element.gateSourceCapacitance > 0.0) {
+    specs.push({
+      name: jfetGateSourceChargeStateName(element),
+      positive: element.gate,
+      negative: element.source,
+      capacitance: element.gateSourceCapacitance,
+    });
+  }
+  if (element.gateDrainCapacitance > 0.0) {
+    specs.push({
+      name: jfetGateDrainChargeStateName(element),
+      positive: element.gate,
+      negative: element.drain,
+      capacitance: element.gateDrainCapacitance,
+    });
+  }
+  return specs;
+}
+
+function jfetChargeStateVoltage(
+  spec: JfetChargeStateSpec,
+  nodeVoltages: ReadonlyMap<string, number>,
+): number {
+  return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
+}
+
 function validateBjt(element: Bjt): void {
   if (element.polarity !== "NPN" && element.polarity !== "PNP") {
     throw invalidElement(element.name, "BJT polarity must be NPN or PNP");
@@ -17355,6 +17467,17 @@ function initialCapacitorStates(
           method,
         });
       }
+    } else if (element.kind === "jfet") {
+      for (const spec of jfetChargeStateSpecs(element)) {
+        states.push({
+          name: spec.name,
+          previousVoltage: 0.0,
+          previousPreviousVoltage: 0.0,
+          previousCurrent: 0.0,
+          timeStep,
+          method,
+        });
+      }
     }
   }
   return states;
@@ -17424,6 +17547,10 @@ function capacitorVoltages(
       for (const spec of bjtChargeStateSpecs(element)) {
         voltages.set(spec.name, bjtChargeStateVoltage(spec, nodeVoltages));
       }
+    } else if (element.kind === "jfet") {
+      for (const spec of jfetChargeStateSpecs(element)) {
+        voltages.set(spec.name, jfetChargeStateVoltage(spec, nodeVoltages));
+      }
     }
   }
   return voltages;
@@ -17446,6 +17573,13 @@ function transientLteEstimate(
         maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
       } else if (element.kind === "bjt") {
         for (const spec of bjtChargeStateSpecs(element)) {
+          const current = currentVoltages.get(spec.name) ?? 0.0;
+          const previous = previousVoltages.get(spec.name) ?? 0.0;
+          const previousPrevious = previousPreviousVoltages.get(spec.name) ?? 0.0;
+          maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
+        }
+      } else if (element.kind === "jfet") {
+        for (const spec of jfetChargeStateSpecs(element)) {
           const current = currentVoltages.get(spec.name) ?? 0.0;
           const previous = previousVoltages.get(spec.name) ?? 0.0;
           const previousPrevious = previousPreviousVoltages.get(spec.name) ?? 0.0;
@@ -17629,7 +17763,26 @@ function updateCapacitorStates(
       bjtElement === undefined
         ? undefined
         : bjtChargeStateSpecs(bjtElement).find((spec) => spec.name === state.name);
-    if (capacitorElement === undefined && diodeElement === undefined && bjtSpec === undefined) {
+    const jfetElement =
+      capacitorElement === undefined && diodeElement === undefined && bjtSpec === undefined
+        ? circuit
+            .elements()
+            .find(
+              (candidate): candidate is Jfet =>
+                candidate.kind === "jfet" &&
+                jfetChargeStateSpecs(candidate).some((spec) => spec.name === state.name),
+            )
+        : undefined;
+    const jfetSpec =
+      jfetElement === undefined
+        ? undefined
+        : jfetChargeStateSpecs(jfetElement).find((spec) => spec.name === state.name);
+    if (
+      capacitorElement === undefined &&
+      diodeElement === undefined &&
+      bjtSpec === undefined &&
+      jfetSpec === undefined
+    ) {
       continue;
     }
     const previousVoltage = state.previousVoltage;
@@ -17639,13 +17792,17 @@ function updateCapacitorStates(
         ? voltageAt(nodeVoltages, capacitorElement.n1) - voltageAt(nodeVoltages, capacitorElement.n2)
         : diodeElement !== undefined
           ? diodeChargeVoltage(diodeElement, nodeVoltages)
-          : bjtChargeStateVoltage(bjtSpec!, nodeVoltages);
+          : bjtSpec !== undefined
+            ? bjtChargeStateVoltage(bjtSpec, nodeVoltages)
+            : jfetChargeStateVoltage(jfetSpec!, nodeVoltages);
     const capacitance =
       capacitorElement !== undefined
         ? capacitorElement.capacitanceFarads
         : diodeElement !== undefined
           ? diodeDynamicCapacitance(diodeElement, previousVoltage)
-          : bjtChargeDynamicCapacitance(bjtElement!, bjtSpec!.kind, previousVoltage);
+          : bjtSpec !== undefined
+            ? bjtChargeDynamicCapacitance(bjtElement!, bjtSpec.kind, previousVoltage)
+            : jfetSpec!.capacitance;
     if (state.method === "trap") {
       const conductance = (2.0 * capacitance) / state.timeStep;
       state.previousCurrent = conductance * (voltage - previousVoltage) - previousCurrent;
@@ -17687,6 +17844,17 @@ function seedDeviceCapacitorStates(
           continue;
         }
         const voltage = bjtChargeStateVoltage(spec, nodeVoltages);
+        state.previousVoltage = voltage;
+        state.previousPreviousVoltage = voltage;
+        state.previousCurrent = 0.0;
+      }
+    } else if (element.kind === "jfet") {
+      for (const spec of jfetChargeStateSpecs(element)) {
+        const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+        if (state === undefined) {
+          continue;
+        }
+        const voltage = jfetChargeStateVoltage(spec, nodeVoltages);
         state.previousVoltage = voltage;
         state.previousPreviousVoltage = voltage;
         state.previousCurrent = 0.0;
@@ -19129,6 +19297,7 @@ function stampAcJfetSmallSignal(
   nodeIndices: ReadonlyMap<string, number>,
   matrix: Complex[][],
   operatingPoint: readonly number[],
+  omega: number,
 ): void {
   validateJfet(element);
   const drain = nodeIndex(nodeIndices, element.drain);
@@ -19143,6 +19312,18 @@ function stampAcJfetSmallSignal(
     drainVoltage - sourceVoltage,
   );
   stampComplexConductance(matrix, drain, source, complex(result.gds, 0.0));
+  stampComplexConductance(
+    matrix,
+    gate,
+    source,
+    complex(0.0, omega * element.gateSourceCapacitance),
+  );
+  stampComplexConductance(
+    matrix,
+    gate,
+    drain,
+    complex(0.0, omega * element.gateDrainCapacitance),
+  );
   stampComplexTransconductance(
     matrix,
     drain,

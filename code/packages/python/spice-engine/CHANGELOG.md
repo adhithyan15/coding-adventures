@@ -4,6 +4,12 @@
 
 ### Added
 
+- **JFET transient charge stamping** —
+  JFET `Cgs`/`Cgd` model-card storage now stamps transient gate-source and
+  gate-drain companions and contributes AC susceptance, matching Rust and
+  TypeScript, with regression coverage for gate-step delay and high-frequency
+  gate-drive shunting.
+
 - **BJT transient charge stamping** —
   BJT `Cje`/`Cjc`/`Tf`/`Tr` model-card storage now stamps transient
   base-emitter and base-collector companions, matching Rust and TypeScript,

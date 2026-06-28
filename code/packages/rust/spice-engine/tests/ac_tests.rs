@@ -157,7 +157,7 @@ fn device_model_capacitance_audit_fixtures_run_reference_ac_points() {
         vec![
             "diode-capacitance-ac",
             "bjt-capacitance-ac",
-            "jfet-capacitance-invariant-ac",
+            "jfet-capacitance-ac",
             "mos-level1-capacitance-ac"
         ]
     );
@@ -198,9 +198,7 @@ fn device_model_capacitance_audit_fixtures_run_reference_ac_points() {
         .iter()
         .find(|fixture| fixture.kind.as_str() == "NJF")
         .expect("JFET capacitance fixture should be present");
-    assert!(jfet_fixture
-        .capacitance_behavior
-        .contains("intentionally unmodeled"));
+    assert!(jfet_fixture.capacitance_behavior.contains("CGS/CGD"));
 }
 
 #[test]
@@ -915,6 +913,44 @@ fn ac_jfet_common_source_uses_dc_bias_for_small_signal_gain() {
     assert_close(out.real, -4.0);
     assert_close(out.imag, 0.0);
     assert_close(points[0].voltage("vdd").unwrap().abs(), 0.0);
+}
+
+#[test]
+fn ac_jfet_gate_source_capacitance_shunts_high_frequency_gate_drive() {
+    fn gate_amplitude(gate_source_capacitance: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "gate", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rdrain", "drain", "0", 1_000.0,
+        )));
+        circuit.add(Element::Jfet(Jfet::with_model_and_capacitance(
+            "J1",
+            "drain",
+            "gate",
+            "0",
+            JfetPolarity::Njf,
+            1.0e-12,
+            -2.0,
+            0.0,
+            gate_source_capacitance,
+            0.0,
+        )));
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("gate")
+            .unwrap()
+            .abs()
+    }
+
+    let without_capacitance = gate_amplitude(0.0);
+    let with_capacitance = gate_amplitude(1.0e-6);
+
+    assert!(without_capacitance > 0.9);
+    assert!(with_capacitance < without_capacitance / 100.0);
 }
 
 #[test]
