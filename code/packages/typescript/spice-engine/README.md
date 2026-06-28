@@ -224,6 +224,13 @@ header-keyed records and browser/release-friendly CSV or compact JSON.
 `formatDeviceModelReferenceDeckAuditSummaryCsv`, and
 `formatDeviceModelReferenceDeckAuditSummaryJson` expose stable per-kind
 coverage summaries with missing-analysis and deck-line totals.
+`deviceModelReferenceDeckAuditAnalysisSummary`,
+`formatDeviceModelReferenceDeckAuditAnalysisSummaryTable`,
+`deviceModelReferenceDeckAuditAnalysisSummaryRecords`,
+`formatDeviceModelReferenceDeckAuditAnalysisSummaryCsv`, and
+`formatDeviceModelReferenceDeckAuditAnalysisSummaryJson` expose the same audit
+matrix grouped by analysis kind, with missing-model-family and deck-line
+totals for release dashboards.
 `deviceModelReferenceDeckAuditGate` and
 `formatDeviceModelReferenceDeckAuditGateReport` validate the required
 kind-by-analysis coverage matrix and emit a stable pass/fail gate report.

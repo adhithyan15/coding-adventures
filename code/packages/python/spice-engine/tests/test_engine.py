@@ -185,6 +185,8 @@ from spice_engine import (
     device_model_capacitance_audit_fixtures,
     device_model_charge_audit_fixtures,
     device_model_noise_audit_fixtures,
+    device_model_reference_deck_audit_analysis_summary,
+    device_model_reference_deck_audit_analysis_summary_records,
     device_model_reference_deck_audit_fixtures,
     device_model_reference_deck_audit_gate,
     device_model_reference_deck_audit_records,
@@ -247,6 +249,9 @@ from spice_engine import (
     format_deck_wrdata_artifact_json,
     format_deck_wrdata_artifact_table,
     format_deck_wrdata_ascii,
+    format_device_model_reference_deck_audit_analysis_summary_csv,
+    format_device_model_reference_deck_audit_analysis_summary_json,
+    format_device_model_reference_deck_audit_analysis_summary_table,
     format_device_model_reference_deck_audit_csv,
     format_device_model_reference_deck_audit_gate_report,
     format_device_model_reference_deck_audit_json,
@@ -717,6 +722,68 @@ def test_device_model_reference_deck_audit_summary_reports_missing_analysis() ->
         "NMOS\t4\top,temperature,ac,noise\ttran\t37\t"
         "SPICE2/SPICE3-style local model-depth fixture"
     ) in format_device_model_reference_deck_audit_summary_table(fixtures)
+
+
+def test_device_model_reference_deck_audit_analysis_summary_exports_are_stable() -> None:
+    summary = device_model_reference_deck_audit_analysis_summary()
+    assert len(summary) == 5
+    assert summary[0].analysis == "op"
+    assert summary[0].fixture_count == 4
+    assert summary[0].kinds == ("D", "NPN", "NJF", "NMOS")
+    assert summary[0].missing_kinds == ()
+    assert summary[0].deck_line_count == 36
+    assert summary[0].references == ("SPICE2/SPICE3-style local model-depth fixture",)
+
+    table = format_device_model_reference_deck_audit_analysis_summary_table()
+    assert table.splitlines() == [
+        "analysis\tfixture_count\tkinds\tmissing_kinds\tdeck_lines\treferences",
+        "op\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        (
+            "temperature\t4\tD,NPN,NJF,NMOS\t\t40\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+        "ac\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        "noise\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        "tran\t4\tD,NPN,NJF,NMOS\t\t40\tSPICE2/SPICE3-style local model-depth fixture",
+    ]
+
+    records = device_model_reference_deck_audit_analysis_summary_records()
+    assert records[0] == {
+        "analysis": "op",
+        "fixture_count": "4",
+        "kinds": "D,NPN,NJF,NMOS",
+        "missing_kinds": "",
+        "deck_lines": "36",
+        "references": "SPICE2/SPICE3-style local model-depth fixture",
+    }
+    assert format_device_model_reference_deck_audit_analysis_summary_csv().splitlines()[1] == (
+        'op,4,"D,NPN,NJF,NMOS",,36,'
+        "SPICE2/SPICE3-style local model-depth fixture"
+    )
+    assert (
+        json.loads(format_device_model_reference_deck_audit_analysis_summary_json())
+        == records
+    )
+
+
+def test_device_model_reference_deck_audit_analysis_summary_reports_missing_kind() -> None:
+    fixtures = tuple(
+        fixture
+        for fixture in device_model_reference_deck_audit_fixtures()
+        if not (fixture.kind == "NMOS" and fixture.analysis == "tran")
+    )
+
+    summary = device_model_reference_deck_audit_analysis_summary(fixtures)
+    tran = next(row for row in summary if row.analysis == "tran")
+
+    assert tran.fixture_count == 3
+    assert tran.kinds == ("D", "NPN", "NJF")
+    assert tran.missing_kinds == ("NMOS",)
+    assert tran.deck_line_count == 30
+    assert (
+        "tran\t3\tD,NPN,NJF\tNMOS\t30\t"
+        "SPICE2/SPICE3-style local model-depth fixture"
+    ) in format_device_model_reference_deck_audit_analysis_summary_table(fixtures)
 
 
 def test_device_model_reference_deck_audit_gate_report_is_stable() -> None:

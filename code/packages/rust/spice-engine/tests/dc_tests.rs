@@ -3,11 +3,16 @@ use spice_engine::{
     dc_corners_parallel, dc_initial_vector_from_conditions, dc_op, dc_op_with_initial_conditions,
     dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
     dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
-    device_model_behavior_audit_fixtures, device_model_reference_deck_audit_fixtures,
-    device_model_reference_deck_audit_gate, device_model_reference_deck_audit_records,
-    device_model_reference_deck_audit_summary, device_model_reference_deck_audit_summary_records,
-    device_model_temperature_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
-    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
+    device_model_behavior_audit_fixtures, device_model_reference_deck_audit_analysis_summary,
+    device_model_reference_deck_audit_analysis_summary_records,
+    device_model_reference_deck_audit_fixtures, device_model_reference_deck_audit_gate,
+    device_model_reference_deck_audit_records, device_model_reference_deck_audit_summary,
+    device_model_reference_deck_audit_summary_records, device_model_temperature_audit_fixtures,
+    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
+    format_corner_temperature_dc_table, format_dc_sweep_table,
+    format_device_model_reference_deck_audit_analysis_summary_csv,
+    format_device_model_reference_deck_audit_analysis_summary_json,
+    format_device_model_reference_deck_audit_analysis_summary_table,
     format_device_model_reference_deck_audit_csv,
     format_device_model_reference_deck_audit_gate_report,
     format_device_model_reference_deck_audit_json,
@@ -451,6 +456,87 @@ fn device_model_reference_deck_audit_summary_reports_missing_analysis() {
     assert!(format_device_model_reference_deck_audit_summary_table(&fixtures).contains(
         "NMOS\t4\top,temperature,ac,noise\ttran\t37\tSPICE2/SPICE3-style local model-depth fixture"
     ));
+}
+
+#[test]
+fn device_model_reference_deck_audit_analysis_summary_exports_are_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let summary = device_model_reference_deck_audit_analysis_summary(&fixtures);
+
+    assert_eq!(summary.len(), 5);
+    assert_eq!(summary[0].analysis, "op");
+    assert_eq!(summary[0].fixture_count, 4);
+    assert_eq!(summary[0].kinds, vec!["D", "NPN", "NJF", "NMOS"]);
+    assert!(summary[0].missing_kinds.is_empty());
+    assert_eq!(summary[0].deck_line_count, 36);
+    assert_eq!(
+        summary[0].references,
+        vec!["SPICE2/SPICE3-style local model-depth fixture"]
+    );
+
+    let table = format_device_model_reference_deck_audit_analysis_summary_table(&fixtures);
+    assert_eq!(
+        table,
+        concat!(
+            "analysis\tfixture_count\tkinds\tmissing_kinds\tdeck_lines\treferences\n",
+            "op\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "temperature\t4\tD,NPN,NJF,NMOS\t\t40\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "ac\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "noise\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "tran\t4\tD,NPN,NJF,NMOS\t\t40\tSPICE2/SPICE3-style local model-depth fixture"
+        )
+    );
+
+    let records = device_model_reference_deck_audit_analysis_summary_records(&fixtures);
+    assert_eq!(records[0].get("analysis").map(String::as_str), Some("op"));
+    assert_eq!(
+        records[0].get("fixture_count").map(String::as_str),
+        Some("4")
+    );
+    assert_eq!(
+        records[0].get("kinds").map(String::as_str),
+        Some("D,NPN,NJF,NMOS")
+    );
+    assert_eq!(
+        records[0].get("missing_kinds").map(String::as_str),
+        Some("")
+    );
+    assert_eq!(records[0].get("deck_lines").map(String::as_str), Some("36"));
+    assert_eq!(
+        format_device_model_reference_deck_audit_analysis_summary_csv(&fixtures)
+            .lines()
+            .nth(1),
+        Some("op,4,\"D,NPN,NJF,NMOS\",,36,SPICE2/SPICE3-style local model-depth fixture")
+    );
+    let json = format_device_model_reference_deck_audit_analysis_summary_json(&fixtures);
+    assert!(json.starts_with("[{\"analysis\":\"op\""));
+    assert!(json.contains("\"analysis\":\"tran\""));
+    assert!(json.ends_with("]\n"));
+}
+
+#[test]
+fn device_model_reference_deck_audit_analysis_summary_reports_missing_kind() {
+    let fixtures = device_model_reference_deck_audit_fixtures()
+        .unwrap()
+        .into_iter()
+        .filter(|fixture| !(fixture.kind == ModelCardKind::Nmos && fixture.analysis == "tran"))
+        .collect::<Vec<_>>();
+
+    let summary = device_model_reference_deck_audit_analysis_summary(&fixtures);
+    let tran = summary
+        .iter()
+        .find(|row| row.analysis == "tran")
+        .expect("transient summary row should exist");
+
+    assert_eq!(tran.fixture_count, 3);
+    assert_eq!(tran.kinds, vec!["D", "NPN", "NJF"]);
+    assert_eq!(tran.missing_kinds, vec!["NMOS"]);
+    assert_eq!(tran.deck_line_count, 30);
+    assert!(
+        format_device_model_reference_deck_audit_analysis_summary_table(&fixtures).contains(
+            "tran\t3\tD,NPN,NJF\tNMOS\t30\tSPICE2/SPICE3-style local model-depth fixture"
+        )
+    );
 }
 
 #[test]
