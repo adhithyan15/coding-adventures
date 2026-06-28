@@ -163,7 +163,7 @@ engine gap that blocks it, and every rung ships a two-arm divergence number.
 | **0** | grade-school arithmetic + 1-step word problems | **none** (value-math exists) — shipped |
 | **1** | fractions / percent | native predicate RHS expressions plus exact rational sidecars for fractional equality; harder banks climb from here |
 | **2** | pre-algebra / algebra word problems | native ADJ solve programs now mix with rule-derived setup premises; broader CAS solve trail (PR-6) |
-| **3** | algebra / calculus | native ADJ `solved_roots` scaffold now covers quadratic, cubic, quartic, and factored-polynomial banks; broader CAS wiring (PR-6) + rewrite trail (PR-4) |
+| **3** | algebra / calculus | native ADJ solve now covers two-variable linear systems plus `solved_roots` banks for quadratic, cubic, quartic, and factored-polynomial equations; broader CAS wiring (PR-6) + rewrite trail (PR-4) |
 | 4 | physics / chem with units | dimensional engine (exists) + exact compute (PR-3) |
 | 5 | clinical / MLE → **apex: pediatrics** | the **MLE-PASS** harness (shares the option-map); multi-hop→PR-1, calculation→PR-3/6 |
 | — | defensibility hardening | `adj-verify` (PR-9): every correct item's proof re-checks |

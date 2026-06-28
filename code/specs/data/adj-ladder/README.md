@@ -43,6 +43,8 @@ adj-ladder/
     items.json              20 pre-algebra MCQs backed by native ADJ solve programs
   rung2_derived_solve/
     items.json              20 MCQs requiring a derived setup premise + native solve
+  rung3_linear_systems/
+    items.json              20 two-variable linear-system MCQs backed by native ADJ solve
   rung3_quadratic_roots/
     items.json              20 algebra MCQs backed by native ADJ solved_roots
   rung3_cubic_roots/
@@ -86,6 +88,7 @@ python3 contamination_check.py rung0_arithmetic
 python3 contamination_check.py rung1_fractions_percent
 python3 contamination_check.py rung2_prealgebra_solve
 python3 contamination_check.py rung2_derived_solve
+python3 contamination_check.py rung3_linear_systems
 python3 contamination_check.py rung3_quadratic_roots
 python3 contamination_check.py rung3_cubic_roots
 python3 contamination_check.py rung3_quartic_roots
@@ -96,6 +99,7 @@ python3 ladder_eval.py rung0_arithmetic
 python3 ladder_eval.py rung1_fractions_percent
 python3 ladder_eval.py rung2_prealgebra_solve
 python3 ladder_eval.py rung2_derived_solve
+python3 ladder_eval.py rung3_linear_systems
 python3 ladder_eval.py rung3_quadratic_roots
 python3 ladder_eval.py rung3_cubic_roots
 python3 ladder_eval.py rung3_quartic_roots
@@ -139,6 +143,9 @@ printed options without solving the equation in Python.
 with `observe` + `rule`, uses that derived atom to fire a queried `setup_ready`
 decision with an SLD `evidence_proof`, then solves the requested unknown from the
 observed quantities.
+`rung3_linear_systems` takes the next native solve step: ADJ solves two-variable
+linear systems, including native LaTeX constraints, and the ladder maps one requested
+engine assignment to the printed options without solving the system in Python.
 `rung3_quadratic_roots` starts the algebra rung: ADJ solves `x^2 = n` programs,
 including native LaTeX constraints, and the harness maps the engine's returned
 `solved_roots` set to the printed root-set options without computing the roots.

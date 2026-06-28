@@ -191,6 +191,32 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       cursor: wait;
     }
 
+    input, select {
+      min-height: 36px;
+      width: 100%;
+      padding: 0 10px;
+      border: 1px solid #8aa0a0;
+      border-radius: 8px;
+      color: var(--ink);
+      background: #ffffff;
+      font: inherit;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .filter-grid label {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -295,6 +321,64 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       <div class="panel">
         <h2>Home</h2>
         <div id="summary" class="metric-grid"></div>
+      </div>
+      <div class="panel">
+        <div class="row" style="justify-content: space-between;">
+          <h2>Filters</h2>
+          <button id="reset-filters" type="button">Reset</button>
+        </div>
+        <div class="filter-grid">
+          <label>Search
+            <input id="filter-search" data-dashboard-filter="search" type="search" autocomplete="off">
+          </label>
+          <label>Entities
+            <select id="filter-domain" data-dashboard-filter="domain">
+              <option value="">All domains</option>
+              <option value="light">Lights</option>
+              <option value="sensor">Sensors</option>
+              <option value="switch">Switches</option>
+              <option value="climate">Climate</option>
+              <option value="lock">Locks</option>
+            </select>
+          </label>
+          <label>State
+            <select id="filter-state" data-dashboard-filter="state">
+              <option value="">All states</option>
+              <option value="stale">Needs refresh</option>
+              <option value="fresh">Fresh</option>
+            </select>
+          </label>
+          <label>Control
+            <select id="filter-control" data-dashboard-filter="control">
+              <option value="">All entities</option>
+              <option value="commandable">Commandable</option>
+              <option value="readonly">Read-only</option>
+            </select>
+          </label>
+          <label>Events
+            <select id="filter-event-kind" data-dashboard-filter="event-kind">
+              <option value="">All events</option>
+              <option value="commands">Commands</option>
+              <option value="supervision">Supervision</option>
+            </select>
+          </label>
+          <label>Commands
+            <select id="filter-command-status" data-dashboard-filter="command-status">
+              <option value="">All commands</option>
+              <option value="accepted">Accepted</option>
+              <option value="rejected">Rejected</option>
+              <option value="timed_out">Timed out</option>
+              <option value="failed">Failed</option>
+            </select>
+          </label>
+          <label>Authorization
+            <select id="filter-authorization-outcome" data-dashboard-filter="authorization-outcome">
+              <option value="">All decisions</option>
+              <option value="allowed">Allowed</option>
+              <option value="denied">Denied</option>
+            </select>
+          </label>
+        </div>
       </div>
       <div class="panel">
         <div class="row">
@@ -402,11 +486,19 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       devices: document.querySelector("#devices"),
       entities: document.querySelector("#entities"),
       events: document.querySelector("#events"),
+      filterAuthorizationOutcome: document.querySelector("#filter-authorization-outcome"),
+      filterCommandStatus: document.querySelector("#filter-command-status"),
+      filterControl: document.querySelector("#filter-control"),
+      filterDomain: document.querySelector("#filter-domain"),
+      filterEventKind: document.querySelector("#filter-event-kind"),
+      filterSearch: document.querySelector("#filter-search"),
+      filterState: document.querySelector("#filter-state"),
       gaps: document.querySelector("#gaps"),
       history: document.querySelector("#history"),
       location: document.querySelector("#location"),
       log: document.querySelector("#log"),
       refresh: document.querySelector("#refresh"),
+      resetFilters: document.querySelector("#reset-filters"),
       routes: document.querySelector("#routes"),
       rooms: document.querySelector("#rooms"),
       scenes: document.querySelector("#scenes"),
@@ -424,6 +516,46 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }
       return body;
     };
+
+    const readFilters = () => ({
+      search: els.filterSearch.value.trim().toLowerCase(),
+      domain: els.filterDomain.value,
+      state: els.filterState.value,
+      control: els.filterControl.value,
+      eventKind: els.filterEventKind.value,
+      commandStatus: els.filterCommandStatus.value,
+      authorizationOutcome: els.filterAuthorizationOutcome.value
+    });
+
+    const queryUrl = (path, params) => {
+      const query = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          query.set(key, String(value));
+        }
+      });
+      const suffix = query.toString();
+      return suffix ? `${path}?${suffix}` : path;
+    };
+
+    const matchesSearch = (filters, item) =>
+      !filters.search || JSON.stringify(item).toLowerCase().includes(filters.search);
+    const filterRows = (items, filters) => items.filter((item) => matchesSearch(filters, item));
+    const isCommandable = (entity) => (entity.capabilities || []).some((item) => item.commandable);
+    const entityMatchesFilters = (filters, entity) => {
+      if (!matchesSearch(filters, entity)) {
+        return false;
+      }
+      if (filters.control === "commandable") {
+        return isCommandable(entity);
+      }
+      if (filters.control === "readonly") {
+        return !isCommandable(entity);
+      }
+      return true;
+    };
+    const countLabel = (shown, total, noun) =>
+      shown === total ? `${total} ${noun}` : `${shown} of ${total} ${noun}`;
 
     const metric = (label, value) =>
       `<div class="metric"><strong>${value}</strong><span class="muted">${label}</span></div>`;
@@ -588,9 +720,14 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       `).join("") || `<p class="muted">No bridges</p>`;
     };
 
-    const renderEntities = (states) => {
-      els.stateCount.textContent = `${states.summary.total_entities} tracked`;
-      els.entities.innerHTML = states.states.map((entity) => {
+    const renderEntities = (states, filters) => {
+      const entities = (states.states || []).filter((entity) => entityMatchesFilters(filters, entity));
+      els.stateCount.textContent = countLabel(
+        entities.length,
+        states.summary.total_entities,
+        "tracked"
+      );
+      els.entities.innerHTML = entities.map((entity) => {
         const value = entity.value === null ? "No state" : JSON.stringify(entity.value);
         const canToggle = entity.domain === "light";
         const brightness = capability(entity, "light.brightness");
@@ -623,11 +760,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             ` : ""}
           </article>
         `;
-      }).join("");
+      }).join("") || `<p class="muted">No matching entities</p>`;
     };
 
-    const renderDesiredStates = (desiredStates) => {
-      const targets = desiredStates.desired_states || [];
+    const renderDesiredStates = (desiredStates, filters) => {
+      const targets = filterRows(desiredStates.desired_states || [], filters);
       els.desired.innerHTML = targets.map((target) => `
         <tr>
           <td>${target.home_assistant_entity_id}<br><span class="muted">${target.entity_id}</span></td>
@@ -638,8 +775,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       `).join("") || `<tr><td colspan="4" class="muted">No desired-state targets</td></tr>`;
     };
 
-    const renderGaps = (stateGaps) => {
-      els.gaps.innerHTML = stateGaps.states.map((entity) => `
+    const renderGaps = (stateGaps, filters) => {
+      const states = filterRows(stateGaps.states || [], filters);
+      els.gaps.innerHTML = states.map((entity) => `
         <tr>
           <td>${entity.name}<br><span class="muted">${entity.home_assistant_entity_id}</span></td>
           <td>${entity.domain}</td>
@@ -648,8 +786,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       `).join("") || `<tr><td colspan="3" class="muted">Clear</td></tr>`;
     };
 
-    const renderHistory = (history) => {
-      const events = history.events || [];
+    const renderHistory = (history, filters) => {
+      const events = filterRows(history.events || [], filters);
       els.history.innerHTML = events.map((row) => {
         const event = row.event || {};
         const detailUrl = `/api/smart_home/state_history/${encodeURIComponent(event.event_id || "")}`;
@@ -665,8 +803,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }).join("") || `<tr><td colspan="5" class="muted">No state history</td></tr>`;
     };
 
-    const renderEvents = (eventLog) => {
-      const entries = eventLog.events || [];
+    const renderEvents = (eventLog, filters) => {
+      const entries = filterRows(eventLog.events || [], filters);
       els.events.innerHTML = entries.map((entry) => {
         const event = entry.event || {};
         return `
@@ -681,8 +819,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }).join("") || `<tr><td colspan="5" class="muted">No runtime events</td></tr>`;
     };
 
-    const renderCommandResults = (audit) => {
-      const results = audit.results || [];
+    const renderCommandResults = (audit, filters) => {
+      const results = filterRows(audit.results || [], filters);
       els.commandResults.innerHTML = results.map((record) => {
         const result = record.result || {};
         const detailUrl = `/api/smart_home/command_results/${encodeURIComponent(result.command_id || "")}`;
@@ -698,8 +836,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }).join("") || `<tr><td colspan="5" class="muted">No command results</td></tr>`;
     };
 
-    const renderAuthorizationDecisions = (audit) => {
-      const decisions = audit.decisions || [];
+    const renderAuthorizationDecisions = (audit, filters) => {
+      const decisions = filterRows(audit.decisions || [], filters);
       els.authorizationDecisions.innerHTML = decisions.map((record) => `
         <tr>
           <td>${record.principal_id}<br><span class="muted">${observedText(record.decided_at_ms)}</span></td>
@@ -711,8 +849,20 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       `).join("") || `<tr><td colspan="5" class="muted">No authorization decisions</td></tr>`;
     };
 
+    let renderTimer = 0;
+    const scheduleRender = () => {
+      window.clearTimeout(renderTimer);
+      renderTimer = window.setTimeout(render, 150);
+    };
+
     const render = async () => {
       els.refresh.disabled = true;
+      const filters = readFilters();
+      const stale = filters.state === "stale"
+        ? true
+        : filters.state === "fresh"
+          ? false
+          : undefined;
       try {
         const [
           bootstrap,
@@ -732,18 +882,24 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         ] = await Promise.all([
           json("/api/smart_home/bootstrap"),
           json("/api/smart_home/readiness"),
-          json("/api/smart_home/states?limit=24"),
-          json("/api/smart_home/scenes?limit=12"),
-          json("/api/smart_home/desired_states?limit=12"),
+          json(queryUrl("/api/smart_home/states", {limit: 24, domain: filters.domain, stale})),
+          json(queryUrl("/api/smart_home/scenes", {limit: 12})),
+          json(queryUrl("/api/smart_home/desired_states", {limit: 12})),
           json("/api/smart_home/state_history?limit=12"),
           json("/api/smart_home/services?limit=8"),
           json("/api/smart_home/api?mutating=true&authorized=true"),
           json("/api/smart_home/rooms?sort=scene_count"),
           json("/api/smart_home/devices?limit=8"),
           json("/api/smart_home/bridges?limit=8"),
-          json("/api/smart_home/events?limit=12"),
-          json("/api/smart_home/command_results?limit=8"),
-          json("/api/smart_home/authorization_decisions?limit=8")
+          json(queryUrl("/api/smart_home/events", {limit: 12, kind: filters.eventKind})),
+          json(queryUrl("/api/smart_home/command_results", {
+            limit: 8,
+            status: filters.commandStatus
+          })),
+          json(queryUrl("/api/smart_home/authorization_decisions", {
+            limit: 8,
+            outcome: filters.authorizationOutcome
+          }))
         ]);
         const summary = bootstrap.dashboard.summary;
         els.location.textContent = bootstrap.dashboard.config.location_name;
@@ -768,13 +924,13 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         renderDevices(devices);
         renderBridges(bridges);
         renderScenes(scenes);
-        renderEntities(states);
-        renderDesiredStates(desiredStates);
-        renderGaps(bootstrap.state_gaps);
-        renderHistory(history);
-        renderEvents(events);
-        renderCommandResults(commandResults);
-        renderAuthorizationDecisions(authorizationDecisions);
+        renderEntities(states, filters);
+        renderDesiredStates(desiredStates, filters);
+        renderGaps(bootstrap.state_gaps, filters);
+        renderHistory(history, filters);
+        renderEvents(events, filters);
+        renderCommandResults(commandResults, filters);
+        renderAuthorizationDecisions(authorizationDecisions, filters);
         log("Dashboard refreshed");
       } catch (error) {
         els.status.className = statusClass("blocked");
@@ -786,6 +942,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     };
 
     document.addEventListener("input", (event) => {
+      if (event.target.closest("[data-dashboard-filter]")) {
+        scheduleRender();
+        return;
+      }
       const input = event.target.closest("input[data-brightness-input]");
       if (!input) {
         return;
@@ -793,6 +953,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       const value = document.querySelector(`[data-brightness-value="${input.dataset.brightnessInput}"]`);
       if (value) {
         value.textContent = `${input.value}%`;
+      }
+    });
+
+    document.addEventListener("change", (event) => {
+      if (event.target.closest("[data-dashboard-filter]")) {
+        scheduleRender();
       }
     });
 
@@ -864,6 +1030,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }
     });
 
+    els.resetFilters.addEventListener("click", () => {
+      document.querySelectorAll("[data-dashboard-filter]").forEach((control) => {
+        control.value = "";
+      });
+      render();
+    });
     els.refresh.addEventListener("click", render);
     render();
   </script>
@@ -6923,18 +7095,29 @@ mod tests {
             assert!(body.contains("<title>Codex Home</title>"));
             assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
             assert!(body.contains("json(\"/api/smart_home/readiness\")"));
-            assert!(body.contains("json(\"/api/smart_home/states?limit=24\")"));
-            assert!(body.contains("json(\"/api/smart_home/scenes?limit=12\")"));
-            assert!(body.contains("json(\"/api/smart_home/desired_states?limit=12\")"));
+            assert!(body.contains("data-dashboard-filter=\"search\""));
+            assert!(body.contains("data-dashboard-filter=\"domain\""));
+            assert!(body.contains("data-dashboard-filter=\"command-status\""));
+            assert!(body.contains(
+                "queryUrl(\"/api/smart_home/states\", {limit: 24, domain: filters.domain, stale})"
+            ));
+            assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12})"));
+            assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
             assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
             assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
             assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
             assert!(body.contains("json(\"/api/smart_home/devices?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
-            assert!(body.contains("json(\"/api/smart_home/events?limit=12\")"));
-            assert!(body.contains("json(\"/api/smart_home/command_results?limit=8\")"));
-            assert!(body.contains("json(\"/api/smart_home/authorization_decisions?limit=8\")"));
+            assert!(body.contains(
+                "queryUrl(\"/api/smart_home/events\", {limit: 12, kind: filters.eventKind})"
+            ));
+            assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
+            assert!(body.contains("status: filters.commandStatus"));
+            assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
+            assert!(body.contains("outcome: filters.authorizationOutcome"));
+            assert!(body.contains("entityMatchesFilters(filters, entity)"));
+            assert!(body.contains("filterRows(history.events || [], filters)"));
             assert!(body.contains("<tbody id=\"events\"></tbody>"));
             assert!(body.contains("data-inspect-url"));
             assert!(body.contains("/api/smart_home/state_history/"));
@@ -8009,16 +8192,17 @@ mod tests {
         assert_eq!(status, 200);
         assert!(body.contains("<title>Codex Home</title>"));
         assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
-        assert!(body.contains("json(\"/api/smart_home/scenes?limit=12\")"));
-        assert!(body.contains("json(\"/api/smart_home/desired_states?limit=12\")"));
+        assert!(body.contains("data-dashboard-filter=\"search\""));
+        assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12})"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
         assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
         assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
         assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
         assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
         assert!(body.contains("json(\"/api/smart_home/devices?limit=8\")"));
         assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
-        assert!(body.contains("json(\"/api/smart_home/command_results?limit=8\")"));
-        assert!(body.contains("json(\"/api/smart_home/authorization_decisions?limit=8\")"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
         assert!(body.contains("/api/services/light/"));
         assert!(body.contains("data-brightness-input"));
         assert!(body.contains("brightness_pct"));

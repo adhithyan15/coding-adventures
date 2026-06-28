@@ -25,6 +25,7 @@ SELF_CONTAINED_RUNGS = (
     "rung1_fractions_percent",
     "rung2_prealgebra_solve",
     "rung2_derived_solve",
+    "rung3_linear_systems",
     "rung3_quadratic_roots",
     "rung3_cubic_roots",
     "rung3_quartic_roots",
@@ -166,6 +167,23 @@ def test_decompose_prompt_mentions_derived_solve_requirements():
     assert "derive the setup premise" in prompt
     assert "Required decision leader: setup_ready" in prompt
     assert "Required derived evidence: repeated_groups_problem" in prompt
+
+
+def test_decompose_prompt_mentions_linear_system_program():
+    prompt = le.decompose_prompt({
+        "stem": "Two numbers x and y have sum 10 and difference 2. What is x?",
+        "program": (
+            "symbol x : scalar\n"
+            "symbol y : scalar\n"
+            "constrain x + y = 10\n"
+            "constrain x - y = 2\n"
+            "solve for { x, y }\n"
+        ),
+        "answer_from": {"type": "solve_assignment", "name": "x"},
+    })
+    assert "symbol y : scalar" in prompt
+    assert "solve for { x, y }" in prompt
+    assert 'constrain latex "$x + 2y = 23$"' in prompt
 
 
 def test_decompose_prompt_mentions_native_root_solve_program():
@@ -322,6 +340,24 @@ def test_solve_assignment_requires_derived_decision_proof():
         doc,
         answer_from,
         {"A": 48, "B": 54, "C": 56, "D": 63, "E": 64},
+    ) == "C"
+
+
+def test_solve_assignment_program_maps_linear_system_value_to_option():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    program = (
+        "symbol x : scalar\n"
+        "symbol y : scalar\n"
+        "constrain x + y = 10\n"
+        "constrain x - y = 2\n"
+        "solve for { x, y }\n"
+    )
+    doc = le.run_program(program)
+    assert le.program_answer_to_letter(
+        doc,
+        {"type": "solve_assignment", "name": "x"},
+        {"A": 4, "B": 5, "C": 6, "D": 7, "E": 8},
     ) == "C"
 
 

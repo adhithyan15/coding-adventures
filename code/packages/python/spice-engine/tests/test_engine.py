@@ -185,6 +185,7 @@ from spice_engine import (
     device_model_capacitance_audit_fixtures,
     device_model_charge_audit_fixtures,
     device_model_noise_audit_fixtures,
+    device_model_reference_deck_audit_fixtures,
     device_model_temperature_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
     digital_event_streams_to_voltage_sources,
@@ -567,6 +568,29 @@ def test_device_model_charge_audit_fixtures_run_reference_transients() -> None:
     mos_fixture = next(fixture for fixture in fixtures if fixture.kind == "NMOS")
     assert "CGSO/CGDO/CGBO" in mos_fixture.charge_behavior
     assert "CBS/CBD" in mos_fixture.charge_behavior
+
+
+def test_device_model_reference_deck_audit_fixtures_cover_model_depth_matrix() -> None:
+    fixtures = device_model_reference_deck_audit_fixtures()
+    assert len(fixtures) == 20
+    assert fixtures[0].name == "diode-forward-bias:op"
+    assert fixtures[-1].name == "mos-level1-storage-charge:tran"
+
+    expected_analyses = {"op", "temperature", "ac", "noise", "tran"}
+    assert {fixture.kind for fixture in fixtures} == {"D", "NPN", "NJF", "NMOS"}
+    for kind in {"D", "NPN", "NJF", "NMOS"}:
+        assert {
+            fixture.analysis
+            for fixture in fixtures
+            if fixture.kind == kind
+        } == expected_analyses
+
+    for fixture in fixtures:
+        assert fixture.reference == "SPICE2/SPICE3-style local model-depth fixture"
+        assert fixture.expected_behavior
+        assert fixture.deck_lines[0].startswith("* device-model ")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert fixture.deck_lines[-1] == ".end"
 
 
 def test_transient_diode_junction_capacitance_slows_current_step() -> None:

@@ -1076,6 +1076,16 @@ export interface DeviceModelChargeBehaviorFixture {
   readonly deckLines: readonly string[];
 }
 
+export interface DeviceModelReferenceDeckAuditFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly analysis: string;
+  readonly reference: string;
+  readonly expectedBehavior: string;
+  readonly deckLines: readonly string[];
+}
+
 export interface Vccs {
   readonly kind: "vccs";
   readonly name: string;
@@ -7778,6 +7788,67 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
       ],
     },
   ];
+}
+
+export function deviceModelReferenceDeckAuditFixtures(): readonly DeviceModelReferenceDeckAuditFixture[] {
+  const reference = "SPICE2/SPICE3-style local model-depth fixture";
+  const rows: DeviceModelReferenceDeckAuditFixture[] = [];
+  for (const fixture of deviceModelBehaviorAuditFixtures()) {
+    rows.push({
+      name: `${fixture.name}:op`,
+      kind: fixture.kind,
+      model: fixture.model,
+      analysis: "op",
+      reference,
+      expectedBehavior: `DC probe ${fixture.probeNode} remains in [${fixture.expectedMin}, ${fixture.expectedMax}] V`,
+      deckLines: fixture.deckLines,
+    });
+  }
+  for (const fixture of deviceModelTemperatureAuditFixtures()) {
+    rows.push({
+      name: `${fixture.name}:temperature`,
+      kind: fixture.kind,
+      model: fixture.model,
+      analysis: "temperature",
+      reference,
+      expectedBehavior: fixture.temperatureBehavior,
+      deckLines: fixture.deckLines,
+    });
+  }
+  for (const fixture of deviceModelCapacitanceAuditFixtures()) {
+    rows.push({
+      name: `${fixture.name}:ac`,
+      kind: fixture.kind,
+      model: fixture.model,
+      analysis: "ac",
+      reference,
+      expectedBehavior: fixture.capacitanceBehavior,
+      deckLines: fixture.deckLines,
+    });
+  }
+  for (const fixture of deviceModelNoiseAuditFixtures()) {
+    rows.push({
+      name: `${fixture.name}:noise`,
+      kind: fixture.kind,
+      model: fixture.model,
+      analysis: "noise",
+      reference,
+      expectedBehavior: fixture.noiseBehavior,
+      deckLines: fixture.deckLines,
+    });
+  }
+  for (const fixture of deviceModelChargeAuditFixtures()) {
+    rows.push({
+      name: `${fixture.name}:tran`,
+      kind: fixture.kind,
+      model: fixture.model,
+      analysis: "tran",
+      reference,
+      expectedBehavior: fixture.chargeBehavior,
+      deckLines: fixture.deckLines,
+    });
+  }
+  return rows;
 }
 
 export function vccs(

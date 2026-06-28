@@ -209,6 +209,9 @@ Level-1 MOS charge audits. Diode `junctionCapacitance` / `transitTime`, BJT
 parameters plus bulk-junction `CBS` / `CBD` model-card parameters also stamp
 transient storage, with MOS `PB` / `MJ` shaping reverse-biased source-body and
 drain-body capacitance to match their small-signal AC semantics.
+`deviceModelReferenceDeckAuditFixtures` flattens those DC, temperature, AC,
+noise, and transient fixture families into a stable reference-deck coverage
+matrix for each supported diode, BJT, JFET, and Level-1 MOS model family.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.
