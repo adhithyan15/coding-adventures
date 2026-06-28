@@ -227,7 +227,10 @@ Formats:
   JSON facade, and C ABI; note-backed Basic and Basic-and-reversed TSV
   import/export now creates notes, generated cards, and tag metadata. Richer
   custom note-type/media export remains.
-- APKG import/export eventually, via a dedicated facade or package crate
+- APKG import/export eventually, via a dedicated facade or package crate.
+  `engram-anki-package` now provides the archive-inspection foundation for
+  legacy and modern collection members plus legacy JSON media maps; SQLite
+  collection import/export remains.
 
 Tests:
 
