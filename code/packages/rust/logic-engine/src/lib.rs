@@ -361,6 +361,22 @@ impl ClauseIndex {
     }
 }
 
+/// Evidence that can gate an LR contribution.
+///
+/// A direct `observe e` remains the common fast path: `fact_ids` names the
+/// observed fact(s), `proof` is absent, and `confidence` is exactly 1.0. When
+/// `e` is only derivable through rules, `proof` carries the SLD derivation and
+/// `confidence` is the product of the probabilities on the facts/rules used by
+/// that proof. LR aggregation uses that confidence to attenuate the
+/// contribution instead of forcing a brittle all-or-nothing bridge.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ObservedEvidence {
+    pub fact_ids: Vec<FactId>,
+    pub rule_ids: Vec<RuleId>,
+    pub proof: Option<Box<Proof>>,
+    pub confidence: f64,
+}
+
 /// A collection of Facts and Rules, indexed for clause selection by
 /// the head's functor/arity. Per LP19e, also stores prior /
 /// contribution / joint-contribution clauses in parallel maps; the
@@ -969,28 +985,72 @@ impl KnowledgeBase {
             .collect()
     }
 
-    /// LP19e "observation gate." If `evidence_term` is asserted in
-    /// the KB as a `Certain` Fact (one or more), return the
-    /// `FactId`s; otherwise `None`.
-    ///
-    /// **Current scope** (LP19e v0.1): only `Certain` Facts gate
-    /// contributions. Probabilistic Facts and Rule-derived evidence
-    /// are deliberately not yet routed here — the spec defers their
-    /// careful treatment to v0.2 because each interacts non-trivially
-    /// with the "probability of observation vs probability of truth"
-    /// distinction in ADJ14.
-    pub fn observed_evidence(&self, evidence_term: &Term) -> Option<Vec<FactId>> {
+    /// LP19e "observation gate." If `evidence_term` is asserted in the KB as a
+    /// `Certain` Fact, return that direct observation. Otherwise fall back to
+    /// SLD proof enumeration: if the evidence is derivable by rules (or by
+    /// probabilistic facts), return the strongest proof and its probability
+    /// product as an attenuation factor for the LR step.
+    pub fn observed_evidence(&self, evidence_term: &Term) -> Option<ObservedEvidence> {
         let matched: Vec<FactId> = self
             .facts_for(evidence_term)
             .iter()
             .filter(|f| f.probability == Probability::Certain && &f.term == evidence_term)
             .map(|f| f.id)
             .collect();
-        if matched.is_empty() {
-            None
-        } else {
-            Some(matched)
+        if !matched.is_empty() {
+            return Some(ObservedEvidence {
+                fact_ids: matched,
+                rule_ids: Vec::new(),
+                proof: None,
+                confidence: 1.0,
+            });
         }
+
+        let dag = enumerate_all(evidence_term, self);
+        dag.proofs
+            .into_iter()
+            .map(|proof| {
+                let confidence = proof_confidence(&proof, self);
+                (proof, confidence)
+            })
+            .filter(|(_, confidence)| *confidence > 0.0)
+            .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal))
+            .map(|(proof, confidence)| ObservedEvidence {
+                fact_ids: proof.via_facts.clone(),
+                rule_ids: proof.via_rules.clone(),
+                proof: Some(Box::new(proof)),
+                confidence,
+            })
+    }
+}
+
+fn proof_confidence(proof: &Proof, kb: &KnowledgeBase) -> f64 {
+    let fact_confidence = proof
+        .via_facts
+        .iter()
+        .map(|id| {
+            kb.find_fact_by_id(*id)
+                .map(|fact| probability_confidence(fact.probability))
+                .unwrap_or(0.0)
+        })
+        .product::<f64>();
+    let rule_confidence = proof
+        .via_rules
+        .iter()
+        .map(|id| {
+            kb.find_rule_by_id(*id)
+                .map(|rule| probability_confidence(rule.probability))
+                .unwrap_or(0.0)
+        })
+        .product::<f64>();
+    fact_confidence * rule_confidence
+}
+
+fn probability_confidence(probability: Probability) -> f64 {
+    match probability {
+        Probability::Certain => 1.0,
+        Probability::Value(p) if p.is_finite() => p.clamp(0.0, 1.0),
+        Probability::Value(_) => 0.0,
     }
 }
 

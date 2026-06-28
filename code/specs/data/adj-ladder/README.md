@@ -104,5 +104,6 @@ units, the deduction↔evidence bridge) — see ADJ-LADDER.md §5.
 `rung1_fractions_percent` is intentionally a starter scaffold. It now has the native
 surface it needs for fractional option matching (`answer == 3 / 10`), with exact
 rational sidecars carrying integer/rational arithmetic through predicate equality.
-The next climb is using that surface in harder banks and then connecting multi-step
-deductions into probabilistic evidence.
+The next climb connects multi-step deductions into probabilistic evidence: ADJ can
+derive an intermediate premise with `rule { ... }`, then let that derived atom fire a
+`contributes ... from <premise>` clause with the SLD proof attached to the audit trail.

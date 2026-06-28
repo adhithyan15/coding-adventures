@@ -2,6 +2,20 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.4.0] — 2026-06-28
+
+### Added — PR-1 deduction to evidence bridge
+
+- `logic-engine` now lets a rule-derived atom gate an LR contribution. This is the
+  first multi-step reasoning bridge the ladder needs: a small model can emit
+  observations and rules, and ADJ can prove the intermediate premise before weighing
+  it probabilistically.
+- Derived evidence carries its SLD proof into the LR proof DAG and CLI JSON. The
+  audit trail can now show both the deduction that established a premise and the
+  likelihood-ratio step that used it.
+- Probabilistic proof chains attenuate the applied LR delta by their fact/rule
+  confidence; all-certain chains keep the old exact behavior.
+
 ## [0.3.0] — 2026-06-27
 
 ### Added — rung 1 fractions/percent scaffold

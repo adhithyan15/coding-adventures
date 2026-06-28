@@ -214,8 +214,14 @@ The mechanism is proven; the ladder can climb.
 
 ## 7. Next
 
-Continue rung 1 with harder fraction/percent banks, then PR-1 = the
-ADJ-REASON-MATH **deduction→evidence bridge** (`logic-engine` — `observed_evidence`
-falls back to SLD provability + attenuates confidence + threads rule provenance), the
-unlock for every multi-step rung. Then rungs 2→5 in order, each gating the next engine
-PR, culminating in the MLE-PASS clinical rung and the pediatrics apex.
+PR-1 is the ADJ-REASON-MATH **deduction→evidence bridge**: `logic-engine`
+`observed_evidence` falls back to SLD provability, attenuates an LR contribution by
+the proof confidence, and threads the rule/fact proof into the aggregate evidence
+step. This unlocks the first true multi-step Arm B programs: the model can emit
+observations plus a rule, and ADJ can derive the intermediate premise before weighing
+it probabilistically.
+
+After this bridge, continue rung 1 with harder fraction/percent banks and start rung
+2 pre-algebra/algebra word problems that mix deduction with equation solving. Then
+rungs 3→5 gate the CAS/dimensional/clinical slices in order, culminating in the
+MLE-PASS clinical rung and the pediatrics apex.

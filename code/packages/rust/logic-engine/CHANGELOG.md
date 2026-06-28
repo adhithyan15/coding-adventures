@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.25.0] - 2026-06-28 — rule-derived evidence gates LR contributions
+
+### Added
+
+- `KnowledgeBase::observed_evidence` now falls back to SLD proof enumeration when
+  an LR evidence term is not directly asserted as a `Certain` fact. A derived atom
+  such as `infection_present` can now fire `contributes ... from infection_present`
+  if rules prove it from observed case facts.
+- `ObservedEvidence` records the direct fact ids, derived rule ids, optional SLD
+  proof, and confidence factor for the evidence gate.
+- LR aggregation attenuates a contribution's applied logit delta by the selected
+  proof's confidence, computed as the product of fact/rule probabilities along the
+  proof. Certain proof chains remain fully backward-compatible with confidence 1.0.
+- `DerivationOrigin::FromContribution` and `FromJointContribution` can carry nested
+  evidence proofs, so aggregate proofs expose the rule/fact chain that licensed a
+  probabilistic step.
+
 ## [0.24.0] - 2026-06-27 — exact rational predicate comparisons
 
 ### Added
