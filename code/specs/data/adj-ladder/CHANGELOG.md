@@ -2,6 +2,20 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.12.0] — 2026-06-28
+
+### Added — rung 3 linear optimization scaffold
+
+- **`rung3_linear_optimization/items.json`** — 20 fresh MCQs where the gold
+  decomposition is a native ADJ `maximize` or `minimize` program over linear
+  constraints.
+- Program-backed items can now declare `answer_from: {"type": "optimize_value"}`.
+  The engine returns `optimize.outcome = optimal`; the harness only compares
+  `optimize.value` to the printed options.
+- The model-mode decomposition prompt now includes both maximize and minimize
+  examples, so local models can emit bounded linear-programming programs without
+  computing the optimum in-model.
+
 ## [0.11.0] — 2026-06-28
 
 ### Added — rung 3 linear systems scaffold

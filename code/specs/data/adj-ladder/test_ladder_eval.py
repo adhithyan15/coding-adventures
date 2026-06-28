@@ -26,6 +26,7 @@ SELF_CONTAINED_RUNGS = (
     "rung2_prealgebra_solve",
     "rung2_derived_solve",
     "rung3_linear_systems",
+    "rung3_linear_optimization",
     "rung3_quadratic_roots",
     "rung3_cubic_roots",
     "rung3_quartic_roots",
@@ -184,6 +185,26 @@ def test_decompose_prompt_mentions_linear_system_program():
     assert "symbol y : scalar" in prompt
     assert "solve for { x, y }" in prompt
     assert 'constrain latex "$x + 2y = 23$"' in prompt
+
+
+def test_decompose_prompt_mentions_native_optimization_program():
+    prompt = le.decompose_prompt({
+        "stem": "Choose x and y with x and y at least 0. Maximize 3x + 2y.",
+        "program": (
+            "symbol x : scalar\n"
+            "symbol y : scalar\n"
+            "constrain x + y <= 4\n"
+            "constrain x <= 3\n"
+            "constrain x >= 0\n"
+            "constrain y >= 0\n"
+            "maximize 3 * x + 2 * y\n"
+        ),
+        "answer_from": {"type": "optimize_value"},
+    })
+    assert "linear optimization program" in prompt
+    assert "maximize 3 * x + 2 * y" in prompt
+    assert "minimize x + y" in prompt
+    assert "Do NOT compute the optimum" in prompt
 
 
 def test_decompose_prompt_mentions_native_root_solve_program():
@@ -425,6 +446,26 @@ def test_solve_roots_program_maps_native_factored_latex_roots_to_option():
             "E": [-2, 3, 8],
         },
     ) == "A"
+
+
+def test_optimize_program_maps_engine_value_to_option():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    program = (
+        "symbol x : scalar\n"
+        "symbol y : scalar\n"
+        "constrain x + y <= 4\n"
+        "constrain x <= 3\n"
+        "constrain x >= 0\n"
+        "constrain y >= 0\n"
+        "maximize 3 * x + 2 * y\n"
+    )
+    doc = le.run_program(program)
+    assert le.program_answer_to_letter(
+        doc,
+        {"type": "optimize_value"},
+        {"A": 9, "B": 10, "C": 11, "D": 12, "E": 13},
+    ) == "C"
 
 
 # ---- bank integrity -----------------------------------------------------------

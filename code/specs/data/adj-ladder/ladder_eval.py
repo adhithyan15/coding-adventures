@@ -411,6 +411,28 @@ def solve_roots_to_letter(
         return None
 
 
+def optimize_value_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ optimization optimum to an option letter.
+
+    Linear-programming rungs ask the model to emit only constraints plus a
+    `maximize`/`minimize` objective. ADJ owns the optimization; the harness only
+    compares `optimize.value` against the printed choices.
+    """
+    if not doc or not answer_from or answer_from.get("type") != "optimize_value":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    optimize = doc.get("optimize")
+    if not isinstance(optimize, dict) or optimize.get("outcome") != "optimal":
+        return None
+    try:
+        return _letter_for_engine_value(float(optimize.get("value")), options)
+    except (TypeError, ValueError):
+        return None
+
+
 def program_answer_to_letter(
     doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
 ) -> str | None:
@@ -420,6 +442,8 @@ def program_answer_to_letter(
         return solve_assignment_to_letter(doc, answer_from, options)
     if answer_from.get("type") == "solve_roots":
         return solve_roots_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "optimize_value":
+        return optimize_value_to_letter(doc, answer_from, options)
     return None
 
 
@@ -587,6 +611,35 @@ def decompose_prompt(item: dict) -> str:
     if "program" in item:
         answer_from = item.get("answer_from") or {}
         name = answer_from.get("name", "x")
+        if answer_from.get("type") == "optimize_value":
+            return (
+                "Translate the word problem into a native ADJ linear optimization "
+                "program. Declare the variables, add every stated constraint, then "
+                "end with the requested `maximize` or `minimize` objective. Use "
+                "ONLY numbers that appear in the question. Do NOT compute the "
+                "optimum, do NOT mention the answer choices, and output ONLY the "
+                "ADJ program.\n\n"
+                "Question: Choose x and y with x and y at least 0. The constraints "
+                "are x + y <= 4 and x <= 3. Maximize 3x + 2y. What is the maximum "
+                "value?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "symbol y : scalar\n"
+                "constrain x + y <= 4\n"
+                "constrain x <= 3\n"
+                "constrain x >= 0\n"
+                "constrain y >= 0\n"
+                "maximize 3 * x + 2 * y\n\n"
+                "Question: Choose x and y with x >= 2 and y >= 3. Minimize x + y. "
+                "What is the minimum value?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "symbol y : scalar\n"
+                "constrain x >= 2\n"
+                "constrain y >= 3\n"
+                "minimize x + y\n\n"
+                f"Question: {item['stem']}\nProgram:"
+            )
         if answer_from.get("type") == "solve_roots":
             return (
                 "Translate the word problem into a native ADJ solve program that "
