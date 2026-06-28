@@ -271,6 +271,24 @@ pub unsafe extern "C" fn eg_parse_basic_cards_csv(
     })
 }
 
+/// # Safety
+/// `session` must be valid; string arguments must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_parse_anki_basic_tsv(
+    session: *mut EgSession,
+    tsv: *const c_char,
+    deck_id: *const c_char,
+    id_prefix: *const c_char,
+    created_at: u64,
+) -> *mut c_char {
+    let tsv = read_cstr(tsv);
+    let deck_id = read_cstr(deck_id);
+    let id_prefix = read_cstr(id_prefix);
+    with_session(session, |session| {
+        session.parse_anki_basic_tsv(&tsv, &deck_id, &id_prefix, created_at)
+    })
+}
+
 unsafe fn read_cstr(value: *const c_char) -> String {
     if value.is_null() {
         return String::new();
@@ -383,6 +401,17 @@ mod tests {
                 NOW,
             ));
             assert!(imported.contains(r#""id":"import-1""#));
+
+            let anki = cstr("#separator:tab\n#columns:Front\tBack\nletter-aa\taa\n");
+            let anki_imported = take(eg_parse_anki_basic_tsv(
+                session,
+                anki.as_ptr(),
+                deck_id.as_ptr(),
+                cstr("anki").as_ptr(),
+                NOW,
+            ));
+            assert!(anki_imported.contains(r#""id":"anki-1""#));
+            assert!(anki_imported.contains(r#""front":"letter-aa""#));
 
             eg_session_free(session);
         }

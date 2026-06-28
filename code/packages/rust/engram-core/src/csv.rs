@@ -142,6 +142,41 @@ pub fn import_basic_cards_csv(
     Ok(cards)
 }
 
+pub fn import_anki_basic_tsv(
+    input: &str,
+    options: &BasicCardCsvImportOptions,
+) -> Result<Vec<Card>, CsvError> {
+    let records = parse_tsv_records(input)?;
+    let mut cards = Vec::new();
+
+    for (index, fields) in records.into_iter().enumerate() {
+        if is_blank_record(&fields) || fields.first().is_some_and(|field| field.starts_with('#')) {
+            continue;
+        }
+        if fields.len() < 2 {
+            return Err(csv_error(
+                &format!(
+                    "Anki TSV row must have at least 2 fields, found {}",
+                    fields.len()
+                ),
+                Some(index + 1),
+            ));
+        }
+
+        let sequence = cards.len() + 1;
+        cards.push(Card {
+            id: generated_basic_card_id(&options.id_prefix, sequence),
+            deck_id: options.deck_id.clone(),
+            front: fields[0].clone(),
+            back: fields[1].clone(),
+            created_at: options.created_at,
+            lineage: None,
+        });
+    }
+
+    Ok(cards)
+}
+
 fn matches_csv_header(fields: &[String], expected: &[&str]) -> bool {
     fields.len() == expected.len()
         && fields
@@ -204,6 +239,18 @@ fn header_value(value: &str) -> String {
 }
 
 fn parse_csv_records(input: &str) -> Result<Vec<Vec<String>>, CsvError> {
+    parse_delimited_records(input, ',', "CSV")
+}
+
+fn parse_tsv_records(input: &str) -> Result<Vec<Vec<String>>, CsvError> {
+    parse_delimited_records(input, '\t', "TSV")
+}
+
+fn parse_delimited_records(
+    input: &str,
+    delimiter: char,
+    format_name: &str,
+) -> Result<Vec<Vec<String>>, CsvError> {
     let mut records = Vec::new();
     let mut record = Vec::new();
     let mut field = String::new();
@@ -231,7 +278,7 @@ fn parse_csv_records(input: &str) -> Result<Vec<Vec<String>>, CsvError> {
 
         if after_quote {
             match ch {
-                ',' => {
+                ch if ch == delimiter => {
                     record.push(std::mem::take(&mut field));
                     after_quote = false;
                 }
@@ -252,7 +299,7 @@ fn parse_csv_records(input: &str) -> Result<Vec<Vec<String>>, CsvError> {
                 }
                 _ => {
                     return Err(csv_error(
-                        "quoted CSV field must end before the next character",
+                        &format!("quoted {format_name} field must end before the next character"),
                         Some(row),
                     ));
                 }
@@ -262,8 +309,13 @@ fn parse_csv_records(input: &str) -> Result<Vec<Vec<String>>, CsvError> {
 
         match ch {
             '"' if field.is_empty() => in_quotes = true,
-            '"' => return Err(csv_error("unexpected quote in CSV field", Some(row))),
-            ',' => record.push(std::mem::take(&mut field)),
+            '"' => {
+                return Err(csv_error(
+                    &format!("unexpected quote in {format_name} field"),
+                    Some(row),
+                ));
+            }
+            ch if ch == delimiter => record.push(std::mem::take(&mut field)),
             '\n' => {
                 record.push(std::mem::take(&mut field));
                 records.push(std::mem::take(&mut record));
@@ -282,7 +334,10 @@ fn parse_csv_records(input: &str) -> Result<Vec<Vec<String>>, CsvError> {
     }
 
     if in_quotes {
-        return Err(csv_error("unterminated quoted CSV field", Some(row)));
+        return Err(csv_error(
+            &format!("unterminated quoted {format_name} field"),
+            Some(row),
+        ));
     }
 
     if after_quote || !field.is_empty() || !record.is_empty() {
@@ -422,6 +477,39 @@ mod tests {
         let tsv = export_cards_anki_basic_tsv(&cards, &options);
 
         assert_eq!(tsv, "front\tback\n");
+    }
+
+    #[test]
+    fn anki_basic_tsv_import_skips_headers_and_preserves_quoted_fields() {
+        let tsv = "#separator:tab\n#html:false\n#notetype:Basic\n#columns:Front\tBack\nletter-a\ta\n\"hello\t\"\"friend\"\"\"\t\"line one\nline two\"\ttag\n";
+        let options = BasicCardCsvImportOptions {
+            deck_id: "deck".to_string(),
+            id_prefix: "anki".to_string(),
+            created_at: 456,
+        };
+
+        let cards = import_anki_basic_tsv(tsv, &options).unwrap();
+
+        assert_eq!(cards.len(), 2);
+        assert_eq!(cards[0].id, "anki-1");
+        assert_eq!(cards[0].front, "letter-a");
+        assert_eq!(cards[1].front, "hello\t\"friend\"");
+        assert_eq!(cards[1].back, "line one\nline two");
+        assert_eq!(cards[1].created_at, 456);
+    }
+
+    #[test]
+    fn anki_basic_tsv_import_reports_short_rows() {
+        let options = BasicCardCsvImportOptions {
+            deck_id: "deck".to_string(),
+            id_prefix: "anki".to_string(),
+            created_at: 456,
+        };
+
+        let error = import_anki_basic_tsv("#separator:tab\nfront-only\n", &options).unwrap_err();
+
+        assert!(error.message.contains("at least 2 fields"));
+        assert_eq!(error.row, Some(2));
     }
 
     #[test]

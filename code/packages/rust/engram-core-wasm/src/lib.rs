@@ -12,8 +12,8 @@ use engram_core::{
     build_session_queue, build_session_queue_with_daily_limits, create_engram_snapshot,
     export_cards_anki_basic_tsv, export_cards_csv, generate_cards_for_note,
     get_active_session_progress, get_daily_study_limit_usage, get_deck_stats,
-    import_basic_cards_csv, import_cards_csv, materialize_generated_card, reduce,
-    restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history,
+    import_anki_basic_tsv, import_basic_cards_csv, import_cards_csv, materialize_generated_card,
+    reduce, restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history,
     AnkiBasicTsvExportOptions, AppState, BasicCardCsvImportOptions, Card, CardFlag, CardLineage,
     DeckOptions, EngramSnapshot, Rating,
 };
@@ -262,6 +262,26 @@ impl EngramSession {
                 created_at,
             };
             match import_basic_cards_csv(csv, &options) {
+                Ok(cards) => Ok(ok_with("cards", &cards)),
+                Err(error) => Ok(error_json_with_row(&error.message, error.row)),
+            }
+        })
+    }
+
+    pub fn parse_anki_basic_tsv(
+        &self,
+        tsv: &str,
+        deck_id: &str,
+        id_prefix: &str,
+        created_at: u64,
+    ) -> String {
+        catch_json(|| {
+            let options = BasicCardCsvImportOptions {
+                deck_id: deck_id.to_string(),
+                id_prefix: id_prefix.to_string(),
+                created_at,
+            };
+            match import_anki_basic_tsv(tsv, &options) {
                 Ok(cards) => Ok(ok_with("cards", &cards)),
                 Err(error) => Ok(error_json_with_row(&error.message, error.row)),
             }
@@ -1160,6 +1180,25 @@ mod tests {
         .unwrap();
         assert_eq!(error["ok"], false);
         assert_eq!(error["row"], 2);
+    }
+
+    #[test]
+    fn parse_anki_basic_tsv_generates_deterministic_cards() {
+        let session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.parse_anki_basic_tsv(
+            "#separator:tab\n#html:false\n#columns:Front\tBack\nletter-a\ta\n\"hello\tfriend\"\t\"line one\nline two\"\n",
+            "deck",
+            "anki",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["cards"][0]["id"], "anki-1");
+        assert_eq!(value["cards"][0]["front"], "letter-a");
+        assert_eq!(value["cards"][1]["id"], "anki-2");
+        assert_eq!(value["cards"][1]["front"], "hello\tfriend");
+        assert_eq!(value["cards"][1]["back"], "line one\nline two");
     }
 
     #[test]

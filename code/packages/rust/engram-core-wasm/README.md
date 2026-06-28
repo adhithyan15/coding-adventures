@@ -44,6 +44,7 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `export_anki_basic_tsv(deck_id, deck_name, note_type_name, html)`
 - `parse_cards_csv(csv)`
 - `parse_basic_cards_csv(csv, deck_id, id_prefix, created_at)`
+- `parse_anki_basic_tsv(tsv, deck_id, id_prefix, created_at)`
 
 All JSON uses camelCase field names to match the existing TypeScript Engram app
 and keep generated bindings idiomatic.
@@ -101,7 +102,7 @@ collection data, clearing any live active session.
 `export_cards_csv` and `parse_cards_csv` expose the shared card CSV helpers.
 Hosts still own file picking, conflict handling, and whether parsed cards are
 inserted, merged, or previewed.
-`export_anki_basic_tsv` exposes Anki-compatible Basic front/back text export
-with Anki import headers and quoted tab/newline fields.
+`export_anki_basic_tsv` and `parse_anki_basic_tsv` expose Anki-compatible Basic
+front/back text files with Anki import headers and quoted tab/newline fields.
 `parse_basic_cards_csv` supports simpler `front,back` files and deterministic
 ID generation from host-supplied import options.

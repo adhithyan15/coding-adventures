@@ -66,6 +66,13 @@ char *eg_parse_basic_cards_csv(
     const char *id_prefix,
     uint64_t created_at
 );
+char *eg_parse_anki_basic_tsv(
+    EgSession *session,
+    const char *tsv,
+    const char *deck_id,
+    const char *id_prefix,
+    uint64_t created_at
+);
 
 #ifdef __cplusplus
 }
