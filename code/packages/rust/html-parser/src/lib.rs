@@ -8320,7 +8320,6 @@ fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_table_font_fostered_image(&mut document.children);
     repair_fostered_anchor_paragraph_continuation(&mut document.children);
     repair_insanely_badly_nested_table_sequence(&mut document.children);
-    unwrap_empty_font_newline_after_font(&mut document.children);
     remove_empty_text_nodes(&mut document.children);
 }
 
@@ -8758,39 +8757,6 @@ fn previous_sibling_carries_font_size_seven_context(node: Option<&Node>) -> bool
                     if child.name == "font" && child.attribute("size") == Some("7")
             )
         })
-}
-
-fn unwrap_empty_font_newline_after_font(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        unwrap_empty_font_newline_after_font(&mut element.children);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_is_font = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(previous))
-                if previous.name == "font" && previous.attribute("size") == Some("7")
-        );
-        let current_is_empty_font_newline = matches!(
-            nodes.get(index),
-            Some(Node::Element(current))
-                if current.name == "font"
-                    && current.attribute("size") == Some("7")
-                    && current.children.len() == 1
-                    && matches!(
-                        current.children.first(),
-                        Some(Node::Text(text)) if text.data == "\n"
-                    )
-        );
-        if previous_is_font && current_is_empty_font_newline {
-            nodes[index] = Node::text("\n");
-        }
-        index += 1;
-    }
 }
 
 fn repair_table_font_fostered_image(nodes: &mut Vec<Node>) {
