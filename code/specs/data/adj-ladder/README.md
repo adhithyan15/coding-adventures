@@ -130,15 +130,26 @@ python3 -m pytest test_ladder_eval.py -q
 
 # 5. two-arm run with the local Gemma base target (needs mlx-lm; cache-only load)
 pip install mlx-lm                                   # one-time, into your run env
+# Use the Python that can `import mlx_lm` (for example, the repo's mise Python).
 HF_HUB_OFFLINE=1 python3 ladder_eval.py rung0_arithmetic --model gemma      # 4B
 HF_HUB_OFFLINE=1 python3 ladder_eval.py rung0_arithmetic --model gemma-1b   # 1B
+# newest-rung smoke runs: enough room for multi-line ADJ programs, without
+# overwriting the committed headline scorecard
+HF_HUB_OFFLINE=1 python3 ladder_eval.py rung3_probability_decisions \
+  --model gemma --max-tokens 512 --limit 3 --output /tmp/gemma-probability-smoke.json
+HF_HUB_OFFLINE=1 python3 ladder_eval.py rung3_derived_probability_decisions \
+  --model gemma --max-tokens 512 --limit 3 --output /tmp/gemma-derived-probability-smoke.json
 # any other local model works too:
 python3 ladder_eval.py rung0_arithmetic --model mlx:<hf-repo>
 python3 ladder_eval.py rung0_arithmetic --model 'cmd:ollama run <model>'
 ```
 
 `--model gemma` writes its scorecard to `ladder-scorecard.gemma.json` (per-model files,
-so a cached CI run never clobbers a committed two-arm headline).
+so a cached CI run never clobbers a committed two-arm headline). Model scorecards
+also record the raw Arm B model output, the extracted ADJ decomposition, its kind
+(`formula` or `program`), and whether it passed the no-result-literals faithfulness
+gate. Those trace fields are the audit trail for the real north-star run: messy human
+input → local Gemma decomposition → native ADJ execution.
 
 If the `adj-lang-cli` binary lives somewhere non-standard, point `ADJ_LANG_CLI` at it.
 

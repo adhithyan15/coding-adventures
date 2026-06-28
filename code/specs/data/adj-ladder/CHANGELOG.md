@@ -2,6 +2,19 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.17.0] — 2026-06-28
+
+### Added — real Gemma run trace controls
+
+- Model-mode runs now default to a 512-token MLX generation budget and expose
+  `--max-tokens`, so Gemma has enough room to emit native multi-line ADJ programs
+  on solve, probability, optimization, and constraint rungs.
+- Added `--limit` and `--output` for faithful local Gemma smoke runs on newest
+  rungs without clobbering committed headline scorecards.
+- Model scorecards now include each raw Arm B model response, the extracted
+  decomposition, its kind (`formula` or `program`), and its faithfulness verdict,
+  making messy-input → Gemma decomposition → ADJ execution failures auditable.
+
 ## [0.16.0] — 2026-06-28
 
 ### Added — rung 3 derived probability decision scaffold
