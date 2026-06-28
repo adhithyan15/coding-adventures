@@ -433,6 +433,33 @@ def optimize_value_to_letter(
         return None
 
 
+def optimize_assignment_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ optimization witness assignment to an option letter.
+
+    This is the assignment analogue of `optimize_value`: ADJ optimizes the linear
+    program and emits a witness; the harness only selects the printed option that
+    equals the requested variable's witness value.
+    """
+    if not doc or not answer_from or answer_from.get("type") != "optimize_assignment":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    name = answer_from.get("name")
+    optimize = doc.get("optimize")
+    if not name or not isinstance(optimize, dict) or optimize.get("outcome") != "optimal":
+        return None
+    assignments = optimize.get("assignments") or []
+    values = [a.get("value") for a in assignments if isinstance(a, dict) and a.get("name") == name]
+    if len(values) != 1:
+        return None
+    try:
+        return _letter_for_engine_value(float(values[0]), options)
+    except (TypeError, ValueError):
+        return None
+
+
 def program_answer_to_letter(
     doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
 ) -> str | None:
@@ -444,6 +471,8 @@ def program_answer_to_letter(
         return solve_roots_to_letter(doc, answer_from, options)
     if answer_from.get("type") == "optimize_value":
         return optimize_value_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "optimize_assignment":
+        return optimize_assignment_to_letter(doc, answer_from, options)
     return None
 
 
@@ -611,14 +640,18 @@ def decompose_prompt(item: dict) -> str:
     if "program" in item:
         answer_from = item.get("answer_from") or {}
         name = answer_from.get("name", "x")
-        if answer_from.get("type") == "optimize_value":
+        if answer_from.get("type") in {"optimize_value", "optimize_assignment"}:
+            target = (
+                "the optimum value"
+                if answer_from.get("type") == "optimize_value"
+                else f"the requested `{name}` witness value"
+            )
             return (
                 "Translate the word problem into a native ADJ linear optimization "
                 "program. Declare the variables, add every stated constraint, then "
                 "end with the requested `maximize` or `minimize` objective. Use "
-                "ONLY numbers that appear in the question. Do NOT compute the "
-                "optimum, do NOT mention the answer choices, and output ONLY the "
-                "ADJ program.\n\n"
+                f"ONLY numbers that appear in the question. Do NOT compute {target}, "
+                "do NOT mention the answer choices, and output ONLY the ADJ program.\n\n"
                 "Question: Choose x and y with x and y at least 0. The constraints "
                 "are x + y <= 4 and x <= 3. Maximize 3x + 2y. What is the maximum "
                 "value?\n"

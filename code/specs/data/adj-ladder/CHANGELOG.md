@@ -2,6 +2,20 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.13.0] — 2026-06-28
+
+### Added — rung 3 optimization witness scaffold
+
+- **`rung3_optimization_witness/items.json`** — 20 fresh MCQs where the gold
+  decomposition is a native ADJ linear optimization program, but the answer is a
+  requested optimal witness assignment rather than the objective value.
+- Program-backed items can now declare
+  `answer_from: {"type": "optimize_assignment", "name": "<var>"}`. The engine
+  returns `optimize.assignments`; the harness only maps the requested witness value
+  to the printed options.
+- The optimization decomposition prompt now covers both objective-value and
+  witness-value items without asking the model to compute either one.
+
 ## [0.12.0] — 2026-06-28
 
 ### Added — rung 3 linear optimization scaffold
