@@ -207,6 +207,22 @@ pub struct ActiveSessionState {
     pub revealed: bool,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct SessionProgress {
+    pub session_id: String,
+    pub deck_id: String,
+    pub total_cards: usize,
+    pub current_index: usize,
+    pub current_position: usize,
+    pub remaining_cards: usize,
+    pub cards_reviewed: u32,
+    pub cards_correct: u32,
+    pub revealed: bool,
+    pub completed: bool,
+}
+
 #[derive(Clone, Debug, Default, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]

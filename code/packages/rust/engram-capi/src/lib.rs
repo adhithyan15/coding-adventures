@@ -114,6 +114,13 @@ pub unsafe extern "C" fn eg_deck_stats(
 }
 
 /// # Safety
+/// `session` must be a valid session pointer.
+#[no_mangle]
+pub unsafe extern "C" fn eg_session_progress(session: *mut EgSession) -> *mut c_char {
+    with_session(session, |session| session.session_progress())
+}
+
+/// # Safety
 /// `session` must be valid; arguments must be null or valid C strings.
 #[no_mangle]
 pub unsafe extern "C" fn eg_generated_cards(
@@ -279,6 +286,44 @@ mod tests {
                 NOW,
             ));
             assert!(imported.contains(r#""id":"import-1""#));
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_session_progress_returns_json() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "noteTypes": [],
+                    "notes": [],
+                    "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            take(eg_load_snapshot(session, snapshot.as_ptr()));
+
+            let command = cstr(
+                r#"{
+                    "type": "startSession",
+                    "sessionId": "session",
+                    "deckId": "deck",
+                    "queue": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                    "startedAt": 1700000000000
+                }"#,
+            );
+            take(eg_dispatch(session, command.as_ptr()));
+
+            let progress = take(eg_session_progress(session));
+            assert!(progress.contains(r#""progress":{"#));
+            assert!(progress.contains(r#""totalCards":1"#));
+            assert!(progress.contains(r#""remainingCards":1"#));
 
             eg_session_free(session);
         }

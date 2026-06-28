@@ -33,6 +33,7 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `dispatch(command_json)`
 - `build_queue(deck_id, now)`
 - `deck_stats(deck_id, now)`
+- `session_progress()`
 - `generated_cards(note_type_id, note_id)`
 - `search_cards(query, now)`
 - `export_cards_csv(deck_id)`
@@ -65,6 +66,11 @@ browsers can filter them without changing scheduling behavior.
 `search_cards` exposes the shared browser-query engine. It returns
 `{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for
 parser diagnostics.
+
+`session_progress` returns `{ ok: true, progress }`, where `progress` is null
+without an active session or contains shared review counters such as
+`totalCards`, `currentPosition`, `remainingCards`, `cardsReviewed`,
+`cardsCorrect`, `revealed`, and `completed`.
 
 `export_backup` and `import_backup` expose the versioned Engram JSON backup
 shape. Backup import validates the app/version fields and restores only durable

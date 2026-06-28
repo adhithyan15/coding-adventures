@@ -12,6 +12,7 @@ mod queue;
 mod reducer;
 mod scheduler;
 mod search;
+mod session;
 mod sm2;
 mod snapshot;
 mod template;
@@ -22,7 +23,7 @@ pub use csv::{
 pub use model::{
     ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardState, CardTemplate, Deck,
     DeckStats, FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating, Review, Session,
-    SessionStatus,
+    SessionProgress, SessionStatus,
 };
 pub use queue::{
     build_session_queue, build_session_queue_with_options, get_deck_stats, is_deck_caught_up,
@@ -30,6 +31,7 @@ pub use queue::{
 pub use reducer::{reduce, EngramCommand};
 pub use scheduler::{schedule_review, DeckOptions};
 pub use search::{search_cards, CardSearchResult, SearchError};
+pub use session::get_active_session_progress;
 pub use sm2::{
     create_initial_progress, update_card_progress, INITIAL_EASE_FACTOR, MAX_EASE_FACTOR,
     MIN_EASE_FACTOR, ONE_DAY_MS,

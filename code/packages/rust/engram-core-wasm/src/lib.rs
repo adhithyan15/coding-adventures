@@ -10,9 +10,9 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
     build_session_queue, create_engram_snapshot, export_cards_csv, generate_cards_for_note,
-    get_deck_stats, import_basic_cards_csv, import_cards_csv, reduce, restore_engram_snapshot,
-    search_cards as search_core_cards, AppState, BasicCardCsvImportOptions, Card, CardFlag,
-    DeckOptions, EngramSnapshot, Rating,
+    get_active_session_progress, get_deck_stats, import_basic_cards_csv, import_cards_csv, reduce,
+    restore_engram_snapshot, search_cards as search_core_cards, AppState,
+    BasicCardCsvImportOptions, Card, CardFlag, DeckOptions, EngramSnapshot, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -89,6 +89,13 @@ impl EngramSession {
                     "averageEaseFactor": stats.average_ease_factor,
                 }),
             ))
+        })
+    }
+
+    pub fn session_progress(&self) -> String {
+        catch_json(|| {
+            let progress = get_active_session_progress(&self.state);
+            Ok(ok_with("progress", &progress))
         })
     }
 
@@ -568,6 +575,67 @@ mod tests {
 
         assert_eq!(value["ok"], true);
         assert_eq!(value["queue"][0]["id"], "card");
+    }
+
+    #[test]
+    fn session_progress_reports_active_review_counts() {
+        let mut session = EngramSession::new();
+        let empty: Value = serde_json::from_str(&session.session_progress()).unwrap();
+        assert_eq!(empty["ok"], true);
+        assert_eq!(empty["progress"], Value::Null);
+
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [
+                    {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                    {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+                ],
+                "startedAt": 1700000000000
+            }"#,
+        );
+        session.dispatch(
+            r#"{
+                "type": "rateCard",
+                "reviewId": "review",
+                "sessionId": "session",
+                "cardId": "card",
+                "rating": "good",
+                "reviewedAt": 1700000000000
+            }"#,
+        );
+        session.dispatch(r#"{"type": "advanceSession"}"#);
+
+        let value: Value = serde_json::from_str(&session.session_progress()).unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["progress"]["sessionId"], "session");
+        assert_eq!(value["progress"]["deckId"], "deck");
+        assert_eq!(value["progress"]["totalCards"], 2);
+        assert_eq!(value["progress"]["currentIndex"], 1);
+        assert_eq!(value["progress"]["currentPosition"], 2);
+        assert_eq!(value["progress"]["remainingCards"], 1);
+        assert_eq!(value["progress"]["cardsReviewed"], 1);
+        assert_eq!(value["progress"]["cardsCorrect"], 1);
+        assert_eq!(value["progress"]["revealed"], false);
+        assert_eq!(value["progress"]["completed"], false);
     }
 
     #[test]

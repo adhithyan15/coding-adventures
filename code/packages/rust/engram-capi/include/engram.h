@@ -20,6 +20,7 @@ char *eg_import_backup(EgSession *session, const char *backup_json);
 char *eg_dispatch(EgSession *session, const char *command_json);
 char *eg_build_queue(EgSession *session, const char *deck_id, uint64_t now);
 char *eg_deck_stats(EgSession *session, const char *deck_id, uint64_t now);
+char *eg_session_progress(EgSession *session);
 char *eg_generated_cards(EgSession *session, const char *note_type_id, const char *note_id);
 char *eg_search_cards(EgSession *session, const char *query, uint64_t now);
 char *eg_export_cards_csv(EgSession *session, const char *deck_id);

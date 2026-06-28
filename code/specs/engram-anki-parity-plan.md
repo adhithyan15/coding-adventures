@@ -309,7 +309,9 @@ Status:
   remains a browser/editor workflow.
 - Flag/mark card. Core and JSON facade support exists; web/native controls and
   browser filters still need to bind to it.
-- Review remaining counts.
+- Review remaining counts. Core, JSON facade, and C ABI support exists via
+  shared active-session progress counters; web/native controls still need to
+  render it.
 
 ## Workstream 4: Language Learning App Foundation
 
@@ -366,6 +368,8 @@ Status:
 - `code/packages/mosaic-pkg-engram` adds the first `ReviewCard` component.
 - The package test compiles the same `.mil/.mll/.msl` sources through React,
   HTML, SwiftUI, XAML, Qt, Compose, and Flutter pipeline emitters.
+- Shared `SessionProgress` counters are available in `engram-core`,
+  `engram-core-wasm`, and `engram-capi` for Mosaic/native review screens.
 - This package is the first concrete pivot point for moving Engram UI out of
   one-off React components and into Mosaic.
 

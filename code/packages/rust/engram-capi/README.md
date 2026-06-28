@@ -26,6 +26,8 @@ A null return signals a null session handle or an interior-NUL allocation error.
 
 The JSON strings are the same values returned by `engram-core-wasm`, so native
 and web shells share one command and result contract.
+`eg_session_progress` mirrors `EngramSession::session_progress()` for native
+review screens that need total/current/remaining/correct counters.
 
 ## Build
 

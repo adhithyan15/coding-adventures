@@ -35,6 +35,7 @@ This crate owns:
 - card browser search/filter evaluation
 - versioned Engram JSON backup snapshots
 - round-trippable card CSV import/export helpers
+- active review-session progress counts
 - pure state transitions
 - derived study stats
 
@@ -68,6 +69,11 @@ backup shape. Backups include durable collection data and clear any live
 format with the header `id,deckId,front,back,createdAt`. `import_basic_cards_csv`
 accepts simpler `front,back` rows and uses host-supplied deck/timestamp/ID
 prefix options to create deterministic cards.
+
+`get_active_session_progress` derives the shared review UI counters from
+`AppState`: total cards, one-based current position, remaining cards, reviewed
+and correct counts, reveal state, and completion. Hosts should render these
+counts instead of recomputing progress differently per platform.
 
 This crate does not own:
 
