@@ -148,6 +148,7 @@ members = [
     "heap",
     "hazard-detection",
     "dom-core",
+    "engram-core",
     "html-lexer",
     "html-parser",
     "html-renderer",

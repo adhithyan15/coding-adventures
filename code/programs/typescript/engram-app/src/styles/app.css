@@ -53,6 +53,7 @@ body {
 }
 
 #root {
+  width: 100%;
   max-width: var(--max-content-width);
   margin: 0 auto;
 }
@@ -151,6 +152,7 @@ button:disabled {
   font-size: 0.8rem;
   color: var(--tab-text, #8899aa);
   display: flex;
+  flex-wrap: wrap;
   gap: var(--spacing-md);
 }
 
@@ -161,8 +163,13 @@ button:disabled {
 
 .deck-card__actions {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--spacing-sm);
   margin-top: var(--spacing-xs);
+}
+
+.deck-card__actions > button {
+  flex: 1 1 72px;
 }
 
 /* ── Deck list ──────────────────────────────────────────────────────────── */
@@ -243,6 +250,7 @@ button:disabled {
 
 .form__actions {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--spacing-sm);
   margin-top: var(--spacing-sm);
 }
@@ -314,6 +322,7 @@ button:disabled {
 
 .card-item__actions {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--spacing-xs);
   flex-shrink: 0;
 }
@@ -386,6 +395,8 @@ button:disabled {
 
 .session-complete__actions {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--spacing-sm);
 }
 
@@ -411,4 +422,62 @@ button:disabled {
 
 .deck-stats__back {
   margin-top: var(--spacing-md);
+}
+
+@media (max-width: 520px) {
+  body {
+    padding: var(--spacing-md);
+  }
+
+  .app-header {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .deck-list__header {
+    justify-content: stretch;
+  }
+
+  .deck-list__header > button {
+    width: 100%;
+  }
+
+  .deck-card,
+  .card-item,
+  .stat-card {
+    padding: var(--spacing-md);
+  }
+
+  .deck-card__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .deck-card__actions > button {
+    width: 100%;
+  }
+
+  .card-list__header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .card-item {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .card-item__actions > button,
+  .form__actions > button,
+  .session-complete__actions > button {
+    flex: 1 1 140px;
+  }
+
+  .session-complete__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .study-session__card {
+    min-height: 240px;
+  }
 }

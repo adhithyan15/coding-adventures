@@ -13,22 +13,26 @@
   },
   "dependencies": {
     "@coding-adventures/indexeddb": "file:../../../packages/typescript/indexeddb",
+    "@coding-adventures/paint-instructions": "file:../../../packages/typescript/paint-instructions",
+    "@coding-adventures/paint-vm": "file:../../../packages/typescript/paint-vm",
+    "@coding-adventures/paint-vm-canvas": "file:../../../packages/typescript/paint-vm-canvas",
+    "@coding-adventures/pixel-container": "file:../../../packages/typescript/pixel-container",
     "@coding-adventures/store": "file:../../../packages/typescript/store",
     "@coding-adventures/ui-components": "file:../../../packages/typescript/ui-components",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "jsdom": "^25.0.0",
     "typescript": "~5.7.0",
     "vite": "^8.0.0",
-    "vitest": "^4.1.0",
-    "@vitest/coverage-v8": "^4.1.0",
-    "@testing-library/react": "^16.0.0",
-    "@testing-library/jest-dom": "^6.0.0",
-    "jsdom": "^25.0.0"
+    "vitest": "^4.1.0"
   },
   "repository": {
     "type": "git",
