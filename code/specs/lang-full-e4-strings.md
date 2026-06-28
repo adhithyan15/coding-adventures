@@ -163,8 +163,9 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   temporary E4 string-expression result, and `LET B$ = "K"; PRINT A$ + B$`
   proves both concat operands can be scalar string slots in that direct-print path.
   `IF A$ + "K" = "OK" THEN ...` proves the same temporary expression path before
-  `str_eq`, while `IF A$ + B$ <> "NO" THEN ...` proves variable-variable concat
-  on the `<>` branch path through `str_eq` plus `jmp_if_false`.
+  `str_eq`, while `IF A$ + B$ = "OK" THEN ...` and
+  `IF A$ + B$ <> "NO" THEN ...` prove variable-variable concat on the `=` and
+  `<>` branch paths through `str_eq` plus `jmp_if_true` / `jmp_if_false`.
   `LET B$ = A$ + "K"; PRINT B$` proves variable-backed concat
   assignment into another scalar string slot. String compares in `IF A$ = "Y"` and
   `IF A$ <> "Y"` lower to `str_eq` (the latter branches with `jmp_if_false`) and
@@ -263,6 +264,7 @@ merge before the next:
    stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Literal
    reassignment, literal concat assignment, scalar copy, variable-backed concat
    assignment, concat expressions in `PRINT`/`IF` including `PRINT A$ + B$`,
+   expression-backed equality branches,
    expression-backed inequality branches,
    copied-slot equality, tight multi-item string `PRINT` (`PRINT A$; B$`), and
    comma-separated string `PRINT` (`PRINT A$, B$` => `O K`) all now run on the
