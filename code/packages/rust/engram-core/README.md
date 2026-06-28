@@ -34,6 +34,7 @@ This crate owns:
 - due/new card queue assembly
 - card browser search/filter evaluation
 - versioned Engram JSON backup snapshots
+- round-trippable card CSV import/export helpers
 - pure state transitions
 - derived study stats
 
@@ -62,6 +63,9 @@ a group use implicit AND, `OR` joins groups, and leading `-` negates a term.
 `create_engram_snapshot` and `restore_engram_snapshot` own the portable Engram
 backup shape. Backups include durable collection data and clear any live
 `active_session` when restored.
+
+`export_cards_csv` and `import_cards_csv` provide a strict card CSV round-trip
+format with the header `id,deckId,front,back,createdAt`.
 
 This crate does not own:
 

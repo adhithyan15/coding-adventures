@@ -9,9 +9,10 @@
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
-    build_session_queue, create_engram_snapshot, generate_cards_for_note, get_deck_stats, reduce,
-    restore_engram_snapshot, search_cards as search_core_cards, AppState, Card, CardFlag,
-    DeckOptions, EngramSnapshot, Rating,
+    build_session_queue, create_engram_snapshot, export_cards_csv, generate_cards_for_note,
+    get_deck_stats, import_cards_csv, reduce, restore_engram_snapshot,
+    search_cards as search_core_cards, AppState, Card, CardFlag, DeckOptions, EngramSnapshot,
+    Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -114,6 +115,26 @@ impl EngramSession {
         catch_json(|| match search_core_cards(&self.state, query, now) {
             Ok(results) => Ok(ok_with("results", &results)),
             Err(error) => Ok(error_json_with_token(&error.message, &error.token)),
+        })
+    }
+
+    pub fn export_cards_csv(&self, deck_id: &str) -> String {
+        catch_json(|| {
+            let cards: Vec<Card> = self
+                .state
+                .cards
+                .iter()
+                .filter(|card| card.deck_id == deck_id)
+                .cloned()
+                .collect();
+            Ok(ok_with("csv", &export_cards_csv(&cards)))
+        })
+    }
+
+    pub fn parse_cards_csv(&self, csv: &str) -> String {
+        catch_json(|| match import_cards_csv(csv) {
+            Ok(cards) => Ok(ok_with("cards", &cards)),
+            Err(error) => Ok(error_json_with_row(&error.message, error.row)),
         })
     }
 }
@@ -366,6 +387,10 @@ fn error_json(message: &str) -> String {
 
 fn error_json_with_token(message: &str, token: &str) -> String {
     json!({ "ok": false, "error": message, "token": token }).to_string()
+}
+
+fn error_json_with_row(message: &str, row: Option<usize>) -> String {
+    json!({ "ok": false, "error": message, "row": row }).to_string()
 }
 
 #[cfg(test)]
@@ -629,6 +654,45 @@ mod tests {
 
         assert_eq!(error["ok"], false);
         assert_eq!(error["token"], "kind:review");
+    }
+
+    #[test]
+    fn export_and_parse_cards_csv() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [
+                {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"other-deck","name":"Spanish","description":"Words","createdAt":1700000000000}
+            ],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"card","deckId":"deck","front":"letter, \"a\"","back":"line one\nline two","createdAt":1700000000000},
+                {"id":"other","deckId":"other-deck","front":"hola","back":"hello","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let exported: Value = serde_json::from_str(&session.export_cards_csv("deck")).unwrap();
+
+        assert_eq!(exported["ok"], true);
+        let csv = exported["csv"].as_str().unwrap();
+        assert!(csv.contains("\"letter, \"\"a\"\"\""));
+        assert!(!csv.contains("other-deck"));
+
+        let parsed: Value = serde_json::from_str(&session.parse_cards_csv(csv)).unwrap();
+        assert_eq!(parsed["ok"], true);
+        assert_eq!(parsed["cards"][0]["id"], "card");
+        assert_eq!(parsed["cards"][0]["front"], "letter, \"a\"");
+
+        let error: Value =
+            serde_json::from_str(&session.parse_cards_csv("front,back\nx,y\n")).unwrap();
+        assert_eq!(error["ok"], false);
+        assert_eq!(error["row"], 1);
     }
 
     #[test]

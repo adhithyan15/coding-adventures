@@ -6,6 +6,7 @@
 
 #![forbid(unsafe_code)]
 
+mod csv;
 mod model;
 mod queue;
 mod reducer;
@@ -15,6 +16,7 @@ mod sm2;
 mod snapshot;
 mod template;
 
+pub use csv::{export_cards_csv, import_cards_csv, CsvError};
 pub use model::{
     ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardState, CardTemplate, Deck,
     DeckStats, FieldDef, GeneratedCard, Note, NoteFieldValue, NoteType, Rating, Review, Session,

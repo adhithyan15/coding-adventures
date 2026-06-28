@@ -35,6 +35,8 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `deck_stats(deck_id, now)`
 - `generated_cards(note_type_id, note_id)`
 - `search_cards(query, now)`
+- `export_cards_csv(deck_id)`
+- `parse_cards_csv(csv)`
 
 All JSON uses camelCase field names to match the existing TypeScript Engram app
 and keep generated bindings idiomatic.
@@ -66,3 +68,7 @@ parser diagnostics.
 `export_backup` and `import_backup` expose the versioned Engram JSON backup
 shape. Backup import validates the app/version fields and restores only durable
 collection data, clearing any live active session.
+
+`export_cards_csv` and `parse_cards_csv` expose the shared card CSV helpers.
+Hosts still own file picking, conflict handling, and whether parsed cards are
+inserted, merged, or previewed.
