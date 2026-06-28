@@ -301,6 +301,10 @@ Next APKG SQLite milestone:
   presets. Shared queueing and default review commands use those presets when
   no explicit options are passed, and legacy APKG export writes the corresponding
   `dconf` entries while preserving imported deck `conf` IDs.
+- Media reference analysis is available for native shells: the APKG bridge can
+  scan note fields/card HTML for Anki `[sound:...]` and local `src` references,
+  then report referenced filenames, matched state media assets, missing files,
+  and unreferenced assets through `eg_analyze_media_references`.
 - `engram-capi` now exposes `eg_parse_anki_apkg` for native import previews and
   `eg_import_anki_apkg` for applying supported APKG bytes into the shared
   session state. Both functions use the same JSON `{ ok, state/error }`
@@ -314,8 +318,8 @@ Next APKG SQLite milestone:
   imported numeric IDs when possible, allocates stable numeric IDs for
   Engram-native rows, writes decks/models/notes/cards/progress/revlog rows, and
   falls back to a synthetic Basic note type for standalone front/back cards.
-- Next export fidelity steps: add reference-aware media pruning/copy workflows,
-  preserve filtered deck semantics beyond `odue`/`odid`, and add modern
+- Next export fidelity steps: preserve filtered deck semantics beyond
+  `odue`/`odid`, add user-facing media copy/prune commands, and add modern
   `.anki21b` package writing after the V18 reader exists.
 - SQL-built V11 fixtures and package round-trips through the existing ZIP
   envelope helpers now cover the parser. Next: add a small checked-in

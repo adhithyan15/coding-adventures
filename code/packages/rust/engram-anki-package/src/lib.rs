@@ -105,6 +105,15 @@ pub struct MediaAsset<'a> {
     pub data: &'a [u8],
 }
 
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EngramMediaReferenceAnalysis {
+    pub referenced_filenames: Vec<String>,
+    pub referenced_asset_ids: Vec<String>,
+    pub missing_filenames: Vec<String>,
+    pub unreferenced_asset_ids: Vec<String>,
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AnkiV11Collection {
@@ -582,6 +591,109 @@ fn media_asset_record_from_resolved(media: ResolvedMediaFile) -> MediaAssetRecor
         filename: media.filename,
         data: media.data,
     }
+}
+
+pub fn analyze_engram_media_references(state: &AppState) -> EngramMediaReferenceAnalysis {
+    let mut referenced = BTreeSet::new();
+    for note in &state.notes {
+        for field in &note.fields {
+            collect_media_references_from_text(&field.value, &mut referenced);
+        }
+    }
+    for card in &state.cards {
+        collect_media_references_from_text(&card.front, &mut referenced);
+        collect_media_references_from_text(&card.back, &mut referenced);
+    }
+
+    let referenced_filenames = referenced.iter().cloned().collect::<Vec<_>>();
+    let referenced_asset_ids = state
+        .media_assets
+        .iter()
+        .filter(|asset| {
+            referenced
+                .iter()
+                .any(|filename| media_asset_matches_filename(asset, filename))
+        })
+        .map(|asset| asset.id.clone())
+        .collect::<Vec<_>>();
+    let unreferenced_asset_ids = state
+        .media_assets
+        .iter()
+        .filter(|asset| {
+            !referenced
+                .iter()
+                .any(|filename| media_asset_matches_filename(asset, filename))
+        })
+        .map(|asset| asset.id.clone())
+        .collect::<Vec<_>>();
+    let missing_filenames = referenced
+        .iter()
+        .filter(|filename| {
+            !state
+                .media_assets
+                .iter()
+                .any(|asset| media_asset_matches_filename(asset, filename))
+        })
+        .cloned()
+        .collect();
+
+    EngramMediaReferenceAnalysis {
+        referenced_filenames,
+        referenced_asset_ids,
+        missing_filenames,
+        unreferenced_asset_ids,
+    }
+}
+
+fn media_asset_matches_filename(asset: &MediaAssetRecord, filename: &str) -> bool {
+    asset.filename.as_deref() == Some(filename) || asset.archive_name == filename
+}
+
+fn collect_media_references_from_text(text: &str, references: &mut BTreeSet<String>) {
+    collect_sound_markers(text, references);
+    collect_src_attributes(text, references, "src=\"", '"');
+    collect_src_attributes(text, references, "src='", '\'');
+}
+
+fn collect_sound_markers(text: &str, references: &mut BTreeSet<String>) {
+    let mut rest = text;
+    while let Some(start) = rest.find("[sound:") {
+        rest = &rest[start + "[sound:".len()..];
+        let Some(end) = rest.find(']') else {
+            break;
+        };
+        maybe_insert_media_reference(&rest[..end], references);
+        rest = &rest[end + 1..];
+    }
+}
+
+fn collect_src_attributes(
+    text: &str,
+    references: &mut BTreeSet<String>,
+    marker: &str,
+    terminator: char,
+) {
+    let mut rest = text;
+    while let Some(start) = rest.find(marker) {
+        rest = &rest[start + marker.len()..];
+        let Some(end) = rest.find(terminator) else {
+            break;
+        };
+        maybe_insert_media_reference(&rest[..end], references);
+        rest = &rest[end + terminator.len_utf8()..];
+    }
+}
+
+fn maybe_insert_media_reference(value: &str, references: &mut BTreeSet<String>) {
+    let value = value.trim();
+    if value.is_empty()
+        || value.starts_with("http://")
+        || value.starts_with("https://")
+        || value.starts_with("data:")
+    {
+        return;
+    }
+    references.insert(value.to_string());
 }
 
 fn v11_deck_options(collection: &AnkiV11Collection) -> Vec<DeckOptionsPreset> {
@@ -4043,6 +4155,61 @@ CREATE TABLE graves (
         let image = read_media_file(&exported, "1").unwrap();
         assert_eq!(image.filename.as_deref(), Some("images/card.png"));
         assert_eq!(image.data, b"png");
+    }
+
+    #[test]
+    fn analyzes_referenced_missing_and_unreferenced_media() {
+        let mut state = AppState::default();
+        state.notes.push(Note {
+            id: "note".to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "deck".to_string(),
+            fields: vec![NoteFieldValue {
+                field_id: "front".to_string(),
+                value: "[sound:audio/hola.mp3] <img src=\"missing.png\">".to_string(),
+            }],
+            tags: Vec::new(),
+            created_at: 0,
+            updated_at: 0,
+        });
+        state.cards.push(Card {
+            id: "card".to_string(),
+            deck_id: "deck".to_string(),
+            front: "<img src='images/card.png'>".to_string(),
+            back: "<img src=\"https://example.com/remote.png\">".to_string(),
+            created_at: 0,
+            lineage: None,
+        });
+        state.media_assets = vec![
+            MediaAssetRecord {
+                id: "audio".to_string(),
+                archive_name: "0".to_string(),
+                filename: Some("audio/hola.mp3".to_string()),
+                data: b"mp3".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "image".to_string(),
+                archive_name: "1".to_string(),
+                filename: Some("images/card.png".to_string()),
+                data: b"png".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "unused".to_string(),
+                archive_name: "2".to_string(),
+                filename: Some("audio/unused.mp3".to_string()),
+                data: b"unused".to_vec(),
+            },
+        ];
+
+        let analysis = analyze_engram_media_references(&state);
+
+        assert_eq!(
+            analysis.referenced_filenames,
+            vec!["audio/hola.mp3", "images/card.png", "missing.png"]
+        );
+        assert_eq!(analysis.referenced_asset_ids, vec!["audio", "image"]);
+        assert_eq!(analysis.missing_filenames, vec!["missing.png"]);
+        assert_eq!(analysis.unreferenced_asset_ids, vec!["unused"]);
     }
 
     #[test]

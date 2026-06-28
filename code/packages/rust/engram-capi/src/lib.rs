@@ -9,8 +9,8 @@ use std::os::raw::c_char;
 use std::ptr;
 
 use engram_anki_package::{
-    inspect_apkg, read_media_file, read_v11_collection_as_engram_state,
-    write_legacy_apkg_from_engram_state,
+    analyze_engram_media_references, inspect_apkg, read_media_file,
+    read_v11_collection_as_engram_state, write_legacy_apkg_from_engram_state,
 };
 use engram_core_wasm::EngramSession;
 use serde_json::{json, Value};
@@ -372,6 +372,16 @@ pub unsafe extern "C" fn eg_export_anki_apkg(session: *mut EgSession) -> *mut c_
 }
 
 /// # Safety
+/// `session` must be a valid session pointer.
+#[no_mangle]
+pub unsafe extern "C" fn eg_analyze_media_references(session: *mut EgSession) -> *mut c_char {
+    if session.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr(analyze_media_references_json(&(*session).inner))
+}
+
+/// # Safety
 /// `session` must be valid; `data` must point to `data_len` APKG bytes.
 #[no_mangle]
 pub unsafe extern "C" fn eg_inspect_anki_apkg(
@@ -510,6 +520,14 @@ fn export_anki_apkg_json(session: &EngramSession) -> String {
         Ok(apkg) => ok_json_with("apkg", serde_json::to_value(apkg).unwrap_or(Value::Null)),
         Err(error) => error_json(&error.message),
     }
+}
+
+fn analyze_media_references_json(session: &EngramSession) -> String {
+    ok_json_with(
+        "mediaReferences",
+        serde_json::to_value(analyze_engram_media_references(session.state()))
+            .unwrap_or(Value::Null),
+    )
 }
 
 fn ok_json_with(key: &str, value: Value) -> String {
@@ -946,6 +964,70 @@ CREATE TABLE graves (
             assert_eq!(media["media"]["archiveName"], "0");
             assert_eq!(media["media"]["filename"], "audio/hola.mp3");
             assert_eq!(media["media"]["data"], serde_json::json!([109, 112, 51]));
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_analyzes_state_media_references() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":0}],
+                    "noteTypes": [],
+                    "notes": [{
+                        "id":"note",
+                        "noteTypeId":"basic",
+                        "deckId":"deck",
+                        "fields":[{"fieldId":"front","value":"[sound:audio/hola.mp3]"}],
+                        "tags":[],
+                        "createdAt":0,
+                        "updatedAt":0
+                    }],
+                    "cards": [{
+                        "id":"card",
+                        "deckId":"deck",
+                        "front":"<img src='images/card.png'>",
+                        "back":"<img src=\"missing.png\">",
+                        "createdAt":0,
+                        "lineage":null
+                    }],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "mediaAssets": [
+                        {"id":"audio","archiveName":"0","filename":"audio/hola.mp3","data":[109,112,51]},
+                        {"id":"image","archiveName":"1","filename":"images/card.png","data":[112,110,103]},
+                        {"id":"unused","archiveName":"2","filename":"audio/unused.mp3","data":[117]}
+                    ],
+                    "activeSession": null
+                }"#,
+            );
+            let loaded = take(eg_load_snapshot(session, snapshot.as_ptr()));
+            assert!(loaded.contains(r#""ok":true"#));
+
+            let analyzed = take(eg_analyze_media_references(session));
+            let analyzed: Value = serde_json::from_str(&analyzed).unwrap();
+
+            assert_eq!(analyzed["ok"], true);
+            assert_eq!(
+                analyzed["mediaReferences"]["referencedFilenames"],
+                json!(["audio/hola.mp3", "images/card.png", "missing.png"])
+            );
+            assert_eq!(
+                analyzed["mediaReferences"]["referencedAssetIds"],
+                json!(["audio", "image"])
+            );
+            assert_eq!(
+                analyzed["mediaReferences"]["missingFilenames"],
+                json!(["missing.png"])
+            );
+            assert_eq!(
+                analyzed["mediaReferences"]["unreferencedAssetIds"],
+                json!(["unused"])
+            );
 
             eg_session_free(session);
         }

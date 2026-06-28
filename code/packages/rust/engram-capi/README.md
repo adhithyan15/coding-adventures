@@ -50,6 +50,9 @@ share the bytes.
 `eg_inspect_anki_apkg` returns collection/media manifest JSON, and
 `eg_read_anki_apkg_media` reads one archived media payload by archive name for
 native import flows that need to copy audio or images alongside imported cards.
+`eg_analyze_media_references` scans the current Engram state for Anki
+`[sound:...]` and local HTML `src` references, returning referenced filenames,
+matched media asset IDs, missing filenames, and unreferenced asset IDs.
 `eg_materialized_cards` mirrors the JSON facade's durable generated-card
 materialization for native note/template editors.
 Native shells can send review-control commands such as `buryCardSiblings`
