@@ -24,6 +24,7 @@ Engram follows the same pattern as the VisiCalc demos:
 
 ```text
 React Engram app
+Lattice-owned web-shell styles
 Mosaic-generated UI
 HTML shell
 Electron shell
@@ -47,6 +48,9 @@ storage, IDs, timestamps, file pickers, audio playback, and sync transport.
 ## Non-Negotiables
 
 - Core learning logic lives in Rust.
+- Engram-owned web styling is authored in Lattice, not hand-maintained CSS.
+- Reusable Engram UI surfaces are authored as Mosaic packages, not per-target
+  component forks.
 - Host apps pass timestamps and IDs into the core.
 - No UI dependencies in `engram-core`.
 - No target shell gets a private copy of scheduling, search, import/export, or
@@ -206,6 +210,20 @@ Consumers:
 
 ## Workstream 3: Engram Web App
 
+### 3.0 Lattice Shell Styling
+
+The current web app still uses a React shell, but app-owned styling should be
+authored in Lattice while the Mosaic component surface comes online.
+
+Status:
+
+- `engram-app` installs `src/styles/app.lattice` through the Lattice
+  transpiler at startup.
+- The old app-owned `src/styles/app.css` file has been retired.
+- Shared `@coding-adventures/ui-components` styles remain CSS imports for now;
+  those are compatibility dependencies until their visual surface is replaced
+  by Mosaic/Lattice-native components.
+
 ### 3.1 Rust Core Integration
 
 - Keep the TypeScript reducer as a compatibility shell at first.
@@ -289,6 +307,14 @@ Start with small components:
 - deck stats panel
 
 Emit React first, then validate one native target.
+
+Status:
+
+- `code/packages/mosaic-pkg-engram` adds the first `ReviewCard` component.
+- The package test compiles the same `.mil/.mll/.msl` sources through React,
+  HTML, SwiftUI, XAML, Qt, Compose, and Flutter pipeline emitters.
+- This package is the first concrete pivot point for moving Engram UI out of
+  one-off React components and into Mosaic.
 
 ### 5.2 Native Target Order
 

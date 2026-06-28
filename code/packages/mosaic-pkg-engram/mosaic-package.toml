@@ -1,0 +1,15 @@
+[package]
+name = "mosaic-pkg-engram"
+version = "0.1.0"
+description = "Engram study-session components built on the Mosaic UI pipeline"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["ReviewCard"]
+
+[dependencies]
+# No userland component dependencies yet. The first slice uses only UI29 kernel
+# primitives so every backend can compile it today.
+
+[kernel]
+version = "1"
