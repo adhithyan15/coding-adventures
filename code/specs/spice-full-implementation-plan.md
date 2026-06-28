@@ -15,19 +15,20 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Device model reference-deck audit table.
+1. Device model reference-deck audit release gate.
    - Status: current PR completion candidate.
-   - Python, Rust, and TypeScript now expose stable
-     `format_device_model_reference_deck_audit_table` /
-     `formatDeviceModelReferenceDeckAuditTable` helpers for the flattened
-     reference-deck audit matrix.
-   - The tab-separated table locks `name`, `kind`, `analysis`, `model`,
-     `reference`, `expected_behavior`, and `deck_lines` columns so release
-     checks and reference-deck comparisons can diff model-depth coverage
-     without inspecting every fixture object.
-   - Cross-language tests lock the exact header, row count, and first/last rows
-     for the diode operating-point and Level-1 MOS transient-storage audit
-     entries.
+   - Python, Rust, and TypeScript now expose
+     `device_model_reference_deck_audit_gate` /
+     `deviceModelReferenceDeckAuditGate` helpers plus stable
+     `format_device_model_reference_deck_audit_gate_report` /
+     `formatDeviceModelReferenceDeckAuditGateReport` output.
+   - The release gate validates the required diode, BJT, JFET, and Level-1 MOS
+     by operating-point, temperature, AC, noise, and transient coverage matrix,
+     checks each row has documented model/reference/deck metadata, and reports
+     missing coverage as stable tab-separated issue rows.
+   - Cross-language tests lock the passing report header/body and a negative
+     missing `NMOS:tran` coverage issue so the audit matrix is enforceable by
+     release automation.
 
 ## Completed Slices
 
@@ -1325,6 +1326,20 @@ downstream tools to compare.
    - Cross-language tests lock the four-family by five-analysis coverage matrix
      and verify every row has model-card deck metadata, an `.end` boundary, and
      a non-empty behavior note.
+
+128. Device model reference-deck audit table.
+   - Status: completed in PR 6836.
+   - Python, Rust, and TypeScript now expose stable
+     `format_device_model_reference_deck_audit_table` /
+     `formatDeviceModelReferenceDeckAuditTable` helpers for the flattened
+     reference-deck audit matrix.
+   - The tab-separated table locks `name`, `kind`, `analysis`, `model`,
+     `reference`, `expected_behavior`, and `deck_lines` columns so release
+     checks and reference-deck comparisons can diff model-depth coverage
+     without inspecting every fixture object.
+   - Cross-language tests lock the exact header, row count, and first/last rows
+     for the diode operating-point and Level-1 MOS transient-storage audit
+     entries.
 
 ## Backlog
 

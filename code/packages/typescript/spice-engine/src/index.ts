@@ -1086,6 +1086,34 @@ export interface DeviceModelReferenceDeckAuditFixture {
   readonly deckLines: readonly string[];
 }
 
+export interface DeviceModelReferenceDeckAuditIssue {
+  readonly fixtureName: string;
+  readonly field: string;
+  readonly message: string;
+}
+
+export interface DeviceModelReferenceDeckAuditGateReport {
+  readonly passed: boolean;
+  readonly fixtureCount: number;
+  readonly expectedKinds: readonly ModelCardKind[];
+  readonly expectedAnalyses: readonly string[];
+  readonly issues: readonly DeviceModelReferenceDeckAuditIssue[];
+}
+
+const REFERENCE_DECK_AUDIT_EXPECTED_KINDS: readonly ModelCardKind[] = [
+  "D",
+  "NPN",
+  "NJF",
+  "NMOS",
+];
+const REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES = [
+  "op",
+  "temperature",
+  "ac",
+  "noise",
+  "tran",
+] as const;
+
 export interface Vccs {
   readonly kind: "vccs";
   readonly name: string;
@@ -7865,6 +7893,150 @@ export function formatDeviceModelReferenceDeckAuditTable(
       fixture.expectedBehavior,
       fixture.deckLines.length.toString(),
     ].join("\t"));
+  }
+  return lines.join("\n");
+}
+
+export function deviceModelReferenceDeckAuditGate(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): DeviceModelReferenceDeckAuditGateReport {
+  const issues: DeviceModelReferenceDeckAuditIssue[] = [];
+  const seenNames = new Set<string>();
+  const seenPairs = new Set<string>();
+
+  if (fixtures.length === 0) {
+    issues.push({
+      fixtureName: "audit_matrix",
+      field: "fixture_count",
+      message: "audit matrix must contain at least one reference-deck row",
+    });
+  }
+
+  for (const fixture of fixtures) {
+    const fixtureName = fixture.name.length === 0 ? "<missing>" : fixture.name;
+    if (seenNames.has(fixture.name)) {
+      issues.push({
+        fixtureName,
+        field: "name",
+        message: "reference-deck audit fixture names must be unique",
+      });
+    }
+    seenNames.add(fixture.name);
+    if (fixture.name.trim().length === 0) {
+      issues.push({
+        fixtureName,
+        field: "name",
+        message: "field must be documented and non-empty",
+      });
+    }
+    if (!REFERENCE_DECK_AUDIT_EXPECTED_KINDS.includes(fixture.kind)) {
+      issues.push({
+        fixtureName,
+        field: "kind",
+        message: `unsupported reference-deck audit kind ${JSON.stringify(fixture.kind)}`,
+      });
+    }
+    if (
+      !(REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES as readonly string[]).includes(fixture.analysis)
+    ) {
+      issues.push({
+        fixtureName,
+        field: "analysis",
+        message: `unsupported reference-deck audit analysis ${JSON.stringify(fixture.analysis)}`,
+      });
+    }
+    seenPairs.add(`${fixture.kind}:${fixture.analysis}`);
+    if (fixture.model.name.trim().length === 0) {
+      issues.push({
+        fixtureName,
+        field: "model.name",
+        message: "field must be documented and non-empty",
+      });
+    }
+    if (fixture.reference.trim().length === 0) {
+      issues.push({
+        fixtureName,
+        field: "reference",
+        message: "field must be documented and non-empty",
+      });
+    }
+    if (fixture.expectedBehavior.trim().length === 0) {
+      issues.push({
+        fixtureName,
+        field: "expected_behavior",
+        message: "field must be documented and non-empty",
+      });
+    }
+    if (fixture.deckLines.length === 0) {
+      issues.push({
+        fixtureName,
+        field: "deck_lines",
+        message: "reference deck must contain active deck lines",
+      });
+    } else {
+      if (!fixture.deckLines[0]!.startsWith("* device-model ")) {
+        issues.push({
+          fixtureName,
+          field: "deck_lines[0]",
+          message: "reference deck must start with a device-model comment",
+        });
+      }
+      if (!fixture.deckLines.some((line) => line.startsWith(".model "))) {
+        issues.push({
+          fixtureName,
+          field: "deck_lines",
+          message: "reference deck must include a .model card",
+        });
+      }
+      if (fixture.deckLines.at(-1) !== ".end") {
+        issues.push({
+          fixtureName,
+          field: "deck_lines[-1]",
+          message: "reference deck must end with .end",
+        });
+      }
+    }
+  }
+
+  for (const kind of REFERENCE_DECK_AUDIT_EXPECTED_KINDS) {
+    for (const analysis of REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES) {
+      if (!seenPairs.has(`${kind}:${analysis}`)) {
+        issues.push({
+          fixtureName: `${kind}:${analysis}`,
+          field: "coverage",
+          message: `missing required ${kind} ${analysis} reference-deck audit row`,
+        });
+      }
+    }
+  }
+
+  return {
+    passed: issues.length === 0,
+    fixtureCount: fixtures.length,
+    expectedKinds: REFERENCE_DECK_AUDIT_EXPECTED_KINDS,
+    expectedAnalyses: REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES,
+    issues,
+  };
+}
+
+export function formatDeviceModelReferenceDeckAuditGateReport(
+  report: DeviceModelReferenceDeckAuditGateReport,
+): string {
+  const lines = [
+    "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count",
+    [
+      String(report.passed),
+      report.fixtureCount.toString(),
+      report.expectedKinds.join(","),
+      report.expectedAnalyses.join(","),
+      report.issues.length.toString(),
+    ].join("\t"),
+  ];
+  if (report.issues.length > 0) {
+    lines.push("fixture_name\tfield\tmessage");
+    for (const issue of report.issues) {
+      lines.push([issue.fixtureName, issue.field, issue.message].join("\t"));
+    }
   }
   return lines.join("\n");
 }

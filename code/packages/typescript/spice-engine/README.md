@@ -214,6 +214,9 @@ noise, and transient fixture families into a stable reference-deck coverage
 matrix for each supported diode, BJT, JFET, and Level-1 MOS model family.
 `formatDeviceModelReferenceDeckAuditTable` renders that matrix as a stable
 tab-separated audit table for release and reference-deck comparisons.
+`deviceModelReferenceDeckAuditGate` and
+`formatDeviceModelReferenceDeckAuditGateReport` validate the required
+kind-by-analysis coverage matrix and emit a stable pass/fail gate report.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.

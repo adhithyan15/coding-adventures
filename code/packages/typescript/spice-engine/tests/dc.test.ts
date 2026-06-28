@@ -24,6 +24,7 @@ import {
   deviceModelAuditFixtures,
   deviceModelBehaviorAuditFixtures,
   deviceModelReferenceDeckAuditFixtures,
+  deviceModelReferenceDeckAuditGate,
   deviceModelTemperatureAuditFixtures,
   diode,
   diodeFromModelCard,
@@ -32,6 +33,7 @@ import {
   formatCornerTemperatureDcTable,
   formatDeckDcSweepTable,
   formatDcSweepTable,
+  formatDeviceModelReferenceDeckAuditGateReport,
   formatDeviceModelReferenceDeckAuditTable,
   formatMeasurementTable,
   formatTemperatureDcTable,
@@ -235,6 +237,33 @@ describe("dcOp", () => {
     expect(lines.at(-1)).toBe(
       "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\tSPICE2/SPICE3-style local model-depth fixture\tLevel-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits\t10",
     );
+  });
+
+  it("formats a stable device model reference deck audit gate report", () => {
+    const report = deviceModelReferenceDeckAuditGate();
+
+    expect(report.passed).toBe(true);
+    expect(report.fixtureCount).toBe(20);
+    expect(report.expectedKinds).toStrictEqual(["D", "NPN", "NJF", "NMOS"]);
+    expect(report.expectedAnalyses).toStrictEqual(["op", "temperature", "ac", "noise", "tran"]);
+    expect(report.issues).toStrictEqual([]);
+    expect(formatDeviceModelReferenceDeckAuditGateReport(report)).toBe(
+      "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count\ntrue\t20\tD,NPN,NJF,NMOS\top,temperature,ac,noise,tran\t0",
+    );
+  });
+
+  it("reports missing reference deck audit gate coverage", () => {
+    const fixtures = deviceModelReferenceDeckAuditFixtures().filter(
+      (fixture) => !(fixture.kind === "NMOS" && fixture.analysis === "tran"),
+    );
+
+    const report = deviceModelReferenceDeckAuditGate(fixtures);
+    const table = formatDeviceModelReferenceDeckAuditGateReport(report);
+
+    expect(report.passed).toBe(false);
+    expect(report.issues.some((issue) => issue.fixtureName === "NMOS:tran" && issue.field === "coverage")).toBe(true);
+    expect(table).toContain("fixture_name\tfield\tmessage");
+    expect(table).toContain("NMOS:tran\tcoverage\tmissing required NMOS tran reference-deck audit row");
   });
 
   it("rejects non-Level-1 MOS model cards explicitly", () => {

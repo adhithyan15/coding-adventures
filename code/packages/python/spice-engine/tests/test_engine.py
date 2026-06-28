@@ -186,6 +186,7 @@ from spice_engine import (
     device_model_charge_audit_fixtures,
     device_model_noise_audit_fixtures,
     device_model_reference_deck_audit_fixtures,
+    device_model_reference_deck_audit_gate,
     device_model_temperature_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
     digital_event_streams_to_voltage_sources,
@@ -243,6 +244,7 @@ from spice_engine import (
     format_deck_wrdata_artifact_json,
     format_deck_wrdata_artifact_table,
     format_deck_wrdata_ascii,
+    format_device_model_reference_deck_audit_gate_report,
     format_device_model_reference_deck_audit_table,
     format_digital_bridge_schedule_table,
     format_digital_event_stream_table,
@@ -611,6 +613,42 @@ def test_device_model_reference_deck_audit_table_is_stable() -> None:
         "gate-overlap and depletion-shaped bulk-junction storage; explicit "
         "Cstore keeps the fixture comparable with other charge audits\t10"
     )
+
+
+def test_device_model_reference_deck_audit_gate_report_is_stable() -> None:
+    report = device_model_reference_deck_audit_gate()
+
+    assert report.passed is True
+    assert report.fixture_count == 20
+    assert report.expected_kinds == ("D", "NPN", "NJF", "NMOS")
+    assert report.expected_analyses == ("op", "temperature", "ac", "noise", "tran")
+    assert report.issues == ()
+    assert format_device_model_reference_deck_audit_gate_report(report) == (
+        "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count\n"
+        "true\t20\tD,NPN,NJF,NMOS\top,temperature,ac,noise,tran\t0"
+    )
+
+
+def test_device_model_reference_deck_audit_gate_reports_missing_coverage() -> None:
+    fixtures = tuple(
+        fixture
+        for fixture in device_model_reference_deck_audit_fixtures()
+        if not (fixture.kind == "NMOS" and fixture.analysis == "tran")
+    )
+
+    report = device_model_reference_deck_audit_gate(fixtures)
+    table = format_device_model_reference_deck_audit_gate_report(report)
+
+    assert report.passed is False
+    assert any(
+        issue.fixture_name == "NMOS:tran" and issue.field == "coverage"
+        for issue in report.issues
+    )
+    assert "fixture_name\tfield\tmessage" in table
+    assert (
+        "NMOS:tran\tcoverage\t"
+        "missing required NMOS tran reference-deck audit row"
+    ) in table
 
 
 def test_transient_diode_junction_capacitance_slows_current_step() -> None:
