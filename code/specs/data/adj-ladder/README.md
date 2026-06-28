@@ -45,6 +45,8 @@ adj-ladder/
     items.json              20 MCQs requiring a derived setup premise + native solve
   rung3_quadratic_roots/
     items.json              20 algebra MCQs backed by native ADJ solved_roots
+  rung3_cubic_roots/
+    items.json              20 cubic algebra MCQs backed by native ADJ solved_roots
   ladder-scorecard.json     emitted artifact (per-arm metrics + divergence + buckets)
 ```
 
@@ -81,6 +83,7 @@ python3 contamination_check.py rung1_fractions_percent
 python3 contamination_check.py rung2_prealgebra_solve
 python3 contamination_check.py rung2_derived_solve
 python3 contamination_check.py rung3_quadratic_roots
+python3 contamination_check.py rung3_cubic_roots
 
 # 3. engine-only (cached) run — expect Arm B 100%, wrong 0
 python3 ladder_eval.py rung0_arithmetic
@@ -88,6 +91,7 @@ python3 ladder_eval.py rung1_fractions_percent
 python3 ladder_eval.py rung2_prealgebra_solve
 python3 ladder_eval.py rung2_derived_solve
 python3 ladder_eval.py rung3_quadratic_roots
+python3 ladder_eval.py rung3_cubic_roots
 
 # 4. tests
 python3 -m pytest test_ladder_eval.py -q
@@ -130,3 +134,6 @@ observed quantities.
 `rung3_quadratic_roots` starts the algebra rung: ADJ solves `x^2 = n` programs,
 including native LaTeX constraints, and the harness maps the engine's returned
 `solved_roots` set to the printed root-set options without computing the roots.
+`rung3_cubic_roots` takes the next small algebra step: ADJ solves expanded cubic
+polynomial equations, including native LaTeX constraints, through the same
+`solved_roots` option-mapping path.

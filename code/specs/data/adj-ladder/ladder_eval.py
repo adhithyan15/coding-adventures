@@ -603,6 +603,11 @@ def decompose_prompt(item: dict) -> str:
                 "symbol x : scalar\n"
                 "constrain latex \"$x^2 = 144$\"\n"
                 "solve for { x }\n\n"
+                "Question: What real values of x solve x^3 - 6x^2 + 11x - 6 = 0?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain x * x * x - 6 * x * x + 11 * x - 6 = 0\n"
+                "solve for { x }\n\n"
                 f"Question: {item['stem']}\nProgram:"
             )
         requires = answer_from.get("requires") or []

@@ -2,6 +2,17 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.8.0] — 2026-06-28
+
+### Added — rung 3 cubic roots scaffold
+
+- **`rung3_cubic_roots/items.json`** — 20 fresh algebra MCQs where the gold
+  decomposition is a native ADJ cubic root-solving program.
+- Several items use native `latex "..."` constraints, keeping LaTeX math input on
+  the ADJ execution path instead of normalizing it in the ladder harness.
+- The root-solve decomposition prompt now includes a cubic example so local models
+  get a native ADJ shape for degree-3 equations as the ladder climbs.
+
 ## [0.7.0] — 2026-06-28
 
 ### Added — rung 3 quadratic roots scaffold

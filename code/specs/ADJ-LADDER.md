@@ -163,7 +163,7 @@ engine gap that blocks it, and every rung ships a two-arm divergence number.
 | **0** | grade-school arithmetic + 1-step word problems | **none** (value-math exists) — shipped |
 | **1** | fractions / percent | native predicate RHS expressions plus exact rational sidecars for fractional equality; harder banks climb from here |
 | **2** | pre-algebra / algebra word problems | native ADJ solve programs now mix with rule-derived setup premises; broader CAS solve trail (PR-6) |
-| **3** | algebra / calculus | native ADJ `solved_roots` scaffold is climbing; broader CAS wiring (PR-6) + rewrite trail (PR-4) |
+| **3** | algebra / calculus | native ADJ `solved_roots` scaffold now covers quadratic and cubic banks; broader CAS wiring (PR-6) + rewrite trail (PR-4) |
 | 4 | physics / chem with units | dimensional engine (exists) + exact compute (PR-3) |
 | 5 | clinical / MLE → **apex: pediatrics** | the **MLE-PASS** harness (shares the option-map); multi-hop→PR-1, calculation→PR-3/6 |
 | — | defensibility hardening | `adj-verify` (PR-9): every correct item's proof re-checks |
@@ -227,7 +227,8 @@ constraint solver computes the unknown, and the ladder maps that engine value to
 printed options. The next rung now mixes that solve path with rule-derived premises:
 the program derives a setup atom, uses it as evidence for a queried readiness
 decision, and then solves the numeric unknown in the same native ADJ run. Rung 3 now
-starts with native quadratic root solving: ADJ returns `solved_roots`, and the ladder
-maps that root set to printed options without host-side solving. From here, rungs 3→5
-gate the broader CAS/dimensional/clinical slices in order, culminating in the
+climbs through native polynomial root solving: ADJ returns `solved_roots` for
+quadratic and cubic programs, and the ladder maps those root sets to printed options
+without host-side solving. From here, rungs 3→5 gate the broader
+CAS/dimensional/clinical slices in order, culminating in the
 MLE-PASS clinical rung and the pediatrics apex.
