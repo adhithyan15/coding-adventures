@@ -905,21 +905,39 @@ impl Compiler {
                 return Err(CompileError::Unsupported(
                     "mixed string/numeric IF comparison".into()));
             };
-            let branch_op = match cmp_op {
-                "cmp_eq" => "jmp_if_true",
-                "cmp_ne" => "jmp_if_false",
+            let target_line = extract_if_target(stmt)?;
+            match cmp_op {
+                "cmp_eq" | "cmp_ne" => {
+                    let branch_op = if cmp_op == "cmp_eq" {
+                        "jmp_if_true"
+                    } else {
+                        "jmp_if_false"
+                    };
+                    let cond = self.fresh_temp();
+                    self.emit("str_eq", Some(&cond),
+                        vec![Operand::Var(lhs), Operand::Var(rhs)], "i64");
+                    self.emit(branch_op, None,
+                        vec![Operand::Var(cond), Operand::Var(format!("line_{target_line}"))],
+                        "void");
+                }
+                "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
+                    let ordering = self.fresh_temp();
+                    self.emit("str_cmp", Some(&ordering),
+                        vec![Operand::Var(lhs), Operand::Var(rhs)], "i64");
+                    let zero = self.fresh_temp();
+                    self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+                    let cond = self.fresh_temp();
+                    self.emit(cmp_op, Some(&cond),
+                        vec![Operand::Var(ordering), Operand::Var(zero)], "i64");
+                    self.emit("jmp_if_true", None,
+                        vec![Operand::Var(cond), Operand::Var(format!("line_{target_line}"))],
+                        "void");
+                }
                 _ => {
                     return Err(CompileError::Unsupported(
-                        "string IF comparisons currently support `=` and `<>` only".into()))
+                        "unsupported string IF comparison".into()))
                 }
-            };
-            let cond = self.fresh_temp();
-            self.emit("str_eq", Some(&cond),
-                vec![Operand::Var(lhs), Operand::Var(rhs)], "i64");
-            let target_line = extract_if_target(stmt)?;
-            self.emit(branch_op, None,
-                vec![Operand::Var(cond), Operand::Var(format!("line_{target_line}"))],
-                "void");
+            }
             return Ok(());
         }
 
@@ -1816,7 +1834,7 @@ fn numeric_scalar_variable_name(var: &GrammarASTNode)
     let name = scalar_variable_name(var)?;
     if is_basic_string_name(&name) {
         return Err(CompileError::Unsupported(format!(
-            "string variable `{name}` is only supported in literal assignment, PRINT, and IF equality/inequality")));
+            "string variable `{name}` is only supported in literal assignment, PRINT, and IF string comparisons")));
     }
     Ok(name)
 }
@@ -3010,6 +3028,66 @@ mod tests {
             "IF A$ <> literal should reuse E4 str_eq");
         assert!(body.iter().any(|i| i.op == "jmp_if_false"),
             "string inequality should branch when str_eq is false");
+    }
+
+    #[test]
+    fn compiles_string_variable_if_ordering() {
+        let src = "10 LET A$ = \"ALPHA\"\n\
+                   20 IF A$ < \"BETA\" THEN 50\n\
+                   30 PRINT \"BAD\"\n\
+                   40 END\n\
+                   50 IF \"BETA\" > A$ THEN 80\n\
+                   60 PRINT \"BAD\"\n\
+                   70 END\n\
+                   80 PRINT \"OK\"\n\
+                   90 END\n";
+        let m = compile(src).expect("ok");
+        let body = &m.functions[0].instructions;
+        assert_eq!(
+            body.iter().filter(|i| i.op == "str_cmp").count(),
+            2,
+            "strict string ordering should lower through E4 str_cmp twice"
+        );
+        assert!(body.iter().any(|i| i.op == "cmp_lt"
+            && i.type_hint == "i64"
+            && matches!(i.srcs.as_slice(), [
+                Operand::Var(ordering),
+                Operand::Var(zero)
+            ] if body.iter().any(|j| j.dest.as_deref() == Some(ordering.as_str()) && j.op == "str_cmp")
+                && body.iter().any(|j| j.dest.as_deref() == Some(zero.as_str())
+                    && j.op == "const"
+                    && matches!(j.srcs.first(), Some(Operand::Int(0)))))),
+            "A$ < literal should compare str_cmp output with zero");
+        assert!(body.iter().any(|i| i.op == "cmp_gt" && i.type_hint == "i64"),
+            "literal > A$ should use the existing numeric cmp_gt over str_cmp");
+        assert!(
+            body.iter().filter(|i| i.op == "jmp_if_true").count() >= 2,
+            "strict string ordering should branch when the ordering predicate is true"
+        );
+    }
+
+    #[test]
+    fn compiles_string_variable_if_inclusive_ordering() {
+        let src = "10 LET A$ = \"BETA\"\n\
+                   20 IF A$ <= \"BETA\" THEN 50\n\
+                   30 PRINT \"BAD\"\n\
+                   40 END\n\
+                   50 IF \"BETA\" >= A$ THEN 80\n\
+                   60 PRINT \"BAD\"\n\
+                   70 END\n\
+                   80 PRINT \"OK\"\n\
+                   90 END\n";
+        let m = compile(src).expect("ok");
+        let body = &m.functions[0].instructions;
+        assert_eq!(
+            body.iter().filter(|i| i.op == "str_cmp").count(),
+            2,
+            "inclusive string ordering should lower through E4 str_cmp twice"
+        );
+        assert!(body.iter().any(|i| i.op == "cmp_le" && i.type_hint == "i64"),
+            "A$ <= literal should compare str_cmp output with zero");
+        assert!(body.iter().any(|i| i.op == "cmp_ge" && i.type_hint == "i64"),
+            "literal >= A$ should compare str_cmp output with zero");
     }
 
     #[test]

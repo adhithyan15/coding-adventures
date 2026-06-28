@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.147.0"
+version = "0.150.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.146.0 (LANG-FULL E4): `tests/lang_matrix.rs` proves Twig lexical `string-append` / `str_concat` feeding `string-ref` / `str_index` on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.145.0 proved BASIC variable-variable string concat in IF equality."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.150.0 (LANG-FULL BA4): `tests/lang_matrix.rs` proves BASIC lexical string ordering in IF branches on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.149.0 proved Twig lexical string ordering."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }

@@ -1,10 +1,10 @@
 # LANG-FULL E4 — Strings (design spec)
 
 **Status:** IR + reference VM slice implemented. BASIC BA4 literal/scalar
-strings, reassignment, equality/inequality, copied-slot equality, literal and
-variable-backed concat, expression concat in `PRINT`/`IF`, and multi-item string
-`PRINT` with `;` and `,` run on all seven backends, including `PRINT A$ + B$`
-over two scalar string slots. ALGOL AL4 literal output,
+strings, reassignment, equality/inequality, lexical ordering, copied-slot
+equality, literal and variable-backed concat, expression concat in `PRINT`/`IF`,
+and multi-item string `PRINT` with `;` and `,` run on all seven backends,
+including `PRINT A$ + B$` over two scalar string slots. ALGOL AL4 literal output,
 `output`, multi-argument `output`, scalar variables, scalar copies, and copy
 snapshots run on all seven backends. Twig
 literal, immutable top-level, and lexical-local string ops run on all seven
@@ -168,10 +168,11 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   `<>` branch paths through `str_eq` plus `jmp_if_true` / `jmp_if_false`.
   `LET B$ = A$ + "K"; PRINT B$` proves variable-backed concat
   assignment into another scalar string slot. String compares in `IF A$ = "Y"` and
-  `IF A$ <> "Y"` lower to `str_eq` (the latter branches with `jmp_if_false`) and
-  now drive line-control branching on all seven backends; string arrays, string
-  `INPUT`, captured/dynamic string storage, and broader runtime byte-string
-  operations remain follow-ups.
+  `IF A$ <> "Y"` lower to `str_eq` (the latter branches with `jmp_if_false`),
+  while `IF A$ < "B"` / `IF "B" > A$` lower through `str_cmp` plus typed zero
+  comparisons. These paths now drive line-control branching on all seven
+  backends; string arrays, string `INPUT`, captured/dynamic string storage, and
+  broader runtime byte-string operations remain follow-ups.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
   produces string literals. The current foothold recognises undeclared
   statement-position `print`/`output` calls and lowers string literal actuals to
@@ -275,6 +276,7 @@ merge before the next:
    assignment, concat expressions in `PRINT`/`IF` including `PRINT A$ + B$`,
    expression-backed equality branches,
    expression-backed inequality branches,
+   lexical string ordering branches,
    copied-slot equality, tight multi-item string `PRINT` (`PRINT A$; B$`), and
    comma-separated string `PRINT` (`PRINT A$, B$` => `O K`) all now run on the
    same seven backends. String arrays, string `INPUT`, captured/dynamic storage,
