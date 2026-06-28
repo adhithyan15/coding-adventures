@@ -1,4 +1,4 @@
-// ReviewCard.mll - Mosaic layout for one Engram review card.
+// ReviewCard.mll - Mosaic layout for one review card.
 
 layout ReviewCard {
   Column [ review-card ] {

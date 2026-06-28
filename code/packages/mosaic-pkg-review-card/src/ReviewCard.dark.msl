@@ -1,4 +1,4 @@
-// ReviewCard.dark.msl - dark Engram review-card theme.
+// ReviewCard.dark.msl - dark review-card theme.
 
 style ReviewCard {
   part review-card {

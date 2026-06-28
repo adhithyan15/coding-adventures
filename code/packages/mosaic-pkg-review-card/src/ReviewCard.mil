@@ -1,9 +1,9 @@
-// ReviewCard.mil - Engram study-session review surface.
+// ReviewCard.mil - spaced-repetition study-session review surface.
 //
 // This component keeps interaction semantic and target-neutral. The Rust
-// Engram core decides which card is due and how each answer affects scheduling;
-// Mosaic owns the shape of the prompt/answer surface and emits native events
-// for the shell to dispatch back into the core.
+// app core decides which card is due and how each answer affects scheduling;
+// Mosaic owns the prompt/answer surface and emits native events for the shell
+// to dispatch back into that core.
 
 component ReviewCard {
   slot deck-name : text ;

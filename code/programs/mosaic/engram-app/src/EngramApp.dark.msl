@@ -1,0 +1,19 @@
+// EngramApp.dark.msl - dark app-shell style for the Engram Mosaic app.
+
+style EngramApp {
+  part app-shell {
+    background : "#101827" ;
+    padding    : 24 ;
+  }
+
+  part app-title {
+    color          : "#f8fafc" ;
+    font-size      : 28 ;
+    font-weight    : 700 ;
+    padding-bottom : 18 ;
+  }
+
+  part review-region {
+    padding : 4 ;
+  }
+}

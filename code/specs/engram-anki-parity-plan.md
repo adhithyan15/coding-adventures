@@ -392,13 +392,20 @@ Emit React first, then validate one native target.
 
 Status:
 
-- `code/packages/mosaic-pkg-engram` adds the first `ReviewCard` component.
-- The package test compiles the same `.mil/.mll/.msl` sources through React,
-  HTML, SwiftUI, XAML, Qt, Compose, and Flutter pipeline emitters.
+- `code/packages/mosaic-pkg-review-card` adds the first reusable
+  `ReviewCard` component package.
+- The component package test compiles the same `.mil/.mll/.msl` sources
+  through React, HTML, SwiftUI, XAML, Qt, Compose, and Flutter pipeline
+  emitters.
+- `code/programs/mosaic/engram-app` adds the Engram Mosaic app package. The
+  app exports `EngramApp`, declares a dependency on `mosaic-pkg-review-card`,
+  and mounts `pkg::mosaic-pkg-review-card::ReviewCard` rather than owning the
+  review-card component itself.
 - Shared `SessionProgress` counters are available in `engram-core`,
   `engram-core-wasm`, and `engram-capi` for Mosaic/native review screens.
-- This package is the first concrete pivot point for moving Engram UI out of
-  one-off React components and into Mosaic.
+- This split is the first concrete pivot point for moving Engram UI out of
+  one-off React components and into Mosaic while keeping component packages
+  reusable.
 
 ### 5.2 Native Target Order
 

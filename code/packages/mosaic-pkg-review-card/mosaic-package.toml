@@ -1,7 +1,7 @@
 [package]
-name = "mosaic-pkg-engram"
+name = "mosaic-pkg-review-card"
 version = "0.1.0"
-description = "Engram study-session components built on the Mosaic UI pipeline"
+description = "A reusable spaced-repetition review card component built on the Mosaic UI pipeline"
 license = "MIT OR Apache-2.0"
 
 [components]
