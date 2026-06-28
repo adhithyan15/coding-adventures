@@ -93,6 +93,8 @@ Current reducer integration:
 - Reviews carry optional previous/resulting progress snapshots so
   `UndoLastReview` can restore card progress, review history, and session
   counters without host-specific logic.
+- `create_engram_snapshot` / `restore_engram_snapshot` define the versioned
+  Engram JSON backup shape in Rust and are exposed through the JSON facade.
 
 ### 1.2 Notes and Card Templates
 
@@ -179,14 +181,16 @@ Core should expose portable snapshot types that facade crates can serialize.
 
 Formats:
 
-- Engram JSON collection snapshot
+- Engram JSON collection snapshot. Initial Rust core and JSON facade support
+  exists and accepts the current web backup shape.
 - CSV deck import/export
 - Anki TSV text export compatibility
 - APKG import/export eventually, via a dedicated facade or package crate
 
 Tests:
 
-- JSON snapshot round-trip.
+- JSON snapshot round-trip. Initial core/facade tests cover durable data,
+  active-session clearing, web backup compatibility, and validation errors.
 - CSV escaping and line ending behavior.
 - Import produces deterministic IDs when caller supplies an ID strategy.
 

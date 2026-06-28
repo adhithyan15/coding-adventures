@@ -33,6 +33,7 @@ This crate owns:
 - Anki-style review scheduling over new, learning, review, and relearning states
 - due/new card queue assembly
 - card browser search/filter evaluation
+- versioned Engram JSON backup snapshots
 - pure state transitions
 - derived study stats
 
@@ -57,6 +58,10 @@ unchanged because there is no reliable prior progress to restore.
 supports plain text terms plus `deck:`, `note:`, `noteType:`, `front:`,
 `back:`, `tag:`, `state:`, `is:`, `flag:`, and `marked:` filters. Terms inside
 a group use implicit AND, `OR` joins groups, and leading `-` negates a term.
+
+`create_engram_snapshot` and `restore_engram_snapshot` own the portable Engram
+backup shape. Backups include durable collection data and clear any live
+`active_session` when restored.
 
 This crate does not own:
 

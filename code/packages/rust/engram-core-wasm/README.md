@@ -28,6 +28,8 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 
 - `snapshot()`
 - `load_snapshot(json)`
+- `export_backup(exported_at)`
+- `import_backup(json)`
 - `dispatch(command_json)`
 - `build_queue(deck_id, now)`
 - `deck_stats(deck_id, now)`
@@ -60,3 +62,7 @@ browsers can filter them without changing scheduling behavior.
 `search_cards` exposes the shared browser-query engine. It returns
 `{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for
 parser diagnostics.
+
+`export_backup` and `import_backup` expose the versioned Engram JSON backup
+shape. Backup import validates the app/version fields and restores only durable
+collection data, clearing any live active session.

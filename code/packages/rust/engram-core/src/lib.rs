@@ -12,6 +12,7 @@ mod reducer;
 mod scheduler;
 mod search;
 mod sm2;
+mod snapshot;
 mod template;
 
 pub use model::{
@@ -28,5 +29,9 @@ pub use search::{search_cards, CardSearchResult, SearchError};
 pub use sm2::{
     create_initial_progress, update_card_progress, INITIAL_EASE_FACTOR, MAX_EASE_FACTOR,
     MIN_EASE_FACTOR, ONE_DAY_MS,
+};
+pub use snapshot::{
+    create_engram_snapshot, restore_engram_snapshot, EngramSnapshot, SnapshotError,
+    ENGRAM_SNAPSHOT_APP, ENGRAM_SNAPSHOT_VERSION,
 };
 pub use template::{generate_cards_for_note, render_template};

@@ -9,8 +9,9 @@
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
-    build_session_queue, generate_cards_for_note, get_deck_stats, reduce,
-    search_cards as search_core_cards, AppState, Card, CardFlag, DeckOptions, Rating,
+    build_session_queue, create_engram_snapshot, generate_cards_for_note, get_deck_stats, reduce,
+    restore_engram_snapshot, search_cards as search_core_cards, AppState, Card, CardFlag,
+    DeckOptions, EngramSnapshot, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -34,6 +35,23 @@ impl EngramSession {
             let state: AppState = serde_json::from_str(snapshot_json)
                 .map_err(|err| format!("invalid snapshot: {err}"))?;
             self.state = state;
+            Ok(ok_with("state", &self.state))
+        })
+    }
+
+    pub fn export_backup(&self, exported_at: u64) -> String {
+        catch_json(|| {
+            let snapshot = create_engram_snapshot(&self.state, exported_at);
+            Ok(ok_with("snapshot", &snapshot))
+        })
+    }
+
+    pub fn import_backup(&mut self, snapshot_json: &str) -> String {
+        catch_json(|| {
+            let snapshot: EngramSnapshot = serde_json::from_str(snapshot_json)
+                .map_err(|err| format!("invalid backup: {err}"))?;
+            self.state =
+                restore_engram_snapshot(snapshot).map_err(|err| err.message.to_string())?;
             Ok(ok_with("state", &self.state))
         })
     }
@@ -396,6 +414,94 @@ mod tests {
 
         assert_eq!(loaded["ok"], true);
         assert_eq!(loaded["state"]["decks"][0]["id"], "deck");
+    }
+
+    #[test]
+    fn export_backup_uses_versioned_engram_shape() {
+        let mut session = EngramSession::new();
+        session.dispatch(
+            r#"{
+                "type": "createDeck",
+                "id": "deck",
+                "name": "Tamil",
+                "description": "Script",
+                "createdAt": 1700000000000
+            }"#,
+        );
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [],
+                "startedAt": 1700000000000
+            }"#,
+        );
+
+        let value: Value = serde_json::from_str(&session.export_backup(NOW + 1)).unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["snapshot"]["app"], "engram");
+        assert_eq!(value["snapshot"]["version"], 1);
+        assert_eq!(value["snapshot"]["exportedAt"], NOW + 1);
+        assert_eq!(value["snapshot"]["decks"][0]["id"], "deck");
+        assert!(value["snapshot"].get("activeSession").is_none());
+    }
+
+    #[test]
+    fn import_backup_accepts_existing_web_backup_shape() {
+        let mut session = EngramSession::new();
+        let backup = r#"{
+            "app": "engram",
+            "version": 1,
+            "exportedAt": 1700000000001,
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": []
+        }"#;
+
+        let value: Value = serde_json::from_str(&session.import_backup(backup)).unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["state"]["decks"][0]["id"], "deck");
+        assert_eq!(value["state"]["cards"][0]["front"], "letter-a");
+        assert!(value["state"]["noteTypes"].as_array().unwrap().is_empty());
+        assert!(value["state"]["notes"].as_array().unwrap().is_empty());
+        assert_eq!(value["state"]["activeSession"], Value::Null);
+    }
+
+    #[test]
+    fn import_backup_rejects_wrong_app_or_version() {
+        let mut session = EngramSession::new();
+        let wrong_app = r#"{
+            "app": "other",
+            "version": 1,
+            "exportedAt": 1700000000001,
+            "decks": [],
+            "cards": [],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": []
+        }"#;
+        let value: Value = serde_json::from_str(&session.import_backup(wrong_app)).unwrap();
+        assert_eq!(value["ok"], false);
+        assert_eq!(value["error"], "The selected file is not an Engram backup.");
+
+        let wrong_version = r#"{
+            "app": "engram",
+            "version": 99,
+            "exportedAt": 1700000000001,
+            "decks": [],
+            "cards": [],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": []
+        }"#;
+        let value: Value = serde_json::from_str(&session.import_backup(wrong_version)).unwrap();
+        assert_eq!(value["ok"], false);
+        assert_eq!(value["error"], "Unsupported Engram backup version: 99");
     }
 
     #[test]
