@@ -712,6 +712,7 @@ mod tests {
             note_type_id: "basic-and-reversed".to_string(),
             template_id: id.to_string(),
             ordinal,
+            cloze_ordinal: None,
         });
         card
     }

@@ -98,6 +98,9 @@ Current reducer integration:
   host-provided boundary.
 - Generated note-template cards can be materialized into durable `Card` records
   with lineage through the JSON facade and C ABI.
+- Anki-style Cloze templates using `{{cloze:Field}}` now generate one card per
+  `{{cN::text::hint}}` ordinal in Rust core, with cloze lineage exposed through
+  the JSON facade and C ABI.
 - `create_engram_snapshot` / `restore_engram_snapshot` define the versioned
   Engram JSON backup shape in Rust and are exposed through the JSON facade.
 - `export_cards_csv` / `import_cards_csv` define a strict round-trippable card
@@ -146,6 +149,8 @@ Tests:
 - Empty required fields suppress invalid generated cards.
 - Renaming a field migrates template references where possible.
 - Generated card IDs remain stable across harmless note edits.
+- Cloze note templates generate stable sibling cards per cloze ordinal. Initial
+  support exists in core plus JSON/C facades.
 
 ### 1.3 Scheduler Parity Track
 

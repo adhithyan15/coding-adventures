@@ -35,6 +35,11 @@ pub struct CardLineage {
     pub note_type_id: String,
     pub template_id: String,
     pub ordinal: u32,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub cloze_ordinal: Option<u32>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -102,6 +107,11 @@ pub struct GeneratedCard {
     pub template_id: String,
     pub deck_id: String,
     pub ordinal: u32,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub cloze_ordinal: Option<u32>,
     pub front: String,
     pub back: String,
     pub tags: Vec<String>,

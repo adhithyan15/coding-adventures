@@ -34,6 +34,7 @@ This crate owns:
 - due/new card queue assembly
 - review-log-aware daily limit accounting
 - optional note/template lineage on durable cards
+- Anki-style Cloze note generation from `{{cloze:Field}}` templates
 - card browser search/filter evaluation
 - versioned Engram JSON backup snapshots
 - round-trippable card CSV import/export helpers
@@ -67,9 +68,11 @@ supports plain text terms plus `deck:`, `note:`, `noteType:`, `front:`,
 a group use implicit AND, `OR` joins groups, and leading `-` negates a term.
 
 `materialize_generated_card` turns a note-template `GeneratedCard` into a
-durable `Card` with note/template lineage. `BuryCardSiblings` uses that lineage
-to bury same-note sibling cards until a host-supplied boundary, matching the
-shared behavior Anki-like review screens need.
+durable `Card` with note/template lineage. Cloze templates using
+`{{cloze:Field}}` generate one card per Anki-style `{{c1::text::hint}}`
+ordinal and preserve the cloze ordinal in lineage. `BuryCardSiblings` uses
+lineage to bury same-note sibling cards until a host-supplied boundary,
+matching the shared behavior Anki-like review screens need.
 
 `create_engram_snapshot` and `restore_engram_snapshot` own the portable Engram
 backup shape. Backups include durable collection data and clear any live

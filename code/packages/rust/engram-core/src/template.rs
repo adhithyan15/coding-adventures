@@ -1,6 +1,12 @@
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 
 use crate::model::{Card, CardLineage, GeneratedCard, Note, NoteType};
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum ClozeSide {
+    Question,
+    Answer,
+}
 
 pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<GeneratedCard> {
     if note.note_type_id != note_type.id {
@@ -23,28 +29,70 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
         })
         .collect();
 
-    note_type
-        .templates
-        .iter()
-        .filter(|template| {
-            template.required_field_names.iter().all(|field_name| {
-                field_values
-                    .get(field_name)
-                    .is_some_and(|value| !value.trim().is_empty())
-            })
-        })
-        .map(|template| GeneratedCard {
-            id: generated_card_id(&note.id, &template.id),
-            note_id: note.id.clone(),
-            note_type_id: note.note_type_id.clone(),
-            template_id: template.id.clone(),
-            deck_id: note.deck_id.clone(),
-            ordinal: template.ordinal,
-            front: render_template(&template.front_template, &field_values),
-            back: render_template(&template.back_template, &field_values),
-            tags: note.tags.clone(),
-        })
-        .collect()
+    let mut generated = Vec::new();
+
+    for template in &note_type.templates {
+        if !template.required_field_names.iter().all(|field_name| {
+            field_values
+                .get(field_name)
+                .is_some_and(|value| !value.trim().is_empty())
+        }) {
+            continue;
+        }
+
+        let cloze_fields =
+            cloze_field_names_for_template(&template.front_template, &template.back_template);
+
+        if cloze_fields.is_empty() {
+            generated.push(GeneratedCard {
+                id: generated_card_id(&note.id, &template.id),
+                note_id: note.id.clone(),
+                note_type_id: note.note_type_id.clone(),
+                template_id: template.id.clone(),
+                deck_id: note.deck_id.clone(),
+                ordinal: template.ordinal,
+                cloze_ordinal: None,
+                front: render_template(&template.front_template, &field_values),
+                back: render_template(&template.back_template, &field_values),
+                tags: note.tags.clone(),
+            });
+            continue;
+        }
+
+        let mut cloze_ordinals = BTreeSet::new();
+        for field_name in cloze_fields {
+            if let Some(value) = field_values.get(&field_name) {
+                collect_cloze_ordinals(value, &mut cloze_ordinals);
+            }
+        }
+
+        for cloze_ordinal in cloze_ordinals {
+            generated.push(GeneratedCard {
+                id: generated_cloze_card_id(&note.id, &template.id, cloze_ordinal),
+                note_id: note.id.clone(),
+                note_type_id: note.note_type_id.clone(),
+                template_id: template.id.clone(),
+                deck_id: note.deck_id.clone(),
+                ordinal: cloze_ordinal.saturating_sub(1),
+                cloze_ordinal: Some(cloze_ordinal),
+                front: render_cloze_template(
+                    &template.front_template,
+                    &field_values,
+                    cloze_ordinal,
+                    ClozeSide::Question,
+                ),
+                back: render_cloze_template(
+                    &template.back_template,
+                    &field_values,
+                    cloze_ordinal,
+                    ClozeSide::Answer,
+                ),
+                tags: note.tags.clone(),
+            });
+        }
+    }
+
+    generated
 }
 
 pub fn render_template(template: &str, field_values: &HashMap<String, String>) -> String {
@@ -89,12 +137,184 @@ pub fn materialize_generated_card(generated: &GeneratedCard, created_at: u64) ->
             note_type_id: generated.note_type_id.clone(),
             template_id: generated.template_id.clone(),
             ordinal: generated.ordinal,
+            cloze_ordinal: generated.cloze_ordinal,
         }),
     }
 }
 
 fn generated_card_id(note_id: &str, template_id: &str) -> String {
     format!("{note_id}::{template_id}")
+}
+
+fn generated_cloze_card_id(note_id: &str, template_id: &str, cloze_ordinal: u32) -> String {
+    format!("{note_id}::{template_id}::c{cloze_ordinal}")
+}
+
+fn cloze_field_names_for_template(front_template: &str, back_template: &str) -> BTreeSet<String> {
+    let mut field_names = BTreeSet::new();
+    collect_cloze_field_names(front_template, &mut field_names);
+    collect_cloze_field_names(back_template, &mut field_names);
+    field_names
+}
+
+fn collect_cloze_field_names(template: &str, field_names: &mut BTreeSet<String>) {
+    let mut rest = template;
+
+    while let Some(start) = rest.find("{{") {
+        let (_, after_start) = rest.split_at(start);
+        let after_start = &after_start[2..];
+
+        match after_start.find("}}") {
+            Some(end) => {
+                let (field_name, after_end) = after_start.split_at(end);
+                if let Some(field_name) = field_name.trim().strip_prefix("cloze:") {
+                    let field_name = field_name.trim();
+                    if !field_name.is_empty() {
+                        field_names.insert(field_name.to_string());
+                    }
+                }
+                rest = &after_end[2..];
+            }
+            None => break,
+        }
+    }
+}
+
+fn render_cloze_template(
+    template: &str,
+    field_values: &HashMap<String, String>,
+    cloze_ordinal: u32,
+    side: ClozeSide,
+) -> String {
+    let mut rendered = String::with_capacity(template.len());
+    let mut rest = template;
+
+    while let Some(start) = rest.find("{{") {
+        let (prefix, after_start) = rest.split_at(start);
+        rendered.push_str(prefix);
+        let after_start = &after_start[2..];
+
+        match after_start.find("}}") {
+            Some(end) => {
+                let (field_name, after_end) = after_start.split_at(end);
+                let field_name = field_name.trim();
+                if let Some(field_name) = field_name.strip_prefix("cloze:") {
+                    if let Some(value) = field_values.get(field_name.trim()) {
+                        rendered.push_str(&render_cloze_text(value, cloze_ordinal, side));
+                    }
+                } else if let Some(value) = field_values.get(field_name) {
+                    rendered.push_str(value);
+                }
+                rest = &after_end[2..];
+            }
+            None => {
+                rendered.push_str("{{");
+                rendered.push_str(after_start);
+                rest = "";
+            }
+        }
+    }
+
+    rendered.push_str(rest);
+    rendered
+}
+
+fn collect_cloze_ordinals(value: &str, ordinals: &mut BTreeSet<u32>) {
+    let mut rest = value;
+
+    while let Some(start) = rest.find("{{c") {
+        let candidate = &rest[start..];
+        if let Some(marker) = parse_cloze_marker(candidate) {
+            ordinals.insert(marker.ordinal);
+            rest = &candidate[marker.consumed..];
+        } else {
+            rest = &candidate[3..];
+        }
+    }
+}
+
+fn render_cloze_text(value: &str, cloze_ordinal: u32, side: ClozeSide) -> String {
+    let mut rendered = String::with_capacity(value.len());
+    let mut rest = value;
+
+    while let Some(start) = rest.find("{{c") {
+        let (prefix, candidate) = rest.split_at(start);
+        rendered.push_str(prefix);
+
+        if let Some(marker) = parse_cloze_marker(candidate) {
+            if side == ClozeSide::Question && marker.ordinal == cloze_ordinal {
+                match marker.hint.map(str::trim).filter(|hint| !hint.is_empty()) {
+                    Some(hint) => {
+                        rendered.push('[');
+                        rendered.push_str(hint);
+                        rendered.push(']');
+                    }
+                    None => rendered.push_str("[...]"),
+                }
+            } else {
+                rendered.push_str(&render_cloze_text(
+                    marker.hidden,
+                    cloze_ordinal,
+                    ClozeSide::Answer,
+                ));
+            }
+            rest = &candidate[marker.consumed..];
+        } else {
+            rendered.push_str("{{c");
+            rest = &candidate[3..];
+        }
+    }
+
+    rendered.push_str(rest);
+    rendered
+}
+
+struct ClozeMarker<'a> {
+    ordinal: u32,
+    hidden: &'a str,
+    hint: Option<&'a str>,
+    consumed: usize,
+}
+
+fn parse_cloze_marker(candidate: &str) -> Option<ClozeMarker<'_>> {
+    if !candidate.starts_with("{{c") {
+        return None;
+    }
+
+    let after_prefix = &candidate[3..];
+    let digit_len = after_prefix
+        .find(|ch: char| !ch.is_ascii_digit())
+        .unwrap_or(after_prefix.len());
+    if digit_len == 0 {
+        return None;
+    }
+
+    let ordinal = after_prefix[..digit_len].parse::<u32>().ok()?;
+    if ordinal == 0 {
+        return None;
+    }
+
+    let after_digits = &after_prefix[digit_len..];
+    if !after_digits.starts_with("::") {
+        return None;
+    }
+
+    let content_start = 3 + digit_len + 2;
+    let after_content_start = &candidate[content_start..];
+    let content_len = after_content_start.find("}}")?;
+    let content = &after_content_start[..content_len];
+    let consumed = content_start + content_len + 2;
+    let (hidden, hint) = match content.split_once("::") {
+        Some((hidden, hint)) => (hidden, Some(hint)),
+        None => (content, None),
+    };
+
+    Some(ClozeMarker {
+        ordinal,
+        hidden,
+        hint,
+        consumed,
+    })
 }
 
 #[cfg(test)]
@@ -145,6 +365,37 @@ mod tests {
         }
     }
 
+    fn cloze_note_type() -> NoteType {
+        NoteType {
+            id: "cloze".to_string(),
+            name: "Cloze".to_string(),
+            fields: vec![
+                FieldDef {
+                    id: "text".to_string(),
+                    name: "Text".to_string(),
+                    required: true,
+                    ordinal: 0,
+                },
+                FieldDef {
+                    id: "extra".to_string(),
+                    name: "Extra".to_string(),
+                    required: false,
+                    ordinal: 1,
+                },
+            ],
+            templates: vec![CardTemplate {
+                id: "cloze".to_string(),
+                name: "Cloze".to_string(),
+                front_template: "{{cloze:Text}}".to_string(),
+                back_template: "{{cloze:Text}}<hr>{{Extra}}".to_string(),
+                required_field_names: vec!["Text".to_string()],
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        }
+    }
+
     fn note(front: &str, back: &str) -> Note {
         Note {
             id: "note-1".to_string(),
@@ -161,6 +412,27 @@ mod tests {
                 },
             ],
             tags: vec!["tamil".to_string(), "script".to_string()],
+            created_at: NOW,
+            updated_at: NOW,
+        }
+    }
+
+    fn cloze_note(text: &str, extra: &str) -> Note {
+        Note {
+            id: "cloze-note".to_string(),
+            note_type_id: "cloze".to_string(),
+            deck_id: "deck-1".to_string(),
+            fields: vec![
+                NoteFieldValue {
+                    field_id: "text".to_string(),
+                    value: text.to_string(),
+                },
+                NoteFieldValue {
+                    field_id: "extra".to_string(),
+                    value: extra.to_string(),
+                },
+            ],
+            tags: vec!["grammar".to_string(), "spanish".to_string()],
             created_at: NOW,
             updated_at: NOW,
         }
@@ -209,6 +481,7 @@ mod tests {
         assert_eq!(lineage.note_type_id, "basic-and-reversed");
         assert_eq!(lineage.template_id, "forward");
         assert_eq!(lineage.ordinal, 0);
+        assert_eq!(lineage.cloze_ordinal, None);
     }
 
     #[test]
@@ -229,5 +502,88 @@ mod tests {
         let rendered = render_template("{{Known}} {{Missing}}", &values);
 
         assert_eq!(rendered, "value ");
+    }
+
+    #[test]
+    fn cloze_notes_generate_one_card_per_cloze_ordinal() {
+        let cards = generate_cards_for_note(
+            &cloze_note_type(),
+            &cloze_note(
+                "A {{c2::suffix}} changes a {{c1::root::base}} word into a new form.",
+                "root + suffix",
+            ),
+        );
+
+        assert_eq!(cards.len(), 2);
+        assert_eq!(cards[0].id, "cloze-note::cloze::c1");
+        assert_eq!(cards[0].ordinal, 0);
+        assert_eq!(cards[0].cloze_ordinal, Some(1));
+        assert_eq!(
+            cards[0].front,
+            "A suffix changes a [base] word into a new form."
+        );
+        assert_eq!(
+            cards[0].back,
+            "A suffix changes a root word into a new form.<hr>root + suffix"
+        );
+        assert_eq!(cards[1].id, "cloze-note::cloze::c2");
+        assert_eq!(cards[1].ordinal, 1);
+        assert_eq!(cards[1].cloze_ordinal, Some(2));
+        assert_eq!(
+            cards[1].front,
+            "A [...] changes a root word into a new form."
+        );
+        assert_eq!(
+            cards[1].back,
+            "A suffix changes a root word into a new form.<hr>root + suffix"
+        );
+        assert_eq!(cards[1].tags, vec!["grammar", "spanish"]);
+    }
+
+    #[test]
+    fn cloze_generation_deduplicates_repeated_ordinals() {
+        let cards = generate_cards_for_note(
+            &cloze_note_type(),
+            &cloze_note("{{c1::Tamil}} and {{c1::Dravidian}}", ""),
+        );
+
+        assert_eq!(cards.len(), 1);
+        assert_eq!(cards[0].id, "cloze-note::cloze::c1");
+        assert_eq!(cards[0].front, "[...] and [...]");
+        assert_eq!(cards[0].back, "Tamil and Dravidian<hr>");
+    }
+
+    #[test]
+    fn cloze_generated_cards_materialize_lineage() {
+        let cards = generate_cards_for_note(
+            &cloze_note_type(),
+            &cloze_note("The word {{c1::night}} traces to old roots.", ""),
+        );
+        let card = materialize_generated_card(&cards[0], NOW + 1);
+        let lineage = card.lineage.expect("cloze cards carry lineage");
+
+        assert_eq!(card.id, "cloze-note::cloze::c1");
+        assert_eq!(card.front, "The word [...] traces to old roots.");
+        assert_eq!(lineage.note_id, "cloze-note");
+        assert_eq!(lineage.note_type_id, "cloze");
+        assert_eq!(lineage.template_id, "cloze");
+        assert_eq!(lineage.ordinal, 0);
+        assert_eq!(lineage.cloze_ordinal, Some(1));
+    }
+
+    #[test]
+    fn malformed_cloze_markers_render_literally() {
+        let cards = generate_cards_for_note(
+            &cloze_note_type(),
+            &cloze_note("{{cx::root}} {{c0::bad}}", ""),
+        );
+
+        assert!(cards.is_empty());
+
+        let mut values = HashMap::new();
+        values.insert("Text".to_string(), "{{c1::root}} {{cx::kept}}".to_string());
+        let rendered = render_cloze_template("{{cloze:Text}}", &values, 1, ClozeSide::Question);
+
+        assert_eq!(rendered, "[...] {{cx::kept}}");
     }
 }

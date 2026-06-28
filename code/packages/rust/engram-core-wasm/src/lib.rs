@@ -1099,6 +1099,68 @@ mod tests {
     }
 
     #[test]
+    fn generated_cards_expose_cloze_ordinals() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Spanish","description":"Grammar","createdAt":1700000000000}],
+            "noteTypes": [{
+                "id": "cloze",
+                "name": "Cloze",
+                "fields": [
+                    {"id": "text", "name": "Text", "required": true, "ordinal": 0},
+                    {"id": "extra", "name": "Extra", "required": false, "ordinal": 1}
+                ],
+                "templates": [{
+                    "id": "cloze",
+                    "name": "Cloze",
+                    "frontTemplate": "{{cloze:Text}}",
+                    "backTemplate": "{{cloze:Text}}<hr>{{Extra}}",
+                    "requiredFieldNames": ["Text"],
+                    "ordinal": 0
+                }],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "notes": [{
+                "id": "note",
+                "noteTypeId": "cloze",
+                "deckId": "deck",
+                "fields": [
+                    {"fieldId": "text", "value": "A {{c1::root::base}} plus a {{c2::suffix}}."},
+                    {"fieldId": "extra", "value": "etymology"}
+                ],
+                "tags": ["grammar"],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "cards": [],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let value: Value = serde_json::from_str(&session.generated_cards("cloze", "note")).unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["cards"].as_array().unwrap().len(), 2);
+        assert_eq!(value["cards"][0]["id"], "note::cloze::c1");
+        assert_eq!(value["cards"][0]["clozeOrdinal"], 1);
+        assert_eq!(value["cards"][0]["front"], "A [base] plus a suffix.");
+        assert_eq!(value["cards"][1]["id"], "note::cloze::c2");
+        assert_eq!(value["cards"][1]["clozeOrdinal"], 2);
+        assert_eq!(value["cards"][1]["front"], "A root plus a [...].");
+
+        let materialized: Value =
+            serde_json::from_str(&session.materialized_cards("cloze", "note", NOW + 1)).unwrap();
+
+        assert_eq!(materialized["ok"], true);
+        assert_eq!(materialized["cards"][0]["lineage"]["templateId"], "cloze");
+        assert_eq!(materialized["cards"][0]["lineage"]["clozeOrdinal"], 1);
+    }
+
+    #[test]
     fn search_cards_returns_core_browser_results() {
         let mut session = EngramSession::new();
         let snapshot = r#"{

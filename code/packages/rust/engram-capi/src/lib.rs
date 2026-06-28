@@ -482,6 +482,70 @@ mod tests {
     }
 
     #[test]
+    fn c_abi_generated_cards_return_cloze_json() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"deck","name":"Spanish","description":"Grammar","createdAt":1700000000000}],
+                    "noteTypes": [{
+                        "id": "cloze",
+                        "name": "Cloze",
+                        "fields": [
+                            {"id": "text", "name": "Text", "required": true, "ordinal": 0},
+                            {"id": "extra", "name": "Extra", "required": false, "ordinal": 1}
+                        ],
+                        "templates": [{
+                            "id": "cloze",
+                            "name": "Cloze",
+                            "frontTemplate": "{{cloze:Text}}",
+                            "backTemplate": "{{cloze:Text}}<hr>{{Extra}}",
+                            "requiredFieldNames": ["Text"],
+                            "ordinal": 0
+                        }],
+                        "createdAt": 1700000000000,
+                        "updatedAt": 1700000000000
+                    }],
+                    "notes": [{
+                        "id": "note",
+                        "noteTypeId": "cloze",
+                        "deckId": "deck",
+                        "fields": [
+                            {"fieldId": "text", "value": "{{c1::root::base}} plus {{c2::suffix}}"},
+                            {"fieldId": "extra", "value": "etymology"}
+                        ],
+                        "tags": ["grammar"],
+                        "createdAt": 1700000000000,
+                        "updatedAt": 1700000000000
+                    }],
+                    "cards": [],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            take(eg_load_snapshot(session, snapshot.as_ptr()));
+
+            let note_type_id = cstr("cloze");
+            let note_id = cstr("note");
+            let cards = take(eg_materialized_cards(
+                session,
+                note_type_id.as_ptr(),
+                note_id.as_ptr(),
+                NOW + 1,
+            ));
+
+            assert!(cards.contains(r#""id":"note::cloze::c1""#));
+            assert!(cards.contains(r#""front":"[base] plus suffix""#));
+            assert!(cards.contains(r#""clozeOrdinal":1"#));
+            assert!(cards.contains(r#""id":"note::cloze::c2""#));
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
     fn c_abi_session_progress_returns_json() {
         unsafe {
             let session = eg_session_new();
