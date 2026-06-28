@@ -1764,10 +1764,48 @@ fn map_v11_review(review: &AnkiV11Review, deck_id: &str) -> Review {
         card_id: review.card_id.to_string(),
         rating: rating_from_v11_ease(review.ease),
         reviewed_at: i64_to_u64(review.id),
-        previous_progress: None,
-        resulting_progress: None,
+        previous_progress: Some(v11_review_progress_snapshot(
+            review,
+            review.last_interval,
+            false,
+        )),
+        resulting_progress: Some(v11_review_progress_snapshot(review, review.interval, true)),
         previous_active_session: None,
         sibling_progress_snapshots: Vec::new(),
+    }
+}
+
+fn v11_review_progress_snapshot(
+    review: &AnkiV11Review,
+    interval: i64,
+    after_review: bool,
+) -> CardProgress {
+    let state = match review.kind {
+        0 => CardState::Learning,
+        2 => CardState::Relearning,
+        _ => CardState::Review,
+    };
+    let timestamp = i64_to_u64(review.id);
+    let incorrect = u32::from(after_review && review.ease == 1);
+    CardProgress {
+        card_id: review.card_id.to_string(),
+        state,
+        interval: i64_to_u32(interval),
+        ease_factor: if review.factor > 0 {
+            review.factor as f64 / 1000.0
+        } else {
+            INITIAL_EASE_FACTOR
+        },
+        next_due_at: timestamp,
+        learning_step_index: None,
+        buried_until: None,
+        suspended_at: None,
+        times_seen: u32::from(after_review),
+        times_correct: u32::from(after_review && review.ease != 1),
+        times_incorrect: incorrect,
+        last_seen_at: timestamp,
+        flag: None,
+        marked_at: None,
     }
 }
 
@@ -2730,6 +2768,22 @@ CREATE TABLE graves (
         assert_eq!(state.reviews[0].session_id, "anki-import:2");
         assert_eq!(state.reviews[0].rating, Rating::Good);
         assert_eq!(state.reviews[0].reviewed_at, 3000);
+        let previous = state.reviews[0].previous_progress.as_ref().unwrap();
+        assert_eq!(previous.card_id, "2000");
+        assert_eq!(previous.interval, 3);
+        assert_eq!(previous.ease_factor, 2.5);
+        let resulting = state.reviews[0].resulting_progress.as_ref().unwrap();
+        assert_eq!(resulting.card_id, "2000");
+        assert_eq!(resulting.interval, 7);
+        assert_eq!(resulting.ease_factor, 2.5);
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(exported.reviews[0].interval, 7);
+        assert_eq!(exported.reviews[0].last_interval, 3);
+        assert_eq!(exported.reviews[0].factor, 2500);
 
         assert_eq!(state.sessions.len(), 1);
         assert_eq!(state.sessions[0].id, "anki-import:2");

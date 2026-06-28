@@ -284,6 +284,9 @@ Next APKG SQLite milestone:
   sections, `{{FrontSide}}` for generated/imported card backs, and `hint:` /
   `type:` field prefixes. APKG import now infers required fields from imported
   template question formats instead of making every model field mandatory.
+- Imported V11 revlog rows now populate Engram review progress snapshots with
+  previous/resulting intervals and ease factors, allowing legacy APKG export to
+  round-trip `ivl`, `lastIvl`, and `factor` for imported reviews.
 - `engram-capi` now exposes `eg_parse_anki_apkg` for native import previews and
   `eg_import_anki_apkg` for applying supported APKG bytes into the shared
   session state. Both functions use the same JSON `{ ok, state/error }`
