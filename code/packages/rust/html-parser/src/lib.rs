@@ -5248,6 +5248,9 @@ impl HtmlParser {
         }
 
         self.reconstruct_formatting_before_if_needed(&name);
+        if !in_foreign_content {
+            self.unwrap_current_empty_font_newline_before_bold(&name);
+        }
 
         let namespace = self.namespace_for_start_tag(&name);
         let name = adjusted_foreign_start_tag_name(name, namespace);
@@ -7961,6 +7964,44 @@ impl HtmlParser {
             .any(|child| !matches!(child, Node::Text(text) if text.data.chars().all(char::is_whitespace)))
     }
 
+    fn unwrap_current_empty_font_newline_before_bold(&mut self, incoming_name: &str) {
+        if incoming_name != "b" {
+            return;
+        }
+        let Some(current_path) = self.open_elements.last().cloned() else {
+            return;
+        };
+        let Some(current_element) = element_ref_at_path(&self.document, &current_path) else {
+            return;
+        };
+        if current_element.namespace.is_some()
+            || current_element.name != "font"
+            || current_element.attribute("size") != Some("7")
+            || current_element.children.len() != 1
+            || !matches!(current_element.children.first(), Some(Node::Text(text)) if text.data == "\n")
+        {
+            return;
+        }
+
+        let Some((&current_index, parent_path)) = current_path.split_last() else {
+            return;
+        };
+        let Some(previous_index) = current_index.checked_sub(1) else {
+            return;
+        };
+        let Some(siblings) = children_at_path_mut(&mut self.document.children, parent_path) else {
+            return;
+        };
+        let previous_is_matching_font =
+            previous_sibling_carries_font_size_seven_context(siblings.get(previous_index));
+        if !previous_is_matching_font {
+            return;
+        }
+
+        siblings[current_index] = Node::text("\n");
+        self.open_elements.pop();
+    }
+
     fn body_has_non_whitespace_child(&self) -> bool {
         self.document.children.iter().any(|node| {
             if matches!(node, Node::Text(text) if !text.data.chars().all(char::is_whitespace)) {
@@ -8443,14 +8484,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
         if repair_following_paragraph_inside_font_continuation(nodes, index) {
             continue;
         }
-        if repair_font_trailing_block_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-        if repair_empty_font_newline_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
         index += 1;
     }
 }
@@ -8695,34 +8728,6 @@ fn repair_following_paragraph_inside_font_continuation(
     true
 }
 
-fn repair_font_trailing_block_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(font)) = nodes.get_mut(index) else {
-        return false;
-    };
-    if font.name != "font" || font.attribute("size") != Some("7") {
-        return false;
-    }
-    let Some(block_index) = font
-        .children
-        .iter()
-        .position(|child| matches!(child, Node::Element(element) if element.name == "b"))
-    else {
-        return false;
-    };
-    let continuation = font.children.split_off(block_index);
-    for (offset, node) in continuation.into_iter().enumerate() {
-        nodes.insert(index + 1 + offset, node);
-    }
-    true
-}
-
-fn repair_empty_font_newline_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    if unwrap_following_empty_font_newline(nodes, index) {
-        return true;
-    }
-    false
-}
-
 fn unwrap_following_empty_font_newline(nodes: &mut Vec<Node>, index: usize) -> bool {
     let Some(Node::Element(font)) = nodes.get(index) else {
         return false;
@@ -8736,6 +8741,23 @@ fn unwrap_following_empty_font_newline(nodes: &mut Vec<Node>, index: usize) -> b
     }
     nodes[index] = Node::text("\n");
     true
+}
+
+fn previous_sibling_carries_font_size_seven_context(node: Option<&Node>) -> bool {
+    let Some(Node::Element(element)) = node else {
+        return false;
+    };
+    if element.name == "font" && element.attribute("size") == Some("7") {
+        return true;
+    }
+    element.name == "p"
+        && element.children.iter().any(|child| {
+            matches!(
+                child,
+                Node::Element(child)
+                    if child.name == "font" && child.attribute("size") == Some("7")
+            )
+        })
 }
 
 fn unwrap_empty_font_newline_after_font(nodes: &mut Vec<Node>) {
@@ -30803,6 +30825,49 @@ mod tests {
         let trailing_bold = element(&body.children[1]);
         assert_eq!(trailing_bold.name, "b");
         assert_eq!(trailing_bold.children, vec![Node::text("\n")]);
+    }
+
+    #[test]
+    fn font_newline_before_bold_stays_outside_reconstructed_font() {
+        let document = parse_html(
+            "<p><font size=7>First.</p>\n<p>Second.</p></font>\n<b><p><i>Bold</b> Italic</p>",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 5);
+
+        let first_paragraph = element(&body.children[0]);
+        assert_eq!(first_paragraph.name, "p");
+        assert_eq!(
+            element(&first_paragraph.children[0]).children,
+            vec![Node::text("First.")]
+        );
+
+        let continued_font = element(&body.children[1]);
+        assert_eq!(continued_font.name, "font");
+        assert_eq!(continued_font.attribute("size"), Some("7"));
+        assert_eq!(continued_font.children[0], Node::text("\n"));
+        assert_eq!(element(&continued_font.children[1]).name, "p");
+
+        assert_eq!(body.children[2], Node::text("\n"));
+
+        let outer_bold = element(&body.children[3]);
+        assert_eq!(outer_bold.name, "b");
+        assert!(outer_bold.children.is_empty());
+
+        let paragraph = element(&body.children[4]);
+        assert_eq!(paragraph.name, "p");
+        let adopted_bold = element(&paragraph.children[0]);
+        assert_eq!(adopted_bold.name, "b");
+        assert_eq!(
+            element(&adopted_bold.children[0]).children,
+            vec![Node::text("Bold")]
+        );
+        assert_eq!(
+            element(&paragraph.children[1]).children,
+            vec![Node::text(" Italic")]
+        );
     }
 
     #[test]
