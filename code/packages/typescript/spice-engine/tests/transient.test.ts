@@ -215,6 +215,7 @@ describe("transient", () => {
     expect(jfetFixture?.chargeBehavior).toContain("CGS/CGD");
     const mosFixture = fixtures.find((fixture) => fixture.kind === "NMOS");
     expect(mosFixture?.chargeBehavior).toContain("CGSO/CGDO/CGBO");
+    expect(mosFixture?.chargeBehavior).toContain("CBS/CBD");
   });
 
   it("uses diode junction capacitance during transient current steps", () => {
@@ -311,6 +312,39 @@ describe("transient", () => {
 
     const unchargedFirst = run(0.0)[0].voltage("gate");
     const chargedFirst = run(1.0e-9)[0].voltage("gate");
+    expect(unchargedFirst).not.toBeUndefined();
+    expect(chargedFirst).not.toBeUndefined();
+    expect(unchargedFirst!).toBeGreaterThan(0.5);
+    expect(chargedFirst!).toBeLessThan(0.01);
+    expect(chargedFirst!).toBeLessThan(unchargedFirst!);
+  });
+
+  it("uses MOSFET bulk junction capacitance during transient drain steps", () => {
+    function run(drainBulkCapacitance: number): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vstep",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [1.0e-9, 1.0],
+          [5.0e-9, 1.0],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "drain", 1_000.0));
+      circuit.add(mosfet("M1", "drain", "0", "0", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        CBD: drainBulkCapacitance,
+      }));
+      return transient(circuit, 1.0e-9, 5.0e-9, "euler");
+    }
+
+    const unchargedFirst = run(0.0)[0].voltage("drain");
+    const chargedFirst = run(1.0e-9)[0].voltage("drain");
     expect(unchargedFirst).not.toBeUndefined();
     expect(chargedFirst).not.toBeUndefined();
     expect(unchargedFirst!).toBeGreaterThan(0.5);

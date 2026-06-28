@@ -8748,6 +8748,14 @@ def _mosfet_gate_body_charge_state_name(el: Mosfet) -> str:
     return f"_M_{el.name}_gb_charge"
 
 
+def _mosfet_source_body_charge_state_name(el: Mosfet) -> str:
+    return f"_M_{el.name}_sb_charge"
+
+
+def _mosfet_drain_body_charge_state_name(el: Mosfet) -> str:
+    return f"_M_{el.name}_db_charge"
+
+
 def _mosfet_charge_state_specs(el: Mosfet) -> list[tuple[str, str, str, float]]:
     params = getattr(getattr(el.model, "model", None), "params", None)
     if params is None:
@@ -8758,12 +8766,18 @@ def _mosfet_charge_state_specs(el: Mosfet) -> list[tuple[str, str, str, float]]:
     cgs = getattr(params, "CGSO", 0.0) * width
     cgd = getattr(params, "CGDO", 0.0) * width
     cgb = getattr(params, "CGBO", 0.0) * length
+    cbs = getattr(params, "CBS", 0.0)
+    cbd = getattr(params, "CBD", 0.0)
     if cgs > 0.0:
         specs.append((_mosfet_gate_source_charge_state_name(el), el.gate, el.source, cgs))
     if cgd > 0.0:
         specs.append((_mosfet_gate_drain_charge_state_name(el), el.gate, el.drain, cgd))
     if cgb > 0.0:
         specs.append((_mosfet_gate_body_charge_state_name(el), el.gate, el.body, cgb))
+    if cbs > 0.0:
+        specs.append((_mosfet_source_body_charge_state_name(el), el.source, el.body, cbs))
+    if cbd > 0.0:
+        specs.append((_mosfet_drain_body_charge_state_name(el), el.drain, el.body, cbd))
     return specs
 
 

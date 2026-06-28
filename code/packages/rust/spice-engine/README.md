@@ -141,11 +141,11 @@ Level-1 MOS charge audits. Diode `junction_capacitance` / `transit_time` and
 BJT `base_emitter_capacitance` / `base_collector_capacitance` /
 `forward_transit_time` / `reverse_transit_time`, and JFET
 `gate_source_capacitance` / `gate_drain_capacitance` plus Level-1 MOS
-`gate_source_overlap_capacitance`, `gate_drain_overlap_capacitance`, and
-`gate_bulk_overlap_capacitance` model-card parameters also stamp transient
-storage, matching their small-signal AC capacitance semantics. MOS bulk
-junction capacitance remains AC-only until nonlinear junction-charge stamping
-lands.
+`gate_source_overlap_capacitance`, `gate_drain_overlap_capacitance`,
+`gate_bulk_overlap_capacitance`, and zero-bias bulk-junction
+`source_bulk_capacitance` / `drain_bulk_capacitance` model-card parameters
+also stamp transient storage, matching their small-signal AC capacitance
+semantics.
 
 `analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
 module shape and rejects dynamic/event/system constructs; it is not a full

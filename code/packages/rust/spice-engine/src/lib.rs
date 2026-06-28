@@ -4042,6 +4042,7 @@ pub fn device_model_charge_audit_fixtures(
             ("CGSO", 2.0e-11),
             ("CGDO", 5.0e-12),
             ("CGBO", 1.0e-12),
+            ("CBS", 4.0e-13),
             ("CBD", 3.0e-13),
         ],
     )?;
@@ -4160,10 +4161,10 @@ pub fn device_model_charge_audit_fixtures(
             expected_initial_max: 1.0,
             expected_final_min: 0.68,
             expected_final_max: 0.73,
-            charge_behavior: "Level-1 MOS CGSO/CGDO/CGBO contribute transient gate-overlap storage; explicit Cstore keeps the fixture comparable while bulk junction charge remains AC-only".to_string(),
+            charge_behavior: "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and zero-bias bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits".to_string(),
             deck_lines: vec![
                 "* device-model charge fixture: mos-level1-storage-charge".to_string(),
-                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBD=3e-13)".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13)".to_string(),
                 "Vdd vdd 0 1.8".to_string(),
                 "Vgate gate 0 1.8".to_string(),
                 "Rload vdd out 1k".to_string(),
@@ -21223,12 +21224,22 @@ fn mosfet_gate_body_charge_state_name(mosfet: &Mosfet) -> String {
     format!("_M_{}_gb_charge", mosfet.name)
 }
 
+fn mosfet_source_body_charge_state_name(mosfet: &Mosfet) -> String {
+    format!("_M_{}_sb_charge", mosfet.name)
+}
+
+fn mosfet_drain_body_charge_state_name(mosfet: &Mosfet) -> String {
+    format!("_M_{}_db_charge", mosfet.name)
+}
+
 fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> {
     let mut specs = Vec::new();
     let params = mosfet.params;
     let gate_source_capacitance = params.gate_source_overlap_capacitance * params.w;
     let gate_drain_capacitance = params.gate_drain_overlap_capacitance * params.w;
     let gate_body_capacitance = params.gate_bulk_overlap_capacitance * params.l;
+    let source_body_capacitance = params.source_bulk_capacitance;
+    let drain_body_capacitance = params.drain_bulk_capacitance;
     if gate_source_capacitance > 0.0 {
         specs.push(MosfetChargeStateSpec {
             name: mosfet_gate_source_charge_state_name(mosfet),
@@ -21251,6 +21262,22 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
             positive: mosfet.gate.as_str(),
             negative: mosfet.body.as_str(),
             capacitance: gate_body_capacitance,
+        });
+    }
+    if source_body_capacitance > 0.0 {
+        specs.push(MosfetChargeStateSpec {
+            name: mosfet_source_body_charge_state_name(mosfet),
+            positive: mosfet.source.as_str(),
+            negative: mosfet.body.as_str(),
+            capacitance: source_body_capacitance,
+        });
+    }
+    if drain_body_capacitance > 0.0 {
+        specs.push(MosfetChargeStateSpec {
+            name: mosfet_drain_body_charge_state_name(mosfet),
+            positive: mosfet.drain.as_str(),
+            negative: mosfet.body.as_str(),
+            capacitance: drain_body_capacitance,
         });
     }
     specs

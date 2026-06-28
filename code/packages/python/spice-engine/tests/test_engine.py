@@ -554,6 +554,7 @@ def test_device_model_charge_audit_fixtures_run_reference_transients() -> None:
     assert "CGS/CGD" in jfet_fixture.charge_behavior
     mos_fixture = next(fixture for fixture in fixtures if fixture.kind == "NMOS")
     assert "CGSO/CGDO/CGBO" in mos_fixture.charge_behavior
+    assert "CBS/CBD" in mos_fixture.charge_behavior
 
 
 def test_transient_diode_junction_capacitance_slows_current_step() -> None:
@@ -641,6 +642,42 @@ def test_transient_mosfet_overlap_capacitance_slows_gate_step() -> None:
     assert charged.converged
     uncharged_first = uncharged.points[1].node_voltages["gate"]
     charged_first = charged.points[1].node_voltages["gate"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_bulk_junction_capacitance_slows_drain_step() -> None:
+    def run(cbd: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CBD=cbd)),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["drain"]
+    charged_first = charged.points[1].node_voltages["drain"]
     assert uncharged_first > 0.5
     assert charged_first < 0.01
     assert charged_first < uncharged_first

@@ -7644,6 +7644,7 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
     CGSO: 2.0e-11,
     CGDO: 5.0e-12,
     CGBO: 1.0e-12,
+    CBS: 4.0e-13,
     CBD: 3.0e-13,
   });
   const mosCircuit = new Circuit();
@@ -7752,10 +7753,10 @@ export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBeha
       expectedFinalMin: 0.68,
       expectedFinalMax: 0.73,
       chargeBehavior:
-        "Level-1 MOS CGSO/CGDO/CGBO contribute transient gate-overlap storage; explicit Cstore keeps the fixture comparable while bulk junction charge remains AC-only",
+        "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and zero-bias bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits",
       deckLines: [
         "* device-model charge fixture: mos-level1-storage-charge",
-        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBD=3e-13)",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13)",
         "Vdd vdd 0 1.8",
         "Vgate gate 0 1.8",
         "Rload vdd out 1k",
@@ -17421,11 +17422,21 @@ function mosfetGateBodyChargeStateName(element: Mosfet): string {
   return `_M_${element.name}_gb_charge`;
 }
 
+function mosfetSourceBodyChargeStateName(element: Mosfet): string {
+  return `_M_${element.name}_sb_charge`;
+}
+
+function mosfetDrainBodyChargeStateName(element: Mosfet): string {
+  return `_M_${element.name}_db_charge`;
+}
+
 function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
   const specs: MosfetChargeStateSpec[] = [];
   const gateSourceCapacitance = element.params.CGSO * element.params.W;
   const gateDrainCapacitance = element.params.CGDO * element.params.W;
   const gateBodyCapacitance = element.params.CGBO * element.params.L;
+  const sourceBodyCapacitance = element.params.CBS;
+  const drainBodyCapacitance = element.params.CBD;
   if (gateSourceCapacitance > 0.0) {
     specs.push({
       name: mosfetGateSourceChargeStateName(element),
@@ -17448,6 +17459,22 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
       positive: element.gate,
       negative: element.body,
       capacitance: gateBodyCapacitance,
+    });
+  }
+  if (sourceBodyCapacitance > 0.0) {
+    specs.push({
+      name: mosfetSourceBodyChargeStateName(element),
+      positive: element.source,
+      negative: element.body,
+      capacitance: sourceBodyCapacitance,
+    });
+  }
+  if (drainBodyCapacitance > 0.0) {
+    specs.push({
+      name: mosfetDrainBodyChargeStateName(element),
+      positive: element.drain,
+      negative: element.body,
+      capacitance: drainBodyCapacitance,
     });
   }
   return specs;
