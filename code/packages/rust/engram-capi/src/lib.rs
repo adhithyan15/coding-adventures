@@ -799,6 +799,47 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn c_abi_dispatches_shared_media_asset_commands() {
+        unsafe {
+            let session = eg_session_new();
+            let upsert = cstr(
+                r#"{
+                    "type": "upsertMediaAsset",
+                    "asset": {
+                        "id": "anki-media:0",
+                        "archiveName": "0",
+                        "filename": "audio/hola.mp3",
+                        "data": [109, 112, 51]
+                    }
+                }"#,
+            );
+
+            let result = take(eg_dispatch(session, upsert.as_ptr()));
+            let result: Value = serde_json::from_str(&result).unwrap();
+            assert_eq!(result["ok"], true);
+            assert_eq!(
+                result["state"]["mediaAssets"][0]["filename"],
+                "audio/hola.mp3"
+            );
+
+            let delete = cstr(
+                r#"{
+                    "type": "deleteMediaAsset",
+                    "assetId": "anki-media:0"
+                }"#,
+            );
+            let result = take(eg_dispatch(session, delete.as_ptr()));
+            let result: Value = serde_json::from_str(&result).unwrap();
+            assert!(result["state"]["mediaAssets"]
+                .as_array()
+                .unwrap()
+                .is_empty());
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
     fn c_abi_parses_and_imports_anki_apkg_state() {
         unsafe {
             let session = eg_session_new();

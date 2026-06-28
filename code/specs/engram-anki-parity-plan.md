@@ -311,6 +311,10 @@ Next APKG SQLite milestone:
   scan note fields/card HTML for Anki `[sound:...]` and local `src` references,
   then report referenced filenames, matched state media assets, missing files,
   and unreferenced assets through `eg_analyze_media_references`.
+- Host-managed media copy/prune flows now use shared Rust commands:
+  `upsertMediaAsset`, `deleteMediaAsset`, and `deleteMediaAssets` mutate
+  `AppState.media_assets` through the same reducer/JSON/C ABI path as review
+  actions, so web and native shells do not need separate media reducers.
 - `engram-capi` now exposes `eg_parse_anki_apkg` for native import previews and
   `eg_import_anki_apkg` for applying supported APKG bytes into the shared
   session state. Both functions use the same JSON `{ ok, state/error }`

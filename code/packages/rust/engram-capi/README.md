@@ -60,6 +60,10 @@ matched media asset IDs, missing filenames, and unreferenced asset IDs.
 materialization for native note/template editors.
 Native shells can send review-control commands such as `buryCardSiblings`
 through `eg_dispatch`, using the same JSON contract as web and Mosaic hosts.
+The same dispatch path accepts shared media commands such as
+`upsertMediaAsset`, `deleteMediaAsset`, and `deleteMediaAssets`, so native
+file-open/editor flows can copy, replace, or prune media assets without
+duplicating Engram state mutation logic.
 
 ## Build
 

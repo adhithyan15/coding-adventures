@@ -16,7 +16,7 @@ use engram_core::{
     import_basic_cards_csv, import_cards_csv, materialize_generated_card, reduce,
     restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history,
     AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card,
-    CardFlag, CardLineage, DeckOptions, EngramSnapshot, Rating,
+    CardFlag, CardLineage, DeckOptions, EngramSnapshot, MediaAssetRecord, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -572,6 +572,15 @@ enum FacadeCommand {
         name: String,
         updated_at: u64,
     },
+    UpsertMediaAsset {
+        asset: MediaAssetRecord,
+    },
+    DeleteMediaAsset {
+        asset_id: String,
+    },
+    DeleteMediaAssets {
+        asset_ids: Vec<String>,
+    },
     CreateCard {
         id: String,
         deck_id: String,
@@ -685,6 +694,15 @@ impl FacadeCommand {
                 name,
                 updated_at,
             },
+            Self::UpsertMediaAsset { asset } => {
+                engram_core::EngramCommand::UpsertMediaAsset { asset }
+            }
+            Self::DeleteMediaAsset { asset_id } => {
+                engram_core::EngramCommand::DeleteMediaAsset { asset_id }
+            }
+            Self::DeleteMediaAssets { asset_ids } => {
+                engram_core::EngramCommand::DeleteMediaAssets { asset_ids }
+            }
             Self::CreateCard {
                 id,
                 deck_id,
@@ -889,6 +907,79 @@ mod tests {
         assert_eq!(value["ok"], true);
         assert_eq!(value["state"]["decks"][0]["createdAt"], NOW);
         assert!(value["state"].get("cardProgress").is_some());
+    }
+
+    #[test]
+    fn dispatch_media_asset_commands_use_shared_state_contract() {
+        let mut session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertMediaAsset",
+                "asset": {
+                    "id": "anki-media:0",
+                    "archiveName": "0",
+                    "filename": "audio/hola.mp3",
+                    "data": [109, 112, 51]
+                }
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], true);
+        assert_eq!(
+            value["state"]["mediaAssets"][0]["filename"],
+            "audio/hola.mp3"
+        );
+
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertMediaAsset",
+                "asset": {
+                    "id": "anki-media:1",
+                    "archiveName": "1",
+                    "filename": "images/card.png",
+                    "data": [112, 110, 103]
+                }
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["state"]["mediaAssets"].as_array().unwrap().len(), 2);
+
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertMediaAsset",
+                "asset": {
+                    "id": "anki-media:0",
+                    "archiveName": "0",
+                    "filename": "audio/hola-v2.mp3",
+                    "data": [118, 50]
+                }
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(
+            value["state"]["mediaAssets"][0]["filename"],
+            "audio/hola-v2.mp3"
+        );
+        assert_eq!(value["state"]["mediaAssets"][0]["data"], json!([118, 50]));
+
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "deleteMediaAssets",
+                "assetIds": ["anki-media:1", "missing"]
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["state"]["mediaAssets"].as_array().unwrap().len(), 1);
+        assert_eq!(value["state"]["mediaAssets"][0]["id"], "anki-media:0");
+
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "deleteMediaAsset",
+                "assetId": "anki-media:0"
+            }"#,
+        ))
+        .unwrap();
+        assert!(value["state"]["mediaAssets"].as_array().unwrap().is_empty());
     }
 
     #[test]

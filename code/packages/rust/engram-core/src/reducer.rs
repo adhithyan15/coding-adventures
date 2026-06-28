@@ -1,7 +1,7 @@
 use crate::model::{
     ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, Deck,
-    DeckOptions, ExternalSourceRecord, ExternalSourceTarget, Rating, Review, Session,
-    SessionStatus,
+    DeckOptions, ExternalSourceRecord, ExternalSourceTarget, MediaAssetRecord, Rating, Review,
+    Session, SessionStatus,
 };
 use crate::scheduler::schedule_review;
 use crate::sm2::INITIAL_EASE_FACTOR;
@@ -29,6 +29,15 @@ pub enum EngramCommand {
         field_id: String,
         name: String,
         updated_at: u64,
+    },
+    UpsertMediaAsset {
+        asset: MediaAssetRecord,
+    },
+    DeleteMediaAsset {
+        asset_id: String,
+    },
+    DeleteMediaAssets {
+        asset_ids: Vec<String>,
     },
     CreateCard {
         id: String,
@@ -270,6 +279,36 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             }
             next
         }
+        EngramCommand::UpsertMediaAsset { asset } => {
+            let mut next = state.clone();
+            match next
+                .media_assets
+                .iter_mut()
+                .find(|existing| existing.id == asset.id)
+            {
+                Some(existing) => *existing = asset,
+                None => next.media_assets.push(asset),
+            }
+            next
+        }
+        EngramCommand::DeleteMediaAsset { asset_id } => AppState {
+            media_assets: state
+                .media_assets
+                .iter()
+                .filter(|asset| asset.id != asset_id)
+                .cloned()
+                .collect(),
+            ..state.clone()
+        },
+        EngramCommand::DeleteMediaAssets { asset_ids } => AppState {
+            media_assets: state
+                .media_assets
+                .iter()
+                .filter(|asset| !asset_ids.contains(&asset.id))
+                .cloned()
+                .collect(),
+            ..state.clone()
+        },
         EngramCommand::CreateCard {
             id,
             deck_id,
@@ -949,6 +988,71 @@ mod tests {
 
         assert_eq!(next.decks[0].id, "deck");
         assert_eq!(next.decks[0].created_at, NOW);
+    }
+
+    #[test]
+    fn media_asset_commands_add_replace_and_prune_shared_state() {
+        let audio = MediaAssetRecord {
+            id: "media:audio".to_string(),
+            archive_name: "0".to_string(),
+            filename: Some("audio/hola.mp3".to_string()),
+            data: b"mp3".to_vec(),
+        };
+        let replaced_audio = MediaAssetRecord {
+            id: "media:audio".to_string(),
+            archive_name: "0".to_string(),
+            filename: Some("audio/hola-v2.mp3".to_string()),
+            data: b"mp3-v2".to_vec(),
+        };
+        let image = MediaAssetRecord {
+            id: "media:image".to_string(),
+            archive_name: "1".to_string(),
+            filename: Some("images/card.png".to_string()),
+            data: b"png".to_vec(),
+        };
+
+        let mut state = reduce(
+            &AppState::default(),
+            EngramCommand::UpsertMediaAsset { asset: audio },
+        );
+        state = reduce(
+            &state,
+            EngramCommand::UpsertMediaAsset {
+                asset: image.clone(),
+            },
+        );
+        state = reduce(
+            &state,
+            EngramCommand::UpsertMediaAsset {
+                asset: replaced_audio,
+            },
+        );
+
+        assert_eq!(state.media_assets.len(), 2);
+        assert_eq!(state.media_assets[0].id, "media:audio");
+        assert_eq!(
+            state.media_assets[0].filename.as_deref(),
+            Some("audio/hola-v2.mp3")
+        );
+        assert_eq!(state.media_assets[0].data, b"mp3-v2");
+        assert_eq!(state.media_assets[1], image);
+
+        state = reduce(
+            &state,
+            EngramCommand::DeleteMediaAssets {
+                asset_ids: vec!["media:image".to_string(), "missing".to_string()],
+            },
+        );
+        assert_eq!(state.media_assets.len(), 1);
+        assert_eq!(state.media_assets[0].id, "media:audio");
+
+        let state = reduce(
+            &state,
+            EngramCommand::DeleteMediaAsset {
+                asset_id: "media:audio".to_string(),
+            },
+        );
+        assert!(state.media_assets.is_empty());
     }
 
     #[test]

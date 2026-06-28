@@ -41,6 +41,7 @@ This crate owns:
 - round-trippable card CSV import/export helpers
 - Anki-compatible Basic TSV card export
 - note-backed Anki Basic, Basic-and-reversed, Cloze, and custom-field TSV import/export
+- durable media asset state plus reducer commands for host-managed copy/prune flows
 - active review-session progress counts
 - deck-scoped review-history summaries
 - pure state transitions
@@ -57,6 +58,11 @@ Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`,
 also live here. They hide cards from queues and active sessions or store review
 metadata in the core reducer so web, Mosaic, and native shells all share the
 same behavior.
+Media commands such as `UpsertMediaAsset`, `DeleteMediaAsset`, and
+`DeleteMediaAssets` update `AppState.media_assets` in the same reducer, giving
+every shell one deterministic place to copy newly attached media, replace
+imported payloads, or prune unreferenced assets after a host-side media analysis
+pass.
 
 Reviews carry optional previous/resulting progress snapshots, sibling-progress
 snapshots, and active-session snapshots. `UndoLastReview` uses those snapshots

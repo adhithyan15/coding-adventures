@@ -65,6 +65,8 @@ The facade also exposes review-control commands:
 - `setCardFlag`
 - `markCard` / `unmarkCard`
 - `undoLastReview`
+- `upsertMediaAsset`
+- `deleteMediaAsset` / `deleteMediaAssets`
 
 Those commands update the Rust state snapshot directly, including active-session
 queues, so host shells do not need their own suspend or bury reducers.
@@ -74,6 +76,10 @@ restores previous review, sibling, and active-session snapshots and rewinds
 session counters through the same shared reducer.
 Flags and marks live on `CardProgress` as optional metadata so collection
 browsers can filter them without changing scheduling behavior.
+Media commands update `AppState.mediaAssets` through the same facade, letting
+web, Electron, SwiftUI, XAML, Qt, and other native hosts copy attached media,
+replace imported payloads, or prune unreferenced media IDs without a separate
+platform reducer.
 
 `search_cards` exposes the shared browser-query engine. It returns
 `{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for
