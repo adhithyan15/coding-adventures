@@ -27,6 +27,7 @@ SELF_CONTAINED_RUNGS = (
     "rung2_derived_solve",
     "rung3_linear_systems",
     "rung3_linear_optimization",
+    "rung3_optimization_witness",
     "rung3_quadratic_roots",
     "rung3_cubic_roots",
     "rung3_quartic_roots",
@@ -205,6 +206,26 @@ def test_decompose_prompt_mentions_native_optimization_program():
     assert "maximize 3 * x + 2 * y" in prompt
     assert "minimize x + y" in prompt
     assert "Do NOT compute the optimum" in prompt
+
+
+def test_decompose_prompt_mentions_native_optimization_witness_program():
+    prompt = le.decompose_prompt({
+        "stem": "Choose x and y with x and y at least 0. Maximize 3x + 2y. What is x?",
+        "program": (
+            "symbol x : scalar\n"
+            "symbol y : scalar\n"
+            "constrain x + y <= 4\n"
+            "constrain x <= 3\n"
+            "constrain x >= 0\n"
+            "constrain y >= 0\n"
+            "maximize 3 * x + 2 * y\n"
+        ),
+        "answer_from": {"type": "optimize_assignment", "name": "x"},
+    })
+    assert "linear optimization program" in prompt
+    assert "maximize 3 * x + 2 * y" in prompt
+    assert "requested `x` witness value" in prompt
+    assert "Do NOT compute" in prompt
 
 
 def test_decompose_prompt_mentions_native_root_solve_program():
@@ -465,6 +486,26 @@ def test_optimize_program_maps_engine_value_to_option():
         doc,
         {"type": "optimize_value"},
         {"A": 9, "B": 10, "C": 11, "D": 12, "E": 13},
+    ) == "C"
+
+
+def test_optimize_program_maps_engine_witness_to_option():
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    program = (
+        "symbol x : scalar\n"
+        "symbol y : scalar\n"
+        "constrain x + y <= 4\n"
+        "constrain x <= 3\n"
+        "constrain x >= 0\n"
+        "constrain y >= 0\n"
+        "maximize 3 * x + 2 * y\n"
+    )
+    doc = le.run_program(program)
+    assert le.program_answer_to_letter(
+        doc,
+        {"type": "optimize_assignment", "name": "x"},
+        {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5},
     ) == "C"
 
 
