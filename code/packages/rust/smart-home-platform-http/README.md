@@ -72,14 +72,15 @@ tool.
 The `GET /api/smart_home/*` routes expose dashboard-ready read models for the
 same runtime: pending-work snapshot counts, entity and capability registry
 records, a compact health probe, a capability catalog grouped across entities,
-device and bridge inventory, room topology summaries with member detail lookups,
-a readiness checklist with actionable links, a dashboard overview, a bootstrap
-payload that composes startup links, route discovery, state gaps, and recent
-audit summaries, an API route catalog with surface/method/authorization filters,
-checkpointed event-log entries with detail lookups, a native service catalog for
-command affordances and Home Assistant target aliases, a native current-state
-registry with confidence/source/staleness filters and detail lookups, a scene
-registry with room/action projections, command-result audit records with
+device and bridge inventory, room topology summaries with member detail lookups
+and room-scoped links, a readiness checklist with actionable links, a dashboard
+overview, a bootstrap payload that composes startup links, route discovery, state
+gaps, and recent audit summaries, an API route catalog with
+surface/method/authorization filters, checkpointed event-log entries with detail
+lookups, a native service catalog for command affordances and Home Assistant
+target aliases, a native current-state registry with confidence/source/staleness
+filters plus room filters and detail lookups, a scene registry with room/action
+projections, command-result audit records with
 command, bridge, correlation, status, and sort filters, indexed authorization
 decisions with principal, outcome, and sort filters, and desired-state
 supervision targets.
@@ -151,14 +152,17 @@ curl http://127.0.0.1:8123/api/smart_home/smoke
 curl 'http://127.0.0.1:8123/api/smart_home/api?surface=home_assistant&method=POST'
 curl 'http://127.0.0.1:8123/api/smart_home/api?mutating=true&authorized=true'
 curl 'http://127.0.0.1:8123/api/smart_home/states?domain=light&stale=true'
+curl 'http://127.0.0.1:8123/api/smart_home/states?room_id=kitchen&stale=true'
 curl 'http://127.0.0.1:8123/api/smart_home/states/light.entity_light_1'
 curl 'http://127.0.0.1:8123/api/smart_home/services?domain=light'
 curl 'http://127.0.0.1:8123/api/smart_home/services/light/turn_on'
 curl 'http://127.0.0.1:8123/api/smart_home/entities?domain=light&commandable=true'
+curl 'http://127.0.0.1:8123/api/smart_home/entities?room_id=kitchen'
 curl 'http://127.0.0.1:8123/api/smart_home/capabilities?domain=light&commandable=true'
 curl 'http://127.0.0.1:8123/api/smart_home/devices?room_id=kitchen&health=online'
 curl 'http://127.0.0.1:8123/api/smart_home/bridges?integration_id=hue&transport=lan_http'
 curl 'http://127.0.0.1:8123/api/smart_home/rooms?sort=scene_count&state_gaps_only=true'
+curl 'http://127.0.0.1:8123/api/smart_home/rooms/kitchen'
 curl 'http://127.0.0.1:8123/api/smart_home/scenes?room_id=kitchen&scope=room'
 curl 'http://127.0.0.1:8123/api/smart_home/scenes/scene.scene_kitchen_bright'
 curl 'http://127.0.0.1:8123/api/smart_home/events?limit=12'

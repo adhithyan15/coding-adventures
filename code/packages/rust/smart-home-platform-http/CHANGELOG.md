@@ -45,6 +45,8 @@ All notable changes to this package will be documented in this file.
   action.
 - Expanded the dashboard-ready room detail route with member devices, entities,
   and scenes.
+- Added room-scoped entity/state filters and navigation links on room detail
+  responses.
 - Added a browser dashboard event-log panel backed by the existing native
   runtime event stream route.
 - Added browser dashboard detail actions for history, event-log,
