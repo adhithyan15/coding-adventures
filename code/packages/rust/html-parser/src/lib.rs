@@ -4524,7 +4524,6 @@ impl HtmlParser {
         repair_split_div_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         repair_tricky_adoption_agency(&mut document);
-        repair_div_bold_nobr_continuation(&mut document.children);
         repair_em_aside_continuation(&mut document.children, self.explicit_em_end_seen);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
@@ -5271,6 +5270,15 @@ impl HtmlParser {
             path.push(child_index);
             self.open_elements.push(path);
         }
+        if namespace.is_none()
+            && name == "div"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
+            self.reconstruct_pending_formatting();
+        }
 
         for (formatting_name, formatting_attributes) in formatting_inside {
             let child_index =
@@ -5851,6 +5859,14 @@ impl HtmlParser {
             return;
         }
         if incoming_name == "p" && self.current_element_is_table_structure() {
+            return;
+        }
+        if incoming_name == "div"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
             return;
         }
         if !starts_before_formatting_reconstruction_boundary(incoming_name) {
@@ -8207,46 +8223,6 @@ fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_insanely_badly_nested_table_sequence(&mut document.children);
     unwrap_empty_font_newline_after_font(&mut document.children);
     remove_empty_text_nodes(&mut document.children);
-}
-
-fn repair_div_bold_nobr_continuation(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_div_bold_nobr_continuation(&mut element.children);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_div_has_bold = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(previous))
-                if previous.name == "div"
-                    && previous
-                        .children
-                        .iter()
-                        .any(|child| matches!(child, Node::Element(child) if child.name == "b"))
-        );
-        let Some(Node::Element(current)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        if previous_div_has_bold
-            && current.name == "div"
-            && current
-                .children
-                .first()
-                .is_some_and(|child| matches!(child, Node::Element(child) if child.name == "nobr"))
-        {
-            let mut bold = Node::element("b".to_string(), Vec::new());
-            if let Node::Element(element) = &mut bold {
-                element.children = std::mem::take(&mut current.children);
-            }
-            current.children.push(bold);
-        }
-        index += 1;
-    }
 }
 
 fn repair_em_aside_continuation(nodes: &mut Vec<Node>, explicit_em_end_seen: bool) {
@@ -30804,6 +30780,31 @@ mod tests {
         let following_anchor = element(&center.children[1]);
         assert_eq!(following_anchor.name, "a");
         assert!(following_anchor.children.is_empty());
+    }
+
+    #[test]
+    fn div_start_reconstructs_pending_bold_inside_new_div() {
+        let document = parse_html("<div><b></div><div><nobr>a<nobr>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let first_div = element(&body.children[0]);
+        assert_eq!(first_div.name, "div");
+        assert_eq!(first_div.children.len(), 1);
+        assert_eq!(element(&first_div.children[0]).name, "b");
+
+        let second_div = element(&body.children[1]);
+        assert_eq!(second_div.name, "div");
+        assert_eq!(second_div.children.len(), 1);
+
+        let reconstructed_bold = element(&second_div.children[0]);
+        assert_eq!(reconstructed_bold.name, "b");
+        assert_eq!(reconstructed_bold.children.len(), 2);
+        let nobr = element(&reconstructed_bold.children[0]);
+        assert_eq!(nobr.name, "nobr");
+        assert_eq!(nobr.children, vec![Node::text("a")]);
+        assert_eq!(element(&reconstructed_bold.children[1]).name, "nobr");
     }
 
     #[test]
