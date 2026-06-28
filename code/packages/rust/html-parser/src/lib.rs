@@ -6299,7 +6299,8 @@ impl HtmlParser {
                     "end tag `</p>` before body content was ignored",
                 ));
             }
-            "p" if !self.has_open_element("body")
+            "p" if !self.has_open_element("p")
+                && !self.has_open_element("body")
                 && !self.document_has_body_element()
                 && !self.body_has_non_whitespace_child() => {}
             "p" if self.current_parent_has_element_ancestor("button")
@@ -6399,6 +6400,13 @@ impl HtmlParser {
                 {
                     self.close_open_formatting_element_silently("a");
                 }
+            }
+            name if is_formatting_element(name)
+                && self.current_element_is(name)
+                && self.current_formatting_has_content_after_closed_paragraph(name) =>
+            {
+                self.remove_pending_formatting_reconstruction(name);
+                self.open_elements.pop();
             }
             name if is_formatting_element(name)
                 && self.current_element_is(name)
@@ -7590,6 +7598,26 @@ impl HtmlParser {
                 .any(|child| matches!(child, Node::Element(child) if child.name == "p"))
     }
 
+    fn current_formatting_has_content_after_closed_paragraph(&self, name: &str) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        if element.name != name {
+            return false;
+        }
+        let Some(paragraph_index) = element
+            .children
+            .iter()
+            .position(|child| matches!(child, Node::Element(child) if child.name == "p"))
+        else {
+            return false;
+        };
+        paragraph_index + 1 < element.children.len()
+    }
+
     fn has_open_element(&self, name: &str) -> bool {
         self.open_elements
             .iter()
@@ -8397,10 +8425,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
             repair_tricky_adoption_agency_in(&mut element.children);
         }
 
-        if repair_empty_formatting_paragraph_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
         if repair_formatting_newline_continuation(nodes, index) {
             index += 1;
             continue;
@@ -8429,54 +8453,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
         }
         index += 1;
     }
-}
-
-fn repair_empty_formatting_paragraph_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    if !matches!(
-        nodes.get(index),
-        Some(Node::Element(element)) if is_formatting_element(&element.name) && element.children.is_empty()
-    ) {
-        return false;
-    }
-    let Some(Node::Element(paragraph)) = nodes.get(index + 1) else {
-        return false;
-    };
-    if paragraph.name != "p" {
-        return false;
-    }
-    let Some(Node::Element(inner_formatting)) = paragraph.children.first() else {
-        return false;
-    };
-    if !is_formatting_element(&inner_formatting.name) {
-        return false;
-    }
-    if !inner_formatting.children.last().is_some_and(
-        |node| matches!(node, Node::Text(text) if text.data.ends_with(" Italic only.")),
-    ) {
-        return false;
-    }
-
-    let mut paragraph = nodes.remove(index + 1);
-    let Node::Element(paragraph_element) = &mut paragraph else {
-        return false;
-    };
-    let Node::Element(mut inner_formatting) = paragraph_element.children.remove(0) else {
-        return false;
-    };
-    let Some(trailing) = split_tail_text(&mut inner_formatting.children, " Italic only.") else {
-        return false;
-    };
-    let following_siblings = std::mem::take(&mut paragraph_element.children);
-    paragraph_element.children = inner_formatting.children;
-    let Some(Node::Element(outer_formatting)) = nodes.get_mut(index) else {
-        return false;
-    };
-    outer_formatting.children.push(paragraph);
-    outer_formatting.children.push(Node::text(trailing));
-    for (offset, node) in following_siblings.into_iter().enumerate() {
-        nodes.insert(index + 1 + offset, node);
-    }
-    true
 }
 
 fn repair_formatting_newline_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
@@ -30433,6 +30409,39 @@ mod tests {
         let reconstructed_italic = element(&paragraph.children[1]);
         assert_eq!(reconstructed_italic.name, "i");
         assert_eq!(reconstructed_italic.children, vec![Node::text(" Italic")]);
+    }
+
+    #[test]
+    fn paragraph_end_reopens_previous_empty_formatting_ancestor_for_following_text() {
+        let document = parse_html(
+            "<font color=red><i>Red italic<p>Red </font>Just italic.</p> Italic only.</i> Plain",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 3);
+
+        let red_font = element(&body.children[0]);
+        assert_eq!(red_font.name, "font");
+        assert_eq!(red_font.attribute("color"), Some("red"));
+        let red_italic = element(&red_font.children[0]);
+        assert_eq!(red_italic.name, "i");
+        assert_eq!(red_italic.children, vec![Node::text("Red italic")]);
+
+        let continued_italic = element(&body.children[1]);
+        assert_eq!(continued_italic.name, "i");
+        assert_eq!(continued_italic.children.len(), 2);
+
+        let paragraph = element(&continued_italic.children[0]);
+        assert_eq!(paragraph.name, "p");
+        let paragraph_font = element(&paragraph.children[0]);
+        assert_eq!(paragraph_font.name, "font");
+        assert_eq!(paragraph_font.attribute("color"), Some("red"));
+        assert_eq!(paragraph_font.children, vec![Node::text("Red ")]);
+        assert_eq!(paragraph.children[1], Node::text("Just italic."));
+
+        assert_eq!(continued_italic.children[1], Node::text(" Italic only."));
+        assert_eq!(body.children[2], Node::text(" Plain"));
     }
 
     #[test]
