@@ -67,50 +67,6 @@ style ReviewCard {
     padding       : 10 ;
   }
 
-  part rating-row {
-    padding : 4 ;
-  }
-
-  part rating-again {
-    background    : "#f87171" ;
-    border-width  : 1 ;
-    border-color  : "#991b1b" ;
-    border-radius : 6 ;
-    color         : "#1a1a2e" ;
-    font-weight   : 700 ;
-    padding       : 8 ;
-  }
-
-  part rating-hard {
-    background    : "#fb923c" ;
-    border-width  : 1 ;
-    border-color  : "#9a3412" ;
-    border-radius : 6 ;
-    color         : "#1a1a2e" ;
-    font-weight   : 700 ;
-    padding       : 8 ;
-  }
-
-  part rating-good {
-    background    : "#4ade80" ;
-    border-width  : 1 ;
-    border-color  : "#166534" ;
-    border-radius : 6 ;
-    color         : "#1a1a2e" ;
-    font-weight   : 700 ;
-    padding       : 8 ;
-  }
-
-  part rating-easy {
-    background    : "#60a5fa" ;
-    border-width  : 1 ;
-    border-color  : "#1d4ed8" ;
-    border-radius : 6 ;
-    color         : "#1a1a2e" ;
-    font-weight   : 700 ;
-    padding       : 8 ;
-  }
-
   part progress-label {
     color     : "#8899aa" ;
     font-size : 12 ;

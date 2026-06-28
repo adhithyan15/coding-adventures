@@ -113,6 +113,17 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
             "{backend:?} did not write {expected_artifact}"
         );
     }
+
+    let html = fs::read_to_string(tmp.path().join("html").join("EngramApp.html"))
+        .expect("EngramApp HTML artifact should be readable");
+    assert!(
+        html.contains("#e94560"),
+        "ReviewCard package styles should reach EngramApp HTML"
+    );
+    assert!(
+        html.contains("#f87171"),
+        "nested RatingControls package styles should reach EngramApp HTML"
+    );
 }
 
 #[test]

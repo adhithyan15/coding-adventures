@@ -5,6 +5,8 @@
 - Added a multi-backend artifact-builder smoke test proving `EngramApp` emits
   through HTML, React, SwiftUI, Qt, XAML, and Flutter while consuming
   `mosaic-pkg-review-card`.
+- Asserted that nested package styles from `ReviewCard` and
+  `RatingControls` reach the generated Engram HTML artifact.
 
 ## 0.1.0
 

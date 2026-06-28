@@ -1,56 +1,60 @@
 # mosaic-package-artifact-builder
 
 Per-backend package-artifact build mode for Mosaic packages, implementing
-**UI29 §4.3** ("Compiling a package").
+UI29 "Compiling a package".
 
-## What it does
+## What It Does
 
-Given a Mosaic package on disk (a directory with `mosaic-package.toml`
-plus a `src/` tree of `.mil` / `.mll` / `.msl` triples), this crate
-compiles every exported component to the requested backend and writes a
-backend-shaped artifact tree:
+Given a Mosaic package on disk, this crate compiles every exported component to
+the requested backend and writes a backend-shaped artifact tree:
 
-```
+```text
 <output_root>/
-└── react/             # or swiftui/, qt/, ...
-    ├── Grid.tsx
-    ├── Cell.tsx
-    ├── Column.tsx
-    └── index.ts       # or index.swift, qmldir
+`-- react/             # or swiftui/, qt/, html/, xaml/, flutter/
+    |-- Grid.tsx
+    |-- Cell.tsx
+    |-- Column.tsx
+    `-- index.ts
 ```
 
-It is the library underneath the `mosaic-compile pkg <root> --backend
-<name> --output <dir>` CLI subcommand.
+It is the library underneath the `mosaic-compile pkg <root> --backend <name>
+--output <dir>` CLI subcommand.
 
-## What it is not
+Package references such as `pkg::mosaic-pkg-card::Card` are inlined before
+backend emission. Styles from referenced packages are compiled and merged first,
+then the consuming package's style is applied, so apps get reusable component
+defaults plus local override points.
 
-- **Not a resolver.** It compiles every component in isolation against
-  its own triple. Cross-package `<Grid />` resolution belongs to
-  `mosaic-package-resolver`.
-- **Not a modifier of emitter crates.** It consumes their public
-  `from_pipeline(interface, layout, style)` entry points as opaque
-  IR-to-string lowerings.
+## Boundaries
 
-## Wired backends
+- Cross-package layout inlining lives in `mosaic-package-resolver`; this crate
+  coordinates that resolver during artifact builds.
+- Emitters stay backend-owned. This crate consumes their public
+  `from_pipeline(interface, layout, style)` entry points.
 
-| Backend       | Extension | Status                                    |
-|---------------|-----------|-------------------------------------------|
-| React         | `.tsx`    | wired                                     |
-| SwiftUI       | `.swift`  | wired                                     |
-| Qt (QML)      | `.qml`    | wired                                     |
-| WebComponent  | —         | returns `UnsupportedBackend` (pending UI) |
-| HTML          | —         | returns `UnsupportedBackend` (pending UI) |
+## Wired Backends
+
+| Backend | Extension | Status |
+| --- | --- | --- |
+| React | `.tsx` | wired |
+| SwiftUI | `.swift` | wired |
+| Qt (QML) | `.qml` | wired |
+| WebComponent | `.js` | wired |
+| HTML | `.html` | wired |
+| XAML | `.xaml` | wired |
+| Flutter | `.dart` | wired |
 
 ## Usage
 
 ```rust
 use std::path::PathBuf;
-use mosaic_package_artifact_builder::{build_package, BuildOptions, Backend};
+use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
 
 let opts = BuildOptions {
     package_root: PathBuf::from("code/packages/mosaic-pkg-grid"),
-    output_root:  PathBuf::from("/tmp/dist"),
-    backend:      Backend::React,
+    output_root: PathBuf::from("/tmp/dist"),
+    backend: Backend::React,
+    emit_project: false,
 };
 let result = build_package(&opts)?;
 for path in &result.artifacts {
@@ -59,23 +63,27 @@ for path in &result.artifacts {
 # Ok::<(), mosaic_package_artifact_builder::BuildError>(())
 ```
 
-## Error surface
+## Error Surface
 
-```
+```text
 build_package(...)
-    │
-    ├── Manifest(_)            ← <package_root>/mosaic-package.toml broken
-    ├── UnsupportedBackend(_)  ← WebComponent / Html (not yet wired)
-    ├── MissingComponent       ← reserved for cross-package checks
-    ├── SourceNotFound         ← .mil/.mll missing under src/
-    ├── PipelineError          ← mosmodel / moslayout / mosstyle / emitter failed
-    └── Io(_)                  ← read / write / mkdir failed
+  |-- Manifest(_)            <- mosaic-package.toml broken
+  |-- UnsupportedBackend(_)  <- future backend without a compiler path
+  |-- MissingComponent       <- reserved for cross-package checks
+  |-- SourceNotFound         <- .mil/.mll missing under src/
+  |-- PipelineError          <- mosmodel / moslayout / mosstyle / emitter failed
+  |-- PackageReferenceError  <- pkg::P::C layout/style dependency failed
+  |-- UnsafeName             <- manifest name unsafe for output paths
+  `-- Io(_)                  <- read / write / mkdir failed
 ```
 
-## Layout per backend
+## Layout Per Backend
 
-| Backend  | Files written                                    |
-|----------|---------------------------------------------------|
-| React    | `react/<Component>.tsx`, `react/index.ts`         |
-| SwiftUI  | `swiftui/<Component>.swift`, `swiftui/index.swift`|
-| Qt       | `qt/<Component>.qml`, `qt/qmldir`                 |
+| Backend | Files written |
+| --- | --- |
+| React | `react/<Component>.tsx`, `react/index.ts` |
+| SwiftUI | `swiftui/<Component>.swift`, `swiftui/index.swift` |
+| Qt | `qt/<Component>.qml`, `qt/qmldir` |
+| HTML | `html/<Component>.html`, `html/index.html` |
+| XAML | `xaml/<Component>.xaml` plus code-behind/events |
+| Flutter | `flutter/<Component>.dart`, `flutter/index.dart` |

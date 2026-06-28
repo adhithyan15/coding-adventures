@@ -445,10 +445,19 @@ Emit React first, then validate one native target.
 Status:
 
 - `code/packages/mosaic-pkg-review-card` adds the first reusable
-  `ReviewCard` component package.
-- The component package test compiles the same `.mil/.mll/.msl` sources
-  through React, HTML, SwiftUI, XAML, Qt, Compose, and Flutter pipeline
-  emitters.
+  `ReviewCard` component package. It now composes
+  `mosaic-pkg-rating-controls` instead of owning the rating button row.
+- `code/packages/mosaic-pkg-rating-controls` adds reusable
+  Again/Hard/Good/Easy answer grading controls with label slots and review
+  events.
+- Mosaic package artifact builds now inline nested package layouts and merge
+  dependency package styles before backend emission. Dependency styles apply
+  first and parent/app styles apply last, preserving reusable defaults while
+  allowing deliberate overrides.
+- The component package tests compile the same `.mil/.mll/.msl` sources
+  through React, HTML, SwiftUI, XAML, Qt, Compose, and Flutter paths, and the
+  app package test verifies the `EngramApp -> ReviewCard -> RatingControls`
+  chain through HTML, React, SwiftUI, XAML, Qt, and Flutter artifacts.
 - `code/programs/mosaic/engram-app` adds the Engram Mosaic app package. The
   app exports `EngramApp`, declares a dependency on `mosaic-pkg-review-card`,
   and mounts `pkg::mosaic-pkg-review-card::ReviewCard` rather than owning the

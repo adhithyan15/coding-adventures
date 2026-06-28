@@ -22,24 +22,16 @@ layout ReviewCard {
           content : slot: answer
         )
       }
-      Row [ rating-row ] {
-        HostButton [ rating-again ] (
-          label : "Again" ,
-          onClick : emit: onAgain
-        )
-        HostButton [ rating-hard ] (
-          label : "Hard" ,
-          onClick : emit: onHard
-        )
-        HostButton [ rating-good ] (
-          label : "Good" ,
-          onClick : emit: onGood
-        )
-        HostButton [ rating-easy ] (
-          label : "Easy" ,
-          onClick : emit: onEasy
-        )
-      }
+      pkg::mosaic-pkg-rating-controls::RatingControls (
+        again-label : "Again" ,
+        hard-label : "Hard" ,
+        good-label : "Good" ,
+        easy-label : "Easy" ,
+        onAgain : emit: onAgain ,
+        onHard : emit: onHard ,
+        onGood : emit: onGood ,
+        onEasy : emit: onEasy
+      )
     }
     Else {
       HostButton [ reveal-button ] (

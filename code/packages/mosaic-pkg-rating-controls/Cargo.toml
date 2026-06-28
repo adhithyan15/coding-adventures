@@ -1,4 +1,4 @@
-# Cargo.toml - smoke-test harness for mosaic-pkg-review-card.
+# Cargo.toml - smoke-test harness for mosaic-pkg-rating-controls.
 #
 # This package's deliverables are Mosaic source files. The Cargo project exists
 # only to run compile and emitter tests for the .mil/.mll/.msl sources.
@@ -7,17 +7,16 @@
 # Intentionally empty: opt out of the parent Rust workspace.
 
 [package]
-name        = "mosaic-pkg-review-card-smoke"
+name        = "mosaic-pkg-rating-controls-smoke"
 version     = "0.1.0"
 edition     = "2021"
-description = "Smoke-test harness for the ReviewCard Mosaic component package"
+description = "Smoke-test harness for the RatingControls Mosaic component package"
 publish     = false
 
 [dev-dependencies]
 mosmodel-compiler   = { path = "../rust/mosmodel-compiler" }
 moslayout-compiler  = { path = "../rust/moslayout-compiler" }
 mosstyle-compiler   = { path = "../rust/mosstyle-compiler" }
-mosaic-package-artifact-builder = { path = "../rust/mosaic-package-artifact-builder" }
 mosaic-emit-compose = { path = "../rust/mosaic-emit-compose" }
 mosaic-emit-flutter = { path = "../rust/mosaic-emit-flutter" }
 mosaic-emit-html    = { path = "../rust/mosaic-emit-html" }
@@ -25,7 +24,6 @@ mosaic-emit-qt      = { path = "../rust/mosaic-emit-qt" }
 mosaic-emit-react   = { path = "../rust/mosaic-emit-react" }
 mosaic-emit-swiftui = { path = "../rust/mosaic-emit-swiftui" }
 mosaic-emit-xaml    = { path = "../rust/mosaic-emit-xaml" }
-tempfile            = "3"
 toml                = "0.8"
 
 [[test]]

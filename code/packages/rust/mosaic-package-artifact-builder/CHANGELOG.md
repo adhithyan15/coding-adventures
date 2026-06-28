@@ -7,6 +7,11 @@ compilation and backend emission, using the shared `mosaic-package-resolver`
 layout inliner. This lets app packages compose reusable component packages and
 still emit backend artifacts from one app source tree.
 
+Dependency package styles are now compiled and merged into the consuming
+component artifact before backend emission. Dependency styles are applied first
+and the consuming component's own style is applied last, so parent/app packages
+can intentionally override a named part while keeping default package styling.
+
 The builder also now honors themed style fallbacks such as
 `<Component>.dark.msl` when `<Component>.msl` is absent.
 

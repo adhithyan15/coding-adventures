@@ -8,8 +8,7 @@ license = "MIT OR Apache-2.0"
 exports = ["ReviewCard"]
 
 [dependencies]
-# No userland component dependencies yet. The first slice uses only UI29 kernel
-# primitives so every backend can compile it today.
+mosaic-pkg-rating-controls = "0.1.0"
 
 [kernel]
 version = "1"
