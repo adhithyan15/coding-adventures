@@ -3,6 +3,15 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.26.0] — 2026-06-29 (AL8-arctan — `f64_atan/f64_tan` via `java.lang.Math`)
+
+Extended the f64 transcendental match arm to cover two more ops:
+- `f64_atan` → `Math.atan`  (inverse tangent, range −π/2 to π/2)
+- `f64_tan`  → `Math.tan`   (tangent)
+
+Both emit `dload r; invokestatic java/lang/Math.<method>:(D)D; dstore rd`.
+HotSpot intrinsifies `Math.atan` and `Math.tan` to native calls at JIT tier 4.
+
 ## [0.25.0] — 2026-06-28 (AL8-trig — `f64_sin/cos/ln/exp` via `java.lang.Math`)
 
 Extended the `f64_sqrt` arm to cover all five f64 ops: `f64_sqrt` → `Math.sqrt`,

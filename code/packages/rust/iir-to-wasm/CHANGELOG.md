@@ -3,6 +3,19 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.26.0] — 2026-06-29 (LANG-FULL AL8-arctan — `f64_atan/f64_tan` via host imports)
+
+WASM has no built-in atan/tan opcodes — same pattern as the AL8-trig imports.
+Two new host-imported functions added to the import table:
+- `env.__atan` (index 8)  — `f64 → f64` host import for inverse tangent
+- `env.__tan`  (index 9)  — `f64 → f64` host import for tangent
+
+`collect_module_features` detects `f64_atan` / `f64_tan` usage; two new booleans
+(`uses_f64_atan`, `uses_f64_tan`) control conditional import injection.
+`emit_instr` dispatches via `atan_fn_idx` / `tan_fn_idx` with `local.get + call + local.set`.
+The test host (`lang_matrix.rs`) registers `AtanFunc` / `TanFunc` resolvers that call
+Rust's `f64::atan` / `f64::tan`.
+
 ## [0.25.0] — 2026-06-28 (LANG-FULL AL8-trig — transcendentals via host imports)
 
 WASM has no built-in sin/cos/log/exp opcodes; the four ops are resolved via

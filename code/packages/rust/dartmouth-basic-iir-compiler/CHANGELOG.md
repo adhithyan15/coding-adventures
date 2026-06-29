@@ -1,5 +1,20 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.33.0 — 2026-06-29 — BA-arctan: `ATN` and `TAN` built-ins (LANG-FULL)
+
+Dartmouth BASIC's `ATN` (arc tangent) and `TAN` (tangent) built-in functions are now
+lowered to the `f64_atan` and `f64_tan` IIR ops respectively:
+
+| Function | Lowers to | All 7 backends |
+|----------|-----------|----------------|
+| `ATN(X)` | `f64_atan` IIR op | ✅ (libm `atan` / `env.__atan` / `Math.atan` / `System.Math.Atan` / `f64::atan`) |
+| `TAN(X)` | `f64_tan`  IIR op | ✅ (libm `tan`  / `env.__tan`  / `Math.tan`  / `System.Math.Tan`  / `f64::tan` ) |
+
+`ATN(0)` = 0.0 and `TAN(0)` = 0.0 exactly in IEEE-754 double; BA7's formatter prints
+whole-valued reals as integers, so `PRINT ATN(0)` outputs `0` and `PRINT TAN(0)` outputs `0`.
+
+Removed the `Unsupported` error for `ATN` and `TAN` from the BA-builtins error table.
+
 ## 0.32.0 — 2026-06-28 — BA-builtins: `SQR`, `INT`, `ABS`, `SGN` (LANG-FULL)
 
 Dartmouth BASIC's built-in math functions `SQR`, `INT`, `ABS`, and `SGN` are

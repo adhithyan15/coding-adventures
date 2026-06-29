@@ -1596,10 +1596,12 @@ impl Compiler {
     /// | `INT(X)` | `real_to_int_floor` → `int_to_real` | floor, result is f64 |
     /// | `ABS(X)` | inline if/neg/jmp    | store-per-branch, no phi          |
     /// | `SGN(X)` | inline 3-way if/jmp  | -1.0 / 0.0 / 1.0 per BA7 model   |
+    /// | `ATN(X)` | `f64_atan`           | arctan via libm/Math.atan etc.     |
+    /// | `TAN(X)` | `f64_tan`            | tangent via libm/Math.tan etc.     |
     ///
-    /// `SIN`, `COS`, `LOG`, `EXP`, `TAN`, `ATN`, `RND` need a cross-backend
-    /// math helper (libm call) and are rejected with a clear error until that
-    /// infrastructure lands.
+    /// `TAN` and `ATN` now also map to `f64_tan`/`f64_atan` IIR ops (AL8-arctan
+    /// infrastructure, same pattern as SIN/COS/LOG/EXP from BA-trig).
+    /// `RND` still needs a cross-backend RNG and is rejected with a clear error.
     fn emit_builtin_fn(&mut self, name: &str, node: &GrammarASTNode)
         -> Result<ExprValue, CompileError>
     {
@@ -1698,6 +1700,24 @@ impl Compiler {
                 self.emit("label", None, vec![Operand::Var(zero_lbl)], "void");
                 self.emit("const", Some(&dest), vec![Operand::Float(0.0)], "f64");
                 self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            // ATN(X) = arctan(X) — the AL8-arctan `f64_atan` IIR op, same
+            // pattern as SIN/COS from BA-trig.  ATN is the standard
+            // Dartmouth BASIC name for arctangent (§5 of the manual).
+            "atn" => {
+                let dest = self.fresh_temp();
+                self.emit("f64_atan", Some(&dest),
+                    vec![Operand::Var(arg.slot)], "f64");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            // TAN(X) = tan(X) — the AL8-arctan `f64_tan` IIR op.
+            "tan" => {
+                let dest = self.fresh_temp();
+                self.emit("f64_tan", Some(&dest),
+                    vec![Operand::Var(arg.slot)], "f64");
                 Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
             }
 

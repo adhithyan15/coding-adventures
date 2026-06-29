@@ -1384,6 +1384,12 @@ fn handle_f64_ln(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value
 fn handle_f64_exp(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     handle_f64_transcendental(ctx, instr, "f64_exp", f64::exp)
 }
+fn handle_f64_atan(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_atan", f64::atan)
+}
+fn handle_f64_tan(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_tan", f64::tan)
+}
 
 // ---------------------------------------------------------------------------
 // Standard opcode dispatch table
@@ -1453,6 +1459,8 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "f64_cos"           => Some(handle_f64_cos),
         "f64_ln"            => Some(handle_f64_ln),
         "f64_exp"           => Some(handle_f64_exp),
+        "f64_atan"          => Some(handle_f64_atan),
+        "f64_tan"           => Some(handle_f64_tan),
         // `call` is handled specially (needs jit_handlers) — see dispatch loop.
         _              => None,
     }

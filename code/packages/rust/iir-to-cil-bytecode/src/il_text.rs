@@ -851,13 +851,16 @@ fn emit_method(
             //
             // `sin`/`cos`/`exp` map directly to the .NET method names; ALGOL's
             // `ln` maps to `System.Math::Log(float64)float64` (natural log).
-            "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp" => {
+            "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp"
+            | "f64_atan" | "f64_tan" => {
                 let dotnet_method = match instr.op.as_str() {
                     "f64_sqrt" => "Sqrt",
                     "f64_sin"  => "Sin",
                     "f64_cos"  => "Cos",
                     "f64_ln"   => "Log",
                     "f64_exp"  => "Exp",
+                    "f64_atan" => "Atan",
+                    "f64_tan"  => "Tan",
                     _ => unreachable!(),
                 };
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
