@@ -38,8 +38,9 @@ binds them to the shared Rust business logic core through host shells.
   context-isolated IPC channels and can delegate them to an optional
   `electron/host.ts` or `MOSAIC_ELECTRON_HOST_MODULE` host module. The
   `engram-wasm` JS loader can serve that contract from the shared Rust facade.
-- The generated SwiftPM and Flutter shells mount `EngramApp` with sample slot
-  values and dispatch callbacks, matching the generated interface shapes.
+- The generated SwiftPM, Flutter, and Compose Desktop shells mount `EngramApp`
+  with sample slot values and dispatch callbacks, matching the generated
+  interface shapes.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
   expose the same Engram host contract slots, collection events, card-browser
   events, rating events, and Anki-style review action events as the shared Rust
@@ -76,8 +77,8 @@ cd code/programs/mosaic/engram-app
 
 The script writes HTML, WebComponent, React, Electron, SwiftUI, Qt, XAML,
 Flutter, and Compose outputs under `target/mosaic-engram-app/` by default. The
-Compose backend currently emits Kotlin library/source-set artifacts plus a
-README rather than a full Gradle project shell.
+Compose backend emits a pinned Gradle Compose Desktop shell plus the reusable
+Kotlin component source so it can be run with `gradle run`.
 
 For a Rust-backed web or Electron host, build
 `code/packages/rust/engram-wasm` and install

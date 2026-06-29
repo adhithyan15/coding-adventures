@@ -365,7 +365,15 @@ fn app_package_emits_native_project_shells() {
         (
             Backend::Compose,
             "compose",
-            vec!["EngramApp.kt", "index.kt", "README.md"],
+            vec![
+                "EngramApp.kt",
+                "index.kt",
+                "settings.gradle.kts",
+                "build.gradle.kts",
+                "src/main/kotlin/Main.kt",
+                "src/main/kotlin/EngramApp.kt",
+                "README.md",
+            ],
         ),
         (
             Backend::Xaml,
@@ -670,6 +678,65 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&compose_app, "actionUndoLabel: String,");
     assert_contains(&compose_app, "actionMarkLabel: String,");
     assert_contains(&compose_app, "dispatch: (EngramAppEvent) -> Unit,");
+    let compose_main = fs::read_to_string(
+        tmp.path()
+            .join("compose")
+            .join("src")
+            .join("main")
+            .join("kotlin")
+            .join("Main.kt"),
+    )
+    .expect("compose/src/main/kotlin/Main.kt");
+    assert_contains(&compose_main, "fun main() = application");
+    assert_contains(
+        &compose_main,
+        "Window(onCloseRequest = ::exitApplication, title = \"EngramApp\")",
+    );
+    assert_contains(&compose_main, "EngramApp(");
+    assert_contains(&compose_main, "appTitle = \"Sample AppTitle\",");
+    assert_contains(
+        &compose_main,
+        "deckOptionsSettingsLabel = \"Sample DeckOptionsSettingsLabel\",",
+    );
+    assert_contains(
+        &compose_main,
+        "deckOptionsLearningStepsValue = \"Sample DeckOptionsLearningStepsValue\",",
+    );
+    assert_contains(&compose_main, "deckOptionsNewCardsValue = 0.0,");
+    assert_contains(&compose_main, "deckOptionsEasyBonusValue = 0.0,");
+    assert_contains(&compose_main, "deckOptionsBuryNewSiblingsValue = false,");
+    assert_contains(&compose_main, "historyLabel = \"Sample HistoryLabel\",");
+    assert_contains(
+        &compose_main,
+        "collectionLabel = \"Sample CollectionLabel\",",
+    );
+    assert_contains(&compose_main, "browserQuery = \"Sample BrowserQuery\",");
+    assert_contains(&compose_main, "browserResults = emptyList(),");
+    assert_contains(&compose_main, "browserResultCardIds = emptyList(),");
+    assert_contains(
+        &compose_main,
+        "browserSelectedCardId = \"Sample BrowserSelectedCardId\",",
+    );
+    assert_contains(&compose_main, "answerVisible = false,");
+    assert_contains(
+        &compose_main,
+        "actionUndoLabel = \"Sample ActionUndoLabel\",",
+    );
+    assert_contains(
+        &compose_main,
+        "actionMarkLabel = \"Sample ActionMarkLabel\",",
+    );
+    assert_contains(
+        &compose_main,
+        "dispatch = { event -> println(\"event: ${event.mosaicEnvelope}\") }",
+    );
+    let compose_gradle = fs::read_to_string(tmp.path().join("compose").join("build.gradle.kts"))
+        .expect("compose/build.gradle.kts");
+    assert_contains(
+        &compose_gradle,
+        "id(\"org.jetbrains.compose\") version \"1.11.1\"",
+    );
+    assert_contains(&compose_gradle, "mainClass = \"MainKt\"");
 
     let qml =
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");
@@ -945,22 +1012,10 @@ fn native_project_shells_expose_engram_host_contract() {
         &xaml_events,
         "public sealed record Again() : EngramAppEvent",
     );
-    assert_contains(
-        &xaml_events,
-        "public sealed record Hard() : EngramAppEvent",
-    );
-    assert_contains(
-        &xaml_events,
-        "public sealed record Good() : EngramAppEvent",
-    );
-    assert_contains(
-        &xaml_events,
-        "public sealed record Easy() : EngramAppEvent",
-    );
-    assert_contains(
-        &xaml_events,
-        "public sealed record Undo() : EngramAppEvent",
-    );
+    assert_contains(&xaml_events, "public sealed record Hard() : EngramAppEvent");
+    assert_contains(&xaml_events, "public sealed record Good() : EngramAppEvent");
+    assert_contains(&xaml_events, "public sealed record Easy() : EngramAppEvent");
+    assert_contains(&xaml_events, "public sealed record Undo() : EngramAppEvent");
     assert_contains(
         &xaml_events,
         "public sealed record BuryCard() : EngramAppEvent",

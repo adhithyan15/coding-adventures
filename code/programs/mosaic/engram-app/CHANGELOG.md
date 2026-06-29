@@ -53,6 +53,9 @@
 - Asserted that the generated React, SwiftPM, and Flutter shells mount
   `EngramApp` with sample slot values and dispatch callbacks instead of
   non-compiling empty initializers.
+- Added a pinned Gradle Compose Desktop project shell for generated Compose
+  artifacts and asserted it mounts `EngramApp` with sample slot values and
+  Mosaic event-envelope logging.
 - Asserted that nested package styles from `DeckStatsPanel`, `SessionProgress`,
   `ReviewActions`, `ReviewCard`, and `RatingControls` reach the generated
   Engram HTML artifact.
