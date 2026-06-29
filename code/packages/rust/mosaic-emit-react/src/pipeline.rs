@@ -1752,7 +1752,9 @@ fn emit_host_button_jsx(
     // writes this as `onTap: emit: onSomething`; we rename to the
     // DOM-native `onClick` here because that's what React expects on a
     // `<button>`.
-    if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
+    if let Some(emit_name) =
+        find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
+    {
         let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_emit_name(&type_field)?;
         attrs.push_str(&format!(
@@ -5597,6 +5599,31 @@ mod tests {
 
     /// UI29 §2.1 test 7 — `disabled` slot ref camelCases to
     /// `disabled={isDisabled}`.
+    #[test]
+    fn host_button_string_label_and_on_click_emits_dispatch_button() {
+        let m = component("X", vec![], vec![emit("onClick", vec![])]);
+        let l = host_button_layout(vec![
+            LayoutProp {
+                name: "label".to_string(),
+                value: LayoutPropValue::String("Click me".to_string()),
+            },
+            LayoutProp {
+                name: "onClick".to_string(),
+                value: LayoutPropValue::EmitRef("onClick".to_string()),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<button onClick={() => dispatch({ type: \"click\" })}>"),
+            "expected `<button onClick=...>`, got:\n{out}"
+        );
+        assert!(
+            out.contains("{\"Click me\"}</button>"),
+            "expected string label as children before closing button, got:\n{out}"
+        );
+    }
+
     #[test]
     fn host_button_disabled_slot_ref_binds_to_disabled_attr() {
         let m = component("X", vec![slot("is-disabled", SlotType::Bool, true)], vec![]);

@@ -1787,7 +1787,9 @@ fn emit_host_button_qml(
     // `""` for arity-0 signals which is what we want; for arity-≥1
     // it returns `"text"`, but a button has no `text` in scope, so
     // we explicitly take the empty-arg path here.
-    if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
+    if let Some(emit_name) =
+        find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
+    {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
         let arity = ctx
@@ -4146,6 +4148,26 @@ mod tests {
     /// HostCheckbox's `onToggle` invocation must follow the
     /// signal's declared arity.  Parameterless → `onToggled: x()`.
     #[test]
+    fn host_button_on_click_parameterless_emits_no_args() {
+        let m = component("X", vec![], vec![emit_decl("onClick", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onClick".to_string(),
+                    value: LayoutPropValue::EmitRef("onClick".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(r.output.contains("onClicked: click()"));
+        assert!(!r.output.contains("onClicked: click(text)"));
+    }
+
+    #[test]
     fn host_checkbox_on_toggle_parameterless_emits_no_args() {
         let m = component("X", vec![], vec![emit_decl("onToggle", vec![])]);
         let l = LayoutDef {
@@ -4310,6 +4332,45 @@ mod tests {
                     },
                     LayoutProp {
                         name: "onTap".to_string(),
+                        value: LayoutPropValue::EmitRef("onSave".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("Button {"),
+            "missing Button in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("text: \"Save\""),
+            "missing label text in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("onClicked: save()"),
+            "missing onClicked in:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn host_button_with_label_and_on_click_emits_button_block() {
+        let m = component("X", vec![], vec![emit_decl("onSave", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "label".to_string(),
+                        value: LayoutPropValue::String("Save".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onClick".to_string(),
                         value: LayoutPropValue::EmitRef("onSave".to_string()),
                     },
                 ],

@@ -1577,7 +1577,9 @@ fn emit_host_button(
     let inner = "    ".repeat(depth + 1);
 
     // onTap → onClick dispatch
-    let on_click = if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
+    let on_click = if let Some(emit_name) =
+        find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
+    {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
         let arity = emits
@@ -1596,7 +1598,7 @@ fn emit_host_button(
             format!("dispatch({component_name}Event.{case}(/* TODO: payload */))")
         }
     } else {
-        "/* no onTap bound */".to_string()
+        "/* no onClick bound */".to_string()
     };
 
     let label = match find_prop_value(node, "label") {
@@ -2556,6 +2558,34 @@ mod tests {
         assert!(
             out.contains("dispatch(BarEvent.Tap)"),
             "expected dispatch(BarEvent.Tap), got:\n{out}"
+        );
+        assert!(out.contains("Text(text = \"Go\")"));
+    }
+
+    #[test]
+    fn host_button_with_on_click_dispatches_data_object() {
+        let m = component("Bar", vec![], vec![emit_decl("onClick", vec![])]);
+        let l = layout(
+            "Bar",
+            node(
+                "HostButton",
+                vec![
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::String("Go".into()),
+                    },
+                    LayoutProp {
+                        name: "onClick".into(),
+                        value: LayoutPropValue::EmitRef("onClick".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Bar")).unwrap().output;
+        assert!(
+            out.contains("dispatch(BarEvent.Click)"),
+            "expected dispatch(BarEvent.Click), got:\n{out}"
         );
         assert!(out.contains("Text(text = \"Go\")"));
     }

@@ -1452,8 +1452,11 @@ fn emit_host_button(
         }
         _ => {}
     }
-    append_emit_marker(&mut attrs, node, "onClick", "data-on-click");
-    append_emit_marker(&mut attrs, node, "onTap", "data-on-click");
+    if find_prop(node, "onClick").is_some() {
+        append_emit_marker(&mut attrs, node, "onClick", "data-on-click");
+    } else {
+        append_emit_marker(&mut attrs, node, "onTap", "data-on-click");
+    }
 
     let style_attr = build_style_attr(node, "", part_styles);
 
@@ -3443,6 +3446,24 @@ mod tests {
     // -------------------------------------------------------------------
     // U29-K-html test 6 — HostScroll lowers to `<div style="overflow: auto">`.
     // -------------------------------------------------------------------
+    #[test]
+    fn host_button_on_tap_alias_becomes_click_hydration_marker() {
+        let l = layout(
+            "B",
+            node_with_props(
+                "HostButton",
+                vec![prop_slot("label", "label"), prop_emit("onTap", "onSave")],
+            ),
+        );
+        let out = from_pipeline(&component("B", vec![]), &l, &empty_style("B"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<button data-on-click=\"onSave\">{{label}}</button>"),
+            "expected button with onTap alias hydration marker, got:\n{out}"
+        );
+    }
+
     #[test]
     fn host_scroll_lowers_to_overflow_auto_div() {
         let out = from_pipeline(

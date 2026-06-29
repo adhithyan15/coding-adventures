@@ -1860,7 +1860,9 @@ fn emit_host_button(
     let disabled_is_true = matches!(find_keyword_prop(node, "disabled"), Some("true"));
     let on_pressed_expr: String = if disabled_is_true {
         "null".to_string()
-    } else if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
+    } else if let Some(emit_name) =
+        find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
+    {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
         format!("() => dispatch({component}Event{case}())")
@@ -3219,6 +3221,32 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &r.output;
         assert!(out.contains("ElevatedButton"));
+        assert!(out.contains("Text(\"Save\")"));
+    }
+
+    #[test]
+    fn host_button_with_on_click_emits_dispatch_handler() {
+        let m = component("X", vec![], vec![emit("onClick", vec![])]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostButton",
+                vec![
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::String("Save".into()),
+                    },
+                    LayoutProp {
+                        name: "onClick".into(),
+                        value: LayoutPropValue::EmitRef("onClick".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(out.contains("onPressed: () => dispatch(XEventClick())"));
         assert!(out.contains("Text(\"Save\")"));
     }
 

@@ -4188,7 +4188,9 @@ fn emit_host_button(
     }
 
     // onClick â†’ Click handler
-    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onClick") {
+    if let Some(LayoutPropValue::EmitRef(emit_name)) =
+        find_prop_value(node, "onClick").or_else(|| find_prop_value(node, "onTap"))
+    {
         let handler = format!("{x_name}_Click");
         let emit_case = strip_on_prefix(emit_name);
         let case_pascal = kebab_to_pascal_case(&emit_case);
@@ -7576,6 +7578,33 @@ mod tests {
     }
 
     // â”€â”€ HostScroll â”€â”€
+
+    #[test]
+    fn host_button_on_tap_alias_emits_dispatch_handler() {
+        let c = component("Foo", vec![], vec![emit("onSubmit", vec![])]);
+        let l = layout_with_root(
+            "Foo",
+            host_button_node(
+                Some("submit"),
+                vec![LayoutProp {
+                    name: "onTap".to_string(),
+                    value: LayoutPropValue::EmitRef("onSubmit".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("Click=\"Submit_Click\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains("private void Submit_Click"),
+            "got:\n{}",
+            r.code_behind
+        );
+        assert!(r.code_behind.contains("FooEvent.Submit()"));
+    }
 
     #[test]
     fn host_scroll_default_direction_is_vertical() {

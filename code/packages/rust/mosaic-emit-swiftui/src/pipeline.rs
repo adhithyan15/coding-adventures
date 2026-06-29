@@ -2160,14 +2160,15 @@ fn emit_host_button(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
     let inner_pad = " ".repeat(indent + 4);
 
     // Action closure body.
-    let action_body = match find_emit_ref_prop(node, "onTap") {
-        Some(emit_name) => {
-            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-            validate_emit_name(&case_name)?;
-            format!("dispatch(.{case_name})")
-        }
-        None => String::new(),
-    };
+    let action_body =
+        match find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap")) {
+            Some(emit_name) => {
+                let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+                validate_emit_name(&case_name)?;
+                format!("dispatch(.{case_name})")
+            }
+            None => String::new(),
+        };
 
     // Label expression. String literal → `Text("...")`; slot ref →
     // `Text(slotName)`; nothing bound → `Text("")` placeholder.
@@ -4436,6 +4437,42 @@ mod tests {
     // Like the other containers, the empty-children form prints
     // `ScrollView { }` so it still type-checks under SwiftUI's `some View`.
     // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_button_on_click_emits_button_with_action_and_label() {
+        let layout = layout_with(
+            "Bar",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostButton",
+                    vec![
+                        prop_slot_ref("label", "caption"),
+                        prop_emit_ref("onClick", "onClick"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "Bar",
+                vec![slot("caption", SlotType::Text, true)],
+                vec![emit("onClick", vec![])],
+            ),
+            &layout,
+            &empty_style("Bar"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("Button(action: { dispatch(.click) }) {"),
+            "expected Button(action:) opener, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(caption)"),
+            "expected label closure with Text(caption), got:\n{out}"
+        );
+    }
 
     #[test]
     fn host_scroll_lowers_to_scroll_view() {

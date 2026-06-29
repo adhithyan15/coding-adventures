@@ -1243,7 +1243,8 @@ fn emit_host_button(node: &LayoutNode) -> String {
 
     // onclick — moslayout authors write `onTap:` (platform-neutral
     // kernel name); we rename to the DOM-native `onclick` here.
-    if let Some(emit_name) = find_emit_ref(node, "onTap") {
+    if let Some(emit_name) = find_emit_ref(node, "onClick").or_else(|| find_emit_ref(node, "onTap"))
+    {
         let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         if is_safe_identifier(&type_field) {
             attrs.push_str(&format!(
@@ -3344,6 +3345,35 @@ mod tests {
         assert!(
             r.output.contains(
                 r#"<button onclick="this.getRootNode().host.dispatch({type:'tap'})">Save</button>"#
+            ),
+            "HostButton output does not match expected shape:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn host_button_on_click_emits_button_with_literal_label_and_onclick() {
+        let m = component("Btn", vec![], vec![emit_decl("onClick", vec![])]);
+        let l = root_layout(
+            "Btn",
+            leaf_with_props(
+                "HostButton",
+                vec![
+                    LayoutProp {
+                        name: "label".to_string(),
+                        value: LayoutPropValue::String("Save".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onClick".to_string(),
+                        value: LayoutPropValue::EmitRef("onClick".to_string()),
+                    },
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("Btn")).unwrap();
+        assert!(
+            r.output.contains(
+                r#"<button onclick="this.getRootNode().host.dispatch({type:'click'})">Save</button>"#
             ),
             "HostButton output does not match expected shape:\n{}",
             r.output
