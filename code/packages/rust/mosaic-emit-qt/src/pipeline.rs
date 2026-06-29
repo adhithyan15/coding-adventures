@@ -448,6 +448,10 @@ struct EmitCtx<'a> {
     /// Combined with `col_widths_slot` to produce
     /// `Layout.preferredWidth: columnWidths[<idx>]` on table cells.
     enclosing_index: Option<String>,
+    /// Item identifier of the nearest enclosing `For` (e.g. `item`,
+    /// `option`). Row buttons use this for single text-like signal
+    /// payloads.
+    enclosing_item: Option<String>,
     /// Text styling (colour / alignment / font / padding) inherited from
     /// the nearest enclosing styled cell `Box`. Applied to descendant
     /// `Text` / `TextInput` so the cell's value renders aligned and
@@ -481,9 +485,10 @@ struct InheritedStyle {
 }
 
 impl<'a> EmitCtx<'a> {
-    /// A child context that descends into a `For` carrying `index`.
-    fn with_index(&self, index: Option<String>) -> Self {
+    /// A child context that descends into a `For` carrying its item/index bindings.
+    fn with_for(&self, item: String, index: Option<String>) -> Self {
         EmitCtx {
+            enclosing_item: Some(item),
             enclosing_index: index.or_else(|| self.enclosing_index.clone()),
             ..self.clone()
         }
@@ -912,6 +917,7 @@ pub fn from_pipeline(
         part_styles: &part_styles,
         col_widths_slot: None,
         enclosing_index: None,
+        enclosing_item: None,
         text_style: None,
         inherited: InheritedStyle::default(),
         cell_fill_children: false,
@@ -1791,23 +1797,45 @@ fn emit_host_button_qml(
     {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arity = ctx
-            .emits
-            .iter()
-            .find(|e| e.name == *emit_name)
-            .map(|e| e.params.len())
-            .unwrap_or(0);
-        if arity > 0 {
+        if let Some(args) = host_button_signal_args(emit_name, ctx) {
+            writeln!(out, "{inner_pad}onClicked: {camel}({args})").unwrap();
+        } else {
+            let arity = ctx
+                .emits
+                .iter()
+                .find(|e| e.name == *emit_name)
+                .map(|e| e.params.len())
+                .unwrap_or(0);
             writeln!(
                 out,
-                "{inner_pad}// NOTE: signal '{emit_name}' declares {arity} param(s) but Qt's Button.clicked() has none; invoking parameterless"
-            ).unwrap();
+                "{inner_pad}// NOTE: signal '{emit_name}' declares {arity} param(s) but Qt's Button.clicked() has no supported row payload; invoking parameterless"
+            )
+            .unwrap();
+            writeln!(out, "{inner_pad}onClicked: {camel}()").unwrap();
         }
-        writeln!(out, "{inner_pad}onClicked: {camel}()").unwrap();
     }
 
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
+}
+
+fn host_button_signal_args(emit_name: &str, ctx: &EmitCtx) -> Option<String> {
+    let Some(emit) = ctx.emits.iter().find(|e| e.name == emit_name) else {
+        return Some(String::new());
+    };
+    if emit.params.is_empty() {
+        return Some(String::new());
+    }
+    if emit.params.len() != 1 {
+        return None;
+    }
+    match &emit.params[0].r#type {
+        EmitPayloadType::Text | EmitPayloadType::Color | EmitPayloadType::Component(_) => {
+            ctx.enclosing_item.clone()
+        }
+        EmitPayloadType::Number => ctx.enclosing_index.clone(),
+        EmitPayloadType::Bool => None,
+    }
 }
 
 /// Lower a `HostDialog` node (UI29-1, the 16th kernel primitive) to a
@@ -2789,9 +2817,9 @@ fn emit_for_qml(
     // for the header loop) becomes the nearest-enclosing index for any
     // styled cell `Box` beneath it — that index drives the cell's
     // `Layout.preferredWidth: columnWidths[<index>]` column-width thread.
-    // `with_index` keeps the existing index when this For has none, so a
+    // `with_for` keeps the existing index when this For has none, so a
     // styled cell still sees the closest indexed ancestor.
-    let child_ctx = ctx.with_index(index_name.clone());
+    let child_ctx = ctx.with_for(as_name.clone(), index_name.clone());
     out.push_str(&emit_qml_children(
         &node.children,
         depth + 2,
@@ -3109,11 +3137,18 @@ fn build_label_attribute(node: &LayoutNode) -> Option<String> {
                 "text: \"\"".to_string()
             }
         }
-        LayoutPropValue::Keyword(k) => format!("text: \"{k}\""),
+        LayoutPropValue::Keyword(k) => {
+            let camel = to_camel_case_first_lower(k);
+            if is_safe_identifier(&camel) {
+                format!("text: {camel}")
+            } else {
+                "text: \"\"".to_string()
+            }
+        }
         LayoutPropValue::Number(n) => format!("text: \"{n}\""),
         LayoutPropValue::EmitRef(_) => "text: \"\"".to_string(),
         // U29-G3 expression — same treatment as build_value_attribute.
-        LayoutPropValue::Expr(_) => "text: \"\"".to_string(),
+        LayoutPropValue::Expr(text) => format!("text: {text}"),
     })
 }
 
@@ -4255,6 +4290,112 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(r.output.contains("onClicked: click()"));
         assert!(!r.output.contains("onClicked: click(text)"));
+    }
+
+    #[test]
+    fn host_button_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "ListGroup",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "ListGroup".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "For".to_string(),
+                    part_name: None,
+                    props: vec![
+                        lp("each", LayoutPropValue::SlotRef("items".to_string())),
+                        lp("as", LayoutPropValue::Keyword("item".to_string())),
+                        lp("index", LayoutPropValue::Keyword("i".to_string())),
+                    ],
+                    children: vec![LayoutNode {
+                        tag: "HostButton".to_string(),
+                        part_name: None,
+                        props: vec![
+                            lp("label", LayoutPropValue::Keyword("item".to_string())),
+                            lp("onClick", LayoutPropValue::EmitRef("onSelect".to_string())),
+                        ],
+                        children: Vec::new(),
+                    }],
+                }],
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("ListGroup")).unwrap();
+        assert!(r.output.contains("property int i: index"));
+        assert!(
+            r.output.contains("onClicked: select(i)"),
+            "expected HostButton to dispatch index payload, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("text: item"),
+            "expected HostButton label to use For item binding, got:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn host_button_inside_for_dispatches_text_item_payload() {
+        let m = component(
+            "SelectMenu",
+            vec![slot(
+                "options",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "SelectMenu".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "For".to_string(),
+                    part_name: None,
+                    props: vec![
+                        lp("each", LayoutPropValue::SlotRef("options".to_string())),
+                        lp("as", LayoutPropValue::Keyword("option".to_string())),
+                    ],
+                    children: vec![LayoutNode {
+                        tag: "HostButton".to_string(),
+                        part_name: None,
+                        props: vec![
+                            lp("label", LayoutPropValue::Keyword("option".to_string())),
+                            lp("onClick", LayoutPropValue::EmitRef("onChange".to_string())),
+                        ],
+                        children: Vec::new(),
+                    }],
+                }],
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("SelectMenu")).unwrap();
+        assert!(
+            r.output.contains("onClicked: change(option)"),
+            "expected HostButton to dispatch item payload, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("text: option"),
+            "expected HostButton label to use For item binding, got:\n{}",
+            r.output
+        );
     }
 
     #[test]
