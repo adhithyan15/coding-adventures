@@ -12,8 +12,11 @@ the requested backend and writes a backend-shaped artifact tree:
 <output_root>/
 `-- react/             # or swiftui/, qt/, html/, xaml/, flutter/
     |-- Grid.tsx
+    |-- Grid.lattice
     |-- Cell.tsx
+    |-- Cell.lattice
     |-- Column.tsx
+    |-- Column.lattice
     `-- index.ts
 ```
 
@@ -23,7 +26,9 @@ It is the library underneath the `mosaic-compile pkg <root> --backend <name>
 Package references such as `pkg::mosaic-pkg-card::Card` are inlined before
 backend emission. Styles from referenced packages are compiled and merged first,
 then the consuming package's style is applied, so apps get reusable component
-defaults plus local override points.
+defaults plus local override points. Each non-empty resolved style map is also
+written as a backend-agnostic `<Component>.lattice` sidecar beside the emitted
+component artifact.
 
 Set `BuildOptions::emit_project` to `true` to write backend project shells
 beside the component artifacts. React, HTML, WebComponent, Flutter, Qt,
@@ -101,9 +106,9 @@ build_package(...)
 
 | Backend | Files written |
 | --- | --- |
-| React | `react/<Component>.tsx`, `react/index.ts` |
-| SwiftUI | `swiftui/<Component>.swift`, `swiftui/index.swift` |
-| Qt | `qt/<Component>.qml`, `qt/qmldir` |
-| HTML | `html/<Component>.html`, `html/index.html` |
-| XAML | `xaml/<Component>.xaml` plus code-behind/events |
-| Flutter | `flutter/<Component>.dart`, `flutter/index.dart` |
+| React | `react/<Component>.tsx`, `react/<Component>.lattice`, `react/index.ts` |
+| SwiftUI | `swiftui/<Component>.swift`, `swiftui/<Component>.lattice`, `swiftui/index.swift` |
+| Qt | `qt/<Component>.qml`, `qt/<Component>.lattice`, `qt/qmldir` |
+| HTML | `html/<Component>.html`, `html/<Component>.lattice`, `html/index.html` |
+| XAML | `xaml/<Component>.xaml` plus code-behind/events and `<Component>.lattice` |
+| Flutter | `flutter/<Component>.dart`, `flutter/<Component>.lattice`, `flutter/index.dart` |

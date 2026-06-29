@@ -409,16 +409,16 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     //
     // UI30 multi-layout: for every component, discover its variants
     // by scanning `src/` for `<Component>.<variant>.mll` files, then
-    // emit one artifact per (component, variant) pair. The default
+    // emit one primary artifact per (component, variant) pair plus any
+    // backend-agnostic sidecars such as generated Lattice. The default
     // variant (bare `<Component>.mll`) emits the unsuffixed artifact
     // name `<Component>.<ext>`; named variants emit
     // `<Component>.<variant>.<ext>`.
     //
     // **Back-compat clause:** a component with only a bare
-    // `<Component>.mll` (no `.touch.mll`/etc.) produces exactly one
-    // artifact with the unsuffixed name — same as the pre-UI30
-    // behaviour. Every existing package builds byte-for-byte
-    // identically.
+    // `<Component>.mll` (no `.touch.mll`/etc.) still produces the same
+    // unsuffixed primary component artifact name; generated sidecars are
+    // listed separately in `BuildResult.artifacts`.
     let src_dir = opts.package_root.join("src");
     let package_search_paths = default_package_search_paths(&opts.package_root);
     let mut artifacts = Vec::new();
@@ -427,7 +427,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     for component in &manifest.components.exports {
         let variants = discover_variants(&src_dir, component)?;
         for variant in &variants {
-            let artifact = compile_one_component(
+            let component_artifacts = compile_one_component(
                 component,
                 variant.as_deref(),
                 &src_dir,
@@ -435,7 +435,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
                 opts.backend,
                 &package_search_paths,
             )?;
-            artifacts.push(artifact);
+            artifacts.extend(component_artifacts);
         }
         // We list the component once in `components_built` even if it
         // produced multiple variant artifacts — the index file (qmldir
@@ -1192,7 +1192,7 @@ fn build_electron_readme(npm_name: &str, component_name: &str) -> String {
 
 /// Compile one component's three-file triple for the chosen backend.
 ///
-/// Returns the path of the written artifact, or a [`BuildError`] tagged
+/// Returns the paths of the written component artifacts, or a [`BuildError`] tagged
 /// with the component name so a CLI can render
 /// `mosaic-compile pkg: error compiling Grid: …`.
 fn compile_one_component(
@@ -1202,7 +1202,7 @@ fn compile_one_component(
     out_dir: &Path,
     backend: Backend,
     package_search_paths: &[PathBuf],
-) -> Result<PathBuf, BuildError> {
+) -> Result<Vec<PathBuf>, BuildError> {
     // ----- 1. Locate the three source files --------------------------------
     //
     // `.mil` and `.mll` are required; `.msl` is optional. If the user has
@@ -1271,6 +1271,7 @@ fn compile_one_component(
     let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let style_def = merge_dependency_styles(style_out.def, dependency_style_parts);
+    let lattice = mosstyle_compiler::emit_lattice(&style_def);
 
     // ----- 3. Hand the three IRs to the chosen backend ---------------------
     //
@@ -1392,9 +1393,18 @@ fn compile_one_component(
         .map_err(|e| pipeline_emit_err(component, e))?,
     };
 
-    // ----- 4. Write the primary artifact -----------------------------------
+    // ----- 4. Write the primary artifact and backend-agnostic style sidecar --
     write_file(&primary_path, primary_bytes.as_bytes())?;
-    Ok(primary_path)
+    let mut artifacts = vec![primary_path];
+    if !lattice.trim().is_empty() {
+        let lattice_path = match variant {
+            Some(v) => out_dir.join(format!("{component}.{v}.lattice")),
+            None => out_dir.join(format!("{component}.lattice")),
+        };
+        write_file(&lattice_path, lattice.as_bytes())?;
+        artifacts.push(lattice_path);
+    }
+    Ok(artifacts)
 }
 
 /// UI30 multi-layout — discover the layout variants present for one
@@ -2399,6 +2409,19 @@ version = "1"
         let body = fs::read_to_string(&tsx).unwrap();
         // The React emitter emits a `function Grid(...)` and the props type.
         assert!(body.contains("Grid"), "tsx must reference component name");
+        let lattice = out.path().join("react").join("Grid.lattice");
+        assert!(lattice.exists(), "Grid.lattice should be written");
+        let lattice_body = fs::read_to_string(&lattice).unwrap();
+        assert!(
+            lattice_body.contains("Generated as Lattice")
+                && lattice_body.contains(".mos-Grid-root")
+                && lattice_body.contains("width: 100%"),
+            "Lattice sidecar should contain scoped component styles"
+        );
+        assert!(
+            result.artifacts.iter().any(|path| path == &lattice),
+            "Lattice sidecar should appear in BuildResult.artifacts"
+        );
     }
 
     #[test]
@@ -3348,22 +3371,30 @@ version = "1"
         // file should list Grid once, not twice).
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
 
-        // Two component artifacts + one index file = 3 artifacts.
+        // Two component artifacts + two Lattice sidecars + one index file.
         let default_path = out.path().join("react").join("Grid.tsx");
         let touch_path = out.path().join("react").join("Grid.touch.tsx");
+        let default_lattice = out.path().join("react").join("Grid.lattice");
+        let touch_lattice = out.path().join("react").join("Grid.touch.lattice");
         assert!(default_path.exists(), "Grid.tsx (default) must exist");
         assert!(touch_path.exists(), "Grid.touch.tsx (variant) must exist");
         assert!(
+            default_lattice.exists() && touch_lattice.exists(),
+            "each variant should have a matching Lattice sidecar"
+        );
+        assert!(
             result.artifacts.iter().any(|p| p == &default_path)
-                && result.artifacts.iter().any(|p| p == &touch_path),
-            "both artifact paths must be in the result"
+                && result.artifacts.iter().any(|p| p == &touch_path)
+                && result.artifacts.iter().any(|p| p == &default_lattice)
+                && result.artifacts.iter().any(|p| p == &touch_lattice),
+            "component and Lattice artifact paths must be in the result"
         );
     }
 
     /// Back-compat regression test: a package with only the bare
-    /// default `.mll` still produces exactly one unsuffixed artifact
-    /// per component. UI30 is opt-in via filesystem and existing
-    /// packages must build identically.
+    /// default `.mll` still produces exactly one unsuffixed primary
+    /// artifact per component. UI30 is opt-in via filesystem and existing
+    /// component-code filenames must build identically.
     #[test]
     fn build_package_without_variants_is_unchanged_from_pre_ui30() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
@@ -3376,8 +3407,8 @@ version = "1"
         })
         .expect("single-variant build");
 
-        // Exactly one component artifact + the index file.
-        assert_eq!(result.artifacts.len(), 2);
+        // Exactly one component artifact + one Lattice sidecar + the index file.
+        assert_eq!(result.artifacts.len(), 3);
         let default_path = out.path().join("react").join("Grid.tsx");
         assert!(default_path.exists());
         // NO variant-suffixed file should exist.
@@ -3420,8 +3451,8 @@ version = "1"
             !out.path().join("react").join("vite.config.ts").exists(),
             "vite.config.ts must not exist when emit_project is false"
         );
-        // No new artifacts beyond the per-component + index.ts.
-        assert_eq!(result.artifacts.len(), 2); // Grid.tsx + index.ts
+        // No shell artifacts beyond the per-component sidecar pair + index.ts.
+        assert_eq!(result.artifacts.len(), 3); // Grid.tsx + Grid.lattice + index.ts
     }
 
     /// §3.4 Composable: when emit_project is true, the React backend

@@ -12,6 +12,10 @@ still emit backend artifacts from one app source tree.
 package root into the emitted backend project after project-shell generation.
 Manifest asset paths are validated to stay relative to the package/output root.
 
+Package builds now write non-empty merged Mosaic styles as `<Component>.lattice`
+sidecars beside each emitted component artifact and include those sidecars in
+`BuildResult.artifacts`.
+
 Dependency package styles are now compiled and merged into the consuming
 component artifact before backend emission. Dependency styles are applied first
 and the consuming component's own style is applied last, so parent/app packages
