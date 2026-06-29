@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.19.0 — 2026-06-29 — `sin`/`cos`/`ln`/`exp` transcendentals (LANG-FULL AL8-trig)
+
+The four ALGOL 60 §3.2.4 transcendental standard functions are now recognised and
+lowered to the new `f64_sin`, `f64_cos`, `f64_ln`, `f64_exp` IIR ops:
+
+- `sin(E)` → `f64_sin` (dispatch to libm `sin` on native, `env.__sin` on WASM,
+  `@llvm.sin.f64` on LLVM, `Math.sin` on JVM, `System.Math.Sin` on CLR, `f64::sin` on VM/JIT)
+- `cos(E)` → `f64_cos` (same pattern with `cos`)
+- `ln(E)`  → `f64_ln`  (ALGOL uses `ln` for natural log; backends use `log`/`log.f64`)
+- `exp(E)` → `f64_exp` (same pattern with `exp`)
+
+Each op is implemented by the new `emit_f64_unary` helper (mirrors `emit_sqrt`).
+All require exactly one `real`-typed argument; wrong arity or type → `CompileError::Type`.
+Proof programs exit 42 on all 7 backends.
+
+## 0.18.0 — 2026-06-28 — String-typed value parameters (LANG-FULL AL4-str-params)
+
+ALGOL 60 typed procedures can now accept `string`-typed value parameters.
+Previously `specifier_scalar_type` rejected `"string"` with an `Unsupported`
+error; now it returns `Ok(ScalarType::String)`, unblocking the full
+`value s; string s` spec syntax for string formals.
+
+When `compile_procedure` binds a string parameter, its slot is immediately added
+to `literal_string_slots` — the same set that makes a locally-assigned variable
+printable.  This means `print(s)` inside the body lowers to `print_str s` with
+no special string-parameter handling: the parameter is pre-seeded by the call
+site's `str_const` (literal) or slot (named variable), which the E4 type system
+already ensures is a known string value.
+
+The call site in `emit_call_common` type-checks string actuals the same way as
+integer/real parameters (`value.ty != *expected`); no new infrastructure is needed
+because `str`-typed function parameters are already proven on all 7 backends via
+Twig (TW4).
+
+New unit tests verify: compilation succeeds, the body emits `print_str`, the IIR
+parameter carries type `str`, the call site emits `call echo …`, a named string
+variable can be passed, and an integer actual to a string parameter is a
+`CompileError::Type`.
+
+## 0.17.0 — 2026-06-28 — `sqrt` standard function (LANG-FULL AL8-sqrt)
+
+`sqrt(E)` — the ALGOL 60 §3.2.4 hardware square root — is now recognised by
+`algol-iir-compiler` and lowered to the new `f64_sqrt` IIR op.  The op carries
+a `ScalarType::Real` result type, exactly like `real_to_int_floor` carries its
+result type, so every backend's typed-dispatch path fires without change.
+
+The lowering is gated on the presence of exactly one `real` argument; a non-real
+or wrong-arity call is a compile-time `CompileError::Type`.  The proof program
+`begin real r; integer result; r := sqrt(49.0); result := entier(r) end` exits
+7 on all 7 backends.
+
 ## 0.16.0 — 2026-06-28 — Literal-backed string predicates (LANG-FULL AL4 on E4)
 
 ALGOL 60 string comparisons now lower through the shared E4 string ops when both

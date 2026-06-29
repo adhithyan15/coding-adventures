@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 155,
-    "correct": 148,
+    "total": 188,
+    "correct": 181,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 139,
+        "correct": 172,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9928,
-    "grounded_correct": 138
+    "grounded_coverage": 0.9942,
+    "grounded_correct": 171
   },
   "results": [
     {
@@ -1264,6 +1264,270 @@
       "tactic": "recall",
       "gold": "coal_workers_pneumoconiosis",
       "answer": "coal_workers_pneumoconiosis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hv_aortic",
+      "tactic": "recall",
+      "gold": "right_second_intercostal_space",
+      "answer": "right_second_intercostal_space",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hv_pulmonic",
+      "tactic": "recall",
+      "gold": "left_second_intercostal_space",
+      "answer": "left_second_intercostal_space",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hv_tricuspid",
+      "tactic": "recall",
+      "gold": "fourth_left_intercostal_space",
+      "answer": "fourth_left_intercostal_space",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hv_mitral",
+      "tactic": "recall",
+      "gold": "fifth_intercostal_space_midclavicular_line",
+      "answer": "fifth_intercostal_space_midclavicular_line",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cn_olfactory",
+      "tactic": "recall",
+      "gold": "smell",
+      "answer": "smell",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cn_optic",
+      "tactic": "recall",
+      "gold": "vision",
+      "answer": "vision",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cn_trochlear",
+      "tactic": "recall",
+      "gold": "superior_oblique_muscle",
+      "answer": "superior_oblique_muscle",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cn_abducens",
+      "tactic": "recall",
+      "gold": "lateral_rectus_muscle",
+      "answer": "lateral_rectus_muscle",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cn_vagus",
+      "tactic": "recall",
+      "gold": "parasympathetic_innervation_of_viscera",
+      "answer": "parasympathetic_innervation_of_viscera",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cn_accessory",
+      "tactic": "recall",
+      "gold": "sternocleidomastoid_and_trapezius",
+      "answer": "sternocleidomastoid_and_trapezius",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cn_hypoglossal",
+      "tactic": "recall",
+      "gold": "tongue_muscles",
+      "answer": "tongue_muscles",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "st_lateral_cst",
+      "tactic": "recall",
+      "gold": "voluntary_motor_control",
+      "answer": "voluntary_motor_control",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "st_dorsal_col",
+      "tactic": "recall",
+      "gold": "fine_touch_vibration_proprioception",
+      "answer": "fine_touch_vibration_proprioception",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "st_spinothal",
+      "tactic": "recall",
+      "gold": "pain_and_temperature",
+      "answer": "pain_and_temperature",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "st_dorsal_spino",
+      "tactic": "recall",
+      "gold": "unconscious_proprioception",
+      "answer": "unconscious_proprioception",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "st_rubrospinal",
+      "tactic": "recall",
+      "gold": "flexor_muscles",
+      "answer": "flexor_muscles",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "st_anterior_cst",
+      "tactic": "recall",
+      "gold": "axial_muscles",
+      "answer": "axial_muscles",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "lv_tidal",
+      "tactic": "recall",
+      "gold": "air_per_respiratory_cycle",
+      "answer": "air_per_respiratory_cycle",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "lv_residual",
+      "tactic": "recall",
+      "gold": "air_remaining_after_maximal_forceful_expiration",
+      "answer": "air_remaining_after_maximal_forceful_expiration",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "lv_irv",
+      "tactic": "recall",
+      "gold": "air_inhaled_after_normal_tidal",
+      "answer": "air_inhaled_after_normal_tidal",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "lv_vc",
+      "tactic": "recall",
+      "gold": "max_air_exhaled_after_max_inspiration",
+      "answer": "max_air_exhaled_after_max_inspiration",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "lv_frc",
+      "tactic": "recall",
+      "gold": "air_remaining_after_normal_passive_exhalation",
+      "answer": "air_remaining_after_normal_passive_exhalation",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ab_met_acidosis",
+      "tactic": "recall",
+      "gold": "respiratory_compensation",
+      "answer": "respiratory_compensation",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ab_met_alkalosis",
+      "tactic": "recall",
+      "gold": "increased_paco2_compensation",
+      "answer": "increased_paco2_compensation",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ab_resp_acidosis",
+      "tactic": "recall",
+      "gold": "metabolic_response_increased_bicarbonate",
+      "answer": "metabolic_response_increased_bicarbonate",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ab_resp_alkalosis",
+      "tactic": "recall",
+      "gold": "chronic_lowered_bicarbonate",
+      "answer": "chronic_lowered_bicarbonate",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ct_lcx",
+      "tactic": "recall",
+      "gold": "lateral_wall",
+      "answer": "lateral_wall",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ct_pda",
+      "tactic": "recall",
+      "gold": "posterior_septum",
+      "answer": "posterior_septum",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "nt_tal",
+      "tactic": "recall",
+      "gold": "nkcc2",
+      "answer": "nkcc2",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "nt_dct",
+      "tactic": "recall",
+      "gold": "ncc",
+      "answer": "ncc",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "nt_cd",
+      "tactic": "recall",
+      "gold": "aquaporin_2",
+      "answer": "aquaporin_2",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "nt_principal",
+      "tactic": "recall",
+      "gold": "enac",
+      "answer": "enac",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "nt_descending",
+      "tactic": "recall",
+      "gold": "water",
+      "answer": "water",
       "outcome": "correct",
       "trust": "authoritative"
     }

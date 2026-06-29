@@ -2541,6 +2541,34 @@ fn lower_function(
                     emit_typed_store(&mut code, dest_slot, dest_jtype);
                 }
             }
+            // ── AL8 sqrt + transcendentals: java/lang/Math calls ─────────────
+            //
+            // `java/lang/Math.sqrt(D)D` is an intrinsic in every modern JVM —
+            // HotSpot lowers it directly to `sqrtsd` on x86_64 with no JNI
+            // overhead.  NaN propagates and negative inputs return NaN, matching
+            // IEEE-754 and the VM handler's `f64::sqrt()` contract.
+            //
+            // `sin`/`cos`/`exp` map directly to the Java method names; ALGOL's
+            // `ln` maps to `java/lang/Math.log(D)D` (Java's natural log).
+            "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp" => {
+                let java_method = match instr.op.as_str() {
+                    "f64_sqrt" => "sqrt",
+                    "f64_sin"  => "sin",
+                    "f64_cos"  => "cos",
+                    "f64_ln"   => "log",
+                    "f64_exp"  => "exp",
+                    _ => unreachable!(),
+                };
+                let src = one_src(func, instr, &slots)?;
+                emit_typed_load(&mut code, src.0, src.1);
+                let mref = cp.add_methodref("java/lang/Math", java_method, "(D)D");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
+                }
+            }
 
             // ── Bitwise: and, or, xor ────────────────────────────────────────
             //

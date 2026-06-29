@@ -17,6 +17,38 @@ C1 out 0 1u
 assert_eq!(parsed.tran_cards().len(), 1);
 ```
 
+`parse_netlist` lowers decks through the Berkeley SPICE logical-card syntax
+facade, so normal simulator parsing honors leading `+` continuations, strips
+inline comments from normalized cards, and reports stable syntax diagnostics
+before semantic lowering starts.
+
+For editor, Mosaic, and parser-generator frontends, the crate also exposes the
+same facade directly:
+
+```rust
+use spice_netlist_parser::{parse_berkeley_app_deck, BerkeleyCardKind};
+
+let deck = parse_berkeley_app_deck(r#"
+* divider
+V1 in 0 DC 1
+R1 in out 1k
+R2 out 0 1k
+.op
+.end
+"#);
+
+assert!(!deck.has_errors());
+assert_eq!(deck.analysis_inventory()[0].analysis, "op");
+assert_eq!(deck.syntax.cards[1].kind, BerkeleyCardKind::Element);
+```
+
+The facade preserves normalized logical cards, source spans, token names
+aligned with `code/grammars/spice/berkeley.tokens`, stable syntax diagnostics,
+analysis inventory, and source-order execution through the existing parser. It
+is the Rust app/runtime entrypoint for Mosaic-backed UI work while the
+grammar-backed parser generator and Python/TypeScript parity surfaces continue
+to mature.
+
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`
 parameters, `.model <name> NPN|PNP(...)` BJT cards with `IS`, `BF` /

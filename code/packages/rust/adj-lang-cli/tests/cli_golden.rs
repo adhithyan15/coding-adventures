@@ -131,6 +131,77 @@ fn let_computed_value_drives_a_predicate() {
 }
 
 #[test]
+fn let_derived_value_reports_its_inferred_dimension() {
+    // ADJ-LADDER rung-4 (dimensional): a `let` over typed quantities surfaces
+    // the engine-INFERRED unit in a `"derived"` section. `quantity(240, km) /
+    // quantity(3, h)` is 80 — but the engine reports it as 80 **km/h**, a tag
+    // it formed by Dimension::combine at the division (the model never wrote
+    // "km/h"). This is the audit channel a grader uses to reject a
+    // numerically-right-but-unit-wrong answer.
+    let (ok, s) = run(
+        "adjcli_dim_speed.adj",
+        "observe distance(quantity(240, km))\n\
+         observe time(quantity(3, h))\n\
+         let speed = distance / time\n\
+         ? speed\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"derived\":["), "expected a derived section: {s}");
+    assert!(s.contains("\"name\":\"speed\""), "{s}");
+    assert!(s.contains("\"value\":80"), "{s}");
+    assert!(s.contains("\"dim\":\"km/h\""), "expected inferred km/h: {s}");
+    // Exact integer arithmetic is preserved alongside the f64.
+    assert!(s.contains("\"exact\":{\"num\":80,\"den\":1}"), "{s}");
+}
+
+#[test]
+fn same_unit_division_cancels_to_scalar_in_derived() {
+    // A ratio of like quantities is dimensionless: mg / mg → scalar. The
+    // derived section reports `"dim":"scalar"`, so a grader knows the answer is
+    // a pure number (a wrong-unit option would be rejected).
+    let (ok, s) = run(
+        "adjcli_dim_ratio.adj",
+        "observe num(quantity(60, mg))\n\
+         observe den(quantity(20, mg))\n\
+         let ratio = num / den\n\
+         ? ratio\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"name\":\"ratio\""), "{s}");
+    assert!(s.contains("\"value\":3"), "{s}");
+    assert!(s.contains("\"dim\":\"scalar\""), "expected scalar: {s}");
+}
+
+#[test]
+fn dimension_mismatch_is_an_error_not_a_silent_number() {
+    // The whole point of carrying dimensions: km + h is a category error. The
+    // engine refuses to compute it rather than returning a meaningless 8.
+    let (ok, s) = run(
+        "adjcli_dim_mismatch.adj",
+        "observe a(quantity(5, km))\n\
+         observe b(quantity(3, h))\n\
+         let bad = a + b\n\
+         ? bad\n",
+    );
+    assert!(!ok, "expected a non-zero exit on a dimension mismatch: {s}");
+    assert!(s.contains("DimensionMismatch"), "{s}");
+}
+
+#[test]
+fn programs_without_a_let_omit_the_derived_section() {
+    // Byte-stability: a plain rulebook/recall program binds nothing, so the
+    // output carries no `"derived"` key at all (existing goldens unchanged).
+    let (ok, s) = run(
+        "adjcli_no_let.adj",
+        "prior 0.10 for acs\n  source \"x\" trust empirical\n\
+         contributes 2.5 from symptom(pressure) to acs\n  source \"y\" trust empirical\n\
+         observe symptom(pressure)\n? acs\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"derived\""), "no let ⇒ no derived section: {s}");
+}
+
+#[test]
 fn predicate_rhs_expression_matches_fraction_result() {
     // Rung-1 hardening: the option predicate can compare a computed answer
     // against another ADJ arithmetic expression, so a model can emit

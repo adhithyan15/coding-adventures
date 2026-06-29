@@ -150,7 +150,7 @@ use crate::codegen::{
     DROP, END, F32_ADD, F32_DIV, F32_EQ, F32_GE, F32_GT, F32_LE, F32_LT, F32_MUL, F32_NEG,
     F32_NE, F32_SUB, F64_ADD, F64_CONVERT_I64_S, F64_DIV, F64_EQ, F64_FLOOR, F64_GE, F64_GT,
     F64_LE, F64_LT, F64_MUL,
-    F64_NEG, F64_NE, F64_SUB, I32_ADD, I32_AND, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S,
+    F64_NEG, F64_NE, F64_SQRT, F64_SUB, I32_ADD, I32_AND, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S,
     I64_TRUNC_F64_S,
     I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
     I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
@@ -834,6 +834,10 @@ fn emit_instr(
     print_str_fn_idx: Option<u32>,
     putchar_fn_idx: Option<u32>,
     getchar_fn_idx: Option<u32>,
+    sin_fn_idx: Option<u32>,
+    cos_fn_idx: Option<u32>,
+    ln_fn_idx: Option<u32>,
+    exp_fn_idx: Option<u32>,
 ) -> Result<(), IIRWasmError> {
     // Helper closures to resolve variable names.
     let get_reg = |var: &str| -> Result<u32, IIRWasmError> {
@@ -1490,6 +1494,57 @@ fn emit_instr(
             code.push(F64_FLOOR); // round toward −∞ (entier)
             code.push(I64_TRUNC_F64_S); // trunc the integral result → i64 (traps out-of-range)
             code.extend(encode_local_set(rd));
+        }
+        // `f64_sqrt` — IEEE-754 hardware square root (WASM MVP opcode 0x9F).
+        // WASM `f64.sqrt` propagates NaN and returns NaN for negative inputs,
+        // matching IEEE-754 and the VM handler's `f.sqrt()` semantics.
+        "f64_sqrt" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "f64_sqrt must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            code.extend(encode_local_get(r)); // f64
+            code.push(F64_SQRT); // f64.sqrt — hardware sqrt, no libm call
+            code.extend(encode_local_set(rd));
+        }
+        // `f64_sin` / `f64_cos` / `f64_ln` / `f64_exp` — ALGOL 60 transcendentals.
+        //
+        // WASM has no built-in sin/cos/log/exp opcodes; they are resolved via
+        // host-imported functions declared in the module's import section (see
+        // `collect_module_features` / import injection in `lower_iir_to_wasm`).
+        // The import indices were assigned in Step 3 and threaded through here.
+        // Pattern: load argument f64, call import, store result f64.
+        "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp" => {
+            let import_idx = match instr.op.as_str() {
+                "f64_sin" => sin_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                    function: fn_name.to_string(),
+                    op: "f64_sin: env.__sin import not registered (internal error)".to_string(),
+                })?,
+                "f64_cos" => cos_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                    function: fn_name.to_string(),
+                    op: "f64_cos: env.__cos import not registered (internal error)".to_string(),
+                })?,
+                "f64_ln" => ln_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                    function: fn_name.to_string(),
+                    op: "f64_ln: env.__ln import not registered (internal error)".to_string(),
+                })?,
+                "f64_exp" => exp_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                    function: fn_name.to_string(),
+                    op: "f64_exp: env.__exp import not registered (internal error)".to_string(),
+                })?,
+                _ => unreachable!(),
+            };
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} must have a dest", instr.op),
+            })?;
+            let rd = get_reg(dest)?;
+            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            code.extend(encode_local_get(r));           // push f64 argument
+            code.extend(encode_call(import_idx));       // call env.__sin/cos/ln/exp
+            code.extend(encode_local_set(rd));          // store f64 result
         }
 
         // ── move / copy ───────────────────────────────────────────────────────
@@ -2750,6 +2805,10 @@ fn lower_function(
     print_str_fn_idx: Option<u32>,
     putchar_fn_idx: Option<u32>,
     getchar_fn_idx: Option<u32>,
+    sin_fn_idx: Option<u32>,
+    cos_fn_idx: Option<u32>,
+    ln_fn_idx: Option<u32>,
+    exp_fn_idx: Option<u32>,
 ) -> Result<FunctionBody, IIRWasmError> {
     let param_count = fn_.params.len() as u32;
     let reg_map = build_register_map(fn_);
@@ -2857,6 +2916,10 @@ fn lower_function(
                     print_str_fn_idx,
                     putchar_fn_idx,
                     getchar_fn_idx,
+                    sin_fn_idx,
+                    cos_fn_idx,
+                    ln_fn_idx,
+                    exp_fn_idx,
                 )?;
             }
 
@@ -2916,6 +2979,10 @@ fn lower_function(
                 print_str_fn_idx,
                 putchar_fn_idx,
                 getchar_fn_idx,
+                sin_fn_idx,
+                cos_fn_idx,
+                ln_fn_idx,
+                exp_fn_idx,
             )?;
         }
     }
@@ -3009,6 +3076,14 @@ struct ModuleFeatures {
     uses_print_str: bool,
     uses_putchar: bool,
     uses_getchar: bool,
+    /// True when the module calls `f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`.
+    /// Triggers injection of `env.__sin`, `env.__cos`, `env.__ln`, `env.__exp`
+    /// host imports (each `f64 -> f64`).  WASM has no built-in transcendental
+    /// opcodes; these are provided by the host runtime (libm on the test host).
+    uses_f64_sin: bool,
+    uses_f64_cos: bool,
+    uses_f64_ln: bool,
+    uses_f64_exp: bool,
     /// True when the module reads or writes Brainfuck's tape memory.
     /// Triggers the addition of a single 1-page linear memory to the
     /// module's `Memory` section.
@@ -3032,6 +3107,10 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut uses_print_str = false;
     let mut uses_putchar = false;
     let mut uses_getchar = false;
+    let mut uses_f64_sin = false;
+    let mut uses_f64_cos = false;
+    let mut uses_f64_ln = false;
+    let mut uses_f64_exp = false;
     let mut uses_memory = false;
     let mut string_literals: ModuleStringLiterals = HashMap::new();
     let mut string_data: Vec<u8> = Vec::new();
@@ -3220,6 +3299,11 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         }
                     }
                 }
+                // ALGOL 60 transcendentals — no WASM opcode; resolved via host imports.
+                "f64_sin" => uses_f64_sin = true,
+                "f64_cos" => uses_f64_cos = true,
+                "f64_ln"  => uses_f64_ln  = true,
+                "f64_exp" => uses_f64_exp  = true,
                 _ => {}
             }
         }
@@ -3230,6 +3314,10 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
         uses_print_str,
         uses_putchar,
         uses_getchar,
+        uses_f64_sin,
+        uses_f64_cos,
+        uses_f64_ln,
+        uses_f64_exp,
         uses_memory,
         string_literals,
         string_data,
@@ -3302,6 +3390,10 @@ pub fn lower_iir_to_wasm(
     let uses_print_str = features.uses_print_str;
     let uses_putchar = features.uses_putchar;
     let uses_getchar = features.uses_getchar;
+    let uses_f64_sin = features.uses_f64_sin;
+    let uses_f64_cos = features.uses_f64_cos;
+    let uses_f64_ln  = features.uses_f64_ln;
+    let uses_f64_exp = features.uses_f64_exp;
     let uses_memory  = features.uses_memory;
     let string_literals = features.string_literals;
     let string_data = features.string_data;
@@ -3323,6 +3415,10 @@ pub fn lower_iir_to_wasm(
     //   1. env.__print_str   (if uses_print_str)
     //   2. env.putchar       (if uses_putchar)
     //   3. env.getchar       (if uses_getchar)
+    //   4. env.__sin         (if uses_f64_sin)
+    //   5. env.__cos         (if uses_f64_cos)
+    //   6. env.__ln          (if uses_f64_ln)
+    //   7. env.__exp         (if uses_f64_exp)
     let mut next_import_idx: u32 = 0;
     let print_fn_idx: Option<u32> = if uses_io_out {
         let i = next_import_idx; next_import_idx += 1; Some(i)
@@ -3334,6 +3430,18 @@ pub fn lower_iir_to_wasm(
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let getchar_fn_idx: Option<u32> = if uses_getchar {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let sin_fn_idx: Option<u32> = if uses_f64_sin {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let cos_fn_idx: Option<u32> = if uses_f64_cos {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let ln_fn_idx: Option<u32> = if uses_f64_ln {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let exp_fn_idx: Option<u32> = if uses_f64_exp {
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let fn_idx_base: u32 = next_import_idx;
@@ -3412,6 +3520,10 @@ pub fn lower_iir_to_wasm(
     //   1. env.__print_str   (if uses_print_str)
     //   2. env.putchar       (if uses_putchar)
     //   3. env.getchar       (if uses_getchar)
+    //   4. env.__sin         (if uses_f64_sin)
+    //   5. env.__cos         (if uses_f64_cos)
+    //   6. env.__ln          (if uses_f64_ln)
+    //   7. env.__exp         (if uses_f64_exp)
     //
     // The function index that emit_instr uses is the one we assigned earlier
     // (print_fn_idx / putchar_fn_idx / getchar_fn_idx).  Here we just need
@@ -3467,6 +3579,51 @@ pub fn lower_iir_to_wasm(
             type_info: ImportTypeInfo::Function(type_idx),
         });
     }
+    // ALGOL 60 transcendentals — WASM has no built-in opcodes for sin/cos/log/exp
+    // so they are resolved via host imports (env.__sin, etc.).  Each is f64 → f64.
+    // The test host in lang_matrix.rs resolves these to Rust's f64::sin() etc.
+    if uses_f64_sin {
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![ValueType::F64], results: vec![ValueType::F64] });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__sin".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
+    if uses_f64_cos {
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![ValueType::F64], results: vec![ValueType::F64] });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__cos".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
+    if uses_f64_ln {
+        // Note: ALGOL calls it `ln` but all backends (libm, Java, LLVM) use `log`.
+        // The WASM import is named `__ln` to match the ALGOL name at the ABI boundary.
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![ValueType::F64], results: vec![ValueType::F64] });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__ln".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
+    if uses_f64_exp {
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![ValueType::F64], results: vec![ValueType::F64] });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__exp".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
 
     // Build WASM Global entries — one mutable i64 per named global,
     // initialised to 0.
@@ -3511,6 +3668,7 @@ pub fn lower_iir_to_wasm(
         let body = lower_function(
             fn_, &fn_map, lispy_pair_type_idx, &global_map, fn_string_literals,
             print_fn_idx, print_str_fn_idx, putchar_fn_idx, getchar_fn_idx,
+            sin_fn_idx, cos_fn_idx, ln_fn_idx, exp_fn_idx,
         )?;
         code.push(body);
     }

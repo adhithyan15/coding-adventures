@@ -3,6 +3,20 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.25.0] — 2026-06-28 (AL8-trig — `f64_sin/cos/ln/exp` via `java.lang.Math`)
+
+Extended the `f64_sqrt` arm to cover all five f64 ops: `f64_sqrt` → `Math.sqrt`,
+`f64_sin` → `Math.sin`, `f64_cos` → `Math.cos`, `f64_ln` → `Math.log` (natural log),
+`f64_exp` → `Math.exp`.  All emit `dload r; invokestatic java/lang/Math.<method>:(D)D;
+dstore rd`.  HotSpot intrinsifies all five; no JNI overhead.
+
+## [0.24.0] — 2026-06-28 (AL8-sqrt — `f64_sqrt` lowers to `Math.sqrt`)
+
+The JVM backend now lowers `f64_sqrt` by emitting `dload r; invokestatic
+java/lang/Math.sqrt:(D)D; dstore rd`.  HotSpot treats `Math.sqrt` as an
+intrinsic and lowers it directly to `sqrtsd` on x86_64 with no JNI overhead.
+NaN propagates; negative input returns NaN (IEEE-754, matches VM).
+
 ## [0.23.0] — 2026-06-28 (literal string comparison — LANG-FULL E4)
 
 The JVM backend now lowers `str_cmp` over managed `String` locals by invoking

@@ -799,6 +799,15 @@ impl Assembler {
         self.emit_sse_rri_0f3a(0x0B, xmm_dst, xmm_src, imm8);
     }
 
+    /// `SQRTSD xmm_dst, xmm_src` — SSE2 double-precision square root (AL8 `sqrt`).
+    ///
+    /// Single hardware FP instruction — no libm call.  NaN propagates; negative
+    /// input returns NaN per IEEE-754 (matches Rust `f64::sqrt` and the VM handler).
+    /// Opcode: `F2 0F 51 /r` → e.g. `sqrtsd xmm0,xmm0` = `F2 0F 51 C0`.
+    pub fn sqrtsd(&mut self, xmm_dst: Reg, xmm_src: Reg) {
+        self.emit_sse_rr(0xF2, 0x51, xmm_dst, xmm_src);
+    }
+
     /// `MOV byte ptr [base], r8` — store the low 8 bits of `src` to `[base]`
     /// (LANG76).
     ///

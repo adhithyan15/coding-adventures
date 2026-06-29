@@ -2,6 +2,124 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.226.0] - 2026-06-29
+
+### Added — SIMPLE/ADVANCED fold static `Object.keys({k: v, …})` → key-string array
+
+At `--compilation_level SIMPLE` (and `ADVANCED`, which routes through the same
+typed pipeline) `Object.keys` of a fully-static NON-EMPTY object literal now
+folds to the array of its own-enumerable string keys, e.g.
+`Object.keys({a:1,b:2})` → `["a","b"]`. The empty-object case
+(`Object.keys/values/entries({})` → `[]`) was already handled; this extends the
+existing `simple-fold-object-keys` fixture to cover the non-empty key-array fold
+and three declines (non-empty `Object.values`, an integer-index-keyed object,
+and an array). Folding requires `coding-adventures-closure-pass-constant-fold`
+0.75.0. No CLI surface change.
+## [0.225.0] - 2026-06-29
+
+### Added — characterization test pinning the per-fold tracing gap (`tests/cv_fold_provenance_gap.rs`)
+
+A test that documents the current `--correlation_vector` contract at the
+constant-fold layer: the constant-fold pass runs (listed in the coarse
+`compilation_level/simple_v2` contribution), but the emitted sidecar carries NO
+per-fold provenance — every CV entry origin is lex/file-level, so a folded
+literal (`"abc".length` → `3`) cannot be traced back to its source bytes. The
+per-fold lineage each fold records via `fork_cv`/`stamp_literal_cv` is dropped at
+the SIMPLE bridge boundary (the typed AST nodes carry `cv: None` and
+`run_typed_pipeline` runs the pipeline with a disabled, discarded `CVLog`). This
+locks the gap so it is visible and regression-detectable: when per-fold
+provenance is wired through the bridge, this test's gap assertion flips and
+signals that the fold lineage assertion should be promoted. No production code
+change.
+
+## [0.224.0] - 2026-06-27
+
+### Added — differential **soundness** conformance harness (`tests/conformance.rs`)
+
+A new test harness that checks the SIMPLE optimizer is **value-preserving**, not
+just byte-stable. For a corpus of source expressions it runs closurec, parses
+the optimized output with a self-contained literal evaluator, and asserts the
+folded value equals the expression's true runtime value (a canonical,
+`Object.is`-faithful golden generated offline by Node/V8 — **CI runs no JS
+engine**). Numbers reuse closurec's V8-faithful `format_js_number`, so the
+canonical form is the raw token (no float-formatting mismatch). Declined/partial
+outputs have no literal value to check and are counted as `skipped` with a loud
+end-of-test summary (no silent coverage holes).
+
+This is the soundness net that byte fixtures can't provide: it value-checks
+21/23 seed entries against the oracle and pins the two known negative-zero
+divergences (`KNOWN_DIVERGENCES`) so the day the underlying unary-minus `-0`→`0`
+flattening bug is fixed, the test tells us to promote those entries. Seed corpus
+covers numbers, string methods, `split`, `String.fromCharCode`, `Number.is*`,
+`Array.isArray`/`of`, `Object.keys`/`entries`/`fromEntries`, `Boolean`/`String`/
+`Number`, and `isNaN`/`isFinite`. Generator + docs under `tests/conformance/`.
+## [0.223.0] - 2026-06-27
+
+### Added — SIMPLE/ADVANCED fold static `Math.max(…)` / `Math.min(…)` → numeric
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static `Math.max(…)` or
+`Math.min(…)` call (ECMAScript §21.3.2.24 / .25) to a numeric literal when there
+is at least one argument and every argument is a numeric literal (e.g.
+`Math.max(1, 2, 3)` → `3`, `Math.min(-5, -1)` → `-5`). Signed zero follows the
+spec exactly (`max` prefers `+0`, `min` prefers `-0`). We decline a non-literal
+argument (a runtime value could be `Infinity`/`NaN` or otherwise unknown), the
+empty call (`Math.max()` → `-Infinity`), and a non-global receiver
+(`m.max(...)`). New end-to-end fixture `tests/diff/simple-fold-math-max-min/`
+plus integration test `tests/diff_simple_fold_math_max_min.rs`.
+
+## [0.222.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold static `Array.from("…")` → array of code-point strings
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static `Array.from(x)`
+call (ECMAScript §23.1.2.1) to an array literal when `x` is a string literal and
+there is no `mapFn`. The string iterator yields one element per code point (like
+spread), so `Array.from("abc")` → `["a","b","c"]`, `Array.from("")` → `[]`, and
+astral characters stay whole. We decline a second `mapFn` argument, any
+non-string-literal first argument, and a shadowed receiver. New end-to-end
+fixture `tests/diff/simple-fold-array-from/` plus integration test
+`tests/diff_simple_fold_array_from.rs`.
+## [0.221.0] - 2026-06-27
+
+### Added — SIMPLE/ADVANCED fold static `Object.entries({…})` → array of pairs
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static
+`Object.entries({k: v, …})` call (ECMAScript §20.1.2.5) — the inverse of
+`Object.fromEntries` — to an array of `[key, value]` pair literals when the
+argument is a non-empty object literal of plain data properties with
+primitive-literal values (string / number / boolean / null). Each entry key is
+emitted as a string literal. We decline a `"__proto__"` key (the object-literal
+form is the §B.3.1 prototype setter, not an own property), any canonical
+array-index key (`0`, `1`, `42`, … — enumerated ahead of string keys, which
+would reorder the result), any non-literal value (including a shorthand `{x}`),
+getters / setters / methods / computed keys, a non-global receiver, and arity
+≠ 1; duplicate keys collapse to one entry (first position, last value). The
+empty-object case `Object.entries({})` → `[]` was already handled. New
+end-to-end fixture `tests/diff/simple-fold-object-entries/` plus integration
+test `tests/diff_simple_fold_object_entries.rs`.
+## [0.220.0] - 2026-06-27
+
+### Added — SIMPLE/ADVANCED fold static `Object.fromEntries(...)` → object literal
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static
+`Object.fromEntries([[k, v], …])` call (ECMAScript §20.1.2.7) — the inverse of
+`Object.entries` — to an object literal when its single argument is a static
+array of 2-element `[key, value]` array literals, each key a string or numeric
+literal (numeric → ToString) and each value a primitive literal (string /
+number / boolean / null). Identifier-name keys emit bare (`{a: 1}`), other keys
+quoted (`{"1": "x"}`); a duplicate key keeps its first position but takes its
+last value; the empty array folds to `{}`. We decline a non-global receiver
+(`o.fromEntries(...)`), wrong arity, a non-array argument, a non-pair element, a
+non-literal/boolean/null/identifier key, a non-literal value, any array hole,
+and a `"__proto__"` key (whose own-property semantics differ from the object
+literal's prototype setter). New end-to-end fixture
+`tests/diff/simple-fold-object-fromentries/` plus
+integration test `tests/diff_simple_fold_object_fromentries.rs`.
+
 ## [0.219.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold static `Object.is(a, b)` → boolean (SameValue)

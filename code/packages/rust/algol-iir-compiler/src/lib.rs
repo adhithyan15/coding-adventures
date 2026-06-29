@@ -710,7 +710,7 @@ impl Compiler {
             "integer" => Ok(ScalarType::Integer),
             "real" => Ok(ScalarType::Real),
             "boolean" => Ok(ScalarType::Boolean),
-            "string" => Err(CompileError::Unsupported("string parameters".into())),
+            "string" => Ok(ScalarType::String),
             kind @ ("array" | "label" | "switch" | "procedure") => Err(
                 CompileError::Unsupported(format!("{kind} parameters")),
             ),
@@ -883,6 +883,14 @@ impl Compiler {
         for (pname, pty) in &params {
             // Parameters and the result slot are real registers, never `own`.
             let slot = self.declare_var(pname, *pty, false)?;
+            // A string parameter is pre-initialized by the caller (the call
+            // site already emitted a str_const or passed a known-literal slot).
+            // Mark it as literal-backed so `print(s)` can emit `print_str`
+            // directly inside the body — the same invariant a variable holds
+            // after `s := 'HI'`.
+            if *pty == ScalarType::String {
+                self.literal_string_slots.insert(slot.clone());
+            }
             param_pairs.push((slot, pty.iir().to_string()));
         }
         // The procedure's name is an in-scope variable holding the return
@@ -1129,18 +1137,25 @@ impl Compiler {
     ///
     /// Implemented so far: `abs` (PR-1) and `sign` (PR-2) — both pure IIR
     /// (compare + branch + move/const).  `entier` (floor of a real → integer)
-    /// needs a float-floor+convert that is not a portable IIR op, and
-    /// `sqrt`/`sin`/`cos`/… need a runtime math library on every backend; those
-    /// land in later slices.
+    /// uses the E8 `real_to_int_floor` op.  `sqrt` (PR-4) emits the new
+    /// `f64_sqrt` IIR op — every backend maps it to its native hardware sqrt
+    /// (aarch64 `fsqrt`, SSE2 `sqrtsd`, WASM `f64.sqrt`, LLVM intrinsic,
+    /// JVM `Math.sqrt`, CLR `Math.Sqrt`).  `sin`/`cos`/`ln`/`exp` need the
+    /// same cross-backend runtime math library and land in later slices.
     fn try_emit_standard_function(
         &mut self,
         name: &str,
         node: &GrammarASTNode,
     ) -> Result<Option<ExprValue>, CompileError> {
         match name {
-            "abs" => Ok(Some(self.emit_abs(node)?)),
-            "sign" => Ok(Some(self.emit_sign(node)?)),
+            "abs"    => Ok(Some(self.emit_abs(node)?)),
+            "sign"   => Ok(Some(self.emit_sign(node)?)),
             "entier" => Ok(Some(self.emit_entier(node)?)),
+            "sqrt"   => Ok(Some(self.emit_sqrt(node)?)),
+            "sin"    => Ok(Some(self.emit_f64_unary("sin",  "f64_sin",  node)?)),
+            "cos"    => Ok(Some(self.emit_f64_unary("cos",  "f64_cos",  node)?)),
+            "ln"     => Ok(Some(self.emit_f64_unary("ln",   "f64_ln",   node)?)),
+            "exp"    => Ok(Some(self.emit_f64_unary("exp",  "f64_exp",  node)?)),
             _ => Ok(None),
         }
     }
@@ -1426,6 +1441,94 @@ impl Compiler {
         Ok(ExprValue {
             slot: dest,
             ty: ScalarType::Integer,
+        })
+    }
+
+    /// `sqrt(E)` — ALGOL 60 §3.2.4 square root.  The operand must be `real`
+    /// (integer `sqrt` is a type error per the standard).  Lowers to the
+    /// portable `f64_sqrt` IIR op: every backend maps it to its native hardware
+    /// square-root instruction (aarch64 `fsqrt`, SSE2 `sqrtsd`, WASM
+    /// `f64.sqrt`, LLVM `@llvm.sqrt.f64`, JVM `Math.sqrt`, CLR `Math.Sqrt`).
+    ///
+    /// ```text
+    ///   t := E          ; evaluate the operand once (real)
+    ///   dest := f64_sqrt t
+    /// ```
+    fn emit_sqrt(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return Err(CompileError::Type(format!(
+                "standard function sqrt expects 1 argument, got {}",
+                actuals.len()
+            )));
+        }
+        let value = self.emit_expr(actuals[0])?;
+        match value.ty {
+            ScalarType::Real => {}
+            other => {
+                return Err(CompileError::Type(format!(
+                    "standard function sqrt requires a real argument, got {}",
+                    other.name()
+                )))
+            }
+        }
+
+        let dest = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "f64_sqrt",
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot)],
+            ScalarType::Real.iir(),
+        ));
+        Ok(ExprValue {
+            slot: dest,
+            ty: ScalarType::Real,
+        })
+    }
+
+    /// Generic `real → real` standard function backed by a single IIR op.
+    ///
+    /// Used for `sin`/`cos`/`ln`/`exp` — each takes one `real` argument and
+    /// returns a `real` result.  The frontend name (`fn_name`) is the ALGOL
+    /// identifier; `op` is the IIR opcode (e.g. `"f64_sin"`).
+    ///
+    /// ```text
+    ///   t    := E         ; evaluate the argument once (must be real)
+    ///   dest := <op> t
+    /// ```
+    fn emit_f64_unary(
+        &mut self,
+        fn_name: &str,
+        op: &str,
+        node: &GrammarASTNode,
+    ) -> Result<ExprValue, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return Err(CompileError::Type(format!(
+                "standard function {fn_name} expects 1 argument, got {}",
+                actuals.len()
+            )));
+        }
+        let value = self.emit_expr(actuals[0])?;
+        match value.ty {
+            ScalarType::Real => {}
+            other => {
+                return Err(CompileError::Type(format!(
+                    "standard function {fn_name} requires a real argument, got {}",
+                    other.name()
+                )))
+            }
+        }
+        let dest = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            op,
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot)],
+            ScalarType::Real.iir(),
+        ));
+        Ok(ExprValue {
+            slot: dest,
+            ty: ScalarType::Real,
         })
     }
 
@@ -4364,5 +4467,103 @@ mod tests {
         let src = "begin real array A[1:2]; real result; \
                    A[1] := 2.5; result := A[1] end";
         assert_eq!(run_f64(src), 2.5);
+    }
+
+    // ── AL4 string procedure parameters ─────────────────────────────────────
+
+    /// A procedure with a string value parameter compiles: `specifier_scalar_type`
+    /// now returns `Ok(ScalarType::String)` for `"string"`.
+    /// Body is a single `print(s)` — the integer result defaults to 0.
+    #[test]
+    fn al4_string_parameter_procedure_compiles() {
+        // ALGOL procedure body is one statement; `begin…end` groups more than one.
+        // Here `print(s)` is the whole body; the integer result is left at its
+        // default 0. The call discards the return value.
+        let src = "begin \
+                   integer procedure msg(s); value s; string s; print(s); \
+                   msg('HELLO') \
+                   end";
+        compile_source(src, "test").expect("string parameter procedure should compile");
+    }
+
+    /// The procedure body emits a `print_str` on the parameter slot, not on an
+    /// intermediate copy — the parameter is in `literal_string_slots` on entry.
+    #[test]
+    fn al4_string_parameter_body_emits_print_str() {
+        let src = "begin \
+                   integer procedure echo(s); value s; string s; print(s); \
+                   echo('HI') \
+                   end";
+        let module = compile_source(src, "test").expect("compiles");
+        let echo_fn = module.functions.iter()
+            .find(|f| f.name == "echo")
+            .expect("procedure echo should exist");
+        assert!(
+            echo_fn.instructions.iter().any(|i| i.op == "print_str"),
+            "print(s) inside echo should lower to print_str, not a dynamic call"
+        );
+    }
+
+    /// The procedure's IIR parameter list carries a `str`-typed entry for the
+    /// string formal.
+    #[test]
+    fn al4_string_parameter_has_str_iir_type() {
+        let src = "begin \
+                   integer procedure echo(s); value s; string s; print(s); \
+                   echo('HI') \
+                   end";
+        let module = compile_source(src, "test").expect("compiles");
+        let echo_fn = module.functions.iter()
+            .find(|f| f.name == "echo")
+            .expect("procedure echo should exist");
+        assert!(
+            echo_fn.params.iter().any(|(_, ty)| ty == "str"),
+            "the string formal parameter should carry type `str` in IIRFunction::params"
+        );
+    }
+
+    /// Call site emits a `call` targeting `echo` with the string-slot argument.
+    #[test]
+    fn al4_string_parameter_call_site_emits_call() {
+        let src = "begin \
+                   integer procedure echo(s); value s; string s; print(s); \
+                   echo('HI') \
+                   end";
+        let module = compile_source(src, "test").expect("compiles");
+        let main_fn = module.functions.iter().find(|f| f.name == "main").expect("main");
+        assert!(
+            main_fn.instructions.iter().any(|i| {
+                i.op == "call"
+                    && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "echo")
+            }),
+            "call site should emit `call echo …`"
+        );
+    }
+
+    /// Passing a named string variable (not just a literal) to a string parameter.
+    #[test]
+    fn al4_string_variable_passed_to_string_parameter() {
+        let src = "begin \
+                   string greeting; \
+                   integer procedure echo(s); value s; string s; print(s); \
+                   greeting := 'WORLD'; \
+                   echo(greeting) \
+                   end";
+        compile_source(src, "test").expect("named string variable as actual compiles");
+    }
+
+    /// Type mismatch: passing an integer where a string parameter is expected.
+    #[test]
+    fn al4_string_parameter_rejects_integer_actual() {
+        let src = "begin \
+                   integer procedure echo(s); value s; string s; print(s); \
+                   echo(42) \
+                   end";
+        let err = compile_source(src, "test")
+            .expect_err("integer actual to string parameter should be a type error");
+        assert!(
+            matches!(err, CompileError::Type(_)),
+            "expected Type error, got {err:?}"
+        );
     }
 }

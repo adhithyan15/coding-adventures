@@ -19,6 +19,758 @@ const SPICE_SUFFIX_FACTORS: Readonly<Record<string, number>> = Object.freeze({
   f: 1.0e-15,
 });
 
+export const BERKELEY_SPICE_GRAMMAR_NAME = "berkeley-spice-logical-card";
+export const BERKELEY_SPICE_GRAMMAR_VERSION = 1;
+export const BERKELEY_SPICE_TOKEN_GRAMMAR = String.raw`# Berkeley SPICE logical-card token grammar.
+# @version 1
+# @case_insensitive true
+#
+# This grammar targets normalized Berkeley SPICE logical cards: physical deck
+# preprocessing owns title-line capture, column-1 comments, blank physical
+# lines, and leading ${"`"}+${"`"} continuations. The token stream below is therefore
+# card-oriented and deliberately preserves device/model atoms for the semantic
+# lowerer instead of trying to encode all SPICE device arity in the lexer.
+
+skip:
+  WHITESPACE = /[ \t\r]+/
+
+# Quoted and braced expressions must win before the generic ATOM token.
+QUOTED_STRING = /"([^"\\\n]|\\.)*"/
+BRACED_EXPR   = /\{[^}\n]*\}/
+
+# Berkeley/SPICE-style scalar with optional engineering suffix. Semantic
+# resolution owns suffix meaning (${ "`" }m${ "`" } vs ${ "`" }meg${ "`" }, temperature units, etc.).
+NUMBER = /[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?[a-zA-Z]*/
+
+# Known dot cards for the Berkeley compatibility base plus the already-present
+# post-1970s analysis/output footholds. These appear before DOT so ${"`"}.op${"`"} is not
+# tokenized as DOT + ATOM.
+DOT_END     = ".end"
+DOT_ENDS    = ".ends"
+DOT_SUBCKT  = ".subckt"
+DOT_MODEL   = ".model"
+DOT_PARAM   = ".param"
+DOT_FUNC    = ".func"
+DOT_OPTIONS = ".options"
+DOT_TEMP    = ".temp"
+DOT_IC      = ".ic"
+DOT_NODESET = ".nodeset"
+DOT_OP      = ".op"
+DOT_DC      = ".dc"
+DOT_AC      = ".ac"
+DOT_TRAN    = ".tran"
+DOT_TF      = ".tf"
+DOT_SENS    = ".sens"
+DOT_NOISE   = ".noise"
+DOT_DISTO   = ".disto"
+DOT_PZ      = ".pz"
+DOT_PRINT   = ".print"
+DOT_PLOT    = ".plot"
+DOT_SAVE    = ".save"
+DOT_PROBE   = ".probe"
+DOT_MEASURE = ".measure"
+DOT_MEAS    = ".meas"
+DOT_FOUR    = ".four"
+DOT_INCLUDE = ".include"
+DOT_LIB     = ".lib"
+DOT_CONTROL = ".control"
+DOT_ENDC    = ".endc"
+
+LPAREN = "("
+RPAREN = ")"
+COMMA  = ","
+EQUALS = "="
+DOT    = "."
+
+# Generic card atom. This is intentionally broad because SPICE node names,
+# device names, model names, vector names, and source waveform arguments vary
+# across dialects. Semantic lowering classifies atoms by card kind.
+ATOM = /[^ \t\r\n()=,"{}]+/
+`;
+export const BERKELEY_SPICE_PARSER_GRAMMAR = String.raw`# Berkeley SPICE logical-card parser grammar.
+# @version 1
+#
+# Input is a stream of normalized logical cards. The grammar recognizes the
+# stable card shapes and leaves device arity, model parameter legality,
+# expression evaluation, include/lib resolution, and dialect-specific behavior
+# to semantic passes.
+
+deck = { line } [ end_card ] EOF ;
+
+line = blank_line
+     | subckt_block
+     | model_card
+     | param_card
+     | func_card
+     | options_card
+     | condition_card
+     | analysis_card
+     | output_card
+     | source_card
+     | control_card
+     | unknown_directive_card
+     | element_card
+     ;
+
+blank_line = NEWLINE ;
+
+end_card = DOT_END NEWLINE ;
+
+subckt_block = subckt_card { line } ends_card ;
+subckt_card  = DOT_SUBCKT ATOM { card_item } NEWLINE ;
+ends_card    = DOT_ENDS [ ATOM ] NEWLINE ;
+
+model_card = DOT_MODEL ATOM ATOM [ parameter_list ] NEWLINE ;
+
+param_card   = DOT_PARAM { assignment } NEWLINE ;
+func_card    = DOT_FUNC function_signature card_value NEWLINE ;
+options_card = DOT_OPTIONS { option_item } NEWLINE ;
+
+condition_card = ( DOT_TEMP | DOT_IC | DOT_NODESET ) { option_item } NEWLINE ;
+
+analysis_card = ( DOT_OP
+                | DOT_DC
+                | DOT_AC
+                | DOT_TRAN
+                | DOT_TF
+                | DOT_SENS
+                | DOT_NOISE
+                | DOT_DISTO
+                | DOT_PZ
+                ) { card_item } NEWLINE ;
+
+output_card = ( DOT_PRINT
+              | DOT_PLOT
+              | DOT_SAVE
+              | DOT_PROBE
+              | DOT_MEASURE
+              | DOT_MEAS
+              | DOT_FOUR
+              ) { card_item } NEWLINE ;
+
+source_card = ( DOT_INCLUDE | DOT_LIB ) { card_item } NEWLINE ;
+
+control_card = DOT_CONTROL NEWLINE { control_line } DOT_ENDC NEWLINE ;
+control_line = { card_item } NEWLINE ;
+
+unknown_directive_card = DOT ATOM { card_item } NEWLINE ;
+
+element_card = ATOM { card_item } NEWLINE ;
+
+parameter_list = LPAREN [ option_item { [ COMMA ] option_item } ] RPAREN ;
+
+option_item = assignment | card_value | waveform_call ;
+assignment  = ATOM EQUALS card_value ;
+
+function_signature = ATOM LPAREN [ ATOM { COMMA ATOM } ] RPAREN ;
+
+waveform_call = ATOM LPAREN [ card_item { [ COMMA ] card_item } ] RPAREN ;
+
+card_item = option_item
+          | parameter_list
+          | card_value
+          ;
+
+card_value = NUMBER
+           | ATOM
+           | QUOTED_STRING
+           | BRACED_EXPR
+           ;
+`;
+
+export interface BerkeleySourceSpan {
+  readonly startLine: number;
+  readonly startColumn: number;
+  readonly endLine: number;
+  readonly endColumn: number;
+}
+
+export type BerkeleyDiagnosticSeverity = "error" | "warning" | "note";
+
+export interface BerkeleySyntaxDiagnostic {
+  readonly code: string;
+  readonly severity: BerkeleyDiagnosticSeverity;
+  readonly message: string;
+  readonly span?: BerkeleySourceSpan;
+}
+
+export type BerkeleyCardKind =
+  | "element"
+  | "model"
+  | "subcktStart"
+  | "subcktEnd"
+  | "end"
+  | "param"
+  | "func"
+  | "options"
+  | "condition"
+  | "analysis"
+  | "output"
+  | "source"
+  | "controlStart"
+  | "controlEnd"
+  | "unknownDirective";
+
+export interface BerkeleySyntaxToken {
+  readonly kind: string;
+  readonly text: string;
+  readonly span: BerkeleySourceSpan;
+}
+
+export interface BerkeleyLogicalCard {
+  readonly kind: BerkeleyCardKind;
+  readonly head: string;
+  readonly text: string;
+  readonly span: BerkeleySourceSpan;
+  readonly physicalLines: readonly number[];
+  readonly tokens: readonly BerkeleySyntaxToken[];
+}
+
+export interface BerkeleyGrammarMetadata {
+  readonly name: string;
+  readonly version: number;
+  readonly tokenGrammar: string;
+  readonly parserGrammar: string;
+}
+
+export interface BerkeleyAnalysisInventoryEntry {
+  readonly index: number;
+  readonly directive: string;
+  readonly analysis: string;
+  readonly span: BerkeleySourceSpan;
+}
+
+export interface BerkeleySyntaxDeck {
+  readonly grammar: BerkeleyGrammarMetadata;
+  readonly title?: string;
+  readonly cards: readonly BerkeleyLogicalCard[];
+  readonly diagnostics: readonly BerkeleySyntaxDiagnostic[];
+  hasErrors(): boolean;
+  analysisInventory(): BerkeleyAnalysisInventoryEntry[];
+}
+
+interface BerkeleySourcePosition {
+  readonly line: number;
+  readonly column: number;
+}
+
+class BerkeleyLogicalCardBuilder {
+  readonly positions: BerkeleySourcePosition[];
+  readonly physicalLines: number[];
+  text: string;
+
+  constructor(lineNumber: number, text: string, startColumn: number) {
+    this.text = text;
+    this.positions = Array.from(text, (_, offset) => ({
+      line: lineNumber,
+      column: startColumn + offset,
+    }));
+    this.physicalLines = [lineNumber];
+  }
+
+  appendContinuation(lineNumber: number, text: string, startColumn: number): void {
+    if (text.length === 0) {
+      return;
+    }
+    const joinPosition = this.positions.at(-1) ?? {
+      line: lineNumber,
+      column: startColumn,
+    };
+    this.text += " ";
+    this.positions.push({ line: joinPosition.line, column: joinPosition.column });
+    for (const [offset, char] of Array.from(text).entries()) {
+      this.text += char;
+      this.positions.push({ line: lineNumber, column: startColumn + offset });
+    }
+    this.physicalLines.push(lineNumber);
+  }
+
+  span(): BerkeleySourceSpan {
+    const start = this.positions[0];
+    if (start === undefined) {
+      return berkeleySourcePoint(1, 1);
+    }
+    const end = this.positions[this.positions.length - 1] ?? start;
+    return {
+      startLine: start.line,
+      startColumn: start.column,
+      endLine: end.line,
+      endColumn: end.column + 1,
+    };
+  }
+}
+
+export function parseBerkeleySyntax(text: string): BerkeleySyntaxDeck {
+  const builders: BerkeleyLogicalCardBuilder[] = [];
+  const diagnostics: BerkeleySyntaxDiagnostic[] = [];
+  let pending: BerkeleyLogicalCardBuilder | undefined;
+  let title: string | undefined;
+  let sawContent = false;
+
+  const lines = text.split(/\r?\n/);
+  if (lines.length > 0 && lines[lines.length - 1] === "") {
+    lines.pop();
+  }
+
+  for (const [index, rawLine] of lines.entries()) {
+    const lineNumber = index + 1;
+    const withoutComment = stripBerkeleyInlineComment(rawLine);
+    const trimmedInfo = berkeleyTrimmedWithColumn(withoutComment);
+    if (trimmedInfo === undefined) {
+      continue;
+    }
+    const { trimmed, startColumn } = trimmedInfo;
+    if (trimmed.length === 0) {
+      continue;
+    }
+    if (trimmed.startsWith("*")) {
+      if (!sawContent && title === undefined) {
+        const candidate = trimmed.slice(1).trim();
+        if (candidate.length > 0) {
+          title = candidate;
+        }
+      }
+      continue;
+    }
+    if (trimmed.startsWith("+")) {
+      const afterPlus = trimmed.slice(1);
+      const continuation = afterPlus.trim();
+      const continuationStartColumn =
+        startColumn + 1 + afterPlus.length - afterPlus.trimStart().length;
+      if (pending === undefined) {
+        diagnostics.push(
+          berkeleySyntaxError(
+            "SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD",
+            "continuation line appears before any logical SPICE card",
+            berkeleySourcePoint(lineNumber, startColumn),
+          ),
+        );
+      } else {
+        pending.appendContinuation(lineNumber, continuation, continuationStartColumn);
+      }
+      continue;
+    }
+
+    sawContent = true;
+    if (pending !== undefined) {
+      builders.push(pending);
+    }
+    pending = new BerkeleyLogicalCardBuilder(lineNumber, trimmed, startColumn);
+  }
+
+  if (pending !== undefined) {
+    builders.push(pending);
+  }
+
+  const cards = builders.map((builder) => berkeleyLogicalCard(builder, diagnostics));
+  return {
+    grammar: berkeleyGrammarMetadata(),
+    title,
+    cards,
+    diagnostics,
+    hasErrors() {
+      return this.diagnostics.some((diagnostic) => diagnostic.severity === "error");
+    },
+    analysisInventory() {
+      return this.cards
+        .map((card, index) => ({ card, index }))
+        .filter(({ card }) => card.kind === "analysis")
+        .map(({ card, index }) => ({
+          index,
+          directive: card.head,
+          analysis: card.head.replace(/^\./, "").toLowerCase(),
+          span: card.span,
+        }));
+    },
+  };
+}
+
+function berkeleyGrammarMetadata(): BerkeleyGrammarMetadata {
+  return {
+    name: BERKELEY_SPICE_GRAMMAR_NAME,
+    version: BERKELEY_SPICE_GRAMMAR_VERSION,
+    tokenGrammar: BERKELEY_SPICE_TOKEN_GRAMMAR,
+    parserGrammar: BERKELEY_SPICE_PARSER_GRAMMAR,
+  };
+}
+
+function berkeleyLogicalCard(
+  builder: BerkeleyLogicalCardBuilder,
+  diagnostics: BerkeleySyntaxDiagnostic[],
+): BerkeleyLogicalCard {
+  const tokens = tokenizeBerkeleyCard(builder, diagnostics);
+  const head = berkeleyCardHead(tokens);
+  return {
+    kind: classifyBerkeleyCard(head),
+    head,
+    text: builder.text,
+    span: builder.span(),
+    physicalLines: [...builder.physicalLines],
+    tokens,
+  };
+}
+
+function tokenizeBerkeleyCard(
+  builder: BerkeleyLogicalCardBuilder,
+  diagnostics: BerkeleySyntaxDiagnostic[],
+): BerkeleySyntaxToken[] {
+  const chars = Array.from(builder.text);
+  const tokens: BerkeleySyntaxToken[] = [];
+  let index = 0;
+  let parenDepth = 0;
+
+  while (index < chars.length) {
+    const char = chars[index];
+    if (/\s/.test(char)) {
+      index += 1;
+      continue;
+    }
+
+    if (char === "\"") {
+      const start = index;
+      index += 1;
+      let escaped = false;
+      let closed = false;
+      while (index < chars.length) {
+        const current = chars[index];
+        if (escaped) {
+          escaped = false;
+        } else if (current === "\\") {
+          escaped = true;
+        } else if (current === "\"") {
+          index += 1;
+          closed = true;
+          break;
+        }
+        index += 1;
+      }
+      if (!closed) {
+        diagnostics.push(
+          berkeleySyntaxError(
+            "SPICE_SYNTAX_UNCLOSED_QUOTE",
+            "quoted string is missing its closing quote",
+            berkeleySpanForRange(builder.positions, start, index),
+          ),
+        );
+      }
+      tokens.push(berkeleyToken("QUOTED_STRING", chars, builder.positions, start, index));
+      continue;
+    }
+
+    if (char === "{") {
+      const start = index;
+      index += 1;
+      let closed = false;
+      while (index < chars.length) {
+        if (chars[index] === "}") {
+          index += 1;
+          closed = true;
+          break;
+        }
+        index += 1;
+      }
+      if (!closed) {
+        diagnostics.push(
+          berkeleySyntaxError(
+            "SPICE_SYNTAX_UNCLOSED_BRACED_EXPR",
+            "braced expression is missing its closing brace",
+            berkeleySpanForRange(builder.positions, start, index),
+          ),
+        );
+      }
+      tokens.push(berkeleyToken("BRACED_EXPR", chars, builder.positions, start, index));
+      continue;
+    }
+
+    if (char === "(") {
+      parenDepth += 1;
+      tokens.push(berkeleyToken("LPAREN", chars, builder.positions, index, index + 1));
+      index += 1;
+      continue;
+    }
+    if (char === ")") {
+      if (parenDepth === 0) {
+        diagnostics.push(
+          berkeleySyntaxError(
+            "SPICE_SYNTAX_UNMATCHED_RPAREN",
+            "closing parenthesis has no matching opening parenthesis",
+            berkeleySpanForRange(builder.positions, index, index + 1),
+          ),
+        );
+      } else {
+        parenDepth -= 1;
+      }
+      tokens.push(berkeleyToken("RPAREN", chars, builder.positions, index, index + 1));
+      index += 1;
+      continue;
+    }
+    if (char === ",") {
+      tokens.push(berkeleyToken("COMMA", chars, builder.positions, index, index + 1));
+      index += 1;
+      continue;
+    }
+    if (char === "=") {
+      tokens.push(berkeleyToken("EQUALS", chars, builder.positions, index, index + 1));
+      index += 1;
+      continue;
+    }
+
+    if (char === ".") {
+      const atomEnd = readBerkeleyAtomEnd(chars, index);
+      const raw = chars.slice(index, atomEnd).join("");
+      const kind = knownBerkeleyDotToken(raw);
+      if (kind !== undefined) {
+        tokens.push(berkeleyToken(kind, chars, builder.positions, index, atomEnd));
+        index = atomEnd;
+      } else {
+        tokens.push(berkeleyToken("DOT", chars, builder.positions, index, index + 1));
+        index += 1;
+      }
+      continue;
+    }
+
+    const start = index;
+    index = readBerkeleyAtomEnd(chars, index);
+    const raw = chars.slice(start, index).join("");
+    tokens.push(
+      berkeleyToken(
+        isBerkeleyNumberToken(raw) ? "NUMBER" : "ATOM",
+        chars,
+        builder.positions,
+        start,
+        index,
+      ),
+    );
+  }
+
+  if (parenDepth > 0) {
+    diagnostics.push(
+      berkeleySyntaxError(
+        "SPICE_SYNTAX_UNCLOSED_PAREN",
+        "unclosed parenthesis: opening parenthesis is missing its closing parenthesis",
+        builder.span(),
+      ),
+    );
+  }
+
+  return tokens;
+}
+
+function berkeleyToken(
+  kind: string,
+  chars: readonly string[],
+  positions: readonly BerkeleySourcePosition[],
+  start: number,
+  end: number,
+): BerkeleySyntaxToken {
+  return {
+    kind,
+    text: chars.slice(start, end).join(""),
+    span: berkeleySpanForRange(positions, start, end),
+  };
+}
+
+function berkeleySpanForRange(
+  positions: readonly BerkeleySourcePosition[],
+  start: number,
+  end: number,
+): BerkeleySourceSpan {
+  const first = positions[start] ?? positions[0] ?? { line: 1, column: 1 };
+  const last = positions[Math.max(end - 1, 0)] ?? first;
+  return {
+    startLine: first.line,
+    startColumn: first.column,
+    endLine: last.line,
+    endColumn: last.column + 1,
+  };
+}
+
+function berkeleyCardHead(tokens: readonly BerkeleySyntaxToken[]): string {
+  const first = tokens[0];
+  if (first === undefined) {
+    return "";
+  }
+  const second = tokens[1];
+  if (first.kind === "DOT" && second?.kind === "ATOM") {
+    return `.${second.text}`;
+  }
+  return first.text;
+}
+
+function classifyBerkeleyCard(head: string): BerkeleyCardKind {
+  switch (head.toLowerCase()) {
+    case ".model":
+      return "model";
+    case ".subckt":
+      return "subcktStart";
+    case ".ends":
+      return "subcktEnd";
+    case ".end":
+      return "end";
+    case ".param":
+      return "param";
+    case ".func":
+      return "func";
+    case ".options":
+      return "options";
+    case ".temp":
+    case ".ic":
+    case ".nodeset":
+      return "condition";
+    case ".op":
+    case ".dc":
+    case ".ac":
+    case ".tran":
+    case ".tf":
+    case ".sens":
+    case ".noise":
+    case ".disto":
+    case ".pz":
+      return "analysis";
+    case ".print":
+    case ".plot":
+    case ".save":
+    case ".probe":
+    case ".measure":
+    case ".meas":
+    case ".four":
+      return "output";
+    case ".include":
+    case ".lib":
+      return "source";
+    case ".control":
+      return "controlStart";
+    case ".endc":
+      return "controlEnd";
+    default:
+      return head.startsWith(".") ? "unknownDirective" : "element";
+  }
+}
+
+function readBerkeleyAtomEnd(chars: readonly string[], index: number): number {
+  while (index < chars.length) {
+    const char = chars[index];
+    if (/\s/.test(char) || ["(", ")", ",", "=", "\"", "{", "}"].includes(char)) {
+      break;
+    }
+    index += 1;
+  }
+  return index;
+}
+
+function knownBerkeleyDotToken(raw: string): string | undefined {
+  return new Map<string, string>([
+    [".end", "DOT_END"],
+    [".ends", "DOT_ENDS"],
+    [".subckt", "DOT_SUBCKT"],
+    [".model", "DOT_MODEL"],
+    [".param", "DOT_PARAM"],
+    [".func", "DOT_FUNC"],
+    [".options", "DOT_OPTIONS"],
+    [".temp", "DOT_TEMP"],
+    [".ic", "DOT_IC"],
+    [".nodeset", "DOT_NODESET"],
+    [".op", "DOT_OP"],
+    [".dc", "DOT_DC"],
+    [".ac", "DOT_AC"],
+    [".tran", "DOT_TRAN"],
+    [".tf", "DOT_TF"],
+    [".sens", "DOT_SENS"],
+    [".noise", "DOT_NOISE"],
+    [".disto", "DOT_DISTO"],
+    [".pz", "DOT_PZ"],
+    [".print", "DOT_PRINT"],
+    [".plot", "DOT_PLOT"],
+    [".save", "DOT_SAVE"],
+    [".probe", "DOT_PROBE"],
+    [".measure", "DOT_MEASURE"],
+    [".meas", "DOT_MEAS"],
+    [".four", "DOT_FOUR"],
+    [".include", "DOT_INCLUDE"],
+    [".lib", "DOT_LIB"],
+    [".control", "DOT_CONTROL"],
+    [".endc", "DOT_ENDC"],
+  ]).get(raw.toLowerCase());
+}
+
+function isBerkeleyNumberToken(raw: string): boolean {
+  let index = 0;
+  if (raw[index] === "+" || raw[index] === "-") {
+    index += 1;
+  }
+
+  let digitsBeforeDot = 0;
+  while (/[0-9]/.test(raw[index] ?? "")) {
+    digitsBeforeDot += 1;
+    index += 1;
+  }
+
+  let digitsAfterDot = 0;
+  if (raw[index] === ".") {
+    index += 1;
+    while (/[0-9]/.test(raw[index] ?? "")) {
+      digitsAfterDot += 1;
+      index += 1;
+    }
+  }
+
+  if (digitsBeforeDot === 0 && digitsAfterDot === 0) {
+    return false;
+  }
+
+  if (raw[index] === "e" || raw[index] === "E") {
+    let probe = index + 1;
+    if (raw[probe] === "+" || raw[probe] === "-") {
+      probe += 1;
+    }
+    let exponentDigits = 0;
+    while (/[0-9]/.test(raw[probe] ?? "")) {
+      exponentDigits += 1;
+      probe += 1;
+    }
+    if (exponentDigits > 0) {
+      index = probe;
+    }
+  }
+
+  return Array.from(raw.slice(index)).every((char) => /[A-Za-z]/.test(char));
+}
+
+function stripBerkeleyInlineComment(line: string): string {
+  return line.split(";", 1)[0];
+}
+
+function berkeleyTrimmedWithColumn(
+  line: string,
+): { readonly trimmed: string; readonly startColumn: number } | undefined {
+  const trimmedEnd = line.trimEnd();
+  if (trimmedEnd.length === 0) {
+    return undefined;
+  }
+  const trimmed = trimmedEnd.trimStart();
+  return {
+    trimmed,
+    startColumn: trimmedEnd.length - trimmed.length + 1,
+  };
+}
+
+function berkeleySourcePoint(line: number, column: number): BerkeleySourceSpan {
+  return {
+    startLine: line,
+    startColumn: column,
+    endLine: line,
+    endColumn: column,
+  };
+}
+
+function berkeleySyntaxError(
+  code: string,
+  message: string,
+  span: BerkeleySourceSpan,
+): BerkeleySyntaxDiagnostic {
+  return { code, severity: "error", message, span };
+}
+
 export type Element =
   | Resistor
   | Capacitor

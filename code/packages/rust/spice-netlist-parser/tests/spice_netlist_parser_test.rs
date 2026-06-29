@@ -3,11 +3,13 @@ use spice_engine::{
     BjtPolarity, Element, JfetPolarity, McDistribution, McOptions, MosfetType, TransientMethod,
 };
 use spice_netlist_parser::{
-    build_analysis_plan, parse_netlist, parse_value, run_netlist, AcAnalysis, Analysis,
-    AnalysisKind, AnalysisResult, DcAnalysis, DistortionAnalysis, FourAnalysis, McAnalysis,
-    MeasureAnalysis, MeasureOperation, NetlistParseError, NoiseAnalysis, OpAnalysis, OptionValue,
-    OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind, PrintAnalysis, ProbeAnalysis,
-    SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis, TfAnalysis, TranAnalysis,
+    build_analysis_plan, parse_berkeley_app_deck, parse_berkeley_syntax, parse_netlist,
+    parse_value, run_netlist, AcAnalysis, Analysis, AnalysisKind, AnalysisResult, BerkeleyCardKind,
+    BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, DcAnalysis, DistortionAnalysis,
+    FourAnalysis, McAnalysis, MeasureAnalysis, MeasureOperation, NetlistParseError, NoiseAnalysis,
+    OpAnalysis, OptionValue, OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind,
+    PrintAnalysis, ProbeAnalysis, SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis,
+    TfAnalysis, TranAnalysis, BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -1801,6 +1803,189 @@ fn rejects_unknown_subcircuit_instances() {
     assert!(err
         .to_string()
         .contains("line 1: unknown subcircuit \"missing\""));
+}
+
+#[test]
+fn berkeley_syntax_facade_preserves_logical_cards_tokens_and_spans() {
+    let syntax = parse_berkeley_syntax(
+        r#"
+* RC low pass
+V1 in 0 DC 1
+R1 in out 1k ; inline comment
++ TC=1m
+.op
+.tran 1n 2n
+.end
+"#,
+    );
+
+    assert!(!syntax.has_errors(), "{:?}", syntax.diagnostics);
+    assert_eq!(
+        syntax.grammar,
+        BerkeleyGrammarMetadata {
+            name: BERKELEY_SPICE_GRAMMAR_NAME,
+            version: BERKELEY_SPICE_GRAMMAR_VERSION,
+            token_grammar: syntax.grammar.token_grammar,
+            parser_grammar: syntax.grammar.parser_grammar,
+        }
+    );
+    assert_eq!(syntax.title.as_deref(), Some("RC low pass"));
+    assert_eq!(syntax.cards.len(), 5);
+
+    let resistor = &syntax.cards[1];
+    assert_eq!(resistor.kind, BerkeleyCardKind::Element);
+    assert_eq!(resistor.head, "R1");
+    assert_eq!(resistor.text, "R1 in out 1k TC=1m");
+    assert_eq!(resistor.physical_lines, vec![4, 5]);
+    assert_eq!(resistor.span.start_line, 4);
+    assert_eq!(resistor.span.end_line, 5);
+    assert_eq!(
+        resistor
+            .tokens
+            .iter()
+            .map(|token| (token.kind.as_str(), token.text.as_str()))
+            .collect::<Vec<_>>(),
+        vec![
+            ("ATOM", "R1"),
+            ("ATOM", "in"),
+            ("ATOM", "out"),
+            ("NUMBER", "1k"),
+            ("ATOM", "TC"),
+            ("EQUALS", "="),
+            ("NUMBER", "1m"),
+        ]
+    );
+
+    let inventory = syntax.analysis_inventory();
+    assert_eq!(
+        inventory
+            .iter()
+            .map(|entry| (entry.index, entry.analysis.as_str()))
+            .collect::<Vec<_>>(),
+        vec![(2, "op"), (3, "tran")]
+    );
+}
+
+#[test]
+fn berkeley_syntax_facade_reports_stable_diagnostics() {
+    let syntax = parse_berkeley_syntax(
+        r#"
++ orphan
+V1 in 0 PULSE(0 1
+.measure tran bad PARAM="unterminated
+"#,
+    );
+
+    assert_eq!(
+        syntax
+            .diagnostics
+            .iter()
+            .map(|diagnostic| (diagnostic.code.as_str(), diagnostic.severity))
+            .collect::<Vec<_>>(),
+        vec![
+            (
+                "SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD",
+                BerkeleyDiagnosticSeverity::Error
+            ),
+            (
+                "SPICE_SYNTAX_UNCLOSED_PAREN",
+                BerkeleyDiagnosticSeverity::Error
+            ),
+            (
+                "SPICE_SYNTAX_UNCLOSED_QUOTE",
+                BerkeleyDiagnosticSeverity::Error
+            ),
+        ]
+    );
+}
+
+#[test]
+fn berkeley_app_facade_exposes_inventory_and_runs_source_order() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* divider
+V1 in 0 DC 1
+R1 in out 1k
+R2 out 0 1k
+.op
+.dc V1 0 1 1
+.end
+"#,
+    );
+
+    assert!(!app.has_errors(), "{:?}", app.diagnostics);
+    assert_eq!(
+        app.analysis_inventory()
+            .iter()
+            .map(|entry| (entry.index, entry.directive.as_str()))
+            .collect::<Vec<_>>(),
+        vec![(3, ".op"), (4, ".dc")]
+    );
+
+    let results = app.run_source_order().unwrap();
+    assert_eq!(
+        results.iter().map(|result| result.kind).collect::<Vec<_>>(),
+        vec![AnalysisKind::Op, AnalysisKind::Dc]
+    );
+
+    let selected = app.run_selected_analysis(4).unwrap().unwrap();
+    assert_eq!(selected.kind, AnalysisKind::Dc);
+}
+
+#[test]
+fn berkeley_app_facade_reports_lowering_errors_without_running() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* invalid semantic deck
+V1 in 0 DC 1
+Rbad in
+.op
+"#,
+    );
+
+    assert!(app.has_errors());
+    assert_eq!(app.parsed, None);
+    assert!(app
+        .diagnostics
+        .iter()
+        .any(|diagnostic| diagnostic.code == "SPICE_BERKELEY_LOWERING_ERROR"));
+    let err = app.run_source_order().unwrap_err();
+    assert!(err.to_string().contains("Berkeley SPICE app deck"));
+}
+
+#[test]
+fn parse_netlist_lowers_berkeley_logical_card_continuations() {
+    let parsed = parse_netlist(
+        r#"
+* continued divider
+V1 in 0 DC 10
+R1 in mid
++ 1k
+R2 mid 0 1k
+.op
+.end
+"#,
+    )
+    .unwrap();
+
+    assert_eq!(parsed.title.as_deref(), Some("continued divider"));
+    let result = dc_op(&parsed.circuit).unwrap();
+    assert_close(result.voltage("mid").unwrap(), 5.0);
+}
+
+#[test]
+fn parse_netlist_reports_berkeley_syntax_diagnostics_before_lowering() {
+    let err = parse_netlist(
+        r#"
++ orphan
+V1 in 0 DC 1
+"#,
+    )
+    .unwrap_err();
+
+    assert!(err
+        .to_string()
+        .contains("SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD"));
 }
 
 fn assert_error_type(_: NetlistParseError) {}

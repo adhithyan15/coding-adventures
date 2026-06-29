@@ -1,5 +1,20 @@
 # Changelog — vm-core
 
+## [0.14.0] — 2026-06-28 (LANG-FULL AL8-trig — `f64_sin/cos/ln/exp` VM dispatch handlers)
+
+Added `handle_f64_transcendental` generic helper and four handlers registered in the
+dispatch table: `f64_sin` → `f64::sin`, `f64_cos` → `f64::cos`, `f64_ln` → `f64::ln`,
+`f64_exp` → `f64::exp`.  Each extracts the first operand as `f64`, applies the function,
+and stores the result.  JIT inherits all four via the standard `lookup_standard` fallback.
+
+## [0.13.0] — 2026-06-28 (LANG-FULL AL8-sqrt — `f64_sqrt` VM dispatch handler)
+
+Added `handle_f64_sqrt` to the dispatch table.  The handler extracts the first
+source operand as a `Value::Float`, calls Rust's `f64::sqrt()` (IEEE-754
+hardware sqrt — NaN propagates, negative input returns NaN), and writes
+`Value::Float(result)` to the dest slot.  The JIT falls back to the VM for all
+`_f64`-suffix ops via the existing fallback path, so no JIT changes were needed.
+
 ## [0.12.0] — 2026-06-28 (LANG-FULL E4 — reference string comparison)
 
 The reference VM now implements `str_cmp`, returning the shared E4 three-way

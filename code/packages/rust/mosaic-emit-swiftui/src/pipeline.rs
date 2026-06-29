@@ -6377,9 +6377,8 @@ mod tests {
             "App.swift must provide a dispatch closure"
         );
         assert!(
-            proj.app_swift
-                .contains("print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")"),
-            "App.swift should print the Mosaic wire envelope"
+            proj.app_swift.contains("host.dispatch(event)"),
+            "App.swift should dispatch the Mosaic wire envelope through the host"
         );
     }
 

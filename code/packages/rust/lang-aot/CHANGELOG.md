@@ -1,5 +1,81 @@
 # Changelog — `lang-aot`
 
+## 0.156.0 — 2026-06-29 — ALGOL 60 real array + real procedure on 7 backends (LANG-FULL AL9)
+
+Added two matrix proof cells for ALGOL 60 real-typed features:
+
+- **AL9-a (real array)**: `real array A[1:3]` with f64 element stores/loads;
+  `A[1]:=40.0; A[3]:=2.0; entier(A[1]+A[3])` ⇒ exit 42.  Exercises non-contiguous
+  f64 slots and ALGOL's lower-bound subtraction on array access.
+- **AL9-b (real procedure)**: `real procedure square(x); value x; real x;` with
+  a real value parameter and real return; `entier(square(6.5))` = `entier(42.25)`
+  ⇒ exit 42.  Exercises the `(f64) → f64` call/ret pathway on all 7 backends.
+
+No new IIR ops or backend changes — both cells run on the existing E5 array substrate
+(array_set/array_get with f64 type_hint) and the existing call/ret mechanism.
+
+844 total proven cells pass.
+
+## 0.155.0 — 2026-06-29 — ALGOL 60 transcendental functions `sin`/`cos`/`ln`/`exp` (LANG-FULL AL8-trig)
+
+Four new matrix `Prog` cells proving ALGOL 60's §3.2.4 transcendental standard
+functions on all 7 backends (NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit):
+
+- `cos(0.0)` → `entier(1.0) + 41` = 42
+- `exp(0.0)` → `entier(1.0) + 41` = 42
+- `sin(0.0)` → `entier(0.0 + 42.0)` = 42
+- `ln(1.0)`  → `entier(0.0 + 42.0)` = 42
+
+Each uses an exact IEEE-754 input/output (no rounding error) to verify correctness
+portably.  Backend mappings: WASM `env.__sin/cos/ln/exp` host imports (resolved by
+`PrintHost` to Rust `f64::*`); LLVM `@llvm.sin/cos/log/exp.f64` intrinsics;
+JVM `Math.sin/cos/log/exp`; CLR `System.Math.Sin/Cos/Log/Exp`; native aarch64/x86_64
+`BL` / `call rel32` to libm `sin/cos/log/exp`; VM/JIT `f64_*` dispatch handlers.
+
+Four new WASM host functions added to `PrintHost`: `SinFunc`, `CosFunc`, `LnFunc`,
+`ExpFunc` — each stateless, `f64 → f64`, resolved as `env.__sin/cos/ln/exp`.
+
+842 total proven cells pass.
+
+## 0.154.0 — 2026-06-28 — ALGOL string procedure parameters on all 7 backends (LANG-FULL AL4-str-params)
+
+Two new matrix `Prog` cells proving ALGOL 60 string-typed value parameters on all
+7 backends (NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit):
+
+- `integer procedure echo(s); value s; string s; print(s); echo('HELLO')` → stdout `HELLO`
+  (string literal as actual argument)
+- `string msg; … msg := 'HI'; say(msg)` → stdout `HI`
+  (named string variable as actual argument)
+
+No new backend code — `str`-typed function parameters were already proven by Twig
+(TW4). The only change is in `algol-iir-compiler` 0.18.0: `specifier_scalar_type`
+now accepts `"string"` specifiers, and `compile_procedure` adds string parameter
+slots to `literal_string_slots` so `print(s)` works inside the body.
+
+838 total proven cells pass.
+
+## 0.153.0 — 2026-06-28 — BASIC built-in functions `SQR`/`INT`/`ABS`/`SGN` (LANG-FULL BA-builtins)
+
+Four new matrix `Prog` cells proving Dartmouth BASIC's built-in math functions
+on all 7 backends (NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit):
+
+- `PRINT SQR(49)` → `7` (`f64_sqrt` IIR op, hardware sqrt everywhere)
+- `PRINT INT(3.7)` → `3` (`real_to_int_floor` + `int_to_real`, E8 ops)
+- `PRINT ABS(-42)` → `42` (inline conditional, store-per-branch)
+- `PRINT SGN(-5)` → `-1` (inline 3-way conditional, result is f64)
+
+818 total proven cells pass.
+
+## 0.152.0 — 2026-06-28 — ALGOL `sqrt` on all seven backends (LANG-FULL AL8-sqrt)
+
+The matrix now proves `sqrt(49.0) = 7` — the ALGOL 60 §3.2.4 `sqrt` standard
+function — on **all 7 backends** (NativeAot / LLVM / WASM / JVM / CLR / VM / JIT).
+The proof program is `begin real r; integer result; r := sqrt(49.0); result :=
+entier(r) end` → exit 7.  `sqrt` lowers through the new `f64_sqrt` IIR op to
+hardware sqrt on every backend: WASM `f64.sqrt` (0x9F), LLVM `@llvm.sqrt.f64`,
+JVM `Math.sqrt`, CLR `System.Math::Sqrt`, aarch64 `FSQRT`, x86_64 `SQRTSD`,
+VM/JIT `f64::sqrt()`.
+
 ## 0.151.0 — 2026-06-28 — ALGOL string predicates on all seven backends (LANG-FULL AL4)
 
 The matrix now proves ALGOL 60 literal-backed scalar string equality and

@@ -332,5 +332,37 @@ ok(wmv.moveSheet(0, 2) === true, "moveSheet Sheet1 → end");
 ok(JSON.stringify(wmv.sheetNames()) === '{"active":2,"sheets":["B","C","Sheet1"]}',
   `sheetNames after move: ${JSON.stringify(wmv.sheetNames())}`);
 
+// ── Column widths & row heights ──────────────────────────────────────────
+// The engine stores per-column / per-row sizes (opaque chrome it never computes
+// with): set → read back, persist through save/load, shift on insert-col.
+const wcr = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+ok(wcr.columnWidth(3) === 0, "column C width unset → 0 (host default)");
+ok(wcr.setColumnWidth(3, 140) === true, "setColumnWidth C=140");
+ok(wcr.setRowHeight(2, 40) === true, "setRowHeight row2=40");
+ok(wcr.columnWidth(3) === 140, `columnWidth C → 140: ${wcr.columnWidth(3)}`);
+ok(wcr.rowHeight(2) === 40, `rowHeight row2 → 40: ${wcr.rowHeight(2)}`);
+// A bad value is rejected, leaving the column unset.
+ok(wcr.setColumnWidth(4, 0) === false, "setColumnWidth ≤0 rejected");
+ok(wcr.columnWidth(4) === 0, "rejected width left unset");
+// Bulk range read, sorted: only customized columns appear.
+wcr.setColumnWidth(5, 90);
+ok(JSON.stringify(wcr.columnWidths(3, 6)) === '[{"col":3,"w":140},{"col":5,"w":90}]',
+  `columnWidths(3,6): ${JSON.stringify(wcr.columnWidths(3, 6))}`);
+ok(JSON.stringify(wcr.rowHeights(1, 5)) === '[{"h":40,"row":2}]',
+  `rowHeights(1,5): ${JSON.stringify(wcr.rowHeights(1, 5))}`);
+// Persist through save/load: the sizes come back after a round trip.
+const crdoc = wcr.serialize();
+wcr.setColumnWidth(3, 999);
+ok(wcr.deserialize(crdoc) === true, "load width/height doc");
+ok(wcr.columnWidth(3) === 140, `width restored after load: ${wcr.columnWidth(3)}`);
+ok(wcr.rowHeight(2) === 40, "height restored after load");
+// Insert a column at B (2): column C's width (140) slides to column D (4).
+wcr.insertCols(2, 1);
+ok(wcr.columnWidth(3) === 0, "old column C now unset after insert");
+ok(wcr.columnWidth(4) === 140, `width slid to column D: ${wcr.columnWidth(4)}`);
+// Clear → back to the host default.
+ok(wcr.clearColumnWidth(4) === true, "clearColumnWidth D");
+ok(wcr.columnWidth(4) === 0, "cleared width → 0");
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);

@@ -514,17 +514,17 @@ fn adapt_constrain_latex(node: &GrammarASTNode) -> Result<Statement, AdapterErro
     })?;
     let source = latex_string_from_node(relation, "latex_relation")?;
     let math = parse_latex_math(&source)?;
-    let MathExpr::Rel(op, lhs, rhs) = math else {
+    let MathExpr::Rel(op, lhs, rhs) = &math else {
         return Err(AdapterError::UnsupportedLatexMath {
             source,
             detail: "expected a LaTeX relation such as x^2 = 4".into(),
         });
     };
-    let op = lower_latex_relop(op, &source)?;
+    let op = lower_latex_relop(*op, &source)?;
     Ok(Statement::Constrain {
-        lhs: latex_math_to_expr_ast(*lhs, &source)?,
+        lhs: latex_math_to_expr_ast(lhs, &source)?,
         op,
-        rhs: latex_math_to_expr_ast(*rhs, &source)?,
+        rhs: latex_math_to_expr_ast(rhs, &source)?,
     })
 }
 
@@ -836,7 +836,7 @@ fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     if let Some(latex) = first_named_child(node, "latex_expr") {
         let source = latex_string_from_node(latex, "latex_expr")?;
         let math = parse_latex_math(&source)?;
-        return latex_math_to_expr_ast(math, &source);
+        return latex_math_to_expr_ast(&math, &source);
     }
     if let Some(agg) = first_named_child(node, "agg") {
         return adapt_agg(agg);
@@ -907,26 +907,30 @@ fn strip_math_delimiters(source: &str) -> &str {
     }
 }
 
-fn latex_math_to_expr_ast(expr: MathExpr, source: &str) -> Result<ExprAst, AdapterError> {
+// Takes `&MathExpr` (not by value): the neutral `MathExpr` now implements `Drop` (so it is
+// safe to free at any depth), and a type with an explicit `Drop` cannot have its fields moved
+// out of a `match`. Borrowing and recursing on the references — cloning only the small leaves
+// we keep — is the idiomatic way to consume it, and avoids E0509.
+fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, AdapterError> {
     match expr {
-        MathExpr::Number(n) => number_to_lit(&n, source),
-        MathExpr::Symbol(name) => Ok(ExprAst::Ref(name)),
-        MathExpr::Group(inner) => latex_math_to_expr_ast(*inner, source),
-        MathExpr::Unary(UnaryOp::Pos, inner) => latex_math_to_expr_ast(*inner, source),
+        MathExpr::Number(n) => number_to_lit(n, source),
+        MathExpr::Symbol(name) => Ok(ExprAst::Ref(name.clone())),
+        MathExpr::Group(inner) => latex_math_to_expr_ast(inner, source),
+        MathExpr::Unary(UnaryOp::Pos, inner) => latex_math_to_expr_ast(inner, source),
         MathExpr::Unary(UnaryOp::Neg, inner) => Ok(ExprAst::Bin(
             ArithOp::Sub,
             Box::new(ExprAst::Lit(0.0)),
-            Box::new(latex_math_to_expr_ast(*inner, source)?),
+            Box::new(latex_math_to_expr_ast(inner, source)?),
         )),
-        MathExpr::Bin(BinOp::Add, lhs, rhs) => latex_bin(ArithOp::Add, *lhs, *rhs, source),
-        MathExpr::Bin(BinOp::Sub, lhs, rhs) => latex_bin(ArithOp::Sub, *lhs, *rhs, source),
-        MathExpr::Bin(BinOp::Mul, lhs, rhs) => latex_bin(ArithOp::Mul, *lhs, *rhs, source),
+        MathExpr::Bin(BinOp::Add, lhs, rhs) => latex_bin(ArithOp::Add, lhs, rhs, source),
+        MathExpr::Bin(BinOp::Sub, lhs, rhs) => latex_bin(ArithOp::Sub, lhs, rhs, source),
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) => latex_bin(ArithOp::Mul, lhs, rhs, source),
         MathExpr::Bin(BinOp::Div, lhs, rhs) | MathExpr::Frac(lhs, rhs) => {
-            latex_bin(ArithOp::Div, *lhs, *rhs, source)
+            latex_bin(ArithOp::Div, lhs, rhs, source)
         }
         MathExpr::Bin(BinOp::Pow, base, exponent) => {
-            let n = latex_power_exponent(&exponent, source)?;
-            expand_power(*base, n, source)
+            let n = latex_power_exponent(exponent, source)?;
+            expand_power(base, n, source)
         }
         MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
@@ -941,8 +945,8 @@ fn latex_math_to_expr_ast(expr: MathExpr, source: &str) -> Result<ExprAst, Adapt
 
 fn latex_bin(
     op: ArithOp,
-    lhs: MathExpr,
-    rhs: MathExpr,
+    lhs: &MathExpr,
+    rhs: &MathExpr,
     source: &str,
 ) -> Result<ExprAst, AdapterError> {
     Ok(ExprAst::Bin(
@@ -993,7 +997,7 @@ fn latex_power_exponent(expr: &MathExpr, source: &str) -> Result<usize, AdapterE
     Ok(v as usize)
 }
 
-fn expand_power(base: MathExpr, exponent: usize, source: &str) -> Result<ExprAst, AdapterError> {
+fn expand_power(base: &MathExpr, exponent: usize, source: &str) -> Result<ExprAst, AdapterError> {
     if exponent == 0 {
         return Ok(ExprAst::Lit(1.0));
     }

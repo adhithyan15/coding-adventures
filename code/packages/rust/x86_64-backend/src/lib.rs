@@ -617,6 +617,44 @@ fn emit_instr(
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store rax
         return Ok(());
     }
+    // AL8 sqrt — `SQRTSD xmm0,xmm0` (SSE2; single hardware FP instruction, no libm).
+    //   f64_sqrt dest <- src  →  movsd xmm0,[src]; sqrtsd xmm0,xmm0; movsd [dest],xmm0
+    // NaN propagates; negative input → NaN (IEEE-754 / matches VM `f64::sqrt`).
+    if op == "f64_sqrt" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr("f64_sqrt needs srcs[0]".into()))?;
+        load_fp_operand(asm, alloc, Reg::Rax, src)?;            // f64 → xmm0
+        asm.sqrtsd(Reg::Rax, Reg::Rax);                         // xmm0 = sqrt(xmm0)
+        let slot = alloc.slot_of(dest);
+        asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store xmm0
+        return Ok(());
+    }
+
+    // AL8 transcendentals — sin/cos/ln/exp via libm (`call rel32` → xmm0).
+    //
+    // Both System V AMD64 and MS x64 pass the first f64 arg in xmm0 and
+    // return the f64 result in xmm0, so there is no ABI difference here.
+    // libm is pre-linked on Linux (`-lm`) and macOS (`-lSystem`).
+    // ALGOL `ln` maps to libm `log` (natural logarithm).
+    if matches!(op, "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp") {
+        let libm_sym = match op {
+            "f64_sin" => "sin",
+            "f64_cos" => "cos",
+            "f64_ln"  => "log",   // libm natural log is `log`, not `ln`
+            "f64_exp" => "exp",
+            _ => unreachable!(),
+        };
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(
+                format!("{op} needs srcs[0]")))?;
+        load_fp_operand(asm, alloc, Reg::Rax, src)?;                     // f64 → xmm0
+        asm.call_rel32(libm_sym, ExternalRelocKind::PltRel32);            // call sin/cos/log/exp
+        let slot = alloc.slot_of(dest);
+        asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store xmm0 result
+        return Ok(());
+    }
 
     // --- add_<ty> / sub_<ty> / mul_<ty> ---
     if let Some(ty) = op.strip_prefix("add_") { return emit_binop(asm, alloc, instr, BinOp::Add, ty); }

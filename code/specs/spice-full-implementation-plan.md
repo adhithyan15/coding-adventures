@@ -6,6 +6,19 @@ not unlimited vendor compatibility with every HSPICE, Spectre, or ngspice
 extension. The target is a documented, cross-language, production-usable SPICE
 core with predictable gaps, stable diagnostics, and native web support.
 
+The application roadmap is staged by dialect confidence:
+
+1. Berkeley SPICE / SPICE2-SPICE3 core conformance first.
+2. ngspice compatibility as an explicit open-source dialect layer.
+3. LTspice compatibility as the later vendor-dialect and product-experience
+   target.
+
+Rust is the primary app/runtime spine for Mosaic-backed user interfaces, native
+execution, and WebAssembly packaging. Python and TypeScript remain first-class
+conformance ports: parser, solver, diagnostic, and output semantics should move
+in sync unless a workstream explicitly documents a Rust-only acceleration path
+with stable cross-language results.
+
 ## Completion Bar
 
 A workstream is complete only when the Python, Rust, and TypeScript surfaces are
@@ -13,22 +26,22 @@ aligned, package tests cover the new behavior, examples or docs explain the
 user-facing entrypoint, and text or structured outputs are stable enough for
 downstream tools to compare.
 
+No backward-compatibility promise exists for pre-release parser APIs. If the
+current parser surface conflicts with Berkeley SPICE correctness, shared grammar
+contracts, source-span diagnostics, or cross-language parity, break it and fix
+the Rust, Python, and TypeScript surfaces together.
+
 ## Current PR Slice
 
-1. Device model reference-deck audit analysis summaries.
+1. Python and TypeScript Berkeley syntax facade parity.
    - Status: current PR completion candidate.
-   - Python, Rust, and TypeScript now expose
-     `device_model_reference_deck_audit_analysis_summary` /
-     `deviceModelReferenceDeckAuditAnalysisSummary` helpers plus stable
-     analysis-summary table, header-keyed records, CSV, and compact JSON
-     output.
-   - The summary condenses the reference-deck audit matrix by analysis kind,
-     preserving expected model-family order, missing-kind gaps, total deck-line
-     counts, and reference labels for release dashboards and coverage reviews.
-   - Cross-language tests lock the five expected analysis summary rows,
-     CSV/JSON exports, and a negative missing `tran:NMOS` summary case so
-     downstream consumers can audit analysis coverage without scanning every
-     fixture row.
+   - Mirror the Rust Berkeley logical-card syntax facade in Python and
+     TypeScript with embedded grammar metadata, normalized cards, leading `+`
+     continuation handling, source spans, token names, stable diagnostics, and
+     analysis inventory.
+   - Keep the slice focused on parser/app-substrate metadata for Mosaic and
+     editor surfaces; richer result/table/waveform app artifacts remain in the
+     next Mosaic facade expansion.
 
 ## Completed Slices
 
@@ -1385,9 +1398,51 @@ downstream tools to compare.
      exports, and a negative missing `NMOS:tran` summary case so downstream
      consumers can audit coverage without scanning every fixture row.
 
+132. Berkeley SPICE grammar foundation.
+   - Status: completed in PR 6861.
+   - `code/grammars/spice/berkeley.tokens` and
+     `code/grammars/spice/berkeley.grammar` now define the first shared syntax
+     contract for normalized Berkeley SPICE logical cards.
+   - The grammar intentionally parses stable card shape and preserves generic
+     card atoms. Semantic passes own device arity, model legality, expression
+     resolution, include/library loading, control policies, and
+     dialect-specific behavior.
+   - Grammar-tool tests parse, validate, cross-validate, and compile the token
+     and parser grammars so future parser rewrites can break old ad hoc parsing
+     behavior against a checked source grammar instead of guessing.
+
+133. Rust Berkeley SPICE parser/app facade.
+   - Status: completed in PR 6902.
+   - Rust `spice-netlist-parser` now exposes a Berkeley SPICE logical-card
+     syntax facade with grammar metadata, normalized cards, leading `+`
+     continuation handling, source spans, token names, stable diagnostics, and
+     analysis inventory.
+   - The Rust app-deck facade parses syntax once, reports syntax/lowering
+     diagnostics, exposes analysis inventory, and can run source-order or
+     selected runnable analyses through the simulator parser for Mosaic-backed
+     UI runtimes.
+
+134. Rust Berkeley syntax lowerer routing.
+   - Status: completed in PR 6907.
+   - Rust `spice-netlist-parser` semantic lowering now routes through the
+     Berkeley syntax facade by default, so normalized logical cards, leading
+     `+` continuations, source spans, and stable syntax diagnostics drive the
+     existing simulator parser.
+   - The parser no longer performs a duplicate physical-line pass before
+     semantic lowering, preserving the Mosaic app facade as the Rust runtime
+     entrypoint over one shared syntax substrate.
+
 ## Backlog
 
-1. Deck compatibility follow-up.
+1. Grammar-backed parser and app facade.
+   - Keep Python and TypeScript parser contract parity aligned with the Rust
+     syntax facade as the grammar evolves, even if that breaks current
+     pre-release parser APIs.
+   - Expand the Rust Mosaic app facade from analysis inventory and execution
+     entrypoints to stable table, waveform, and result artifacts backed by the
+     same public parser contract.
+
+2. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -1398,7 +1453,7 @@ downstream tools to compare.
      command routing, including control flow, variables, and script execution
      policy.
 
-2. Production solver core follow-up.
+3. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -1409,14 +1464,14 @@ downstream tools to compare.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-3. Device model depth.
+4. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-4. Analysis completion.
+5. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
@@ -1425,14 +1480,14 @@ downstream tools to compare.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-5. Mixed-signal integration.
+6. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.
    - Keep mixed-signal coupling deterministic across Python, Rust, and
      TypeScript.
 
-6. Verilog-A and custom models.
+7. Verilog-A and custom models.
    - Specify the accepted model subset and residual/Jacobian hooks.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.

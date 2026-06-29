@@ -1,5 +1,19 @@
 # Changelog — `x86_64-backend`
 
+## 0.18.0 — 2026-06-28 — `f64_sin/cos/ln/exp` via libm `call rel32` (LANG-FULL AL8-trig)
+
+Transcendentals call libm via `call_rel32` with `PltRel32` external relocs:
+`movsd xmm0,[src]; call sin/cos/log/exp; movsd [dest],xmm0`.
+Both System V AMD64 and MS x64 pass/return the first f64 in xmm0.
+Mapping: `f64_ln` → `call log` (libm natural log is `log`, not `ln`).
+libm is pre-linked on Linux (`-lm`) and macOS (`-lSystem`).
+
+## 0.17.0 — 2026-06-28 — `f64_sqrt` via `SQRTSD` hardware instruction (LANG-FULL AL8-sqrt)
+
+The x86_64 backend now lowers `f64_sqrt dest <- src` to:
+`movsd xmm0,[src]; sqrtsd xmm0,xmm0; movsd [dest],xmm0` — one SSE2 hardware
+instruction, no libm call.  Uses the new `x86_64-encoder v0.6.0` `sqrtsd` method.
+
 ## 0.16.0 — 2026-06-27 — `array<f64>` element support (LANG-FULL BA7)
 
 Native x86_64 arrays now accept `f64` element types in `alloc_array`,

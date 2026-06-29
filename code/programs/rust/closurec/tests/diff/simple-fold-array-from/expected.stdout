@@ -1,0 +1,1 @@
+var a=["a","b","c"];var b=[];var c=Array.from("xy",f);var d=Array.from(s);var e=q.from("z");report(a,b,c,d,e);

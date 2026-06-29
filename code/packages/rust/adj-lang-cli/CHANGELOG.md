@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.11.0] - 2026-06-29 — surface `let`-derived dimensioned values
+
+### Added
+
+- New optional `"derived"` JSON section: one object per `let`-bound value with
+  its `name`, computed `value`, exact rational (when integer/rational), and the
+  `dim` tag the engine **inferred** (`"km/h"`, `"mol/l"`, `"scalar"`, …). The
+  tag is formed by the engine's `Dimension::combine` at each operation, never
+  written by the model — so a grader can reject a numerically-right-but-unit-wrong
+  answer. The section is **omitted entirely** when a program binds no `let`, so
+  existing rulebook/recall output is byte-for-byte unchanged. Backs the
+  ADJ-LADDER `rung4_dimensional` rung's `compute_dimensioned` extractor.
+
 ## [0.10.0] - 2026-06-28 — render derived evidence proofs
 
 ### Added

@@ -953,6 +953,72 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the `sqrt` **standard function** (§3.2.4, LANG-FULL AL8-sqrt).
+    // `sqrt(E)` computes the IEEE-754 square root of a `real` expression.  Unlike
+    // `abs`/`sign` (which lower to compare+branch) and `entier` (which lowers to
+    // `real_to_int_floor`), `sqrt` lowers to the new **`f64_sqrt`** IIR op — a
+    // single-argument f64→f64 primitive that every backend emits in its native idiom:
+    // LLVM `@llvm.sqrt.f64` intrinsic, WASM `f64.sqrt` (opcode 0x9F, MVP), JVM
+    // `invokestatic java/lang/Math.sqrt:(D)D`, CLR
+    // `call float64 [System.Runtime]System.Math::Sqrt(float64)`, native aarch64
+    // `FSQRT Dd,Dn`, native x86_64 `SQRTSD xmm0,xmm0`.  The JIT falls back to the
+    // VM handler (`f64::sqrt()`) via the `_f64`-suffix fallback.  The proof program
+    // computes `sqrt(49.0)` = 7.0, converts to integer via `entier`, and exits with
+    // that value: exit 7 on **all 7 backends**.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := sqrt(49.0); \
+               result := entier(r) end",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — **AL8-trig**: `cos` standard function (§3.2.4).
+    // `cos(0.0)` = 1.0 exactly in IEEE-754 double.  `entier(1.0) + 41` = 42.
+    // Every backend calls the platform libm / runtime: WASM resolves `env.__cos`
+    // to Rust `f64::cos`; LLVM emits `@llvm.cos.f64`; JVM `Math.cos`; CLR
+    // `System.Math.Cos`; native aarch64/x86_64 `BL cos` / `call cos`; VM/JIT
+    // via the `f64_cos` dispatch handler.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := cos(0.0); \
+               result := entier(r) + 41 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — **AL8-trig**: `exp` standard function (§3.2.4).
+    // `exp(0.0)` = 1.0 exactly.  `entier(1.0) + 41` = 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := exp(0.0); \
+               result := entier(r) + 41 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — **AL8-trig**: `sin` standard function (§3.2.4).
+    // `sin(0.0)` = 0.0 exactly.  `entier(0.0 + 42.0)` = 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := sin(0.0); \
+               result := entier(r + 42.0) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — **AL8-trig**: `ln` standard function (§3.2.4).
+    // `ln(1.0)` = 0.0 exactly.  `entier(0.0 + 42.0)` = 42.
+    // Note: ALGOL 60 §3.2.4 calls it `ln` (natural logarithm); every backend
+    // maps this to libm `log` / `Math.log` / `@llvm.log.f64` etc.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := ln(1.0); \
+               result := entier(r + 42.0) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *typed procedure with a value parameter* (`integer procedure
     // sq(x); value x; integer x; sq := x*x`) called from the main block:
     // `result := sq(7)` ⇒ exit 49.  `algol-iir-compiler` lowers the procedure
@@ -1148,6 +1214,78 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin integer array A[1:3]; integer result; \
                A[1] := 40; A[3] := 2; result := A[1] + A[3] end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a **string-typed value parameter** (LANG-FULL AL4-str-params).
+    // `integer procedure echo(s); value s; string s; print(s)` declares a
+    // procedure that accepts a string by value and prints it.  The call
+    // `echo('HELLO')` passes the literal through the shared `call` IIR op;
+    // inside `echo`, `s` is a `str`-typed IIR parameter already seeded into
+    // `literal_string_slots`, so `print(s)` lowers to `print_str s` on all
+    // backends — the same path ALGOL literal-string `print` uses (AL4).
+    // The return value (implicitly 0, the integer default) is discarded.
+    // Backends: no new backend code; `str`-typed procedure parameters were
+    // already proven by Twig (TW4 `(define (strlen (s : str)) …)`).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer procedure echo(s); value s; string s; print(s); \
+               echo('HELLO') end",
+        expect: Expect::Stdout("HELLO"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a named string variable passed to a string parameter (AL4-str-params).
+    // The outer block declares `string msg`, initialises it with a literal, then
+    // calls `say(msg)`.  This proves the call site can pass a *named* E4 string
+    // slot (not just an inline literal) as a `str`-typed actual argument, and
+    // the callee's `print(s)` still lowers to `print_str` — the E4 chain is
+    // end-to-end on all 7 backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string msg; \
+               integer procedure say(s); value s; string s; print(s); \
+               msg := 'HI'; say(msg) end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *`real` array* (LANG-FULL AL9-a — real-typed E5 arrays).  The E5
+    // array substrate (`alloc_array`/`array_set`/`array_get`) uses the IIR
+    // type_hint to decide the element width: `f64` instead of `i64`.  BASIC's BA3
+    // cells already proved `array<f64>` reaches all 7 backends, but this is the
+    // first ALGOL 60 real-array matrix cell — exercising `real array A[lo:hi]`
+    // syntax, the ALGOL lower-bound subtraction on access, and f64-typed element
+    // stores/loads through `entier` back to an integer exit code.
+    //
+    // `A[1] := 40.0; A[3] := 2.0; result := entier(A[1] + A[3])` ⇒ `entier(42.0)`
+    // = 42 ⇒ exit 42 on all 7 backends.  Exercises a *non-contiguous* pair of
+    // f64 slots (index 1 and 3 with a gap at 2) so the element-offset arithmetic is
+    // non-trivial.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real array A[1:3]; integer result; \
+               A[1] := 40.0; A[3] := 2.0; result := entier(A[1] + A[3]) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *`real` procedure with a real value parameter* (LANG-FULL AL9-b).
+    // Proves that the `call`/`ret` pathway carries `f64` arguments and return values
+    // correctly across all 7 backends.  The function type is `(f64) -> f64`; the
+    // call site lowers to a `call square(x_slot)` with a real (f64) argument, and
+    // the callee emits `ret square` after `square := x * x` (an f64 multiply).
+    //
+    // `square(6.5)` = 6.5 × 6.5 = 42.25; `entier(42.25)` = 42 (floor, not trunc —
+    // same direction here since 42.25 > 0) ⇒ exit 42 on all 7 backends.  The
+    // non-integer argument (6.5) and non-integer intermediate result (42.25) both
+    // exercise the f64 parameter-passing path independently of the E3 scalar
+    // arithmetic cells, which use only whole-valued reals.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure square(x); value x; real x; square := x * x; \
+               integer result; result := entier(square(6.5)) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -1685,6 +1823,47 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("876"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — `SQR` (square root) built-in (LANG-FULL BA-builtins).
+    // SQR(X) lowers to the f64_sqrt IIR op (same hardware instruction that
+    // ALGOL sqrt uses).  SQR(49) is exactly 7.0 — a whole-valued real — so
+    // BA7's formatter prints `7` with no decimal point.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT SQR(49)\n20 END\n",
+        expect: Expect::Stdout("7"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `INT` (floor) built-in (LANG-FULL BA-builtins).
+    // INT(X) = ⌊X⌋, returned as a real.  Lowers to real_to_int_floor +
+    // int_to_real (both E8 ops).  INT(3.7) → 3.0, printed as `3`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT INT(3.7)\n20 END\n",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `ABS` (absolute value) built-in (LANG-FULL BA-builtins).
+    // ABS(X) is lowered inline: if X < 0 then −X else X (store-per-branch,
+    // same pattern as ALGOL abs).  ABS(-42) → 42.0, printed as `42`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT ABS(-42)\n20 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `SGN` (signum) built-in (LANG-FULL BA-builtins).
+    // SGN(X) = 1.0 if X > 0, −1.0 if X < 0, 0.0 if X = 0.  Lowered
+    // inline as a 3-way conditional.  SGN(-5) → −1.0, printed as `-1`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT SGN(-5)\n20 END\n",
+        expect: Expect::Stdout("-1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -2041,6 +2220,104 @@ impl wasm_execution::HostFunction for GetcharFunc {
     }
 }
 
+// AL8 transcendentals — stateless `HostFunction` adapters for `env.__sin`,
+// `env.__cos`, `env.__ln`, `env.__exp`.  Each takes one f64 and returns one f64,
+// delegating to Rust's `f64::*` methods (which call the platform libm).
+// `__ln` wraps `f64::ln` (natural log) matching ALGOL 60 semantics; the WASM
+// import uses `__ln` rather than `__log` to signal intent at the ABI boundary.
+
+struct SinFunc;
+impl wasm_execution::HostFunction for SinFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let x = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__sin: missing argument"))?
+            .as_f64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        Ok(vec![wasm_execution::WasmValue::F64(x.sin())])
+    }
+}
+
+struct CosFunc;
+impl wasm_execution::HostFunction for CosFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let x = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__cos: missing argument"))?
+            .as_f64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        Ok(vec![wasm_execution::WasmValue::F64(x.cos())])
+    }
+}
+
+struct LnFunc;
+impl wasm_execution::HostFunction for LnFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let x = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__ln: missing argument"))?
+            .as_f64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        Ok(vec![wasm_execution::WasmValue::F64(x.ln())])
+    }
+}
+
+struct ExpFunc;
+impl wasm_execution::HostFunction for ExpFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let x = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__exp: missing argument"))?
+            .as_f64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        Ok(vec![wasm_execution::WasmValue::F64(x.exp())])
+    }
+}
+
 /// The host interface the matrix runs wasm under: it resolves the generic
 /// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC),
 /// `env.__print_str` to a memory-reading byte capture, and the Brainfuck I/O
@@ -2073,6 +2350,11 @@ impl wasm_execution::HostInterface for PrintHost {
             ("env", "getchar") => Some(Box::new(GetcharFunc {
                 input: std::sync::Arc::clone(&self.input),
             })),
+            // AL8 transcendentals: env.__sin/cos/ln/exp are f64→f64 host imports.
+            ("env", "__sin") => Some(Box::new(SinFunc)),
+            ("env", "__cos") => Some(Box::new(CosFunc)),
+            ("env", "__ln")  => Some(Box::new(LnFunc)),
+            ("env", "__exp") => Some(Box::new(ExpFunc)),
             _ => None,
         }
     }

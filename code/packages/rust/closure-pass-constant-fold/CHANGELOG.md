@@ -2,6 +2,134 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.75.0] - 2026-06-29
+
+### Added — fold static `Object.keys({k: v, …})` → array of key string literals
+
+`Object.keys` (ECMAScript §20.1.2.16) now folds a fully-static, NON-empty
+object literal to an array of its own-enumerable string keys:
+
+| call                        | result       |
+|-----------------------------|--------------|
+| `Object.keys({a: 1, b: 2})` | `["a", "b"]` |
+| `Object.keys({x: "hi"})`    | `["x"]`      |
+| `Object.keys({a: 1, a: 3})` | `["a"]`      |
+
+(The empty-object case `Object.keys({})` → `[]` was already handled; the new
+`fold_object_keys_names` helper drives the non-empty case, mirroring
+`fold_object_entries_pairs`.)
+
+The soundness conditions are IDENTICAL to `Object.entries`, deliberately NOT
+weaker even though the value is dropped: evaluating the source object literal
+still runs each value expression, so `Object.keys({a: foo()})` and
+`Object.keys({a: x})` (undeclared `x`) must be left untouched. Every property
+must therefore be a plain data property with a side-effect-free primitive
+literal value (string / number / boolean / null) and a non-`__proto__`,
+non-array-index key; getters/setters/methods, computed keys, and any canonical
+integer-index key (which would reorder the result) decline the whole fold.
+Duplicate keys collapse to a single first-position entry. Only the bare global
+`Object.keys(...)` callee folds — `o.keys(...)` is left alone.
+
+## [0.74.0] - 2026-06-27
+
+### Added — fold static `Math.max(…)` / `Math.min(…)` on numeric literals → numeric
+
+`Math.max` / `Math.min` (ECMAScript §21.3.2.24 / .25) now fold to a numeric
+literal when there is at least one argument and EVERY argument is a numeric
+literal:
+
+| call                | result |
+|---------------------|--------|
+| `Math.max(1, 2, 3)` | `3`    |
+| `Math.min(1, 2, 3)` | `1`    |
+| `Math.max(-5, -1)`  | `-1`   |
+| `Math.min(-5, -1)`  | `-5`   |
+
+The reducers `js_math_max` / `js_math_min` model the spec's signed-zero rule
+exactly — `Math.max` prefers `+0` over `-0`, `Math.min` prefers `-0` over `+0`
+— rather than relying on Rust's `f64::max`/`min`. We DECLINE: any non-literal
+argument (`Infinity` and `NaN` are global identifiers, never numeric literals,
+and a runtime value is unknown / could change the result), the empty call
+`Math.max()` / `Math.min()` (which would need an infinite literal), and a
+non-global receiver (`m.max(...)`). We also decline when the result is NEGATIVE
+ZERO (`Math.min(0, -0)` → `-0`): `-0` has no numeric-literal spelling (it is
+`UnaryMinus` on `0`, and `ToString(-0)` is `"0"`), so emitting it would flip the
+sign bit to `+0`. Only `max` and `min` are modelled.
+
+## [0.73.0] - 2026-06-26
+
+### Added — fold static `Array.from("…")` → array of code-point strings
+
+The static `Array.from` (ECMAScript §23.1.2.1) now folds to an array literal when
+its single argument is a string literal (and there is no `mapFn`). The string
+iterator yields one element per **code point** (like spread `[..."…"]`), so the
+astral characters stay whole:
+
+| call                  | result            |
+|-----------------------|-------------------|
+| `Array.from("abc")`   | `["a", "b", "c"]` |
+| `Array.from("")`      | `[]`              |
+| `Array.from("a💩b")`  | `["a", "💩", "b"]` (💩 is one element) |
+
+We decline a second `mapFn` argument (its return values are unknown), any
+non-string-literal first argument (array-likes/iterables/identifiers/numbers),
+and a shadowed receiver — only the bare global `Array.from(...)` callee folds.
+## [0.72.0] - 2026-06-27
+
+### Added — fold static `Object.entries({k: v, …})` → `[["k", v], …]`
+
+The static `Object.entries` (ECMAScript §20.1.2.5) — the inverse of
+`Object.fromEntries` — now folds a NON-empty object literal to an array of
+`[key, value]` pair literals (the empty-object case `Object.entries({})` → `[]`
+was already handled):
+
+| call                            | result                |
+|---------------------------------|-----------------------|
+| `Object.entries({a: 1, b: 2})`  | `[["a", 1], ["b", 2]]`|
+| `Object.entries({x: "hi"})`     | `[["x", "hi"]]`       |
+
+Each entry key is emitted as a string literal; the value expression is copied
+verbatim. The fold applies ONLY when every property is a plain data property
+(`k: v` — no getter, setter, method, or computed key) with a primitive-literal
+value (string / number / boolean / null). We DECLINE: a `"__proto__"` key (a
+non-computed `{__proto__: v}` is the §B.3.1 prototype setter, not an own
+property, so it is not enumerated); any canonical array-index key (`0`, `1`,
+`42`, …, which `[[OwnPropertyKeys]]` enumerates ahead of string keys, breaking
+the source order we emit); any non-literal value (including the implicit
+identifier of a shorthand `{x}`); a non-global receiver; and any arity ≠ 1.
+Duplicate keys collapse to one entry (first position, last value), mirroring the
+object the literal builds.
+## [0.71.0] - 2026-06-27
+
+### Added — fold static `Object.fromEntries([[k, v], …])` → object literal
+
+The static `Object.fromEntries` (ECMAScript §20.1.2.7) — the inverse of
+`Object.entries` — now folds to an object literal when its single argument is a
+fully-static array of `[key, value]` pairs:
+
+| call                                          | result        |
+|-----------------------------------------------|---------------|
+| `Object.fromEntries([["a", 1], ["b", 2]])`    | `{a: 1, b: 2}`|
+| `Object.fromEntries([[1, "x"]])`              | `{"1": "x"}`  |
+| `Object.fromEntries([["a", 1], ["a", 2]])`    | `{a: 2}`      |
+| `Object.fromEntries([])`                      | `{}`          |
+
+The fold applies ONLY when every soundness condition holds: exactly one
+argument that is an array literal with no holes; every element a 2-element array
+literal (no holes) `[key, value]`; the key a string or numeric literal (a
+numeric key folds to its ECMAScript ToString, e.g. `1` → `"1"`); and the value a
+primitive literal (string / number / boolean / null). Duplicate keys follow the
+spec — the property keeps the POSITION of its first occurrence but takes the
+value of its LAST (CreateDataPropertyOnObject overwrites in place). Keys that are
+valid identifier names emit as bare identifiers (`{a: 1}`), others as quoted
+strings (`{"1": "x"}`). We DECLINE any other shape: wrong arity, a non-array
+argument, a non-pair element, a non-literal/boolean/null/identifier key, a
+non-literal value, or any hole. We also DECLINE a `"__proto__"` key —
+`Object.fromEntries` makes an OWN property named `"__proto__"`, whereas
+`{__proto__: …}` in an object literal is the §B.3.1 prototype setter, so folding
+it would silently change semantics. Only the bare global `Object.fromEntries(...)`
+callee folds (never a shadowed `o.fromEntries(...)`).
+
 ## [0.70.0] - 2026-06-26
 
 ### Added — fold static `Object.is(a, b)` → boolean (SameValue)

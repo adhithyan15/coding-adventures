@@ -1,5 +1,25 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.32.0 — 2026-06-28 — BA-builtins: `SQR`, `INT`, `ABS`, `SGN` (LANG-FULL)
+
+Dartmouth BASIC's built-in math functions `SQR`, `INT`, `ABS`, and `SGN` are
+now lowered — all using existing E3/E8 IIR ops, so no new backend code was
+needed.
+
+| Function | Lowers to | All 7 backends |
+|----------|-----------|----------------|
+| `SQR(X)` | `f64_sqrt` IIR op | ✅ (hardware sqrt: WASM `f64.sqrt`, LLVM `@llvm.sqrt.f64`, JVM `Math.sqrt`, CLR `System.Math::Sqrt`, aarch64 `FSQRT`, x86_64 `SQRTSD`, VM/JIT `f64::sqrt`) |
+| `INT(X)` | `real_to_int_floor` → `int_to_real` | ✅ (E8 floor + convert back to real) |
+| `ABS(X)` | inline compare + branch (`cmp_lt`/`jmp_if_false`/`neg`) | ✅ (store-per-branch, no phi — same pattern as ALGOL `abs`) |
+| `SGN(X)` | inline 3-way conditional | ✅ (returns −1.0/0.0/1.0 as float per BA7 value model) |
+
+`SIN`, `COS`, `LOG`, `EXP`, `TAN`, `ATN`, and `RND` are rejected with a clear
+`Unsupported` error until cross-backend math helper infrastructure lands.
+
+Verified by RUNNING `PRINT SQR(49)` → `7`, `PRINT INT(3.7)` → `3`,
+`PRINT ABS(-42)` → `42`, `PRINT SGN(-5)` → `-1` on all 7 backends via
+`lang-aot/tests/lang_matrix.rs`.
+
 ## 0.31.0 — 2026-06-28 — BA4 lexical string ordering in IF branches
 
 String `IF` now lowers the standard lexical ordering relops through the shared

@@ -1477,8 +1477,8 @@ impl Compiler {
     {
         // primary = NUMBER | BUILTIN_FN(expr) | USER_FN(expr) | variable | (expr)
         //
-        // V1 supports NUMBER, `variable`, and `USER_FN(expr)` calls (BA5).
-        // Built-in maths functions (SIN/ABS/…) stay deferred until E3 (reals).
+        // V1 supports NUMBER, `variable`, `USER_FN(expr)`, and built-in functions.
+        // E3 (reals) is complete, so SQR/INT/ABS/SGN are now lowered inline.
         for c in &node.children {
             match c {
                 ASTNodeOrToken::Token(t) if t.effective_type_name() == "NUMBER" => {
@@ -1505,8 +1505,7 @@ impl Compiler {
                     return self.emit_user_fn_call(&t.value, node);
                 }
                 ASTNodeOrToken::Token(t) if t.effective_type_name() == "BUILTIN_FN" => {
-                    return Err(CompileError::Unsupported(format!(
-                        "built-in function `{}` (needs E3 reals)", t.value)));
+                    return self.emit_builtin_fn(&t.value.to_lowercase(), node);
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "variable" => {
                     // `A(I)` reads an array element (BA3 / E5) → `array_get`.
@@ -1581,6 +1580,132 @@ impl Compiler {
         self.emit("call", Some(&dest),
             vec![Operand::Var(name.to_string()), Operand::Var(arg.slot)], "f64");
         Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+    }
+
+    /// Lower a Dartmouth BASIC built-in math function call.
+    ///
+    /// `name` is the lower-cased `BUILTIN_FN` token value (`sqr`, `int`,
+    /// `abs`, `sgn`, …); `node` is the enclosing `primary`.  The argument is
+    /// the single `expr` child of that primary (same shape as `USER_FN`).
+    ///
+    /// Implemented now (no new backend ops needed — all reuse E3/E8 IIR ops):
+    ///
+    /// | Function | Lowers to            | Notes                              |
+    /// |----------|----------------------|------------------------------------|
+    /// | `SQR(X)` | `f64_sqrt`           | hardware sqrt on all 7 backends    |
+    /// | `INT(X)` | `real_to_int_floor` → `int_to_real` | floor, result is f64 |
+    /// | `ABS(X)` | inline if/neg/jmp    | store-per-branch, no phi          |
+    /// | `SGN(X)` | inline 3-way if/jmp  | -1.0 / 0.0 / 1.0 per BA7 model   |
+    ///
+    /// `SIN`, `COS`, `LOG`, `EXP`, `TAN`, `ATN`, `RND` need a cross-backend
+    /// math helper (libm call) and are rejected with a clear error until that
+    /// infrastructure lands.
+    fn emit_builtin_fn(&mut self, name: &str, node: &GrammarASTNode)
+        -> Result<ExprValue, CompileError>
+    {
+        let arg_node = child_nodes(node).into_iter()
+            .find(|n| n.rule_name == "expr")
+            .ok_or_else(|| CompileError::Malformed(format!(
+                "built-in function `{name}` missing argument expr")))?;
+        let arg = self.emit_expr(arg_node)?;
+        let arg = self.coerce_value(arg, BasicScalarType::Real);
+
+        match name {
+            // SQR(X) = √X — reuse the f64_sqrt IIR op added for ALGOL sqrt.
+            "sqr" => {
+                let dest = self.fresh_temp();
+                self.emit("f64_sqrt", Some(&dest),
+                    vec![Operand::Var(arg.slot)], "f64");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            // INT(X) = ⌊X⌋ — floor toward −∞, result is a real per BA7.
+            // real_to_int_floor + int_to_real: both are E8 ops present on
+            // every backend.  (BASIC INT differs from ALGOL entier only in
+            // that it returns a float, not an integer — same value.)
+            "int" => {
+                let floored = self.fresh_temp();
+                self.emit("real_to_int_floor", Some(&floored),
+                    vec![Operand::Var(arg.slot)], "i64");
+                let dest = self.fresh_temp();
+                self.emit("int_to_real", Some(&dest),
+                    vec![Operand::Var(floored)], "f64");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            // ABS(X) = |X| — inline conditional: if X < 0 then −X else X.
+            // The store-per-branch discipline (one `mov` per path, no phi)
+            // is the same pattern ALGOL abs uses (AL8).
+            "abs" => {
+                let id = self.temp_counter;
+                self.temp_counter += 1;
+                let else_lbl = format!("_abs_else_{id}");
+                let end_lbl  = format!("_abs_end_{id}");
+
+                let zero = self.fresh_temp();
+                self.emit("const", Some(&zero), vec![Operand::Float(0.0)], "f64");
+                let cond = self.fresh_temp();
+                self.emit("cmp_lt", Some(&cond),
+                    vec![Operand::Var(arg.slot.clone()), Operand::Var(zero)], "f64");
+                let dest = self.fresh_temp();
+                // then: X < 0 → negate
+                self.emit("jmp_if_false", None,
+                    vec![Operand::Var(cond), Operand::Var(else_lbl.clone())], "void");
+                let neg = self.fresh_temp();
+                self.emit("neg", Some(&neg), vec![Operand::Var(arg.slot.clone())], "f64");
+                self.emit("mov", Some(&dest), vec![Operand::Var(neg)], "f64");
+                self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+                // else: X >= 0 → keep
+                self.emit("label", None, vec![Operand::Var(else_lbl)], "void");
+                self.emit("mov", Some(&dest), vec![Operand::Var(arg.slot)], "f64");
+                self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            // SGN(X) = sign of X: 1.0 if X > 0, −1.0 if X < 0, 0.0 if X = 0.
+            // Result is f64 (the BA7 value model has no separate integer type).
+            "sgn" => {
+                let id = self.temp_counter;
+                self.temp_counter += 1;
+                let neg_lbl  = format!("_sgn_neg_{id}");
+                let zero_lbl = format!("_sgn_zero_{id}");
+                let end_lbl  = format!("_sgn_end_{id}");
+
+                let dest = self.fresh_temp();
+                let z = self.fresh_temp();
+                self.emit("const", Some(&z), vec![Operand::Float(0.0)], "f64");
+
+                // X > 0 → 1.0
+                let gt = self.fresh_temp();
+                self.emit("cmp_gt", Some(&gt),
+                    vec![Operand::Var(arg.slot.clone()), Operand::Var(z.clone())], "f64");
+                self.emit("jmp_if_false", None,
+                    vec![Operand::Var(gt), Operand::Var(neg_lbl.clone())], "void");
+                self.emit("const", Some(&dest), vec![Operand::Float(1.0)], "f64");
+                self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+
+                // X < 0 → −1.0
+                self.emit("label", None, vec![Operand::Var(neg_lbl)], "void");
+                let lt = self.fresh_temp();
+                self.emit("cmp_lt", Some(&lt),
+                    vec![Operand::Var(arg.slot), Operand::Var(z)], "f64");
+                self.emit("jmp_if_false", None,
+                    vec![Operand::Var(lt), Operand::Var(zero_lbl.clone())], "void");
+                self.emit("const", Some(&dest), vec![Operand::Float(-1.0)], "f64");
+                self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+
+                // X = 0 → 0.0
+                self.emit("label", None, vec![Operand::Var(zero_lbl)], "void");
+                self.emit("const", Some(&dest), vec![Operand::Float(0.0)], "f64");
+                self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            _ => Err(CompileError::Unsupported(format!(
+                "built-in function `{}` not yet implemented \
+                 (needs cross-backend math support)",
+                name.to_uppercase())))
+        }
     }
 
     /// Pre-pass: record every `DEF FNx` name declared on `line` so a call

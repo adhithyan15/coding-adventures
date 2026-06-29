@@ -593,6 +593,64 @@ pub extern "C" fn current_revision() -> u64 {
     SESSION.with(|s| s.borrow().current_revision())
 }
 
+// ── Column widths & row heights ──────────────────────────────────────────
+// Per-column / per-row sizes on the active sheet, returned/taken as `f64`
+// directly (no packing). A returned `0.0` means "no custom size — host default".
+
+/// `column_width(col)` → the active sheet's width for a 1-based `col` (`0.0` if
+/// unset). See [`SpreadsheetSession::column_width`].
+#[no_mangle]
+pub extern "C" fn column_width(col: u32) -> f64 {
+    SESSION.with(|s| s.borrow().column_width(col))
+}
+
+/// `row_height(row)` → the active sheet's height for a 1-based `row` (`0.0` if
+/// unset).
+#[no_mangle]
+pub extern "C" fn row_height(row: u32) -> f64 {
+    SESSION.with(|s| s.borrow().row_height(row))
+}
+
+/// `set_column_width(col, width)` → 1 if it changed, 0 if rejected (non-finite /
+/// `≤ 0` width, `col == 0`).
+#[no_mangle]
+pub extern "C" fn set_column_width(col: u32, width: f64) -> i32 {
+    SESSION.with(|s| s.borrow_mut().set_column_width(col, width)) as i32
+}
+
+/// `set_row_height(row, height)` → 1 if it changed, 0 if rejected.
+#[no_mangle]
+pub extern "C" fn set_row_height(row: u32, height: f64) -> i32 {
+    SESSION.with(|s| s.borrow_mut().set_row_height(row, height)) as i32
+}
+
+/// `clear_column_width(col)` → 1 if a width was removed (back to the host
+/// default), 0 otherwise.
+#[no_mangle]
+pub extern "C" fn clear_column_width(col: u32) -> i32 {
+    SESSION.with(|s| s.borrow_mut().clear_column_width(col)) as i32
+}
+
+/// `clear_row_height(row)` → 1 if a height was removed, 0 otherwise.
+#[no_mangle]
+pub extern "C" fn clear_row_height(row: u32) -> i32 {
+    SESSION.with(|s| s.borrow_mut().clear_row_height(row)) as i32
+}
+
+/// `column_widths(col0, col1)` → packed JSON array of the customized column
+/// widths in `[col0, col1]`, e.g. `[{"col":3,"w":140.0}]` (sorted by column).
+#[no_mangle]
+pub extern "C" fn column_widths(col0: u32, col1: u32) -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().column_widths(col0, col1)))
+}
+
+/// `row_heights(row0, row1)` → packed JSON array of the customized row heights in
+/// `[row0, row1]`, e.g. `[{"row":2,"h":40.0}]` (sorted by row).
+#[no_mangle]
+pub extern "C" fn row_heights(row0: u32, row1: u32) -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().row_heights(row0, row1)))
+}
+
 /// `changed_since(since)` → changed-cells JSON. See
 /// [`SpreadsheetSession::changed_since`].
 #[no_mangle]

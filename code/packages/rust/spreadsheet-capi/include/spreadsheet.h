@@ -150,6 +150,22 @@ uint64_t sc_current_revision(ScSession *s);     /* per-edit revision clock (0 if
 char *sc_changed_since(ScSession *s, uint64_t since);  /* -> {"revision":N,"changed":[..]} |
                                                             {"revision":N,"stale":true}    */
 
+/* Column widths & row heights on the active sheet (presentation chrome the engine
+   stores but never computes with). A 1-based column / row index; a `double` size
+   in host units. A returned `0.0` means "no custom size — use the host default"
+   (a valid size is always > 0). The setters return 1 if the size changed, 0 if
+   rejected (non-finite / <= 0 size, or index 0); they persist through save/load
+   and shift with their column/row on an insert/delete. The *_widths/_heights
+   readers return a heap JSON array (free with sc_string_free). */
+double sc_column_width(ScSession *s, uint32_t col);     /* -> width  | 0.0 if unset/NULL */
+double sc_row_height(ScSession *s, uint32_t row);       /* -> height | 0.0 if unset/NULL */
+int   sc_set_column_width(ScSession *s, uint32_t col, double width);  /* 1 changed / 0 rejected */
+int   sc_set_row_height(ScSession *s, uint32_t row, double height);   /* 1 changed / 0 rejected */
+int   sc_clear_column_width(ScSession *s, uint32_t col); /* 1 if a width was removed, else 0 */
+int   sc_clear_row_height(ScSession *s, uint32_t row);   /* 1 if a height was removed, else 0 */
+char *sc_column_widths(ScSession *s, uint32_t col0, uint32_t col1); /* -> [{"col":N,"w":F},..] */
+char *sc_row_heights(ScSession *s, uint32_t row0, uint32_t row1);   /* -> [{"row":N,"h":F},..] */
+
 /* Free a string returned by any sc_* function. */
 void  sc_string_free(char *p);
 

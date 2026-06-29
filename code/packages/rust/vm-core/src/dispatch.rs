@@ -1334,6 +1334,57 @@ fn handle_real_to_int_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<O
     Ok(Some(result))
 }
 
+/// `f64_sqrt` — IEEE-754 square root.  The operand must be a `Value::Float`
+/// (the ALGOL `real` model).  Returns `Value::Float(sqrt(x))`.  NaN
+/// propagates naturally; negative operands produce NaN per IEEE-754.
+fn handle_f64_sqrt(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let f = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("f64_sqrt: operand is not a real".into()))?
+    };
+    let result = Value::Float(f.sqrt());
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// Generic helper for the AL8 transcendental ops `f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`.
+/// Each takes one `Value::Float` operand, applies `f`, and stores the result.
+fn handle_f64_transcendental(
+    ctx: &mut DispatchCtx,
+    instr: &IIRInstr,
+    op_name: &str,
+    f: fn(f64) -> f64,
+) -> Result<Option<Value>, VMError> {
+    let x = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom(format!("{op_name}: operand is not a real")))?
+    };
+    let result = Value::Float(f(x));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+fn handle_f64_sin(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_sin", f64::sin)
+}
+fn handle_f64_cos(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_cos", f64::cos)
+}
+fn handle_f64_ln(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_ln", f64::ln)
+}
+fn handle_f64_exp(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_exp", f64::exp)
+}
+
 // ---------------------------------------------------------------------------
 // Standard opcode dispatch table
 // ---------------------------------------------------------------------------
@@ -1397,6 +1448,11 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "int_to_real"       => Some(handle_int_to_real),
         "real_to_int_trunc" => Some(handle_real_to_int_trunc),
         "real_to_int_floor" => Some(handle_real_to_int_floor),
+        "f64_sqrt"          => Some(handle_f64_sqrt),
+        "f64_sin"           => Some(handle_f64_sin),
+        "f64_cos"           => Some(handle_f64_cos),
+        "f64_ln"            => Some(handle_f64_ln),
+        "f64_exp"           => Some(handle_f64_exp),
         // `call` is handled specially (needs jit_handlers) — see dispatch loop.
         _              => None,
     }

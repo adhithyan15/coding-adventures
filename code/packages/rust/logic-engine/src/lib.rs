@@ -947,6 +947,17 @@ impl KnowledgeBase {
         self.derived.iter().rev().find(|d| d.name == name)
     }
 
+    /// All `let`-bound derived values, in binding order. Read-only view so a
+    /// consumer (e.g. the CLI's JSON renderer) can surface every computed
+    /// quantity together with the [`Dimension`](crate::dimension::Dimension)
+    /// the engine inferred for it — the audit channel for dimensional
+    /// analysis. A rebinding leaves both entries here (latest wins for
+    /// [`derived_for`](Self::derived_for) / [`observed_value`](Self::observed_value));
+    /// the renderer keeps the most-recent per name to mirror that rule.
+    pub fn derived_bindings(&self) -> &[crate::compute::Derived] {
+        &self.derived
+    }
+
     /// True iff at least one contribution (single or joint) names
     /// `conclusion`. This is the discriminator that `AutoDetect` uses
     /// to route to LR aggregation rather than SLD / WMC. Uncertainty
@@ -1343,6 +1354,38 @@ mod tests {
 
     fn empty_kb() -> KnowledgeBase {
         KnowledgeBase::new()
+    }
+
+    #[test]
+    fn derived_bindings_exposes_every_let_in_binding_order() {
+        // The CLI's dimensional-audit channel reads this accessor. It must
+        // return every binding (so a UI can list all computed quantities),
+        // in binding order, while `derived_for` keeps the latest-wins rule.
+        let mut kb = empty_kb();
+        assert!(kb.derived_bindings().is_empty());
+        let a = compute("a", &ComputeExpr::Lit(2.0), &kb).unwrap();
+        let b = compute(
+            "b",
+            &ComputeExpr::Bin(
+                ComputeOp::Add,
+                Box::new(ComputeExpr::Lit(1.0)),
+                Box::new(ComputeExpr::Lit(4.0)),
+            ),
+            &kb,
+        )
+        .unwrap();
+        kb.add_derived(a);
+        kb.add_derived(b);
+        let bindings = kb.derived_bindings();
+        assert_eq!(bindings.len(), 2);
+        assert_eq!(bindings[0].name, "a");
+        assert_eq!(bindings[1].name, "b");
+        assert_eq!(bindings[1].value, 5.0);
+        // A rebinding appends; the table keeps both, latest wins for lookup.
+        let a2 = compute("a", &ComputeExpr::Lit(9.0), &kb).unwrap();
+        kb.add_derived(a2);
+        assert_eq!(kb.derived_bindings().len(), 3);
+        assert_eq!(kb.derived_for("a").unwrap().value, 9.0);
     }
 
     #[test]
