@@ -1,6 +1,6 @@
 use std::collections::{BTreeSet, HashMap};
 
-use crate::model::{Card, CardLineage, GeneratedCard, Note, NoteType};
+use crate::model::{Card, CardLineage, CardTemplate, GeneratedCard, Note, NoteType};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ClozeRenderSide {
@@ -53,7 +53,7 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
         .map(|field| (field.id.as_str(), field.name.as_str()))
         .collect();
 
-    let field_values: HashMap<String, String> = note
+    let base_field_values: HashMap<String, String> = note
         .fields
         .iter()
         .filter_map(|value| {
@@ -67,7 +67,7 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
 
     for template in &note_type.templates {
         if !template.required_field_names.iter().all(|field_name| {
-            field_values
+            base_field_values
                 .get(field_name)
                 .is_some_and(|value| !value.trim().is_empty())
         }) {
@@ -78,11 +78,14 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
             cloze_field_names_for_template(&template.front_template, &template.back_template);
 
         if cloze_fields.is_empty() {
+            let card_id = generated_card_id(&note.id, &template.id);
+            let mut field_values = base_field_values.clone();
+            insert_special_template_values(&mut field_values, note_type, note, template, &card_id);
             let front = render_template(&template.front_template, &field_values);
             let back =
                 render_template_with_front_side(&template.back_template, &field_values, &front);
             generated.push(GeneratedCard {
-                id: generated_card_id(&note.id, &template.id),
+                id: card_id,
                 note_id: note.id.clone(),
                 note_type_id: note.note_type_id.clone(),
                 template_id: template.id.clone(),
@@ -98,12 +101,15 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
 
         let mut cloze_ordinals = BTreeSet::new();
         for field_name in cloze_fields {
-            if let Some(value) = field_values.get(&field_name) {
+            if let Some(value) = base_field_values.get(&field_name) {
                 collect_cloze_ordinals(value, &mut cloze_ordinals);
             }
         }
 
         for cloze_ordinal in cloze_ordinals {
+            let card_id = generated_cloze_card_id(&note.id, &template.id, cloze_ordinal);
+            let mut field_values = base_field_values.clone();
+            insert_special_template_values(&mut field_values, note_type, note, template, &card_id);
             let front = render_cloze_template(
                 &template.front_template,
                 &field_values,
@@ -118,7 +124,7 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
                 &front,
             );
             generated.push(GeneratedCard {
-                id: generated_cloze_card_id(&note.id, &template.id, cloze_ordinal),
+                id: card_id,
                 note_id: note.id.clone(),
                 note_type_id: note.note_type_id.clone(),
                 template_id: template.id.clone(),
@@ -508,6 +514,42 @@ fn generated_card_id(note_id: &str, template_id: &str) -> String {
 
 fn generated_cloze_card_id(note_id: &str, template_id: &str, cloze_ordinal: u32) -> String {
     format!("{note_id}::{template_id}::c{cloze_ordinal}")
+}
+
+fn insert_special_template_values(
+    field_values: &mut HashMap<String, String>,
+    note_type: &NoteType,
+    note: &Note,
+    template: &CardTemplate,
+    card_id: &str,
+) {
+    field_values
+        .entry("Tags".to_string())
+        .or_insert_with(|| note.tags.join(" "));
+    field_values
+        .entry("Type".to_string())
+        .or_insert_with(|| note_type.name.clone());
+    field_values
+        .entry("Deck".to_string())
+        .or_insert_with(|| note.deck_id.clone());
+    field_values
+        .entry("Subdeck".to_string())
+        .or_insert_with(|| subdeck_name(&note.deck_id).to_string());
+    field_values
+        .entry("Card".to_string())
+        .or_insert_with(|| template.name.clone());
+    field_values
+        .entry("CardFlag".to_string())
+        .or_insert_with(|| "flag0".to_string());
+    field_values
+        .entry("CardID".to_string())
+        .or_insert_with(|| card_id.to_string());
+}
+
+fn subdeck_name(deck_name: &str) -> &str {
+    deck_name
+        .rsplit_once("::")
+        .map_or(deck_name, |(_, subdeck)| subdeck)
 }
 
 fn rename_template_field_references(template: &str, old_name: &str, new_name: &str) -> String {
@@ -1033,6 +1075,25 @@ mod tests {
 
         assert_eq!(cards[0].front, "letter-a");
         assert_eq!(cards[0].back, "letter-a<hr>a");
+    }
+
+    #[test]
+    fn generated_cards_render_anki_special_template_values() {
+        let mut note_type = basic_note_type();
+        note_type.templates[0].name = "Forward".to_string();
+        note_type.templates[0].front_template =
+            "{{Tags}}|{{Type}}|{{Deck}}|{{Subdeck}}|{{Card}}|{{CardFlag}}|{{CardID}}".to_string();
+        note_type.templates[0].back_template = "{{Back}}".to_string();
+        let mut note = note("letter-a", "a");
+        note.deck_id = "Languages::Tamil".to_string();
+        note.tags = vec!["script".to_string(), "vowel".to_string()];
+
+        let cards = generate_cards_for_note(&note_type, &note);
+
+        assert_eq!(
+            cards[0].front,
+            "script vowel|Basic and reversed|Languages::Tamil|Tamil|Forward|flag0|note-1::forward"
+        );
     }
 
     #[test]

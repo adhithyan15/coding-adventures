@@ -636,6 +636,11 @@ pub fn v11_collection_to_engram_state(
         .cloned()
         .map(|note| (note.id.clone(), note))
         .collect();
+    let deck_names_by_id: HashMap<i64, String> = collection
+        .decks
+        .iter()
+        .map(|deck| (deck.id, deck.name.clone()))
+        .collect();
 
     let mut cards = Vec::with_capacity(collection.cards.len());
     for card in &collection.cards {
@@ -644,6 +649,7 @@ pub fn v11_collection_to_engram_state(
             &notes_by_id,
             &note_types_by_id,
             &anki_note_types_by_id,
+            &deck_names_by_id,
         )?);
     }
 
@@ -2578,7 +2584,7 @@ fn normalize_anki_template_field_tag(tag: &str) -> Option<&str> {
     }
 
     let tag = tag.trim();
-    if tag == "FrontSide" || tag.is_empty() {
+    if tag.is_empty() {
         return None;
     }
 
@@ -2590,7 +2596,12 @@ fn normalize_anki_template_field_tag(tag: &str) -> Option<&str> {
         field_name = after_filter.trim();
     }
 
-    Some(field_name.trim())
+    let field_name = field_name.trim();
+    if is_anki_special_template_field(field_name) {
+        return None;
+    }
+
+    Some(field_name)
 }
 
 fn strip_anki_template_field_filter(tag: &str) -> Option<&str> {
@@ -2606,6 +2617,13 @@ fn strip_anki_template_field_filter(tag: &str) -> Option<&str> {
     ]
     .iter()
     .find_map(|prefix| tag.strip_prefix(prefix))
+}
+
+fn is_anki_special_template_field(field_name: &str) -> bool {
+    matches!(
+        field_name,
+        "FrontSide" | "Tags" | "Type" | "Deck" | "Subdeck" | "Card" | "CardFlag" | "CardID"
+    )
 }
 
 fn map_v11_note(note: &AnkiV11Note, note_type: &AnkiV11NoteType, deck_id: &str) -> Note {
@@ -2635,6 +2653,7 @@ fn map_v11_card(
     notes_by_id: &HashMap<String, Note>,
     note_types_by_id: &HashMap<String, NoteType>,
     anki_note_types_by_id: &HashMap<i64, &AnkiV11NoteType>,
+    deck_names_by_id: &HashMap<i64, String>,
 ) -> Result<Card, ApkgError> {
     let note = notes_by_id.get(&card.note_id.to_string()).ok_or_else(|| {
         apkg_error(format!(
@@ -2666,7 +2685,15 @@ fn map_v11_card(
                 card.id, note.note_type_id
             ))
         })?;
-    let field_values = field_value_map(note, anki_note_type);
+    let mut field_values = field_value_map(note, anki_note_type);
+    insert_anki_special_template_values(
+        &mut field_values,
+        note,
+        anki_note_type,
+        template,
+        card,
+        deck_names_by_id,
+    );
     let cloze_ordinal = if anki_note_type.kind == 1 {
         Some(i64_to_u32(card.ordinal.saturating_add(1)))
     } else {
@@ -2730,6 +2757,55 @@ fn field_value_map(note: &Note, note_type: &AnkiV11NoteType) -> HashMap<String, 
             )
         })
         .collect()
+}
+
+fn insert_anki_special_template_values(
+    field_values: &mut HashMap<String, String>,
+    note: &Note,
+    note_type: &AnkiV11NoteType,
+    template: &CardTemplate,
+    card: &AnkiV11Card,
+    deck_names_by_id: &HashMap<i64, String>,
+) {
+    let render_deck_id = if card.original_deck_id != 0 {
+        card.original_deck_id
+    } else {
+        card.deck_id
+    };
+    let deck_name = deck_names_by_id
+        .get(&render_deck_id)
+        .cloned()
+        .unwrap_or_else(|| render_deck_id.to_string());
+    field_values
+        .entry("Tags".to_string())
+        .or_insert_with(|| note.tags.join(" "));
+    field_values
+        .entry("Type".to_string())
+        .or_insert_with(|| note_type.name.clone());
+    field_values
+        .entry("Deck".to_string())
+        .or_insert_with(|| deck_name.clone());
+    field_values
+        .entry("Subdeck".to_string())
+        .or_insert_with(|| {
+            deck_name
+                .rsplit_once("::")
+                .map_or(deck_name.as_str(), |(_, subdeck)| subdeck)
+                .to_string()
+        });
+    field_values
+        .entry("Card".to_string())
+        .or_insert_with(|| template.name.clone());
+    field_values
+        .entry("CardFlag".to_string())
+        .or_insert_with(|| anki_card_flag_template_value(card.flags));
+    field_values
+        .entry("CardID".to_string())
+        .or_insert_with(|| card.id.to_string());
+}
+
+fn anki_card_flag_template_value(flags: i64) -> String {
+    format!("flag{}", flags & 0b111)
 }
 
 fn card_note_type_id(note: &Note) -> i64 {
@@ -4198,6 +4274,27 @@ CREATE TABLE graves (
         );
         assert_eq!(state.cards[0].front, "hola");
         assert_eq!(state.cards[0].back, "hola<hr>hello");
+    }
+
+    #[test]
+    fn maps_v11_anki_special_template_fields() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.note_types[0].templates[0].question_format =
+            "{{Tags}}|{{Type}}|{{Deck}}|{{Subdeck}}|{{Card}}|{{CardFlag}}|{{CardID}}".to_string();
+        collection.notes[0].tags = vec!["script".to_string(), "root".to_string()];
+        collection.cards[0].original_deck_id = 2;
+        collection.cards[0].flags = 3;
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        assert_eq!(
+            state.note_types[0].templates[0].required_field_names,
+            Vec::<String>::new()
+        );
+        assert_eq!(
+            state.cards[0].front,
+            "script root|Basic|Spanish::Latin|Latin|Card 1|flag3|2000"
+        );
     }
 
     #[test]

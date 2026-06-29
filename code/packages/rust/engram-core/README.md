@@ -87,8 +87,11 @@ and leading `-` negates a term or group.
 durable `Card` with note/template lineage. Cloze templates using
 `{{cloze:Field}}` or filtered forms such as `{{type:cloze:Field}}` generate one
 card per Anki-style `{{c1::text::hint}}` ordinal, render sections and
-`FrontSide`, and preserve the cloze ordinal in lineage. `BuryCardSiblings` uses
-lineage to bury same-note sibling cards until a host-supplied boundary.
+`FrontSide`, expose Anki-style special fields such as `Tags`, `Type`, `Deck`,
+`Subdeck`, `Card`, `CardFlag`, and `CardID`, and preserve the cloze ordinal in
+lineage.
+`BuryCardSiblings` uses lineage to bury same-note sibling cards until a
+host-supplied boundary.
 `RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` apply that
 behavior atomically during review and record undo snapshots, matching the shared
 behavior Anki-like review screens need.
