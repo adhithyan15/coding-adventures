@@ -547,6 +547,7 @@ fn native_project_shells_expose_engram_host_contract() {
     )
     .expect("engram-capi header");
     assert_contains(&capi_header, "eg_handle_engram_app_event");
+    assert_contains(&capi_header, "eg_engram_browser_props");
 }
 
 fn assert_contains(haystack: &str, needle: &str) {

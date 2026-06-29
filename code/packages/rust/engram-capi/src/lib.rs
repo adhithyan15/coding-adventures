@@ -173,6 +173,18 @@ pub unsafe extern "C" fn eg_engram_app_props(
 }
 
 /// # Safety
+/// `session` must be valid; `query` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn eg_engram_browser_props(
+    session: *mut EgSession,
+    query: *const c_char,
+    now: u64,
+) -> *mut c_char {
+    let query = read_cstr(query);
+    with_session(session, |session| session.engram_browser_props(&query, now))
+}
+
+/// # Safety
 /// `session` must be valid; strings must be null or valid C strings.
 #[no_mangle]
 pub unsafe extern "C" fn eg_handle_engram_app_event(
@@ -1375,10 +1387,7 @@ CREATE TABLE graves (
             assert_eq!(props["props"]["deck-name"], "Tamil");
             assert_eq!(props["props"]["deck-total-value"], "1");
             assert_eq!(props["props"]["browser-label"], "Card browser");
-            assert_eq!(
-                props["props"]["browser-results-summary"],
-                "1 cards in collection"
-            );
+            assert_eq!(props["props"]["browser-results-summary"], "1 matching card");
             assert_eq!(props["props"]["browser-results"], json!(["letter-a -> a"]));
             assert_eq!(props["props"]["answer-visible"], false);
             assert_eq!(props["props"]["action-undo-label"], "Undo");
@@ -1389,6 +1398,19 @@ CREATE TABLE graves (
             );
             assert_eq!(props["props"]["action-suspend-card-label"], "Suspend");
             assert_eq!(props["props"]["action-mark-label"], "Mark");
+
+            let browser_props = take(eg_engram_browser_props(
+                session,
+                cstr("cid:card").as_ptr(),
+                NOW,
+            ));
+            let browser_props: Value = serde_json::from_str(&browser_props).unwrap();
+            assert_eq!(browser_props["ok"], true);
+            assert_eq!(browser_props["props"]["browser-query"], "cid:card");
+            assert_eq!(
+                browser_props["props"]["browser-results"],
+                json!(["letter-a -> a"])
+            );
 
             eg_session_free(session);
         }

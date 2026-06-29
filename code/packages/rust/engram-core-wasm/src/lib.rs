@@ -16,10 +16,12 @@ use engram_core::{
     import_basic_cards_csv, import_cards_csv, materialize_generated_card, reduce,
     restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history,
     AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card,
-    CardFlag, CardLineage, DeckOptions, EngramSnapshot, MediaAssetRecord, Rating,
+    CardFlag, CardLineage, CardSearchResult, DeckOptions, EngramSnapshot, MediaAssetRecord, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
+
+const DEFAULT_BROWSER_QUERY: &str = "is:due OR is:new";
 
 #[derive(Default)]
 pub struct EngramSession {
@@ -157,6 +159,15 @@ impl EngramSession {
             let props = engram_app_props_for_state(&self.state, deck_id, now);
             Ok(ok_with("props", &props))
         })
+    }
+
+    pub fn engram_browser_props(&self, query: &str, now: u64) -> String {
+        catch_json(
+            || match engram_browser_props_for_state(&self.state, query, now) {
+                Ok(props) => Ok(ok_with("props", &props)),
+                Err(error) => Ok(error_json_with_token(&error.message, &error.token)),
+            },
+        )
     }
 
     pub fn handle_engram_app_event(&mut self, event: &str, deck_id: &str, now: u64) -> String {
@@ -515,12 +526,8 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
         "Mark"
     };
     let hidden_count = stats.suspended_count + stats.buried_count;
-    let browser_results = browser_result_rows(state);
-    let browser_results_summary = match browser_results.len() {
-        0 => "No cards in collection".to_string(),
-        visible if visible == state.cards.len() => format!("{visible} cards in collection"),
-        visible => format!("Showing {visible} of {} cards", state.cards.len()),
-    };
+    let browser_props = engram_browser_props_for_state(state, DEFAULT_BROWSER_QUERY, now)
+        .unwrap_or_else(|_| fallback_browser_props_for_state(state));
     let (current_value, remaining_value, correct_value, total_value, progress_label) =
         if let Some(progress) = &progress {
             (
@@ -581,37 +588,83 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
     let props_object = props
         .as_object_mut()
         .expect("Engram app props literal must be a JSON object");
-    for (key, value) in [
-        ("browser-label", json!("Card browser")),
-        ("browser-query-label", json!("Search")),
-        ("browser-query", json!("is:due OR is:new")),
-        (
-            "browser-query-placeholder",
-            json!("deck:tamil tag:script is:due"),
-        ),
-        ("browser-search-label", json!("Search")),
-        ("browser-results-label", json!("Results")),
-        ("browser-results-summary", json!(browser_results_summary)),
-        ("browser-results", json!(browser_results)),
-        ("browser-selected-index", json!(0)),
-        ("browser-open-label", json!("Open")),
-        ("browser-edit-label", json!("Edit")),
-        ("browser-suspend-label", json!("Suspend")),
-        ("browser-mark-label", json!("Mark")),
-    ] {
-        props_object.insert(key.to_string(), value);
+    if let Some(browser_object) = browser_props.as_object() {
+        for (key, value) in browser_object {
+            props_object.insert(key.clone(), value.clone());
+        }
     }
 
     props
 }
 
-fn browser_result_rows(state: &AppState) -> Vec<String> {
-    state
+fn engram_browser_props_for_state(
+    state: &AppState,
+    query: &str,
+    now: u64,
+) -> Result<Value, engram_core::SearchError> {
+    let query = normalize_browser_query(query);
+    let results = search_core_cards(state, &query, now)?;
+    let rows = results
+        .iter()
+        .take(20)
+        .map(format_browser_result_row)
+        .collect::<Vec<_>>();
+
+    Ok(browser_props_from_rows(query, rows, results.len()))
+}
+
+fn fallback_browser_props_for_state(state: &AppState) -> Value {
+    let rows = state
         .cards
         .iter()
         .take(20)
-        .map(|card| format!("{} -> {}", card.front, card.back))
-        .collect()
+        .map(format_browser_card_row)
+        .collect::<Vec<_>>();
+    browser_props_from_rows(DEFAULT_BROWSER_QUERY.to_string(), rows, state.cards.len())
+}
+
+fn normalize_browser_query(query: &str) -> String {
+    let query = query.trim();
+    if query.is_empty() {
+        DEFAULT_BROWSER_QUERY.to_string()
+    } else {
+        query.to_string()
+    }
+}
+
+fn browser_props_from_rows(query: String, rows: Vec<String>, total_results: usize) -> Value {
+    let visible = rows.len();
+    let summary = match total_results {
+        0 => "No matching cards".to_string(),
+        1 if visible == 1 => "1 matching card".to_string(),
+        total if visible == total => format!("{total} matching cards"),
+        total => format!("Showing {visible} of {total} matching cards"),
+    };
+    let selected_index = if rows.is_empty() { -1 } else { 0 };
+
+    json!({
+        "browser-label": "Card browser",
+        "browser-query-label": "Search",
+        "browser-query": query,
+        "browser-query-placeholder": "deck:tamil tag:script is:due",
+        "browser-search-label": "Search",
+        "browser-results-label": "Results",
+        "browser-results-summary": summary,
+        "browser-results": rows,
+        "browser-selected-index": selected_index,
+        "browser-open-label": "Open",
+        "browser-edit-label": "Edit",
+        "browser-suspend-label": "Suspend",
+        "browser-mark-label": "Mark",
+    })
+}
+
+fn format_browser_result_row(result: &CardSearchResult) -> String {
+    format_browser_card_row(&result.card)
+}
+
+fn format_browser_card_row(card: &Card) -> String {
+    format!("{} -> {}", card.front, card.back)
 }
 
 fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
@@ -1644,7 +1697,7 @@ mod tests {
         assert_eq!(value["props"]["browser-query"], "is:due OR is:new");
         assert_eq!(
             value["props"]["browser-results-summary"],
-            "2 cards in collection"
+            "2 matching cards"
         );
         assert_eq!(
             value["props"]["browser-results"],
@@ -2104,10 +2157,43 @@ mod tests {
         assert_eq!(value["results"][0]["card"]["id"], "note::forward");
         assert_eq!(value["results"][0]["progress"]["flag"], "blue");
 
+        let browser_props: Value = serde_json::from_str(
+            &session.engram_browser_props("deck:tamil tag:script cid:note::forward", NOW),
+        )
+        .unwrap();
+
+        assert_eq!(browser_props["ok"], true);
+        assert_eq!(
+            browser_props["props"]["browser-query"],
+            "deck:tamil tag:script cid:note::forward"
+        );
+        assert_eq!(
+            browser_props["props"]["browser-results"],
+            json!(["letter-a -> a"])
+        );
+        assert_eq!(
+            browser_props["props"]["browser-results-summary"],
+            "1 matching card"
+        );
+        assert_eq!(browser_props["props"]["browser-selected-index"], 0);
+
+        let empty_query_props: Value =
+            serde_json::from_str(&session.engram_browser_props("", NOW)).unwrap();
+        assert_eq!(empty_query_props["ok"], true);
+        assert_eq!(
+            empty_query_props["props"]["browser-query"],
+            "is:due OR is:new"
+        );
+
         let error: Value = serde_json::from_str(&session.search_cards("kind:review", NOW)).unwrap();
 
         assert_eq!(error["ok"], false);
         assert_eq!(error["token"], "kind:review");
+
+        let browser_error: Value =
+            serde_json::from_str(&session.engram_browser_props("kind:review", NOW)).unwrap();
+        assert_eq!(browser_error["ok"], false);
+        assert_eq!(browser_error["token"], "kind:review");
     }
 
     #[test]
