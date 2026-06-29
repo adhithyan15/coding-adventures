@@ -54,7 +54,9 @@ tag so the mark survives APKG round-trips. Imported suspended cards and Anki's
 user-buried / scheduler-buried queue distinction (`-2` vs `-3`) are preserved
 when exporting back to APKG, along with the imported collection creation day
 that anchors Anki's due-day offsets and the collection's modification/schema
-metadata. Learning and relearning cards translate Anki's packed `left`
+metadata. Imported new-card due positions remain available to the shared queue
+builder so study order matches Anki's new-card queue. Learning and relearning
+cards translate Anki's packed `left`
 remaining-step field into Engram's internal step index and back again on export.
 Imported filtered decks normalize Anki's `dyn` and `resched` flags into deck
 external-source metadata so the shared reducer can honor non-rescheduling

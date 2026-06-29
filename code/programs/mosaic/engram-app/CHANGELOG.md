@@ -4,6 +4,8 @@
 
 - Added Anki `initialFactor` import/export and a shared initial-ease deck option
   control across the Rust core, WASM facade, and generated Mosaic shells.
+- Aligned state-aware study queues with imported Anki new-card `due` positions
+  so Mosaic/web/native hosts share the same new-card order.
 - Moved HTML/React host adapter activation into Mosaic package host asset
   emission, leaving `build-all.ps1` responsible for generated runtime binaries
   and loaders instead of editing generated shell entry files.

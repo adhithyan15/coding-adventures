@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use crate::model::{
     AppState, Card, CardProgress, CardState, DailyStudyLimitUsage, Deck, DeckOptions, DeckStats,
-    Note,
+    ExternalSourceRecord, ExternalSourceTarget, Note,
 };
 
 pub const SESSION_SIZE: usize = 20;
@@ -23,6 +23,7 @@ pub fn build_session_queue(
         SESSION_SIZE,
         MAX_NEW_PER_SESSION,
         SESSION_SIZE,
+        None,
     )
 }
 
@@ -46,6 +47,7 @@ pub fn build_session_queue_with_options(
         session_size,
         max_new,
         max_reviews,
+        None,
     )
 }
 
@@ -59,6 +61,7 @@ pub fn build_session_queue_for_state_with_options(
     let max_reviews = options.reviews_per_day as usize;
     let session_size = (max_new + max_reviews).max(1);
     let deck_ids = deck_ids_in_scope(state, deck_id);
+    let new_card_positions = imported_new_card_positions(state);
 
     build_session_queue_with_limits(
         &state.cards,
@@ -68,6 +71,7 @@ pub fn build_session_queue_for_state_with_options(
         session_size,
         max_new,
         max_reviews,
+        Some(&new_card_positions),
     )
 }
 
@@ -155,6 +159,7 @@ pub fn build_session_queue_with_daily_limits(
     let usage = get_daily_study_limit_usage(state, deck_id, day_start, day_end, options);
     let session_size = (usage.remaining_new_cards + usage.remaining_reviews).max(1);
     let deck_ids = deck_ids_in_scope(state, deck_id);
+    let new_card_positions = imported_new_card_positions(state);
 
     build_session_queue_with_limits(
         &state.cards,
@@ -164,6 +169,7 @@ pub fn build_session_queue_with_daily_limits(
         session_size,
         usage.remaining_new_cards,
         usage.remaining_reviews,
+        Some(&new_card_positions),
     )
 }
 
@@ -175,6 +181,7 @@ fn build_session_queue_with_limits(
     session_size: usize,
     max_new: usize,
     max_reviews: usize,
+    new_card_positions: Option<&HashMap<&str, i64>>,
 ) -> Vec<Card> {
     let progress_by_card: HashMap<&str, &CardProgress> = all_progress
         .iter()
@@ -199,16 +206,29 @@ fn build_session_queue_with_limits(
             .unwrap_or(u64::MAX)
     });
 
-    let new_cards: Vec<Card> = all_cards
+    let mut new_cards: Vec<(usize, Card)> = all_cards
         .iter()
-        .filter(|card| deck_ids.contains(card.deck_id.as_str()))
-        .filter(|card| {
+        .enumerate()
+        .filter(|(_, card)| deck_ids.contains(card.deck_id.as_str()))
+        .filter(|(_, card)| {
             progress_by_card
                 .get(card.id.as_str())
                 .map_or(true, |progress| is_new_progress_overlay(progress))
         })
+        .map(|(index, card)| (index, card.clone()))
+        .collect();
+    new_cards.sort_by_key(|(index, card)| {
+        (
+            new_card_positions
+                .and_then(|positions| positions.get(card.id.as_str()).copied())
+                .unwrap_or(i64::MAX),
+            *index,
+        )
+    });
+    let new_cards: Vec<Card> = new_cards
+        .into_iter()
         .take(max_new)
-        .cloned()
+        .map(|(_, card)| card)
         .collect();
 
     let remaining_session_slots = session_size.saturating_sub(new_cards.len());
@@ -221,6 +241,31 @@ fn build_session_queue_with_limits(
         .take(review_slots)
         .chain(new_cards)
         .collect()
+}
+
+fn imported_new_card_positions(state: &AppState) -> HashMap<&str, i64> {
+    state
+        .external_sources
+        .iter()
+        .filter(|source| source.target == ExternalSourceTarget::Card)
+        .filter_map(|source| {
+            imported_new_card_position(source).map(|position| (source.target_id.as_str(), position))
+        })
+        .collect()
+}
+
+fn imported_new_card_position(source: &ExternalSourceRecord) -> Option<i64> {
+    if source_data_i64(source, "kind").is_some_and(|kind| kind != 0)
+        || source_data_i64(source, "queue").is_some_and(|queue| queue != 0)
+    {
+        return None;
+    }
+
+    source_data_i64(source, "due")
+}
+
+fn source_data_i64(source: &ExternalSourceRecord, key: &str) -> Option<i64> {
+    source.data.get(key)?.parse().ok()
 }
 
 pub(crate) fn deck_ids_in_scope<'a>(state: &'a AppState, deck_id: &'a str) -> HashSet<&'a str> {
@@ -380,6 +425,7 @@ fn get_deck_stats_for_deck_ids(
 mod tests {
     use super::*;
     use crate::model::{Rating, Review};
+    use std::collections::BTreeMap;
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -471,6 +517,20 @@ mod tests {
             resulting_progress: None,
             previous_active_session: None,
             sibling_progress_snapshots: Vec::new(),
+        }
+    }
+
+    fn anki_card_source(card_id: &str, kind: i64, queue: i64, due: i64) -> ExternalSourceRecord {
+        ExternalSourceRecord {
+            target: ExternalSourceTarget::Card,
+            target_id: card_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(card_id.to_string()),
+            data: BTreeMap::from([
+                ("kind".to_string(), kind.to_string()),
+                ("queue".to_string(), queue.to_string()),
+                ("due".to_string(), due.to_string()),
+            ]),
         }
     }
 
@@ -633,6 +693,37 @@ mod tests {
         assert_eq!(usage.review_cards_seen, 1);
         assert_eq!(usage.remaining_new_cards, 1);
         assert_eq!(usage.remaining_reviews, 2);
+    }
+
+    #[test]
+    fn state_queue_sorts_imported_new_cards_by_anki_position() {
+        let state = AppState {
+            decks: vec![deck("deck", "Tamil")],
+            cards: vec![
+                card("native-new", "deck", 1),
+                card("anki-late", "deck", 2),
+                card("due", "deck", 3),
+                card("anki-early", "deck", 4),
+                card("review-source", "deck", 5),
+            ],
+            card_progress: vec![progress("due", NOW - 100, 3)],
+            external_sources: vec![
+                anki_card_source("anki-late", 0, 0, 200),
+                anki_card_source("anki-early", 0, 0, 25),
+                anki_card_source("review-source", 2, 2, 5),
+            ],
+            ..AppState::default()
+        };
+        let options = DeckOptions {
+            new_cards_per_day: 3,
+            reviews_per_day: 1,
+            ..DeckOptions::default()
+        };
+
+        let queue = build_session_queue_for_state_with_options(&state, "deck", NOW, &options);
+        let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
+
+        assert_eq!(ids, vec!["due", "anki-early", "anki-late", "native-new"]);
     }
 
     #[test]

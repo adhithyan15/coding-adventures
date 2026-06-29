@@ -31,8 +31,8 @@ This crate owns:
 
 - decks, cards, progress, sessions, and reviews
 - Anki-style review scheduling over new, learning, review, and relearning states
-- due/new card queue assembly, including Anki-style parent deck scopes when a
-  caller passes full `AppState`
+- due/new card queue assembly, including Anki-style parent deck scopes and
+  imported new-card position ordering when a caller passes full `AppState`
 - review-log-aware daily limit accounting
 - optional note/template lineage on durable cards
 - Anki-style Cloze note generation from `{{cloze:Field}}` templates
@@ -119,7 +119,9 @@ available, `flag:` uses preserved Anki card flags, `is:marked` recognizes
 Anki's `marked` note tag, and `prop:due` uses imported Anki due metadata,
 including review/day-learning scheduler days and learning queue seconds.
 `added:` uses imported Anki card-id timestamps when available. `prop:pos` /
-`prop:position` uses imported Anki new-card queue positions when available.
+`prop:position` uses imported Anki new-card queue positions when available, and
+state-aware queue builders use the same positions when ordering imported new
+cards for study.
 For imported filtered-deck cards, `deck:` also matches the preserved original
 deck ID/name.
 Imported Anki card-row metrics also power `prop:ivl`, `prop:reps`,

@@ -2930,6 +2930,78 @@ mod tests {
     }
 
     #[test]
+    fn build_queue_uses_imported_anki_new_card_positions() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"native-new","deckId":"deck","front":"native","back":"n","createdAt":1700000000000},
+                {"id":"anki-late","deckId":"deck","front":"late","back":"l","createdAt":1700000000001},
+                {"id":"due","deckId":"deck","front":"due","back":"d","createdAt":1700000000002},
+                {"id":"anki-early","deckId":"deck","front":"early","back":"e","createdAt":1700000000003}
+            ],
+            "cardProgress": [{
+                "cardId":"due",
+                "state":"review",
+                "interval":3,
+                "easeFactor":2.5,
+                "nextDueAt":1699999999900,
+                "learningStepIndex":null,
+                "buriedUntil":null,
+                "suspendedAt":null,
+                "timesSeen":1,
+                "timesCorrect":1,
+                "timesIncorrect":0,
+                "lastSeenAt":1699999990000
+            }],
+            "sessions": [],
+            "reviews": [],
+            "deckOptions": [{
+                "deckId": "deck",
+                "options": {
+                    "newCardsPerDay": 3,
+                    "reviewsPerDay": 1,
+                    "learningStepsMinutes": [1, 10],
+                    "relearningStepsMinutes": [10],
+                    "graduatingIntervalDays": 1,
+                    "easyIntervalDays": 4,
+                    "lapseIntervalMultiplier": 0.0
+                }
+            }],
+            "externalSources": [
+                {
+                    "target":"card",
+                    "targetId":"anki-late",
+                    "source":"anki-v11",
+                    "originalId":"anki-late",
+                    "data":{"kind":"0","queue":"0","due":"200"}
+                },
+                {
+                    "target":"card",
+                    "targetId":"anki-early",
+                    "source":"anki-v11",
+                    "originalId":"anki-early",
+                    "data":{"kind":"0","queue":"0","due":"25"}
+                }
+            ],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let value: Value = serde_json::from_str(&session.build_queue("deck", NOW)).unwrap();
+        let ids: Vec<_> = value["queue"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|card| card["id"].as_str().unwrap())
+            .collect();
+
+        assert_eq!(ids, vec!["due", "anki-early", "anki-late", "native-new"]);
+    }
+
+    #[test]
     fn parent_deck_queue_and_stats_include_child_decks() {
         let mut session = EngramSession::new();
         let snapshot = r#"{

@@ -61,7 +61,9 @@ options for a deck, using the same camelCase `DeckOptions` shape accepted by
 the full loaded `AppState` to include Anki-style child decks named with
 `Parent::Child` when the selected deck is a parent. HTML, Electron, Qt, SwiftUI,
 XAML, and other hosts therefore share the same parent-deck study/export scope
-without implementing hierarchy rules themselves.
+without implementing hierarchy rules themselves. Queue builders also honor
+preserved Anki new-card positions for imported cards, so generated hosts do not
+need a platform-specific new-card ordering path.
 
 `rateCard` remains backward-compatible with the original command shape. Hosts
 may also include a `deckOptions` object to drive the Rust scheduler with custom
