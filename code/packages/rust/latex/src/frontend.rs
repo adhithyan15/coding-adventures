@@ -18,16 +18,12 @@
 //! - matrix *delimiter* is dropped: `pmatrix`/`bmatrix`/`cases`/… all become [`MathExpr::Matrix`].
 //! - `base^sup` → [`BinOp::Pow`]; `base_sub` → [`MathExpr::Subscript`]; both → `Pow(Subscript(…))`.
 //! - an accent (`\hat{x}`, `\vec{v}`) is a named unary, lowered to `Call{Other(kind), arg}`.
+//! - `\pm` / `\mp` → [`BinOp::PlusMinus`] / [`BinOp::MinusPlus`] (the ± / ∓ pair operators).
+//! - `\binom{n}{k}` → [`MathExpr::Binom`] (a binomial coefficient — no division bar).
 //!
-//! ## Honest gaps (neutral AST has no representation)
-//!
-//! Two LaTeX math constructs have *no* neutral counterpart today, so rather than fake them we
-//! return a well-formed [`FrontendError`] (the parse of that island fails honestly):
-//! - `\pm` / `\mp` — the neutral [`BinOp`] has no ± / ∓;
-//! - `\binom{n}{k}` — the neutral AST has no binomial.
-//!
-//! Extending the neutral AST to cover these is a future change to the `math-frontend` crate
-//! (and its conformance harness), not a hack here. Everything else L2/L3a can parse lowers.
+//! Every LaTeX math construct L2/L3a can parse now lowers to a neutral counterpart: the two
+//! former gaps (± / ∓ and binomials) were closed by extending the `math-frontend` neutral AST
+//! and its conformance harness, then wiring them here — no faking, no hack.
 //!
 //! ## Registration
 //!
@@ -92,6 +88,7 @@ enum Build {
     Bin(BinOp),
     Unary(UnaryOp),
     Frac,
+    Binom,
     Root { has_degree: bool },
     Script { has_sub: bool, has_sup: bool },
     Call(Func),
@@ -140,17 +137,14 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                 )?)),
                 MathNode::Sym(s) => vals.push(MathExpr::Symbol(s)),
                 MathNode::Text(s) => vals.push(MathExpr::Text(s)),
-                MathNode::Binom(_, _) => {
-                    return Err(FrontendError::new(
-                        "latex",
-                        "binomial \\binom has no neutral MathExpr representation",
-                        span,
-                    ))
+                // `\binom{n}{k}` → the neutral binomial coefficient (no division bar).
+                MathNode::Binom(x, y) => {
+                    work.push(Task::Build(Build::Binom));
+                    work.push(Task::Node(*y));
+                    work.push(Task::Node(*x));
                 }
                 MathNode::Bin(op, x, y) => {
-                    // Resolve the operator first so `\pm`/`\mp` fail before we descend.
-                    let op = lower_binop(op, span)?;
-                    work.push(Task::Build(Build::Bin(op)));
+                    work.push(Task::Build(Build::Bin(lower_binop(op))));
                     work.push(Task::Node(*y));
                     work.push(Task::Node(*x));
                 }
@@ -255,6 +249,11 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                     let x = pop!();
                     vals.push(MathExpr::Frac(Box::new(x), Box::new(y)));
                 }
+                Build::Binom => {
+                    let k = pop!();
+                    let n = pop!();
+                    vals.push(MathExpr::Binom(Box::new(n), Box::new(k)));
+                }
                 Build::Root { has_degree } => {
                     let radicand = pop!();
                     let degree = if has_degree { Some(Box::new(pop!())) } else { None };
@@ -316,29 +315,18 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
     }
 }
 
-/// Lower a binary operator. `\pm`/`\mp` have no neutral form → spanned error.
-fn lower_binop(op: MBinOp, span: (usize, usize)) -> Result<BinOp, FrontendError> {
-    Ok(match op {
+/// Lower a binary operator (1:1 — every LaTeX math operator has a neutral form, including
+/// `\pm`/`\mp` which map to the meaning-bearing `±`/`∓`).
+fn lower_binop(op: MBinOp) -> BinOp {
+    match op {
         MBinOp::Add => BinOp::Add,
         MBinOp::Sub => BinOp::Sub,
         MBinOp::Mul => BinOp::Mul,
         MBinOp::Div => BinOp::Div,
         MBinOp::Pow => BinOp::Pow,
-        MBinOp::PlusMinus => {
-            return Err(FrontendError::new(
-                "latex",
-                "\\pm has no neutral MathExpr representation",
-                span,
-            ))
-        }
-        MBinOp::MinusPlus => {
-            return Err(FrontendError::new(
-                "latex",
-                "\\mp has no neutral MathExpr representation",
-                span,
-            ))
-        }
-    })
+        MBinOp::PlusMinus => BinOp::PlusMinus,
+        MBinOp::MinusPlus => BinOp::MinusPlus,
+    }
 }
 
 /// Map a relation operator (1:1 — both enums carry the same eight relations).
@@ -548,12 +536,17 @@ mod tests {
     }
 
     #[test]
-    fn neutral_gaps_error_honestly() {
-        // \pm / \mp / \binom have no neutral representation → well-formed spanned error.
-        for src in [r"a \pm b", r"a \mp b", r"\binom{n}{k}"] {
-            let err = LatexMath.parse(src).expect_err("should be a neutral-AST gap");
-            assert_eq!(err.frontend, "latex");
-            assert!(err.span.0 <= err.span.1 && err.span.1 <= src.len());
+    fn plusminus_minusplus_and_binom_lower() {
+        // The two former neutral-AST gaps now lower to real, meaning-bearing nodes.
+        assert!(matches!(m(r"a \pm b"), MathExpr::Bin(BinOp::PlusMinus, _, _)));
+        assert!(matches!(m(r"a \mp b"), MathExpr::Bin(BinOp::MinusPlus, _, _)));
+        // \binom{n}{k} → Binom(n, k), with the arguments in source order (not swapped).
+        match m(r"\binom{n}{k}") {
+            MathExpr::Binom(n, k) => {
+                assert_eq!(*n, MathExpr::Symbol("n".into()));
+                assert_eq!(*k, MathExpr::Symbol("k".into()));
+            }
+            other => panic!("expected Binom, got {other:?}"),
         }
     }
 
@@ -622,8 +615,8 @@ mod tests {
                 "a_i",
                 r"\hat{x}",
                 "(a+b)",
-                r"a \pm b",       // gap: must error well-formed, not panic
-                r"\binom{n}{k}",  // gap
+                r"a \pm b",       // ± → BinOp::PlusMinus
+                r"\binom{n}{k}",  // binomial → MathExpr::Binom
                 r"\frac{1}",      // parse error: span in range
                 "",               // empty
             ],
