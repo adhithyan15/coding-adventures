@@ -48,6 +48,9 @@ pub enum MathExpr {
     Group(Box<MathExpr>),                       // explicit grouping (parens/braces)
     Text(String),                               // \text{…}: prose inside math (units, labels)
     Matrix(Vec<Vec<MathExpr>>),                 // rows × cols
+    Accent { accent: String, body: Box<MathExpr> }, // diacritic over body: \hat{x}, \bar{y},
+                                                //   \vec{v}, … (distinct from a Call: a mark,
+                                                //   not a named-function application)
 }
 ```
 
@@ -118,8 +121,10 @@ work and the consumption work are kept distinct.
 ## 5. Capabilities & conformance
 
 `Capabilities` is a bitset over `MathExpr` variants (plus sub-features like
-`implicit_mul`, `big_op_bounds`, `matrices`). A consumer can ask "does this frontend emit
-matrices yet?" and gate gracefully instead of failing at parse time.
+`implicit_mul`, `big_op_bounds`, `matrices`, `plusminus`, `binomials`, `accents`). A consumer
+can ask "does this frontend emit matrices yet?" and gate gracefully instead of failing at
+parse time. The conformance harness flags any frontend that *emits* a variant (e.g. an
+`Accent`) it did not *declare*, so a capability is an enforced promise, not a hope.
 
 **Conformance harness (shared):** a notation-agnostic test battery asserts, for every
 registered frontend, that (a) parsing its sample corpus never panics; (b) errors carry a
