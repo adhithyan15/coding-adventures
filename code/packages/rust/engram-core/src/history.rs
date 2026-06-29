@@ -1,6 +1,9 @@
 use std::collections::HashSet;
 
-use crate::model::{AppState, Rating, RatingCounts, ReviewHistorySummary};
+use crate::model::{
+    AppState, ExternalSourceRecord, ExternalSourceTarget, Rating, RatingCounts,
+    ReviewHistorySummary,
+};
 
 pub fn summarize_review_history(
     state: &AppState,
@@ -20,6 +23,7 @@ pub fn summarize_review_history(
         last_reviewed_at: None,
     };
 
+    let manual_reschedule_review_ids = manual_reschedule_review_ids(&state.external_sources);
     let deck_card_ids: HashSet<&str> = state
         .cards
         .iter()
@@ -29,6 +33,9 @@ pub fn summarize_review_history(
     let mut reviewed_card_ids: HashSet<&str> = HashSet::new();
 
     for review in &state.reviews {
+        if manual_reschedule_review_ids.contains(review.id.as_str()) {
+            continue;
+        }
         if review.reviewed_at < reviewed_after || review.reviewed_at >= reviewed_before {
             continue;
         }
@@ -68,9 +75,26 @@ pub fn summarize_review_history(
     summary
 }
 
+fn manual_reschedule_review_ids(sources: &[ExternalSourceRecord]) -> HashSet<&str> {
+    sources
+        .iter()
+        .filter(|source| source.target == ExternalSourceTarget::Review)
+        .filter(|source| {
+            source
+                .data
+                .get("ease")
+                .and_then(|ease| ease.parse::<i64>().ok())
+                == Some(0)
+        })
+        .map(|source| source.target_id.as_str())
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::collections::BTreeMap;
+
     use crate::model::{Card, Review};
 
     const NOW: u64 = 1_700_000_000_000;
@@ -145,5 +169,34 @@ mod tests {
         assert_eq!(summary.unique_cards, 0);
         assert_eq!(summary.first_reviewed_at, None);
         assert_eq!(summary.last_reviewed_at, None);
+    }
+
+    #[test]
+    fn summary_ignores_imported_manual_reschedule_reviews() {
+        let state = AppState {
+            cards: vec![card("a", "deck")],
+            reviews: vec![
+                review("manual", "a", Rating::Good, NOW + 10),
+                review("answered", "a", Rating::Hard, NOW + 20),
+            ],
+            external_sources: vec![ExternalSourceRecord {
+                target: ExternalSourceTarget::Review,
+                target_id: "manual".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("manual".to_string()),
+                data: BTreeMap::from([("ease".to_string(), "0".to_string())]),
+            }],
+            ..AppState::default()
+        };
+
+        let summary = summarize_review_history(&state, "deck", NOW, NOW + 50);
+
+        assert_eq!(summary.total_reviews, 1);
+        assert_eq!(summary.correct_reviews, 1);
+        assert_eq!(summary.unique_cards, 1);
+        assert_eq!(summary.rating_counts.hard, 1);
+        assert_eq!(summary.rating_counts.good, 0);
+        assert_eq!(summary.first_reviewed_at, Some(NOW + 20));
+        assert_eq!(summary.last_reviewed_at, Some(NOW + 20));
     }
 }

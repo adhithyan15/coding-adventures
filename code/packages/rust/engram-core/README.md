@@ -76,7 +76,9 @@ active-session snapshots. `UndoLastReview` uses those snapshots to remove the
 newest snapshot-backed review in a session, restore card progress, adjust
 session counters, and return the active session to its pre-review queue. Legacy
 reviews without snapshots are left unchanged because there is no reliable prior
-progress to restore.
+progress to restore. Review-history summaries ignore imported Anki manual
+reschedule revlog rows (`ease = 0`) so they do not inflate answer counts or
+accuracy.
 
 `search_cards` provides the first shared collection-browser query layer. It
 supports plain text terms against Anki-style note field content, falling back to
