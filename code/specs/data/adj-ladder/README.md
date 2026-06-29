@@ -94,6 +94,19 @@ the quadratic root computation and returned `solve/solved_roots` for every item,
 including the LaTeX-backed constraints. Artifact:
 `ladder-scorecard.rung3_quadratic_roots.gemma.json`.
 
+### Current algebra baseline (rung 3 cubic roots, Gemma-3-4b, greedy)
+
+| Arm | raw accuracy | wrong (fabrications) | defensibility |
+|-----|--------------|----------------------|---------------|
+| **A** — Gemma alone | **80%** (16/20) | **4** | 0.80 |
+| **B** — Gemma + ADJ | **100%** (20/20) | **0** | **1.00** |
+
+**Divergence B − A = +20% (+4 items).** On the expanded cubic algebra rung,
+Gemma emitted faithful native ADJ `solve` programs for all 20 prompts. ADJ owned
+the cubic root computation and returned `solve/solved_roots` for every item,
+including the LaTeX-backed constraints. Artifact:
+`ladder-scorecard.rung3_cubic_roots.gemma.json`.
+
 ## Layout
 
 ```
@@ -140,6 +153,8 @@ adj-ladder/
                             full local Gemma trace artifact for linear systems
   ladder-scorecard.rung3_quadratic_roots.gemma.json
                             full local Gemma trace artifact for quadratic roots
+  ladder-scorecard.rung3_cubic_roots.gemma.json
+                            full local Gemma trace artifact for cubic roots
 ```
 
 ## How Arm B answers without computing the answer itself
