@@ -38,8 +38,7 @@ struct SearchClause {
 #[derive(Clone, Debug, PartialEq)]
 enum SearchClauseKind {
     Text(String),
-    Front(String),
-    Back(String),
+    Field(FieldFilter),
     CardId(IdFilter),
     NoteId(IdFilter),
     CardTemplate(String),
@@ -123,6 +122,20 @@ struct RatedFilter {
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct IdFilter {
     values: Vec<String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct FieldFilter {
+    name_pattern: String,
+    value_pattern: FieldValuePattern,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum FieldValuePattern {
+    Any,
+    NonEmpty,
+    Exact(String),
+    Wildcard(String),
 }
 
 pub fn search_cards(
@@ -468,6 +481,11 @@ fn parse_keyed_clause(
     key: &str,
     value: &str,
 ) -> Result<SearchClauseKind, SearchError> {
+    let key = key.to_ascii_lowercase();
+    if is_field_search_key(&key) {
+        return Ok(SearchClauseKind::Field(parse_field_filter(&key, value)));
+    }
+
     if value.is_empty() {
         return Err(SearchError {
             message: "search filter is missing a value".to_string(),
@@ -476,9 +494,7 @@ fn parse_keyed_clause(
     }
 
     let value = value.to_lowercase();
-    match key.to_ascii_lowercase().as_str() {
-        "front" => Ok(SearchClauseKind::Front(value)),
-        "back" => Ok(SearchClauseKind::Back(value)),
+    match key.as_str() {
         "cid" | "cardid" | "card_id" | "card-id" => {
             parse_id_filter(token, &value).map(SearchClauseKind::CardId)
         }
@@ -504,6 +520,25 @@ fn parse_keyed_clause(
             message: "unknown search filter".to_string(),
             token: token.to_string(),
         }),
+    }
+}
+
+fn is_field_search_key(key: &str) -> bool {
+    matches!(key, "front" | "back") || key.contains('*') || key.contains(' ')
+}
+
+fn parse_field_filter(key: &str, value: &str) -> FieldFilter {
+    let value = value.to_lowercase();
+    let value_pattern = match value.as_str() {
+        "*" => FieldValuePattern::Any,
+        "_*" => FieldValuePattern::NonEmpty,
+        _ if value.contains('*') => FieldValuePattern::Wildcard(value),
+        _ => FieldValuePattern::Exact(value),
+    };
+
+    FieldFilter {
+        name_pattern: key.to_string(),
+        value_pattern,
     }
 }
 
@@ -766,8 +801,7 @@ fn clause_matches(
 ) -> bool {
     let matched = match &clause.kind {
         SearchClauseKind::Text(term) => text_matches(term, card, deck, note),
-        SearchClauseKind::Front(term) => contains_case_insensitive(&card.front, term),
-        SearchClauseKind::Back(term) => contains_case_insensitive(&card.back, term),
+        SearchClauseKind::Field(filter) => field_matches(filter, card, note, note_type),
         SearchClauseKind::CardId(filter) => id_filter_matches(filter, &card.id),
         SearchClauseKind::NoteId(filter) => note_id_matches(filter, card, note),
         SearchClauseKind::CardTemplate(term) => card_template_matches(term, card, note_type),
@@ -811,6 +845,55 @@ fn text_matches(term: &str, card: &Card, deck: Option<&Deck>, note: Option<&Note
                     .iter()
                     .any(|field| contains_case_insensitive(&field.value, term))
         })
+}
+
+fn field_matches(
+    filter: &FieldFilter,
+    card: &Card,
+    note: Option<&Note>,
+    note_type: Option<&NoteType>,
+) -> bool {
+    if let (Some(note), Some(note_type)) = (note, note_type) {
+        for field in &note_type.fields {
+            if !field_name_matches(&filter.name_pattern, &field.name) {
+                continue;
+            }
+            let value = note
+                .fields
+                .iter()
+                .find(|value| value.field_id == field.id)
+                .map_or("", |value| value.value.as_str());
+            if field_value_matches(&filter.value_pattern, value) {
+                return true;
+            }
+        }
+    }
+
+    match filter.name_pattern.as_str() {
+        "front" => field_value_matches(&filter.value_pattern, &card.front),
+        "back" => field_value_matches(&filter.value_pattern, &card.back),
+        _ => false,
+    }
+}
+
+fn field_name_matches(pattern: &str, candidate: &str) -> bool {
+    let candidate = candidate.to_lowercase();
+    if pattern.contains('*') {
+        wildcard_matches(pattern, &candidate)
+    } else {
+        candidate == pattern
+    }
+}
+
+fn field_value_matches(pattern: &FieldValuePattern, candidate: &str) -> bool {
+    match pattern {
+        FieldValuePattern::Any => true,
+        FieldValuePattern::NonEmpty => !candidate.trim().is_empty(),
+        FieldValuePattern::Exact(expected) => candidate.to_lowercase() == *expected,
+        FieldValuePattern::Wildcard(expected) => {
+            wildcard_matches(expected, &candidate.to_lowercase())
+        }
+    }
 }
 
 fn deck_matches(
@@ -1250,6 +1333,97 @@ mod tests {
             vec!["note::forward", "due", "future"]
         );
         assert_eq!(ids_for("uyir"), vec!["note::forward"]);
+    }
+
+    #[test]
+    fn anki_browser_field_filters_use_exact_and_wildcard_matching() {
+        let note_type = NoteType {
+            id: "basic".to_string(),
+            name: "Basic".to_string(),
+            fields: vec![
+                FieldDef {
+                    id: "front".to_string(),
+                    name: "Front".to_string(),
+                    required: true,
+                    ordinal: 0,
+                },
+                FieldDef {
+                    id: "back".to_string(),
+                    name: "Back".to_string(),
+                    required: false,
+                    ordinal: 1,
+                },
+            ],
+            templates: vec![CardTemplate {
+                id: "forward".to_string(),
+                name: "Forward".to_string(),
+                front_template: "{{Front}}".to_string(),
+                back_template: "{{Back}}".to_string(),
+                required_field_names: vec!["Front".to_string()],
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let note = |id: &str, front: &str, back: &str| Note {
+            id: id.to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "tamil".to_string(),
+            fields: vec![
+                NoteFieldValue {
+                    field_id: "front".to_string(),
+                    value: front.to_string(),
+                },
+                NoteFieldValue {
+                    field_id: "back".to_string(),
+                    value: back.to_string(),
+                },
+            ],
+            tags: Vec::new(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |note_id: &str, front: &str, back: &str| {
+            let mut card = card(&format!("{note_id}::forward"), "tamil", front, back);
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            note_types: vec![note_type],
+            notes: vec![
+                note("dog-note", "a dog", ""),
+                note("cat-note", "cat", "tail"),
+            ],
+            cards: vec![
+                card_for_note("dog-note", "a dog", ""),
+                card_for_note("cat-note", "cat", "tail"),
+                card("standalone", "tamil", "hola", "hello"),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert!(ids_for("front:dog").is_empty());
+        assert_eq!(ids_for("front:\"a dog\""), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("front:*dog*"), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("fr*:\"a dog\""), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("back:"), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("back:_*"), vec!["cat-note::forward", "standalone"]);
+        assert_eq!(ids_for("front:hola"), vec!["standalone"]);
     }
 
     #[test]
