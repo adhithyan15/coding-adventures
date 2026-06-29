@@ -123,6 +123,10 @@ pub struct MediaFile {
     pub filename: Option<String>,
     pub size: u32,
     pub compressed_size: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sha1: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub legacy_zip_filename: Option<u32>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -3413,6 +3417,8 @@ fn media_manifest(
             filename: manifest.mapping.get(&entry.name).cloned(),
             size: entry.size,
             compressed_size: entry.compressed_size,
+            sha1: None,
+            legacy_zip_filename: None,
         });
     }
 
@@ -3462,6 +3468,8 @@ fn modern_media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgEr
                 filename: Some(entry.name),
                 size: entry.size,
                 compressed_size: *archive_entry,
+                sha1: (!entry.sha1.is_empty()).then(|| bytes_to_lower_hex(&entry.sha1)),
+                legacy_zip_filename: entry.legacy_zip_filename,
             });
         } else {
             manifest.missing_files.push(archive_name);
@@ -3482,6 +3490,16 @@ fn is_reserved_entry(name: &str) -> bool {
         name,
         LEGACY_COLLECTION | SQLITE_21_COLLECTION | SQLITE_21B_COLLECTION | MEDIA_MAP | META
     )
+}
+
+fn bytes_to_lower_hex(bytes: &[u8]) -> String {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    let mut encoded = String::with_capacity(bytes.len() * 2);
+    for byte in bytes {
+        encoded.push(HEX[(byte >> 4) as usize] as char);
+        encoded.push(HEX[(byte & 0x0f) as usize] as char);
+    }
+    encoded
 }
 
 fn apkg_error(message: impl Into<String>) -> ApkgError {
@@ -3522,11 +3540,12 @@ mod tests {
         let media_entries = MediaEntriesProto {
             entries: media_assets
                 .iter()
-                .map(|asset| MediaEntryProto {
+                .enumerate()
+                .map(|(index, asset)| MediaEntryProto {
                     name: asset.filename.to_string(),
                     size: asset.data.len() as u32,
                     sha1: sum1(asset.data).to_vec(),
-                    legacy_zip_filename: None,
+                    legacy_zip_filename: Some(index as u32),
                 })
                 .collect(),
         };
@@ -3813,6 +3832,8 @@ CREATE TABLE graves (
             manifest.media.media_files[0].filename.as_deref(),
             Some("audio/hola.mp3")
         );
+        assert_eq!(manifest.media.media_files[0].sha1, None);
+        assert_eq!(manifest.media.media_files[0].legacy_zip_filename, None);
         assert_eq!(manifest.media.missing_files, vec!["3"]);
         assert_eq!(manifest.media.unmapped_files, vec!["2"]);
     }
@@ -4665,6 +4686,18 @@ CREATE TABLE graves (
         assert!(manifest.media.missing_files.is_empty());
         assert!(manifest.media.unmapped_files.is_empty());
         assert_eq!(manifest.media.media_files[0].size, 3);
+        let expected_mp3_sha1 = bytes_to_lower_hex(&sum1(b"mp3"));
+        let expected_png_sha1 = bytes_to_lower_hex(&sum1(b"png"));
+        assert_eq!(
+            manifest.media.media_files[0].sha1.as_deref(),
+            Some(expected_mp3_sha1.as_str())
+        );
+        assert_eq!(
+            manifest.media.media_files[1].sha1.as_deref(),
+            Some(expected_png_sha1.as_str())
+        );
+        assert_eq!(manifest.media.media_files[0].legacy_zip_filename, Some(0));
+        assert_eq!(manifest.media.media_files[1].legacy_zip_filename, Some(1));
 
         let media_files = read_media_files(&apkg).unwrap();
         assert_eq!(

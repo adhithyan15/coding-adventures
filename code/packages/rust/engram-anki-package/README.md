@@ -31,6 +31,9 @@ SQLite bytes for inspection workflows. `read_v11_collection_bytes` accepts
 legacy `collection.anki2` / `collection.anki21` members and modern
 `collection.anki21b` package envelopes by honoring Anki's `meta` protobuf and
 zstd-decompressing the collection payload before parsing.
+Modern media manifest inspection exposes each protobuf entry's SHA-1 digest as
+lowercase hex and preserves `legacyZipFilename` when Anki includes it, so native
+hosts can verify imported payloads without re-parsing the protobuf map.
 
 The export path preserves numeric Anki IDs when Engram state came from Anki,
 allocates deterministic numeric IDs for Engram-native rows, writes decks,
