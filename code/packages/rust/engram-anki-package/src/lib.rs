@@ -1525,7 +1525,7 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     source_string(source, "guid")
                         .unwrap_or_else(|| export_note_guid(&note.key, export.note_ids[&note.key])),
                     export.note_type_ids[&note.note_type_key],
-                    millis_to_anki_seconds(note.updated_at.max(note.created_at)),
+                    export_note_modified_at(note, source),
                     source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
                     join_anki_tags(&note.tags),
                     field_join,
@@ -1550,7 +1550,7 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     export.note_ids[&card.note_key],
                     export.deck_ids[&card.deck_key],
                     i64::from(card.template_ordinal),
-                    export_card_modified_at(card, progress),
+                    export_card_modified_at(card, progress, source),
                     source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
                     scheduling.kind,
                     scheduling.queue,
@@ -2193,11 +2193,22 @@ fn card_flag_to_anki(flag: CardFlag) -> i64 {
     }
 }
 
-fn export_card_modified_at(card: &ExportCard, progress: Option<&CardProgress>) -> i64 {
-    let timestamp = progress
-        .map(|progress| progress.last_seen_at.max(card.created_at))
-        .unwrap_or(card.created_at);
-    millis_to_anki_seconds(timestamp)
+fn export_note_modified_at(note: &ExportNote, source: Option<&ExternalSourceRecord>) -> i64 {
+    source_i64(source, "modifiedAt")
+        .unwrap_or_else(|| millis_to_anki_seconds(note.updated_at.max(note.created_at)))
+}
+
+fn export_card_modified_at(
+    card: &ExportCard,
+    progress: Option<&CardProgress>,
+    source: Option<&ExternalSourceRecord>,
+) -> i64 {
+    source_i64(source, "modifiedAt").unwrap_or_else(|| {
+        let timestamp = progress
+            .map(|progress| progress.last_seen_at.max(card.created_at))
+            .unwrap_or(card.created_at);
+        millis_to_anki_seconds(timestamp)
+    })
 }
 
 fn rating_to_v11_ease(rating: Rating) -> i64 {
@@ -4285,10 +4296,12 @@ CREATE TABLE graves (
             ]
         });
         collection.notes[0].guid = "stable-guid".to_string();
+        collection.notes[0].modified_at = 1_700_006_666;
         collection.notes[0].update_sequence_number = 17;
         collection.notes[0].checksum = 4242;
         collection.notes[0].flags = 5;
         collection.notes[0].data = "note-data".to_string();
+        collection.cards[0].modified_at = 1_700_007_777;
         collection.cards[0].update_sequence_number = 23;
         collection.cards[0].original_due = 777;
         collection.cards[0].original_deck_id = 1;
@@ -4345,12 +4358,14 @@ CREATE TABLE graves (
 
         let note = &exported.notes[0];
         assert_eq!(note.guid, "stable-guid");
+        assert_eq!(note.modified_at, 1_700_006_666);
         assert_eq!(note.update_sequence_number, 17);
         assert_eq!(note.checksum, 4242);
         assert_eq!(note.flags, 5);
         assert_eq!(note.data, "note-data");
 
         let card = &exported.cards[0];
+        assert_eq!(card.modified_at, 1_700_007_777);
         assert_eq!(card.update_sequence_number, 23);
         assert_eq!(card.original_due, 777);
         assert_eq!(card.original_deck_id, 1);
