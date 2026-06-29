@@ -1350,7 +1350,17 @@ impl ExportModel {
             }
         }
 
-        let created_at_days = export_created_at_days(state, &decks, &notes, &cards);
+        let computed_created_at_days = export_created_at_days(state, &decks, &notes, &cards);
+        let created_at_days = state
+            .external_sources
+            .iter()
+            .find(|source| {
+                source.source == ANKI_V11_SOURCE
+                    && source.target == ExternalSourceTarget::Collection
+                    && source.target_id == "collection"
+            })
+            .and_then(|source| source_i64(Some(source), "createdAtDays"))
+            .unwrap_or(computed_created_at_days);
         let modified_at_seconds = export_modified_at_seconds(state, &notes, &cards);
         let deck_ids = assign_anki_ids(decks.iter().map(|deck| deck.key.as_str()), 1_000_000);
         let note_type_ids = assign_anki_ids(
@@ -4083,6 +4093,7 @@ CREATE TABLE graves (
         )
         .unwrap();
         assert_eq!(scheduler_buried_export.cards[0].queue, -3);
+        assert_eq!(scheduler_buried_export.cards[0].due, 45);
         let scheduler_buried_reimport =
             v11_collection_to_engram_state(&scheduler_buried_export).unwrap();
         assert_eq!(
@@ -4105,6 +4116,7 @@ CREATE TABLE graves (
         )
         .unwrap();
         assert_eq!(suspended_export.cards[0].queue, -1);
+        assert_eq!(suspended_export.cards[0].due, 46);
         let suspended_reimport = v11_collection_to_engram_state(&suspended_export).unwrap();
         assert_eq!(
             suspended_reimport.card_progress[0].next_due_at,
