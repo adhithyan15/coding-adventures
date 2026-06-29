@@ -403,8 +403,9 @@ Status:
   slot names -> camelCase React/Electron prop names.
 - Generated app events that require platform file/dialog APIs now return a
   shared `hostIntent` payload. The JS Mosaic host adapter preserves that intent
-  and offers `onHostIntent`, giving HTML/Electron hosts the same import/export
-  handoff contract that native C/Swift/XAML/Qt shells can use.
+  and offers `onHostIntent`, giving HTML/Electron hosts the same browser
+  open/edit and import/export handoff contract that native C/Swift/XAML/Qt
+  shells can use.
 
 APKG fixture status:
 

@@ -67,5 +67,12 @@ check("host intent type", imported.hostIntent.type, "importAnki");
 check("host intent callback", seenIntent.type, "importAnki");
 check("host intent result", imported.hostResult, { handled: true });
 
+const opened = await intentHost.handleEvent({
+  component: "EngramApp",
+  event: "onBrowserOpenSelected",
+});
+check("browser open intent", opened.hostIntent.type, "openCard");
+check("browser open card", opened.hostIntent.cardId, "card");
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exitCode = failures === 0 ? 0 : 1;

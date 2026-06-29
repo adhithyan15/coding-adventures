@@ -6,4 +6,5 @@
 - Added a dependency-free JavaScript loader that installs a Mosaic host adapter
   for generated React and Electron shells.
 - Preserved generated app `hostIntent` responses and exposed an optional
-  `onHostIntent` callback for Anki import/export and note workflow actions.
+  `onHostIntent` callback for browser open/edit, Anki import/export, and note
+  workflow actions.

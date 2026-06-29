@@ -93,10 +93,10 @@ replace imported payloads, or prune unreferenced media IDs without a separate
 platform reducer.
 
 `handle_engram_app_event` returns updated props for generated Mosaic shells.
-Events that require host APIs, including Anki package import/export and
-note/note-type dialogs, include a `hostIntent` payload so each platform can open
-files, save APKG bytes, or present native dialogs without forking the generated
-interface.
+Events that require host APIs, including browser open/edit, Anki package
+import/export, and note/note-type dialogs, include a `hostIntent` payload so
+each platform can open files, save APKG bytes, or present native dialogs without
+forking the generated interface.
 
 `search_cards` exposes the shared browser-query engine. It returns
 `{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for

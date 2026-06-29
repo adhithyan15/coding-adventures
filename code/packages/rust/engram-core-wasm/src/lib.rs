@@ -285,12 +285,16 @@ impl EngramSession {
                     self.state = reduce(&self.state, engram_core::EngramCommand::AdvanceSession);
                 }
                 EngramAppEvent::BrowserToggleSuspendSelected => {
-                    let card_id =
-                        required_event_card_id(&self.state, parsed.card_id, "toggle suspend")?;
+                    let card_id = required_event_card_id(
+                        &self.state,
+                        parsed.card_id.clone(),
+                        "toggle suspend",
+                    )?;
                     self.state = suspend_or_unsuspend_card(&self.state, card_id, now);
                 }
                 EngramAppEvent::BrowserToggleMarkSelected => {
-                    let card_id = required_event_card_id(&self.state, parsed.card_id, "mark")?;
+                    let card_id =
+                        required_event_card_id(&self.state, parsed.card_id.clone(), "mark")?;
                     self.state = mark_or_unmark_card(&self.state, card_id, now);
                 }
                 EngramAppEvent::BrowserQueryChange
@@ -306,7 +310,7 @@ impl EngramSession {
                 | EngramAppEvent::DeleteNoteType => {}
             }
 
-            let host_intent = host_intent_for_event(parsed.kind, &self.state, deck_id, now);
+            let host_intent = host_intent_for_event(&parsed, &self.state, deck_id, now);
             let props = engram_app_props_for_state(&self.state, deck_id, now);
             Ok(json!({
                 "ok": true,
@@ -1055,11 +1059,12 @@ fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
 }
 
 fn host_intent_for_event(
-    event: EngramAppEvent,
+    parsed: &ParsedEngramAppEvent,
     state: &AppState,
     deck_id: &str,
     now: u64,
 ) -> Option<Value> {
+    let event = parsed.kind;
     let selected_deck = selected_deck_id(state, deck_id);
     let base = |intent_type: &str| {
         json!({
@@ -1085,12 +1090,39 @@ fn host_intent_for_event(
             "createdAt": now,
             "extension": ".apkg",
         })),
+        EngramAppEvent::BrowserOpenSelected => Some(json!({
+            "type": "openCard",
+            "event": event.canonical_name(),
+            "deckId": selected_deck,
+            "createdAt": now,
+            "cardId": browser_selected_card_id(state, parsed.card_id.as_deref(), now),
+        })),
+        EngramAppEvent::BrowserEditSelected => Some(json!({
+            "type": "editCard",
+            "event": event.canonical_name(),
+            "deckId": selected_deck,
+            "createdAt": now,
+            "cardId": browser_selected_card_id(state, parsed.card_id.as_deref(), now),
+        })),
         EngramAppEvent::AddNote => Some(base("addNote")),
         EngramAppEvent::AddNoteType => Some(base("addNoteType")),
         EngramAppEvent::DeleteNote => Some(base("deleteNote")),
         EngramAppEvent::DeleteNoteType => Some(base("deleteNoteType")),
         _ => None,
     }
+}
+
+fn browser_selected_card_id(state: &AppState, explicit_card_id: Option<&str>, now: u64) -> String {
+    explicit_card_id
+        .filter(|card_id| !card_id.trim().is_empty())
+        .map(str::to_string)
+        .or_else(|| {
+            search_core_cards(state, DEFAULT_BROWSER_QUERY, now)
+                .ok()
+                .and_then(|results| results.first().map(|result| result.card.id.clone()))
+        })
+        .or_else(|| state.cards.first().map(|card| card.id.clone()))
+        .unwrap_or_default()
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -3365,6 +3397,26 @@ mod tests {
         assert_eq!(search["ok"], true);
         assert_eq!(search["event"], "onBrowserSearch");
         assert_eq!(search["props"]["browser-selected-card-id"], "card");
+
+        let open: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserOpenSelected",
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(open["ok"], true);
+        assert_eq!(open["hostIntent"]["type"], "openCard");
+        assert_eq!(open["hostIntent"]["cardId"], "card");
+
+        let edit: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserEditSelected","selectedCardId":"other"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(edit["ok"], true);
+        assert_eq!(edit["hostIntent"]["type"], "editCard");
+        assert_eq!(edit["hostIntent"]["cardId"], "other");
 
         let marked: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onBrowserToggleMarkSelected|other",
