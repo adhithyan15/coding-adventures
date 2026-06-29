@@ -71,6 +71,8 @@ All notable changes to this package will be documented in this file.
   inspecting runtime authorization boundaries.
 - Added a browser dashboard capability-grants panel with status, scope, and
   principal filters plus authorization-row links to active principal grants.
+- Added a browser dashboard authorization principal filter so decision-log
+  views can be scoped to one local API caller from the dashboard URL.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe

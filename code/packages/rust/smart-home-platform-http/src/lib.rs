@@ -405,6 +405,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               <option value="denied">Denied</option>
             </select>
           </label>
+          <label>Auth Principal
+            <input id="filter-authorization-principal" data-dashboard-filter="authorization-principal" type="search" autocomplete="off">
+          </label>
           <label>Grant Status
             <select id="filter-grant-status" data-dashboard-filter="grant-status">
               <option value="">All grants</option>
@@ -559,6 +562,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       entities: document.querySelector("#entities"),
       events: document.querySelector("#events"),
       filterAuthorizationOutcome: document.querySelector("#filter-authorization-outcome"),
+      filterAuthorizationPrincipal: document.querySelector("#filter-authorization-principal"),
       filterCommandStatus: document.querySelector("#filter-command-status"),
       filterControl: document.querySelector("#filter-control"),
       filterDomain: document.querySelector("#filter-domain"),
@@ -602,6 +606,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["event_kind", els.filterEventKind],
       ["command_status", els.filterCommandStatus],
       ["authorization_outcome", els.filterAuthorizationOutcome],
+      ["authorization_principal", els.filterAuthorizationPrincipal],
       ["grant_status", els.filterGrantStatus],
       ["grant_scope", els.filterGrantScope],
       ["grant_principal", els.filterGrantPrincipal]
@@ -653,6 +658,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       eventKind: els.filterEventKind.value,
       commandStatus: els.filterCommandStatus.value,
       authorizationOutcome: els.filterAuthorizationOutcome.value,
+      authorizationPrincipal: els.filterAuthorizationPrincipal.value.trim(),
       grantStatus: els.filterGrantStatus.value,
       grantScope: els.filterGrantScope.value,
       grantPrincipal: els.filterGrantPrincipal.value.trim()
@@ -1148,7 +1154,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           })),
           json(queryUrl("/api/smart_home/authorization_decisions", {
             limit: 8,
-            outcome: filters.authorizationOutcome
+            outcome: filters.authorizationOutcome,
+            principal_id: filters.authorizationPrincipal
           })),
           json(queryUrl("/api/smart_home/capability_grants", {
             limit: 8,
@@ -9241,7 +9248,9 @@ mod tests {
         assert!(body.contains("data-dashboard-filter=\"grant-status\""));
         assert!(body.contains("data-dashboard-filter=\"grant-scope\""));
         assert!(body.contains("data-dashboard-filter=\"grant-principal\""));
+        assert!(body.contains("data-dashboard-filter=\"authorization-principal\""));
         assert!(body.contains("const FILTER_QUERY_PARAMS = ["));
+        assert!(body.contains("[\"authorization_principal\", els.filterAuthorizationPrincipal]"));
         assert!(body.contains("[\"grant_status\", els.filterGrantStatus]"));
         assert!(body.contains("window.addEventListener(\"popstate\""));
         assert!(body.contains("window.history.replaceState(null, \"\", nextUrl)"));
@@ -9256,6 +9265,7 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
         assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
         assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
+        assert!(body.contains("principal_id: filters.authorizationPrincipal"));
         assert!(body.contains("queryUrl(\"/api/smart_home/capability_grants\", {"));
         assert!(body.contains("id=\"detail-body\""));
         assert!(body.contains("renderDetail(label, url, response.status, response.ok, body)"));
