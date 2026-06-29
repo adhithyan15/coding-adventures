@@ -424,7 +424,12 @@ pub fn from_pipeline(
     //    inlining) so the HTML walker can attach `style="..."` to every
     //    element that carries a `part_name`.
     let part_styles = build_part_style_map(style);
-    out.push_str(&emit_render(&interface.slots, &layout.root, &part_styles)?);
+    out.push_str(&emit_render(
+        &interface.slots,
+        &interface.emits,
+        &layout.root,
+        &part_styles,
+    )?);
     writeln!(out).unwrap();
 
     // 8. dispatch — UI24 Flux entry point. Wraps the event payload in a
@@ -507,6 +512,7 @@ fn emit_observed_attributes(slots: &[SlotDecl]) -> String {
 ///    is the result of walking the moslayout root via [`emit_html_tree`].
 fn emit_render(
     slots: &[SlotDecl],
+    emits: &[EmitDecl],
     layout_root: &LayoutNode,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
@@ -576,7 +582,7 @@ fn emit_render(
     // and a `close`-event listener must be attached after the tree is
     // live. Every `HostDialog` occurrence gets a unique id of the form
     // `mos-dlg-N` so the post-script can `getElementById` it.
-    let mut ctx = RenderCtx::default();
+    let mut ctx = RenderCtx::new(emits);
     let html = emit_html_tree(layout_root, 0, &mut ctx, part_styles)?;
     // The HTML tree is one flat string for now (no per-line indentation
     // inside the template literal — keeps the output compact and avoids
@@ -672,7 +678,7 @@ fn emit_signal_method(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
 fn emit_html_tree(
     node: &LayoutNode,
     _depth: usize,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     // -----------------------------------------------------------------
@@ -685,7 +691,7 @@ fn emit_html_tree(
     // -----------------------------------------------------------------
     match node.tag.as_str() {
         "HostInput" => return Ok(emit_host_input(node)),
-        "HostButton" => return Ok(emit_host_button(node)),
+        "HostButton" => return Ok(emit_host_button(node, ctx)),
         "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
 
         // UI29-2 — `HostCheckbox` and `HostRadio` lower to native
@@ -826,7 +832,7 @@ fn emit_html_tree(
 /// open/close tag is emitted.
 fn emit_branch_children(
     parent: &LayoutNode,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
@@ -862,7 +868,7 @@ fn emit_branch_children(
 fn emit_if(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     // Pull the `when:` prop. moslayout-compiler's validator already
@@ -900,13 +906,19 @@ fn emit_if(
 /// `row` is the arrow-function parameter.
 fn emit_for(
     node: &LayoutNode,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
-    let (each_expr, as_name, index_name) = for_bindings(node);
-    let body = emit_branch_children(node, ctx, part_styles)?;
+    let bindings = for_bindings(node);
+    ctx.push_for_payload(bindings.as_name.clone(), bindings.explicit_index.clone());
+    let body_result = emit_branch_children(node, ctx, part_styles);
+    ctx.pop_for_payload();
+    let body = body_result?;
     Ok(format!(
-        "${{{each_expr}.map(({as_name}, {index_name}) => `{body}`).join('')}}"
+        "${{{each_expr}.map(({as_name}, {index_name}) => `{body}`).join('')}}",
+        each_expr = bindings.each_expr,
+        as_name = bindings.as_name,
+        index_name = bindings.index_name
     ))
 }
 
@@ -941,7 +953,7 @@ fn emit_for(
 fn emit_table_section(
     node: &LayoutNode,
     cell_tag: &str,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
@@ -971,17 +983,23 @@ fn emit_table_section(
 fn try_emit_table_for_rows(
     for_node: &LayoutNode,
     cell_tag: &str,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<Option<String>, PipelineEmitError> {
     if for_node.children.len() != 1 || for_node.children[0].tag != "Row" {
         return Ok(None);
     }
-    let (each_expr, as_name, index_name) = for_bindings(for_node);
+    let bindings = for_bindings(for_node);
+    ctx.push_for_payload(bindings.as_name.clone(), bindings.explicit_index.clone());
     let row = &for_node.children[0];
-    let row_html = emit_table_row(row, cell_tag, ctx, part_styles)?;
+    let row_result = emit_table_row(row, cell_tag, ctx, part_styles);
+    ctx.pop_for_payload();
+    let row_html = row_result?;
     Ok(Some(format!(
-        "${{{each_expr}.map(({as_name}, {index_name}) => `{row_html}`).join('')}}"
+        "${{{each_expr}.map(({as_name}, {index_name}) => `{row_html}`).join('')}}",
+        each_expr = bindings.each_expr,
+        as_name = bindings.as_name,
+        index_name = bindings.index_name
     )))
 }
 
@@ -998,7 +1016,7 @@ fn try_emit_table_for_rows(
 fn emit_table_row(
     row: &LayoutNode,
     cell_tag: &str,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let tr_style = build_style_attr(row, "", part_styles);
@@ -1034,22 +1052,28 @@ fn emit_table_row(
 fn try_emit_table_for_cells(
     for_node: &LayoutNode,
     cell_tag: &str,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<Option<String>, PipelineEmitError> {
     if for_node.children.len() != 1 || for_node.children[0].tag == "Row" {
         return Ok(None);
     }
-    let (each_expr, as_name, index_name) = for_bindings(for_node);
+    let bindings = for_bindings(for_node);
+    ctx.push_for_payload(bindings.as_name.clone(), bindings.explicit_index.clone());
     let leaf = &for_node.children[0];
-    let cell_html = if leaf.tag == "Text" {
+    let cell_result = if leaf.tag == "Text" {
         let body = build_text_content(leaf).unwrap_or_default();
-        format!("<{cell_tag}>{body}</{cell_tag}>")
+        Ok(format!("<{cell_tag}>{body}</{cell_tag}>"))
     } else {
-        emit_table_cell(leaf, cell_tag, ctx, part_styles)?
+        emit_table_cell(leaf, cell_tag, ctx, part_styles)
     };
+    ctx.pop_for_payload();
+    let cell_html = cell_result?;
     Ok(Some(format!(
-        "${{{each_expr}.map(({as_name}, {index_name}) => `{cell_html}`).join('')}}"
+        "${{{each_expr}.map(({as_name}, {index_name}) => `{cell_html}`).join('')}}",
+        each_expr = bindings.each_expr,
+        as_name = bindings.as_name,
+        index_name = bindings.index_name
     )))
 }
 
@@ -1061,7 +1085,7 @@ fn try_emit_table_for_cells(
 fn emit_table_cell(
     cell: &LayoutNode,
     cell_tag: &str,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let style_attr = build_style_attr(cell, "", part_styles);
@@ -1069,12 +1093,23 @@ fn emit_table_cell(
     Ok(format!("<{cell_tag}{style_attr}>{inner}</{cell_tag}>"))
 }
 
-/// Extract `(each-expr, as-name, index-name)` from a `For` node's
-/// props, with the same defaults and camelCasing `emit_for` uses.
-fn for_bindings(node: &LayoutNode) -> (String, String, String) {
+struct ForBindings {
+    each_expr: String,
+    as_name: String,
+    index_name: String,
+    explicit_index: Option<String>,
+}
+
+/// Extract the runtime binding names from a `For` node's props, with
+/// the same defaults and camelCasing `emit_for` uses. `index_name` is
+/// always populated because the generated `.map()` callback always
+/// receives an index argument, while `explicit_index` only records an
+/// author-declared `index:` binding for event-payload semantics.
+fn for_bindings(node: &LayoutNode) -> ForBindings {
     let mut each_expr = String::from("[]");
     let mut as_name = String::from("item");
     let mut index_name = String::from("idx");
+    let mut explicit_index = None;
     for prop in &node.props {
         match prop.name.as_str() {
             "each" => each_expr = layout_value_to_js_expr(&prop.value),
@@ -1090,14 +1125,20 @@ fn for_bindings(node: &LayoutNode) -> (String, String, String) {
                 if let LayoutPropValue::Keyword(k) = &prop.value {
                     let camel = to_camel_case_first_lower(k);
                     if is_safe_identifier(&camel) {
-                        index_name = camel;
+                        index_name = camel.clone();
+                        explicit_index = Some(camel);
                     }
                 }
             }
             _ => {}
         }
     }
-    (each_expr, as_name, index_name)
+    ForBindings {
+        each_expr,
+        as_name,
+        index_name,
+        explicit_index,
+    }
 }
 
 /// Convert a moslayout prop value to the JS expression text suitable
@@ -1225,7 +1266,7 @@ fn emit_host_input(node: &LayoutNode) -> String {
 /// `onTap:` emit (kernel-canonical) is renamed to the DOM-native
 /// `onclick` attribute. Like `HostInput`, the inline handler reaches
 /// the Custom Element via `this.getRootNode().host`.
-fn emit_host_button(node: &LayoutNode) -> String {
+fn emit_host_button(node: &LayoutNode, ctx: &RenderCtx<'_>) -> String {
     let mut attrs = String::new();
 
     // disabled — slot ref → `${slot ? 'disabled' : ''}` attribute
@@ -1245,29 +1286,95 @@ fn emit_host_button(node: &LayoutNode) -> String {
     // kernel name); we rename to the DOM-native `onclick` here.
     if let Some(emit_name) = find_emit_ref(node, "onClick").or_else(|| find_emit_ref(node, "onTap"))
     {
-        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        if is_safe_identifier(&type_field) {
+        if let Some((payload_attrs, event_expr)) = host_button_dispatch_bits(emit_name, ctx) {
+            attrs.push_str(&payload_attrs);
             attrs.push_str(&format!(
-                r#" onclick="this.getRootNode().host.dispatch({{type:'{type_field}'}})""#
+                r#" onclick="this.getRootNode().host.dispatch({event_expr})""#
             ));
         }
     }
 
-    // Body: label may be a string literal or a slot ref.
-    let body = if let Some(s) = find_string(node, "label") {
-        escape_html_text(s)
-    } else if let Some(slot) = find_slot_ref(node, "label") {
-        let camel = to_camel_case_first_lower(slot);
-        if is_safe_identifier(&camel) {
-            format!("${{{camel}}}")
-        } else {
-            String::new()
-        }
-    } else {
-        String::new()
-    };
+    let body = host_button_label_body(node);
 
     format!("<button{attrs}>{body}</button>")
+}
+
+fn host_button_dispatch_bits(emit_name: &str, ctx: &RenderCtx<'_>) -> Option<(String, String)> {
+    let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+    if !is_safe_identifier(&type_field) {
+        return None;
+    }
+
+    let mut payload_attrs = String::new();
+    let mut event_expr = format!("{{type:'{type_field}'");
+    if let Some(emit) = ctx.emits.iter().find(|e| e.name == emit_name) {
+        if emit.params.len() == 1 {
+            let param = &emit.params[0];
+            if let Some((attr, value_expr)) =
+                host_button_single_payload_binding(&param.r#type, ctx.current_for_payload())
+            {
+                let field = to_camel_case_first_lower(&param.name);
+                if is_safe_identifier(&field) {
+                    payload_attrs.push_str(&attr);
+                    event_expr.push_str(&format!(",{field}:{value_expr}"));
+                }
+            }
+        }
+    }
+    event_expr.push('}');
+    Some((payload_attrs, event_expr))
+}
+
+fn host_button_single_payload_binding(
+    param_type: &EmitPayloadType,
+    for_payload: Option<&ForPayloadScope>,
+) -> Option<(String, String)> {
+    let scope = for_payload?;
+    match param_type {
+        EmitPayloadType::Text | EmitPayloadType::Color | EmitPayloadType::Component(_) => Some((
+            format!(
+                r#" data-mosaic-payload="${{encodeURIComponent(String({item} ?? ""))}}""#,
+                item = scope.item.as_str()
+            ),
+            "decodeURIComponent(this.dataset.mosaicPayload||'')".to_string(),
+        )),
+        EmitPayloadType::Number => scope.index.as_ref().map(|index| {
+            (
+                format!(r#" data-mosaic-index="${{{index}}}""#),
+                "Number(this.dataset.mosaicIndex)".to_string(),
+            )
+        }),
+        EmitPayloadType::Bool => None,
+    }
+}
+
+fn host_button_label_body(node: &LayoutNode) -> String {
+    let Some(prop) = node.props.iter().find(|p| p.name == "label") else {
+        return String::new();
+    };
+    match &prop.value {
+        LayoutPropValue::String(s) => escape_html_text(s),
+        LayoutPropValue::SlotRef(slot) => template_identifier_body(slot),
+        LayoutPropValue::Keyword(name) => template_identifier_body(name),
+        LayoutPropValue::Expr(expr) => {
+            let trimmed = strip_outer_parens(expr.trim());
+            if trimmed.is_empty() {
+                String::new()
+            } else {
+                format!("${{{trimmed}}}")
+            }
+        }
+        _ => String::new(),
+    }
+}
+
+fn template_identifier_body(name: &str) -> String {
+    let camel = to_camel_case_first_lower(name);
+    if is_safe_identifier(&camel) {
+        format!("${{{camel}}}")
+    } else {
+        String::new()
+    }
 }
 
 // ---------------------------------------------------------------------
@@ -1552,7 +1659,7 @@ fn emit_host_link(node: &LayoutNode) -> String {
 /// browser tooltip surface; plain-text only in v1.
 fn emit_host_tooltip(
     node: &LayoutNode,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut attrs = String::new();
@@ -1676,7 +1783,7 @@ fn emit_host_number_input(node: &LayoutNode) -> String {
 // where `this` *is* the element.
 fn emit_host_dialog(
     node: &LayoutNode,
-    ctx: &mut RenderCtx,
+    ctx: &mut RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let dlg_idx = ctx.next_dialog_id();
@@ -1808,21 +1915,59 @@ fn emit_host_dialog(
 /// contributor is `emit_host_dialog`; future imperative primitives
 /// (e.g. a `HostCanvas` that needs a `getContext("2d")` call) can
 /// reuse the same hook.
-#[derive(Default)]
-struct RenderCtx {
+#[derive(Clone, Debug)]
+struct ForPayloadScope {
+    item: String,
+    index: Option<String>,
+}
+
+struct RenderCtx<'a> {
+    /// `.mil` emits declared by the component. Host primitives use this
+    /// to decide whether an inline dispatch can supply a payload field.
+    emits: &'a [EmitDecl],
     /// Monotonic counter — every `HostDialog` claims one id so multiple
     /// dialogs in a single component do not collide on `id="mos-dlg-…"`.
     dialog_count: usize,
     /// One JS statement per line, appended to `_render()` AFTER the
     /// `this.shadowRoot.innerHTML = ...` assignment.
     post_script_lines: Vec<String>,
+    /// Nearest active `For` bindings while rendering template bodies.
+    for_payload_stack: Vec<ForPayloadScope>,
 }
 
-impl RenderCtx {
+impl<'a> RenderCtx<'a> {
+    fn new(emits: &'a [EmitDecl]) -> Self {
+        Self {
+            emits,
+            dialog_count: 0,
+            post_script_lines: Vec::new(),
+            for_payload_stack: Vec::new(),
+        }
+    }
+
     fn next_dialog_id(&mut self) -> usize {
         let id = self.dialog_count;
         self.dialog_count += 1;
         id
+    }
+
+    fn push_for_payload(&mut self, item: String, index: Option<String>) {
+        let inherited_index = self
+            .for_payload_stack
+            .last()
+            .and_then(|scope| scope.index.clone());
+        self.for_payload_stack.push(ForPayloadScope {
+            item,
+            index: index.or(inherited_index),
+        });
+    }
+
+    fn pop_for_payload(&mut self) {
+        self.for_payload_stack.pop();
+    }
+
+    fn current_for_payload(&self) -> Option<&ForPayloadScope> {
+        self.for_payload_stack.last()
     }
 }
 
@@ -3405,6 +3550,129 @@ mod tests {
         assert!(
             r.output.contains("<button>${displayName}</button>"),
             "slot-label HostButton missing camelCase interpolation, got:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn host_button_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "ListGroup",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onSelect",
+                vec![EmitParam {
+                    name: "index".to_string(),
+                    r#type: EmitPayloadType::Number,
+                }],
+            )],
+        );
+        let l = root_layout(
+            "ListGroup",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::SlotRef("items".to_string()),
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword("item".to_string()),
+                    },
+                    LayoutProp {
+                        name: "index".to_string(),
+                        value: LayoutPropValue::Keyword("i".to_string()),
+                    },
+                ],
+                children: vec![leaf_with_props(
+                    "HostButton",
+                    vec![
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("item".to_string()),
+                        },
+                        LayoutProp {
+                            name: "onClick".to_string(),
+                            value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                        },
+                    ],
+                )],
+            },
+        );
+        let r = from_pipeline(&m, &l, &empty_style("ListGroup")).unwrap();
+        assert!(
+            r.output.contains(r#"items.map((item, i) => `"#),
+            "expected For callback to bind item and explicit index, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains(
+                r#"<button data-mosaic-index="${i}" onclick="this.getRootNode().host.dispatch({type:'select',index:Number(this.dataset.mosaicIndex)})">${item}</button>"#
+            ),
+            "expected HostButton to dispatch index payload and render row label, got:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn host_button_inside_for_dispatches_text_item_payload() {
+        let m = component(
+            "SelectMenu",
+            vec![slot(
+                "options",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onChange",
+                vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            )],
+        );
+        let l = root_layout(
+            "SelectMenu",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::SlotRef("options".to_string()),
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword("option".to_string()),
+                    },
+                ],
+                children: vec![leaf_with_props(
+                    "HostButton",
+                    vec![
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("option".to_string()),
+                        },
+                        LayoutProp {
+                            name: "onClick".to_string(),
+                            value: LayoutPropValue::EmitRef("onChange".to_string()),
+                        },
+                    ],
+                )],
+            },
+        );
+        let r = from_pipeline(&m, &l, &empty_style("SelectMenu")).unwrap();
+        assert!(
+            r.output.contains(
+                r#"<button data-mosaic-payload="${encodeURIComponent(String(option ?? ""))}" onclick="this.getRootNode().host.dispatch({type:'change',value:decodeURIComponent(this.dataset.mosaicPayload||'')})">${option}</button>"#
+            ),
+            "expected HostButton to dispatch item payload and render row label, got:\n{}",
             r.output
         );
     }
