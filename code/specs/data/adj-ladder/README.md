@@ -122,6 +122,22 @@ headline (like the rung-0/rung-3 tables above) will be recorded as a follow-up; 
 is expected to widen here, since a small model is markedly worse at multi-unit applied
 arithmetic than at bare sums.
 
+### Dimensional analysis rung (rung 4 dimensional, cached engine)
+
+`rung4_dimensional/` delivers that dimensional-engine step. Here the answer is a
+**unit-bearing quantity**: the gold program `observe`s typed quantities and binds
+`let answer = distance / time`, and the engine carries the dimension through the division —
+reporting `240 km ÷ 3 h = 80 km/h`, with the `km/h` tag formed by `Dimension::combine`,
+not written by the model. The CLI surfaces this in a new `derived` JSON section
+(`{"name":"answer","value":80,"dim":"km/h"}`), and each option is a `{value, unit}` pair.
+The harness's `compute_dimensioned` extractor demands the engine's **(magnitude, unit)**
+match BOTH, so every item includes a wrong-unit-same-magnitude distractor (`80 m/s` vs
+`80 km/h`): a number-only reasoner is lured by it, the dimensional engine is not. The
+engine — which also *refuses* a category error like `km + h` rather than returning a
+meaningless number — selects **20/20 in cached mode with zero unit mismatches**. This is
+exactly the "offload the units to the CPU" thesis: the model only writes which quantities
+to divide; the engine owns the dimensional algebra.
+
 ## Layout
 
 ```

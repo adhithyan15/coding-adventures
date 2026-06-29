@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.26.0] - 2026-06-29 — expose derived dimensioned bindings
+
+### Added
+
+- `KnowledgeBase::derived_bindings()` — a read-only view of every `let`-bound
+  `compute::Derived` value (name, magnitude, exact rational, and the `Dimension`
+  the engine inferred), in binding order. The engine already carried dimensions
+  through each `let` via `Dimension::combine`; this accessor surfaces them so a
+  consumer (the `adj-lang-cli` JSON renderer, a UI, a proof checker) can audit
+  the dimensional analysis — e.g. report `240 km / 3 h` as `80 km/h`, not just
+  `80`. Purely additive; `derived_for` keeps the latest-wins lookup rule.
+
 ## [0.25.0] - 2026-06-28 — rule-derived evidence gates LR contributions
 
 ### Added
