@@ -431,6 +431,7 @@ fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
     let mut current = String::new();
     let mut in_quotes = false;
     let mut escaping = false;
+    let mut quote_start_len = 0usize;
 
     for ch in query.chars() {
         if escaping {
@@ -440,8 +441,24 @@ fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
         }
 
         match ch {
-            '\\' if in_quotes => escaping = true,
-            '"' => in_quotes = !in_quotes,
+            '\\' => {
+                current.push(ch);
+                escaping = true;
+            }
+            '"' => {
+                if in_quotes {
+                    if current.len() == quote_start_len {
+                        return Err(SearchError {
+                            message: "empty quoted string".to_string(),
+                            token: query.to_string(),
+                        });
+                    }
+                    in_quotes = false;
+                } else {
+                    in_quotes = true;
+                    quote_start_len = current.len();
+                }
+            }
             '(' | ')' if !in_quotes => {
                 if !current.is_empty() {
                     tokens.push(current);
@@ -459,9 +476,6 @@ fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
         }
     }
 
-    if escaping {
-        current.push('\\');
-    }
     if in_quotes {
         return Err(SearchError {
             message: "unterminated quoted string".to_string(),
@@ -655,12 +669,30 @@ fn parse_clause(token: &str) -> Result<SearchClause, SearchError> {
         .filter(|stripped| !stripped.is_empty())
         .map_or((false, token), |stripped| (true, stripped));
 
-    let kind = match raw.split_once(':') {
+    let kind = match split_once_unescaped(raw, ':') {
         Some((key, value)) => parse_keyed_clause(raw, key, value)?,
-        None => SearchClauseKind::Text(text_filter_contains(raw)),
+        None => SearchClauseKind::Text(text_filter_contains(&unescape_search_pattern(token, raw)?)),
     };
 
     Ok(SearchClause { kind, negated })
+}
+
+fn split_once_unescaped(value: &str, delimiter: char) -> Option<(&str, &str)> {
+    let mut escaped = false;
+    for (index, ch) in value.char_indices() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if ch == '\\' {
+            escaped = true;
+            continue;
+        }
+        if ch == delimiter {
+            return Some((&value[..index], &value[index + ch.len_utf8()..]));
+        }
+    }
+    None
 }
 
 fn parse_keyed_clause(
@@ -668,7 +700,7 @@ fn parse_keyed_clause(
     key: &str,
     value: &str,
 ) -> Result<SearchClauseKind, SearchError> {
-    let key = key.to_ascii_lowercase();
+    let key = unescape_search_pattern(token, key)?.to_ascii_lowercase();
     if is_field_search_key(&key) {
         return parse_field_filter(token, &key, value).map(SearchClauseKind::Field);
     }
@@ -696,19 +728,27 @@ fn parse_keyed_clause(
         "dupe" => parse_duplicate_filter(token, value).map(SearchClauseKind::Duplicate),
         "card" | "template" | "cardtemplate" | "card_template" | "card-template" => {
             require_keyed_filter_value(token, value)?;
-            Ok(SearchClauseKind::CardTemplate(value.to_lowercase()))
+            Ok(SearchClauseKind::CardTemplate(
+                unescape_search_pattern(token, value)?.to_lowercase(),
+            ))
         }
         "deck" => {
             require_keyed_filter_value(token, value)?;
-            Ok(SearchClauseKind::Deck(value.to_lowercase()))
+            Ok(SearchClauseKind::Deck(
+                unescape_search_pattern(token, value)?.to_lowercase(),
+            ))
         }
         "preset" => {
             require_keyed_filter_value(token, value)?;
-            Ok(SearchClauseKind::Preset(value.to_lowercase()))
+            Ok(SearchClauseKind::Preset(
+                unescape_search_pattern(token, value)?.to_lowercase(),
+            ))
         }
         "note" | "notetype" | "note_type" | "note-type" => {
             require_keyed_filter_value(token, value)?;
-            Ok(SearchClauseKind::NoteType(value.to_lowercase()))
+            Ok(SearchClauseKind::NoteType(
+                unescape_search_pattern(token, value)?.to_lowercase(),
+            ))
         }
         "tag" => {
             require_keyed_filter_value(token, value)?;
@@ -720,7 +760,9 @@ fn parse_keyed_clause(
         "marked" => parse_bool_filter(token, &value.to_lowercase()).map(SearchClauseKind::Marked),
         "has-cd" | "has_cd" | "hascd" => {
             require_keyed_filter_value(token, value)?;
-            Ok(SearchClauseKind::CustomDataKey(value.to_string()))
+            Ok(SearchClauseKind::CustomDataKey(unescape_search_pattern(
+                token, value,
+            )?))
         }
         "prop" => parse_property_filter(token, value),
         "added" => {
@@ -740,7 +782,7 @@ fn parse_keyed_clause(
 }
 
 fn is_field_search_key(key: &str) -> bool {
-    matches!(key, "front" | "back") || key.contains('*') || key.contains(' ')
+    matches!(key, "front" | "back") || contains_search_wildcard(key) || key.contains(' ')
 }
 
 fn require_keyed_filter_value(token: &str, value: &str) -> Result<(), SearchError> {
@@ -758,7 +800,7 @@ fn parse_field_filter(token: &str, key: &str, value: &str) -> Result<FieldFilter
     let value_pattern = if let Some((mode, pattern)) = split_text_modifier(value) {
         FieldValuePattern::Text(parse_text_filter(token, mode, pattern)?)
     } else {
-        parse_exact_field_value_filter(value)
+        parse_exact_field_value_filter(token, value)?
     };
 
     Ok(FieldFilter {
@@ -767,21 +809,28 @@ fn parse_field_filter(token: &str, key: &str, value: &str) -> Result<FieldFilter
     })
 }
 
-fn parse_exact_field_value_filter(value: &str) -> FieldValuePattern {
-    let value = value.to_lowercase();
+fn parse_exact_field_value_filter(
+    token: &str,
+    value: &str,
+) -> Result<FieldValuePattern, SearchError> {
+    let value = unescape_search_pattern(token, value)?.to_lowercase();
     match value.as_str() {
-        "*" => FieldValuePattern::Any,
-        "_*" => FieldValuePattern::NonEmpty,
-        _ if contains_search_wildcard(&value) => FieldValuePattern::Wildcard(value),
-        _ => FieldValuePattern::Exact(value),
+        "*" if contains_search_wildcard(&value) => Ok(FieldValuePattern::Any),
+        "_*" if contains_search_wildcard(&value) => Ok(FieldValuePattern::NonEmpty),
+        _ if contains_search_wildcard(&value) => Ok(FieldValuePattern::Wildcard(value)),
+        _ => Ok(FieldValuePattern::Exact(search_literal_text(&value))),
     }
 }
 
 fn parse_tag_filter(token: &str, value: &str) -> Result<TagFilter, SearchError> {
     match split_text_modifier(value) {
         Some(("re", pattern)) => parse_text_filter(token, "re", pattern).map(TagFilter::Regex),
-        Some(("nc", pattern)) => Ok(TagFilter::NoCombining(pattern.to_string())),
-        _ => Ok(TagFilter::Hierarchical(value.to_lowercase())),
+        Some(("nc", pattern)) => Ok(TagFilter::NoCombining(unescape_search_pattern(
+            token, pattern,
+        )?)),
+        _ => Ok(TagFilter::Hierarchical(
+            unescape_search_pattern(token, value)?.to_lowercase(),
+        )),
     }
 }
 
@@ -808,21 +857,25 @@ fn parse_text_filter(token: &str, mode: &str, pattern: &str) -> Result<TextFilte
         "re" => TextMatchMode::Regex,
         _ => unreachable!("validated search modifier"),
     };
+    let pattern = match mode {
+        TextMatchMode::Regex => pattern.to_string(),
+        _ => unescape_search_pattern(token, pattern)?,
+    };
     let regex = match mode {
-        TextMatchMode::WholeWord => Some(build_whole_word_regex(token, pattern)?),
-        TextMatchMode::Regex => Some(build_search_regex(token, pattern)?),
+        TextMatchMode::WholeWord => Some(build_whole_word_regex(token, &pattern)?),
+        TextMatchMode::Regex => Some(build_search_regex(token, &pattern)?),
         TextMatchMode::Contains | TextMatchMode::NoCombining | TextMatchMode::StripCloze => None,
     };
 
     Ok(TextFilter {
-        pattern: pattern.to_string(),
+        pattern,
         mode,
         regex,
     })
 }
 
 fn split_text_modifier(value: &str) -> Option<(&'static str, &str)> {
-    let (mode, pattern) = value.split_once(':')?;
+    let (mode, pattern) = split_once_unescaped(value, ':')?;
     let mode = match mode.to_ascii_lowercase().as_str() {
         "w" => "w",
         "nc" => "nc",
@@ -863,9 +916,27 @@ enum WildcardScope {
     Word,
 }
 
+const ESCAPED_BACKSLASH: char = '\u{E000}';
+
 fn search_pattern_regex_source(pattern: &str, scope: WildcardScope) -> String {
     let mut source = String::new();
-    for ch in pattern.chars() {
+    let mut chars = pattern.chars().peekable();
+    while let Some(ch) = chars.next() {
+        if ch == ESCAPED_BACKSLASH {
+            source.push_str(r"\\");
+            continue;
+        }
+        if ch == '\\' {
+            match chars.peek().copied() {
+                Some('*' | '_') => {
+                    let escaped = chars.next().expect("peeked wildcard exists");
+                    source.push_str(&regex::escape(&escaped.to_string()));
+                }
+                _ => source.push_str(&regex::escape(&ch.to_string())),
+            }
+            continue;
+        }
+
         match ch {
             '*' => match scope {
                 WildcardScope::Text => source.push_str(".*"),
@@ -1204,6 +1275,64 @@ fn unescape_search_literal(value: &str) -> String {
     unescaped
 }
 
+fn unescape_search_pattern(token: &str, value: &str) -> Result<String, SearchError> {
+    let mut unescaped = String::with_capacity(value.len());
+    let mut chars = value.chars();
+    while let Some(ch) = chars.next() {
+        if ch != '\\' {
+            unescaped.push(ch);
+            continue;
+        }
+
+        let Some(next) = chars.next() else {
+            return Err(SearchError {
+                message: "unknown escape sequence".to_string(),
+                token: token.to_string(),
+            });
+        };
+
+        match next {
+            '\\' => unescaped.push(ESCAPED_BACKSLASH),
+            '"' | ':' | '(' | ')' | '-' => unescaped.push(next),
+            '*' | '_' => {
+                unescaped.push('\\');
+                unescaped.push(next);
+            }
+            _ => {
+                return Err(SearchError {
+                    message: format!("unknown escape sequence: \\{next}"),
+                    token: token.to_string(),
+                });
+            }
+        }
+    }
+    Ok(unescaped)
+}
+
+fn search_literal_text(value: &str) -> String {
+    let mut literal = String::with_capacity(value.len());
+    let mut chars = value.chars();
+    while let Some(ch) = chars.next() {
+        if ch == ESCAPED_BACKSLASH {
+            literal.push('\\');
+            continue;
+        }
+        if ch == '\\' {
+            match chars.next() {
+                Some(next @ ('*' | '_')) => literal.push(next),
+                Some(next) => {
+                    literal.push('\\');
+                    literal.push(next);
+                }
+                None => literal.push('\\'),
+            }
+            continue;
+        }
+        literal.push(ch);
+    }
+    literal
+}
+
 fn parse_rating_filter(token: &str, value: &str) -> Result<Rating, SearchError> {
     match value {
         "1" | "again" => Ok(Rating::Again),
@@ -1357,7 +1486,7 @@ fn field_name_matches(pattern: &str, candidate: &str) -> bool {
     if contains_search_wildcard(pattern) {
         search_pattern_matches(pattern, &candidate)
     } else {
-        candidate == pattern
+        candidate == search_literal_text(pattern)
     }
 }
 
@@ -1402,12 +1531,26 @@ fn contains_search_pattern(pattern: &str, candidate: &str, scope: WildcardScope)
         Regex::new(&search_pattern_regex_source(pattern, scope))
             .is_ok_and(|regex| regex.is_match(candidate))
     } else {
-        candidate.contains(pattern)
+        candidate.contains(&search_literal_text(pattern))
     }
 }
 
 fn contains_search_wildcard(value: &str) -> bool {
-    value.contains('*') || value.contains('_')
+    let mut escaped = false;
+    for ch in value.chars() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if ch == '\\' {
+            escaped = true;
+            continue;
+        }
+        if matches!(ch, '*' | '_') {
+            return true;
+        }
+    }
+    false
 }
 
 fn normalize_no_combining(value: &str) -> String {
@@ -1630,7 +1773,7 @@ fn preset_candidate_matches(term: &str, candidate: &str) -> bool {
     if contains_search_wildcard(term) {
         search_pattern_matches(term, &candidate)
     } else {
-        candidate == term
+        candidate == search_literal_text(term)
     }
 }
 
@@ -1670,17 +1813,17 @@ fn tag_matches(filter: &TagFilter, note: Option<&Note>) -> bool {
 
 fn anki_hierarchical_name_matches(pattern: &str, candidate: &str) -> bool {
     let candidate = candidate.to_lowercase();
-    if pattern.contains('*') {
+    if contains_search_wildcard(pattern) {
         return search_pattern_matches(pattern, &candidate);
     }
 
+    let pattern = search_literal_text(pattern);
     candidate == pattern || candidate.starts_with(&format!("{pattern}::"))
 }
 
 fn search_pattern_matches(pattern: &str, candidate: &str) -> bool {
-    let parts = pattern.split('*').collect::<Vec<_>>();
-    if parts.len() == 1 && !pattern.contains('_') {
-        return candidate == pattern;
+    if !contains_search_wildcard(pattern) {
+        return candidate == search_literal_text(pattern);
     }
 
     Regex::new(&format!(
@@ -1923,7 +2066,7 @@ fn anki_name_candidate_matches(term: &str, candidate: &str) -> bool {
     if contains_search_wildcard(term) {
         search_pattern_matches(term, &candidate)
     } else {
-        candidate == term
+        candidate == search_literal_text(term)
     }
 }
 
@@ -2871,6 +3014,9 @@ mod tests {
             cards: vec![
                 card_for_note("dog-note", "a dog", ""),
                 card_for_note("cat-note", "cat", "tail"),
+                card("star-card", "tamil", "foo*bar", " "),
+                card("underscore-card", "tamil", "foo_bar", " "),
+                card("x-card", "tamil", "fooxbar", " "),
                 card("standalone", "tamil", "hola", "hello"),
             ],
             ..AppState::default()
@@ -2888,6 +3034,12 @@ mod tests {
         assert_eq!(ids_for("front:\"a dog\""), vec!["dog-note::forward"]);
         assert_eq!(ids_for("front:*dog*"), vec!["dog-note::forward"]);
         assert_eq!(ids_for("front:a_dog"), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("front:foo\\*bar"), vec!["star-card"]);
+        assert_eq!(ids_for("front:foo\\_bar"), vec!["underscore-card"]);
+        assert_eq!(
+            ids_for("front:foo_bar"),
+            vec!["star-card", "underscore-card", "x-card"]
+        );
         assert_eq!(ids_for("fr*:\"a dog\""), vec!["dog-note::forward"]);
         assert_eq!(ids_for("back:"), vec!["dog-note::forward"]);
         assert_eq!(ids_for("back:_*"), vec!["cat-note::forward", "standalone"]);
@@ -4297,8 +4449,39 @@ mod tests {
             .unwrap()
             .is_empty());
 
+        let mut escaped_state = state();
+        escaped_state.decks.push(deck("punct", ":"));
+        escaped_state
+            .cards
+            .push(card("colon-deck", "punct", "literal", "deck"));
+        escaped_state
+            .cards
+            .push(card("dash-front", "tamil", "-lead", "dash"));
+        assert_eq!(
+            search_cards(&escaped_state, "deck:\\:", NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>(),
+            vec!["colon-deck"]
+        );
+        assert_eq!(
+            search_cards(&escaped_state, "\\-lead", NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>(),
+            vec!["dash-front"]
+        );
+
         let error = search_cards(&state(), "\"vanakkam", NOW).unwrap_err();
         assert_eq!(error.message, "unterminated quoted string");
+
+        let error = search_cards(&state(), "\"\"", NOW).unwrap_err();
+        assert_eq!(error.message, "empty quoted string");
+
+        let error = search_cards(&state(), "\\%", NOW).unwrap_err();
+        assert_eq!(error.message, "unknown escape sequence: \\%");
 
         let error = search_cards(&state(), "OR deck:tamil", NOW).unwrap_err();
         assert_eq!(error.message, "OR operator is missing a left-hand clause");
