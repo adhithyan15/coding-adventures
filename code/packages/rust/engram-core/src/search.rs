@@ -1522,11 +1522,11 @@ fn state_matches(
     match state {
         CardSearchState::New => progress.map_or(true, is_new_progress_overlay),
         CardSearchState::Due => progress.is_some_and(|progress| is_reviewable(progress, now)),
-        CardSearchState::Learning => {
-            progress.is_some_and(|progress| progress.state == CardState::Learning)
-        }
+        CardSearchState::Learning => progress.is_some_and(|progress| {
+            matches!(progress.state, CardState::Learning | CardState::Relearning)
+        }),
         CardSearchState::Review => progress.is_some_and(|progress| {
-            progress.state == CardState::Review
+            matches!(progress.state, CardState::Review | CardState::Relearning)
                 && !is_new_progress_overlay(progress)
                 && progress.suspended_at.is_none()
                 && !is_buried(progress, now)
@@ -2228,7 +2228,10 @@ mod tests {
                 .map(|result| result.card.id)
                 .collect::<Vec<_>>()
         };
-        assert_eq!(ids_for("is:learn"), vec!["learning"]);
+        assert_eq!(ids_for("is:learn"), vec!["learning", "relearning"]);
+        assert_eq!(ids_for("is:review"), vec!["due", "future", "relearning"]);
+        assert_eq!(ids_for("is:learn -is:review"), vec!["learning"]);
+        assert_eq!(ids_for("is:learn is:review"), vec!["relearning"]);
         assert_eq!(ids_for("state:relearn"), vec!["relearning"]);
     }
 

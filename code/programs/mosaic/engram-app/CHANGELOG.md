@@ -8,6 +8,8 @@
   `has-cd:`, `prop:cdn:`, and `prop:cds:` filters.
 - Added imported Anki queue-aware browser filters for `is:buried-manually` and
   `is:buried-sibling`.
+- Aligned browser `is:learn` / `is:review` semantics so relearning cards match
+  Anki-style lapsed-card search intersections.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.
