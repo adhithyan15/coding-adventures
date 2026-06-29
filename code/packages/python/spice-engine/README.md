@@ -59,6 +59,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `tf` | `.TF` | DC transfer function, input/output impedance |
 | `dc_sweep` | `.DC` | DC parameter sweep |
 | `resolve_deck_analyses` | `.OP` / `.DC` / `.AC` / `.TRAN` | Parsed deck analysis metadata |
+| `parse_berkeley_syntax` | Berkeley logical cards | Grammar-backed syntax metadata, source spans, diagnostics, and analysis inventory |
 | `run_deck_analysis`, `run_deck` | Deck analysis execution | Selected-analysis execution or source-order whole-deck execution with aggregate artifacts |
 | `sens_dc` | `.SENS` | DC sensitivity analysis |
 | `mc_dc` | `.MC` | Monte Carlo DC analysis |
@@ -99,6 +100,11 @@ crossing times over optional `FROM=` / `TO=` windows.
 TARG ...` cards report trigger-to-target crossing delays. The deck helpers
 route parsed transient, DC sweep, and AC sweep `.measure` / `.meas` cards into
 those stable measurement rows.
+`parse_berkeley_syntax()` exposes the shared Berkeley SPICE logical-card parser
+contract for editors and Mosaic-style app shells: it normalizes leading `+`
+continuations, removes inline semicolon comments, preserves source spans and
+token streams, reports stable syntax diagnostics, embeds the checked grammar
+metadata, and returns an analysis inventory without requiring solver dispatch.
 `resolve_deck_analyses()` extracts `.op`, `.dc`, `.ac`, and `.tran` cards
 before `.end`, keeps non-analysis active lines, and reports stable diagnostics
 for malformed arguments, unsupported AC sweep modes, invalid sweep intervals,
