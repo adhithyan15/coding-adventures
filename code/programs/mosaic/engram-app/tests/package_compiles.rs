@@ -312,6 +312,9 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
         );
     }
 
+    let html = read_artifact(tmp.path(), "html/EngramApp.html");
+    assert_contains(&html, "data-on-click=\"onImportAnki\"");
+    assert_contains(&html, "data-on-commit=\"onBrowserSearch\"");
     assert_dependency_styles_reach_all_backends(tmp.path());
 }
 
