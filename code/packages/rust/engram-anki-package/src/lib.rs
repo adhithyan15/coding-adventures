@@ -1486,9 +1486,10 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
             rusqlite::params![
                 export_collection_i64(export, "id").unwrap_or(1_i64),
                 export.created_at_days,
-                export.modified_at_seconds,
-                export.modified_at_seconds,
-                11_i64,
+                export_collection_i64(export, "modifiedAt").unwrap_or(export.modified_at_seconds),
+                export_collection_i64(export, "schemaModifiedAt")
+                    .unwrap_or(export.modified_at_seconds),
+                export_collection_i64(export, "version").unwrap_or(11_i64),
                 export_collection_i64(export, "dirty").unwrap_or(0_i64),
                 export_collection_i64(export, "updateSequenceNumber").unwrap_or(-1_i64),
                 export_collection_i64(export, "lastSync").unwrap_or(0_i64),
@@ -4233,6 +4234,12 @@ CREATE TABLE graves (
     #[test]
     fn imported_v11_source_metadata_round_trips_on_export() {
         let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.metadata.modified_at = 1_700_001_111;
+        collection.metadata.schema_modified_at = 1_700_002_222;
+        collection.metadata.version = 11;
+        collection.metadata.dirty = 7;
+        collection.metadata.update_sequence_number = 33;
+        collection.metadata.last_sync = 1_700_003_333;
         collection.metadata.config = serde_json::json!({
             "nextPos": 99,
             "customStudy": true,
@@ -4306,6 +4313,12 @@ CREATE TABLE graves (
 
         assert_eq!(exported.metadata.config["customStudy"], true);
         assert_eq!(exported.metadata.config["nextPos"], 1);
+        assert_eq!(exported.metadata.modified_at, 1_700_001_111);
+        assert_eq!(exported.metadata.schema_modified_at, 1_700_002_222);
+        assert_eq!(exported.metadata.version, 11);
+        assert_eq!(exported.metadata.dirty, 7);
+        assert_eq!(exported.metadata.update_sequence_number, 33);
+        assert_eq!(exported.metadata.last_sync, 1_700_003_333);
         assert_eq!(exported.metadata.deck_config["2"]["name"], "Story defaults");
         assert_eq!(exported.metadata.tags["imported"], 2);
         assert_eq!(exported.graves[0].object_id, 9001);
