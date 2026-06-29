@@ -1354,6 +1354,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — real-valued procedure (LANG-FULL AL13). `scale(x)` is a `real
+    // procedure` that multiplies its argument by 6.0 and assigns the product to
+    // the implicit return slot `scale`.  The caller applies the standard function
+    // `entier` (§3.2.4) to floor the f64 result to an integer exit code.
+    //
+    // This proves three things simultaneously:
+    //   1. A `real` return slot is declared for the procedure name (same path as
+    //      `integer` / `boolean` procedures; the compiler seeds it with `0.0`).
+    //   2. `emit_call_common` returns `ExprValue { ty: ScalarType::Real }` for a
+    //      real-returning call, so `emit_entier` sees the right type without any
+    //      special-case code.
+    //   3. All 7 backends can propagate an f64 through a `call` instruction and
+    //      hand it to `real_to_int_floor` in the calling function.
+    //
+    // scale(7.0) = 7.0 × 6.0 = 42.0; entier(42.0) = 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure scale(x); value x; real x; scale := x * 6.0; \
+               integer result; result := entier(scale(7.0)) end",        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *boolean variable* (LANG-FULL AL10). `boolean b` declares a
     // slot at type_hint `"bool"` (LLVM `i1`, JVM/CLR `int32 0/1`, VM
     // `Value::Bool`).  `b := true` lowers to `const _t0 = 1 / mov b, _t0`
