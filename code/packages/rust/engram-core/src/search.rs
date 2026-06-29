@@ -241,6 +241,7 @@ struct SearchMetadata<'a> {
     card_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
     note_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
     review_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
+    decks_by_id: HashMap<&'a str, &'a Deck>,
     deck_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
     decks_by_original_id: HashMap<&'a str, Vec<&'a Deck>>,
     note_type_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
@@ -350,6 +351,7 @@ impl<'a> SearchMetadata<'a> {
             });
         let mut metadata = Self {
             current_deck_id,
+            decks_by_id: decks_by_id.clone(),
             deck_option_deck_ids: state
                 .deck_options
                 .iter()
@@ -1443,7 +1445,7 @@ fn clause_matches(
         SearchClauseKind::Duplicate(filter) => duplicate_matches(filter, note, note_type, metadata),
         SearchClauseKind::CardTemplate(term) => card_template_matches(term, card, note_type),
         SearchClauseKind::Deck(term) => deck_matches(term, card, deck, card_sources, metadata),
-        SearchClauseKind::CurrentDeck => current_deck_matches(card, metadata),
+        SearchClauseKind::CurrentDeck => current_deck_matches(card, deck, card_sources, metadata),
         SearchClauseKind::Preset(term) => preset_matches(term, card, deck, metadata),
         SearchClauseKind::NoteType(term) => note_type_matches(term, note, note_type),
         SearchClauseKind::Tag(tag) => tag_matches(tag, note),
@@ -1869,11 +1871,30 @@ fn deck_matches(
         || imported_original_deck_matches(term, card_sources, metadata)
 }
 
-fn current_deck_matches(card: &Card, metadata: &SearchMetadata<'_>) -> bool {
-    metadata
-        .current_deck_id
-        .as_deref()
-        .is_some_and(|deck_id| card.deck_id == deck_id)
+fn current_deck_matches(
+    card: &Card,
+    deck: Option<&Deck>,
+    card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
+) -> bool {
+    let Some(current_deck_id) = metadata.current_deck_id.as_deref() else {
+        return false;
+    };
+
+    let current_deck_id_term = current_deck_id.to_lowercase();
+    deck_matches(&current_deck_id_term, card, deck, card_sources, metadata)
+        || metadata
+            .decks_by_id
+            .get(current_deck_id)
+            .is_some_and(|current_deck| {
+                deck_matches(
+                    &current_deck.name.to_lowercase(),
+                    card,
+                    deck,
+                    card_sources,
+                    metadata,
+                )
+            })
 }
 
 fn imported_original_deck_matches(
@@ -3969,10 +3990,43 @@ mod tests {
     #[test]
     fn deck_current_uses_search_context_or_active_session() {
         let mut state = AppState {
-            decks: vec![deck("tamil", "Tamil"), deck("spanish", "Spanish")],
+            decks: vec![
+                deck("tamil", "Tamil"),
+                deck("tamil::script", "Tamil::Script"),
+                deck("filtered", "Filtered"),
+                deck("spanish", "Spanish"),
+            ],
             cards: vec![
                 card("tamil-card", "tamil", "amma", "mother"),
+                card("tamil-child-card", "tamil::script", "uyir", "vowel"),
+                card("filtered-tamil-card", "filtered", "filtered", "original"),
                 card("spanish-card", "spanish", "madre", "mother"),
+            ],
+            external_sources: vec![
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Deck,
+                    target_id: "tamil".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some("100".to_string()),
+                    data: BTreeMap::new(),
+                },
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Deck,
+                    target_id: "filtered".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some("200".to_string()),
+                    data: BTreeMap::from([("dyn".to_string(), "1".to_string())]),
+                },
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Card,
+                    target_id: "filtered-tamil-card".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some("300".to_string()),
+                    data: BTreeMap::from([
+                        ("deckId".to_string(), "200".to_string()),
+                        ("originalDeckId".to_string(), "100".to_string()),
+                    ]),
+                },
             ],
             ..AppState::default()
         };
@@ -3993,7 +4047,7 @@ mod tests {
                     current_deck_id: Some("tamil"),
                 },
             ),
-            vec!["tamil-card"]
+            vec!["tamil-card", "tamil-child-card", "filtered-tamil-card"]
         );
 
         state.active_session = Some(ActiveSessionState {
@@ -4019,7 +4073,7 @@ mod tests {
                     current_deck_id: Some("tamil"),
                 },
             ),
-            vec!["tamil-card"],
+            vec!["tamil-card", "tamil-child-card", "filtered-tamil-card"],
             "explicit UI deck context should override active-session fallback"
         );
     }
