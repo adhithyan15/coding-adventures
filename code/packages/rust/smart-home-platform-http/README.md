@@ -119,13 +119,13 @@ rows also link to their current state, registry detail, desired-state target,
 state history, entity-scoped runtime events, and owning bridge command-result
 audit trail. The browser shell also exposes filters for
 room, entity domain/state/control status, runtime event kind, command-result
-status, authorization outcome, capability-grant status/scope/principal, with
-server-backed room scoping across inventory, state, history, event-log, and
-command-result panels plus server-backed capability-grant scoping and local text
-search across the rendered dashboard rows. Those filter selections are mirrored
-into URL query parameters and restored on page load or browser navigation, so
-local-controller room, audit, and grant-boundary views can be shared or reopened
-directly.
+status, authorization outcome/principal, and capability-grant
+status/scope/principal, with server-backed room scoping across inventory, state,
+history, event-log, and command-result panels plus server-backed authorization
+and capability-grant scoping and local text search across the rendered dashboard
+rows. Those filter selections are mirrored into URL query parameters and
+restored on page load or browser navigation, so local-controller room, audit,
+and grant-boundary views can be shared or reopened directly.
 
 ## Dependencies
 
