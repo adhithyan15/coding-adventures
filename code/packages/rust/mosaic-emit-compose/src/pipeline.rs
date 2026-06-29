@@ -39,6 +39,12 @@ pub struct PipelineEmitResult {
     pub component_name: String,
 }
 
+#[derive(Clone, Copy)]
+struct ForPayloadScope<'a> {
+    item: &'a str,
+    index: Option<&'a str>,
+}
+
 /// Emit one Composable function for the three-file triple.
 ///
 /// The `style` argument's `part` blocks are inlined as Jetpack Compose
@@ -248,6 +254,7 @@ fn emit_composable_function(
         component_name,
         emits,
         part_styles,
+        None,
         None,
         None,
         None,
@@ -853,6 +860,7 @@ fn emit_compose_tree(
     // Inherited text styling for any `Text` this subtree emits; consumed
     // by `emit_text` / the inline-edit `BasicTextField`.
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
     // Threaded column-width Kotlin expression (e.g.
     // `columnWidths[_kotlinIdxc]`) for THIS node only — `Some` exactly
     // when this is a direct body child of a width-threading HostTable
@@ -871,6 +879,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             injected_width,
         ),
         "Row" => emit_container(
@@ -882,6 +891,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             injected_width,
         ),
         "Column" => emit_container(
@@ -893,6 +903,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             injected_width,
         ),
         // UI29 §2.1 — `HostTable` lowers to a vertical `Column`.  Before
@@ -916,6 +927,7 @@ fn emit_compose_tree(
                 part_styles,
                 Some(&ctx),
                 Some(&sheet_text),
+                for_payload,
                 injected_width,
             )
         }
@@ -931,6 +943,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             injected_width,
         ),
         "HostTableColGroup" => {
@@ -947,6 +960,7 @@ fn emit_compose_tree(
                 part_styles,
                 table_ctx,
                 text_ctx,
+                for_payload,
                 injected_width,
             )
         }
@@ -960,7 +974,7 @@ fn emit_compose_tree(
         "Text" => emit_text(node, depth, text_ctx),
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
         "HostInput" => emit_host_input(node, depth, component_name, emits),
-        "HostButton" => emit_host_button(node, depth, component_name, emits),
+        "HostButton" => emit_host_button(node, depth, component_name, emits, for_payload),
         "HostCheckbox" => emit_host_checkbox(node, depth, component_name, emits),
         "HostRadio" => emit_host_radio(node, depth, component_name, emits),
         "HostNumberInput" => emit_host_number_input(node, depth, component_name, emits),
@@ -973,6 +987,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             /*width_thread=*/ false,
         ),
         "If" => emit_if_compose(
@@ -984,6 +999,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
         ),
         // An orphan `Else` renders as a documenting Kotlin comment.
         "Else" => Ok(format!("{pad}// orphan Else — ignored\n")),
@@ -1013,6 +1029,7 @@ fn emit_container(
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
     injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
@@ -1119,6 +1136,7 @@ fn emit_container(
                 part_styles,
                 table_ctx,
                 child_text.as_ref(),
+                for_payload,
             )?);
         }
     } else {
@@ -1130,6 +1148,7 @@ fn emit_container(
             part_styles,
             table_ctx,
             child_text.as_ref(),
+            for_payload,
             None,
         )?);
     }
@@ -1151,6 +1170,7 @@ fn emit_table_cell(
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     if let Some(ctx) = table_ctx {
         if ctx.column_widths_slot.is_some()
@@ -1165,6 +1185,7 @@ fn emit_table_cell(
                 part_styles,
                 table_ctx,
                 text_ctx,
+                for_payload,
                 /*width_thread=*/ true,
             );
         }
@@ -1177,6 +1198,7 @@ fn emit_table_cell(
         part_styles,
         table_ctx,
         text_ctx,
+        for_payload,
         None,
     )
 }
@@ -1196,6 +1218,7 @@ fn emit_children_compose(
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
     // Threaded column-width expression to inject into each DIRECT plain
     // child's Modifier chain.  `Some` only on the body-children dispatch
     // of a width-threading HostTable cell `For`.
@@ -1216,6 +1239,7 @@ fn emit_children_compose(
                 part_styles,
                 table_ctx,
                 text_ctx,
+                for_payload,
             )?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
@@ -1228,6 +1252,7 @@ fn emit_children_compose(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             injected_width,
         )?);
         i += 1;
@@ -1257,6 +1282,7 @@ fn emit_for_compose(
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
     // When true AND a `column_widths_slot` is live AND this For has an
     // `index:` binding, each iteration's body Box gets a threaded
     // `.width(<slot>[_kotlinIdx<idx>].dp)`.  See [`emit_table_cell`].
@@ -1342,6 +1368,11 @@ fn emit_for_compose(
         None
     };
 
+    let scoped_payload = Some(ForPayloadScope {
+        item: as_name.as_str(),
+        index: index_name.as_deref().or(for_payload.and_then(|scope| scope.index)),
+    });
+
     let mut out = header;
     if node.children.is_empty() {
         // Compose's content lambda is fine with no children — the
@@ -1360,6 +1391,7 @@ fn emit_for_compose(
             part_styles,
             table_ctx,
             text_ctx,
+            scoped_payload,
             width_expr.as_deref(),
         )?);
     }
@@ -1390,6 +1422,7 @@ fn emit_if_compose(
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_depth = depth + 1;
@@ -1408,6 +1441,7 @@ fn emit_if_compose(
                     part_styles,
                     table_ctx,
                     text_ctx,
+                    for_payload,
                     None,
                 );
             }
@@ -1421,6 +1455,7 @@ fn emit_if_compose(
                         part_styles,
                         table_ctx,
                         text_ctx,
+                        for_payload,
                         None,
                     );
                 }
@@ -1450,6 +1485,7 @@ fn emit_if_compose(
         part_styles,
         table_ctx,
         text_ctx,
+        for_payload,
         None,
     )?);
     if let Some(e) = else_node {
@@ -1462,6 +1498,7 @@ fn emit_if_compose(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             None,
         )?);
     }
@@ -1572,6 +1609,7 @@ fn emit_host_button(
     depth: usize,
     component_name: &str,
     emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
@@ -1587,13 +1625,13 @@ fn emit_host_button(
             .find(|e| e.name == *emit_name)
             .map(|e| e.params.len())
             .unwrap_or(0);
-        // Buttons have no inherent payload; only emit the dispatch
-        // call if the signal is parameterless.  A button wired to a
-        // payload-carrying signal won't know what to pass; surface
-        // that as `(/* TODO: ... */)` deliberately so the codegen
-        // is visibly incomplete rather than silently lying.
         if arity == 0 {
             format!("dispatch({component_name}Event.{case})")
+        } else if arity == 1 {
+            match host_button_single_payload_expr(emit_name, emits, for_payload) {
+                Some(payload) => format!("dispatch({component_name}Event.{case}({payload}))"),
+                None => format!("dispatch({component_name}Event.{case}(/* TODO: payload */))"),
+            }
         } else {
             format!("dispatch({component_name}Event.{case}(/* TODO: payload */))")
         }
@@ -1604,6 +1642,8 @@ fn emit_host_button(
     let label = match find_prop_value(node, "label") {
         Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_kotlin_string(s)),
         Some(LayoutPropValue::SlotRef(slot)) => to_camel_case_first_lower(slot),
+        Some(LayoutPropValue::Keyword(name)) => to_camel_case_first_lower(name),
+        Some(LayoutPropValue::Expr(text)) => text.trim().to_string(),
         _ => "\"\"".to_string(),
     };
 
@@ -1612,6 +1652,26 @@ fn emit_host_button(
     writeln!(out, "{inner}Text(text = {label})").unwrap();
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
+}
+
+fn host_button_single_payload_expr(
+    emit_name: &str,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Option<String> {
+    let param_type = emits
+        .iter()
+        .find(|e| e.name == emit_name)
+        .and_then(|e| e.params.first())
+        .map(|p| &p.r#type)?;
+    let scope = for_payload?;
+    match param_type {
+        EmitPayloadType::Text | EmitPayloadType::Color | EmitPayloadType::Component(_) => {
+            Some(scope.item.to_string())
+        }
+        EmitPayloadType::Number => scope.index.map(str::to_string),
+        EmitPayloadType::Bool => None,
+    }
 }
 
 fn emit_host_checkbox(
@@ -2588,6 +2648,136 @@ mod tests {
             "expected dispatch(BarEvent.Click), got:\n{out}"
         );
         assert!(out.contains("Text(text = \"Go\")"));
+    }
+
+    #[test]
+    fn host_button_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "ListGroup",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout(
+            "ListGroup",
+            node(
+                "Column",
+                vec![],
+                vec![node(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".into(),
+                            value: LayoutPropValue::SlotRef("items".into()),
+                        },
+                        LayoutProp {
+                            name: "as".into(),
+                            value: LayoutPropValue::Keyword("item".into()),
+                        },
+                        LayoutProp {
+                            name: "index".into(),
+                            value: LayoutPropValue::Keyword("i".into()),
+                        },
+                    ],
+                    vec![node(
+                        "HostButton",
+                        vec![
+                            LayoutProp {
+                                name: "label".into(),
+                                value: LayoutPropValue::Keyword("item".into()),
+                            },
+                            LayoutProp {
+                                name: "onClick".into(),
+                                value: LayoutPropValue::EmitRef("onSelect".into()),
+                            },
+                        ],
+                        vec![],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("ListGroup"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("val i: Double = _kotlinIdxi.toDouble()"),
+            "expected numeric For index binding, got:\n{out}"
+        );
+        assert!(
+            out.contains("dispatch(ListGroupEvent.Select(i))"),
+            "expected HostButton to dispatch index payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(text = item)"),
+            "expected HostButton label to use For item binding, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_inside_for_dispatches_text_item_payload() {
+        let m = component(
+            "SelectMenu",
+            vec![slot(
+                "options",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout(
+            "SelectMenu",
+            node(
+                "Column",
+                vec![],
+                vec![node(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".into(),
+                            value: LayoutPropValue::SlotRef("options".into()),
+                        },
+                        LayoutProp {
+                            name: "as".into(),
+                            value: LayoutPropValue::Keyword("option".into()),
+                        },
+                    ],
+                    vec![node(
+                        "HostButton",
+                        vec![
+                            LayoutProp {
+                                name: "label".into(),
+                                value: LayoutPropValue::Keyword("option".into()),
+                            },
+                            LayoutProp {
+                                name: "onClick".into(),
+                                value: LayoutPropValue::EmitRef("onChange".into()),
+                            },
+                        ],
+                        vec![],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("SelectMenu"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("dispatch(SelectMenuEvent.Change(option))"),
+            "expected HostButton to dispatch item payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(text = option)"),
+            "expected HostButton label to use For item binding, got:\n{out}"
+        );
     }
 
     #[test]
