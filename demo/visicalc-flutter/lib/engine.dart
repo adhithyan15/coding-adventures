@@ -222,14 +222,31 @@ class SpreadsheetSession {
         : Platform.isWindows
             ? 'spreadsheet_capi.dll'
             : 'libspreadsheet_capi.so';
-    var dir = Directory.current;
-    for (var i = 0; i < 5; i++) {
-      final candidate = File('${dir.path}/native/$name');
-      if (candidate.existsSync()) return candidate.path;
-      final parent = dir.parent;
-      if (parent.path == dir.path) break;
-      dir = parent;
+
+    // Search for `native/<lib>` by walking up from two roots: the current
+    // working directory (set when run via `flutter test` / the headless tools)
+    // AND the running executable's directory (a desktop app — `flutter run -d
+    // macos` or the built .app — whose CWD is the bundle, not the project). The
+    // first hit wins. CAPI_LIB-style overrides aren't needed; the demo vendors
+    // the lib into the project's native/ via scripts/build.sh.
+    File? findNear(Directory start) {
+      var dir = start;
+      for (var i = 0; i < 6; i++) {
+        final candidate = File('${dir.path}/native/$name');
+        if (candidate.existsSync()) return candidate;
+        final parent = dir.parent;
+        if (parent.path == dir.path) break;
+        dir = parent;
+      }
+      return null;
     }
+
+    final fromCwd = findNear(Directory.current);
+    if (fromCwd != null) return fromCwd.path;
+    final exeDir = File(Platform.resolvedExecutable).parent;
+    final fromExe = findNear(exeDir);
+    if (fromExe != null) return fromExe.path;
+
     // Fall back to the conventional location relative to CWD; DynamicLibrary
     // .open will throw a clear error if it isn't there.
     return 'native/$name';

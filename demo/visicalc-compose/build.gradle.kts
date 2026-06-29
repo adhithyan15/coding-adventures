@@ -67,8 +67,28 @@ compose.desktop {
         // to the run directory.
         jvmArgs += listOf("--enable-preview", "--enable-native-access=ALL-UNNAMED")
 
-        // Native-distribution packaging (.dmg / .msi / .deb) is intentionally
-        // left unconfigured; the demo's job is to render the window via
-        // `gradle run`.
+        // Native-distribution packaging so the demo can be built as a real,
+        // double-clickable app bundle (`gradle createDistributable` →
+        // build/compose/binaries/main/app/VisiCalc.app) that holds its window —
+        // unlike `gradle run`, which doesn't keep a GUI session when launched
+        // non-interactively. The engine's `libspreadsheet_capi.*` from `native/`
+        // is bundled as an app resource; Engine.kt's resolver checks the packaged
+        // resources dir (the `compose.application.resources.dir` system property
+        // jpackage sets) so the FFM lookup works from inside the bundle too.
+        nativeDistributions {
+            targetFormats(
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
+            )
+            packageName = "VisiCalc"
+            // jpackage rejects a leading-zero version for the macOS app image.
+            packageVersion = "1.0.0"
+            // Bundle the engine dylib. Compose expects this dir to hold per-target
+            // subdirs (`common`, `macos-arm64`, `macos-x64`, `windows-x64`,
+            // `linux-x64`); at runtime the current target's files are flattened
+            // into the `compose.application.resources.dir` directory, where
+            // Engine.kt's resolver looks. scripts/build.sh populates the right
+            // subdir from the freshly built capi (git-ignored, like native/).
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("appResources"))
+        }
     }
 }

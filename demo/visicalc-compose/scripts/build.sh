@@ -102,6 +102,22 @@ case "$(uname -s)" in
 esac
 cp "$RUST/target/release/$LIB" "$DEMO_DIR/native/$LIB"
 
+# Also stage the dylib into the Compose appResources layout so a packaged app
+# (gradle createDistributable / packageDmg) is self-contained — it bundles the
+# engine and finds it via compose.application.resources.dir (no CAPI_LIB needed).
+# Compose wants a per-target subdir; pick it from the OS + CPU arch.
+case "$(uname -s)-$(uname -m)" in
+  Darwin-arm64)  TARGET_DIR="macos-arm64" ;;
+  Darwin-x86_64) TARGET_DIR="macos-x64" ;;
+  Linux-x86_64)  TARGET_DIR="linux-x64" ;;
+  Linux-aarch64) TARGET_DIR="linux-arm64" ;;
+  *)             TARGET_DIR="" ;;
+esac
+if [ -n "$TARGET_DIR" ]; then
+  mkdir -p "$DEMO_DIR/appResources/$TARGET_DIR"
+  cp "$RUST/target/release/$LIB" "$DEMO_DIR/appResources/$TARGET_DIR/$LIB"
+fi
+
 echo "Done. Generated composables + vendored engine:"
 ls -la "$OUT_DIR"
 ls -la "$DEMO_DIR/native"

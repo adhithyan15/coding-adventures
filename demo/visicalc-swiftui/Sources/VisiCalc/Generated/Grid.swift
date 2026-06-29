@@ -31,7 +31,7 @@ struct GridView: View {
                         Text(( h )).bold()
                     }
                         .foregroundColor(Color(red: 0.616, green: 0.616, blue: 0.616))
-                        .frame(width: columnWidths[Int(ch)], alignment: .center)
+                        .frame(width: columnWidths[Int(ch)], height: 24, alignment: .center)
                         .background(Color(red: 0.176, green: 0.176, blue: 0.188))
                         .border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)
                 }
