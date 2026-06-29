@@ -259,6 +259,75 @@ pub enum MathExpr {
     Matrix(Vec<Vec<MathExpr>>),
 }
 
+/// Drop a `MathExpr` **iteratively** so freeing a deeply-nested tree cannot overflow the
+/// stack.
+///
+/// A frontend can legitimately produce a very deep tree from small input: a left-
+/// associative chain `a + a + a + …` (or juxtaposition `aaa…`, or `1/1/1/…`) parses — by
+/// design, with loops not recursion — into `Bin(Add, Bin(Add, …))` nested N deep. The
+/// compiler's *default* destructor for a recursive `Box`-owning enum is itself recursive,
+/// so dropping such a tree would recurse N frames and abort the process (an uncatchable
+/// stack overflow) on adversarial-but-tiny input. Since every frontend hands these trees
+/// back through the panic-free `MathFrontend` contract, the neutral AST must be safe to
+/// drop at any depth — so we override `Drop` to dismantle the tree with an explicit heap
+/// worklist instead of the call stack.
+///
+/// How it stays O(1) in stack depth: we move each node's boxed children onto a `Vec`
+/// worklist (replacing them in place with a cheap leaf), then pop and repeat. By the time
+/// any node is finally dropped, its children are leaves, so the compiler-generated
+/// destructor recurses at most one trivial level.
+impl Drop for MathExpr {
+    fn drop(&mut self) {
+        let mut stack: Vec<MathExpr> = Vec::new();
+        take_children(self, &mut stack);
+        while let Some(mut node) = stack.pop() {
+            take_children(&mut node, &mut stack);
+            // `node` now owns only leaf children, so dropping it here is shallow.
+        }
+    }
+}
+
+/// Move every boxed child of `e` onto `out`, leaving `e` holding cheap leaves in their place.
+/// A leaf (`Number`/`Symbol`/`Text`) contributes nothing. Used only by [`MathExpr`]'s `Drop`.
+fn take_children(e: &mut MathExpr, out: &mut Vec<MathExpr>) {
+    // Swap a boxed child out for a leaf (no allocation: `String::new()` doesn't allocate).
+    fn take(b: &mut Box<MathExpr>, out: &mut Vec<MathExpr>) {
+        out.push(std::mem::replace(b.as_mut(), MathExpr::Symbol(String::new())));
+    }
+    fn take_opt(b: &mut Option<Box<MathExpr>>, out: &mut Vec<MathExpr>) {
+        if let Some(boxed) = b.take() {
+            out.push(*boxed);
+        }
+    }
+    match e {
+        MathExpr::Number(_) | MathExpr::Symbol(_) | MathExpr::Text(_) => {}
+        MathExpr::Bin(_, a, b)
+        | MathExpr::Frac(a, b)
+        | MathExpr::Binom(a, b)
+        | MathExpr::Subscript(a, b)
+        | MathExpr::Rel(_, a, b) => {
+            take(a, out);
+            take(b, out);
+        }
+        MathExpr::Unary(_, a) | MathExpr::Group(a) => take(a, out),
+        MathExpr::Root { degree, radicand } => {
+            take_opt(degree, out);
+            take(radicand, out);
+        }
+        MathExpr::Call { arg, .. } => take(arg, out),
+        MathExpr::BigOp { lower, upper, body, .. } => {
+            take_opt(lower, out);
+            take_opt(upper, out);
+            take(body, out);
+        }
+        MathExpr::Matrix(rows) => {
+            for row in std::mem::take(rows) {
+                out.extend(row);
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -275,6 +344,35 @@ mod tests {
         let binom = MathExpr::Binom(one(), one());
         assert_eq!(binom, MathExpr::Binom(one(), one()));
         assert_ne!(binom, MathExpr::Frac(one(), one()));
+    }
+
+    #[test]
+    fn dropping_a_very_deep_tree_does_not_overflow() {
+        // A frontend can build a left-associative chain `a + a + … ` this deep from tiny
+        // input. With the default recursive destructor this drop would overflow the stack
+        // and abort the process; the iterative `Drop` impl must free it on the heap instead.
+        // 300_000 nodes is far beyond any per-frame recursive-drop budget on a 2 MiB stack.
+        let mut e = MathExpr::Number(Number::from_i64(0));
+        for _ in 0..300_000 {
+            e = MathExpr::Bin(
+                BinOp::Add,
+                Box::new(e),
+                Box::new(MathExpr::Number(Number::from_i64(1))),
+            );
+        }
+        drop(e); // must return normally, not abort with a stack overflow
+    }
+
+    #[test]
+    fn dropping_a_deep_matrix_and_options_does_not_overflow() {
+        // Exercise the Option/Vec child paths of the iterative drop (Root degree, BigOp
+        // bounds, Matrix rows) nested deeply through a Root chain.
+        let mut e = MathExpr::Symbol("x".to_string());
+        for _ in 0..100_000 {
+            e = MathExpr::Root { degree: Some(Box::new(MathExpr::Number(Number::from_i64(2)))), radicand: Box::new(e) };
+        }
+        e = MathExpr::Matrix(vec![vec![e]]);
+        drop(e);
     }
 
     #[test]

@@ -701,34 +701,30 @@ struct SubcktDefinition {
 }
 
 pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
+    let syntax = syntax::parse_berkeley_syntax(text);
+    if let Some(diagnostic) = syntax
+        .diagnostics
+        .iter()
+        .find(|diagnostic| diagnostic.is_error())
+    {
+        return Err(syntax_diagnostic_error(diagnostic));
+    }
+
     let mut circuit = Circuit::new();
     let mut analyses = Vec::new();
     let mut models = HashMap::new();
     let mut statements = Vec::new();
     let mut subckts = HashMap::new();
     let mut current_subckt: Option<SubcktDefinition> = None;
-    let mut title = None;
-    let mut saw_content = false;
+    let title = syntax.title.clone();
 
-    for (index, raw_line) in text.lines().enumerate() {
-        let line_number = index + 1;
-        let stripped = raw_line.trim();
-        if stripped.is_empty() {
-            continue;
+    for card in syntax.cards {
+        let line_number = card.span.start_line;
+        if card.kind == BerkeleyCardKind::End {
+            break;
         }
-        if stripped.starts_with('*') {
-            if !saw_content && title.is_none() {
-                let candidate = stripped[1..].trim();
-                if !candidate.is_empty() {
-                    title = Some(candidate.to_string());
-                }
-            }
-            continue;
-        }
-        saw_content = true;
 
-        let fields = split_fields(strip_inline_comment(raw_line))
-            .map_err(|err| line_error(line_number, err))?;
+        let fields = split_fields(&card.text).map_err(|err| line_error(line_number, err))?;
         if fields.is_empty() {
             continue;
         }
@@ -828,6 +824,15 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
         models,
         title,
     })
+}
+
+fn syntax_diagnostic_error(diagnostic: &BerkeleySyntaxDiagnostic) -> NetlistParseError {
+    let message = format!("{}: {}", diagnostic.code, diagnostic.message);
+    if let Some(span) = diagnostic.span {
+        line_error(span.start_line, NetlistParseError::new(message))
+    } else {
+        NetlistParseError::new(message)
+    }
 }
 
 pub fn build_analysis_plan(parsed: &ParsedNetlist) -> Vec<AnalysisPlanStep> {
@@ -2890,10 +2895,6 @@ fn split_fields(line: &str) -> Result<Vec<String>, NetlistParseError> {
         fields.push(current);
     }
     Ok(fields)
-}
-
-fn strip_inline_comment(line: &str) -> &str {
-    line.split_once(';').map_or(line, |(before, _)| before)
 }
 
 fn parse_waveform_values(inner: &str) -> Result<Vec<f64>, NetlistParseError> {

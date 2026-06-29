@@ -10,14 +10,16 @@
 use serde_json::Value as JsonValue;
 use smart_home_core::{
     AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Bridge, BridgeId,
-    BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId, CapabilityMode,
-    CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceEvent,
-    DeviceEventType, Entity, EntityId, EntityKind, EventId, Health, PrivilegeTier, Scene,
-    SceneScope, StateConfidence, StateDelta, StateSource, Value, ValueKind,
+    BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId,
+    CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
+    CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
+    DeviceEvent, DeviceEventType, Entity, EntityId, EntityKind, EventId, Health, PrivilegeTier,
+    Scene, SceneScope, StateConfidence, StateDelta, StateSource, Value, ValueKind,
 };
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
-    RuntimeAuthorizationDecisionSort, RuntimeClearDesiredStateToolOutput,
+    RuntimeAuthorizationDecisionSort, RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind,
+    RuntimeCapabilityGrantSort, RuntimeClearDesiredStateToolOutput,
     RuntimeClearDesiredStateToolRequest, RuntimeCommandResultQuery, RuntimeCommandResultRecord,
     RuntimeCommandResultSort, RuntimeCommandToolRequest, RuntimeError, RuntimeEvent,
     RuntimeEventCheckpoint, RuntimeEventFilter, RuntimeEventLogEntry, RuntimeEventQuery,
@@ -1664,6 +1666,21 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/capability_grants", move |request| {
+            runtime_capability_grants_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get(
+            "/api/smart_home/capability_grants/:grant_id",
+            move |request| runtime_capability_grant_response(&runtime, request),
+        );
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/devices", move |request| {
             runtime_devices_response(&runtime, request)
         });
@@ -2398,6 +2415,32 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/capability_grants",
+        category: "authorization",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[
+            "capability_id",
+            "entity_id",
+            "limit",
+            "principal_id",
+            "scope",
+            "sort",
+            "status",
+        ],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/capability_grants/:grant_id",
+        category: "authorization",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/devices",
         category: "devices",
         surface: "smart_home",
@@ -2850,6 +2893,46 @@ fn runtime_capabilities_response(
         .expect("smart-home runtime mutex should not be poisoned");
     let capabilities = runtime_capability_catalog(&runtime_guard, &query);
     WebResponse::json(capabilities_catalog_json(&capabilities).into_bytes())
+}
+
+fn runtime_capability_grants_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let query = match runtime_capability_grant_query(&runtime_guard, request) {
+        Ok(query) => query,
+        Err(error) => return api_error_response(error),
+    };
+    let grants = runtime_guard.query_capability_grants_at(&query, runtime.now_ms);
+    let summary = runtime_guard.capability_grant_summary_at(&query, runtime.now_ms);
+    WebResponse::json(capability_grants_json(&grants, &summary, runtime.now_ms).into_bytes())
+}
+
+fn runtime_capability_grant_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(grant_id) = request.route_params.get("grant_id") else {
+        return api_error_response(ApiError::bad_request("missing grant_id"));
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let Some(grant) = runtime_guard
+        .registry()
+        .capability_grants()
+        .find(|grant| grant.grant_id.as_str() == grant_id)
+    else {
+        return api_error_response(ApiError::not_found(format!(
+            "capability grant `{grant_id}` not found"
+        )));
+    };
+    WebResponse::json(capability_grant_json(grant, runtime.now_ms).into_bytes())
 }
 
 fn runtime_devices_response(
@@ -3408,7 +3491,7 @@ fn runtime_readiness_json(
     };
 
     format!(
-        "{{\"generated_at_ms\":{},\"status\":{},\"ready\":{},\"summary\":{{\"total_checks\":{},\"passing_checks\":{},\"attention_checks\":{},\"blocking_checks\":{}}},\"links\":{{\"health\":{},\"dashboard\":{},\"bootstrap\":{},\"smoke\":{},\"api\":{},\"state_gaps\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"checks\":[{}]}}",
+        "{{\"generated_at_ms\":{},\"status\":{},\"ready\":{},\"summary\":{{\"total_checks\":{},\"passing_checks\":{},\"attention_checks\":{},\"blocking_checks\":{}}},\"links\":{{\"health\":{},\"dashboard\":{},\"bootstrap\":{},\"smoke\":{},\"api\":{},\"state_gaps\":{},\"command_results\":{},\"authorization_decisions\":{},\"capability_grants\":{}}},\"checks\":[{}]}}",
         runtime.now_ms,
         json_string(status),
         blocking_checks == 0,
@@ -3424,6 +3507,7 @@ fn runtime_readiness_json(
         json_string("/api/smart_home/states?stale=true"),
         json_string("/api/smart_home/command_results"),
         json_string("/api/smart_home/authorization_decisions"),
+        json_string("/api/smart_home/capability_grants"),
         checks
             .iter()
             .map(readiness_check_json)
@@ -3696,7 +3780,7 @@ fn runtime_bootstrap_json(
     let authorization_summary = runtime_guard.authorization_decision_summary(&authorization_query);
 
     format!(
-        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"smoke\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
+        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"smoke\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{},\"capability_grants\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
         runtime.now_ms,
         json_string(VERSION),
         json_string("/api/smart_home/readiness"),
@@ -3707,6 +3791,7 @@ fn runtime_bootstrap_json(
         json_string("/api/smart_home/state_history"),
         json_string("/api/smart_home/command_results"),
         json_string("/api/smart_home/authorization_decisions"),
+        json_string("/api/smart_home/capability_grants"),
         runtime_health_json(runtime, runtime_guard),
         runtime_dashboard_json(runtime, runtime_guard),
         api_catalog_json(&routes),
@@ -3763,7 +3848,7 @@ fn runtime_smoke_json(
         .count();
 
     format!(
-        "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_checks\":{},\"safe_get_checks\":{},\"mutating_checks\":{},\"runtime_authorized_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{}}},\"links\":{{\"self\":{},\"dashboard\":{},\"readiness\":{},\"bootstrap\":{},\"api\":{},\"command_results\":{},\"authorization_decisions\":{}}},\"checks\":[{}]}}",
+        "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_checks\":{},\"safe_get_checks\":{},\"mutating_checks\":{},\"runtime_authorized_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{}}},\"links\":{{\"self\":{},\"dashboard\":{},\"readiness\":{},\"bootstrap\":{},\"api\":{},\"command_results\":{},\"authorization_decisions\":{},\"capability_grants\":{}}},\"checks\":[{}]}}",
         runtime.now_ms,
         json_string(VERSION),
         json_string(status),
@@ -3782,6 +3867,7 @@ fn runtime_smoke_json(
         json_string("/api/smart_home/api"),
         json_string("/api/smart_home/command_results"),
         json_string("/api/smart_home/authorization_decisions"),
+        json_string("/api/smart_home/capability_grants"),
         checks
             .iter()
             .map(runtime_smoke_check_json)
@@ -4179,6 +4265,85 @@ fn command_result_summary_json(
         optional_u64_json(summary.latest_sequence),
         summary.next_checkpoint.next_sequence(),
     )
+}
+
+fn capability_grants_json(
+    grants: &[&CapabilityGrant],
+    summary: &CapabilityGrantInventorySummary,
+    now_ms: u64,
+) -> String {
+    format!(
+        "{{\"summary\":{},\"grants\":[{}]}}",
+        capability_grant_summary_json(summary),
+        grants
+            .iter()
+            .map(|grant| capability_grant_json(grant, now_ms))
+            .collect::<Vec<_>>()
+            .join(",")
+    )
+}
+
+fn capability_grant_summary_json(summary: &CapabilityGrantInventorySummary) -> String {
+    format!(
+        "{{\"generated_at_ms\":{},\"total_grants\":{},\"active_grants\":{},\"pending_grants\":{},\"revoked_grants\":{},\"expired_grants\":{},\"tool_grants\":{},\"capability_grants\":{},\"entity_capability_grants\":{},\"all_smart_home_grants\":{},\"read_only_tier_grants\":{},\"low_risk_tier_grants\":{},\"human_approval_tier_grants\":{},\"high_risk_tier_grants\":{},\"expiring_grants\":{},\"unique_principals\":{}}}",
+        summary.generated_at_ms,
+        summary.total_grants,
+        summary.active_grants,
+        summary.pending_grants,
+        summary.revoked_grants,
+        summary.expired_grants,
+        summary.tool_grants,
+        summary.capability_grants,
+        summary.entity_capability_grants,
+        summary.all_smart_home_grants,
+        summary.read_only_tier_grants,
+        summary.low_risk_tier_grants,
+        summary.human_approval_tier_grants,
+        summary.high_risk_tier_grants,
+        summary.expiring_grants,
+        summary.unique_principals,
+    )
+}
+
+fn capability_grant_json(grant: &CapabilityGrant, now_ms: u64) -> String {
+    format!(
+        "{{\"grant_id\":{},\"principal_id\":{},\"scope\":{},\"max_tier\":{},\"configured_status\":{},\"effective_status\":{},\"active\":{},\"granted_by\":{},\"granted_at_ms\":{},\"expires_at_ms\":{},\"metadata\":[{}]}}",
+        json_string(grant.grant_id.as_str()),
+        json_string(grant.principal_id.as_str()),
+        capability_grant_scope_json(&grant.scope),
+        json_string(privilege_tier_label(grant.max_tier)),
+        json_string(capability_grant_status_label(grant.status)),
+        json_string(capability_grant_status_label(grant.status_at(now_ms))),
+        grant.is_active_at(now_ms),
+        json_string(&grant.granted_by),
+        grant.granted_at_ms,
+        optional_u64_json(grant.expires_at_ms),
+        metadata_json(&grant.metadata),
+    )
+}
+
+fn capability_grant_scope_json(scope: &CapabilityGrantScope) -> String {
+    match scope {
+        CapabilityGrantScope::Tool(tool) => {
+            format!(
+                "{{\"kind\":\"tool\",\"tool_id\":{}}}",
+                json_string(tool.descriptor().tool_id)
+            )
+        }
+        CapabilityGrantScope::Capability(capability_id) => format!(
+            "{{\"kind\":\"capability\",\"capability_id\":{}}}",
+            json_string(capability_id.as_str()),
+        ),
+        CapabilityGrantScope::EntityCapability {
+            entity_id,
+            capability_id,
+        } => format!(
+            "{{\"kind\":\"entity_capability\",\"entity_id\":{},\"capability_id\":{}}}",
+            json_string(entity_id.as_str()),
+            json_string(capability_id.as_str()),
+        ),
+        CapabilityGrantScope::AllSmartHome => "{\"kind\":\"all_smart_home\"}".to_string(),
+    }
 }
 
 fn authorization_decisions_json(
@@ -5335,6 +5500,32 @@ fn runtime_authorization_decision_query(
     }
     if let Some(sort) = query_string(request, "sort") {
         query = query.sorted_by(authorization_decision_sort_from_label(sort)?);
+    }
+    Ok(query)
+}
+
+fn runtime_capability_grant_query(
+    runtime: &SmartHomeRuntime,
+    request: &WebRequest,
+) -> Result<RuntimeCapabilityGrantQuery, ApiError> {
+    let mut query = RuntimeCapabilityGrantQuery::new().with_limit(query_limit(request, 50, 500)?);
+    if let Some(principal_id) = query_string(request, "principal_id") {
+        query = query.for_principal(AgentId::trusted(principal_id));
+    }
+    if let Some(status) = query_string(request, "status") {
+        query = query.with_status(capability_grant_status_from_label(status)?);
+    }
+    if let Some(scope) = query_string(request, "scope") {
+        query = query.with_scope_kind(capability_grant_scope_kind_from_label(scope)?);
+    }
+    if let Some(capability_id) = query_string(request, "capability_id") {
+        query = query.with_capability(CapabilityId::trusted(capability_id));
+    }
+    if let Some(entity_id) = query_string(request, "entity_id") {
+        query = query.for_entity(runtime_entity_id(runtime, entity_id)?);
+    }
+    if let Some(sort) = query_string(request, "sort") {
+        query = query.sorted_by(capability_grant_sort_from_label(sort)?);
     }
     Ok(query)
 }
@@ -6851,6 +7042,55 @@ fn authorization_decision_sort_from_label(
     }
 }
 
+fn capability_grant_status_label(status: CapabilityGrantStatus) -> &'static str {
+    match status {
+        CapabilityGrantStatus::Pending => "pending",
+        CapabilityGrantStatus::Active => "active",
+        CapabilityGrantStatus::Revoked => "revoked",
+        CapabilityGrantStatus::Expired => "expired",
+    }
+}
+
+fn capability_grant_status_from_label(status: &str) -> Result<CapabilityGrantStatus, ApiError> {
+    match status {
+        "pending" => Ok(CapabilityGrantStatus::Pending),
+        "active" => Ok(CapabilityGrantStatus::Active),
+        "revoked" => Ok(CapabilityGrantStatus::Revoked),
+        "expired" => Ok(CapabilityGrantStatus::Expired),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported capability grant status `{other}`"
+        ))),
+    }
+}
+
+fn capability_grant_scope_kind_from_label(
+    scope: &str,
+) -> Result<RuntimeCapabilityGrantScopeKind, ApiError> {
+    match scope {
+        "tool" => Ok(RuntimeCapabilityGrantScopeKind::Tool),
+        "capability" => Ok(RuntimeCapabilityGrantScopeKind::Capability),
+        "entity_capability" | "entity" => Ok(RuntimeCapabilityGrantScopeKind::EntityCapability),
+        "all_smart_home" | "all" => Ok(RuntimeCapabilityGrantScopeKind::AllSmartHome),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported capability grant scope `{other}`"
+        ))),
+    }
+}
+
+fn capability_grant_sort_from_label(sort: &str) -> Result<RuntimeCapabilityGrantSort, ApiError> {
+    match sort {
+        "grant_id" => Ok(RuntimeCapabilityGrantSort::GrantId),
+        "principal_id" | "principal" => Ok(RuntimeCapabilityGrantSort::PrincipalId),
+        "granted_at_asc" | "oldest_first" => Ok(RuntimeCapabilityGrantSort::GrantedAtAsc),
+        "granted_at_desc" | "newest_first" => Ok(RuntimeCapabilityGrantSort::GrantedAtDesc),
+        "expires_at_asc" => Ok(RuntimeCapabilityGrantSort::ExpiresAtAsc),
+        "expires_at_desc" => Ok(RuntimeCapabilityGrantSort::ExpiresAtDesc),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported capability grant sort `{other}`"
+        ))),
+    }
+}
+
 fn privilege_tier_label(tier: PrivilegeTier) -> &'static str {
     match tier {
         PrivilegeTier::ReadOnly => "read_only",
@@ -7909,6 +8149,58 @@ mod tests {
     }
 
     #[test]
+    fn runtime_web_app_serves_dashboard_ready_capability_grants() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+
+        let grants = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/capability_grants?principal_id=agent:home-assistant-local-api&status=active&scope=all_smart_home&sort=principal_id&limit=5",
+            ))
+            .into(),
+        );
+        assert!(grants.contains(r#""generated_at_ms":5000"#));
+        assert!(grants.contains(r#""total_grants":1"#));
+        assert!(grants.contains(r#""active_grants":1"#));
+        assert!(grants.contains(r#""all_smart_home_grants":1"#));
+        assert!(grants.contains(r#""high_risk_tier_grants":1"#));
+        assert!(grants.contains(r#""unique_principals":1"#));
+        assert!(grants.contains(r#""principal_id":"agent:home-assistant-local-api""#));
+        assert!(grants.contains(r#""scope":{"kind":"all_smart_home"}"#));
+        assert!(grants.contains(r#""configured_status":"active""#));
+        assert!(grants.contains(r#""effective_status":"active""#));
+        assert!(grants.contains(r#""active":true"#));
+
+        let grants_json: JsonValue =
+            serde_json::from_str(&grants).expect("capability grants response is JSON");
+        let grant_id = grants_json["grants"][0]["grant_id"]
+            .as_str()
+            .expect("capability grant exposes grant_id");
+
+        let grant_detail_path = format!("/api/smart_home/capability_grants/{grant_id}");
+        let grant_detail = response_body(app.handle(request("GET", &grant_detail_path)).into());
+        assert!(grant_detail.contains(&format!(r#""grant_id":"{grant_id}""#)));
+        assert!(grant_detail.contains(r#""max_tier":"high_risk""#));
+        assert!(grant_detail.contains(r#""granted_by":"test""#));
+
+        let missing_grant: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/capability_grants/missing-grant",
+            ))
+            .into();
+        assert_eq!(missing_grant.status, 404);
+
+        let invalid_status: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/capability_grants?status=unknown",
+            ))
+            .into();
+        assert_eq!(invalid_status.status, 400);
+    }
+
+    #[test]
     fn runtime_web_app_serves_dashboard_ready_health_probe() {
         let app = home_assistant_runtime_web_app(fixture_runtime(true));
         let health = response_body(app.handle(request("GET", "/api/smart_home/health")).into());
@@ -8097,6 +8389,9 @@ mod tests {
         ));
         assert!(catalog.contains(
             r#""path":"/api/smart_home/command_results","category":"command_results","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","command_id","correlation_id","from_sequence","limit","room_id","sort","status"]"#
+        ));
+        assert!(catalog.contains(
+            r#""path":"/api/smart_home/capability_grants","category":"authorization","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","entity_id","limit","principal_id","scope","sort","status"]"#
         ));
         assert!(catalog.contains(
             r#""path":"/api/smart_home/state_history","category":"state_history","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","entity_id","event_type","from_ms","limit","room_id","to_ms"]"#

@@ -175,6 +175,46 @@
     {"id": "resp_asbestos_dx", "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "asbestos",    "var": "Disease", "gold": "asbestosis"},
     {"id": "resp_beryl_dx",    "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "beryllium",   "var": "Disease", "gold": "berylliosis"},
     {"id": "resp_cotton_dx",   "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "cotton_dust", "var": "Disease", "gold": "byssinosis"},
-    {"id": "resp_coal_dx",     "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "coal_dust",   "var": "Disease", "gold": "coal_workers_pneumoconiosis"}
+    {"id": "resp_coal_dx",     "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "coal_dust",   "var": "Disease", "gold": "coal_workers_pneumoconiosis"},
+
+    {"id": "hv_aortic",    "domain": "heart_valve", "tactic": "recall", "relation": "best_heard_at", "subject": "aortic_valve",    "var": "Location", "gold": "right_second_intercostal_space"},
+    {"id": "hv_pulmonic",  "domain": "heart_valve", "tactic": "recall", "relation": "best_heard_at", "subject": "pulmonic_valve",  "var": "Location", "gold": "left_second_intercostal_space"},
+    {"id": "hv_tricuspid", "domain": "heart_valve", "tactic": "recall", "relation": "best_heard_at", "subject": "tricuspid_valve", "var": "Location", "gold": "fourth_left_intercostal_space"},
+    {"id": "hv_mitral",    "domain": "heart_valve", "tactic": "recall", "relation": "best_heard_at", "subject": "mitral_valve",    "var": "Location", "gold": "fifth_intercostal_space_midclavicular_line"},
+
+    {"id": "cn_olfactory",  "domain": "cranial_nerve", "tactic": "recall", "relation": "cranial_nerve_function", "subject": "olfactory_nerve",  "var": "Function", "gold": "smell"},
+    {"id": "cn_optic",      "domain": "cranial_nerve", "tactic": "recall", "relation": "cranial_nerve_function", "subject": "optic_nerve",      "var": "Function", "gold": "vision"},
+    {"id": "cn_trochlear",  "domain": "cranial_nerve", "tactic": "recall", "relation": "cranial_nerve_function", "subject": "trochlear_nerve",  "var": "Function", "gold": "superior_oblique_muscle"},
+    {"id": "cn_abducens",   "domain": "cranial_nerve", "tactic": "recall", "relation": "cranial_nerve_function", "subject": "abducens_nerve",   "var": "Function", "gold": "lateral_rectus_muscle"},
+    {"id": "cn_vagus",      "domain": "cranial_nerve", "tactic": "recall", "relation": "cranial_nerve_function", "subject": "vagus_nerve",      "var": "Function", "gold": "parasympathetic_innervation_of_viscera"},
+    {"id": "cn_accessory",  "domain": "cranial_nerve", "tactic": "recall", "relation": "cranial_nerve_function", "subject": "accessory_nerve",  "var": "Function", "gold": "sternocleidomastoid_and_trapezius"},
+    {"id": "cn_hypoglossal","domain": "cranial_nerve", "tactic": "recall", "relation": "cranial_nerve_function", "subject": "hypoglossal_nerve","var": "Function", "gold": "tongue_muscles"},
+
+    {"id": "st_lateral_cst",  "domain": "spinal_tract", "tactic": "recall", "relation": "carries", "subject": "lateral_corticospinal_tract",   "var": "Function", "gold": "voluntary_motor_control"},
+    {"id": "st_dorsal_col",   "domain": "spinal_tract", "tactic": "recall", "relation": "carries", "subject": "dorsal_column",                 "var": "Function", "gold": "fine_touch_vibration_proprioception"},
+    {"id": "st_spinothal",    "domain": "spinal_tract", "tactic": "recall", "relation": "carries", "subject": "spinothalamic_tract",           "var": "Function", "gold": "pain_and_temperature"},
+    {"id": "st_dorsal_spino", "domain": "spinal_tract", "tactic": "recall", "relation": "carries", "subject": "dorsal_spinocerebellar_tract",  "var": "Function", "gold": "unconscious_proprioception"},
+    {"id": "st_rubrospinal",  "domain": "spinal_tract", "tactic": "recall", "relation": "carries", "subject": "rubrospinal_tract",             "var": "Function", "gold": "flexor_muscles"},
+    {"id": "st_anterior_cst", "domain": "spinal_tract", "tactic": "recall", "relation": "carries", "subject": "anterior_corticospinal_tract",  "var": "Function", "gold": "axial_muscles"},
+
+    {"id": "lv_tidal",   "domain": "lung_volume", "tactic": "recall", "relation": "is_defined_as", "subject": "tidal_volume",                 "var": "Definition", "gold": "air_per_respiratory_cycle"},
+    {"id": "lv_residual","domain": "lung_volume", "tactic": "recall", "relation": "is_defined_as", "subject": "residual_volume",              "var": "Definition", "gold": "air_remaining_after_maximal_forceful_expiration"},
+    {"id": "lv_irv",     "domain": "lung_volume", "tactic": "recall", "relation": "is_defined_as", "subject": "inspiratory_reserve_volume",   "var": "Definition", "gold": "air_inhaled_after_normal_tidal"},
+    {"id": "lv_vc",      "domain": "lung_volume", "tactic": "recall", "relation": "is_defined_as", "subject": "vital_capacity",               "var": "Definition", "gold": "max_air_exhaled_after_max_inspiration"},
+    {"id": "lv_frc",     "domain": "lung_volume", "tactic": "recall", "relation": "is_defined_as", "subject": "functional_residual_capacity", "var": "Definition", "gold": "air_remaining_after_normal_passive_exhalation"},
+
+    {"id": "ab_met_acidosis",  "domain": "acid_base", "tactic": "recall", "relation": "compensated_by", "subject": "metabolic_acidosis",    "var": "Compensation", "gold": "respiratory_compensation"},
+    {"id": "ab_met_alkalosis", "domain": "acid_base", "tactic": "recall", "relation": "compensated_by", "subject": "metabolic_alkalosis",   "var": "Compensation", "gold": "increased_paco2_compensation"},
+    {"id": "ab_resp_acidosis", "domain": "acid_base", "tactic": "recall", "relation": "compensated_by", "subject": "respiratory_acidosis",  "var": "Compensation", "gold": "metabolic_response_increased_bicarbonate"},
+    {"id": "ab_resp_alkalosis","domain": "acid_base", "tactic": "recall", "relation": "compensated_by", "subject": "respiratory_alkalosis", "var": "Compensation", "gold": "chronic_lowered_bicarbonate"},
+
+    {"id": "ct_lcx", "domain": "coronary_territory", "tactic": "recall", "relation": "coronary_artery_territory", "subject": "left_circumflex_artery",      "var": "Region", "gold": "lateral_wall"},
+    {"id": "ct_pda", "domain": "coronary_territory", "tactic": "recall", "relation": "coronary_artery_territory", "subject": "posterior_descending_artery", "var": "Region", "gold": "posterior_septum"},
+
+    {"id": "nt_tal",       "domain": "nephron_transporter", "tactic": "recall", "relation": "nephron_segment_transporter", "subject": "thick_ascending_limb",     "var": "Transporter", "gold": "nkcc2"},
+    {"id": "nt_dct",       "domain": "nephron_transporter", "tactic": "recall", "relation": "nephron_segment_transporter", "subject": "distal_convoluted_tubule", "var": "Transporter", "gold": "ncc"},
+    {"id": "nt_cd",        "domain": "nephron_transporter", "tactic": "recall", "relation": "nephron_segment_transporter", "subject": "collecting_duct",          "var": "Transporter", "gold": "aquaporin_2"},
+    {"id": "nt_principal", "domain": "nephron_transporter", "tactic": "recall", "relation": "nephron_segment_transporter", "subject": "principal_cell",           "var": "Transporter", "gold": "enac"},
+    {"id": "nt_descending","domain": "nephron_transporter", "tactic": "recall", "relation": "nephron_segment_transporter", "subject": "descending_limb",          "var": "Transporter", "gold": "water"}
   ]
 }

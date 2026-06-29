@@ -2,6 +2,23 @@
 
 All notable changes to the pluggable parser-frontend framework.
 
+## [0.3.0] — 2026-06-28
+
+### Fixed — iterative `Drop` for `MathExpr` (stack-overflow / abort on deep trees)
+
+- **`MathExpr` now drops iteratively.** A frontend can produce a very deeply-nested tree
+  from small input — a left-associative chain `a + a + a + …` (or juxtaposition, or
+  `1/1/1/…`) parses, by design, into `Bin(Add, Bin(Add, …))` nested N deep. The compiler's
+  default recursive destructor would then overflow the stack and **abort the process** when
+  that tree is dropped — an uncatchable failure reachable from every frontend's panic-free
+  `parse` on adversarial-but-tiny input (≈100 KB). The new `impl Drop for MathExpr`
+  dismantles the tree with an explicit heap worklist (moving each node's boxed children out
+  in place), so freeing is O(1) in stack depth at any tree depth.
+- Fixes the issue for **all** frontends at the source (surfaced by the `asciimath` PR-1
+  security review; `latex` and any future frontend benefit too).
+- +2 regression tests drop 300k-deep `Bin` and 100k-deep `Root`/`Matrix` trees without
+  overflow. Behaviour-only change (no API change); additive. Crate 0.2.0 → 0.3.0.
+
 ## [0.2.0] — 2026-06-27
 
 ### Added — neutral-AST coverage for ± / ∓ and binomials
