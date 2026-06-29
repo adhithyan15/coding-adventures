@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.226.0] - 2026-06-29
+
+### Added — SIMPLE/ADVANCED fold static `Object.keys({k: v, …})` → key-string array
+
+At `--compilation_level SIMPLE` (and `ADVANCED`, which routes through the same
+typed pipeline) `Object.keys` of a fully-static NON-EMPTY object literal now
+folds to the array of its own-enumerable string keys, e.g.
+`Object.keys({a:1,b:2})` → `["a","b"]`. The empty-object case
+(`Object.keys/values/entries({})` → `[]`) was already handled; this extends the
+existing `simple-fold-object-keys` fixture to cover the non-empty key-array fold
+and three declines (non-empty `Object.values`, an integer-index-keyed object,
+and an array). Folding requires `coding-adventures-closure-pass-constant-fold`
+0.75.0. No CLI surface change.
+
 ## [0.223.0] - 2026-06-27
 
 ### Added — SIMPLE/ADVANCED fold static `Math.max(…)` / `Math.min(…)` → numeric
