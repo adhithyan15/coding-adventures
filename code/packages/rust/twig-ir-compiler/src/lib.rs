@@ -42,8 +42,9 @@
 //! Twig remains dynamically typed, so functions keep `type_status = Untyped`
 //! and dynamic paths carry `type_hint = "any"`.  LANG-FULL fast paths stamp
 //! concrete hints where source forms make the type unambiguous (literals, typed
-//! arithmetic, E4 string ops, and selected annotations).  The vm-core profiler
-//! fills in observed types at runtime, which the JIT can specialise on later.
+//! arithmetic, E4 string ops, selected annotations, and conservative top-level
+//! direct-call evidence).  The vm-core profiler fills in observed types at
+//! runtime, which the JIT can specialise on later.
 //!
 //! ## Apply-site dispatch (compile-time)
 //!
@@ -1316,10 +1317,26 @@ mod tests {
         assert!(f.return_refinement.is_none());
     }
 
-    /// Parsing an annotated function does not change its `params` tuple —
-    /// the `type_hint` field of each param entry is still `"any"` (dynamic typing
-    /// is unchanged; refinements are carried in the parallel `param_refinements`
-    /// field, not in the existing `type_hint` strings).
+    #[test]
+    fn unannotated_param_string_inference_requires_consistent_evidence() {
+        let src = "(define (id s) s) (id \"HI\") (id 1)";
+        let m = compile_source(src, "test_e4_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "id").unwrap();
+        assert_eq!(
+            f.params,
+            vec![("s".to_string(), "any".to_string())],
+            "mixed string/non-string direct calls must leave unannotated params dynamic"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
+    /// Parsing non-static refinement annotations does not change the existing
+    /// param type-hint strings; those refinements live in the parallel
+    /// `param_refinements` field.  E4's `str` annotations are the deliberate
+    /// exception because they seed concrete backend-safe string params.
     #[test]
     fn annotation_does_not_change_existing_type_hints() {
         let src = "(define (f (x : (Int 0 10)) (y : int)) (+ x y))";

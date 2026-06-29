@@ -44,14 +44,18 @@ at later direct call sites, so `(define (strlen) (string-length "HELLO"))
 (strlen)` returns through a typed `call [i64]`. Bare `str`/`string` parameter
 annotations on top-level functions also seed concrete `str` IIR params, so
 `(define (strlen (s : str)) (string-length s)) (strlen "HELLO")` lowers without
-dynamic string builtins. Reassignable strings, captured strings, unannotated or
-closure-derived string parameters, and broader dynamic string values remain
-follow-up work.
+dynamic string builtins. Conservative `main`-level direct-call evidence can also
+seed an otherwise-unannotated top-level string parameter, so `(define (strlen s)
+(string-length s)) (strlen "HELLO")` follows the same typed path without
+synthesizing refinement annotations. Reassignable strings, captured strings,
+unobserved/conflicting or closure-derived string parameters, and broader dynamic
+string values remain follow-up work.
 
 Twig remains dynamically typed, so functions keep `type_status = Untyped` and
 dynamic paths still carry `type_hint = "any"`. The LANG-FULL fast paths above
-stamp concrete hints only where the source form makes the type unambiguous. The
-vm-core profiler observes runtime types; the JIT specialises later.
+stamp concrete hints only where source-local evidence makes the type
+unambiguous. The vm-core profiler observes runtime types; the JIT specialises
+later.
 
 ## Apply-site dispatch
 
@@ -61,7 +65,7 @@ The compiler decides at compile time:
 |-----------------------------|---------------------------------------------|
 | Top-level user fn           | `call <name>, ...args`, using the known return type when the function was already lowered in source order |
 | Typed arithmetic (`+`,`-`,`*`,`/`) on `i64` args | a chain of typed `add`/`sub`/`mul`/`div` |
-| Direct literal, immutable top-level, lexical-local, or annotated top-level-parameter string metadata (`string-length`, `string-ref`, `substring`, `string=?`, `string<?`, `string>?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`, with typed index arithmetic for `string-ref` and `substring` bounds |
+| Direct literal, immutable top-level, lexical-local, annotated top-level-parameter, or direct-call-inferred top-level-parameter string metadata (`string-length`, `string-ref`, `substring`, `string=?`, `string<?`, `string>?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`, with typed index arithmetic for `string-ref` and `substring` bounds |
 | Builtin (`cons`, `<`, …)    | `call_builtin <name>, ...args`              |
 | Anything else (locals etc.) | `call_builtin "apply_closure", h, ...args`  |
 
