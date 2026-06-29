@@ -406,6 +406,13 @@ Status:
   and offers `onHostIntent`, giving HTML/Electron hosts the same import/export
   handoff contract that native C/Swift/XAML/Qt shells can use.
 
+APKG fixture status:
+
+- `code/packages/rust/engram-anki-package/tests/fixtures/golden-v11-filtered-media.apkg`
+  is now checked in and covered with `include_bytes!` so filtered decks,
+  original deck/due metadata, and media references are pinned to stable package
+  bytes as well as generated fixture construction.
+
 ### 2.3 `engram-capi`
 
 Native C ABI over the JSON facade.

@@ -36,3 +36,8 @@ The export path preserves numeric Anki IDs when Engram state came from Anki,
 allocates deterministic numeric IDs for Engram-native rows, writes decks,
 models, notes, cards, progress, and review rows, and falls back to a synthetic
 Basic note type for standalone front/back cards.
+
+`tests/fixtures/golden-v11-filtered-media.apkg` pins a deterministic V11 package
+with filtered-deck metadata and media references through `include_bytes!`. Run
+the ignored `regenerate_checked_in_golden_v11_apkg_fixture` test when the
+fixture shape intentionally changes.

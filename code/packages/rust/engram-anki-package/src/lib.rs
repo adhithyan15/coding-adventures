@@ -3772,6 +3772,21 @@ CREATE TABLE graves (
         )
     }
 
+    fn checked_in_golden_v11_apkg_fixture_bytes() -> &'static [u8] {
+        include_bytes!("../tests/fixtures/golden-v11-filtered-media.apkg")
+    }
+
+    #[test]
+    #[ignore]
+    fn regenerate_checked_in_golden_v11_apkg_fixture() {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join("golden-v11-filtered-media.apkg");
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        std::fs::write(&path, golden_v11_apkg_fixture_bytes()).unwrap();
+    }
+
     #[test]
     fn inspects_legacy_apkg_collection_and_media_map() {
         let media = br#"{"0":"audio/hola.mp3","1":"images/card.png","3":"missing.wav"}"#;
@@ -4306,10 +4321,7 @@ CREATE TABLE graves (
         assert_eq!(state.cards[0].back, "hello");
     }
 
-    #[test]
-    fn golden_v11_apkg_fixture_round_trips_filtered_deck_and_media() {
-        let apkg = golden_v11_apkg_fixture_bytes();
-
+    fn assert_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media(apkg: &[u8]) {
         let manifest = inspect_apkg(&apkg).unwrap();
         assert_eq!(manifest.collection.name, LEGACY_COLLECTION);
         assert_eq!(manifest.media.media_files.len(), 2);
@@ -4384,6 +4396,19 @@ CREATE TABLE graves (
         let audio = read_media_file(&exported, "0").unwrap();
         assert_eq!(audio.filename.as_deref(), Some("audio/hola.mp3"));
         assert_eq!(audio.data, b"mp3");
+    }
+
+    #[test]
+    fn generated_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media() {
+        let apkg = golden_v11_apkg_fixture_bytes();
+        assert_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media(&apkg);
+    }
+
+    #[test]
+    fn checked_in_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media() {
+        assert_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media(
+            checked_in_golden_v11_apkg_fixture_bytes(),
+        );
     }
 
     #[test]
