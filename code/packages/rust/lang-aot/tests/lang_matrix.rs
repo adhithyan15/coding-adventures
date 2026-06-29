@@ -1335,6 +1335,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — *`for … while`* (LANG-FULL AL11). ALGOL 60 report §4.6.4:
+    // a `for` element of the form `expr while cond` re-evaluates the
+    // expression first, then tests the condition; if false the whole `for`
+    // exits.  Here `i := i + 6 while i <= 36` advances `i` by 6 each
+    // iteration; the body captures the stepped value into `result`.
+    // Trace: i=6 (6<=36 → result=12), 12 (→18), 18 (→24), 24 (→30),
+    // 30 (→36), 36 (→42), 42 (42<=36 false, exit) → result=42.
+    // The `emit_for_while` IIR lowering emits a loop label, the expression
+    // code, a `jmp_if_false` to the exit, the body, and an unconditional
+    // `jmp` back.  All 7 backends lower this loop shape already (it's the
+    // same `jmp`/`jmp_if_*`/`label` skeleton as the `step-until` loop).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, result; i := 0; \
+               for i := i + 6 while i <= 36 do result := i + 6 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *boolean variable* (LANG-FULL AL10). `boolean b` declares a
     // slot at type_hint `"bool"` (LLVM `i1`, JVM/CLR `int32 0/1`, VM
     // `Value::Bool`).  `b := true` lowers to `const _t0 = 1 / mov b, _t0`
@@ -1404,6 +1423,36 @@ const PROGRAMS: &[Prog] = &[
                if not flag then result := x else result := 1 end; \
                result := result + x end; \
                if flag then result := result + x else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *single-value `for` element* (LANG-FULL AL11). The ALGOL
+    // 60 for-list `for i := expr do body` with a single literal value
+    // executes the body exactly once with `i = expr`.  The `emit_for_value`
+    // IIR lowering emits a single `mov` + body block — no loop at all.
+    // `for i := 2 do result := 40 + i` → result = 42.  Proves the
+    // degenerate single-element list path on all 7 backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, result; for i := 2 do result := 40 + i end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *multi-element `for` list* (LANG-FULL AL11). The for-list
+    // `1 step 1 until 3, 10, i + 1 while i < 13` sequences three kinds of
+    // for-element in a single `for` head: (1) `step-until` (i=1,2,3),
+    // (2) a single literal value (i=10), (3) `while` (i=11,12).
+    // Sum = 1+2+3+10+11+12 = 39; `result := result + 3` brings it to 42.
+    // The multi-element lowering emits each element's control-flow block in
+    // sequence; on exit of one the next element's init code runs.  No backend
+    // needed a change — the loop skeleton already existed.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, result; i := 0; result := 0; \
+               for i := 1 step 1 until 3, 10, i + 1 while i < 13 do \
+               result := result + i; result := result + 3 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
