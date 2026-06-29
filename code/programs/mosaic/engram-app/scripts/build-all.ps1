@@ -214,6 +214,38 @@ module CEngram {
     Add-EngramSwiftUIPackageBridge -PackagePath (Join-Path $SwiftUIRoot "Package.swift")
 }
 
+function Add-EngramComposeHostDependencies {
+    param([Parameter(Mandatory = $true)][string]$BuildGradlePath)
+
+    if (-not (Test-Path -LiteralPath $BuildGradlePath)) {
+        return
+    }
+    $content = Get-Content -LiteralPath $BuildGradlePath -Raw
+    if ($content.Contains('net.java.dev.jna:jna')) {
+        return
+    }
+
+    $content = $content.Replace(
+        '    implementation(compose.desktop.currentOs)',
+        "    implementation(compose.desktop.currentOs)`r`n    implementation(""net.java.dev.jna:jna:5.19.1"")`r`n    implementation(""org.json:json:20260522"")"
+    )
+    Write-Utf8NoBom -Path $BuildGradlePath -Content $content
+}
+
+function Install-EngramComposeHost {
+    param([Parameter(Mandatory = $true)][string]$ComposeRoot)
+
+    if (-not (Test-Path -LiteralPath $ComposeRoot)) {
+        return
+    }
+    if (-not (Test-Path -LiteralPath $engramCapiLibrary)) {
+        throw "expected Engram native library missing: $engramCapiLibrary"
+    }
+
+    Copy-Item -LiteralPath $engramCapiLibrary -Destination (Join-Path $ComposeRoot $nativeLibraryName) -Force
+    Add-EngramComposeHostDependencies -BuildGradlePath (Join-Path $ComposeRoot "build.gradle.kts")
+}
+
 $backends = @(
     "html",
     "webcomponent",
@@ -262,5 +294,6 @@ Install-EngramElectronHost -ElectronRoot (Join-Path $outputRoot "electron")
 Install-EngramQtHost -QtRoot (Join-Path $outputRoot "qt")
 Install-EngramSwiftUIHost -SwiftUIRoot (Join-Path $outputRoot "swiftui")
 Install-EngramXamlHost -XamlRoot (Join-Path $outputRoot "xaml")
+Install-EngramComposeHost -ComposeRoot (Join-Path $outputRoot "compose")
 
 Write-Host "Engram Mosaic host shells written to $outputRoot"

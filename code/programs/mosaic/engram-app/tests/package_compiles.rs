@@ -97,6 +97,11 @@ fn manifest_declares_app_package_boundary() {
         "host/swiftui/MosaicHost.swift",
         "Sources/App/MosaicHost.swift"
     )));
+    assert!(host_assets.contains(&(
+        "compose",
+        "host/compose/MosaicHost.kt",
+        "src/main/kotlin/MosaicHost.kt"
+    )));
     assert!(host_assets.contains(&("xaml", "host/xaml/MosaicHost.cs", "MosaicHost.cs")));
     assert_eq!(package.kernel.version, "1");
 }
@@ -404,6 +409,7 @@ fn app_package_emits_native_project_shells() {
                 "build.gradle.kts",
                 "src/main/kotlin/Main.kt",
                 "src/main/kotlin/EngramApp.kt",
+                "src/main/kotlin/MosaicHost.kt",
                 "README.md",
             ],
         ),
@@ -841,56 +847,88 @@ fn native_project_shells_expose_engram_host_contract() {
         &compose_main,
         "Window(onCloseRequest = ::exitApplication, title = \"EngramApp\")",
     );
+    assert_contains(&compose_main, "MosaicComposeHostBridge.load()");
+    assert_contains(&compose_main, "var hostProps by remember");
+    assert_contains(&compose_main, "applyMosaicResponse(mosaicHost?.props())");
     assert_contains(&compose_main, "EngramApp(");
-    assert_contains(&compose_main, "appTitle = \"Sample AppTitle\",");
     assert_contains(
         &compose_main,
-        "deckOptionsSettingsLabel = \"Sample DeckOptionsSettingsLabel\",",
+        "appTitle = mosaicString(hostProps, \"app-title\", \"Sample AppTitle\"),",
     );
     assert_contains(
         &compose_main,
-        "deckOptionsLearningStepsValue = \"Sample DeckOptionsLearningStepsValue\",",
-    );
-    assert_contains(&compose_main, "deckOptionsNewCardsValue = 0.0,");
-    assert_contains(&compose_main, "deckOptionsEasyBonusValue = 0.0,");
-    assert_contains(&compose_main, "deckOptionsInitialEaseValue = 0.0,");
-    assert_contains(&compose_main, "deckOptionsBuryNewSiblingsValue = false,");
-    assert_contains(&compose_main, "historyLabel = \"Sample HistoryLabel\",");
-    assert_contains(
-        &compose_main,
-        "collectionLabel = \"Sample CollectionLabel\",",
-    );
-    assert_contains(&compose_main, "browserQuery = \"Sample BrowserQuery\",");
-    assert_contains(
-        &compose_main,
-        "browserFlagValue = \"Sample BrowserFlagValue\",",
-    );
-    assert_contains(&compose_main, "browserFlagOptions = emptyList(),");
-    assert_contains(&compose_main, "browserFlagOpen = false,");
-    assert_contains(&compose_main, "browserTagEdit = \"Sample BrowserTagEdit\",");
-    assert_contains(
-        &compose_main,
-        "browserRemoveTagLabel = \"Sample BrowserRemoveTagLabel\",",
-    );
-    assert_contains(&compose_main, "browserResults = emptyList(),");
-    assert_contains(&compose_main, "browserResultCardIds = emptyList(),");
-    assert_contains(
-        &compose_main,
-        "browserSelectedCardId = \"Sample BrowserSelectedCardId\",",
-    );
-    assert_contains(&compose_main, "answerVisible = false,");
-    assert_contains(
-        &compose_main,
-        "actionUndoLabel = \"Sample ActionUndoLabel\",",
+        "deckOptionsSettingsLabel = mosaicString(hostProps, \"deck-options-settings-label\", \"Sample DeckOptionsSettingsLabel\"),",
     );
     assert_contains(
         &compose_main,
-        "actionMarkLabel = \"Sample ActionMarkLabel\",",
+        "deckOptionsLearningStepsValue = mosaicString(hostProps, \"deck-options-learning-steps-value\", \"Sample DeckOptionsLearningStepsValue\"),",
     );
     assert_contains(
         &compose_main,
-        "dispatch = { event -> println(\"event: ${event.mosaicEnvelope}\") }",
+        "deckOptionsNewCardsValue = mosaicDouble(hostProps, \"deck-options-new-cards-value\", 0.0),",
     );
+    assert_contains(
+        &compose_main,
+        "deckOptionsEasyBonusValue = mosaicDouble(hostProps, \"deck-options-easy-bonus-value\", 0.0),",
+    );
+    assert_contains(
+        &compose_main,
+        "deckOptionsInitialEaseValue = mosaicDouble(hostProps, \"deck-options-initial-ease-value\", 0.0),",
+    );
+    assert_contains(
+        &compose_main,
+        "deckOptionsBuryNewSiblingsValue = mosaicBoolean(hostProps, \"deck-options-bury-new-siblings-value\", false),",
+    );
+    assert_contains(
+        &compose_main,
+        "historyLabel = mosaicString(hostProps, \"history-label\", \"Sample HistoryLabel\"),",
+    );
+    assert_contains(
+        &compose_main,
+        "collectionLabel = mosaicString(hostProps, \"collection-label\", \"Sample CollectionLabel\"),",
+    );
+    assert_contains(
+        &compose_main,
+        "browserQuery = mosaicString(hostProps, \"browser-query\", \"Sample BrowserQuery\"),",
+    );
+    assert_contains(
+        &compose_main,
+        "browserFlagValue = mosaicString(hostProps, \"browser-flag-value\", \"Sample BrowserFlagValue\"),",
+    );
+    assert_contains(&compose_main, "browserFlagOptions = mosaicStringList(hostProps, \"browser-flag-options\"),");
+    assert_contains(
+        &compose_main,
+        "browserFlagOpen = mosaicBoolean(hostProps, \"browser-flag-open\", false),",
+    );
+    assert_contains(
+        &compose_main,
+        "browserTagEdit = mosaicString(hostProps, \"browser-tag-edit\", \"Sample BrowserTagEdit\"),",
+    );
+    assert_contains(
+        &compose_main,
+        "browserRemoveTagLabel = mosaicString(hostProps, \"browser-remove-tag-label\", \"Sample BrowserRemoveTagLabel\"),",
+    );
+    assert_contains(&compose_main, "browserResults = mosaicStringList(hostProps, \"browser-results\"),");
+    assert_contains(&compose_main, "browserResultCardIds = mosaicStringList(hostProps, \"browser-result-card-ids\"),");
+    assert_contains(
+        &compose_main,
+        "browserSelectedCardId = mosaicString(hostProps, \"browser-selected-card-id\", \"Sample BrowserSelectedCardId\"),",
+    );
+    assert_contains(
+        &compose_main,
+        "answerVisible = mosaicBoolean(hostProps, \"answer-visible\", false),",
+    );
+    assert_contains(
+        &compose_main,
+        "actionUndoLabel = mosaicString(hostProps, \"action-undo-label\", \"Sample ActionUndoLabel\"),",
+    );
+    assert_contains(
+        &compose_main,
+        "actionMarkLabel = mosaicString(hostProps, \"action-mark-label\", \"Sample ActionMarkLabel\"),",
+    );
+    assert_contains(&compose_main, "mosaicHost?.handleEvent(event.mosaicEnvelope)");
+    assert_contains(&compose_main, "applyMosaicResponse(response)");
+    assert_contains(&compose_main, "Class.forName(\"MosaicHost\")");
     let compose_gradle = fs::read_to_string(tmp.path().join("compose").join("build.gradle.kts"))
         .expect("compose/build.gradle.kts");
     assert_contains(
@@ -898,6 +936,18 @@ fn native_project_shells_expose_engram_host_contract() {
         "id(\"org.jetbrains.compose\") version \"1.11.1\"",
     );
     assert_contains(&compose_gradle, "mainClass = \"MainKt\"");
+    let compose_host = fs::read_to_string(
+        tmp.path()
+            .join("compose")
+            .join("src")
+            .join("main")
+            .join("kotlin")
+            .join("MosaicHost.kt"),
+    )
+    .expect("compose host");
+    assert_contains(&compose_host, "class MosaicHost");
+    assert_contains(&compose_host, "eg_engram_app_props");
+    assert_contains(&compose_host, "eg_handle_engram_app_event");
 
     let qml =
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");
@@ -1640,6 +1690,7 @@ fn source_tree_has_expected_shape() {
         "host/qt/MosaicHost.h",
         "host/qt/MosaicHost.cpp",
         "host/swiftui/MosaicHost.swift",
+        "host/compose/MosaicHost.kt",
         "host/xaml/MosaicHost.cs",
     ] {
         let path = package_root().join(relative);
@@ -1679,12 +1730,25 @@ fn source_tree_has_expected_shape() {
     assert_contains(&qt_host, "hostIntent");
     assert_contains(&qt_host, "props");
 
+    let compose_host = fs::read_to_string(package_root().join("host/compose/MosaicHost.kt"))
+        .expect("compose host template");
+    assert_contains(&compose_host, "interface EngramCapi");
+    assert_contains(&compose_host, "eg_engram_app_props");
+    assert_contains(&compose_host, "eg_handle_engram_app_event");
+    assert_contains(&compose_host, "Native.load");
+    assert_contains(&compose_host, "JSONObject(event)");
+    assert_contains(&compose_host, "\"hostIntent\"");
+    assert_contains(&compose_host, "\"props\"");
+
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
     assert_contains(&build_script, "Install-EngramHtmlHost");
     assert_contains(&build_script, "Install-EngramXamlHost");
     assert_contains(&build_script, "Install-EngramQtHost");
     assert_contains(&build_script, "Install-EngramSwiftUIHost");
+    assert_contains(&build_script, "Install-EngramComposeHost");
+    assert_contains(&build_script, "net.java.dev.jna:jna:5.19.1");
+    assert_contains(&build_script, "org.json:json:20260522");
     assert_contains(&build_script, "module CEngram");
     assert_contains(&build_script, "libengram_capi.a");
     assert_contains(&build_script, "engram_capi.dll");

@@ -50,9 +50,11 @@ binds them to the shared Rust business logic core through host shells.
   `host/qt/MosaicHost.h/.cpp` implements it with a runtime-loaded
   `engram-capi` library, hydrating QML properties and routing generated Mosaic
   event envelopes back into the same core.
-- The generated SwiftPM, Flutter, and Compose Desktop shells mount `EngramApp`
-  with sample slot values and dispatch callbacks, matching the generated
-  interface shapes.
+- The generated Compose Desktop shell has an optional reflection-based
+  `MosaicHost` hook. Engram's `host/compose/MosaicHost.kt` implements it with
+  `engram-capi` through JNA, hydrating Compose slot props and routing generated
+  Mosaic event envelopes back into the same core. Flutter still mounts
+  `EngramApp` with sample slot values and dispatch callbacks.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
   expose the same Engram host contract slots, collection events, card-browser
   events, rating events, and Anki-style review action events as the shared Rust
@@ -109,7 +111,8 @@ that host adapters need. Static host adapters are declared in
 `src/engram-host.ts`, `engram-host.mjs`, `electron/host.js`, and the native
 bridge sources during project emission. The script adds the JS loader and
 `engram_engine.wasm` for web/Electron shells, `Sources/CEngram` plus the static
-`engram-capi` library for SwiftUI, the dynamic `engram-capi` library for Qt,
-and `engram_capi.dll` as XAML project content. Collection actions such as Anki
+`engram-capi` library for SwiftUI, the dynamic `engram-capi` library for Qt and
+Compose, JNA/JSON dependencies for the Compose host bridge, and
+`engram_capi.dll` as XAML project content. Collection actions such as Anki
 import/export return `hostIntent` payloads so hosts can open file pickers or
 save APKG bytes while keeping the Mosaic app interface shared.
