@@ -25,6 +25,8 @@ static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<Regex> = LazyLock::new(|| {
 
 static DUPLICATE_HTML_TAGS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?is)<[^>]+>").expect("html tag regex should compile"));
+const FSRS5_DEFAULT_DECAY: f64 = 0.5;
+const SECONDS_PER_DAY: i64 = 86_400;
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -146,6 +148,7 @@ enum CardProperty {
     Position,
     Stability,
     Difficulty,
+    Retrievability,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -223,6 +226,7 @@ struct SearchMetadata<'a> {
     note_type_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
     deck_preset_names_by_id: HashMap<&'a str, Vec<String>>,
     deck_option_deck_ids: HashSet<&'a str>,
+    collection_created_at_days: Option<i64>,
 }
 
 pub fn search_cards(
@@ -310,6 +314,10 @@ impl<'a> SearchMetadata<'a> {
 
         for source in &state.external_sources {
             match source.target {
+                ExternalSourceTarget::Collection => {
+                    metadata.collection_created_at_days =
+                        source_i64_from_data(source, "createdAtDays");
+                }
                 ExternalSourceTarget::Deck => {
                     if let Some(original_id) = source.original_id.as_deref() {
                         metadata
@@ -936,6 +944,7 @@ fn parse_property_filter(token: &str, value: &str) -> Result<SearchClauseKind, S
         "pos" | "position" => CardProperty::Position,
         "s" | "stability" => CardProperty::Stability,
         "d" | "difficulty" => CardProperty::Difficulty,
+        "r" | "retrievability" => CardProperty::Retrievability,
         _ => {
             return Err(SearchError {
                 message: "unknown card property filter".to_string(),
@@ -1940,15 +1949,82 @@ fn property_matches(
                 compare_number(actual, filter.operator, filter.value * 9.0 + 1.0)
             })
         }
+        CardProperty::Retrievability => {
+            imported_fsrs_retrievability(progress, card_sources, metadata, now)
+                .is_some_and(|actual| compare_number(actual, filter.operator, filter.value))
+        }
     }
 }
 
 fn imported_fsrs_variable(card_sources: &[&ExternalSourceRecord], key: &str) -> Option<f64> {
+    card_sources
+        .iter()
+        .find_map(|source| card_data_number(source, key))
+}
+
+fn imported_fsrs_retrievability(
+    progress: Option<&CardProgress>,
+    card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
+    now: u64,
+) -> Option<f64> {
+    if progress.map_or(true, is_new_progress_overlay) {
+        return None;
+    }
+
     card_sources.iter().find_map(|source| {
-        card_custom_data_value(source, key)
-            .as_ref()
-            .and_then(custom_data_number)
+        if source_i64_from_data(source, "kind") == Some(0) {
+            return None;
+        }
+        let stability = card_data_number(source, "s")?;
+        let _difficulty = card_data_number(source, "d")?;
+        let elapsed_seconds = imported_fsrs_elapsed_seconds(source, metadata, now)?;
+        let decay = card_data_number(source, "decay").unwrap_or(FSRS5_DEFAULT_DECAY);
+        Some(fsrs_retrievability(stability, elapsed_seconds, decay))
     })
+}
+
+fn imported_fsrs_elapsed_seconds(
+    source: &ExternalSourceRecord,
+    metadata: &SearchMetadata<'_>,
+    now: u64,
+) -> Option<u64> {
+    let now_secs = i64::try_from(now / 1000).ok()?;
+    if let Some(last_review_time) = card_data_number(source, "lrt").map(|value| value as i64) {
+        return Some(nonnegative_seconds_between(now_secs, last_review_time));
+    }
+
+    let due = source_i64_from_data(source, "due")?;
+    let interval = source_i64_from_data(source, "interval")?;
+    if due > 365_000 {
+        return Some(nonnegative_seconds_between(
+            now_secs,
+            due.saturating_sub(interval),
+        ));
+    }
+
+    let today = now_secs
+        .div_euclid(SECONDS_PER_DAY)
+        .saturating_sub(metadata.collection_created_at_days?);
+    let review_day = due.saturating_sub(interval);
+    Some(nonnegative_days_between(today, review_day).saturating_mul(SECONDS_PER_DAY as u64))
+}
+
+fn nonnegative_seconds_between(later: i64, earlier: i64) -> u64 {
+    later.saturating_sub(earlier).max(0) as u64
+}
+
+fn nonnegative_days_between(later: i64, earlier: i64) -> u64 {
+    later.saturating_sub(earlier).max(0) as u64
+}
+
+fn fsrs_retrievability(stability: f64, elapsed_seconds: u64, decay: f64) -> f64 {
+    if stability <= 0.0 || decay <= 0.0 {
+        return 0.0;
+    }
+    let elapsed_days = elapsed_seconds as f64 / SECONDS_PER_DAY as f64;
+    let factor = 0.9_f64.powf(1.0 / -decay) - 1.0;
+    (1.0 + factor * elapsed_days / stability).powf(-decay)
 }
 
 fn imported_new_card_position(
@@ -2012,6 +2088,12 @@ fn card_custom_data_value(source: &ExternalSourceRecord, key: &str) -> Option<Va
         return None;
     };
     data.get(key).cloned()
+}
+
+fn card_data_number(source: &ExternalSourceRecord, key: &str) -> Option<f64> {
+    card_custom_data_value(source, key)
+        .as_ref()
+        .and_then(custom_data_number)
 }
 
 fn custom_data_number(value: &Value) -> Option<f64> {
@@ -3278,9 +3360,19 @@ mod tests {
                 card("difficult", "tamil", "difficult", "difficult"),
                 card("native", "tamil", "native", "native"),
             ],
+            card_progress: vec![
+                progress("stable", CardState::Review, NOW),
+                progress("difficult", CardState::Review, NOW),
+            ],
             external_sources: vec![
-                anki_card_data("stable", r#"{"s":12.5,"d":5.5}"#),
-                anki_card_data("difficult", r#"{"s":2.0,"d":8.2}"#),
+                anki_card_data(
+                    "stable",
+                    &format!(r#"{{"s":12.5,"d":5.5,"lrt":{}}}"#, NOW / 1000 - 86_400),
+                ),
+                anki_card_data(
+                    "difficult",
+                    &format!(r#"{{"s":2.0,"d":8.2,"lrt":{}}}"#, NOW / 1000 - 864_000),
+                ),
             ],
             ..AppState::default()
         };
@@ -3297,7 +3389,10 @@ mod tests {
         assert_eq!(ids_for("prop:stability<=2"), vec!["difficult"]);
         assert_eq!(ids_for("prop:d=0.5"), vec!["stable"]);
         assert_eq!(ids_for("prop:difficulty>0.7"), vec!["difficult"]);
+        assert_eq!(ids_for("prop:r>0.98"), vec!["stable"]);
+        assert_eq!(ids_for("prop:retrievability<0.91"), vec!["difficult"]);
         assert!(ids_for("prop:s=0").is_empty());
+        assert!(ids_for("prop:r=1").is_empty());
     }
 
     #[test]
