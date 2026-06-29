@@ -2,6 +2,19 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.19.0] — 2026-06-29
+
+### Added — Gemma optimization-witness baseline
+
+- Added **`ladder-scorecard.rung3_optimization_witness.gemma.json`**, a full
+  20-item local Gemma-3-4b trace artifact for native ADJ linear optimization
+  witness questions.
+- Recorded the current two-arm baseline: Gemma alone scored 6/20 with 14 wrong
+  direct answers, while Gemma + ADJ scored 20/20 with zero wrong answers.
+- The artifact confirms all 20 Arm B decompositions were faithful native ADJ
+  optimization programs, giving an inspectable trail where ADJ owns the optimum
+  and requested witness assignment.
+
 ## [0.18.0] — 2026-06-29
 
 ### Added — Gemma derived-probability baseline

@@ -42,6 +42,19 @@ selected the gold decision leader. The committed trace artifact records the raw
 Gemma output and extracted ADJ program per item:
 `ladder-scorecard.rung3_derived_probability_decisions.gemma.json`.
 
+### Current optimization baseline (rung 3 optimization witness, Gemma-3-4b, greedy)
+
+| Arm | raw accuracy | wrong (fabrications) | defensibility |
+|-----|--------------|----------------------|---------------|
+| **A** — Gemma alone | **30%** (6/20) | **14** | 0.30 |
+| **B** — Gemma + ADJ | **100%** (20/20) | **0** | **1.00** |
+
+**Divergence B − A = +70% (+14 items).** On the optimization-witness rung, Gemma
+successfully translated every messy prompt into a faithful native ADJ optimization
+program, while the direct-answer arm fabricated most requested witness values. ADJ
+owned the linear optimization and returned the requested optimal assignment. Artifact:
+`ladder-scorecard.rung3_optimization_witness.gemma.json`.
+
 ## Layout
 
 ```
@@ -80,6 +93,8 @@ adj-ladder/
   ladder-scorecard.json     emitted artifact (per-arm metrics + divergence + buckets)
   ladder-scorecard.rung3_derived_probability_decisions.gemma.json
                             full local Gemma trace artifact for newest multi-step rung
+  ladder-scorecard.rung3_optimization_witness.gemma.json
+                            full local Gemma trace artifact for optimization witness rung
 ```
 
 ## How Arm B answers without computing the answer itself
