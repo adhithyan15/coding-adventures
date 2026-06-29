@@ -61,6 +61,11 @@ pub struct CardTemplate {
     pub name: String,
     pub front_template: String,
     pub back_template: String,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub deck_id: Option<String>,
     pub required_field_names: Vec<String>,
     #[cfg_attr(
         feature = "serde",

@@ -77,8 +77,16 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
 
         if cloze_fields.is_empty() {
             let card_id = generated_card_id(&note.id, &template.id);
+            let deck_id = template_deck_id(template, note).to_string();
             let mut field_values = base_field_values.clone();
-            insert_special_template_values(&mut field_values, note_type, note, template, &card_id);
+            insert_special_template_values(
+                &mut field_values,
+                note_type,
+                note,
+                template,
+                &card_id,
+                &deck_id,
+            );
             let front = render_template(&template.front_template, &field_values);
             let back =
                 render_template_with_front_side(&template.back_template, &field_values, &front);
@@ -87,7 +95,7 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
                 note_id: note.id.clone(),
                 note_type_id: note.note_type_id.clone(),
                 template_id: template.id.clone(),
-                deck_id: note.deck_id.clone(),
+                deck_id,
                 ordinal: template.ordinal,
                 cloze_ordinal: None,
                 front,
@@ -106,8 +114,16 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
 
         for cloze_ordinal in cloze_ordinals {
             let card_id = generated_cloze_card_id(&note.id, &template.id, cloze_ordinal);
+            let deck_id = template_deck_id(template, note).to_string();
             let mut field_values = base_field_values.clone();
-            insert_special_template_values(&mut field_values, note_type, note, template, &card_id);
+            insert_special_template_values(
+                &mut field_values,
+                note_type,
+                note,
+                template,
+                &card_id,
+                &deck_id,
+            );
             let front = render_cloze_template(
                 &template.front_template,
                 &field_values,
@@ -126,7 +142,7 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
                 note_id: note.id.clone(),
                 note_type_id: note.note_type_id.clone(),
                 template_id: template.id.clone(),
-                deck_id: note.deck_id.clone(),
+                deck_id,
                 ordinal: cloze_ordinal.saturating_sub(1),
                 cloze_ordinal: Some(cloze_ordinal),
                 front,
@@ -514,12 +530,17 @@ fn generated_cloze_card_id(note_id: &str, template_id: &str, cloze_ordinal: u32)
     format!("{note_id}::{template_id}::c{cloze_ordinal}")
 }
 
+fn template_deck_id<'a>(template: &'a CardTemplate, note: &'a Note) -> &'a str {
+    template.deck_id.as_deref().unwrap_or(&note.deck_id)
+}
+
 fn insert_special_template_values(
     field_values: &mut HashMap<String, String>,
     note_type: &NoteType,
     note: &Note,
     template: &CardTemplate,
     card_id: &str,
+    deck_id: &str,
 ) {
     field_values
         .entry("Tags".to_string())
@@ -529,10 +550,10 @@ fn insert_special_template_values(
         .or_insert_with(|| note_type.name.clone());
     field_values
         .entry("Deck".to_string())
-        .or_insert_with(|| note.deck_id.clone());
+        .or_insert_with(|| deck_id.to_string());
     field_values
         .entry("Subdeck".to_string())
-        .or_insert_with(|| subdeck_name(&note.deck_id).to_string());
+        .or_insert_with(|| subdeck_name(deck_id).to_string());
     field_values
         .entry("Card".to_string())
         .or_insert_with(|| template.name.clone());
@@ -873,6 +894,7 @@ mod tests {
                     name: "Forward".to_string(),
                     front_template: "{{Front}}".to_string(),
                     back_template: "{{Back}}".to_string(),
+                    deck_id: None,
                     required_field_names: vec!["Front".to_string(), "Back".to_string()],
                     requirement_mode: TemplateRequirementMode::All,
                     ordinal: 0,
@@ -882,6 +904,7 @@ mod tests {
                     name: "Reverse".to_string(),
                     front_template: "{{Back}}".to_string(),
                     back_template: "{{Front}}".to_string(),
+                    deck_id: None,
                     required_field_names: vec!["Front".to_string(), "Back".to_string()],
                     requirement_mode: TemplateRequirementMode::All,
                     ordinal: 1,
@@ -915,6 +938,7 @@ mod tests {
                 name: "Cloze".to_string(),
                 front_template: "{{cloze:Text}}".to_string(),
                 back_template: "{{cloze:Text}}<hr>{{Extra}}".to_string(),
+                deck_id: None,
                 required_field_names: vec!["Text".to_string()],
                 requirement_mode: TemplateRequirementMode::All,
                 ordinal: 0,
@@ -1025,6 +1049,24 @@ mod tests {
         assert_eq!(lineage.template_id, "forward");
         assert_eq!(lineage.ordinal, 0);
         assert_eq!(lineage.cloze_ordinal, None);
+    }
+
+    #[test]
+    fn template_deck_override_controls_generated_card_deck() {
+        let mut note_type = basic_note_type();
+        note_type.templates[1].deck_id = Some("Languages::Tamil".to_string());
+        note_type.templates[1].front_template = "{{Deck}}|{{Subdeck}}|{{Back}}".to_string();
+
+        let generated = generate_cards_for_note(&note_type, &note("letter-a", "a"));
+        let reverse = generated
+            .iter()
+            .find(|card| card.template_id == "reverse")
+            .expect("reverse card");
+        let materialized = materialize_generated_card(reverse, NOW);
+
+        assert_eq!(reverse.deck_id, "Languages::Tamil");
+        assert_eq!(reverse.front, "Languages::Tamil|Tamil|a");
+        assert_eq!(materialized.deck_id, "Languages::Tamil");
     }
 
     #[test]

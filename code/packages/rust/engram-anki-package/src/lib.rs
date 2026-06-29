@@ -1727,7 +1727,8 @@ fn export_note_types_json(export: &ExportModel) -> Value {
         let raw_fields = model_json.get("flds").cloned().unwrap_or(Value::Null);
         let raw_templates = model_json.get("tmpls").cloned().unwrap_or(Value::Null);
         let fields = export_note_type_fields_json(note_type, &raw_fields);
-        let templates = export_note_type_templates_json(note_type, &raw_templates);
+        let templates =
+            export_note_type_templates_json(note_type, &raw_templates, &export.deck_ids);
         let requirements = export_note_type_requirements_json(note_type);
         let model_object = ensure_json_object(&mut model_json);
         model_object.insert("id".to_string(), Value::Number(id.into()));
@@ -1992,6 +1993,7 @@ fn export_note_type_fields_json(note_type: &ExportNoteType, raw_fields: &Value) 
 fn export_note_type_templates_json(
     note_type: &ExportNoteType,
     raw_templates: &Value,
+    deck_ids: &BTreeMap<String, i64>,
 ) -> Vec<Value> {
     let raw_by_ordinal = raw_values_by_ordinal(raw_templates);
     let mut templates = note_type.templates.clone();
@@ -2011,7 +2013,12 @@ fn export_note_type_templates_json(
             );
             object.insert("qfmt".to_string(), Value::String(template.front_template));
             object.insert("afmt".to_string(), Value::String(template.back_template));
-            object.entry("did".to_string()).or_insert(Value::Null);
+            object.insert(
+                "did".to_string(),
+                export_template_deck_id(template.deck_id.as_deref(), deck_ids)
+                    .map(|deck_id| Value::Number(deck_id.into()))
+                    .unwrap_or(Value::Null),
+            );
             object
                 .entry("bqfmt".to_string())
                 .or_insert_with(|| Value::String(String::new()));
@@ -2021,6 +2028,15 @@ fn export_note_type_templates_json(
             template_json
         })
         .collect()
+}
+
+fn export_template_deck_id(deck_id: Option<&str>, deck_ids: &BTreeMap<String, i64>) -> Option<i64> {
+    let deck_id = deck_id?;
+    deck_ids
+        .get(deck_id)
+        .copied()
+        .or_else(|| deck_id.parse::<i64>().ok())
+        .filter(|deck_id| *deck_id > 0)
 }
 
 fn export_note_type_requirements_json(note_type: &ExportNoteType) -> Vec<Value> {
@@ -2432,6 +2448,7 @@ fn synthetic_basic_note_type() -> ExportNoteType {
             name: "Card 1".to_string(),
             front_template: "{{Front}}".to_string(),
             back_template: "{{Back}}".to_string(),
+            deck_id: None,
             required_field_names: vec!["Front".to_string()],
             requirement_mode: TemplateRequirementMode::All,
             ordinal: 0,
@@ -2571,6 +2588,10 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
                 name: template.name.clone(),
                 front_template: template.question_format.clone(),
                 back_template: template.answer_format.clone(),
+                deck_id: template
+                    .deck_id
+                    .filter(|deck_id| *deck_id > 0)
+                    .map(|deck_id| deck_id.to_string()),
                 required_field_names: requirement.field_names,
                 requirement_mode: requirement.mode,
                 ordinal: i64_to_u32(template.ordinal),
@@ -4195,6 +4216,7 @@ CREATE TABLE graves (
         assert_eq!(note_type.fields[0].id, "100:field:0");
         assert_eq!(note_type.fields[0].name, "Front");
         assert_eq!(note_type.templates[0].id, "100:template:0");
+        assert_eq!(note_type.templates[0].deck_id.as_deref(), Some("2"));
 
         assert_eq!(state.notes.len(), 1);
         let note = &state.notes[0];
@@ -4406,6 +4428,39 @@ CREATE TABLE graves (
             state.cards[0].front,
             "script root|Basic|Spanish::Latin|Latin|Card 1|flag3|2000"
         );
+    }
+
+    #[test]
+    fn maps_v11_template_deck_override_into_regenerated_cards() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.decks.push(AnkiV11Deck {
+            id: 3,
+            name: "Spanish::Reverse".to_string(),
+            description: "Template override deck".to_string(),
+            raw: serde_json::json!({
+                "id": 3,
+                "name": "Spanish::Reverse",
+                "desc": "Template override deck"
+            }),
+        });
+        collection.note_types[0].templates[0].deck_id = Some(3);
+        collection.note_types[0].raw["tmpls"][0]["did"] = serde_json::json!(3);
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+        let template = &state.note_types[0].templates[0];
+        let generated = engram_core::generate_cards_for_note(&state.note_types[0], &state.notes[0]);
+
+        assert_eq!(state.notes[0].deck_id, "2");
+        assert_eq!(state.cards[0].deck_id, "2");
+        assert_eq!(template.deck_id.as_deref(), Some("3"));
+        assert_eq!(generated[0].deck_id, "3");
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(exported.note_types[0].templates[0].deck_id, Some(3));
+        assert_eq!(exported.note_types[0].raw["tmpls"][0]["did"], 3);
     }
 
     #[test]
@@ -4901,6 +4956,7 @@ CREATE TABLE graves (
                     name: "Card 1".to_string(),
                     front_template: "{{Front}}".to_string(),
                     back_template: "{{Back}}".to_string(),
+                    deck_id: Some("2".to_string()),
                     required_field_names: vec!["Front".to_string(), "Back".to_string()],
                     requirement_mode: TemplateRequirementMode::Any,
                     ordinal: 0,
@@ -4982,6 +5038,8 @@ CREATE TABLE graves (
         assert_eq!(collection.decks[0].id, 2);
         assert_eq!(collection.decks[0].name, "Spanish::Latin");
         assert_eq!(collection.note_types[0].id, 100);
+        assert_eq!(collection.note_types[0].templates[0].deck_id, Some(2));
+        assert_eq!(collection.note_types[0].raw["tmpls"][0]["did"], 2);
         assert_eq!(
             collection.note_types[0].raw["req"],
             serde_json::json!([[0, "any", [0, 1]]])
@@ -5000,6 +5058,10 @@ CREATE TABLE graves (
         let imported = read_v11_collection_as_engram_state(&apkg).unwrap();
 
         assert_eq!(imported.decks[0].name, "Spanish::Latin");
+        assert_eq!(
+            imported.note_types[0].templates[0].deck_id.as_deref(),
+            Some("2")
+        );
         assert_eq!(imported.notes[0].fields[0].value, "hola");
         assert_eq!(imported.cards[0].front, "hola");
         assert_eq!(imported.cards[0].back, "hello");

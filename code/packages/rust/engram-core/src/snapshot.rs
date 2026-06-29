@@ -129,6 +129,7 @@ mod tests {
                     name: "Forward".to_string(),
                     front_template: "{{Front}}".to_string(),
                     back_template: "Answer".to_string(),
+                    deck_id: None,
                     required_field_names: vec!["Front".to_string()],
                     requirement_mode: TemplateRequirementMode::All,
                     ordinal: 0,

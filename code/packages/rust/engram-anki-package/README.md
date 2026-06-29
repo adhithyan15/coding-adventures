@@ -28,7 +28,9 @@ with the same `[...]` / `[hint]`, section, and `FrontSide` behavior used by the
 core cloze generator. Imported card rendering also fills Anki's special
 template fields for tags, note type, deck, subdeck, card template, and card
 flag/card ID metadata, and model-level `req` rows import/export as Engram's
-shared template requirement mode.
+shared template requirement mode. Template-level deck overrides (`did` in Anki
+model JSON) import into `CardTemplate::deck_id`, drive regenerated sibling card
+decks, and export back to Anki model JSON.
 
 `read_collection_bytes` returns the detected collection member as decoded raw
 SQLite bytes for inspection workflows. `read_v11_collection_bytes` accepts
