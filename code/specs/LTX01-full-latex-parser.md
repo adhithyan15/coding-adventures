@@ -89,6 +89,16 @@ pub enum MathNode {
 Every node records a byte span. The parser is **total and panic-free**: malformed input
 yields a spanned `ParseError`, never a panic.
 
+**Deep-tree drop safety.** The math AST (`MathNode`) is a recursive `Box`-owning tree.
+`MAX_DEPTH` bounds *nesting*, but left-associative operator/relation chains are built in
+loops with no per-term depth charge, so well-formed input like `1+1+1+…` produces an
+O(n)-deep tree that `parse_math` returns successfully (it builds iteratively). A
+compiler-derived destructor would recurse one frame per level and overflow the stack on a
+deep-enough tree — an uncatchable abort that the spanned-error contract cannot cover. So
+`MathNode` (and the neutral `math_frontend::MathExpr`) implement `Drop` explicitly,
+dismantling the tree with a heap worklist (O(1) stack depth). Panic-freedom therefore holds
+through teardown as well as parse. (Implemented in `latex` 0.12.0 / `math-frontend` 0.3.0.)
+
 ## 4. Public API (`latex` crate)
 
 ```rust

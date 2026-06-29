@@ -133,6 +133,76 @@ pub enum MathNode {
     },
 }
 
+/// Drop a [`MathNode`] **iteratively** so freeing a deeply-nested tree cannot overflow the
+/// stack.
+///
+/// `parse_math` builds left-associative chains (`a+a+a+…`, `1/1/1/…`) and juxtaposition with
+/// *loops*, not recursion — by design — so a small input like `"1" + "+1".repeat(100_000)`
+/// parses fine into a `Bin(Add, Bin(Add, …))` tree nested 100k deep. But the compiler's
+/// default destructor for a recursive `Box`-owning enum is itself recursive: dropping such a
+/// tree would recurse 100k frames and abort the process (an uncatchable stack overflow) when
+/// the `MathNode` simply goes out of scope. Since `parse_math` is public and panic-free, the
+/// AST must be safe to drop at any depth — so we dismantle it with an explicit heap worklist
+/// instead of the call stack. (Mirrors `math_frontend::MathExpr`'s `Drop`.)
+///
+/// O(1) stack depth: move each node's boxed children onto a `Vec` worklist (replacing them in
+/// place with a cheap leaf), pop, repeat. By the time any node is finally dropped its children
+/// are leaves, so the generated destructor recurses at most one trivial level.
+impl Drop for MathNode {
+    fn drop(&mut self) {
+        let mut stack: Vec<MathNode> = Vec::new();
+        take_children(self, &mut stack);
+        while let Some(mut node) = stack.pop() {
+            take_children(&mut node, &mut stack);
+            // `node` now owns only leaf children, so dropping it here is shallow.
+        }
+    }
+}
+
+/// Move every boxed child of `n` onto `out`, leaving `n` holding cheap leaves in their place.
+/// A leaf (`Num`/`Sym`/`Text`) contributes nothing. Used only by [`MathNode`]'s `Drop`.
+fn take_children(n: &mut MathNode, out: &mut Vec<MathNode>) {
+    // Swap a boxed child out for a leaf (no allocation: `String::new()` doesn't allocate).
+    fn take(b: &mut Box<MathNode>, out: &mut Vec<MathNode>) {
+        out.push(std::mem::replace(b.as_mut(), MathNode::Sym(String::new())));
+    }
+    fn take_opt(b: &mut Option<Box<MathNode>>, out: &mut Vec<MathNode>) {
+        if let Some(boxed) = b.take() {
+            out.push(*boxed);
+        }
+    }
+    match n {
+        MathNode::Num(_) | MathNode::Sym(_) | MathNode::Text(_) => {}
+        MathNode::Bin(_, a, b) | MathNode::Frac(a, b) | MathNode::Binom(a, b) | MathNode::Rel(_, a, b) => {
+            take(a, out);
+            take(b, out);
+        }
+        MathNode::Unary(_, a) => take(a, out),
+        MathNode::Root { degree, radicand } => {
+            take_opt(degree, out);
+            take(radicand, out);
+        }
+        MathNode::Script { base, sub, sup } => {
+            take(base, out);
+            take_opt(sub, out);
+            take_opt(sup, out);
+        }
+        MathNode::Call { arg, .. } => take(arg, out),
+        MathNode::BigOp { lower, upper, body, .. } => {
+            take_opt(lower, out);
+            take_opt(upper, out);
+            take(body, out);
+        }
+        MathNode::Accent { body, .. } => take(body, out),
+        MathNode::Fenced { body, .. } => take(body, out),
+        MathNode::Matrix { rows, .. } => {
+            for row in std::mem::take(rows) {
+                out.extend(row);
+            }
+        }
+    }
+}
+
 /// Parse LaTeX math-mode source (the inner content of an island) into a [`MathNode`].
 pub fn parse_math(src: &str) -> Result<MathNode, ParseError> {
     let raw = tokenize(src)?;
@@ -1036,10 +1106,12 @@ mod tests {
     fn frac_with_nested_mul() {
         // \frac{12 \times 15}{3}
         let n = parse_math(r"\frac{12 \times 15}{3}").unwrap();
-        match n {
+        // Match by reference — `MathNode` implements `Drop`, so a by-value `match` can't
+        // move fields out (E0509). `&n` borrows; `**a` derefs &Box<MathNode> → MathNode.
+        match &n {
             MathNode::Frac(a, b) => {
-                assert!(matches!(*a, MathNode::Bin(MBinOp::Mul, ..)));
-                assert_eq!(*b, num("3"));
+                assert!(matches!(**a, MathNode::Bin(MBinOp::Mul, ..)));
+                assert_eq!(**b, num("3"));
             }
             other => panic!("expected Frac, got {other:?}"),
         }
@@ -1067,12 +1139,12 @@ mod tests {
     fn sum_with_bounds() {
         // \sum_{i=1}^{n} i
         let n = parse_math(r"\sum_{i=1}^{n} i").unwrap();
-        match n {
+        match &n {
             MathNode::BigOp { op, lower, upper, body } => {
-                assert_eq!(op, "sum");
+                assert_eq!(op.as_str(), "sum");
                 assert!(matches!(lower.as_deref(), Some(MathNode::Rel(MRelOp::Eq, ..))));
                 assert_eq!(upper.as_deref(), Some(&sym("n")));
-                assert_eq!(*body, sym("i"));
+                assert_eq!(**body, sym("i"));
             }
             other => panic!("expected BigOp, got {other:?}"),
         }
@@ -1082,9 +1154,9 @@ mod tests {
     fn left_right_fence_with_power() {
         // \left(\frac{a}{b}\right)^2
         let n = parse_math(r"\left(\frac{a}{b}\right)^2").unwrap();
-        match n {
+        match &n {
             MathNode::Script { base, sup, .. } => {
-                assert!(matches!(*base, MathNode::Fenced { .. }));
+                assert!(matches!(**base, MathNode::Fenced { .. }));
                 assert_eq!(sup.as_deref(), Some(&num("2")));
             }
             other => panic!("expected Script over Fenced, got {other:?}"),
@@ -1160,12 +1232,12 @@ mod tests {
     #[test]
     fn pmatrix_two_by_two() {
         let n = parse_math(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}").unwrap();
-        match n {
+        match &n {
             MathNode::Matrix { env, rows } => {
-                assert_eq!(env, "pmatrix");
+                assert_eq!(env.as_str(), "pmatrix");
                 assert_eq!(
                     rows,
-                    vec![
+                    &vec![
                         vec![sym("a"), sym("b")],
                         vec![sym("c"), sym("d")],
                     ]
@@ -1192,9 +1264,9 @@ mod tests {
     fn cases_with_conditions() {
         // \begin{cases} f & cond \\ g & cond \end{cases}
         let n = parse_math(r"\begin{cases} 1 & x > 0 \\ 0 & x \le 0 \end{cases}").unwrap();
-        match n {
+        match &n {
             MathNode::Matrix { env, rows } => {
-                assert_eq!(env, "cases");
+                assert_eq!(env.as_str(), "cases");
                 assert_eq!(rows.len(), 2);
                 assert_eq!(rows[0].len(), 2);
                 assert!(matches!(rows[0][1], MathNode::Rel(MRelOp::Gt, ..)));
@@ -1207,7 +1279,7 @@ mod tests {
     #[test]
     fn cells_hold_full_expressions() {
         let n = parse_math(r"\begin{matrix} \frac{a}{b} & x^2 \\ 1+1 & c \end{matrix}").unwrap();
-        match n {
+        match &n {
             MathNode::Matrix { rows, .. } => {
                 assert!(matches!(rows[0][0], MathNode::Frac(..)));
                 assert!(matches!(rows[0][1], MathNode::Script { .. }));
@@ -1220,9 +1292,9 @@ mod tests {
     #[test]
     fn single_column_multiple_rows() {
         let n = parse_math(r"\begin{matrix} a \\ b \\ c \end{matrix}").unwrap();
-        match n {
+        match &n {
             MathNode::Matrix { rows, .. } => {
-                assert_eq!(rows, vec![vec![sym("a")], vec![sym("b")], vec![sym("c")]]);
+                assert_eq!(rows, &vec![vec![sym("a")], vec![sym("b")], vec![sym("c")]]);
             }
             other => panic!("expected Matrix, got {other:?}"),
         }
@@ -1232,7 +1304,7 @@ mod tests {
     fn trailing_row_separator_is_tolerated() {
         // A trailing `\\` before `\end` does not create an empty final row.
         let n = parse_math(r"\begin{matrix} a \\ b \\ \end{matrix}").unwrap();
-        match n {
+        match &n {
             MathNode::Matrix { rows, .. } => assert_eq!(rows.len(), 2),
             other => panic!("expected Matrix, got {other:?}"),
         }
@@ -1244,7 +1316,7 @@ mod tests {
             r"\begin{pmatrix} \begin{pmatrix} a \end{pmatrix} & b \\ c & d \end{pmatrix}",
         )
         .unwrap();
-        match n {
+        match &n {
             MathNode::Matrix { rows, .. } => {
                 assert!(matches!(rows[0][0], MathNode::Matrix { .. }));
             }
@@ -1256,9 +1328,9 @@ mod tests {
     fn matrix_can_be_scripted() {
         // \begin{pmatrix}…\end{pmatrix}^2 — a matrix is an atom, so postfix scripts attach.
         let n = parse_math(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}^2").unwrap();
-        match n {
+        match &n {
             MathNode::Script { base, sup, .. } => {
-                assert!(matches!(*base, MathNode::Matrix { .. }));
+                assert!(matches!(**base, MathNode::Matrix { .. }));
                 assert_eq!(sup.as_deref(), Some(&num("2")));
             }
             other => panic!("expected Script over Matrix, got {other:?}"),
@@ -1273,5 +1345,46 @@ mod tests {
         assert!(parse_math(r"\begin{matrix} & b \end{matrix}").is_err()); // empty cell (limitation)
         assert!(parse_math(r"\end{matrix}").is_err()); // stray \end
         assert!(parse_math(r"\begin matrix").is_err()); // missing { after \begin
+    }
+
+    // ---- deep-tree Drop safety -------------------------------------------------
+    //
+    // The parser's `parse_add`/`parse_mul`/`parse_relation` build LEFT-nested chains via
+    // loops with no per-term depth charge, so a long chain like `1+1+1+…` yields an
+    // O(n)-deep `Bin` tree even though MAX_DEPTH bounds nesting. The *compiler-generated*
+    // destructor for such a tree recurses one stack frame per level → stack overflow (an
+    // uncatchable abort) on a deep-enough tree. `impl Drop for MathNode` dismantles the
+    // tree with a heap worklist instead, so these must complete without overflowing.
+
+    #[test]
+    fn deep_left_nested_tree_drops_without_overflow() {
+        // Build `((…((1+1)+1)+…)+1)` 200k levels deep directly (bypassing the parser's
+        // depth limits), then let it drop at end of scope. Pre-Drop-impl this aborted.
+        let mut node = num("1");
+        for _ in 0..200_000 {
+            node = MathNode::Bin(MBinOp::Add, Box::new(node), Box::new(num("1")));
+        }
+        // Touch it so the optimizer can't elide construction, then drop implicitly.
+        assert!(matches!(node, MathNode::Bin(MBinOp::Add, ..)));
+    }
+
+    #[test]
+    fn deep_parsed_chain_drops_without_overflow() {
+        // The same hazard but reached through the real parser: a long `+` chain parses to
+        // a deep left-nested tree. Keep it under MAX_DEPTH-per-nesting (these are loop
+        // iterations, not nesting) but long enough that a recursive Drop would overflow.
+        let src = format!("1{}", "+1".repeat(50_000));
+        let tree = parse_math(&src).expect("long additive chain parses");
+        drop(tree); // explicit: the heap-worklist Drop must not overflow
+    }
+
+    #[test]
+    fn deep_unary_chain_drops_without_overflow() {
+        // A `Unary` spine (single-child nodes) is the other deep shape; verify it too.
+        let mut node = num("1");
+        for _ in 0..200_000 {
+            node = MathNode::Unary(MUnOp::Neg, Box::new(node));
+        }
+        assert!(matches!(node, MathNode::Unary(MUnOp::Neg, _)));
     }
 }
