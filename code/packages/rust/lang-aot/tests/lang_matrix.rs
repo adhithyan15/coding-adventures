@@ -1297,7 +1297,41 @@ const PROGRAMS: &[Prog] = &[
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real procedure square(x); value x; real x; square := x * x; \
-               integer result; result := entier(square(6.5)) end",
+               integer result; result := entier(square(6.5)) end",        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *recursive procedure* (LANG-FULL AL12). The classic factorial
+    // function calls itself via `fact(n - 1)`, proving that the call-and-return
+    // mechanism lowers through every backend's `call`/`ret` path recursively.
+    // ALGOL 60 report §5.4.2: a typed procedure may appear in its own body.
+    // `fact(3)` = 3 × 2 × 1 = 6; three levels of recursion are enough to
+    // distinguish correct recursion from a loop or memoised result.  The IIR
+    // compiles to a `call fact [sub(n,1)]` instruction inside the `fact`
+    // function; every backend already handled cross-function `call` for the
+    // non-recursive procedure cells.  Exit 6.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure fact(n); value n; integer n; \
+               if n < 2 then fact := 1 else fact := n * fact(n - 1); \
+               result := fact(3) end",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *`goto` loop* (LANG-FULL AL12). Labels + `goto` are ALGOL 60
+    // primitives (report §4.7): `label:` defines a label in the current block;
+    // `goto label` transfers control unconditionally.  Here the loop adds 7
+    // each iteration until `x >= 42`: x goes 7 → 14 → 21 → 28 → 35 → 42 (6
+    // iters), then the `if x < 42` is false and control falls through.
+    // `result := x` = 42.  The IIR lowering emits the label as a block and
+    // `jmp` / `jmp_if_true` for the conditional — the same skeleton every
+    // backend already lowers for `for` and `if`.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer x, result; x := 0; \
+               loop: x := x + 7; if x < 42 then goto loop; result := x end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -1347,6 +1381,29 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin boolean a, b; integer result; a := true; b := false; \
                if a and (not b) then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *nested block variable shadowing* (LANG-FULL AL12). ALGOL 60
+    // report §2.7: each `begin … end` is a block with its own declarations;
+    // inner declarations shadow outer ones.  This program nests three blocks,
+    // each declaring its own `integer x` and `boolean flag`.  The compiler
+    // disambiguates them by scope; the IIR uses unique slot names so every
+    // backend sees plain SSA/register values with no aliasing.
+    // Trace: outer x=1, flag=true; middle x=10, flag=false; inner x=31;
+    // `if not flag` uses middle's flag=false → not false=true → result:=31;
+    // after inner: result := 31 + middle-x(10) = 41;
+    // after middle: `if flag` uses outer flag=true → result := 41 + outer-x(1)
+    // = 42.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer x, result; boolean flag; x := 1; flag := true; result := 0; \
+               begin integer x; boolean flag; x := 10; flag := false; \
+               begin integer x; x := 31; \
+               if not flag then result := x else result := 1 end; \
+               result := result + x end; \
+               if flag then result := result + x else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
