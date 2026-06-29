@@ -107,11 +107,11 @@ scene, and desired-state set/clear actions through the existing Home
 Assistant-compatible and native service endpoints, preserving runtime
 authorization. Entity, service, scene, device, bridge, history, event-log,
 command-result, and authorization rows/cards expose read-only detail buttons
-that fetch the matching native detail route and show the response in the
-dashboard log. Entity cards and state-gap rows also link to their current
-state, registry detail, desired-state target, state history, entity-scoped
-runtime events, and owning bridge command-result audit trail. The browser shell
-also exposes filters for
+that fetch the matching native detail route and show formatted JSON plus the
+endpoint/status in a dedicated detail panel. Entity cards and state-gap rows
+also link to their current state, registry detail, desired-state target, state
+history, entity-scoped runtime events, and owning bridge command-result audit
+trail. The browser shell also exposes filters for
 room, entity domain/state/control status, runtime event kind, command-result
 status, and authorization outcome, with server-backed room scoping across
 inventory, state, history, event-log, and command-result panels plus local text
