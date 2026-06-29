@@ -1617,7 +1617,7 @@ CREATE TABLE graves (
                 .iter()
                 .any(|progress| progress["cardId"] == "other" && progress["markedAt"] == NOW + 5));
 
-            let browser_select = cstr(r#"{"event":"onBrowserSelectResult","cardId":"other"}"#);
+            let browser_select = cstr(r#"{"event":"onBrowserSelectResult","index":0}"#);
             let browser_selected = take(eg_handle_engram_app_event(
                 session,
                 browser_select.as_ptr(),
@@ -1627,6 +1627,10 @@ CREATE TABLE graves (
             let browser_selected: Value = serde_json::from_str(&browser_selected).unwrap();
             assert_eq!(browser_selected["ok"], true);
             assert_eq!(browser_selected["event"], "onBrowserSelectResult");
+            assert_eq!(
+                browser_selected["props"]["browser-selected-card-id"],
+                "other"
+            );
 
             let import_anki = cstr("onImportAnki");
             let import_intent = take(eg_handle_engram_app_event(
@@ -1658,8 +1662,7 @@ CREATE TABLE graves (
             assert_eq!(export_intent["hostIntent"]["type"], "exportAnki");
             assert_eq!(export_intent["hostIntent"]["extension"], ".apkg");
 
-            let browser_open =
-                cstr(r#"{"event":"onBrowserOpenSelected","selectedCardId":"other"}"#);
+            let browser_open = cstr("onBrowserOpenSelected");
             let open_intent = take(eg_handle_engram_app_event(
                 session,
                 browser_open.as_ptr(),
@@ -1672,8 +1675,7 @@ CREATE TABLE graves (
             assert_eq!(open_intent["hostIntent"]["type"], "openCard");
             assert_eq!(open_intent["hostIntent"]["cardId"], "other");
 
-            let browser_edit =
-                cstr(r#"{"event":"onBrowserEditSelected","selectedCardId":"other"}"#);
+            let browser_edit = cstr("onBrowserEditSelected");
             let edit_intent = take(eg_handle_engram_app_event(
                 session,
                 browser_edit.as_ptr(),

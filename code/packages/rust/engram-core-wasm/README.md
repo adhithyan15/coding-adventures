@@ -121,6 +121,12 @@ them through the same core reducer commands used by direct JSON dispatch. It
 also accepts browser events such as `onBrowserSearch` and targeted row actions
 such as `onBrowserToggleMarkSelected|card-id` or
 `{"event":"onBrowserToggleSuspendSelected","cardId":"card-id"}`.
+Generated `onBrowserQueryChange` events store the active browser query in the
+session and reset selection to the first row. `onBrowserSelectResult` accepts an
+`index` or `selectedIndex` payload, updates the shared selection, and all later
+open/edit/mark/suspend browser actions use that selected row when no explicit
+card ID is provided. This keeps HTML, Electron, SwiftUI, XAML, Qt, and other
+Mosaic hosts on the same browser-selection contract.
 Deck option controls use the generated event shape, for example
 `{"type":"deckOptionsNewCardsChange","value":12}` for numeric fields or
 `{"type":"deckOptionsLearningStepsChange","value":"1, 10"}` for step-list
