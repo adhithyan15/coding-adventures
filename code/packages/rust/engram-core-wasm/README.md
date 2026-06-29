@@ -103,14 +103,17 @@ without an active session or contains shared review counters such as
 `cardsCorrect`, `revealed`, and `completed`.
 
 `engram_app_props` includes Mosaic-slot-shaped labels and counts for collection
-actions, browser rows, and secondary review actions such as undo, bury card,
-bury siblings, suspend, and mark/unmark.
+actions, browser rows, selected-deck scheduler options, and secondary review
+actions such as undo, bury card, bury siblings, suspend, and mark/unmark.
 `handle_engram_app_event` accepts those generated events (`onUndo`,
 `onBuryCard`, `onBurySiblings`, `onSuspendCard`, and `onToggleMark`) and routes
 them through the same core reducer commands used by direct JSON dispatch. It
 also accepts browser events such as `onBrowserSearch` and targeted row actions
 such as `onBrowserToggleMarkSelected|card-id` or
 `{"event":"onBrowserToggleSuspendSelected","cardId":"card-id"}`.
+Deck option controls use the generated event shape, for example
+`{"type":"deckOptionsNewCardsChange","value":12}`, and update the selected
+deck through the shared `setDeckOptions` reducer path.
 Collection workflow events such as `onImportAnki`, `onExportAnki`, `onAddNote`,
 `onAddNoteType`, `onDeleteNote`, and `onDeleteNoteType` round-trip through the
 same event parser as host intents so generated shells share one UI contract

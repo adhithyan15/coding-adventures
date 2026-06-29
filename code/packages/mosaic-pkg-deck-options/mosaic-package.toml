@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-pkg-deck-options"
+version = "0.1.0"
+description = "Reusable Anki-style deck scheduler option controls built on the Mosaic UI pipeline"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["DeckOptionsPanel"]
+
+[kernel]
+version = "1"

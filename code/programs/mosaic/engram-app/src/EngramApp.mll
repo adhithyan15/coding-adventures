@@ -21,6 +21,38 @@ layout EngramApp {
         hidden-value : slot: deck-hidden-value
       )
     }
+    Box [ deck-options-region ] {
+      pkg::mosaic-pkg-deck-options::DeckOptionsPanel (
+        settings-label : slot: deck-options-settings-label ,
+        new-cards-label : slot: deck-options-new-cards-label ,
+        new-cards-value : slot: deck-options-new-cards-value ,
+        reviews-label : slot: deck-options-reviews-label ,
+        reviews-value : slot: deck-options-reviews-value ,
+        graduating-interval-label : slot: deck-options-graduating-interval-label ,
+        graduating-interval-value : slot: deck-options-graduating-interval-value ,
+        easy-interval-label : slot: deck-options-easy-interval-label ,
+        easy-interval-value : slot: deck-options-easy-interval-value ,
+        maximum-interval-label : slot: deck-options-maximum-interval-label ,
+        maximum-interval-value : slot: deck-options-maximum-interval-value ,
+        interval-modifier-label : slot: deck-options-interval-modifier-label ,
+        interval-modifier-value : slot: deck-options-interval-modifier-value ,
+        hard-multiplier-label : slot: deck-options-hard-multiplier-label ,
+        hard-multiplier-value : slot: deck-options-hard-multiplier-value ,
+        easy-bonus-label : slot: deck-options-easy-bonus-label ,
+        easy-bonus-value : slot: deck-options-easy-bonus-value ,
+        lapse-multiplier-label : slot: deck-options-lapse-multiplier-label ,
+        lapse-multiplier-value : slot: deck-options-lapse-multiplier-value ,
+        onNewCardsChange : emit: onDeckOptionsNewCardsChange ,
+        onReviewsChange : emit: onDeckOptionsReviewsChange ,
+        onGraduatingIntervalChange : emit: onDeckOptionsGraduatingIntervalChange ,
+        onEasyIntervalChange : emit: onDeckOptionsEasyIntervalChange ,
+        onMaximumIntervalChange : emit: onDeckOptionsMaximumIntervalChange ,
+        onIntervalModifierChange : emit: onDeckOptionsIntervalModifierChange ,
+        onHardMultiplierChange : emit: onDeckOptionsHardMultiplierChange ,
+        onEasyBonusChange : emit: onDeckOptionsEasyBonusChange ,
+        onLapseMultiplierChange : emit: onDeckOptionsLapseMultiplierChange
+      )
+    }
     Box [ collection-region ] {
       pkg::mosaic-pkg-collection-actions::CollectionActions (
         collection-label : slot: collection-label ,

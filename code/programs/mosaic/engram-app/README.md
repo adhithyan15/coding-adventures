@@ -4,7 +4,8 @@ Engram's Mosaic app package.
 
 This package is the product assembly layer. It exports `EngramApp`, owns the
 app/root surface, and depends on reusable Mosaic component packages such as
-`mosaic-pkg-card-browser`, `mosaic-pkg-collection-actions`, `mosaic-pkg-deck-stats`,
+`mosaic-pkg-card-browser`, `mosaic-pkg-collection-actions`,
+`mosaic-pkg-deck-options`, `mosaic-pkg-deck-stats`,
 `mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
 `mosaic-pkg-session-progress`.
 The review card composes further Mosaic packages such as
@@ -21,6 +22,7 @@ binds them to the shared Rust business logic core through host shells.
 - `EngramApp.mll` owns the product shell and mounts
   `pkg::mosaic-pkg-card-browser::CardBrowser`,
   `pkg::mosaic-pkg-collection-actions::CollectionActions`,
+  `pkg::mosaic-pkg-deck-options::DeckOptionsPanel`,
   `pkg::mosaic-pkg-deck-stats::DeckStatsPanel`,
   `pkg::mosaic-pkg-session-progress::SessionProgress`, and
   `pkg::mosaic-pkg-review-card::ReviewCard`, plus
@@ -44,6 +46,12 @@ binds them to the shared Rust business logic core through host shells.
   display labels.
 - The collection slots expose note, note-type, and media counts plus shared
   Anki import/export and note workflow intents for host shells.
+- The deck option slots expose the selected deck's shared scheduler settings,
+  including daily limits, graduation intervals, maximum interval, interval
+  modifier, hard/easy multipliers, and lapse multiplier.
+- Deck option events carry numeric values and route through the shared
+  `EngramSession::handle_engram_app_event` contract, which persists them with
+  `EngramCommand::SetDeckOptions`.
 
 ## Running the smoke test
 

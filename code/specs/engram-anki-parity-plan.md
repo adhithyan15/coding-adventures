@@ -193,8 +193,9 @@ at least:
   daily queue limits; UI settings still need to bind to it.
 - maximum interval, review interval modifier, hard interval multiplier, and easy
   bonus multiplier. Core scheduling and Anki package import/export support
-  exists, and shared `setDeckOptions` commands now persist these values; UI
-  settings still need visible controls for editing them.
+  exists; shared `setDeckOptions` commands persist these values; and the
+  Mosaic `DeckOptionsPanel` exposes visible controls that generated host
+  shells can route back through the shared event bridge.
 - review history log
 - review history summaries for deck/date ranges. Core, JSON facade, and C ABI
   support exists; richer graphing and browser UI still need to bind to it.
@@ -537,6 +538,9 @@ Status:
   `mosaic-pkg-rating-controls` instead of owning the rating button row.
 - `code/packages/mosaic-pkg-review-actions` adds reusable Anki-style undo,
   bury-card, bury-siblings, suspend-card, and mark/unmark review controls.
+- `code/packages/mosaic-pkg-deck-options` adds reusable daily-limit,
+  graduation-interval, maximum-interval, interval-modifier, hard/easy
+  multiplier, and lapse-multiplier controls for Anki-style deck settings.
 - `code/packages/mosaic-pkg-rating-controls` adds reusable
   Again/Hard/Good/Easy answer grading controls with label slots and review
   events.
@@ -559,15 +563,20 @@ Status:
 - The Engram event bridge now handles generated review action events from the
   Mosaic app (`onUndo`, `onBuryCard`, `onBurySiblings`, `onSuspendCard`, and
   `onToggleMark`) by dispatching the existing shared Rust reducer commands.
+- The Engram event bridge also handles generated deck-option number-change
+  events by updating the selected deck through `EngramCommand::SetDeckOptions`,
+  so HTML, Electron, SwiftUI, XAML, and Qt hosts can share the same settings
+  mutation path.
 - `mosaic-package-artifact-builder` now emits XAML project-shell side files
   through the same package build path as React/HTML/Qt/SwiftUI/etc., and the
   Engram app smoke test verifies native project shells for Qt, SwiftUI, and
   XAML from the same Mosaic app sources.
 - `code/programs/mosaic/engram-app` adds the Engram Mosaic app package. The
   app exports `EngramApp`, declares dependencies on `mosaic-pkg-deck-stats`,
-  `mosaic-pkg-review-card`, and `mosaic-pkg-session-progress`, and mounts
-  package components rather than owning deck-stat, review-card, or
-  progress-counter component implementations itself.
+  `mosaic-pkg-deck-options`, `mosaic-pkg-review-card`, and
+  `mosaic-pkg-session-progress`, and mounts package components rather than
+  owning deck-stat, settings, review-card, or progress-counter component
+  implementations itself.
 - Shared `SessionProgress` counters are available in `engram-core`,
   `engram-core-wasm`, and `engram-capi` for Mosaic/native review screens.
 - This split is the first concrete pivot point for moving Engram UI out of

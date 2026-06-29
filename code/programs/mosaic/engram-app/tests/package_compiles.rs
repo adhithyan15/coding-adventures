@@ -53,6 +53,10 @@ fn manifest_declares_app_package_boundary() {
         Some(&"0.1.0".to_string())
     );
     assert_eq!(
+        package.dependencies.get("mosaic-pkg-deck-options"),
+        Some(&"0.1.0".to_string())
+    );
+    assert_eq!(
         package.dependencies.get("mosaic-pkg-deck-stats"),
         Some(&"0.1.0".to_string())
     );
@@ -89,12 +93,14 @@ fn app_sources_compile_without_owning_review_card_component() {
     let source = read_source("EngramApp.mll");
     assert!(source.contains("pkg::mosaic-pkg-card-browser::CardBrowser"));
     assert!(source.contains("pkg::mosaic-pkg-collection-actions::CollectionActions"));
+    assert!(source.contains("pkg::mosaic-pkg-deck-options::DeckOptionsPanel"));
     assert!(source.contains("pkg::mosaic-pkg-deck-stats::DeckStatsPanel"));
     assert!(source.contains("pkg::mosaic-pkg-review-card::ReviewCard"));
     assert!(source.contains("pkg::mosaic-pkg-review-actions::ReviewActions"));
     assert!(source.contains("pkg::mosaic-pkg-session-progress::SessionProgress"));
     assert!(!source.contains("layout CardBrowser"));
     assert!(!source.contains("layout CollectionActions"));
+    assert!(!source.contains("layout DeckOptionsPanel"));
     assert!(!source.contains("layout DeckStatsPanel"));
     assert!(!source.contains("layout ReviewCard"));
     assert!(!source.contains("layout ReviewActions"));
@@ -160,6 +166,24 @@ fn app_manifest_resolves_collection_actions_dependency() {
             assert!(package_path.ends_with("mosaic-pkg-collection-actions"));
         }
         other => panic!("expected CollectionActions component resolution, got {other:?}"),
+    }
+}
+
+#[test]
+fn app_manifest_resolves_deck_options_dependency() {
+    let resolver = dependency_resolver();
+
+    match resolver.resolve("DeckOptionsPanel") {
+        Some(Resolution::Component {
+            package,
+            component,
+            package_path,
+        }) => {
+            assert_eq!(package, "mosaic-pkg-deck-options");
+            assert_eq!(component, "DeckOptionsPanel");
+            assert!(package_path.ends_with("mosaic-pkg-deck-options"));
+        }
+        other => panic!("expected DeckOptionsPanel component resolution, got {other:?}"),
     }
 }
 
@@ -370,6 +394,12 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("react/src/main.tsx");
     assert_contains(&react_app, "const fallbackProps = {");
     assert_contains(&react_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(
+        &react_app,
+        "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
+    );
+    assert_contains(&react_app, "deckOptionsNewCardsValue: 0,");
+    assert_contains(&react_app, "deckOptionsIntervalModifierValue: 0,");
     assert_contains(&react_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &react_app,
@@ -406,6 +436,12 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("electron/src/main.tsx");
     assert_contains(&electron_app, "const fallbackProps = {");
     assert_contains(&electron_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(
+        &electron_app,
+        "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
+    );
+    assert_contains(&electron_app, "deckOptionsMaximumIntervalValue: 0,");
+    assert_contains(&electron_app, "deckOptionsEasyBonusValue: 0,");
     assert_contains(
         &electron_app,
         "collectionImportLabel: \"Sample CollectionImportLabel\",",
@@ -478,6 +514,12 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("flutter/lib/main.dart");
     assert_contains(&flutter_app, "EngramApp(");
     assert_contains(&flutter_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(
+        &flutter_app,
+        "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
+    );
+    assert_contains(&flutter_app, "deckOptionsNewCardsValue: 0.0,");
+    assert_contains(&flutter_app, "deckOptionsHardMultiplierValue: 0.0,");
     assert_contains(&flutter_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &flutter_app,
@@ -501,6 +543,9 @@ fn native_project_shells_expose_engram_host_contract() {
     let qml =
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");
     assert_contains(&qml, "property string appTitle");
+    assert_contains(&qml, "property string deckOptionsSettingsLabel");
+    assert_contains(&qml, "property real deckOptionsNewCardsValue");
+    assert_contains(&qml, "property real deckOptionsEasyBonusValue");
     assert_contains(&qml, "property string collectionLabel");
     assert_contains(&qml, "property string collectionNoteCountValue");
     assert_contains(&qml, "property string browserQuery");
@@ -524,6 +569,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal addNoteType()");
     assert_contains(&qml, "signal deleteNote()");
     assert_contains(&qml, "signal deleteNoteType()");
+    assert_contains(&qml, "signal deckOptionsNewCardsChange(real value)");
+    assert_contains(&qml, "signal deckOptionsMaximumIntervalChange(real value)");
+    assert_contains(&qml, "signal deckOptionsEasyBonusChange(real value)");
     assert_contains(&qml, "signal browserSearch()");
     assert_contains(&qml, "signal browserSelectResult(real index)");
 
@@ -540,6 +588,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case burySiblings");
     assert_contains(&swift, "case suspendCard");
     assert_contains(&swift, "case toggleMark");
+    assert_contains(&swift, "case deckOptionsNewCardsChange");
+    assert_contains(&swift, "case deckOptionsMaximumIntervalChange");
+    assert_contains(&swift, "case deckOptionsEasyBonusChange");
     assert_contains(&swift, "case importAnki");
     assert_contains(&swift, "case exportAnki");
     assert_contains(&swift, "case addNote");
@@ -550,6 +601,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case browserSelectResult");
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
+    assert_contains(&swift, "let deckOptionsSettingsLabel: String");
+    assert_contains(&swift, "let deckOptionsNewCardsValue: Double");
+    assert_contains(&swift, "let deckOptionsEasyBonusValue: Double");
     assert_contains(&swift, "let collectionLabel: String");
     assert_contains(&swift, "let collectionNoteCountValue: String");
     assert_contains(&swift, "let browserResults: [String]");
@@ -568,6 +622,12 @@ fn native_project_shells_expose_engram_host_contract() {
     .expect("Sources/App/App.swift");
     assert_contains(&swift_app, "EngramAppView(");
     assert_contains(&swift_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(
+        &swift_app,
+        "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
+    );
+    assert_contains(&swift_app, "deckOptionsNewCardsValue: 0,");
+    assert_contains(&swift_app, "deckOptionsEasyBonusValue: 0,");
     assert_contains(&swift_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &swift_app,
@@ -602,6 +662,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty AppTitleProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsSettingsLabelProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsNewCardsValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsEasyBonusValueProperty",
     );
     assert_contains(
         &xaml_code_behind,
@@ -681,6 +753,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record ToggleMark() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsNewCardsChange(double Value) : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsMaximumIntervalChange(double Value) : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsEasyBonusChange(double Value) : EngramAppEvent;",
     );
     assert_contains(
         &xaml_events,
@@ -776,21 +860,38 @@ fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
         "CollectionActions dependency style should reach HTML artifact"
     );
     assert!(
+        read_artifact(output_root, "html/EngramApp.html").contains("#f59e0b"),
+        "DeckOptionsPanel dependency style should reach HTML artifact"
+    );
+    assert!(
         read_artifact(output_root, "react/EngramApp.tsx").contains("#0891b2"),
         "CollectionActions dependency style should reach React artifact"
+    );
+    assert!(
+        read_artifact(output_root, "react/EngramApp.tsx").contains("#f59e0b"),
+        "DeckOptionsPanel dependency style should reach React artifact"
     );
     assert!(
         read_artifact(output_root, "electron/EngramApp.tsx").contains("#0891b2"),
         "CollectionActions dependency style should reach Electron artifact"
     );
     assert!(
+        read_artifact(output_root, "electron/EngramApp.tsx").contains("#f59e0b"),
+        "DeckOptionsPanel dependency style should reach Electron artifact"
+    );
+    assert!(
         read_artifact(output_root, "xaml/EngramApp.xaml").contains("#0891b2"),
         "CollectionActions dependency style should reach XAML artifact"
+    );
+    assert!(
+        read_artifact(output_root, "xaml/EngramApp.xaml").contains("#f59e0b"),
+        "DeckOptionsPanel dependency style should reach XAML artifact"
     );
 
     let swift = read_artifact(output_root, "swiftui/EngramApp.swift");
     for (component, needle) in [
         ("DeckStatsPanel", "0.145, green: 0.388, blue: 0.922"),
+        ("DeckOptionsPanel", "0.961, green: 0.62, blue: 0.043"),
         ("CollectionActions", "0.031, green: 0.569, blue: 0.698"),
         ("ReviewCard", "0.914, green: 0.271, blue: 0.376"),
         ("SessionProgress", "0.059, green: 0.463, blue: 0.431"),

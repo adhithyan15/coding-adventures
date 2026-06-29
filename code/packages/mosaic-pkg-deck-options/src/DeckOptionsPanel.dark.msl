@@ -1,0 +1,218 @@
+// DeckOptionsPanel.dark.msl - dark deck options theme.
+
+style DeckOptionsPanel {
+  part deck-options-panel {
+    background : "#111827" ;
+    border-color : "#f59e0b" ;
+    border-width : 1 ;
+    padding : 14 ;
+  }
+
+  part settings-title {
+    color : "#fffbeb" ;
+    font-size : 18 ;
+    font-weight : 700 ;
+    padding-bottom : 10 ;
+  }
+
+  part deck-option-limits {
+    padding-bottom : 10 ;
+  }
+
+  part graduation-options {
+    padding-bottom : 10 ;
+  }
+
+  part review-factor-options {
+    padding-bottom : 4 ;
+  }
+
+  part new-cards-field {
+    padding : 6 ;
+  }
+
+  part reviews-field {
+    padding : 6 ;
+  }
+
+  part graduating-interval-field {
+    padding : 6 ;
+  }
+
+  part easy-interval-field {
+    padding : 6 ;
+  }
+
+  part maximum-interval-field {
+    padding : 6 ;
+  }
+
+  part interval-modifier-field {
+    padding : 6 ;
+  }
+
+  part hard-multiplier-field {
+    padding : 6 ;
+  }
+
+  part easy-bonus-field {
+    padding : 6 ;
+  }
+
+  part lapse-multiplier-field {
+    padding : 6 ;
+  }
+
+  part new-cards-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part reviews-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part graduating-interval-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part easy-interval-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part maximum-interval-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part interval-modifier-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part hard-multiplier-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part easy-bonus-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part lapse-multiplier-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part new-cards-label {
+    color : "#fde68a" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part reviews-label {
+    color : "#a7f3d0" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part graduating-interval-label {
+    color : "#bfdbfe" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part easy-interval-label {
+    color : "#c4b5fd" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part maximum-interval-label {
+    color : "#fbcfe8" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part interval-modifier-label {
+    color : "#bae6fd" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part hard-multiplier-label {
+    color : "#fecaca" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part easy-bonus-label {
+    color : "#bbf7d0" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part lapse-multiplier-label {
+    color : "#ddd6fe" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+}

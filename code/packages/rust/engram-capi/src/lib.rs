@@ -1616,6 +1616,28 @@ CREATE TABLE graves (
             assert_eq!(browser_selected["ok"], true);
             assert_eq!(browser_selected["event"], "onBrowserSelectResult");
 
+            let deck_option = cstr(r#"{"type":"deckOptionsMaximumIntervalChange","value":90}"#);
+            let deck_option_changed = take(eg_handle_engram_app_event(
+                session,
+                deck_option.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 7,
+            ));
+            let deck_option_changed: Value = serde_json::from_str(&deck_option_changed).unwrap();
+            assert_eq!(deck_option_changed["ok"], true);
+            assert_eq!(
+                deck_option_changed["event"],
+                "onDeckOptionsMaximumIntervalChange"
+            );
+            assert_eq!(
+                deck_option_changed["state"]["deckOptions"][0]["options"]["maximumIntervalDays"],
+                90
+            );
+            assert_eq!(
+                deck_option_changed["props"]["deck-options-maximum-interval-value"],
+                90
+            );
+
             eg_session_free(session);
         }
     }
