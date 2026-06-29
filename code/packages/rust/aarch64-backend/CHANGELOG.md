@@ -1,5 +1,18 @@
 # Changelog — `aarch64-backend`
 
+## 0.14.0 — 2026-06-27 — `array<f64>` element support (LANG-FULL BA7)
+
+Native aarch64 arrays now accept `f64` element types in `alloc_array`,
+`array_get`, and `array_set`. The layout remains the E5 8-byte
+length-prefixed block; f64 elements ride those slots as raw IEEE-754 bits, and
+later floating-point operations load them through the existing FP path.
+
+- Keeps the same explicit unsigned bounds checks and `udf #0xDEAD` trap behavior
+  from E5.
+- Retains fixed 8-byte native array elements and rejects non-8-byte types.
+- Verified by `aarch64-backend` unit tests and the BASIC BA7 matrix cell that
+  stores fractional `DATA` through `array<f64>` on the native column.
+
 ## 0.13.0 — 2026-06-23 — int ⇄ real conversions (LANG-FULL E8 PR-6a)
 
 The three IIR numeric-conversion ops now lower to aarch64 — the sixth backend
@@ -48,7 +61,7 @@ length-prefixed model with an **explicit** `udf` bounds trap:
   trap when in range — `b.lo` (LO = unsigned `<`) catches both `>= len` and a
   negative index. The aarch64 twin of LLVM's `icmp uge`+`llvm.trap`.
 - Element width fixed at **8 bytes** (the AOT specialiser collapses `array<T>`→
-  `any`; `array_get`/`array_set` validate `i64`/`u64` — native is i64-only so far).
+  `any`; `array_get`/`array_set` validate `i64`/`u64`; 0.14.0 adds `f64`).
   Reuses only pre-existing encoders (`lsl_reg`/`add_imm`/`cmp`/`b_cond`/`ldr`/
   `str_`/`udf`/`bl_external`).
 - 2 new unit tests (≥2 `udf` traps; non-`i64` element refused). The ALGOL array

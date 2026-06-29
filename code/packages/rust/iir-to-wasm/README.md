@@ -64,6 +64,22 @@ through a deprecated intermediate.
   (or `f64`) at `wrap(handle)+idx*elemsize` offset 8; `array_len` reads the header.
   The wasm sibling of the LLVM `@calloc` + `icmp uge` + `llvm.trap` lowering. `i64`
   and `f64` elements (the ALGOL `integer`/`real` arrays).
+- **String literal foothold (v0.23.0 — LANG-FULL E4 / BA4)**: `str_const` writes
+  printable ASCII literal bytes into a linear-memory data segment and stores the
+  byte pointer in an `i32` local; `print_str` calls the host import
+  `env.__print_str(ptr,len)`. `str_len` over a direct literal materialises that
+  literal's byte count as an integer constant, `str_eq` over two direct literals
+  materialises byte equality as `1`/`0`, `str_cmp` materialises `-1`/`0`/`1`
+  from byte ordering, and literal `str_concat` creates another
+  data entry for the combined bytes. Literal `str_slice` derives another data
+  entry for a constant byte range. `str_index` over a direct literal emits a
+  guarded `i32.load8_u` from the same data segment. This covers BASIC
+  `PRINT "HELLO"` plus Twig `(string-length "HELLO")` and
+  `(string-ref "ABC" 1)`, `(string=? "HELLO" "HELLO")`,
+  `(string<? "ALPHA" "BETA")`, and
+  `(string-length (string-append "AB" "CDE"))`, plus
+  `(string-ref (substring "ABCDE" 1 4) 1)`; non-literal string values still fail
+  closed until the full byte-string runtime lands.
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.
 

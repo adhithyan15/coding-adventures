@@ -98,6 +98,24 @@ All notable changes to this package will be documented in this file.
 - Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action summaries that combine action-row counts
   with next repair, review, and release handoff pointers.
+- Mesh release ticket handoff protocol-evidence package handoff execution
+  action rows that turn package execution slots into repair, review, operator,
+  dispatch, execution, and release handoff work.
+- Mesh release ticket handoff protocol-evidence package handoff execution
+  action summaries that combine action-row counts with next repair, review,
+  operator, dispatch, execution, and release handoff pointers.
+- Mesh release ticket handoff protocol-evidence package handoff execution
+  action evidence rows that preserve action, slot, package, packet, blocker,
+  and release evidence lineage.
+- Mesh release ticket handoff protocol-evidence package handoff execution
+  action evidence review rows that classify protocol evidence into blocker,
+  operator, review, lineage, and release-ready outcomes.
+- Mesh release ticket handoff protocol-evidence package handoff execution
+  action evidence summaries that combine evidence-row counts with next
+  blocker, protocol, and release handoff pointers.
+- Mesh release ticket handoff protocol-evidence package handoff execution
+  action evidence review summaries that combine review counts with next
+  blocker, protocol, and release handoff pointers.
 - Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence rows that preserve action
   lineage, release evidence, and handoff readiness flags.
@@ -139,6 +157,14 @@ All notable changes to this package will be documented in this file.
   repair, review, operator, lineage, and release handoff pointers.
 - Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence review disposition action
+  readiness execution handoff action rows that turn handoff readiness into
+  repair, review, operator, and release actions.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review disposition action
+  readiness execution handoff action summaries that combine action rows with
+  next repair, review, operator, lineage, and release handoff pointers.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review disposition action
   summaries that combine action rows with next repair, review, lineage, and
   release handoff pointers.
 - Mesh release ticket handoff readiness-evidence review disposition-action
@@ -151,6 +177,34 @@ All notable changes to this package will be documented in this file.
 - Mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence summaries that combine evidence
   rows with next repair, review, and release handoff pointers.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence packet rows that join
+  Zigbee, Z-Wave, and Thread substrate readiness with handoff-action evidence
+  state.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence packet summaries that
+  combine packet readiness, substrate blockers, and first actionable evidence
+  pointers.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence package readiness
+  summaries that lift protocol packet state into package-facing go/no-go
+  release coordination.
+- Low-level mesh release ticket handoff readiness-evidence review
+  disposition-action readiness execution handoff action protocol-evidence
+  package handoff rows that project Zigbee, Z-Wave, and Thread packet
+  readiness into package handoff work.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence package handoff
+  summaries that combine package handoff rows with next actionable protocol
+  and evidence pointers.
+- Low-level mesh release ticket handoff readiness-evidence review
+  disposition-action readiness execution handoff action protocol-evidence
+  package handoff execution slots that order Zigbee, Z-Wave, and Thread
+  package handoff work into deterministic release lanes.
+- Mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence package handoff
+  execution slot summaries that combine slot lane counts with next actionable
+  protocol and release handoff pointers.
 - Virtual alias entries for product lines supported by another integration or
   standard.
 - Read-only D18D tool descriptors for listing/describing integrations and

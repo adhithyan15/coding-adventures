@@ -1,6 +1,7 @@
 # LANG-FULL E8 — Numeric conversions (`integer` ↔ `real`)
 
-**Status:** design spec, pending user sign-off (no implementation yet).
+**Status:** COMPLETE. The conversion ops are implemented on VM/JIT and all five
+code-generation backends, and the ALGOL `entier` matrix proof closes the arc.
 **Depends on:** E3 (reals / `f64`, COMPLETE — every backend executes f64).
 **Unblocks:** ALGOL **AL8 `entier`**, int→real **coercion** in mixed arithmetic,
 BASIC **BA7** (floats) and **`INT()`**, and any future numeric standard

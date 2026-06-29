@@ -2,6 +2,99 @@
 
 ## Unreleased
 
+- Add `device_model_reference_deck_audit_analysis_summary`,
+  `format_device_model_reference_deck_audit_analysis_summary_table`,
+  `device_model_reference_deck_audit_analysis_summary_records`,
+  `format_device_model_reference_deck_audit_analysis_summary_csv`, and
+  `format_device_model_reference_deck_audit_analysis_summary_json`, stable
+  per-analysis coverage summaries for the reference-deck audit matrix,
+  matching Python and TypeScript.
+- Add `device_model_reference_deck_audit_summary`,
+  `format_device_model_reference_deck_audit_summary_table`,
+  `device_model_reference_deck_audit_summary_records`,
+  `format_device_model_reference_deck_audit_summary_csv`, and
+  `format_device_model_reference_deck_audit_summary_json`, stable per-kind
+  coverage summaries for the reference-deck audit matrix, matching Python and
+  TypeScript.
+- Add `device_model_reference_deck_audit_records`,
+  `format_device_model_reference_deck_audit_csv`, and
+  `format_device_model_reference_deck_audit_json`, stable record-oriented
+  exports for the device-model reference-deck audit matrix, matching Python
+  and TypeScript.
+- Add `device_model_reference_deck_audit_gate` and
+  `format_device_model_reference_deck_audit_gate_report`, a stable pass/fail
+  gate for the required device-model reference-deck audit coverage matrix,
+  matching Python and TypeScript.
+- Add `format_device_model_reference_deck_audit_table`, a stable
+  tab-separated summary for the device-model reference-deck audit matrix,
+  matching Python and TypeScript.
+- Add `device_model_reference_deck_audit_fixtures`, a stable reference coverage
+  matrix across DC, temperature, AC, noise, and transient model-depth fixtures
+  for diode, BJT, JFET, and Level-1 MOS families, matching Python and
+  TypeScript.
+- Shape Level-1 MOS reverse-biased bulk-junction capacitance with
+  `bulk_junction_potential` and `bulk_junction_grading_coefficient`
+  model-card parameters (`PB`/`MJ`) for AC operating-point capacitance reports
+  and transient source-body / drain-body companions, matching Python and
+  TypeScript, with regression coverage for reverse-biased drain-step delay.
+- Stamp Level-1 MOS zero-bias bulk-junction
+  `source_bulk_capacitance` and `drain_bulk_capacitance` model-card storage as
+  transient source-body and drain-body companions, matching Python and
+  TypeScript, with regression coverage for drain-step delay.
+- Stamp Level-1 MOS `gate_source_overlap_capacitance`,
+  `gate_drain_overlap_capacitance`, and `gate_bulk_overlap_capacitance`
+  model-card storage as transient gate-source, gate-drain, and gate-body
+  companions, matching Python and TypeScript, with regression coverage for
+  gate-step delay.
+- Stamp JFET `gate_source_capacitance` and `gate_drain_capacitance`
+  model-card storage as transient gate-source and gate-drain companions and AC
+  susceptance, matching Python and TypeScript, with regression coverage for
+  gate-step delay and high-frequency gate-drive shunting.
+- Stamp BJT `base_emitter_capacitance`, `base_collector_capacitance`,
+  `forward_transit_time`, and `reverse_transit_time` model-card storage as
+  transient base-emitter and base-collector companions, matching Python and
+  TypeScript, with regression coverage for base current-step delay and forward
+  transit-time turnoff charge.
+- Stamp diode `junction_capacitance` and `transit_time` model-card storage as
+  transient anode-cathode companions, matching Python and TypeScript, with
+  regression coverage for current-step delay and turnoff charge retention.
+- Add `device_model_charge_audit_fixtures` runnable one-device `.tran`
+  fixtures with reference deck lines, explicit terminal storage capacitance
+  metadata, stable first/final probe-voltage windows, and charge-behavior notes
+  for diode, BJT, JFET, and Level-1 MOS audits, matching Python and
+  TypeScript.
+- Add `device_model_noise_audit_fixtures` runnable one-device `.noise`
+  fixtures with reference deck lines and stable source/output PSD windows for
+  diode and BJT shot noise plus JFET and Level-1 MOS channel thermal noise
+  audits, matching Python and TypeScript.
+- Add `device_model_capacitance_audit_fixtures` runnable one-device AC fixtures
+  with `.ac` reference deck lines and stable high-frequency probe-magnitude
+  windows for diode, BJT, JFET, and Level-1 MOS model-depth audits, matching
+  Python and TypeScript.
+- Add `device_model_temperature_audit_fixtures` runnable one-device DC
+  temperature-sweep fixtures with `.temp` reference deck lines and stable
+  probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth
+  audits, matching Python and TypeScript.
+- Add `device_model_behavior_audit_fixtures` runnable one-device DC bias
+  fixtures with reference deck lines and stable probe-voltage windows for
+  diode, BJT, JFET, and Level-1 MOS model-depth audits, matching Python and
+  TypeScript.
+- Add configurable nonlinear Newton damping through
+  `DcOpOptions::newton_step_limit`, plus stable diagnostics for
+  `newton_step_limit`, `limited_newton_steps`, and `minimum_damping_factor`,
+  matching Python and TypeScript.
+- Add `DcResult::diagnostics.solver_profile` with matrix size, solver kind,
+  backend, structural nonzero count, density, peak fill-in, and fallback
+  metadata for production sparse-solver audits, matching Python and TypeScript.
+- Add `run_deck` whole-run execution for every parsed `.op`, `.dc`, `.ac`,
+  `.tran`, `.tf`, `.sens`, and `.noise` card in source order, preserving
+  duplicate analysis directives, defaulting analysis-less decks to an implicit
+  `.op`, and returning aggregate run-artifact table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and TypeScript.
+- Expose selected analysis sweep, frequency, transient timing, and `UIC`
+  metadata in `run_deck_analysis` output-plan artifacts, with stable table,
+  CSV, compact JSON, and header-keyed record exports, matching Python and
+  TypeScript.
 - Expose selected analysis output-node metadata in `run_deck_analysis`
   output-plan artifacts beside line/source metadata, with stable table, CSV,
   compact JSON, and header-keyed record exports, matching Python and

@@ -33,6 +33,8 @@ class Level1Params:
     CGBO: float = 0.0  # gate-bulk overlap capacitance per width (F/m)
     CBS: float = 0.0  # source-bulk zero-bias junction capacitance (F)
     CBD: float = 0.0  # drain-bulk zero-bias junction capacitance (F)
+    PB: float = 0.8  # bulk junction potential (V)
+    MJ: float = 0.5  # bulk junction grading coefficient
     subthreshold_enable: bool = True
 
 
@@ -50,6 +52,26 @@ class MosResult:
     Cbs: float
     Cbd: float
     region: str  # 'cutoff', 'subthreshold', 'triode', 'saturation'
+
+
+def bulk_junction_capacitance(
+    zero_bias_capacitance: float,
+    junction_voltage: float,
+    junction_potential: float,
+    grading_coefficient: float,
+) -> float:
+    """Return the Level-1 bulk-junction depletion capacitance.
+
+    ``junction_voltage`` follows the diode convention: positive is forward
+    body-to-terminal bias, negative is reverse bias.
+    """
+
+    if zero_bias_capacitance <= 0.0:
+        return zero_bias_capacitance
+    if junction_potential <= 0.0 or grading_coefficient == 0.0:
+        return zero_bias_capacitance
+    reverse_scale = max(0.0, -junction_voltage) / junction_potential
+    return zero_bias_capacitance / ((1.0 + reverse_scale) ** grading_coefficient)
 
 
 def evaluate_level1(
@@ -84,8 +106,8 @@ def evaluate_level1(
     Cgs_intrinsic = (2.0 / 3.0) * p.W * p.L * p.KP / 1.0  # placeholder; Meyer model
     Cgd_intrinsic = 0.0
     Cgb_intrinsic = 0.0
-    Cbs_bulk = p.CBS
-    Cbd_bulk = p.CBD
+    Cbs_bulk = bulk_junction_capacitance(p.CBS, V_BS, p.PB, p.MJ)
+    Cbd_bulk = bulk_junction_capacitance(p.CBD, V_BS - V_DS, p.PB, p.MJ)
 
     if V_OV <= 0:
         # Cutoff — optionally subthreshold.

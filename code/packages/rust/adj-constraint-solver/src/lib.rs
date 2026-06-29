@@ -2456,6 +2456,20 @@ mod tests {
     }
 
     #[test]
+    fn quartic_four_real_roots() {
+        // (x-1)(x-2)(x-3)(x-4) = x^4 - 10x^3 + 35x^2 - 50x + 24 = 0.
+        let r = roots(&solve_src(
+            "symbol x : scalar\n\
+             constrain x * x * x * x - 10 * x * x * x + 35 * x * x - 50 * x + 24 = 0\n\
+             solve for { x }\n",
+        ));
+        assert_eq!(r.len(), 4);
+        for (got, want) in r.iter().zip([1.0, 2.0, 3.0, 4.0]) {
+            assert!((got - want).abs() < 1e-5, "{r:?}");
+        }
+    }
+
+    #[test]
     fn quadratic_with_no_real_roots_is_unsupported() {
         // x^2 + 1 = 0 has only complex roots → no real roots.
         let out = solve_src("symbol x : scalar\nconstrain x * x + 1 = 0\nsolve for { x }\n");

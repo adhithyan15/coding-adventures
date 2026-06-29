@@ -3,8 +3,23 @@ use spice_engine::{
     dc_corners_parallel, dc_initial_vector_from_conditions, dc_op, dc_op_with_initial_conditions,
     dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
     dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
+    device_model_behavior_audit_fixtures, device_model_reference_deck_audit_analysis_summary,
+    device_model_reference_deck_audit_analysis_summary_records,
+    device_model_reference_deck_audit_fixtures, device_model_reference_deck_audit_gate,
+    device_model_reference_deck_audit_records, device_model_reference_deck_audit_summary,
+    device_model_reference_deck_audit_summary_records, device_model_temperature_audit_fixtures,
     diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
-    format_corner_temperature_dc_table, format_dc_sweep_table, format_measurement_table,
+    format_corner_temperature_dc_table, format_dc_sweep_table,
+    format_device_model_reference_deck_audit_analysis_summary_csv,
+    format_device_model_reference_deck_audit_analysis_summary_json,
+    format_device_model_reference_deck_audit_analysis_summary_table,
+    format_device_model_reference_deck_audit_csv,
+    format_device_model_reference_deck_audit_gate_report,
+    format_device_model_reference_deck_audit_json,
+    format_device_model_reference_deck_audit_summary_csv,
+    format_device_model_reference_deck_audit_summary_json,
+    format_device_model_reference_deck_audit_summary_table,
+    format_device_model_reference_deck_audit_table, format_measurement_table,
     format_temperature_dc_table, jfet_from_model_card, measure_dc_sweep_deck,
     measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
     normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs,
@@ -14,6 +29,7 @@ use spice_engine::{
     SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource,
     Waveform, XInstance,
 };
+use std::collections::{BTreeMap, BTreeSet};
 
 fn assert_close(actual: f64, expected: f64) {
     assert!(
@@ -92,6 +108,8 @@ fn model_card_aliases_build_device_instances() {
             ("LAM", 0.04),
             ("NSUB", 1.6),
             ("CJD", 3.0e-13),
+            ("PB", 0.9),
+            ("MJ", 0.45),
         ],
     )
     .unwrap();
@@ -100,11 +118,15 @@ fn model_card_aliases_build_device_instances() {
     assert_close(*mos_card.parameters.get("LAMBDA").unwrap(), 0.04);
     assert_close(*mos_card.parameters.get("N_SUB").unwrap(), 1.6);
     assert_close(*mos_card.parameters.get("CBD").unwrap(), 3.0e-13);
+    assert_close(*mos_card.parameters.get("PB").unwrap(), 0.9);
+    assert_close(*mos_card.parameters.get("MJ").unwrap(), 0.45);
     assert_eq!(mos_model.mosfet_type, MosfetType::Nmos);
     assert_close(mos_model.params.vt0, 0.55);
     assert_close(mos_model.params.lambda, 0.04);
     assert_close(mos_model.params.n_sub, 1.6);
     assert_close(mos_model.params.drain_bulk_capacitance, 3.0e-13);
+    assert_close(mos_model.params.bulk_junction_potential, 0.9);
+    assert_close(mos_model.params.bulk_junction_grading_coefficient, 0.45);
 }
 
 #[test]
@@ -126,6 +148,436 @@ fn model_card_audit_fixtures_cover_supported_device_families() {
     assert_close(*fixtures[1].parameters.get("BF").unwrap(), 125.0);
     assert_close(*fixtures[2].parameters.get("VTO").unwrap(), -1.8);
     assert_close(*fixtures[3].parameters.get("VT0").unwrap(), 0.55);
+}
+
+#[test]
+fn device_model_behavior_audit_fixtures_run_reference_bias_points() {
+    let fixtures = device_model_behavior_audit_fixtures().unwrap();
+    assert_eq!(
+        fixtures
+            .iter()
+            .map(|fixture| fixture.name.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "diode-forward-bias",
+            "bjt-emitter-follower",
+            "jfet-source-bias",
+            "mos-level1-common-source"
+        ]
+    );
+
+    for fixture in fixtures {
+        let result = dc_op(&fixture.circuit).unwrap();
+        let value = *result
+            .node_voltages
+            .get(&fixture.probe_node)
+            .expect("fixture probe node should be present");
+        assert!(result.converged);
+        assert!(
+            value >= fixture.expected_min && value <= fixture.expected_max,
+            "{} expected {} <= {} <= {}",
+            fixture.name,
+            fixture.expected_min,
+            value,
+            fixture.expected_max
+        );
+        assert!(fixture.deck_lines[0].starts_with("* device-model behavior fixture:"));
+        assert!(fixture.deck_lines.iter().any(|line| line == ".op"));
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line.starts_with(".model ")));
+    }
+}
+
+#[test]
+fn device_model_temperature_audit_fixtures_run_reference_sweeps() {
+    let fixtures = device_model_temperature_audit_fixtures().unwrap();
+    assert_eq!(
+        fixtures
+            .iter()
+            .map(|fixture| fixture.name.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "diode-forward-bias",
+            "bjt-emitter-follower",
+            "jfet-source-bias",
+            "mos-level1-common-source"
+        ]
+    );
+
+    for fixture in &fixtures {
+        let temperatures = fixture
+            .temperature_points
+            .iter()
+            .map(|point| point.temperature_kelvin)
+            .collect::<Vec<_>>();
+        let result = dc_temperature_sweep(
+            &fixture.circuit,
+            &temperatures,
+            fixture.nominal_temperature_kelvin,
+            fixture.energy_gap_electron_volts,
+            DcOpOptions::default(),
+        )
+        .unwrap();
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line == ".temp 260.15 300.15 340.15"));
+        assert!(fixture.deck_lines[0].starts_with("* device-model temperature fixture:"));
+        assert_eq!(result.points.len(), fixture.temperature_points.len());
+        for (actual, expected) in result.points.iter().zip(&fixture.temperature_points) {
+            let value = *actual
+                .result
+                .node_voltages
+                .get(&fixture.probe_node)
+                .expect("fixture probe node should be present");
+            assert!(actual.result.converged);
+            assert_close(actual.temperature_kelvin, expected.temperature_kelvin);
+            assert!(
+                value >= expected.expected_min && value <= expected.expected_max,
+                "{} expected {} <= {} <= {} at {} K",
+                fixture.name,
+                expected.expected_min,
+                value,
+                expected.expected_max,
+                expected.temperature_kelvin
+            );
+        }
+    }
+
+    let jfet_fixture = fixtures
+        .iter()
+        .find(|fixture| fixture.kind == ModelCardKind::Njf)
+        .expect("NJF fixture should exist");
+    assert!(jfet_fixture
+        .temperature_behavior
+        .starts_with("JFET temperature scaling is intentionally"));
+}
+
+#[test]
+fn device_model_reference_deck_audit_fixtures_cover_model_depth_matrix() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    assert_eq!(fixtures.len(), 20);
+    assert_eq!(fixtures.first().unwrap().name, "diode-forward-bias:op");
+    assert_eq!(
+        fixtures.last().unwrap().name,
+        "mos-level1-storage-charge:tran"
+    );
+
+    let expected_analyses = BTreeSet::from([
+        "ac".to_string(),
+        "noise".to_string(),
+        "op".to_string(),
+        "temperature".to_string(),
+        "tran".to_string(),
+    ]);
+    let mut by_kind: BTreeMap<ModelCardKind, BTreeSet<String>> = BTreeMap::new();
+    for fixture in &fixtures {
+        by_kind
+            .entry(fixture.kind)
+            .or_default()
+            .insert(fixture.analysis.clone());
+        assert_eq!(
+            fixture.reference,
+            "SPICE2/SPICE3-style local model-depth fixture"
+        );
+        assert!(!fixture.expected_behavior.is_empty());
+        assert!(fixture.deck_lines[0].starts_with("* device-model "));
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line.starts_with(".model ")));
+        assert_eq!(fixture.deck_lines.last().unwrap(), ".end");
+    }
+
+    assert_eq!(
+        by_kind.keys().copied().collect::<BTreeSet<_>>(),
+        BTreeSet::from([
+            ModelCardKind::Diode,
+            ModelCardKind::Npn,
+            ModelCardKind::Njf,
+            ModelCardKind::Nmos,
+        ])
+    );
+    for analyses in by_kind.values() {
+        assert_eq!(analyses, &expected_analyses);
+    }
+}
+
+#[test]
+fn device_model_reference_deck_audit_table_is_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let table = format_device_model_reference_deck_audit_table(&fixtures);
+    let lines = table.lines().collect::<Vec<_>>();
+    assert_eq!(lines.len(), 21);
+    assert_eq!(
+        lines[0],
+        "name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines"
+    );
+    assert_eq!(
+        lines[1],
+        "diode-forward-bias:op\tD\top\tDfast\tSPICE2/SPICE3-style local model-depth fixture\tDC probe out remains in [0.55, 0.65] V\t8"
+    );
+    assert_eq!(
+        lines.last().copied().unwrap(),
+        "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\tSPICE2/SPICE3-style local model-depth fixture\tLevel-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits\t10"
+    );
+}
+
+#[test]
+fn device_model_reference_deck_audit_record_exports_are_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let records = device_model_reference_deck_audit_records(&fixtures);
+
+    assert_eq!(records.len(), 20);
+    assert_eq!(
+        records[0].get("name").map(String::as_str),
+        Some("diode-forward-bias:op")
+    );
+    assert_eq!(records[0].get("kind").map(String::as_str), Some("D"));
+    assert_eq!(records[0].get("analysis").map(String::as_str), Some("op"));
+    assert_eq!(records[0].get("model").map(String::as_str), Some("Dfast"));
+    assert_eq!(
+        records[0].get("reference").map(String::as_str),
+        Some("SPICE2/SPICE3-style local model-depth fixture")
+    );
+    assert_eq!(
+        records[0].get("expected_behavior").map(String::as_str),
+        Some("DC probe out remains in [0.55, 0.65] V")
+    );
+    assert_eq!(records[0].get("deck_lines").map(String::as_str), Some("8"));
+    assert_eq!(
+        records.last().unwrap().get("name").map(String::as_str),
+        Some("mos-level1-storage-charge:tran")
+    );
+    assert_eq!(
+        records
+            .last()
+            .unwrap()
+            .get("deck_lines")
+            .map(String::as_str),
+        Some("10")
+    );
+
+    let csv = format_device_model_reference_deck_audit_csv(&fixtures);
+    let csv_lines = csv.lines().collect::<Vec<_>>();
+    assert_eq!(
+        csv_lines[0],
+        "name,kind,analysis,model,reference,expected_behavior,deck_lines"
+    );
+    assert_eq!(
+        csv_lines[1],
+        "diode-forward-bias:op,D,op,Dfast,SPICE2/SPICE3-style local model-depth fixture,\"DC probe out remains in [0.55, 0.65] V\",8"
+    );
+
+    let json = format_device_model_reference_deck_audit_json(&fixtures);
+    assert!(json.starts_with("[{\"name\":\"diode-forward-bias:op\""));
+    assert!(json.contains("\"deck_lines\":\"10\""));
+    assert!(json.ends_with("]\n"));
+}
+
+#[test]
+fn device_model_reference_deck_audit_summary_exports_are_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let summary = device_model_reference_deck_audit_summary(&fixtures);
+
+    assert_eq!(summary.len(), 4);
+    assert_eq!(summary[0].kind, "D");
+    assert_eq!(summary[0].fixture_count, 5);
+    assert_eq!(
+        summary[0].analyses,
+        vec!["op", "temperature", "ac", "noise", "tran"]
+    );
+    assert!(summary[0].missing_analyses.is_empty());
+    assert_eq!(summary[0].deck_line_count, 42);
+    assert_eq!(
+        summary[0].references,
+        vec!["SPICE2/SPICE3-style local model-depth fixture"]
+    );
+
+    let table = format_device_model_reference_deck_audit_summary_table(&fixtures);
+    assert_eq!(
+        table,
+        concat!(
+            "kind\tfixture_count\tanalyses\tmissing_analyses\tdeck_lines\treferences\n",
+            "D\t5\top,temperature,ac,noise,tran\t\t42\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "NPN\t5\top,temperature,ac,noise,tran\t\t47\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "NJF\t5\top,temperature,ac,noise,tran\t\t52\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "NMOS\t5\top,temperature,ac,noise,tran\t\t47\tSPICE2/SPICE3-style local model-depth fixture"
+        )
+    );
+
+    let records = device_model_reference_deck_audit_summary_records(&fixtures);
+    assert_eq!(records[0].get("kind").map(String::as_str), Some("D"));
+    assert_eq!(
+        records[0].get("fixture_count").map(String::as_str),
+        Some("5")
+    );
+    assert_eq!(
+        records[0].get("analyses").map(String::as_str),
+        Some("op,temperature,ac,noise,tran")
+    );
+    assert_eq!(
+        records[0].get("missing_analyses").map(String::as_str),
+        Some("")
+    );
+    assert_eq!(records[0].get("deck_lines").map(String::as_str), Some("42"));
+    assert_eq!(
+        format_device_model_reference_deck_audit_summary_csv(&fixtures)
+            .lines()
+            .nth(1),
+        Some("D,5,\"op,temperature,ac,noise,tran\",,42,SPICE2/SPICE3-style local model-depth fixture")
+    );
+    let json = format_device_model_reference_deck_audit_summary_json(&fixtures);
+    assert!(json.starts_with("[{\"kind\":\"D\""));
+    assert!(json.contains("\"deck_lines\":\"47\""));
+    assert!(json.ends_with("]\n"));
+}
+
+#[test]
+fn device_model_reference_deck_audit_summary_reports_missing_analysis() {
+    let fixtures = device_model_reference_deck_audit_fixtures()
+        .unwrap()
+        .into_iter()
+        .filter(|fixture| !(fixture.kind == ModelCardKind::Nmos && fixture.analysis == "tran"))
+        .collect::<Vec<_>>();
+
+    let summary = device_model_reference_deck_audit_summary(&fixtures);
+    let nmos = summary
+        .iter()
+        .find(|row| row.kind == "NMOS")
+        .expect("NMOS summary row should exist");
+
+    assert_eq!(nmos.fixture_count, 4);
+    assert_eq!(nmos.analyses, vec!["op", "temperature", "ac", "noise"]);
+    assert_eq!(nmos.missing_analyses, vec!["tran"]);
+    assert_eq!(nmos.deck_line_count, 37);
+    assert!(format_device_model_reference_deck_audit_summary_table(&fixtures).contains(
+        "NMOS\t4\top,temperature,ac,noise\ttran\t37\tSPICE2/SPICE3-style local model-depth fixture"
+    ));
+}
+
+#[test]
+fn device_model_reference_deck_audit_analysis_summary_exports_are_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let summary = device_model_reference_deck_audit_analysis_summary(&fixtures);
+
+    assert_eq!(summary.len(), 5);
+    assert_eq!(summary[0].analysis, "op");
+    assert_eq!(summary[0].fixture_count, 4);
+    assert_eq!(summary[0].kinds, vec!["D", "NPN", "NJF", "NMOS"]);
+    assert!(summary[0].missing_kinds.is_empty());
+    assert_eq!(summary[0].deck_line_count, 36);
+    assert_eq!(
+        summary[0].references,
+        vec!["SPICE2/SPICE3-style local model-depth fixture"]
+    );
+
+    let table = format_device_model_reference_deck_audit_analysis_summary_table(&fixtures);
+    assert_eq!(
+        table,
+        concat!(
+            "analysis\tfixture_count\tkinds\tmissing_kinds\tdeck_lines\treferences\n",
+            "op\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "temperature\t4\tD,NPN,NJF,NMOS\t\t40\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "ac\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "noise\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture\n",
+            "tran\t4\tD,NPN,NJF,NMOS\t\t40\tSPICE2/SPICE3-style local model-depth fixture"
+        )
+    );
+
+    let records = device_model_reference_deck_audit_analysis_summary_records(&fixtures);
+    assert_eq!(records[0].get("analysis").map(String::as_str), Some("op"));
+    assert_eq!(
+        records[0].get("fixture_count").map(String::as_str),
+        Some("4")
+    );
+    assert_eq!(
+        records[0].get("kinds").map(String::as_str),
+        Some("D,NPN,NJF,NMOS")
+    );
+    assert_eq!(
+        records[0].get("missing_kinds").map(String::as_str),
+        Some("")
+    );
+    assert_eq!(records[0].get("deck_lines").map(String::as_str), Some("36"));
+    assert_eq!(
+        format_device_model_reference_deck_audit_analysis_summary_csv(&fixtures)
+            .lines()
+            .nth(1),
+        Some("op,4,\"D,NPN,NJF,NMOS\",,36,SPICE2/SPICE3-style local model-depth fixture")
+    );
+    let json = format_device_model_reference_deck_audit_analysis_summary_json(&fixtures);
+    assert!(json.starts_with("[{\"analysis\":\"op\""));
+    assert!(json.contains("\"analysis\":\"tran\""));
+    assert!(json.ends_with("]\n"));
+}
+
+#[test]
+fn device_model_reference_deck_audit_analysis_summary_reports_missing_kind() {
+    let fixtures = device_model_reference_deck_audit_fixtures()
+        .unwrap()
+        .into_iter()
+        .filter(|fixture| !(fixture.kind == ModelCardKind::Nmos && fixture.analysis == "tran"))
+        .collect::<Vec<_>>();
+
+    let summary = device_model_reference_deck_audit_analysis_summary(&fixtures);
+    let tran = summary
+        .iter()
+        .find(|row| row.analysis == "tran")
+        .expect("transient summary row should exist");
+
+    assert_eq!(tran.fixture_count, 3);
+    assert_eq!(tran.kinds, vec!["D", "NPN", "NJF"]);
+    assert_eq!(tran.missing_kinds, vec!["NMOS"]);
+    assert_eq!(tran.deck_line_count, 30);
+    assert!(
+        format_device_model_reference_deck_audit_analysis_summary_table(&fixtures).contains(
+            "tran\t3\tD,NPN,NJF\tNMOS\t30\tSPICE2/SPICE3-style local model-depth fixture"
+        )
+    );
+}
+
+#[test]
+fn device_model_reference_deck_audit_gate_report_is_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let report = device_model_reference_deck_audit_gate(&fixtures);
+
+    assert!(report.passed);
+    assert_eq!(report.fixture_count, 20);
+    assert_eq!(report.expected_kinds, vec!["D", "NPN", "NJF", "NMOS"]);
+    assert_eq!(
+        report.expected_analyses,
+        vec!["op", "temperature", "ac", "noise", "tran"]
+    );
+    assert!(report.issues.is_empty());
+    assert_eq!(
+        format_device_model_reference_deck_audit_gate_report(&report),
+        "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count\ntrue\t20\tD,NPN,NJF,NMOS\top,temperature,ac,noise,tran\t0"
+    );
+}
+
+#[test]
+fn device_model_reference_deck_audit_gate_reports_missing_coverage() {
+    let fixtures = device_model_reference_deck_audit_fixtures()
+        .unwrap()
+        .into_iter()
+        .filter(|fixture| !(fixture.kind == ModelCardKind::Nmos && fixture.analysis == "tran"))
+        .collect::<Vec<_>>();
+
+    let report = device_model_reference_deck_audit_gate(&fixtures);
+    let table = format_device_model_reference_deck_audit_gate_report(&report);
+
+    assert!(!report.passed);
+    assert!(report
+        .issues
+        .iter()
+        .any(|issue| issue.fixture_name == "NMOS:tran" && issue.field == "coverage"));
+    assert!(table.contains("fixture_name\tfield\tmessage"));
+    assert!(
+        table.contains("NMOS:tran\tcoverage\tmissing required NMOS tran reference-deck audit row")
+    );
 }
 
 #[test]
@@ -251,6 +703,20 @@ fn dc_large_resistor_ladder_uses_sparse_real_solver_path() {
     assert_eq!(result.diagnostics.convergence_aid, DcConvergenceAid::Newton);
     assert_close(result.diagnostics.tolerance, 1.0e-9);
     assert!(result.diagnostics.max_delta.is_finite());
+    assert_eq!(result.diagnostics.newton_step_limit, None);
+    assert_eq!(result.diagnostics.limited_newton_steps, 0);
+    assert_close(result.diagnostics.minimum_damping_factor, 1.0);
+    assert_eq!(result.diagnostics.solver_profile.matrix_size, 36);
+    assert_eq!(result.diagnostics.solver_profile.solver, "sparse_real");
+    assert_eq!(
+        result.diagnostics.solver_profile.backend,
+        "native_sparse_gaussian"
+    );
+    assert!(result.diagnostics.solver_profile.structural_nonzeros > 0);
+    assert!(result.diagnostics.solver_profile.density > 0.0);
+    assert!(result.diagnostics.solver_profile.density < 0.1);
+    assert!(result.diagnostics.solver_profile.fill_in_nonzeros <= 36 * 36);
+    assert!(result.diagnostics.solver_profile.fallback_reason.is_none());
 }
 
 #[test]
@@ -897,6 +1363,43 @@ fn dc_op_reports_unconverged_nonlinear_result_when_aids_are_disabled() {
 }
 
 #[test]
+fn dc_op_newton_step_limit_reports_damped_nonlinear_step() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vs", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Diode(Diode::with_model(
+        "D1", "in", "out", 1.0e-15, 0.02585,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("Rload", "out", "0", 100.0)));
+
+    let result = dc_op_with_options(
+        &circuit,
+        DcOpOptions {
+            max_iterations: 1,
+            convergence_aids: false,
+            newton_step_limit: Some(0.25),
+            ..DcOpOptions::default()
+        },
+    )
+    .unwrap();
+
+    assert!(!result.converged);
+    assert_eq!(result.convergence_aid, DcConvergenceAid::None);
+    assert_eq!(result.diagnostics.newton_step_limit, Some(0.25));
+    assert_eq!(result.diagnostics.limited_newton_steps, 1);
+    assert!(result.diagnostics.minimum_damping_factor > 0.0);
+    assert!(result.diagnostics.minimum_damping_factor < 1.0);
+    assert_close(result.diagnostics.max_delta, 0.25);
+    let max_voltage = result
+        .node_voltages
+        .values()
+        .map(|value| value.abs())
+        .fold(0.0, f64::max);
+    assert!(max_voltage <= 0.25 + 1.0e-12);
+}
+
+#[test]
 fn dc_op_pseudo_transient_recovers_after_earlier_aids_fail() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
@@ -1141,6 +1644,17 @@ fn dc_op_rejects_invalid_options() {
         ),
         Err(SpiceError::InvalidElement { name, reason })
             if name == "dc_op" && reason == "tolerance must be finite and positive"
+    ));
+    assert!(matches!(
+        dc_op_with_options(
+            &circuit,
+            DcOpOptions {
+                newton_step_limit: Some(0.0),
+                ..DcOpOptions::default()
+            },
+        ),
+        Err(SpiceError::InvalidElement { name, reason })
+            if name == "dc_op" && reason == "newton_step_limit must be finite and positive"
     ));
 }
 

@@ -1,13 +1,13 @@
 use std::collections::BTreeMap;
 
 use spice_engine::{
-    ac_sweep, ac_sweep_corners, ac_sweep_corners_parallel, format_ac_table, format_corner_ac_table,
-    format_corner_s_parameter_table, format_measurement_table, format_s_parameter_table,
-    measure_ac_sweep_deck, measure_ac_sweep_probe, s_parameters, s_parameters_corners,
-    s_parameters_corners_parallel, AcPoint, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
-    Complex, CornerOverride, CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet,
-    JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError,
-    TransmissionLine, Vcvs, VoltageSource,
+    ac_sweep, ac_sweep_corners, ac_sweep_corners_parallel, device_model_capacitance_audit_fixtures,
+    format_ac_table, format_corner_ac_table, format_corner_s_parameter_table,
+    format_measurement_table, format_s_parameter_table, measure_ac_sweep_deck,
+    measure_ac_sweep_probe, s_parameters, s_parameters_corners, s_parameters_corners_parallel,
+    AcPoint, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, Complex, CornerOverride, CornerSpec,
+    CurrentSource, Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params,
+    MosfetType, MutualInductor, Resistor, SpiceError, TransmissionLine, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -144,6 +144,61 @@ fn ac_sweep_measurements_execute_probe_and_parsed_cards() {
         format_measurement_table(&measurements),
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nout_swing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\nout_final\tac\tV(out)\tlast\t\t\t5.000000e-01\n"
     );
+}
+
+#[test]
+fn device_model_capacitance_audit_fixtures_run_reference_ac_points() {
+    let fixtures = device_model_capacitance_audit_fixtures().unwrap();
+    assert_eq!(
+        fixtures
+            .iter()
+            .map(|fixture| fixture.name.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "diode-capacitance-ac",
+            "bjt-capacitance-ac",
+            "jfet-capacitance-ac",
+            "mos-level1-capacitance-ac"
+        ]
+    );
+
+    for fixture in &fixtures {
+        let points = ac_sweep(
+            &fixture.circuit,
+            fixture.frequency_hz,
+            fixture.frequency_hz,
+            1,
+        )
+        .unwrap();
+        let value = points[0]
+            .voltage(&fixture.probe_node)
+            .expect("fixture probe node should be present")
+            .abs();
+        assert!(
+            value >= fixture.expected_magnitude_min && value <= fixture.expected_magnitude_max,
+            "{} expected {} <= {} <= {}",
+            fixture.name,
+            fixture.expected_magnitude_min,
+            value,
+            fixture.expected_magnitude_max
+        );
+        assert!(fixture.deck_lines[0].starts_with("* device-model capacitance fixture:"));
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line.starts_with(".model ")));
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line.starts_with(".ac ")));
+        assert!(!fixture.capacitance_behavior.is_empty());
+    }
+
+    let jfet_fixture = fixtures
+        .iter()
+        .find(|fixture| fixture.kind.as_str() == "NJF")
+        .expect("JFET capacitance fixture should be present");
+    assert!(jfet_fixture.capacitance_behavior.contains("CGS/CGD"));
 }
 
 #[test]
@@ -858,6 +913,44 @@ fn ac_jfet_common_source_uses_dc_bias_for_small_signal_gain() {
     assert_close(out.real, -4.0);
     assert_close(out.imag, 0.0);
     assert_close(points[0].voltage("vdd").unwrap().abs(), 0.0);
+}
+
+#[test]
+fn ac_jfet_gate_source_capacitance_shunts_high_frequency_gate_drive() {
+    fn gate_amplitude(gate_source_capacitance: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "gate", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rdrain", "drain", "0", 1_000.0,
+        )));
+        circuit.add(Element::Jfet(Jfet::with_model_and_capacitance(
+            "J1",
+            "drain",
+            "gate",
+            "0",
+            JfetPolarity::Njf,
+            1.0e-12,
+            -2.0,
+            0.0,
+            gate_source_capacitance,
+            0.0,
+        )));
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("gate")
+            .unwrap()
+            .abs()
+    }
+
+    let without_capacitance = gate_amplitude(0.0);
+    let with_capacitance = gate_amplitude(1.0e-6);
+
+    assert!(without_capacitance > 0.9);
+    assert!(with_capacitance < without_capacitance / 100.0);
 }
 
 #[test]

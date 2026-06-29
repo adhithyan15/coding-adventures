@@ -1,6 +1,7 @@
 # LANG-FULL E7 — Subroutine / return-stack (`GOSUB` / `RETURN`)
 
-**Status:** design spec, pending user sign-off (no implementation yet).
+**Status:** COMPLETE. Implemented by `dartmouth-basic-iir-compiler` 0.10.0 and
+proven on all 7 matrix backends after the `iir-to-wasm` 0.18.0 dispatch-loop fix.
 **Depends on:** E5 (arrays — COMPLETE, runs on all 7 backends) and the existing
 comparison + `jmp`/`jmp_if_false` control-flow ops (the AL5 computed-goto chain,
 COMPLETE).
@@ -16,7 +17,7 @@ The roadmap entry for E7 reads:
 > **E7 — Subroutine / return-stack.** `GOSUB`/`RETURN` and procedure call/return —
 > likely expressible with existing `call`/`ret`; confirm and add if needed.
 
-This spec **confirms** that question, and the answer has two halves:
+This spec **confirmed** that question, and the answer has two halves:
 
 1. **Structured procedure call/return is already done.** A call to a named
    function that returns to its single static call site is the IIR `call` / `ret`
@@ -204,8 +205,8 @@ BA6's size):
    campaign's anti-smoke-test rule. Nested `GOSUB` (a subroutine that itself
    `GOSUB`s) is the key second cell — it proves the stack discipline, not just a
    single level.
-7. **Docs**: `dartmouth-basic-iir-compiler` CHANGELOG + README, bump versions,
-   flip roadmap **BA1** ☐→✅ and mark **E7** confirmed/COMPLETE.
+7. **Docs**: `dartmouth-basic-iir-compiler` CHANGELOG + README and the LANG-FULL
+   roadmap now mark **BA1** and **E7** complete.
 
 ### Test matrix
 

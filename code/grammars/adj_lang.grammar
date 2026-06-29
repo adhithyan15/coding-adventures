@@ -31,6 +31,7 @@ statement   = prior_decl
             | query_decl
             | let_decl
             | symbol_decl
+            | constrain_latex_decl
             | constrain_decl
             | solve_decl
             | check_decl
@@ -52,7 +53,8 @@ prior_decl       = "prior" NUMBER "for" term { annotation } ;
 contributes_decl = "contributes" NUMBER "from" evidence "to" term { annotation } ;
 
 # Evidence is either a numeric PREDICATE over a valued slot
-# (`gross_income >= 14600`) or an ordinary term (`pmh(hypertension)`).
+# (`gross_income >= 14600`, `answer == 3 / 10`) or an ordinary term
+# (`pmh(hypertension)`).
 # The predicate alternative is tried first; because both start with an
 # IDENT, the parser relies on full backtracking — `predicate` consumes
 # the IDENT, fails when it does not find a comparison operator, and the
@@ -61,7 +63,7 @@ contributes_decl = "contributes" NUMBER "from" evidence "to" term { annotation }
 # very large LR over a CPU-evaluated comparison, not a second engine.
 evidence  = predicate | term ;
 
-predicate = IDENT ( GE | LE | GT | LT | EQEQ ) NUMBER ;
+predicate = IDENT ( GE | LE | GT | LT | EQEQ ) expr ;
 
 interacts_decl   = "interacts" NUMBER "when" term "and" term { "and" term } "for" term { annotation } ;
 
@@ -148,9 +150,16 @@ expr      = term_expr { ( PLUS | MINUS ) term_expr } ;
 
 term_expr = factor { ( STAR | SLASH ) factor } ;
 
-factor    = agg | NUMBER | IDENT | LPAREN expr RPAREN ;
+factor    = latex_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
 
 agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
+
+# Native LaTeX math input. The model may write `latex "$5 \times 12$"` anywhere
+# an ADJ arithmetic expression is accepted; the adj-lang frontend parses the
+# string with the repo's LaTeX MathFrontend and lowers the arithmetic subset to
+# the same ExprAst used by ASCII formulas. Unsupported math is a compile error,
+# not a host-language fallback.
+latex_expr = "latex" STRING ;
 
 # ----------------------------------------------------------------
 # Constraint sublanguage (ADJ constraints track B1). The model
@@ -162,7 +171,11 @@ agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
 
 symbol_decl    = "symbol" IDENT COLON term ;
 
+constrain_latex_decl = "constrain" latex_relation ;
+
 constrain_decl = "constrain" expr relop expr ;
+
+latex_relation = "latex" STRING ;
 
 relop          = GE | LE | GT | LT | EQEQ | EQUALS | NE ;
 

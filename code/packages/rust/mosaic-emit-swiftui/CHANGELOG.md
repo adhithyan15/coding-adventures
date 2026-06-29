@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - `--emit-project` SwiftPM shell supplies view inputs
+
+`Sources/App/App.swift` now mounts `{Component}View(...)` with deterministic
+sample values for every declared slot plus a dispatch closure. Previously the
+project shell emitted `{Component}View()` even though generated SwiftUI views
+store each slot and `dispatch` as required initializer inputs, so any component
+with slots (including EngramApp) produced a SwiftPM shell that was not
+compile-shaped.
+
 ### Fixed — editable `HostInput` (the formula-bar issue)
 
 A `HostInput` with an `onChange` handler and a bound `value` slot now lowers to

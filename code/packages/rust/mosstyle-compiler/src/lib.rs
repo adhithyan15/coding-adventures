@@ -25,8 +25,11 @@
 //!       ▼  validate()
 //! ValidationResult   (part existence, property validity, token resolution)
 //!       │
-//!       ▼  emit_css()
-//! String             (scoped CSS for the DOM/React backend)
+//!       ▼  emit_lattice()
+//! String             (scoped Lattice source for web-capable backends)
+//!       │
+//!       └── emit_style_map_json()
+//!           String   (backend-neutral style map for native emitters)
 //! ```
 //!
 //! # Design tokens
@@ -50,7 +53,7 @@
 //! "#;
 //!
 //! let result = compile(src, None).expect("compilation failed");
-//! println!("{}", result.css);
+//! println!("{}", result.lattice);
 //! ```
 
 use lexer::grammar_lexer::GrammarLexer;
@@ -114,12 +117,12 @@ pub struct StateStyle {
 pub struct CompileOutput {
     /// The analyzed style IR.
     pub def: StyleDef,
-    /// Scoped CSS for the DOM / React backend.
+    /// Scoped Lattice source for web-capable Mosaic targets.
     ///
-    /// Class names follow the pattern `mos-{ComponentName}-{part-name}`.
-    /// State selectors use CSS pseudo-classes: `:hover`, `:active`, `:focus`,
-    /// `.disabled`, `.selected`, etc.
-    pub css: String,
+    /// Lattice is a CSS superset, so the first Mosaic emission path writes
+    /// CSS-compatible selectors and declarations while keeping the artifact
+    /// in the repo's homegrown style language.
+    pub lattice: String,
     /// Resolved style map as JSON (backend-agnostic intermediate form).
     pub style_map_json: String,
 }
@@ -168,36 +171,45 @@ impl std::error::Error for CompileError {}
 fn default_token_map() -> HashMap<String, String> {
     let mut m = HashMap::new();
     // Colors
-    m.insert("color-surface".to_string(),       "#1e1e1e".to_string());
-    m.insert("color-surface-hover".to_string(),  "#2e2e2e".to_string());
-    m.insert("color-text-primary".to_string(),   "#ffffff".to_string());
-    m.insert("color-text-muted".to_string(),     "rgba(255,255,255,0.6)".to_string());
-    m.insert("color-accent".to_string(),         "#4a90d9".to_string());
-    m.insert("color-border".to_string(),         "rgba(255,255,255,0.12)".to_string());
-    m.insert("color-danger".to_string(),         "#e53e3e".to_string());
+    m.insert("color-surface".to_string(), "#1e1e1e".to_string());
+    m.insert("color-surface-hover".to_string(), "#2e2e2e".to_string());
+    m.insert("color-text-primary".to_string(), "#ffffff".to_string());
+    m.insert(
+        "color-text-muted".to_string(),
+        "rgba(255,255,255,0.6)".to_string(),
+    );
+    m.insert("color-accent".to_string(), "#4a90d9".to_string());
+    m.insert(
+        "color-border".to_string(),
+        "rgba(255,255,255,0.12)".to_string(),
+    );
+    m.insert("color-danger".to_string(), "#e53e3e".to_string());
     // Radii
-    m.insert("radius-sm".to_string(),            "4px".to_string());
-    m.insert("radius-md".to_string(),            "8px".to_string());
-    m.insert("radius-lg".to_string(),            "12px".to_string());
+    m.insert("radius-sm".to_string(), "4px".to_string());
+    m.insert("radius-md".to_string(), "8px".to_string());
+    m.insert("radius-lg".to_string(), "12px".to_string());
     // Spacing
-    m.insert("spacing-xs".to_string(),           "4px".to_string());
-    m.insert("spacing-sm".to_string(),           "8px".to_string());
-    m.insert("spacing-md".to_string(),           "16px".to_string());
-    m.insert("spacing-lg".to_string(),           "24px".to_string());
+    m.insert("spacing-xs".to_string(), "4px".to_string());
+    m.insert("spacing-sm".to_string(), "8px".to_string());
+    m.insert("spacing-md".to_string(), "16px".to_string());
+    m.insert("spacing-lg".to_string(), "24px".to_string());
     // Typography
-    m.insert("font-family-body".to_string(),     "\"Inter\", system-ui".to_string());
-    m.insert("font-size-sm".to_string(),         "12px".to_string());
-    m.insert("font-size-body".to_string(),       "14px".to_string());
-    m.insert("font-size-lg".to_string(),         "18px".to_string());
-    m.insert("font-weight-normal".to_string(),   "400".to_string());
-    m.insert("font-weight-bold".to_string(),     "600".to_string());
+    m.insert(
+        "font-family-body".to_string(),
+        "\"Inter\", system-ui".to_string(),
+    );
+    m.insert("font-size-sm".to_string(), "12px".to_string());
+    m.insert("font-size-body".to_string(), "14px".to_string());
+    m.insert("font-size-lg".to_string(), "18px".to_string());
+    m.insert("font-weight-normal".to_string(), "400".to_string());
+    m.insert("font-weight-bold".to_string(), "600".to_string());
     // Durations
-    m.insert("duration-fast".to_string(),        "80ms".to_string());
-    m.insert("duration-normal".to_string(),      "150ms".to_string());
-    m.insert("duration-slow".to_string(),        "300ms".to_string());
-    m.insert("easing-out".to_string(),           "ease-out".to_string());
+    m.insert("duration-fast".to_string(), "80ms".to_string());
+    m.insert("duration-normal".to_string(), "150ms".to_string());
+    m.insert("duration-slow".to_string(), "300ms".to_string());
+    m.insert("easing-out".to_string(), "ease-out".to_string());
     // Opacity
-    m.insert("opacity-disabled".to_string(),     "0.4".to_string());
+    m.insert("opacity-disabled".to_string(), "0.4".to_string());
     m
 }
 
@@ -497,10 +509,7 @@ fn extract_style_value(sv_ast: &GrammarASTNode) -> Result<String, CompileError> 
 ///
 /// `part_map_json` is the JSON output of `moslayout_compiler::compile().part_map_json`.
 /// Pass `None` to skip part-existence validation.
-pub fn validate(
-    def: &StyleDef,
-    part_map_json: Option<&str>,
-) -> Result<(), Vec<CompileError>> {
+pub fn validate(def: &StyleDef, part_map_json: Option<&str>) -> Result<(), Vec<CompileError>> {
     let mut errors = Vec::new();
 
     let known_parts: HashSet<String> = if let Some(json) = part_map_json {
@@ -594,29 +603,40 @@ pub fn compile(
     let def = analyze(&ast).map_err(|e| vec![e])?;
     validate(&def, part_map_json)?;
 
-    let css = emit_css(&def);
+    let lattice = emit_lattice(&def);
     let style_map_json = emit_style_map_json(&def);
 
     Ok(CompileOutput {
         def,
-        css,
+        lattice,
         style_map_json,
     })
 }
 
 // ===========================================================================
-// CSS emitter
+// Lattice emitter
 // ===========================================================================
 
-/// Emit scoped CSS for the DOM / React backend.
+/// Emit scoped Lattice source for web-capable Mosaic backends.
 ///
-/// Class names: `.mos-{ComponentName}-{part-name}` for base styles.
-/// States: `.mos-{ComponentName}-{part-name}:hover` for hover, etc.
-///
-/// The `selected` and `editing` states use class selectors rather than CSS
-/// pseudo-classes because they are driven by application state, not native
-/// browser state: `.mos-{ComponentName}-{part-name}.selected`.
-pub fn emit_css(def: &StyleDef) -> String {
+/// This currently emits CSS-compatible Lattice. That makes the output
+/// immediately consumable by the existing Lattice transpiler while keeping
+/// Mosaic's authored style artifacts in Lattice instead of treating CSS as the
+/// canonical style output.
+pub fn emit_lattice(def: &StyleDef) -> String {
+    let blocks = emit_scoped_rule_blocks(def);
+    if blocks.is_empty() {
+        String::new()
+    } else {
+        format!(
+            "/* Generated as Lattice by mosstyle-compiler for {}. Do not edit. */\n\n{}",
+            def.component_name,
+            blocks.join("\n\n")
+        )
+    }
+}
+
+fn emit_scoped_rule_blocks(def: &StyleDef) -> Vec<String> {
     let mut blocks: Vec<String> = Vec::new();
     let comp = &def.component_name;
 
@@ -639,14 +659,14 @@ pub fn emit_css(def: &StyleDef) -> String {
                 continue;
             }
             let selector = match state.state.as_str() {
-                "hover"    => format!("{}:hover", class),
-                "pressed"  => format!("{}:active", class),
-                "focused"  => format!("{}:focus-visible", class),
+                "hover" => format!("{}:hover", class),
+                "pressed" => format!("{}:active", class),
+                "focused" => format!("{}:focus-visible", class),
                 "disabled" => format!("{}.disabled", class),
                 "selected" => format!("{}.selected", class),
-                "editing"  => format!("{}.editing", class),
-                "error"    => format!("{}.error", class),
-                other      => format!("{}.{}", class, other),
+                "editing" => format!("{}.editing", class),
+                "error" => format!("{}.error", class),
+                other => format!("{}.{}", class, other),
             };
             let props: Vec<String> = state
                 .props
@@ -657,15 +677,7 @@ pub fn emit_css(def: &StyleDef) -> String {
         }
     }
 
-    if blocks.is_empty() {
-        String::new()
-    } else {
-        format!(
-            "/* Generated by mosstyle-compiler for {}. Do not edit. */\n\n{}",
-            comp,
-            blocks.join("\n\n")
-        )
-    }
+    blocks
 }
 
 /// Emit the backend-agnostic style map as JSON.
@@ -720,10 +732,10 @@ mod tests {
             .collect();
         // "style" and "part" should be Keyword tokens; "Grid" and "root" Name.
         assert_eq!(values[0], ("style", TokenType::Keyword));
-        assert_eq!(values[1], ("Grid",  TokenType::Name));
-        assert_eq!(values[2], ("{",     TokenType::LBrace));
-        assert_eq!(values[3], ("part",  TokenType::Keyword));
-        assert_eq!(values[4], ("root",  TokenType::Name));
+        assert_eq!(values[1], ("Grid", TokenType::Name));
+        assert_eq!(values[2], ("{", TokenType::LBrace));
+        assert_eq!(values[3], ("part", TokenType::Keyword));
+        assert_eq!(values[4], ("root", TokenType::Name));
     }
 
     #[test]
@@ -846,10 +858,10 @@ mod tests {
         assert_eq!(def.parts[0].base[0].value, "1px");
     }
 
-    // ── CSS emitter ──────────────────────────────────────────────────────────
+    // ── Lattice emitter ──────────────────────────────────────────────────────
 
     #[test]
-    fn test_css_base_class() {
+    fn test_lattice_base_class() {
         let src = r#"
           style Button {
             part root {
@@ -859,13 +871,13 @@ mod tests {
           }
         "#;
         let result = compile(src, None).unwrap();
-        assert!(result.css.contains(".mos-Button-root"));
-        assert!(result.css.contains("background: #1e1e1e"));
-        assert!(result.css.contains("border-radius: 4px"));
+        assert!(result.lattice.contains(".mos-Button-root"));
+        assert!(result.lattice.contains("background: #1e1e1e"));
+        assert!(result.lattice.contains("border-radius: 4px"));
     }
 
     #[test]
-    fn test_css_hover_state() {
+    fn test_lattice_hover_state() {
         let src = r#"
           style Button {
             part root {
@@ -875,12 +887,12 @@ mod tests {
           }
         "#;
         let result = compile(src, None).unwrap();
-        assert!(result.css.contains(".mos-Button-root:hover"));
-        assert!(result.css.contains("background: #2e2e2e"));
+        assert!(result.lattice.contains(".mos-Button-root:hover"));
+        assert!(result.lattice.contains("background: #2e2e2e"));
     }
 
     #[test]
-    fn test_css_disabled_class_selector() {
+    fn test_lattice_disabled_class_selector() {
         let src = r#"
           style Button {
             part root {
@@ -890,15 +902,53 @@ mod tests {
           }
         "#;
         let result = compile(src, None).unwrap();
-        // disabled → .disabled class selector (not CSS :disabled pseudo-class).
-        assert!(result.css.contains(".mos-Button-root.disabled"));
+        // disabled emits a class selector so app state can drive it.
+        assert!(result.lattice.contains(".mos-Button-root.disabled"));
     }
 
     #[test]
-    fn test_css_has_preamble() {
+    fn test_lattice_has_preamble() {
         let src = "style Grid { part root { background: #1e1e1e ; } }";
         let result = compile(src, None).unwrap();
-        assert!(result.css.starts_with("/* Generated by mosstyle-compiler"));
+        assert!(result.lattice.starts_with("/* Generated as Lattice"));
+    }
+
+    #[test]
+    fn test_lattice_output_is_first_class_artifact() {
+        let src = r#"
+          style Button {
+            part root {
+              background: #1e1e1e ;
+              border-radius: 4px ;
+              state hover { background: #2e2e2e ; }
+            }
+          }
+        "#;
+        let result = compile(src, None).unwrap();
+
+        assert!(result.lattice.starts_with("/* Generated as Lattice"));
+        assert!(result.lattice.contains(".mos-Button-root"));
+        assert!(result.lattice.contains(".mos-Button-root:hover"));
+        assert!(result.lattice.contains("background: #2e2e2e"));
+    }
+
+    #[test]
+    fn test_lattice_output_transpiles_to_css() {
+        let src = r#"
+          style Button {
+            part root {
+              background: $color-surface ;
+              border-radius: 4px ;
+            }
+          }
+        "#;
+        let result = compile(src, None).unwrap();
+        let css = coding_adventures_lattice_transpiler::transpile_lattice(&result.lattice)
+            .expect("mosstyle Lattice output should compile through Lattice");
+
+        assert!(css.contains(".mos-Button-root"));
+        assert!(css.contains("background: #1e1e1e"));
+        assert!(css.contains("border-radius: 4px"));
     }
 
     // ── Multi-value shorthand ────────────────────────────────────────────────
@@ -1056,8 +1106,7 @@ mod tests {
     /// exists; the sub-part name `cell` is the primitive's concern.
     #[test]
     fn test_subpart_passes_when_top_level_part_exists() {
-        let part_map =
-            r#"{"component":"Grid","parts":[{"name":"sheet","primitive":"Grid"}]}"#;
+        let part_map = r#"{"component":"Grid","parts":[{"name":"sheet","primitive":"Grid"}]}"#;
         let src = r#"
           style Grid {
             part sheet { background: #1e1e1e ; }
@@ -1065,15 +1114,17 @@ mod tests {
           }
         "#;
         let result = compile(src, Some(part_map));
-        assert!(result.is_ok(), "sub-part of an exported top-level part should validate");
+        assert!(
+            result.is_ok(),
+            "sub-part of an exported top-level part should validate"
+        );
     }
 
     /// Conversely, a sub-part whose top-level segment is NOT in the
     /// part map still triggers UnknownPart.
     #[test]
     fn test_subpart_unknown_top_level_errors() {
-        let part_map =
-            r#"{"component":"Grid","parts":[{"name":"sheet","primitive":"Grid"}]}"#;
+        let part_map = r#"{"component":"Grid","parts":[{"name":"sheet","primitive":"Grid"}]}"#;
         let src = r#"
           style Grid {
             part nonexistent/cell { border-color: #3f3f46 ; }
@@ -1134,10 +1185,10 @@ mod tests {
           }
         "#;
         let result = compile(src, None).unwrap();
-        let css = &result.css;
-        assert!(css.contains(".mos-Grid-root"));
-        assert!(css.contains(".mos-Grid-cell-grid"));
-        assert!(css.contains("border-width: 1px"));
+        let lattice = &result.lattice;
+        assert!(lattice.contains(".mos-Grid-root"));
+        assert!(lattice.contains(".mos-Grid-cell-grid"));
+        assert!(lattice.contains("border-width: 1px"));
     }
 
     #[test]

@@ -1,0 +1,207 @@
+// ReviewHistoryPanel.dark.msl - dark review-history theme.
+
+style ReviewHistoryPanel {
+  part review-history-panel {
+    background : "#111827" ;
+    border-color : "#14b8a6" ;
+    border-width : 1 ;
+    border-radius : 8 ;
+    padding : 14 ;
+  }
+
+  part history-title {
+    color : "#f8fafc" ;
+    font-size : 18 ;
+    font-weight : 800 ;
+    padding-bottom : 4 ;
+  }
+
+  part history-window {
+    color : "#99f6e4" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 10 ;
+  }
+
+  part history-summary-grid {
+    padding-bottom : 10 ;
+  }
+
+  part rating-summary-grid {
+    padding-bottom : 10 ;
+  }
+
+  part history-total {
+    background : "#0f766e" ;
+    border-radius : 6 ;
+    padding : 9 ;
+  }
+
+  part history-correct {
+    background : "#2563eb" ;
+    border-radius : 6 ;
+    padding : 9 ;
+  }
+
+  part history-unique {
+    background : "#9333ea" ;
+    border-radius : 6 ;
+    padding : 9 ;
+  }
+
+  part history-accuracy {
+    background : "#ca8a04" ;
+    border-radius : 6 ;
+    padding : 9 ;
+  }
+
+  part history-rating-again {
+    background : "#dc2626" ;
+    border-radius : 6 ;
+    padding : 9 ;
+  }
+
+  part history-rating-hard {
+    background : "#ea580c" ;
+    border-radius : 6 ;
+    padding : 9 ;
+  }
+
+  part history-rating-good {
+    background : "#16a34a" ;
+    border-radius : 6 ;
+    padding : 9 ;
+  }
+
+  part history-rating-easy {
+    background : "#0891b2" ;
+    border-radius : 6 ;
+    padding : 9 ;
+  }
+
+  part history-first {
+    padding : 6 ;
+  }
+
+  part history-last {
+    padding : 6 ;
+  }
+
+  part history-total-value {
+    color : "#ffffff" ;
+    font-size : 18 ;
+    font-weight : 800 ;
+  }
+
+  part history-correct-value {
+    color : "#ffffff" ;
+    font-size : 18 ;
+    font-weight : 800 ;
+  }
+
+  part history-unique-value {
+    color : "#ffffff" ;
+    font-size : 18 ;
+    font-weight : 800 ;
+  }
+
+  part history-accuracy-value {
+    color : "#ffffff" ;
+    font-size : 18 ;
+    font-weight : 800 ;
+  }
+
+  part history-again-value {
+    color : "#ffffff" ;
+    font-size : 16 ;
+    font-weight : 800 ;
+  }
+
+  part history-hard-value {
+    color : "#ffffff" ;
+    font-size : 16 ;
+    font-weight : 800 ;
+  }
+
+  part history-good-value {
+    color : "#ffffff" ;
+    font-size : 16 ;
+    font-weight : 800 ;
+  }
+
+  part history-easy-value {
+    color : "#ffffff" ;
+    font-size : 16 ;
+    font-weight : 800 ;
+  }
+
+  part history-total-label {
+    color : "#ccfbf1" ;
+    font-size : 11 ;
+    font-weight : 700 ;
+  }
+
+  part history-correct-label {
+    color : "#dbeafe" ;
+    font-size : 11 ;
+    font-weight : 700 ;
+  }
+
+  part history-unique-label {
+    color : "#f3e8ff" ;
+    font-size : 11 ;
+    font-weight : 700 ;
+  }
+
+  part history-accuracy-label {
+    color : "#fef3c7" ;
+    font-size : 11 ;
+    font-weight : 700 ;
+  }
+
+  part history-again-label {
+    color : "#fee2e2" ;
+    font-size : 11 ;
+    font-weight : 700 ;
+  }
+
+  part history-hard-label {
+    color : "#ffedd5" ;
+    font-size : 11 ;
+    font-weight : 700 ;
+  }
+
+  part history-good-label {
+    color : "#dcfce7" ;
+    font-size : 11 ;
+    font-weight : 700 ;
+  }
+
+  part history-easy-label {
+    color : "#cffafe" ;
+    font-size : 11 ;
+    font-weight : 700 ;
+  }
+
+  part history-first-label {
+    color : "#a7f3d0" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+
+  part history-last-label {
+    color : "#bfdbfe" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+
+  part history-first-value {
+    color : "#f8fafc" ;
+    font-size : 13 ;
+  }
+
+  part history-last-value {
+    color : "#f8fafc" ;
+    font-size : 13 ;
+  }
+}

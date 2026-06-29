@@ -1,0 +1,18 @@
+[package]
+name = "engram-capi"
+version = "0.1.0"
+edition = "2021"
+description = "Stable C ABI over the Engram JSON facade for native shells."
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+engram-anki-package = { path = "../engram-anki-package" }
+engram-core-wasm = { path = "../engram-core-wasm" }
+serde_json = "1"
+
+[dev-dependencies]
+rusqlite = { version = "0.32", features = ["bundled"] }
+tempfile = "3"

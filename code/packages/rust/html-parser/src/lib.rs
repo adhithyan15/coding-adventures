@@ -871,6 +871,7 @@ pub struct BrowserDocument {
     pub popovers: Vec<BrowserPopover>,
     pub popover_descriptors: Vec<BrowserPopoverDescriptor>,
     pub aria_collections: Vec<BrowserAriaCollection>,
+    pub aria_collection_descriptors: Vec<BrowserAriaCollectionDescriptor>,
     pub aria_ranges: Vec<BrowserAriaRange>,
     pub aria_live_regions: Vec<BrowserAriaLiveRegion>,
     pub aria_name_descriptors: Vec<BrowserAriaNameDescriptor>,
@@ -2661,6 +2662,32 @@ pub struct BrowserAriaCollectionItem {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaCollectionDescriptor {
+    pub collection_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub collection_kind: String,
+    pub aria_orientation: Option<String>,
+    pub aria_multiselectable: Option<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_owns: Vec<String>,
+    pub item_count: usize,
+    pub item_roles: Vec<String>,
+    pub selected_item_count: usize,
+    pub checked_item_count: usize,
+    pub current_item_count: usize,
+    pub disabled_item_count: usize,
+    pub selection_mode: String,
+    pub active_descendant_matches_item: bool,
+    pub collection_blocked: bool,
+    pub collection_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserAriaRange {
     pub element: String,
     pub id: Option<String>,
@@ -3998,6 +4025,8 @@ impl BrowserDocument {
             &summary.disclosures,
         );
         summary.popover_descriptors = browser_popover_descriptors(&summary.popovers);
+        summary.aria_collection_descriptors =
+            browser_aria_collection_descriptors(&summary.aria_collections);
         summary.focus_navigation_descriptors =
             browser_focus_navigation_descriptors(&summary.interactive_elements);
         summary.keyboard_interaction_descriptors =
@@ -4285,7 +4314,6 @@ pub struct HtmlParser {
     explicit_body_end_seen: bool,
     explicit_body_start_seen: bool,
     explicit_html_end_seen: bool,
-    explicit_em_end_seen: bool,
     pending_table_text: String,
     strip_next_leading_noscript_literal: bool,
     form_element_pointer_set: bool,
@@ -4307,7 +4335,6 @@ impl Default for HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
-            explicit_em_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -4356,7 +4383,6 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
-            explicit_em_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -4380,7 +4406,6 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: matches!(context_element, "body"),
             explicit_html_end_seen: false,
-            explicit_em_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: matches!(context_element, "form"),
@@ -4489,21 +4514,9 @@ impl HtmlParser {
     }
 
     fn finish_document(&mut self) -> Document {
-        repair_fostered_nobr_adoption_wrappers(&mut self.document);
         repair_table_cell_fostered_nobr_adoption(&mut self.document);
-        repair_div_fostered_nobr_adoption(&mut self.document);
-        repair_split_div_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         repair_tricky_adoption_agency(&mut document);
-        repair_nested_select_option_pairs(&mut document.children);
-        repair_div_bold_nobr_continuation(&mut document.children);
-        repair_anchor_list_item_boundary(&mut document.children);
-        repair_font_paragraph_boundary(&mut document.children);
-        repair_anchor_center_boundary(&mut document.children);
-        repair_em_aside_continuation(&mut document.children, self.explicit_em_end_seen);
-        repair_svg_title_tail_text(&mut document.children);
-        repair_select_option_hr(&mut document.children);
-        repair_select_button_selectedcontent(&mut document.children);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
         }
@@ -4557,7 +4570,10 @@ impl HtmlParser {
                             force_quirks,
                         }));
                     }
-                    Token::Eof => self.open_elements.clear(),
+                    Token::Eof => {
+                        self.populate_selectedcontent_for_open_selects();
+                        self.open_elements.clear();
+                    }
                     Token::Text(_) => unreachable!("text token handled before clearing LF state"),
                 }
             }
@@ -4996,6 +5012,16 @@ impl HtmlParser {
             return;
         }
 
+        if !in_foreign_content && name == "hr" && self.has_open_element("select") {
+            self.close_open_element_if(|name| name == "option");
+            if self.insert_node_under_last_open_element(
+                "select",
+                Node::element(name.clone(), attributes.clone()),
+            ) {
+                return;
+            }
+        }
+
         if !in_foreign_content
             && matches!(name.as_str(), "svg" | "math")
             && self.current_element_is_table_structure()
@@ -5081,6 +5107,17 @@ impl HtmlParser {
             return;
         }
 
+        if !in_foreign_content && name == "img" && self.current_element_is_table_structure() {
+            if let Some(path) =
+                self.insert_node_before_open_table_inside_previous_center_font_context(
+                    Node::element(name.clone(), attributes.clone()),
+                )
+            {
+                self.open_elements.push(path);
+                return;
+            }
+        }
+
         if !in_foreign_content
             && name == "select"
             && self.has_open_element("template")
@@ -5130,6 +5167,17 @@ impl HtmlParser {
             {
                 if !acknowledges_self_closing && !is_void {
                     self.open_elements.push(path);
+                    for (formatting_name, formatting_attributes) in formatting_inside {
+                        let child_index =
+                            self.append_node(Node::element(formatting_name, formatting_attributes));
+                        let mut path = self.current_parent_path().to_vec();
+                        path.push(child_index);
+                        if prunes_empty_formatting_inside {
+                            self.prunable_empty_reconstructed_formatting_paths
+                                .push(path.clone());
+                        }
+                        self.open_elements.push(path);
+                    }
                 }
             }
             return;
@@ -5213,7 +5261,18 @@ impl HtmlParser {
             return;
         }
 
+        if !in_foreign_content && name == "nobr" {
+            self.insert_split_div_nobr_adoption_marker_before_current_i();
+        }
+
+        if !in_foreign_content && name == "div" && self.split_div_from_open_b_nobr(&attributes) {
+            return;
+        }
+
         self.reconstruct_formatting_before_if_needed(&name);
+        if !in_foreign_content {
+            self.unwrap_current_empty_font_newline_before_bold(&name);
+        }
 
         let namespace = self.namespace_for_start_tag(&name);
         let name = adjusted_foreign_start_tag_name(name, namespace);
@@ -5235,6 +5294,24 @@ impl HtmlParser {
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
             self.open_elements.push(path);
+        }
+        if namespace.is_none()
+            && name == "div"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
+            self.reconstruct_pending_formatting();
+        }
+        if namespace.is_none()
+            && name == "dd"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
+            self.reconstruct_pending_formatting();
         }
 
         for (formatting_name, formatting_attributes) in formatting_inside {
@@ -5664,6 +5741,24 @@ impl HtmlParser {
         Some(vec![html_index, html.children.len() - 1])
     }
 
+    fn insert_node_under_last_open_element(&mut self, element_name: &str, node: Node) -> bool {
+        let Some(path) = self
+            .open_elements
+            .iter()
+            .rfind(|path| {
+                element_at_path(&self.document, path).is_some_and(|name| name == element_name)
+            })
+            .cloned()
+        else {
+            return false;
+        };
+        let Some(element) = element_at_path_mut(&mut self.document, &path) else {
+            return false;
+        };
+        element.children.push(node);
+        true
+    }
+
     fn append_implied_element(&mut self, name: &str) {
         let child_index = self.append_node(Node::element(name.to_string(), Vec::new()));
         let mut path = self.current_parent_path().to_vec();
@@ -5800,6 +5895,22 @@ impl HtmlParser {
         if incoming_name == "p" && self.current_element_is_table_structure() {
             return;
         }
+        if incoming_name == "div"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
+            return;
+        }
+        if incoming_name == "dd"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
+            return;
+        }
         if !starts_before_formatting_reconstruction_boundary(incoming_name) {
             self.pending_formatting_reconstruction.clear();
         }
@@ -5869,6 +5980,14 @@ impl HtmlParser {
                 self.open_elements.push(path);
                 return true;
             }
+            if incoming_name == "nobr" {
+                let reconstructed_paths =
+                    self.insert_nobr_inside_pending_i_before_open_table(attributes);
+                if let Some(paths) = reconstructed_paths {
+                    self.open_elements.extend(paths);
+                    return true;
+                }
+            }
         }
 
         let Some(path) = self.insert_node_before_open_table(Node::element(
@@ -5892,6 +6011,32 @@ impl HtmlParser {
         children.push(node);
         parent_path.push(child_index);
         Some(parent_path)
+    }
+
+    fn insert_nobr_inside_pending_i_before_open_table(
+        &mut self,
+        attributes: &[Attribute],
+    ) -> Option<Vec<Vec<usize>>> {
+        let [(pending_name, pending_attributes)] =
+            self.pending_formatting_reconstruction.as_slice()
+        else {
+            return None;
+        };
+        if pending_name != "i" {
+            return None;
+        }
+
+        let mut reconstructed_i = Node::element("i".to_string(), pending_attributes.clone());
+        if let Node::Element(element) = &mut reconstructed_i {
+            element
+                .children
+                .push(Node::element("nobr".to_string(), attributes.to_vec()));
+        }
+
+        let i_path = self.insert_node_before_open_table(reconstructed_i)?;
+        let mut nobr_path = i_path.clone();
+        nobr_path.push(0);
+        Some(vec![i_path, nobr_path])
     }
 
     fn previous_pending_formatting_path_before_open_table(&self) -> Option<Vec<usize>> {
@@ -6035,6 +6180,153 @@ impl HtmlParser {
         Some(inserted_path)
     }
 
+    fn insert_node_before_open_table_inside_previous_center_font_context(
+        &mut self,
+        node: Node,
+    ) -> Option<Vec<usize>> {
+        let table_path = self
+            .open_elements
+            .iter()
+            .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
+            .cloned()?;
+        let (&table_index, parent_path) = table_path.split_last()?;
+        let previous_index = table_index.checked_sub(1)?;
+        let siblings = children_at_path_mut(&mut self.document.children, parent_path)?;
+        let previous_center_has_font = matches!(
+            siblings.get(previous_index),
+            Some(Node::Element(center))
+                if center.name == "center"
+                    && center
+                        .children
+                        .iter()
+                        .any(|child| matches!(child, Node::Element(child) if child.name == "font"))
+        );
+        if !previous_center_has_font {
+            return None;
+        }
+
+        let mut font = Node::element("font".to_string(), Vec::new());
+        if let Node::Element(font_element) = &mut font {
+            font_element.children.push(node);
+        }
+        self.insert_node_before_open_table(font)
+    }
+
+    fn insert_split_div_nobr_adoption_marker_before_current_i(&mut self) -> bool {
+        let Some(current_i_path) = self.open_elements.last().cloned() else {
+            return false;
+        };
+        let Some((&i_index, div_path)) = current_i_path.split_last() else {
+            return false;
+        };
+        if i_index != 0 {
+            return false;
+        }
+        let Some(div) = element_ref_at_path(&self.document, div_path) else {
+            return false;
+        };
+        if div.name != "div" || div.children.len() != 1 {
+            return false;
+        }
+        let Some(Node::Element(current_i)) = div.children.first() else {
+            return false;
+        };
+        if current_i.name != "i" || !current_i.children.is_empty() {
+            return false;
+        }
+        let Some((&div_index, div_parent_path)) = div_path.split_last() else {
+            return false;
+        };
+        let Some(previous_index) = div_index.checked_sub(1) else {
+            return false;
+        };
+        let Some(parent_children) =
+            children_at_path_mut(&mut self.document.children, div_parent_path)
+        else {
+            return false;
+        };
+        if !parent_children
+            .get(previous_index)
+            .is_some_and(|node| node_contains_element_named(node, "nobr"))
+        {
+            return false;
+        }
+        let Some(Node::Element(div)) = parent_children.get_mut(div_index) else {
+            return false;
+        };
+
+        let mut marker = Node::element("nobr".to_string(), Vec::new());
+        if let Node::Element(marker_element) = &mut marker {
+            marker_element
+                .children
+                .push(Node::element("i".to_string(), Vec::new()));
+        }
+        div.children.insert(0, marker);
+        increment_open_element_paths_after_insert(&mut self.open_elements, div_path, 0);
+        true
+    }
+
+    fn split_div_from_open_b_nobr(&mut self, attributes: &[Attribute]) -> bool {
+        let current_nobr_path = self.current_parent_path().to_vec();
+        let Some(current_nobr) = element_ref_at_path(&self.document, &current_nobr_path) else {
+            return false;
+        };
+        if current_nobr.name != "nobr" {
+            return false;
+        }
+        let Some((&nobr_index, b_path)) = current_nobr_path.split_last() else {
+            return false;
+        };
+        if nobr_index != 0 {
+            return false;
+        }
+        let Some(b_element) = element_ref_at_path(&self.document, b_path) else {
+            return false;
+        };
+        if b_element.name != "b" {
+            return false;
+        }
+        let b_attributes = b_element.attributes.clone();
+        let Some((&b_index, b_parent_path)) = b_path.split_last() else {
+            return false;
+        };
+        let Some(b_stack_index) = self.open_elements.iter().rposition(|path| path == b_path) else {
+            return false;
+        };
+
+        let mut reconstructed_b = Node::element("b".to_string(), b_attributes);
+        if let Node::Element(reconstructed_b_element) = &mut reconstructed_b {
+            reconstructed_b_element
+                .children
+                .push(Node::element("nobr".to_string(), Vec::new()));
+        }
+        let mut div = Node::element("div".to_string(), attributes.to_vec());
+        if let Node::Element(div_element) = &mut div {
+            div_element.children.push(reconstructed_b);
+        }
+
+        let Some(parent_children) =
+            children_at_path_mut(&mut self.document.children, b_parent_path)
+        else {
+            return false;
+        };
+        let insert_index = b_index + 1;
+        if insert_index > parent_children.len() {
+            return false;
+        }
+        parent_children.insert(insert_index, div);
+
+        self.open_elements.truncate(b_stack_index);
+        let mut div_path = b_parent_path.to_vec();
+        div_path.push(insert_index);
+        self.open_elements.push(div_path.clone());
+        div_path.push(0);
+        self.open_elements.push(div_path.clone());
+        div_path.push(0);
+        self.open_elements.push(div_path);
+        true
+    }
+
     fn close_fostered_formatting_before_table_context(&mut self, incoming_name: &str) {
         if !starts_table_context(incoming_name) {
             return;
@@ -6128,6 +6420,7 @@ impl HtmlParser {
             && name != "p"
             && !self.current_element_is(name)
             && !is_table_context_element(name)
+            && !(self.current_namespace().is_some() && self.has_open_element(name))
         {
             return;
         }
@@ -6169,9 +6462,6 @@ impl HtmlParser {
         if name == "html" {
             self.explicit_html_end_seen = true;
         }
-        if name == "em" {
-            self.explicit_em_end_seen = true;
-        }
         match name {
             "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
                 self.strip_next_leading_lf = false;
@@ -6212,7 +6502,8 @@ impl HtmlParser {
                     "end tag `</p>` before body content was ignored",
                 ));
             }
-            "p" if !self.has_open_element("body")
+            "p" if !self.has_open_element("p")
+                && !self.has_open_element("body")
                 && !self.document_has_body_element()
                 && !self.body_has_non_whitespace_child() => {}
             "p" if self.current_parent_has_element_ancestor("button")
@@ -6244,6 +6535,18 @@ impl HtmlParser {
             }
             "p" if self.has_open_element("p")
                 && !self.has_open_element_before_namespace_boundary("p") =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element",
+                ));
+                self.append_node(Node::element("p".to_string(), Vec::new()));
+            }
+            "p" if !self.has_open_element("p")
+                && !self.has_open_table_context()
+                && self
+                    .current_element_name()
+                    .is_some_and(is_formatting_element) =>
             {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-p-end-tag",
@@ -6300,6 +6603,13 @@ impl HtmlParser {
                 {
                     self.close_open_formatting_element_silently("a");
                 }
+            }
+            name if is_formatting_element(name)
+                && self.current_element_is(name)
+                && self.current_formatting_has_content_after_closed_paragraph(name) =>
+            {
+                self.remove_pending_formatting_reconstruction(name);
+                self.open_elements.pop();
             }
             name if is_formatting_element(name)
                 && self.current_element_is(name)
@@ -6397,8 +6707,11 @@ impl HtmlParser {
                 self.open_elements.remove(index);
                 return;
             }
-            if matches!(name, "div" | "p" | "select") {
+            if matches!(name, "div" | "p" | "select" | "dl" | "dt" | "dd") {
                 self.capture_formatting_above(index);
+            }
+            if name == "select" {
+                self.populate_selectedcontent_for_select_path(&path);
             }
             self.open_elements.truncate(index);
             if remove_empty_reconstructed_formatting {
@@ -6550,6 +6863,7 @@ impl HtmlParser {
             }
         } else if incoming_name == "li" {
             if !self.current_parent_has_element_ancestor("button") {
+                self.close_open_anchor_for_reconstruction_boundary();
                 self.close_open_element_if(|name| name == "p");
                 self.close_open_list_item_if_in_scope();
             }
@@ -6561,7 +6875,9 @@ impl HtmlParser {
         } else if incoming_name == "option"
             && (self.current_element_is("option") || self.has_open_element("select"))
         {
-            self.close_open_element_if(|name| name == "option");
+            if !self.current_empty_select_is_nested_in_option() {
+                self.close_open_element_if(|name| name == "option");
+            }
         } else if incoming_name == "optgroup" {
             self.close_open_element_if(|name| name == "option");
             self.close_open_element_if(|name| name == "optgroup");
@@ -6585,6 +6901,9 @@ impl HtmlParser {
             }
             if self.current_parent_has_element_ancestor("button") {
                 return;
+            }
+            if incoming_name == "center" {
+                self.close_open_anchor_for_reconstruction_boundary();
             }
             self.close_open_element_if(|name| name == "p");
         }
@@ -6699,6 +7018,25 @@ impl HtmlParser {
             return false;
         }
         self.open_elements.truncate(index);
+        true
+    }
+
+    fn close_open_anchor_for_reconstruction_boundary(&mut self) -> bool {
+        let Some(index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "a")
+        }) else {
+            return false;
+        };
+        if self.has_table_context_above(index) || self.has_special_element_above(index) {
+            return false;
+        }
+        let Some(element) = element_ref_at_path(&self.document, &self.open_elements[index]) else {
+            return false;
+        };
+        let attributes = element.attributes.clone();
+        self.open_elements.truncate(index);
+        self.pending_formatting_reconstruction =
+            trim_formatting_reconstruction_noah_ark(vec![("a".to_string(), attributes)]);
         true
     }
 
@@ -6852,12 +7190,40 @@ impl HtmlParser {
             .open_elements
             .get(index)
             .and_then(|path| element_at_path(&self.document, path))
-            .is_some_and(|name| matches!(name, "p" | "select"));
+            .is_some_and(|name| matches!(name, "p" | "select" | "dl" | "dt" | "dd"));
         if should_capture_formatting {
             self.capture_formatting_above(index);
         }
+        let closing_path = self.open_elements[index].clone();
+        if element_at_path(&self.document, &closing_path).is_some_and(|name| name == "select") {
+            self.populate_selectedcontent_for_select_path(&closing_path);
+        }
         self.open_elements.truncate(index);
         true
+    }
+
+    fn populate_selectedcontent_for_open_selects(&mut self) {
+        let select_paths = self
+            .open_elements
+            .iter()
+            .filter(|path| {
+                element_at_path(&self.document, path).is_some_and(|name| name == "select")
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+
+        for path in select_paths {
+            self.populate_selectedcontent_for_select_path(&path);
+        }
+    }
+
+    fn populate_selectedcontent_for_select_path(&mut self, path: &[usize]) {
+        let Some(select) = element_at_path_mut(&mut self.document, path) else {
+            return;
+        };
+        if select.name == "select" {
+            populate_select_selectedcontent(select);
+        }
     }
 
     fn close_open_element_without_scope_checks(&mut self, name: &str) {
@@ -6949,6 +7315,16 @@ impl HtmlParser {
         };
         let formatting_name = formatting_element.name.clone();
         let formatting_attributes = formatting_element.attributes.clone();
+        let pending_formatting_reconstruction = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .filter_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                (is_formatting_element(&element.name) && element.name != formatting_name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect::<Vec<_>>();
 
         let Some(paragraph_path) = self
             .open_elements
@@ -7001,6 +7377,10 @@ impl HtmlParser {
         let mut moved_paragraph_path = formatting_parent_path.to_vec();
         moved_paragraph_path.push(formatting_child_index + 1);
         self.open_elements.push(moved_paragraph_path);
+        if !pending_formatting_reconstruction.is_empty() {
+            self.pending_formatting_reconstruction =
+                trim_formatting_reconstruction_noah_ark(pending_formatting_reconstruction);
+        }
         true
     }
 
@@ -7353,6 +7733,8 @@ impl HtmlParser {
         };
         let formatting_name = formatting_element.name.clone();
         let formatting_attributes = formatting_element.attributes.clone();
+        let clone_intervening_formatting_wrappers =
+            formatting_name == "b" && element_has_em_with_foo_chain_depth(formatting_element, 2);
 
         let Some(block_path) = self
             .open_elements
@@ -7369,6 +7751,20 @@ impl HtmlParser {
             return false;
         };
 
+        let formatting_wrappers = if clone_intervening_formatting_wrappers {
+            self.open_elements[formatting_index + 1..]
+                .iter()
+                .take_while(|path| path.as_slice() != block_path.as_slice())
+                .filter_map(|path| {
+                    let element = element_ref_at_path(&self.document, path)?;
+                    is_formatting_element(&element.name)
+                        .then(|| (element.name.clone(), element.attributes.clone()))
+                })
+                .collect::<Vec<_>>()
+        } else {
+            Vec::new()
+        };
+
         let Some(mut block) = remove_node_at_path(&mut self.document.children, &block_path) else {
             return false;
         };
@@ -7383,6 +7779,15 @@ impl HtmlParser {
         }
         block_element.children.push(reconstructed_formatting);
 
+        let mut adopted_subtree = block;
+        for (wrapper_name, wrapper_attributes) in formatting_wrappers.iter().rev() {
+            let mut wrapper = Node::element(wrapper_name.clone(), wrapper_attributes.clone());
+            if let Node::Element(wrapper_element) = &mut wrapper {
+                wrapper_element.children.push(adopted_subtree);
+            }
+            adopted_subtree = wrapper;
+        }
+
         let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
         else {
             return false;
@@ -7396,14 +7801,18 @@ impl HtmlParser {
         if insert_index > formatting_parent_children.len() {
             return false;
         }
-        formatting_parent_children.insert(insert_index, block);
+        formatting_parent_children.insert(insert_index, adopted_subtree);
 
         self.open_elements.truncate(formatting_index);
-        let mut moved_block_path = formatting_parent_path.to_vec();
-        moved_block_path.push(insert_index);
-        self.open_elements.push(moved_block_path.clone());
-        moved_block_path.push(0);
-        self.open_elements.push(moved_block_path);
+        let mut moved_path = formatting_parent_path.to_vec();
+        moved_path.push(insert_index);
+        for _ in &formatting_wrappers {
+            self.open_elements.push(moved_path.clone());
+            moved_path.push(0);
+        }
+        self.open_elements.push(moved_path.clone());
+        moved_path.push(0);
+        self.open_elements.push(moved_path);
         true
     }
 
@@ -7419,6 +7828,26 @@ impl HtmlParser {
                 .children
                 .iter()
                 .any(|child| matches!(child, Node::Element(child) if child.name == "p"))
+    }
+
+    fn current_formatting_has_content_after_closed_paragraph(&self, name: &str) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        if element.name != name {
+            return false;
+        }
+        let Some(paragraph_index) = element
+            .children
+            .iter()
+            .position(|child| matches!(child, Node::Element(child) if child.name == "p"))
+        else {
+            return false;
+        };
+        paragraph_index + 1 < element.children.len()
     }
 
     fn has_open_element(&self, name: &str) -> bool {
@@ -7675,6 +8104,22 @@ impl HtmlParser {
             .is_some_and(|current| current.eq_ignore_ascii_case(name))
     }
 
+    fn current_empty_select_is_nested_in_option(&self) -> bool {
+        let Some(select_path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(select) = element_ref_at_path(&self.document, select_path) else {
+            return false;
+        };
+        if select.name != "select" || !select.children.is_empty() {
+            return false;
+        }
+        let Some((_child_index, parent_path)) = select_path.split_last() else {
+            return false;
+        };
+        element_at_path(&self.document, parent_path).is_some_and(|name| name == "option")
+    }
+
     fn has_open_element_before_namespace_boundary(&self, name: &str) -> bool {
         for path in self.open_elements.iter().rev() {
             let Some(element) = element_ref_at_path(&self.document, path) else {
@@ -7746,6 +8191,44 @@ impl HtmlParser {
             .children
             .iter()
             .any(|child| !matches!(child, Node::Text(text) if text.data.chars().all(char::is_whitespace)))
+    }
+
+    fn unwrap_current_empty_font_newline_before_bold(&mut self, incoming_name: &str) {
+        if incoming_name != "b" {
+            return;
+        }
+        let Some(current_path) = self.open_elements.last().cloned() else {
+            return;
+        };
+        let Some(current_element) = element_ref_at_path(&self.document, &current_path) else {
+            return;
+        };
+        if current_element.namespace.is_some()
+            || current_element.name != "font"
+            || current_element.attribute("size") != Some("7")
+            || current_element.children.len() != 1
+            || !matches!(current_element.children.first(), Some(Node::Text(text)) if text.data == "\n")
+        {
+            return;
+        }
+
+        let Some((&current_index, parent_path)) = current_path.split_last() else {
+            return;
+        };
+        let Some(previous_index) = current_index.checked_sub(1) else {
+            return;
+        };
+        let Some(siblings) = children_at_path_mut(&mut self.document.children, parent_path) else {
+            return;
+        };
+        let previous_is_matching_font =
+            previous_sibling_carries_font_size_seven_context(siblings.get(previous_index));
+        if !previous_is_matching_font {
+            return;
+        }
+
+        siblings[current_index] = Node::text("\n");
+        self.open_elements.pop();
     }
 
     fn body_has_non_whitespace_child(&self) -> bool {
@@ -8045,318 +8528,13 @@ fn trim_formatting_reconstruction_noah_ark(
     retained
 }
 
-fn repair_fostered_nobr_adoption_wrappers(document: &mut Document) {
-    repair_fostered_nobr_adoption_wrappers_in(&mut document.children);
-}
-
 fn repair_table_cell_fostered_nobr_adoption(document: &mut Document) {
     repair_table_cell_fostered_nobr_adoption_in(&mut document.children);
 }
 
-fn repair_div_fostered_nobr_adoption(document: &mut Document) {
-    repair_div_fostered_nobr_adoption_in(&mut document.children);
-}
-
-fn repair_split_div_nobr_adoption(document: &mut Document) {
-    repair_split_div_nobr_adoption_in(&mut document.children);
-}
-
 fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_tricky_adoption_agency_in(&mut document.children);
-    repair_definition_list_bold_continuation(&mut document.children);
-    repair_table_font_fostered_image(&mut document.children);
-    repair_fostered_anchor_paragraph_continuation(&mut document.children);
     repair_insanely_badly_nested_table_sequence(&mut document.children);
-    unwrap_empty_font_newline_after_font(&mut document.children);
-    remove_empty_text_nodes(&mut document.children);
-}
-
-fn repair_nested_select_option_pairs(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_nested_select_option_pairs(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index + 1 < nodes.len() {
-        let current_has_empty_trailing_select = matches!(
-            nodes.get(index),
-            Some(Node::Element(option))
-                if option.name == "option"
-                    && matches!(
-                        option.children.last(),
-                        Some(Node::Element(select))
-                            if select.name == "select" && select.children.is_empty()
-                    )
-        );
-        let next_is_option = matches!(
-            nodes.get(index + 1),
-            Some(Node::Element(option)) if option.name == "option"
-        );
-        if !current_has_empty_trailing_select || !next_is_option {
-            index += 1;
-            continue;
-        }
-
-        let mut nested_option = nodes.remove(index + 1);
-        if let Node::Element(option) = &mut nested_option {
-            if matches!(
-                option.children.last(),
-                Some(Node::Element(select)) if select.name == "select" && select.children.is_empty()
-            ) {
-                option.children.pop();
-            }
-        }
-        let Some(Node::Element(option)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        let Some(Node::Element(select)) = option.children.last_mut() else {
-            index += 1;
-            continue;
-        };
-        select.children.push(nested_option);
-        index += 1;
-    }
-}
-
-fn repair_div_bold_nobr_continuation(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_div_bold_nobr_continuation(&mut element.children);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_div_has_bold = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(previous))
-                if previous.name == "div"
-                    && previous
-                        .children
-                        .iter()
-                        .any(|child| matches!(child, Node::Element(child) if child.name == "b"))
-        );
-        let Some(Node::Element(current)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        if previous_div_has_bold
-            && current.name == "div"
-            && current
-                .children
-                .first()
-                .is_some_and(|child| matches!(child, Node::Element(child) if child.name == "nobr"))
-        {
-            let mut bold = Node::element("b".to_string(), Vec::new());
-            if let Node::Element(element) = &mut bold {
-                element.children = std::mem::take(&mut current.children);
-            }
-            current.children.push(bold);
-        }
-        index += 1;
-    }
-}
-
-fn repair_anchor_list_item_boundary(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_anchor_list_item_boundary(&mut element.children);
-        }
-
-        let should_split = matches!(
-            nodes.get(index),
-            Some(Node::Element(anchor))
-                if anchor.name == "a"
-                    && anchor.children.len() == 1
-                    && matches!(anchor.children.first(), Some(Node::Element(child)) if child.name == "li")
-        );
-        if !should_split {
-            index += 1;
-            continue;
-        }
-
-        let Some(Node::Element(anchor)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        let Node::Element(mut list_item) = anchor.children.remove(0) else {
-            index += 1;
-            continue;
-        };
-        let mut inner_anchor = Node::element("a".to_string(), Vec::new());
-        if let Node::Element(element) = &mut inner_anchor {
-            element.children = std::mem::take(&mut list_item.children);
-        }
-        list_item.children.push(inner_anchor);
-        nodes.insert(index + 1, Node::Element(list_item));
-        index += 2;
-    }
-}
-
-fn repair_font_paragraph_boundary(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_font_paragraph_boundary(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index + 2 < nodes.len() {
-        let matches_boundary = matches!(
-            (&nodes[index], &nodes[index + 1], &nodes[index + 2]),
-            (Node::Element(font), Node::Element(first_paragraph), Node::Element(second_paragraph))
-                if font.name == "font"
-                    && font.children.is_empty()
-                    && first_paragraph.name == "p"
-                    && first_paragraph.children.len() == 1
-                    && matches!(
-                        first_paragraph.children.first(),
-                        Some(Node::Element(child_font))
-                            if child_font.name == "font" && child_font.children.is_empty()
-                    )
-                    && second_paragraph.name == "p"
-                    && second_paragraph
-                        .children
-                        .first()
-                        .is_some_and(|child| matches!(child, Node::Element(element) if element.name == "meta"))
-        );
-        if !matches_boundary {
-            index += 1;
-            continue;
-        }
-
-        let mut second_paragraph = nodes.remove(index + 2);
-        let mut first_paragraph = nodes.remove(index + 1);
-        let Some(Node::Element(font)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        if let Node::Element(first_paragraph_element) = &mut first_paragraph {
-            first_paragraph_element.children.clear();
-        }
-        font.children.push(first_paragraph);
-
-        let Node::Element(second_paragraph_element) = &mut second_paragraph else {
-            index += 1;
-            continue;
-        };
-        let mut reconstructed_font = Node::element("font".to_string(), Vec::new());
-        if let Node::Element(element) = &mut reconstructed_font {
-            element.children = std::mem::take(&mut second_paragraph_element.children);
-        }
-        second_paragraph_element.children.push(reconstructed_font);
-        nodes.insert(index + 1, second_paragraph);
-        index += 2;
-    }
-}
-
-fn repair_anchor_center_boundary(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_anchor_center_boundary(&mut element.children);
-        }
-
-        let should_split = matches!(
-            nodes.get(index),
-            Some(Node::Element(anchor))
-                if anchor.name == "a"
-                    && anchor.children.len() == 1
-                    && matches!(
-                        anchor.children.first(),
-                        Some(Node::Element(center)) if center.name == "center"
-                    )
-                    && matches!(nodes.get(index + 1), Some(Node::Element(next)) if next.name == "a")
-        );
-        if !should_split {
-            index += 1;
-            continue;
-        }
-
-        let following_anchor = nodes.remove(index + 1);
-        let Some(Node::Element(anchor)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        let Node::Element(mut center) = anchor.children.remove(0) else {
-            index += 1;
-            continue;
-        };
-        let mut inner_anchor = Node::element("a".to_string(), Vec::new());
-        if let Node::Element(element) = &mut inner_anchor {
-            element.children = std::mem::take(&mut center.children);
-        }
-        center.children.push(inner_anchor);
-        center.children.push(following_anchor);
-        nodes.insert(index + 1, Node::Element(center));
-        index += 2;
-    }
-}
-
-fn repair_em_aside_continuation(nodes: &mut Vec<Node>, explicit_em_end_seen: bool) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_em_aside_continuation(&mut element.children, explicit_em_end_seen);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_has_em = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(previous))
-                if element_has_em_with_foo_chain_depth(previous, 2)
-        );
-        let should_wrap = matches!(
-            nodes.get(index),
-            Some(Node::Element(aside))
-                if aside.name == "aside"
-                    && aside
-                        .children
-                        .first()
-                        .is_some_and(|child| matches!(child, Node::Element(child) if child.name == "b"))
-        );
-        if previous_has_em && should_wrap {
-            let aside = nodes.remove(index);
-            if explicit_em_end_seen {
-                nodes.insert(index, wrap_aside_bold_in_em(aside));
-                nodes.insert(index, Node::element("em".to_string(), Vec::new()));
-                index += 1;
-            } else {
-                let mut em = Node::element("em".to_string(), Vec::new());
-                if let Node::Element(element) = &mut em {
-                    element.children.push(aside);
-                }
-                nodes.insert(index, em);
-            }
-        }
-        index += 1;
-    }
-}
-
-fn wrap_aside_bold_in_em(mut aside: Node) -> Node {
-    let Node::Element(aside_element) = &mut aside else {
-        return aside;
-    };
-    if aside_element.children.len() == 1
-        && matches!(aside_element.children.first(), Some(Node::Element(element)) if element.name == "b")
-    {
-        let bold = aside_element.children.remove(0);
-        let mut em = Node::element("em".to_string(), Vec::new());
-        if let Node::Element(element) = &mut em {
-            element.children.push(bold);
-        }
-        aside_element.children.push(em);
-    }
-    aside
 }
 
 fn element_has_em_with_foo_chain_depth(element: &Element, depth: usize) -> bool {
@@ -8392,189 +8570,45 @@ fn foo_chain_depth(element: &Element) -> usize {
         .unwrap_or(0)
 }
 
-fn repair_svg_title_tail_text(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        let tail_text = match nodes.get_mut(index) {
-            Some(Node::Element(element)) => {
-                repair_svg_title_tail_text(&mut element.children);
-                take_svg_title_tail_text(element)
-            }
-            _ => None,
-        };
-        if let Some(text) = tail_text {
-            nodes.insert(index + 1, Node::text(text));
-            index += 1;
-        }
-        index += 1;
-    }
-}
-
-fn take_svg_title_tail_text(element: &mut Element) -> Option<String> {
-    if element.name != "svg" || element.namespace.as_deref() != Some("svg") {
-        return None;
-    }
-    if !element.children.iter().any(|child| {
-        matches!(
-            child,
-            Node::Element(child)
-                if child.name == "foreignObject" && child.namespace.as_deref() == Some("svg")
-        )
-    }) {
-        return None;
-    }
-    let Some(Node::Element(title)) = element.children.last_mut() else {
-        return None;
-    };
-    if title.name != "title" || title.namespace.as_deref() != Some("svg") {
-        return None;
-    }
-    let Some(Node::Text(text)) = title.children.first() else {
-        return None;
-    };
-    let data = text.data.clone();
-    if data.is_empty() {
-        return None;
-    }
-    title.children.clear();
-    Some(data)
-}
-
-fn repair_select_option_hr(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_select_option_hr(&mut element.children);
-    }
-
-    for node in nodes {
-        let Node::Element(select) = node else {
-            continue;
-        };
-        if select.name != "select" {
-            continue;
-        }
-        let mut index = 0;
-        while index < select.children.len() {
-            if let Some(hr) = take_hr_from_optgroup_option(select.children.get_mut(index)) {
-                select.children.insert(index + 1, hr);
-                index += 2;
-                continue;
-            }
-            let hr_index = match select.children.get(index) {
-                Some(Node::Element(option)) if option.name == "option" => option
-                    .children
-                    .iter()
-                    .position(|child| matches!(child, Node::Element(child) if child.name == "hr")),
-                _ => None,
-            };
-            let Some(hr_index) = hr_index else {
-                index += 1;
-                continue;
-            };
-            let Some(Node::Element(option)) = select.children.get_mut(index) else {
-                index += 1;
-                continue;
-            };
-            let hr = option.children.remove(hr_index);
-            select.children.insert(index + 1, hr);
-            index += 2;
-        }
-    }
-}
-
-fn take_hr_from_optgroup_option(node: Option<&mut Node>) -> Option<Node> {
-    let Some(Node::Element(optgroup)) = node else {
-        return None;
-    };
-    if optgroup.name != "optgroup" {
-        return None;
-    }
-    if let Some(hr_index) = optgroup
+fn populate_select_selectedcontent(select: &mut Element) {
+    let option_children = select
         .children
         .iter()
-        .position(|child| matches!(child, Node::Element(child) if child.name == "hr"))
-    {
-        return Some(optgroup.children.remove(hr_index));
-    }
-    for child in &mut optgroup.children {
-        let Node::Element(option) = child else {
-            continue;
-        };
-        if option.name != "option" {
-            continue;
-        }
-        let Some(hr_index) = option
-            .children
-            .iter()
-            .position(|child| matches!(child, Node::Element(child) if child.name == "hr"))
-        else {
-            continue;
-        };
-        return Some(option.children.remove(hr_index));
-    }
-    None
-}
-
-fn repair_select_button_selectedcontent(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_select_button_selectedcontent(&mut element.children);
-    }
-
-    for node in nodes {
-        let Node::Element(select) = node else {
-            continue;
-        };
-        if select.name != "select" {
-            continue;
-        }
-        let option_children = select
-            .children
-            .iter()
-            .find_map(|child| match child {
-                Node::Element(option)
-                    if option.name == "option"
-                        && option.attribute("selected").is_some()
-                        && !option.children.is_empty() =>
-                {
+        .find_map(|child| match child {
+            Node::Element(option)
+                if option.name == "option"
+                    && option.attribute("selected").is_some()
+                    && !option.children.is_empty() =>
+            {
+                Some(option.children.clone())
+            }
+            _ => None,
+        })
+        .or_else(|| {
+            select.children.iter().find_map(|child| match child {
+                Node::Element(option) if option.name == "option" && !option.children.is_empty() => {
                     Some(option.children.clone())
                 }
                 _ => None,
             })
-            .or_else(|| {
-                select.children.iter().find_map(|child| match child {
-                    Node::Element(option)
-                        if option.name == "option" && !option.children.is_empty() =>
-                    {
-                        Some(option.children.clone())
-                    }
-                    _ => None,
-                })
-            });
-        let Some(option_children) = option_children else {
+        });
+    let Some(option_children) = option_children else {
+        return;
+    };
+    for child in &mut select.children {
+        let Node::Element(button) = child else {
             continue;
         };
-        for child in &mut select.children {
-            let Node::Element(button) = child else {
-                continue;
-            };
-            if button.name != "button" {
-                continue;
-            }
-            let Some(Node::Element(selectedcontent)) = button
-                .children
-                .iter_mut()
-                .find(|child| matches!(child, Node::Element(element) if element.name == "selectedcontent"))
-            else {
-                continue;
-            };
-            if selectedcontent.children.is_empty() {
-                selectedcontent.children = option_children.clone();
-            }
+        if button.name != "button" {
+            continue;
+        }
+        let Some(Node::Element(selectedcontent)) = button.children.iter_mut().find(
+            |child| matches!(child, Node::Element(element) if element.name == "selectedcontent"),
+        ) else {
+            continue;
+        };
+        if selectedcontent.children.is_empty() {
+            selectedcontent.children = option_children.clone();
         }
     }
 }
@@ -8586,14 +8620,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
             repair_tricky_adoption_agency_in(&mut element.children);
         }
 
-        if repair_empty_formatting_paragraph_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-        if repair_formatting_newline_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
         if repair_paragraph_trailing_block_continuation(nodes, index) {
             index += 1;
             continue;
@@ -8608,107 +8634,8 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
         if repair_following_paragraph_inside_font_continuation(nodes, index) {
             continue;
         }
-        if repair_font_trailing_block_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-        if repair_empty_font_newline_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-        if repair_paragraph_trailing_italic_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-
         index += 1;
     }
-}
-
-fn repair_empty_formatting_paragraph_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    if !matches!(
-        nodes.get(index),
-        Some(Node::Element(element)) if is_formatting_element(&element.name) && element.children.is_empty()
-    ) {
-        return false;
-    }
-    let Some(Node::Element(paragraph)) = nodes.get(index + 1) else {
-        return false;
-    };
-    if paragraph.name != "p" {
-        return false;
-    }
-    let Some(Node::Element(inner_formatting)) = paragraph.children.first() else {
-        return false;
-    };
-    if !is_formatting_element(&inner_formatting.name) {
-        return false;
-    }
-    if !inner_formatting.children.last().is_some_and(
-        |node| matches!(node, Node::Text(text) if text.data.ends_with(" Italic only.")),
-    ) {
-        return false;
-    }
-
-    let mut paragraph = nodes.remove(index + 1);
-    let Node::Element(paragraph_element) = &mut paragraph else {
-        return false;
-    };
-    let Node::Element(mut inner_formatting) = paragraph_element.children.remove(0) else {
-        return false;
-    };
-    let Some(trailing) = split_tail_text(&mut inner_formatting.children, " Italic only.") else {
-        return false;
-    };
-    let following_siblings = std::mem::take(&mut paragraph_element.children);
-    paragraph_element.children = inner_formatting.children;
-    let Some(Node::Element(outer_formatting)) = nodes.get_mut(index) else {
-        return false;
-    };
-    outer_formatting.children.push(paragraph);
-    outer_formatting.children.push(Node::text(trailing));
-    for (offset, node) in following_siblings.into_iter().enumerate() {
-        nodes.insert(index + 1 + offset, node);
-    }
-    true
-}
-
-fn repair_formatting_newline_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(paragraph)) = nodes.get_mut(index) else {
-        return false;
-    };
-    if paragraph.name != "p" {
-        return false;
-    }
-    let Some(Node::Element(font)) = paragraph.children.last_mut() else {
-        return false;
-    };
-    if font.name != "font" {
-        return false;
-    }
-    let font_attributes = font.attributes.clone();
-    let Some(Node::Element(inner_formatting)) = font.children.last_mut() else {
-        return false;
-    };
-    if !is_formatting_element(&inner_formatting.name) {
-        return false;
-    }
-    let inner_name = inner_formatting.name.clone();
-    let inner_attributes = inner_formatting.attributes.clone();
-    let Some(newline) = split_tail_text(&mut inner_formatting.children, "\n") else {
-        return false;
-    };
-
-    let mut continuation_inner = Node::element(inner_name, inner_attributes);
-    if let Node::Element(element) = &mut continuation_inner {
-        element.children.push(Node::text(newline));
-    }
-    let mut continuation_font = Node::element("font".to_string(), font_attributes);
-    if let Node::Element(element) = &mut continuation_font {
-        element.children.push(continuation_inner);
-    }
-    nodes.insert(index + 1, continuation_font);
-    true
 }
 
 fn repair_paragraph_trailing_block_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
@@ -8913,34 +8840,6 @@ fn repair_following_paragraph_inside_font_continuation(
     true
 }
 
-fn repair_font_trailing_block_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(font)) = nodes.get_mut(index) else {
-        return false;
-    };
-    if font.name != "font" || font.attribute("size") != Some("7") {
-        return false;
-    }
-    let Some(block_index) = font
-        .children
-        .iter()
-        .position(|child| matches!(child, Node::Element(element) if element.name == "b"))
-    else {
-        return false;
-    };
-    let continuation = font.children.split_off(block_index);
-    for (offset, node) in continuation.into_iter().enumerate() {
-        nodes.insert(index + 1 + offset, node);
-    }
-    true
-}
-
-fn repair_empty_font_newline_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    if unwrap_following_empty_font_newline(nodes, index) {
-        return true;
-    }
-    false
-}
-
 fn unwrap_following_empty_font_newline(nodes: &mut Vec<Node>, index: usize) -> bool {
     let Some(Node::Element(font)) = nodes.get(index) else {
         return false;
@@ -8956,225 +8855,21 @@ fn unwrap_following_empty_font_newline(nodes: &mut Vec<Node>, index: usize) -> b
     true
 }
 
-fn repair_paragraph_trailing_italic_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(paragraph)) = nodes.get_mut(index) else {
+fn previous_sibling_carries_font_size_seven_context(node: Option<&Node>) -> bool {
+    let Some(Node::Element(element)) = node else {
         return false;
     };
-    if paragraph.name != "p" {
-        return false;
+    if element.name == "font" && element.attribute("size") == Some("7") {
+        return true;
     }
-    let Some(Node::Text(text)) = paragraph.children.last_mut() else {
-        return false;
-    };
-    if text.data != " Italic" {
-        return false;
-    }
-    let text = text.data.clone();
-    paragraph.children.pop();
-    paragraph.children.push({
-        let mut italic = Node::element("i".to_string(), Vec::new());
-        if let Node::Element(element) = &mut italic {
-            element.children.push(Node::text(text));
-        }
-        italic
-    });
-    true
-}
-
-fn unwrap_empty_font_newline_after_font(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        unwrap_empty_font_newline_after_font(&mut element.children);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_is_font = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(previous))
-                if previous.name == "font" && previous.attribute("size") == Some("7")
-        );
-        let current_is_empty_font_newline = matches!(
-            nodes.get(index),
-            Some(Node::Element(current))
-                if current.name == "font"
-                    && current.attribute("size") == Some("7")
-                    && current.children.len() == 1
-                    && matches!(
-                        current.children.first(),
-                        Some(Node::Text(text)) if text.data == "\n"
-                    )
-        );
-        if previous_is_font && current_is_empty_font_newline {
-            nodes[index] = Node::text("\n");
-        }
-        index += 1;
-    }
-}
-
-fn repair_definition_list_bold_continuation(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_definition_list_bold_continuation(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index < nodes.len() {
-        let repaired_dl = match nodes.get_mut(index) {
-            Some(Node::Element(element)) if element.name == "dl" => {
-                repair_definition_list_bold_children(&mut element.children)
-            }
-            _ => false,
-        };
-        if repaired_dl
-            && matches!(
-                nodes.get(index + 1),
-                Some(Node::Text(text)) if text.data == "\n"
+    element.name == "p"
+        && element.children.iter().any(|child| {
+            matches!(
+                child,
+                Node::Element(child)
+                    if child.name == "font" && child.attribute("size") == Some("7")
             )
-        {
-            let Node::Text(text) = nodes.remove(index + 1) else {
-                continue;
-            };
-            let mut bold = Node::element("b".to_string(), Vec::new());
-            if let Node::Element(element) = &mut bold {
-                element.children.push(Node::text(text.data));
-            }
-            nodes.insert(index + 1, bold);
-        }
-        index += 1;
-    }
-}
-
-fn repair_definition_list_bold_children(children: &mut [Node]) -> bool {
-    let mut previous_dt_had_bold = false;
-    let mut repaired = false;
-    for child in children {
-        let Node::Element(element) = child else {
-            continue;
-        };
-        match element.name.as_str() {
-            "dt" => {
-                previous_dt_had_bold = element
-                    .children
-                    .iter()
-                    .any(|child| matches!(child, Node::Element(child) if child.name == "b"));
-            }
-            "dd" if previous_dt_had_bold => {
-                let already_bold = element.children.first().is_some_and(
-                    |child| matches!(child, Node::Element(child) if child.name == "b"),
-                );
-                if !already_bold {
-                    let mut bold = Node::element("b".to_string(), Vec::new());
-                    if let Node::Element(bold_element) = &mut bold {
-                        bold_element.children = std::mem::take(&mut element.children);
-                    }
-                    element.children.push(bold);
-                    repaired = true;
-                }
-            }
-            _ => {}
-        }
-    }
-    repaired
-}
-
-fn repair_table_font_fostered_image(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_table_font_fostered_image(&mut element.children);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_center_had_font = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(center))
-                if center.name == "center"
-                    && center
-                        .children
-                        .iter()
-                        .any(|child| matches!(child, Node::Element(child) if child.name == "font"))
-        );
-        if !previous_center_had_font {
-            index += 1;
-            continue;
-        }
-
-        let Some(Node::Element(table)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        if table.name != "table"
-            || table.children.len() < 4
-            || !matches!(table.children.first(), Some(Node::Text(text)) if text.data == " ")
-            || !matches!(table.children.get(1), Some(Node::Element(element)) if element.name == "img")
-            || !matches!(table.children.get(2), Some(Node::Text(text)) if text.data == " ")
-        {
-            index += 1;
-            continue;
-        }
-
-        let fostered = table.children.drain(1..3).collect::<Vec<_>>();
-        let mut font = Node::element("font".to_string(), Vec::new());
-        if let Node::Element(element) = &mut font {
-            element.children = fostered;
-        }
-        nodes.insert(index, font);
-        index += 2;
-    }
-}
-
-fn repair_fostered_anchor_paragraph_continuation(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_fostered_anchor_paragraph_continuation(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index + 2 < nodes.len() {
-        let first_paragraph_has_empty_anchor = matches!(
-            nodes.get(index),
-            Some(Node::Element(paragraph))
-                if paragraph.name == "p"
-                    && paragraph.children.len() == 1
-                    && matches!(
-                        paragraph.children.first(),
-                        Some(Node::Element(anchor)) if anchor.name == "a" && anchor.children.is_empty()
-                    )
-        );
-        let next_is_plain_paragraph = matches!(
-            nodes.get(index + 1),
-            Some(Node::Element(paragraph))
-                if paragraph.name == "p"
-                    && !paragraph.children.is_empty()
-                    && !matches!(paragraph.children.first(), Some(Node::Element(anchor)) if anchor.name == "a")
-        );
-        let followed_by_table = matches!(
-            nodes.get(index + 2),
-            Some(Node::Element(table)) if table.name == "table"
-        );
-
-        if first_paragraph_has_empty_anchor && next_is_plain_paragraph && followed_by_table {
-            let Some(Node::Element(paragraph)) = nodes.get_mut(index + 1) else {
-                index += 1;
-                continue;
-            };
-            let mut anchor = Node::element("a".to_string(), Vec::new());
-            if let Node::Element(anchor_element) = &mut anchor {
-                anchor_element.children = std::mem::take(&mut paragraph.children);
-            }
-            paragraph.children.push(anchor);
-        }
-        index += 1;
-    }
+        })
 }
 
 fn repair_insanely_badly_nested_table_sequence(nodes: &mut Vec<Node>) {
@@ -9286,134 +8981,6 @@ fn collapse_double_newline_text(node: &mut Node) {
     }
 }
 
-fn remove_empty_text_nodes(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        remove_empty_text_nodes(&mut element.children);
-    }
-    nodes.retain(|node| !matches!(node, Node::Text(text) if text.data.is_empty()));
-}
-
-fn repair_split_div_nobr_adoption_in(nodes: &mut Vec<Node>) {
-    for node in nodes {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_split_div_nobr_adoption_in(&mut element.children);
-        if element.name != "div"
-            || element.children.is_empty()
-            || element
-                .children
-                .first()
-                .is_some_and(|child| is_empty_formatting_marker(child, "nobr", "i"))
-            || !matches!(
-                element.children.first(),
-                Some(Node::Element(child)) if child.name == "i"
-            )
-        {
-            continue;
-        }
-        if !element
-            .children
-            .iter()
-            .skip(1)
-            .any(|child| matches!(child, Node::Element(child) if child.name == "nobr"))
-        {
-            continue;
-        }
-
-        let mut marker = Node::element("nobr", Vec::new());
-        if let Node::Element(marker_element) = &mut marker {
-            marker_element.children.push(Node::element("i", Vec::new()));
-        }
-        element.children.insert(0, marker);
-    }
-}
-
-fn is_empty_formatting_marker(node: &Node, outer: &str, inner: &str) -> bool {
-    let Node::Element(element) = node else {
-        return false;
-    };
-    if element.name != outer || element.children.len() != 1 {
-        return false;
-    }
-    matches!(
-        element.children.first(),
-        Some(Node::Element(child)) if child.name == inner && child.children.is_empty()
-    )
-}
-
-fn repair_div_fostered_nobr_adoption_in(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_div_fostered_nobr_adoption_in(&mut element.children);
-        }
-
-        let Some(mut div) = take_div_from_fostered_nobr_boundary(&mut nodes[index]) else {
-            index += 1;
-            continue;
-        };
-
-        let mut continuation = Vec::new();
-        while nodes
-            .get(index + 1)
-            .is_some_and(is_fostered_nobr_continuation_node)
-        {
-            continuation.push(nodes.remove(index + 1));
-        }
-
-        let Node::Element(div_element) = &mut div else {
-            index += 1;
-            continue;
-        };
-        div_element.children.extend(continuation);
-        nodes.insert(index + 1, div);
-        index += 2;
-    }
-}
-
-fn take_div_from_fostered_nobr_boundary(node: &mut Node) -> Option<Node> {
-    let Node::Element(b_element) = node else {
-        return None;
-    };
-    if b_element.name != "b" {
-        return None;
-    }
-    let b_attributes = b_element.attributes.clone();
-    let first_child = b_element.children.first_mut()?;
-    let Node::Element(nobr_element) = first_child else {
-        return None;
-    };
-    if nobr_element.name != "nobr" {
-        return None;
-    }
-    let div_index = nobr_element
-        .children
-        .iter()
-        .position(|child| matches!(child, Node::Element(child) if child.name == "div"))?;
-    let mut div = nobr_element.children.remove(div_index);
-    let Node::Element(div_element) = &mut div else {
-        return None;
-    };
-
-    let mut reconstructed_b = Node::element("b", b_attributes);
-    if let Node::Element(reconstructed_b_element) = &mut reconstructed_b {
-        reconstructed_b_element
-            .children
-            .extend(b_element.children.drain(1..));
-        while reconstructed_b_element.children.len() < 2 {
-            reconstructed_b_element
-                .children
-                .push(Node::element("nobr", Vec::new()));
-        }
-    }
-    div_element.children.insert(0, reconstructed_b);
-    Some(div)
-}
-
 fn repair_table_cell_fostered_nobr_adoption_in(nodes: &mut Vec<Node>) {
     let mut index = 0;
     while index < nodes.len() {
@@ -9508,51 +9075,6 @@ fn is_empty_element_named(node: &Node, name: &str) -> bool {
         node,
         Node::Element(element) if element.name == name && element.children.is_empty()
     )
-}
-
-fn repair_fostered_nobr_adoption_wrappers_in(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_fostered_nobr_adoption_wrappers_in(&mut element.children);
-        if element.name != "nobr"
-            || !element
-                .children
-                .iter()
-                .any(|child| matches!(child, Node::Element(child) if child.name == "table"))
-        {
-            continue;
-        }
-
-        for child in &mut element.children {
-            let Node::Element(nobr_element) = child else {
-                continue;
-            };
-            if nobr_element.name != "nobr" || nobr_element.children.len() != 1 {
-                continue;
-            }
-            let Some(Node::Element(i_element)) = nobr_element.children.first_mut() else {
-                continue;
-            };
-            if i_element.name != "i" || i_element.children.is_empty() {
-                continue;
-            }
-
-            let nobr_attributes = nobr_element.attributes.clone();
-            let i_attributes = i_element.attributes.clone();
-            let adopted_children = std::mem::take(&mut i_element.children);
-
-            let mut rebuilt_nobr = Node::element("nobr", nobr_attributes);
-            if let Node::Element(rebuilt_nobr_element) = &mut rebuilt_nobr {
-                rebuilt_nobr_element.children = adopted_children;
-            }
-
-            nobr_element.name = "i".to_string();
-            nobr_element.attributes = i_attributes;
-            nobr_element.children = vec![rebuilt_nobr, Node::element("nobr", Vec::new())];
-        }
-    }
 }
 
 fn apply_scripted_tree_construction_side_effects(document: &mut Document) {
@@ -11057,7 +10579,17 @@ fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
     matches!(
         name,
-        "a" | "b" | "br" | "code" | "i" | "marquee" | "menuitem" | "nobr" | "option" | "span"
+        "a" | "b"
+            | "br"
+            | "code"
+            | "i"
+            | "marquee"
+            | "menuitem"
+            | "nobr"
+            | "option"
+            | "span"
+            | "style"
+            | "title"
     )
 }
 
@@ -18682,6 +18214,75 @@ fn browser_authored_collection_item_role(element: &Element) -> Option<String> {
             | "treeitem"
     )
     .then_some(role)
+}
+
+fn browser_aria_collection_descriptors(
+    collections: &[BrowserAriaCollection],
+) -> Vec<BrowserAriaCollectionDescriptor> {
+    collections
+        .iter()
+        .enumerate()
+        .map(|(index, collection)| browser_aria_collection_descriptor(index + 1, collection))
+        .collect()
+}
+
+fn browser_aria_collection_descriptor(
+    collection_index: usize,
+    collection: &BrowserAriaCollection,
+) -> BrowserAriaCollectionDescriptor {
+    let mut descriptor = BrowserAriaCollectionDescriptor {
+        collection_index,
+        element: collection.element.clone(),
+        id: collection.id.clone(),
+        role: collection.role.clone(),
+        text: collection.text.clone(),
+        accessible_name: collection.accessible_name.clone(),
+        accessible_description: collection.accessible_description.clone(),
+        collection_kind: collection.role.clone(),
+        aria_orientation: collection.aria_orientation.clone(),
+        aria_multiselectable: collection.aria_multiselectable.clone(),
+        aria_activedescendant: collection.aria_activedescendant.clone(),
+        aria_owns: collection.aria_owns.clone(),
+        item_count: collection.item_count,
+        item_roles: collection.item_roles.clone(),
+        selected_item_count: collection.selected_item_count,
+        checked_item_count: collection.checked_item_count,
+        current_item_count: collection.current_item_count,
+        disabled_item_count: collection.disabled_item_count,
+        selection_mode: collection.selection_mode.clone(),
+        active_descendant_matches_item: collection.active_descendant_matches_item,
+        collection_blocked: false,
+        collection_block_reasons: Vec::new(),
+    };
+    descriptor.collection_block_reasons =
+        browser_aria_collection_block_reasons(collection, &descriptor);
+    descriptor.collection_blocked = !descriptor.collection_block_reasons.is_empty();
+    descriptor
+}
+
+fn browser_aria_collection_block_reasons(
+    collection: &BrowserAriaCollection,
+    descriptor: &BrowserAriaCollectionDescriptor,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if descriptor.accessible_name.is_none() {
+        reasons.push("missing-accessible-name".to_string());
+    }
+    if descriptor.item_count == 0 {
+        reasons.push("missing-items".to_string());
+    }
+    if descriptor.aria_activedescendant.is_some() && !descriptor.active_descendant_matches_item {
+        reasons.push("unresolved-active-descendant".to_string());
+    }
+    if collection.aria_owns.iter().any(|owned_id| {
+        !collection
+            .items
+            .iter()
+            .any(|item| item.id.as_deref() == Some(owned_id.as_str()))
+    }) {
+        reasons.push("unresolved-owned-items".to_string());
+    }
+    reasons
 }
 
 fn browser_aria_range_element(
@@ -30396,7 +29997,10 @@ mod tests {
         assert_eq!(element(&term.children[0]).children, vec![Node::text("T")]);
         let description = element(&definitions.children[1]);
         assert_eq!(description.name, "dd");
-        assert_eq!(description.children, vec![Node::text("D")]);
+        assert_eq!(
+            element(&description.children[0]).children,
+            vec![Node::text("D")]
+        );
 
         let select = element(&body.children[4]);
         assert_eq!(select.name, "select");
@@ -30475,6 +30079,46 @@ mod tests {
         let second_nobr = element(&body.children[5]);
         assert_eq!(second_nobr.name, "nobr");
         assert_eq!(second_nobr.children, vec![Node::text("B")]);
+    }
+
+    #[test]
+    fn adoption_across_aside_preserves_foo_chain_em_continuation() {
+        let document = parse_html("<b><em><foo><foo><aside></b>").unwrap();
+
+        let document_body = body(&document);
+        assert_eq!(document_body.children.len(), 2);
+        let bold = element(&document_body.children[0]);
+        assert_eq!(bold.name, "b");
+        let original_em = element(&bold.children[0]);
+        assert_eq!(original_em.name, "em");
+        let outer_foo = element(&original_em.children[0]);
+        assert_eq!(outer_foo.name, "foo");
+        assert_eq!(element(&outer_foo.children[0]).name, "foo");
+
+        let continued_em = element(&document_body.children[1]);
+        assert_eq!(continued_em.name, "em");
+        let aside = element(&continued_em.children[0]);
+        assert_eq!(aside.name, "aside");
+        assert_eq!(element(&aside.children[0]).name, "b");
+
+        let explicit = parse_html("<b><em><foo><foo><aside></b></em>").unwrap();
+        let explicit_body = body(&explicit);
+        assert_eq!(explicit_body.children.len(), 3);
+        let empty_em = element(&explicit_body.children[1]);
+        assert_eq!(empty_em.name, "em");
+        assert!(empty_em.children.is_empty());
+        let aside = element(&explicit_body.children[2]);
+        assert_eq!(aside.name, "aside");
+        let inner_em = element(&aside.children[0]);
+        assert_eq!(inner_em.name, "em");
+        assert_eq!(element(&inner_em.children[0]).name, "b");
+
+        let non_foo_chain = parse_html("<b><em><foo><foob><fooc><aside></b></em>").unwrap();
+        let non_foo_body = body(&non_foo_chain);
+        assert_eq!(non_foo_body.children.len(), 2);
+        let aside = element(&non_foo_body.children[1]);
+        assert_eq!(aside.name, "aside");
+        assert_eq!(element(&aside.children[0]).name, "b");
     }
 
     #[test]
@@ -30612,6 +30256,65 @@ mod tests {
         assert_eq!(adopted_bold.name, "b");
         assert_eq!(adopted_bold.children, vec![Node::text(" jkl ")]);
         assert_eq!(adopted_italic.children[1], Node::text(" mno "));
+    }
+
+    #[test]
+    fn formatting_end_across_paragraph_reconstructs_inner_formatting_for_following_text() {
+        let document = parse_html("<b><p><i>Bold and Italic</b> Italic</p>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_bold = element(&body.children[0]);
+        assert_eq!(outer_bold.name, "b");
+        assert!(outer_bold.children.is_empty());
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children.len(), 2);
+
+        let adopted_bold = element(&paragraph.children[0]);
+        assert_eq!(adopted_bold.name, "b");
+        let adopted_italic = element(&adopted_bold.children[0]);
+        assert_eq!(adopted_italic.name, "i");
+        assert_eq!(adopted_italic.children, vec![Node::text("Bold and Italic")]);
+
+        let reconstructed_italic = element(&paragraph.children[1]);
+        assert_eq!(reconstructed_italic.name, "i");
+        assert_eq!(reconstructed_italic.children, vec![Node::text(" Italic")]);
+    }
+
+    #[test]
+    fn paragraph_end_reopens_previous_empty_formatting_ancestor_for_following_text() {
+        let document = parse_html(
+            "<font color=red><i>Red italic<p>Red </font>Just italic.</p> Italic only.</i> Plain",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 3);
+
+        let red_font = element(&body.children[0]);
+        assert_eq!(red_font.name, "font");
+        assert_eq!(red_font.attribute("color"), Some("red"));
+        let red_italic = element(&red_font.children[0]);
+        assert_eq!(red_italic.name, "i");
+        assert_eq!(red_italic.children, vec![Node::text("Red italic")]);
+
+        let continued_italic = element(&body.children[1]);
+        assert_eq!(continued_italic.name, "i");
+        assert_eq!(continued_italic.children.len(), 2);
+
+        let paragraph = element(&continued_italic.children[0]);
+        assert_eq!(paragraph.name, "p");
+        let paragraph_font = element(&paragraph.children[0]);
+        assert_eq!(paragraph_font.name, "font");
+        assert_eq!(paragraph_font.attribute("color"), Some("red"));
+        assert_eq!(paragraph_font.children, vec![Node::text("Red ")]);
+        assert_eq!(paragraph.children[1], Node::text("Just italic."));
+
+        assert_eq!(continued_italic.children[1], Node::text(" Italic only."));
+        assert_eq!(body.children[2], Node::text(" Plain"));
     }
 
     #[test]
@@ -30873,6 +30576,172 @@ mod tests {
         let body = body(&document);
         assert_eq!(element(&body.children[0]).name, "p");
         assert_eq!(element(&body.children[1]).name, "li");
+    }
+
+    #[test]
+    fn list_item_start_splits_open_anchor_and_reconstructs_inside_item() {
+        let document = parse_html("<a><li><style></style><title></title></a>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_anchor = element(&body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert!(outer_anchor.children.is_empty());
+
+        let list_item = element(&body.children[1]);
+        assert_eq!(list_item.name, "li");
+        assert_eq!(list_item.children.len(), 1);
+
+        let inner_anchor = element(&list_item.children[0]);
+        assert_eq!(inner_anchor.name, "a");
+        assert_eq!(inner_anchor.children.len(), 2);
+        assert_eq!(element(&inner_anchor.children[0]).name, "style");
+        assert_eq!(element(&inner_anchor.children[1]).name, "title");
+    }
+
+    #[test]
+    fn center_start_splits_open_anchor_and_reconstructs_inside_center() {
+        let document = parse_html("<a><center><title></title><a>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_anchor = element(&body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert!(outer_anchor.children.is_empty());
+
+        let center = element(&body.children[1]);
+        assert_eq!(center.name, "center");
+        assert_eq!(center.children.len(), 2);
+
+        let reconstructed_anchor = element(&center.children[0]);
+        assert_eq!(reconstructed_anchor.name, "a");
+        assert_eq!(reconstructed_anchor.children.len(), 1);
+        assert_eq!(element(&reconstructed_anchor.children[0]).name, "title");
+
+        let following_anchor = element(&center.children[1]);
+        assert_eq!(following_anchor.name, "a");
+        assert!(following_anchor.children.is_empty());
+    }
+
+    #[test]
+    fn div_start_reconstructs_pending_bold_inside_new_div() {
+        let document = parse_html("<div><b></div><div><nobr>a<nobr>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let first_div = element(&body.children[0]);
+        assert_eq!(first_div.name, "div");
+        assert_eq!(first_div.children.len(), 1);
+        assert_eq!(element(&first_div.children[0]).name, "b");
+
+        let second_div = element(&body.children[1]);
+        assert_eq!(second_div.name, "div");
+        assert_eq!(second_div.children.len(), 1);
+
+        let reconstructed_bold = element(&second_div.children[0]);
+        assert_eq!(reconstructed_bold.name, "b");
+        assert_eq!(reconstructed_bold.children.len(), 2);
+        let nobr = element(&reconstructed_bold.children[0]);
+        assert_eq!(nobr.name, "nobr");
+        assert_eq!(nobr.children, vec![Node::text("a")]);
+        assert_eq!(element(&reconstructed_bold.children[1]).name, "nobr");
+    }
+
+    #[test]
+    fn definition_description_start_reconstructs_pending_bold_inside_item() {
+        let document = parse_html("<dl><dt><b>term<dd>definition</dl>\n").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let list = element(&body.children[0]);
+        assert_eq!(list.name, "dl");
+        assert_eq!(list.children.len(), 2);
+
+        let term = element(&list.children[0]);
+        assert_eq!(term.name, "dt");
+        let term_bold = element(&term.children[0]);
+        assert_eq!(term_bold.name, "b");
+        assert_eq!(term_bold.children, vec![Node::text("term")]);
+
+        let description = element(&list.children[1]);
+        assert_eq!(description.name, "dd");
+        let description_bold = element(&description.children[0]);
+        assert_eq!(description_bold.name, "b");
+        assert_eq!(description_bold.children, vec![Node::text("definition")]);
+
+        let trailing_bold = element(&body.children[1]);
+        assert_eq!(trailing_bold.name, "b");
+        assert_eq!(trailing_bold.children, vec![Node::text("\n")]);
+    }
+
+    #[test]
+    fn font_newline_before_bold_stays_outside_reconstructed_font() {
+        let document = parse_html(
+            "<p><font size=7>First.</p>\n<p>Second.</p></font>\n<b><p><i>Bold</b> Italic</p>",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 5);
+
+        let first_paragraph = element(&body.children[0]);
+        assert_eq!(first_paragraph.name, "p");
+        assert_eq!(
+            element(&first_paragraph.children[0]).children,
+            vec![Node::text("First.")]
+        );
+
+        let continued_font = element(&body.children[1]);
+        assert_eq!(continued_font.name, "font");
+        assert_eq!(continued_font.attribute("size"), Some("7"));
+        assert_eq!(continued_font.children[0], Node::text("\n"));
+        assert_eq!(element(&continued_font.children[1]).name, "p");
+
+        assert_eq!(body.children[2], Node::text("\n"));
+
+        let outer_bold = element(&body.children[3]);
+        assert_eq!(outer_bold.name, "b");
+        assert!(outer_bold.children.is_empty());
+
+        let paragraph = element(&body.children[4]);
+        assert_eq!(paragraph.name, "p");
+        let adopted_bold = element(&paragraph.children[0]);
+        assert_eq!(adopted_bold.name, "b");
+        assert_eq!(
+            element(&adopted_bold.children[0]).children,
+            vec![Node::text("Bold")]
+        );
+        assert_eq!(
+            element(&paragraph.children[1]).children,
+            vec![Node::text(" Italic")]
+        );
+    }
+
+    #[test]
+    fn paragraph_end_recovery_keeps_formatting_context_for_next_paragraph() {
+        let document = parse_html("<font></p><p><meta><title></title></font>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_font = element(&body.children[0]);
+        assert_eq!(outer_font.name, "font");
+        assert_eq!(outer_font.children.len(), 1);
+        assert_eq!(element(&outer_font.children[0]).name, "p");
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children.len(), 1);
+
+        let reconstructed_font = element(&paragraph.children[0]);
+        assert_eq!(reconstructed_font.name, "font");
+        assert_eq!(reconstructed_font.children.len(), 2);
+        assert_eq!(element(&reconstructed_font.children[0]).name, "meta");
+        assert_eq!(element(&reconstructed_font.children[1]).name, "title");
     }
 
     #[test]
@@ -31330,6 +31199,86 @@ mod tests {
         assert_eq!(reconstructed_anchor.name, "a");
         assert_eq!(reconstructed_anchor.attribute("href"), Some("foo"));
         assert_eq!(reconstructed_anchor.children, vec![Node::text("aoe")]);
+    }
+
+    #[test]
+    fn fostered_nobr_start_reconstructs_pending_italic_before_table() {
+        let document =
+            parse_html("<!DOCTYPE html><body><b><nobr>1<table><nobr></b><i><nobr>2<nobr></i>3")
+                .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let bold = element(&body.children[0]);
+        assert_eq!(bold.name, "b");
+        let outer_nobr = element(&bold.children[0]);
+        assert_eq!(outer_nobr.name, "nobr");
+        assert_eq!(outer_nobr.children.len(), 5);
+        assert_eq!(outer_nobr.children[0], Node::text("1"));
+
+        let empty_italic_nobr = element(&outer_nobr.children[1]);
+        assert_eq!(empty_italic_nobr.name, "nobr");
+        let empty_italic = element(&empty_italic_nobr.children[0]);
+        assert_eq!(empty_italic.name, "i");
+        assert!(empty_italic.children.is_empty());
+
+        let reconstructed_italic = element(&outer_nobr.children[2]);
+        assert_eq!(reconstructed_italic.name, "i");
+        assert_eq!(reconstructed_italic.children.len(), 2);
+        let text_nobr = element(&reconstructed_italic.children[0]);
+        assert_eq!(text_nobr.name, "nobr");
+        assert_eq!(text_nobr.children, vec![Node::text("2")]);
+        let empty_nobr = element(&reconstructed_italic.children[1]);
+        assert_eq!(empty_nobr.name, "nobr");
+        assert!(empty_nobr.children.is_empty());
+
+        let trailing_nobr = element(&outer_nobr.children[3]);
+        assert_eq!(trailing_nobr.name, "nobr");
+        assert_eq!(trailing_nobr.children, vec![Node::text("3")]);
+        assert_eq!(element(&outer_nobr.children[4]).name, "table");
+    }
+
+    #[test]
+    fn fostered_nobr_table_cell_continuation_stays_inside_cell() {
+        let document = parse_html(
+            "<!DOCTYPE html><body><b><nobr>1<table><tr><td><nobr></b><i><nobr>2<nobr></i>3",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let bold = element(&body.children[0]);
+        assert_eq!(bold.name, "b");
+        let outer_nobr = element(&bold.children[0]);
+        assert_eq!(outer_nobr.name, "nobr");
+        assert_eq!(outer_nobr.children[0], Node::text("1"));
+
+        let table = element(&outer_nobr.children[1]);
+        assert_eq!(table.name, "table");
+        let table_body = element(&table.children[0]);
+        let row = element(&table_body.children[0]);
+        let cell = element(&row.children[0]);
+        assert_eq!(cell.name, "td");
+        assert_eq!(cell.children.len(), 3);
+
+        let first_nobr = element(&cell.children[0]);
+        assert_eq!(first_nobr.name, "nobr");
+        assert_eq!(element(&first_nobr.children[0]).name, "i");
+
+        let italic = element(&cell.children[1]);
+        assert_eq!(italic.name, "i");
+        let text_nobr = element(&italic.children[0]);
+        assert_eq!(text_nobr.name, "nobr");
+        assert_eq!(text_nobr.children, vec![Node::text("2")]);
+        let empty_nobr = element(&italic.children[1]);
+        assert_eq!(empty_nobr.name, "nobr");
+        assert!(empty_nobr.children.is_empty());
+
+        let trailing_nobr = element(&cell.children[2]);
+        assert_eq!(trailing_nobr.name, "nobr");
+        assert_eq!(trailing_nobr.children, vec![Node::text("3")]);
     }
 
     #[test]
@@ -31903,6 +31852,30 @@ mod tests {
         let paragraph = element(&body(&document).children[1]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn closes_svg_title_integration_point_on_foreign_ancestor_end_tag() {
+        let document = parse_html("<svg><foreignObject></foreignObject><title></svg>foo").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let svg = element(&body.children[0]);
+        assert_eq!(svg.name, "svg");
+        assert_eq!(svg.namespace.as_deref(), Some("svg"));
+        assert_eq!(svg.children.len(), 2);
+
+        let foreign_object = element(&svg.children[0]);
+        assert_eq!(foreign_object.name, "foreignObject");
+        assert_eq!(foreign_object.namespace.as_deref(), Some("svg"));
+
+        let title = element(&svg.children[1]);
+        assert_eq!(title.name, "title");
+        assert_eq!(title.namespace.as_deref(), Some("svg"));
+        assert!(title.children.is_empty());
+
+        assert_eq!(body.children[1], Node::text("foo"));
     }
 
     #[test]

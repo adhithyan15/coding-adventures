@@ -1,5 +1,71 @@
 # Changelog — `twig-aot`
 
+## 0.22.0 — 2026-06-28 — native string comparison metadata folding (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds literal-only `str_cmp` to the shared `-1`,
+`0`, or `1` integer convention before direct native lowering.
+
+## 0.21.0 — 2026-06-28 — native substring metadata folding (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds literal-only `str_slice` results into the
+same native byte-buffer metadata used by `str_const` and `str_concat`. This lets
+Twig `(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` fold the slice to
+`BCD` and the final `str_index` to byte `67` before direct native lowering.
+
+## 0.20.0 — 2026-06-28 — native computed string index metadata (LANG-FULL E4)
+
+`prepare_module_for_aot` now records folded `str_len` results as integer
+metadata and propagates that metadata through typed integer arithmetic. This
+lets Twig `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` fold the
+native `str_index` to byte `69` instead of leaving an unsupported E4 string op
+for the direct native backend.
+
+## 0.19.0 — 2026-06-27 — native string literal metadata through local moves (LANG-FULL E4)
+
+`prepare_module_for_aot` now propagates literal string and integer metadata
+through `mov`, so lexical Twig bindings such as `(let ((s "ABC") (i 2))
+(string-ref s i))` still fold the native `str_index` to a byte constant instead
+of leaving an unsupported string op in the direct native backend.
+
+## 0.18.0 — 2026-06-27 — native literal string index OOB trap (LANG-FULL E4)
+
+`prepare_module_for_aot` now preserves the E4 trap contract for direct-literal
+`str_index` when the index is statically out of range. The native rewrite emits
+an unconditional `type_assert` trap before a dummy destination seed, so
+`(string-ref "ABC" 3)` reaches native machine code and traps at runtime instead
+of being rejected before execution.
+
+## 0.17.0 — 2026-06-27 — native literal string index lowering (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds direct-literal `str_index` when both the
+string value and index are statically known. Twig `(string-ref "ABC" 1)` now
+runs through the native AOT column and returns byte/codepoint `66`, matching the
+shared E4 byte-string semantics for printable ASCII. Dynamic string indexing and
+the out-of-bounds trap matrix proof remain follow-up runtime slices.
+
+## 0.16.0 — 2026-06-27 — native literal string metadata lowering (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds `str_len`, `str_eq`, and literal
+`str_concat` metadata over direct string literals before native machine-code
+lowering. This lets Twig `(string-length "HELLO")`,
+`(string=? "HELLO" "HELLO")`, and
+`(string-length (string-append "AB" "CDE"))` run through the native AOT column
+without adding rodata string objects or a dynamic string runtime. The existing
+`str_const` + `print_str` rewrite still handles literal output, and non-literal
+byte-string ops remain deferred.
+
+## 0.15.0 — 2026-06-27 — native string literal PRINT lowering (LANG-FULL E4 / BA4)
+
+`prepare_module_for_aot` now lowers the landed E4 literal-output pair
+`str_const` + `print_str` into the native runtime path that already existed:
+`alloc_bytes`, one `store_byte` per printable-ASCII byte, and
+`call_builtin "print_string"` (`__twig_print_string(ptr,len)`). This covers the
+direct native AOT column without adding object-file rodata support or duplicating
+machine-backend logic.
+
+Added unit coverage for the rewrite shape and a Mach-O object compile test that
+proves the transformed IIR reaches the aarch64 backend/packager.
+
 ## 0.14.0 — 2026-06-10 — `lispy_runtime.c`: universal exit coercion (LANG77 / McCarthy W13b)
 
 Adds `__twig_lispy_to_exit_code(uint64_t)` to the shared tagged-word C runtime: it

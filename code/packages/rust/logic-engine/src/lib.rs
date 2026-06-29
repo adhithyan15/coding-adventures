@@ -361,6 +361,22 @@ impl ClauseIndex {
     }
 }
 
+/// Evidence that can gate an LR contribution.
+///
+/// A direct `observe e` remains the common fast path: `fact_ids` names the
+/// observed fact(s), `proof` is absent, and `confidence` is exactly 1.0. When
+/// `e` is only derivable through rules, `proof` carries the SLD derivation and
+/// `confidence` is the product of the probabilities on the facts/rules used by
+/// that proof. LR aggregation uses that confidence to attenuate the
+/// contribution instead of forcing a brittle all-or-nothing bridge.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ObservedEvidence {
+    pub fact_ids: Vec<FactId>,
+    pub rule_ids: Vec<RuleId>,
+    pub proof: Option<Box<Proof>>,
+    pub confidence: f64,
+}
+
 /// A collection of Facts and Rules, indexed for clause selection by
 /// the head's functor/arity. Per LP19e, also stores prior /
 /// contribution / joint-contribution clauses in parallel maps; the
@@ -816,6 +832,24 @@ impl KnowledgeBase {
             .or_else(|| self.derived_for(slot).map(|d| d.value))
     }
 
+    /// Read an observed or derived numeric value together with its exact
+    /// rational sidecar when one is available. This is used by equality-heavy
+    /// predicate gates such as `answer == 3 / 10`: the public magnitude remains
+    /// `f64`, but exact integer/rational arithmetic can avoid float artifacts.
+    pub fn observed_numeric(
+        &self,
+        slot: &str,
+    ) -> Option<(f64, Option<crate::compute::ExactRational>)> {
+        self.observed_value_with_fact(slot)
+            .map(|(v, id)| {
+                let exact = self
+                    .observed_exact_value_with_fact(slot)
+                    .and_then(|(x, exact_id)| if exact_id == id { Some(x) } else { None });
+                (v, exact)
+            })
+            .or_else(|| self.derived_for(slot).map(|d| (d.value, d.exact)))
+    }
+
     /// Like [`observed_value`](Self::observed_value) but also returns the
     /// [`FactId`] of the winning observation — used by
     /// [`compute`](crate::compute) so a derivation-tree leaf can cite the byte-
@@ -834,6 +868,27 @@ impl KnowledgeBase {
             })
             // Largest FactId wins — facts are inserted in program order,
             // so a later `observe` of the same slot supersedes an earlier.
+            .max_by_key(|(id, _)| id.0)
+            .map(|(id, v)| (v, id))
+    }
+
+    /// Exact counterpart to [`observed_value_with_fact`](Self::observed_value_with_fact).
+    /// Returns a value only when the fact's leading magnitude is exactly
+    /// representable as an integer/rational sidecar.
+    pub fn observed_exact_value_with_fact(
+        &self,
+        slot: &str,
+    ) -> Option<(crate::compute::ExactRational, FactId)> {
+        self.facts
+            .values()
+            .flatten()
+            .filter(|f| f.probability == Probability::Certain)
+            .filter_map(|f| match &f.term {
+                Term::Compound { functor, args } if functor == slot && args.len() == 1 => {
+                    numeric_exact_magnitude(&args[0]).map(|v| (f.id, v))
+                }
+                _ => None,
+            })
             .max_by_key(|(id, _)| id.0)
             .map(|(id, v)| (v, id))
     }
@@ -930,28 +985,72 @@ impl KnowledgeBase {
             .collect()
     }
 
-    /// LP19e "observation gate." If `evidence_term` is asserted in
-    /// the KB as a `Certain` Fact (one or more), return the
-    /// `FactId`s; otherwise `None`.
-    ///
-    /// **Current scope** (LP19e v0.1): only `Certain` Facts gate
-    /// contributions. Probabilistic Facts and Rule-derived evidence
-    /// are deliberately not yet routed here — the spec defers their
-    /// careful treatment to v0.2 because each interacts non-trivially
-    /// with the "probability of observation vs probability of truth"
-    /// distinction in ADJ14.
-    pub fn observed_evidence(&self, evidence_term: &Term) -> Option<Vec<FactId>> {
+    /// LP19e "observation gate." If `evidence_term` is asserted in the KB as a
+    /// `Certain` Fact, return that direct observation. Otherwise fall back to
+    /// SLD proof enumeration: if the evidence is derivable by rules (or by
+    /// probabilistic facts), return the strongest proof and its probability
+    /// product as an attenuation factor for the LR step.
+    pub fn observed_evidence(&self, evidence_term: &Term) -> Option<ObservedEvidence> {
         let matched: Vec<FactId> = self
             .facts_for(evidence_term)
             .iter()
             .filter(|f| f.probability == Probability::Certain && &f.term == evidence_term)
             .map(|f| f.id)
             .collect();
-        if matched.is_empty() {
-            None
-        } else {
-            Some(matched)
+        if !matched.is_empty() {
+            return Some(ObservedEvidence {
+                fact_ids: matched,
+                rule_ids: Vec::new(),
+                proof: None,
+                confidence: 1.0,
+            });
         }
+
+        let dag = enumerate_all(evidence_term, self);
+        dag.proofs
+            .into_iter()
+            .map(|proof| {
+                let confidence = proof_confidence(&proof, self);
+                (proof, confidence)
+            })
+            .filter(|(_, confidence)| *confidence > 0.0)
+            .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal))
+            .map(|(proof, confidence)| ObservedEvidence {
+                fact_ids: proof.via_facts.clone(),
+                rule_ids: proof.via_rules.clone(),
+                proof: Some(Box::new(proof)),
+                confidence,
+            })
+    }
+}
+
+fn proof_confidence(proof: &Proof, kb: &KnowledgeBase) -> f64 {
+    let fact_confidence = proof
+        .via_facts
+        .iter()
+        .map(|id| {
+            kb.find_fact_by_id(*id)
+                .map(|fact| probability_confidence(fact.probability))
+                .unwrap_or(0.0)
+        })
+        .product::<f64>();
+    let rule_confidence = proof
+        .via_rules
+        .iter()
+        .map(|id| {
+            kb.find_rule_by_id(*id)
+                .map(|rule| probability_confidence(rule.probability))
+                .unwrap_or(0.0)
+        })
+        .product::<f64>();
+    fact_confidence * rule_confidence
+}
+
+fn probability_confidence(probability: Probability) -> f64 {
+    match probability {
+        Probability::Certain => 1.0,
+        Probability::Value(p) if p.is_finite() => p.clamp(0.0, 1.0),
+        Probability::Value(_) => 0.0,
     }
 }
 
@@ -984,6 +1083,27 @@ pub fn numeric_magnitude(value: &Term) -> Option<f64> {
         Term::Compound { args, .. } => match args.first() {
             Some(Term::Num(Number::Int(i))) => Some(*i as f64),
             Some(Term::Num(Number::Float(x))) => Some(*x),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
+/// Exact counterpart to [`numeric_magnitude`]. It intentionally returns `None`
+/// for non-integral floats; exact decimal parsing belongs at the language
+/// adapter layer, while this engine helper only trusts values that arrived as
+/// integer terms or integer-valued floats.
+pub fn numeric_exact_magnitude(value: &Term) -> Option<crate::compute::ExactRational> {
+    match value {
+        Term::Num(Number::Int(i)) => Some(crate::compute::ExactRational::from_i128(*i as i128)),
+        Term::Num(Number::Float(x)) => crate::compute::ExactRational::from_integer_f64(*x),
+        Term::Compound { args, .. } => match args.first() {
+            Some(Term::Num(Number::Int(i))) => {
+                Some(crate::compute::ExactRational::from_i128(*i as i128))
+            }
+            Some(Term::Num(Number::Float(x))) => {
+                crate::compute::ExactRational::from_integer_f64(*x)
+            }
             _ => None,
         },
         _ => None,

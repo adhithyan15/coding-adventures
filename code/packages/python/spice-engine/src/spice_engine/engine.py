@@ -63,7 +63,13 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field, replace
 from typing import Literal
 
-from mosfet_models import MOSFET, Level1Model, Level1Params
+from mosfet_models import (
+    MOSFET,
+    Level1Model,
+    Level1Params,
+    MosfetType,
+    bulk_junction_capacitance,
+)
 
 from spice_engine.compatibility import (
     DeckAnalysisPlan,
@@ -109,6 +115,8 @@ from spice_engine.elements import (
     XInstance,
     waveform_period,
 )
+
+_DEFAULT_NEWTON_STEP_LIMIT = 5.0
 
 
 @dataclass
@@ -571,7 +579,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Tt,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -588,6 +596,19 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
 
 
 @dataclass
+class LinearSolverProfile:
+    """Auditable profile for one real-valued linear solve."""
+
+    matrix_size: int
+    solver: str
+    backend: str
+    structural_nonzeros: int
+    density: float
+    fill_in_nonzeros: int = 0
+    fallback_reason: str | None = None
+
+
+@dataclass
 class DcSolverDiagnostics:
     """Stable DC solve metadata for downstream comparison."""
 
@@ -596,6 +617,18 @@ class DcSolverDiagnostics:
     tolerance: float
     max_delta: float
     convergence_aid: str
+    newton_step_limit: float | None = None
+    limited_newton_steps: int = 0
+    minimum_damping_factor: float = 1.0
+    solver_profile: LinearSolverProfile = field(
+        default_factory=lambda: LinearSolverProfile(
+            matrix_size=0,
+            solver="none",
+            backend="none",
+            structural_nonzeros=0,
+            density=0.0,
+        )
+    )
 
 
 @dataclass
@@ -2326,6 +2359,10 @@ class DeckRunArtifact:
     directive: str
     analysis_directive_count: int
     analysis_directives: list[str]
+    deck_analysis_kind_count: int
+    deck_analysis_kinds: list[str]
+    deck_analysis_directive_count: int
+    deck_analysis_directives: list[str]
     line_number: int
     source_name: str | None
     output_node: str | None
@@ -2388,6 +2425,18 @@ class DeckOutputPlanArtifact:
     line_number: int
     source_name: str | None
     output_node: str | None
+    sweep_kind: str | None
+    start_value: float | None
+    stop_value: float | None
+    step_value: float | None
+    point_count: int | None
+    start_frequency_hz: float | None
+    stop_frequency_hz: float | None
+    step_time: float | None
+    stop_time: float | None
+    start_time: float | None
+    max_step: float | None
+    use_initial_conditions: bool | None
     result_row_count: int
     result_column_count: int
     result_columns: list[str]
@@ -2475,6 +2524,10 @@ class DeckAnalysisExecution:
     output_probes: list[str]
     output_directives: list[str]
     analysis_directives: list[str]
+    deck_analysis_kind_count: int
+    deck_analysis_kinds: list[str]
+    deck_analysis_directive_count: int
+    deck_analysis_directives: list[str]
     output_plan_artifact_count: int
     output_plan_artifacts: list[DeckOutputPlanArtifact]
     output_plan_artifact_table: str
@@ -2677,6 +2730,22 @@ class DeckAnalysisExecution:
         )
 
 
+@dataclass(frozen=True)
+class DeckExecution:
+    """A full deck execution sequence in source analysis order."""
+
+    execution_count: int
+    analysis_order: list[str]
+    analysis_directives: list[str]
+    executions: list[DeckAnalysisExecution]
+    run_artifact_count: int
+    run_artifacts: list[DeckRunArtifact]
+    run_artifact_table: str
+    run_artifact_csv: str
+    run_artifact_json: str
+    run_artifact_records: list[dict[str, str]]
+
+
 def _select_deck_measurement_cards_for_analysis(
     netlist: str,
     analysis: str,
@@ -2769,6 +2838,10 @@ _DECK_RUN_ARTIFACT_COLUMNS = [
     "ControlPolicySeverityList",
     "Diagnostics",
     "DiagnosticCodeList",
+    "DeckAnalysisKinds",
+    "DeckAnalysisKindList",
+    "DeckAnalysisDirectives",
+    "DeckAnalysisDirectiveList",
 ]
 
 
@@ -2779,6 +2852,20 @@ def _deck_table_columns(table: str) -> list[str]:
 
 def _deck_analysis_directives(plan: DeckAnalysisPlan) -> list[str]:
     return [plan.directive] if plan.directive else []
+
+
+def _deck_analysis_inventory(netlist: str) -> tuple[list[str], list[str]]:
+    summary = resolve_deck_analyses(netlist)
+    analysis_kinds: list[str] = []
+    seen_kinds: set[str] = set()
+    directives: list[str] = []
+    for plan in summary.analyses:
+        if plan.analysis and plan.analysis not in seen_kinds:
+            seen_kinds.add(plan.analysis)
+            analysis_kinds.append(plan.analysis)
+        if plan.directive:
+            directives.append(plan.directive)
+    return analysis_kinds, directives
 
 
 def _deck_stable_tables(
@@ -2828,6 +2915,8 @@ def _deck_run_artifacts(
     rawfile_options: list[str],
     diagnostic_codes: list[str],
     control_policy_artifacts: list[DeckControlPolicyArtifact],
+    deck_analysis_kinds: list[str],
+    deck_analysis_directives: list[str],
 ) -> list[DeckRunArtifact]:
     is_transient = plan.analysis == "tran"
     analysis_directives = _deck_analysis_directives(plan)
@@ -2852,6 +2941,10 @@ def _deck_run_artifacts(
             directive=plan.directive,
             analysis_directive_count=len(analysis_directives),
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             line_number=plan.line_number,
             source_name=plan.source_name,
             output_node=plan.output_node,
@@ -2912,6 +3005,7 @@ def _deck_output_plan_artifacts(
     tables: list[str],
 ) -> list[DeckOutputPlanArtifact]:
     output_directive_kinds = _deck_output_directive_kinds(output_directives)
+    is_transient = plan.analysis == "tran"
     return [
         DeckOutputPlanArtifact(
             analysis=plan.analysis,
@@ -2919,6 +3013,20 @@ def _deck_output_plan_artifacts(
             line_number=plan.line_number,
             source_name=plan.source_name,
             output_node=plan.output_node,
+            sweep_kind=plan.sweep_kind,
+            start_value=plan.start_value,
+            stop_value=plan.stop_value,
+            step_value=plan.step_value,
+            point_count=plan.point_count,
+            start_frequency_hz=plan.start_frequency,
+            stop_frequency_hz=plan.stop_frequency,
+            step_time=plan.step_time if is_transient else None,
+            stop_time=plan.stop_time if is_transient else None,
+            start_time=plan.start_time if is_transient else None,
+            max_step=plan.max_step if is_transient else None,
+            use_initial_conditions=(
+                plan.use_initial_conditions if is_transient else None
+            ),
             result_row_count=result_row_count,
             result_column_count=len(result_columns),
             result_columns=list(result_columns),
@@ -2948,6 +3056,18 @@ _DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
     "Line",
     "SourceName",
     "OutputNode",
+    "SweepKind",
+    "StartValue",
+    "StopValue",
+    "StepValue",
+    "PointCount",
+    "StartFrequencyHz",
+    "StopFrequencyHz",
+    "StepTime",
+    "StopTime",
+    "StartTime",
+    "MaxStep",
+    "UseInitialConditions",
     "ResultRows",
     "ResultColumns",
     "ResultColumnList",
@@ -2975,6 +3095,18 @@ def _deck_output_plan_artifact_cells(artifact: DeckOutputPlanArtifact) -> list[s
         str(artifact.line_number),
         artifact.source_name or "",
         artifact.output_node or "",
+        artifact.sweep_kind or "",
+        _format_deck_artifact_float(artifact.start_value),
+        _format_deck_artifact_float(artifact.stop_value),
+        _format_deck_artifact_float(artifact.step_value),
+        "" if artifact.point_count is None else str(artifact.point_count),
+        _format_deck_artifact_float(artifact.start_frequency_hz),
+        _format_deck_artifact_float(artifact.stop_frequency_hz),
+        _format_deck_artifact_float(artifact.step_time),
+        _format_deck_artifact_float(artifact.stop_time),
+        _format_deck_artifact_float(artifact.start_time),
+        _format_deck_artifact_float(artifact.max_step),
+        _format_deck_artifact_bool(artifact.use_initial_conditions),
         str(artifact.result_row_count),
         str(artifact.result_column_count),
         ";".join(artifact.result_columns),
@@ -3181,6 +3313,10 @@ def _deck_run_artifact_cells(artifact: DeckRunArtifact) -> list[str]:
         ";".join(artifact.control_policy_severities),
         str(artifact.diagnostic_count),
         ";".join(artifact.diagnostic_codes),
+        str(artifact.deck_analysis_kind_count),
+        ";".join(artifact.deck_analysis_kinds),
+        str(artifact.deck_analysis_directive_count),
+        ";".join(artifact.deck_analysis_directives),
     ]
 
 
@@ -3192,6 +3328,14 @@ def _deck_run_artifact_record(artifact: DeckRunArtifact) -> dict[str, str]:
             strict=True,
         )
     )
+
+
+def deck_run_artifact_records(
+    artifacts: Iterable[DeckRunArtifact],
+) -> list[dict[str, str]]:
+    """Return stable run-artifact records keyed by exported column name."""
+
+    return [_deck_run_artifact_record(artifact) for artifact in artifacts]
 
 
 def _format_csv_cell(value: str) -> str:
@@ -3958,6 +4102,53 @@ def run_deck_analysis(
     """Select one deck analysis card, execute it, and format deck-selected output."""
 
     plan = select_deck_analysis_plan(netlist, analysis)
+    return _run_deck_analysis_plan(circuit, netlist, plan)
+
+
+def run_deck(circuit: Circuit, netlist: str) -> DeckExecution:
+    """Execute every parsed deck analysis card in source order."""
+
+    plans = _deck_analysis_plans_for_execution(netlist, "run_deck")
+    executions = [
+        _run_deck_analysis_plan(circuit, netlist, plan) for plan in plans
+    ]
+    run_artifacts = [
+        artifact for execution in executions for artifact in execution.run_artifacts
+    ]
+    return DeckExecution(
+        execution_count=len(executions),
+        analysis_order=[plan.analysis for plan in plans],
+        analysis_directives=[plan.directive for plan in plans if plan.directive],
+        executions=executions,
+        run_artifact_count=len(run_artifacts),
+        run_artifacts=run_artifacts,
+        run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+        run_artifact_csv=format_deck_run_artifact_csv(run_artifacts),
+        run_artifact_json=format_deck_run_artifact_json(run_artifacts),
+        run_artifact_records=deck_run_artifact_records(run_artifacts),
+    )
+
+
+def _deck_analysis_plans_for_execution(
+    netlist: str,
+    context: str,
+) -> list[DeckAnalysisPlan]:
+    summary = resolve_deck_analyses(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"{context}: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    return list(summary.analyses) or [DeckAnalysisPlan(".op", "op", 0)]
+
+
+def _run_deck_analysis_plan(
+    circuit: Circuit,
+    netlist: str,
+    plan: DeckAnalysisPlan,
+) -> DeckAnalysisExecution:
+    """Execute an already resolved deck analysis plan."""
+
     diagnostic_codes = _deck_run_diagnostic_codes(netlist, plan)
     control_lines = _deck_control_lines(netlist)
     write_markers = _deck_control_write_markers(netlist)
@@ -3975,6 +4166,7 @@ def run_deck_analysis(
         )
     )
     analysis_directives = _deck_analysis_directives(plan)
+    deck_analysis_kinds, deck_analysis_directives = _deck_analysis_inventory(netlist)
     if plan.analysis == "op":
         result = dc_op(circuit)
         table = format_deck_op_table(result, netlist)
@@ -4006,6 +4198,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4057,6 +4251,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4119,6 +4317,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4170,6 +4370,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4234,6 +4438,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4285,6 +4491,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4355,6 +4565,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4406,6 +4618,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4458,6 +4674,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4509,6 +4727,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4560,6 +4782,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4611,6 +4835,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -4681,6 +4909,8 @@ def run_deck_analysis(
             rawfile_options,
             diagnostic_codes,
             control_policy_artifacts,
+            deck_analysis_kinds,
+            deck_analysis_directives,
         )
         measurement_table = format_measurement_table(measurements)
         fourier_table = format_deck_fourier_table(fourier)
@@ -4732,6 +4962,10 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            deck_analysis_kind_count=len(deck_analysis_kinds),
+            deck_analysis_kinds=list(deck_analysis_kinds),
+            deck_analysis_directive_count=len(deck_analysis_directives),
+            deck_analysis_directives=list(deck_analysis_directives),
             output_plan_artifact_count=len(output_plan_artifacts),
             output_plan_artifacts=output_plan_artifacts,
             output_plan_artifact_table=output_plan_artifact_table,
@@ -7084,6 +7318,10 @@ def _dc_diagnostics(
     tol: float,
     max_delta: float,
     convergence_aid: str,
+    solver_profile: LinearSolverProfile | None = None,
+    newton_step_limit: float | None = None,
+    limited_newton_steps: int = 0,
+    minimum_damping_factor: float = 1.0,
 ) -> DcSolverDiagnostics:
     return DcSolverDiagnostics(
         matrix_size=matrix_size,
@@ -7091,7 +7329,63 @@ def _dc_diagnostics(
         tolerance=tol,
         max_delta=max_delta,
         convergence_aid=convergence_aid,
+        newton_step_limit=newton_step_limit,
+        limited_newton_steps=limited_newton_steps,
+        minimum_damping_factor=minimum_damping_factor,
+        solver_profile=solver_profile
+        if solver_profile is not None
+        else _empty_solver_profile(matrix_size),
     )
+
+
+def _has_nonlinear_element(circuit: Circuit) -> bool:
+    return any(
+        isinstance(el, (BSource, CustomModel, Diode, JFET, Mosfet, BJT))
+        for el in circuit.elements
+    )
+
+
+def _validate_newton_step_limit(value: float | None) -> float | None:
+    if value is None:
+        return None
+    if not math.isfinite(value) or value <= 0.0:
+        raise ValueError("newton_step_limit must be finite and positive")
+    return value
+
+
+def _limit_newton_step(
+    previous: list[float],
+    candidate: list[float],
+    step_limit: float | None,
+) -> tuple[list[float], float, float, bool]:
+    if step_limit is None or not previous:
+        max_delta = (
+            max(abs(a - bv) for a, bv in zip(previous, candidate, strict=False))
+            if previous
+            else 0.0
+        )
+        return candidate, max_delta, 1.0, False
+
+    raw_delta = max(abs(a - bv) for a, bv in zip(previous, candidate, strict=False))
+    if raw_delta <= step_limit:
+        return candidate, raw_delta, 1.0, False
+
+    if not math.isfinite(raw_delta):
+        limited = []
+        for old, new in zip(previous, candidate, strict=False):
+            delta = new - old
+            if math.isfinite(delta):
+                limited.append(old + math.copysign(step_limit, delta))
+            else:
+                limited.append(old)
+        return limited, step_limit, 0.0, True
+
+    damping_factor = step_limit / raw_delta
+    limited = [
+        old + (new - old) * damping_factor
+        for old, new in zip(previous, candidate, strict=False)
+    ]
+    return limited, step_limit, damping_factor, True
 
 
 # ---------------------------------------------------------------------------
@@ -7105,6 +7399,7 @@ def _dc_newton(
     max_iterations: int = 50,
     tol: float = 1e-6,
     x_init: list[float] | None = None,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult:
     """Run Newton-Raphson DC solve, optionally warm-started from *x_init*.
 
@@ -7132,6 +7427,13 @@ def _dc_newton(
     size = n + m
 
     x = list(x_init) if x_init is not None else [0.0] * size
+    active_step_limit = (
+        _validate_newton_step_limit(newton_step_limit)
+        if _has_nonlinear_element(circuit)
+        else None
+    )
+    limited_newton_steps = 0
+    minimum_damping_factor = 1.0
 
     max_delta = float("inf")
     for it in range(max_iterations):
@@ -7139,9 +7441,12 @@ def _dc_newton(
         b = [0.0] * size
         for el in circuit.elements:
             _stamp_dc(el, G, b, x, node_to_idx, branch_srcs)
+        solver_profile = _real_solver_profile(G, backend="pending")
         try:
-            x_new = _solve(G, b)
-        except ZeroDivisionError:
+            x_new, solver_profile = _solve_with_profile(G, b)
+        except ZeroDivisionError as exc:
+            if isinstance(exc, _LinearSolveFailure):
+                solver_profile = exc.solver_profile
             node_v = {nd: x[i] for nd, i in node_to_idx.items()}
             return DcResult(
                 node_v,
@@ -7153,10 +7458,21 @@ def _dc_newton(
                     tol=tol,
                     max_delta=float("inf"),
                     convergence_aid="newton",
+                    solver_profile=solver_profile,
+                    newton_step_limit=active_step_limit,
+                    limited_newton_steps=limited_newton_steps,
+                    minimum_damping_factor=minimum_damping_factor,
                 ),
             )
 
-        max_delta = max(abs(a - bv) for a, bv in zip(x, x_new, strict=False)) if x else 0.0
+        x_new, max_delta, damping_factor, was_limited = _limit_newton_step(
+            x,
+            x_new,
+            active_step_limit,
+        )
+        if was_limited:
+            limited_newton_steps += 1
+            minimum_damping_factor = min(minimum_damping_factor, damping_factor)
         x = x_new
         if max_delta < tol:
             break
@@ -7173,6 +7489,10 @@ def _dc_newton(
             tol=tol,
             max_delta=max_delta,
             convergence_aid="newton",
+            solver_profile=solver_profile,
+            newton_step_limit=active_step_limit,
+            limited_newton_steps=limited_newton_steps,
+            minimum_damping_factor=minimum_damping_factor,
         ),
     )
 
@@ -7208,6 +7528,7 @@ def _dc_gmin_step(
     tol: float = 1e-6,
     gmin_start: float = 1e-3,
     n_steps: int = 10,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult | None:
     """DC operating point via Gmin stepping (convergence aid #1).
 
@@ -7281,7 +7602,13 @@ def _dc_gmin_step(
             # Final step: original circuit, warm-started from the last Gmin solve.
             aug = circuit
 
-        result = _dc_newton(aug, max_iterations=max_iterations, tol=tol, x_init=x_init)
+        result = _dc_newton(
+            aug,
+            max_iterations=max_iterations,
+            tol=tol,
+            x_init=x_init,
+            newton_step_limit=newton_step_limit,
+        )
         if not result.converged:
             return None  # This step diverged — Gmin stepping has failed.
 
@@ -7299,6 +7626,7 @@ def _dc_source_step(
     max_iterations: int = 50,
     tol: float = 1e-6,
     n_steps: int = 10,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult | None:
     """DC operating point via source stepping (convergence aid #2).
 
@@ -7376,7 +7704,11 @@ def _dc_source_step(
         scaled_circuit = Circuit(elements=scaled_elements)
 
         result = _dc_newton(
-            scaled_circuit, max_iterations=max_iterations, tol=tol, x_init=x_init
+            scaled_circuit,
+            max_iterations=max_iterations,
+            tol=tol,
+            x_init=x_init,
+            newton_step_limit=newton_step_limit,
         )
         if not result.converged:
             return None  # This step diverged — source stepping has failed.
@@ -7396,6 +7728,7 @@ def _dc_pseudo_transient(
     tol: float = 1e-6,
     n_steps: int = 20,
     shunt_conductance: float = 1e-3,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult | None:
     """DC continuation through artificial backward-Euler node capacitors."""
     if n_steps <= 0 or not math.isfinite(shunt_conductance) or shunt_conductance <= 0.0:
@@ -7433,6 +7766,7 @@ def _dc_pseudo_transient(
             max_iterations=max_iterations,
             tol=tol,
             x_init=x_init,
+            newton_step_limit=newton_step_limit,
         )
         if not result.converged:
             return None
@@ -7526,6 +7860,7 @@ def dc_op(
     pseudo_transient_shunt_conductance: float = 1e-3,
     pseudo_transient_max_iterations: int | None = None,
     initial_vector: list[float] | None = None,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult:
     """Solve DC operating point via Newton-Raphson on a linearized MNA.
 
@@ -7571,9 +7906,13 @@ def dc_op(
     initial_vector:
         Optional MNA warm-start vector.  Prefer
         :func:`dc_op_with_initial_conditions` for parsed deck hints.
+    newton_step_limit:
+        Maximum absolute Newton update per unknown for nonlinear circuits.
+        Set to ``None`` to disable damping.
     """
     if initial_vector is not None:
         _validate_dc_initial_vector(circuit, initial_vector)
+    newton_step_limit = _validate_newton_step_limit(newton_step_limit)
 
     # Attempt 1: plain Newton-Raphson.
     result = _dc_newton(
@@ -7581,6 +7920,7 @@ def dc_op(
         max_iterations=max_iterations,
         tol=tol,
         x_init=initial_vector,
+        newton_step_limit=newton_step_limit,
     )
     if result.converged:
         return replace(
@@ -7596,7 +7936,12 @@ def dc_op(
         )
 
     # Attempt 2: Gmin stepping.
-    gmin_result = _dc_gmin_step(circuit, max_iterations=max_iterations, tol=tol)
+    gmin_result = _dc_gmin_step(
+        circuit,
+        max_iterations=max_iterations,
+        tol=tol,
+        newton_step_limit=newton_step_limit,
+    )
     if gmin_result is not None and gmin_result.converged:
         return replace(
             gmin_result,
@@ -7605,7 +7950,12 @@ def dc_op(
         )
 
     # Attempt 3: source stepping.
-    src_result = _dc_source_step(circuit, max_iterations=max_iterations, tol=tol)
+    src_result = _dc_source_step(
+        circuit,
+        max_iterations=max_iterations,
+        tol=tol,
+        newton_step_limit=newton_step_limit,
+    )
     if src_result is not None and src_result.converged:
         return replace(
             src_result,
@@ -7624,6 +7974,7 @@ def dc_op(
         tol=tol,
         n_steps=pseudo_transient_steps,
         shunt_conductance=pseudo_transient_shunt_conductance,
+        newton_step_limit=newton_step_limit,
     )
     if pseudo_result is not None and pseudo_result.converged:
         return replace(
@@ -7653,6 +8004,7 @@ def dc_op_with_initial_conditions(
     pseudo_transient_steps: int = 20,
     pseudo_transient_shunt_conductance: float = 1e-3,
     pseudo_transient_max_iterations: int | None = None,
+    newton_step_limit: float | None = _DEFAULT_NEWTON_STEP_LIMIT,
 ) -> DcResult:
     """Solve DC operating point using parsed ``.ic``/``.nodeset`` node hints."""
 
@@ -7670,6 +8022,7 @@ def dc_op_with_initial_conditions(
         pseudo_transient_shunt_conductance=pseudo_transient_shunt_conductance,
         pseudo_transient_max_iterations=pseudo_transient_max_iterations,
         initial_vector=initial_vector,
+        newton_step_limit=newton_step_limit,
     )
 
 
@@ -8312,6 +8665,162 @@ def _diode_current_conductance(el: Diode, vd: float, *, clamp_forward: bool = Tr
     return current, conductance
 
 
+def _diode_charge_state_name(el: Diode) -> str:
+    return f"_D_{el.name}_charge"
+
+
+def _diode_has_charge_storage(el: Diode) -> bool:
+    return el.Cjo > 0.0 or el.Tt > 0.0
+
+
+def _diode_dynamic_capacitance(el: Diode, vd: float) -> float:
+    _, gd = _diode_current_conductance(el, vd)
+    return el.Cjo + el.Tt * gd
+
+
+def _diode_charge_voltage(el: Diode, node_voltages: dict[str, float]) -> float:
+    return _node_voltage(el.anode, node_voltages) - _node_voltage(el.cathode, node_voltages)
+
+
+def _bjt_base_emitter_charge_state_name(el: BJT) -> str:
+    return f"_Q_{el.name}_be_charge"
+
+
+def _bjt_base_collector_charge_state_name(el: BJT) -> str:
+    return f"_Q_{el.name}_bc_charge"
+
+
+def _bjt_junction_transconductance(el: BJT, voltage: float) -> float:
+    exponent = max(-40.0, min(40.0, voltage / el.Vt))
+    return (el.Is / el.Vt) * math.exp(exponent)
+
+
+def _bjt_charge_dynamic_capacitance(el: BJT, state_kind: str, voltage: float) -> float:
+    conductance = _bjt_junction_transconductance(el, voltage)
+    if state_kind == "be":
+        return el.Cje + el.Tf * conductance
+    return el.Cjc + el.Tr * conductance
+
+
+def _bjt_charge_state_specs(el: BJT) -> list[tuple[str, str, str, str]]:
+    specs: list[tuple[str, str, str, str]] = []
+    if el.Cje > 0.0 or el.Tf > 0.0:
+        if el.polarity == "NPN":
+            specs.append((_bjt_base_emitter_charge_state_name(el), el.base, el.emitter, "be"))
+        else:
+            specs.append((_bjt_base_emitter_charge_state_name(el), el.emitter, el.base, "be"))
+    if el.Cjc > 0.0 or el.Tr > 0.0:
+        if el.polarity == "NPN":
+            specs.append((_bjt_base_collector_charge_state_name(el), el.base, el.collector, "bc"))
+        else:
+            specs.append((_bjt_base_collector_charge_state_name(el), el.collector, el.base, "bc"))
+    return specs
+
+
+def _bjt_charge_state_voltage(n_plus: str, n_minus: str, node_voltages: dict[str, float]) -> float:
+    return _node_voltage(n_plus, node_voltages) - _node_voltage(n_minus, node_voltages)
+
+
+def _jfet_gate_source_charge_state_name(el: JFET) -> str:
+    return f"_J_{el.name}_gs_charge"
+
+
+def _jfet_gate_drain_charge_state_name(el: JFET) -> str:
+    return f"_J_{el.name}_gd_charge"
+
+
+def _jfet_charge_state_specs(el: JFET) -> list[tuple[str, str, str, float]]:
+    specs: list[tuple[str, str, str, float]] = []
+    if el.Cgs > 0.0:
+        specs.append((_jfet_gate_source_charge_state_name(el), el.gate, el.source, el.Cgs))
+    if el.Cgd > 0.0:
+        specs.append((_jfet_gate_drain_charge_state_name(el), el.gate, el.drain, el.Cgd))
+    return specs
+
+
+def _jfet_charge_state_voltage(n_plus: str, n_minus: str, node_voltages: dict[str, float]) -> float:
+    return _node_voltage(n_plus, node_voltages) - _node_voltage(n_minus, node_voltages)
+
+
+def _mosfet_gate_source_charge_state_name(el: Mosfet) -> str:
+    return f"_M_{el.name}_gs_charge"
+
+
+def _mosfet_gate_drain_charge_state_name(el: Mosfet) -> str:
+    return f"_M_{el.name}_gd_charge"
+
+
+def _mosfet_gate_body_charge_state_name(el: Mosfet) -> str:
+    return f"_M_{el.name}_gb_charge"
+
+
+def _mosfet_source_body_charge_state_name(el: Mosfet) -> str:
+    return f"_M_{el.name}_sb_charge"
+
+
+def _mosfet_drain_body_charge_state_name(el: Mosfet) -> str:
+    return f"_M_{el.name}_db_charge"
+
+
+def _mosfet_charge_state_specs(el: Mosfet) -> list[tuple[str, str, str, float]]:
+    params = getattr(getattr(el.model, "model", None), "params", None)
+    if params is None:
+        return []
+    width = getattr(params, "W", 0.0)
+    length = getattr(params, "L", 0.0)
+    specs: list[tuple[str, str, str, float]] = []
+    cgs = getattr(params, "CGSO", 0.0) * width
+    cgd = getattr(params, "CGDO", 0.0) * width
+    cgb = getattr(params, "CGBO", 0.0) * length
+    cbs = getattr(params, "CBS", 0.0)
+    cbd = getattr(params, "CBD", 0.0)
+    if cgs > 0.0:
+        specs.append((_mosfet_gate_source_charge_state_name(el), el.gate, el.source, cgs))
+    if cgd > 0.0:
+        specs.append((_mosfet_gate_drain_charge_state_name(el), el.gate, el.drain, cgd))
+    if cgb > 0.0:
+        specs.append((_mosfet_gate_body_charge_state_name(el), el.gate, el.body, cgb))
+    if cbs > 0.0:
+        specs.append((_mosfet_source_body_charge_state_name(el), el.source, el.body, cbs))
+    if cbd > 0.0:
+        specs.append((_mosfet_drain_body_charge_state_name(el), el.drain, el.body, cbd))
+    return specs
+
+
+def _mosfet_charge_state_voltage(n_plus: str, n_minus: str, node_voltages: dict[str, float]) -> float:
+    return _node_voltage(n_plus, node_voltages) - _node_voltage(n_minus, node_voltages)
+
+
+def _mosfet_charge_dynamic_capacitance(
+    el: Mosfet,
+    state_name: str,
+    zero_bias_capacitance: float,
+    state_voltage: float,
+) -> float:
+    params = getattr(getattr(el.model, "model", None), "params", None)
+    if params is None or zero_bias_capacitance <= 0.0:
+        return zero_bias_capacitance
+    if state_name not in {
+        _mosfet_source_body_charge_state_name(el),
+        _mosfet_drain_body_charge_state_name(el),
+    }:
+        return zero_bias_capacitance
+    junction_potential = getattr(params, "PB", 0.8)
+    grading_coefficient = getattr(params, "MJ", 0.5)
+    if not math.isfinite(junction_potential) or junction_potential <= 0.0:
+        raise ValueError(f"{el.name}: MOSFET PB must be finite and positive")
+    if not math.isfinite(grading_coefficient) or grading_coefficient < 0.0:
+        raise ValueError(f"{el.name}: MOSFET MJ must be finite and non-negative")
+    mosfet_type = getattr(el.model, "type", None)
+    junction_voltage = state_voltage if mosfet_type == MosfetType.PMOS else -state_voltage
+    return bulk_junction_capacitance(
+        zero_bias_capacitance,
+        junction_voltage,
+        junction_potential,
+        grading_coefficient,
+    )
+
+
 def _stamp_mosfet(
     G: list[list[float]],
     b: list[float],
@@ -8365,6 +8874,10 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(f"JFET '{el.name}' VTO must be finite")
     if not math.isfinite(el.lambda_):
         raise ValueError(f"JFET '{el.name}' LAMBDA must be finite")
+    if not math.isfinite(el.Cgs) or el.Cgs < 0.0:
+        raise ValueError(f"JFET '{el.name}' CGS must be finite and non-negative")
+    if not math.isfinite(el.Cgd) or el.Cgd < 0.0:
+        raise ValueError(f"JFET '{el.name}' CGD must be finite and non-negative")
     if el.polarity == "PJF":
         ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
         return -ids, gm, gds
@@ -8591,10 +9104,66 @@ def _validate_bjt(el: BJT) -> None:
 _SPARSE_SOLVER_THRESHOLD = 30
 
 
+class _LinearSolveFailure(ZeroDivisionError):
+    def __init__(self, message: str, solver_profile: LinearSolverProfile):
+        super().__init__(message)
+        self.solver_profile = solver_profile
+
+
 def _solve(A: list[list[float]], b: list[float]) -> list[float]:
+    return _solve_with_profile(A, b)[0]
+
+
+def _empty_solver_profile(matrix_size: int = 0) -> LinearSolverProfile:
+    return LinearSolverProfile(
+        matrix_size=matrix_size,
+        solver=_real_solver_kind(matrix_size),
+        backend="none",
+        structural_nonzeros=0,
+        density=0.0,
+    )
+
+
+def _real_matrix_nonzeros(A: list[list[float]]) -> int:
+    return sum(1 for row in A for value in row if value != 0.0)
+
+
+def _real_matrix_density(matrix_size: int, structural_nonzeros: int) -> float:
+    if matrix_size == 0:
+        return 0.0
+    return structural_nonzeros / float(matrix_size * matrix_size)
+
+
+def _real_solver_profile(
+    A: list[list[float]],
+    *,
+    backend: str,
+    fill_in_nonzeros: int = 0,
+    fallback_reason: str | None = None,
+) -> LinearSolverProfile:
+    matrix_size = len(A)
+    structural_nonzeros = _real_matrix_nonzeros(A)
+    return LinearSolverProfile(
+        matrix_size=matrix_size,
+        solver=_real_solver_kind(matrix_size),
+        backend=backend,
+        structural_nonzeros=structural_nonzeros,
+        density=_real_matrix_density(matrix_size, structural_nonzeros),
+        fill_in_nonzeros=fill_in_nonzeros,
+        fallback_reason=fallback_reason,
+    )
+
+
+def _solve_with_profile(
+    A: list[list[float]], b: list[float]
+) -> tuple[list[float], LinearSolverProfile]:
     if len(A) >= _SPARSE_SOLVER_THRESHOLD:
-        return _solve_sparse(A, b)
-    return _solve_dense(A, b)
+        return _solve_sparse_with_profile(A, b)
+    profile = _real_solver_profile(A, backend="dense_gaussian")
+    try:
+        return _solve_dense(A, b), profile
+    except ZeroDivisionError as exc:
+        raise _LinearSolveFailure(str(exc), profile) from exc
 
 
 def _solve_dense(A: list[list[float]], b: list[float]) -> list[float]:
@@ -8632,6 +9201,72 @@ def _solve_dense(A: list[list[float]], b: list[float]) -> list[float]:
 
 
 def _solve_sparse(A: list[list[float]], b: list[float]) -> list[float]:
+    return _solve_sparse_with_profile(A, b)[0]
+
+
+def _solve_sparse_with_profile(
+    A: list[list[float]],
+    b: list[float],
+    *,
+    fallback_reason: str | None = None,
+) -> tuple[list[float], LinearSolverProfile]:
+    scipy_result = _solve_sparse_scipy(A, b)
+    if scipy_result is not None:
+        return scipy_result
+    return _solve_sparse_native_with_profile(
+        A,
+        b,
+        fallback_reason=fallback_reason or "scipy_unavailable",
+    )
+
+
+def _solve_sparse_scipy(
+    A: list[list[float]], b: list[float]
+) -> tuple[list[float], LinearSolverProfile] | None:
+    try:
+        from scipy.sparse import csc_matrix
+        from scipy.sparse.linalg import splu
+    except Exception:
+        return None
+
+    matrix_size = len(A)
+    structural_nonzeros = _real_matrix_nonzeros(A)
+    profile = LinearSolverProfile(
+        matrix_size=matrix_size,
+        solver=_real_solver_kind(matrix_size),
+        backend="scipy_sparse_lu",
+        structural_nonzeros=structural_nonzeros,
+        density=_real_matrix_density(matrix_size, structural_nonzeros),
+    )
+    try:
+        sparse_matrix = csc_matrix(A, dtype=float)
+        factorization = splu(sparse_matrix)
+        solution = factorization.solve(b)
+        fill_in_nonzeros = max(
+            0,
+            int(factorization.L.nnz + factorization.U.nnz) - structural_nonzeros,
+        )
+        return (
+            [float(value) for value in solution],
+            replace(profile, fill_in_nonzeros=fill_in_nonzeros),
+        )
+    except Exception as exc:
+        try:
+            return _solve_sparse_native_with_profile(
+                A,
+                b,
+                fallback_reason=f"scipy_sparse_lu:{type(exc).__name__}",
+            )
+        except ZeroDivisionError as native_exc:
+            raise _LinearSolveFailure(str(native_exc), profile) from native_exc
+
+
+def _solve_sparse_native_with_profile(
+    A: list[list[float]],
+    b: list[float],
+    *,
+    fallback_reason: str | None = None,
+) -> tuple[list[float], LinearSolverProfile]:
     """Sparse-row Gaussian elimination with partial pivoting.
 
     The MNA matrix is assembled densely today, but each device stamp touches
@@ -8641,7 +9276,17 @@ def _solve_sparse(A: list[list[float]], b: list[float]) -> list[float]:
 
     n = len(A)
     if n == 0:
-        return []
+        return [], _empty_solver_profile()
+    initial_nonzeros = _real_matrix_nonzeros(A)
+    peak_nonzeros = initial_nonzeros
+    profile = LinearSolverProfile(
+        matrix_size=n,
+        solver=_real_solver_kind(n),
+        backend="native_sparse_gaussian",
+        structural_nonzeros=initial_nonzeros,
+        density=_real_matrix_density(n, initial_nonzeros),
+        fallback_reason=fallback_reason,
+    )
     rows = [
         {col: value for col, value in enumerate(row) if value != 0.0}
         for row in A
@@ -8655,7 +9300,7 @@ def _solve_sparse(A: list[list[float]], b: list[float]) -> list[float]:
         )
         pivot_abs = abs(rows[pivot_row].get(pivot_col, 0.0))
         if pivot_abs < 1e-15:
-            raise ZeroDivisionError(f"singular matrix at row {pivot_col}")
+            raise _LinearSolveFailure(f"singular matrix at row {pivot_col}", profile)
 
         rows[pivot_col], rows[pivot_row] = rows[pivot_row], rows[pivot_col]
         rhs[pivot_col], rhs[pivot_row] = rhs[pivot_row], rhs[pivot_col]
@@ -8679,18 +9324,19 @@ def _solve_sparse(A: list[list[float]], b: list[float]) -> list[float]:
                 else:
                     rows[row_index][col] = next_value
             rhs[row_index] -= factor * rhs[pivot_col]
+        peak_nonzeros = max(peak_nonzeros, sum(len(row) for row in rows))
 
     x = [0.0] * n
     for row_index in range(n - 1, -1, -1):
         diag = rows[row_index].get(row_index, 0.0)
         if abs(diag) < 1e-15:
-            raise ZeroDivisionError(f"singular matrix at row {row_index}")
+            raise _LinearSolveFailure(f"singular matrix at row {row_index}", profile)
         total = rhs[row_index]
         for col, value in rows[row_index].items():
             if col > row_index:
                 total -= value * x[col]
         x[row_index] = total / diag
-    return x
+    return x, replace(profile, fill_in_nonzeros=max(0, peak_nonzeros - initial_nonzeros))
 
 
 # ---------------------------------------------------------------------------
@@ -9061,6 +9707,131 @@ def _build_transient_companions(
                 current=I_eq,
             ))
 
+        # ---- Diode model-card charge companion ----------------------------
+        elif isinstance(el, Diode) and _diode_has_charge_storage(el):
+            state_name = _diode_charge_state_name(el)
+            v_prev = cap_voltages.get(state_name, 0.0)
+            capacitance = _diode_dynamic_capacitance(el, v_prev)
+            if capacitance > 0.0:
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_eq = g_eq * v_prev + cap_currents.get(state_name, 0.0)
+                elif method == "gear2":
+                    v_older = cap_voltages_older.get(state_name, v_prev)
+                    g_eq = 3.0 * capacitance / (2.0 * h)
+                    I_eq = capacitance * (4.0 * v_prev - v_older) / (2.0 * h)
+                else:
+                    g_eq = capacitance / h
+                    I_eq = g_eq * v_prev
+
+                aug.elements.append(Resistor(
+                    name=f"_D_{el.name}_charge_R",
+                    n_plus=el.anode,
+                    n_minus=el.cathode,
+                    resistance=1.0 / g_eq,
+                ))
+                aug.elements.append(CurrentSource(
+                    name=f"_D_{el.name}_charge_I",
+                    n_plus=el.cathode,
+                    n_minus=el.anode,
+                    current=I_eq,
+                ))
+
+        # ---- JFET model-card charge companions -----------------------------
+        elif isinstance(el, JFET):
+            for state_name, n_plus, n_minus, capacitance in _jfet_charge_state_specs(el):
+                v_prev = cap_voltages.get(state_name, 0.0)
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_eq = g_eq * v_prev + cap_currents.get(state_name, 0.0)
+                elif method == "gear2":
+                    v_older = cap_voltages_older.get(state_name, v_prev)
+                    g_eq = 3.0 * capacitance / (2.0 * h)
+                    I_eq = capacitance * (4.0 * v_prev - v_older) / (2.0 * h)
+                else:
+                    g_eq = capacitance / h
+                    I_eq = g_eq * v_prev
+
+                aug.elements.append(Resistor(
+                    name=f"{state_name}_R",
+                    n_plus=n_plus,
+                    n_minus=n_minus,
+                    resistance=1.0 / g_eq,
+                ))
+                aug.elements.append(CurrentSource(
+                    name=f"{state_name}_I",
+                    n_plus=n_minus,
+                    n_minus=n_plus,
+                    current=I_eq,
+                ))
+
+        # ---- MOS Level-1 overlap charge companions -------------------------
+        elif isinstance(el, Mosfet):
+            for state_name, n_plus, n_minus, capacitance in _mosfet_charge_state_specs(el):
+                v_prev = cap_voltages.get(state_name, 0.0)
+                capacitance = _mosfet_charge_dynamic_capacitance(
+                    el,
+                    state_name,
+                    capacitance,
+                    v_prev,
+                )
+                if capacitance <= 0.0:
+                    continue
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_eq = g_eq * v_prev + cap_currents.get(state_name, 0.0)
+                elif method == "gear2":
+                    v_older = cap_voltages_older.get(state_name, v_prev)
+                    g_eq = 3.0 * capacitance / (2.0 * h)
+                    I_eq = capacitance * (4.0 * v_prev - v_older) / (2.0 * h)
+                else:
+                    g_eq = capacitance / h
+                    I_eq = g_eq * v_prev
+
+                aug.elements.append(Resistor(
+                    name=f"{state_name}_R",
+                    n_plus=n_plus,
+                    n_minus=n_minus,
+                    resistance=1.0 / g_eq,
+                ))
+                aug.elements.append(CurrentSource(
+                    name=f"{state_name}_I",
+                    n_plus=n_minus,
+                    n_minus=n_plus,
+                    current=I_eq,
+                ))
+
+        # ---- BJT model-card charge companions ------------------------------
+        elif isinstance(el, BJT):
+            for state_name, n_plus, n_minus, state_kind in _bjt_charge_state_specs(el):
+                v_prev = cap_voltages.get(state_name, 0.0)
+                capacitance = _bjt_charge_dynamic_capacitance(el, state_kind, v_prev)
+                if capacitance <= 0.0:
+                    continue
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_eq = g_eq * v_prev + cap_currents.get(state_name, 0.0)
+                elif method == "gear2":
+                    v_older = cap_voltages_older.get(state_name, v_prev)
+                    g_eq = 3.0 * capacitance / (2.0 * h)
+                    I_eq = capacitance * (4.0 * v_prev - v_older) / (2.0 * h)
+                else:
+                    g_eq = capacitance / h
+                    I_eq = g_eq * v_prev
+
+                aug.elements.append(Resistor(
+                    name=f"{state_name}_R",
+                    n_plus=n_plus,
+                    n_minus=n_minus,
+                    resistance=1.0 / g_eq,
+                ))
+                aug.elements.append(CurrentSource(
+                    name=f"{state_name}_I",
+                    n_plus=n_minus,
+                    n_minus=n_plus,
+                    current=I_eq,
+                ))
+
         # ---- Inductor companion ------------------------------------------
         elif isinstance(el, Inductor) and el.name not in coupled_names:
             I_prev = ind_currents.get(el.name, 0.0)
@@ -9194,6 +9965,109 @@ def _update_reactive_state(
             cap_voltages_older[el.name] = v_prev
             cap_voltages[el.name] = v_new
 
+        elif isinstance(el, Diode) and _diode_has_charge_storage(el):
+            state_name = _diode_charge_state_name(el)
+            v_new = _diode_charge_voltage(el, op.node_voltages)
+            v_prev = cap_voltages.get(state_name, v_new)
+            v_older = cap_voltages_older.get(state_name, v_prev)
+            capacitance = _diode_dynamic_capacitance(el, v_prev)
+
+            if capacitance > 0.0:
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_prev = cap_currents.get(state_name, 0.0)
+                    cap_currents[state_name] = g_eq * (v_new - v_prev) - I_prev
+                elif method == "gear2":
+                    cap_currents[state_name] = (
+                        capacitance * (3.0 * v_new - 4.0 * v_prev + v_older)
+                        / (2.0 * h)
+                    )
+                else:
+                    g_eq = capacitance / h
+                    cap_currents[state_name] = g_eq * (v_new - v_prev)
+
+            cap_voltages_older[state_name] = v_prev
+            cap_voltages[state_name] = v_new
+
+        elif isinstance(el, JFET):
+            for state_name, n_plus, n_minus, capacitance in _jfet_charge_state_specs(el):
+                v_new = _jfet_charge_state_voltage(n_plus, n_minus, op.node_voltages)
+                v_prev = cap_voltages.get(state_name, v_new)
+                v_older = cap_voltages_older.get(state_name, v_prev)
+
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_prev = cap_currents.get(state_name, 0.0)
+                    cap_currents[state_name] = g_eq * (v_new - v_prev) - I_prev
+                elif method == "gear2":
+                    cap_currents[state_name] = (
+                        capacitance * (3.0 * v_new - 4.0 * v_prev + v_older)
+                        / (2.0 * h)
+                    )
+                else:
+                    g_eq = capacitance / h
+                    cap_currents[state_name] = g_eq * (v_new - v_prev)
+
+                cap_voltages_older[state_name] = v_prev
+                cap_voltages[state_name] = v_new
+
+        elif isinstance(el, Mosfet):
+            for state_name, n_plus, n_minus, capacitance in _mosfet_charge_state_specs(el):
+                v_new = _mosfet_charge_state_voltage(n_plus, n_minus, op.node_voltages)
+                v_prev = cap_voltages.get(state_name, v_new)
+                v_older = cap_voltages_older.get(state_name, v_prev)
+                capacitance = _mosfet_charge_dynamic_capacitance(
+                    el,
+                    state_name,
+                    capacitance,
+                    v_prev,
+                )
+
+                if capacitance <= 0.0:
+                    cap_voltages_older[state_name] = v_prev
+                    cap_voltages[state_name] = v_new
+                    continue
+
+                if method == "trap":
+                    g_eq = 2.0 * capacitance / h
+                    I_prev = cap_currents.get(state_name, 0.0)
+                    cap_currents[state_name] = g_eq * (v_new - v_prev) - I_prev
+                elif method == "gear2":
+                    cap_currents[state_name] = (
+                        capacitance * (3.0 * v_new - 4.0 * v_prev + v_older)
+                        / (2.0 * h)
+                    )
+                else:
+                    g_eq = capacitance / h
+                    cap_currents[state_name] = g_eq * (v_new - v_prev)
+
+                cap_voltages_older[state_name] = v_prev
+                cap_voltages[state_name] = v_new
+
+        elif isinstance(el, BJT):
+            for state_name, n_plus, n_minus, state_kind in _bjt_charge_state_specs(el):
+                v_new = _bjt_charge_state_voltage(n_plus, n_minus, op.node_voltages)
+                v_prev = cap_voltages.get(state_name, v_new)
+                v_older = cap_voltages_older.get(state_name, v_prev)
+                capacitance = _bjt_charge_dynamic_capacitance(el, state_kind, v_prev)
+
+                if capacitance > 0.0:
+                    if method == "trap":
+                        g_eq = 2.0 * capacitance / h
+                        I_prev = cap_currents.get(state_name, 0.0)
+                        cap_currents[state_name] = g_eq * (v_new - v_prev) - I_prev
+                    elif method == "gear2":
+                        cap_currents[state_name] = (
+                            capacitance * (3.0 * v_new - 4.0 * v_prev + v_older)
+                            / (2.0 * h)
+                        )
+                    else:
+                        g_eq = capacitance / h
+                        cap_currents[state_name] = g_eq * (v_new - v_prev)
+
+                cap_voltages_older[state_name] = v_prev
+                cap_voltages[state_name] = v_new
+
         elif isinstance(el, Inductor) and el.name not in coupled_names:
             v_plus = _node_voltage(el.n_plus, op.node_voltages)
             v_minus = _node_voltage(el.n_minus, op.node_voltages)
@@ -9250,6 +10124,38 @@ def _lte_estimate(
             lte_c = abs(v1 - 2.0 * v0 + vm1) / 2.0
             if lte_c > max_lte:
                 max_lte = lte_c
+        elif isinstance(el, Diode) and _diode_has_charge_storage(el):
+            state_name = _diode_charge_state_name(el)
+            v1 = cap_voltages_now.get(state_name, 0.0)
+            v0 = cap_voltages_prev.get(state_name, 0.0)
+            vm1 = cap_voltages_prev2.get(state_name, 0.0)
+            lte_c = abs(v1 - 2.0 * v0 + vm1) / 2.0
+            if lte_c > max_lte:
+                max_lte = lte_c
+        elif isinstance(el, JFET):
+            for state_name, _, _, _ in _jfet_charge_state_specs(el):
+                v1 = cap_voltages_now.get(state_name, 0.0)
+                v0 = cap_voltages_prev.get(state_name, 0.0)
+                vm1 = cap_voltages_prev2.get(state_name, 0.0)
+                lte_c = abs(v1 - 2.0 * v0 + vm1) / 2.0
+                if lte_c > max_lte:
+                    max_lte = lte_c
+        elif isinstance(el, Mosfet):
+            for state_name, _, _, _ in _mosfet_charge_state_specs(el):
+                v1 = cap_voltages_now.get(state_name, 0.0)
+                v0 = cap_voltages_prev.get(state_name, 0.0)
+                vm1 = cap_voltages_prev2.get(state_name, 0.0)
+                lte_c = abs(v1 - 2.0 * v0 + vm1) / 2.0
+                if lte_c > max_lte:
+                    max_lte = lte_c
+        elif isinstance(el, BJT):
+            for state_name, _, _, _ in _bjt_charge_state_specs(el):
+                v1 = cap_voltages_now.get(state_name, 0.0)
+                v0 = cap_voltages_prev.get(state_name, 0.0)
+                vm1 = cap_voltages_prev2.get(state_name, 0.0)
+                lte_c = abs(v1 - 2.0 * v0 + vm1) / 2.0
+                if lte_c > max_lte:
+                    max_lte = lte_c
     return max_lte
 
 
@@ -9410,10 +10316,46 @@ def transient(
         el.name: el.initial_voltage
         for el in circuit.elements if isinstance(el, Capacitor)
     }
+    for el in circuit.elements:
+        if isinstance(el, Diode) and _diode_has_charge_storage(el):
+            cap_voltages[_diode_charge_state_name(el)] = _diode_charge_voltage(el, op.node_voltages)
+        elif isinstance(el, JFET):
+            for state_name, n_plus, n_minus, _ in _jfet_charge_state_specs(el):
+                cap_voltages[state_name] = _jfet_charge_state_voltage(
+                    n_plus,
+                    n_minus,
+                    op.node_voltages,
+                )
+        elif isinstance(el, Mosfet):
+            for state_name, n_plus, n_minus, _ in _mosfet_charge_state_specs(el):
+                cap_voltages[state_name] = _mosfet_charge_state_voltage(
+                    n_plus,
+                    n_minus,
+                    op.node_voltages,
+                )
+        elif isinstance(el, BJT):
+            for state_name, n_plus, n_minus, _ in _bjt_charge_state_specs(el):
+                cap_voltages[state_name] = _bjt_charge_state_voltage(
+                    n_plus,
+                    n_minus,
+                    op.node_voltages,
+                )
     cap_currents: dict[str, float] = {
         el.name: 0.0
         for el in circuit.elements if isinstance(el, Capacitor)
     }
+    for el in circuit.elements:
+        if isinstance(el, Diode) and _diode_has_charge_storage(el):
+            cap_currents[_diode_charge_state_name(el)] = 0.0
+        elif isinstance(el, JFET):
+            for state_name, _, _, _ in _jfet_charge_state_specs(el):
+                cap_currents[state_name] = 0.0
+        elif isinstance(el, Mosfet):
+            for state_name, _, _, _ in _mosfet_charge_state_specs(el):
+                cap_currents[state_name] = 0.0
+        elif isinstance(el, BJT):
+            for state_name, _, _, _ in _bjt_charge_state_specs(el):
+                cap_currents[state_name] = 0.0
     cap_voltages_older: dict[str, float] = dict(cap_voltages)
     ind_currents: dict[str, float] = {
         el.name: el.initial_current
@@ -9478,6 +10420,32 @@ def transient(
                     v_plus = _node_voltage(el.n_plus, op.node_voltages)
                     v_minus = _node_voltage(el.n_minus, op.node_voltages)
                     cap_voltages_new[el.name] = v_plus - v_minus
+                elif isinstance(el, Diode) and _diode_has_charge_storage(el):
+                    cap_voltages_new[_diode_charge_state_name(el)] = _diode_charge_voltage(
+                        el,
+                        op.node_voltages,
+                    )
+                elif isinstance(el, JFET):
+                    for state_name, n_plus, n_minus, _ in _jfet_charge_state_specs(el):
+                        cap_voltages_new[state_name] = _jfet_charge_state_voltage(
+                            n_plus,
+                            n_minus,
+                            op.node_voltages,
+                        )
+                elif isinstance(el, Mosfet):
+                    for state_name, n_plus, n_minus, _ in _mosfet_charge_state_specs(el):
+                        cap_voltages_new[state_name] = _mosfet_charge_state_voltage(
+                            n_plus,
+                            n_minus,
+                            op.node_voltages,
+                        )
+                elif isinstance(el, BJT):
+                    for state_name, n_plus, n_minus, _ in _bjt_charge_state_specs(el):
+                        cap_voltages_new[state_name] = _bjt_charge_state_voltage(
+                            n_plus,
+                            n_minus,
+                            op.node_voltages,
+                        )
 
             lte = _lte_estimate(circuit, cap_voltages_new,
                                  cap_voltages, cap_voltages_prev)
@@ -11276,6 +12244,10 @@ def _stamp_ac(
         Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
         _, gm_j, gds_j = _eval_jfet(el, Vg - Vs, Vd - Vs)
         _stamp_g_c(G, node_to_idx, el.drain, el.source, gds_j + 0j)
+        if el.Cgs > 0.0:
+            _stamp_g_c(G, node_to_idx, el.gate, el.source, 1j * omega * el.Cgs)
+        if el.Cgd > 0.0:
+            _stamp_g_c(G, node_to_idx, el.gate, el.drain, 1j * omega * el.Cgd)
         if not _is_ground(el.drain):
             d = node_to_idx[el.drain]
             if not _is_ground(el.gate):
@@ -13479,6 +14451,18 @@ def _collect_noise_sources(
             Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
             r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
             gm = max(0.0, float(r.gm))
+            if gm > 0.0:
+                psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
+                n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
+                n_s = None if _is_ground(el.source) else node_to_idx[el.source]
+                sources.append((el.name, "thermal", n_d, n_s, psd))
+
+        elif isinstance(el, JFET):
+            Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+            Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
+            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            _, gm, _ = _eval_jfet(el, Vg - Vs, Vd - Vs)
+            gm = max(0.0, float(gm))
             if gm > 0.0:
                 psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
                 n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]

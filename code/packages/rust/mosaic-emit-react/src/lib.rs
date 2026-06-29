@@ -48,8 +48,8 @@
 //! | Stack   | `<div style={{ position: 'relative' }}>`            |
 //! | Icon    | `<span className="icon">` (simplified)              |
 
-use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
 use mosaic_analyzer::{MosaicSlot, MosaicType};
+use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
 
 // =====================================================================
 // New three-file pipeline entry point.
@@ -151,7 +151,11 @@ impl ReactRenderer {
             }
             "Text" => {
                 // Use <h2> if a11y-role is "heading".
-                let elem = if extra_attrs.contains("heading") { "h2" } else { "span" };
+                let elem = if extra_attrs.contains("heading") {
+                    "h2"
+                } else {
+                    "span"
+                };
                 let combined = style.clone();
                 let class_attr = if class.is_empty() {
                     String::new()
@@ -201,7 +205,7 @@ impl ReactRenderer {
                 // For the static v1 demo no virtual scrolling or row selection is
                 // emitted — those belong in the interactive phase.
                 let headers = find_slot_ref_prop(props, "headers");
-                let rows    = find_slot_ref_prop(props, "rows");
+                let rows = find_slot_ref_prop(props, "rows");
 
                 let style_attr = if style.is_empty() {
                     String::new()
@@ -419,9 +423,7 @@ impl MosaicRenderer for ReactRenderer {
 
     fn begin_each(&mut self, slot_name: &str, item_name: &str, _element_type: &MosaicType) {
         let camel = to_camel_case(slot_name);
-        let jsx_open = format!(
-            "{{{camel}.map(({item_name}, _idx) => ("
-        );
+        let jsx_open = format!("{{{camel}.map(({item_name}, _idx) => (");
         if let Some(frame) = self.stack.last_mut() {
             frame.lines.push(jsx_open);
         } else {
@@ -443,16 +445,8 @@ impl MosaicRenderer for ReactRenderer {
         let params = if self.slots.is_empty() {
             String::new()
         } else {
-            let params: Vec<String> = self
-                .slots
-                .iter()
-                .map(|s| to_camel_case(&s.name))
-                .collect();
-            format!(
-                "{{ {} }}: {}Props",
-                params.join(", "),
-                self.component_name
-            )
+            let params: Vec<String> = self.slots.iter().map(|s| to_camel_case(&s.name)).collect();
+            format!("{{ {} }}: {}Props", params.join(", "), self.component_name)
         };
 
         let props_iface = self.generate_props_interface();
@@ -547,7 +541,14 @@ fn resolved_value_to_jsx_text(v: &ResolvedValue) -> String {
 
 /// Build an inline style string from properties that map to CSS.
 fn build_style_string(props: &[ResolvedProperty]) -> String {
-    let skip = ["content", "source", "a11y-label", "a11y-role", "a11y-hidden", "style"];
+    let skip = [
+        "content",
+        "source",
+        "a11y-label",
+        "a11y-role",
+        "a11y-hidden",
+        "style",
+    ];
     let entries: Vec<String> = props
         .iter()
         .filter(|p| !skip.contains(&p.name.as_str()))
@@ -687,7 +688,9 @@ fn find_slot_ref_prop(props: &[ResolvedProperty], name: &str) -> String {
         .iter()
         .find(|p| p.name == name)
         .map(|p| match &p.value {
-            ResolvedValue::SlotRef { name: slot_name, .. } => {
+            ResolvedValue::SlotRef {
+                name: slot_name, ..
+            } => {
                 let camel = to_camel_case(slot_name);
                 // Validate: a safe JS identifier starts with [a-zA-Z_$] and
                 // contains only [a-zA-Z0-9_$].  The NAME token pattern used by
@@ -695,7 +698,11 @@ fn find_slot_ref_prop(props: &[ResolvedProperty], name: &str) -> String {
                 // removes hyphens, so in practice this check always passes.
                 // We guard defensively against future grammar changes or direct
                 // ResolvedValue construction that bypasses the tokeniser.
-                if is_safe_js_identifier(&camel) { camel } else { String::new() }
+                if is_safe_js_identifier(&camel) {
+                    camel
+                } else {
+                    String::new()
+                }
             }
             _ => String::new(),
         })
@@ -740,8 +747,8 @@ fn indent_lines(s: &str, spaces: usize) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mosaic_vm::MosaicVM;
     use mosaic_analyzer::analyze;
+    use mosaic_vm::MosaicVM;
 
     fn emit(src: &str) -> String {
         let file = analyze(src).unwrap();
@@ -756,7 +763,10 @@ mod tests {
     #[test]
     fn test_react_import() {
         let out = emit(r#"component X { Box { } }"#);
-        assert!(out.contains("import React from \"react\""), "Missing React import");
+        assert!(
+            out.contains("import React from \"react\""),
+            "Missing React import"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -766,7 +776,10 @@ mod tests {
     #[test]
     fn test_export_function() {
         let out = emit(r#"component ProfileCard { Box { } }"#);
-        assert!(out.contains("export function ProfileCard"), "Missing export function");
+        assert!(
+            out.contains("export function ProfileCard"),
+            "Missing export function"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -777,7 +790,10 @@ mod tests {
     fn test_props_interface() {
         // Note: slot name must not be a keyword — use "title" not "text".
         let out = emit(r#"component Label { slot title: text; Text { content: @title; } }"#);
-        assert!(out.contains("interface LabelProps"), "Missing props interface");
+        assert!(
+            out.contains("interface LabelProps"),
+            "Missing props interface"
+        );
         assert!(out.contains("title"), "Missing slot in interface");
     }
 
@@ -823,7 +839,9 @@ mod tests {
 
     #[test]
     fn test_slot_ref_camel_case() {
-        let out = emit(r#"component Label { slot display-name: text; Text { content: @display-name; } }"#);
+        let out = emit(
+            r#"component Label { slot display-name: text; Text { content: @display-name; } }"#,
+        );
         assert!(
             out.contains("displayName"),
             "Expected camelCase slot ref in output: {out}"
@@ -836,7 +854,8 @@ mod tests {
 
     #[test]
     fn test_when_block_conditional() {
-        let out = emit(r#"
+        let out = emit(
+            r#"
           component Cond {
             slot show: bool;
             Column {
@@ -845,7 +864,8 @@ mod tests {
               }
             }
           }
-        "#);
+        "#,
+        );
         assert!(
             out.contains("show &&") || out.contains("show&&"),
             "Expected conditional in output: {out}"
@@ -859,7 +879,8 @@ mod tests {
 
     #[test]
     fn test_each_block_map() {
-        let out = emit(r#"
+        let out = emit(
+            r#"
           component List {
             slot items: list<text>;
             Column {
@@ -868,7 +889,8 @@ mod tests {
               }
             }
           }
-        "#);
+        "#,
+        );
         assert!(out.contains(".map("), "Expected .map() in output: {out}");
     }
 
@@ -892,19 +914,13 @@ mod tests {
     fn renders_simple_text_slot() {
         let out = emit(r#"component Label { slot title: text; Text { content: @title; } }"#);
         // Must contain: React import, function keyword, and export keyword.
-        assert!(
-            out.contains("import React"),
-            "Missing React import: {out}"
-        );
+        assert!(out.contains("import React"), "Missing React import: {out}");
         assert!(
             out.contains("function Label"),
             "Missing function declaration: {out}"
         );
         // The function must be exported (export function or export default).
-        assert!(
-            out.contains("export"),
-            "Missing export: {out}"
-        );
+        assert!(out.contains("export"), "Missing export: {out}");
         // The slot must appear as a camelCase prop.
         assert!(
             out.contains("title"),
@@ -918,7 +934,8 @@ mod tests {
 
     #[test]
     fn renders_column_with_text() {
-        let out = emit(r#"component Card { slot label: text; Column { Text { content: @label; } } }"#);
+        let out =
+            emit(r#"component Card { slot label: text; Column { Text { content: @label; } } }"#);
         assert!(
             out.contains("flexDirection: 'column'") || out.contains("flexDirection:'column'"),
             "Expected flex column style: {out}"
@@ -933,7 +950,8 @@ mod tests {
 
     #[test]
     fn renders_when_block() {
-        let out = emit(r#"
+        let out = emit(
+            r#"
           component Cond {
             slot show: bool;
             Column {
@@ -942,7 +960,8 @@ mod tests {
               }
             }
           }
-        "#);
+        "#,
+        );
         // The when block must produce a JS conditional expression (&&) or ternary.
         assert!(
             out.contains("show &&") || out.contains("show ?") || out.contains("show&&"),
@@ -956,7 +975,8 @@ mod tests {
 
     #[test]
     fn renders_each_block() {
-        let out = emit(r#"
+        let out = emit(
+            r#"
           component List {
             slot items: list<text>;
             Column {
@@ -965,8 +985,12 @@ mod tests {
               }
             }
           }
-        "#);
-        assert!(out.contains(".map("), "Expected .map() for each block: {out}");
+        "#,
+        );
+        assert!(
+            out.contains(".map("),
+            "Expected .map() for each block: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -985,10 +1009,7 @@ mod tests {
         ];
         for (src, expected) in tests {
             let out = emit(src);
-            assert!(
-                !out.is_empty(),
-                "Expected non-empty output for: {src}"
-            );
+            assert!(!out.is_empty(), "Expected non-empty output for: {src}");
             assert!(
                 out.contains(expected),
                 "Expected '{expected}' in output for: {src}\nGot: {out}"
@@ -998,7 +1019,10 @@ mod tests {
         // Image test: check for img element
         let img_out = emit(r#"component X { Image { source: "img.png"; } }"#);
         assert!(!img_out.is_empty(), "Image output must be non-empty");
-        assert!(img_out.contains("<img"), "Expected <img for Image: {img_out}");
+        assert!(
+            img_out.contains("<img"),
+            "Expected <img for Image: {img_out}"
+        );
 
         // Spacer test: check for flex:1
         let spacer_out = emit(r#"component X { Column { Spacer { } } }"#);

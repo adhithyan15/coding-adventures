@@ -6,6 +6,7 @@ description = "Per-backend package-artifact build mode for Mosaic packages (UI29
 
 [dependencies]
 mosaic-package-manifest = { path = "../mosaic-package-manifest" }
+mosaic-package-resolver = { path = "../mosaic-package-resolver" }
 mosmodel-compiler = { path = "../mosmodel-compiler" }
 moslayout-compiler = { path = "../moslayout-compiler" }
 mosstyle-compiler = { path = "../mosstyle-compiler" }

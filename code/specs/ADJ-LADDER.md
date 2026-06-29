@@ -1,6 +1,7 @@
 # ADJ-LADDER — A Graduated, Two-Arm Proof that Reasoning Lives in the Framework
 
-**Status:** Specs-first; PR-0 (this PR) ships the instrument + rung 0.
+**Status:** PR-0 shipped the instrument + rung 0; the ladder now climbs in small,
+audited rungs from the existing engine surface before heavier symbolic work.
 **Author:** evaluation-systems architecture pass, 2026-06-26.
 **North star:** A Haiku- or Gemma-class (small, non-frontier) model + the ADJ engine
 and its content-addressed *standard library* passes a Medical Licensing Exam where the
@@ -32,6 +33,13 @@ USMLE (where contamination and knowledge-breadth confound everything), we climb 
 
 In Arm B the model's only job is to **decompose** the question into an ADJ program;
 the engine evaluates it and selects an answer, emitting a machine-checkable proof.
+
+**Base target: Gemma.** The canonical model is **Gemma** — a small, non-frontier model
+that runs **fully locally** (no API, offline, on commodity Apple-silicon via MLX). The
+default is `gemma-3-4b-it`; `gemma-3-1b-it` is available for an even-smaller probe where
+the gap should appear earlier. This is a deliberate choice: the standing claim is
+"a Haiku- or **Gemma**-class model + ADJ passes an exam the model alone cannot", and a
+local model makes the whole pipeline reproducible end-to-end with zero network.
 
 **The headline number is the divergence, B − A.** At the bottom of the ladder the gap
 is small (a small model can do `7 * 8 + 3`). As computation deepens, Arm A degrades
@@ -76,12 +84,12 @@ contributes 1000000 from answer == 62 to opt_e
 
 The engine evaluates `answer` (= 59), the predicate `answer == 59` fires, opt_a's
 log-odds jump decisively, and the decision returns `determinate` with `leader = opt_a`
-→ letter **A**. If the computed answer matches **no** option (or, via a duplicate-value
-accident, two) the hypotheses stay tied → `kickback` → the harness **ABSTAINS** rather
-than guess. The harness supplies only the formula and the printed option values; the
-arithmetic, the comparison, and the selection are all the engine's. (This is the
-`let` + predicate-`contributes` mechanism from `proration.adj`; it needs **zero engine
-change** — the first audited rung is answerable today.)
+→ letter **A**. Fractional options use the same path with an expression RHS, for
+example `contributes 1000000 from answer == 3 / 10 to opt_a`. If the computed answer
+matches **no** option (or, via a duplicate-value accident, two) the hypotheses stay tied
+→ `kickback` → the harness **ABSTAINS** rather than guess. The harness supplies only
+the formula and the printed option values; the arithmetic, the comparison, and the
+selection are all the engine's.
 
 ---
 
@@ -152,10 +160,10 @@ engine gap that blocks it, and every rung ships a two-arm divergence number.
 
 | Rung | Content | Engine capability it pulls |
 |------|---------|----------------------------|
-| **0** | grade-school arithmetic + 1-step word problems | **none** (value-math exists) — **shipped here** |
-| 1 | fractions / percent | exact rationals (ADJ-REASON-MATH PR-3) for clean fraction equality |
-| 2 | pre-algebra / algebra word problems | multi-step deduction→evidence bridge (PR-1) + CAS solve (PR-6) |
-| 3 | algebra / calculus | CAS wiring (PR-6) + rewrite trail (PR-4) |
+| **0** | grade-school arithmetic + 1-step word problems | **none** (value-math exists) — shipped |
+| **1** | fractions / percent | native predicate RHS expressions plus exact rational sidecars for fractional equality; harder banks climb from here |
+| **2** | pre-algebra / algebra word problems | native ADJ solve programs now mix with rule-derived setup premises; broader CAS solve trail (PR-6) |
+| **3** | algebra / calculus + probabilistic decisions | native ADJ solve now covers two-variable linear systems, linear optimization values and witnesses, direct and rule-derived `decision.leader` probability banks, plus `solved_roots` banks for quadratic, cubic, quartic, and factored-polynomial equations; broader CAS wiring (PR-6) + rewrite trail (PR-4) |
 | 4 | physics / chem with units | dimensional engine (exists) + exact compute (PR-3) |
 | 5 | clinical / MLE → **apex: pediatrics** | the **MLE-PASS** harness (shares the option-map); multi-hop→PR-1, calculation→PR-3/6 |
 | — | defensibility hardening | `adj-verify` (PR-9): every correct item's proof re-checks |
@@ -182,16 +190,59 @@ of record (this file + ADJ-REASON-MATH + MLE-PASS). **No engine/grammar change.*
 5. (where a local model exists) `python3 ladder_eval.py rung0_arithmetic --model
    mlx:<repo>` → the first real two-arm number + divergence.
 
-**Result on first run:** rung-0 Arm B = **20/20 correct, 0 wrong, 0 abstain** — the
-engine computed every answer exactly and selected the gold option, with the computed
-value visible in each item's proof. The mechanism is proven; the ladder can climb.
+**Result — engine sanity (cached, no model):** rung-0 Arm B = **20/20 correct, 0
+wrong, 0 abstain** — the engine computed every answer exactly and selected the gold
+option, with the computed value visible in each item's proof.
+
+**Result — first real two-arm run (Gemma-3-4b, greedy, fully local):**
+
+| Arm | raw accuracy | wrong (fabrications) | defensibility |
+|-----|--------------|----------------------|---------------|
+| **A** — Gemma alone | **60%** (12/20) | **8** | 0.60 |
+| **B** — Gemma + ADJ | **95%** (19/20) | **0** | **1.00** |
+
+**Divergence B − A = +35% (+7 items).** The money curve is visible at the very bottom
+of the ladder: even on grade-school arithmetic a small local model fabricates 8 wrong
+answers, while the engine arm makes **zero** — its single miss is a *decompose* error
+(bucket `b`) the engine caught and **abstained** on, not a fabrication. The defensibility
+gap (0.60 → 1.00) is the headline the ladder will widen rung by rung. (Artifact:
+`code/specs/data/adj-ladder/ladder-scorecard.gemma.json`.)
+
+The mechanism is proven; the ladder can climb.
 
 ---
 
 ## 7. Next
 
-PR-1 = the ADJ-REASON-MATH **deduction→evidence bridge** (`logic-engine` —
-`observed_evidence` falls back to SLD provability + attenuates confidence + threads
-rule provenance), the unlock for every multi-step rung. Then rungs 1→5 in order, each
-gating the next engine PR, culminating in the MLE-PASS clinical rung and the
-pediatrics apex.
+PR-1 is the ADJ-REASON-MATH **deduction→evidence bridge**: `logic-engine`
+`observed_evidence` falls back to SLD provability, attenuates an LR contribution by
+the proof confidence, and threads the rule/fact proof into the aggregate evidence
+step. This unlocks the first true multi-step Arm B programs: the model can emit
+observations plus a rule, and ADJ can derive the intermediate premise before weighing
+it probabilistically.
+
+After this bridge, rung 2 starts with native ADJ solve programs: a small model can
+emit `symbol` / `constrain` / `solve for` from a messy pre-algebra stem, the ADJ
+constraint solver computes the unknown, and the ladder maps that engine value to the
+printed options. The next rung now mixes that solve path with rule-derived premises:
+the program derives a setup atom, uses it as evidence for a queried readiness
+decision, and then solves the numeric unknown in the same native ADJ run. Rung 3 now
+also exercises native constraint feasibility: ADJ returns `check.outcome` for
+linear `symbol` / `constrain` / `check` programs, and the ladder maps that verdict
+to printed feasible/infeasible options without host-side solving. It exercises
+native probability decisions directly: ADJ ranks candidate hypotheses from
+`prior` / `contributes` / `observe` / `?` programs, and the ladder maps
+`decision.leader` to printed categorical options without host-side probability math.
+It then combines deduction and probability: ADJ proves a rule-derived evidence atom,
+uses that proof to license an LR contribution, and the ladder requires the proof
+before mapping the winning leader.
+It exercises
+native constraint optimization too: ADJ returns `optimize.value` for linear
+`maximize`/`minimize` programs and `optimize.assignments` for requested witness
+variables; the ladder maps those engine outputs to printed options without
+host-side solving. It then climbs through native polynomial root solving: ADJ
+returns `solved_roots` for quadratic, cubic, quartic, and factored-polynomial
+programs, and the ladder maps those root sets to printed options without host-side
+solving. From here, rungs 3→5 gate the broader
+CAS/dimensional/clinical slices in order, culminating in the MLE-PASS clinical rung
+and the pediatrics apex.

@@ -8,6 +8,10 @@ cd ../../../packages/typescript/sql-lexer && npm install --quiet
 cd ../../../packages/typescript/sql-parser && npm install --quiet
 cd ../../../packages/typescript/sql-execution-engine && npm install --quiet
 cd ../../../packages/typescript/storage && npm install --quiet
+cd ../../../packages/typescript/lattice-lexer && npm install --quiet
+cd ../../../packages/typescript/lattice-parser && npm install --quiet
+cd ../../../packages/typescript/lattice-ast-to-css && npm install --quiet
+cd ../../../packages/typescript/lattice-transpiler && npm install --quiet
 cd ../../../packages/typescript/indexeddb && npm install --quiet
 cd ../../../packages/typescript/store && npm install --quiet
 cd ../../../packages/typescript/pixel-container && npm install --quiet

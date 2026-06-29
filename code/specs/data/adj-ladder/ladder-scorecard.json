@@ -2,6 +2,7 @@
   "summary": {
     "rung": "rung0_arithmetic",
     "mode": "cached",
+    "model": null,
     "arm_a_model_alone": {
       "total": 20,
       "correct": 0,

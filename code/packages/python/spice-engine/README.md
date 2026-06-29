@@ -59,13 +59,14 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `tf` | `.TF` | DC transfer function, input/output impedance |
 | `dc_sweep` | `.DC` | DC parameter sweep |
 | `resolve_deck_analyses` | `.OP` / `.DC` / `.AC` / `.TRAN` | Parsed deck analysis metadata |
+| `run_deck_analysis`, `run_deck` | Deck analysis execution | Selected-analysis execution or source-order whole-deck execution with aggregate artifacts |
 | `sens_dc` | `.SENS` | DC sensitivity analysis |
 | `mc_dc` | `.MC` | Monte Carlo DC analysis |
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 | `resolve_deck_outputs`, `format_deck_*_table`, `format_deck_table_csv`, `format_deck_table_json`, `deck_table_records` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables plus deterministic CSV/JSON/record conversion |
-| `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, table, analysis-directive, output-probe, output-directive, measurement, Fourier, control-command, and diagnostic count/name lists |
+| `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json`, `deck_run_artifact_records` | Deck execution artifact | Stable selected-run row, table, analysis-directive, deck-analysis, output-probe, output-directive, measurement, Fourier, control-command, and diagnostic count/name lists |
 | `format_deck_control_policy_artifact_table`, `format_deck_control_policy_artifact_csv`, `format_deck_control_policy_artifact_json` | `.control` policy diagnostic artifact | Stable line/category/command/code/severity/message exports for policy-blocked `.control` commands |
 | `format_deck_rawfile_ascii`, `format_deck_rawfile_artifact_table`, `format_deck_rawfile_artifact_csv`, `format_deck_rawfile_artifact_json` | `.control write` artifact | Deterministic in-memory ASCII rawfile text plus stable probe-aware rawfile artifact table/CSV/JSON exports |
 | `format_deck_wrdata_ascii`, `format_deck_wrdata_artifact_table`, `format_deck_wrdata_artifact_csv`, `format_deck_wrdata_artifact_json` | `.control wrdata` artifact | Deterministic in-memory ASCII data-file text plus stable option-aware WRDATA artifact table/CSV/JSON exports |
@@ -113,10 +114,10 @@ that produced the table, plus selected
 executions. Execution `table_artifacts` preserve the same order as `tables` and
 carry each stable table's text, CSV, compact JSON, and header-keyed records.
 Execution `output_plan_artifacts` summarize the selected result row count,
-result columns, selected analysis line/source/output-node metadata, output
-probes, selected output probe source lines, output directives, normalized
-output directive kinds, normalized directive analysis scopes, selected output
-directive source lines, and stable table names, and the
+result columns, selected analysis line/source/output-node and sweep/time/frequency
+metadata, output probes, selected output probe source lines, output directives,
+normalized output directive kinds, normalized directive analysis scopes, selected
+output directive source lines, and stable table names, and the
 `output-plan` entry in `table_artifacts` carries the same
 table, CSV, compact JSON, and header-keyed record exports.
 Selected `.tran` plans also return selected `.four` harmonic results and a stable
@@ -125,6 +126,13 @@ Fourier table. Executions also include a selected-run artifact summary plus
 for stable result-row, table, analysis-directive, output-probe,
 output-directive, measurement, Fourier, write-marker, rawfile-option, and
 diagnostic count/name lists.
+`run_deck()` executes every parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`,
+`.sens`, and `.noise` card in source order, preserves duplicate analysis
+directives, and defaults analysis-less decks to an implicit `.op`. Its
+whole-run result returns ordered selected executions plus aggregate
+selected-run artifact table, CSV, compact JSON, and header-keyed records, and
+each selected-run artifact carries the deck-wide analysis kind/directive
+inventories beside the selected analysis directive metadata.
 Normalized accepted `.control` commands are surfaced separately in
 `control_line_count` / `control_lines` execution fields and in
 `ControlLines` / `ControlLineList` artifact fields.
@@ -175,16 +183,68 @@ existing SPICE-style Fourier result shape with optional `HARMONICS=` and
 `FROM=` controls.
 
 `DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
-size, selected real solver path, tolerance, convergence aid, and final Newton
-delta.  Large real DC and complex AC matrix solves use sparse-row solver paths
-when the matrix size reaches the package threshold.
+size, selected real solver path, tolerance, convergence aid, final Newton
+delta, and a nested solver profile with backend, structural nonzero count,
+density, fill-in, and fallback metadata. Large real DC solves use an optional
+SciPy sparse-LU backend when available and fall back to the native sparse-row
+solver with an explicit fallback reason; large complex AC solves use the native
+sparse-row path when the matrix size reaches the package threshold.
+For nonlinear operating points, `dc_op(newton_step_limit=...)` bounds each
+Newton update per unknown. Diagnostics report the active limit, how many steps
+were clipped, and the minimum damping factor; pass `newton_step_limit=None` to
+disable the limiter.
 
 `normalize_model_card()`, `diode_from_model_card()`,
 `bjt_from_model_card()`, `jfet_from_model_card()`, and
 `mosfet_from_model_card()` provide the shared `.model` alias surface for diode,
 BJT, JFET, and Level-1 MOS cards. `device_model_audit_fixtures()` returns the
 canonical cross-language fixture cards used to keep the Python, Rust, and
-TypeScript ports aligned.
+TypeScript ports aligned. `device_model_behavior_audit_fixtures()` extends
+those cards into runnable one-device DC bias fixtures with reference deck lines
+and stable expected probe-voltage windows for diode, BJT, JFET, and Level-1 MOS
+model-depth audits. `device_model_temperature_audit_fixtures()` adds matching
+`.temp` reference-deck metadata and stable per-temperature probe windows for
+those same fixture circuits. `device_model_capacitance_audit_fixtures()` adds
+matching `.ac` reference-deck metadata and stable high-frequency probe
+magnitude windows for diode, BJT, JFET `CGS`/`CGD`, and Level-1 MOS
+capacitance audits.
+`device_model_noise_audit_fixtures()` adds matching `.noise` reference-deck
+metadata and stable source/output PSD windows for diode and BJT shot noise plus
+JFET and Level-1 MOS channel thermal noise audits.
+`device_model_charge_audit_fixtures()` adds matching `.tran` reference-deck
+metadata, explicit terminal storage capacitance metadata, stable first/final
+probe-voltage windows, and charge-behavior notes for diode, BJT, JFET, and
+Level-1 MOS charge audits. Diode `Cjo` / `Tt`, BJT `Cje` / `Cjc` / `Tf` /
+`Tr`, JFET `Cgs` / `Cgd`, and Level-1 MOS `CGSO` / `CGDO` / `CGBO` plus
+bulk-junction `CBS` / `CBD` model-card parameters also stamp transient
+storage, with MOS `PB` / `MJ` shaping reverse-biased source-body and
+drain-body capacitance to match their small-signal AC semantics.
+`device_model_reference_deck_audit_fixtures()` flattens those DC,
+temperature, AC, noise, and transient fixture families into a stable
+reference-deck coverage matrix for each supported diode, BJT, JFET, and
+Level-1 MOS model family.
+`format_device_model_reference_deck_audit_table()` renders that matrix as a
+stable tab-separated audit table for release and reference-deck comparisons.
+`device_model_reference_deck_audit_records()`,
+`format_device_model_reference_deck_audit_csv()`, and
+`format_device_model_reference_deck_audit_json()` expose the same matrix as
+header-keyed records and browser/release-friendly CSV or compact JSON.
+`device_model_reference_deck_audit_summary()`,
+`format_device_model_reference_deck_audit_summary_table()`,
+`device_model_reference_deck_audit_summary_records()`,
+`format_device_model_reference_deck_audit_summary_csv()`, and
+`format_device_model_reference_deck_audit_summary_json()` expose stable
+per-kind coverage summaries with missing-analysis and deck-line totals.
+`device_model_reference_deck_audit_analysis_summary()`,
+`format_device_model_reference_deck_audit_analysis_summary_table()`,
+`device_model_reference_deck_audit_analysis_summary_records()`,
+`format_device_model_reference_deck_audit_analysis_summary_csv()`, and
+`format_device_model_reference_deck_audit_analysis_summary_json()` expose the
+same audit matrix grouped by analysis kind, with missing-model-family and
+deck-line totals for release dashboards.
+`device_model_reference_deck_audit_gate()` and
+`format_device_model_reference_deck_audit_gate_report()` validate the required
+kind-by-analysis coverage matrix and emit a stable pass/fail gate report.
 
 `DigitalEventStream`, `DigitalLogicLevels`, and `DigitalThresholds` provide the
 first mixed-signal bridge surface: digital event streams can drive finite-edge

@@ -48,6 +48,8 @@ pub fn check(root: GrammarASTNode) -> TypeCheckResult<TypedAst> {
     let mut checker = Checker {
         errors: Vec::new(),
         types: HashMap::new(),
+        consts: HashMap::new(),
+        statics: HashMap::new(),
     };
     checker.check_program(&root);
     let ok = checker.errors.is_empty();
@@ -64,10 +66,16 @@ pub fn check(root: GrammarASTNode) -> TypeCheckResult<TypedAst> {
 struct Checker {
     errors: Vec<TypeErrorDiagnostic>,
     types: HashMap<usize, NibType>,
+    consts: HashMap<String, NibType>,
+    statics: HashMap<String, NibType>,
 }
 
 impl Checker {
     fn check_program(&mut self, root: &GrammarASTNode) {
+        self.collect_const_declarations(root);
+        self.collect_static_declarations(root);
+        self.check_const_initializers(root);
+        self.check_static_initializers(root);
         for decl in child_nodes(root) {
             if decl.rule_name == "fn_decl" {
                 self.check_function(decl);
@@ -81,8 +89,95 @@ impl Checker {
         }
     }
 
+    fn collect_const_declarations(&mut self, root: &GrammarASTNode) {
+        for decl in child_nodes(root) {
+            let Some(const_decl) = const_decl_node(decl) else {
+                continue;
+            };
+            let name = first_name(const_decl).unwrap_or_else(|| "<unknown>".to_string());
+            let declared = child_nodes(const_decl)
+                .into_iter()
+                .find(|node| node.rule_name == "type")
+                .and_then(parse_type)
+                .unwrap_or(NibType::U4);
+            self.consts.insert(name, declared);
+        }
+    }
+
+    fn collect_static_declarations(&mut self, root: &GrammarASTNode) {
+        for decl in child_nodes(root) {
+            let Some(static_decl) = static_decl_node(decl) else {
+                continue;
+            };
+            let name = first_name(static_decl).unwrap_or_else(|| "<unknown>".to_string());
+            let declared = child_nodes(static_decl)
+                .into_iter()
+                .find(|node| node.rule_name == "type")
+                .and_then(parse_type)
+                .unwrap_or(NibType::U4);
+            self.statics.insert(name, declared);
+        }
+    }
+
+    fn check_const_initializers(&mut self, root: &GrammarASTNode) {
+        for decl in child_nodes(root) {
+            let Some(const_decl) = const_decl_node(decl) else {
+                continue;
+            };
+            let name = first_name(const_decl).unwrap_or_else(|| "<unknown>".to_string());
+            let declared = child_nodes(const_decl)
+                .into_iter()
+                .find(|node| node.rule_name == "type")
+                .and_then(parse_type)
+                .unwrap_or(NibType::U4);
+            let expr = child_nodes(const_decl)
+                .into_iter()
+                .find(|node| node.rule_name == "expr");
+            if let Some(expr) = expr {
+                let env = self.consts.clone();
+                if let Some(actual) = self.infer_expr(expr, &env, Some(&declared)) {
+                    if actual != declared {
+                        self.error(
+                            format!("const `{name}` expects {:?}, got {:?}", declared, actual),
+                            expr,
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    fn check_static_initializers(&mut self, root: &GrammarASTNode) {
+        for decl in child_nodes(root) {
+            let Some(static_decl) = static_decl_node(decl) else {
+                continue;
+            };
+            let name = first_name(static_decl).unwrap_or_else(|| "<unknown>".to_string());
+            let declared = child_nodes(static_decl)
+                .into_iter()
+                .find(|node| node.rule_name == "type")
+                .and_then(parse_type)
+                .unwrap_or(NibType::U4);
+            let expr = child_nodes(static_decl)
+                .into_iter()
+                .find(|node| node.rule_name == "expr");
+            if let Some(expr) = expr {
+                let env = self.consts.clone();
+                if let Some(actual) = self.infer_expr(expr, &env, Some(&declared)) {
+                    if actual != declared {
+                        self.error(
+                            format!("static `{name}` expects {:?}, got {:?}", declared, actual),
+                            expr,
+                        );
+                    }
+                }
+            }
+        }
+    }
+
     fn check_function(&mut self, fn_decl: &GrammarASTNode) {
-        let mut env = HashMap::new();
+        let mut env = self.consts.clone();
+        env.extend(self.statics.clone());
         // Seed the env with the parameters' declared types so their uses type.
         for (name, ty) in extract_params(fn_decl) {
             env.insert(name, ty);
@@ -243,10 +338,12 @@ impl Checker {
         }
 
         let inferred = match node.rule_name.as_str() {
-            "expr" | "or_expr" | "and_expr" | "eq_expr" | "cmp_expr" | "bitwise_expr"
-            | "unary_expr" => child_nodes(node)
-                .first()
-                .and_then(|child| self.infer_expr(child, env, expected)),
+            "expr" | "or_expr" | "and_expr" | "eq_expr" | "cmp_expr" | "bitwise_expr" => {
+                child_nodes(node)
+                    .first()
+                    .and_then(|child| self.infer_expr(child, env, expected))
+            }
+            "unary_expr" => self.infer_unary_expr(node, env, expected),
             "add_expr" | "mul_expr" => {
                 let operands = child_nodes(node);
                 // The expected width flows to BOTH operands (an arithmetic op
@@ -288,6 +385,30 @@ impl Checker {
         inferred
     }
 
+    fn infer_unary_expr(
+        &mut self,
+        node: &GrammarASTNode,
+        env: &HashMap<String, NibType>,
+        expected: Option<&NibType>,
+    ) -> Option<NibType> {
+        let inner = child_nodes(node)
+            .into_iter()
+            .find(|child| is_expr_rule(&child.rule_name))?;
+        let op = node.children.iter().find_map(|child| match child {
+            ASTNodeOrToken::Token(token) => Some(token),
+            ASTNodeOrToken::Node(_) => None,
+        });
+
+        match op.map(|token| (token.value.as_str(), token.effective_type_name())) {
+            Some(("!", _)) | Some((_, "BANG")) => {
+                self.infer_expr(inner, env, None);
+                Some(NibType::Bool)
+            }
+            Some(("~", _)) | Some((_, "TILDE")) => self.infer_expr(inner, env, expected),
+            _ => self.infer_expr(inner, env, expected),
+        }
+    }
+
     fn error(&mut self, message: impl Into<String>, node: &GrammarASTNode) {
         self.errors.push(TypeErrorDiagnostic {
             message: message.into(),
@@ -307,6 +428,23 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
         .collect()
 }
 
+fn is_expr_rule(name: &str) -> bool {
+    matches!(
+        name,
+        "expr"
+            | "or_expr"
+            | "and_expr"
+            | "eq_expr"
+            | "cmp_expr"
+            | "add_expr"
+            | "mul_expr"
+            | "bitwise_expr"
+            | "unary_expr"
+            | "primary"
+            | "call_expr"
+    )
+}
+
 fn first_name(node: &GrammarASTNode) -> Option<String> {
     node.children.iter().find_map(|child| match child {
         ASTNodeOrToken::Token(token) if token.effective_type_name() == "NAME" => {
@@ -315,6 +453,30 @@ fn first_name(node: &GrammarASTNode) -> Option<String> {
         ASTNodeOrToken::Token(_) => None,
         ASTNodeOrToken::Node(inner) => first_name(inner),
     })
+}
+
+fn const_decl_node(decl: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    if decl.rule_name == "const_decl" {
+        Some(decl)
+    } else if decl.rule_name == "top_decl" {
+        child_nodes(decl)
+            .into_iter()
+            .find(|node| node.rule_name == "const_decl")
+    } else {
+        None
+    }
+}
+
+fn static_decl_node(decl: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    if decl.rule_name == "static_decl" {
+        Some(decl)
+    } else if decl.rule_name == "top_decl" {
+        child_nodes(decl)
+            .into_iter()
+            .find(|node| node.rule_name == "static_decl")
+    } else {
+        None
+    }
 }
 
 fn first_token_value(node: &GrammarASTNode) -> Option<String> {
@@ -433,5 +595,68 @@ mod tests {
     fn check_source_rejects_bad_assignment() {
         let result = check_source("fn main() { let x: bool = 1 +% 2; }");
         assert!(!result.ok);
+    }
+
+    #[test]
+    fn check_source_accepts_static_assignment_across_functions() {
+        let result = check_source(
+            "static counter: u8 = 40; \
+             fn bump(step: u8) -> u8 { counter = counter + step; return counter; } \
+             fn main() -> u8 { let a: u8 = bump(1); let b: u8 = bump(1); return counter; }",
+        );
+        assert!(result.ok, "expected success, got {:?}", result.errors);
+    }
+
+    #[test]
+    fn check_source_rejects_static_initializer_wrong_width() {
+        let result = check_source("static small: u4 = 16; fn main() {}");
+        assert!(!result.ok);
+        assert!(
+            result
+                .errors
+                .iter()
+                .any(|err| err.message.contains("static `small` expects")),
+            "expected static width error, got {:?}",
+            result.errors
+        );
+    }
+
+    #[test]
+    fn check_source_accepts_const_expression_initializer() {
+        let result = check_source("const N: u8 = 6 * 7; fn main() -> u8 { return N; }");
+        assert!(result.ok, "expected success, got {:?}", result.errors);
+    }
+
+    #[test]
+    fn check_source_rejects_const_initializer_wrong_width() {
+        let result = check_source("const small: u4 = 16; fn main() {}");
+        assert!(!result.ok);
+        assert!(
+            result
+                .errors
+                .iter()
+                .any(|err| err.message.contains("const `small` expects")),
+            "expected const width error, got {:?}",
+            result.errors
+        );
+    }
+
+    #[test]
+    fn check_source_accepts_static_expression_using_const() {
+        let result =
+            check_source("const BASE: u8 = 40 + 1; static counter: u8 = BASE + 1; fn main() {}");
+        assert!(result.ok, "expected success, got {:?}", result.errors);
+    }
+
+    #[test]
+    fn check_source_accepts_logical_not_condition() {
+        let result = check_source("fn main() -> u8 { if !(1 == 2) { return 42; } return 0; }");
+        assert!(result.ok, "expected success, got {:?}", result.errors);
+    }
+
+    #[test]
+    fn check_source_accepts_logical_not_bool_binding() {
+        let result = check_source("fn main() { let b: bool = !false; }");
+        assert!(result.ok, "expected success, got {:?}", result.errors);
     }
 }

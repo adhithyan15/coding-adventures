@@ -369,6 +369,25 @@ const L2I: u8 = 0x88;
 /// Used to box i32/bool captured values into the `long[]` closure array.
 const I2L: u8 = 0x85;
 
+fn checked_jvm_string_literal(ctx: &str, s: &str) -> Result<(), IIRJvmError> {
+    for ch in s.chars() {
+        match ch {
+            '\n' | '\r' | '\t' => {}
+            c if c.is_ascii_graphic() || c == ' ' => {}
+            c => {
+                return Err(IIRJvmError::InvalidOperand {
+                    function: ctx.to_string(),
+                    detail: format!(
+                        "str_const literal contains unsupported non-printable/non-ASCII character U+{:04X}",
+                        c as u32
+                    ),
+                })
+            }
+        }
+    }
+    Ok(())
+}
+
 // ---------------------------------------------------------------------------
 // IIRJvmError
 // ---------------------------------------------------------------------------
@@ -679,6 +698,11 @@ fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
         // LANG36: A closure is a `long[]` array reference.
         // Variables holding closures use aload/astore (Ref = reference type).
         "closure" => Some(JvmType::Ref),
+        // LANG-FULL E4: first string foothold. A `str` value is a JVM reference
+        // local so `str_const` can materialise a `java.lang.String` and
+        // `print_str` can pass it to `PrintStream.print(String)`. Richer byte
+        // string ops remain unsupported by the validator.
+        "str" => Some(JvmType::Ref),
         // LANG-FULL E5: an `array<T>` handle is a JVM primitive-array reference
         // (`int[]`/`long[]`/`double[]`/…). Like every reference it occupies one
         // local slot and uses aload/astore; the *element* opcode (iaload/laload/
@@ -686,7 +710,10 @@ fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
         // map to a JVM type (no nested or reference-element arrays yet).
         h if is_array_type(h) => {
             let elem = array_elem_type(h)?;
-            iir_type_to_jvm(&elem).map(|_| JvmType::Ref)
+            match iir_type_to_jvm(&elem)? {
+                JvmType::Int | JvmType::Long | JvmType::Float | JvmType::Double => Some(JvmType::Ref),
+                JvmType::Void | JvmType::Ref => None,
+            }
         }
         // Catch-all: return None, let caller decide
         _ => None,
@@ -767,6 +794,8 @@ fn type_to_jvm_descriptor(hint: &str) -> &str {
         "ref<LispyPair>" => "Ljava/lang/Object;",
         // McCarthy W3b: a boxed lisp value (`ref<any>`) erases to Object.
         "ref<any>" => "Ljava/lang/Object;",
+        // LANG-FULL E4: string literals flow as java.lang.String.
+        "str" => "Ljava/lang/String;",
         // LANG36: A closure is a `long[]` — descriptor is "[J".
         "closure" => "[J",
         _ => "I", // default for unknown — validator should have caught this
@@ -1016,6 +1045,16 @@ fn emit_iconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i32) 
         return;
     }
     let idx = cp.add_integer(value);
+    if idx <= 0xFF {
+        code.push(LDC);
+        code.push(idx as u8);
+    } else {
+        code.push(LDC_W);
+        code.extend_from_slice(&idx.to_be_bytes());
+    }
+}
+
+fn emit_ldc_index(code: &mut Vec<u8>, idx: u16) {
     if idx <= 0xFF {
         code.push(LDC);
         code.push(idx as u8);
@@ -1577,6 +1616,13 @@ impl ConstantPoolBuilder {
         self.add_entry(key, JvmConstantPoolEntry::Utf8(s.to_string()))
     }
 
+    /// Add a `CONSTANT_String` entry for an `ldc` string literal.
+    fn add_string(&mut self, s: &str) -> u16 {
+        let string_idx = self.add_utf8(s);
+        let key = format!("String:{}", s);
+        self.add_entry(key, JvmConstantPoolEntry::String { string_index: string_idx })
+    }
+
     /// Add a `CONSTANT_Integer` entry (deduplicated) and return its 1-based
     /// index, for an `int` literal too large for `bipush`/`sipush` and so loaded
     /// with `ldc`/`ldc_w` (McCarthy W5a — e.g. an interned symbol id ≥ 2²⁹).
@@ -1870,6 +1916,381 @@ fn lower_function(
         };
 
         match instr.op.as_str() {
+            // ── LANG-FULL E4: string literal output foothold ────────────────
+            //
+            // Dartmouth BASIC `PRINT "..."` lowers to `str_const` +
+            // `print_str`; literal Twig `string-length`, `string=?`, `string<?` /
+            // `string>?`, and `string-append` lower to `str_len`, `str_eq`,
+            // `str_cmp`, and `str_concat`.
+            // Use Java's native `String` only for this literal foothold; richer
+            // byte-oriented string algebra remains rejected by the validator
+            // until the JVM representation owns those semantics explicitly.
+            "str_const" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_const instruction has no dest".to_string(),
+                })?;
+                let literal = match instr.srcs.first() {
+                    Some(Operand::Str(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_const expects a string literal, got {other:?}"),
+                        })
+                    }
+                };
+                checked_jvm_string_literal(fname, literal)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                let idx = cp.add_string(literal);
+                emit_ldc_index(&mut code, idx);
+                emit_astore(&mut code, dest_slot);
+            }
+
+            "str_concat" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_concat instruction has no dest".to_string(),
+                })?;
+                let left = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_concat expects left string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let right = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_concat expects right string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (left_slot, left_type) = lookup_var(left)?;
+                let (right_slot, right_type) = lookup_var(right)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if left_type != JvmType::Ref || right_type != JvmType::Ref || dest_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                emit_aload(&mut code, left_slot);
+                emit_aload(&mut code, right_slot);
+                let concat_ref = cp.add_methodref(
+                    "java/lang/String",
+                    "concat",
+                    "(Ljava/lang/String;)Ljava/lang/String;",
+                );
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&concat_ref.to_be_bytes());
+                emit_astore(&mut code, dest_slot);
+            }
+
+            "str_slice" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_slice instruction has no dest".to_string(),
+                })?;
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_slice expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let start = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_slice expects a start variable, got {other:?}"),
+                        })
+                    }
+                };
+                let end = match instr.srcs.get(2) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_slice expects an end variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                let (start_slot, start_type) = lookup_var(start)?;
+                let (end_slot, end_type) = lookup_var(end)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if src_type != JvmType::Ref
+                    || dest_type != JvmType::Ref
+                    || (start_type != JvmType::Int && start_type != JvmType::Long)
+                    || (end_type != JvmType::Int && end_type != JvmType::Long)
+                {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str_slice".to_string(),
+                    });
+                }
+                emit_aload(&mut code, src_slot);
+                emit_typed_load(&mut code, start_slot, start_type);
+                if start_type == JvmType::Long {
+                    code.push(L2I);
+                }
+                emit_typed_load(&mut code, end_slot, end_type);
+                if end_type == JvmType::Long {
+                    code.push(L2I);
+                }
+                let substring_ref =
+                    cp.add_methodref("java/lang/String", "substring", "(II)Ljava/lang/String;");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&substring_ref.to_be_bytes());
+                emit_astore(&mut code, dest_slot);
+            }
+
+            "str_len" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_len instruction has no dest".to_string(),
+                })?;
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_len expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                if src_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, src_slot);
+                let length_ref = cp.add_methodref("java/lang/String", "length", "()I");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&length_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
+            }
+
+            "str_index" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_index instruction has no dest".to_string(),
+                })?;
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_index expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let idx = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_index expects an index variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                let (idx_slot, idx_type) = lookup_var(idx)?;
+                if src_type != JvmType::Ref || (idx_type != JvmType::Int && idx_type != JvmType::Long) {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str_index".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, src_slot);
+                emit_typed_load(&mut code, idx_slot, idx_type);
+                if idx_type == JvmType::Long {
+                    code.push(L2I);
+                }
+                let char_at_ref = cp.add_methodref("java/lang/String", "charAt", "(I)C");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&char_at_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
+            }
+
+            "str_eq" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_eq instruction has no dest".to_string(),
+                })?;
+                let left = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_eq expects left string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let right = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_eq expects right string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (left_slot, left_type) = lookup_var(left)?;
+                let (right_slot, right_type) = lookup_var(right)?;
+                if left_type != JvmType::Ref || right_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, left_slot);
+                emit_aload(&mut code, right_slot);
+                let equals_ref =
+                    cp.add_methodref("java/lang/String", "equals", "(Ljava/lang/Object;)Z");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&equals_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
+            }
+
+            "str_cmp" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_cmp instruction has no dest".to_string(),
+                })?;
+                let left = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_cmp expects left string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let right = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_cmp expects right string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (left_slot, left_type) = lookup_var(left)?;
+                let (right_slot, right_type) = lookup_var(right)?;
+                if left_type != JvmType::Ref || right_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, left_slot);
+                emit_aload(&mut code, right_slot);
+                let compare_ref =
+                    cp.add_methodref("java/lang/String", "compareTo", "(Ljava/lang/String;)I");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&compare_ref.to_be_bytes());
+                let signum_ref = cp.add_methodref("java/lang/Integer", "signum", "(I)I");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&signum_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
+            }
+
+            "print_str" => {
+                if instr.dest.is_some() {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "print_str is a side-effecting op and must not have a dest".to_string(),
+                    });
+                }
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("print_str expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                if src_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                let out_ref = cp.add_fieldref(
+                    "java/lang/System",
+                    "out",
+                    "Ljava/io/PrintStream;",
+                );
+                code.push(GETSTATIC);
+                code.extend_from_slice(&out_ref.to_be_bytes());
+                emit_aload(&mut code, src_slot);
+                let print_ref = cp.add_methodref(
+                    "java/io/PrintStream",
+                    "print",
+                    "(Ljava/lang/String;)V",
+                );
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&print_ref.to_be_bytes());
+            }
+
             // ── label ───────────────────────────────────────────────────────
             //
             // `label` in IIR is simply a named marker.  On the JVM, labels are

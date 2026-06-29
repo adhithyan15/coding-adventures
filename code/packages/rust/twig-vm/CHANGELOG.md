@@ -1,5 +1,22 @@
 # Changelog — twig-vm
 
+## [0.24.0] — 2026-06-27 (LANG-FULL E4 — shared `str_const` compatibility)
+
+`twig-vm` now executes the shared E4 `str_const` opcode by allocating the same
+`LangString` heap object as the older `const Operand::Str(...)` path. This keeps
+the self-hosted `twigc` compiler-tree tests compatible with
+`twig-ir-compiler` 0.27.0, which can emit `str_const` for immutable top-level
+string value defines.
+
+`twig-vm` also executes the shared E4 string operation opcodes:
+`str_len`, `str_index`, `str_concat`, `str_eq`, and `print_str`.
+`str_eq` returns Lispy's native `#t`/`#f` values so equality can safely feed
+Twig branch opcodes, where integer `0` remains truthy by Scheme rules.
+
+Added regression tests proving `str_const` returns a heap string, E4
+concat/length/index execute through the dispatcher, and E4 equality branches
+correctly.
+
 ## [0.23.0] — 2026-05-30 (VMDEBUG01 — extract generic debug substrate to `vm-debug`)
 
 ### Changed — `DebugHooks` + `DebugServer` moved to the new `vm-debug` crate

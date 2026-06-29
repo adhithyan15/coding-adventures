@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.10.0] - 2026-06-28 — render derived evidence proofs
+
+### Added
+
+- LR contribution proof JSON now includes an `"evidence_proof"` array when the
+  contribution fired from a rule-derived evidence atom. The nested proof lists the
+  SLD fact/rule steps and their provenance, so a `.adj` program that emits
+  observations plus `rule { ... }` can show how the derived premise licensed the
+  probabilistic verdict.
+
 ## [0.9.0] - 2026-06-21 — render corroborating citations (ADJ-A9)
 
 ### Added

@@ -4,6 +4,7 @@ use std::thread;
 
 const PIVOT_EPSILON: f64 = 1.0e-12;
 const SPARSE_SOLVER_THRESHOLD: usize = 30;
+const DEFAULT_NEWTON_STEP_LIMIT: f64 = 5.0;
 const TWO_PI: f64 = std::f64::consts::PI * 2.0;
 const BOLTZMANN: f64 = 1.380_649e-23;
 const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
@@ -27,6 +28,63 @@ fn complex_solver_kind(matrix_size: usize) -> &'static str {
         "sparse_complex"
     } else {
         "dense_complex"
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct LinearSolverProfile {
+    pub matrix_size: usize,
+    pub solver: String,
+    pub backend: String,
+    pub structural_nonzeros: usize,
+    pub density: f64,
+    pub fill_in_nonzeros: usize,
+    pub fallback_reason: Option<String>,
+}
+
+fn empty_solver_profile(matrix_size: usize) -> LinearSolverProfile {
+    LinearSolverProfile {
+        matrix_size,
+        solver: real_solver_kind(matrix_size).to_string(),
+        backend: "none".to_string(),
+        structural_nonzeros: 0,
+        density: 0.0,
+        fill_in_nonzeros: 0,
+        fallback_reason: None,
+    }
+}
+
+fn real_matrix_nonzeros(matrix: &[Vec<f64>]) -> usize {
+    matrix
+        .iter()
+        .map(|row| row.iter().filter(|&&value| value != 0.0).count())
+        .sum()
+}
+
+fn real_matrix_density(matrix_size: usize, structural_nonzeros: usize) -> f64 {
+    if matrix_size == 0 {
+        0.0
+    } else {
+        structural_nonzeros as f64 / (matrix_size * matrix_size) as f64
+    }
+}
+
+fn real_solver_profile(
+    matrix: &[Vec<f64>],
+    backend: &str,
+    fill_in_nonzeros: usize,
+    fallback_reason: Option<String>,
+) -> LinearSolverProfile {
+    let matrix_size = matrix.len();
+    let structural_nonzeros = real_matrix_nonzeros(matrix);
+    LinearSolverProfile {
+        matrix_size,
+        solver: real_solver_kind(matrix_size).to_string(),
+        backend: backend.to_string(),
+        structural_nonzeros,
+        density: real_matrix_density(matrix_size, structural_nonzeros),
+        fill_in_nonzeros,
+        fallback_reason,
     }
 }
 
@@ -334,7 +392,7 @@ fn clone_subckt_element(
             element.junction_capacitance,
             element.transit_time,
         )),
-        Element::Jfet(element) => Element::Jfet(Jfet::with_model(
+        Element::Jfet(element) => Element::Jfet(Jfet::with_model_and_capacitance(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.drain, instance_name, node_map),
             map_subckt_node(&element.gate, instance_name, node_map),
@@ -343,6 +401,8 @@ fn clone_subckt_element(
             element.beta,
             element.threshold_voltage,
             element.channel_length_modulation,
+            element.gate_source_capacitance,
+            element.gate_drain_capacitance,
         )),
         Element::Bjt(element) => Element::Bjt(Bjt::with_model(
             format!("{instance_name}.{}", element.name),
@@ -2505,6 +2565,8 @@ pub struct Jfet {
     pub beta: f64,
     pub threshold_voltage: f64,
     pub channel_length_modulation: f64,
+    pub gate_source_capacitance: f64,
+    pub gate_drain_capacitance: f64,
 }
 
 impl Jfet {
@@ -2536,6 +2598,32 @@ impl Jfet {
         threshold_voltage: f64,
         channel_length_modulation: f64,
     ) -> Self {
+        Self::with_model_and_capacitance(
+            name,
+            drain,
+            gate,
+            source,
+            polarity,
+            beta,
+            threshold_voltage,
+            channel_length_modulation,
+            0.0,
+            0.0,
+        )
+    }
+
+    pub fn with_model_and_capacitance(
+        name: impl Into<String>,
+        drain: impl Into<String>,
+        gate: impl Into<String>,
+        source: impl Into<String>,
+        polarity: JfetPolarity,
+        beta: f64,
+        threshold_voltage: f64,
+        channel_length_modulation: f64,
+        gate_source_capacitance: f64,
+        gate_drain_capacitance: f64,
+    ) -> Self {
         Self {
             name: name.into(),
             drain: drain.into(),
@@ -2545,6 +2633,8 @@ impl Jfet {
             beta,
             threshold_voltage,
             channel_length_modulation,
+            gate_source_capacitance,
+            gate_drain_capacitance,
         }
     }
 }
@@ -2648,6 +2738,8 @@ pub struct MosfetLevel1Params {
     pub gate_bulk_overlap_capacitance: f64,
     pub source_bulk_capacitance: f64,
     pub drain_bulk_capacitance: f64,
+    pub bulk_junction_potential: f64,
+    pub bulk_junction_grading_coefficient: f64,
 }
 
 impl Default for MosfetLevel1Params {
@@ -2668,6 +2760,8 @@ impl Default for MosfetLevel1Params {
             gate_bulk_overlap_capacitance: 0.0,
             source_bulk_capacitance: 0.0,
             drain_bulk_capacitance: 0.0,
+            bulk_junction_potential: 0.8,
+            bulk_junction_grading_coefficient: 0.5,
         }
     }
 }
@@ -2723,7 +2817,7 @@ impl Mosfet {
     }
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum ModelCardKind {
     Diode,
     Npn,
@@ -2755,6 +2849,146 @@ pub struct NormalizedModelCard {
     pub parameters: BTreeMap<String, f64>,
     pub unsupported_parameters: Vec<String>,
 }
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelBehaviorFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub circuit: Circuit,
+    pub probe_node: String,
+    pub expected_min: f64,
+    pub expected_max: f64,
+    pub deck_lines: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelTemperaturePoint {
+    pub temperature_kelvin: f64,
+    pub expected_min: f64,
+    pub expected_max: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelTemperatureBehaviorFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub circuit: Circuit,
+    pub probe_node: String,
+    pub nominal_temperature_kelvin: f64,
+    pub energy_gap_electron_volts: f64,
+    pub temperature_behavior: String,
+    pub temperature_points: Vec<DeviceModelTemperaturePoint>,
+    pub deck_lines: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelCapacitanceBehaviorFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub circuit: Circuit,
+    pub probe_node: String,
+    pub frequency_hz: f64,
+    pub expected_magnitude_min: f64,
+    pub expected_magnitude_max: f64,
+    pub capacitance_behavior: String,
+    pub deck_lines: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelNoiseBehaviorFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub circuit: Circuit,
+    pub output_node: String,
+    pub input_source: String,
+    pub frequency_hz: f64,
+    pub expected_noise_element: String,
+    pub expected_noise_type: NoiseType,
+    pub expected_source_psd_min: f64,
+    pub expected_source_psd_max: f64,
+    pub expected_output_psd_min: f64,
+    pub expected_output_psd_max: f64,
+    pub noise_behavior: String,
+    pub deck_lines: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelChargeBehaviorFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub circuit: Circuit,
+    pub probe_node: String,
+    pub time_step_s: f64,
+    pub stop_time_s: f64,
+    pub storage_capacitance_f: f64,
+    pub expected_initial_min: f64,
+    pub expected_initial_max: f64,
+    pub expected_final_min: f64,
+    pub expected_final_max: f64,
+    pub charge_behavior: String,
+    pub deck_lines: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceModelReferenceDeckAuditFixture {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub model: NormalizedModelCard,
+    pub analysis: String,
+    pub reference: String,
+    pub expected_behavior: String,
+    pub deck_lines: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeviceModelReferenceDeckAuditIssue {
+    pub fixture_name: String,
+    pub field: String,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeviceModelReferenceDeckAuditGateReport {
+    pub passed: bool,
+    pub fixture_count: usize,
+    pub expected_kinds: Vec<String>,
+    pub expected_analyses: Vec<String>,
+    pub issues: Vec<DeviceModelReferenceDeckAuditIssue>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeviceModelReferenceDeckAuditSummary {
+    pub kind: String,
+    pub fixture_count: usize,
+    pub analyses: Vec<String>,
+    pub missing_analyses: Vec<String>,
+    pub deck_line_count: usize,
+    pub references: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeviceModelReferenceDeckAuditAnalysisSummary {
+    pub analysis: String,
+    pub fixture_count: usize,
+    pub kinds: Vec<String>,
+    pub missing_kinds: Vec<String>,
+    pub deck_line_count: usize,
+    pub references: Vec<String>,
+}
+
+const REFERENCE_DECK_AUDIT_EXPECTED_KINDS: &[ModelCardKind] = &[
+    ModelCardKind::Diode,
+    ModelCardKind::Npn,
+    ModelCardKind::Njf,
+    ModelCardKind::Nmos,
+];
+const REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES: &[&str] =
+    &["op", "temperature", "ac", "noise", "tran"];
 
 fn model_type_key(text: &str) -> String {
     text.trim()
@@ -2819,6 +3053,8 @@ fn model_card_parameter_alias(kind: ModelCardKind, key: &str) -> Option<&'static
             "BETA" | "BET" => Some("BETA"),
             "VTO" | "VT0" | "VTH" => Some("VTO"),
             "LAMBDA" | "LAM" => Some("LAMBDA"),
+            "CGS" | "CGS0" => Some("CGS"),
+            "CGD" | "CGD0" => Some("CGD"),
             _ => None,
         },
         ModelCardKind::Nmos | ModelCardKind::Pmos => match key {
@@ -2838,6 +3074,8 @@ fn model_card_parameter_alias(kind: ModelCardKind, key: &str) -> Option<&'static
             "CGBO" => Some("CGBO"),
             "CBS" | "CJS" => Some("CBS"),
             "CBD" | "CJD" => Some("CBD"),
+            "PB" => Some("PB"),
+            "MJ" => Some("MJ"),
             _ => None,
         },
     }
@@ -2955,7 +3193,7 @@ pub fn jfet_from_model_card(
         ModelCardKind::Pjf => JfetPolarity::Pjf,
         _ => return Err(model_card_kind_error(&name, "JFET", model.kind)),
     };
-    Ok(Jfet::with_model(
+    Ok(Jfet::with_model_and_capacitance(
         name,
         drain,
         gate,
@@ -2972,6 +3210,8 @@ pub fn jfet_from_model_card(
             },
         ),
         model_card_value(model, "LAMBDA", 0.0),
+        model_card_value(model, "CGS", 0.0),
+        model_card_value(model, "CGD", 0.0),
     ))
 }
 
@@ -3035,6 +3275,12 @@ pub fn mosfet_from_model_card(
     if let Some(value) = model.parameters.get("CBD") {
         params.drain_bulk_capacitance = *value;
     }
+    if let Some(value) = model.parameters.get("PB") {
+        params.bulk_junction_potential = *value;
+    }
+    if let Some(value) = model.parameters.get("MJ") {
+        params.bulk_junction_grading_coefficient = *value;
+    }
     Ok(Mosfet::with_model(
         name,
         drain,
@@ -3075,6 +3321,1438 @@ pub fn device_model_audit_fixtures() -> Result<Vec<NormalizedModelCard>, SpiceEr
             ],
         )?,
     ])
+}
+
+fn model_card_by_name(
+    models: &[NormalizedModelCard],
+) -> Result<BTreeMap<String, NormalizedModelCard>, SpiceError> {
+    Ok(models
+        .iter()
+        .map(|model| (model.name.clone(), model.clone()))
+        .collect())
+}
+
+pub fn device_model_behavior_audit_fixtures() -> Result<Vec<DeviceModelBehaviorFixture>, SpiceError>
+{
+    let models = model_card_by_name(&device_model_audit_fixtures()?)?;
+
+    let diode_model = models
+        .get("Dfast")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_behavior_audit_fixtures".to_string(),
+            reason: "missing Dfast model fixture".to_string(),
+        })?;
+    let mut diode_circuit = Circuit::new();
+    diode_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbias", "vin", "0", 0.8,
+    )));
+    diode_circuit.add(Element::Resistor(Resistor::new(
+        "Rlimit", "vin", "out", 1_000.0,
+    )));
+    diode_circuit.add(Element::Diode(diode_from_model_card(
+        "D1",
+        "out",
+        "0",
+        diode_model,
+    )?));
+
+    let bjt_model = models
+        .get("Qsmall")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_behavior_audit_fixtures".to_string(),
+            reason: "missing Qsmall model fixture".to_string(),
+        })?;
+    let mut bjt_circuit = Circuit::new();
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.72,
+    )));
+    bjt_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+    bjt_circuit.add(Element::Bjt(bjt_from_model_card(
+        "Q1", "vcc", "base", "out", bjt_model,
+    )?));
+
+    let jfet_model = models.get("Jn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_behavior_audit_fixtures".to_string(),
+        reason: "missing Jn model fixture".to_string(),
+    })?;
+    let mut jfet_circuit = Circuit::new();
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 10.0,
+    )));
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vg", "gate", "0", 0.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rd", "vdd", "drain", 2_000.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rs", "source", "0", 1_000.0,
+    )));
+    jfet_circuit.add(Element::Jfet(jfet_from_model_card(
+        "J1",
+        "drain",
+        "gate",
+        "source",
+        &jfet_model,
+    )?));
+
+    let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_behavior_audit_fixtures".to_string(),
+        reason: "missing Mn model fixture".to_string(),
+    })?;
+    let mut mos_circuit = Circuit::new();
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 1.8,
+    )));
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 1.8,
+    )));
+    mos_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    mos_circuit.add(Element::Mosfet(mosfet_from_model_card(
+        "M1", "out", "gate", "0", "0", mos_model,
+    )?));
+
+    Ok(vec![
+        DeviceModelBehaviorFixture {
+            name: "diode-forward-bias".to_string(),
+            kind: diode_model.kind,
+            model: diode_model.clone(),
+            circuit: diode_circuit,
+            probe_node: "out".to_string(),
+            expected_min: 0.55,
+            expected_max: 0.65,
+            deck_lines: vec![
+                "* device-model behavior fixture: diode-forward-bias".to_string(),
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)".to_string(),
+                "Vbias vin 0 0.8".to_string(),
+                "Rlimit vin out 1k".to_string(),
+                "D1 out 0 Dfast".to_string(),
+                ".op".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelBehaviorFixture {
+            name: "bjt-emitter-follower".to_string(),
+            kind: bjt_model.kind,
+            model: bjt_model.clone(),
+            circuit: bjt_circuit,
+            probe_node: "out".to_string(),
+            expected_min: 0.08,
+            expected_max: 0.18,
+            deck_lines: vec![
+                "* device-model behavior fixture: bjt-emitter-follower".to_string(),
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)".to_string(),
+                "Vcc vcc 0 5".to_string(),
+                "Vbase base 0 0.72".to_string(),
+                "Q1 vcc base out Qsmall".to_string(),
+                "Rload out 0 1k".to_string(),
+                ".op".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelBehaviorFixture {
+            name: "jfet-source-bias".to_string(),
+            kind: jfet_model.kind,
+            model: jfet_model.clone(),
+            circuit: jfet_circuit,
+            probe_node: "source".to_string(),
+            expected_min: 0.80,
+            expected_max: 0.95,
+            deck_lines: vec![
+                "* device-model behavior fixture: jfet-source-bias".to_string(),
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)".to_string(),
+                "Vdd vdd 0 10".to_string(),
+                "Vg gate 0 0".to_string(),
+                "Rd vdd drain 2k".to_string(),
+                "Rs source 0 1k".to_string(),
+                "J1 drain gate source Jn".to_string(),
+                ".op".to_string(),
+                ".save V(source)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelBehaviorFixture {
+            name: "mos-level1-common-source".to_string(),
+            kind: mos_model.kind,
+            model: mos_model.clone(),
+            circuit: mos_circuit,
+            probe_node: "out".to_string(),
+            expected_min: 0.55,
+            expected_max: 0.85,
+            deck_lines: vec![
+                "* device-model behavior fixture: mos-level1-common-source".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)".to_string(),
+                "Vdd vdd 0 1.8".to_string(),
+                "Vgate gate 0 1.8".to_string(),
+                "Rload vdd out 1k".to_string(),
+                "M1 out gate 0 0 Mn".to_string(),
+                ".op".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+    ])
+}
+
+fn device_model_temperature_points(
+    name: &str,
+) -> Result<Vec<DeviceModelTemperaturePoint>, SpiceError> {
+    let windows: &[(f64, f64, f64)] = match name {
+        "diode-forward-bias" => &[
+            (260.15, 0.63, 0.70),
+            (300.15, 0.55, 0.65),
+            (340.15, 0.49, 0.56),
+        ],
+        "bjt-emitter-follower" => &[
+            (260.15, 0.03, 0.09),
+            (300.15, 0.08, 0.18),
+            (340.15, 0.15, 0.22),
+        ],
+        "jfet-source-bias" => &[
+            (260.15, 0.86, 0.90),
+            (300.15, 0.86, 0.90),
+            (340.15, 0.86, 0.90),
+        ],
+        "mos-level1-common-source" => &[
+            (260.15, 0.58, 0.68),
+            (300.15, 0.55, 0.85),
+            (340.15, 0.70, 0.82),
+        ],
+        _ => {
+            return Err(SpiceError::InvalidElement {
+                name: "device_model_temperature_audit_fixtures".to_string(),
+                reason: format!("missing temperature windows for {name}"),
+            })
+        }
+    };
+    Ok(windows
+        .iter()
+        .map(
+            |(temperature_kelvin, expected_min, expected_max)| DeviceModelTemperaturePoint {
+                temperature_kelvin: *temperature_kelvin,
+                expected_min: *expected_min,
+                expected_max: *expected_max,
+            },
+        )
+        .collect())
+}
+
+fn device_model_temperature_behavior(name: &str) -> Result<String, SpiceError> {
+    match name {
+        "diode-forward-bias" => {
+            Ok("diode saturation current and thermal voltage scale with temperature".to_string())
+        }
+        "bjt-emitter-follower" => {
+            Ok("BJT saturation current and thermal voltage scale with temperature".to_string())
+        }
+        "jfet-source-bias" => Ok(
+            "JFET temperature scaling is intentionally invariant until a policy lands".to_string(),
+        ),
+        "mos-level1-common-source" => {
+            Ok("Level-1 MOS threshold and transconductance scale with temperature".to_string())
+        }
+        _ => Err(SpiceError::InvalidElement {
+            name: "device_model_temperature_audit_fixtures".to_string(),
+            reason: format!("missing temperature behavior for {name}"),
+        }),
+    }
+}
+
+fn device_model_temperature_deck_lines(fixture: &DeviceModelBehaviorFixture) -> Vec<String> {
+    let mut lines = fixture.deck_lines.clone();
+    if let Some(first) = lines.first_mut() {
+        *first = format!("* device-model temperature fixture: {}", fixture.name);
+    }
+    let op_index = lines
+        .iter()
+        .position(|line| line == ".op")
+        .unwrap_or(lines.len());
+    lines.insert(op_index, ".temp 260.15 300.15 340.15".to_string());
+    lines
+}
+
+pub fn device_model_temperature_audit_fixtures(
+) -> Result<Vec<DeviceModelTemperatureBehaviorFixture>, SpiceError> {
+    device_model_behavior_audit_fixtures()?
+        .into_iter()
+        .map(|fixture| {
+            Ok(DeviceModelTemperatureBehaviorFixture {
+                name: fixture.name.clone(),
+                kind: fixture.kind,
+                model: fixture.model.clone(),
+                circuit: fixture.circuit.clone(),
+                probe_node: fixture.probe_node.clone(),
+                nominal_temperature_kelvin: 300.15,
+                energy_gap_electron_volts: 1.11,
+                temperature_behavior: device_model_temperature_behavior(&fixture.name)?,
+                temperature_points: device_model_temperature_points(&fixture.name)?,
+                deck_lines: device_model_temperature_deck_lines(&fixture),
+            })
+        })
+        .collect()
+}
+
+pub fn device_model_capacitance_audit_fixtures(
+) -> Result<Vec<DeviceModelCapacitanceBehaviorFixture>, SpiceError> {
+    let models = model_card_by_name(&device_model_audit_fixtures()?)?;
+    let frequency_hz = 100_000.0;
+
+    let diode_model = models
+        .get("Dfast")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_capacitance_audit_fixtures".to_string(),
+            reason: "missing Dfast model fixture".to_string(),
+        })?;
+    let mut diode_circuit = Circuit::new();
+    diode_circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vdrive", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    diode_circuit.add(Element::Resistor(Resistor::new(
+        "Rin",
+        "in",
+        "out",
+        1_000_000.0,
+    )));
+    diode_circuit.add(Element::Diode(diode_from_model_card(
+        "D1",
+        "out",
+        "0",
+        diode_model,
+    )?));
+
+    let bjt_model = models
+        .get("Qsmall")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_capacitance_audit_fixtures".to_string(),
+            reason: "missing Qsmall model fixture".to_string(),
+        })?;
+    let mut bjt_circuit = Circuit::new();
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vdrive", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    bjt_circuit.add(Element::Resistor(Resistor::new(
+        "Rin",
+        "in",
+        "base",
+        1_000_000.0,
+    )));
+    bjt_circuit.add(Element::Resistor(Resistor::new("Rc", "col", "0", 1_000.0)));
+    bjt_circuit.add(Element::Bjt(bjt_from_model_card(
+        "Q1", "col", "base", "0", bjt_model,
+    )?));
+
+    let jfet_model = normalize_model_card(
+        "Jn",
+        "NJF",
+        &[
+            ("BETA", 9.0e-4),
+            ("VTO", -1.8),
+            ("LAMBDA", 0.02),
+            ("CGS", 2.0e-9),
+            ("CGD", 1.0e-10),
+        ],
+    )?;
+    let mut jfet_circuit = Circuit::new();
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vdrive", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rin", "in", "source", 1_000.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rd", "drain", "0", 2_000.0,
+    )));
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    jfet_circuit.add(Element::Jfet(jfet_from_model_card(
+        "J1",
+        "drain",
+        "gate",
+        "source",
+        &jfet_model,
+    )?));
+
+    let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_capacitance_audit_fixtures".to_string(),
+        reason: "missing Mn model fixture".to_string(),
+    })?;
+    let mut mos_circuit = Circuit::new();
+    mos_circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vdrive", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    mos_circuit.add(Element::Resistor(Resistor::new(
+        "Rin",
+        "in",
+        "drain",
+        5_000_000.0,
+    )));
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    mos_circuit.add(Element::Mosfet(mosfet_from_model_card(
+        "M1", "drain", "gate", "0", "0", mos_model,
+    )?));
+
+    Ok(vec![
+        DeviceModelCapacitanceBehaviorFixture {
+            name: "diode-capacitance-ac".to_string(),
+            kind: diode_model.kind,
+            model: diode_model.clone(),
+            circuit: diode_circuit,
+            probe_node: "out".to_string(),
+            frequency_hz,
+            expected_magnitude_min: 0.72,
+            expected_magnitude_max: 0.74,
+            capacitance_behavior: "diode CJO and TT contribute high-frequency shunt capacitance"
+                .to_string(),
+            deck_lines: vec![
+                "* device-model capacitance fixture: diode-capacitance-ac".to_string(),
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)".to_string(),
+                "Vdrive in 0 0 AC 1".to_string(),
+                "Rin in out 1meg".to_string(),
+                "D1 out 0 Dfast".to_string(),
+                ".ac lin 1 100k 100k".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelCapacitanceBehaviorFixture {
+            name: "bjt-capacitance-ac".to_string(),
+            kind: bjt_model.kind,
+            model: bjt_model.clone(),
+            circuit: bjt_circuit,
+            probe_node: "base".to_string(),
+            frequency_hz,
+            expected_magnitude_min: 0.61,
+            expected_magnitude_max: 0.64,
+            capacitance_behavior: "BJT CJE and TF contribute base-emitter AC capacitance"
+                .to_string(),
+            deck_lines: vec![
+                "* device-model capacitance fixture: bjt-capacitance-ac".to_string(),
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)".to_string(),
+                "Vdrive in 0 0 AC 1".to_string(),
+                "Rin in base 1meg".to_string(),
+                "Rc col 0 1k".to_string(),
+                "Q1 col base 0 Qsmall".to_string(),
+                ".ac lin 1 100k 100k".to_string(),
+                ".save V(base)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelCapacitanceBehaviorFixture {
+            name: "jfet-capacitance-ac".to_string(),
+            kind: jfet_model.kind,
+            model: jfet_model.clone(),
+            circuit: jfet_circuit,
+            probe_node: "source".to_string(),
+            frequency_hz,
+            expected_magnitude_min: 0.50,
+            expected_magnitude_max: 0.54,
+            capacitance_behavior: "JFET CGS/CGD contribute high-frequency gate-channel capacitance"
+                .to_string(),
+            deck_lines: vec![
+                "* device-model capacitance fixture: jfet-capacitance-ac".to_string(),
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02 CGS=2n CGD=100p)".to_string(),
+                "Vdrive in 0 0 AC 1".to_string(),
+                "Rin in source 1k".to_string(),
+                "Rd drain 0 2k".to_string(),
+                "Vgate gate 0 0".to_string(),
+                "J1 drain gate source Jn".to_string(),
+                ".ac lin 1 100k 100k".to_string(),
+                ".save V(source)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelCapacitanceBehaviorFixture {
+            name: "mos-level1-capacitance-ac".to_string(),
+            kind: mos_model.kind,
+            model: mos_model.clone(),
+            circuit: mos_circuit,
+            probe_node: "drain".to_string(),
+            frequency_hz,
+            expected_magnitude_min: 0.72,
+            expected_magnitude_max: 0.74,
+            capacitance_behavior: "Level-1 MOS CBD contributes drain-bulk AC capacitance"
+                .to_string(),
+            deck_lines: vec![
+                "* device-model capacitance fixture: mos-level1-capacitance-ac".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)".to_string(),
+                "Vdrive in 0 0 AC 1".to_string(),
+                "Rin in drain 5meg".to_string(),
+                "Vgate gate 0 0".to_string(),
+                "M1 drain gate 0 0 Mn".to_string(),
+                ".ac lin 1 100k 100k".to_string(),
+                ".save V(drain)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+    ])
+}
+
+pub fn device_model_noise_audit_fixtures(
+) -> Result<Vec<DeviceModelNoiseBehaviorFixture>, SpiceError> {
+    let models = model_card_by_name(&device_model_audit_fixtures()?)?;
+    let frequency_hz = 1_000.0;
+
+    let diode_model = models
+        .get("Dfast")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_noise_audit_fixtures".to_string(),
+            reason: "missing Dfast model fixture".to_string(),
+        })?;
+    let mut diode_circuit = Circuit::new();
+    diode_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbias", "vin", "0", 0.8,
+    )));
+    diode_circuit.add(Element::Resistor(Resistor::new(
+        "Rlimit", "vin", "out", 1_000.0,
+    )));
+    diode_circuit.add(Element::Diode(diode_from_model_card(
+        "D1",
+        "out",
+        "0",
+        diode_model,
+    )?));
+
+    let bjt_model = models
+        .get("Qsmall")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_noise_audit_fixtures".to_string(),
+            reason: "missing Qsmall model fixture".to_string(),
+        })?;
+    let mut bjt_circuit = Circuit::new();
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.72,
+    )));
+    bjt_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+    bjt_circuit.add(Element::Bjt(bjt_from_model_card(
+        "Q1", "vcc", "base", "out", bjt_model,
+    )?));
+
+    let jfet_model = models.get("Jn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_noise_audit_fixtures".to_string(),
+        reason: "missing Jn model fixture".to_string(),
+    })?;
+    let mut jfet_circuit = Circuit::new();
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 10.0,
+    )));
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vg", "gate", "0", 0.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rd", "vdd", "drain", 2_000.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rs", "source", "0", 1_000.0,
+    )));
+    jfet_circuit.add(Element::Jfet(jfet_from_model_card(
+        "J1",
+        "drain",
+        "gate",
+        "source",
+        &jfet_model,
+    )?));
+
+    let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
+        name: "device_model_noise_audit_fixtures".to_string(),
+        reason: "missing Mn model fixture".to_string(),
+    })?;
+    let mut mos_circuit = Circuit::new();
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 1.8,
+    )));
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 1.8,
+    )));
+    mos_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    mos_circuit.add(Element::Mosfet(mosfet_from_model_card(
+        "M1", "out", "gate", "0", "0", mos_model,
+    )?));
+
+    Ok(vec![
+        DeviceModelNoiseBehaviorFixture {
+            name: "diode-shot-noise".to_string(),
+            kind: diode_model.kind,
+            model: diode_model.clone(),
+            circuit: diode_circuit,
+            output_node: "out".to_string(),
+            input_source: "Vbias".to_string(),
+            frequency_hz,
+            expected_noise_element: "D1".to_string(),
+            expected_noise_type: NoiseType::Shot,
+            expected_source_psd_min: 6.4e-23,
+            expected_source_psd_max: 6.7e-23,
+            expected_output_psd_min: 8.0e-19,
+            expected_output_psd_max: 8.5e-19,
+            noise_behavior: "diode forward current contributes junction shot noise".to_string(),
+            deck_lines: vec![
+                "* device-model noise fixture: diode-shot-noise".to_string(),
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)".to_string(),
+                "Vbias vin 0 0.8".to_string(),
+                "Rlimit vin out 1k".to_string(),
+                "D1 out 0 Dfast".to_string(),
+                ".noise V(out) Vbias lin 1 1k 1k".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelNoiseBehaviorFixture {
+            name: "bjt-shot-noise".to_string(),
+            kind: bjt_model.kind,
+            model: bjt_model.clone(),
+            circuit: bjt_circuit,
+            output_node: "out".to_string(),
+            input_source: "Vbase".to_string(),
+            frequency_hz,
+            expected_noise_element: "Q1".to_string(),
+            expected_noise_type: NoiseType::Shot,
+            expected_source_psd_min: 3.7e-23,
+            expected_source_psd_max: 3.9e-23,
+            expected_output_psd_min: 1.1e-18,
+            expected_output_psd_max: 1.3e-18,
+            noise_behavior: "BJT forward-active collector current contributes shot noise"
+                .to_string(),
+            deck_lines: vec![
+                "* device-model noise fixture: bjt-shot-noise".to_string(),
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)".to_string(),
+                "Vcc vcc 0 5".to_string(),
+                "Vbase base 0 0.72".to_string(),
+                "Q1 vcc base out Qsmall".to_string(),
+                "Rload out 0 1k".to_string(),
+                ".noise V(out) Vbase lin 1 1k 1k".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelNoiseBehaviorFixture {
+            name: "jfet-channel-noise".to_string(),
+            kind: jfet_model.kind,
+            model: jfet_model.clone(),
+            circuit: jfet_circuit,
+            output_node: "source".to_string(),
+            input_source: "Vdd".to_string(),
+            frequency_hz,
+            expected_noise_element: "J1".to_string(),
+            expected_noise_type: NoiseType::Thermal,
+            expected_source_psd_min: 2.0e-23,
+            expected_source_psd_max: 2.2e-23,
+            expected_output_psd_min: 2.3e-18,
+            expected_output_psd_max: 2.5e-18,
+            noise_behavior: "JFET transconductance contributes long-channel channel thermal noise"
+                .to_string(),
+            deck_lines: vec![
+                "* device-model noise fixture: jfet-channel-noise".to_string(),
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)".to_string(),
+                "Vdd vdd 0 10".to_string(),
+                "Vg gate 0 0".to_string(),
+                "Rd vdd drain 2k".to_string(),
+                "Rs source 0 1k".to_string(),
+                "J1 drain gate source Jn".to_string(),
+                ".noise V(source) Vdd lin 1 1k 1k".to_string(),
+                ".save V(source)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelNoiseBehaviorFixture {
+            name: "mos-level1-channel-noise".to_string(),
+            kind: mos_model.kind,
+            model: mos_model.clone(),
+            circuit: mos_circuit,
+            output_node: "out".to_string(),
+            input_source: "Vgate".to_string(),
+            frequency_hz,
+            expected_noise_element: "M1".to_string(),
+            expected_noise_type: NoiseType::Thermal,
+            expected_source_psd_min: 1.3e-23,
+            expected_source_psd_max: 1.4e-23,
+            expected_output_psd_min: 3.3e-18,
+            expected_output_psd_max: 3.5e-18,
+            noise_behavior: "Level-1 MOS gm contributes long-channel channel thermal noise"
+                .to_string(),
+            deck_lines: vec![
+                "* device-model noise fixture: mos-level1-channel-noise".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)".to_string(),
+                "Vdd vdd 0 1.8".to_string(),
+                "Vgate gate 0 1.8".to_string(),
+                "Rload vdd out 1k".to_string(),
+                "M1 out gate 0 0 Mn".to_string(),
+                ".noise V(out) Vgate lin 1 1k 1k".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+    ])
+}
+
+pub fn device_model_charge_audit_fixtures(
+) -> Result<Vec<DeviceModelChargeBehaviorFixture>, SpiceError> {
+    let models = model_card_by_name(&device_model_audit_fixtures()?)?;
+    let time_step_s = 2.0e-8;
+    let stop_time_s = 2.0e-6;
+    let storage_capacitance_f = 1.0e-10;
+
+    let diode_model = models
+        .get("Dfast")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_charge_audit_fixtures".to_string(),
+            reason: "missing Dfast model fixture".to_string(),
+        })?;
+    let mut diode_circuit = Circuit::new();
+    diode_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbias", "vin", "0", 0.8,
+    )));
+    diode_circuit.add(Element::Resistor(Resistor::new(
+        "Rlimit", "vin", "out", 1_000.0,
+    )));
+    diode_circuit.add(Element::Diode(diode_from_model_card(
+        "D1",
+        "out",
+        "0",
+        diode_model,
+    )?));
+    diode_circuit.add(Element::Capacitor(Capacitor::new(
+        "Cstore",
+        "out",
+        "0",
+        storage_capacitance_f,
+    )));
+
+    let bjt_model = models
+        .get("Qsmall")
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "device_model_charge_audit_fixtures".to_string(),
+            reason: "missing Qsmall model fixture".to_string(),
+        })?;
+    let mut bjt_circuit = Circuit::new();
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    bjt_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.72,
+    )));
+    bjt_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+    bjt_circuit.add(Element::Bjt(bjt_from_model_card(
+        "Q1", "vcc", "base", "out", bjt_model,
+    )?));
+    bjt_circuit.add(Element::Capacitor(Capacitor::new(
+        "Cstore",
+        "out",
+        "0",
+        storage_capacitance_f,
+    )));
+
+    let jfet_model = normalize_model_card(
+        "Jn",
+        "NJF",
+        &[
+            ("BETA", 9.0e-4),
+            ("VTO", -1.8),
+            ("LAMBDA", 0.02),
+            ("CGS", 2.0e-11),
+            ("CGD", 5.0e-12),
+        ],
+    )?;
+    let mut jfet_circuit = Circuit::new();
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 10.0,
+    )));
+    jfet_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vg", "gate", "0", 0.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rd", "vdd", "drain", 2_000.0,
+    )));
+    jfet_circuit.add(Element::Resistor(Resistor::new(
+        "Rs", "source", "0", 1_000.0,
+    )));
+    jfet_circuit.add(Element::Jfet(jfet_from_model_card(
+        "J1",
+        "drain",
+        "gate",
+        "source",
+        &jfet_model,
+    )?));
+    jfet_circuit.add(Element::Capacitor(Capacitor::new(
+        "Cstore",
+        "source",
+        "0",
+        storage_capacitance_f,
+    )));
+
+    let mos_model = normalize_model_card(
+        "Mn",
+        "NMOS",
+        &[
+            ("LEVEL", 1.0),
+            ("VTO", 0.55),
+            ("LAMBDA", 0.04),
+            ("NSUB", 1.6),
+            ("CGSO", 2.0e-11),
+            ("CGDO", 5.0e-12),
+            ("CGBO", 1.0e-12),
+            ("CBS", 4.0e-13),
+            ("CBD", 3.0e-13),
+            ("PB", 0.9),
+            ("MJ", 0.45),
+        ],
+    )?;
+    let mut mos_circuit = Circuit::new();
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 1.8,
+    )));
+    mos_circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 1.8,
+    )));
+    mos_circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    mos_circuit.add(Element::Mosfet(mosfet_from_model_card(
+        "M1", "out", "gate", "0", "0", &mos_model,
+    )?));
+    mos_circuit.add(Element::Capacitor(Capacitor::new(
+        "Cstore",
+        "out",
+        "0",
+        storage_capacitance_f,
+    )));
+
+    Ok(vec![
+        DeviceModelChargeBehaviorFixture {
+            name: "diode-storage-charge".to_string(),
+            kind: diode_model.kind,
+            model: diode_model.clone(),
+            circuit: diode_circuit,
+            probe_node: "out".to_string(),
+            time_step_s,
+            stop_time_s,
+            storage_capacitance_f,
+            expected_initial_min: -1.0e-9,
+            expected_initial_max: 1.0,
+            expected_final_min: 0.58,
+            expected_final_max: 0.61,
+            charge_behavior: "diode CJO/TT contribute transient anode-cathode storage; explicit Cstore keeps the fixture comparable with other charge audits".to_string(),
+            deck_lines: vec![
+                "* device-model charge fixture: diode-storage-charge".to_string(),
+                ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)".to_string(),
+                "Vbias vin 0 0.8".to_string(),
+                "Rlimit vin out 1k".to_string(),
+                "D1 out 0 Dfast".to_string(),
+                "Cstore out 0 100p".to_string(),
+                ".tran 20n 2u".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelChargeBehaviorFixture {
+            name: "bjt-storage-charge".to_string(),
+            kind: bjt_model.kind,
+            model: bjt_model.clone(),
+            circuit: bjt_circuit,
+            probe_node: "out".to_string(),
+            time_step_s,
+            stop_time_s,
+            storage_capacitance_f,
+            expected_initial_min: -1.0e-9,
+            expected_initial_max: 1.0,
+            expected_final_min: 0.10,
+            expected_final_max: 0.14,
+            charge_behavior: "BJT CJE/CJC/TF/TR contribute transient base-emitter and base-collector storage; explicit Cstore keeps the fixture comparable with other charge audits".to_string(),
+            deck_lines: vec![
+                "* device-model charge fixture: bjt-storage-charge".to_string(),
+                ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)".to_string(),
+                "Vcc vcc 0 5".to_string(),
+                "Vbase base 0 0.72".to_string(),
+                "Q1 vcc base out Qsmall".to_string(),
+                "Rload out 0 1k".to_string(),
+                "Cstore out 0 100p".to_string(),
+                ".tran 20n 2u".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelChargeBehaviorFixture {
+            name: "jfet-storage-charge".to_string(),
+            kind: jfet_model.kind,
+            model: jfet_model.clone(),
+            circuit: jfet_circuit,
+            probe_node: "source".to_string(),
+            time_step_s,
+            stop_time_s,
+            storage_capacitance_f,
+            expected_initial_min: -1.0e-9,
+            expected_initial_max: 1.0,
+            expected_final_min: 0.86,
+            expected_final_max: 0.90,
+            charge_behavior: "JFET CGS/CGD contribute transient gate-source and gate-drain storage; explicit Cstore keeps the fixture comparable with other charge audits".to_string(),
+            deck_lines: vec![
+                "* device-model charge fixture: jfet-storage-charge".to_string(),
+                ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02 CGS=20p CGD=5p)".to_string(),
+                "Vdd vdd 0 10".to_string(),
+                "Vg gate 0 0".to_string(),
+                "Rd vdd drain 2k".to_string(),
+                "Rs source 0 1k".to_string(),
+                "J1 drain gate source Jn".to_string(),
+                "Cstore source 0 100p".to_string(),
+                ".tran 20n 2u".to_string(),
+                ".save V(source)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+        DeviceModelChargeBehaviorFixture {
+            name: "mos-level1-storage-charge".to_string(),
+            kind: mos_model.kind,
+            model: mos_model,
+            circuit: mos_circuit,
+            probe_node: "out".to_string(),
+            time_step_s,
+            stop_time_s,
+            storage_capacitance_f,
+            expected_initial_min: -1.0e-9,
+            expected_initial_max: 1.0,
+            expected_final_min: 0.68,
+            expected_final_max: 0.73,
+            charge_behavior: "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits".to_string(),
+            deck_lines: vec![
+                "* device-model charge fixture: mos-level1-storage-charge".to_string(),
+                ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13 PB=0.9 MJ=0.45)".to_string(),
+                "Vdd vdd 0 1.8".to_string(),
+                "Vgate gate 0 1.8".to_string(),
+                "Rload vdd out 1k".to_string(),
+                "M1 out gate 0 0 Mn".to_string(),
+                "Cstore out 0 100p".to_string(),
+                ".tran 20n 2u".to_string(),
+                ".save V(out)".to_string(),
+                ".end".to_string(),
+            ],
+        },
+    ])
+}
+
+pub fn device_model_reference_deck_audit_fixtures(
+) -> Result<Vec<DeviceModelReferenceDeckAuditFixture>, SpiceError> {
+    let reference = "SPICE2/SPICE3-style local model-depth fixture".to_string();
+    let mut fixtures = Vec::new();
+    for fixture in device_model_behavior_audit_fixtures()? {
+        fixtures.push(DeviceModelReferenceDeckAuditFixture {
+            name: format!("{}:op", fixture.name),
+            kind: fixture.kind,
+            model: fixture.model,
+            analysis: "op".to_string(),
+            reference: reference.clone(),
+            expected_behavior: format!(
+                "DC probe {} remains in [{}, {}] V",
+                fixture.probe_node, fixture.expected_min, fixture.expected_max
+            ),
+            deck_lines: fixture.deck_lines,
+        });
+    }
+    for fixture in device_model_temperature_audit_fixtures()? {
+        fixtures.push(DeviceModelReferenceDeckAuditFixture {
+            name: format!("{}:temperature", fixture.name),
+            kind: fixture.kind,
+            model: fixture.model,
+            analysis: "temperature".to_string(),
+            reference: reference.clone(),
+            expected_behavior: fixture.temperature_behavior,
+            deck_lines: fixture.deck_lines,
+        });
+    }
+    for fixture in device_model_capacitance_audit_fixtures()? {
+        fixtures.push(DeviceModelReferenceDeckAuditFixture {
+            name: format!("{}:ac", fixture.name),
+            kind: fixture.kind,
+            model: fixture.model,
+            analysis: "ac".to_string(),
+            reference: reference.clone(),
+            expected_behavior: fixture.capacitance_behavior,
+            deck_lines: fixture.deck_lines,
+        });
+    }
+    for fixture in device_model_noise_audit_fixtures()? {
+        fixtures.push(DeviceModelReferenceDeckAuditFixture {
+            name: format!("{}:noise", fixture.name),
+            kind: fixture.kind,
+            model: fixture.model,
+            analysis: "noise".to_string(),
+            reference: reference.clone(),
+            expected_behavior: fixture.noise_behavior,
+            deck_lines: fixture.deck_lines,
+        });
+    }
+    for fixture in device_model_charge_audit_fixtures()? {
+        fixtures.push(DeviceModelReferenceDeckAuditFixture {
+            name: format!("{}:tran", fixture.name),
+            kind: fixture.kind,
+            model: fixture.model,
+            analysis: "tran".to_string(),
+            reference: reference.clone(),
+            expected_behavior: fixture.charge_behavior,
+            deck_lines: fixture.deck_lines,
+        });
+    }
+    Ok(fixtures)
+}
+
+pub fn format_device_model_reference_deck_audit_table(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    let mut lines =
+        vec!["name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines".to_string()];
+    for fixture in fixtures {
+        lines.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            fixture.name,
+            fixture.kind.as_str(),
+            fixture.analysis,
+            fixture.model.name,
+            fixture.reference,
+            fixture.expected_behavior,
+            fixture.deck_lines.len()
+        ));
+    }
+    lines.join("\n")
+}
+
+pub fn device_model_reference_deck_audit_records(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_device_model_reference_deck_audit_table(fixtures))
+}
+
+pub fn format_device_model_reference_deck_audit_csv(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    format_deck_table_csv(&format_device_model_reference_deck_audit_table(fixtures))
+}
+
+pub fn format_device_model_reference_deck_audit_json(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    format_deck_table_json(&format_device_model_reference_deck_audit_table(fixtures))
+}
+
+pub fn device_model_reference_deck_audit_summary(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> Vec<DeviceModelReferenceDeckAuditSummary> {
+    let expected_kinds = REFERENCE_DECK_AUDIT_EXPECTED_KINDS
+        .iter()
+        .map(|kind| kind.as_str().to_string())
+        .collect::<Vec<_>>();
+    let mut kinds = expected_kinds.clone();
+    for kind in fixtures
+        .iter()
+        .map(|fixture| fixture.kind.as_str().to_string())
+        .collect::<BTreeSet<_>>()
+    {
+        if !kinds.contains(&kind) {
+            kinds.push(kind);
+        }
+    }
+
+    kinds
+        .into_iter()
+        .map(|kind| {
+            let kind_rows = fixtures
+                .iter()
+                .filter(|fixture| fixture.kind.as_str() == kind)
+                .collect::<Vec<_>>();
+            let row_analyses = kind_rows
+                .iter()
+                .map(|fixture| fixture.analysis.clone())
+                .collect::<BTreeSet<_>>();
+            let mut analyses = REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES
+                .iter()
+                .filter(|analysis| row_analyses.contains::<str>(*analysis))
+                .map(|analysis| analysis.to_string())
+                .collect::<Vec<_>>();
+            analyses.extend(
+                row_analyses
+                    .iter()
+                    .filter(|analysis| {
+                        !REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES.contains(&analysis.as_str())
+                    })
+                    .cloned(),
+            );
+            let missing_analyses = if expected_kinds.contains(&kind) {
+                REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES
+                    .iter()
+                    .filter(|analysis| !row_analyses.contains::<str>(*analysis))
+                    .map(|analysis| analysis.to_string())
+                    .collect::<Vec<_>>()
+            } else {
+                Vec::new()
+            };
+            let mut references = Vec::new();
+            for fixture in &kind_rows {
+                if !fixture.reference.is_empty() && !references.contains(&fixture.reference) {
+                    references.push(fixture.reference.clone());
+                }
+            }
+
+            DeviceModelReferenceDeckAuditSummary {
+                kind,
+                fixture_count: kind_rows.len(),
+                analyses,
+                missing_analyses,
+                deck_line_count: kind_rows
+                    .iter()
+                    .map(|fixture| fixture.deck_lines.len())
+                    .sum(),
+                references,
+            }
+        })
+        .collect()
+}
+
+pub fn format_device_model_reference_deck_audit_summary_table(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    let mut lines =
+        vec!["kind\tfixture_count\tanalyses\tmissing_analyses\tdeck_lines\treferences".to_string()];
+    for summary in device_model_reference_deck_audit_summary(fixtures) {
+        lines.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}",
+            summary.kind,
+            summary.fixture_count,
+            summary.analyses.join(","),
+            summary.missing_analyses.join(","),
+            summary.deck_line_count,
+            summary.references.join(",")
+        ));
+    }
+    lines.join("\n")
+}
+
+pub fn device_model_reference_deck_audit_summary_records(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_device_model_reference_deck_audit_summary_table(
+        fixtures,
+    ))
+}
+
+pub fn format_device_model_reference_deck_audit_summary_csv(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    format_deck_table_csv(&format_device_model_reference_deck_audit_summary_table(
+        fixtures,
+    ))
+}
+
+pub fn format_device_model_reference_deck_audit_summary_json(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    format_deck_table_json(&format_device_model_reference_deck_audit_summary_table(
+        fixtures,
+    ))
+}
+
+pub fn device_model_reference_deck_audit_analysis_summary(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> Vec<DeviceModelReferenceDeckAuditAnalysisSummary> {
+    let expected_kinds = REFERENCE_DECK_AUDIT_EXPECTED_KINDS
+        .iter()
+        .map(|kind| kind.as_str().to_string())
+        .collect::<Vec<_>>();
+    let expected_analyses = REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES
+        .iter()
+        .map(|analysis| analysis.to_string())
+        .collect::<Vec<_>>();
+    let mut analyses = expected_analyses.clone();
+    for analysis in fixtures
+        .iter()
+        .map(|fixture| fixture.analysis.clone())
+        .collect::<BTreeSet<_>>()
+    {
+        if !analyses.contains(&analysis) {
+            analyses.push(analysis);
+        }
+    }
+
+    analyses
+        .into_iter()
+        .map(|analysis| {
+            let analysis_rows = fixtures
+                .iter()
+                .filter(|fixture| fixture.analysis == analysis)
+                .collect::<Vec<_>>();
+            let row_kinds = analysis_rows
+                .iter()
+                .map(|fixture| fixture.kind.as_str().to_string())
+                .collect::<BTreeSet<_>>();
+            let mut kinds = expected_kinds
+                .iter()
+                .filter(|kind| row_kinds.contains(*kind))
+                .cloned()
+                .collect::<Vec<_>>();
+            kinds.extend(
+                row_kinds
+                    .iter()
+                    .filter(|kind| !expected_kinds.contains(kind))
+                    .cloned(),
+            );
+            let missing_kinds = if expected_analyses.contains(&analysis) {
+                expected_kinds
+                    .iter()
+                    .filter(|kind| !row_kinds.contains(*kind))
+                    .cloned()
+                    .collect::<Vec<_>>()
+            } else {
+                Vec::new()
+            };
+            let mut references = Vec::new();
+            for fixture in &analysis_rows {
+                if !fixture.reference.is_empty() && !references.contains(&fixture.reference) {
+                    references.push(fixture.reference.clone());
+                }
+            }
+
+            DeviceModelReferenceDeckAuditAnalysisSummary {
+                analysis,
+                fixture_count: analysis_rows.len(),
+                kinds,
+                missing_kinds,
+                deck_line_count: analysis_rows
+                    .iter()
+                    .map(|fixture| fixture.deck_lines.len())
+                    .sum(),
+                references,
+            }
+        })
+        .collect()
+}
+
+pub fn format_device_model_reference_deck_audit_analysis_summary_table(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    let mut lines =
+        vec!["analysis\tfixture_count\tkinds\tmissing_kinds\tdeck_lines\treferences".to_string()];
+    for summary in device_model_reference_deck_audit_analysis_summary(fixtures) {
+        lines.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}",
+            summary.analysis,
+            summary.fixture_count,
+            summary.kinds.join(","),
+            summary.missing_kinds.join(","),
+            summary.deck_line_count,
+            summary.references.join(",")
+        ));
+    }
+    lines.join("\n")
+}
+
+pub fn device_model_reference_deck_audit_analysis_summary_records(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_device_model_reference_deck_audit_analysis_summary_table(fixtures))
+}
+
+pub fn format_device_model_reference_deck_audit_analysis_summary_csv(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    format_deck_table_csv(
+        &format_device_model_reference_deck_audit_analysis_summary_table(fixtures),
+    )
+}
+
+pub fn format_device_model_reference_deck_audit_analysis_summary_json(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> String {
+    format_deck_table_json(
+        &format_device_model_reference_deck_audit_analysis_summary_table(fixtures),
+    )
+}
+
+pub fn device_model_reference_deck_audit_gate(
+    fixtures: &[DeviceModelReferenceDeckAuditFixture],
+) -> DeviceModelReferenceDeckAuditGateReport {
+    let expected_kinds = REFERENCE_DECK_AUDIT_EXPECTED_KINDS
+        .iter()
+        .map(|kind| kind.as_str().to_string())
+        .collect::<Vec<_>>();
+    let expected_analyses = REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES
+        .iter()
+        .map(|analysis| analysis.to_string())
+        .collect::<Vec<_>>();
+    let mut issues = Vec::new();
+    let mut seen_names = HashSet::new();
+    let mut seen_pairs = HashSet::new();
+
+    if fixtures.is_empty() {
+        issues.push(DeviceModelReferenceDeckAuditIssue {
+            fixture_name: "audit_matrix".to_string(),
+            field: "fixture_count".to_string(),
+            message: "audit matrix must contain at least one reference-deck row".to_string(),
+        });
+    }
+
+    for fixture in fixtures {
+        let fixture_name = if fixture.name.is_empty() {
+            "<missing>".to_string()
+        } else {
+            fixture.name.clone()
+        };
+
+        if !seen_names.insert(fixture.name.clone()) {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "name".to_string(),
+                message: "reference-deck audit fixture names must be unique".to_string(),
+            });
+        }
+        if fixture.name.trim().is_empty() {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "name".to_string(),
+                message: "field must be documented and non-empty".to_string(),
+            });
+        }
+        if !REFERENCE_DECK_AUDIT_EXPECTED_KINDS.contains(&fixture.kind) {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "kind".to_string(),
+                message: format!(
+                    "unsupported reference-deck audit kind {:?}",
+                    fixture.kind.as_str()
+                ),
+            });
+        }
+        if !REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES.contains(&fixture.analysis.as_str()) {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "analysis".to_string(),
+                message: format!(
+                    "unsupported reference-deck audit analysis {:?}",
+                    fixture.analysis
+                ),
+            });
+        }
+        seen_pairs.insert((fixture.kind.as_str().to_string(), fixture.analysis.clone()));
+        if fixture.model.name.trim().is_empty() {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "model.name".to_string(),
+                message: "field must be documented and non-empty".to_string(),
+            });
+        }
+        if fixture.reference.trim().is_empty() {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "reference".to_string(),
+                message: "field must be documented and non-empty".to_string(),
+            });
+        }
+        if fixture.expected_behavior.trim().is_empty() {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "expected_behavior".to_string(),
+                message: "field must be documented and non-empty".to_string(),
+            });
+        }
+        if fixture.deck_lines.is_empty() {
+            issues.push(DeviceModelReferenceDeckAuditIssue {
+                fixture_name: fixture_name.clone(),
+                field: "deck_lines".to_string(),
+                message: "reference deck must contain active deck lines".to_string(),
+            });
+        } else {
+            if !fixture.deck_lines[0].starts_with("* device-model ") {
+                issues.push(DeviceModelReferenceDeckAuditIssue {
+                    fixture_name: fixture_name.clone(),
+                    field: "deck_lines[0]".to_string(),
+                    message: "reference deck must start with a device-model comment".to_string(),
+                });
+            }
+            if !fixture
+                .deck_lines
+                .iter()
+                .any(|line| line.starts_with(".model "))
+            {
+                issues.push(DeviceModelReferenceDeckAuditIssue {
+                    fixture_name: fixture_name.clone(),
+                    field: "deck_lines".to_string(),
+                    message: "reference deck must include a .model card".to_string(),
+                });
+            }
+            if fixture.deck_lines.last().map(String::as_str) != Some(".end") {
+                issues.push(DeviceModelReferenceDeckAuditIssue {
+                    fixture_name: fixture_name.clone(),
+                    field: "deck_lines[-1]".to_string(),
+                    message: "reference deck must end with .end".to_string(),
+                });
+            }
+        }
+    }
+
+    for kind in REFERENCE_DECK_AUDIT_EXPECTED_KINDS {
+        for analysis in REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES {
+            let kind_text = kind.as_str();
+            if !seen_pairs.contains(&(kind_text.to_string(), analysis.to_string())) {
+                issues.push(DeviceModelReferenceDeckAuditIssue {
+                    fixture_name: format!("{}:{}", kind_text, analysis),
+                    field: "coverage".to_string(),
+                    message: format!(
+                        "missing required {} {} reference-deck audit row",
+                        kind_text, analysis
+                    ),
+                });
+            }
+        }
+    }
+
+    DeviceModelReferenceDeckAuditGateReport {
+        passed: issues.is_empty(),
+        fixture_count: fixtures.len(),
+        expected_kinds,
+        expected_analyses,
+        issues,
+    }
+}
+
+pub fn format_device_model_reference_deck_audit_gate_report(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    let mut lines = vec![
+        "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count".to_string(),
+        format!(
+            "{}\t{}\t{}\t{}\t{}",
+            report.passed,
+            report.fixture_count,
+            report.expected_kinds.join(","),
+            report.expected_analyses.join(","),
+            report.issues.len()
+        ),
+    ];
+    if !report.issues.is_empty() {
+        lines.push("fixture_name\tfield\tmessage".to_string());
+        for issue in &report.issues {
+            lines.push(format!(
+                "{}\t{}\t{}",
+                issue.fixture_name, issue.field, issue.message
+            ));
+        }
+    }
+    lines.join("\n")
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3411,6 +5089,10 @@ pub struct DeckRunArtifact {
     pub directive: String,
     pub analysis_directive_count: usize,
     pub analysis_directives: Vec<String>,
+    pub deck_analysis_kind_count: usize,
+    pub deck_analysis_kinds: Vec<String>,
+    pub deck_analysis_directive_count: usize,
+    pub deck_analysis_directives: Vec<String>,
     pub line_number: usize,
     pub source_name: Option<String>,
     pub output_node: Option<String>,
@@ -3469,6 +5151,18 @@ pub struct DeckOutputPlanArtifact {
     pub line_number: usize,
     pub source_name: Option<String>,
     pub output_node: Option<String>,
+    pub sweep_kind: Option<String>,
+    pub start_value: Option<f64>,
+    pub stop_value: Option<f64>,
+    pub step_value: Option<f64>,
+    pub point_count: Option<usize>,
+    pub start_frequency_hz: Option<f64>,
+    pub stop_frequency_hz: Option<f64>,
+    pub step_time: Option<f64>,
+    pub stop_time: Option<f64>,
+    pub start_time: Option<f64>,
+    pub max_step: Option<f64>,
+    pub use_initial_conditions: Option<bool>,
     pub result_row_count: usize,
     pub result_column_count: usize,
     pub result_columns: Vec<String>,
@@ -3546,6 +5240,10 @@ pub struct DeckAnalysisExecution {
     pub output_probes: Vec<String>,
     pub output_directives: Vec<String>,
     pub analysis_directives: Vec<String>,
+    pub deck_analysis_kind_count: usize,
+    pub deck_analysis_kinds: Vec<String>,
+    pub deck_analysis_directive_count: usize,
+    pub deck_analysis_directives: Vec<String>,
     pub output_plan_artifact_count: usize,
     pub output_plan_artifacts: Vec<DeckOutputPlanArtifact>,
     pub output_plan_artifact_table: String,
@@ -3593,6 +5291,20 @@ pub struct DeckAnalysisExecution {
     pub fourier_table: String,
     pub run_artifacts: Vec<DeckRunArtifact>,
     pub run_artifact_table: String,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckExecution {
+    pub execution_count: usize,
+    pub analysis_order: Vec<String>,
+    pub analysis_directives: Vec<String>,
+    pub executions: Vec<DeckAnalysisExecution>,
+    pub run_artifact_count: usize,
+    pub run_artifacts: Vec<DeckRunArtifact>,
+    pub run_artifact_table: String,
+    pub run_artifact_csv: String,
+    pub run_artifact_json: String,
+    pub run_artifact_records: Vec<BTreeMap<String, String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -7852,6 +9564,10 @@ pub struct DcSolverDiagnostics {
     pub tolerance: f64,
     pub max_delta: f64,
     pub convergence_aid: DcConvergenceAid,
+    pub newton_step_limit: Option<f64>,
+    pub limited_newton_steps: usize,
+    pub minimum_damping_factor: f64,
+    pub solver_profile: LinearSolverProfile,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -7937,6 +9653,7 @@ pub struct DcOpOptions {
     pub pseudo_transient_steps: usize,
     pub pseudo_transient_conductance: f64,
     pub pseudo_transient_max_iterations: usize,
+    pub newton_step_limit: Option<f64>,
 }
 
 impl Default for DcOpOptions {
@@ -7948,6 +9665,7 @@ impl Default for DcOpOptions {
             pseudo_transient_steps: 20,
             pseudo_transient_conductance: 1.0e-3,
             pseudo_transient_max_iterations: 80,
+            newton_step_limit: Some(DEFAULT_NEWTON_STEP_LIMIT),
         }
     }
 }
@@ -8253,6 +9971,7 @@ pub struct CornerSParameterResult {
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum NoiseType {
     Thermal,
+    Shot,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -10387,6 +12106,8 @@ fn deck_run_artifacts(
     rawfile_options: &[String],
     diagnostic_codes: &[String],
     control_policy_artifacts: &[DeckControlPolicyArtifact],
+    deck_analysis_kinds: &[String],
+    deck_analysis_directive_inventory: &[String],
 ) -> Vec<DeckRunArtifact> {
     let is_transient = plan.analysis == "tran";
     let analysis_directives = deck_analysis_directives(plan);
@@ -10411,6 +12132,10 @@ fn deck_run_artifacts(
         directive: plan.directive.clone(),
         analysis_directive_count: analysis_directives.len(),
         analysis_directives,
+        deck_analysis_kind_count: deck_analysis_kinds.len(),
+        deck_analysis_kinds: deck_analysis_kinds.to_vec(),
+        deck_analysis_directive_count: deck_analysis_directive_inventory.len(),
+        deck_analysis_directives: deck_analysis_directive_inventory.to_vec(),
         line_number: plan.line_number,
         source_name: plan.source_name.clone(),
         output_node: plan.output_node.clone(),
@@ -10472,12 +12197,25 @@ fn deck_output_plan_artifacts(
     tables: &[String],
 ) -> Vec<DeckOutputPlanArtifact> {
     let output_directive_kinds = deck_output_directive_kinds(output_directives);
+    let is_transient = plan.analysis == "tran";
     vec![DeckOutputPlanArtifact {
         analysis: plan.analysis.clone(),
         directive: plan.directive.clone(),
         line_number: plan.line_number,
         source_name: plan.source_name.clone(),
         output_node: plan.output_node.clone(),
+        sweep_kind: plan.sweep_kind.clone(),
+        start_value: plan.start_value,
+        stop_value: plan.stop_value,
+        step_value: plan.step_value,
+        point_count: plan.point_count,
+        start_frequency_hz: plan.start_frequency_hz,
+        stop_frequency_hz: plan.stop_frequency_hz,
+        step_time: is_transient.then_some(plan.step_time).flatten(),
+        stop_time: is_transient.then_some(plan.stop_time).flatten(),
+        start_time: is_transient.then_some(plan.start_time).flatten(),
+        max_step: is_transient.then_some(plan.max_step).flatten(),
+        use_initial_conditions: is_transient.then_some(plan.use_initial_conditions),
         result_row_count,
         result_column_count: result_columns.len(),
         result_columns: result_columns.to_vec(),
@@ -10527,6 +12265,18 @@ const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS: &[&str] = &[
     "Line",
     "SourceName",
     "OutputNode",
+    "SweepKind",
+    "StartValue",
+    "StopValue",
+    "StepValue",
+    "PointCount",
+    "StartFrequencyHz",
+    "StopFrequencyHz",
+    "StepTime",
+    "StopTime",
+    "StartTime",
+    "MaxStep",
+    "UseInitialConditions",
     "ResultRows",
     "ResultColumns",
     "ResultColumnList",
@@ -10553,6 +12303,21 @@ fn deck_output_plan_artifact_cells(artifact: &DeckOutputPlanArtifact) -> Vec<Str
         artifact.line_number.to_string(),
         artifact.source_name.clone().unwrap_or_default(),
         artifact.output_node.clone().unwrap_or_default(),
+        artifact.sweep_kind.clone().unwrap_or_default(),
+        format_deck_artifact_float(artifact.start_value),
+        format_deck_artifact_float(artifact.stop_value),
+        format_deck_artifact_float(artifact.step_value),
+        artifact
+            .point_count
+            .map(|point_count| point_count.to_string())
+            .unwrap_or_default(),
+        format_deck_artifact_float(artifact.start_frequency_hz),
+        format_deck_artifact_float(artifact.stop_frequency_hz),
+        format_deck_artifact_float(artifact.step_time),
+        format_deck_artifact_float(artifact.stop_time),
+        format_deck_artifact_float(artifact.start_time),
+        format_deck_artifact_float(artifact.max_step),
+        format_deck_artifact_bool(artifact.use_initial_conditions),
         artifact.result_row_count.to_string(),
         artifact.result_column_count.to_string(),
         artifact.result_columns.join(";"),
@@ -10685,6 +12450,21 @@ fn deck_analysis_directives(plan: &DeckAnalysisPlan) -> Vec<String> {
     }
 }
 
+fn deck_analysis_inventory(netlist: &str) -> (Vec<String>, Vec<String>) {
+    let summary = resolve_deck_analyses(netlist);
+    let mut analysis_kinds = Vec::new();
+    let mut directives = Vec::new();
+    for plan in summary.analyses {
+        if !plan.analysis.is_empty() {
+            push_unique_string(&mut analysis_kinds, &plan.analysis);
+        }
+        if !plan.directive.is_empty() {
+            directives.push(plan.directive);
+        }
+    }
+    (analysis_kinds, directives)
+}
+
 fn deck_stable_tables(
     measurements: &[ProbeMeasurement],
     fourier: &[FourierResult],
@@ -10797,6 +12577,10 @@ const DECK_RUN_ARTIFACT_COLUMNS: &[&str] = &[
     "ControlPolicySeverityList",
     "Diagnostics",
     "DiagnosticCodeList",
+    "DeckAnalysisKinds",
+    "DeckAnalysisKindList",
+    "DeckAnalysisDirectives",
+    "DeckAnalysisDirectiveList",
 ];
 
 fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
@@ -10848,6 +12632,10 @@ fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
         artifact.control_policy_severities.join(";"),
         artifact.diagnostic_count.to_string(),
         artifact.diagnostic_codes.join(";"),
+        artifact.deck_analysis_kind_count.to_string(),
+        artifact.deck_analysis_kinds.join(";"),
+        artifact.deck_analysis_directive_count.to_string(),
+        artifact.deck_analysis_directives.join(";"),
     ]
 }
 
@@ -10856,6 +12644,18 @@ fn deck_run_artifact_record(artifact: &DeckRunArtifact) -> Vec<(&'static str, St
         .iter()
         .copied()
         .zip(deck_run_artifact_cells(artifact))
+        .collect()
+}
+
+pub fn deck_run_artifact_records(artifacts: &[DeckRunArtifact]) -> Vec<BTreeMap<String, String>> {
+    artifacts
+        .iter()
+        .map(|artifact| {
+            deck_run_artifact_record(artifact)
+                .into_iter()
+                .map(|(column, value)| (column.to_string(), value))
+                .collect()
+        })
         .collect()
 }
 
@@ -11839,6 +13639,78 @@ pub fn run_deck_analysis(
     analysis: Option<&str>,
 ) -> Result<DeckAnalysisExecution, SpiceError> {
     let plan = select_deck_analysis_plan(netlist, analysis)?;
+    run_deck_analysis_plan(circuit, netlist, plan)
+}
+
+pub fn run_deck(circuit: &Circuit, netlist: &str) -> Result<DeckExecution, SpiceError> {
+    let plans = deck_analysis_plans_for_execution(netlist, "run_deck")?;
+    let mut executions = Vec::new();
+    for plan in plans.iter().cloned() {
+        executions.push(run_deck_analysis_plan(circuit, netlist, plan)?);
+    }
+    let run_artifacts = executions
+        .iter()
+        .flat_map(|execution| execution.run_artifacts.iter().cloned())
+        .collect::<Vec<_>>();
+    let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+    let run_artifact_csv = format_deck_run_artifact_csv(&run_artifacts);
+    let run_artifact_json = format_deck_run_artifact_json(&run_artifacts);
+    let run_artifact_records = deck_run_artifact_records(&run_artifacts);
+    Ok(DeckExecution {
+        execution_count: executions.len(),
+        analysis_order: plans.iter().map(|plan| plan.analysis.clone()).collect(),
+        analysis_directives: plans.iter().map(|plan| plan.directive.clone()).collect(),
+        executions,
+        run_artifact_count: run_artifacts.len(),
+        run_artifacts,
+        run_artifact_table,
+        run_artifact_csv,
+        run_artifact_json,
+        run_artifact_records,
+    })
+}
+
+fn deck_analysis_plans_for_execution(
+    netlist: &str,
+    context: &str,
+) -> Result<Vec<DeckAnalysisPlan>, SpiceError> {
+    let summary = resolve_deck_analyses(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            context,
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    if summary.analyses.is_empty() {
+        Ok(vec![DeckAnalysisPlan {
+            directive: ".op".to_string(),
+            analysis: "op".to_string(),
+            line_number: 0,
+            source_name: None,
+            output_node: None,
+            start_value: None,
+            stop_value: None,
+            step_value: None,
+            sweep_kind: None,
+            point_count: None,
+            start_frequency_hz: None,
+            stop_frequency_hz: None,
+            step_time: None,
+            stop_time: None,
+            start_time: None,
+            max_step: None,
+            use_initial_conditions: false,
+        }])
+    } else {
+        Ok(summary.analyses)
+    }
+}
+
+fn run_deck_analysis_plan(
+    circuit: &Circuit,
+    netlist: &str,
+    plan: DeckAnalysisPlan,
+) -> Result<DeckAnalysisExecution, SpiceError> {
     let diagnostic_codes = deck_run_diagnostic_codes(netlist, &plan);
     let control_lines = deck_control_lines(netlist);
     let write_markers = deck_control_write_markers(netlist);
@@ -11863,6 +13735,7 @@ pub fn run_deck_analysis(
     let control_policy_summary_artifact_records =
         deck_control_policy_summary_artifact_records(&control_policy_summary_artifacts);
     let analysis_directives = deck_analysis_directives(&plan);
+    let (deck_analysis_kinds, deck_analysis_directives) = deck_analysis_inventory(netlist);
     match plan.analysis.as_str() {
         "op" => {
             let result = dc_op(circuit)?;
@@ -11892,6 +13765,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -11948,6 +13823,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12039,6 +13918,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12095,6 +13976,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12187,6 +14072,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12243,6 +14130,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12338,6 +14229,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12394,6 +14287,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12482,6 +14379,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12538,6 +14437,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12624,6 +14527,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12680,6 +14585,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -12778,6 +14687,8 @@ pub fn run_deck_analysis(
                 &rawfile_options,
                 &diagnostic_codes,
                 &control_policy_artifacts,
+                &deck_analysis_kinds,
+                &deck_analysis_directives,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier, &control_policy_artifacts);
@@ -12834,6 +14745,10 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                deck_analysis_kind_count: deck_analysis_kinds.len(),
+                deck_analysis_kinds,
+                deck_analysis_directive_count: deck_analysis_directives.len(),
+                deck_analysis_directives,
 
                 output_plan_artifact_count: output_plan_artifacts.len(),
 
@@ -13595,6 +15510,7 @@ pub fn format_corner_fourier_table(result: &CornerFourierResult) -> String {
 fn format_noise_type(noise_type: NoiseType) -> &'static str {
     match noise_type {
         NoiseType::Thermal => "thermal",
+        NoiseType::Shot => "shot",
     }
 }
 
@@ -14886,6 +16802,10 @@ fn dc_result_from_linear_solution(
             tolerance,
             max_delta: solution.max_delta,
             convergence_aid,
+            newton_step_limit: solution.newton_step_limit,
+            limited_newton_steps: solution.limited_newton_steps,
+            minimum_damping_factor: solution.minimum_damping_factor,
+            solver_profile: solution.solver_profile,
         },
     }
 }
@@ -14916,6 +16836,14 @@ fn validate_dc_op_options(options: DcOpOptions) -> Result<(), SpiceError> {
             name: "dc_op".to_string(),
             reason: "pseudo_transient_max_iterations must be positive".to_string(),
         });
+    }
+    if let Some(limit) = options.newton_step_limit {
+        if !limit.is_finite() || limit <= 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: "dc_op".to_string(),
+                reason: "newton_step_limit must be finite and positive".to_string(),
+            });
+        }
     }
     Ok(())
 }
@@ -16240,6 +18168,11 @@ pub fn transient_with_method(
         &inductor_states,
         Some(0.0),
     )?;
+    seed_device_capacitor_states(
+        circuit,
+        &initial_solution.node_voltages,
+        &mut capacitor_states,
+    );
     update_transmission_line_states(
         circuit,
         &initial_solution.node_voltages,
@@ -16375,6 +18308,11 @@ pub fn transient_adaptive(
         &inductor_states,
         Some(0.0),
     )?;
+    seed_device_capacitor_states(
+        circuit,
+        &initial_solution.node_voltages,
+        &mut capacitor_states,
+    );
     update_transmission_line_states(
         circuit,
         &initial_solution.node_voltages,
@@ -17446,6 +19384,16 @@ struct LinearSolution {
     iterations: usize,
     converged: bool,
     max_delta: f64,
+    newton_step_limit: Option<f64>,
+    limited_newton_steps: usize,
+    minimum_damping_factor: f64,
+    solver_profile: LinearSolverProfile,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct SolvedLinearSystem {
+    solution: Vec<f64>,
+    profile: LinearSolverProfile,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -17454,6 +19402,7 @@ struct LinearSolveOptions<'a> {
     tolerance: f64,
     initial_vector: Option<&'a [f64]>,
     return_singular_as_unconverged: bool,
+    newton_step_limit: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -17493,6 +19442,7 @@ fn solve_linear_circuit(
             tolerance: 1.0e-9,
             initial_vector: None,
             return_singular_as_unconverged: false,
+            newton_step_limit: None,
         },
     )
 }
@@ -17512,6 +19462,7 @@ fn solve_dc_newton(
             tolerance: options.tolerance,
             initial_vector,
             return_singular_as_unconverged: true,
+            newton_step_limit: options.newton_step_limit,
         },
     )
 }
@@ -17537,6 +19488,10 @@ fn solve_linear_circuit_with_options(
             iterations: 0,
             converged: true,
             max_delta: 0.0,
+            newton_step_limit: None,
+            limited_newton_steps: 0,
+            minimum_damping_factor: 1.0,
+            solver_profile: empty_solver_profile(0),
         });
     }
 
@@ -17568,6 +19523,13 @@ fn solve_linear_circuit_with_options(
         &operating_point,
         return_singular_as_unconverged,
     )?;
+    let active_step_limit = if has_nonlinear {
+        options.newton_step_limit
+    } else {
+        None
+    };
+    let mut limited_newton_steps = 0;
+    let mut minimum_damping_factor: f64 = 1.0;
     if !has_nonlinear {
         return Ok(LinearSolution {
             iterations: 1,
@@ -17575,6 +19537,28 @@ fn solve_linear_circuit_with_options(
             ..solution
         });
     }
+    if solution.converged {
+        let step = limit_newton_step(&operating_point, &solution.vector, active_step_limit);
+        if step.limited {
+            limited_newton_steps += 1;
+            minimum_damping_factor = minimum_damping_factor.min(step.damping_factor);
+        }
+        let solver_profile = solution.solver_profile.clone();
+        solution = linear_solution_from_vector(
+            circuit,
+            inductor_states,
+            &node_indices,
+            &voltage_sources,
+            node_count,
+            &step.vector,
+            solution.converged,
+            step.max_delta,
+            solver_profile,
+        );
+    }
+    solution.newton_step_limit = active_step_limit;
+    solution.limited_newton_steps = limited_newton_steps;
+    solution.minimum_damping_factor = minimum_damping_factor;
 
     let mut iterations = 1;
     while iterations < options.max_iterations {
@@ -17583,16 +19567,22 @@ fn solve_linear_circuit_with_options(
                 iterations,
                 converged: false,
                 max_delta: f64::INFINITY,
+                newton_step_limit: active_step_limit,
+                limited_newton_steps,
+                minimum_damping_factor,
                 ..solution
             });
         }
-        let delta = max_vector_delta(&solution.vector, &operating_point);
+        let delta = solution.max_delta;
         operating_point = solution.vector.clone();
         if delta < options.tolerance {
             return Ok(LinearSolution {
                 iterations,
                 converged: true,
                 max_delta: delta,
+                newton_step_limit: active_step_limit,
+                limited_newton_steps,
+                minimum_damping_factor,
                 ..solution
             });
         }
@@ -17608,14 +19598,39 @@ fn solve_linear_circuit_with_options(
             &operating_point,
             return_singular_as_unconverged,
         )?;
+        if solution.converged {
+            let step = limit_newton_step(&operating_point, &solution.vector, active_step_limit);
+            if step.limited {
+                limited_newton_steps += 1;
+                minimum_damping_factor = minimum_damping_factor.min(step.damping_factor);
+            }
+            let solver_profile = solution.solver_profile.clone();
+            solution = linear_solution_from_vector(
+                circuit,
+                inductor_states,
+                &node_indices,
+                &voltage_sources,
+                node_count,
+                &step.vector,
+                solution.converged,
+                step.max_delta,
+                solver_profile,
+            );
+        }
+        solution.newton_step_limit = active_step_limit;
+        solution.limited_newton_steps = limited_newton_steps;
+        solution.minimum_damping_factor = minimum_damping_factor;
         iterations += 1;
     }
 
-    let delta = max_vector_delta(&solution.vector, &operating_point);
+    let delta = solution.max_delta;
     Ok(LinearSolution {
         iterations,
         converged: delta < options.tolerance,
         max_delta: delta,
+        newton_step_limit: active_step_limit,
+        limited_newton_steps,
+        minimum_damping_factor,
         ..solution
     })
 }
@@ -17659,6 +19674,7 @@ fn solve_linear_circuit_at_operating_point_or_failure(
                 operating_point,
                 false,
                 f64::INFINITY,
+                empty_solver_profile(matrix_size),
             ))
         }
         Err(error) => Err(error),
@@ -17742,18 +19758,38 @@ fn solve_linear_circuit_at_operating_point(
             Element::CustomModel(model) => {
                 stamp_custom_model(model, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
-            Element::Diode(diode) => {
-                stamp_diode(diode, node_indices, &mut matrix, &mut rhs, operating_point)?
-            }
-            Element::Jfet(jfet) => {
-                stamp_jfet(jfet, node_indices, &mut matrix, &mut rhs, operating_point)?
-            }
-            Element::Bjt(bjt) => {
-                stamp_bjt(bjt, node_indices, &mut matrix, &mut rhs, operating_point)?
-            }
-            Element::Mosfet(mosfet) => {
-                stamp_mosfet(mosfet, node_indices, &mut matrix, &mut rhs, operating_point)?
-            }
+            Element::Diode(diode) => stamp_diode(
+                diode,
+                capacitor_states,
+                node_indices,
+                &mut matrix,
+                &mut rhs,
+                operating_point,
+            )?,
+            Element::Jfet(jfet) => stamp_jfet(
+                jfet,
+                capacitor_states,
+                node_indices,
+                &mut matrix,
+                &mut rhs,
+                operating_point,
+            )?,
+            Element::Bjt(bjt) => stamp_bjt(
+                bjt,
+                capacitor_states,
+                node_indices,
+                &mut matrix,
+                &mut rhs,
+                operating_point,
+            )?,
+            Element::Mosfet(mosfet) => stamp_mosfet(
+                mosfet,
+                capacitor_states,
+                node_indices,
+                &mut matrix,
+                &mut rhs,
+                operating_point,
+            )?,
             Element::Vccs(source) => stamp_vccs(source, node_indices, &mut matrix)?,
             Element::Vcvs(source) => stamp_vcvs(
                 source,
@@ -17775,16 +19811,17 @@ fn solve_linear_circuit_at_operating_point(
         }
     }
 
-    let solution = solve_linear_system(matrix, rhs)?;
+    let solved = solve_linear_system_with_profile(matrix, rhs)?;
     Ok(linear_solution_from_vector(
         circuit,
         inductor_states,
         node_indices,
         voltage_sources,
         node_count,
-        &solution,
+        &solved.solution,
         true,
         0.0,
+        solved.profile,
     ))
 }
 
@@ -17797,6 +19834,7 @@ fn linear_solution_from_vector(
     solution: &[f64],
     converged: bool,
     max_delta: f64,
+    solver_profile: LinearSolverProfile,
 ) -> LinearSolution {
     let node_voltages = node_voltages_from_solution(node_indices, solution);
     let mut branch_currents = BTreeMap::new();
@@ -17820,6 +19858,10 @@ fn linear_solution_from_vector(
         iterations: 1,
         converged,
         max_delta,
+        newton_step_limit: None,
+        limited_newton_steps: 0,
+        minimum_damping_factor: 1.0,
+        solver_profile,
     }
 }
 
@@ -17828,6 +19870,71 @@ fn max_vector_delta(left: &[f64], right: &[f64]) -> f64 {
         .zip(right.iter())
         .map(|(left, right)| (left - right).abs())
         .fold(0.0, f64::max)
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct NewtonStepLimitResult {
+    vector: Vec<f64>,
+    max_delta: f64,
+    damping_factor: f64,
+    limited: bool,
+}
+
+fn limit_newton_step(
+    previous: &[f64],
+    candidate: &[f64],
+    step_limit: Option<f64>,
+) -> NewtonStepLimitResult {
+    let Some(step_limit) = step_limit else {
+        return NewtonStepLimitResult {
+            vector: candidate.to_vec(),
+            max_delta: max_vector_delta(previous, candidate),
+            damping_factor: 1.0,
+            limited: false,
+        };
+    };
+    let raw_delta = max_vector_delta(previous, candidate);
+    if raw_delta <= step_limit {
+        return NewtonStepLimitResult {
+            vector: candidate.to_vec(),
+            max_delta: raw_delta,
+            damping_factor: 1.0,
+            limited: false,
+        };
+    }
+    if !raw_delta.is_finite() {
+        let vector = previous
+            .iter()
+            .zip(candidate.iter())
+            .map(|(old, new)| {
+                let delta = *new - *old;
+                if delta.is_finite() {
+                    *old + step_limit.copysign(delta)
+                } else {
+                    *old
+                }
+            })
+            .collect();
+        return NewtonStepLimitResult {
+            vector,
+            max_delta: step_limit,
+            damping_factor: 0.0,
+            limited: true,
+        };
+    }
+
+    let damping_factor = step_limit / raw_delta;
+    let vector = previous
+        .iter()
+        .zip(candidate.iter())
+        .map(|(old, new)| *old + (*new - *old) * damping_factor)
+        .collect();
+    NewtonStepLimitResult {
+        vector,
+        max_delta: step_limit,
+        damping_factor,
+        limited: true,
+    }
 }
 
 fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceError> {
@@ -17981,7 +20088,7 @@ fn build_ac_matrix(
                 );
             }
             Element::Jfet(jfet) => {
-                stamp_ac_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point)?
+                stamp_ac_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point, omega)?
             }
             Element::Bjt(bjt) => {
                 stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point, omega)?
@@ -18398,6 +20505,74 @@ fn collect_noise_sources(
                     source_psd: 4.0 * BOLTZMANN * temperature_kelvin / resistor.resistance_ohms,
                 });
             }
+            Element::Diode(diode) => {
+                validate_diode(diode)?;
+                let anode = node_index(node_indices, &diode.anode);
+                let cathode = node_index(node_indices, &diode.cathode);
+                let anode_voltage = vector_voltage(operating_point, anode);
+                let cathode_voltage = vector_voltage(operating_point, cathode);
+                let (current, _) =
+                    diode_current_conductance(diode, anode_voltage - cathode_voltage);
+                sources.push(NoiseSource {
+                    element_name: diode.name.clone(),
+                    noise_type: NoiseType::Shot,
+                    positive: anode,
+                    negative: cathode,
+                    source_psd: 2.0 * ELECTRON_CHARGE * current.abs(),
+                });
+            }
+            Element::Bjt(bjt) => {
+                validate_bjt(bjt)?;
+                let base = node_index(node_indices, &bjt.base);
+                let emitter = node_index(node_indices, &bjt.emitter);
+                let base_voltage = vector_voltage(operating_point, base);
+                let emitter_voltage = vector_voltage(operating_point, emitter);
+                let junction_voltage = match bjt.polarity {
+                    BjtPolarity::Npn => base_voltage - emitter_voltage,
+                    BjtPolarity::Pnp => emitter_voltage - base_voltage,
+                };
+                let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+                let collector_current = bjt.saturation_current * (exponent.exp() - 1.0);
+                let (positive, negative) = match bjt.polarity {
+                    BjtPolarity::Npn => (base, emitter),
+                    BjtPolarity::Pnp => (emitter, base),
+                };
+                sources.push(NoiseSource {
+                    element_name: bjt.name.clone(),
+                    noise_type: NoiseType::Shot,
+                    positive,
+                    negative,
+                    source_psd: 2.0 * ELECTRON_CHARGE * collector_current.abs(),
+                });
+            }
+            Element::Jfet(jfet) => {
+                validate_jfet(jfet)?;
+                let drain = node_index(node_indices, &jfet.drain);
+                let gate = node_index(node_indices, &jfet.gate);
+                let source = node_index(node_indices, &jfet.source);
+                let drain_voltage = vector_voltage(operating_point, drain);
+                let gate_voltage = vector_voltage(operating_point, gate);
+                let source_voltage = vector_voltage(operating_point, source);
+                let result = evaluate_jfet(
+                    jfet,
+                    gate_voltage - source_voltage,
+                    drain_voltage - source_voltage,
+                );
+                let gm = result.gm.max(0.0);
+                if gm > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: jfet.name.clone(),
+                        noise_type: NoiseType::Thermal,
+                        positive: drain,
+                        negative: source,
+                        source_psd: 4.0
+                            * BOLTZMANN
+                            * temperature_kelvin
+                            * MOSFET_CHANNEL_NOISE_GAMMA
+                            * gm,
+                    });
+                }
+            }
             Element::Mosfet(mosfet) => {
                 validate_mosfet(mosfet)?;
                 let drain = node_index(node_indices, &mosfet.drain);
@@ -18729,6 +20904,7 @@ fn stamp_custom_model(
 
 fn stamp_diode(
     diode: &Diode,
+    capacitor_states: &[CapacitorState],
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
@@ -18749,11 +20925,57 @@ fn stamp_diode(
     if let Some(index) = cathode {
         rhs[index] += equivalent_current;
     }
+    stamp_diode_charge(diode, capacitor_states, node_indices, matrix, rhs)?;
+    Ok(())
+}
+
+fn stamp_diode_charge(
+    diode: &Diode,
+    capacitor_states: &[CapacitorState],
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) -> Result<(), SpiceError> {
+    let state_name = diode_charge_state_name(diode);
+    let Some(state) = capacitor_states
+        .iter()
+        .find(|state| state.name == state_name)
+    else {
+        return Ok(());
+    };
+    let capacitance = diode_dynamic_capacitance(diode, state.previous_voltage);
+    if capacitance <= 0.0 {
+        return Ok(());
+    }
+
+    let conductance = match state.method {
+        TransientMethod::Trap => 2.0 * capacitance / state.time_step,
+        TransientMethod::Gear2 => 3.0 * capacitance / (2.0 * state.time_step),
+        TransientMethod::Euler => capacitance / state.time_step,
+    };
+    let history_current = match state.method {
+        TransientMethod::Trap => conductance * state.previous_voltage + state.previous_current,
+        TransientMethod::Gear2 => {
+            capacitance * (4.0 * state.previous_voltage - state.previous_previous_voltage)
+                / (2.0 * state.time_step)
+        }
+        TransientMethod::Euler => conductance * state.previous_voltage,
+    };
+    let anode = node_index(node_indices, &diode.anode);
+    let cathode = node_index(node_indices, &diode.cathode);
+    stamp_conductance(matrix, anode, cathode, conductance);
+    if let Some(index) = anode {
+        rhs[index] += history_current;
+    }
+    if let Some(index) = cathode {
+        rhs[index] -= history_current;
+    }
     Ok(())
 }
 
 fn stamp_bjt(
     bjt: &Bjt,
+    capacitor_states: &[CapacitorState],
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
@@ -18790,6 +21012,51 @@ fn stamp_bjt(
             stamp_transconductance(matrix, emitter, collector, emitter, base, gm);
             stamp_equivalent_current_source(rhs, emitter, base, equivalent_base_current);
             stamp_equivalent_current_source(rhs, emitter, collector, equivalent_collector_current);
+        }
+    }
+    stamp_bjt_charge(bjt, capacitor_states, node_indices, matrix, rhs)?;
+    Ok(())
+}
+
+fn stamp_bjt_charge(
+    bjt: &Bjt,
+    capacitor_states: &[CapacitorState],
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) -> Result<(), SpiceError> {
+    for spec in bjt_charge_state_specs(bjt) {
+        let Some(state) = capacitor_states
+            .iter()
+            .find(|state| state.name == spec.name)
+        else {
+            continue;
+        };
+        let capacitance = bjt_charge_dynamic_capacitance(bjt, spec.kind, state.previous_voltage);
+        if capacitance <= 0.0 {
+            continue;
+        }
+        let conductance = match state.method {
+            TransientMethod::Trap => 2.0 * capacitance / state.time_step,
+            TransientMethod::Gear2 => 3.0 * capacitance / (2.0 * state.time_step),
+            TransientMethod::Euler => capacitance / state.time_step,
+        };
+        let history_current = match state.method {
+            TransientMethod::Trap => conductance * state.previous_voltage + state.previous_current,
+            TransientMethod::Gear2 => {
+                capacitance * (4.0 * state.previous_voltage - state.previous_previous_voltage)
+                    / (2.0 * state.time_step)
+            }
+            TransientMethod::Euler => conductance * state.previous_voltage,
+        };
+        let positive = node_index(node_indices, spec.positive);
+        let negative = node_index(node_indices, spec.negative);
+        stamp_conductance(matrix, positive, negative, conductance);
+        if let Some(index) = positive {
+            rhs[index] += history_current;
+        }
+        if let Some(index) = negative {
+            rhs[index] -= history_current;
         }
     }
     Ok(())
@@ -18908,6 +21175,22 @@ struct MosfetDcResult {
     cbd: f64,
 }
 
+fn mosfet_bulk_junction_capacitance(
+    zero_bias_capacitance: f64,
+    junction_voltage: f64,
+    junction_potential: f64,
+    grading_coefficient: f64,
+) -> f64 {
+    if zero_bias_capacitance <= 0.0 {
+        return zero_bias_capacitance;
+    }
+    if junction_potential <= 0.0 || grading_coefficient == 0.0 {
+        return zero_bias_capacitance;
+    }
+    let reverse_scale = (-junction_voltage).max(0.0) / junction_potential;
+    zero_bias_capacitance / (1.0 + reverse_scale).powf(grading_coefficient)
+}
+
 struct JfetDcResult {
     drain_current: f64,
     gm: f64,
@@ -18916,6 +21199,7 @@ struct JfetDcResult {
 
 fn stamp_jfet(
     jfet: &Jfet,
+    capacitor_states: &[CapacitorState],
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
@@ -18936,6 +21220,51 @@ fn stamp_jfet(
     stamp_conductance(matrix, drain, source, result.gds);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
+    stamp_jfet_charge(jfet, capacitor_states, node_indices, matrix, rhs)?;
+    Ok(())
+}
+
+fn stamp_jfet_charge(
+    jfet: &Jfet,
+    capacitor_states: &[CapacitorState],
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) -> Result<(), SpiceError> {
+    for spec in jfet_charge_state_specs(jfet) {
+        let Some(state) = capacitor_states
+            .iter()
+            .find(|state| state.name == spec.name)
+        else {
+            continue;
+        };
+        let capacitance = spec.capacitance;
+        if capacitance <= 0.0 {
+            continue;
+        }
+        let conductance = match state.method {
+            TransientMethod::Trap => 2.0 * capacitance / state.time_step,
+            TransientMethod::Gear2 => 3.0 * capacitance / (2.0 * state.time_step),
+            TransientMethod::Euler => capacitance / state.time_step,
+        };
+        let history_current = match state.method {
+            TransientMethod::Trap => conductance * state.previous_voltage + state.previous_current,
+            TransientMethod::Gear2 => {
+                capacitance * (4.0 * state.previous_voltage - state.previous_previous_voltage)
+                    / (2.0 * state.time_step)
+            }
+            TransientMethod::Euler => conductance * state.previous_voltage,
+        };
+        let positive = node_index(node_indices, spec.positive);
+        let negative = node_index(node_indices, spec.negative);
+        stamp_conductance(matrix, positive, negative, conductance);
+        if let Some(index) = positive {
+            rhs[index] += history_current;
+        }
+        if let Some(index) = negative {
+            rhs[index] -= history_current;
+        }
+    }
     Ok(())
 }
 
@@ -18999,6 +21328,7 @@ fn evaluate_njf(
 
 fn stamp_mosfet(
     mosfet: &Mosfet,
+    capacitor_states: &[CapacitorState],
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
@@ -19024,6 +21354,51 @@ fn stamp_mosfet(
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_transconductance(matrix, drain, source, body, source, result.gmb);
     stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
+    stamp_mosfet_charge(mosfet, capacitor_states, node_indices, matrix, rhs)?;
+    Ok(())
+}
+
+fn stamp_mosfet_charge(
+    mosfet: &Mosfet,
+    capacitor_states: &[CapacitorState],
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) -> Result<(), SpiceError> {
+    for spec in mosfet_charge_state_specs(mosfet) {
+        let Some(state) = capacitor_states
+            .iter()
+            .find(|state| state.name == spec.name)
+        else {
+            continue;
+        };
+        let capacitance = mosfet_charge_dynamic_capacitance(mosfet, &spec, state.previous_voltage);
+        if capacitance <= 0.0 {
+            continue;
+        }
+        let conductance = match state.method {
+            TransientMethod::Trap => 2.0 * capacitance / state.time_step,
+            TransientMethod::Gear2 => 3.0 * capacitance / (2.0 * state.time_step),
+            TransientMethod::Euler => capacitance / state.time_step,
+        };
+        let history_current = match state.method {
+            TransientMethod::Trap => conductance * state.previous_voltage + state.previous_current,
+            TransientMethod::Gear2 => {
+                capacitance * (4.0 * state.previous_voltage - state.previous_previous_voltage)
+                    / (2.0 * state.time_step)
+            }
+            TransientMethod::Euler => conductance * state.previous_voltage,
+        };
+        let positive = node_index(node_indices, spec.positive);
+        let negative = node_index(node_indices, spec.negative);
+        stamp_conductance(matrix, positive, negative, conductance);
+        if let Some(index) = positive {
+            rhs[index] += history_current;
+        }
+        if let Some(index) = negative {
+            rhs[index] -= history_current;
+        }
+    }
     Ok(())
 }
 
@@ -19058,6 +21433,18 @@ fn evaluate_nmos_level1(
     let cgd_overlap = params.gate_drain_overlap_capacitance * params.w;
     let cgb_overlap = params.gate_bulk_overlap_capacitance * params.l;
     let cgs_intrinsic = (2.0 / 3.0) * params.w * params.l * params.kp;
+    let cbs_bulk = mosfet_bulk_junction_capacitance(
+        params.source_bulk_capacitance,
+        vbs,
+        params.bulk_junction_potential,
+        params.bulk_junction_grading_coefficient,
+    );
+    let cbd_bulk = mosfet_bulk_junction_capacitance(
+        params.drain_bulk_capacitance,
+        vbs - vds,
+        params.bulk_junction_potential,
+        params.bulk_junction_grading_coefficient,
+    );
     let threshold = if params.phi - vbs >= 0.0 {
         params.vt0 + params.gamma * ((params.phi - vbs).sqrt() - params.phi.sqrt())
     } else {
@@ -19073,8 +21460,8 @@ fn evaluate_nmos_level1(
             cgs: cgs_overlap + cgs_intrinsic,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
-            cbs: params.source_bulk_capacitance,
-            cbd: params.drain_bulk_capacitance,
+            cbs: cbs_bulk,
+            cbd: cbd_bulk,
         };
     }
 
@@ -19095,8 +21482,8 @@ fn evaluate_nmos_level1(
             cgs: cgs_overlap + cgs_intrinsic / 2.0,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
-            cbs: params.source_bulk_capacitance,
-            cbd: params.drain_bulk_capacitance,
+            cbs: cbs_bulk,
+            cbd: cbd_bulk,
         };
     }
 
@@ -19110,8 +21497,8 @@ fn evaluate_nmos_level1(
         cgs: cgs_overlap + (2.0 / 3.0) * cgs_intrinsic,
         cgd: cgd_overlap,
         cgb: cgb_overlap,
-        cbs: params.source_bulk_capacitance,
-        cbd: params.drain_bulk_capacitance,
+        cbs: cbs_bulk,
+        cbd: cbd_bulk,
     }
 }
 
@@ -19217,6 +21604,7 @@ fn stamp_ac_jfet_small_signal(
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<Complex>],
     operating_point: &[f64],
+    omega: f64,
 ) -> Result<(), SpiceError> {
     validate_jfet(jfet)?;
     let drain = node_index(node_indices, &jfet.drain);
@@ -19231,6 +21619,18 @@ fn stamp_ac_jfet_small_signal(
         drain_voltage - source_voltage,
     );
     stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
+    stamp_complex_conductance(
+        matrix,
+        gate,
+        source,
+        Complex::new(0.0, omega * jfet.gate_source_capacitance),
+    );
+    stamp_complex_conductance(
+        matrix,
+        gate,
+        drain,
+        Complex::new(0.0, omega * jfet.gate_drain_capacitance),
+    );
     stamp_complex_transconductance(
         matrix,
         drain,
@@ -19274,6 +21674,261 @@ fn diode_current_conductance(diode: &Diode, voltage: f64) -> (f64, f64) {
         }
     }
     (current, conductance)
+}
+
+fn diode_charge_state_name(diode: &Diode) -> String {
+    format!("_D_{}_charge", diode.name)
+}
+
+fn diode_has_charge_storage(diode: &Diode) -> bool {
+    diode.junction_capacitance > 0.0 || diode.transit_time > 0.0
+}
+
+fn diode_dynamic_capacitance(diode: &Diode, voltage: f64) -> f64 {
+    let (_, conductance) = diode_current_conductance(diode, voltage);
+    diode.junction_capacitance + diode.transit_time * conductance
+}
+
+fn diode_charge_voltage(diode: &Diode, node_voltages: &BTreeMap<String, f64>) -> f64 {
+    voltage_at(node_voltages, &diode.anode) - voltage_at(node_voltages, &diode.cathode)
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+enum BjtChargeStateKind {
+    BaseEmitter,
+    BaseCollector,
+}
+
+struct BjtChargeStateSpec<'a> {
+    name: String,
+    positive: &'a str,
+    negative: &'a str,
+    kind: BjtChargeStateKind,
+}
+
+fn bjt_base_emitter_charge_state_name(bjt: &Bjt) -> String {
+    format!("_Q_{}_be_charge", bjt.name)
+}
+
+fn bjt_base_collector_charge_state_name(bjt: &Bjt) -> String {
+    format!("_Q_{}_bc_charge", bjt.name)
+}
+
+fn bjt_junction_transconductance(bjt: &Bjt, voltage: f64) -> f64 {
+    bjt.saturation_current / bjt.thermal_voltage
+        * (voltage / bjt.thermal_voltage).clamp(-40.0, 40.0).exp()
+}
+
+fn bjt_charge_dynamic_capacitance(bjt: &Bjt, kind: BjtChargeStateKind, voltage: f64) -> f64 {
+    let conductance = bjt_junction_transconductance(bjt, voltage);
+    match kind {
+        BjtChargeStateKind::BaseEmitter => {
+            bjt.base_emitter_capacitance + bjt.forward_transit_time * conductance
+        }
+        BjtChargeStateKind::BaseCollector => {
+            bjt.base_collector_capacitance + bjt.reverse_transit_time * conductance
+        }
+    }
+}
+
+fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec<'_>> {
+    let mut specs = Vec::new();
+    if bjt.base_emitter_capacitance > 0.0 || bjt.forward_transit_time > 0.0 {
+        let (positive, negative) = match bjt.polarity {
+            BjtPolarity::Npn => (bjt.base.as_str(), bjt.emitter.as_str()),
+            BjtPolarity::Pnp => (bjt.emitter.as_str(), bjt.base.as_str()),
+        };
+        specs.push(BjtChargeStateSpec {
+            name: bjt_base_emitter_charge_state_name(bjt),
+            positive,
+            negative,
+            kind: BjtChargeStateKind::BaseEmitter,
+        });
+    }
+    if bjt.base_collector_capacitance > 0.0 || bjt.reverse_transit_time > 0.0 {
+        let (positive, negative) = match bjt.polarity {
+            BjtPolarity::Npn => (bjt.base.as_str(), bjt.collector.as_str()),
+            BjtPolarity::Pnp => (bjt.collector.as_str(), bjt.base.as_str()),
+        };
+        specs.push(BjtChargeStateSpec {
+            name: bjt_base_collector_charge_state_name(bjt),
+            positive,
+            negative,
+            kind: BjtChargeStateKind::BaseCollector,
+        });
+    }
+    specs
+}
+
+fn bjt_charge_state_voltage(
+    spec: &BjtChargeStateSpec<'_>,
+    node_voltages: &BTreeMap<String, f64>,
+) -> f64 {
+    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+}
+
+struct JfetChargeStateSpec<'a> {
+    name: String,
+    positive: &'a str,
+    negative: &'a str,
+    capacitance: f64,
+}
+
+fn jfet_gate_source_charge_state_name(jfet: &Jfet) -> String {
+    format!("_J_{}_gs_charge", jfet.name)
+}
+
+fn jfet_gate_drain_charge_state_name(jfet: &Jfet) -> String {
+    format!("_J_{}_gd_charge", jfet.name)
+}
+
+fn jfet_charge_state_specs(jfet: &Jfet) -> Vec<JfetChargeStateSpec<'_>> {
+    let mut specs = Vec::new();
+    if jfet.gate_source_capacitance > 0.0 {
+        specs.push(JfetChargeStateSpec {
+            name: jfet_gate_source_charge_state_name(jfet),
+            positive: jfet.gate.as_str(),
+            negative: jfet.source.as_str(),
+            capacitance: jfet.gate_source_capacitance,
+        });
+    }
+    if jfet.gate_drain_capacitance > 0.0 {
+        specs.push(JfetChargeStateSpec {
+            name: jfet_gate_drain_charge_state_name(jfet),
+            positive: jfet.gate.as_str(),
+            negative: jfet.drain.as_str(),
+            capacitance: jfet.gate_drain_capacitance,
+        });
+    }
+    specs
+}
+
+fn jfet_charge_state_voltage(
+    spec: &JfetChargeStateSpec<'_>,
+    node_voltages: &BTreeMap<String, f64>,
+) -> f64 {
+    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+}
+
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+enum MosfetChargeStateKind {
+    GateOverlap,
+    SourceBody,
+    DrainBody,
+}
+
+struct MosfetChargeStateSpec<'a> {
+    name: String,
+    positive: &'a str,
+    negative: &'a str,
+    capacitance: f64,
+    kind: MosfetChargeStateKind,
+}
+
+fn mosfet_gate_source_charge_state_name(mosfet: &Mosfet) -> String {
+    format!("_M_{}_gs_charge", mosfet.name)
+}
+
+fn mosfet_gate_drain_charge_state_name(mosfet: &Mosfet) -> String {
+    format!("_M_{}_gd_charge", mosfet.name)
+}
+
+fn mosfet_gate_body_charge_state_name(mosfet: &Mosfet) -> String {
+    format!("_M_{}_gb_charge", mosfet.name)
+}
+
+fn mosfet_source_body_charge_state_name(mosfet: &Mosfet) -> String {
+    format!("_M_{}_sb_charge", mosfet.name)
+}
+
+fn mosfet_drain_body_charge_state_name(mosfet: &Mosfet) -> String {
+    format!("_M_{}_db_charge", mosfet.name)
+}
+
+fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> {
+    let mut specs = Vec::new();
+    let params = mosfet.params;
+    let gate_source_capacitance = params.gate_source_overlap_capacitance * params.w;
+    let gate_drain_capacitance = params.gate_drain_overlap_capacitance * params.w;
+    let gate_body_capacitance = params.gate_bulk_overlap_capacitance * params.l;
+    let source_body_capacitance = params.source_bulk_capacitance;
+    let drain_body_capacitance = params.drain_bulk_capacitance;
+    if gate_source_capacitance > 0.0 {
+        specs.push(MosfetChargeStateSpec {
+            name: mosfet_gate_source_charge_state_name(mosfet),
+            positive: mosfet.gate.as_str(),
+            negative: mosfet.source.as_str(),
+            capacitance: gate_source_capacitance,
+            kind: MosfetChargeStateKind::GateOverlap,
+        });
+    }
+    if gate_drain_capacitance > 0.0 {
+        specs.push(MosfetChargeStateSpec {
+            name: mosfet_gate_drain_charge_state_name(mosfet),
+            positive: mosfet.gate.as_str(),
+            negative: mosfet.drain.as_str(),
+            capacitance: gate_drain_capacitance,
+            kind: MosfetChargeStateKind::GateOverlap,
+        });
+    }
+    if gate_body_capacitance > 0.0 {
+        specs.push(MosfetChargeStateSpec {
+            name: mosfet_gate_body_charge_state_name(mosfet),
+            positive: mosfet.gate.as_str(),
+            negative: mosfet.body.as_str(),
+            capacitance: gate_body_capacitance,
+            kind: MosfetChargeStateKind::GateOverlap,
+        });
+    }
+    if source_body_capacitance > 0.0 {
+        specs.push(MosfetChargeStateSpec {
+            name: mosfet_source_body_charge_state_name(mosfet),
+            positive: mosfet.source.as_str(),
+            negative: mosfet.body.as_str(),
+            capacitance: source_body_capacitance,
+            kind: MosfetChargeStateKind::SourceBody,
+        });
+    }
+    if drain_body_capacitance > 0.0 {
+        specs.push(MosfetChargeStateSpec {
+            name: mosfet_drain_body_charge_state_name(mosfet),
+            positive: mosfet.drain.as_str(),
+            negative: mosfet.body.as_str(),
+            capacitance: drain_body_capacitance,
+            kind: MosfetChargeStateKind::DrainBody,
+        });
+    }
+    specs
+}
+
+fn mosfet_charge_state_voltage(
+    spec: &MosfetChargeStateSpec<'_>,
+    node_voltages: &BTreeMap<String, f64>,
+) -> f64 {
+    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+}
+
+fn mosfet_charge_dynamic_capacitance(
+    mosfet: &Mosfet,
+    spec: &MosfetChargeStateSpec<'_>,
+    state_voltage: f64,
+) -> f64 {
+    if !matches!(
+        spec.kind,
+        MosfetChargeStateKind::SourceBody | MosfetChargeStateKind::DrainBody
+    ) {
+        return spec.capacitance;
+    }
+    let junction_voltage = match mosfet.mosfet_type {
+        MosfetType::Pmos => state_voltage,
+        MosfetType::Nmos => -state_voltage,
+    };
+    mosfet_bulk_junction_capacitance(
+        spec.capacitance,
+        junction_voltage,
+        mosfet.params.bulk_junction_potential,
+        mosfet.params.bulk_junction_grading_coefficient,
+    )
 }
 
 fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
@@ -19389,6 +22044,18 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
             reason: "channel length modulation must be finite".to_string(),
         });
     }
+    if !jfet.gate_source_capacitance.is_finite() || jfet.gate_source_capacitance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "gate-source capacitance must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.gate_drain_capacitance.is_finite() || jfet.gate_drain_capacitance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "gate-drain capacitance must be finite and non-negative".to_string(),
+        });
+    }
     Ok(())
 }
 
@@ -19410,6 +22077,8 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("CGBO", params.gate_bulk_overlap_capacitance),
         ("CBS", params.source_bulk_capacitance),
         ("CBD", params.drain_bulk_capacitance),
+        ("PB", params.bulk_junction_potential),
+        ("MJ", params.bulk_junction_grading_coefficient),
     ] {
         if !value.is_finite() {
             return Err(SpiceError::InvalidElement {
@@ -19440,6 +22109,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET IS, N_SUB, and T_NOM must be positive".to_string(),
+        });
+    }
+    if params.bulk_junction_potential <= 0.0 || params.bulk_junction_grading_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET PB must be positive and MJ must be non-negative".to_string(),
         });
     }
     if params.gate_source_overlap_capacitance < 0.0
@@ -19521,11 +22196,10 @@ fn initial_capacitor_states(
     time_step: f64,
     method: TransientMethod,
 ) -> Vec<CapacitorState> {
-    circuit
-        .elements()
-        .iter()
-        .filter_map(|element| match element {
-            Element::Capacitor(capacitor) => Some(CapacitorState {
+    let mut states = Vec::new();
+    for element in circuit.elements() {
+        match element {
+            Element::Capacitor(capacitor) => states.push(CapacitorState {
                 name: capacitor.name.clone(),
                 previous_voltage: capacitor.initial_voltage,
                 previous_previous_voltage: capacitor.initial_voltage,
@@ -19533,9 +22207,56 @@ fn initial_capacitor_states(
                 time_step,
                 method,
             }),
-            _ => None,
-        })
-        .collect()
+            Element::Diode(diode) if diode_has_charge_storage(diode) => {
+                states.push(CapacitorState {
+                    name: diode_charge_state_name(diode),
+                    previous_voltage: 0.0,
+                    previous_previous_voltage: 0.0,
+                    previous_current: 0.0,
+                    time_step,
+                    method,
+                });
+            }
+            Element::Bjt(bjt) => {
+                for spec in bjt_charge_state_specs(bjt) {
+                    states.push(CapacitorState {
+                        name: spec.name,
+                        previous_voltage: 0.0,
+                        previous_previous_voltage: 0.0,
+                        previous_current: 0.0,
+                        time_step,
+                        method,
+                    });
+                }
+            }
+            Element::Jfet(jfet) => {
+                for spec in jfet_charge_state_specs(jfet) {
+                    states.push(CapacitorState {
+                        name: spec.name,
+                        previous_voltage: 0.0,
+                        previous_previous_voltage: 0.0,
+                        previous_current: 0.0,
+                        time_step,
+                        method,
+                    });
+                }
+            }
+            Element::Mosfet(mosfet) => {
+                for spec in mosfet_charge_state_specs(mosfet) {
+                    states.push(CapacitorState {
+                        name: spec.name,
+                        previous_voltage: 0.0,
+                        previous_previous_voltage: 0.0,
+                        previous_current: 0.0,
+                        time_step,
+                        method,
+                    });
+                }
+            }
+            _ => {}
+        }
+    }
+    states
 }
 
 fn initial_inductor_states(
@@ -19590,17 +22311,50 @@ fn capacitor_voltages(
     circuit: &Circuit,
     node_voltages: &BTreeMap<String, f64>,
 ) -> BTreeMap<String, f64> {
-    circuit
-        .elements()
-        .iter()
-        .filter_map(|element| match element {
-            Element::Capacitor(capacitor) => Some((
-                capacitor.name.clone(),
-                voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2),
-            )),
-            _ => None,
-        })
-        .collect()
+    let mut voltages = BTreeMap::new();
+    for element in circuit.elements() {
+        match element {
+            Element::Capacitor(capacitor) => {
+                voltages.insert(
+                    capacitor.name.clone(),
+                    voltage_at(node_voltages, &capacitor.n1)
+                        - voltage_at(node_voltages, &capacitor.n2),
+                );
+            }
+            Element::Diode(diode) if diode_has_charge_storage(diode) => {
+                voltages.insert(
+                    diode_charge_state_name(diode),
+                    diode_charge_voltage(diode, node_voltages),
+                );
+            }
+            Element::Bjt(bjt) => {
+                for spec in bjt_charge_state_specs(bjt) {
+                    voltages.insert(
+                        spec.name.clone(),
+                        bjt_charge_state_voltage(&spec, node_voltages),
+                    );
+                }
+            }
+            Element::Jfet(jfet) => {
+                for spec in jfet_charge_state_specs(jfet) {
+                    voltages.insert(
+                        spec.name.clone(),
+                        jfet_charge_state_voltage(&spec, node_voltages),
+                    );
+                }
+            }
+            Element::Mosfet(mosfet) => {
+                for spec in mosfet_charge_state_specs(mosfet) {
+                    voltages.insert(
+                        spec.name.clone(),
+                        mosfet_charge_state_voltage(&spec, node_voltages),
+                    );
+                }
+            }
+            _ => {}
+        }
+    }
+    voltages
 }
 
 fn transient_lte_estimate(
@@ -19609,10 +22363,9 @@ fn transient_lte_estimate(
     previous_voltages: &BTreeMap<String, f64>,
     previous_previous_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
-    circuit
-        .elements()
-        .iter()
-        .filter_map(|element| match element {
+    let mut max_lte = 0.0_f64;
+    for element in circuit.elements() {
+        match element {
             Element::Capacitor(capacitor) => {
                 let current = current_voltages
                     .get(&capacitor.name)
@@ -19626,11 +22379,58 @@ fn transient_lte_estimate(
                     .get(&capacitor.name)
                     .copied()
                     .unwrap_or(capacitor.initial_voltage);
-                Some((current - 2.0 * previous + previous_previous).abs() / 2.0)
+                max_lte = max_lte.max((current - 2.0 * previous + previous_previous).abs() / 2.0);
             }
-            _ => None,
-        })
-        .fold(0.0, f64::max)
+            Element::Diode(diode) if diode_has_charge_storage(diode) => {
+                let state_name = diode_charge_state_name(diode);
+                let current = current_voltages.get(&state_name).copied().unwrap_or(0.0);
+                let previous = previous_voltages.get(&state_name).copied().unwrap_or(0.0);
+                let previous_previous = previous_previous_voltages
+                    .get(&state_name)
+                    .copied()
+                    .unwrap_or(0.0);
+                max_lte = max_lte.max((current - 2.0 * previous + previous_previous).abs() / 2.0);
+            }
+            Element::Bjt(bjt) => {
+                for spec in bjt_charge_state_specs(bjt) {
+                    let current = current_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous = previous_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous_previous = previous_previous_voltages
+                        .get(&spec.name)
+                        .copied()
+                        .unwrap_or(0.0);
+                    max_lte =
+                        max_lte.max((current - 2.0 * previous + previous_previous).abs() / 2.0);
+                }
+            }
+            Element::Jfet(jfet) => {
+                for spec in jfet_charge_state_specs(jfet) {
+                    let current = current_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous = previous_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous_previous = previous_previous_voltages
+                        .get(&spec.name)
+                        .copied()
+                        .unwrap_or(0.0);
+                    max_lte =
+                        max_lte.max((current - 2.0 * previous + previous_previous).abs() / 2.0);
+                }
+            }
+            Element::Mosfet(mosfet) => {
+                for spec in mosfet_charge_state_specs(mosfet) {
+                    let current = current_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous = previous_voltages.get(&spec.name).copied().unwrap_or(0.0);
+                    let previous_previous = previous_previous_voltages
+                        .get(&spec.name)
+                        .copied()
+                        .unwrap_or(0.0);
+                    max_lte =
+                        max_lte.max((current - 2.0 * previous + previous_previous).abs() / 2.0);
+                }
+            }
+            _ => {}
+        }
+    }
+    max_lte
 }
 
 fn initial_transmission_line_states(circuit: &Circuit) -> Vec<TransmissionLineState> {
@@ -19803,32 +22603,128 @@ fn update_capacitor_states(
     capacitor_states: &mut [CapacitorState],
 ) {
     for state in capacitor_states {
-        let Some(capacitor) = circuit.elements().iter().find_map(|element| match element {
-            Element::Capacitor(capacitor) if capacitor.name == state.name => Some(capacitor),
+        let update = circuit.elements().iter().find_map(|element| match element {
+            Element::Capacitor(capacitor) if capacitor.name == state.name => Some((
+                voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2),
+                capacitor.capacitance_farads,
+            )),
+            Element::Diode(diode) if diode_charge_state_name(diode) == state.name => Some((
+                diode_charge_voltage(diode, node_voltages),
+                diode_dynamic_capacitance(diode, state.previous_voltage),
+            )),
+            Element::Bjt(bjt) => bjt_charge_state_specs(bjt)
+                .into_iter()
+                .find(|spec| spec.name == state.name)
+                .map(|spec| {
+                    (
+                        bjt_charge_state_voltage(&spec, node_voltages),
+                        bjt_charge_dynamic_capacitance(bjt, spec.kind, state.previous_voltage),
+                    )
+                }),
+            Element::Jfet(jfet) => jfet_charge_state_specs(jfet)
+                .into_iter()
+                .find(|spec| spec.name == state.name)
+                .map(|spec| {
+                    (
+                        jfet_charge_state_voltage(&spec, node_voltages),
+                        spec.capacitance,
+                    )
+                }),
+            Element::Mosfet(mosfet) => mosfet_charge_state_specs(mosfet)
+                .into_iter()
+                .find(|spec| spec.name == state.name)
+                .map(|spec| {
+                    let capacitance =
+                        mosfet_charge_dynamic_capacitance(mosfet, &spec, state.previous_voltage);
+                    (
+                        mosfet_charge_state_voltage(&spec, node_voltages),
+                        capacitance,
+                    )
+                }),
             _ => None,
-        }) else {
+        });
+        let Some((voltage, capacitance)) = update else {
             continue;
         };
         let previous_voltage = state.previous_voltage;
         let previous_current = state.previous_current;
-        let voltage =
-            voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2);
         state.previous_current = match state.method {
             TransientMethod::Trap => {
-                let conductance = 2.0 * capacitor.capacitance_farads / state.time_step;
+                let conductance = 2.0 * capacitance / state.time_step;
                 conductance * (voltage - previous_voltage) - previous_current
             }
             TransientMethod::Gear2 => {
-                capacitor.capacitance_farads
+                capacitance
                     * (3.0 * voltage - 4.0 * previous_voltage + state.previous_previous_voltage)
                     / (2.0 * state.time_step)
             }
-            TransientMethod::Euler => {
-                capacitor.capacitance_farads * (voltage - previous_voltage) / state.time_step
-            }
+            TransientMethod::Euler => capacitance * (voltage - previous_voltage) / state.time_step,
         };
         state.previous_voltage = voltage;
         state.previous_previous_voltage = previous_voltage;
+    }
+}
+
+fn seed_device_capacitor_states(
+    circuit: &Circuit,
+    node_voltages: &BTreeMap<String, f64>,
+    capacitor_states: &mut [CapacitorState],
+) {
+    for element in circuit.elements() {
+        match element {
+            Element::Diode(diode) => {
+                let state_name = diode_charge_state_name(diode);
+                if let Some(state) = capacitor_states
+                    .iter_mut()
+                    .find(|state| state.name == state_name)
+                {
+                    let voltage = diode_charge_voltage(diode, node_voltages);
+                    state.previous_voltage = voltage;
+                    state.previous_previous_voltage = voltage;
+                    state.previous_current = 0.0;
+                }
+            }
+            Element::Bjt(bjt) => {
+                for spec in bjt_charge_state_specs(bjt) {
+                    if let Some(state) = capacitor_states
+                        .iter_mut()
+                        .find(|state| state.name == spec.name)
+                    {
+                        let voltage = bjt_charge_state_voltage(&spec, node_voltages);
+                        state.previous_voltage = voltage;
+                        state.previous_previous_voltage = voltage;
+                        state.previous_current = 0.0;
+                    }
+                }
+            }
+            Element::Jfet(jfet) => {
+                for spec in jfet_charge_state_specs(jfet) {
+                    if let Some(state) = capacitor_states
+                        .iter_mut()
+                        .find(|state| state.name == spec.name)
+                    {
+                        let voltage = jfet_charge_state_voltage(&spec, node_voltages);
+                        state.previous_voltage = voltage;
+                        state.previous_previous_voltage = voltage;
+                        state.previous_current = 0.0;
+                    }
+                }
+            }
+            Element::Mosfet(mosfet) => {
+                for spec in mosfet_charge_state_specs(mosfet) {
+                    if let Some(state) = capacitor_states
+                        .iter_mut()
+                        .find(|state| state.name == spec.name)
+                    {
+                        let voltage = mosfet_charge_state_voltage(&spec, node_voltages);
+                        state.previous_voltage = voltage;
+                        state.previous_previous_voltage = voltage;
+                        state.previous_current = 0.0;
+                    }
+                }
+            }
+            _ => {}
+        }
     }
 }
 
@@ -21334,10 +24230,21 @@ fn stamp_complex_transconductance(
 }
 
 fn solve_linear_system(matrix: Vec<Vec<f64>>, rhs: Vec<f64>) -> Result<Vec<f64>, SpiceError> {
+    Ok(solve_linear_system_with_profile(matrix, rhs)?.solution)
+}
+
+fn solve_linear_system_with_profile(
+    matrix: Vec<Vec<f64>>,
+    rhs: Vec<f64>,
+) -> Result<SolvedLinearSystem, SpiceError> {
     if rhs.len() >= SPARSE_SOLVER_THRESHOLD {
-        return solve_sparse_linear_system(matrix, rhs);
+        return solve_sparse_linear_system_with_profile(matrix, rhs);
     }
-    solve_dense_linear_system(matrix, rhs)
+    let profile = real_solver_profile(&matrix, "dense_gaussian", 0, None);
+    Ok(SolvedLinearSystem {
+        solution: solve_dense_linear_system(matrix, rhs)?,
+        profile,
+    })
 }
 
 fn solve_dense_linear_system(
@@ -21386,11 +24293,14 @@ fn solve_dense_linear_system(
     Ok(solution)
 }
 
-fn solve_sparse_linear_system(
+fn solve_sparse_linear_system_with_profile(
     matrix: Vec<Vec<f64>>,
     rhs: Vec<f64>,
-) -> Result<Vec<f64>, SpiceError> {
+) -> Result<SolvedLinearSystem, SpiceError> {
     let n = rhs.len();
+    let initial_nonzeros = real_matrix_nonzeros(&matrix);
+    let mut peak_nonzeros = initial_nonzeros;
+    let mut profile = real_solver_profile(&matrix, "native_sparse_gaussian", 0, None);
     let mut rows: Vec<HashMap<usize, f64>> = matrix
         .into_iter()
         .map(|row| {
@@ -21422,6 +24332,7 @@ fn solve_sparse_linear_system(
             .abs()
             < PIVOT_EPSILON
         {
+            profile.fill_in_nonzeros = peak_nonzeros.saturating_sub(initial_nonzeros);
             return Err(SpiceError::SingularMatrix);
         }
 
@@ -21450,12 +24361,14 @@ fn solve_sparse_linear_system(
             }
             rhs[row] -= factor * rhs[pivot_col];
         }
+        peak_nonzeros = peak_nonzeros.max(rows.iter().map(HashMap::len).sum());
     }
 
     let mut solution = vec![0.0; n];
     for row in (0..n).rev() {
         let diagonal = rows[row].get(&row).copied().unwrap_or(0.0);
         if diagonal.abs() < PIVOT_EPSILON {
+            profile.fill_in_nonzeros = peak_nonzeros.saturating_sub(initial_nonzeros);
             return Err(SpiceError::SingularMatrix);
         }
         let mut value = rhs[row];
@@ -21467,7 +24380,8 @@ fn solve_sparse_linear_system(
         solution[row] = value / diagonal;
     }
 
-    Ok(solution)
+    profile.fill_in_nonzeros = peak_nonzeros.saturating_sub(initial_nonzeros);
+    Ok(SolvedLinearSystem { solution, profile })
 }
 
 fn solve_complex_linear_system(

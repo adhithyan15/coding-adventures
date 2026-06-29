@@ -12,10 +12,11 @@ through TWO arms:
             in its head (this is exactly what language models are bad at).
 
     Arm B — the small model + the ADJ engine.   The model only DECOMPOSES the
-            question into an ADJ program (a `let` formula over the numbers that
-            appear in the stem); the **engine** does every bit of arithmetic on the
-            CPU, exactly, and SELECTS the option whose value equals the computed
-            answer — emitting a machine-checkable proof.
+            question into an ADJ expression (ASCII arithmetic or ADJ's native
+            `latex "..."` form over the numbers that appear in the stem); the
+            **engine** does every bit of arithmetic on the CPU, exactly, and SELECTS
+            the option whose value equals the computed answer — emitting a
+            machine-checkable proof.
 
 The headline number is the **divergence, B − A**. At rung 0 the gap is small (a
 small model can do `7 * 8 + 3`). As the ladder climbs and the computation deepens,
@@ -89,13 +90,16 @@ MODES
 Usage:
     python3 ladder_eval.py rung0_arithmetic                      # cached, pretty
     python3 ladder_eval.py rung0_arithmetic --quiet              # scorecard JSON only
-    python3 ladder_eval.py rung0_arithmetic --model mlx:mlx-community/Qwen2.5-0.5B-Instruct-4bit
+    python3 ladder_eval.py rung0_arithmetic --model gemma --max-tokens 512
+    python3 ladder_eval.py rung3_derived_probability_decisions --model gemma --limit 3 --output /tmp/gemma-smoke.json
 """
 
 from __future__ import annotations
 
 import argparse
+import ast
 import json
+import operator
 import os
 import re
 import subprocess
@@ -103,6 +107,7 @@ import sys
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Union
 
 HERE = Path(__file__).resolve().parent
 
@@ -139,28 +144,99 @@ _LETTER = re.compile(r"\b([A-E])\b")
 # ----------------------------------------------------------------------------------
 # Arm B — build the ADJ program and read the engine's selection.
 # ----------------------------------------------------------------------------------
-def build_arm_b_program(formula: str, options: dict[str, float]) -> str:
+OptionValue = Union[int, float, str, list[Union[int, float]]]
+
+_BINOPS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+}
+_UNOPS = {ast.UAdd: operator.pos, ast.USub: operator.neg}
+
+
+def _render_option_expr(value: OptionValue) -> str:
+    if isinstance(value, list):
+        raise ValueError("root-set options are supported only by solve_roots items")
+    if isinstance(value, str):
+        value = value.strip()
+        if not value:
+            raise ValueError("option expression must not be empty")
+        return value
+    v = float(value)
+    return str(int(v)) if v.is_integer() else str(value)
+
+
+def _safe_number_expr(expr: str) -> float:
+    def ev(node):
+        if isinstance(node, ast.Expression):
+            return ev(node.body)
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return float(node.value)
+        if isinstance(node, ast.BinOp) and type(node.op) in _BINOPS:
+            return _BINOPS[type(node.op)](ev(node.left), ev(node.right))
+        if isinstance(node, ast.UnaryOp) and type(node.op) in _UNOPS:
+            return _UNOPS[type(node.op)](ev(node.operand))
+        raise ValueError(f"disallowed option expression element: {ast.dump(node)}")
+
+    return ev(ast.parse(expr, mode="eval"))
+
+
+def _option_number(value: OptionValue) -> float:
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        return _safe_number_expr(value)
+    raise ValueError(f"unsupported option value {value!r}")
+
+
+def _option_label(value: OptionValue) -> str:
+    if not isinstance(value, str):
+        raise ValueError(f"unsupported label option value {value!r}")
+    label = value.strip().lower()
+    if not label:
+        raise ValueError("label option must not be empty")
+    return label
+
+
+def _option_roots(value: OptionValue) -> tuple[float, ...]:
+    if not isinstance(value, list) or not value:
+        raise ValueError(f"unsupported root-set option value {value!r}")
+    roots = []
+    for root in value:
+        if not isinstance(root, (int, float)):
+            raise ValueError(f"unsupported root value {root!r}")
+        roots.append(float(root))
+    return tuple(sorted(roots))
+
+
+def build_arm_b_program(formula: str, options: dict[str, OptionValue]) -> str:
     """Render the option-selection ADJ program described in the module docstring.
 
-    `options` maps letters (A..E) to their numeric value as printed in the question.
-    We declare one equal-prior hypothesis per option and one `contributes` predicate
-    that fires when the engine-computed `answer` equals that option's value. The huge
-    likelihood ratio (1e6) makes a single matching option dominate decisively; if
-    none match, the hypotheses stay tied and the engine returns a kickback."""
+    `options` maps letters (A..E) to their numeric value or ADJ arithmetic expression
+    as printed in the question. We declare one equal-prior hypothesis per option and
+    one `contributes` predicate that fires when the engine-computed `answer` equals
+    that option's value. The huge likelihood ratio (1e6) makes a single matching
+    option dominate decisively; if none match, the hypotheses stay tied and the
+    engine returns a kickback."""
     lines = [f"prior 0.0001 for opt_{ltr.lower()}" for ltr in options]
     lines.append(f"let answer = {formula}")
     for ltr, val in options.items():
-        # Render whole-valued floats as ints so the predicate threshold reads cleanly
-        # (59 not 59.0); the engine compares numerically either way.
-        v = int(val) if float(val).is_integer() else val
-        lines.append(f"contributes 1000000 from answer == {v} to opt_{ltr.lower()}")
+        # Render whole-valued floats as ints so the predicate reads cleanly (59 not
+        # 59.0). String values are already ADJ expressions such as `3 / 10`.
+        lines.append(
+            f"contributes 1000000 from answer == {_render_option_expr(val)} to opt_{ltr.lower()}"
+        )
     lines += [f"? opt_{ltr.lower()}" for ltr in options]
     return "\n".join(lines) + "\n"
 
 
-def run_decision(program: str) -> dict | None:
-    """Write the program to a temp .adj, run the native CLI, return its `decision`
-    dict (or None if the CLI is unavailable or the program failed to compile)."""
+def run_program(program: str) -> dict | None:
+    """Write a native ADJ program to a temp .adj and run the CLI.
+
+    Formula rungs inspect only the `decision`; solve-backed rungs inspect the `solve`
+    section. In both cases the native CLI is the only component that executes the
+    math/reasoning program."""
     if _CLI is None:
         return None
     fd, path = tempfile.mkstemp(suffix=".adj", prefix=".ladder_")
@@ -176,6 +252,12 @@ def run_decision(program: str) -> dict | None:
             os.unlink(path)
         except OSError:
             pass
+    return doc if isinstance(doc, dict) else None
+
+
+def run_decision(program: str) -> dict | None:
+    """Run a program and return its `decision` dict, or None on compile/runtime miss."""
+    doc = run_program(program)
     return doc.get("decision") if isinstance(doc, dict) else None
 
 
@@ -193,14 +275,338 @@ def decision_to_letter(decision: dict | None) -> str | None:
     return None
 
 
-def formula_is_faithful(formula: str, stem: str) -> bool:
+def _letter_for_engine_value(value: float, options: dict[str, OptionValue]) -> str | None:
+    matches = []
+    for ltr, option in options.items():
+        try:
+            if abs(float(value) - _option_number(option)) <= 1e-9:
+                matches.append(ltr)
+        except (ValueError, SyntaxError, ZeroDivisionError):
+            return None
+    return matches[0] if len(matches) == 1 else None
+
+
+def _letter_for_engine_roots(roots: list[float], options: dict[str, OptionValue]) -> str | None:
+    root_set = tuple(sorted(float(r) for r in roots))
+    matches = []
+    for ltr, option in options.items():
+        try:
+            option_roots = _option_roots(option)
+        except (TypeError, ValueError):
+            return None
+        if len(root_set) == len(option_roots) and all(
+            abs(a - b) <= 1e-9 for a, b in zip(root_set, option_roots)
+        ):
+            matches.append(ltr)
+    return matches[0] if len(matches) == 1 else None
+
+
+def _letter_for_engine_label(label: str, options: dict[str, OptionValue]) -> str | None:
+    label = label.strip().lower()
+    matches = []
+    for ltr, option in options.items():
+        try:
+            if _option_label(option) == label:
+                matches.append(ltr)
+        except ValueError:
+            return None
+    return matches[0] if len(matches) == 1 else None
+
+
+_PROGRAM_WEIGHT_LINE = re.compile(
+    r"^(\s*(?:prior|contributes|interacts)\s+)\d+(?:\.\d+)?"
+)
+
+
+def decomposition_numbers(
+    decomposition: str, *, program: bool = False, structural_weights: bool = True
+) -> list[str]:
+    """Return numeric literals that must be grounded in the stem.
+
+    Program-backed rungs may include structural confidence weights such as
+    `prior 0.001` or `contributes 1000000 ...`; those are not math facts from the
+    word problem. Strip just that leading weight and keep every number in observed
+    facts, constraints, and predicate thresholds under the no-result-literals gate.
+    """
+    if not program or not structural_weights:
+        return _NUM.findall(decomposition)
+    nums: list[str] = []
+    for raw in decomposition.splitlines():
+        line = _PROGRAM_WEIGHT_LINE.sub(r"\1", raw)
+        nums.extend(_NUM.findall(line))
+    return nums
+
+
+def program_requirements_hold(doc: dict | None, answer_from: dict | None) -> bool:
+    """Check optional native-program requirements beyond the solved value.
+
+    The first mixed reasoning rung requires a rule-derived premise to fire a
+    queried decision before the numeric solve is accepted. This keeps Python out of
+    the reasoning path: it only inspects the CLI JSON for a determinate leader and,
+    when requested, the evidence proof ADJ produced for that leader.
+    """
+    if not answer_from:
+        return True
+    requirements = answer_from.get("requires") or []
+    if not requirements:
+        return True
+    if not doc:
+        return False
+    for req in requirements:
+        if req.get("type") != "decision":
+            return False
+        decision = doc.get("decision")
+        leader = req.get("leader")
+        if not leader or not isinstance(decision, dict):
+            return False
+        if decision.get("type") != "determinate" or decision.get("leader") != leader:
+            return False
+        evidence = req.get("evidence")
+        if evidence:
+            ranked = doc.get("ranked") or []
+            proof_steps = []
+            for entry in ranked:
+                if isinstance(entry, dict) and entry.get("hypothesis") == leader:
+                    proof_steps = entry.get("proof") or []
+                    break
+            matched = [
+                step for step in proof_steps
+                if isinstance(step, dict)
+                and step.get("kind") == "contribution"
+                and step.get("evidence") == evidence
+                and step.get("evidence_proof")
+            ]
+            if not matched:
+                return False
+    return True
+
+
+def solve_assignment_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ solver assignment to an option letter.
+
+    A rung-2 item can carry a full ADJ program such as `symbol x; constrain ...;
+    solve for { x }`. The engine returns the solved value; this helper only performs
+    option lookup against the printed choices, preserving the invariant that Python
+    never solves the equation."""
+    if not doc or not answer_from or answer_from.get("type") != "solve_assignment":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    name = answer_from.get("name")
+    solve = doc.get("solve")
+    if not name or not isinstance(solve, dict) or solve.get("outcome") != "solved":
+        return None
+    assignments = solve.get("assignments") or []
+    values = [a.get("value") for a in assignments if isinstance(a, dict) and a.get("name") == name]
+    if len(values) != 1:
+        return None
+    try:
+        return _letter_for_engine_value(float(values[0]), options)
+    except (TypeError, ValueError):
+        return None
+
+
+def solve_roots_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ root solve to an option letter.
+
+    The engine owns the nonlinear solve and returns the real roots; the harness
+    only compares that returned root set to the printed multiple-choice root sets.
+    """
+    if not doc or not answer_from or answer_from.get("type") != "solve_roots":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    name = answer_from.get("name")
+    solve = doc.get("solve")
+    if not name or not isinstance(solve, dict) or solve.get("outcome") != "solved_roots":
+        return None
+    if solve.get("var") != name:
+        return None
+    roots = solve.get("roots")
+    if not isinstance(roots, list):
+        return None
+    try:
+        return _letter_for_engine_roots([float(r) for r in roots], options)
+    except (TypeError, ValueError):
+        return None
+
+
+def optimize_value_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ optimization optimum to an option letter.
+
+    Linear-programming rungs ask the model to emit only constraints plus a
+    `maximize`/`minimize` objective. ADJ owns the optimization; the harness only
+    compares `optimize.value` against the printed choices.
+    """
+    if not doc or not answer_from or answer_from.get("type") != "optimize_value":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    optimize = doc.get("optimize")
+    if not isinstance(optimize, dict) or optimize.get("outcome") != "optimal":
+        return None
+    try:
+        return _letter_for_engine_value(float(optimize.get("value")), options)
+    except (TypeError, ValueError):
+        return None
+
+
+def optimize_assignment_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ optimization witness assignment to an option letter.
+
+    This is the assignment analogue of `optimize_value`: ADJ optimizes the linear
+    program and emits a witness; the harness only selects the printed option that
+    equals the requested variable's witness value.
+    """
+    if not doc or not answer_from or answer_from.get("type") != "optimize_assignment":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    name = answer_from.get("name")
+    optimize = doc.get("optimize")
+    if not name or not isinstance(optimize, dict) or optimize.get("outcome") != "optimal":
+        return None
+    assignments = optimize.get("assignments") or []
+    values = [a.get("value") for a in assignments if isinstance(a, dict) and a.get("name") == name]
+    if len(values) != 1:
+        return None
+    try:
+        return _letter_for_engine_value(float(values[0]), options)
+    except (TypeError, ValueError):
+        return None
+
+
+def check_outcome_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ feasibility verdict to an option letter.
+
+    Constraint-feasibility rungs ask the model to emit only variables,
+    constraints, and `check`. ADJ decides whether the system is feasible over the
+    supported domain; the harness only maps `check.outcome` to printed categorical
+    choices such as "feasible" or "infeasible".
+    """
+    if not doc or not answer_from or answer_from.get("type") != "check_outcome":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    check = doc.get("check")
+    if not isinstance(check, dict):
+        return None
+    outcome = check.get("outcome")
+    labels = {
+        "sat": "feasible",
+        "sat_real": "feasible",
+        "unsat": "infeasible",
+        "unknown": "unknown",
+    }
+    labels.update(answer_from.get("labels") or {})
+    label = labels.get(outcome)
+    if not isinstance(label, str):
+        return None
+    return _letter_for_engine_label(label, options)
+
+
+def decision_leader_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a native ADJ probabilistic decision leader to an option letter.
+
+    Probability-decision rungs ask the model to emit priors, likelihood-ratio
+    contributions, observations, and queries. ADJ owns the posterior ranking; the
+    harness only maps `decision.leader` to the printed categorical choices.
+    """
+    if not doc or not answer_from or answer_from.get("type") != "decision_leader":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    decision = doc.get("decision")
+    if not isinstance(decision, dict) or decision.get("type") != "determinate":
+        return None
+    leader = decision.get("leader")
+    if not isinstance(leader, str):
+        return None
+    labels = answer_from.get("labels") or {}
+    label = labels.get(leader, leader)
+    if not isinstance(label, str):
+        return None
+    return _letter_for_engine_label(label, options)
+
+
+def program_answer_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    if not answer_from:
+        return None
+    if answer_from.get("type") == "solve_assignment":
+        return solve_assignment_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "solve_roots":
+        return solve_roots_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "optimize_value":
+        return optimize_value_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "optimize_assignment":
+        return optimize_assignment_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "check_outcome":
+        return check_outcome_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "decision_leader":
+        return decision_leader_to_letter(doc, answer_from, options)
+    return None
+
+
+def program_engine_trace(doc: dict | None, answer_from: dict | None) -> tuple[str | None, str | None]:
+    """Return the native engine result family and outcome for scorecard auditing.
+
+    This does not interpret the result or pick an option. It only records the section
+    Arm B asked ADJ to execute and the engine's own outcome label, so a model-mode
+    miss can be audited as e.g. `solve/no_unique_solution` instead of an opaque
+    abstention.
+    """
+    if not doc or not answer_from:
+        return None, None
+    typ = answer_from.get("type")
+    if typ in {"solve_assignment", "solve_roots"}:
+        section = doc.get("solve")
+        kind = "solve"
+    elif typ in {"optimize_value", "optimize_assignment"}:
+        section = doc.get("optimize")
+        kind = "optimize"
+    elif typ == "check_outcome":
+        section = doc.get("check")
+        kind = "check"
+    elif typ == "decision_leader":
+        section = doc.get("decision")
+        kind = "decision"
+    else:
+        return None, None
+    if not isinstance(section, dict):
+        return kind, None
+    outcome = section.get("outcome") or section.get("type")
+    return kind, str(outcome) if outcome is not None else None
+
+
+def formula_is_faithful(
+    formula: str, stem: str, *, program: bool = False, structural_weights: bool = True
+) -> bool:
     """The no-result-literals gate: every number in the formula must also appear in
     the stem. This is what stops a model (in --model mode) from smuggling the answer
     into the "decomposition" — it may write `7 * 8 + 3` (all from the stem) but not
     `59`. The gold formulae in items.json are authored to satisfy this too; the test
     suite re-checks them, so the gate is exercised even in cached mode."""
     stem_nums = set(_NUM.findall(stem))
-    return all(tok in stem_nums for tok in _NUM.findall(formula))
+    return all(
+        tok in stem_nums
+        for tok in decomposition_numbers(
+            formula, program=program, structural_weights=structural_weights
+        )
+    )
 
 
 # ----------------------------------------------------------------------------------
@@ -234,6 +640,12 @@ class ItemResult:
     arm_b: str | None
     arm_b_outcome: str
     bucket: str | None         # Arm B failure bucket (see classify_bucket), else None
+    arm_b_model_output: str | None = None
+    arm_b_decomposition: str | None = None
+    arm_b_decomposition_kind: str | None = None
+    arm_b_decomposition_faithful: bool | None = None
+    arm_b_engine_kind: str | None = None
+    arm_b_engine_outcome: str | None = None
 
 
 def outcome(letter: str | None, gold: str) -> str:
@@ -261,6 +673,7 @@ def classify_bucket(arm_b_outcome: str, faithful: bool) -> str | None:
 class Scorecard:
     rung: str
     mode: str
+    model: str | None = None
     results: list[ItemResult] = field(default_factory=list)
 
     def _arm_summary(self, arm: str) -> dict:
@@ -290,6 +703,7 @@ class Scorecard:
         return {
             "rung": self.rung,
             "mode": self.mode,
+            "model": self.model,
             "arm_a_model_alone": a,
             "arm_b_model_plus_adj": b,
             # The money number: how much the engine arm out-scores the model alone.
@@ -305,20 +719,53 @@ def score_item(item: dict, gen) -> ItemResult:
     """Run both arms for one item. `gen` is a callable prompt→text for the model, or
     None in cached mode (Arm A is skipped → abstained; Arm B uses the gold formula)."""
     gold = item["gold_letter"]
+    arm_b_model_output = None
+    arm_b_decomposition = None
+    arm_b_decomposition_kind = None
+    arm_b_decomposition_faithful = None
+    arm_b_engine_kind = None
+    arm_b_engine_outcome = None
 
     # --- Arm B: decompose → engine selects ---
     if gen is None:
-        formula, faithful = item["formula"], True            # cached: trust the gold
+        formula = item.get("formula")
+        program = item.get("program")
+        faithful = True                                     # cached: trust the gold
     else:
         raw = gen(decompose_prompt(item))
-        formula = extract_formula(raw)
-        faithful = bool(formula) and formula_is_faithful(formula, item["stem"])
-    if not formula or not faithful:
+        arm_b_model_output = raw
+        if "program" in item:
+            formula = None
+            program = extract_program(raw)
+            arm_b_decomposition = program
+            arm_b_decomposition_kind = "program"
+            answer_from = item.get("answer_from") or {}
+            faithful = bool(program) and formula_is_faithful(
+                program,
+                item["stem"],
+                program=True,
+                structural_weights=answer_from.get("structural_weights", True),
+            )
+        else:
+            program = None
+            formula = extract_formula(raw)
+            arm_b_decomposition = formula
+            arm_b_decomposition_kind = "formula"
+            faithful = bool(formula) and formula_is_faithful(formula, item["stem"])
+        arm_b_decomposition_faithful = faithful
+    if not faithful:
         arm_b_letter = None                                  # decompose failed → abstain
-    else:
+    elif program:
+        answer_from = item.get("answer_from")
+        engine_doc = run_program(program)
+        arm_b_engine_kind, arm_b_engine_outcome = program_engine_trace(engine_doc, answer_from)
+        arm_b_letter = program_answer_to_letter(engine_doc, answer_from, item["options"])
+    elif formula:
         arm_b_letter = decision_to_letter(
             run_decision(build_arm_b_program(formula, item["options"]))
         )
+    else:
+        arm_b_letter = None
     arm_b_out = outcome(arm_b_letter, gold)
 
     # --- Arm A: model alone (skipped in cached mode) ---
@@ -331,38 +778,397 @@ def score_item(item: dict, gen) -> ItemResult:
     return ItemResult(
         item["id"], gold, arm_a_letter, arm_a_out, arm_b_letter, arm_b_out,
         classify_bucket(arm_b_out, faithful),
+        arm_b_model_output,
+        arm_b_decomposition,
+        arm_b_decomposition_kind,
+        arm_b_decomposition_faithful,
+        arm_b_engine_kind,
+        arm_b_engine_outcome,
     )
+
+
+def result_to_json(r: ItemResult) -> dict:
+    out = {
+        "id": r.item_id,
+        "gold": r.gold,
+        "arm_a": r.arm_a,
+        "arm_a_outcome": r.arm_a_outcome,
+        "arm_b": r.arm_b,
+        "arm_b_outcome": r.arm_b_outcome,
+        "bucket": r.bucket,
+    }
+    if r.arm_b_model_output is not None:
+        out["arm_b_model_output"] = r.arm_b_model_output
+        out["arm_b_decomposition"] = r.arm_b_decomposition
+        out["arm_b_decomposition_kind"] = r.arm_b_decomposition_kind
+        out["arm_b_decomposition_faithful"] = r.arm_b_decomposition_faithful
+        if r.arm_b_engine_kind is not None:
+            out["arm_b_engine_kind"] = r.arm_b_engine_kind
+            out["arm_b_engine_outcome"] = r.arm_b_engine_outcome
+    return out
 
 
 # ----------------------------------------------------------------------------------
 # Model decomposition (only used in --model mode).
 # ----------------------------------------------------------------------------------
 def decompose_prompt(item: dict) -> str:
+    if "program" in item:
+        answer_from = item.get("answer_from") or {}
+        name = answer_from.get("name", "x")
+        if answer_from.get("type") == "decision_leader":
+            requires = answer_from.get("requires") or []
+            decision_req = next((r for r in requires if r.get("type") == "decision"), None)
+            if decision_req:
+                leader = decision_req.get("leader", "tuberculosis")
+                evidence = decision_req.get("evidence", "tb_pattern")
+                return (
+                    "Translate the word problem into a native ADJ derived-evidence "
+                    "probability decision program. Use observe statements for the "
+                    "stated findings, derive the requested intermediate evidence "
+                    "with `rule { head: ... when: ... }`, add every stated prior and "
+                    "likelihood-ratio contribution, then query every candidate with "
+                    "`?`. Use ONLY numbers and labels that appear in the question. "
+                    "Do NOT choose the answer, do NOT mention the answer choices, "
+                    "and output ONLY the ADJ program.\n\n"
+                    "Question: Two diagnoses start with prior 0.05 for tuberculosis "
+                    "and 0.25 for bronchitis. Findings are prolonged_cough and "
+                    "night_sweats. Those findings derive tb_pattern. Tb_pattern has "
+                    "likelihood ratio 25 for tuberculosis and 0.5 for bronchitis. "
+                    "Which diagnosis leads?\n"
+                    "Program:\n"
+                    "prior 0.05 for tuberculosis\n"
+                    "prior 0.25 for bronchitis\n"
+                    "contributes 25 from tb_pattern to tuberculosis\n"
+                    "contributes 0.5 from tb_pattern to bronchitis\n"
+                    "observe prolonged_cough\n"
+                    "observe night_sweats\n"
+                    "rule { head: tb_pattern when: prolonged_cough, night_sweats }\n"
+                    "? tuberculosis\n"
+                    "? bronchitis\n\n"
+                    "Question: Two causes start with prior 0.10 for appendicitis "
+                    "and 0.20 for gastroenteritis. Findings are rlq_pain and "
+                    "rebound_tenderness. Those findings derive peritoneal_pattern. "
+                    "Peritoneal_pattern has likelihood ratio 18 for appendicitis and "
+                    "0.8 for gastroenteritis. Which cause leads?\n"
+                    "Program:\n"
+                    "prior 0.10 for appendicitis\n"
+                    "prior 0.20 for gastroenteritis\n"
+                    "contributes 18 from peritoneal_pattern to appendicitis\n"
+                    "contributes 0.8 from peritoneal_pattern to gastroenteritis\n"
+                    "observe rlq_pain\n"
+                    "observe rebound_tenderness\n"
+                    "rule { head: peritoneal_pattern when: rlq_pain, rebound_tenderness }\n"
+                    "? appendicitis\n"
+                    "? gastroenteritis\n\n"
+                    f"Required decision leader: {leader}\n"
+                    f"Required derived evidence: {evidence}\n"
+                    f"Question: {item['stem']}\nProgram:"
+                )
+            return (
+                "Translate the word problem into a native ADJ probability decision "
+                "program. Declare the priors for the candidate hypotheses, add every "
+                "stated likelihood-ratio contribution, observe the stated evidence, "
+                "then query every candidate with `?`. Use ONLY numbers and labels "
+                "that appear in the question. Do NOT choose the answer, do NOT "
+                "mention the answer choices, and output ONLY the ADJ program.\n\n"
+                "Question: Two diagnoses start with prior 0.30 each: bacterial and "
+                "viral. Observed evidence is csf(neutrophilic). That evidence has "
+                "likelihood ratio 15 for bacterial and 1.2 for viral. Which diagnosis "
+                "leads?\n"
+                "Program:\n"
+                "prior 0.30 for bacterial\n"
+                "prior 0.30 for viral\n"
+                "contributes 15 from csf(neutrophilic) to bacterial\n"
+                "contributes 1.2 from csf(neutrophilic) to viral\n"
+                "observe csf(neutrophilic)\n"
+                "? bacterial\n"
+                "? viral\n\n"
+                "Question: Two causes start with prior 0.20 each: asthma and panic. "
+                "Observed evidence is wheeze and inhaler_response. Wheeze has "
+                "likelihood ratio 10 for asthma and 0.8 for panic. Inhaler_response "
+                "has likelihood ratio 6 for asthma and 0.7 for panic. Which cause "
+                "leads?\n"
+                "Program:\n"
+                "prior 0.20 for asthma\n"
+                "prior 0.20 for panic\n"
+                "contributes 10 from wheeze to asthma\n"
+                "contributes 0.8 from wheeze to panic\n"
+                "contributes 6 from inhaler_response to asthma\n"
+                "contributes 0.7 from inhaler_response to panic\n"
+                "observe wheeze\n"
+                "observe inhaler_response\n"
+                "? asthma\n"
+                "? panic\n\n"
+                f"Question: {item['stem']}\nProgram:"
+            )
+        if answer_from.get("type") == "check_outcome":
+            return (
+                "Translate the word problem into a native ADJ constraint "
+                "feasibility program. Declare the variables, add every stated "
+                "constraint, then end with `check`. Use ONLY numbers that appear "
+                "in the question. Do NOT decide feasibility, do NOT mention the "
+                "answer choices, and output ONLY the ADJ program.\n\n"
+                "Question: Is there a value of x with x >= 3 and x <= 5?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain x >= 3\n"
+                "constrain x <= 5\n"
+                "check\n\n"
+                "Question: Is there a value of x with x >= 5 and x <= 3?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain x >= 5\n"
+                "constrain x <= 3\n"
+                "check\n\n"
+                "Question: Are there values x and y with x + y = 10, x >= 4, "
+                "and y >= 4?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "symbol y : scalar\n"
+                "constrain x + y = 10\n"
+                "constrain x >= 4\n"
+                "constrain y >= 4\n"
+                "check\n\n"
+                f"Question: {item['stem']}\nProgram:"
+            )
+        if answer_from.get("type") in {"optimize_value", "optimize_assignment"}:
+            target = (
+                "the optimum value"
+                if answer_from.get("type") == "optimize_value"
+                else f"the requested `{name}` witness value"
+            )
+            return (
+                "Translate the word problem into a native ADJ linear optimization "
+                "program. Declare the variables, add every stated constraint, then "
+                "end with the requested `maximize` or `minimize` objective. Use "
+                f"ONLY numbers that appear in the question. Do NOT compute {target}, "
+                "do NOT mention the answer choices, and output ONLY the ADJ program.\n\n"
+                "Question: Choose x and y with x and y at least 0. The constraints "
+                "are x + y <= 4 and x <= 3. Maximize 3x + 2y. What is the maximum "
+                "value?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "symbol y : scalar\n"
+                "constrain x + y <= 4\n"
+                "constrain x <= 3\n"
+                "constrain x >= 0\n"
+                "constrain y >= 0\n"
+                "maximize 3 * x + 2 * y\n\n"
+                "Question: Choose x and y with x >= 2 and y >= 3. Minimize x + y. "
+                "What is the minimum value?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "symbol y : scalar\n"
+                "constrain x >= 2\n"
+                "constrain y >= 3\n"
+                "minimize x + y\n\n"
+                f"Question: {item['stem']}\nProgram:"
+            )
+        if answer_from.get("type") == "solve_roots":
+            return (
+                "Translate the word problem into a native ADJ solve program that "
+                f"finds all real roots for `{name}`. Use ONLY numbers that appear "
+                "in the question. Do NOT compute the roots, do NOT mention the "
+                "answer choices, and output ONLY the ADJ program.\n\n"
+                "Question: What real values of x solve x^2 = 121?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain x * x = 121\n"
+                "solve for { x }\n\n"
+                "Question: What real values of x solve x^2 = 144?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain latex \"$x^2 = 144$\"\n"
+                "solve for { x }\n\n"
+                "Question: What real values of x solve x^3 - 6x^2 + 11x - 6 = 0?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain x * x * x - 6 * x * x + 11 * x - 6 = 0\n"
+                "solve for { x }\n\n"
+                "Question: What real values of x solve x^4 - 10x^3 + 35x^2 - 50x + 24 = 0?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain x * x * x * x - 10 * x * x * x + 35 * x * x - 50 * x + 24 = 0\n"
+                "solve for { x }\n\n"
+                "Question: What real values of x solve (x - 2)(x - 5) = 0?\n"
+                "Program:\n"
+                "symbol x : scalar\n"
+                "constrain (x - 2) * (x - 5) = 0\n"
+                "solve for { x }\n\n"
+                f"Question: {item['stem']}\nProgram:"
+            )
+        requires = answer_from.get("requires") or []
+        decision_req = next((r for r in requires if r.get("type") == "decision"), None)
+        if decision_req:
+            leader = decision_req.get("leader", "setup_ready")
+            evidence = decision_req.get("evidence", "repeated_groups_problem")
+            return (
+                "Translate the word problem into a native ADJ program. Use observe "
+                "statements for the given quantities, derive the setup premise with "
+                "`rule { head: ... when: ... }`, make the derived premise fire the "
+                f"`{leader}` decision, then solve for `{name}`. Use ONLY numbers that "
+                "appear in the question except structural prior/LR weights. Do NOT "
+                "compute the answer, do NOT mention the answer choices, and output "
+                "ONLY the ADJ program.\n\n"
+                "Question: There are 21 boxes with 22 pencils in each box. How many "
+                "pencils are there?\n"
+                "Program:\n"
+                "prior 0.001 for setup_ready\n"
+                "contributes 1000000 from repeated_groups_problem to setup_ready\n"
+                "observe groups(21)\n"
+                "observe per_group(22)\n"
+                "rule { head: repeated_groups_problem when: groups(21), per_group(22) }\n"
+                "? setup_ready\n"
+                "symbol x : scalar\n"
+                "constrain x = groups * per_group\n"
+                "solve for { x }\n\n"
+                "Question: There are 23 bags with 24 beads in each bag and 25 loose "
+                "beads. How many beads are there altogether?\n"
+                "Program:\n"
+                "prior 0.001 for setup_ready\n"
+                "contributes 1000000 from repeated_groups_with_extra to setup_ready\n"
+                "observe groups(23)\n"
+                "observe per_group(24)\n"
+                "observe extra(25)\n"
+                "rule { head: repeated_groups_with_extra when: groups(23), per_group(24), extra(25) }\n"
+                "? setup_ready\n"
+                "symbol x : scalar\n"
+                "constrain x = groups * per_group + extra\n"
+                "solve for { x }\n\n"
+                f"Required decision leader: {leader}\n"
+                f"Required derived evidence: {evidence}\n"
+                f"Question: {item['stem']}\nProgram:"
+            )
+        return (
+            "Translate the word problem into a native ADJ solve program. Name the "
+            f"requested unknown `{name}`. Use ONLY numbers that appear in the "
+            "question. For a multi-variable system, declare every named unknown and "
+            "include every variable in `solve for { ... }` even if the question asks "
+            "for only one of them; the harness will read the requested variable. Do "
+            "NOT compute the answer, do NOT mention the answer choices, and output "
+            "ONLY the ADJ program.\n\n"
+            "Question: A number plus 5 is 17. What is the number?\n"
+            "Program:\n"
+            "symbol x : scalar\n"
+            "constrain x + 5 = 17\n"
+            "solve for { x }\n\n"
+            "Question: 3 times a number is 24. What is the number?\n"
+            "Program:\n"
+            "symbol x : scalar\n"
+            "constrain 3 * x = 24\n"
+            "solve for { x }\n\n"
+            "Question: Two numbers x and y have sum 10 and difference 2. What is x?\n"
+            "Program:\n"
+            "symbol x : scalar\n"
+            "symbol y : scalar\n"
+            "constrain x + y = 10\n"
+            "constrain x - y = 2\n"
+            "solve for { x, y }\n\n"
+            "Question: For x and y, x + 2y = 23 and x + y = 14. What is y?\n"
+            "Program:\n"
+            "symbol x : scalar\n"
+            "symbol y : scalar\n"
+            "constrain latex \"$x + 2y = 23$\"\n"
+            "constrain latex \"$x + y = 14$\"\n"
+            "solve for { x, y }\n\n"
+            f"Question: {item['stem']}\nProgram:"
+        )
+
+    # Two worked examples (a bare expression and a one-step word problem) give a small
+    # model a fair shot at the FORMAT — we are measuring its decomposition ability, not
+    # its prompt-guessing. The examples carry no overlap with any bank item's numbers.
     return (
-        "Translate the arithmetic in this question into a single formula using only "
-        "the numbers that appear in the question and the operators + - * / and "
-        "parentheses. Do NOT compute the answer — output only the formula.\n\n"
-        f"Question: {item['stem']}\n\nFormula:"
+        "Translate the arithmetic in a question into a SINGLE ADJ expression using ONLY "
+        "the numbers that appear in the question. Prefer + - * / and parentheses; if "
+        "you use LaTeX, wrap it as ADJ syntax like latex \"$5 \\times 12$\". Do NOT "
+        "compute the answer. Output ONLY the expression, on one line.\n\n"
+        "Question: What is 11 * 4 - 6?\nFormula: 11 * 4 - 6\n\n"
+        "Question: A box holds 8 pens. How many pens are in 3 boxes?\nFormula: 3 * 8\n\n"
+        f"Question: {item['stem']}\nFormula:"
     )
 
 
 _FORMULA_OK = re.compile(r"^[\d\s+\-*/().]+$")
+_LABEL = re.compile(r"(?i)^\s*formula\s*[:=]?\s*")
+_PROGRAM_LABEL = re.compile(r"(?i)^\s*program\s*[:=]?\s*")
+_NATIVE_LATEX_EXPR = re.compile(r'^latex\s+"([^"\\]|\\.)*"$')
+_CODE_FENCE = re.compile(r"```(?:adj|adj-lang)?\s*(.*?)```", re.IGNORECASE | re.DOTALL)
+_ADJ_LINE_PREFIXES = (
+    "symbol ",
+    "observe ",
+    "constrain ",
+    "solve ",
+    "check",
+    "minimize ",
+    "maximize ",
+    "let ",
+    "prior ",
+    "contributes ",
+    "interacts ",
+    "rule ",
+    "relate ",
+    "? ",
+)
 
 
 def extract_formula(text: str) -> str | None:
-    """Take the model's reply and keep the first line that is a pure arithmetic
-    expression (digits, operators, parens, spaces). Anything else → None (abstain)."""
-    for line in (text or "").splitlines():
-        line = line.strip().rstrip(".")
-        if line and _FORMULA_OK.match(line):
+    """Take the model's reply and return the first line that is a plain ASCII
+    arithmetic expression — digits, the four operators + - * /, and parentheses.
+    Or a native ADJ `latex "..."` expression. Anything else → None (abstain).
+
+    The only cosmetic step is stripping a leading "Formula:" label the model may echo;
+    we never rewrite the math. A model that wants LaTeX must emit ADJ's native
+    `latex "..."` expression syntax; parsing and solving belong to adj-lang."""
+    for raw in (text or "").splitlines():
+        line = _LABEL.sub("", raw.strip()).rstrip(".")
+        if line and (_FORMULA_OK.match(line) or _NATIVE_LATEX_EXPR.match(line)):
             return line
     return None
 
 
-def load_gen(spec: str):
-    """Build a prompt→text callable from a --model spec. `mlx:<repo>` loads a local
-    MLX model (Apple silicon); `cmd:<shell>` pipes the prompt to a command's stdin and
-    reads its stdout (works with any local inference server / wrapper)."""
+def extract_program(text: str) -> str | None:
+    """Extract a small native ADJ program from a model response.
+
+    For the first solve-backed rung we keep this conservative: prose is ignored,
+    code fences are accepted, and only known ADJ statement prefixes are retained."""
+    if not text:
+        return None
+    m = _CODE_FENCE.search(text)
+    body = m.group(1) if m else text
+    lines: list[str] = []
+    for raw in body.splitlines():
+        line = _PROGRAM_LABEL.sub("", raw.strip())
+        if not line or line.startswith("#") or line.startswith("```"):
+            continue
+        if line.startswith(_ADJ_LINE_PREFIXES):
+            lines.append(line)
+    program = "\n".join(lines).strip()
+    if not program:
+        return None
+    return program + "\n"
+
+
+# Gemma is the canonical base target for the ladder: a small, fully-LOCAL, non-frontier
+# model (no API, runs offline on commodity Apple-silicon via MLX). The headline claim is
+# explicitly "a Haiku- or Gemma-class model + ADJ passes an exam the model alone cannot",
+# so these aliases let `--model gemma` Just Work against the cached instruct checkpoints.
+MODEL_ALIASES = {
+    "gemma": "mlx:mlx-community/gemma-3-4b-it-bf16",      # default base target (4B)
+    "gemma-4b": "mlx:mlx-community/gemma-3-4b-it-bf16",
+    "gemma-1b": "mlx:mlx-community/gemma-3-1b-it-bf16",   # even smaller — wider gap earlier
+}
+
+
+def load_gen(spec: str, *, max_tokens: int = 512):
+    """Build a prompt→text callable from a --model spec. Accepts a Gemma alias
+    (`gemma`, `gemma-1b`, …), `mlx:<repo>` for any local MLX checkpoint (Apple
+    silicon), or `cmd:<shell>` which pipes the prompt to a command's stdin and reads
+    its stdout (works with any local inference server / wrapper, e.g. ollama).
+
+    `max_tokens` matters for MLX model runs on program-backed rungs: native ADJ
+    probability, optimization, and solve programs are multi-line decompositions, so
+    the default must leave enough room for the model to emit a complete program."""
+    spec = MODEL_ALIASES.get(spec, spec)
     if spec.startswith("cmd:"):
         shell = spec[4:]
 
@@ -374,24 +1180,33 @@ def load_gen(spec: str):
         return gen
     if spec.startswith("mlx:"):
         repo = spec[4:]
-        from mlx_lm import generate, load           # lazy: only needed in model mode
+        from mlx_lm import generate, load              # lazy: only needed in model mode
+        from mlx_lm.sample_utils import make_sampler
 
         model, tok = load(repo)
+        sampler = make_sampler(temp=0.0)              # greedy → reproducible runs
 
         def gen(prompt: str) -> str:
-            return generate(model, tok, prompt=prompt, max_tokens=64, verbose=False)
+            msgs = [{"role": "user", "content": prompt}]
+            templated = tok.apply_chat_template(msgs, add_generation_prompt=True, tokenize=False)
+            return generate(model, tok, prompt=templated, max_tokens=max_tokens,
+                            sampler=sampler, verbose=False)
 
         return gen
-    raise SystemExit(f"unknown --model spec {spec!r} (use mlx:<repo> or cmd:<shell>)")
+    raise SystemExit(f"unknown --model spec {spec!r} (use a gemma alias, mlx:<repo>, or cmd:<shell>)")
 
 
 # ----------------------------------------------------------------------------------
 # Driver.
 # ----------------------------------------------------------------------------------
-def run(rung: str, gen) -> Scorecard:
+def run(rung: str, gen, model: str | None = None, limit: int | None = None) -> Scorecard:
     items = json.loads((HERE / rung / "items.json").read_text())["items"]
+    if limit is not None:
+        if limit <= 0:
+            raise ValueError("limit must be positive")
+        items = items[:limit]
     mode = "cached" if gen is None else "model"
-    card = Scorecard(rung, mode)
+    card = Scorecard(rung, mode, model)
     for it in items:
         card.results.append(score_item(it, gen))
     return card
@@ -400,25 +1215,41 @@ def run(rung: str, gen) -> Scorecard:
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="ADJ-LADDER two-arm scoreboard")
     ap.add_argument("rung", help="rung directory name, e.g. rung0_arithmetic")
-    ap.add_argument("--model", help="model spec: mlx:<repo> or cmd:<shell> (omit for cached engine-only run)")
+    ap.add_argument("--model", help="model spec: a gemma alias (gemma, gemma-1b), mlx:<repo>, or cmd:<shell> (omit for cached engine-only run)")
+    ap.add_argument("--max-tokens", type=int, default=512, help="maximum MLX generation tokens for model decompositions (default: 512)")
+    ap.add_argument("--limit", type=int, help="score only the first N items; useful for real local model smoke runs")
+    ap.add_argument("--output", help="write the scorecard to this path instead of the default ladder-scorecard*.json file")
     ap.add_argument("--quiet", action="store_true", help="emit scorecard JSON only")
     args = ap.parse_args(argv)
+    if args.max_tokens <= 0:
+        ap.error("--max-tokens must be positive")
+    if args.limit is not None and args.limit <= 0:
+        ap.error("--limit must be positive")
 
-    gen = load_gen(args.model) if args.model else None
-    card = run(args.rung, gen)
+    gen = load_gen(args.model, max_tokens=args.max_tokens) if args.model else None
+    card = run(args.rung, gen, args.model, limit=args.limit)
     summary = card.summary()
 
     scorecard = {
         "summary": summary,
-        "results": [
-            {"id": r.item_id, "gold": r.gold,
-             "arm_a": r.arm_a, "arm_a_outcome": r.arm_a_outcome,
-             "arm_b": r.arm_b, "arm_b_outcome": r.arm_b_outcome,
-             "bucket": r.bucket}
-            for r in card.results
-        ],
+        "results": [result_to_json(r) for r in card.results],
     }
-    (HERE / "ladder-scorecard.json").write_text(json.dumps(scorecard, indent=2) + "\n")
+    if card.mode == "model":
+        scorecard["run_config"] = {"max_tokens": args.max_tokens}
+    if args.limit is not None:
+        scorecard.setdefault("run_config", {})["limit"] = args.limit
+    # Write per-mode/model files so a cached CI run never clobbers a committed two-arm
+    # headline: cached → ladder-scorecard.json; model → ladder-scorecard.<model>.json.
+    if args.output:
+        out_path = Path(args.output)
+    else:
+        if card.mode == "cached":
+            out_name = "ladder-scorecard.json"
+        else:
+            slug = re.sub(r"[^a-z0-9.-]+", "-", args.model.lower()).strip("-")
+            out_name = f"ladder-scorecard.{slug}.json"
+        out_path = HERE / out_name
+    out_path.write_text(json.dumps(scorecard, indent=2) + "\n")
 
     if not args.quiet:
         _pretty(card, summary)

@@ -1,8 +1,8 @@
 use spice_engine::{
-    format_corner_noise_table, format_noise_table, noise_ac, noise_ac_corners,
-    noise_ac_corners_parallel, noise_ac_default, Capacitor, Circuit, CornerOverride, CornerSpec,
-    CurrentSource, Element, Mosfet, MosfetLevel1Params, MosfetType, NoiseType, Resistor,
-    SpiceError, VoltageSource,
+    device_model_noise_audit_fixtures, format_corner_noise_table, format_noise_table, noise_ac,
+    noise_ac_corners, noise_ac_corners_parallel, noise_ac_default, Capacitor, Circuit,
+    CornerOverride, CornerSpec, CurrentSource, Element, Mosfet, MosfetLevel1Params, MosfetType,
+    NoiseType, Resistor, SpiceError, VoltageSource,
 };
 
 const BOLTZMANN: f64 = 1.380_649e-23;
@@ -383,6 +383,68 @@ fn noise_ac_includes_mosfet_channel_thermal_noise() {
         expected_source_psd * 1_000.0_f64.powi(2),
         1.0e-27,
     );
+}
+
+#[test]
+fn device_model_noise_audit_fixtures_run_reference_noise_points() {
+    let fixtures = device_model_noise_audit_fixtures().unwrap();
+    assert_eq!(
+        fixtures
+            .iter()
+            .map(|fixture| fixture.name.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "diode-shot-noise",
+            "bjt-shot-noise",
+            "jfet-channel-noise",
+            "mos-level1-channel-noise"
+        ]
+    );
+
+    for fixture in &fixtures {
+        let result = noise_ac(
+            &fixture.circuit,
+            &fixture.output_node,
+            &fixture.input_source,
+            &[fixture.frequency_hz],
+            300.0,
+        )
+        .unwrap();
+        let entry = result.points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == fixture.expected_noise_element)
+            .expect("expected model noise entry");
+        assert_eq!(entry.noise_type, fixture.expected_noise_type);
+        assert!(
+            fixture.expected_source_psd_min <= entry.source_psd
+                && entry.source_psd <= fixture.expected_source_psd_max,
+            "{} expected {} <= source {} <= {}",
+            fixture.name,
+            fixture.expected_source_psd_min,
+            entry.source_psd,
+            fixture.expected_source_psd_max
+        );
+        assert!(
+            fixture.expected_output_psd_min <= entry.output_psd
+                && entry.output_psd <= fixture.expected_output_psd_max,
+            "{} expected {} <= output {} <= {}",
+            fixture.name,
+            fixture.expected_output_psd_min,
+            entry.output_psd,
+            fixture.expected_output_psd_max
+        );
+        assert!(fixture.deck_lines[0].starts_with("* device-model noise fixture:"));
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line.starts_with(".model ")));
+        assert!(fixture
+            .deck_lines
+            .iter()
+            .any(|line| line.starts_with(".noise ")));
+        assert!(!fixture.noise_behavior.is_empty());
+    }
 }
 
 #[test]

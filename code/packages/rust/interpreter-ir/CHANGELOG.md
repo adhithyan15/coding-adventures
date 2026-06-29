@@ -1,5 +1,30 @@
 # Changelog — interpreter-ir
 
+## [0.10.0] — 2026-06-28 (LANG-FULL E4 — string opcode classification truth-up)
+
+The shared opcode taxonomy now covers the full E4 string surface that later
+backend/frontend slices have already implemented and matrix-proven:
+
+- `is_string_op(op)` recognises `str_slice` and `str_cmp` in addition to the
+  original literal/length/index/concat/equality/output ops.
+- `str_slice` and `str_cmp` are value-producing, so generic passes no longer
+  miss them when scanning for destination-producing string work.
+- `str_slice` is marked allocating, matching the immutable string contract: it
+  produces a fresh string value just like `str_concat`.
+
+## [0.9.0] — 2026-06-27 (LANG-FULL E4 — string op taxonomy, VM slice)
+
+Defines the shared string type helper and six E4 string opcodes for downstream
+passes to classify before backend lowering lands.
+
+- New **`STR_TYPE`** constant and `is_str_type(type_hint)` helper for the
+  `"str"` scalar type.
+- New **`is_string_op(op)`** predicate covering `str_const`, `str_len`,
+  `str_index`, `str_concat`, `str_eq`, and `print_str`.
+- `str_const`/`str_len`/`str_index`/`str_concat`/`str_eq` are value-producing;
+  `print_str` is side-effecting; `str_concat` is marked allocating because it
+  creates a fresh immutable string value.
+
 ## [0.8.0] — 2026-06-22 (LANG-FULL E8 — numeric conversion opcodes, PR-1)
 
 Defines the three `integer`↔`real` conversion opcodes in the shared op-classifier

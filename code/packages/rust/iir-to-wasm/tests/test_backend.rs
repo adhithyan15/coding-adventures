@@ -17,7 +17,7 @@
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_wasm::{encode_module, lower_iir_to_wasm, validate_for_wasm, IIRWasmConfig, IIRWasmError};
-use wasm_types::{ExternalKind, ValueType};
+use wasm_types::{ExternalKind, ImportTypeInfo, ValueType};
 
 // ---------------------------------------------------------------------------
 // Helper builders
@@ -1617,6 +1617,225 @@ fn g2_unknown_builtin_still_rejected() {
     let errs = validate_for_wasm(&m);
     assert!(!errs.is_empty(),
         "G2: unknown builtin must still be rejected; got no errors");
+}
+
+#[test]
+fn e4_string_print_lowers_to_data_memory_and_host_import() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("HELLO".into())],
+            "str",
+        ),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_const + print_str should lower");
+    let import = wm
+        .imports
+        .iter()
+        .find(|i| i.module_name == "env" && i.name == "__print_str")
+        .expect("E4: print_str must inject env.__print_str");
+    let ImportTypeInfo::Function(type_idx) = import.type_info else {
+        panic!("E4: __print_str import should be a function");
+    };
+    assert_eq!(wm.types[type_idx as usize].params, vec![ValueType::I32, ValueType::I32]);
+    assert_eq!(wm.types[type_idx as usize].results, Vec::<ValueType>::new());
+    assert_eq!(wm.memories.len(), 1, "E4: string bytes live in linear memory");
+    assert_eq!(wm.data.len(), 1, "E4: literal should be emitted as one data segment");
+    assert_eq!(wm.data[0].data, b"HELLO");
+    assert!(
+        wm.code[0].code.contains(&0x10),
+        "E4: function body should call env.__print_str"
+    );
+
+    let bytes = encode_module(&wm).expect("encode");
+    assert_eq!(&bytes[..4], &[0x00, 0x61, 0x73, 0x6D], "wasm magic prefix");
+}
+
+#[test]
+fn e4_string_concat_len_lowers_to_literal_length() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("a".into()),
+            vec![Operand::Str("AB".into())],
+            "str",
+        ),
+        IIRInstr::new(
+            "str_const",
+            Some("b".into()),
+            vec![Operand::Str("CDE".into())],
+            "str",
+        ),
+        IIRInstr::new("str_concat", Some("s".into()), vec![
+            Operand::Var("a".into()),
+            Operand::Var("b".into()),
+        ], "str"),
+        IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(), "E4: str_concat + str_len should validate: {errs:?}");
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_concat + str_len should lower");
+    assert_eq!(
+        wm.data[0].data,
+        b"ABCDEABCDE",
+        "E4: string data should include both literals plus the concatenated literal"
+    );
+    assert!(
+        wm.code[0].code.windows(2).any(|w| w == [0x42, 0x05]),
+        "E4: str_len over literal concat should emit i64.const 5"
+    );
+}
+
+#[test]
+fn e4_string_cmp_lowers_to_literal_ordering() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("a".into()),
+            vec![Operand::Str("ALPHA".into())],
+            "str",
+        ),
+        IIRInstr::new(
+            "str_const",
+            Some("b".into()),
+            vec![Operand::Str("BETA".into())],
+            "str",
+        ),
+        IIRInstr::new("str_cmp", Some("ord".into()), vec![
+            Operand::Var("a".into()),
+            Operand::Var("b".into()),
+        ], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(), "E4: str_cmp should validate: {errs:?}");
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("E4: str_cmp should lower");
+    assert!(
+        wm.code[0].code.windows(2).any(|w| w == [0x42, 0x7f]),
+        "E4: str_cmp over ALPHA/BETA should emit i64.const -1"
+    );
+}
+
+#[test]
+fn e4_string_slice_index_lowers_to_literal_byte_load() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("ABCDE".into())],
+            "str",
+        ),
+        IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+        IIRInstr::new(
+            "str_slice",
+            Some("sub".into()),
+            vec![
+                Operand::Var("s".into()),
+                Operand::Var("start".into()),
+                Operand::Var("end".into()),
+            ],
+            "str",
+        ),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new(
+            "str_index",
+            Some("b".into()),
+            vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+            "i64",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(
+        errs.is_empty(),
+        "E4: str_slice + str_index should validate: {errs:?}"
+    );
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_slice + str_index should lower");
+    assert_eq!(
+        wm.data[0].data, b"ABCDEBCD",
+        "E4: string data should contain the source and sliced literal"
+    );
+    assert!(
+        wm.code[0].code.contains(&0x2D),
+        "E4: str_index over a slice should still emit i32.load8_u"
+    );
+}
+
+#[test]
+fn e4_string_index_lowers_to_literal_byte_load() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("ABC".into())],
+            "str",
+        ),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("str_index", Some("b".into()), vec![
+            Operand::Var("s".into()),
+            Operand::Var("i".into()),
+        ], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(), "E4: str_index should validate: {errs:?}");
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_index should lower");
+    assert_eq!(wm.data[0].data, b"ABC", "E4: string data should contain ABC");
+    assert!(
+        wm.code[0].code.contains(&0x2D),
+        "E4: str_index should emit i32.load8_u"
+    );
+    assert!(
+        wm.code[0].code.contains(&0xAD),
+        "E4: i64 str_index result should zero-extend the loaded byte"
+    );
+}
+
+#[test]
+fn e4_string_print_coexists_with_putchar_newline_import() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("HELLO".into())],
+            "str",
+        ),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("const", Some("nl".into()), vec![Operand::Int(10)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![Operand::Var("putchar".into()), Operand::Var("nl".into())],
+            "void",
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: string print plus putchar should lower");
+    assert!(
+        wm.imports.iter().any(|i| i.module_name == "env" && i.name == "__print_str"),
+        "expected env.__print_str import"
+    );
+    assert!(
+        wm.imports.iter().any(|i| i.module_name == "env" && i.name == "putchar"),
+        "expected env.putchar import"
+    );
+    assert_eq!(wm.data[0].data, b"HELLO");
 }
 
 // ---------------------------------------------------------------------------

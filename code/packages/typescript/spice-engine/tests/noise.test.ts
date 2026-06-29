@@ -4,6 +4,7 @@ import {
   SpiceError,
   capacitor,
   currentSource,
+  deviceModelNoiseAuditFixtures,
   formatCornerNoiseTable,
   formatNoiseTable,
   mosfet,
@@ -115,6 +116,39 @@ describe("noiseAc", () => {
     expect(entry?.noiseType).toBe("thermal");
     expect(entry?.sourcePsd).toBeCloseTo(expectedSourcePsd, 30);
     expect(entry?.outputPsd).toBeCloseTo(expectedSourcePsd * 1_000.0 ** 2, 30);
+  });
+
+  it("runs device model noise audit fixtures as reference noise points", () => {
+    const fixtures = deviceModelNoiseAuditFixtures();
+    expect(fixtures.map((fixture) => fixture.name)).toStrictEqual([
+      "diode-shot-noise",
+      "bjt-shot-noise",
+      "jfet-channel-noise",
+      "mos-level1-channel-noise",
+    ]);
+
+    for (const fixture of fixtures) {
+      const result = noiseAc(
+        fixture.circuit,
+        fixture.outputNode,
+        fixture.inputSource,
+        [fixture.frequencyHz],
+        300.0,
+      );
+      const entry = result.points[0]?.entries.find(
+        (candidate) => candidate.elementName === fixture.expectedNoiseElement,
+      );
+      expect(entry).toBeDefined();
+      expect(entry?.noiseType).toBe(fixture.expectedNoiseType);
+      expect(entry!.sourcePsd).toBeGreaterThanOrEqual(fixture.expectedSourcePsdMin);
+      expect(entry!.sourcePsd).toBeLessThanOrEqual(fixture.expectedSourcePsdMax);
+      expect(entry!.outputPsd).toBeGreaterThanOrEqual(fixture.expectedOutputPsdMin);
+      expect(entry!.outputPsd).toBeLessThanOrEqual(fixture.expectedOutputPsdMax);
+      expect(fixture.deckLines[0]!.startsWith("* device-model noise fixture:")).toBe(true);
+      expect(fixture.deckLines.some((line) => line.startsWith(".model "))).toBe(true);
+      expect(fixture.deckLines.some((line) => line.startsWith(".noise "))).toBe(true);
+      expect(fixture.noiseBehavior.length).toBeGreaterThan(0);
+    }
   });
 
   it("uses default logarithmic frequencies", () => {

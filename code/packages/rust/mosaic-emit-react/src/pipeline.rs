@@ -91,10 +91,10 @@
 use std::collections::HashMap;
 use std::fmt::Write as _;
 
-use mosmodel_compiler::{
-    EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
-};
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use mosmodel_compiler::{
+    EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
+};
 use mosstyle_compiler::{StyleDef, StyleProp};
 
 // =====================================================================
@@ -122,10 +122,7 @@ pub struct PipelineEmitResult {
 pub enum PipelineEmitError {
     /// The mosmodel component name and the moslayout component name disagree.
     /// This is almost always a manifest authoring error.
-    ComponentNameMismatch {
-        mosmodel: String,
-        moslayout: String,
-    },
+    ComponentNameMismatch { mosmodel: String, moslayout: String },
     /// A slot name fails the safe-JS-identifier check after camelCase conversion.
     /// Should never happen in practice because mosmodel grammar restricts slot
     /// names to kebab-case `[a-z][a-z0-9]*(-[a-z][a-z0-9]*)*`, but we double
@@ -145,7 +142,10 @@ pub enum PipelineEmitError {
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            PipelineEmitError::ComponentNameMismatch { mosmodel, moslayout } => write!(
+            PipelineEmitError::ComponentNameMismatch {
+                mosmodel,
+                moslayout,
+            } => write!(
                 f,
                 "component name mismatch: mosmodel says '{mosmodel}', moslayout says '{moslayout}'"
             ),
@@ -187,8 +187,8 @@ impl std::error::Error for PipelineEmitError {}
 /// implicitly so existing callers continue to compile.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EmitOptions {
-    /// Also emit `package.json`, `vite.config.ts`, `index.html`,
-    /// `src/main.tsx`, `README.md` alongside the component TSX. The
+    /// Also emit `package.json`, `tsconfig.json`, `vite.config.ts`,
+    /// `index.html`, `src/main.tsx`, `README.md` alongside the component TSX. The
     /// emitted shell is a Vite + React-SWC project — author runs
     /// `npm install && npm run dev` to see the component on
     /// `http://localhost:5173`.
@@ -246,6 +246,7 @@ impl Default for EmitOptions {
 pub struct ProjectFiles {
     pub package_json: String,
     pub vite_config: String,
+    pub tsconfig_json: String,
     pub index_html: String,
     pub main_tsx: String,
     pub readme: String,
@@ -302,7 +303,7 @@ pub fn from_pipeline_with_options(
     let component = from_pipeline(interface, layout, style)?;
 
     let project = if options.emit_project {
-        Some(build_react_project_files(&component.component_name, options)?)
+        Some(build_react_project_files(interface, options)?)
     } else {
         None
     };
@@ -314,11 +315,12 @@ pub fn from_pipeline_with_options(
     })
 }
 
-/// Build the five Vite-shell side files for a single component.
+/// Build the Vite-shell side files for a single component.
 fn build_react_project_files(
-    name: &str,
+    interface: &MosmodelComponent,
     options: &EmitOptions,
 ) -> Result<ProjectFiles, ProjectShellError> {
+    let name = &interface.component;
     let npm_name = match &options.package_name {
         Some(p) => p.clone(),
         None => format!("mosaic-{}", pascal_to_kebab_for_npm(name)),
@@ -330,8 +332,9 @@ fn build_react_project_files(
     Ok(ProjectFiles {
         package_json: build_package_json(&npm_name, options),
         vite_config: build_vite_config(),
+        tsconfig_json: build_tsconfig_json(),
         index_html: build_index_html(name),
-        main_tsx: build_main_tsx(name),
+        main_tsx: build_main_tsx(name, &interface.slots),
         readme: build_react_readme(&npm_name, name),
     })
 }
@@ -391,21 +394,79 @@ fn build_vite_config() -> String {
     )
 }
 
+fn build_tsconfig_json() -> String {
+    format!(
+        "{BANNER_TS}{{\n  \"compilerOptions\": {{\n    \"target\": \"ES2020\",\n    \"useDefineForClassFields\": true,\n    \"lib\": [\"DOM\", \"DOM.Iterable\", \"ES2020\"],\n    \"allowJs\": false,\n    \"skipLibCheck\": true,\n    \"esModuleInterop\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"strict\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"Bundler\",\n    \"resolveJsonModule\": true,\n    \"isolatedModules\": true,\n    \"noEmit\": true,\n    \"jsx\": \"react-jsx\"\n  }},\n  \"include\": [\"*.ts\", \"*.tsx\", \"src/**/*.ts\", \"src/**/*.tsx\"]\n}}\n"
+    )
+}
+
 fn build_index_html(component_name: &str) -> String {
     format!(
         "<!DOCTYPE html>\n{BANNER_HTML}<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>{component_name}</title>\n  </head>\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/src/main.tsx\"></script>\n  </body>\n</html>\n"
     )
 }
 
-fn build_main_tsx(component_name: &str) -> String {
+fn build_main_tsx(component_name: &str, slots: &[SlotDecl]) -> String {
+    let fallback_props = build_fallback_props_object(slots);
     format!(
-        "{BANNER_TS}import {{ StrictMode }} from \"react\";\nimport {{ createRoot }} from \"react-dom/client\";\nimport {{ {component_name} }} from \"../{component_name}\";\n\nconst rootEl = document.getElementById(\"root\");\nif (rootEl === null) {{\n  throw new Error(\"#root not found in index.html\");\n}}\n\ncreateRoot(rootEl).render(\n  <StrictMode>\n    <{component_name} dispatch={{(ev) => console.log(\"event:\", ev)}} />\n  </StrictMode>\n);\n"
+        "{BANNER_TS}import {{ StrictMode, useCallback, useEffect, useState, type ComponentProps }} from \"react\";\nimport {{ createRoot }} from \"react-dom/client\";\nimport {{ {component_name} }} from \"../{component_name}\";\n\ntype RootComponentProps = ComponentProps<typeof {component_name}>;\ntype RootSlotProps = Omit<RootComponentProps, \"dispatch\">;\ntype RootEvent = Parameters<RootComponentProps[\"dispatch\"]>[0];\ntype HostPropsResponse = Partial<RootSlotProps> | {{ props?: Partial<RootSlotProps> }} | void;\ntype MosaicHost = {{\n  getProps?: (request: {{ component: string }}) => HostPropsResponse | Promise<HostPropsResponse>;\n  handleEvent?: (request: {{ component: string; event: RootEvent }}) => HostPropsResponse | Promise<HostPropsResponse>;\n}};\n\ndeclare global {{\n  interface Window {{\n    mosaicHost?: MosaicHost;\n  }}\n}}\n\nconst fallbackProps = {fallback_props} satisfies RootSlotProps;\n\nfunction normalizeHostProps(response: HostPropsResponse): Partial<RootSlotProps> | undefined {{\n  if (response === undefined || response === null) {{\n    return undefined;\n  }}\n  if (\"props\" in response && response.props !== undefined) {{\n    return response.props;\n  }}\n  return response as Partial<RootSlotProps>;\n}}\n\nfunction Root() {{\n  const [props, setProps] = useState<RootSlotProps>(fallbackProps);\n\n  const refreshProps = useCallback(async () => {{\n    const response = await window.mosaicHost?.getProps?.({{ component: \"{component_name}\" }});\n    const nextProps = normalizeHostProps(response);\n    if (nextProps !== undefined) {{\n      setProps(current => ({{ ...current, ...nextProps }}));\n    }}\n  }}, []);\n\n  useEffect(() => {{\n    void refreshProps();\n  }}, [refreshProps]);\n\n  const dispatch = useCallback(\n    async (event: RootEvent) => {{\n      const response = await window.mosaicHost?.handleEvent?.({{ component: \"{component_name}\", event }});\n      const nextProps = normalizeHostProps(response);\n      if (nextProps !== undefined) {{\n        setProps(current => ({{ ...current, ...nextProps }}));\n      }} else {{\n        await refreshProps();\n      }}\n    }},\n    [refreshProps],\n  );\n\n  return <{component_name} {{...props}} dispatch={{dispatch}} />;\n}}\n\nconst rootEl = document.getElementById(\"root\");\nif (rootEl === null) {{\n  throw new Error(\"#root not found in index.html\");\n}}\n\ncreateRoot(rootEl).render(\n  <StrictMode>\n    <Root />\n  </StrictMode>\n);\n"
     )
+}
+
+fn build_fallback_props_object(slots: &[SlotDecl]) -> String {
+    let mut out = "{\n".to_string();
+    for slot in slots {
+        let field = to_camel_case_first_lower(&slot.name);
+        let value = sample_ts_value_for_slot(slot);
+        writeln!(out, "  {field}: {value},").unwrap();
+    }
+    out.push('}');
+    out
+}
+
+fn sample_ts_value_for_slot(slot: &SlotDecl) -> String {
+    match &slot.default {
+        Some(SlotDefault::Text(value)) => {
+            format!("\"{}\"", escape_for_jsx_double_quoted(value))
+        }
+        Some(SlotDefault::Number(value)) if value.is_finite() => format!("{value}"),
+        Some(SlotDefault::Number(_)) => "0".to_string(),
+        Some(SlotDefault::Bool(value)) => value.to_string(),
+        None => sample_ts_value_for_slot_type(&slot.r#type, &slot.name),
+    }
+}
+
+fn sample_ts_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> String {
+    match slot_type {
+        SlotType::Text => format!("\"Sample {}\"", kebab_to_pascal_case_for_label(slot_name)),
+        SlotType::Number => "0".to_string(),
+        SlotType::Bool => "false".to_string(),
+        SlotType::Image => "\"sample-image\"".to_string(),
+        SlotType::Color => "\"#808080\"".to_string(),
+        SlotType::Node | SlotType::Component(_) => "null".to_string(),
+        SlotType::List(_) => "[]".to_string(),
+    }
+}
+
+fn kebab_to_pascal_case_for_label(s: &str) -> String {
+    let mut out = String::new();
+    for part in s.split('-').filter(|part| !part.is_empty()) {
+        let mut chars = part.chars();
+        if let Some(first) = chars.next() {
+            out.push(first.to_ascii_uppercase());
+            out.extend(chars);
+        }
+    }
+    if out.is_empty() {
+        "Value".to_string()
+    } else {
+        out
+    }
 }
 
 fn build_react_readme(npm_name: &str, component_name: &str) -> String {
     format!(
-        "{BANNER_MD}# {component_name} — Vite + React shell\n\nAuto-generated by `mosaic-compile --backend react --emit-project`.\n\n## Prerequisites\n\n- Node.js ≥ 18 (run `node --version` to check).\n- npm or pnpm or yarn (Node ships with npm).\n\n## Run\n\n```sh\nnpm install\nnpm run dev\n```\n\nThen open <http://localhost:5173>.\n\n## Build for production\n\n```sh\nnpm run build\nnpm run preview\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.tsx` | The Mosaic-compiled component. |\n| `package.json` | npm package manifest. Pinned versions per UI32 spec §3.6.3. |\n| `vite.config.ts` | Vite 5 + React-SWC plugin. |\n| `index.html` | Vite root document. |\n| `src/main.tsx` | Mounts `<{component_name}>` into `#root`. |\n| `README.md` | This file. |\n\nnpm package name: `{npm_name}`.\n\n## Editing\n\nEvery file in this directory except `{component_name}.tsx` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+        "{BANNER_MD}# {component_name} — Vite + React shell\n\nAuto-generated by `mosaic-compile --backend react --emit-project`.\n\n## Prerequisites\n\n- Node.js ≥ 18 (run `node --version` to check).\n- npm or pnpm or yarn (Node ships with npm).\n\n## Run\n\n```sh\nnpm install\nnpm run dev\n```\n\nThen open <http://localhost:5173>.\n\n## Host integration\n\n`src/main.tsx` reads props from `window.mosaicHost.getProps` and sends events to `window.mosaicHost.handleEvent`. If no host is installed, it uses deterministic sample props for every slot.\n\n## Build for production\n\n```sh\nnpm run build\nnpm run preview\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.tsx` | The Mosaic-compiled component. |\n| `package.json` | npm package manifest. Pinned versions per UI32 spec §3.6.3. |\n| `tsconfig.json` | TypeScript config used by `npm run build`. |\n| `vite.config.ts` | Vite 5 + React-SWC plugin. |\n| `index.html` | Vite root document. |\n| `src/main.tsx` | Mounts `<{component_name}>` into `#root` through `window.mosaicHost` when available. |\n| `README.md` | This file. |\n\nnpm package name: `{npm_name}`.\n\n## Editing\n\nEvery file in this directory except `{component_name}.tsx` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
     )
 }
 
@@ -458,8 +519,8 @@ pub fn from_pipeline(
     // form is mandatory. That introduces a hard dependency on the
     // `React` namespace identifier, so a layout containing any For
     // must trigger the import even when the interface itself wouldn't.
-    let needs_react_import = interface_uses_react_namespace(interface)
-        || layout_contains_for(&layout.root);
+    let needs_react_import =
+        interface_uses_react_namespace(interface) || layout_contains_for(&layout.root);
 
     // UI29-1 — `HostDialog` lowers to React's native `<dialog>` with a
     // `useRef` + `useEffect` pair that drives `showModal()`/`show()`/`close()`
@@ -474,11 +535,9 @@ pub fn from_pipeline(
     // its own `useRef<HTMLInputElement>` + `useEffect` setting
     // `el.indeterminate = !!<slot>` on every render. Same pattern
     // as `dialog_nodes` for `HostDialog`.
-    let indeterminate_checkbox_nodes =
-        collect_indeterminate_checkbox_nodes(&layout.root);
+    let indeterminate_checkbox_nodes = collect_indeterminate_checkbox_nodes(&layout.root);
 
-    let needs_hook_imports =
-        !dialog_nodes.is_empty() || !indeterminate_checkbox_nodes.is_empty();
+    let needs_hook_imports = !dialog_nodes.is_empty() || !indeterminate_checkbox_nodes.is_empty();
 
     writeln!(out, "// Auto-generated by mosaic-emit-react. Do not edit.").unwrap();
     if needs_react_import {
@@ -663,7 +722,13 @@ fn emit_function(
     }
 
     writeln!(out, "  return (").unwrap();
-    out.push_str(&emit_jsx_tree(layout_root, 4, part_styles, dialog_nodes, indeterminate_checkbox_nodes)?);
+    out.push_str(&emit_jsx_tree(
+        layout_root,
+        4,
+        part_styles,
+        dialog_nodes,
+        indeterminate_checkbox_nodes,
+    )?);
     writeln!(out, "  );").unwrap();
     writeln!(out, "}}").unwrap();
     // Suppress unused-variable warnings the compiler would emit for slots
@@ -720,7 +785,13 @@ fn emit_jsx_tree(
     // `emit_function`). Routed before the generic primitive flow so we
     // never fall through to the unknown-primitive arm.
     if node.tag == "HostDialog" {
-        return emit_host_dialog_jsx(node, indent, part_styles, dialog_nodes, indeterminate_checkbox_nodes);
+        return emit_host_dialog_jsx(
+            node,
+            indent,
+            part_styles,
+            dialog_nodes,
+            indeterminate_checkbox_nodes,
+        );
     }
 
     // The `Input` primitive (UI25) has its own lowering rules — multiline
@@ -795,7 +866,13 @@ fn emit_jsx_tree(
     // cross-browser tooltip surface — richer tooltips are a v2
     // feature per UI29-4 §3.2.
     if node.tag == "HostTooltip" {
-        return emit_host_tooltip_jsx(node, indent, part_styles, dialog_nodes, indeterminate_checkbox_nodes);
+        return emit_host_tooltip_jsx(
+            node,
+            indent,
+            part_styles,
+            dialog_nodes,
+            indeterminate_checkbox_nodes,
+        );
     }
 
     // UI29-4 — `HostNumberInput` lowers to `<input type="number"
@@ -824,7 +901,13 @@ fn emit_jsx_tree(
     // → HTML-sub-element mapping, so HostTable gets its own dedicated
     // emitter.
     if node.tag == "HostTable" {
-        return emit_host_table_jsx(node, indent, part_styles, dialog_nodes, indeterminate_checkbox_nodes);
+        return emit_host_table_jsx(
+            node,
+            indent,
+            part_styles,
+            dialog_nodes,
+            indeterminate_checkbox_nodes,
+        );
     }
 
     // UI29 §2.1 — `HostTable*` structural sub-tags (`HostTableColGroup`,
@@ -851,7 +934,13 @@ fn emit_jsx_tree(
     // `.map(...)` JSX expression. Routed before the generic primitive flow
     // because `For` is not a visual element.
     if node.tag == "For" {
-        return emit_for_jsx(node, indent, part_styles, dialog_nodes, indeterminate_checkbox_nodes);
+        return emit_for_jsx(
+            node,
+            indent,
+            part_styles,
+            dialog_nodes,
+            indeterminate_checkbox_nodes,
+        );
     }
 
     // UI29 §3.2 — `If` is a control-flow meta-primitive. When reached via
@@ -862,7 +951,14 @@ fn emit_jsx_tree(
     // `emit_children_jsx_with_control_flow` when an `If` is followed by an
     // `Else` sibling.
     if node.tag == "If" {
-        return emit_if_jsx(node, None, indent, part_styles, dialog_nodes, indeterminate_checkbox_nodes);
+        return emit_if_jsx(
+            node,
+            None,
+            indent,
+            part_styles,
+            dialog_nodes,
+            indeterminate_checkbox_nodes,
+        );
     }
 
     // UI29 §3.2 — a standalone `Else` (no preceding `If` in the same
@@ -1021,12 +1117,25 @@ fn emit_children_jsx_with_control_flow(
         // them and emit a ternary.
         if child.tag == "If" {
             let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
-            out.push_str(&emit_if_jsx(child, else_node, indent, part_styles, dialog_nodes, indeterminate_checkbox_nodes)?);
+            out.push_str(&emit_if_jsx(
+                child,
+                else_node,
+                indent,
+                part_styles,
+                dialog_nodes,
+                indeterminate_checkbox_nodes,
+            )?);
             // Skip the Else we just consumed, if any.
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
         }
-        out.push_str(&emit_jsx_tree(child, indent, part_styles, dialog_nodes, indeterminate_checkbox_nodes)?);
+        out.push_str(&emit_jsx_tree(
+            child,
+            indent,
+            part_styles,
+            dialog_nodes,
+            indeterminate_checkbox_nodes,
+        )?);
         i += 1;
     }
     Ok(out)
@@ -1084,9 +1193,7 @@ fn emit_for_jsx(
         .iter()
         .find(|p| p.name == "each")
         .ok_or_else(|| {
-            PipelineEmitError::UnsafeSlotName(
-                "For: missing required prop `each:`".to_string(),
-            )
+            PipelineEmitError::UnsafeSlotName("For: missing required prop `each:`".to_string())
         })?;
     let collection_expr: String = match &each_prop.value {
         LayoutPropValue::SlotRef(slot) => {
@@ -1170,10 +1277,7 @@ fn emit_for_jsx(
     // silent-misbehave, so the bug surfaces immediately.
     let (params, key_source) = match &index_ident {
         Some(idx) => (format!("({as_ident}, {idx})"), idx.clone()),
-        None => (
-            format!("({as_ident}, _idx)"),
-            "_idx".to_string(),
-        ),
+        None => (format!("({as_ident}, _idx)"), "_idx".to_string()),
     };
 
     // Emit the body. Always wrap in a keyed React.Fragment so React's
@@ -1232,9 +1336,7 @@ fn emit_if_jsx(
         .iter()
         .find(|p| p.name == "when")
         .ok_or_else(|| {
-            PipelineEmitError::UnsafeSlotName(
-                "If: missing required prop `when:`".to_string(),
-            )
+            PipelineEmitError::UnsafeSlotName("If: missing required prop `when:`".to_string())
         })?;
     let cond_expr: String = match &when_prop.value {
         LayoutPropValue::SlotRef(slot) => {
@@ -1255,12 +1357,23 @@ fn emit_if_jsx(
     let branch_indent = indent + 2;
     let branch_pad = " ".repeat(branch_indent);
 
-    let then_jsx = emit_branch_jsx(&if_node.children, branch_indent + 2, part_styles, dialog_nodes, indeterminate_checkbox_nodes)?;
+    let then_jsx = emit_branch_jsx(
+        &if_node.children,
+        branch_indent + 2,
+        part_styles,
+        dialog_nodes,
+        indeterminate_checkbox_nodes,
+    )?;
 
     match else_node {
         Some(en) => {
-            let else_jsx =
-                emit_branch_jsx(&en.children, branch_indent + 2, part_styles, dialog_nodes, indeterminate_checkbox_nodes)?;
+            let else_jsx = emit_branch_jsx(
+                &en.children,
+                branch_indent + 2,
+                part_styles,
+                dialog_nodes,
+                indeterminate_checkbox_nodes,
+            )?;
             let mut out = format!("{pad}{{{cond_expr} ? (\n");
             out.push_str(&then_jsx);
             out.push_str(&format!("{branch_pad}) : (\n"));
@@ -1292,7 +1405,13 @@ fn emit_branch_jsx(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if children.len() == 1 {
-        return emit_jsx_tree(&children[0], indent, part_styles, dialog_nodes, indeterminate_checkbox_nodes);
+        return emit_jsx_tree(
+            &children[0],
+            indent,
+            part_styles,
+            dialog_nodes,
+            indeterminate_checkbox_nodes,
+        );
     }
     let mut out = format!("{pad}<>\n");
     out.push_str(&emit_children_jsx_with_control_flow(
@@ -1369,14 +1488,14 @@ fn emit_input_jsx(
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         attrs.push_str(&format!(" value={{{camel}}}"));
-    } else if let Some(expr_text) = node
-        .props
-        .iter()
-        .find(|p| p.name == "value")
-        .and_then(|p| match &p.value {
-            LayoutPropValue::Expr(t) => Some(t.as_str()),
-            _ => None,
-        })
+    } else if let Some(expr_text) =
+        node.props
+            .iter()
+            .find(|p| p.name == "value")
+            .and_then(|p| match &p.value {
+                LayoutPropValue::Expr(t) => Some(t.as_str()),
+                _ => None,
+            })
     {
         // Expr passes verbatim into a JSX `{...}` interpolation,
         // matching the trust model UI29 §3.3 establishes for Expr
@@ -1506,14 +1625,14 @@ fn emit_host_input_jsx(
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         attrs.push_str(&format!(" value={{{camel}}}"));
-    } else if let Some(expr_text) = node
-        .props
-        .iter()
-        .find(|p| p.name == "value")
-        .and_then(|p| match &p.value {
-            LayoutPropValue::Expr(t) => Some(t.as_str()),
-            _ => None,
-        })
+    } else if let Some(expr_text) =
+        node.props
+            .iter()
+            .find(|p| p.name == "value")
+            .and_then(|p| match &p.value {
+                LayoutPropValue::Expr(t) => Some(t.as_str()),
+                _ => None,
+            })
     {
         // Expr passes verbatim into a JSX `{...}` interpolation,
         // matching the trust model UI29 §3.3 establishes for Expr
@@ -1729,10 +1848,7 @@ fn collect_indeterminate_checkbox_nodes(root: &LayoutNode) -> Vec<*const LayoutN
     out
 }
 
-fn collect_indeterminate_checkbox_nodes_inner(
-    node: &LayoutNode,
-    out: &mut Vec<*const LayoutNode>,
-) {
+fn collect_indeterminate_checkbox_nodes_inner(node: &LayoutNode, out: &mut Vec<*const LayoutNode>) {
     if node.tag == "HostCheckbox"
         && node
             .props
@@ -1793,11 +1909,7 @@ fn emit_host_checkbox_indeterminate_hooks(
     };
 
     let mut out = String::new();
-    writeln!(
-        out,
-        "  const {ref_name} = useRef<HTMLInputElement>(null);"
-    )
-    .unwrap();
+    writeln!(out, "  const {ref_name} = useRef<HTMLInputElement>(null);").unwrap();
     writeln!(out, "  useEffect(() => {{").unwrap();
     writeln!(out, "    if ({ref_name}.current) {{").unwrap();
     writeln!(
@@ -1881,11 +1993,7 @@ fn emit_host_dialog_hooks(node: &LayoutNode, idx: usize) -> Result<String, Pipel
     // a stable identity for React, so the effect runs once on mount and
     // never again.
     let mut out = String::new();
-    writeln!(
-        out,
-        "  const {ref_name} = useRef<HTMLDialogElement>(null);"
-    )
-    .unwrap();
+    writeln!(out, "  const {ref_name} = useRef<HTMLDialogElement>(null);").unwrap();
     writeln!(out, "  useEffect(() => {{").unwrap();
     writeln!(out, "    const d = {ref_name}.current;").unwrap();
     writeln!(out, "    if (!d) return;").unwrap();
@@ -1974,8 +2082,7 @@ fn emit_host_dialog_jsx(
     let title_heading: Option<String> = match find_slot_ref_prop(node, "title") {
         Some(slot) => {
             let camel = to_camel_case_first_lower(slot);
-            validate_slot_or_field_name(&camel)
-                .map_err(PipelineEmitError::UnsafeSlotName)?;
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
             let inner_pad = " ".repeat(indent + 2);
             Some(format!("{inner_pad}<h2>{{{camel}}}</h2>\n"))
         }
@@ -2749,12 +2856,24 @@ fn emit_host_table_section_jsx(
             // For-emitter will still produce `.map((row) => …)`, but
             // the `…` body won't have the row-context that gives a
             // `Row` inside the For body its `<tr>` shape.
-            out.push_str(&emit_jsx_tree(child, indent + 2, part_styles, dialog_nodes, indeterminate_checkbox_nodes)?);
+            out.push_str(&emit_jsx_tree(
+                child,
+                indent + 2,
+                part_styles,
+                dialog_nodes,
+                indeterminate_checkbox_nodes,
+            )?);
         } else {
             // Non-Row, non-For child — recurse through the standard
             // emitter. Lets a static comment, a conditional row block
             // (`If { Row { … } }`), or a future seam compose cleanly.
-            out.push_str(&emit_jsx_tree(child, indent + 2, part_styles, dialog_nodes, indeterminate_checkbox_nodes)?);
+            out.push_str(&emit_jsx_tree(
+                child,
+                indent + 2,
+                part_styles,
+                dialog_nodes,
+                indeterminate_checkbox_nodes,
+            )?);
         }
     }
     out.push_str(&format!("{pad}</{html_tag}>\n"));
@@ -2866,9 +2985,7 @@ fn try_emit_table_for_cell_jsx(
         .iter()
         .find(|p| p.name == "each")
         .ok_or_else(|| {
-            PipelineEmitError::UnsafeSlotName(
-                "For: missing required prop `each:`".to_string(),
-            )
+            PipelineEmitError::UnsafeSlotName("For: missing required prop `each:`".to_string())
         })?;
     let collection_expr: String = match &each_prop.value {
         LayoutPropValue::SlotRef(slot) => {
@@ -2932,10 +3049,7 @@ fn try_emit_table_for_cell_jsx(
     // callback for the same purpose.
     let (params, key_source) = match &index_ident {
         Some(idx) => (format!("({as_ident}, {idx})"), idx.clone()),
-        None => (
-            format!("({as_ident}, _idx)"),
-            "_idx".to_string(),
-        ),
+        None => (format!("({as_ident}, _idx)"), "_idx".to_string()),
     };
 
     // Emit the per-iteration cell. The leaf flows through the general
@@ -3020,9 +3134,7 @@ fn try_emit_table_for_row_jsx(
         .iter()
         .find(|p| p.name == "each")
         .ok_or_else(|| {
-            PipelineEmitError::UnsafeSlotName(
-                "For: missing required prop `each:`".to_string(),
-            )
+            PipelineEmitError::UnsafeSlotName("For: missing required prop `each:`".to_string())
         })?;
     let collection_expr: String = match &each_prop.value {
         LayoutPropValue::SlotRef(slot) => {
@@ -3087,10 +3199,7 @@ fn try_emit_table_for_row_jsx(
     // <tr> inside it doesn't disrupt the <tbody><tr> hierarchy.
     let (params, key_source) = match &index_ident {
         Some(idx) => (format!("({as_ident}, {idx})"), idx.clone()),
-        None => (
-            format!("({as_ident}, _idx)"),
-            "_idx".to_string(),
-        ),
+        None => (format!("({as_ident}, _idx)"), "_idx".to_string()),
     };
 
     let pad = " ".repeat(indent);
@@ -3143,13 +3252,8 @@ fn emit_host_table_colgroup_jsx(
         // mosaic-pkg-grid v0.2.0 shape. Recognise the For-wraps-Col
         // pattern and expand it into a `.map((w, cw) => <col style=...>)`
         // so dynamic column widths actually emit one <col> per entry.
-        if child.tag == "For"
-            && child.children.len() == 1
-            && child.children[0].tag == "Col"
-        {
-            if let Some(expanded) =
-                try_emit_colgroup_for_col_jsx(child, indent + 2)?
-            {
+        if child.tag == "For" && child.children.len() == 1 && child.children[0].tag == "Col" {
+            if let Some(expanded) = try_emit_colgroup_for_col_jsx(child, indent + 2)? {
                 out.push_str(&expanded);
                 continue;
             }
@@ -3194,9 +3298,13 @@ fn try_emit_colgroup_for_col_jsx(
 ) -> Result<Option<String>, PipelineEmitError> {
     let col_node = &for_node.children[0];
 
-    let each_prop = for_node.props.iter().find(|p| p.name == "each").ok_or_else(|| {
-        PipelineEmitError::UnsafeSlotName("For: missing required prop `each:`".to_string())
-    })?;
+    let each_prop = for_node
+        .props
+        .iter()
+        .find(|p| p.name == "each")
+        .ok_or_else(|| {
+            PipelineEmitError::UnsafeSlotName("For: missing required prop `each:`".to_string())
+        })?;
     let coll = match &each_prop.value {
         LayoutPropValue::SlotRef(s) => {
             let camel = to_camel_case_first_lower(s);
@@ -3249,7 +3357,11 @@ fn try_emit_colgroup_for_col_jsx(
     let width_attr = match col_node.props.iter().find(|p| p.name == "width") {
         Some(p) => match &p.value {
             LayoutPropValue::Number(n) => {
-                let s = if n.fract() == 0.0 { format!("{}", *n as i64) } else { format!("{n}") };
+                let s = if n.fract() == 0.0 {
+                    format!("{}", *n as i64)
+                } else {
+                    format!("{n}")
+                };
                 format!(" style={{{{ width: \"{s}px\" }}}}")
             }
             LayoutPropValue::SlotRef(slot) => {
@@ -3295,7 +3407,6 @@ fn count_section_children(node: &LayoutNode, section_tag: &str) -> usize {
         .filter(|c| c.tag == section_tag)
         .count()
 }
-
 
 /// Find a prop on `node` whose value is a `SlotRef`. Returns the slot's
 /// kebab-case name, or `None` if no such prop exists.
@@ -3372,7 +3483,7 @@ fn escape_for_jsx_double_quoted(s: &str) -> String {
     for c in s.chars() {
         match c {
             '\\' => out.push_str("\\\\"),
-            '"'  => out.push_str("\\\""),
+            '"' => out.push_str("\\\""),
             other => out.push(other),
         }
     }
@@ -3482,13 +3593,7 @@ fn primitive_to_jsx_tag(tag: &str) -> Result<JsxTag, PipelineEmitError> {
         // and tests still author `Scroll`).
         "HostScroll" => ("<div", "overflow: \"auto\"", "", "</div>", false),
         "Divider" => ("<hr", "", "", "", true),
-        "Stack" => (
-            "<div",
-            "position: \"relative\"",
-            "",
-            "</div>",
-            false,
-        ),
+        "Stack" => ("<div", "position: \"relative\"", "", "</div>", false),
         "Icon" => ("<span", "", " className=\"icon\"", "</span>", false),
         // Deferred — emit a placeholder so the file still compiles end-to-end.
         // The host can see at a glance that this node needs a real renderer
@@ -3683,7 +3788,10 @@ fn jsx_text_content(node: &LayoutNode) -> Option<String> {
 /// Both can also appear inside `list<...>` containers, which we
 /// inspect recursively.
 fn interface_uses_react_namespace(interface: &MosmodelComponent) -> bool {
-    interface.slots.iter().any(|slot| slot_uses_react_namespace(&slot.r#type))
+    interface
+        .slots
+        .iter()
+        .any(|slot| slot_uses_react_namespace(&slot.r#type))
 }
 
 fn slot_uses_react_namespace(t: &SlotType) -> bool {
@@ -3866,11 +3974,7 @@ mod tests {
     }
 
     /// Helper: build a component with the given name, slots, and emits.
-    fn component(
-        name: &str,
-        slots: Vec<SlotDecl>,
-        emits: Vec<EmitDecl>,
-    ) -> MosmodelComponent {
+    fn component(name: &str, slots: Vec<SlotDecl>, emits: Vec<EmitDecl>) -> MosmodelComponent {
         MosmodelComponent {
             component: name.to_string(),
             slots,
@@ -3973,7 +4077,10 @@ mod tests {
         let l = single_box_layout("Grid");
         let s = empty_style("Grid");
         let result = from_pipeline(&m, &l, &s).expect("emit ok");
-        let nav = result.output.find("\"navigate\"").expect("navigate present");
+        let nav = result
+            .output
+            .find("\"navigate\"")
+            .expect("navigate present");
         let commit = result
             .output
             .find("\"editCommit\"")
@@ -3982,15 +4089,17 @@ mod tests {
             .output
             .find("\"editCancel\"")
             .expect("editCancel present");
-        assert!(nav < commit && commit < cancel, "variants must be in source order");
+        assert!(
+            nav < commit && commit < cancel,
+            "variants must be in source order"
+        );
     }
 
     /// UI24 §10 row 3 — `test_dispatch_prop_required`
     #[test]
     fn dispatch_prop_is_required_and_in_interface() {
         let m = component("Grid", vec![], vec![emit("onNavigate", vec![])]);
-        let result =
-            from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
         assert!(
             result
                 .output
@@ -4011,13 +4120,16 @@ mod tests {
         let m = component(
             "Grid",
             vec![
-                slot("column-headers", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot(
+                    "column-headers",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
                 slot("total-rows", SlotType::Number, true),
             ],
             vec![],
         );
-        let result =
-            from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
         // The destructuring block must list dispatch after every slot.
         let dispatch_at = result.output.find("dispatch,").expect("dispatch present");
         let total_rows_at = result.output.find("totalRows,").expect("totalRows present");
@@ -4031,10 +4143,15 @@ mod tests {
     #[test]
     fn emit_on_prefix_is_stripped_in_type_field() {
         let m = component("Grid", vec![], vec![emit("onNavigate", vec![])]);
-        let result =
-            from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
-        assert!(result.output.contains("type: \"navigate\""), "expected 'navigate'");
-        assert!(!result.output.contains("type: \"onNavigate\""), "must strip on prefix");
+        let result = from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
+        assert!(
+            result.output.contains("type: \"navigate\""),
+            "expected 'navigate'"
+        );
+        assert!(
+            !result.output.contains("type: \"onNavigate\""),
+            "must strip on prefix"
+        );
     }
 
     /// UI24 §10 row 6 — `test_emit_param_camel_case`
@@ -4053,9 +4170,13 @@ mod tests {
                 ],
             )],
         );
-        let result =
-            from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
-        for needle in ["startRow: number", "startCol: number", "endRow: number", "endCol: number"] {
+        let result = from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
+        for needle in [
+            "startRow: number",
+            "startCol: number",
+            "endRow: number",
+            "endCol: number",
+        ] {
             assert!(
                 result.output.contains(needle),
                 "expected '{needle}' in:\n{}",
@@ -4068,26 +4189,29 @@ mod tests {
     #[test]
     fn void_emit_produces_type_only_variant() {
         let m = component("Grid", vec![], vec![emit("onEditCancel", vec![])]);
-        let result =
-            from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
-        assert!(result.output.contains("| { type: \"editCancel\" }"),
-            "expected void variant, got:\n{}", result.output);
+        let result = from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
+        assert!(
+            result.output.contains("| { type: \"editCancel\" }"),
+            "expected void variant, got:\n{}",
+            result.output
+        );
     }
 
     /// UI24 §10 row 8 — `test_zero_emit_component`
     #[test]
     fn zero_emit_component_uses_never_union_and_still_has_dispatch() {
-        let m = component(
-            "Label",
-            vec![slot("text", SlotType::Text, true)],
-            vec![],
+        let m = component("Label", vec![slot("text", SlotType::Text, true)], vec![]);
+        let result = from_pipeline(&m, &single_box_layout("Label"), &empty_style("Label")).unwrap();
+        assert!(
+            result.output.contains("type LabelEvent = never;"),
+            "expected `never` union for zero-emit component"
         );
-        let result =
-            from_pipeline(&m, &single_box_layout("Label"), &empty_style("Label")).unwrap();
-        assert!(result.output.contains("type LabelEvent = never;"),
-            "expected `never` union for zero-emit component");
-        assert!(result.output.contains("dispatch: (event: LabelEvent) => void;"),
-            "dispatch prop must still appear");
+        assert!(
+            result
+                .output
+                .contains("dispatch: (event: LabelEvent) => void;"),
+            "dispatch prop must still appear"
+        );
     }
 
     /// UI24 §10 row 9 — `test_reserved_emit_name_errors`
@@ -4110,7 +4234,6 @@ mod tests {
     // Structural invariants from UI24 §3.3
     // -----------------------------------------------------------------
 
-    #[test]
     /// The auto-generated banner is always the first line. The
     /// React import is only emitted when the component generates a
     /// `React.*` type reference (slot types `node` or `<Component>`,
@@ -4120,10 +4243,12 @@ mod tests {
     #[test]
     fn output_starts_with_auto_generated_header_and_no_react_import_when_unused() {
         let m = component("X", vec![], vec![]);
-        let result =
-            from_pipeline(&m, &single_box_layout("X"), &empty_style("X")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("X"), &empty_style("X")).unwrap();
         let lines: Vec<&str> = result.output.lines().collect();
-        assert_eq!(lines[0], "// Auto-generated by mosaic-emit-react. Do not edit.");
+        assert_eq!(
+            lines[0],
+            "// Auto-generated by mosaic-emit-react. Do not edit."
+        );
         // line 1 is the blank-line separator before the event union —
         // NOT the React import (which is conditional).
         assert_ne!(lines[1], "import React from \"react\";");
@@ -4138,8 +4263,7 @@ mod tests {
     #[test]
     fn react_import_emitted_when_node_slot_present() {
         let m = component("Card", vec![slot("body", SlotType::Node, true)], vec![]);
-        let result =
-            from_pipeline(&m, &single_box_layout("Card"), &empty_style("Card")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Card"), &empty_style("Card")).unwrap();
         assert!(
             result.output.contains("import React from \"react\";"),
             "node slot generates React.ReactNode, so React must be imported"
@@ -4152,11 +4276,14 @@ mod tests {
     fn react_import_emitted_when_component_slot_present() {
         let m = component(
             "Card",
-            vec![slot("avatar", SlotType::Component("Image".to_string()), true)],
+            vec![slot(
+                "avatar",
+                SlotType::Component("Image".to_string()),
+                true,
+            )],
             vec![],
         );
-        let result =
-            from_pipeline(&m, &single_box_layout("Card"), &empty_style("Card")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Card"), &empty_style("Card")).unwrap();
         assert!(
             result.output.contains("import React from \"react\";"),
             "component slot generates React.ReactNode reference; import required"
@@ -4176,8 +4303,7 @@ mod tests {
             )],
             vec![],
         );
-        let result =
-            from_pipeline(&m, &single_box_layout("Stack"), &empty_style("Stack")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Stack"), &empty_style("Stack")).unwrap();
         assert!(
             result.output.contains("import React from \"react\";"),
             "list<node> generates Array<React.ReactNode>; React import required"
@@ -4195,8 +4321,7 @@ mod tests {
             ],
             vec![],
         );
-        let result =
-            from_pipeline(&m, &single_box_layout("Card"), &empty_style("Card")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Card"), &empty_style("Card")).unwrap();
         // image -> string per UI20 §6 / mirrored in slot_type_to_ts
         assert!(result.output.contains("avatarUrl: string;"));
         assert!(result.output.contains("displayName: string;"));
@@ -4207,8 +4332,7 @@ mod tests {
     #[test]
     fn node_slot_is_optional_and_react_node_typed() {
         let m = component("Card", vec![slot("body", SlotType::Node, true)], vec![]);
-        let result =
-            from_pipeline(&m, &single_box_layout("Card"), &empty_style("Card")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Card"), &empty_style("Card")).unwrap();
         assert!(
             result.output.contains("body?: React.ReactNode;"),
             "node slots must be optional and typed React.ReactNode"
@@ -4317,7 +4441,10 @@ mod tests {
         // Stack wraps Row wraps Box
         assert!(result.output.contains("position: \"relative\""));
         assert!(result.output.contains("flexDirection: \"row\""));
-        assert!(result.output.contains("<div></div>"), "expected Box -> empty div");
+        assert!(
+            result.output.contains("<div></div>"),
+            "expected Box -> empty div"
+        );
     }
 
     #[test]
@@ -4332,8 +4459,8 @@ mod tests {
                 children: Vec::new(),
             },
         };
-        let err = from_pipeline(&m, &l, &empty_style("X"))
-            .expect_err("unknown primitive must error");
+        let err =
+            from_pipeline(&m, &l, &empty_style("X")).expect_err("unknown primitive must error");
         assert!(matches!(err, PipelineEmitError::UnknownPrimitive(_)));
     }
 
@@ -4386,7 +4513,10 @@ mod tests {
                 name: part.to_string(),
                 base: props
                     .iter()
-                    .map(|(k, v)| StyleProp { name: k.to_string(), value: v.to_string() })
+                    .map(|(k, v)| StyleProp {
+                        name: k.to_string(),
+                        value: v.to_string(),
+                    })
                     .collect(),
                 states: Vec::new(),
             }],
@@ -4413,7 +4543,9 @@ mod tests {
         let l = box_root(Some("panel"));
         let result = from_pipeline(&m, &l, &s).unwrap();
         assert!(
-            result.output.contains("style={{ background: \"#1e1e1e\" }}"),
+            result
+                .output
+                .contains("style={{ background: \"#1e1e1e\" }}"),
             "expected inline style, got:\n{}",
             result.output
         );
@@ -4425,13 +4557,21 @@ mod tests {
         let s = style_with_part(
             "X",
             "panel",
-            &[("background", "#1e1e1e"), ("color", "#cccccc"), ("padding", "8px")],
+            &[
+                ("background", "#1e1e1e"),
+                ("color", "#cccccc"),
+                ("padding", "8px"),
+            ],
         );
         let l = box_root(Some("panel"));
         let result = from_pipeline(&m, &l, &s).unwrap();
-        assert!(result.output.contains(
-            "style={{ background: \"#1e1e1e\", color: \"#cccccc\", padding: \"8px\" }}"
-        ), "got:\n{}", result.output);
+        assert!(
+            result.output.contains(
+                "style={{ background: \"#1e1e1e\", color: \"#cccccc\", padding: \"8px\" }}"
+            ),
+            "got:\n{}",
+            result.output
+        );
     }
 
     #[test]
@@ -4444,10 +4584,16 @@ mod tests {
         );
         let l = box_root(Some("panel"));
         let result = from_pipeline(&m, &l, &s).unwrap();
-        assert!(result.output.contains("backgroundColor: \"#1e1e1e\""),
-            "got:\n{}", result.output);
-        assert!(result.output.contains("fontSize: \"13px\""),
-            "got:\n{}", result.output);
+        assert!(
+            result.output.contains("backgroundColor: \"#1e1e1e\""),
+            "got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("fontSize: \"13px\""),
+            "got:\n{}",
+            result.output
+        );
     }
 
     #[test]
@@ -4458,8 +4604,11 @@ mod tests {
         let l = box_root(None);
         let result = from_pipeline(&m, &l, &s).unwrap();
         // The Box should still render <div></div> with no style attr.
-        assert!(result.output.contains("<div></div>"),
-            "expected bare div, got:\n{}", result.output);
+        assert!(
+            result.output.contains("<div></div>"),
+            "expected bare div, got:\n{}",
+            result.output
+        );
     }
 
     #[test]
@@ -4469,8 +4618,11 @@ mod tests {
         let s = style_with_part("X", "panel", &[("background", "#fff")]);
         let l = box_root(Some("header"));
         let result = from_pipeline(&m, &l, &s).unwrap();
-        assert!(result.output.contains("<div></div>"),
-            "missing part name must not produce a style attr, got:\n{}", result.output);
+        assert!(
+            result.output.contains("<div></div>"),
+            "missing part name must not produce a style attr, got:\n{}",
+            result.output
+        );
     }
 
     #[test]
@@ -4490,9 +4642,13 @@ mod tests {
         };
         let result = from_pipeline(&m, &l, &s).unwrap();
         // Built-in style appears first; author style appears after.
-        let expected = "style={{ display: \"flex\", flexDirection: \"row\", background: \"#222\" }}";
-        assert!(result.output.contains(expected),
-            "expected merged style, got:\n{}", result.output);
+        let expected =
+            "style={{ display: \"flex\", flexDirection: \"row\", background: \"#222\" }}";
+        assert!(
+            result.output.contains(expected),
+            "expected merged style, got:\n{}",
+            result.output
+        );
     }
 
     #[test]
@@ -4523,8 +4679,11 @@ mod tests {
         // Base style is present.
         assert!(result.output.contains("background: \"#222\""));
         // Hover override is NOT present — needs separate plumbing.
-        assert!(!result.output.contains("#444"),
-            "state blocks must not leak into the inline style, got:\n{}", result.output);
+        assert!(
+            !result.output.contains("#444"),
+            "state blocks must not leak into the inline style, got:\n{}",
+            result.output
+        );
     }
 
     #[test]
@@ -4532,11 +4691,7 @@ mod tests {
         let m = component("X", vec![], vec![]);
         // A font-family with an embedded quoted name — the embedded `"`
         // must be escaped so the JSX literal stays well-formed.
-        let s = style_with_part(
-            "X",
-            "panel",
-            &[("font-family", "\"SF Mono\", monospace")],
-        );
+        let s = style_with_part("X", "panel", &[("font-family", "\"SF Mono\", monospace")]);
         let l = box_root(Some("panel"));
         let result = from_pipeline(&m, &l, &s).unwrap();
         assert!(
@@ -4563,9 +4718,9 @@ mod tests {
         // Attribute name comes from the prop name verbatim;
         // type literal comes from the emit name with `on` stripped.
         assert!(
-            result.output.contains(
-                "onClick={() => dispatch({ type: \"navigate\" })}"
-            ),
+            result
+                .output
+                .contains("onClick={() => dispatch({ type: \"navigate\" })}"),
             "got:\n{}",
             result.output
         );
@@ -4576,10 +4731,7 @@ mod tests {
         let m = component(
             "Tile",
             vec![],
-            vec![
-                emit("onClick", vec![]),
-                emit("onDoubleClick", vec![]),
-            ],
+            vec![emit("onClick", vec![]), emit("onDoubleClick", vec![])],
         );
         let l = LayoutDef {
             component_name: "Tile".to_string(),
@@ -4603,18 +4755,14 @@ mod tests {
         assert!(result
             .output
             .contains("onClick={() => dispatch({ type: \"click\" })}"));
-        assert!(result.output.contains(
-            "onDoubleClick={() => dispatch({ type: \"doubleClick\" })}"
-        ));
+        assert!(result
+            .output
+            .contains("onDoubleClick={() => dispatch({ type: \"doubleClick\" })}"));
     }
 
     #[test]
     fn slot_ref_props_do_not_produce_event_handlers() {
-        let m = component(
-            "Label",
-            vec![slot("text", SlotType::Text, true)],
-            vec![],
-        );
+        let m = component("Label", vec![slot("text", SlotType::Text, true)], vec![]);
         // A `content: slot: text` prop on a Text node — NOT an emit.
         let l = LayoutDef {
             component_name: "Label".to_string(),
@@ -4630,9 +4778,11 @@ mod tests {
         };
         let result = from_pipeline(&m, &l, &empty_style("Label")).unwrap();
         // Must NOT contain any dispatch call — slot refs are not events.
-        assert!(!result.output.contains("dispatch({"),
+        assert!(
+            !result.output.contains("dispatch({"),
             "slot refs must not produce event handlers, got:\n{}",
-            result.output);
+            result.output
+        );
     }
 
     #[test]
@@ -4666,10 +4816,7 @@ mod tests {
             .find('>')
             .map(|i| i + handler_pos)
             .expect("opening tag closes");
-        let closing_div_pos = result
-            .output
-            .find("</div>")
-            .expect("close tag present");
+        let closing_div_pos = result.output.find("</div>").expect("close tag present");
         assert!(handler_pos < opening_close_pos);
         assert!(opening_close_pos < closing_div_pos);
     }
@@ -4746,11 +4893,7 @@ mod tests {
 
     #[test]
     fn input_readonly_slot_ref_binds_to_readonly_attr() {
-        let m = component(
-            "X",
-            vec![slot("is-locked", SlotType::Bool, true)],
-            vec![],
-        );
+        let m = component("X", vec![slot("is-locked", SlotType::Bool, true)], vec![]);
         let l = input_layout(vec![LayoutProp {
             name: "read-only".to_string(),
             value: LayoutPropValue::SlotRef("is-locked".to_string()),
@@ -4823,7 +4966,9 @@ mod tests {
         }]);
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            result.output.contains(r#"placeholder="say \"hi\" \\ then more""#),
+            result
+                .output
+                .contains(r#"placeholder="say \"hi\" \\ then more""#),
             "expected escaped placeholder attr, got:\n{}",
             result.output
         );
@@ -4838,9 +4983,9 @@ mod tests {
         }]);
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            result.output.contains(
-                "onChange={e => dispatch({ type: \"change\", value: e.target.value })}"
-            ),
+            result
+                .output
+                .contains("onChange={e => dispatch({ type: \"change\", value: e.target.value })}"),
             "expected onChange handler with e.target.value payload, got:\n{}",
             result.output
         );
@@ -4870,17 +5015,17 @@ mod tests {
         assert!(out.contains("if (e.key === \"Enter\") dispatch({ type: \"commit\" });"));
         assert!(out.contains("if (e.key === \"Escape\") dispatch({ type: \"cancel\" });"));
         // Confirm we did NOT emit two separate handlers.
-        assert_eq!(out.matches("onKeyDown=").count(), 1,
-            "expected exactly one onKeyDown attr, got:\n{}", out);
+        assert_eq!(
+            out.matches("onKeyDown=").count(),
+            1,
+            "expected exactly one onKeyDown attr, got:\n{}",
+            out
+        );
     }
 
     #[test]
     fn input_inside_row_renders_inside_flex_div() {
-        let m = component(
-            "X",
-            vec![slot("text", SlotType::Text, true)],
-            vec![],
-        );
+        let m = component("X", vec![slot("text", SlotType::Text, true)], vec![]);
         let l = LayoutDef {
             component_name: "X".to_string(),
             root: LayoutNode {
@@ -4898,8 +5043,14 @@ mod tests {
         let row_pos = out.find("flexDirection: \"row\"").expect("row present");
         let input_pos = out.find("<input").expect("input present");
         let close_div = out.find("</div>").expect("row closes");
-        assert!(row_pos < input_pos, "input must appear after row opening tag");
-        assert!(input_pos < close_div, "input must appear before row closing tag");
+        assert!(
+            row_pos < input_pos,
+            "input must appear after row opening tag"
+        );
+        assert!(
+            input_pos < close_div,
+            "input must appear before row closing tag"
+        );
     }
 
     #[test]
@@ -5022,8 +5173,16 @@ mod tests {
         component(
             name,
             vec![
-                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
-                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot(
+                    "col-labels",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+                slot(
+                    "data-rows",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
             ],
             vec![],
         )
@@ -5088,9 +5247,12 @@ mod tests {
                 children: Vec::new(),
             },
         };
-        let err = from_pipeline(&m, &l, &empty_style("Grid"))
-            .expect_err("name mismatch must error");
-        assert!(matches!(err, PipelineEmitError::ComponentNameMismatch { .. }));
+        let err =
+            from_pipeline(&m, &l, &empty_style("Grid")).expect_err("name mismatch must error");
+        assert!(matches!(
+            err,
+            PipelineEmitError::ComponentNameMismatch { .. }
+        ));
     }
 
     // -----------------------------------------------------------------
@@ -5194,17 +5356,15 @@ mod tests {
                 tag: "Column".to_string(),
                 part_name: Some("root".to_string()),
                 props: Vec::new(),
-                children: vec![
-                    LayoutNode {
-                        tag: "Text".to_string(),
-                        part_name: None,
-                        props: vec![LayoutProp {
-                            name: "content".to_string(),
-                            value: LayoutPropValue::SlotRef("body".to_string()),
-                        }],
-                        children: Vec::new(),
-                    },
-                ],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::SlotRef("body".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
             },
         };
         let style = empty_style("Card");
@@ -5439,11 +5599,7 @@ mod tests {
     /// `disabled={isDisabled}`.
     #[test]
     fn host_button_disabled_slot_ref_binds_to_disabled_attr() {
-        let m = component(
-            "X",
-            vec![slot("is-disabled", SlotType::Bool, true)],
-            vec![],
-        );
+        let m = component("X", vec![slot("is-disabled", SlotType::Bool, true)], vec![]);
         let l = host_button_layout(vec![
             LayoutProp {
                 name: "label".to_string(),
@@ -5472,11 +5628,7 @@ mod tests {
     /// the userland migration completes (tracked under U29-X1).
     #[test]
     fn host_scroll_with_children_emits_overflow_auto_div() {
-        let m = component(
-            "X",
-            vec![slot("body", SlotType::Text, true)],
-            vec![],
-        );
+        let m = component("X", vec![slot("body", SlotType::Text, true)], vec![]);
         let l = LayoutDef {
             component_name: "X".to_string(),
             root: LayoutNode {
@@ -5903,9 +6055,7 @@ mod tests {
         );
         // The dispatch must sit between the showModal() call and the
         // closing brace of the open branch — i.e. inside `if (open) {`.
-        let open_branch = out
-            .find("if (open) {")
-            .expect("open branch present");
+        let open_branch = out.find("if (open) {").expect("open branch present");
         let dispatch_pos = out[open_branch..]
             .find("dispatch({ type: \"shown\" })")
             .expect("dispatch inside open branch");
@@ -5994,7 +6144,10 @@ mod tests {
         let m = component(
             "X",
             vec![],
-            vec![emit("onChange", vec![param("checked", EmitPayloadType::Bool)])],
+            vec![emit(
+                "onChange",
+                vec![param("checked", EmitPayloadType::Bool)],
+            )],
         );
         let l = host_checkbox_layout(vec![LayoutProp {
             name: "onToggle".to_string(),
@@ -6003,7 +6156,9 @@ mod tests {
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &result.output;
         assert!(
-            out.contains("onChange={e => dispatch({ type: \"change\", checked: e.target.checked })}"),
+            out.contains(
+                "onChange={e => dispatch({ type: \"change\", checked: e.target.checked })}"
+            ),
             "expected onChange handler with checked: e.target.checked payload, got:\n{out}"
         );
     }
@@ -6052,11 +6207,7 @@ mod tests {
     /// array. The `<input>` gains `ref={checkboxRef_0}`.
     #[test]
     fn host_checkbox_indeterminate_slot_emits_useref_useeffect_pair() {
-        let m = component(
-            "X",
-            vec![slot("is-mixed", SlotType::Bool, true)],
-            vec![],
-        );
+        let m = component("X", vec![slot("is-mixed", SlotType::Bool, true)], vec![]);
         let l = host_checkbox_layout(vec![LayoutProp {
             name: "indeterminate".to_string(),
             value: LayoutPropValue::SlotRef("is-mixed".to_string()),
@@ -6530,7 +6681,10 @@ mod tests {
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &result.output;
         assert!(out.contains("min={0}"), "expected min={{0}}, got:\n{out}");
-        assert!(out.contains("max={100}"), "expected max={{100}}, got:\n{out}");
+        assert!(
+            out.contains("max={100}"),
+            "expected max={{100}}, got:\n{out}"
+        );
         assert!(out.contains("step={5}"), "expected step={{5}}, got:\n{out}");
     }
 
@@ -6645,9 +6799,18 @@ mod tests {
             "expected `<table></table>` for empty HostTable, got:\n{out}"
         );
         // Defensive — no spurious thead/tbody/tfoot/colgroup.
-        assert!(!out.contains("<thead"), "empty HostTable must not emit <thead>");
-        assert!(!out.contains("<tbody"), "empty HostTable must not emit <tbody>");
-        assert!(!out.contains("<tfoot"), "empty HostTable must not emit <tfoot>");
+        assert!(
+            !out.contains("<thead"),
+            "empty HostTable must not emit <thead>"
+        );
+        assert!(
+            !out.contains("<tbody"),
+            "empty HostTable must not emit <tbody>"
+        );
+        assert!(
+            !out.contains("<tfoot"),
+            "empty HostTable must not emit <tfoot>"
+        );
         assert!(
             !out.contains("<colgroup"),
             "empty HostTable must not emit <colgroup>"
@@ -6676,8 +6839,14 @@ mod tests {
         )]);
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &result.output;
-        assert!(out.contains("<thead>"), "expected <thead> open, got:\n{out}");
-        assert!(out.contains("</thead>"), "expected </thead> close, got:\n{out}");
+        assert!(
+            out.contains("<thead>"),
+            "expected <thead> open, got:\n{out}"
+        );
+        assert!(
+            out.contains("</thead>"),
+            "expected </thead> close, got:\n{out}"
+        );
         assert!(out.contains("<tr>"), "expected <tr>, got:\n{out}");
         // Both cells use <th>, not <td>, because they are inside head.
         assert!(
@@ -6716,8 +6885,14 @@ mod tests {
         )]);
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &result.output;
-        assert!(out.contains("<tbody>"), "expected <tbody> open, got:\n{out}");
-        assert!(out.contains("</tbody>"), "expected </tbody> close, got:\n{out}");
+        assert!(
+            out.contains("<tbody>"),
+            "expected <tbody> open, got:\n{out}"
+        );
+        assert!(
+            out.contains("</tbody>"),
+            "expected </tbody> close, got:\n{out}"
+        );
         assert!(
             out.contains("<td><span>{cellA}</span></td>"),
             "expected first <td>, got:\n{out}"
@@ -6768,18 +6943,9 @@ mod tests {
         // Intentionally feed sections in *reverse* order to prove the
         // emitter reorders them.
         let l = host_table_layout(vec![
-            section_node(
-                "HostTableFoot",
-                vec![row_node(vec![text_slot_node("c")])],
-            ),
-            section_node(
-                "HostTableBody",
-                vec![row_node(vec![text_slot_node("c")])],
-            ),
-            section_node(
-                "HostTableHead",
-                vec![row_node(vec![text_slot_node("c")])],
-            ),
+            section_node("HostTableFoot", vec![row_node(vec![text_slot_node("c")])]),
+            section_node("HostTableBody", vec![row_node(vec![text_slot_node("c")])]),
+            section_node("HostTableHead", vec![row_node(vec![text_slot_node("c")])]),
             section_node("HostTableColGroup", vec![col_node(None)]),
         ]);
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
@@ -7075,7 +7241,11 @@ mod tests {
     fn host_table_for_of_row_in_body_emits_map_of_tr() {
         let m = component(
             "X",
-            vec![slot("viewport-rows", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![slot(
+                "viewport-rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
             vec![],
         );
         let for_of_row = LayoutNode {
@@ -7093,10 +7263,7 @@ mod tests {
             ],
             children: vec![row_node(vec![text_keyword_node("row")])],
         };
-        let l = host_table_layout(vec![section_node(
-            "HostTableBody",
-            vec![for_of_row],
-        )]);
+        let l = host_table_layout(vec![section_node("HostTableBody", vec![for_of_row])]);
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &r.output;
         // UI28-1 §5 / §6.3 — implicit `_idx` injection for stable keys
@@ -7139,7 +7306,11 @@ mod tests {
     fn host_table_for_of_cell_in_head_row_emits_map_of_th() {
         let m = component(
             "X",
-            vec![slot("column-headers", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![slot(
+                "column-headers",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
             vec![],
         );
         let for_of_text = LayoutNode {
@@ -7307,11 +7478,7 @@ mod tests {
     /// state (e.g. user locale switcher).
     #[test]
     fn host_table_with_dir_slot_ref_emits_jsx_expression() {
-        let m = component(
-            "X",
-            vec![slot("table-dir", SlotType::Text, true)],
-            vec![],
-        );
+        let m = component("X", vec![slot("table-dir", SlotType::Text, true)], vec![]);
         let l = LayoutDef {
             component_name: "X".to_string(),
             root: LayoutNode {
@@ -7397,8 +7564,8 @@ mod tests {
                 children: Vec::new(),
             },
         };
-        let result = from_pipeline(&m, &l, &empty_style("X"))
-            .expect("orphan Col must not error the emit");
+        let result =
+            from_pipeline(&m, &l, &empty_style("X")).expect("orphan Col must not error the emit");
         assert!(
             result
                 .output
@@ -7414,11 +7581,7 @@ mod tests {
     /// until then.
     #[test]
     fn legacy_scroll_still_emits_overflow_auto_div() {
-        let m = component(
-            "X",
-            vec![],
-            vec![],
-        );
+        let m = component("X", vec![], vec![]);
         let l = LayoutDef {
             component_name: "X".to_string(),
             root: LayoutNode {
@@ -7957,8 +8120,7 @@ mod tests {
         let s = empty_style("X");
 
         let legacy = from_pipeline(&m, &l, &s).unwrap();
-        let extended =
-            from_pipeline_with_options(&m, &l, &s, &EmitOptions::default()).unwrap();
+        let extended = from_pipeline_with_options(&m, &l, &s, &EmitOptions::default()).unwrap();
 
         assert_eq!(legacy.output, extended.output, "TSX bytes diverged");
         assert_eq!(legacy.component_name, extended.component_name);
@@ -7976,7 +8138,10 @@ mod tests {
         let mut opts = EmitOptions::default();
         opts.emit_project = true;
         let r = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
-        assert!(r.project.is_some(), "emit_project: true must produce a shell");
+        assert!(
+            r.project.is_some(),
+            "emit_project: true must produce a shell"
+        );
     }
 
     #[test]
@@ -8000,6 +8165,10 @@ mod tests {
         assert!(
             proj.vite_config.starts_with("// AUTO-GENERATED"),
             "vite.config.ts must START with `// AUTO-GENERATED`"
+        );
+        assert!(
+            proj.tsconfig_json.starts_with("// AUTO-GENERATED"),
+            "tsconfig.json must START with `// AUTO-GENERATED`"
         );
         assert!(
             proj.main_tsx.starts_with("// AUTO-GENERATED"),
@@ -8038,8 +8207,8 @@ mod tests {
         opts.emit_project = true;
         opts.package_name = Some("Mosaic-Grid".to_string()); // uppercase = invalid
 
-        let err = from_pipeline_with_options(&m, &l, &s, &opts)
-            .expect_err("invalid npm name must error");
+        let err =
+            from_pipeline_with_options(&m, &l, &s, &opts).expect_err("invalid npm name must error");
         let msg = format!("{err}");
         assert!(
             msg.contains("Mosaic-Grid") && msg.contains("npm RFC"),
@@ -8059,7 +8228,8 @@ mod tests {
             .project
             .unwrap();
         assert!(
-            proj.package_json.contains("\"name\": \"mosaic-host-table\""),
+            proj.package_json
+                .contains("\"name\": \"mosaic-host-table\""),
             "expected derived `mosaic-host-table` npm name, got:\n{}",
             proj.package_json
         );
@@ -8157,12 +8327,14 @@ mod tests {
         let ProjectFiles {
             package_json,
             vite_config,
+            tsconfig_json,
             index_html,
             main_tsx,
             readme,
         } = proj;
         assert!(!package_json.is_empty());
         assert!(!vite_config.is_empty());
+        assert!(!tsconfig_json.is_empty());
         assert!(!index_html.is_empty());
         assert!(!main_tsx.is_empty());
         assert!(!readme.is_empty());
@@ -8180,8 +8352,13 @@ mod tests {
             .project
             .unwrap();
         let all = format!(
-            "{}\n{}\n{}\n{}\n{}",
-            proj.package_json, proj.vite_config, proj.index_html, proj.main_tsx, proj.readme
+            "{}\n{}\n{}\n{}\n{}\n{}",
+            proj.package_json,
+            proj.vite_config,
+            proj.tsconfig_json,
+            proj.index_html,
+            proj.main_tsx,
+            proj.readme
         );
         for banned in ["/Users/", "/home/", "C:\\Users\\", "$HOME"] {
             assert!(
@@ -8189,6 +8366,55 @@ mod tests {
                 "emitted shell contains environment-specific fragment `{banned}`"
             );
         }
+    }
+
+    #[test]
+    fn ui32_main_tsx_uses_host_adapter_with_sample_fallback_props() {
+        let mut display_name = slot("display-name", SlotType::Text, false);
+        display_name.default = Some(SlotDefault::Text("Ada".to_string()));
+        let m = component(
+            "ProfileCard",
+            vec![
+                display_name,
+                slot("age", SlotType::Number, true),
+                slot("is-active", SlotType::Bool, true),
+                slot("avatar-url", SlotType::Image, true),
+                slot("accent", SlotType::Color, true),
+                slot("tags", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        );
+        let l = single_box_layout("ProfileCard");
+        let s = empty_style("ProfileCard");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+
+        assert!(proj.main_tsx.contains("const fallbackProps = {"));
+        assert!(proj.main_tsx.contains("displayName: \"Ada\","));
+        assert!(proj.main_tsx.contains("age: 0,"));
+        assert!(proj.main_tsx.contains("isActive: false,"));
+        assert!(proj.main_tsx.contains("avatarUrl: \"sample-image\","));
+        assert!(proj.main_tsx.contains("accent: \"#808080\","));
+        assert!(proj.main_tsx.contains("tags: [],"));
+        assert!(proj
+            .main_tsx
+            .contains("window.mosaicHost?.getProps?.({ component: \"ProfileCard\" })"));
+        assert!(proj
+            .main_tsx
+            .contains("window.mosaicHost?.handleEvent?.({ component: \"ProfileCard\", event })"));
+        assert!(proj
+            .main_tsx
+            .contains("return response as Partial<RootSlotProps>;"));
+        assert!(proj
+            .main_tsx
+            .contains("return <ProfileCard {...props} dispatch={dispatch} />;"));
+        assert!(!proj
+            .main_tsx
+            .contains("dispatch={(ev) => console.log(\"event:\", ev)}"));
     }
 
     #[test]
@@ -8461,20 +8687,21 @@ mod tests {
             }],
             children: vec![],
         };
-        let l = LayoutDef { component_name: "X".to_string(), root: box_node };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: box_node,
+        };
         // Style source — declares `part cell { background: gray; state
         // selected { background: blue } }`. The mosstyle compiler produces
         // a part-style map entry for both `cell` and `cell:selected`.
         let style_src = "style X { part cell { background: #444444; state selected { background: #0066cc; } } }";
-        let style_def =
-            mosstyle_compiler::compile(style_src, None).expect("compile style");
+        let style_def = mosstyle_compiler::compile(style_src, None).expect("compile style");
         let result = from_pipeline(&m, &l, &style_def.def).expect("emit ok");
         let out = &result.output;
         // The state-when-selected predicate Expr appears inside a
         // conditional spread on the style object.
         assert!(
-            out.contains("...((( selRow == 0 )) ? {")
-                || out.contains("...(( selRow == 0 ) ? {"),
+            out.contains("...((( selRow == 0 )) ? {") || out.contains("...(( selRow == 0 ) ? {"),
             "expected conditional style spread from state-when-selected, got:\n{}",
             out
         );
@@ -8501,7 +8728,10 @@ mod tests {
             }],
             children: vec![],
         };
-        let l = LayoutDef { component_name: "X".to_string(), root: box_node };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: box_node,
+        };
         let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
         let out = &result.output;
         assert!(
@@ -8525,7 +8755,10 @@ mod tests {
             }],
             children: vec![],
         };
-        let l = LayoutDef { component_name: "X".to_string(), root: box_node };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: box_node,
+        };
         let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
         let out = &result.output;
         assert!(

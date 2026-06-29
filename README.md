@@ -52,6 +52,7 @@ The repo has deep coverage of the path from text to execution:
 - shared grammars and generated frontends
 - lexers and parsers for multiple languages
 - bytecode compilers, virtual machines, assemblers, and IR tooling
+- LANG-FULL matrix proofs that run frontend features across native, LLVM, WASM, JVM, CLR, VM, and JIT backends
 - grammar tools and build-time code generation
 
 ### 3. Data structures, storage, and execution infrastructure

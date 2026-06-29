@@ -22,6 +22,15 @@ import {
   dcTemperatureSweep,
   dcTemperatureSweepCorners,
   deviceModelAuditFixtures,
+  deviceModelBehaviorAuditFixtures,
+  deviceModelReferenceDeckAuditAnalysisSummary,
+  deviceModelReferenceDeckAuditAnalysisSummaryRecords,
+  deviceModelReferenceDeckAuditFixtures,
+  deviceModelReferenceDeckAuditGate,
+  deviceModelReferenceDeckAuditRecords,
+  deviceModelReferenceDeckAuditSummary,
+  deviceModelReferenceDeckAuditSummaryRecords,
+  deviceModelTemperatureAuditFixtures,
   diode,
   diodeFromModelCard,
   formatCornerDcSweepTable,
@@ -29,6 +38,16 @@ import {
   formatCornerTemperatureDcTable,
   formatDeckDcSweepTable,
   formatDcSweepTable,
+  formatDeviceModelReferenceDeckAuditAnalysisSummaryCsv,
+  formatDeviceModelReferenceDeckAuditAnalysisSummaryJson,
+  formatDeviceModelReferenceDeckAuditAnalysisSummaryTable,
+  formatDeviceModelReferenceDeckAuditCsv,
+  formatDeviceModelReferenceDeckAuditGateReport,
+  formatDeviceModelReferenceDeckAuditJson,
+  formatDeviceModelReferenceDeckAuditSummaryCsv,
+  formatDeviceModelReferenceDeckAuditSummaryJson,
+  formatDeviceModelReferenceDeckAuditSummaryTable,
+  formatDeviceModelReferenceDeckAuditTable,
   formatMeasurementTable,
   formatTemperatureDcTable,
   inductor,
@@ -97,6 +116,8 @@ describe("dcOp", () => {
       LAM: 0.04,
       NSUB: 1.6,
       CJD: 3.0e-13,
+      PB: 0.9,
+      MJ: 0.45,
     });
     const mosModel = mosfetFromModelCard("M1", "d", "g", "s", "b", mosCard);
     expect(mosCard.parameters).toStrictEqual({
@@ -105,12 +126,16 @@ describe("dcOp", () => {
       LAMBDA: 0.04,
       N_SUB: 1.6,
       CBD: 3.0e-13,
+      PB: 0.9,
+      MJ: 0.45,
     });
     expect(mosModel.type).toBe("NMOS");
     expectClose(mosModel.params.VT0, 0.55);
     expectClose(mosModel.params.LAMBDA, 0.04);
     expectClose(mosModel.params.N_SUB, 1.6);
     expectClose(mosModel.params.CBD, 3.0e-13);
+    expectClose(mosModel.params.PB, 0.9);
+    expectClose(mosModel.params.MJ, 0.45);
   });
 
   it("provides cross-language device model audit fixtures", () => {
@@ -120,6 +145,271 @@ describe("dcOp", () => {
     expectClose(fixtures[1]!.parameters.BF, 125.0);
     expectClose(fixtures[2]!.parameters.VTO, -1.8);
     expectClose(fixtures[3]!.parameters.VT0, 0.55);
+  });
+
+  it("runs device model behavior audit fixtures as reference bias points", () => {
+    const fixtures = deviceModelBehaviorAuditFixtures();
+    expect(fixtures.map((fixture) => fixture.name)).toStrictEqual([
+      "diode-forward-bias",
+      "bjt-emitter-follower",
+      "jfet-source-bias",
+      "mos-level1-common-source",
+    ]);
+
+    for (const fixture of fixtures) {
+      const result = dcOp(fixture.circuit);
+      const value = result.voltage(fixture.probeNode);
+      expect(result.converged).toBe(true);
+      expect(value).not.toBeUndefined();
+      expect(value!).toBeGreaterThanOrEqual(fixture.expectedMin);
+      expect(value!).toBeLessThanOrEqual(fixture.expectedMax);
+      expect(fixture.deckLines[0]!.startsWith("* device-model behavior fixture:")).toBe(true);
+      expect(fixture.deckLines).toContain(".op");
+      expect(fixture.deckLines.some((line) => line.startsWith(".model "))).toBe(true);
+    }
+  });
+
+  it("runs device model temperature audit fixtures as reference sweeps", () => {
+    const fixtures = deviceModelTemperatureAuditFixtures();
+    expect(fixtures.map((fixture) => fixture.name)).toStrictEqual([
+      "diode-forward-bias",
+      "bjt-emitter-follower",
+      "jfet-source-bias",
+      "mos-level1-common-source",
+    ]);
+
+    for (const fixture of fixtures) {
+      const result = dcTemperatureSweep(
+        fixture.circuit,
+        fixture.temperaturePoints.map((point) => point.temperatureKelvin),
+        {},
+        fixture.nominalTemperatureKelvin,
+        fixture.energyGapElectronVolts,
+      );
+      expect(fixture.deckLines).toContain(".temp 260.15 300.15 340.15");
+      expect(fixture.deckLines[0]!.startsWith("* device-model temperature fixture:")).toBe(true);
+      expect(result.points).toHaveLength(fixture.temperaturePoints.length);
+      for (let index = 0; index < result.points.length; index += 1) {
+        const actual = result.points[index]!;
+        const expected = fixture.temperaturePoints[index]!;
+        const value = actual.result.voltage(fixture.probeNode);
+        expect(actual.result.converged).toBe(true);
+        expectClose(actual.temperatureKelvin, expected.temperatureKelvin);
+        expect(value).not.toBeUndefined();
+        expect(value!).toBeGreaterThanOrEqual(expected.expectedMin);
+        expect(value!).toBeLessThanOrEqual(expected.expectedMax);
+      }
+    }
+
+    const jfetFixture = fixtures.find((fixture) => fixture.kind === "NJF");
+    expect(jfetFixture?.temperatureBehavior.startsWith("JFET temperature scaling is intentionally")).toBe(true);
+  });
+
+  it("summarizes device model reference deck audit fixture coverage", () => {
+    const fixtures = deviceModelReferenceDeckAuditFixtures();
+    expect(fixtures).toHaveLength(20);
+    expect(fixtures[0]!.name).toBe("diode-forward-bias:op");
+    expect(fixtures.at(-1)!.name).toBe("mos-level1-storage-charge:tran");
+
+    const expectedAnalyses = ["ac", "noise", "op", "temperature", "tran"];
+    expect([...new Set(fixtures.map((fixture) => fixture.kind))].sort()).toStrictEqual([
+      "D",
+      "NJF",
+      "NMOS",
+      "NPN",
+    ]);
+    for (const kind of ["D", "NPN", "NJF", "NMOS"]) {
+      expect(
+        [
+          ...new Set(
+            fixtures
+              .filter((fixture) => fixture.kind === kind)
+              .map((fixture) => fixture.analysis),
+          ),
+        ].sort(),
+      ).toStrictEqual(expectedAnalyses);
+    }
+
+    for (const fixture of fixtures) {
+      expect(fixture.reference).toBe("SPICE2/SPICE3-style local model-depth fixture");
+      expect(fixture.expectedBehavior.length).toBeGreaterThan(0);
+      expect(fixture.deckLines[0]!.startsWith("* device-model ")).toBe(true);
+      expect(fixture.deckLines.some((line) => line.startsWith(".model "))).toBe(true);
+      expect(fixture.deckLines.at(-1)).toBe(".end");
+    }
+  });
+
+  it("formats a stable device model reference deck audit table", () => {
+    const table = formatDeviceModelReferenceDeckAuditTable();
+    const lines = table.split("\n");
+    expect(lines).toHaveLength(21);
+    expect(lines[0]).toBe("name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines");
+    expect(lines[1]).toBe(
+      "diode-forward-bias:op\tD\top\tDfast\tSPICE2/SPICE3-style local model-depth fixture\tDC probe out remains in [0.55, 0.65] V\t8",
+    );
+    expect(lines.at(-1)).toBe(
+      "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\tSPICE2/SPICE3-style local model-depth fixture\tLevel-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits\t10",
+    );
+  });
+
+  it("formats stable device model reference deck audit records", () => {
+    const records = deviceModelReferenceDeckAuditRecords();
+    expect(records).toHaveLength(20);
+    expect(records[0]).toStrictEqual({
+      name: "diode-forward-bias:op",
+      kind: "D",
+      analysis: "op",
+      model: "Dfast",
+      reference: "SPICE2/SPICE3-style local model-depth fixture",
+      expected_behavior: "DC probe out remains in [0.55, 0.65] V",
+      deck_lines: "8",
+    });
+    expect(records.at(-1)?.name).toBe("mos-level1-storage-charge:tran");
+    expect(records.at(-1)?.deck_lines).toBe("10");
+
+    const csvLines = formatDeviceModelReferenceDeckAuditCsv().split(/\r?\n/u).filter(Boolean);
+    expect(csvLines[0]).toBe("name,kind,analysis,model,reference,expected_behavior,deck_lines");
+    expect(csvLines[1]).toBe(
+      'diode-forward-bias:op,D,op,Dfast,SPICE2/SPICE3-style local model-depth fixture,"DC probe out remains in [0.55, 0.65] V",8',
+    );
+
+    expect(JSON.parse(formatDeviceModelReferenceDeckAuditJson())).toStrictEqual(records);
+  });
+
+  it("formats stable device model reference deck audit summary records", () => {
+    const summary = deviceModelReferenceDeckAuditSummary();
+    expect(summary).toHaveLength(4);
+    expect(summary[0]).toStrictEqual({
+      kind: "D",
+      fixtureCount: 5,
+      analyses: ["op", "temperature", "ac", "noise", "tran"],
+      missingAnalyses: [],
+      deckLineCount: 42,
+      references: ["SPICE2/SPICE3-style local model-depth fixture"],
+    });
+
+    expect(formatDeviceModelReferenceDeckAuditSummaryTable()).toBe(
+      [
+        "kind\tfixture_count\tanalyses\tmissing_analyses\tdeck_lines\treferences",
+        "D\t5\top,temperature,ac,noise,tran\t\t42\tSPICE2/SPICE3-style local model-depth fixture",
+        "NPN\t5\top,temperature,ac,noise,tran\t\t47\tSPICE2/SPICE3-style local model-depth fixture",
+        "NJF\t5\top,temperature,ac,noise,tran\t\t52\tSPICE2/SPICE3-style local model-depth fixture",
+        "NMOS\t5\top,temperature,ac,noise,tran\t\t47\tSPICE2/SPICE3-style local model-depth fixture",
+      ].join("\n"),
+    );
+
+    const records = deviceModelReferenceDeckAuditSummaryRecords();
+    expect(records[0]).toStrictEqual({
+      kind: "D",
+      fixture_count: "5",
+      analyses: "op,temperature,ac,noise,tran",
+      missing_analyses: "",
+      deck_lines: "42",
+      references: "SPICE2/SPICE3-style local model-depth fixture",
+    });
+    expect(formatDeviceModelReferenceDeckAuditSummaryCsv().split(/\r?\n/u)[1]).toBe(
+      'D,5,"op,temperature,ac,noise,tran",,42,SPICE2/SPICE3-style local model-depth fixture',
+    );
+    expect(JSON.parse(formatDeviceModelReferenceDeckAuditSummaryJson())).toStrictEqual(records);
+  });
+
+  it("reports missing device model reference deck audit summary analyses", () => {
+    const fixtures = deviceModelReferenceDeckAuditFixtures().filter(
+      (fixture) => !(fixture.kind === "NMOS" && fixture.analysis === "tran"),
+    );
+
+    const summary = deviceModelReferenceDeckAuditSummary(fixtures);
+    const nmos = summary.find((row) => row.kind === "NMOS");
+
+    expect(nmos?.fixtureCount).toBe(4);
+    expect(nmos?.analyses).toStrictEqual(["op", "temperature", "ac", "noise"]);
+    expect(nmos?.missingAnalyses).toStrictEqual(["tran"]);
+    expect(nmos?.deckLineCount).toBe(37);
+    expect(formatDeviceModelReferenceDeckAuditSummaryTable(fixtures)).toContain(
+      "NMOS\t4\top,temperature,ac,noise\ttran\t37\tSPICE2/SPICE3-style local model-depth fixture",
+    );
+  });
+
+  it("exports stable device model reference deck audit analysis summaries", () => {
+    const summary = deviceModelReferenceDeckAuditAnalysisSummary();
+    expect(summary).toHaveLength(5);
+    expect(summary[0]).toStrictEqual({
+      analysis: "op",
+      fixtureCount: 4,
+      kinds: ["D", "NPN", "NJF", "NMOS"],
+      missingKinds: [],
+      deckLineCount: 36,
+      references: ["SPICE2/SPICE3-style local model-depth fixture"],
+    });
+
+    expect(formatDeviceModelReferenceDeckAuditAnalysisSummaryTable()).toBe(
+      [
+        "analysis\tfixture_count\tkinds\tmissing_kinds\tdeck_lines\treferences",
+        "op\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        "temperature\t4\tD,NPN,NJF,NMOS\t\t40\tSPICE2/SPICE3-style local model-depth fixture",
+        "ac\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        "noise\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        "tran\t4\tD,NPN,NJF,NMOS\t\t40\tSPICE2/SPICE3-style local model-depth fixture",
+      ].join("\n"),
+    );
+
+    const records = deviceModelReferenceDeckAuditAnalysisSummaryRecords();
+    expect(records[0]).toStrictEqual({
+      analysis: "op",
+      fixture_count: "4",
+      kinds: "D,NPN,NJF,NMOS",
+      missing_kinds: "",
+      deck_lines: "36",
+      references: "SPICE2/SPICE3-style local model-depth fixture",
+    });
+    expect(formatDeviceModelReferenceDeckAuditAnalysisSummaryCsv().split(/\r?\n/u)[1]).toBe(
+      'op,4,"D,NPN,NJF,NMOS",,36,SPICE2/SPICE3-style local model-depth fixture',
+    );
+    expect(JSON.parse(formatDeviceModelReferenceDeckAuditAnalysisSummaryJson())).toStrictEqual(records);
+  });
+
+  it("reports missing device model reference deck audit analysis summary kinds", () => {
+    const fixtures = deviceModelReferenceDeckAuditFixtures().filter(
+      (fixture) => !(fixture.kind === "NMOS" && fixture.analysis === "tran"),
+    );
+
+    const summary = deviceModelReferenceDeckAuditAnalysisSummary(fixtures);
+    const tran = summary.find((row) => row.analysis === "tran");
+
+    expect(tran?.fixtureCount).toBe(3);
+    expect(tran?.kinds).toStrictEqual(["D", "NPN", "NJF"]);
+    expect(tran?.missingKinds).toStrictEqual(["NMOS"]);
+    expect(tran?.deckLineCount).toBe(30);
+    expect(formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(fixtures)).toContain(
+      "tran\t3\tD,NPN,NJF\tNMOS\t30\tSPICE2/SPICE3-style local model-depth fixture",
+    );
+  });
+
+  it("formats a stable device model reference deck audit gate report", () => {
+    const report = deviceModelReferenceDeckAuditGate();
+
+    expect(report.passed).toBe(true);
+    expect(report.fixtureCount).toBe(20);
+    expect(report.expectedKinds).toStrictEqual(["D", "NPN", "NJF", "NMOS"]);
+    expect(report.expectedAnalyses).toStrictEqual(["op", "temperature", "ac", "noise", "tran"]);
+    expect(report.issues).toStrictEqual([]);
+    expect(formatDeviceModelReferenceDeckAuditGateReport(report)).toBe(
+      "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count\ntrue\t20\tD,NPN,NJF,NMOS\top,temperature,ac,noise,tran\t0",
+    );
+  });
+
+  it("reports missing reference deck audit gate coverage", () => {
+    const fixtures = deviceModelReferenceDeckAuditFixtures().filter(
+      (fixture) => !(fixture.kind === "NMOS" && fixture.analysis === "tran"),
+    );
+
+    const report = deviceModelReferenceDeckAuditGate(fixtures);
+    const table = formatDeviceModelReferenceDeckAuditGateReport(report);
+
+    expect(report.passed).toBe(false);
+    expect(report.issues.some((issue) => issue.fixtureName === "NMOS:tran" && issue.field === "coverage")).toBe(true);
+    expect(table).toContain("fixture_name\tfield\tmessage");
+    expect(table).toContain("NMOS:tran\tcoverage\tmissing required NMOS tran reference-deck audit row");
   });
 
   it("rejects non-Level-1 MOS model cards explicitly", () => {
@@ -237,6 +527,17 @@ describe("dcOp", () => {
     expect(result.diagnostics.convergenceAid).toBe("newton");
     expectClose(result.diagnostics.tolerance, 1.0e-9);
     expect(Number.isFinite(result.diagnostics.maxDelta)).toBe(true);
+    expect(result.diagnostics.newtonStepLimit).toBeUndefined();
+    expect(result.diagnostics.limitedNewtonSteps).toBe(0);
+    expectClose(result.diagnostics.minimumDampingFactor, 1.0);
+    expect(result.diagnostics.solverProfile.matrixSize).toBe(36);
+    expect(result.diagnostics.solverProfile.solver).toBe("sparse_real");
+    expect(result.diagnostics.solverProfile.backend).toBe("native_sparse_gaussian");
+    expect(result.diagnostics.solverProfile.structuralNonzeros).toBeGreaterThan(0);
+    expect(result.diagnostics.solverProfile.density).toBeGreaterThan(0);
+    expect(result.diagnostics.solverProfile.density).toBeLessThan(0.1);
+    expect(result.diagnostics.solverProfile.fillInNonzeros).toBeLessThanOrEqual(36 * 36);
+    expect(result.diagnostics.solverProfile.fallbackReason).toBeUndefined();
   });
 
   it("expands subcircuit instances into namespaced primitive elements", () => {
@@ -649,6 +950,30 @@ describe("dcOp", () => {
     expect(result.iterations).toBe(1);
   });
 
+  it("reports damped nonlinear Newton steps from the step limiter", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vs", "in", "0", 10.0));
+    circuit.add(diode("D1", "in", "out", 1.0e-15, 0.02585));
+    circuit.add(resistor("Rload", "out", "0", 100.0));
+
+    const result = dcOp(circuit, {
+      maxIterations: 1,
+      convergenceAids: false,
+      newtonStepLimit: 0.25,
+    });
+
+    expect(result.converged).toBe(false);
+    expect(result.convergenceAid).toBe("none");
+    expectClose(result.diagnostics.newtonStepLimit ?? 0.0, 0.25);
+    expect(result.diagnostics.limitedNewtonSteps).toBe(1);
+    expect(result.diagnostics.minimumDampingFactor).toBeGreaterThan(0.0);
+    expect(result.diagnostics.minimumDampingFactor).toBeLessThan(1.0);
+    expectClose(result.diagnostics.maxDelta, 0.25);
+    expect(Math.max(...Array.from(result.nodeVoltages.values()).map(Math.abs))).toBeLessThanOrEqual(
+      0.25 + 1.0e-12,
+    );
+  });
+
   it("recovers with pseudo-transient continuation after earlier aids fail", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vs", "in", "0", 10.0));
@@ -842,6 +1167,9 @@ describe("dcOp", () => {
     );
     expect(() => dcOp(circuit, { tolerance: 0.0 })).toThrowError(
       "tolerance must be finite and positive",
+    );
+    expect(() => dcOp(circuit, { newtonStepLimit: 0.0 })).toThrowError(
+      "newtonStepLimit must be finite and positive",
     );
   });
 

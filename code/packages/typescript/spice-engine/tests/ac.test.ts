@@ -20,6 +20,7 @@ import {
   complexPhase,
   currentSource,
   currentSourceWithAc,
+  deviceModelCapacitanceAuditFixtures,
   diode,
   inductor,
   jfet,
@@ -149,6 +150,32 @@ describe("acSweep", () => {
         "outSwing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\n" +
         "outFinal\tac\tV(out)\tlast\t\t\t5.000000e-01\n",
     );
+  });
+
+  it("runs device model capacitance audit fixtures as reference AC points", () => {
+    const fixtures = deviceModelCapacitanceAuditFixtures();
+    expect(fixtures.map((fixture) => fixture.name)).toStrictEqual([
+      "diode-capacitance-ac",
+      "bjt-capacitance-ac",
+      "jfet-capacitance-ac",
+      "mos-level1-capacitance-ac",
+    ]);
+
+    for (const fixture of fixtures) {
+      const point = acSweep(fixture.circuit, fixture.frequencyHz, fixture.frequencyHz, 1)[0]!;
+      const voltage = point.voltage(fixture.probeNode);
+      expect(voltage).not.toBeUndefined();
+      const magnitude = complexAbs(voltage!);
+      expect(magnitude).toBeGreaterThanOrEqual(fixture.expectedMagnitudeMin);
+      expect(magnitude).toBeLessThanOrEqual(fixture.expectedMagnitudeMax);
+      expect(fixture.deckLines[0]!.startsWith("* device-model capacitance fixture:")).toBe(true);
+      expect(fixture.deckLines.some((line) => line.startsWith(".model "))).toBe(true);
+      expect(fixture.deckLines.some((line) => line.startsWith(".ac "))).toBe(true);
+      expect(fixture.capacitanceBehavior.length).toBeGreaterThan(0);
+    }
+
+    const jfetFixture = fixtures.find((fixture) => fixture.kind === "NJF");
+    expect(jfetFixture?.capacitanceBehavior).toContain("CGS/CGD");
   });
 
   it("places an RC low-pass at the minus-three-dB corner", () => {
@@ -402,6 +429,33 @@ describe("acSweep", () => {
     expectClose(out!.real, -4.0);
     expectClose(out!.imag, 0.0);
     expectClose(complexAbs(points[0].voltage("vdd")!), 0.0);
+  });
+
+  it("uses JFET gate-source capacitance in AC analysis", () => {
+    function gateAmplitude(gateSourceCapacitance: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "gate", 1_000.0));
+      circuit.add(resistor("Rdrain", "drain", "0", 1_000.0));
+      circuit.add(jfet(
+        "J1",
+        "drain",
+        "gate",
+        "0",
+        "NJF",
+        1.0e-12,
+        -2.0,
+        0.0,
+        gateSourceCapacitance,
+      ));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("gate")!);
+    }
+
+    const withoutCapacitance = gateAmplitude(0.0);
+    const withCapacitance = gateAmplitude(1.0e-6);
+
+    expect(withoutCapacitance).toBeGreaterThan(0.9);
+    expect(withCapacitance).toBeLessThan(withoutCapacitance / 100.0);
   });
 
   it("uses MOSFET overlap capacitance in AC analysis", () => {

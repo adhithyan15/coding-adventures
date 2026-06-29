@@ -1,6 +1,25 @@
 # LANG-FULL E4 — Strings (design spec)
 
-**Status:** design pass (this document) — implementation gated on sign-off.
+**Status:** IR + reference VM slice implemented. BASIC BA4 literal/scalar
+strings, reassignment, equality/inequality, lexical ordering, copied-slot
+equality, literal and variable-backed concat, expression concat in `PRINT`/`IF`,
+and multi-item string `PRINT` with `;` and `,` run on all seven backends,
+including `PRINT A$ + B$` over two scalar string slots. ALGOL AL4 literal output,
+`output`, multi-argument `output`, scalar variables, scalar copies, copy
+snapshots, and literal-backed string equality/ordering predicates run on all
+seven backends. Twig literal, immutable top-level, lexical-local, direct
+top-level-function, annotated string-parameter, and direct-call-inferred
+unannotated string-parameter string-op proofs, including named top-level string
+actuals plus static string expression, lexical, and derived sequential `let*`
+string actuals, plus multi-parameter string equality, run on all seven backends,
+including `str_concat` and `str_slice` feeding `str_index`, lexical ordering
+predicates, a function-wrapped `string-length` direct call, `string-length` over
+a bare `str` parameter annotation, and `string-length` over an unannotated
+parameter with conservative literal, static-expression, named, lexical, or
+derived sequential `let*` direct-call evidence, including multi-parameter
+direct-call evidence.
+Captured/dynamic strings, arrays/input/unobserved or conflicting parameters, and fuller backend
+byte-string representations remain.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
 **Unlocks:** Dartmouth BASIC strings + string `PRINT` (BA4), ALGOL 60 strings +
 `print`/`output` I/O (AL4), Twig strings on the code-gen backends (TW4), and any
@@ -56,7 +75,7 @@ representation that is natural and safe for its target.
 
 ## 2. IIR surface
 
-Six new ops. A string value rides the `type_hint` `str`; it flows as a `Var`
+Eight string ops. A string value rides the `type_hint` `str`; it flows as a `Var`
 (a managed reference or a fat handle), exactly like an `array<T>` value.
 
 | Op | Form | Result | Semantics |
@@ -65,12 +84,13 @@ Six new ops. A string value rides the `type_hint` `str`; it flows as a `Var`
 | `str_len` | `dest <- s` | `i64` | The **byte** length of `s`. |
 | `str_concat` | `dest <- a, b` | `str` | A new string = bytes of `a` followed by bytes of `b`. Neither input is mutated. |
 | `str_index` | `dest <- s, idx` | `i64` | **Bounds-checked** byte load: if `idx < 0 \|\| idx >= str_len(s)` → **trap**; else `dest` = the unsigned byte value `s[idx]` (0–255). |
+| `str_slice` | `dest <- s, start, end` | `str` | **Bounds-checked** byte slice `[start,end)`: invalid ranges trap; valid ranges produce a new immutable string. |
 | `str_eq` | `dest <- a, b` | `i64` (bool) | `1` if `a` and `b` have identical bytes, else `0`. |
+| `str_cmp` | `dest <- a, b` | `i64` | Lexicographic byte ordering: `-1` if `a < b`, `0` if equal, `1` if `a > b`. |
 | `print_str` | `s` | — | Write the bytes of `s` to stdout (no implicit newline). The text-I/O primitive — the string sibling of `call_builtin "print_i64"`. |
 
-`str_cmp` (lexicographic `-1/0/1`) and `str_substr` are **follow-ups**, not v1 —
-`str_eq` covers the first runnable proofs (`PRINT`, equality), and lexical
-ordering can layer on `str_index` + `str_len` later.
+Broader dynamic allocation, captured/reassigned strings, and richer frontend
+string APIs remain follow-ups beyond this literal/known-value foothold.
 
 ### 2.1 Type model
 
@@ -100,53 +120,119 @@ explicit `cmp idx,len` + branch-to-trap.
 
 ## 3. Per-backend representation
 
-| Backend | Family | Representation | `str_const` | `str_len` | `str_index` | `str_concat` | `print_str` |
-|---|---|---|---|---|---|---|---|
-| **vm-core** | (interp) | `Value::Str(Vec<u8>)` (new value variant) or a handle into `memory` | intern the literal bytes | `.len()` | range-checked byte index | allocate a new buffer | write bytes to the host stdout sink |
-| **jit-core** | (interp) | same as vm-core (CIR mirrors it) | — | — | — | — | — |
-| **JVM** | GC | `java/lang/String` (or `byte[]`) | `ldc "…"` (constant pool `String`) | `invokevirtual String.length()` (or `arraylength`) | `String.charAt`/`bytes[i]` (native check) | `StringBuilder`/`String.concat` | `BasicRuntime.printStr(String)` → `System.out.print` |
-| **CLR** | GC | `System.String` | `ldstr "…"` | `callvirt String::get_Length` | `String::get_Chars` (native check) | `String::Concat` | `BasicRuntime::PrintStr` → `Console.Write` |
-| **WASM** | GC | WasmGC `(array i8)` — or linear-memory buffer + length header if GC disabled | data segment / `array.new_data` | `array.len` | `array.get_u` (native trap) | `array.new` + copy | host import `env.__print_str(ptr,len)` |
-| **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | a `@.str.N` global + a header word | load header word | guard `icmp ult` → `br trap`; else `getelementptr`+`load i8` (zero-extended) | `@malloc(len_a+len_b+8)` + two `memcpy`s | `@__print_str(i8* base+8, i64 len)` C-runtime |
-| **x86_64** | static | length-prefixed `__twig_alloc_bytes` buffer; literals in `.rodata` | emit the literal into rodata, materialise its address | load header | `cmp`/`jae trap`; else `movzx [base+8+idx]` | alloc + `rep movsb` ×2 | `call __print_str` |
-| **aarch64** | static | length-prefixed buffer; literals in `__TEXT,__const` | `adrp`/`add` the literal address | load header | `cmp`/`b.hs trap`; else `ldrb [base+8+idx]` | alloc + copy | `bl __print_str` |
+| Backend | Family | Representation | `str_const` | `str_len` | `str_eq` | `str_cmp` | `str_index` | `str_concat` | `str_slice` | `print_str` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **vm-core** | (interp) | `Value::Str(Vec<u8>)` (new value variant) or a handle into `memory` | intern the literal bytes | `.len()` | byte equality | byte ordering | range-checked byte index | allocate a new buffer | allocate a sliced buffer | write bytes to the host stdout sink |
+| **jit-core** | (interp) | same as vm-core (CIR mirrors it) | — | — | — | — | — | — | — | — |
+| **JVM** | GC | `java.lang.String` for the landed literal-output/metadata/index slice; byte-string representation still under E4-managed | `ldc` string CP entry ✅ for ASCII literals | `String.length()` ✅ for ASCII literals | `String.equals(Object)` ✅ for ASCII literals | `String.compareTo` + `Integer.signum` ✅ | `String.charAt(I)` ✅ for ASCII literals | `String.concat(String)` ✅ for ASCII literals | `String.substring(II)` ✅ for ASCII literals | `PrintStream.print(String)` ✅ |
+| **CLR** | GC | `System.String` for the landed literal-output/metadata/index slice; byte-string representation still under E4-managed | `ldstr "…"` ✅ for ASCII literals | `String.Length` ✅ for ASCII literals | `String.Equals(string,string)` ✅ for ASCII literals | `String.CompareOrdinal` + `Math.Sign` ✅ | `String.get_Chars(int32)` ✅ for ASCII literals | `String.Concat(string,string)` ✅ for ASCII literals | `String.Substring(int32,int32)` ✅ for ASCII literals | `Console.Write(string)` ✅ |
+| **WASM** | linear-memory foothold now; WasmGC later | `i32` pointer into a data segment for the landed literal-output/metadata/index slice; richer byte-string representation still under E4-managed | data segment ✅ for ASCII literals | literal side-table length ✅ | literal side-table byte equality ✅ | literal side-table ordering ✅ | guarded `i32.load8_u` ✅ for ASCII literals | literal data entry ✅ | literal side-table slice ✅ | host import `env.__print_str(ptr,len)` ✅ |
+| **LLVM** | static | length-prefixed buffer `[i64 len][bytes…]`; literals in a `private constant` global | private `{len,bytes}` global ✅ for ASCII literals | literal side-table length ✅ | literal side-table byte equality ✅ | literal side-table ordering ✅ | folded literal byte ✅ | literal metadata ✅ | literal metadata slice ✅ | `@__print_str(i8* base+8, i64 len)` C-runtime ✅ |
+| **x86_64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | folded literal equality ✅ | folded literal ordering ✅ | folded literal byte ✅ | folded literal concat ✅ | folded literal slice ✅ | `call __twig_print_string(ptr,len)` ✅ |
+| **aarch64** | static | heap-byte literal-output foothold now; full length-prefixed rodata model later | `alloc_bytes` + `store_byte` ✅ for ASCII literals | folded literal length ✅ | folded literal equality ✅ | folded literal ordering ✅ | folded literal byte ✅ | folded literal concat ✅ | folded literal slice ✅ | `bl __twig_print_string(ptr,len)` ✅ |
 
 **Unmanaged header layout** (LLVM / x86_64 / aarch64): identical to E5's array
 header — word 0 is the byte count, bytes start at offset 8. String literals are
-emitted once into read-only data with that header; `str_concat` allocates a fresh
-`8 + len_a + len_b` block via the existing `alloc_bytes`/`__twig_alloc_bytes`
-machinery. **No new allocator** — E4 reuses E5's.
+emitted once into read-only data with that header. The landed LLVM literal-only
+slice folds direct-literal `str_concat` into a derived read-only constant so
+`print_str` can consume the concat result; richer dynamic concat allocation
+remains future E4-managed/static work. **No new allocator** — E4 reuses E5's.
 
-**Managed backends** (JVM/CLR/WASM): native `String` / managed `(array i8)`; the
-length and bounds check come for free; GC reclaims. `str_const` is the native
-constant-load (`ldc`/`ldstr`/data segment).
+**Managed backends** (JVM/CLR/WASM): JVM/CLR currently use native `String`
+constant loads (`ldc`/`ldstr`) for the literal-output/metadata/index slice;
+because the landed proof is printable ASCII, managed character length/indexing
+equals E4 byte length/indexing. WASM currently uses a linear-memory data segment,
+side-table metadata, and guarded byte loads; a richer managed `(array i8)`/WasmGC
+representation remains the follow-up for non-literal byte-string ops.
 
 **The print runtime** (`print_str`): the static backends share one
 `__print_str(const char* base_plus_8, long len)` C runtime (the string sibling of
 the existing `__print_i64`), compiled into the LLVM/native matrix harness exactly
 as `PRINT_RUNTIME_C` is today. WASM imports `env.__print_str(ptr,len)` (the sibling
-of the existing `env.__print_i64`). The JVM/CLR call a `BasicRuntime.printStr`.
-This is the one genuinely new piece of host surface E4 adds beyond E5.
+of the existing `env.__print_i64`). The landed JVM/CLR literal-output footholds
+write through `PrintStream.print(String)` / `Console.Write(string)` directly; a
+broader `printStr` host surface remains a representation decision for the rest of
+E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
 
 ---
 
 ## 4. Frontend drivers
 
 - **Dartmouth BASIC (BA4)** — `PRINT "HELLO"` already *parses* (the grammar has a
-  `STRING` `print_item`; the frontend currently errors "string literals in PRINT
-  (need LANG77)"). Lower a `STRING` print-item to `str_const` + `print_str`;
-  string variables (`A$`) and `PRINT A$` to a `str`-typed slot. String compare in
-  `IF A$ = "Y"` lowers to `str_eq`.
+  `STRING` `print_item`); the frontend now lowers a `STRING` print-item to
+  `str_const` + `print_str` on all seven backends. `$` string variables now
+  tokenize/parse as `NAME`s, and `LET A$ = "HI"; PRINT A$` lowers to a safe E4
+  string slot plus `print_str`; `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
+  proves literal reassignment through that same slot, and
+  `LET A$ = "O" + "K"; PRINT A$` proves literal `str_concat`. `LET A$ = "OK";
+  LET B$ = A$; PRINT B$` proves scalar string copy by lowering through
+  `str_concat` with an empty suffix, and `IF B$ = A$ THEN ...` proves copied-slot
+  equality through `str_eq`. `PRINT A$; B$` proves ordered tight multi-item string
+  output without concat or numeric formatting helpers, while `PRINT A$, B$`
+  proves BA2's comma separator (`putchar(' ')`) composes with the same ordered
+  `print_str` calls. `LET A$ = "O"; PRINT A$ + "K"` proves `PRINT` can consume a
+  temporary E4 string-expression result, and `LET B$ = "K"; PRINT A$ + B$`
+  proves both concat operands can be scalar string slots in that direct-print path.
+  `IF A$ + "K" = "OK" THEN ...` proves the same temporary expression path before
+  `str_eq`, while `IF A$ + B$ = "OK" THEN ...` and
+  `IF A$ + B$ <> "NO" THEN ...` prove variable-variable concat on the `=` and
+  `<>` branch paths through `str_eq` plus `jmp_if_true` / `jmp_if_false`.
+  `LET B$ = A$ + "K"; PRINT B$` proves variable-backed concat
+  assignment into another scalar string slot. String compares in `IF A$ = "Y"` and
+  `IF A$ <> "Y"` lower to `str_eq` (the latter branches with `jmp_if_false`),
+  while `IF A$ < "B"` / `IF "B" > A$` lower through `str_cmp` plus typed zero
+  comparisons. These paths now drive line-control branching on all seven
+  backends; string arrays, string `INPUT`, captured/dynamic string storage, and
+  broader runtime byte-string operations remain follow-ups.
 - **ALGOL 60 (AL4)** — `string` is already a `type` keyword; `algol-parser`
-  produces string literals. Lower `string` declarations to `str` slots and the
-  (to-be-added) `print`/`output` intrinsic to `print_str`.
+  produces string literals. The current foothold recognises undeclared
+  statement-position `print`/`output` calls and lowers string literal actuals to
+  `str_const` + `print_str`. Literal-backed scalar string variables now lower
+  `s := 'HI'` to a direct `str_const` slot consumed by `print(s)`, and
+  literal-backed scalar copies lower `t := s` through `str_concat` with an empty
+  suffix. Reassigning the source after a copy leaves the target printable as a
+  snapshot, matching the immutable E4 value model. `output(s, t)` over two
+  literal-backed scalar strings preserves actual order through two E4
+  `print_str` calls. Literal-backed scalar string predicates lower through E4
+  too: `s = 'OK'` / `s != 'NO'` use `str_eq` plus typed zero comparisons, while
+  `s < 'BETA'` / `'BETA' > s` use `str_cmp` plus typed zero comparisons before
+  the normal ALGOL conditional branch. Captured/`own` strings, arrays,
+  parameters, and broader dynamic strings remain follow-ups.
 - **Twig (TW4)** — Twig string literals + `print` lower to `str_const` +
-  `print_str`; `++`/`string-append` to `str_concat`, `string=?` to `str_eq`. (The
-  dynamic-`any` Twig path still needs broader E6; the *typed* string slice here is
-  the statically-typed subset that clears the code-gen validators, mirroring how
-  E5/E6 carved a typed slice out of Twig.)
+  `print_str`; `++`/`string-append` to `str_concat`, `string=?` to `str_eq`,
+  `string<?`/`string>?` to `str_cmp` plus typed comparisons, and `string-ref`
+  to `str_index`. Direct literals, immutable top-level values, and
+  lexical `let`/`let*` locals can now feed `str_len`, `str_index`, `str_eq`, `str_cmp`, and
+  `str_concat` on all seven backends; local `substring` lowers to `str_slice`,
+  and local `string-append` results can also feed
+  `string-ref` directly through `str_concat` followed by `str_index`, and
+  local `string-length` results can compute `string-ref` indexes through typed
+  arithmetic. Direct top-level functions whose body ends in one of those typed
+  E4 string-op results now preserve the concrete return type through a later
+  direct `call`; `(define (strlen) (string-length "HELLO")) (strlen)` returns `5`
+  on all seven backends. Bare `str`/`string` parameter annotations on top-level
+  functions now seed concrete `str` IIR params, so `(define (strlen (s : str))
+  (string-length s)) (strlen "HELLO")` also returns `5` without dynamic string
+  builtins. Conservative `main`-level direct-call evidence can now type
+  otherwise-unannotated top-level string parameters, so `(define (strlen s)
+  (string-length s)) (strlen "HELLO")`, `(define (strlen x) (string-length x))
+  (strlen (substring (string-append "HE" "LLO!") 0 5))`, `(define s "HELLO")
+  (define (strlen x) (string-length x)) (strlen s)`, `(define (strlen x)
+  (string-length x)) (let ((s "HELLO")) (strlen s))`, and `(define (strlen x)
+  (string-length x)) (let* ((a "HE") (b (string-append a "LLO"))) (strlen b))`
+  follow the same E4 path without synthesizing refinement annotations. A single
+  direct call can also type multiple unannotated string params, so `(define
+  (same a b) (if (string=? a b) 42 0)) (same "OK" (string-append "O" "K"))`
+  lowers the parameter equality through `str_eq`. Named
+  evidence is limited to non-escaping top-level
+  string values that can stay in `main` as typed registers; lexical evidence is
+  limited to scoped `let`/`let*` string values whose dynamic shadows are excluded.
+  The dynamic-`any`, captured, reassigned, unobserved/conflicting, and closure-derived Twig string parameter paths still need broader
+  E6/dynamic representation work; the *typed* string slice here is the
+  statically-typed subset that clears the code-gen validators, mirroring how E5/E6
+  carved a typed slice out of Twig.
 
-The frontends emit `str` values and the six ops; no backend learns anything
+The frontends emit `str` values and the shared E4 string ops; no backend learns anything
 language-specific.
 
 ---
@@ -162,11 +248,56 @@ proof:
 10 PRINT "HELLO"
 ```
 
-⇒ stdout `HELLO` on every backend the toolchain is present for. A second proof
-exercises `str_concat` + `str_len` observably, e.g. a program that prints the
-length of `"AB" ++ "CDE"` ⇒ `5`, and a third exercises `str_eq` driving a branch
-(`IF A$ = "Y" THEN PRINT 1 ELSE PRINT 0`). A **bounds-trap** proof (`str_index`
-out of range) confirms the check fires (aborts non-zero) on each backend.
+⇒ stdout `HELLO` on every backend the toolchain is present for. The landed Twig
+footholds also prove direct literal `str_len`, `str_index`, `str_eq`, `str_cmp`, and
+`str_concat`-feeding-`str_len` via exit codes `5`/`66`/`1`/`42`/`5`. The named-value
+proofs exercise immutable top-level string values with `str_concat` + `str_len`,
+`str_eq` driving an `if`, and `str_index` via exit codes `5`/`42`/`67` on every
+backend. Lexical string locals now run through indexing, `let*` length, equality
+branches, and concat: `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`,
+`(let* ((s "HELLO")) (string-length s))` returns `5`,
+`(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))` returns `42`, and
+`(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`
+everywhere; `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
+returns `68`, proving a concat temporary can feed byte indexing, and
+`(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns `69`,
+proving `str_len` can compute a byte-index operand.
+`(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` returns `67`,
+proving `str_slice` can feed byte indexing. `(if (string<? "ALPHA"
+"BETA") (if (string>? "BETA" "ALPHA") 42 0) 0)` returns `42`, proving lexical
+ordering through `str_cmp`. `(define (strlen) (string-length "HELLO")) (strlen)`
+returns `5`, proving a direct top-level function can wrap a typed E4 string op
+and propagate its `i64` return through the caller's `call`. `(define (strlen
+(s : str)) (string-length s)) (strlen "HELLO")` returns `5`, proving a bare
+`str` parameter annotation can feed the same typed E4 path and that callers
+materialise known string arguments through E4 ops. The matrix also covers the
+unannotated direct-call evidence case: `(define (strlen s) (string-length s))
+(strlen "HELLO")` and `(define s "HELLO") (define (strlen x) (string-length x))
+(strlen s)` and `(define (strlen x) (string-length x)) (let ((s "HELLO"))
+(strlen s))` all return `5` without adding refinement annotations. It also covers the
+**bounds-trap** case: `(string-ref "ABC"
+3)` must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+Dartmouth BASIC proves source-language string variables, reassignment, scalar
+copy, copied-slot equality, literal/variable-backed concat, concat expressions in
+`PRINT`/`IF` including `PRINT A$ + B$`, equality/inequality branches, and multi-item string `PRINT` with
+both `;` and `,` on all seven backends. ALGOL proves literal output, the
+`output` alias, multi-argument `output`, scalar string variables, scalar copies,
+copy snapshots, and literal-backed scalar string predicates on the same
+all-seven E4 path:
+
+```algol
+begin string s; s := 'ALPHA';
+  if (s = 'ALPHA' and s != 'OMEGA') and
+     (s < 'BETA' and 'BETA' > s) then print('OK') else print('BAD')
+end
+```
+
+The program writes `OK` through native-AOT + LLVM + WASM + JVM + CLR + VM +
+JIT.
+Follow-up proofs now focus on string arrays/input, unobserved/conflicting or
+closure-derived parameters, captured or reassigned dynamic strings, and runtime
+byte-string operations beyond the current immutable scalar/local/top-level-function
+subset.
 
 `run_native` runs the host arch, so `NativeAot` exercises aarch64 locally and
 x86_64 on CI (as for E3/E5). The `x86-simulator` harness can additionally run the
@@ -180,34 +311,126 @@ E4 is large, so it ships as a sequence, each a `feat(lang-full): …` PR babysat
 merge before the next:
 
 0. **E4-spec** (this document) — committed specs-first, for design sign-off.
-1. **E4-ir + vm** — define the six ops + the `str` type helper in `interpreter-ir`;
-   implement them in `vm-core` (+ jit-core): a string value model, the literal
-   pool, `str_len`/`str_index` (bounds-checked)/`str_concat`/`str_eq`, and
-   `print_str` to the host sink. Unit tests incl. an out-of-bounds trap. *No
-   matrix Prog yet (needs a frontend), but a direct IIR unit test proves it runs.*
-2. **E4-basic-frontend** — `dartmouth-basic-iir-compiler` lowers `PRINT "…"` to
-   `str_const` + `print_str`; matrix `Prog` (`PRINT "HELLO"` ⇒ stdout `HELLO`)
-   runs on VM + JIT.
-3. **E4-managed-backends** — JVM, CLR, WASM string lowering (native `String` /
-   managed `(array i8)` + the `printStr` runtime); extend the matrix Prog's
-   backend list. (May be one PR per backend if they diverge.)
-4. **E4-static-backends** — LLVM, then native x86_64 + aarch64 (length-prefixed
-   rodata literals + heap `str_concat` + the shared `__print_str` C runtime +
-   explicit `str_index` guard); extend the matrix Prog to all 7. Native encodings
-   byte-verified vs the system assembler (as for E3/E5-native).
-5. **E4-ops-proofs** — matrix programs for `str_concat`+`str_len` (⇒ `5`) and
-   `str_eq` driving a branch, plus the `str_index` out-of-bounds **trap** proof,
-   across every backend.
-6. **(follow-ups, not v1)** `str_cmp` (lexical ordering) + `str_substr`; string
-   *variables* and reassignment in each frontend; ALGOL `string` arrays; Unicode
-   codepoint/grapheme semantics; the dynamic-`any` Twig string path (needs broader
-   E6); string interpolation.
+1. ✅ **E4-ir + vm** — define the string ops + the `str` type helper in
+   `interpreter-ir`; implement them in `vm-core`: a string value model,
+   `str_len`/`str_index` (bounds-checked)/`str_concat`/`str_eq`, and `print_str`
+   to the host sink. Unit tests incl. an out-of-bounds trap. *No matrix Prog yet
+   (needs a frontend), but a direct IIR unit test proves it runs.* The generic CIR
+   JIT remains i64-only and cold-interprets/declines string-shaped functions
+   until a string-capable tier is added.
+2. ✅ **E4-basic-frontend (all-7 literal-output proof)** — `dartmouth-basic-iir-compiler` lowers
+   `PRINT "…"` to `str_const` + `print_str`; matrix `Prog` (`PRINT "HELLO"` ⇒
+   stdout `HELLO`) runs on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. The
+   native/LLVM/WASM/JVM/CLR slices are deliberately literal-output footholds
+   (native heap-byte `alloc_bytes` + `store_byte` + `print_string`, LLVM private `{len,bytes}` global,
+   WASM data segment +
+   `env.__print_str(ptr,len)`, JVM/CLR `ldc`/`ldstr` + `PrintStream.print`/
+   `Console.Write(string)`).
+2a. ✅ **BA4-string-variable proof** — `coding-adventures-dartmouth-basic-lexer`
+   tokenizes `$`-suffixed names as one `NAME`, the parser accepts `STRING` as a
+   primary expression, and `dartmouth-basic-iir-compiler` lowers `LET A$ = "HI"`
+   into a safe typed string slot consumed by `PRINT A$`. Matrix `Prog` returns
+   stdout `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Literal
+   reassignment, literal concat assignment, scalar copy, variable-backed concat
+   assignment, concat expressions in `PRINT`/`IF` including `PRINT A$ + B$`,
+   expression-backed equality branches,
+   expression-backed inequality branches,
+   lexical string ordering branches,
+   copied-slot equality, tight multi-item string `PRINT` (`PRINT A$; B$`), and
+   comma-separated string `PRINT` (`PRINT A$, B$` => `O K`) all now run on the
+   same seven backends. String arrays, string `INPUT`, captured/dynamic storage,
+   and broader runtime byte-string operations remain follow-ups.
+2b. ✅ **AL4-literal-output proof** — `algol-iir-compiler` recognises
+   undeclared statement-position `print`/`output` calls and lowers string literal
+   actuals to E4 `str_const` + `print_str`. Matrix `Prog`
+   `begin print('HI') end` returns stdout `HI` on native-AOT + VM + JIT + LLVM +
+   WASM + JVM + CLR. Scalar string variables are the follow-up proof below;
+   broader dynamic strings remain follow-up work.
+2c. ✅ **AL4-string-variable proof** — `algol-iir-compiler` accepts scalar
+   `string` declarations when assigned from a literal, materialising the variable
+   slot with E4 `str_const`; `print(s)` is accepted only for literal-backed
+   slots. Matrix `Prog` `begin string s; s := 'HI'; print(s) end` returns stdout
+   `HI` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR, and the sibling
+   `output(s)` matrix proof returns `OK` through the same E4 path. The
+   multi-argument proof `begin string s, t; s := 'O'; t := 'K'; output(s, t) end`
+   also returns `OK` through ordered `print_str` calls. The scalar
+   copy proof `begin string s, t; s := 'OK'; t := s; print(t) end` and the copy
+   snapshot proof `begin string s, t; s := 'OK'; t := s; s := 'NO'; print(t) end`
+   now return stdout `OK` on the same seven backends. Captured/`own` strings,
+   string arrays, string parameters, and broader dynamic strings remain
+   follow-ups.
+3. ✅ **E4-literal-metadata/index proofs** — Twig lowers literal
+   `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
+   `(string=? "HELLO" "HELLO")`, and
+   `(string-length (string-append "AB" "CDE"))` to shared `str_const` +
+   `str_len`/`str_index`/`str_eq`/`str_concat`; matrix `Prog`s return `5`, `66`,
+   `1`, and `5` on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. This is
+   deliberately still a direct-literal foothold: native and LLVM fold to integer
+   consts, WASM uses literal data plus a guarded byte load, and JVM/CLR use
+   managed `String` metadata/index/equality/concat for printable ASCII.
+3a. ✅ **E4-named-value ops proofs** — immutable top-level Twig string value
+   defines stay in `main` as typed `str_const` registers, so named values can
+   feed `str_concat`+`str_len`, `str_eq` in an `if`, and `str_index`; matrix
+   `Prog`s return `5`, `42`, and `67` on native-AOT + VM + JIT + LLVM + WASM +
+   JVM + CLR.
+3b. ✅ **E4-lexical-local proof** — Twig `let`/`let*` string literal bindings
+   materialise directly as typed `str_const` registers, and known local string
+   and integer registers can feed E4 ops. Matrix `Prog`
+   `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67`, and
+   `(let* ((s "HELLO")) (string-length s))` plus
+   `(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))` return `5`/`42`, while
+   `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns `5`,
+   and `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
+   returns `68`, and
+   `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns `69`,
+   `(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` returns `67`,
+   and `(define (strlen) (string-length "HELLO")) (strlen)` returns `5`
+   through a typed direct `call [i64]`, and `(define (strlen (s : str))
+   (string-length s)) (strlen "HELLO")` returns `5` through a typed `str`
+   parameter, and `(define (strlen s) (string-length s)) (strlen "HELLO")`
+   returns `5` through conservative direct-call evidence for an unannotated
+   parameter, and `(define (strlen x) (string-length x)) (strlen (substring
+   (string-append "HE" "LLO!") 0 5))` returns `5` through static-expression
+   evidence for an unannotated
+   parameter, and `(define (same a b) (if (string=? a b) 42 0)) (same "OK"
+   (string-append "O" "K"))` returns `42` through multi-parameter evidence for
+   unannotated string parameters, and `(define s "HELLO") (define (strlen x) (string-length x))
+   (strlen s)` returns `5` through named top-level string evidence, and
+   `(define (strlen x) (string-length x)) (let ((s "HELLO")) (strlen s))`
+   returns `5` through lexical string evidence, and `(define (strlen x)
+   (string-length x)) (let* ((a "HE") (b (string-append a "LLO"))) (strlen b))`
+   returns `5` through derived sequential `let*` lexical evidence, on native-AOT
+   + VM + JIT + LLVM + WASM + JVM + CLR. Captured, reassigned,
+   unobserved/conflicting parameter, and closure-derived strings still wait for
+   the broader dynamic representation.
+4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
+   representations own UTF-8 byte semantics. (May be one PR per backend if they
+   diverge.)
+5. **E4-static-backends** — full native x86_64 + aarch64 byte-string ops
+   (length-prefixed rodata literals + heap `str_concat` + explicit `str_index`
+   guard). Native literal output is already proven through the heap-byte foothold;
+   this item is now the richer ops/representation slice.
+6. ✅ **E4-ops-proofs** — named-value `str_concat`+`str_len`, `str_eq` driving a
+   branch, named/local `str_index`, local `str_concat` feeding `str_index`, and
+   local `str_len` computing a `str_index` operand, `str_slice` feeding
+   `str_index`, `str_cmp` driving lexical predicates, direct top-level
+   function-call return typing, annotated string-parameter typing, and
+   direct-call-inferred unannotated parameter typing for E4 string ops from
+   literal, static-expression, named top-level, lexical, and derived sequential
+   `let*` actuals, multi-parameter string equality, plus the
+   `str_index`
+   out-of-bounds **trap** proof now run across every backend.
+7. **Follow-ups beyond v1** captured/reassigned dynamic strings,
+   string arrays/input/unobserved or conflicting parameters in each
+   frontend, runtime byte-string allocation beyond the current immutable scalar
+   foothold, Unicode codepoint/grapheme semantics, the dynamic-`any` Twig string
+   path (needs broader E6), and string interpolation.
 
-Ordering rationale mirrors E5: get the IIR + reference interpreter right (1), prove
-it end-to-end through the simplest frontend (2), then the *managed* backends (3)
-where `String` is native and bounds-checking is free, then the *static* backends
-(4) where the rodata literal + header + heap concat + guard is the real work, then
-the richer ops + trap proof (5). Front-loads the cheap high-confidence wins.
+Ordering rationale mirrors E5: get the IIR + reference interpreter right (1),
+prove it end-to-end through the simplest frontend (2), extend source-language
+frontends while staying inside the immutable typed slice (2a-3b), and only then
+take on the wider managed/static byte-string representations and dynamic
+front-end features. Front-loads the cheap high-confidence wins.
 
 ---
 

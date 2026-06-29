@@ -1,5 +1,34 @@
 # Changelog — vm-core
 
+## [0.12.0] — 2026-06-28 (LANG-FULL E4 — reference string comparison)
+
+The reference VM now implements `str_cmp`, returning the shared E4 three-way
+byte ordering convention: `-1`, `0`, or `1`.
+
+## [0.11.0] — 2026-06-28 (LANG-FULL E4 — reference string slicing)
+
+The reference VM now implements shared E4 `str_slice` semantics over
+`Value::Str`: source string plus start/end integer bounds produce a fresh
+substring. The operation is byte-indexed, traps on negative, inverted, or
+out-of-bounds ranges, and rejects ranges that do not preserve UTF-8 boundaries.
+
+## [0.10.0] — 2026-06-27 (LANG-FULL E4 — reference string ops, VM slice)
+
+Reference VM semantics for the six shared E4 string opcodes:
+
+- **`str_const`** materialises an `Operand::Str` literal as `Value::Str`.
+- **`str_len`** returns the byte length.
+- **`str_index`** returns an unsigned byte and traps on negative/out-of-range
+  indexes.
+- **`str_concat`** produces a fresh immutable string.
+- **`str_eq`** returns the IIR integer-bool convention (`1` / `0`).
+- **`print_str`** writes through the built-in registry's `print_str` sink with
+  no implicit newline, so embedders/tests can capture output while the default
+  registry writes to stdout.
+
+Verified by `tests/e4_strings.rs`, covering byte length, concat+equality,
+indexing, the bounds trap, and sink-routed output capture.
+
 ## [0.9.0] — 2026-06-22 (LANG-FULL E8 — numeric conversions, PR-1)
 
 Reference VM semantics for the three `integer`↔`real` conversion opcodes

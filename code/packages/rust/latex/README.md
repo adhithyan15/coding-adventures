@@ -35,8 +35,10 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L2 math** | math AST (frac, binom, roots, scripts, big ops, functions, accents, `\left\right` fences, relations), precedence-climbing parser, `to_latex()` round-trip | ✅ |
 | **L3 environments** | math env family — `matrix`/`pmatrix`/`bmatrix`/`vmatrix`/`cases`/`aligned`/`align` split on `&` and `\\` → `MathNode::Matrix`, round-trip; nesting + scripts | ✅ |
 | **L4 macros** | `\newcommand`/`\renewcommand`/`\providecommand` with positional `#1`..`#9`; bounded recursive expansion via `expand()` (L4a) | ✅ |
-| **L5 text breadth** | inline `\verb`/`\verb*` (L5a) + `verbatim`/`verbatim*` environment (L5b), both raw; accents, sectioning, refs to follow | 🚧 this release (L5b) |
-| L6 frontend | implement `math-frontend::MathFrontend` (LaTeX becomes plugin #1) | ⏳ |
+| **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c) + sectioning/refs/preamble/font via `recognize_structure` (L5d) | ✅ |
+| **L6 frontend** | `LatexMath` implements `math-frontend::MathFrontend` — lifts `MathNode` → neutral `MathExpr`; LaTeX is plugin #1 via `registry()` (default-on `frontend` feature) | ✅ |
+
+The ladder is **complete** (L0–L6). 🎉
 
 ## Usage
 
@@ -139,8 +141,85 @@ assert!(matches!(doc[0], Node::VerbatimEnv { .. }));   // body kept literal, $/{
 
 Only `verbatim`/`verbatim*` divert to raw scanning; every other `\begin{…}` is parsed
 structurally. An unterminated `\verb` (or a `*`/space delimiter, or a body past the line end)
-and an unterminated `verbatim` environment are spanned errors — never a mis-parse. (Text
-accents, sectioning, and cross-refs arrive in later L5 sub-rungs.)
+and an unterminated `verbatim` environment are spanned errors — never a mis-parse.
+
+### Text accents (L5c)
+
+`recognize_accents` is an opt-in pass (like `expand`) that folds an accent control sequence
+and the character it accents into a `Node::Accent` — both spellings, `\'e` and `\'{e}`,
+recognize to the same node and round-trip:
+
+```rust
+use latex::{parse, recognize_accents, Node};
+
+let doc = recognize_accents(parse(r"caf\'e").unwrap());
+assert!(matches!(doc[1], Node::Accent { .. }));   // é over `e`; "caf" stays text
+```
+
+Recognized: `\'  \`  \^  \"  \~  \=  \.` and `\u \v \H \c \d \b \r \t`. A dangling accent (no
+accent-able char after it) is left as a plain command — never dropped.
+
+### Document structure (L5d)
+
+`recognize_structure` is the second opt-in classification pass (like `recognize_accents`). It
+turns the *generic* commands L1 produces into **semantic** structure nodes — headings,
+cross-references, preamble directives, and argument-form font commands — while leaving L1's
+round-trip intact:
+
+```rust
+use latex::{parse, recognize_structure, Node, SectionLevel};
+
+let doc = recognize_structure(parse(r"\section*{Intro} see \ref{fig:1}").unwrap());
+assert!(matches!(doc[0], Node::Section { level: SectionLevel::Section, starred: true, .. }));
+assert!(doc.iter().any(|n| matches!(n, Node::CrossRef { .. })));   // \ref{fig:1}
+```
+
+Recognized:
+
+- **`Node::Section`** — `\part`/`\chapter`/`\section`/`\subsection`/`\subsubsection`/
+  `\paragraph`/`\subparagraph`, the starred `\section*{…}` form (the `*` sibling is folded),
+  and the optional short TOC title `\section[Short]{Title}`;
+- **`Node::CrossRef`** — `\label`/`\ref`/`\eqref`/`\pageref`/`\autoref`/`\nameref`/`\cite`/
+  `\citep`/`\citet` (the `\cite[note]{key}` optional is kept);
+- **`Node::Preamble`** — `\documentclass`/`\usepackage`/`\RequirePackage` with `[options]`;
+- **`Node::Styled`** — argument-form font commands (`\textbf`, `\textit`, `\texttt`, `\emph`,
+  `\underline`, …).
+
+A command that does not match its expected shape (a sectioning command with no title, a
+cross-ref with no key) is left as a plain command — never dropped or mis-folded. Font
+*declarations* (`\bfseries`, `\itshape`, `\large`, …) also stay plain commands: their effect is
+positional (until end of group), so wrapping them in an argument node would misrepresent them.
+The pass is idempotent and round-trips: `recognize_structure(parse(&n.to_latex())) == [n]`.
+(The two passes — `recognize_accents` and `recognize_structure` — are independent and compose.)
+
+### Pluggable frontend (L6)
+
+The capstone: `LatexMath` implements the [`math-frontend`](../math-frontend) `MathFrontend`
+trait, so LaTeX math plugs into the shared, notation-agnostic registry. `parse` runs the math
+grammar and **lowers** the LaTeX-shaped `MathNode` into the neutral `MathExpr` — two source
+strings that mean the same math produce the same tree, so a consumer lowers *one* AST and gets
+every notation for free:
+
+```rust
+use latex::registry;                       // a FrontendRegistry with LaTeX installed
+use math_frontend::{MathExpr, BinOp};
+
+let reg = registry();
+assert_eq!(reg.names(), ["latex"]);
+
+// \times, \cdot, and juxtaposition all normalize to the same neutral Mul:
+let a = reg.parse("latex", r"a \times b").unwrap();
+assert_eq!(a, reg.parse("latex", "ab").unwrap());
+assert!(matches!(a, MathExpr::Bin(BinOp::Mul, _, _)));
+```
+
+Lowering drops *presentation* and keeps *meaning*: fence style → `Group`, matrix delimiter →
+`Matrix`, `a^n` → `Pow`, `a_i` → `Subscript`, accents → `Call`; numbers stay **exact**
+(`MathExpr::Number`, never `f64`). Two constructs have no neutral counterpart yet — `\pm`/`\mp`
+and `\binom` — so they return a well-formed spanned error rather than being faked (extending the
+neutral AST to cover them is a future `math-frontend` change). The adapter sits behind the
+default-on **`frontend`** feature; build with `--no-default-features` for the zero-dependency
+L0–L5 parser alone.
 
 The low-level `tokenize` is also public. Tokens and errors carry half-open byte `Span`s;
 all of `parse`, `parse_math`, and `tokenize` return spanned errors rather than panicking,

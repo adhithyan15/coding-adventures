@@ -19,6 +19,7 @@ import { startSessionAction, deleteDeckAction } from "../actions.js";
 import { buildSessionQueue, isDeckCaughtUp, getDeckStats } from "../queue.js";
 import { generateSecureId } from "../secure-id.js";
 import type { Deck } from "../types.js";
+import { CollectionTools } from "./CollectionTools.js";
 
 interface DeckListProps {
   onNavigate: (path: string) => void;
@@ -57,6 +58,7 @@ export function DeckList({ onNavigate }: DeckListProps) {
         >
           New Deck
         </button>
+        <CollectionTools state={state} />
       </div>
 
       {state.decks.length === 0 ? (

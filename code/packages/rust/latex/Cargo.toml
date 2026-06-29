@@ -1,10 +1,20 @@
 [package]
 name = "latex"
-version = "0.7.0"
+version = "0.10.0"
 edition = "2021"
 description = "A full-fidelity LaTeX parser (documents and math): a catcode-driven, text-mode-primary tokenizer and (in later layers) a structural + math parser producing a faithful AST. Standalone and reusable; will also implement the math-frontend MathFrontend trait."
 license = "MIT"
 
 [dependencies]
-# No dependencies yet. The math-frontend adapter (a later layer) will add it behind a
-# thin module so the core parser stays dependency-free.
+# The only dependency, and it is **optional**: the L6 `MathFrontend` adapter lifts our math
+# AST into the neutral `math-frontend::MathExpr`. It is gated behind the (default-on)
+# `frontend` feature so the core parser (L0–L5) stays dependency-free for consumers who build
+# with `--no-default-features`.
+math-frontend = { path = "../math-frontend", optional = true }
+
+[features]
+# `frontend` is on by default (so the standard `cargo test -p latex` exercises the adapter and
+# downstream consumers get LaTeX-as-a-frontend out of the box). Build with
+# `--no-default-features` for the zero-dependency document/math parser alone.
+default = ["frontend"]
+frontend = ["dep:math-frontend"]
