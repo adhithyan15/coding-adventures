@@ -1594,6 +1594,7 @@ fn preset_candidate_matches(term: &str, candidate: &str) -> bool {
 
 fn tag_matches(filter: &TagFilter, note: Option<&Note>) -> bool {
     match filter {
+        TagFilter::Hierarchical(tag) if tag == "*" => true,
         TagFilter::Hierarchical(tag) if tag == "none" => {
             note.map_or(true, |note| note.tags.is_empty())
         }
@@ -3464,6 +3465,14 @@ mod tests {
                 .collect::<Vec<_>>()
         };
 
+        assert_eq!(
+            ids_for("tag:*"),
+            vec![
+                "tagged-note::forward",
+                "tagged-note::reverse",
+                "untagged-note::forward"
+            ]
+        );
         assert_eq!(ids_for("tag:none"), vec!["untagged-note::forward"]);
         assert_eq!(ids_for("deck:filtered"), vec!["untagged-note::forward"]);
         assert_eq!(
