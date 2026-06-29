@@ -629,6 +629,58 @@ fn twig_unannotated_string_param_direct_call_accepts_named_string_actual() {
     }
 }
 
+/// E4 direct-call evidence proof: a lexical string local in `main` can seed an
+/// otherwise-unannotated top-level string parameter when the direct call occurs
+/// in the lexical scope that keeps the actual as a typed `str` register.
+#[test]
+fn twig_unannotated_string_param_direct_call_accepts_let_string_actual() {
+    let m = compile_source(
+        "(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let strlen = m
+        .functions
+        .iter()
+        .find(|f| f.name == "strlen")
+        .expect("module should contain the top-level function");
+    assert_eq!(strlen.params, vec![("x".to_string(), "str".to_string())]);
+    assert!(
+        strlen.param_refinements.iter().all(|r| r.is_none()),
+        "call-site string evidence must not synthesize refinement annotations: {:?}",
+        strlen.param_refinements,
+    );
+    assert_eq!(strlen.return_type, "i64");
+    let len = strlen
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_len")
+        .expect("string-length should lower to str_len over the inferred param");
+    assert!(
+        matches!(len.srcs.first(), Some(Operand::Var(name)) if name == "x"),
+        "str_len should consume the inferred string parameter; got {len:?}",
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept a typed E4 string op over a lexical-actual inferred string parameter; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
 /// Path-A increment 5: `match` arms now use typed `mov` everywhere
 /// (scrutinee binding, nil-init, variant arm result merge, field
 /// extraction, body merge for variant / binding / wildcard arms).
