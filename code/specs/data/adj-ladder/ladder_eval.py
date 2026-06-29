@@ -90,7 +90,8 @@ MODES
 Usage:
     python3 ladder_eval.py rung0_arithmetic                      # cached, pretty
     python3 ladder_eval.py rung0_arithmetic --quiet              # scorecard JSON only
-    python3 ladder_eval.py rung0_arithmetic --model mlx:mlx-community/Qwen2.5-0.5B-Instruct-4bit
+    python3 ladder_eval.py rung0_arithmetic --model gemma --max-tokens 512
+    python3 ladder_eval.py rung3_derived_probability_decisions --model gemma --limit 3 --output /tmp/gemma-smoke.json
 """
 
 from __future__ import annotations
@@ -608,6 +609,10 @@ class ItemResult:
     arm_b: str | None
     arm_b_outcome: str
     bucket: str | None         # Arm B failure bucket (see classify_bucket), else None
+    arm_b_model_output: str | None = None
+    arm_b_decomposition: str | None = None
+    arm_b_decomposition_kind: str | None = None
+    arm_b_decomposition_faithful: bool | None = None
 
 
 def outcome(letter: str | None, gold: str) -> str:
@@ -681,6 +686,10 @@ def score_item(item: dict, gen) -> ItemResult:
     """Run both arms for one item. `gen` is a callable prompt→text for the model, or
     None in cached mode (Arm A is skipped → abstained; Arm B uses the gold formula)."""
     gold = item["gold_letter"]
+    arm_b_model_output = None
+    arm_b_decomposition = None
+    arm_b_decomposition_kind = None
+    arm_b_decomposition_faithful = None
 
     # --- Arm B: decompose → engine selects ---
     if gen is None:
@@ -689,9 +698,12 @@ def score_item(item: dict, gen) -> ItemResult:
         faithful = True                                     # cached: trust the gold
     else:
         raw = gen(decompose_prompt(item))
+        arm_b_model_output = raw
         if "program" in item:
             formula = None
             program = extract_program(raw)
+            arm_b_decomposition = program
+            arm_b_decomposition_kind = "program"
             answer_from = item.get("answer_from") or {}
             faithful = bool(program) and formula_is_faithful(
                 program,
@@ -702,7 +714,10 @@ def score_item(item: dict, gen) -> ItemResult:
         else:
             program = None
             formula = extract_formula(raw)
+            arm_b_decomposition = formula
+            arm_b_decomposition_kind = "formula"
             faithful = bool(formula) and formula_is_faithful(formula, item["stem"])
+        arm_b_decomposition_faithful = faithful
     if not faithful:
         arm_b_letter = None                                  # decompose failed → abstain
     elif program:
@@ -727,7 +742,29 @@ def score_item(item: dict, gen) -> ItemResult:
     return ItemResult(
         item["id"], gold, arm_a_letter, arm_a_out, arm_b_letter, arm_b_out,
         classify_bucket(arm_b_out, faithful),
+        arm_b_model_output,
+        arm_b_decomposition,
+        arm_b_decomposition_kind,
+        arm_b_decomposition_faithful,
     )
+
+
+def result_to_json(r: ItemResult) -> dict:
+    out = {
+        "id": r.item_id,
+        "gold": r.gold,
+        "arm_a": r.arm_a,
+        "arm_a_outcome": r.arm_a_outcome,
+        "arm_b": r.arm_b,
+        "arm_b_outcome": r.arm_b_outcome,
+        "bucket": r.bucket,
+    }
+    if r.arm_b_model_output is not None:
+        out["arm_b_model_output"] = r.arm_b_model_output
+        out["arm_b_decomposition"] = r.arm_b_decomposition
+        out["arm_b_decomposition_kind"] = r.arm_b_decomposition_kind
+        out["arm_b_decomposition_faithful"] = r.arm_b_decomposition_faithful
+    return out
 
 
 # ----------------------------------------------------------------------------------
@@ -1078,11 +1115,15 @@ MODEL_ALIASES = {
 }
 
 
-def load_gen(spec: str):
+def load_gen(spec: str, *, max_tokens: int = 512):
     """Build a prompt→text callable from a --model spec. Accepts a Gemma alias
     (`gemma`, `gemma-1b`, …), `mlx:<repo>` for any local MLX checkpoint (Apple
     silicon), or `cmd:<shell>` which pipes the prompt to a command's stdin and reads
-    its stdout (works with any local inference server / wrapper, e.g. ollama)."""
+    its stdout (works with any local inference server / wrapper, e.g. ollama).
+
+    `max_tokens` matters for MLX model runs on program-backed rungs: native ADJ
+    probability, optimization, and solve programs are multi-line decompositions, so
+    the default must leave enough room for the model to emit a complete program."""
     spec = MODEL_ALIASES.get(spec, spec)
     if spec.startswith("cmd:"):
         shell = spec[4:]
@@ -1104,7 +1145,7 @@ def load_gen(spec: str):
         def gen(prompt: str) -> str:
             msgs = [{"role": "user", "content": prompt}]
             templated = tok.apply_chat_template(msgs, add_generation_prompt=True, tokenize=False)
-            return generate(model, tok, prompt=templated, max_tokens=64,
+            return generate(model, tok, prompt=templated, max_tokens=max_tokens,
                             sampler=sampler, verbose=False)
 
         return gen
@@ -1114,8 +1155,12 @@ def load_gen(spec: str):
 # ----------------------------------------------------------------------------------
 # Driver.
 # ----------------------------------------------------------------------------------
-def run(rung: str, gen, model: str | None = None) -> Scorecard:
+def run(rung: str, gen, model: str | None = None, limit: int | None = None) -> Scorecard:
     items = json.loads((HERE / rung / "items.json").read_text())["items"]
+    if limit is not None:
+        if limit <= 0:
+            raise ValueError("limit must be positive")
+        items = items[:limit]
     mode = "cached" if gen is None else "model"
     card = Scorecard(rung, mode, model)
     for it in items:
@@ -1127,31 +1172,40 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="ADJ-LADDER two-arm scoreboard")
     ap.add_argument("rung", help="rung directory name, e.g. rung0_arithmetic")
     ap.add_argument("--model", help="model spec: a gemma alias (gemma, gemma-1b), mlx:<repo>, or cmd:<shell> (omit for cached engine-only run)")
+    ap.add_argument("--max-tokens", type=int, default=512, help="maximum MLX generation tokens for model decompositions (default: 512)")
+    ap.add_argument("--limit", type=int, help="score only the first N items; useful for real local model smoke runs")
+    ap.add_argument("--output", help="write the scorecard to this path instead of the default ladder-scorecard*.json file")
     ap.add_argument("--quiet", action="store_true", help="emit scorecard JSON only")
     args = ap.parse_args(argv)
+    if args.max_tokens <= 0:
+        ap.error("--max-tokens must be positive")
+    if args.limit is not None and args.limit <= 0:
+        ap.error("--limit must be positive")
 
-    gen = load_gen(args.model) if args.model else None
-    card = run(args.rung, gen, args.model)
+    gen = load_gen(args.model, max_tokens=args.max_tokens) if args.model else None
+    card = run(args.rung, gen, args.model, limit=args.limit)
     summary = card.summary()
 
     scorecard = {
         "summary": summary,
-        "results": [
-            {"id": r.item_id, "gold": r.gold,
-             "arm_a": r.arm_a, "arm_a_outcome": r.arm_a_outcome,
-             "arm_b": r.arm_b, "arm_b_outcome": r.arm_b_outcome,
-             "bucket": r.bucket}
-            for r in card.results
-        ],
+        "results": [result_to_json(r) for r in card.results],
     }
+    if card.mode == "model":
+        scorecard["run_config"] = {"max_tokens": args.max_tokens}
+    if args.limit is not None:
+        scorecard.setdefault("run_config", {})["limit"] = args.limit
     # Write per-mode/model files so a cached CI run never clobbers a committed two-arm
     # headline: cached → ladder-scorecard.json; model → ladder-scorecard.<model>.json.
-    if card.mode == "cached":
-        out_name = "ladder-scorecard.json"
+    if args.output:
+        out_path = Path(args.output)
     else:
-        slug = re.sub(r"[^a-z0-9.-]+", "-", args.model.lower()).strip("-")
-        out_name = f"ladder-scorecard.{slug}.json"
-    (HERE / out_name).write_text(json.dumps(scorecard, indent=2) + "\n")
+        if card.mode == "cached":
+            out_name = "ladder-scorecard.json"
+        else:
+            slug = re.sub(r"[^a-z0-9.-]+", "-", args.model.lower()).strip("-")
+            out_name = f"ladder-scorecard.{slug}.json"
+        out_path = HERE / out_name
+    out_path.write_text(json.dumps(scorecard, indent=2) + "\n")
 
     if not args.quiet:
         _pretty(card, summary)

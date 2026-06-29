@@ -411,6 +411,55 @@ def test_divergence_math():
     assert s["divergence"]["correct"] == 2
 
 
+def test_model_score_item_records_decomposition_trace():
+    item = {
+        "id": "trace_001",
+        "stem": "What is 2 + 3?",
+        "formula": "2 + 3",
+        "options": {"A": 4, "B": 5, "C": 6, "D": 7, "E": 8},
+        "gold_letter": "B",
+    }
+    result = le.score_item(item, lambda prompt: "Formula: 2 + 3")
+    assert result.arm_b_model_output == "Formula: 2 + 3"
+    assert result.arm_b_decomposition == "2 + 3"
+    assert result.arm_b_decomposition_kind == "formula"
+    assert result.arm_b_decomposition_faithful is True
+
+
+def test_result_json_omits_trace_for_cached_result():
+    result = le.ItemResult("1", "A", None, "abstained", "A", "correct", None)
+    out = le.result_to_json(result)
+    assert "arm_b_model_output" not in out
+    assert out["arm_b"] == "A"
+
+
+def test_result_json_includes_trace_for_model_result():
+    result = le.ItemResult(
+        "1",
+        "A",
+        "B",
+        "wrong",
+        None,
+        "abstained",
+        "b",
+        "Formula: 99",
+        "99",
+        "formula",
+        False,
+    )
+    out = le.result_to_json(result)
+    assert out["arm_b_model_output"] == "Formula: 99"
+    assert out["arm_b_decomposition"] == "99"
+    assert out["arm_b_decomposition_kind"] == "formula"
+    assert out["arm_b_decomposition_faithful"] is False
+
+
+def test_run_limit_caps_item_count():
+    card = le.run("rung0_arithmetic", gen=None, limit=3)
+    assert len(card.results) == 3
+    assert card.summary()["arm_b_model_plus_adj"]["total"] == 3
+
+
 # ---- end-to-end engine run (only when the CLI is built) -----------------------
 @pytest.mark.parametrize("rung", SELF_CONTAINED_RUNGS)
 def test_cached_engine_selects_every_gold(rung):
