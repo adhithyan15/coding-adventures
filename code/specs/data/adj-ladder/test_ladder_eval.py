@@ -38,6 +38,7 @@ SELF_CONTAINED_RUNGS = (
     "rung4_physics_chem",
     "rung4_dimensional",
     "rung4_products",
+    "rung5_multistep",
 )
 
 
