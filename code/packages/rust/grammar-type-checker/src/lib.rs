@@ -321,7 +321,7 @@ mod tests {
             line: 1,
             column: 1,
             type_name: None,
-            flags: None,
+            flags: None, cv: None,
         };
         GrammarASTNode {
             rule_name: rule.to_owned(),
