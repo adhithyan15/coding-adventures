@@ -33,19 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE parser/app facade.
+1. Rust Berkeley syntax lowerer routing.
    - Status: current PR completion candidate.
-   - Add a Rust `spice-netlist-parser` facade for Berkeley SPICE logical-card
-     syntax that exposes grammar metadata, normalized cards, leading `+`
-     continuations, source spans, token names, stable diagnostics, and analysis
-     inventory.
-   - Add a Rust app-deck entrypoint for Mosaic-backed UI runtimes that parses
-     syntax once, reports syntax/lowering diagnostics, exposes analysis
-     inventory, and can run source-order or selected runnable analyses through
-     the existing simulator parser.
-   - This slice does not change Python/TypeScript simulator semantics. The
-     follow-up grammar-backed parser contract mirrors this facade outward once
-     the Rust/Mosaic substrate shape is reviewed.
+   - Route the Rust `spice-netlist-parser` semantic lowerer through the
+     Berkeley syntax facade by default, so normalized logical cards, leading
+     `+` continuations, source spans, and stable syntax diagnostics drive the
+     existing simulator parser.
+   - Preserve the Mosaic app facade as the Rust runtime entrypoint while
+     removing the parser's duplicate physical-line pass.
+   - This slice is a Rust/Mosaic substrate step. Python and TypeScript parser
+     parity remain the next explicit contract item once the Rust syntax-driven
+     lowering path is reviewed.
 
 ## Completed Slices
 
@@ -1415,12 +1413,20 @@ the Rust, Python, and TypeScript surfaces together.
      and parser grammars so future parser rewrites can break old ad hoc parsing
      behavior against a checked source grammar instead of guessing.
 
+133. Rust Berkeley SPICE parser/app facade.
+   - Status: completed in PR 6902.
+   - Rust `spice-netlist-parser` now exposes a Berkeley SPICE logical-card
+     syntax facade with grammar metadata, normalized cards, leading `+`
+     continuation handling, source spans, token names, stable diagnostics, and
+     analysis inventory.
+   - The Rust app-deck facade parses syntax once, reports syntax/lowering
+     diagnostics, exposes analysis inventory, and can run source-order or
+     selected runnable analyses through the simulator parser for Mosaic-backed
+     UI runtimes.
+
 ## Backlog
 
 1. Grammar-backed parser and app facade.
-   - Route the Rust `spice-netlist-parser` semantic lowerer through the
-     Berkeley syntax facade and checked grammar contract, replacing the current
-     ad hoc line parser as the default deck parse path.
    - Mirror the resulting public parser contract in Python and TypeScript, even
      if that breaks current pre-release parser APIs.
    - Expand the Rust Mosaic app facade from analysis inventory and execution

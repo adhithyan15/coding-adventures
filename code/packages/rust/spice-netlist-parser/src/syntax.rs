@@ -574,7 +574,7 @@ fn tokenize_card(
     if paren_depth > 0 {
         diagnostics.push(BerkeleySyntaxDiagnostic::error(
             "SPICE_SYNTAX_UNCLOSED_PAREN",
-            "opening parenthesis is missing its closing parenthesis",
+            "unclosed parenthesis: opening parenthesis is missing its closing parenthesis",
             Some(builder.span()),
         ));
     }
