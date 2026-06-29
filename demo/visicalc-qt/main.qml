@@ -33,8 +33,10 @@ import "qml"
 
 Window {
     id: root
-    width: 720
-    height: 520
+    width: 1180
+    height: 680
+    minimumWidth: 560
+    minimumHeight: 420
     visible: true
     title: "VisiCalc — Mosaic Qt demo · Rust engine"
     color: "#1E1E1E"
@@ -49,7 +51,7 @@ Window {
     // a sibling component rendered on the same engine via the viewport
     // primitive). The Layout ignores items whose `visible` is false, so only
     // the active view participates in layout.
-    property bool infinite: false
+    property bool infinite: true
 
     ColumnLayout {
         anchors.fill: parent

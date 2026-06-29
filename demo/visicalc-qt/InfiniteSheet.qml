@@ -123,11 +123,26 @@ Item {
             color: sheet.cPanel
             border.color: sheet.cLine
             radius: 8
+            clip: true
 
-            RowLayout {
+            // The toolbar is feature-rich (~20 controls), so it can be wider than
+            // the window. A horizontal Flickable lets it scroll/swipe instead of
+            // clipping the trailing buttons (Undo/Redo) off the edge — the same
+            // approach the web reference uses. contentWidth tracks the row's
+            // implicit width; a two-finger swipe pans it.
+            Flickable {
                 anchors.fill: parent
                 anchors.margins: 8
-                spacing: 6
+                contentWidth: toolbarRow.implicitWidth
+                contentHeight: height
+                clip: true
+                flickableDirection: Flickable.HorizontalFlick
+                boundsBehavior: Flickable.StopAtBounds
+
+                RowLayout {
+                    id: toolbarRow
+                    height: parent.height
+                    spacing: 6
 
                 // Address pill.
                 Rectangle {
@@ -152,9 +167,12 @@ Item {
                     font.italic: true
                     font.family: sheet.monoFamily
                 }
-                // Formula field — accent focus ring on edit.
+                // Formula field — accent focus ring on edit. A fixed width (not
+                // fillWidth) so the toolbar's total width is definite and the
+                // wrapping Flickable can scroll it horizontally when the window is
+                // too narrow to show every action.
                 Rectangle {
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: 280
                     Layout.preferredHeight: 30
                     color: "#0f1115"
                     radius: 5
@@ -387,7 +405,8 @@ Item {
                     ToolTip.text: "Redo the last undone edit"
                     onClicked: if (doc) doc.redo()
                 }
-            }
+                }   // RowLayout (toolbarRow)
+            }       // Flickable (horizontal toolbar scroll)
         }
 
         // ── Sheet tab bar ────────────────────────────────────────────────

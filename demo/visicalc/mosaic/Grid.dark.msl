@@ -76,6 +76,11 @@ style Grid {
     border-width: 1px ;
     border-style: solid ;
     border-color: #3f3f46 ;
+    // Give the header cell an explicit height like the body `cell` has —
+    // without it, backends that size a cell box from its style height (Qt
+    // emits the Rectangle with no height, an anchor-filled Text inside) collapse
+    // the header row to a sliver and the A/B/C… letters clip. Matches header-row.
+    height:      24px ;
   }
 
   // The header row itself sets the row height; useful when the

@@ -65,6 +65,9 @@ style Grid {
     border-width: 1px ;
     border-style: solid ;
     border-color: #c8c8c8 ;
+    // Explicit header-cell height (see the dark stylesheet) so a backend that
+    // sizes the cell box from its style height doesn't collapse the header row.
+    height:      24px ;
   }
 
   part sheet/header-row {
