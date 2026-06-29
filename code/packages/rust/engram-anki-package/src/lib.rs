@@ -1537,8 +1537,10 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
             })?;
         let fields = export_note_field_values(note, note_type);
         let field_join = fields.join("\u{1f}");
-        let sort_field = fields.first().cloned().unwrap_or_default();
         let source = anki_source(export, ExternalSourceTarget::Note, &note.key);
+        let note_type_source =
+            anki_source(export, ExternalSourceTarget::NoteType, &note.note_type_key);
+        let sort_field = export_note_sort_field(&fields, note_type_source);
         connection
             .execute(
                 "INSERT INTO notes VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
@@ -1552,7 +1554,7 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     join_anki_tags(&note.tags),
                     field_join,
                     sort_field,
-                    export_note_checksum(source, &fields.first().cloned().unwrap_or_default()),
+                    export_note_checksum(source, &sort_field),
                     source_i64(source, "flags").unwrap_or_default(),
                     source_string(source, "data").unwrap_or_default(),
                 ],
@@ -2053,6 +2055,18 @@ fn source_json(source: Option<&ExternalSourceRecord>, key: &str) -> Option<Value
     source
         .and_then(|source| source.data.get(key))
         .and_then(|value| serde_json::from_str(value).ok())
+}
+
+fn export_note_sort_field(
+    fields: &[String],
+    note_type_source: Option<&ExternalSourceRecord>,
+) -> String {
+    let sort_index = source_json(note_type_source, "rawJson")
+        .and_then(|raw| json_i64(&raw, "sortf"))
+        .and_then(|index| usize::try_from(index).ok())
+        .filter(|index| *index < fields.len())
+        .unwrap_or_default();
+    fields.get(sort_index).cloned().unwrap_or_default()
 }
 
 fn export_note_checksum(source: Option<&ExternalSourceRecord>, sort_field: &str) -> i64 {
@@ -4327,6 +4341,7 @@ CREATE TABLE graves (
         collection.notes[0].guid = "stable-guid".to_string();
         collection.notes[0].modified_at = 1_700_006_666;
         collection.notes[0].update_sequence_number = 17;
+        collection.notes[0].sort_field = "hello".to_string();
         collection.notes[0].checksum = 4242;
         collection.notes[0].flags = 5;
         collection.notes[0].data = "note-data".to_string();
@@ -4396,6 +4411,7 @@ CREATE TABLE graves (
         assert_eq!(note.guid, "stable-guid");
         assert_eq!(note.modified_at, 1_700_006_666);
         assert_eq!(note.update_sequence_number, 17);
+        assert_eq!(note.sort_field, "hello");
         assert_eq!(note.checksum, 4242);
         assert_eq!(note.flags, 5);
         assert_eq!(note.data, "note-data");

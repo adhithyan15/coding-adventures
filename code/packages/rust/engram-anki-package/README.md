@@ -50,8 +50,8 @@ when exporting back to APKG, along with the imported collection creation day
 that anchors Anki's due-day offsets and the collection's modification/schema
 metadata. Imported deck and note-type modification metadata is also retained
 when Engram re-emits the stored Anki JSON, and imported note/card row
-modification timestamps plus revlog answer-time metadata are preserved on
-export.
+modification timestamps, model sort-field selection, note checksums, and
+revlog answer-time metadata are preserved on export.
 
 `tests/fixtures/golden-v11-filtered-media.apkg` pins a deterministic V11 package
 with filtered-deck metadata and media references through `include_bytes!`. Run
