@@ -88,6 +88,9 @@ State-history reads expose registry-backed device events with Home Assistant
 entity aliases, room filters, state deltas, timestamp filters, and event-id
 detail lookups; the Home Assistant-style history route accepts
 `filter_entity_id` and room filters.
+Runtime event-log reads accept Home Assistant entity aliases through
+`entity_id`, letting dashboard clients drill from an entity into its device,
+state-expiration, and desired-state drift events.
 
 `GET /api/smart_home/smoke` exposes a machine-readable local-controller smoke
 plan with safe GET probes and a single runtime-authorized Home Assistant-style
@@ -105,7 +108,10 @@ Assistant-compatible and native service endpoints, preserving runtime
 authorization. Entity, service, scene, device, bridge, history, event-log,
 command-result, and authorization rows/cards expose read-only detail buttons
 that fetch the matching native detail route and show the response in the
-dashboard log. The browser shell also exposes filters for
+dashboard log. Entity cards and state-gap rows also link to their current
+state, registry detail, desired-state target, state history, entity-scoped
+runtime events, and owning bridge command-result audit trail. The browser shell
+also exposes filters for
 room, entity domain/state/control status, runtime event kind, command-result
 status, and authorization outcome, with server-backed room scoping across
 inventory, state, history, event-log, and command-result panels plus local text
@@ -169,6 +175,7 @@ curl 'http://127.0.0.1:8123/api/smart_home/scenes?room_id=kitchen&scope=room'
 curl 'http://127.0.0.1:8123/api/smart_home/scenes/scene.scene_kitchen_bright'
 curl 'http://127.0.0.1:8123/api/smart_home/events?limit=12'
 curl 'http://127.0.0.1:8123/api/smart_home/events?room_id=kitchen&limit=12'
+curl 'http://127.0.0.1:8123/api/smart_home/events?entity_id=light.entity_light_1&limit=12'
 curl 'http://127.0.0.1:8123/api/smart_home/events/0'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?room_id=kitchen&limit=10'

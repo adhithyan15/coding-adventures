@@ -433,7 +433,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         <h2>State Gaps</h2>
         <table>
           <thead>
-            <tr><th>Entity</th><th>Domain</th><th>Status</th></tr>
+            <tr><th>Entity</th><th>Domain</th><th>Status</th><th></th></tr>
           </thead>
           <tbody id="gaps"></tbody>
         </table>
@@ -616,12 +616,22 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }
       return event.health || event.reason || event.event_type || event.kind || "event";
     };
-    const inspectButton = (url, label) =>
-      `<button type="button" data-inspect-url="${url}" data-inspect-label="${label}">View</button>`;
+    const inspectButton = (url, label, text = "View") =>
+      `<button type="button" data-inspect-url="${url}" data-inspect-label="${label}">${text}</button>`;
+    const entityIdentity = (entity) => entity.home_assistant_entity_id || entity.entity_id;
     const stateDetailUrl = (entity) =>
-      `/api/smart_home/states/${encodeURIComponent(entity.home_assistant_entity_id || entity.entity_id)}`;
+      `/api/smart_home/states/${encodeURIComponent(entityIdentity(entity))}`;
     const entityDetailUrl = (entity) =>
-      `/api/smart_home/entities/${encodeURIComponent(entity.home_assistant_entity_id || entity.entity_id)}`;
+      `/api/smart_home/entities/${encodeURIComponent(entityIdentity(entity))}`;
+    const entityDesiredStateUrl = (entity) =>
+      `/api/smart_home/desired_states?entity_id=${encodeURIComponent(entityIdentity(entity))}`;
+    const entityHistoryUrl = (entity) =>
+      `/api/smart_home/state_history?entity_id=${encodeURIComponent(entityIdentity(entity))}`;
+    const entityEventsUrl = (entity) =>
+      `/api/smart_home/events?entity_id=${encodeURIComponent(entityIdentity(entity))}&limit=12&sort=desc`;
+    const entityBridgeCommandsUrl = (entity) => entity.bridge_id
+      ? `/api/smart_home/command_results?bridge_id=${encodeURIComponent(entity.bridge_id)}&limit=8&sort=status_then_newest`
+      : "/api/smart_home/command_results?limit=8&sort=status_then_newest";
     const sceneDetailUrl = (scene) =>
       `/api/smart_home/scenes/${encodeURIComponent(scene.home_assistant_scene_id || scene.scene_id)}`;
     const serviceDetailUrl = (service) => {
@@ -787,6 +797,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             <div class="actions row">
               ${inspectButton(stateDetailUrl(entity), "state detail")}
               ${inspectButton(entityDetailUrl(entity), "entity detail")}
+              ${inspectButton(entityHistoryUrl(entity), "entity history", "History")}
+              ${inspectButton(entityEventsUrl(entity), "entity events", "Events")}
+              ${inspectButton(entityDesiredStateUrl(entity), "desired state", "Desired")}
+              ${inspectButton(entityBridgeCommandsUrl(entity), "bridge command results", "Commands")}
               ${canToggle ? `<button type="button" data-service="turn_on" data-entity="${entity.home_assistant_entity_id}">Turn on</button><button type="button" data-service="turn_off" data-entity="${entity.home_assistant_entity_id}">Turn off</button>` : ""}
               ${canToggle ? `<button type="button" data-desired-action="on" data-entity="${entity.home_assistant_entity_id}">Target on</button><button type="button" data-desired-action="off" data-entity="${entity.home_assistant_entity_id}">Target off</button>` : ""}
             </div>
@@ -822,8 +836,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <td>${entity.name}<br><span class="muted">${entity.home_assistant_entity_id}</span></td>
           <td>${entity.domain}</td>
           <td><span class="${statusClass(entity.stale ? "attention" : "ok")}">${entity.stale ? "needs refresh" : "ok"}</span></td>
+          <td>${inspectButton(stateDetailUrl(entity), "state gap detail", "State")} ${inspectButton(entityHistoryUrl(entity), "state gap history", "History")} ${inspectButton(entityEventsUrl(entity), "state gap events", "Events")}</td>
         </tr>
-      `).join("") || `<tr><td colspan="3" class="muted">Clear</td></tr>`;
+      `).join("") || `<tr><td colspan="4" class="muted">Clear</td></tr>`;
     };
 
     const renderHistory = (history, filters) => {
@@ -2345,7 +2360,14 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         surface: "smart_home",
         mutates_runtime: false,
         runtime_authorized: false,
-        query_params: &["from_sequence", "kind", "limit", "room_id", "sort"],
+        query_params: &[
+            "entity_id",
+            "from_sequence",
+            "kind",
+            "limit",
+            "room_id",
+            "sort",
+        ],
     },
     ApiRouteDescriptor {
         method: "GET",
@@ -2880,6 +2902,17 @@ fn runtime_events_response(
         limit: None,
         ..query
     });
+    let entity_id = match query_string(request, "entity_id")
+        .map(|value| runtime_entity_id(&runtime_guard, value))
+        .transpose()
+    {
+        Ok(entity_id) => entity_id,
+        Err(error) => return api_error_response(error),
+    };
+    if let Some(entity_id) = entity_id {
+        let entity_filter = RuntimeEventFilter::Entity(entity_id);
+        entries.retain(|entry| entity_filter.matches(entry.event));
+    }
     if let Some(room_id) = query_string(request, "room_id") {
         entries.retain(|entry| runtime_event_matches_room(&runtime_guard, entry.event, room_id));
     }
@@ -4995,7 +5028,7 @@ fn entity_registry_json(entity: &Entity, runtime: &SmartHomeRuntime, now_ms: u64
     let summary = entity.capability_summary();
 
     format!(
-        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"device_id\":{},\"bridge_id\":{},\"name\":{},\"domain\":{},\"entity_kind\":{},\"room_id\":{},\"manufacturer\":{},\"model\":{},\"has_state\":{},\"stale\":{},\"state_confidence\":{},\"capability_summary\":{{\"total\":{},\"observable\":{},\"commandable\":{},\"ranged\":{}}},\"capabilities\":[{}]}}",
+        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"device_id\":{},\"bridge_id\":{},\"name\":{},\"domain\":{},\"entity_kind\":{},\"room_id\":{},\"manufacturer\":{},\"model\":{},\"has_state\":{},\"stale\":{},\"state_confidence\":{},\"capability_summary\":{{\"total\":{},\"observable\":{},\"commandable\":{},\"ranged\":{}}},\"capabilities\":[{}],\"links\":{}}}",
         json_string(entity.entity_id.as_str()),
         json_string(home_assistant_entity_id(entity)),
         json_string(entity.device_id.as_str()),
@@ -5019,6 +5052,36 @@ fn entity_registry_json(entity: &Entity, runtime: &SmartHomeRuntime, now_ms: u64
             .map(capability_json)
             .collect::<Vec<_>>()
             .join(","),
+        entity_links_json(entity, runtime),
+    )
+}
+
+fn entity_links_json(entity: &Entity, runtime: &SmartHomeRuntime) -> String {
+    let home_assistant_entity_id = home_assistant_entity_id(entity);
+    let entity_ref = url_component(&home_assistant_entity_id);
+    let device_ref = url_component(entity.device_id.as_str());
+    let device = runtime.registry().device(&entity.device_id);
+    let bridge_command_results = device.map(|device| {
+        json_string(format!(
+            "/api/smart_home/command_results?bridge_id={}&limit=8&sort=status_then_newest",
+            url_component(device.bridge_id.as_str())
+        ))
+    });
+    let room_link = device
+        .and_then(|device| device.room_id.as_deref())
+        .map(|room_id| json_string(format!("/api/smart_home/rooms/{}", url_component(room_id))));
+    format!(
+        "{{\"self\":{},\"state\":{},\"desired_state\":{},\"history\":{},\"events\":{},\"bridge_command_results\":{},\"device\":{},\"room\":{}}}",
+        json_string(format!("/api/smart_home/entities/{entity_ref}")),
+        json_string(format!("/api/smart_home/states/{entity_ref}")),
+        json_string(format!(
+            "/api/smart_home/desired_states?entity_id={entity_ref}"
+        )),
+        json_string(format!("/api/smart_home/state_history?entity_id={entity_ref}")),
+        json_string(format!("/api/smart_home/events?entity_id={entity_ref}")),
+        bridge_command_results.unwrap_or_else(|| "null".to_string()),
+        json_string(format!("/api/smart_home/devices/{device_ref}")),
+        room_link.unwrap_or_else(|| "null".to_string()),
     )
 }
 
@@ -7416,6 +7479,10 @@ mod tests {
             assert!(body.contains("data-inspect-url"));
             assert!(body.contains("stateDetailUrl(entity)"));
             assert!(body.contains("entityDetailUrl(entity)"));
+            assert!(body.contains("entityDesiredStateUrl(entity)"));
+            assert!(body.contains("entityHistoryUrl(entity)"));
+            assert!(body.contains("entityEventsUrl(entity)"));
+            assert!(body.contains("entityBridgeCommandsUrl(entity)"));
             assert!(body.contains("sceneDetailUrl(scene)"));
             assert!(body.contains("serviceDetailUrl(service)"));
             assert!(body.contains("roomDetailUrl(room)"));
@@ -7897,7 +7964,7 @@ mod tests {
             r#""path":"/api/smart_home/states","category":"states","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","confidence","domain","has_state","kind","limit","room_id","source","stale"]"#
         ));
         assert!(catalog.contains(
-            r#""path":"/api/smart_home/events","category":"events","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["from_sequence","kind","limit","room_id","sort"]"#
+            r#""path":"/api/smart_home/events","category":"events","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["entity_id","from_sequence","kind","limit","room_id","sort"]"#
         ));
         assert!(catalog.contains(
             r#""path":"/api/smart_home/command_results","category":"command_results","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","command_id","correlation_id","from_sequence","limit","room_id","sort","status"]"#
@@ -8038,6 +8105,22 @@ mod tests {
         assert!(body.contains(r#""value_kind":"percentage""#));
         assert!(body.contains(r#""min":0"#));
         assert!(body.contains(r#""max":100"#));
+        assert!(body.contains(r#""links":{"self":"/api/smart_home/entities/light.entity_light_1""#));
+        assert!(body.contains(r#""state":"/api/smart_home/states/light.entity_light_1""#));
+        assert!(body.contains(
+            r#""desired_state":"/api/smart_home/desired_states?entity_id=light.entity_light_1""#
+        ));
+        assert!(body.contains(
+            r#""history":"/api/smart_home/state_history?entity_id=light.entity_light_1""#
+        ));
+        assert!(
+            body.contains(r#""events":"/api/smart_home/events?entity_id=light.entity_light_1""#)
+        );
+        assert!(body.contains(
+            r#""bridge_command_results":"/api/smart_home/command_results?bridge_id=bridge-1&limit=8&sort=status_then_newest""#
+        ));
+        assert!(body.contains(r#""device":"/api/smart_home/devices/device-1""#));
+        assert!(body.contains(r#""room":"/api/smart_home/rooms/kitchen""#));
 
         let room_entities = response_body(
             app.handle(request(
@@ -8061,6 +8144,9 @@ mod tests {
         assert_eq!(one_response.status, 200);
         assert!(one_body.contains(r#""name":"Kitchen Light""#));
         assert!(one_body.contains(r#""domain":"light""#));
+        assert!(one_body.contains(
+            r#""history":"/api/smart_home/state_history?entity_id=light.entity_light_1""#
+        ));
     }
 
     #[test]
@@ -8496,6 +8582,26 @@ mod tests {
         assert!(room_body.contains(r#""total_events":1"#));
         assert!(room_body.contains(r#""event_id":"event-light-1-on""#));
 
+        let entity_events = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/events?entity_id=light.entity_light_1&limit=5",
+            ))
+            .into(),
+        );
+        assert!(entity_events.contains(r#""total_events":1"#));
+        assert!(entity_events.contains(r#""kind":"device_event""#));
+        assert!(entity_events.contains(r#""event_id":"event-light-1-on""#));
+
+        let missing_entity_events = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/events?entity_id=sensor.entity_sensor_1&limit=5",
+            ))
+            .into(),
+        );
+        assert!(missing_entity_events.contains(r#""total_events":0"#));
+
         let missing_room_body = response_body(
             app.handle(request(
                 "GET",
@@ -8637,6 +8743,9 @@ mod tests {
         assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
         assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
         assert!(body.contains("stateDetailUrl(entity)"));
+        assert!(body.contains("entityHistoryUrl(entity)"));
+        assert!(body.contains("entityEventsUrl(entity)"));
+        assert!(body.contains("entityBridgeCommandsUrl(entity)"));
         assert!(body.contains("serviceDetailUrl(service)"));
         assert!(body.contains("roomDetailUrl(room)"));
         assert!(body.contains("/api/smart_home/devices/${encodeURIComponent(device.device_id)}"));
