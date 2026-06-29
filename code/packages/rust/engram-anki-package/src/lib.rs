@@ -1644,13 +1644,18 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
 
     let mut used_review_ids = BTreeSet::new();
     for review in &export.reviews {
-        let Some(card_id) = export.card_ids.get(&review.card_id) else {
-            return Err(apkg_error(format!(
-                "Engram review {} references missing card {}",
-                review.id, review.card_id
-            )));
-        };
         let source = anki_source(export, ExternalSourceTarget::Review, &review.id);
+        let card_id = export
+            .card_ids
+            .get(&review.card_id)
+            .copied()
+            .or_else(|| source_i64(source, "cardId"))
+            .ok_or_else(|| {
+                apkg_error(format!(
+                    "Engram review {} references missing card {}",
+                    review.id, review.card_id
+                ))
+            })?;
         let review_id = unique_review_id(review, &mut used_review_ids);
         connection
             .execute(
@@ -4906,8 +4911,7 @@ CREATE TABLE graves (
 
     #[test]
     fn exports_graves_for_deleted_imported_notes_and_cards() {
-        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
-        collection.reviews.clear();
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
         let state = v11_collection_to_engram_state(&collection).unwrap();
 
         let deleted = engram_core::reduce(
@@ -4943,6 +4947,8 @@ CREATE TABLE graves (
             .graves
             .iter()
             .any(|grave| grave.object_id == 2000 && grave.kind == 0));
+        assert_eq!(exported.reviews.len(), 1);
+        assert_eq!(exported.reviews[0].card_id, 2000);
     }
 
     #[test]
