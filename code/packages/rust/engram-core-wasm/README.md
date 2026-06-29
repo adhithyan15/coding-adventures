@@ -165,6 +165,13 @@ Collection workflow events such as `onImportAnki`, `onExportAnki`, `onAddNote`,
 `onAddNoteType`, `onDeleteNote`, and `onDeleteNoteType` round-trip through the
 same event parser as host intents so generated shells share one UI contract
 while file picking, dialogs, and concrete note payloads stay host-owned.
+Host editors can post `onSaveNote` with a top-level or nested `note` payload
+containing `noteId`, `noteTypeId`, `deckId`, `fields`, and `tags`; field updates
+may be an array of `{ id|fieldId|name, value }` objects or a name/id keyed
+object. The shared reducer upserts the note and rematerializes generated cards.
+`onDeleteNote` keeps returning a host intent when sent without a target, and
+deletes through the shared reducer only when the event carries an explicit
+`noteId` or `selectedCardId`.
 
 `daily_limit_usage` returns `{ ok: true, usage }` with new/review counts already
 seen in a host-provided day window and the remaining slots from `DeckOptions`.

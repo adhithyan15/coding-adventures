@@ -20,7 +20,7 @@ use engram_core::{
     type_answer_matches, typed_answer_for_template, AnkiBasicTsvExportOptions,
     AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card, CardFlag, CardLineage,
     CardProgress, CardSearchResult, CardState, ClozeRenderSide, DeckOptions, EngramSnapshot,
-    LeechAction, MediaAssetRecord, Rating, SearchContext, TypeAnswerSpec,
+    LeechAction, MediaAssetRecord, Note, NoteFieldValue, Rating, SearchContext, TypeAnswerSpec,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -505,13 +505,30 @@ impl EngramSession {
                         .ok_or_else(|| "onBrowserSelectResult is missing an index".to_string())?;
                     self.browser.set_selected_index(value)?;
                 }
+                EngramAppEvent::SaveNote => {
+                    let note = note_from_app_event(&parsed, &self.state, deck_id, now)?;
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::UpsertNote {
+                            note,
+                            materialize_cards_at: Some(now),
+                        },
+                    );
+                }
+                EngramAppEvent::DeleteNote => {
+                    if let Some(note_id) = explicit_note_id_from_app_event(&parsed, &self.state) {
+                        self.state = reduce(
+                            &self.state,
+                            engram_core::EngramCommand::DeleteNote { note_id },
+                        );
+                    }
+                }
                 EngramAppEvent::BrowserOpenSelected
                 | EngramAppEvent::BrowserEditSelected
                 | EngramAppEvent::ImportAnki
                 | EngramAppEvent::ExportAnki
                 | EngramAppEvent::AddNote
                 | EngramAppEvent::AddNoteType
-                | EngramAppEvent::DeleteNote
                 | EngramAppEvent::DeleteNoteType => {}
             }
 
@@ -1679,7 +1696,11 @@ fn host_intent_for_event(
             ))
         }
         EngramAppEvent::AddNote => Some(base("addNote")),
+        EngramAppEvent::SaveNote => None,
         EngramAppEvent::AddNoteType => Some(base("addNoteType")),
+        EngramAppEvent::DeleteNote if explicit_note_id_from_app_event(parsed, state).is_some() => {
+            None
+        }
         EngramAppEvent::DeleteNote => Some(base("deleteNote")),
         EngramAppEvent::DeleteNoteType => Some(base("deleteNoteType")),
         _ => None,
@@ -2005,6 +2026,7 @@ enum EngramAppEvent {
     ImportAnki,
     ExportAnki,
     AddNote,
+    SaveNote,
     AddNoteType,
     DeleteNote,
     DeleteNoteType,
@@ -2106,6 +2128,7 @@ impl EngramAppEvent {
             Self::ImportAnki => "onImportAnki",
             Self::ExportAnki => "onExportAnki",
             Self::AddNote => "onAddNote",
+            Self::SaveNote => "onSaveNote",
             Self::AddNoteType => "onAddNoteType",
             Self::DeleteNote => "onDeleteNote",
             Self::DeleteNoteType => "onDeleteNoteType",
@@ -2147,6 +2170,7 @@ struct ParsedEngramAppEvent {
     number_value: Option<f64>,
     text_value: Option<String>,
     bool_value: Option<bool>,
+    payload: Option<Value>,
 }
 
 fn parse_engram_app_event(event: &str) -> Result<ParsedEngramAppEvent, String> {
@@ -2183,13 +2207,10 @@ fn parse_engram_app_event(event: &str) -> Result<ParsedEngramAppEvent, String> {
             .get("checked")
             .and_then(parse_json_bool_value)
             .or_else(|| event_value.and_then(parse_json_bool_value));
-        return parse_engram_app_event_name(
-            event_name,
-            card_id,
-            number_value,
-            text_value,
-            bool_value,
-        );
+        let mut parsed =
+            parse_engram_app_event_name(event_name, card_id, number_value, text_value, bool_value)?;
+        parsed.payload = Some(value);
+        return Ok(parsed);
     }
 
     let (event_name, card_id) = split_event_card_id(event);
@@ -2413,6 +2434,8 @@ fn parse_engram_app_event_name(
         "importanki" | "import-anki" | "import_anki" => parsed(EngramAppEvent::ImportAnki),
         "exportanki" | "export-anki" | "export_anki" => parsed(EngramAppEvent::ExportAnki),
         "addnote" | "add-note" | "add_note" => parsed(EngramAppEvent::AddNote),
+        "savenote" | "save-note" | "save_note" | "notesave" | "note-save" | "note_save"
+        | "upsertnote" | "upsert-note" | "upsert_note" => parsed(EngramAppEvent::SaveNote),
         "addnotetype" | "add-note-type" | "add_note_type" => parsed(EngramAppEvent::AddNoteType),
         "deletenote" | "delete-note" | "delete_note" => parsed(EngramAppEvent::DeleteNote),
         "deletenotetype" | "delete-note-type" | "delete_note_type" => {
@@ -2435,7 +2458,229 @@ fn parsed_event(
         number_value,
         text_value,
         bool_value,
+        payload: None,
     }
+}
+
+fn note_from_app_event(
+    parsed: &ParsedEngramAppEvent,
+    state: &AppState,
+    deck_id: &str,
+    now: u64,
+) -> Result<Note, String> {
+    let payload = parsed
+        .payload
+        .as_ref()
+        .ok_or_else(|| "onSaveNote requires a JSON payload".to_string())?;
+    let note_payload = payload.get("note").unwrap_or(payload);
+    let note_id = explicit_note_id_from_app_event(parsed, state)
+        .ok_or_else(|| "onSaveNote is missing a noteId".to_string())?;
+    let existing_note = state.notes.iter().find(|note| note.id == note_id);
+    let note_type_id = string_field(note_payload, &["noteTypeId", "note_type_id"])
+        .or_else(|| existing_note.map(|note| note.note_type_id.clone()))
+        .ok_or_else(|| "onSaveNote is missing a noteTypeId".to_string())?;
+    let deck_id = string_field(note_payload, &["deckId", "deck_id"])
+        .or_else(|| existing_note.map(|note| note.deck_id.clone()))
+        .unwrap_or_else(|| deck_id.to_string());
+    let note_type = state
+        .note_types
+        .iter()
+        .find(|note_type| note_type.id == note_type_id);
+
+    let fields = note_fields_from_payload(note_payload, existing_note, note_type)?;
+    let tags = note_payload
+        .get("tags")
+        .and_then(parse_note_tags_value)
+        .or_else(|| existing_note.map(|note| note.tags.clone()))
+        .unwrap_or_default();
+    let created_at = integer_field(note_payload, &["createdAt", "created_at"])
+        .or_else(|| existing_note.map(|note| note.created_at))
+        .unwrap_or(now);
+    let updated_at = integer_field(note_payload, &["updatedAt", "updated_at"]).unwrap_or(now);
+
+    Ok(Note {
+        id: note_id,
+        note_type_id,
+        deck_id,
+        fields,
+        tags,
+        created_at,
+        updated_at,
+    })
+}
+
+fn explicit_note_id_from_app_event(
+    parsed: &ParsedEngramAppEvent,
+    state: &AppState,
+) -> Option<String> {
+    let payload = parsed.payload.as_ref()?;
+    let note_payload = payload.get("note").unwrap_or(payload);
+    string_field(note_payload, &["noteId", "note_id", "id"]).or_else(|| {
+        parsed.card_id.as_ref().and_then(|card_id| {
+            state
+                .cards
+                .iter()
+                .find(|card| card.id == *card_id)
+                .and_then(|card| card.lineage.as_ref())
+                .map(|lineage| lineage.note_id.clone())
+        })
+    })
+}
+
+fn note_fields_from_payload(
+    note_payload: &Value,
+    existing_note: Option<&Note>,
+    note_type: Option<&engram_core::NoteType>,
+) -> Result<Vec<NoteFieldValue>, String> {
+    let mut values = existing_note
+        .map(|note| {
+            note.fields
+                .iter()
+                .map(|field| (field.field_id.clone(), field.value.clone()))
+                .collect::<HashMap<_, _>>()
+        })
+        .unwrap_or_default();
+
+    if let Some(fields_value) = note_payload.get("fields") {
+        apply_note_field_updates(&mut values, fields_value, note_type)?;
+    }
+
+    let mut field_ids = note_type
+        .map(|note_type| {
+            note_type
+                .fields
+                .iter()
+                .map(|field| field.id.clone())
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_else(|| {
+            existing_note
+                .map(|note| {
+                    note.fields
+                        .iter()
+                        .map(|field| field.field_id.clone())
+                        .collect::<Vec<_>>()
+                })
+                .unwrap_or_default()
+        });
+    for field_id in values.keys() {
+        if !field_ids.iter().any(|existing| existing == field_id) {
+            field_ids.push(field_id.clone());
+        }
+    }
+
+    Ok(field_ids
+        .into_iter()
+        .map(|field_id| NoteFieldValue {
+            value: values.remove(&field_id).unwrap_or_default(),
+            field_id,
+        })
+        .collect())
+}
+
+fn apply_note_field_updates(
+    values: &mut HashMap<String, String>,
+    fields_value: &Value,
+    note_type: Option<&engram_core::NoteType>,
+) -> Result<(), String> {
+    match fields_value {
+        Value::Array(fields) => {
+            for field in fields {
+                let field_id = note_field_id_from_value(field, note_type)
+                    .ok_or_else(|| "note field is missing an id or name".to_string())?;
+                let value = field
+                    .get("value")
+                    .and_then(parse_json_text_value)
+                    .unwrap_or_default();
+                values.insert(field_id, value);
+            }
+            Ok(())
+        }
+        Value::Object(fields) => {
+            for (field_id, value) in fields {
+                let field_id = resolve_note_field_id(field_id, note_type);
+                values.insert(field_id, parse_json_text_value(value).unwrap_or_default());
+            }
+            Ok(())
+        }
+        _ => Err("onSaveNote fields must be an array or object".to_string()),
+    }
+}
+
+fn note_field_id_from_value(
+    field: &Value,
+    note_type: Option<&engram_core::NoteType>,
+) -> Option<String> {
+    string_field(field, &["fieldId", "field_id", "id"]).or_else(|| {
+        string_field(field, &["name"]).map(|name| resolve_note_field_id(&name, note_type))
+    })
+}
+
+fn resolve_note_field_id(raw: &str, note_type: Option<&engram_core::NoteType>) -> String {
+    let trimmed = raw.trim();
+    if let Some(note_type) = note_type {
+        if let Some(field) = note_type.fields.iter().find(|field| field.id == trimmed) {
+            return field.id.clone();
+        }
+        if let Some(field) = note_type
+            .fields
+            .iter()
+            .find(|field| field.name.eq_ignore_ascii_case(trimmed))
+        {
+            return field.id.clone();
+        }
+    }
+    trimmed.to_string()
+}
+
+fn parse_note_tags_value(value: &Value) -> Option<Vec<String>> {
+    let tags = match value {
+        Value::Array(values) => values
+            .iter()
+            .filter_map(parse_json_text_value)
+            .collect::<Vec<_>>(),
+        Value::String(raw) => raw.split_whitespace().map(str::to_string).collect(),
+        Value::Null => Vec::new(),
+        _ => return None,
+    };
+    Some(normalize_note_tags(tags))
+}
+
+fn normalize_note_tags(tags: Vec<String>) -> Vec<String> {
+    let mut normalized = Vec::new();
+    for tag in tags {
+        let tag = tag.trim();
+        if tag.is_empty() {
+            continue;
+        }
+        if normalized
+            .iter()
+            .any(|existing: &String| existing.eq_ignore_ascii_case(tag))
+        {
+            continue;
+        }
+        normalized.push(tag.to_string());
+    }
+    normalized
+}
+
+fn string_field(value: &Value, keys: &[&str]) -> Option<String> {
+    keys.iter()
+        .find_map(|key| value.get(*key))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(str::to_string)
+}
+
+fn integer_field(value: &Value, keys: &[&str]) -> Option<u64> {
+    keys.iter()
+        .find_map(|key| value.get(*key))
+        .and_then(|value| {
+            value
+                .as_u64()
+                .or_else(|| value.as_str()?.trim().parse().ok())
+        })
 }
 
 fn parse_json_number_value(value: &Value) -> Option<f64> {
@@ -5398,6 +5643,149 @@ mod tests {
             serde_json::from_str(&session.handle_engram_app_event("onExportAnki", "deck", NOW))
                 .unwrap();
         assert_eq!(export["hostIntent"]["extension"], ".apkg");
+    }
+
+    #[test]
+    fn handle_engram_app_save_and_delete_note_events_update_shared_state() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [{
+                "id": "basic",
+                "name": "Basic",
+                "fields": [
+                    {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                    {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                ],
+                "templates": [
+                    {
+                        "id": "forward",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "{{Back}}",
+                        "requiredFieldNames": ["Front"],
+                        "ordinal": 0
+                    },
+                    {
+                        "id": "reverse",
+                        "name": "Reverse",
+                        "frontTemplate": "{{Back}}",
+                        "backTemplate": "{{Front}}",
+                        "requiredFieldNames": ["Back"],
+                        "ordinal": 1
+                    }
+                ],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "notes": [{
+                "id": "note",
+                "noteTypeId": "basic",
+                "deckId": "deck",
+                "fields": [
+                    {"fieldId": "front", "value": "letter-aa"},
+                    {"fieldId": "back", "value": "aa"}
+                ],
+                "tags": ["tamil"],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "cards": [
+                {
+                    "id":"note::forward",
+                    "deckId":"deck",
+                    "front":"letter-aa",
+                    "back":"aa",
+                    "createdAt":1700000000000,
+                    "lineage": {
+                        "noteId": "note",
+                        "noteTypeId": "basic",
+                        "templateId": "forward",
+                        "ordinal": 0
+                    }
+                },
+                {
+                    "id":"note::reverse",
+                    "deckId":"deck",
+                    "front":"aa",
+                    "back":"letter-aa",
+                    "createdAt":1700000000000,
+                    "lineage": {
+                        "noteId": "note",
+                        "noteTypeId": "basic",
+                        "templateId": "reverse",
+                        "ordinal": 1
+                    }
+                }
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+
+        let saved: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{
+                "event":"onSaveNote",
+                "selectedCardId":"note::reverse",
+                "fields": {
+                    "Front": "letter-aaa",
+                    "back": "aaa"
+                },
+                "tags": "tamil vowel tamil"
+            }"#,
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(saved["ok"], true);
+        assert_eq!(saved["event"], "onSaveNote");
+        assert_eq!(saved["hostIntent"], Value::Null);
+        assert_eq!(saved["state"]["notes"][0]["id"], "note");
+        assert_eq!(saved["state"]["notes"][0]["updatedAt"], NOW + 1);
+        assert_eq!(
+            saved["state"]["notes"][0]["fields"],
+            json!([
+                {"fieldId": "front", "value": "letter-aaa"},
+                {"fieldId": "back", "value": "aaa"}
+            ])
+        );
+        assert_eq!(
+            saved["state"]["notes"][0]["tags"],
+            json!(["tamil", "vowel"])
+        );
+        assert!(saved["state"]["cards"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|card| {
+                card["id"] == "note::forward"
+                    && card["front"] == "letter-aaa"
+                    && card["back"] == "aaa"
+            }));
+        assert!(saved["state"]["cards"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|card| {
+                card["id"] == "note::reverse"
+                    && card["front"] == "aaa"
+                    && card["back"] == "letter-aaa"
+            }));
+
+        let deleted: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onDeleteNote","noteId":"note"}"#,
+            "deck",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(deleted["ok"], true);
+        assert_eq!(deleted["event"], "onDeleteNote");
+        assert_eq!(deleted["hostIntent"], Value::Null);
+        assert!(deleted["state"]["notes"].as_array().unwrap().is_empty());
+        assert!(deleted["state"]["cards"].as_array().unwrap().is_empty());
     }
 
     #[test]
