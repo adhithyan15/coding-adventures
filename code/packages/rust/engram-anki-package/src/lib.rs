@@ -1256,6 +1256,7 @@ struct ExportModel {
     notes: Vec<ExportNote>,
     cards: Vec<ExportCard>,
     reviews: Vec<Review>,
+    session_deck_by_id: HashMap<String, String>,
     progress_by_card: HashMap<String, CardProgress>,
     deck_options: Vec<DeckOptionsPreset>,
     deck_ids: BTreeMap<String, i64>,
@@ -1431,6 +1432,22 @@ impl ExportModel {
         }
 
         let computed_created_at_days = export_created_at_days(state, &decks, &notes, &cards);
+        let mut session_deck_by_id: HashMap<String, String> = state
+            .sessions
+            .iter()
+            .map(|session| {
+                (
+                    session.id.clone(),
+                    fallback_deck_key(&session.deck_id, &default_deck_key),
+                )
+            })
+            .collect();
+        if let Some(active_session) = &state.active_session {
+            session_deck_by_id.insert(
+                active_session.session_id.clone(),
+                fallback_deck_key(&active_session.deck_id, &default_deck_key),
+            );
+        }
         let created_at_days = state
             .external_sources
             .iter()
@@ -1458,6 +1475,7 @@ impl ExportModel {
             notes,
             cards,
             reviews: state.reviews.clone(),
+            session_deck_by_id,
             progress_by_card,
             deck_options: state.deck_options.clone(),
             deck_ids,
@@ -1709,7 +1727,8 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     source_i64(source, "time")
                         .or_else(|| review.answer_time_ms.map(i64::from))
                         .unwrap_or_default(),
-                    source_i64(source, "kind").unwrap_or_else(|| review_kind(review)),
+                    source_i64(source, "kind")
+                        .unwrap_or_else(|| review_kind(export, review, &review.card_id)),
                 ],
             )
             .map_err(|err| {
@@ -2490,7 +2509,10 @@ fn rating_to_v11_ease(rating: Rating) -> i64 {
     }
 }
 
-fn review_kind(review: &Review) -> i64 {
+fn review_kind(export: &ExportModel, review: &Review, card_key: &str) -> i64 {
+    if review_is_from_dynamic_deck(export, review, card_key) {
+        return 3;
+    }
     match review
         .resulting_progress
         .as_ref()
@@ -2500,6 +2522,35 @@ fn review_kind(review: &Review) -> i64 {
         Some(CardState::Relearning) => 2,
         _ => 1,
     }
+}
+
+fn review_is_from_dynamic_deck(export: &ExportModel, review: &Review, card_key: &str) -> bool {
+    let deck_key = export
+        .session_deck_by_id
+        .get(&review.session_id)
+        .map(String::as_str)
+        .or_else(|| {
+            review
+                .previous_active_session
+                .as_ref()
+                .map(|session| session.deck_id.as_str())
+        })
+        .or_else(|| {
+            export
+                .cards
+                .iter()
+                .find(|card| card.key == card_key)
+                .map(|card| card.deck_key.as_str())
+        });
+    deck_key.is_some_and(|deck_key| is_dynamic_anki_deck(export, deck_key))
+}
+
+fn is_dynamic_anki_deck(export: &ExportModel, deck_key: &str) -> bool {
+    let source = anki_source(export, ExternalSourceTarget::Deck, deck_key);
+    source_i64(source, "dyn").is_some_and(|dyn_value| dyn_value != 0)
+        || source_json(source, "rawJson")
+            .and_then(|raw| json_i64(&raw, "dyn"))
+            .is_some_and(|dyn_value| dyn_value != 0)
 }
 
 fn unique_review_id(review: &Review, used: &mut BTreeSet<i64>) -> i64 {
@@ -5370,6 +5421,116 @@ CREATE TABLE graves (
         assert_eq!(imported.card_progress[0].interval, 7);
         assert_eq!(imported.card_progress[0].flag, Some(CardFlag::Blue));
         assert_eq!(imported.reviews[0].answer_time_ms, Some(12_345));
+    }
+
+    #[test]
+    fn native_filtered_deck_reviews_export_as_cram_revlog_kind() {
+        for resched in [true, false] {
+            let mut deck_source_data = BTreeMap::new();
+            deck_source_data.insert("dyn".to_string(), "1".to_string());
+            deck_source_data.insert("resched".to_string(), resched.to_string());
+            deck_source_data.insert(
+                "rawJson".to_string(),
+                serde_json::json!({
+                    "id": 3,
+                    "name": "Filtered::Today",
+                    "desc": "Custom study",
+                    "dyn": 1,
+                    "conf": 1,
+                    "terms": [["deck:Spanish", 10, 0]],
+                    "resched": resched,
+                })
+                .to_string(),
+            );
+
+            let previous_progress = CardProgress {
+                card_id: "card".to_string(),
+                state: CardState::Review,
+                interval: 2,
+                ease_factor: 2.5,
+                next_due_at: 1_700_086_400_000,
+                learning_step_index: None,
+                buried_until: None,
+                suspended_at: None,
+                times_seen: 2,
+                times_correct: 2,
+                times_incorrect: 0,
+                last_seen_at: 1_700_000_000_000,
+                flag: None,
+                marked_at: None,
+            };
+            let resulting_progress = CardProgress {
+                interval: 5,
+                next_due_at: 1_700_432_000_000,
+                times_seen: 3,
+                times_correct: 3,
+                last_seen_at: 1_700_000_005_000,
+                ..previous_progress.clone()
+            };
+
+            let mut state = AppState::default();
+            state.decks.push(Deck {
+                id: "filtered".to_string(),
+                name: "Filtered::Today".to_string(),
+                description: "Custom study".to_string(),
+                created_at: 1_700_000_000_000,
+            });
+            state.cards.push(Card {
+                id: "card".to_string(),
+                deck_id: "filtered".to_string(),
+                front: "hola".to_string(),
+                back: "hello".to_string(),
+                created_at: 1_700_000_000_000,
+                lineage: None,
+            });
+            state.card_progress.push(resulting_progress.clone());
+            state.sessions.push(Session {
+                id: "filtered-session".to_string(),
+                deck_id: "filtered".to_string(),
+                status: SessionStatus::Completed,
+                started_at: 1_700_000_000_000,
+                ended_at: Some(1_700_000_005_000),
+                cards_reviewed: 1,
+                cards_correct: 1,
+            });
+            state.reviews.push(Review {
+                id: "1700000005000".to_string(),
+                session_id: "filtered-session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: 1_700_000_005_000,
+                answer_time_ms: Some(987),
+                leech_event: None,
+                previous_progress: Some(previous_progress),
+                resulting_progress: Some(resulting_progress),
+                previous_active_session: None,
+                sibling_progress_snapshots: Vec::new(),
+            });
+            state.external_sources.push(ExternalSourceRecord {
+                target: ExternalSourceTarget::Deck,
+                target_id: "filtered".to_string(),
+                source: ANKI_V11_SOURCE.to_string(),
+                original_id: Some("3".to_string()),
+                data: deck_source_data,
+            });
+
+            let collection = parse_v11_collection_bytes(
+                &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+            )
+            .unwrap();
+
+            let filtered_deck = collection
+                .decks
+                .iter()
+                .find(|deck| deck.name == "Filtered::Today")
+                .unwrap();
+            assert_eq!(filtered_deck.raw["dyn"], 1);
+            assert_eq!(filtered_deck.raw["resched"], resched);
+            assert_eq!(
+                collection.reviews[0].kind, 3,
+                "resched={resched} filtered reviews should export as Anki cram rows"
+            );
+        }
     }
 
     #[test]
