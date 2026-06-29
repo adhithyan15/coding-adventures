@@ -35,6 +35,7 @@ SELF_CONTAINED_RUNGS = (
     "rung3_cubic_roots",
     "rung3_quartic_roots",
     "rung3_factored_roots",
+    "rung4_physics_chem",
 )
 
 

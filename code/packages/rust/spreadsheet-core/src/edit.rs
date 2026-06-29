@@ -82,7 +82,7 @@ pub enum StructuralEdit {
 /// Lines at or after the insertion point slide outward; earlier lines are
 /// unchanged. Saturates at `u32::MAX` rather than wrapping (a reference pushed
 /// past the end of the grid by an absurd insert is clamped, never corrupted).
-fn insert_coord(v: u32, at: u32, count: u32) -> u32 {
+pub(crate) fn insert_coord(v: u32, at: u32, count: u32) -> u32 {
     if v >= at {
         v.saturating_add(count)
     } else {
@@ -93,7 +93,7 @@ fn insert_coord(v: u32, at: u32, count: u32) -> u32 {
 /// Adjust one 1-based coordinate for a **delete** of the band `[at, at+count)`.
 /// Returns `None` if the coordinate is *inside* the deleted band (the cell it
 /// names no longer exists); coordinates after the band slide inward.
-fn delete_coord(v: u32, at: u32, count: u32) -> Option<u32> {
+pub(crate) fn delete_coord(v: u32, at: u32, count: u32) -> Option<u32> {
     let band_end = at.saturating_add(count); // exclusive
     if v < at {
         Some(v) // before the band — unchanged

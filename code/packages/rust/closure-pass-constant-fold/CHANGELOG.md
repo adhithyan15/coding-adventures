@@ -20,6 +20,31 @@ astral characters stay whole:
 We decline a second `mapFn` argument (its return values are unknown), any
 non-string-literal first argument (array-likes/iterables/identifiers/numbers),
 and a shadowed receiver — only the bare global `Array.from(...)` callee folds.
+## [0.72.0] - 2026-06-27
+
+### Added — fold static `Object.entries({k: v, …})` → `[["k", v], …]`
+
+The static `Object.entries` (ECMAScript §20.1.2.5) — the inverse of
+`Object.fromEntries` — now folds a NON-empty object literal to an array of
+`[key, value]` pair literals (the empty-object case `Object.entries({})` → `[]`
+was already handled):
+
+| call                            | result                |
+|---------------------------------|-----------------------|
+| `Object.entries({a: 1, b: 2})`  | `[["a", 1], ["b", 2]]`|
+| `Object.entries({x: "hi"})`     | `[["x", "hi"]]`       |
+
+Each entry key is emitted as a string literal; the value expression is copied
+verbatim. The fold applies ONLY when every property is a plain data property
+(`k: v` — no getter, setter, method, or computed key) with a primitive-literal
+value (string / number / boolean / null). We DECLINE: a `"__proto__"` key (a
+non-computed `{__proto__: v}` is the §B.3.1 prototype setter, not an own
+property, so it is not enumerated); any canonical array-index key (`0`, `1`,
+`42`, …, which `[[OwnPropertyKeys]]` enumerates ahead of string keys, breaking
+the source order we emit); any non-literal value (including the implicit
+identifier of a shorthand `{x}`); a non-global receiver; and any arity ≠ 1.
+Duplicate keys collapse to one entry (first position, last value), mirroring the
+object the literal builds.
 ## [0.71.0] - 2026-06-27
 
 ### Added — fold static `Object.fromEntries([[k, v], …])` → object literal

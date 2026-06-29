@@ -1,0 +1,65 @@
+# Berkeley SPICE logical-card token grammar.
+# @version 1
+# @case_insensitive true
+#
+# This grammar targets normalized Berkeley SPICE logical cards: physical deck
+# preprocessing owns title-line capture, column-1 comments, blank physical
+# lines, and leading `+` continuations. The token stream below is therefore
+# card-oriented and deliberately preserves device/model atoms for the semantic
+# lowerer instead of trying to encode all SPICE device arity in the lexer.
+
+skip:
+  WHITESPACE = /[ \t\r]+/
+
+# Quoted and braced expressions must win before the generic ATOM token.
+QUOTED_STRING = /"([^"\\\n]|\\.)*"/
+BRACED_EXPR   = /\{[^}\n]*\}/
+
+# Berkeley/SPICE-style scalar with optional engineering suffix. Semantic
+# resolution owns suffix meaning (`m` vs `meg`, temperature units, etc.).
+NUMBER = /[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?[a-zA-Z]*/
+
+# Known dot cards for the Berkeley compatibility base plus the already-present
+# post-1970s analysis/output footholds. These appear before DOT so `.op` is not
+# tokenized as DOT + ATOM.
+DOT_END     = ".end"
+DOT_ENDS    = ".ends"
+DOT_SUBCKT  = ".subckt"
+DOT_MODEL   = ".model"
+DOT_PARAM   = ".param"
+DOT_FUNC    = ".func"
+DOT_OPTIONS = ".options"
+DOT_TEMP    = ".temp"
+DOT_IC      = ".ic"
+DOT_NODESET = ".nodeset"
+DOT_OP      = ".op"
+DOT_DC      = ".dc"
+DOT_AC      = ".ac"
+DOT_TRAN    = ".tran"
+DOT_TF      = ".tf"
+DOT_SENS    = ".sens"
+DOT_NOISE   = ".noise"
+DOT_DISTO   = ".disto"
+DOT_PZ      = ".pz"
+DOT_PRINT   = ".print"
+DOT_PLOT    = ".plot"
+DOT_SAVE    = ".save"
+DOT_PROBE   = ".probe"
+DOT_MEASURE = ".measure"
+DOT_MEAS    = ".meas"
+DOT_FOUR    = ".four"
+DOT_INCLUDE = ".include"
+DOT_LIB     = ".lib"
+DOT_CONTROL = ".control"
+DOT_ENDC    = ".endc"
+
+LPAREN = "("
+RPAREN = ")"
+COMMA  = ","
+EQUALS = "="
+DOT    = "."
+
+# Generic card atom. This is intentionally broad because SPICE node names,
+# device names, model names, vector names, and source waveform arguments vary
+# across dialects. Semantic lowering classifies atoms by card kind.
+ATOM = /[^ \t\r\n()=,"{}]+/
