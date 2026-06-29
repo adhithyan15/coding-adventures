@@ -973,6 +973,52 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(7),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — **AL8-trig**: `cos` standard function (§3.2.4).
+    // `cos(0.0)` = 1.0 exactly in IEEE-754 double.  `entier(1.0) + 41` = 42.
+    // Every backend calls the platform libm / runtime: WASM resolves `env.__cos`
+    // to Rust `f64::cos`; LLVM emits `@llvm.cos.f64`; JVM `Math.cos`; CLR
+    // `System.Math.Cos`; native aarch64/x86_64 `BL cos` / `call cos`; VM/JIT
+    // via the `f64_cos` dispatch handler.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := cos(0.0); \
+               result := entier(r) + 41 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — **AL8-trig**: `exp` standard function (§3.2.4).
+    // `exp(0.0)` = 1.0 exactly.  `entier(1.0) + 41` = 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := exp(0.0); \
+               result := entier(r) + 41 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — **AL8-trig**: `sin` standard function (§3.2.4).
+    // `sin(0.0)` = 0.0 exactly.  `entier(0.0 + 42.0)` = 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := sin(0.0); \
+               result := entier(r + 42.0) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — **AL8-trig**: `ln` standard function (§3.2.4).
+    // `ln(1.0)` = 0.0 exactly.  `entier(0.0 + 42.0)` = 42.
+    // Note: ALGOL 60 §3.2.4 calls it `ln` (natural logarithm); every backend
+    // maps this to libm `log` / `Math.log` / `@llvm.log.f64` etc.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := ln(1.0); \
+               result := entier(r + 42.0) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *typed procedure with a value parameter* (`integer procedure
     // sq(x); value x; integer x; sq := x*x`) called from the main block:
     // `result := sq(7)` ⇒ exit 49.  `algol-iir-compiler` lowers the procedure
@@ -2135,6 +2181,104 @@ impl wasm_execution::HostFunction for GetcharFunc {
     }
 }
 
+// AL8 transcendentals — stateless `HostFunction` adapters for `env.__sin`,
+// `env.__cos`, `env.__ln`, `env.__exp`.  Each takes one f64 and returns one f64,
+// delegating to Rust's `f64::*` methods (which call the platform libm).
+// `__ln` wraps `f64::ln` (natural log) matching ALGOL 60 semantics; the WASM
+// import uses `__ln` rather than `__log` to signal intent at the ABI boundary.
+
+struct SinFunc;
+impl wasm_execution::HostFunction for SinFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let x = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__sin: missing argument"))?
+            .as_f64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        Ok(vec![wasm_execution::WasmValue::F64(x.sin())])
+    }
+}
+
+struct CosFunc;
+impl wasm_execution::HostFunction for CosFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let x = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__cos: missing argument"))?
+            .as_f64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        Ok(vec![wasm_execution::WasmValue::F64(x.cos())])
+    }
+}
+
+struct LnFunc;
+impl wasm_execution::HostFunction for LnFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let x = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__ln: missing argument"))?
+            .as_f64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        Ok(vec![wasm_execution::WasmValue::F64(x.ln())])
+    }
+}
+
+struct ExpFunc;
+impl wasm_execution::HostFunction for ExpFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let x = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__exp: missing argument"))?
+            .as_f64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        Ok(vec![wasm_execution::WasmValue::F64(x.exp())])
+    }
+}
+
 /// The host interface the matrix runs wasm under: it resolves the generic
 /// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC),
 /// `env.__print_str` to a memory-reading byte capture, and the Brainfuck I/O
@@ -2167,6 +2311,11 @@ impl wasm_execution::HostInterface for PrintHost {
             ("env", "getchar") => Some(Box::new(GetcharFunc {
                 input: std::sync::Arc::clone(&self.input),
             })),
+            // AL8 transcendentals: env.__sin/cos/ln/exp are f64→f64 host imports.
+            ("env", "__sin") => Some(Box::new(SinFunc)),
+            ("env", "__cos") => Some(Box::new(CosFunc)),
+            ("env", "__ln")  => Some(Box::new(LnFunc)),
+            ("env", "__exp") => Some(Box::new(ExpFunc)),
             _ => None,
         }
     }
