@@ -21,6 +21,30 @@ layout EngramApp {
         hidden-value : slot: deck-hidden-value
       )
     }
+    Box [ browser-region ] {
+      pkg::mosaic-pkg-card-browser::CardBrowser (
+        browser-label : slot: browser-label ,
+        query-label : slot: browser-query-label ,
+        query : slot: browser-query ,
+        query-placeholder : slot: browser-query-placeholder ,
+        search-label : slot: browser-search-label ,
+        results-label : slot: browser-results-label ,
+        results-summary : slot: browser-results-summary ,
+        results : slot: browser-results ,
+        selected-index : slot: browser-selected-index ,
+        open-label : slot: browser-open-label ,
+        edit-label : slot: browser-edit-label ,
+        suspend-label : slot: browser-suspend-label ,
+        mark-label : slot: browser-mark-label ,
+        onQueryChange : emit: onBrowserQueryChange ,
+        onSearch : emit: onBrowserSearch ,
+        onSelectResult : emit: onBrowserSelectResult ,
+        onOpenSelected : emit: onBrowserOpenSelected ,
+        onEditSelected : emit: onBrowserEditSelected ,
+        onToggleSuspendSelected : emit: onBrowserToggleSuspendSelected ,
+        onToggleMarkSelected : emit: onBrowserToggleMarkSelected
+      )
+    }
     pkg::mosaic-pkg-session-progress::SessionProgress (
       current-label : slot: current-label ,
       current-value : slot: current-value ,

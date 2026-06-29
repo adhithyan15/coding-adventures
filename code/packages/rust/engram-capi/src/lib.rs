@@ -1374,6 +1374,12 @@ CREATE TABLE graves (
             assert_eq!(props["props"]["app-title"], "Engram");
             assert_eq!(props["props"]["deck-name"], "Tamil");
             assert_eq!(props["props"]["deck-total-value"], "1");
+            assert_eq!(props["props"]["browser-label"], "Card browser");
+            assert_eq!(
+                props["props"]["browser-results-summary"],
+                "1 cards in collection"
+            );
+            assert_eq!(props["props"]["browser-results"], json!(["letter-a -> a"]));
             assert_eq!(props["props"]["answer-visible"], false);
             assert_eq!(props["props"]["action-undo-label"], "Undo");
             assert_eq!(props["props"]["action-bury-card-label"], "Bury card");

@@ -515,6 +515,12 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
         "Mark"
     };
     let hidden_count = stats.suspended_count + stats.buried_count;
+    let browser_results = browser_result_rows(state);
+    let browser_results_summary = match browser_results.len() {
+        0 => "No cards in collection".to_string(),
+        visible if visible == state.cards.len() => format!("{visible} cards in collection"),
+        visible => format!("Showing {visible} of {} cards", state.cards.len()),
+    };
     let (current_value, remaining_value, correct_value, total_value, progress_label) =
         if let Some(progress) = &progress {
             (
@@ -537,7 +543,7 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
             )
         };
 
-    json!({
+    let mut props = json!({
         "app-title": "Engram",
         "deck-name": deck_name,
         "deck-stats-label": "Deck stats",
@@ -570,7 +576,42 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
         "action-bury-siblings-label": "Bury siblings",
         "action-suspend-card-label": "Suspend",
         "action-mark-label": mark_label,
-    })
+    });
+
+    let props_object = props
+        .as_object_mut()
+        .expect("Engram app props literal must be a JSON object");
+    for (key, value) in [
+        ("browser-label", json!("Card browser")),
+        ("browser-query-label", json!("Search")),
+        ("browser-query", json!("is:due OR is:new")),
+        (
+            "browser-query-placeholder",
+            json!("deck:tamil tag:script is:due"),
+        ),
+        ("browser-search-label", json!("Search")),
+        ("browser-results-label", json!("Results")),
+        ("browser-results-summary", json!(browser_results_summary)),
+        ("browser-results", json!(browser_results)),
+        ("browser-selected-index", json!(0)),
+        ("browser-open-label", json!("Open")),
+        ("browser-edit-label", json!("Edit")),
+        ("browser-suspend-label", json!("Suspend")),
+        ("browser-mark-label", json!("Mark")),
+    ] {
+        props_object.insert(key.to_string(), value);
+    }
+
+    props
+}
+
+fn browser_result_rows(state: &AppState) -> Vec<String> {
+    state
+        .cards
+        .iter()
+        .take(20)
+        .map(|card| format!("{} -> {}", card.front, card.back))
+        .collect()
 }
 
 fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
@@ -1599,6 +1640,17 @@ mod tests {
         assert_eq!(value["props"]["deck-name"], "Tamil");
         assert_eq!(value["props"]["deck-total-value"], "2");
         assert_eq!(value["props"]["deck-new-value"], "2");
+        assert_eq!(value["props"]["browser-label"], "Card browser");
+        assert_eq!(value["props"]["browser-query"], "is:due OR is:new");
+        assert_eq!(
+            value["props"]["browser-results-summary"],
+            "2 cards in collection"
+        );
+        assert_eq!(
+            value["props"]["browser-results"],
+            json!(["letter-a -> a", "letter-aa -> aa"])
+        );
+        assert_eq!(value["props"]["browser-selected-index"], 0);
         assert_eq!(value["props"]["prompt"], "letter-a");
         assert_eq!(value["props"]["answer"], "a");
         assert_eq!(value["props"]["answer-visible"], true);

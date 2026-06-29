@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added the reusable `mosaic-pkg-card-browser` dependency and mounted its
+  `CardBrowser` component so the Mosaic app exposes Anki-style browser/search
+  slots and events through the shared host contract.
 - Added the reusable `mosaic-pkg-deck-stats` dependency and mounted its
   `DeckStatsPanel` component in the app shell.
 - Added the reusable `mosaic-pkg-session-progress` dependency and mounted its
@@ -11,7 +14,8 @@
   suspend, and mark events through the shared Engram event bridge.
 - Added a multi-backend artifact-builder smoke test proving `EngramApp` emits
   through HTML, React, SwiftUI, Qt, XAML, and Flutter while consuming
-  `mosaic-pkg-deck-stats`, `mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
+  `mosaic-pkg-card-browser`, `mosaic-pkg-deck-stats`,
+  `mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
   `mosaic-pkg-session-progress`.
 - Asserted that the generated React, SwiftPM, and Flutter shells mount
   `EngramApp` with sample slot values and dispatch callbacks instead of

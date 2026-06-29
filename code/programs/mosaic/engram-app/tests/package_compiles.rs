@@ -45,6 +45,10 @@ fn manifest_declares_app_package_boundary() {
     assert_eq!(package.package.name, "engram-app");
     assert_eq!(package.components.exports, COMPONENTS);
     assert_eq!(
+        package.dependencies.get("mosaic-pkg-card-browser"),
+        Some(&"0.1.0".to_string())
+    );
+    assert_eq!(
         package.dependencies.get("mosaic-pkg-deck-stats"),
         Some(&"0.1.0".to_string())
     );
@@ -79,10 +83,12 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert_eq!(msl.def.component_name, "EngramApp");
 
     let source = read_source("EngramApp.mll");
+    assert!(source.contains("pkg::mosaic-pkg-card-browser::CardBrowser"));
     assert!(source.contains("pkg::mosaic-pkg-deck-stats::DeckStatsPanel"));
     assert!(source.contains("pkg::mosaic-pkg-review-card::ReviewCard"));
     assert!(source.contains("pkg::mosaic-pkg-review-actions::ReviewActions"));
     assert!(source.contains("pkg::mosaic-pkg-session-progress::SessionProgress"));
+    assert!(!source.contains("layout CardBrowser"));
     assert!(!source.contains("layout DeckStatsPanel"));
     assert!(!source.contains("layout ReviewCard"));
     assert!(!source.contains("layout ReviewActions"));
@@ -113,6 +119,24 @@ fn shared_engram_app_props_match_mosaic_slots() {
     assert_eq!(props["ok"], true);
     assert_eq!(prop_keys, expected_slots);
     assert_eq!(props["props"]["answer-visible"], false);
+}
+
+#[test]
+fn app_manifest_resolves_card_browser_dependency() {
+    let resolver = dependency_resolver();
+
+    match resolver.resolve("CardBrowser") {
+        Some(Resolution::Component {
+            package,
+            component,
+            package_path,
+        }) => {
+            assert_eq!(package, "mosaic-pkg-card-browser");
+            assert_eq!(component, "CardBrowser");
+            assert!(package_path.ends_with("mosaic-pkg-card-browser"));
+        }
+        other => panic!("expected CardBrowser component resolution, got {other:?}"),
+    }
 }
 
 #[test]
@@ -322,6 +346,8 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("react/src/main.tsx");
     assert_contains(&react_app, "<EngramApp");
     assert_contains(&react_app, "appTitle=\"Sample AppTitle\"");
+    assert_contains(&react_app, "browserQuery=\"Sample BrowserQuery\"");
+    assert_contains(&react_app, "browserResults={[]}");
     assert_contains(&react_app, "answerVisible={false}");
     assert_contains(&react_app, "actionUndoLabel=\"Sample ActionUndoLabel\"");
     assert_contains(&react_app, "actionMarkLabel=\"Sample ActionMarkLabel\"");
@@ -331,6 +357,8 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("electron/src/main.tsx");
     assert_contains(&electron_app, "<EngramApp");
     assert_contains(&electron_app, "appTitle=\"Sample AppTitle\"");
+    assert_contains(&electron_app, "browserQuery=\"Sample BrowserQuery\"");
+    assert_contains(&electron_app, "browserResults={[]}");
     assert_contains(&electron_app, "answerVisible={false}");
     assert_contains(&electron_app, "actionUndoLabel=\"Sample ActionUndoLabel\"");
     assert_contains(&electron_app, "actionMarkLabel=\"Sample ActionMarkLabel\"");
@@ -349,6 +377,8 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("flutter/lib/main.dart");
     assert_contains(&flutter_app, "EngramApp(");
     assert_contains(&flutter_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(&flutter_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(&flutter_app, "browserResults: const [],");
     assert_contains(&flutter_app, "answerVisible: false,");
     assert_contains(&flutter_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
     assert_contains(&flutter_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
@@ -360,6 +390,8 @@ fn native_project_shells_expose_engram_host_contract() {
     let qml =
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");
     assert_contains(&qml, "property string appTitle");
+    assert_contains(&qml, "property string browserQuery");
+    assert_contains(&qml, "property var browserResults");
     assert_contains(&qml, "property bool answerVisible");
     assert_contains(&qml, "signal reveal()");
     assert_contains(&qml, "signal again()");
@@ -371,6 +403,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal burySiblings()");
     assert_contains(&qml, "signal suspendCard()");
     assert_contains(&qml, "signal toggleMark()");
+    assert_contains(&qml, "signal browserSearch()");
+    assert_contains(&qml, "signal browserSelectResult(real index)");
 
     let swift = fs::read_to_string(tmp.path().join("swiftui").join("EngramApp.swift"))
         .expect("EngramApp.swift");
@@ -385,8 +419,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case burySiblings");
     assert_contains(&swift, "case suspendCard");
     assert_contains(&swift, "case toggleMark");
+    assert_contains(&swift, "case browserSearch");
+    assert_contains(&swift, "case browserSelectResult");
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
+    assert_contains(&swift, "let browserResults: [String]");
     assert_contains(&swift, "let answerVisible: Bool");
     assert_contains(&swift, "let actionUndoLabel: String");
     assert_contains(&swift, "let actionMarkLabel: String");
@@ -400,6 +437,8 @@ fn native_project_shells_expose_engram_host_contract() {
     .expect("Sources/App/App.swift");
     assert_contains(&swift_app, "EngramAppView(");
     assert_contains(&swift_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(&swift_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(&swift_app, "browserResults: [],");
     assert_contains(&swift_app, "answerVisible: false,");
     assert_contains(&swift_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
     assert_contains(&swift_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
@@ -422,6 +461,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty AppTitleProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserResultsProperty",
     );
     assert_contains(
         &xaml_code_behind,
@@ -481,6 +524,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record ToggleMark() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserSearch() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserSelectResult(double Index) : EngramAppEvent;",
     );
 
     let capi_header = fs::read_to_string(

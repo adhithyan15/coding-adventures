@@ -1,0 +1,28 @@
+// CardBrowser.mil - reusable card browser/search surface.
+//
+// The host owns search execution and mutations. This component only describes
+// a target-neutral UI contract for Anki-style browser workflows.
+
+component CardBrowser {
+  slot browser-label : text ;
+  slot query-label : text ;
+  slot query : text ;
+  slot query-placeholder : text ;
+  slot search-label : text ;
+  slot results-label : text ;
+  slot results-summary : text ;
+  slot results : list<text> ;
+  slot selected-index : number ;
+  slot open-label : text ;
+  slot edit-label : text ;
+  slot suspend-label : text ;
+  slot mark-label : text ;
+
+  emit onQueryChange ( value : text ) ;
+  emit onSearch ;
+  emit onSelectResult ( index : number ) ;
+  emit onOpenSelected ;
+  emit onEditSelected ;
+  emit onToggleSuspendSelected ;
+  emit onToggleMarkSelected ;
+}
