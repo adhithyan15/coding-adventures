@@ -11,7 +11,7 @@ use std::collections::{HashMap, HashSet, VecDeque};
 use crate::address::{CellAddress, CellRange, SheetId, MAX_RANGE_CELLS};
 use crate::cell::{Cell, CellContent, CellValue};
 use crate::dag::DependencyGraph;
-use crate::edit::StructuralEdit;
+use crate::edit::{delete_coord, insert_coord, StructuralEdit};
 use crate::errors::SpreadsheetError;
 use crate::parser::{parse, ParseError};
 use crate::recalc::{collect_refs, evaluate};
@@ -92,6 +92,17 @@ struct Sheet {
     ///
     /// [`get_display`]: Workbook::get_display
     formats: HashMap<CellAddress, String>,
+    /// Per-column widths and per-row heights, keyed by the 1-based column / row
+    /// index. The value is an **opaque `f64` in host units** (the engine never
+    /// computes with it — it only stores, key-shifts on structural edits, and
+    /// serializes it). A column / row *absent* from the map uses the host's
+    /// default size, so a fresh sheet (both maps empty) is byte-identical to the
+    /// pre-feature behaviour. See [`set_column_width`] / [`set_row_height`].
+    ///
+    /// [`set_column_width`]: Workbook::set_column_width
+    /// [`set_row_height`]: Workbook::set_row_height
+    col_widths: HashMap<u32, f64>,
+    row_heights: HashMap<u32, f64>,
 }
 
 impl Workbook {
@@ -117,6 +128,8 @@ impl Workbook {
             name: name.clone(),
             cells: HashMap::new(),
             formats: HashMap::new(),
+            col_widths: HashMap::new(),
+            row_heights: HashMap::new(),
         });
         self.sheet_by_name.insert(name, id);
         id
@@ -594,6 +607,140 @@ impl Workbook {
         self.apply_structural_edit(sheet, StructuralEdit::DeleteCols { at, count });
     }
 
+    // ── Column widths & row heights ──────────────────────────────────────
+    // Per-sheet presentation chrome: the engine STORES a width/height keyed by
+    // column/row index but never reads it for any computation. A host renders
+    // columns/rows at these sizes; an index with no stored size uses the host's
+    // own default. The value is an opaque `f64` in whatever unit the host picks
+    // (the demos use pixels). These survive save/load and shift with their
+    // column/row on a structural edit (see `apply_structural_edit`).
+
+    /// The stored width of a 1-based `col` on `sheet`, or `None` if the column has
+    /// no custom width (the host should use its default). `None` for an unknown
+    /// sheet or `col == 0`.
+    pub fn column_width(&self, sheet: SheetId, col: u32) -> Option<f64> {
+        self.sheets
+            .get(sheet.0 as usize)
+            .and_then(|s| s.col_widths.get(&col).copied())
+    }
+
+    /// The stored height of a 1-based `row` on `sheet`, or `None` if the row has
+    /// no custom height. `None` for an unknown sheet or `row == 0`.
+    pub fn row_height(&self, sheet: SheetId, row: u32) -> Option<f64> {
+        self.sheets
+            .get(sheet.0 as usize)
+            .and_then(|s| s.row_heights.get(&row).copied())
+    }
+
+    /// Every customized column width in the inclusive 1-based range `[col0, col1]`
+    /// on `sheet`, as `(col, width)` pairs sorted by column. Columns with no custom
+    /// width are omitted — a host fetches a viewport's overrides in one call instead
+    /// of one probe per column. Empty for an unknown sheet or an empty range.
+    pub fn column_widths_in(&self, sheet: SheetId, col0: u32, col1: u32) -> Vec<(u32, f64)> {
+        let Some(s) = self.sheets.get(sheet.0 as usize) else {
+            return Vec::new();
+        };
+        let mut out: Vec<(u32, f64)> = s
+            .col_widths
+            .iter()
+            .filter(|(c, _)| **c >= col0 && **c <= col1)
+            .map(|(c, w)| (*c, *w))
+            .collect();
+        out.sort_by_key(|(c, _)| *c);
+        out
+    }
+
+    /// Every customized row height in the inclusive 1-based range `[row0, row1]` on
+    /// `sheet`, as `(row, height)` pairs sorted by row. The row analogue of
+    /// [`column_widths_in`].
+    ///
+    /// [`column_widths_in`]: Workbook::column_widths_in
+    pub fn row_heights_in(&self, sheet: SheetId, row0: u32, row1: u32) -> Vec<(u32, f64)> {
+        let Some(s) = self.sheets.get(sheet.0 as usize) else {
+            return Vec::new();
+        };
+        let mut out: Vec<(u32, f64)> = s
+            .row_heights
+            .iter()
+            .filter(|(r, _)| **r >= row0 && **r <= row1)
+            .map(|(r, h)| (*r, *h))
+            .collect();
+        out.sort_by_key(|(r, _)| *r);
+        out
+    }
+
+    /// Set the width of a 1-based `col` on `sheet`. Returns `true` if the map
+    /// changed. Rejects (returns `false`, leaving the map untouched) a non-finite
+    /// width (`NaN` / `±∞`), a width `≤ 0`, `col == 0`, or an unknown sheet — so a
+    /// bad host value can never poison the map or the serialized file. Setting the
+    /// width a column already has is a no-op (no revision bump), matching the
+    /// engine's diff-gating convention so an unchanged resize isn't snapshotted.
+    pub fn set_column_width(&mut self, sheet: SheetId, col: u32, width: f64) -> bool {
+        if col == 0 || !width.is_finite() || width <= 0.0 {
+            return false;
+        }
+        let Some(s) = self.sheets.get_mut(sheet.0 as usize) else {
+            return false;
+        };
+        if s.col_widths.get(&col) == Some(&width) {
+            return false; // unchanged
+        }
+        s.col_widths.insert(col, width);
+        self.revision = self.revision.wrapping_add(1);
+        true
+    }
+
+    /// Set the height of a 1-based `row` on `sheet`. The row analogue of
+    /// [`set_column_width`] — same finite / `> 0` / `row ≥ 1` validation and
+    /// same-value no-op.
+    ///
+    /// [`set_column_width`]: Workbook::set_column_width
+    pub fn set_row_height(&mut self, sheet: SheetId, row: u32, height: f64) -> bool {
+        if row == 0 || !height.is_finite() || height <= 0.0 {
+            return false;
+        }
+        let Some(s) = self.sheets.get_mut(sheet.0 as usize) else {
+            return false;
+        };
+        if s.row_heights.get(&row) == Some(&height) {
+            return false; // unchanged
+        }
+        s.row_heights.insert(row, height);
+        self.revision = self.revision.wrapping_add(1);
+        true
+    }
+
+    /// Remove a column's custom width, returning it to the host default. Returns
+    /// `true` if an entry was removed (and bumps the revision); `false` if the
+    /// column had no custom width or the sheet is unknown.
+    pub fn clear_column_width(&mut self, sheet: SheetId, col: u32) -> bool {
+        let Some(s) = self.sheets.get_mut(sheet.0 as usize) else {
+            return false;
+        };
+        if s.col_widths.remove(&col).is_some() {
+            self.revision = self.revision.wrapping_add(1);
+            true
+        } else {
+            false
+        }
+    }
+
+    /// Remove a row's custom height, returning it to the host default. The row
+    /// analogue of [`clear_column_width`].
+    ///
+    /// [`clear_column_width`]: Workbook::clear_column_width
+    pub fn clear_row_height(&mut self, sheet: SheetId, row: u32) -> bool {
+        let Some(s) = self.sheets.get_mut(sheet.0 as usize) else {
+            return false;
+        };
+        if s.row_heights.remove(&row).is_some() {
+            self.revision = self.revision.wrapping_add(1);
+            true
+        } else {
+            false
+        }
+    }
+
     /// Apply a [`StructuralEdit`] to one sheet: relocate every cell, rewrite each
     /// formula's references and echo text, drop cells on deleted lines, rebuild
     /// the dependency graph, and recalculate. A no-op if `sheet` is unknown.
@@ -693,6 +840,38 @@ impl Workbook {
             }
         }
         self.sheets[sheet.0 as usize].formats = moved_formats;
+
+        // 1d. Shift the column-width / row-height keys the same way. A width is
+        //     keyed by COLUMN index, so only a column insert/delete moves it; a
+        //     height by ROW index, so only a row insert/delete. The OTHER axis is
+        //     untouched (widen column C, insert a row → column C stays wide). A key
+        //     in a deleted band is dropped (`delete_coord → None`), exactly as a
+        //     cell/format on a deleted line is. Reuses the same `insert_coord` /
+        //     `delete_coord` helpers that shift cell addresses and references, so
+        //     the chrome stays aligned with the data it decorates.
+        let s = &mut self.sheets[sheet.0 as usize];
+        match edit {
+            StructuralEdit::InsertCols { at, count } => {
+                s.col_widths = shift_axis_keys(std::mem::take(&mut s.col_widths), |c| {
+                    Some(insert_coord(c, at, count))
+                });
+            }
+            StructuralEdit::DeleteCols { at, count } => {
+                s.col_widths = shift_axis_keys(std::mem::take(&mut s.col_widths), |c| {
+                    delete_coord(c, at, count)
+                });
+            }
+            StructuralEdit::InsertRows { at, count } => {
+                s.row_heights = shift_axis_keys(std::mem::take(&mut s.row_heights), |r| {
+                    Some(insert_coord(r, at, count))
+                });
+            }
+            StructuralEdit::DeleteRows { at, count } => {
+                s.row_heights = shift_axis_keys(std::mem::take(&mut s.row_heights), |r| {
+                    delete_coord(r, at, count)
+                });
+            }
+        }
 
         // 2. Every address moved, so the old dependency edges are stale. Rebuild
         //    the graph from the rewritten ASTs, then recalc the whole workbook.
@@ -1414,12 +1593,16 @@ impl Workbook {
     /// never disagree with the engine.
     ///
     /// Shape (version 1), cells and formats sorted by (row, col) for stable
-    /// output:
+    /// output. The optional `colWidths` / `rowHeights` arrays (sorted by index)
+    /// appear only when a sheet has custom sizes, so a workbook with none is
+    /// byte-identical to the pre-feature output:
     /// ```json
     /// {"version":1,"sheets":[{"name":"Sheet1",
     ///   "cells":[{"a1":"A1","value":{"number":15.0}},
     ///            {"a1":"E1","formula":"=SUM(A1:D1)"}],
-    ///   "formats":[{"a1":"E1","code":"#,##0.00"}]}]}
+    ///   "formats":[{"a1":"E1","code":"#,##0.00"}],
+    ///   "colWidths":[{"col":3,"w":140.0}],
+    ///   "rowHeights":[{"row":2,"h":40.0}]}]}
     /// ```
     /// No I/O happens here — the caller writes the returned string wherever it
     /// likes. Round-trips through [`deserialize`].
@@ -1453,7 +1636,33 @@ impl Workbook {
                     .map(|(addr, code)| json!({ "a1": addr.to_a1(), "code": code }))
                     .collect();
 
-                json!({ "name": s.name, "cells": cells_json, "formats": fmts_json })
+                let mut sheet_obj = json!({
+                    "name": s.name, "cells": cells_json, "formats": fmts_json
+                });
+                // Column widths / row heights are additive: emit them ONLY when a
+                // sheet has custom sizes, so a workbook with none serializes
+                // byte-identically to the pre-feature output (the document stays
+                // version 1, and an old reader ignores unknown keys). Sorted by
+                // index for stable output.
+                if !s.col_widths.is_empty() {
+                    let mut ws: Vec<(&u32, &f64)> = s.col_widths.iter().collect();
+                    ws.sort_by_key(|(c, _)| **c);
+                    let ws_json: Vec<Value> = ws
+                        .iter()
+                        .map(|(c, w)| json!({ "col": *c, "w": *w }))
+                        .collect();
+                    sheet_obj["colWidths"] = Value::Array(ws_json);
+                }
+                if !s.row_heights.is_empty() {
+                    let mut hs: Vec<(&u32, &f64)> = s.row_heights.iter().collect();
+                    hs.sort_by_key(|(r, _)| **r);
+                    let hs_json: Vec<Value> = hs
+                        .iter()
+                        .map(|(r, h)| json!({ "row": *r, "h": *h }))
+                        .collect();
+                    sheet_obj["rowHeights"] = Value::Array(hs_json);
+                }
+                sheet_obj
             })
             .collect();
 
@@ -1536,6 +1745,37 @@ impl Workbook {
                     let addr = CellAddress::parse(a1)
                         .map_err(|e| format!("bad format address {a1:?}: {}", e.display()))?;
                     self.set_format(sheet, addr, code);
+                }
+            }
+
+            // Column widths / row heights are read TOLERANTLY — a missing array, a
+            // non-numeric / non-finite / ≤ 0 value, or a 0 / out-of-u32 index is
+            // skipped (never aborts the load), so a hand-edited or future file can't
+            // crash a load over presentation chrome. `set_column_width` /
+            // `set_row_height` already enforce the finite / `> 0` / index ≥ 1 rules,
+            // so a bad entry simply doesn't take.
+            if let Some(ws) = sj.get("colWidths").and_then(Value::as_array) {
+                for w in ws {
+                    if let (Some(col), Some(width)) = (
+                        w.get("col").and_then(Value::as_u64),
+                        w.get("w").and_then(Value::as_f64),
+                    ) {
+                        if let Ok(col) = u32::try_from(col) {
+                            self.set_column_width(sheet, col, width);
+                        }
+                    }
+                }
+            }
+            if let Some(hs) = sj.get("rowHeights").and_then(Value::as_array) {
+                for h in hs {
+                    if let (Some(row), Some(height)) = (
+                        h.get("row").and_then(Value::as_u64),
+                        h.get("h").and_then(Value::as_f64),
+                    ) {
+                        if let Ok(row) = u32::try_from(row) {
+                            self.set_row_height(sheet, row, height);
+                        }
+                    }
                 }
             }
         }
@@ -1687,6 +1927,20 @@ impl Default for Workbook {
 /// overflow when `row1 - row0 == u32::MAX`, wrapping to a bogus small count that
 /// slips past the cap and sends the caller's loop over the entire u32 range (an
 /// OOM DoS). `checked_mul` then rejects any product that still overflows `u64`.
+/// Re-key a column-width / row-height map under a structural edit: apply `f` to
+/// every key, keeping the entry at its new key when `f` returns `Some` and dropping
+/// it when `f` returns `None` (the index sat inside a deleted band). The value (the
+/// width / height) rides along unchanged. Used by [`Workbook::apply_structural_edit`]
+/// to slide column widths / row heights with their columns / rows.
+fn shift_axis_keys(
+    map: HashMap<u32, f64>,
+    f: impl Fn(u32) -> Option<u32>,
+) -> HashMap<u32, f64> {
+    map.into_iter()
+        .filter_map(|(k, v)| f(k).map(|nk| (nk, v)))
+        .collect()
+}
+
 /// Coerce a raw literal string (already trimmed, not a formula) to a typed value:
 /// `"TRUE"`/`"FALSE"` (any case) → boolean, a finite parseable number → number,
 /// anything else → text. The literal half of [`Workbook::set_raw`]'s policy.
@@ -3219,5 +3473,171 @@ mod tests {
         // Case-insensitive replace of "hello" → "Hi" splices over the original span.
         assert_eq!(wb.replace_all(s, "hello", "Hi", false), 1);
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Text("Hi".into())));
+    }
+
+    // ── Column widths & row heights ──────────────────────────────────────
+
+    #[test]
+    fn column_width_and_row_height_set_get_clear() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        // Absent → None (host uses its default).
+        assert_eq!(wb.column_width(s, 3), None);
+        assert_eq!(wb.row_height(s, 2), None);
+        // Set, then read back.
+        assert!(wb.set_column_width(s, 3, 140.0));
+        assert!(wb.set_row_height(s, 2, 40.0));
+        assert_eq!(wb.column_width(s, 3), Some(140.0));
+        assert_eq!(wb.row_height(s, 2), Some(40.0));
+        // Setting the SAME value is a no-op (returns false, revision unchanged).
+        let rev = wb.current_revision();
+        assert!(!wb.set_column_width(s, 3, 140.0));
+        assert!(!wb.set_row_height(s, 2, 40.0));
+        assert_eq!(wb.current_revision(), rev);
+        // A different value overwrites + bumps the revision.
+        assert!(wb.set_column_width(s, 3, 200.0));
+        assert_eq!(wb.column_width(s, 3), Some(200.0));
+        assert!(wb.current_revision() > rev);
+        // Clear → back to None; clearing an absent one returns false.
+        assert!(wb.clear_column_width(s, 3));
+        assert_eq!(wb.column_width(s, 3), None);
+        assert!(!wb.clear_column_width(s, 3));
+        assert!(wb.clear_row_height(s, 2));
+        assert_eq!(wb.row_height(s, 2), None);
+    }
+
+    #[test]
+    fn set_size_rejects_bad_values_and_indices() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        for bad in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY, 0.0, -5.0] {
+            assert!(!wb.set_column_width(s, 1, bad), "width {bad} must be rejected");
+            assert!(!wb.set_row_height(s, 1, bad), "height {bad} must be rejected");
+        }
+        // Index 0 is invalid (the grid is 1-based).
+        assert!(!wb.set_column_width(s, 0, 100.0));
+        assert!(!wb.set_row_height(s, 0, 100.0));
+        // An unknown sheet is rejected, not panicked.
+        assert!(!wb.set_column_width(SheetId(9), 1, 100.0));
+        assert_eq!(wb.column_width(s, 1), None);
+    }
+
+    #[test]
+    fn widths_and_heights_in_range_are_filtered_and_sorted() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        for (c, w) in [(2u32, 80.0), (5, 120.0), (3, 100.0), (9, 200.0)] {
+            wb.set_column_width(s, c, w);
+        }
+        // Only columns in [3, 6], sorted ascending.
+        assert_eq!(wb.column_widths_in(s, 3, 6), vec![(3, 100.0), (5, 120.0)]);
+        // Row analogue.
+        wb.set_row_height(s, 4, 30.0);
+        wb.set_row_height(s, 1, 20.0);
+        assert_eq!(wb.row_heights_in(s, 1, 4), vec![(1, 20.0), (4, 30.0)]);
+        // Empty range / unknown sheet → empty.
+        assert!(wb.column_widths_in(s, 100, 200).is_empty());
+        assert!(wb.column_widths_in(SheetId(9), 1, 10).is_empty());
+    }
+
+    #[test]
+    fn structural_edits_shift_width_and_height_keys() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_column_width(s, 3, 140.0); // column C
+        wb.set_row_height(s, 2, 40.0); // row 2
+
+        // Insert a column at B (col 2): C's width slides to D (col 4). Heights untouched.
+        wb.insert_cols(s, 2, 1);
+        assert_eq!(wb.column_width(s, 3), None);
+        assert_eq!(wb.column_width(s, 4), Some(140.0));
+        assert_eq!(wb.row_height(s, 2), Some(40.0)); // other axis unmoved
+
+        // Insert a row at 1: row 2's height slides to row 3. Widths untouched.
+        wb.insert_rows(s, 1, 1);
+        assert_eq!(wb.row_height(s, 2), None);
+        assert_eq!(wb.row_height(s, 3), Some(40.0));
+        assert_eq!(wb.column_width(s, 4), Some(140.0)); // width still at D
+
+        // Delete the row holding the height (now row 3): its height is dropped.
+        wb.delete_rows(s, 3, 1);
+        assert_eq!(wb.row_height(s, 3), None);
+        assert!(wb.row_heights_in(s, 1, 1000).is_empty());
+
+        // Delete a column before the widened one (col 4 → back to col 3): width slides.
+        wb.delete_cols(s, 1, 1);
+        assert_eq!(wb.column_width(s, 3), Some(140.0));
+        // Delete the widened column itself: its width is dropped.
+        wb.delete_cols(s, 3, 1);
+        assert_eq!(wb.column_width(s, 3), None);
+        assert!(wb.column_widths_in(s, 1, 1000).is_empty());
+    }
+
+    #[test]
+    fn range_sort_does_not_move_widths_or_heights() {
+        // Resize is positional chrome, not record data: sorting the VALUES of rows
+        // must leave the column widths and row heights where they are.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(3.0));
+        wb.set_value(s, cell(2, 1), CellValue::Number(1.0));
+        wb.set_value(s, cell(3, 1), CellValue::Number(2.0));
+        wb.set_column_width(s, 1, 150.0); // column A wide
+        wb.set_row_height(s, 1, 50.0); // row 1 tall
+        wb.sort_range(s, CellRange::new(cell(1, 1), cell(3, 1)), 1, true);
+        // Values reordered (1,2,3) but A stays wide and row 1 stays tall.
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
+        assert_eq!(wb.column_width(s, 1), Some(150.0));
+        assert_eq!(wb.row_height(s, 1), Some(50.0));
+    }
+
+    #[test]
+    fn serialize_round_trips_widths_and_heights_across_two_sheets() {
+        let mut wb = Workbook::new();
+        let s1 = wb.add_sheet("Sheet1");
+        let s2 = wb.add_sheet("Summary");
+        wb.set_column_width(s1, 3, 140.0);
+        wb.set_row_height(s1, 2, 40.0);
+        wb.set_column_width(s2, 1, 90.5);
+        let doc = wb.serialize();
+        assert!(doc.contains("colWidths"));
+        assert!(doc.contains("rowHeights"));
+
+        let mut loaded = Workbook::new();
+        loaded.deserialize(&doc).expect("round-trips");
+        assert_eq!(loaded.column_width(SheetId(0), 3), Some(140.0));
+        assert_eq!(loaded.row_height(SheetId(0), 2), Some(40.0));
+        assert_eq!(loaded.column_width(SheetId(1), 1), Some(90.5));
+    }
+
+    #[test]
+    fn deserialize_is_tolerant_of_missing_and_bad_sizes() {
+        let mut wb = Workbook::new();
+        // No size arrays at all (e.g. an old file) loads fine.
+        wb.deserialize(r#"{"version":1,"sheets":[{"name":"S","cells":[],"formats":[]}]}"#)
+            .expect("old-shape file loads");
+        assert_eq!(wb.column_width(SheetId(0), 1), None);
+        // A non-finite / ≤ 0 / index-0 entry is SKIPPED, not fatal.
+        let doc = r#"{"version":1,"sheets":[{"name":"S","cells":[],"formats":[],
+            "colWidths":[{"col":2,"w":120.0},{"col":3,"w":-9.0},{"col":0,"w":50.0}],
+            "rowHeights":[{"row":1,"h":30.0}]}]}"#;
+        let mut wb2 = Workbook::new();
+        wb2.deserialize(doc).expect("tolerant load");
+        assert_eq!(wb2.column_width(SheetId(0), 2), Some(120.0)); // good one took
+        assert_eq!(wb2.column_width(SheetId(0), 3), None); // negative skipped
+        assert_eq!(wb2.column_width(SheetId(0), 0), None); // index 0 skipped
+        assert_eq!(wb2.row_height(SheetId(0), 1), Some(30.0));
+    }
+
+    #[test]
+    fn serialize_of_no_custom_sizes_omits_the_arrays() {
+        // A workbook with no resizes must serialize byte-identically to the
+        // pre-feature output (no colWidths / rowHeights keys at all).
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(15.0));
+        let doc = wb.serialize();
+        assert!(!doc.contains("colWidths"));
+        assert!(!doc.contains("rowHeights"));
     }
 }

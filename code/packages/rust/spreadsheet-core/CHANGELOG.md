@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.16.0
+
+**Column widths & row heights — engine-homed, persisted layout.** The `Workbook`
+now stores per-sheet column widths and row heights, the engine side of resizable
+columns/rows in the demos. The engine treats the value as an **opaque `f64` in host
+units it never interprets** — it only stores, key-shifts, and serializes it; the host
+owns the unit, the default, and any min/max clamp.
+
+- `Sheet` gains `col_widths: HashMap<u32, f64>` + `row_heights: HashMap<u32, f64>`,
+  keyed by the 1-based column / row index. A column / row absent from the map uses the
+  host default, so a fresh sheet (both maps empty) is byte-identical to before.
+- API: `column_width(sheet, col) -> Option<f64>` / `row_height(sheet, row)`;
+  `column_widths_in(sheet, c0, c1)` / `row_heights_in(sheet, r0, r1)` bulk reads (only
+  the customized indices in range, sorted) so a host fetches a viewport's overrides in
+  one call; `set_column_width` / `set_row_height` (return `bool`; reject `NaN` / `±∞` /
+  `≤ 0` / index 0 so a bad host value can't poison the map or the file; setting the
+  current value is a no-op, no revision bump); `clear_column_width` / `clear_row_height`.
+- **Structural edits shift the keys.** `apply_structural_edit` slides column-width keys
+  on InsertCols / DeleteCols and row-height keys on InsertRows / DeleteRows (reusing the
+  same `insert_coord` / `delete_coord` helpers that shift cell addresses and references,
+  now `pub(crate)`), dropping a key in a deleted band — so widen column C, insert a
+  column at B, and the widened column (now D) keeps its width. The other axis is untouched.
+- **Sort-immune:** column widths are columnar and row heights positional, so a range
+  sort (which reorders row *records*) leaves them where they are (matches Excel —
+  resize is chrome, not cell data).
+- **Persisted:** `serialize` emits optional per-sheet `colWidths` / `rowHeights` arrays
+  (sorted, **only when non-empty** — the document stays `version: 1` and a workbook with
+  no custom sizes serializes byte-identically to before, exactly as `formats` was added).
+  `deserialize` reads them **tolerantly** — a missing array, a non-finite / ≤ 0 value, or
+  a 0 / out-of-`u32` index is skipped, never aborting the load.
+- Sheet management is free: the maps live inside `Sheet`, so `delete_sheet` drops them
+  and `move_sheet` carries them with no reindex (they're keyed by col/row, not `SheetId`).
+- 8 new tests (set/get/clear, reject bad values + indices, bulk-in-range, insert/delete
+  shift both axes independently, sort-immunity, two-sheet round-trip, tolerant load,
+  empty-omits-arrays). 203 tests pass; `#![forbid(unsafe_code)]` unchanged.
+
 ## 0.15.0
 
 **Sheet management + multi-sheet load fix (multi-sheet PR-4 — the last engine
