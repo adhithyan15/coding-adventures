@@ -1,11 +1,13 @@
 //! APKG archive inspection for Engram.
 //!
-//! This crate intentionally stops at the archive boundary: it identifies the
-//! Anki collection member and media mapping inside an `.apkg`/`.colpkg` zip
-//! archive, but leaves SQLite collection import/export to a later layer.
+//! This crate owns the APKG archive boundary plus the supported SQLite
+//! collection import/export path. It identifies Anki collection members,
+//! honors modern package metadata, decodes zstd-compressed modern payloads, and
+//! resolves legacy JSON or modern protobuf media maps.
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
+use std::io::Cursor;
 
 use coding_adventures_sha1::sum1;
 use engram_core::{
@@ -14,6 +16,7 @@ use engram_core::{
     ExternalSourceRecord, ExternalSourceTarget, FieldDef, MediaAssetRecord, Note, NoteFieldValue,
     NoteType, Rating, Review, Session, SessionStatus, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
+use prost::Message;
 use rusqlite::{Connection, OpenFlags};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -23,7 +26,41 @@ const LEGACY_COLLECTION: &str = "collection.anki2";
 const SQLITE_21_COLLECTION: &str = "collection.anki21";
 const SQLITE_21B_COLLECTION: &str = "collection.anki21b";
 const MEDIA_MAP: &str = "media";
+const META: &str = "meta";
 const ANKI_V11_SOURCE: &str = "anki-v11";
+
+#[derive(Clone, PartialEq, Message)]
+struct PackageMetadataProto {
+    #[prost(enumeration = "PackageVersionProto", tag = "1")]
+    version: i32,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, prost::Enumeration)]
+#[repr(i32)]
+enum PackageVersionProto {
+    Unknown = 0,
+    Legacy1 = 1,
+    Legacy2 = 2,
+    Latest = 3,
+}
+
+#[derive(Clone, PartialEq, Message)]
+struct MediaEntriesProto {
+    #[prost(message, repeated, tag = "1")]
+    entries: Vec<MediaEntryProto>,
+}
+
+#[derive(Clone, PartialEq, Message)]
+struct MediaEntryProto {
+    #[prost(string, tag = "1")]
+    name: String,
+    #[prost(uint32, tag = "2")]
+    size: u32,
+    #[prost(bytes, tag = "3")]
+    sha1: Vec<u8>,
+    #[prost(uint32, optional, tag = "255")]
+    legacy_zip_filename: Option<u32>,
+}
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -54,6 +91,18 @@ pub enum CollectionFormat {
 impl CollectionFormat {
     pub fn is_v11_sqlite(self) -> bool {
         matches!(self, Self::LegacySqlite | Self::Sqlite21)
+    }
+
+    fn is_modern(self) -> bool {
+        matches!(self, Self::Sqlite21b)
+    }
+
+    fn collection_name(self) -> &'static str {
+        match self {
+            Self::LegacySqlite => LEGACY_COLLECTION,
+            Self::Sqlite21 => SQLITE_21_COLLECTION,
+            Self::Sqlite21b => SQLITE_21B_COLLECTION,
+        }
     }
 }
 
@@ -252,8 +301,8 @@ impl std::error::Error for ApkgError {}
 pub fn inspect_apkg(data: &[u8]) -> Result<AnkiPackageManifest, ApkgError> {
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
-    let collection = collection_member(&entries)?;
-    let media = media_manifest(&reader)?;
+    let collection = collection_member(&reader, &entries)?;
+    let media = media_manifest(&reader, collection.format)?;
 
     Ok(AnkiPackageManifest {
         collection,
@@ -265,33 +314,28 @@ pub fn inspect_apkg(data: &[u8]) -> Result<AnkiPackageManifest, ApkgError> {
 pub fn read_collection_bytes(data: &[u8]) -> Result<Vec<u8>, ApkgError> {
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
-    let collection = collection_member(&entries)?;
-    reader
+    let collection = collection_member(&reader, &entries)?;
+    let bytes = reader
         .read_by_name(&collection.name)
-        .map_err(|err| apkg_error(format!("failed to read collection: {err}")))
+        .map_err(|err| apkg_error(format!("failed to read collection: {err}")))?;
+    decode_package_payload(collection.format, "collection", &bytes)
 }
 
 pub fn read_v11_collection_bytes(data: &[u8]) -> Result<Vec<u8>, ApkgError> {
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
-    let collection = collection_member(&entries)?;
-    if !collection.format.is_v11_sqlite() {
-        return Err(apkg_error(format!(
-            "{} uses Anki's modern package format; the V11 collection reader supports collection.anki2 and collection.anki21 only",
-            collection.name
-        )));
-    }
-
-    reader
+    let collection = collection_member(&reader, &entries)?;
+    let bytes = reader
         .read_by_name(&collection.name)
-        .map_err(|err| apkg_error(format!("failed to read collection: {err}")))
+        .map_err(|err| apkg_error(format!("failed to read collection: {err}")))?;
+    decode_package_payload(collection.format, "collection", &bytes)
 }
 
 pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaFile, ApkgError> {
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
-    collection_member(&entries)?;
-    let manifest = media_manifest(&reader)?;
+    let collection = collection_member(&reader, &entries)?;
+    let manifest = media_manifest(&reader, collection.format)?;
     let media = manifest
         .media_files
         .into_iter()
@@ -303,6 +347,7 @@ pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaF
             media.archive_name
         ))
     })?;
+    let data = decode_package_payload(collection.format, "media file", &data)?;
 
     Ok(ResolvedMediaFile {
         archive_name: media.archive_name,
@@ -314,8 +359,8 @@ pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaF
 pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError> {
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
-    collection_member(&entries)?;
-    let manifest = media_manifest(&reader)?;
+    let collection = collection_member(&reader, &entries)?;
+    let manifest = media_manifest(&reader, collection.format)?;
 
     manifest
         .media_files
@@ -327,6 +372,7 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
                     media.archive_name
                 ))
             })?;
+            let data = decode_package_payload(collection.format, "media file", &data)?;
             Ok(ResolvedMediaFile {
                 archive_name: media.archive_name,
                 filename: media.filename,
@@ -3093,14 +3139,22 @@ fn archive_entries(reader: &ZipReader<'_>) -> Vec<ArchiveEntry> {
         .collect()
 }
 
-fn collection_member(entries: &[ArchiveEntry]) -> Result<CollectionMember, ApkgError> {
+fn collection_member(
+    reader: &ZipReader<'_>,
+    entries: &[ArchiveEntry],
+) -> Result<CollectionMember, ApkgError> {
+    if let Some(format) = package_collection_format(reader)? {
+        return collection_member_for_format(entries, format);
+    }
+
     let candidates = [
-        (LEGACY_COLLECTION, CollectionFormat::LegacySqlite),
-        (SQLITE_21_COLLECTION, CollectionFormat::Sqlite21),
-        (SQLITE_21B_COLLECTION, CollectionFormat::Sqlite21b),
+        CollectionFormat::Sqlite21b,
+        CollectionFormat::Sqlite21,
+        CollectionFormat::LegacySqlite,
     ];
 
-    for (name, format) in candidates {
+    for format in candidates {
+        let name = format.collection_name();
         if let Some(entry) = entries.iter().find(|entry| entry.name == name) {
             return Ok(CollectionMember {
                 name: entry.name.clone(),
@@ -3117,7 +3171,70 @@ fn collection_member(entries: &[ArchiveEntry]) -> Result<CollectionMember, ApkgE
     ))
 }
 
-fn media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgError> {
+fn package_collection_format(
+    reader: &ZipReader<'_>,
+) -> Result<Option<CollectionFormat>, ApkgError> {
+    let Ok(bytes) = reader.read_by_name(META) else {
+        return Ok(None);
+    };
+    let metadata = PackageMetadataProto::decode(bytes.as_slice())
+        .map_err(|err| apkg_error(format!("invalid Anki package metadata: {err}")))?;
+    let version = PackageVersionProto::try_from(metadata.version).map_err(|_| {
+        apkg_error(format!(
+            "unsupported Anki package version {}",
+            metadata.version
+        ))
+    })?;
+    let format = match version {
+        PackageVersionProto::Unknown => {
+            return Err(apkg_error("unsupported Anki package version 0"));
+        }
+        PackageVersionProto::Legacy1 => CollectionFormat::LegacySqlite,
+        PackageVersionProto::Legacy2 => CollectionFormat::Sqlite21,
+        PackageVersionProto::Latest => CollectionFormat::Sqlite21b,
+    };
+    Ok(Some(format))
+}
+
+fn collection_member_for_format(
+    entries: &[ArchiveEntry],
+    format: CollectionFormat,
+) -> Result<CollectionMember, ApkgError> {
+    let name = format.collection_name();
+    let entry = entries
+        .iter()
+        .find(|entry| entry.name == name)
+        .ok_or_else(|| apkg_error(format!("Anki package is missing {name}")))?;
+    Ok(CollectionMember {
+        name: entry.name.clone(),
+        format,
+        size: entry.size,
+        compressed_size: entry.compressed_size,
+        compression_method: entry.compression_method,
+    })
+}
+
+fn decode_package_payload(
+    format: CollectionFormat,
+    label: &str,
+    bytes: &[u8],
+) -> Result<Vec<u8>, ApkgError> {
+    if format.is_modern() {
+        zstd_crate::stream::decode_all(Cursor::new(bytes))
+            .map_err(|err| apkg_error(format!("failed to decode zstd-compressed {label}: {err}")))
+    } else {
+        Ok(bytes.to_vec())
+    }
+}
+
+fn media_manifest(
+    reader: &ZipReader<'_>,
+    format: CollectionFormat,
+) -> Result<MediaManifest, ApkgError> {
+    if format.is_modern() {
+        return modern_media_manifest(reader);
+    }
+
     let mut manifest = MediaManifest::default();
     if let Ok(bytes) = reader.read_by_name(MEDIA_MAP) {
         manifest.map_present = true;
@@ -3154,10 +3271,56 @@ fn media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgError> {
     Ok(manifest)
 }
 
+fn modern_media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgError> {
+    let mut manifest = MediaManifest::default();
+    let media_map = match reader.read_by_name(MEDIA_MAP) {
+        Ok(bytes) => bytes,
+        Err(_) => return Ok(manifest),
+    };
+    manifest.map_present = true;
+    let media_map = decode_package_payload(CollectionFormat::Sqlite21b, "media map", &media_map)?;
+    let entries = MediaEntriesProto::decode(media_map.as_slice())
+        .map_err(|err| apkg_error(format!("invalid Anki media entries protobuf: {err}")))?;
+
+    let archive_entries: BTreeMap<&str, u32> = reader
+        .entries()
+        .iter()
+        .filter(|entry| !entry.is_directory && !is_reserved_entry(&entry.name))
+        .map(|entry| (entry.name.as_str(), entry.compressed_size))
+        .collect();
+    let mut mapped_archive_names = BTreeSet::new();
+
+    for (index, entry) in entries.entries.into_iter().enumerate() {
+        let archive_name = index.to_string();
+        manifest
+            .mapping
+            .insert(archive_name.clone(), entry.name.clone());
+        mapped_archive_names.insert(archive_name.clone());
+        if let Some(archive_entry) = archive_entries.get(archive_name.as_str()) {
+            manifest.media_files.push(MediaFile {
+                archive_name,
+                filename: Some(entry.name),
+                size: entry.size,
+                compressed_size: *archive_entry,
+            });
+        } else {
+            manifest.missing_files.push(archive_name);
+        }
+    }
+
+    for archive_name in archive_entries.keys() {
+        if !mapped_archive_names.contains(*archive_name) {
+            manifest.unmapped_files.push((*archive_name).to_string());
+        }
+    }
+
+    Ok(manifest)
+}
+
 fn is_reserved_entry(name: &str) -> bool {
     matches!(
         name,
-        LEGACY_COLLECTION | SQLITE_21_COLLECTION | SQLITE_21B_COLLECTION | MEDIA_MAP
+        LEGACY_COLLECTION | SQLITE_21_COLLECTION | SQLITE_21B_COLLECTION | MEDIA_MAP | META
     )
 }
 
@@ -3176,6 +3339,45 @@ mod tests {
         for (name, data) in entries {
             writer.add_file(name, data, false);
         }
+        writer.finish()
+    }
+
+    fn zstd_encode(data: &[u8]) -> Vec<u8> {
+        zstd_crate::stream::encode_all(Cursor::new(data), 0).unwrap()
+    }
+
+    fn modern_package(collection: &[u8], media_assets: &[MediaAsset<'_>]) -> Vec<u8> {
+        let mut writer = ZipWriter::new();
+
+        let mut meta = Vec::new();
+        PackageMetadataProto {
+            version: PackageVersionProto::Latest as i32,
+        }
+        .encode(&mut meta)
+        .unwrap();
+        writer.add_file(META, &meta, false);
+        writer.add_file(SQLITE_21B_COLLECTION, &zstd_encode(collection), false);
+        writer.add_file(LEGACY_COLLECTION, b"dummy legacy collection", false);
+
+        let media_entries = MediaEntriesProto {
+            entries: media_assets
+                .iter()
+                .map(|asset| MediaEntryProto {
+                    name: asset.filename.to_string(),
+                    size: asset.data.len() as u32,
+                    sha1: sum1(asset.data).to_vec(),
+                    legacy_zip_filename: None,
+                })
+                .collect(),
+        };
+        let mut media_map = Vec::new();
+        media_entries.encode(&mut media_map).unwrap();
+        writer.add_file(MEDIA_MAP, &zstd_encode(&media_map), false);
+
+        for (index, asset) in media_assets.iter().enumerate() {
+            writer.add_file(&index.to_string(), &zstd_encode(asset.data), false);
+        }
+
         writer.finish()
     }
 
@@ -3442,7 +3644,7 @@ CREATE TABLE graves (
 
     #[test]
     fn recognizes_modern_collection_members() {
-        let apkg = package(&[(SQLITE_21B_COLLECTION, b"modern collection")]);
+        let apkg = modern_package(b"modern collection", &[]);
 
         let manifest = inspect_apkg(&apkg).unwrap();
         let collection = read_collection_bytes(&apkg).unwrap();
@@ -3453,10 +3655,10 @@ CREATE TABLE graves (
     }
 
     #[test]
-    fn reads_v11_collection_members_and_rejects_modern_packages() {
+    fn reads_collection_members_across_legacy_and_modern_packages() {
         let legacy = package(&[(LEGACY_COLLECTION, b"legacy collection")]);
         let sqlite21 = package(&[(SQLITE_21_COLLECTION, b"v11 collection")]);
-        let modern = package(&[(SQLITE_21B_COLLECTION, b"modern collection")]);
+        let modern = modern_package(b"modern collection", &[]);
 
         assert_eq!(
             read_v11_collection_bytes(&legacy).unwrap(),
@@ -3466,12 +3668,10 @@ CREATE TABLE graves (
             read_v11_collection_bytes(&sqlite21).unwrap(),
             b"v11 collection"
         );
-
-        let error = read_v11_collection_bytes(&modern).unwrap_err();
-        assert!(error.message.contains("modern package format"));
-        assert!(error
-            .message
-            .contains("collection.anki2 and collection.anki21"));
+        assert_eq!(
+            read_v11_collection_bytes(&modern).unwrap(),
+            b"modern collection"
+        );
     }
 
     #[test]
@@ -4194,13 +4394,14 @@ CREATE TABLE graves (
     }
 
     #[test]
-    fn v11_collection_reader_rejects_modern_apkg_envelope() {
+    fn v11_collection_reader_accepts_modern_zstd_envelope() {
         let sqlite = v11_sqlite_collection_bytes();
-        let modern = package(&[(SQLITE_21B_COLLECTION, sqlite.as_slice())]);
+        let modern = modern_package(&sqlite, &[]);
 
-        let error = read_v11_collection(&modern).unwrap_err();
+        let collection = read_v11_collection(&modern).unwrap();
 
-        assert!(error.message.contains("modern package format"));
+        assert_eq!(collection.metadata.version, 11);
+        assert_eq!(collection.decks[1].name, "Spanish::Latin");
     }
 
     #[test]
@@ -4239,6 +4440,63 @@ CREATE TABLE graves (
         let audio = read_media_file(&apkg, "0").unwrap();
         assert_eq!(audio.filename.as_deref(), Some("audio/hola.mp3"));
         assert_eq!(audio.data, b"mp3");
+    }
+
+    #[test]
+    fn inspects_and_reads_modern_zstd_media_entries() {
+        let apkg = modern_package(
+            &v11_sqlite_collection_bytes(),
+            &[
+                MediaAsset {
+                    filename: "audio/hola.mp3",
+                    data: b"mp3",
+                },
+                MediaAsset {
+                    filename: "images/card.png",
+                    data: b"png",
+                },
+            ],
+        );
+
+        let manifest = inspect_apkg(&apkg).unwrap();
+        assert_eq!(manifest.collection.name, SQLITE_21B_COLLECTION);
+        assert_eq!(manifest.media.map_present, true);
+        assert_eq!(manifest.media.mapping["0"], "audio/hola.mp3");
+        assert_eq!(manifest.media.mapping["1"], "images/card.png");
+        assert!(manifest.media.missing_files.is_empty());
+        assert!(manifest.media.unmapped_files.is_empty());
+        assert_eq!(manifest.media.media_files[0].size, 3);
+
+        let media_files = read_media_files(&apkg).unwrap();
+        assert_eq!(
+            media_files,
+            vec![
+                ResolvedMediaFile {
+                    archive_name: "0".to_string(),
+                    filename: Some("audio/hola.mp3".to_string()),
+                    data: b"mp3".to_vec(),
+                },
+                ResolvedMediaFile {
+                    archive_name: "1".to_string(),
+                    filename: Some("images/card.png".to_string()),
+                    data: b"png".to_vec(),
+                },
+            ]
+        );
+
+        let audio = read_media_file(&apkg, "0").unwrap();
+        assert_eq!(audio.filename.as_deref(), Some("audio/hola.mp3"));
+        assert_eq!(audio.data, b"mp3");
+
+        let state = read_v11_collection_as_engram_state(&apkg).unwrap();
+        assert_eq!(state.decks[1].name, "Spanish::Latin");
+        assert_eq!(state.media_assets.len(), 2);
+        assert_eq!(state.media_assets[0].archive_name, "0");
+        assert_eq!(
+            state.media_assets[0].filename.as_deref(),
+            Some("audio/hola.mp3")
+        );
+        assert_eq!(state.media_assets[0].data, b"mp3");
     }
 
     #[test]
