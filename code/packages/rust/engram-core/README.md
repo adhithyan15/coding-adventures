@@ -87,8 +87,9 @@ Anki deck-option preset names from preserved collection metadata, while
 `prop:pos` / `prop:position` uses imported Anki new-card queue positions when
 available. Imported Anki card custom data can be searched with `has-cd:key`,
 numeric `prop:cdn:key>5`, and scalar string `prop:cds:key=value` filters.
-Terms inside a group use implicit AND, `OR` joins groups, parentheses group
-subexpressions, and leading `-` negates a term or group.
+Imported Anki queue metadata also powers `is:buried-manually` and
+`is:buried-sibling`. Terms inside a group use implicit AND, `OR` joins groups,
+parentheses group subexpressions, and leading `-` negates a term or group.
 
 `materialize_generated_card` turns a note-template `GeneratedCard` into a
 durable `Card` with note/template lineage. Cloze templates using

@@ -95,6 +95,8 @@ enum CardSearchState {
     Due,
     Suspended,
     Buried,
+    BuriedManually,
+    BuriedSibling,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -775,6 +777,8 @@ fn parse_state_filter(token: &str, value: &str) -> Result<CardSearchState, Searc
         "due" => Ok(CardSearchState::Due),
         "suspended" => Ok(CardSearchState::Suspended),
         "buried" => Ok(CardSearchState::Buried),
+        "buried-manually" | "buried_manually" => Ok(CardSearchState::BuriedManually),
+        "buried-sibling" | "buried_sibling" => Ok(CardSearchState::BuriedSibling),
         _ => Err(SearchError {
             message: "unknown card state filter".to_string(),
             token: token.to_string(),
@@ -1085,7 +1089,7 @@ fn clause_matches(
         SearchClauseKind::Preset(term) => preset_matches(term, card, deck, metadata),
         SearchClauseKind::NoteType(term) => note_type_matches(term, note, note_type),
         SearchClauseKind::Tag(tag) => tag_matches(tag, note),
-        SearchClauseKind::State(state) => state_matches(*state, progress, now),
+        SearchClauseKind::State(state) => state_matches(*state, progress, card_sources, now),
         SearchClauseKind::Flag(filter) => flag_matches(*filter, progress),
         SearchClauseKind::Marked(expected) => {
             progress.is_some_and(|progress| progress.marked_at.is_some()) == *expected
@@ -1509,7 +1513,12 @@ fn card_template_matches(term: &str, card: &Card, note_type: Option<&NoteType>) 
         })
 }
 
-fn state_matches(state: CardSearchState, progress: Option<&CardProgress>, now: u64) -> bool {
+fn state_matches(
+    state: CardSearchState,
+    progress: Option<&CardProgress>,
+    card_sources: &[&ExternalSourceRecord],
+    now: u64,
+) -> bool {
     match state {
         CardSearchState::New => progress.map_or(true, is_new_progress_overlay),
         CardSearchState::Due => progress.is_some_and(|progress| is_reviewable(progress, now)),
@@ -1527,6 +1536,14 @@ fn state_matches(state: CardSearchState, progress: Option<&CardProgress>, now: u
         }
         CardSearchState::Suspended => progress.is_some_and(is_suspended),
         CardSearchState::Buried => progress.is_some_and(|progress| is_buried(progress, now)),
+        CardSearchState::BuriedManually => {
+            progress.is_some_and(|progress| is_buried(progress, now))
+                && anki_card_queue_matches(card_sources, -2)
+        }
+        CardSearchState::BuriedSibling => {
+            progress.is_some_and(|progress| is_buried(progress, now))
+                && anki_card_queue_matches(card_sources, -3)
+        }
     }
 }
 
@@ -1712,6 +1729,12 @@ fn is_buried(progress: &CardProgress, now: u64) -> bool {
         .buried_until
         .is_some_and(|buried_until| buried_until > now)
         || progress.state == CardState::Buried
+}
+
+fn anki_card_queue_matches(card_sources: &[&ExternalSourceRecord], expected: i64) -> bool {
+    card_sources
+        .iter()
+        .any(|source| source_i64_from_data(source, "queue") == Some(expected))
 }
 
 fn contains_case_insensitive(value: &str, term: &str) -> bool {
@@ -2207,6 +2230,52 @@ mod tests {
         };
         assert_eq!(ids_for("is:learn"), vec!["learning"]);
         assert_eq!(ids_for("state:relearn"), vec!["relearning"]);
+    }
+
+    #[test]
+    fn buried_reason_filters_use_imported_anki_queue_metadata() {
+        let anki_card_queue = |card_id: &str, queue: i64| ExternalSourceRecord {
+            target: ExternalSourceTarget::Card,
+            target_id: card_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(card_id.to_string()),
+            data: BTreeMap::from([("queue".to_string(), queue.to_string())]),
+        };
+        let buried_progress = |card_id: &str| {
+            let mut progress = progress(card_id, CardState::Buried, NOW + ONE_DAY_MS);
+            progress.buried_until = Some(NOW + ONE_DAY_MS);
+            progress
+        };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("manual", "tamil", "manual", "manual"),
+                card("sibling", "tamil", "sibling", "sibling"),
+                card("generic", "tamil", "generic", "generic"),
+            ],
+            card_progress: vec![
+                buried_progress("manual"),
+                buried_progress("sibling"),
+                buried_progress("generic"),
+            ],
+            external_sources: vec![
+                anki_card_queue("manual", -2),
+                anki_card_queue("sibling", -3),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("is:buried"), vec!["manual", "sibling", "generic"]);
+        assert_eq!(ids_for("is:buried-manually"), vec!["manual"]);
+        assert_eq!(ids_for("is:buried-sibling"), vec!["sibling"]);
     }
 
     #[test]

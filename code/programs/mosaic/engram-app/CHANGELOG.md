@@ -6,6 +6,8 @@
   `prop:pos` / `prop:position` new-card queue position filters.
 - Added shared browser support for Anki custom card data searches with
   `has-cd:`, `prop:cdn:`, and `prop:cds:` filters.
+- Added imported Anki queue-aware browser filters for `is:buried-manually` and
+  `is:buried-sibling`.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.
