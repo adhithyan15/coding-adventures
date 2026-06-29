@@ -59,6 +59,11 @@ pub struct SearchError {
     pub token: String,
 }
 
+#[derive(Clone, Copy, Debug, Default)]
+pub struct SearchContext<'a> {
+    pub current_deck_id: Option<&'a str>,
+}
+
 #[derive(Clone, Debug)]
 struct SearchClause {
     kind: SearchClauseKind,
@@ -76,6 +81,7 @@ enum SearchClauseKind {
     Duplicate(DuplicateFilter),
     CardTemplate(String),
     Deck(String),
+    CurrentDeck,
     Preset(String),
     NoteType(String),
     Tag(TagFilter),
@@ -230,6 +236,7 @@ enum TagFilter {
 
 #[derive(Default)]
 struct SearchMetadata<'a> {
+    current_deck_id: Option<String>,
     filtered_deck_ids: HashSet<&'a str>,
     card_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
     note_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
@@ -247,6 +254,15 @@ pub fn search_cards(
     state: &AppState,
     query: &str,
     now: u64,
+) -> Result<Vec<CardSearchResult>, SearchError> {
+    search_cards_with_context(state, query, now, SearchContext::default())
+}
+
+pub fn search_cards_with_context(
+    state: &AppState,
+    query: &str,
+    now: u64,
+    context: SearchContext<'_>,
 ) -> Result<Vec<CardSearchResult>, SearchError> {
     let expression = parse_query(query)?;
     let progress_by_card: HashMap<&str, &CardProgress> = state
@@ -269,7 +285,7 @@ pub fn search_cards(
         .iter()
         .map(|note_type| (note_type.id.as_str(), note_type))
         .collect();
-    let metadata = SearchMetadata::from_state(state);
+    let metadata = SearchMetadata::from_state_with_context(state, context);
     let mut reviews_by_card: HashMap<&str, Vec<&Review>> = HashMap::new();
     for review in &state.reviews {
         reviews_by_card
@@ -315,14 +331,25 @@ pub fn search_cards(
 }
 
 impl<'a> SearchMetadata<'a> {
-    fn from_state(state: &'a AppState) -> Self {
+    fn from_state_with_context(state: &'a AppState, context: SearchContext<'_>) -> Self {
         let deck_config_names = anki_deck_config_names_by_id(state);
         let decks_by_id: HashMap<&str, &Deck> = state
             .decks
             .iter()
             .map(|deck| (deck.id.as_str(), deck))
             .collect();
+        let current_deck_id = context
+            .current_deck_id
+            .filter(|deck_id| !deck_id.is_empty())
+            .map(str::to_string)
+            .or_else(|| {
+                state
+                    .active_session
+                    .as_ref()
+                    .map(|active| active.deck_id.clone())
+            });
         let mut metadata = Self {
+            current_deck_id,
             deck_option_deck_ids: state
                 .deck_options
                 .iter()
@@ -743,9 +770,12 @@ fn parse_keyed_clause(
         }
         "deck" => {
             require_keyed_filter_value(token, value)?;
-            Ok(SearchClauseKind::Deck(
-                unescape_search_pattern(token, value)?.to_lowercase(),
-            ))
+            let term = unescape_search_pattern(token, value)?.to_lowercase();
+            if term == "current" {
+                Ok(SearchClauseKind::CurrentDeck)
+            } else {
+                Ok(SearchClauseKind::Deck(term))
+            }
         }
         "preset" => {
             require_keyed_filter_value(token, value)?;
@@ -1413,6 +1443,7 @@ fn clause_matches(
         SearchClauseKind::Duplicate(filter) => duplicate_matches(filter, note, note_type, metadata),
         SearchClauseKind::CardTemplate(term) => card_template_matches(term, card, note_type),
         SearchClauseKind::Deck(term) => deck_matches(term, card, deck, card_sources, metadata),
+        SearchClauseKind::CurrentDeck => current_deck_matches(card, metadata),
         SearchClauseKind::Preset(term) => preset_matches(term, card, deck, metadata),
         SearchClauseKind::NoteType(term) => note_type_matches(term, note, note_type),
         SearchClauseKind::Tag(tag) => tag_matches(tag, note),
@@ -1782,6 +1813,13 @@ fn deck_matches(
                 || anki_hierarchical_name_matches(term, &deck.name)
         })
         || imported_original_deck_matches(term, card_sources, metadata)
+}
+
+fn current_deck_matches(card: &Card, metadata: &SearchMetadata<'_>) -> bool {
+    metadata
+        .current_deck_id
+        .as_deref()
+        .is_some_and(|deck_id| card.deck_id == deck_id)
 }
 
 fn imported_original_deck_matches(
@@ -2737,8 +2775,9 @@ fn note_for_card<'a>(card: &Card, notes_by_id: &'a HashMap<&str, &Note>) -> Opti
 mod tests {
     use super::*;
     use crate::model::{
-        CardLineage, CardTemplate, Deck, DeckOptions, DeckOptionsPreset, ExternalSourceRecord,
-        ExternalSourceTarget, FieldDef, NoteFieldValue, NoteType, Review, TemplateRequirementMode,
+        ActiveSessionState, CardLineage, CardTemplate, Deck, DeckOptions, DeckOptionsPreset,
+        ExternalSourceRecord, ExternalSourceTarget, FieldDef, NoteFieldValue, NoteType, Review,
+        TemplateRequirementMode,
     };
     use crate::sm2::{INITIAL_EASE_FACTOR, ONE_DAY_MS};
     use std::collections::BTreeMap;
@@ -3683,6 +3722,64 @@ mod tests {
             vec!["native-card", "filtered-card"]
         );
         assert!(ids_for("mid:102").is_empty());
+    }
+
+    #[test]
+    fn deck_current_uses_search_context_or_active_session() {
+        let mut state = AppState {
+            decks: vec![deck("tamil", "Tamil"), deck("spanish", "Spanish")],
+            cards: vec![
+                card("tamil-card", "tamil", "amma", "mother"),
+                card("spanish-card", "spanish", "madre", "mother"),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |state: &AppState, context: SearchContext<'_>| {
+            search_cards_with_context(state, "deck:current", NOW, context)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert!(ids_for(&state, SearchContext::default()).is_empty());
+        assert_eq!(
+            ids_for(
+                &state,
+                SearchContext {
+                    current_deck_id: Some("tamil"),
+                },
+            ),
+            vec!["tamil-card"]
+        );
+
+        state.active_session = Some(ActiveSessionState {
+            session_id: "session".to_string(),
+            deck_id: "spanish".to_string(),
+            queue: Vec::new(),
+            current_index: 0,
+            revealed: false,
+        });
+
+        assert_eq!(
+            search_cards(&state, "deck:current", NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>(),
+            vec!["spanish-card"]
+        );
+        assert_eq!(
+            ids_for(
+                &state,
+                SearchContext {
+                    current_deck_id: Some("tamil"),
+                },
+            ),
+            vec!["tamil-card"],
+            "explicit UI deck context should override active-session fallback"
+        );
     }
 
     #[test]

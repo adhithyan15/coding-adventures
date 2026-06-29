@@ -37,7 +37,9 @@ pub use queue::{
 };
 pub use reducer::{reduce, EngramCommand};
 pub use scheduler::schedule_review;
-pub use search::{search_cards, CardSearchResult, SearchError};
+pub use search::{
+    search_cards, search_cards_with_context, CardSearchResult, SearchContext, SearchError,
+};
 pub use session::get_active_session_progress;
 pub use sm2::{
     create_initial_progress, update_card_progress, INITIAL_EASE_FACTOR, MAX_EASE_FACTOR,

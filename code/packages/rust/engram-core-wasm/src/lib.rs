@@ -14,10 +14,10 @@ use engram_core::{
     export_notes_anki_tsv, generate_cards_for_note, get_active_session_progress,
     get_daily_study_limit_usage, get_deck_stats, import_anki_basic_tsv, import_anki_notes_tsv,
     import_basic_cards_csv, import_cards_csv, materialize_generated_card, reduce,
-    restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history,
-    AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card,
-    CardFlag, CardLineage, CardProgress, CardSearchResult, CardState, DeckOptions, EngramSnapshot,
-    MediaAssetRecord, Rating,
+    restore_engram_snapshot, search_cards as search_core_cards, search_cards_with_context,
+    summarize_review_history, AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState,
+    BasicCardCsvImportOptions, Card, CardFlag, CardLineage, CardProgress, CardSearchResult,
+    CardState, DeckOptions, EngramSnapshot, MediaAssetRecord, Rating, SearchContext,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -207,7 +207,7 @@ impl EngramSession {
 
     pub fn engram_browser_props(&self, query: &str, now: u64) -> String {
         catch_json(
-            || match engram_browser_props_for_state(&self.state, query, now, 0) {
+            || match engram_browser_props_for_state(&self.state, query, now, 0, None) {
                 Ok(props) => Ok(ok_with("props", &props)),
                 Err(error) => Ok(error_json_with_token(&error.message, &error.token)),
             },
@@ -217,6 +217,7 @@ impl EngramSession {
     pub fn handle_engram_app_event(&mut self, event: &str, deck_id: &str, now: u64) -> String {
         catch_json(|| {
             let parsed = parse_engram_app_event(event)?;
+            let selected_deck_context = selected_deck_id(&self.state, deck_id);
             match parsed.kind {
                 EngramAppEvent::Reveal => {
                     self.state = reduce(&self.state, engram_core::EngramCommand::RevealCurrentCard);
@@ -334,6 +335,7 @@ impl EngramSession {
                         parsed.card_id.clone(),
                         "toggle suspend",
                         now,
+                        Some(selected_deck_context.as_str()),
                     )?;
                     self.state = suspend_or_unsuspend_card(&self.state, card_id, now);
                 }
@@ -344,6 +346,7 @@ impl EngramSession {
                         parsed.card_id.clone(),
                         "mark",
                         now,
+                        Some(selected_deck_context.as_str()),
                     )?;
                     self.state = mark_or_unmark_card(&self.state, card_id, now);
                 }
@@ -638,9 +641,14 @@ fn engram_app_props_for_state(
         "Mark"
     };
     let hidden_count = stats.suspended_count + stats.buried_count;
-    let browser_props =
-        engram_browser_props_for_state(state, browser.active_query(), now, browser.selected_index)
-            .unwrap_or_else(|_| fallback_browser_props_for_state(state, browser.selected_index));
+    let browser_props = engram_browser_props_for_state(
+        state,
+        browser.active_query(),
+        now,
+        browser.selected_index,
+        Some(selected_deck_id.as_str()),
+    )
+    .unwrap_or_else(|_| fallback_browser_props_for_state(state, browser.selected_index));
     let (current_value, remaining_value, correct_value, total_value, progress_label) =
         if let Some(progress) = &progress {
             (
@@ -978,9 +986,14 @@ fn engram_browser_props_for_state(
     query: &str,
     now: u64,
     selected_index: usize,
+    current_deck_id: Option<&str>,
 ) -> Result<Value, engram_core::SearchError> {
     let query = normalize_browser_query(query);
-    let results = search_core_cards(state, &query, now)?;
+    let results = if current_deck_id.is_some() {
+        search_cards_with_context(state, &query, now, SearchContext { current_deck_id })?
+    } else {
+        search_core_cards(state, &query, now)?
+    };
     let rows = results
         .iter()
         .take(20)
@@ -1190,14 +1203,26 @@ fn host_intent_for_event(
             "event": event.canonical_name(),
             "deckId": selected_deck,
             "createdAt": now,
-            "cardId": browser_selected_card_id(state, browser, parsed.card_id.as_deref(), now),
+            "cardId": browser_selected_card_id(
+                state,
+                browser,
+                parsed.card_id.as_deref(),
+                now,
+                Some(selected_deck.as_str()),
+            ),
         })),
         EngramAppEvent::BrowserEditSelected => Some(json!({
             "type": "editCard",
             "event": event.canonical_name(),
             "deckId": selected_deck,
             "createdAt": now,
-            "cardId": browser_selected_card_id(state, browser, parsed.card_id.as_deref(), now),
+            "cardId": browser_selected_card_id(
+                state,
+                browser,
+                parsed.card_id.as_deref(),
+                now,
+                Some(selected_deck.as_str()),
+            ),
         })),
         EngramAppEvent::AddNote => Some(base("addNote")),
         EngramAppEvent::AddNoteType => Some(base("addNoteType")),
@@ -1212,15 +1237,27 @@ fn browser_selected_card_id(
     browser: &BrowserSessionState,
     explicit_card_id: Option<&str>,
     now: u64,
+    current_deck_id: Option<&str>,
 ) -> String {
     explicit_card_id
         .filter(|card_id| !card_id.trim().is_empty())
         .map(str::to_string)
-        .or_else(|| selected_browser_row(state, browser, now).map(|row| row.card_id))
         .or_else(|| {
-            search_core_cards(state, DEFAULT_BROWSER_QUERY, now)
-                .ok()
-                .and_then(|results| results.first().map(|result| result.card.id.clone()))
+            selected_browser_row(state, browser, now, current_deck_id).map(|row| row.card_id)
+        })
+        .or_else(|| {
+            if current_deck_id.is_some() {
+                search_cards_with_context(
+                    state,
+                    DEFAULT_BROWSER_QUERY,
+                    now,
+                    SearchContext { current_deck_id },
+                )
+            } else {
+                search_core_cards(state, DEFAULT_BROWSER_QUERY, now)
+            }
+            .ok()
+            .and_then(|results| results.first().map(|result| result.card.id.clone()))
         })
         .or_else(|| state.cards.first().map(|card| card.id.clone()))
         .unwrap_or_default()
@@ -1230,23 +1267,27 @@ fn selected_browser_row(
     state: &AppState,
     browser: &BrowserSessionState,
     now: u64,
+    current_deck_id: Option<&str>,
 ) -> Option<BrowserRow> {
     let query = normalize_browser_query(browser.active_query());
-    search_core_cards(state, &query, now)
-        .ok()
-        .and_then(|results| {
-            let rows = results
-                .iter()
-                .take(20)
-                .map(|result| BrowserRow::from_search_result(result, now))
-                .collect::<Vec<_>>();
-            if rows.is_empty() {
-                None
-            } else {
-                rows.get(browser.selected_index.min(rows.len() - 1))
-                    .cloned()
-            }
-        })
+    let results = if current_deck_id.is_some() {
+        search_cards_with_context(state, &query, now, SearchContext { current_deck_id })
+    } else {
+        search_core_cards(state, &query, now)
+    };
+    results.ok().and_then(|results| {
+        let rows = results
+            .iter()
+            .take(20)
+            .map(|result| BrowserRow::from_search_result(result, now))
+            .collect::<Vec<_>>();
+        if rows.is_empty() {
+            None
+        } else {
+            rows.get(browser.selected_index.min(rows.len() - 1))
+                .cloned()
+        }
+    })
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -1756,11 +1797,14 @@ fn required_browser_event_card_id(
     card_id: Option<String>,
     action: &str,
     now: u64,
+    current_deck_id: Option<&str>,
 ) -> Result<String, String> {
     let card_id = card_id
         .map(|card_id| card_id.trim().to_string())
         .filter(|card_id| !card_id.is_empty())
-        .or_else(|| selected_browser_row(state, browser, now).map(|row| row.card_id))
+        .or_else(|| {
+            selected_browser_row(state, browser, now, current_deck_id).map(|row| row.card_id)
+        })
         .ok_or_else(|| format!("cannot {action} browser row without a card id"))?;
     if state.cards.iter().any(|card| card.id == card_id) {
         Ok(card_id)
@@ -4224,6 +4268,66 @@ mod tests {
             empty_field_browser_props["props"]["browser-results-summary"],
             "No matching cards"
         );
+    }
+
+    #[test]
+    fn app_browser_deck_current_uses_selected_deck_context() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [
+                {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"other-deck","name":"Spanish","description":"Words","createdAt":1700000000000}
+            ],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"tamil-card","deckId":"deck","front":"amma","back":"mother","createdAt":1700000000000},
+                {"id":"spanish-card","deckId":"other-deck","front":"madre","back":"mother","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+
+        let context_free: Value =
+            serde_json::from_str(&session.engram_browser_props("deck:current", NOW)).unwrap();
+        assert_eq!(context_free["ok"], true);
+        assert_eq!(
+            context_free["props"]["browser-results-summary"],
+            "No matching cards"
+        );
+
+        let query_change: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserQueryChange","value":"deck:current"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(query_change["ok"], true);
+        assert_eq!(
+            query_change["props"]["browser-result-card-ids"],
+            json!(["tamil-card"])
+        );
+
+        let other_deck_props: Value =
+            serde_json::from_str(&session.engram_app_props("other-deck", NOW)).unwrap();
+        assert_eq!(other_deck_props["ok"], true);
+        assert_eq!(
+            other_deck_props["props"]["browser-result-card-ids"],
+            json!(["spanish-card"])
+        );
+
+        let open_intent: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserOpenSelected",
+            "other-deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(open_intent["ok"], true);
+        assert_eq!(open_intent["hostIntent"]["cardId"], "spanish-card");
     }
 
     #[test]
