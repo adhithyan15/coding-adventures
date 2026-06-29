@@ -10,8 +10,10 @@
 //! The output module always contains:
 //!
 //! 1. **One `IIRFunction` per `(define (name args...) body+)` form.**
-//!    Parameters lower 1-to-1 to typed `("any", name)` IIR params; the
-//!    function body is the lowered body expressions plus a final `ret`.
+//!    Parameters lower 1-to-1 to IIR params.  They stay `"any"` unless an
+//!    explicit static annotation or a conservative LANG-FULL E4 call-site proof
+//!    can stamp a concrete hint such as `"str"`; the function body is the
+//!    lowered body expressions plus a final `ret`.
 //! 2. **One `IIRFunction` per anonymous `(lambda ...)` expression.**
 //!    Synthetic name (`__lambda_0`, `__lambda_1`, …); captured variables
 //!    appear as the *leading* parameters, in the order produced by
@@ -27,7 +29,8 @@
 //!
 //! Twig remains dynamically typed, so functions keep `type_status = Untyped`
 //! and dynamic paths still carry `type_hint = "any"`.  The LANG-FULL fast paths
-//! stamp concrete hints only where the source form makes the type unambiguous.
+//! stamp concrete hints only where source-local evidence makes the type
+//! unambiguous.
 //! The vm-core profiler will fill in observed types at runtime; the JIT can
 //! specialise from those observations.
 //!
@@ -138,6 +141,24 @@ fn type_annotation_static_iir_hint(ann: &TypeAnnotation) -> Option<&'static str>
             Some("str")
         }
         _ => None,
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum StaticParamEvidence {
+    Unknown,
+    Str,
+    Conflict,
+}
+
+impl StaticParamEvidence {
+    fn observe(self, is_str: bool) -> Self {
+        match (self, is_str) {
+            (StaticParamEvidence::Unknown, true) | (StaticParamEvidence::Str, true) => {
+                StaticParamEvidence::Str
+            }
+            _ => StaticParamEvidence::Conflict,
+        }
     }
 }
 
@@ -401,6 +422,10 @@ pub struct Compiler {
     /// in source order. Used only to keep later direct string arguments on the
     /// E4 `str_const`/string-expression path when a callee parameter is `str`.
     fn_param_types: HashMap<String, Vec<String>>,
+    /// Conservative call-site-derived parameter hints for top-level functions.
+    /// A hint appears only when `main`-level direct calls provide static E4
+    /// string evidence and no conflicting evidence for that parameter.
+    fn_inferred_param_types: HashMap<String, Vec<String>>,
     /// Names of top-level defines whose RHS is *not* a lambda — looked
     /// up through `global_get` at use sites.
     value_globals: HashSet<String>,
@@ -439,6 +464,7 @@ impl Compiler {
             fn_globals: HashSet::new(),
             fn_return_types: HashMap::new(),
             fn_param_types: HashMap::new(),
+            fn_inferred_param_types: HashMap::new(),
             value_globals: HashSet::new(),
             escaping_value_globals: HashSet::new(),
             value_global_locals: HashMap::new(),
@@ -525,6 +551,8 @@ impl Compiler {
                 _ => {}
             }
         }
+
+        self.infer_main_direct_string_param_types(&program.forms);
 
         // TW2: decide which value-globals may be lowered to typed `main`
         // locals.  A value-global captured by any lambda must stay on the host
@@ -720,6 +748,182 @@ impl Compiler {
         })
     }
 
+    fn infer_main_direct_string_param_types(&mut self, forms: &[Form]) {
+        let mut evidence: HashMap<String, Vec<StaticParamEvidence>> = HashMap::new();
+
+        for form in forms {
+            if let Form::Define(def) = form {
+                if let Expr::Lambda(lam) = &def.expr {
+                    evidence.insert(
+                        def.name.clone(),
+                        vec![StaticParamEvidence::Unknown; lam.params.len()],
+                    );
+                }
+            }
+        }
+
+        for form in forms {
+            match form {
+                Form::Expr(expr) => {
+                    self.collect_main_direct_string_call_evidence(expr, &mut evidence);
+                }
+                Form::Define(def) if !matches!(def.expr, Expr::Lambda(_)) => {
+                    self.collect_main_direct_string_call_evidence(&def.expr, &mut evidence);
+                }
+                _ => {}
+            }
+        }
+
+        self.fn_inferred_param_types = evidence
+            .into_iter()
+            .map(|(name, slots)| {
+                let types = slots
+                    .into_iter()
+                    .map(|e| {
+                        if e == StaticParamEvidence::Str {
+                            "str"
+                        } else {
+                            "any"
+                        }
+                        .to_string()
+                    })
+                    .collect();
+                (name, types)
+            })
+            .collect();
+    }
+
+    fn collect_main_direct_string_call_evidence(
+        &self,
+        expr: &Expr,
+        evidence: &mut HashMap<String, Vec<StaticParamEvidence>>,
+    ) {
+        match expr {
+            Expr::If(i) => {
+                self.collect_main_direct_string_call_evidence(&i.cond, evidence);
+                self.collect_main_direct_string_call_evidence(&i.then_branch, evidence);
+                self.collect_main_direct_string_call_evidence(&i.else_branch, evidence);
+            }
+            Expr::Begin(Begin { exprs, .. }) => {
+                for e in exprs {
+                    self.collect_main_direct_string_call_evidence(e, evidence);
+                }
+            }
+            Expr::Let(l) => {
+                for (_, rhs) in &l.bindings {
+                    self.collect_main_direct_string_call_evidence(rhs, evidence);
+                }
+                for e in &l.body {
+                    self.collect_main_direct_string_call_evidence(e, evidence);
+                }
+            }
+            Expr::LetStar(l) => {
+                for (_, rhs) in &l.bindings {
+                    self.collect_main_direct_string_call_evidence(rhs, evidence);
+                }
+                for e in &l.body {
+                    self.collect_main_direct_string_call_evidence(e, evidence);
+                }
+            }
+            Expr::Apply(apply) => {
+                if let Expr::VarRef(f) = apply.fn_expr.as_ref() {
+                    if let Some(slots) = evidence.get_mut(&f.name) {
+                        if apply.args.len() == slots.len() {
+                            for (slot, arg) in slots.iter_mut().zip(apply.args.iter()) {
+                                *slot = slot.observe(Self::is_syntax_static_e4_string_expr(arg));
+                            }
+                        } else {
+                            for slot in slots {
+                                *slot = StaticParamEvidence::Conflict;
+                            }
+                        }
+                    }
+                }
+                self.collect_main_direct_string_call_evidence(apply.fn_expr.as_ref(), evidence);
+                for arg in &apply.args {
+                    self.collect_main_direct_string_call_evidence(arg, evidence);
+                }
+            }
+            // Lambdas and match bodies can depend on dynamic closure/match-time
+            // values, so this prepass deliberately does not infer from them.
+            Expr::Lambda(_) | Expr::Match(_) => {}
+            Expr::IntLit(_)
+            | Expr::BoolLit(_)
+            | Expr::NilLit(_)
+            | Expr::SymLit(_)
+            | Expr::StrLit(_)
+            | Expr::VarRef(_) => {}
+        }
+    }
+
+    fn is_syntax_static_e4_string_expr(expr: &Expr) -> bool {
+        match expr {
+            Expr::StrLit(_) => true,
+            Expr::Apply(apply) => {
+                let Expr::VarRef(f) = apply.fn_expr.as_ref() else {
+                    return false;
+                };
+                match f.name.as_str() {
+                    "string-append" => {
+                        apply.args.len() == 2
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[0])
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[1])
+                    }
+                    "substring" => {
+                        apply.args.len() == 3
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[0])
+                            && Self::is_syntax_static_e4_index_expr(&apply.args[1])
+                            && Self::is_syntax_static_e4_index_expr(&apply.args[2])
+                    }
+                    _ => false,
+                }
+            }
+            _ => false,
+        }
+    }
+
+    fn is_syntax_static_e4_index_expr(expr: &Expr) -> bool {
+        match expr {
+            Expr::IntLit(_) => true,
+            Expr::Apply(apply) => {
+                let Expr::VarRef(f) = apply.fn_expr.as_ref() else {
+                    return false;
+                };
+                match f.name.as_str() {
+                    "string-length" => {
+                        apply.args.len() == 1
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[0])
+                    }
+                    "+" | "-" | "*" | "/" => {
+                        apply.args.len() >= 2
+                            && apply
+                                .args
+                                .iter()
+                                .all(Self::is_syntax_static_e4_index_expr)
+                    }
+                    _ => false,
+                }
+            }
+            _ => false,
+        }
+    }
+
+    fn param_static_iir_hint(
+        &self,
+        ann: Option<&TypeAnnotation>,
+        inferred_param_types: &[String],
+        idx: usize,
+    ) -> Option<&'static str> {
+        if let Some(ann) = ann {
+            return type_annotation_static_iir_hint(ann);
+        }
+        if inferred_param_types.get(idx).map(|ty| ty.as_str()) == Some("str") {
+            Some("str")
+        } else {
+            None
+        }
+    }
+
     // ------------------------------------------------------------------
     // Top-level fn (define (name args...) body+)
     // ------------------------------------------------------------------
@@ -727,9 +931,20 @@ impl Compiler {
     fn compile_top_level_lambda(&mut self, name: &str, lam: &Lambda) -> Result<(), TwigCompileError> {
         let mut ctx = FnCtx::new();
         let lam_loc = SourceLoc::new(lam.line, lam.column);
-        for (p, ann) in lam.params.iter().zip(lam.param_annotations.iter()) {
+        let inferred_param_types = self
+            .fn_inferred_param_types
+            .get(name)
+            .cloned()
+            .unwrap_or_default();
+        for (idx, (p, ann)) in lam
+            .params
+            .iter()
+            .zip(lam.param_annotations.iter())
+            .enumerate()
+        {
             ctx.locals.insert(p.clone());
-            if let Some(ty) = ann.as_ref().and_then(type_annotation_static_iir_hint) {
+            if let Some(ty) = self.param_static_iir_hint(ann.as_ref(), &inferred_param_types, idx)
+            {
                 ctx.record_type(p, ty);
             }
         }
@@ -753,10 +968,10 @@ impl Compiler {
             .params
             .iter()
             .zip(lam.param_annotations.iter())
-            .map(|(p, ann)| {
-                let ty = ann
-                    .as_ref()
-                    .and_then(type_annotation_static_iir_hint)
+            .enumerate()
+            .map(|(idx, (p, ann))| {
+                let ty = self
+                    .param_static_iir_hint(ann.as_ref(), &inferred_param_types, idx)
                     .unwrap_or("any");
                 (p.clone(), ty.to_string())
             })

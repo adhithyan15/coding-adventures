@@ -1,5 +1,22 @@
 # Changelog — twig-ir-compiler
 
+## [0.37.0] — 2026-06-28 (LANG-FULL E4 — direct-call string parameter inference)
+
+Top-level Twig functions can now infer `str` for otherwise-unannotated
+parameters from conservative `main`-level direct-call evidence:
+
+```scheme
+(define (strlen s) (string-length s)) (strlen "HELLO")
+```
+
+The prepass only considers direct top-level calls from `main` expressions or
+non-lambda define RHSs. A parameter becomes `str` only when observed direct-call
+arguments are static E4 string expressions with no conflicting evidence. The
+callee body then emits `str_len [i64]`, the caller materialises the string
+argument through E4 string ops, and no refinement annotations are synthesized.
+Unobserved, conflicting, closure-derived, captured, or reassigned parameter
+paths remain dynamic.
+
 ## [0.36.0] — 2026-06-28 (LANG-FULL E4 — annotated string parameters)
 
 Bare `str` / `string` parameter annotations on top-level Twig functions now seed

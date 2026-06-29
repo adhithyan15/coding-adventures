@@ -352,6 +352,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 string ops over an unannotated top-level function parameter
+    // with direct-call evidence from `main`. The direct `(strlen "HELLO")`
+    // call gives the compiler enough static evidence to stamp `s` as `str`
+    // without creating refinement annotations.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen s) (string-length s)) (strlen \"HELLO\")",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
     // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =
