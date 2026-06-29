@@ -616,7 +616,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&flutter_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
     assert_contains(
         &flutter_app,
-        "dispatch: (event) => debugPrint(\"event: $event\")",
+        "dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\")",
     );
 
     let qml =

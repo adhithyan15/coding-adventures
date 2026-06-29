@@ -341,7 +341,9 @@ fn build_root_widget_constructor(component_name: &str, slots: &[SlotDecl]) -> St
         let value = sample_value_for_slot(slot);
         writeln!(out, "            {field}: {value},").unwrap();
     }
-    out.push_str("            dispatch: (event) => debugPrint(\"event: $event\"),\n");
+    out.push_str(
+        "            dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\"),\n",
+    );
     out.push_str("          )");
     out
 }
@@ -482,6 +484,17 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
     let mut out = String::new();
     writeln!(out, "sealed class {component}Event {{").unwrap();
     writeln!(out, "  const {component}Event();").unwrap();
+    writeln!(out, "  String get mosaicName;").unwrap();
+    writeln!(
+        out,
+        "  Map<String, Object?> get mosaicPayload => const {{}};"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "  Map<String, Object?> get mosaicEnvelope => {{'event': mosaicName, ...mosaicPayload}};"
+    )
+    .unwrap();
     writeln!(out, "}}").unwrap();
 
     for e in emits {
@@ -506,6 +519,30 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
                 writeln!(out, "    required this.{field},").unwrap();
             }
             writeln!(out, "  }});").unwrap();
+        }
+        writeln!(out, "  @override").unwrap();
+        writeln!(
+            out,
+            "  String get mosaicName => \"{}\";",
+            escape_dart_string(&e.name)
+        )
+        .unwrap();
+        if !e.params.is_empty() {
+            let payload_entries = e
+                .params
+                .iter()
+                .map(|p| {
+                    let field = to_camel_case_first_lower(&p.name);
+                    format!("'{}': {field}", escape_dart_string(&field))
+                })
+                .collect::<Vec<_>>()
+                .join(", ");
+            writeln!(out, "  @override").unwrap();
+            writeln!(
+                out,
+                "  Map<String, Object?> get mosaicPayload => {{{payload_entries}}};"
+            )
+            .unwrap();
         }
         writeln!(out, "}}").unwrap();
     }
@@ -3018,6 +3055,11 @@ mod tests {
             "expected `sealed class XEvent`, got:\n{}",
             r.output
         );
+        assert!(r.output.contains("String get mosaicName;"));
+        assert!(r
+            .output
+            .contains("Map<String, Object?> get mosaicPayload => const {};"));
+        assert!(r.output.contains("Map<String, Object?> get mosaicEnvelope"));
     }
 
     // ----- Event union: one emit with payload --------------------------
@@ -3049,6 +3091,8 @@ mod tests {
         assert!(out.contains("final int col;"));
         assert!(out.contains("required this.row,"));
         assert!(out.contains("required this.col,"));
+        assert!(out.contains("String get mosaicName => \"onNavigate\";"));
+        assert!(out.contains("Map<String, Object?> get mosaicPayload => {'row': row, 'col': col};"));
     }
 
     // ----- Slot lowering: required vs optional + dispatch field --------
@@ -4417,8 +4461,8 @@ mod tests {
         );
         assert!(
             proj.main_dart
-                .contains("dispatch: (event) => debugPrint(\"event: $event\")"),
-            "main.dart must provide a dispatch callback"
+                .contains("dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\")"),
+            "main.dart must provide a dispatch callback with a Mosaic envelope"
         );
         assert!(
             proj.main_dart.contains("MaterialApp("),
@@ -4464,7 +4508,7 @@ mod tests {
         assert!(proj.main_dart.contains("tags: const [],"));
         assert!(proj
             .main_dart
-            .contains("dispatch: (event) => debugPrint(\"event: $event\")"));
+            .contains("dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\")"));
     }
 
     /// Truth table for is_valid_dart_pub_name.
