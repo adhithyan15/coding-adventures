@@ -50,15 +50,28 @@ it through a C ABI.)
 > `$#,##0.00`, or `""` to clear). The format is display-only — the engine renders
 > the stored value through the code (`getDisplayWindow`), so `15` shows as
 > `15.00` / `1500.0%` / `$15.00` without changing the underlying number.
+> **Resize columns and rows by dragging** a column header's right edge or a row
+> number's bottom edge (double-click the handle to auto-fit back to the default).
+> The size lives in the engine
+> (`workbook.columnWidth`/`setColumnWidth`/`rowHeight`/`setRowHeight`, with bulk
+> `columnWidths`/`rowHeights` for a one-call viewport read) — so it **persists
+> through Save / Load**, **shifts with its column / row** on an insert/delete
+> (widen C, insert a column at B, and the now-D column stays wide), and a whole
+> drag is a **single Undo** step. The seed opens with a wide column C (140 px) and
+> a tall row 2 (40 px) so the non-uniform grid is visible immediately. The
+> virtualized window math uses exact per-column / per-row cumulative offsets (a
+> prefix-sum over the bounded extent), not a uniform-cell assumption.
 > Headless proof: `node scripts/verify-infinite.mjs` replays the exact windowing
 > math against the committed WASM bundle and asserts the render stays bounded,
 > the formatted display strings are correct, a formula 1000 rows down is
 > reachable, the gaps are empty (sparse), an edit's diff reaches the far cell
 > that depends on it, a save → mutate → load round trip restores the
 > workbook (formulas recompute live; garbage input is rejected), an
-> undo/redo walk reverses two edits then replays them with the formula live, and
-> an insert/delete row & column round trip shifts a formula's references (and
-> turns a reference into `#REF!` when its row is deleted).
+> undo/redo walk reverses two edits then replays them with the formula live, an
+> insert/delete row & column round trip shifts a formula's references (and
+> turns a reference into `#REF!` when its row is deleted), and a column-width /
+> row-height round trip sets a size, reads it back, rejects a bad value, persists
+> it through save/load, and shifts it when a column is inserted before it.
 
 ## Design language
 

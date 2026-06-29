@@ -178,6 +178,19 @@
       width: var(--gutter-w); height: var(--head-h); background: var(--head-bg);
       z-index: 3; border-right-color: var(--line-strong); border-bottom-color: var(--line-strong);
     }
+    /* Drag handles to resize a column (a thin strip on a column header's right
+       edge) or a row (the bottom edge of a row-number gutter cell). They sit
+       just inside the header, above it (z-index), and show a resize cursor; a
+       double-click clears the custom size (auto-fit back to the default). */
+    .colresize {
+      position: absolute; width: 6px; height: var(--head-h); z-index: 4;
+      cursor: col-resize; margin-left: -3px;
+    }
+    .rowresize {
+      position: absolute; width: var(--gutter-w); height: 6px; z-index: 4;
+      cursor: row-resize; margin-top: -3px;
+    }
+    .colresize:hover, .rowresize:hover, .resizing { background: var(--accent); opacity: .5; }
   </style>
 </head>
 <body>
@@ -256,8 +269,33 @@
   <script>
     "use strict";
 
-    // Geometry (must match the CSS variables above).
+    // Geometry. COL_W / ROW_H are the DEFAULT sizes (must match the CSS
+    // variables above); a column / row can override its size — that lives in the
+    // engine (workbook.columnWidth / rowHeight), persists through save/load, and
+    // shifts with its column / row on an insert/delete. Resize clamps:
     var ROW_H = 26, COL_W = 88, GUTTER_W = 60, HEAD_H = 28, OVERSCAN = 3;
+    var MIN_COL_W = 40, MAX_COL_W = 600, MIN_ROW_H = 16, MAX_ROW_H = 240;
+
+    // Per-index size overrides + cumulative-offset prefix arrays, rebuilt by
+    // resize() whenever the extent or a size changes. The grid is bounded (~1k
+    // rows × ~60 cols here), so full prefix arrays are tiny and exact — no
+    // uniform-grid assumption. colLefts[c] is the x of column c's left edge;
+    // rowTops[r] is the y of row r's top edge. Lengths are TOTAL_*+2 so the
+    // sentinel [TOTAL_*+1] holds the canvas extent.
+    var colOverride = {}, rowOverride = {};   // {index: size} from the engine
+    var colLefts = [0, GUTTER_W], rowTops = [0, HEAD_H];
+    function colW(c) { return colOverride[c] || COL_W; }
+    function rowH(r) { return rowOverride[r] || ROW_H; }
+    // First index whose start offset is ≤ `px` (the visible window's leading
+    // edge): binary search the prefix array. `arr` is colLefts / rowTops.
+    function indexAt(arr, total, px) {
+      var lo = 1, hi = total;
+      while (lo < hi) {
+        var mid = (lo + hi + 1) >> 1;
+        if (arr[mid] <= px) lo = mid; else hi = mid - 1;
+      }
+      return lo;
+    }
 
     var sheet = document.getElementById("sheet");
     var canvas = document.getElementById("canvas");
@@ -288,8 +326,29 @@
       var maxRow = u ? u.maxRow : 1, maxCol = u ? u.maxCol : 1;
       TOTAL_ROWS = Math.max(maxRow + 200, 1000);
       TOTAL_COLS = Math.max(maxCol + 30, 60);
-      canvas.style.width = (GUTTER_W + TOTAL_COLS * COL_W) + "px";
-      canvas.style.height = (HEAD_H + TOTAL_ROWS * ROW_H) + "px";
+
+      // Pull the sparse per-column / per-row size overrides for the whole extent
+      // in two engine calls (the readers return only the customized indices), then
+      // build exact cumulative-offset prefix arrays. colLefts[c+1]-colLefts[c] is
+      // column c's width; the last entry is the canvas width.
+      colOverride = {}; rowOverride = {};
+      workbook.columnWidths(1, TOTAL_COLS).forEach(function (e) { colOverride[e.col] = e.w; });
+      workbook.rowHeights(1, TOTAL_ROWS).forEach(function (e) { rowOverride[e.row] = e.h; });
+      rebuildPrefix();
+    }
+
+    // Rebuild the cumulative-offset prefix arrays + canvas size from the current
+    // colOverride / rowOverride maps. Split out from resize() so a live drag can
+    // preview a new size (mutate the local map, rebuild, re-render) WITHOUT an
+    // engine round-trip per mouse-move — the engine is written once, on release,
+    // so a drag is a single undo step rather than dozens.
+    function rebuildPrefix() {
+      colLefts = new Array(TOTAL_COLS + 2); colLefts[1] = GUTTER_W;
+      for (var c = 1; c <= TOTAL_COLS; c++) colLefts[c + 1] = colLefts[c] + colW(c);
+      rowTops = new Array(TOTAL_ROWS + 2); rowTops[1] = HEAD_H;
+      for (var r = 1; r <= TOTAL_ROWS; r++) rowTops[r + 1] = rowTops[r] + rowH(r);
+      canvas.style.width = colLefts[TOTAL_COLS + 1] + "px";
+      canvas.style.height = rowTops[TOTAL_ROWS + 1] + "px";
     }
 
     // Paint ONLY the visible window. Cells are positioned in canvas space (they
@@ -299,10 +358,18 @@
       var st = sheet.scrollTop, sl = sheet.scrollLeft;
       var vh = sheet.clientHeight, vw = sheet.clientWidth;
 
-      var firstRow = Math.max(1, Math.floor(st / ROW_H) + 1 - OVERSCAN);
-      var lastRow = Math.min(TOTAL_ROWS, Math.ceil((st + vh) / ROW_H) + OVERSCAN);
-      var firstCol = Math.max(1, Math.floor(sl / COL_W) + 1 - OVERSCAN);
-      var lastCol = Math.min(TOTAL_COLS, Math.ceil((sl + vw) / COL_W) + OVERSCAN);
+      // The visible window in variable-size space: binary-search the prefix
+      // arrays for the first row/col at the scroll edge, then walk until past the
+      // viewport. OVERSCAN pads a few extra so a partial row/col at the edge and a
+      // fast scroll never flash blank.
+      var firstRow = Math.max(1, indexAt(rowTops, TOTAL_ROWS, st) - OVERSCAN);
+      var lastRow = firstRow;
+      while (lastRow < TOTAL_ROWS && rowTops[lastRow + 1] < st + vh) lastRow++;
+      lastRow = Math.min(TOTAL_ROWS, lastRow + OVERSCAN);
+      var firstCol = Math.max(1, indexAt(colLefts, TOTAL_COLS, sl) - OVERSCAN);
+      var lastCol = firstCol;
+      while (lastCol < TOTAL_COLS && colLefts[lastCol + 1] < sl + vw) lastCol++;
+      lastCol = Math.min(TOTAL_COLS, lastCol + OVERSCAN);
 
       // Display strings: each cell is already rendered through its format code
       // by the engine, so we paint row[...] directly (no client-side formatting).
@@ -312,29 +379,35 @@
       var cellHtml = "";
       for (var r = firstRow; r <= lastRow; r++) {
         var row = win.cells[r - firstRow];
-        var top = HEAD_H + (r - 1) * ROW_H;
+        var top = rowTops[r], h = rowH(r);
         var band = (r % 2 === 0) ? " even" : ""; // zebra row banding
         for (var c = firstCol; c <= lastCol; c++) {
-          var left = GUTTER_W + (c - 1) * COL_W;
           var sel = (r === selRow && c === selCol) ? " sel" : "";
           cellHtml += '<div class="cell' + band + sel + '" data-r="' + r + '" data-c="' + c +
-            '" style="top:' + top + 'px;left:' + left + 'px">' +
+            '" style="top:' + top + 'px;left:' + colLefts[c] + 'px;width:' + colW(c) +
+            'px;height:' + h + 'px;line-height:' + h + 'px">' +
             esc(row[c - firstCol]) + "</div>";
         }
       }
       cellsEl.innerHTML = cellHtml;
 
       // Frozen chrome: column letters across the top, row numbers down the left.
+      // Each header carries a drag handle (.colresize on its right edge,
+      // .rowresize on its bottom edge) to resize that column / row.
       var headHtml = '<div class="corner" style="top:' + st + 'px;left:' + sl + 'px"></div>';
       for (var hc = firstCol; hc <= lastCol; hc++) {
         var colSel = (hc === selCol) ? " selhdr" : ""; // highlight selected column
         headHtml += '<div class="colhead' + colSel + '" style="top:' + st + 'px;left:' +
-          (GUTTER_W + (hc - 1) * COL_W) + 'px">' + esc(workbook.columnLetters(hc)) + "</div>";
+          colLefts[hc] + 'px;width:' + colW(hc) + 'px">' + esc(workbook.columnLetters(hc)) + "</div>" +
+          '<div class="colresize" data-c="' + hc + '" title="Drag to resize, double-click to auto-fit"' +
+          ' style="top:' + st + 'px;left:' + colLefts[hc + 1] + 'px"></div>';
       }
       for (var hr = firstRow; hr <= lastRow; hr++) {
         var rowSel = (hr === selRow) ? " selhdr" : ""; // highlight selected row
-        headHtml += '<div class="rowhead' + rowSel + '" style="top:' + (HEAD_H + (hr - 1) * ROW_H) +
-          'px;left:' + sl + 'px">' + hr + "</div>";
+        headHtml += '<div class="rowhead' + rowSel + '" style="top:' + rowTops[hr] +
+          'px;left:' + sl + 'px;height:' + rowH(hr) + 'px;line-height:' + rowH(hr) + 'px">' + hr + "</div>" +
+          '<div class="rowresize" data-r="' + hr + '" title="Drag to resize, double-click to auto-fit"' +
+          ' style="top:' + rowTops[hr + 1] + 'px;left:' + sl + 'px"></div>';
       }
       headsEl.innerHTML = headHtml;
 
@@ -365,6 +438,56 @@
       var t = e.target.closest(".cell");
       if (!t) return;
       selectCell(+t.dataset.r, +t.dataset.c);
+    });
+
+    // ── Column / row resize (drag a header handle) ───────────────────────────
+    // Mousedown on a .colresize / .rowresize starts a drag: while dragging we
+    // PREVIEW the new size in the local override map + rebuild (no engine call),
+    // and on mouseup we commit it ONCE through the engine (one undo step). The
+    // size is clamped to [MIN,MAX]. A double-click clears the size (auto-fit back
+    // to the default). The committed size persists through save/load and shifts
+    // with its column/row on an insert/delete — all handled by the engine.
+    var drag = null;
+    headsEl.addEventListener("mousedown", function (e) {
+      var col = e.target.closest(".colresize"), row = e.target.closest(".rowresize");
+      if (!col && !row) return;
+      e.preventDefault(); // don't start a text selection
+      document.body.style.userSelect = "none";
+      e.target.classList.add("resizing");
+      if (col) {
+        var c = +col.dataset.c;
+        drag = { kind: "col", i: c, start: e.clientX, size: colW(c), el: e.target };
+      } else {
+        var r = +row.dataset.r;
+        drag = { kind: "row", i: r, start: e.clientY, size: rowH(r), el: e.target };
+      }
+    });
+    window.addEventListener("mousemove", function (e) {
+      if (!drag) return;
+      if (drag.kind === "col") {
+        var w = Math.round(drag.size + (e.clientX - drag.start));
+        colOverride[drag.i] = Math.max(MIN_COL_W, Math.min(MAX_COL_W, w));
+      } else {
+        var h = Math.round(drag.size + (e.clientY - drag.start));
+        rowOverride[drag.i] = Math.max(MIN_ROW_H, Math.min(MAX_ROW_H, h));
+      }
+      rebuildPrefix(); // live preview, no engine write yet
+      render();
+    });
+    window.addEventListener("mouseup", function () {
+      if (!drag) return;
+      // Commit the previewed size to the engine once → a single undo step.
+      if (drag.kind === "col") workbook.setColumnWidth(drag.i, colOverride[drag.i]);
+      else workbook.setRowHeight(drag.i, rowOverride[drag.i]);
+      if (drag.el) drag.el.classList.remove("resizing");
+      document.body.style.userSelect = "";
+      drag = null;
+      resize(); render(); // re-pull from the engine (authoritative) + repaint
+    });
+    headsEl.addEventListener("dblclick", function (e) {
+      var col = e.target.closest(".colresize"), row = e.target.closest(".rowresize");
+      if (col) { workbook.clearColumnWidth(+col.dataset.c); resize(); render(); }
+      else if (row) { workbook.clearRowHeight(+row.dataset.r); resize(); render(); }
     });
 
     formulaEl.addEventListener("keydown", function (e) {
@@ -681,6 +804,11 @@
       workbook.addSheet("Summary");
       workbook.setCells({ A1: "100", A2: "200", A3: "=A1+A2" });
       workbook.setActiveSheet(0); // back to Sheet1 as the active tab
+      // Seed a wide column C (140px) and a tall row 2 (40px) so the grid opens
+      // non-uniform — drag any column header's right edge or a row number's
+      // bottom edge to resize; double-click the handle to auto-fit.
+      workbook.setColumnWidth(3, 140);
+      workbook.setRowHeight(2, 40);
       renderTabs();
       resize();
       selectCell(1, 1);
