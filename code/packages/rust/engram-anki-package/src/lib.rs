@@ -1083,6 +1083,28 @@ fn v11_external_sources(
         ));
     }
 
+    for review in &collection.reviews {
+        let mut data = BTreeMap::new();
+        insert_i64(&mut data, "cardId", review.card_id);
+        insert_i64(
+            &mut data,
+            "updateSequenceNumber",
+            review.update_sequence_number,
+        );
+        insert_i64(&mut data, "ease", review.ease);
+        insert_i64(&mut data, "interval", review.interval);
+        insert_i64(&mut data, "lastInterval", review.last_interval);
+        insert_i64(&mut data, "factor", review.factor);
+        insert_i64(&mut data, "time", review.time);
+        insert_i64(&mut data, "kind", review.kind);
+        sources.push(source_record(
+            ExternalSourceTarget::Review,
+            review.id.to_string(),
+            Some(review.id.to_string()),
+            data,
+        ));
+    }
+
     Ok(sources)
 }
 
@@ -1577,6 +1599,7 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                 review.id, review.card_id
             )));
         };
+        let source = anki_source(export, ExternalSourceTarget::Review, &review.id);
         let review_id = unique_review_id(review, &mut used_review_ids);
         connection
             .execute(
@@ -1584,25 +1607,31 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                 rusqlite::params![
                     review_id,
                     card_id,
-                    -1_i64,
-                    rating_to_v11_ease(review.rating),
-                    review
-                        .resulting_progress
-                        .as_ref()
-                        .map(|progress| i64::from(progress.interval))
-                        .unwrap_or_default(),
-                    review
-                        .previous_progress
-                        .as_ref()
-                        .map(|progress| i64::from(progress.interval))
-                        .unwrap_or_default(),
-                    review
-                        .resulting_progress
-                        .as_ref()
-                        .map(progress_factor_to_anki)
-                        .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64),
-                    0_i64,
-                    review_kind(review),
+                    source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
+                    source_i64(source, "ease").unwrap_or_else(|| rating_to_v11_ease(review.rating)),
+                    source_i64(source, "interval").unwrap_or_else(|| {
+                        review
+                            .resulting_progress
+                            .as_ref()
+                            .map(|progress| i64::from(progress.interval))
+                            .unwrap_or_default()
+                    }),
+                    source_i64(source, "lastInterval").unwrap_or_else(|| {
+                        review
+                            .previous_progress
+                            .as_ref()
+                            .map(|progress| i64::from(progress.interval))
+                            .unwrap_or_default()
+                    }),
+                    source_i64(source, "factor").unwrap_or_else(|| {
+                        review
+                            .resulting_progress
+                            .as_ref()
+                            .map(progress_factor_to_anki)
+                            .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64)
+                    }),
+                    source_i64(source, "time").unwrap_or_default(),
+                    source_i64(source, "kind").unwrap_or_else(|| review_kind(review)),
                 ],
             )
             .map_err(|err| {
@@ -4306,6 +4335,13 @@ CREATE TABLE graves (
         collection.cards[0].original_due = 777;
         collection.cards[0].original_deck_id = 1;
         collection.cards[0].data = "card-data".to_string();
+        collection.reviews[0].update_sequence_number = 29;
+        collection.reviews[0].ease = 4;
+        collection.reviews[0].interval = 12;
+        collection.reviews[0].last_interval = 6;
+        collection.reviews[0].factor = 2650;
+        collection.reviews[0].time = 34_567;
+        collection.reviews[0].kind = 3;
         collection.graves = vec![AnkiV11Grave {
             update_sequence_number: 31,
             object_id: 9001,
@@ -4370,6 +4406,15 @@ CREATE TABLE graves (
         assert_eq!(card.original_due, 777);
         assert_eq!(card.original_deck_id, 1);
         assert_eq!(card.data, "card-data");
+
+        let review = &exported.reviews[0];
+        assert_eq!(review.update_sequence_number, 29);
+        assert_eq!(review.ease, 4);
+        assert_eq!(review.interval, 12);
+        assert_eq!(review.last_interval, 6);
+        assert_eq!(review.factor, 2650);
+        assert_eq!(review.time, 34_567);
+        assert_eq!(review.kind, 3);
     }
 
     #[test]
