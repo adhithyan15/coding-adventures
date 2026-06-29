@@ -1771,6 +1771,7 @@ fn emit_host_link(
     let body: String = match find_prop(node, "label") {
         Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
         Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
+        Some(LayoutPropValue::Keyword(k)) => format!("{{{{{}}}}}", camel(k)),
         _ => String::new(),
     };
 
@@ -4749,7 +4750,62 @@ mod tests {
         );
     }
 
-    /// UI29-4 HTML test 4 — bare HostTooltip wraps no child in
+    /// UI29-4 HTML test 4 — a link inside an indexed `For` renders
+    /// the loop item as its label and lets the runtime read the loop
+    /// index payload.
+    #[test]
+    fn host_link_inside_indexed_for_emits_label_and_index_payload_runtime() {
+        let m = component_with_emits(
+            "Nav",
+            vec![SlotDecl {
+                name: "items".to_string(),
+                r#type: SlotType::List(Box::new(ListInnerType::Text)),
+                required: true,
+                default: None,
+            }],
+            vec![emit(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout(
+            "Nav",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    prop_slot("each", "items"),
+                    prop_keyword("as", "item"),
+                    prop_keyword("index", "i"),
+                ],
+                children: vec![node_with_props(
+                    "HostLink",
+                    vec![
+                        prop_string("href", "#"),
+                        prop_keyword("label", "item"),
+                        prop_keyword("external", "false"),
+                        prop_emit("onActivate", "onSelect"),
+                    ],
+                )],
+            },
+        );
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let result = from_pipeline_with_options(&m, &l, &empty_style("Nav"), &opts).unwrap();
+        assert!(
+            result.output.contains(
+                "<a href=\"#\" data-external=\"false\" data-on-activate=\"onSelect\">{{item}}</a>"
+            ),
+            "expected HostLink label to use For item binding, got:\n{}",
+            result.output
+        );
+        let project = result.project.unwrap();
+        assert!(project.main_js.contains("\"onSelect\""));
+        assert!(project.main_js.contains("\"name\": \"index\""));
+        assert!(project.main_js.contains("readLoopIndex(source)"));
+    }
+
+    /// UI29-4 HTML test 5 — bare HostTooltip wraps no child in
     /// `<span title=...></span>` (empty span). The single-child
     /// case wraps the child inside.
     #[test]

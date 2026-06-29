@@ -2205,7 +2205,6 @@ fn emit_host_link_qml(
     let mut out = String::new();
 
     let href = find_string_prop(node, "href").unwrap_or("#");
-    let label = find_string_prop(node, "label").unwrap_or(href);
     // Two-layer escaping. The author's strings are embedded inside
     // an HTML payload that is itself embedded inside a QML double-
     // quoted string literal. Each layer needs its own escaping:
@@ -2226,16 +2225,11 @@ fn emit_host_link_qml(
             .replace('"', "&quot;")
     }
     let href_html = html_entity_encode(href);
-    let label_html = html_entity_encode(label);
-    // Build the rich-text payload first, then QML-escape the WHOLE
-    // thing (which neutralises any `\` and the `"` we emit around
-    // the inner href attr).
-    let rich_text_raw = format!(r#"<a href="{href_html}">{label_html}</a>"#);
-    let rich_text = escape_qml_string(&rich_text_raw);
+    let rich_text = host_link_rich_text_expr(node, href, &href_html)?;
 
     writeln!(out, "{pad}Text {{").unwrap();
     writeln!(out, "{inner}textFormat: Text.RichText").unwrap();
-    writeln!(out, "{inner}text: \"{rich_text}\"").unwrap();
+    writeln!(out, "{inner}text: {rich_text}").unwrap();
 
     // onLinkActivated wiring:
     //   - external: false + onActivate -> dispatch emit, don't open
@@ -2252,13 +2246,13 @@ fn emit_host_link_qml(
             // URL as `link`).
             let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
             validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-            let arg = pick_signal_arg_with(emit, ctx.emits, "link");
+            let arg = host_link_signal_args(emit, ctx).unwrap_or_default();
             format!("{camel}({arg})")
         }
         (false, Some(emit)) => {
             let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
             validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-            let arg = pick_signal_arg_with(emit, ctx.emits, "link");
+            let arg = host_link_signal_args(emit, ctx).unwrap_or_default();
             // Dispatch AND open externally.
             format!("{{ {camel}({arg}); Qt.openUrlExternally(link); }}")
         }
@@ -2268,6 +2262,83 @@ fn emit_host_link_qml(
 
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
+}
+
+fn host_link_rich_text_expr(
+    node: &LayoutNode,
+    fallback_href: &str,
+    href_html: &str,
+) -> Result<String, PipelineEmitError> {
+    fn html_entity_encode(s: &str) -> String {
+        s.replace('&', "&amp;")
+            .replace('<', "&lt;")
+            .replace('>', "&gt;")
+            .replace('"', "&quot;")
+    }
+
+    if let Some(label) = find_string_prop(node, "label") {
+        let label_html = html_entity_encode(label);
+        let rich_text_raw = format!(r#"<a href="{href_html}">{label_html}</a>"#);
+        return Ok(format!("\"{}\"", escape_qml_string(&rich_text_raw)));
+    }
+
+    let label_expr = if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Some(camel)
+    } else if let Some(keyword) = find_keyword_prop(node, "label") {
+        let camel = to_camel_case_first_lower(keyword);
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Some(camel)
+    } else {
+        None
+    };
+
+    if let Some(label_expr) = label_expr {
+        let prefix = escape_qml_string(&format!(r#"<a href="{href_html}">"#));
+        let suffix = escape_qml_string("</a>");
+        let escaped_label = qml_html_escape_expr(&label_expr);
+        Ok(format!("\"{prefix}\" + {escaped_label} + \"{suffix}\""))
+    } else {
+        let label_html = html_entity_encode(fallback_href);
+        let rich_text_raw = format!(r#"<a href="{href_html}">{label_html}</a>"#);
+        Ok(format!("\"{}\"", escape_qml_string(&rich_text_raw)))
+    }
+}
+
+fn qml_html_escape_expr(expr: &str) -> String {
+    format!(
+        "String({expr}).replace(/&/g, \"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\").replace(/\"/g, \"&quot;\")"
+    )
+}
+
+fn host_link_signal_args(emit_name: &str, ctx: &EmitCtx) -> Option<String> {
+    let Some(emit) = ctx.emits.iter().find(|e| e.name == emit_name) else {
+        return Some("link".to_string());
+    };
+    if emit.params.is_empty() {
+        return Some(String::new());
+    }
+    if emit.params.len() != 1 {
+        return None;
+    }
+
+    let field = to_camel_case_first_lower(&emit.params[0].name);
+    if field == "href" {
+        return match &emit.params[0].r#type {
+            EmitPayloadType::Text => Some("link".to_string()),
+            _ => None,
+        };
+    }
+
+    match &emit.params[0].r#type {
+        EmitPayloadType::Text | EmitPayloadType::Color | EmitPayloadType::Component(_) => ctx
+            .enclosing_item
+            .clone()
+            .or_else(|| Some("link".to_string())),
+        EmitPayloadType::Number => ctx.enclosing_index.clone(),
+        EmitPayloadType::Bool => None,
+    }
 }
 
 /// Lower a `HostTooltip` node (UI29-4, 20th kernel primitive) to a
@@ -4506,7 +4577,9 @@ mod tests {
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(r.output.contains("onTextEdited: {"));
-        assert!(r.output.contains("if (text.length > 0 && !isNaN(nextValue)) { change() }"));
+        assert!(r
+            .output
+            .contains("if (text.length > 0 && !isNaN(nextValue)) { change() }"));
         assert!(!r.output.contains("change(nextValue)"));
     }
 
@@ -6691,7 +6764,83 @@ mod tests {
         );
     }
 
-    /// UI29-4 Qt test 3 — `HostTooltip` lowers to an `Item` wrapping
+    /// UI29-4 Qt test 3 — a link inside an indexed `For` dispatches
+    /// the row index and renders the row item as its label.
+    #[test]
+    fn host_link_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "Nav",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onSelect",
+                vec![EmitParam {
+                    name: "index".to_string(),
+                    r#type: EmitPayloadType::Number,
+                }],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "Nav".to_string(),
+            root: LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::SlotRef("items".to_string()),
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword("item".to_string()),
+                    },
+                    LayoutProp {
+                        name: "index".to_string(),
+                        value: LayoutPropValue::Keyword("i".to_string()),
+                    },
+                ],
+                children: vec![LayoutNode {
+                    tag: "HostLink".to_string(),
+                    part_name: None,
+                    props: vec![
+                        LayoutProp {
+                            name: "href".to_string(),
+                            value: LayoutPropValue::String("#".to_string()),
+                        },
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("item".to_string()),
+                        },
+                        LayoutProp {
+                            name: "external".to_string(),
+                            value: LayoutPropValue::Keyword("false".to_string()),
+                        },
+                        LayoutProp {
+                            name: "onActivate".to_string(),
+                            value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                        },
+                    ],
+                    children: Vec::new(),
+                }],
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("Nav")).unwrap();
+        assert!(
+            r.output.contains("onLinkActivated: select(i)"),
+            "expected HostLink to dispatch For index, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("\"<a href=\\\"#\\\">\" + String(item)"),
+            "expected HostLink label to use For item binding, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 Qt test 4 — `HostTooltip` lowers to an `Item` wrapping
     /// the child with `ToolTip.text` + `HoverHandler` to drive
     /// visibility. The wrapped child (a Text in this fixture) is
     /// recursed-through normally.

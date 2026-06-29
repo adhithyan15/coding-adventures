@@ -4273,6 +4273,45 @@ fn host_button_click_payload_expr(emit_name: &str, ctx: &EmitContext<'_>) -> Opt
 /// case only fires `Indeterminate` when the user clicks through to the
 /// third state, which is a UX choice the host can drive via the
 /// `indeterminate:` slot. v1 ignores `Indeterminate` events.)
+fn host_link_click_payload_expr(
+    emit_name: &str,
+    node: &LayoutNode,
+    ctx: &EmitContext<'_>,
+) -> Option<String> {
+    let params = ctx.emit_payloads.get(emit_name)?;
+    if params.is_empty() {
+        return None;
+    }
+    if params.len() != 1 {
+        return None;
+    }
+
+    let (param_name, param_type) = &params[0];
+    if param_name == "href" && param_type == "string" {
+        return Some(host_link_href_payload_expr(node));
+    }
+    if let Some(expr) = host_button_click_payload_expr(emit_name, ctx) {
+        return Some(expr);
+    }
+    if param_type == "string" {
+        return Some(host_link_href_payload_expr(node));
+    }
+    None
+}
+
+fn host_link_href_payload_expr(node: &LayoutNode) -> String {
+    match find_prop_value(node, "href") {
+        Some(LayoutPropValue::String(s)) => {
+            format!("\"{}\"", escape_csharp_string(s))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            format!("this.{pascal}")
+        }
+        _ => "\"\"".to_string(),
+    }
+}
+
 fn emit_host_checkbox(
     node: &LayoutNode,
     indent: usize,
@@ -4614,6 +4653,16 @@ fn emit_host_link(
         Some(LayoutPropValue::String(s)) => {
             content_attr.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
         }
+        Some(LayoutPropValue::Keyword(k)) => {
+            if ctx.lookup_for_binding(k).is_some() {
+                let pascal = kebab_to_pascal_case(k);
+                content_attr.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+            } else if ctx.lookup_for_index(k).is_some() {
+                content_attr.push_str(" Content=\"{x:Bind Index}\"");
+            } else {
+                content_attr.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
+            }
+        }
         _ => {
             // No label â€” fall back to href as the visible text.
             if let Some(LayoutPropValue::String(s)) = find_prop_value(node, "href") {
@@ -4629,18 +4678,14 @@ fn emit_host_link(
             let handler = format!("{x_name}_Click");
             let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
             let component = ctx.component_name;
-            let href_arg: String = match find_prop_value(node, "href") {
-                Some(LayoutPropValue::String(s)) => {
-                    format!("\"{}\"", escape_csharp_string(s))
-                }
-                Some(LayoutPropValue::SlotRef(slot)) => {
-                    let pascal = kebab_to_pascal_case(slot);
-                    format!("this.{pascal}")
-                }
-                _ => "\"\"".to_string(),
-            };
+            let event_ctor =
+                if let Some(payload_expr) = host_link_click_payload_expr(emit_name, node, ctx) {
+                    format!("new {component}Event.{case_pascal}({payload_expr})")
+                } else {
+                    format!("new {component}Event.{case_pascal}()")
+                };
             let body = format!(
-                "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}({href_arg}));\n    }}"
+                "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, {event_ctor});\n    }}"
             );
             ctx.add_host_handler(HostHandler {
                 name: handler.clone(),
@@ -9202,7 +9247,69 @@ mod tests {
         );
     }
 
-    /// UI29-4 XAML test 3 â€” `HostTooltip` wraps its child in a
+    /// UI29-4 XAML test 3 â€” a link inside an indexed `For` dispatches
+    /// the row index and binds the row item as its label.
+    #[test]
+    fn host_link_inside_indexed_for_dispatches_index_payload() {
+        let c = component(
+            "Nav",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout_with_root(
+            "Nav",
+            for_node(
+                LayoutPropValue::SlotRef("items".to_string()),
+                "item",
+                Some("i"),
+                vec![LayoutNode {
+                    tag: "HostLink".to_string(),
+                    part_name: None,
+                    props: vec![
+                        LayoutProp {
+                            name: "href".to_string(),
+                            value: LayoutPropValue::String("#".to_string()),
+                        },
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("item".to_string()),
+                        },
+                        LayoutProp {
+                            name: "external".to_string(),
+                            value: LayoutPropValue::Keyword("false".to_string()),
+                        },
+                        LayoutProp {
+                            name: "onActivate".to_string(),
+                            value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                        },
+                    ],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Nav"));
+        assert!(
+            r.xaml.contains("Content=\"{x:Bind Item}\""),
+            "expected HostLink label to bind For item, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains(
+                "new NavEvent.Select((sender as Microsoft.UI.Xaml.FrameworkElement)?.DataContext is Nav_ItemVm row ? (double)row.Index : -1.0)"
+            ),
+            "expected HostLink to dispatch For index payload, got:\n{}",
+            r.code_behind
+        );
+    }
+
+    /// UI29-4 XAML test 4 â€” `HostTooltip` wraps its child in a
     /// `Border` with the `ToolTipService.ToolTip` attached property.
     #[test]
     fn host_tooltip_wraps_child_in_border_with_tooltip_service() {

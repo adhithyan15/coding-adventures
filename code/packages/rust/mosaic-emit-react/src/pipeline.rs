@@ -868,7 +868,7 @@ fn emit_jsx_tree(
     //      AND call `preventDefault()` so the host's router takes
     //      over. The generic flow has no way to express this.
     if node.tag == "HostLink" {
-        return emit_host_link_jsx(node, indent, part_styles);
+        return emit_host_link_jsx(node, indent, part_styles, emits, for_payload);
     }
 
     // UI29-4 — `HostTooltip` wraps its single child in a `<span
@@ -2486,6 +2486,8 @@ fn emit_host_link_jsx(
     node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -2539,11 +2541,8 @@ fn emit_host_link_jsx(
             body.push_str("e.preventDefault(); ");
         }
         if let Some(emit_name) = on_activate {
-            let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-            validate_emit_name(&type_field)?;
-            body.push_str(&format!(
-                "dispatch({{ type: \"{type_field}\", href: {href_expr} }});"
-            ));
+            let event_expr = host_link_event_expr(emit_name, emits, for_payload, &href_expr)?;
+            body.push_str(&format!("dispatch({event_expr});"));
         }
         attrs.push_str(&format!(" onClick={{e => {{ {body} }}}}"));
     }
@@ -2553,6 +2552,10 @@ fn emit_host_link_jsx(
         Some(format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s)))
     } else if let Some(slot) = find_slot_ref_prop(node, "label") {
         let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Some(format!("{{{camel}}}"))
+    } else if let Some(keyword) = find_keyword_prop(node, "label") {
+        let camel = to_camel_case_first_lower(keyword);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         Some(format!("{{{camel}}}"))
     } else {
@@ -2568,6 +2571,55 @@ fn emit_host_link_jsx(
             // dialog_nodes/checkbox_nodes parameters; emit a stub.
             Ok(format!("{pad}<a{attrs}></a>\n"))
         }
+    }
+}
+
+fn host_link_event_expr(
+    emit_name: &str,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+    href_expr: &str,
+) -> Result<String, PipelineEmitError> {
+    let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+    validate_emit_name(&type_field)?;
+
+    let mut event_expr = format!("{{ type: \"{type_field}\"");
+    let Some(emit) = emits.iter().find(|e| e.name == emit_name) else {
+        event_expr.push_str(" }");
+        return Ok(event_expr);
+    };
+    if emit.params.len() == 1 {
+        let param = &emit.params[0];
+        let field = to_camel_case_first_lower(&param.name);
+        validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        if let Some(payload) =
+            host_link_single_payload_expr(&param.r#type, &field, for_payload, href_expr)
+        {
+            event_expr.push_str(&format!(", {field}: {payload}"));
+        }
+    }
+    event_expr.push_str(" }");
+    Ok(event_expr)
+}
+
+fn host_link_single_payload_expr(
+    param_type: &EmitPayloadType,
+    field: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+    href_expr: &str,
+) -> Option<String> {
+    if field == "href" {
+        return match param_type {
+            EmitPayloadType::Text => Some(href_expr.to_string()),
+            _ => None,
+        };
+    }
+    if let Some(payload) = host_button_single_payload_expr(param_type, for_payload) {
+        return Some(payload);
+    }
+    match param_type {
+        EmitPayloadType::Text => Some(href_expr.to_string()),
+        _ => None,
     }
 }
 
@@ -6864,6 +6916,87 @@ mod tests {
         assert!(
             out.contains("dispatch({ type: \"navigate\", href: \"/about\" })"),
             "expected dispatch with href payload, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_link_inside_indexed_for_dispatches_index_payload() {
+        let layout = LayoutDef {
+            component_name: "Nav".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "For".to_string(),
+                    part_name: None,
+                    props: vec![
+                        LayoutProp {
+                            name: "each".to_string(),
+                            value: LayoutPropValue::SlotRef("items".to_string()),
+                        },
+                        LayoutProp {
+                            name: "as".to_string(),
+                            value: LayoutPropValue::Keyword("item".to_string()),
+                        },
+                        LayoutProp {
+                            name: "index".to_string(),
+                            value: LayoutPropValue::Keyword("i".to_string()),
+                        },
+                    ],
+                    children: vec![LayoutNode {
+                        tag: "HostLink".to_string(),
+                        part_name: None,
+                        props: vec![
+                            LayoutProp {
+                                name: "href".to_string(),
+                                value: LayoutPropValue::String("#".to_string()),
+                            },
+                            LayoutProp {
+                                name: "label".to_string(),
+                                value: LayoutPropValue::Keyword("item".to_string()),
+                            },
+                            LayoutProp {
+                                name: "external".to_string(),
+                                value: LayoutPropValue::Keyword("false".to_string()),
+                            },
+                            LayoutProp {
+                                name: "onActivate".to_string(),
+                                value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                            },
+                        ],
+                        children: Vec::new(),
+                    }],
+                }],
+            },
+        };
+        let result = from_pipeline(
+            &component(
+                "Nav",
+                vec![slot(
+                    "items",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                )],
+                vec![emit(
+                    "onSelect",
+                    vec![param("index", EmitPayloadType::Number)],
+                )],
+            ),
+            &layout,
+            &empty_style("Nav"),
+        )
+        .unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains(
+                "onClick={e => { e.preventDefault(); dispatch({ type: \"select\", index: i }); }}"
+            ),
+            "expected HostLink to dispatch index payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("<a href=\"#\" onClick={e => { e.preventDefault(); dispatch({ type: \"select\", index: i }); }}>{item}</a>"),
+            "expected HostLink label to use For item binding, got:\n{out}"
         );
     }
 

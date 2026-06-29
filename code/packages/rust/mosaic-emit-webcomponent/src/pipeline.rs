@@ -707,7 +707,7 @@ fn emit_html_tree(
         // default the React and HTML backends ship. The onclick
         // handler reaches the Custom Element via
         // `this.getRootNode().host.dispatch(...)`.
-        "HostLink" => return Ok(emit_host_link(node)),
+        "HostLink" => return Ok(emit_host_link(node, ctx)),
 
         // UI29-4 — `HostTooltip` wraps its child(ren) in `<span
         // title="${text}">…</span>`. Plain-text only in v1 per
@@ -1590,7 +1590,7 @@ fn emit_host_radio(node: &LayoutNode) -> String {
 /// pair is emitted as a single literal string in one branch, so the
 /// two attributes can't be decoupled by future refactors. Same
 /// shape as the React and HTML backends ship.
-fn emit_host_link(node: &LayoutNode) -> String {
+fn emit_host_link(node: &LayoutNode, ctx: &RenderCtx<'_>) -> String {
     let mut attrs = String::new();
 
     // href= — string literal or `${slot}` template marker
@@ -1627,11 +1627,9 @@ fn emit_host_link(node: &LayoutNode) -> String {
             body.push_str("event.preventDefault();");
         }
         if let Some(emit_name) = on_activate {
-            let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-            if is_safe_identifier(&type_field) {
-                body.push_str(&format!(
-                    "this.getRootNode().host.dispatch({{type:'{type_field}',href:this.getAttribute('href')}})"
-                ));
+            if let Some((payload_attrs, event_expr)) = host_link_dispatch_bits(emit_name, ctx) {
+                attrs.push_str(&payload_attrs);
+                body.push_str(&format!("this.getRootNode().host.dispatch({event_expr})"));
             }
         }
         attrs.push_str(&format!(r#" onclick="{body}""#));
@@ -1647,11 +1645,65 @@ fn emit_host_link(node: &LayoutNode) -> String {
         } else {
             String::new()
         }
+    } else if let Some(keyword) = find_keyword(node, "label") {
+        template_identifier_body(keyword)
     } else {
         String::new()
     };
 
     format!("<a{attrs}>{body}</a>")
+}
+
+fn host_link_dispatch_bits(emit_name: &str, ctx: &RenderCtx<'_>) -> Option<(String, String)> {
+    let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+    if !is_safe_identifier(&type_field) {
+        return None;
+    }
+
+    let mut payload_attrs = String::new();
+    let mut event_expr = format!("{{type:'{type_field}'");
+    if let Some(emit) = ctx.emits.iter().find(|e| e.name == emit_name) {
+        if emit.params.len() == 1 {
+            let param = &emit.params[0];
+            let field = to_camel_case_first_lower(&param.name);
+            if is_safe_identifier(&field) {
+                if let Some((attr, value_expr)) =
+                    host_link_single_payload_binding(&param.r#type, &field, ctx.current_for_payload())
+                {
+                    payload_attrs.push_str(&attr);
+                    event_expr.push_str(&format!(",{field}:{value_expr}"));
+                }
+            }
+        }
+    }
+    event_expr.push('}');
+    Some((payload_attrs, event_expr))
+}
+
+fn host_link_single_payload_binding(
+    param_type: &EmitPayloadType,
+    field: &str,
+    for_payload: Option<&ForPayloadScope>,
+) -> Option<(String, String)> {
+    if field == "href" {
+        return match param_type {
+            EmitPayloadType::Text => Some((
+                String::new(),
+                "(this.getAttribute('href')||'')".to_string(),
+            )),
+            _ => None,
+        };
+    }
+    if let Some(payload) = host_button_single_payload_binding(param_type, for_payload) {
+        return Some(payload);
+    }
+    match param_type {
+        EmitPayloadType::Text => Some((
+            String::new(),
+            "(this.getAttribute('href')||'')".to_string(),
+        )),
+        _ => None,
+    }
 }
 
 /// Lower a `HostTooltip` node to `<span title="${text}">child(ren)
@@ -4876,14 +4928,83 @@ mod tests {
         );
         assert!(
             r.output.contains(
-                "this.getRootNode().host.dispatch({type:'navigate',href:this.getAttribute('href')})"
+                "this.getRootNode().host.dispatch({type:'navigate',href:(this.getAttribute('href')||'')})"
             ),
             "expected shadow-DOM-aware dispatch with href payload, got:\n{}",
             r.output
         );
     }
 
-    /// UI29-4 webcomp test 4 — `HostTooltip` with `text` and a
+    /// UI29-4 webcomp test 4 — a link inside an indexed `For`
+    /// dispatches the row index and renders the row item as its label.
+    #[test]
+    fn host_link_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "Nav",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onSelect",
+                vec![EmitParam {
+                    name: "index".to_string(),
+                    r#type: EmitPayloadType::Number,
+                }],
+            )],
+        );
+        let l = root_layout(
+            "Nav",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::SlotRef("items".to_string()),
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword("item".to_string()),
+                    },
+                    LayoutProp {
+                        name: "index".to_string(),
+                        value: LayoutPropValue::Keyword("i".to_string()),
+                    },
+                ],
+                children: vec![leaf_with_props(
+                    "HostLink",
+                    vec![
+                        LayoutProp {
+                            name: "href".to_string(),
+                            value: LayoutPropValue::String("#".to_string()),
+                        },
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("item".to_string()),
+                        },
+                        LayoutProp {
+                            name: "external".to_string(),
+                            value: LayoutPropValue::Keyword("false".to_string()),
+                        },
+                        LayoutProp {
+                            name: "onActivate".to_string(),
+                            value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                        },
+                    ],
+                )],
+            },
+        );
+        let r = from_pipeline(&m, &l, &empty_style("Nav")).unwrap();
+        assert!(
+            r.output.contains(r##"<a href="#" data-mosaic-index="${i}" onclick="event.preventDefault();this.getRootNode().host.dispatch({type:'select',index:Number(this.dataset.mosaicIndex)})">${item}</a>"##),
+            "expected HostLink to dispatch the For index and render item label, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 webcomp test 5 — `HostTooltip` with `text` and a
     /// single child wraps the child in a `<span title="...">`.
     #[test]
     fn host_tooltip_wraps_child_in_span_with_title() {

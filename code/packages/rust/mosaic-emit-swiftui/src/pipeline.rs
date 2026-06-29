@@ -1719,7 +1719,7 @@ fn emit_view_tree(
         // view modifier on the wrapped child (macOS / iOS 16+), and
         // `HostNumberInput` to `TextField` with the `.number`
         // format binding (iOS 15+/macOS 12+).
-        "HostLink" => emit_host_link(node, indent)?,
+        "HostLink" => emit_host_link(node, indent, emits, for_payload)?,
         "HostTooltip" => emit_host_tooltip(node, indent, part_styles, emits, for_payload)?,
         "HostNumberInput" => emit_host_number_input(node, indent)?,
 
@@ -2649,14 +2649,18 @@ fn emit_host_radio(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
 /// `onActivate` dispatch when `external != false` and documents
 /// the limitation. The far-more-common in-app routing path
 /// (`external: false`) gets the full Button-with-dispatch shape.
-fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_link(
+    node: &LayoutNode,
+    indent: usize,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
 
     let href = find_string_prop(node, "href").unwrap_or("#");
-    let label = find_string_prop(node, "label").unwrap_or(href);
     let escaped_href = escape_swift_string(href);
-    let escaped_label = escape_swift_string(label);
+    let label_text = host_link_label_text_expr(node, href)?;
 
     let external_false = matches!(find_keyword_prop(node, "external"), Some("false"));
     let on_activate = find_emit_ref_prop(node, "onActivate");
@@ -2668,22 +2672,105 @@ fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
             Some(emit_name) => {
                 let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
                 validate_emit_name(&case)?;
-                // The href is passed through the dispatch payload as
-                // a String literal; downstream the host's router
-                // takes it and navigates in-app.
-                format!("dispatch(.{case}(href: \"{escaped_href}\"))")
+                let args = host_link_event_args(emit_name, emits, for_payload, &escaped_href)?;
+                if args.is_empty() {
+                    format!("dispatch(.{case})")
+                } else {
+                    format!("dispatch(.{case}({args}))")
+                }
             }
             None => "{ }".to_string(),
         };
         writeln!(out, "{pad}Button(action: {{ {action_body} }}) {{").unwrap();
-        writeln!(out, "{inner_pad}Text(\"{escaped_label}\")").unwrap();
+        writeln!(out, "{inner_pad}{label_text}").unwrap();
         writeln!(out, "{pad}}}").unwrap();
         Ok(out)
     } else {
         // Default: SwiftUI Link with OS-default open behaviour.
-        Ok(format!(
-            "{pad}Link(\"{escaped_label}\", destination: URL(string: \"{escaped_href}\")!)\n"
-        ))
+        let mut out = String::new();
+        writeln!(
+            out,
+            "{pad}Link(destination: URL(string: \"{escaped_href}\")!) {{"
+        )
+        .unwrap();
+        writeln!(out, "{inner_pad}{label_text}").unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+        Ok(out)
+    }
+}
+
+fn host_link_label_text_expr(
+    node: &LayoutNode,
+    fallback_href: &str,
+) -> Result<String, PipelineEmitError> {
+    if let Some(label) = find_string_prop(node, "label") {
+        return Ok(format!("Text(\"{}\")", escape_swift_string(label)));
+    }
+    if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        return Ok(format!("Text({camel})"));
+    }
+    if let Some(keyword) = find_keyword_prop(node, "label") {
+        let camel = to_camel_case_first_lower(keyword);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        return Ok(format!("Text({camel})"));
+    }
+    Ok(format!("Text(\"{}\")", escape_swift_string(fallback_href)))
+}
+
+fn host_link_event_args(
+    emit_name: &str,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+    escaped_href: &str,
+) -> Result<String, PipelineEmitError> {
+    let Some(emit) = emits.iter().find(|e| e.name == emit_name) else {
+        return Ok(String::new());
+    };
+    if emit.params.is_empty() {
+        return Ok(String::new());
+    }
+    if emit.params.len() == 1 {
+        let param = &emit.params[0];
+        let field = to_camel_case_first_lower(&param.name);
+        validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        let expr = host_link_payload_expr(&param.r#type, &field, for_payload, escaped_href)
+            .unwrap_or_else(|| "/* TODO: payload */ fatalError(\"TODO: payload\")".to_string());
+        return Ok(format!("{field}: {expr}"));
+    }
+
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            let expr = host_link_payload_expr(&param.r#type, &field, for_payload, escaped_href)
+                .unwrap_or_else(|| "/* TODO: payload */ fatalError(\"TODO: payload\")".to_string());
+            Ok(format!("{field}: {expr}"))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
+}
+
+fn host_link_payload_expr(
+    t: &EmitPayloadType,
+    field: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+    escaped_href: &str,
+) -> Option<String> {
+    if field == "href" {
+        return match t {
+            EmitPayloadType::Text => Some(format!("\"{escaped_href}\"")),
+            _ => None,
+        };
+    }
+    if let Some(expr) = host_button_payload_expr(t, for_payload) {
+        return Some(expr);
+    }
+    match t {
+        EmitPayloadType::Text => Some(format!("\"{escaped_href}\"")),
+        _ => None,
     }
 }
 
@@ -6376,8 +6463,12 @@ mod tests {
             .output;
         let _ = m;
         assert!(
-            r.contains("Link(\"Click me\", destination: URL(string: \"https://example.com\")!)"),
+            r.contains("Link(destination: URL(string: \"https://example.com\")!) {"),
             "expected SwiftUI Link with URL, got:\n{r}"
+        );
+        assert!(
+            r.contains("Text(\"Click me\")"),
+            "expected SwiftUI Link label, got:\n{r}"
         );
     }
 
@@ -6387,7 +6478,14 @@ mod tests {
     /// in-app routing path.
     #[test]
     fn host_link_external_false_with_on_activate_emits_button_dispatch() {
-        let m = component("X", vec![], vec![emit("onNavigate", vec![])]);
+        let m = component(
+            "X",
+            vec![],
+            vec![emit(
+                "onNavigate",
+                vec![param("href", EmitPayloadType::Text)],
+            )],
+        );
         let l = layout_with(
             "X",
             container_node(
@@ -6410,6 +6508,63 @@ mod tests {
         assert!(
             !r.contains("URL(string:"),
             "in-app routing path must NOT emit URL open, got:\n{r}"
+        );
+    }
+
+    #[test]
+    fn host_link_inside_indexed_for_dispatches_index_payload() {
+        let layout = layout_with(
+            "Nav",
+            container_node(
+                "Column",
+                vec![node_with_props(
+                    "For",
+                    vec![
+                        prop_slot_ref("each", "items"),
+                        prop_keyword("as", "item"),
+                        prop_keyword("index", "i"),
+                    ],
+                    vec![leaf(
+                        "HostLink",
+                        vec![
+                            prop_string("href", "#"),
+                            prop_keyword("label", "item"),
+                            prop_keyword("external", "false"),
+                            prop_emit_ref("onActivate", "onSelect"),
+                        ],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "Nav",
+                vec![slot(
+                    "items",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                )],
+                vec![emit(
+                    "onSelect",
+                    vec![param("index", EmitPayloadType::Number)],
+                )],
+            ),
+            &layout,
+            &empty_style("Nav"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("let i: Double = Double(_swiftIdxi)"),
+            "expected numeric For index binding, got:\n{out}"
+        );
+        assert!(
+            out.contains("dispatch(.select(index: i))"),
+            "expected HostLink to dispatch index payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(item)"),
+            "expected HostLink label to use For item binding, got:\n{out}"
         );
     }
 
