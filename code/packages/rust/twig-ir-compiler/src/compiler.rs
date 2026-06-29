@@ -939,6 +939,11 @@ impl Compiler {
                 for (name, _) in &l.bindings {
                     body_static_string_values.remove(name);
                 }
+                for (name, rhs) in &l.bindings {
+                    if Self::is_syntax_static_e4_string_expr(rhs, known_static_string_values) {
+                        body_static_string_values.insert(name.clone());
+                    }
+                }
                 for e in &l.body {
                     self.collect_main_direct_string_call_evidence(e, evidence, &body_static_string_values);
                 }
@@ -947,7 +952,11 @@ impl Compiler {
                 let mut scoped_static_string_values = known_static_string_values.clone();
                 for (name, rhs) in &l.bindings {
                     self.collect_main_direct_string_call_evidence(rhs, evidence, &scoped_static_string_values);
-                    scoped_static_string_values.remove(name);
+                    if Self::is_syntax_static_e4_string_expr(rhs, &scoped_static_string_values) {
+                        scoped_static_string_values.insert(name.clone());
+                    } else {
+                        scoped_static_string_values.remove(name);
+                    }
                 }
                 for e in &l.body {
                     self.collect_main_direct_string_call_evidence(e, evidence, &scoped_static_string_values);

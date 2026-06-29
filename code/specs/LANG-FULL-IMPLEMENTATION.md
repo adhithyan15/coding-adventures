@@ -9,7 +9,7 @@ program per language**, and each frontend is a **deliberate subset**:
 
 | Language | What the matrix actually runs end-to-end on the code-gen backends | The subset gap |
 |---|---|---|
-| Twig | `42`, variadic arithmetic, top-level value `define`, and typed E4 string literal/named/local/function-call/annotated-parameter/direct-call-inferred-parameter proofs from literal and named actuals, including substring/index and lexical ordering | rich Lisp frontend; lists/lambdas/dynamic globals/records/symbols still need E5/E6, and captured/reassigned/unobserved or conflicting parameter strings stay on the dynamic path |
+| Twig | `42`, variadic arithmetic, top-level value `define`, and typed E4 string literal/named/local/function-call/annotated-parameter/direct-call-inferred-parameter proofs from literal, named, and lexical actuals, including substring/index and lexical ordering | rich Lisp frontend; lists/lambdas/dynamic globals/records/symbols still need E5/E6, and captured/reassigned/unobserved or conflicting parameter strings stay on the dynamic path |
 | Nib | typed calls, `*`/`/`, `for`, bitwise, short-circuit logic, logical `!`, consts, const/static-expression folding, wrap/sat arithmetic, and module `static`s all run on all 7 backends | BCD semantics and Intel-4004 RAM mapping remain |
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
@@ -238,7 +238,9 @@ multiple languages; close an enabler before the features that depend on it.
   top-level function parameter without synthesizing refinement annotations, and
   `(define s "HELLO") (define (strlen x) (string-length x)) (strlen s)` returns
   `5` by accepting named, non-escaping top-level string actuals as the same
-  evidence, on all 7 backends. The
+  evidence, and `(define (strlen x) (string-length x)) (let ((s "HELLO"))
+  (strlen s))` returns `5` by accepting scoped lexical string actuals as the
+  same evidence, on all 7 backends. The
   matrix now also proves the E4 bounds contract: `(string-ref "ABC" 3)` traps on
   native-AOT + LLVM + WASM + JVM + CLR + VM + JIT. WASM owns the literal-output
   shape with a linear-memory data segment + `env.__print_str(ptr,len)`, LLVM owns
@@ -704,7 +706,7 @@ backend immediately) come before the enabler-dependent items.
   plus local concat, `substring`, computed `string-length` indexes feeding string
   indexing, lexical `string<?`/`string>?` ordering, function-call return typing,
   annotated parameter typing, and conservative direct-call-inferred unannotated
-  parameter typing from literal and named top-level actuals across
+  parameter typing from literal, named top-level, and lexical actuals across
   native/LLVM/WASM/JVM/CLR/VM/JIT
   (`lang_matrix.rs`). **Limits:** captured or reassigned strings and the
   dynamic-`any` string path still need **E6**/dynamic representation work.
