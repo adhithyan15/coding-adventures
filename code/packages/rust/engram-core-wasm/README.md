@@ -90,6 +90,9 @@ The facade also exposes review-control commands:
 
 Those commands update the Rust state snapshot directly, including active-session
 queues, so host shells do not need their own suspend or bury reducers.
+Scheduling and flag mutations also clear stale imported Anki card-row fields in
+the shared snapshot, keeping browser queries and APKG export aligned with the
+current Engram progress instead of the imported row.
 `buryCardSiblings` uses optional `card.lineage.noteId` data to hide same-note
 siblings until the host-provided `buriedUntil` timestamp. `undoLastReview`
 restores previous review, sibling, and active-session snapshots and rewinds

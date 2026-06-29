@@ -12,6 +12,24 @@ use crate::template::{
     generate_cards_for_note, materialize_generated_card, rename_note_type_field,
 };
 
+const CARD_SCHEDULING_SOURCE_KEYS: &[&str] = &[
+    "kind",
+    "queue",
+    "due",
+    "originalDue",
+    "originalDeckId",
+    "interval",
+    "factor",
+    "repetitions",
+    "lapses",
+    "left",
+    "flags",
+    "data",
+    "modifiedAt",
+    "updateSequenceNumber",
+];
+const CARD_FLAG_SOURCE_KEYS: &[&str] = &["flags", "modifiedAt", "updateSequenceNumber"];
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum EngramCommand {
     LoadState(AppState),
@@ -465,6 +483,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             let progress =
                 ensure_progress_overlay(&mut next.card_progress, card_id.clone(), suspended_at);
             progress.suspended_at = Some(suspended_at);
+            clear_card_scheduling_source_keys(&mut next, &card_id);
             next.active_session = remove_card_from_active_session(next.active_session, &card_id);
             next
         }
@@ -481,6 +500,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     progress.state = crate::model::CardState::Review;
                 }
                 remove_clear_overlay(&mut next.card_progress, index);
+                clear_card_scheduling_source_keys(&mut next, &card_id);
             }
             next
         }
@@ -493,6 +513,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             let progress =
                 ensure_progress_overlay(&mut next.card_progress, card_id.clone(), buried_at);
             progress.buried_until = Some(buried_until);
+            clear_card_scheduling_source_keys(&mut next, &card_id);
             next.active_session = remove_card_from_active_session(next.active_session, &card_id);
             next
         }
@@ -514,6 +535,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     progress.state = crate::model::CardState::Review;
                 }
                 remove_clear_overlay(&mut next.card_progress, index);
+                clear_card_scheduling_source_keys(&mut next, &card_id);
             }
             next
         }
@@ -525,9 +547,13 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             let mut next = state.clone();
             match flag {
                 Some(flag) => {
-                    let progress =
-                        ensure_progress_overlay(&mut next.card_progress, card_id, flagged_at);
+                    let progress = ensure_progress_overlay(
+                        &mut next.card_progress,
+                        card_id.clone(),
+                        flagged_at,
+                    );
                     progress.flag = Some(flag);
+                    clear_card_flag_source_keys(&mut next, &card_id);
                 }
                 None => {
                     if let Some(index) = next
@@ -537,6 +563,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     {
                         next.card_progress[index].flag = None;
                         remove_clear_overlay(&mut next.card_progress, index);
+                        clear_card_flag_source_keys(&mut next, &card_id);
                     }
                 }
             }
@@ -728,6 +755,39 @@ fn without_external_source_target(
     }
     next.extend(tombstones);
     next
+}
+
+fn clear_card_scheduling_source_keys(state: &mut AppState, card_id: &str) {
+    clear_external_source_data_keys(
+        state,
+        ExternalSourceTarget::Card,
+        card_id,
+        CARD_SCHEDULING_SOURCE_KEYS,
+    );
+}
+
+fn clear_card_flag_source_keys(state: &mut AppState, card_id: &str) {
+    clear_external_source_data_keys(
+        state,
+        ExternalSourceTarget::Card,
+        card_id,
+        CARD_FLAG_SOURCE_KEYS,
+    );
+}
+
+fn clear_external_source_data_keys(
+    state: &mut AppState,
+    target: ExternalSourceTarget,
+    target_id: &str,
+    keys: &[&str],
+) {
+    for source in &mut state.external_sources {
+        if source.target == target && source.target_id == target_id {
+            for key in keys {
+                source.data.remove(*key);
+            }
+        }
+    }
 }
 
 fn deleted_external_source_record(source: &ExternalSourceRecord) -> Option<ExternalSourceRecord> {
@@ -969,10 +1029,12 @@ fn bury_card_siblings_matching_with_snapshots(
         let progress =
             ensure_progress_overlay(&mut next.card_progress, sibling_id.clone(), buried_at);
         progress.buried_until = Some(buried_until);
+        let resulting_progress = progress.clone();
+        clear_card_scheduling_source_keys(&mut next, sibling_id);
         snapshots.push(CardProgressSnapshot {
             card_id: sibling_id.clone(),
             previous_progress,
-            resulting_progress: Some(progress.clone()),
+            resulting_progress: Some(resulting_progress),
         });
     }
     for sibling_id in sibling_ids {
@@ -1132,6 +1194,7 @@ fn reduce_rate_card(
             reviewed_at,
         );
         upsert_progress(&mut next.card_progress, new_progress.clone());
+        clear_card_scheduling_source_keys(&mut next, &reviewed_card_id);
         (leech_event, Some(new_progress))
     } else {
         (None, existing.clone())
@@ -1577,6 +1640,19 @@ mod tests {
             last_seen_at: NOW - ONE_DAY_MS,
             flag: None,
             marked_at: None,
+        }
+    }
+
+    fn anki_card_source(card_id: &str, data: &[(&str, &str)]) -> ExternalSourceRecord {
+        ExternalSourceRecord {
+            target: ExternalSourceTarget::Card,
+            target_id: card_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(card_id.to_string()),
+            data: data
+                .iter()
+                .map(|(key, value)| ((*key).to_string(), (*value).to_string()))
+                .collect::<BTreeMap<_, _>>(),
         }
     }
 
@@ -2124,6 +2200,68 @@ mod tests {
         assert_eq!(next.reviews.len(), 1);
         assert_eq!(next.sessions[0].cards_reviewed, 1);
         assert_eq!(next.sessions[0].cards_correct, 1);
+    }
+
+    #[test]
+    fn rate_card_clears_stale_imported_anki_card_scheduling_metadata() {
+        let mut state = AppState {
+            cards: vec![card("card")],
+            external_sources: vec![anki_card_source(
+                "card",
+                &[
+                    ("kind", "0"),
+                    ("queue", "0"),
+                    ("due", "42"),
+                    ("originalDue", "99"),
+                    ("originalDeckId", "7"),
+                    ("interval", "0"),
+                    ("factor", "2500"),
+                    ("repetitions", "0"),
+                    ("lapses", "0"),
+                    ("left", "0"),
+                    ("flags", "3"),
+                    ("data", "{\"s\":1.2}"),
+                    ("modifiedAt", "1700000000"),
+                    ("updateSequenceNumber", "12"),
+                    ("custom", "keep"),
+                ],
+            )],
+            ..AppState::default()
+        };
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card")],
+                started_at: NOW,
+            },
+        );
+
+        let next = reduce(
+            &state,
+            EngramCommand::RateCard {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: NOW,
+            },
+        );
+        let source = next
+            .external_sources
+            .iter()
+            .find(|source| source.target == ExternalSourceTarget::Card)
+            .expect("card source");
+
+        for key in CARD_SCHEDULING_SOURCE_KEYS {
+            assert!(
+                !source.data.contains_key(*key),
+                "rated cards should clear stale Anki card source key {key}"
+            );
+        }
+        assert_eq!(source.original_id.as_deref(), Some("card"));
+        assert_eq!(source.data.get("custom").map(String::as_str), Some("keep"));
     }
 
     #[test]
@@ -3049,6 +3187,52 @@ mod tests {
         );
 
         assert!(unmarked.card_progress.is_empty());
+    }
+
+    #[test]
+    fn set_card_flag_clears_only_stale_imported_anki_flag_metadata() {
+        let state = AppState {
+            cards: vec![card("card")],
+            external_sources: vec![anki_card_source(
+                "card",
+                &[
+                    ("kind", "0"),
+                    ("queue", "0"),
+                    ("due", "42"),
+                    ("flags", "1"),
+                    ("modifiedAt", "1700000000"),
+                    ("updateSequenceNumber", "12"),
+                    ("custom", "keep"),
+                ],
+            )],
+            ..AppState::default()
+        };
+
+        let next = reduce(
+            &state,
+            EngramCommand::SetCardFlag {
+                card_id: "card".to_string(),
+                flag: Some(CardFlag::Blue),
+                flagged_at: NOW,
+            },
+        );
+        let source = next
+            .external_sources
+            .iter()
+            .find(|source| source.target == ExternalSourceTarget::Card)
+            .expect("card source");
+
+        for key in CARD_FLAG_SOURCE_KEYS {
+            assert!(
+                !source.data.contains_key(*key),
+                "flag changes should clear stale Anki card source key {key}"
+            );
+        }
+        assert_eq!(source.data.get("kind").map(String::as_str), Some("0"));
+        assert_eq!(source.data.get("queue").map(String::as_str), Some("0"));
+        assert_eq!(source.data.get("due").map(String::as_str), Some("42"));
+        assert_eq!(source.data.get("custom").map(String::as_str), Some("keep"));
+        assert_eq!(next.card_progress[0].flag, Some(CardFlag::Blue));
     }
 
     #[test]

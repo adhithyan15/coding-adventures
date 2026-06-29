@@ -6,6 +6,8 @@
   control across the Rust core, WASM facade, and generated Mosaic shells.
 - Aligned state-aware study queues with imported Anki new-card `due` positions
   so Mosaic/web/native hosts share the same new-card order.
+- Cleared stale imported Anki card-row scheduling and flag fields after shared
+  reducer mutations, keeping browser filters and APKG export current.
 - Moved HTML/React host adapter activation into Mosaic package host asset
   emission, leaving `build-all.ps1` responsible for generated runtime binaries
   and loaders instead of editing generated shell entry files.

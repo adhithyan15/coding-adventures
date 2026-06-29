@@ -126,6 +126,9 @@ For imported filtered-deck cards, `deck:` also matches the preserved original
 deck ID/name.
 Imported Anki card-row metrics also power `prop:ivl`, `prop:reps`,
 `prop:lapses`, and `prop:ease` searches when preserved source data is present.
+When the shared reducer locally rates, buries, suspends, unburies, unsuspends,
+or flags a card, it clears the stale imported card-row fields that would
+otherwise override current Engram progress in browser searches or APKG export.
 `dupe:notetype,text` compares Anki-style first-field text, using preserved
 imported sort fields when available.
 Unknown `key:value` searches fall back to Anki-style note field searches, so

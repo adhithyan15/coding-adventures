@@ -71,7 +71,8 @@ their card has been deleted by falling back to the preserved Anki `cardId`.
 Imported deck and note-type modification metadata is also retained
 when Engram re-emits the stored Anki JSON, and imported note/card row
 modification timestamps, model sort-field selection, note checksums, and
-revlog answer-time metadata are preserved on export. Engram-native reviews can
+revlog answer-time metadata are preserved on export until the shared reducer
+locally changes the card's scheduling or flag state. Engram-native reviews can
 also export their optional shared-core `Review::answer_time_ms` value into
 Anki's `revlog.time` column, so non-web Mosaic/native shells do not need their
 own Anki-specific review-duration path.
