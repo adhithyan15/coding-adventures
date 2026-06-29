@@ -885,6 +885,13 @@ fn v11_options_for_deck(deck: &AnkiV11Deck, deck_config: &Value) -> DeckOptions 
         options.reviews_per_day = json_path_u32(config, &["rev", "perDay"])
             .or_else(|| json_path_u32(config, &["rev", "perday"]))
             .unwrap_or(options.reviews_per_day);
+        options.bury_new_siblings =
+            json_path_bool(config, &["new", "bury"]).unwrap_or(options.bury_new_siblings);
+        options.bury_review_siblings =
+            json_path_bool(config, &["rev", "bury"]).unwrap_or(options.bury_review_siblings);
+        options.bury_interday_learning_siblings = json_path_bool(config, &["buryInterdayLearning"])
+            .or_else(|| json_path_bool(config, &["new", "buryInterdayLearning"]))
+            .unwrap_or(options.bury_interday_learning_siblings);
         options.learning_steps_minutes =
             json_path_minutes(config, &["new", "delays"]).unwrap_or(options.learning_steps_minutes);
         options.relearning_steps_minutes = json_path_minutes(config, &["lapse", "delays"])
@@ -1804,6 +1811,7 @@ fn merge_deck_options_json(
         "perDay".to_string(),
         Value::Number(i64::from(options.new_cards_per_day).into()),
     );
+    new_object.insert("bury".to_string(), Value::Bool(options.bury_new_siblings));
     new_object.insert(
         "delays".to_string(),
         Value::Array(
@@ -1831,6 +1839,10 @@ fn merge_deck_options_json(
     review_object.insert(
         "perDay".to_string(),
         Value::Number(i64::from(options.reviews_per_day).into()),
+    );
+    review_object.insert(
+        "bury".to_string(),
+        Value::Bool(options.bury_review_siblings),
     );
     review_object.insert(
         "maxIvl".to_string(),
@@ -1870,6 +1882,10 @@ fn merge_deck_options_json(
         json_f64_or(options.lapse_interval_multiplier, 0.0),
     );
     object.insert("lapse".to_string(), lapse_section);
+    object.insert(
+        "buryInterdayLearning".to_string(),
+        Value::Bool(options.bury_interday_learning_siblings),
+    );
 }
 
 fn json_f64_or(value: f64, fallback: f64) -> Value {
@@ -3171,6 +3187,10 @@ fn json_path_f64(value: &Value, path: &[&str]) -> Option<f64> {
     json_path(value, path).and_then(Value::as_f64)
 }
 
+fn json_path_bool(value: &Value, path: &[&str]) -> Option<bool> {
+    json_path(value, path).and_then(value_to_bool)
+}
+
 fn json_path_u32_array(value: &Value, path: &[&str]) -> Option<Vec<u32>> {
     json_path(value, path).and_then(|value| {
         value
@@ -3205,6 +3225,19 @@ fn value_to_u32(value: &Value) -> Option<u32> {
                 .as_f64()
                 .map(|value| value.max(0.0).round().clamp(0.0, u32::MAX as f64) as u32)
         })
+}
+
+fn value_to_bool(value: &Value) -> Option<bool> {
+    value
+        .as_bool()
+        .or_else(|| value.as_i64().map(|value| value != 0))
+        .or_else(
+            || match value.as_str()?.trim().to_ascii_lowercase().as_str() {
+                "true" | "1" | "yes" => Some(true),
+                "false" | "0" | "no" => Some(false),
+                _ => None,
+            },
+        )
 }
 
 fn split_anki_fields(fields: &str) -> Vec<String> {
@@ -3616,9 +3649,10 @@ CREATE TABLE graves (
                             "1": {
                                 "id": 1,
                                 "name": "Default",
-                                "new": {"perDay": 12, "delays": [3, 12], "ints": [2, 5]},
-                                "rev": {"perDay": 80, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
-                                "lapse": {"delays": [20], "mult": 0.5}
+                                "new": {"perDay": 12, "bury": false, "delays": [3, 12], "ints": [2, 5]},
+                                "rev": {"perDay": 80, "bury": false, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
+                                "lapse": {"delays": [20], "mult": 0.5},
+                                "buryInterdayLearning": false
                             }
                         }"#,
                         r#"{"spanish": 1}"#
@@ -3891,6 +3925,9 @@ CREATE TABLE graves (
         assert_eq!(options.hard_interval_multiplier, 1.4);
         assert_eq!(options.easy_bonus_multiplier, 1.6);
         assert_eq!(options.lapse_interval_multiplier, 0.5);
+        assert!(!options.bury_new_siblings);
+        assert!(!options.bury_review_siblings);
+        assert!(!options.bury_interday_learning_siblings);
 
         assert_eq!(state.note_types.len(), 1);
         let note_type = &state.note_types[0];
@@ -3963,6 +4000,12 @@ CREATE TABLE graves (
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["hardFactor"], 1.4);
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["ease4"], 1.6);
         assert_eq!(exported.metadata.deck_config["2"]["lapse"]["mult"], 0.5);
+        assert_eq!(exported.metadata.deck_config["2"]["new"]["bury"], false);
+        assert_eq!(exported.metadata.deck_config["2"]["rev"]["bury"], false);
+        assert_eq!(
+            exported.metadata.deck_config["2"]["buryInterdayLearning"],
+            false
+        );
 
         assert_eq!(state.sessions.len(), 1);
         assert_eq!(state.sessions[0].id, "anki-import:2");
