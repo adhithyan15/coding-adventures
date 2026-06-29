@@ -1556,15 +1556,39 @@ fn field_value_matches(pattern: &FieldValuePattern, candidate: &str) -> bool {
     match pattern {
         FieldValuePattern::Any => true,
         FieldValuePattern::NonEmpty => !candidate.trim().is_empty(),
-        FieldValuePattern::Exact(expected) => candidate.to_lowercase() == *expected,
+        FieldValuePattern::Exact(expected) => {
+            let candidate_lower = candidate.to_lowercase();
+            candidate_lower == expected.as_str()
+                || rendered_search_text_matches(candidate, |rendered| {
+                    rendered.to_lowercase() == expected.as_str()
+                })
+        }
         FieldValuePattern::Wildcard(expected) => {
-            search_pattern_matches(expected, &candidate.to_lowercase())
+            let candidate_lower = candidate.to_lowercase();
+            search_pattern_matches(expected, &candidate_lower)
+                || rendered_search_text_matches(candidate, |rendered| {
+                    search_pattern_matches(expected, &rendered.to_lowercase())
+                })
         }
         FieldValuePattern::Text(filter) => text_filter_matches(filter, candidate),
     }
 }
 
 fn text_filter_matches(filter: &TextFilter, candidate: &str) -> bool {
+    if text_filter_matches_candidate(filter, candidate) {
+        return true;
+    }
+
+    if filter.mode == TextMatchMode::Regex {
+        return false;
+    }
+
+    rendered_search_text_matches(candidate, |rendered| {
+        text_filter_matches_candidate(filter, rendered)
+    })
+}
+
+fn text_filter_matches_candidate(filter: &TextFilter, candidate: &str) -> bool {
     match filter.mode {
         TextMatchMode::Contains => contains_search_pattern(
             &filter.pattern.to_lowercase(),
@@ -2070,6 +2094,14 @@ fn duplicate_text_matches(expected: &str, candidate: &str) -> bool {
 }
 
 fn duplicate_search_text(value: &str) -> String {
+    rendered_search_text(value).chars().nfc().collect()
+}
+
+fn rendered_search_text(value: &str) -> Cow<'_, str> {
+    if !value.contains('<') && !value.contains('&') {
+        return Cow::Borrowed(value);
+    }
+
     let with_media = DUPLICATE_HTML_MEDIA_TAGS.replace_all(value, |captures: &regex::Captures| {
         let filename = captures
             .get(1)
@@ -2079,10 +2111,12 @@ fn duplicate_search_text(value: &str) -> String {
         format!(" {filename} ")
     });
     let without_tags = DUPLICATE_HTML_TAGS.replace_all(&with_media, "");
-    decode_search_html_entities(&without_tags)
-        .chars()
-        .nfc()
-        .collect()
+    Cow::Owned(decode_search_html_entities(&without_tags))
+}
+
+fn rendered_search_text_matches(value: &str, matches: impl FnOnce(&str) -> bool) -> bool {
+    let rendered = rendered_search_text(value);
+    rendered.as_ref() != value && matches(&rendered)
 }
 
 fn decode_search_html_entities(value: &str) -> String {
@@ -3044,6 +3078,95 @@ mod tests {
         );
         assert_eq!(ids_for("\"re:^A DOG$\""), vec!["dog-word"]);
         assert_eq!(ids_for("re:\\d{3}"), vec!["digits"]);
+    }
+
+    #[test]
+    fn anki_browser_text_search_uses_rendered_html_for_non_regex_modes() {
+        let note_type = NoteType {
+            id: "basic".to_string(),
+            name: "Basic".to_string(),
+            fields: vec![FieldDef {
+                id: "front".to_string(),
+                name: "Front".to_string(),
+                required: true,
+                ordinal: 0,
+            }],
+            templates: vec![CardTemplate {
+                id: "forward".to_string(),
+                name: "Forward".to_string(),
+                front_template: "{{Front}}".to_string(),
+                back_template: "Answer".to_string(),
+                required_field_names: vec!["Front".to_string()],
+                requirement_mode: TemplateRequirementMode::All,
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let note = |id: &str, front: &str| Note {
+            id: id.to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "languages".to_string(),
+            fields: vec![NoteFieldValue {
+                field_id: "front".to_string(),
+                value: front.to_string(),
+            }],
+            tags: Vec::new(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |note_id: &str| {
+            let mut card = card(&format!("{note_id}::forward"), "languages", "front", "back");
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let state = AppState {
+            decks: vec![deck("languages", "Languages")],
+            note_types: vec![note_type],
+            notes: vec![
+                note("entity-note", "Tamil &amp; Sanskrit"),
+                note("split-note", "proto-<b>dravidian</b> root"),
+                note("media-note", "<img src=\"amma.mp3\">"),
+                note("cloze-note", "{{c1::<b>hidden</b>}} clue"),
+            ],
+            cards: vec![
+                card_for_note("entity-note"),
+                card_for_note("split-note"),
+                card_for_note("media-note"),
+                card_for_note("cloze-note"),
+            ],
+            ..AppState::default()
+        };
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(
+            ids_for(r#""Tamil & Sanskrit""#),
+            vec!["entity-note::forward"]
+        );
+        assert_eq!(ids_for("proto-dravidian"), vec!["split-note::forward"]);
+        assert_eq!(ids_for("w:dravidian"), vec!["split-note::forward"]);
+        assert_eq!(ids_for("amma.mp3"), vec!["media-note::forward"]);
+        assert_eq!(ids_for("sc:hidden"), vec!["cloze-note::forward"]);
+        assert_eq!(
+            ids_for(r#"front:"Tamil & Sanskrit""#),
+            vec!["entity-note::forward"]
+        );
+        assert_eq!(ids_for("front:*dravidian*"), vec!["split-note::forward"]);
+        assert_eq!(ids_for("front:re:&amp;"), vec!["entity-note::forward"]);
+        assert_eq!(ids_for("re:<b>dravidian</b>"), vec!["split-note::forward"]);
+        assert!(ids_for(r#""re:Tamil & Sanskrit""#).is_empty());
     }
 
     #[test]
