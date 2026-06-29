@@ -704,6 +704,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case deleteNoteType");
     assert_contains(&swift, "case browserSearch");
     assert_contains(&swift, "case browserSelectResult");
+    assert_contains(&swift, "var mosaicName: String");
+    assert_contains(&swift, "var mosaicEnvelope: [String: Any]");
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
     assert_contains(&swift, "let deckOptionsSettingsLabel: String");
@@ -767,6 +769,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
     assert_contains(&swift_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
     assert_contains(&swift_app, "dispatch: { event in");
+    assert_contains(&swift_app, "event.mosaicEnvelope");
     let swift_package = fs::read_to_string(tmp.path().join("swiftui").join("Package.swift"))
         .expect("Package.swift");
     assert_contains(&swift_package, "platforms: [.macOS(.v13), .iOS(.v16)]");
