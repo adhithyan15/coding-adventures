@@ -150,6 +150,28 @@ composite (`m·n` when the engine emits `n·m`) — an operand-order trap that a
 reasoner accepts but the dimensional engine rejects. Reuses the same `compute_dimensioned`
 harness as `rung4_dimensional`; engine selects **20/20 cached, zero unit mismatches**.
 
+### Multi-step formula chains rung (rung 5 multistep, cached engine)
+
+`rung5_multistep/` is the **next reasoning depth**: rungs 0–4 each computed a *single*
+operation, but here the gold program needs **two or more chained `let`-bindings** — an
+intermediate quantity is computed and then *consumed* by the next step. The canonical shape
+is a weighted average: `let total_distance = first + second`, `let total_time = t1 + t2`,
+`let answer = total_distance / total_time`. The model's only job is to **decompose** the
+problem into ordered sub-results; the engine carries dimensions through every link, and the
+intermediate results are *never written as literals* — the engine computes each and threads
+it forward — so the no-result-literals gate holds for the whole chain exactly as it did for
+one op. Five families: average speed over two legs (`km/h`), net displacement rate (`km/h`,
+via subtraction *then* division), combined density (`g/ml`), average power (`j/s`), and
+average flow rate (`l/min`). The signature distractor is the **average-of-the-two-ratios**
+answer — which equals the correct `total/total` *only* when the two denominators are equal,
+so every item uses **unequal** denominators to separate them. A single-step or number-only
+reasoner averages the per-leg ratios (e.g. `(60+100)/2 = 80 km/h`); the engine, carrying the
+chained computation, lands the weighted `total/total` (`420/5 = 84 km/h`) with the right
+unit. Also carries a skip-a-step trap (the numerator sum, undivided) and a wrong-unit trap.
+Reuses the `compute_dimensioned` harness **unchanged** (it reads the final `answer` binding);
+no engine or harness change — pure new data exercising deeper `let`-chaining the engine
+already supports. Engine selects **20/20 cached, zero wrong, zero unit mismatches**.
+
 ## Layout
 
 ```

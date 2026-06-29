@@ -2,6 +2,32 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.28.0] — 2026-06-29
+
+### Added — rung 5: multi-step formula chains (the next reasoning depth)
+
+- New **`rung5_multistep/items.json`**: 20 self-authored dimensional word problems whose gold
+  ADJ program needs **two or more chained `let`-bindings** — an intermediate quantity is computed
+  and then *consumed* by the next step (e.g. `let total_distance = first + second`,
+  `let total_time = t1 + t2`, `let answer = total_distance / total_time`). Rungs 0–4 each computed
+  a *single* operation; rung 5 forces the model to **decompose** the problem into ordered
+  sub-results, while the engine carries dimensions through every link of the chain.
+- Five families: average speed over two legs (`km/h`), net displacement rate (`km/h`, subtraction
+  *then* division), combined density (`g/ml`), average power (`j/s`), average flow rate (`l/min`).
+- The intermediate results (`total_distance`, `total_time`, …) are **never written as literals** —
+  the engine computes each and threads it forward — so the no-result-literals gate holds for the
+  whole chain just as it did for one op.
+- Signature distractor is the **average-of-the-two-ratios** answer, which equals the correct
+  `total/total` *only* when the denominators are equal; every item uses **unequal** denominators so
+  the trap is a genuinely distinct wrong option (a single-step reasoner takes `(60+100)/2 = 80`,
+  the engine the weighted `420/5 = 84`). Plus a skip-a-step trap (numerator sum, undivided) and a
+  wrong-unit trap. All five options per item have distinct (value, unit) signatures.
+- **Reuses the `compute_dimensioned` extractor unchanged** (reads the final `answer` binding from
+  the CLI `derived` section); no engine or harness change — pure new data exercising deeper
+  `let`-chaining the engine already supports. Engine selects **20/20 cached, zero wrong, zero unit
+  mismatches**.
+- Registered in `test_ladder_eval.py` `SELF_CONTAINED_RUNGS`; cached + contamination + json gates green.
+
 ## [0.27.0] — 2026-06-29
 
 ### Added — rung 4: dimensional analysis, the MULTIPLICATION arm
