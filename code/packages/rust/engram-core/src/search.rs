@@ -134,6 +134,7 @@ struct CardPropertyFilter {
     property: CardProperty,
     operator: ComparisonOperator,
     value: f64,
+    rating: Option<Rating>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -864,6 +865,7 @@ fn parse_property_filter(token: &str, value: &str) -> Result<SearchClauseKind, S
             });
         }
     };
+    let (expected, rating) = parse_property_rating_suffix(token, property, expected)?;
     let value = expected.parse::<f64>().map_err(|_| SearchError {
         message: "property search value must be numeric".to_string(),
         token: token.to_string(),
@@ -873,7 +875,30 @@ fn parse_property_filter(token: &str, value: &str) -> Result<SearchClauseKind, S
         property,
         operator,
         value,
+        rating,
     }))
+}
+
+fn parse_property_rating_suffix<'a>(
+    token: &str,
+    property: CardProperty,
+    expected: &'a str,
+) -> Result<(&'a str, Option<Rating>), SearchError> {
+    if property != CardProperty::Rated {
+        return Ok((expected, None));
+    }
+
+    let Some((days, rating)) = expected.split_once(':') else {
+        return Ok((expected, None));
+    };
+    if rating.is_empty() {
+        return Err(SearchError {
+            message: "rated property search rating is missing".to_string(),
+            token: token.to_string(),
+        });
+    }
+
+    Ok((days, Some(parse_rating_filter(token, rating)?)))
 }
 
 fn parse_custom_data_numeric_filter(
@@ -1608,6 +1633,7 @@ fn property_matches(
         }),
         CardProperty::Rated => reviews.iter().any(|review| {
             !anki_review_is_manual_reschedule(review, metadata)
+                && filter.rating.map_or(true, |rating| review.rating == rating)
                 && compare_number(
                     f64::from(relative_day_bucket(review.reviewed_at, now)),
                     filter.operator,
@@ -2839,6 +2865,8 @@ mod tests {
         assert_eq!(ids_for("rated:0"), ids_for("rated:1"));
         assert_eq!(ids_for("rated:1:3"), vec!["due"]);
         assert_eq!(ids_for("rated:4:again"), vec!["future"]);
+        assert_eq!(ids_for("prop:rated=0:good"), vec!["due"]);
+        assert_eq!(ids_for("prop:rated<-1:again"), vec!["future"]);
     }
 
     #[test]
@@ -2902,6 +2930,7 @@ mod tests {
         assert_eq!(ids_for("rated:1"), vec!["answered", "native"]);
         assert_eq!(ids_for("rated:1:good"), vec!["answered", "native"]);
         assert_eq!(ids_for("prop:rated=0"), vec!["answered", "native"]);
+        assert_eq!(ids_for("prop:rated=0:good"), vec!["answered", "native"]);
     }
 
     #[test]

@@ -16,6 +16,8 @@
 - Normalized Anki-style recent-day browser searches so top-level `:0` windows
   behave as one-day searches for added, edited, introduced, rated, and
   rescheduled cards.
+- Added Anki-style answer-button suffix support for `prop:rated`, such as
+  `prop:rated<-7:again`.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.

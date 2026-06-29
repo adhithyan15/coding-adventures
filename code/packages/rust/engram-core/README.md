@@ -87,8 +87,10 @@ imported Anki deck-option preset names from preserved collection metadata, while
 `prop:pos` / `prop:position` uses imported Anki new-card queue positions when
 available. Imported Anki card custom data can be searched with `has-cd:key`,
 numeric `prop:cdn:key>5`, and scalar string `prop:cds:key=value` filters.
-Imported Anki revlog metadata powers manual reschedule searches with
-`resched:` and `prop:resched`; imported Anki queue metadata also powers
+`prop:rated` accepts Anki-style answer-button suffixes such as
+`prop:rated<-7:again`. Imported Anki revlog metadata powers manual reschedule
+searches with `resched:` and `prop:resched`; imported Anki queue metadata also
+powers
 `is:buried-manually` and
 `is:buried-sibling`; relearning cards match both `is:learn` and `is:review`
 for Anki-style lapsed-card queries. Recent-day filters treat `:0` as Anki does:
