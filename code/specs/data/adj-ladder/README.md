@@ -81,6 +81,19 @@ programs abstained as bucket `c`, exposing the next solve-result selection gap r
 than hiding it as a model answer. Artifact:
 `ladder-scorecard.rung3_linear_systems.gemma.json`.
 
+### Current algebra baseline (rung 3 quadratic roots, Gemma-3-4b, greedy)
+
+| Arm | raw accuracy | wrong (fabrications) | defensibility |
+|-----|--------------|----------------------|---------------|
+| **A** — Gemma alone | **75%** (15/20) | **5** | 0.75 |
+| **B** — Gemma + ADJ | **100%** (20/20) | **0** | **1.00** |
+
+**Divergence B − A = +25% (+5 items).** On the first nonlinear algebra rung,
+Gemma emitted faithful native ADJ `solve` programs for all 20 prompts. ADJ owned
+the quadratic root computation and returned `solve/solved_roots` for every item,
+including the LaTeX-backed constraints. Artifact:
+`ladder-scorecard.rung3_quadratic_roots.gemma.json`.
+
 ## Layout
 
 ```
@@ -125,6 +138,8 @@ adj-ladder/
                             full local Gemma trace artifact for constraint feasibility
   ladder-scorecard.rung3_linear_systems.gemma.json
                             full local Gemma trace artifact for linear systems
+  ladder-scorecard.rung3_quadratic_roots.gemma.json
+                            full local Gemma trace artifact for quadratic roots
 ```
 
 ## How Arm B answers without computing the answer itself

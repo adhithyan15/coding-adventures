@@ -2,6 +2,19 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.23.0] — 2026-06-29
+
+### Added — Gemma quadratic-roots baseline
+
+- Added **`ladder-scorecard.rung3_quadratic_roots.gemma.json`**, a full 20-item
+  local Gemma-3-4b trace artifact for native ADJ quadratic root-solving
+  questions.
+- Recorded the current two-arm baseline: Gemma alone scored 15/20 with 5 wrong
+  direct answers, while Gemma + ADJ scored 20/20 with zero wrong answers.
+- The artifact confirms all 20 Arm B decompositions were faithful native ADJ
+  `solve` programs and ADJ returned `solve/solved_roots` for every item,
+  including LaTeX-backed quadratic constraints.
+
 ## [0.22.0] — 2026-06-29
 
 ### Added — native engine outcome traces
