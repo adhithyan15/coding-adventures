@@ -81,7 +81,7 @@ use twig_parser::{
     // LANG52: sequential let* bindings
     LetStar,
     Match, MatchPat, NilLit, Program,
-    RecordDef, StrLit, SymLit, TypeAnnotation, UnionDef, VarRef,
+    RecordDef, StrLit, SymLit, TypeAnnotation, TypeExpr, UnionDef, VarRef,
 };
 
 use crate::errors::TwigCompileError;
@@ -127,6 +127,17 @@ fn type_annotation_to_refined_type(ann: &TypeAnnotation) -> RefinedType {
         // are erased to `any` in TW05-A.  The TW05-B type checker will interpret
         // them; for now they're treated as unconstrained.
         TypeAnnotation::Opaque(_) => RefinedType::unrefined(Kind::Any),
+    }
+}
+
+fn type_annotation_static_iir_hint(ann: &TypeAnnotation) -> Option<&'static str> {
+    match ann {
+        TypeAnnotation::Opaque(TypeExpr::Name(name))
+            if matches!(name.as_str(), "str" | "Str" | "string" | "String") =>
+        {
+            Some("str")
+        }
+        _ => None,
     }
 }
 
@@ -386,6 +397,10 @@ pub struct Compiler {
     /// source order. Direct calls that appear after such a definition can carry
     /// the concrete IIR type instead of falling back to `any`.
     fn_return_types: HashMap<String, String>,
+    /// Statically-known parameter types for top-level functions already lowered
+    /// in source order. Used only to keep later direct string arguments on the
+    /// E4 `str_const`/string-expression path when a callee parameter is `str`.
+    fn_param_types: HashMap<String, Vec<String>>,
     /// Names of top-level defines whose RHS is *not* a lambda — looked
     /// up through `global_get` at use sites.
     value_globals: HashSet<String>,
@@ -423,6 +438,7 @@ impl Compiler {
         Compiler {
             fn_globals: HashSet::new(),
             fn_return_types: HashMap::new(),
+            fn_param_types: HashMap::new(),
             value_globals: HashSet::new(),
             escaping_value_globals: HashSet::new(),
             value_global_locals: HashMap::new(),
@@ -711,8 +727,11 @@ impl Compiler {
     fn compile_top_level_lambda(&mut self, name: &str, lam: &Lambda) -> Result<(), TwigCompileError> {
         let mut ctx = FnCtx::new();
         let lam_loc = SourceLoc::new(lam.line, lam.column);
-        for p in &lam.params {
+        for (p, ann) in lam.params.iter().zip(lam.param_annotations.iter()) {
             ctx.locals.insert(p.clone());
+            if let Some(ty) = ann.as_ref().and_then(type_annotation_static_iir_hint) {
+                ctx.record_type(p, ty);
+            }
         }
 
         let mut last: Option<String> = None;
@@ -730,10 +749,17 @@ impl Compiler {
             lam_loc,
         );
 
-        let params = lam
+        let params: Vec<(String, String)> = lam
             .params
             .iter()
-            .map(|p| (p.clone(), "any".to_string()))
+            .zip(lam.param_annotations.iter())
+            .map(|(p, ann)| {
+                let ty = ann
+                    .as_ref()
+                    .and_then(type_annotation_static_iir_hint)
+                    .unwrap_or("any");
+                (p.clone(), ty.to_string())
+            })
             .collect();
 
         // LANG23 PR 23-E — lower TypeAnnotation → RefinedType for every param
@@ -751,7 +777,7 @@ impl Compiler {
 
         self.functions.push(IIRFunction {
             name: name.to_string(),
-            params,
+            params: params.clone(),
             return_type: return_type.clone(),
             register_count: count_registers(&ctx.instrs),
             instructions: ctx.instrs,
@@ -763,6 +789,10 @@ impl Compiler {
             return_refinement,
         });
         self.fn_return_types.insert(name.to_string(), return_type);
+        self.fn_param_types.insert(
+            name.to_string(),
+            params.into_iter().map(|(_, ty)| ty).collect(),
+        );
         Ok(())
     }
 
@@ -977,6 +1007,7 @@ impl Compiler {
                     vec![Operand::Str(value.clone())],
                     "str",
                 ), loc);
+                ctx.record_type(&v, "str");
                 Ok(v)
             }
 
@@ -1648,9 +1679,20 @@ impl Compiler {
                     .get(&v.name)
                     .cloned()
                     .unwrap_or_else(|| "any".to_string());
+                let param_types = self
+                    .fn_param_types
+                    .get(&v.name)
+                    .cloned()
+                    .unwrap_or_default();
                 let mut srcs: Vec<Operand> = vec![Operand::Var(v.name.clone())];
-                for a in &expr.args {
-                    let r = self.compile_expr(a, ctx)?;
+                for (idx, a) in expr.args.iter().enumerate() {
+                    let r = if param_types.get(idx).map(|ty| ty.as_str()) == Some("str")
+                        && self.can_compile_e4_string_expr(a, ctx)
+                    {
+                        self.compile_e4_string_expr(a, ctx)?
+                    } else {
+                        self.compile_expr(a, ctx)?
+                    };
                     srcs.push(Operand::Var(r));
                 }
                 let dest = ctx.fresh_var("r");

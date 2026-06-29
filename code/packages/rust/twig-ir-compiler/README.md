@@ -41,8 +41,11 @@ known string and known index expressions lowers to `str_slice`, so its result
 can feed `string-ref` through `str_index`. Direct top-level functions whose
 final expression already infers a concrete type also preserve that return type
 at later direct call sites, so `(define (strlen) (string-length "HELLO"))
-(strlen)` returns through a typed `call [i64]`. Reassignable strings, captured
-strings, parameter-derived strings, and broader dynamic string values remain
+(strlen)` returns through a typed `call [i64]`. Bare `str`/`string` parameter
+annotations on top-level functions also seed concrete `str` IIR params, so
+`(define (strlen (s : str)) (string-length s)) (strlen "HELLO")` lowers without
+dynamic string builtins. Reassignable strings, captured strings, unannotated or
+closure-derived string parameters, and broader dynamic string values remain
 follow-up work.
 
 Twig remains dynamically typed, so functions keep `type_status = Untyped` and
@@ -58,7 +61,7 @@ The compiler decides at compile time:
 |-----------------------------|---------------------------------------------|
 | Top-level user fn           | `call <name>, ...args`, using the known return type when the function was already lowered in source order |
 | Typed arithmetic (`+`,`-`,`*`,`/`) on `i64` args | a chain of typed `add`/`sub`/`mul`/`div` |
-| Direct literal, immutable top-level, or lexical-local string metadata (`string-length`, `string-ref`, `substring`, `string=?`, `string<?`, `string>?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`, with typed index arithmetic for `string-ref` and `substring` bounds |
+| Direct literal, immutable top-level, lexical-local, or annotated top-level-parameter string metadata (`string-length`, `string-ref`, `substring`, `string=?`, `string<?`, `string>?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`, with typed index arithmetic for `string-ref` and `substring` bounds |
 | Builtin (`cons`, `<`, …)    | `call_builtin <name>, ...args`              |
 | Anything else (locals etc.) | `call_builtin "apply_closure", h, ...args`  |
 

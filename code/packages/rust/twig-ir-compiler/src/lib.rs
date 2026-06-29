@@ -39,10 +39,11 @@
 //!   expression becomes `main`'s return; programs with no expression
 //!   return `nil`.
 //!
-//! All instructions carry `type_hint = "any"` (Twig is dynamically
-//! typed); functions therefore have `type_status = Untyped`.  The
-//! vm-core profiler fills in observed types at runtime, which the
-//! JIT can specialise on later.
+//! Twig remains dynamically typed, so functions keep `type_status = Untyped`
+//! and dynamic paths carry `type_hint = "any"`.  LANG-FULL fast paths stamp
+//! concrete hints where source forms make the type unambiguous (literals, typed
+//! arithmetic, E4 string ops, and selected annotations).  The vm-core profiler
+//! fills in observed types at runtime, which the JIT can specialise on later.
 //!
 //! ## Apply-site dispatch (compile-time)
 //!
