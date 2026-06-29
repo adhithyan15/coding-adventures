@@ -1,5 +1,12 @@
 # Changelog — vm-core
 
+## [0.14.0] — 2026-06-28 (LANG-FULL AL8-trig — `f64_sin/cos/ln/exp` VM dispatch handlers)
+
+Added `handle_f64_transcendental` generic helper and four handlers registered in the
+dispatch table: `f64_sin` → `f64::sin`, `f64_cos` → `f64::cos`, `f64_ln` → `f64::ln`,
+`f64_exp` → `f64::exp`.  Each extracts the first operand as `f64`, applies the function,
+and stores the result.  JIT inherits all four via the standard `lookup_standard` fallback.
+
 ## [0.13.0] — 2026-06-28 (LANG-FULL AL8-sqrt — `f64_sqrt` VM dispatch handler)
 
 Added `handle_f64_sqrt` to the dispatch table.  The handler extracts the first

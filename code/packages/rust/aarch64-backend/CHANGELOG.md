@@ -1,5 +1,13 @@
 # Changelog — `aarch64-backend`
 
+## 0.16.0 — 2026-06-28 — `f64_sin/cos/ln/exp` via libm `BL` (LANG-FULL AL8-trig)
+
+Transcendentals call libm via AArch64's `BL` instruction with an external reloc:
+`ldr_d D0,[src]; BL sin/cos/log/exp; str_d D0,[dest]`.
+AAPCS64 passes and returns f64 in D0, so no register adjustment is needed.
+Mapping: `f64_ln` → `BL log` (libm natural log is `log`, not `ln`).
+libm is pre-linked on macOS (`-lSystem`) and Linux (`-lm`).
+
 ## 0.15.0 — 2026-06-28 — `f64_sqrt` via `FSQRT` hardware instruction (LANG-FULL AL8-sqrt)
 
 The aarch64 backend now lowers `f64_sqrt dest <- src` to:

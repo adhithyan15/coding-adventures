@@ -3,6 +3,15 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.25.0] — 2026-06-28 (LANG-FULL AL8-trig — transcendentals via host imports)
+
+WASM has no built-in sin/cos/log/exp opcodes; the four ops are resolved via
+host-imported functions `env.__sin`, `env.__cos`, `env.__ln`, `env.__exp`
+(each `f64 → f64`).  `collect_module_features` detects usage; Step 3 assigns
+import indices; Step 4 injects `FuncType` + `Import` entries; `emit_instr` emits
+`local.get arg; call <import_idx>; local.set dest`.  The test host (`PrintHost`
+in `lang_matrix.rs`) resolves these to Rust's `f64::sin/cos/ln/exp`.
+
 ## [0.24.0] — 2026-06-28 (LANG-FULL AL8-sqrt — `f64_sqrt` lowers to `f64.sqrt`)
 
 Added `F64_SQRT = 0x9F` constant (WASM MVP opcode) to `codegen.rs` and an

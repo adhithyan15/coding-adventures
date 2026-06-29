@@ -1,6 +1,6 @@
 [package]
 name = "algol-iir-compiler"
-version = "0.17.0"
+version = "0.18.0"
 edition = "2021"
 description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.17.0 (AL8-sqrt): sqrt(E) lowers to the f64_sqrt IIR op — hardware sqrt on all 7 backends; v0.16.0 proves AL4 string equality and ordering."
 
