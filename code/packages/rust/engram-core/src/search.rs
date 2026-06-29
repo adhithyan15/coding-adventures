@@ -1267,9 +1267,7 @@ fn clause_matches(
             state_matches(*state, progress, card_sources, metadata, now)
         }
         SearchClauseKind::Flag(filter) => flag_matches(*filter, progress, card_sources),
-        SearchClauseKind::Marked(expected) => {
-            progress.is_some_and(|progress| progress.marked_at.is_some()) == *expected
-        }
+        SearchClauseKind::Marked(expected) => marked_matches(*expected, progress, note),
         SearchClauseKind::Property(filter) => {
             property_matches(filter, progress, card_sources, metadata, reviews, now)
         }
@@ -1996,6 +1994,16 @@ fn anki_card_flag(flags: i64) -> Option<CardFlag> {
         7 => Some(CardFlag::Purple),
         _ => None,
     }
+}
+
+fn marked_matches(expected: bool, progress: Option<&CardProgress>, note: Option<&Note>) -> bool {
+    let marked = progress.is_some_and(|progress| progress.marked_at.is_some())
+        || note.is_some_and(|note| {
+            note.tags
+                .iter()
+                .any(|tag| tag.eq_ignore_ascii_case("marked"))
+        });
+    marked == expected
 }
 
 fn property_matches(
@@ -3149,6 +3157,56 @@ mod tests {
         assert_eq!(ids_for("flag:1"), vec!["flagged-new"]);
         assert!(ids_for("is:due").is_empty());
         assert!(ids_for("is:review").is_empty());
+    }
+
+    #[test]
+    fn marked_filters_use_anki_marked_note_tag() {
+        let note = |id: &str, tags: Vec<&str>| Note {
+            id: id.to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "tamil".to_string(),
+            fields: vec![NoteFieldValue {
+                field_id: "front".to_string(),
+                value: id.to_string(),
+            }],
+            tags: tags.into_iter().map(str::to_string).collect(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |note_id: &str| {
+            let mut card = card(&format!("{note_id}::forward"), "tamil", note_id, note_id);
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            note_types: vec![note_type()],
+            notes: vec![
+                note("marked-note", vec!["Marked"]),
+                note("plain-note", vec![]),
+            ],
+            cards: vec![card_for_note("marked-note"), card_for_note("plain-note")],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("marked:true"), vec!["marked-note::forward"]);
+        assert_eq!(ids_for("is:marked"), vec!["marked-note::forward"]);
+        assert_eq!(ids_for("marked:false"), vec!["plain-note::forward"]);
+        assert_eq!(ids_for("is:unmarked"), vec!["plain-note::forward"]);
     }
 
     #[test]
