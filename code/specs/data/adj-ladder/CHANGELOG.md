@@ -2,6 +2,19 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.18.0] — 2026-06-29
+
+### Added — Gemma derived-probability baseline
+
+- Added **`ladder-scorecard.rung3_derived_probability_decisions.gemma.json`**, a
+  full 20-item local Gemma-3-4b trace artifact for the newest multi-step
+  derived-evidence probability rung.
+- Recorded the current two-arm baseline: Gemma alone scored 18/20 with 2 wrong
+  direct answers, while Gemma + ADJ scored 20/20 with zero wrong answers.
+- The artifact confirms all 20 Arm B decompositions were faithful native ADJ
+  programs, giving an inspectable messy-input → Gemma program → ADJ execution
+  trail for this rung.
+
 ## [0.17.0] — 2026-06-28
 
 ### Added — real Gemma run trace controls
