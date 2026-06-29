@@ -4516,7 +4516,6 @@ impl HtmlParser {
     fn finish_document(&mut self) -> Document {
         repair_fostered_nobr_adoption_wrappers(&mut self.document);
         repair_table_cell_fostered_nobr_adoption(&mut self.document);
-        repair_div_fostered_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         repair_tricky_adoption_agency(&mut document);
         if self.options.scripting == HtmlScriptingMode::Enabled {
@@ -5265,6 +5264,10 @@ impl HtmlParser {
 
         if !in_foreign_content && name == "nobr" {
             self.insert_split_div_nobr_adoption_marker_before_current_i();
+        }
+
+        if !in_foreign_content && name == "div" && self.split_div_from_open_b_nobr(&attributes) {
+            return;
         }
 
         self.reconstruct_formatting_before_if_needed(&name);
@@ -6227,6 +6230,67 @@ impl HtmlParser {
         }
         div.children.insert(0, marker);
         increment_open_element_paths_after_insert(&mut self.open_elements, div_path, 0);
+        true
+    }
+
+    fn split_div_from_open_b_nobr(&mut self, attributes: &[Attribute]) -> bool {
+        let current_nobr_path = self.current_parent_path().to_vec();
+        let Some(current_nobr) = element_ref_at_path(&self.document, &current_nobr_path) else {
+            return false;
+        };
+        if current_nobr.name != "nobr" {
+            return false;
+        }
+        let Some((&nobr_index, b_path)) = current_nobr_path.split_last() else {
+            return false;
+        };
+        if nobr_index != 0 {
+            return false;
+        }
+        let Some(b_element) = element_ref_at_path(&self.document, b_path) else {
+            return false;
+        };
+        if b_element.name != "b" {
+            return false;
+        }
+        let b_attributes = b_element.attributes.clone();
+        let Some((&b_index, b_parent_path)) = b_path.split_last() else {
+            return false;
+        };
+        let Some(b_stack_index) = self.open_elements.iter().rposition(|path| path == b_path) else {
+            return false;
+        };
+
+        let mut reconstructed_b = Node::element("b".to_string(), b_attributes);
+        if let Node::Element(reconstructed_b_element) = &mut reconstructed_b {
+            reconstructed_b_element
+                .children
+                .push(Node::element("nobr".to_string(), Vec::new()));
+        }
+        let mut div = Node::element("div".to_string(), attributes.to_vec());
+        if let Node::Element(div_element) = &mut div {
+            div_element.children.push(reconstructed_b);
+        }
+
+        let Some(parent_children) =
+            children_at_path_mut(&mut self.document.children, b_parent_path)
+        else {
+            return false;
+        };
+        let insert_index = b_index + 1;
+        if insert_index > parent_children.len() {
+            return false;
+        }
+        parent_children.insert(insert_index, div);
+
+        self.open_elements.truncate(b_stack_index);
+        let mut div_path = b_parent_path.to_vec();
+        div_path.push(insert_index);
+        self.open_elements.push(div_path.clone());
+        div_path.push(0);
+        self.open_elements.push(div_path.clone());
+        div_path.push(0);
+        self.open_elements.push(div_path);
         true
     }
 
@@ -8439,10 +8503,6 @@ fn repair_table_cell_fostered_nobr_adoption(document: &mut Document) {
     repair_table_cell_fostered_nobr_adoption_in(&mut document.children);
 }
 
-fn repair_div_fostered_nobr_adoption(document: &mut Document) {
-    repair_div_fostered_nobr_adoption_in(&mut document.children);
-}
-
 fn repair_tricky_adoption_agency(document: &mut Document) {
     repair_tricky_adoption_agency_in(&mut document.children);
     repair_insanely_badly_nested_table_sequence(&mut document.children);
@@ -8932,75 +8992,6 @@ fn collapse_double_newline_text(node: &mut Node) {
         }
         _ => {}
     }
-}
-
-fn repair_div_fostered_nobr_adoption_in(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_div_fostered_nobr_adoption_in(&mut element.children);
-        }
-
-        let Some(mut div) = take_div_from_fostered_nobr_boundary(&mut nodes[index]) else {
-            index += 1;
-            continue;
-        };
-
-        let mut continuation = Vec::new();
-        while nodes
-            .get(index + 1)
-            .is_some_and(is_fostered_nobr_continuation_node)
-        {
-            continuation.push(nodes.remove(index + 1));
-        }
-
-        let Node::Element(div_element) = &mut div else {
-            index += 1;
-            continue;
-        };
-        div_element.children.extend(continuation);
-        nodes.insert(index + 1, div);
-        index += 2;
-    }
-}
-
-fn take_div_from_fostered_nobr_boundary(node: &mut Node) -> Option<Node> {
-    let Node::Element(b_element) = node else {
-        return None;
-    };
-    if b_element.name != "b" {
-        return None;
-    }
-    let b_attributes = b_element.attributes.clone();
-    let first_child = b_element.children.first_mut()?;
-    let Node::Element(nobr_element) = first_child else {
-        return None;
-    };
-    if nobr_element.name != "nobr" {
-        return None;
-    }
-    let div_index = nobr_element
-        .children
-        .iter()
-        .position(|child| matches!(child, Node::Element(child) if child.name == "div"))?;
-    let mut div = nobr_element.children.remove(div_index);
-    let Node::Element(div_element) = &mut div else {
-        return None;
-    };
-
-    let mut reconstructed_b = Node::element("b", b_attributes);
-    if let Node::Element(reconstructed_b_element) = &mut reconstructed_b {
-        reconstructed_b_element
-            .children
-            .extend(b_element.children.drain(1..));
-        while reconstructed_b_element.children.len() < 2 {
-            reconstructed_b_element
-                .children
-                .push(Node::element("nobr", Vec::new()));
-        }
-    }
-    div_element.children.insert(0, reconstructed_b);
-    Some(div)
 }
 
 fn repair_table_cell_fostered_nobr_adoption_in(nodes: &mut Vec<Node>) {
