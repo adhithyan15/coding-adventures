@@ -19,6 +19,27 @@ provenance is wired through the bridge, this test's gap assertion flips and
 signals that the fold lineage assertion should be promoted. No production code
 change.
 
+## [0.224.0] - 2026-06-27
+
+### Added — differential **soundness** conformance harness (`tests/conformance.rs`)
+
+A new test harness that checks the SIMPLE optimizer is **value-preserving**, not
+just byte-stable. For a corpus of source expressions it runs closurec, parses
+the optimized output with a self-contained literal evaluator, and asserts the
+folded value equals the expression's true runtime value (a canonical,
+`Object.is`-faithful golden generated offline by Node/V8 — **CI runs no JS
+engine**). Numbers reuse closurec's V8-faithful `format_js_number`, so the
+canonical form is the raw token (no float-formatting mismatch). Declined/partial
+outputs have no literal value to check and are counted as `skipped` with a loud
+end-of-test summary (no silent coverage holes).
+
+This is the soundness net that byte fixtures can't provide: it value-checks
+21/23 seed entries against the oracle and pins the two known negative-zero
+divergences (`KNOWN_DIVERGENCES`) so the day the underlying unary-minus `-0`→`0`
+flattening bug is fixed, the test tells us to promote those entries. Seed corpus
+covers numbers, string methods, `split`, `String.fromCharCode`, `Number.is*`,
+`Array.isArray`/`of`, `Object.keys`/`entries`/`fromEntries`, `Boolean`/`String`/
+`Number`, and `isNaN`/`isFinite`. Generator + docs under `tests/conformance/`.
 ## [0.223.0] - 2026-06-27
 
 ### Added — SIMPLE/ADVANCED fold static `Math.max(…)` / `Math.min(…)` → numeric

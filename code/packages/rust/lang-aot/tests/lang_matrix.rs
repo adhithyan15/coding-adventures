@@ -1171,6 +1171,39 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a **string-typed value parameter** (LANG-FULL AL4-str-params).
+    // `integer procedure echo(s); value s; string s; print(s)` declares a
+    // procedure that accepts a string by value and prints it.  The call
+    // `echo('HELLO')` passes the literal through the shared `call` IIR op;
+    // inside `echo`, `s` is a `str`-typed IIR parameter already seeded into
+    // `literal_string_slots`, so `print(s)` lowers to `print_str s` on all
+    // backends — the same path ALGOL literal-string `print` uses (AL4).
+    // The return value (implicitly 0, the integer default) is discarded.
+    // Backends: no new backend code; `str`-typed procedure parameters were
+    // already proven by Twig (TW4 `(define (strlen (s : str)) …)`).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer procedure echo(s); value s; string s; print(s); \
+               echo('HELLO') end",
+        expect: Expect::Stdout("HELLO"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a named string variable passed to a string parameter (AL4-str-params).
+    // The outer block declares `string msg`, initialises it with a literal, then
+    // calls `say(msg)`.  This proves the call site can pass a *named* E4 string
+    // slot (not just an inline literal) as a `str`-typed actual argument, and
+    // the callee's `print(s)` still lowers to `print_str` — the E4 chain is
+    // end-to-end on all 7 backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string msg; \
+               integer procedure say(s); value s; string s; print(s); \
+               msg := 'HI'; say(msg) end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
     // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)

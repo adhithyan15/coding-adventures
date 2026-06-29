@@ -78,6 +78,50 @@ fn jnum(x: f64) -> String {
     }
 }
 
+/// Render the `let`-bound derived values as a JSON array, one object per
+/// distinct binding name, each carrying the engine-computed magnitude plus the
+/// [`Dimension`](logic_engine::dimension::Dimension) tag the engine *inferred*
+/// for it (`"km/h"`, `"mol/l"`, `"usd"`, `"scalar"`, …).
+///
+/// This is the audit channel for dimensional analysis: a downstream reader (a
+/// grader, a UI, a proof checker) sees not just *80* but *80 km/h*, so it can
+/// reject a numerically-right-but-unit-wrong answer. The dimension is not
+/// asserted by the model — it is the result of [`Dimension::combine`] applied
+/// at every binary op while the `let` was evaluated (so `quantity(240, km) /
+/// quantity(3, h)` reports `km/h`, never a guess).
+///
+/// A rebinding leaves two entries in the engine's table (latest wins for
+/// lookups); we mirror that here by emitting only the most-recently-bound value
+/// per name, preserving first-seen order so the output is stable.
+fn derived_json(kb: &KnowledgeBase) -> String {
+    let all = kb.derived_bindings();
+    // First-seen order, but the value/dim are the LATEST binding for that name.
+    let mut order: Vec<&str> = Vec::new();
+    for d in all {
+        if !order.iter().any(|n| *n == d.name.as_str()) {
+            order.push(d.name.as_str());
+        }
+    }
+    let objs: Vec<String> = order
+        .iter()
+        .filter_map(|name| kb.derived_for(name))
+        .map(|d| {
+            let exact = match d.exact {
+                Some(r) => format!(",\"exact\":{{\"num\":{},\"den\":{}}}", r.num, r.den),
+                None => String::new(),
+            };
+            format!(
+                "{{\"name\":\"{}\",\"value\":{},\"dim\":\"{}\"{}}}",
+                esc(&d.name),
+                jnum(d.value),
+                esc(&d.dim.tag()),
+                exact
+            )
+        })
+        .collect();
+    format!("[{}]", objs.join(","))
+}
+
 fn trust(t: &TrustTier) -> &'static str {
     match t {
         TrustTier::Consensus => "consensus",
@@ -568,8 +612,18 @@ fn main() -> ExitCode {
         None => String::new(),
     };
 
+    // `let`-bound derived values with their inferred dimensions. Omitted when
+    // the program binds nothing (the common rulebook/recall case), so existing
+    // output is byte-for-byte unchanged unless a `let` is present.
+    let derived = derived_json(&lowered.kb);
+    let derived_section = if derived == "[]" {
+        String::new()
+    } else {
+        format!(",\"derived\":{}", derived)
+    };
+
     println!(
-        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}}}",
+        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}{}}}",
         queries.join(","),
         ranked.join(","),
         decision,
@@ -577,7 +631,8 @@ fn main() -> ExitCode {
         check_section,
         optimize_section,
         recall_section,
-        governing_section
+        governing_section,
+        derived_section
     );
     ExitCode::SUCCESS
 }

@@ -1,0 +1,365 @@
+//! The AsciiMath parser — tokens → the neutral [`MathExpr`].
+//!
+//! A precedence-climbing recursive-descent parser. Precedence, lowest binds loosest:
+//!
+//! ```text
+//!   relation   a = b   a <= b   a != b              (left-assoc)
+//!   add/sub    a + b   a - b
+//!   mul        a * b   a xx b   a cdot b   a -: b    and JUXTAPOSITION (a b ⇒ a·b)
+//!   frac       a / b                                 (binds the adjacent simple exprs)
+//!   unary      -a   +a                               (a sign *run* is folded with a loop)
+//!   script     a^b   a_b   a_b^c                     (operand is one atom)
+//!   atom       number | symbol | f(x) | sqrt x | root(n)(x) | (group) | "text"
+//! ```
+//!
+//! ## Two safety properties (both deliberate)
+//! * **Bounded recursion.** Only *nesting* (groups, scripts, function/root arguments)
+//!   recurses, and every such descent charges [`MAX_DEPTH`]; adversarial nesting therefore
+//!   returns a spanned error instead of overflowing the stack.
+//! * **Loops for chains.** Left-associative chains (`a+a+…`, juxtaposition, `a/a/…`) and
+//!   sign runs (`---a`) are built with `while`/`for` loops, *not* recursion — so an
+//!   arbitrarily long chain costs O(1) parser stack. (The neutral tree it builds is still
+//!   left-nested; dropping a *pathologically* deep such tree is a separate concern tracked
+//!   for the math-frontend AST, not introduced here.)
+
+use crate::token::{tokenize, Token, TokenKind};
+use math_frontend::{BinOp, Func, FrontendError, MathExpr, Number, RelOp, UnaryOp};
+
+/// Maximum *nesting* depth before we refuse with a spanned error (never overflow).
+///
+/// Each nesting level descends ~9 parser functions (`relation→…→atom→group`), so the cap is
+/// kept well below what would exhaust a 2 MiB test-thread stack — the guard must fire *before*
+/// the stack does. Real AsciiMath never nests anywhere near this deep; adversarial input that
+/// does gets a clean spanned error instead of an abort.
+const MAX_DEPTH: usize = 64;
+
+/// Parse an AsciiMath source string into the neutral [`MathExpr`]. Total and panic-free.
+pub fn parse(src: &str) -> Result<MathExpr, FrontendError> {
+    let toks = tokenize(src)?;
+    let mut p = Parser { toks: &toks, pos: 0, depth: 0 };
+    let e = p.parse_relation()?;
+    match p.peek() {
+        TokenKind::Eof => Ok(e),
+        _ => Err(p.error_here("unexpected trailing input")),
+    }
+}
+
+struct Parser<'a> {
+    toks: &'a [Token],
+    pos: usize,
+    depth: usize,
+}
+
+impl Parser<'_> {
+    fn peek(&self) -> &TokenKind {
+        // `tokenize` always appends Eof, so indexing the last token is safe; the fallback
+        // keeps this total even if that invariant were ever violated.
+        self.toks.get(self.pos).map(|t| &t.kind).unwrap_or(&TokenKind::Eof)
+    }
+
+    fn span_here(&self) -> (usize, usize) {
+        self.toks
+            .get(self.pos)
+            .or_else(|| self.toks.last())
+            .map(|t| t.span)
+            .unwrap_or((0, 0))
+    }
+
+    fn advance(&mut self) {
+        if self.pos < self.toks.len() {
+            self.pos += 1;
+        }
+    }
+
+    fn error_here(&self, msg: impl Into<String>) -> FrontendError {
+        FrontendError::new("asciimath", msg, self.span_here())
+    }
+
+    /// Enter one level of *nesting* (the recursion points). Returns an error at the cap so
+    /// deeply-nested input fails cleanly rather than overflowing the call stack.
+    fn enter(&mut self) -> Result<(), FrontendError> {
+        self.depth += 1;
+        if self.depth > MAX_DEPTH {
+            Err(self.error_here("expression nested too deeply"))
+        } else {
+            Ok(())
+        }
+    }
+    fn exit(&mut self) {
+        self.depth -= 1;
+    }
+
+    // ---- relation < add < mul < frac < unary < script < atom --------------------
+
+    fn parse_relation(&mut self) -> Result<MathExpr, FrontendError> {
+        let mut lhs = self.parse_add()?;
+        while let Some(op) = rel_of(self.peek()) {
+            self.advance();
+            let rhs = self.parse_add()?;
+            lhs = MathExpr::Rel(op, Box::new(lhs), Box::new(rhs));
+        }
+        Ok(lhs)
+    }
+
+    fn parse_add(&mut self) -> Result<MathExpr, FrontendError> {
+        let mut lhs = self.parse_mul()?;
+        loop {
+            let op = match self.peek() {
+                TokenKind::Plus => BinOp::Add,
+                TokenKind::Minus => BinOp::Sub,
+                _ => break,
+            };
+            self.advance();
+            let rhs = self.parse_mul()?;
+            lhs = MathExpr::Bin(op, Box::new(lhs), Box::new(rhs));
+        }
+        Ok(lhs)
+    }
+
+    fn parse_mul(&mut self) -> Result<MathExpr, FrontendError> {
+        let mut lhs = self.parse_frac()?;
+        loop {
+            // Explicit multiplicative operators: `*`/`**`, `xx`, `cdot`, `/`-as-`-:`, `div`.
+            let op = match self.peek() {
+                TokenKind::Star => Some(BinOp::Mul),
+                TokenKind::Div => Some(BinOp::Div),
+                TokenKind::Ident(w) if w == "xx" || w == "cdot" => Some(BinOp::Mul),
+                TokenKind::Ident(w) if w == "div" => Some(BinOp::Div),
+                _ => None,
+            };
+            if let Some(op) = op {
+                self.advance();
+                let rhs = self.parse_frac()?;
+                lhs = MathExpr::Bin(op, Box::new(lhs), Box::new(rhs));
+                continue;
+            }
+            // Implicit multiplication: a new simple expression begins with no operator.
+            if self.starts_simple() {
+                let rhs = self.parse_frac()?;
+                lhs = MathExpr::Bin(BinOp::Mul, Box::new(lhs), Box::new(rhs));
+                continue;
+            }
+            break;
+        }
+        Ok(lhs)
+    }
+
+    fn parse_frac(&mut self) -> Result<MathExpr, FrontendError> {
+        let mut lhs = self.parse_unary()?;
+        while matches!(self.peek(), TokenKind::Slash) {
+            self.advance();
+            let rhs = self.parse_unary()?;
+            lhs = MathExpr::Frac(Box::new(lhs), Box::new(rhs));
+        }
+        Ok(lhs)
+    }
+
+    fn parse_unary(&mut self) -> Result<MathExpr, FrontendError> {
+        // Collect a sign run with a loop (no recursion → `------x` can't overflow).
+        let mut signs: Vec<UnaryOp> = Vec::new();
+        loop {
+            match self.peek() {
+                TokenKind::Minus => { signs.push(UnaryOp::Neg); self.advance(); }
+                TokenKind::Plus => { signs.push(UnaryOp::Pos); self.advance(); }
+                _ => break,
+            }
+        }
+        let mut e = self.parse_script()?;
+        for op in signs.into_iter().rev() {
+            e = MathExpr::Unary(op, Box::new(e));
+        }
+        Ok(e)
+    }
+
+    fn parse_script(&mut self) -> Result<MathExpr, FrontendError> {
+        let mut base = self.parse_atom()?;
+        // AsciiMath order: subscript then superscript (`a_i^2` ⇒ (a_i)^2). Each operand is
+        // a single atom (so `x^2y` is (x^2)·y, the AsciiMath reading).
+        if matches!(self.peek(), TokenKind::Underscore) {
+            self.advance();
+            let sub = self.parse_atom()?;
+            base = MathExpr::Subscript(Box::new(base), Box::new(sub));
+        }
+        if matches!(self.peek(), TokenKind::Caret) {
+            self.advance();
+            let sup = self.parse_atom()?;
+            base = MathExpr::Bin(BinOp::Pow, Box::new(base), Box::new(sup));
+        }
+        Ok(base)
+    }
+
+    /// Does the upcoming token begin a *simple expression* (an atom)? Drives implicit
+    /// multiplication — and excludes the operator-words (`xx`/`cdot`/`div`) so they are not
+    /// mistaken for operands.
+    fn starts_simple(&self) -> bool {
+        match self.peek() {
+            TokenKind::Num(_) | TokenKind::Text(_) => true,
+            TokenKind::LParen | TokenKind::LBracket | TokenKind::LBrace => true,
+            TokenKind::Ident(w) => !matches!(w.as_str(), "xx" | "cdot" | "div"),
+            _ => false,
+        }
+    }
+
+    fn parse_atom(&mut self) -> Result<MathExpr, FrontendError> {
+        self.enter()?;
+        let result = self.parse_atom_inner();
+        self.exit();
+        result
+    }
+
+    fn parse_atom_inner(&mut self) -> Result<MathExpr, FrontendError> {
+        match self.peek().clone() {
+            TokenKind::Num(s) => {
+                self.advance();
+                match Number::parse(&s) {
+                    Some(n) => Ok(MathExpr::Number(n)),
+                    None => Err(self.error_here(format!("invalid number literal {s:?}"))),
+                }
+            }
+            TokenKind::Text(s) => {
+                self.advance();
+                Ok(MathExpr::Text(s))
+            }
+            TokenKind::LParen | TokenKind::LBracket | TokenKind::LBrace => self.parse_group(),
+            TokenKind::Ident(word) => self.parse_ident_atom(&word),
+            _ => Err(self.error_here("expected a number, symbol, or '('")),
+        }
+    }
+
+    /// A bracketed group: parentheses are *grouping only* — the delimiter style is dropped
+    /// and the inner expression is returned directly (so `sqrt(x)` ≡ `sqrt x` and
+    /// `(1)/(2)` ≡ `1/2`). Any closing bracket is accepted (AsciiMath treats them loosely).
+    fn parse_group(&mut self) -> Result<MathExpr, FrontendError> {
+        self.advance(); // opening bracket
+        let inner = self.parse_relation()?;
+        match self.peek() {
+            TokenKind::RParen | TokenKind::RBracket | TokenKind::RBrace => {
+                self.advance();
+                Ok(inner)
+            }
+            _ => Err(self.error_here("expected a closing bracket")),
+        }
+    }
+
+    fn parse_ident_atom(&mut self, word: &str) -> Result<MathExpr, FrontendError> {
+        // Function application: `sin x`, `ln(x)` — the argument is the next atom.
+        if let Some(func) = func_of(word) {
+            self.advance();
+            let arg = self.parse_atom()?;
+            return Ok(MathExpr::Call { func, arg: Box::new(arg) });
+        }
+        match word {
+            "sqrt" => {
+                self.advance();
+                let radicand = self.parse_atom()?;
+                Ok(MathExpr::Root { degree: None, radicand: Box::new(radicand) })
+            }
+            "root" => {
+                // `root(n)(x)` or `root n x`: degree then radicand, each one atom.
+                self.advance();
+                let degree = self.parse_atom()?;
+                let radicand = self.parse_atom()?;
+                Ok(MathExpr::Root { degree: Some(Box::new(degree)), radicand: Box::new(radicand) })
+            }
+            "xx" | "cdot" | "div" => {
+                // A multiplicative operator with no left operand.
+                Err(self.error_here(format!("'{word}' needs a left operand")))
+            }
+            _ => {
+                self.advance();
+                if let Some(canon) = constant_of(word) {
+                    Ok(MathExpr::Symbol(canon.to_string()))
+                } else if word.chars().count() == 1 {
+                    Ok(MathExpr::Symbol(word.to_string()))
+                } else {
+                    // A bare multi-letter run is the implicit product of its single letters
+                    // (`xy` ⇒ x·y) — the AsciiMath convention. Built left-assoc with a loop.
+                    let mut chars = word.chars();
+                    let first = chars.next().expect("identifier is non-empty");
+                    let mut e = MathExpr::Symbol(first.to_string());
+                    for ch in chars {
+                        e = MathExpr::Bin(
+                            BinOp::Mul,
+                            Box::new(e),
+                            Box::new(MathExpr::Symbol(ch.to_string())),
+                        );
+                    }
+                    Ok(e)
+                }
+            }
+        }
+    }
+}
+
+/// Relational operator for a token, if it is one (`=`, `!=`, `<`, `<=`, `>`, `>=`, `~~`, `-=`).
+fn rel_of(kind: &TokenKind) -> Option<RelOp> {
+    Some(match kind {
+        TokenKind::Eq => RelOp::Eq,
+        TokenKind::Ne => RelOp::Ne,
+        TokenKind::Lt => RelOp::Lt,
+        TokenKind::Le => RelOp::Le,
+        TokenKind::Gt => RelOp::Gt,
+        TokenKind::Ge => RelOp::Ge,
+        TokenKind::Approx => RelOp::Approx,
+        TokenKind::Equiv => RelOp::Equiv,
+        _ => return None,
+    })
+}
+
+/// Map an identifier to a named [`Func`], or `None` if it is not a known function.
+fn func_of(word: &str) -> Option<Func> {
+    Some(match word {
+        "sin" => Func::Sin,
+        "cos" => Func::Cos,
+        "tan" => Func::Tan,
+        "cot" => Func::Cot,
+        "sec" => Func::Sec,
+        "csc" => Func::Csc,
+        "arcsin" => Func::Asin,
+        "arccos" => Func::Acos,
+        "arctan" => Func::Atan,
+        "sinh" => Func::Sinh,
+        "cosh" => Func::Cosh,
+        "tanh" => Func::Tanh,
+        "ln" => Func::Ln,
+        "log" => Func::Log,
+        "exp" => Func::Exp,
+        "min" => Func::Min,
+        "max" => Func::Max,
+        "gcd" => Func::Gcd,
+        "lcm" => Func::Lcm,
+        "det" => Func::Det,
+        _ => return None,
+    })
+}
+
+/// Map an identifier to a canonical constant/symbol name, or `None` for an ordinary variable.
+/// Greek names are kept verbatim; `oo`/`infty` canonicalize to `infinity`.
+fn constant_of(word: &str) -> Option<&'static str> {
+    Some(match word {
+        "pi" => "pi",
+        "tau" => "tau",
+        "theta" => "theta",
+        "alpha" => "alpha",
+        "beta" => "beta",
+        "gamma" => "gamma",
+        "delta" => "delta",
+        "epsilon" => "epsilon",
+        "zeta" => "zeta",
+        "eta" => "eta",
+        "iota" => "iota",
+        "kappa" => "kappa",
+        "lambda" => "lambda",
+        "mu" => "mu",
+        "nu" => "nu",
+        "xi" => "xi",
+        "rho" => "rho",
+        "sigma" => "sigma",
+        "phi" => "phi",
+        "chi" => "chi",
+        "psi" => "psi",
+        "omega" => "omega",
+        "oo" | "infty" => "infinity",
+        _ => return None,
+    })
+}

@@ -58,8 +58,11 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     # RHEUM/ONCO/HISTO are Tier-2 organ-system domains where a subject binds several
     # answers, so the board scores the top binding per subject (the libraries + their
     # tests cover all edges).
+    # +33 with the 7 newly-wired anatomy/physiology domains (heart-valve 4, cranial-nerve 7,
+    # spinal-tract 6, lung-volume 5, acid-base 4, coronary-territory 2, nephron-transporter 5):
+    # 139 → 172 covered recall items, all over one merged store.
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 139
+    assert len(recall_correct) == 172
     assert by_id["fabry_enzyme"].outcome == "correct"               # IEM
     assert by_id["thiamine_disease"].answer == "beriberi"           # vitamin
     assert by_id["ida_mcv"].answer == "microcytic"                  # anemia
@@ -128,6 +131,15 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["resp_silica_dx"].trust == "authoritative"      # ADJ-only edge, grounded inline
     assert by_id["resp_coal_dx"].answer == "coal_workers_pneumoconiosis"  # primary-source-first: no deferral
     assert by_id["resp_coal_dx"].trust == "authoritative"        # grounded from CDC/NIOSH (cdc.gov), not StatPearls
+    # Newly-wired anatomy/physiology domains (grounded libraries now exercised by the board):
+    assert by_id["hv_aortic"].answer == "right_second_intercostal_space"  # heart-valve — best_heard_at
+    assert by_id["cn_optic"].answer == "vision"                  # cranial-nerve — cranial_nerve_function
+    assert by_id["st_spinothal"].answer == "pain_and_temperature"  # spinal-tract — carries
+    assert by_id["lv_tidal"].answer == "air_per_respiratory_cycle"  # lung-volume — is_defined_as
+    assert by_id["ab_met_acidosis"].answer == "respiratory_compensation"  # acid-base — compensated_by
+    assert by_id["ct_lcx"].answer == "lateral_wall"              # coronary-territory — coronary_artery_territory
+    assert by_id["nt_tal"].answer == "nkcc2"                    # nephron-transporter — nephron_segment_transporter
+    assert by_id["hv_aortic"].trust == "authoritative"           # grounded edge, cited proof
 
 
 def test_uncovered_items_abstain_not_fabricate() -> None:
@@ -170,8 +182,11 @@ def test_grounded_coverage_is_the_live_grounding_number() -> None:
     # verbatim, so the framework declines to claim grounding it cannot defend, by design:
     # cortisol_def (endocrine, deficiency_syndrome__cortisol — the only verbatim spans frame
     # cortisol deficiency as a consequence/feature of Addison disease, not the named-syndrome identity).
-    assert s["grounded_coverage"] == round(138 / 139, 4)   # 0.9928
-    assert s["grounded_correct"] == 138
+    # +33 grounded (all [authoritative]) from the 7 newly-wired anatomy/physiology domains:
+    # grounded_correct 138 → 171, recall correct 139 → 172, so coverage 171/172 = 0.9942
+    # (the lone cortisol_def direction_only holdout is unchanged).
+    assert s["grounded_coverage"] == round(171 / 172, 4)   # 0.9942
+    assert s["grounded_correct"] == 171
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia
