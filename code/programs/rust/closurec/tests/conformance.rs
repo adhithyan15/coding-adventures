@@ -88,8 +88,23 @@ const KNOWN_DIVERGENCES: &[(&str, &str, &str)] = &[
 /// Optimize one source *expression* at SIMPLE and return the emitted output with
 /// the trailing `;`/newline stripped.
 fn optimize(src: &str) -> String {
-    let dir = std::env::temp_dir().join(format!("closurec_conf_{}", sanitize(src)));
-    std::fs::create_dir_all(&dir).expect("mk tmp dir");
+    // A UNIQUE temp dir per call — never a name derived from `src`. A predictable
+    // path under the shared, world-writable system temp dir would invite a
+    // symlink/TOCTOU pre-creation attack on a multi-user host (CWE-377/367) and,
+    // more practically, would collide between parallel `cargo test` threads (two
+    // calls sharing a dir, one's cleanup yanking the other's file). pid + a
+    // monotonic counter makes the name unguessable-enough and per-invocation
+    // distinct; `create_dir` (not `_all`) fails rather than reuses if it somehow
+    // already exists.
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static SEQ: AtomicU64 = AtomicU64::new(0);
+    let dir = std::env::temp_dir().join(format!(
+        "closurec_conf_{}_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed),
+        sanitize(src),
+    ));
+    std::fs::create_dir(&dir).expect("mk tmp dir");
     let path = dir.join("a.js");
     std::fs::write(&path, format!("{src};\n")).expect("write src");
     let out = Command::new(BINARY)
