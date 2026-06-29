@@ -82,6 +82,10 @@ fn deck_options_frontend_sources_compile() {
         slot_names,
         vec![
             "settings-label",
+            "learning-steps-label",
+            "learning-steps-value",
+            "relearning-steps-label",
+            "relearning-steps-value",
             "new-cards-label",
             "new-cards-value",
             "reviews-label",
@@ -107,6 +111,8 @@ fn deck_options_frontend_sources_compile() {
     assert_eq!(
         emit_names,
         vec![
+            "onLearningStepsChange",
+            "onRelearningStepsChange",
             "onNewCardsChange",
             "onReviewsChange",
             "onGraduatingIntervalChange",
@@ -123,6 +129,20 @@ fn deck_options_frontend_sources_compile() {
 #[test]
 fn deck_options_layout_wires_number_controls() {
     let source = read_source("DeckOptionsPanel.mll");
+
+    for (value_slot, emit) in [
+        ("learning-steps-value", "onLearningStepsChange"),
+        ("relearning-steps-value", "onRelearningStepsChange"),
+    ] {
+        assert!(
+            source.contains(&format!("value : slot: {value_slot}")),
+            "DeckOptionsPanel.mll must bind {value_slot}"
+        );
+        assert!(
+            source.contains(&format!("onChange : emit: {emit}")),
+            "DeckOptionsPanel.mll must wire {emit}"
+        );
+    }
 
     for (value_slot, emit) in [
         ("new-cards-value", "onNewCardsChange"),
@@ -146,6 +166,8 @@ fn deck_options_layout_wires_number_controls() {
     }
 
     for label_slot in [
+        "learning-steps-label",
+        "relearning-steps-label",
         "new-cards-label",
         "reviews-label",
         "graduating-interval-label",

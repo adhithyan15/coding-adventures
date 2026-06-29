@@ -1638,6 +1638,31 @@ CREATE TABLE graves (
                 90
             );
 
+            let learning_steps =
+                cstr(r#"{"type":"deckOptionsLearningStepsChange","value":"4, 40"}"#);
+            let learning_steps_changed = take(eg_handle_engram_app_event(
+                session,
+                learning_steps.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 8,
+            ));
+            let learning_steps_changed: Value =
+                serde_json::from_str(&learning_steps_changed).unwrap();
+            assert_eq!(learning_steps_changed["ok"], true);
+            assert_eq!(
+                learning_steps_changed["event"],
+                "onDeckOptionsLearningStepsChange"
+            );
+            assert_eq!(
+                learning_steps_changed["state"]["deckOptions"][0]["options"]
+                    ["learningStepsMinutes"],
+                json!([4, 40])
+            );
+            assert_eq!(
+                learning_steps_changed["props"]["deck-options-learning-steps-value"],
+                "4, 40"
+            );
+
             eg_session_free(session);
         }
     }

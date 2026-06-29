@@ -24,6 +24,10 @@ layout EngramApp {
     Box [ deck-options-region ] {
       pkg::mosaic-pkg-deck-options::DeckOptionsPanel (
         settings-label : slot: deck-options-settings-label ,
+        learning-steps-label : slot: deck-options-learning-steps-label ,
+        learning-steps-value : slot: deck-options-learning-steps-value ,
+        relearning-steps-label : slot: deck-options-relearning-steps-label ,
+        relearning-steps-value : slot: deck-options-relearning-steps-value ,
         new-cards-label : slot: deck-options-new-cards-label ,
         new-cards-value : slot: deck-options-new-cards-value ,
         reviews-label : slot: deck-options-reviews-label ,
@@ -42,6 +46,8 @@ layout EngramApp {
         easy-bonus-value : slot: deck-options-easy-bonus-value ,
         lapse-multiplier-label : slot: deck-options-lapse-multiplier-label ,
         lapse-multiplier-value : slot: deck-options-lapse-multiplier-value ,
+        onLearningStepsChange : emit: onDeckOptionsLearningStepsChange ,
+        onRelearningStepsChange : emit: onDeckOptionsRelearningStepsChange ,
         onNewCardsChange : emit: onDeckOptionsNewCardsChange ,
         onReviewsChange : emit: onDeckOptionsReviewsChange ,
         onGraduatingIntervalChange : emit: onDeckOptionsGraduatingIntervalChange ,

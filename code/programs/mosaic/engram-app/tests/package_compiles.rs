@@ -398,6 +398,10 @@ fn native_project_shells_expose_engram_host_contract() {
         &react_app,
         "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
     );
+    assert_contains(
+        &react_app,
+        "deckOptionsLearningStepsValue: \"Sample DeckOptionsLearningStepsValue\",",
+    );
     assert_contains(&react_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&react_app, "deckOptionsIntervalModifierValue: 0,");
     assert_contains(&react_app, "collectionLabel: \"Sample CollectionLabel\",");
@@ -439,6 +443,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &electron_app,
         "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
+    );
+    assert_contains(
+        &electron_app,
+        "deckOptionsRelearningStepsValue: \"Sample DeckOptionsRelearningStepsValue\",",
     );
     assert_contains(&electron_app, "deckOptionsMaximumIntervalValue: 0,");
     assert_contains(&electron_app, "deckOptionsEasyBonusValue: 0,");
@@ -518,6 +526,10 @@ fn native_project_shells_expose_engram_host_contract() {
         &flutter_app,
         "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
     );
+    assert_contains(
+        &flutter_app,
+        "deckOptionsLearningStepsValue: \"Sample DeckOptionsLearningStepsValue\",",
+    );
     assert_contains(&flutter_app, "deckOptionsNewCardsValue: 0.0,");
     assert_contains(&flutter_app, "deckOptionsHardMultiplierValue: 0.0,");
     assert_contains(&flutter_app, "collectionLabel: \"Sample CollectionLabel\",");
@@ -544,6 +556,8 @@ fn native_project_shells_expose_engram_host_contract() {
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");
     assert_contains(&qml, "property string appTitle");
     assert_contains(&qml, "property string deckOptionsSettingsLabel");
+    assert_contains(&qml, "property string deckOptionsLearningStepsValue");
+    assert_contains(&qml, "property string deckOptionsRelearningStepsValue");
     assert_contains(&qml, "property real deckOptionsNewCardsValue");
     assert_contains(&qml, "property real deckOptionsEasyBonusValue");
     assert_contains(&qml, "property string collectionLabel");
@@ -569,6 +583,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal addNoteType()");
     assert_contains(&qml, "signal deleteNote()");
     assert_contains(&qml, "signal deleteNoteType()");
+    assert_contains(&qml, "signal deckOptionsLearningStepsChange(string value)");
+    assert_contains(&qml, "signal deckOptionsRelearningStepsChange(string value)");
     assert_contains(&qml, "signal deckOptionsNewCardsChange(real value)");
     assert_contains(&qml, "signal deckOptionsMaximumIntervalChange(real value)");
     assert_contains(&qml, "signal deckOptionsEasyBonusChange(real value)");
@@ -588,6 +604,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case burySiblings");
     assert_contains(&swift, "case suspendCard");
     assert_contains(&swift, "case toggleMark");
+    assert_contains(&swift, "case deckOptionsLearningStepsChange");
+    assert_contains(&swift, "case deckOptionsRelearningStepsChange");
     assert_contains(&swift, "case deckOptionsNewCardsChange");
     assert_contains(&swift, "case deckOptionsMaximumIntervalChange");
     assert_contains(&swift, "case deckOptionsEasyBonusChange");
@@ -602,6 +620,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
     assert_contains(&swift, "let deckOptionsSettingsLabel: String");
+    assert_contains(&swift, "let deckOptionsLearningStepsValue: String");
+    assert_contains(&swift, "let deckOptionsRelearningStepsValue: String");
     assert_contains(&swift, "let deckOptionsNewCardsValue: Double");
     assert_contains(&swift, "let deckOptionsEasyBonusValue: Double");
     assert_contains(&swift, "let collectionLabel: String");
@@ -625,6 +645,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &swift_app,
         "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
+    );
+    assert_contains(
+        &swift_app,
+        "deckOptionsLearningStepsValue: \"Sample DeckOptionsLearningStepsValue\",",
     );
     assert_contains(&swift_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&swift_app, "deckOptionsEasyBonusValue: 0,");
@@ -666,6 +690,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty DeckOptionsSettingsLabelProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsLearningStepsValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsRelearningStepsValueProperty",
     );
     assert_contains(
         &xaml_code_behind,
@@ -753,6 +785,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record ToggleMark() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsLearningStepsChange(string Value) : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsRelearningStepsChange(string Value) : EngramAppEvent;",
     );
     assert_contains(
         &xaml_events,

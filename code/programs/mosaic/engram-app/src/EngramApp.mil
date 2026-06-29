@@ -19,6 +19,10 @@ component EngramApp {
   slot deck-hidden-label : text ;
   slot deck-hidden-value : text ;
   slot deck-options-settings-label : text ;
+  slot deck-options-learning-steps-label : text ;
+  slot deck-options-learning-steps-value : text ;
+  slot deck-options-relearning-steps-label : text ;
+  slot deck-options-relearning-steps-value : text ;
   slot deck-options-new-cards-label : text ;
   slot deck-options-new-cards-value : number ;
   slot deck-options-reviews-label : text ;
@@ -107,6 +111,8 @@ component EngramApp {
   emit onAddNoteType ;
   emit onDeleteNote ;
   emit onDeleteNoteType ;
+  emit onDeckOptionsLearningStepsChange ( value : text ) ;
+  emit onDeckOptionsRelearningStepsChange ( value : text ) ;
   emit onDeckOptionsNewCardsChange ( value : number ) ;
   emit onDeckOptionsReviewsChange ( value : number ) ;
   emit onDeckOptionsGraduatingIntervalChange ( value : number ) ;

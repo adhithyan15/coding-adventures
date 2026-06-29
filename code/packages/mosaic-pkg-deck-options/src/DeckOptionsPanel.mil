@@ -5,6 +5,10 @@
 
 component DeckOptionsPanel {
   slot settings-label : text ;
+  slot learning-steps-label : text ;
+  slot learning-steps-value : text ;
+  slot relearning-steps-label : text ;
+  slot relearning-steps-value : text ;
   slot new-cards-label : text ;
   slot new-cards-value : number ;
   slot reviews-label : text ;
@@ -24,6 +28,8 @@ component DeckOptionsPanel {
   slot lapse-multiplier-label : text ;
   slot lapse-multiplier-value : number ;
 
+  emit onLearningStepsChange ( value : text ) ;
+  emit onRelearningStepsChange ( value : text ) ;
   emit onNewCardsChange ( value : number ) ;
   emit onReviewsChange ( value : number ) ;
   emit onGraduatingIntervalChange ( value : number ) ;

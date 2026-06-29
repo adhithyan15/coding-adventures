@@ -5,6 +5,30 @@ layout DeckOptionsPanel {
     Text [ settings-title ] (
       content : slot: settings-label
     )
+    Row [ learning-step-options ] {
+      Column [ learning-steps-field ] {
+        Text [ learning-steps-label ] (
+          content : slot: learning-steps-label
+        )
+        HostInput [ learning-steps-input ] (
+          value : slot: learning-steps-value ,
+          placeholder : "1, 10" ,
+          disabled : false ,
+          onChange : emit: onLearningStepsChange
+        )
+      }
+      Column [ relearning-steps-field ] {
+        Text [ relearning-steps-label ] (
+          content : slot: relearning-steps-label
+        )
+        HostInput [ relearning-steps-input ] (
+          value : slot: relearning-steps-value ,
+          placeholder : "10" ,
+          disabled : false ,
+          onChange : emit: onRelearningStepsChange
+        )
+      }
+    }
     Row [ deck-option-limits ] {
       Column [ new-cards-field ] {
         Text [ new-cards-label ] (

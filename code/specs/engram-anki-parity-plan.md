@@ -181,7 +181,9 @@ The current scheduler is a compact SM-2 variant. Anki compatibility requires
 at least:
 
 - new, learning, review, and relearning queues
-- learning steps in minutes
+- learning and relearning steps in minutes. Core scheduling and durable deck
+  options support exists; the Mosaic `DeckOptionsPanel` now exposes editable
+  step-list controls that route through the shared event bridge.
 - graduating interval
 - easy interval
 - lapse handling
@@ -190,7 +192,8 @@ at least:
   `rateCard` option; UI controls/settings still need to bind to it.
 - deck options
 - daily limits. Core, JSON facade, and C ABI support exists for review-log-aware
-  daily queue limits; UI settings still need to bind to it.
+  daily queue limits; the Mosaic `DeckOptionsPanel` exposes editable new/review
+  daily-limit controls that route through the shared event bridge.
 - maximum interval, review interval modifier, hard interval multiplier, and easy
   bonus multiplier. Core scheduling and Anki package import/export support
   exists; shared `setDeckOptions` commands persist these values; and the
@@ -616,7 +619,8 @@ shared contract first, then let each shell bind to it.
 ### Commit C: Core Scheduler Step Toward Anki
 
 - Add learning/review card states.
-- Add deck options for learning steps and daily limits.
+- Add deck options for learning steps and daily limits. Initial shared core,
+  facade, and Mosaic settings bindings now exist.
 - Add deterministic scheduler tests.
 
 ### Commit D: Web App Import/Export

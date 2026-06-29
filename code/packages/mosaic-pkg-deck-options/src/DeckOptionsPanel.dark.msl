@@ -15,6 +15,10 @@ style DeckOptionsPanel {
     padding-bottom : 10 ;
   }
 
+  part learning-step-options {
+    padding-bottom : 10 ;
+  }
+
   part deck-option-limits {
     padding-bottom : 10 ;
   }
@@ -25,6 +29,14 @@ style DeckOptionsPanel {
 
   part review-factor-options {
     padding-bottom : 4 ;
+  }
+
+  part learning-steps-field {
+    padding : 6 ;
+  }
+
+  part relearning-steps-field {
+    padding : 6 ;
   }
 
   part new-cards-field {
@@ -61,6 +73,26 @@ style DeckOptionsPanel {
 
   part lapse-multiplier-field {
     padding : 6 ;
+  }
+
+  part learning-steps-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part relearning-steps-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
   }
 
   part new-cards-input {
@@ -151,6 +183,20 @@ style DeckOptionsPanel {
     border-width : 1 ;
     border-color : "#475569" ;
     font-size : 14 ;
+  }
+
+  part learning-steps-label {
+    color : "#fef3c7" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part relearning-steps-label {
+    color : "#fed7aa" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
   }
 
   part new-cards-label {

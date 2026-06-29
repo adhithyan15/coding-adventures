@@ -220,11 +220,22 @@ impl EngramSession {
                     if selected_deck_id.is_empty() {
                         return Err("cannot update deck options without a deck".to_string());
                     }
-                    let value = parsed.number_value.ok_or_else(|| {
-                        format!("{} is missing numeric value", parsed.kind.canonical_name())
-                    })?;
                     let mut options = deck_options_for_state(&self.state, &selected_deck_id);
-                    apply_deck_option_change(&mut options, field, value)?;
+                    match field {
+                        DeckOptionField::LearningStepsMinutes
+                        | DeckOptionField::RelearningStepsMinutes => {
+                            let value = parsed.text_value.as_deref().ok_or_else(|| {
+                                format!("{} is missing text value", parsed.kind.canonical_name())
+                            })?;
+                            apply_deck_option_steps_change(&mut options, field, value)?;
+                        }
+                        _ => {
+                            let value = parsed.number_value.ok_or_else(|| {
+                                format!("{} is missing numeric value", parsed.kind.canonical_name())
+                            })?;
+                            apply_deck_option_number_change(&mut options, field, value)?;
+                        }
+                    }
                     self.state = reduce(
                         &self.state,
                         engram_core::EngramCommand::SetDeckOptions {
@@ -638,6 +649,22 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
             Value::String("Deck options".to_string()),
         );
         props_object.insert(
+            "deck-options-learning-steps-label".to_string(),
+            Value::String("Learning steps".to_string()),
+        );
+        props_object.insert(
+            "deck-options-learning-steps-value".to_string(),
+            Value::String(format_step_minutes(&deck_options.learning_steps_minutes)),
+        );
+        props_object.insert(
+            "deck-options-relearning-steps-label".to_string(),
+            Value::String("Relearning steps".to_string()),
+        );
+        props_object.insert(
+            "deck-options-relearning-steps-value".to_string(),
+            Value::String(format_step_minutes(&deck_options.relearning_steps_minutes)),
+        );
+        props_object.insert(
             "deck-options-new-cards-label".to_string(),
             Value::String("New cards/day".to_string()),
         );
@@ -717,6 +744,14 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
     }
 
     props
+}
+
+fn format_step_minutes(steps: &[u32]) -> String {
+    steps
+        .iter()
+        .map(u32::to_string)
+        .collect::<Vec<_>>()
+        .join(", ")
 }
 
 fn engram_browser_props_for_state(
@@ -908,6 +943,12 @@ impl EngramAppEvent {
             Self::BurySiblings => "onBurySiblings",
             Self::SuspendCard => "onSuspendCard",
             Self::ToggleMark => "onToggleMark",
+            Self::DeckOptionsChange(DeckOptionField::LearningStepsMinutes) => {
+                "onDeckOptionsLearningStepsChange"
+            }
+            Self::DeckOptionsChange(DeckOptionField::RelearningStepsMinutes) => {
+                "onDeckOptionsRelearningStepsChange"
+            }
             Self::DeckOptionsChange(DeckOptionField::NewCardsPerDay) => {
                 "onDeckOptionsNewCardsChange"
             }
@@ -956,6 +997,8 @@ impl EngramAppEvent {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum DeckOptionField {
+    LearningStepsMinutes,
+    RelearningStepsMinutes,
     NewCardsPerDay,
     ReviewsPerDay,
     GraduatingIntervalDays,
@@ -972,13 +1015,14 @@ struct ParsedEngramAppEvent {
     kind: EngramAppEvent,
     card_id: Option<String>,
     number_value: Option<f64>,
+    text_value: Option<String>,
 }
 
 fn parse_engram_app_event(event: &str) -> Result<ParsedEngramAppEvent, String> {
     let event = event.trim();
     if let Ok(value) = serde_json::from_str::<Value>(event) {
         if let Some(event_name) = value.as_str() {
-            return parse_engram_app_event_name(event_name, None, None);
+            return parse_engram_app_event_name(event_name, None, None, None);
         }
         let event_name = value
             .get("event")
@@ -991,12 +1035,14 @@ fn parse_engram_app_event(event: &str) -> Result<ParsedEngramAppEvent, String> {
             .or_else(|| value.get("selectedCardId"))
             .and_then(Value::as_str)
             .map(str::to_string);
-        let number_value = value.get("value").and_then(parse_json_number_value);
-        return parse_engram_app_event_name(event_name, card_id, number_value);
+        let event_value = value.get("value");
+        let number_value = event_value.and_then(parse_json_number_value);
+        let text_value = event_value.and_then(parse_json_text_value);
+        return parse_engram_app_event_name(event_name, card_id, number_value, text_value);
     }
 
     let (event_name, card_id) = split_event_card_id(event);
-    parse_engram_app_event_name(event_name, card_id, None)
+    parse_engram_app_event_name(event_name, card_id, None, None)
 }
 
 fn split_event_card_id(event: &str) -> (&str, Option<String>) {
@@ -1017,9 +1063,17 @@ fn parse_engram_app_event_name(
     event_name: &str,
     card_id: Option<String>,
     number_value: Option<f64>,
+    text_value: Option<String>,
 ) -> Result<ParsedEngramAppEvent, String> {
     let lowered = event_name.trim().to_ascii_lowercase();
-    let parsed = |kind| Ok(parsed_event(kind, card_id.clone(), number_value));
+    let parsed = |kind| {
+        Ok(parsed_event(
+            kind,
+            card_id.clone(),
+            number_value,
+            text_value.clone(),
+        ))
+    };
     match lowered.strip_prefix("on").unwrap_or(&lowered) {
         "reveal" => parsed(EngramAppEvent::Reveal),
         "undo" => parsed(EngramAppEvent::Undo),
@@ -1030,6 +1084,16 @@ fn parse_engram_app_event_name(
             parsed(EngramAppEvent::SuspendCard)
         }
         "togglemark" | "toggle-mark" | "toggle_mark" | "mark" => parsed(EngramAppEvent::ToggleMark),
+        "deckoptionslearningstepschange"
+        | "deck-options-learning-steps-change"
+        | "deck_options_learning_steps_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::LearningStepsMinutes,
+        )),
+        "deckoptionsrelearningstepschange"
+        | "deck-options-relearning-steps-change"
+        | "deck_options_relearning_steps_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::RelearningStepsMinutes,
+        )),
         "deckoptionsnewcardschange"
         | "deck-options-new-cards-change"
         | "deck_options_new_cards_change" => parsed(EngramAppEvent::DeckOptionsChange(
@@ -1116,11 +1180,13 @@ fn parsed_event(
     kind: EngramAppEvent,
     card_id: Option<String>,
     number_value: Option<f64>,
+    text_value: Option<String>,
 ) -> ParsedEngramAppEvent {
     ParsedEngramAppEvent {
         kind,
         card_id,
         number_value,
+        text_value,
     }
 }
 
@@ -1130,12 +1196,55 @@ fn parse_json_number_value(value: &Value) -> Option<f64> {
         .or_else(|| value.as_str().and_then(|raw| raw.trim().parse().ok()))
 }
 
-fn apply_deck_option_change(
+fn parse_json_text_value(value: &Value) -> Option<String> {
+    value
+        .as_str()
+        .map(str::to_string)
+        .or_else(|| value.as_f64().map(|number| number.to_string()))
+}
+
+fn apply_deck_option_steps_change(
+    options: &mut DeckOptions,
+    field: DeckOptionField,
+    value: &str,
+) -> Result<(), String> {
+    match field {
+        DeckOptionField::LearningStepsMinutes => {
+            options.learning_steps_minutes = parse_step_minutes(value, "learning steps")?;
+        }
+        DeckOptionField::RelearningStepsMinutes => {
+            options.relearning_steps_minutes = parse_step_minutes(value, "relearning steps")?;
+        }
+        _ => return Err("deck option field does not accept text values".to_string()),
+    }
+    Ok(())
+}
+
+fn parse_step_minutes(value: &str, label: &str) -> Result<Vec<u32>, String> {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return Ok(Vec::new());
+    }
+
+    trimmed
+        .split(|ch: char| ch == ',' || ch == ';' || ch.is_whitespace())
+        .filter(|part| !part.trim().is_empty())
+        .map(|part| {
+            part.parse::<u32>()
+                .map_err(|_| format!("{label} must be whole minutes separated by commas"))
+        })
+        .collect()
+}
+
+fn apply_deck_option_number_change(
     options: &mut DeckOptions,
     field: DeckOptionField,
     value: f64,
 ) -> Result<(), String> {
     match field {
+        DeckOptionField::LearningStepsMinutes | DeckOptionField::RelearningStepsMinutes => {
+            return Err("deck option field does not accept numeric values".to_string());
+        }
         DeckOptionField::NewCardsPerDay => {
             options.new_cards_per_day = deck_option_count(value, "new cards/day")?;
         }
@@ -2526,6 +2635,8 @@ mod tests {
             value["props"]["deck-options-settings-label"],
             "Deck options"
         );
+        assert_eq!(value["props"]["deck-options-learning-steps-value"], "1, 10");
+        assert_eq!(value["props"]["deck-options-relearning-steps-value"], "10");
         assert_eq!(value["props"]["deck-options-new-cards-value"], 12);
         assert_eq!(value["props"]["deck-options-reviews-value"], 80);
         assert_eq!(value["props"]["deck-options-graduating-interval-value"], 2);
@@ -2936,6 +3047,8 @@ mod tests {
                     "options": {
                         "newCardsPerDay": 12,
                         "reviewsPerDay": 80,
+                        "learningStepsMinutes": [3, 30],
+                        "relearningStepsMinutes": [5],
                         "graduatingIntervalDays": 2,
                         "easyIntervalDays": 5,
                         "maximumIntervalDays": 180,
@@ -2987,6 +3100,43 @@ mod tests {
             1.25
         );
 
+        let learning_steps: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsLearningStepsChange","value":"2, 20 60"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(learning_steps["ok"], true);
+        assert_eq!(learning_steps["event"], "onDeckOptionsLearningStepsChange");
+        assert_eq!(
+            learning_steps["state"]["deckOptions"][0]["options"]["learningStepsMinutes"],
+            json!([2, 20, 60])
+        );
+        assert_eq!(
+            learning_steps["props"]["deck-options-learning-steps-value"],
+            "2, 20, 60"
+        );
+
+        let relearning_steps: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onDeckOptionsRelearningStepsChange","value":"15; 45"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(relearning_steps["ok"], true);
+        assert_eq!(
+            relearning_steps["event"],
+            "onDeckOptionsRelearningStepsChange"
+        );
+        assert_eq!(
+            relearning_steps["state"]["deckOptions"][0]["options"]["relearningStepsMinutes"],
+            json!([15, 45])
+        );
+        assert_eq!(
+            relearning_steps["props"]["deck-options-relearning-steps-value"],
+            "15, 45"
+        );
+
         let invalid: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"type":"deckOptionsEasyBonusChange"}"#,
             "deck",
@@ -2997,6 +3147,18 @@ mod tests {
         assert_eq!(
             invalid["error"],
             "onDeckOptionsEasyBonusChange is missing numeric value"
+        );
+
+        let invalid_steps: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsLearningStepsChange","value":"soon"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(invalid_steps["ok"], false);
+        assert_eq!(
+            invalid_steps["error"],
+            "learning steps must be whole minutes separated by commas"
         );
     }
 

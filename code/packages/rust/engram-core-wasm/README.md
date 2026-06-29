@@ -112,8 +112,10 @@ also accepts browser events such as `onBrowserSearch` and targeted row actions
 such as `onBrowserToggleMarkSelected|card-id` or
 `{"event":"onBrowserToggleSuspendSelected","cardId":"card-id"}`.
 Deck option controls use the generated event shape, for example
-`{"type":"deckOptionsNewCardsChange","value":12}`, and update the selected
-deck through the shared `setDeckOptions` reducer path.
+`{"type":"deckOptionsNewCardsChange","value":12}` for numeric fields or
+`{"type":"deckOptionsLearningStepsChange","value":"1, 10"}` for step-list
+fields, and update the selected deck through the shared `setDeckOptions`
+reducer path.
 Collection workflow events such as `onImportAnki`, `onExportAnki`, `onAddNote`,
 `onAddNoteType`, `onDeleteNote`, and `onDeleteNoteType` round-trip through the
 same event parser as host intents so generated shells share one UI contract

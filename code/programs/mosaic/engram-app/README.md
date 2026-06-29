@@ -47,8 +47,9 @@ binds them to the shared Rust business logic core through host shells.
 - The collection slots expose note, note-type, and media counts plus shared
   Anki import/export and note workflow intents for host shells.
 - The deck option slots expose the selected deck's shared scheduler settings,
-  including daily limits, graduation intervals, maximum interval, interval
-  modifier, hard/easy multipliers, and lapse multiplier.
+  including learning/relearning steps, daily limits, graduation intervals,
+  maximum interval, interval modifier, hard/easy multipliers, and lapse
+  multiplier.
 - Deck option events carry numeric values and route through the shared
   `EngramSession::handle_engram_app_event` contract, which persists them with
   `EngramCommand::SetDeckOptions`.
