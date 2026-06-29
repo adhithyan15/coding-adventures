@@ -4,6 +4,7 @@ use crate::model::{
     AppState, ExternalSourceRecord, ExternalSourceTarget, Rating, RatingCounts,
     ReviewHistorySummary,
 };
+use crate::queue::deck_ids_in_scope;
 
 pub fn summarize_review_history(
     state: &AppState,
@@ -24,10 +25,11 @@ pub fn summarize_review_history(
     };
 
     let manual_reschedule_review_ids = manual_reschedule_review_ids(&state.external_sources);
+    let deck_ids = deck_ids_in_scope(state, deck_id);
     let deck_card_ids: HashSet<&str> = state
         .cards
         .iter()
-        .filter(|card| card.deck_id == deck_id)
+        .filter(|card| deck_ids.contains(card.deck_id.as_str()))
         .map(|card| card.id.as_str())
         .collect();
     let mut reviewed_card_ids: HashSet<&str> = HashSet::new();
@@ -95,7 +97,7 @@ mod tests {
     use super::*;
     use std::collections::BTreeMap;
 
-    use crate::model::{Card, Review};
+    use crate::model::{Card, Deck, Review};
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -107,6 +109,15 @@ mod tests {
             back: format!("back-{id}"),
             created_at: NOW,
             lineage: None,
+        }
+    }
+
+    fn deck(id: &str, name: &str) -> Deck {
+        Deck {
+            id: id.to_string(),
+            name: name.to_string(),
+            description: String::new(),
+            created_at: NOW,
         }
     }
 
@@ -153,6 +164,37 @@ mod tests {
         assert_eq!(summary.rating_counts.easy, 1);
         assert_eq!(summary.first_reviewed_at, Some(NOW + 10));
         assert_eq!(summary.last_reviewed_at, Some(NOW + 40));
+    }
+
+    #[test]
+    fn parent_deck_summary_counts_child_deck_reviews() {
+        let state = AppState {
+            decks: vec![
+                deck("parent", "Tamil"),
+                deck("child", "Tamil::Verbs"),
+                deck("sibling", "Spanish"),
+            ],
+            cards: vec![
+                card("a", "parent"),
+                card("b", "child"),
+                card("x", "sibling"),
+            ],
+            reviews: vec![
+                review("parent", "a", Rating::Good, NOW + 10),
+                review("child", "b", Rating::Again, NOW + 20),
+                review("sibling", "x", Rating::Easy, NOW + 30),
+            ],
+            ..AppState::default()
+        };
+
+        let summary = summarize_review_history(&state, "parent", NOW, NOW + 50);
+
+        assert_eq!(summary.total_reviews, 2);
+        assert_eq!(summary.correct_reviews, 1);
+        assert_eq!(summary.unique_cards, 2);
+        assert_eq!(summary.rating_counts.good, 1);
+        assert_eq!(summary.rating_counts.again, 1);
+        assert_eq!(summary.rating_counts.easy, 0);
     }
 
     #[test]

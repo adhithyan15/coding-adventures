@@ -4216,12 +4216,14 @@ mod tests {
         let snapshot = r#"{
             "decks": [
                 {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"child","name":"Tamil::Verbs","description":"Grammar","createdAt":1700000000000},
                 {"id":"other","name":"Spanish","description":"Words","createdAt":1700000000000}
             ],
             "noteTypes": [],
             "notes": [],
             "cards": [
                 {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                {"id":"child-card","deckId":"child","front":"padi","back":"study","createdAt":1700000000000},
                 {"id":"other-card","deckId":"other","front":"hola","back":"hello","createdAt":1700000000000}
             ],
             "cardProgress": [],
@@ -4243,6 +4245,7 @@ mod tests {
         for (review_id, card_id, rating, reviewed_at) in [
             ("again", "card", "again", NOW + 10),
             ("good", "card", "good", NOW + 20),
+            ("hard-child", "child-card", "hard", NOW + 25),
             ("easy-other", "other-card", "easy", NOW + 30),
         ] {
             session.dispatch(&format!(
@@ -4262,13 +4265,14 @@ mod tests {
 
         assert_eq!(value["ok"], true);
         assert_eq!(value["history"]["deckId"], "deck");
-        assert_eq!(value["history"]["totalReviews"], 2);
-        assert_eq!(value["history"]["correctReviews"], 1);
-        assert_eq!(value["history"]["uniqueCards"], 1);
+        assert_eq!(value["history"]["totalReviews"], 3);
+        assert_eq!(value["history"]["correctReviews"], 2);
+        assert_eq!(value["history"]["uniqueCards"], 2);
         assert_eq!(value["history"]["ratingCounts"]["again"], 1);
         assert_eq!(value["history"]["ratingCounts"]["good"], 1);
+        assert_eq!(value["history"]["ratingCounts"]["hard"], 1);
         assert_eq!(value["history"]["firstReviewedAt"], NOW + 10);
-        assert_eq!(value["history"]["lastReviewedAt"], NOW + 20);
+        assert_eq!(value["history"]["lastReviewedAt"], NOW + 25);
     }
 
     #[test]

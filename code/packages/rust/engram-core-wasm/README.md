@@ -56,11 +56,11 @@ and `deleteNote` commands; pass `materializeCardsAt` with `upsertNoteType` or
 It also accepts `setDeckOptions` to insert or replace the durable scheduler
 options for a deck, using the same camelCase `DeckOptions` shape accepted by
 `rateCard`.
-`build_queue`, `build_queue_with_daily_limits`, `daily_limit_usage`, and
-`deck_stats` use the full loaded `AppState` to include Anki-style child decks
-named with `Parent::Child` when the selected deck is a parent. HTML, Electron,
-Qt, SwiftUI, XAML, and other hosts therefore share the same parent-deck study
-scope without implementing hierarchy rules themselves.
+`build_queue`, `build_queue_with_daily_limits`, `daily_limit_usage`,
+`deck_stats`, and `review_history` use the full loaded `AppState` to include
+Anki-style child decks named with `Parent::Child` when the selected deck is a
+parent. HTML, Electron, Qt, SwiftUI, XAML, and other hosts therefore share the
+same parent-deck study scope without implementing hierarchy rules themselves.
 
 `rateCard` remains backward-compatible with the original command shape. Hosts
 may also include a `deckOptions` object to drive the Rust scheduler with custom

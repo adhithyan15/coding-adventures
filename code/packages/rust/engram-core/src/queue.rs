@@ -202,7 +202,7 @@ fn build_session_queue_with_limits(
         .collect()
 }
 
-fn deck_ids_in_scope<'a>(state: &'a AppState, deck_id: &'a str) -> HashSet<&'a str> {
+pub(crate) fn deck_ids_in_scope<'a>(state: &'a AppState, deck_id: &'a str) -> HashSet<&'a str> {
     let mut deck_ids = HashSet::from([deck_id]);
     let Some(selected_deck) = state.decks.iter().find(|deck| deck.id == deck_id) else {
         return deck_ids;
