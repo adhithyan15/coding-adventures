@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, and literal-backed string equality/ordering predicates ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, literal-backed string equality/ordering predicates ✅ (AL4 foothold), string-typed value parameters in typed procedures ✅ (AL4-str-params, all 7 backends); no call-by-name, dynamic string variables/arrays, or multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -664,8 +664,12 @@ backend immediately) come before the enabler-dependent items.
   the `output(s)` spelling, multi-argument `output(s, t)`, plus literal-backed
   scalar copy snapshot semantics (`string s, t; s := 'OK'; t := s; s := 'NO';
   print(t)`), plus string equality/inequality and lexical ordering predicates, all on
-  native/LLVM/WASM/JVM/CLR/VM/JIT. Captured/`own` strings, arrays, parameters,
-  and broader dynamic string expressions remain.
+  native/LLVM/WASM/JVM/CLR/VM/JIT. **String-typed value parameters in typed
+  procedures are now proven** (`algol-iir-compiler` 0.18.0): `integer procedure
+  echo(s); value s; string s; print(s)` passes a literal or named-variable
+  string to the body's `print_str` on all 7 backends (`lang-aot` 0.154.0, AL4-str-params).
+  `own`/captured strings, string arrays, and broader dynamic string expressions
+  remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
   native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). `goto s[i]` lowers to a 1-based
