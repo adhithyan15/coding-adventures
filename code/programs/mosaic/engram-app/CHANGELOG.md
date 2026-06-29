@@ -42,14 +42,14 @@
   `ReviewActions` component so Mosaic/native review screens expose undo, bury,
   suspend, and mark events through the shared Engram event bridge.
 - Added a multi-backend artifact-builder smoke test proving `EngramApp` emits
-  through HTML, React, SwiftUI, Qt, XAML, and Flutter while consuming
+  through HTML, React, SwiftUI, Qt, XAML, Flutter, and Compose while consuming
   `mosaic-pkg-card-browser`, `mosaic-pkg-collection-actions`,
   `mosaic-pkg-deck-options`, `mosaic-pkg-deck-stats`,
   `mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
   `mosaic-pkg-session-progress`.
 - Added `scripts/build-all.ps1` to emit HTML, WebComponent, React, Electron,
-  SwiftUI, Qt, XAML, and Flutter host shells from the same Engram Mosaic app
-  package into `target/mosaic-engram-app/`.
+  SwiftUI, Qt, XAML, Flutter, and Compose artifacts from the same Engram
+  Mosaic app package into `target/mosaic-engram-app/`.
 - Asserted that the generated React, SwiftPM, and Flutter shells mount
   `EngramApp` with sample slot values and dispatch callbacks instead of
   non-compiling empty initializers.

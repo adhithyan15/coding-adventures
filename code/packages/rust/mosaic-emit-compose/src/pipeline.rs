@@ -103,13 +103,21 @@ pub fn from_pipeline(
         "import androidx.compose.foundation.text.BasicTextField"
     )
     .unwrap();
+    writeln!(
+        out,
+        "import androidx.compose.foundation.text.KeyboardOptions"
+    )
+    .unwrap();
     writeln!(out, "import androidx.compose.material.Button").unwrap();
+    writeln!(out, "import androidx.compose.material.Checkbox").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
+    writeln!(out, "import androidx.compose.material.TextField").unwrap();
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
     writeln!(out, "import androidx.compose.ui.Alignment").unwrap();
     writeln!(out, "import androidx.compose.ui.Modifier").unwrap();
     writeln!(out, "import androidx.compose.ui.graphics.Color").unwrap();
     writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
+    writeln!(out, "import androidx.compose.ui.text.input.KeyboardType").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.sp").unwrap();
     writeln!(out).unwrap();
@@ -952,6 +960,8 @@ fn emit_compose_tree(
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
         "HostInput" => emit_host_input(node, depth, component_name, emits),
         "HostButton" => emit_host_button(node, depth, component_name, emits),
+        "HostCheckbox" => emit_host_checkbox(node, depth, component_name, emits),
+        "HostNumberInput" => emit_host_number_input(node, depth, component_name, emits),
         // UI29 §3.1 / §3.2 — meta-primitives.
         "For" => emit_for_compose(
             node,
@@ -1600,6 +1610,132 @@ fn emit_host_button(
     Ok(out)
 }
 
+fn emit_host_checkbox(
+    node: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let checked_expr = bool_prop_expr(node, "checked", "false")?;
+    let enabled_expr = disabled_prop_enabled_expr(node)?;
+
+    let on_checked = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arity = emits
+            .iter()
+            .find(|e| e.name == *emit_name)
+            .map(|e| e.params.len())
+            .unwrap_or(0);
+        if arity == 0 {
+            format!("dispatch({component_name}Event.{case})")
+        } else {
+            format!("dispatch({component_name}Event.{case}(checked))")
+        }
+    } else {
+        "/* no onToggle bound */".to_string()
+    };
+
+    let mut checkbox_lines = Vec::new();
+    checkbox_lines.push(format!("{inner}Checkbox("));
+    checkbox_lines.push(format!("{inner}    checked = {checked_expr},"));
+    checkbox_lines.push(format!(
+        "{inner}    onCheckedChange = {{ checked -> {on_checked} }},"
+    ));
+    if let Some(enabled) = enabled_expr.as_deref() {
+        checkbox_lines.push(format!("{inner}    enabled = {enabled},"));
+    }
+    checkbox_lines.push(format!("{inner})"));
+
+    if let Some(label) = text_prop_expr(node, "label")? {
+        let mut out = String::new();
+        writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+        for line in checkbox_lines {
+            writeln!(out, "{line}").unwrap();
+        }
+        writeln!(out, "{inner}Text(text = {label})").unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+        Ok(out)
+    } else {
+        let mut out = String::new();
+        writeln!(out, "{pad}Checkbox(").unwrap();
+        writeln!(out, "{inner}checked = {checked_expr},").unwrap();
+        writeln!(
+            out,
+            "{inner}onCheckedChange = {{ checked -> {on_checked} }},"
+        )
+        .unwrap();
+        if let Some(enabled) = enabled_expr.as_deref() {
+            writeln!(out, "{inner}enabled = {enabled},").unwrap();
+        }
+        writeln!(out, "{pad})").unwrap();
+        Ok(out)
+    }
+}
+
+fn emit_host_number_input(
+    node: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+
+    let value_expr = match find_prop_value(node, "value") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            camel
+        }
+        Some(LayoutPropValue::Number(n)) => n.to_string(),
+        Some(LayoutPropValue::Expr(expr)) => expr.clone(),
+        _ => "0.0".to_string(),
+    };
+
+    let on_value_change = if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arity = emits
+            .iter()
+            .find(|e| e.name == *emit_name)
+            .map(|e| e.params.len())
+            .unwrap_or(0);
+        if arity == 0 {
+            format!("dispatch({component_name}Event.{case})")
+        } else {
+            format!("dispatch({component_name}Event.{case}(v.toDoubleOrNull() ?: 0.0))")
+        }
+    } else {
+        "/* no onChange bound */".to_string()
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}TextField(").unwrap();
+    writeln!(out, "{inner}value = {value_expr}.toString(),").unwrap();
+    writeln!(out, "{inner}onValueChange = {{ v -> {on_value_change} }},").unwrap();
+    writeln!(out, "{inner}singleLine = true,").unwrap();
+    writeln!(
+        out,
+        "{inner}keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),"
+    )
+    .unwrap();
+    if let Some(placeholder) = text_prop_expr(node, "placeholder")? {
+        writeln!(
+            out,
+            "{inner}placeholder = {{ Text(text = {placeholder}) }},"
+        )
+        .unwrap();
+    }
+    if let Some(enabled) = disabled_prop_enabled_expr(node)? {
+        writeln!(out, "{inner}enabled = {enabled},").unwrap();
+    }
+    writeln!(out, "{pad})").unwrap();
+    Ok(out)
+}
+
 // =====================================================================
 // Type lowerings
 // =====================================================================
@@ -1687,6 +1823,50 @@ fn find_emit_ref_prop<'a>(node: &'a LayoutNode, name: &str) -> Option<&'a str> {
     match find_prop_value(node, name)? {
         LayoutPropValue::EmitRef(s) => Some(s.as_str()),
         _ => None,
+    }
+}
+
+fn text_prop_expr(node: &LayoutNode, name: &str) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, name) {
+        Some(LayoutPropValue::String(s)) => Ok(Some(format!("\"{}\"", escape_kotlin_string(s)))),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(camel))
+        }
+        Some(LayoutPropValue::Expr(expr)) => Ok(Some(expr.clone())),
+        _ => Ok(None),
+    }
+}
+
+fn bool_prop_expr(
+    node: &LayoutNode,
+    name: &str,
+    default: &str,
+) -> Result<String, PipelineEmitError> {
+    match find_prop_value(node, name) {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" || k == "false" => Ok(k.clone()),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(camel)
+        }
+        Some(LayoutPropValue::Expr(expr)) => Ok(expr.clone()),
+        _ => Ok(default.to_string()),
+    }
+}
+
+fn disabled_prop_enabled_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "disabled") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => Ok(Some("false".to_string())),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => Ok(Some("true".to_string())),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(format!("!{camel}")))
+        }
+        Some(LayoutPropValue::Expr(expr)) => Ok(Some(format!("!({expr})"))),
+        _ => Ok(None),
     }
 }
 
@@ -2316,6 +2496,110 @@ mod tests {
             "expected dispatch(BarEvent.Tap), got:\n{out}"
         );
         assert!(out.contains("Text(text = \"Go\")"));
+    }
+
+    #[test]
+    fn host_number_input_dispatches_numeric_payload() {
+        let m = component(
+            "DeckOptions",
+            vec![slot("new-cards", SlotType::Number, true)],
+            vec![emit_decl(
+                "onNewCardsChange",
+                vec![param("value", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout(
+            "DeckOptions",
+            node(
+                "HostNumberInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("new-cards".into()),
+                    },
+                    LayoutProp {
+                        name: "placeholder".into(),
+                        value: LayoutPropValue::String("20".into()),
+                    },
+                    LayoutProp {
+                        name: "disabled".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                    LayoutProp {
+                        name: "onChange".into(),
+                        value: LayoutPropValue::EmitRef("onNewCardsChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("DeckOptions"))
+            .unwrap()
+            .output;
+        assert!(out.contains("import androidx.compose.material.TextField"));
+        assert!(out.contains("import androidx.compose.ui.text.input.KeyboardType"));
+        assert!(out.contains("TextField("));
+        assert!(out.contains("value = newCards.toString(),"));
+        assert!(out.contains(
+            "onValueChange = { v -> dispatch(DeckOptionsEvent.NewCardsChange(v.toDoubleOrNull() ?: 0.0)) },"
+        ));
+        assert!(
+            out.contains("keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),")
+        );
+        assert!(out.contains("placeholder = { Text(text = \"20\") },"));
+        assert!(out.contains("enabled = true,"));
+    }
+
+    #[test]
+    fn host_checkbox_dispatches_checked_payload_with_label() {
+        let m = component(
+            "DeckOptions",
+            vec![
+                slot("bury-new-label", SlotType::Text, true),
+                slot("bury-new-value", SlotType::Bool, true),
+            ],
+            vec![emit_decl(
+                "onBuryNewSiblingsChange",
+                vec![param("checked", EmitPayloadType::Bool)],
+            )],
+        );
+        let l = layout(
+            "DeckOptions",
+            node(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::SlotRef("bury-new-label".into()),
+                    },
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("bury-new-value".into()),
+                    },
+                    LayoutProp {
+                        name: "disabled".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                    LayoutProp {
+                        name: "onToggle".into(),
+                        value: LayoutPropValue::EmitRef("onBuryNewSiblingsChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("DeckOptions"))
+            .unwrap()
+            .output;
+        assert!(out.contains("import androidx.compose.material.Checkbox"));
+        assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
+        assert!(out.contains("Checkbox("));
+        assert!(out.contains("checked = buryNewValue,"));
+        assert!(out.contains(
+            "onCheckedChange = { checked -> dispatch(DeckOptionsEvent.BuryNewSiblingsChange(checked)) },"
+        ));
+        assert!(out.contains("enabled = true,"));
+        assert!(out.contains("Text(text = buryNewLabel)"));
     }
 
     #[test]

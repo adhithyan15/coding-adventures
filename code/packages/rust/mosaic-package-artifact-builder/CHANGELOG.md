@@ -24,6 +24,10 @@ or `MOSAIC_ELECTRON_HOST_MODULE`) instead of hardcoding no-op responses.
 `MainWindow.xaml`, `app.manifest`, `build.ps1`, and README side files beside
 the package's component XAML triple and `MosaicPackage.props` fragment.
 
+`Backend::Compose` is now wired through package builds, emitting per-component
+`.kt` files, a lightweight `index.kt`, and a README for adding the generated
+sources to Android, Desktop, or Compose Multiplatform source sets.
+
 All notable changes to `mosaic-package-artifact-builder` will be documented
 in this file.
 

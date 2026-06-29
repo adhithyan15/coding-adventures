@@ -33,7 +33,8 @@ $backends = @(
     "swiftui",
     "qt",
     "xaml",
-    "flutter"
+    "flutter",
+    "compose"
 )
 
 foreach ($backend in $backends) {

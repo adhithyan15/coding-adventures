@@ -294,6 +294,7 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
         (Backend::Qt, "qt/EngramApp.qml"),
         (Backend::Xaml, "xaml/EngramApp.xaml"),
         (Backend::Flutter, "flutter/EngramApp.dart"),
+        (Backend::Compose, "compose/EngramApp.kt"),
     ];
 
     for (backend, expected_artifact) in backends {
@@ -362,6 +363,11 @@ fn app_package_emits_native_project_shells() {
             ],
         ),
         (
+            Backend::Compose,
+            "compose",
+            vec!["EngramApp.kt", "index.kt", "README.md"],
+        ),
+        (
             Backend::Xaml,
             "xaml",
             vec![
@@ -404,6 +410,7 @@ fn native_project_shells_expose_engram_host_contract() {
         Backend::React,
         Backend::Electron,
         Backend::Flutter,
+        Backend::Compose,
         Backend::Qt,
         Backend::SwiftUI,
         Backend::Xaml,
@@ -618,6 +625,51 @@ fn native_project_shells_expose_engram_host_contract() {
         &flutter_app,
         "dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\")",
     );
+
+    let compose_app =
+        fs::read_to_string(tmp.path().join("compose").join("EngramApp.kt")).expect("EngramApp.kt");
+    assert_contains(&compose_app, "sealed class EngramAppEvent {");
+    assert_contains(&compose_app, "abstract val mosaicName: String");
+    assert_contains(&compose_app, "val mosaicEnvelope: Map<String, Any?>");
+    assert_contains(&compose_app, "data object ImportAnki : EngramAppEvent()");
+    assert_contains(
+        &compose_app,
+        "override val mosaicName: String = \"onImportAnki\"",
+    );
+    assert_contains(
+        &compose_app,
+        "data class DeckOptionsNewCardsChange(val value: Double)",
+    );
+    assert_contains(
+        &compose_app,
+        "override val mosaicPayload: Map<String, Any?> get() = mapOf(\"value\" to value)",
+    );
+    assert_contains(
+        &compose_app,
+        "data class DeckOptionsBuryNewSiblingsChange(val checked: Boolean)",
+    );
+    assert_contains(
+        &compose_app,
+        "override val mosaicPayload: Map<String, Any?> get() = mapOf(\"checked\" to checked)",
+    );
+    assert_contains(&compose_app, "@Composable");
+    assert_contains(&compose_app, "fun EngramApp(");
+    assert_contains(&compose_app, "appTitle: String,");
+    assert_contains(&compose_app, "deckOptionsSettingsLabel: String,");
+    assert_contains(&compose_app, "deckOptionsLearningStepsValue: String,");
+    assert_contains(&compose_app, "deckOptionsNewCardsValue: Double,");
+    assert_contains(&compose_app, "deckOptionsEasyBonusValue: Double,");
+    assert_contains(&compose_app, "deckOptionsBuryNewSiblingsValue: Boolean,");
+    assert_contains(&compose_app, "historyLabel: String,");
+    assert_contains(&compose_app, "collectionLabel: String,");
+    assert_contains(&compose_app, "browserQuery: String,");
+    assert_contains(&compose_app, "browserResults: List<String>,");
+    assert_contains(&compose_app, "browserResultCardIds: List<String>,");
+    assert_contains(&compose_app, "browserSelectedCardId: String,");
+    assert_contains(&compose_app, "answerVisible: Boolean,");
+    assert_contains(&compose_app, "actionUndoLabel: String,");
+    assert_contains(&compose_app, "actionMarkLabel: String,");
+    assert_contains(&compose_app, "dispatch: (EngramAppEvent) -> Unit,");
 
     let qml =
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");

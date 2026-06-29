@@ -74,8 +74,10 @@ cd code/programs/mosaic/engram-app
 ./scripts/build-all.ps1
 ```
 
-The script writes HTML, WebComponent, React, Electron, SwiftUI, Qt, XAML, and
-Flutter outputs under `target/mosaic-engram-app/` by default.
+The script writes HTML, WebComponent, React, Electron, SwiftUI, Qt, XAML,
+Flutter, and Compose outputs under `target/mosaic-engram-app/` by default. The
+Compose backend currently emits Kotlin library/source-set artifacts plus a
+README rather than a full Gradle project shell.
 
 For a Rust-backed web or Electron host, build
 `code/packages/rust/engram-wasm` and install

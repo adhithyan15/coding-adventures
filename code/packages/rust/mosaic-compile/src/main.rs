@@ -1202,7 +1202,7 @@ fn emit_single_file<E: std::fmt::Display>(
 // `pkg` subcommand — package-artifact build (UI29 §4.3)
 // ===========================================================================
 
-const PKG_BACKENDS: &str = "react|electron|swiftui|qt|xaml|webcomponent|html|flutter";
+const PKG_BACKENDS: &str = "react|electron|swiftui|qt|xaml|webcomponent|html|flutter|compose";
 
 fn pkg_backend_from_str(value: &str) -> Option<Backend> {
     match value {
@@ -1214,6 +1214,7 @@ fn pkg_backend_from_str(value: &str) -> Option<Backend> {
         "webcomponent" => Some(Backend::WebComponent),
         "html" => Some(Backend::Html),
         "flutter" => Some(Backend::Flutter),
+        "compose" => Some(Backend::Compose),
         _ => None,
     }
 }
@@ -1223,7 +1224,7 @@ fn pkg_backend_from_str(value: &str) -> Option<Backend> {
 /// Spec (mosaic-compile.json):
 ///
 /// ```text
-/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|xaml|webcomponent|html|flutter> --output <DIR> [--emit-project]
+/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|xaml|webcomponent|html|flutter|compose> --output <DIR> [--emit-project]
 /// ```
 ///
 /// Required: `package_root` positional, `--backend`, `--output`. cli-builder
@@ -1374,6 +1375,7 @@ mod tests {
         );
         assert_eq!(pkg_backend_from_str("html"), Some(Backend::Html));
         assert_eq!(pkg_backend_from_str("flutter"), Some(Backend::Flutter));
+        assert_eq!(pkg_backend_from_str("compose"), Some(Backend::Compose));
         assert_eq!(pkg_backend_from_str("paint"), None);
     }
 
