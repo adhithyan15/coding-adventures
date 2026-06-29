@@ -275,6 +275,26 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       padding: 10px;
     }
 
+    .detail-meta {
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .detail-body {
+      min-height: 180px;
+      max-height: 360px;
+      overflow: auto;
+      white-space: pre-wrap;
+      color: #263235;
+      background: #f5f7f6;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
     @media (max-width: 800px) {
       header {
         align-items: flex-start;
@@ -475,6 +495,16 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         </table>
       </div>
       <div class="panel">
+        <div class="row detail-meta">
+          <div>
+            <h2 id="detail-title">Detail</h2>
+            <p id="detail-endpoint" class="muted">Select any View action</p>
+          </div>
+          <span id="detail-status" class="status">Idle</span>
+        </div>
+        <pre id="detail-body" class="detail-body">No detail selected</pre>
+      </div>
+      <div class="panel">
         <h2>Log</h2>
         <div id="log" class="log"></div>
       </div>
@@ -487,6 +517,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       bridges: document.querySelector("#bridges"),
       checks: document.querySelector("#checks"),
       commandResults: document.querySelector("#command-results"),
+      detailBody: document.querySelector("#detail-body"),
+      detailEndpoint: document.querySelector("#detail-endpoint"),
+      detailStatus: document.querySelector("#detail-status"),
+      detailTitle: document.querySelector("#detail-title"),
       desired: document.querySelector("#desired"),
       devices: document.querySelector("#devices"),
       entities: document.querySelector("#entities"),
@@ -646,6 +680,32 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     const log = (message) => {
       const at = new Date().toLocaleTimeString();
       els.log.textContent = `[${at}] ${message}\n${els.log.textContent}`.slice(0, 2000);
+    };
+
+    const renderDetail = (label, url, status, ok, body) => {
+      els.detailTitle.textContent = label || "Detail";
+      els.detailEndpoint.textContent = url;
+      els.detailStatus.className = statusClass(ok ? "ready" : "blocked");
+      els.detailStatus.textContent = String(status);
+      els.detailBody.textContent = typeof body === "string" ? body : JSON.stringify(body, null, 2);
+    };
+
+    const inspectDetail = async (button) => {
+      const url = button.dataset.inspectUrl;
+      const label = button.dataset.inspectLabel || "detail";
+      const response = await fetch(url);
+      const text = await response.text();
+      let body = text;
+      try {
+        body = JSON.parse(text);
+      } catch (_) {
+        body = text || response.statusText;
+      }
+      renderDetail(label, url, response.status, response.ok, body);
+      log(`${label}: ${url}`);
+      if (!response.ok) {
+        throw new Error(body.error || response.statusText);
+      }
     };
 
     const renderChecks = (readiness) => {
@@ -1035,8 +1095,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       button.disabled = true;
       try {
         if (inspectDetailButton) {
-          const detail = await json(inspectDetailButton.dataset.inspectUrl);
-          log(`${inspectDetailButton.dataset.inspectLabel}: ${JSON.stringify(detail).slice(0, 1200)}`);
+          await inspectDetail(inspectDetailButton);
         } else if (serviceButton) {
           const body = {entity_id: serviceButton.dataset.entity};
           if (serviceButton.dataset.service === "set_brightness") {
@@ -7476,6 +7535,9 @@ mod tests {
             assert!(body.contains("entityMatchesFilters(filters, entity)"));
             assert!(body.contains("filterRows(history.events || [], filters)"));
             assert!(body.contains("<tbody id=\"events\"></tbody>"));
+            assert!(body.contains("id=\"detail-body\""));
+            assert!(body.contains("renderDetail(label, url, response.status, response.ok, body)"));
+            assert!(body.contains("inspectDetail(inspectDetailButton)"));
             assert!(body.contains("data-inspect-url"));
             assert!(body.contains("stateDetailUrl(entity)"));
             assert!(body.contains("entityDetailUrl(entity)"));
@@ -8742,6 +8804,8 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
         assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
         assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
+        assert!(body.contains("id=\"detail-body\""));
+        assert!(body.contains("renderDetail(label, url, response.status, response.ok, body)"));
         assert!(body.contains("stateDetailUrl(entity)"));
         assert!(body.contains("entityHistoryUrl(entity)"));
         assert!(body.contains("entityEventsUrl(entity)"));
