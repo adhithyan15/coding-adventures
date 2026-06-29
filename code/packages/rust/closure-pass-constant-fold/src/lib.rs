@@ -1685,6 +1685,66 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     });
                 }
 
+                // ---- Math.max(n0, n1, …) / Math.min(…) → numeric literal ----
+                //
+                // `Math.max` / `Math.min` (ECMAScript §21.3.2.24 / .25) coerce each
+                // argument with ToNumber and return the largest / smallest. When
+                // EVERY argument is already a numeric literal we can evaluate the
+                // result at compile time:
+                //
+                //   Math.max(1, 2, 3) → 3        Math.min(1, 2, 3) → 1
+                //   Math.max(-5, -1)  → -1       Math.min(-5, -1)  → -5
+                //
+                // We fold ONLY when there is at least one argument and ALL of them
+                // are numeric literals (so no ToNumber side effect, and the result
+                // is a definite finite number — `Infinity`/`NaN` are GLOBAL
+                // identifiers, never numeric literals, so a non-literal argument is
+                // declined). We model the spec's signed-zero rule exactly: `Math.max`
+                // prefers `+0` over `-0`, `Math.min` prefers `-0` over `+0` (see
+                // `js_math_max` / `js_math_min`) — we do NOT rely on Rust's
+                // `f64::max`/`min`, whose zero handling we don't want to depend on.
+                // The empty call `Math.max()` (→ `-Infinity`) / `Math.min()` (→
+                // `+Infinity`) is declined: emitting an infinite numeric literal is
+                // out of scope. Same bare-global premise — only the literal
+                // `Math.max(...)` callee folds, never a shadowed `m.max(...)`.
+                if obj.name == "Math"
+                    && matches!(prop.name.as_str(), "max" | "min")
+                    && !arguments.is_empty()
+                {
+                    let nums: Option<Vec<f64>> = arguments
+                        .iter()
+                        .map(|a| match a {
+                            Expression::NumericLiteral(n) => Some(n.value),
+                            _ => None,
+                        })
+                        .collect();
+                    if let Some(nums) = nums {
+                        let result = if prop.name == "max" {
+                            js_math_max(&nums)
+                        } else {
+                            js_math_min(&nums)
+                        };
+                        // Emit only when the result has a faithful numeric-literal
+                        // spelling. Two results don't:
+                        //   * an infinite result — but all-finite literal inputs
+                        //     never produce one (defense-in-depth);
+                        //   * NEGATIVE ZERO — `-0` has NO numeric-literal token in
+                        //     JS (`-0` is UnaryMinus on `0`, and ToString(-0) is
+                        //     "0"), so a bare `NumericLiteral` would print as `0`
+                        //     (=== +0). `Math.min(0, -0)` is `-0`, so folding it
+                        //     would flip the sign bit (observable via `1/x` or
+                        //     `Object.is`). DECLINE — leaving the call intact is safe.
+                        if result.is_finite() && !(result == 0.0 && result.is_sign_negative()) {
+                            let parent = c.cv.clone();
+                            let before =
+                                format!("Math.{}({} numeric arg(s))", prop.name, nums.len());
+                            let after = format_js_number(result);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
+                        }
+                    }
+                }
+
                 // ---- Object.fromEntries([[k, v], …]) → object literal ----
                 //
                 // `Object.fromEntries` (ECMAScript §20.1.2.7) is the inverse of
@@ -4407,6 +4467,45 @@ fn literal_nullish(expr: &Expression) -> Option<bool> {
         | Expression::StringLiteral(_) => Some(false),
         _ => None,
     }
+}
+
+/// Evaluate `Math.max(values…)` per ECMAScript §21.3.2.24: the largest value,
+/// with `+0` preferred over `-0`, and `NaN` if any input is NaN. (Our callers
+/// only pass numeric literals, which are never NaN, but the NaN guard keeps the
+/// helper a faithful standalone model.) We implement the signed-zero rule by
+/// hand rather than using `f64::max`, whose zero handling we don't want to rely
+/// on. The starting accumulator is `-Infinity` (the identity for max).
+fn js_math_max(values: &[f64]) -> f64 {
+    let mut acc = f64::NEG_INFINITY;
+    for &v in values {
+        if v.is_nan() {
+            return f64::NAN;
+        }
+        // Take v when it is strictly larger, OR when both are zero and v is the
+        // `+0` that max must prefer over a `-0` accumulator.
+        if v > acc || (v == acc && v == 0.0 && v.is_sign_positive()) {
+            acc = v;
+        }
+    }
+    acc
+}
+
+/// Evaluate `Math.min(values…)` per ECMAScript §21.3.2.25: the smallest value,
+/// with `-0` preferred over `+0`, and `NaN` if any input is NaN. Starting
+/// accumulator is `+Infinity` (the identity for min).
+fn js_math_min(values: &[f64]) -> f64 {
+    let mut acc = f64::INFINITY;
+    for &v in values {
+        if v.is_nan() {
+            return f64::NAN;
+        }
+        // Take v when it is strictly smaller, OR when both are zero and v is the
+        // `-0` that min must prefer over a `+0` accumulator.
+        if v < acc || (v == acc && v == 0.0 && v.is_sign_negative()) {
+            acc = v;
+        }
+    }
+    acc
 }
 
 /// Lower the properties of the object literal passed to `Object.entries` into a
@@ -8826,6 +8925,170 @@ mod tests {
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "a.of(1) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- Math.max / Math.min (static) ----------------
+
+    /// Build `Math.<method>(<args…>)`.
+    fn math_call(method: &str, args: Vec<Expression>) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Math"), method)),
+            arguments: args,
+        })
+    }
+
+    /// Run the pass and return the single folded numeric value, asserting it
+    /// folded to a numeric literal.
+    fn folded_number(c: Expression) -> f64 {
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "expected the Math call to fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => n.value,
+            other => panic!("expected numeric literal; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_math_max_min_basic() {
+        assert_eq!(
+            folded_number(math_call(
+                "max",
+                vec![num(1.0, None), num(2.0, None), num(3.0, None)]
+            )),
+            3.0
+        );
+        assert_eq!(
+            folded_number(math_call(
+                "min",
+                vec![num(1.0, None), num(2.0, None), num(3.0, None)]
+            )),
+            1.0
+        );
+    }
+
+    #[test]
+    fn fold_math_max_min_negatives_and_single() {
+        assert_eq!(
+            folded_number(math_call("max", vec![num(-5.0, None), num(-1.0, None)])),
+            -1.0
+        );
+        assert_eq!(
+            folded_number(math_call("min", vec![num(-5.0, None), num(-1.0, None)])),
+            -5.0
+        );
+        // Single argument returns that argument.
+        assert_eq!(folded_number(math_call("max", vec![num(7.0, None)])), 7.0);
+        assert_eq!(folded_number(math_call("min", vec![num(7.0, None)])), 7.0);
+    }
+
+    #[test]
+    fn fold_math_max_prefers_positive_zero() {
+        // Math.max(-0, +0) === +0 and Math.max(+0, -0) === +0.
+        for args in [
+            vec![num(-0.0, None), num(0.0, None)],
+            vec![num(0.0, None), num(-0.0, None)],
+        ] {
+            let r = folded_number(math_call("max", args));
+            assert_eq!(r, 0.0);
+            assert!(r.is_sign_positive(), "Math.max(±0) must be +0");
+        }
+    }
+
+    #[test]
+    fn math_negative_zero_result_does_not_fold() {
+        // A result of -0 has NO faithful numeric-literal spelling (`-0` is
+        // UnaryMinus on `0`, ToString(-0) === "0"), so emitting it would print
+        // `0` (=== +0) — a sign-bit miscompile. We DECLINE these:
+        //   Math.min(-0, +0) === -0, Math.min(+0, -0) === -0, Math.max(-0, -0) === -0,
+        //   Math.min(-0)     === -0.
+        let cases = [
+            math_call("min", vec![num(-0.0, None), num(0.0, None)]),
+            math_call("min", vec![num(0.0, None), num(-0.0, None)]),
+            math_call("max", vec![num(-0.0, None), num(-0.0, None)]),
+            math_call("min", vec![num(-0.0, None)]),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "a -0 result must not fold (no -0 literal spelling)");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn fold_math_positive_zero_result_still_folds() {
+        // A +0 result IS representable, so it still folds.
+        // Math.max(-0, +0) === +0; Math.min(+0, +0) === +0; Math.max(0) === +0.
+        for c in [
+            math_call("max", vec![num(-0.0, None), num(0.0, None)]),
+            math_call("min", vec![num(0.0, None), num(0.0, None)]),
+            math_call("max", vec![num(0.0, None)]),
+        ] {
+            let r = folded_number(c);
+            assert_eq!(r, 0.0);
+            assert!(r.is_sign_positive(), "a +0 result folds to +0");
+        }
+    }
+
+    #[test]
+    fn math_max_min_non_literal_argument_does_not_fold() {
+        // A non-literal argument (identifier — could be NaN/Infinity at runtime)
+        // declines the whole fold.
+        for method in ["max", "min"] {
+            let c = math_call(method, vec![num(1.0, None), ident("x")]);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "Math.{method}(1, x) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn math_max_min_zero_args_does_not_fold() {
+        // Math.max() → -Infinity, Math.min() → +Infinity; we decline emitting an
+        // infinite numeric literal.
+        for method in ["max", "min"] {
+            let c = math_call(method, vec![]);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "Math.{method}() must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn math_max_min_on_non_global_receiver_does_not_fold() {
+        // Only the bare global `Math` folds; `m.max(1, 2)` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("m"), "max")),
+            arguments: vec![num(1.0, None), num(2.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "m.max(1, 2) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn math_other_methods_do_not_fold() {
+        // Only max/min are modelled; e.g. Math.pow(2, 3) is left alone.
+        let c = math_call("pow", vec![num(2.0, None), num(3.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Math.pow(2, 3) is not modelled and must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn js_math_max_min_helpers_signed_zero_and_nan() {
+        // Direct unit coverage of the spec-faithful reducers.
+        assert_eq!(js_math_max(&[1.0, 5.0, 3.0]), 5.0);
+        assert_eq!(js_math_min(&[1.0, 5.0, 3.0]), 1.0);
+        assert!(js_math_max(&[-0.0, 0.0]).is_sign_positive());
+        assert!(js_math_min(&[0.0, -0.0]).is_sign_negative());
+        // NaN propagation (callers never hit this, but the model is faithful).
+        assert!(js_math_max(&[1.0, f64::NAN]).is_nan());
+        assert!(js_math_min(&[f64::NAN, 1.0]).is_nan());
+        // Empty → identities.
+        assert_eq!(js_math_max(&[]), f64::NEG_INFINITY);
+        assert_eq!(js_math_min(&[]), f64::INFINITY);
     }
 
     // ------------------- Object.fromEntries (static) -----------------

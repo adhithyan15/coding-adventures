@@ -599,7 +599,7 @@ backend immediately) come before the enabler-dependent items.
   RESTORE / READ B / PRINT A+B` ⇒ 42 (proves sequential consumption + rewind).
   BA7-3 adds the fractional proof: `DATA 3.14, 0.25 / READ A(0) / READ B / PRINT
   A(0) / PRINT B` ⇒ `3.14` and `.25` on all 7 backends.
-- ◑ **BA7** — floating-point (needs **E3**, ✅; **E8**, ✅). Design spec is
+- ✅ **BA7** — floating-point (needs **E3**, ✅; **E8**, ✅). Design spec is
   **decision-complete** ([`lang-full-ba7-floating-point.md`](lang-full-ba7-floating-point.md))
   by historical Dartmouth BASIC fidelity (no sign-off gate). **BA7-1a/1b landed**
   (`dartmouth-basic-iir-compiler` 0.11.0): decimal/exponent and integer-spelled
@@ -613,7 +613,7 @@ backend immediately) come before the enabler-dependent items.
   `dartmouth-basic-iir-compiler` 0.12.0: `DIM` arrays and `DATA` pools now store
   `f64`, with index/read-pointer boundaries left as `i64`; fractional `DATA`
   through array and scalar `READ` runs on native/LLVM/WASM/JVM/CLR/VM/JIT. BA7
-  numeric formatting completed in 0.13.0.
+  numeric formatting completed in 0.13.0. **BA7 COMPLETE.**
 - ✅ **BA-^** — integer-literal exponentiation (`dartmouth-basic-iir-compiler` 0.26.0).
   The parser already supported right-associative `^`, but the compiler rejected it pending
   a runtime math helper. The backend-neutral slice now recognizes nonnegative
@@ -621,6 +621,15 @@ backend immediately) come before the enabler-dependent items.
   `mul`, so no backend learns a new operation. Verified by RUNNING `PRINT 6 ^ 2 + 6`
   on native/LLVM/WASM/JVM/CLR/VM/JIT → stdout `42`. General variable, nested, negative,
   fractional, and large exponents still need a cross-backend runtime math helper.
+- ✅ **BA-builtins** — `SQR`, `INT`, `ABS`, `SGN` built-in functions
+  (`dartmouth-basic-iir-compiler` 0.32.0). All four reuse existing IIR ops — no new
+  backend code needed. `SQR(X)` → `f64_sqrt` (the same hardware-sqrt op ALGOL uses).
+  `INT(X)` → `real_to_int_floor` + `int_to_real` (E8 ops, floor toward −∞, result is
+  real). `ABS(X)` and `SGN(X)` lower inline via `cmp_lt`/`cmp_gt` + store-per-branch
+  conditionals (same pattern as ALGOL `abs`/`sign`). **Verified by RUNNING** on
+  native/LLVM/WASM/JVM/CLR/VM/JIT: `PRINT SQR(49)` → `7`, `PRINT INT(3.7)` → `3`,
+  `PRINT ABS(-42)` → `42`, `PRINT SGN(-5)` → `-1`. `SIN`, `COS`, `LOG`, `EXP`,
+  `TAN`, `ATN`, `RND` need a cross-backend math helper (libm/host call) — deferred.
 
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`

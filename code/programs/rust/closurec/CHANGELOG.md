@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.223.0] - 2026-06-27
+
+### Added — SIMPLE/ADVANCED fold static `Math.max(…)` / `Math.min(…)` → numeric
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static `Math.max(…)` or
+`Math.min(…)` call (ECMAScript §21.3.2.24 / .25) to a numeric literal when there
+is at least one argument and every argument is a numeric literal (e.g.
+`Math.max(1, 2, 3)` → `3`, `Math.min(-5, -1)` → `-5`). Signed zero follows the
+spec exactly (`max` prefers `+0`, `min` prefers `-0`). We decline a non-literal
+argument (a runtime value could be `Infinity`/`NaN` or otherwise unknown), the
+empty call (`Math.max()` → `-Infinity`), and a non-global receiver
+(`m.max(...)`). New end-to-end fixture `tests/diff/simple-fold-math-max-min/`
+plus integration test `tests/diff_simple_fold_math_max_min.rs`.
+
 ## [0.222.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold static `Array.from("…")` → array of code-point strings
