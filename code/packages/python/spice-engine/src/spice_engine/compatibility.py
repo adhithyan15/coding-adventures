@@ -6,6 +6,690 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from math import isfinite, pi
 
+BERKELEY_SPICE_GRAMMAR_NAME = "berkeley-spice-logical-card"
+BERKELEY_SPICE_GRAMMAR_VERSION = 1
+BERKELEY_SPICE_TOKEN_GRAMMAR = """# Berkeley SPICE logical-card token grammar.
+# @version 1
+# @case_insensitive true
+#
+# This grammar targets normalized Berkeley SPICE logical cards: physical deck
+# preprocessing owns title-line capture, column-1 comments, blank physical
+# lines, and leading `+` continuations. The token stream below is therefore
+# card-oriented and deliberately preserves device/model atoms for the semantic
+# lowerer instead of trying to encode all SPICE device arity in the lexer.
+
+skip:
+  WHITESPACE = /[ \\t\\r]+/
+
+# Quoted and braced expressions must win before the generic ATOM token.
+QUOTED_STRING = /"([^"\\\\\\n]|\\\\.)*"/
+BRACED_EXPR   = /\\{[^}\\n]*\\}/
+
+# Berkeley/SPICE-style scalar with optional engineering suffix. Semantic
+# resolution owns suffix meaning (`m` vs `meg`, temperature units, etc.).
+NUMBER = /[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?[a-zA-Z]*/
+
+# Known dot cards for the Berkeley compatibility base plus the already-present
+# post-1970s analysis/output footholds. These appear before DOT so `.op` is not
+# tokenized as DOT + ATOM.
+DOT_END     = ".end"
+DOT_ENDS    = ".ends"
+DOT_SUBCKT  = ".subckt"
+DOT_MODEL   = ".model"
+DOT_PARAM   = ".param"
+DOT_FUNC    = ".func"
+DOT_OPTIONS = ".options"
+DOT_TEMP    = ".temp"
+DOT_IC      = ".ic"
+DOT_NODESET = ".nodeset"
+DOT_OP      = ".op"
+DOT_DC      = ".dc"
+DOT_AC      = ".ac"
+DOT_TRAN    = ".tran"
+DOT_TF      = ".tf"
+DOT_SENS    = ".sens"
+DOT_NOISE   = ".noise"
+DOT_DISTO   = ".disto"
+DOT_PZ      = ".pz"
+DOT_PRINT   = ".print"
+DOT_PLOT    = ".plot"
+DOT_SAVE    = ".save"
+DOT_PROBE   = ".probe"
+DOT_MEASURE = ".measure"
+DOT_MEAS    = ".meas"
+DOT_FOUR    = ".four"
+DOT_INCLUDE = ".include"
+DOT_LIB     = ".lib"
+DOT_CONTROL = ".control"
+DOT_ENDC    = ".endc"
+
+LPAREN = "("
+RPAREN = ")"
+COMMA  = ","
+EQUALS = "="
+DOT    = "."
+
+# Generic card atom. This is intentionally broad because SPICE node names,
+# device names, model names, vector names, and source waveform arguments vary
+# across dialects. Semantic lowering classifies atoms by card kind.
+ATOM = /[^ \\t\\r\\n()=,"{}]+/
+"""
+BERKELEY_SPICE_PARSER_GRAMMAR = """# Berkeley SPICE logical-card parser grammar.
+# @version 1
+#
+# Input is a stream of normalized logical cards. The grammar recognizes the
+# stable card shapes and leaves device arity, model parameter legality,
+# expression evaluation, include/lib resolution, and dialect-specific behavior
+# to semantic passes.
+
+deck = { line } [ end_card ] EOF ;
+
+line = blank_line
+     | subckt_block
+     | model_card
+     | param_card
+     | func_card
+     | options_card
+     | condition_card
+     | analysis_card
+     | output_card
+     | source_card
+     | control_card
+     | unknown_directive_card
+     | element_card
+     ;
+
+blank_line = NEWLINE ;
+
+end_card = DOT_END NEWLINE ;
+
+subckt_block = subckt_card { line } ends_card ;
+subckt_card  = DOT_SUBCKT ATOM { card_item } NEWLINE ;
+ends_card    = DOT_ENDS [ ATOM ] NEWLINE ;
+
+model_card = DOT_MODEL ATOM ATOM [ parameter_list ] NEWLINE ;
+
+param_card   = DOT_PARAM { assignment } NEWLINE ;
+func_card    = DOT_FUNC function_signature card_value NEWLINE ;
+options_card = DOT_OPTIONS { option_item } NEWLINE ;
+
+condition_card = ( DOT_TEMP | DOT_IC | DOT_NODESET ) { option_item } NEWLINE ;
+
+analysis_card = ( DOT_OP
+                | DOT_DC
+                | DOT_AC
+                | DOT_TRAN
+                | DOT_TF
+                | DOT_SENS
+                | DOT_NOISE
+                | DOT_DISTO
+                | DOT_PZ
+                ) { card_item } NEWLINE ;
+
+output_card = ( DOT_PRINT
+              | DOT_PLOT
+              | DOT_SAVE
+              | DOT_PROBE
+              | DOT_MEASURE
+              | DOT_MEAS
+              | DOT_FOUR
+              ) { card_item } NEWLINE ;
+
+source_card = ( DOT_INCLUDE | DOT_LIB ) { card_item } NEWLINE ;
+
+control_card = DOT_CONTROL NEWLINE { control_line } DOT_ENDC NEWLINE ;
+control_line = { card_item } NEWLINE ;
+
+unknown_directive_card = DOT ATOM { card_item } NEWLINE ;
+
+element_card = ATOM { card_item } NEWLINE ;
+
+parameter_list = LPAREN [ option_item { [ COMMA ] option_item } ] RPAREN ;
+
+option_item = assignment | card_value | waveform_call ;
+assignment  = ATOM EQUALS card_value ;
+
+function_signature = ATOM LPAREN [ ATOM { COMMA ATOM } ] RPAREN ;
+
+waveform_call = ATOM LPAREN [ card_item { [ COMMA ] card_item } ] RPAREN ;
+
+card_item = option_item
+          | parameter_list
+          | card_value
+          ;
+
+card_value = NUMBER
+           | ATOM
+           | QUOTED_STRING
+           | BRACED_EXPR
+           ;
+"""
+
+
+@dataclass(frozen=True, slots=True)
+class BerkeleySourceSpan:
+    """One-based source span for a normalized Berkeley SPICE token or card."""
+
+    start_line: int
+    start_column: int
+    end_line: int
+    end_column: int
+
+
+@dataclass(frozen=True, slots=True)
+class BerkeleySyntaxDiagnostic:
+    """Stable Berkeley SPICE logical-card syntax diagnostic."""
+
+    code: str
+    severity: str
+    message: str
+    span: BerkeleySourceSpan | None = None
+
+    def is_error(self) -> bool:
+        return self.severity == "error"
+
+
+@dataclass(frozen=True, slots=True)
+class BerkeleySyntaxToken:
+    """A token emitted by the shared Berkeley SPICE logical-card facade."""
+
+    kind: str
+    text: str
+    span: BerkeleySourceSpan
+
+
+@dataclass(frozen=True, slots=True)
+class BerkeleyLogicalCard:
+    """A normalized Berkeley SPICE logical card with token and span metadata."""
+
+    kind: str
+    head: str
+    text: str
+    span: BerkeleySourceSpan
+    physical_lines: tuple[int, ...]
+    tokens: tuple[BerkeleySyntaxToken, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class BerkeleyGrammarMetadata:
+    """The grammar source bundle used by the Berkeley syntax facade."""
+
+    name: str
+    version: int
+    token_grammar: str
+    parser_grammar: str
+
+
+@dataclass(frozen=True, slots=True)
+class BerkeleyAnalysisInventoryEntry:
+    """A source-card entry for analysis directives in a Berkeley syntax deck."""
+
+    index: int
+    directive: str
+    analysis: str
+    span: BerkeleySourceSpan
+
+
+@dataclass(frozen=True, slots=True)
+class BerkeleySyntaxDeck:
+    """Parsed Berkeley SPICE logical-card syntax deck."""
+
+    grammar: BerkeleyGrammarMetadata
+    title: str | None
+    cards: tuple[BerkeleyLogicalCard, ...]
+    diagnostics: tuple[BerkeleySyntaxDiagnostic, ...]
+
+    def has_errors(self) -> bool:
+        return any(diagnostic.is_error() for diagnostic in self.diagnostics)
+
+    def analysis_inventory(self) -> tuple[BerkeleyAnalysisInventoryEntry, ...]:
+        entries: list[BerkeleyAnalysisInventoryEntry] = []
+        for index, card in enumerate(self.cards):
+            if card.kind != "analysis":
+                continue
+            entries.append(
+                BerkeleyAnalysisInventoryEntry(
+                    index=index,
+                    directive=card.head,
+                    analysis=card.head.removeprefix(".").lower(),
+                    span=card.span,
+                )
+            )
+        return tuple(entries)
+
+
+@dataclass(slots=True)
+class _BerkeleySourcePosition:
+    line: int
+    column: int
+
+
+@dataclass(slots=True)
+class _BerkeleyLogicalCardBuilder:
+    text: str
+    positions: list[_BerkeleySourcePosition]
+    physical_lines: list[int]
+
+    @classmethod
+    def new(cls, line_number: int, text: str, start_column: int) -> _BerkeleyLogicalCardBuilder:
+        positions = [
+            _BerkeleySourcePosition(line_number, start_column + offset)
+            for offset, _ in enumerate(text)
+        ]
+        return cls(text=text, positions=positions, physical_lines=[line_number])
+
+    def append_continuation(self, line_number: int, text: str, start_column: int) -> None:
+        if not text:
+            return
+        join_position = (
+            self.positions[-1]
+            if self.positions
+            else _BerkeleySourcePosition(line_number, start_column)
+        )
+        self.text += " "
+        self.positions.append(_BerkeleySourcePosition(join_position.line, join_position.column))
+        for offset, char in enumerate(text):
+            self.text += char
+            self.positions.append(_BerkeleySourcePosition(line_number, start_column + offset))
+        self.physical_lines.append(line_number)
+
+    def span(self) -> BerkeleySourceSpan:
+        if not self.positions:
+            return _berkeley_source_point(1, 1)
+        start = self.positions[0]
+        end = self.positions[-1]
+        return BerkeleySourceSpan(
+            start_line=start.line,
+            start_column=start.column,
+            end_line=end.line,
+            end_column=end.column + 1,
+        )
+
+
+def parse_berkeley_syntax(text: str) -> BerkeleySyntaxDeck:
+    """Parse physical SPICE deck text into normalized Berkeley logical cards."""
+
+    builders: list[_BerkeleyLogicalCardBuilder] = []
+    diagnostics: list[BerkeleySyntaxDiagnostic] = []
+    pending: _BerkeleyLogicalCardBuilder | None = None
+    title: str | None = None
+    saw_content = False
+
+    for index, raw_line in enumerate(text.splitlines()):
+        line_number = index + 1
+        without_comment = _strip_berkeley_inline_comment(raw_line)
+        trimmed_info = _berkeley_trimmed_with_column(without_comment)
+        if trimmed_info is None:
+            continue
+        trimmed, start_column = trimmed_info
+        if not trimmed:
+            continue
+        if trimmed.startswith("*"):
+            if not saw_content and title is None:
+                candidate = trimmed[1:].strip()
+                if candidate:
+                    title = candidate
+            continue
+        if trimmed.startswith("+"):
+            after_plus = trimmed[1:]
+            continuation = after_plus.strip()
+            continuation_start_column = (
+                start_column + 1 + len(after_plus) - len(after_plus.lstrip())
+            )
+            if pending is None:
+                diagnostics.append(
+                    _berkeley_syntax_error(
+                        "SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD",
+                        "continuation line appears before any logical SPICE card",
+                        _berkeley_source_point(line_number, start_column),
+                    )
+                )
+            else:
+                pending.append_continuation(
+                    line_number, continuation, continuation_start_column
+                )
+            continue
+
+        saw_content = True
+        if pending is not None:
+            builders.append(pending)
+        pending = _BerkeleyLogicalCardBuilder.new(line_number, trimmed, start_column)
+
+    if pending is not None:
+        builders.append(pending)
+
+    cards = tuple(_berkeley_logical_card(builder, diagnostics) for builder in builders)
+    return BerkeleySyntaxDeck(
+        grammar=_berkeley_grammar_metadata(),
+        title=title,
+        cards=cards,
+        diagnostics=tuple(diagnostics),
+    )
+
+
+def _berkeley_grammar_metadata() -> BerkeleyGrammarMetadata:
+    return BerkeleyGrammarMetadata(
+        name=BERKELEY_SPICE_GRAMMAR_NAME,
+        version=BERKELEY_SPICE_GRAMMAR_VERSION,
+        token_grammar=BERKELEY_SPICE_TOKEN_GRAMMAR,
+        parser_grammar=BERKELEY_SPICE_PARSER_GRAMMAR,
+    )
+
+
+def _berkeley_logical_card(
+    builder: _BerkeleyLogicalCardBuilder,
+    diagnostics: list[BerkeleySyntaxDiagnostic],
+) -> BerkeleyLogicalCard:
+    tokens = tuple(_tokenize_berkeley_card(builder, diagnostics))
+    head = _berkeley_card_head(tokens)
+    return BerkeleyLogicalCard(
+        kind=_classify_berkeley_card(head),
+        head=head,
+        text=builder.text,
+        span=builder.span(),
+        physical_lines=tuple(builder.physical_lines),
+        tokens=tokens,
+    )
+
+
+def _tokenize_berkeley_card(
+    builder: _BerkeleyLogicalCardBuilder,
+    diagnostics: list[BerkeleySyntaxDiagnostic],
+) -> list[BerkeleySyntaxToken]:
+    chars = list(builder.text)
+    tokens: list[BerkeleySyntaxToken] = []
+    index = 0
+    paren_depth = 0
+
+    while index < len(chars):
+        char = chars[index]
+        if char.isspace():
+            index += 1
+            continue
+
+        if char == '"':
+            start = index
+            index += 1
+            escaped = False
+            closed = False
+            while index < len(chars):
+                current = chars[index]
+                if escaped:
+                    escaped = False
+                elif current == "\\":
+                    escaped = True
+                elif current == '"':
+                    index += 1
+                    closed = True
+                    break
+                index += 1
+            if not closed:
+                diagnostics.append(
+                    _berkeley_syntax_error(
+                        "SPICE_SYNTAX_UNCLOSED_QUOTE",
+                        "quoted string is missing its closing quote",
+                        _berkeley_span_for_range(builder.positions, start, index),
+                    )
+                )
+            tokens.append(_berkeley_token("QUOTED_STRING", chars, builder.positions, start, index))
+            continue
+
+        if char == "{":
+            start = index
+            index += 1
+            closed = False
+            while index < len(chars):
+                if chars[index] == "}":
+                    index += 1
+                    closed = True
+                    break
+                index += 1
+            if not closed:
+                diagnostics.append(
+                    _berkeley_syntax_error(
+                        "SPICE_SYNTAX_UNCLOSED_BRACED_EXPR",
+                        "braced expression is missing its closing brace",
+                        _berkeley_span_for_range(builder.positions, start, index),
+                    )
+                )
+            tokens.append(_berkeley_token("BRACED_EXPR", chars, builder.positions, start, index))
+            continue
+
+        if char == "(":
+            paren_depth += 1
+            tokens.append(_berkeley_token("LPAREN", chars, builder.positions, index, index + 1))
+            index += 1
+            continue
+        if char == ")":
+            if paren_depth == 0:
+                diagnostics.append(
+                    _berkeley_syntax_error(
+                        "SPICE_SYNTAX_UNMATCHED_RPAREN",
+                        "closing parenthesis has no matching opening parenthesis",
+                        _berkeley_span_for_range(builder.positions, index, index + 1),
+                    )
+                )
+            else:
+                paren_depth -= 1
+            tokens.append(_berkeley_token("RPAREN", chars, builder.positions, index, index + 1))
+            index += 1
+            continue
+        if char == ",":
+            tokens.append(_berkeley_token("COMMA", chars, builder.positions, index, index + 1))
+            index += 1
+            continue
+        if char == "=":
+            tokens.append(_berkeley_token("EQUALS", chars, builder.positions, index, index + 1))
+            index += 1
+            continue
+
+        if char == ".":
+            atom_end = _read_berkeley_atom_end(chars, index)
+            raw = "".join(chars[index:atom_end])
+            kind = _known_berkeley_dot_token(raw)
+            if kind is not None:
+                tokens.append(_berkeley_token(kind, chars, builder.positions, index, atom_end))
+                index = atom_end
+            else:
+                tokens.append(_berkeley_token("DOT", chars, builder.positions, index, index + 1))
+                index += 1
+            continue
+
+        start = index
+        index = _read_berkeley_atom_end(chars, index)
+        raw = "".join(chars[start:index])
+        kind = "NUMBER" if _is_berkeley_number_token(raw) else "ATOM"
+        tokens.append(_berkeley_token(kind, chars, builder.positions, start, index))
+
+    if paren_depth > 0:
+        diagnostics.append(
+            _berkeley_syntax_error(
+                "SPICE_SYNTAX_UNCLOSED_PAREN",
+                "unclosed parenthesis: opening parenthesis is missing its closing parenthesis",
+                builder.span(),
+            )
+        )
+
+    return tokens
+
+
+def _berkeley_token(
+    kind: str,
+    chars: list[str],
+    positions: list[_BerkeleySourcePosition],
+    start: int,
+    end: int,
+) -> BerkeleySyntaxToken:
+    return BerkeleySyntaxToken(
+        kind=kind,
+        text="".join(chars[start:end]),
+        span=_berkeley_span_for_range(positions, start, end),
+    )
+
+
+def _berkeley_span_for_range(
+    positions: list[_BerkeleySourcePosition],
+    start: int,
+    end: int,
+) -> BerkeleySourceSpan:
+    if positions:
+        first = positions[start] if start < len(positions) else positions[0]
+    else:
+        first = _BerkeleySourcePosition(1, 1)
+    last_index = max(end - 1, 0)
+    last = positions[last_index] if last_index < len(positions) else first
+    return BerkeleySourceSpan(
+        start_line=first.line,
+        start_column=first.column,
+        end_line=last.line,
+        end_column=last.column + 1,
+    )
+
+
+def _berkeley_card_head(tokens: Sequence[BerkeleySyntaxToken]) -> str:
+    if not tokens:
+        return ""
+    first = tokens[0]
+    if first.kind == "DOT" and len(tokens) > 1 and tokens[1].kind == "ATOM":
+        return f".{tokens[1].text}"
+    return first.text
+
+
+def _classify_berkeley_card(head: str) -> str:
+    lowered = head.lower()
+    if lowered == ".model":
+        return "model"
+    if lowered == ".subckt":
+        return "subckt_start"
+    if lowered == ".ends":
+        return "subckt_end"
+    if lowered == ".end":
+        return "end"
+    if lowered == ".param":
+        return "param"
+    if lowered == ".func":
+        return "func"
+    if lowered == ".options":
+        return "options"
+    if lowered in {".temp", ".ic", ".nodeset"}:
+        return "condition"
+    if lowered in {".op", ".dc", ".ac", ".tran", ".tf", ".sens", ".noise", ".disto", ".pz"}:
+        return "analysis"
+    if lowered in {".print", ".plot", ".save", ".probe", ".measure", ".meas", ".four"}:
+        return "output"
+    if lowered in {".include", ".lib"}:
+        return "source"
+    if lowered == ".control":
+        return "control_start"
+    if lowered == ".endc":
+        return "control_end"
+    if lowered.startswith("."):
+        return "unknown_directive"
+    return "element"
+
+
+def _read_berkeley_atom_end(chars: list[str], index: int) -> int:
+    while index < len(chars):
+        char = chars[index]
+        if char.isspace() or char in {'(', ')', ',', '=', '"', '{', '}'}:
+            break
+        index += 1
+    return index
+
+
+def _known_berkeley_dot_token(raw: str) -> str | None:
+    return {
+        ".end": "DOT_END",
+        ".ends": "DOT_ENDS",
+        ".subckt": "DOT_SUBCKT",
+        ".model": "DOT_MODEL",
+        ".param": "DOT_PARAM",
+        ".func": "DOT_FUNC",
+        ".options": "DOT_OPTIONS",
+        ".temp": "DOT_TEMP",
+        ".ic": "DOT_IC",
+        ".nodeset": "DOT_NODESET",
+        ".op": "DOT_OP",
+        ".dc": "DOT_DC",
+        ".ac": "DOT_AC",
+        ".tran": "DOT_TRAN",
+        ".tf": "DOT_TF",
+        ".sens": "DOT_SENS",
+        ".noise": "DOT_NOISE",
+        ".disto": "DOT_DISTO",
+        ".pz": "DOT_PZ",
+        ".print": "DOT_PRINT",
+        ".plot": "DOT_PLOT",
+        ".save": "DOT_SAVE",
+        ".probe": "DOT_PROBE",
+        ".measure": "DOT_MEASURE",
+        ".meas": "DOT_MEAS",
+        ".four": "DOT_FOUR",
+        ".include": "DOT_INCLUDE",
+        ".lib": "DOT_LIB",
+        ".control": "DOT_CONTROL",
+        ".endc": "DOT_ENDC",
+    }.get(raw.lower())
+
+
+def _is_berkeley_number_token(raw: str) -> bool:
+    index = 0
+    if index < len(raw) and raw[index] in "+-":
+        index += 1
+
+    digits_before_dot = 0
+    while index < len(raw) and raw[index].isdigit():
+        digits_before_dot += 1
+        index += 1
+
+    digits_after_dot = 0
+    if index < len(raw) and raw[index] == ".":
+        index += 1
+        while index < len(raw) and raw[index].isdigit():
+            digits_after_dot += 1
+            index += 1
+
+    if digits_before_dot == 0 and digits_after_dot == 0:
+        return False
+
+    if index < len(raw) and raw[index] in "eE":
+        probe = index + 1
+        if probe < len(raw) and raw[probe] in "+-":
+            probe += 1
+        exponent_digits = 0
+        while probe < len(raw) and raw[probe].isdigit():
+            exponent_digits += 1
+            probe += 1
+        if exponent_digits > 0:
+            index = probe
+
+    return all(char.isalpha() for char in raw[index:])
+
+
+def _strip_berkeley_inline_comment(line: str) -> str:
+    return line.split(";", 1)[0]
+
+
+def _berkeley_trimmed_with_column(line: str) -> tuple[str, int] | None:
+    trimmed_end = line.rstrip()
+    if not trimmed_end:
+        return None
+    trimmed = trimmed_end.lstrip()
+    leading_columns = len(trimmed_end) - len(trimmed)
+    return trimmed, leading_columns + 1
+
+
+def _berkeley_source_point(line: int, column: int) -> BerkeleySourceSpan:
+    return BerkeleySourceSpan(line, column, line, column)
+
+
+def _berkeley_syntax_error(
+    code: str,
+    message: str,
+    span: BerkeleySourceSpan | None,
+) -> BerkeleySyntaxDiagnostic:
+    return BerkeleySyntaxDiagnostic(code=code, severity="error", message=message, span=span)
+
 
 @dataclass(frozen=True, slots=True)
 class CompatibilityOracle:

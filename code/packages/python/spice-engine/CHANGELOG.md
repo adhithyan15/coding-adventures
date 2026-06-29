@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Berkeley SPICE syntax facade** —
+  `parse_berkeley_syntax()` now mirrors the Rust Berkeley logical-card parser
+  contract with embedded grammar metadata, normalized continuation cards,
+  source spans, token streams, stable diagnostics, and analysis inventory for
+  frontend and parser-tooling consumers.
+
 - **Device model reference-deck audit analysis summaries** —
   `device_model_reference_deck_audit_analysis_summary()`,
   `format_device_model_reference_deck_audit_analysis_summary_table()`,

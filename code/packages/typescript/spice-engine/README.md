@@ -90,6 +90,11 @@ transient `WHEN probe=target` cards report first or counted `RISE`, `FALL`, and
 cards report trigger-to-target crossing delays. The deck helpers route parsed
 transient, DC sweep, and AC sweep `.measure` / `.meas` cards into those stable
 measurement rows.
+`parseBerkeleySyntax` exposes the shared Berkeley SPICE logical-card parser
+contract for editors and Mosaic-style app shells: it normalizes leading `+`
+continuations, removes inline semicolon comments, preserves source spans and
+token streams, reports stable syntax diagnostics, embeds the checked grammar
+metadata, and returns an analysis inventory without requiring solver dispatch.
 `resolveDeckAnalyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
 `.end`, keeps non-analysis active lines, and reports stable diagnostics for
 malformed arguments, unsupported AC sweep modes, invalid sweep intervals, and
