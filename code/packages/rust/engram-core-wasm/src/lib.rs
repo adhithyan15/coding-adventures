@@ -4211,15 +4211,19 @@ mod tests {
             "is:due OR is:new"
         );
 
-        let error: Value = serde_json::from_str(&session.search_cards("kind:review", NOW)).unwrap();
+        let empty_field_search: Value =
+            serde_json::from_str(&session.search_cards("kind:review", NOW)).unwrap();
 
-        assert_eq!(error["ok"], false);
-        assert_eq!(error["token"], "kind:review");
+        assert_eq!(empty_field_search["ok"], true);
+        assert_eq!(empty_field_search["results"], json!([]));
 
-        let browser_error: Value =
+        let empty_field_browser_props: Value =
             serde_json::from_str(&session.engram_browser_props("kind:review", NOW)).unwrap();
-        assert_eq!(browser_error["ok"], false);
-        assert_eq!(browser_error["token"], "kind:review");
+        assert_eq!(empty_field_browser_props["ok"], true);
+        assert_eq!(
+            empty_field_browser_props["props"]["browser-results-summary"],
+            "No matching cards"
+        );
     }
 
     #[test]

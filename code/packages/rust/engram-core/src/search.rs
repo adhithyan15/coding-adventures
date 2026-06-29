@@ -588,13 +588,6 @@ fn parse_keyed_clause(
         return parse_field_filter(token, &key, value).map(SearchClauseKind::Field);
     }
 
-    if value.is_empty() {
-        return Err(SearchError {
-            message: "search filter is missing a value".to_string(),
-            token: token.to_string(),
-        });
-    }
-
     match key.as_str() {
         "w" | "nc" | "sc" | "re" => {
             parse_text_filter(token, &key, value).map(SearchClauseKind::Text)
@@ -608,19 +601,33 @@ fn parse_keyed_clause(
             parse_id_filter(token, &value).map(SearchClauseKind::NoteId)
         }
         "card" | "template" | "cardtemplate" | "card_template" | "card-template" => {
+            require_keyed_filter_value(token, value)?;
             Ok(SearchClauseKind::CardTemplate(value.to_lowercase()))
         }
-        "deck" => Ok(SearchClauseKind::Deck(value.to_lowercase())),
-        "preset" => Ok(SearchClauseKind::Preset(value.to_lowercase())),
+        "deck" => {
+            require_keyed_filter_value(token, value)?;
+            Ok(SearchClauseKind::Deck(value.to_lowercase()))
+        }
+        "preset" => {
+            require_keyed_filter_value(token, value)?;
+            Ok(SearchClauseKind::Preset(value.to_lowercase()))
+        }
         "note" | "notetype" | "note_type" | "note-type" => {
+            require_keyed_filter_value(token, value)?;
             Ok(SearchClauseKind::NoteType(value.to_lowercase()))
         }
-        "tag" => parse_tag_filter(token, value).map(SearchClauseKind::Tag),
+        "tag" => {
+            require_keyed_filter_value(token, value)?;
+            parse_tag_filter(token, value).map(SearchClauseKind::Tag)
+        }
         "state" => parse_state_filter(token, &value.to_lowercase()).map(SearchClauseKind::State),
         "is" => parse_is_filter(token, &value.to_lowercase()),
         "flag" => parse_flag_filter(token, &value.to_lowercase()).map(SearchClauseKind::Flag),
         "marked" => parse_bool_filter(token, &value.to_lowercase()).map(SearchClauseKind::Marked),
-        "has-cd" | "has_cd" | "hascd" => Ok(SearchClauseKind::CustomDataKey(value.to_string())),
+        "has-cd" | "has_cd" | "hascd" => {
+            require_keyed_filter_value(token, value)?;
+            Ok(SearchClauseKind::CustomDataKey(value.to_string()))
+        }
         "prop" => parse_property_filter(token, value),
         "added" => {
             parse_recent_days_filter(token, &value.to_lowercase()).map(SearchClauseKind::Added)
@@ -634,15 +641,23 @@ fn parse_keyed_clause(
         "rated" => parse_rated_filter(token, &value.to_lowercase()).map(SearchClauseKind::Rated),
         "resched" | "rescheduled" => parse_recent_days_filter(token, &value.to_lowercase())
             .map(SearchClauseKind::Rescheduled),
-        _ => Err(SearchError {
-            message: "unknown search filter".to_string(),
-            token: token.to_string(),
-        }),
+        _ => parse_field_filter(token, &key, value).map(SearchClauseKind::Field),
     }
 }
 
 fn is_field_search_key(key: &str) -> bool {
     matches!(key, "front" | "back") || key.contains('*') || key.contains(' ')
+}
+
+fn require_keyed_filter_value(token: &str, value: &str) -> Result<(), SearchError> {
+    if value.is_empty() {
+        return Err(SearchError {
+            message: "search filter is missing a value".to_string(),
+            token: token.to_string(),
+        });
+    }
+
+    Ok(())
 }
 
 fn parse_field_filter(token: &str, key: &str, value: &str) -> Result<FieldFilter, SearchError> {
@@ -2132,6 +2147,12 @@ mod tests {
                     required: false,
                     ordinal: 1,
                 },
+                FieldDef {
+                    id: "extra".to_string(),
+                    name: "Extra".to_string(),
+                    required: false,
+                    ordinal: 2,
+                },
             ],
             templates: vec![CardTemplate {
                 id: "forward".to_string(),
@@ -2145,7 +2166,7 @@ mod tests {
             created_at: NOW,
             updated_at: NOW,
         };
-        let note = |id: &str, front: &str, back: &str| Note {
+        let note = |id: &str, front: &str, back: &str, extra: &str| Note {
             id: id.to_string(),
             note_type_id: "basic".to_string(),
             deck_id: "tamil".to_string(),
@@ -2157,6 +2178,10 @@ mod tests {
                 NoteFieldValue {
                     field_id: "back".to_string(),
                     value: back.to_string(),
+                },
+                NoteFieldValue {
+                    field_id: "extra".to_string(),
+                    value: extra.to_string(),
                 },
             ],
             tags: Vec::new(),
@@ -2178,8 +2203,8 @@ mod tests {
             decks: vec![deck("tamil", "Tamil")],
             note_types: vec![note_type],
             notes: vec![
-                note("dog-note", "a dog", ""),
-                note("cat-note", "cat", "tail"),
+                note("dog-note", "a dog", "", "Latin root"),
+                note("cat-note", "cat", "tail", ""),
             ],
             cards: vec![
                 card_for_note("dog-note", "a dog", ""),
@@ -2205,6 +2230,9 @@ mod tests {
         assert_eq!(ids_for("back:"), vec!["dog-note::forward"]);
         assert_eq!(ids_for("back:_*"), vec!["cat-note::forward", "standalone"]);
         assert_eq!(ids_for("front:hola"), vec!["standalone"]);
+        assert_eq!(ids_for("Extra:\"Latin root\""), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("Extra:"), vec!["cat-note::forward"]);
+        assert_eq!(ids_for("Extra:_*"), vec!["dog-note::forward"]);
     }
 
     #[test]
@@ -3004,9 +3032,10 @@ mod tests {
     }
 
     #[test]
-    fn parser_reports_unknown_filters_and_unclosed_quotes() {
-        let error = search_cards(&state(), "kind:review", NOW).unwrap_err();
-        assert_eq!(error.token, "kind:review");
+    fn parser_reports_syntax_errors_and_treats_unknown_keys_as_fields() {
+        assert!(search_cards(&state(), "kind:review", NOW)
+            .unwrap()
+            .is_empty());
 
         let error = search_cards(&state(), "\"vanakkam", NOW).unwrap_err();
         assert_eq!(error.message, "unterminated quoted string");

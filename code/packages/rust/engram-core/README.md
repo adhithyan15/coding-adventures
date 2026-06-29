@@ -85,8 +85,11 @@ modifiers, field-scoped regex searches such as `front:re:...`, tag regexes,
 `edited:`, `introduced:`, `rated:`, and `resched:` filters. `preset:` resolves
 imported Anki deck-option preset names from preserved collection metadata, while
 `prop:pos` / `prop:position` uses imported Anki new-card queue positions when
-available. Imported Anki card custom data can be searched with `has-cd:key`,
-numeric `prop:cdn:key>5`, and scalar string `prop:cds:key=value` filters.
+available. Unknown `key:value` searches fall back to Anki-style note field
+searches, so custom fields such as `Extra:` work alongside built-in `front:` and
+`back:` filters. Imported Anki card custom data can be searched with
+`has-cd:key`, numeric `prop:cdn:key>5`, and scalar string
+`prop:cds:key=value` filters.
 `prop:rated` accepts Anki-style answer-button suffixes such as
 `prop:rated<-7:again`. Imported Anki revlog metadata powers manual reschedule
 searches with `resched:` and `prop:resched`; imported Anki queue metadata also

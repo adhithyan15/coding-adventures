@@ -20,6 +20,8 @@
   `prop:rated<-7:again`.
 - Aligned `introduced:` with Anki revlog semantics by ignoring imported manual
   reschedule rows when detecting a card's first real review.
+- Treated unknown `key:value` browser searches as Anki-style custom field
+  searches, enabling queries such as `Extra:` and `Sentence:re:...`.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.
