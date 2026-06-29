@@ -187,7 +187,9 @@ is text-primary, which is a different mode model.)
 - **L6 (shipped) — `math-frontend` adapter.** `LatexMath` implements `MathFrontend` for `latex`:
   `parse` runs the L2/L3a grammar and lowers `MathNode` → neutral `MathExpr` (presentation
   dropped, meaning kept — `\times`/`\cdot`/juxtaposition → `Mul`, fence style → `Group`, matrix
-  delimiter → `Matrix`, accents → `Call{Other}`, exact numbers preserved). Declares
+  delimiter → `Matrix`, accents (`\hat{x}`/`\vec{v}`) → `Accent{accent, body}` (a diacritic over
+  its body, distinct from a function `Call`; needs `math-frontend` ≥ 0.4.0), exact numbers
+  preserved). Declares
   `Capabilities::all()` and conforms to the shared `check_frontend` harness. LaTeX is registered
   as plugin #1 via `latex::registry()` / `register_latex` — `math-frontend`'s `with_builtins()`
   stays empty because that crate cannot depend on `latex` (cycle), so the wiring lives in the

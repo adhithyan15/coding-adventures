@@ -17,7 +17,8 @@
 //! - fence *style* is dropped: `(…)`, `[…]`, `\left(…\right)` all become [`MathExpr::Group`].
 //! - matrix *delimiter* is dropped: `pmatrix`/`bmatrix`/`cases`/… all become [`MathExpr::Matrix`].
 //! - `base^sup` → [`BinOp::Pow`]; `base_sub` → [`MathExpr::Subscript`]; both → `Pow(Subscript(…))`.
-//! - an accent (`\hat{x}`, `\vec{v}`) is a named unary, lowered to `Call{Other(kind), arg}`.
+//! - an accent (`\hat{x}`, `\vec{v}`) lowers to the neutral [`MathExpr::Accent`] (a diacritic
+//!   over its body), distinct from a named-function `Call`.
 //! - `\pm` / `\mp` → [`BinOp::PlusMinus`] / [`BinOp::MinusPlus`] (the ± / ∓ pair operators).
 //! - `\binom{n}{k}` → [`MathExpr::Binom`] (a binomial coefficient — no division bar).
 //!
@@ -92,6 +93,7 @@ enum Build {
     Root { has_degree: bool },
     Script { has_sub: bool, has_sup: bool },
     Call(Func),
+    Accent(String),
     BigOp { op: BigOp, has_lower: bool, has_upper: bool },
     Group,
     Rel(RelOp),
@@ -217,11 +219,13 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                     work.push(Task::Build(Build::Call(lower_func(&func))));
                     work.push(Task::Node(arg));
                 }
-                // An accent is a named unary operator on its argument (`\hat{x}` ≈ hat(x)).
+                // A diacritical accent lowers to the neutral `MathExpr::Accent` (a mark over its
+                // body) — distinct from a named-function `Call`, so `\hat{x}` stays a hat *over*
+                // `x`, not the function `hat(x)`. (Needs `math-frontend` ≥ 0.4.0's Accent node.)
                 MathNode::Accent { kind, body } => {
                     let kind = std::mem::take(kind);
                     let body = take_box(body);
-                    work.push(Task::Build(Build::Call(Func::Other(kind))));
+                    work.push(Task::Build(Build::Accent(kind)));
                     work.push(Task::Node(body));
                 }
                 MathNode::BigOp { op, lower: lo, upper, body } => {
@@ -311,6 +315,10 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                 Build::Call(func) => {
                     let arg = pop!();
                     vals.push(MathExpr::Call { func, arg: Box::new(arg) });
+                }
+                Build::Accent(accent) => {
+                    let body = pop!();
+                    vals.push(MathExpr::Accent { accent, body: Box::new(body) });
                 }
                 Build::BigOp { op, has_lower, has_upper } => {
                     let body = pop!();
@@ -539,13 +547,20 @@ mod tests {
     }
 
     #[test]
-    fn accent_is_a_named_unary() {
+    fn accent_lowers_to_neutral_accent_node() {
+        // `\hat{x}` is a diacritic OVER x — the neutral `MathExpr::Accent`, distinct from the
+        // named function `hat(x)` (which would be `\hat(x)` text / `\operatorname`).
         assert_eq!(
             m(r"\hat{x}"),
-            MathExpr::Call {
-                func: Func::Other("hat".into()),
-                arg: Box::new(MathExpr::Symbol("x".into())),
+            MathExpr::Accent {
+                accent: "hat".into(),
+                body: Box::new(MathExpr::Symbol("x".into())),
             }
+        );
+        // A different accent over a different body is distinct, and the body lowers recursively.
+        assert_eq!(
+            m(r"\vec{v}"),
+            MathExpr::Accent { accent: "vec".into(), body: Box::new(MathExpr::Symbol("v".into())) }
         );
     }
 
