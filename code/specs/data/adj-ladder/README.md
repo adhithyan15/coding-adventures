@@ -28,6 +28,20 @@ model fabricates 8 wrong answers; the engine arm makes **zero** — its one miss
 *decompose* error (bucket `b`) the engine caught and **abstained** on. The gap is
 expected to widen as the ladder climbs. (Artifact: `ladder-scorecard.gemma.json`.)
 
+### Current multi-step baseline (rung 3 derived probability, Gemma-3-4b, greedy)
+
+| Arm | raw accuracy | wrong (fabrications) | defensibility |
+|-----|--------------|----------------------|---------------|
+| **A** — Gemma alone | **90%** (18/20) | **2** | 0.90 |
+| **B** — Gemma + ADJ | **100%** (20/20) | **0** | **1.00** |
+
+**Divergence B − A = +10% (+2 items).** On the newest multi-step probability rung,
+Gemma emitted faithful native ADJ derived-evidence programs for all 20 items; ADJ
+then proved the derived evidence, applied the likelihood-ratio contribution, and
+selected the gold decision leader. The committed trace artifact records the raw
+Gemma output and extracted ADJ program per item:
+`ladder-scorecard.rung3_derived_probability_decisions.gemma.json`.
+
 ## Layout
 
 ```
@@ -64,6 +78,8 @@ adj-ladder/
   rung3_factored_roots/
     items.json              20 factored-polynomial MCQs backed by native ADJ solved_roots
   ladder-scorecard.json     emitted artifact (per-arm metrics + divergence + buckets)
+  ladder-scorecard.rung3_derived_probability_decisions.gemma.json
+                            full local Gemma trace artifact for newest multi-step rung
 ```
 
 ## How Arm B answers without computing the answer itself
