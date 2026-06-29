@@ -82,6 +82,19 @@ style NoteEditor {
     font-weight : 700 ;
   }
 
+  part note-field-list {
+    padding-top : 6 ;
+  }
+
+  part note-field-option {
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
+  }
+
   part focused-field-column {
     padding : 2 ;
   }

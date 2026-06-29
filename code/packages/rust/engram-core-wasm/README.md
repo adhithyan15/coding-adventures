@@ -177,6 +177,10 @@ object. The shared reducer upserts the note and rematerializes generated cards.
 `onDeleteNote` keeps returning a host intent when sent without a target, and
 deletes through the shared reducer only when the event carries an explicit
 `noteId` or `selectedCardId`.
+The mounted Mosaic note editor uses the same reducer path through
+`onNoteEditorSelectField`, `onNoteEditorFieldValueChange`, `onNoteEditorTagsChange`,
+`onNoteEditorSaveNote`, `onNoteEditorDeleteNote`, and `onNoteEditorCancel`,
+deriving its editable note from the shared browser selection.
 Host model editors can post `onSaveNoteType` with a top-level or nested
 `noteType` payload containing `id`/`noteTypeId`, `name`, `fields`, `templates`,
 and optional `stylesheet`; the shared reducer upserts the model and

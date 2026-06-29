@@ -59,13 +59,6 @@ fn manifest_declares_expected_exports() {
     let export_names: Vec<&str> = exports.iter().filter_map(|v| v.as_str()).collect();
     assert_eq!(export_names, COMPONENTS);
 
-    let toolkit_version = value
-        .get("dependencies")
-        .and_then(|d| d.get("mosaic-pkg-toolkit"))
-        .and_then(|v| v.as_str())
-        .expect("[dependencies].mosaic-pkg-toolkit must be set");
-    assert_eq!(toolkit_version, "0.11.0");
-
     let kernel_version = value
         .get("kernel")
         .and_then(|k| k.get("version"))
@@ -126,10 +119,9 @@ fn note_editor_frontend_sources_compile() {
 fn note_editor_layout_wires_focused_field_editor() {
     let source = read_source("NoteEditor.mll");
 
-    assert!(source.contains("pkg::mosaic-pkg-toolkit::ListGroup"));
-    assert!(source.contains("items : slot: field-labels"));
-    assert!(source.contains("selected-index : slot: selected-field-index"));
-    assert!(source.contains("onSelect : emit: onSelectField"));
+    assert!(source.contains("For ( each: slot: field-labels"));
+    assert!(source.contains("HostButton [ note-field-option ]"));
+    assert!(source.contains("onClick : emit: onSelectField"));
     assert!(source.contains("HostInput [ selected-field-input ]"));
     assert!(source.contains("value : slot: selected-field-value"));
     assert!(source.contains("onChange : emit: onFieldValueChange"));
@@ -157,6 +149,8 @@ fn note_editor_layout_wires_focused_field_editor() {
         "note-editor",
         "note-metadata",
         "field-list-column",
+        "note-field-list",
+        "note-field-option",
         "focused-field-column",
         "selected-field-input",
         "tags-input",

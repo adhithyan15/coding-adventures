@@ -61,6 +61,10 @@ fn manifest_declares_app_package_boundary() {
         Some(&"0.1.0".to_string())
     );
     assert_eq!(
+        package.dependencies.get("mosaic-pkg-note-editor"),
+        Some(&"0.1.0".to_string())
+    );
+    assert_eq!(
         package.dependencies.get("mosaic-pkg-review-card"),
         Some(&"0.1.0".to_string())
     );
@@ -131,6 +135,7 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert!(source.contains("pkg::mosaic-pkg-collection-actions::CollectionActions"));
     assert!(source.contains("pkg::mosaic-pkg-deck-options::DeckOptionsPanel"));
     assert!(source.contains("pkg::mosaic-pkg-deck-stats::DeckStatsPanel"));
+    assert!(source.contains("pkg::mosaic-pkg-note-editor::NoteEditor"));
     assert!(source.contains("pkg::mosaic-pkg-review-card::ReviewCard"));
     assert!(source.contains("pkg::mosaic-pkg-review-actions::ReviewActions"));
     assert!(source.contains("pkg::mosaic-pkg-review-history::ReviewHistoryPanel"));
@@ -139,6 +144,7 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert!(!source.contains("layout CollectionActions"));
     assert!(!source.contains("layout DeckOptionsPanel"));
     assert!(!source.contains("layout DeckStatsPanel"));
+    assert!(!source.contains("layout NoteEditor"));
     assert!(!source.contains("layout ReviewCard"));
     assert!(!source.contains("layout ReviewActions"));
     assert!(!source.contains("layout ReviewHistoryPanel"));
@@ -262,6 +268,24 @@ fn app_manifest_resolves_deck_stats_dependency() {
 }
 
 #[test]
+fn app_manifest_resolves_note_editor_dependency() {
+    let resolver = dependency_resolver();
+
+    match resolver.resolve("NoteEditor") {
+        Some(Resolution::Component {
+            package,
+            component,
+            package_path,
+        }) => {
+            assert_eq!(package, "mosaic-pkg-note-editor");
+            assert_eq!(component, "NoteEditor");
+            assert!(package_path.ends_with("mosaic-pkg-note-editor"));
+        }
+        other => panic!("expected NoteEditor component resolution, got {other:?}"),
+    }
+}
+
+#[test]
 fn app_manifest_resolves_review_card_dependency() {
     let resolver = dependency_resolver();
 
@@ -353,6 +377,12 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert_contains(&html, "data-on-click=\"onBrowserRemoveTagSelected\"");
     assert_contains(&html, "data-on-click=\"onBrowserToggleFlagPicker\"");
     assert_contains(&html, "data-on-click=\"onBrowserSetFlagSelected\"");
+    assert_contains(&html, "data-on-click=\"onNoteEditorSelectField\"");
+    assert_contains(&html, "data-on-change=\"onNoteEditorFieldValueChange\"");
+    assert_contains(&html, "data-on-change=\"onNoteEditorTagsChange\"");
+    assert_contains(&html, "data-on-click=\"onNoteEditorSaveNote\"");
+    assert_contains(&html, "data-on-click=\"onNoteEditorDeleteNote\"");
+    assert_contains(&html, "data-on-click=\"onNoteEditorCancel\"");
     assert_dependency_styles_reach_all_backends(tmp.path());
 }
 

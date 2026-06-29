@@ -36,11 +36,14 @@ layout NoteEditor {
         Text [ fields-label ] (
           content : slot: fields-label
         )
-        pkg::mosaic-pkg-toolkit::ListGroup (
-          items : slot: field-labels ,
-          selected-index : slot: selected-field-index ,
-          onSelect : emit: onSelectField
-        )
+        Column [ note-field-list ] {
+          For ( each: slot: field-labels , as: field , index: field-index ) {
+            HostButton [ note-field-option ] (
+              label : field ,
+              onClick : emit: onSelectField
+            )
+          }
+        }
       }
       Column [ focused-field-column ] {
         Text [ selected-field-label ] (

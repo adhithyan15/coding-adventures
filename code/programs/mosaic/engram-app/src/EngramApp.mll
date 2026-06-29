@@ -196,6 +196,35 @@ layout EngramApp {
         onRemoveTagSelected : emit: onBrowserRemoveTagSelected
       )
     }
+    Box [ note-editor-region ] {
+      pkg::mosaic-pkg-note-editor::NoteEditor (
+        editor-label : slot: note-editor-label ,
+        note-id-label : slot: note-editor-note-id-label ,
+        note-id-value : slot: note-editor-note-id-value ,
+        note-type-label : slot: note-editor-note-type-label ,
+        note-type-value : slot: note-editor-note-type-value ,
+        deck-label : slot: note-editor-deck-label ,
+        deck-value : slot: note-editor-deck-value ,
+        fields-label : slot: note-editor-fields-label ,
+        field-labels : slot: note-editor-field-labels ,
+        selected-field-index : slot: note-editor-selected-field-index ,
+        selected-field-label : slot: note-editor-selected-field-label ,
+        selected-field-value : slot: note-editor-selected-field-value ,
+        selected-field-placeholder : slot: note-editor-selected-field-placeholder ,
+        tags-label : slot: note-editor-tags-label ,
+        tags-value : slot: note-editor-tags-value ,
+        tags-placeholder : slot: note-editor-tags-placeholder ,
+        save-label : slot: note-editor-save-label ,
+        delete-label : slot: note-editor-delete-label ,
+        cancel-label : slot: note-editor-cancel-label ,
+        onSelectField : emit: onNoteEditorSelectField ,
+        onFieldValueChange : emit: onNoteEditorFieldValueChange ,
+        onTagsChange : emit: onNoteEditorTagsChange ,
+        onSaveNote : emit: onNoteEditorSaveNote ,
+        onDeleteNote : emit: onNoteEditorDeleteNote ,
+        onCancel : emit: onNoteEditorCancel
+      )
+    }
     pkg::mosaic-pkg-session-progress::SessionProgress (
       current-label : slot: current-label ,
       current-value : slot: current-value ,

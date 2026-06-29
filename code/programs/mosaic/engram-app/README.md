@@ -6,7 +6,7 @@ This package is the product assembly layer. It exports `EngramApp`, owns the
 app/root surface, and depends on reusable Mosaic component packages such as
 `mosaic-pkg-card-browser`, `mosaic-pkg-collection-actions`,
 `mosaic-pkg-deck-options`, `mosaic-pkg-deck-stats`,
-`mosaic-pkg-review-actions`, `mosaic-pkg-review-card`,
+`mosaic-pkg-note-editor`, `mosaic-pkg-review-actions`, `mosaic-pkg-review-card`,
 `mosaic-pkg-review-history`, and `mosaic-pkg-session-progress`.
 The review card composes further Mosaic packages such as
 `mosaic-pkg-rating-controls`; Engram does not fork those components into the app
@@ -15,9 +15,9 @@ package.
 Reusable UI components should live under `code/packages/mosaic-pkg-*`. Engram
 itself should grow here as an app package that composes those components and
 binds them to the shared Rust business logic core through host shells.
-`mosaic-pkg-note-editor` now provides the reusable focused-field note editor
-surface for host-owned add/edit note dialogs without folding editor controls
-directly into the Engram app package.
+`mosaic-pkg-note-editor` provides the reusable focused-field note editor
+surface for selected browser notes without folding editor controls directly
+into the Engram app package.
 
 ## Current surface
 
@@ -27,6 +27,7 @@ directly into the Engram app package.
   `pkg::mosaic-pkg-collection-actions::CollectionActions`,
   `pkg::mosaic-pkg-deck-options::DeckOptionsPanel`,
   `pkg::mosaic-pkg-deck-stats::DeckStatsPanel`,
+  `pkg::mosaic-pkg-note-editor::NoteEditor`,
   `pkg::mosaic-pkg-review-history::ReviewHistoryPanel`,
   `pkg::mosaic-pkg-session-progress::SessionProgress`, and
   `pkg::mosaic-pkg-review-card::ReviewCard`, plus
