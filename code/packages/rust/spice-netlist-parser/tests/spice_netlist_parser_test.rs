@@ -1953,4 +1953,39 @@ Rbad in
     assert!(err.to_string().contains("Berkeley SPICE app deck"));
 }
 
+#[test]
+fn parse_netlist_lowers_berkeley_logical_card_continuations() {
+    let parsed = parse_netlist(
+        r#"
+* continued divider
+V1 in 0 DC 10
+R1 in mid
++ 1k
+R2 mid 0 1k
+.op
+.end
+"#,
+    )
+    .unwrap();
+
+    assert_eq!(parsed.title.as_deref(), Some("continued divider"));
+    let result = dc_op(&parsed.circuit).unwrap();
+    assert_close(result.voltage("mid").unwrap(), 5.0);
+}
+
+#[test]
+fn parse_netlist_reports_berkeley_syntax_diagnostics_before_lowering() {
+    let err = parse_netlist(
+        r#"
++ orphan
+V1 in 0 DC 1
+"#,
+    )
+    .unwrap_err();
+
+    assert!(err
+        .to_string()
+        .contains("SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD"));
+}
+
 fn assert_error_type(_: NetlistParseError) {}
