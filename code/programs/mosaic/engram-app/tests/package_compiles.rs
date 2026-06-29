@@ -866,37 +866,81 @@ fn native_project_shells_expose_engram_host_contract() {
     )
     .expect("Sources/App/App.swift");
     assert_contains(&swift_app, "EngramAppView(");
-    assert_contains(&swift_app, "appTitle: \"Sample AppTitle\",");
     assert_contains(
         &swift_app,
-        "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
+        "appTitle: MosaicHostValue.string(host.props, \"app-title\", fallback: \"Sample AppTitle\"),",
     );
     assert_contains(
         &swift_app,
-        "deckOptionsLearningStepsValue: \"Sample DeckOptionsLearningStepsValue\",",
+        "deckOptionsSettingsLabel: MosaicHostValue.string(host.props, \"deck-options-settings-label\", fallback: \"Sample DeckOptionsSettingsLabel\"),",
     );
-    assert_contains(&swift_app, "deckOptionsNewCardsValue: 0,");
-    assert_contains(&swift_app, "deckOptionsEasyBonusValue: 0,");
-    assert_contains(&swift_app, "deckOptionsBuryNewSiblingsValue: false,");
-    assert_contains(&swift_app, "historyLabel: \"Sample HistoryLabel\",");
-    assert_contains(&swift_app, "historyLastValue: \"Sample HistoryLastValue\",");
-    assert_contains(&swift_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &swift_app,
-        "collectionImportLabel: \"Sample CollectionImportLabel\",",
+        "deckOptionsLearningStepsValue: MosaicHostValue.string(host.props, \"deck-options-learning-steps-value\", fallback: \"Sample DeckOptionsLearningStepsValue\"),",
     );
-    assert_contains(&swift_app, "browserQuery: \"Sample BrowserQuery\",");
-    assert_contains(&swift_app, "browserResults: [],");
-    assert_contains(&swift_app, "browserResultCardIds: [],");
     assert_contains(
         &swift_app,
-        "browserSelectedCardId: \"Sample BrowserSelectedCardId\",",
+        "deckOptionsNewCardsValue: MosaicHostValue.double(host.props, \"deck-options-new-cards-value\", fallback: 0),",
     );
-    assert_contains(&swift_app, "answerVisible: false,");
-    assert_contains(&swift_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
-    assert_contains(&swift_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
+    assert_contains(
+        &swift_app,
+        "deckOptionsEasyBonusValue: MosaicHostValue.double(host.props, \"deck-options-easy-bonus-value\", fallback: 0),",
+    );
+    assert_contains(
+        &swift_app,
+        "deckOptionsBuryNewSiblingsValue: MosaicHostValue.bool(host.props, \"deck-options-bury-new-siblings-value\", fallback: false),",
+    );
+    assert_contains(
+        &swift_app,
+        "historyLabel: MosaicHostValue.string(host.props, \"history-label\", fallback: \"Sample HistoryLabel\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "historyLastValue: MosaicHostValue.string(host.props, \"history-last-value\", fallback: \"Sample HistoryLastValue\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "collectionLabel: MosaicHostValue.string(host.props, \"collection-label\", fallback: \"Sample CollectionLabel\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "collectionImportLabel: MosaicHostValue.string(host.props, \"collection-import-label\", fallback: \"Sample CollectionImportLabel\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "browserQuery: MosaicHostValue.string(host.props, \"browser-query\", fallback: \"Sample BrowserQuery\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "browserResults: MosaicHostValue.stringList(host.props, \"browser-results\", fallback: []),",
+    );
+    assert_contains(
+        &swift_app,
+        "browserResultCardIds: MosaicHostValue.stringList(host.props, \"browser-result-card-ids\", fallback: []),",
+    );
+    assert_contains(
+        &swift_app,
+        "browserSelectedCardId: MosaicHostValue.string(host.props, \"browser-selected-card-id\", fallback: \"Sample BrowserSelectedCardId\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "answerVisible: MosaicHostValue.bool(host.props, \"answer-visible\", fallback: false),",
+    );
+    assert_contains(
+        &swift_app,
+        "actionUndoLabel: MosaicHostValue.string(host.props, \"action-undo-label\", fallback: \"Sample ActionUndoLabel\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "actionMarkLabel: MosaicHostValue.string(host.props, \"action-mark-label\", fallback: \"Sample ActionMarkLabel\"),",
+    );
     assert_contains(&swift_app, "dispatch: { event in");
-    assert_contains(&swift_app, "event.mosaicEnvelope");
+    assert_contains(&swift_app, "host.dispatch(event)");
+    assert_contains(&swift_app, "final class MosaicHostState: ObservableObject");
+    assert_contains(&swift_app, "MosaicHostBridge.load()");
+    assert_contains(&swift_app, "@objc protocol MosaicHostBridgeObject");
+    assert_contains(&swift_app, "[\"App.MosaicHost\", \"MosaicHost\"]");
+    assert_contains(&swift_app, "NSClassFromString(className)");
     let swift_package = fs::read_to_string(tmp.path().join("swiftui").join("Package.swift"))
         .expect("Package.swift");
     assert_contains(&swift_package, "platforms: [.macOS(.v13), .iOS(.v16)]");
@@ -1243,6 +1287,7 @@ fn source_tree_has_expected_shape() {
         "host/web/engram-host.ts",
         "host/web/engram-mosaic-host-wasm.d.ts",
         "host/electron/host.js",
+        "host/swiftui/MosaicHost.swift",
         "host/xaml/MosaicHost.cs",
     ] {
         let path = package_root().join(relative);
@@ -1259,8 +1304,17 @@ fn source_tree_has_expected_shape() {
     assert_contains(&xaml_host, "eg_handle_engram_app_event");
     assert_contains(&xaml_host, "SlotNameToPropertyName");
 
+    let swiftui_host = fs::read_to_string(package_root().join("host/swiftui/MosaicHost.swift"))
+        .expect("swiftui host template");
+    assert_contains(&swiftui_host, "MosaicHostBridgeObject");
+    assert_contains(&swiftui_host, "eg_engram_app_props");
+    assert_contains(&swiftui_host, "eg_handle_engram_app_event");
+
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
     assert_contains(&build_script, "Install-EngramXamlHost");
+    assert_contains(&build_script, "Install-EngramSwiftUIHost");
+    assert_contains(&build_script, "module CEngram");
+    assert_contains(&build_script, "libengram_capi.a");
     assert_contains(&build_script, "engram_capi.dll");
 }

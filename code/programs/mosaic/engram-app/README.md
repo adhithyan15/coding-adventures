@@ -42,6 +42,10 @@ binds them to the shared Rust business logic core through host shells.
   `host/xaml/MosaicHost.cs` implements it with `engram-capi`, hydrating the
   generated WinUI dependency properties from the shared Rust facade and routing
   generated Mosaic event envelopes back into the same core.
+- The generated SwiftUI project shell has an optional `MosaicHost` hook.
+  Engram's `host/swiftui/MosaicHost.swift` implements it with `engram-capi`
+  through a staged `CEngram` Swift module, hydrating SwiftUI props and routing
+  generated Mosaic event envelopes back into the same core.
 - The generated SwiftPM, Flutter, and Compose Desktop shells mount `EngramApp`
   with sample slot values and dispatch callbacks, matching the generated
   interface shapes.
@@ -88,8 +92,9 @@ The script also builds `code/packages/rust/engram-wasm` and
 `code/packages/rust/engram-capi`, then installs the Engram Mosaic host assets
 into generated app shells. The React shell receives `src/engram-host.ts`, the
 JS loader, and `public/engram_engine.wasm`; the Electron shell receives
-`electron/host.js`, the JS loader, and `electron/engram_engine.wasm`; the XAML
-shell receives `MosaicHost.cs` and `engram_capi.dll` as project content.
-Collection actions such as Anki import/export return `hostIntent` payloads so
-hosts can open file pickers or save APKG bytes while keeping the Mosaic app
-interface shared.
+`electron/host.js`, the JS loader, and `electron/engram_engine.wasm`; the
+SwiftUI shell receives `Sources/App/MosaicHost.swift`, `Sources/CEngram`, and
+the static `engram-capi` library; the XAML shell receives `MosaicHost.cs` and
+`engram_capi.dll` as project content. Collection actions such as Anki
+import/export return `hostIntent` payloads so hosts can open file pickers or
+save APKG bytes while keeping the Mosaic app interface shared.

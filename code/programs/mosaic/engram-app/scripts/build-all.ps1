@@ -18,7 +18,13 @@ $nativeLibraryName = if ([System.Runtime.InteropServices.RuntimeInformation]::Is
 } else {
     "libengram_capi.so"
 }
+$staticLibraryName = if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) {
+    "engram_capi.lib"
+} else {
+    "libengram_capi.a"
+}
 $engramCapiLibrary = Join-Path $rustWorkspace "target\$nativeProfile\$nativeLibraryName"
+$engramCapiStaticLibrary = Join-Path $rustWorkspace "target\$nativeProfile\$staticLibraryName"
 
 if ([System.IO.Path]::IsPathRooted($Output)) {
     $outputRoot = [System.IO.Path]::GetFullPath($Output)
@@ -63,6 +69,8 @@ $engramWasmTypes = Join-Path $hostRoot "web\engram-mosaic-host-wasm.d.ts"
 $engramWebHost = Join-Path $hostRoot "web\engram-host.ts"
 $engramElectronHost = Join-Path $hostRoot "electron\host.js"
 $engramXamlHost = Join-Path $hostRoot "xaml\MosaicHost.cs"
+$engramSwiftUIHost = Join-Path $hostRoot "swiftui\MosaicHost.swift"
+$engramCapiHeader = Join-Path $rustWorkspace "engram-capi\include\engram.h"
 
 function Write-Utf8NoBom {
     param(
@@ -161,6 +169,61 @@ function Install-EngramXamlHost {
     }
 }
 
+function Add-EngramSwiftUIPackageBridge {
+    param([Parameter(Mandatory = $true)][string]$PackagePath)
+
+    if (-not (Test-Path -LiteralPath $PackagePath)) {
+        return
+    }
+    $content = Get-Content -LiteralPath $PackagePath -Raw
+    if ($content.Contains('name: "CEngram"')) {
+        return
+    }
+
+    $content = [regex]::Replace(
+        $content,
+        'targets: \[\r?\n',
+        "targets: [`r`n    .systemLibrary(`r`n      name: ""CEngram"",`r`n      path: ""Sources/CEngram""`r`n    ),`r`n",
+        1
+    )
+    $content = [regex]::Replace(
+        $content,
+        '\.executableTarget\(\r?\n\s+name: "App",\r?\n\s+path: "Sources/App"\r?\n\s+\)',
+        ".executableTarget(`r`n      name: ""App"",`r`n      dependencies: [""CEngram""],`r`n      path: ""Sources/App"",`r`n      linkerSettings: [`r`n        .unsafeFlags([""-L"", ""Sources/CEngram/lib"", ""-lengram_capi""])`r`n      ]`r`n    )",
+        1
+    )
+    Write-Utf8NoBom -Path $PackagePath -Content $content
+}
+
+function Install-EngramSwiftUIHost {
+    param([Parameter(Mandatory = $true)][string]$SwiftUIRoot)
+
+    if (-not (Test-Path -LiteralPath $SwiftUIRoot)) {
+        return
+    }
+    if (-not (Test-Path -LiteralPath $engramCapiStaticLibrary)) {
+        throw "expected Engram static native library missing: $engramCapiStaticLibrary"
+    }
+
+    $appDir = Join-Path $SwiftUIRoot "Sources\App"
+    $moduleDir = Join-Path $SwiftUIRoot "Sources\CEngram"
+    $includeDir = Join-Path $moduleDir "include"
+    $libDir = Join-Path $moduleDir "lib"
+    New-Item -ItemType Directory -Force -Path $appDir, $includeDir, $libDir | Out-Null
+
+    Copy-Item -LiteralPath $engramSwiftUIHost -Destination (Join-Path $appDir "MosaicHost.swift") -Force
+    Copy-Item -LiteralPath $engramCapiHeader -Destination (Join-Path $includeDir "engram.h") -Force
+    Copy-Item -LiteralPath $engramCapiStaticLibrary -Destination (Join-Path $libDir $staticLibraryName) -Force
+    Write-Utf8NoBom -Path (Join-Path $moduleDir "module.modulemap") -Content @"
+module CEngram {
+  header "include/engram.h"
+  export *
+}
+"@
+
+    Add-EngramSwiftUIPackageBridge -PackagePath (Join-Path $SwiftUIRoot "Package.swift")
+}
+
 $backends = @(
     "html",
     "webcomponent",
@@ -205,6 +268,7 @@ foreach ($backend in $backends) {
 
 Install-EngramReactHost -ReactRoot (Join-Path $outputRoot "react")
 Install-EngramElectronHost -ElectronRoot (Join-Path $outputRoot "electron")
+Install-EngramSwiftUIHost -SwiftUIRoot (Join-Path $outputRoot "swiftui")
 Install-EngramXamlHost -XamlRoot (Join-Path $outputRoot "xaml")
 
 Write-Host "Engram Mosaic host shells written to $outputRoot"

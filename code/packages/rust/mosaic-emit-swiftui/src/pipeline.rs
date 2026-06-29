@@ -382,24 +382,79 @@ fn build_app_swift(component_name: &str, slots: &[SlotDecl]) -> String {
     // The Mosaic SwiftUI emitter produces a `View` struct named
     // `{component_name}View` (per pipeline.rs:120 doc comment), so
     // mount that here.
-    let root_view = build_root_view_initializer(component_name, slots);
-    format!(
-        "{BANNER_SWIFT}import SwiftUI\n\n@main\nstruct MosaicApp: App {{\n  var body: some Scene {{\n    WindowGroup(\"{component_name}\") {{\n      {root_view}\n    }}\n  }}\n}}\n"
+    let root_view = build_root_view_initializer(component_name, slots, "host.props");
+    let mut out = String::new();
+    write!(
+        out,
+        "{BANNER_SWIFT}import Combine\nimport Foundation\nimport SwiftUI\n\n"
     )
+    .unwrap();
+    writeln!(out, "@main").unwrap();
+    writeln!(out, "struct MosaicApp: App {{").unwrap();
+    writeln!(out, "  @StateObject private var host = MosaicHostState()").unwrap();
+    writeln!(out).unwrap();
+    writeln!(out, "  var body: some Scene {{").unwrap();
+    writeln!(out, "    WindowGroup(\"{component_name}\") {{").unwrap();
+    writeln!(out, "      {root_view}").unwrap();
+    writeln!(out, "    }}").unwrap();
+    writeln!(out, "  }}").unwrap();
+    writeln!(out, "}}").unwrap();
+    writeln!(out).unwrap();
+    out.push_str(&build_mosaic_host_state(component_name));
+    out
 }
 
-fn build_root_view_initializer(component_name: &str, slots: &[SlotDecl]) -> String {
+fn build_root_view_initializer(
+    component_name: &str,
+    slots: &[SlotDecl],
+    props_expr: &str,
+) -> String {
     let mut out = format!("{component_name}View(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = sample_value_for_slot(slot);
+        let value = host_value_for_slot(slot, props_expr);
         writeln!(out, "        {field}: {value},").unwrap();
     }
     out.push_str("        dispatch: { event in\n");
-    out.push_str("          print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n");
+    out.push_str("          host.dispatch(event)\n");
     out.push_str("        }\n");
     out.push_str("      )");
     out
+}
+
+fn host_value_for_slot(slot: &SlotDecl, props_expr: &str) -> String {
+    let key = escape_swift_string(&slot.name);
+    let fallback = sample_value_for_slot(slot);
+    match &slot.r#type {
+        SlotType::Text | SlotType::Image | SlotType::Color => {
+            format!("MosaicHostValue.string({props_expr}, \"{key}\", fallback: {fallback})")
+        }
+        SlotType::Number => {
+            format!("MosaicHostValue.double({props_expr}, \"{key}\", fallback: {fallback})")
+        }
+        SlotType::Bool => {
+            format!("MosaicHostValue.bool({props_expr}, \"{key}\", fallback: {fallback})")
+        }
+        SlotType::List(inner) => match inner.as_ref() {
+            ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+                format!("MosaicHostValue.stringList({props_expr}, \"{key}\", fallback: {fallback})")
+            }
+            ListInnerType::Number => {
+                format!("MosaicHostValue.doubleList({props_expr}, \"{key}\", fallback: {fallback})")
+            }
+            ListInnerType::Bool => {
+                format!("MosaicHostValue.boolList({props_expr}, \"{key}\", fallback: {fallback})")
+            }
+            ListInnerType::Node | ListInnerType::Component(_) | ListInnerType::List(_) => fallback,
+        },
+        SlotType::Node | SlotType::Component(_) => fallback,
+    }
+}
+
+fn build_mosaic_host_state(component_name: &str) -> String {
+    format!(
+        "private final class MosaicHostState: ObservableObject {{\n  @Published var props: [String: Any] = [:]\n  private let bridge: MosaicHostBridgeObject?\n\n  init() {{\n    self.bridge = MosaicHostBridge.load()\n    if let next = bridge?.applyProps() as? [String: Any] {{\n      self.props = next\n    }}\n  }}\n\n  func dispatch(_ event: {component_name}Event) {{\n    guard let bridge else {{\n      print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n      return\n    }}\n    if let next = bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any] {{\n      self.props = next\n    }}\n  }}\n}}\n\n@objc protocol MosaicHostBridgeObject {{\n  func applyProps() -> NSDictionary?\n  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?\n}}\n\nprivate enum MosaicHostBridge {{\n  static func load() -> MosaicHostBridgeObject? {{\n    for className in [\"App.MosaicHost\", \"MosaicHost\"] {{\n      guard let hostType = NSClassFromString(className) as? NSObject.Type else {{\n        continue\n      }}\n      if let bridge = hostType.init() as? MosaicHostBridgeObject {{\n        return bridge\n      }}\n    }}\n    return nil\n  }}\n}}\n\nprivate enum MosaicHostValue {{\n  static func string(_ props: [String: Any], _ key: String, fallback: String) -> String {{\n    if let value = props[key] as? String {{ return value }}\n    if let value = props[key] {{ return String(describing: value) }}\n    return fallback\n  }}\n\n  static func double(_ props: [String: Any], _ key: String, fallback: Double) -> Double {{\n    if let value = props[key] as? Double {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.doubleValue }}\n    if let value = props[key] as? String, let parsed = Double(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func bool(_ props: [String: Any], _ key: String, fallback: Bool) -> Bool {{\n    if let value = props[key] as? Bool {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.boolValue }}\n    if let value = props[key] as? String, let parsed = Bool(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func stringList(_ props: [String: Any], _ key: String, fallback: [String]) -> [String] {{\n    if let value = props[key] as? [String] {{ return value }}\n    if let value = props[key] as? [Any] {{ return value.map {{ String(describing: $0) }} }}\n    return fallback\n  }}\n\n  static func doubleList(_ props: [String: Any], _ key: String, fallback: [Double]) -> [Double] {{\n    if let value = props[key] as? [Double] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.doubleValue }} }}\n    return fallback\n  }}\n\n  static func boolList(_ props: [String: Any], _ key: String, fallback: [Bool]) -> [Bool] {{\n    if let value = props[key] as? [Bool] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.boolValue }} }}\n    return fallback\n  }}\n}}\n"
+    )
 }
 
 fn sample_value_for_slot(slot: &SlotDecl) -> String {
@@ -6329,6 +6384,57 @@ mod tests {
     }
 
     #[test]
+    fn ui32_app_swift_exposes_optional_mosaic_host_bridge() {
+        let m = component(
+            "Hostable",
+            vec![
+                slot("title", SlotType::Text, true),
+                slot("count", SlotType::Number, true),
+                slot("enabled", SlotType::Bool, true),
+                slot("items", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![emit("onTap", vec![])],
+        );
+        let l = layout_with("Hostable", container_node("Box", vec![]));
+        let s = empty_style("Hostable");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+
+        assert!(proj.app_swift.contains("import Combine"));
+        assert!(proj
+            .app_swift
+            .contains("@StateObject private var host = MosaicHostState()"));
+        assert!(proj
+            .app_swift
+            .contains("@objc protocol MosaicHostBridgeObject"));
+        assert!(proj.app_swift.contains("MosaicHostBridge.load()"));
+        assert!(proj
+            .app_swift
+            .contains("[\"App.MosaicHost\", \"MosaicHost\"]"));
+        assert!(proj.app_swift.contains("NSClassFromString(className)"));
+        assert!(proj.app_swift.contains(
+            "title: MosaicHostValue.string(host.props, \"title\", fallback: \"Sample Title\"),"
+        ));
+        assert!(proj
+            .app_swift
+            .contains("count: MosaicHostValue.double(host.props, \"count\", fallback: 0),"));
+        assert!(proj
+            .app_swift
+            .contains("enabled: MosaicHostValue.bool(host.props, \"enabled\", fallback: false),"));
+        assert!(proj
+            .app_swift
+            .contains("items: MosaicHostValue.stringList(host.props, \"items\", fallback: []),"));
+        assert!(proj.app_swift.contains("host.dispatch(event)"));
+        assert!(proj
+            .app_swift
+            .contains("bridge.handleEvent(event.mosaicEnvelope as NSDictionary"));
+    }
+
+    #[test]
     fn ui32_app_swift_passes_sample_slot_values_to_component_view() {
         let mut display_name = slot("display-name", SlotType::Text, false);
         display_name.default = Some(SlotDefault::Text("Ada".to_string()));
@@ -6358,32 +6464,44 @@ mod tests {
             "App.swift must instantiate ProfileCardView"
         );
         assert!(
-            proj.app_swift.contains("displayName: \"Ada\","),
-            "text defaults should flow into the generated initializer"
+            proj.app_swift
+                .contains("displayName: MosaicHostValue.string(host.props, \"display-name\", fallback: \"Ada\"),"),
+            "text defaults should flow into the generated initializer fallback"
         );
         assert!(
-            proj.app_swift.contains("age: 0,"),
+            proj.app_swift
+                .contains("age: MosaicHostValue.double(host.props, \"age\", fallback: 0),"),
             "number slots need a sample value"
         );
         assert!(
-            proj.app_swift.contains("isActive: false,"),
+            proj.app_swift.contains(
+                "isActive: MosaicHostValue.bool(host.props, \"is-active\", fallback: false),"
+            ),
             "bool slots need a sample value"
         );
         assert!(
-            proj.app_swift.contains("avatarUrl: \"sample-image\","),
+            proj.app_swift
+                .contains("avatarUrl: MosaicHostValue.string(host.props, \"avatar-url\", fallback: \"sample-image\"),"),
             "image slots need a sample value"
         );
         assert!(
-            proj.app_swift.contains("accent: \"#808080\","),
+            proj.app_swift.contains(
+                "accent: MosaicHostValue.string(host.props, \"accent\", fallback: \"#808080\"),"
+            ),
             "color slots need a sample value"
         );
         assert!(
-            proj.app_swift.contains("tags: [],"),
+            proj.app_swift
+                .contains("tags: MosaicHostValue.stringList(host.props, \"tags\", fallback: []),"),
             "list slots need an empty sample value"
         );
         assert!(
             proj.app_swift.contains("dispatch: { event in"),
             "the generated initializer must pass dispatch last"
+        );
+        assert!(
+            proj.app_swift.contains("host.dispatch(event)"),
+            "dispatch should route through the optional Mosaic host state"
         );
     }
 
