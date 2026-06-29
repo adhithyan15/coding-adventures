@@ -557,6 +557,54 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       return body;
     };
 
+    const FILTER_QUERY_PARAMS = [
+      ["search", els.filterSearch],
+      ["room", els.filterRoom],
+      ["domain", els.filterDomain],
+      ["state", els.filterState],
+      ["control", els.filterControl],
+      ["event_kind", els.filterEventKind],
+      ["command_status", els.filterCommandStatus],
+      ["authorization_outcome", els.filterAuthorizationOutcome]
+    ];
+
+    const ensureSelectOption = (control, value) => {
+      if (!value || control.tagName !== "SELECT") {
+        return;
+      }
+      const hasOption = Array.from(control.options).some((option) => option.value === value);
+      if (!hasOption) {
+        control.add(new Option(value, value));
+      }
+    };
+
+    const restoreFiltersFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      FILTER_QUERY_PARAMS.forEach(([queryParam, control]) => {
+        const value = params.get(queryParam) || "";
+        ensureSelectOption(control, value);
+        control.value = value;
+      });
+    };
+
+    const syncFiltersToUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      FILTER_QUERY_PARAMS.forEach(([queryParam, control]) => {
+        const value = control.value.trim ? control.value.trim() : control.value;
+        if (value) {
+          params.set(queryParam, value);
+        } else {
+          params.delete(queryParam);
+        }
+      });
+      const query = params.toString();
+      const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
+      const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      if (nextUrl !== currentUrl) {
+        window.history.replaceState(null, "", nextUrl);
+      }
+    };
+
     const readFilters = () => ({
       search: els.filterSearch.value.trim().toLowerCase(),
       room: els.filterRoom.value,
@@ -778,6 +826,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       );
       els.filterRoom.innerHTML = options.join("");
       els.filterRoom.value = rooms.some((room) => room.room_id === selectedRoom) ? selectedRoom : "";
+      if (selectedRoom && !els.filterRoom.value) {
+        syncFiltersToUrl();
+      }
     };
 
     const renderRooms = (inventory, filters) => {
@@ -970,6 +1021,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       renderTimer = window.setTimeout(render, 150);
     };
 
+    const applyFilterChange = () => {
+      syncFiltersToUrl();
+      scheduleRender();
+    };
+
     const render = async () => {
       els.refresh.disabled = true;
       const filters = readFilters();
@@ -1063,7 +1119,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
 
     document.addEventListener("input", (event) => {
       if (event.target.closest("[data-dashboard-filter]")) {
-        scheduleRender();
+        applyFilterChange();
         return;
       }
       const input = event.target.closest("input[data-brightness-input]");
@@ -1078,7 +1134,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
 
     document.addEventListener("change", (event) => {
       if (event.target.closest("[data-dashboard-filter]")) {
-        scheduleRender();
+        applyFilterChange();
       }
     });
 
@@ -1153,9 +1209,15 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       document.querySelectorAll("[data-dashboard-filter]").forEach((control) => {
         control.value = "";
       });
+      syncFiltersToUrl();
       render();
     });
     els.refresh.addEventListener("click", render);
+    window.addEventListener("popstate", () => {
+      restoreFiltersFromUrl();
+      render();
+    });
+    restoreFiltersFromUrl();
     render();
   </script>
 </body>
@@ -7503,6 +7565,11 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"room\""));
             assert!(body.contains("data-dashboard-filter=\"domain\""));
             assert!(body.contains("data-dashboard-filter=\"command-status\""));
+            assert!(body.contains("const FILTER_QUERY_PARAMS = ["));
+            assert!(body.contains("[\"event_kind\", els.filterEventKind]"));
+            assert!(body.contains("[\"command_status\", els.filterCommandStatus]"));
+            assert!(body.contains("restoreFiltersFromUrl()"));
+            assert!(body.contains("window.history.replaceState(null, \"\", nextUrl)"));
             assert!(body.contains(
                 "queryUrl(\"/api/smart_home/states\", {limit: 24, domain: filters.domain, room_id: roomId, stale})"
             ));
@@ -8793,6 +8860,9 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
         assert!(body.contains("data-dashboard-filter=\"search\""));
         assert!(body.contains("data-dashboard-filter=\"room\""));
+        assert!(body.contains("const FILTER_QUERY_PARAMS = ["));
+        assert!(body.contains("window.addEventListener(\"popstate\""));
+        assert!(body.contains("window.history.replaceState(null, \"\", nextUrl)"));
         assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})"));
         assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
         assert!(body
