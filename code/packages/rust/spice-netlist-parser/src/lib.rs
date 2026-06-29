@@ -16,10 +16,10 @@ mod syntax;
 
 pub use syntax::{
     parse_berkeley_app_deck, parse_berkeley_syntax, BerkeleyAnalysisInventoryEntry,
-    BerkeleyAppDeck, BerkeleyCardKind, BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata,
-    BerkeleyLogicalCard, BerkeleySyntaxDeck, BerkeleySyntaxDiagnostic, BerkeleySyntaxToken,
-    SourceSpan, BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
-    BERKELEY_SPICE_PARSER_GRAMMAR, BERKELEY_SPICE_TOKEN_GRAMMAR,
+    BerkeleyAppAnalysisArtifact, BerkeleyAppDeck, BerkeleyAppExecution, BerkeleyCardKind,
+    BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, BerkeleyLogicalCard, BerkeleySyntaxDeck,
+    BerkeleySyntaxDiagnostic, BerkeleySyntaxToken, SourceSpan, BERKELEY_SPICE_GRAMMAR_NAME,
+    BERKELEY_SPICE_GRAMMAR_VERSION, BERKELEY_SPICE_PARSER_GRAMMAR, BERKELEY_SPICE_TOKEN_GRAMMAR,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]

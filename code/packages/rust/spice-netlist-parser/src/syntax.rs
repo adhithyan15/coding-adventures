@@ -2,6 +2,10 @@ use crate::{
     parse_netlist, AnalysisExecutionError, AnalysisExecutionResult, AnalysisKind,
     NetlistParseError, ParsedNetlist,
 };
+use spice_engine::{
+    run_deck, DeckOutputPlanArtifact, DeckRawfileArtifact, DeckRunArtifact, DeckTableArtifact,
+    DeckWrdataArtifact,
+};
 
 pub const BERKELEY_SPICE_GRAMMAR_NAME: &str = "berkeley-spice-logical-card";
 pub const BERKELEY_SPICE_GRAMMAR_VERSION: u32 = 1;
@@ -175,8 +179,35 @@ impl BerkeleySyntaxDeck {
 #[derive(Debug, Clone, PartialEq)]
 pub struct BerkeleyAppDeck {
     pub syntax: BerkeleySyntaxDeck,
+    pub canonical_source: String,
     pub parsed: Option<ParsedNetlist>,
     pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct BerkeleyAppAnalysisArtifact {
+    pub syntax_card_index: Option<usize>,
+    pub directive: String,
+    pub analysis: String,
+    pub span: Option<SourceSpan>,
+    pub table: String,
+    pub table_columns: Vec<String>,
+    pub table_row_count: usize,
+    pub table_artifacts: Vec<DeckTableArtifact>,
+    pub output_plan_artifacts: Vec<DeckOutputPlanArtifact>,
+    pub run_artifacts: Vec<DeckRunArtifact>,
+    pub rawfile_artifacts: Vec<DeckRawfileArtifact>,
+    pub wrdata_artifacts: Vec<DeckWrdataArtifact>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct BerkeleyAppExecution {
+    pub canonical_source: String,
+    pub analyses: Vec<BerkeleyAppAnalysisArtifact>,
+    pub run_artifacts: Vec<DeckRunArtifact>,
+    pub run_artifact_table: String,
+    pub run_artifact_csv: String,
+    pub run_artifact_json: String,
 }
 
 impl BerkeleyAppDeck {
@@ -222,6 +253,67 @@ impl BerkeleyAppDeck {
         Ok(self.run_source_order()?.into_iter().nth(result_ordinal))
     }
 
+    pub fn run_artifacts(&self) -> Result<BerkeleyAppExecution, AnalysisExecutionError> {
+        let parsed = self.parsed.as_ref().ok_or_else(|| {
+            AnalysisExecutionError::Netlist(NetlistParseError::new(self.blocking_message()))
+        })?;
+        let deck_execution = run_deck(&parsed.circuit, &self.canonical_source)?;
+        let analysis_entries = self
+            .analysis_inventory()
+            .into_iter()
+            .filter(|entry| deck_artifact_analysis_directive(&entry.directive))
+            .collect::<Vec<_>>();
+        let mut analysis_entries = analysis_entries.into_iter();
+        let analyses = deck_execution
+            .executions
+            .into_iter()
+            .map(|execution| {
+                let entry = if execution.plan.line_number == 0 {
+                    None
+                } else {
+                    analysis_entries.next()
+                };
+                BerkeleyAppAnalysisArtifact {
+                    syntax_card_index: entry.as_ref().map(|entry| entry.index),
+                    directive: entry
+                        .as_ref()
+                        .map(|entry| entry.directive.clone())
+                        .unwrap_or_else(|| execution.plan.directive.clone()),
+                    analysis: execution.plan.analysis.clone(),
+                    span: entry.as_ref().map(|entry| entry.span),
+                    table_columns: deck_table_columns(&execution.table),
+                    table_row_count: deck_table_row_count(&execution.table),
+                    table: execution.table,
+                    table_artifacts: execution.table_artifacts,
+                    output_plan_artifacts: execution.output_plan_artifacts,
+                    run_artifacts: execution.run_artifacts,
+                    rawfile_artifacts: execution.rawfile_artifacts,
+                    wrdata_artifacts: execution.wrdata_artifacts,
+                }
+            })
+            .collect();
+
+        Ok(BerkeleyAppExecution {
+            canonical_source: self.canonical_source.clone(),
+            analyses,
+            run_artifacts: deck_execution.run_artifacts,
+            run_artifact_table: deck_execution.run_artifact_table,
+            run_artifact_csv: deck_execution.run_artifact_csv,
+            run_artifact_json: deck_execution.run_artifact_json,
+        })
+    }
+
+    pub fn run_selected_artifact(
+        &self,
+        syntax_card_index: usize,
+    ) -> Result<Option<BerkeleyAppAnalysisArtifact>, AnalysisExecutionError> {
+        Ok(self
+            .run_artifacts()?
+            .analyses
+            .into_iter()
+            .find(|artifact| artifact.syntax_card_index == Some(syntax_card_index)))
+    }
+
     fn blocking_message(&self) -> String {
         self.diagnostics
             .iter()
@@ -231,6 +323,13 @@ impl BerkeleyAppDeck {
                 "Berkeley SPICE app deck did not produce a parsed netlist".to_string()
             })
     }
+}
+
+fn deck_artifact_analysis_directive(directive: &str) -> bool {
+    matches!(
+        directive.to_ascii_lowercase().as_str(),
+        ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens" | ".noise"
+    )
 }
 
 fn runnable_analysis_kind(directive: &str) -> Option<AnalysisKind> {
@@ -372,6 +471,7 @@ pub fn parse_berkeley_syntax(text: &str) -> BerkeleySyntaxDeck {
 
 pub fn parse_berkeley_app_deck(text: &str) -> BerkeleyAppDeck {
     let syntax = parse_berkeley_syntax(text);
+    let canonical_source = canonical_source(&syntax);
     let mut diagnostics = syntax.diagnostics.clone();
     let parsed = if syntax.has_errors() {
         None
@@ -392,8 +492,39 @@ pub fn parse_berkeley_app_deck(text: &str) -> BerkeleyAppDeck {
 
     BerkeleyAppDeck {
         syntax,
+        canonical_source,
         parsed,
         diagnostics,
+    }
+}
+
+fn canonical_source(syntax: &BerkeleySyntaxDeck) -> String {
+    let mut lines = Vec::new();
+    if let Some(title) = &syntax.title {
+        lines.push(format!("* {title}"));
+    }
+    lines.extend(syntax.cards.iter().map(|card| card.text.clone()));
+    if lines.is_empty() {
+        String::new()
+    } else {
+        format!("{}\n", lines.join("\n"))
+    }
+}
+
+fn deck_table_columns(table: &str) -> Vec<String> {
+    table
+        .lines()
+        .next()
+        .map(|header| header.split('\t').map(str::to_string).collect())
+        .unwrap_or_default()
+}
+
+fn deck_table_row_count(table: &str) -> usize {
+    let mut lines = table.lines();
+    if lines.next().is_none() {
+        0
+    } else {
+        lines.count()
     }
 }
 

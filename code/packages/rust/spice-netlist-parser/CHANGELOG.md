@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add Berkeley SPICE app-deck result artifacts for Mosaic-facing Rust UI
+  substrates. `BerkeleyAppDeck::run_artifacts()` now exposes normalized source,
+  syntax-card-indexed result tables, output-plan artifacts, run-artifact
+  summaries, and rawfile / wrdata artifact metadata backed by the engine deck
+  execution layer.
 - Route `parse_netlist` through the Berkeley SPICE logical-card syntax facade,
   so the default Rust parser consumes normalized cards, supports leading `+`
   continuations, and reports stable syntax diagnostics before semantic

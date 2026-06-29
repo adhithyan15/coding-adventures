@@ -1933,6 +1933,56 @@ R2 out 0 1k
 }
 
 #[test]
+fn berkeley_app_facade_exports_card_indexed_result_artifacts() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient UI
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out
++ 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+
+    assert!(!app.has_errors(), "{:?}", app.diagnostics);
+    assert!(app.canonical_source.contains("R1 in out 1k\n"));
+
+    let execution = app.run_artifacts().unwrap();
+    assert_eq!(execution.analyses.len(), 1);
+    assert_eq!(execution.run_artifacts.len(), 1);
+    assert!(execution.run_artifact_table.contains("Analysis\tDirective"));
+
+    let tran = &execution.analyses[0];
+    assert_eq!(tran.syntax_card_index, Some(3));
+    assert_eq!(tran.directive, ".tran");
+    assert_eq!(tran.analysis, "tran");
+    assert_eq!(tran.span.unwrap().start_line, 7);
+    assert!(tran.table_row_count >= 1);
+    assert!(tran.table_columns.iter().any(|column| column == "Time"));
+    assert!(tran.table_columns.iter().any(|column| column == "V(out)"));
+    assert!(tran
+        .table_artifacts
+        .iter()
+        .any(|artifact| artifact.name == "result"));
+    assert!(tran
+        .table_artifacts
+        .iter()
+        .any(|artifact| artifact.name == "output-plan"));
+    assert_eq!(tran.output_plan_artifacts[0].output_probes, vec!["V(out)"]);
+    assert!(tran.run_artifacts[0]
+        .tables
+        .iter()
+        .any(|table| table == "result"));
+
+    let selected = app.run_selected_artifact(3).unwrap().unwrap();
+    assert_eq!(selected.analysis, "tran");
+    assert!(app.run_selected_artifact(4).unwrap().is_none());
+}
+
+#[test]
 fn berkeley_app_facade_reports_lowering_errors_without_running() {
     let app = parse_berkeley_app_deck(
         r#"

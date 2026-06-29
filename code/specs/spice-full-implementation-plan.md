@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Python and TypeScript Berkeley syntax facade parity.
+1. Rust Berkeley Mosaic app artifacts.
    - Status: current PR completion candidate.
-   - Mirror the Rust Berkeley logical-card syntax facade in Python and
-     TypeScript with embedded grammar metadata, normalized cards, leading `+`
-     continuation handling, source spans, token names, stable diagnostics, and
-     analysis inventory.
-   - Keep the slice focused on parser/app-substrate metadata for Mosaic and
-     editor surfaces; richer result/table/waveform app artifacts remain in the
-     next Mosaic facade expansion.
+   - Expand the Rust `spice-netlist-parser` Berkeley app facade from analysis
+     inventory and execution entrypoints into card-indexed stable result
+     artifacts for Mosaic UI surfaces.
+   - Keep this as a Rust-only app-substrate acceleration slice over the public
+     parser contract and existing engine deck artifacts; Python and TypeScript
+     parser parity was completed separately and should remain aligned when
+     parser behavior changes.
 
 ## Completed Slices
 
@@ -1432,15 +1432,26 @@ the Rust, Python, and TypeScript surfaces together.
      semantic lowering, preserving the Mosaic app facade as the Rust runtime
      entrypoint over one shared syntax substrate.
 
+135. Python and TypeScript Berkeley syntax facade parity.
+   - Status: completed in PR 6924.
+   - Python and TypeScript `spice-engine` surfaces now mirror the Rust Berkeley
+     logical-card syntax facade with embedded grammar metadata, normalized
+     cards, leading `+` continuation handling, source spans, token names,
+     stable diagnostics, and analysis inventory.
+   - Cross-language tests lock the shared grammar metadata and representative
+     logical-card / diagnostic behavior so future parser work can keep editor
+     and app-substrate surfaces in sync.
+
 ## Backlog
 
 1. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
-   - Expand the Rust Mosaic app facade from analysis inventory and execution
-     entrypoints to stable table, waveform, and result artifacts backed by the
-     same public parser contract.
+   - Continue expanding the Rust Mosaic app facade beyond the initial
+     card-indexed result artifacts toward richer waveform inspection, app
+     session state, and editor-driven analysis controls backed by the same
+     public parser contract.
 
 2. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
