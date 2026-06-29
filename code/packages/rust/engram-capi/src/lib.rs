@@ -1617,7 +1617,7 @@ CREATE TABLE graves (
                 .iter()
                 .any(|progress| progress["cardId"] == "other" && progress["markedAt"] == NOW + 5));
 
-            let browser_select = cstr(r#"{"event":"onBrowserSelectResult","cardId":"other"}"#);
+            let browser_select = cstr(r#"{"event":"onBrowserSelectResult","index":0}"#);
             let browser_selected = take(eg_handle_engram_app_event(
                 session,
                 browser_select.as_ptr(),
@@ -1627,13 +1627,73 @@ CREATE TABLE graves (
             let browser_selected: Value = serde_json::from_str(&browser_selected).unwrap();
             assert_eq!(browser_selected["ok"], true);
             assert_eq!(browser_selected["event"], "onBrowserSelectResult");
+            assert_eq!(
+                browser_selected["props"]["browser-selected-card-id"],
+                "other"
+            );
+
+            let import_anki = cstr("onImportAnki");
+            let import_intent = take(eg_handle_engram_app_event(
+                session,
+                import_anki.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 7,
+            ));
+            let import_intent: Value = serde_json::from_str(&import_intent).unwrap();
+            assert_eq!(import_intent["ok"], true);
+            assert_eq!(import_intent["event"], "onImportAnki");
+            assert_eq!(import_intent["hostIntent"]["type"], "importAnki");
+            assert_eq!(import_intent["hostIntent"]["deckId"], "deck");
+            assert_eq!(
+                import_intent["hostIntent"]["accept"],
+                json!([".apkg", ".colpkg"])
+            );
+
+            let export_anki = cstr("export-anki");
+            let export_intent = take(eg_handle_engram_app_event(
+                session,
+                export_anki.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 8,
+            ));
+            let export_intent: Value = serde_json::from_str(&export_intent).unwrap();
+            assert_eq!(export_intent["ok"], true);
+            assert_eq!(export_intent["event"], "onExportAnki");
+            assert_eq!(export_intent["hostIntent"]["type"], "exportAnki");
+            assert_eq!(export_intent["hostIntent"]["extension"], ".apkg");
+
+            let browser_open = cstr("onBrowserOpenSelected");
+            let open_intent = take(eg_handle_engram_app_event(
+                session,
+                browser_open.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 9,
+            ));
+            let open_intent: Value = serde_json::from_str(&open_intent).unwrap();
+            assert_eq!(open_intent["ok"], true);
+            assert_eq!(open_intent["event"], "onBrowserOpenSelected");
+            assert_eq!(open_intent["hostIntent"]["type"], "openCard");
+            assert_eq!(open_intent["hostIntent"]["cardId"], "other");
+
+            let browser_edit = cstr("onBrowserEditSelected");
+            let edit_intent = take(eg_handle_engram_app_event(
+                session,
+                browser_edit.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 10,
+            ));
+            let edit_intent: Value = serde_json::from_str(&edit_intent).unwrap();
+            assert_eq!(edit_intent["ok"], true);
+            assert_eq!(edit_intent["event"], "onBrowserEditSelected");
+            assert_eq!(edit_intent["hostIntent"]["type"], "editCard");
+            assert_eq!(edit_intent["hostIntent"]["cardId"], "other");
 
             let deck_option = cstr(r#"{"type":"deckOptionsMaximumIntervalChange","value":90}"#);
             let deck_option_changed = take(eg_handle_engram_app_event(
                 session,
                 deck_option.as_ptr(),
                 deck_id.as_ptr(),
-                NOW + 7,
+                NOW + 11,
             ));
             let deck_option_changed: Value = serde_json::from_str(&deck_option_changed).unwrap();
             assert_eq!(deck_option_changed["ok"], true);
@@ -1656,7 +1716,7 @@ CREATE TABLE graves (
                 session,
                 learning_steps.as_ptr(),
                 deck_id.as_ptr(),
-                NOW + 8,
+                NOW + 12,
             ));
             let learning_steps_changed: Value =
                 serde_json::from_str(&learning_steps_changed).unwrap();
@@ -1681,7 +1741,7 @@ CREATE TABLE graves (
                 session,
                 bury_review.as_ptr(),
                 deck_id.as_ptr(),
-                NOW + 9,
+                NOW + 13,
             ));
             let bury_review_changed: Value = serde_json::from_str(&bury_review_changed).unwrap();
             assert_eq!(bury_review_changed["ok"], true);

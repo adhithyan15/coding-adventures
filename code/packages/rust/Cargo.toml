@@ -152,6 +152,7 @@ members = [
     "engram-anki-package",
     "engram-core",
     "engram-core-wasm",
+    "engram-wasm",
     "html-lexer",
     "html-parser",
     "html-renderer",

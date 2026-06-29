@@ -17,6 +17,7 @@ mosaic-emit-html = { path = "../mosaic-emit-html" }
 mosaic-emit-webcomponent = { path = "../mosaic-emit-webcomponent" }
 mosaic-emit-xaml = { path = "../mosaic-emit-xaml" }
 mosaic-emit-flutter = { path = "../mosaic-emit-flutter" }
+mosaic-emit-compose = { path = "../mosaic-emit-compose" }
 
 [dev-dependencies]
 tempfile = "3"

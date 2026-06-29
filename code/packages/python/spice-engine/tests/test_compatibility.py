@@ -1,6 +1,8 @@
 import pytest
 
 from spice_engine import (
+    BERKELEY_SPICE_GRAMMAR_NAME,
+    BERKELEY_SPICE_GRAMMAR_VERSION,
     CompatibilityDeck,
     CompatibilityGoldenValue,
     CompatibilityOracle,
@@ -8,6 +10,7 @@ from spice_engine import (
     compatibility_corpus,
     format_compatibility_corpus_table,
     format_release_readiness_report,
+    parse_berkeley_syntax,
     release_readiness_gates,
     resolve_deck_analyses,
     resolve_deck_fourier,
@@ -21,6 +24,65 @@ from spice_engine import (
     select_deck_output_probe_lines,
     select_deck_output_probes,
 )
+
+
+def test_berkeley_syntax_facade_preserves_logical_cards_tokens_and_spans() -> None:
+    syntax = parse_berkeley_syntax(
+        """
+* RC low pass
+V1 in 0 DC 1
+R1 in out 1k ; inline comment
++ TC=1m
+.op
+.tran 1n 2n
+.end
+"""
+    )
+
+    assert syntax.has_errors() is False
+    assert syntax.grammar.name == BERKELEY_SPICE_GRAMMAR_NAME
+    assert syntax.grammar.version == BERKELEY_SPICE_GRAMMAR_VERSION
+    assert "DOT_TRAN" in syntax.grammar.token_grammar
+    assert "analysis_card" in syntax.grammar.parser_grammar
+    assert syntax.title == "RC low pass"
+    assert len(syntax.cards) == 5
+
+    resistor = syntax.cards[1]
+    assert resistor.kind == "element"
+    assert resistor.head == "R1"
+    assert resistor.text == "R1 in out 1k TC=1m"
+    assert resistor.physical_lines == (4, 5)
+    assert resistor.span.start_line == 4
+    assert resistor.span.end_line == 5
+    assert [(token.kind, token.text) for token in resistor.tokens] == [
+        ("ATOM", "R1"),
+        ("ATOM", "in"),
+        ("ATOM", "out"),
+        ("NUMBER", "1k"),
+        ("ATOM", "TC"),
+        ("EQUALS", "="),
+        ("NUMBER", "1m"),
+    ]
+
+    inventory = syntax.analysis_inventory()
+    assert [(entry.index, entry.analysis) for entry in inventory] == [(2, "op"), (3, "tran")]
+
+
+def test_berkeley_syntax_facade_reports_stable_diagnostics() -> None:
+    syntax = parse_berkeley_syntax(
+        """
++ orphan
+V1 in 0 PULSE(0 1
+.measure tran bad PARAM="unterminated
+"""
+    )
+
+    assert [(diagnostic.code, diagnostic.severity) for diagnostic in syntax.diagnostics] == [
+        ("SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD", "error"),
+        ("SPICE_SYNTAX_UNCLOSED_PAREN", "error"),
+        ("SPICE_SYNTAX_UNCLOSED_QUOTE", "error"),
+    ]
+    assert syntax.has_errors() is True
 
 
 def test_compatibility_corpus_release_gates_pass() -> None:

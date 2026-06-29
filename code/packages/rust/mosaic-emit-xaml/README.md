@@ -56,6 +56,9 @@ For a component `MyComponent` the emitter returns:
   `InitializeComponent()` boilerplate.
 - `events`: the discriminated event-union as C# records (one nested record
   per emit, matching UI24 §3.1's `export type GridEvent = ...` shape).
+  Non-empty unions also expose `MosaicName`, `MosaicPayload`, and
+  `MosaicEnvelope`, preserving original emit names such as `onReveal` and
+  payload keys such as `value` or `checked` for native host bridges.
 
 ## Public API
 

@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - Mosaic event envelopes for SwiftUI hosts
+
+Generated non-empty `{Component}Event` enums now include `mosaicName`,
+`mosaicPayload`, and `mosaicEnvelope` helpers. `Sources/App/App.swift` uses the
+envelope in its sample dispatch closure, giving SwiftUI native hosts a stable
+wire shape to JSON-encode into shared Mosaic/Engram business logic.
+
 ### Fixed - `--emit-project` SwiftPM shell supplies view inputs
 
 `Sources/App/App.swift` now mounts `{Component}View(...)` with deterministic

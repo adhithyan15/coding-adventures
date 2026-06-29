@@ -30,6 +30,15 @@ beside the component artifacts. React, HTML, WebComponent, Flutter, Qt,
 SwiftUI, and XAML all produce their shell side files from the same package
 source tree.
 
+Electron project shells expose the same renderer-side `window.mosaicHost`
+contract as React and route it through context-isolated IPC. The generated main
+process can load an optional host module from compiled `dist-electron/host.js`,
+source-side `electron/host.js` or `electron/host.mjs`, or from
+`MOSAIC_ELECTRON_HOST_MODULE`, so apps can bind generated UI events to shared
+business logic without editing renderer artifacts. The generated `npm run dev`
+script compiles the Electron main/preload TypeScript before launching Electron
+so a fresh emitted project is runnable without a separate build step.
+
 ## Boundaries
 
 - Cross-package layout inlining lives in `mosaic-package-resolver`; this crate

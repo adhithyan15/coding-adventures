@@ -69,6 +69,8 @@ All notable changes to this package will be documented in this file.
   event, command, and authorization filters into URL query parameters.
 - Added dashboard-ready capability grant inventory and detail routes for
   inspecting runtime authorization boundaries.
+- Added a browser dashboard capability-grants panel with status, scope, and
+  principal filters plus authorization-row links to active principal grants.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe

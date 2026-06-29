@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added - HTML event hydration markers
+
+`HostButton` now preserves `onClick`/`onTap` emits as `data-on-click`, and
+`HostInput` preserves `onChange`/`onCommit`/`onCancel` emits as
+`data-on-change`, `data-on-commit`, and `data-on-cancel`. The HTML backend
+stays static and script-free while giving a downstream hydrator the same Mosaic
+event names used by the interactive shells.
+
 ### Added — UI32-K-html — `--emit-project` standalone-HTML shell
 
 L3 of UI32 (spec PR #4286). Lifts the `index-shell.html` pattern

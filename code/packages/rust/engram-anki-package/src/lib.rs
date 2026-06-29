@@ -11,10 +11,12 @@ use std::io::Cursor;
 
 use coding_adventures_sha1::sum1;
 use engram_core::{
-    render_template, render_template_with_front_side, AppState, Card, CardFlag, CardLineage,
-    CardProgress, CardState, CardTemplate, Deck, DeckOptions, DeckOptionsPreset,
-    ExternalSourceRecord, ExternalSourceTarget, FieldDef, MediaAssetRecord, Note, NoteFieldValue,
-    NoteType, Rating, Review, Session, SessionStatus, INITIAL_EASE_FACTOR, ONE_DAY_MS,
+    render_cloze_template, render_cloze_template_with_front_side, render_template,
+    render_template_with_front_side, template_references_cloze, AppState, Card, CardFlag,
+    CardLineage, CardProgress, CardState, CardTemplate, ClozeRenderSide, Deck, DeckOptions,
+    DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, FieldDef, MediaAssetRecord,
+    Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
+    TemplateRequirementMode, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
 use prost::Message;
 use rusqlite::{Connection, OpenFlags};
@@ -28,6 +30,7 @@ const SQLITE_21B_COLLECTION: &str = "collection.anki21b";
 const MEDIA_MAP: &str = "media";
 const META: &str = "meta";
 const ANKI_V11_SOURCE: &str = "anki-v11";
+const ANKI_MARKED_TAG: &str = "marked";
 
 #[derive(Clone, PartialEq, Message)]
 struct PackageMetadataProto {
@@ -123,6 +126,10 @@ pub struct MediaFile {
     pub filename: Option<String>,
     pub size: u32,
     pub compressed_size: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sha1: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub legacy_zip_filename: Option<u32>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -629,6 +636,11 @@ pub fn v11_collection_to_engram_state(
         .cloned()
         .map(|note| (note.id.clone(), note))
         .collect();
+    let deck_names_by_id: HashMap<i64, String> = collection
+        .decks
+        .iter()
+        .map(|deck| (deck.id, deck.name.clone()))
+        .collect();
 
     let mut cards = Vec::with_capacity(collection.cards.len());
     for card in &collection.cards {
@@ -637,9 +649,15 @@ pub fn v11_collection_to_engram_state(
             &notes_by_id,
             &note_types_by_id,
             &anki_note_types_by_id,
+            &deck_names_by_id,
         )?);
     }
 
+    let marked_at_by_note_id = collection
+        .notes
+        .iter()
+        .filter_map(|note| anki_marked_at_for_note(note).map(|marked_at| (note.id, marked_at)))
+        .collect::<BTreeMap<_, _>>();
     let last_reviewed_at_by_card = last_reviewed_at_by_card(&collection.reviews);
     let card_progress = collection
         .cards
@@ -648,6 +666,7 @@ pub fn v11_collection_to_engram_state(
             map_v11_card_progress(
                 card,
                 collection.metadata.created_at_days,
+                &marked_at_by_note_id,
                 &last_reviewed_at_by_card,
             )
         })
@@ -872,6 +891,13 @@ fn v11_options_for_deck(deck: &AnkiV11Deck, deck_config: &Value) -> DeckOptions 
         options.reviews_per_day = json_path_u32(config, &["rev", "perDay"])
             .or_else(|| json_path_u32(config, &["rev", "perday"]))
             .unwrap_or(options.reviews_per_day);
+        options.bury_new_siblings =
+            json_path_bool(config, &["new", "bury"]).unwrap_or(options.bury_new_siblings);
+        options.bury_review_siblings =
+            json_path_bool(config, &["rev", "bury"]).unwrap_or(options.bury_review_siblings);
+        options.bury_interday_learning_siblings = json_path_bool(config, &["buryInterdayLearning"])
+            .or_else(|| json_path_bool(config, &["new", "buryInterdayLearning"]))
+            .unwrap_or(options.bury_interday_learning_siblings);
         options.learning_steps_minutes =
             json_path_minutes(config, &["new", "delays"]).unwrap_or(options.learning_steps_minutes);
         options.relearning_steps_minutes = json_path_minutes(config, &["lapse", "delays"])
@@ -1059,6 +1085,28 @@ fn v11_external_sources(
             ExternalSourceTarget::Card,
             card.id.to_string(),
             Some(card.id.to_string()),
+            data,
+        ));
+    }
+
+    for review in &collection.reviews {
+        let mut data = BTreeMap::new();
+        insert_i64(&mut data, "cardId", review.card_id);
+        insert_i64(
+            &mut data,
+            "updateSequenceNumber",
+            review.update_sequence_number,
+        );
+        insert_i64(&mut data, "ease", review.ease);
+        insert_i64(&mut data, "interval", review.interval);
+        insert_i64(&mut data, "lastInterval", review.last_interval);
+        insert_i64(&mut data, "factor", review.factor);
+        insert_i64(&mut data, "time", review.time);
+        insert_i64(&mut data, "kind", review.kind);
+        sources.push(source_record(
+            ExternalSourceTarget::Review,
+            review.id.to_string(),
+            Some(review.id.to_string()),
             data,
         ));
     }
@@ -1273,12 +1321,19 @@ impl ExportModel {
         }
 
         let mut cards = Vec::with_capacity(state.cards.len());
+        let mut marked_note_keys = BTreeSet::new();
         for card in &state.cards {
+            let card_marked = progress_by_card
+                .get(&card.id)
+                .is_some_and(|progress| progress.marked_at.is_some());
             if let Some(lineage) = card
                 .lineage
                 .as_ref()
                 .filter(|lineage| lineage_is_exportable(lineage, &notes_by_id, &note_types_by_id))
             {
+                if card_marked {
+                    marked_note_keys.insert(lineage.note_id.clone());
+                }
                 cards.push(ExportCard {
                     key: card.id.clone(),
                     note_key: lineage.note_id.clone(),
@@ -1288,6 +1343,9 @@ impl ExportModel {
                 });
             } else {
                 let note_key = synthetic_basic_note_key(&card.id);
+                if card_marked {
+                    marked_note_keys.insert(note_key.clone());
+                }
                 notes.push(ExportNote {
                     key: note_key.clone(),
                     note_type_key: SYNTHETIC_BASIC_NOTE_TYPE.to_string(),
@@ -1314,8 +1372,23 @@ impl ExportModel {
                 });
             }
         }
+        for note in &mut notes {
+            if marked_note_keys.contains(&note.key) {
+                note.tags = tags_with_anki_marked(&note.tags);
+            }
+        }
 
-        let created_at_days = export_created_at_days(state, &decks, &notes, &cards);
+        let computed_created_at_days = export_created_at_days(state, &decks, &notes, &cards);
+        let created_at_days = state
+            .external_sources
+            .iter()
+            .find(|source| {
+                source.source == ANKI_V11_SOURCE
+                    && source.target == ExternalSourceTarget::Collection
+                    && source.target_id == "collection"
+            })
+            .and_then(|source| source_i64(Some(source), "createdAtDays"))
+            .unwrap_or(computed_created_at_days);
         let modified_at_seconds = export_modified_at_seconds(state, &notes, &cards);
         let deck_ids = assign_anki_ids(decks.iter().map(|deck| deck.key.as_str()), 1_000_000);
         let note_type_ids = assign_anki_ids(
@@ -1441,9 +1514,10 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
             rusqlite::params![
                 export_collection_i64(export, "id").unwrap_or(1_i64),
                 export.created_at_days,
-                export.modified_at_seconds,
-                export.modified_at_seconds,
-                11_i64,
+                export_collection_i64(export, "modifiedAt").unwrap_or(export.modified_at_seconds),
+                export_collection_i64(export, "schemaModifiedAt")
+                    .unwrap_or(export.modified_at_seconds),
+                export_collection_i64(export, "version").unwrap_or(11_i64),
                 export_collection_i64(export, "dirty").unwrap_or(0_i64),
                 export_collection_i64(export, "updateSequenceNumber").unwrap_or(-1_i64),
                 export_collection_i64(export, "lastSync").unwrap_or(0_i64),
@@ -1469,8 +1543,10 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
             })?;
         let fields = export_note_field_values(note, note_type);
         let field_join = fields.join("\u{1f}");
-        let sort_field = fields.first().cloned().unwrap_or_default();
         let source = anki_source(export, ExternalSourceTarget::Note, &note.key);
+        let note_type_source =
+            anki_source(export, ExternalSourceTarget::NoteType, &note.note_type_key);
+        let sort_field = export_note_sort_field(&fields, note_type_source);
         connection
             .execute(
                 "INSERT INTO notes VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
@@ -1479,12 +1555,12 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     source_string(source, "guid")
                         .unwrap_or_else(|| export_note_guid(&note.key, export.note_ids[&note.key])),
                     export.note_type_ids[&note.note_type_key],
-                    millis_to_anki_seconds(note.updated_at.max(note.created_at)),
+                    export_note_modified_at(note, source),
                     source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
                     join_anki_tags(&note.tags),
                     field_join,
                     sort_field,
-                    export_note_checksum(source, &fields.first().cloned().unwrap_or_default()),
+                    export_note_checksum(source, &sort_field),
                     source_i64(source, "flags").unwrap_or_default(),
                     source_string(source, "data").unwrap_or_default(),
                 ],
@@ -1504,7 +1580,7 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     export.note_ids[&card.note_key],
                     export.deck_ids[&card.deck_key],
                     i64::from(card.template_ordinal),
-                    export_card_modified_at(card, progress),
+                    export_card_modified_at(card, progress, source),
                     source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
                     scheduling.kind,
                     scheduling.queue,
@@ -1531,6 +1607,7 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                 review.id, review.card_id
             )));
         };
+        let source = anki_source(export, ExternalSourceTarget::Review, &review.id);
         let review_id = unique_review_id(review, &mut used_review_ids);
         connection
             .execute(
@@ -1538,25 +1615,31 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                 rusqlite::params![
                     review_id,
                     card_id,
-                    -1_i64,
-                    rating_to_v11_ease(review.rating),
-                    review
-                        .resulting_progress
-                        .as_ref()
-                        .map(|progress| i64::from(progress.interval))
-                        .unwrap_or_default(),
-                    review
-                        .previous_progress
-                        .as_ref()
-                        .map(|progress| i64::from(progress.interval))
-                        .unwrap_or_default(),
-                    review
-                        .resulting_progress
-                        .as_ref()
-                        .map(progress_factor_to_anki)
-                        .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64),
-                    0_i64,
-                    review_kind(review),
+                    source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
+                    source_i64(source, "ease").unwrap_or_else(|| rating_to_v11_ease(review.rating)),
+                    source_i64(source, "interval").unwrap_or_else(|| {
+                        review
+                            .resulting_progress
+                            .as_ref()
+                            .map(|progress| i64::from(progress.interval))
+                            .unwrap_or_default()
+                    }),
+                    source_i64(source, "lastInterval").unwrap_or_else(|| {
+                        review
+                            .previous_progress
+                            .as_ref()
+                            .map(|progress| i64::from(progress.interval))
+                            .unwrap_or_default()
+                    }),
+                    source_i64(source, "factor").unwrap_or_else(|| {
+                        review
+                            .resulting_progress
+                            .as_ref()
+                            .map(progress_factor_to_anki)
+                            .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64)
+                    }),
+                    source_i64(source, "time").unwrap_or_default(),
+                    source_i64(source, "kind").unwrap_or_else(|| review_kind(review)),
                 ],
             )
             .map_err(|err| {
@@ -1592,10 +1675,9 @@ fn export_decks_json(export: &ExportModel) -> Value {
         deck_object.insert("id".to_string(), Value::Number(id.into()));
         deck_object.insert("name".to_string(), Value::String(deck.name.clone()));
         deck_object.insert("desc".to_string(), Value::String(deck.description.clone()));
-        deck_object.insert(
-            "mod".to_string(),
-            Value::Number(millis_to_anki_seconds(deck.created_at).into()),
-        );
+        deck_object
+            .entry("mod".to_string())
+            .or_insert_with(|| Value::Number(millis_to_anki_seconds(deck.created_at).into()));
         deck_object
             .entry("usn".to_string())
             .or_insert_with(|| Value::Number((-1_i64).into()));
@@ -1634,16 +1716,16 @@ fn export_note_types_json(export: &ExportModel) -> Value {
         let raw_templates = model_json.get("tmpls").cloned().unwrap_or(Value::Null);
         let fields = export_note_type_fields_json(note_type, &raw_fields);
         let templates = export_note_type_templates_json(note_type, &raw_templates);
+        let requirements = export_note_type_requirements_json(note_type);
         let model_object = ensure_json_object(&mut model_json);
         model_object.insert("id".to_string(), Value::Number(id.into()));
         model_object.insert("name".to_string(), Value::String(note_type.name.clone()));
         model_object.insert("type".to_string(), Value::Number(note_type.kind.into()));
-        model_object.insert(
-            "mod".to_string(),
+        model_object.entry("mod".to_string()).or_insert_with(|| {
             Value::Number(
                 millis_to_anki_seconds(note_type.updated_at.max(note_type.created_at)).into(),
-            ),
-        );
+            )
+        });
         model_object
             .entry("usn".to_string())
             .or_insert_with(|| Value::Number((-1_i64).into()));
@@ -1665,6 +1747,7 @@ fn export_note_types_json(export: &ExportModel) -> Value {
             .or_insert_with(|| Value::String("\\end{document}".to_string()));
         model_object.insert("flds".to_string(), Value::Array(fields));
         model_object.insert("tmpls".to_string(), Value::Array(templates));
+        model_object.insert("req".to_string(), Value::Array(requirements));
         object.insert(id.to_string(), model_json);
     }
     Value::Object(object)
@@ -1776,6 +1859,7 @@ fn merge_deck_options_json(
         "perDay".to_string(),
         Value::Number(i64::from(options.new_cards_per_day).into()),
     );
+    new_object.insert("bury".to_string(), Value::Bool(options.bury_new_siblings));
     new_object.insert(
         "delays".to_string(),
         Value::Array(
@@ -1803,6 +1887,10 @@ fn merge_deck_options_json(
     review_object.insert(
         "perDay".to_string(),
         Value::Number(i64::from(options.reviews_per_day).into()),
+    );
+    review_object.insert(
+        "bury".to_string(),
+        Value::Bool(options.bury_review_siblings),
     );
     review_object.insert(
         "maxIvl".to_string(),
@@ -1842,6 +1930,10 @@ fn merge_deck_options_json(
         json_f64_or(options.lapse_interval_multiplier, 0.0),
     );
     object.insert("lapse".to_string(), lapse_section);
+    object.insert(
+        "buryInterdayLearning".to_string(),
+        Value::Bool(options.bury_interday_learning_siblings),
+    );
 }
 
 fn json_f64_or(value: f64, fallback: f64) -> Value {
@@ -1919,6 +2011,36 @@ fn export_note_type_templates_json(
         .collect()
 }
 
+fn export_note_type_requirements_json(note_type: &ExportNoteType) -> Vec<Value> {
+    let field_ordinals_by_name = note_type
+        .fields
+        .iter()
+        .map(|field| (field.name.as_str(), i64::from(field.ordinal)))
+        .collect::<HashMap<_, _>>();
+    let mut templates = note_type.templates.clone();
+    templates.sort_by_key(|template| template.ordinal);
+    templates
+        .into_iter()
+        .map(|template| {
+            let field_ordinals = template
+                .required_field_names
+                .iter()
+                .filter_map(|field_name| field_ordinals_by_name.get(field_name.as_str()).copied())
+                .map(|ordinal| Value::Number(ordinal.into()))
+                .collect::<Vec<_>>();
+            let mode = match template.requirement_mode {
+                TemplateRequirementMode::Any => "any",
+                TemplateRequirementMode::All => "all",
+            };
+            Value::Array(vec![
+                Value::Number(i64::from(template.ordinal).into()),
+                Value::String(mode.to_string()),
+                Value::Array(field_ordinals),
+            ])
+        })
+        .collect()
+}
+
 fn raw_values_by_ordinal(value: &Value) -> BTreeMap<i64, Value> {
     value
         .as_array()
@@ -1971,6 +2093,18 @@ fn source_json(source: Option<&ExternalSourceRecord>, key: &str) -> Option<Value
     source
         .and_then(|source| source.data.get(key))
         .and_then(|value| serde_json::from_str(value).ok())
+}
+
+fn export_note_sort_field(
+    fields: &[String],
+    note_type_source: Option<&ExternalSourceRecord>,
+) -> String {
+    let sort_index = source_json(note_type_source, "rawJson")
+        .and_then(|raw| json_i64(&raw, "sortf"))
+        .and_then(|index| usize::try_from(index).ok())
+        .filter(|index| *index < fields.len())
+        .unwrap_or_default();
+    fields.get(sort_index).cloned().unwrap_or_default()
 }
 
 fn export_note_checksum(source: Option<&ExternalSourceRecord>, sort_field: &str) -> i64 {
@@ -2058,12 +2192,12 @@ fn export_card_scheduling(
         CardState::Relearning => (3, 1, millis_to_anki_seconds(progress.next_due_at).max(1)),
         CardState::Suspended => (
             review_or_new_kind(progress),
-            -1,
+            preserved_source_queue(source, &[-1], -1),
             millis_to_anki_due_day(collection_created_at_days, progress.next_due_at),
         ),
         CardState::Buried => (
             review_or_new_kind(progress),
-            -2,
+            preserved_source_queue(source, &[-2, -3], -2),
             millis_to_anki_due_day(collection_created_at_days, progress.next_due_at),
         ),
         CardState::Review => (
@@ -2091,6 +2225,16 @@ fn export_card_scheduling(
             .or_else(|| source_i64(source, "flags"))
             .unwrap_or_default(),
     }
+}
+
+fn preserved_source_queue(
+    source: Option<&ExternalSourceRecord>,
+    allowed: &[i64],
+    fallback: i64,
+) -> i64 {
+    source_i64(source, "queue")
+        .filter(|queue| allowed.contains(queue))
+        .unwrap_or(fallback)
 }
 
 fn review_or_new_kind(progress: &CardProgress) -> i64 {
@@ -2130,11 +2274,22 @@ fn card_flag_to_anki(flag: CardFlag) -> i64 {
     }
 }
 
-fn export_card_modified_at(card: &ExportCard, progress: Option<&CardProgress>) -> i64 {
-    let timestamp = progress
-        .map(|progress| progress.last_seen_at.max(card.created_at))
-        .unwrap_or(card.created_at);
-    millis_to_anki_seconds(timestamp)
+fn export_note_modified_at(note: &ExportNote, source: Option<&ExternalSourceRecord>) -> i64 {
+    source_i64(source, "modifiedAt")
+        .unwrap_or_else(|| millis_to_anki_seconds(note.updated_at.max(note.created_at)))
+}
+
+fn export_card_modified_at(
+    card: &ExportCard,
+    progress: Option<&CardProgress>,
+    source: Option<&ExternalSourceRecord>,
+) -> i64 {
+    source_i64(source, "modifiedAt").unwrap_or_else(|| {
+        let timestamp = progress
+            .map(|progress| progress.last_seen_at.max(card.created_at))
+            .unwrap_or(card.created_at);
+        millis_to_anki_seconds(timestamp)
+    })
 }
 
 fn rating_to_v11_ease(rating: Rating) -> i64 {
@@ -2233,7 +2388,7 @@ fn lineage_is_exportable(
 
 fn note_type_kind(note_type: &NoteType) -> i64 {
     if note_type.templates.iter().any(|template| {
-        template.front_template.contains("{{cloze:") || template.back_template.contains("{{cloze:")
+        template_references_cloze(&template.front_template, &template.back_template)
     }) {
         1
     } else {
@@ -2266,6 +2421,7 @@ fn synthetic_basic_note_type() -> ExportNoteType {
             front_template: "{{Front}}".to_string(),
             back_template: "{{Back}}".to_string(),
             required_field_names: vec!["Front".to_string()],
+            requirement_mode: TemplateRequirementMode::All,
             ordinal: 0,
         }],
         created_at: 0,
@@ -2362,6 +2518,20 @@ fn join_anki_tags(tags: &[String]) -> String {
     }
 }
 
+fn tags_with_anki_marked(tags: &[String]) -> Vec<String> {
+    if tags.iter().any(|tag| tag.trim() == ANKI_MARKED_TAG) {
+        return tags.to_vec();
+    }
+
+    let mut next = tags
+        .iter()
+        .filter(|tag| !tag.trim().eq_ignore_ascii_case(ANKI_MARKED_TAG))
+        .cloned()
+        .collect::<Vec<_>>();
+    next.push(ANKI_MARKED_TAG.to_string());
+    next
+}
+
 fn anki_field_checksum(sort_field: &str) -> i64 {
     let digest = sum1(sort_field.as_bytes());
     u32::from_be_bytes([digest[0], digest[1], digest[2], digest[3]]) as i64
@@ -2382,13 +2552,17 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
     let templates = note_type
         .templates
         .iter()
-        .map(|template| CardTemplate {
-            id: template_id(note_type.id, template.ordinal),
-            name: template.name.clone(),
-            front_template: template.question_format.clone(),
-            back_template: template.answer_format.clone(),
-            required_field_names: required_field_names_for_anki_template(note_type, template),
-            ordinal: i64_to_u32(template.ordinal),
+        .map(|template| {
+            let requirement = requirement_for_anki_template(note_type, template);
+            CardTemplate {
+                id: template_id(note_type.id, template.ordinal),
+                name: template.name.clone(),
+                front_template: template.question_format.clone(),
+                back_template: template.answer_format.clone(),
+                required_field_names: requirement.field_names,
+                requirement_mode: requirement.mode,
+                ordinal: i64_to_u32(template.ordinal),
+            }
         })
         .collect();
 
@@ -2402,7 +2576,56 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
     }
 }
 
-fn required_field_names_for_anki_template(
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct TemplateRequirement {
+    field_names: Vec<String>,
+    mode: TemplateRequirementMode,
+}
+
+fn requirement_for_anki_template(
+    note_type: &AnkiV11NoteType,
+    template: &AnkiV11Template,
+) -> TemplateRequirement {
+    anki_req_requirement_for_template(note_type, template).unwrap_or_else(|| TemplateRequirement {
+        field_names: inferred_required_field_names_for_anki_template(note_type, template),
+        mode: TemplateRequirementMode::All,
+    })
+}
+
+fn anki_req_requirement_for_template(
+    note_type: &AnkiV11NoteType,
+    template: &AnkiV11Template,
+) -> Option<TemplateRequirement> {
+    let field_names_by_ordinal = note_type
+        .fields
+        .iter()
+        .map(|field| (field.ordinal, field.name.as_str()))
+        .collect::<BTreeMap<_, _>>();
+    let req_rows = note_type.raw.get("req")?.as_array()?;
+    for row in req_rows {
+        let row = row.as_array()?;
+        if row.first().and_then(Value::as_i64) != Some(template.ordinal) {
+            continue;
+        }
+        let mode = match row.get(1).and_then(Value::as_str) {
+            Some("any") => TemplateRequirementMode::Any,
+            Some("all") => TemplateRequirementMode::All,
+            _ => return None,
+        };
+        let field_names = row
+            .get(2)
+            .and_then(Value::as_array)?
+            .iter()
+            .filter_map(Value::as_i64)
+            .filter_map(|ordinal| field_names_by_ordinal.get(&ordinal).copied())
+            .map(str::to_string)
+            .collect::<Vec<_>>();
+        return Some(TemplateRequirement { field_names, mode });
+    }
+    None
+}
+
+fn inferred_required_field_names_for_anki_template(
     note_type: &AnkiV11NoteType,
     template: &AnkiV11Template,
 ) -> Vec<String> {
@@ -2447,16 +2670,45 @@ fn normalize_anki_template_field_tag(tag: &str) -> Option<&str> {
     }
 
     let tag = tag.trim();
-    if tag == "FrontSide" || tag.is_empty() {
+    if tag.is_empty() {
         return None;
     }
 
-    Some(
-        tag.strip_prefix("cloze:")
-            .or_else(|| tag.strip_prefix("hint:"))
-            .or_else(|| tag.strip_prefix("type:"))
-            .unwrap_or(tag)
-            .trim(),
+    let mut field_name = tag;
+    loop {
+        let Some(after_filter) = strip_anki_template_field_filter(field_name) else {
+            break;
+        };
+        field_name = after_filter.trim();
+    }
+
+    let field_name = field_name.trim();
+    if is_anki_special_template_field(field_name) {
+        return None;
+    }
+
+    Some(field_name)
+}
+
+fn strip_anki_template_field_filter(tag: &str) -> Option<&str> {
+    [
+        "cloze:",
+        "hint:",
+        "type:",
+        "nc:",
+        "text:",
+        "furigana:",
+        "kana:",
+        "kanji:",
+    ]
+    .iter()
+    .find_map(|prefix| tag.strip_prefix(prefix))
+}
+
+fn is_anki_special_template_field(field_name: &str) -> bool {
+    matches!(
+        field_name,
+        "FrontSide" | "Tags" | "Type" | "Deck" | "Subdeck" | "Card" | "CardFlag" | "CardID"
     )
 }
 
@@ -2487,6 +2739,7 @@ fn map_v11_card(
     notes_by_id: &HashMap<String, Note>,
     note_types_by_id: &HashMap<String, NoteType>,
     anki_note_types_by_id: &HashMap<i64, &AnkiV11NoteType>,
+    deck_names_by_id: &HashMap<i64, String>,
 ) -> Result<Card, ApkgError> {
     let note = notes_by_id.get(&card.note_id.to_string()).ok_or_else(|| {
         apkg_error(format!(
@@ -2518,27 +2771,35 @@ fn map_v11_card(
                 card.id, note.note_type_id
             ))
         })?;
-    let field_values = field_value_map(note, anki_note_type);
+    let mut field_values = field_value_map(note, anki_note_type);
+    insert_anki_special_template_values(
+        &mut field_values,
+        note,
+        anki_note_type,
+        template,
+        card,
+        deck_names_by_id,
+    );
     let cloze_ordinal = if anki_note_type.kind == 1 {
         Some(i64_to_u32(card.ordinal.saturating_add(1)))
     } else {
         None
     };
     let (front, back) = if let Some(cloze_ordinal) = cloze_ordinal {
-        (
-            render_anki_cloze_template(
-                &template.front_template,
-                &field_values,
-                cloze_ordinal,
-                AnkiClozeSide::Question,
-            ),
-            render_anki_cloze_template(
-                &template.back_template,
-                &field_values,
-                cloze_ordinal,
-                AnkiClozeSide::Answer,
-            ),
-        )
+        let front = render_cloze_template(
+            &template.front_template,
+            &field_values,
+            cloze_ordinal,
+            ClozeRenderSide::Question,
+        );
+        let back = render_cloze_template_with_front_side(
+            &template.back_template,
+            &field_values,
+            cloze_ordinal,
+            ClozeRenderSide::Answer,
+            &front,
+        );
+        (front, back)
     } else {
         let front = render_template(&template.front_template, &field_values);
         let back = render_template_with_front_side(&template.back_template, &field_values, &front);
@@ -2584,6 +2845,55 @@ fn field_value_map(note: &Note, note_type: &AnkiV11NoteType) -> HashMap<String, 
         .collect()
 }
 
+fn insert_anki_special_template_values(
+    field_values: &mut HashMap<String, String>,
+    note: &Note,
+    note_type: &AnkiV11NoteType,
+    template: &CardTemplate,
+    card: &AnkiV11Card,
+    deck_names_by_id: &HashMap<i64, String>,
+) {
+    let render_deck_id = if card.original_deck_id != 0 {
+        card.original_deck_id
+    } else {
+        card.deck_id
+    };
+    let deck_name = deck_names_by_id
+        .get(&render_deck_id)
+        .cloned()
+        .unwrap_or_else(|| render_deck_id.to_string());
+    field_values
+        .entry("Tags".to_string())
+        .or_insert_with(|| note.tags.join(" "));
+    field_values
+        .entry("Type".to_string())
+        .or_insert_with(|| note_type.name.clone());
+    field_values
+        .entry("Deck".to_string())
+        .or_insert_with(|| deck_name.clone());
+    field_values
+        .entry("Subdeck".to_string())
+        .or_insert_with(|| {
+            deck_name
+                .rsplit_once("::")
+                .map_or(deck_name.as_str(), |(_, subdeck)| subdeck)
+                .to_string()
+        });
+    field_values
+        .entry("Card".to_string())
+        .or_insert_with(|| template.name.clone());
+    field_values
+        .entry("CardFlag".to_string())
+        .or_insert_with(|| anki_card_flag_template_value(card.flags));
+    field_values
+        .entry("CardID".to_string())
+        .or_insert_with(|| card.id.to_string());
+}
+
+fn anki_card_flag_template_value(flags: i64) -> String {
+    format!("flag{}", flags & 0b111)
+}
+
 fn card_note_type_id(note: &Note) -> i64 {
     note.note_type_id.parse().unwrap_or_default()
 }
@@ -2591,10 +2901,14 @@ fn card_note_type_id(note: &Note) -> i64 {
 fn map_v11_card_progress(
     card: &AnkiV11Card,
     collection_created_at_days: i64,
+    marked_at_by_note_id: &BTreeMap<i64, u64>,
     last_reviewed_at_by_card: &BTreeMap<i64, u64>,
 ) -> Option<CardProgress> {
+    let flag = anki_card_flag(card.flags);
+    let marked_at = marked_at_by_note_id.get(&card.note_id).copied();
     if card.queue == 0 {
-        return anki_card_flag(card.flags).map(|flag| new_card_metadata_overlay(card, flag));
+        return (flag.is_some() || marked_at.is_some())
+            .then(|| new_card_metadata_overlay(card, flag, marked_at));
     }
 
     let state = match card.queue {
@@ -2640,12 +2954,16 @@ fn map_v11_card_progress(
         times_correct: i64_to_u32(card.repetitions.saturating_sub(card.lapses)),
         times_incorrect: i64_to_u32(card.lapses),
         last_seen_at,
-        flag: anki_card_flag(card.flags),
-        marked_at: None,
+        flag,
+        marked_at,
     })
 }
 
-fn new_card_metadata_overlay(card: &AnkiV11Card, flag: CardFlag) -> CardProgress {
+fn new_card_metadata_overlay(
+    card: &AnkiV11Card,
+    flag: Option<CardFlag>,
+    marked_at: Option<u64>,
+) -> CardProgress {
     let timestamp = anki_seconds_to_millis(card.modified_at);
     CardProgress {
         card_id: card.id.to_string(),
@@ -2660,9 +2978,16 @@ fn new_card_metadata_overlay(card: &AnkiV11Card, flag: CardFlag) -> CardProgress
         times_correct: 0,
         times_incorrect: 0,
         last_seen_at: timestamp,
-        flag: Some(flag),
-        marked_at: None,
+        flag,
+        marked_at,
     }
+}
+
+fn anki_marked_at_for_note(note: &AnkiV11Note) -> Option<u64> {
+    note.tags
+        .iter()
+        .any(|tag| tag.eq_ignore_ascii_case(ANKI_MARKED_TAG))
+        .then_some(anki_seconds_to_millis(note.modified_at))
 }
 
 fn map_v11_review(review: &AnkiV11Review, deck_id: &str) -> Review {
@@ -3097,6 +3422,10 @@ fn json_path_f64(value: &Value, path: &[&str]) -> Option<f64> {
     json_path(value, path).and_then(Value::as_f64)
 }
 
+fn json_path_bool(value: &Value, path: &[&str]) -> Option<bool> {
+    json_path(value, path).and_then(value_to_bool)
+}
+
 fn json_path_u32_array(value: &Value, path: &[&str]) -> Option<Vec<u32>> {
     json_path(value, path).and_then(|value| {
         value
@@ -3133,139 +3462,25 @@ fn value_to_u32(value: &Value) -> Option<u32> {
         })
 }
 
+fn value_to_bool(value: &Value) -> Option<bool> {
+    value
+        .as_bool()
+        .or_else(|| value.as_i64().map(|value| value != 0))
+        .or_else(
+            || match value.as_str()?.trim().to_ascii_lowercase().as_str() {
+                "true" | "1" | "yes" => Some(true),
+                "false" | "0" | "no" => Some(false),
+                _ => None,
+            },
+        )
+}
+
 fn split_anki_fields(fields: &str) -> Vec<String> {
     fields.split('\u{1f}').map(str::to_string).collect()
 }
 
 fn split_anki_tags(tags: &str) -> Vec<String> {
     tags.split_whitespace().map(str::to_string).collect()
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum AnkiClozeSide {
-    Question,
-    Answer,
-}
-
-fn render_anki_cloze_template(
-    template: &str,
-    field_values: &HashMap<String, String>,
-    cloze_ordinal: u32,
-    side: AnkiClozeSide,
-) -> String {
-    let mut rendered = String::with_capacity(template.len());
-    let mut rest = template;
-
-    while let Some(start) = rest.find("{{") {
-        let (prefix, after_start) = rest.split_at(start);
-        rendered.push_str(prefix);
-        let after_start = &after_start[2..];
-
-        match after_start.find("}}") {
-            Some(end) => {
-                let (field_name, after_end) = after_start.split_at(end);
-                let field_name = field_name.trim();
-                if let Some(field_name) = field_name.strip_prefix("cloze:") {
-                    if let Some(value) = field_values.get(field_name.trim()) {
-                        rendered.push_str(&render_anki_cloze_text(value, cloze_ordinal, side));
-                    }
-                } else if let Some(value) = field_values.get(field_name) {
-                    rendered.push_str(value);
-                }
-                rest = &after_end[2..];
-            }
-            None => {
-                rendered.push_str("{{");
-                rendered.push_str(after_start);
-                rest = "";
-            }
-        }
-    }
-
-    rendered.push_str(rest);
-    rendered
-}
-
-fn render_anki_cloze_text(value: &str, cloze_ordinal: u32, side: AnkiClozeSide) -> String {
-    let mut rendered = String::with_capacity(value.len());
-    let mut rest = value;
-
-    while let Some(start) = rest.find("{{c") {
-        let (prefix, candidate) = rest.split_at(start);
-        rendered.push_str(prefix);
-
-        if let Some(marker) = parse_anki_cloze_marker(candidate) {
-            if side == AnkiClozeSide::Question && marker.ordinal == cloze_ordinal {
-                match marker.hint.map(str::trim).filter(|hint| !hint.is_empty()) {
-                    Some(hint) => {
-                        rendered.push('[');
-                        rendered.push_str(hint);
-                        rendered.push(']');
-                    }
-                    None => rendered.push_str("[...]"),
-                }
-            } else {
-                rendered.push_str(&render_anki_cloze_text(
-                    marker.hidden,
-                    cloze_ordinal,
-                    AnkiClozeSide::Answer,
-                ));
-            }
-            rest = &candidate[marker.consumed..];
-        } else {
-            rendered.push_str("{{c");
-            rest = &candidate[3..];
-        }
-    }
-
-    rendered.push_str(rest);
-    rendered
-}
-
-#[derive(Debug, PartialEq, Eq)]
-struct AnkiClozeMarker<'a> {
-    ordinal: u32,
-    hidden: &'a str,
-    hint: Option<&'a str>,
-    consumed: usize,
-}
-
-fn parse_anki_cloze_marker(candidate: &str) -> Option<AnkiClozeMarker<'_>> {
-    if !candidate.starts_with("{{c") {
-        return None;
-    }
-
-    let after_prefix = &candidate[3..];
-    let digit_len = after_prefix
-        .find(|ch: char| !ch.is_ascii_digit())
-        .unwrap_or(after_prefix.len());
-    if digit_len == 0 {
-        return None;
-    }
-    let ordinal: u32 = after_prefix[..digit_len].parse().ok()?;
-    if ordinal == 0 {
-        return None;
-    }
-    let after_digits = &after_prefix[digit_len..];
-    if !after_digits.starts_with("::") {
-        return None;
-    }
-    let marker_body = &after_digits[2..];
-    let end = marker_body.find("}}")?;
-    let body = &marker_body[..end];
-    let consumed = 3 + digit_len + 2 + end + 2;
-
-    let (hidden, hint) = match body.split_once("::") {
-        Some((hidden, hint)) => (hidden, Some(hint)),
-        None => (body, None),
-    };
-
-    Some(AnkiClozeMarker {
-        ordinal,
-        hidden,
-        hint,
-        consumed,
-    })
 }
 
 fn sqlite_value_to_string(row: &rusqlite::Row<'_>, index: usize) -> rusqlite::Result<String> {
@@ -3413,6 +3628,8 @@ fn media_manifest(
             filename: manifest.mapping.get(&entry.name).cloned(),
             size: entry.size,
             compressed_size: entry.compressed_size,
+            sha1: None,
+            legacy_zip_filename: None,
         });
     }
 
@@ -3462,6 +3679,8 @@ fn modern_media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgEr
                 filename: Some(entry.name),
                 size: entry.size,
                 compressed_size: *archive_entry,
+                sha1: (!entry.sha1.is_empty()).then(|| bytes_to_lower_hex(&entry.sha1)),
+                legacy_zip_filename: entry.legacy_zip_filename,
             });
         } else {
             manifest.missing_files.push(archive_name);
@@ -3482,6 +3701,16 @@ fn is_reserved_entry(name: &str) -> bool {
         name,
         LEGACY_COLLECTION | SQLITE_21_COLLECTION | SQLITE_21B_COLLECTION | MEDIA_MAP | META
     )
+}
+
+fn bytes_to_lower_hex(bytes: &[u8]) -> String {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    let mut encoded = String::with_capacity(bytes.len() * 2);
+    for byte in bytes {
+        encoded.push(HEX[(byte >> 4) as usize] as char);
+        encoded.push(HEX[(byte & 0x0f) as usize] as char);
+    }
+    encoded
 }
 
 fn apkg_error(message: impl Into<String>) -> ApkgError {
@@ -3522,11 +3751,12 @@ mod tests {
         let media_entries = MediaEntriesProto {
             entries: media_assets
                 .iter()
-                .map(|asset| MediaEntryProto {
+                .enumerate()
+                .map(|(index, asset)| MediaEntryProto {
                     name: asset.filename.to_string(),
                     size: asset.data.len() as u32,
                     sha1: sum1(asset.data).to_vec(),
-                    legacy_zip_filename: None,
+                    legacy_zip_filename: Some(index as u32),
                 })
                 .collect(),
         };
@@ -3654,9 +3884,10 @@ CREATE TABLE graves (
                             "1": {
                                 "id": 1,
                                 "name": "Default",
-                                "new": {"perDay": 12, "delays": [3, 12], "ints": [2, 5]},
-                                "rev": {"perDay": 80, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
-                                "lapse": {"delays": [20], "mult": 0.5}
+                                "new": {"perDay": 12, "bury": false, "delays": [3, 12], "ints": [2, 5]},
+                                "rev": {"perDay": 80, "bury": false, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
+                                "lapse": {"delays": [20], "mult": 0.5},
+                                "buryInterdayLearning": false
                             }
                         }"#,
                         r#"{"spanish": 1}"#
@@ -3772,6 +4003,21 @@ CREATE TABLE graves (
         )
     }
 
+    fn checked_in_golden_v11_apkg_fixture_bytes() -> &'static [u8] {
+        include_bytes!("../tests/fixtures/golden-v11-filtered-media.apkg")
+    }
+
+    #[test]
+    #[ignore]
+    fn regenerate_checked_in_golden_v11_apkg_fixture() {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join("golden-v11-filtered-media.apkg");
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        std::fs::write(&path, golden_v11_apkg_fixture_bytes()).unwrap();
+    }
+
     #[test]
     fn inspects_legacy_apkg_collection_and_media_map() {
         let media = br#"{"0":"audio/hola.mp3","1":"images/card.png","3":"missing.wav"}"#;
@@ -3798,6 +4044,8 @@ CREATE TABLE graves (
             manifest.media.media_files[0].filename.as_deref(),
             Some("audio/hola.mp3")
         );
+        assert_eq!(manifest.media.media_files[0].sha1, None);
+        assert_eq!(manifest.media.media_files[0].legacy_zip_filename, None);
         assert_eq!(manifest.media.missing_files, vec!["3"]);
         assert_eq!(manifest.media.unmapped_files, vec!["2"]);
     }
@@ -3912,6 +4160,9 @@ CREATE TABLE graves (
         assert_eq!(options.hard_interval_multiplier, 1.4);
         assert_eq!(options.easy_bonus_multiplier, 1.6);
         assert_eq!(options.lapse_interval_multiplier, 0.5);
+        assert!(!options.bury_new_siblings);
+        assert!(!options.bury_review_siblings);
+        assert!(!options.bury_interday_learning_siblings);
 
         assert_eq!(state.note_types.len(), 1);
         let note_type = &state.note_types[0];
@@ -3984,6 +4235,12 @@ CREATE TABLE graves (
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["hardFactor"], 1.4);
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["ease4"], 1.6);
         assert_eq!(exported.metadata.deck_config["2"]["lapse"]["mult"], 0.5);
+        assert_eq!(exported.metadata.deck_config["2"]["new"]["bury"], false);
+        assert_eq!(exported.metadata.deck_config["2"]["rev"]["bury"], false);
+        assert_eq!(
+            exported.metadata.deck_config["2"]["buryInterdayLearning"],
+            false
+        );
 
         assert_eq!(state.sessions.len(), 1);
         assert_eq!(state.sessions[0].id, "anki-import:2");
@@ -4030,6 +4287,59 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn preserves_v11_negative_queue_kind_for_suspended_and_scheduler_buried_cards() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+
+        let mut scheduler_buried = collection.clone();
+        scheduler_buried.cards[0].kind = 2;
+        scheduler_buried.cards[0].queue = -3;
+        scheduler_buried.cards[0].due = 45;
+        scheduler_buried.cards[0].modified_at = 1_700_000_400;
+        let scheduler_buried_state = v11_collection_to_engram_state(&scheduler_buried).unwrap();
+        let scheduler_buried_progress = &scheduler_buried_state.card_progress[0];
+        assert_eq!(scheduler_buried_progress.state, CardState::Buried);
+        assert_eq!(
+            scheduler_buried_progress.buried_until,
+            Some((19_000 + 45) * ONE_DAY_MS)
+        );
+
+        let scheduler_buried_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&scheduler_buried_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(scheduler_buried_export.cards[0].queue, -3);
+        assert_eq!(scheduler_buried_export.cards[0].due, 45);
+        let scheduler_buried_reimport =
+            v11_collection_to_engram_state(&scheduler_buried_export).unwrap();
+        assert_eq!(
+            scheduler_buried_reimport.card_progress[0].buried_until,
+            scheduler_buried_progress.buried_until
+        );
+
+        let mut suspended = collection.clone();
+        suspended.cards[0].kind = 2;
+        suspended.cards[0].queue = -1;
+        suspended.cards[0].due = 46;
+        suspended.cards[0].modified_at = 1_700_000_500;
+        let suspended_state = v11_collection_to_engram_state(&suspended).unwrap();
+        let suspended_progress = &suspended_state.card_progress[0];
+        assert_eq!(suspended_progress.state, CardState::Suspended);
+        assert_eq!(suspended_progress.suspended_at, Some(1_700_000_500_000));
+
+        let suspended_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&suspended_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(suspended_export.cards[0].queue, -1);
+        assert_eq!(suspended_export.cards[0].due, 46);
+        let suspended_reimport = v11_collection_to_engram_state(&suspended_export).unwrap();
+        assert_eq!(
+            suspended_reimport.card_progress[0].next_due_at,
+            suspended_progress.next_due_at
+        );
+    }
+
+    #[test]
     fn maps_v11_front_side_and_optional_template_sections() {
         let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
         collection.note_types[0].fields.push(AnkiV11Field {
@@ -4050,6 +4360,47 @@ CREATE TABLE graves (
         );
         assert_eq!(state.cards[0].front, "hola");
         assert_eq!(state.cards[0].back, "hola<hr>hello");
+    }
+
+    #[test]
+    fn maps_v11_anki_special_template_fields() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.note_types[0].templates[0].question_format =
+            "{{Tags}}|{{Type}}|{{Deck}}|{{Subdeck}}|{{Card}}|{{CardFlag}}|{{CardID}}".to_string();
+        collection.notes[0].tags = vec!["script".to_string(), "root".to_string()];
+        collection.cards[0].original_deck_id = 2;
+        collection.cards[0].flags = 3;
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        assert_eq!(
+            state.note_types[0].templates[0].required_field_names,
+            Vec::<String>::new()
+        );
+        assert_eq!(
+            state.cards[0].front,
+            "script root|Basic|Spanish::Latin|Latin|Card 1|flag3|2000"
+        );
+    }
+
+    #[test]
+    fn maps_v11_model_req_any_into_generated_card_rules() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.note_types[0].raw["req"] = serde_json::json!([[0, "any", [0, 1]]]);
+        collection.note_types[0].templates[0].question_format = "{{Front}}{{Back}}".to_string();
+        collection.notes[0].field_values = vec![String::new(), "hello".to_string()];
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+        let template = &state.note_types[0].templates[0];
+
+        assert_eq!(template.requirement_mode, TemplateRequirementMode::Any);
+        assert_eq!(
+            template.required_field_names,
+            vec!["Front".to_string(), "Back".to_string()]
+        );
+        let generated = engram_core::generate_cards_for_note(&state.note_types[0], &state.notes[0]);
+        assert_eq!(generated.len(), 1);
+        assert_eq!(generated[0].front, "hello");
     }
 
     #[test]
@@ -4086,8 +4437,64 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn maps_v11_marked_note_tag_to_card_progress_overlay() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.notes[0].tags.push("marked".to_string());
+        collection.notes[0].modified_at = 1_234;
+        collection.cards[0].kind = 0;
+        collection.cards[0].queue = 0;
+        collection.cards[0].due = 1;
+        collection.cards[0].interval = 0;
+        collection.cards[0].repetitions = 0;
+        collection.cards[0].lapses = 0;
+        collection.cards[0].flags = 0;
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        assert_eq!(state.card_progress.len(), 1);
+        let progress = &state.card_progress[0];
+        assert_eq!(progress.card_id, "2000");
+        assert_eq!(progress.state, CardState::Review);
+        assert_eq!(progress.interval, 0);
+        assert_eq!(progress.times_seen, 0);
+        assert_eq!(progress.flag, None);
+        assert_eq!(progress.marked_at, Some(1_234_000));
+
+        let queue = engram_core::build_session_queue(&state.cards, &state.card_progress, "2", 0);
+        assert_eq!(
+            queue
+                .iter()
+                .map(|card| card.id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["2000"]
+        );
+    }
+
+    #[test]
+    fn exports_marked_card_progress_as_anki_marked_note_tag() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let mut state = v11_collection_to_engram_state(&collection).unwrap();
+        state.notes[0].tags = vec!["spanish".to_string(), "Marked".to_string()];
+        state.card_progress[0].marked_at = Some(1_700_000_040_000);
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+
+        assert_eq!(exported.notes[0].tags, vec!["spanish", "marked"]);
+        assert_eq!(exported.metadata.tags["marked"], serde_json::json!(1));
+    }
+
+    #[test]
     fn imported_v11_source_metadata_round_trips_on_export() {
         let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.metadata.modified_at = 1_700_001_111;
+        collection.metadata.schema_modified_at = 1_700_002_222;
+        collection.metadata.version = 11;
+        collection.metadata.dirty = 7;
+        collection.metadata.update_sequence_number = 33;
+        collection.metadata.last_sync = 1_700_003_333;
         collection.metadata.config = serde_json::json!({
             "nextPos": 99,
             "customStudy": true,
@@ -4104,6 +4511,7 @@ CREATE TABLE graves (
             "name": "Spanish::Latin",
             "desc": "Story deck",
             "conf": 7,
+            "mod": 1_700_004_444_i64,
             "dyn": 1,
             "extendNew": 25,
             "extendRev": 75,
@@ -4113,6 +4521,7 @@ CREATE TABLE graves (
             "id": 100,
             "name": "Basic",
             "type": 0,
+            "mod": 1_700_005_555_i64,
             "css": ".card { color: teal; }",
             "sortf": 1,
             "latexPre": "custom pre",
@@ -4133,14 +4542,24 @@ CREATE TABLE graves (
             ]
         });
         collection.notes[0].guid = "stable-guid".to_string();
+        collection.notes[0].modified_at = 1_700_006_666;
         collection.notes[0].update_sequence_number = 17;
+        collection.notes[0].sort_field = "hello".to_string();
         collection.notes[0].checksum = 4242;
         collection.notes[0].flags = 5;
         collection.notes[0].data = "note-data".to_string();
+        collection.cards[0].modified_at = 1_700_007_777;
         collection.cards[0].update_sequence_number = 23;
         collection.cards[0].original_due = 777;
         collection.cards[0].original_deck_id = 1;
         collection.cards[0].data = "card-data".to_string();
+        collection.reviews[0].update_sequence_number = 29;
+        collection.reviews[0].ease = 4;
+        collection.reviews[0].interval = 12;
+        collection.reviews[0].last_interval = 6;
+        collection.reviews[0].factor = 2650;
+        collection.reviews[0].time = 34_567;
+        collection.reviews[0].kind = 3;
         collection.graves = vec![AnkiV11Grave {
             update_sequence_number: 31,
             object_id: 9001,
@@ -4161,6 +4580,12 @@ CREATE TABLE graves (
 
         assert_eq!(exported.metadata.config["customStudy"], true);
         assert_eq!(exported.metadata.config["nextPos"], 1);
+        assert_eq!(exported.metadata.modified_at, 1_700_001_111);
+        assert_eq!(exported.metadata.schema_modified_at, 1_700_002_222);
+        assert_eq!(exported.metadata.version, 11);
+        assert_eq!(exported.metadata.dirty, 7);
+        assert_eq!(exported.metadata.update_sequence_number, 33);
+        assert_eq!(exported.metadata.last_sync, 1_700_003_333);
         assert_eq!(exported.metadata.deck_config["2"]["name"], "Story defaults");
         assert_eq!(exported.metadata.tags["imported"], 2);
         assert_eq!(exported.graves[0].object_id, 9001);
@@ -4168,12 +4593,14 @@ CREATE TABLE graves (
 
         let deck = exported.decks.iter().find(|deck| deck.id == 2).unwrap();
         assert_eq!(deck.raw["conf"], 7);
+        assert_eq!(deck.raw["mod"], 1_700_004_444_i64);
         assert_eq!(deck.raw["dyn"], 1);
         assert_eq!(deck.raw["collapsed"], true);
         assert_eq!(deck.name, "Spanish::Latin");
 
         let note_type = &exported.note_types[0];
         assert_eq!(note_type.css, ".card { color: teal; }");
+        assert_eq!(note_type.raw["mod"], 1_700_005_555_i64);
         assert_eq!(note_type.raw["sortf"], 1);
         assert_eq!(note_type.raw["latexPre"], "custom pre");
         assert_eq!(note_type.raw["flds"][0]["font"], "Noto Sans");
@@ -4185,16 +4612,28 @@ CREATE TABLE graves (
 
         let note = &exported.notes[0];
         assert_eq!(note.guid, "stable-guid");
+        assert_eq!(note.modified_at, 1_700_006_666);
         assert_eq!(note.update_sequence_number, 17);
+        assert_eq!(note.sort_field, "hello");
         assert_eq!(note.checksum, 4242);
         assert_eq!(note.flags, 5);
         assert_eq!(note.data, "note-data");
 
         let card = &exported.cards[0];
+        assert_eq!(card.modified_at, 1_700_007_777);
         assert_eq!(card.update_sequence_number, 23);
         assert_eq!(card.original_due, 777);
         assert_eq!(card.original_deck_id, 1);
         assert_eq!(card.data, "card-data");
+
+        let review = &exported.reviews[0];
+        assert_eq!(review.update_sequence_number, 29);
+        assert_eq!(review.ease, 4);
+        assert_eq!(review.interval, 12);
+        assert_eq!(review.last_interval, 6);
+        assert_eq!(review.factor, 2650);
+        assert_eq!(review.time, 34_567);
+        assert_eq!(review.kind, 3);
     }
 
     #[test]
@@ -4237,8 +4676,8 @@ CREATE TABLE graves (
                 templates: vec![AnkiV11Template {
                     ordinal: 0,
                     name: "Cloze".to_string(),
-                    question_format: "{{cloze:Text}}".to_string(),
-                    answer_format: "{{cloze:Text}}<hr>{{Extra}}".to_string(),
+                    question_format: "{{#Extra}}{{type:cloze:Text}}{{/Extra}}".to_string(),
+                    answer_format: "{{FrontSide}}<hr>{{text:cloze:Text}}<br>{{Extra}}".to_string(),
                     deck_id: None,
                 }],
                 raw: serde_json::json!({}),
@@ -4285,14 +4724,24 @@ CREATE TABLE graves (
 
         let state = v11_collection_to_engram_state(&collection).unwrap();
 
+        assert_eq!(
+            state.note_types[0].templates[0].required_field_names,
+            vec!["Text"]
+        );
         assert_eq!(state.cards[0].front, "The word [old root] travels.");
         assert_eq!(
             state.cards[0].back,
-            "The word night travels.<hr>Proto-Indo-European stories go here."
+            "The word [old root] travels.<hr>The word night travels.<br>Proto-Indo-European stories go here."
         );
         let lineage = state.cards[0].lineage.as_ref().unwrap();
         assert_eq!(lineage.cloze_ordinal, Some(1));
         assert!(state.card_progress.is_empty());
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(exported.note_types[0].kind, 1);
     }
 
     #[test]
@@ -4306,10 +4755,7 @@ CREATE TABLE graves (
         assert_eq!(state.cards[0].back, "hello");
     }
 
-    #[test]
-    fn golden_v11_apkg_fixture_round_trips_filtered_deck_and_media() {
-        let apkg = golden_v11_apkg_fixture_bytes();
-
+    fn assert_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media(apkg: &[u8]) {
         let manifest = inspect_apkg(&apkg).unwrap();
         assert_eq!(manifest.collection.name, LEGACY_COLLECTION);
         assert_eq!(manifest.media.media_files.len(), 2);
@@ -4387,6 +4833,19 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn generated_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media() {
+        let apkg = golden_v11_apkg_fixture_bytes();
+        assert_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media(&apkg);
+    }
+
+    #[test]
+    fn checked_in_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media() {
+        assert_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media(
+            checked_in_golden_v11_apkg_fixture_bytes(),
+        );
+    }
+
+    #[test]
     fn writes_v11_collection_from_engram_note_state() {
         let state = AppState {
             decks: vec![Deck {
@@ -4417,7 +4876,8 @@ CREATE TABLE graves (
                     name: "Card 1".to_string(),
                     front_template: "{{Front}}".to_string(),
                     back_template: "{{Back}}".to_string(),
-                    required_field_names: vec!["Front".to_string()],
+                    required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                    requirement_mode: TemplateRequirementMode::Any,
                     ordinal: 0,
                 }],
                 created_at: 1_641_600_000_000,
@@ -4497,6 +4957,10 @@ CREATE TABLE graves (
         assert_eq!(collection.decks[0].id, 2);
         assert_eq!(collection.decks[0].name, "Spanish::Latin");
         assert_eq!(collection.note_types[0].id, 100);
+        assert_eq!(
+            collection.note_types[0].raw["req"],
+            serde_json::json!([[0, "any", [0, 1]]])
+        );
         assert_eq!(collection.notes[0].id, 1000);
         assert_eq!(collection.notes[0].tags, vec!["spanish", "roots"]);
         assert_eq!(collection.cards[0].id, 2000);
@@ -4640,6 +5104,18 @@ CREATE TABLE graves (
         assert!(manifest.media.missing_files.is_empty());
         assert!(manifest.media.unmapped_files.is_empty());
         assert_eq!(manifest.media.media_files[0].size, 3);
+        let expected_mp3_sha1 = bytes_to_lower_hex(&sum1(b"mp3"));
+        let expected_png_sha1 = bytes_to_lower_hex(&sum1(b"png"));
+        assert_eq!(
+            manifest.media.media_files[0].sha1.as_deref(),
+            Some(expected_mp3_sha1.as_str())
+        );
+        assert_eq!(
+            manifest.media.media_files[1].sha1.as_deref(),
+            Some(expected_png_sha1.as_str())
+        );
+        assert_eq!(manifest.media.media_files[0].legacy_zip_filename, Some(0));
+        assert_eq!(manifest.media.media_files[1].legacy_zip_filename, Some(1));
 
         let media_files = read_media_files(&apkg).unwrap();
         assert_eq!(

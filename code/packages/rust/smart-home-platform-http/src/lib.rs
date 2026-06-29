@@ -405,6 +405,27 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               <option value="denied">Denied</option>
             </select>
           </label>
+          <label>Grant Status
+            <select id="filter-grant-status" data-dashboard-filter="grant-status">
+              <option value="">All grants</option>
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="revoked">Revoked</option>
+              <option value="expired">Expired</option>
+            </select>
+          </label>
+          <label>Grant Scope
+            <select id="filter-grant-scope" data-dashboard-filter="grant-scope">
+              <option value="">All scopes</option>
+              <option value="all_smart_home">All smart home</option>
+              <option value="tool">Tool</option>
+              <option value="capability">Capability</option>
+              <option value="entity_capability">Entity capability</option>
+            </select>
+          </label>
+          <label>Grant Principal
+            <input id="filter-grant-principal" data-dashboard-filter="grant-principal" type="search" autocomplete="off">
+          </label>
         </div>
       </div>
       <div class="panel">
@@ -497,6 +518,15 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         </table>
       </div>
       <div class="panel">
+        <h2>Capability Grants</h2>
+        <table>
+          <thead>
+            <tr><th>Principal</th><th>Scope</th><th>Status</th><th>Tier</th><th></th></tr>
+          </thead>
+          <tbody id="capability-grants"></tbody>
+        </table>
+      </div>
+      <div class="panel">
         <div class="row detail-meta">
           <div>
             <h2 id="detail-title">Detail</h2>
@@ -517,6 +547,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       activity: document.querySelector("#activity"),
       authorizationDecisions: document.querySelector("#authorization-decisions"),
       bridges: document.querySelector("#bridges"),
+      capabilityGrants: document.querySelector("#capability-grants"),
       checks: document.querySelector("#checks"),
       commandResults: document.querySelector("#command-results"),
       detailBody: document.querySelector("#detail-body"),
@@ -532,6 +563,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterControl: document.querySelector("#filter-control"),
       filterDomain: document.querySelector("#filter-domain"),
       filterEventKind: document.querySelector("#filter-event-kind"),
+      filterGrantPrincipal: document.querySelector("#filter-grant-principal"),
+      filterGrantScope: document.querySelector("#filter-grant-scope"),
+      filterGrantStatus: document.querySelector("#filter-grant-status"),
       filterRoom: document.querySelector("#filter-room"),
       filterSearch: document.querySelector("#filter-search"),
       filterState: document.querySelector("#filter-state"),
@@ -567,7 +601,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["control", els.filterControl],
       ["event_kind", els.filterEventKind],
       ["command_status", els.filterCommandStatus],
-      ["authorization_outcome", els.filterAuthorizationOutcome]
+      ["authorization_outcome", els.filterAuthorizationOutcome],
+      ["grant_status", els.filterGrantStatus],
+      ["grant_scope", els.filterGrantScope],
+      ["grant_principal", els.filterGrantPrincipal]
     ];
 
     const ensureSelectOption = (control, value) => {
@@ -615,7 +652,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       control: els.filterControl.value,
       eventKind: els.filterEventKind.value,
       commandStatus: els.filterCommandStatus.value,
-      authorizationOutcome: els.filterAuthorizationOutcome.value
+      authorizationOutcome: els.filterAuthorizationOutcome.value,
+      grantStatus: els.filterGrantStatus.value,
+      grantScope: els.filterGrantScope.value,
+      grantPrincipal: els.filterGrantPrincipal.value.trim()
     });
 
     const queryUrl = (path, params) => {
@@ -700,6 +740,21 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }
       return event.health || event.reason || event.event_type || event.kind || "event";
     };
+    const grantScopeText = (scope) => {
+      if (!scope) {
+        return "unknown";
+      }
+      if (scope.kind === "tool") {
+        return scope.tool_id || "tool";
+      }
+      if (scope.kind === "capability") {
+        return scope.capability_id || "capability";
+      }
+      if (scope.kind === "entity_capability") {
+        return [scope.entity_id, scope.capability_id].filter(Boolean).join(" / ") || "entity capability";
+      }
+      return scope.kind || "scope";
+    };
     const inspectButton = (url, label, text = "View") =>
       `<button type="button" data-inspect-url="${url}" data-inspect-label="${label}">${text}</button>`;
     const entityIdentity = (entity) => entity.home_assistant_entity_id || entity.entity_id;
@@ -726,6 +781,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     };
     const roomDetailUrl = (room) =>
       `/api/smart_home/rooms/${encodeURIComponent(room.room_id)}`;
+    const capabilityGrantDetailUrl = (grant) =>
+      `/api/smart_home/capability_grants/${encodeURIComponent(grant.grant_id)}`;
+    const principalCapabilityGrantsUrl = (principalId) =>
+      `/api/smart_home/capability_grants?principal_id=${encodeURIComponent(principalId)}&status=active&sort=principal_id`;
 
     const log = (message) => {
       const at = new Date().toLocaleTimeString();
@@ -1012,9 +1071,22 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <td>${subjectText(record.subject)}</td>
           <td><span class="${statusClass(record.outcome || "ok")}">${record.outcome}</span></td>
           <td>${record.required_tier}</td>
-          <td>${inspectButton(`/api/smart_home/authorization_decisions/${record.decision_index}`, "authorization decision")}</td>
+          <td>${inspectButton(`/api/smart_home/authorization_decisions/${record.decision_index}`, "authorization decision")} ${inspectButton(principalCapabilityGrantsUrl(record.principal_id), "principal grants", "Grants")}</td>
         </tr>
       `).join("") || `<tr><td colspan="5" class="muted">No authorization decisions</td></tr>`;
+    };
+
+    const renderCapabilityGrants = (audit, filters) => {
+      const grants = filterRows(audit.grants || [], filters);
+      els.capabilityGrants.innerHTML = grants.map((grant) => `
+        <tr>
+          <td>${grant.principal_id}<br><span class="muted">${grant.grant_id}</span></td>
+          <td>${grantScopeText(grant.scope)}</td>
+          <td><span class="${statusClass(grant.active ? "ready" : "attention")}">${grant.effective_status}</span><br><span class="muted">configured ${grant.configured_status}</span></td>
+          <td>${grant.max_tier}</td>
+          <td>${inspectButton(capabilityGrantDetailUrl(grant), "capability grant")}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="5" class="muted">No capability grants</td></tr>`;
     };
 
     let renderTimer = 0;
@@ -1053,7 +1125,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           bridges,
           events,
           commandResults,
-          authorizationDecisions
+          authorizationDecisions,
+          capabilityGrants
         ] = await Promise.all([
           json("/api/smart_home/bootstrap"),
           json("/api/smart_home/readiness"),
@@ -1076,6 +1149,13 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           json(queryUrl("/api/smart_home/authorization_decisions", {
             limit: 8,
             outcome: filters.authorizationOutcome
+          })),
+          json(queryUrl("/api/smart_home/capability_grants", {
+            limit: 8,
+            principal_id: filters.grantPrincipal,
+            status: filters.grantStatus,
+            scope: filters.grantScope,
+            sort: "principal_id"
           }))
         ]);
         const summary = bootstrap.dashboard.summary;
@@ -1086,12 +1166,14 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           metric("Entities", summary.entity_count),
           metric("Devices", summary.device_count),
           metric("Rooms", summary.room_count),
-          metric("Scenes", summary.scene_count)
+          metric("Scenes", summary.scene_count),
+          metric("Active grants", capabilityGrants.summary.active_grants)
         ].join("");
         els.activity.innerHTML = [
           metric("Events", bootstrap.recent_activity.events.summary.total_events),
           metric("Commands", bootstrap.recent_activity.command_results.summary.total_results),
           metric("Decisions", bootstrap.recent_activity.authorization_decisions.summary.total_decisions),
+          metric("Grants", capabilityGrants.summary.total_grants),
           metric("State gaps", bootstrap.state_gaps.summary.total_entities)
         ].join("");
         renderChecks(readiness);
@@ -1109,6 +1191,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         renderEvents(events, filters);
         renderCommandResults(commandResults, filters);
         renderAuthorizationDecisions(authorizationDecisions, filters);
+        renderCapabilityGrants(capabilityGrants, filters);
         log("Dashboard refreshed");
       } catch (error) {
         els.status.className = statusClass("blocked");
@@ -9155,7 +9238,11 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
         assert!(body.contains("data-dashboard-filter=\"search\""));
         assert!(body.contains("data-dashboard-filter=\"room\""));
+        assert!(body.contains("data-dashboard-filter=\"grant-status\""));
+        assert!(body.contains("data-dashboard-filter=\"grant-scope\""));
+        assert!(body.contains("data-dashboard-filter=\"grant-principal\""));
         assert!(body.contains("const FILTER_QUERY_PARAMS = ["));
+        assert!(body.contains("[\"grant_status\", els.filterGrantStatus]"));
         assert!(body.contains("window.addEventListener(\"popstate\""));
         assert!(body.contains("window.history.replaceState(null, \"\", nextUrl)"));
         assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})"));
@@ -9169,8 +9256,13 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
         assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
         assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/capability_grants\", {"));
         assert!(body.contains("id=\"detail-body\""));
         assert!(body.contains("renderDetail(label, url, response.status, response.ok, body)"));
+        assert!(body.contains("id=\"capability-grants\""));
+        assert!(body.contains("renderCapabilityGrants(capabilityGrants, filters)"));
+        assert!(body.contains("principalCapabilityGrantsUrl(record.principal_id)"));
+        assert!(body.contains("capabilityGrantDetailUrl(grant)"));
         assert!(body.contains("stateDetailUrl(entity)"));
         assert!(body.contains("entityHistoryUrl(entity)"));
         assert!(body.contains("entityEventsUrl(entity)"));

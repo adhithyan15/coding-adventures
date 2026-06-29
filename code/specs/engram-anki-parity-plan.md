@@ -390,6 +390,29 @@ Exports:
 - `get_state`
 - `build_queue`
 - `get_deck_stats`
+- `engram_app_props`
+- `handle_engram_app_event`
+
+Status:
+
+- `code/packages/rust/engram-wasm` now owns the linear-memory ABI over
+  `engram-core-wasm`, with host-target tests for snapshot loading, dispatch,
+  app props, and generated app events.
+- `engram-wasm/js/engram-mosaic-host-wasm.mjs` adapts the WASM facade to the
+  generated Mosaic `window.mosaicHost` contract, including kebab-case Mosaic
+  slot names -> camelCase React/Electron prop names.
+- Generated app events that require platform file/dialog APIs now return a
+  shared `hostIntent` payload. The JS Mosaic host adapter preserves that intent
+  and offers `onHostIntent`, giving HTML/Electron hosts the same browser
+  open/edit and import/export handoff contract that native C/Swift/XAML/Qt
+  shells can use.
+
+APKG fixture status:
+
+- `code/packages/rust/engram-anki-package/tests/fixtures/golden-v11-filtered-media.apkg`
+  is now checked in and covered with `include_bytes!` so filtered decks,
+  original deck/due metadata, and media references are pinned to stable package
+  bytes as well as generated fixture construction.
 
 ### 2.3 `engram-capi`
 

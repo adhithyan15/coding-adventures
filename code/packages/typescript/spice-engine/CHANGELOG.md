@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `parseBerkeleySyntax`, a Berkeley SPICE logical-card facade with
+  embedded grammar metadata, normalized continuation cards, source spans,
+  token streams, stable diagnostics, and analysis inventory, matching Python
+  and Rust for frontend/parser-tooling consumers.
 - Add `deviceModelReferenceDeckAuditAnalysisSummary`,
   `formatDeviceModelReferenceDeckAuditAnalysisSummaryTable`,
   `deviceModelReferenceDeckAuditAnalysisSummaryRecords`,

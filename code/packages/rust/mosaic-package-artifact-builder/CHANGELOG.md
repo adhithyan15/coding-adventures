@@ -15,10 +15,22 @@ can intentionally override a named part while keeping default package styling.
 The builder also now honors themed style fallbacks such as
 `<Component>.dark.msl` when `<Component>.msl` is absent.
 
+Electron project shells now delegate `mosaic:get-props` and
+`mosaic:handle-event` IPC calls to an optional host module (`electron/host.ts`
+compiled to `dist-electron/host.js`, source-side `electron/host.js` or
+`electron/host.mjs`, or `MOSAIC_ELECTRON_HOST_MODULE`) instead of hardcoding
+no-op responses. Their generated `npm run dev` script now compiles the Electron
+main/preload TypeScript before launching Electron, so a fresh emitted project is
+runnable without a separate build.
+
 `BuildOptions::emit_project` now writes XAML project shells through
 `mosaic-emit-xaml` as well, producing `<Component>.csproj`, `App.xaml`,
 `MainWindow.xaml`, `app.manifest`, `build.ps1`, and README side files beside
 the package's component XAML triple and `MosaicPackage.props` fragment.
+
+`Backend::Compose` is now wired through package builds, emitting per-component
+`.kt` files, a lightweight `index.kt`, and a README for adding the generated
+sources to Android, Desktop, or Compose Multiplatform source sets.
 
 All notable changes to `mosaic-package-artifact-builder` will be documented
 in this file.

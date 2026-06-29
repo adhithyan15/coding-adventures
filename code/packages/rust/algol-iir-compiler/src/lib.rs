@@ -1152,6 +1152,10 @@ impl Compiler {
             "sign"   => Ok(Some(self.emit_sign(node)?)),
             "entier" => Ok(Some(self.emit_entier(node)?)),
             "sqrt"   => Ok(Some(self.emit_sqrt(node)?)),
+            "sin"    => Ok(Some(self.emit_f64_unary("sin",  "f64_sin",  node)?)),
+            "cos"    => Ok(Some(self.emit_f64_unary("cos",  "f64_cos",  node)?)),
+            "ln"     => Ok(Some(self.emit_f64_unary("ln",   "f64_ln",   node)?)),
+            "exp"    => Ok(Some(self.emit_f64_unary("exp",  "f64_exp",  node)?)),
             _ => Ok(None),
         }
     }
@@ -1472,6 +1476,52 @@ impl Compiler {
         let dest = self.fresh_temp();
         self.emit(IIRInstr::new(
             "f64_sqrt",
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot)],
+            ScalarType::Real.iir(),
+        ));
+        Ok(ExprValue {
+            slot: dest,
+            ty: ScalarType::Real,
+        })
+    }
+
+    /// Generic `real → real` standard function backed by a single IIR op.
+    ///
+    /// Used for `sin`/`cos`/`ln`/`exp` — each takes one `real` argument and
+    /// returns a `real` result.  The frontend name (`fn_name`) is the ALGOL
+    /// identifier; `op` is the IIR opcode (e.g. `"f64_sin"`).
+    ///
+    /// ```text
+    ///   t    := E         ; evaluate the argument once (must be real)
+    ///   dest := <op> t
+    /// ```
+    fn emit_f64_unary(
+        &mut self,
+        fn_name: &str,
+        op: &str,
+        node: &GrammarASTNode,
+    ) -> Result<ExprValue, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return Err(CompileError::Type(format!(
+                "standard function {fn_name} expects 1 argument, got {}",
+                actuals.len()
+            )));
+        }
+        let value = self.emit_expr(actuals[0])?;
+        match value.ty {
+            ScalarType::Real => {}
+            other => {
+                return Err(CompileError::Type(format!(
+                    "standard function {fn_name} requires a real argument, got {}",
+                    other.name()
+                )))
+            }
+        }
+        let dest = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            op,
             Some(dest.clone()),
             vec![Operand::Var(value.slot)],
             ScalarType::Real.iir(),
