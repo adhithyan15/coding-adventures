@@ -2439,8 +2439,14 @@ fn export_card_scheduling(
     }
 
     let (kind, queue, due) = match progress.state {
-        CardState::Learning => (1, 1, millis_to_anki_seconds(progress.next_due_at).max(1)),
-        CardState::Relearning => (3, 1, millis_to_anki_seconds(progress.next_due_at).max(1)),
+        CardState::Learning => {
+            let (queue, due) = learning_queue_and_due(progress, collection_created_at_days, source);
+            (1, queue, due)
+        }
+        CardState::Relearning => {
+            let (queue, due) = learning_queue_and_due(progress, collection_created_at_days, source);
+            (3, queue, due)
+        }
         CardState::Suspended => (
             review_or_new_kind(progress),
             preserved_source_queue(source, &[-1], -1),
@@ -2473,6 +2479,20 @@ fn export_card_scheduling(
             .or_else(|| source_i64(source, "flags"))
             .unwrap_or_default(),
     }
+}
+
+fn learning_queue_and_due(
+    progress: &CardProgress,
+    collection_created_at_days: i64,
+    source: Option<&ExternalSourceRecord>,
+) -> (i64, i64) {
+    let queue = preserved_source_queue(source, &[1, 3], 1);
+    let due = if queue == 3 {
+        millis_to_anki_due_day(collection_created_at_days, progress.next_due_at)
+    } else {
+        millis_to_anki_seconds(progress.next_due_at).max(1)
+    };
+    (queue, due)
 }
 
 fn learning_step_index_to_anki_left(
@@ -4758,6 +4778,34 @@ CREATE TABLE graves (
             day_learning_state.card_progress[0].next_due_at,
             (19_000 + 43) * ONE_DAY_MS
         );
+        let day_learning_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&day_learning_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(day_learning_export.cards[0].kind, 1);
+        assert_eq!(day_learning_export.cards[0].queue, 3);
+        assert_eq!(day_learning_export.cards[0].due, 43);
+
+        let mut day_relearning = collection.clone();
+        day_relearning.cards[0].kind = 3;
+        day_relearning.cards[0].queue = 3;
+        day_relearning.cards[0].due = 44;
+        let day_relearning_state = v11_collection_to_engram_state(&day_relearning).unwrap();
+        assert_eq!(
+            day_relearning_state.card_progress[0].state,
+            CardState::Relearning
+        );
+        assert_eq!(
+            day_relearning_state.card_progress[0].next_due_at,
+            (19_000 + 44) * ONE_DAY_MS
+        );
+        let day_relearning_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&day_relearning_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(day_relearning_export.cards[0].kind, 3);
+        assert_eq!(day_relearning_export.cards[0].queue, 3);
+        assert_eq!(day_relearning_export.cards[0].due, 44);
     }
 
     #[test]
