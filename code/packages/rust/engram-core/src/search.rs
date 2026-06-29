@@ -1966,11 +1966,17 @@ fn property_matches(
     now: u64,
 ) -> bool {
     match filter.property {
-        CardProperty::Interval => compare_number(
-            progress.map_or(0.0, |progress| f64::from(progress.interval)),
-            filter.operator,
-            filter.value,
-        ),
+        CardProperty::Interval => imported_anki_card_property(card_sources, "interval")
+            .map_or_else(
+                || {
+                    compare_number(
+                        progress.map_or(0.0, |progress| f64::from(progress.interval)),
+                        filter.operator,
+                        filter.value,
+                    )
+                },
+                |actual| compare_number(actual, filter.operator, filter.value),
+            ),
         CardProperty::Due => imported_anki_due_relative_days(card_sources, metadata, now)
             .map_or_else(
                 || {
@@ -1984,19 +1990,35 @@ fn property_matches(
                 },
                 |days| compare_number(days as f64, filter.operator, filter.value),
             ),
-        CardProperty::Repetitions => compare_number(
-            progress.map_or(0.0, |progress| f64::from(progress.times_seen)),
-            filter.operator,
-            filter.value,
+        CardProperty::Repetitions => imported_anki_card_property(card_sources, "repetitions")
+            .map_or_else(
+                || {
+                    compare_number(
+                        progress.map_or(0.0, |progress| f64::from(progress.times_seen)),
+                        filter.operator,
+                        filter.value,
+                    )
+                },
+                |actual| compare_number(actual, filter.operator, filter.value),
+            ),
+        CardProperty::Lapses => imported_anki_card_property(card_sources, "lapses").map_or_else(
+            || {
+                compare_number(
+                    progress.map_or(0.0, |progress| f64::from(progress.times_incorrect)),
+                    filter.operator,
+                    filter.value,
+                )
+            },
+            |actual| compare_number(actual, filter.operator, filter.value),
         ),
-        CardProperty::Lapses => compare_number(
-            progress.map_or(0.0, |progress| f64::from(progress.times_incorrect)),
-            filter.operator,
-            filter.value,
+        CardProperty::Ease => imported_anki_card_factor(card_sources).map_or_else(
+            || {
+                progress.is_some_and(|progress| {
+                    compare_number(progress.ease_factor, filter.operator, filter.value)
+                })
+            },
+            |actual| compare_number(actual, filter.operator, filter.value),
         ),
-        CardProperty::Ease => progress.is_some_and(|progress| {
-            compare_number(progress.ease_factor, filter.operator, filter.value)
-        }),
         CardProperty::Rated => reviews.iter().any(|review| {
             !anki_review_is_manual_reschedule(review, metadata)
                 && filter.rating.map_or(true, |rating| review.rating == rating)
@@ -2028,6 +2050,16 @@ fn property_matches(
                 .is_some_and(|actual| compare_number(actual, filter.operator, filter.value))
         }
     }
+}
+
+fn imported_anki_card_property(card_sources: &[&ExternalSourceRecord], key: &str) -> Option<f64> {
+    card_sources
+        .iter()
+        .find_map(|source| source_i64_from_data(source, key).map(|value| value as f64))
+}
+
+fn imported_anki_card_factor(card_sources: &[&ExternalSourceRecord]) -> Option<f64> {
+    imported_anki_card_property(card_sources, "factor").map(|factor| factor / 1000.0)
 }
 
 fn imported_fsrs_variable(card_sources: &[&ExternalSourceRecord], key: &str) -> Option<f64> {
@@ -3617,6 +3649,55 @@ mod tests {
         ];
         assert_eq!(ids_for(&state, "prop:rated=0"), vec!["due"]);
         assert_eq!(ids_for(&state, "prop:rated<-1"), vec!["lapsed"]);
+    }
+
+    #[test]
+    fn imported_anki_property_filters_use_card_row_metrics() {
+        let anki_card_metrics =
+            |card_id: &str, interval: i64, repetitions: i64, lapses: i64, factor: i64| {
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Card,
+                    target_id: card_id.to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some(card_id.to_string()),
+                    data: BTreeMap::from([
+                        ("interval".to_string(), interval.to_string()),
+                        ("repetitions".to_string(), repetitions.to_string()),
+                        ("lapses".to_string(), lapses.to_string()),
+                        ("factor".to_string(), factor.to_string()),
+                    ]),
+                }
+            };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("fresh", "tamil", "fresh", "fresh"),
+                card("mature", "tamil", "mature", "mature"),
+                card("easy", "tamil", "easy", "easy"),
+            ],
+            external_sources: vec![
+                anki_card_metrics("fresh", 0, 0, 0, 0),
+                anki_card_metrics("mature", 21, 6, 1, 2300),
+                anki_card_metrics("easy", 5, 2, 0, 2800),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("prop:ivl>=20"), vec!["mature"]);
+        assert_eq!(ids_for("prop:interval=0"), vec!["fresh"]);
+        assert_eq!(ids_for("prop:reps=0"), vec!["fresh"]);
+        assert_eq!(ids_for("prop:reviews>=6"), vec!["mature"]);
+        assert_eq!(ids_for("prop:lapses=1"), vec!["mature"]);
+        assert_eq!(ids_for("prop:ease=2.3"), vec!["mature"]);
+        assert_eq!(ids_for("prop:ease>2.5"), vec!["easy"]);
     }
 
     #[test]

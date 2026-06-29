@@ -89,6 +89,8 @@ imported Anki deck-option preset names from preserved collection metadata, while
 imported Anki card-state filters use preserved type/queue metadata when
 available, and `prop:due` uses imported Anki due metadata. `prop:pos` /
 `prop:position` uses imported Anki new-card queue positions when available.
+Imported Anki card-row metrics also power `prop:ivl`, `prop:reps`,
+`prop:lapses`, and `prop:ease` searches when preserved source data is present.
 `dupe:notetype,text` compares Anki-style first-field text, using preserved
 imported sort fields when available.
 Unknown `key:value` searches fall back to Anki-style note field searches, so
