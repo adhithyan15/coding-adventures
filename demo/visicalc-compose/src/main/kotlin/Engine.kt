@@ -382,6 +382,14 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
                 else -> "libspreadsheet_capi.so"
             }
             System.getenv("CAPI_LIB")?.let { if (File(it).exists()) return it }
+            // Packaged app (`gradle createDistributable`): the Compose Desktop
+            // plugin bundles `appResourcesRootDir` (our `native/`) and exposes its
+            // path via this system property. Check it so the FFM lookup works from
+            // inside the .app bundle, where the working dir isn't the project.
+            System.getProperty("compose.application.resources.dir")?.let {
+                val candidate = File(it, name)
+                if (candidate.exists()) return candidate.absolutePath
+            }
             var dir: File? = File(System.getProperty("user.dir"))
             repeat(5) {
                 val candidate = File(dir, "native/$name")
