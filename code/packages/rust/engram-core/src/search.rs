@@ -39,6 +39,9 @@ enum SearchClauseKind {
     Text(String),
     Front(String),
     Back(String),
+    CardId(IdFilter),
+    NoteId(IdFilter),
+    CardTemplate(String),
     Deck(String),
     NoteType(String),
     Tag(String),
@@ -114,6 +117,11 @@ struct RecentDaysFilter {
 struct RatedFilter {
     days: u32,
     rating: Option<Rating>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct IdFilter {
+    values: Vec<String>,
 }
 
 pub fn search_cards(
@@ -457,6 +465,15 @@ fn parse_keyed_clause(
     match key.to_ascii_lowercase().as_str() {
         "front" => Ok(SearchClauseKind::Front(value)),
         "back" => Ok(SearchClauseKind::Back(value)),
+        "cid" | "cardid" | "card_id" | "card-id" => {
+            parse_id_filter(token, &value).map(SearchClauseKind::CardId)
+        }
+        "nid" | "noteid" | "note_id" | "note-id" => {
+            parse_id_filter(token, &value).map(SearchClauseKind::NoteId)
+        }
+        "card" | "template" | "cardtemplate" | "card_template" | "card-template" => {
+            Ok(SearchClauseKind::CardTemplate(value))
+        }
         "deck" => Ok(SearchClauseKind::Deck(value)),
         "note" | "notetype" | "note_type" | "note-type" => Ok(SearchClauseKind::NoteType(value)),
         "tag" => Ok(SearchClauseKind::Tag(value)),
@@ -628,6 +645,24 @@ fn parse_rated_filter(token: &str, value: &str) -> Result<RatedFilter, SearchErr
     Ok(RatedFilter { days, rating })
 }
 
+fn parse_id_filter(token: &str, value: &str) -> Result<IdFilter, SearchError> {
+    let values = value
+        .split(',')
+        .map(str::trim)
+        .filter(|candidate| !candidate.is_empty())
+        .map(str::to_string)
+        .collect::<Vec<_>>();
+
+    if values.is_empty() {
+        return Err(SearchError {
+            message: "id search filter is missing a value".to_string(),
+            token: token.to_string(),
+        });
+    }
+
+    Ok(IdFilter { values })
+}
+
 fn parse_rating_filter(token: &str, value: &str) -> Result<Rating, SearchError> {
     match value {
         "1" | "again" => Ok(Rating::Again),
@@ -685,6 +720,9 @@ fn clause_matches(
         SearchClauseKind::Text(term) => text_matches(term, card, deck, note),
         SearchClauseKind::Front(term) => contains_case_insensitive(&card.front, term),
         SearchClauseKind::Back(term) => contains_case_insensitive(&card.back, term),
+        SearchClauseKind::CardId(filter) => id_filter_matches(filter, &card.id),
+        SearchClauseKind::NoteId(filter) => note_id_matches(filter, card, note),
+        SearchClauseKind::CardTemplate(term) => card_template_matches(term, card, note_type),
         SearchClauseKind::Deck(term) => deck_matches(term, card, deck),
         SearchClauseKind::NoteType(term) => note_type_matches(term, note, note_type),
         SearchClauseKind::Tag(tag) => note.is_some_and(|note| {
@@ -743,6 +781,40 @@ fn note_type_matches(term: &str, note: Option<&Note>, note_type: Option<&NoteTyp
         || note_type.is_some_and(|note_type| {
             contains_case_insensitive(&note_type.id, term)
                 || contains_case_insensitive(&note_type.name, term)
+        })
+}
+
+fn id_filter_matches(filter: &IdFilter, value: &str) -> bool {
+    filter
+        .values
+        .iter()
+        .any(|expected| value.eq_ignore_ascii_case(expected))
+}
+
+fn note_id_matches(filter: &IdFilter, card: &Card, note: Option<&Note>) -> bool {
+    card.lineage
+        .as_ref()
+        .is_some_and(|lineage| id_filter_matches(filter, &lineage.note_id))
+        || note.is_some_and(|note| id_filter_matches(filter, &note.id))
+}
+
+fn card_template_matches(term: &str, card: &Card, note_type: Option<&NoteType>) -> bool {
+    let lineage = card.lineage.as_ref();
+    let template_id = lineage
+        .map(|lineage| lineage.template_id.as_str())
+        .or_else(|| card.id.split_once("::").map(|(_, template_id)| template_id));
+    let template_ordinal = lineage.map(|lineage| lineage.ordinal);
+
+    template_id.is_some_and(|template_id| contains_case_insensitive(template_id, term))
+        || note_type.is_some_and(|note_type| {
+            note_type.templates.iter().any(|template| {
+                let is_current_template = template_id
+                    .is_some_and(|template_id| template.id.eq_ignore_ascii_case(template_id))
+                    || template_ordinal.is_some_and(|ordinal| template.ordinal == ordinal);
+                is_current_template
+                    && (contains_case_insensitive(&template.id, term)
+                        || contains_case_insensitive(&template.name, term))
+            })
         })
 }
 
@@ -1142,6 +1214,38 @@ mod tests {
     }
 
     #[test]
+    fn anki_browser_id_and_card_template_filters_match_current_card() {
+        let mut state = state();
+        state.note_types[0].templates.push(CardTemplate {
+            id: "reverse".to_string(),
+            name: "Reverse".to_string(),
+            front_template: "{{Back}}".to_string(),
+            back_template: "{{Front}}".to_string(),
+            required_field_names: vec!["Back".to_string()],
+            ordinal: 1,
+        });
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(
+            ids_for("cid:due,note::forward"),
+            vec!["note::forward", "due"]
+        );
+        assert_eq!(ids_for("cardId:DUE"), vec!["due"]);
+        assert_eq!(ids_for("nid:note"), vec!["note::forward"]);
+        assert_eq!(ids_for("note-id:NOTE"), vec!["note::forward"]);
+        assert_eq!(ids_for("card:forward"), vec!["note::forward"]);
+        assert_eq!(ids_for("template:Forward"), vec!["note::forward"]);
+        assert!(ids_for("card:reverse").is_empty());
+    }
+
+    #[test]
     fn property_filters_match_progress_metrics() {
         let mut state = AppState {
             decks: vec![deck("tamil", "Tamil")],
@@ -1249,6 +1353,8 @@ mod tests {
 
         assert_eq!(ids_for("tag:script"), vec!["2000"]);
         assert_eq!(ids_for("note:basic"), vec!["2000"]);
+        assert_eq!(ids_for("nid:note"), vec!["2000"]);
+        assert_eq!(ids_for("card:forward"), vec!["2000"]);
         assert_eq!(ids_for("uyir"), vec!["2000"]);
     }
 
