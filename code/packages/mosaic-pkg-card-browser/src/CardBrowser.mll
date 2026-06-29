@@ -35,6 +35,25 @@ layout CardBrowser {
       selected-index : slot: selected-index ,
       onSelect : emit: onSelectResult
     )
+    Row [ browser-flag-row ] {
+      Column [ flag-picker-column ] {
+        Text [ flag-label ] (
+          content : slot: flag-label
+        )
+        pkg::mosaic-pkg-toolkit::Select (
+          value : slot: flag-value ,
+          options : slot: flag-options ,
+          placeholder : slot: flag-placeholder ,
+          open : slot: flag-open ,
+          disabled : false ,
+          onToggle : emit: onToggleFlagPicker ,
+          onChange : emit: onSetFlagSelected
+        )
+      }
+      Text [ selected-flag-label ] (
+        content : slot: selected-flag
+      )
+    }
     Row [ browser-tag-row ] {
       Column [ tag-edit-column ] {
         Text [ tag-edit-label ] (

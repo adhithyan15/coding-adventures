@@ -98,15 +98,22 @@ fn card_browser_frontend_sources_compile() {
             "result-note-ids",
             "result-template-ids",
             "result-states",
+            "result-flags",
             "selected-index",
             "selected-card-id",
             "selected-note-id",
             "selected-template-id",
             "selected-state",
+            "selected-flag",
             "open-label",
             "edit-label",
             "suspend-label",
             "mark-label",
+            "flag-label",
+            "flag-value",
+            "flag-options",
+            "flag-placeholder",
+            "flag-open",
             "tag-edit-label",
             "tag-edit",
             "tag-edit-placeholder",
@@ -126,6 +133,8 @@ fn card_browser_frontend_sources_compile() {
             "onEditSelected",
             "onToggleSuspendSelected",
             "onToggleMarkSelected",
+            "onToggleFlagPicker",
+            "onSetFlagSelected",
             "onTagEditChange",
             "onAddTagSelected",
             "onRemoveTagSelected",
@@ -145,6 +154,14 @@ fn card_browser_layout_wires_search_results_and_actions() {
     assert!(source.contains("items : slot: results"));
     assert!(source.contains("selected-index : slot: selected-index"));
     assert!(source.contains("onSelect : emit: onSelectResult"));
+    assert!(source.contains("Row [ browser-flag-row ]"));
+    assert!(source.contains("pkg::mosaic-pkg-toolkit::Select"));
+    assert!(source.contains("value : slot: flag-value"));
+    assert!(source.contains("options : slot: flag-options"));
+    assert!(source.contains("placeholder : slot: flag-placeholder"));
+    assert!(source.contains("open : slot: flag-open"));
+    assert!(source.contains("onToggle : emit: onToggleFlagPicker"));
+    assert!(source.contains("onChange : emit: onSetFlagSelected"));
     assert!(source.contains("Row [ browser-tag-row ]"));
     assert!(source.contains("HostInput [ tag-edit-input ]"));
     assert!(source.contains("value : slot: tag-edit"));
@@ -172,6 +189,10 @@ fn card_browser_layout_wires_search_results_and_actions() {
     let style = read_source("CardBrowser.dark.msl");
     for part in [
         "browser-tag-row",
+        "browser-flag-row",
+        "flag-picker-column",
+        "flag-label",
+        "selected-flag-label",
         "tag-edit-column",
         "tag-edit-label",
         "tag-edit-input",
@@ -195,6 +216,7 @@ fn card_browser_package_emitters_all_accept_nested_toolkit_controls() {
         (Backend::Qt, "qt/CardBrowser.qml"),
         (Backend::Xaml, "xaml/CardBrowser.xaml"),
         (Backend::Flutter, "flutter/CardBrowser.dart"),
+        (Backend::Compose, "compose/CardBrowser.kt"),
     ];
 
     for (backend, expected_artifact) in backends {

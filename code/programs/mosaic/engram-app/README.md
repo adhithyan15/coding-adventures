@@ -64,6 +64,9 @@ binds them to the shared Rust business logic core through host shells.
   `mosaic-pkg-card-browser` and route selected-card add/remove tag actions back
   into the shared Rust core, keeping Anki-style note tags available to every
   generated host shell.
+- The browser flag slots and events expose Anki card flags from the shared
+  search/progress model and route selected-card flag changes through
+  `EngramCommand::SetCardFlag`.
 - Browser open/edit host intents also carry selected note, template, and
   scheduling-state metadata so host editors can be launched without re-querying
   or duplicating browser selection logic.

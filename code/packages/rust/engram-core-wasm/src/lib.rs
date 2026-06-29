@@ -35,6 +35,7 @@ pub struct EngramSession {
 struct BrowserSessionState {
     query: String,
     tag_edit: String,
+    flag_picker_open: bool,
     selected_index: usize,
 }
 
@@ -59,6 +60,14 @@ impl BrowserSessionState {
 
     fn active_tag_edit(&self) -> String {
         self.tag_edit.trim().to_string()
+    }
+
+    fn toggle_flag_picker(&mut self) {
+        self.flag_picker_open = !self.flag_picker_open;
+    }
+
+    fn close_flag_picker(&mut self) {
+        self.flag_picker_open = false;
     }
 
     fn set_selected_index(&mut self, value: f64) -> Result<(), String> {
@@ -211,12 +220,12 @@ impl EngramSession {
     }
 
     pub fn engram_browser_props(&self, query: &str, now: u64) -> String {
-        catch_json(
-            || match engram_browser_props_for_state(&self.state, query, now, 0, None) {
+        catch_json(|| {
+            match engram_browser_props_for_state(&self.state, query, now, 0, None, false) {
                 Ok(props) => Ok(ok_with("props", &props)),
                 Err(error) => Ok(error_json_with_token(&error.message, &error.token)),
-            },
-        )
+            }
+        })
     }
 
     pub fn handle_engram_app_event(&mut self, event: &str, deck_id: &str, now: u64) -> String {
@@ -355,6 +364,32 @@ impl EngramSession {
                         Some(selected_deck_context.as_str()),
                     )?;
                     self.state = mark_or_unmark_card(&self.state, card_id, now);
+                }
+                EngramAppEvent::BrowserToggleFlagPicker => {
+                    self.browser.toggle_flag_picker();
+                }
+                EngramAppEvent::BrowserSetFlagSelected => {
+                    let card_id = required_browser_event_card_id(
+                        &self.state,
+                        &self.browser,
+                        parsed.card_id.clone(),
+                        "set flag on",
+                        now,
+                        Some(selected_deck_context.as_str()),
+                    )?;
+                    let flag = browser_event_flag_value(
+                        parsed.text_value.as_deref(),
+                        parsed.number_value,
+                    )?;
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::SetCardFlag {
+                            card_id,
+                            flag,
+                            flagged_at: now,
+                        },
+                    );
+                    self.browser.close_flag_picker();
                 }
                 EngramAppEvent::BrowserTagEditChange => {
                     if let Some(value) = parsed.text_value.clone() {
@@ -684,8 +719,11 @@ fn engram_app_props_for_state(
         now,
         browser.selected_index,
         Some(selected_deck_id.as_str()),
+        browser.flag_picker_open,
     )
-    .unwrap_or_else(|_| fallback_browser_props_for_state(state, browser.selected_index));
+    .unwrap_or_else(|_| {
+        fallback_browser_props_for_state(state, browser.selected_index, browser.flag_picker_open)
+    });
     let (current_value, remaining_value, correct_value, total_value, progress_label) =
         if let Some(progress) = &progress {
             (
@@ -1080,6 +1118,7 @@ fn engram_browser_props_for_state(
     now: u64,
     selected_index: usize,
     current_deck_id: Option<&str>,
+    flag_picker_open: bool,
 ) -> Result<Value, engram_core::SearchError> {
     let query = normalize_browser_query(query);
     let results = if current_deck_id.is_some() {
@@ -1106,10 +1145,15 @@ fn engram_browser_props_for_state(
         rows,
         results.len(),
         selected_index,
+        flag_picker_open,
     ))
 }
 
-fn fallback_browser_props_for_state(state: &AppState, selected_index: usize) -> Value {
+fn fallback_browser_props_for_state(
+    state: &AppState,
+    selected_index: usize,
+    flag_picker_open: bool,
+) -> Value {
     let rows = state
         .cards
         .iter()
@@ -1121,6 +1165,7 @@ fn fallback_browser_props_for_state(state: &AppState, selected_index: usize) -> 
         rows,
         state.cards.len(),
         selected_index,
+        flag_picker_open,
     )
 }
 
@@ -1138,6 +1183,7 @@ fn browser_props_from_rows(
     rows: Vec<BrowserRow>,
     total_results: usize,
     requested_selected_index: usize,
+    flag_picker_open: bool,
 ) -> Value {
     let visible = rows.len();
     let summary = match total_results {
@@ -1170,6 +1216,7 @@ fn browser_props_from_rows(
         .map(|row| row.template_id.clone())
         .collect::<Vec<_>>();
     let states = rows.iter().map(|row| row.state.clone()).collect::<Vec<_>>();
+    let flags = rows.iter().map(|row| row.flag.clone()).collect::<Vec<_>>();
 
     json!({
         "browser-label": "Card browser",
@@ -1184,15 +1231,22 @@ fn browser_props_from_rows(
         "browser-result-note-ids": note_ids,
         "browser-result-template-ids": template_ids,
         "browser-result-states": states,
+        "browser-result-flags": flags,
         "browser-selected-index": selected_index,
         "browser-selected-card-id": selected_row.map_or("", |row| row.card_id.as_str()),
         "browser-selected-note-id": selected_row.map_or("", |row| row.note_id.as_str()),
         "browser-selected-template-id": selected_row.map_or("", |row| row.template_id.as_str()),
         "browser-selected-state": selected_row.map_or("", |row| row.state.as_str()),
+        "browser-selected-flag": selected_row.map_or("none", |row| row.flag.as_str()),
         "browser-open-label": "Open",
         "browser-edit-label": "Edit",
         "browser-suspend-label": "Suspend",
         "browser-mark-label": "Mark",
+        "browser-flag-label": "Flag",
+        "browser-flag-value": selected_row.map_or("none", |row| row.flag.as_str()),
+        "browser-flag-options": ["none", "red", "orange", "green", "blue", "pink", "turquoise", "purple"],
+        "browser-flag-placeholder": "none",
+        "browser-flag-open": flag_picker_open,
     })
 }
 
@@ -1203,6 +1257,7 @@ struct BrowserRow {
     note_id: String,
     template_id: String,
     state: String,
+    flag: String,
 }
 
 impl BrowserRow {
@@ -1225,6 +1280,7 @@ impl BrowserRow {
                 .or_else(|| fallback_lineage.map(|(_, template_id)| template_id.to_string()))
                 .unwrap_or_default(),
             state: browser_card_state(progress, now).to_string(),
+            flag: browser_card_flag(progress).to_string(),
         }
     }
 }
@@ -1251,6 +1307,25 @@ fn browser_card_state(progress: Option<&CardProgress>, now: u64) -> &'static str
         CardState::Relearning => "relearning",
         CardState::Suspended => "suspended",
         CardState::Buried => "buried",
+    }
+}
+
+fn browser_card_flag(progress: Option<&CardProgress>) -> &'static str {
+    progress
+        .and_then(|progress| progress.flag)
+        .map(card_flag_label)
+        .unwrap_or("none")
+}
+
+fn card_flag_label(flag: CardFlag) -> &'static str {
+    match flag {
+        CardFlag::Red => "red",
+        CardFlag::Orange => "orange",
+        CardFlag::Green => "green",
+        CardFlag::Blue => "blue",
+        CardFlag::Pink => "pink",
+        CardFlag::Turquoise => "turquoise",
+        CardFlag::Purple => "purple",
     }
 }
 
@@ -1483,6 +1558,8 @@ enum EngramAppEvent {
     BrowserEditSelected,
     BrowserToggleSuspendSelected,
     BrowserToggleMarkSelected,
+    BrowserToggleFlagPicker,
+    BrowserSetFlagSelected,
     BrowserTagEditChange,
     BrowserAddTagSelected,
     BrowserRemoveTagSelected,
@@ -1563,6 +1640,8 @@ impl EngramAppEvent {
             Self::BrowserEditSelected => "onBrowserEditSelected",
             Self::BrowserToggleSuspendSelected => "onBrowserToggleSuspendSelected",
             Self::BrowserToggleMarkSelected => "onBrowserToggleMarkSelected",
+            Self::BrowserToggleFlagPicker => "onBrowserToggleFlagPicker",
+            Self::BrowserSetFlagSelected => "onBrowserSetFlagSelected",
             Self::BrowserTagEditChange => "onBrowserTagEditChange",
             Self::BrowserAddTagSelected => "onBrowserAddTagSelected",
             Self::BrowserRemoveTagSelected => "onBrowserRemoveTagSelected",
@@ -1807,6 +1886,15 @@ fn parse_engram_app_event_name(
         "browsertogglemarkselected"
         | "browser-toggle-mark-selected"
         | "browser_toggle_mark_selected" => parsed(EngramAppEvent::BrowserToggleMarkSelected),
+        "browsertoggleflagpicker" | "browser-toggle-flag-picker" | "browser_toggle_flag_picker" => {
+            parsed(EngramAppEvent::BrowserToggleFlagPicker)
+        }
+        "browsersetflagselected"
+        | "browser-set-flag-selected"
+        | "browser_set_flag_selected"
+        | "browserflagchange"
+        | "browser-flag-change"
+        | "browser_flag_change" => parsed(EngramAppEvent::BrowserSetFlagSelected),
         "browsertageditchange" | "browser-tag-edit-change" | "browser_tag_edit_change" => {
             parsed(EngramAppEvent::BrowserTagEditChange)
         }
@@ -2071,6 +2159,53 @@ fn browser_event_tag_value(
         Err(format!("cannot {action} empty browser tag"))
     } else {
         Ok(tag)
+    }
+}
+
+fn browser_event_flag_value(
+    text_value: Option<&str>,
+    number_value: Option<f64>,
+) -> Result<Option<CardFlag>, String> {
+    if let Some(value) = text_value {
+        return parse_browser_flag_text(value);
+    }
+    if let Some(value) = number_value {
+        return parse_browser_flag_number(value);
+    }
+    Ok(None)
+}
+
+fn parse_browser_flag_text(value: &str) -> Result<Option<CardFlag>, String> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "" | "0" | "none" | "no flag" | "clear" | "unflagged" => Ok(None),
+        "1" | "red" => Ok(Some(CardFlag::Red)),
+        "2" | "orange" => Ok(Some(CardFlag::Orange)),
+        "3" | "green" => Ok(Some(CardFlag::Green)),
+        "4" | "blue" => Ok(Some(CardFlag::Blue)),
+        "5" | "pink" => Ok(Some(CardFlag::Pink)),
+        "6" | "turquoise" => Ok(Some(CardFlag::Turquoise)),
+        "7" | "purple" => Ok(Some(CardFlag::Purple)),
+        other => Err(format!("unknown browser card flag: {other}")),
+    }
+}
+
+fn parse_browser_flag_number(value: f64) -> Result<Option<CardFlag>, String> {
+    if !value.is_finite() {
+        return Err("browser card flag must be finite".to_string());
+    }
+    if value.fract() != 0.0 {
+        return Err("browser card flag number must be an integer".to_string());
+    }
+    match value as i64 {
+        0 => Ok(None),
+        1 => Ok(Some(CardFlag::Red)),
+        2 => Ok(Some(CardFlag::Orange)),
+        3 => Ok(Some(CardFlag::Green)),
+        4 => Ok(Some(CardFlag::Blue)),
+        5 => Ok(Some(CardFlag::Pink)),
+        6 => Ok(Some(CardFlag::Turquoise)),
+        7 => Ok(Some(CardFlag::Purple)),
+        other => Err(format!("unknown browser card flag number: {other}")),
     }
 }
 
@@ -4354,10 +4489,52 @@ mod tests {
             .unwrap()
             .is_empty());
 
+        let flag_picker: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserToggleFlagPicker",
+            "deck",
+            NOW + 9,
+        ))
+        .unwrap();
+        assert_eq!(flag_picker["ok"], true);
+        assert_eq!(flag_picker["event"], "onBrowserToggleFlagPicker");
+        assert_eq!(flag_picker["props"]["browser-flag-open"], true);
+
+        let flagged: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserSetFlagSelected","value":"blue"}"#,
+            "deck",
+            NOW + 10,
+        ))
+        .unwrap();
+        assert_eq!(flagged["ok"], true);
+        assert_eq!(flagged["event"], "onBrowserSetFlagSelected");
+        assert_eq!(flagged["state"]["cardProgress"][0]["cardId"], "other");
+        assert_eq!(flagged["state"]["cardProgress"][0]["flag"], "blue");
+        assert_eq!(
+            flagged["props"]["browser-result-flags"],
+            json!(["none", "blue"])
+        );
+        assert_eq!(flagged["props"]["browser-selected-flag"], "blue");
+        assert_eq!(flagged["props"]["browser-flag-value"], "blue");
+        assert_eq!(flagged["props"]["browser-flag-open"], false);
+
+        let cleared_flag: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserSetFlagSelected","selectedCardId":"other","value":0}"#,
+            "deck",
+            NOW + 11,
+        ))
+        .unwrap();
+        assert_eq!(cleared_flag["ok"], true);
+        assert!(cleared_flag["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+        assert_eq!(cleared_flag["props"]["browser-selected-flag"], "none");
+        assert_eq!(cleared_flag["props"]["browser-flag-value"], "none");
+
         let explicit_edit: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"event":"onBrowserEditSelected","selectedCardId":"card"}"#,
             "deck",
-            NOW + 9,
+            NOW + 12,
         ))
         .unwrap();
         assert_eq!(explicit_edit["ok"], true);
@@ -4367,7 +4544,7 @@ mod tests {
         let query_change: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"event":"onBrowserQueryChange","value":"cid:other"}"#,
             "deck",
-            NOW + 10,
+            NOW + 13,
         ))
         .unwrap();
         assert_eq!(query_change["ok"], true);
@@ -5004,6 +5181,10 @@ mod tests {
             json!(["due"])
         );
         assert_eq!(
+            browser_props["props"]["browser-result-flags"],
+            json!(["blue"])
+        );
+        assert_eq!(
             browser_props["props"]["browser-results-summary"],
             "1 matching card"
         );
@@ -5018,6 +5199,22 @@ mod tests {
             "forward"
         );
         assert_eq!(browser_props["props"]["browser-selected-state"], "due");
+        assert_eq!(browser_props["props"]["browser-selected-flag"], "blue");
+        assert_eq!(browser_props["props"]["browser-flag-value"], "blue");
+        assert_eq!(
+            browser_props["props"]["browser-flag-options"],
+            json!([
+                "none",
+                "red",
+                "orange",
+                "green",
+                "blue",
+                "pink",
+                "turquoise",
+                "purple"
+            ])
+        );
+        assert_eq!(browser_props["props"]["browser-flag-open"], false);
 
         let empty_query_props: Value =
             serde_json::from_str(&session.engram_browser_props("", NOW)).unwrap();

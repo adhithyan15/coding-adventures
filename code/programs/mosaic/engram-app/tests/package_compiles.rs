@@ -341,6 +341,8 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert_contains(&html, "data-on-change=\"onBrowserTagEditChange\"");
     assert_contains(&html, "data-on-click=\"onBrowserAddTagSelected\"");
     assert_contains(&html, "data-on-click=\"onBrowserRemoveTagSelected\"");
+    assert_contains(&html, "data-on-click=\"onBrowserToggleFlagPicker\"");
+    assert_contains(&html, "data-on-click=\"onBrowserSetFlagSelected\"");
     assert_dependency_styles_reach_all_backends(tmp.path());
 }
 
@@ -494,6 +496,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&html_main, "\"onBrowserTagEditChange\"");
     assert_contains(&html_main, "\"onBrowserAddTagSelected\"");
     assert_contains(&html_main, "\"onBrowserRemoveTagSelected\"");
+    assert_contains(&html_main, "\"onBrowserToggleFlagPicker\"");
+    assert_contains(&html_main, "\"onBrowserSetFlagSelected\"");
     assert_contains(&html_main, "\"name\": \"index\"");
     assert_contains(&html_main, "\"onDeckOptionsBuryNewSiblingsChange\"");
     assert_contains(&html_main, "\"onDeckOptionsInitialEaseChange\"");
@@ -538,6 +542,9 @@ fn native_project_shells_expose_engram_host_contract() {
         "collectionNoteCountValue: \"Sample CollectionNoteCountValue\",",
     );
     assert_contains(&react_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(&react_app, "browserFlagValue: \"Sample BrowserFlagValue\",");
+    assert_contains(&react_app, "browserFlagOptions: [],");
+    assert_contains(&react_app, "browserFlagOpen: false,");
     assert_contains(&react_app, "browserTagEdit: \"Sample BrowserTagEdit\",");
     assert_contains(
         &react_app,
@@ -618,6 +625,12 @@ fn native_project_shells_expose_engram_host_contract() {
         "collectionDeleteNoteTypeLabel: \"Sample CollectionDeleteNoteTypeLabel\",",
     );
     assert_contains(&electron_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(
+        &electron_app,
+        "browserFlagValue: \"Sample BrowserFlagValue\",",
+    );
+    assert_contains(&electron_app, "browserFlagOptions: [],");
+    assert_contains(&electron_app, "browserFlagOpen: false,");
     assert_contains(&electron_app, "browserTagEdit: \"Sample BrowserTagEdit\",");
     assert_contains(
         &electron_app,
@@ -724,6 +737,12 @@ fn native_project_shells_expose_engram_host_contract() {
         "collectionExportLabel: \"Sample CollectionExportLabel\",",
     );
     assert_contains(&flutter_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(
+        &flutter_app,
+        "browserFlagValue: \"Sample BrowserFlagValue\",",
+    );
+    assert_contains(&flutter_app, "browserFlagOptions: const [],");
+    assert_contains(&flutter_app, "browserFlagOpen: false,");
     assert_contains(&flutter_app, "browserTagEdit: \"Sample BrowserTagEdit\",");
     assert_contains(
         &flutter_app,
@@ -777,6 +796,11 @@ fn native_project_shells_expose_engram_host_contract() {
         &compose_app,
         "data class BrowserTagEditChange(val value: String)",
     );
+    assert_contains(&compose_app, "data object BrowserToggleFlagPicker");
+    assert_contains(
+        &compose_app,
+        "data class BrowserSetFlagSelected(val value: String)",
+    );
     assert_contains(&compose_app, "data object BrowserAddTagSelected");
     assert_contains(&compose_app, "data object BrowserRemoveTagSelected");
     assert_contains(&compose_app, "@Composable");
@@ -791,6 +815,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&compose_app, "historyLabel: String,");
     assert_contains(&compose_app, "collectionLabel: String,");
     assert_contains(&compose_app, "browserQuery: String,");
+    assert_contains(&compose_app, "browserFlagValue: String,");
+    assert_contains(&compose_app, "browserFlagOptions: List<String>,");
+    assert_contains(&compose_app, "browserFlagOpen: Boolean,");
     assert_contains(&compose_app, "browserTagEdit: String,");
     assert_contains(&compose_app, "browserAddTagLabel: String,");
     assert_contains(&compose_app, "browserResults: List<String>,");
@@ -834,6 +861,12 @@ fn native_project_shells_expose_engram_host_contract() {
         "collectionLabel = \"Sample CollectionLabel\",",
     );
     assert_contains(&compose_main, "browserQuery = \"Sample BrowserQuery\",");
+    assert_contains(
+        &compose_main,
+        "browserFlagValue = \"Sample BrowserFlagValue\",",
+    );
+    assert_contains(&compose_main, "browserFlagOptions = emptyList(),");
+    assert_contains(&compose_main, "browserFlagOpen = false,");
     assert_contains(&compose_main, "browserTagEdit = \"Sample BrowserTagEdit\",");
     assert_contains(
         &compose_main,
@@ -887,6 +920,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "property string collectionLabel");
     assert_contains(&qml, "property string collectionNoteCountValue");
     assert_contains(&qml, "property string browserQuery");
+    assert_contains(&qml, "property string browserFlagValue");
+    assert_contains(&qml, "property var browserFlagOptions");
+    assert_contains(&qml, "property bool browserFlagOpen");
     assert_contains(&qml, "property string browserTagEdit");
     assert_contains(&qml, "property string browserAddTagLabel");
     assert_contains(&qml, "property var browserResults");
@@ -951,6 +987,8 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&qml, "signal browserSearch()");
     assert_contains(&qml, "signal browserSelectResult(real index)");
+    assert_contains(&qml, "signal browserToggleFlagPicker()");
+    assert_contains(&qml, "signal browserSetFlagSelected(string value)");
     assert_contains(&qml, "signal browserTagEditChange(string value)");
     assert_contains(&qml, "signal browserAddTagSelected()");
     assert_contains(&qml, "signal browserRemoveTagSelected()");
@@ -1008,6 +1046,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case deleteNoteType");
     assert_contains(&swift, "case browserSearch");
     assert_contains(&swift, "case browserSelectResult");
+    assert_contains(&swift, "case browserToggleFlagPicker");
+    assert_contains(&swift, "case browserSetFlagSelected");
     assert_contains(&swift, "case browserTagEditChange");
     assert_contains(&swift, "case browserAddTagSelected");
     assert_contains(&swift, "case browserRemoveTagSelected");
@@ -1037,6 +1077,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "let collectionLabel: String");
     assert_contains(&swift, "let collectionNoteCountValue: String");
     assert_contains(&swift, "let browserResults: [String]");
+    assert_contains(&swift, "let browserFlagValue: String");
+    assert_contains(&swift, "let browserFlagOptions: [String]");
+    assert_contains(&swift, "let browserFlagOpen: Bool");
     assert_contains(&swift, "let browserTagEdit: String");
     assert_contains(&swift, "let browserAddTagLabel: String");
     assert_contains(&swift, "let browserResultCardIds: [String]");
@@ -1108,6 +1151,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &swift_app,
         "browserQuery: MosaicHostValue.string(host.props, \"browser-query\", fallback: \"Sample BrowserQuery\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "browserFlagValue: MosaicHostValue.string(host.props, \"browser-flag-value\", fallback: \"Sample BrowserFlagValue\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "browserFlagOptions: MosaicHostValue.stringList(host.props, \"browser-flag-options\", fallback: []),",
+    );
+    assert_contains(
+        &swift_app,
+        "browserFlagOpen: MosaicHostValue.bool(host.props, \"browser-flag-open\", fallback: false),",
     );
     assert_contains(
         &swift_app,
@@ -1255,6 +1310,18 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserFlagValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserFlagOptionsProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserFlagOpenProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
         "public static readonly DependencyProperty BrowserTagEditProperty",
     );
     assert_contains(
@@ -1396,6 +1463,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record BrowserSelectResult(double Index) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserToggleFlagPicker() : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserSetFlagSelected(string Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,

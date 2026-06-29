@@ -56,6 +56,28 @@ style CardBrowser {
     padding-top : 10 ;
   }
 
+  part browser-flag-row {
+    padding-top    : 10 ;
+    padding-bottom : 2 ;
+  }
+
+  part flag-picker-column {
+    padding : 2 ;
+  }
+
+  part flag-label {
+    color       : "#facc15" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part selected-flag-label {
+    color       : "#fef3c7" ;
+    font-size   : 12 ;
+    font-weight : 700 ;
+    padding     : 8 ;
+  }
+
   part browser-tag-row {
     padding-top    : 10 ;
     padding-bottom : 2 ;

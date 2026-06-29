@@ -6,8 +6,10 @@ The component is app-neutral: it receives formatted search/query/result slots,
 emits browser actions, and leaves persistence, search execution, tag mutation,
 and card edits to the host app's shared business-logic core.
 Result rows also carry target-neutral card IDs, note IDs, template IDs, state
-labels, and selected-row metadata so generated native/web hosts can route
+labels, flag labels, and selected-row metadata so generated native/web hosts can route
 browser actions back into the shared core without scraping display text.
+The flag picker uses target-neutral option slots plus a typed selected-value
+event, allowing hosts to map Anki card flags without backend-specific widgets.
 The tag editor row emits draft text changes plus add/remove actions; hosts can
 bind those to note-owned tag commands while still targeting selected cards.
 
