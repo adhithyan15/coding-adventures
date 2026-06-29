@@ -28,6 +28,7 @@ const SQLITE_21B_COLLECTION: &str = "collection.anki21b";
 const MEDIA_MAP: &str = "media";
 const META: &str = "meta";
 const ANKI_V11_SOURCE: &str = "anki-v11";
+const ANKI_MARKED_TAG: &str = "marked";
 
 #[derive(Clone, PartialEq, Message)]
 struct PackageMetadataProto {
@@ -644,6 +645,11 @@ pub fn v11_collection_to_engram_state(
         )?);
     }
 
+    let marked_at_by_note_id = collection
+        .notes
+        .iter()
+        .filter_map(|note| anki_marked_at_for_note(note).map(|marked_at| (note.id, marked_at)))
+        .collect::<BTreeMap<_, _>>();
     let last_reviewed_at_by_card = last_reviewed_at_by_card(&collection.reviews);
     let card_progress = collection
         .cards
@@ -652,6 +658,7 @@ pub fn v11_collection_to_engram_state(
             map_v11_card_progress(
                 card,
                 collection.metadata.created_at_days,
+                &marked_at_by_note_id,
                 &last_reviewed_at_by_card,
             )
         })
@@ -1277,12 +1284,19 @@ impl ExportModel {
         }
 
         let mut cards = Vec::with_capacity(state.cards.len());
+        let mut marked_note_keys = BTreeSet::new();
         for card in &state.cards {
+            let card_marked = progress_by_card
+                .get(&card.id)
+                .is_some_and(|progress| progress.marked_at.is_some());
             if let Some(lineage) = card
                 .lineage
                 .as_ref()
                 .filter(|lineage| lineage_is_exportable(lineage, &notes_by_id, &note_types_by_id))
             {
+                if card_marked {
+                    marked_note_keys.insert(lineage.note_id.clone());
+                }
                 cards.push(ExportCard {
                     key: card.id.clone(),
                     note_key: lineage.note_id.clone(),
@@ -1292,6 +1306,9 @@ impl ExportModel {
                 });
             } else {
                 let note_key = synthetic_basic_note_key(&card.id);
+                if card_marked {
+                    marked_note_keys.insert(note_key.clone());
+                }
                 notes.push(ExportNote {
                     key: note_key.clone(),
                     note_type_key: SYNTHETIC_BASIC_NOTE_TYPE.to_string(),
@@ -1316,6 +1333,11 @@ impl ExportModel {
                     template_ordinal: 0,
                     created_at: card.created_at,
                 });
+            }
+        }
+        for note in &mut notes {
+            if marked_note_keys.contains(&note.key) {
+                note.tags = tags_with_anki_marked(&note.tags);
             }
         }
 
@@ -2366,6 +2388,20 @@ fn join_anki_tags(tags: &[String]) -> String {
     }
 }
 
+fn tags_with_anki_marked(tags: &[String]) -> Vec<String> {
+    if tags.iter().any(|tag| tag.trim() == ANKI_MARKED_TAG) {
+        return tags.to_vec();
+    }
+
+    let mut next = tags
+        .iter()
+        .filter(|tag| !tag.trim().eq_ignore_ascii_case(ANKI_MARKED_TAG))
+        .cloned()
+        .collect::<Vec<_>>();
+    next.push(ANKI_MARKED_TAG.to_string());
+    next
+}
+
 fn anki_field_checksum(sort_field: &str) -> i64 {
     let digest = sum1(sort_field.as_bytes());
     u32::from_be_bytes([digest[0], digest[1], digest[2], digest[3]]) as i64
@@ -2595,10 +2631,14 @@ fn card_note_type_id(note: &Note) -> i64 {
 fn map_v11_card_progress(
     card: &AnkiV11Card,
     collection_created_at_days: i64,
+    marked_at_by_note_id: &BTreeMap<i64, u64>,
     last_reviewed_at_by_card: &BTreeMap<i64, u64>,
 ) -> Option<CardProgress> {
+    let flag = anki_card_flag(card.flags);
+    let marked_at = marked_at_by_note_id.get(&card.note_id).copied();
     if card.queue == 0 {
-        return anki_card_flag(card.flags).map(|flag| new_card_metadata_overlay(card, flag));
+        return (flag.is_some() || marked_at.is_some())
+            .then(|| new_card_metadata_overlay(card, flag, marked_at));
     }
 
     let state = match card.queue {
@@ -2644,12 +2684,16 @@ fn map_v11_card_progress(
         times_correct: i64_to_u32(card.repetitions.saturating_sub(card.lapses)),
         times_incorrect: i64_to_u32(card.lapses),
         last_seen_at,
-        flag: anki_card_flag(card.flags),
-        marked_at: None,
+        flag,
+        marked_at,
     })
 }
 
-fn new_card_metadata_overlay(card: &AnkiV11Card, flag: CardFlag) -> CardProgress {
+fn new_card_metadata_overlay(
+    card: &AnkiV11Card,
+    flag: Option<CardFlag>,
+    marked_at: Option<u64>,
+) -> CardProgress {
     let timestamp = anki_seconds_to_millis(card.modified_at);
     CardProgress {
         card_id: card.id.to_string(),
@@ -2664,9 +2708,16 @@ fn new_card_metadata_overlay(card: &AnkiV11Card, flag: CardFlag) -> CardProgress
         times_correct: 0,
         times_incorrect: 0,
         last_seen_at: timestamp,
-        flag: Some(flag),
-        marked_at: None,
+        flag,
+        marked_at,
     }
+}
+
+fn anki_marked_at_for_note(note: &AnkiV11Note) -> Option<u64> {
+    note.tags
+        .iter()
+        .any(|tag| tag.eq_ignore_ascii_case(ANKI_MARKED_TAG))
+        .then_some(anki_seconds_to_millis(note.modified_at))
 }
 
 fn map_v11_review(review: &AnkiV11Review, deck_id: &str) -> Review {
@@ -4119,6 +4170,56 @@ CREATE TABLE graves (
                 .collect::<Vec<_>>(),
             vec!["2000"]
         );
+    }
+
+    #[test]
+    fn maps_v11_marked_note_tag_to_card_progress_overlay() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.notes[0].tags.push("marked".to_string());
+        collection.notes[0].modified_at = 1_234;
+        collection.cards[0].kind = 0;
+        collection.cards[0].queue = 0;
+        collection.cards[0].due = 1;
+        collection.cards[0].interval = 0;
+        collection.cards[0].repetitions = 0;
+        collection.cards[0].lapses = 0;
+        collection.cards[0].flags = 0;
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        assert_eq!(state.card_progress.len(), 1);
+        let progress = &state.card_progress[0];
+        assert_eq!(progress.card_id, "2000");
+        assert_eq!(progress.state, CardState::Review);
+        assert_eq!(progress.interval, 0);
+        assert_eq!(progress.times_seen, 0);
+        assert_eq!(progress.flag, None);
+        assert_eq!(progress.marked_at, Some(1_234_000));
+
+        let queue = engram_core::build_session_queue(&state.cards, &state.card_progress, "2", 0);
+        assert_eq!(
+            queue
+                .iter()
+                .map(|card| card.id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["2000"]
+        );
+    }
+
+    #[test]
+    fn exports_marked_card_progress_as_anki_marked_note_tag() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let mut state = v11_collection_to_engram_state(&collection).unwrap();
+        state.notes[0].tags = vec!["spanish".to_string(), "Marked".to_string()];
+        state.card_progress[0].marked_at = Some(1_700_000_040_000);
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+
+        assert_eq!(exported.notes[0].tags, vec!["spanish", "marked"]);
+        assert_eq!(exported.metadata.tags["marked"], serde_json::json!(1));
     }
 
     #[test]
