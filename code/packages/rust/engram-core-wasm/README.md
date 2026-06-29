@@ -103,6 +103,9 @@ Events that require host APIs, including browser open/edit, Anki package
 import/export, and note/note-type dialogs, include a `hostIntent` payload so
 each platform can open files, save APKG bytes, or present native dialogs without
 forking the generated interface.
+Browser open/edit host intents include the selected `cardId`, `noteId`,
+`templateId`, and scheduling `state` when available, allowing native hosts to
+open the same note/card editor from the shared browser selection.
 
 `search_cards` exposes the shared browser-query engine. It returns
 `{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for
@@ -131,8 +134,9 @@ Generated `onBrowserQueryChange` events store the active browser query in the
 session and reset selection to the first row. `onBrowserSelectResult` accepts an
 `index` or `selectedIndex` payload, updates the shared selection, and all later
 open/edit/mark/suspend browser actions use that selected row when no explicit
-card ID is provided. This keeps HTML, Electron, SwiftUI, XAML, Qt, and other
-Mosaic hosts on the same browser-selection contract.
+card ID is provided. Open/edit actions return selected card, note, template, and
+state metadata in their host intents. This keeps HTML, Electron, SwiftUI, XAML,
+Qt, and other Mosaic hosts on the same browser-selection contract.
 Deck option controls use the generated event shape, for example
 `{"type":"deckOptionsNewCardsChange","value":12}` for numeric fields or
 `{"type":"deckOptionsLearningStepsChange","value":"1, 10"}` for step-list

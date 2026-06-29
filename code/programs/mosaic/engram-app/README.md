@@ -60,6 +60,9 @@ binds them to the shared Rust business logic core through host shells.
 - The browser slots include stable result and selected-card metadata from the
   Rust core so emitted native/web hosts can wire actions to card IDs instead of
   display labels.
+- Browser open/edit host intents also carry selected note, template, and
+  scheduling-state metadata so host editors can be launched without re-querying
+  or duplicating browser selection logic.
 - The collection slots expose note, note-type, and media counts plus shared
   Anki import/export and note workflow intents for host shells.
 - The deck option slots expose the selected deck's shared scheduler settings,

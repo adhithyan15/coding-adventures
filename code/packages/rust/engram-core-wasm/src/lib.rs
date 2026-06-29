@@ -1211,32 +1211,44 @@ fn host_intent_for_event(
             "createdAt": now,
             "extension": ".apkg",
         })),
-        EngramAppEvent::BrowserOpenSelected => Some(json!({
-            "type": "openCard",
-            "event": event.canonical_name(),
-            "deckId": selected_deck,
-            "createdAt": now,
-            "cardId": browser_selected_card_id(
+        EngramAppEvent::BrowserOpenSelected => {
+            let selection = browser_selected_card_details(
                 state,
                 browser,
                 parsed.card_id.as_deref(),
                 now,
                 Some(selected_deck.as_str()),
-            ),
-        })),
-        EngramAppEvent::BrowserEditSelected => Some(json!({
-            "type": "editCard",
-            "event": event.canonical_name(),
-            "deckId": selected_deck,
-            "createdAt": now,
-            "cardId": browser_selected_card_id(
+            );
+            Some(json!({
+                "type": "openCard",
+                "event": event.canonical_name(),
+                "deckId": selected_deck,
+                "createdAt": now,
+                "cardId": selection.card_id,
+                "noteId": selection.note_id,
+                "templateId": selection.template_id,
+                "state": selection.state,
+            }))
+        }
+        EngramAppEvent::BrowserEditSelected => {
+            let selection = browser_selected_card_details(
                 state,
                 browser,
                 parsed.card_id.as_deref(),
                 now,
                 Some(selected_deck.as_str()),
-            ),
-        })),
+            );
+            Some(json!({
+                "type": "editCard",
+                "event": event.canonical_name(),
+                "deckId": selected_deck,
+                "createdAt": now,
+                "cardId": selection.card_id,
+                "noteId": selection.note_id,
+                "templateId": selection.template_id,
+                "state": selection.state,
+            }))
+        }
         EngramAppEvent::AddNote => Some(base("addNote")),
         EngramAppEvent::AddNoteType => Some(base("addNoteType")),
         EngramAppEvent::DeleteNote => Some(base("deleteNote")),
@@ -1245,21 +1257,58 @@ fn host_intent_for_event(
     }
 }
 
-fn browser_selected_card_id(
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+struct BrowserSelection {
+    card_id: String,
+    note_id: String,
+    template_id: String,
+    state: String,
+}
+
+impl From<BrowserRow> for BrowserSelection {
+    fn from(row: BrowserRow) -> Self {
+        Self {
+            card_id: row.card_id,
+            note_id: row.note_id,
+            template_id: row.template_id,
+            state: row.state,
+        }
+    }
+}
+
+fn browser_selected_card_details(
     state: &AppState,
     browser: &BrowserSessionState,
     explicit_card_id: Option<&str>,
     now: u64,
     current_deck_id: Option<&str>,
-) -> String {
-    explicit_card_id
-        .filter(|card_id| !card_id.trim().is_empty())
-        .map(str::to_string)
+) -> BrowserSelection {
+    if let Some(card_id) = explicit_card_id.filter(|card_id| !card_id.trim().is_empty()) {
+        let row = state
+            .cards
+            .iter()
+            .find(|card| card.id == card_id)
+            .map(|card| {
+                BrowserRow::from_card(
+                    card,
+                    state
+                        .card_progress
+                        .iter()
+                        .find(|progress| progress.card_id == card.id),
+                    now,
+                )
+            });
+        return row
+            .map(BrowserSelection::from)
+            .unwrap_or_else(|| BrowserSelection {
+                card_id: card_id.to_string(),
+                ..BrowserSelection::default()
+            });
+    }
+
+    selected_browser_row(state, browser, now, current_deck_id)
         .or_else(|| {
-            selected_browser_row(state, browser, now, current_deck_id).map(|row| row.card_id)
-        })
-        .or_else(|| {
-            if current_deck_id.is_some() {
+            let results = if current_deck_id.is_some() {
                 search_cards_with_context(
                     state,
                     DEFAULT_BROWSER_QUERY,
@@ -1271,11 +1320,26 @@ fn browser_selected_card_id(
                 )
             } else {
                 search_core_cards(state, DEFAULT_BROWSER_QUERY, now)
-            }
-            .ok()
-            .and_then(|results| results.first().map(|result| result.card.id.clone()))
+            };
+            results.ok().and_then(|results| {
+                results
+                    .first()
+                    .map(|result| BrowserRow::from_search_result(result, now))
+            })
         })
-        .or_else(|| state.cards.first().map(|card| card.id.clone()))
+        .or_else(|| {
+            state.cards.first().map(|card| {
+                BrowserRow::from_card(
+                    card,
+                    state
+                        .card_progress
+                        .iter()
+                        .find(|progress| progress.card_id == card.id),
+                    now,
+                )
+            })
+        })
+        .map(BrowserSelection::from)
         .unwrap_or_default()
 }
 
@@ -3734,7 +3798,19 @@ mod tests {
             "notes": [],
             "cards": [
                 {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
-                {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+                {
+                    "id":"other",
+                    "deckId":"deck",
+                    "front":"letter-aa",
+                    "back":"aa",
+                    "createdAt":1700000000000,
+                    "lineage": {
+                        "noteId": "note",
+                        "noteTypeId": "basic",
+                        "templateId": "reverse",
+                        "ordinal": 1
+                    }
+                }
             ],
             "cardProgress": [],
             "sessions": [],
@@ -3771,6 +3847,9 @@ mod tests {
         assert_eq!(open["ok"], true);
         assert_eq!(open["hostIntent"]["type"], "openCard");
         assert_eq!(open["hostIntent"]["cardId"], "other");
+        assert_eq!(open["hostIntent"]["noteId"], "note");
+        assert_eq!(open["hostIntent"]["templateId"], "reverse");
+        assert_eq!(open["hostIntent"]["state"], "new");
 
         let edit: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onBrowserEditSelected",
@@ -3781,6 +3860,9 @@ mod tests {
         assert_eq!(edit["ok"], true);
         assert_eq!(edit["hostIntent"]["type"], "editCard");
         assert_eq!(edit["hostIntent"]["cardId"], "other");
+        assert_eq!(edit["hostIntent"]["noteId"], "note");
+        assert_eq!(edit["hostIntent"]["templateId"], "reverse");
+        assert_eq!(edit["hostIntent"]["state"], "new");
 
         let marked: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onBrowserToggleMarkSelected",
