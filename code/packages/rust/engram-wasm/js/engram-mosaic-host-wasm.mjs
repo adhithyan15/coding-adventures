@@ -154,6 +154,7 @@ export async function createEngramMosaicHostFromUrl(url, options = {}) {
 export function installEngramMosaicHost(targetWindow, wasmBytes, options = {}) {
   const host = createEngramMosaicHost(wasmBytes, options);
   targetWindow.mosaicHost = host;
+  dispatchMosaicHostReady(targetWindow, host);
   return host;
 }
 
@@ -177,6 +178,20 @@ function createMosaicHost(host) {
     getProps: host.getProps,
     handleEvent: host.handleEvent,
   };
+}
+
+function dispatchMosaicHostReady(targetWindow, host) {
+  if (
+    typeof targetWindow?.dispatchEvent !== "function" ||
+    typeof targetWindow?.CustomEvent !== "function"
+  ) {
+    return;
+  }
+  targetWindow.dispatchEvent(
+    new targetWindow.CustomEvent("mosaic-host-ready", {
+      detail: { platform: host.platform },
+    }),
+  );
 }
 
 function toHostResponse(result) {

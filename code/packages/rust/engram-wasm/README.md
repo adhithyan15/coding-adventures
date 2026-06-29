@@ -43,7 +43,9 @@ kebab-case slot names such as `app-title` to generated prop names such as
 `appTitle`. Generated app events that require platform work, such as browser
 open/edit, Anki package import/export, or note dialogs, also return a
 `hostIntent` object and may be observed through
-`createMosaicHost({ onHostIntent })`.
+`createMosaicHost({ onHostIntent })`. `installEngramMosaicHost(window, ...)`
+dispatches `mosaic-host-ready` after installing `window.mosaicHost`, allowing
+generated React/Electron renderers to refresh after asynchronous host setup.
 
 ## Building
 

@@ -6,7 +6,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createEngramEngine } from "./engram-mosaic-host-wasm.mjs";
+import { createEngramEngine, installEngramMosaicHost } from "./engram-mosaic-host-wasm.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const wasm = readFileSync(join(here, "..", "pkg", "engram_engine.wasm"));
@@ -73,6 +73,23 @@ const opened = await intentHost.handleEvent({
 });
 check("browser open intent", opened.hostIntent.type, "openCard");
 check("browser open card", opened.hostIntent.cardId, "card");
+
+let readyEvent = null;
+const fakeWindow = {
+  CustomEvent: class CustomEvent {
+    constructor(type, init) {
+      this.type = type;
+      this.detail = init?.detail;
+    }
+  },
+  dispatchEvent(event) {
+    readyEvent = event;
+  },
+};
+installEngramMosaicHost(fakeWindow, wasm, { deckId: "deck", now: () => 1700000000000 });
+check("install host platform", fakeWindow.mosaicHost.platform, "engram-wasm");
+check("install ready event", readyEvent.type, "mosaic-host-ready");
+check("install ready detail", readyEvent.detail, { platform: "engram-wasm" });
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exitCode = failures === 0 ? 0 : 1;
