@@ -710,7 +710,7 @@ impl Compiler {
             "integer" => Ok(ScalarType::Integer),
             "real" => Ok(ScalarType::Real),
             "boolean" => Ok(ScalarType::Boolean),
-            "string" => Err(CompileError::Unsupported("string parameters".into())),
+            "string" => Ok(ScalarType::String),
             kind @ ("array" | "label" | "switch" | "procedure") => Err(
                 CompileError::Unsupported(format!("{kind} parameters")),
             ),
@@ -883,6 +883,14 @@ impl Compiler {
         for (pname, pty) in &params {
             // Parameters and the result slot are real registers, never `own`.
             let slot = self.declare_var(pname, *pty, false)?;
+            // A string parameter is pre-initialized by the caller (the call
+            // site already emitted a str_const or passed a known-literal slot).
+            // Mark it as literal-backed so `print(s)` can emit `print_str`
+            // directly inside the body — the same invariant a variable holds
+            // after `s := 'HI'`.
+            if *pty == ScalarType::String {
+                self.literal_string_slots.insert(slot.clone());
+            }
             param_pairs.push((slot, pty.iir().to_string()));
         }
         // The procedure's name is an in-scope variable holding the return
@@ -4409,5 +4417,103 @@ mod tests {
         let src = "begin real array A[1:2]; real result; \
                    A[1] := 2.5; result := A[1] end";
         assert_eq!(run_f64(src), 2.5);
+    }
+
+    // ── AL4 string procedure parameters ─────────────────────────────────────
+
+    /// A procedure with a string value parameter compiles: `specifier_scalar_type`
+    /// now returns `Ok(ScalarType::String)` for `"string"`.
+    /// Body is a single `print(s)` — the integer result defaults to 0.
+    #[test]
+    fn al4_string_parameter_procedure_compiles() {
+        // ALGOL procedure body is one statement; `begin…end` groups more than one.
+        // Here `print(s)` is the whole body; the integer result is left at its
+        // default 0. The call discards the return value.
+        let src = "begin \
+                   integer procedure msg(s); value s; string s; print(s); \
+                   msg('HELLO') \
+                   end";
+        compile_source(src, "test").expect("string parameter procedure should compile");
+    }
+
+    /// The procedure body emits a `print_str` on the parameter slot, not on an
+    /// intermediate copy — the parameter is in `literal_string_slots` on entry.
+    #[test]
+    fn al4_string_parameter_body_emits_print_str() {
+        let src = "begin \
+                   integer procedure echo(s); value s; string s; print(s); \
+                   echo('HI') \
+                   end";
+        let module = compile_source(src, "test").expect("compiles");
+        let echo_fn = module.functions.iter()
+            .find(|f| f.name == "echo")
+            .expect("procedure echo should exist");
+        assert!(
+            echo_fn.instructions.iter().any(|i| i.op == "print_str"),
+            "print(s) inside echo should lower to print_str, not a dynamic call"
+        );
+    }
+
+    /// The procedure's IIR parameter list carries a `str`-typed entry for the
+    /// string formal.
+    #[test]
+    fn al4_string_parameter_has_str_iir_type() {
+        let src = "begin \
+                   integer procedure echo(s); value s; string s; print(s); \
+                   echo('HI') \
+                   end";
+        let module = compile_source(src, "test").expect("compiles");
+        let echo_fn = module.functions.iter()
+            .find(|f| f.name == "echo")
+            .expect("procedure echo should exist");
+        assert!(
+            echo_fn.params.iter().any(|(_, ty)| ty == "str"),
+            "the string formal parameter should carry type `str` in IIRFunction::params"
+        );
+    }
+
+    /// Call site emits a `call` targeting `echo` with the string-slot argument.
+    #[test]
+    fn al4_string_parameter_call_site_emits_call() {
+        let src = "begin \
+                   integer procedure echo(s); value s; string s; print(s); \
+                   echo('HI') \
+                   end";
+        let module = compile_source(src, "test").expect("compiles");
+        let main_fn = module.functions.iter().find(|f| f.name == "main").expect("main");
+        assert!(
+            main_fn.instructions.iter().any(|i| {
+                i.op == "call"
+                    && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "echo")
+            }),
+            "call site should emit `call echo …`"
+        );
+    }
+
+    /// Passing a named string variable (not just a literal) to a string parameter.
+    #[test]
+    fn al4_string_variable_passed_to_string_parameter() {
+        let src = "begin \
+                   string greeting; \
+                   integer procedure echo(s); value s; string s; print(s); \
+                   greeting := 'WORLD'; \
+                   echo(greeting) \
+                   end";
+        compile_source(src, "test").expect("named string variable as actual compiles");
+    }
+
+    /// Type mismatch: passing an integer where a string parameter is expected.
+    #[test]
+    fn al4_string_parameter_rejects_integer_actual() {
+        let src = "begin \
+                   integer procedure echo(s); value s; string s; print(s); \
+                   echo(42) \
+                   end";
+        let err = compile_source(src, "test")
+            .expect_err("integer actual to string parameter should be a type error");
+        assert!(
+            matches!(err, CompileError::Type(_)),
+            "expected Type error, got {err:?}"
+        );
     }
 }
