@@ -9,6 +9,7 @@
 - Aligned `tag:*` browser searches with Anki's universal tag-filter behavior.
 - Added imported Anki card-flag support for `flag:` and `is:flagged` browser
   searches.
+- Added imported Anki card-id timestamp support for `added:` browser searches.
 - Added imported Anki card-row metric support for `prop:ivl`, `prop:reps`,
   `prop:lapses`, and `prop:ease` browser filters.
 - Added shared browser support for Anki custom card data searches with

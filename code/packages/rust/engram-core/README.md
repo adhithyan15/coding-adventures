@@ -92,7 +92,8 @@ cards whose note has no tags.
 imported Anki deck-option preset names from preserved collection metadata, while
 imported Anki card-state filters use preserved type/queue metadata when
 available, `flag:` uses preserved Anki card flags, and `prop:due` uses imported
-Anki due metadata. `prop:pos` /
+Anki due metadata. `added:` uses imported Anki card-id timestamps when
+available. `prop:pos` /
 `prop:position` uses imported Anki new-card queue positions when available.
 Imported Anki card-row metrics also power `prop:ivl`, `prop:reps`,
 `prop:lapses`, and `prop:ease` searches when preserved source data is present.

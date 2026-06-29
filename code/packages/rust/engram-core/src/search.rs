@@ -1280,7 +1280,7 @@ fn clause_matches(
         SearchClauseKind::CustomDataString(filter) => {
             custom_data_string_matches(filter, card_sources)
         }
-        SearchClauseKind::Added(filter) => happened_recently(card.created_at, filter.days, now),
+        SearchClauseKind::Added(filter) => added_matches(card, card_sources, filter.days, now),
         SearchClauseKind::Edited(filter) => {
             note.is_some_and(|note| happened_recently(note.updated_at, filter.days, now))
         }
@@ -2334,6 +2334,17 @@ fn custom_data_string(value: &Value) -> Option<String> {
         Value::Null => Some("null".to_string()),
         Value::Array(_) | Value::Object(_) => None,
     }
+}
+
+fn added_matches(card: &Card, card_sources: &[&ExternalSourceRecord], days: u32, now: u64) -> bool {
+    let timestamp = imported_anki_card_added_at(card_sources).unwrap_or(card.created_at);
+    happened_recently(timestamp, days, now)
+}
+
+fn imported_anki_card_added_at(card_sources: &[&ExternalSourceRecord]) -> Option<u64> {
+    card_sources
+        .iter()
+        .find_map(|source| source.original_id.as_deref()?.parse::<u64>().ok())
 }
 
 fn rated_matches(
@@ -3940,6 +3951,44 @@ mod tests {
         assert_eq!(ids_for("prop:cds:enabled=false"), vec!["nested"]);
         assert!(ids_for("has-cd:cd").is_empty());
         assert!(ids_for("has-cd:missing").is_empty());
+    }
+
+    #[test]
+    fn imported_anki_added_filter_uses_original_card_id_timestamp() {
+        let anki_card_source = |card_id: &str, original_id: u64| ExternalSourceRecord {
+            target: ExternalSourceTarget::Card,
+            target_id: card_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(original_id.to_string()),
+            data: BTreeMap::new(),
+        };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("recent-import", "tamil", "recent", "import"),
+                card("older-import", "tamil", "older", "import"),
+                card("native", "tamil", "native", "card"),
+            ],
+            external_sources: vec![
+                anki_card_source("recent-import", NOW - ONE_DAY_MS / 2),
+                anki_card_source("older-import", NOW - 2 * ONE_DAY_MS),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("added:1"), vec!["recent-import", "native"]);
+        assert_eq!(
+            ids_for("added:3"),
+            vec!["recent-import", "older-import", "native"]
+        );
     }
 
     #[test]
