@@ -1434,8 +1434,8 @@ fn clause_matches(
     let matched = match &clause.kind {
         SearchClauseKind::Text(filter) => text_matches(filter, card, note, note_type, metadata),
         SearchClauseKind::Field(filter) => field_matches(filter, card, note, note_type),
-        SearchClauseKind::CardId(filter) => id_filter_matches(filter, &card.id),
-        SearchClauseKind::NoteId(filter) => note_id_matches(filter, card, note),
+        SearchClauseKind::CardId(filter) => card_id_matches(filter, card, card_sources),
+        SearchClauseKind::NoteId(filter) => note_id_matches(filter, card, note, metadata),
         SearchClauseKind::DeckId(filter) => deck_id_matches(filter, card, card_sources, metadata),
         SearchClauseKind::NoteTypeId(filter) => {
             note_type_id_matches(filter, note, note_type, metadata)
@@ -2006,11 +2006,38 @@ fn id_filter_matches(filter: &IdFilter, value: &str) -> bool {
         .any(|expected| value.eq_ignore_ascii_case(expected))
 }
 
-fn note_id_matches(filter: &IdFilter, card: &Card, note: Option<&Note>) -> bool {
+fn card_id_matches(filter: &IdFilter, card: &Card, card_sources: &[&ExternalSourceRecord]) -> bool {
+    id_filter_matches(filter, &card.id)
+        || card_sources
+            .iter()
+            .filter_map(|source| source.original_id.as_deref())
+            .any(|original_id| id_filter_matches(filter, original_id))
+}
+
+fn note_id_matches(
+    filter: &IdFilter,
+    card: &Card,
+    note: Option<&Note>,
+    metadata: &SearchMetadata<'_>,
+) -> bool {
     card.lineage
         .as_ref()
         .is_some_and(|lineage| id_filter_matches(filter, &lineage.note_id))
         || note.is_some_and(|note| id_filter_matches(filter, &note.id))
+        || note
+            .map(|note| note.id.as_str())
+            .or_else(|| {
+                card.lineage
+                    .as_ref()
+                    .map(|lineage| lineage.note_id.as_str())
+            })
+            .and_then(|note_id| metadata.note_sources_by_id.get(note_id))
+            .is_some_and(|sources| {
+                sources
+                    .iter()
+                    .filter_map(|source| source.original_id.as_deref())
+                    .any(|original_id| id_filter_matches(filter, original_id))
+            })
 }
 
 fn deck_id_matches(
@@ -3802,6 +3829,22 @@ mod tests {
             requirement_mode: TemplateRequirementMode::All,
             ordinal: 1,
         });
+        state.external_sources.extend([
+            ExternalSourceRecord {
+                target: ExternalSourceTarget::Card,
+                target_id: "due".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("12345".to_string()),
+                data: BTreeMap::new(),
+            },
+            ExternalSourceRecord {
+                target: ExternalSourceTarget::Note,
+                target_id: "note".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("67890".to_string()),
+                data: BTreeMap::new(),
+            },
+        ]);
 
         let ids_for = |query: &str| {
             search_cards(&state, query, NOW)
@@ -3815,8 +3858,10 @@ mod tests {
             ids_for("cid:due,note::forward"),
             vec!["note::forward", "due"]
         );
+        assert_eq!(ids_for("cid:12345"), vec!["due"]);
         assert_eq!(ids_for("cardId:DUE"), vec!["due"]);
         assert_eq!(ids_for("nid:note"), vec!["note::forward"]);
+        assert_eq!(ids_for("nid:67890"), vec!["note::forward"]);
         assert_eq!(ids_for("note-id:NOTE"), vec!["note::forward"]);
         assert_eq!(ids_for("card:forward"), vec!["note::forward"]);
         assert_eq!(ids_for("card:for*"), vec!["note::forward"]);
