@@ -2,6 +2,17 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.22.0] — 2026-06-29
+
+### Added — native engine outcome traces
+
+- Program-backed model scorecards now record `arm_b_engine_kind` and
+  `arm_b_engine_outcome`, making Arm B misses auditable as native ADJ outcomes
+  such as `solve/no_unique_solution` instead of opaque abstentions.
+- Tightened the native solve decomposition prompt so multi-variable systems ask
+  Gemma to declare every unknown and include every variable in `solve for { ... }`;
+  the harness still reads only the requested variable.
+
 ## [0.21.0] — 2026-06-29
 
 ### Added — Gemma linear-systems baseline
