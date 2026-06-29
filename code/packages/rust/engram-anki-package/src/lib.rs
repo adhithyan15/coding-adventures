@@ -2102,12 +2102,12 @@ fn export_card_scheduling(
         CardState::Relearning => (3, 1, millis_to_anki_seconds(progress.next_due_at).max(1)),
         CardState::Suspended => (
             review_or_new_kind(progress),
-            -1,
+            preserved_source_queue(source, &[-1], -1),
             millis_to_anki_due_day(collection_created_at_days, progress.next_due_at),
         ),
         CardState::Buried => (
             review_or_new_kind(progress),
-            -2,
+            preserved_source_queue(source, &[-2, -3], -2),
             millis_to_anki_due_day(collection_created_at_days, progress.next_due_at),
         ),
         CardState::Review => (
@@ -2135,6 +2135,16 @@ fn export_card_scheduling(
             .or_else(|| source_i64(source, "flags"))
             .unwrap_or_default(),
     }
+}
+
+fn preserved_source_queue(
+    source: Option<&ExternalSourceRecord>,
+    allowed: &[i64],
+    fallback: i64,
+) -> i64 {
+    source_i64(source, "queue")
+        .filter(|queue| allowed.contains(queue))
+        .unwrap_or(fallback)
 }
 
 fn review_or_new_kind(progress: &CardProgress) -> i64 {
@@ -4048,6 +4058,57 @@ CREATE TABLE graves (
         assert_eq!(
             day_learning_state.card_progress[0].next_due_at,
             (19_000 + 43) * ONE_DAY_MS
+        );
+    }
+
+    #[test]
+    fn preserves_v11_negative_queue_kind_for_suspended_and_scheduler_buried_cards() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+
+        let mut scheduler_buried = collection.clone();
+        scheduler_buried.cards[0].kind = 2;
+        scheduler_buried.cards[0].queue = -3;
+        scheduler_buried.cards[0].due = 45;
+        scheduler_buried.cards[0].modified_at = 1_700_000_400;
+        let scheduler_buried_state = v11_collection_to_engram_state(&scheduler_buried).unwrap();
+        let scheduler_buried_progress = &scheduler_buried_state.card_progress[0];
+        assert_eq!(scheduler_buried_progress.state, CardState::Buried);
+        assert_eq!(
+            scheduler_buried_progress.buried_until,
+            Some((19_000 + 45) * ONE_DAY_MS)
+        );
+
+        let scheduler_buried_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&scheduler_buried_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(scheduler_buried_export.cards[0].queue, -3);
+        let scheduler_buried_reimport =
+            v11_collection_to_engram_state(&scheduler_buried_export).unwrap();
+        assert_eq!(
+            scheduler_buried_reimport.card_progress[0].buried_until,
+            scheduler_buried_progress.buried_until
+        );
+
+        let mut suspended = collection.clone();
+        suspended.cards[0].kind = 2;
+        suspended.cards[0].queue = -1;
+        suspended.cards[0].due = 46;
+        suspended.cards[0].modified_at = 1_700_000_500;
+        let suspended_state = v11_collection_to_engram_state(&suspended).unwrap();
+        let suspended_progress = &suspended_state.card_progress[0];
+        assert_eq!(suspended_progress.state, CardState::Suspended);
+        assert_eq!(suspended_progress.suspended_at, Some(1_700_000_500_000));
+
+        let suspended_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&suspended_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(suspended_export.cards[0].queue, -1);
+        let suspended_reimport = v11_collection_to_engram_state(&suspended_export).unwrap();
+        assert_eq!(
+            suspended_reimport.card_progress[0].next_due_at,
+            suspended_progress.next_due_at
         );
     }
 

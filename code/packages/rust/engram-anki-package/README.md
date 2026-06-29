@@ -44,7 +44,9 @@ includes daily limits, learning/relearning steps, interval multipliers, lapse
 multiplier, maximum interval, and Anki-style sibling bury booleans. Anki's
 special `marked` note tag imports as Engram marked-card progress for each card
 generated from that note, and Engram marked cards export the canonical `marked`
-tag so the mark survives APKG round-trips.
+tag so the mark survives APKG round-trips. Imported suspended cards and Anki's
+user-buried / scheduler-buried queue distinction (`-2` vs `-3`) are preserved
+when exporting back to APKG.
 
 `tests/fixtures/golden-v11-filtered-media.apkg` pins a deterministic V11 package
 with filtered-deck metadata and media references through `include_bytes!`. Run
