@@ -226,6 +226,7 @@ members = [
     "logic-engine",
     "math-frontend",
     "latex",
+    "asciimath",
     "adjudication-ir",
     "llm-cache",
     "llm-gateway",
