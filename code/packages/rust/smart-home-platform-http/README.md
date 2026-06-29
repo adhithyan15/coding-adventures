@@ -115,7 +115,9 @@ trail. The browser shell also exposes filters for
 room, entity domain/state/control status, runtime event kind, command-result
 status, and authorization outcome, with server-backed room scoping across
 inventory, state, history, event-log, and command-result panels plus local text
-search across the rendered dashboard rows.
+search across the rendered dashboard rows. Those filter selections are mirrored
+into URL query parameters and restored on page load or browser navigation, so
+local-controller room and audit views can be shared or reopened directly.
 
 ## Dependencies
 

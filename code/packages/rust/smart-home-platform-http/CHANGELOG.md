@@ -65,6 +65,8 @@ All notable changes to this package will be documented in this file.
   services, scenes, devices, and bridges.
 - Added browser dashboard filters for entity state, event-log, command-result,
   and authorization audit views, plus local text search across dashboard rows.
+- Added browser dashboard filter permalinks that mirror search, room, state,
+  event, command, and authorization filters into URL query parameters.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe
