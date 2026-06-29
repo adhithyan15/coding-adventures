@@ -15,6 +15,9 @@ package.
 Reusable UI components should live under `code/packages/mosaic-pkg-*`. Engram
 itself should grow here as an app package that composes those components and
 binds them to the shared Rust business logic core through host shells.
+`mosaic-pkg-note-editor` now provides the reusable focused-field note editor
+surface for host-owned add/edit note dialogs without folding editor controls
+directly into the Engram app package.
 
 ## Current surface
 

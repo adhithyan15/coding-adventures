@@ -1,0 +1,153 @@
+// NoteEditor.dark.msl - dark note editor theme.
+
+style NoteEditor {
+  part note-editor {
+    background    : "#111827" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    border-radius : 8 ;
+    padding       : 14 ;
+  }
+
+  part editor-title {
+    color          : "#f8fafc" ;
+    font-size      : 20 ;
+    font-weight    : 800 ;
+    padding-bottom : 10 ;
+  }
+
+  part note-metadata {
+    padding-bottom : 12 ;
+  }
+
+  part note-id-meta {
+    padding : 8 ;
+  }
+
+  part note-type-meta {
+    padding : 8 ;
+  }
+
+  part deck-meta {
+    padding : 8 ;
+  }
+
+  part note-id-label {
+    color       : "#93c5fd" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part note-type-label {
+    color       : "#93c5fd" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part deck-label {
+    color       : "#93c5fd" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part note-id-value {
+    color       : "#e2e8f0" ;
+    font-size   : 14 ;
+    font-weight : 600 ;
+  }
+
+  part note-type-value {
+    color       : "#e2e8f0" ;
+    font-size   : 14 ;
+    font-weight : 600 ;
+  }
+
+  part deck-value {
+    color       : "#e2e8f0" ;
+    font-size   : 14 ;
+    font-weight : 600 ;
+  }
+
+  part editor-body {
+    padding-bottom : 12 ;
+  }
+
+  part field-list-column {
+    padding : 2 ;
+  }
+
+  part fields-label {
+    color       : "#c4b5fd" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part focused-field-column {
+    padding : 2 ;
+  }
+
+  part selected-field-label {
+    color       : "#86efac" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part selected-field-input {
+    background    : "#0f172a" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
+  }
+
+  part tags-label {
+    color       : "#fde68a" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+    padding-top : 8 ;
+  }
+
+  part tags-input {
+    background    : "#0f172a" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
+  }
+
+  part editor-actions {
+    padding-top : 2 ;
+  }
+
+  part save-button {
+    background    : "#0f766e" ;
+    border-width  : 1 ;
+    border-color  : "#134e4a" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part delete-button {
+    background    : "#be123c" ;
+    border-width  : 1 ;
+    border-color  : "#881337" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part cancel-button {
+    background    : "#334155" ;
+    border-width  : 1 ;
+    border-color  : "#64748b" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+}
