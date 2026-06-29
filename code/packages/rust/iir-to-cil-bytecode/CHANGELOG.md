@@ -1,5 +1,11 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.32.0] — 2026-06-28 — `f64_sqrt` lowers to `System.Math::Sqrt` (LANG-FULL AL8-sqrt)
+
+The textual `.il` emitter now handles `f64_sqrt`: `load_var src; call float64
+[System.Runtime]System.Math::Sqrt(float64); store_var dest`.  The .NET JIT
+intrinsifies `Math.Sqrt` to a hardware `sqrtsd`/`fsqrt` with no P/Invoke cost.
+
 ## [0.31.0] — 2026-06-28 — textual CLR literal string comparison (LANG-FULL E4)
 
 The textual `.il` path now lowers `str_cmp` over managed string locals by

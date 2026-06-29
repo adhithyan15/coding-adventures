@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, and literal-backed string equality/ordering predicates ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, and literal-backed string equality/ordering predicates ✅ (AL4 foothold); no call-by-name, dynamic string variables/arrays, or multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -679,14 +679,16 @@ backend immediately) come before the enabler-dependent items.
   campaign — design pass + user check before implementing.**
 - ◑ **AL8** — standard functions (§3.2.4/§3.2.5). The pure-IIR/conversion-backed
   functions are done: **`abs` ✅** (algol-iir-compiler 0.8.0), **`sign` ✅** (0.9.0),
-  and **`entier` ✅** (0.10.0). `abs`/`sign` are built-in, resolved by name
-  (overridable by a user `procedure`), and lower inline to compares +
-  `jmp_if_false` + `mov`-into-one-slot (store-per-branch, no phi). `entier(E)`
-  requires a `real` operand and lowers to the E8 `real_to_int_floor` conversion,
-  so `entier(0.0 - 2.7)` proves floor toward negative infinity rather than truncation.
-  Verified by RUNNING `abs(0-42)`⇒42, `43+sign(0-1)`⇒42, and
-  `45+entier(0.0-2.7)`⇒42 on native/LLVM/WASM/JVM/CLR/VM/JIT. **Remaining:**
-  `sqrt`/`sin`/`cos`/`ln`/`exp`, which need a cross-backend runtime math library.
+  **`entier` ✅** (0.10.0), and **`sqrt` ✅** (0.17.0). `abs`/`sign` lower inline to
+  compares + `jmp_if_false` + `mov`-into-one-slot (store-per-branch, no phi). `entier(E)`
+  lowers to the E8 `real_to_int_floor` op. `sqrt(E)` lowers to the new `f64_sqrt` IIR op
+  — a single IEEE-754 hardware sqrt on every backend: WASM `f64.sqrt` (0x9F), LLVM
+  `@llvm.sqrt.f64`, JVM `Math.sqrt`, CLR `System.Math::Sqrt`, aarch64 `FSQRT`,
+  x86_64 `SQRTSD` (SSE2); VM/JIT fall back to `f64::sqrt()`. No libm call on any
+  backend. Verified by RUNNING `abs(0-42)`⇒42, `43+sign(0-1)`⇒42,
+  `45+entier(0.0-2.7)`⇒42, and `entier(sqrt(49.0))`⇒7 on all 7 backends.
+  **Remaining:** `sin`/`cos`/`ln`/`exp`, which require cross-backend transcendental
+  support (libm or equivalent).
 
 ### Twig
 - ✅ **TW1** — variadic arithmetic typed lowering. An all-`i64` `(+ a b c …)` /
@@ -737,7 +739,7 @@ backend immediately) come before the enabler-dependent items.
    and fuller byte-string representations without per-frontend shortcuts.
 2. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
    work and any frontend code that still needs shared state across functions.
-4. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, **AL8 transcendentals**,
+4. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**, **AL8 remaining transcendentals** (`sin`/`cos`/`ln`/`exp`),
    and **MC1 cons/symbol values on the code-gen backends** — explicit user decision points.
 
 This roadmap is the contract; each ☐ becomes a `feat(lang-full): …` PR, checked off here as

@@ -1,8 +1,8 @@
 [package]
 name = "algol-iir-compiler"
-version = "0.16.0"
+version = "0.17.0"
 edition = "2021"
-description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.16.0 proves AL4 string equality and ordering over literal-backed scalar string slots; v0.15.0 proved multi-argument output."
+description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.17.0 (AL8-sqrt): sqrt(E) lowers to the f64_sqrt IIR op — hardware sqrt on all 7 backends; v0.16.0 proves AL4 string equality and ordering."
 
 [dependencies]
 coding-adventures-algol-parser = { path = "../algol-parser" }

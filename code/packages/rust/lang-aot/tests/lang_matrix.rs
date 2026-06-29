@@ -953,6 +953,26 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the `sqrt` **standard function** (§3.2.4, LANG-FULL AL8-sqrt).
+    // `sqrt(E)` computes the IEEE-754 square root of a `real` expression.  Unlike
+    // `abs`/`sign` (which lower to compare+branch) and `entier` (which lowers to
+    // `real_to_int_floor`), `sqrt` lowers to the new **`f64_sqrt`** IIR op — a
+    // single-argument f64→f64 primitive that every backend emits in its native idiom:
+    // LLVM `@llvm.sqrt.f64` intrinsic, WASM `f64.sqrt` (opcode 0x9F, MVP), JVM
+    // `invokestatic java/lang/Math.sqrt:(D)D`, CLR
+    // `call float64 [System.Runtime]System.Math::Sqrt(float64)`, native aarch64
+    // `FSQRT Dd,Dn`, native x86_64 `SQRTSD xmm0,xmm0`.  The JIT falls back to the
+    // VM handler (`f64::sqrt()`) via the `_f64`-suffix fallback.  The proof program
+    // computes `sqrt(49.0)` = 7.0, converts to integer via `entier`, and exits with
+    // that value: exit 7 on **all 7 backends**.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := sqrt(49.0); \
+               result := entier(r) end",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *typed procedure with a value parameter* (`integer procedure
     // sq(x); value x; integer x; sq := x*x`) called from the main block:
     // `result := sq(7)` ⇒ exit 49.  `algol-iir-compiler` lowers the procedure

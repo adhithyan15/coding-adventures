@@ -582,6 +582,19 @@ fn emit_instr(
         asm.str_(Reg::X0, Reg::Sp, slot)?;          // store the integer
         return Ok(());
     }
+    // AL8 sqrt — `FSQRT Dd, Dn` (single hardware FP instruction, no libm).
+    //   f64_sqrt dest <- src  →  ldr_d D0,[src]; fsqrt D0,D0; str_d D0,[dest]
+    // NaN propagates; negative input → NaN (IEEE-754 / matches VM `f64::sqrt`).
+    if op == "f64_sqrt" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr("f64_sqrt needs srcs[0]".into()))?;
+        load_fp_operand(asm, alloc, Reg::X0, src)?; // f64 → D0
+        asm.fsqrt(Reg::X0, Reg::X0);               // D0 = sqrt(D0)
+        let slot = alloc.slot_of(dest);
+        asm.str_d(Reg::X0, Reg::Sp, slot)?;        // store the result as f64
+        return Ok(());
+    }
 
     // ---- add/sub/mul (typed) --------------------------------------------
     for (prefix, kind) in &[("add_", BinKind::Add), ("sub_", BinKind::Sub), ("mul_", BinKind::Mul)] {

@@ -150,7 +150,7 @@ use crate::codegen::{
     DROP, END, F32_ADD, F32_DIV, F32_EQ, F32_GE, F32_GT, F32_LE, F32_LT, F32_MUL, F32_NEG,
     F32_NE, F32_SUB, F64_ADD, F64_CONVERT_I64_S, F64_DIV, F64_EQ, F64_FLOOR, F64_GE, F64_GT,
     F64_LE, F64_LT, F64_MUL,
-    F64_NEG, F64_NE, F64_SUB, I32_ADD, I32_AND, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S,
+    F64_NEG, F64_NE, F64_SQRT, F64_SUB, I32_ADD, I32_AND, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S,
     I64_TRUNC_F64_S,
     I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
     I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
@@ -1489,6 +1489,20 @@ fn emit_instr(
             code.extend(encode_local_get(r)); // f64
             code.push(F64_FLOOR); // round toward −∞ (entier)
             code.push(I64_TRUNC_F64_S); // trunc the integral result → i64 (traps out-of-range)
+            code.extend(encode_local_set(rd));
+        }
+        // `f64_sqrt` — IEEE-754 hardware square root (WASM MVP opcode 0x9F).
+        // WASM `f64.sqrt` propagates NaN and returns NaN for negative inputs,
+        // matching IEEE-754 and the VM handler's `f.sqrt()` semantics.
+        "f64_sqrt" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "f64_sqrt must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            code.extend(encode_local_get(r)); // f64
+            code.push(F64_SQRT); // f64.sqrt — hardware sqrt, no libm call
             code.extend(encode_local_set(rd));
         }
 

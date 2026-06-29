@@ -3,6 +3,13 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.24.0] — 2026-06-28 (LANG-FULL AL8-sqrt — `f64_sqrt` lowers to `f64.sqrt`)
+
+Added `F64_SQRT = 0x9F` constant (WASM MVP opcode) to `codegen.rs` and an
+`f64_sqrt` dispatch arm in `lower.rs`.  Emission: `local.get r; f64.sqrt;
+local.set rd` — a single WASM MVP instruction, no imports or feature gates
+needed.  NaN propagates; negative input returns NaN (IEEE-754).
+
 ## [0.23.0] — 2026-06-28 (LANG-FULL E4 — literal string comparison on WASM)
 
 The WASM backend now accepts and lowers literal-only `str_cmp`, materialising
