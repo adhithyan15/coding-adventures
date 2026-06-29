@@ -30,6 +30,11 @@ beside the component artifacts. React, HTML, WebComponent, Flutter, Qt,
 SwiftUI, and XAML all produce their shell side files from the same package
 source tree.
 
+Packages may declare optional `[host_assets]` file copies in
+`mosaic-package.toml`. Matching backend assets are copied from package-relative
+paths into the backend output directory after shell emission, so app packages
+can attach host adapters without moving that file list into bespoke scripts.
+
 Electron project shells expose the same renderer-side `window.mosaicHost`
 contract as React and route it through context-isolated IPC. The generated main
 process can load an optional host module from compiled `dist-electron/host.js`,
@@ -88,6 +93,7 @@ build_package(...)
   |-- PipelineError          <- mosmodel / moslayout / mosstyle / emitter failed
   |-- PackageReferenceError  <- pkg::P::C layout/style dependency failed
   |-- UnsafeName             <- manifest name unsafe for output paths
+  |-- UnsafePath             <- host asset path escaped package/output roots
   `-- Io(_)                  <- read / write / mkdir failed
 ```
 

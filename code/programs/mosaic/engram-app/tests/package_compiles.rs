@@ -76,6 +76,28 @@ fn manifest_declares_app_package_boundary() {
         package.dependencies.get("mosaic-pkg-session-progress"),
         Some(&"0.1.0".to_string())
     );
+    let host_assets = package
+        .host_assets
+        .files
+        .iter()
+        .map(|asset| {
+            (
+                asset.backend.as_str(),
+                asset.source.as_str(),
+                asset.target.as_str(),
+            )
+        })
+        .collect::<BTreeSet<_>>();
+    assert!(host_assets.contains(&("html", "host/web/engram-host.mjs", "engram-host.mjs")));
+    assert!(host_assets.contains(&("react", "host/web/engram-host.ts", "src/engram-host.ts")));
+    assert!(host_assets.contains(&("electron", "host/electron/host.js", "electron/host.js")));
+    assert!(host_assets.contains(&("qt", "host/qt/MosaicHost.cpp", "MosaicHost.cpp")));
+    assert!(host_assets.contains(&(
+        "swiftui",
+        "host/swiftui/MosaicHost.swift",
+        "Sources/App/MosaicHost.swift"
+    )));
+    assert!(host_assets.contains(&("xaml", "host/xaml/MosaicHost.cs", "MosaicHost.cs")));
     assert_eq!(package.kernel.version, "1");
 }
 
@@ -459,6 +481,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&html_main, "\"name\": \"index\"");
     assert_contains(&html_main, "\"onDeckOptionsBuryNewSiblingsChange\"");
     assert_contains(&html_main, "\"name\": \"checked\"");
+    let html_host =
+        fs::read_to_string(tmp.path().join("html").join("engram-host.mjs")).expect("html host");
+    assert_contains(&html_host, "engram_engine.wasm");
 
     let react_app = fs::read_to_string(tmp.path().join("react").join("src").join("main.tsx"))
         .expect("react/src/main.tsx");
@@ -515,6 +540,19 @@ fn native_project_shells_expose_engram_host_contract() {
     assert!(
         !react_app.contains("dispatch={(ev) => console.log(\"event:\", ev)}"),
         "react shell should route events through window.mosaicHost"
+    );
+    let react_host =
+        fs::read_to_string(tmp.path().join("react").join("src").join("engram-host.ts"))
+            .expect("react host");
+    assert_contains(&react_host, "installEngramMosaicHost");
+    assert_contains(&react_host, "engram_engine.wasm");
+    assert!(
+        tmp.path()
+            .join("react")
+            .join("src")
+            .join("engram-mosaic-host-wasm.d.ts")
+            .exists(),
+        "react host wasm declarations should be installed from manifest assets"
     );
 
     let electron_app = fs::read_to_string(tmp.path().join("electron").join("src").join("main.tsx"))
@@ -621,6 +659,10 @@ fn native_project_shells_expose_engram_host_contract() {
         &electron_preload,
         "handleEvent: (request: MosaicHostRequest)",
     );
+    let electron_host =
+        fs::read_to_string(tmp.path().join("electron").join("electron").join("host.js"))
+            .expect("electron host.js");
+    assert_contains(&electron_host, "createMosaicHost");
 
     let flutter_app = fs::read_to_string(tmp.path().join("flutter").join("lib").join("main.dart"))
         .expect("flutter/lib/main.dart");
@@ -858,6 +900,11 @@ fn native_project_shells_expose_engram_host_contract() {
         &qt_cmake,
         "foreach(_mosaic_native_library IN ITEMS engram_capi.dll libengram_capi.dylib libengram_capi.so)",
     );
+    assert!(
+        tmp.path().join("qt").join("MosaicHost.h").exists()
+            && tmp.path().join("qt").join("MosaicHost.cpp").exists(),
+        "qt host adapter files should be installed from manifest assets"
+    );
 
     let swift = fs::read_to_string(tmp.path().join("swiftui").join("EngramApp.swift"))
         .expect("EngramApp.swift");
@@ -1007,6 +1054,15 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift_app, "@objc protocol MosaicHostBridgeObject");
     assert_contains(&swift_app, "[\"App.MosaicHost\", \"MosaicHost\"]");
     assert_contains(&swift_app, "NSClassFromString(className)");
+    assert!(
+        tmp.path()
+            .join("swiftui")
+            .join("Sources")
+            .join("App")
+            .join("MosaicHost.swift")
+            .exists(),
+        "swiftui host adapter should be installed from manifest assets"
+    );
     let swift_package = fs::read_to_string(tmp.path().join("swiftui").join("Package.swift"))
         .expect("Package.swift");
     assert_contains(&swift_package, "platforms: [.macOS(.v13), .iOS(.v16)]");
@@ -1221,6 +1277,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_main_window,
         "System.Type.GetType(\"Mosaic.Generated.MosaicHost\")",
+    );
+    assert!(
+        tmp.path().join("xaml").join("MosaicHost.cs").exists(),
+        "xaml host adapter should be installed from manifest assets"
     );
     assert_contains(&xaml_main_window, "Status: sample props loaded");
 

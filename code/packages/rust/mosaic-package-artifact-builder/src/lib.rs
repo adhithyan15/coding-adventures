@@ -86,9 +86,9 @@
 use std::collections::HashSet;
 use std::fmt::Write as _;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 
-use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError};
+use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError, MosaicPackage};
 use mosmodel_compiler::{SlotDecl, SlotDefault, SlotType};
 
 // ===========================================================================
@@ -254,6 +254,18 @@ pub enum BuildError {
         /// (e.g. `[A-Za-z][A-Za-z0-9_]*` for components).
         reason: &'static str,
     },
+    /// A manifest-declared host asset path would escape the package root or
+    /// backend output directory. Host assets are copied from package-relative
+    /// paths to backend-relative paths, so absolute paths, `..`, and `.` are
+    /// rejected before any filesystem write.
+    UnsafePath {
+        /// What path we were validating.
+        kind: &'static str,
+        /// The offending string verbatim.
+        path: String,
+        /// A short explanation of what's allowed.
+        reason: &'static str,
+    },
     /// The manifest's `[components].exports` listed a component name that
     /// matched no source file. (We don't error from this directly today —
     /// we error from [`SourceNotFound`] instead — but the variant exists
@@ -315,6 +327,10 @@ impl std::fmt::Display for BuildError {
             BuildError::UnsafeName { kind, name, reason } => write!(
                 f,
                 "unsafe {kind} name '{name}': {reason} (would break path or output safety)"
+            ),
+            BuildError::UnsafePath { kind, path, reason } => write!(
+                f,
+                "unsafe {kind} path '{path}': {reason} (would break path or output safety)"
             ),
             BuildError::Io(e) => write!(f, "io error: {e}"),
         }
@@ -478,10 +494,68 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
         // step 5 still lands in `backend_dir`.
     }
 
+    let host_asset_artifacts =
+        install_host_assets(&manifest, opts.backend, &opts.package_root, &backend_dir)?;
+    artifacts.extend(host_asset_artifacts);
+
     Ok(BuildResult {
         artifacts,
         components_built,
     })
+}
+
+fn install_host_assets(
+    manifest: &MosaicPackage,
+    backend: Backend,
+    package_root: &Path,
+    backend_dir: &Path,
+) -> Result<Vec<PathBuf>, BuildError> {
+    let backend_name = backend.dir_name();
+    let mut written = Vec::new();
+    for asset in &manifest.host_assets.files {
+        if asset.backend != backend_name && asset.backend != "*" {
+            continue;
+        }
+
+        let source_rel = safe_manifest_relative_path("host asset source", &asset.source)?;
+        let target_rel = safe_manifest_relative_path("host asset target", &asset.target)?;
+        let source = package_root.join(source_rel);
+        let target = backend_dir.join(target_rel);
+        let bytes = fs::read(&source)
+            .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
+        write_file(&target, &bytes)?;
+        written.push(target);
+    }
+    Ok(written)
+}
+
+fn safe_manifest_relative_path(kind: &'static str, value: &str) -> Result<PathBuf, BuildError> {
+    let path = Path::new(value);
+    if value.trim().is_empty() || path.is_absolute() {
+        return Err(unsafe_path_err(kind, value));
+    }
+
+    let mut clean = PathBuf::new();
+    for component in path.components() {
+        match component {
+            Component::Normal(part) => clean.push(part),
+            _ => return Err(unsafe_path_err(kind, value)),
+        }
+    }
+
+    if clean.as_os_str().is_empty() {
+        return Err(unsafe_path_err(kind, value));
+    }
+
+    Ok(clean)
+}
+
+fn unsafe_path_err(kind: &'static str, path: &str) -> BuildError {
+    BuildError::UnsafePath {
+        kind,
+        path: path.to_string(),
+        reason: "must be a relative path made of normal path components",
+    }
 }
 
 /// UI32-M: emit the per-backend project shell for the package's first
@@ -2272,6 +2346,13 @@ version = "1"
         fs::write(src.join(format!("{component}.msl")), msl).unwrap();
     }
 
+    fn append_host_assets(root: &Path, toml: &str) {
+        let manifest_path = root.join("mosaic-package.toml");
+        let manifest = fs::read_to_string(&manifest_path).unwrap();
+        let manifest = manifest.replace("[kernel]", &format!("{toml}\n[kernel]"));
+        fs::write(manifest_path, manifest).unwrap();
+    }
+
     // -----------------------------------------------------------------------
     // 1. Empty package
     // -----------------------------------------------------------------------
@@ -2318,6 +2399,83 @@ version = "1"
         let body = fs::read_to_string(&tsx).unwrap();
         // The React emitter emits a `function Grid(...)` and the props type.
         assert!(body.contains("Grid"), "tsx must reference component name");
+    }
+
+    #[test]
+    fn manifest_host_assets_are_copied_for_matching_backend() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("web");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(
+            host_dir.join("grid-host.ts"),
+            "export const gridHost = true;\n",
+        )
+        .unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "react", source = "host/web/grid-host.ts", target = "src/grid-host.ts" },
+  { backend = "qt", source = "host/web/grid-host.ts", target = "grid-host.ts" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: true,
+        })
+        .expect("react build");
+
+        let installed = out.path().join("react").join("src").join("grid-host.ts");
+        assert_eq!(
+            fs::read_to_string(&installed).unwrap(),
+            "export const gridHost = true;\n"
+        );
+        assert!(
+            result.artifacts.iter().any(|path| path == &installed),
+            "copied host asset should appear in BuildResult.artifacts"
+        );
+        assert!(
+            !out.path().join("react").join("grid-host.ts").exists(),
+            "qt-only asset must not be copied for react builds"
+        );
+    }
+
+    #[test]
+    fn manifest_host_assets_reject_escaping_targets() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(host_dir.join("grid-host.ts"), "export {};\n").unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "react", source = "host/grid-host.ts", target = "../grid-host.ts" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        let err = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .unwrap_err();
+        assert!(
+            matches!(
+                err,
+                BuildError::UnsafePath {
+                    kind: "host asset target",
+                    ..
+                }
+            ),
+            "expected UnsafePath(host asset target), got {err:?}"
+        );
     }
 
     #[test]

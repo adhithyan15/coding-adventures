@@ -9,7 +9,6 @@ $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $packageRoot = (Resolve-Path (Join-Path $scriptRoot "..")).Path
 $rustWorkspace = (Resolve-Path (Join-Path $packageRoot "..\..\..\packages\rust")).Path
 $engramWasmRoot = (Resolve-Path (Join-Path $rustWorkspace "engram-wasm")).Path
-$hostRoot = Join-Path $packageRoot "host"
 $nativeProfile = if ($Release) { "release" } else { "debug" }
 $nativeLibraryName = if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) {
     "engram_capi.dll"
@@ -65,14 +64,6 @@ try {
 
 $engramWasmFile = Join-Path $engramWasmRoot "pkg\engram_engine.wasm"
 $engramWasmLoader = Join-Path $engramWasmRoot "js\engram-mosaic-host-wasm.mjs"
-$engramWasmTypes = Join-Path $hostRoot "web\engram-mosaic-host-wasm.d.ts"
-$engramWebHost = Join-Path $hostRoot "web\engram-host.ts"
-$engramHtmlHost = Join-Path $hostRoot "web\engram-host.mjs"
-$engramElectronHost = Join-Path $hostRoot "electron\host.js"
-$engramQtHostHeader = Join-Path $hostRoot "qt\MosaicHost.h"
-$engramQtHostSource = Join-Path $hostRoot "qt\MosaicHost.cpp"
-$engramXamlHost = Join-Path $hostRoot "xaml\MosaicHost.cs"
-$engramSwiftUIHost = Join-Path $hostRoot "swiftui\MosaicHost.swift"
 $engramCapiHeader = Join-Path $rustWorkspace "engram-capi\include\engram.h"
 
 function Write-Utf8NoBom {
@@ -116,8 +107,6 @@ function Install-EngramReactHost {
     New-Item -ItemType Directory -Force -Path $publicDir, $srcDir | Out-Null
     Copy-Item -LiteralPath $engramWasmFile -Destination (Join-Path $publicDir "engram_engine.wasm") -Force
     Copy-Item -LiteralPath $engramWasmLoader -Destination (Join-Path $srcDir "engram-mosaic-host-wasm.mjs") -Force
-    Copy-Item -LiteralPath $engramWasmTypes -Destination (Join-Path $srcDir "engram-mosaic-host-wasm.d.ts") -Force
-    Copy-Item -LiteralPath $engramWebHost -Destination (Join-Path $srcDir "engram-host.ts") -Force
     Add-EngramHostImport -MainPath (Join-Path $srcDir "main.tsx")
 }
 
@@ -149,7 +138,6 @@ function Install-EngramHtmlHost {
     }
     Copy-Item -LiteralPath $engramWasmFile -Destination (Join-Path $HtmlRoot "engram_engine.wasm") -Force
     Copy-Item -LiteralPath $engramWasmLoader -Destination (Join-Path $HtmlRoot "engram-mosaic-host-wasm.mjs") -Force
-    Copy-Item -LiteralPath $engramHtmlHost -Destination (Join-Path $HtmlRoot "engram-host.mjs") -Force
     Add-EngramHtmlHostScript -IndexPath (Join-Path $HtmlRoot "index.html")
 }
 
@@ -163,7 +151,6 @@ function Install-EngramElectronHost {
     New-Item -ItemType Directory -Force -Path $electronDir | Out-Null
     Copy-Item -LiteralPath $engramWasmFile -Destination (Join-Path $electronDir "engram_engine.wasm") -Force
     Copy-Item -LiteralPath $engramWasmLoader -Destination (Join-Path $electronDir "engram-mosaic-host-wasm.mjs") -Force
-    Copy-Item -LiteralPath $engramElectronHost -Destination (Join-Path $electronDir "host.js") -Force
 }
 
 function Install-EngramQtHost {
@@ -176,8 +163,6 @@ function Install-EngramQtHost {
         throw "expected Engram native library missing: $engramCapiLibrary"
     }
 
-    Copy-Item -LiteralPath $engramQtHostHeader -Destination (Join-Path $QtRoot "MosaicHost.h") -Force
-    Copy-Item -LiteralPath $engramQtHostSource -Destination (Join-Path $QtRoot "MosaicHost.cpp") -Force
     Copy-Item -LiteralPath $engramCapiLibrary -Destination (Join-Path $QtRoot $nativeLibraryName) -Force
 }
 
@@ -210,7 +195,6 @@ function Install-EngramXamlHost {
         throw "expected Engram native library missing: $engramCapiLibrary"
     }
 
-    Copy-Item -LiteralPath $engramXamlHost -Destination (Join-Path $XamlRoot "MosaicHost.cs") -Force
     Copy-Item -LiteralPath $engramCapiLibrary -Destination (Join-Path $XamlRoot $nativeLibraryName) -Force
 
     $csproj = Get-ChildItem -LiteralPath $XamlRoot -Filter "*.csproj" | Select-Object -First 1
@@ -261,7 +245,6 @@ function Install-EngramSwiftUIHost {
     $libDir = Join-Path $moduleDir "lib"
     New-Item -ItemType Directory -Force -Path $appDir, $includeDir, $libDir | Out-Null
 
-    Copy-Item -LiteralPath $engramSwiftUIHost -Destination (Join-Path $appDir "MosaicHost.swift") -Force
     Copy-Item -LiteralPath $engramCapiHeader -Destination (Join-Path $includeDir "engram.h") -Force
     Copy-Item -LiteralPath $engramCapiStaticLibrary -Destination (Join-Path $libDir $staticLibraryName) -Force
     Write-Utf8NoBom -Path (Join-Path $moduleDir "module.modulemap") -Content @"

@@ -7,6 +7,11 @@ compilation and backend emission, using the shared `mosaic-package-resolver`
 layout inliner. This lets app packages compose reusable component packages and
 still emit backend artifacts from one app source tree.
 
+`build_package` now installs backend-matching host assets declared in
+`mosaic-package.toml` under `[host_assets]`, copying source files from the
+package root into the emitted backend project after project-shell generation.
+Manifest asset paths are validated to stay relative to the package/output root.
+
 Dependency package styles are now compiled and merged into the consuming
 component artifact before backend emission. Dependency styles are applied first
 and the consuming component's own style is applied last, so parent/app packages
