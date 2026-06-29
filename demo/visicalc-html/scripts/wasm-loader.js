@@ -235,6 +235,22 @@
           canUndo: () => ex.can_undo() === 1,
           canRedo: () => ex.can_redo() === 1,
 
+          // Column widths & row heights on the ACTIVE sheet (presentation chrome
+          // the engine stores but never computes with). A 1-based column / row
+          // index; a number size in host units. columnWidth/rowHeight return 0 when
+          // unset (use the host default); the setters return true if applied, false
+          // if rejected (non-finite / <= 0 / index 0). columnWidths/rowHeights return
+          // the customized sizes in a range, [{col,w}] / [{row,h}], for a one-call
+          // viewport fetch. Sizes persist through serialize/load and shift on insert.
+          columnWidth: (col) => ex.column_width(col >>> 0),
+          rowHeight: (row) => ex.row_height(row >>> 0),
+          setColumnWidth: (col, width) => ex.set_column_width(col >>> 0, +width) === 1,
+          setRowHeight: (row, height) => ex.set_row_height(row >>> 0, +height) === 1,
+          clearColumnWidth: (col) => ex.clear_column_width(col >>> 0) === 1,
+          clearRowHeight: (row) => ex.clear_row_height(row >>> 0) === 1,
+          columnWidths: (col0, col1) => JSON.parse(callInts("column_widths", col0, col1)),
+          rowHeights: (row0, row1) => JSON.parse(callInts("row_heights", row0, row1)),
+
           // Viewport primitive — render only the visible window of an unbounded
           // sheet. 1-based inclusive coords.
           getWindow: (row0, col0, row1, col1) =>

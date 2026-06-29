@@ -28,6 +28,24 @@ ZERO (`Math.min(0, -0)` → `-0`): `-0` has no numeric-literal spelling (it is
 `UnaryMinus` on `0`, and `ToString(-0)` is `"0"`), so emitting it would flip the
 sign bit to `+0`. Only `max` and `min` are modelled.
 
+## [0.73.0] - 2026-06-26
+
+### Added — fold static `Array.from("…")` → array of code-point strings
+
+The static `Array.from` (ECMAScript §23.1.2.1) now folds to an array literal when
+its single argument is a string literal (and there is no `mapFn`). The string
+iterator yields one element per **code point** (like spread `[..."…"]`), so the
+astral characters stay whole:
+
+| call                  | result            |
+|-----------------------|-------------------|
+| `Array.from("abc")`   | `["a", "b", "c"]` |
+| `Array.from("")`      | `[]`              |
+| `Array.from("a💩b")`  | `["a", "💩", "b"]` (💩 is one element) |
+
+We decline a second `mapFn` argument (its return values are unknown), any
+non-string-literal first argument (array-likes/iterables/identifiers/numbers),
+and a shadowed receiver — only the bare global `Array.from(...)` callee folds.
 ## [0.72.0] - 2026-06-27
 
 ### Added — fold static `Object.entries({k: v, …})` → `[["k", v], …]`

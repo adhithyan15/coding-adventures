@@ -1429,6 +1429,58 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
                     }
                 }
+
+                // ---- Array.from("…") → array of code-point strings ----
+                //
+                // `Array.from` (ECMAScript §23.1.2.1) builds an array from an
+                // iterable or array-like. For a STRING the iterator yields one
+                // element per CODE POINT (not per UTF-16 code unit) — exactly what
+                // the spread `[..."…"]` produces — so `Array.from("abc")` →
+                // `["a", "b", "c"]` and `Array.from("a💩b")` → `["a", "💩", "b"]`
+                // (the astral `💩` is a SINGLE element, never split into its two
+                // surrogate halves). Folding a string LITERAL to that array
+                // literal is exact and side-effect-free; the empty string → `[]`.
+                //
+                // We fold ONLY the single-string-literal-argument form. A SECOND
+                // argument is a `mapFn` whose return values we cannot compute at
+                // compile time, so we decline it. Any non-string-literal first
+                // argument (an array-like object, a real iterable, an identifier,
+                // a number) is also declined — its iteration result is unknown.
+                // Same bare-global-`Array` premise as `Array.isArray` — only the
+                // literal `Array.from(...)` callee folds, never a shadowed
+                // receiver (`a.from(...)` is left alone).
+                if obj.name == "Array" && prop.name == "from" && arguments.len() == 1 {
+                    if let Some(Expression::StringLiteral(s)) = arguments.first() {
+                        let parent = c.cv.clone();
+                        // Rust's `chars()` iterates Unicode scalar values — i.e.
+                        // code points — matching the string iterator JS uses, so
+                        // an astral char stays a single element.
+                        let code_points: Vec<String> =
+                            s.value.chars().map(|c| c.to_string()).collect();
+                        let before = format!("Array.from(\"{}\")", s.value);
+                        let after = format!(
+                            "[{}]",
+                            code_points
+                                .iter()
+                                .map(|p| format!("\"{}\"", p))
+                                .collect::<Vec<_>>()
+                                .join(",")
+                        );
+                        let array_cv = st.fork_cv(&parent, &before, &after);
+                        let elements: Vec<Option<Expression>> = code_points
+                            .into_iter()
+                            .map(|p| {
+                                let elem_after = format!("\"{}\"", p);
+                                let elem_cv = st.fork_cv(&array_cv, &before, &elem_after);
+                                Some(stamp_literal_cv(FoldedLiteral::String(p), elem_cv))
+                            })
+                            .collect();
+                        return Expression::ArrayExpression(ArrayExpression {
+                            cv: array_cv,
+                            elements,
+                        });
+                    }
+                }
                 // ---- Object.keys / values / entries ({}) → [] ----
                 //
                 // The static `Object.keys`/`values`/`entries` (ECMAScript
@@ -8142,6 +8194,103 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "a.isArray([]) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- Array.from (static, string) -----------------
+
+    /// Build `Array.from(<arg>)` (single argument).
+    fn array_from_call(arg: Expression) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Array"), "from")),
+            arguments: vec![arg],
+        })
+    }
+
+    /// Extract the element string values of a folded `ArrayExpression`.
+    fn array_string_elements(expr: &Expression) -> Vec<String> {
+        match expr {
+            Expression::ArrayExpression(a) => a
+                .elements
+                .iter()
+                .map(|e| match e {
+                    Some(Expression::StringLiteral(s)) => s.value.clone(),
+                    other => panic!("expected string element; got {:?}", other),
+                })
+                .collect(),
+            other => panic!("expected array literal; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_array_from_string_to_code_point_strings() {
+        // `Array.from("abc")` → `["a", "b", "c"]` — one element per code point.
+        let c = array_from_call(string("abc", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Array.from(\"abc\") should fold");
+        assert_eq!(array_string_elements(extract_expr(&out)), vec!["a", "b", "c"]);
+    }
+
+    #[test]
+    fn fold_array_from_empty_string_to_empty_array() {
+        // `Array.from("")` → `[]`.
+        let c = array_from_call(string("", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Array.from(\"\") should fold to []");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => assert!(a.elements.is_empty(), "→ []"),
+            other => panic!("expected []; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_array_from_astral_char_is_one_element() {
+        // `Array.from("a💩b")` → `["a", "💩", "b"]` — the astral code point is a
+        // SINGLE element (NOT split into its two UTF-16 surrogate halves), which
+        // is exactly how the string iterator / spread behaves.
+        let c = array_from_call(string("a💩b", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Array.from(\"a💩b\") should fold");
+        let els = array_string_elements(extract_expr(&out));
+        assert_eq!(els.len(), 3, "three elements (astral char not split)");
+        assert_eq!(els, vec!["a", "💩", "b"]);
+        // The middle element is the full astral scalar (one Unicode char).
+        assert_eq!(els[1].chars().count(), 1, "the astral element is one code point");
+    }
+
+    #[test]
+    fn array_from_with_map_function_does_not_fold() {
+        // A second `mapFn` argument changes every element — decline.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Array"), "from")),
+            arguments: vec![string("abc", None), ident("fn")],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Array.from(\"abc\", fn) must not fold (mapFn)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn array_from_non_string_argument_does_not_fold() {
+        // An identifier / non-string-literal argument's iteration is unknown.
+        let c = array_from_call(ident("x"));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Array.from(x) must not fold (unknown iterable)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn array_from_on_non_array_receiver_does_not_fold() {
+        // Only the bare global `Array` folds; `a.from("x")` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("a"), "from")),
+            arguments: vec![string("x", None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "a.from(\"x\") must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
