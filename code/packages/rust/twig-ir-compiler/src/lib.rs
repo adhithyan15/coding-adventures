@@ -1333,6 +1333,38 @@ mod tests {
         );
     }
 
+    #[test]
+    fn captured_top_level_string_actual_does_not_infer_unannotated_param() {
+        let src = "(define s \"HI\") (define (capture) s) (define (id x) x) (id s)";
+        let m = compile_source(src, "test_e4_captured_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "id").unwrap();
+        assert_eq!(
+            f.params,
+            vec![("x".to_string(), "any".to_string())],
+            "captured top-level string values must stay on the dynamic global path"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
+    #[test]
+    fn forward_referenced_top_level_string_actual_does_not_infer_unannotated_param() {
+        let src = "s (define s \"HI\") (define (id x) x) (id s)";
+        let m = compile_source(src, "test_e4_forward_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "id").unwrap();
+        assert_eq!(
+            f.params,
+            vec![("x".to_string(), "any".to_string())],
+            "forward-referenced top-level string values must stay on the dynamic global path"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
     /// Parsing non-static refinement annotations does not change the existing
     /// param type-hint strings; those refinements live in the parallel
     /// `param_refinements` field.  E4's `str` annotations are the deliberate

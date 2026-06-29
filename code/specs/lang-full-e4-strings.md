@@ -9,11 +9,12 @@ including `PRINT A$ + B$` over two scalar string slots. ALGOL AL4 literal output
 snapshots, and literal-backed string equality/ordering predicates run on all
 seven backends. Twig literal, immutable top-level, lexical-local, direct
 top-level-function, annotated string-parameter, and direct-call-inferred
-unannotated string-parameter string-op proofs run on all seven backends,
+unannotated string-parameter string-op proofs, including named top-level string
+actuals, run on all seven backends,
 including `str_concat` and `str_slice` feeding `str_index`, lexical ordering
 predicates, a function-wrapped `string-length` direct call, `string-length` over
 a bare `str` parameter annotation, and `string-length` over an unannotated
-parameter with conservative direct-call evidence. Captured/dynamic strings,
+parameter with conservative literal or named direct-call evidence. Captured/dynamic strings,
 arrays/input/unobserved or conflicting parameters, and fuller backend
 byte-string representations remain.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
@@ -211,12 +212,15 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   (string-length s)) (strlen "HELLO")` also returns `5` without dynamic string
   builtins. Conservative `main`-level direct-call evidence can now type
   otherwise-unannotated top-level string parameters, so `(define (strlen s)
-  (string-length s)) (strlen "HELLO")` follows the same E4 path without
-  synthesizing refinement annotations. The dynamic-`any`, captured, reassigned,
-  unobserved/conflicting, and closure-derived Twig string parameter paths still
-  need broader E6/dynamic representation work; the *typed* string slice here is
-  the statically-typed subset that clears the code-gen validators, mirroring how
-  E5/E6 carved a typed slice out of Twig.
+  (string-length s)) (strlen "HELLO")` and `(define s "HELLO") (define (strlen
+  x) (string-length x)) (strlen s)` follow the same E4 path without
+  synthesizing refinement annotations. Named evidence is limited to
+  non-escaping top-level string values that can stay in `main` as typed
+  registers. The dynamic-`any`, captured, reassigned, unobserved/conflicting,
+  and closure-derived Twig string parameter paths still need broader
+  E6/dynamic representation work; the *typed* string slice here is the
+  statically-typed subset that clears the code-gen validators, mirroring how E5/E6
+  carved a typed slice out of Twig.
 
 The frontends emit `str` values and the shared E4 string ops; no backend learns anything
 language-specific.
@@ -258,8 +262,8 @@ and propagate its `i64` return through the caller's `call`. `(define (strlen
 `str` parameter annotation can feed the same typed E4 path and that callers
 materialise known string arguments through E4 ops. The matrix also covers the
 unannotated direct-call evidence case: `(define (strlen s) (string-length s))
-(strlen "HELLO")` returns `5` without adding refinement annotations. It also
-covers the
+(strlen "HELLO")` and `(define s "HELLO") (define (strlen x) (string-length x))
+(strlen s)` both return `5` without adding refinement annotations. It also covers the
 **bounds-trap** case: `(string-ref "ABC"
 3)` must fail closed on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
 Dartmouth BASIC proves source-language string variables, reassignment, scalar
@@ -374,9 +378,11 @@ merge before the next:
    (string-length s)) (strlen "HELLO")` returns `5` through a typed `str`
    parameter, and `(define (strlen s) (string-length s)) (strlen "HELLO")`
    returns `5` through conservative direct-call evidence for an unannotated
-   parameter, on native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured,
-   reassigned, unobserved/conflicting parameter, and closure-derived strings
-   still wait for the broader dynamic representation.
+   parameter, and `(define s "HELLO") (define (strlen x) (string-length x))
+   (strlen s)` returns `5` through named top-level string evidence, on
+   native-AOT + VM + JIT + LLVM + WASM + JVM + CLR. Captured, reassigned,
+   unobserved/conflicting parameter, and closure-derived strings still wait for
+   the broader dynamic representation.
 4. **E4-managed-backends** — richer WASM/JVM/CLR byte-string ops once their
    representations own UTF-8 byte semantics. (May be one PR per backend if they
    diverge.)
@@ -389,7 +395,8 @@ merge before the next:
    local `str_len` computing a `str_index` operand, `str_slice` feeding
    `str_index`, `str_cmp` driving lexical predicates, direct top-level
    function-call return typing, annotated string-parameter typing, and
-   direct-call-inferred unannotated parameter typing for E4 string ops, plus the
+   direct-call-inferred unannotated parameter typing for E4 string ops from
+   literal and named top-level actuals, plus the
    `str_index`
    out-of-bounds **trap** proof now run across every backend.
 7. **Follow-ups beyond v1** captured/reassigned dynamic strings,
