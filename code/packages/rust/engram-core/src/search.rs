@@ -1494,7 +1494,7 @@ fn text_matches(
             let excluded = metadata
                 .excluded_field_ids_by_note_type_id
                 .get(note_type.id.as_str());
-            return note_type.fields.iter().any(|field| {
+            let matches_field = note_type.fields.iter().any(|field| {
                 if excluded.is_some_and(|fields| fields.contains(&field.id)) {
                     return false;
                 }
@@ -1505,10 +1505,12 @@ fn text_matches(
                     .map_or("", |value| value.value.as_str());
                 text_filter_matches(filter, value)
             });
+            return matches_field || preserved_anki_sort_field_matches(filter, note, metadata);
         }
         note.fields
             .iter()
             .any(|field| text_filter_matches(filter, &field.value))
+            || preserved_anki_sort_field_matches(filter, note, metadata)
     } else {
         text_filter_matches(filter, &card.front) || text_filter_matches(filter, &card.back)
     }
@@ -1557,17 +1559,16 @@ fn field_value_matches(pattern: &FieldValuePattern, candidate: &str) -> bool {
         FieldValuePattern::Any => true,
         FieldValuePattern::NonEmpty => !candidate.trim().is_empty(),
         FieldValuePattern::Exact(expected) => {
-            let candidate_lower = candidate.to_lowercase();
-            candidate_lower == expected.as_str()
-                || rendered_search_text_matches(candidate, |rendered| {
-                    rendered.to_lowercase() == expected.as_str()
-                })
+            let candidate = candidate.to_lowercase();
+            candidate == expected.as_str()
+                || decoded_html_entity_pattern(expected)
+                    .is_some_and(|decoded| candidate == decoded.to_lowercase())
         }
         FieldValuePattern::Wildcard(expected) => {
-            let candidate_lower = candidate.to_lowercase();
-            search_pattern_matches(expected, &candidate_lower)
-                || rendered_search_text_matches(candidate, |rendered| {
-                    search_pattern_matches(expected, &rendered.to_lowercase())
+            let candidate = candidate.to_lowercase();
+            search_pattern_matches(expected, &candidate)
+                || decoded_html_entity_pattern(expected).is_some_and(|decoded| {
+                    search_pattern_matches(&decoded.to_lowercase(), &candidate)
                 })
         }
         FieldValuePattern::Text(filter) => text_filter_matches(filter, candidate),
@@ -1575,41 +1576,70 @@ fn field_value_matches(pattern: &FieldValuePattern, candidate: &str) -> bool {
 }
 
 fn text_filter_matches(filter: &TextFilter, candidate: &str) -> bool {
-    if text_filter_matches_candidate(filter, candidate) {
-        return true;
-    }
-
-    if filter.mode == TextMatchMode::Regex {
-        return false;
-    }
-
-    rendered_search_text_matches(candidate, |rendered| {
-        text_filter_matches_candidate(filter, rendered)
-    })
-}
-
-fn text_filter_matches_candidate(filter: &TextFilter, candidate: &str) -> bool {
     match filter.mode {
-        TextMatchMode::Contains => contains_search_pattern(
-            &filter.pattern.to_lowercase(),
-            &candidate.to_lowercase(),
-            WildcardScope::Text,
-        ),
-        TextMatchMode::WholeWord | TextMatchMode::Regex => filter
+        TextMatchMode::Contains => {
+            contains_search_pattern(
+                &filter.pattern.to_lowercase(),
+                &candidate.to_lowercase(),
+                WildcardScope::Text,
+            ) || decoded_html_entity_pattern(&filter.pattern).is_some_and(|decoded| {
+                contains_search_pattern(
+                    &decoded.to_lowercase(),
+                    &candidate.to_lowercase(),
+                    WildcardScope::Text,
+                )
+            })
+        }
+        TextMatchMode::WholeWord => {
+            filter
+                .regex
+                .as_ref()
+                .is_some_and(|regex| regex.is_match(candidate))
+                || decoded_html_entity_pattern(&filter.pattern)
+                    .is_some_and(|decoded| whole_word_pattern_matches(&decoded, candidate))
+        }
+        TextMatchMode::Regex => filter
             .regex
             .as_ref()
             .is_some_and(|regex| regex.is_match(candidate)),
-        TextMatchMode::NoCombining => contains_search_pattern(
-            &normalize_no_combining(&filter.pattern),
-            &normalize_no_combining(candidate),
-            WildcardScope::Text,
-        ),
-        TextMatchMode::StripCloze => contains_search_pattern(
-            &filter.pattern.to_lowercase(),
-            &strip_cloze_markup(candidate).to_lowercase(),
-            WildcardScope::Text,
-        ),
+        TextMatchMode::NoCombining => {
+            contains_search_pattern(
+                &normalize_no_combining(&filter.pattern),
+                &normalize_no_combining(candidate),
+                WildcardScope::Text,
+            ) || decoded_html_entity_pattern(&filter.pattern).is_some_and(|decoded| {
+                contains_search_pattern(
+                    &normalize_no_combining(&decoded),
+                    &normalize_no_combining(candidate),
+                    WildcardScope::Text,
+                )
+            })
+        }
+        TextMatchMode::StripCloze => {
+            contains_search_pattern(
+                &filter.pattern.to_lowercase(),
+                &strip_cloze_markup(candidate).to_lowercase(),
+                WildcardScope::Text,
+            ) || decoded_html_entity_pattern(&filter.pattern).is_some_and(|decoded| {
+                contains_search_pattern(
+                    &decoded.to_lowercase(),
+                    &strip_cloze_markup(candidate).to_lowercase(),
+                    WildcardScope::Text,
+                )
+            })
+        }
     }
+}
+
+fn whole_word_pattern_matches(pattern: &str, candidate: &str) -> bool {
+    let source = format!(
+        "(?u)(?:^|[^\\p{{Alphabetic}}\\p{{Mark}}\\p{{Nd}}_]){}(?:$|[^\\p{{Alphabetic}}\\p{{Mark}}\\p{{Nd}}_])",
+        search_pattern_regex_source(pattern, WildcardScope::Word)
+    );
+    RegexBuilder::new(&source)
+        .case_insensitive(true)
+        .build()
+        .is_ok_and(|regex| regex.is_match(candidate))
 }
 
 fn contains_search_pattern(pattern: &str, candidate: &str, scope: WildcardScope) -> bool {
@@ -2097,6 +2127,23 @@ fn duplicate_search_text(value: &str) -> String {
     rendered_search_text(value).chars().nfc().collect()
 }
 
+fn preserved_anki_sort_field_matches(
+    filter: &TextFilter,
+    note: &Note,
+    metadata: &SearchMetadata<'_>,
+) -> bool {
+    preserved_anki_sort_field(note, metadata)
+        .is_some_and(|sort_field| text_filter_matches(filter, sort_field))
+}
+
+fn preserved_anki_sort_field<'a>(note: &Note, metadata: &SearchMetadata<'a>) -> Option<&'a str> {
+    metadata
+        .note_sources_by_id
+        .get(note.id.as_str())?
+        .iter()
+        .find_map(|source| source.data.get("sortField").map(String::as_str))
+}
+
 fn rendered_search_text(value: &str) -> Cow<'_, str> {
     if !value.contains('<') && !value.contains('&') {
         return Cow::Borrowed(value);
@@ -2114,9 +2161,12 @@ fn rendered_search_text(value: &str) -> Cow<'_, str> {
     Cow::Owned(decode_search_html_entities(&without_tags))
 }
 
-fn rendered_search_text_matches(value: &str, matches: impl FnOnce(&str) -> bool) -> bool {
-    let rendered = rendered_search_text(value);
-    rendered.as_ref() != value && matches(&rendered)
+fn decoded_html_entity_pattern(pattern: &str) -> Option<String> {
+    if !pattern.contains('&') {
+        return None;
+    }
+    let decoded = decode_search_html_entities(pattern);
+    (decoded != pattern).then_some(decoded)
 }
 
 fn decode_search_html_entities(value: &str) -> String {
@@ -3081,7 +3131,7 @@ mod tests {
     }
 
     #[test]
-    fn anki_browser_text_search_uses_rendered_html_for_non_regex_modes() {
+    fn anki_browser_text_search_uses_raw_html_and_preserved_sort_field() {
         let note_type = NoteType {
             id: "basic".to_string(),
             name: "Basic".to_string(),
@@ -3131,16 +3181,28 @@ mod tests {
             note_types: vec![note_type],
             notes: vec![
                 note("entity-note", "Tamil &amp; Sanskrit"),
+                note("literal-amp-note", "&text"),
                 note("split-note", "proto-<b>dravidian</b> root"),
                 note("media-note", "<img src=\"amma.mp3\">"),
                 note("cloze-note", "{{c1::<b>hidden</b>}} clue"),
             ],
             cards: vec![
                 card_for_note("entity-note"),
+                card_for_note("literal-amp-note"),
                 card_for_note("split-note"),
                 card_for_note("media-note"),
                 card_for_note("cloze-note"),
             ],
+            external_sources: vec![ExternalSourceRecord {
+                target: ExternalSourceTarget::Note,
+                target_id: "split-note".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("split-note".to_string()),
+                data: BTreeMap::from([(
+                    "sortField".to_string(),
+                    "proto-dravidian root".to_string(),
+                )]),
+            }],
             ..AppState::default()
         };
         let ids_for = |query: &str| {
@@ -3151,18 +3213,30 @@ mod tests {
                 .collect::<Vec<_>>()
         };
 
+        assert!(ids_for(r#""Tamil & Sanskrit""#).is_empty());
         assert_eq!(
-            ids_for(r#""Tamil & Sanskrit""#),
+            ids_for(r#""Tamil &amp; Sanskrit""#),
             vec!["entity-note::forward"]
         );
-        assert_eq!(ids_for("proto-dravidian"), vec!["split-note::forward"]);
+        assert_eq!(ids_for("&amp;text"), vec!["literal-amp-note::forward"]);
+        assert_eq!(
+            ids_for(r#"front:"&amp;text""#),
+            vec!["literal-amp-note::forward"]
+        );
+        assert_eq!(
+            ids_for("proto-dravidian"),
+            vec!["split-note::forward"],
+            "preserved Anki sfld should allow formatted sort-field text to match"
+        );
         assert_eq!(ids_for("w:dravidian"), vec!["split-note::forward"]);
         assert_eq!(ids_for("amma.mp3"), vec!["media-note::forward"]);
         assert_eq!(ids_for("sc:hidden"), vec!["cloze-note::forward"]);
+        assert!(ids_for(r#"front:"Tamil & Sanskrit""#).is_empty());
         assert_eq!(
-            ids_for(r#"front:"Tamil & Sanskrit""#),
+            ids_for(r#"front:"Tamil &amp; Sanskrit""#),
             vec!["entity-note::forward"]
         );
+        assert!(ids_for(r#"front:"proto-dravidian root""#).is_empty());
         assert_eq!(ids_for("front:*dravidian*"), vec!["split-note::forward"]);
         assert_eq!(ids_for("front:re:&amp;"), vec!["entity-note::forward"]);
         assert_eq!(ids_for("re:<b>dravidian</b>"), vec!["split-note::forward"]);
