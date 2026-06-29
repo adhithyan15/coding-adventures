@@ -1,15 +1,21 @@
 //! Integration test for the `tests/diff/simple-fold-object-keys/` fixture.
 //!
 //! End-to-end oracle for static `Object.keys`/`values`/`entries` folding in
-//! `closure-pass-constant-fold`: a call whose single argument is an EMPTY object
-//! literal `{}` collapses to the empty array literal `[]` V8 would produce
-//! (ECMAScript §20.1.2.16/.22/.5). A non-empty object and an array are left
-//! intact.
+//! `closure-pass-constant-fold` (ECMAScript §20.1.2.16/.22/.5):
+//!
+//!   * a call whose single argument is an EMPTY object literal `{}` collapses to
+//!     the empty array literal `[]` for all three methods; and
+//!   * `Object.keys` of a NON-EMPTY static object literal collapses to the array
+//!     of its own string keys: `Object.keys({a:1,b:2})` → `["a","b"]`.
+//!
+//! Declined and left intact: `Object.values` of a non-empty object (no non-empty
+//! values fold yet), `Object.keys` of an integer-index-keyed object (indices
+//! enumerate first, reordering the result), and `Object.keys` of an array.
 //!
 //! At SIMPLE the fixture optimizes to:
 //!
 //! ```text
-//! var a=[];var b=[];var c=[];var d=Object.keys({a:1});var e=Object.keys([]);report(a,b,c,d,e);
+//! var a=[];var b=[];var c=[];var d=["a","b"];var e=Object.values({a:1});var f=Object.keys({1:"x"});var g=Object.keys([]);report(a,b,c,d,e,f,g);
 //! ```
 
 use std::process::Command;
@@ -50,33 +56,44 @@ fn simple_fold_object_keys_fixture_matches_expected_stdout() {
     );
 }
 
-/// `Object.keys/values/entries({})` each collapse to `[]`, while the non-empty
-/// object and the array argument survive untouched.
+/// The empty-object `[]` folds AND the non-empty `Object.keys` key-array fold
+/// fire; the three declined calls survive untouched.
 #[test]
-fn simple_fold_object_keys_folds_empty_object_to_empty_array() {
+fn simple_fold_object_keys_folds_empty_and_nonempty() {
     let out = Command::new(BINARY)
         .args(read_flags())
         .output()
         .expect("run closurec");
     let actual = String::from_utf8_lossy(&out.stdout);
 
+    // Empty-object folds → [] for all three methods.
     assert!(actual.contains("a=[]"), "Object.keys({{}}) → []; got:\n{actual}");
     assert!(actual.contains("b=[]"), "Object.values({{}}) → []; got:\n{actual}");
     assert!(actual.contains("c=[]"), "Object.entries({{}}) → []; got:\n{actual}");
-    // The non-empty object and the array are NOT folded — the calls must remain.
+    // Non-empty Object.keys → array of its string keys.
     assert!(
-        actual.contains("d=Object.keys({a:1})"),
-        "Object.keys({{a:1}}) must NOT fold (property side effects); got:\n{actual}"
+        actual.contains(r#"d=["a","b"]"#),
+        "Object.keys({{a:1,b:2}}) → [\"a\",\"b\"]; got:\n{actual}"
+    );
+    // The three declines survive: non-empty values, integer-index keys, array.
+    assert!(
+        actual.contains("e=Object.values({a:1})"),
+        "Object.values({{a:1}}) must NOT fold (no non-empty values fold); got:\n{actual}"
     );
     assert!(
-        actual.contains("e=Object.keys([])"),
+        actual.contains(r#"f=Object.keys({1:"x"})"#),
+        "Object.keys({{1:\"x\"}}) must NOT fold (integer-index reorders); got:\n{actual}"
+    );
+    assert!(
+        actual.contains("g=Object.keys([])"),
         "Object.keys([]) must NOT fold (array declined); got:\n{actual}"
     );
 }
 
 /// Regression guard: the output must be the SIMPLE typed pipeline, not the
-/// `WHITESPACE_ONLY` fallback (which would leave every call intact). Exactly two
-/// calls — the declined non-empty object and the array — may remain.
+/// `WHITESPACE_ONLY` fallback (which would leave every call intact). Exactly
+/// three calls — the non-empty-values, integer-index, and array declines — may
+/// remain.
 #[test]
 fn simple_fold_object_keys_did_not_fall_back_to_whitespace_only() {
     let out = Command::new(BINARY)
@@ -87,9 +104,9 @@ fn simple_fold_object_keys_did_not_fall_back_to_whitespace_only() {
 
     assert_eq!(
         actual.matches("Object.").count(),
-        2,
-        "exactly two Object. calls (the non-empty-object + array declines) should \
-         remain — proving the typed SIMPLE optimizer ran, not the whitespace \
+        3,
+        "exactly three Object. calls (the values + integer-index + array declines) \
+         should remain — proving the typed SIMPLE optimizer ran, not the whitespace \
          fallback; got:\n{actual}",
     );
 }

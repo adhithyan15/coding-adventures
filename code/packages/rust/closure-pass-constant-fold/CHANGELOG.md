@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.75.0] - 2026-06-29
+
+### Added — fold static `Object.keys({k: v, …})` → array of key string literals
+
+`Object.keys` (ECMAScript §20.1.2.16) now folds a fully-static, NON-empty
+object literal to an array of its own-enumerable string keys:
+
+| call                        | result       |
+|-----------------------------|--------------|
+| `Object.keys({a: 1, b: 2})` | `["a", "b"]` |
+| `Object.keys({x: "hi"})`    | `["x"]`      |
+| `Object.keys({a: 1, a: 3})` | `["a"]`      |
+
+(The empty-object case `Object.keys({})` → `[]` was already handled; the new
+`fold_object_keys_names` helper drives the non-empty case, mirroring
+`fold_object_entries_pairs`.)
+
+The soundness conditions are IDENTICAL to `Object.entries`, deliberately NOT
+weaker even though the value is dropped: evaluating the source object literal
+still runs each value expression, so `Object.keys({a: foo()})` and
+`Object.keys({a: x})` (undeclared `x`) must be left untouched. Every property
+must therefore be a plain data property with a side-effect-free primitive
+literal value (string / number / boolean / null) and a non-`__proto__`,
+non-array-index key; getters/setters/methods, computed keys, and any canonical
+integer-index key (which would reorder the result) decline the whole fold.
+Duplicate keys collapse to a single first-position entry. Only the bare global
+`Object.keys(...)` callee folds — `o.keys(...)` is left alone.
+
 ## [0.74.0] - 2026-06-27
 
 ### Added — fold static `Math.max(…)` / `Math.min(…)` on numeric literals → numeric
