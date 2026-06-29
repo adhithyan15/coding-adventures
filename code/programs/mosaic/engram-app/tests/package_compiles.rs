@@ -294,6 +294,7 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
         (Backend::Qt, "qt/EngramApp.qml"),
         (Backend::Xaml, "xaml/EngramApp.xaml"),
         (Backend::Flutter, "flutter/EngramApp.dart"),
+        (Backend::Compose, "compose/EngramApp.kt"),
     ];
 
     for (backend, expected_artifact) in backends {
@@ -312,6 +313,9 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
         );
     }
 
+    let html = read_artifact(tmp.path(), "html/EngramApp.html");
+    assert_contains(&html, "data-on-click=\"onImportAnki\"");
+    assert_contains(&html, "data-on-commit=\"onBrowserSearch\"");
     assert_dependency_styles_reach_all_backends(tmp.path());
 }
 
@@ -359,6 +363,19 @@ fn app_package_emits_native_project_shells() {
             ],
         ),
         (
+            Backend::Compose,
+            "compose",
+            vec![
+                "EngramApp.kt",
+                "index.kt",
+                "settings.gradle.kts",
+                "build.gradle.kts",
+                "src/main/kotlin/Main.kt",
+                "src/main/kotlin/EngramApp.kt",
+                "README.md",
+            ],
+        ),
+        (
             Backend::Xaml,
             "xaml",
             vec![
@@ -401,6 +418,7 @@ fn native_project_shells_expose_engram_host_contract() {
         Backend::React,
         Backend::Electron,
         Backend::Flutter,
+        Backend::Compose,
         Backend::Qt,
         Backend::SwiftUI,
         Backend::Xaml,
@@ -429,12 +447,12 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&react_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&react_app, "deckOptionsIntervalModifierValue: 0,");
     assert_contains(&react_app, "deckOptionsBuryNewSiblingsValue: false,");
+    assert_contains(&react_app, "deckOptionsBuryReviewSiblingsValue: false,");
+    assert_contains(&react_app, "historyLabel: \"Sample HistoryLabel\",");
     assert_contains(
         &react_app,
-        "deckOptionsBuryReviewSiblingsValue: false,",
+        "historyTotalValue: \"Sample HistoryTotalValue\",",
     );
-    assert_contains(&react_app, "historyLabel: \"Sample HistoryLabel\",");
-    assert_contains(&react_app, "historyTotalValue: \"Sample HistoryTotalValue\",");
     assert_contains(
         &react_app,
         "historyAccuracyValue: \"Sample HistoryAccuracyValue\",",
@@ -493,7 +511,10 @@ fn native_project_shells_expose_engram_host_contract() {
         &electron_app,
         "historyWindowLabel: \"Sample HistoryWindowLabel\",",
     );
-    assert_contains(&electron_app, "historyAgainValue: \"Sample HistoryAgainValue\",");
+    assert_contains(
+        &electron_app,
+        "historyAgainValue: \"Sample HistoryAgainValue\",",
+    );
     assert_contains(
         &electron_app,
         "collectionImportLabel: \"Sample CollectionImportLabel\",",
@@ -541,9 +562,20 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&electron_main, "MOSAIC_ELECTRON_DEV_SERVER_URL");
     assert_contains(&electron_main, "EngramApp");
     assert_contains(&electron_main, "import { app, BrowserWindow, ipcMain }");
+    assert_contains(&electron_main, "import { existsSync } from \"node:fs\"");
+    assert_contains(&electron_main, "pathToFileURL");
+    assert_contains(&electron_main, "MOSAIC_ELECTRON_HOST_MODULE");
+    assert_contains(&electron_main, "async function loadMosaicHost()");
+    assert_contains(&electron_main, "let mosaicHost: MosaicHost = {}");
     assert_contains(&electron_main, "ipcMain.handle(");
     assert_contains(&electron_main, "mosaic:get-props");
     assert_contains(&electron_main, "mosaic:handle-event");
+    assert_contains(&electron_main, "mosaicHost.getProps?.(request)");
+    assert_contains(&electron_main, "mosaicHost.handleEvent?.(request)");
+    assert!(
+        !electron_main.contains("=> undefined"),
+        "electron main shell should delegate IPC to a host module when one is installed"
+    );
     let electron_preload = fs::read_to_string(
         tmp.path()
             .join("electron")
@@ -576,10 +608,7 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&flutter_app, "deckOptionsNewCardsValue: 0.0,");
     assert_contains(&flutter_app, "deckOptionsHardMultiplierValue: 0.0,");
-    assert_contains(
-        &flutter_app,
-        "deckOptionsBuryNewSiblingsValue: false,",
-    );
+    assert_contains(&flutter_app, "deckOptionsBuryNewSiblingsValue: false,");
     assert_contains(&flutter_app, "historyLabel: \"Sample HistoryLabel\",");
     assert_contains(
         &flutter_app,
@@ -602,8 +631,112 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&flutter_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
     assert_contains(
         &flutter_app,
-        "dispatch: (event) => debugPrint(\"event: $event\")",
+        "dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\")",
     );
+
+    let compose_app =
+        fs::read_to_string(tmp.path().join("compose").join("EngramApp.kt")).expect("EngramApp.kt");
+    assert_contains(&compose_app, "sealed class EngramAppEvent {");
+    assert_contains(&compose_app, "abstract val mosaicName: String");
+    assert_contains(&compose_app, "val mosaicEnvelope: Map<String, Any?>");
+    assert_contains(&compose_app, "data object ImportAnki : EngramAppEvent()");
+    assert_contains(
+        &compose_app,
+        "override val mosaicName: String = \"onImportAnki\"",
+    );
+    assert_contains(
+        &compose_app,
+        "data class DeckOptionsNewCardsChange(val value: Double)",
+    );
+    assert_contains(
+        &compose_app,
+        "override val mosaicPayload: Map<String, Any?> get() = mapOf(\"value\" to value)",
+    );
+    assert_contains(
+        &compose_app,
+        "data class DeckOptionsBuryNewSiblingsChange(val checked: Boolean)",
+    );
+    assert_contains(
+        &compose_app,
+        "override val mosaicPayload: Map<String, Any?> get() = mapOf(\"checked\" to checked)",
+    );
+    assert_contains(&compose_app, "@Composable");
+    assert_contains(&compose_app, "fun EngramApp(");
+    assert_contains(&compose_app, "appTitle: String,");
+    assert_contains(&compose_app, "deckOptionsSettingsLabel: String,");
+    assert_contains(&compose_app, "deckOptionsLearningStepsValue: String,");
+    assert_contains(&compose_app, "deckOptionsNewCardsValue: Double,");
+    assert_contains(&compose_app, "deckOptionsEasyBonusValue: Double,");
+    assert_contains(&compose_app, "deckOptionsBuryNewSiblingsValue: Boolean,");
+    assert_contains(&compose_app, "historyLabel: String,");
+    assert_contains(&compose_app, "collectionLabel: String,");
+    assert_contains(&compose_app, "browserQuery: String,");
+    assert_contains(&compose_app, "browserResults: List<String>,");
+    assert_contains(&compose_app, "browserResultCardIds: List<String>,");
+    assert_contains(&compose_app, "browserSelectedCardId: String,");
+    assert_contains(&compose_app, "answerVisible: Boolean,");
+    assert_contains(&compose_app, "actionUndoLabel: String,");
+    assert_contains(&compose_app, "actionMarkLabel: String,");
+    assert_contains(&compose_app, "dispatch: (EngramAppEvent) -> Unit,");
+    let compose_main = fs::read_to_string(
+        tmp.path()
+            .join("compose")
+            .join("src")
+            .join("main")
+            .join("kotlin")
+            .join("Main.kt"),
+    )
+    .expect("compose/src/main/kotlin/Main.kt");
+    assert_contains(&compose_main, "fun main() = application");
+    assert_contains(
+        &compose_main,
+        "Window(onCloseRequest = ::exitApplication, title = \"EngramApp\")",
+    );
+    assert_contains(&compose_main, "EngramApp(");
+    assert_contains(&compose_main, "appTitle = \"Sample AppTitle\",");
+    assert_contains(
+        &compose_main,
+        "deckOptionsSettingsLabel = \"Sample DeckOptionsSettingsLabel\",",
+    );
+    assert_contains(
+        &compose_main,
+        "deckOptionsLearningStepsValue = \"Sample DeckOptionsLearningStepsValue\",",
+    );
+    assert_contains(&compose_main, "deckOptionsNewCardsValue = 0.0,");
+    assert_contains(&compose_main, "deckOptionsEasyBonusValue = 0.0,");
+    assert_contains(&compose_main, "deckOptionsBuryNewSiblingsValue = false,");
+    assert_contains(&compose_main, "historyLabel = \"Sample HistoryLabel\",");
+    assert_contains(
+        &compose_main,
+        "collectionLabel = \"Sample CollectionLabel\",",
+    );
+    assert_contains(&compose_main, "browserQuery = \"Sample BrowserQuery\",");
+    assert_contains(&compose_main, "browserResults = emptyList(),");
+    assert_contains(&compose_main, "browserResultCardIds = emptyList(),");
+    assert_contains(
+        &compose_main,
+        "browserSelectedCardId = \"Sample BrowserSelectedCardId\",",
+    );
+    assert_contains(&compose_main, "answerVisible = false,");
+    assert_contains(
+        &compose_main,
+        "actionUndoLabel = \"Sample ActionUndoLabel\",",
+    );
+    assert_contains(
+        &compose_main,
+        "actionMarkLabel = \"Sample ActionMarkLabel\",",
+    );
+    assert_contains(
+        &compose_main,
+        "dispatch = { event -> println(\"event: ${event.mosaicEnvelope}\") }",
+    );
+    let compose_gradle = fs::read_to_string(tmp.path().join("compose").join("build.gradle.kts"))
+        .expect("compose/build.gradle.kts");
+    assert_contains(
+        &compose_gradle,
+        "id(\"org.jetbrains.compose\") version \"1.11.1\"",
+    );
+    assert_contains(&compose_gradle, "mainClass = \"MainKt\"");
 
     let qml =
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");
@@ -640,17 +773,28 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal suspendCard()");
     assert_contains(&qml, "signal toggleMark()");
     assert_contains(&qml, "signal importAnki()");
+    assert_contains(&qml, "signal mosaicEvent(var event)");
+    assert_contains(
+        &qml,
+        "onImportAnki: mosaicEvent({ \"event\": \"onImportAnki\" })",
+    );
     assert_contains(&qml, "signal exportAnki()");
     assert_contains(&qml, "signal addNote()");
     assert_contains(&qml, "signal addNoteType()");
     assert_contains(&qml, "signal deleteNote()");
     assert_contains(&qml, "signal deleteNoteType()");
     assert_contains(&qml, "signal deckOptionsLearningStepsChange(string value)");
-    assert_contains(&qml, "signal deckOptionsRelearningStepsChange(string value)");
+    assert_contains(
+        &qml,
+        "signal deckOptionsRelearningStepsChange(string value)",
+    );
     assert_contains(&qml, "signal deckOptionsNewCardsChange(real value)");
     assert_contains(&qml, "signal deckOptionsMaximumIntervalChange(real value)");
     assert_contains(&qml, "signal deckOptionsEasyBonusChange(real value)");
-    assert_contains(&qml, "signal deckOptionsBuryNewSiblingsChange(bool checked)");
+    assert_contains(
+        &qml,
+        "signal deckOptionsBuryNewSiblingsChange(bool checked)",
+    );
     assert_contains(
         &qml,
         "signal deckOptionsBuryInterdayLearningSiblingsChange(bool checked)",
@@ -687,6 +831,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case deleteNoteType");
     assert_contains(&swift, "case browserSearch");
     assert_contains(&swift, "case browserSelectResult");
+    assert_contains(&swift, "var mosaicName: String");
+    assert_contains(&swift, "var mosaicEnvelope: [String: Any]");
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
     assert_contains(&swift, "let deckOptionsSettingsLabel: String");
@@ -733,10 +879,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift_app, "deckOptionsEasyBonusValue: 0,");
     assert_contains(&swift_app, "deckOptionsBuryNewSiblingsValue: false,");
     assert_contains(&swift_app, "historyLabel: \"Sample HistoryLabel\",");
-    assert_contains(
-        &swift_app,
-        "historyLastValue: \"Sample HistoryLastValue\",",
-    );
+    assert_contains(&swift_app, "historyLastValue: \"Sample HistoryLastValue\",");
     assert_contains(&swift_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &swift_app,
@@ -753,6 +896,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
     assert_contains(&swift_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
     assert_contains(&swift_app, "dispatch: { event in");
+    assert_contains(&swift_app, "event.mosaicEnvelope");
     let swift_package = fs::read_to_string(tmp.path().join("swiftui").join("Package.swift"))
         .expect("Package.swift");
     assert_contains(&swift_package, "platforms: [.macOS(.v13), .iOS(.v16)]");
@@ -855,110 +999,119 @@ fn native_project_shells_expose_engram_host_contract() {
 
     let xaml_events = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.Event.cs"))
         .expect("EngramApp.Event.cs");
+    assert_contains(&xaml_events, "public abstract string MosaicName { get; }");
     assert_contains(
         &xaml_events,
-        "public sealed record Reveal() : EngramAppEvent;",
+        "public System.Collections.Generic.IReadOnlyDictionary<string, object?> MosaicEnvelope",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record Again() : EngramAppEvent;",
+        "public sealed record Reveal() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record Hard() : EngramAppEvent;",
+        "public sealed record Again() : EngramAppEvent",
+    );
+    assert_contains(&xaml_events, "public sealed record Hard() : EngramAppEvent");
+    assert_contains(&xaml_events, "public sealed record Good() : EngramAppEvent");
+    assert_contains(&xaml_events, "public sealed record Easy() : EngramAppEvent");
+    assert_contains(&xaml_events, "public sealed record Undo() : EngramAppEvent");
+    assert_contains(
+        &xaml_events,
+        "public sealed record BuryCard() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record Good() : EngramAppEvent;",
+        "public sealed record BurySiblings() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record Easy() : EngramAppEvent;",
+        "public sealed record SuspendCard() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record Undo() : EngramAppEvent;",
+        "public sealed record ToggleMark() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record BuryCard() : EngramAppEvent;",
+        "public sealed record DeckOptionsLearningStepsChange(string Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record BurySiblings() : EngramAppEvent;",
+        "public sealed record DeckOptionsRelearningStepsChange(string Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record SuspendCard() : EngramAppEvent;",
+        "public sealed record DeckOptionsNewCardsChange(double Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record ToggleMark() : EngramAppEvent;",
+        "public sealed record DeckOptionsMaximumIntervalChange(double Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsLearningStepsChange(string Value) : EngramAppEvent;",
+        "public sealed record DeckOptionsEasyBonusChange(double Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsRelearningStepsChange(string Value) : EngramAppEvent;",
+        "public sealed record DeckOptionsBuryNewSiblingsChange(bool Checked) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsNewCardsChange(double Value) : EngramAppEvent;",
+        "public sealed record DeckOptionsBuryReviewSiblingsChange(bool Checked) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsMaximumIntervalChange(double Value) : EngramAppEvent;",
+        "public sealed record DeckOptionsBuryInterdayLearningSiblingsChange(bool Checked) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsEasyBonusChange(double Value) : EngramAppEvent;",
+        "public sealed record ImportAnki() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsBuryNewSiblingsChange(bool Checked) : EngramAppEvent;",
+        "public sealed record ExportAnki() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsBuryReviewSiblingsChange(bool Checked) : EngramAppEvent;",
+        "public sealed record AddNote() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsBuryInterdayLearningSiblingsChange(bool Checked) : EngramAppEvent;",
+        "public sealed record AddNoteType() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record ImportAnki() : EngramAppEvent;",
+        "public sealed record DeleteNote() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record ExportAnki() : EngramAppEvent;",
+        "public sealed record DeleteNoteType() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record AddNote() : EngramAppEvent;",
+        "public sealed record BrowserSearch() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record AddNoteType() : EngramAppEvent;",
+        "public sealed record BrowserSelectResult(double Index) : EngramAppEvent",
+    );
+    let xaml_main_window = fs::read_to_string(tmp.path().join("xaml").join("MainWindow.xaml.cs"))
+        .expect("MainWindow.xaml.cs");
+    assert_contains(&xaml_main_window, "TryApplyMosaicHostProps");
+    assert_contains(
+        &xaml_main_window,
+        "FindMosaicHostMethod(\"ApplyProps\", typeof(EngramApp))",
     );
     assert_contains(
-        &xaml_events,
-        "public sealed record DeleteNote() : EngramAppEvent;",
+        &xaml_main_window,
+        "FindMosaicHostMethod(\"HandleEvent\", typeof(EngramApp), typeof(EngramAppEvent))",
     );
     assert_contains(
-        &xaml_events,
-        "public sealed record DeleteNoteType() : EngramAppEvent;",
+        &xaml_main_window,
+        "System.Type.GetType(\"Mosaic.Generated.MosaicHost\")",
     );
-    assert_contains(
-        &xaml_events,
-        "public sealed record BrowserSearch() : EngramAppEvent;",
-    );
-    assert_contains(
-        &xaml_events,
-        "public sealed record BrowserSelectResult(double Index) : EngramAppEvent;",
-    );
+    assert_contains(&xaml_main_window, "Status: sample props loaded");
 
     let capi_header = fs::read_to_string(
         package_root()
@@ -1085,4 +1238,29 @@ fn source_tree_has_expected_shape() {
             path.display()
         );
     }
+
+    for relative in [
+        "host/web/engram-host.ts",
+        "host/web/engram-mosaic-host-wasm.d.ts",
+        "host/electron/host.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let path = package_root().join(relative);
+        assert!(
+            path.exists(),
+            "expected host template missing: {}",
+            path.display()
+        );
+    }
+
+    let xaml_host = fs::read_to_string(package_root().join("host/xaml/MosaicHost.cs"))
+        .expect("xaml host template");
+    assert_contains(&xaml_host, "eg_engram_app_props");
+    assert_contains(&xaml_host, "eg_handle_engram_app_event");
+    assert_contains(&xaml_host, "SlotNameToPropertyName");
+
+    let build_script =
+        fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
+    assert_contains(&build_script, "Install-EngramXamlHost");
+    assert_contains(&build_script, "engram_capi.dll");
 }

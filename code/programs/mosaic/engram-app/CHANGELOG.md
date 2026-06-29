@@ -19,6 +19,13 @@
   fallback props, so Engram events can be routed to shared Rust-backed hosts.
 - Updated generated Electron preload/main shells to expose those host adapter
   calls over context-isolated IPC channels instead of a placeholder host object.
+- Added the Engram WASM Mosaic host bridge so generated React/Electron shells
+  can consume shared Rust facade props/events with generated camelCase prop
+  names.
+- Updated `scripts/build-all.ps1` to build the Engram WASM host and install the
+  React/Electron host adapter assets into generated app shells automatically.
+- Added an Engram XAML `MosaicHost` bridge that calls `engram-capi` for shared
+  Rust facade props/events, and installs it into generated WinUI project shells.
 - Added the reusable `mosaic-pkg-collection-actions` dependency and mounted its
   `CollectionActions` component so generated host shells expose shared
   collection counts, Anki import/export intents, and note/note-type workflow
@@ -39,17 +46,20 @@
   `ReviewActions` component so Mosaic/native review screens expose undo, bury,
   suspend, and mark events through the shared Engram event bridge.
 - Added a multi-backend artifact-builder smoke test proving `EngramApp` emits
-  through HTML, React, SwiftUI, Qt, XAML, and Flutter while consuming
+  through HTML, React, SwiftUI, Qt, XAML, Flutter, and Compose while consuming
   `mosaic-pkg-card-browser`, `mosaic-pkg-collection-actions`,
   `mosaic-pkg-deck-options`, `mosaic-pkg-deck-stats`,
   `mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
   `mosaic-pkg-session-progress`.
 - Added `scripts/build-all.ps1` to emit HTML, WebComponent, React, Electron,
-  SwiftUI, Qt, XAML, and Flutter host shells from the same Engram Mosaic app
-  package into `target/mosaic-engram-app/`.
+  SwiftUI, Qt, XAML, Flutter, and Compose artifacts from the same Engram
+  Mosaic app package into `target/mosaic-engram-app/`.
 - Asserted that the generated React, SwiftPM, and Flutter shells mount
   `EngramApp` with sample slot values and dispatch callbacks instead of
   non-compiling empty initializers.
+- Added a pinned Gradle Compose Desktop project shell for generated Compose
+  artifacts and asserted it mounts `EngramApp` with sample slot values and
+  Mosaic event-envelope logging.
 - Asserted that nested package styles from `DeckStatsPanel`, `SessionProgress`,
   `ReviewActions`, `ReviewCard`, and `RatingControls` reach the generated
   Engram HTML artifact.

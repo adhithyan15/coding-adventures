@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  BERKELEY_SPICE_GRAMMAR_NAME,
+  BERKELEY_SPICE_GRAMMAR_VERSION,
   analyzeDeckControls,
   type CompatibilityDeck,
   compatibilityCorpus,
   formatCompatibilityCorpusTable,
   formatReleaseReadinessReport,
+  parseBerkeleySyntax,
   releaseReadinessGates,
   resolveDeckAnalyses,
   resolveDeckFourier,
@@ -18,6 +21,66 @@ import {
   selectDeckOutputProbeLines,
   selectDeckOutputProbes,
 } from "../src/index.js";
+
+describe("Berkeley SPICE syntax facade", () => {
+  it("preserves logical cards, tokens, spans, and analysis inventory", () => {
+    const syntax = parseBerkeleySyntax(`
+* RC low pass
+V1 in 0 DC 1
+R1 in out 1k ; inline comment
++ TC=1m
+.op
+.tran 1n 2n
+.end
+`);
+
+    expect(syntax.hasErrors()).toBe(false);
+    expect(syntax.grammar.name).toBe(BERKELEY_SPICE_GRAMMAR_NAME);
+    expect(syntax.grammar.version).toBe(BERKELEY_SPICE_GRAMMAR_VERSION);
+    expect(syntax.grammar.tokenGrammar).toContain("DOT_TRAN");
+    expect(syntax.grammar.parserGrammar).toContain("analysis_card");
+    expect(syntax.title).toBe("RC low pass");
+    expect(syntax.cards).toHaveLength(5);
+
+    const resistor = syntax.cards[1];
+    expect(resistor.kind).toBe("element");
+    expect(resistor.head).toBe("R1");
+    expect(resistor.text).toBe("R1 in out 1k TC=1m");
+    expect(resistor.physicalLines).toStrictEqual([4, 5]);
+    expect(resistor.span.startLine).toBe(4);
+    expect(resistor.span.endLine).toBe(5);
+    expect(resistor.tokens.map((token) => [token.kind, token.text])).toStrictEqual([
+      ["ATOM", "R1"],
+      ["ATOM", "in"],
+      ["ATOM", "out"],
+      ["NUMBER", "1k"],
+      ["ATOM", "TC"],
+      ["EQUALS", "="],
+      ["NUMBER", "1m"],
+    ]);
+
+    expect(syntax.analysisInventory().map((entry) => [entry.index, entry.analysis])).toStrictEqual([
+      [2, "op"],
+      [3, "tran"],
+    ]);
+  });
+
+  it("reports stable diagnostics", () => {
+    const syntax = parseBerkeleySyntax(`
++ orphan
+V1 in 0 PULSE(0 1
+.measure tran bad PARAM="unterminated
+`);
+
+    expect(syntax.diagnostics.map((diagnostic) => [diagnostic.code, diagnostic.severity]))
+      .toStrictEqual([
+        ["SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD", "error"],
+        ["SPICE_SYNTAX_UNCLOSED_PAREN", "error"],
+        ["SPICE_SYNTAX_UNCLOSED_QUOTE", "error"],
+      ]);
+    expect(syntax.hasErrors()).toBe(true);
+  });
+});
 
 describe("compatibility corpus", () => {
   it("ships a release-readiness corpus with stable deck ids", () => {

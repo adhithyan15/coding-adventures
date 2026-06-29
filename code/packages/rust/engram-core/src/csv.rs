@@ -1,4 +1,6 @@
-use crate::model::{Card, CardTemplate, FieldDef, Note, NoteFieldValue, NoteType};
+use crate::model::{
+    Card, CardTemplate, FieldDef, Note, NoteFieldValue, NoteType, TemplateRequirementMode,
+};
 use crate::template::{generate_cards_for_note, materialize_generated_card};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -753,6 +755,7 @@ fn basic_note_type(id: &str, name: &str, created_at: u64, reverse: bool) -> Note
         front_template: "{{Front}}".to_string(),
         back_template: "{{Back}}".to_string(),
         required_field_names: vec!["Front".to_string(), "Back".to_string()],
+        requirement_mode: TemplateRequirementMode::All,
         ordinal: 0,
     }];
 
@@ -763,6 +766,7 @@ fn basic_note_type(id: &str, name: &str, created_at: u64, reverse: bool) -> Note
             front_template: "{{Back}}".to_string(),
             back_template: "{{Front}}".to_string(),
             required_field_names: vec!["Front".to_string(), "Back".to_string()],
+            requirement_mode: TemplateRequirementMode::All,
             ordinal: 1,
         });
     }
@@ -814,6 +818,7 @@ fn cloze_note_type(id: &str, name: &str, created_at: u64) -> NoteType {
             front_template: "{{cloze:Text}}".to_string(),
             back_template: "{{cloze:Text}}<hr>{{Extra}}".to_string(),
             required_field_names: vec!["Text".to_string()],
+            requirement_mode: TemplateRequirementMode::All,
             ordinal: 0,
         }],
         created_at,

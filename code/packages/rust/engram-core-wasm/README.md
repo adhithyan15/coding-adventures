@@ -45,6 +45,8 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `parse_cards_csv(csv)`
 - `parse_basic_cards_csv(csv, deck_id, id_prefix, created_at)`
 - `parse_anki_basic_tsv(tsv, deck_id, id_prefix, created_at)`
+- `engram_app_props(deck_id, now)`
+- `handle_engram_app_event(event, deck_id, now)`
 
 All JSON uses camelCase field names to match the existing TypeScript Engram app
 and keep generated bindings idiomatic.
@@ -90,6 +92,12 @@ web, Electron, SwiftUI, XAML, Qt, and other native hosts copy attached media,
 replace imported payloads, or prune unreferenced media IDs without a separate
 platform reducer.
 
+`handle_engram_app_event` returns updated props for generated Mosaic shells.
+Events that require host APIs, including browser open/edit, Anki package
+import/export, and note/note-type dialogs, include a `hostIntent` payload so
+each platform can open files, save APKG bytes, or present native dialogs without
+forking the generated interface.
+
 `search_cards` exposes the shared browser-query engine. It returns
 `{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for
 parser diagnostics.
@@ -113,6 +121,12 @@ them through the same core reducer commands used by direct JSON dispatch. It
 also accepts browser events such as `onBrowserSearch` and targeted row actions
 such as `onBrowserToggleMarkSelected|card-id` or
 `{"event":"onBrowserToggleSuspendSelected","cardId":"card-id"}`.
+Generated `onBrowserQueryChange` events store the active browser query in the
+session and reset selection to the first row. `onBrowserSelectResult` accepts an
+`index` or `selectedIndex` payload, updates the shared selection, and all later
+open/edit/mark/suspend browser actions use that selected row when no explicit
+card ID is provided. This keeps HTML, Electron, SwiftUI, XAML, Qt, and other
+Mosaic hosts on the same browser-selection contract.
 Deck option controls use the generated event shape, for example
 `{"type":"deckOptionsNewCardsChange","value":12}` for numeric fields or
 `{"type":"deckOptionsLearningStepsChange","value":"1, 10"}` for step-list

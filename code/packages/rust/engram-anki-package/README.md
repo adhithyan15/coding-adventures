@@ -23,16 +23,40 @@ the same parser for raw SQLite collection bytes.
 `read_v11_collection_as_engram_state` and `v11_collection_to_engram_state`
 map that parsed representation into `engram-core::AppState` while preserving
 Anki IDs as deterministic Engram IDs. Cloze note types render
-`{{cloze:Field}}` templates into Engram card fronts/backs with the same
-`[...]` / `[hint]` question behavior used by the core cloze generator.
+`{{cloze:Field}}` and filtered cloze templates into Engram card fronts/backs
+with the same `[...]` / `[hint]`, section, and `FrontSide` behavior used by the
+core cloze generator. Imported card rendering also fills Anki's special
+template fields for tags, note type, deck, subdeck, card template, and card
+flag/card ID metadata, and model-level `req` rows import/export as Engram's
+shared template requirement mode.
 
 `read_collection_bytes` returns the detected collection member as decoded raw
 SQLite bytes for inspection workflows. `read_v11_collection_bytes` accepts
 legacy `collection.anki2` / `collection.anki21` members and modern
 `collection.anki21b` package envelopes by honoring Anki's `meta` protobuf and
 zstd-decompressing the collection payload before parsing.
+Modern media manifest inspection exposes each protobuf entry's SHA-1 digest as
+lowercase hex and preserves `legacyZipFilename` when Anki includes it, so native
+hosts can verify imported payloads without re-parsing the protobuf map.
 
 The export path preserves numeric Anki IDs when Engram state came from Anki,
 allocates deterministic numeric IDs for Engram-native rows, writes decks,
 models, notes, cards, progress, and review rows, and falls back to a synthetic
-Basic note type for standalone front/back cards.
+Basic note type for standalone front/back cards. Deck option import/export
+includes daily limits, learning/relearning steps, interval multipliers, lapse
+multiplier, maximum interval, and Anki-style sibling bury booleans. Anki's
+special `marked` note tag imports as Engram marked-card progress for each card
+generated from that note, and Engram marked cards export the canonical `marked`
+tag so the mark survives APKG round-trips. Imported suspended cards and Anki's
+user-buried / scheduler-buried queue distinction (`-2` vs `-3`) are preserved
+when exporting back to APKG, along with the imported collection creation day
+that anchors Anki's due-day offsets and the collection's modification/schema
+metadata. Imported deck and note-type modification metadata is also retained
+when Engram re-emits the stored Anki JSON, and imported note/card row
+modification timestamps, model sort-field selection, note checksums, and
+revlog answer-time metadata are preserved on export.
+
+`tests/fixtures/golden-v11-filtered-media.apkg` pins a deterministic V11 package
+with filtered-deck metadata and media references through `include_bytes!`. Run
+the ignored `regenerate_checked_in_golden_v11_apkg_fixture` test when the
+fixture shape intentionally changes.

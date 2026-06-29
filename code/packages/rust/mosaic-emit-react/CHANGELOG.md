@@ -12,6 +12,10 @@ deterministic sample values as fallback props. Previously the Vite shell only
 passed sample props and logged events locally, which made generated app shells
 hard to wire to shared business logic.
 
+The generated shell also listens for a `mosaic-host-ready` browser event and
+refreshes props when it fires, allowing async WASM or Electron host installers
+to attach `window.mosaicHost` after the React bundle has loaded.
+
 The React project shell now also emits `tsconfig.json`, matching its
 `npm run build` script (`tsc && vite build`) so generated shells are directly
 type-checkable.

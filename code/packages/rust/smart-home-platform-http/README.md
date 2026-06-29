@@ -104,23 +104,28 @@ scraping launch text.
 The browser routes serve an embedded local dashboard shell over the same
 `web-core::WebApp`. The shell loads bootstrap, readiness, state, scene,
 desired-state, room, device, bridge, state-history, command-result audit,
-runtime event-log, authorization audit, service catalog, API catalog, and audit
+runtime event-log, authorization audit, capability-grant inventory, service
+catalog, API catalog, and audit
 summary data from the native API routes and sends light on/off, light brightness,
 scene, and desired-state set/clear actions through the existing Home
 Assistant-compatible and native service endpoints, preserving runtime
 authorization. Entity, service, scene, device, bridge, history, event-log,
-command-result, and authorization rows/cards expose read-only detail buttons
-that fetch the matching native detail route and show formatted JSON plus the
-endpoint/status in a dedicated detail panel. Entity cards and state-gap rows
-also link to their current state, registry detail, desired-state target, state
-history, entity-scoped runtime events, and owning bridge command-result audit
-trail. The browser shell also exposes filters for
+command-result, authorization, and capability-grant rows/cards expose read-only
+detail buttons that fetch the matching native detail route and show formatted
+JSON plus the endpoint/status in a dedicated detail panel. Authorization rows
+also link to the active grants for their principal so denied/allowed decisions
+can be checked against the runtime policy boundary. Entity cards and state-gap
+rows also link to their current state, registry detail, desired-state target,
+state history, entity-scoped runtime events, and owning bridge command-result
+audit trail. The browser shell also exposes filters for
 room, entity domain/state/control status, runtime event kind, command-result
-status, and authorization outcome, with server-backed room scoping across
-inventory, state, history, event-log, and command-result panels plus local text
+status, authorization outcome, capability-grant status/scope/principal, with
+server-backed room scoping across inventory, state, history, event-log, and
+command-result panels plus server-backed capability-grant scoping and local text
 search across the rendered dashboard rows. Those filter selections are mirrored
 into URL query parameters and restored on page load or browser navigation, so
-local-controller room and audit views can be shared or reopened directly.
+local-controller room, audit, and grant-boundary views can be shared or reopened
+directly.
 
 ## Dependencies
 

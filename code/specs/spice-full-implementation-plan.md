@@ -33,17 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley syntax lowerer routing.
+1. Python and TypeScript Berkeley syntax facade parity.
    - Status: current PR completion candidate.
-   - Route the Rust `spice-netlist-parser` semantic lowerer through the
-     Berkeley syntax facade by default, so normalized logical cards, leading
-     `+` continuations, source spans, and stable syntax diagnostics drive the
-     existing simulator parser.
-   - Preserve the Mosaic app facade as the Rust runtime entrypoint while
-     removing the parser's duplicate physical-line pass.
-   - This slice is a Rust/Mosaic substrate step. Python and TypeScript parser
-     parity remain the next explicit contract item once the Rust syntax-driven
-     lowering path is reviewed.
+   - Mirror the Rust Berkeley logical-card syntax facade in Python and
+     TypeScript with embedded grammar metadata, normalized cards, leading `+`
+     continuation handling, source spans, token names, stable diagnostics, and
+     analysis inventory.
+   - Keep the slice focused on parser/app-substrate metadata for Mosaic and
+     editor surfaces; richer result/table/waveform app artifacts remain in the
+     next Mosaic facade expansion.
 
 ## Completed Slices
 
@@ -1424,11 +1422,22 @@ the Rust, Python, and TypeScript surfaces together.
      selected runnable analyses through the simulator parser for Mosaic-backed
      UI runtimes.
 
+134. Rust Berkeley syntax lowerer routing.
+   - Status: completed in PR 6907.
+   - Rust `spice-netlist-parser` semantic lowering now routes through the
+     Berkeley syntax facade by default, so normalized logical cards, leading
+     `+` continuations, source spans, and stable syntax diagnostics drive the
+     existing simulator parser.
+   - The parser no longer performs a duplicate physical-line pass before
+     semantic lowering, preserving the Mosaic app facade as the Rust runtime
+     entrypoint over one shared syntax substrate.
+
 ## Backlog
 
 1. Grammar-backed parser and app facade.
-   - Mirror the resulting public parser contract in Python and TypeScript, even
-     if that breaks current pre-release parser APIs.
+   - Keep Python and TypeScript parser contract parity aligned with the Rust
+     syntax facade as the grammar evolves, even if that breaks current
+     pre-release parser APIs.
    - Expand the Rust Mosaic app facade from analysis inventory and execution
      entrypoints to stable table, waveform, and result artifacts backed by the
      same public parser contract.

@@ -85,9 +85,14 @@ and leading `-` negates a term or group.
 
 `materialize_generated_card` turns a note-template `GeneratedCard` into a
 durable `Card` with note/template lineage. Cloze templates using
-`{{cloze:Field}}` generate one card per Anki-style `{{c1::text::hint}}`
-ordinal and preserve the cloze ordinal in lineage. `BuryCardSiblings` uses
-lineage to bury same-note sibling cards until a host-supplied boundary.
+`{{cloze:Field}}` or filtered forms such as `{{type:cloze:Field}}` generate one
+card per Anki-style `{{c1::text::hint}}` ordinal, render sections and
+`FrontSide`, expose Anki-style special fields such as `Tags`, `Type`, `Deck`,
+`Subdeck`, `Card`, `CardFlag`, and `CardID`, and preserve the cloze ordinal in
+lineage. Templates can require all listed fields or any one listed field,
+matching Anki model `req` rules for optional card generation.
+`BuryCardSiblings` uses lineage to bury same-note sibling cards until a
+host-supplied boundary.
 `RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` apply that
 behavior atomically during review and record undo snapshots, matching the shared
 behavior Anki-like review screens need.

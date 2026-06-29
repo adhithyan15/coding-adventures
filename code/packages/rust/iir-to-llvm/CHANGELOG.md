@@ -3,6 +3,17 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.26.0] — 2026-06-28 — `f64_sin/cos/ln/exp` LLVM intrinsics (LANG-FULL AL8-trig)
+
+Added `lower_f64_intrinsic` helper and four dispatch arms:
+- `f64_sin` → `@llvm.sin.f64`
+- `f64_cos` → `@llvm.cos.f64`
+- `f64_ln`  → `@llvm.log.f64` (LLVM uses `log` for natural log)
+- `f64_exp` → `@llvm.exp.f64`
+
+Each intrinsic is declared with a usage-gated `declare double @llvm.<op>.f64(double)` header
+emitted only when the op appears.  All four added to `SUPPORTED_OPS`.
+
 ## [0.25.0] — 2026-06-28 — `f64_sqrt` lowers to `@llvm.sqrt.f64` intrinsic (LANG-FULL AL8-sqrt)
 
 Added `lower_f64_sqrt` function emitting `%dest = call double @llvm.sqrt.f64(double %src)`.
