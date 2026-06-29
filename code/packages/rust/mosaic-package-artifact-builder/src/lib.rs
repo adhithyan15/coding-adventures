@@ -652,8 +652,9 @@ fn emit_project_shell(
                 // manifest-only index from step 5 is at the same
                 // path, so this overwrites it — by design per UI32
                 // §3.4: with --emit-project, the shell IS the index).
-                let flat: [(&str, &str); 2] = [
+                let flat: [(&str, &str); 3] = [
                     ("index.html", &proj.index_html),
+                    ("main.js", &proj.main_js),
                     ("README.md", &proj.readme),
                 ];
                 for (rel, body) in flat {
@@ -3351,7 +3352,7 @@ version = "1"
                     "README.md",
                 ],
             ),
-            (Backend::Html, vec!["index.html", "README.md"]),
+            (Backend::Html, vec!["index.html", "main.js", "README.md"]),
             (Backend::WebComponent, vec!["index.html", "README.md"]),
             (
                 Backend::Flutter,

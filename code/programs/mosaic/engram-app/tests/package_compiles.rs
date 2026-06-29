@@ -324,6 +324,11 @@ fn app_package_emits_native_project_shells() {
     let tmp = tempfile::tempdir().expect("temp dist root");
     let shells = [
         (
+            Backend::Html,
+            "html",
+            vec!["EngramApp.html", "index.html", "main.js", "README.md"],
+        ),
+        (
             Backend::Electron,
             "electron",
             vec![
@@ -415,6 +420,7 @@ fn app_package_emits_native_project_shells() {
 fn native_project_shells_expose_engram_host_contract() {
     let tmp = tempfile::tempdir().expect("temp dist root");
     for backend in [
+        Backend::Html,
         Backend::React,
         Backend::Electron,
         Backend::Flutter,
@@ -431,6 +437,28 @@ fn native_project_shells_expose_engram_host_contract() {
         })
         .unwrap_or_else(|e| panic!("{backend:?} should emit EngramApp project shell: {e}"));
     }
+
+    let html_index =
+        fs::read_to_string(tmp.path().join("html").join("index.html")).expect("html/index.html");
+    assert_contains(&html_index, "data-mosaic-html-root=\"EngramApp\"");
+    assert_contains(&html_index, "src=\"./main.js\"");
+    let html_main =
+        fs::read_to_string(tmp.path().join("html").join("main.js")).expect("html/main.js");
+    assert_contains(
+        &html_main,
+        "window.mosaicHost?.getProps?.({ component: componentName })",
+    );
+    assert_contains(
+        &html_main,
+        "window.mosaicHost.handleEvent({ component: componentName, event })",
+    );
+    assert_contains(&html_main, "const componentName = \"EngramApp\";");
+    assert_contains(&html_main, "\"browserResults\": []");
+    assert_contains(&html_main, "\"answerVisible\": false");
+    assert_contains(&html_main, "\"onBrowserSelectResult\"");
+    assert_contains(&html_main, "\"name\": \"index\"");
+    assert_contains(&html_main, "\"onDeckOptionsBuryNewSiblingsChange\"");
+    assert_contains(&html_main, "\"name\": \"checked\"");
 
     let react_app = fs::read_to_string(tmp.path().join("react").join("src").join("main.tsx"))
         .expect("react/src/main.tsx");
@@ -1324,6 +1352,7 @@ fn source_tree_has_expected_shape() {
 
     for relative in [
         "host/web/engram-host.ts",
+        "host/web/engram-host.mjs",
         "host/web/engram-mosaic-host-wasm.d.ts",
         "host/electron/host.js",
         "host/qt/MosaicHost.h",
@@ -1370,6 +1399,8 @@ fn source_tree_has_expected_shape() {
 
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
+    assert_contains(&build_script, "Install-EngramHtmlHost");
+    assert_contains(&build_script, "engram-host.mjs");
     assert_contains(&build_script, "Install-EngramXamlHost");
     assert_contains(&build_script, "Install-EngramQtHost");
     assert_contains(&build_script, "Install-EngramSwiftUIHost");

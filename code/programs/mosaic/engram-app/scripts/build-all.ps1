@@ -67,6 +67,7 @@ $engramWasmFile = Join-Path $engramWasmRoot "pkg\engram_engine.wasm"
 $engramWasmLoader = Join-Path $engramWasmRoot "js\engram-mosaic-host-wasm.mjs"
 $engramWasmTypes = Join-Path $hostRoot "web\engram-mosaic-host-wasm.d.ts"
 $engramWebHost = Join-Path $hostRoot "web\engram-host.ts"
+$engramHtmlHost = Join-Path $hostRoot "web\engram-host.mjs"
 $engramElectronHost = Join-Path $hostRoot "electron\host.js"
 $engramQtHostHeader = Join-Path $hostRoot "qt\MosaicHost.h"
 $engramQtHostSource = Join-Path $hostRoot "qt\MosaicHost.cpp"
@@ -118,6 +119,38 @@ function Install-EngramReactHost {
     Copy-Item -LiteralPath $engramWasmTypes -Destination (Join-Path $srcDir "engram-mosaic-host-wasm.d.ts") -Force
     Copy-Item -LiteralPath $engramWebHost -Destination (Join-Path $srcDir "engram-host.ts") -Force
     Add-EngramHostImport -MainPath (Join-Path $srcDir "main.tsx")
+}
+
+function Add-EngramHtmlHostScript {
+    param([Parameter(Mandatory = $true)][string]$IndexPath)
+
+    if (-not (Test-Path -LiteralPath $IndexPath)) {
+        return
+    }
+    $content = Get-Content -LiteralPath $IndexPath -Raw
+    $scriptLine = '  <script type="module" src="./engram-host.mjs"></script>'
+    if ($content.Contains($scriptLine)) {
+        return
+    }
+    $mainScriptLine = '  <script type="module" src="./main.js"></script>'
+    if ($content.Contains($mainScriptLine)) {
+        $content = $content.Replace($mainScriptLine, "$scriptLine`r`n$mainScriptLine")
+    } else {
+        $content = $content.Replace("</body>", "$scriptLine`r`n</body>")
+    }
+    Write-Utf8NoBom -Path $IndexPath -Content $content
+}
+
+function Install-EngramHtmlHost {
+    param([Parameter(Mandatory = $true)][string]$HtmlRoot)
+
+    if (-not (Test-Path -LiteralPath $HtmlRoot)) {
+        return
+    }
+    Copy-Item -LiteralPath $engramWasmFile -Destination (Join-Path $HtmlRoot "engram_engine.wasm") -Force
+    Copy-Item -LiteralPath $engramWasmLoader -Destination (Join-Path $HtmlRoot "engram-mosaic-host-wasm.mjs") -Force
+    Copy-Item -LiteralPath $engramHtmlHost -Destination (Join-Path $HtmlRoot "engram-host.mjs") -Force
+    Add-EngramHtmlHostScript -IndexPath (Join-Path $HtmlRoot "index.html")
 }
 
 function Install-EngramElectronHost {
@@ -283,6 +316,7 @@ foreach ($backend in $backends) {
     }
 }
 
+Install-EngramHtmlHost -HtmlRoot (Join-Path $outputRoot "html")
 Install-EngramReactHost -ReactRoot (Join-Path $outputRoot "react")
 Install-EngramElectronHost -ElectronRoot (Join-Path $outputRoot "electron")
 Install-EngramQtHost -QtRoot (Join-Path $outputRoot "qt")
