@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.74.0] - 2026-06-27
+
+### Added — fold static `Math.max(…)` / `Math.min(…)` on numeric literals → numeric
+
+`Math.max` / `Math.min` (ECMAScript §21.3.2.24 / .25) now fold to a numeric
+literal when there is at least one argument and EVERY argument is a numeric
+literal:
+
+| call                | result |
+|---------------------|--------|
+| `Math.max(1, 2, 3)` | `3`    |
+| `Math.min(1, 2, 3)` | `1`    |
+| `Math.max(-5, -1)`  | `-1`   |
+| `Math.min(-5, -1)`  | `-5`   |
+
+The reducers `js_math_max` / `js_math_min` model the spec's signed-zero rule
+exactly — `Math.max` prefers `+0` over `-0`, `Math.min` prefers `-0` over `+0`
+— rather than relying on Rust's `f64::max`/`min`. We DECLINE: any non-literal
+argument (`Infinity` and `NaN` are global identifiers, never numeric literals,
+and a runtime value is unknown / could change the result), the empty call
+`Math.max()` / `Math.min()` (which would need an infinite literal), and a
+non-global receiver (`m.max(...)`). Only `max` and `min` are modelled.
+
 ## [0.71.0] - 2026-06-27
 
 ### Added — fold static `Object.fromEntries([[k, v], …])` → object literal
