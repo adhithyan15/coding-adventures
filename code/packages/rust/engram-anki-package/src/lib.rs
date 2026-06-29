@@ -1638,10 +1638,9 @@ fn export_decks_json(export: &ExportModel) -> Value {
         deck_object.insert("id".to_string(), Value::Number(id.into()));
         deck_object.insert("name".to_string(), Value::String(deck.name.clone()));
         deck_object.insert("desc".to_string(), Value::String(deck.description.clone()));
-        deck_object.insert(
-            "mod".to_string(),
-            Value::Number(millis_to_anki_seconds(deck.created_at).into()),
-        );
+        deck_object
+            .entry("mod".to_string())
+            .or_insert_with(|| Value::Number(millis_to_anki_seconds(deck.created_at).into()));
         deck_object
             .entry("usn".to_string())
             .or_insert_with(|| Value::Number((-1_i64).into()));
@@ -1684,12 +1683,11 @@ fn export_note_types_json(export: &ExportModel) -> Value {
         model_object.insert("id".to_string(), Value::Number(id.into()));
         model_object.insert("name".to_string(), Value::String(note_type.name.clone()));
         model_object.insert("type".to_string(), Value::Number(note_type.kind.into()));
-        model_object.insert(
-            "mod".to_string(),
+        model_object.entry("mod".to_string()).or_insert_with(|| {
             Value::Number(
                 millis_to_anki_seconds(note_type.updated_at.max(note_type.created_at)).into(),
-            ),
-        );
+            )
+        });
         model_object
             .entry("usn".to_string())
             .or_insert_with(|| Value::Number((-1_i64).into()));
@@ -4256,6 +4254,7 @@ CREATE TABLE graves (
             "name": "Spanish::Latin",
             "desc": "Story deck",
             "conf": 7,
+            "mod": 1_700_004_444_i64,
             "dyn": 1,
             "extendNew": 25,
             "extendRev": 75,
@@ -4265,6 +4264,7 @@ CREATE TABLE graves (
             "id": 100,
             "name": "Basic",
             "type": 0,
+            "mod": 1_700_005_555_i64,
             "css": ".card { color: teal; }",
             "sortf": 1,
             "latexPre": "custom pre",
@@ -4326,12 +4326,14 @@ CREATE TABLE graves (
 
         let deck = exported.decks.iter().find(|deck| deck.id == 2).unwrap();
         assert_eq!(deck.raw["conf"], 7);
+        assert_eq!(deck.raw["mod"], 1_700_004_444_i64);
         assert_eq!(deck.raw["dyn"], 1);
         assert_eq!(deck.raw["collapsed"], true);
         assert_eq!(deck.name, "Spanish::Latin");
 
         let note_type = &exported.note_types[0];
         assert_eq!(note_type.css, ".card { color: teal; }");
+        assert_eq!(note_type.raw["mod"], 1_700_005_555_i64);
         assert_eq!(note_type.raw["sortf"], 1);
         assert_eq!(note_type.raw["latexPre"], "custom pre");
         assert_eq!(note_type.raw["flds"][0]["font"], "Noto Sans");
