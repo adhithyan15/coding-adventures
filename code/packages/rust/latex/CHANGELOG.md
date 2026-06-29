@@ -2,6 +2,29 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.11.0] — 2026-06-28
+
+### Changed — L6 closes its two honest neutral-AST gaps (± / ∓ and binomials)
+
+The L6 capstone (0.10.0) had to return a spanned `FrontendError` for `\pm`, `\mp`, and
+`\binom`, because the `math-frontend` neutral AST could not represent them. `math-frontend`
+0.2.0 added `BinOp::PlusMinus`/`MinusPlus` and `MathExpr::Binom`; this release wires the
+`latex` adapter to **emit** them, so every LaTeX math construct the L2/L3a grammar parses now
+lowers to a faithful neutral node — no faking, no honest-error islands.
+
+- **`\pm` → `BinOp::PlusMinus`, `\mp` → `BinOp::MinusPlus`** (the ± / ∓ pair operators).
+  `lower_binop` is now total (infallible) — the two error arms are gone.
+- **`\binom{n}{k}` → `MathExpr::Binom(n, k)`** (binomial coefficient, args in source order;
+  distinct from `Frac` — no division bar). Lowered via a new `Build::Binom` work-stack step,
+  so it stays inside the iterative (stack-safe) trampoline like every other node.
+- `capabilities()` stays `Capabilities::all()` — now **honest**, since the adapter genuinely
+  emits ± / ∓ and binomials (the shared conformance harness polices this).
+- Tests: the former `neutral_gaps_error_honestly` becomes `plusminus_minusplus_and_binom_lower`
+  (asserts the three now lower to the right shapes); the conformance corpus keeps `a \pm b`
+  and `\binom{n}{k}` (now exercising emission, not error). 136 tests pass; both the default
+  build and `--no-default-features` (zero-dep L0–L5) stay green; clippy `-D warnings` clean.
+- Crate 0.10.0 → 0.11.0. **LTX01 L6 now has no honest gaps.**
+
 ## [0.10.0] — 2026-06-27
 
 ### Added — LTX01 L6: `math-frontend` adapter (the ladder's capstone)
