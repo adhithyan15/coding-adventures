@@ -390,6 +390,17 @@ Exports:
 - `get_state`
 - `build_queue`
 - `get_deck_stats`
+- `engram_app_props`
+- `handle_engram_app_event`
+
+Status:
+
+- `code/packages/rust/engram-wasm` now owns the linear-memory ABI over
+  `engram-core-wasm`, with host-target tests for snapshot loading, dispatch,
+  app props, and generated app events.
+- `engram-wasm/js/engram-mosaic-host-wasm.mjs` adapts the WASM facade to the
+  generated Mosaic `window.mosaicHost` contract, including kebab-case Mosaic
+  slot names -> camelCase React/Electron prop names.
 
 ### 2.3 `engram-capi`
 

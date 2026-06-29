@@ -19,6 +19,9 @@
   fallback props, so Engram events can be routed to shared Rust-backed hosts.
 - Updated generated Electron preload/main shells to expose those host adapter
   calls over context-isolated IPC channels instead of a placeholder host object.
+- Added the Engram WASM Mosaic host bridge so generated React/Electron shells
+  can consume shared Rust facade props/events with generated camelCase prop
+  names.
 - Added the reusable `mosaic-pkg-collection-actions` dependency and mounted its
   `CollectionActions` component so generated host shells expose shared
   collection counts, Anki import/export intents, and note/note-type workflow

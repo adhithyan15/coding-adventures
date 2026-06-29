@@ -15,6 +15,10 @@ can intentionally override a named part while keeping default package styling.
 The builder also now honors themed style fallbacks such as
 `<Component>.dark.msl` when `<Component>.msl` is absent.
 
+Electron project shells now delegate `mosaic:get-props` and
+`mosaic:handle-event` IPC calls to an optional host module (`electron/host.ts`
+or `MOSAIC_ELECTRON_HOST_MODULE`) instead of hardcoding no-op responses.
+
 `BuildOptions::emit_project` now writes XAML project shells through
 `mosaic-emit-xaml` as well, producing `<Component>.csproj`, `App.xaml`,
 `MainWindow.xaml`, `app.manifest`, `build.ps1`, and README side files beside

@@ -1,0 +1,12 @@
+[package]
+name = "engram-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "extern \"C\" + linear-memory WASM ABI over the Engram JSON facade"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+engram-core-wasm = { path = "../engram-core-wasm" }

@@ -1,0 +1,58 @@
+# engram-wasm
+
+`engram-wasm` is the zero-dependency `extern "C"` and linear-memory ABI over
+`engram-core-wasm`. It follows the same repo convention as
+`spreadsheet-wasm`: no `wasm-bindgen`, no wasm-pack, and no browser APIs in
+Rust.
+
+The crate owns only the host boundary:
+
+```text
+Mosaic React/Electron host
+        |
+        v
+engram-wasm                 extern "C" + linear-memory ABI
+        |
+        v
+engram-core-wasm            JSON facade
+        |
+        v
+engram-core                 scheduling, cards, queues, snapshots
+```
+
+## Memory Protocol
+
+Strings cross the WASM boundary as `(ptr, len)` UTF-8 inputs and packed output
+buffers:
+
+- JS calls `alloc(len)`, writes UTF-8 bytes, passes `(ptr, len)`, then frees the
+  input buffer with `dealloc(ptr, len)`.
+- Rust string outputs are returned as `[len: u32 little-endian][utf8 bytes]`;
+  JS reads the payload and frees the whole buffer with `dealloc(ptr, 4 + len)`.
+
+## Exports
+
+Core session exports include `reset`, `snapshot`, `get_state`, `load_snapshot`,
+`dispatch`, `build_queue`, `get_deck_stats`, `session_progress`,
+`review_history`, `search_cards`, `engram_app_props`,
+`engram_browser_props`, and `handle_engram_app_event`.
+
+The JS loader in `js/engram-mosaic-host-wasm.mjs` adapts those JSON responses to
+the generated Mosaic React/Electron host contract by converting Mosaic
+kebab-case slot names such as `app-title` to generated prop names such as
+`appTitle`.
+
+## Building
+
+```bash
+cd code/packages/rust/engram-wasm
+bash build-wasm.sh
+node js/smoke.mjs
+```
+
+The Rust tests exercise the ABI on the host target, so CI can validate the
+marshalling protocol without requiring a WASM toolchain:
+
+```bash
+cargo test -p engram-wasm
+```

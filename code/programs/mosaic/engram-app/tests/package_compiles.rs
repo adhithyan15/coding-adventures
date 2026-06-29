@@ -429,12 +429,12 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&react_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&react_app, "deckOptionsIntervalModifierValue: 0,");
     assert_contains(&react_app, "deckOptionsBuryNewSiblingsValue: false,");
+    assert_contains(&react_app, "deckOptionsBuryReviewSiblingsValue: false,");
+    assert_contains(&react_app, "historyLabel: \"Sample HistoryLabel\",");
     assert_contains(
         &react_app,
-        "deckOptionsBuryReviewSiblingsValue: false,",
+        "historyTotalValue: \"Sample HistoryTotalValue\",",
     );
-    assert_contains(&react_app, "historyLabel: \"Sample HistoryLabel\",");
-    assert_contains(&react_app, "historyTotalValue: \"Sample HistoryTotalValue\",");
     assert_contains(
         &react_app,
         "historyAccuracyValue: \"Sample HistoryAccuracyValue\",",
@@ -493,7 +493,10 @@ fn native_project_shells_expose_engram_host_contract() {
         &electron_app,
         "historyWindowLabel: \"Sample HistoryWindowLabel\",",
     );
-    assert_contains(&electron_app, "historyAgainValue: \"Sample HistoryAgainValue\",");
+    assert_contains(
+        &electron_app,
+        "historyAgainValue: \"Sample HistoryAgainValue\",",
+    );
     assert_contains(
         &electron_app,
         "collectionImportLabel: \"Sample CollectionImportLabel\",",
@@ -541,9 +544,20 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&electron_main, "MOSAIC_ELECTRON_DEV_SERVER_URL");
     assert_contains(&electron_main, "EngramApp");
     assert_contains(&electron_main, "import { app, BrowserWindow, ipcMain }");
+    assert_contains(&electron_main, "import { existsSync } from \"node:fs\"");
+    assert_contains(&electron_main, "pathToFileURL");
+    assert_contains(&electron_main, "MOSAIC_ELECTRON_HOST_MODULE");
+    assert_contains(&electron_main, "async function loadMosaicHost()");
+    assert_contains(&electron_main, "let mosaicHost: MosaicHost = {}");
     assert_contains(&electron_main, "ipcMain.handle(");
     assert_contains(&electron_main, "mosaic:get-props");
     assert_contains(&electron_main, "mosaic:handle-event");
+    assert_contains(&electron_main, "mosaicHost.getProps?.(request)");
+    assert_contains(&electron_main, "mosaicHost.handleEvent?.(request)");
+    assert!(
+        !electron_main.contains("=> undefined"),
+        "electron main shell should delegate IPC to a host module when one is installed"
+    );
     let electron_preload = fs::read_to_string(
         tmp.path()
             .join("electron")
@@ -576,10 +590,7 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&flutter_app, "deckOptionsNewCardsValue: 0.0,");
     assert_contains(&flutter_app, "deckOptionsHardMultiplierValue: 0.0,");
-    assert_contains(
-        &flutter_app,
-        "deckOptionsBuryNewSiblingsValue: false,",
-    );
+    assert_contains(&flutter_app, "deckOptionsBuryNewSiblingsValue: false,");
     assert_contains(&flutter_app, "historyLabel: \"Sample HistoryLabel\",");
     assert_contains(
         &flutter_app,
@@ -646,11 +657,17 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal deleteNote()");
     assert_contains(&qml, "signal deleteNoteType()");
     assert_contains(&qml, "signal deckOptionsLearningStepsChange(string value)");
-    assert_contains(&qml, "signal deckOptionsRelearningStepsChange(string value)");
+    assert_contains(
+        &qml,
+        "signal deckOptionsRelearningStepsChange(string value)",
+    );
     assert_contains(&qml, "signal deckOptionsNewCardsChange(real value)");
     assert_contains(&qml, "signal deckOptionsMaximumIntervalChange(real value)");
     assert_contains(&qml, "signal deckOptionsEasyBonusChange(real value)");
-    assert_contains(&qml, "signal deckOptionsBuryNewSiblingsChange(bool checked)");
+    assert_contains(
+        &qml,
+        "signal deckOptionsBuryNewSiblingsChange(bool checked)",
+    );
     assert_contains(
         &qml,
         "signal deckOptionsBuryInterdayLearningSiblingsChange(bool checked)",
@@ -733,10 +750,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift_app, "deckOptionsEasyBonusValue: 0,");
     assert_contains(&swift_app, "deckOptionsBuryNewSiblingsValue: false,");
     assert_contains(&swift_app, "historyLabel: \"Sample HistoryLabel\",");
-    assert_contains(
-        &swift_app,
-        "historyLastValue: \"Sample HistoryLastValue\",",
-    );
+    assert_contains(&swift_app, "historyLastValue: \"Sample HistoryLastValue\",");
     assert_contains(&swift_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &swift_app,

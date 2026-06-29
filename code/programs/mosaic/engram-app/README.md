@@ -35,7 +35,9 @@ binds them to the shared Rust business logic core through host shells.
   `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with sample
   slot values as a fallback when no host is installed.
 - The generated Electron preload/main shell exposes those calls over
-  context-isolated IPC channels so native hosts can bind them to app state.
+  context-isolated IPC channels and can delegate them to an optional
+  `electron/host.ts` or `MOSAIC_ELECTRON_HOST_MODULE` host module. The
+  `engram-wasm` JS loader can serve that contract from the shared Rust facade.
 - The generated SwiftPM and Flutter shells mount `EngramApp` with sample slot
   values and dispatch callbacks, matching the generated interface shapes.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
@@ -74,3 +76,8 @@ cd code/programs/mosaic/engram-app
 
 The script writes HTML, WebComponent, React, Electron, SwiftUI, Qt, XAML, and
 Flutter outputs under `target/mosaic-engram-app/` by default.
+
+For a Rust-backed web or Electron host, build
+`code/packages/rust/engram-wasm` and install
+`js/engram-mosaic-host-wasm.mjs` as the generated shell's `window.mosaicHost`
+provider.
