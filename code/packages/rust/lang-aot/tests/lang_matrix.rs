@@ -1297,7 +1297,25 @@ const PROGRAMS: &[Prog] = &[
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real procedure square(x); value x; real x; square := x * x; \
-               integer result; result := entier(square(6.5)) end",
+               integer result; result := entier(square(6.5)) end",        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *`for … while`* (LANG-FULL AL11). ALGOL 60 report §4.6.4:
+    // a `for` element of the form `expr while cond` re-evaluates the
+    // expression first, then tests the condition; if false the whole `for`
+    // exits.  Here `i := i + 6 while i <= 36` advances `i` by 6 each
+    // iteration; the body captures the stepped value into `result`.
+    // Trace: i=6 (6<=36 → result=12), 12 (→18), 18 (→24), 24 (→30),
+    // 30 (→36), 36 (→42), 42 (42<=36 false, exit) → result=42.
+    // The `emit_for_while` IIR lowering emits a loop label, the expression
+    // code, a `jmp_if_false` to the exit, the body, and an unconditional
+    // `jmp` back.  All 7 backends lower this loop shape already (it's the
+    // same `jmp`/`jmp_if_*`/`label` skeleton as the `step-until` loop).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, result; i := 0; \
+               for i := i + 6 while i <= 36 do result := i + 6 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -1348,6 +1366,35 @@ const PROGRAMS: &[Prog] = &[
         src: "begin boolean a, b; integer result; a := true; b := false; \
                if a and (not b) then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *single-value `for` element* (LANG-FULL AL11). The ALGOL
+    // 60 for-list `for i := expr do body` with a single literal value
+    // executes the body exactly once with `i = expr`.  The `emit_for_value`
+    // IIR lowering emits a single `mov` + body block — no loop at all.
+    // `for i := 2 do result := 40 + i` → result = 42.  Proves the
+    // degenerate single-element list path on all 7 backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, result; for i := 2 do result := 40 + i end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *multi-element `for` list* (LANG-FULL AL11). The for-list
+    // `1 step 1 until 3, 10, i + 1 while i < 13` sequences three kinds of
+    // for-element in a single `for` head: (1) `step-until` (i=1,2,3),
+    // (2) a single literal value (i=10), (3) `while` (i=11,12).
+    // Sum = 1+2+3+10+11+12 = 39; `result := result + 3` brings it to 42.
+    // The multi-element lowering emits each element's control-flow block in
+    // sequence; on exit of one the next element's init code runs.  No backend
+    // needed a change — the loop skeleton already existed.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, result; i := 0; result := 0; \
+               for i := 1 step 1 until 3, 10, i + 1 while i < 13 do \
+               result := result + i; result := result + 3 end",        expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
@@ -1959,6 +2006,16 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT TAN(0)\n20 END\n",
         expect: Expect::Stdout("0"),
+    // Dartmouth BASIC — general `^` exponentiation via f64_pow IIR op (LANG-FULL BA-pow).
+    // 4 ^ 0.5 = pow(4.0, 0.5) = 2.0 exactly; printed as "2" by __basic_print_real
+    // (no decimal point when fractional part is zero).  Non-integer exponent exercises
+    // the new runtime pow path; the literal-integer fast path stays for whole-number
+    // exponents so this cell is the minimal proof of the general case.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 4 ^ 0.5\n20 END\n",
+        expect: Expect::Stdout("2"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
@@ -2292,6 +2349,12 @@ struct GetcharFunc {
     input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
 }
 
+/// `env.__pow(f64 base, f64 exp) -> f64` — libm `pow` for WASM modules that
+/// emit the `f64_pow` IIR op (BA-pow: BASIC general `^` exponentiation).
+/// Two f64 arguments in; one f64 result out.  Rust `f64::powf` matches libm
+/// IEEE-754 semantics on all tier-1 platforms.
+struct PowFunc;
+
 impl wasm_execution::HostFunction for GetcharFunc {
     fn func_type(&self) -> &wasm_types::FuncType {
         static FT: std::sync::LazyLock<wasm_types::FuncType> =
@@ -2415,6 +2478,33 @@ impl wasm_execution::HostFunction for ExpFunc {
     }
 }
 
+impl wasm_execution::HostFunction for PowFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64, wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let base = match args.first() {
+            Some(wasm_execution::WasmValue::F64(v)) => *v,
+            _ => return Err(wasm_execution::TrapError::new("pow: arg 0 not f64")),
+        };
+        let exp_ = match args.get(1) {
+            Some(wasm_execution::WasmValue::F64(v)) => *v,
+            _ => return Err(wasm_execution::TrapError::new("pow: arg 1 not f64")),
+        };
+        Ok(vec![wasm_execution::WasmValue::F64(base.powf(exp_))])
+    }
+}
+
 struct AtanFunc;
 impl wasm_execution::HostFunction for AtanFunc {
     fn func_type(&self) -> &wasm_types::FuncType {
@@ -2501,6 +2591,11 @@ impl wasm_execution::HostInterface for PrintHost {
             // AL8-arctan: env.__atan/tan are f64→f64 host imports.
             ("env", "__atan") => Some(Box::new(AtanFunc)),
             ("env", "__tan")  => Some(Box::new(TanFunc)),
+            ("env", "__sin") => Some(Box::new(SinFunc)),
+            ("env", "__cos") => Some(Box::new(CosFunc)),
+            ("env", "__ln")  => Some(Box::new(LnFunc)),
+            ("env", "__exp") => Some(Box::new(ExpFunc)),
+            ("env", "__pow") => Some(Box::new(PowFunc)),
             _ => None,
         }
     }

@@ -1423,29 +1423,34 @@ impl Compiler {
                 _ => return Err(CompileError::Malformed(
                     "power rhs is not a node".into())),
             };
-            let exponent = literal_integer_exponent(exponent_node)?
-                .ok_or_else(|| CompileError::Unsupported(
-                    "exponentiation (^) with non-literal exponent — needs runtime helper".into()))?;
+            // Fast path: literal small nonneg integer exponent → repeated f64 mul.
+            if let Some(exponent) = literal_integer_exponent(exponent_node)? {
+                let base = self.emit_expr(base_node)?;
+                let base = self.coerce_value(base, BasicScalarType::Real);
+                if exponent == 0 {
+                    let dest = self.fresh_temp();
+                    self.emit("const", Some(&dest), vec![Operand::Float(1.0)], "f64");
+                    return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
+                }
+                let base_slot = base.slot.clone();
+                let mut acc = base.slot;
+                for _ in 1..exponent {
+                    let dest = self.fresh_temp();
+                    self.emit("mul", Some(&dest),
+                        vec![Operand::Var(acc), Operand::Var(base_slot.clone())], "f64");
+                    acc = dest;
+                }
+                return Ok(ExprValue { slot: acc, ty: BasicScalarType::Real });
+            }
+            // General case: runtime pow(base, exp) via the f64_pow IIR op.
             let base = self.emit_expr(base_node)?;
             let base = self.coerce_value(base, BasicScalarType::Real);
-            if exponent == 0 {
-                let dest = self.fresh_temp();
-                self.emit("const", Some(&dest), vec![Operand::Float(1.0)], "f64");
-                return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
-            }
-            let base_slot = base.slot.clone();
-            let mut acc = base.slot;
-            for _ in 1..exponent {
-                let dest = self.fresh_temp();
-                self.emit("mul", Some(&dest),
-                    vec![Operand::Var(acc), Operand::Var(base_slot.clone())], "f64");
-                acc = dest;
-            }
-            return Ok(ExprValue { slot: acc, ty: BasicScalarType::Real });
-        }
-        if kids.iter().any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "^")) {
-            return Err(CompileError::Unsupported(
-                "exponentiation (^) shape — needs runtime helper".into()));
+            let exp_val = self.emit_expr(exponent_node)?;
+            let exp_val = self.coerce_value(exp_val, BasicScalarType::Real);
+            let dest = self.fresh_temp();
+            self.emit("f64_pow", Some(&dest),
+                vec![Operand::Var(base.slot), Operand::Var(exp_val.slot)], "f64");
+            return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
         }
         // Otherwise just unwrap the single Node child.
         for c in kids {
@@ -1945,9 +1950,8 @@ fn literal_integer_exponent(node: &GrammarASTNode) -> Result<Option<u32>, Compil
         || value.fract() != 0.0
         || value > MAX_LITERAL_EXPONENT as f64
     {
-        return Err(CompileError::Unsupported(format!(
-            "exponentiation (^) supports only nonnegative integer-valued \
-             literal exponents 0..={MAX_LITERAL_EXPONENT}; got `{raw}`")));
+        // Not a small nonnegative integer literal — caller falls through to f64_pow.
+        return Ok(None);
     }
     Ok(Some(value as u32))
 }
@@ -2604,13 +2608,16 @@ mod tests {
         assert!(calls_named(body, "__basic_print_real"));
     }
 
+    /// BA-^: a variable exponent falls through to the two-argument f64_pow IIR op,
+    /// which every backend lowers to libm pow().
     #[test]
-    fn variable_power_exponent_stays_unsupported() {
-        let err = compile("10 LET X = 2\n20 PRINT 6 ^ X\n30 END\n").unwrap_err();
-        match err {
-            CompileError::Unsupported(msg) => assert!(msg.contains("non-literal exponent")),
-            other => panic!("expected Unsupported(non-literal exponent), got {other:?}"),
-        }
+    fn variable_power_exponent_uses_f64_pow() {
+        let m = compile("10 LET X = 2\n20 PRINT 6 ^ X\n30 END\n").expect("variable exponent should compile via f64_pow");
+        let body = &m.functions[0].instructions;
+        assert!(
+            body.iter().any(|i| i.op == "f64_pow"),
+            "`6 ^ X` should lower to f64_pow IIR op: {body:?}"
+        );
     }
 
     /// BA2: a program with no value-printing `PRINT` carries no helper

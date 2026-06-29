@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.157.0"
+version = "0.159.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.157.0 (LANG-FULL AL10+BA-step): proves ALGOL boolean variables + BASIC FOR STEP on all 7 backends.  v0.156.0 proved AL9."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.159.0 (LANG-FULL AL11): ALGOL 60 for-while + single-value + for-list on all 7 backends.  v0.158.0 proved BA-pow."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }

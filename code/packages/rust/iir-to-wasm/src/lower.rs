@@ -840,6 +840,7 @@ fn emit_instr(
     exp_fn_idx: Option<u32>,
     atan_fn_idx: Option<u32>,
     tan_fn_idx: Option<u32>,
+    pow_fn_idx: Option<u32>,
 ) -> Result<(), IIRWasmError> {
     // Helper closures to resolve variable names.
     let get_reg = |var: &str| -> Result<u32, IIRWasmError> {
@@ -1555,6 +1556,26 @@ fn emit_instr(
             code.extend(encode_local_get(r));           // push f64 argument
             code.extend(encode_call(import_idx));       // call env.__sin/cos/ln/exp/atan/tan
             code.extend(encode_local_set(rd));          // store f64 result
+        }
+
+        // `f64_pow` — two-argument pow(base, exp) via `env.__pow` host import.
+        // There is no WASM native pow opcode; the host supplies libm semantics.
+        "f64_pow" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "f64_pow must have a dest".to_string(),
+            })?;
+            let idx = pow_fn_idx.ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "f64_pow: env.__pow import not registered (internal error)".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let rb = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?; // base
+            let re = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?; // exp
+            code.extend(encode_local_get(rb)); // f64 base
+            code.extend(encode_local_get(re)); // f64 exp
+            code.extend(encode_call(idx));     // call env.__pow
+            code.extend(encode_local_set(rd));
         }
 
         // ── move / copy ───────────────────────────────────────────────────────
@@ -2821,6 +2842,7 @@ fn lower_function(
     exp_fn_idx: Option<u32>,
     atan_fn_idx: Option<u32>,
     tan_fn_idx: Option<u32>,
+    pow_fn_idx: Option<u32>,
 ) -> Result<FunctionBody, IIRWasmError> {
     let param_count = fn_.params.len() as u32;
     let reg_map = build_register_map(fn_);
@@ -2934,6 +2956,7 @@ fn lower_function(
                     exp_fn_idx,
                     atan_fn_idx,
                     tan_fn_idx,
+                    pow_fn_idx,
                 )?;
             }
 
@@ -2999,6 +3022,7 @@ fn lower_function(
                 exp_fn_idx,
                 atan_fn_idx,
                 tan_fn_idx,
+                pow_fn_idx,
             )?;
         }
     }
@@ -3102,6 +3126,8 @@ struct ModuleFeatures {
     uses_f64_exp: bool,
     uses_f64_atan: bool,
     uses_f64_tan: bool,
+    /// True when any function emits `f64_pow` — triggers the `env.__pow` import.
+    uses_f64_pow: bool,
     /// True when the module reads or writes Brainfuck's tape memory.
     /// Triggers the addition of a single 1-page linear memory to the
     /// module's `Memory` section.
@@ -3132,6 +3158,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut uses_f64_atan = false;
     let mut uses_f64_tan  = false;
     let mut uses_memory = false;
+    let mut uses_f64_pow = false;
     let mut string_literals: ModuleStringLiterals = HashMap::new();
     let mut string_data: Vec<u8> = Vec::new();
     for fn_ in &module.functions {
@@ -3147,6 +3174,9 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                 }
                 "io_out" => {
                     uses_io_out = true;
+                }
+                "f64_pow" => {
+                    uses_f64_pow = true;
                 }
                 "const" => {
                     if let (Some(dest), Some(Operand::Int(value))) =
@@ -3343,6 +3373,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
         uses_f64_atan,
         uses_f64_tan,
         uses_memory,
+        uses_f64_pow,
         string_literals,
         string_data,
     }
@@ -3421,6 +3452,7 @@ pub fn lower_iir_to_wasm(
     let uses_f64_atan = features.uses_f64_atan;
     let uses_f64_tan  = features.uses_f64_tan;
     let uses_memory  = features.uses_memory;
+    let uses_f64_pow = features.uses_f64_pow;
     let string_literals = features.string_literals;
     let string_data = features.string_data;
 
@@ -3447,6 +3479,7 @@ pub fn lower_iir_to_wasm(
     //   7. env.__exp         (if uses_f64_exp)
     //   8. env.__atan        (if uses_f64_atan)
     //   9. env.__tan         (if uses_f64_tan)
+    //  10. env.__pow         (if uses_f64_pow)
     let mut next_import_idx: u32 = 0;
     let print_fn_idx: Option<u32> = if uses_io_out {
         let i = next_import_idx; next_import_idx += 1; Some(i)
@@ -3476,6 +3509,9 @@ pub fn lower_iir_to_wasm(
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let tan_fn_idx: Option<u32> = if uses_f64_tan {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let pow_fn_idx: Option<u32> = if uses_f64_pow {
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let fn_idx_base: u32 = next_import_idx;
@@ -3560,6 +3596,7 @@ pub fn lower_iir_to_wasm(
     //   7. env.__exp         (if uses_f64_exp)
     //   8. env.__atan        (if uses_f64_atan)
     //   9. env.__tan         (if uses_f64_tan)
+    //  10. env.__pow         (if uses_f64_pow)
     //
     // The function index that emit_instr uses is the one we assigned earlier
     // (print_fn_idx / putchar_fn_idx / getchar_fn_idx).  Here we just need
@@ -3680,6 +3717,20 @@ pub fn lower_iir_to_wasm(
             type_info: ImportTypeInfo::Function(type_idx),
         });
     }
+    if uses_f64_pow {
+        // env.__pow(f64 base, f64 exp) -> f64  — libm pow, no WASM native opcode.
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType {
+            params: vec![ValueType::F64, ValueType::F64],
+            results: vec![ValueType::F64],
+        });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__pow".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
 
     // Build WASM Global entries — one mutable i64 per named global,
     // initialised to 0.
@@ -3726,6 +3777,7 @@ pub fn lower_iir_to_wasm(
             print_fn_idx, print_str_fn_idx, putchar_fn_idx, getchar_fn_idx,
             sin_fn_idx, cos_fn_idx, ln_fn_idx, exp_fn_idx,
             atan_fn_idx, tan_fn_idx,
+            pow_fn_idx,
         )?;
         code.push(body);
     }

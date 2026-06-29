@@ -1,5 +1,13 @@
 # Changelog — iir-to-llvm
 
+## [0.26.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` LLVM lowering)
+
+Added `lower_f64_pow`: detects use of `f64_pow` during the scan pass
+(`used_f64_pow` flag), emits `declare double @pow(double, double)` once at the
+top of the module when needed (direct libm call — no `@llvm.pow.f64` intrinsic
+exists), and lowers each `f64_pow` instruction to a `call double @pow(...)`
+with two f64 operands.  Added `"f64_pow"` to `SUPPORTED_OPS`.
+
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 

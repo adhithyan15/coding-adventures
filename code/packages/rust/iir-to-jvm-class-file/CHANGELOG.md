@@ -1,5 +1,12 @@
 # Changelog — iir-to-jvm-class-file
 
+## [0.25.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` JVM lowering)
+
+Added `"f64_pow"` arm: loads base and exponent onto the JVM operand stack with
+`emit_typed_load`, emits `invokestatic java/lang/Math.pow:(DD)D`, and stores the
+result with `emit_typed_store`.  Two-double-argument call — matches the existing
+unary transcendental pattern but with a second source.
+
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 

@@ -1,5 +1,13 @@
 # Changelog — iir-to-wasm
 
+## [0.25.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` WASM lowering)
+
+Added `env.__pow(f64, f64) -> f64` host import (slot 4, after getchar) to
+`ModuleFeatures`/`collect_module_features` scan and the import section.
+`lower_function` and `emit_instr` both receive `pow_fn_idx: Option<u32>` so
+both the dispatch-loop path and the linear emission path can emit:
+`local.get base; local.get exp; call env.__pow; local.set dest`.
+
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 

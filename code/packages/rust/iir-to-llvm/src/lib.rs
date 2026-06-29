@@ -271,6 +271,8 @@ const SUPPORTED_OPS: &[&str] = &[
     "int_to_real", "real_to_int_trunc", "real_to_int_floor",
     // AL8 sqrt + transcendentals — IEEE-754 ops via LLVM intrinsics / libm.
     "f64_sqrt", "f64_sin", "f64_cos", "f64_ln", "f64_exp", "f64_atan", "f64_tan",
+    // BA-pow — two-argument pow(base, exp) via libm `@pow`.
+    "f64_pow",
     // LANG-FULL E4 — string literal foothold for the static LLVM column.
     // `str_const` materialises a length-prefixed private constant. `str_index`,
     // `str_concat`, `str_slice`, `str_len`, `str_eq`, and `str_cmp` read literal metadata,
@@ -719,6 +721,8 @@ pub fn lower_iir_to_llvm(
     let mut used_f64_exp  = false;
     let mut used_f64_atan = false;
     let mut used_f64_tan  = false;
+    // BA-pow: `f64_pow` lowers to `call double @pow(double, double)` — libm.
+    let mut used_f64_pow = false;
     // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
     // first-seen order, so each gets exactly one `declare i64 @__twig_lispy_*`.
     let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
@@ -746,6 +750,7 @@ pub fn lower_iir_to_llvm(
             if i.op == "f64_exp"  { used_f64_exp  = true; }
             if i.op == "f64_atan" { used_f64_atan = true; }
             if i.op == "f64_tan"  { used_f64_tan  = true; }
+            if i.op == "f64_pow"  { used_f64_pow  = true; }
             if i.op == "call_builtin" {
                 if let Some(Operand::Var(name)) = i.srcs.first() {
                     match name.as_str() {
@@ -795,6 +800,12 @@ pub fn lower_iir_to_llvm(
     // intrinsics; call libm directly.  libm is pre-linked on both platforms.
     if used_f64_atan { out.push_str("declare double @atan(double)\n"); }
     if used_f64_tan  { out.push_str("declare double @tan(double)\n"); }
+    if used_f64_pow {
+        out.push('\n');
+        // `@pow` is the C99 libm two-argument power function.  There is no
+        // LLVM intrinsic for pow; direct libm call is the canonical approach.
+        out.push_str("declare double @pow(double, double)\n");
+    }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
@@ -1584,6 +1595,8 @@ fn lower_instr(
         // AL8-arctan: direct libm calls (no LLVM intrinsic for atan/tan).
         "f64_atan" => lower_f64_intrinsic(instr, state, out, "f64_atan", "@atan"),
         "f64_tan"  => lower_f64_intrinsic(instr, state, out, "f64_tan",  "@tan"),
+        // BA-pow — two-argument pow(base, exp) via libm `@pow`.
+        "f64_pow" => lower_f64_pow(instr, state, out),
 
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
@@ -2031,6 +2044,24 @@ fn lower_f64_intrinsic(
     let dest = require_dest(instr, iir_op, state.fn_name)?.to_string();
     let a = resolve_operand(instr.srcs.first(), &state.env, "f64", state.fn_name)?;
     out.push_str(&format!("  %{dest} = call double {llvm_fn}(double {a})\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower `f64_pow dest <- base, exp` — two-argument IEEE-754 power via libm `@pow`.
+///
+/// LLVM has no `@llvm.pow.f64` intrinsic; the standard approach is a direct
+/// call to the C library `pow(double, double)`.  The linker resolves `@pow`
+/// from libm (`-lm`).  NaN / ±inf propagate per IEEE-754.
+fn lower_f64_pow(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "f64_pow", state.fn_name)?.to_string();
+    let base = resolve_operand(instr.srcs.first(), &state.env, "f64", state.fn_name)?;
+    let exp_ = resolve_operand(instr.srcs.get(1), &state.env, "f64", state.fn_name)?;
+    out.push_str(&format!("  %{dest} = call double @pow(double {base}, double {exp_})\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }
