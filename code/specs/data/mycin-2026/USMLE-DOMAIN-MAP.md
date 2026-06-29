@@ -93,6 +93,14 @@ its board items + the filename in `board_eval.EDGE_FILES`; the harness scores it
 unchanged. Adding a relation just widens the schema — the engine already binds any
 `relate(rel, args)`.
 
+> **Wiring backlog (2026-06-29):** many grounded `<domain>-edges.adj` libraries were built
+> but never added to `board_eval.EDGE_FILES`, so the board harness wasn't exercising them.
+> Now wired with board items (engine-verified, `wrong=0`): **heart-valve, cranial-nerve,
+> spinal-tract, lung-volume, acid-base, coronary-territory, nephron-transporter** (+33
+> recall items). The remaining built-but-unwired anatomy/physiology/biochem domains
+> (autonomic-receptor, ig-isotype, complement-protein, germ-layer, organelle, …) are
+> queued for the same treatment.
+
 ## Built vs. to-build matrix
 
 ### Built (grounded, scored, merged)
