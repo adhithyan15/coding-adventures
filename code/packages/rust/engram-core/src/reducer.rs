@@ -572,6 +572,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 deck_id,
                 queue,
                 current_index: 0,
+                current_card_started_at: Some(started_at),
                 revealed: false,
             });
             next
@@ -1072,12 +1073,19 @@ fn reduce_rate_card(
     let mut next = state.clone();
     upsert_progress(&mut next.card_progress, new_progress.clone());
     let reviewed_card_id = card_id.clone();
+    let answer_time_ms = answer_time_ms_for_review(
+        state.active_session.as_ref(),
+        &session_id,
+        &reviewed_card_id,
+        reviewed_at,
+    );
     next.reviews.push(Review {
         id: review_id,
         session_id: session_id.clone(),
         card_id,
         rating,
         reviewed_at,
+        answer_time_ms,
         previous_progress: existing,
         resulting_progress: Some(new_progress),
         previous_active_session: if sibling_bury.captures_previous_session() {
@@ -1136,7 +1144,33 @@ fn reduce_rate_card(
             next = buried;
         }
     }
+    if let Some(active_session) = &mut next.active_session {
+        if active_session.session_id == session_id {
+            active_session.current_card_started_at = Some(reviewed_at);
+        }
+    }
     next
+}
+
+fn answer_time_ms_for_review(
+    active_session: Option<&ActiveSessionState>,
+    session_id: &str,
+    card_id: &str,
+    reviewed_at: u64,
+) -> Option<u32> {
+    let active_session = active_session?;
+    if active_session.session_id != session_id {
+        return None;
+    }
+    let active_card = active_session.queue.get(active_session.current_index)?;
+    if active_card.id != card_id {
+        return None;
+    }
+    let elapsed = reviewed_at.saturating_sub(active_session.current_card_started_at?);
+    if elapsed == 0 {
+        return None;
+    }
+    Some(u32::try_from(elapsed).unwrap_or(u32::MAX))
 }
 
 fn undo_last_review(state: &AppState, session_id: &str) -> AppState {
@@ -1759,6 +1793,7 @@ mod tests {
                 deck_id: "deck".to_string(),
                 queue: vec![generated, manual],
                 current_index: 0,
+                current_card_started_at: None,
                 revealed: true,
             }),
             ..AppState::default()
@@ -1819,6 +1854,7 @@ mod tests {
                 deck_id: "deck".to_string(),
                 queue: vec![generated, manual],
                 current_index: 0,
+                current_card_started_at: None,
                 revealed: true,
             }),
             ..AppState::default()
@@ -1876,6 +1912,41 @@ mod tests {
         assert_eq!(next.reviews.len(), 1);
         assert_eq!(next.sessions[0].cards_reviewed, 1);
         assert_eq!(next.sessions[0].cards_correct, 1);
+    }
+
+    #[test]
+    fn rate_card_records_answer_time_from_active_session_card_start() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card")],
+                started_at: NOW,
+            },
+        );
+
+        let next = reduce(
+            &state,
+            EngramCommand::RateCard {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: NOW + 4_200,
+            },
+        );
+
+        assert_eq!(next.reviews[0].answer_time_ms, Some(4_200));
+        assert_eq!(
+            next.active_session
+                .as_ref()
+                .unwrap()
+                .current_card_started_at,
+            Some(NOW + 4_200)
+        );
     }
 
     #[test]
@@ -2293,6 +2364,7 @@ mod tests {
             card_id: "card".to_string(),
             rating: Rating::Good,
             reviewed_at: NOW,
+            answer_time_ms: None,
             previous_progress: None,
             resulting_progress: None,
             previous_active_session: None,
@@ -2595,6 +2667,7 @@ mod tests {
                 card_id: "card".to_string(),
                 rating: Rating::Good,
                 reviewed_at: NOW,
+                answer_time_ms: None,
                 previous_progress: None,
                 resulting_progress: Some(progress("card")),
                 previous_active_session: None,
@@ -2608,6 +2681,7 @@ mod tests {
                 deck_id: "deck".to_string(),
                 queue: vec![card("card")],
                 current_index: 0,
+                current_card_started_at: None,
                 revealed: false,
             }),
         };

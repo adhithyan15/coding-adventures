@@ -70,12 +70,13 @@ every shell one deterministic place to copy newly attached media, replace
 imported payloads, or prune unreferenced assets after a host-side media analysis
 pass.
 
-Reviews carry optional previous/resulting progress snapshots, sibling-progress
-snapshots, and active-session snapshots. `UndoLastReview` uses those snapshots
-to remove the newest snapshot-backed review in a session, restore card progress,
-adjust session counters, and return the active session to its pre-review queue.
-Legacy reviews without snapshots are left unchanged because there is no reliable
-prior progress to restore.
+Reviews carry optional answer-time durations for Anki-compatible revlog export,
+plus previous/resulting progress snapshots, sibling-progress snapshots, and
+active-session snapshots. `UndoLastReview` uses those snapshots to remove the
+newest snapshot-backed review in a session, restore card progress, adjust
+session counters, and return the active session to its pre-review queue. Legacy
+reviews without snapshots are left unchanged because there is no reliable prior
+progress to restore.
 
 `search_cards` provides the first shared collection-browser query layer. It
 supports plain text terms against Anki-style note field content, falling back to

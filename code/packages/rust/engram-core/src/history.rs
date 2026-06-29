@@ -93,6 +93,7 @@ mod tests {
             card_id: card_id.to_string(),
             rating,
             reviewed_at,
+            answer_time_ms: None,
             previous_progress: None,
             resulting_progress: None,
             previous_active_session: None,

@@ -256,6 +256,11 @@ pub struct Review {
         feature = "serde",
         serde(default, skip_serializing_if = "Option::is_none")
     )]
+    pub answer_time_ms: Option<u32>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
     pub previous_progress: Option<CardProgress>,
     #[cfg_attr(
         feature = "serde",
@@ -320,6 +325,11 @@ pub struct ActiveSessionState {
     pub deck_id: String,
     pub queue: Vec<Card>,
     pub current_index: usize,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub current_card_started_at: Option<u64>,
     pub revealed: bool,
 }
 

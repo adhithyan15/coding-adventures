@@ -1650,7 +1650,9 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                             .map(progress_factor_to_anki)
                             .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64)
                     }),
-                    source_i64(source, "time").unwrap_or_default(),
+                    source_i64(source, "time")
+                        .or_else(|| review.answer_time_ms.map(i64::from))
+                        .unwrap_or_default(),
                     source_i64(source, "kind").unwrap_or_else(|| review_kind(review)),
                 ],
             )
@@ -3030,6 +3032,7 @@ fn map_v11_review(review: &AnkiV11Review, deck_id: &str) -> Review {
         card_id: review.card_id.to_string(),
         rating: rating_from_v11_ease(review.ease),
         reviewed_at: i64_to_u64(review.id),
+        answer_time_ms: (review.time > 0).then(|| i64_to_u32(review.time)),
         previous_progress: Some(v11_review_progress_snapshot(
             review,
             review.last_interval,
@@ -4156,6 +4159,7 @@ CREATE TABLE graves (
         assert_eq!(collection.reviews[0].card_id, 2000);
         assert_eq!(collection.reviews[0].ease, 3);
         assert_eq!(collection.reviews[0].last_interval, 3);
+        assert_eq!(collection.reviews[0].time, 12_000);
 
         assert_eq!(collection.graves.len(), 1);
         assert_eq!(collection.graves[0].object_id, 999);
@@ -4255,6 +4259,7 @@ CREATE TABLE graves (
         assert_eq!(state.reviews[0].session_id, "anki-import:2");
         assert_eq!(state.reviews[0].rating, Rating::Good);
         assert_eq!(state.reviews[0].reviewed_at, 3000);
+        assert_eq!(state.reviews[0].answer_time_ms, Some(12_000));
         let previous = state.reviews[0].previous_progress.as_ref().unwrap();
         assert_eq!(previous.card_id, "2000");
         assert_eq!(previous.interval, 3);
@@ -5019,6 +5024,7 @@ CREATE TABLE graves (
                 card_id: "2000".to_string(),
                 rating: Rating::Good,
                 reviewed_at: 1_700_000_030_000,
+                answer_time_ms: Some(12_345),
                 previous_progress: None,
                 resulting_progress: None,
                 previous_active_session: None,
@@ -5053,6 +5059,7 @@ CREATE TABLE graves (
         assert_eq!(collection.cards[0].flags, 4);
         assert_eq!(collection.reviews[0].card_id, 2000);
         assert_eq!(collection.reviews[0].ease, 3);
+        assert_eq!(collection.reviews[0].time, 12_345);
 
         let apkg = write_legacy_apkg_from_engram_state(&state, &[]).unwrap();
         let imported = read_v11_collection_as_engram_state(&apkg).unwrap();
@@ -5067,6 +5074,7 @@ CREATE TABLE graves (
         assert_eq!(imported.cards[0].back, "hello");
         assert_eq!(imported.card_progress[0].interval, 7);
         assert_eq!(imported.card_progress[0].flag, Some(CardFlag::Blue));
+        assert_eq!(imported.reviews[0].answer_time_ms, Some(12_345));
     }
 
     #[test]

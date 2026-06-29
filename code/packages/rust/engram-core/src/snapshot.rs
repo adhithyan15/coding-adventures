@@ -193,6 +193,7 @@ mod tests {
                 deck_id: "deck".to_string(),
                 queue: Vec::new(),
                 current_index: 0,
+                current_card_started_at: None,
                 revealed: false,
             }),
         }
