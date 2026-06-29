@@ -26,6 +26,8 @@
   keeping standalone Engram cards searchable by front/back text.
 - Added Anki-style `did:` deck ID and `mid:` notetype ID browser filters,
   including preserved original IDs from imported packages.
+- Added Anki-style `dupe:notetype,text` duplicate first-field browser searches,
+  including imported sort-field metadata and HTML/media filename normalization.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.

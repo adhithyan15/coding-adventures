@@ -1,4 +1,8 @@
-use std::collections::{HashMap, HashSet};
+use std::{
+    borrow::Cow,
+    collections::{HashMap, HashSet},
+    sync::LazyLock,
+};
 
 use crate::model::{
     AppState, Card, CardFlag, CardProgress, CardState, Deck, ExternalSourceRecord,
@@ -11,6 +15,16 @@ use regex::{Regex, RegexBuilder};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
+
+static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r#"(?is)<(?:img|audio|video|object|source)[^>]*(?:src|data)\s*=\s*(?:"([^"]+)"|'([^']+)'|([^ >]+))[^>]*>"#,
+    )
+    .expect("duplicate media tag regex should compile")
+});
+
+static DUPLICATE_HTML_TAGS: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(?is)<[^>]+>").expect("html tag regex should compile"));
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -46,6 +60,7 @@ enum SearchClauseKind {
     NoteId(IdFilter),
     DeckId(IdFilter),
     NoteTypeId(IdFilter),
+    Duplicate(DuplicateFilter),
     CardTemplate(String),
     Deck(String),
     Preset(String),
@@ -153,6 +168,12 @@ struct CardCustomDataStringFilter {
     value: String,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct DuplicateFilter {
+    note_type_id: IdFilter,
+    first_field: String,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 struct RecentDaysFilter {
     days: u32,
@@ -194,6 +215,7 @@ enum TagFilter {
 struct SearchMetadata<'a> {
     filtered_deck_ids: HashSet<&'a str>,
     card_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
+    note_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
     review_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
     deck_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
     note_type_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
@@ -324,6 +346,13 @@ impl<'a> SearchMetadata<'a> {
                 ExternalSourceTarget::Card => {
                     metadata
                         .card_sources_by_id
+                        .entry(source.target_id.as_str())
+                        .or_default()
+                        .push(source);
+                }
+                ExternalSourceTarget::Note => {
+                    metadata
+                        .note_sources_by_id
                         .entry(source.target_id.as_str())
                         .or_default()
                         .push(source);
@@ -629,6 +658,7 @@ fn parse_keyed_clause(
             let value = value.to_lowercase();
             parse_id_filter(token, &value).map(SearchClauseKind::NoteTypeId)
         }
+        "dupe" => parse_duplicate_filter(token, value).map(SearchClauseKind::Duplicate),
         "card" | "template" | "cardtemplate" | "card_template" | "card-template" => {
             require_keyed_filter_value(token, value)?;
             Ok(SearchClauseKind::CardTemplate(value.to_lowercase()))
@@ -1103,6 +1133,38 @@ fn parse_id_filter(token: &str, value: &str) -> Result<IdFilter, SearchError> {
     Ok(IdFilter { values })
 }
 
+fn parse_duplicate_filter(token: &str, value: &str) -> Result<DuplicateFilter, SearchError> {
+    let Some((note_type_id, first_field)) = value.split_once(',') else {
+        return Err(SearchError {
+            message: "duplicate search must be dupe:notetype,text".to_string(),
+            token: token.to_string(),
+        });
+    };
+    let note_type_id = parse_id_filter(token, &note_type_id.to_lowercase())?;
+
+    Ok(DuplicateFilter {
+        note_type_id,
+        first_field: unescape_search_literal(first_field),
+    })
+}
+
+fn unescape_search_literal(value: &str) -> String {
+    let mut unescaped = String::with_capacity(value.len());
+    let mut chars = value.chars();
+    while let Some(ch) = chars.next() {
+        if ch == '\\' {
+            if let Some(next) = chars.next() {
+                unescaped.push(next);
+            } else {
+                unescaped.push(ch);
+            }
+        } else {
+            unescaped.push(ch);
+        }
+    }
+    unescaped
+}
+
 fn parse_rating_filter(token: &str, value: &str) -> Result<Rating, SearchError> {
     match value {
         "1" | "again" => Ok(Rating::Again),
@@ -1171,6 +1233,7 @@ fn clause_matches(
         SearchClauseKind::NoteTypeId(filter) => {
             note_type_id_matches(filter, note, note_type, metadata)
         }
+        SearchClauseKind::Duplicate(filter) => duplicate_matches(filter, note, note_type, metadata),
         SearchClauseKind::CardTemplate(term) => card_template_matches(term, card, note_type),
         SearchClauseKind::Deck(term) => deck_matches(term, card, deck, &metadata.filtered_deck_ids),
         SearchClauseKind::Preset(term) => preset_matches(term, card, deck, metadata),
@@ -1615,6 +1678,131 @@ fn note_type_id_candidate_matches(
                     .iter()
                     .any(|original_id| id_filter_matches(filter, original_id))
             })
+}
+
+fn duplicate_matches(
+    filter: &DuplicateFilter,
+    note: Option<&Note>,
+    note_type: Option<&NoteType>,
+    metadata: &SearchMetadata<'_>,
+) -> bool {
+    let Some(note) = note else {
+        return false;
+    };
+    if !note_type_id_matches(&filter.note_type_id, Some(note), note_type, metadata) {
+        return false;
+    }
+
+    duplicate_sort_field(note, note_type, metadata)
+        .is_some_and(|candidate| duplicate_text_matches(&filter.first_field, &candidate))
+}
+
+fn duplicate_sort_field<'a>(
+    note: &'a Note,
+    note_type: Option<&'a NoteType>,
+    metadata: &SearchMetadata<'a>,
+) -> Option<Cow<'a, str>> {
+    if let Some(sort_field) =
+        metadata
+            .note_sources_by_id
+            .get(note.id.as_str())
+            .and_then(|sources| {
+                sources
+                    .iter()
+                    .find_map(|source| source.data.get("sortField").map(String::as_str))
+            })
+    {
+        return Some(Cow::Borrowed(sort_field));
+    }
+
+    let first_field_id = note_type.and_then(|note_type| {
+        note_type
+            .fields
+            .iter()
+            .min_by_key(|field| field.ordinal)
+            .map(|field| field.id.as_str())
+    });
+    let value = first_field_id
+        .and_then(|field_id| {
+            note.fields
+                .iter()
+                .find(|field| field.field_id == field_id)
+                .map(|field| field.value.as_str())
+        })
+        .or_else(|| note.fields.first().map(|field| field.value.as_str()))?;
+
+    Some(Cow::Borrowed(value))
+}
+
+fn duplicate_text_matches(expected: &str, candidate: &str) -> bool {
+    duplicate_search_text(expected) == duplicate_search_text(candidate)
+}
+
+fn duplicate_search_text(value: &str) -> String {
+    let with_media = DUPLICATE_HTML_MEDIA_TAGS.replace_all(value, |captures: &regex::Captures| {
+        let filename = captures
+            .get(1)
+            .or_else(|| captures.get(2))
+            .or_else(|| captures.get(3))
+            .map_or("", |capture| capture.as_str());
+        format!(" {filename} ")
+    });
+    let without_tags = DUPLICATE_HTML_TAGS.replace_all(&with_media, "");
+    decode_search_html_entities(&without_tags)
+        .chars()
+        .nfc()
+        .collect()
+}
+
+fn decode_search_html_entities(value: &str) -> String {
+    if !value.contains('&') {
+        return value.to_string();
+    }
+
+    let mut decoded = String::with_capacity(value.len());
+    let mut rest = value;
+    while let Some(start) = rest.find('&') {
+        decoded.push_str(&rest[..start]);
+        let after_amp = &rest[start + 1..];
+        let Some(end) = after_amp.find(';') else {
+            decoded.push('&');
+            rest = after_amp;
+            continue;
+        };
+        let entity = &after_amp[..end];
+        if let Some(ch) = decode_search_html_entity(entity) {
+            decoded.push(ch);
+            rest = &after_amp[end + 1..];
+        } else {
+            decoded.push('&');
+            rest = after_amp;
+        }
+    }
+    decoded.push_str(rest);
+    decoded
+}
+
+fn decode_search_html_entity(entity: &str) -> Option<char> {
+    match entity {
+        "amp" => Some('&'),
+        "lt" => Some('<'),
+        "gt" => Some('>'),
+        "quot" => Some('"'),
+        "apos" => Some('\''),
+        "nbsp" => Some(' '),
+        _ => {
+            let codepoint = entity
+                .strip_prefix("#x")
+                .or_else(|| entity.strip_prefix("#X"))
+                .and_then(|hex| u32::from_str_radix(hex, 16).ok())
+                .or_else(|| {
+                    entity
+                        .strip_prefix('#')
+                        .and_then(|decimal| decimal.parse::<u32>().ok())
+                })?;
+            char::from_u32(codepoint)
+        }
+    }
 }
 
 fn card_template_matches(term: &str, card: &Card, note_type: Option<&NoteType>) -> bool {
@@ -2645,6 +2833,119 @@ mod tests {
     }
 
     #[test]
+    fn anki_browser_duplicate_filter_matches_first_field_text() {
+        let mut note_type = note_type();
+        note_type.id = "local-basic".to_string();
+
+        let note = |id: &str, first_field: &str, note_type_id: &str| Note {
+            id: id.to_string(),
+            note_type_id: note_type_id.to_string(),
+            deck_id: "tamil".to_string(),
+            fields: vec![NoteFieldValue {
+                field_id: "front".to_string(),
+                value: first_field.to_string(),
+            }],
+            tags: Vec::new(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |note_id: &str| {
+            let mut card = card(&format!("{note_id}::forward"), "tamil", note_id, note_id);
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "local-basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let note_source = |note_id: &str, sort_field: &str| ExternalSourceRecord {
+            target: ExternalSourceTarget::Note,
+            target_id: note_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(note_id.to_string()),
+            data: BTreeMap::from([("sortField".to_string(), sort_field.to_string())]),
+        };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            note_types: vec![
+                note_type,
+                NoteType {
+                    id: "other".to_string(),
+                    name: "Other".to_string(),
+                    fields: vec![FieldDef {
+                        id: "front".to_string(),
+                        name: "Front".to_string(),
+                        required: true,
+                        ordinal: 0,
+                    }],
+                    templates: Vec::new(),
+                    created_at: NOW,
+                    updated_at: NOW,
+                },
+            ],
+            notes: vec![
+                note("plain-note", "Latin root", "local-basic"),
+                note("html-note", "<b>Latin root</b>", "local-basic"),
+                note("media-note", "<img src='foo.jpg'>", "local-basic"),
+                note("entity-note", "Latin &amp; root", "local-basic"),
+                note("preserved-note", "changed value", "local-basic"),
+                note("other-note", "Latin root", "other"),
+            ],
+            cards: vec![
+                card_for_note("plain-note"),
+                card_for_note("html-note"),
+                card_for_note("media-note"),
+                card_for_note("entity-note"),
+                card_for_note("preserved-note"),
+                card_for_note("other-note"),
+            ],
+            external_sources: vec![
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::NoteType,
+                    target_id: "local-basic".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some("101".to_string()),
+                    data: BTreeMap::new(),
+                },
+                note_source("preserved-note", "Preserved root"),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(
+            ids_for("\"dupe:101,Latin root\""),
+            vec!["plain-note::forward", "html-note::forward"]
+        );
+        assert_eq!(
+            ids_for("\"dupe:101,<img src='foo.jpg'>\""),
+            vec!["media-note::forward"]
+        );
+        assert_eq!(
+            ids_for("\"dupe:101,Latin & root\""),
+            vec!["entity-note::forward"]
+        );
+        assert_eq!(
+            ids_for("\"dupe:101,Preserved root\""),
+            vec!["preserved-note::forward"]
+        );
+        assert_eq!(
+            ids_for("\"dupe:other,Latin root\""),
+            vec!["other-note::forward"]
+        );
+        assert!(ids_for("dupe:101,missing").is_empty());
+    }
+
+    #[test]
     fn anki_browser_none_filtered_and_card_number_filters_match() {
         let mut state = AppState {
             decks: vec![
@@ -3214,5 +3515,8 @@ mod tests {
 
         let error = search_cards(&state(), "deck:tamil)", NOW).unwrap_err();
         assert_eq!(error.message, "unexpected closing parenthesis");
+
+        let error = search_cards(&state(), "dupe:101", NOW).unwrap_err();
+        assert_eq!(error.token, "dupe:101");
     }
 }
