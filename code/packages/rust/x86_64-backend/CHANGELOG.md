@@ -1,5 +1,12 @@
 # Changelog — `x86_64-backend`
 
+## 0.20.0 — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` x86-64 lowering)
+
+Added `f64_pow` block: loads base into xmm0 via `load_fp_operand(Rax)`, loads
+exponent into xmm1 via `load_fp_operand(Rcx)`, emits
+`call_rel32("pow", PltRel32)` (System V: xmm0=base, xmm1=exp, result in xmm0),
+and stores xmm0 to the dest stack slot.  This is the first two-argument FP
+external call in the x86_64-backend.
 ## 0.19.0 — 2026-06-29 — `f64_atan/f64_tan` via libm `call rel32` (LANG-FULL AL8-arctan)
 
 Extended the transcendental match arm to cover two more ops:

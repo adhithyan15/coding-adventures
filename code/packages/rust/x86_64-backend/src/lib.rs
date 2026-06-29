@@ -630,6 +630,22 @@ fn emit_instr(
         asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store xmm0
         return Ok(());
     }
+    // BA-pow — `call pow` (libm two-argument power, no hardware opcode).
+    //   f64_pow dest <- base, exp  →  movsd xmm0,[base]; movsd xmm1,[exp]; call pow; movsd [dest],xmm0
+    // SysV: first FP arg xmm0, second xmm1; result xmm0.  MS x64: same (xmm0/xmm1).
+    if op == "f64_pow" {
+        let dest = require_dest(instr)?;
+        let base = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr("f64_pow needs srcs[0]".into()))?;
+        let exp_ = instr.srcs.get(1)
+            .ok_or_else(|| BackendError::MalformedInstr("f64_pow needs srcs[1]".into()))?;
+        load_fp_operand(asm, alloc, Reg::Rax, base)?;           // xmm0 = base
+        load_fp_operand(asm, alloc, Reg::Rcx, exp_)?;           // xmm1 = exp
+        asm.call_rel32("pow", ExternalRelocKind::PltRel32);     // xmm0 = pow(xmm0, xmm1)
+        let slot = alloc.slot_of(dest);
+        asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store xmm0
+        return Ok(());
+    }
 
     // AL8 transcendentals — sin/cos/ln/exp via libm (`call rel32` → xmm0).
     //

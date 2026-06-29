@@ -1,5 +1,13 @@
 # Changelog — vm-core
 
+## [0.16.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` VM dispatch handler)
+
+Added `handle_f64_pow` to the dispatch table.  The handler extracts two source
+operands as `Value::Float` (base and exponent), calls Rust's `f64::powf()`
+(IEEE-754 `pow` — NaN propagates, negative base with non-integer exp returns NaN),
+and writes `Value::Float(result)` to the dest slot.  The JIT falls back to the
+VM for all `_f64`-suffix ops via the existing fallback path, so no JIT changes
+were needed.
 ## [0.15.0] — 2026-06-29 (LANG-FULL AL8-arctan — `f64_atan/f64_tan` VM dispatch handlers)
 
 Added two handlers registered in `lookup_standard`:

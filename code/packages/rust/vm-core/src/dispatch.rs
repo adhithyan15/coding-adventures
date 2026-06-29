@@ -1372,6 +1372,26 @@ fn handle_f64_transcendental(
     Ok(Some(result))
 }
 
+/// `f64_pow` — IEEE-754 `pow(base, exp)`.  Both operands must be `Value::Float`.
+/// Maps to Rust `f64::powf`.  NaN / ±inf propagate per IEEE-754 (same as libm `pow`).
+fn handle_f64_pow(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (base, exp_) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let b = resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("f64_pow: srcs[0] is not a real".into()))?;
+        let e = resolve_src(frame, &instr.srcs, 1)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("f64_pow: srcs[1] is not a real".into()))?;
+        (b, e)
+    };
+    let result = Value::Float(base.powf(exp_));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
 fn handle_f64_sin(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     handle_f64_transcendental(ctx, instr, "f64_sin", f64::sin)
 }
@@ -1390,6 +1410,7 @@ fn handle_f64_atan(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
 fn handle_f64_tan(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     handle_f64_transcendental(ctx, instr, "f64_tan", f64::tan)
 }
+
 
 // ---------------------------------------------------------------------------
 // Standard opcode dispatch table
@@ -1461,6 +1482,7 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "f64_exp"           => Some(handle_f64_exp),
         "f64_atan"          => Some(handle_f64_atan),
         "f64_tan"           => Some(handle_f64_tan),
+        "f64_pow"           => Some(handle_f64_pow),
         // `call` is handled specially (needs jit_handlers) — see dispatch loop.
         _              => None,
     }
