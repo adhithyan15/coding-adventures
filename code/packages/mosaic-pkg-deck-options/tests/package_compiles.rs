@@ -104,6 +104,13 @@ fn deck_options_frontend_sources_compile() {
             "easy-bonus-value",
             "lapse-multiplier-label",
             "lapse-multiplier-value",
+            "leech-threshold-label",
+            "leech-threshold-value",
+            "leech-action-label",
+            "leech-action-suspend-label",
+            "leech-action-suspend-value",
+            "leech-action-tag-only-label",
+            "leech-action-tag-only-value",
             "bury-new-siblings-label",
             "bury-new-siblings-value",
             "bury-review-siblings-label",
@@ -128,6 +135,8 @@ fn deck_options_frontend_sources_compile() {
             "onHardMultiplierChange",
             "onEasyBonusChange",
             "onLapseMultiplierChange",
+            "onLeechThresholdChange",
+            "onLeechActionChange",
             "onBuryNewSiblingsChange",
             "onBuryReviewSiblingsChange",
             "onBuryInterdayLearningSiblingsChange",
@@ -163,6 +172,7 @@ fn deck_options_layout_wires_number_controls() {
         ("hard-multiplier-value", "onHardMultiplierChange"),
         ("easy-bonus-value", "onEasyBonusChange"),
         ("lapse-multiplier-value", "onLapseMultiplierChange"),
+        ("leech-threshold-value", "onLeechThresholdChange"),
     ] {
         assert!(
             source.contains(&format!("value : slot: {value_slot}")),
@@ -186,6 +196,10 @@ fn deck_options_layout_wires_number_controls() {
         "hard-multiplier-label",
         "easy-bonus-label",
         "lapse-multiplier-label",
+        "leech-threshold-label",
+        "leech-action-label",
+        "leech-action-suspend-label",
+        "leech-action-tag-only-label",
         "bury-new-siblings-label",
         "bury-review-siblings-label",
         "bury-interday-learning-siblings-label",
@@ -214,6 +228,24 @@ fn deck_options_layout_wires_number_controls() {
             "DeckOptionsPanel.mll must wire {emit}"
         );
     }
+
+    for (value_slot, option) in [
+        ("leech-action-suspend-value", "suspend"),
+        ("leech-action-tag-only-value", "tag-only"),
+    ] {
+        assert!(
+            source.contains(&format!("checked : slot: {value_slot}")),
+            "DeckOptionsPanel.mll must bind {value_slot}"
+        );
+        assert!(
+            source.contains(&format!("value : \"{option}\"")),
+            "DeckOptionsPanel.mll must set radio value {option}"
+        );
+    }
+    assert!(
+        source.contains("onSelect : emit: onLeechActionChange"),
+        "DeckOptionsPanel.mll must wire onLeechActionChange"
+    );
 }
 
 #[test]

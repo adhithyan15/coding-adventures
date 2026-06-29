@@ -110,6 +110,7 @@ pub fn from_pipeline(
     .unwrap();
     writeln!(out, "import androidx.compose.material.Button").unwrap();
     writeln!(out, "import androidx.compose.material.Checkbox").unwrap();
+    writeln!(out, "import androidx.compose.material.RadioButton").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
     writeln!(out, "import androidx.compose.material.TextField").unwrap();
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
@@ -961,6 +962,7 @@ fn emit_compose_tree(
         "HostInput" => emit_host_input(node, depth, component_name, emits),
         "HostButton" => emit_host_button(node, depth, component_name, emits),
         "HostCheckbox" => emit_host_checkbox(node, depth, component_name, emits),
+        "HostRadio" => emit_host_radio(node, depth, component_name, emits),
         "HostNumberInput" => emit_host_number_input(node, depth, component_name, emits),
         // UI29 §3.1 / §3.2 — meta-primitives.
         "For" => emit_for_compose(
@@ -1667,6 +1669,66 @@ fn emit_host_checkbox(
             "{inner}onCheckedChange = {{ checked -> {on_checked} }},"
         )
         .unwrap();
+        if let Some(enabled) = enabled_expr.as_deref() {
+            writeln!(out, "{inner}enabled = {enabled},").unwrap();
+        }
+        writeln!(out, "{pad})").unwrap();
+        Ok(out)
+    }
+}
+
+fn emit_host_radio(
+    node: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let checked_expr = bool_prop_expr(node, "checked", "false")?;
+    let enabled_expr = disabled_prop_enabled_expr(node)?;
+    let value_expr = text_prop_expr(node, "value")?.unwrap_or_else(|| "\"\"".to_string());
+
+    let on_select = if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arity = emits
+            .iter()
+            .find(|e| e.name == *emit_name)
+            .map(|e| e.params.len())
+            .unwrap_or(0);
+        if arity == 0 {
+            format!("dispatch({component_name}Event.{case})")
+        } else {
+            format!("dispatch({component_name}Event.{case}({value_expr}))")
+        }
+    } else {
+        "/* no onSelect bound */".to_string()
+    };
+
+    let mut radio_lines = Vec::new();
+    radio_lines.push(format!("{inner}RadioButton("));
+    radio_lines.push(format!("{inner}    selected = {checked_expr},"));
+    radio_lines.push(format!("{inner}    onClick = {{ {on_select} }},"));
+    if let Some(enabled) = enabled_expr.as_deref() {
+        radio_lines.push(format!("{inner}    enabled = {enabled},"));
+    }
+    radio_lines.push(format!("{inner})"));
+
+    if let Some(label) = text_prop_expr(node, "label")? {
+        let mut out = String::new();
+        writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+        for line in radio_lines {
+            writeln!(out, "{line}").unwrap();
+        }
+        writeln!(out, "{inner}Text(text = {label})").unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+        Ok(out)
+    } else {
+        let mut out = String::new();
+        writeln!(out, "{pad}RadioButton(").unwrap();
+        writeln!(out, "{inner}selected = {checked_expr},").unwrap();
+        writeln!(out, "{inner}onClick = {{ {on_select} }},").unwrap();
         if let Some(enabled) = enabled_expr.as_deref() {
             writeln!(out, "{inner}enabled = {enabled},").unwrap();
         }
@@ -2600,6 +2662,65 @@ mod tests {
         ));
         assert!(out.contains("enabled = true,"));
         assert!(out.contains("Text(text = buryNewLabel)"));
+    }
+
+    #[test]
+    fn host_radio_dispatches_text_payload_with_label() {
+        let m = component(
+            "DeckOptions",
+            vec![
+                slot("suspend-label", SlotType::Text, true),
+                slot("suspend-selected", SlotType::Bool, true),
+            ],
+            vec![emit_decl(
+                "onLeechActionChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout(
+            "DeckOptions",
+            node(
+                "HostRadio",
+                vec![
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::SlotRef("suspend-label".into()),
+                    },
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("suspend-selected".into()),
+                    },
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::String("suspend".into()),
+                    },
+                    LayoutProp {
+                        name: "group".into(),
+                        value: LayoutPropValue::String("leech-action".into()),
+                    },
+                    LayoutProp {
+                        name: "disabled".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                    LayoutProp {
+                        name: "onSelect".into(),
+                        value: LayoutPropValue::EmitRef("onLeechActionChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("DeckOptions"))
+            .unwrap()
+            .output;
+        assert!(out.contains("import androidx.compose.material.RadioButton"));
+        assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
+        assert!(out.contains("RadioButton("));
+        assert!(out.contains("selected = suspendSelected,"));
+        assert!(out
+            .contains("onClick = { dispatch(DeckOptionsEvent.LeechActionChange(\"suspend\")) },"));
+        assert!(out.contains("enabled = true,"));
+        assert!(out.contains("Text(text = suspendLabel)"));
     }
 
     #[test]

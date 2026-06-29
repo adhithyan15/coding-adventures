@@ -31,6 +31,10 @@ style DeckOptionsPanel {
     padding-bottom : 10 ;
   }
 
+  part leech-options {
+    padding-bottom : 10 ;
+  }
+
   part sibling-bury-options {
     padding-bottom : 4 ;
   }
@@ -77,6 +81,18 @@ style DeckOptionsPanel {
 
   part lapse-multiplier-field {
     padding : 6 ;
+  }
+
+  part leech-threshold-field {
+    padding : 6 ;
+  }
+
+  part leech-action-field {
+    padding : 6 ;
+  }
+
+  part leech-action-choices {
+    padding-top : 4 ;
   }
 
   part bury-new-siblings-field {
@@ -201,6 +217,16 @@ style DeckOptionsPanel {
     font-size : 14 ;
   }
 
+  part leech-threshold-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
   part learning-steps-label {
     color : "#fef3c7" ;
     font-size : 12 ;
@@ -276,6 +302,32 @@ style DeckOptionsPanel {
     font-size : 12 ;
     font-weight : 700 ;
     padding-bottom : 4 ;
+  }
+
+  part leech-threshold-label {
+    color : "#fda4af" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part leech-action-label {
+    color : "#f0abfc" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part leech-action-suspend-radio {
+    color : "#fecdd3" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+
+  part leech-action-tag-only-radio {
+    color : "#e9d5ff" ;
+    font-size : 12 ;
+    font-weight : 700 ;
   }
 
   part bury-new-siblings-checkbox {

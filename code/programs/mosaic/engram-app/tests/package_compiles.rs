@@ -490,6 +490,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&html_main, "\"onBrowserSelectResult\"");
     assert_contains(&html_main, "\"name\": \"index\"");
     assert_contains(&html_main, "\"onDeckOptionsBuryNewSiblingsChange\"");
+    assert_contains(&html_main, "\"onDeckOptionsLeechActionChange\"");
     assert_contains(&html_main, "\"name\": \"checked\"");
     let html_host =
         fs::read_to_string(tmp.path().join("html").join("engram-host.mjs")).expect("html host");
@@ -510,6 +511,8 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&react_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&react_app, "deckOptionsIntervalModifierValue: 0,");
+    assert_contains(&react_app, "deckOptionsLeechThresholdValue: 0,");
+    assert_contains(&react_app, "deckOptionsLeechActionSuspendValue: false,");
     assert_contains(&react_app, "deckOptionsBuryNewSiblingsValue: false,");
     assert_contains(&react_app, "deckOptionsBuryReviewSiblingsValue: false,");
     assert_contains(&react_app, "historyLabel: \"Sample HistoryLabel\",");
@@ -1003,6 +1006,14 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &swift_app,
+        "deckOptionsLeechThresholdValue: MosaicHostValue.double(host.props, \"deck-options-leech-threshold-value\", fallback: 0),",
+    );
+    assert_contains(
+        &swift_app,
+        "deckOptionsLeechActionSuspendValue: MosaicHostValue.bool(host.props, \"deck-options-leech-action-suspend-value\", fallback: false),",
+    );
+    assert_contains(
+        &swift_app,
         "deckOptionsBuryNewSiblingsValue: MosaicHostValue.bool(host.props, \"deck-options-bury-new-siblings-value\", fallback: false),",
     );
     assert_contains(
@@ -1112,6 +1123,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty DeckOptionsEasyBonusValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsLeechThresholdValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsLeechActionSuspendValueProperty",
     );
     assert_contains(
         &xaml_code_behind,
@@ -1228,6 +1247,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record DeckOptionsEasyBonusChange(double Value) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsLeechThresholdChange(double Value) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsLeechActionChange(string Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,

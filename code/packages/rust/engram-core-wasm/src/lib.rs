@@ -17,7 +17,7 @@ use engram_core::{
     restore_engram_snapshot, search_cards as search_core_cards, search_cards_with_context,
     summarize_review_history, AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState,
     BasicCardCsvImportOptions, Card, CardFlag, CardLineage, CardProgress, CardSearchResult,
-    CardState, DeckOptions, EngramSnapshot, MediaAssetRecord, Rating, SearchContext,
+    CardState, DeckOptions, EngramSnapshot, LeechAction, MediaAssetRecord, Rating, SearchContext,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -267,11 +267,12 @@ impl EngramSession {
                     let mut options = deck_options_for_state(&self.state, &selected_deck_id);
                     match field {
                         DeckOptionField::LearningStepsMinutes
-                        | DeckOptionField::RelearningStepsMinutes => {
+                        | DeckOptionField::RelearningStepsMinutes
+                        | DeckOptionField::LeechAction => {
                             let value = parsed.text_value.as_deref().ok_or_else(|| {
                                 format!("{} is missing text value", parsed.kind.canonical_name())
                             })?;
-                            apply_deck_option_steps_change(&mut options, field, value)?;
+                            apply_deck_option_text_change(&mut options, field, value)?;
                         }
                         DeckOptionField::BuryNewSiblings
                         | DeckOptionField::BuryReviewSiblings
@@ -833,6 +834,34 @@ fn engram_app_props_for_state(
             Value::from(deck_options.lapse_interval_multiplier),
         );
         props_object.insert(
+            "deck-options-leech-threshold-label".to_string(),
+            Value::String("Leech threshold".to_string()),
+        );
+        props_object.insert(
+            "deck-options-leech-threshold-value".to_string(),
+            Value::from(deck_options.leech_threshold),
+        );
+        props_object.insert(
+            "deck-options-leech-action-label".to_string(),
+            Value::String("Leech action".to_string()),
+        );
+        props_object.insert(
+            "deck-options-leech-action-suspend-label".to_string(),
+            Value::String("Suspend".to_string()),
+        );
+        props_object.insert(
+            "deck-options-leech-action-suspend-value".to_string(),
+            Value::Bool(deck_options.leech_action == LeechAction::Suspend),
+        );
+        props_object.insert(
+            "deck-options-leech-action-tag-only-label".to_string(),
+            Value::String("Tag only".to_string()),
+        );
+        props_object.insert(
+            "deck-options-leech-action-tag-only-value".to_string(),
+            Value::Bool(deck_options.leech_action == LeechAction::TagOnly),
+        );
+        props_object.insert(
             "deck-options-bury-new-siblings-label".to_string(),
             Value::String("Bury new siblings".to_string()),
         );
@@ -1374,6 +1403,12 @@ impl EngramAppEvent {
             Self::DeckOptionsChange(DeckOptionField::LapseIntervalMultiplier) => {
                 "onDeckOptionsLapseMultiplierChange"
             }
+            Self::DeckOptionsChange(DeckOptionField::LeechThreshold) => {
+                "onDeckOptionsLeechThresholdChange"
+            }
+            Self::DeckOptionsChange(DeckOptionField::LeechAction) => {
+                "onDeckOptionsLeechActionChange"
+            }
             Self::DeckOptionsChange(DeckOptionField::BuryNewSiblings) => {
                 "onDeckOptionsBuryNewSiblingsChange"
             }
@@ -1417,6 +1452,8 @@ enum DeckOptionField {
     HardIntervalMultiplier,
     EasyBonusMultiplier,
     LapseIntervalMultiplier,
+    LeechThreshold,
+    LeechAction,
     BuryNewSiblings,
     BuryReviewSiblings,
     BuryInterdayLearningSiblings,
@@ -1574,6 +1611,16 @@ fn parse_engram_app_event_name(
         | "deck_options_lapse_multiplier_change" => parsed(EngramAppEvent::DeckOptionsChange(
             DeckOptionField::LapseIntervalMultiplier,
         )),
+        "deckoptionsleechthresholdchange"
+        | "deck-options-leech-threshold-change"
+        | "deck_options_leech_threshold_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::LeechThreshold,
+        )),
+        "deckoptionsleechactionchange"
+        | "deck-options-leech-action-change"
+        | "deck_options_leech_action_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::LeechAction,
+        )),
         "deckoptionsburynewsiblingschange"
         | "deck-options-bury-new-siblings-change"
         | "deck_options_bury_new_siblings_change" => parsed(EngramAppEvent::DeckOptionsChange(
@@ -1667,7 +1714,7 @@ fn parse_json_bool_value(value: &Value) -> Option<bool> {
     })
 }
 
-fn apply_deck_option_steps_change(
+fn apply_deck_option_text_change(
     options: &mut DeckOptions,
     field: DeckOptionField,
     value: &str,
@@ -1679,6 +1726,9 @@ fn apply_deck_option_steps_change(
         DeckOptionField::RelearningStepsMinutes => {
             options.relearning_steps_minutes = parse_step_minutes(value, "relearning steps")?;
         }
+        DeckOptionField::LeechAction => {
+            options.leech_action = parse_leech_action(value)?;
+        }
         DeckOptionField::BuryNewSiblings
         | DeckOptionField::BuryReviewSiblings
         | DeckOptionField::BuryInterdayLearningSiblings => {
@@ -1687,6 +1737,19 @@ fn apply_deck_option_steps_change(
         _ => return Err("deck option field does not accept text values".to_string()),
     }
     Ok(())
+}
+
+fn parse_leech_action(value: &str) -> Result<LeechAction, String> {
+    let normalized = value
+        .trim()
+        .to_ascii_lowercase()
+        .replace('_', "-")
+        .replace(' ', "-");
+    match normalized.as_str() {
+        "suspend" | "0" => Ok(LeechAction::Suspend),
+        "tag-only" | "tagonly" | "tag" | "1" => Ok(LeechAction::TagOnly),
+        _ => Err("leech action must be suspend or tag-only".to_string()),
+    }
 }
 
 fn parse_step_minutes(value: &str, label: &str) -> Result<Vec<u32>, String> {
@@ -1713,6 +1776,7 @@ fn apply_deck_option_number_change(
     match field {
         DeckOptionField::LearningStepsMinutes
         | DeckOptionField::RelearningStepsMinutes
+        | DeckOptionField::LeechAction
         | DeckOptionField::BuryNewSiblings
         | DeckOptionField::BuryReviewSiblings
         | DeckOptionField::BuryInterdayLearningSiblings => {
@@ -1747,6 +1811,9 @@ fn apply_deck_option_number_change(
         DeckOptionField::LapseIntervalMultiplier => {
             options.lapse_interval_multiplier =
                 deck_option_non_negative_number(value, "lapse multiplier")?;
+        }
+        DeckOptionField::LeechThreshold => {
+            options.leech_threshold = deck_option_count(value, "leech threshold")?;
         }
     }
     Ok(())
@@ -3125,6 +3192,8 @@ mod tests {
                     "hardIntervalMultiplier": 1.4,
                     "easyBonusMultiplier": 1.6,
                     "lapseIntervalMultiplier": 0.5,
+                    "leechThreshold": 6,
+                    "leechAction": "suspend",
                     "buryNewSiblings": false,
                     "buryReviewSiblings": true,
                     "buryInterdayLearningSiblings": false
@@ -3170,6 +3239,19 @@ mod tests {
         assert_eq!(value["props"]["deck-options-hard-multiplier-value"], 1.4);
         assert_eq!(value["props"]["deck-options-easy-bonus-value"], 1.6);
         assert_eq!(value["props"]["deck-options-lapse-multiplier-value"], 0.5);
+        assert_eq!(value["props"]["deck-options-leech-threshold-value"], 6);
+        assert_eq!(
+            value["props"]["deck-options-leech-action-label"],
+            "Leech action"
+        );
+        assert_eq!(
+            value["props"]["deck-options-leech-action-suspend-value"],
+            true
+        );
+        assert_eq!(
+            value["props"]["deck-options-leech-action-tag-only-value"],
+            false
+        );
         assert_eq!(
             value["props"]["deck-options-bury-new-siblings-label"],
             "Bury new siblings"
@@ -3815,6 +3897,8 @@ mod tests {
                         "hardIntervalMultiplier": 1.2,
                         "easyBonusMultiplier": 1.4,
                         "lapseIntervalMultiplier": 0.25,
+                        "leechThreshold": 8,
+                        "leechAction": "tagOnly",
                         "buryNewSiblings": true,
                         "buryReviewSiblings": true,
                         "buryInterdayLearningSiblings": true
@@ -3899,6 +3983,47 @@ mod tests {
             "15, 45"
         );
 
+        let leech_threshold: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsLeechThresholdChange","value":4}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(leech_threshold["ok"], true);
+        assert_eq!(
+            leech_threshold["event"],
+            "onDeckOptionsLeechThresholdChange"
+        );
+        assert_eq!(
+            leech_threshold["state"]["deckOptions"][0]["options"]["leechThreshold"],
+            4
+        );
+        assert_eq!(
+            leech_threshold["props"]["deck-options-leech-threshold-value"],
+            4
+        );
+
+        let leech_action: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onDeckOptionsLeechActionChange","value":"suspend"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(leech_action["ok"], true);
+        assert_eq!(leech_action["event"], "onDeckOptionsLeechActionChange");
+        assert_eq!(
+            leech_action["state"]["deckOptions"][0]["options"]["leechAction"],
+            "suspend"
+        );
+        assert_eq!(
+            leech_action["props"]["deck-options-leech-action-suspend-value"],
+            true
+        );
+        assert_eq!(
+            leech_action["props"]["deck-options-leech-action-tag-only-value"],
+            false
+        );
+
         let bury_new: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"type":"deckOptionsBuryNewSiblingsChange","checked":false}"#,
             "deck",
@@ -3958,6 +4083,18 @@ mod tests {
         assert_eq!(
             invalid_steps["error"],
             "learning steps must be whole minutes separated by commas"
+        );
+
+        let invalid_leech_action: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsLeechActionChange","value":"delete"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(invalid_leech_action["ok"], false);
+        assert_eq!(
+            invalid_leech_action["error"],
+            "leech action must be suspend or tag-only"
         );
 
         let invalid_bool: Value = serde_json::from_str(&session.handle_engram_app_event(

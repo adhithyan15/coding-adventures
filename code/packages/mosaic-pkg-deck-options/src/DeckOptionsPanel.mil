@@ -27,6 +27,13 @@ component DeckOptionsPanel {
   slot easy-bonus-value : number ;
   slot lapse-multiplier-label : text ;
   slot lapse-multiplier-value : number ;
+  slot leech-threshold-label : text ;
+  slot leech-threshold-value : number ;
+  slot leech-action-label : text ;
+  slot leech-action-suspend-label : text ;
+  slot leech-action-suspend-value : bool ;
+  slot leech-action-tag-only-label : text ;
+  slot leech-action-tag-only-value : bool ;
   slot bury-new-siblings-label : text ;
   slot bury-new-siblings-value : bool ;
   slot bury-review-siblings-label : text ;
@@ -45,6 +52,8 @@ component DeckOptionsPanel {
   emit onHardMultiplierChange ( value : number ) ;
   emit onEasyBonusChange ( value : number ) ;
   emit onLapseMultiplierChange ( value : number ) ;
+  emit onLeechThresholdChange ( value : number ) ;
+  emit onLeechActionChange ( value : text ) ;
   emit onBuryNewSiblingsChange ( checked : bool ) ;
   emit onBuryReviewSiblingsChange ( checked : bool ) ;
   emit onBuryInterdayLearningSiblingsChange ( checked : bool ) ;

@@ -41,6 +41,13 @@ component EngramApp {
   slot deck-options-easy-bonus-value : number ;
   slot deck-options-lapse-multiplier-label : text ;
   slot deck-options-lapse-multiplier-value : number ;
+  slot deck-options-leech-threshold-label : text ;
+  slot deck-options-leech-threshold-value : number ;
+  slot deck-options-leech-action-label : text ;
+  slot deck-options-leech-action-suspend-label : text ;
+  slot deck-options-leech-action-suspend-value : bool ;
+  slot deck-options-leech-action-tag-only-label : text ;
+  slot deck-options-leech-action-tag-only-value : bool ;
   slot deck-options-bury-new-siblings-label : text ;
   slot deck-options-bury-new-siblings-value : bool ;
   slot deck-options-bury-review-siblings-label : text ;
@@ -150,6 +157,8 @@ component EngramApp {
   emit onDeckOptionsHardMultiplierChange ( value : number ) ;
   emit onDeckOptionsEasyBonusChange ( value : number ) ;
   emit onDeckOptionsLapseMultiplierChange ( value : number ) ;
+  emit onDeckOptionsLeechThresholdChange ( value : number ) ;
+  emit onDeckOptionsLeechActionChange ( value : text ) ;
   emit onDeckOptionsBuryNewSiblingsChange ( checked : bool ) ;
   emit onDeckOptionsBuryReviewSiblingsChange ( checked : bool ) ;
   emit onDeckOptionsBuryInterdayLearningSiblingsChange ( checked : bool ) ;
