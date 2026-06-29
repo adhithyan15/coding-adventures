@@ -904,6 +904,11 @@ fn v11_external_sources(
     for deck in &collection.decks {
         let mut data = BTreeMap::new();
         insert_json(&mut data, "rawJson", &deck.raw, "Anki deck JSON")?;
+        insert_i64(
+            &mut data,
+            "dyn",
+            deck.raw.get("dyn").and_then(Value::as_i64).unwrap_or(0),
+        );
         sources.push(source_record(
             ExternalSourceTarget::Deck,
             deck.id.to_string(),
@@ -4214,6 +4219,12 @@ CREATE TABLE graves (
         assert_eq!(state.cards[0].deck_id, "3");
         assert!(state.cards[0].front.contains("[sound:audio/hola.mp3]"));
         assert!(state.cards[0].back.contains("images/card.png"));
+        assert!(state.external_sources.iter().any(|source| {
+            source.source == ANKI_V11_SOURCE
+                && source.target == ExternalSourceTarget::Deck
+                && source.target_id == "3"
+                && source.data.get("dyn").map(String::as_str) == Some("1")
+        }));
         assert!(state.external_sources.iter().any(|source| {
             source.source == ANKI_V11_SOURCE
                 && source.target == ExternalSourceTarget::Card
