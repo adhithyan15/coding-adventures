@@ -229,6 +229,14 @@ impl EngramSession {
                             })?;
                             apply_deck_option_steps_change(&mut options, field, value)?;
                         }
+                        DeckOptionField::BuryNewSiblings
+                        | DeckOptionField::BuryReviewSiblings
+                        | DeckOptionField::BuryInterdayLearningSiblings => {
+                            let checked = parsed.bool_value.ok_or_else(|| {
+                                format!("{} is missing checked value", parsed.kind.canonical_name())
+                            })?;
+                            apply_deck_option_bool_change(&mut options, field, checked)?;
+                        }
                         _ => {
                             let value = parsed.number_value.ok_or_else(|| {
                                 format!("{} is missing numeric value", parsed.kind.canonical_name())
@@ -254,7 +262,7 @@ impl EngramSession {
                         .queue
                         .get(active_session.current_index)
                         .ok_or_else(|| "cannot rate without a current card".to_string())?;
-                    let session_id = active_session.session_id;
+                    let session_id = active_session.session_id.clone();
                     let card_id = card.id.clone();
                     let review_id = format!(
                         "engram-app::{}::{}::{now}::{}",
@@ -262,14 +270,16 @@ impl EngramSession {
                         card_id,
                         rating_label(rating)
                     );
+                    let deck_options = deck_options_for_state(&self.state, &active_session.deck_id);
                     self.state = reduce(
                         &self.state,
-                        engram_core::EngramCommand::RateCard {
+                        engram_core::EngramCommand::RateCardWithOptions {
                             review_id,
                             session_id,
                             card_id,
                             rating,
                             reviewed_at: now,
+                            deck_options,
                         },
                     );
                     self.state = reduce(&self.state, engram_core::EngramCommand::AdvanceSession);
@@ -738,6 +748,30 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
             "deck-options-lapse-multiplier-value".to_string(),
             Value::from(deck_options.lapse_interval_multiplier),
         );
+        props_object.insert(
+            "deck-options-bury-new-siblings-label".to_string(),
+            Value::String("Bury new siblings".to_string()),
+        );
+        props_object.insert(
+            "deck-options-bury-new-siblings-value".to_string(),
+            Value::Bool(deck_options.bury_new_siblings),
+        );
+        props_object.insert(
+            "deck-options-bury-review-siblings-label".to_string(),
+            Value::String("Bury review siblings".to_string()),
+        );
+        props_object.insert(
+            "deck-options-bury-review-siblings-value".to_string(),
+            Value::Bool(deck_options.bury_review_siblings),
+        );
+        props_object.insert(
+            "deck-options-bury-interday-learning-siblings-label".to_string(),
+            Value::String("Bury interday learning siblings".to_string()),
+        );
+        props_object.insert(
+            "deck-options-bury-interday-learning-siblings-value".to_string(),
+            Value::Bool(deck_options.bury_interday_learning_siblings),
+        );
     }
     {
         props_object.insert(
@@ -1083,6 +1117,15 @@ impl EngramAppEvent {
             Self::DeckOptionsChange(DeckOptionField::LapseIntervalMultiplier) => {
                 "onDeckOptionsLapseMultiplierChange"
             }
+            Self::DeckOptionsChange(DeckOptionField::BuryNewSiblings) => {
+                "onDeckOptionsBuryNewSiblingsChange"
+            }
+            Self::DeckOptionsChange(DeckOptionField::BuryReviewSiblings) => {
+                "onDeckOptionsBuryReviewSiblingsChange"
+            }
+            Self::DeckOptionsChange(DeckOptionField::BuryInterdayLearningSiblings) => {
+                "onDeckOptionsBuryInterdayLearningSiblingsChange"
+            }
             Self::Rate(Rating::Again) => "onAgain",
             Self::Rate(Rating::Hard) => "onHard",
             Self::Rate(Rating::Good) => "onGood",
@@ -1117,6 +1160,9 @@ enum DeckOptionField {
     HardIntervalMultiplier,
     EasyBonusMultiplier,
     LapseIntervalMultiplier,
+    BuryNewSiblings,
+    BuryReviewSiblings,
+    BuryInterdayLearningSiblings,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1125,13 +1171,14 @@ struct ParsedEngramAppEvent {
     card_id: Option<String>,
     number_value: Option<f64>,
     text_value: Option<String>,
+    bool_value: Option<bool>,
 }
 
 fn parse_engram_app_event(event: &str) -> Result<ParsedEngramAppEvent, String> {
     let event = event.trim();
     if let Ok(value) = serde_json::from_str::<Value>(event) {
         if let Some(event_name) = value.as_str() {
-            return parse_engram_app_event_name(event_name, None, None, None);
+            return parse_engram_app_event_name(event_name, None, None, None, None);
         }
         let event_name = value
             .get("event")
@@ -1147,11 +1194,21 @@ fn parse_engram_app_event(event: &str) -> Result<ParsedEngramAppEvent, String> {
         let event_value = value.get("value");
         let number_value = event_value.and_then(parse_json_number_value);
         let text_value = event_value.and_then(parse_json_text_value);
-        return parse_engram_app_event_name(event_name, card_id, number_value, text_value);
+        let bool_value = value
+            .get("checked")
+            .and_then(parse_json_bool_value)
+            .or_else(|| event_value.and_then(parse_json_bool_value));
+        return parse_engram_app_event_name(
+            event_name,
+            card_id,
+            number_value,
+            text_value,
+            bool_value,
+        );
     }
 
     let (event_name, card_id) = split_event_card_id(event);
-    parse_engram_app_event_name(event_name, card_id, None, None)
+    parse_engram_app_event_name(event_name, card_id, None, None, None)
 }
 
 fn split_event_card_id(event: &str) -> (&str, Option<String>) {
@@ -1173,6 +1230,7 @@ fn parse_engram_app_event_name(
     card_id: Option<String>,
     number_value: Option<f64>,
     text_value: Option<String>,
+    bool_value: Option<bool>,
 ) -> Result<ParsedEngramAppEvent, String> {
     let lowered = event_name.trim().to_ascii_lowercase();
     let parsed = |kind| {
@@ -1181,6 +1239,7 @@ fn parse_engram_app_event_name(
             card_id.clone(),
             number_value,
             text_value.clone(),
+            bool_value,
         ))
     };
     match lowered.strip_prefix("on").unwrap_or(&lowered) {
@@ -1248,6 +1307,21 @@ fn parse_engram_app_event_name(
         | "deck_options_lapse_multiplier_change" => parsed(EngramAppEvent::DeckOptionsChange(
             DeckOptionField::LapseIntervalMultiplier,
         )),
+        "deckoptionsburynewsiblingschange"
+        | "deck-options-bury-new-siblings-change"
+        | "deck_options_bury_new_siblings_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::BuryNewSiblings,
+        )),
+        "deckoptionsburyreviewsiblingschange"
+        | "deck-options-bury-review-siblings-change"
+        | "deck_options_bury_review_siblings_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::BuryReviewSiblings,
+        )),
+        "deckoptionsburyinterdaylearningsiblingschange"
+        | "deck-options-bury-interday-learning-siblings-change"
+        | "deck_options_bury_interday_learning_siblings_change" => parsed(
+            EngramAppEvent::DeckOptionsChange(DeckOptionField::BuryInterdayLearningSiblings),
+        ),
         "again" => parsed(EngramAppEvent::Rate(Rating::Again)),
         "hard" => parsed(EngramAppEvent::Rate(Rating::Hard)),
         "good" => parsed(EngramAppEvent::Rate(Rating::Good)),
@@ -1290,12 +1364,14 @@ fn parsed_event(
     card_id: Option<String>,
     number_value: Option<f64>,
     text_value: Option<String>,
+    bool_value: Option<bool>,
 ) -> ParsedEngramAppEvent {
     ParsedEngramAppEvent {
         kind,
         card_id,
         number_value,
         text_value,
+        bool_value,
     }
 }
 
@@ -1312,6 +1388,18 @@ fn parse_json_text_value(value: &Value) -> Option<String> {
         .or_else(|| value.as_f64().map(|number| number.to_string()))
 }
 
+fn parse_json_bool_value(value: &Value) -> Option<bool> {
+    value.as_bool().or_else(|| {
+        value
+            .as_str()
+            .and_then(|raw| match raw.trim().to_ascii_lowercase().as_str() {
+                "true" | "1" | "yes" | "on" => Some(true),
+                "false" | "0" | "no" | "off" => Some(false),
+                _ => None,
+            })
+    })
+}
+
 fn apply_deck_option_steps_change(
     options: &mut DeckOptions,
     field: DeckOptionField,
@@ -1323,6 +1411,11 @@ fn apply_deck_option_steps_change(
         }
         DeckOptionField::RelearningStepsMinutes => {
             options.relearning_steps_minutes = parse_step_minutes(value, "relearning steps")?;
+        }
+        DeckOptionField::BuryNewSiblings
+        | DeckOptionField::BuryReviewSiblings
+        | DeckOptionField::BuryInterdayLearningSiblings => {
+            return Err("deck option field does not accept text values".to_string());
         }
         _ => return Err("deck option field does not accept text values".to_string()),
     }
@@ -1351,7 +1444,11 @@ fn apply_deck_option_number_change(
     value: f64,
 ) -> Result<(), String> {
     match field {
-        DeckOptionField::LearningStepsMinutes | DeckOptionField::RelearningStepsMinutes => {
+        DeckOptionField::LearningStepsMinutes
+        | DeckOptionField::RelearningStepsMinutes
+        | DeckOptionField::BuryNewSiblings
+        | DeckOptionField::BuryReviewSiblings
+        | DeckOptionField::BuryInterdayLearningSiblings => {
             return Err("deck option field does not accept numeric values".to_string());
         }
         DeckOptionField::NewCardsPerDay => {
@@ -1384,6 +1481,22 @@ fn apply_deck_option_number_change(
             options.lapse_interval_multiplier =
                 deck_option_non_negative_number(value, "lapse multiplier")?;
         }
+    }
+    Ok(())
+}
+
+fn apply_deck_option_bool_change(
+    options: &mut DeckOptions,
+    field: DeckOptionField,
+    checked: bool,
+) -> Result<(), String> {
+    match field {
+        DeckOptionField::BuryNewSiblings => options.bury_new_siblings = checked,
+        DeckOptionField::BuryReviewSiblings => options.bury_review_siblings = checked,
+        DeckOptionField::BuryInterdayLearningSiblings => {
+            options.bury_interday_learning_siblings = checked;
+        }
+        _ => return Err("deck option field does not accept checked values".to_string()),
     }
     Ok(())
 }
@@ -1966,6 +2079,14 @@ mod tests {
             value["state"]["deckOptions"][0]["options"]["learningStepsMinutes"],
             json!([1, 10])
         );
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["buryNewSiblings"],
+            true
+        );
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["buryReviewSiblings"],
+            true
+        );
     }
 
     #[test]
@@ -2471,7 +2592,10 @@ mod tests {
                     "reviewIntervalModifier": 0.75,
                     "hardIntervalMultiplier": 1.4,
                     "easyBonusMultiplier": 1.6,
-                    "lapseIntervalMultiplier": 0.5
+                    "lapseIntervalMultiplier": 0.5,
+                    "buryNewSiblings": false,
+                    "buryReviewSiblings": true,
+                    "buryInterdayLearningSiblings": false
                 }
             }],
             "activeSession": null
@@ -2727,7 +2851,10 @@ mod tests {
                     "reviewIntervalModifier": 0.75,
                     "hardIntervalMultiplier": 1.4,
                     "easyBonusMultiplier": 1.6,
-                    "lapseIntervalMultiplier": 0.5
+                    "lapseIntervalMultiplier": 0.5,
+                    "buryNewSiblings": false,
+                    "buryReviewSiblings": true,
+                    "buryInterdayLearningSiblings": false
                 }
             }],
             "activeSession": null
@@ -2770,6 +2897,22 @@ mod tests {
         assert_eq!(value["props"]["deck-options-hard-multiplier-value"], 1.4);
         assert_eq!(value["props"]["deck-options-easy-bonus-value"], 1.6);
         assert_eq!(value["props"]["deck-options-lapse-multiplier-value"], 0.5);
+        assert_eq!(
+            value["props"]["deck-options-bury-new-siblings-label"],
+            "Bury new siblings"
+        );
+        assert_eq!(
+            value["props"]["deck-options-bury-new-siblings-value"],
+            false
+        );
+        assert_eq!(
+            value["props"]["deck-options-bury-review-siblings-value"],
+            true
+        );
+        assert_eq!(
+            value["props"]["deck-options-bury-interday-learning-siblings-value"],
+            false
+        );
         assert_eq!(value["props"]["history-label"], "Review history");
         assert_eq!(value["props"]["history-window-label"], "Lifetime");
         assert_eq!(value["props"]["history-total-value"], "2");
@@ -2898,6 +3041,136 @@ mod tests {
         assert_eq!(undone["props"]["answer-visible"], true);
         assert_eq!(undone["state"]["sessions"][0]["cardsReviewed"], 0);
         assert_eq!(undone["state"]["sessions"][0]["cardsCorrect"], 0);
+    }
+
+    #[test]
+    fn handle_engram_app_rate_uses_deck_sibling_bury_options() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {
+                    "id":"note::forward",
+                    "deckId":"deck",
+                    "front":"letter-a",
+                    "back":"a",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                },
+                {
+                    "id":"note::reverse",
+                    "deckId":"deck",
+                    "front":"a",
+                    "back":"letter-a",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"reverse","ordinal":1}
+                },
+                {
+                    "id":"other::forward",
+                    "deckId":"deck",
+                    "front":"letter-b",
+                    "back":"b",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"other","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                }
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "deckOptions": [{
+                "deckId": "deck",
+                "options": {
+                    "buryNewSiblings": true,
+                    "buryReviewSiblings": false,
+                    "buryInterdayLearningSiblings": false
+                }
+            }],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [
+                    {
+                        "id":"note::forward",
+                        "deckId":"deck",
+                        "front":"letter-a",
+                        "back":"a",
+                        "createdAt":1700000000000,
+                        "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                    },
+                    {
+                        "id":"note::reverse",
+                        "deckId":"deck",
+                        "front":"a",
+                        "back":"letter-a",
+                        "createdAt":1700000000000,
+                        "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"reverse","ordinal":1}
+                    },
+                    {
+                        "id":"other::forward",
+                        "deckId":"deck",
+                        "front":"letter-b",
+                        "back":"b",
+                        "createdAt":1700000000000,
+                        "lineage":{"noteId":"other","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                    }
+                ],
+                "startedAt": 1700000000000
+            }"#,
+        );
+
+        let rated: Value =
+            serde_json::from_str(&session.handle_engram_app_event("good", "deck", NOW)).unwrap();
+        assert_eq!(rated["ok"], true);
+        assert_eq!(rated["event"], "onGood");
+        assert_eq!(
+            rated["state"]["reviews"][0]["siblingProgressSnapshots"][0]["cardId"],
+            "note::reverse"
+        );
+        assert_eq!(
+            rated["state"]["cardProgress"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .find(|progress| progress["cardId"] == "note::reverse")
+                .and_then(|progress| progress["buriedUntil"].as_u64()),
+            Some(NOW + engram_core::ONE_DAY_MS)
+        );
+        let queue_ids: Vec<_> = rated["state"]["activeSession"]["queue"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|card| card["id"].as_str().unwrap())
+            .collect();
+        assert_eq!(queue_ids, vec!["note::forward", "other::forward"]);
+        assert_eq!(rated["props"]["prompt"], "letter-b");
+
+        let undone: Value =
+            serde_json::from_str(&session.handle_engram_app_event("undo", "deck", NOW + 1))
+                .unwrap();
+        assert_eq!(undone["ok"], true);
+        assert!(undone["state"]["reviews"].as_array().unwrap().is_empty());
+        assert!(undone["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+        let restored_ids: Vec<_> = undone["state"]["activeSession"]["queue"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|card| card["id"].as_str().unwrap())
+            .collect();
+        assert_eq!(
+            restored_ids,
+            vec!["note::forward", "note::reverse", "other::forward"]
+        );
     }
 
     #[test]
@@ -3189,7 +3462,10 @@ mod tests {
                         "reviewIntervalModifier": 1.1,
                         "hardIntervalMultiplier": 1.2,
                         "easyBonusMultiplier": 1.4,
-                        "lapseIntervalMultiplier": 0.25
+                        "lapseIntervalMultiplier": 0.25,
+                        "buryNewSiblings": true,
+                        "buryReviewSiblings": true,
+                        "buryInterdayLearningSiblings": true
                     }
                 }],
                 "activeSession": null
@@ -3271,6 +3547,43 @@ mod tests {
             "15, 45"
         );
 
+        let bury_new: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsBuryNewSiblingsChange","checked":false}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(bury_new["ok"], true);
+        assert_eq!(bury_new["event"], "onDeckOptionsBuryNewSiblingsChange");
+        assert_eq!(
+            bury_new["state"]["deckOptions"][0]["options"]["buryNewSiblings"],
+            false
+        );
+        assert_eq!(
+            bury_new["props"]["deck-options-bury-new-siblings-value"],
+            false
+        );
+
+        let bury_interday: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onDeckOptionsBuryInterdayLearningSiblingsChange","value":"off"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(bury_interday["ok"], true);
+        assert_eq!(
+            bury_interday["event"],
+            "onDeckOptionsBuryInterdayLearningSiblingsChange"
+        );
+        assert_eq!(
+            bury_interday["state"]["deckOptions"][0]["options"]["buryInterdayLearningSiblings"],
+            false
+        );
+        assert_eq!(
+            bury_interday["props"]["deck-options-bury-interday-learning-siblings-value"],
+            false
+        );
+
         let invalid: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"type":"deckOptionsEasyBonusChange"}"#,
             "deck",
@@ -3293,6 +3606,18 @@ mod tests {
         assert_eq!(
             invalid_steps["error"],
             "learning steps must be whole minutes separated by commas"
+        );
+
+        let invalid_bool: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsBuryReviewSiblingsChange"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(invalid_bool["ok"], false);
+        assert_eq!(
+            invalid_bool["error"],
+            "onDeckOptionsBuryReviewSiblingsChange is missing checked value"
         );
     }
 

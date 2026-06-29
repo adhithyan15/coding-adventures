@@ -104,6 +104,9 @@ Current reducer integration:
 - `RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` let hosts
   apply Anki-style sibling burying atomically during review; the JSON facade
   exposes this as optional `burySiblingsUntil` on `rateCard`.
+- Durable deck options now include Anki-style defaults for burying new, review,
+  and interday-learning same-note siblings; generated Engram app rating events
+  consume those defaults through the shared Rust facade.
 - Generated note-template cards can be materialized into durable `Card` records
   with lineage through the JSON facade and C ABI.
 - Anki-style Cloze templates using `{{cloze:Field}}` now generate one card per
@@ -189,7 +192,8 @@ at least:
 - lapse handling
 - bury siblings until next day. Core and JSON facade support exists for
   lineage-backed sibling burying both as a direct command and as an atomic
-  `rateCard` option; UI controls/settings still need to bind to it.
+  `rateCard` option; durable deck-option defaults and Mosaic checkbox controls
+  now bind to new/review/interday-learning sibling burying.
 - deck options
 - daily limits. Core, JSON facade, and C ABI support exists for review-log-aware
   daily queue limits; the Mosaic `DeckOptionsPanel` exposes editable new/review
@@ -548,7 +552,8 @@ Status:
   shared Engram review-history props.
 - `code/packages/mosaic-pkg-deck-options` adds reusable daily-limit,
   graduation-interval, maximum-interval, interval-modifier, hard/easy
-  multiplier, and lapse-multiplier controls for Anki-style deck settings.
+  multiplier, lapse-multiplier, and sibling-bury checkbox controls for
+  Anki-style deck settings.
 - `code/packages/mosaic-pkg-rating-controls` adds reusable
   Again/Hard/Good/Easy answer grading controls with label slots and review
   events.
@@ -571,10 +576,10 @@ Status:
 - The Engram event bridge now handles generated review action events from the
   Mosaic app (`onUndo`, `onBuryCard`, `onBurySiblings`, `onSuspendCard`, and
   `onToggleMark`) by dispatching the existing shared Rust reducer commands.
-- The Engram event bridge also handles generated deck-option number-change
-  events by updating the selected deck through `EngramCommand::SetDeckOptions`,
-  so HTML, Electron, SwiftUI, XAML, and Qt hosts can share the same settings
-  mutation path.
+- The Engram event bridge also handles generated deck-option number, text, and
+  checkbox-change events by updating the selected deck through
+  `EngramCommand::SetDeckOptions`, so HTML, Electron, SwiftUI, XAML, and Qt
+  hosts can share the same settings mutation path.
 - `mosaic-package-artifact-builder` now emits XAML project-shell side files
   through the same package build path as React/HTML/Qt/SwiftUI/etc., and the
   Engram app smoke test verifies native project shells for Qt, SwiftUI, and

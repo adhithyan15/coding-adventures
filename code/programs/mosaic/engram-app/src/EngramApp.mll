@@ -46,6 +46,12 @@ layout EngramApp {
         easy-bonus-value : slot: deck-options-easy-bonus-value ,
         lapse-multiplier-label : slot: deck-options-lapse-multiplier-label ,
         lapse-multiplier-value : slot: deck-options-lapse-multiplier-value ,
+        bury-new-siblings-label : slot: deck-options-bury-new-siblings-label ,
+        bury-new-siblings-value : slot: deck-options-bury-new-siblings-value ,
+        bury-review-siblings-label : slot: deck-options-bury-review-siblings-label ,
+        bury-review-siblings-value : slot: deck-options-bury-review-siblings-value ,
+        bury-interday-learning-siblings-label : slot: deck-options-bury-interday-learning-siblings-label ,
+        bury-interday-learning-siblings-value : slot: deck-options-bury-interday-learning-siblings-value ,
         onLearningStepsChange : emit: onDeckOptionsLearningStepsChange ,
         onRelearningStepsChange : emit: onDeckOptionsRelearningStepsChange ,
         onNewCardsChange : emit: onDeckOptionsNewCardsChange ,
@@ -56,7 +62,10 @@ layout EngramApp {
         onIntervalModifierChange : emit: onDeckOptionsIntervalModifierChange ,
         onHardMultiplierChange : emit: onDeckOptionsHardMultiplierChange ,
         onEasyBonusChange : emit: onDeckOptionsEasyBonusChange ,
-        onLapseMultiplierChange : emit: onDeckOptionsLapseMultiplierChange
+        onLapseMultiplierChange : emit: onDeckOptionsLapseMultiplierChange ,
+        onBuryNewSiblingsChange : emit: onDeckOptionsBuryNewSiblingsChange ,
+        onBuryReviewSiblingsChange : emit: onDeckOptionsBuryReviewSiblingsChange ,
+        onBuryInterdayLearningSiblingsChange : emit: onDeckOptionsBuryInterdayLearningSiblingsChange
       )
     }
     Box [ review-history-region ] {

@@ -104,6 +104,12 @@ fn deck_options_frontend_sources_compile() {
             "easy-bonus-value",
             "lapse-multiplier-label",
             "lapse-multiplier-value",
+            "bury-new-siblings-label",
+            "bury-new-siblings-value",
+            "bury-review-siblings-label",
+            "bury-review-siblings-value",
+            "bury-interday-learning-siblings-label",
+            "bury-interday-learning-siblings-value",
         ]
     );
 
@@ -122,6 +128,9 @@ fn deck_options_frontend_sources_compile() {
             "onHardMultiplierChange",
             "onEasyBonusChange",
             "onLapseMultiplierChange",
+            "onBuryNewSiblingsChange",
+            "onBuryReviewSiblingsChange",
+            "onBuryInterdayLearningSiblingsChange",
         ]
     );
 }
@@ -177,10 +186,32 @@ fn deck_options_layout_wires_number_controls() {
         "hard-multiplier-label",
         "easy-bonus-label",
         "lapse-multiplier-label",
+        "bury-new-siblings-label",
+        "bury-review-siblings-label",
+        "bury-interday-learning-siblings-label",
     ] {
         assert!(
-            source.contains(&format!("content : slot: {label_slot}")),
+            source.contains(&format!("content : slot: {label_slot}"))
+                || source.contains(&format!("label : slot: {label_slot}")),
             "DeckOptionsPanel.mll must bind {label_slot}"
+        );
+    }
+
+    for (value_slot, emit) in [
+        ("bury-new-siblings-value", "onBuryNewSiblingsChange"),
+        ("bury-review-siblings-value", "onBuryReviewSiblingsChange"),
+        (
+            "bury-interday-learning-siblings-value",
+            "onBuryInterdayLearningSiblingsChange",
+        ),
+    ] {
+        assert!(
+            source.contains(&format!("checked : slot: {value_slot}")),
+            "DeckOptionsPanel.mll must bind {value_slot}"
+        );
+        assert!(
+            source.contains(&format!("onToggle : emit: {emit}")),
+            "DeckOptionsPanel.mll must wire {emit}"
         );
     }
 }

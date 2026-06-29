@@ -134,5 +134,34 @@ layout DeckOptionsPanel {
         )
       }
     }
+    Row [ sibling-bury-options ] {
+      Column [ bury-new-siblings-field ] {
+        HostCheckbox [ bury-new-siblings-checkbox ] (
+          label : slot: bury-new-siblings-label ,
+          checked : slot: bury-new-siblings-value ,
+          disabled : false ,
+          indeterminate : false ,
+          onToggle : emit: onBuryNewSiblingsChange
+        )
+      }
+      Column [ bury-review-siblings-field ] {
+        HostCheckbox [ bury-review-siblings-checkbox ] (
+          label : slot: bury-review-siblings-label ,
+          checked : slot: bury-review-siblings-value ,
+          disabled : false ,
+          indeterminate : false ,
+          onToggle : emit: onBuryReviewSiblingsChange
+        )
+      }
+      Column [ bury-interday-learning-siblings-field ] {
+        HostCheckbox [ bury-interday-learning-siblings-checkbox ] (
+          label : slot: bury-interday-learning-siblings-label ,
+          checked : slot: bury-interday-learning-siblings-value ,
+          disabled : false ,
+          indeterminate : false ,
+          onToggle : emit: onBuryInterdayLearningSiblingsChange
+        )
+      }
+    }
   }
 }

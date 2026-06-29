@@ -428,6 +428,11 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&react_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&react_app, "deckOptionsIntervalModifierValue: 0,");
+    assert_contains(&react_app, "deckOptionsBuryNewSiblingsValue: false,");
+    assert_contains(
+        &react_app,
+        "deckOptionsBuryReviewSiblingsValue: false,",
+    );
     assert_contains(&react_app, "historyLabel: \"Sample HistoryLabel\",");
     assert_contains(&react_app, "historyTotalValue: \"Sample HistoryTotalValue\",");
     assert_contains(
@@ -480,6 +485,10 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&electron_app, "deckOptionsMaximumIntervalValue: 0,");
     assert_contains(&electron_app, "deckOptionsEasyBonusValue: 0,");
+    assert_contains(
+        &electron_app,
+        "deckOptionsBuryInterdayLearningSiblingsValue: false,",
+    );
     assert_contains(
         &electron_app,
         "historyWindowLabel: \"Sample HistoryWindowLabel\",",
@@ -567,6 +576,10 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&flutter_app, "deckOptionsNewCardsValue: 0.0,");
     assert_contains(&flutter_app, "deckOptionsHardMultiplierValue: 0.0,");
+    assert_contains(
+        &flutter_app,
+        "deckOptionsBuryNewSiblingsValue: false,",
+    );
     assert_contains(&flutter_app, "historyLabel: \"Sample HistoryLabel\",");
     assert_contains(
         &flutter_app,
@@ -600,6 +613,12 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "property string deckOptionsRelearningStepsValue");
     assert_contains(&qml, "property real deckOptionsNewCardsValue");
     assert_contains(&qml, "property real deckOptionsEasyBonusValue");
+    assert_contains(&qml, "property bool deckOptionsBuryNewSiblingsValue");
+    assert_contains(&qml, "property bool deckOptionsBuryReviewSiblingsValue");
+    assert_contains(
+        &qml,
+        "property bool deckOptionsBuryInterdayLearningSiblingsValue",
+    );
     assert_contains(&qml, "property string historyLabel");
     assert_contains(&qml, "property string historyTotalValue");
     assert_contains(&qml, "property string historyAccuracyValue");
@@ -631,6 +650,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal deckOptionsNewCardsChange(real value)");
     assert_contains(&qml, "signal deckOptionsMaximumIntervalChange(real value)");
     assert_contains(&qml, "signal deckOptionsEasyBonusChange(real value)");
+    assert_contains(&qml, "signal deckOptionsBuryNewSiblingsChange(bool checked)");
+    assert_contains(
+        &qml,
+        "signal deckOptionsBuryInterdayLearningSiblingsChange(bool checked)",
+    );
     assert_contains(&qml, "signal browserSearch()");
     assert_contains(&qml, "signal browserSelectResult(real index)");
 
@@ -652,6 +676,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case deckOptionsNewCardsChange");
     assert_contains(&swift, "case deckOptionsMaximumIntervalChange");
     assert_contains(&swift, "case deckOptionsEasyBonusChange");
+    assert_contains(&swift, "case deckOptionsBuryNewSiblingsChange");
+    assert_contains(&swift, "case deckOptionsBuryReviewSiblingsChange");
+    assert_contains(&swift, "case deckOptionsBuryInterdayLearningSiblingsChange");
     assert_contains(&swift, "case importAnki");
     assert_contains(&swift, "case exportAnki");
     assert_contains(&swift, "case addNote");
@@ -667,6 +694,12 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "let deckOptionsRelearningStepsValue: String");
     assert_contains(&swift, "let deckOptionsNewCardsValue: Double");
     assert_contains(&swift, "let deckOptionsEasyBonusValue: Double");
+    assert_contains(&swift, "let deckOptionsBuryNewSiblingsValue: Bool");
+    assert_contains(&swift, "let deckOptionsBuryReviewSiblingsValue: Bool");
+    assert_contains(
+        &swift,
+        "let deckOptionsBuryInterdayLearningSiblingsValue: Bool",
+    );
     assert_contains(&swift, "let historyLabel: String");
     assert_contains(&swift, "let historyTotalValue: String");
     assert_contains(&swift, "let historyAccuracyValue: String");
@@ -698,6 +731,7 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&swift_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&swift_app, "deckOptionsEasyBonusValue: 0,");
+    assert_contains(&swift_app, "deckOptionsBuryNewSiblingsValue: false,");
     assert_contains(&swift_app, "historyLabel: \"Sample HistoryLabel\",");
     assert_contains(
         &swift_app,
@@ -757,6 +791,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty DeckOptionsEasyBonusValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsBuryNewSiblingsValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsBuryReviewSiblingsValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsBuryInterdayLearningSiblingsValueProperty",
     );
     assert_contains(
         &xaml_code_behind,
@@ -868,6 +914,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record DeckOptionsEasyBonusChange(double Value) : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsBuryNewSiblingsChange(bool Checked) : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsBuryReviewSiblingsChange(bool Checked) : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsBuryInterdayLearningSiblingsChange(bool Checked) : EngramAppEvent;",
     );
     assert_contains(
         &xaml_events,

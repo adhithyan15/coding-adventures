@@ -28,6 +28,10 @@ style DeckOptionsPanel {
   }
 
   part review-factor-options {
+    padding-bottom : 10 ;
+  }
+
+  part sibling-bury-options {
     padding-bottom : 4 ;
   }
 
@@ -72,6 +76,18 @@ style DeckOptionsPanel {
   }
 
   part lapse-multiplier-field {
+    padding : 6 ;
+  }
+
+  part bury-new-siblings-field {
+    padding : 6 ;
+  }
+
+  part bury-review-siblings-field {
+    padding : 6 ;
+  }
+
+  part bury-interday-learning-siblings-field {
     padding : 6 ;
   }
 
@@ -260,5 +276,23 @@ style DeckOptionsPanel {
     font-size : 12 ;
     font-weight : 700 ;
     padding-bottom : 4 ;
+  }
+
+  part bury-new-siblings-checkbox {
+    color : "#fef3c7" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+
+  part bury-review-siblings-checkbox {
+    color : "#dbeafe" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+
+  part bury-interday-learning-siblings-checkbox {
+    color : "#dcfce7" ;
+    font-size : 12 ;
+    font-weight : 700 ;
   }
 }

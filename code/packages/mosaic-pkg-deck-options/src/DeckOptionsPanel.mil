@@ -27,6 +27,12 @@ component DeckOptionsPanel {
   slot easy-bonus-value : number ;
   slot lapse-multiplier-label : text ;
   slot lapse-multiplier-value : number ;
+  slot bury-new-siblings-label : text ;
+  slot bury-new-siblings-value : bool ;
+  slot bury-review-siblings-label : text ;
+  slot bury-review-siblings-value : bool ;
+  slot bury-interday-learning-siblings-label : text ;
+  slot bury-interday-learning-siblings-value : bool ;
 
   emit onLearningStepsChange ( value : text ) ;
   emit onRelearningStepsChange ( value : text ) ;
@@ -39,4 +45,7 @@ component DeckOptionsPanel {
   emit onHardMultiplierChange ( value : number ) ;
   emit onEasyBonusChange ( value : number ) ;
   emit onLapseMultiplierChange ( value : number ) ;
+  emit onBuryNewSiblingsChange ( checked : bool ) ;
+  emit onBuryReviewSiblingsChange ( checked : bool ) ;
+  emit onBuryInterdayLearningSiblingsChange ( checked : bool ) ;
 }

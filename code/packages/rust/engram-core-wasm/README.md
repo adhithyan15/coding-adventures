@@ -59,7 +59,8 @@ options for a deck, using the same camelCase `DeckOptions` shape accepted by
 may also include a `deckOptions` object to drive the Rust scheduler with custom
 learning steps, relearning steps, daily limits, graduation intervals, and lapse
 behavior. `deckOptions` can also tune Anki-style maximum interval, review
-interval modifier, hard interval multiplier, and easy bonus multiplier values.
+interval modifier, hard interval multiplier, easy bonus multiplier, and
+same-note sibling-bury defaults for new, review, and interday-learning cards.
 When `deckOptions` is omitted, the core applies `DeckOptions::default()`.
 Hosts may also include `burySiblingsUntil` to rate the current card and bury
 same-note siblings in the same reducer transition; the review log records enough
@@ -115,8 +116,9 @@ such as `onBrowserToggleMarkSelected|card-id` or
 Deck option controls use the generated event shape, for example
 `{"type":"deckOptionsNewCardsChange","value":12}` for numeric fields or
 `{"type":"deckOptionsLearningStepsChange","value":"1, 10"}` for step-list
-fields, and update the selected deck through the shared `setDeckOptions`
-reducer path.
+fields. Checkbox fields use the native HostCheckbox payload, for example
+`{"type":"deckOptionsBuryNewSiblingsChange","checked":false}`. All update the
+selected deck through the shared `setDeckOptions` reducer path.
 Collection workflow events such as `onImportAnki`, `onExportAnki`, `onAddNote`,
 `onAddNoteType`, `onDeleteNote`, and `onDeleteNoteType` round-trip through the
 same event parser as host intents so generated shells share one UI contract

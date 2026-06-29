@@ -41,6 +41,12 @@ component EngramApp {
   slot deck-options-easy-bonus-value : number ;
   slot deck-options-lapse-multiplier-label : text ;
   slot deck-options-lapse-multiplier-value : number ;
+  slot deck-options-bury-new-siblings-label : text ;
+  slot deck-options-bury-new-siblings-value : bool ;
+  slot deck-options-bury-review-siblings-label : text ;
+  slot deck-options-bury-review-siblings-value : bool ;
+  slot deck-options-bury-interday-learning-siblings-label : text ;
+  slot deck-options-bury-interday-learning-siblings-value : bool ;
   slot history-label : text ;
   slot history-window-label : text ;
   slot history-total-label : text ;
@@ -144,6 +150,9 @@ component EngramApp {
   emit onDeckOptionsHardMultiplierChange ( value : number ) ;
   emit onDeckOptionsEasyBonusChange ( value : number ) ;
   emit onDeckOptionsLapseMultiplierChange ( value : number ) ;
+  emit onDeckOptionsBuryNewSiblingsChange ( checked : bool ) ;
+  emit onDeckOptionsBuryReviewSiblingsChange ( checked : bool ) ;
+  emit onDeckOptionsBuryInterdayLearningSiblingsChange ( checked : bool ) ;
   emit onBrowserQueryChange ( value : text ) ;
   emit onBrowserSearch ;
   emit onBrowserSelectResult ( index : number ) ;

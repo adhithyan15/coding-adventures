@@ -8,6 +8,8 @@
 - Added the reusable `mosaic-pkg-deck-options` dependency and mounted its
   `DeckOptionsPanel` component so generated host shells expose shared
   Anki-style deck scheduler option controls.
+- Expanded deck options with native checkbox bindings for Anki-style sibling
+  burying defaults.
 - Expanded the generated deck option contract with learning/relearning step
   list slots and events.
 - Routed generated deck option change events through the shared Engram facade

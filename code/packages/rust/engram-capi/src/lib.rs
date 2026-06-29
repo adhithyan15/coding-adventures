@@ -1462,6 +1462,15 @@ CREATE TABLE graves (
             assert_eq!(props["props"]["history-label"], "Review history");
             assert_eq!(props["props"]["history-total-value"], "0");
             assert_eq!(props["props"]["history-accuracy-value"], "0%");
+            assert_eq!(props["props"]["deck-options-bury-new-siblings-value"], true);
+            assert_eq!(
+                props["props"]["deck-options-bury-review-siblings-value"],
+                true
+            );
+            assert_eq!(
+                props["props"]["deck-options-bury-interday-learning-siblings-value"],
+                true
+            );
             assert_eq!(props["props"]["answer-visible"], false);
             assert_eq!(props["props"]["action-undo-label"], "Undo");
             assert_eq!(props["props"]["action-bury-card-label"], "Bury card");
@@ -1664,6 +1673,29 @@ CREATE TABLE graves (
             assert_eq!(
                 learning_steps_changed["props"]["deck-options-learning-steps-value"],
                 "4, 40"
+            );
+
+            let bury_review =
+                cstr(r#"{"type":"deckOptionsBuryReviewSiblingsChange","checked":false}"#);
+            let bury_review_changed = take(eg_handle_engram_app_event(
+                session,
+                bury_review.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 9,
+            ));
+            let bury_review_changed: Value = serde_json::from_str(&bury_review_changed).unwrap();
+            assert_eq!(bury_review_changed["ok"], true);
+            assert_eq!(
+                bury_review_changed["event"],
+                "onDeckOptionsBuryReviewSiblingsChange"
+            );
+            assert_eq!(
+                bury_review_changed["state"]["deckOptions"][0]["options"]["buryReviewSiblings"],
+                false
+            );
+            assert_eq!(
+                bury_review_changed["props"]["deck-options-bury-review-siblings-value"],
+                false
             );
 
             eg_session_free(session);
