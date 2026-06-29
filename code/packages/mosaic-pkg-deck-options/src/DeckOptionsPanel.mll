@@ -145,6 +145,76 @@ layout DeckOptionsPanel {
         )
       }
     }
+    Row [ fsrs-options ] {
+      Column [ desired-retention-field ] {
+        Text [ desired-retention-label ] (
+          content : slot: desired-retention-label
+        )
+        HostNumberInput [ desired-retention-input ] (
+          value : slot: desired-retention-value ,
+          placeholder : "0.90" ,
+          disabled : false ,
+          onChange : emit: onDesiredRetentionChange
+        )
+      }
+      Column [ historical-retention-field ] {
+        Text [ historical-retention-label ] (
+          content : slot: historical-retention-label
+        )
+        HostNumberInput [ historical-retention-input ] (
+          value : slot: historical-retention-value ,
+          placeholder : "0.90" ,
+          disabled : false ,
+          onChange : emit: onHistoricalRetentionChange
+        )
+      }
+      Column [ fsrs-parameters-field ] {
+        Text [ fsrs-parameters-label ] (
+          content : slot: fsrs-parameters-label
+        )
+        HostInput [ fsrs-parameters-input ] (
+          value : slot: fsrs-parameters-value ,
+          placeholder : "0.1, 1.2, 2.3" ,
+          disabled : false ,
+          onChange : emit: onFsrsParametersChange
+        )
+      }
+    }
+    Row [ fsrs-filter-options ] {
+      Column [ fsrs-search-field ] {
+        Text [ fsrs-search-label ] (
+          content : slot: fsrs-search-label
+        )
+        HostInput [ fsrs-search-input ] (
+          value : slot: fsrs-search-value ,
+          placeholder : "preset:\"Default\" -is:suspended" ,
+          disabled : false ,
+          onChange : emit: onFsrsSearchChange
+        )
+      }
+      Column [ ignore-review-history-before-field ] {
+        Text [ ignore-review-history-before-label ] (
+          content : slot: ignore-review-history-before-label
+        )
+        HostInput [ ignore-review-history-before-input ] (
+          value : slot: ignore-review-history-before-value ,
+          placeholder : "2024-01-02" ,
+          disabled : false ,
+          onChange : emit: onIgnoreReviewHistoryBeforeChange
+        )
+      }
+      Column [ easy-days-percentages-field ] {
+        Text [ easy-days-percentages-label ] (
+          content : slot: easy-days-percentages-label
+        )
+        HostInput [ easy-days-percentages-input ] (
+          value : slot: easy-days-percentages-value ,
+          placeholder : "1, 1, 1, 1, 1, 1, 1" ,
+          disabled : false ,
+          onChange : emit: onEasyDaysPercentagesChange
+        )
+      }
+    }
     Row [ leech-options ] {
       Column [ leech-threshold-field ] {
         Text [ leech-threshold-label ] (

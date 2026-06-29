@@ -154,6 +154,12 @@ fields. Checkbox fields use the native HostCheckbox payload, for example
 `{"type":"deckOptionsBuryNewSiblingsChange","checked":false}`. All update the
 selected deck through the shared `setDeckOptions` reducer path. Initial ease
 changes use the same numeric path and persist as `DeckOptions.initialEaseFactor`.
+FSRS deck option events use the same generated shape:
+`deckOptionsDesiredRetentionChange`, `deckOptionsFsrsParametersChange`,
+`deckOptionsFsrsSearchChange`, `deckOptionsIgnoreReviewHistoryBeforeChange`,
+`deckOptionsHistoricalRetentionChange`, and
+`deckOptionsEasyDaysPercentagesChange` persist the matching first-class
+`DeckOptions` fields for Anki FSRS preset round-trips.
 Collection workflow events such as `onImportAnki`, `onExportAnki`, `onAddNote`,
 `onAddNoteType`, `onDeleteNote`, and `onDeleteNoteType` round-trip through the
 same event parser as host intents so generated shells share one UI contract

@@ -453,6 +453,12 @@ pub struct DeckOptions {
     pub bury_new_siblings: bool,
     pub bury_review_siblings: bool,
     pub bury_interday_learning_siblings: bool,
+    pub desired_retention: f64,
+    pub fsrs_parameters: Vec<f64>,
+    pub fsrs_parameter_search: String,
+    pub ignore_review_history_before: String,
+    pub historical_retention: f64,
+    pub easy_days_percentages: Vec<f64>,
 }
 
 impl Default for DeckOptions {
@@ -475,6 +481,12 @@ impl Default for DeckOptions {
             bury_new_siblings: true,
             bury_review_siblings: true,
             bury_interday_learning_siblings: true,
+            desired_retention: 0.9,
+            fsrs_parameters: Vec::new(),
+            fsrs_parameter_search: String::new(),
+            ignore_review_history_before: String::new(),
+            historical_retention: 0.9,
+            easy_days_percentages: vec![1.0; 7],
         }
     }
 }

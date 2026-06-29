@@ -47,7 +47,10 @@ models, notes, cards, progress, and review rows, and falls back to a synthetic
 Basic note type for standalone front/back cards. Deck option import/export
 includes daily limits, learning/relearning steps, initial ease factor, interval
 multipliers, lapse multiplier, maximum interval, leech threshold/action, and
-Anki-style sibling bury booleans. Anki's
+Anki-style sibling bury booleans. It also imports and exports Anki FSRS preset
+fields including desired retention, `fsrsParams6`/`fsrsParams5`/legacy
+`fsrsWeights`, weight-search queries, ignored-history dates, historical
+retention, and easy-day percentages. Anki's
 special `marked` note tag imports as Engram marked-card progress for each card
 generated from that note, and Engram marked cards export the canonical `marked`
 tag so the mark survives APKG round-trips. Imported suspended cards and Anki's

@@ -108,6 +108,18 @@ fn deck_options_frontend_sources_compile() {
             "lapse-multiplier-value",
             "leech-threshold-label",
             "leech-threshold-value",
+            "desired-retention-label",
+            "desired-retention-value",
+            "fsrs-parameters-label",
+            "fsrs-parameters-value",
+            "fsrs-search-label",
+            "fsrs-search-value",
+            "ignore-review-history-before-label",
+            "ignore-review-history-before-value",
+            "historical-retention-label",
+            "historical-retention-value",
+            "easy-days-percentages-label",
+            "easy-days-percentages-value",
             "leech-action-label",
             "leech-action-suspend-label",
             "leech-action-suspend-value",
@@ -139,6 +151,12 @@ fn deck_options_frontend_sources_compile() {
             "onEasyBonusChange",
             "onLapseMultiplierChange",
             "onLeechThresholdChange",
+            "onDesiredRetentionChange",
+            "onFsrsParametersChange",
+            "onFsrsSearchChange",
+            "onIgnoreReviewHistoryBeforeChange",
+            "onHistoricalRetentionChange",
+            "onEasyDaysPercentagesChange",
             "onLeechActionChange",
             "onBuryNewSiblingsChange",
             "onBuryReviewSiblingsChange",
@@ -177,6 +195,8 @@ fn deck_options_layout_wires_number_controls() {
         ("easy-bonus-value", "onEasyBonusChange"),
         ("lapse-multiplier-value", "onLapseMultiplierChange"),
         ("leech-threshold-value", "onLeechThresholdChange"),
+        ("desired-retention-value", "onDesiredRetentionChange"),
+        ("historical-retention-value", "onHistoricalRetentionChange"),
     ] {
         assert!(
             source.contains(&format!("value : slot: {value_slot}")),
@@ -202,6 +222,12 @@ fn deck_options_layout_wires_number_controls() {
         "easy-bonus-label",
         "lapse-multiplier-label",
         "leech-threshold-label",
+        "desired-retention-label",
+        "fsrs-parameters-label",
+        "fsrs-search-label",
+        "ignore-review-history-before-label",
+        "historical-retention-label",
+        "easy-days-percentages-label",
         "leech-action-label",
         "leech-action-suspend-label",
         "leech-action-tag-only-label",
@@ -213,6 +239,25 @@ fn deck_options_layout_wires_number_controls() {
             source.contains(&format!("content : slot: {label_slot}"))
                 || source.contains(&format!("label : slot: {label_slot}")),
             "DeckOptionsPanel.mll must bind {label_slot}"
+        );
+    }
+
+    for (value_slot, emit) in [
+        ("fsrs-parameters-value", "onFsrsParametersChange"),
+        ("fsrs-search-value", "onFsrsSearchChange"),
+        (
+            "ignore-review-history-before-value",
+            "onIgnoreReviewHistoryBeforeChange",
+        ),
+        ("easy-days-percentages-value", "onEasyDaysPercentagesChange"),
+    ] {
+        assert!(
+            source.contains(&format!("value : slot: {value_slot}")),
+            "DeckOptionsPanel.mll must bind {value_slot}"
+        );
+        assert!(
+            source.contains(&format!("onChange : emit: {emit}")),
+            "DeckOptionsPanel.mll must wire {emit}"
         );
     }
 

@@ -282,7 +282,11 @@ impl EngramSession {
                     match field {
                         DeckOptionField::LearningStepsMinutes
                         | DeckOptionField::RelearningStepsMinutes
-                        | DeckOptionField::LeechAction => {
+                        | DeckOptionField::LeechAction
+                        | DeckOptionField::FsrsParameters
+                        | DeckOptionField::FsrsParameterSearch
+                        | DeckOptionField::IgnoreReviewHistoryBefore
+                        | DeckOptionField::EasyDaysPercentages => {
                             let value = parsed.text_value.as_deref().ok_or_else(|| {
                                 format!("{} is missing text value", parsed.kind.canonical_name())
                             })?;
@@ -924,6 +928,54 @@ fn engram_app_props_for_state(
             Value::from(deck_options.leech_threshold),
         );
         props_object.insert(
+            "deck-options-desired-retention-label".to_string(),
+            Value::String("Desired retention".to_string()),
+        );
+        props_object.insert(
+            "deck-options-desired-retention-value".to_string(),
+            Value::from(deck_options.desired_retention),
+        );
+        props_object.insert(
+            "deck-options-fsrs-parameters-label".to_string(),
+            Value::String("FSRS parameters".to_string()),
+        );
+        props_object.insert(
+            "deck-options-fsrs-parameters-value".to_string(),
+            Value::String(format_f64_list(&deck_options.fsrs_parameters)),
+        );
+        props_object.insert(
+            "deck-options-fsrs-search-label".to_string(),
+            Value::String("FSRS search".to_string()),
+        );
+        props_object.insert(
+            "deck-options-fsrs-search-value".to_string(),
+            Value::String(deck_options.fsrs_parameter_search.clone()),
+        );
+        props_object.insert(
+            "deck-options-ignore-review-history-before-label".to_string(),
+            Value::String("Ignore reviews before".to_string()),
+        );
+        props_object.insert(
+            "deck-options-ignore-review-history-before-value".to_string(),
+            Value::String(deck_options.ignore_review_history_before.clone()),
+        );
+        props_object.insert(
+            "deck-options-historical-retention-label".to_string(),
+            Value::String("Historical retention".to_string()),
+        );
+        props_object.insert(
+            "deck-options-historical-retention-value".to_string(),
+            Value::from(deck_options.historical_retention),
+        );
+        props_object.insert(
+            "deck-options-easy-days-percentages-label".to_string(),
+            Value::String("Easy day factors".to_string()),
+        );
+        props_object.insert(
+            "deck-options-easy-days-percentages-value".to_string(),
+            Value::String(format_f64_list(&deck_options.easy_days_percentages)),
+        );
+        props_object.insert(
             "deck-options-leech-action-label".to_string(),
             Value::String("Leech action".to_string()),
         );
@@ -1094,6 +1146,15 @@ fn format_step_minutes(steps: &[u32]) -> String {
     steps
         .iter()
         .map(u32::to_string)
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
+fn format_f64_list(values: &[f64]) -> String {
+    values
+        .iter()
+        .filter(|value| value.is_finite())
+        .map(|value| value.to_string())
         .collect::<Vec<_>>()
         .join(", ")
 }
@@ -1617,6 +1678,24 @@ impl EngramAppEvent {
             Self::DeckOptionsChange(DeckOptionField::LeechThreshold) => {
                 "onDeckOptionsLeechThresholdChange"
             }
+            Self::DeckOptionsChange(DeckOptionField::DesiredRetention) => {
+                "onDeckOptionsDesiredRetentionChange"
+            }
+            Self::DeckOptionsChange(DeckOptionField::FsrsParameters) => {
+                "onDeckOptionsFsrsParametersChange"
+            }
+            Self::DeckOptionsChange(DeckOptionField::FsrsParameterSearch) => {
+                "onDeckOptionsFsrsSearchChange"
+            }
+            Self::DeckOptionsChange(DeckOptionField::IgnoreReviewHistoryBefore) => {
+                "onDeckOptionsIgnoreReviewHistoryBeforeChange"
+            }
+            Self::DeckOptionsChange(DeckOptionField::HistoricalRetention) => {
+                "onDeckOptionsHistoricalRetentionChange"
+            }
+            Self::DeckOptionsChange(DeckOptionField::EasyDaysPercentages) => {
+                "onDeckOptionsEasyDaysPercentagesChange"
+            }
             Self::DeckOptionsChange(DeckOptionField::LeechAction) => {
                 "onDeckOptionsLeechActionChange"
             }
@@ -1670,6 +1749,12 @@ enum DeckOptionField {
     EasyBonusMultiplier,
     LapseIntervalMultiplier,
     LeechThreshold,
+    DesiredRetention,
+    FsrsParameters,
+    FsrsParameterSearch,
+    IgnoreReviewHistoryBefore,
+    HistoricalRetention,
+    EasyDaysPercentages,
     LeechAction,
     BuryNewSiblings,
     BuryReviewSiblings,
@@ -1841,6 +1926,45 @@ fn parse_engram_app_event_name(
         | "deck_options_leech_threshold_change" => parsed(EngramAppEvent::DeckOptionsChange(
             DeckOptionField::LeechThreshold,
         )),
+        "deckoptionsdesiredretentionchange"
+        | "deck-options-desired-retention-change"
+        | "deck_options_desired_retention_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::DesiredRetention,
+        )),
+        "deckoptionsfsrsparameterschange"
+        | "deck-options-fsrs-parameters-change"
+        | "deck_options_fsrs_parameters_change"
+        | "deckoptionsfsrsparamschange"
+        | "deck-options-fsrs-params-change"
+        | "deck_options_fsrs_params_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::FsrsParameters,
+        )),
+        "deckoptionsfsrssearchchange"
+        | "deck-options-fsrs-search-change"
+        | "deck_options_fsrs_search_change"
+        | "deckoptionsfsrsparametersearchchange"
+        | "deck-options-fsrs-parameter-search-change"
+        | "deck_options_fsrs_parameter_search_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::FsrsParameterSearch,
+        )),
+        "deckoptionsignorereviewhistorybeforechange"
+        | "deck-options-ignore-review-history-before-change"
+        | "deck_options_ignore_review_history_before_change" => parsed(
+            EngramAppEvent::DeckOptionsChange(DeckOptionField::IgnoreReviewHistoryBefore),
+        ),
+        "deckoptionshistoricalretentionchange"
+        | "deck-options-historical-retention-change"
+        | "deck_options_historical_retention_change"
+        | "deckoptionssm2retentionchange"
+        | "deck-options-sm2-retention-change"
+        | "deck_options_sm2_retention_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::HistoricalRetention,
+        )),
+        "deckoptionseasydayspercentageschange"
+        | "deck-options-easy-days-percentages-change"
+        | "deck_options_easy_days_percentages_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::EasyDaysPercentages,
+        )),
         "deckoptionsleechactionchange"
         | "deck-options-leech-action-change"
         | "deck_options_leech_action_change" => parsed(EngramAppEvent::DeckOptionsChange(
@@ -1972,6 +2096,18 @@ fn apply_deck_option_text_change(
         DeckOptionField::LeechAction => {
             options.leech_action = parse_leech_action(value)?;
         }
+        DeckOptionField::FsrsParameters => {
+            options.fsrs_parameters = parse_f64_list(value, "FSRS parameters")?;
+        }
+        DeckOptionField::FsrsParameterSearch => {
+            options.fsrs_parameter_search = value.trim().to_string();
+        }
+        DeckOptionField::IgnoreReviewHistoryBefore => {
+            options.ignore_review_history_before = value.trim().to_string();
+        }
+        DeckOptionField::EasyDaysPercentages => {
+            options.easy_days_percentages = parse_f64_list(value, "easy day factors")?;
+        }
         DeckOptionField::BuryNewSiblings
         | DeckOptionField::BuryReviewSiblings
         | DeckOptionField::BuryInterdayLearningSiblings => {
@@ -2011,6 +2147,28 @@ fn parse_step_minutes(value: &str, label: &str) -> Result<Vec<u32>, String> {
         .collect()
 }
 
+fn parse_f64_list(value: &str, label: &str) -> Result<Vec<f64>, String> {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return Ok(Vec::new());
+    }
+
+    trimmed
+        .split(|ch: char| ch == ',' || ch == ';' || ch.is_whitespace())
+        .filter(|part| !part.trim().is_empty())
+        .map(|part| {
+            let value = part
+                .parse::<f64>()
+                .map_err(|_| format!("{label} must be numbers separated by commas"))?;
+            if value.is_finite() {
+                Ok(value)
+            } else {
+                Err(format!("{label} must contain finite numbers"))
+            }
+        })
+        .collect()
+}
+
 fn apply_deck_option_number_change(
     options: &mut DeckOptions,
     field: DeckOptionField,
@@ -2020,6 +2178,10 @@ fn apply_deck_option_number_change(
         DeckOptionField::LearningStepsMinutes
         | DeckOptionField::RelearningStepsMinutes
         | DeckOptionField::LeechAction
+        | DeckOptionField::FsrsParameters
+        | DeckOptionField::FsrsParameterSearch
+        | DeckOptionField::IgnoreReviewHistoryBefore
+        | DeckOptionField::EasyDaysPercentages
         | DeckOptionField::BuryNewSiblings
         | DeckOptionField::BuryReviewSiblings
         | DeckOptionField::BuryInterdayLearningSiblings => {
@@ -2060,6 +2222,12 @@ fn apply_deck_option_number_change(
         }
         DeckOptionField::LeechThreshold => {
             options.leech_threshold = deck_option_count(value, "leech threshold")?;
+        }
+        DeckOptionField::DesiredRetention => {
+            options.desired_retention = deck_option_retention(value, "desired retention")?;
+        }
+        DeckOptionField::HistoricalRetention => {
+            options.historical_retention = deck_option_retention(value, "historical retention")?;
         }
     }
     Ok(())
@@ -2119,6 +2287,16 @@ fn deck_option_non_negative_number(value: f64, label: &str) -> Result<f64, Strin
     }
     if value < 0.0 {
         return Err(format!("{label} must be non-negative"));
+    }
+    Ok(value)
+}
+
+fn deck_option_retention(value: f64, label: &str) -> Result<f64, String> {
+    if !value.is_finite() {
+        return Err(format!("{label} must be a finite number"));
+    }
+    if !(0.0..=1.0).contains(&value) || value == 0.0 {
+        return Err(format!("{label} must be between 0 and 1"));
     }
     Ok(value)
 }
@@ -3847,6 +4025,12 @@ mod tests {
                     "easyBonusMultiplier": 1.6,
                     "lapseIntervalMultiplier": 0.5,
                     "leechThreshold": 6,
+                    "desiredRetention": 0.92,
+                    "fsrsParameters": [0.1, 1.2, 2.3],
+                    "fsrsParameterSearch": "preset:\"Tamil\" -is:suspended",
+                    "ignoreReviewHistoryBefore": "2024-01-02",
+                    "historicalRetention": 0.86,
+                    "easyDaysPercentages": [1.0, 0.9, 0.8, 1.1, 1.2, 1.0, 0.95],
                     "leechAction": "suspend",
                     "buryNewSiblings": false,
                     "buryReviewSiblings": true,
@@ -3895,6 +4079,27 @@ mod tests {
         assert_eq!(value["props"]["deck-options-easy-bonus-value"], 1.6);
         assert_eq!(value["props"]["deck-options-lapse-multiplier-value"], 0.5);
         assert_eq!(value["props"]["deck-options-leech-threshold-value"], 6);
+        assert_eq!(value["props"]["deck-options-desired-retention-value"], 0.92);
+        assert_eq!(
+            value["props"]["deck-options-fsrs-parameters-value"],
+            "0.1, 1.2, 2.3"
+        );
+        assert_eq!(
+            value["props"]["deck-options-fsrs-search-value"],
+            "preset:\"Tamil\" -is:suspended"
+        );
+        assert_eq!(
+            value["props"]["deck-options-ignore-review-history-before-value"],
+            "2024-01-02"
+        );
+        assert_eq!(
+            value["props"]["deck-options-historical-retention-value"],
+            0.86
+        );
+        assert_eq!(
+            value["props"]["deck-options-easy-days-percentages-value"],
+            "1, 0.9, 0.8, 1.1, 1.2, 1, 0.95"
+        );
         assert_eq!(
             value["props"]["deck-options-leech-action-label"],
             "Leech action"
@@ -4790,6 +4995,120 @@ mod tests {
         assert_eq!(
             leech_threshold["props"]["deck-options-leech-threshold-value"],
             4
+        );
+
+        let desired_retention: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsDesiredRetentionChange","value":0.93}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(desired_retention["ok"], true);
+        assert_eq!(
+            desired_retention["event"],
+            "onDeckOptionsDesiredRetentionChange"
+        );
+        assert_eq!(
+            desired_retention["state"]["deckOptions"][0]["options"]["desiredRetention"],
+            0.93
+        );
+        assert_eq!(
+            desired_retention["props"]["deck-options-desired-retention-value"],
+            0.93
+        );
+
+        let fsrs_parameters: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsFsrsParametersChange","value":"0.1, 1.2 2.3"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(fsrs_parameters["ok"], true);
+        assert_eq!(
+            fsrs_parameters["event"],
+            "onDeckOptionsFsrsParametersChange"
+        );
+        assert_eq!(
+            fsrs_parameters["state"]["deckOptions"][0]["options"]["fsrsParameters"],
+            json!([0.1, 1.2, 2.3])
+        );
+        assert_eq!(
+            fsrs_parameters["props"]["deck-options-fsrs-parameters-value"],
+            "0.1, 1.2, 2.3"
+        );
+
+        let fsrs_search: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsFsrsSearchChange","value":"preset:\"Tamil\" -is:suspended"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(fsrs_search["ok"], true);
+        assert_eq!(fsrs_search["event"], "onDeckOptionsFsrsSearchChange");
+        assert_eq!(
+            fsrs_search["state"]["deckOptions"][0]["options"]["fsrsParameterSearch"],
+            "preset:\"Tamil\" -is:suspended"
+        );
+        assert_eq!(
+            fsrs_search["props"]["deck-options-fsrs-search-value"],
+            "preset:\"Tamil\" -is:suspended"
+        );
+
+        let ignore_before: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsIgnoreReviewHistoryBeforeChange","value":"2024-01-02"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(ignore_before["ok"], true);
+        assert_eq!(
+            ignore_before["event"],
+            "onDeckOptionsIgnoreReviewHistoryBeforeChange"
+        );
+        assert_eq!(
+            ignore_before["state"]["deckOptions"][0]["options"]["ignoreReviewHistoryBefore"],
+            "2024-01-02"
+        );
+        assert_eq!(
+            ignore_before["props"]["deck-options-ignore-review-history-before-value"],
+            "2024-01-02"
+        );
+
+        let historical_retention: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsHistoricalRetentionChange","value":0.86}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(historical_retention["ok"], true);
+        assert_eq!(
+            historical_retention["event"],
+            "onDeckOptionsHistoricalRetentionChange"
+        );
+        assert_eq!(
+            historical_retention["state"]["deckOptions"][0]["options"]["historicalRetention"],
+            0.86
+        );
+        assert_eq!(
+            historical_retention["props"]["deck-options-historical-retention-value"],
+            0.86
+        );
+
+        let easy_days: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"type":"deckOptionsEasyDaysPercentagesChange","value":"1, 0.9, 0.8"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(easy_days["ok"], true);
+        assert_eq!(easy_days["event"], "onDeckOptionsEasyDaysPercentagesChange");
+        assert_eq!(
+            easy_days["state"]["deckOptions"][0]["options"]["easyDaysPercentages"],
+            json!([1.0, 0.9, 0.8])
+        );
+        assert_eq!(
+            easy_days["props"]["deck-options-easy-days-percentages-value"],
+            "1, 0.9, 0.8"
         );
 
         let leech_action: Value = serde_json::from_str(&session.handle_engram_app_event(

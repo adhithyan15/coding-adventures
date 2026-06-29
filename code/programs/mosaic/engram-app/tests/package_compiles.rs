@@ -507,6 +507,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&html_main, "\"name\": \"index\"");
     assert_contains(&html_main, "\"onDeckOptionsBuryNewSiblingsChange\"");
     assert_contains(&html_main, "\"onDeckOptionsInitialEaseChange\"");
+    assert_contains(&html_main, "\"onDeckOptionsDesiredRetentionChange\"");
+    assert_contains(&html_main, "\"onDeckOptionsFsrsParametersChange\"");
     assert_contains(&html_main, "\"onDeckOptionsLeechActionChange\"");
     assert_contains(&html_main, "\"name\": \"checked\"");
     let html_host =
@@ -529,6 +531,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&react_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&react_app, "deckOptionsIntervalModifierValue: 0,");
     assert_contains(&react_app, "deckOptionsInitialEaseValue: 0,");
+    assert_contains(&react_app, "deckOptionsDesiredRetentionValue: 0,");
+    assert_contains(
+        &react_app,
+        "deckOptionsFsrsParametersValue: \"Sample DeckOptionsFsrsParametersValue\",",
+    );
     assert_contains(&react_app, "deckOptionsLeechThresholdValue: 0,");
     assert_contains(&react_app, "deckOptionsLeechActionSuspendValue: false,");
     assert_contains(&react_app, "deckOptionsBuryNewSiblingsValue: false,");
@@ -788,6 +795,14 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &compose_app,
+        "data class DeckOptionsDesiredRetentionChange(val value: Double)",
+    );
+    assert_contains(
+        &compose_app,
+        "data class DeckOptionsFsrsParametersChange(val value: String)",
+    );
+    assert_contains(
+        &compose_app,
         "override val mosaicPayload: Map<String, Any?> get() = mapOf(\"value\" to value)",
     );
     assert_contains(
@@ -817,6 +832,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&compose_app, "deckOptionsNewCardsValue: Double,");
     assert_contains(&compose_app, "deckOptionsEasyBonusValue: Double,");
     assert_contains(&compose_app, "deckOptionsInitialEaseValue: Double,");
+    assert_contains(&compose_app, "deckOptionsDesiredRetentionValue: Double,");
+    assert_contains(&compose_app, "deckOptionsFsrsParametersValue: String,");
     assert_contains(&compose_app, "deckOptionsBuryNewSiblingsValue: Boolean,");
     assert_contains(&compose_app, "historyLabel: String,");
     assert_contains(&compose_app, "collectionLabel: String,");
@@ -874,6 +891,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &compose_main,
         "deckOptionsInitialEaseValue = mosaicDouble(hostProps, \"deck-options-initial-ease-value\", 0.0),",
+    );
+    assert_contains(
+        &compose_main,
+        "deckOptionsDesiredRetentionValue = mosaicDouble(hostProps, \"deck-options-desired-retention-value\", 0.0),",
+    );
+    assert_contains(
+        &compose_main,
+        "deckOptionsFsrsParametersValue = mosaicString(hostProps, \"deck-options-fsrs-parameters-value\", \"Sample DeckOptionsFsrsParametersValue\"),",
     );
     assert_contains(
         &compose_main,
@@ -1316,6 +1341,14 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsDesiredRetentionValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsFsrsParametersValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
         "public static readonly DependencyProperty DeckOptionsLeechThresholdValueProperty",
     );
     assert_contains(
@@ -1457,6 +1490,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record DeckOptionsInitialEaseChange(double Value) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsDesiredRetentionChange(double Value) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsFsrsParametersChange(string Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,

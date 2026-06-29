@@ -77,7 +77,9 @@ binds them to the shared Rust business logic core through host shells.
 - The deck option slots expose the selected deck's shared scheduler settings,
   including learning/relearning steps, daily limits, graduation intervals,
   initial ease factor, maximum interval, interval modifier, hard/easy
-  multipliers, and lapse multiplier plus Anki-style sibling-bury defaults.
+  multipliers, and lapse multiplier plus Anki-style sibling-bury defaults and
+  FSRS desired-retention, parameter, search, ignored-history, historical
+  retention, and easy-day factor fields.
 - Deck option events carry numeric, text, or checkbox values and route through
   the shared `EngramSession::handle_engram_app_event` contract, which persists
   them with `EngramCommand::SetDeckOptions`.

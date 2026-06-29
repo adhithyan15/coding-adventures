@@ -953,9 +953,44 @@ fn v11_options_for_deck(deck: &AnkiV11Deck, deck_config: &Value) -> DeckOptions 
             options.easy_bonus_multiplier =
                 normalized_anki_multiplier(multiplier, options.easy_bonus_multiplier);
         }
+        if let Some(desired_retention) = json_path_f64(config, &["desiredRetention"]) {
+            options.desired_retention =
+                normalized_retention(desired_retention, options.desired_retention);
+        }
+        options.fsrs_parameters = json_path_f64_array(config, &["fsrsParams6"])
+            .filter(|parameters| !parameters.is_empty())
+            .or_else(|| {
+                json_path_f64_array(config, &["fsrsParams5"])
+                    .filter(|parameters| !parameters.is_empty())
+            })
+            .or_else(|| {
+                json_path_f64_array(config, &["fsrsWeights"])
+                    .filter(|parameters| !parameters.is_empty())
+            })
+            .unwrap_or(options.fsrs_parameters);
+        options.fsrs_parameter_search =
+            json_path_string(config, &["weightSearch"]).unwrap_or(options.fsrs_parameter_search);
+        options.ignore_review_history_before =
+            json_path_string(config, &["ignoreRevlogsBeforeDate"])
+                .unwrap_or(options.ignore_review_history_before);
+        if let Some(historical_retention) = json_path_f64(config, &["sm2Retention"]) {
+            options.historical_retention =
+                normalized_retention(historical_retention, options.historical_retention);
+        }
+        options.easy_days_percentages = json_path_f64_array(config, &["easyDaysPercentages"])
+            .filter(|values| !values.is_empty())
+            .unwrap_or(options.easy_days_percentages);
     }
 
     options
+}
+
+fn normalized_retention(value: f64, fallback: f64) -> f64 {
+    if value.is_finite() && value > 0.0 && value <= 1.0 {
+        value
+    } else {
+        fallback
+    }
 }
 
 fn normalized_anki_multiplier(value: f64, fallback: f64) -> f64 {
@@ -1727,8 +1762,11 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     source_i64(source, "time")
                         .or_else(|| review.answer_time_ms.map(i64::from))
                         .unwrap_or_default(),
-                    source_i64(source, "kind")
-                        .unwrap_or_else(|| review_kind(export, review, &review.card_id)),
+                    source_i64(source, "kind").unwrap_or_else(|| review_kind(
+                        export,
+                        review,
+                        &review.card_id
+                    )),
                 ],
             )
             .map_err(|err| {
@@ -2076,6 +2114,32 @@ fn merge_deck_options_json(
         "buryInterdayLearning".to_string(),
         Value::Bool(options.bury_interday_learning_siblings),
     );
+    object.insert(
+        "desiredRetention".to_string(),
+        json_f64_or(options.desired_retention, 0.9),
+    );
+    if !options.fsrs_parameters.is_empty() {
+        object.insert(
+            "fsrsParams6".to_string(),
+            json_f64_array_or(&options.fsrs_parameters),
+        );
+    }
+    object.insert(
+        "weightSearch".to_string(),
+        Value::String(options.fsrs_parameter_search.clone()),
+    );
+    object.insert(
+        "ignoreRevlogsBeforeDate".to_string(),
+        Value::String(options.ignore_review_history_before.clone()),
+    );
+    object.insert(
+        "sm2Retention".to_string(),
+        json_f64_or(options.historical_retention, 0.9),
+    );
+    object.insert(
+        "easyDaysPercentages".to_string(),
+        json_f64_array_or(&options.easy_days_percentages),
+    );
 }
 
 fn json_f64_or(value: f64, fallback: f64) -> Value {
@@ -2083,6 +2147,16 @@ fn json_f64_or(value: f64, fallback: f64) -> Value {
     serde_json::Number::from_f64(normalized)
         .map(Value::Number)
         .unwrap_or_else(|| Value::Number(0_i64.into()))
+}
+
+fn json_f64_array_or(values: &[f64]) -> Value {
+    Value::Array(
+        values
+            .iter()
+            .filter(|value| value.is_finite())
+            .map(|value| json_f64_or(*value, 0.0))
+            .collect(),
+    )
 }
 
 fn finite_positive(value: f64, fallback: f64) -> f64 {
@@ -3687,8 +3761,26 @@ fn json_path_f64(value: &Value, path: &[&str]) -> Option<f64> {
     json_path(value, path).and_then(Value::as_f64)
 }
 
+fn json_path_string(value: &Value, path: &[&str]) -> Option<String> {
+    json_path(value, path)
+        .and_then(Value::as_str)
+        .map(str::to_string)
+}
+
 fn json_path_bool(value: &Value, path: &[&str]) -> Option<bool> {
     json_path(value, path).and_then(value_to_bool)
+}
+
+fn json_path_f64_array(value: &Value, path: &[&str]) -> Option<Vec<f64>> {
+    json_path(value, path).and_then(|value| {
+        value.as_array().map(|values| {
+            values
+                .iter()
+                .filter_map(Value::as_f64)
+                .filter(|value| value.is_finite())
+                .collect()
+        })
+    })
 }
 
 fn json_path_u32_array(value: &Value, path: &[&str]) -> Option<Vec<u32>> {
@@ -4541,6 +4633,68 @@ CREATE TABLE graves (
         assert_eq!(state.sessions[0].status, SessionStatus::Completed);
         assert_eq!(state.sessions[0].cards_reviewed, 1);
         assert_eq!(state.sessions[0].cards_correct, 1);
+    }
+
+    #[test]
+    fn imports_and_exports_v11_fsrs_deck_options() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.metadata.deck_config = serde_json::json!({
+            "1": {
+                "id": 1,
+                "name": "FSRS preset",
+                "new": {"perDay": 12, "delays": [3, 12], "ints": [2, 5], "initialFactor": 2800},
+                "rev": {"perDay": 80, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
+                "lapse": {"delays": [20], "mult": 0.5, "leechFails": 6, "leechAction": 0},
+                "desiredRetention": 0.92,
+                "fsrsParams6": [0.1, 1.2, 2.3],
+                "weightSearch": "preset:\"FSRS preset\" -is:suspended",
+                "ignoreRevlogsBeforeDate": "2024-01-02",
+                "sm2Retention": 0.86,
+                "easyDaysPercentages": [1.0, 0.9, 0.8, 1.1, 1.2, 1.0, 0.95]
+            }
+        });
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+        let options = state
+            .deck_options
+            .iter()
+            .find(|preset| preset.deck_id == "2")
+            .map(|preset| &preset.options)
+            .expect("Spanish deck should have imported deck options");
+
+        assert_eq!(options.desired_retention, 0.92);
+        assert_eq!(options.fsrs_parameters, vec![0.1, 1.2, 2.3]);
+        assert_eq!(
+            options.fsrs_parameter_search,
+            "preset:\"FSRS preset\" -is:suspended"
+        );
+        assert_eq!(options.ignore_review_history_before, "2024-01-02");
+        assert_eq!(options.historical_retention, 0.86);
+        assert_eq!(
+            options.easy_days_percentages,
+            vec![1.0, 0.9, 0.8, 1.1, 1.2, 1.0, 0.95]
+        );
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        let deck = exported.decks.iter().find(|deck| deck.id == 2).unwrap();
+        let config_id = deck.raw["conf"].as_i64().unwrap();
+        let config = &exported.metadata.deck_config[config_id.to_string()];
+
+        assert_eq!(config["desiredRetention"], 0.92);
+        assert_eq!(config["fsrsParams6"], serde_json::json!([0.1, 1.2, 2.3]));
+        assert_eq!(
+            config["weightSearch"],
+            "preset:\"FSRS preset\" -is:suspended"
+        );
+        assert_eq!(config["ignoreRevlogsBeforeDate"], "2024-01-02");
+        assert_eq!(config["sm2Retention"], 0.86);
+        assert_eq!(
+            config["easyDaysPercentages"],
+            serde_json::json!([1.0, 0.9, 0.8, 1.1, 1.2, 1.0, 0.95])
+        );
     }
 
     #[test]
