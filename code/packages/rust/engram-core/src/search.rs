@@ -823,9 +823,10 @@ fn deck_matches(
         return filtered_deck_ids.contains(card.deck_id.as_str());
     }
 
-    contains_case_insensitive(&card.deck_id, term)
+    anki_hierarchical_name_matches(term, &card.deck_id)
         || deck.is_some_and(|deck| {
-            contains_case_insensitive(&deck.id, term) || contains_case_insensitive(&deck.name, term)
+            anki_hierarchical_name_matches(term, &deck.id)
+                || anki_hierarchical_name_matches(term, &deck.name)
         })
 }
 
@@ -837,8 +838,50 @@ fn tag_matches(tag: &str, note: Option<&Note>) -> bool {
     note.is_some_and(|note| {
         note.tags
             .iter()
-            .any(|candidate| candidate.eq_ignore_ascii_case(tag))
+            .any(|candidate| anki_hierarchical_name_matches(tag, candidate))
     })
+}
+
+fn anki_hierarchical_name_matches(pattern: &str, candidate: &str) -> bool {
+    let candidate = candidate.to_lowercase();
+    if pattern.contains('*') {
+        return wildcard_matches(pattern, &candidate);
+    }
+
+    candidate == pattern || candidate.starts_with(&format!("{pattern}::"))
+}
+
+fn wildcard_matches(pattern: &str, candidate: &str) -> bool {
+    let parts = pattern.split('*').collect::<Vec<_>>();
+    if parts.len() == 1 {
+        return candidate == pattern;
+    }
+
+    let mut position = 0;
+    for (index, part) in parts.iter().enumerate() {
+        if part.is_empty() {
+            continue;
+        }
+
+        if index == 0 && !pattern.starts_with('*') {
+            if !candidate[position..].starts_with(part) {
+                return false;
+            }
+            position += part.len();
+            continue;
+        }
+
+        let Some(found) = candidate[position..].find(part) else {
+            return false;
+        };
+        position += found + part.len();
+
+        if index == parts.len() - 1 && !pattern.ends_with('*') && position != candidate.len() {
+            return false;
+        }
+    }
+
+    true
 }
 
 fn note_type_matches(term: &str, note: Option<&Note>, note_type: Option<&NoteType>) -> bool {
@@ -1429,6 +1472,72 @@ mod tests {
         );
         assert_eq!(ids_for("card:2"), vec!["tagged-note::reverse"]);
         assert_eq!(ids_for("flag:0 card:2"), vec!["tagged-note::reverse"]);
+    }
+
+    #[test]
+    fn anki_browser_tag_and_deck_hierarchy_filters_match() {
+        let note = |id: &str, deck_id: &str, tags: Vec<&str>| Note {
+            id: id.to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: deck_id.to_string(),
+            fields: vec![NoteFieldValue {
+                field_id: "front".to_string(),
+                value: id.to_string(),
+            }],
+            tags: tags.into_iter().map(str::to_string).collect(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |note_id: &str, deck_id: &str| {
+            let mut card = card(&format!("{note_id}::forward"), deck_id, note_id, note_id);
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let state = AppState {
+            decks: vec![
+                deck("french", "French"),
+                deck("french-verbs", "French::Verbs"),
+                deck("languages-french", "Languages::French"),
+            ],
+            note_types: vec![note_type()],
+            notes: vec![
+                note("animal-note", "french", vec!["animal::mammal"]),
+                note("verb-note", "french-verbs", vec!["grammar"]),
+                note("language-note", "languages-french", vec!["language"]),
+            ],
+            cards: vec![
+                card_for_note("animal-note", "french"),
+                card_for_note("verb-note", "french-verbs"),
+                card_for_note("language-note", "languages-french"),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("tag:animal"), vec!["animal-note::forward"]);
+        assert_eq!(ids_for("tag:animal::*"), vec!["animal-note::forward"]);
+        assert_eq!(
+            ids_for("deck:french"),
+            vec!["animal-note::forward", "verb-note::forward"]
+        );
+        assert_eq!(ids_for("deck:french::*"), vec!["verb-note::forward"]);
+        assert_eq!(
+            ids_for("deck:*french"),
+            vec!["animal-note::forward", "language-note::forward"]
+        );
     }
 
     #[test]
