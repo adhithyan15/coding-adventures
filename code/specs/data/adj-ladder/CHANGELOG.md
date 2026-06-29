@@ -2,6 +2,29 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.29.0] — 2026-06-29
+
+### Added — rung 6: clinical differential diagnosis (the clinical / MLE bridge)
+
+- New **`rung6_clinical_differential/items.json`**: 20 board-style differentials. Each has three
+  competing diagnoses (equal `prior`s), three findings, and a likelihood ratio for every
+  (finding, diagnosis) pair. The gold program declares the priors, a
+  `contributes <LR> from <finding> to <dx>` for each pair, and `observe`s every finding; the
+  **engine** does the Bayesian combination (prior × ∏ likelihood ratios) and reports the leading
+  diagnosis, read by the existing **`decision_leader`** extractor — no harness or engine change.
+- The reasoning step beyond rung-3's single-finding decisions is **combining** evidence: the gold
+  is the diagnosis that wins on the *product of all* likelihood ratios, while a planted distractor
+  wins on one **flashy** finding alone (a huge LR, ~1 on the rest). Anchoring on the salient
+  finding (the classic board trap) takes the distractor; only carrying every LR through the product
+  lands the gold (e.g. *wheezing* LR 20 for COPD lures, but elevated BNP + orthopnea make **heart
+  failure** the combined leader). The stem is generated from the data, so every prior and LR in the
+  program appears verbatim in the stem (no-result-literals gate); the five options are distinct
+  diagnosis labels.
+- 20 real differentials across cardiology, pulmonology, GI, neurology, endocrine, ID, renal, MSK,
+  and pediatrics. Engine selects the combined-evidence leader **20/20 cached, zero wrong**.
+- Registered in `test_ladder_eval.py` `SELF_CONTAINED_RUNGS`; cached + contamination + json gates
+  green. Realizes rung 6 of `ADJ-LADDER.md` §5 — the on-ramp to the MLE apex.
+
 ## [0.28.0] — 2026-06-29
 
 ### Added — rung 5: multi-step formula chains (the next reasoning depth)

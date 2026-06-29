@@ -1,0 +1,366 @@
+{
+  "rung": "rung6_clinical_differential",
+  "description": "Rung-6 clinical differential diagnosis \u2014 the clinical/MLE bridge. Each item is a board-style differential: three competing diagnoses with equal priors, three findings, and a likelihood ratio for every (finding, diagnosis) pair. The gold ADJ program declares the priors, a contributes-<LR>-from-<finding>-to-<diagnosis> for each pair, and observes every finding; the ENGINE multiplies the priors by all the likelihood ratios (Bayesian combination) and reports the leading diagnosis, read by the existing decision_leader extractor (no harness or engine change). The reasoning step beyond rung-3 single-finding decisions: the answer is the diagnosis that wins on the COMBINED evidence, while a deliberately planted distractor wins on a single FLASHY finding alone (one huge likelihood ratio, ~1 on the rest). A reasoner that anchors on the salient finding takes the distractor; only carrying every likelihood ratio through the product lands the gold (anchoring bias is the classic board trap). The stem is generated from the data so every prior and likelihood ratio in the program appears verbatim in the stem (no-result-literals gate holds); the five options are distinct diagnosis labels. Twenty real differentials across cardiology, pulmonology, GI, neurology, endocrine, ID, renal, MSK, and pediatrics. Engine selects the combined-evidence leader 20/20 in cached mode, zero wrong.",
+  "items": [
+    {
+      "id": "r6-01",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: bacterial meningitis, viral meningitis, subarachnoid hemorrhage. csf neutrophilic has likelihood ratio 4 for bacterial meningitis, 6 for viral meningitis, 1 for subarachnoid hemorrhage. csf low glucose has likelihood ratio 8 for bacterial meningitis, 1 for viral meningitis, 1 for subarachnoid hemorrhage. fever has likelihood ratio 3 for bacterial meningitis, 3 for viral meningitis, 1 for subarachnoid hemorrhage. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for bacterial_meningitis\nprior 0.30 for viral_meningitis\nprior 0.30 for subarachnoid_hemorrhage\ncontributes 4 from csf_neutrophilic to bacterial_meningitis\ncontributes 6 from csf_neutrophilic to viral_meningitis\ncontributes 1 from csf_neutrophilic to subarachnoid_hemorrhage\ncontributes 8 from csf_low_glucose to bacterial_meningitis\ncontributes 1 from csf_low_glucose to viral_meningitis\ncontributes 1 from csf_low_glucose to subarachnoid_hemorrhage\ncontributes 3 from fever to bacterial_meningitis\ncontributes 3 from fever to viral_meningitis\ncontributes 1 from fever to subarachnoid_hemorrhage\nobserve csf_neutrophilic\nobserve csf_low_glucose\nobserve fever\n? bacterial_meningitis\n? viral_meningitis\n? subarachnoid_hemorrhage\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "bacterial_meningitis",
+        "B": "viral_meningitis",
+        "C": "subarachnoid_hemorrhage",
+        "D": "migraine",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-02",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: pulmonary embolism, pneumonia, myocardial infarction. pleuritic chest pain has likelihood ratio 5 for pulmonary embolism, 4 for pneumonia, 1 for myocardial infarction. hypoxia has likelihood ratio 6 for pulmonary embolism, 3 for pneumonia, 2 for myocardial infarction. unilateral leg swelling has likelihood ratio 9 for pulmonary embolism, 1 for pneumonia, 1 for myocardial infarction. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for pulmonary_embolism\nprior 0.30 for pneumonia\nprior 0.30 for myocardial_infarction\ncontributes 5 from pleuritic_chest_pain to pulmonary_embolism\ncontributes 4 from pleuritic_chest_pain to pneumonia\ncontributes 1 from pleuritic_chest_pain to myocardial_infarction\ncontributes 6 from hypoxia to pulmonary_embolism\ncontributes 3 from hypoxia to pneumonia\ncontributes 2 from hypoxia to myocardial_infarction\ncontributes 9 from unilateral_leg_swelling to pulmonary_embolism\ncontributes 1 from unilateral_leg_swelling to pneumonia\ncontributes 1 from unilateral_leg_swelling to myocardial_infarction\nobserve pleuritic_chest_pain\nobserve hypoxia\nobserve unilateral_leg_swelling\n? pulmonary_embolism\n? pneumonia\n? myocardial_infarction\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "pneumonia",
+        "B": "pulmonary_embolism",
+        "C": "myocardial_infarction",
+        "D": "pericarditis",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-03",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: heart failure, copd exacerbation, pneumonia. wheezing has likelihood ratio 1 for heart failure, 20 for copd exacerbation, 2 for pneumonia. elevated bnp has likelihood ratio 10 for heart failure, 1 for copd exacerbation, 1 for pneumonia. orthopnea has likelihood ratio 6 for heart failure, 1 for copd exacerbation, 1 for pneumonia. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for heart_failure\nprior 0.30 for copd_exacerbation\nprior 0.30 for pneumonia\ncontributes 1 from wheezing to heart_failure\ncontributes 20 from wheezing to copd_exacerbation\ncontributes 2 from wheezing to pneumonia\ncontributes 10 from elevated_bnp to heart_failure\ncontributes 1 from elevated_bnp to copd_exacerbation\ncontributes 1 from elevated_bnp to pneumonia\ncontributes 6 from orthopnea to heart_failure\ncontributes 1 from orthopnea to copd_exacerbation\ncontributes 1 from orthopnea to pneumonia\nobserve wheezing\nobserve elevated_bnp\nobserve orthopnea\n? heart_failure\n? copd_exacerbation\n? pneumonia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "copd_exacerbation",
+        "B": "pneumonia",
+        "C": "heart_failure",
+        "D": "asthma",
+        "E": "unknown"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r6-04",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: appendicitis, gastroenteritis, ovarian torsion. vomiting has likelihood ratio 1 for appendicitis, 12 for gastroenteritis, 2 for ovarian torsion. rlq rebound tenderness has likelihood ratio 15 for appendicitis, 1 for gastroenteritis, 2 for ovarian torsion. elevated neutrophils has likelihood ratio 4 for appendicitis, 1 for gastroenteritis, 1 for ovarian torsion. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for appendicitis\nprior 0.30 for gastroenteritis\nprior 0.30 for ovarian_torsion\ncontributes 1 from vomiting to appendicitis\ncontributes 12 from vomiting to gastroenteritis\ncontributes 2 from vomiting to ovarian_torsion\ncontributes 15 from rlq_rebound_tenderness to appendicitis\ncontributes 1 from rlq_rebound_tenderness to gastroenteritis\ncontributes 2 from rlq_rebound_tenderness to ovarian_torsion\ncontributes 4 from elevated_neutrophils to appendicitis\ncontributes 1 from elevated_neutrophils to gastroenteritis\ncontributes 1 from elevated_neutrophils to ovarian_torsion\nobserve vomiting\nobserve rlq_rebound_tenderness\nobserve elevated_neutrophils\n? appendicitis\n? gastroenteritis\n? ovarian_torsion\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "gastroenteritis",
+        "B": "ovarian_torsion",
+        "C": "constipation",
+        "D": "appendicitis",
+        "E": "unknown"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r6-05",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: diabetic ketoacidosis, sepsis, panic attack. tachypnea has likelihood ratio 2 for diabetic ketoacidosis, 3 for sepsis, 8 for panic attack. high anion gap has likelihood ratio 12 for diabetic ketoacidosis, 2 for sepsis, 1 for panic attack. hyperglycemia has likelihood ratio 9 for diabetic ketoacidosis, 1 for sepsis, 1 for panic attack. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for diabetic_ketoacidosis\nprior 0.30 for sepsis\nprior 0.30 for panic_attack\ncontributes 2 from tachypnea to diabetic_ketoacidosis\ncontributes 3 from tachypnea to sepsis\ncontributes 8 from tachypnea to panic_attack\ncontributes 12 from high_anion_gap to diabetic_ketoacidosis\ncontributes 2 from high_anion_gap to sepsis\ncontributes 1 from high_anion_gap to panic_attack\ncontributes 9 from hyperglycemia to diabetic_ketoacidosis\ncontributes 1 from hyperglycemia to sepsis\ncontributes 1 from hyperglycemia to panic_attack\nobserve tachypnea\nobserve high_anion_gap\nobserve hyperglycemia\n? diabetic_ketoacidosis\n? sepsis\n? panic_attack\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "sepsis",
+        "B": "panic_attack",
+        "C": "anxiety",
+        "D": "unknown",
+        "E": "diabetic_ketoacidosis"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r6-06",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: aortic dissection, myocardial infarction, pericarditis. tearing chest pain has likelihood ratio 10 for aortic dissection, 1 for myocardial infarction, 1 for pericarditis. pulse deficit has likelihood ratio 8 for aortic dissection, 1 for myocardial infarction, 1 for pericarditis. diaphoresis has likelihood ratio 2 for aortic dissection, 9 for myocardial infarction, 1 for pericarditis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for aortic_dissection\nprior 0.30 for myocardial_infarction\nprior 0.30 for pericarditis\ncontributes 10 from tearing_chest_pain to aortic_dissection\ncontributes 1 from tearing_chest_pain to myocardial_infarction\ncontributes 1 from tearing_chest_pain to pericarditis\ncontributes 8 from pulse_deficit to aortic_dissection\ncontributes 1 from pulse_deficit to myocardial_infarction\ncontributes 1 from pulse_deficit to pericarditis\ncontributes 2 from diaphoresis to aortic_dissection\ncontributes 9 from diaphoresis to myocardial_infarction\ncontributes 1 from diaphoresis to pericarditis\nobserve tearing_chest_pain\nobserve pulse_deficit\nobserve diaphoresis\n? aortic_dissection\n? myocardial_infarction\n? pericarditis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "aortic_dissection",
+        "B": "myocardial_infarction",
+        "C": "pericarditis",
+        "D": "gerd",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-07",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: choledocholithiasis, viral hepatitis, pancreatic cancer. painless jaundice has likelihood ratio 1 for choledocholithiasis, 1 for viral hepatitis, 12 for pancreatic cancer. dilated bile duct has likelihood ratio 8 for choledocholithiasis, 1 for viral hepatitis, 3 for pancreatic cancer. ruq colic has likelihood ratio 7 for choledocholithiasis, 2 for viral hepatitis, 1 for pancreatic cancer. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for choledocholithiasis\nprior 0.30 for viral_hepatitis\nprior 0.30 for pancreatic_cancer\ncontributes 1 from painless_jaundice to choledocholithiasis\ncontributes 1 from painless_jaundice to viral_hepatitis\ncontributes 12 from painless_jaundice to pancreatic_cancer\ncontributes 8 from dilated_bile_duct to choledocholithiasis\ncontributes 1 from dilated_bile_duct to viral_hepatitis\ncontributes 3 from dilated_bile_duct to pancreatic_cancer\ncontributes 7 from ruq_colic to choledocholithiasis\ncontributes 2 from ruq_colic to viral_hepatitis\ncontributes 1 from ruq_colic to pancreatic_cancer\nobserve painless_jaundice\nobserve dilated_bile_duct\nobserve ruq_colic\n? choledocholithiasis\n? viral_hepatitis\n? pancreatic_cancer\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "viral_hepatitis",
+        "B": "choledocholithiasis",
+        "C": "pancreatic_cancer",
+        "D": "cholecystitis",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-08",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: septic arthritis, gout, rheumatoid arthritis. monoarticular swelling has likelihood ratio 4 for septic arthritis, 6 for gout, 1 for rheumatoid arthritis. synovial neutrophils has likelihood ratio 12 for septic arthritis, 2 for gout, 1 for rheumatoid arthritis. fever has likelihood ratio 6 for septic arthritis, 1 for gout, 1 for rheumatoid arthritis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for septic_arthritis\nprior 0.30 for gout\nprior 0.30 for rheumatoid_arthritis\ncontributes 4 from monoarticular_swelling to septic_arthritis\ncontributes 6 from monoarticular_swelling to gout\ncontributes 1 from monoarticular_swelling to rheumatoid_arthritis\ncontributes 12 from synovial_neutrophils to septic_arthritis\ncontributes 2 from synovial_neutrophils to gout\ncontributes 1 from synovial_neutrophils to rheumatoid_arthritis\ncontributes 6 from fever to septic_arthritis\ncontributes 1 from fever to gout\ncontributes 1 from fever to rheumatoid_arthritis\nobserve monoarticular_swelling\nobserve synovial_neutrophils\nobserve fever\n? septic_arthritis\n? gout\n? rheumatoid_arthritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "gout",
+        "B": "rheumatoid_arthritis",
+        "C": "septic_arthritis",
+        "D": "osteoarthritis",
+        "E": "unknown"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r6-09",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: subarachnoid hemorrhage, migraine, tension headache. thunderclap onset has likelihood ratio 12 for subarachnoid hemorrhage, 2 for migraine, 1 for tension headache. neck stiffness has likelihood ratio 7 for subarachnoid hemorrhage, 1 for migraine, 1 for tension headache. photophobia has likelihood ratio 2 for subarachnoid hemorrhage, 8 for migraine, 1 for tension headache. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for subarachnoid_hemorrhage\nprior 0.30 for migraine\nprior 0.30 for tension_headache\ncontributes 12 from thunderclap_onset to subarachnoid_hemorrhage\ncontributes 2 from thunderclap_onset to migraine\ncontributes 1 from thunderclap_onset to tension_headache\ncontributes 7 from neck_stiffness to subarachnoid_hemorrhage\ncontributes 1 from neck_stiffness to migraine\ncontributes 1 from neck_stiffness to tension_headache\ncontributes 2 from photophobia to subarachnoid_hemorrhage\ncontributes 8 from photophobia to migraine\ncontributes 1 from photophobia to tension_headache\nobserve thunderclap_onset\nobserve neck_stiffness\nobserve photophobia\n? subarachnoid_hemorrhage\n? migraine\n? tension_headache\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "migraine",
+        "B": "tension_headache",
+        "C": "cluster_headache",
+        "D": "subarachnoid_hemorrhage",
+        "E": "unknown"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r6-10",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: aortic stenosis, vasovagal syncope, arrhythmia. exertional syncope has likelihood ratio 10 for aortic stenosis, 1 for vasovagal syncope, 3 for arrhythmia. systolic ejection murmur has likelihood ratio 12 for aortic stenosis, 1 for vasovagal syncope, 1 for arrhythmia. prodromal nausea has likelihood ratio 1 for aortic stenosis, 9 for vasovagal syncope, 1 for arrhythmia. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for aortic_stenosis\nprior 0.30 for vasovagal_syncope\nprior 0.30 for arrhythmia\ncontributes 10 from exertional_syncope to aortic_stenosis\ncontributes 1 from exertional_syncope to vasovagal_syncope\ncontributes 3 from exertional_syncope to arrhythmia\ncontributes 12 from systolic_ejection_murmur to aortic_stenosis\ncontributes 1 from systolic_ejection_murmur to vasovagal_syncope\ncontributes 1 from systolic_ejection_murmur to arrhythmia\ncontributes 1 from prodromal_nausea to aortic_stenosis\ncontributes 9 from prodromal_nausea to vasovagal_syncope\ncontributes 1 from prodromal_nausea to arrhythmia\nobserve exertional_syncope\nobserve systolic_ejection_murmur\nobserve prodromal_nausea\n? aortic_stenosis\n? vasovagal_syncope\n? arrhythmia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "vasovagal_syncope",
+        "B": "arrhythmia",
+        "C": "seizure",
+        "D": "unknown",
+        "E": "aortic_stenosis"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r6-11",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: croup, bronchiolitis, asthma. barking cough has likelihood ratio 14 for croup, 1 for bronchiolitis, 1 for asthma. inspiratory stridor has likelihood ratio 9 for croup, 1 for bronchiolitis, 1 for asthma. expiratory wheeze has likelihood ratio 1 for croup, 6 for bronchiolitis, 8 for asthma. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for croup\nprior 0.30 for bronchiolitis\nprior 0.30 for asthma\ncontributes 14 from barking_cough to croup\ncontributes 1 from barking_cough to bronchiolitis\ncontributes 1 from barking_cough to asthma\ncontributes 9 from inspiratory_stridor to croup\ncontributes 1 from inspiratory_stridor to bronchiolitis\ncontributes 1 from inspiratory_stridor to asthma\ncontributes 1 from expiratory_wheeze to croup\ncontributes 6 from expiratory_wheeze to bronchiolitis\ncontributes 8 from expiratory_wheeze to asthma\nobserve barking_cough\nobserve inspiratory_stridor\nobserve expiratory_wheeze\n? croup\n? bronchiolitis\n? asthma\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "croup",
+        "B": "bronchiolitis",
+        "C": "asthma",
+        "D": "epiglottitis",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-12",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: iron deficiency anemia, b12 deficiency, thalassemia. low mcv has likelihood ratio 5 for iron deficiency anemia, 1 for b12 deficiency, 6 for thalassemia. low ferritin has likelihood ratio 12 for iron deficiency anemia, 1 for b12 deficiency, 1 for thalassemia. high rdw has likelihood ratio 4 for iron deficiency anemia, 3 for b12 deficiency, 1 for thalassemia. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for iron_deficiency_anemia\nprior 0.30 for b12_deficiency\nprior 0.30 for thalassemia\ncontributes 5 from low_mcv to iron_deficiency_anemia\ncontributes 1 from low_mcv to b12_deficiency\ncontributes 6 from low_mcv to thalassemia\ncontributes 12 from low_ferritin to iron_deficiency_anemia\ncontributes 1 from low_ferritin to b12_deficiency\ncontributes 1 from low_ferritin to thalassemia\ncontributes 4 from high_rdw to iron_deficiency_anemia\ncontributes 3 from high_rdw to b12_deficiency\ncontributes 1 from high_rdw to thalassemia\nobserve low_mcv\nobserve low_ferritin\nobserve high_rdw\n? iron_deficiency_anemia\n? b12_deficiency\n? thalassemia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "b12_deficiency",
+        "B": "iron_deficiency_anemia",
+        "C": "thalassemia",
+        "D": "anemia_of_chronic_disease",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-13",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: c difficile colitis, inflammatory bowel disease, irritable bowel syndrome. recent antibiotics has likelihood ratio 12 for c difficile colitis, 1 for inflammatory bowel disease, 1 for irritable bowel syndrome. fecal leukocytes has likelihood ratio 6 for c difficile colitis, 5 for inflammatory bowel disease, 1 for irritable bowel syndrome. watery diarrhea has likelihood ratio 3 for c difficile colitis, 2 for inflammatory bowel disease, 4 for irritable bowel syndrome. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for c_difficile_colitis\nprior 0.30 for inflammatory_bowel_disease\nprior 0.30 for irritable_bowel_syndrome\ncontributes 12 from recent_antibiotics to c_difficile_colitis\ncontributes 1 from recent_antibiotics to inflammatory_bowel_disease\ncontributes 1 from recent_antibiotics to irritable_bowel_syndrome\ncontributes 6 from fecal_leukocytes to c_difficile_colitis\ncontributes 5 from fecal_leukocytes to inflammatory_bowel_disease\ncontributes 1 from fecal_leukocytes to irritable_bowel_syndrome\ncontributes 3 from watery_diarrhea to c_difficile_colitis\ncontributes 2 from watery_diarrhea to inflammatory_bowel_disease\ncontributes 4 from watery_diarrhea to irritable_bowel_syndrome\nobserve recent_antibiotics\nobserve fecal_leukocytes\nobserve watery_diarrhea\n? c_difficile_colitis\n? inflammatory_bowel_disease\n? irritable_bowel_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "inflammatory_bowel_disease",
+        "B": "irritable_bowel_syndrome",
+        "C": "c_difficile_colitis",
+        "D": "celiac_disease",
+        "E": "unknown"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r6-14",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: nephrolithiasis, urinary tract infection, bladder cancer. colicky flank pain has likelihood ratio 12 for nephrolithiasis, 1 for urinary tract infection, 1 for bladder cancer. hematuria has likelihood ratio 3 for nephrolithiasis, 2 for urinary tract infection, 6 for bladder cancer. ct stone has likelihood ratio 10 for nephrolithiasis, 1 for urinary tract infection, 1 for bladder cancer. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for nephrolithiasis\nprior 0.30 for urinary_tract_infection\nprior 0.30 for bladder_cancer\ncontributes 12 from colicky_flank_pain to nephrolithiasis\ncontributes 1 from colicky_flank_pain to urinary_tract_infection\ncontributes 1 from colicky_flank_pain to bladder_cancer\ncontributes 3 from hematuria to nephrolithiasis\ncontributes 2 from hematuria to urinary_tract_infection\ncontributes 6 from hematuria to bladder_cancer\ncontributes 10 from ct_stone to nephrolithiasis\ncontributes 1 from ct_stone to urinary_tract_infection\ncontributes 1 from ct_stone to bladder_cancer\nobserve colicky_flank_pain\nobserve hematuria\nobserve ct_stone\n? nephrolithiasis\n? urinary_tract_infection\n? bladder_cancer\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "urinary_tract_infection",
+        "B": "bladder_cancer",
+        "C": "pyelonephritis",
+        "D": "nephrolithiasis",
+        "E": "unknown"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r6-15",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: graves disease, hashimoto thyroiditis, subacute thyroiditis. low tsh has likelihood ratio 6 for graves disease, 1 for hashimoto thyroiditis, 5 for subacute thyroiditis. high radioiodine uptake has likelihood ratio 12 for graves disease, 1 for hashimoto thyroiditis, 1 for subacute thyroiditis. exophthalmos has likelihood ratio 9 for graves disease, 1 for hashimoto thyroiditis, 1 for subacute thyroiditis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for graves_disease\nprior 0.30 for hashimoto_thyroiditis\nprior 0.30 for subacute_thyroiditis\ncontributes 6 from low_tsh to graves_disease\ncontributes 1 from low_tsh to hashimoto_thyroiditis\ncontributes 5 from low_tsh to subacute_thyroiditis\ncontributes 12 from high_radioiodine_uptake to graves_disease\ncontributes 1 from high_radioiodine_uptake to hashimoto_thyroiditis\ncontributes 1 from high_radioiodine_uptake to subacute_thyroiditis\ncontributes 9 from exophthalmos to graves_disease\ncontributes 1 from exophthalmos to hashimoto_thyroiditis\ncontributes 1 from exophthalmos to subacute_thyroiditis\nobserve low_tsh\nobserve high_radioiodine_uptake\nobserve exophthalmos\n? graves_disease\n? hashimoto_thyroiditis\n? subacute_thyroiditis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "hashimoto_thyroiditis",
+        "B": "subacute_thyroiditis",
+        "C": "toxic_adenoma",
+        "D": "unknown",
+        "E": "graves_disease"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r6-16",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: cauda equina syndrome, lumbar disc herniation, muscular back strain. saddle anesthesia has likelihood ratio 14 for cauda equina syndrome, 1 for lumbar disc herniation, 1 for muscular back strain. urinary retention has likelihood ratio 10 for cauda equina syndrome, 1 for lumbar disc herniation, 1 for muscular back strain. positive straight leg raise has likelihood ratio 2 for cauda equina syndrome, 8 for lumbar disc herniation, 1 for muscular back strain. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for cauda_equina_syndrome\nprior 0.30 for lumbar_disc_herniation\nprior 0.30 for muscular_back_strain\ncontributes 14 from saddle_anesthesia to cauda_equina_syndrome\ncontributes 1 from saddle_anesthesia to lumbar_disc_herniation\ncontributes 1 from saddle_anesthesia to muscular_back_strain\ncontributes 10 from urinary_retention to cauda_equina_syndrome\ncontributes 1 from urinary_retention to lumbar_disc_herniation\ncontributes 1 from urinary_retention to muscular_back_strain\ncontributes 2 from positive_straight_leg_raise to cauda_equina_syndrome\ncontributes 8 from positive_straight_leg_raise to lumbar_disc_herniation\ncontributes 1 from positive_straight_leg_raise to muscular_back_strain\nobserve saddle_anesthesia\nobserve urinary_retention\nobserve positive_straight_leg_raise\n? cauda_equina_syndrome\n? lumbar_disc_herniation\n? muscular_back_strain\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "cauda_equina_syndrome",
+        "B": "lumbar_disc_herniation",
+        "C": "muscular_back_strain",
+        "D": "spinal_stenosis",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-17",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: kawasaki disease, measles, scarlet fever. strawberry tongue has likelihood ratio 5 for kawasaki disease, 1 for measles, 6 for scarlet fever. conjunctival injection has likelihood ratio 8 for kawasaki disease, 4 for measles, 1 for scarlet fever. desquamation of hands has likelihood ratio 10 for kawasaki disease, 1 for measles, 2 for scarlet fever. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for kawasaki_disease\nprior 0.30 for measles\nprior 0.30 for scarlet_fever\ncontributes 5 from strawberry_tongue to kawasaki_disease\ncontributes 1 from strawberry_tongue to measles\ncontributes 6 from strawberry_tongue to scarlet_fever\ncontributes 8 from conjunctival_injection to kawasaki_disease\ncontributes 4 from conjunctival_injection to measles\ncontributes 1 from conjunctival_injection to scarlet_fever\ncontributes 10 from desquamation_of_hands to kawasaki_disease\ncontributes 1 from desquamation_of_hands to measles\ncontributes 2 from desquamation_of_hands to scarlet_fever\nobserve strawberry_tongue\nobserve conjunctival_injection\nobserve desquamation_of_hands\n? kawasaki_disease\n? measles\n? scarlet_fever\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "measles",
+        "B": "kawasaki_disease",
+        "C": "scarlet_fever",
+        "D": "roseola",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-18",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: pyelonephritis, cystitis, nephrolithiasis. costovertebral tenderness has likelihood ratio 10 for pyelonephritis, 1 for cystitis, 3 for nephrolithiasis. fever has likelihood ratio 6 for pyelonephritis, 1 for cystitis, 1 for nephrolithiasis. dysuria has likelihood ratio 2 for pyelonephritis, 9 for cystitis, 1 for nephrolithiasis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for pyelonephritis\nprior 0.30 for cystitis\nprior 0.30 for nephrolithiasis\ncontributes 10 from costovertebral_tenderness to pyelonephritis\ncontributes 1 from costovertebral_tenderness to cystitis\ncontributes 3 from costovertebral_tenderness to nephrolithiasis\ncontributes 6 from fever to pyelonephritis\ncontributes 1 from fever to cystitis\ncontributes 1 from fever to nephrolithiasis\ncontributes 2 from dysuria to pyelonephritis\ncontributes 9 from dysuria to cystitis\ncontributes 1 from dysuria to nephrolithiasis\nobserve costovertebral_tenderness\nobserve fever\nobserve dysuria\n? pyelonephritis\n? cystitis\n? nephrolithiasis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "cystitis",
+        "B": "nephrolithiasis",
+        "C": "pyelonephritis",
+        "D": "urethritis",
+        "E": "unknown"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r6-19",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: addisonian crisis, septic shock, hypovolemic shock. hyperpigmentation has likelihood ratio 12 for addisonian crisis, 1 for septic shock, 1 for hypovolemic shock. hyponatremia hyperkalemia has likelihood ratio 9 for addisonian crisis, 2 for septic shock, 1 for hypovolemic shock. fever has likelihood ratio 1 for addisonian crisis, 10 for septic shock, 1 for hypovolemic shock. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for addisonian_crisis\nprior 0.30 for septic_shock\nprior 0.30 for hypovolemic_shock\ncontributes 12 from hyperpigmentation to addisonian_crisis\ncontributes 1 from hyperpigmentation to septic_shock\ncontributes 1 from hyperpigmentation to hypovolemic_shock\ncontributes 9 from hyponatremia_hyperkalemia to addisonian_crisis\ncontributes 2 from hyponatremia_hyperkalemia to septic_shock\ncontributes 1 from hyponatremia_hyperkalemia to hypovolemic_shock\ncontributes 1 from fever to addisonian_crisis\ncontributes 10 from fever to septic_shock\ncontributes 1 from fever to hypovolemic_shock\nobserve hyperpigmentation\nobserve hyponatremia_hyperkalemia\nobserve fever\n? addisonian_crisis\n? septic_shock\n? hypovolemic_shock\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "septic_shock",
+        "B": "hypovolemic_shock",
+        "C": "cardiogenic_shock",
+        "D": "addisonian_crisis",
+        "E": "unknown"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r6-20",
+      "qtype": "clinical_differential",
+      "stem": "Three diagnoses each start with prior 0.30: temporal arteritis, migraine, tension headache. jaw claudication has likelihood ratio 12 for temporal arteritis, 1 for migraine, 1 for tension headache. elevated esr has likelihood ratio 8 for temporal arteritis, 1 for migraine, 1 for tension headache. scalp tenderness has likelihood ratio 6 for temporal arteritis, 2 for migraine, 2 for tension headache. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.30 for temporal_arteritis\nprior 0.30 for migraine\nprior 0.30 for tension_headache\ncontributes 12 from jaw_claudication to temporal_arteritis\ncontributes 1 from jaw_claudication to migraine\ncontributes 1 from jaw_claudication to tension_headache\ncontributes 8 from elevated_esr to temporal_arteritis\ncontributes 1 from elevated_esr to migraine\ncontributes 1 from elevated_esr to tension_headache\ncontributes 6 from scalp_tenderness to temporal_arteritis\ncontributes 2 from scalp_tenderness to migraine\ncontributes 2 from scalp_tenderness to tension_headache\nobserve jaw_claudication\nobserve elevated_esr\nobserve scalp_tenderness\n? temporal_arteritis\n? migraine\n? tension_headache\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "migraine",
+        "B": "tension_headache",
+        "C": "cluster_headache",
+        "D": "unknown",
+        "E": "temporal_arteritis"
+      },
+      "gold_letter": "E"
+    }
+  ]
+}

@@ -39,6 +39,7 @@ SELF_CONTAINED_RUNGS = (
     "rung4_dimensional",
     "rung4_products",
     "rung5_multistep",
+    "rung6_clinical_differential",
 )
 
 
