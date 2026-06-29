@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.13.0
+
+**Column widths & row heights (facade for spreadsheet-core 0.16.0).** Per-column /
+per-row sizes on the ACTIVE sheet, the session side of resizable columns/rows in the
+demos. `column_width(col)` / `row_height(row)` return the stored size or `0.0` when
+unset (the host-default sentinel — a valid size is always `> 0`);
+`set_column_width(col, w)` / `set_row_height(row, h)` return `bool` and route through
+the `mutate` gate (a resize is **undoable** and persists through save/load);
+`clear_column_width` / `clear_row_height`; bulk `column_widths(c0, c1)` /
+`row_heights(r0, r1)` return JSON `[{"col":N,"w":F}]` / `[{"row":N,"h":F}]` (sorted) for
+a one-call viewport fetch. All on the active sheet; the engine validates (rejects
+non-finite / ≤ 0 / index 0). 2 new tests (set/get/clear + undo + bulk; save/load +
+insert-col shift). 40 tests pass.
+
 ## 0.12.0
 
 **Multi-sheet workbook.** `SpreadsheetSession` is now multi-sheet: bare-A1 ops

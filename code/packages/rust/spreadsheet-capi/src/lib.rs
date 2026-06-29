@@ -708,6 +708,117 @@ pub unsafe extern "C" fn sc_current_revision(s: *mut ScSession) -> u64 {
     (*s).inner.current_revision()
 }
 
+// ── Column widths & row heights ──────────────────────────────────────────
+// Per-column / per-row sizes on the active sheet. A `double` of `0.0` means
+// "no custom size — use the host default" (a valid size is always `> 0`).
+
+/// `column_width(col)` → the active sheet's width for a 1-based `col`, or `0.0`
+/// if the column has no custom width (the host uses its default). `0.0` on a null
+/// session. See [`SpreadsheetSession::column_width`].
+///
+/// # Safety
+/// `s` must be a valid session (or null).
+#[no_mangle]
+pub unsafe extern "C" fn sc_column_width(s: *mut ScSession, col: u32) -> f64 {
+    if s.is_null() {
+        return 0.0;
+    }
+    (*s).inner.column_width(col)
+}
+
+/// `row_height(row)` → the active sheet's height for a 1-based `row`, or `0.0`
+/// if unset. The row analogue of [`sc_column_width`].
+///
+/// # Safety
+/// `s` must be a valid session (or null).
+#[no_mangle]
+pub unsafe extern "C" fn sc_row_height(s: *mut ScSession, row: u32) -> f64 {
+    if s.is_null() {
+        return 0.0;
+    }
+    (*s).inner.row_height(row)
+}
+
+/// `set_column_width(col, width)` → 1 if it changed, 0 if rejected (non-finite /
+/// `≤ 0` width, `col == 0`) or a null session. See
+/// [`SpreadsheetSession::set_column_width`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_set_column_width(s: *mut ScSession, col: u32, width: f64) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.set_column_width(col, width) as c_int
+}
+
+/// `set_row_height(row, height)` → 1 if it changed, 0 if rejected. The row
+/// analogue of [`sc_set_column_width`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_set_row_height(s: *mut ScSession, row: u32, height: f64) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.set_row_height(row, height) as c_int
+}
+
+/// `clear_column_width(col)` → 1 if a width was removed (back to the host
+/// default), 0 otherwise. See [`SpreadsheetSession::clear_column_width`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_clear_column_width(s: *mut ScSession, col: u32) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.clear_column_width(col) as c_int
+}
+
+/// `clear_row_height(row)` → 1 if a height was removed, 0 otherwise.
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_clear_row_height(s: *mut ScSession, row: u32) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.clear_row_height(row) as c_int
+}
+
+/// `column_widths(col0, col1)` → a heap `char*` JSON array of the customized
+/// column widths in `[col0, col1]` on the active sheet, e.g.
+/// `[{"col":3,"w":140.0}]` (sorted by column). Free with [`sc_string_free`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_column_widths(s: *mut ScSession, col0: u32, col1: u32) -> *mut c_char {
+    if s.is_null() {
+        return into_cstr(String::from("[]"));
+    }
+    into_cstr((*s).inner.column_widths(col0, col1))
+}
+
+/// `row_heights(row0, row1)` → a heap `char*` JSON array of the customized row
+/// heights in `[row0, row1]`, e.g. `[{"row":2,"h":40.0}]`. Free with
+/// [`sc_string_free`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_row_heights(s: *mut ScSession, row0: u32, row1: u32) -> *mut c_char {
+    if s.is_null() {
+        return into_cstr(String::from("[]"));
+    }
+    into_cstr((*s).inner.row_heights(row0, row1))
+}
+
 /// `changed_since(since)` → changed-cells JSON. See
 /// [`SpreadsheetSession::changed_since`].
 ///

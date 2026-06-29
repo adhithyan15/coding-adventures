@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.13.0
+
+**Column widths & row heights (wasm linear-mem exports).** `column_width(col)` /
+`row_height(row)` → `f64` (`0.0` = unset); `set_column_width` / `set_row_height` → `i32`
+(1/0); `clear_column_width` / `clear_row_height` → `i32`; `column_widths(c0, c1)` /
+`row_heights(r0, r1)` → packed JSON array. Sizes return/take `f64` directly (no
+packing). Rebuilt `pkg/spreadsheet_engine.wasm`; the web demo's bundled
+`vendor/spreadsheet-engine-wasm.js` + JS loader wrappers
+(`columnWidth/rowHeight/setColumnWidth/setRowHeight/clearColumnWidth/clearRowHeight/
+columnWidths/rowHeights`) updated, with a `verify-infinite.mjs` width/height proof
+(set → read → save/load round-trip → insert-col shift). Thin wrappers over
+`spreadsheet-core-wasm` 0.13.0.
+
 ## 0.12.0
 
 **Multi-sheet WASM exports.** Linear-memory exports for the sheet ops:

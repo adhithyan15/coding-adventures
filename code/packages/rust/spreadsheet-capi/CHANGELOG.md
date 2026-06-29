@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.13.0
+
+**Column widths & row heights (C ABI).** `sc_column_width` / `sc_row_height` →
+`double` (`0.0` = unset / null session); `sc_set_column_width` / `sc_set_row_height` →
+`int` (1 changed / 0 rejected); `sc_clear_column_width` / `sc_clear_row_height` → `int`;
+`sc_column_widths` / `sc_row_heights` → heap `char*` JSON `[{"col":N,"w":F}]` /
+`[{"row":N,"h":F}]` (free with `sc_string_free`). Declarations added to
+`include/spreadsheet.h`. Thin wrappers over `spreadsheet-core-wasm` 0.13.0.
+
 ## 0.12.0
 
 **Multi-sheet C ABI.** Expose the multi-sheet session through the C ABI:

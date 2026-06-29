@@ -907,6 +907,87 @@ impl SpreadsheetSession {
         }
     }
 
+    // ── Column widths & row heights ──────────────────────────────────
+    //
+    // Per-column / per-row sizes on the ACTIVE sheet (bare-index, like every
+    // other session op). The engine stores an opaque size keyed by column / row;
+    // a host renders columns / rows at these sizes and uses its own default where
+    // none is set. `0.0` is the unset sentinel here — a valid size is always
+    // `> 0`, so a host treats `0.0` as "use my default". Resizes are undoable
+    // (routed through `mutate`) and persist through save / load.
+
+    /// The width of a 1-based `col` on the active sheet, or `0.0` if the column
+    /// has no custom width (the host should use its default).
+    pub fn column_width(&self, col: u32) -> f64 {
+        self.wb.column_width(self.sheet, col).unwrap_or(0.0)
+    }
+
+    /// The height of a 1-based `row` on the active sheet, or `0.0` if unset.
+    pub fn row_height(&self, row: u32) -> f64 {
+        self.wb.row_height(self.sheet, row).unwrap_or(0.0)
+    }
+
+    /// Set the width of a 1-based `col` on the active sheet. Returns `true` if it
+    /// changed. A non-finite / `≤ 0` width or `col == 0` is rejected (`false`) by
+    /// the engine, so a bad host value can't poison the sheet. Undoable.
+    pub fn set_column_width(&mut self, col: u32, width: f64) -> bool {
+        self.mutate(|s| {
+            let sheet = s.sheet;
+            s.wb.set_column_width(sheet, col, width)
+        })
+    }
+
+    /// Set the height of a 1-based `row` on the active sheet. The row analogue of
+    /// [`set_column_width`](Self::set_column_width). Undoable.
+    pub fn set_row_height(&mut self, row: u32, height: f64) -> bool {
+        self.mutate(|s| {
+            let sheet = s.sheet;
+            s.wb.set_row_height(sheet, row, height)
+        })
+    }
+
+    /// Clear a column's custom width on the active sheet (back to the host
+    /// default). Returns `true` if a width was removed. Undoable.
+    pub fn clear_column_width(&mut self, col: u32) -> bool {
+        self.mutate(|s| {
+            let sheet = s.sheet;
+            s.wb.clear_column_width(sheet, col)
+        })
+    }
+
+    /// Clear a row's custom height on the active sheet. Undoable.
+    pub fn clear_row_height(&mut self, row: u32) -> bool {
+        self.mutate(|s| {
+            let sheet = s.sheet;
+            s.wb.clear_row_height(sheet, row)
+        })
+    }
+
+    /// Every customized column width in the inclusive 1-based range `[col0, col1]`
+    /// on the active sheet, as JSON `[{"col":3,"w":140.0},...]` sorted by column —
+    /// a host fetches a viewport's overrides in one call.
+    pub fn column_widths(&self, col0: u32, col1: u32) -> String {
+        let ws: Vec<serde_json::Value> = self
+            .wb
+            .column_widths_in(self.sheet, col0, col1)
+            .into_iter()
+            .map(|(c, w)| json!({ "col": c, "w": w }))
+            .collect();
+        serde_json::Value::Array(ws).to_string()
+    }
+
+    /// Every customized row height in the inclusive 1-based range `[row0, row1]`
+    /// on the active sheet, as JSON `[{"row":2,"h":40.0},...]` sorted by row.
+    pub fn row_heights(&self, row0: u32, row1: u32) -> String {
+        let hs: Vec<serde_json::Value> = self
+            .wb
+            .row_heights_in(self.sheet, row0, row1)
+            .into_iter()
+            .map(|(r, h)| json!({ "row": r, "h": h }))
+            .collect();
+        serde_json::Value::Array(hs).to_string()
+    }
+
     /// Get every set cell's computed value as a JSON object keyed by A1
     /// address, e.g. `{"B1":{"kind":"number","value":15.0},...}`. Only cells
     /// that were explicitly set appear; everything else is implicitly empty.
@@ -1726,5 +1807,50 @@ mod tests {
         // no-match / empty query → 0.
         assert_eq!(s.replace_all("zzz", "q", true), 0);
         assert_eq!(s.replace_all("", "q", true), 0);
+    }
+
+    #[test]
+    fn column_width_and_row_height_through_the_session() {
+        let mut s = SpreadsheetSession::new();
+        // Unset → 0.0 (the host-default sentinel).
+        assert_eq!(s.column_width(3), 0.0);
+        assert_eq!(s.row_height(2), 0.0);
+        // Set + read back; a bad value is rejected (false), leaving it unset.
+        assert!(s.set_column_width(3, 140.0));
+        assert!(s.set_row_height(2, 40.0));
+        assert_eq!(s.column_width(3), 140.0);
+        assert_eq!(s.row_height(2), 40.0);
+        assert!(!s.set_column_width(4, f64::NAN)); // rejected
+        assert_eq!(s.column_width(4), 0.0);
+        // Bulk JSON for a viewport range, sorted.
+        s.set_column_width(5, 90.0);
+        // JSON object keys are serde-sorted (alphabetical): col<w, h<row.
+        assert_eq!(s.column_widths(3, 6), r#"[{"col":3,"w":140.0},{"col":5,"w":90.0}]"#);
+        assert_eq!(s.row_heights(1, 5), r#"[{"h":40.0,"row":2}]"#);
+        // A resize is undoable (routed through `mutate`): undo restores the width.
+        assert!(s.can_undo());
+        assert!(s.undo());
+        assert_eq!(s.column_width(5), 0.0); // last set (col 5) undone
+        assert_eq!(s.column_width(3), 140.0); // earlier one survives
+        // Clear → back to the default sentinel.
+        assert!(s.clear_column_width(3));
+        assert_eq!(s.column_width(3), 0.0);
+    }
+
+    #[test]
+    fn widths_survive_save_load_and_shift_on_insert_col() {
+        let mut s = SpreadsheetSession::new();
+        s.set_column_width(3, 140.0);
+        s.set_row_height(2, 40.0);
+        let snap = s.serialize();
+        // Mutate, then restore — the saved sizes come back.
+        s.set_column_width(3, 999.0);
+        assert!(s.deserialize(&snap));
+        assert_eq!(s.column_width(3), 140.0);
+        assert_eq!(s.row_height(2), 40.0);
+        // Insert a column at B (2): C's width slides to D (4).
+        s.insert_cols(2, 1);
+        assert_eq!(s.column_width(3), 0.0);
+        assert_eq!(s.column_width(4), 140.0);
     }
 }
