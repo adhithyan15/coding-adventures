@@ -7,8 +7,10 @@ use std::collections::{BTreeMap, HashMap};
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
 const WHATWG_DOCUMENT_SHELL_AUDIT: &str =
     include_str!("fixtures/whatwg-document-shell-audit.json");
-const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] =
-    &[("tricky01-dat-3", "html-element-boundary")];
+const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
+    ("tricky01-dat-3", "html-element-boundary"),
+    ("tests26-dat-1251", "body-frameset-boundary"),
+];
 
 #[derive(Debug, Deserialize)]
 struct DocumentShellAuditSuite {
