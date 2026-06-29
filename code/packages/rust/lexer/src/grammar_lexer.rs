@@ -1168,7 +1168,7 @@ impl<'a> GrammarLexer<'a> {
 
             // --- Newlines ---
             if ch == '\n' {
-                tokens.push(Token {
+                tokens.push(Token { cv: None,
                     type_: TokenType::Newline,
                     value: "\\n".to_string(),
                     line: self.line,
@@ -1276,7 +1276,7 @@ impl<'a> GrammarLexer<'a> {
                 self.newline_before_next = false;
                 let flags = if flag_bits == 0 { None } else { Some(flag_bits) };
 
-                let token = Token {
+                let token = Token { cv: None,
                     type_: token_type,
                     value: final_value,
                     line: start_line,
@@ -1399,7 +1399,7 @@ impl<'a> GrammarLexer<'a> {
             });
         }
 
-        tokens.push(Token {
+        tokens.push(Token { cv: None,
             type_: TokenType::Eof,
             value: String::new(),
             line: self.line,
@@ -1494,7 +1494,7 @@ impl<'a> GrammarLexer<'a> {
 
                 if spaces > current_indent {
                     indent_stack.push(spaces);
-                    tokens.push(Token {
+                    tokens.push(Token { cv: None,
                         type_: TokenType::Indent,
                         value: String::new(),
                         line: indent_line,
@@ -1505,7 +1505,7 @@ impl<'a> GrammarLexer<'a> {
                     // Emit DEDENT for each level we're leaving.
                     while indent_stack.len() > 1 && *indent_stack.last().unwrap() > spaces {
                         indent_stack.pop();
-                        tokens.push(Token {
+                        tokens.push(Token { cv: None,
                             type_: TokenType::Dedent,
                             value: String::new(),
                             line: indent_line,
@@ -1543,7 +1543,7 @@ impl<'a> GrammarLexer<'a> {
             // --- Newlines ---
             if ch == '\n' {
                 if bracket_depth == 0 {
-                    tokens.push(Token {
+                    tokens.push(Token { cv: None,
                         type_: TokenType::Newline,
                         value: "\\n".to_string(),
                         line: self.line,
@@ -1598,7 +1598,7 @@ impl<'a> GrammarLexer<'a> {
                     matched.clone()
                 };
 
-                tokens.push(Token {
+                tokens.push(Token { cv: None,
                     type_: token_type,
                     value: final_value,
                     line: start_line,
@@ -1624,7 +1624,7 @@ impl<'a> GrammarLexer<'a> {
             // Emit a final NEWLINE if the last token isn't one.
             let need_newline = tokens.last().map_or(false, |t| t.type_ != TokenType::Newline);
             if need_newline {
-                tokens.push(Token {
+                tokens.push(Token { cv: None,
                     type_: TokenType::Newline,
                     value: "\\n".to_string(),
                     line: self.line,
@@ -1635,7 +1635,7 @@ impl<'a> GrammarLexer<'a> {
 
             while indent_stack.len() > 1 {
                 indent_stack.pop();
-                tokens.push(Token {
+                tokens.push(Token { cv: None,
                     type_: TokenType::Dedent,
                     value: String::new(),
                     line: self.line,
@@ -1645,7 +1645,7 @@ impl<'a> GrammarLexer<'a> {
             }
         }
 
-        tokens.push(Token {
+        tokens.push(Token { cv: None,
             type_: TokenType::Eof,
             value: String::new(),
             line: self.line,
@@ -1763,7 +1763,7 @@ impl<'a> GrammarLexer<'a> {
     }
 
     fn virtual_layout_token(&self, type_name: &str, value: &str, anchor: &Token) -> Token {
-        Token {
+        Token { cv: None,
             type_: TokenType::Name,
             value: value.to_string(),
             line: anchor.line,
@@ -2483,7 +2483,7 @@ PLUS = "+""#,
             bracket_depths: BracketDepths::default(),
             current_token_line: 1,
         };
-        let synthetic = Token {
+        let synthetic = Token { cv: None,
             type_: TokenType::Name,
             value: "!".to_string(),
             line: 1,
@@ -2746,7 +2746,7 @@ PLUS = "+""#,
         let mut lexer = GrammarLexer::new("<hello", &grammar);
         lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
             if token.type_name.as_deref() == Some("OPEN_TAG") {
-                ctx.emit(Token {
+                ctx.emit(Token { cv: None,
                     type_: TokenType::Name,
                     value: "[start]".to_string(),
                     line: token.line,
@@ -2777,7 +2777,7 @@ PLUS = "+""#,
         lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
             if token.type_name.as_deref() == Some("OPEN_TAG") {
                 ctx.suppress();
-                ctx.emit(Token {
+                ctx.emit(Token { cv: None,
                     type_: TokenType::Name,
                     value: "<".to_string(),
                     line: token.line,

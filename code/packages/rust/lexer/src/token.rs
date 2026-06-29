@@ -307,6 +307,20 @@ pub struct Token {
     /// let is_context_kw = token.flags.unwrap_or(0) & TOKEN_CONTEXT_KEYWORD != 0;
     /// ```
     pub flags: Option<u32>,
+
+    /// Optional correlation-vector id for this token (CLOC03 / CLOC27).
+    ///
+    /// The CV-aware tokenizer mints one `CvId` per token, recording the source
+    /// `Origin` (file, line, column). That id is stored here so it can ride the
+    /// token through the parser and into the typed AST, where the bridge stamps
+    /// it onto leaf literals — letting an optimizer fold (`"abc".length` → `3`)
+    /// trace the folded literal back to the bytes it came from.
+    ///
+    /// `None` on the non-CV path (the common, zero-overhead case): a token with
+    /// no id produces an AST leaf with no id, exactly as before. The id is a
+    /// plain `String` (the `CvId` alias) so the low-level lexer needs no
+    /// dependency on the correlation-vector crate.
+    pub cv: Option<String>,
 }
 
 impl Token {
@@ -538,7 +552,7 @@ mod tests {
 
     #[test]
     fn test_token_display() {
-        let tok = Token {
+        let tok = Token { cv: None,
             type_: TokenType::Name,
             value: "x".to_string(),
             line: 1,
@@ -549,8 +563,35 @@ mod tests {
     }
 
     #[test]
+    fn test_token_cv_defaults_none_and_carries_id() {
+        // CLOC27 P1: the `cv` field defaults to `None` (the common, zero-overhead
+        // path) and can carry a correlation-vector id when the CV-aware tokenizer
+        // sets one. It does not affect equality of two otherwise-equal tokens'
+        // observable text/position — it is pure provenance metadata.
+        let plain = Token {
+            cv: None,
+            type_: TokenType::Number,
+            value: "42".to_string(),
+            line: 1,
+            column: 1,
+            type_name: None,
+            flags: None,
+        };
+        assert_eq!(plain.cv, None, "tokens carry no cv by default");
+
+        let traced = Token {
+            cv: Some("cv-7".to_string()),
+            ..plain.clone()
+        };
+        assert_eq!(traced.cv.as_deref(), Some("cv-7"));
+        // The id rides alongside the token; the rest is identical.
+        assert_eq!(traced.value, plain.value);
+        assert_eq!((traced.line, traced.column), (plain.line, plain.column));
+    }
+
+    #[test]
     fn test_token_display_string_with_escape() {
-        let tok = Token {
+        let tok = Token { cv: None,
             type_: TokenType::String,
             value: "hello\nworld".to_string(),
             line: 3,
@@ -568,14 +609,14 @@ mod tests {
 
     #[test]
     fn test_token_equality() {
-        let a = Token {
+        let a = Token { cv: None,
             type_: TokenType::Number,
             value: "42".to_string(),
             line: 1,
             column: 1,
             type_name: None, flags: None,
         };
-        let b = Token {
+        let b = Token { cv: None,
             type_: TokenType::Number,
             value: "42".to_string(),
             line: 1,
@@ -587,14 +628,14 @@ mod tests {
 
     #[test]
     fn test_token_inequality_type() {
-        let a = Token {
+        let a = Token { cv: None,
             type_: TokenType::Number,
             value: "42".to_string(),
             line: 1,
             column: 1,
             type_name: None, flags: None,
         };
-        let b = Token {
+        let b = Token { cv: None,
             type_: TokenType::Name,
             value: "42".to_string(),
             line: 1,
@@ -639,7 +680,7 @@ mod tests {
 
     #[test]
     fn test_token_clone() {
-        let original = Token {
+        let original = Token { cv: None,
             type_: TokenType::Keyword,
             value: "if".to_string(),
             line: 10,

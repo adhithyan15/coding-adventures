@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.1] - 2026-06-29
+
+### Changed — adapt to `lexer::Token` gaining a `cv` field (CLOC27 P1)
+
+The synthetic ASI semicolon (`asi::synthetic_semicolon`) now sets `cv: None` on
+the `Token` it builds — correct, since an ASI-inserted token corresponds to no
+source bytes and so carries no correlation-vector id. Mechanical adaptation to
+`lexer` 0.7.0; no behaviour change (all 82 tests pass unchanged).
+
 ## [0.19.0] - 2026-06-22
 
 ### Added — ASI Phase 3: restricted productions (Rule 3)

@@ -472,7 +472,7 @@ mod tests {
 
     /// Helper: create a token with default position (line 1, column 1).
     fn tok(type_: TokenType, value: &str) -> Token {
-        Token {
+        Token { cv: None,
             type_,
             value: value.to_string(),
             line: 1,
@@ -483,7 +483,7 @@ mod tests {
 
     /// Helper: create a token with specific position.
     fn tok_at(type_: TokenType, value: &str, line: usize, col: usize) -> Token {
-        Token {
+        Token { cv: None,
             type_,
             value: value.to_string(),
             line,

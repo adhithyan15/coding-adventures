@@ -276,7 +276,7 @@ impl<'a> Lexer<'a> {
             }
         }
 
-        Token {
+        Token { cv: None,
             type_: TokenType::Number,
             value,
             line: start_line,
@@ -318,7 +318,7 @@ impl<'a> Lexer<'a> {
             TokenType::Name
         };
 
-        Token {
+        Token { cv: None,
             type_,
             value,
             line: start_line,
@@ -411,7 +411,7 @@ impl<'a> Lexer<'a> {
             }
         }
 
-        Ok(Token {
+        Ok(Token { cv: None,
             type_: TokenType::String,
             value,
             line: start_line,
@@ -466,7 +466,7 @@ impl<'a> Lexer<'a> {
                     self.skip_whitespace();
                 }
                 "at_newline" => {
-                    let tok = Token {
+                    let tok = Token { cv: None,
                         type_: TokenType::Newline,
                         value: "\\n".to_string(),
                         line: self.line,
@@ -492,7 +492,7 @@ impl<'a> Lexer<'a> {
 
                     if self.current_char() == Some('=') {
                         self.advance();
-                        tokens.push(Token {
+                        tokens.push(Token { cv: None,
                             type_: TokenType::EqualsEquals,
                             value: "==".to_string(),
                             line: start_line,
@@ -500,7 +500,7 @@ impl<'a> Lexer<'a> {
                             type_name: None, flags: None,
                         });
                     } else {
-                        tokens.push(Token {
+                        tokens.push(Token { cv: None,
                             type_: TokenType::Equals,
                             value: "=".to_string(),
                             line: start_line,
@@ -513,7 +513,7 @@ impl<'a> Lexer<'a> {
                     let c = ch.expect("char must exist for in_operator");
                     let token_type =
                         simple_token_type(c).expect("char must be a simple token");
-                    let tok = Token {
+                    let tok = Token { cv: None,
                         type_: token_type,
                         value: c.to_string(),
                         line: self.line,
@@ -545,7 +545,7 @@ impl<'a> Lexer<'a> {
         }
 
         // Every token stream ends with EOF.
-        tokens.push(Token {
+        tokens.push(Token { cv: None,
             type_: TokenType::Eof,
             value: String::new(),
             line: self.line,

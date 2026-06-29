@@ -292,6 +292,9 @@ fn synthetic_semicolon(offending: &Token) -> Token {
         column: offending.column,
         type_name: Some("SEMICOLON".to_string()),
         flags: None,
+        // Synthetic (ASI-inserted) token: it corresponds to no source bytes, so
+        // it carries no correlation-vector id.
+        cv: None,
     }
 }
 

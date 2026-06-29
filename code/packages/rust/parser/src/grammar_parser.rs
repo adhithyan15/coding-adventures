@@ -237,8 +237,8 @@ impl GrammarParser {
     ///
     /// let grammar = parse_parser_grammar("value = NUMBER ;").unwrap();
     /// let tokens = vec![
-    ///     Token { type_: TokenType::Number, value: "42".into(), line: 1, column: 1, type_name: None, flags: None },
-    ///     Token { type_: TokenType::Eof,    value: "".into(),   line: 1, column: 3, type_name: None, flags: None },
+    ///     Token { cv: None, type_: TokenType::Number, value: "42".into(), line: 1, column: 1, type_name: None, flags: None },
+    ///     Token { cv: None, type_: TokenType::Eof,    value: "".into(),   line: 1, column: 3, type_name: None, flags: None },
     /// ];
     /// let mut parser = GrammarParser::new_with_trace(tokens, grammar, true);
     /// let result = parser.parse();
@@ -1016,7 +1016,7 @@ mod tests {
 
     /// Helper: create a token with default position.
     fn tok(type_: TokenType, value: &str) -> Token {
-        Token {
+        Token { cv: None,
             type_,
             value: value.to_string(),
             line: 1,
@@ -1027,7 +1027,7 @@ mod tests {
 
     /// Helper: create a token with a string type name.
     fn tok_named(type_: TokenType, value: &str, type_name: &str) -> Token {
-        Token {
+        Token { cv: None,
             type_,
             value: value.to_string(),
             line: 1,

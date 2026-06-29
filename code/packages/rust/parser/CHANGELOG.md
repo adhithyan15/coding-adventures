@@ -2,6 +2,15 @@
 
 All notable changes to the `parser` crate will be documented in this file.
 
+## [0.3.1] - 2026-06-29
+
+### Changed — adapt to `lexer::Token` gaining a `cv` field (CLOC27 P1)
+
+`GrammarParser` and `Parser` internal `Token` construction (including test
+helpers) now set `cv: None`. Mechanical adaptation to `lexer` 0.7.0; no public
+API or behaviour change (all parser tests pass unchanged). Also reconciles the
+crate version with this changelog's numbering.
+
 ## [0.3.0] - 2026-04-04
 
 ### Added
