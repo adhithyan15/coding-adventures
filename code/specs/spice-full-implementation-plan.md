@@ -33,18 +33,19 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Berkeley SPICE grammar foundation.
+1. Rust Berkeley SPICE parser/app facade.
    - Status: current PR completion candidate.
-   - Add `code/grammars/spice/berkeley.tokens` and
-     `code/grammars/spice/berkeley.grammar` as the first shared syntax contract
-     for normalized Berkeley SPICE logical cards.
-   - The grammar intentionally parses stable card shape and preserves generic
-     card atoms. Semantic passes own device arity, model legality, expression
-     resolution, include/library loading, control policies, and dialect-specific
-     behavior.
-   - Grammar-tool tests parse, validate, cross-validate, and compile the token
-     and parser grammars so future parser rewrites can break old ad hoc parsing
-     behavior against a checked source grammar instead of guessing.
+   - Add a Rust `spice-netlist-parser` facade for Berkeley SPICE logical-card
+     syntax that exposes grammar metadata, normalized cards, leading `+`
+     continuations, source spans, token names, stable diagnostics, and analysis
+     inventory.
+   - Add a Rust app-deck entrypoint for Mosaic-backed UI runtimes that parses
+     syntax once, reports syntax/lowering diagnostics, exposes analysis
+     inventory, and can run source-order or selected runnable analyses through
+     the existing simulator parser.
+   - This slice does not change Python/TypeScript simulator semantics. The
+     follow-up grammar-backed parser contract mirrors this facade outward once
+     the Rust/Mosaic substrate shape is reviewed.
 
 ## Completed Slices
 
@@ -1401,16 +1402,30 @@ the Rust, Python, and TypeScript surfaces together.
      exports, and a negative missing `NMOS:tran` summary case so downstream
      consumers can audit coverage without scanning every fixture row.
 
+132. Berkeley SPICE grammar foundation.
+   - Status: completed in PR 6861.
+   - `code/grammars/spice/berkeley.tokens` and
+     `code/grammars/spice/berkeley.grammar` now define the first shared syntax
+     contract for normalized Berkeley SPICE logical cards.
+   - The grammar intentionally parses stable card shape and preserves generic
+     card atoms. Semantic passes own device arity, model legality, expression
+     resolution, include/library loading, control policies, and
+     dialect-specific behavior.
+   - Grammar-tool tests parse, validate, cross-validate, and compile the token
+     and parser grammars so future parser rewrites can break old ad hoc parsing
+     behavior against a checked source grammar instead of guessing.
+
 ## Backlog
 
 1. Grammar-backed parser and app facade.
-   - Route the Rust `spice-netlist-parser` through a grammar-backed Berkeley
-     syntax layer with source spans and stable diagnostics.
+   - Route the Rust `spice-netlist-parser` semantic lowerer through the
+     Berkeley syntax facade and checked grammar contract, replacing the current
+     ad hoc line parser as the default deck parse path.
    - Mirror the resulting public parser contract in Python and TypeScript, even
      if that breaks current pre-release parser APIs.
-   - Add a Rust app facade for Mosaic-backed UI runtimes: parse deck, report
-     diagnostics, expose analysis inventory, run selected or source-order
-     analyses, and return stable table/waveform/result artifacts.
+   - Expand the Rust Mosaic app facade from analysis inventory and execution
+     entrypoints to stable table, waveform, and result artifacts backed by the
+     same public parser contract.
 
 2. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
