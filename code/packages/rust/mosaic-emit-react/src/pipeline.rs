@@ -63,10 +63,9 @@
 //!
 //! - ~~No `connects` wiring yet.~~ As of the connects-wiring PR, every
 //!   moslayout prop whose value is an `EmitRef` produces a JSX event handler
-//!   attribute that fires the matching dispatch variant (void emits only).
-//!   Payload-carrying emits still produce a void dispatch; mapping a JSX
-//!   event payload to the emit's parameters needs grammar work that is
-//!   tracked separately.
+//!   attribute that fires the matching dispatch variant. Generic emit-ref
+//!   handlers still dispatch without payload fields; dedicated host controls
+//!   add payloads when their UI event or row scope can supply them.
 //! - ~~No `Grid` primitive rendering yet.~~ As of the Grid-render PR, the
 //!   `Grid` moslayout tag lowers to a full `<table>` with `<thead>` /
 //!   `<tbody>` and `.map(...)` callbacks for header cells and row cells.
@@ -137,6 +136,12 @@ pub enum PipelineEmitError {
     /// First-pass limitations: see the module-level "What is NOT in this
     /// first pass" section.
     UnknownPrimitive(String),
+}
+
+#[derive(Clone, Copy)]
+struct ForPayloadScope<'a> {
+    item: &'a str,
+    index: Option<&'a str>,
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -570,6 +575,7 @@ pub fn from_pipeline(
     out.push_str(&emit_function(
         name,
         &interface.slots,
+        &interface.emits,
         &layout.root,
         &part_styles,
         &dialog_nodes,
@@ -683,6 +689,7 @@ fn emit_props_interface(component: &str, slots: &[SlotDecl]) -> Result<String, P
 fn emit_function(
     component: &str,
     slots: &[SlotDecl],
+    emits: &[EmitDecl],
     layout_root: &LayoutNode,
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
@@ -728,6 +735,8 @@ fn emit_function(
         part_styles,
         dialog_nodes,
         indeterminate_checkbox_nodes,
+        emits,
+        None,
     )?);
     writeln!(out, "  );").unwrap();
     writeln!(out, "}}").unwrap();
@@ -776,6 +785,8 @@ fn emit_jsx_tree(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -791,6 +802,8 @@ fn emit_jsx_tree(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         );
     }
 
@@ -826,7 +839,7 @@ fn emit_jsx_tree(
     // string-OR-slot label or the `onClick`-from-`onTap` rename, so HostButton
     // gets its own emitter.
     if node.tag == "HostButton" {
-        return emit_host_button_jsx(node, indent, part_styles);
+        return emit_host_button_jsx(node, indent, part_styles, emits, for_payload);
     }
 
     // UI29-2 — `HostCheckbox` lowers to `<input type="checkbox" />` with
@@ -872,6 +885,8 @@ fn emit_jsx_tree(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         );
     }
 
@@ -907,6 +922,8 @@ fn emit_jsx_tree(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         );
     }
 
@@ -940,6 +957,8 @@ fn emit_jsx_tree(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         );
     }
 
@@ -958,6 +977,8 @@ fn emit_jsx_tree(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         );
     }
 
@@ -1081,6 +1102,8 @@ fn emit_jsx_tree(
         part_styles,
         dialog_nodes,
         indeterminate_checkbox_nodes,
+        emits,
+        for_payload,
     )?);
     out.push_str(&format!("{pad}{close}\n"));
     Ok(out)
@@ -1108,6 +1131,8 @@ fn emit_children_jsx_with_control_flow(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -1124,6 +1149,8 @@ fn emit_children_jsx_with_control_flow(
                 part_styles,
                 dialog_nodes,
                 indeterminate_checkbox_nodes,
+                emits,
+                for_payload,
             )?);
             // Skip the Else we just consumed, if any.
             i += if else_node.is_some() { 2 } else { 1 };
@@ -1135,6 +1162,8 @@ fn emit_children_jsx_with_control_flow(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         )?);
         i += 1;
     }
@@ -1183,6 +1212,8 @@ fn emit_for_jsx(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1279,6 +1310,12 @@ fn emit_for_jsx(
         Some(idx) => (format!("({as_ident}, {idx})"), idx.clone()),
         None => (format!("({as_ident}, _idx)"), "_idx".to_string()),
     };
+    let scoped_payload = Some(ForPayloadScope {
+        item: as_ident.as_str(),
+        index: index_ident
+            .as_deref()
+            .or(for_payload.and_then(|scope| scope.index)),
+    });
 
     // Emit the body. Always wrap in a keyed React.Fragment so React's
     // reconciler has a stable identity per iteration regardless of
@@ -1291,6 +1328,8 @@ fn emit_for_jsx(
         part_styles,
         dialog_nodes,
         indeterminate_checkbox_nodes,
+        emits,
+        scoped_payload,
     )?;
     let body_trimmed = body_jsx.trim_end_matches('\n');
 
@@ -1328,6 +1367,8 @@ fn emit_if_jsx(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1363,6 +1404,8 @@ fn emit_if_jsx(
         part_styles,
         dialog_nodes,
         indeterminate_checkbox_nodes,
+        emits,
+        for_payload,
     )?;
 
     match else_node {
@@ -1373,6 +1416,8 @@ fn emit_if_jsx(
                 part_styles,
                 dialog_nodes,
                 indeterminate_checkbox_nodes,
+                emits,
+                for_payload,
             )?;
             let mut out = format!("{pad}{{{cond_expr} ? (\n");
             out.push_str(&then_jsx);
@@ -1402,6 +1447,8 @@ fn emit_branch_jsx(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if children.len() == 1 {
@@ -1411,6 +1458,8 @@ fn emit_branch_jsx(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         );
     }
     let mut out = format!("{pad}<>\n");
@@ -1420,6 +1469,8 @@ fn emit_branch_jsx(
         part_styles,
         dialog_nodes,
         indeterminate_checkbox_nodes,
+        emits,
+        for_payload,
     )?);
     out.push_str(&format!("{pad}</>\n"));
     Ok(out)
@@ -1722,6 +1773,8 @@ fn emit_host_button_jsx(
     node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1755,33 +1808,80 @@ fn emit_host_button_jsx(
     if let Some(emit_name) =
         find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
     {
-        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_emit_name(&type_field)?;
-        attrs.push_str(&format!(
-            " onClick={{() => dispatch({{ type: \"{type_field}\" }})}}"
-        ));
+        let event_expr = host_button_event_expr(emit_name, emits, for_payload)?;
+        attrs.push_str(&format!(" onClick={{() => dispatch({event_expr})}}"));
     }
 
-    // Body: `label` may be a string literal (verbatim text) or a slot ref
-    // (rendered as a JSX expression).  If neither is present, render an
-    // empty `<button></button>` — host may still set children via CSS
-    // generated content or simply use the button as an icon target.
-    let body = if let Some(s) = find_string_prop(node, "label") {
-        // String labels are inlined as JSX text. Brace any literal `{`
-        // or `}` characters so they don't terminate the JSX expression
-        // context (rare, but possible if the host wants Unicode).  We
-        // reuse the double-quoted escaper for `\` and `"`, then wrap the
-        // result as a string expression so HTML entities don't escape us.
-        format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s))
-    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        format!("{{{camel}}}")
-    } else {
-        String::new()
-    };
+    let body = host_button_label_body(node)?;
 
     Ok(format!("{pad}<button{attrs}>{body}</button>\n"))
+}
+
+fn host_button_event_expr(
+    emit_name: &str,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+    validate_emit_name(&type_field)?;
+
+    let mut event_expr = format!("{{ type: \"{type_field}\"");
+    let Some(emit) = emits.iter().find(|e| e.name == emit_name) else {
+        event_expr.push_str(" }");
+        return Ok(event_expr);
+    };
+    if emit.params.len() == 1 {
+        let param = &emit.params[0];
+        if let Some(payload) = host_button_single_payload_expr(&param.r#type, for_payload) {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            event_expr.push_str(&format!(", {field}: {payload}"));
+        }
+    }
+    event_expr.push_str(" }");
+    Ok(event_expr)
+}
+
+fn host_button_single_payload_expr(
+    param_type: &EmitPayloadType,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Option<String> {
+    let scope = for_payload?;
+    match param_type {
+        EmitPayloadType::Text | EmitPayloadType::Color | EmitPayloadType::Component(_) => {
+            Some(scope.item.to_string())
+        }
+        EmitPayloadType::Number => scope.index.map(str::to_string),
+        EmitPayloadType::Bool => None,
+    }
+}
+
+fn host_button_label_body(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|p| p.name == "label") else {
+        return Ok(String::new());
+    };
+    match &prop.value {
+        LayoutPropValue::String(s) => {
+            // String labels are inlined as JSX text. Brace any literal `{`
+            // or `}` characters so they don't terminate the JSX expression
+            // context (rare, but possible if the host wants Unicode).  We
+            // reuse the double-quoted escaper for `\` and `"`, then wrap the
+            // result as a string expression so HTML entities don't escape us.
+            Ok(format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s)))
+        }
+        LayoutPropValue::SlotRef(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(format!("{{{camel}}}"))
+        }
+        LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(format!("{{{camel}}}"))
+        }
+        LayoutPropValue::Expr(text) => Ok(format!("{{{text}}}")),
+        _ => Ok(String::new()),
+    }
 }
 
 // =====================================================================
@@ -2033,6 +2133,8 @@ fn emit_host_dialog_jsx(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -2107,6 +2209,8 @@ fn emit_host_dialog_jsx(
         part_styles,
         dialog_nodes,
         indeterminate_checkbox_nodes,
+        emits,
+        for_payload,
     )?);
     out.push_str(&format!("{pad}</dialog>\n"));
     Ok(out)
@@ -2489,6 +2593,8 @@ fn emit_host_tooltip_jsx(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -2523,6 +2629,8 @@ fn emit_host_tooltip_jsx(
         part_styles,
         dialog_nodes,
         indeterminate_checkbox_nodes,
+        emits,
+        for_payload,
     )?);
     out.push_str(&format!("{pad}</span>\n"));
     Ok(out)
@@ -2679,6 +2787,8 @@ fn emit_host_table_jsx(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -2762,6 +2872,8 @@ fn emit_host_table_jsx(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         )?);
     }
     if let Some(b) = tbody {
@@ -2773,6 +2885,8 @@ fn emit_host_table_jsx(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         )?);
     }
     if let Some(f) = tfoot {
@@ -2784,6 +2898,8 @@ fn emit_host_table_jsx(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         )?);
     }
 
@@ -2809,6 +2925,8 @@ fn emit_host_table_section_jsx(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let row_pad = " ".repeat(indent + 2);
@@ -2834,6 +2952,8 @@ fn emit_host_table_section_jsx(
                 part_styles,
                 dialog_nodes,
                 indeterminate_checkbox_nodes,
+                emits,
+                for_payload,
             )?);
         } else if child.tag == "For" {
             // UI31-L10 seam — `For` inside a section. Recognise the
@@ -2850,6 +2970,8 @@ fn emit_host_table_section_jsx(
                 part_styles,
                 dialog_nodes,
                 indeterminate_checkbox_nodes,
+                emits,
+                for_payload,
             )? {
                 out.push_str(&map_jsx);
                 continue;
@@ -2864,6 +2986,8 @@ fn emit_host_table_section_jsx(
                 part_styles,
                 dialog_nodes,
                 indeterminate_checkbox_nodes,
+                emits,
+                for_payload,
             )?);
         } else {
             // Non-Row, non-For child — recurse through the standard
@@ -2875,6 +2999,8 @@ fn emit_host_table_section_jsx(
                 part_styles,
                 dialog_nodes,
                 indeterminate_checkbox_nodes,
+                emits,
+                for_payload,
             )?);
         }
     }
@@ -2899,6 +3025,8 @@ fn emit_table_row_jsx(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let row_pad = " ".repeat(indent);
     let cell_pad = " ".repeat(indent + 2);
@@ -2918,6 +3046,8 @@ fn emit_table_row_jsx(
                 part_styles,
                 dialog_nodes,
                 indeterminate_checkbox_nodes,
+                emits,
+                for_payload,
             )? {
                 out.push_str(&map_jsx);
                 continue;
@@ -2930,6 +3060,8 @@ fn emit_table_row_jsx(
             part_styles,
             dialog_nodes,
             indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
         )?;
         let inner_trimmed = inner.trim_end_matches('\n');
         if inner_trimmed.contains('\n') {
@@ -2970,6 +3102,8 @@ fn try_emit_table_for_cell_jsx(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<Option<String>, PipelineEmitError> {
     if for_node.children.len() != 1 {
         return Ok(None);
@@ -3053,6 +3187,12 @@ fn try_emit_table_for_cell_jsx(
         Some(idx) => (format!("({as_ident}, {idx})"), idx.clone()),
         None => (format!("({as_ident}, _idx)"), "_idx".to_string()),
     };
+    let scoped_payload = Some(ForPayloadScope {
+        item: as_ident.as_str(),
+        index: index_ident
+            .as_deref()
+            .or(for_payload.and_then(|scope| scope.index)),
+    });
 
     // Emit the per-iteration cell. The leaf flows through the general
     // walker so a Text leaf carrying `content: <binding>` interpolates
@@ -3066,6 +3206,8 @@ fn try_emit_table_for_cell_jsx(
         part_styles,
         dialog_nodes,
         indeterminate_checkbox_nodes,
+        emits,
+        scoped_payload,
     )?;
     let inner_trimmed = inner.trim_end_matches('\n');
     let cell_pad = " ".repeat(body_indent);
@@ -3125,6 +3267,8 @@ fn try_emit_table_for_row_jsx(
     part_styles: &HashMap<String, String>,
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<Option<String>, PipelineEmitError> {
     if for_node.children.len() != 1 || for_node.children[0].tag != "Row" {
         return Ok(None);
@@ -3203,6 +3347,12 @@ fn try_emit_table_for_row_jsx(
         Some(idx) => (format!("({as_ident}, {idx})"), idx.clone()),
         None => (format!("({as_ident}, _idx)"), "_idx".to_string()),
     };
+    let scoped_payload = Some(ForPayloadScope {
+        item: as_ident.as_str(),
+        index: index_ident
+            .as_deref()
+            .or(for_payload.and_then(|scope| scope.index)),
+    });
 
     let pad = " ".repeat(indent);
     let row_indent = indent + 4;
@@ -3213,6 +3363,8 @@ fn try_emit_table_for_row_jsx(
         part_styles,
         dialog_nodes,
         indeterminate_checkbox_nodes,
+        emits,
+        scoped_payload,
     )?;
     let inner_row_trimmed = inner_row.trim_end_matches('\n');
 
@@ -5642,6 +5794,140 @@ mod tests {
             result.output.contains("disabled={isDisabled}"),
             "expected `disabled={{isDisabled}}`, got:\n{}",
             result.output
+        );
+    }
+
+    #[test]
+    fn host_button_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "ListGroup",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "ListGroup".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "For".to_string(),
+                    part_name: None,
+                    props: vec![
+                        LayoutProp {
+                            name: "each".to_string(),
+                            value: LayoutPropValue::SlotRef("items".to_string()),
+                        },
+                        LayoutProp {
+                            name: "as".to_string(),
+                            value: LayoutPropValue::Keyword("item".to_string()),
+                        },
+                        LayoutProp {
+                            name: "index".to_string(),
+                            value: LayoutPropValue::Keyword("i".to_string()),
+                        },
+                    ],
+                    children: vec![LayoutNode {
+                        tag: "HostButton".to_string(),
+                        part_name: None,
+                        props: vec![
+                            LayoutProp {
+                                name: "label".to_string(),
+                                value: LayoutPropValue::Keyword("item".to_string()),
+                            },
+                            LayoutProp {
+                                name: "onClick".to_string(),
+                                value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                            },
+                        ],
+                        children: Vec::new(),
+                    }],
+                }],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("ListGroup"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("onClick={() => dispatch({ type: \"select\", index: i })}"),
+            "expected HostButton to dispatch index payload, got:\n{out}"
+        );
+        assert!(
+            out.contains(
+                "<button onClick={() => dispatch({ type: \"select\", index: i })}>{item}</button>"
+            ),
+            "expected HostButton label to use For item binding, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_inside_for_dispatches_text_item_payload() {
+        let m = component(
+            "SelectMenu",
+            vec![slot(
+                "options",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit(
+                "onChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "SelectMenu".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "For".to_string(),
+                    part_name: None,
+                    props: vec![
+                        LayoutProp {
+                            name: "each".to_string(),
+                            value: LayoutPropValue::SlotRef("options".to_string()),
+                        },
+                        LayoutProp {
+                            name: "as".to_string(),
+                            value: LayoutPropValue::Keyword("option".to_string()),
+                        },
+                    ],
+                    children: vec![LayoutNode {
+                        tag: "HostButton".to_string(),
+                        part_name: None,
+                        props: vec![
+                            LayoutProp {
+                                name: "label".to_string(),
+                                value: LayoutPropValue::Keyword("option".to_string()),
+                            },
+                            LayoutProp {
+                                name: "onClick".to_string(),
+                                value: LayoutPropValue::EmitRef("onChange".to_string()),
+                            },
+                        ],
+                        children: Vec::new(),
+                    }],
+                }],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("SelectMenu"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("onClick={() => dispatch({ type: \"change\", value: option })}"),
+            "expected HostButton to dispatch item payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("<button onClick={() => dispatch({ type: \"change\", value: option })}>{option}</button>"),
+            "expected HostButton label to use For item binding, got:\n{out}"
         );
     }
 
