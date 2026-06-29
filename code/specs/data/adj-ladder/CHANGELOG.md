@@ -2,6 +2,19 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.20.0] — 2026-06-29
+
+### Added — Gemma constraint-feasibility baseline
+
+- Added **`ladder-scorecard.rung3_constraint_feasibility.gemma.json`**, a full
+  20-item local Gemma-3-4b trace artifact for native ADJ constraint-feasibility
+  questions.
+- Recorded the current two-arm baseline: Gemma alone scored 13/20 with 7 wrong
+  direct answers, while Gemma + ADJ scored 20/20 with zero wrong answers.
+- The artifact confirms all 20 Arm B decompositions were faithful native ADJ
+  `check` programs, giving an inspectable trail where ADJ owns the feasibility
+  verdict instead of asking the model to solve constraints directly.
+
 ## [0.19.0] — 2026-06-29
 
 ### Added — Gemma optimization-witness baseline

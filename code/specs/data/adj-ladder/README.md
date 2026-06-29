@@ -55,6 +55,18 @@ program, while the direct-answer arm fabricated most requested witness values. A
 owned the linear optimization and returned the requested optimal assignment. Artifact:
 `ladder-scorecard.rung3_optimization_witness.gemma.json`.
 
+### Current constraint baseline (rung 3 constraint feasibility, Gemma-3-4b, greedy)
+
+| Arm | raw accuracy | wrong (fabrications) | defensibility |
+|-----|--------------|----------------------|---------------|
+| **A** — Gemma alone | **65%** (13/20) | **7** | 0.65 |
+| **B** — Gemma + ADJ | **100%** (20/20) | **0** | **1.00** |
+
+**Divergence B − A = +35% (+7 items).** On the constraint-feasibility rung,
+Gemma emitted faithful native ADJ `check` programs for all 20 messy prompts; ADJ
+owned the feasibility verdict and mapped it back to the printed options. Artifact:
+`ladder-scorecard.rung3_constraint_feasibility.gemma.json`.
+
 ## Layout
 
 ```
@@ -95,6 +107,8 @@ adj-ladder/
                             full local Gemma trace artifact for newest multi-step rung
   ladder-scorecard.rung3_optimization_witness.gemma.json
                             full local Gemma trace artifact for optimization witness rung
+  ladder-scorecard.rung3_constraint_feasibility.gemma.json
+                            full local Gemma trace artifact for constraint feasibility
 ```
 
 ## How Arm B answers without computing the answer itself
