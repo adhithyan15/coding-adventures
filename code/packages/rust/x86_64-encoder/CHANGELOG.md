@@ -1,5 +1,14 @@
 # Changelog — `x86_64-encoder`
 
+## 0.6.0 — 2026-06-28 (AL8-sqrt — `SQRTSD xmm_dst, xmm_src`)
+
+### Added — `sqrtsd`
+
+`sqrtsd(xmm_dst, xmm_src)` emits `SQRTSD xmm_dst, xmm_src` — SSE2 double-
+precision hardware square root.  Opcode: `F2 0F 51 /r` — e.g. `sqrtsd xmm0,
+xmm0` = `F2 0F 51 C0`.  Single instruction, no libm call; NaN propagates,
+negative → NaN per IEEE-754.
+
 ## 0.5.0 — 2026-06-23 (int ⇄ real conversions — LANG-FULL E8 PR-6b)
 
 ### Added — `cvtsi2sd` / `cvttsd2si` / `roundsd`

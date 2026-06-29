@@ -1334,6 +1334,23 @@ fn handle_real_to_int_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<O
     Ok(Some(result))
 }
 
+/// `f64_sqrt` — IEEE-754 square root.  The operand must be a `Value::Float`
+/// (the ALGOL `real` model).  Returns `Value::Float(sqrt(x))`.  NaN
+/// propagates naturally; negative operands produce NaN per IEEE-754.
+fn handle_f64_sqrt(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let f = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("f64_sqrt: operand is not a real".into()))?
+    };
+    let result = Value::Float(f.sqrt());
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
 // ---------------------------------------------------------------------------
 // Standard opcode dispatch table
 // ---------------------------------------------------------------------------
@@ -1397,6 +1414,7 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "int_to_real"       => Some(handle_int_to_real),
         "real_to_int_trunc" => Some(handle_real_to_int_trunc),
         "real_to_int_floor" => Some(handle_real_to_int_floor),
+        "f64_sqrt"          => Some(handle_f64_sqrt),
         // `call` is handled specially (needs jit_handlers) — see dispatch loop.
         _              => None,
     }

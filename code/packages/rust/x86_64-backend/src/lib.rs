@@ -617,6 +617,19 @@ fn emit_instr(
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store rax
         return Ok(());
     }
+    // AL8 sqrt — `SQRTSD xmm0,xmm0` (SSE2; single hardware FP instruction, no libm).
+    //   f64_sqrt dest <- src  →  movsd xmm0,[src]; sqrtsd xmm0,xmm0; movsd [dest],xmm0
+    // NaN propagates; negative input → NaN (IEEE-754 / matches VM `f64::sqrt`).
+    if op == "f64_sqrt" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr("f64_sqrt needs srcs[0]".into()))?;
+        load_fp_operand(asm, alloc, Reg::Rax, src)?;            // f64 → xmm0
+        asm.sqrtsd(Reg::Rax, Reg::Rax);                         // xmm0 = sqrt(xmm0)
+        let slot = alloc.slot_of(dest);
+        asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store xmm0
+        return Ok(());
+    }
 
     // --- add_<ty> / sub_<ty> / mul_<ty> ---
     if let Some(ty) = op.strip_prefix("add_") { return emit_binop(asm, alloc, instr, BinOp::Add, ty); }

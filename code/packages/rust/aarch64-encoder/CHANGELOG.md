@@ -1,5 +1,14 @@
 # Changelog — `aarch64-encoder`
 
+## 0.6.0 — 2026-06-28 (AL8-sqrt — `FSQRT Dd, Dn`)
+
+### Added — `fsqrt`
+
+`fsqrt(dd, dn)` emits `FSQRT Dd, Dn` — IEEE-754 double-precision square root.
+Encoding: FP data-processing (1 source), `type=01` (double), `opcode=000011`
+(FSQRT): `0001_1110_0110_0001_1100_00nn_nnnd_dddd` (`0x1E61C000`).  Single
+hardware instruction, no libm call; NaN propagates, negative → NaN.
+
 ## 0.5.0 — 2026-06-23 (int ⇄ real conversions — LANG-FULL E8)
 
 ### Added — `scvtf` / `fcvtzs` / `frintm`

@@ -269,6 +269,8 @@ const SUPPORTED_OPS: &[&str] = &[
     // (`@llvm.trunc.f64`/`@llvm.floor.f64`), range-check (trap on
     // NaN/∞/out-of-i64-range, matching the VM), then `fptosi double → i64`.
     "int_to_real", "real_to_int_trunc", "real_to_int_floor",
+    // AL8 sqrt — IEEE-754 hardware square root via `@llvm.sqrt.f64`.
+    "f64_sqrt",
     // LANG-FULL E4 — string literal foothold for the static LLVM column.
     // `str_const` materialises a length-prefixed private constant. `str_index`,
     // `str_concat`, `str_slice`, `str_len`, `str_eq`, and `str_cmp` read literal metadata,
@@ -707,6 +709,9 @@ pub fn lower_iir_to_llvm(
     // out-of-range trap) plus the `@llvm.floor.f64`/`@llvm.trunc.f64` rounding
     // intrinsics. `is_conversion` covers int_to_real / real_to_int_{trunc,floor}.
     let mut used_conversions = false;
+    // AL8 sqrt: `f64_sqrt` lowers to `call double @llvm.sqrt.f64(double …)` —
+    // one `declare` is needed when any function uses the op.
+    let mut used_f64_sqrt = false;
     // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
     // first-seen order, so each gets exactly one `declare i64 @__twig_lispy_*`.
     let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
@@ -726,6 +731,9 @@ pub fn lower_iir_to_llvm(
             }
             if interpreter_ir::opcodes::is_conversion(&i.op) {
                 used_conversions = true;
+            }
+            if i.op == "f64_sqrt" {
+                used_f64_sqrt = true;
             }
             if i.op == "call_builtin" {
                 if let Some(Operand::Var(name)) = i.srcs.first() {
@@ -756,6 +764,13 @@ pub fn lower_iir_to_llvm(
     // LLVM05 — libc / allocator declarations for the Brainfuck tape & I/O.
     // `calloc(nmemb, size)` returns a zero-filled buffer (BF cells start at 0);
     // `putchar`/`getchar` are the libc character I/O the BF `.`/`,` map to.
+    if used_f64_sqrt {
+        out.push('\n');
+        // `@llvm.sqrt.f64` is an IEEE-754 hardware sqrt intrinsic — maps to
+        // `sqrtsd` on x86_64 and `fsqrt` on aarch64.  No trap needed: NaN
+        // propagates and negatives return NaN per IEEE-754.
+        out.push_str("declare double @llvm.sqrt.f64(double)\n");
+    }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
@@ -1536,6 +1551,8 @@ fn lower_instr(
         "int_to_real" => lower_int_to_real(instr, state, out),
         "real_to_int_trunc" => lower_real_to_int(instr, state, out, /*floor=*/ false),
         "real_to_int_floor" => lower_real_to_int(instr, state, out, /*floor=*/ true),
+        // AL8 sqrt — hardware IEEE-754 square root via LLVM intrinsic.
+        "f64_sqrt" => lower_f64_sqrt(instr, state, out),
 
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
@@ -1946,6 +1963,25 @@ fn lower_real_to_int(
     emit_real_range_check(&rounded, state, out);
 
     out.push_str(&format!("  %{dest} = fptosi double {rounded} to i64\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower `f64_sqrt dest <- x` — IEEE-754 hardware square root.
+///
+/// Maps to LLVM's `@llvm.sqrt.f64` intrinsic, which lowers to `sqrtsd` on
+/// x86_64 and `fsqrt` on aarch64 — no libm call, no trap.  NaN propagates
+/// naturally; `sqrt(negative)` returns NaN per IEEE-754 (same as Rust's
+/// `f64::sqrt`).  The ALGOL 60 spec §3.2.4 defines `sqrt` only for non-negative
+/// arguments; the NaN result for negative inputs is the "undefined" outcome.
+fn lower_f64_sqrt(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "f64_sqrt", state.fn_name)?.to_string();
+    let a = resolve_operand(instr.srcs.first(), &state.env, "f64", state.fn_name)?;
+    out.push_str(&format!("  %{dest} = call double @llvm.sqrt.f64(double {a})\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }

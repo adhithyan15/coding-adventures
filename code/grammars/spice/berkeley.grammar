@@ -1,0 +1,89 @@
+# Berkeley SPICE logical-card parser grammar.
+# @version 1
+#
+# Input is a stream of normalized logical cards. The grammar recognizes the
+# stable card shapes and leaves device arity, model parameter legality,
+# expression evaluation, include/lib resolution, and dialect-specific behavior
+# to semantic passes.
+
+deck = { line } [ end_card ] EOF ;
+
+line = blank_line
+     | subckt_block
+     | model_card
+     | param_card
+     | func_card
+     | options_card
+     | condition_card
+     | analysis_card
+     | output_card
+     | source_card
+     | control_card
+     | unknown_directive_card
+     | element_card
+     ;
+
+blank_line = NEWLINE ;
+
+end_card = DOT_END NEWLINE ;
+
+subckt_block = subckt_card { line } ends_card ;
+subckt_card  = DOT_SUBCKT ATOM { card_item } NEWLINE ;
+ends_card    = DOT_ENDS [ ATOM ] NEWLINE ;
+
+model_card = DOT_MODEL ATOM ATOM [ parameter_list ] NEWLINE ;
+
+param_card   = DOT_PARAM { assignment } NEWLINE ;
+func_card    = DOT_FUNC function_signature card_value NEWLINE ;
+options_card = DOT_OPTIONS { option_item } NEWLINE ;
+
+condition_card = ( DOT_TEMP | DOT_IC | DOT_NODESET ) { option_item } NEWLINE ;
+
+analysis_card = ( DOT_OP
+                | DOT_DC
+                | DOT_AC
+                | DOT_TRAN
+                | DOT_TF
+                | DOT_SENS
+                | DOT_NOISE
+                | DOT_DISTO
+                | DOT_PZ
+                ) { card_item } NEWLINE ;
+
+output_card = ( DOT_PRINT
+              | DOT_PLOT
+              | DOT_SAVE
+              | DOT_PROBE
+              | DOT_MEASURE
+              | DOT_MEAS
+              | DOT_FOUR
+              ) { card_item } NEWLINE ;
+
+source_card = ( DOT_INCLUDE | DOT_LIB ) { card_item } NEWLINE ;
+
+control_card = DOT_CONTROL NEWLINE { control_line } DOT_ENDC NEWLINE ;
+control_line = { card_item } NEWLINE ;
+
+unknown_directive_card = DOT ATOM { card_item } NEWLINE ;
+
+element_card = ATOM { card_item } NEWLINE ;
+
+parameter_list = LPAREN [ option_item { [ COMMA ] option_item } ] RPAREN ;
+
+option_item = assignment | card_value | waveform_call ;
+assignment  = ATOM EQUALS card_value ;
+
+function_signature = ATOM LPAREN [ ATOM { COMMA ATOM } ] RPAREN ;
+
+waveform_call = ATOM LPAREN [ card_item { [ COMMA ] card_item } ] RPAREN ;
+
+card_item = option_item
+          | parameter_list
+          | card_value
+          ;
+
+card_value = NUMBER
+           | ATOM
+           | QUOTED_STRING
+           | BRACED_EXPR
+           ;

@@ -107,6 +107,21 @@ the cubic root computation and returned `solve/solved_roots` for every item,
 including the LaTeX-backed constraints. Artifact:
 `ladder-scorecard.rung3_cubic_roots.gemma.json`.
 
+### First physics/chemistry rung (rung 4, cached engine)
+
+Rung 4 climbs off pure algebra into **applied science word problems** — kinematics
+(`speed = distance / time`), density, Ohm's law, unit conversions, molarity,
+stoichiometry, and force/work/power/pressure. This first rung-4 PR keeps every gold
+decomposition a plain ASCII arithmetic formula whose numbers all appear in the stem, so
+the existing exact-compute engine selects **20/20 with zero miscomputations** in cached
+mode (the same hard gate every rung passes). The unit symbols (km/h, g/cm³, mol/L, N, J,
+W, Pa) live in the prose; carrying dimensions through the engine as first-class *typed
+quantities* (so a wrong-unit answer is rejected, not just a wrong number) is the next
+rung-4 PR — the dimensional-engine step in ADJ-LADDER.md §5. A local-Gemma two-arm
+headline (like the rung-0/rung-3 tables above) will be recorded as a follow-up; the gap
+is expected to widen here, since a small model is markedly worse at multi-unit applied
+arithmetic than at bare sums.
+
 ## Layout
 
 ```
@@ -142,6 +157,8 @@ adj-ladder/
     items.json              20 quartic algebra MCQs backed by native ADJ solved_roots
   rung3_factored_roots/
     items.json              20 factored-polynomial MCQs backed by native ADJ solved_roots
+  rung4_physics_chem/
+    items.json              20 physics/chemistry word problems (formula-backed exact compute)
   ladder-scorecard.json     emitted artifact (per-arm metrics + divergence + buckets)
   ladder-scorecard.rung3_derived_probability_decisions.gemma.json
                             full local Gemma trace artifact for newest multi-step rung
@@ -199,6 +216,7 @@ python3 contamination_check.py rung3_quadratic_roots
 python3 contamination_check.py rung3_cubic_roots
 python3 contamination_check.py rung3_quartic_roots
 python3 contamination_check.py rung3_factored_roots
+python3 contamination_check.py rung4_physics_chem
 
 # 3. engine-only (cached) run — expect Arm B 100%, wrong 0
 python3 ladder_eval.py rung0_arithmetic
@@ -215,6 +233,7 @@ python3 ladder_eval.py rung3_quadratic_roots
 python3 ladder_eval.py rung3_cubic_roots
 python3 ladder_eval.py rung3_quartic_roots
 python3 ladder_eval.py rung3_factored_roots
+python3 ladder_eval.py rung4_physics_chem
 
 # 4. tests
 python3 -m pytest test_ladder_eval.py -q
@@ -300,3 +319,12 @@ ladder still maps only the engine-returned real root set to the printed options.
 `rung3_factored_roots` keeps the same solver boundary but switches the decomposition
 shape to zero-product equations like `(x - 2)(x - 5) = 0`, so local models can emit
 the natural factored program and let ADJ expand and solve it.
+`rung4_physics_chem` climbs into applied science: physics and chemistry word problems
+(kinematics, density, Ohm's law, unit conversions, molarity, stoichiometry,
+force/work/power/pressure). This first rung-4 PR returns to the formula path — every
+gold decomposition is a plain ASCII arithmetic expression whose numbers all appear in
+the stem (conversion factors like "1 minute equals 60 seconds" are stated in the stem so
+no constant is smuggled past the gate) — and the engine selects 20/20 with zero
+miscomputations. The unit symbols stay in the prose for now; making the engine carry
+dimensions as first-class typed quantities (so a wrong-unit selection is rejected) is the
+next rung-4 step (ADJ-LADDER.md §5).
