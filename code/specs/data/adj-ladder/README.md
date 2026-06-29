@@ -67,6 +67,20 @@ Gemma emitted faithful native ADJ `check` programs for all 20 messy prompts; ADJ
 owned the feasibility verdict and mapped it back to the printed options. Artifact:
 `ladder-scorecard.rung3_constraint_feasibility.gemma.json`.
 
+### Current equation-solving baseline (rung 3 linear systems, Gemma-3-4b, greedy)
+
+| Arm | raw accuracy | wrong (fabrications) | defensibility |
+|-----|--------------|----------------------|---------------|
+| **A** — Gemma alone | **10%** (2/20) | **18** | 0.10 |
+| **B** — Gemma + ADJ | **70%** (14/20) | **0** | **1.00** |
+
+**Divergence B − A = +60% (+12 items).** On the two-variable linear-system rung,
+Gemma emitted faithful native ADJ `solve` programs for all 20 messy prompts. ADJ
+returned 14 correct answers with zero wrong selections; the remaining 6 faithful
+programs abstained as bucket `c`, exposing the next solve-result selection gap rather
+than hiding it as a model answer. Artifact:
+`ladder-scorecard.rung3_linear_systems.gemma.json`.
+
 ## Layout
 
 ```
@@ -109,6 +123,8 @@ adj-ladder/
                             full local Gemma trace artifact for optimization witness rung
   ladder-scorecard.rung3_constraint_feasibility.gemma.json
                             full local Gemma trace artifact for constraint feasibility
+  ladder-scorecard.rung3_linear_systems.gemma.json
+                            full local Gemma trace artifact for linear systems
 ```
 
 ## How Arm B answers without computing the answer itself
