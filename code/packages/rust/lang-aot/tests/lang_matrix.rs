@@ -1705,6 +1705,47 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("876"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — `SQR` (square root) built-in (LANG-FULL BA-builtins).
+    // SQR(X) lowers to the f64_sqrt IIR op (same hardware instruction that
+    // ALGOL sqrt uses).  SQR(49) is exactly 7.0 — a whole-valued real — so
+    // BA7's formatter prints `7` with no decimal point.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT SQR(49)\n20 END\n",
+        expect: Expect::Stdout("7"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `INT` (floor) built-in (LANG-FULL BA-builtins).
+    // INT(X) = ⌊X⌋, returned as a real.  Lowers to real_to_int_floor +
+    // int_to_real (both E8 ops).  INT(3.7) → 3.0, printed as `3`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT INT(3.7)\n20 END\n",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `ABS` (absolute value) built-in (LANG-FULL BA-builtins).
+    // ABS(X) is lowered inline: if X < 0 then −X else X (store-per-branch,
+    // same pattern as ALGOL abs).  ABS(-42) → 42.0, printed as `42`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT ABS(-42)\n20 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `SGN` (signum) built-in (LANG-FULL BA-builtins).
+    // SGN(X) = 1.0 if X > 0, −1.0 if X < 0, 0.0 if X = 0.  Lowered
+    // inline as a 3-way conditional.  SGN(-5) → −1.0, printed as `-1`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT SGN(-5)\n20 END\n",
+        expect: Expect::Stdout("-1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
