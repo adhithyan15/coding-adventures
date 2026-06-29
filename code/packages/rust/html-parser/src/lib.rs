@@ -31282,6 +31282,48 @@ mod tests {
     }
 
     #[test]
+    fn fostered_nobr_table_cell_continuation_stays_inside_cell() {
+        let document = parse_html(
+            "<!DOCTYPE html><body><b><nobr>1<table><tr><td><nobr></b><i><nobr>2<nobr></i>3",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let bold = element(&body.children[0]);
+        assert_eq!(bold.name, "b");
+        let outer_nobr = element(&bold.children[0]);
+        assert_eq!(outer_nobr.name, "nobr");
+        assert_eq!(outer_nobr.children[0], Node::text("1"));
+
+        let table = element(&outer_nobr.children[1]);
+        assert_eq!(table.name, "table");
+        let table_body = element(&table.children[0]);
+        let row = element(&table_body.children[0]);
+        let cell = element(&row.children[0]);
+        assert_eq!(cell.name, "td");
+        assert_eq!(cell.children.len(), 3);
+
+        let first_nobr = element(&cell.children[0]);
+        assert_eq!(first_nobr.name, "nobr");
+        assert_eq!(element(&first_nobr.children[0]).name, "i");
+
+        let italic = element(&cell.children[1]);
+        assert_eq!(italic.name, "i");
+        let text_nobr = element(&italic.children[0]);
+        assert_eq!(text_nobr.name, "nobr");
+        assert_eq!(text_nobr.children, vec![Node::text("2")]);
+        let empty_nobr = element(&italic.children[1]);
+        assert_eq!(empty_nobr.name, "nobr");
+        assert!(empty_nobr.children.is_empty());
+
+        let trailing_nobr = element(&cell.children[2]);
+        assert_eq!(trailing_nobr.name, "nobr");
+        assert_eq!(trailing_nobr.children, vec![Node::text("3")]);
+    }
+
+    #[test]
     fn skips_fostered_anchor_reconstruction_inside_table_cells() {
         let document = parse_html(
             "<table><a href=\"blah\">aba<tr><td><a href=\"foo\">br</td></tr>x</table>aoe",
