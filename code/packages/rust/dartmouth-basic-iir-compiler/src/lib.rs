@@ -2608,13 +2608,16 @@ mod tests {
         assert!(calls_named(body, "__basic_print_real"));
     }
 
+    /// BA-^: a variable exponent falls through to the two-argument f64_pow IIR op,
+    /// which every backend lowers to libm pow().
     #[test]
-    fn variable_power_exponent_stays_unsupported() {
-        let err = compile("10 LET X = 2\n20 PRINT 6 ^ X\n30 END\n").unwrap_err();
-        match err {
-            CompileError::Unsupported(msg) => assert!(msg.contains("non-literal exponent")),
-            other => panic!("expected Unsupported(non-literal exponent), got {other:?}"),
-        }
+    fn variable_power_exponent_uses_f64_pow() {
+        let m = compile("10 LET X = 2\n20 PRINT 6 ^ X\n30 END\n").expect("variable exponent should compile via f64_pow");
+        let body = &m.functions[0].instructions;
+        assert!(
+            body.iter().any(|i| i.op == "f64_pow"),
+            "`6 ^ X` should lower to f64_pow IIR op: {body:?}"
+        );
     }
 
     /// BA2: a program with no value-printing `PRINT` carries no helper
