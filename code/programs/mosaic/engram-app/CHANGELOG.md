@@ -30,6 +30,8 @@
   including imported sort-field metadata and HTML/media filename normalization.
 - Added imported Anki FSRS stability, difficulty, and retrievability browser
   filters via `prop:s`, `prop:d`, and `prop:r`.
+- Aligned imported Anki `is:due` and `prop:due` browser filters with preserved
+  queue, due, original-due, and collection day metadata.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.

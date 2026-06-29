@@ -27,6 +27,10 @@ static DUPLICATE_HTML_TAGS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?is)<[^>]+>").expect("html tag regex should compile"));
 const FSRS5_DEFAULT_DECAY: f64 = 0.5;
 const SECONDS_PER_DAY: i64 = 86_400;
+const ANKI_QUEUE_LEARN: i64 = 1;
+const ANKI_QUEUE_REVIEW: i64 = 2;
+const ANKI_QUEUE_DAY_LEARN: i64 = 3;
+const ANKI_QUEUE_PREVIEW_REPEAT: i64 = 4;
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -1252,7 +1256,9 @@ fn clause_matches(
         SearchClauseKind::Preset(term) => preset_matches(term, card, deck, metadata),
         SearchClauseKind::NoteType(term) => note_type_matches(term, note, note_type),
         SearchClauseKind::Tag(tag) => tag_matches(tag, note),
-        SearchClauseKind::State(state) => state_matches(*state, progress, card_sources, now),
+        SearchClauseKind::State(state) => {
+            state_matches(*state, progress, card_sources, metadata, now)
+        }
         SearchClauseKind::Flag(filter) => flag_matches(*filter, progress),
         SearchClauseKind::Marked(expected) => {
             progress.is_some_and(|progress| progress.marked_at.is_some()) == *expected
@@ -1851,11 +1857,13 @@ fn state_matches(
     state: CardSearchState,
     progress: Option<&CardProgress>,
     card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
     now: u64,
 ) -> bool {
     match state {
         CardSearchState::New => progress.map_or(true, is_new_progress_overlay),
-        CardSearchState::Due => progress.is_some_and(|progress| is_reviewable(progress, now)),
+        CardSearchState::Due => imported_anki_card_is_due(card_sources, metadata, now)
+            .unwrap_or_else(|| progress.is_some_and(|progress| is_reviewable(progress, now))),
         CardSearchState::Learning => progress.is_some_and(|progress| {
             matches!(progress.state, CardState::Learning | CardState::Relearning)
         }),
@@ -1903,13 +1911,19 @@ fn property_matches(
             filter.operator,
             filter.value,
         ),
-        CardProperty::Due => progress.is_some_and(|progress| {
-            compare_number(
-                f64::from(relative_day_bucket(progress.next_due_at, now)),
-                filter.operator,
-                filter.value,
-            )
-        }),
+        CardProperty::Due => imported_anki_due_relative_days(card_sources, metadata, now)
+            .map_or_else(
+                || {
+                    progress.is_some_and(|progress| {
+                        compare_number(
+                            f64::from(relative_day_bucket(progress.next_due_at, now)),
+                            filter.operator,
+                            filter.value,
+                        )
+                    })
+                },
+                |days| compare_number(days as f64, filter.operator, filter.value),
+            ),
         CardProperty::Repetitions => compare_number(
             progress.map_or(0.0, |progress| f64::from(progress.times_seen)),
             filter.operator,
@@ -2025,6 +2039,56 @@ fn fsrs_retrievability(stability: f64, elapsed_seconds: u64, decay: f64) -> f64 
     let elapsed_days = elapsed_seconds as f64 / SECONDS_PER_DAY as f64;
     let factor = 0.9_f64.powf(1.0 / -decay) - 1.0;
     (1.0 + factor * elapsed_days / stability).powf(-decay)
+}
+
+fn imported_anki_card_is_due(
+    card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
+    now: u64,
+) -> Option<bool> {
+    card_sources.iter().find_map(|source| {
+        let queue = source_i64_from_data(source, "queue")?;
+        let due = imported_anki_due_value(source)?;
+        match queue {
+            ANKI_QUEUE_REVIEW | ANKI_QUEUE_DAY_LEARN => {
+                Some(due <= imported_anki_today(metadata, now)?)
+            }
+            ANKI_QUEUE_LEARN | ANKI_QUEUE_PREVIEW_REPEAT => {
+                let now_secs = i64::try_from(now / 1000).ok()?;
+                Some(due <= now_secs)
+            }
+            _ => None,
+        }
+    })
+}
+
+fn imported_anki_due_relative_days(
+    card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
+    now: u64,
+) -> Option<i64> {
+    card_sources.iter().find_map(|source| {
+        let queue = source_i64_from_data(source, "queue")?;
+        if !matches!(queue, ANKI_QUEUE_REVIEW | ANKI_QUEUE_DAY_LEARN) {
+            return None;
+        }
+        Some(imported_anki_due_value(source)? - imported_anki_today(metadata, now)?)
+    })
+}
+
+fn imported_anki_due_value(source: &ExternalSourceRecord) -> Option<i64> {
+    source_i64_from_data(source, "originalDue")
+        .filter(|due| *due != 0)
+        .or_else(|| source_i64_from_data(source, "due"))
+}
+
+fn imported_anki_today(metadata: &SearchMetadata<'_>, now: u64) -> Option<i64> {
+    let now_secs = i64::try_from(now / 1000).ok()?;
+    Some(
+        now_secs
+            .div_euclid(SECONDS_PER_DAY)
+            .saturating_sub(metadata.collection_created_at_days?),
+    )
 }
 
 fn imported_new_card_position(
@@ -2717,6 +2781,80 @@ mod tests {
         assert_eq!(ids_for("is:learn -is:review"), vec!["learning"]);
         assert_eq!(ids_for("is:learn is:review"), vec!["relearning"]);
         assert_eq!(ids_for("state:relearn"), vec!["relearning"]);
+    }
+
+    #[test]
+    fn imported_anki_due_filters_use_queue_and_due_days() {
+        let today = 200_i64;
+        let created_at_days = (NOW / 1000) as i64 / SECONDS_PER_DAY - today;
+        let collection_source = ExternalSourceRecord {
+            target: ExternalSourceTarget::Collection,
+            target_id: "collection".to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some("1".to_string()),
+            data: BTreeMap::from([("createdAtDays".to_string(), created_at_days.to_string())]),
+        };
+        let card_source =
+            |card_id: &str, queue: i64, due: i64, original_due: i64| ExternalSourceRecord {
+                target: ExternalSourceTarget::Card,
+                target_id: card_id.to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some(card_id.to_string()),
+                data: BTreeMap::from([
+                    ("queue".to_string(), queue.to_string()),
+                    ("due".to_string(), due.to_string()),
+                    ("originalDue".to_string(), original_due.to_string()),
+                ]),
+            };
+        let now_secs = (NOW / 1000) as i64;
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("review-overdue", "tamil", "review", "overdue"),
+                card("review-today", "tamil", "review", "today"),
+                card("review-future", "tamil", "review", "future"),
+                card("day-learn", "tamil", "day", "learn"),
+                card("learn-due", "tamil", "learn", "due"),
+                card("learn-future", "tamil", "learn", "future"),
+                card("filtered-original", "tamil", "filtered", "original"),
+            ],
+            external_sources: vec![
+                collection_source,
+                card_source("review-overdue", ANKI_QUEUE_REVIEW, today - 2, 0),
+                card_source("review-today", ANKI_QUEUE_REVIEW, today, 0),
+                card_source("review-future", ANKI_QUEUE_REVIEW, today + 3, 0),
+                card_source("day-learn", ANKI_QUEUE_DAY_LEARN, today, 0),
+                card_source("learn-due", ANKI_QUEUE_LEARN, now_secs - 1, 0),
+                card_source("learn-future", ANKI_QUEUE_LEARN, now_secs + 600, 0),
+                card_source("filtered-original", ANKI_QUEUE_REVIEW, today + 7, today - 1),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(
+            ids_for("is:due"),
+            vec![
+                "review-overdue",
+                "review-today",
+                "day-learn",
+                "learn-due",
+                "filtered-original"
+            ]
+        );
+        assert_eq!(
+            ids_for("prop:due<0"),
+            vec!["review-overdue", "filtered-original"]
+        );
+        assert_eq!(ids_for("prop:due=0"), vec!["review-today", "day-learn"]);
+        assert_eq!(ids_for("prop:due>0"), vec!["review-future"]);
     }
 
     #[test]
