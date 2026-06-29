@@ -5,7 +5,8 @@
 - Added shared browser support for Anki `preset:` deck option searches and
   `prop:pos` / `prop:position` new-card queue position filters.
 - Added shared browser support for Anki custom card data searches with
-  `has-cd:`, `prop:cdn:`, and `prop:cds:` filters.
+  `has-cd:`, `prop:cdn:`, and `prop:cds:` filters, including Anki's nested
+  `cd` payload.
 - Added imported Anki queue-aware browser filters for `is:buried-manually` and
   `is:buried-sibling`.
 - Aligned browser `is:learn` / `is:review` semantics so relearning cards match

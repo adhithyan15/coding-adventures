@@ -95,7 +95,8 @@ Unknown `key:value` searches fall back to Anki-style note field searches, so
 custom fields such as `Extra:` work alongside built-in `front:` and `back:`
 filters. Imported Anki card custom data can be searched with
 `has-cd:key`, numeric `prop:cdn:key>5`, and scalar string
-`prop:cds:key=value` filters.
+`prop:cds:key=value` filters, including values preserved in Anki's nested
+`cd` card data payload.
 `prop:rated` accepts Anki-style answer-button suffixes such as
 `prop:rated<-7:again`; imported Anki FSRS card data powers stability,
 difficulty, and retrievability searches with `prop:s`, `prop:d`, and `prop:r`.

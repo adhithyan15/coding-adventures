@@ -2207,15 +2207,40 @@ fn custom_data_string_matches(
 }
 
 fn card_custom_data_value(source: &ExternalSourceRecord, key: &str) -> Option<Value> {
+    let data = card_data_object(source)?;
+    if let Some(custom_data) = data.get("cd") {
+        return anki_custom_data_value(custom_data, key);
+    }
+    data.get(key).cloned()
+}
+
+fn anki_custom_data_value(custom_data: &Value, key: &str) -> Option<Value> {
+    match custom_data {
+        Value::Object(data) => data.get(key).cloned(),
+        Value::String(raw) => {
+            let Value::Object(data) = serde_json::from_str::<Value>(raw).ok()? else {
+                return None;
+            };
+            data.get(key).cloned()
+        }
+        _ => None,
+    }
+}
+
+fn card_data_value(source: &ExternalSourceRecord, key: &str) -> Option<Value> {
+    card_data_object(source)?.get(key).cloned()
+}
+
+fn card_data_object(source: &ExternalSourceRecord) -> Option<serde_json::Map<String, Value>> {
     let raw = source.data.get("data")?;
     let Value::Object(data) = serde_json::from_str::<Value>(raw).ok()? else {
         return None;
     };
-    data.get(key).cloned()
+    Some(data)
 }
 
 fn card_data_number(source: &ExternalSourceRecord, key: &str) -> Option<f64> {
-    card_custom_data_value(source, key)
+    card_data_value(source, key)
         .as_ref()
         .and_then(custom_data_number)
 }
@@ -3704,6 +3729,7 @@ mod tests {
             cards: vec![
                 card("rescheduled", "tamil", "one", "one"),
                 card("manual", "tamil", "two", "two"),
+                card("nested", "tamil", "two and a half", "two and a half"),
                 card("invalid", "tamil", "three", "three"),
                 card("plain", "tamil", "four", "four"),
             ],
@@ -3713,6 +3739,10 @@ mod tests {
                     r#"{"v":"reschedule","d":6.25,"n":"9","enabled":true,"empty":null}"#,
                 ),
                 anki_card_data("manual", r#"{"v":"manual","d":4}"#),
+                anki_card_data(
+                    "nested",
+                    r#"{"s":30,"d":6.5,"cd":"{\"v\":\"nested\",\"n\":11,\"enabled\":false}"}"#,
+                ),
                 anki_card_data("invalid", "not-json"),
             ],
             ..AppState::default()
@@ -3726,13 +3756,17 @@ mod tests {
                 .collect::<Vec<_>>()
         };
 
-        assert_eq!(ids_for("has-cd:v"), vec!["rescheduled", "manual"]);
+        assert_eq!(ids_for("has-cd:v"), vec!["rescheduled", "manual", "nested"]);
         assert_eq!(ids_for("has-cd:empty"), vec!["rescheduled"]);
         assert_eq!(ids_for("prop:cdn:d>5"), vec!["rescheduled"]);
         assert_eq!(ids_for("prop:cdn:n=9"), vec!["rescheduled"]);
+        assert_eq!(ids_for("prop:cdn:n=11"), vec!["nested"]);
         assert_eq!(ids_for("prop:cds:v=reschedule"), vec!["rescheduled"]);
-        assert_eq!(ids_for("prop:cds:v!=reschedule"), vec!["manual"]);
+        assert_eq!(ids_for("prop:cds:v=nested"), vec!["nested"]);
+        assert_eq!(ids_for("prop:cds:v!=reschedule"), vec!["manual", "nested"]);
         assert_eq!(ids_for("prop:cds:enabled=true"), vec!["rescheduled"]);
+        assert_eq!(ids_for("prop:cds:enabled=false"), vec!["nested"]);
+        assert!(ids_for("has-cd:cd").is_empty());
         assert!(ids_for("has-cd:missing").is_empty());
     }
 
