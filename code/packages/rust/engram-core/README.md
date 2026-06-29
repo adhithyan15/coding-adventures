@@ -82,12 +82,14 @@ supports plain text terms plus Anki-style `w:`, `nc:`, `sc:`, and `re:` text
 modifiers, field-scoped regex searches such as `front:re:...`, tag regexes,
 `deck:`, `preset:`, `note:`, `noteType:`, `card:`, `cid:`, `nid:`, `front:`,
 `back:`, `tag:`, `state:`, `is:`, `flag:`, `marked:`, `prop:`, `added:`,
-`edited:`, `introduced:`, and `rated:` filters. `preset:` resolves imported
-Anki deck-option preset names from preserved collection metadata, while
+`edited:`, `introduced:`, `rated:`, and `resched:` filters. `preset:` resolves
+imported Anki deck-option preset names from preserved collection metadata, while
 `prop:pos` / `prop:position` uses imported Anki new-card queue positions when
 available. Imported Anki card custom data can be searched with `has-cd:key`,
 numeric `prop:cdn:key>5`, and scalar string `prop:cds:key=value` filters.
-Imported Anki queue metadata also powers `is:buried-manually` and
+Imported Anki revlog metadata powers manual reschedule searches with
+`resched:` and `prop:resched`; imported Anki queue metadata also powers
+`is:buried-manually` and
 `is:buried-sibling`; relearning cards match both `is:learn` and `is:review`
 for Anki-style lapsed-card queries. Terms inside a group use implicit AND,
 `OR` joins groups, parentheses group subexpressions, and leading `-` negates a

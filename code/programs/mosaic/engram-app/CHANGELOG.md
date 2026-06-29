@@ -10,6 +10,9 @@
   `is:buried-sibling`.
 - Aligned browser `is:learn` / `is:review` semantics so relearning cards match
   Anki-style lapsed-card search intersections.
+- Added imported Anki revlog-aware `resched:` and `prop:resched` manual
+  reschedule browser filters, while excluding those rows from imported
+  `rated:` searches.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.

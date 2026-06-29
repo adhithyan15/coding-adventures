@@ -60,6 +60,7 @@ enum SearchClauseKind {
     Edited(RecentDaysFilter),
     Introduced(RecentDaysFilter),
     Rated(RatedFilter),
+    Rescheduled(RecentDaysFilter),
 }
 
 #[derive(Clone, Debug)]
@@ -124,6 +125,7 @@ enum CardProperty {
     Lapses,
     Ease,
     Rated,
+    Rescheduled,
     Position,
 }
 
@@ -189,6 +191,7 @@ enum TagFilter {
 struct SearchMetadata<'a> {
     filtered_deck_ids: HashSet<&'a str>,
     card_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
+    review_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
     deck_preset_names_by_id: HashMap<&'a str, Vec<String>>,
     deck_option_deck_ids: HashSet<&'a str>,
 }
@@ -299,6 +302,13 @@ impl<'a> SearchMetadata<'a> {
                 ExternalSourceTarget::Card => {
                     metadata
                         .card_sources_by_id
+                        .entry(source.target_id.as_str())
+                        .or_default()
+                        .push(source);
+                }
+                ExternalSourceTarget::Review => {
+                    metadata
+                        .review_sources_by_id
                         .entry(source.target_id.as_str())
                         .or_default()
                         .push(source);
@@ -621,6 +631,8 @@ fn parse_keyed_clause(
             parse_recent_days_filter(token, &value.to_lowercase()).map(SearchClauseKind::Introduced)
         }
         "rated" => parse_rated_filter(token, &value.to_lowercase()).map(SearchClauseKind::Rated),
+        "resched" | "rescheduled" => parse_recent_days_filter(token, &value.to_lowercase())
+            .map(SearchClauseKind::Rescheduled),
         _ => Err(SearchError {
             message: "unknown search filter".to_string(),
             token: token.to_string(),
@@ -843,6 +855,7 @@ fn parse_property_filter(token: &str, value: &str) -> Result<SearchClauseKind, S
         "lapses" => CardProperty::Lapses,
         "ease" => CardProperty::Ease,
         "rated" => CardProperty::Rated,
+        "resched" | "rescheduled" => CardProperty::Rescheduled,
         "pos" | "position" => CardProperty::Position,
         _ => {
             return Err(SearchError {
@@ -1095,7 +1108,7 @@ fn clause_matches(
             progress.is_some_and(|progress| progress.marked_at.is_some()) == *expected
         }
         SearchClauseKind::Property(filter) => {
-            property_matches(filter, progress, card_sources, reviews, now)
+            property_matches(filter, progress, card_sources, metadata, reviews, now)
         }
         SearchClauseKind::CustomDataKey(key) => custom_data_key_matches(key, card_sources),
         SearchClauseKind::CustomDataNumeric(filter) => {
@@ -1109,7 +1122,10 @@ fn clause_matches(
             note.is_some_and(|note| happened_recently(note.updated_at, filter.days, now))
         }
         SearchClauseKind::Introduced(filter) => first_reviewed_within(reviews, filter.days, now),
-        SearchClauseKind::Rated(filter) => rated_matches(reviews, *filter, now),
+        SearchClauseKind::Rated(filter) => rated_matches(reviews, *filter, metadata, now),
+        SearchClauseKind::Rescheduled(filter) => {
+            rescheduled_matches(reviews, *filter, metadata, now)
+        }
     };
 
     if clause.negated {
@@ -1559,6 +1575,7 @@ fn property_matches(
     filter: &CardPropertyFilter,
     progress: Option<&CardProgress>,
     card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
     reviews: &[&Review],
     now: u64,
 ) -> bool {
@@ -1589,11 +1606,20 @@ fn property_matches(
             compare_number(progress.ease_factor, filter.operator, filter.value)
         }),
         CardProperty::Rated => reviews.iter().any(|review| {
-            compare_number(
-                f64::from(relative_day_bucket(review.reviewed_at, now)),
-                filter.operator,
-                filter.value,
-            )
+            !anki_review_is_manual_reschedule(review, metadata)
+                && compare_number(
+                    f64::from(relative_day_bucket(review.reviewed_at, now)),
+                    filter.operator,
+                    filter.value,
+                )
+        }),
+        CardProperty::Rescheduled => reviews.iter().any(|review| {
+            anki_review_is_manual_reschedule(review, metadata)
+                && compare_number(
+                    f64::from(relative_day_bucket(review.reviewed_at, now)),
+                    filter.operator,
+                    filter.value,
+                )
         }),
         CardProperty::Position => imported_new_card_position(progress, card_sources)
             .is_some_and(|position| compare_number(position as f64, filter.operator, filter.value)),
@@ -1681,11 +1707,40 @@ fn custom_data_string(value: &Value) -> Option<String> {
     }
 }
 
-fn rated_matches(reviews: &[&Review], filter: RatedFilter, now: u64) -> bool {
+fn rated_matches(
+    reviews: &[&Review],
+    filter: RatedFilter,
+    metadata: &SearchMetadata<'_>,
+    now: u64,
+) -> bool {
     reviews.iter().any(|review| {
-        filter.rating.map_or(true, |rating| review.rating == rating)
+        !anki_review_is_manual_reschedule(review, metadata)
+            && filter.rating.map_or(true, |rating| review.rating == rating)
             && happened_recently(review.reviewed_at, filter.days, now)
     })
+}
+
+fn rescheduled_matches(
+    reviews: &[&Review],
+    filter: RecentDaysFilter,
+    metadata: &SearchMetadata<'_>,
+    now: u64,
+) -> bool {
+    reviews.iter().any(|review| {
+        anki_review_is_manual_reschedule(review, metadata)
+            && happened_recently(review.reviewed_at, filter.days, now)
+    })
+}
+
+fn anki_review_is_manual_reschedule(review: &Review, metadata: &SearchMetadata<'_>) -> bool {
+    metadata
+        .review_sources_by_id
+        .get(review.id.as_str())
+        .is_some_and(|sources| {
+            sources
+                .iter()
+                .any(|source| source_i64_from_data(source, "ease") == Some(0))
+        })
 }
 
 fn first_reviewed_within(reviews: &[&Review], days: u32, now: u64) -> bool {
@@ -2779,6 +2834,68 @@ mod tests {
         assert_eq!(ids_for("introduced:1"), vec!["due"]);
         assert_eq!(ids_for("rated:1:3"), vec!["due"]);
         assert_eq!(ids_for("rated:4:again"), vec!["future"]);
+    }
+
+    #[test]
+    fn rescheduled_filters_use_imported_anki_manual_reschedule_reviews() {
+        let anki_review_source = |review_id: &str, ease: i64| ExternalSourceRecord {
+            target: ExternalSourceTarget::Review,
+            target_id: review_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(review_id.to_string()),
+            data: BTreeMap::from([("ease".to_string(), ease.to_string())]),
+        };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("manual", "tamil", "manual", "rescheduled"),
+                card("answered", "tamil", "answered", "normally"),
+                card("old-manual", "tamil", "old", "rescheduled"),
+                card("native", "tamil", "native", "review"),
+            ],
+            reviews: vec![
+                review(
+                    "manual-recent",
+                    "manual",
+                    Rating::Good,
+                    NOW - ONE_DAY_MS / 2,
+                ),
+                review(
+                    "answered-recent",
+                    "answered",
+                    Rating::Good,
+                    NOW - ONE_DAY_MS / 2,
+                ),
+                review(
+                    "manual-old",
+                    "old-manual",
+                    Rating::Good,
+                    NOW - 3 * ONE_DAY_MS,
+                ),
+                review("native-good", "native", Rating::Good, NOW - ONE_DAY_MS / 2),
+            ],
+            external_sources: vec![
+                anki_review_source("manual-recent", 0),
+                anki_review_source("answered-recent", 3),
+                anki_review_source("manual-old", 0),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("resched:1"), vec!["manual"]);
+        assert_eq!(ids_for("prop:resched=0"), vec!["manual"]);
+        assert_eq!(ids_for("prop:rescheduled<-1"), vec!["old-manual"]);
+        assert_eq!(ids_for("rated:1"), vec!["answered", "native"]);
+        assert_eq!(ids_for("rated:1:good"), vec!["answered", "native"]);
+        assert_eq!(ids_for("prop:rated=0"), vec!["answered", "native"]);
     }
 
     #[test]
