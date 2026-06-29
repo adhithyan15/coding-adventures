@@ -2,6 +2,29 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.25.0] — 2026-06-28
+
+### Added — rung 4: physics & chemistry word problems (first PR)
+
+- New **`rung4_physics_chem/items.json`**: 20 fresh, self-authored applied-science MCQs
+  spanning kinematics (speed/distance/time), density, Ohm's law (V/I/R), unit
+  conversions (min→s, km→m, kg→g, hr→min), molarity, stoichiometry (moles↔mass), and
+  force/work/power/pressure. This is the ladder's first climb past pure algebra into
+  applied science — the roadmap's rung 4 (ADJ-LADDER.md §5).
+- Scoped this first rung-4 PR to the **exact-compute formula path**: every gold
+  decomposition is a plain ASCII arithmetic expression whose numbers all appear in the
+  stem (conversion factors such as "1 minute equals 60 seconds" are stated in the stem,
+  so no constant is smuggled past the no-result-literals gate). The engine selects
+  **20/20 in cached mode with zero miscomputations** — the same hard gate every rung
+  passes. Unit symbols (km/h, g/cm³, mol/L, N, J, W, Pa) live in the prose; carrying
+  dimensions through the engine as first-class *typed quantities* (so a wrong-unit answer
+  is rejected) is the next rung-4 PR (dimensional engine, §5).
+- Registered `rung4_physics_chem` in `test_ladder_eval.py`'s `SELF_CONTAINED_RUNGS`, so
+  the contamination, ≥20-item, and cached-engine end-to-end tests now cover it. Full
+  suite: **102 tests pass**; `contamination_check.py rung4_physics_chem` clean.
+- A local-Gemma two-arm headline (like the rung-0/rung-3 tables) will be recorded as a
+  follow-up; the divergence is expected to widen here.
+
 ## [0.24.0] — 2026-06-29
 
 ### Added — Gemma cubic-roots baseline
