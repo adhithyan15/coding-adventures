@@ -1,7 +1,7 @@
 use crate::model::{
     ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, CardState,
-    Deck, DeckOptions, DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget,
-    MediaAssetRecord, Note, NoteType, Rating, Review, Session, SessionStatus,
+    Deck, DeckOptions, DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, LeechAction,
+    LeechEvent, MediaAssetRecord, Note, NoteType, Rating, Review, Session, SessionStatus,
 };
 use crate::queue::is_new_progress_overlay;
 use crate::scheduler::schedule_review;
@@ -1062,7 +1062,7 @@ fn reduce_rate_card(
         .iter()
         .find(|progress| progress.card_id == card_id)
         .cloned();
-    let new_progress = schedule_review(
+    let mut new_progress = schedule_review(
         existing.as_ref(),
         card_id.clone(),
         rating,
@@ -1071,8 +1071,17 @@ fn reduce_rate_card(
     );
 
     let mut next = state.clone();
-    upsert_progress(&mut next.card_progress, new_progress.clone());
     let reviewed_card_id = card_id.clone();
+    let leech_event = apply_leech_handling(
+        &mut next,
+        &reviewed_card_id,
+        existing.as_ref(),
+        &mut new_progress,
+        rating,
+        deck_options,
+        reviewed_at,
+    );
+    upsert_progress(&mut next.card_progress, new_progress.clone());
     let answer_time_ms = answer_time_ms_for_review(
         state.active_session.as_ref(),
         &session_id,
@@ -1086,6 +1095,7 @@ fn reduce_rate_card(
         rating,
         reviewed_at,
         answer_time_ms,
+        leech_event,
         previous_progress: existing,
         resulting_progress: Some(new_progress),
         previous_active_session: if sibling_bury.captures_previous_session() {
@@ -1152,6 +1162,64 @@ fn reduce_rate_card(
     next
 }
 
+fn apply_leech_handling(
+    state: &mut AppState,
+    card_id: &str,
+    existing: Option<&CardProgress>,
+    new_progress: &mut CardProgress,
+    rating: Rating,
+    deck_options: &DeckOptions,
+    reviewed_at: u64,
+) -> Option<LeechEvent> {
+    let existing = existing?;
+    if rating != Rating::Again || existing.state != CardState::Review {
+        return None;
+    }
+    if !leech_threshold_met(new_progress.times_incorrect, deck_options.leech_threshold) {
+        return None;
+    }
+
+    let note_id = state
+        .cards
+        .iter()
+        .find(|card| card.id == card_id)
+        .and_then(|card| card.lineage.as_ref())
+        .map(|lineage| lineage.note_id.clone());
+    let previous_note_tags = note_id.as_ref().and_then(|note_id| {
+        let note = state.notes.iter_mut().find(|note| note.id == *note_id)?;
+        let previous = note.tags.clone();
+        if !note
+            .tags
+            .iter()
+            .any(|tag| tag.eq_ignore_ascii_case("leech"))
+        {
+            note.tags.push("leech".to_string());
+        }
+        Some(previous)
+    });
+
+    if deck_options.leech_action == LeechAction::Suspend {
+        new_progress.state = CardState::Suspended;
+        new_progress.learning_step_index = None;
+        new_progress.buried_until = None;
+        new_progress.suspended_at = Some(reviewed_at);
+    }
+
+    Some(LeechEvent {
+        action: deck_options.leech_action,
+        note_id,
+        previous_note_tags,
+    })
+}
+
+fn leech_threshold_met(lapses: u32, threshold: u32) -> bool {
+    if threshold == 0 || lapses < threshold {
+        return false;
+    }
+    let half_threshold = ((threshold as f64) / 2.0).ceil().max(1.0) as u32;
+    (lapses - threshold) % half_threshold == 0
+}
+
 fn answer_time_ms_for_review(
     active_session: Option<&ActiveSessionState>,
     session_id: &str,
@@ -1202,6 +1270,15 @@ fn undo_last_review(state: &AppState, session_id: &str) -> AppState {
             None => next
                 .card_progress
                 .retain(|progress| progress.card_id != snapshot.card_id),
+        }
+    }
+    if let Some(leech_event) = review.leech_event.clone() {
+        if let (Some(note_id), Some(previous_note_tags)) =
+            (leech_event.note_id, leech_event.previous_note_tags)
+        {
+            if let Some(note) = next.notes.iter_mut().find(|note| note.id == note_id) {
+                note.tags = previous_note_tags;
+            }
         }
     }
 
@@ -1340,8 +1417,8 @@ fn upsert_progress(progress: &mut Vec<CardProgress>, new_progress: CardProgress)
 mod tests {
     use super::*;
     use crate::model::{
-        CardLineage, CardState, CardTemplate, FieldDef, Note, NoteFieldValue, NoteType,
-        TemplateRequirementMode,
+        CardLineage, CardState, CardTemplate, FieldDef, LeechAction, Note, NoteFieldValue,
+        NoteType, TemplateRequirementMode,
     };
     use crate::queue::build_session_queue;
     use crate::scheduler::ONE_MINUTE_MS;
@@ -1950,6 +2027,118 @@ mod tests {
     }
 
     #[test]
+    fn rate_card_marks_and_suspends_leech_reviews_with_undo_snapshot() {
+        let review_card = card_with_note("card", "note", 0);
+        let mut previous = progress("card");
+        previous.times_seen = 12;
+        previous.times_correct = 5;
+        previous.times_incorrect = 7;
+        let mut state = AppState {
+            notes: vec![basic_note()],
+            cards: vec![review_card.clone()],
+            card_progress: vec![previous.clone()],
+            ..AppState::default()
+        };
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![review_card],
+                started_at: NOW,
+            },
+        );
+
+        let next = reduce(
+            &state,
+            EngramCommand::RateCardWithOptions {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Again,
+                reviewed_at: NOW,
+                deck_options: DeckOptions {
+                    leech_threshold: 8,
+                    leech_action: LeechAction::Suspend,
+                    ..DeckOptions::default()
+                },
+            },
+        );
+
+        assert_eq!(next.card_progress[0].state, CardState::Suspended);
+        assert_eq!(next.card_progress[0].times_incorrect, 8);
+        assert_eq!(next.card_progress[0].suspended_at, Some(NOW));
+        assert_eq!(next.notes[0].tags, vec!["tamil", "leech"]);
+        let leech = next.reviews[0].leech_event.as_ref().unwrap();
+        assert_eq!(leech.action, LeechAction::Suspend);
+        assert_eq!(leech.note_id.as_deref(), Some("note"));
+        assert_eq!(leech.previous_note_tags, Some(vec!["tamil".to_string()]));
+
+        let undone = reduce(
+            &next,
+            EngramCommand::UndoLastReview {
+                session_id: "session".to_string(),
+            },
+        );
+
+        assert_eq!(undone.card_progress[0], previous);
+        assert_eq!(undone.notes[0].tags, vec!["tamil"]);
+    }
+
+    #[test]
+    fn rate_card_repeats_leech_events_without_suspending_for_tag_only_decks() {
+        let review_card = card_with_note("card", "note", 0);
+        let mut previous = progress("card");
+        previous.times_seen = 20;
+        previous.times_correct = 9;
+        previous.times_incorrect = 11;
+        let mut note = basic_note();
+        note.tags.push("leech".to_string());
+        let mut state = AppState {
+            notes: vec![note],
+            cards: vec![review_card.clone()],
+            card_progress: vec![previous],
+            ..AppState::default()
+        };
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![review_card],
+                started_at: NOW,
+            },
+        );
+
+        let next = reduce(
+            &state,
+            EngramCommand::RateCardWithOptions {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Again,
+                reviewed_at: NOW,
+                deck_options: DeckOptions {
+                    leech_threshold: 8,
+                    leech_action: LeechAction::TagOnly,
+                    ..DeckOptions::default()
+                },
+            },
+        );
+
+        assert_eq!(next.card_progress[0].state, CardState::Relearning);
+        assert_eq!(next.card_progress[0].times_incorrect, 12);
+        assert_eq!(next.card_progress[0].suspended_at, None);
+        assert_eq!(next.notes[0].tags, vec!["tamil", "leech"]);
+        let leech = next.reviews[0].leech_event.as_ref().unwrap();
+        assert_eq!(leech.action, LeechAction::TagOnly);
+        assert_eq!(
+            leech.previous_note_tags,
+            Some(vec!["tamil".to_string(), "leech".to_string()])
+        );
+    }
+
+    #[test]
     fn rate_card_with_options_honors_custom_learning_steps() {
         let mut state = AppState::default();
         state.cards.push(card("card"));
@@ -2365,6 +2554,7 @@ mod tests {
             rating: Rating::Good,
             reviewed_at: NOW,
             answer_time_ms: None,
+            leech_event: None,
             previous_progress: None,
             resulting_progress: None,
             previous_active_session: None,
@@ -2668,6 +2858,7 @@ mod tests {
                 rating: Rating::Good,
                 reviewed_at: NOW,
                 answer_time_ms: None,
+                leech_event: None,
                 previous_progress: None,
                 resulting_progress: Some(progress("card")),
                 previous_active_session: None,

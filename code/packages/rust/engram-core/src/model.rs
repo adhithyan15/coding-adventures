@@ -167,6 +167,15 @@ pub enum CardFlag {
     Purple,
 }
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum LeechAction {
+    Suspend,
+    #[default]
+    TagOnly,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
@@ -243,6 +252,23 @@ pub struct CardProgressSnapshot {
     pub resulting_progress: Option<CardProgress>,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct LeechEvent {
+    pub action: LeechAction,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub note_id: Option<String>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub previous_note_tags: Option<Vec<String>>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
@@ -257,6 +283,11 @@ pub struct Review {
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub answer_time_ms: Option<u32>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub leech_event: Option<LeechEvent>,
     #[cfg_attr(
         feature = "serde",
         serde(default, skip_serializing_if = "Option::is_none")
@@ -410,6 +441,8 @@ pub struct DeckOptions {
     pub hard_interval_multiplier: f64,
     pub easy_bonus_multiplier: f64,
     pub lapse_interval_multiplier: f64,
+    pub leech_threshold: u32,
+    pub leech_action: LeechAction,
     pub bury_new_siblings: bool,
     pub bury_review_siblings: bool,
     pub bury_interday_learning_siblings: bool,
@@ -429,6 +462,8 @@ impl Default for DeckOptions {
             hard_interval_multiplier: 1.2,
             easy_bonus_multiplier: 1.3,
             lapse_interval_multiplier: 0.0,
+            leech_threshold: 8,
+            leech_action: LeechAction::TagOnly,
             bury_new_siblings: true,
             bury_review_siblings: true,
             bury_interday_learning_siblings: true,

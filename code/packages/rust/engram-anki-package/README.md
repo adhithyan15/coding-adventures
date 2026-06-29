@@ -46,7 +46,8 @@ allocates deterministic numeric IDs for Engram-native rows, writes decks,
 models, notes, cards, progress, and review rows, and falls back to a synthetic
 Basic note type for standalone front/back cards. Deck option import/export
 includes daily limits, learning/relearning steps, interval multipliers, lapse
-multiplier, maximum interval, and Anki-style sibling bury booleans. Anki's
+multiplier, maximum interval, leech threshold/action, and Anki-style sibling
+bury booleans. Anki's
 special `marked` note tag imports as Engram marked-card progress for each card
 generated from that note, and Engram marked cards export the canonical `marked`
 tag so the mark survives APKG round-trips. Imported suspended cards and Anki's

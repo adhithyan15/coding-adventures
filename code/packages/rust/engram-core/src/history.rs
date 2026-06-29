@@ -118,6 +118,7 @@ mod tests {
             rating,
             reviewed_at,
             answer_time_ms: None,
+            leech_event: None,
             previous_progress: None,
             resulting_progress: None,
             previous_active_session: None,

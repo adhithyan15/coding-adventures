@@ -14,8 +14,8 @@ use engram_core::{
     render_cloze_template, render_cloze_template_with_front_side, render_template,
     render_template_with_front_side, template_references_cloze, AppState, Card, CardFlag,
     CardLineage, CardProgress, CardState, CardTemplate, ClozeRenderSide, Deck, DeckOptions,
-    DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, FieldDef, MediaAssetRecord,
-    Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
+    DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, FieldDef, LeechAction,
+    MediaAssetRecord, Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
     TemplateRequirementMode, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
 use prost::Message;
@@ -913,6 +913,15 @@ fn v11_options_for_deck(deck: &AnkiV11Deck, deck_config: &Value) -> DeckOptions 
         if let Some(multiplier) = json_path_f64(config, &["lapse", "mult"]) {
             options.lapse_interval_multiplier =
                 normalized_anki_multiplier(multiplier, options.lapse_interval_multiplier);
+        }
+        options.leech_threshold =
+            json_path_u32(config, &["lapse", "leechFails"]).unwrap_or(options.leech_threshold);
+        if let Some(action) = json_path_i64(config, &["lapse", "leechAction"]) {
+            options.leech_action = match action {
+                0 => LeechAction::Suspend,
+                1 => LeechAction::TagOnly,
+                _ => options.leech_action,
+            };
         }
         if let Some(max_interval) = json_path_u32(config, &["rev", "maxIvl"]) {
             options.maximum_interval_days = max_interval.max(1);
@@ -1944,6 +1953,14 @@ fn merge_deck_options_json(
         "mult".to_string(),
         json_f64_or(options.lapse_interval_multiplier, 0.0),
     );
+    lapse_object.insert(
+        "leechFails".to_string(),
+        Value::Number(i64::from(options.leech_threshold).into()),
+    );
+    lapse_object.insert(
+        "leechAction".to_string(),
+        Value::Number(leech_action_to_anki(options.leech_action).into()),
+    );
     object.insert("lapse".to_string(), lapse_section);
     object.insert(
         "buryInterdayLearning".to_string(),
@@ -1956,6 +1973,13 @@ fn json_f64_or(value: f64, fallback: f64) -> Value {
     serde_json::Number::from_f64(normalized)
         .map(Value::Number)
         .unwrap_or_else(|| Value::Number(0_i64.into()))
+}
+
+fn leech_action_to_anki(action: LeechAction) -> i64 {
+    match action {
+        LeechAction::Suspend => 0,
+        LeechAction::TagOnly => 1,
+    }
 }
 
 fn export_note_type_fields_json(note_type: &ExportNoteType, raw_fields: &Value) -> Vec<Value> {
@@ -3033,6 +3057,7 @@ fn map_v11_review(review: &AnkiV11Review, deck_id: &str) -> Review {
         rating: rating_from_v11_ease(review.ease),
         reviewed_at: i64_to_u64(review.id),
         answer_time_ms: (review.time > 0).then(|| i64_to_u32(review.time)),
+        leech_event: None,
         previous_progress: Some(v11_review_progress_snapshot(
             review,
             review.last_interval,
@@ -3452,6 +3477,10 @@ fn json_path<'a>(value: &'a Value, path: &[&str]) -> Option<&'a Value> {
 
 fn json_path_u32(value: &Value, path: &[&str]) -> Option<u32> {
     json_path(value, path).and_then(value_to_u32)
+}
+
+fn json_path_i64(value: &Value, path: &[&str]) -> Option<i64> {
+    json_path(value, path).and_then(Value::as_i64)
 }
 
 fn json_path_f64(value: &Value, path: &[&str]) -> Option<f64> {
@@ -3922,7 +3951,7 @@ CREATE TABLE graves (
                                 "name": "Default",
                                 "new": {"perDay": 12, "bury": false, "delays": [3, 12], "ints": [2, 5]},
                                 "rev": {"perDay": 80, "bury": false, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
-                                "lapse": {"delays": [20], "mult": 0.5},
+                                "lapse": {"delays": [20], "mult": 0.5, "leechFails": 6, "leechAction": 0},
                                 "buryInterdayLearning": false
                             }
                         }"#,
@@ -4197,6 +4226,8 @@ CREATE TABLE graves (
         assert_eq!(options.hard_interval_multiplier, 1.4);
         assert_eq!(options.easy_bonus_multiplier, 1.6);
         assert_eq!(options.lapse_interval_multiplier, 0.5);
+        assert_eq!(options.leech_threshold, 6);
+        assert_eq!(options.leech_action, LeechAction::Suspend);
         assert!(!options.bury_new_siblings);
         assert!(!options.bury_review_siblings);
         assert!(!options.bury_interday_learning_siblings);
@@ -4287,6 +4318,11 @@ CREATE TABLE graves (
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["hardFactor"], 1.4);
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["ease4"], 1.6);
         assert_eq!(exported.metadata.deck_config["2"]["lapse"]["mult"], 0.5);
+        assert_eq!(exported.metadata.deck_config["2"]["lapse"]["leechFails"], 6);
+        assert_eq!(
+            exported.metadata.deck_config["2"]["lapse"]["leechAction"],
+            0
+        );
         assert_eq!(exported.metadata.deck_config["2"]["new"]["bury"], false);
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["bury"], false);
         assert_eq!(
@@ -5025,6 +5061,7 @@ CREATE TABLE graves (
                 rating: Rating::Good,
                 reviewed_at: 1_700_000_030_000,
                 answer_time_ms: Some(12_345),
+                leech_event: None,
                 previous_progress: None,
                 resulting_progress: None,
                 previous_active_session: None,

@@ -53,8 +53,9 @@ dispatch `EngramCommand::RateCardWithOptions` to provide learning steps,
 graduating/easy intervals, review limits, and lapse behavior without forking the
 review logic.
 Deck options also carry Anki-style maximum interval, review interval modifier,
-hard interval multiplier, and easy bonus multiplier settings, so hosts can keep
-deck-specific scheduler tuning in the shared Rust core.
+hard interval multiplier, easy bonus multiplier, leech threshold, and leech
+action settings, so hosts can keep deck-specific scheduler tuning in the shared
+Rust core.
 `EngramCommand::SetDeckOptions` inserts or replaces a stored deck option preset,
 letting settings screens update the same options that queue building and
 `RateCard` use.
@@ -79,6 +80,10 @@ reviews without snapshots are left unchanged because there is no reliable prior
 progress to restore. Review-history summaries ignore imported Anki manual
 reschedule revlog rows (`ease = 0`) so they do not inflate answer counts or
 accuracy.
+When a review card lapses at the configured Anki-style leech threshold, the
+reducer records a leech event, adds the `leech` tag to the lineaged note, and
+suspends the card when the deck option requests Anki's suspend action. Undo
+restores both the previous progress and the previous note tags.
 
 `search_cards` provides the first shared collection-browser query layer. It
 supports plain text terms against Anki-style note field content, falling back to
