@@ -3074,16 +3074,6 @@ fn map_v11_card(
             card.id, note.note_type_id
         ))
     })?;
-    let template = note_type
-        .templates
-        .iter()
-        .find(|template| template.ordinal == i64_to_u32(card.ordinal))
-        .ok_or_else(|| {
-            apkg_error(format!(
-                "Anki card {} references missing template ordinal {}",
-                card.id, card.ordinal
-            ))
-        })?;
     let anki_note_type = anki_note_types_by_id
         .get(&card_note_type_id(note))
         .ok_or_else(|| {
@@ -3092,6 +3082,7 @@ fn map_v11_card(
                 card.id, note.note_type_id
             ))
         })?;
+    let template = template_for_v11_card(card, note_type, anki_note_type)?;
     let mut field_values = field_value_map(note, anki_note_type);
     insert_anki_special_template_values(
         &mut field_values,
@@ -3141,6 +3132,42 @@ fn map_v11_card(
             cloze_ordinal,
         }),
     })
+}
+
+fn template_for_v11_card<'a>(
+    card: &AnkiV11Card,
+    note_type: &'a NoteType,
+    anki_note_type: &AnkiV11NoteType,
+) -> Result<&'a CardTemplate, ApkgError> {
+    if anki_note_type.kind == 1 {
+        return note_type
+            .templates
+            .iter()
+            .find(|template| template.ordinal == 0)
+            .or_else(|| {
+                note_type.templates.iter().find(|template| {
+                    template_references_cloze(&template.front_template, &template.back_template)
+                })
+            })
+            .or_else(|| note_type.templates.first())
+            .ok_or_else(|| {
+                apkg_error(format!(
+                    "Anki cloze card {} references note type {} without templates",
+                    card.id, note_type.id
+                ))
+            });
+    }
+
+    note_type
+        .templates
+        .iter()
+        .find(|template| template.ordinal == i64_to_u32(card.ordinal))
+        .ok_or_else(|| {
+            apkg_error(format!(
+                "Anki card {} references missing template ordinal {}",
+                card.id, card.ordinal
+            ))
+        })
 }
 
 fn field_value_map(note: &Note, note_type: &AnkiV11NoteType) -> HashMap<String, String> {
@@ -5298,34 +5325,56 @@ CREATE TABLE graves (
                 update_sequence_number: -1,
                 tags: vec!["roots".to_string()],
                 field_values: vec![
-                    "The word {{c1::night::old root}} travels.".to_string(),
+                    "The word {{c1::night::old root}} meets {{c2::nox::Latin}}.".to_string(),
                     "Proto-Indo-European stories go here.".to_string(),
                 ],
-                sort_field: "The word night travels.".to_string(),
+                sort_field: "The word night meets nox.".to_string(),
                 checksum: 0,
                 flags: 0,
                 data: String::new(),
             }],
-            cards: vec![AnkiV11Card {
-                id: 2000,
-                note_id: 1000,
-                deck_id: 1,
-                ordinal: 0,
-                modified_at: 1_700_000_020,
-                update_sequence_number: -1,
-                kind: 0,
-                queue: 0,
-                due: 0,
-                interval: 0,
-                factor: 0,
-                repetitions: 0,
-                lapses: 0,
-                left: 0,
-                original_due: 0,
-                original_deck_id: 0,
-                flags: 0,
-                data: String::new(),
-            }],
+            cards: vec![
+                AnkiV11Card {
+                    id: 2000,
+                    note_id: 1000,
+                    deck_id: 1,
+                    ordinal: 0,
+                    modified_at: 1_700_000_020,
+                    update_sequence_number: -1,
+                    kind: 0,
+                    queue: 0,
+                    due: 0,
+                    interval: 0,
+                    factor: 0,
+                    repetitions: 0,
+                    lapses: 0,
+                    left: 0,
+                    original_due: 0,
+                    original_deck_id: 0,
+                    flags: 0,
+                    data: String::new(),
+                },
+                AnkiV11Card {
+                    id: 2001,
+                    note_id: 1000,
+                    deck_id: 1,
+                    ordinal: 1,
+                    modified_at: 1_700_000_021,
+                    update_sequence_number: -1,
+                    kind: 0,
+                    queue: 0,
+                    due: 1,
+                    interval: 0,
+                    factor: 0,
+                    repetitions: 0,
+                    lapses: 0,
+                    left: 0,
+                    original_due: 0,
+                    original_deck_id: 0,
+                    flags: 0,
+                    data: String::new(),
+                },
+            ],
             reviews: Vec::new(),
             graves: Vec::new(),
         };
@@ -5339,10 +5388,21 @@ CREATE TABLE graves (
         assert_eq!(state.cards[0].front, "[type answer: Text]");
         assert_eq!(
             state.cards[0].back,
-            "[type answer: Text]<hr>The word night travels.<br>Proto-Indo-European stories go here."
+            "[type answer: Text]<hr>The word night meets nox.<br>Proto-Indo-European stories go here."
         );
-        let lineage = state.cards[0].lineage.as_ref().unwrap();
-        assert_eq!(lineage.cloze_ordinal, Some(1));
+        assert_eq!(state.cards[1].front, "[type answer: Text]");
+        assert_eq!(
+            state.cards[1].back,
+            "[type answer: Text]<hr>The word night meets nox.<br>Proto-Indo-European stories go here."
+        );
+        let first_lineage = state.cards[0].lineage.as_ref().unwrap();
+        assert_eq!(first_lineage.template_id, "100:template:0");
+        assert_eq!(first_lineage.ordinal, 0);
+        assert_eq!(first_lineage.cloze_ordinal, Some(1));
+        let second_lineage = state.cards[1].lineage.as_ref().unwrap();
+        assert_eq!(second_lineage.template_id, "100:template:0");
+        assert_eq!(second_lineage.ordinal, 1);
+        assert_eq!(second_lineage.cloze_ordinal, Some(2));
         assert!(state.card_progress.is_empty());
 
         let exported = parse_v11_collection_bytes(
@@ -5350,6 +5410,8 @@ CREATE TABLE graves (
         )
         .unwrap();
         assert_eq!(exported.note_types[0].kind, 1);
+        assert_eq!(exported.cards[0].ordinal, 0);
+        assert_eq!(exported.cards[1].ordinal, 1);
     }
 
     #[test]
