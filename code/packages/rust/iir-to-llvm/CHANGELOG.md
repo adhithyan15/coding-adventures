@@ -3,6 +3,19 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.27.0] — 2026-06-29 — `f64_atan/f64_tan` via direct libm declarations (LANG-FULL AL8-arctan)
+
+LLVM has no `@llvm.atan.f64` or `@llvm.tan.f64` intrinsics (unlike sin/cos/log/exp).
+Solution: emit direct libm declarations and call them:
+
+- `f64_atan` → `declare double @atan(double)` + `call double @atan(double %src)`
+- `f64_tan`  → `declare double @tan(double)`  + `call double @tan(double %src)`
+
+Both use the existing `lower_f64_intrinsic` helper (which emits a `call double` instruction
+for any function pointer, whether LLVM intrinsic or external libm symbol).
+Two new `used_f64_atan` / `used_f64_tan` booleans gate the declarations.
+Both ops added to `SUPPORTED_OPS`.
+
 ## [0.26.0] — 2026-06-28 — `f64_sin/cos/ln/exp` LLVM intrinsics (LANG-FULL AL8-trig)
 
 Added `lower_f64_intrinsic` helper and four dispatch arms:

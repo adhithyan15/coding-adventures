@@ -606,12 +606,14 @@ fn emit_instr(
     // libm is pre-linked on both macOS (`-lSystem` includes libm) and Linux
     // (`-lm`) — see twig-aot/src/lib.rs.  The BL placeholder is resolved by
     // the AOT cross-function linker at link time.
-    if matches!(op, "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp") {
+    if matches!(op, "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp" | "f64_atan" | "f64_tan") {
         let libm_sym = match op {
-            "f64_sin" => "sin",
-            "f64_cos" => "cos",
-            "f64_ln"  => "log",  // libm natural log is `log`, not `ln`
-            "f64_exp" => "exp",
+            "f64_sin"  => "sin",
+            "f64_cos"  => "cos",
+            "f64_ln"   => "log",  // libm natural log is `log`, not `ln`
+            "f64_exp"  => "exp",
+            "f64_atan" => "atan",
+            "f64_tan"  => "tan",
             _ => unreachable!(),
         };
         let dest = require_dest(instr)?;

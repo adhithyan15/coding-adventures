@@ -1,5 +1,14 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.34.0] — 2026-06-29 — `f64_atan/f64_tan` via `System.Math` (LANG-FULL AL8-arctan)
+
+Extended the f64 transcendental match arm to cover two more ops:
+- `f64_atan` → `System.Math::Atan` (inverse tangent)
+- `f64_tan`  → `System.Math::Tan`  (tangent)
+
+Both emit `load_var src; call float64 [System.Runtime]System.Math::<Method>(float64); store_var dest`.
+CoreCLR JIT intrinsifies both to native libm calls.
+
 ## [0.33.0] — 2026-06-28 — `f64_sin/cos/ln/exp` via `System.Math` (LANG-FULL AL8-trig)
 
 Extended the `f64_sqrt` arm to cover all five f64 ops: `f64_sqrt` → `Sqrt`,

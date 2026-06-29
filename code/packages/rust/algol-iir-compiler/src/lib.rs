@@ -1152,10 +1152,11 @@ impl Compiler {
             "sign"   => Ok(Some(self.emit_sign(node)?)),
             "entier" => Ok(Some(self.emit_entier(node)?)),
             "sqrt"   => Ok(Some(self.emit_sqrt(node)?)),
-            "sin"    => Ok(Some(self.emit_f64_unary("sin",  "f64_sin",  node)?)),
-            "cos"    => Ok(Some(self.emit_f64_unary("cos",  "f64_cos",  node)?)),
-            "ln"     => Ok(Some(self.emit_f64_unary("ln",   "f64_ln",   node)?)),
-            "exp"    => Ok(Some(self.emit_f64_unary("exp",  "f64_exp",  node)?)),
+            "sin"    => Ok(Some(self.emit_f64_unary("sin",     "f64_sin",  node)?)),
+            "cos"    => Ok(Some(self.emit_f64_unary("cos",     "f64_cos",  node)?)),
+            "ln"     => Ok(Some(self.emit_f64_unary("ln",      "f64_ln",   node)?)),
+            "exp"    => Ok(Some(self.emit_f64_unary("exp",     "f64_exp",  node)?)),
+            "arctan" => Ok(Some(self.emit_f64_unary("arctan",  "f64_atan", node)?)),
             _ => Ok(None),
         }
     }

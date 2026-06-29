@@ -1,5 +1,14 @@
 # Changelog — `x86_64-backend`
 
+## 0.19.0 — 2026-06-29 — `f64_atan/f64_tan` via libm `call rel32` (LANG-FULL AL8-arctan)
+
+Extended the transcendental match arm to cover two more ops:
+- `f64_atan` → `call atan`  (libm inverse tangent, `PltRel32` external reloc)
+- `f64_tan`  → `call tan`   (libm tangent, `PltRel32` external reloc)
+
+Pattern: `movsd xmm0,[src]; call rel32 atan/tan; movsd [dest],xmm0`.
+System V AMD64 and MS x64 both pass/return the first f64 in xmm0.
+
 ## 0.18.0 — 2026-06-28 — `f64_sin/cos/ln/exp` via libm `call rel32` (LANG-FULL AL8-trig)
 
 Transcendentals call libm via `call_rel32` with `PltRel32` external relocs:
