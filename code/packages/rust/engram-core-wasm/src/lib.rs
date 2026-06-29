@@ -1712,9 +1712,11 @@ fn host_intent_for_event(
                 selection,
             ))
         }
-        EngramAppEvent::AddNote => Some(base("addNote")),
+        EngramAppEvent::AddNote => Some(add_note_host_intent(event, state, &selected_deck, now)),
         EngramAppEvent::SaveNote => None,
-        EngramAppEvent::AddNoteType => Some(base("addNoteType")),
+        EngramAppEvent::AddNoteType => {
+            Some(add_note_type_host_intent(event, state, &selected_deck, now))
+        }
         EngramAppEvent::SaveNoteType => None,
         EngramAppEvent::DeleteNote if explicit_note_id_from_app_event(parsed, state).is_some() => {
             None
@@ -1728,6 +1730,67 @@ fn host_intent_for_event(
         EngramAppEvent::DeleteNoteType => Some(base("deleteNoteType")),
         _ => None,
     }
+}
+
+fn add_note_host_intent(event: EngramAppEvent, state: &AppState, deck_id: &str, now: u64) -> Value {
+    json!({
+        "type": "addNote",
+        "event": event.canonical_name(),
+        "deckId": deck_id,
+        "deckName": deck_name_for_id(state, deck_id),
+        "createdAt": now,
+        "defaultDeckId": deck_id,
+        "defaultNoteTypeId": state.note_types.first().map(|note_type| note_type.id.as_str()).unwrap_or(""),
+        "decks": state.decks,
+        "noteTypes": state.note_types,
+    })
+}
+
+fn add_note_type_host_intent(
+    event: EngramAppEvent,
+    state: &AppState,
+    deck_id: &str,
+    now: u64,
+) -> Value {
+    json!({
+        "type": "addNoteType",
+        "event": event.canonical_name(),
+        "deckId": deck_id,
+        "deckName": deck_name_for_id(state, deck_id),
+        "createdAt": now,
+        "noteTypes": state.note_types,
+        "defaultNoteType": default_note_type_draft(now),
+    })
+}
+
+fn deck_name_for_id(state: &AppState, deck_id: &str) -> String {
+    state
+        .decks
+        .iter()
+        .find(|deck| deck.id == deck_id)
+        .map(|deck| deck.name.clone())
+        .unwrap_or_default()
+}
+
+fn default_note_type_draft(now: u64) -> Value {
+    json!({
+        "id": format!("note-type-{now}"),
+        "name": "Basic",
+        "fields": [
+            {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+            {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+        ],
+        "templates": [{
+            "id": "forward",
+            "name": "Forward",
+            "frontTemplate": "{{Front}}",
+            "backTemplate": "{{Back}}",
+            "requiredFieldNames": ["Front"],
+            "ordinal": 0
+        }],
+        "createdAt": now,
+        "updatedAt": now
+    })
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -5681,12 +5744,22 @@ mod tests {
         let mut session = EngramSession::new();
         session.load_snapshot(
             r#"{
-                "decks": [],
+                "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
                 "noteTypes": [{
                     "id": "basic",
                     "name": "Basic",
-                    "fields": [],
-                    "templates": [],
+                    "fields": [
+                        {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                        {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                    ],
+                    "templates": [{
+                        "id": "forward",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "{{Back}}",
+                        "requiredFieldNames": ["Front"],
+                        "ordinal": 0
+                    }],
                     "createdAt": 1700000000000,
                     "updatedAt": 1700000000000
                 }],
@@ -5738,6 +5811,30 @@ mod tests {
             serde_json::from_str(&session.handle_engram_app_event("onExportAnki", "deck", NOW))
                 .unwrap();
         assert_eq!(export["hostIntent"]["extension"], ".apkg");
+
+        let add_note: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onAddNote", "deck", NOW))
+                .unwrap();
+        assert_eq!(add_note["hostIntent"]["type"], "addNote");
+        assert_eq!(add_note["hostIntent"]["deckName"], "Tamil");
+        assert_eq!(add_note["hostIntent"]["defaultDeckId"], "deck");
+        assert_eq!(add_note["hostIntent"]["defaultNoteTypeId"], "basic");
+        assert_eq!(add_note["hostIntent"]["decks"][0]["name"], "Tamil");
+        assert_eq!(
+            add_note["hostIntent"]["noteTypes"][0]["fields"][0]["name"],
+            "Front"
+        );
+
+        let add_note_type: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onAddNoteType", "deck", NOW))
+                .unwrap();
+        assert_eq!(add_note_type["hostIntent"]["type"], "addNoteType");
+        assert_eq!(add_note_type["hostIntent"]["deckName"], "Tamil");
+        assert_eq!(add_note_type["hostIntent"]["noteTypes"][0]["id"], "basic");
+        assert_eq!(
+            add_note_type["hostIntent"]["defaultNoteType"]["templates"][0]["frontTemplate"],
+            "{{Front}}"
+        );
     }
 
     #[test]

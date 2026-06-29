@@ -165,6 +165,11 @@ Collection workflow events such as `onImportAnki`, `onExportAnki`, `onAddNote`,
 `onAddNoteType`, `onDeleteNote`, and `onDeleteNoteType` round-trip through the
 same event parser as host intents so generated shells share one UI contract
 while file picking, dialogs, and concrete note payloads stay host-owned.
+`onAddNote` host intents include the selected deck name, all decks, available
+note types, and default deck/note-type IDs so native shells can open an editor
+without re-querying shared state. `onAddNoteType` includes existing note types
+plus a default Basic-style model draft that host editors can mutate and post
+back through `onSaveNoteType`.
 Host editors can post `onSaveNote` with a top-level or nested `note` payload
 containing `noteId`, `noteTypeId`, `deckId`, `fields`, and `tags`; field updates
 may be an array of `{ id|fieldId|name, value }` objects or a name/id keyed
