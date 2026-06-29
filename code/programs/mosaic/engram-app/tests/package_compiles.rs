@@ -898,6 +898,13 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal deckOptionsMaximumIntervalChange(real value)");
     assert_contains(&qml, "signal deckOptionsInitialEaseChange(real value)");
     assert_contains(&qml, "signal deckOptionsEasyBonusChange(real value)");
+    assert_contains(&qml, "text: String(deckOptionsInitialEaseValue)");
+    assert_contains(&qml, "placeholderText: \"2.5\"");
+    assert_contains(&qml, "validator: DoubleValidator {");
+    assert_contains(
+        &qml,
+        "if (text.length > 0 && !isNaN(nextValue)) { deckOptionsInitialEaseChange(nextValue) }",
+    );
     assert_contains(
         &qml,
         "signal deckOptionsBuryNewSiblingsChange(bool checked)",

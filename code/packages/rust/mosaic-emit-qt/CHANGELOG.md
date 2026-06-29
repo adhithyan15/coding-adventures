@@ -91,14 +91,10 @@ Three new UI29-4 kernel primitives lower to QML widgets:
   Wraps the child(ren) so the tooltip activates on hover via
   `HoverHandler` (QtQuick 2.12+). `HoverHandler` is used instead of
   `MouseArea` so clicks still reach the wrapped child unimpeded.
-- **`HostNumberInput` → `SpinBox { value; from; to; stepSize;
-  enabled; onValueModified }`**. QtQuick.Controls 2.15 SpinBox has
-  built-in ± stepper buttons and direct text entry with integer-
-  only validation. `onValueModified` fires only on user-initiated
-  changes (not programmatic value-set), matching the kernel-
-  canonical `onChange` semantics. Note: SpinBox is integer-only in
-  v1; the f64 → int cast is a documented limitation pending a
-  DoubleSpinBox shape.
+- **`HostNumberInput` → `TextField { text; DoubleValidator;
+  enabled; onTextEdited }`**. QtQuick.Controls 2.15 TextField keeps
+  direct text entry, preserves fractional `number` values, and
+  dispatches parsed values only for user edits.
 
 Infrastructure:
 
@@ -108,13 +104,13 @@ Infrastructure:
   `Text`, not a Controls widget.
 - New `find_number_prop` helper alongside the existing
   `find_string_prop` / `find_slot_ref_prop` / `find_emit_ref_prop`
-  for `HostNumberInput`'s numeric-literal min/max/step props.
+  for `HostNumberInput`'s numeric-literal value/min/max props.
 
 6 new tests cover: HostLink rich-text rendering with
 openUrlExternally, the external-false + onActivate dispatch-only
 mode, HostTooltip Item wrapper with HoverHandler, bare
-HostNumberInput SpinBox emission, min/max/step → from/to/stepSize
-mapping, and `onValueModified` (user-only) dispatch wiring.
+HostNumberInput TextField emission, fractional value preservation,
+DoubleValidator bounds, and `onTextEdited` parsed-value dispatch wiring.
 
 ### Added — U29-2-K-qt — `HostCheckbox` + `HostRadio` kernel primitive lowerings
 

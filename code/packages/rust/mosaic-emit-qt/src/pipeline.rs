@@ -1064,7 +1064,7 @@ fn emit_qml_tree(
         // href='...'>label</a>" }` is the idiomatic shape).
         // `HostTooltip` lowers to the `ToolTip.text` attached
         // property on any child. `HostNumberInput` lowers to
-        // QtQuick.Controls 2 `SpinBox` (built-in ± stepper).
+        // QtQuick.Controls 2 `TextField` plus `DoubleValidator`.
         "HostLink" => return emit_host_link_qml(node, depth, ctx),
         "HostTooltip" => return emit_host_tooltip_qml(node, depth, ctx),
         "HostNumberInput" => return emit_host_number_input_qml(node, depth, ctx),
@@ -2313,25 +2313,20 @@ fn emit_host_tooltip_qml(
 }
 
 /// Lower a `HostNumberInput` node (UI29-4, 21st kernel primitive)
-/// to a QtQuick.Controls 2.15 `SpinBox`. SpinBox ships built-in ±
-/// stepper buttons and direct text entry, plus integer-only
-/// validation by default.
+/// to a QtQuick.Controls 2.15 `TextField` with a `DoubleValidator`.
+/// This preserves decimal `number` payloads for scheduler options such
+/// as ease factors and interval multipliers.
 ///
 /// ## Property handling
 ///
 /// | moslayout prop  | QML output                                |
 /// |---|---|
-/// | `value: slot|n` | `value: <bare-identifier>` or numeric literal |
-/// | `min: <n>`      | `from: <n>` (Qt calls it "from")              |
-/// | `max: <n>`      | `to: <n>`                                      |
-/// | `step: <n>`     | `stepSize: <n>`                                |
-/// | `disabled: …`   | `enabled: !d` (polarity flip)                  |
-/// | `onChange: emit`| `onValueModified: x(value)` (user-initiated changes only — `valueChanged` fires on programmatic changes too) |
-///
-/// Note: SpinBox holds integers only. The kernel's `number` slot
-/// type is f64; the int↔f64 cast is documented as a v1 limitation,
-/// to be revisited when a `DoubleSpinBox` shape lands (it'd need
-/// QtQuick.Controls 2.15's `Tumbler` or a custom Component).
+/// | `value: slot|n` | `text: String(<bare-identifier>|n)`          |
+/// | `placeholder`   | `placeholderText: "..."`                    |
+/// | `min: <n>`      | `validator.bottom: <n>`                     |
+/// | `max: <n>`      | `validator.top: <n>`                        |
+/// | `disabled: ...` | `enabled: !d` (polarity flip)               |
+/// | `onChange: emit`| `onTextEdited` parses and dispatches `nextValue` |
 fn emit_host_number_input_qml(
     node: &LayoutNode,
     depth: usize,
@@ -2339,43 +2334,54 @@ fn emit_host_number_input_qml(
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
+    let validator_inner = "    ".repeat(depth + 2);
     let mut out = String::new();
-    writeln!(out, "{pad}SpinBox {{").unwrap();
+    writeln!(out, "{pad}TextField {{").unwrap();
 
     // value:
     if let Some(slot) = find_slot_ref_prop(node, "value") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            writeln!(out, "{inner}value: {camel}").unwrap();
+            writeln!(out, "{inner}text: String({camel})").unwrap();
         }
     } else if let Some(n) = find_number_prop(node, "value") {
-        writeln!(out, "{inner}value: {n}").unwrap();
+        writeln!(out, "{inner}text: String({n})").unwrap();
     }
 
-    // min -> from, max -> to, step -> stepSize.
+    if let Some(placeholder) = find_string_prop(node, "placeholder") {
+        let escaped = escape_qml_string(placeholder);
+        writeln!(out, "{inner}placeholderText: \"{escaped}\"").unwrap();
+    }
+    writeln!(out, "{inner}inputMethodHints: Qt.ImhFormattedNumbersOnly").unwrap();
+    writeln!(out, "{inner}validator: DoubleValidator {{").unwrap();
+    writeln!(out, "{validator_inner}decimals: 12").unwrap();
     if let Some(n) = find_number_prop(node, "min") {
-        writeln!(out, "{inner}from: {n}").unwrap();
+        writeln!(out, "{validator_inner}bottom: {n}").unwrap();
     }
     if let Some(n) = find_number_prop(node, "max") {
-        writeln!(out, "{inner}to: {n}").unwrap();
+        writeln!(out, "{validator_inner}top: {n}").unwrap();
     }
-    if let Some(n) = find_number_prop(node, "step") {
-        writeln!(out, "{inner}stepSize: {n}").unwrap();
-    }
+    writeln!(out, "{inner}}}").unwrap();
 
     // disabled -> enabled: !d (polarity flip; same shape as HostButton).
     if let Some(line) = build_disabled_to_enabled_attribute(node) {
         writeln!(out, "{inner}{line}").unwrap();
     }
 
-    // onChange -> onValueModified.  Respect signal arity: arity-0 →
-    // `e()`; arity ≥1 → `e(value)` (Qt's SpinBox.value is the
-    // natural payload to forward).
+    // onChange -> onTextEdited. Respect signal arity: arity-0 →
+    // `e()`; arity ≥1 → `e(nextValue)`.
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arg = pick_signal_arg_with(emit_name, ctx.emits, "value");
-        writeln!(out, "{inner}onValueModified: {camel}({arg})").unwrap();
+        let arg = pick_signal_arg_with(emit_name, ctx.emits, "nextValue");
+        writeln!(out, "{inner}onTextEdited: {{").unwrap();
+        writeln!(out, "{validator_inner}const nextValue = Number(text)").unwrap();
+        writeln!(
+            out,
+            "{validator_inner}if (text.length > 0 && !isNaN(nextValue)) {{ {camel}({arg}) }}"
+        )
+        .unwrap();
+        writeln!(out, "{inner}}}").unwrap();
     }
 
     writeln!(out, "{pad}}}").unwrap();
@@ -2457,7 +2463,7 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 /// `HostButton` → `Button`, `HostScroll` → `ScrollView`,
 /// `HostDialog` → `Popup`, `HostCheckbox` → `CheckBox`,
 /// `HostRadio` → `RadioButton`, `HostTooltip` → `ToolTip` attached
-/// property, `HostNumberInput` → `SpinBox`. `HostLink` is intentionally
+/// property, `HostNumberInput` → `TextField`. `HostLink` is intentionally
 /// NOT here because it lowers to a plain `Text` element with rich-
 /// text + onLinkActivated, not a QtQuick.Controls widget.
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
@@ -4499,8 +4505,9 @@ mod tests {
             },
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
-        assert!(r.output.contains("onValueModified: change()"));
-        assert!(!r.output.contains("onValueModified: change(value)"));
+        assert!(r.output.contains("onTextEdited: {"));
+        assert!(r.output.contains("if (text.length > 0 && !isNaN(nextValue)) { change() }"));
+        assert!(!r.output.contains("change(nextValue)"));
     }
 
     // -------- Test 21: HostInput with onCancel emits Keys.onEscapePressed --------
@@ -6728,11 +6735,10 @@ mod tests {
         );
     }
 
-    /// UI29-4 Qt test 4 — bare `HostNumberInput` lowers to a `SpinBox
-    /// { }` (QtQuick.Controls 2.15 widget with built-in ± stepper
-    /// buttons and direct text entry).
+    /// UI29-4 Qt test 4 — bare `HostNumberInput` lowers to a
+    /// decimal-safe `TextField { }` with a `DoubleValidator`.
     #[test]
-    fn host_number_input_empty_emits_spinbox_block() {
+    fn host_number_input_empty_emits_textfield_block() {
         let m = component("X", vec![], vec![]);
         let l = LayoutDef {
             component_name: "X".to_string(),
@@ -6745,8 +6751,13 @@ mod tests {
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            r.output.contains("SpinBox {"),
-            "expected SpinBox block, got:\n{}",
+            r.output.contains("TextField {"),
+            "expected TextField block, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("validator: DoubleValidator {"),
+            "expected DoubleValidator, got:\n{}",
             r.output
         );
         assert!(
@@ -6756,10 +6767,11 @@ mod tests {
         );
     }
 
-    /// UI29-4 Qt test 5 — `min`/`max`/`step` numeric literals map
-    /// to Qt's `from`/`to`/`stepSize` SpinBox properties.
+    /// UI29-4 Qt test 5 — `min`/`max` numeric literals map to
+    /// DoubleValidator bounds, while fractional value literals remain
+    /// decimal text.
     #[test]
-    fn host_number_input_min_max_step_map_to_qt_spinbox_props() {
+    fn host_number_input_value_min_max_map_to_decimal_textfield_props() {
         let m = component("X", vec![], vec![]);
         let l = LayoutDef {
             component_name: "X".to_string(),
@@ -6768,16 +6780,16 @@ mod tests {
                 part_name: None,
                 props: vec![
                     LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::Number(2.5),
+                    },
+                    LayoutProp {
                         name: "min".to_string(),
                         value: LayoutPropValue::Number(0.0),
                     },
                     LayoutProp {
                         name: "max".to_string(),
-                        value: LayoutPropValue::Number(100.0),
-                    },
-                    LayoutProp {
-                        name: "step".to_string(),
-                        value: LayoutPropValue::Number(5.0),
+                        value: LayoutPropValue::Number(10.5),
                     },
                 ],
                 children: Vec::new(),
@@ -6785,20 +6797,25 @@ mod tests {
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &r.output;
-        assert!(out.contains("from: 0"), "expected from: 0, got:\n{out}");
-        assert!(out.contains("to: 100"), "expected to: 100, got:\n{out}");
         assert!(
-            out.contains("stepSize: 5"),
-            "expected stepSize: 5, got:\n{out}"
+            out.contains("text: String(2.5)"),
+            "expected fractional text value, got:\n{out}"
+        );
+        assert!(
+            out.contains("bottom: 0"),
+            "expected validator bottom: 0, got:\n{out}"
+        );
+        assert!(
+            out.contains("top: 10.5"),
+            "expected validator top: 10.5, got:\n{out}"
         );
     }
 
     /// UI29-4 Qt test 6 — `onChange: emit: onSet` wires
-    /// `onValueModified` (user-initiated only, NOT `valueChanged`
-    /// which also fires on programmatic value-set). Dispatches the
-    /// emit with the SpinBox's current `value`.
+    /// `onTextEdited` (user-initiated only) and dispatches the
+    /// parsed floating-point value.
     #[test]
-    fn host_number_input_on_change_wires_on_value_modified() {
+    fn host_number_input_on_change_wires_parsed_text_edited_value() {
         let m = component(
             "X",
             vec![],
@@ -6824,8 +6841,19 @@ mod tests {
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            r.output.contains("onValueModified: set(value)"),
-            "expected `onValueModified: set(value)` (user-only event), got:\n{}",
+            r.output.contains("onTextEdited: {"),
+            "expected onTextEdited handler, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("const nextValue = Number(text)"),
+            "expected parsed numeric payload, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output
+                .contains("if (text.length > 0 && !isNaN(nextValue)) { set(nextValue) }"),
+            "expected valid-number dispatch, got:\n{}",
             r.output
         );
     }
