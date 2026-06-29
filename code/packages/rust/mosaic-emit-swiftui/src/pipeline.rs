@@ -122,6 +122,12 @@ pub struct PipelineEmitResult {
     pub component_name: String,
 }
 
+#[derive(Clone, Copy)]
+struct ForPayloadScope<'a> {
+    item: &'a str,
+    index: Option<&'a str>,
+}
+
 /// Errors the SwiftUI pipeline emitter can return.
 ///
 /// These mirror the React backend's variants verbatim so a generic CLI can
@@ -1311,6 +1317,7 @@ pub fn from_pipeline(
     out.push_str(&emit_view_struct(
         name,
         &interface.slots,
+        &interface.emits,
         &layout.root,
         &part_styles,
     )?);
@@ -1383,6 +1390,49 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
     writeln!(out, "}}").unwrap();
     out.push_str(&emit_event_wire_extension(component, emits)?);
     Ok(out)
+}
+
+fn host_button_event_args(
+    emit: &EmitDecl,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    if emit.params.is_empty() {
+        return Ok(String::new());
+    }
+    if emit.params.len() == 1 {
+        let param = &emit.params[0];
+        let field = to_camel_case_first_lower(&param.name);
+        validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        let expr = host_button_payload_expr(&param.r#type, for_payload)
+            .unwrap_or_else(|| "/* TODO: payload */ fatalError(\"TODO: payload\")".to_string());
+        return Ok(format!("{field}: {expr}"));
+    }
+
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(format!(
+                "{field}: /* TODO: payload */ fatalError(\"TODO: payload\")"
+            ))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
+}
+
+fn host_button_payload_expr(
+    t: &EmitPayloadType,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Option<String> {
+    let scope = for_payload?;
+    match t {
+        EmitPayloadType::Text | EmitPayloadType::Color | EmitPayloadType::Component(_) => {
+            Some(scope.item.to_string())
+        }
+        EmitPayloadType::Number => scope.index.map(str::to_string),
+        EmitPayloadType::Bool => None,
+    }
 }
 
 fn emit_event_wire_extension(
@@ -1478,6 +1528,7 @@ fn swift_event_payload_dictionary(emit: &EmitDecl) -> Result<String, PipelineEmi
 fn emit_view_struct(
     component: &str,
     slots: &[SlotDecl],
+    emits: &[EmitDecl],
     layout_root: &LayoutNode,
     part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
@@ -1496,7 +1547,7 @@ fn emit_view_struct(
 
     // body computed property.
     writeln!(out, "    var body: some View {{").unwrap();
-    let body = emit_view_tree(layout_root, 8, part_styles, None, None)?;
+    let body = emit_view_tree(layout_root, 8, part_styles, emits, None, None, None)?;
     if body.trim().is_empty() {
         // Empty layout — emit an EmptyView so the file still type-checks.
         // Swift's `some View` cannot resolve to "nothing"; EmptyView is the
@@ -1536,7 +1587,9 @@ fn emit_view_tree(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
     // The threaded column-width Swift expression (e.g.
     // `columnWidths[Int(c)]`) for THIS node only — `Some` exactly when
     // this is a direct body child of a width-threading HostTable cell
@@ -1554,7 +1607,15 @@ fn emit_view_tree(
         // Containers — open a SwiftUI view-builder block, recurse into
         // children at +4 indentation, then close.
         // -----------------------------------------------------------------
-        "Box" => container("Group", node, indent, part_styles, table_ctx)?,
+        "Box" => container(
+            "Group",
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
         // `Row` inside a HostTable lowers to `HStack(spacing: 0)` so cells
         // sit flush (matching `border-collapse: collapse` semantics in the
         // companion .msl).  Outside a HostTable we keep the default
@@ -1562,9 +1623,17 @@ fn emit_view_tree(
         // See [`TableContext`] for the discovery path.
         "Row" => {
             if table_ctx.is_some() {
-                container_table_row(node, indent, part_styles, table_ctx)?
+                container_table_row(node, indent, part_styles, emits, table_ctx, for_payload)?
             } else {
-                container("HStack", node, indent, part_styles, table_ctx)?
+                container(
+                    "HStack",
+                    node,
+                    indent,
+                    part_styles,
+                    emits,
+                    table_ctx,
+                    for_payload,
+                )?
             }
         }
         // TODO(UI28 §2.2): Column is being repurposed as Grid-metadata
@@ -1572,16 +1641,40 @@ fn emit_view_tree(
         // discarded as a SwiftUI view). For now we keep the legacy UI14
         // semantics: `Column → VStack`. The Cell/Column/Grid v3 SwiftUI
         // lowering lands in a separate follow-up PR.
-        "Column" => container("VStack", node, indent, part_styles, table_ctx)?,
+        "Column" => container(
+            "VStack",
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
         // UI29 kernel partial — Stack is the z-axis / overlay container.
         // It is *not* a synonym for VStack: SwiftUI's `ZStack` overlays
         // children along the depth axis, which is the UI29 semantics.
-        "Stack" => container("ZStack", node, indent, part_styles, table_ctx)?,
+        "Stack" => container(
+            "ZStack",
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
         // UI29 kernel partial — `HostScroll` is the kernel form of a
         // scrollable region. SwiftUI's `ScrollView` is the direct analog;
         // it implicitly handles its own scroll-state and viewport, so we
         // do not need to thread offset/extent slots through here.
-        "HostScroll" => container("ScrollView", node, indent, part_styles, table_ctx)?,
+        "HostScroll" => container(
+            "ScrollView",
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
 
         // -----------------------------------------------------------------
         // Leaf primitives — emit a single line, no children.
@@ -1608,7 +1701,7 @@ fn emit_view_tree(
         // respectively. They read slot/emit refs off the node props; see
         // the per-function doc comments below for the full mapping.
         "HostInput" => emit_host_input(node, indent)?,
-        "HostButton" => emit_host_button(node, indent)?,
+        "HostButton" => emit_host_button(node, indent, emits, for_payload)?,
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` both lower to
         // SwiftUI `Toggle` with the platform's default toggle style.
@@ -1627,7 +1720,7 @@ fn emit_view_tree(
         // `HostNumberInput` to `TextField` with the `.number`
         // format binding (iOS 15+/macOS 12+).
         "HostLink" => emit_host_link(node, indent)?,
-        "HostTooltip" => emit_host_tooltip(node, indent, part_styles)?,
+        "HostTooltip" => emit_host_tooltip(node, indent, part_styles, emits, for_payload)?,
         "HostNumberInput" => emit_host_number_input(node, indent)?,
 
         // UI29 kernel — `HostTable` is the semantic data-table primitive.
@@ -1641,7 +1734,7 @@ fn emit_view_tree(
         // apply `.frame(width: columnWidths[Int(<idx>)])`.  Any inherited
         // `table_ctx` from a HostTable-inside-HostTable would be confusing
         // anyway, so we start a fresh context here rather than chaining.
-        "HostTable" => emit_host_table(node, indent, part_styles)?,
+        "HostTable" => emit_host_table(node, indent, part_styles, emits, for_payload)?,
 
         // UI29-1 kernel — `HostDialog` is the modal/popover primitive.
         // It lowers to a `Color.clear` anchor view carrying a
@@ -1649,7 +1742,7 @@ fn emit_view_tree(
         // modifier. See [`emit_host_dialog`] for the lowering rationale
         // (SwiftUI exposes dialogs as view modifiers, not standalone
         // views).
-        "HostDialog" => emit_host_dialog(node, indent, part_styles)?,
+        "HostDialog" => emit_host_dialog(node, indent, part_styles, emits, for_payload)?,
 
         // UI29 kernel — table sub-tags. When they appear OUTSIDE of a
         // HostTable parent they have nothing to attach to in SwiftUI;
@@ -1671,8 +1764,24 @@ fn emit_view_tree(
         // not visible — we lower as an if-only. The sibling-aware
         // pairing happens in [`emit_children`], which container-shaped
         // parents call instead of looping `emit_view_tree` directly.
-        "For" => emit_for_swift(node, indent, part_styles, table_ctx, false)?,
-        "If" => emit_if_swift(node, None, indent, part_styles, table_ctx)?,
+        "For" => emit_for_swift(
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+            false,
+        )?,
+        "If" => emit_if_swift(
+            node,
+            None,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
         // An orphan `Else` (Else not preceded by If) is rejected by the
         // moslayout analyzer, but the emitter is defensive: rather than
         // erroring at the Swift level we emit a self-documenting Swift
@@ -1748,7 +1857,9 @@ fn container(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if node.children.is_empty() {
@@ -1764,7 +1875,9 @@ fn container(
         &node.children,
         indent + 4,
         part_styles,
+        emits,
         table_ctx,
+        for_payload,
         None,
     )?);
     out.push_str(&format!("{pad}}}\n"));
@@ -1792,7 +1905,9 @@ fn container_table_row(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if node.children.is_empty() {
@@ -1800,7 +1915,14 @@ fn container_table_row(
     }
     let mut out = format!("{pad}HStack(spacing: 0) {{\n");
     for cell in &node.children {
-        out.push_str(&emit_table_cell(cell, indent + 4, part_styles, table_ctx)?);
+        out.push_str(&emit_table_cell(
+            cell,
+            indent + 4,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?);
     }
     out.push_str(&format!("{pad}}}\n"));
     Ok(out)
@@ -1823,7 +1945,9 @@ fn emit_table_cell(
     cell: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     if let Some(ctx) = table_ctx {
         if ctx.column_widths_slot.is_some()
@@ -1834,12 +1958,22 @@ fn emit_table_cell(
                 cell,
                 indent,
                 part_styles,
+                emits,
                 table_ctx,
+                for_payload,
                 /*width_thread=*/ true,
             );
         }
     }
-    emit_view_tree(cell, indent, part_styles, table_ctx, None)
+    emit_view_tree(
+        cell,
+        indent,
+        part_styles,
+        emits,
+        table_ctx,
+        for_payload,
+        None,
+    )
 }
 
 /// Walk a flat list of sibling layout nodes at `indent`, with two
@@ -1858,7 +1992,9 @@ fn emit_children(
     children: &[LayoutNode],
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
     // The threaded column-width Swift expression to inject into each
     // DIRECT child's modifier chain.  `Some` only on the body-children
     // dispatch of a width-threading HostTable cell `For`; `None`
@@ -1880,7 +2016,9 @@ fn emit_children(
                 else_node,
                 indent,
                 part_styles,
+                emits,
                 table_ctx,
+                for_payload,
             )?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
@@ -1896,7 +2034,9 @@ fn emit_children(
             child,
             indent,
             part_styles,
+            emits,
             table_ctx,
+            for_payload,
             injected_width,
         )?);
         i += 1;
@@ -2141,9 +2281,11 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
 /// |-------------------------|-------------------------------------------------|
 /// | `label: "..."`          | `Text("...")` inside the label closure          |
 /// | `label: slot: x`        | `Text(x)` inside the label closure              |
+/// | `label: item`           | `Text(item)` for a scoped `For` binding         |
 /// | `disabled: slot: x`     | `.disabled(x)` modifier                         |
 /// | `disabled: true`/`false`| `.disabled(true)` / `.disabled(false)`          |
 /// | `onTap: emit: onE`      | `action: { dispatch(.e) }`                      |
+/// | `onClick: emit: onE`    | same, with single row payloads when declared    |
 ///
 /// ## Generated shape
 ///
@@ -2153,9 +2295,14 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
 /// }.disabled(disabled)
 /// ```
 ///
-/// If no `onTap` emit is bound the action closure is `{ }` (a no-op);
+/// If no click/tap emit is bound the action closure is `{ }` (a no-op);
 /// the file still compiles and the button is effectively decorative.
-fn emit_host_button(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_button(
+    node: &LayoutNode,
+    indent: usize,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
 
@@ -2165,21 +2312,37 @@ fn emit_host_button(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
             Some(emit_name) => {
                 let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
                 validate_emit_name(&case_name)?;
-                format!("dispatch(.{case_name})")
+                let args = emits
+                    .iter()
+                    .find(|e| e.name == *emit_name)
+                    .map(|e| host_button_event_args(e, for_payload))
+                    .transpose()?
+                    .unwrap_or_default();
+                if args.is_empty() {
+                    format!("dispatch(.{case_name})")
+                } else {
+                    format!("dispatch(.{case_name}({args}))")
+                }
             }
             None => String::new(),
         };
 
     // Label expression. String literal → `Text("...")`; slot ref →
     // `Text(slotName)`; nothing bound → `Text("")` placeholder.
-    let label_expr = if let Some(s) = find_string_prop(node, "label") {
-        format!("Text(\"{}\")", escape_swift_string(s))
-    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        format!("Text({camel})")
-    } else {
-        "Text(\"\")".to_string()
+    let label_expr = match find_prop_value(node, "label") {
+        Some(LayoutPropValue::String(s)) => format!("Text(\"{}\")", escape_swift_string(s)),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("Text({camel})")
+        }
+        Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("Text({camel})")
+        }
+        Some(LayoutPropValue::Expr(text)) => format!("Text({})", text.trim()),
+        _ => "Text(\"\")".to_string(),
     };
 
     let mut out = String::new();
@@ -2547,6 +2710,8 @@ fn emit_host_tooltip(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
@@ -2561,7 +2726,9 @@ fn emit_host_tooltip(
             &node.children,
             indent + 4,
             part_styles,
+            emits,
             None,
+            for_payload,
             None,
         )?);
     }
@@ -2692,6 +2859,8 @@ fn emit_host_table(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
@@ -2731,7 +2900,9 @@ fn emit_host_table(
                     indent + 4,
                     /*bold=*/ true,
                     part_styles,
+                    emits,
                     table_ctx,
+                    for_payload,
                 )?;
                 head_just_emitted = true;
             }
@@ -2746,7 +2917,9 @@ fn emit_host_table(
                     indent + 4,
                     /*bold=*/ false,
                     part_styles,
+                    emits,
                     table_ctx,
+                    for_payload,
                 )?;
             }
             "HostTableFoot" => {
@@ -2761,7 +2934,9 @@ fn emit_host_table(
                     indent + 4,
                     /*bold=*/ false,
                     part_styles,
+                    emits,
                     table_ctx,
+                    for_payload,
                 )?;
             }
             "HostTableColGroup" => {
@@ -2902,6 +3077,8 @@ fn emit_host_dialog(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
@@ -2960,7 +3137,9 @@ fn emit_host_dialog(
             &node.children,
             indent + 12,
             part_styles,
+            emits,
             None,
+            for_payload,
             None,
         )?);
     }
@@ -3006,7 +3185,9 @@ fn emit_table_section_rows(
     indent: usize,
     bold: bool,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<(), PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -3028,7 +3209,8 @@ fn emit_table_section_rows(
                 // `index:` binding AND the table has a discovered
                 // column-widths slot.  Other cells go through
                 // [`emit_view_tree`] unchanged.
-                let emitted = emit_table_cell(cell, indent + 4, part_styles, table_ctx)?;
+                let emitted =
+                    emit_table_cell(cell, indent + 4, part_styles, emits, table_ctx, for_payload)?;
                 if bold {
                     // Apply `.bold()` to every `Text(...)` line we just
                     // produced. We do this by string-rewriting the
@@ -3067,7 +3249,15 @@ fn emit_table_section_rows(
                 child.tag
             )
             .unwrap();
-            let emitted = emit_view_tree(child, indent, part_styles, table_ctx, None)?;
+            let emitted = emit_view_tree(
+                child,
+                indent,
+                part_styles,
+                emits,
+                table_ctx,
+                for_payload,
+                None,
+            )?;
             out.push_str(&emitted);
         }
     }
@@ -3116,7 +3306,9 @@ fn emit_for_swift(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
     width_thread: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -3252,6 +3444,13 @@ fn emit_for_swift(
         None
     };
 
+    let scoped_payload = Some(ForPayloadScope {
+        item: as_name.as_str(),
+        index: index_name
+            .as_deref()
+            .or(for_payload.and_then(|scope| scope.index)),
+    });
+
     let mut out = header;
     if node.children.is_empty() {
         // Empty body — SwiftUI's view builder requires *something* in
@@ -3262,7 +3461,9 @@ fn emit_for_swift(
             &node.children,
             body_indent,
             part_styles,
+            emits,
             table_ctx,
+            scoped_payload,
             width_expr.as_deref(),
         )?);
     }
@@ -3292,7 +3493,9 @@ fn emit_if_swift(
     else_node: Option<&LayoutNode>,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -3316,7 +3519,9 @@ fn emit_if_swift(
             &if_node.children,
             indent + 4,
             part_styles,
+            emits,
             table_ctx,
+            for_payload,
             None,
         )?);
     }
@@ -3330,7 +3535,9 @@ fn emit_if_swift(
                 &en.children,
                 indent + 4,
                 part_styles,
+                emits,
                 table_ctx,
+                for_payload,
                 None,
             )?);
         }
@@ -3401,6 +3608,13 @@ fn emit_payload_to_swift(t: &EmitPayloadType) -> String {
 
 /// Find a prop on `node` whose value is a `String` literal. Returns the
 /// unescaped inner text, or `None`.
+fn find_prop_value<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a LayoutPropValue> {
+    node.props
+        .iter()
+        .find(|p| p.name == prop_name)
+        .map(|p| &p.value)
+}
+
 fn find_string_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
     node.props.iter().find_map(|p| {
         if p.name == prop_name {
@@ -4471,6 +4685,111 @@ mod tests {
         assert!(
             out.contains("Text(caption)"),
             "expected label closure with Text(caption), got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_inside_indexed_for_dispatches_index_payload() {
+        let layout = layout_with(
+            "ListGroup",
+            container_node(
+                "Column",
+                vec![node_with_props(
+                    "For",
+                    vec![
+                        prop_slot_ref("each", "items"),
+                        prop_keyword("as", "item"),
+                        prop_keyword("index", "i"),
+                    ],
+                    vec![leaf(
+                        "HostButton",
+                        vec![
+                            prop_keyword("label", "item"),
+                            prop_emit_ref("onClick", "onSelect"),
+                        ],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "ListGroup",
+                vec![slot(
+                    "items",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                )],
+                vec![emit(
+                    "onSelect",
+                    vec![param("index", EmitPayloadType::Number)],
+                )],
+            ),
+            &layout,
+            &empty_style("ListGroup"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("let i: Double = Double(_swiftIdxi)"),
+            "expected numeric For index binding, got:\n{out}"
+        );
+        assert!(
+            out.contains("dispatch(.select(index: i))"),
+            "expected HostButton to dispatch index payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(item)"),
+            "expected HostButton label to use For item binding, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_inside_for_dispatches_text_item_payload() {
+        let layout = layout_with(
+            "SelectMenu",
+            container_node(
+                "Column",
+                vec![node_with_props(
+                    "For",
+                    vec![
+                        prop_slot_ref("each", "options"),
+                        prop_keyword("as", "option"),
+                    ],
+                    vec![leaf(
+                        "HostButton",
+                        vec![
+                            prop_keyword("label", "option"),
+                            prop_emit_ref("onClick", "onChange"),
+                        ],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "SelectMenu",
+                vec![slot(
+                    "options",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                )],
+                vec![emit(
+                    "onChange",
+                    vec![param("value", EmitPayloadType::Text)],
+                )],
+            ),
+            &layout,
+            &empty_style("SelectMenu"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("dispatch(.change(value: option))"),
+            "expected HostButton to dispatch item payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(option)"),
+            "expected HostButton label to use For item binding, got:\n{out}"
         );
     }
 
