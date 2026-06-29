@@ -1266,7 +1266,7 @@ fn clause_matches(
         SearchClauseKind::State(state) => {
             state_matches(*state, progress, card_sources, metadata, now)
         }
-        SearchClauseKind::Flag(filter) => flag_matches(*filter, progress),
+        SearchClauseKind::Flag(filter) => flag_matches(*filter, progress, card_sources),
         SearchClauseKind::Marked(expected) => {
             progress.is_some_and(|progress| progress.marked_at.is_some()) == *expected
         }
@@ -1959,11 +1959,42 @@ fn imported_anki_state_matches(
     })
 }
 
-fn flag_matches(filter: FlagFilter, progress: Option<&CardProgress>) -> bool {
+fn flag_matches(
+    filter: FlagFilter,
+    progress: Option<&CardProgress>,
+    card_sources: &[&ExternalSourceRecord],
+) -> bool {
+    if let Some(flag) = imported_anki_card_flag(card_sources) {
+        return flag_filter_matches(filter, flag);
+    }
+
+    flag_filter_matches(filter, progress.and_then(|progress| progress.flag))
+}
+
+fn flag_filter_matches(filter: FlagFilter, flag: Option<CardFlag>) -> bool {
     match filter {
-        FlagFilter::Any => progress.is_some_and(|progress| progress.flag.is_some()),
-        FlagFilter::None => progress.map_or(true, |progress| progress.flag.is_none()),
-        FlagFilter::Color(flag) => progress.is_some_and(|progress| progress.flag == Some(flag)),
+        FlagFilter::Any => flag.is_some(),
+        FlagFilter::None => flag.is_none(),
+        FlagFilter::Color(expected) => flag == Some(expected),
+    }
+}
+
+fn imported_anki_card_flag(card_sources: &[&ExternalSourceRecord]) -> Option<Option<CardFlag>> {
+    card_sources
+        .iter()
+        .find_map(|source| source_i64_from_data(source, "flags").map(anki_card_flag))
+}
+
+fn anki_card_flag(flags: i64) -> Option<CardFlag> {
+    match flags & 0b111 {
+        1 => Some(CardFlag::Red),
+        2 => Some(CardFlag::Orange),
+        3 => Some(CardFlag::Green),
+        4 => Some(CardFlag::Blue),
+        5 => Some(CardFlag::Pink),
+        6 => Some(CardFlag::Turquoise),
+        7 => Some(CardFlag::Purple),
+        _ => None,
     }
 }
 
@@ -3107,6 +3138,47 @@ mod tests {
         assert_eq!(ids_for("flag:1"), vec!["flagged-new"]);
         assert!(ids_for("is:due").is_empty());
         assert!(ids_for("is:review").is_empty());
+    }
+
+    #[test]
+    fn imported_anki_flag_filters_use_preserved_card_flags() {
+        let anki_card_flags = |card_id: &str, flags: i64| ExternalSourceRecord {
+            target: ExternalSourceTarget::Card,
+            target_id: card_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(card_id.to_string()),
+            data: BTreeMap::from([("flags".to_string(), flags.to_string())]),
+        };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("red", "tamil", "red", "red"),
+                card("none", "tamil", "none", "none"),
+                card("pink", "tamil", "pink", "pink"),
+            ],
+            external_sources: vec![
+                anki_card_flags("red", 1),
+                anki_card_flags("none", 0),
+                anki_card_flags("pink", 5),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("flag:red"), vec!["red"]);
+        assert_eq!(ids_for("flag:1"), vec!["red"]);
+        assert_eq!(ids_for("flag:pink"), vec!["pink"]);
+        assert_eq!(ids_for("flag:any"), vec!["red", "pink"]);
+        assert_eq!(ids_for("is:flagged"), vec!["red", "pink"]);
+        assert_eq!(ids_for("flag:0"), vec!["none"]);
+        assert_eq!(ids_for("is:unflagged"), vec!["none"]);
     }
 
     #[test]
