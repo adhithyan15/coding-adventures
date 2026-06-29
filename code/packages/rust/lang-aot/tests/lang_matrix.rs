@@ -2065,6 +2065,8 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT TAN(0)\n20 END\n",
         expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — general `^` exponentiation via f64_pow IIR op (LANG-FULL BA-pow).
     // 4 ^ 0.5 = pow(4.0, 0.5) = 2.0 exactly; printed as "2" by __basic_print_real
     // (no decimal point when fractional part is zero).  Non-integer exponent exercises
