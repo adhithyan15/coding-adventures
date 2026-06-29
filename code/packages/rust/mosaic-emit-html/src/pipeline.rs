@@ -1461,8 +1461,9 @@ fn emit_host_button(
     let style_attr = build_style_attr(node, "", part_styles);
 
     // Body: `label:` prop wins over children. Slot ref → `{{slot}}`,
-    // string literal → escaped text. When neither prop nor children are
-    // present, we still emit the open+close on one line for compactness.
+    // string literal → escaped text, and Keyword/Expr values follow the
+    // Text primitive's mustache-binding path so `label: item` inside a
+    // `For (as: item)` renders the current row.
     match find_prop(node, "label") {
         Some(LayoutPropValue::SlotRef(s)) => Ok(format!(
             "{pad}<button{attrs}{style_attr}>{{{{{slot}}}}}</button>\n",
@@ -1472,6 +1473,19 @@ fn emit_host_button(
             "{pad}<button{attrs}{style_attr}>{esc}</button>\n",
             esc = escape_html_text(lit)
         )),
+        Some(LayoutPropValue::Keyword(k)) => {
+            let safe = escape_mustache_braces(&escape_html_text(k));
+            Ok(format!(
+                "{pad}<button{attrs}{style_attr}>{{{{{safe}}}}}</button>\n"
+            ))
+        }
+        Some(LayoutPropValue::Expr(expr)) => {
+            let trimmed = strip_outer_parens(expr.trim());
+            let safe = escape_mustache_braces(&escape_html_text(trimmed));
+            Ok(format!(
+                "{pad}<button{attrs}{style_attr}>{{{{{safe}}}}}</button>\n"
+            ))
+        }
         _ => {
             if node.children.is_empty() {
                 Ok(format!("{pad}<button{attrs}{style_attr}></button>\n"))
@@ -2853,6 +2867,32 @@ mod tests {
         }
     }
 
+    fn component_with_emits(
+        name: &str,
+        slots: Vec<SlotDecl>,
+        emits: Vec<EmitDecl>,
+    ) -> MosmodelComponent {
+        MosmodelComponent {
+            component: name.to_string(),
+            slots,
+            emits,
+        }
+    }
+
+    fn emit(name: &str, params: Vec<EmitParam>) -> EmitDecl {
+        EmitDecl {
+            name: name.to_string(),
+            params,
+        }
+    }
+
+    fn param(name: &str, t: EmitPayloadType) -> EmitParam {
+        EmitParam {
+            name: name.to_string(),
+            r#type: t,
+        }
+    }
+
     fn layout(name: &str, root: LayoutNode) -> LayoutDef {
         LayoutDef {
             component_name: name.to_string(),
@@ -3462,6 +3502,126 @@ mod tests {
             out.contains("<button data-on-click=\"onSave\">{{label}}</button>"),
             "expected button with onTap alias hydration marker, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn host_button_inside_indexed_for_emits_label_and_index_payload_runtime() {
+        let m = component_with_emits(
+            "ListGroup",
+            vec![SlotDecl {
+                name: "items".to_string(),
+                r#type: SlotType::List(Box::new(ListInnerType::Text)),
+                required: true,
+                default: None,
+            }],
+            vec![emit(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout(
+            "ListGroup",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::SlotRef("items".to_string()),
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword("item".to_string()),
+                    },
+                    LayoutProp {
+                        name: "index".to_string(),
+                        value: LayoutPropValue::Keyword("i".to_string()),
+                    },
+                ],
+                children: vec![node_with_props(
+                    "HostButton",
+                    vec![
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("item".to_string()),
+                        },
+                        prop_emit("onClick", "onSelect"),
+                    ],
+                )],
+            },
+        );
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let result = from_pipeline_with_options(&m, &l, &empty_style("ListGroup"), &opts).unwrap();
+        assert!(
+            result
+                .output
+                .contains("<button data-on-click=\"onSelect\">{{item}}</button>"),
+            "expected HostButton label to use For item binding, got:\n{}",
+            result.output
+        );
+        let project = result.project.unwrap();
+        assert!(project.main_js.contains("\"onSelect\""));
+        assert!(project.main_js.contains("\"name\": \"index\""));
+        assert!(project.main_js.contains("readLoopIndex(source)"));
+    }
+
+    #[test]
+    fn host_button_inside_for_emits_label_and_text_payload_runtime() {
+        let m = component_with_emits(
+            "SelectMenu",
+            vec![SlotDecl {
+                name: "options".to_string(),
+                r#type: SlotType::List(Box::new(ListInnerType::Text)),
+                required: true,
+                default: None,
+            }],
+            vec![emit(
+                "onChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout(
+            "SelectMenu",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::SlotRef("options".to_string()),
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword("option".to_string()),
+                    },
+                ],
+                children: vec![node_with_props(
+                    "HostButton",
+                    vec![
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("option".to_string()),
+                        },
+                        prop_emit("onClick", "onChange"),
+                    ],
+                )],
+            },
+        );
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let result = from_pipeline_with_options(&m, &l, &empty_style("SelectMenu"), &opts).unwrap();
+        assert!(
+            result
+                .output
+                .contains("<button data-on-click=\"onChange\">{{option}}</button>"),
+            "expected HostButton label to use For option binding, got:\n{}",
+            result.output
+        );
+        let project = result.project.unwrap();
+        assert!(project.main_js.contains("\"onChange\""));
+        assert!(project.main_js.contains("\"name\": \"value\""));
+        assert!(project.main_js.contains("readText(source)"));
     }
 
     #[test]
