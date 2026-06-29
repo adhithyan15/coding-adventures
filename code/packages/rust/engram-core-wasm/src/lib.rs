@@ -515,6 +515,16 @@ impl EngramSession {
                         },
                     );
                 }
+                EngramAppEvent::SaveNoteType => {
+                    let note_type = note_type_from_app_event(&parsed, &self.state, now)?;
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::UpsertNoteType {
+                            note_type,
+                            materialize_cards_at: Some(now),
+                        },
+                    );
+                }
                 EngramAppEvent::DeleteNote => {
                     if let Some(note_id) = explicit_note_id_from_app_event(&parsed, &self.state) {
                         self.state = reduce(
@@ -523,13 +533,20 @@ impl EngramSession {
                         );
                     }
                 }
+                EngramAppEvent::DeleteNoteType => {
+                    if let Some(note_type_id) = explicit_note_type_id_from_app_event(&parsed) {
+                        self.state = reduce(
+                            &self.state,
+                            engram_core::EngramCommand::DeleteNoteType { note_type_id },
+                        );
+                    }
+                }
                 EngramAppEvent::BrowserOpenSelected
                 | EngramAppEvent::BrowserEditSelected
                 | EngramAppEvent::ImportAnki
                 | EngramAppEvent::ExportAnki
                 | EngramAppEvent::AddNote
-                | EngramAppEvent::AddNoteType
-                | EngramAppEvent::DeleteNoteType => {}
+                | EngramAppEvent::AddNoteType => {}
             }
 
             let host_intent =
@@ -1698,10 +1715,16 @@ fn host_intent_for_event(
         EngramAppEvent::AddNote => Some(base("addNote")),
         EngramAppEvent::SaveNote => None,
         EngramAppEvent::AddNoteType => Some(base("addNoteType")),
+        EngramAppEvent::SaveNoteType => None,
         EngramAppEvent::DeleteNote if explicit_note_id_from_app_event(parsed, state).is_some() => {
             None
         }
         EngramAppEvent::DeleteNote => Some(base("deleteNote")),
+        EngramAppEvent::DeleteNoteType
+            if explicit_note_type_id_from_app_event(parsed).is_some() =>
+        {
+            None
+        }
         EngramAppEvent::DeleteNoteType => Some(base("deleteNoteType")),
         _ => None,
     }
@@ -2028,6 +2051,7 @@ enum EngramAppEvent {
     AddNote,
     SaveNote,
     AddNoteType,
+    SaveNoteType,
     DeleteNote,
     DeleteNoteType,
 }
@@ -2130,6 +2154,7 @@ impl EngramAppEvent {
             Self::AddNote => "onAddNote",
             Self::SaveNote => "onSaveNote",
             Self::AddNoteType => "onAddNoteType",
+            Self::SaveNoteType => "onSaveNoteType",
             Self::DeleteNote => "onDeleteNote",
             Self::DeleteNoteType => "onDeleteNoteType",
         }
@@ -2437,6 +2462,9 @@ fn parse_engram_app_event_name(
         "savenote" | "save-note" | "save_note" | "notesave" | "note-save" | "note_save"
         | "upsertnote" | "upsert-note" | "upsert_note" => parsed(EngramAppEvent::SaveNote),
         "addnotetype" | "add-note-type" | "add_note_type" => parsed(EngramAppEvent::AddNoteType),
+        "savenotetype" | "save-note-type" | "save_note_type" | "notetypesave"
+        | "note-type-save" | "note_type_save" | "upsertnotetype" | "upsert-note-type"
+        | "upsert_note_type" => parsed(EngramAppEvent::SaveNoteType),
         "deletenote" | "delete-note" | "delete_note" => parsed(EngramAppEvent::DeleteNote),
         "deletenotetype" | "delete-note-type" | "delete_note_type" => {
             parsed(EngramAppEvent::DeleteNoteType)
@@ -2525,6 +2553,73 @@ fn explicit_note_id_from_app_event(
                 .map(|lineage| lineage.note_id.clone())
         })
     })
+}
+
+fn note_type_from_app_event(
+    parsed: &ParsedEngramAppEvent,
+    state: &AppState,
+    now: u64,
+) -> Result<engram_core::NoteType, String> {
+    let payload = parsed
+        .payload
+        .as_ref()
+        .ok_or_else(|| "onSaveNoteType requires a JSON payload".to_string())?;
+    let note_type_payload = payload.get("noteType").unwrap_or(payload);
+    let note_type_id = explicit_note_type_id_from_app_event(parsed)
+        .ok_or_else(|| "onSaveNoteType is missing a noteTypeId".to_string())?;
+    let existing = state
+        .note_types
+        .iter()
+        .find(|note_type| note_type.id == note_type_id);
+    let mut note_type = existing.cloned().unwrap_or(engram_core::NoteType {
+        id: note_type_id.clone(),
+        name: String::new(),
+        fields: Vec::new(),
+        templates: Vec::new(),
+        stylesheet: None,
+        created_at: now,
+        updated_at: now,
+    });
+
+    note_type.id = note_type_id;
+    if let Some(name) = string_field(note_type_payload, &["name"]) {
+        note_type.name = name;
+    }
+    if note_type.name.trim().is_empty() {
+        return Err("onSaveNoteType is missing a name".to_string());
+    }
+    if let Some(fields) = note_type_payload.get("fields") {
+        note_type.fields = serde_json::from_value::<Vec<engram_core::FieldDef>>(fields.clone())
+            .map_err(|error| format!("invalid note type fields: {error}"))?;
+    }
+    if let Some(templates) = note_type_payload.get("templates") {
+        note_type.templates =
+            serde_json::from_value::<Vec<engram_core::CardTemplate>>(templates.clone())
+                .map_err(|error| format!("invalid note type templates: {error}"))?;
+    }
+    if let Some(stylesheet) = note_type_payload.get("stylesheet") {
+        note_type.stylesheet = match stylesheet {
+            Value::Null => None,
+            Value::String(value) if value.trim().is_empty() => None,
+            Value::String(value) => Some(value.clone()),
+            _ => return Err("note type stylesheet must be a string or null".to_string()),
+        };
+    }
+    note_type.created_at = integer_field(note_type_payload, &["createdAt", "created_at"])
+        .unwrap_or(note_type.created_at);
+    note_type.updated_at =
+        integer_field(note_type_payload, &["updatedAt", "updated_at"]).unwrap_or(now);
+
+    Ok(note_type)
+}
+
+fn explicit_note_type_id_from_app_event(parsed: &ParsedEngramAppEvent) -> Option<String> {
+    let payload = parsed.payload.as_ref()?;
+    let note_type_payload = payload.get("noteType").unwrap_or(payload);
+    string_field(
+        note_type_payload,
+        &["noteTypeId", "note_type_id", "modelId", "model_id", "id"],
+    )
 }
 
 fn note_fields_from_payload(
@@ -5784,6 +5879,146 @@ mod tests {
         assert_eq!(deleted["ok"], true);
         assert_eq!(deleted["event"], "onDeleteNote");
         assert_eq!(deleted["hostIntent"], Value::Null);
+        assert!(deleted["state"]["notes"].as_array().unwrap().is_empty());
+        assert!(deleted["state"]["cards"].as_array().unwrap().is_empty());
+    }
+
+    #[test]
+    fn handle_engram_app_save_and_delete_note_type_events_update_shared_state() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [{
+                "id": "basic",
+                "name": "Basic",
+                "fields": [
+                    {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                    {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                ],
+                "templates": [
+                    {
+                        "id": "forward",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "{{Back}}",
+                        "requiredFieldNames": ["Front"],
+                        "ordinal": 0
+                    }
+                ],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "notes": [{
+                "id": "note",
+                "noteTypeId": "basic",
+                "deckId": "deck",
+                "fields": [
+                    {"fieldId": "front", "value": "letter-aa"},
+                    {"fieldId": "back", "value": "aa"}
+                ],
+                "tags": ["tamil"],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "cards": [
+                {
+                    "id":"note::forward",
+                    "deckId":"deck",
+                    "front":"letter-aa",
+                    "back":"aa",
+                    "createdAt":1700000000000,
+                    "lineage": {
+                        "noteId": "note",
+                        "noteTypeId": "basic",
+                        "templateId": "forward",
+                        "ordinal": 0
+                    }
+                }
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+
+        let saved: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{
+                "event": "onSaveNoteType",
+                "noteType": {
+                    "id": "basic",
+                    "name": "Basic updated",
+                    "fields": [
+                        {"id": "front", "name": "Prompt", "required": true, "ordinal": 0},
+                        {"id": "back", "name": "Answer", "required": true, "ordinal": 1}
+                    ],
+                    "templates": [
+                        {
+                            "id": "forward",
+                            "name": "Forward",
+                            "frontTemplate": "{{Prompt}}",
+                            "backTemplate": "{{Answer}}",
+                            "requiredFieldNames": ["Prompt"],
+                            "ordinal": 0
+                        },
+                        {
+                            "id": "reverse",
+                            "name": "Reverse",
+                            "frontTemplate": "{{Answer}}",
+                            "backTemplate": "{{Prompt}}",
+                            "requiredFieldNames": ["Answer"],
+                            "ordinal": 1
+                        }
+                    ],
+                    "stylesheet": ".card { color: red; }"
+                }
+            }"#,
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(saved["ok"], true);
+        assert_eq!(saved["event"], "onSaveNoteType");
+        assert_eq!(saved["hostIntent"], Value::Null);
+        assert_eq!(saved["state"]["noteTypes"][0]["name"], "Basic updated");
+        assert_eq!(
+            saved["state"]["noteTypes"][0]["fields"][0]["name"],
+            "Prompt"
+        );
+        assert_eq!(
+            saved["state"]["noteTypes"][0]["stylesheet"],
+            ".card { color: red; }"
+        );
+        assert!(saved["state"]["cards"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|card| {
+                card["id"] == "note::forward"
+                    && card["front"] == "letter-aa"
+                    && card["back"] == "aa"
+            }));
+        assert!(saved["state"]["cards"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|card| {
+                card["id"] == "note::reverse"
+                    && card["front"] == "aa"
+                    && card["back"] == "letter-aa"
+            }));
+
+        let deleted: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onDeleteNoteType","noteTypeId":"basic"}"#,
+            "deck",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(deleted["ok"], true);
+        assert_eq!(deleted["event"], "onDeleteNoteType");
+        assert_eq!(deleted["hostIntent"], Value::Null);
+        assert!(deleted["state"]["noteTypes"].as_array().unwrap().is_empty());
         assert!(deleted["state"]["notes"].as_array().unwrap().is_empty());
         assert!(deleted["state"]["cards"].as_array().unwrap().is_empty());
     }

@@ -172,6 +172,12 @@ object. The shared reducer upserts the note and rematerializes generated cards.
 `onDeleteNote` keeps returning a host intent when sent without a target, and
 deletes through the shared reducer only when the event carries an explicit
 `noteId` or `selectedCardId`.
+Host model editors can post `onSaveNoteType` with a top-level or nested
+`noteType` payload containing `id`/`noteTypeId`, `name`, `fields`, `templates`,
+and optional `stylesheet`; the shared reducer upserts the model and
+rematerializes notes that use it. `onDeleteNoteType` follows the same safety
+rule as note deletion: no target returns a host intent, while an explicit
+`noteTypeId` deletes the model and its related notes/cards through the core.
 
 `daily_limit_usage` returns `{ ok: true, usage }` with new/review counts already
 seen in a host-provided day window and the remaining slots from `DeckOptions`.
