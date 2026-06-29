@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use engram_core_wasm::EngramSession;
 use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
@@ -215,28 +215,7 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
         );
     }
 
-    let html = fs::read_to_string(tmp.path().join("html").join("EngramApp.html"))
-        .expect("EngramApp HTML artifact should be readable");
-    assert!(
-        html.contains("#2563eb"),
-        "DeckStatsPanel package styles should reach EngramApp HTML"
-    );
-    assert!(
-        html.contains("#e94560"),
-        "ReviewCard package styles should reach EngramApp HTML"
-    );
-    assert!(
-        html.contains("#0f766e"),
-        "SessionProgress package styles should reach EngramApp HTML"
-    );
-    assert!(
-        html.contains("#7c3aed"),
-        "ReviewActions package styles should reach EngramApp HTML"
-    );
-    assert!(
-        html.contains("#f87171"),
-        "nested RatingControls package styles should reach EngramApp HTML"
-    );
+    assert_dependency_styles_reach_all_backends(tmp.path());
 }
 
 #[test]
@@ -474,6 +453,60 @@ fn assert_contains(haystack: &str, needle: &str) {
         haystack.contains(needle),
         "expected generated artifact to contain `{needle}`"
     );
+}
+
+fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
+    let hex_sentinels = [
+        ("DeckStatsPanel", "#2563eb"),
+        ("ReviewCard", "#e94560"),
+        ("SessionProgress", "#0f766e"),
+        ("ReviewActions", "#7c3aed"),
+        ("RatingControls", "#f87171"),
+    ];
+
+    for (backend, artifact) in [
+        ("HTML", "html/EngramApp.html"),
+        ("React", "react/EngramApp.tsx"),
+        ("Qt", "qt/EngramApp.qml"),
+        ("XAML", "xaml/EngramApp.xaml"),
+    ] {
+        let source = read_artifact(output_root, artifact);
+        for (component, needle) in hex_sentinels {
+            assert!(
+                source.contains(needle),
+                "{component} dependency style {needle} should reach {backend} artifact {artifact}"
+            );
+        }
+    }
+
+    let flutter = read_artifact(output_root, "flutter/EngramApp.dart");
+    for (component, hex) in hex_sentinels {
+        let needle = format!("0xFF{}", hex.trim_start_matches('#').to_ascii_uppercase());
+        assert!(
+            flutter.contains(&needle),
+            "{component} dependency style {needle} should reach Flutter artifact"
+        );
+    }
+
+    let swift = read_artifact(output_root, "swiftui/EngramApp.swift");
+    for (component, needle) in [
+        ("DeckStatsPanel", "0.145, green: 0.388, blue: 0.922"),
+        ("ReviewCard", "0.914, green: 0.271, blue: 0.376"),
+        ("SessionProgress", "0.059, green: 0.463, blue: 0.431"),
+        ("ReviewActions", "0.486, green: 0.227, blue: 0.929"),
+        ("RatingControls", "0.973, green: 0.443, blue: 0.443"),
+    ] {
+        assert!(
+            swift.contains(needle),
+            "{component} dependency style {needle} should reach SwiftUI artifact"
+        );
+    }
+}
+
+fn read_artifact(output_root: &Path, relative: &str) -> String {
+    let path = output_root.join(relative);
+    fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("expected generated artifact {}: {e}", path.display()))
 }
 
 #[test]
