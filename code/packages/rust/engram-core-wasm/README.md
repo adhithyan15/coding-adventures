@@ -48,9 +48,9 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 
 All JSON uses camelCase field names to match the existing TypeScript Engram app
 and keep generated bindings idiomatic.
-`dispatch` accepts note-first `upsertNote` and `deleteNote` commands; pass
-`materializeCardsAt` with `upsertNote` to sync generated cards from the note
-type through the shared core.
+`dispatch` accepts note-first `upsertNoteType`, `deleteNoteType`, `upsertNote`,
+and `deleteNote` commands; pass `materializeCardsAt` with `upsertNoteType` or
+`upsertNote` to sync generated cards from the note type through the shared core.
 
 `rateCard` remains backward-compatible with the original command shape. Hosts
 may also include a `deckOptions` object to drive the Rust scheduler with custom

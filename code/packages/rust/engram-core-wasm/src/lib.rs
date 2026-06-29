@@ -1001,6 +1001,14 @@ enum FacadeCommand {
     DeleteDeck {
         deck_id: String,
     },
+    UpsertNoteType {
+        note_type: engram_core::NoteType,
+        #[serde(default)]
+        materialize_cards_at: Option<u64>,
+    },
+    DeleteNoteType {
+        note_type_id: String,
+    },
     UpsertNote {
         note: engram_core::Note,
         #[serde(default)]
@@ -1126,6 +1134,16 @@ impl FacadeCommand {
                 description,
             },
             Self::DeleteDeck { deck_id } => engram_core::EngramCommand::DeleteDeck { deck_id },
+            Self::UpsertNoteType {
+                note_type,
+                materialize_cards_at,
+            } => engram_core::EngramCommand::UpsertNoteType {
+                note_type,
+                materialize_cards_at,
+            },
+            Self::DeleteNoteType { note_type_id } => {
+                engram_core::EngramCommand::DeleteNoteType { note_type_id }
+            }
             Self::UpsertNote {
                 note,
                 materialize_cards_at,
@@ -1491,6 +1509,83 @@ mod tests {
             "Prompt"
         );
         assert_eq!(value["state"]["noteTypes"][0]["updatedAt"], NOW + 1);
+    }
+
+    #[test]
+    fn dispatch_upsert_and_delete_note_type_syncs_notes_and_cards() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                "noteTypes": [],
+                "notes": [{
+                    "id": "note",
+                    "noteTypeId": "basic",
+                    "deckId": "deck",
+                    "fields": [
+                        {"fieldId": "front", "value": "amma"},
+                        {"fieldId": "back", "value": "mother"}
+                    ],
+                    "tags": ["tamil"],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "cards": [],
+                "cardProgress": [],
+                "sessions": [],
+                "reviews": [],
+                "activeSession": null
+            }"#,
+        );
+
+        let created: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNoteType",
+                "noteType": {
+                    "id": "basic",
+                    "name": "Basic",
+                    "fields": [
+                        {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                        {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                    ],
+                    "templates": [{
+                        "id": "forward",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "{{Back}}",
+                        "requiredFieldNames": ["Front", "Back"],
+                        "ordinal": 0
+                    }],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                },
+                "materializeCardsAt": 1700000000001
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(created["ok"], true);
+        assert_eq!(created["state"]["noteTypes"][0]["id"], "basic");
+        assert_eq!(created["state"]["cards"][0]["id"], "note::forward");
+        assert_eq!(created["state"]["cards"][0]["front"], "amma");
+        assert_eq!(created["state"]["cards"][0]["createdAt"], NOW + 1);
+        assert_eq!(
+            created["state"]["cards"][0]["lineage"]["templateId"],
+            "forward"
+        );
+
+        let deleted: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "deleteNoteType",
+                "noteTypeId": "basic"
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(deleted["ok"], true);
+        assert!(deleted["state"]["noteTypes"].as_array().unwrap().is_empty());
+        assert!(deleted["state"]["notes"].as_array().unwrap().is_empty());
+        assert!(deleted["state"]["cards"].as_array().unwrap().is_empty());
     }
 
     #[test]
