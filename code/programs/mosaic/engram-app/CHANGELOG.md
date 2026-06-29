@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
+  `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
+  and single-character `_` wildcards.
 - Added the reusable `mosaic-pkg-review-history` dependency and mounted its
   `ReviewHistoryPanel` component so generated host shells expose shared
   review totals, accuracy, per-rating counts, and first/last review fields.

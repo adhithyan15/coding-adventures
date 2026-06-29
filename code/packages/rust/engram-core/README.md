@@ -78,10 +78,13 @@ Legacy reviews without snapshots are left unchanged because there is no reliable
 prior progress to restore.
 
 `search_cards` provides the first shared collection-browser query layer. It
-supports plain text terms plus `deck:`, `note:`, `noteType:`, `front:`,
-`back:`, `tag:`, `state:`, `is:`, `flag:`, and `marked:` filters. Terms inside
-a group use implicit AND, `OR` joins groups, parentheses group subexpressions,
-and leading `-` negates a term or group.
+supports plain text terms plus Anki-style `w:`, `nc:`, `sc:`, and `re:` text
+modifiers, field-scoped regex searches such as `front:re:...`, tag regexes,
+`deck:`, `note:`, `noteType:`, `card:`, `cid:`, `nid:`, `front:`, `back:`,
+`tag:`, `state:`, `is:`, `flag:`, `marked:`, `prop:`, `added:`, `edited:`,
+`introduced:`, and `rated:` filters. Terms inside a group use implicit AND,
+`OR` joins groups, parentheses group subexpressions, and leading `-` negates a
+term or group.
 
 `materialize_generated_card` turns a note-template `GeneratedCard` into a
 durable `Card` with note/template lineage. Cloze templates using

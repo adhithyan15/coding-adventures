@@ -6,8 +6,10 @@ use crate::model::{
 };
 use crate::queue::{is_new_progress_overlay, is_reviewable};
 use crate::sm2::ONE_DAY_MS as MS_PER_DAY;
+use regex::{Regex, RegexBuilder};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -29,22 +31,22 @@ pub struct SearchError {
     pub token: String,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 struct SearchClause {
     kind: SearchClauseKind,
     negated: bool,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 enum SearchClauseKind {
-    Text(String),
+    Text(TextFilter),
     Field(FieldFilter),
     CardId(IdFilter),
     NoteId(IdFilter),
     CardTemplate(String),
     Deck(String),
     NoteType(String),
-    Tag(String),
+    Tag(TagFilter),
     State(CardSearchState),
     Flag(FlagFilter),
     Marked(bool),
@@ -55,12 +57,28 @@ enum SearchClauseKind {
     Rated(RatedFilter),
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 enum SearchExpr {
     Clause(SearchClause),
     And(Vec<SearchExpr>),
     Or(Vec<SearchExpr>),
     Not(Box<SearchExpr>),
+}
+
+#[derive(Clone, Debug)]
+struct TextFilter {
+    pattern: String,
+    mode: TextMatchMode,
+    regex: Option<Regex>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum TextMatchMode {
+    Contains,
+    WholeWord,
+    NoCombining,
+    StripCloze,
+    Regex,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -124,18 +142,25 @@ struct IdFilter {
     values: Vec<String>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug)]
 struct FieldFilter {
     name_pattern: String,
     value_pattern: FieldValuePattern,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug)]
 enum FieldValuePattern {
     Any,
     NonEmpty,
     Exact(String),
     Wildcard(String),
+    Text(TextFilter),
+}
+
+#[derive(Clone, Debug)]
+enum TagFilter {
+    Hierarchical(String),
+    Regex(TextFilter),
 }
 
 pub fn search_cards(
@@ -470,7 +495,7 @@ fn parse_clause(token: &str) -> Result<SearchClause, SearchError> {
 
     let kind = match raw.split_once(':') {
         Some((key, value)) => parse_keyed_clause(raw, key, value)?,
-        None => SearchClauseKind::Text(raw.to_lowercase()),
+        None => SearchClauseKind::Text(text_filter_contains(raw)),
     };
 
     Ok(SearchClause { kind, negated })
@@ -483,7 +508,7 @@ fn parse_keyed_clause(
 ) -> Result<SearchClauseKind, SearchError> {
     let key = key.to_ascii_lowercase();
     if is_field_search_key(&key) {
-        return Ok(SearchClauseKind::Field(parse_field_filter(&key, value)));
+        return parse_field_filter(token, &key, value).map(SearchClauseKind::Field);
     }
 
     if value.is_empty() {
@@ -493,29 +518,43 @@ fn parse_keyed_clause(
         });
     }
 
-    let value = value.to_lowercase();
     match key.as_str() {
+        "w" | "nc" | "sc" | "re" => {
+            parse_text_filter(token, &key, value).map(SearchClauseKind::Text)
+        }
         "cid" | "cardid" | "card_id" | "card-id" => {
+            let value = value.to_lowercase();
             parse_id_filter(token, &value).map(SearchClauseKind::CardId)
         }
         "nid" | "noteid" | "note_id" | "note-id" => {
+            let value = value.to_lowercase();
             parse_id_filter(token, &value).map(SearchClauseKind::NoteId)
         }
         "card" | "template" | "cardtemplate" | "card_template" | "card-template" => {
-            Ok(SearchClauseKind::CardTemplate(value))
+            Ok(SearchClauseKind::CardTemplate(value.to_lowercase()))
         }
-        "deck" => Ok(SearchClauseKind::Deck(value)),
-        "note" | "notetype" | "note_type" | "note-type" => Ok(SearchClauseKind::NoteType(value)),
-        "tag" => Ok(SearchClauseKind::Tag(value)),
-        "state" => parse_state_filter(token, &value).map(SearchClauseKind::State),
-        "is" => parse_is_filter(token, &value),
-        "flag" => parse_flag_filter(token, &value).map(SearchClauseKind::Flag),
-        "marked" => parse_bool_filter(token, &value).map(SearchClauseKind::Marked),
-        "prop" => parse_property_filter(token, &value).map(SearchClauseKind::Property),
-        "added" => parse_recent_days_filter(token, &value).map(SearchClauseKind::Added),
-        "edited" => parse_recent_days_filter(token, &value).map(SearchClauseKind::Edited),
-        "introduced" => parse_recent_days_filter(token, &value).map(SearchClauseKind::Introduced),
-        "rated" => parse_rated_filter(token, &value).map(SearchClauseKind::Rated),
+        "deck" => Ok(SearchClauseKind::Deck(value.to_lowercase())),
+        "note" | "notetype" | "note_type" | "note-type" => {
+            Ok(SearchClauseKind::NoteType(value.to_lowercase()))
+        }
+        "tag" => parse_tag_filter(token, value).map(SearchClauseKind::Tag),
+        "state" => parse_state_filter(token, &value.to_lowercase()).map(SearchClauseKind::State),
+        "is" => parse_is_filter(token, &value.to_lowercase()),
+        "flag" => parse_flag_filter(token, &value.to_lowercase()).map(SearchClauseKind::Flag),
+        "marked" => parse_bool_filter(token, &value.to_lowercase()).map(SearchClauseKind::Marked),
+        "prop" => {
+            parse_property_filter(token, &value.to_lowercase()).map(SearchClauseKind::Property)
+        }
+        "added" => {
+            parse_recent_days_filter(token, &value.to_lowercase()).map(SearchClauseKind::Added)
+        }
+        "edited" => {
+            parse_recent_days_filter(token, &value.to_lowercase()).map(SearchClauseKind::Edited)
+        }
+        "introduced" => {
+            parse_recent_days_filter(token, &value.to_lowercase()).map(SearchClauseKind::Introduced)
+        }
+        "rated" => parse_rated_filter(token, &value.to_lowercase()).map(SearchClauseKind::Rated),
         _ => Err(SearchError {
             message: "unknown search filter".to_string(),
             token: token.to_string(),
@@ -527,19 +566,130 @@ fn is_field_search_key(key: &str) -> bool {
     matches!(key, "front" | "back") || key.contains('*') || key.contains(' ')
 }
 
-fn parse_field_filter(key: &str, value: &str) -> FieldFilter {
-    let value = value.to_lowercase();
-    let value_pattern = match value.as_str() {
-        "*" => FieldValuePattern::Any,
-        "_*" => FieldValuePattern::NonEmpty,
-        _ if value.contains('*') => FieldValuePattern::Wildcard(value),
-        _ => FieldValuePattern::Exact(value),
+fn parse_field_filter(token: &str, key: &str, value: &str) -> Result<FieldFilter, SearchError> {
+    let value_pattern = if let Some((mode, pattern)) = split_text_modifier(value) {
+        FieldValuePattern::Text(parse_text_filter(token, mode, pattern)?)
+    } else {
+        parse_exact_field_value_filter(value)
     };
 
-    FieldFilter {
+    Ok(FieldFilter {
         name_pattern: key.to_string(),
         value_pattern,
+    })
+}
+
+fn parse_exact_field_value_filter(value: &str) -> FieldValuePattern {
+    let value = value.to_lowercase();
+    match value.as_str() {
+        "*" => FieldValuePattern::Any,
+        "_*" => FieldValuePattern::NonEmpty,
+        _ if contains_search_wildcard(&value) => FieldValuePattern::Wildcard(value),
+        _ => FieldValuePattern::Exact(value),
     }
+}
+
+fn parse_tag_filter(token: &str, value: &str) -> Result<TagFilter, SearchError> {
+    match split_text_modifier(value) {
+        Some(("re", pattern)) => parse_text_filter(token, "re", pattern).map(TagFilter::Regex),
+        _ => Ok(TagFilter::Hierarchical(value.to_lowercase())),
+    }
+}
+
+fn text_filter_contains(pattern: &str) -> TextFilter {
+    TextFilter {
+        pattern: pattern.to_string(),
+        mode: TextMatchMode::Contains,
+        regex: None,
+    }
+}
+
+fn parse_text_filter(token: &str, mode: &str, pattern: &str) -> Result<TextFilter, SearchError> {
+    if pattern.is_empty() {
+        return Err(SearchError {
+            message: "text search modifier is missing a value".to_string(),
+            token: token.to_string(),
+        });
+    }
+
+    let mode = match mode {
+        "w" => TextMatchMode::WholeWord,
+        "nc" => TextMatchMode::NoCombining,
+        "sc" => TextMatchMode::StripCloze,
+        "re" => TextMatchMode::Regex,
+        _ => unreachable!("validated search modifier"),
+    };
+    let regex = match mode {
+        TextMatchMode::WholeWord => Some(build_whole_word_regex(token, pattern)?),
+        TextMatchMode::Regex => Some(build_search_regex(token, pattern)?),
+        TextMatchMode::Contains | TextMatchMode::NoCombining | TextMatchMode::StripCloze => None,
+    };
+
+    Ok(TextFilter {
+        pattern: pattern.to_string(),
+        mode,
+        regex,
+    })
+}
+
+fn split_text_modifier(value: &str) -> Option<(&'static str, &str)> {
+    let (mode, pattern) = value.split_once(':')?;
+    let mode = match mode.to_ascii_lowercase().as_str() {
+        "w" => "w",
+        "nc" => "nc",
+        "sc" => "sc",
+        "re" => "re",
+        _ => return None,
+    };
+    Some((mode, pattern))
+}
+
+fn build_search_regex(token: &str, pattern: &str) -> Result<Regex, SearchError> {
+    RegexBuilder::new(pattern)
+        .case_insensitive(true)
+        .build()
+        .map_err(|error| SearchError {
+            message: format!("invalid regular expression: {error}"),
+            token: token.to_string(),
+        })
+}
+
+fn build_whole_word_regex(token: &str, pattern: &str) -> Result<Regex, SearchError> {
+    let source = format!(
+        "(?u)(?:^|[^\\p{{Alphabetic}}\\p{{Mark}}\\p{{Nd}}_]){}(?:$|[^\\p{{Alphabetic}}\\p{{Mark}}\\p{{Nd}}_])",
+        search_pattern_regex_source(pattern, WildcardScope::Word)
+    );
+    RegexBuilder::new(&source)
+        .case_insensitive(true)
+        .build()
+        .map_err(|error| SearchError {
+            message: format!("invalid whole-word search pattern: {error}"),
+            token: token.to_string(),
+        })
+}
+
+#[derive(Clone, Copy)]
+enum WildcardScope {
+    Text,
+    Word,
+}
+
+fn search_pattern_regex_source(pattern: &str, scope: WildcardScope) -> String {
+    let mut source = String::new();
+    for ch in pattern.chars() {
+        match ch {
+            '*' => match scope {
+                WildcardScope::Text => source.push_str(".*"),
+                WildcardScope::Word => source.push_str("[\\p{Alphabetic}\\p{Mark}\\p{Nd}_]*"),
+            },
+            '_' => match scope {
+                WildcardScope::Text => source.push('.'),
+                WildcardScope::Word => source.push_str("[\\p{Alphabetic}\\p{Mark}\\p{Nd}_]"),
+            },
+            _ => source.push_str(&regex::escape(&ch.to_string())),
+        }
+    }
+    source
 }
 
 fn parse_is_filter(token: &str, value: &str) -> Result<SearchClauseKind, SearchError> {
@@ -800,7 +950,7 @@ fn clause_matches(
     now: u64,
 ) -> bool {
     let matched = match &clause.kind {
-        SearchClauseKind::Text(term) => text_matches(term, card, deck, note),
+        SearchClauseKind::Text(filter) => text_matches(filter, card, deck, note),
         SearchClauseKind::Field(filter) => field_matches(filter, card, note, note_type),
         SearchClauseKind::CardId(filter) => id_filter_matches(filter, &card.id),
         SearchClauseKind::NoteId(filter) => note_id_matches(filter, card, note),
@@ -829,21 +979,24 @@ fn clause_matches(
     }
 }
 
-fn text_matches(term: &str, card: &Card, deck: Option<&Deck>, note: Option<&Note>) -> bool {
-    contains_case_insensitive(&card.front, term)
-        || contains_case_insensitive(&card.back, term)
+fn text_matches(
+    filter: &TextFilter,
+    card: &Card,
+    deck: Option<&Deck>,
+    note: Option<&Note>,
+) -> bool {
+    text_filter_matches(filter, &card.front)
+        || text_filter_matches(filter, &card.back)
         || deck.is_some_and(|deck| {
-            contains_case_insensitive(&deck.name, term)
-                || contains_case_insensitive(&deck.description, term)
+            text_filter_matches(filter, &deck.name)
+                || text_filter_matches(filter, &deck.description)
         })
         || note.is_some_and(|note| {
-            note.tags
-                .iter()
-                .any(|tag| contains_case_insensitive(tag, term))
+            note.tags.iter().any(|tag| text_filter_matches(filter, tag))
                 || note
                     .fields
                     .iter()
-                    .any(|field| contains_case_insensitive(&field.value, term))
+                    .any(|field| text_filter_matches(filter, &field.value))
         })
 }
 
@@ -878,8 +1031,8 @@ fn field_matches(
 
 fn field_name_matches(pattern: &str, candidate: &str) -> bool {
     let candidate = candidate.to_lowercase();
-    if pattern.contains('*') {
-        wildcard_matches(pattern, &candidate)
+    if contains_search_wildcard(pattern) {
+        search_pattern_matches(pattern, &candidate)
     } else {
         candidate == pattern
     }
@@ -891,9 +1044,117 @@ fn field_value_matches(pattern: &FieldValuePattern, candidate: &str) -> bool {
         FieldValuePattern::NonEmpty => !candidate.trim().is_empty(),
         FieldValuePattern::Exact(expected) => candidate.to_lowercase() == *expected,
         FieldValuePattern::Wildcard(expected) => {
-            wildcard_matches(expected, &candidate.to_lowercase())
+            search_pattern_matches(expected, &candidate.to_lowercase())
+        }
+        FieldValuePattern::Text(filter) => text_filter_matches(filter, candidate),
+    }
+}
+
+fn text_filter_matches(filter: &TextFilter, candidate: &str) -> bool {
+    match filter.mode {
+        TextMatchMode::Contains => contains_search_pattern(
+            &filter.pattern.to_lowercase(),
+            &candidate.to_lowercase(),
+            WildcardScope::Text,
+        ),
+        TextMatchMode::WholeWord | TextMatchMode::Regex => filter
+            .regex
+            .as_ref()
+            .is_some_and(|regex| regex.is_match(candidate)),
+        TextMatchMode::NoCombining => contains_search_pattern(
+            &normalize_no_combining(&filter.pattern),
+            &normalize_no_combining(candidate),
+            WildcardScope::Text,
+        ),
+        TextMatchMode::StripCloze => contains_search_pattern(
+            &filter.pattern.to_lowercase(),
+            &strip_cloze_markup(candidate).to_lowercase(),
+            WildcardScope::Text,
+        ),
+    }
+}
+
+fn contains_search_pattern(pattern: &str, candidate: &str, scope: WildcardScope) -> bool {
+    if contains_search_wildcard(pattern) {
+        Regex::new(&search_pattern_regex_source(pattern, scope))
+            .is_ok_and(|regex| regex.is_match(candidate))
+    } else {
+        candidate.contains(pattern)
+    }
+}
+
+fn contains_search_wildcard(value: &str) -> bool {
+    value.contains('*') || value.contains('_')
+}
+
+fn normalize_no_combining(value: &str) -> String {
+    let mut normalized = String::new();
+    for ch in value.nfd() {
+        if is_combining_mark(ch) {
+            continue;
+        }
+        match ch {
+            'ß' | 'ẞ' => normalized.push('s'),
+            _ => normalized.extend(ch.to_lowercase()),
         }
     }
+    normalized
+}
+
+fn strip_cloze_markup(value: &str) -> String {
+    let mut stripped = String::with_capacity(value.len());
+    let mut rest = value;
+
+    while let Some(start) = rest.find("{{c") {
+        let (prefix, candidate) = rest.split_at(start);
+        stripped.push_str(prefix);
+
+        if let Some(marker) = parse_search_cloze_marker(candidate) {
+            stripped.push_str(&strip_cloze_markup(marker.hidden));
+            rest = &candidate[marker.consumed..];
+        } else {
+            stripped.push_str("{{c");
+            rest = &candidate[3..];
+        }
+    }
+
+    stripped.push_str(rest);
+    stripped
+}
+
+struct SearchClozeMarker<'a> {
+    hidden: &'a str,
+    consumed: usize,
+}
+
+fn parse_search_cloze_marker(candidate: &str) -> Option<SearchClozeMarker<'_>> {
+    if !candidate.starts_with("{{c") {
+        return None;
+    }
+
+    let after_prefix = &candidate[3..];
+    let digit_len = after_prefix
+        .find(|ch: char| !ch.is_ascii_digit())
+        .unwrap_or(after_prefix.len());
+    if digit_len == 0 || after_prefix[..digit_len].parse::<u32>().ok()? == 0 {
+        return None;
+    }
+
+    let after_digits = &after_prefix[digit_len..];
+    if !after_digits.starts_with("::") {
+        return None;
+    }
+
+    let content_start = 3 + digit_len + 2;
+    let after_content_start = &candidate[content_start..];
+    let content_len = after_content_start.find("}}")?;
+    let content = &after_content_start[..content_len];
+    let consumed = content_start + content_len + 2;
+    let hidden = content
+        .split_once("::")
+        .map_or(content, |(hidden, _hint)| hidden);
+
+    Some(SearchClozeMarker { hidden, consumed })
 }
 
 fn deck_matches(
@@ -913,58 +1174,44 @@ fn deck_matches(
         })
 }
 
-fn tag_matches(tag: &str, note: Option<&Note>) -> bool {
-    if tag == "none" {
-        return note.map_or(true, |note| note.tags.is_empty());
+fn tag_matches(filter: &TagFilter, note: Option<&Note>) -> bool {
+    match filter {
+        TagFilter::Hierarchical(tag) if tag == "none" => {
+            note.map_or(true, |note| note.tags.is_empty())
+        }
+        TagFilter::Hierarchical(tag) => note.is_some_and(|note| {
+            note.tags
+                .iter()
+                .any(|candidate| anki_hierarchical_name_matches(tag, candidate))
+        }),
+        TagFilter::Regex(regex) => note.is_some_and(|note| {
+            note.tags
+                .iter()
+                .any(|candidate| text_filter_matches(regex, candidate))
+        }),
     }
-
-    note.is_some_and(|note| {
-        note.tags
-            .iter()
-            .any(|candidate| anki_hierarchical_name_matches(tag, candidate))
-    })
 }
 
 fn anki_hierarchical_name_matches(pattern: &str, candidate: &str) -> bool {
     let candidate = candidate.to_lowercase();
     if pattern.contains('*') {
-        return wildcard_matches(pattern, &candidate);
+        return search_pattern_matches(pattern, &candidate);
     }
 
     candidate == pattern || candidate.starts_with(&format!("{pattern}::"))
 }
 
-fn wildcard_matches(pattern: &str, candidate: &str) -> bool {
+fn search_pattern_matches(pattern: &str, candidate: &str) -> bool {
     let parts = pattern.split('*').collect::<Vec<_>>();
-    if parts.len() == 1 {
+    if parts.len() == 1 && !pattern.contains('_') {
         return candidate == pattern;
     }
 
-    let mut position = 0;
-    for (index, part) in parts.iter().enumerate() {
-        if part.is_empty() {
-            continue;
-        }
-
-        if index == 0 && !pattern.starts_with('*') {
-            if !candidate[position..].starts_with(part) {
-                return false;
-            }
-            position += part.len();
-            continue;
-        }
-
-        let Some(found) = candidate[position..].find(part) else {
-            return false;
-        };
-        position += found + part.len();
-
-        if index == parts.len() - 1 && !pattern.ends_with('*') && position != candidate.len() {
-            return false;
-        }
-    }
-
-    true
+    Regex::new(&format!(
+        "^{}$",
+        search_pattern_regex_source(pattern, WildcardScope::Text)
+    ))
+    .is_ok_and(|regex| regex.is_match(candidate))
 }
 
 fn note_type_matches(term: &str, note: Option<&Note>, note_type: Option<&NoteType>) -> bool {
@@ -1337,6 +1584,96 @@ mod tests {
     }
 
     #[test]
+    fn anki_browser_text_modifiers_match_words_combining_marks_clozes_and_regex() {
+        let note_type = NoteType {
+            id: "basic".to_string(),
+            name: "Basic".to_string(),
+            fields: vec![FieldDef {
+                id: "front".to_string(),
+                name: "Front".to_string(),
+                required: true,
+                ordinal: 0,
+            }],
+            templates: vec![CardTemplate {
+                id: "forward".to_string(),
+                name: "Forward".to_string(),
+                front_template: "{{Front}}".to_string(),
+                back_template: "Answer".to_string(),
+                required_field_names: vec!["Front".to_string()],
+                requirement_mode: TemplateRequirementMode::All,
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let note = |id: &str, front: &str| Note {
+            id: id.to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "languages".to_string(),
+            fields: vec![NoteFieldValue {
+                field_id: "front".to_string(),
+                value: front.to_string(),
+            }],
+            tags: Vec::new(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |note_id: &str| {
+            let mut card = card(&format!("{note_id}::forward"), "languages", "front", "back");
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let state = AppState {
+            decks: vec![deck("languages", "Languages")],
+            note_types: vec![note_type],
+            notes: vec![
+                note("accent-note", "über café heißen ば"),
+                note(
+                    "cloze-note",
+                    "The {{c1::capital}} of {{c2::France}} carries a mnemonic.",
+                ),
+            ],
+            cards: vec![
+                card("dog-word", "languages", "a dog", "canis"),
+                card("doggy", "languages", "doggy", "canine"),
+                card("underdog", "languages", "underdog", "outsider"),
+                card("digits", "languages", "lesson 123", "numbers"),
+                card_for_note("accent-note"),
+                card_for_note("cloze-note"),
+            ],
+            ..AppState::default()
+        };
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("w:dog"), vec!["dog-word"]);
+        assert_eq!(ids_for("w:dog*"), vec!["dog-word", "doggy"]);
+        assert_eq!(ids_for("w:*dog"), vec!["dog-word", "underdog"]);
+        assert_eq!(ids_for("nc:uber"), vec!["accent-note::forward"]);
+        assert_eq!(ids_for("nc:cafe"), vec!["accent-note::forward"]);
+        assert_eq!(ids_for("nc:は"), vec!["accent-note::forward"]);
+        assert_eq!(ids_for("nc:heisen"), vec!["accent-note::forward"]);
+        assert_eq!(ids_for("\"nc:heißen\""), vec!["accent-note::forward"]);
+        assert_eq!(
+            ids_for("\"sc:capital of France\""),
+            vec!["cloze-note::forward"]
+        );
+        assert_eq!(ids_for("\"re:^A DOG$\""), vec!["dog-word"]);
+        assert_eq!(ids_for("re:\\d{3}"), vec!["digits"]);
+    }
+
+    #[test]
     fn anki_browser_field_filters_use_exact_and_wildcard_matching() {
         let note_type = NoteType {
             id: "basic".to_string(),
@@ -1422,10 +1759,95 @@ mod tests {
         assert!(ids_for("front:dog").is_empty());
         assert_eq!(ids_for("front:\"a dog\""), vec!["dog-note::forward"]);
         assert_eq!(ids_for("front:*dog*"), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("front:a_dog"), vec!["dog-note::forward"]);
         assert_eq!(ids_for("fr*:\"a dog\""), vec!["dog-note::forward"]);
         assert_eq!(ids_for("back:"), vec!["dog-note::forward"]);
         assert_eq!(ids_for("back:_*"), vec!["cat-note::forward", "standalone"]);
         assert_eq!(ids_for("front:hola"), vec!["standalone"]);
+    }
+
+    #[test]
+    fn anki_browser_field_and_tag_regex_modifiers_search_targeted_values() {
+        let note_type = NoteType {
+            id: "basic".to_string(),
+            name: "Basic".to_string(),
+            fields: vec![FieldDef {
+                id: "front".to_string(),
+                name: "Front".to_string(),
+                required: true,
+                ordinal: 0,
+            }],
+            templates: vec![CardTemplate {
+                id: "forward".to_string(),
+                name: "Forward".to_string(),
+                front_template: "{{Front}}".to_string(),
+                back_template: "Answer".to_string(),
+                required_field_names: vec!["Front".to_string()],
+                requirement_mode: TemplateRequirementMode::All,
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let note = |id: &str, front: &str, tags: Vec<&str>| Note {
+            id: id.to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "languages".to_string(),
+            fields: vec![NoteFieldValue {
+                field_id: "front".to_string(),
+                value: front.to_string(),
+            }],
+            tags: tags.into_iter().map(str::to_string).collect(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |note_id: &str| {
+            let mut card = card(&format!("{note_id}::forward"), "languages", "front", "back");
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let state = AppState {
+            decks: vec![deck("languages", "Languages")],
+            note_types: vec![note_type],
+            notes: vec![
+                note("range-note", "B1 grammar", vec!["lesson-17", "parent"]),
+                note(
+                    "child-note",
+                    "cafe au lait",
+                    vec!["lesson-09", "parent::child"],
+                ),
+                note("dog-note", "a dog", Vec::new()),
+            ],
+            cards: vec![
+                card_for_note("range-note"),
+                card_for_note("child-note"),
+                card_for_note("dog-note"),
+            ],
+            ..AppState::default()
+        };
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("front:re:^[a-c]1"), vec!["range-note::forward"]);
+        assert!(ids_for("front:re:^[a-c]1$").is_empty());
+        assert_eq!(ids_for("front:w:dog"), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("front:nc:café"), vec!["child-note::forward"]);
+        assert_eq!(ids_for("tag:re:^parent$"), vec!["range-note::forward"]);
+        assert_eq!(
+            ids_for("\"tag:re:lesson-(1[7-9]|2[0-5])\""),
+            vec!["range-note::forward"]
+        );
     }
 
     #[test]
