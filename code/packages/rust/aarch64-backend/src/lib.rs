@@ -595,6 +595,22 @@ fn emit_instr(
         asm.str_d(Reg::X0, Reg::Sp, slot)?;        // store the result as f64
         return Ok(());
     }
+    // BA-pow — `BL pow` (libm two-argument power, no hardware opcode).
+    //   f64_pow dest <- base, exp  →  ldr_d D0,[base]; ldr_d D1,[exp]; BL pow; str_d D0,[dest]
+    // AAPCS64: first FP arg in D0, second in D1; result in D0.
+    if op == "f64_pow" {
+        let dest = require_dest(instr)?;
+        let base = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr("f64_pow needs srcs[0]".into()))?;
+        let exp_ = instr.srcs.get(1)
+            .ok_or_else(|| BackendError::MalformedInstr("f64_pow needs srcs[1]".into()))?;
+        load_fp_operand(asm, alloc, Reg::X0, base)?; // D0 = base
+        load_fp_operand(asm, alloc, Reg::X1, exp_)?; // D1 = exp
+        asm.bl_external("pow");                       // D0 = pow(D0, D1)
+        let slot = alloc.slot_of(dest);
+        asm.str_d(Reg::X0, Reg::Sp, slot)?;          // store the result as f64
+        return Ok(());
+    }
 
     // AL8 transcendentals — sin/cos/ln/exp via libm (AAPCS64: D0 → BL → D0).
     //

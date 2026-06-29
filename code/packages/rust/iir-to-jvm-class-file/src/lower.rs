@@ -2572,6 +2572,23 @@ fn lower_function(
                     emit_typed_store(&mut code, dest_slot, dest_jtype);
                 }
             }
+            // ── BA-pow: two-argument pow(base, exp) via java/lang/Math.pow ───
+            //
+            // `Math.pow(DD)D` handles all IEEE-754 edge cases (NaN, ±inf,
+            // negative bases with fractional exponents → NaN) matching every
+            // other backend and the VM handler's `f64::powf` contract.
+            "f64_pow" => {
+                let (src0, src1) = two_srcs(func, instr, &slots)?;
+                emit_typed_load(&mut code, src0.0, src0.1); // base
+                emit_typed_load(&mut code, src1.0, src1.1); // exp
+                let mref = cp.add_methodref("java/lang/Math", "pow", "(DD)D");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
+                }
+            }
 
             // ── Bitwise: and, or, xor ────────────────────────────────────────
             //

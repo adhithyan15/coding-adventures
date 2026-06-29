@@ -1,5 +1,11 @@
 # Changelog — `aarch64-backend`
 
+## 0.18.0 — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` AArch64 lowering)
+
+Added `f64_pow` block: loads base into D0 via `load_fp_operand`, loads exponent
+into D1, emits `BL pow` via `bl_external("pow")` (AAPCS64: D0=base, D1=exp,
+result in D0), and stores D0 to the dest stack slot.  This is the first
+two-argument floating-point external call in the aarch64-backend.
 ## 0.17.0 — 2026-06-29 — `f64_atan/f64_tan` via libm `BL` (LANG-FULL AL8-arctan)
 
 Extended the transcendental match arm to cover two more ops:

@@ -1,5 +1,11 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.35.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` CLR lowering)
+
+Added `"f64_pow"` arm in `il_text`: loads base and exponent via `load_var`,
+emits `call float64 [System.Runtime]System.Math::Pow(float64, float64)`, and
+stores the result via `store_var`.  Two-argument static call, matching the
+existing unary Math calls (Sqrt, Sin, etc.) but with a second argument.
 ## [0.34.0] — 2026-06-29 — `f64_atan/f64_tan` via `System.Math` (LANG-FULL AL8-arctan)
 
 Extended the f64 transcendental match arm to cover two more ops:

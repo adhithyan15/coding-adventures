@@ -875,6 +875,25 @@ fn emit_method(
                 );
                 store_var(il, &regs, dest)?;
             }
+            // ── BA-pow: two-argument pow(base, exp) via System.Math::Pow ─────
+            //
+            // `System.Math::Pow(float64,float64)float64` — the CLR JIT lowers
+            // this to the FPU/SSE pow path.  NaN propagates per IEEE-754.
+            "f64_pow" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "f64_pow must have a dest".to_string(),
+                })?;
+                let base = var_src(f, instr, 0, "f64_pow")?;
+                let exp_ = var_src(f, instr, 1, "f64_pow")?;
+                load_var(il, &regs, base)?;
+                load_var(il, &regs, exp_)?;
+                let _ = writeln!(
+                    il,
+                    "    call float64 [System.Runtime]System.Math::Pow(float64, float64)"
+                );
+                store_var(il, &regs, dest)?;
+            }
             // ret <src>  →  ld<src>; ret
             "ret" => {
                 let src = var_src(f, instr, 0, "ret")?;

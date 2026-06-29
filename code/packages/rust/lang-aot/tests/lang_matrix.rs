@@ -1959,6 +1959,16 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT TAN(0)\n20 END\n",
         expect: Expect::Stdout("0"),
+    // Dartmouth BASIC — general `^` exponentiation via f64_pow IIR op (LANG-FULL BA-pow).
+    // 4 ^ 0.5 = pow(4.0, 0.5) = 2.0 exactly; printed as "2" by __basic_print_real
+    // (no decimal point when fractional part is zero).  Non-integer exponent exercises
+    // the new runtime pow path; the literal-integer fast path stays for whole-number
+    // exponents so this cell is the minimal proof of the general case.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 4 ^ 0.5\n20 END\n",
+        expect: Expect::Stdout("2"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
@@ -2292,6 +2302,12 @@ struct GetcharFunc {
     input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
 }
 
+/// `env.__pow(f64 base, f64 exp) -> f64` — libm `pow` for WASM modules that
+/// emit the `f64_pow` IIR op (BA-pow: BASIC general `^` exponentiation).
+/// Two f64 arguments in; one f64 result out.  Rust `f64::powf` matches libm
+/// IEEE-754 semantics on all tier-1 platforms.
+struct PowFunc;
+
 impl wasm_execution::HostFunction for GetcharFunc {
     fn func_type(&self) -> &wasm_types::FuncType {
         static FT: std::sync::LazyLock<wasm_types::FuncType> =
@@ -2415,6 +2431,33 @@ impl wasm_execution::HostFunction for ExpFunc {
     }
 }
 
+impl wasm_execution::HostFunction for PowFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64, wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let base = match args.first() {
+            Some(wasm_execution::WasmValue::F64(v)) => *v,
+            _ => return Err(wasm_execution::TrapError::new("pow: arg 0 not f64")),
+        };
+        let exp_ = match args.get(1) {
+            Some(wasm_execution::WasmValue::F64(v)) => *v,
+            _ => return Err(wasm_execution::TrapError::new("pow: arg 1 not f64")),
+        };
+        Ok(vec![wasm_execution::WasmValue::F64(base.powf(exp_))])
+    }
+}
+
 struct AtanFunc;
 impl wasm_execution::HostFunction for AtanFunc {
     fn func_type(&self) -> &wasm_types::FuncType {
@@ -2501,6 +2544,11 @@ impl wasm_execution::HostInterface for PrintHost {
             // AL8-arctan: env.__atan/tan are f64→f64 host imports.
             ("env", "__atan") => Some(Box::new(AtanFunc)),
             ("env", "__tan")  => Some(Box::new(TanFunc)),
+            ("env", "__sin") => Some(Box::new(SinFunc)),
+            ("env", "__cos") => Some(Box::new(CosFunc)),
+            ("env", "__ln")  => Some(Box::new(LnFunc)),
+            ("env", "__exp") => Some(Box::new(ExpFunc)),
+            ("env", "__pow") => Some(Box::new(PowFunc)),
             _ => None,
         }
     }

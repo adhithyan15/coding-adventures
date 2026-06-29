@@ -1,5 +1,14 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## [0.34.0] — 2026-06-29 (LANG-FULL BA-pow — general `^` exponentiation)
+
+Extended the `^` operator to handle non-integer exponents.  Previously
+`literal_integer_exponent` returned `Err` for float-valued or out-of-range
+exponents (blocking `4 ^ 0.5`).  It now returns `Ok(None)`, letting the caller
+fall through to the new general path: `emit_power` emits a two-operand
+`f64_pow` IIR instruction (`coerce_value` to Real on both sides) for any case
+where the literal-integer fast path does not apply.  The literal-integer
+fast path (repeated f64 mul for small nonneg integer exponents) is unchanged.
 ## 0.33.0 — 2026-06-29 — BA-arctan: `ATN` and `TAN` built-ins (LANG-FULL)
 
 Dartmouth BASIC's `ATN` (arc tangent) and `TAN` (tangent) built-in functions are now
