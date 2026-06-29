@@ -902,6 +902,12 @@ fn emit_project_shell(
                 }
                 write_file(&nested, proj.main_dart.as_bytes())?;
                 written.push(nested);
+                let host_stub = backend_dir.join("lib/mosaic_host.dart");
+                if let Some(parent) = host_stub.parent() {
+                    create_dir_all(parent)?;
+                }
+                write_file(&host_stub, proj.mosaic_host_dart.as_bytes())?;
+                written.push(host_stub);
             }
         }
         Backend::Compose => {
@@ -3813,7 +3819,12 @@ version = "1"
             (Backend::WebComponent, vec!["index.html", "README.md"]),
             (
                 Backend::Flutter,
-                vec!["pubspec.yaml", "README.md", "lib/main.dart"],
+                vec![
+                    "pubspec.yaml",
+                    "README.md",
+                    "lib/main.dart",
+                    "lib/mosaic_host.dart",
+                ],
             ),
             (
                 Backend::Compose,
@@ -3871,6 +3882,33 @@ version = "1"
                 );
             }
         }
+    }
+
+    #[test]
+    fn flutter_project_shell_exposes_mosaic_host_hook() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Flutter,
+            emit_project: true,
+        })
+        .expect("flutter package build");
+
+        let dir = out.path().join("flutter");
+        let main_dart = fs::read_to_string(dir.join("lib/main.dart")).expect("main.dart");
+        assert!(main_dart.contains("import 'mosaic_host.dart';"));
+        assert!(main_dart.contains("MosaicHost.load()"));
+        assert!(main_dart.contains("_applyMosaicResponse(_mosaicHost?.props())"));
+        assert!(main_dart.contains("String mosaicString(Map<String, Object?> props"));
+        assert!(main_dart.contains("_mosaicHost?.handleEvent(event.mosaicEnvelope)"));
+        assert!(main_dart.contains("debugPrint(\"event: ${event.mosaicEnvelope}\")"));
+
+        let host = fs::read_to_string(dir.join("lib/mosaic_host.dart")).expect("mosaic_host.dart");
+        assert!(host.contains("class MosaicHost"));
+        assert!(host.contains("static MosaicHost? load() => null;"));
+        assert!(host.contains("Map<String, Object?>? handleEvent"));
     }
 
     #[test]

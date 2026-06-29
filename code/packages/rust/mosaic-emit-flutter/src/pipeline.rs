@@ -69,7 +69,7 @@ use std::fmt::Write as _;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
 use mosmodel_compiler::{
-    EmitDecl, EmitPayloadType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
+    EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
 #[cfg(test)]
 use mosstyle_compiler::PartStyle;
@@ -197,6 +197,11 @@ pub struct ProjectFiles {
     /// component as the `home:` widget. Imports the component
     /// sibling-relative from the project root.
     pub main_dart: String,
+    /// `lib/mosaic_host.dart` — default no-op host hook. App packages
+    /// can overwrite this file with a backend-specific bridge via
+    /// manifest host assets while the generated shell remains runnable
+    /// without a host installed.
+    pub mosaic_host_dart: String,
     /// `README.md` — prereqs (Flutter SDK), `flutter pub get` +
     /// `flutter run` commands, file map.
     pub readme: String,
@@ -281,6 +286,7 @@ fn build_flutter_project_files(
     Ok(ProjectFiles {
         pubspec_yaml: build_pubspec_yaml(&pub_name, options),
         main_dart: build_main_dart(name, &interface.slots),
+        mosaic_host_dart: build_mosaic_host_dart(),
         readme: build_flutter_readme(&pub_name, name),
     })
 }
@@ -330,7 +336,135 @@ fn build_pubspec_yaml(pub_name: &str, options: &EmitOptions) -> String {
 fn build_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
     let root_widget = build_root_widget_constructor(component_name, slots);
     format!(
-        "{BANNER_DART}import 'package:flutter/material.dart';\nimport '../{component_name}.dart';\n\nvoid main() {{\n  runApp(const _MosaicApp());\n}}\n\nclass _MosaicApp extends StatelessWidget {{\n  const _MosaicApp();\n\n  @override\n  Widget build(BuildContext context) {{\n    return MaterialApp(\n      title: '{component_name}',\n      home: Scaffold(\n        appBar: AppBar(title: const Text('{component_name}')),\n        body: Center(\n          child: {root_widget},\n        ),\n      ),\n    );\n  }}\n}}\n"
+        concat!(
+            "{banner}",
+            "import 'package:flutter/material.dart';\n",
+            "import '../{component_name}.dart';\n",
+            "import 'mosaic_host.dart';\n\n",
+            "void main() {{\n",
+            "  runApp(const _MosaicApp());\n",
+            "}}\n\n",
+            "class _MosaicApp extends StatefulWidget {{\n",
+            "  const _MosaicApp();\n\n",
+            "  @override\n",
+            "  State<_MosaicApp> createState() => _MosaicAppState();\n",
+            "}}\n\n",
+            "class _MosaicAppState extends State<_MosaicApp> {{\n",
+            "  late final MosaicHost? _mosaicHost;\n",
+            "  Map<String, Object?> _hostProps = const <String, Object?>{{}};\n\n",
+            "  @override\n",
+            "  void initState() {{\n",
+            "    super.initState();\n",
+            "    _mosaicHost = MosaicHost.load();\n",
+            "    _applyMosaicResponse(_mosaicHost?.props());\n",
+            "  }}\n\n",
+            "  @override\n",
+            "  void dispose() {{\n",
+            "    _mosaicHost?.dispose();\n",
+            "    super.dispose();\n",
+            "  }}\n\n",
+            "  void _applyMosaicResponse(Map<String, Object?>? response) {{\n",
+            "    if (response == null) return;\n",
+            "    final nextProps = mosaicMap(response['props']);\n",
+            "    final hostIntent = mosaicMap(response['hostIntent']);\n",
+            "    final error = response['error'];\n",
+            "    if (nextProps.isNotEmpty) {{\n",
+            "      setState(() {{\n",
+            "        _hostProps = nextProps;\n",
+            "      }});\n",
+            "    }}\n",
+            "    if (hostIntent.isNotEmpty) {{\n",
+            "      debugPrint('hostIntent: $hostIntent');\n",
+            "    }}\n",
+            "    if (error != null) {{\n",
+            "      debugPrint('host error: $error');\n",
+            "    }}\n",
+            "  }}\n\n",
+            "  @override\n",
+            "  Widget build(BuildContext context) {{\n",
+            "    return MaterialApp(\n",
+            "      title: '{component_name}',\n",
+            "      home: Scaffold(\n",
+            "        appBar: AppBar(title: const Text('{component_name}')),\n",
+            "        body: Center(\n",
+            "          child: {root_widget},\n",
+            "        ),\n",
+            "      ),\n",
+            "    );\n",
+            "  }}\n",
+            "}}\n\n",
+            "Map<String, Object?> mosaicMap(Object? value) {{\n",
+            "  if (value is Map<String, Object?>) return value;\n",
+            "  if (value is Map) {{\n",
+            "    return Map<String, Object?>.fromEntries(\n",
+            "      value.entries.where((entry) => entry.key is String).map(\n",
+            "        (entry) => MapEntry(entry.key as String, entry.value),\n",
+            "      ),\n",
+            "    );\n",
+            "  }}\n",
+            "  return const <String, Object?>{{}};\n",
+            "}}\n\n",
+            "String mosaicString(Map<String, Object?> props, String name, String fallback) =>\n",
+            "    props[name]?.toString() ?? fallback;\n\n",
+            "double mosaicDouble(Map<String, Object?> props, String name, double fallback) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is num) return value.toDouble();\n",
+            "  if (value is String) return double.tryParse(value) ?? fallback;\n",
+            "  return fallback;\n",
+            "}}\n\n",
+            "bool mosaicBoolean(Map<String, Object?> props, String name, bool fallback) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is bool) return value;\n",
+            "  if (value is String) {{\n",
+            "    final lowered = value.toLowerCase();\n",
+            "    if (lowered == 'true') return true;\n",
+            "    if (lowered == 'false') return false;\n",
+            "  }}\n",
+            "  return fallback;\n",
+            "}}\n\n",
+            "List<String> mosaicStringList(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is List) {{\n",
+            "    return value.map((item) => item.toString()).toList(growable: false);\n",
+            "  }}\n",
+            "  return const <String>[];\n",
+            "}}\n\n",
+            "List<double> mosaicDoubleList(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is List) {{\n",
+            "    return value\n",
+            "        .map((item) {{\n",
+            "          if (item is num) return item.toDouble();\n",
+            "          if (item is String) return double.tryParse(item);\n",
+            "          return null;\n",
+            "        }})\n",
+            "        .whereType<double>()\n",
+            "        .toList(growable: false);\n",
+            "  }}\n",
+            "  return const <double>[];\n",
+            "}}\n\n",
+            "List<bool> mosaicBooleanList(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is List) {{\n",
+            "    return value\n",
+            "        .map((item) {{\n",
+            "          if (item is bool) return item;\n",
+            "          if (item is String) {{\n",
+            "            final lowered = item.toLowerCase();\n",
+            "            if (lowered == 'true') return true;\n",
+            "            if (lowered == 'false') return false;\n",
+            "          }}\n",
+            "          return null;\n",
+            "        }})\n",
+            "        .whereType<bool>()\n",
+            "        .toList(growable: false);\n",
+            "  }}\n",
+            "  return const <bool>[];\n",
+            "}}\n"
+        ),
+        banner = BANNER_DART,
+        component_name = component_name,
+        root_widget = root_widget
     )
 }
 
@@ -338,13 +472,52 @@ fn build_root_widget_constructor(component_name: &str, slots: &[SlotDecl]) -> St
     let mut out = format!("{component_name}(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = sample_value_for_slot(slot);
+        let value = host_value_for_slot(slot);
         writeln!(out, "            {field}: {value},").unwrap();
     }
+    out.push_str("            dispatch: (event) {\n");
     out.push_str(
-        "            dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\"),\n",
+        "              final response = _mosaicHost?.handleEvent(event.mosaicEnvelope);\n",
     );
+    out.push_str("              if (response == null) {\n");
+    out.push_str("                debugPrint(\"event: ${event.mosaicEnvelope}\");\n");
+    out.push_str("              }\n");
+    out.push_str("              _applyMosaicResponse(response);\n");
+    out.push_str("            },\n");
     out.push_str("          )");
+    out
+}
+
+fn host_value_for_slot(slot: &SlotDecl) -> String {
+    let slot_name = escape_dart_string(&slot.name);
+    let fallback = sample_value_for_slot(slot);
+    match &slot.r#type {
+        SlotType::Text | SlotType::Image | SlotType::Color => {
+            format!("mosaicString(_hostProps, \"{slot_name}\", {fallback})")
+        }
+        SlotType::Number => format!("mosaicDouble(_hostProps, \"{slot_name}\", {fallback})"),
+        SlotType::Bool => format!("mosaicBoolean(_hostProps, \"{slot_name}\", {fallback})"),
+        SlotType::List(inner) => match inner.as_ref() {
+            ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+                format!("mosaicStringList(_hostProps, \"{slot_name}\")")
+            }
+            ListInnerType::Number => format!("mosaicDoubleList(_hostProps, \"{slot_name}\")"),
+            ListInnerType::Bool => format!("mosaicBooleanList(_hostProps, \"{slot_name}\")"),
+            _ => fallback,
+        },
+        SlotType::Node | SlotType::Component(_) => fallback,
+    }
+}
+
+fn build_mosaic_host_dart() -> String {
+    let mut out = String::from(BANNER_DART);
+    out.push_str("class MosaicHost {\n");
+    out.push_str("  const MosaicHost();\n\n");
+    out.push_str("  static MosaicHost? load() => null;\n\n");
+    out.push_str("  Map<String, Object?>? props() => null;\n\n");
+    out.push_str("  Map<String, Object?>? handleEvent(Map<String, Object?> event) => null;\n\n");
+    out.push_str("  void dispose() {}\n");
+    out.push_str("}\n");
     out
 }
 
@@ -398,7 +571,7 @@ fn kebab_to_pascal_case_for_label(s: &str) -> String {
 
 fn build_flutter_readme(pub_name: &str, component_name: &str) -> String {
     format!(
-        "{BANNER_MD}# {component_name} — Flutter app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project`.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\n```sh\nflutter pub get\nflutter run -d <device-id>   # or `flutter run` to pick interactively\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.dart` | The Mosaic-compiled component. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | MaterialApp shell that mounts `{component_name}(...)` with sample slot values and a dispatch callback. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery file except `{component_name}.dart` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+        "{BANNER_MD}# {component_name} — Flutter app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project`.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\n```sh\nflutter pub get\nflutter run -d <device-id>   # or `flutter run` to pick interactively\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.dart` | The Mosaic-compiled component. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | MaterialApp shell that mounts `{component_name}(...)`, hydrates slot values from an optional Mosaic host, and forwards Mosaic event envelopes. |\n| `lib/mosaic_host.dart` | Default no-op Mosaic host hook. App packages can overwrite it with a real bridge. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery file except `{component_name}.dart` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
     )
 }
 
@@ -4651,6 +4824,10 @@ mod tests {
             proj.main_dart.starts_with("// AUTO-GENERATED"),
             "lib/main.dart must START with `// AUTO-GENERATED`"
         );
+        assert!(
+            proj.mosaic_host_dart.starts_with("// AUTO-GENERATED"),
+            "lib/mosaic_host.dart must START with `// AUTO-GENERATED`"
+        );
         // README uses HTML-comment syntax.
         assert!(
             proj.readme.starts_with("<!-- AUTO-GENERATED"),
@@ -4753,10 +4930,12 @@ mod tests {
         let ProjectFiles {
             pubspec_yaml,
             main_dart,
+            mosaic_host_dart,
             readme,
         } = proj;
         assert!(!pubspec_yaml.is_empty(), "pubspec.yaml empty");
         assert!(!main_dart.is_empty(), "lib/main.dart empty");
+        assert!(!mosaic_host_dart.is_empty(), "lib/mosaic_host.dart empty");
         assert!(!readme.is_empty(), "README.md empty");
     }
 
@@ -4804,13 +4983,36 @@ mod tests {
             "main.dart must invoke MyWidget constructor"
         );
         assert!(
+            proj.main_dart.contains("import 'mosaic_host.dart';"),
+            "main.dart must import the optional Mosaic host hook"
+        );
+        assert!(
+            proj.main_dart.contains("MosaicHost.load()"),
+            "main.dart must load the optional Mosaic host"
+        );
+        assert!(
             proj.main_dart
-                .contains("dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\")"),
-            "main.dart must provide a dispatch callback with a Mosaic envelope"
+                .contains("_applyMosaicResponse(_mosaicHost?.props())"),
+            "main.dart must hydrate initial props through the Mosaic host"
+        );
+        assert!(
+            proj.main_dart
+                .contains("final response = _mosaicHost?.handleEvent(event.mosaicEnvelope);"),
+            "main.dart must forward Mosaic event envelopes to the host"
+        );
+        assert!(
+            proj.main_dart
+                .contains("debugPrint(\"event: ${event.mosaicEnvelope}\");"),
+            "main.dart must keep a sample fallback when no host is installed"
         );
         assert!(
             proj.main_dart.contains("MaterialApp("),
             "main.dart must wrap in MaterialApp"
+        );
+        assert!(
+            proj.mosaic_host_dart
+                .contains("static MosaicHost? load() => null;"),
+            "default mosaic_host.dart must be a no-op hook"
         );
     }
 
@@ -4844,15 +5046,25 @@ mod tests {
             .unwrap();
 
         assert!(proj.main_dart.contains("ProfileCard("));
-        assert!(proj.main_dart.contains("displayName: \"Ada\","));
-        assert!(proj.main_dart.contains("age: 0.0,"));
-        assert!(proj.main_dart.contains("isActive: false,"));
-        assert!(proj.main_dart.contains("avatarUrl: \"sample-image\","));
-        assert!(proj.main_dart.contains("accent: \"#808080\","));
-        assert!(proj.main_dart.contains("tags: const [],"));
         assert!(proj
             .main_dart
-            .contains("dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\")"));
+            .contains("displayName: mosaicString(_hostProps, \"display-name\", \"Ada\"),"));
+        assert!(proj
+            .main_dart
+            .contains("age: mosaicDouble(_hostProps, \"age\", 0.0),"));
+        assert!(proj
+            .main_dart
+            .contains("isActive: mosaicBoolean(_hostProps, \"is-active\", false),"));
+        assert!(proj
+            .main_dart
+            .contains("avatarUrl: mosaicString(_hostProps, \"avatar-url\", \"sample-image\"),"));
+        assert!(proj
+            .main_dart
+            .contains("accent: mosaicString(_hostProps, \"accent\", \"#808080\"),"));
+        assert!(proj
+            .main_dart
+            .contains("tags: mosaicStringList(_hostProps, \"tags\"),"));
+        assert!(proj.main_dart.contains("_applyMosaicResponse(response);"));
     }
 
     /// Truth table for is_valid_dart_pub_name.

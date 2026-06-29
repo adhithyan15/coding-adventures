@@ -246,6 +246,42 @@ function Install-EngramComposeHost {
     Add-EngramComposeHostDependencies -BuildGradlePath (Join-Path $ComposeRoot "build.gradle.kts")
 }
 
+function Add-EngramFlutterHostDependencies {
+    param([Parameter(Mandatory = $true)][string]$PubspecPath)
+
+    if (-not (Test-Path -LiteralPath $PubspecPath)) {
+        return
+    }
+    $content = Get-Content -LiteralPath $PubspecPath -Raw
+    if ($content.Contains("  ffi:")) {
+        return
+    }
+
+    $content = $content.Replace(
+        "dependencies:`n  flutter:`n    sdk: flutter",
+        "dependencies:`n  flutter:`n    sdk: flutter`n  ffi: ^2.1.3"
+    )
+    $content = $content.Replace(
+        "dependencies:`r`n  flutter:`r`n    sdk: flutter",
+        "dependencies:`r`n  flutter:`r`n    sdk: flutter`r`n  ffi: ^2.1.3"
+    )
+    Write-Utf8NoBom -Path $PubspecPath -Content $content
+}
+
+function Install-EngramFlutterHost {
+    param([Parameter(Mandatory = $true)][string]$FlutterRoot)
+
+    if (-not (Test-Path -LiteralPath $FlutterRoot)) {
+        return
+    }
+    if (-not (Test-Path -LiteralPath $engramCapiLibrary)) {
+        throw "expected Engram native library missing: $engramCapiLibrary"
+    }
+
+    Copy-Item -LiteralPath $engramCapiLibrary -Destination (Join-Path $FlutterRoot $nativeLibraryName) -Force
+    Add-EngramFlutterHostDependencies -PubspecPath (Join-Path $FlutterRoot "pubspec.yaml")
+}
+
 $backends = @(
     "html",
     "webcomponent",
@@ -294,6 +330,7 @@ Install-EngramElectronHost -ElectronRoot (Join-Path $outputRoot "electron")
 Install-EngramQtHost -QtRoot (Join-Path $outputRoot "qt")
 Install-EngramSwiftUIHost -SwiftUIRoot (Join-Path $outputRoot "swiftui")
 Install-EngramXamlHost -XamlRoot (Join-Path $outputRoot "xaml")
+Install-EngramFlutterHost -FlutterRoot (Join-Path $outputRoot "flutter")
 Install-EngramComposeHost -ComposeRoot (Join-Path $outputRoot "compose")
 
 Write-Host "Engram Mosaic host shells written to $outputRoot"

@@ -27,6 +27,7 @@ files = [
   { backend = "qt", source = "host/qt/MosaicHost.cpp", target = "MosaicHost.cpp" },
   { backend = "swiftui", source = "host/swiftui/MosaicHost.swift", target = "Sources/App/MosaicHost.swift" },
   { backend = "compose", source = "host/compose/MosaicHost.kt", target = "src/main/kotlin/MosaicHost.kt" },
+  { backend = "flutter", source = "host/flutter/mosaic_host.dart", target = "lib/mosaic_host.dart" },
   { backend = "xaml", source = "host/xaml/MosaicHost.cs", target = "MosaicHost.cs" },
 ]
 

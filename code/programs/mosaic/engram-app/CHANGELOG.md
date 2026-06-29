@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Wired the generated Flutter Engram shell to the optional Mosaic host contract
+  with a Dart FFI `engram-capi` adapter, shared slot hydration, and generated
+  event-envelope routing through the Rust core.
 - Added Anki `initialFactor` import/export and a shared initial-ease deck option
   control across the Rust core, WASM facade, and generated Mosaic shells.
 - Aligned state-aware study queues with imported Anki new-card `due` positions

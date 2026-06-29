@@ -102,6 +102,11 @@ fn manifest_declares_app_package_boundary() {
         "host/compose/MosaicHost.kt",
         "src/main/kotlin/MosaicHost.kt"
     )));
+    assert!(host_assets.contains(&(
+        "flutter",
+        "host/flutter/mosaic_host.dart",
+        "lib/mosaic_host.dart"
+    )));
     assert!(host_assets.contains(&("xaml", "host/xaml/MosaicHost.cs", "MosaicHost.cs")));
     assert_eq!(package.kernel.version, "1");
 }
@@ -726,54 +731,124 @@ fn native_project_shells_expose_engram_host_contract() {
     let flutter_app = fs::read_to_string(tmp.path().join("flutter").join("lib").join("main.dart"))
         .expect("flutter/lib/main.dart");
     assert_contains(&flutter_app, "EngramApp(");
-    assert_contains(&flutter_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(&flutter_app, "import 'mosaic_host.dart';");
+    assert_contains(&flutter_app, "MosaicHost.load()");
+    assert_contains(&flutter_app, "_applyMosaicResponse(_mosaicHost?.props())");
     assert_contains(
         &flutter_app,
-        "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
+        "appTitle: mosaicString(_hostProps, \"app-title\", \"Sample AppTitle\"),",
     );
     assert_contains(
         &flutter_app,
-        "deckOptionsLearningStepsValue: \"Sample DeckOptionsLearningStepsValue\",",
+        "deckOptionsSettingsLabel: mosaicString(_hostProps, \"deck-options-settings-label\", \"Sample DeckOptionsSettingsLabel\"),",
     );
-    assert_contains(&flutter_app, "deckOptionsNewCardsValue: 0.0,");
-    assert_contains(&flutter_app, "deckOptionsHardMultiplierValue: 0.0,");
-    assert_contains(&flutter_app, "deckOptionsInitialEaseValue: 0.0,");
-    assert_contains(&flutter_app, "deckOptionsBuryNewSiblingsValue: false,");
-    assert_contains(&flutter_app, "historyLabel: \"Sample HistoryLabel\",");
     assert_contains(
         &flutter_app,
-        "historyCorrectValue: \"Sample HistoryCorrectValue\",",
+        "deckOptionsLearningStepsValue: mosaicString(_hostProps, \"deck-options-learning-steps-value\", \"Sample DeckOptionsLearningStepsValue\"),",
     );
-    assert_contains(&flutter_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &flutter_app,
-        "collectionExportLabel: \"Sample CollectionExportLabel\",",
+        "deckOptionsNewCardsValue: mosaicDouble(_hostProps, \"deck-options-new-cards-value\", 0.0),",
     );
-    assert_contains(&flutter_app, "browserQuery: \"Sample BrowserQuery\",");
     assert_contains(
         &flutter_app,
-        "browserFlagValue: \"Sample BrowserFlagValue\",",
+        "deckOptionsHardMultiplierValue: mosaicDouble(_hostProps, \"deck-options-hard-multiplier-value\", 0.0),",
     );
-    assert_contains(&flutter_app, "browserFlagOptions: const [],");
-    assert_contains(&flutter_app, "browserFlagOpen: false,");
-    assert_contains(&flutter_app, "browserTagEdit: \"Sample BrowserTagEdit\",");
     assert_contains(
         &flutter_app,
-        "browserAddTagLabel: \"Sample BrowserAddTagLabel\",",
+        "deckOptionsInitialEaseValue: mosaicDouble(_hostProps, \"deck-options-initial-ease-value\", 0.0),",
     );
-    assert_contains(&flutter_app, "browserResults: const [],");
-    assert_contains(&flutter_app, "browserResultCardIds: const [],");
     assert_contains(
         &flutter_app,
-        "browserSelectedCardId: \"Sample BrowserSelectedCardId\",",
+        "deckOptionsBuryNewSiblingsValue: mosaicBoolean(_hostProps, \"deck-options-bury-new-siblings-value\", false),",
     );
-    assert_contains(&flutter_app, "answerVisible: false,");
-    assert_contains(&flutter_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
-    assert_contains(&flutter_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
     assert_contains(
         &flutter_app,
-        "dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\")",
+        "historyLabel: mosaicString(_hostProps, \"history-label\", \"Sample HistoryLabel\"),",
     );
+    assert_contains(
+        &flutter_app,
+        "historyCorrectValue: mosaicString(_hostProps, \"history-correct-value\", \"Sample HistoryCorrectValue\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "collectionLabel: mosaicString(_hostProps, \"collection-label\", \"Sample CollectionLabel\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "collectionExportLabel: mosaicString(_hostProps, \"collection-export-label\", \"Sample CollectionExportLabel\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "browserQuery: mosaicString(_hostProps, \"browser-query\", \"Sample BrowserQuery\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "browserFlagValue: mosaicString(_hostProps, \"browser-flag-value\", \"Sample BrowserFlagValue\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "browserFlagOptions: mosaicStringList(_hostProps, \"browser-flag-options\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "browserFlagOpen: mosaicBoolean(_hostProps, \"browser-flag-open\", false),",
+    );
+    assert_contains(
+        &flutter_app,
+        "browserTagEdit: mosaicString(_hostProps, \"browser-tag-edit\", \"Sample BrowserTagEdit\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "browserAddTagLabel: mosaicString(_hostProps, \"browser-add-tag-label\", \"Sample BrowserAddTagLabel\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "browserResults: mosaicStringList(_hostProps, \"browser-results\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "browserResultCardIds: mosaicStringList(_hostProps, \"browser-result-card-ids\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "browserSelectedCardId: mosaicString(_hostProps, \"browser-selected-card-id\", \"Sample BrowserSelectedCardId\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "answerVisible: mosaicBoolean(_hostProps, \"answer-visible\", false),",
+    );
+    assert_contains(
+        &flutter_app,
+        "actionUndoLabel: mosaicString(_hostProps, \"action-undo-label\", \"Sample ActionUndoLabel\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "actionMarkLabel: mosaicString(_hostProps, \"action-mark-label\", \"Sample ActionMarkLabel\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "final response = _mosaicHost?.handleEvent(event.mosaicEnvelope);",
+    );
+    assert_contains(
+        &flutter_app,
+        "debugPrint(\"event: ${event.mosaicEnvelope}\");",
+    );
+    assert_contains(&flutter_app, "_applyMosaicResponse(response);");
+
+    let flutter_host = fs::read_to_string(
+        tmp.path()
+            .join("flutter")
+            .join("lib")
+            .join("mosaic_host.dart"),
+    )
+    .expect("flutter/lib/mosaic_host.dart");
+    assert_contains(&flutter_host, "class MosaicHost");
+    assert_contains(&flutter_host, "DynamicLibrary.open");
+    assert_contains(&flutter_host, "eg_engram_app_props");
+    assert_contains(&flutter_host, "eg_handle_engram_app_event");
+    assert_contains(&flutter_host, "jsonEncode(event)");
+    assert_contains(&flutter_host, "'props': _mosaicMap(decoded['props'])");
 
     let compose_app =
         fs::read_to_string(tmp.path().join("compose").join("EngramApp.kt")).expect("EngramApp.kt");
@@ -1732,6 +1807,7 @@ fn source_tree_has_expected_shape() {
         "host/qt/MosaicHost.cpp",
         "host/swiftui/MosaicHost.swift",
         "host/compose/MosaicHost.kt",
+        "host/flutter/mosaic_host.dart",
         "host/xaml/MosaicHost.cs",
     ] {
         let path = package_root().join(relative);
@@ -1781,13 +1857,26 @@ fn source_tree_has_expected_shape() {
     assert_contains(&compose_host, "\"hostIntent\"");
     assert_contains(&compose_host, "\"props\"");
 
+    let flutter_host = fs::read_to_string(package_root().join("host/flutter/mosaic_host.dart"))
+        .expect("flutter host template");
+    assert_contains(&flutter_host, "dart:ffi");
+    assert_contains(&flutter_host, "package:ffi/ffi.dart");
+    assert_contains(&flutter_host, "DynamicLibrary.open");
+    assert_contains(&flutter_host, "eg_engram_app_props");
+    assert_contains(&flutter_host, "eg_handle_engram_app_event");
+    assert_contains(&flutter_host, "jsonEncode(event)");
+    assert_contains(&flutter_host, "'hostIntent'");
+    assert_contains(&flutter_host, "'props'");
+
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
     assert_contains(&build_script, "Install-EngramHtmlHost");
     assert_contains(&build_script, "Install-EngramXamlHost");
     assert_contains(&build_script, "Install-EngramQtHost");
     assert_contains(&build_script, "Install-EngramSwiftUIHost");
+    assert_contains(&build_script, "Install-EngramFlutterHost");
     assert_contains(&build_script, "Install-EngramComposeHost");
+    assert_contains(&build_script, "ffi: ^2.1.3");
     assert_contains(&build_script, "net.java.dev.jna:jna:5.19.1");
     assert_contains(&build_script, "org.json:json:20260522");
     assert_contains(&build_script, "module CEngram");
