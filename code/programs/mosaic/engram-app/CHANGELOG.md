@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added browser result and selected-card metadata slots to the Engram app
+  contract, backed by `EngramSession::engram_browser_props`, so generated host
+  shells can route browser actions by card ID.
 - Added the reusable `mosaic-pkg-card-browser` dependency and mounted its
   `CardBrowser` component so the Mosaic app exposes Anki-style browser/search
   slots and events through the shared host contract.

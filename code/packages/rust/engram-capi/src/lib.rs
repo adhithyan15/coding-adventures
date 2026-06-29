@@ -1433,6 +1433,10 @@ CREATE TABLE graves (
             assert_eq!(props["props"]["browser-label"], "Card browser");
             assert_eq!(props["props"]["browser-results-summary"], "1 matching card");
             assert_eq!(props["props"]["browser-results"], json!(["letter-a -> a"]));
+            assert_eq!(props["props"]["browser-result-card-ids"], json!(["card"]));
+            assert_eq!(props["props"]["browser-result-states"], json!(["new"]));
+            assert_eq!(props["props"]["browser-selected-card-id"], "card");
+            assert_eq!(props["props"]["browser-selected-state"], "new");
             assert_eq!(props["props"]["answer-visible"], false);
             assert_eq!(props["props"]["action-undo-label"], "Undo");
             assert_eq!(props["props"]["action-bury-card-label"], "Bury card");
@@ -1455,6 +1459,11 @@ CREATE TABLE graves (
                 browser_props["props"]["browser-results"],
                 json!(["letter-a -> a"])
             );
+            assert_eq!(
+                browser_props["props"]["browser-result-card-ids"],
+                json!(["card"])
+            );
+            assert_eq!(browser_props["props"]["browser-selected-card-id"], "card");
 
             eg_session_free(session);
         }

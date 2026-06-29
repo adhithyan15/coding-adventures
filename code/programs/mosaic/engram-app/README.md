@@ -34,6 +34,9 @@ binds them to the shared Rust business logic core through host shells.
   expose the same Engram host contract slots, card-browser events, rating
   events, and Anki-style review action events as the shared Rust
   `EngramSession::engram_app_props` facade.
+- The browser slots include stable result and selected-card metadata from the
+  Rust core so emitted native/web hosts can wire actions to card IDs instead of
+  display labels.
 
 ## Running the smoke test
 

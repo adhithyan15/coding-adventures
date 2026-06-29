@@ -12,7 +12,15 @@ component CardBrowser {
   slot results-label : text ;
   slot results-summary : text ;
   slot results : list<text> ;
+  slot result-card-ids : list<text> ;
+  slot result-note-ids : list<text> ;
+  slot result-template-ids : list<text> ;
+  slot result-states : list<text> ;
   slot selected-index : number ;
+  slot selected-card-id : text ;
+  slot selected-note-id : text ;
+  slot selected-template-id : text ;
+  slot selected-state : text ;
   slot open-label : text ;
   slot edit-label : text ;
   slot suspend-label : text ;

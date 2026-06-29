@@ -26,7 +26,15 @@ component EngramApp {
   slot browser-results-label : text ;
   slot browser-results-summary : text ;
   slot browser-results : list<text> ;
+  slot browser-result-card-ids : list<text> ;
+  slot browser-result-note-ids : list<text> ;
+  slot browser-result-template-ids : list<text> ;
+  slot browser-result-states : list<text> ;
   slot browser-selected-index : number ;
+  slot browser-selected-card-id : text ;
+  slot browser-selected-note-id : text ;
+  slot browser-selected-template-id : text ;
+  slot browser-selected-state : text ;
   slot browser-open-label : text ;
   slot browser-edit-label : text ;
   slot browser-suspend-label : text ;

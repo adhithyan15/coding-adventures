@@ -348,6 +348,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&react_app, "appTitle=\"Sample AppTitle\"");
     assert_contains(&react_app, "browserQuery=\"Sample BrowserQuery\"");
     assert_contains(&react_app, "browserResults={[]}");
+    assert_contains(&react_app, "browserResultCardIds={[]}");
+    assert_contains(&react_app, "browserSelectedCardId=\"Sample BrowserSelectedCardId\"");
     assert_contains(&react_app, "answerVisible={false}");
     assert_contains(&react_app, "actionUndoLabel=\"Sample ActionUndoLabel\"");
     assert_contains(&react_app, "actionMarkLabel=\"Sample ActionMarkLabel\"");
@@ -359,6 +361,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&electron_app, "appTitle=\"Sample AppTitle\"");
     assert_contains(&electron_app, "browserQuery=\"Sample BrowserQuery\"");
     assert_contains(&electron_app, "browserResults={[]}");
+    assert_contains(&electron_app, "browserResultCardIds={[]}");
+    assert_contains(
+        &electron_app,
+        "browserSelectedCardId=\"Sample BrowserSelectedCardId\"",
+    );
     assert_contains(&electron_app, "answerVisible={false}");
     assert_contains(&electron_app, "actionUndoLabel=\"Sample ActionUndoLabel\"");
     assert_contains(&electron_app, "actionMarkLabel=\"Sample ActionMarkLabel\"");
@@ -379,6 +386,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&flutter_app, "appTitle: \"Sample AppTitle\",");
     assert_contains(&flutter_app, "browserQuery: \"Sample BrowserQuery\",");
     assert_contains(&flutter_app, "browserResults: const [],");
+    assert_contains(&flutter_app, "browserResultCardIds: const [],");
+    assert_contains(
+        &flutter_app,
+        "browserSelectedCardId: \"Sample BrowserSelectedCardId\",",
+    );
     assert_contains(&flutter_app, "answerVisible: false,");
     assert_contains(&flutter_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
     assert_contains(&flutter_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
@@ -392,6 +404,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "property string appTitle");
     assert_contains(&qml, "property string browserQuery");
     assert_contains(&qml, "property var browserResults");
+    assert_contains(&qml, "property var browserResultCardIds");
+    assert_contains(&qml, "property string browserSelectedCardId");
     assert_contains(&qml, "property bool answerVisible");
     assert_contains(&qml, "signal reveal()");
     assert_contains(&qml, "signal again()");
@@ -424,6 +438,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
     assert_contains(&swift, "let browserResults: [String]");
+    assert_contains(&swift, "let browserResultCardIds: [String]");
+    assert_contains(&swift, "let browserSelectedCardId: String");
     assert_contains(&swift, "let answerVisible: Bool");
     assert_contains(&swift, "let actionUndoLabel: String");
     assert_contains(&swift, "let actionMarkLabel: String");
@@ -439,6 +455,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift_app, "appTitle: \"Sample AppTitle\",");
     assert_contains(&swift_app, "browserQuery: \"Sample BrowserQuery\",");
     assert_contains(&swift_app, "browserResults: [],");
+    assert_contains(&swift_app, "browserResultCardIds: [],");
+    assert_contains(
+        &swift_app,
+        "browserSelectedCardId: \"Sample BrowserSelectedCardId\",",
+    );
     assert_contains(&swift_app, "answerVisible: false,");
     assert_contains(&swift_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
     assert_contains(&swift_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
@@ -465,6 +486,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty BrowserResultsProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserResultCardIdsProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserSelectedCardIdProperty",
     );
     assert_contains(
         &xaml_code_behind,

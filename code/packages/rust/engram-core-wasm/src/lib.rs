@@ -16,7 +16,8 @@ use engram_core::{
     import_basic_cards_csv, import_cards_csv, materialize_generated_card, reduce,
     restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history,
     AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card,
-    CardFlag, CardLineage, CardSearchResult, DeckOptions, EngramSnapshot, MediaAssetRecord, Rating,
+    CardFlag, CardLineage, CardProgress, CardSearchResult, CardState, DeckOptions, EngramSnapshot,
+    MediaAssetRecord, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -607,7 +608,7 @@ fn engram_browser_props_for_state(
     let rows = results
         .iter()
         .take(20)
-        .map(format_browser_result_row)
+        .map(|result| BrowserRow::from_search_result(result, now))
         .collect::<Vec<_>>();
 
     Ok(browser_props_from_rows(query, rows, results.len()))
@@ -618,7 +619,7 @@ fn fallback_browser_props_for_state(state: &AppState) -> Value {
         .cards
         .iter()
         .take(20)
-        .map(format_browser_card_row)
+        .map(|card| BrowserRow::from_card(card, None, 0))
         .collect::<Vec<_>>();
     browser_props_from_rows(DEFAULT_BROWSER_QUERY.to_string(), rows, state.cards.len())
 }
@@ -632,7 +633,7 @@ fn normalize_browser_query(query: &str) -> String {
     }
 }
 
-fn browser_props_from_rows(query: String, rows: Vec<String>, total_results: usize) -> Value {
+fn browser_props_from_rows(query: String, rows: Vec<BrowserRow>, total_results: usize) -> Value {
     let visible = rows.len();
     let summary = match total_results {
         0 => "No matching cards".to_string(),
@@ -641,6 +642,21 @@ fn browser_props_from_rows(query: String, rows: Vec<String>, total_results: usiz
         total => format!("Showing {visible} of {total} matching cards"),
     };
     let selected_index = if rows.is_empty() { -1 } else { 0 };
+    let selected_row = rows.first();
+    let labels = rows.iter().map(|row| row.label.clone()).collect::<Vec<_>>();
+    let card_ids = rows
+        .iter()
+        .map(|row| row.card_id.clone())
+        .collect::<Vec<_>>();
+    let note_ids = rows
+        .iter()
+        .map(|row| row.note_id.clone())
+        .collect::<Vec<_>>();
+    let template_ids = rows
+        .iter()
+        .map(|row| row.template_id.clone())
+        .collect::<Vec<_>>();
+    let states = rows.iter().map(|row| row.state.clone()).collect::<Vec<_>>();
 
     json!({
         "browser-label": "Card browser",
@@ -650,8 +666,16 @@ fn browser_props_from_rows(query: String, rows: Vec<String>, total_results: usiz
         "browser-search-label": "Search",
         "browser-results-label": "Results",
         "browser-results-summary": summary,
-        "browser-results": rows,
+        "browser-results": labels,
+        "browser-result-card-ids": card_ids,
+        "browser-result-note-ids": note_ids,
+        "browser-result-template-ids": template_ids,
+        "browser-result-states": states,
         "browser-selected-index": selected_index,
+        "browser-selected-card-id": selected_row.map_or("", |row| row.card_id.as_str()),
+        "browser-selected-note-id": selected_row.map_or("", |row| row.note_id.as_str()),
+        "browser-selected-template-id": selected_row.map_or("", |row| row.template_id.as_str()),
+        "browser-selected-state": selected_row.map_or("", |row| row.state.as_str()),
         "browser-open-label": "Open",
         "browser-edit-label": "Edit",
         "browser-suspend-label": "Suspend",
@@ -659,12 +683,62 @@ fn browser_props_from_rows(query: String, rows: Vec<String>, total_results: usiz
     })
 }
 
-fn format_browser_result_row(result: &CardSearchResult) -> String {
-    format_browser_card_row(&result.card)
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct BrowserRow {
+    label: String,
+    card_id: String,
+    note_id: String,
+    template_id: String,
+    state: String,
+}
+
+impl BrowserRow {
+    fn from_search_result(result: &CardSearchResult, now: u64) -> Self {
+        Self::from_card(&result.card, result.progress.as_ref(), now)
+    }
+
+    fn from_card(card: &Card, progress: Option<&CardProgress>, now: u64) -> Self {
+        let lineage = card.lineage.as_ref();
+        let fallback_lineage = card.id.split_once("::");
+        Self {
+            label: format_browser_card_row(card),
+            card_id: card.id.clone(),
+            note_id: lineage
+                .map(|lineage| lineage.note_id.clone())
+                .or_else(|| fallback_lineage.map(|(note_id, _)| note_id.to_string()))
+                .unwrap_or_default(),
+            template_id: lineage
+                .map(|lineage| lineage.template_id.clone())
+                .or_else(|| fallback_lineage.map(|(_, template_id)| template_id.to_string()))
+                .unwrap_or_default(),
+            state: browser_card_state(progress, now).to_string(),
+        }
+    }
 }
 
 fn format_browser_card_row(card: &Card) -> String {
     format!("{} -> {}", card.front, card.back)
+}
+
+fn browser_card_state(progress: Option<&CardProgress>, now: u64) -> &'static str {
+    let Some(progress) = progress else {
+        return "new";
+    };
+    if progress.suspended_at.is_some() || progress.state == CardState::Suspended {
+        return "suspended";
+    }
+    if progress.buried_until.is_some_and(|until| until > now) || progress.state == CardState::Buried
+    {
+        return "buried";
+    }
+    match progress.state {
+        CardState::Learning => "learning",
+        CardState::Review if progress.next_due_at <= now => "due",
+        CardState::Review => "review",
+        CardState::Relearning => "relearning",
+        CardState::Suspended => "suspended",
+        CardState::Buried => "buried",
+    }
 }
 
 fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
@@ -1703,7 +1777,17 @@ mod tests {
             value["props"]["browser-results"],
             json!(["letter-a -> a", "letter-aa -> aa"])
         );
+        assert_eq!(
+            value["props"]["browser-result-card-ids"],
+            json!(["card", "other"])
+        );
+        assert_eq!(
+            value["props"]["browser-result-states"],
+            json!(["new", "new"])
+        );
         assert_eq!(value["props"]["browser-selected-index"], 0);
+        assert_eq!(value["props"]["browser-selected-card-id"], "card");
+        assert_eq!(value["props"]["browser-selected-state"], "new");
         assert_eq!(value["props"]["prompt"], "letter-a");
         assert_eq!(value["props"]["answer"], "a");
         assert_eq!(value["props"]["answer-visible"], true);
@@ -2172,10 +2256,36 @@ mod tests {
             json!(["letter-a -> a"])
         );
         assert_eq!(
+            browser_props["props"]["browser-result-card-ids"],
+            json!(["note::forward"])
+        );
+        assert_eq!(
+            browser_props["props"]["browser-result-note-ids"],
+            json!(["note"])
+        );
+        assert_eq!(
+            browser_props["props"]["browser-result-template-ids"],
+            json!(["forward"])
+        );
+        assert_eq!(
+            browser_props["props"]["browser-result-states"],
+            json!(["due"])
+        );
+        assert_eq!(
             browser_props["props"]["browser-results-summary"],
             "1 matching card"
         );
         assert_eq!(browser_props["props"]["browser-selected-index"], 0);
+        assert_eq!(
+            browser_props["props"]["browser-selected-card-id"],
+            "note::forward"
+        );
+        assert_eq!(browser_props["props"]["browser-selected-note-id"], "note");
+        assert_eq!(
+            browser_props["props"]["browser-selected-template-id"],
+            "forward"
+        );
+        assert_eq!(browser_props["props"]["browser-selected-state"], "due");
 
         let empty_query_props: Value =
             serde_json::from_str(&session.engram_browser_props("", NOW)).unwrap();
