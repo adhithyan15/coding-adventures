@@ -697,8 +697,7 @@ fn media_asset_matches_filename(asset: &MediaAssetRecord, filename: &str) -> boo
 
 fn collect_media_references_from_text(text: &str, references: &mut BTreeSet<String>) {
     collect_sound_markers(text, references);
-    collect_src_attributes(text, references, "src=\"", '"');
-    collect_src_attributes(text, references, "src='", '\'');
+    collect_src_attributes(text, references);
 }
 
 fn collect_sound_markers(text: &str, references: &mut BTreeSet<String>) {
@@ -713,21 +712,67 @@ fn collect_sound_markers(text: &str, references: &mut BTreeSet<String>) {
     }
 }
 
-fn collect_src_attributes(
-    text: &str,
-    references: &mut BTreeSet<String>,
-    marker: &str,
-    terminator: char,
-) {
-    let mut rest = text;
-    while let Some(start) = rest.find(marker) {
-        rest = &rest[start + marker.len()..];
-        let Some(end) = rest.find(terminator) else {
+fn collect_src_attributes(text: &str, references: &mut BTreeSet<String>) {
+    let bytes = text.as_bytes();
+    let mut index = 0;
+    while index + 3 <= bytes.len() {
+        if !bytes[index..index + 3].eq_ignore_ascii_case(b"src")
+            || !is_html_attr_boundary(bytes.get(index.wrapping_sub(1)).copied())
+        {
+            index += 1;
+            continue;
+        }
+
+        let mut cursor = index + 3;
+        while bytes
+            .get(cursor)
+            .is_some_and(|byte| byte.is_ascii_whitespace())
+        {
+            cursor += 1;
+        }
+        if bytes.get(cursor) != Some(&b'=') {
+            index += 3;
+            continue;
+        }
+        cursor += 1;
+        while bytes
+            .get(cursor)
+            .is_some_and(|byte| byte.is_ascii_whitespace())
+        {
+            cursor += 1;
+        }
+
+        let Some(first) = bytes.get(cursor).copied() else {
             break;
         };
-        maybe_insert_media_reference(&rest[..end], references);
-        rest = &rest[end + terminator.len_utf8()..];
+        let (value_start, value_end) = if first == b'"' || first == b'\'' {
+            cursor += 1;
+            let terminator = first;
+            let start = cursor;
+            while bytes.get(cursor).is_some_and(|byte| *byte != terminator) {
+                cursor += 1;
+            }
+            (start, cursor)
+        } else {
+            let start = cursor;
+            while bytes
+                .get(cursor)
+                .is_some_and(|byte| !byte.is_ascii_whitespace() && *byte != b'>')
+            {
+                cursor += 1;
+            }
+            (start, cursor)
+        };
+
+        if let Some(value) = text.get(value_start..value_end) {
+            maybe_insert_media_reference(value, references);
+        }
+        index = cursor.saturating_add(1);
     }
+}
+
+fn is_html_attr_boundary(previous: Option<u8>) -> bool {
+    previous.is_none_or(|byte| byte.is_ascii_whitespace() || byte == b'<')
 }
 
 fn maybe_insert_media_reference(value: &str, references: &mut BTreeSet<String>) {
@@ -4545,7 +4590,9 @@ CREATE TABLE graves (
             deck_id: "deck".to_string(),
             fields: vec![NoteFieldValue {
                 field_id: "front".to_string(),
-                value: "[sound:audio/hola.mp3] <img src=\"missing.png\">".to_string(),
+                value:
+                    "[sound:audio/hola.mp3] <img SRC = \"images/caps.png\"> <img src=missing-unquoted.png> <img src=\"missing.png\">"
+                        .to_string(),
             }],
             tags: Vec::new(),
             created_at: 0,
@@ -4554,8 +4601,8 @@ CREATE TABLE graves (
         state.cards.push(Card {
             id: "card".to_string(),
             deck_id: "deck".to_string(),
-            front: "<img src='images/card.png'>".to_string(),
-            back: "<img src=\"https://example.com/remote.png\">".to_string(),
+            front: "<img data-src=\"ignored.png\"> <img Src='images/card.png'>".to_string(),
+            back: "<img src = https://example.com/remote.png>".to_string(),
             created_at: 0,
             lineage: None,
         });
@@ -4565,6 +4612,12 @@ CREATE TABLE graves (
                 archive_name: "0".to_string(),
                 filename: Some("audio/hola.mp3".to_string()),
                 data: b"mp3".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "caps".to_string(),
+                archive_name: "3".to_string(),
+                filename: Some("images/caps.png".to_string()),
+                data: b"caps".to_vec(),
             },
             MediaAssetRecord {
                 id: "image".to_string(),
@@ -4584,10 +4637,22 @@ CREATE TABLE graves (
 
         assert_eq!(
             analysis.referenced_filenames,
-            vec!["audio/hola.mp3", "images/card.png", "missing.png"]
+            vec![
+                "audio/hola.mp3",
+                "images/caps.png",
+                "images/card.png",
+                "missing-unquoted.png",
+                "missing.png"
+            ]
         );
-        assert_eq!(analysis.referenced_asset_ids, vec!["audio", "image"]);
-        assert_eq!(analysis.missing_filenames, vec!["missing.png"]);
+        assert_eq!(
+            analysis.referenced_asset_ids,
+            vec!["audio", "caps", "image"]
+        );
+        assert_eq!(
+            analysis.missing_filenames,
+            vec!["missing-unquoted.png", "missing.png"]
+        );
         assert_eq!(analysis.unreferenced_asset_ids, vec!["unused"]);
     }
 
