@@ -1397,6 +1397,22 @@ mod tests {
         );
     }
 
+    #[test]
+    fn static_string_expression_actual_infers_unannotated_param() {
+        let src = "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))";
+        let m = compile_source(src, "test_e4_static_expr_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(
+            f.params,
+            vec![("x".to_string(), "str".to_string())],
+            "static string expression actuals should seed typed string params"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
     /// Parsing non-static refinement annotations does not change the existing
     /// param type-hint strings; those refinements live in the parallel
     /// `param_refinements` field.  E4's `str` annotations are the deliberate

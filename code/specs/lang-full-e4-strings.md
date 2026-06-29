@@ -10,13 +10,13 @@ snapshots, and literal-backed string equality/ordering predicates run on all
 seven backends. Twig literal, immutable top-level, lexical-local, direct
 top-level-function, annotated string-parameter, and direct-call-inferred
 unannotated string-parameter string-op proofs, including named top-level string
-actuals plus lexical and derived sequential `let*` string actuals, run on all
-seven backends,
+actuals plus static string expression, lexical, and derived sequential `let*`
+string actuals, run on all seven backends,
 including `str_concat` and `str_slice` feeding `str_index`, lexical ordering
 predicates, a function-wrapped `string-length` direct call, `string-length` over
 a bare `str` parameter annotation, and `string-length` over an unannotated
-parameter with conservative literal, named, lexical, or derived sequential `let*`
-direct-call evidence.
+parameter with conservative literal, static-expression, named, lexical, or
+derived sequential `let*` direct-call evidence.
 Captured/dynamic strings, arrays/input/unobserved or conflicting parameters, and fuller backend
 byte-string representations remain.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
@@ -214,11 +214,13 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   (string-length s)) (strlen "HELLO")` also returns `5` without dynamic string
   builtins. Conservative `main`-level direct-call evidence can now type
   otherwise-unannotated top-level string parameters, so `(define (strlen s)
-  (string-length s)) (strlen "HELLO")` and `(define s "HELLO") (define (strlen
-  x) (string-length x)) (strlen s)` and `(define (strlen x) (string-length x))
-  (let ((s "HELLO")) (strlen s))` and `(define (strlen x) (string-length x))
-  (let* ((a "HE") (b (string-append a "LLO"))) (strlen b))` follow the same E4
-  path without synthesizing refinement annotations. Named evidence is limited to non-escaping top-level
+  (string-length s)) (strlen "HELLO")`, `(define (strlen x) (string-length x))
+  (strlen (substring (string-append "HE" "LLO!") 0 5))`, `(define s "HELLO")
+  (define (strlen x) (string-length x)) (strlen s)`, `(define (strlen x)
+  (string-length x)) (let ((s "HELLO")) (strlen s))`, and `(define (strlen x)
+  (string-length x)) (let* ((a "HE") (b (string-append a "LLO"))) (strlen b))`
+  follow the same E4 path without synthesizing refinement annotations. Named
+  evidence is limited to non-escaping top-level
   string values that can stay in `main` as typed registers; lexical evidence is
   limited to scoped `let`/`let*` string values whose dynamic shadows are excluded.
   The dynamic-`any`, captured, reassigned, unobserved/conflicting, and closure-derived Twig string parameter paths still need broader
@@ -383,6 +385,9 @@ merge before the next:
    (string-length s)) (strlen "HELLO")` returns `5` through a typed `str`
    parameter, and `(define (strlen s) (string-length s)) (strlen "HELLO")`
    returns `5` through conservative direct-call evidence for an unannotated
+   parameter, and `(define (strlen x) (string-length x)) (strlen (substring
+   (string-append "HE" "LLO!") 0 5))` returns `5` through static-expression
+   evidence for an unannotated
    parameter, and `(define s "HELLO") (define (strlen x) (string-length x))
    (strlen s)` returns `5` through named top-level string evidence, and
    `(define (strlen x) (string-length x)) (let ((s "HELLO")) (strlen s))`
@@ -405,7 +410,8 @@ merge before the next:
    `str_index`, `str_cmp` driving lexical predicates, direct top-level
    function-call return typing, annotated string-parameter typing, and
    direct-call-inferred unannotated parameter typing for E4 string ops from
-   literal, named top-level, lexical, and derived sequential `let*` actuals, plus the
+   literal, static-expression, named top-level, lexical, and derived sequential
+   `let*` actuals, plus the
    `str_index`
    out-of-bounds **trap** proof now run across every backend.
 7. **Follow-ups beyond v1** captured/reassigned dynamic strings,
