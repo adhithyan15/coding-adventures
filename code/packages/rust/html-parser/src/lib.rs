@@ -4514,7 +4514,6 @@ impl HtmlParser {
     }
 
     fn finish_document(&mut self) -> Document {
-        repair_fostered_nobr_adoption_wrappers(&mut self.document);
         repair_table_cell_fostered_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         repair_tricky_adoption_agency(&mut document);
@@ -5981,6 +5980,14 @@ impl HtmlParser {
                 self.open_elements.push(path);
                 return true;
             }
+            if incoming_name == "nobr" {
+                let reconstructed_paths =
+                    self.insert_nobr_inside_pending_i_before_open_table(attributes);
+                if let Some(paths) = reconstructed_paths {
+                    self.open_elements.extend(paths);
+                    return true;
+                }
+            }
         }
 
         let Some(path) = self.insert_node_before_open_table(Node::element(
@@ -6004,6 +6011,32 @@ impl HtmlParser {
         children.push(node);
         parent_path.push(child_index);
         Some(parent_path)
+    }
+
+    fn insert_nobr_inside_pending_i_before_open_table(
+        &mut self,
+        attributes: &[Attribute],
+    ) -> Option<Vec<Vec<usize>>> {
+        let [(pending_name, pending_attributes)] =
+            self.pending_formatting_reconstruction.as_slice()
+        else {
+            return None;
+        };
+        if pending_name != "i" {
+            return None;
+        }
+
+        let mut reconstructed_i = Node::element("i".to_string(), pending_attributes.clone());
+        if let Node::Element(element) = &mut reconstructed_i {
+            element
+                .children
+                .push(Node::element("nobr".to_string(), attributes.to_vec()));
+        }
+
+        let i_path = self.insert_node_before_open_table(reconstructed_i)?;
+        let mut nobr_path = i_path.clone();
+        nobr_path.push(0);
+        Some(vec![i_path, nobr_path])
     }
 
     fn previous_pending_formatting_path_before_open_table(&self) -> Option<Vec<usize>> {
@@ -8495,10 +8528,6 @@ fn trim_formatting_reconstruction_noah_ark(
     retained
 }
 
-fn repair_fostered_nobr_adoption_wrappers(document: &mut Document) {
-    repair_fostered_nobr_adoption_wrappers_in(&mut document.children);
-}
-
 fn repair_table_cell_fostered_nobr_adoption(document: &mut Document) {
     repair_table_cell_fostered_nobr_adoption_in(&mut document.children);
 }
@@ -9088,51 +9117,6 @@ fn is_empty_element_named(node: &Node, name: &str) -> bool {
         node,
         Node::Element(element) if element.name == name && element.children.is_empty()
     )
-}
-
-fn repair_fostered_nobr_adoption_wrappers_in(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_fostered_nobr_adoption_wrappers_in(&mut element.children);
-        if element.name != "nobr"
-            || !element
-                .children
-                .iter()
-                .any(|child| matches!(child, Node::Element(child) if child.name == "table"))
-        {
-            continue;
-        }
-
-        for child in &mut element.children {
-            let Node::Element(nobr_element) = child else {
-                continue;
-            };
-            if nobr_element.name != "nobr" || nobr_element.children.len() != 1 {
-                continue;
-            }
-            let Some(Node::Element(i_element)) = nobr_element.children.first_mut() else {
-                continue;
-            };
-            if i_element.name != "i" || i_element.children.is_empty() {
-                continue;
-            }
-
-            let nobr_attributes = nobr_element.attributes.clone();
-            let i_attributes = i_element.attributes.clone();
-            let adopted_children = std::mem::take(&mut i_element.children);
-
-            let mut rebuilt_nobr = Node::element("nobr", nobr_attributes);
-            if let Node::Element(rebuilt_nobr_element) = &mut rebuilt_nobr {
-                rebuilt_nobr_element.children = adopted_children;
-            }
-
-            nobr_element.name = "i".to_string();
-            nobr_element.attributes = i_attributes;
-            nobr_element.children = vec![rebuilt_nobr, Node::element("nobr", Vec::new())];
-        }
-    }
 }
 
 fn apply_scripted_tree_construction_side_effects(document: &mut Document) {
@@ -31257,6 +31241,44 @@ mod tests {
         assert_eq!(reconstructed_anchor.name, "a");
         assert_eq!(reconstructed_anchor.attribute("href"), Some("foo"));
         assert_eq!(reconstructed_anchor.children, vec![Node::text("aoe")]);
+    }
+
+    #[test]
+    fn fostered_nobr_start_reconstructs_pending_italic_before_table() {
+        let document =
+            parse_html("<!DOCTYPE html><body><b><nobr>1<table><nobr></b><i><nobr>2<nobr></i>3")
+                .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let bold = element(&body.children[0]);
+        assert_eq!(bold.name, "b");
+        let outer_nobr = element(&bold.children[0]);
+        assert_eq!(outer_nobr.name, "nobr");
+        assert_eq!(outer_nobr.children.len(), 5);
+        assert_eq!(outer_nobr.children[0], Node::text("1"));
+
+        let empty_italic_nobr = element(&outer_nobr.children[1]);
+        assert_eq!(empty_italic_nobr.name, "nobr");
+        let empty_italic = element(&empty_italic_nobr.children[0]);
+        assert_eq!(empty_italic.name, "i");
+        assert!(empty_italic.children.is_empty());
+
+        let reconstructed_italic = element(&outer_nobr.children[2]);
+        assert_eq!(reconstructed_italic.name, "i");
+        assert_eq!(reconstructed_italic.children.len(), 2);
+        let text_nobr = element(&reconstructed_italic.children[0]);
+        assert_eq!(text_nobr.name, "nobr");
+        assert_eq!(text_nobr.children, vec![Node::text("2")]);
+        let empty_nobr = element(&reconstructed_italic.children[1]);
+        assert_eq!(empty_nobr.name, "nobr");
+        assert!(empty_nobr.children.is_empty());
+
+        let trailing_nobr = element(&outer_nobr.children[3]);
+        assert_eq!(trailing_nobr.name, "nobr");
+        assert_eq!(trailing_nobr.children, vec![Node::text("3")]);
+        assert_eq!(element(&outer_nobr.children[4]).name, "table");
     }
 
     #[test]
