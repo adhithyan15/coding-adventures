@@ -28,6 +28,9 @@
   Rust facade props/events, and installs it into generated WinUI project shells.
 - Added an Engram SwiftUI `MosaicHost` bridge plus `CEngram` module staging so
   generated SwiftPM shells can hydrate from and dispatch into `engram-capi`.
+- Added an Engram Qt `MosaicHost` bridge that runtime-loads `engram-capi` and
+  installs into generated Qt/CMake shells so QML properties/events share the
+  Rust facade.
 - Added the reusable `mosaic-pkg-collection-actions` dependency and mounted its
   `CollectionActions` component so generated host shells expose shared
   collection counts, Anki import/export intents, and note/note-type workflow

@@ -774,6 +774,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal toggleMark()");
     assert_contains(&qml, "signal importAnki()");
     assert_contains(&qml, "signal mosaicEvent(var event)");
+    assert_contains(&qml, "id: mosaicRoot");
+    assert_contains(&qml, "property var mosaicHost: null");
+    assert_contains(&qml, "function applyMosaicProps(props)");
+    assert_contains(&qml, "mosaicRoot[key] = props[key];");
+    assert_contains(
+        &qml,
+        "onMosaicEvent: applyMosaicProps(mosaicHost ? mosaicHost.handleEvent(event) : null)",
+    );
     assert_contains(
         &qml,
         "onImportAnki: mosaicEvent({ \"event\": \"onImportAnki\" })",
@@ -801,6 +809,24 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&qml, "signal browserSearch()");
     assert_contains(&qml, "signal browserSelectResult(real index)");
+    let qt_main = fs::read_to_string(tmp.path().join("qt").join("main.cpp")).expect("qt/main.cpp");
+    assert_contains(&qt_main, "#if __has_include(\"MosaicHost.h\")");
+    assert_contains(&qt_main, "MosaicHost mosaicHost;");
+    assert_contains(&qt_main, "root->setProperty(\"mosaicHost\"");
+    assert_contains(
+        &qt_main,
+        "QMetaObject::invokeMethod(root, \"applyMosaicProps\"",
+    );
+    let qt_cmake = fs::read_to_string(tmp.path().join("qt").join("CMakeLists.txt"))
+        .expect("qt/CMakeLists.txt");
+    assert_contains(
+        &qt_cmake,
+        "target_sources(EngramApp PRIVATE MosaicHost.cpp MosaicHost.h)",
+    );
+    assert_contains(
+        &qt_cmake,
+        "foreach(_mosaic_native_library IN ITEMS engram_capi.dll libengram_capi.dylib libengram_capi.so)",
+    );
 
     let swift = fs::read_to_string(tmp.path().join("swiftui").join("EngramApp.swift"))
         .expect("EngramApp.swift");
@@ -1287,6 +1313,8 @@ fn source_tree_has_expected_shape() {
         "host/web/engram-host.ts",
         "host/web/engram-mosaic-host-wasm.d.ts",
         "host/electron/host.js",
+        "host/qt/MosaicHost.h",
+        "host/qt/MosaicHost.cpp",
         "host/swiftui/MosaicHost.swift",
         "host/xaml/MosaicHost.cs",
     ] {
@@ -1310,9 +1338,17 @@ fn source_tree_has_expected_shape() {
     assert_contains(&swiftui_host, "eg_engram_app_props");
     assert_contains(&swiftui_host, "eg_handle_engram_app_event");
 
+    let qt_host = fs::read_to_string(package_root().join("host/qt/MosaicHost.cpp"))
+        .expect("qt host template");
+    assert_contains(&qt_host, "eg_engram_app_props");
+    assert_contains(&qt_host, "eg_handle_engram_app_event");
+    assert_contains(&qt_host, "QLibrary");
+    assert_contains(&qt_host, "mosaicPropName");
+
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
     assert_contains(&build_script, "Install-EngramXamlHost");
+    assert_contains(&build_script, "Install-EngramQtHost");
     assert_contains(&build_script, "Install-EngramSwiftUIHost");
     assert_contains(&build_script, "module CEngram");
     assert_contains(&build_script, "libengram_capi.a");

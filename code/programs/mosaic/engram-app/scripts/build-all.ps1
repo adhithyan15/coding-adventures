@@ -68,6 +68,8 @@ $engramWasmLoader = Join-Path $engramWasmRoot "js\engram-mosaic-host-wasm.mjs"
 $engramWasmTypes = Join-Path $hostRoot "web\engram-mosaic-host-wasm.d.ts"
 $engramWebHost = Join-Path $hostRoot "web\engram-host.ts"
 $engramElectronHost = Join-Path $hostRoot "electron\host.js"
+$engramQtHostHeader = Join-Path $hostRoot "qt\MosaicHost.h"
+$engramQtHostSource = Join-Path $hostRoot "qt\MosaicHost.cpp"
 $engramXamlHost = Join-Path $hostRoot "xaml\MosaicHost.cs"
 $engramSwiftUIHost = Join-Path $hostRoot "swiftui\MosaicHost.swift"
 $engramCapiHeader = Join-Path $rustWorkspace "engram-capi\include\engram.h"
@@ -129,6 +131,21 @@ function Install-EngramElectronHost {
     Copy-Item -LiteralPath $engramWasmFile -Destination (Join-Path $electronDir "engram_engine.wasm") -Force
     Copy-Item -LiteralPath $engramWasmLoader -Destination (Join-Path $electronDir "engram-mosaic-host-wasm.mjs") -Force
     Copy-Item -LiteralPath $engramElectronHost -Destination (Join-Path $electronDir "host.js") -Force
+}
+
+function Install-EngramQtHost {
+    param([Parameter(Mandatory = $true)][string]$QtRoot)
+
+    if (-not (Test-Path -LiteralPath $QtRoot)) {
+        return
+    }
+    if (-not (Test-Path -LiteralPath $engramCapiLibrary)) {
+        throw "expected Engram native library missing: $engramCapiLibrary"
+    }
+
+    Copy-Item -LiteralPath $engramQtHostHeader -Destination (Join-Path $QtRoot "MosaicHost.h") -Force
+    Copy-Item -LiteralPath $engramQtHostSource -Destination (Join-Path $QtRoot "MosaicHost.cpp") -Force
+    Copy-Item -LiteralPath $engramCapiLibrary -Destination (Join-Path $QtRoot $nativeLibraryName) -Force
 }
 
 function Add-EngramXamlNativeContent {
@@ -268,6 +285,7 @@ foreach ($backend in $backends) {
 
 Install-EngramReactHost -ReactRoot (Join-Path $outputRoot "react")
 Install-EngramElectronHost -ElectronRoot (Join-Path $outputRoot "electron")
+Install-EngramQtHost -QtRoot (Join-Path $outputRoot "qt")
 Install-EngramSwiftUIHost -SwiftUIRoot (Join-Path $outputRoot "swiftui")
 Install-EngramXamlHost -XamlRoot (Join-Path $outputRoot "xaml")
 

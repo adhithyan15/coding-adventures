@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - optional MosaicHost bridge for Qt project shells
+
+Generated Qt project shells now compile with or without an installed
+`MosaicHost.h/.cpp` adapter. When present, `main.cpp` injects the host object
+into QML, hydrates initial props through `applyMosaicProps`, and emitted
+`mosaicEvent` envelopes round-trip through `mosaicHost.handleEvent(event)`.
+`CMakeLists.txt` also picks up an installed host adapter and copies a colocated
+Engram-style native host library next to the executable.
+
 ### Added - generic Mosaic event signal for QML hosts
 
 Generated QML components with emits now expose `signal mosaicEvent(var event)`
