@@ -1,0 +1,35 @@
+// NoteTypeEditor.mil - reusable note-type editing surface.
+//
+// Hosts own durable schema validation. This component exposes the portable
+// model-selection, model metadata edit, and commit/delete/cancel contract.
+
+component NoteTypeEditor {
+  slot editor-label : text ;
+  slot note-types-label : text ;
+  slot note-type-names : list<text> ;
+  slot selected-note-type-index : number ;
+  slot note-type-id-label : text ;
+  slot note-type-id-value : text ;
+  slot name-label : text ;
+  slot name-value : text ;
+  slot name-placeholder : text ;
+  slot fields-label : text ;
+  slot field-labels : list<text> ;
+  slot templates-label : text ;
+  slot template-labels : list<text> ;
+  slot stylesheet-label : text ;
+  slot stylesheet-value : text ;
+  slot stylesheet-placeholder : text ;
+  slot new-label : text ;
+  slot save-label : text ;
+  slot delete-label : text ;
+  slot cancel-label : text ;
+
+  emit onSelectNoteType ( index : number ) ;
+  emit onNameChange ( value : text ) ;
+  emit onStylesheetChange ( value : text ) ;
+  emit onNewNoteType ;
+  emit onSaveNoteType ;
+  emit onDeleteNoteType ;
+  emit onCancel ;
+}

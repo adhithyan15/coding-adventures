@@ -33,6 +33,7 @@ pub struct EngramSession {
     browser: BrowserSessionState,
     review: ReviewSessionState,
     editor: NoteEditorSessionState,
+    note_type_editor: NoteTypeEditorSessionState,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -82,6 +83,60 @@ impl NoteEditorSessionState {
     fn set_tags(&mut self, note_id: &str, value: String) {
         self.reset_for_note(note_id);
         self.draft_tags = Some(value);
+    }
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+struct NoteTypeEditorSessionState {
+    selected_index: usize,
+    draft_note_type_id: Option<String>,
+    draft_name: Option<String>,
+    draft_stylesheet: Option<String>,
+    draft_created_at: Option<u64>,
+    draft_is_new: bool,
+}
+
+impl NoteTypeEditorSessionState {
+    fn reset(&mut self) {
+        *self = Self::default();
+    }
+
+    fn select_index(&mut self, index: usize) {
+        self.selected_index = index;
+        self.draft_note_type_id = None;
+        self.draft_name = None;
+        self.draft_stylesheet = None;
+        self.draft_created_at = None;
+        self.draft_is_new = false;
+    }
+
+    fn start_new(&mut self, now: u64) {
+        self.selected_index = usize::MAX;
+        self.draft_note_type_id = Some(format!("note-type-{now}"));
+        self.draft_name = Some("Basic".to_string());
+        self.draft_stylesheet = Some(String::new());
+        self.draft_created_at = Some(now);
+        self.draft_is_new = true;
+    }
+
+    fn ensure_selected_draft(&mut self, note_type_id: &str) {
+        if self.draft_note_type_id.as_deref() != Some(note_type_id) {
+            self.draft_note_type_id = Some(note_type_id.to_string());
+            self.draft_name = None;
+            self.draft_stylesheet = None;
+            self.draft_created_at = None;
+            self.draft_is_new = false;
+        }
+    }
+
+    fn set_name(&mut self, note_type_id: &str, value: String) {
+        self.ensure_selected_draft(note_type_id);
+        self.draft_name = Some(value);
+    }
+
+    fn set_stylesheet(&mut self, note_type_id: &str, value: String) {
+        self.ensure_selected_draft(note_type_id);
+        self.draft_stylesheet = Some(value);
     }
 }
 
@@ -174,6 +229,7 @@ impl EngramSession {
             self.browser = BrowserSessionState::default();
             self.review = ReviewSessionState::default();
             self.editor = NoteEditorSessionState::default();
+            self.note_type_editor = NoteTypeEditorSessionState::default();
             Ok(ok_with("state", &self.state))
         })
     }
@@ -194,6 +250,7 @@ impl EngramSession {
             self.browser = BrowserSessionState::default();
             self.review = ReviewSessionState::default();
             self.editor = NoteEditorSessionState::default();
+            self.note_type_editor = NoteTypeEditorSessionState::default();
             Ok(ok_with("state", &self.state))
         })
     }
@@ -209,6 +266,7 @@ impl EngramSession {
                 self.browser = BrowserSessionState::default();
                 self.review = ReviewSessionState::default();
                 self.editor = NoteEditorSessionState::default();
+                self.note_type_editor = NoteTypeEditorSessionState::default();
             }
             Ok(ok_with("state", &self.state))
         })
@@ -295,6 +353,7 @@ impl EngramSession {
                 &self.browser,
                 &self.review,
                 &self.editor,
+                &self.note_type_editor,
             );
             Ok(ok_with("props", &props))
         })
@@ -635,6 +694,77 @@ impl EngramSession {
                 EngramAppEvent::NoteEditorCancel => {
                     self.editor.reset();
                 }
+                EngramAppEvent::NoteTypeEditorSelectNoteType => {
+                    let value = parsed.number_value.ok_or_else(|| {
+                        "onNoteTypeEditorSelectNoteType is missing an index".to_string()
+                    })?;
+                    let index = parse_nonnegative_index(value, "note type")?;
+                    if !(self.note_type_editor.draft_is_new && index == self.state.note_types.len())
+                    {
+                        self.note_type_editor.select_index(index);
+                    }
+                }
+                EngramAppEvent::NoteTypeEditorNameChange => {
+                    let value = parsed.text_value.clone().ok_or_else(|| {
+                        "onNoteTypeEditorNameChange is missing a value".to_string()
+                    })?;
+                    let note_type_id =
+                        note_type_editor_selected_id(&self.state, &self.note_type_editor, now)
+                            .ok_or_else(|| {
+                                "cannot edit note type name without a selected note type"
+                                    .to_string()
+                            })?;
+                    self.note_type_editor.set_name(&note_type_id, value);
+                }
+                EngramAppEvent::NoteTypeEditorStylesheetChange => {
+                    let value = parsed.text_value.clone().ok_or_else(|| {
+                        "onNoteTypeEditorStylesheetChange is missing a value".to_string()
+                    })?;
+                    let note_type_id =
+                        note_type_editor_selected_id(&self.state, &self.note_type_editor, now)
+                            .ok_or_else(|| {
+                                "cannot edit note type stylesheet without a selected note type"
+                                    .to_string()
+                            })?;
+                    self.note_type_editor.set_stylesheet(&note_type_id, value);
+                }
+                EngramAppEvent::NoteTypeEditorNewNoteType => {
+                    self.note_type_editor.start_new(now);
+                }
+                EngramAppEvent::NoteTypeEditorSaveNoteType => {
+                    let note_type =
+                        note_type_from_editor_selection(&self.state, &self.note_type_editor, now)?;
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::UpsertNoteType {
+                            note_type,
+                            materialize_cards_at: Some(now),
+                        },
+                    );
+                    self.note_type_editor.reset();
+                }
+                EngramAppEvent::NoteTypeEditorDeleteNoteType => {
+                    let note_type_id =
+                        note_type_editor_selected_id(&self.state, &self.note_type_editor, now)
+                            .ok_or_else(|| {
+                                "cannot delete note type without a selected note type".to_string()
+                            })?;
+                    if self
+                        .state
+                        .note_types
+                        .iter()
+                        .any(|note_type| note_type.id == note_type_id)
+                    {
+                        self.state = reduce(
+                            &self.state,
+                            engram_core::EngramCommand::DeleteNoteType { note_type_id },
+                        );
+                    }
+                    self.note_type_editor.reset();
+                }
+                EngramAppEvent::NoteTypeEditorCancel => {
+                    self.note_type_editor.reset();
+                }
                 EngramAppEvent::SaveNote => {
                     let note = note_from_app_event(&parsed, &self.state, deck_id, now)?;
                     self.state = reduce(
@@ -671,12 +801,14 @@ impl EngramSession {
                         );
                     }
                 }
+                EngramAppEvent::AddNoteType => {
+                    self.note_type_editor.start_new(now);
+                }
                 EngramAppEvent::BrowserOpenSelected
                 | EngramAppEvent::BrowserEditSelected
                 | EngramAppEvent::ImportAnki
                 | EngramAppEvent::ExportAnki
-                | EngramAppEvent::AddNote
-                | EngramAppEvent::AddNoteType => {}
+                | EngramAppEvent::AddNote => {}
             }
 
             let host_intent =
@@ -688,6 +820,7 @@ impl EngramSession {
                 &self.browser,
                 &self.review,
                 &self.editor,
+                &self.note_type_editor,
             );
             Ok(json!({
                 "ok": true,
@@ -901,6 +1034,7 @@ fn engram_app_props_for_state(
     browser: &BrowserSessionState,
     review: &ReviewSessionState,
     editor: &NoteEditorSessionState,
+    note_type_editor: &NoteTypeEditorSessionState,
 ) -> Value {
     let selected_deck_id = selected_deck_id(state, deck_id);
     let deck = state.decks.iter().find(|deck| deck.id == selected_deck_id);
@@ -1434,6 +1568,7 @@ fn engram_app_props_for_state(
         now,
         Some(selected_deck_id.as_str()),
     );
+    insert_note_type_editor_props(props_object, state, note_type_editor, now);
 
     props
 }
@@ -1593,6 +1728,151 @@ fn insert_note_editor_props(
     );
     props.insert(
         "note-editor-cancel-label".to_string(),
+        Value::String("Cancel".to_string()),
+    );
+}
+
+fn insert_note_type_editor_props(
+    props: &mut serde_json::Map<String, Value>,
+    state: &AppState,
+    editor: &NoteTypeEditorSessionState,
+    now: u64,
+) {
+    let mut note_type_names = state
+        .note_types
+        .iter()
+        .map(|note_type| note_type.name.clone())
+        .collect::<Vec<_>>();
+    if editor.draft_is_new {
+        note_type_names.push(format!(
+            "{} (new)",
+            editor
+                .draft_name
+                .as_deref()
+                .filter(|name| !name.trim().is_empty())
+                .unwrap_or("Basic")
+        ));
+    }
+
+    let selected_index = note_type_editor_selected_index(state, editor);
+    let selected_note_type = note_type_editor_selected_note_type(state, editor, now);
+    let field_labels = selected_note_type
+        .as_ref()
+        .map(|note_type| {
+            note_type
+                .fields
+                .iter()
+                .map(|field| {
+                    let required = if field.required { " *" } else { "" };
+                    format!("{} {}{}", field.ordinal + 1, field.name, required)
+                })
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    let template_labels = selected_note_type
+        .as_ref()
+        .map(|note_type| {
+            note_type
+                .templates
+                .iter()
+                .map(|template| format!("{} {}", template.ordinal + 1, template.name))
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+
+    props.insert(
+        "note-type-editor-label".to_string(),
+        Value::String("Note type editor".to_string()),
+    );
+    props.insert(
+        "note-type-editor-note-types-label".to_string(),
+        Value::String("Note types".to_string()),
+    );
+    props.insert(
+        "note-type-editor-note-type-names".to_string(),
+        json!(note_type_names),
+    );
+    props.insert(
+        "note-type-editor-selected-note-type-index".to_string(),
+        selected_index.map_or(Value::from(-1), |index| Value::from(index as i64)),
+    );
+    props.insert(
+        "note-type-editor-note-type-id-label".to_string(),
+        Value::String("Model".to_string()),
+    );
+    props.insert(
+        "note-type-editor-note-type-id-value".to_string(),
+        Value::String(
+            selected_note_type
+                .as_ref()
+                .map(|note_type| note_type.id.clone())
+                .unwrap_or_default(),
+        ),
+    );
+    props.insert(
+        "note-type-editor-name-label".to_string(),
+        Value::String("Name".to_string()),
+    );
+    props.insert(
+        "note-type-editor-name-value".to_string(),
+        Value::String(
+            selected_note_type
+                .as_ref()
+                .map(|note_type| note_type.name.clone())
+                .unwrap_or_default(),
+        ),
+    );
+    props.insert(
+        "note-type-editor-name-placeholder".to_string(),
+        Value::String("Basic".to_string()),
+    );
+    props.insert(
+        "note-type-editor-fields-label".to_string(),
+        Value::String("Fields".to_string()),
+    );
+    props.insert(
+        "note-type-editor-field-labels".to_string(),
+        json!(field_labels),
+    );
+    props.insert(
+        "note-type-editor-templates-label".to_string(),
+        Value::String("Templates".to_string()),
+    );
+    props.insert(
+        "note-type-editor-template-labels".to_string(),
+        json!(template_labels),
+    );
+    props.insert(
+        "note-type-editor-stylesheet-label".to_string(),
+        Value::String("Card style".to_string()),
+    );
+    props.insert(
+        "note-type-editor-stylesheet-value".to_string(),
+        Value::String(
+            selected_note_type
+                .as_ref()
+                .and_then(|note_type| note_type.stylesheet.clone())
+                .unwrap_or_default(),
+        ),
+    );
+    props.insert(
+        "note-type-editor-stylesheet-placeholder".to_string(),
+        Value::String(".card { font-family: sans-serif; }".to_string()),
+    );
+    props.insert(
+        "note-type-editor-new-label".to_string(),
+        Value::String("New type".to_string()),
+    );
+    props.insert(
+        "note-type-editor-save-label".to_string(),
+        Value::String("Save type".to_string()),
+    );
+    props.insert(
+        "note-type-editor-delete-label".to_string(),
+        Value::String("Delete type".to_string()),
+    );
+    props.insert(
+        "note-type-editor-cancel-label".to_string(),
         Value::String("Cancel".to_string()),
     );
 }
@@ -1987,9 +2267,7 @@ fn host_intent_for_event(
         }
         EngramAppEvent::AddNote => Some(add_note_host_intent(event, state, &selected_deck, now)),
         EngramAppEvent::SaveNote => None,
-        EngramAppEvent::AddNoteType => {
-            Some(add_note_type_host_intent(event, state, &selected_deck, now))
-        }
+        EngramAppEvent::AddNoteType => None,
         EngramAppEvent::SaveNoteType => None,
         EngramAppEvent::DeleteNote if explicit_note_id_from_app_event(parsed, state).is_some() => {
             None
@@ -2019,23 +2297,6 @@ fn add_note_host_intent(event: EngramAppEvent, state: &AppState, deck_id: &str, 
     })
 }
 
-fn add_note_type_host_intent(
-    event: EngramAppEvent,
-    state: &AppState,
-    deck_id: &str,
-    now: u64,
-) -> Value {
-    json!({
-        "type": "addNoteType",
-        "event": event.canonical_name(),
-        "deckId": deck_id,
-        "deckName": deck_name_for_id(state, deck_id),
-        "createdAt": now,
-        "noteTypes": state.note_types,
-        "defaultNoteType": default_note_type_draft(now),
-    })
-}
-
 fn deck_name_for_id(state: &AppState, deck_id: &str) -> String {
     state
         .decks
@@ -2045,25 +2306,38 @@ fn deck_name_for_id(state: &AppState, deck_id: &str) -> String {
         .unwrap_or_default()
 }
 
-fn default_note_type_draft(now: u64) -> Value {
-    json!({
-        "id": format!("note-type-{now}"),
-        "name": "Basic",
-        "fields": [
-            {"id": "front", "name": "Front", "required": true, "ordinal": 0},
-            {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+fn default_note_type_model(now: u64) -> engram_core::NoteType {
+    engram_core::NoteType {
+        id: format!("note-type-{now}"),
+        name: "Basic".to_string(),
+        fields: vec![
+            engram_core::FieldDef {
+                id: "front".to_string(),
+                name: "Front".to_string(),
+                required: true,
+                ordinal: 0,
+            },
+            engram_core::FieldDef {
+                id: "back".to_string(),
+                name: "Back".to_string(),
+                required: true,
+                ordinal: 1,
+            },
         ],
-        "templates": [{
-            "id": "forward",
-            "name": "Forward",
-            "frontTemplate": "{{Front}}",
-            "backTemplate": "{{Back}}",
-            "requiredFieldNames": ["Front"],
-            "ordinal": 0
+        templates: vec![engram_core::CardTemplate {
+            id: "forward".to_string(),
+            name: "Forward".to_string(),
+            front_template: "{{Front}}".to_string(),
+            back_template: "{{Back}}".to_string(),
+            deck_id: None,
+            required_field_names: vec!["Front".to_string()],
+            requirement_mode: engram_core::TemplateRequirementMode::All,
+            ordinal: 0,
         }],
-        "createdAt": now,
-        "updatedAt": now
-    })
+        stylesheet: None,
+        created_at: now,
+        updated_at: now,
+    }
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -2446,6 +2720,69 @@ fn note_from_editor_selection(
     })
 }
 
+fn note_type_editor_selected_index(
+    state: &AppState,
+    editor: &NoteTypeEditorSessionState,
+) -> Option<usize> {
+    if editor.draft_is_new {
+        Some(state.note_types.len())
+    } else if state.note_types.is_empty() {
+        None
+    } else {
+        Some(editor.selected_index.min(state.note_types.len() - 1))
+    }
+}
+
+fn note_type_editor_selected_id(
+    state: &AppState,
+    editor: &NoteTypeEditorSessionState,
+    now: u64,
+) -> Option<String> {
+    note_type_editor_selected_note_type(state, editor, now).map(|note_type| note_type.id)
+}
+
+fn note_type_editor_selected_note_type(
+    state: &AppState,
+    editor: &NoteTypeEditorSessionState,
+    now: u64,
+) -> Option<engram_core::NoteType> {
+    let mut note_type = if editor.draft_is_new {
+        let mut draft = default_note_type_model(editor.draft_created_at.unwrap_or(now));
+        if let Some(note_type_id) = editor.draft_note_type_id.as_ref() {
+            draft.id = note_type_id.clone();
+        }
+        draft
+    } else {
+        let index = note_type_editor_selected_index(state, editor)?;
+        state.note_types.get(index)?.clone()
+    };
+
+    if editor.draft_note_type_id.as_deref() == Some(note_type.id.as_str()) || editor.draft_is_new {
+        if let Some(name) = editor.draft_name.as_ref() {
+            note_type.name = name.clone();
+        }
+        if let Some(stylesheet) = editor.draft_stylesheet.as_ref() {
+            note_type.stylesheet = (!stylesheet.trim().is_empty()).then(|| stylesheet.clone());
+        }
+    }
+
+    Some(note_type)
+}
+
+fn note_type_from_editor_selection(
+    state: &AppState,
+    editor: &NoteTypeEditorSessionState,
+    now: u64,
+) -> Result<engram_core::NoteType, String> {
+    let mut note_type = note_type_editor_selected_note_type(state, editor, now)
+        .ok_or_else(|| "cannot save note type without a selected note type".to_string())?;
+    if note_type.name.trim().is_empty() {
+        return Err("onNoteTypeEditorSaveNoteType is missing a name".to_string());
+    }
+    note_type.updated_at = now;
+    Ok(note_type)
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum EngramAppEvent {
     Reveal,
@@ -2475,6 +2812,13 @@ enum EngramAppEvent {
     NoteEditorSaveNote,
     NoteEditorDeleteNote,
     NoteEditorCancel,
+    NoteTypeEditorSelectNoteType,
+    NoteTypeEditorNameChange,
+    NoteTypeEditorStylesheetChange,
+    NoteTypeEditorNewNoteType,
+    NoteTypeEditorSaveNoteType,
+    NoteTypeEditorDeleteNoteType,
+    NoteTypeEditorCancel,
     ImportAnki,
     ExportAnki,
     AddNote,
@@ -2584,6 +2928,13 @@ impl EngramAppEvent {
             Self::NoteEditorSaveNote => "onNoteEditorSaveNote",
             Self::NoteEditorDeleteNote => "onNoteEditorDeleteNote",
             Self::NoteEditorCancel => "onNoteEditorCancel",
+            Self::NoteTypeEditorSelectNoteType => "onNoteTypeEditorSelectNoteType",
+            Self::NoteTypeEditorNameChange => "onNoteTypeEditorNameChange",
+            Self::NoteTypeEditorStylesheetChange => "onNoteTypeEditorStylesheetChange",
+            Self::NoteTypeEditorNewNoteType => "onNoteTypeEditorNewNoteType",
+            Self::NoteTypeEditorSaveNoteType => "onNoteTypeEditorSaveNoteType",
+            Self::NoteTypeEditorDeleteNoteType => "onNoteTypeEditorDeleteNoteType",
+            Self::NoteTypeEditorCancel => "onNoteTypeEditorCancel",
             Self::ImportAnki => "onImportAnki",
             Self::ExportAnki => "onExportAnki",
             Self::AddNote => "onAddNote",
@@ -2908,6 +3259,33 @@ fn parse_engram_app_event_name(
         }
         "noteeditorcancel" | "note-editor-cancel" | "note_editor_cancel" => {
             parsed(EngramAppEvent::NoteEditorCancel)
+        }
+        "notetypeeditorselectnotetype"
+        | "note-type-editor-select-note-type"
+        | "note_type_editor_select_note_type" => {
+            parsed(EngramAppEvent::NoteTypeEditorSelectNoteType)
+        }
+        "notetypeeditornamechange"
+        | "note-type-editor-name-change"
+        | "note_type_editor_name_change" => parsed(EngramAppEvent::NoteTypeEditorNameChange),
+        "notetypeeditorstylesheetchange"
+        | "note-type-editor-stylesheet-change"
+        | "note_type_editor_stylesheet_change" => {
+            parsed(EngramAppEvent::NoteTypeEditorStylesheetChange)
+        }
+        "notetypeeditornewnotetype"
+        | "note-type-editor-new-note-type"
+        | "note_type_editor_new_note_type" => parsed(EngramAppEvent::NoteTypeEditorNewNoteType),
+        "notetypeeditorsavenotetype"
+        | "note-type-editor-save-note-type"
+        | "note_type_editor_save_note_type" => parsed(EngramAppEvent::NoteTypeEditorSaveNoteType),
+        "notetypeeditordeletenotetype"
+        | "note-type-editor-delete-note-type"
+        | "note_type_editor_delete_note_type" => {
+            parsed(EngramAppEvent::NoteTypeEditorDeleteNoteType)
+        }
+        "notetypeeditorcancel" | "note-type-editor-cancel" | "note_type_editor_cancel" => {
+            parsed(EngramAppEvent::NoteTypeEditorCancel)
         }
         "importanki" | "import-anki" | "import_anki" => parsed(EngramAppEvent::ImportAnki),
         "exportanki" | "export-anki" | "export_anki" => parsed(EngramAppEvent::ExportAnki),
@@ -6188,7 +6566,6 @@ mod tests {
             ("onImportAnki", "onImportAnki", "importAnki"),
             ("export-anki", "onExportAnki", "exportAnki"),
             ("add-note", "onAddNote", "addNote"),
-            ("add-note-type", "onAddNoteType", "addNoteType"),
             ("delete-note", "onDeleteNote", "deleteNote"),
             ("delete-note-type", "onDeleteNoteType", "deleteNoteType"),
         ] {
@@ -6231,12 +6608,24 @@ mod tests {
         let add_note_type: Value =
             serde_json::from_str(&session.handle_engram_app_event("onAddNoteType", "deck", NOW))
                 .unwrap();
-        assert_eq!(add_note_type["hostIntent"]["type"], "addNoteType");
-        assert_eq!(add_note_type["hostIntent"]["deckName"], "Tamil");
-        assert_eq!(add_note_type["hostIntent"]["noteTypes"][0]["id"], "basic");
+        assert_eq!(add_note_type["ok"], true);
+        assert_eq!(add_note_type["event"], "onAddNoteType");
+        assert_eq!(add_note_type["hostIntent"], Value::Null);
         assert_eq!(
-            add_note_type["hostIntent"]["defaultNoteType"]["templates"][0]["frontTemplate"],
-            "{{Front}}"
+            add_note_type["props"]["note-type-editor-note-type-id-value"],
+            "note-type-1700000000000"
+        );
+        assert_eq!(
+            add_note_type["props"]["note-type-editor-name-value"],
+            "Basic"
+        );
+        assert_eq!(
+            add_note_type["props"]["note-type-editor-field-labels"],
+            json!(["1 Front *", "2 Back *"])
+        );
+        assert_eq!(
+            add_note_type["props"]["note-type-editor-template-labels"],
+            json!(["1 Forward"])
         );
     }
 
@@ -6680,6 +7069,160 @@ mod tests {
         assert!(deleted["state"]["noteTypes"].as_array().unwrap().is_empty());
         assert!(deleted["state"]["notes"].as_array().unwrap().is_empty());
         assert!(deleted["state"]["cards"].as_array().unwrap().is_empty());
+    }
+
+    #[test]
+    fn handle_engram_app_note_type_editor_events_save_shared_models() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                "noteTypes": [{
+                    "id": "basic",
+                    "name": "Basic",
+                    "fields": [
+                        {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                        {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                    ],
+                    "templates": [{
+                        "id": "forward",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "{{Back}}",
+                        "requiredFieldNames": ["Front"],
+                        "ordinal": 0
+                    }],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "notes": [],
+                "cards": [],
+                "cardProgress": [],
+                "sessions": [],
+                "reviews": [],
+                "activeSession": null
+            }"#,
+        );
+
+        let initial: Value = serde_json::from_str(&session.engram_app_props("deck", NOW)).unwrap();
+        assert_eq!(
+            initial["props"]["note-type-editor-note-type-names"],
+            json!(["Basic"])
+        );
+        assert_eq!(
+            initial["props"]["note-type-editor-field-labels"],
+            json!(["1 Front *", "2 Back *"])
+        );
+
+        let renamed: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteTypeEditorNameChange","value":"Tamil Script"}"#,
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(renamed["ok"], true);
+        assert_eq!(
+            renamed["props"]["note-type-editor-name-value"],
+            "Tamil Script"
+        );
+
+        let styled: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteTypeEditorStylesheetChange","value":".card { color: teal; }"}"#,
+            "deck",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(
+            styled["props"]["note-type-editor-stylesheet-value"],
+            ".card { color: teal; }"
+        );
+
+        let saved_existing: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onNoteTypeEditorSaveNoteType",
+            "deck",
+            NOW + 3,
+        ))
+        .unwrap();
+        assert_eq!(saved_existing["ok"], true);
+        assert_eq!(saved_existing["hostIntent"], Value::Null);
+        assert_eq!(
+            saved_existing["state"]["noteTypes"][0]["name"],
+            "Tamil Script"
+        );
+        assert_eq!(
+            saved_existing["state"]["noteTypes"][0]["stylesheet"],
+            ".card { color: teal; }"
+        );
+        assert_eq!(
+            saved_existing["state"]["noteTypes"][0]["updatedAt"],
+            NOW + 3
+        );
+
+        let new_draft: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onAddNoteType",
+            "deck",
+            NOW + 4,
+        ))
+        .unwrap();
+        assert_eq!(new_draft["hostIntent"], Value::Null);
+        assert_eq!(
+            new_draft["props"]["note-type-editor-note-type-names"],
+            json!(["Tamil Script", "Basic (new)"])
+        );
+        assert_eq!(
+            new_draft["props"]["note-type-editor-selected-note-type-index"],
+            1
+        );
+        assert_eq!(
+            new_draft["props"]["note-type-editor-note-type-id-value"],
+            "note-type-1700000000004"
+        );
+
+        let renamed_new: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteTypeEditorNameChange","value":"Tamil Reverse"}"#,
+            "deck",
+            NOW + 5,
+        ))
+        .unwrap();
+        assert_eq!(
+            renamed_new["props"]["note-type-editor-name-value"],
+            "Tamil Reverse"
+        );
+
+        let saved_new: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onNoteTypeEditorSaveNoteType",
+            "deck",
+            NOW + 6,
+        ))
+        .unwrap();
+        assert_eq!(saved_new["state"]["noteTypes"].as_array().unwrap().len(), 2);
+        assert_eq!(
+            saved_new["state"]["noteTypes"][1]["id"],
+            "note-type-1700000000004"
+        );
+        assert_eq!(saved_new["state"]["noteTypes"][1]["name"], "Tamil Reverse");
+        assert_eq!(
+            saved_new["state"]["noteTypes"][1]["templates"][0]["frontTemplate"],
+            "{{Front}}"
+        );
+
+        serde_json::from_str::<Value>(&session.handle_engram_app_event(
+            r#"{"event":"onNoteTypeEditorSelectNoteType","index":1}"#,
+            "deck",
+            NOW + 7,
+        ))
+        .unwrap();
+        let deleted_new: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onNoteTypeEditorDeleteNoteType",
+            "deck",
+            NOW + 8,
+        ))
+        .unwrap();
+        assert_eq!(
+            deleted_new["state"]["noteTypes"].as_array().unwrap().len(),
+            1
+        );
+        assert_eq!(deleted_new["state"]["noteTypes"][0]["id"], "basic");
     }
 
     #[test]

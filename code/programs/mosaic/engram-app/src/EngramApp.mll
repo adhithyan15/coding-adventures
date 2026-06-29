@@ -225,6 +225,37 @@ layout EngramApp {
         onCancel : emit: onNoteEditorCancel
       )
     }
+    Box [ note-type-editor-region ] {
+      pkg::mosaic-pkg-note-type-editor::NoteTypeEditor (
+        editor-label : slot: note-type-editor-label ,
+        note-types-label : slot: note-type-editor-note-types-label ,
+        note-type-names : slot: note-type-editor-note-type-names ,
+        selected-note-type-index : slot: note-type-editor-selected-note-type-index ,
+        note-type-id-label : slot: note-type-editor-note-type-id-label ,
+        note-type-id-value : slot: note-type-editor-note-type-id-value ,
+        name-label : slot: note-type-editor-name-label ,
+        name-value : slot: note-type-editor-name-value ,
+        name-placeholder : slot: note-type-editor-name-placeholder ,
+        fields-label : slot: note-type-editor-fields-label ,
+        field-labels : slot: note-type-editor-field-labels ,
+        templates-label : slot: note-type-editor-templates-label ,
+        template-labels : slot: note-type-editor-template-labels ,
+        stylesheet-label : slot: note-type-editor-stylesheet-label ,
+        stylesheet-value : slot: note-type-editor-stylesheet-value ,
+        stylesheet-placeholder : slot: note-type-editor-stylesheet-placeholder ,
+        new-label : slot: note-type-editor-new-label ,
+        save-label : slot: note-type-editor-save-label ,
+        delete-label : slot: note-type-editor-delete-label ,
+        cancel-label : slot: note-type-editor-cancel-label ,
+        onSelectNoteType : emit: onNoteTypeEditorSelectNoteType ,
+        onNameChange : emit: onNoteTypeEditorNameChange ,
+        onStylesheetChange : emit: onNoteTypeEditorStylesheetChange ,
+        onNewNoteType : emit: onNoteTypeEditorNewNoteType ,
+        onSaveNoteType : emit: onNoteTypeEditorSaveNoteType ,
+        onDeleteNoteType : emit: onNoteTypeEditorDeleteNoteType ,
+        onCancel : emit: onNoteTypeEditorCancel
+      )
+    }
     pkg::mosaic-pkg-session-progress::SessionProgress (
       current-label : slot: current-label ,
       current-value : slot: current-value ,

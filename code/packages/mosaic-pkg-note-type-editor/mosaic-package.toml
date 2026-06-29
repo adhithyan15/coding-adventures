@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-pkg-note-type-editor"
+version = "0.1.0"
+description = "Reusable note type editor component for Engram-style card models"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["NoteTypeEditor"]
+
+[kernel]
+version = "1"

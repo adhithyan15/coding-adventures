@@ -155,6 +155,26 @@ component EngramApp {
   slot note-editor-save-label : text ;
   slot note-editor-delete-label : text ;
   slot note-editor-cancel-label : text ;
+  slot note-type-editor-label : text ;
+  slot note-type-editor-note-types-label : text ;
+  slot note-type-editor-note-type-names : list<text> ;
+  slot note-type-editor-selected-note-type-index : number ;
+  slot note-type-editor-note-type-id-label : text ;
+  slot note-type-editor-note-type-id-value : text ;
+  slot note-type-editor-name-label : text ;
+  slot note-type-editor-name-value : text ;
+  slot note-type-editor-name-placeholder : text ;
+  slot note-type-editor-fields-label : text ;
+  slot note-type-editor-field-labels : list<text> ;
+  slot note-type-editor-templates-label : text ;
+  slot note-type-editor-template-labels : list<text> ;
+  slot note-type-editor-stylesheet-label : text ;
+  slot note-type-editor-stylesheet-value : text ;
+  slot note-type-editor-stylesheet-placeholder : text ;
+  slot note-type-editor-new-label : text ;
+  slot note-type-editor-save-label : text ;
+  slot note-type-editor-delete-label : text ;
+  slot note-type-editor-cancel-label : text ;
   slot prompt-label : text ;
   slot prompt : text ;
   slot answer-label : text ;
@@ -243,4 +263,11 @@ component EngramApp {
   emit onNoteEditorSaveNote ;
   emit onNoteEditorDeleteNote ;
   emit onNoteEditorCancel ;
+  emit onNoteTypeEditorSelectNoteType ( index : number ) ;
+  emit onNoteTypeEditorNameChange ( value : text ) ;
+  emit onNoteTypeEditorStylesheetChange ( value : text ) ;
+  emit onNoteTypeEditorNewNoteType ;
+  emit onNoteTypeEditorSaveNoteType ;
+  emit onNoteTypeEditorDeleteNoteType ;
+  emit onNoteTypeEditorCancel ;
 }

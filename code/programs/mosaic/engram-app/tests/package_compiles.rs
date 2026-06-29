@@ -65,6 +65,10 @@ fn manifest_declares_app_package_boundary() {
         Some(&"0.1.0".to_string())
     );
     assert_eq!(
+        package.dependencies.get("mosaic-pkg-note-type-editor"),
+        Some(&"0.1.0".to_string())
+    );
+    assert_eq!(
         package.dependencies.get("mosaic-pkg-review-card"),
         Some(&"0.1.0".to_string())
     );
@@ -136,6 +140,7 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert!(source.contains("pkg::mosaic-pkg-deck-options::DeckOptionsPanel"));
     assert!(source.contains("pkg::mosaic-pkg-deck-stats::DeckStatsPanel"));
     assert!(source.contains("pkg::mosaic-pkg-note-editor::NoteEditor"));
+    assert!(source.contains("pkg::mosaic-pkg-note-type-editor::NoteTypeEditor"));
     assert!(source.contains("pkg::mosaic-pkg-review-card::ReviewCard"));
     assert!(source.contains("pkg::mosaic-pkg-review-actions::ReviewActions"));
     assert!(source.contains("pkg::mosaic-pkg-review-history::ReviewHistoryPanel"));
@@ -145,6 +150,7 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert!(!source.contains("layout DeckOptionsPanel"));
     assert!(!source.contains("layout DeckStatsPanel"));
     assert!(!source.contains("layout NoteEditor"));
+    assert!(!source.contains("layout NoteTypeEditor"));
     assert!(!source.contains("layout ReviewCard"));
     assert!(!source.contains("layout ReviewActions"));
     assert!(!source.contains("layout ReviewHistoryPanel"));
@@ -286,6 +292,24 @@ fn app_manifest_resolves_note_editor_dependency() {
 }
 
 #[test]
+fn app_manifest_resolves_note_type_editor_dependency() {
+    let resolver = dependency_resolver();
+
+    match resolver.resolve("NoteTypeEditor") {
+        Some(Resolution::Component {
+            package,
+            component,
+            package_path,
+        }) => {
+            assert_eq!(package, "mosaic-pkg-note-type-editor");
+            assert_eq!(component, "NoteTypeEditor");
+            assert!(package_path.ends_with("mosaic-pkg-note-type-editor"));
+        }
+        other => panic!("expected NoteTypeEditor component resolution, got {other:?}"),
+    }
+}
+
+#[test]
 fn app_manifest_resolves_review_card_dependency() {
     let resolver = dependency_resolver();
 
@@ -383,6 +407,13 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert_contains(&html, "data-on-click=\"onNoteEditorSaveNote\"");
     assert_contains(&html, "data-on-click=\"onNoteEditorDeleteNote\"");
     assert_contains(&html, "data-on-click=\"onNoteEditorCancel\"");
+    assert_contains(&html, "data-on-click=\"onNoteTypeEditorSelectNoteType\"");
+    assert_contains(&html, "data-on-change=\"onNoteTypeEditorNameChange\"");
+    assert_contains(&html, "data-on-change=\"onNoteTypeEditorStylesheetChange\"");
+    assert_contains(&html, "data-on-click=\"onNoteTypeEditorNewNoteType\"");
+    assert_contains(&html, "data-on-click=\"onNoteTypeEditorSaveNoteType\"");
+    assert_contains(&html, "data-on-click=\"onNoteTypeEditorDeleteNoteType\"");
+    assert_contains(&html, "data-on-click=\"onNoteTypeEditorCancel\"");
     assert_dependency_styles_reach_all_backends(tmp.path());
 }
 
@@ -608,10 +639,7 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&react_app, "answerVisible: false,");
     assert_contains(&react_app, "typeAnswerActive: false,");
-    assert_contains(
-        &react_app,
-        "typeAnswerValue: \"Sample TypeAnswerValue\",",
-    );
+    assert_contains(&react_app, "typeAnswerValue: \"Sample TypeAnswerValue\",");
     assert_contains(&react_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
     assert_contains(&react_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
     assert_contains(
@@ -1051,7 +1079,10 @@ fn native_project_shells_expose_engram_host_contract() {
         &compose_main,
         "browserFlagValue = mosaicString(hostProps, \"browser-flag-value\", \"Sample BrowserFlagValue\"),",
     );
-    assert_contains(&compose_main, "browserFlagOptions = mosaicStringList(hostProps, \"browser-flag-options\"),");
+    assert_contains(
+        &compose_main,
+        "browserFlagOptions = mosaicStringList(hostProps, \"browser-flag-options\"),",
+    );
     assert_contains(
         &compose_main,
         "browserFlagOpen = mosaicBoolean(hostProps, \"browser-flag-open\", false),",
@@ -1064,8 +1095,14 @@ fn native_project_shells_expose_engram_host_contract() {
         &compose_main,
         "browserRemoveTagLabel = mosaicString(hostProps, \"browser-remove-tag-label\", \"Sample BrowserRemoveTagLabel\"),",
     );
-    assert_contains(&compose_main, "browserResults = mosaicStringList(hostProps, \"browser-results\"),");
-    assert_contains(&compose_main, "browserResultCardIds = mosaicStringList(hostProps, \"browser-result-card-ids\"),");
+    assert_contains(
+        &compose_main,
+        "browserResults = mosaicStringList(hostProps, \"browser-results\"),",
+    );
+    assert_contains(
+        &compose_main,
+        "browserResultCardIds = mosaicStringList(hostProps, \"browser-result-card-ids\"),",
+    );
     assert_contains(
         &compose_main,
         "browserSelectedCardId = mosaicString(hostProps, \"browser-selected-card-id\", \"Sample BrowserSelectedCardId\"),",
@@ -1090,7 +1127,10 @@ fn native_project_shells_expose_engram_host_contract() {
         &compose_main,
         "actionMarkLabel = mosaicString(hostProps, \"action-mark-label\", \"Sample ActionMarkLabel\"),",
     );
-    assert_contains(&compose_main, "mosaicHost?.handleEvent(event.mosaicEnvelope)");
+    assert_contains(
+        &compose_main,
+        "mosaicHost?.handleEvent(event.mosaicEnvelope)",
+    );
     assert_contains(&compose_main, "applyMosaicResponse(response)");
     assert_contains(&compose_main, "Class.forName(\"MosaicHost\")");
     let compose_gradle = fs::read_to_string(tmp.path().join("compose").join("build.gradle.kts"))
@@ -1793,6 +1833,7 @@ fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
         ("SessionProgress", "#0f766e"),
         ("ReviewActions", "#7c3aed"),
         ("RatingControls", "#f87171"),
+        ("NoteTypeEditor", "#1d4ed8"),
     ];
 
     for (backend, artifact) in [

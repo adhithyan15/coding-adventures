@@ -167,9 +167,9 @@ same event parser as host intents so generated shells share one UI contract
 while file picking, dialogs, and concrete note payloads stay host-owned.
 `onAddNote` host intents include the selected deck name, all decks, available
 note types, and default deck/note-type IDs so native shells can open an editor
-without re-querying shared state. `onAddNoteType` includes existing note types
-plus a default Basic-style model draft that host editors can mutate and post
-back through `onSaveNoteType`.
+without re-querying shared state. `onAddNoteType` now starts the shared
+Mosaic note-type editor draft in the core facade instead of requiring each host
+to open its own model dialog.
 Host editors can post `onSaveNote` with a top-level or nested `note` payload
 containing `noteId`, `noteTypeId`, `deckId`, `fields`, and `tags`; field updates
 may be an array of `{ id|fieldId|name, value }` objects or a name/id keyed
@@ -181,6 +181,12 @@ The mounted Mosaic note editor uses the same reducer path through
 `onNoteEditorSelectField`, `onNoteEditorFieldValueChange`, `onNoteEditorTagsChange`,
 `onNoteEditorSaveNote`, `onNoteEditorDeleteNote`, and `onNoteEditorCancel`,
 deriving its editable note from the shared browser selection.
+The mounted Mosaic note-type editor follows the same pattern through
+`onNoteTypeEditorSelectNoteType`, `onNoteTypeEditorNameChange`,
+`onNoteTypeEditorStylesheetChange`, `onNoteTypeEditorNewNoteType`,
+`onNoteTypeEditorSaveNoteType`, `onNoteTypeEditorDeleteNoteType`, and
+`onNoteTypeEditorCancel`, so HTML, Electron, SwiftUI, XAML, Qt, Flutter, and
+Compose shells share one Basic-style note-type creation/editing flow.
 Host model editors can post `onSaveNoteType` with a top-level or nested
 `noteType` payload containing `id`/`noteTypeId`, `name`, `fields`, `templates`,
 and optional `stylesheet`; the shared reducer upserts the model and
