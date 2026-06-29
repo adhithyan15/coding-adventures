@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.227.0] - 2026-06-29
+
+### Added — `advanced-bigpass` end-to-end ADVANCED proof (size + runtime equivalence)
+
+A new test-only fixture (`tests/diff/advanced-bigpass/`) and integration test
+(`tests/diff_advanced_bigpass.rs`) that prove the whole ADVANCED pipeline
+cooperates on a realistic four-function geometry module, shrinking it from a
+195-byte `WHITESPACE_ONLY` baseline to 56 bytes (~71%) **without changing
+observable behaviour**:
+
+```text
+function f(x){return x * 10};report(12,25,f(7));sink(f);
+```
+
+The single output line exhibits four passes — dead-code elimination
+(`unusedPerimeter` tree-shaken), single-use inlining + constant folding
+(`area(3,4)`→`12`, `hypotSq(3,4)`→`25`, the runtime-equivalence anchors), the
+ADVANCED-only global rename (`scale`→`f`, contrasted against SIMPLE which keeps
+`scale`), and live-reference retention (`f(7)` + `sink(f)`). Size savings are
+measured against `WHITESPACE_ONLY` (not the raw source) so the shrink reflects
+optimization, not comment stripping. No production-code or CLI-surface change.
+
 ## [0.223.0] - 2026-06-27
 
 ### Added — SIMPLE/ADVANCED fold static `Math.max(…)` / `Math.min(…)` → numeric

@@ -1,0 +1,4 @@
+--compilation_level
+ADVANCED
+--js
+tests/diff/advanced-bigpass/input/a.js
