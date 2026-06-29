@@ -2004,17 +2004,43 @@ fn emit_events(
 
     writeln!(out, "public abstract record {name}Event").unwrap();
     writeln!(out, "{{").unwrap();
+    writeln!(out, "    public abstract string MosaicName {{ get; }}").unwrap();
+    writeln!(
+        out,
+        "    public virtual System.Collections.Generic.IReadOnlyDictionary<string, object?> MosaicPayload => new System.Collections.Generic.Dictionary<string, object?>();"
+    )
+    .unwrap();
+    writeln!(out).unwrap();
+    writeln!(
+        out,
+        "    public System.Collections.Generic.IReadOnlyDictionary<string, object?> MosaicEnvelope"
+    )
+    .unwrap();
+    writeln!(out, "    {{").unwrap();
+    writeln!(out, "        get").unwrap();
+    writeln!(out, "        {{").unwrap();
+    writeln!(
+        out,
+        "            var envelope = new System.Collections.Generic.Dictionary<string, object?>(MosaicPayload);"
+    )
+    .unwrap();
+    writeln!(out, "            envelope[\"event\"] = MosaicName;").unwrap();
+    writeln!(out, "            return envelope;").unwrap();
+    writeln!(out, "        }}").unwrap();
+    writeln!(out, "    }}").unwrap();
+    writeln!(out).unwrap();
     for emit in emits {
         let case_name = strip_on_prefix(&emit.name);
         let case_pascal = kebab_to_pascal_case(&case_name);
         if !is_safe_identifier(&case_pascal) {
             return Err(PipelineEmitError::UnsafeEmitName(case_pascal));
         }
+        let event_name = escape_csharp_string(&emit.name);
 
         if emit.params.is_empty() {
             writeln!(
                 out,
-                "    public sealed record {case_pascal}() : {name}Event;"
+                "    public sealed record {case_pascal}() : {name}Event\n    {{\n        public override string MosaicName => \"{event_name}\";\n    }}"
             )
             .unwrap();
         } else {
@@ -2027,16 +2053,36 @@ fn emit_events(
                 let ptype = emit_payload_to_csharp(&p.r#type);
                 params.push(format!("{ptype} {pname}"));
             }
+            let payload = csharp_event_payload_dictionary(emit)?;
             writeln!(
                 out,
-                "    public sealed record {case_pascal}({}) : {name}Event;",
-                params.join(", ")
+                "    public sealed record {case_pascal}({}) : {name}Event\n    {{\n        public override string MosaicName => \"{event_name}\";\n        public override System.Collections.Generic.IReadOnlyDictionary<string, object?> MosaicPayload => {payload};\n    }}",
+                params.join(", "),
             )
             .unwrap();
         }
     }
     writeln!(out, "}}").unwrap();
     Ok(out)
+}
+
+fn csharp_event_payload_dictionary(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
+    let mut entries = Vec::with_capacity(emit.params.len());
+    for param in &emit.params {
+        let key = kebab_to_camel_case(&param.name);
+        let property_name = kebab_to_pascal_case(&param.name);
+        if !is_safe_identifier(&property_name) {
+            return Err(PipelineEmitError::UnsafeEmitName(property_name));
+        }
+        entries.push(format!(
+            "[\"{}\"] = {property_name}",
+            escape_csharp_string(&key)
+        ));
+    }
+    Ok(format!(
+        "new System.Collections.Generic.Dictionary<string, object?> {{ {} }}",
+        entries.join(", ")
+    ))
 }
 
 fn emit_payload_to_csharp(t: &EmitPayloadType) -> String {
@@ -5448,12 +5494,34 @@ mod tests {
         let l = layout_with_root("Grid", box_root());
         let r = compile(&c, &l, &empty_style("Grid"));
         assert!(
-            r.events.contains("public sealed record Navigate(double Row, double Col) : GridEvent;"),
+            r.events.contains("public abstract string MosaicName { get; }"),
             "got:\n{}",
             r.events
         );
-        assert!(r.events.contains("public sealed record EditCommit(string Value) : GridEvent;"));
-        assert!(r.events.contains("public sealed record Cancel() : GridEvent;"));
+        assert!(
+            r.events.contains("public virtual System.Collections.Generic.IReadOnlyDictionary<string, object?> MosaicPayload"),
+            "got:\n{}",
+            r.events
+        );
+        assert!(
+            r.events.contains("public System.Collections.Generic.IReadOnlyDictionary<string, object?> MosaicEnvelope"),
+            "got:\n{}",
+            r.events
+        );
+        assert!(
+            r.events
+                .contains("public sealed record Navigate(double Row, double Col) : GridEvent"),
+            "got:\n{}",
+            r.events
+        );
+        assert!(r.events.contains("public override string MosaicName => \"onNavigate\";"));
+        assert!(r.events.contains("[\"row\"] = Row"));
+        assert!(r.events.contains("[\"col\"] = Col"));
+        assert!(r.events.contains("public sealed record EditCommit(string Value) : GridEvent"));
+        assert!(r.events.contains("public override string MosaicName => \"onEditCommit\";"));
+        assert!(r.events.contains("[\"value\"] = Value"));
+        assert!(r.events.contains("public sealed record Cancel() : GridEvent"));
+        assert!(r.events.contains("public override string MosaicName => \"onCancel\";"));
     }
 
     #[test]

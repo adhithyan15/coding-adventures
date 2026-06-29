@@ -872,109 +872,114 @@ fn native_project_shells_expose_engram_host_contract() {
 
     let xaml_events = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.Event.cs"))
         .expect("EngramApp.Event.cs");
+    assert_contains(&xaml_events, "public abstract string MosaicName { get; }");
     assert_contains(
         &xaml_events,
-        "public sealed record Reveal() : EngramAppEvent;",
+        "public System.Collections.Generic.IReadOnlyDictionary<string, object?> MosaicEnvelope",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record Again() : EngramAppEvent;",
+        "public sealed record Reveal() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record Hard() : EngramAppEvent;",
+        "public sealed record Again() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record Good() : EngramAppEvent;",
+        "public sealed record Hard() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record Easy() : EngramAppEvent;",
+        "public sealed record Good() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record Undo() : EngramAppEvent;",
+        "public sealed record Easy() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record BuryCard() : EngramAppEvent;",
+        "public sealed record Undo() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record BurySiblings() : EngramAppEvent;",
+        "public sealed record BuryCard() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record SuspendCard() : EngramAppEvent;",
+        "public sealed record BurySiblings() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record ToggleMark() : EngramAppEvent;",
+        "public sealed record SuspendCard() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsLearningStepsChange(string Value) : EngramAppEvent;",
+        "public sealed record ToggleMark() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsRelearningStepsChange(string Value) : EngramAppEvent;",
+        "public sealed record DeckOptionsLearningStepsChange(string Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsNewCardsChange(double Value) : EngramAppEvent;",
+        "public sealed record DeckOptionsRelearningStepsChange(string Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsMaximumIntervalChange(double Value) : EngramAppEvent;",
+        "public sealed record DeckOptionsNewCardsChange(double Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsEasyBonusChange(double Value) : EngramAppEvent;",
+        "public sealed record DeckOptionsMaximumIntervalChange(double Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsBuryNewSiblingsChange(bool Checked) : EngramAppEvent;",
+        "public sealed record DeckOptionsEasyBonusChange(double Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsBuryReviewSiblingsChange(bool Checked) : EngramAppEvent;",
+        "public sealed record DeckOptionsBuryNewSiblingsChange(bool Checked) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeckOptionsBuryInterdayLearningSiblingsChange(bool Checked) : EngramAppEvent;",
+        "public sealed record DeckOptionsBuryReviewSiblingsChange(bool Checked) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record ImportAnki() : EngramAppEvent;",
+        "public sealed record DeckOptionsBuryInterdayLearningSiblingsChange(bool Checked) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record ExportAnki() : EngramAppEvent;",
+        "public sealed record ImportAnki() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record AddNote() : EngramAppEvent;",
+        "public sealed record ExportAnki() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record AddNoteType() : EngramAppEvent;",
+        "public sealed record AddNote() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeleteNote() : EngramAppEvent;",
+        "public sealed record AddNoteType() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record DeleteNoteType() : EngramAppEvent;",
+        "public sealed record DeleteNote() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record BrowserSearch() : EngramAppEvent;",
+        "public sealed record DeleteNoteType() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
-        "public sealed record BrowserSelectResult(double Index) : EngramAppEvent;",
+        "public sealed record BrowserSearch() : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserSelectResult(double Index) : EngramAppEvent",
     );
 
     let capi_header = fs::read_to_string(
