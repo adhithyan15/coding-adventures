@@ -7,10 +7,13 @@ member (`collection.anki2`, `collection.anki21`, or `collection.anki21b`), and
 parses the legacy JSON `media` map into archive-name to filename metadata.
 It can resolve media archive members into filename metadata plus byte payloads,
 and can also write a deterministic legacy package envelope from existing
-`collection.anki2` bytes plus media assets. `write_v11_collection_bytes_from_engram_state`
-generates a legacy/V11 SQLite collection from `engram-core::AppState`, and
-`write_legacy_apkg_from_engram_state` wraps that collection in a deterministic
-APKG envelope.
+`collection.anki2` bytes plus media assets. `write_modern_apkg` writes the
+same SQLite payload in a modern `collection.anki21b` envelope with Anki `meta`
+protobuf metadata, zstd-compressed payloads, and protobuf media entries.
+`write_v11_collection_bytes_from_engram_state` generates a legacy/V11 SQLite
+collection from `engram-core::AppState`, while
+`write_legacy_apkg_from_engram_state` and `write_modern_apkg_from_engram_state`
+wrap that collection in legacy or modern APKG envelopes.
 
 It also parses legacy/V11 SQLite collection files into an owned Anki
 representation. `read_v11_collection` accepts APKG bytes, extracts

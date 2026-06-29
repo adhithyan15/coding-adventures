@@ -49,9 +49,11 @@ packages and modern `collection.anki21b` envelopes by decoding Anki's `meta`
 protobuf plus zstd-compressed collection/media payloads before the shared
 SQLite import path runs.
 `eg_export_anki_apkg` writes the current session as a deterministic legacy/V11
-APKG and returns the package bytes as a JSON byte array under `apkg`, keeping
-the native ABI string-shaped while target-specific shells decide how to save or
-share the bytes.
+APKG. `eg_export_anki_apkg_modern` writes the same state in a modern
+`collection.anki21b` envelope with zstd-compressed collection/media payloads.
+Both return package bytes as a JSON byte array under `apkg`, keeping the native
+ABI string-shaped while target-specific shells decide how to save or share the
+bytes.
 `eg_inspect_anki_apkg` returns collection/media manifest JSON, and
 `eg_read_anki_apkg_media` reads one archived media payload by archive name for
 native import flows that need to copy audio or images alongside imported cards.

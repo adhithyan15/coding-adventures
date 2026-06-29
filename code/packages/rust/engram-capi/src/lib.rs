@@ -11,6 +11,7 @@ use std::ptr;
 use engram_anki_package::{
     analyze_engram_media_references, inspect_apkg, read_media_file,
     read_v11_collection_as_engram_state, write_legacy_apkg_from_engram_state,
+    write_modern_apkg_from_engram_state,
 };
 use engram_core_wasm::EngramSession;
 use serde_json::{json, Value};
@@ -402,6 +403,16 @@ pub unsafe extern "C" fn eg_export_anki_apkg(session: *mut EgSession) -> *mut c_
 /// # Safety
 /// `session` must be a valid session pointer.
 #[no_mangle]
+pub unsafe extern "C" fn eg_export_anki_apkg_modern(session: *mut EgSession) -> *mut c_char {
+    if session.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr(export_modern_anki_apkg_json(&(*session).inner))
+}
+
+/// # Safety
+/// `session` must be a valid session pointer.
+#[no_mangle]
 pub unsafe extern "C" fn eg_analyze_media_references(session: *mut EgSession) -> *mut c_char {
     if session.is_null() {
         return ptr::null_mut();
@@ -545,6 +556,13 @@ fn import_anki_apkg_json(session: &mut EngramSession, bytes: &[u8]) -> String {
 
 fn export_anki_apkg_json(session: &EngramSession) -> String {
     match write_legacy_apkg_from_engram_state(session.state(), &[]) {
+        Ok(apkg) => ok_json_with("apkg", serde_json::to_value(apkg).unwrap_or(Value::Null)),
+        Err(error) => error_json(&error.message),
+    }
+}
+
+fn export_modern_anki_apkg_json(session: &EngramSession) -> String {
+    match write_modern_apkg_from_engram_state(session.state(), &[]) {
         Ok(apkg) => ok_json_with("apkg", serde_json::to_value(apkg).unwrap_or(Value::Null)),
         Err(error) => error_json(&error.message),
     }
@@ -993,6 +1011,32 @@ CREATE TABLE graves (
             assert_eq!(parsed["state"]["decks"][0]["name"], "Spanish::Latin");
             assert_eq!(parsed["state"]["cards"][0]["front"], "hola");
             assert_eq!(parsed["state"]["cards"][0]["back"], "hello");
+
+            let modern_exported = take(eg_export_anki_apkg_modern(session));
+            let modern_exported: Value = serde_json::from_str(&modern_exported).unwrap();
+            assert_eq!(modern_exported["ok"], true);
+            let modern_apkg = modern_exported["apkg"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|byte| byte.as_u64().unwrap() as u8)
+                .collect::<Vec<_>>();
+            let inspected = take(eg_inspect_anki_apkg(
+                session,
+                modern_apkg.as_ptr(),
+                modern_apkg.len(),
+            ));
+            let inspected: Value = serde_json::from_str(&inspected).unwrap();
+            assert_eq!(inspected["manifest"]["collection"]["format"], "sqlite21b");
+
+            let parsed = take(eg_parse_anki_apkg(
+                session,
+                modern_apkg.as_ptr(),
+                modern_apkg.len(),
+            ));
+            let parsed: Value = serde_json::from_str(&parsed).unwrap();
+            assert_eq!(parsed["ok"], true);
+            assert_eq!(parsed["state"]["cards"][0]["front"], "hola");
 
             eg_session_free(session);
         }

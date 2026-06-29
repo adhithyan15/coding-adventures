@@ -401,6 +401,49 @@ pub fn write_legacy_apkg(collection_anki2: &[u8], media_assets: &[MediaAsset<'_>
     writer.finish()
 }
 
+pub fn write_modern_apkg(
+    collection_anki21b: &[u8],
+    media_assets: &[MediaAsset<'_>],
+) -> Result<Vec<u8>, ApkgError> {
+    let mut writer = ZipWriter::new();
+
+    let mut metadata = Vec::new();
+    PackageMetadataProto {
+        version: PackageVersionProto::Latest as i32,
+    }
+    .encode(&mut metadata)
+    .map_err(|err| apkg_error(format!("failed to encode Anki package metadata: {err}")))?;
+    writer.add_file(META, &metadata, false);
+
+    let collection = encode_package_payload("collection", collection_anki21b)?;
+    writer.add_file(SQLITE_21B_COLLECTION, &collection, false);
+
+    let media_entries = MediaEntriesProto {
+        entries: media_assets
+            .iter()
+            .map(|asset| MediaEntryProto {
+                name: asset.filename.to_string(),
+                size: asset.data.len() as u32,
+                sha1: sum1(asset.data).to_vec(),
+                legacy_zip_filename: None,
+            })
+            .collect(),
+    };
+    let mut media_map = Vec::new();
+    media_entries
+        .encode(&mut media_map)
+        .map_err(|err| apkg_error(format!("failed to encode Anki media entries: {err}")))?;
+    let media_map = encode_package_payload("media map", &media_map)?;
+    writer.add_file(MEDIA_MAP, &media_map, false);
+
+    for (index, asset) in media_assets.iter().enumerate() {
+        let media = encode_package_payload(&format!("media file {index}"), asset.data)?;
+        writer.add_file(&index.to_string(), &media, false);
+    }
+
+    Ok(writer.finish())
+}
+
 pub fn write_v11_collection_bytes_from_engram_state(
     state: &AppState,
 ) -> Result<Vec<u8>, ApkgError> {
@@ -440,6 +483,23 @@ pub fn write_legacy_apkg_from_engram_state(
         .collect::<Vec<_>>();
     state_media.extend_from_slice(media_assets);
     Ok(write_legacy_apkg(&collection, &state_media))
+}
+
+pub fn write_modern_apkg_from_engram_state(
+    state: &AppState,
+    media_assets: &[MediaAsset<'_>],
+) -> Result<Vec<u8>, ApkgError> {
+    let collection = write_v11_collection_bytes_from_engram_state(state)?;
+    let mut state_media = state
+        .media_assets
+        .iter()
+        .map(|asset| MediaAsset {
+            filename: asset.filename.as_deref().unwrap_or(&asset.archive_name),
+            data: asset.data.as_slice(),
+        })
+        .collect::<Vec<_>>();
+    state_media.extend_from_slice(media_assets);
+    write_modern_apkg(&collection, &state_media)
 }
 
 pub fn read_v11_collection(data: &[u8]) -> Result<AnkiV11Collection, ApkgError> {
@@ -3277,6 +3337,11 @@ fn decode_package_payload(
     }
 }
 
+fn encode_package_payload(label: &str, bytes: &[u8]) -> Result<Vec<u8>, ApkgError> {
+    zstd_crate::stream::encode_all(Cursor::new(bytes), 0)
+        .map_err(|err| apkg_error(format!("failed to encode zstd-compressed {label}: {err}")))
+}
+
 fn media_manifest(
     reader: &ZipReader<'_>,
     format: CollectionFormat,
@@ -4589,6 +4654,54 @@ CREATE TABLE graves (
 
         let image = read_media_file(&exported, "1").unwrap();
         assert_eq!(image.filename.as_deref(), Some("images/card.png"));
+        assert_eq!(image.data, b"png");
+    }
+
+    #[test]
+    fn writes_modern_apkg_envelope_and_state_export() {
+        let sqlite = v11_sqlite_collection_bytes();
+        let media = [
+            MediaAsset {
+                filename: "audio/hola.mp3",
+                data: b"mp3",
+            },
+            MediaAsset {
+                filename: "images/card.png",
+                data: b"png",
+            },
+        ];
+
+        let modern = write_modern_apkg(&sqlite, &media).unwrap();
+        let manifest = inspect_apkg(&modern).unwrap();
+        assert_eq!(manifest.collection.name, SQLITE_21B_COLLECTION);
+        assert_eq!(manifest.collection.format, CollectionFormat::Sqlite21b);
+        assert_eq!(manifest.media.mapping["0"], "audio/hola.mp3");
+        assert_eq!(manifest.media.mapping["1"], "images/card.png");
+        assert!(manifest
+            .entries
+            .iter()
+            .any(|entry| entry.name == META && entry.size > 0));
+        assert!(manifest
+            .entries
+            .iter()
+            .all(|entry| entry.name != LEGACY_COLLECTION));
+
+        let collection = read_v11_collection(&modern).unwrap();
+        assert_eq!(collection.decks[1].name, "Spanish::Latin");
+        let audio = read_media_file(&modern, "0").unwrap();
+        assert_eq!(audio.filename.as_deref(), Some("audio/hola.mp3"));
+        assert_eq!(audio.data, b"mp3");
+
+        let imported_state =
+            read_v11_collection_as_engram_state(&write_legacy_apkg(&sqlite, &media)).unwrap();
+        let exported = write_modern_apkg_from_engram_state(&imported_state, &[]).unwrap();
+        let exported_manifest = inspect_apkg(&exported).unwrap();
+        assert_eq!(
+            exported_manifest.collection.format,
+            CollectionFormat::Sqlite21b
+        );
+        assert_eq!(exported_manifest.media.mapping["1"], "images/card.png");
+        let image = read_media_file(&exported, "1").unwrap();
         assert_eq!(image.data, b"png");
     }
 
