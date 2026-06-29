@@ -35,7 +35,9 @@ contract as React and route it through context-isolated IPC. The generated main
 process can load an optional host module from `electron/host.ts` (compiled to
 `dist-electron/host.js`) or from `MOSAIC_ELECTRON_HOST_MODULE`, so apps can
 bind generated UI events to shared business logic without editing renderer
-artifacts.
+artifacts. The generated `npm run dev` script compiles the Electron
+main/preload TypeScript before launching Electron so a fresh emitted project is
+runnable without a separate build step.
 
 ## Boundaries
 
