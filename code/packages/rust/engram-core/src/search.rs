@@ -235,6 +235,7 @@ struct SearchMetadata<'a> {
     note_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
     review_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
     deck_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
+    decks_by_original_id: HashMap<&'a str, Vec<&'a Deck>>,
     note_type_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
     deck_preset_names_by_id: HashMap<&'a str, Vec<String>>,
     deck_option_deck_ids: HashSet<&'a str>,
@@ -315,6 +316,11 @@ pub fn search_cards(
 impl<'a> SearchMetadata<'a> {
     fn from_state(state: &'a AppState) -> Self {
         let deck_config_names = anki_deck_config_names_by_id(state);
+        let decks_by_id: HashMap<&str, &Deck> = state
+            .decks
+            .iter()
+            .map(|deck| (deck.id.as_str(), deck))
+            .collect();
         let mut metadata = Self {
             deck_option_deck_ids: state
                 .deck_options
@@ -337,6 +343,13 @@ impl<'a> SearchMetadata<'a> {
                             .entry(source.target_id.as_str())
                             .or_default()
                             .push(original_id);
+                        if let Some(deck) = decks_by_id.get(source.target_id.as_str()) {
+                            metadata
+                                .decks_by_original_id
+                                .entry(original_id)
+                                .or_default()
+                                .push(*deck);
+                        }
                     }
 
                     if source
@@ -1261,7 +1274,7 @@ fn clause_matches(
         }
         SearchClauseKind::Duplicate(filter) => duplicate_matches(filter, note, note_type, metadata),
         SearchClauseKind::CardTemplate(term) => card_template_matches(term, card, note_type),
-        SearchClauseKind::Deck(term) => deck_matches(term, card, deck, &metadata.filtered_deck_ids),
+        SearchClauseKind::Deck(term) => deck_matches(term, card, deck, card_sources, metadata),
         SearchClauseKind::Preset(term) => preset_matches(term, card, deck, metadata),
         SearchClauseKind::NoteType(term) => note_type_matches(term, note, note_type),
         SearchClauseKind::Tag(tag) => tag_matches(tag, note),
@@ -1546,10 +1559,12 @@ fn deck_matches(
     term: &str,
     card: &Card,
     deck: Option<&Deck>,
-    filtered_deck_ids: &HashSet<&str>,
+    card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
 ) -> bool {
     if term == "filtered" {
-        return filtered_deck_ids.contains(card.deck_id.as_str());
+        return metadata.filtered_deck_ids.contains(card.deck_id.as_str())
+            || imported_anki_original_deck_id(card_sources).is_some();
     }
 
     anki_hierarchical_name_matches(term, &card.deck_id)
@@ -1557,6 +1572,33 @@ fn deck_matches(
             anki_hierarchical_name_matches(term, &deck.id)
                 || anki_hierarchical_name_matches(term, &deck.name)
         })
+        || imported_original_deck_matches(term, card_sources, metadata)
+}
+
+fn imported_original_deck_matches(
+    term: &str,
+    card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
+) -> bool {
+    let Some(original_deck_id) = imported_anki_original_deck_id(card_sources) else {
+        return false;
+    };
+    let original_deck_id = original_deck_id.to_string();
+    metadata
+        .decks_by_original_id
+        .get(original_deck_id.as_str())
+        .is_some_and(|decks| {
+            decks.iter().any(|deck| {
+                anki_hierarchical_name_matches(term, &deck.id)
+                    || anki_hierarchical_name_matches(term, &deck.name)
+            })
+        })
+}
+
+fn imported_anki_original_deck_id(card_sources: &[&ExternalSourceRecord]) -> Option<i64> {
+    card_sources.iter().find_map(|source| {
+        source_i64_from_data(source, "originalDeckId").filter(|deck_id| *deck_id != 0)
+    })
 }
 
 fn preset_matches(
@@ -3383,7 +3425,13 @@ mod tests {
             external_sources: vec![
                 source_record(ExternalSourceTarget::NoteType, "local-basic", "101"),
                 source_record(ExternalSourceTarget::Deck, "native", "2"),
-                source_record(ExternalSourceTarget::Deck, "filtered", "3"),
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Deck,
+                    target_id: "filtered".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some("3".to_string()),
+                    data: BTreeMap::from([("dyn".to_string(), "1".to_string())]),
+                },
                 card_source("filtered-card", 3, 2),
             ],
             ..AppState::default()
@@ -3400,6 +3448,9 @@ mod tests {
         assert_eq!(ids_for("did:2"), vec!["native-card", "filtered-card"]);
         assert_eq!(ids_for("did:3"), vec!["filtered-card"]);
         assert_eq!(ids_for("did:native"), vec!["native-card"]);
+        assert_eq!(ids_for("deck:Native"), vec!["native-card", "filtered-card"]);
+        assert_eq!(ids_for("deck:Filtered"), vec!["filtered-card"]);
+        assert_eq!(ids_for("deck:filtered"), vec!["filtered-card"]);
         assert!(ids_for("did:4").is_empty());
         assert_eq!(ids_for("mid:101"), vec!["native-card", "filtered-card"]);
         assert_eq!(

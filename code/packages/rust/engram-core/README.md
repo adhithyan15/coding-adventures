@@ -95,6 +95,8 @@ available, `flag:` uses preserved Anki card flags, `is:marked` recognizes
 Anki's `marked` note tag, and `prop:due` uses imported Anki due metadata.
 `added:` uses imported Anki card-id timestamps when available. `prop:pos` /
 `prop:position` uses imported Anki new-card queue positions when available.
+For imported filtered-deck cards, `deck:` also matches the preserved original
+deck ID/name.
 Imported Anki card-row metrics also power `prop:ivl`, `prop:reps`,
 `prop:lapses`, and `prop:ease` searches when preserved source data is present.
 `dupe:notetype,text` compares Anki-style first-field text, using preserved
