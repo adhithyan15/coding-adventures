@@ -2,12 +2,10 @@
 //
 //   Row [ nav ]
 //     For (each: slot: items, as: item, index: i)
-//       HostLink [ nav-link ] (
-//         href: "#",
-//         label: item,
-//         external: false,
-//         onActivate: emit: onSelect
-//       )
+//       If (when: i == activeIndex)
+//         HostLink [ nav-link-active ] (...)
+//       Else
+//         HostLink [ nav-link ] (...)
 //
 // v0.4 swaps the per-item HostButton for HostLink — same rationale
 // as Breadcrumb's rewrite. The "nav as a row of links" idiom is
@@ -20,17 +18,29 @@
 //
 // `external: false` + `href: "#"` is the same pattern as
 // Breadcrumb — toolkit owns the layout, host owns routing via
-// `onActivate(index)`.
+// `onActivate(index)`. active-index remains the public kebab-case
+// slot; predicates use activeIndex because emitters expose kebab
+// slots as backend-safe camel/Pascal identifiers.
 
 layout Nav {
   Row [ nav ] {
     For ( each: slot: items , as: item , index: i ) {
-      HostLink [ nav-link ] (
-        href : "#" ,
-        label : item ,
-        external : false ,
-        onActivate : emit: onSelect
-      )
+      If ( when: i == activeIndex ) {
+        HostLink [ nav-link-active ] (
+          href : "#" ,
+          label : item ,
+          external : false ,
+          onActivate : emit: onSelect
+        )
+      }
+      Else {
+        HostLink [ nav-link ] (
+          href : "#" ,
+          label : item ,
+          external : false ,
+          onActivate : emit: onSelect
+        )
+      }
     }
   }
 }

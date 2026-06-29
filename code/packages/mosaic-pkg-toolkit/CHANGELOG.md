@@ -210,6 +210,9 @@ components (`Tooltip`, `NumberInput`) wrap `HostTooltip` and
 - **Layout:** each item now emits `HostLink[nav-link]` instead of
   `HostButton[nav-link]`. Same rationale + same `href: "#"` +
   `external: false` choices as Breadcrumb.
+- **Active state:** the active item now emits
+  `HostLink[nav-link-active]`, giving every backend a concrete
+  part to style from `active-index`.
 - **Interface:** unchanged — `Nav.onSelect(index)` still fires
   on activation; internal wiring moved from `onClick` to
   `onActivate`.
