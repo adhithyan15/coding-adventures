@@ -19,22 +19,24 @@ mod snapshot;
 mod template;
 
 pub use csv::{
-    export_cards_anki_basic_tsv, export_cards_csv, import_anki_basic_tsv, import_basic_cards_csv,
-    import_cards_csv, AnkiBasicTsvExportOptions, BasicCardCsvImportOptions, CsvError,
+    export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv, import_anki_basic_tsv,
+    import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv, AnkiBasicTsvExportOptions,
+    AnkiNoteTsvImport, AnkiNoteTsvImportOptions, BasicCardCsvImportOptions, CsvError,
 };
 pub use history::summarize_review_history;
 pub use model::{
-    ActiveSessionState, AppState, Card, CardFlag, CardLineage, CardProgress, CardState,
-    CardTemplate, DailyStudyLimitUsage, Deck, DeckStats, FieldDef, GeneratedCard, Note,
+    ActiveSessionState, AppState, Card, CardFlag, CardLineage, CardProgress, CardProgressSnapshot,
+    CardState, CardTemplate, DailyStudyLimitUsage, Deck, DeckOptions, DeckOptionsPreset, DeckStats,
+    ExternalSourceRecord, ExternalSourceTarget, FieldDef, GeneratedCard, MediaAssetRecord, Note,
     NoteFieldValue, NoteType, Rating, RatingCounts, Review, ReviewHistorySummary, Session,
     SessionProgress, SessionStatus,
 };
 pub use queue::{
     build_session_queue, build_session_queue_with_daily_limits, build_session_queue_with_options,
-    get_daily_study_limit_usage, get_deck_stats, is_deck_caught_up,
+    deck_options_for_state, get_daily_study_limit_usage, get_deck_stats, is_deck_caught_up,
 };
 pub use reducer::{reduce, EngramCommand};
-pub use scheduler::{schedule_review, DeckOptions};
+pub use scheduler::schedule_review;
 pub use search::{search_cards, CardSearchResult, SearchError};
 pub use session::get_active_session_progress;
 pub use sm2::{
@@ -45,4 +47,7 @@ pub use snapshot::{
     create_engram_snapshot, restore_engram_snapshot, EngramSnapshot, SnapshotError,
     ENGRAM_SNAPSHOT_APP, ENGRAM_SNAPSHOT_VERSION,
 };
-pub use template::{generate_cards_for_note, materialize_generated_card, render_template};
+pub use template::{
+    generate_cards_for_note, materialize_generated_card, rename_note_type_field, render_template,
+    render_template_with_front_side,
+};

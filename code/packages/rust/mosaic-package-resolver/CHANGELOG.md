@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Added `LayoutPackageResolver`, a shared `pkg::P::C` layout inliner that
+  compiles referenced component layouts, rewrites slot/event bindings, detects
+  package-reference cycles, and rejects source symlink escapes.
+- Added `first_qualified_tag()` for post-resolution sanity checks.
+
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); the crate follows
 SemVer.

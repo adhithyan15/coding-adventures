@@ -89,15 +89,26 @@ Current reducer integration:
   `MarkCard`, `UnmarkCard`) and are exposed through the JSON facade.
 - `search_cards` provides the first shared collection-browser query engine with
   text, deck, note type, field-side, tag, state, due, suspended, buried, flag,
-  marked, negation, and `OR` filters.
+  marked, negation, parenthesized grouping, and `OR` filters.
 - Reviews carry optional previous/resulting progress snapshots so
-  `UndoLastReview` can restore card progress, review history, and session
-  counters without host-specific logic.
+  `UndoLastReview` can restore card progress, sibling bury snapshots, active
+  queue state, review history, and session counters without host-specific
+  logic.
 - Durable cards can carry optional note/template lineage, and
   `BuryCardSiblings` uses that lineage to bury same-note sibling cards until a
   host-provided boundary.
+- `RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` let hosts
+  apply Anki-style sibling burying atomically during review; the JSON facade
+  exposes this as optional `burySiblingsUntil` on `rateCard`.
 - Generated note-template cards can be materialized into durable `Card` records
   with lineage through the JSON facade and C ABI.
+- Anki-style Cloze templates using `{{cloze:Field}}` now generate one card per
+  `{{cN::text::hint}}` ordinal in Rust core, with cloze lineage exposed through
+  the JSON facade and C ABI.
+- `rename_note_type_field` / `EngramCommand::RenameNoteTypeField` migrate
+  normal template references, Cloze template references, and required-field
+  names while keeping note field IDs stable; the command is exposed through the
+  JSON facade.
 - `create_engram_snapshot` / `restore_engram_snapshot` define the versioned
   Engram JSON backup shape in Rust and are exposed through the JSON facade.
 - `export_cards_csv` / `import_cards_csv` define a strict round-trippable card
@@ -110,6 +121,15 @@ Current reducer integration:
   facade and C ABI.
 - `import_anki_basic_tsv` parses Anki Basic front/back text files with headers
   and quoted fields, and is exposed through the JSON facade and C ABI.
+- Note-backed Anki TSV import/export now supports Basic and Basic-and-reversed
+  rows as `NoteType`, `Note`, and generated lineage cards, including Tags
+  column preservation through the JSON facade and C ABI.
+- Note-backed Anki TSV import also supports Cloze rows with `Text`, optional
+  `Extra`, and `Tags` columns, producing Cloze note models and cloze lineage
+  cards through the JSON facade.
+- Note-backed Anki TSV import preserves custom note-type field columns as
+  notes, including Tags metadata, without inventing cards when the source text
+  file does not contain real template definitions.
 - `summarize_review_history` derives deck-scoped review-log summaries for a
   timestamp range and is exposed through the JSON facade and C ABI.
 - `get_daily_study_limit_usage` and
@@ -144,8 +164,12 @@ Tests:
 
 - One note can generate multiple cards.
 - Empty required fields suppress invalid generated cards.
-- Renaming a field migrates template references where possible.
+- Renaming a field migrates template references where possible. Initial Rust
+  core support covers normal and Cloze template references plus required-field
+  names, with reducer and JSON facade command coverage.
 - Generated card IDs remain stable across harmless note edits.
+- Cloze note templates generate stable sibling cards per cloze ordinal. Initial
+  support exists in core plus JSON/C facades.
 
 ### 1.3 Scheduler Parity Track
 
@@ -158,8 +182,8 @@ at least:
 - easy interval
 - lapse handling
 - bury siblings until next day. Core and JSON facade support exists for
-  lineage-backed card siblings; UI controls and automatic scheduler integration
-  remain.
+  lineage-backed sibling burying both as a direct command and as an atomic
+  `rateCard` option; UI controls/settings still need to bind to it.
 - deck options
 - daily limits. Core, JSON facade, and C ABI support exists for review-log-aware
   daily queue limits; UI settings still need to bind to it.
@@ -192,7 +216,7 @@ Support:
 - tag filters
 - suspended/buried flags
 - flag/mark filters
-- simple boolean operators (`OR`, implicit AND, and negation)
+- simple boolean operators (`OR`, implicit AND, negation, and parentheses)
 
 Tests:
 
@@ -200,8 +224,8 @@ Tests:
   unterminated quotes.
 - Search result stability. Initial core tests preserve source card order.
 - Tag, deck, and note type filters compose with text filters. Initial core
-  support exists for implicit AND, `OR`, and negation; parentheses and richer
-  expressions remain.
+  support exists for implicit AND, `OR`, negation, and parenthesized groups;
+  richer expressions remain.
 - Hidden-card stats. Deck stats now report suspended and buried counts from the
   same logic used by queues.
 
@@ -216,8 +240,100 @@ Formats:
 - CSV deck import/export. Initial Rust support exists for full card CSV
   round-trips and simpler generated-ID `front,back` imports.
 - Anki TSV text compatibility. Basic front/back import/export exists in core,
-  JSON facade, and C ABI; richer note-type/media export remains.
-- APKG import/export eventually, via a dedicated facade or package crate
+  JSON facade, and C ABI; note-backed Basic and Basic-and-reversed TSV
+  import/export now creates notes, generated cards, and tag metadata. Cloze TSV
+  import creates cloze note models and cards. Custom note-type TSV import now
+  preserves arbitrary field columns as notes without generated cards. Richer
+  custom note-template/media export remains.
+- APKG import/export eventually, via a dedicated facade or package crate.
+  `engram-anki-package` now provides the archive-inspection foundation for
+  legacy and modern collection members plus legacy JSON media maps, and can
+  resolve media payloads or write deterministic legacy package envelopes from
+  existing `collection.anki2` bytes plus media assets. It also parses
+  legacy/V11 SQLite collection bytes into owned Anki decks, note types, notes,
+  cards, revlog rows, and graves, and maps them into `engram-core::AppState`
+  with deterministic IDs, rendered card fronts/backs, cloze card rendering,
+  and preserved scheduled-card color flags. The same crate now generates
+  deterministic legacy/V11 SQLite collection bytes from `AppState` and wraps
+  them in an APKG envelope for the first native export path.
+
+Next APKG SQLite milestone:
+
+- Target Anki legacy/V11 collection files first (`collection.anki2` and
+  `collection.anki21`). `engram-anki-package` now exposes
+  `read_v11_collection`, `parse_v11_collection_bytes`, and
+  `read_v11_collection_bytes` as the package boundary for this reader.
+- Keep `collection.anki21b` detected but explicitly unsupported until Engram
+  adds modern package handling for V18, zstd-compressed collection payloads, and
+  protobuf media entries.
+- Added a real SQLite-file dependency in `engram-anki-package`; APKG-specific
+  parsing remains outside `engram-core`.
+- Parsed V11 decks from `col.decks`, models from `col.models`, notes from
+  `notes.flds`/`notes.tags`, card lineage from `cards.nid`/`cards.ord`, card
+  progress from `cards`, and review history from `revlog.ease`/`revlog.id` now
+  map into `engram-core::AppState`.
+- V11 due values now preserve Anki's distinction between intraday learning
+  timestamps and collection-day-based review/day-learning due dates.
+- Card flags on new V11 cards now import as metadata-only progress overlays;
+  shared queue, stats, and search logic still treat those cards as new while
+  preserving their flag filters.
+- Search now follows `Card.lineage.note_id` before falling back to generated
+  `note::template` card IDs, so imported numeric Anki card IDs still match
+  note-field text, tags, and note-type filters.
+- Search accepts additional Anki-style aliases including `is:learn`,
+  `state:relearn`, and numeric `flag:1` through `flag:7` alongside color names.
+- Search now supports Anki-style recent-event and property filters backed by
+  shared Engram state: `added:N`, `edited:N`, `introduced:N`, `rated:N[:rating]`,
+  and `prop:` comparisons for interval, due offset, repetitions, lapses, ease,
+  and rated review days.
+- Template rendering now supports simple Anki-style conditional/inverted
+  sections, `{{FrontSide}}` for generated/imported card backs, and `hint:` /
+  `type:` field prefixes. APKG import now infers required fields from imported
+  template question formats instead of making every model field mandatory.
+- Imported V11 revlog rows now populate Engram review progress snapshots with
+  previous/resulting intervals and ease factors, allowing legacy APKG export to
+  round-trip `ivl`, `lastIvl`, and `factor` for imported reviews.
+- `engram-core::AppState` now includes durable external source records.
+  V11 import stores collection config/graves, raw deck/model JSON, note
+  GUID/checksum/data, and card scheduler/filter metadata there; V11 export
+  uses those records to preserve CSS/template extras, deck config, tags, note
+  metadata, `odue`/`odid`, card data, and graves while still letting Engram's
+  current fields win when edited.
+- `engram-core::AppState` also carries durable media assets. V11 APKG import
+  copies resolved media payloads into the shared state, snapshots preserve them,
+  and legacy APKG export includes state media automatically so C ABI/native
+  shells do not need to re-supply imported audio/images.
+- Imported Anki deck configuration now maps into durable Engram deck option
+  presets. Shared queueing and default review commands use those presets when
+  no explicit options are passed, and legacy APKG export writes the corresponding
+  `dconf` entries while preserving imported deck `conf` IDs.
+- Media reference analysis is available for native shells: the APKG bridge can
+  scan note fields/card HTML for Anki `[sound:...]` and local `src` references,
+  then report referenced filenames, matched state media assets, missing files,
+  and unreferenced assets through `eg_analyze_media_references`.
+- Host-managed media copy/prune flows now use shared Rust commands:
+  `upsertMediaAsset`, `deleteMediaAsset`, and `deleteMediaAssets` mutate
+  `AppState.media_assets` through the same reducer/JSON/C ABI path as review
+  actions, so web and native shells do not need separate media reducers.
+- `engram-capi` now exposes `eg_parse_anki_apkg` for native import previews and
+  `eg_import_anki_apkg` for applying supported APKG bytes into the shared
+  session state. Both functions use the same JSON `{ ok, state/error }`
+  contract as the rest of the native facade.
+- Native package inspection and single-media extraction are available through
+  `eg_inspect_anki_apkg` and `eg_read_anki_apkg_media`, so SwiftUI/XAML/Qt
+  shells can inspect package contents and copy referenced audio/images without
+  duplicating ZIP/media-map parsing.
+- `eg_export_anki_apkg` now exports the current session as a deterministic
+  legacy/V11 APKG JSON byte array for native shells. The writer preserves
+  imported numeric IDs when possible, allocates stable numeric IDs for
+  Engram-native rows, writes decks/models/notes/cards/progress/revlog rows, and
+  falls back to a synthetic Basic note type for standalone front/back cards.
+- Next export fidelity steps: preserve filtered deck semantics beyond
+  `odue`/`odid`, add user-facing media copy/prune commands, and add modern
+  `.anki21b` package writing after the V18 reader exists.
+- SQL-built V11 fixtures and package round-trips through the existing ZIP
+  envelope helpers now cover the parser. Next: add a small checked-in
+  Anki-generated golden fixture.
 
 Tests:
 
@@ -274,6 +390,19 @@ Status:
 - `code/packages/rust/engram-capi` exposes the first native ABI over
   `engram-core-wasm`, including dispatch, snapshots/backups, queue/stats,
   generated cards, search, and CSV helpers.
+- `engram-core-wasm::EngramSession::engram_app_props` and
+  `eg_engram_app_props` return a flat props object keyed by the exact
+  `EngramApp.mil` Mosaic slots, giving HTML/React/native shells one shared
+  binding surface for deck stats, session progress, and the current review
+  card.
+- Native APKG byte-slice imports are now available through `eg_parse_anki_apkg`
+  and `eg_import_anki_apkg`, backed by `engram-anki-package` and returning the
+  same JSON result shape as other C ABI calls.
+- Native APKG manifest inspection and on-demand media extraction are exposed
+  through the C ABI as JSON helpers, keeping ZIP/media-map behavior out of
+  target-specific shells.
+- Native APKG export is exposed through `eg_export_anki_apkg`, returning a JSON
+  byte array for the generated legacy/V11 package.
 
 ## Workstream 3: Engram Web App
 
@@ -392,15 +521,45 @@ Emit React first, then validate one native target.
 
 Status:
 
+- `code/packages/mosaic-pkg-deck-stats` adds reusable total, new, due,
+  learning, and hidden deck counters with label/value slots ready to bind to
+  shared Engram core deck-stat JSON.
 - `code/packages/mosaic-pkg-review-card` adds the first reusable
-  `ReviewCard` component package.
-- The component package test compiles the same `.mil/.mll/.msl` sources
-  through React, HTML, SwiftUI, XAML, Qt, Compose, and Flutter pipeline
-  emitters.
+  `ReviewCard` component package. It now composes
+  `mosaic-pkg-rating-controls` instead of owning the rating button row.
+- `code/packages/mosaic-pkg-review-actions` adds reusable Anki-style undo,
+  bury-card, bury-siblings, suspend-card, and mark/unmark review controls.
+- `code/packages/mosaic-pkg-rating-controls` adds reusable
+  Again/Hard/Good/Easy answer grading controls with label slots and review
+  events.
+- `code/packages/mosaic-pkg-session-progress` adds reusable current,
+  remaining, correct, and total review-session counters with label/value slots
+  ready to bind to shared Engram core facade JSON.
+- Mosaic package artifact builds now inline nested package layouts and merge
+  dependency package styles before backend emission. Dependency styles apply
+  first and parent/app styles apply last, preserving reusable defaults while
+  allowing deliberate overrides.
+- The component package tests compile the same `.mil/.mll/.msl` sources
+  through React, HTML, SwiftUI, XAML, Qt, Compose, and Flutter paths, and the
+  app package test verifies the `EngramApp -> DeckStatsPanel`,
+  `EngramApp -> SessionProgress`, and `EngramApp -> ReviewCard ->
+  RatingControls` chains through HTML, React, SwiftUI, XAML, Qt, and Flutter
+  artifacts.
+- The Engram app smoke test now compares `EngramSession::engram_app_props`
+  keys against the compiled `EngramApp.mil` slots, so shared core/facade
+  bindings fail fast when the Mosaic app interface changes.
+- The Engram event bridge now handles generated review action events from the
+  Mosaic app (`onUndo`, `onBuryCard`, `onBurySiblings`, `onSuspendCard`, and
+  `onToggleMark`) by dispatching the existing shared Rust reducer commands.
+- `mosaic-package-artifact-builder` now emits XAML project-shell side files
+  through the same package build path as React/HTML/Qt/SwiftUI/etc., and the
+  Engram app smoke test verifies native project shells for Qt, SwiftUI, and
+  XAML from the same Mosaic app sources.
 - `code/programs/mosaic/engram-app` adds the Engram Mosaic app package. The
-  app exports `EngramApp`, declares a dependency on `mosaic-pkg-review-card`,
-  and mounts `pkg::mosaic-pkg-review-card::ReviewCard` rather than owning the
-  review-card component itself.
+  app exports `EngramApp`, declares dependencies on `mosaic-pkg-deck-stats`,
+  `mosaic-pkg-review-card`, and `mosaic-pkg-session-progress`, and mounts
+  package components rather than owning deck-stat, review-card, or
+  progress-counter component implementations itself.
 - Shared `SessionProgress` counters are available in `engram-core`,
   `engram-core-wasm`, and `engram-capi` for Mosaic/native review screens.
 - This split is the first concrete pivot point for moving Engram UI out of

@@ -17,6 +17,7 @@ publish     = false
 mosmodel-compiler   = { path = "../rust/mosmodel-compiler" }
 moslayout-compiler  = { path = "../rust/moslayout-compiler" }
 mosstyle-compiler   = { path = "../rust/mosstyle-compiler" }
+mosaic-package-artifact-builder = { path = "../rust/mosaic-package-artifact-builder" }
 mosaic-emit-compose = { path = "../rust/mosaic-emit-compose" }
 mosaic-emit-flutter = { path = "../rust/mosaic-emit-flutter" }
 mosaic-emit-html    = { path = "../rust/mosaic-emit-html" }
@@ -24,6 +25,7 @@ mosaic-emit-qt      = { path = "../rust/mosaic-emit-qt" }
 mosaic-emit-react   = { path = "../rust/mosaic-emit-react" }
 mosaic-emit-swiftui = { path = "../rust/mosaic-emit-swiftui" }
 mosaic-emit-xaml    = { path = "../rust/mosaic-emit-xaml" }
+tempfile            = "3"
 toml                = "0.8"
 
 [[test]]

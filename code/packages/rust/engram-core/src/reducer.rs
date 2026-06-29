@@ -1,9 +1,11 @@
 use crate::model::{
-    ActiveSessionState, AppState, Card, CardFlag, CardProgress, Deck, Rating, Review, Session,
-    SessionStatus,
+    ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, Deck,
+    DeckOptions, ExternalSourceRecord, ExternalSourceTarget, MediaAssetRecord, Rating, Review,
+    Session, SessionStatus,
 };
-use crate::scheduler::{schedule_review, DeckOptions};
+use crate::scheduler::schedule_review;
 use crate::sm2::INITIAL_EASE_FACTOR;
+use crate::template::rename_note_type_field;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum EngramCommand {
@@ -21,6 +23,21 @@ pub enum EngramCommand {
     },
     DeleteDeck {
         deck_id: String,
+    },
+    RenameNoteTypeField {
+        note_type_id: String,
+        field_id: String,
+        name: String,
+        updated_at: u64,
+    },
+    UpsertMediaAsset {
+        asset: MediaAssetRecord,
+    },
+    DeleteMediaAsset {
+        asset_id: String,
+    },
+    DeleteMediaAssets {
+        asset_ids: Vec<String>,
     },
     CreateCard {
         id: String,
@@ -84,6 +101,14 @@ pub enum EngramCommand {
         rating: Rating,
         reviewed_at: u64,
     },
+    RateCardAndBurySiblings {
+        review_id: String,
+        session_id: String,
+        card_id: String,
+        rating: Rating,
+        reviewed_at: u64,
+        buried_until: u64,
+    },
     RateCardWithOptions {
         review_id: String,
         session_id: String,
@@ -91,6 +116,15 @@ pub enum EngramCommand {
         rating: Rating,
         reviewed_at: u64,
         deck_options: DeckOptions,
+    },
+    RateCardWithOptionsAndBurySiblings {
+        review_id: String,
+        session_id: String,
+        card_id: String,
+        rating: Rating,
+        reviewed_at: u64,
+        deck_options: DeckOptions,
+        buried_until: u64,
     },
     UndoLastReview {
         session_id: String,
@@ -145,6 +179,12 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 .filter(|card| card.deck_id == deck_id)
                 .map(|card| card.id.clone())
                 .collect();
+            let note_ids: Vec<String> = state
+                .notes
+                .iter()
+                .filter(|note| note.deck_id == deck_id)
+                .map(|note| note.id.clone())
+                .collect();
             let session_ids: Vec<String> = state
                 .sessions
                 .iter()
@@ -190,6 +230,33 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     .filter(|review| !session_ids.contains(&review.session_id))
                     .cloned()
                     .collect(),
+                deck_options: state
+                    .deck_options
+                    .iter()
+                    .filter(|preset| preset.deck_id != deck_id)
+                    .cloned()
+                    .collect(),
+                external_sources: state
+                    .external_sources
+                    .iter()
+                    .filter(|source| {
+                        source.target != ExternalSourceTarget::Deck || source.target_id != deck_id
+                    })
+                    .filter(|source| {
+                        source.target != ExternalSourceTarget::Card
+                            || !card_ids.contains(&source.target_id)
+                    })
+                    .filter(|source| {
+                        source.target != ExternalSourceTarget::Note
+                            || !note_ids.contains(&source.target_id)
+                    })
+                    .filter(|source| {
+                        source.target != ExternalSourceTarget::Session
+                            || !session_ids.contains(&source.target_id)
+                    })
+                    .cloned()
+                    .collect(),
+                media_assets: state.media_assets.clone(),
                 active_session: state
                     .active_session
                     .as_ref()
@@ -197,6 +264,51 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     .cloned(),
             }
         }
+        EngramCommand::RenameNoteTypeField {
+            note_type_id,
+            field_id,
+            name,
+            updated_at,
+        } => {
+            let mut next = state.clone();
+            for note_type in &mut next.note_types {
+                if note_type.id == note_type_id {
+                    *note_type = rename_note_type_field(note_type, &field_id, &name, updated_at);
+                    break;
+                }
+            }
+            next
+        }
+        EngramCommand::UpsertMediaAsset { asset } => {
+            let mut next = state.clone();
+            match next
+                .media_assets
+                .iter_mut()
+                .find(|existing| existing.id == asset.id)
+            {
+                Some(existing) => *existing = asset,
+                None => next.media_assets.push(asset),
+            }
+            next
+        }
+        EngramCommand::DeleteMediaAsset { asset_id } => AppState {
+            media_assets: state
+                .media_assets
+                .iter()
+                .filter(|asset| asset.id != asset_id)
+                .cloned()
+                .collect(),
+            ..state.clone()
+        },
+        EngramCommand::DeleteMediaAssets { asset_ids } => AppState {
+            media_assets: state
+                .media_assets
+                .iter()
+                .filter(|asset| !asset_ids.contains(&asset.id))
+                .cloned()
+                .collect(),
+            ..state.clone()
+        },
         EngramCommand::CreateCard {
             id,
             deck_id,
@@ -244,6 +356,11 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 .filter(|progress| progress.card_id != card_id)
                 .cloned()
                 .collect(),
+            external_sources: without_external_source_target(
+                &state.external_sources,
+                ExternalSourceTarget::Card,
+                &card_id,
+            ),
             active_session: remove_card_from_active_session(state.active_session.clone(), &card_id),
             ..state.clone()
         },
@@ -388,15 +505,39 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             card_id,
             rating,
             reviewed_at,
-        } => reduce_rate_card(
-            state,
+        } => {
+            let deck_options = deck_options_for_card(state, &card_id);
+            reduce_rate_card(
+                state,
+                review_id,
+                session_id,
+                card_id,
+                rating,
+                reviewed_at,
+                &deck_options,
+                None,
+            )
+        }
+        EngramCommand::RateCardAndBurySiblings {
             review_id,
             session_id,
             card_id,
             rating,
             reviewed_at,
-            &DeckOptions::default(),
-        ),
+            buried_until,
+        } => {
+            let deck_options = deck_options_for_card(state, &card_id);
+            reduce_rate_card(
+                state,
+                review_id,
+                session_id,
+                card_id,
+                rating,
+                reviewed_at,
+                &deck_options,
+                Some(buried_until),
+            )
+        }
         EngramCommand::RateCardWithOptions {
             review_id,
             session_id,
@@ -412,6 +553,25 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             rating,
             reviewed_at,
             &deck_options,
+            None,
+        ),
+        EngramCommand::RateCardWithOptionsAndBurySiblings {
+            review_id,
+            session_id,
+            card_id,
+            rating,
+            reviewed_at,
+            deck_options,
+            buried_until,
+        } => reduce_rate_card(
+            state,
+            review_id,
+            session_id,
+            card_id,
+            rating,
+            reviewed_at,
+            &deck_options,
+            Some(buried_until),
         ),
         EngramCommand::UndoLastReview { session_id } => undo_last_review(state, &session_id),
         EngramCommand::AdvanceSession => {
@@ -440,12 +600,48 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
     }
 }
 
+fn without_external_source_target(
+    sources: &[ExternalSourceRecord],
+    target: ExternalSourceTarget,
+    target_id: &str,
+) -> Vec<ExternalSourceRecord> {
+    sources
+        .iter()
+        .filter(|source| source.target != target || source.target_id != target_id)
+        .cloned()
+        .collect()
+}
+
+fn deck_options_for_card(state: &AppState, card_id: &str) -> DeckOptions {
+    state
+        .cards
+        .iter()
+        .find(|card| card.id == card_id)
+        .and_then(|card| {
+            state
+                .deck_options
+                .iter()
+                .find(|preset| preset.deck_id == card.deck_id)
+        })
+        .map(|preset| preset.options.clone())
+        .unwrap_or_default()
+}
+
 fn bury_card_siblings(
     state: &AppState,
     card_id: &str,
     buried_at: u64,
     buried_until: u64,
 ) -> AppState {
+    bury_card_siblings_with_snapshots(state, card_id, buried_at, buried_until).0
+}
+
+fn bury_card_siblings_with_snapshots(
+    state: &AppState,
+    card_id: &str,
+    buried_at: u64,
+    buried_until: u64,
+) -> (AppState, Vec<CardProgressSnapshot>) {
     let Some(note_id) = state
         .cards
         .iter()
@@ -453,7 +649,7 @@ fn bury_card_siblings(
         .and_then(|card| card.lineage.as_ref())
         .map(|lineage| lineage.note_id.clone())
     else {
-        return state.clone();
+        return (state.clone(), Vec::new());
     };
 
     let sibling_ids: Vec<String> = state
@@ -469,19 +665,30 @@ fn bury_card_siblings(
         .collect();
 
     if sibling_ids.is_empty() {
-        return state.clone();
+        return (state.clone(), Vec::new());
     }
 
     let mut next = state.clone();
+    let mut snapshots = Vec::new();
     for sibling_id in &sibling_ids {
+        let previous_progress = next
+            .card_progress
+            .iter()
+            .find(|progress| progress.card_id == *sibling_id)
+            .cloned();
         let progress =
             ensure_progress_overlay(&mut next.card_progress, sibling_id.clone(), buried_at);
         progress.buried_until = Some(buried_until);
+        snapshots.push(CardProgressSnapshot {
+            card_id: sibling_id.clone(),
+            previous_progress,
+            resulting_progress: Some(progress.clone()),
+        });
     }
     for sibling_id in sibling_ids {
         next.active_session = remove_card_from_active_session(next.active_session, &sibling_id);
     }
-    next
+    (next, snapshots)
 }
 
 fn reduce_rate_card(
@@ -492,6 +699,7 @@ fn reduce_rate_card(
     rating: Rating,
     reviewed_at: u64,
     deck_options: &DeckOptions,
+    bury_siblings_until: Option<u64>,
 ) -> AppState {
     if state.active_session.is_none() {
         return state.clone();
@@ -512,6 +720,7 @@ fn reduce_rate_card(
 
     let mut next = state.clone();
     upsert_progress(&mut next.card_progress, new_progress.clone());
+    let reviewed_card_id = card_id.clone();
     next.reviews.push(Review {
         id: review_id,
         session_id: session_id.clone(),
@@ -520,6 +729,12 @@ fn reduce_rate_card(
         reviewed_at,
         previous_progress: existing,
         resulting_progress: Some(new_progress),
+        previous_active_session: if bury_siblings_until.is_some() {
+            state.active_session.clone()
+        } else {
+            None
+        },
+        sibling_progress_snapshots: Vec::new(),
     });
     for session in &mut next.sessions {
         if session.id == session_id {
@@ -529,6 +744,14 @@ fn reduce_rate_card(
             }
             break;
         }
+    }
+    if let Some(buried_until) = bury_siblings_until {
+        let (mut buried, snapshots) =
+            bury_card_siblings_with_snapshots(&next, &reviewed_card_id, reviewed_at, buried_until);
+        if let Some(review) = buried.reviews.last_mut() {
+            review.sibling_progress_snapshots = snapshots;
+        }
+        next = buried;
     }
     next
 }
@@ -556,6 +779,14 @@ fn undo_last_review(state: &AppState, session_id: &str) -> AppState {
             .card_progress
             .retain(|progress| progress.card_id != review.card_id),
     }
+    for snapshot in &review.sibling_progress_snapshots {
+        match snapshot.previous_progress.clone() {
+            Some(previous_progress) => upsert_progress(&mut next.card_progress, previous_progress),
+            None => next
+                .card_progress
+                .retain(|progress| progress.card_id != snapshot.card_id),
+        }
+    }
 
     for session in &mut next.sessions {
         if session.id == session_id {
@@ -567,7 +798,11 @@ fn undo_last_review(state: &AppState, session_id: &str) -> AppState {
         }
     }
 
-    restore_active_session_to_reviewed_card(&mut next, session_id, &review.card_id);
+    if let Some(previous_active_session) = review.previous_active_session {
+        next.active_session = Some(previous_active_session);
+    } else {
+        restore_active_session_to_reviewed_card(&mut next, session_id, &review.card_id);
+    }
     next
 }
 
@@ -687,10 +922,13 @@ fn upsert_progress(progress: &mut Vec<CardProgress>, new_progress: CardProgress)
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::{CardLineage, CardState};
+    use crate::model::{
+        CardLineage, CardState, CardTemplate, FieldDef, Note, NoteFieldValue, NoteType,
+    };
     use crate::queue::build_session_queue;
     use crate::scheduler::ONE_MINUTE_MS;
     use crate::sm2::ONE_DAY_MS;
+    use crate::template::generate_cards_for_note;
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -712,6 +950,7 @@ mod tests {
             note_type_id: "basic-and-reversed".to_string(),
             template_id: id.to_string(),
             ordinal,
+            cloze_ordinal: None,
         });
         card
     }
@@ -749,6 +988,147 @@ mod tests {
 
         assert_eq!(next.decks[0].id, "deck");
         assert_eq!(next.decks[0].created_at, NOW);
+    }
+
+    #[test]
+    fn media_asset_commands_add_replace_and_prune_shared_state() {
+        let audio = MediaAssetRecord {
+            id: "media:audio".to_string(),
+            archive_name: "0".to_string(),
+            filename: Some("audio/hola.mp3".to_string()),
+            data: b"mp3".to_vec(),
+        };
+        let replaced_audio = MediaAssetRecord {
+            id: "media:audio".to_string(),
+            archive_name: "0".to_string(),
+            filename: Some("audio/hola-v2.mp3".to_string()),
+            data: b"mp3-v2".to_vec(),
+        };
+        let image = MediaAssetRecord {
+            id: "media:image".to_string(),
+            archive_name: "1".to_string(),
+            filename: Some("images/card.png".to_string()),
+            data: b"png".to_vec(),
+        };
+
+        let mut state = reduce(
+            &AppState::default(),
+            EngramCommand::UpsertMediaAsset { asset: audio },
+        );
+        state = reduce(
+            &state,
+            EngramCommand::UpsertMediaAsset {
+                asset: image.clone(),
+            },
+        );
+        state = reduce(
+            &state,
+            EngramCommand::UpsertMediaAsset {
+                asset: replaced_audio,
+            },
+        );
+
+        assert_eq!(state.media_assets.len(), 2);
+        assert_eq!(state.media_assets[0].id, "media:audio");
+        assert_eq!(
+            state.media_assets[0].filename.as_deref(),
+            Some("audio/hola-v2.mp3")
+        );
+        assert_eq!(state.media_assets[0].data, b"mp3-v2");
+        assert_eq!(state.media_assets[1], image);
+
+        state = reduce(
+            &state,
+            EngramCommand::DeleteMediaAssets {
+                asset_ids: vec!["media:image".to_string(), "missing".to_string()],
+            },
+        );
+        assert_eq!(state.media_assets.len(), 1);
+        assert_eq!(state.media_assets[0].id, "media:audio");
+
+        let state = reduce(
+            &state,
+            EngramCommand::DeleteMediaAsset {
+                asset_id: "media:audio".to_string(),
+            },
+        );
+        assert!(state.media_assets.is_empty());
+    }
+
+    #[test]
+    fn rename_note_type_field_command_migrates_templates() {
+        let note_type = NoteType {
+            id: "basic".to_string(),
+            name: "Basic".to_string(),
+            fields: vec![
+                FieldDef {
+                    id: "front".to_string(),
+                    name: "Front".to_string(),
+                    required: true,
+                    ordinal: 0,
+                },
+                FieldDef {
+                    id: "back".to_string(),
+                    name: "Back".to_string(),
+                    required: true,
+                    ordinal: 1,
+                },
+            ],
+            templates: vec![CardTemplate {
+                id: "forward".to_string(),
+                name: "Forward".to_string(),
+                front_template: "{{Front}}".to_string(),
+                back_template: "{{Back}}".to_string(),
+                required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let note = Note {
+            id: "note".to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "deck".to_string(),
+            fields: vec![
+                NoteFieldValue {
+                    field_id: "front".to_string(),
+                    value: "hola".to_string(),
+                },
+                NoteFieldValue {
+                    field_id: "back".to_string(),
+                    value: "hello".to_string(),
+                },
+            ],
+            tags: Vec::new(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let state = AppState {
+            note_types: vec![note_type],
+            notes: vec![note.clone()],
+            ..AppState::default()
+        };
+
+        let next = reduce(
+            &state,
+            EngramCommand::RenameNoteTypeField {
+                note_type_id: "basic".to_string(),
+                field_id: "front".to_string(),
+                name: "Prompt".to_string(),
+                updated_at: NOW + 1,
+            },
+        );
+        let generated = generate_cards_for_note(&next.note_types[0], &note);
+
+        assert_eq!(next.note_types[0].fields[0].name, "Prompt");
+        assert_eq!(next.note_types[0].templates[0].front_template, "{{Prompt}}");
+        assert_eq!(
+            next.note_types[0].templates[0].required_field_names,
+            vec!["Prompt", "Back"]
+        );
+        assert_eq!(next.note_types[0].updated_at, NOW + 1);
+        assert_eq!(generated[0].id, "note::forward");
+        assert_eq!(generated[0].front, "hola");
     }
 
     #[test]
@@ -819,6 +1199,124 @@ mod tests {
         assert_eq!(next.card_progress[0].state, CardState::Learning);
         assert_eq!(next.card_progress[0].learning_step_index, Some(1));
         assert_eq!(next.card_progress[0].next_due_at, NOW + 30 * ONE_MINUTE_MS);
+    }
+
+    #[test]
+    fn rate_card_uses_stored_deck_options() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state.deck_options.push(crate::model::DeckOptionsPreset {
+            deck_id: "deck".to_string(),
+            options: DeckOptions {
+                learning_steps_minutes: vec![4, 40],
+                ..DeckOptions::default()
+            },
+        });
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card")],
+                started_at: NOW,
+            },
+        );
+
+        let next = reduce(
+            &state,
+            EngramCommand::RateCard {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: NOW,
+            },
+        );
+
+        assert_eq!(next.card_progress[0].state, CardState::Learning);
+        assert_eq!(next.card_progress[0].learning_step_index, Some(1));
+        assert_eq!(next.card_progress[0].next_due_at, NOW + 40 * ONE_MINUTE_MS);
+    }
+
+    #[test]
+    fn rate_card_and_bury_siblings_can_be_undone_atomically() {
+        let target = card_with_note("note::forward", "note", 0);
+        let sibling = card_with_note("note::reverse", "note", 1);
+        let unrelated = card_with_note("other::forward", "other", 0);
+        let mut state = AppState {
+            cards: vec![target.clone(), sibling.clone(), unrelated.clone()],
+            ..AppState::default()
+        };
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![target.clone(), sibling.clone(), unrelated.clone()],
+                started_at: NOW,
+            },
+        );
+        state = reduce(&state, EngramCommand::RevealCurrentCard);
+
+        let reviewed = reduce(
+            &state,
+            EngramCommand::RateCardAndBurySiblings {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: target.id.clone(),
+                rating: Rating::Good,
+                reviewed_at: NOW,
+                buried_until: NOW + ONE_DAY_MS,
+            },
+        );
+
+        assert_eq!(reviewed.card_progress.len(), 2);
+        assert_eq!(
+            reviewed
+                .card_progress
+                .iter()
+                .find(|progress| progress.card_id == sibling.id)
+                .and_then(|progress| progress.buried_until),
+            Some(NOW + ONE_DAY_MS)
+        );
+        assert_eq!(reviewed.reviews[0].sibling_progress_snapshots.len(), 1);
+        assert_eq!(
+            reviewed.reviews[0].sibling_progress_snapshots[0].card_id,
+            sibling.id
+        );
+        assert!(reviewed.reviews[0].sibling_progress_snapshots[0]
+            .previous_progress
+            .is_none());
+        let active_ids: Vec<_> = reviewed
+            .active_session
+            .as_ref()
+            .unwrap()
+            .queue
+            .iter()
+            .map(|card| card.id.as_str())
+            .collect();
+        assert_eq!(active_ids, vec!["note::forward", "other::forward"]);
+
+        let advanced = reduce(&reviewed, EngramCommand::AdvanceSession);
+        let undone = reduce(
+            &advanced,
+            EngramCommand::UndoLastReview {
+                session_id: "session".to_string(),
+            },
+        );
+
+        assert!(undone.card_progress.is_empty());
+        assert!(undone.reviews.is_empty());
+        assert_eq!(undone.sessions[0].cards_reviewed, 0);
+        assert_eq!(undone.sessions[0].cards_correct, 0);
+        let active = undone.active_session.as_ref().unwrap();
+        assert_eq!(active.current_index, 0);
+        assert!(active.revealed);
+        let restored_ids: Vec<_> = active.queue.iter().map(|card| card.id.as_str()).collect();
+        assert_eq!(
+            restored_ids,
+            vec!["note::forward", "note::reverse", "other::forward"]
+        );
     }
 
     #[test]
@@ -931,6 +1429,8 @@ mod tests {
             reviewed_at: NOW,
             previous_progress: None,
             resulting_progress: None,
+            previous_active_session: None,
+            sibling_progress_snapshots: Vec::new(),
         });
 
         let undone = reduce(
@@ -1231,7 +1731,12 @@ mod tests {
                 reviewed_at: NOW,
                 previous_progress: None,
                 resulting_progress: Some(progress("card")),
+                previous_active_session: None,
+                sibling_progress_snapshots: Vec::new(),
             }],
+            deck_options: Vec::new(),
+            external_sources: Vec::new(),
+            media_assets: Vec::new(),
             active_session: Some(ActiveSessionState {
                 session_id: "session".to_string(),
                 deck_id: "deck".to_string(),

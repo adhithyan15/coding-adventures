@@ -1,0 +1,83 @@
+// SessionProgress.dark.msl - dark review-session counter theme.
+
+style SessionProgress {
+  part progress-strip {
+    background    : "#111827" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 8 ;
+    padding       : 12 ;
+  }
+
+  part metric-current {
+    background    : "#0f766e" ;
+    border-radius : 6 ;
+    padding       : 10 ;
+  }
+
+  part metric-remaining {
+    background    : "#7c3aed" ;
+    border-radius : 6 ;
+    padding       : 10 ;
+  }
+
+  part metric-correct {
+    background    : "#15803d" ;
+    border-radius : 6 ;
+    padding       : 10 ;
+  }
+
+  part metric-total {
+    background    : "#b45309" ;
+    border-radius : 6 ;
+    padding       : 10 ;
+  }
+
+  part current-label {
+    color       : "#ccfbf1" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part remaining-label {
+    color       : "#ede9fe" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part correct-label {
+    color       : "#dcfce7" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part total-label {
+    color       : "#ffedd5" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part current-value {
+    color       : "#ffffff" ;
+    font-size   : 20 ;
+    font-weight : 800 ;
+  }
+
+  part remaining-value {
+    color       : "#ffffff" ;
+    font-size   : 20 ;
+    font-weight : 800 ;
+  }
+
+  part correct-value {
+    color       : "#ffffff" ;
+    font-size   : 20 ;
+    font-weight : 800 ;
+  }
+
+  part total-value {
+    color       : "#ffffff" ;
+    font-size   : 20 ;
+    font-weight : 800 ;
+  }
+}

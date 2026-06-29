@@ -7,16 +7,45 @@
 component EngramApp {
   slot app-title : text ;
   slot deck-name : text ;
+  slot deck-stats-label : text ;
+  slot deck-total-label : text ;
+  slot deck-total-value : text ;
+  slot deck-new-label : text ;
+  slot deck-new-value : text ;
+  slot deck-due-label : text ;
+  slot deck-due-value : text ;
+  slot deck-learning-label : text ;
+  slot deck-learning-value : text ;
+  slot deck-hidden-label : text ;
+  slot deck-hidden-value : text ;
   slot prompt-label : text ;
   slot prompt : text ;
   slot answer-label : text ;
   slot answer : text ;
   slot answer-visible : bool ;
   slot progress-label : text ;
+  slot current-label : text ;
+  slot current-value : text ;
+  slot remaining-label : text ;
+  slot remaining-value : text ;
+  slot correct-label : text ;
+  slot correct-value : text ;
+  slot total-label : text ;
+  slot total-value : text ;
+  slot action-undo-label : text ;
+  slot action-bury-card-label : text ;
+  slot action-bury-siblings-label : text ;
+  slot action-suspend-card-label : text ;
+  slot action-mark-label : text ;
 
   emit onReveal ;
   emit onAgain ;
   emit onHard ;
   emit onGood ;
   emit onEasy ;
+  emit onUndo ;
+  emit onBuryCard ;
+  emit onBurySiblings ;
+  emit onSuspendCard ;
+  emit onToggleMark ;
 }

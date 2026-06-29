@@ -14,11 +14,15 @@ description = "Smoke-test harness for the Engram Mosaic app package"
 publish     = false
 
 [dev-dependencies]
+engram-core-wasm       = { path = "../../../packages/rust/engram-core-wasm" }
 mosmodel-compiler       = { path = "../../../packages/rust/mosmodel-compiler" }
 moslayout-compiler      = { path = "../../../packages/rust/moslayout-compiler" }
 mosstyle-compiler       = { path = "../../../packages/rust/mosstyle-compiler" }
+mosaic-package-artifact-builder = { path = "../../../packages/rust/mosaic-package-artifact-builder" }
 mosaic-package-manifest = { path = "../../../packages/rust/mosaic-package-manifest" }
 mosaic-package-resolver = { path = "../../../packages/rust/mosaic-package-resolver" }
+serde_json              = "1"
+tempfile                = "3"
 toml                    = "0.8"
 
 [[test]]

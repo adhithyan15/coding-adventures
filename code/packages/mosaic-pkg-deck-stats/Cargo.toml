@@ -1,0 +1,31 @@
+# Cargo.toml - smoke-test harness for mosaic-pkg-deck-stats.
+#
+# This package's deliverables are Mosaic source files. The Cargo project exists
+# only to run compile and emitter tests for the .mil/.mll/.msl sources.
+
+[workspace]
+# Intentionally empty: opt out of the parent Rust workspace.
+
+[package]
+name        = "mosaic-pkg-deck-stats-smoke"
+version     = "0.1.0"
+edition     = "2021"
+description = "Smoke-test harness for the DeckStatsPanel Mosaic component package"
+publish     = false
+
+[dev-dependencies]
+mosmodel-compiler   = { path = "../rust/mosmodel-compiler" }
+moslayout-compiler  = { path = "../rust/moslayout-compiler" }
+mosstyle-compiler   = { path = "../rust/mosstyle-compiler" }
+mosaic-emit-compose = { path = "../rust/mosaic-emit-compose" }
+mosaic-emit-flutter = { path = "../rust/mosaic-emit-flutter" }
+mosaic-emit-html    = { path = "../rust/mosaic-emit-html" }
+mosaic-emit-qt      = { path = "../rust/mosaic-emit-qt" }
+mosaic-emit-react   = { path = "../rust/mosaic-emit-react" }
+mosaic-emit-swiftui = { path = "../rust/mosaic-emit-swiftui" }
+mosaic-emit-xaml    = { path = "../rust/mosaic-emit-xaml" }
+toml                = "0.8"
+
+[[test]]
+name = "package_compiles"
+path = "tests/package_compiles.rs"

@@ -34,10 +34,14 @@ This crate owns:
 - due/new card queue assembly
 - review-log-aware daily limit accounting
 - optional note/template lineage on durable cards
+- Anki-style Cloze note generation from `{{cloze:Field}}` templates
+- note-type field rename migration for templates and required fields
 - card browser search/filter evaluation
 - versioned Engram JSON backup snapshots
 - round-trippable card CSV import/export helpers
 - Anki-compatible Basic TSV card export
+- note-backed Anki Basic, Basic-and-reversed, Cloze, and custom-field TSV import/export
+- durable media asset state plus reducer commands for host-managed copy/prune flows
 - active review-session progress counts
 - deck-scoped review-history summaries
 - pure state transitions
@@ -54,22 +58,36 @@ Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`,
 also live here. They hide cards from queues and active sessions or store review
 metadata in the core reducer so web, Mosaic, and native shells all share the
 same behavior.
+Media commands such as `UpsertMediaAsset`, `DeleteMediaAsset`, and
+`DeleteMediaAssets` update `AppState.media_assets` in the same reducer, giving
+every shell one deterministic place to copy newly attached media, replace
+imported payloads, or prune unreferenced assets after a host-side media analysis
+pass.
 
-Reviews carry optional previous/resulting progress snapshots. `UndoLastReview`
-uses those snapshots to remove the newest snapshot-backed review in a session,
-restore the card's previous progress, adjust session counters, and return an
-active session to the reviewed card. Legacy reviews without snapshots are left
-unchanged because there is no reliable prior progress to restore.
+Reviews carry optional previous/resulting progress snapshots, sibling-progress
+snapshots, and active-session snapshots. `UndoLastReview` uses those snapshots
+to remove the newest snapshot-backed review in a session, restore card progress,
+adjust session counters, and return the active session to its pre-review queue.
+Legacy reviews without snapshots are left unchanged because there is no reliable
+prior progress to restore.
 
 `search_cards` provides the first shared collection-browser query layer. It
 supports plain text terms plus `deck:`, `note:`, `noteType:`, `front:`,
 `back:`, `tag:`, `state:`, `is:`, `flag:`, and `marked:` filters. Terms inside
-a group use implicit AND, `OR` joins groups, and leading `-` negates a term.
+a group use implicit AND, `OR` joins groups, parentheses group subexpressions,
+and leading `-` negates a term or group.
 
 `materialize_generated_card` turns a note-template `GeneratedCard` into a
-durable `Card` with note/template lineage. `BuryCardSiblings` uses that lineage
-to bury same-note sibling cards until a host-supplied boundary, matching the
-shared behavior Anki-like review screens need.
+durable `Card` with note/template lineage. Cloze templates using
+`{{cloze:Field}}` generate one card per Anki-style `{{c1::text::hint}}`
+ordinal and preserve the cloze ordinal in lineage. `BuryCardSiblings` uses
+lineage to bury same-note sibling cards until a host-supplied boundary.
+`RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` apply that
+behavior atomically during review and record undo snapshots, matching the shared
+behavior Anki-like review screens need.
+`rename_note_type_field` and `EngramCommand::RenameNoteTypeField` keep field
+IDs stable while migrating template references, Cloze references, and
+required-field names to the new display name.
 
 `create_engram_snapshot` and `restore_engram_snapshot` own the portable Engram
 backup shape. Backups include durable collection data and clear any live
@@ -83,6 +101,13 @@ prefix options to create deterministic cards.
 front/back text files with import headers (`#separator:tab`, `#html`,
 `#notetype`, `#deck`, and `#columns`) and quoted fields containing tabs,
 newlines, or quotes.
+`import_anki_notes_tsv` and `export_notes_anki_tsv` use the note/template model
+instead: imported Basic rows produce `NoteType`, `Note`, and materialized
+lineage cards, Basic-and-reversed note types produce forward and reverse
+sibling cards, and Cloze rows produce cloze note models plus one generated card
+per cloze ordinal. Custom note-type rows preserve arbitrary field columns and
+Anki's Tags column as note data, but generate no cards until a real template is
+available because Anki text exports do not carry template definitions.
 
 `get_active_session_progress` derives the shared review UI counters from
 `AppState`: total cards, one-based current position, remaining cards, reviewed

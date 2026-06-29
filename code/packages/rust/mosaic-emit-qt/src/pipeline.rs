@@ -73,10 +73,10 @@ use std::fmt::Write as _;
 
 use std::collections::HashMap;
 
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
 use mosstyle_compiler::{StyleDef, StyleProp};
 
 // =====================================================================
@@ -106,10 +106,7 @@ pub struct PipelineEmitResult {
 pub enum PipelineEmitError {
     /// The mosmodel component name and the moslayout component name disagree.
     /// Authoring error — almost always a manifest typo.
-    ComponentNameMismatch {
-        mosmodel: String,
-        moslayout: String,
-    },
+    ComponentNameMismatch { mosmodel: String, moslayout: String },
     /// A slot name fails the safe-identifier check after camelCase conversion.
     /// The mosmodel grammar already enforces a safe shape; this is a defense-
     /// in-depth check at lowering time.
@@ -125,7 +122,10 @@ pub enum PipelineEmitError {
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            PipelineEmitError::ComponentNameMismatch { mosmodel, moslayout } => write!(
+            PipelineEmitError::ComponentNameMismatch {
+                mosmodel,
+                moslayout,
+            } => write!(
                 f,
                 "component name mismatch: mosmodel says '{mosmodel}', moslayout says '{moslayout}'"
             ),
@@ -301,9 +301,7 @@ fn build_main_cpp(name: &str, module_name: &str) -> String {
 }
 
 fn build_qmldir(name: &str, module_name: &str) -> String {
-    format!(
-        "{BANNER_QMLDIR}module {module_name}\n{name} 1.0 {name}.qml\n"
-    )
+    format!("{BANNER_QMLDIR}module {module_name}\n{name} 1.0 {name}.qml\n")
 }
 
 fn build_qt_readme(name: &str, module_name: &str) -> String {
@@ -523,7 +521,10 @@ fn qml_text_align(v: &str) -> Option<&'static str> {
 
 /// Find the first prop named `name` in a base/state prop list.
 fn style_prop<'p>(props: &'p [StyleProp], name: &str) -> Option<&'p str> {
-    props.iter().find(|p| p.name == name).map(|p| p.value.as_str())
+    props
+        .iter()
+        .find(|p| p.name == name)
+        .map(|p| p.value.as_str())
 }
 
 /// Collect the `state-when-<X>: ( expr )` predicate for one state on a
@@ -544,9 +545,7 @@ fn state_when_predicate(node: &LayoutNode, state: &str) -> Option<String> {
             let camel = to_camel_case_first_lower(s);
             is_safe_identifier(&camel).then_some(camel)
         }
-        LayoutPropValue::Keyword(k) => {
-            is_safe_identifier(k).then(|| k.clone())
-        }
+        LayoutPropValue::Keyword(k) => is_safe_identifier(k).then(|| k.clone()),
         _ => None,
     }
 }
@@ -571,7 +570,11 @@ struct StyledBox {
 /// are read from `node`'s `state-when-selected` / `state-when-editing`
 /// props.
 fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
-    let base: &[StyleProp] = ctx.part_styles.get(part).map(|v| v.as_slice()).unwrap_or(&[]);
+    let base: &[StyleProp] = ctx
+        .part_styles
+        .get(part)
+        .map(|v| v.as_slice())
+        .unwrap_or(&[]);
     let selected: &[StyleProp] = ctx
         .part_styles
         .get(&format!("{part}:selected"))
@@ -894,7 +897,11 @@ fn emit_signal_declaration(emit: &EmitDecl) -> Result<String, PipelineEmitError>
 /// The `depth` argument is the *block depth from the root Item* — so the
 /// outermost layout element starts at depth 1 (one level inside the root
 /// wrapper).
-fn emit_qml_tree(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+fn emit_qml_tree(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     // The UI29 *host* primitives (`HostInput`, `HostButton`) need
     // attribute lowering that depends on the moslayout props — slot refs
     // for `value`, emit refs for `onCommit`, etc. — none of which the
@@ -975,8 +982,7 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<Strin
             // A width thread (column-widths slot + enclosing index) forces
             // the Rectangle even when the part itself carries no props, so
             // the fixed column width still lands.
-            let has_width_thread =
-                ctx.col_widths_slot.is_some() && ctx.enclosing_index.is_some();
+            let has_width_thread = ctx.col_widths_slot.is_some() && ctx.enclosing_index.is_some();
             if has_base || has_state || has_width_thread {
                 let styled = lower_styled_box(node, part, ctx);
                 let mut out = String::new();
@@ -1085,7 +1091,12 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<Strin
     // Children are walked through `emit_qml_children` rather than a
     // bare `for` so that `If`+`Else` sibling pairs are recognised
     // (UI29 §3.2).
-    out.push_str(&emit_qml_children(&node.children, depth + 1, is_stack, ctx)?);
+    out.push_str(&emit_qml_children(
+        &node.children,
+        depth + 1,
+        is_stack,
+        ctx,
+    )?);
 
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
@@ -1428,7 +1439,11 @@ fn pick_signal_arg_with(
         .find(|e| e.name == emit_name)
         .map(|e| e.params.len())
         .unwrap_or(0);
-    if arity == 0 { "" } else { payload_token }
+    if arity == 0 {
+        ""
+    } else {
+        payload_token
+    }
 }
 
 /// Lower a `HostInput` node to a QML `TextInput { ... }` block.
@@ -1468,7 +1483,11 @@ fn pick_signal_arg_with(
 /// The Enter / Escape mapping mirrors UI25 §10 (the React backend
 /// merges both into a single `onKeyDown` handler; QML has dedicated
 /// signal handlers for both, so we use them directly).
-fn emit_host_input_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+fn emit_host_input_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1537,6 +1556,59 @@ fn emit_host_input_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result
     Ok(out)
 }
 
+/// Lower a styled Mosaic button part into QML `Button` property lines.
+///
+/// This mirrors the conservative native-button subset used by the other
+/// backends: padding, foreground colour, background, border, and radius.
+/// Values pass through the same hex/pixel validators used by styled cells.
+fn host_button_style_qml_lines(node: &LayoutNode, ctx: &EmitCtx) -> Vec<String> {
+    let Some(part) = node.part_name.as_deref() else {
+        return Vec::new();
+    };
+    let Some(base) = ctx.part_styles.get(part) else {
+        return Vec::new();
+    };
+
+    let mut lines = Vec::new();
+    if let Some(padding) = style_prop(base, "padding").and_then(qml_px_or_none) {
+        lines.push(format!("leftPadding: {padding}"));
+        lines.push(format!("rightPadding: {padding}"));
+        lines.push(format!("topPadding: {padding}"));
+        lines.push(format!("bottomPadding: {padding}"));
+    }
+    if let Some(foreground) = style_prop(base, "color").and_then(qml_hex_color_or_none) {
+        lines.push(format!("palette.buttonText: \"{foreground}\""));
+    }
+
+    let background = style_prop(base, "background")
+        .or_else(|| style_prop(base, "background-color"))
+        .and_then(qml_hex_color_or_none);
+    let border_color = style_prop(base, "border-color").and_then(qml_hex_color_or_none);
+    let border_width = style_prop(base, "border-width").and_then(qml_px_or_none);
+    let radius = style_prop(base, "border-radius").and_then(qml_px_or_none);
+    if background.is_some() || border_color.is_some() || border_width.is_some() || radius.is_some()
+    {
+        lines.push("background: Rectangle {".to_string());
+        if let Some(background) = background {
+            lines.push(format!("    color: \"{background}\""));
+        } else {
+            lines.push("    color: \"transparent\"".to_string());
+        }
+        if let Some(radius) = radius {
+            lines.push(format!("    radius: {radius}"));
+        }
+        if let Some(border_color) = border_color {
+            lines.push(format!("    border.color: \"{border_color}\""));
+        }
+        if let Some(border_width) = border_width {
+            lines.push(format!("    border.width: {border_width}"));
+        }
+        lines.push("}".to_string());
+    }
+
+    lines
+}
+
 /// Lower a `HostButton` node to a QML `Button { ... }` block.
 ///
 /// `Button` lives in `QtQuick.Controls 2.15`, which we import only when
@@ -1552,7 +1624,11 @@ fn emit_host_input_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result
 /// | `disabled: slot: x`     | `enabled: !x`                             |
 /// | `disabled: true/false`  | `enabled: !true` / `enabled: !false`      |
 /// | `onTap: emit: onE`      | `onClicked: e()`                          |
-fn emit_host_button_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+fn emit_host_button_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1568,6 +1644,10 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Resul
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
+    for line in host_button_style_qml_lines(node, ctx) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+
     // onClicked: e(<arg>) — buttons fire QML's `clicked()` signal
     // which carries no payload.  If the author declared `emit onTap
     // ;` (parameterless) we emit `e()`; if they declared a payload
@@ -1580,8 +1660,12 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Resul
     if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arity = ctx.emits.iter().find(|e| e.name == *emit_name)
-            .map(|e| e.params.len()).unwrap_or(0);
+        let arity = ctx
+            .emits
+            .iter()
+            .find(|e| e.name == *emit_name)
+            .map(|e| e.params.len())
+            .unwrap_or(0);
         if arity > 0 {
             writeln!(
                 out,
@@ -1634,7 +1718,11 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Resul
 /// machinery we don't want for a primitive). When a `title:` prop is
 /// bound, we synthesise a bold `Text` element as the first child of
 /// `contentItem`, before the author's children.
-fn emit_host_dialog_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+fn emit_host_dialog_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let content_pad = "    ".repeat(depth + 2);
@@ -1739,7 +1827,11 @@ fn emit_host_dialog_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Resul
 /// `toggled(bool checked)` signal. We forward the `checked` parameter
 /// into the Mosaic emit call so the host sees the new state, matching
 /// the kernel-canonical `onToggle(checked: bool)` payload.
-fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+fn emit_host_checkbox_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1767,8 +1859,7 @@ fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Res
     // and the `checked` slot resolves the binary case otherwise.
     if let Some(slot) = find_slot_ref_prop(node, "indeterminate") {
         let camel = to_camel_case_first_lower(slot);
-        validate_safe_identifier(&camel)
-            .map_err(PipelineEmitError::UnsafeSlotName)?;
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         writeln!(out, "{inner_pad}tristate: true").unwrap();
         // The `checked` binding above is sufficient when indeterminate
         // is false; when it's true we override via checkState. This
@@ -1828,7 +1919,11 @@ fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Res
 /// reserved for UI29-2.1's `RadioGroup` userland component; v1
 /// preserves the `group:` prop as a `// group: ...` comment, identical
 /// to the SwiftUI backend's choice, so the metadata stays visible.
-fn emit_host_radio_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+fn emit_host_radio_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1850,8 +1945,7 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result
         writeln!(out, "{pad}// group: {}", escape_for_line_comment(g)).unwrap();
     } else if let Some(slot) = find_slot_ref_prop(node, "group") {
         let camel = to_camel_case_first_lower(slot);
-        validate_safe_identifier(&camel)
-            .map_err(PipelineEmitError::UnsafeSlotName)?;
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         writeln!(out, "{pad}// group: slot {camel}").unwrap();
     }
 
@@ -1865,8 +1959,7 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result
         format!("\"{}\"", escape_qml_string(v))
     } else if let Some(slot) = find_slot_ref_prop(node, "value") {
         let camel = to_camel_case_first_lower(slot);
-        validate_safe_identifier(&camel)
-            .map_err(PipelineEmitError::UnsafeSlotName)?;
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         writeln!(out, "{pad}// value: slot {camel}").unwrap();
         camel
     } else {
@@ -1897,8 +1990,12 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result
     if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arity = ctx.emits.iter().find(|e| e.name == *emit_name)
-            .map(|e| e.params.len()).unwrap_or(0);
+        let arity = ctx
+            .emits
+            .iter()
+            .find(|e| e.name == *emit_name)
+            .map(|e| e.params.len())
+            .unwrap_or(0);
         let call_args = if arity == 0 {
             String::new()
         } else {
@@ -1939,7 +2036,11 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result
 /// | `target: new-tab`   | `onLinkActivated: Qt.openUrlExternally(link)` (always external — Qt has no in-window tab concept; new-tab and same map to the same external-browser call) |
 /// | `external: false`   | `onLinkActivated: x()` — dispatches the emit instead of opening, letting the host route in-app |
 /// | `onActivate: emit`  | dispatched on link activation                             |
-fn emit_host_link_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+fn emit_host_link_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1991,15 +2092,13 @@ fn emit_host_link_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<
             // onLinkActivated handler scope exposes the activated
             // URL as `link`).
             let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
-            validate_safe_identifier(&camel)
-                .map_err(PipelineEmitError::UnsafeEmitName)?;
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
             let arg = pick_signal_arg_with(emit, ctx.emits, "link");
             format!("{camel}({arg})")
         }
         (false, Some(emit)) => {
             let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
-            validate_safe_identifier(&camel)
-                .map_err(PipelineEmitError::UnsafeEmitName)?;
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
             let arg = pick_signal_arg_with(emit, ctx.emits, "link");
             // Dispatch AND open externally.
             format!("{{ {camel}({arg}); Qt.openUrlExternally(link); }}")
@@ -2029,7 +2128,11 @@ fn emit_host_link_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<
 ///
 /// `HoverHandler` (QtQuick 2.12+) gives the hover state without
 /// needing a `MouseArea` (which would intercept clicks on the child).
-fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+fn emit_host_tooltip_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -2256,7 +2359,11 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
 /// `part_name` on the `HostTable` itself is *currently* not consumed —
 /// styling integration for table parts is a follow-up. Tests assert
 /// that its presence does not break emission.
-fn emit_host_table_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+fn emit_host_table_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -2274,8 +2381,11 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result
     // CSS inheritance on the other backends.
     let inherited = match &node.part_name {
         Some(part) => {
-            let sheet: &[StyleProp] =
-                ctx.part_styles.get(part).map(|v| v.as_slice()).unwrap_or(&[]);
+            let sheet: &[StyleProp] = ctx
+                .part_styles
+                .get(part)
+                .map(|v| v.as_slice())
+                .unwrap_or(&[]);
             InheritedStyle {
                 background: style_prop(sheet, "background")
                     .or_else(|| style_prop(sheet, "background-color"))
@@ -2499,7 +2609,11 @@ fn emit_table_section_rows(
 /// declarations lower `list<T>` to QML `var`, which is exactly that.
 /// We therefore make no attempt to specialise the delegate's
 /// `property var <as>` to a typed property — `var` is the right shape.
-fn emit_for_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
+fn emit_for_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let delegate_pad = "    ".repeat(depth + 1);
     let prop_pad = "    ".repeat(depth + 2);
@@ -2543,7 +2657,12 @@ fn emit_for_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String
     // `with_index` keeps the existing index when this For has none, so a
     // styled cell still sees the closest indexed ancestor.
     let child_ctx = ctx.with_index(index_name.clone());
-    out.push_str(&emit_qml_children(&node.children, depth + 2, false, &child_ctx)?);
+    out.push_str(&emit_qml_children(
+        &node.children,
+        depth + 2,
+        false,
+        &child_ctx,
+    )?);
 
     writeln!(out, "{delegate_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
@@ -3144,13 +3263,19 @@ mod tests {
         let l = single_box_layout("Empty");
         let s = empty_style("Empty");
         let result = from_pipeline(&m, &l, &s).expect("emit ok");
-        assert!(result.output.starts_with("// Auto-generated by mosaic-emit-qt"));
+        assert!(result
+            .output
+            .starts_with("// Auto-generated by mosaic-emit-qt"));
         assert!(result.output.contains("import QtQuick 2.15"));
         assert!(result.output.contains("import QtQuick.Layouts 1.15"));
         assert!(result.output.contains("Item {"));
         // The Box lowering → child Item.
         let item_count = result.output.matches("Item {").count();
-        assert!(item_count >= 2, "expected root Item + Box Item: {}", result.output);
+        assert!(
+            item_count >= 2,
+            "expected root Item + Box Item: {}",
+            result.output
+        );
         assert_eq!(result.component_name, "Empty");
     }
 
@@ -3170,8 +3295,7 @@ mod tests {
             ],
             vec![],
         );
-        let result =
-            from_pipeline(&m, &single_box_layout("Card"), &empty_style("Card")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Card"), &empty_style("Card")).unwrap();
         assert!(
             result.output.contains("property string displayName: \"\""),
             "missing displayName property in:\n{}",
@@ -3206,8 +3330,7 @@ mod tests {
             ],
             vec![],
         );
-        let result =
-            from_pipeline(&m, &single_box_layout("Misc"), &empty_style("Misc")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Misc"), &empty_style("Misc")).unwrap();
         assert!(result.output.contains("property real count: 0"));
         assert!(result.output.contains("property color tint: \"#000000\""));
         assert!(result.output.contains("property var items: []"));
@@ -3230,8 +3353,7 @@ mod tests {
                 emit_decl("onEditCommit", vec![]),
             ],
         );
-        let result =
-            from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
         assert!(
             result.output.contains("signal navigate()"),
             "missing 'signal navigate()' in:\n{}",
@@ -3262,10 +3384,11 @@ mod tests {
                 ],
             )],
         );
-        let result =
-            from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
         assert!(
-            result.output.contains("signal select(real startRow, real startCol)"),
+            result
+                .output
+                .contains("signal select(real startRow, real startCol)"),
             "expected typed params, got:\n{}",
             result.output
         );
@@ -3288,7 +3411,9 @@ mod tests {
         );
         let result = from_pipeline(&m, &single_box_layout("X"), &empty_style("X")).unwrap();
         assert!(result.output.contains("a11yLabelText"));
-        assert!(result.output.contains("signal userClickedHere(real eventRow)"));
+        assert!(result
+            .output
+            .contains("signal userClickedHere(real eventRow)"));
     }
 
     // -------- Test 7: Row → RowLayout, Column → ColumnLayout --------
@@ -3315,7 +3440,11 @@ mod tests {
             },
         };
         let row_result = from_pipeline(&m, &row_layout, &empty_style("X")).unwrap();
-        assert!(row_result.output.contains("RowLayout {"), "got:\n{}", row_result.output);
+        assert!(
+            row_result.output.contains("RowLayout {"),
+            "got:\n{}",
+            row_result.output
+        );
 
         // Column
         let col_layout = LayoutDef {
@@ -3412,11 +3541,7 @@ mod tests {
     /// "/path/img.png" }`. Slot-ref `source` also works (bare identifier).
     #[test]
     fn image_source_lowers_to_qml_source_attribute() {
-        let m = component(
-            "X",
-            vec![slot("photo-url", SlotType::Image, true)],
-            vec![],
-        );
+        let m = component("X", vec![slot("photo-url", SlotType::Image, true)], vec![]);
         // String-literal source
         let l_str = LayoutDef {
             component_name: "X".to_string(),
@@ -3531,7 +3656,11 @@ mod tests {
         let col = result.output.find("ColumnLayout {").expect("ColumnLayout");
         let row = result.output.find("RowLayout {").expect("RowLayout");
         let txt = result.output.find("Text {").expect("Text");
-        assert!(col < row && row < txt, "nesting order broken in:\n{}", result.output);
+        assert!(
+            col < row && row < txt,
+            "nesting order broken in:\n{}",
+            result.output
+        );
         assert!(result.output.contains("text: \"Hi\""));
     }
 
@@ -3548,7 +3677,10 @@ mod tests {
         let s = empty_style("Foo");
         let err = from_pipeline(&m, &l, &s).expect_err("should error on mismatch");
         match err {
-            PipelineEmitError::ComponentNameMismatch { mosmodel, moslayout } => {
+            PipelineEmitError::ComponentNameMismatch {
+                mosmodel,
+                moslayout,
+            } => {
                 assert_eq!(mosmodel, "Foo");
                 assert_eq!(moslayout, "Bar");
             }
@@ -3573,8 +3705,8 @@ mod tests {
                 children: Vec::new(),
             },
         };
-        let err = from_pipeline(&m, &l, &empty_style("X"))
-            .expect_err("unknown primitive must error");
+        let err =
+            from_pipeline(&m, &l, &empty_style("X")).expect_err("unknown primitive must error");
         assert!(matches!(err, PipelineEmitError::UnknownPrimitive(_)));
     }
 
@@ -3597,8 +3729,7 @@ mod tests {
     #[test]
     fn imports_precede_root_item() {
         let m = component("X", vec![], vec![]);
-        let result =
-            from_pipeline(&m, &single_box_layout("X"), &empty_style("X")).unwrap();
+        let result = from_pipeline(&m, &single_box_layout("X"), &empty_style("X")).unwrap();
         let qq = result.output.find("import QtQuick 2.15").expect("qtquick");
         let qql = result
             .output
@@ -3703,9 +3834,21 @@ mod tests {
             },
         };
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
-        assert!(result.output.contains("TextInput {"), "missing TextInput in:\n{}", result.output);
-        assert!(result.output.contains("text: userText"), "missing text binding in:\n{}", result.output);
-        assert!(result.output.contains("readOnly: locked"), "missing readOnly binding in:\n{}", result.output);
+        assert!(
+            result.output.contains("TextInput {"),
+            "missing TextInput in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("text: userText"),
+            "missing text binding in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("readOnly: locked"),
+            "missing readOnly binding in:\n{}",
+            result.output
+        );
     }
 
     // -------- Test 20a: HostInput onCommit (parameterless signal) --------
@@ -3925,8 +4068,7 @@ mod tests {
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            r.output
-                .contains("onCheckedChanged: if (checked) select()"),
+            r.output.contains("onCheckedChanged: if (checked) select()"),
             "missing parameterless onCheckedChanged dispatch in:\n{}",
             r.output
         );
@@ -4020,9 +4162,107 @@ mod tests {
             },
         };
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
-        assert!(result.output.contains("Button {"), "missing Button in:\n{}", result.output);
-        assert!(result.output.contains("text: \"Save\""), "missing label text in:\n{}", result.output);
-        assert!(result.output.contains("onClicked: save()"), "missing onClicked in:\n{}", result.output);
+        assert!(
+            result.output.contains("Button {"),
+            "missing Button in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("text: \"Save\""),
+            "missing label text in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("onClicked: save()"),
+            "missing onClicked in:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn host_button_with_part_style_emits_native_button_style() {
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![mosstyle_compiler::PartStyle {
+                name: "danger".to_string(),
+                base: vec![
+                    StyleProp {
+                        name: "background".to_string(),
+                        value: "#f87171".to_string(),
+                    },
+                    StyleProp {
+                        name: "color".to_string(),
+                        value: "#ffffff".to_string(),
+                    },
+                    StyleProp {
+                        name: "padding".to_string(),
+                        value: "10px".to_string(),
+                    },
+                    StyleProp {
+                        name: "border-color".to_string(),
+                        value: "#7f1d1d".to_string(),
+                    },
+                    StyleProp {
+                        name: "border-width".to_string(),
+                        value: "2px".to_string(),
+                    },
+                    StyleProp {
+                        name: "border-radius".to_string(),
+                        value: "7px".to_string(),
+                    },
+                ],
+                states: vec![],
+            }],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("danger".to_string()),
+                props: vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Again".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &style).unwrap();
+        assert!(
+            result.output.contains("palette.buttonText: \"#ffffff\""),
+            "missing foreground style in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("background: Rectangle {"),
+            "missing styled background in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("color: \"#f87171\""),
+            "missing background color in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("radius: 7"),
+            "missing radius in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("border.color: \"#7f1d1d\""),
+            "missing border color in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("border.width: 2"),
+            "missing border width in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("leftPadding: 10"),
+            "missing padding in:\n{}",
+            result.output
+        );
     }
 
     // -------- Test 23: HostButton with disabled flips to enabled --------
@@ -4033,11 +4273,7 @@ mod tests {
     /// `true` flow correctly.
     #[test]
     fn host_button_disabled_lowers_to_enabled_negated() {
-        let m = component(
-            "X",
-            vec![slot("is-saving", SlotType::Bool, false)],
-            vec![],
-        );
+        let m = component("X", vec![slot("is-saving", SlotType::Bool, false)], vec![]);
         let l = LayoutDef {
             component_name: "X".to_string(),
             root: LayoutNode {
@@ -4139,12 +4375,7 @@ mod tests {
 
         // Without any Host*-Controls primitive: NO Controls import.
         let m2 = component("Y", vec![], vec![]);
-        let r_without = from_pipeline(
-            &m2,
-            &single_box_layout("Y"),
-            &empty_style("Y"),
-        )
-        .unwrap();
+        let r_without = from_pipeline(&m2, &single_box_layout("Y"), &empty_style("Y")).unwrap();
         assert!(
             !r_without.output.contains("import QtQuick.Controls"),
             "Controls import must NOT appear when no Host*-Controls primitive used:\n{}",
@@ -4249,10 +4480,7 @@ mod tests {
     #[test]
     fn host_table_head_emits_bold_row_layout() {
         let m = component("X", vec![], vec![]);
-        let l = host_table(vec![section(
-            "HostTableHead",
-            vec![row_of(vec!["A", "B"])],
-        )]);
+        let l = host_table(vec![section("HostTableHead", vec![row_of(vec!["A", "B"])])]);
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
             result.output.contains("RowLayout {"),
@@ -4326,10 +4554,7 @@ mod tests {
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         // Find positions of divider and the foot's RowLayout. Divider
         // (height: 1 line) must come before the RowLayout opening.
-        let divider_pos = result
-            .output
-            .find("height: 1")
-            .expect("divider not found");
+        let divider_pos = result.output.find("height: 1").expect("divider not found");
         let row_pos = result
             .output
             .find("RowLayout {")
@@ -4358,10 +4583,7 @@ mod tests {
             .output
             .find("text: \"A\"")
             .expect("head cell not found");
-        let divider_pos = result
-            .output
-            .find("height: 1")
-            .expect("divider not found");
+        let divider_pos = result.output.find("height: 1").expect("divider not found");
         let body_pos = result
             .output
             .find("text: \"1\"")
@@ -4601,7 +4823,8 @@ mod tests {
         let l = host_table_with_dir(LayoutPropValue::SlotRef("layout-direction".to_string()));
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            r.output.contains("LayoutMirroring.enabled: layoutDirection"),
+            r.output
+                .contains("LayoutMirroring.enabled: layoutDirection"),
             "expected LayoutMirroring.enabled: layoutDirection, got:\n{}",
             r.output
         );
@@ -4671,8 +4894,8 @@ mod tests {
                 children: Vec::new(),
             },
         };
-        let err = from_pipeline(&m, &l, &empty_style("X"))
-            .expect_err("unknown primitive must error");
+        let err =
+            from_pipeline(&m, &l, &empty_style("X")).expect_err("unknown primitive must error");
         assert!(
             matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t == "FlibbertyJibbet"),
             "expected UnknownPrimitive(FlibbertyJibbet), got {err:?}"
@@ -4998,8 +5221,14 @@ mod tests {
             result.output
         );
         // The two branch bodies should appear in source order.
-        let yes_pos = result.output.find("text: \"yes\"").expect("missing then body");
-        let no_pos = result.output.find("text: \"no\"").expect("missing else body");
+        let yes_pos = result
+            .output
+            .find("text: \"yes\"")
+            .expect("missing then body");
+        let no_pos = result
+            .output
+            .find("text: \"no\"")
+            .expect("missing else body");
         assert!(
             yes_pos < no_pos,
             "Else body must follow If body in:\n{}",
@@ -5202,8 +5431,16 @@ mod tests {
         };
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         // Both children's content must appear (literal text values).
-        assert!(result.output.contains("text: \"a\""), "got:\n{}", result.output);
-        assert!(result.output.contains("text: \"b\""), "got:\n{}", result.output);
+        assert!(
+            result.output.contains("text: \"a\""),
+            "got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("text: \"b\""),
+            "got:\n{}",
+            result.output
+        );
         // And there must be an inner `Item {` wrapping them in addition
         // to the root `Item { ... }` of the component itself, so we
         // expect at least 2 occurrences of `Item {`.
@@ -5282,11 +5519,7 @@ mod tests {
     /// hook.
     #[test]
     fn host_dialog_open_slot_binds_visible() {
-        let m = component(
-            "X",
-            vec![slot("is-open", SlotType::Bool, false)],
-            vec![],
-        );
+        let m = component("X", vec![slot("is-open", SlotType::Bool, false)], vec![]);
         let l = dialog_layout(
             vec![LayoutProp {
                 name: "open".to_string(),
@@ -5678,10 +5911,13 @@ mod tests {
         let m = component(
             "X",
             vec![],
-            vec![emit_decl("onChange", vec![EmitParam {
-                name: "checked".to_string(),
-                r#type: EmitPayloadType::Bool,
-            }])],
+            vec![emit_decl(
+                "onChange",
+                vec![EmitParam {
+                    name: "checked".to_string(),
+                    r#type: EmitPayloadType::Bool,
+                }],
+            )],
         );
         let l = checkbox_layout(vec![LayoutProp {
             name: "onToggle".to_string(),
@@ -5786,10 +6022,13 @@ mod tests {
         let m = component(
             "X",
             vec![],
-            vec![emit_decl("onPick", vec![EmitParam {
-                name: "value".to_string(),
-                r#type: EmitPayloadType::Text,
-            }])],
+            vec![emit_decl(
+                "onPick",
+                vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            )],
         );
         let l = radio_layout(vec![
             LayoutProp {
@@ -5818,10 +6057,13 @@ mod tests {
         let m = component(
             "X",
             vec![slot("radio-value", SlotType::Text, true)],
-            vec![emit_decl("onPick", vec![EmitParam {
-                name: "value".to_string(),
-                r#type: EmitPayloadType::Text,
-            }])],
+            vec![emit_decl(
+                "onPick",
+                vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            )],
         );
         let l = radio_layout(vec![
             LayoutProp {
@@ -6155,8 +6397,7 @@ mod tests {
         let s = empty_style("X");
 
         let legacy = from_pipeline(&m, &l, &s).unwrap();
-        let extended =
-            from_pipeline_with_options(&m, &l, &s, &EmitOptions::default()).unwrap();
+        let extended = from_pipeline_with_options(&m, &l, &s, &EmitOptions::default()).unwrap();
 
         assert_eq!(legacy.output, extended.output, ".qml bytes diverged");
         assert_eq!(legacy.component_name, extended.component_name);
@@ -6174,7 +6415,10 @@ mod tests {
         let mut opts = EmitOptions::default();
         opts.emit_project = true;
         let r = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
-        assert!(r.project.is_some(), "emit_project: true must produce a shell");
+        assert!(
+            r.project.is_some(),
+            "emit_project: true must produce a shell"
+        );
     }
 
     #[test]
@@ -6276,7 +6520,8 @@ mod tests {
             .project
             .unwrap();
         assert!(
-            proj.cmake_lists.contains("cmake_minimum_required(VERSION 3.21)"),
+            proj.cmake_lists
+                .contains("cmake_minimum_required(VERSION 3.21)"),
             "expected CMake minimum 3.21"
         );
         assert!(
@@ -6480,7 +6725,10 @@ mod tests {
             tag: "For".to_string(),
             part_name: None,
             props: vec![
-                lp("each", LayoutPropValue::SlotRef("viewport-rows".to_string())),
+                lp(
+                    "each",
+                    LayoutPropValue::SlotRef("viewport-rows".to_string()),
+                ),
                 lp("as", LayoutPropValue::Keyword("row".to_string())),
                 lp("index", LayoutPropValue::Keyword("r".to_string())),
             ],
@@ -6501,7 +6749,10 @@ mod tests {
                 tag: "For".to_string(),
                 part_name: None,
                 props: vec![
-                    lp("each", LayoutPropValue::SlotRef("column-widths".to_string())),
+                    lp(
+                        "each",
+                        LayoutPropValue::SlotRef("column-widths".to_string()),
+                    ),
                     lp("as", LayoutPropValue::Keyword("w".to_string())),
                     lp("index", LayoutPropValue::Keyword("cw".to_string())),
                 ],
@@ -6528,8 +6779,16 @@ mod tests {
         component(
             name,
             vec![
-                slot("viewport-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
-                slot("column-widths", SlotType::List(Box::new(ListInnerType::Number)), true),
+                slot(
+                    "viewport-rows",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+                slot(
+                    "column-widths",
+                    SlotType::List(Box::new(ListInnerType::Number)),
+                    true,
+                ),
                 slot("selected-row", SlotType::Number, true),
                 slot("selected-col", SlotType::Number, true),
                 slot("edit-row", SlotType::Number, true),
@@ -6549,8 +6808,14 @@ mod tests {
         let s = cell_style("Grid");
         let out = from_pipeline(&m, &l, &s).unwrap().output;
 
-        assert!(out.contains("Rectangle {"), "cell must be a Rectangle:\n{out}");
-        assert!(out.contains("border.width: 1"), "missing border.width:\n{out}");
+        assert!(
+            out.contains("Rectangle {"),
+            "cell must be a Rectangle:\n{out}"
+        );
+        assert!(
+            out.contains("border.width: 1"),
+            "missing border.width:\n{out}"
+        );
         assert!(
             out.contains("border.color: \"#3f3f46\""),
             "missing border.color:\n{out}"
@@ -6581,7 +6846,10 @@ mod tests {
             out.contains("color: ( ( r == editRow && c == editCol ) ) ? \"#1f4f3f\""),
             "editing branch missing:\n{out}"
         );
-        assert!(out.contains("\"#264f78\""), "selected colour missing:\n{out}");
+        assert!(
+            out.contains("\"#264f78\""),
+            "selected colour missing:\n{out}"
+        );
         assert!(
             out.contains("\"#1e1e1e\""),
             "inherited sheet background fallback missing:\n{out}"
@@ -6673,13 +6941,22 @@ mod tests {
         };
         let m = component("Grid", vec![], vec![]);
         let out = from_pipeline(&m, &l, &style).unwrap().output;
-        assert!(out.contains("Rectangle {"), "header must be a Rectangle:\n{out}");
-        assert!(out.contains("color: \"#2d2d30\""), "header bg missing:\n{out}");
+        assert!(
+            out.contains("Rectangle {"),
+            "header must be a Rectangle:\n{out}"
+        );
+        assert!(
+            out.contains("color: \"#2d2d30\""),
+            "header bg missing:\n{out}"
+        );
         assert!(
             out.contains("horizontalAlignment: Text.AlignHCenter"),
             "header must center text:\n{out}"
         );
-        assert!(out.contains("color: \"#9d9d9d\""), "header text colour missing:\n{out}");
+        assert!(
+            out.contains("color: \"#9d9d9d\""),
+            "header text colour missing:\n{out}"
+        );
     }
 
     /// An unstyled `Box` (no matching part) keeps the bare `Item` shape —
@@ -6697,7 +6974,10 @@ mod tests {
             !out.contains("Rectangle {"),
             "unstyled Box must not become a Rectangle:\n{out}"
         );
-        assert!(out.matches("Item {").count() >= 2, "Box must stay an Item:\n{out}");
+        assert!(
+            out.matches("Item {").count() >= 2,
+            "Box must stay an Item:\n{out}"
+        );
     }
 
     /// `qml_hex_color_or_none` only accepts `#RGB` / `#RRGGBB` (the

@@ -53,6 +53,9 @@ and keep generated bindings idiomatic.
 may also include a `deckOptions` object to drive the Rust scheduler with custom
 learning steps, relearning steps, daily limits, graduation intervals, and lapse
 behavior. When `deckOptions` is omitted, the core applies `DeckOptions::default()`.
+Hosts may also include `burySiblingsUntil` to rate the current card and bury
+same-note siblings in the same reducer transition; the review log records enough
+snapshots for `undoLastReview` to restore the sibling state and active queue.
 
 The facade also exposes review-control commands:
 
@@ -62,15 +65,21 @@ The facade also exposes review-control commands:
 - `setCardFlag`
 - `markCard` / `unmarkCard`
 - `undoLastReview`
+- `upsertMediaAsset`
+- `deleteMediaAsset` / `deleteMediaAssets`
 
 Those commands update the Rust state snapshot directly, including active-session
 queues, so host shells do not need their own suspend or bury reducers.
 `buryCardSiblings` uses optional `card.lineage.noteId` data to hide same-note
-siblings until the host-provided `buriedUntil` timestamp.
-`undoLastReview` restores the previous progress snapshot recorded on the review
-and rewinds session counters through the same shared reducer.
+siblings until the host-provided `buriedUntil` timestamp. `undoLastReview`
+restores previous review, sibling, and active-session snapshots and rewinds
+session counters through the same shared reducer.
 Flags and marks live on `CardProgress` as optional metadata so collection
 browsers can filter them without changing scheduling behavior.
+Media commands update `AppState.mediaAssets` through the same facade, letting
+web, Electron, SwiftUI, XAML, Qt, and other native hosts copy attached media,
+replace imported payloads, or prune unreferenced media IDs without a separate
+platform reducer.
 
 `search_cards` exposes the shared browser-query engine. It returns
 `{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for
@@ -84,6 +93,12 @@ queues without rebuilding note/template provenance per platform.
 without an active session or contains shared review counters such as
 `totalCards`, `currentPosition`, `remainingCards`, `cardsReviewed`,
 `cardsCorrect`, `revealed`, and `completed`.
+
+`engram_app_props` includes Mosaic-slot-shaped labels for secondary review
+actions such as undo, bury card, bury siblings, suspend, and mark/unmark.
+`handle_engram_app_event` accepts those generated events (`onUndo`,
+`onBuryCard`, `onBurySiblings`, `onSuspendCard`, and `onToggleMark`) and routes
+them through the same core reducer commands used by direct JSON dispatch.
 
 `daily_limit_usage` returns `{ ok: true, usage }` with new/review counts already
 seen in a host-provided day window and the remaining slots from `DeckOptions`.

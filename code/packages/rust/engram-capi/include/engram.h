@@ -1,6 +1,7 @@
 #ifndef ENGRAM_CAPI_H
 #define ENGRAM_CAPI_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -36,6 +37,13 @@ char *eg_build_queue_with_daily_limits(
 );
 char *eg_deck_stats(EgSession *session, const char *deck_id, uint64_t now);
 char *eg_session_progress(EgSession *session);
+char *eg_engram_app_props(EgSession *session, const char *deck_id, uint64_t now);
+char *eg_handle_engram_app_event(
+    EgSession *session,
+    const char *event,
+    const char *deck_id,
+    uint64_t now
+);
 char *eg_review_history(
     EgSession *session,
     const char *deck_id,
@@ -58,6 +66,14 @@ char *eg_export_anki_basic_tsv(
     const char *note_type_name,
     uint8_t html
 );
+char *eg_export_anki_notes_tsv(
+    EgSession *session,
+    const char *note_type_id,
+    const char *deck_id,
+    const char *deck_name,
+    const char *note_type_name,
+    uint8_t html
+);
 char *eg_parse_cards_csv(EgSession *session, const char *csv);
 char *eg_parse_basic_cards_csv(
     EgSession *session,
@@ -73,6 +89,26 @@ char *eg_parse_anki_basic_tsv(
     const char *id_prefix,
     uint64_t created_at
 );
+char *eg_parse_anki_notes_tsv(
+    EgSession *session,
+    const char *tsv,
+    const char *deck_id,
+    const char *note_type_id,
+    const char *note_type_name,
+    const char *note_id_prefix,
+    uint64_t created_at
+);
+char *eg_export_anki_apkg(EgSession *session);
+char *eg_analyze_media_references(EgSession *session);
+char *eg_inspect_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
+char *eg_read_anki_apkg_media(
+    EgSession *session,
+    const uint8_t *data,
+    size_t data_len,
+    const char *archive_name
+);
+char *eg_parse_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
+char *eg_import_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
 
 #ifdef __cplusplus
 }

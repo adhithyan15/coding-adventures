@@ -1,7 +1,10 @@
 use std::collections::HashMap;
 
-use crate::model::{AppState, Card, CardFlag, CardProgress, CardState, Deck, Note, NoteType};
-use crate::queue::is_reviewable;
+use crate::model::{
+    AppState, Card, CardFlag, CardProgress, CardState, Deck, Note, NoteType, Rating, Review,
+};
+use crate::queue::{is_new_progress_overlay, is_reviewable};
+use crate::sm2::ONE_DAY_MS as MS_PER_DAY;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -25,13 +28,13 @@ pub struct SearchError {
     pub token: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 struct SearchClause {
     kind: SearchClauseKind,
     negated: bool,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 enum SearchClauseKind {
     Text(String),
     Front(String),
@@ -42,6 +45,19 @@ enum SearchClauseKind {
     State(CardSearchState),
     Flag(FlagFilter),
     Marked(bool),
+    Property(CardPropertyFilter),
+    Added(RecentDaysFilter),
+    Edited(RecentDaysFilter),
+    Introduced(RecentDaysFilter),
+    Rated(RatedFilter),
+}
+
+#[derive(Clone, Debug, PartialEq)]
+enum SearchExpr {
+    Clause(SearchClause),
+    And(Vec<SearchExpr>),
+    Or(Vec<SearchExpr>),
+    Not(Box<SearchExpr>),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -62,12 +78,50 @@ enum FlagFilter {
     Color(CardFlag),
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum ComparisonOperator {
+    Equal,
+    NotEqual,
+    LessThan,
+    LessThanOrEqual,
+    GreaterThan,
+    GreaterThanOrEqual,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum CardProperty {
+    Interval,
+    Due,
+    Repetitions,
+    Lapses,
+    Ease,
+    Rated,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+struct CardPropertyFilter {
+    property: CardProperty,
+    operator: ComparisonOperator,
+    value: f64,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct RecentDaysFilter {
+    days: u32,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct RatedFilter {
+    days: u32,
+    rating: Option<Rating>,
+}
+
 pub fn search_cards(
     state: &AppState,
     query: &str,
     now: u64,
 ) -> Result<Vec<CardSearchResult>, SearchError> {
-    let clause_groups = parse_query(query)?;
+    let expression = parse_query(query)?;
     let progress_by_card: HashMap<&str, &CardProgress> = state
         .card_progress
         .iter()
@@ -88,6 +142,13 @@ pub fn search_cards(
         .iter()
         .map(|note_type| (note_type.id.as_str(), note_type))
         .collect();
+    let mut reviews_by_card: HashMap<&str, Vec<&Review>> = HashMap::new();
+    for review in &state.reviews {
+        reviews_by_card
+            .entry(review.card_id.as_str())
+            .or_default()
+            .push(review);
+    }
 
     let results = state
         .cards
@@ -99,11 +160,19 @@ pub fn search_cards(
             let note_type = note
                 .and_then(|note| note_types_by_id.get(note.note_type_id.as_str()))
                 .copied();
-            clause_groups.iter().any(|clauses| {
-                clauses.iter().all(|clause| {
-                    clause_matches(clause, card, progress, deck, note, note_type, now)
-                })
-            })
+            let reviews = reviews_by_card
+                .get(card.id.as_str())
+                .map_or(&[] as &[&Review], Vec::as_slice);
+            expression_matches(
+                &expression,
+                card,
+                progress,
+                deck,
+                note,
+                note_type,
+                reviews,
+                now,
+            )
         })
         .map(|card| CardSearchResult {
             card: card.clone(),
@@ -116,41 +185,23 @@ pub fn search_cards(
     Ok(results)
 }
 
-fn parse_query(query: &str) -> Result<Vec<Vec<SearchClause>>, SearchError> {
-    let mut groups = vec![Vec::new()];
-    let mut saw_or = false;
+fn parse_query(query: &str) -> Result<SearchExpr, SearchError> {
+    let tokens = tokenize(query)?;
+    let mut parser = SearchParser::new(tokens);
+    let expression = parser.parse_or()?;
 
-    for token in tokenize(query)? {
-        if token.eq_ignore_ascii_case("and") {
-            continue;
-        }
-        if token.eq_ignore_ascii_case("or") {
-            if groups.last().is_some_and(Vec::is_empty) {
-                return Err(SearchError {
-                    message: "OR operator is missing a left-hand clause".to_string(),
-                    token,
-                });
-            }
-            groups.push(Vec::new());
-            saw_or = true;
-            continue;
-        }
-
-        let clause = parse_clause(&token)?;
-        groups
-            .last_mut()
-            .expect("search parser always keeps a current group")
-            .push(clause);
-    }
-
-    if saw_or && groups.last().is_some_and(Vec::is_empty) {
+    if let Some(token) = parser.peek() {
         return Err(SearchError {
-            message: "OR operator is missing a right-hand clause".to_string(),
-            token: "OR".to_string(),
+            message: if token == ")" {
+                "unexpected closing parenthesis".to_string()
+            } else {
+                "unexpected search token".to_string()
+            },
+            token: token.to_string(),
         });
     }
 
-    Ok(groups)
+    Ok(expression)
 }
 
 fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
@@ -169,6 +220,13 @@ fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
         match ch {
             '\\' if in_quotes => escaping = true,
             '"' => in_quotes = !in_quotes,
+            '(' | ')' if !in_quotes => {
+                if !current.is_empty() {
+                    tokens.push(current);
+                    current = String::new();
+                }
+                tokens.push(ch.to_string());
+            }
             ch if ch.is_whitespace() && !in_quotes => {
                 if !current.is_empty() {
                     tokens.push(current);
@@ -193,6 +251,180 @@ fn tokenize(query: &str) -> Result<Vec<String>, SearchError> {
     }
 
     Ok(tokens)
+}
+
+struct SearchParser {
+    tokens: Vec<String>,
+    position: usize,
+}
+
+impl SearchParser {
+    fn new(tokens: Vec<String>) -> Self {
+        Self {
+            tokens,
+            position: 0,
+        }
+    }
+
+    fn parse_or(&mut self) -> Result<SearchExpr, SearchError> {
+        let left = self.parse_and()?;
+        if self
+            .peek()
+            .is_some_and(|token| token.eq_ignore_ascii_case("or"))
+            && expression_is_empty(&left)
+        {
+            let token = self.next().expect("peeked token exists");
+            return Err(SearchError {
+                message: "OR operator is missing a left-hand clause".to_string(),
+                token,
+            });
+        }
+
+        let mut expressions = vec![left];
+        while self
+            .peek()
+            .is_some_and(|token| token.eq_ignore_ascii_case("or"))
+        {
+            let operator = self.next().expect("peeked token exists");
+            let right = self.parse_and()?;
+            if expression_is_empty(&right) {
+                return Err(SearchError {
+                    message: "OR operator is missing a right-hand clause".to_string(),
+                    token: operator,
+                });
+            }
+            expressions.push(right);
+        }
+
+        Ok(fold_or(expressions))
+    }
+
+    fn parse_and(&mut self) -> Result<SearchExpr, SearchError> {
+        let mut expressions = Vec::new();
+
+        loop {
+            let Some(token) = self.peek() else {
+                break;
+            };
+            if token == ")" || token.eq_ignore_ascii_case("or") {
+                break;
+            }
+            if token.eq_ignore_ascii_case("and") {
+                let operator = self.next().expect("peeked token exists");
+                if expressions.is_empty() {
+                    return Err(SearchError {
+                        message: "AND operator is missing a left-hand clause".to_string(),
+                        token: operator,
+                    });
+                }
+                if self.peek().is_none_or(|token| {
+                    token == ")"
+                        || token.eq_ignore_ascii_case("or")
+                        || token.eq_ignore_ascii_case("and")
+                }) {
+                    return Err(SearchError {
+                        message: "AND operator is missing a right-hand clause".to_string(),
+                        token: "AND".to_string(),
+                    });
+                }
+                continue;
+            }
+
+            expressions.push(self.parse_unary()?);
+        }
+
+        Ok(fold_and(expressions))
+    }
+
+    fn parse_unary(&mut self) -> Result<SearchExpr, SearchError> {
+        if self.peek().is_some_and(|token| token == "-") {
+            let operator = self.next().expect("peeked token exists");
+            if self.peek().is_none_or(|token| {
+                token == ")"
+                    || token.eq_ignore_ascii_case("or")
+                    || token.eq_ignore_ascii_case("and")
+            }) {
+                return Err(SearchError {
+                    message: "negation is missing a clause".to_string(),
+                    token: operator,
+                });
+            }
+            return Ok(SearchExpr::Not(Box::new(self.parse_unary()?)));
+        }
+
+        self.parse_primary()
+    }
+
+    fn parse_primary(&mut self) -> Result<SearchExpr, SearchError> {
+        let token = self.next().ok_or_else(|| SearchError {
+            message: "search expression is missing a clause".to_string(),
+            token: String::new(),
+        })?;
+
+        if token == "(" {
+            let expression = self.parse_or()?;
+            if expression_is_empty(&expression) {
+                return Err(SearchError {
+                    message: "parenthesized search expression is empty".to_string(),
+                    token,
+                });
+            }
+            match self.next() {
+                Some(closing) if closing == ")" => Ok(expression),
+                Some(unexpected) => Err(SearchError {
+                    message: "expected closing parenthesis".to_string(),
+                    token: unexpected,
+                }),
+                None => Err(SearchError {
+                    message: "missing closing parenthesis".to_string(),
+                    token,
+                }),
+            }
+        } else if token == ")" {
+            Err(SearchError {
+                message: "unexpected closing parenthesis".to_string(),
+                token,
+            })
+        } else {
+            parse_clause(&token).map(SearchExpr::Clause)
+        }
+    }
+
+    fn peek(&self) -> Option<&str> {
+        self.tokens.get(self.position).map(String::as_str)
+    }
+
+    fn next(&mut self) -> Option<String> {
+        let token = self.tokens.get(self.position).cloned()?;
+        self.position += 1;
+        Some(token)
+    }
+}
+
+fn fold_and(expressions: Vec<SearchExpr>) -> SearchExpr {
+    match expressions.len() {
+        0 => SearchExpr::And(expressions),
+        1 => expressions
+            .into_iter()
+            .next()
+            .expect("one expression exists"),
+        _ => SearchExpr::And(expressions),
+    }
+}
+
+fn fold_or(expressions: Vec<SearchExpr>) -> SearchExpr {
+    match expressions.len() {
+        0 => SearchExpr::Or(expressions),
+        1 => expressions
+            .into_iter()
+            .next()
+            .expect("one expression exists"),
+        _ => SearchExpr::Or(expressions),
+    }
+}
+
+fn expression_is_empty(expression: &SearchExpr) -> bool {
+    matches!(expression, SearchExpr::And(items) if items.is_empty())
 }
 
 fn parse_clause(token: &str) -> Result<SearchClause, SearchError> {
@@ -232,6 +464,11 @@ fn parse_keyed_clause(
         "is" => parse_is_filter(token, &value),
         "flag" => parse_flag_filter(token, &value).map(SearchClauseKind::Flag),
         "marked" => parse_bool_filter(token, &value).map(SearchClauseKind::Marked),
+        "prop" => parse_property_filter(token, &value).map(SearchClauseKind::Property),
+        "added" => parse_recent_days_filter(token, &value).map(SearchClauseKind::Added),
+        "edited" => parse_recent_days_filter(token, &value).map(SearchClauseKind::Edited),
+        "introduced" => parse_recent_days_filter(token, &value).map(SearchClauseKind::Introduced),
+        "rated" => parse_rated_filter(token, &value).map(SearchClauseKind::Rated),
         _ => Err(SearchError {
             message: "unknown search filter".to_string(),
             token: token.to_string(),
@@ -252,9 +489,9 @@ fn parse_is_filter(token: &str, value: &str) -> Result<SearchClauseKind, SearchE
 fn parse_state_filter(token: &str, value: &str) -> Result<CardSearchState, SearchError> {
     match value {
         "new" => Ok(CardSearchState::New),
-        "learning" => Ok(CardSearchState::Learning),
+        "learn" | "learning" => Ok(CardSearchState::Learning),
         "review" => Ok(CardSearchState::Review),
-        "relearning" => Ok(CardSearchState::Relearning),
+        "relearn" | "relearning" => Ok(CardSearchState::Relearning),
         "due" => Ok(CardSearchState::Due),
         "suspended" => Ok(CardSearchState::Suspended),
         "buried" => Ok(CardSearchState::Buried),
@@ -269,13 +506,13 @@ fn parse_flag_filter(token: &str, value: &str) -> Result<FlagFilter, SearchError
     match value {
         "any" | "flagged" => Ok(FlagFilter::Any),
         "none" | "unflagged" => Ok(FlagFilter::None),
-        "red" => Ok(FlagFilter::Color(CardFlag::Red)),
-        "orange" => Ok(FlagFilter::Color(CardFlag::Orange)),
-        "green" => Ok(FlagFilter::Color(CardFlag::Green)),
-        "blue" => Ok(FlagFilter::Color(CardFlag::Blue)),
-        "pink" => Ok(FlagFilter::Color(CardFlag::Pink)),
-        "turquoise" => Ok(FlagFilter::Color(CardFlag::Turquoise)),
-        "purple" => Ok(FlagFilter::Color(CardFlag::Purple)),
+        "1" | "red" => Ok(FlagFilter::Color(CardFlag::Red)),
+        "2" | "orange" => Ok(FlagFilter::Color(CardFlag::Orange)),
+        "3" | "green" => Ok(FlagFilter::Color(CardFlag::Green)),
+        "4" | "blue" => Ok(FlagFilter::Color(CardFlag::Blue)),
+        "5" | "pink" => Ok(FlagFilter::Color(CardFlag::Pink)),
+        "6" | "turquoise" => Ok(FlagFilter::Color(CardFlag::Turquoise)),
+        "7" | "purple" => Ok(FlagFilter::Color(CardFlag::Purple)),
         _ => Err(SearchError {
             message: "unknown card flag filter".to_string(),
             token: token.to_string(),
@@ -294,6 +531,146 @@ fn parse_bool_filter(token: &str, value: &str) -> Result<bool, SearchError> {
     }
 }
 
+fn parse_property_filter(token: &str, value: &str) -> Result<CardPropertyFilter, SearchError> {
+    let Some((property, operator, expected)) = split_property_comparison(value) else {
+        return Err(SearchError {
+            message: "property search must include a comparison operator".to_string(),
+            token: token.to_string(),
+        });
+    };
+    if property.is_empty() || expected.is_empty() {
+        return Err(SearchError {
+            message: "property search is missing a property or value".to_string(),
+            token: token.to_string(),
+        });
+    }
+
+    let property = match property {
+        "ivl" | "interval" => CardProperty::Interval,
+        "due" => CardProperty::Due,
+        "reps" | "reviews" => CardProperty::Repetitions,
+        "lapses" => CardProperty::Lapses,
+        "ease" => CardProperty::Ease,
+        "rated" => CardProperty::Rated,
+        _ => {
+            return Err(SearchError {
+                message: "unknown card property filter".to_string(),
+                token: token.to_string(),
+            });
+        }
+    };
+    let value = expected.parse::<f64>().map_err(|_| SearchError {
+        message: "property search value must be numeric".to_string(),
+        token: token.to_string(),
+    })?;
+
+    Ok(CardPropertyFilter {
+        property,
+        operator,
+        value,
+    })
+}
+
+fn split_property_comparison(value: &str) -> Option<(&str, ComparisonOperator, &str)> {
+    const OPERATORS: [(&str, ComparisonOperator); 6] = [
+        (">=", ComparisonOperator::GreaterThanOrEqual),
+        ("<=", ComparisonOperator::LessThanOrEqual),
+        ("!=", ComparisonOperator::NotEqual),
+        (">", ComparisonOperator::GreaterThan),
+        ("<", ComparisonOperator::LessThan),
+        ("=", ComparisonOperator::Equal),
+    ];
+
+    OPERATORS.iter().find_map(|(symbol, operator)| {
+        value.find(symbol).map(|index| {
+            let expected_start = index + symbol.len();
+            (&value[..index], *operator, &value[expected_start..])
+        })
+    })
+}
+
+fn parse_recent_days_filter(token: &str, value: &str) -> Result<RecentDaysFilter, SearchError> {
+    let days = value.parse::<u32>().map_err(|_| SearchError {
+        message: "recent-event search value must be a whole number of days".to_string(),
+        token: token.to_string(),
+    })?;
+
+    Ok(RecentDaysFilter { days })
+}
+
+fn parse_rated_filter(token: &str, value: &str) -> Result<RatedFilter, SearchError> {
+    let mut parts = value.split(':');
+    let days = parts
+        .next()
+        .expect("split always returns at least one item")
+        .parse::<u32>()
+        .map_err(|_| SearchError {
+            message: "rated search value must start with a whole number of days".to_string(),
+            token: token.to_string(),
+        })?;
+    let rating = match parts.next() {
+        Some(raw_rating) if raw_rating.is_empty() => {
+            return Err(SearchError {
+                message: "rated search rating is missing".to_string(),
+                token: token.to_string(),
+            });
+        }
+        Some(raw_rating) => Some(parse_rating_filter(token, raw_rating)?),
+        None => None,
+    };
+    if parts.next().is_some() {
+        return Err(SearchError {
+            message: "rated search has too many parts".to_string(),
+            token: token.to_string(),
+        });
+    }
+
+    Ok(RatedFilter { days, rating })
+}
+
+fn parse_rating_filter(token: &str, value: &str) -> Result<Rating, SearchError> {
+    match value {
+        "1" | "again" => Ok(Rating::Again),
+        "2" | "hard" => Ok(Rating::Hard),
+        "3" | "good" => Ok(Rating::Good),
+        "4" | "easy" => Ok(Rating::Easy),
+        _ => Err(SearchError {
+            message: "rated search rating must be 1-4 or again/hard/good/easy".to_string(),
+            token: token.to_string(),
+        }),
+    }
+}
+
+fn expression_matches(
+    expression: &SearchExpr,
+    card: &Card,
+    progress: Option<&CardProgress>,
+    deck: Option<&Deck>,
+    note: Option<&Note>,
+    note_type: Option<&NoteType>,
+    reviews: &[&Review],
+    now: u64,
+) -> bool {
+    match expression {
+        SearchExpr::Clause(clause) => {
+            clause_matches(clause, card, progress, deck, note, note_type, reviews, now)
+        }
+        SearchExpr::And(expressions) => expressions.iter().all(|expression| {
+            expression_matches(
+                expression, card, progress, deck, note, note_type, reviews, now,
+            )
+        }),
+        SearchExpr::Or(expressions) => expressions.iter().any(|expression| {
+            expression_matches(
+                expression, card, progress, deck, note, note_type, reviews, now,
+            )
+        }),
+        SearchExpr::Not(expression) => !expression_matches(
+            expression, card, progress, deck, note, note_type, reviews, now,
+        ),
+    }
+}
+
 fn clause_matches(
     clause: &SearchClause,
     card: &Card,
@@ -301,6 +678,7 @@ fn clause_matches(
     deck: Option<&Deck>,
     note: Option<&Note>,
     note_type: Option<&NoteType>,
+    reviews: &[&Review],
     now: u64,
 ) -> bool {
     let matched = match &clause.kind {
@@ -319,6 +697,13 @@ fn clause_matches(
         SearchClauseKind::Marked(expected) => {
             progress.is_some_and(|progress| progress.marked_at.is_some()) == *expected
         }
+        SearchClauseKind::Property(filter) => property_matches(filter, progress, reviews, now),
+        SearchClauseKind::Added(filter) => happened_recently(card.created_at, filter.days, now),
+        SearchClauseKind::Edited(filter) => {
+            note.is_some_and(|note| happened_recently(note.updated_at, filter.days, now))
+        }
+        SearchClauseKind::Introduced(filter) => first_reviewed_within(reviews, filter.days, now),
+        SearchClauseKind::Rated(filter) => rated_matches(reviews, *filter, now),
     };
 
     if clause.negated {
@@ -363,13 +748,14 @@ fn note_type_matches(term: &str, note: Option<&Note>, note_type: Option<&NoteTyp
 
 fn state_matches(state: CardSearchState, progress: Option<&CardProgress>, now: u64) -> bool {
     match state {
-        CardSearchState::New => progress.is_none(),
+        CardSearchState::New => progress.map_or(true, is_new_progress_overlay),
         CardSearchState::Due => progress.is_some_and(|progress| is_reviewable(progress, now)),
         CardSearchState::Learning => {
             progress.is_some_and(|progress| progress.state == CardState::Learning)
         }
         CardSearchState::Review => progress.is_some_and(|progress| {
             progress.state == CardState::Review
+                && !is_new_progress_overlay(progress)
                 && progress.suspended_at.is_none()
                 && !is_buried(progress, now)
         }),
@@ -389,6 +775,87 @@ fn flag_matches(filter: FlagFilter, progress: Option<&CardProgress>) -> bool {
     }
 }
 
+fn property_matches(
+    filter: &CardPropertyFilter,
+    progress: Option<&CardProgress>,
+    reviews: &[&Review],
+    now: u64,
+) -> bool {
+    match filter.property {
+        CardProperty::Interval => compare_number(
+            progress.map_or(0.0, |progress| f64::from(progress.interval)),
+            filter.operator,
+            filter.value,
+        ),
+        CardProperty::Due => progress.is_some_and(|progress| {
+            compare_number(
+                f64::from(relative_day_bucket(progress.next_due_at, now)),
+                filter.operator,
+                filter.value,
+            )
+        }),
+        CardProperty::Repetitions => compare_number(
+            progress.map_or(0.0, |progress| f64::from(progress.times_seen)),
+            filter.operator,
+            filter.value,
+        ),
+        CardProperty::Lapses => compare_number(
+            progress.map_or(0.0, |progress| f64::from(progress.times_incorrect)),
+            filter.operator,
+            filter.value,
+        ),
+        CardProperty::Ease => progress.is_some_and(|progress| {
+            compare_number(progress.ease_factor, filter.operator, filter.value)
+        }),
+        CardProperty::Rated => reviews.iter().any(|review| {
+            compare_number(
+                f64::from(relative_day_bucket(review.reviewed_at, now)),
+                filter.operator,
+                filter.value,
+            )
+        }),
+    }
+}
+
+fn rated_matches(reviews: &[&Review], filter: RatedFilter, now: u64) -> bool {
+    reviews.iter().any(|review| {
+        filter.rating.map_or(true, |rating| review.rating == rating)
+            && happened_recently(review.reviewed_at, filter.days, now)
+    })
+}
+
+fn first_reviewed_within(reviews: &[&Review], days: u32, now: u64) -> bool {
+    reviews
+        .iter()
+        .map(|review| review.reviewed_at)
+        .min()
+        .is_some_and(|reviewed_at| happened_recently(reviewed_at, days, now))
+}
+
+fn happened_recently(timestamp: u64, days: u32, now: u64) -> bool {
+    timestamp <= now && now.saturating_sub(timestamp) <= recent_window_ms(days)
+}
+
+fn recent_window_ms(days: u32) -> u64 {
+    u64::from(days).saturating_mul(MS_PER_DAY)
+}
+
+fn relative_day_bucket(timestamp: u64, now: u64) -> i32 {
+    let diff = timestamp as i128 - now as i128;
+    (diff / i128::from(MS_PER_DAY)) as i32
+}
+
+fn compare_number(actual: f64, operator: ComparisonOperator, expected: f64) -> bool {
+    match operator {
+        ComparisonOperator::Equal => actual == expected,
+        ComparisonOperator::NotEqual => actual != expected,
+        ComparisonOperator::LessThan => actual < expected,
+        ComparisonOperator::LessThanOrEqual => actual <= expected,
+        ComparisonOperator::GreaterThan => actual > expected,
+        ComparisonOperator::GreaterThanOrEqual => actual >= expected,
+    }
+}
+
 fn is_suspended(progress: &CardProgress) -> bool {
     progress.suspended_at.is_some() || progress.state == CardState::Suspended
 }
@@ -405,6 +872,10 @@ fn contains_case_insensitive(value: &str, term: &str) -> bool {
 }
 
 fn note_for_card<'a>(card: &Card, notes_by_id: &'a HashMap<&str, &Note>) -> Option<&'a Note> {
+    if let Some(lineage) = &card.lineage {
+        return notes_by_id.get(lineage.note_id.as_str()).copied();
+    }
+
     let (note_id, _) = card.id.split_once("::")?;
     notes_by_id
         .get(note_id)
@@ -415,7 +886,9 @@ fn note_for_card<'a>(card: &Card, notes_by_id: &'a HashMap<&str, &Note>) -> Opti
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::{CardTemplate, Deck, FieldDef, NoteFieldValue, NoteType};
+    use crate::model::{
+        CardLineage, CardTemplate, Deck, FieldDef, NoteFieldValue, NoteType, Review,
+    };
     use crate::sm2::{INITIAL_EASE_FACTOR, ONE_DAY_MS};
 
     const NOW: u64 = 1_700_000_000_000;
@@ -460,6 +933,39 @@ mod tests {
             last_seen_at: NOW - ONE_DAY_MS,
             flag: None,
             marked_at: None,
+        }
+    }
+
+    fn metadata_overlay(card_id: &str) -> CardProgress {
+        CardProgress {
+            card_id: card_id.to_string(),
+            state: CardState::Review,
+            interval: 0,
+            ease_factor: INITIAL_EASE_FACTOR,
+            next_due_at: NOW,
+            learning_step_index: None,
+            buried_until: None,
+            suspended_at: None,
+            times_seen: 0,
+            times_correct: 0,
+            times_incorrect: 0,
+            last_seen_at: NOW,
+            flag: Some(CardFlag::Red),
+            marked_at: Some(NOW),
+        }
+    }
+
+    fn review(id: &str, card_id: &str, rating: Rating, reviewed_at: u64) -> Review {
+        Review {
+            id: id.to_string(),
+            session_id: "session".to_string(),
+            card_id: card_id.to_string(),
+            rating,
+            reviewed_at,
+            previous_progress: None,
+            resulting_progress: None,
+            previous_active_session: None,
+            sibling_progress_snapshots: Vec::new(),
         }
     }
 
@@ -530,6 +1036,9 @@ mod tests {
             ],
             sessions: Vec::new(),
             reviews: Vec::new(),
+            deck_options: Vec::new(),
+            external_sources: Vec::new(),
+            media_assets: Vec::new(),
             active_session: None,
         }
     }
@@ -558,6 +1067,60 @@ mod tests {
         assert_eq!(ids_for("is:due"), vec!["due"]);
         assert_eq!(ids_for("is:suspended"), vec!["suspended"]);
         assert_eq!(ids_for("is:buried"), vec!["buried"]);
+
+        let mut state = state();
+        state
+            .card_progress
+            .push(progress("learning", CardState::Learning, NOW - 1));
+        state
+            .cards
+            .push(card("learning", "tamil", "learn", "learn"));
+        state
+            .card_progress
+            .push(progress("relearning", CardState::Relearning, NOW - 1));
+        state
+            .cards
+            .push(card("relearning", "tamil", "relearn", "relearn"));
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(ids_for("is:learn"), vec!["learning"]);
+        assert_eq!(ids_for("state:relearn"), vec!["relearning"]);
+    }
+
+    #[test]
+    fn metadata_only_progress_overlay_searches_as_new_and_flagged() {
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            note_types: Vec::new(),
+            notes: Vec::new(),
+            cards: vec![card("flagged-new", "tamil", "amma", "mother")],
+            card_progress: vec![metadata_overlay("flagged-new")],
+            sessions: Vec::new(),
+            reviews: Vec::new(),
+            deck_options: Vec::new(),
+            external_sources: Vec::new(),
+            media_assets: Vec::new(),
+            active_session: None,
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("is:new"), vec!["flagged-new"]);
+        assert_eq!(ids_for("flag:red"), vec!["flagged-new"]);
+        assert_eq!(ids_for("flag:1"), vec!["flagged-new"]);
+        assert!(ids_for("is:due").is_empty());
+        assert!(ids_for("is:review").is_empty());
     }
 
     #[test]
@@ -579,6 +1142,117 @@ mod tests {
     }
 
     #[test]
+    fn property_filters_match_progress_metrics() {
+        let mut state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("new", "tamil", "new", "new"),
+                card("due", "tamil", "due", "due"),
+                card("lapsed", "tamil", "lapsed", "lapsed"),
+                card("low-ease", "tamil", "ease", "ease"),
+            ],
+            card_progress: vec![
+                {
+                    let mut progress = progress("due", CardState::Review, NOW - 2 * ONE_DAY_MS);
+                    progress.interval = 12;
+                    progress.times_seen = 5;
+                    progress
+                },
+                {
+                    let mut progress = progress("lapsed", CardState::Review, NOW + ONE_DAY_MS);
+                    progress.interval = 3;
+                    progress.times_seen = 8;
+                    progress.times_incorrect = 2;
+                    progress
+                },
+                {
+                    let mut progress = progress("low-ease", CardState::Review, NOW);
+                    progress.interval = 1;
+                    progress.ease_factor = 2.1;
+                    progress
+                },
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |state: &AppState, query: &str| {
+            search_cards(state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for(&state, "prop:ivl>=10"), vec!["due"]);
+        assert_eq!(ids_for(&state, "prop:due<0"), vec!["due"]);
+        assert_eq!(ids_for(&state, "prop:reps=0"), vec!["new"]);
+        assert_eq!(ids_for(&state, "prop:lapses>1"), vec!["lapsed"]);
+        assert_eq!(ids_for(&state, "prop:ease<2.5"), vec!["low-ease"]);
+
+        state.reviews = vec![
+            review("recent", "due", Rating::Good, NOW - ONE_DAY_MS / 2),
+            review("older", "lapsed", Rating::Again, NOW - 3 * ONE_DAY_MS),
+        ];
+        assert_eq!(ids_for(&state, "prop:rated=0"), vec!["due"]);
+        assert_eq!(ids_for(&state, "prop:rated<-1"), vec!["lapsed"]);
+    }
+
+    #[test]
+    fn recent_event_filters_match_added_edited_introduced_and_rated_cards() {
+        let mut state = state();
+        state.cards[1].created_at = NOW - 3 * ONE_DAY_MS;
+        state.notes[0].updated_at = NOW - ONE_DAY_MS / 2;
+        state.reviews = vec![
+            review("recent-good", "due", Rating::Good, NOW - ONE_DAY_MS / 2),
+            review("older-again", "future", Rating::Again, NOW - 3 * ONE_DAY_MS),
+            review("older-easy", "buried", Rating::Easy, NOW - 2 * ONE_DAY_MS),
+        ];
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(
+            ids_for("added:1"),
+            vec!["note::forward", "future", "suspended", "buried", "new"]
+        );
+        assert_eq!(ids_for("edited:1"), vec!["note::forward"]);
+        assert_eq!(ids_for("introduced:1"), vec!["due"]);
+        assert_eq!(ids_for("rated:1:3"), vec!["due"]);
+        assert_eq!(ids_for("rated:4:again"), vec!["future"]);
+    }
+
+    #[test]
+    fn imported_anki_cards_search_through_lineage_notes() {
+        let mut state = state();
+        let mut imported = card("2000", "spanish", "hola", "hello");
+        imported.lineage = Some(CardLineage {
+            note_id: "note".to_string(),
+            note_type_id: "basic".to_string(),
+            template_id: "forward".to_string(),
+            ordinal: 0,
+            cloze_ordinal: None,
+        });
+        state.cards = vec![imported];
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("tag:script"), vec!["2000"]);
+        assert_eq!(ids_for("note:basic"), vec!["2000"]);
+        assert_eq!(ids_for("uyir"), vec!["2000"]);
+    }
+
+    #[test]
     fn negated_clauses_exclude_matches() {
         assert_eq!(ids_for("deck:spanish -is:buried"), vec!["suspended", "new"]);
     }
@@ -596,6 +1270,22 @@ mod tests {
     }
 
     #[test]
+    fn parenthesized_groups_compose_with_implicit_and_and_negation() {
+        assert_eq!(
+            ids_for("deck:spanish (front:hola OR front:adios)"),
+            vec!["suspended", "new"]
+        );
+        assert_eq!(
+            ids_for("deck:tamil -(front:nandri OR is:due)"),
+            vec!["note::forward"]
+        );
+        assert_eq!(
+            ids_for("(deck:tamil tag:script) OR (deck:spanish is:new)"),
+            vec!["note::forward", "new"]
+        );
+    }
+
+    #[test]
     fn parser_reports_unknown_filters_and_unclosed_quotes() {
         let error = search_cards(&state(), "kind:review", NOW).unwrap_err();
         assert_eq!(error.token, "kind:review");
@@ -608,5 +1298,11 @@ mod tests {
 
         let error = search_cards(&state(), "deck:tamil OR", NOW).unwrap_err();
         assert_eq!(error.message, "OR operator is missing a right-hand clause");
+
+        let error = search_cards(&state(), "(deck:tamil OR is:due", NOW).unwrap_err();
+        assert_eq!(error.message, "missing closing parenthesis");
+
+        let error = search_cards(&state(), "deck:tamil)", NOW).unwrap_err();
+        assert_eq!(error.message, "unexpected closing parenthesis");
     }
 }

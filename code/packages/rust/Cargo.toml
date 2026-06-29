@@ -149,6 +149,7 @@ members = [
     "hazard-detection",
     "dom-core",
     "engram-capi",
+    "engram-anki-package",
     "engram-core",
     "engram-core-wasm",
     "html-lexer",

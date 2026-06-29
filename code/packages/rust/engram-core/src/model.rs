@@ -1,5 +1,6 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -35,6 +36,11 @@ pub struct CardLineage {
     pub note_type_id: String,
     pub template_id: String,
     pub ordinal: u32,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub cloze_ordinal: Option<u32>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -102,6 +108,11 @@ pub struct GeneratedCard {
     pub template_id: String,
     pub deck_id: String,
     pub ordinal: u32,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub cloze_ordinal: Option<u32>,
     pub front: String,
     pub back: String,
     pub tags: Vec<String>,
@@ -193,6 +204,23 @@ pub enum Rating {
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct CardProgressSnapshot {
+    pub card_id: String,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub previous_progress: Option<CardProgress>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub resulting_progress: Option<CardProgress>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct Review {
     pub id: String,
     pub session_id: String,
@@ -209,6 +237,16 @@ pub struct Review {
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub resulting_progress: Option<CardProgress>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub previous_active_session: Option<ActiveSessionState>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Vec::is_empty")
+    )]
+    pub sibling_progress_snapshots: Vec<CardProgressSnapshot>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -276,6 +314,87 @@ pub struct SessionProgress {
     pub completed: bool,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum ExternalSourceTarget {
+    Collection,
+    Deck,
+    NoteType,
+    Note,
+    Card,
+    Review,
+    Session,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct ExternalSourceRecord {
+    pub target: ExternalSourceTarget,
+    pub target_id: String,
+    pub source: String,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub original_id: Option<String>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "BTreeMap::is_empty")
+    )]
+    pub data: BTreeMap<String, String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct MediaAssetRecord {
+    pub id: String,
+    pub archive_name: String,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub filename: Option<String>,
+    pub data: Vec<u8>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase", default))]
+pub struct DeckOptions {
+    pub new_cards_per_day: u32,
+    pub reviews_per_day: u32,
+    pub learning_steps_minutes: Vec<u32>,
+    pub relearning_steps_minutes: Vec<u32>,
+    pub graduating_interval_days: u32,
+    pub easy_interval_days: u32,
+    pub lapse_interval_multiplier: f64,
+}
+
+impl Default for DeckOptions {
+    fn default() -> Self {
+        Self {
+            new_cards_per_day: 20,
+            reviews_per_day: 200,
+            learning_steps_minutes: vec![1, 10],
+            relearning_steps_minutes: vec![10],
+            graduating_interval_days: 1,
+            easy_interval_days: 4,
+            lapse_interval_multiplier: 0.0,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct DeckOptionsPreset {
+    pub deck_id: String,
+    pub options: DeckOptions,
+}
+
 #[derive(Clone, Debug, Default, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
@@ -287,6 +406,12 @@ pub struct AppState {
     pub card_progress: Vec<CardProgress>,
     pub sessions: Vec<Session>,
     pub reviews: Vec<Review>,
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub deck_options: Vec<DeckOptionsPreset>,
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub external_sources: Vec<ExternalSourceRecord>,
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub media_assets: Vec<MediaAssetRecord>,
     pub active_session: Option<ActiveSessionState>,
 }
 

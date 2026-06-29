@@ -1,0 +1,16 @@
+// RatingControls.mil - spaced-repetition answer grading controls.
+//
+// This component is deliberately small and reusable. The host supplies labels
+// and decides how each emitted rating mutates review state.
+
+component RatingControls {
+  slot again-label : text ;
+  slot hard-label : text ;
+  slot good-label : text ;
+  slot easy-label : text ;
+
+  emit onAgain ;
+  emit onHard ;
+  emit onGood ;
+  emit onEasy ;
+}

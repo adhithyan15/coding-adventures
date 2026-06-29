@@ -1,7 +1,8 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::model::{AppState, Card, CardProgress, CardState, DailyStudyLimitUsage, DeckStats};
-use crate::scheduler::DeckOptions;
+use crate::model::{
+    AppState, Card, CardProgress, CardState, DailyStudyLimitUsage, DeckOptions, DeckStats,
+};
 
 pub const SESSION_SIZE: usize = 20;
 pub const MAX_NEW_PER_SESSION: usize = 7;
@@ -43,6 +44,15 @@ pub fn build_session_queue_with_options(
         max_new,
         max_reviews,
     )
+}
+
+pub fn deck_options_for_state(state: &AppState, deck_id: &str) -> DeckOptions {
+    state
+        .deck_options
+        .iter()
+        .find(|preset| preset.deck_id == deck_id)
+        .map(|preset| preset.options.clone())
+        .unwrap_or_default()
 }
 
 pub fn get_daily_study_limit_usage(
@@ -145,7 +155,11 @@ fn build_session_queue_with_limits(
     let new_cards: Vec<Card> = all_cards
         .iter()
         .filter(|card| card.deck_id == deck_id)
-        .filter(|card| !progress_by_card.contains_key(card.id.as_str()))
+        .filter(|card| {
+            progress_by_card
+                .get(card.id.as_str())
+                .map_or(true, |progress| is_new_progress_overlay(progress))
+        })
         .take(max_new)
         .cloned()
         .collect();
@@ -163,6 +177,9 @@ fn build_session_queue_with_limits(
 }
 
 pub(crate) fn is_reviewable(progress: &CardProgress, now: u64) -> bool {
+    if is_new_progress_overlay(progress) {
+        return false;
+    }
     if is_suspended(progress) || is_currently_buried(progress, now) {
         return false;
     }
@@ -171,6 +188,17 @@ pub(crate) fn is_reviewable(progress: &CardProgress, now: u64) -> bool {
         progress.state,
         CardState::Learning | CardState::Review | CardState::Relearning | CardState::Buried
     ) && progress.next_due_at <= now
+}
+
+pub(crate) fn is_new_progress_overlay(progress: &CardProgress) -> bool {
+    progress.state == CardState::Review
+        && progress.interval == 0
+        && progress.learning_step_index.is_none()
+        && progress.buried_until.is_none()
+        && progress.suspended_at.is_none()
+        && progress.times_seen == 0
+        && progress.times_correct == 0
+        && progress.times_incorrect == 0
 }
 
 fn is_suspended(progress: &CardProgress) -> bool {
@@ -228,6 +256,10 @@ pub fn get_deck_stats(
         stats.total += 1;
         match progress_by_card.get(card.id.as_str()) {
             Some(progress) => {
+                if is_new_progress_overlay(progress) {
+                    stats.new_count += 1;
+                    continue;
+                }
                 if is_suspended(progress) {
                     stats.suspended_count += 1;
                 }
@@ -295,6 +327,25 @@ mod tests {
         }
     }
 
+    fn metadata_overlay(card_id: &str) -> CardProgress {
+        CardProgress {
+            card_id: card_id.to_string(),
+            state: CardState::Review,
+            interval: 0,
+            ease_factor: 2.5,
+            next_due_at: NOW,
+            learning_step_index: None,
+            buried_until: None,
+            suspended_at: None,
+            times_seen: 0,
+            times_correct: 0,
+            times_incorrect: 0,
+            last_seen_at: NOW,
+            flag: Some(crate::model::CardFlag::Red),
+            marked_at: Some(NOW),
+        }
+    }
+
     fn review(
         id: &str,
         card_id: &str,
@@ -309,6 +360,8 @@ mod tests {
             reviewed_at,
             previous_progress,
             resulting_progress: None,
+            previous_active_session: None,
+            sibling_progress_snapshots: Vec::new(),
         }
     }
 
@@ -328,6 +381,20 @@ mod tests {
         let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
 
         assert_eq!(ids, vec!["due-early", "due-late", "new-1"]);
+    }
+
+    #[test]
+    fn metadata_only_progress_overlay_still_queues_as_new() {
+        let cards = vec![card("flagged-new", "deck", 1), card("plain-new", "deck", 2)];
+        let queue = build_session_queue(&cards, &[metadata_overlay("flagged-new")], "deck", NOW);
+        let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
+
+        assert_eq!(ids, vec!["flagged-new", "plain-new"]);
+
+        let stats = get_deck_stats(&cards, &[metadata_overlay("flagged-new")], "deck", NOW);
+        assert_eq!(stats.new_count, 2);
+        assert_eq!(stats.due_count, 0);
+        assert_eq!(stats.learning_count, 0);
     }
 
     #[test]
