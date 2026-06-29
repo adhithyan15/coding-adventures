@@ -84,6 +84,9 @@ When a review card lapses at the configured Anki-style leech threshold, the
 reducer records a leech event, adds the `leech` tag to the lineaged note, and
 suspends the card when the deck option requests Anki's suspend action. Undo
 restores both the previous progress and the previous note tags.
+Imported Anki filtered decks with `resched=false` are treated as preview-style
+sessions: the review is logged and session counters advance, but card progress,
+leech handling, and sibling burying are left unchanged.
 Deleting imported decks, notes, or cards now preserves generic
 `ExternalSourceTarget::Deleted` tombstones with the original source ID, so
 package boundaries such as APKG can emit deletion markers without teaching the

@@ -1050,6 +1050,9 @@ fn v11_external_sources(
             "dyn",
             deck.raw.get("dyn").and_then(Value::as_i64).unwrap_or(0),
         );
+        if let Some(resched) = deck.raw.get("resched").and_then(Value::as_bool) {
+            insert_string(&mut data, "resched", if resched { "true" } else { "false" });
+        }
         sources.push(source_record(
             ExternalSourceTarget::Deck,
             deck.id.to_string(),
@@ -5116,6 +5119,7 @@ CREATE TABLE graves (
                 && source.target == ExternalSourceTarget::Deck
                 && source.target_id == "3"
                 && source.data.get("dyn").map(String::as_str) == Some("1")
+                && source.data.get("resched").map(String::as_str) == Some("true")
         }));
         assert!(state.external_sources.iter().any(|source| {
             source.source == ANKI_V11_SOURCE

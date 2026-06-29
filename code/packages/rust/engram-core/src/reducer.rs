@@ -1106,31 +1106,36 @@ fn reduce_rate_card(
         return state.clone();
     }
 
+    let reschedules_card = review_reschedules_card(state, &session_id, &card_id);
     let existing = state
         .card_progress
         .iter()
         .find(|progress| progress.card_id == card_id)
         .cloned();
-    let mut new_progress = schedule_review(
-        existing.as_ref(),
-        card_id.clone(),
-        rating,
-        deck_options,
-        reviewed_at,
-    );
-
     let mut next = state.clone();
     let reviewed_card_id = card_id.clone();
-    let leech_event = apply_leech_handling(
-        &mut next,
-        &reviewed_card_id,
-        existing.as_ref(),
-        &mut new_progress,
-        rating,
-        deck_options,
-        reviewed_at,
-    );
-    upsert_progress(&mut next.card_progress, new_progress.clone());
+    let (leech_event, resulting_progress) = if reschedules_card {
+        let mut new_progress = schedule_review(
+            existing.as_ref(),
+            card_id.clone(),
+            rating,
+            deck_options,
+            reviewed_at,
+        );
+        let leech_event = apply_leech_handling(
+            &mut next,
+            &reviewed_card_id,
+            existing.as_ref(),
+            &mut new_progress,
+            rating,
+            deck_options,
+            reviewed_at,
+        );
+        upsert_progress(&mut next.card_progress, new_progress.clone());
+        (leech_event, Some(new_progress))
+    } else {
+        (None, existing.clone())
+    };
     let answer_time_ms = answer_time_ms_for_review(
         state.active_session.as_ref(),
         &session_id,
@@ -1146,7 +1151,7 @@ fn reduce_rate_card(
         answer_time_ms,
         leech_event,
         previous_progress: existing,
-        resulting_progress: Some(new_progress),
+        resulting_progress,
         previous_active_session: if sibling_bury.captures_previous_session() {
             state.active_session.clone()
         } else {
@@ -1163,44 +1168,46 @@ fn reduce_rate_card(
             break;
         }
     }
-    match sibling_bury {
-        SiblingBuryRule::None => {}
-        SiblingBuryRule::All(buried_until) => {
-            let (mut buried, snapshots) = bury_card_siblings_with_snapshots(
-                &next,
-                &reviewed_card_id,
-                reviewed_at,
-                buried_until,
-            );
-            if let Some(review) = buried.reviews.last_mut() {
-                review.sibling_progress_snapshots = snapshots;
+    if reschedules_card {
+        match sibling_bury {
+            SiblingBuryRule::None => {}
+            SiblingBuryRule::All(buried_until) => {
+                let (mut buried, snapshots) = bury_card_siblings_with_snapshots(
+                    &next,
+                    &reviewed_card_id,
+                    reviewed_at,
+                    buried_until,
+                );
+                if let Some(review) = buried.reviews.last_mut() {
+                    review.sibling_progress_snapshots = snapshots;
+                }
+                next = buried;
             }
-            next = buried;
-        }
-        SiblingBuryRule::DeckOptions {
-            options,
-            until,
-            reviewed_kind,
-        } => {
-            let (mut buried, snapshots) = bury_card_siblings_matching_with_snapshots(
-                &next,
-                &reviewed_card_id,
-                reviewed_at,
+            SiblingBuryRule::DeckOptions {
+                options,
                 until,
-                |card| {
-                    should_bury_sibling_for_deck_options(
-                        state,
-                        &card.id,
-                        reviewed_at,
-                        options,
-                        reviewed_kind,
-                    )
-                },
-            );
-            if let Some(review) = buried.reviews.last_mut() {
-                review.sibling_progress_snapshots = snapshots;
+                reviewed_kind,
+            } => {
+                let (mut buried, snapshots) = bury_card_siblings_matching_with_snapshots(
+                    &next,
+                    &reviewed_card_id,
+                    reviewed_at,
+                    until,
+                    |card| {
+                        should_bury_sibling_for_deck_options(
+                            state,
+                            &card.id,
+                            reviewed_at,
+                            options,
+                            reviewed_kind,
+                        )
+                    },
+                );
+                if let Some(review) = buried.reviews.last_mut() {
+                    review.sibling_progress_snapshots = snapshots;
+                }
+                next = buried;
             }
-            next = buried;
         }
     }
     if let Some(active_session) = &mut next.active_session {
@@ -1209,6 +1216,62 @@ fn reduce_rate_card(
         }
     }
     next
+}
+
+fn review_reschedules_card(state: &AppState, session_id: &str, card_id: &str) -> bool {
+    let review_deck_id = state
+        .active_session
+        .as_ref()
+        .filter(|active| active.session_id == session_id)
+        .map(|active| active.deck_id.as_str())
+        .or_else(|| {
+            state
+                .sessions
+                .iter()
+                .find(|session| session.id == session_id)
+                .map(|session| session.deck_id.as_str())
+        })
+        .or_else(|| {
+            state
+                .cards
+                .iter()
+                .find(|card| card.id == card_id)
+                .map(|card| card.deck_id.as_str())
+        });
+    let Some(review_deck_id) = review_deck_id else {
+        return true;
+    };
+
+    !state
+        .external_sources
+        .iter()
+        .filter(|source| {
+            source.target == ExternalSourceTarget::Deck && source.target_id == review_deck_id
+        })
+        .any(|source| is_non_rescheduling_filtered_deck_source(source))
+}
+
+fn is_non_rescheduling_filtered_deck_source(source: &ExternalSourceRecord) -> bool {
+    source_i64_from_data(source, "dyn").is_some_and(|dyn_value| dyn_value != 0)
+        && source_bool_from_data(source, "resched") == Some(false)
+}
+
+fn source_i64_from_data(source: &ExternalSourceRecord, key: &str) -> Option<i64> {
+    source
+        .data
+        .get(key)
+        .and_then(|value| value.trim().parse::<i64>().ok())
+}
+
+fn source_bool_from_data(source: &ExternalSourceRecord, key: &str) -> Option<bool> {
+    let value = source.data.get(key)?.trim();
+    if value.eq_ignore_ascii_case("true") || value == "1" {
+        Some(true)
+    } else if value.eq_ignore_ascii_case("false") || value == "0" {
+        Some(false)
+    } else {
+        None
+    }
 }
 
 fn apply_leech_handling(
@@ -2208,6 +2271,98 @@ mod tests {
             leech.previous_note_tags,
             Some(vec!["tamil".to_string(), "leech".to_string()])
         );
+    }
+
+    #[test]
+    fn filtered_deck_review_without_reschedule_preserves_card_progress() {
+        let mut review_card = card_with_note("card", "note", 0);
+        review_card.deck_id = "filtered".to_string();
+        let mut sibling = card_with_note("sibling", "note", 1);
+        sibling.deck_id = "filtered".to_string();
+        let mut previous = progress("card");
+        previous.times_seen = 12;
+        previous.times_correct = 5;
+        previous.times_incorrect = 7;
+        let previous_sibling = progress("sibling");
+        let mut state = AppState {
+            decks: vec![Deck {
+                id: "filtered".to_string(),
+                name: "Preview".to_string(),
+                description: String::new(),
+                created_at: NOW,
+            }],
+            notes: vec![basic_note()],
+            cards: vec![review_card.clone(), sibling.clone()],
+            card_progress: vec![previous.clone(), previous_sibling.clone()],
+            external_sources: vec![ExternalSourceRecord {
+                target: ExternalSourceTarget::Deck,
+                target_id: "filtered".to_string(),
+                source: "anki".to_string(),
+                original_id: Some("3".to_string()),
+                data: BTreeMap::from([
+                    ("dyn".to_string(), "1".to_string()),
+                    ("resched".to_string(), "false".to_string()),
+                ]),
+            }],
+            ..AppState::default()
+        };
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "filtered".to_string(),
+                queue: vec![review_card, sibling],
+                started_at: NOW,
+            },
+        );
+
+        let next = reduce(
+            &state,
+            EngramCommand::RateCardWithOptions {
+                review_id: "preview-review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Again,
+                reviewed_at: NOW,
+                deck_options: DeckOptions {
+                    leech_threshold: 8,
+                    leech_action: LeechAction::Suspend,
+                    ..DeckOptions::default()
+                },
+            },
+        );
+
+        assert_eq!(
+            next.card_progress
+                .iter()
+                .find(|progress| progress.card_id == "card"),
+            Some(&previous)
+        );
+        assert_eq!(
+            next.card_progress
+                .iter()
+                .find(|progress| progress.card_id == "sibling"),
+            Some(&previous_sibling)
+        );
+        assert_eq!(next.notes[0].tags, vec!["tamil"]);
+        assert_eq!(next.sessions[0].cards_reviewed, 1);
+        assert_eq!(next.sessions[0].cards_correct, 0);
+        assert_eq!(next.reviews[0].previous_progress, Some(previous.clone()));
+        assert_eq!(next.reviews[0].resulting_progress, Some(previous.clone()));
+        assert_eq!(next.reviews[0].leech_event, None);
+        assert!(next.reviews[0].sibling_progress_snapshots.is_empty());
+
+        let undone = reduce(
+            &next,
+            EngramCommand::UndoLastReview {
+                session_id: "session".to_string(),
+            },
+        );
+
+        assert_eq!(undone.card_progress, vec![previous, previous_sibling]);
+        assert!(undone.reviews.is_empty());
+        assert_eq!(undone.sessions[0].cards_reviewed, 0);
+        assert_eq!(undone.sessions[0].cards_correct, 0);
     }
 
     #[test]

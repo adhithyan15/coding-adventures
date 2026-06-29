@@ -56,6 +56,9 @@ when exporting back to APKG, along with the imported collection creation day
 that anchors Anki's due-day offsets and the collection's modification/schema
 metadata. Learning and relearning cards translate Anki's packed `left`
 remaining-step field into Engram's internal step index and back again on export.
+Imported filtered decks normalize Anki's `dyn` and `resched` flags into deck
+external-source metadata so the shared reducer can honor non-rescheduling
+filtered/custom-study sessions without APKG-specific logic in host shells.
 Anki model CSS imports into shared `NoteType::stylesheet`; Engram-native
 stylesheets export back to Anki model `css` so note styling does not depend on
 preserved raw model JSON alone.
