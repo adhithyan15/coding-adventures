@@ -23,11 +23,11 @@ Anki IDs as deterministic Engram IDs. Cloze note types render
 `{{cloze:Field}}` templates into Engram card fronts/backs with the same
 `[...]` / `[hint]` question behavior used by the core cloze generator.
 
-`read_collection_bytes` returns the detected collection member as raw bytes for
-inspection workflows. `read_v11_collection_bytes` is the import boundary for
-legacy SQLite packages: it accepts `collection.anki2` and `collection.anki21`,
-but rejects `collection.anki21b` until Engram has modern Anki V18 package
-support.
+`read_collection_bytes` returns the detected collection member as decoded raw
+SQLite bytes for inspection workflows. `read_v11_collection_bytes` accepts
+legacy `collection.anki2` / `collection.anki21` members and modern
+`collection.anki21b` package envelopes by honoring Anki's `meta` protobuf and
+zstd-decompressing the collection payload before parsing.
 
 The export path preserves numeric Anki IDs when Engram state came from Anki,
 allocates deterministic numeric IDs for Engram-native rows, writes decks,

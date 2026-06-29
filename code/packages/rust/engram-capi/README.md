@@ -44,9 +44,10 @@ daily limit accounting and queue builder for native review screens.
 Anki-compatible Basic front/back text path for native file-open/save flows.
 `eg_parse_anki_apkg` previews a legacy/V11 APKG import as Engram state JSON,
 and `eg_import_anki_apkg` applies that imported state to the session. These
-byte-slice APIs currently support `collection.anki2` and `collection.anki21`
-packages and return JSON errors for modern `collection.anki21b` packages until
-the modern Anki package reader lands.
+byte-slice APIs support legacy `collection.anki2` / `collection.anki21`
+packages and modern `collection.anki21b` envelopes by decoding Anki's `meta`
+protobuf plus zstd-compressed collection/media payloads before the shared
+SQLite import path runs.
 `eg_export_anki_apkg` writes the current session as a deterministic legacy/V11
 APKG and returns the package bytes as a JSON byte array under `apkg`, keeping
 the native ABI string-shaped while target-specific shells decide how to save or
