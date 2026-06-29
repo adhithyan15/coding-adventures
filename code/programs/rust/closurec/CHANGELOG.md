@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.225.0] - 2026-06-29
+
+### Added — characterization test pinning the per-fold tracing gap (`tests/cv_fold_provenance_gap.rs`)
+
+A test that documents the current `--correlation_vector` contract at the
+constant-fold layer: the constant-fold pass runs (listed in the coarse
+`compilation_level/simple_v2` contribution), but the emitted sidecar carries NO
+per-fold provenance — every CV entry origin is lex/file-level, so a folded
+literal (`"abc".length` → `3`) cannot be traced back to its source bytes. The
+per-fold lineage each fold records via `fork_cv`/`stamp_literal_cv` is dropped at
+the SIMPLE bridge boundary (the typed AST nodes carry `cv: None` and
+`run_typed_pipeline` runs the pipeline with a disabled, discarded `CVLog`). This
+locks the gap so it is visible and regression-detectable: when per-fold
+provenance is wired through the bridge, this test's gap assertion flips and
+signals that the fold lineage assertion should be promoted. No production code
+change.
+
 ## [0.223.0] - 2026-06-27
 
 ### Added — SIMPLE/ADVANCED fold static `Math.max(…)` / `Math.min(…)` → numeric
