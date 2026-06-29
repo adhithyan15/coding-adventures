@@ -1222,4 +1222,17 @@ fn source_tree_has_expected_shape() {
             path.display()
         );
     }
+
+    for relative in [
+        "host/web/engram-host.ts",
+        "host/web/engram-mosaic-host-wasm.d.ts",
+        "host/electron/host.js",
+    ] {
+        let path = package_root().join(relative);
+        assert!(
+            path.exists(),
+            "expected host template missing: {}",
+            path.display()
+        );
+    }
 }

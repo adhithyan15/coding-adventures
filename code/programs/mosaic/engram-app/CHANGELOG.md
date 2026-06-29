@@ -22,6 +22,8 @@
 - Added the Engram WASM Mosaic host bridge so generated React/Electron shells
   can consume shared Rust facade props/events with generated camelCase prop
   names.
+- Updated `scripts/build-all.ps1` to build the Engram WASM host and install the
+  React/Electron host adapter assets into generated app shells automatically.
 - Added the reusable `mosaic-pkg-collection-actions` dependency and mounted its
   `CollectionActions` component so generated host shells expose shared
   collection counts, Anki import/export intents, and note/note-type workflow

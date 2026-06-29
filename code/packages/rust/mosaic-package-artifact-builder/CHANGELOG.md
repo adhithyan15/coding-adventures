@@ -17,10 +17,11 @@ The builder also now honors themed style fallbacks such as
 
 Electron project shells now delegate `mosaic:get-props` and
 `mosaic:handle-event` IPC calls to an optional host module (`electron/host.ts`
-or `MOSAIC_ELECTRON_HOST_MODULE`) instead of hardcoding no-op responses. Their
-generated `npm run dev` script now compiles the Electron main/preload
-TypeScript before launching Electron, so a fresh emitted project is runnable
-without a separate build.
+compiled to `dist-electron/host.js`, source-side `electron/host.js` or
+`electron/host.mjs`, or `MOSAIC_ELECTRON_HOST_MODULE`) instead of hardcoding
+no-op responses. Their generated `npm run dev` script now compiles the Electron
+main/preload TypeScript before launching Electron, so a fresh emitted project is
+runnable without a separate build.
 
 `BuildOptions::emit_project` now writes XAML project shells through
 `mosaic-emit-xaml` as well, producing `<Component>.csproj`, `App.xaml`,

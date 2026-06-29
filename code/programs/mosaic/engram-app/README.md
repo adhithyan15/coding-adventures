@@ -80,9 +80,10 @@ Flutter, and Compose outputs under `target/mosaic-engram-app/` by default. The
 Compose backend emits a pinned Gradle Compose Desktop shell plus the reusable
 Kotlin component source so it can be run with `gradle run`.
 
-For a Rust-backed web or Electron host, build
-`code/packages/rust/engram-wasm` and install
-`js/engram-mosaic-host-wasm.mjs` as the generated shell's `window.mosaicHost`
-provider. Collection actions such as Anki import/export return `hostIntent`
-payloads so hosts can open file pickers or save APKG bytes while keeping the
-Mosaic app interface shared.
+The script also builds `code/packages/rust/engram-wasm` and installs the
+Engram Mosaic host assets into the generated React and Electron outputs. The
+React shell receives `src/engram-host.ts`, the JS loader, and
+`public/engram_engine.wasm`; the Electron shell receives `electron/host.js`,
+the JS loader, and `electron/engram_engine.wasm`. Collection actions such as
+Anki import/export return `hostIntent` payloads so hosts can open file pickers
+or save APKG bytes while keeping the Mosaic app interface shared.
