@@ -85,6 +85,9 @@ lineage to bury same-note sibling cards until a host-supplied boundary.
 `RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` apply that
 behavior atomically during review and record undo snapshots, matching the shared
 behavior Anki-like review screens need.
+`EngramCommand::UpsertNote` can optionally materialize generated cards from the
+note type while preserving progress for stable generated card IDs, and
+`EngramCommand::DeleteNote` cascades only the note's lineaged generated cards.
 `rename_note_type_field` and `EngramCommand::RenameNoteTypeField` keep field
 IDs stable while migrating template references, Cloze references, and
 required-field names to the new display name.
