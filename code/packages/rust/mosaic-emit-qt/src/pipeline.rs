@@ -806,6 +806,12 @@ pub fn from_pipeline(
     for e in &interface.emits {
         out.push_str(&emit_signal_declaration(e)?);
     }
+    if !interface.emits.is_empty() {
+        writeln!(out, "    signal mosaicEvent(var event)").unwrap();
+        for e in &interface.emits {
+            out.push_str(&emit_mosaic_event_handler(e)?);
+        }
+    }
 
     // 6. The layout tree. Build the part-style map up front and seed the
     // walker's context so styled `Box [part]` containers can inline their
@@ -885,6 +891,40 @@ fn emit_signal_declaration(emit: &EmitDecl) -> Result<String, PipelineEmitError>
     let mut out = String::new();
     writeln!(out, "    signal {signal_name}({params})").unwrap();
     Ok(out)
+}
+
+fn emit_mosaic_event_handler(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
+    let lowered = strip_on_prefix(&emit.name);
+    let signal_name = to_camel_case_first_lower(&lowered);
+    validate_safe_identifier(&signal_name).map_err(PipelineEmitError::UnsafeEmitName)?;
+    let handler_name = qml_signal_handler_name(&signal_name);
+
+    let mut fields = vec![format!("\"event\": \"{}\"", escape_qml_string(&emit.name))];
+    for param in &emit.params {
+        let field = to_camel_case_first_lower(&param.name);
+        validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeEmitName)?;
+        fields.push(format!("\"{field}\": {field}"));
+    }
+
+    let mut out = String::new();
+    writeln!(
+        out,
+        "    {handler_name}: mosaicEvent({{ {} }})",
+        fields.join(", ")
+    )
+    .unwrap();
+    Ok(out)
+}
+
+fn qml_signal_handler_name(signal_name: &str) -> String {
+    let mut chars = signal_name.chars();
+    let Some(first) = chars.next() else {
+        return "on".to_string();
+    };
+    let mut out = String::from("on");
+    out.push(first.to_ascii_uppercase());
+    out.extend(chars);
+    out
 }
 
 // =====================================================================
@@ -3364,6 +3404,21 @@ mod tests {
             "missing 'signal editCommit()' in:\n{}",
             result.output
         );
+        assert!(result.output.contains("signal mosaicEvent(var event)"));
+        assert!(
+            result
+                .output
+                .contains("onNavigate: mosaicEvent({ \"event\": \"onNavigate\" })"),
+            "missing generic navigate Mosaic event in:\n{}",
+            result.output
+        );
+        assert!(
+            result
+                .output
+                .contains("onEditCommit: mosaicEvent({ \"event\": \"onEditCommit\" })"),
+            "missing generic editCommit Mosaic event in:\n{}",
+            result.output
+        );
     }
 
     // -------- Test 5: parameterised emits produce typed signal params --------
@@ -3392,6 +3447,13 @@ mod tests {
             "expected typed params, got:\n{}",
             result.output
         );
+        assert!(
+            result.output.contains(
+                "onSelect: mosaicEvent({ \"event\": \"onSelect\", \"startRow\": startRow, \"startCol\": startCol })"
+            ),
+            "expected payload to flow into generic Mosaic event, got:\n{}",
+            result.output
+        );
     }
 
     // -------- Test 6: kebab→camel conversion for slots and signals --------
@@ -3414,6 +3476,9 @@ mod tests {
         assert!(result
             .output
             .contains("signal userClickedHere(real eventRow)"));
+        assert!(result
+            .output
+            .contains("onUserClickedHere: mosaicEvent({ \"event\": \"onUserClickedHere\", \"eventRow\": eventRow })"));
     }
 
     // -------- Test 7: Row → RowLayout, Column → ColumnLayout --------

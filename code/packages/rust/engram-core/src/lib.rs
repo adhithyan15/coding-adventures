@@ -29,7 +29,7 @@ pub use model::{
     CardState, CardTemplate, DailyStudyLimitUsage, Deck, DeckOptions, DeckOptionsPreset, DeckStats,
     ExternalSourceRecord, ExternalSourceTarget, FieldDef, GeneratedCard, MediaAssetRecord, Note,
     NoteFieldValue, NoteType, Rating, RatingCounts, Review, ReviewHistorySummary, Session,
-    SessionProgress, SessionStatus,
+    SessionProgress, SessionStatus, TemplateRequirementMode,
 };
 pub use queue::{
     build_session_queue, build_session_queue_with_daily_limits, build_session_queue_with_options,
@@ -48,6 +48,7 @@ pub use snapshot::{
     ENGRAM_SNAPSHOT_APP, ENGRAM_SNAPSHOT_VERSION,
 };
 pub use template::{
-    generate_cards_for_note, materialize_generated_card, rename_note_type_field, render_template,
-    render_template_with_front_side,
+    generate_cards_for_note, materialize_generated_card, rename_note_type_field,
+    render_cloze_template, render_cloze_template_with_front_side, render_template,
+    render_template_with_front_side, template_references_cloze, ClozeRenderSide,
 };

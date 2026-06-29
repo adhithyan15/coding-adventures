@@ -71,10 +71,15 @@ import 'package:flutter/material.dart';
 
 sealed class GreetingEvent {
   const GreetingEvent();
+  String get mosaicName;
+  Map<String, Object?> get mosaicPayload => const {};
+  Map<String, Object?> get mosaicEnvelope => {'event': mosaicName, ...mosaicPayload};
 }
 
 class GreetingEventClick extends GreetingEvent {
   const GreetingEventClick();
+  @override
+  String get mosaicName => "onClick";
 }
 
 class Greeting extends StatelessWidget {
@@ -100,6 +105,10 @@ class Greeting extends StatelessWidget {
 generator emits valid but unformatted Dart — pass through
 `dart format` in the host's build pipeline if you want
 indentation polish.)
+
+Generated events expose a target-neutral `mosaicEnvelope` map. Flutter shells
+can forward that map to the same Mosaic host bridge used by HTML, Electron,
+SwiftUI, XAML, and Qt instead of reverse-engineering Dart class names.
 
 ## What works in v0.1 / what's deferred
 

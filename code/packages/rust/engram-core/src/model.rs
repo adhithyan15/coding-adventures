@@ -62,7 +62,27 @@ pub struct CardTemplate {
     pub front_template: String,
     pub back_template: String,
     pub required_field_names: Vec<String>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "TemplateRequirementMode::is_all")
+    )]
+    pub requirement_mode: TemplateRequirementMode,
     pub ordinal: u32,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum TemplateRequirementMode {
+    #[default]
+    All,
+    Any,
+}
+
+impl TemplateRequirementMode {
+    pub fn is_all(&self) -> bool {
+        matches!(self, Self::All)
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

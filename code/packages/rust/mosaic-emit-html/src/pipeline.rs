@@ -874,6 +874,17 @@ fn emit_children(
 // UI29 §2.1 — HostInput / HostButton lowerings
 // =====================================================================
 
+fn append_emit_marker(attrs: &mut String, node: &LayoutNode, prop_name: &str, attr_name: &str) {
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, prop_name) {
+        write!(
+            attrs,
+            " {attr_name}=\"{}\"",
+            escape_html_attr(emit_name)
+        )
+        .unwrap();
+    }
+}
+
 /// Lower a UI29 `HostInput` node to an `<input type="text" ...>` line.
 ///
 /// Static-HTML constraints shape the prop handling:
@@ -934,6 +945,9 @@ fn emit_host_input(
         }
         _ => {}
     }
+    append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
+    append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+    append_emit_marker(&mut attrs, node, "onCancel", "data-on-cancel");
 
     let style_attr = build_style_attr(node, "", part_styles);
     format!("{pad}<input type=\"text\"{attrs}{style_attr}>\n")
@@ -967,6 +981,8 @@ fn emit_host_button(
         }
         _ => {}
     }
+    append_emit_marker(&mut attrs, node, "onClick", "data-on-click");
+    append_emit_marker(&mut attrs, node, "onTap", "data-on-click");
 
     let style_attr = build_style_attr(node, "", part_styles);
 
@@ -2918,6 +2934,27 @@ mod tests {
         );
     }
 
+    #[test]
+    fn host_input_emit_refs_become_hydration_markers() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "HostInput",
+                vec![
+                    prop_emit("onChange", "onQueryChange"),
+                    prop_emit("onCommit", "onSearch"),
+                    prop_emit("onCancel", "onCancelSearch"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(out.contains("data-on-change=\"onQueryChange\""));
+        assert!(out.contains("data-on-commit=\"onSearch\""));
+        assert!(out.contains("data-on-cancel=\"onCancelSearch\""));
+    }
+
     // -------------------------------------------------------------------
     // U29-K-html test 5 — HostButton with label slot ref emits
     // `<button>{{label}}</button>`.
@@ -2926,14 +2963,17 @@ mod tests {
     fn host_button_with_label_slot_ref() {
         let l = layout(
             "B",
-            node_with_props("HostButton", vec![prop_slot("label", "label")]),
+            node_with_props(
+                "HostButton",
+                vec![prop_slot("label", "label"), prop_emit("onClick", "onSave")],
+            ),
         );
         let out = from_pipeline(&component("B", vec![]), &l, &empty_style("B"))
             .unwrap()
             .output;
         assert!(
-            out.contains("<button>{{label}}</button>"),
-            "expected button with label placeholder, got:\n{out}"
+            out.contains("<button data-on-click=\"onSave\">{{label}}</button>"),
+            "expected button with label placeholder and hydration marker, got:\n{out}"
         );
     }
 

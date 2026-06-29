@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - generic Mosaic event signal for QML hosts
+
+Generated QML components with emits now expose `signal mosaicEvent(var event)`
+and re-emit each specific signal through it as an object preserving the original
+Mosaic emit name and payload keys. Qt hosts can connect once to `mosaicEvent`
+for the same event-envelope bridge used by the other native shells.
+
 ### Added — UI32-K-qt — `--emit-project` Qt6 + CMake desktop shell
 
 L6 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2 React #4297, L3 HTML #4309, L4 WebComponent #4315, L5 Flutter #4319). `mosaic-compile --backend qt --emit-project` now produces a Qt6 + CMake desktop scaffold:

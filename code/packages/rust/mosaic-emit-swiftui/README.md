@@ -33,6 +33,14 @@ import SwiftUI
 
 enum ProfileCardEvent {
     case tap
+
+    var mosaicName: String { "onTap" }
+    var mosaicPayload: [String: Any] { [:] }
+    var mosaicEnvelope: [String: Any] {
+        var envelope = mosaicPayload
+        envelope["event"] = mosaicName
+        return envelope
+    }
 }
 
 struct ProfileCardView: View {
@@ -102,6 +110,13 @@ Each component carries a single `dispatch: (NameEvent) -> Void` closure
 property; the event type is a Swift `enum` with one case per emit. Empty
 emit lists produce an uninhabitable enum `enum NameEvent {}`, the SwiftUI
 analog of TypeScript's `type NameEvent = never` in the React backend.
+
+For non-empty emit lists, the generated enum also carries `mosaicName`,
+`mosaicPayload`, and `mosaicEnvelope` helpers. These preserve the original
+Mosaic emit name (`onReveal`, `onDeckOptionsLearningStepsChange`, etc.) and
+payload keys (`value`, `checked`, ...), so SwiftUI app shells can JSON-encode
+the same event object that web, Electron, and native C-ABI hosts send to shared
+business logic.
 
 ## What is NOT yet supported
 

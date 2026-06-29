@@ -35,9 +35,16 @@ binds them to the shared Rust business logic core through host shells.
   `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with sample
   slot values as a fallback when no host is installed.
 - The generated Electron preload/main shell exposes those calls over
-  context-isolated IPC channels so native hosts can bind them to app state.
-- The generated SwiftPM and Flutter shells mount `EngramApp` with sample slot
-  values and dispatch callbacks, matching the generated interface shapes.
+  context-isolated IPC channels and can delegate them to an optional
+  `electron/host.ts` or `MOSAIC_ELECTRON_HOST_MODULE` host module. The
+  `engram-wasm` JS loader can serve that contract from the shared Rust facade.
+- The generated XAML project shell has an optional `MosaicHost` hook. Engram's
+  `host/xaml/MosaicHost.cs` implements it with `engram-capi`, hydrating the
+  generated WinUI dependency properties from the shared Rust facade and routing
+  generated Mosaic event envelopes back into the same core.
+- The generated SwiftPM, Flutter, and Compose Desktop shells mount `EngramApp`
+  with sample slot values and dispatch callbacks, matching the generated
+  interface shapes.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
   expose the same Engram host contract slots, collection events, card-browser
   events, rating events, and Anki-style review action events as the shared Rust
@@ -72,5 +79,17 @@ cd code/programs/mosaic/engram-app
 ./scripts/build-all.ps1
 ```
 
-The script writes HTML, WebComponent, React, Electron, SwiftUI, Qt, XAML, and
-Flutter outputs under `target/mosaic-engram-app/` by default.
+The script writes HTML, WebComponent, React, Electron, SwiftUI, Qt, XAML,
+Flutter, and Compose outputs under `target/mosaic-engram-app/` by default. The
+Compose backend emits a pinned Gradle Compose Desktop shell plus the reusable
+Kotlin component source so it can be run with `gradle run`.
+
+The script also builds `code/packages/rust/engram-wasm` and
+`code/packages/rust/engram-capi`, then installs the Engram Mosaic host assets
+into generated app shells. The React shell receives `src/engram-host.ts`, the
+JS loader, and `public/engram_engine.wasm`; the Electron shell receives
+`electron/host.js`, the JS loader, and `electron/engram_engine.wasm`; the XAML
+shell receives `MosaicHost.cs` and `engram_capi.dll` as project content.
+Collection actions such as Anki import/export return `hostIntent` payloads so
+hosts can open file pickers or save APKG bytes while keeping the Mosaic app
+interface shared.

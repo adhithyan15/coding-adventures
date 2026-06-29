@@ -101,7 +101,7 @@ mod tests {
     use super::*;
     use crate::model::{
         ActiveSessionState, CardTemplate, DeckOptions, DeckOptionsPreset, ExternalSourceRecord,
-        ExternalSourceTarget, FieldDef, NoteFieldValue, SessionStatus,
+        ExternalSourceTarget, FieldDef, NoteFieldValue, SessionStatus, TemplateRequirementMode,
     };
     use std::collections::BTreeMap;
 
@@ -130,6 +130,7 @@ mod tests {
                     front_template: "{{Front}}".to_string(),
                     back_template: "Answer".to_string(),
                     required_field_names: vec!["Front".to_string()],
+                    requirement_mode: TemplateRequirementMode::All,
                     ordinal: 0,
                 }],
                 created_at: NOW,

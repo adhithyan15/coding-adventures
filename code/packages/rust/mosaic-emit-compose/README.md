@@ -10,7 +10,9 @@ Consumes the three-file IR produced by `mosmodel-compiler`,
 `.kt` source file containing:
 
 1. A `sealed class <Component>Event` with one `data object` per
-   parameterless emit and one `data class` per emit with a payload
+   parameterless emit and one `data class` per emit with a payload. Each event
+   exposes `mosaicName`, `mosaicPayload`, and `mosaicEnvelope` so hosts can
+   forward the same target-neutral event map as the other Mosaic backends.
 2. A `@Composable fun <Component>(...)` function whose parameters
    mirror the component's slots plus a trailing
    `dispatch: (<Component>Event) -> Unit` closure
