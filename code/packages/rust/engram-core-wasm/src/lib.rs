@@ -9,12 +9,12 @@
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
-    build_session_queue_with_daily_limits, build_session_queue_with_options,
+    build_session_queue_for_state_with_options, build_session_queue_with_daily_limits,
     create_engram_snapshot, deck_options_for_state, export_cards_anki_basic_tsv, export_cards_csv,
     export_notes_anki_tsv, generate_cards_for_note, get_active_session_progress,
-    get_daily_study_limit_usage, get_deck_stats, import_anki_basic_tsv, import_anki_notes_tsv,
-    import_basic_cards_csv, import_cards_csv, materialize_generated_card, reduce,
-    restore_engram_snapshot, search_cards as search_core_cards, search_cards_with_context,
+    get_daily_study_limit_usage, get_deck_stats_for_state, import_anki_basic_tsv,
+    import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv, materialize_generated_card,
+    reduce, restore_engram_snapshot, search_cards as search_core_cards, search_cards_with_context,
     summarize_review_history, AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState,
     BasicCardCsvImportOptions, Card, CardFlag, CardLineage, CardProgress, CardSearchResult,
     CardState, DeckOptions, EngramSnapshot, LeechAction, MediaAssetRecord, Rating, SearchContext,
@@ -124,13 +124,8 @@ impl EngramSession {
     pub fn build_queue(&self, deck_id: &str, now: u64) -> String {
         catch_json(|| {
             let options = deck_options_for_state(&self.state, deck_id);
-            let queue = build_session_queue_with_options(
-                &self.state.cards,
-                &self.state.card_progress,
-                deck_id,
-                now,
-                &options,
-            );
+            let queue =
+                build_session_queue_for_state_with_options(&self.state, deck_id, now, &options);
             Ok(ok_with("queue", &queue))
         })
     }
@@ -174,7 +169,7 @@ impl EngramSession {
 
     pub fn deck_stats(&self, deck_id: &str, now: u64) -> String {
         catch_json(|| {
-            let stats = get_deck_stats(&self.state.cards, &self.state.card_progress, deck_id, now);
+            let stats = get_deck_stats_for_state(&self.state, deck_id, now);
             Ok(ok_with(
                 "stats",
                 &json!({
@@ -613,12 +608,7 @@ fn engram_app_props_for_state(
         .filter(|name| !name.is_empty())
         .or_else(|| (!selected_deck_id.is_empty()).then(|| selected_deck_id.clone()))
         .unwrap_or_else(|| "Deck".to_string());
-    let stats = get_deck_stats(
-        &state.cards,
-        &state.card_progress,
-        selected_deck_id.as_str(),
-        now,
-    );
+    let stats = get_deck_stats_for_state(state, selected_deck_id.as_str(), now);
     let deck_options = deck_options_for_state(state, selected_deck_id.as_str());
     let review_history =
         summarize_review_history(state, selected_deck_id.as_str(), 0, now.saturating_add(1));
@@ -2859,6 +2849,101 @@ mod tests {
         assert_eq!(value["ok"], true);
         assert_eq!(value["queue"][0]["id"], "card");
         assert_eq!(value["queue"].as_array().unwrap().len(), 1);
+    }
+
+    #[test]
+    fn parent_deck_queue_and_stats_include_child_decks() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [
+                {"id":"parent","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"child","name":"Tamil::Verbs","description":"Grammar","createdAt":1700000000001},
+                {"id":"sibling","name":"Spanish","description":"Other","createdAt":1700000000002}
+            ],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"parent-due","deckId":"parent","front":"root","back":"r","createdAt":1700000000000},
+                {"id":"child-due","deckId":"child","front":"verb","back":"v","createdAt":1700000000001},
+                {"id":"child-new","deckId":"child","front":"fresh","back":"f","createdAt":1700000000002},
+                {"id":"sibling-due","deckId":"sibling","front":"otro","back":"other","createdAt":1700000000003}
+            ],
+            "cardProgress": [
+                {
+                    "cardId":"parent-due",
+                    "state":"review",
+                    "interval":3,
+                    "easeFactor":2.5,
+                    "nextDueAt":1699999999900,
+                    "learningStepIndex":null,
+                    "buriedUntil":null,
+                    "suspendedAt":null,
+                    "timesSeen":1,
+                    "timesCorrect":1,
+                    "timesIncorrect":0,
+                    "lastSeenAt":1699999990000
+                },
+                {
+                    "cardId":"child-due",
+                    "state":"review",
+                    "interval":3,
+                    "easeFactor":2.5,
+                    "nextDueAt":1699999999950,
+                    "learningStepIndex":null,
+                    "buriedUntil":null,
+                    "suspendedAt":null,
+                    "timesSeen":1,
+                    "timesCorrect":1,
+                    "timesIncorrect":0,
+                    "lastSeenAt":1699999990000
+                },
+                {
+                    "cardId":"sibling-due",
+                    "state":"review",
+                    "interval":3,
+                    "easeFactor":2.5,
+                    "nextDueAt":1699999999800,
+                    "learningStepIndex":null,
+                    "buriedUntil":null,
+                    "suspendedAt":null,
+                    "timesSeen":1,
+                    "timesCorrect":1,
+                    "timesIncorrect":0,
+                    "lastSeenAt":1699999990000
+                }
+            ],
+            "sessions": [],
+            "reviews": [],
+            "deckOptions": [{
+                "deckId": "parent",
+                "options": {
+                    "newCardsPerDay": 2,
+                    "reviewsPerDay": 3,
+                    "learningStepsMinutes": [1, 10],
+                    "relearningStepsMinutes": [10],
+                    "graduatingIntervalDays": 1,
+                    "easyIntervalDays": 4,
+                    "lapseIntervalMultiplier": 0.0
+                }
+            }],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let queue: Value = serde_json::from_str(&session.build_queue("parent", NOW)).unwrap();
+        let ids: Vec<_> = queue["queue"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|card| card["id"].as_str().unwrap())
+            .collect();
+
+        assert_eq!(ids, vec!["parent-due", "child-due", "child-new"]);
+
+        let stats: Value = serde_json::from_str(&session.deck_stats("parent", NOW)).unwrap();
+        assert_eq!(stats["stats"]["total"], 3);
+        assert_eq!(stats["stats"]["dueCount"], 2);
+        assert_eq!(stats["stats"]["newCount"], 1);
     }
 
     #[test]

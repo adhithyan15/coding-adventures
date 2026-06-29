@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use crate::model::{
-    AppState, Card, CardProgress, CardState, DailyStudyLimitUsage, DeckOptions, DeckStats,
+    AppState, Card, CardProgress, CardState, DailyStudyLimitUsage, Deck, DeckOptions, DeckStats,
 };
 
 pub const SESSION_SIZE: usize = 20;
@@ -13,10 +13,11 @@ pub fn build_session_queue(
     deck_id: &str,
     now: u64,
 ) -> Vec<Card> {
+    let deck_ids = HashSet::from([deck_id]);
     build_session_queue_with_limits(
         all_cards,
         all_progress,
-        deck_id,
+        &deck_ids,
         now,
         SESSION_SIZE,
         MAX_NEW_PER_SESSION,
@@ -34,11 +35,34 @@ pub fn build_session_queue_with_options(
     let max_new = options.new_cards_per_day as usize;
     let max_reviews = options.reviews_per_day as usize;
     let session_size = (max_new + max_reviews).max(1);
+    let deck_ids = HashSet::from([deck_id]);
 
     build_session_queue_with_limits(
         all_cards,
         all_progress,
-        deck_id,
+        &deck_ids,
+        now,
+        session_size,
+        max_new,
+        max_reviews,
+    )
+}
+
+pub fn build_session_queue_for_state_with_options(
+    state: &AppState,
+    deck_id: &str,
+    now: u64,
+    options: &DeckOptions,
+) -> Vec<Card> {
+    let max_new = options.new_cards_per_day as usize;
+    let max_reviews = options.reviews_per_day as usize;
+    let session_size = (max_new + max_reviews).max(1);
+    let deck_ids = deck_ids_in_scope(state, deck_id);
+
+    build_session_queue_with_limits(
+        &state.cards,
+        &state.card_progress,
+        &deck_ids,
         now,
         session_size,
         max_new,
@@ -62,10 +86,11 @@ pub fn get_daily_study_limit_usage(
     day_end: u64,
     options: &DeckOptions,
 ) -> DailyStudyLimitUsage {
+    let deck_ids = deck_ids_in_scope(state, deck_id);
     let deck_card_ids: HashSet<&str> = state
         .cards
         .iter()
-        .filter(|card| card.deck_id == deck_id)
+        .filter(|card| deck_ids.contains(card.deck_id.as_str()))
         .map(|card| card.id.as_str())
         .collect();
     let mut new_card_ids: HashSet<&str> = HashSet::new();
@@ -108,11 +133,12 @@ pub fn build_session_queue_with_daily_limits(
 ) -> Vec<Card> {
     let usage = get_daily_study_limit_usage(state, deck_id, day_start, day_end, options);
     let session_size = (usage.remaining_new_cards + usage.remaining_reviews).max(1);
+    let deck_ids = deck_ids_in_scope(state, deck_id);
 
     build_session_queue_with_limits(
         &state.cards,
         &state.card_progress,
-        deck_id,
+        &deck_ids,
         now,
         session_size,
         usage.remaining_new_cards,
@@ -123,7 +149,7 @@ pub fn build_session_queue_with_daily_limits(
 fn build_session_queue_with_limits(
     all_cards: &[Card],
     all_progress: &[CardProgress],
-    deck_id: &str,
+    deck_ids: &HashSet<&str>,
     now: u64,
     session_size: usize,
     max_new: usize,
@@ -136,7 +162,7 @@ fn build_session_queue_with_limits(
 
     let mut due_cards: Vec<Card> = all_cards
         .iter()
-        .filter(|card| card.deck_id == deck_id)
+        .filter(|card| deck_ids.contains(card.deck_id.as_str()))
         .filter(|card| {
             progress_by_card
                 .get(card.id.as_str())
@@ -154,7 +180,7 @@ fn build_session_queue_with_limits(
 
     let new_cards: Vec<Card> = all_cards
         .iter()
-        .filter(|card| card.deck_id == deck_id)
+        .filter(|card| deck_ids.contains(card.deck_id.as_str()))
         .filter(|card| {
             progress_by_card
                 .get(card.id.as_str())
@@ -174,6 +200,27 @@ fn build_session_queue_with_limits(
         .take(review_slots)
         .chain(new_cards)
         .collect()
+}
+
+fn deck_ids_in_scope<'a>(state: &'a AppState, deck_id: &'a str) -> HashSet<&'a str> {
+    let mut deck_ids = HashSet::from([deck_id]);
+    let Some(selected_deck) = state.decks.iter().find(|deck| deck.id == deck_id) else {
+        return deck_ids;
+    };
+    let Some(descendant_prefix) = deck_descendant_prefix(selected_deck) else {
+        return deck_ids;
+    };
+
+    for deck in &state.decks {
+        if deck.id != selected_deck.id && deck.name.starts_with(descendant_prefix.as_str()) {
+            deck_ids.insert(deck.id.as_str());
+        }
+    }
+    deck_ids
+}
+
+fn deck_descendant_prefix(deck: &Deck) -> Option<String> {
+    (!deck.name.is_empty()).then(|| format!("{}::", deck.name))
 }
 
 pub(crate) fn is_reviewable(progress: &CardProgress, now: u64) -> bool {
@@ -234,6 +281,21 @@ pub fn get_deck_stats(
     deck_id: &str,
     now: u64,
 ) -> DeckStats {
+    let deck_ids = HashSet::from([deck_id]);
+    get_deck_stats_for_deck_ids(all_cards, all_progress, &deck_ids, now)
+}
+
+pub fn get_deck_stats_for_state(state: &AppState, deck_id: &str, now: u64) -> DeckStats {
+    let deck_ids = deck_ids_in_scope(state, deck_id);
+    get_deck_stats_for_deck_ids(&state.cards, &state.card_progress, &deck_ids, now)
+}
+
+fn get_deck_stats_for_deck_ids(
+    all_cards: &[Card],
+    all_progress: &[CardProgress],
+    deck_ids: &HashSet<&str>,
+    now: u64,
+) -> DeckStats {
     let progress_by_card: HashMap<&str, &CardProgress> = all_progress
         .iter()
         .map(|progress| (progress.card_id.as_str(), progress))
@@ -252,7 +314,10 @@ pub fn get_deck_stats(
     let mut ease_sum = 0.0;
     let mut ease_count = 0;
 
-    for card in all_cards.iter().filter(|card| card.deck_id == deck_id) {
+    for card in all_cards
+        .iter()
+        .filter(|card| deck_ids.contains(card.deck_id.as_str()))
+    {
         stats.total += 1;
         match progress_by_card.get(card.id.as_str()) {
             Some(progress) => {
@@ -305,6 +370,15 @@ mod tests {
             back: format!("back {id}"),
             created_at,
             lineage: None,
+        }
+    }
+
+    fn deck(id: &str, name: &str) -> Deck {
+        Deck {
+            id: id.to_string(),
+            name: name.to_string(),
+            description: String::new(),
+            created_at: NOW,
         }
     }
 
@@ -442,6 +516,64 @@ mod tests {
         assert_eq!(stats.suspended_count, 1);
         assert_eq!(stats.buried_count, 1);
         assert_eq!(stats.average_ease_factor, 2.5);
+    }
+
+    #[test]
+    fn state_queues_stats_and_daily_limits_include_child_decks() {
+        let state = AppState {
+            decks: vec![
+                deck("parent", "Tamil"),
+                deck("child", "Tamil::Verbs"),
+                deck("sibling", "Spanish"),
+            ],
+            cards: vec![
+                card("parent-due", "parent", 1),
+                card("child-due", "child", 2),
+                card("child-new", "child", 3),
+                card("sibling-due", "sibling", 4),
+            ],
+            card_progress: vec![
+                progress("parent-due", NOW - 100, 3),
+                progress("child-due", NOW - 50, 3),
+                progress("sibling-due", NOW - 200, 3),
+            ],
+            reviews: vec![
+                review("new-child", "child-new", NOW + 10, None),
+                review(
+                    "review-child",
+                    "child-due",
+                    NOW + 20,
+                    Some(progress("child-due", NOW - 50, 3)),
+                ),
+                review(
+                    "review-sibling",
+                    "sibling-due",
+                    NOW + 30,
+                    Some(progress("sibling-due", NOW - 200, 3)),
+                ),
+            ],
+            ..AppState::default()
+        };
+        let options = DeckOptions {
+            new_cards_per_day: 2,
+            reviews_per_day: 3,
+            ..DeckOptions::default()
+        };
+
+        let queue = build_session_queue_for_state_with_options(&state, "parent", NOW, &options);
+        let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
+        assert_eq!(ids, vec!["parent-due", "child-due", "child-new"]);
+
+        let stats = get_deck_stats_for_state(&state, "parent", NOW);
+        assert_eq!(stats.total, 3);
+        assert_eq!(stats.new_count, 1);
+        assert_eq!(stats.due_count, 2);
+
+        let usage = get_daily_study_limit_usage(&state, "parent", NOW, NOW + 100, &options);
+        assert_eq!(usage.new_cards_seen, 1);
+        assert_eq!(usage.review_cards_seen, 1);
+        assert_eq!(usage.remaining_new_cards, 1);
+        assert_eq!(usage.remaining_reviews, 2);
     }
 
     #[test]

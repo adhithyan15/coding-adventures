@@ -32,8 +32,10 @@ pub use model::{
     ReviewHistorySummary, Session, SessionProgress, SessionStatus, TemplateRequirementMode,
 };
 pub use queue::{
-    build_session_queue, build_session_queue_with_daily_limits, build_session_queue_with_options,
-    deck_options_for_state, get_daily_study_limit_usage, get_deck_stats, is_deck_caught_up,
+    build_session_queue, build_session_queue_for_state_with_options,
+    build_session_queue_with_daily_limits, build_session_queue_with_options,
+    deck_options_for_state, get_daily_study_limit_usage, get_deck_stats, get_deck_stats_for_state,
+    is_deck_caught_up,
 };
 pub use reducer::{reduce, EngramCommand};
 pub use scheduler::schedule_review;

@@ -31,7 +31,8 @@ This crate owns:
 
 - decks, cards, progress, sessions, and reviews
 - Anki-style review scheduling over new, learning, review, and relearning states
-- due/new card queue assembly
+- due/new card queue assembly, including Anki-style parent deck scopes when a
+  caller passes full `AppState`
 - review-log-aware daily limit accounting
 - optional note/template lineage on durable cards
 - Anki-style Cloze note generation from `{{cloze:Field}}` templates
@@ -59,6 +60,11 @@ Rust core.
 `EngramCommand::SetDeckOptions` inserts or replaces a stored deck option preset,
 letting settings screens update the same options that queue building and
 `RateCard` use.
+The slice-based queue/stat helpers keep their exact deck-ID behavior for legacy
+callers, while the state-aware helpers include child decks whose names use
+Anki's `Parent::Child` hierarchy. Facade crates use the state-aware helpers so
+studying or inspecting a parent deck includes its descendants across web and
+native shells.
 
 Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`,
 `BuryCardSiblings`, `UnburyCard`, `SetCardFlag`, `MarkCard`, and `UnmarkCard`
