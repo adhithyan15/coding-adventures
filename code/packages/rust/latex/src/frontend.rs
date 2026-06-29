@@ -423,9 +423,9 @@ mod tests {
             )
         );
         // both: a_i^n → Pow(Subscript(a,i), n)
-        match m("a_i^n") {
+        match &m("a_i^n") {
             MathExpr::Bin(BinOp::Pow, base, _) => {
-                assert!(matches!(*base, MathExpr::Subscript(..)));
+                assert!(matches!(**base, MathExpr::Subscript(..)));
             }
             other => panic!("expected Pow(Subscript,..), got {other:?}"),
         }
@@ -433,8 +433,8 @@ mod tests {
 
     #[test]
     fn roots() {
-        match m(r"\sqrt[3]{x}") {
-            MathExpr::Root { degree: Some(d), .. } => assert_eq!(*d, num(3)),
+        match &m(r"\sqrt[3]{x}") {
+            MathExpr::Root { degree: Some(d), .. } => assert_eq!(**d, num(3)),
             other => panic!("expected Root with degree, got {other:?}"),
         }
         assert!(matches!(m(r"\sqrt{2}"), MathExpr::Root { degree: None, .. }));
@@ -496,8 +496,8 @@ mod tests {
         assert_eq!(m(r"\pi"), MathExpr::Symbol("pi".into()));
         assert_eq!(m(r"\text{kg}"), MathExpr::Text("kg".into()));
         // fence style dropped to Group.
-        match m("(a+b)") {
-            MathExpr::Group(inner) => assert!(matches!(*inner, MathExpr::Bin(BinOp::Add, ..))),
+        match &m("(a+b)") {
+            MathExpr::Group(inner) => assert!(matches!(**inner, MathExpr::Bin(BinOp::Add, ..))),
             other => panic!("expected Group, got {other:?}"),
         }
     }
@@ -515,7 +515,7 @@ mod tests {
 
     #[test]
     fn matrix_lowers_dropping_delimiter_style() {
-        match m(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}") {
+        match &m(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}") {
             MathExpr::Matrix(rows) => {
                 assert_eq!(rows.len(), 2);
                 assert_eq!(rows[0].len(), 2);
@@ -529,8 +529,8 @@ mod tests {
     fn numbers_stay_exact_not_f64() {
         assert_eq!(m("0.1"), MathExpr::Number(Number::parse("0.1").unwrap()));
         // and the numerator of a fraction is an exact Number, not a float.
-        match m(r"\frac{1}{3}") {
-            MathExpr::Frac(n, _) => assert_eq!(*n, num(1)),
+        match &m(r"\frac{1}{3}") {
+            MathExpr::Frac(n, _) => assert_eq!(**n, num(1)),
             other => panic!("expected Frac, got {other:?}"),
         }
     }
@@ -541,10 +541,10 @@ mod tests {
         assert!(matches!(m(r"a \pm b"), MathExpr::Bin(BinOp::PlusMinus, _, _)));
         assert!(matches!(m(r"a \mp b"), MathExpr::Bin(BinOp::MinusPlus, _, _)));
         // \binom{n}{k} → Binom(n, k), with the arguments in source order (not swapped).
-        match m(r"\binom{n}{k}") {
+        match &m(r"\binom{n}{k}") {
             MathExpr::Binom(n, k) => {
-                assert_eq!(*n, MathExpr::Symbol("n".into()));
-                assert_eq!(*k, MathExpr::Symbol("k".into()));
+                assert_eq!(**n, MathExpr::Symbol("n".into()));
+                assert_eq!(**k, MathExpr::Symbol("k".into()));
             }
             other => panic!("expected Binom, got {other:?}"),
         }
