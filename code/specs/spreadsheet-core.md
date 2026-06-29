@@ -913,6 +913,43 @@ Consequences, all intentional:
   state, not document state, so it is deliberately excluded from snapshots; undo
   restores cells, not what is on the clipboard.
 
+### §16.2 Column widths & row heights
+
+A real spreadsheet lets you resize columns and rows. The width/height is pure
+**presentation chrome** — the engine never *computes* with it — but it is stored in
+the engine (not left to each host) so it **persists across save/load** and stays
+consistent across every backend, the same way per-cell display formats are.
+
+- **Storage.** Each `Sheet` holds `col_widths: HashMap<u32, f64>` and
+  `row_heights: HashMap<u32, f64>`, keyed by the 1-based column / row index. The value
+  is an **opaque `f64` in host units** — the engine stores, key-shifts, and serializes
+  it but never interprets it. A column/row **absent** from the map uses the host's
+  default, so a sheet with no resizes is byte-identical to the pre-feature behaviour.
+  The host owns the unit (the demos use pixels), the default size, and any min/max clamp.
+- **API.** `column_width(sheet, col) -> Option<f64>` / `row_height(sheet, row)`;
+  `column_widths_in` / `row_heights_in` (bulk: only the customized indices in an
+  inclusive range, sorted, for a one-call viewport fetch); `set_column_width` /
+  `set_row_height` (return `bool`; **reject `NaN` / `±∞` / `≤ 0` / index 0** so a bad
+  host value can never poison the map or the serialized file; setting the current value
+  is a no-op with no revision bump, matching the diff-gating convention);
+  `clear_column_width` / `clear_row_height`.
+- **Structural edits shift the keys.** Insert/delete columns slide the `col_widths`
+  keys (drop a key in a deleted band); insert/delete rows do the same to `row_heights`;
+  the other axis is untouched. This reuses the same `insert_coord` / `delete_coord`
+  helpers that shift cell addresses and references, so a widened column stays widened as
+  it moves: widen C, insert a column at B, and the now-D column keeps its width.
+- **Sort-immune.** Column widths are columnar and row heights positional, so a range
+  sort — which reorders the *values* of row records — leaves both where they are. Resize
+  is chrome, not cell data (matches Excel).
+- **Persistence.** `serialize` adds optional per-sheet `colWidths` / `rowHeights` arrays
+  (sorted, emitted **only when non-empty**), so the document stays `version: 1` and a
+  workbook with no custom sizes serializes byte-identically — exactly how `formats` was
+  added. `deserialize` reads them **tolerantly**: a missing array, a non-finite / `≤ 0`
+  value, or a `0` / out-of-`u32` index is skipped, never aborting the load.
+- **Out of scope:** auto-fit ("size to widest cell" needs font metrics the engine
+  doesn't have) and hidden rows/columns (`set_*` rejects `≤ 0`; hiding is a separate
+  feature). See `code/specs/visicalc-column-width-row-height.md` for the full rollout.
+
 ---
 
 ## §17 Test Vectors
