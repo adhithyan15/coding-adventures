@@ -57,8 +57,9 @@ impl MathFrontend for AsciiMath {
     }
 
     fn capabilities(&self) -> Capabilities {
-        // Exactly the PR-1 surface. `matrices` and `big_operators` stay off until PR-2;
-        // `plusminus`/`binomials` are not part of AsciiMath's core spelling here. Declaring
+        // PR-1 surface + PR-2 breadth (`matrices`, `big_operators`). `plusminus`/`binomials`
+        // are not part of AsciiMath's core spelling here, and there is no neutral `Accent`
+        // node yet, so accents stay out until math-frontend grows one. Declaring
         // `implicit_mul` is a parser-behavior claim (juxtaposition ⇒ `Mul`) the goldens cover.
         Capabilities::none()
             .with_fractions()
@@ -68,6 +69,8 @@ impl MathFrontend for AsciiMath {
             .with_relations()
             .with_implicit_mul()
             .with_text()
+            .with_matrices()
+            .with_big_operators()
     }
 }
 
@@ -174,10 +177,95 @@ mod tests {
         assert_eq!(p("x^2 + y^2 = r^2"), MathExpr::Rel(RelOp::Eq, Box::new(lhs), Box::new(rhs)));
     }
 
+    // ---- PR-2: matrices --------------------------------------------------------
+    #[test]
+    fn matrix_two_by_two() {
+        // [[a,b],[c,d]] ⇒ Matrix rows of cells, in source order.
+        assert_eq!(
+            p("[[a,b],[c,d]]"),
+            MathExpr::Matrix(vec![vec![sym("a"), sym("b")], vec![sym("c"), sym("d")]])
+        );
+    }
+
+    #[test]
+    fn matrix_cells_are_full_expressions_and_rows_may_use_parens() {
+        // Cells parse as full expressions; `(…)` rows are accepted too.
+        assert_eq!(
+            p("((1,x^2),(a+b,0))"),
+            MathExpr::Matrix(vec![
+                vec![num(1), b(BinOp::Pow, sym("x"), num(2))],
+                vec![b(BinOp::Add, sym("a"), sym("b")), num(0)],
+            ])
+        );
+        // A single row with several cells is a 1×n matrix (row vector).
+        assert_eq!(p("[[a,b,c]]"), MathExpr::Matrix(vec![vec![sym("a"), sym("b"), sym("c")]]));
+    }
+
+    #[test]
+    fn nested_brackets_without_commas_are_grouping_not_a_matrix() {
+        // `((a))` and `[[a]]` are double grouping, NOT a 1×1 matrix.
+        assert_eq!(p("((a))"), sym("a"));
+        assert_eq!(p("[[a]]"), sym("a"));
+        // ragged rows are not a matrix → falls back to a group parse, which errors cleanly.
+        assert!(AsciiMath.parse("[[a,b],[c]]").is_err());
+    }
+
+    #[test]
+    fn det_of_a_matrix() {
+        // det binds the matrix as its argument atom.
+        assert_eq!(
+            p("det[[a,b],[c,d]]"),
+            MathExpr::Call {
+                func: Func::Det,
+                arg: Box::new(MathExpr::Matrix(vec![
+                    vec![sym("a"), sym("b")],
+                    vec![sym("c"), sym("d")],
+                ])),
+            }
+        );
+    }
+
+    // ---- PR-2: big operators ---------------------------------------------------
+    #[test]
+    fn sum_with_both_bounds() {
+        // sum_(i=1)^n i ⇒ BigOp{Sum, lower:(i=1), upper:n, body:i}
+        let lower = MathExpr::Rel(RelOp::Eq, Box::new(sym("i")), Box::new(num(1)));
+        assert_eq!(
+            p("sum_(i=1)^n i"),
+            MathExpr::BigOp {
+                op: BigOp::Sum,
+                lower: Some(Box::new(lower)),
+                upper: Some(Box::new(sym("n"))),
+                body: Box::new(sym("i")),
+            }
+        );
+    }
+
+    #[test]
+    fn integral_and_bare_and_either_order() {
+        // int_a^b f — body is the next atom.
+        assert_eq!(
+            p("int_a^b f"),
+            MathExpr::BigOp {
+                op: BigOp::Int,
+                lower: Some(Box::new(sym("a"))),
+                upper: Some(Box::new(sym("b"))),
+                body: Box::new(sym("f")),
+            }
+        );
+        // prod with no bounds.
+        assert_eq!(
+            p("prod x"),
+            MathExpr::BigOp { op: BigOp::Prod, lower: None, upper: None, body: Box::new(sym("x")) }
+        );
+        // superscript-before-subscript order is accepted and normalizes the same.
+        assert_eq!(p("sum^n_(i=1) i"), p("sum_(i=1)^n i"));
+    }
+
     // ---- totality / errors -----------------------------------------------------
     #[test]
     fn errors_are_spanned_never_panic() {
-        for bad in ["", "1 +", "(x", "a ! b", "\"oops", ")"] {
+        for bad in ["", "1 +", "(x", "a ! b", "\"oops", ")", "[[a,b],[c]]"] {
             let e = AsciiMath.parse(bad).expect_err(&format!("{bad:?} should error"));
             assert_eq!(e.frontend, "asciimath");
             assert!(e.span.0 <= e.span.1 && e.span.1 <= bad.len(), "bad span on {bad:?}: {:?}", e.span);
@@ -191,13 +279,27 @@ mod tests {
         assert!(AsciiMath.parse(&deep).is_err());
     }
 
+    #[test]
+    fn deeply_nested_matrices_error_not_overflow() {
+        // A matrix whose single cell is itself a matrix, nested thousands deep, must hit
+        // MAX_DEPTH and return a spanned error rather than overflowing the parser stack.
+        // Build [[ [[ … 1 … ]] ]]: each level wraps the prior in a 1×2 matrix (so it is a
+        // *real* matrix, not collapsed grouping) — `[[X,0]]`.
+        let mut s = String::from("1");
+        for _ in 0..3000 {
+            s = format!("[[{s},0]]");
+        }
+        assert!(AsciiMath.parse(&s).is_err());
+    }
+
     // ---- name / capabilities / conformance -------------------------------------
     #[test]
     fn name_and_capabilities_are_honest() {
         assert_eq!(AsciiMath.name(), "asciimath");
         let c = AsciiMath.capabilities();
         assert!(c.fractions && c.roots && c.powers && c.functions && c.relations && c.text && c.implicit_mul);
-        assert!(!c.matrices && !c.big_operators && !c.plusminus && !c.binomials);
+        assert!(c.matrices && c.big_operators); // PR-2 breadth
+        assert!(!c.plusminus && !c.binomials); // not part of AsciiMath's core spelling
     }
 
     #[test]
@@ -216,6 +318,9 @@ mod tests {
                 r#""kg""#,
                 "a <= b",
                 "(a + b)/(c - d)",
+                "[[a,b],[c,d]]",   // matrix
+                "sum_(i=1)^n i",   // big operator with bounds
+                "int_a^b f",       // big operator, integral
                 "1 +",   // error: trailing operator (span in range, not a panic)
                 "(x",    // error: missing close
                 "",      // error: empty

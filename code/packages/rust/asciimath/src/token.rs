@@ -65,6 +65,9 @@ pub enum TokenKind {
     RBracket,
     LBrace,
     RBrace,
+    /// `,` — cell/row separator inside a matrix (`[[a,b],[c,d]]`). Outside a matrix the
+    /// parser has no use for it and reports a clean error, never a panic.
+    Comma,
     /// End of input (always the final token; zero-width span at the end).
     Eof,
 }
@@ -165,6 +168,7 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
             b']' => (TokenKind::RBracket, i + 1),
             b'{' => (TokenKind::LBrace, i + 1),
             b'}' => (TokenKind::RBrace, i + 1),
+            b',' => (TokenKind::Comma, i + 1),
             b'"' => {
                 // A text literal runs to the next double-quote.
                 let mut j = i + 1;
@@ -246,6 +250,13 @@ mod tests {
     #[test]
     fn text_literal() {
         assert_eq!(kinds(r#""kg" "#)[0], TokenKind::Text("kg".into()));
+    }
+
+    #[test]
+    fn comma_is_a_token() {
+        assert_eq!(kinds("a,b"), vec![
+            TokenKind::Ident("a".into()), TokenKind::Comma, TokenKind::Ident("b".into()), TokenKind::Eof,
+        ]);
     }
 
     #[test]
