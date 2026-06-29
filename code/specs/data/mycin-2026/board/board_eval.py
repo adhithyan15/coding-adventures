@@ -68,7 +68,12 @@ EDGE_FILES = ["iem-edges.adj", "vitamin-edges.adj", "anemia-edges.adj", "endocri
               "coag-edges.adj", "micro-edges.adj", "pharm-edges.adj", "immuno-edges.adj",
               "genetics-edges.adj", "rheum-edges.adj", "onco-edges.adj", "histo-edges.adj",
               "cardio-edges.adj", "neuro-edges.adj", "gi-edges.adj", "derm-edges.adj",
-              "resp-edges.adj"]
+              "resp-edges.adj",
+              # Anatomy/physiology recall domains — grounded libraries that were built but
+              # not yet exercised by the board harness; wired here with board items below.
+              "heart-valve-edges.adj", "cranial-nerve-edges.adj", "spinal-tract-edges.adj",
+              "lung-volume-edges.adj", "acid-base-edges.adj", "coronary-territory-edges.adj",
+              "nephron-transporter-edges.adj"]
 
 # The native adj-lang CLI binary — the ONE engine behind every tactic (recall,
 # differential, management). If the binary is absent (e.g. a Python-only CI job that

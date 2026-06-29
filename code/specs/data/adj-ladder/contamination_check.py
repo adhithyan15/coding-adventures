@@ -97,6 +97,20 @@ def label_option_signature(value):
     return ("label", label)
 
 
+def dimensioned_option_signature(value):
+    """A `{"value": <num>, "unit": "<tag>"}` option (rung-4 dimensional). Two
+    options are distinct iff they differ in magnitude OR unit, so a wrong-unit
+    distractor (80 m/s vs 80 km/h) is a legitimately *distinct* choice."""
+    if (
+        not isinstance(value, dict)
+        or not isinstance(value.get("value"), (int, float))
+        or not isinstance(value.get("unit"), str)
+        or not value["unit"].strip()
+    ):
+        raise ValueError(f"unsupported dimensioned option value {value!r}")
+    return ("dimensioned", round(float(value["value"]), 9), value["unit"].strip())
+
+
 def check(rung: str) -> list[str]:
     items = json.loads((HERE / rung / "items.json").read_text())["items"]
     errors: list[str] = []
@@ -114,10 +128,13 @@ def check(rung: str) -> list[str]:
         option_keys = {}
         answer_type = (it.get("answer_from") or {}).get("type")
         label_options = "program" in it and answer_type in {"check_outcome", "decision_leader"}
+        dimensioned_options = "program" in it and answer_type == "compute_dimensioned"
         for ltr, value in opts.items():
             try:
                 if label_options:
                     option_keys[ltr] = label_option_signature(value)
+                elif dimensioned_options:
+                    option_keys[ltr] = dimensioned_option_signature(value)
                 else:
                     option_keys[ltr] = option_signature(value)
                 if option_keys[ltr][0] == "number":

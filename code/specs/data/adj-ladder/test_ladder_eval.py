@@ -36,6 +36,7 @@ SELF_CONTAINED_RUNGS = (
     "rung3_quartic_roots",
     "rung3_factored_roots",
     "rung4_physics_chem",
+    "rung4_dimensional",
 )
 
 
@@ -128,6 +129,57 @@ def test_kickback_abstains():
 
 def test_missing_decision_abstains():
     assert le.decision_to_letter(None) is None
+
+
+# ---- Rung-4 dimensional: (value, unit) option mapping -------------------------
+_DIM_OPTIONS = {
+    "A": {"value": 80, "unit": "km/h"},
+    "B": {"value": 80, "unit": "m/s"},
+    "C": {"value": 720, "unit": "km/h"},
+    "D": {"value": 80, "unit": "km"},
+    "E": {"value": 60, "unit": "km/h"},
+}
+
+
+def _dim_doc(value, unit, name="answer"):
+    return {"derived": [{"name": name, "value": value, "dim": unit}]}
+
+
+def test_dimensioned_match_requires_value_and_unit():
+    af = {"type": "compute_dimensioned", "name": "answer"}
+    # Right number AND right unit → the km/h option.
+    assert le.compute_dimensioned_to_letter(_dim_doc(80, "km/h"), af, _DIM_OPTIONS) == "A"
+
+
+def test_dimensioned_wrong_unit_is_not_matched():
+    # The engine reports 80 km/h; an 80-m/s answer must NOT be read as the km/h
+    # option — the unit discriminates, not just the magnitude.
+    af = {"type": "compute_dimensioned", "name": "answer"}
+    assert le.compute_dimensioned_to_letter(_dim_doc(80, "m/s"), af, _DIM_OPTIONS) == "B"
+
+
+def test_dimensioned_unknown_unit_abstains():
+    af = {"type": "compute_dimensioned", "name": "answer"}
+    # A unit no option carries → no unique match → abstain (never a guess).
+    assert le.compute_dimensioned_to_letter(_dim_doc(80, "furlong/fortnight"), af, _DIM_OPTIONS) is None
+
+
+def test_dimensioned_missing_binding_abstains():
+    af = {"type": "compute_dimensioned", "name": "answer"}
+    assert le.compute_dimensioned_to_letter({"derived": []}, af, _DIM_OPTIONS) is None
+    assert le.compute_dimensioned_to_letter({}, af, _DIM_OPTIONS) is None
+
+
+def test_dimensioned_scalar_cancellation_maps():
+    opts = {
+        "A": {"value": 3, "unit": "mg"},
+        "B": {"value": 3, "unit": "scalar"},
+        "C": {"value": 3, "unit": "mg/mg"},
+        "D": {"value": 1200, "unit": "scalar"},
+        "E": {"value": 4, "unit": "scalar"},
+    }
+    af = {"type": "compute_dimensioned", "name": "answer"}
+    assert le.compute_dimensioned_to_letter(_dim_doc(3, "scalar"), af, opts) == "B"
 
 
 # ---- Arm-A letter parsing -----------------------------------------------------
