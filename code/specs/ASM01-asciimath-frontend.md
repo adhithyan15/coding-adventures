@@ -80,8 +80,15 @@ actually emitted (no over-claiming). Notation-specific golden tests assert exact
 shapes for representative inputs.
 
 ## 5. Roadmap (later PRs)
-- **PR-2:** matrices `[[a,b],[c,d]]`; big operators `sum_(…)^(…)`, `prod`, `int`; accents
-  (`hat`, `vec`, `bar`); angle/invisible brackets `(: … :)`, `{: … :}`.
+- **PR-2 (shipped, v0.2.0):** matrices `[[a,b],[c,d]]` → `Matrix` (rows may use `[…]`/`(…)`;
+  `((a))`/`[[a]]` stay grouping — a matrix must use commas; ragged rows error cleanly;
+  `det[[…]]` binds the matrix); big operators `sum`/`prod`/`int`/`oint`/`coprod`/`lim` →
+  `BigOp{op,lower,upper,body}` (optional `_`/`^` bounds either order, body = next atom). A new
+  `Comma` token; `capabilities()` adds `matrices`+`big_operators`; matrix nesting is `MAX_DEPTH`-guarded.
+  **Accents deferred** — the neutral `MathExpr` has no `Accent` node; adding one to `math-frontend`
+  (with iterative-Drop + a `Capabilities::accents` flag) is the prerequisite, tracked as a follow-up.
+- **PR-2b (deferred):** accents (`hat`, `vec`, `bar`) once a neutral `Accent` node exists;
+  angle/invisible brackets `(: … :)`, `{: … :}`.
 - **PR-3:** the full AsciiMath symbol table (greek, arrows, set/logic ops), longest-match
   tokenization (so `sinx` splits as `sin`·`x`), `stackrel`, `overset`/`underset`, and the
   `text(…)` keyword form alongside the `"…"` literal.
