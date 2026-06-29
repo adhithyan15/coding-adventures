@@ -2,6 +2,20 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.21.0] — 2026-06-29
+
+### Added — Gemma linear-systems baseline
+
+- Added **`ladder-scorecard.rung3_linear_systems.gemma.json`**, a full 20-item
+  local Gemma-3-4b trace artifact for native ADJ two-variable linear-system
+  solve questions.
+- Recorded the current two-arm baseline: Gemma alone scored 2/20 with 18 wrong
+  direct answers, while Gemma + ADJ scored 14/20 with zero wrong answers and 6
+  abstentions.
+- The artifact confirms all 20 Arm B decompositions were faithful native ADJ
+  `solve` programs; the 6 bucket-`c` abstentions make the remaining solve-result
+  selection gap auditable instead of letting the model fabricate answers.
+
 ## [0.20.0] — 2026-06-29
 
 ### Added — Gemma constraint-feasibility baseline
