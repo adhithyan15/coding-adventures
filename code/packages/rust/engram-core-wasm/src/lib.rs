@@ -6,6 +6,7 @@
 
 #![forbid(unsafe_code)]
 
+use std::collections::HashMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
@@ -16,9 +17,10 @@ use engram_core::{
     import_anki_basic_tsv, import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv,
     materialize_generated_card, notes_in_deck_scope, reduce, restore_engram_snapshot,
     search_cards as search_core_cards, search_cards_with_context, summarize_review_history,
-    AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card,
-    CardFlag, CardLineage, CardProgress, CardSearchResult, CardState, DeckOptions, EngramSnapshot,
-    LeechAction, MediaAssetRecord, Rating, SearchContext,
+    type_answer_matches, typed_answer_for_template, AnkiBasicTsvExportOptions,
+    AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card, CardFlag, CardLineage,
+    CardProgress, CardSearchResult, CardState, ClozeRenderSide, DeckOptions, EngramSnapshot,
+    LeechAction, MediaAssetRecord, Rating, SearchContext, TypeAnswerSpec,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -29,6 +31,7 @@ const DEFAULT_BROWSER_QUERY: &str = "is:due OR is:new";
 pub struct EngramSession {
     state: AppState,
     browser: BrowserSessionState,
+    review: ReviewSessionState,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -37,6 +40,34 @@ struct BrowserSessionState {
     tag_edit: String,
     flag_picker_open: bool,
     selected_index: usize,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+struct ReviewSessionState {
+    typed_answer_card_id: Option<String>,
+    typed_answer: String,
+}
+
+impl ReviewSessionState {
+    fn typed_answer_for_card(&self, card_id: &str) -> &str {
+        if self.typed_answer_card_id.as_deref() == Some(card_id) {
+            &self.typed_answer
+        } else {
+            ""
+        }
+    }
+
+    fn set_typed_answer(&mut self, card_id: String, value: String) {
+        self.typed_answer_card_id = Some(card_id);
+        self.typed_answer = value;
+    }
+
+    fn clear_card(&mut self, card_id: &str) {
+        if self.typed_answer_card_id.as_deref() == Some(card_id) {
+            self.typed_answer_card_id = None;
+            self.typed_answer.clear();
+        }
+    }
 }
 
 impl BrowserSessionState {
@@ -104,6 +135,7 @@ impl EngramSession {
                 .map_err(|err| format!("invalid snapshot: {err}"))?;
             self.state = state;
             self.browser = BrowserSessionState::default();
+            self.review = ReviewSessionState::default();
             Ok(ok_with("state", &self.state))
         })
     }
@@ -122,6 +154,7 @@ impl EngramSession {
             self.state =
                 restore_engram_snapshot(snapshot).map_err(|err| err.message.to_string())?;
             self.browser = BrowserSessionState::default();
+            self.review = ReviewSessionState::default();
             Ok(ok_with("state", &self.state))
         })
     }
@@ -135,6 +168,7 @@ impl EngramSession {
             self.state = reduce(&self.state, command);
             if resets_browser {
                 self.browser = BrowserSessionState::default();
+                self.review = ReviewSessionState::default();
             }
             Ok(ok_with("state", &self.state))
         })
@@ -214,7 +248,8 @@ impl EngramSession {
 
     pub fn engram_app_props(&self, deck_id: &str, now: u64) -> String {
         catch_json(|| {
-            let props = engram_app_props_for_state(&self.state, deck_id, now, &self.browser);
+            let props =
+                engram_app_props_for_state(&self.state, deck_id, now, &self.browser, &self.review);
             Ok(ok_with("props", &props))
         })
     }
@@ -272,6 +307,13 @@ impl EngramSession {
                 EngramAppEvent::ToggleMark => {
                     let card_id = current_active_card_id(&self.state, "mark")?;
                     self.state = mark_or_unmark_card(&self.state, card_id, now);
+                }
+                EngramAppEvent::TypeAnswerChange => {
+                    let card_id = current_active_card_id(&self.state, "type an answer")?;
+                    let value = parsed.text_value.clone().ok_or_else(|| {
+                        format!("{} is missing text value", parsed.kind.canonical_name())
+                    })?;
+                    self.review.set_typed_answer(card_id, value);
                 }
                 EngramAppEvent::DeckOptionsChange(field) => {
                     let selected_deck_id = selected_deck_id(&self.state, deck_id);
@@ -339,13 +381,14 @@ impl EngramSession {
                         engram_core::EngramCommand::RateCardWithOptions {
                             review_id,
                             session_id,
-                            card_id,
+                            card_id: card_id.clone(),
                             rating,
                             reviewed_at: now,
                             deck_options,
                         },
                     );
                     self.state = reduce(&self.state, engram_core::EngramCommand::AdvanceSession);
+                    self.review.clear_card(&card_id);
                 }
                 EngramAppEvent::BrowserToggleSuspendSelected => {
                     let card_id = required_browser_event_card_id(
@@ -474,7 +517,8 @@ impl EngramSession {
 
             let host_intent =
                 host_intent_for_event(&parsed, &self.state, deck_id, now, &self.browser);
-            let props = engram_app_props_for_state(&self.state, deck_id, now, &self.browser);
+            let props =
+                engram_app_props_for_state(&self.state, deck_id, now, &self.browser, &self.review);
             Ok(json!({
                 "ok": true,
                 "event": parsed.kind.canonical_name(),
@@ -685,6 +729,7 @@ fn engram_app_props_for_state(
     deck_id: &str,
     now: u64,
     browser: &BrowserSessionState,
+    review: &ReviewSessionState,
 ) -> Value {
     let selected_deck_id = selected_deck_id(state, deck_id);
     let deck = state.decks.iter().find(|deck| deck.id == selected_deck_id);
@@ -702,6 +747,38 @@ fn engram_app_props_for_state(
         .active_session
         .as_ref()
         .and_then(|active| active.queue.get(active.current_index));
+    let answer_visible = state
+        .active_session
+        .as_ref()
+        .is_some_and(|active| active.revealed);
+    let type_answer_spec = active_card.and_then(|card| active_type_answer_spec(state, card));
+    let type_answer_value = active_card
+        .map(|card| review.typed_answer_for_card(&card.id).to_string())
+        .unwrap_or_default();
+    let type_answer_correct = type_answer_spec
+        .as_ref()
+        .is_some_and(|spec| answer_visible && type_answer_matches(&type_answer_value, spec));
+    let type_answer_expected = type_answer_spec
+        .as_ref()
+        .filter(|_| answer_visible)
+        .map(|spec| spec.expected.clone())
+        .unwrap_or_default();
+    let type_answer_comparison = type_answer_spec
+        .as_ref()
+        .filter(|_| answer_visible)
+        .map(|spec| format_type_answer_comparison(&type_answer_value, spec, type_answer_correct))
+        .unwrap_or_default();
+    let type_answer_placeholder = type_answer_spec
+        .as_ref()
+        .map(|spec| format!("Type {}", spec.field_name))
+        .unwrap_or_else(|| "Type your answer".to_string());
+    let type_answer_field = type_answer_spec
+        .as_ref()
+        .map(|spec| spec.field_name.clone())
+        .unwrap_or_default();
+    let type_answer_ignore_combining = type_answer_spec
+        .as_ref()
+        .is_some_and(|spec| spec.ignore_combining);
     let active_progress = active_card.and_then(|card| {
         state
             .card_progress
@@ -768,7 +845,7 @@ fn engram_app_props_for_state(
         "prompt": active_card.map(|card| card.front.as_str()).unwrap_or("No cards queued"),
         "answer-label": "Answer",
         "answer": active_card.map(|card| card.back.as_str()).unwrap_or_default(),
-        "answer-visible": state.active_session.as_ref().is_some_and(|active| active.revealed),
+        "answer-visible": answer_visible,
         "progress-label": progress_label,
         "current-label": "Current",
         "current-value": current_value,
@@ -788,6 +865,46 @@ fn engram_app_props_for_state(
     let props_object = props
         .as_object_mut()
         .expect("Engram app props literal must be a JSON object");
+    props_object.insert(
+        "type-answer-active".to_string(),
+        Value::Bool(type_answer_spec.is_some()),
+    );
+    props_object.insert(
+        "type-answer-label".to_string(),
+        Value::String("Type answer".to_string()),
+    );
+    props_object.insert(
+        "type-answer-value".to_string(),
+        Value::String(type_answer_value),
+    );
+    props_object.insert(
+        "type-answer-placeholder".to_string(),
+        Value::String(type_answer_placeholder),
+    );
+    props_object.insert(
+        "type-answer-field".to_string(),
+        Value::String(type_answer_field),
+    );
+    props_object.insert(
+        "type-answer-expected".to_string(),
+        Value::String(type_answer_expected),
+    );
+    props_object.insert(
+        "type-answer-comparison-label".to_string(),
+        Value::String("Typed answer".to_string()),
+    );
+    props_object.insert(
+        "type-answer-comparison-value".to_string(),
+        Value::String(type_answer_comparison),
+    );
+    props_object.insert(
+        "type-answer-correct".to_string(),
+        Value::Bool(type_answer_correct),
+    );
+    props_object.insert(
+        "type-answer-ignore-combining".to_string(),
+        Value::Bool(type_answer_ignore_combining),
+    );
     {
         let mut insert_prop = |key: &str, value: String| {
             props_object.insert(key.to_string(), Value::String(value));
@@ -1402,6 +1519,100 @@ fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
         .unwrap_or_default()
 }
 
+fn active_type_answer_spec(state: &AppState, card: &Card) -> Option<TypeAnswerSpec> {
+    let lineage = card.lineage.as_ref()?;
+    let note = state.notes.iter().find(|note| note.id == lineage.note_id)?;
+    let note_type = state
+        .note_types
+        .iter()
+        .find(|note_type| note_type.id == lineage.note_type_id)?;
+    let template = note_type
+        .templates
+        .iter()
+        .find(|template| template.id == lineage.template_id)
+        .or_else(|| {
+            note_type
+                .templates
+                .iter()
+                .find(|template| template.ordinal == lineage.ordinal)
+        })?;
+    let field_values = lineaged_card_field_values(state, note_type, note, template, card);
+    let cloze_context = lineage
+        .cloze_ordinal
+        .map(|ordinal| (ordinal, ClozeRenderSide::Question));
+
+    typed_answer_for_template(&template.front_template, &field_values, cloze_context)
+}
+
+fn lineaged_card_field_values(
+    state: &AppState,
+    note_type: &engram_core::NoteType,
+    note: &engram_core::Note,
+    template: &engram_core::CardTemplate,
+    card: &Card,
+) -> HashMap<String, String> {
+    let field_names_by_id: HashMap<&str, &str> = note_type
+        .fields
+        .iter()
+        .map(|field| (field.id.as_str(), field.name.as_str()))
+        .collect();
+    let mut field_values: HashMap<String, String> = note
+        .fields
+        .iter()
+        .filter_map(|value| {
+            field_names_by_id
+                .get(value.field_id.as_str())
+                .map(|name| ((*name).to_string(), value.value.clone()))
+        })
+        .collect();
+
+    let deck_name = state
+        .decks
+        .iter()
+        .find(|deck| deck.id == card.deck_id)
+        .map(|deck| deck.name.as_str())
+        .filter(|name| !name.trim().is_empty())
+        .unwrap_or(card.deck_id.as_str());
+    field_values
+        .entry("Tags".to_string())
+        .or_insert_with(|| note.tags.join(" "));
+    field_values
+        .entry("Type".to_string())
+        .or_insert_with(|| note_type.name.clone());
+    field_values
+        .entry("Deck".to_string())
+        .or_insert_with(|| deck_name.to_string());
+    field_values
+        .entry("Subdeck".to_string())
+        .or_insert_with(|| subdeck_name(deck_name).to_string());
+    field_values
+        .entry("Card".to_string())
+        .or_insert_with(|| template.name.clone());
+    field_values
+        .entry("CardFlag".to_string())
+        .or_insert_with(|| "flag0".to_string());
+    field_values
+        .entry("CardID".to_string())
+        .or_insert_with(|| card.id.clone());
+
+    field_values
+}
+
+fn subdeck_name(deck_name: &str) -> &str {
+    deck_name
+        .rsplit_once("::")
+        .map_or(deck_name, |(_, subdeck)| subdeck)
+}
+
+fn format_type_answer_comparison(value: &str, spec: &TypeAnswerSpec, correct: bool) -> String {
+    if value.trim().is_empty() {
+        return format!("Expected: {}", spec.expected);
+    }
+
+    let result = if correct { "Correct" } else { "Needs review" };
+    format!("You: {value} | Expected: {} | {result}", spec.expected)
+}
+
 fn host_intent_for_event(
     parsed: &ParsedEngramAppEvent,
     state: &AppState,
@@ -1610,6 +1821,7 @@ enum EngramAppEvent {
     BurySiblings,
     SuspendCard,
     ToggleMark,
+    TypeAnswerChange,
     DeckOptionsChange(DeckOptionField),
     Rate(Rating),
     BrowserQueryChange,
@@ -1641,6 +1853,7 @@ impl EngramAppEvent {
             Self::BurySiblings => "onBurySiblings",
             Self::SuspendCard => "onSuspendCard",
             Self::ToggleMark => "onToggleMark",
+            Self::TypeAnswerChange => "onTypeAnswerChange",
             Self::DeckOptionsChange(DeckOptionField::LearningStepsMinutes) => {
                 "onDeckOptionsLearningStepsChange"
             }
@@ -1858,6 +2071,9 @@ fn parse_engram_app_event_name(
             parsed(EngramAppEvent::SuspendCard)
         }
         "togglemark" | "toggle-mark" | "toggle_mark" | "mark" => parsed(EngramAppEvent::ToggleMark),
+        "typeanswerchange" | "type-answer-change" | "type_answer_change" => {
+            parsed(EngramAppEvent::TypeAnswerChange)
+        }
         "deckoptionslearningstepschange"
         | "deck-options-learning-steps-change"
         | "deck_options_learning_steps_change" => parsed(EngramAppEvent::DeckOptionsChange(
@@ -4181,6 +4397,10 @@ mod tests {
         assert_eq!(value["props"]["prompt"], "letter-a");
         assert_eq!(value["props"]["answer"], "a");
         assert_eq!(value["props"]["answer-visible"], true);
+        assert_eq!(value["props"]["type-answer-active"], false);
+        assert_eq!(value["props"]["type-answer-value"], "");
+        assert_eq!(value["props"]["type-answer-expected"], "");
+        assert_eq!(value["props"]["type-answer-correct"], false);
         assert_eq!(value["props"]["current-value"], "1 / 2");
         assert_eq!(value["props"]["remaining-value"], "2");
         assert_eq!(value["props"]["total-value"], "2");
@@ -4192,6 +4412,106 @@ mod tests {
         );
         assert_eq!(value["props"]["action-suspend-card-label"], "Suspend");
         assert_eq!(value["props"]["action-mark-label"], "Mark");
+    }
+
+    #[test]
+    fn engram_app_props_tracks_type_answer_without_leaking_expected_value() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Spanish","description":"Roots","createdAt":1700000000000}],
+            "noteTypes": [{
+                "id": "basic",
+                "name": "Basic",
+                "fields": [
+                    {"id":"front","name":"Front","required":true,"ordinal":0},
+                    {"id":"back","name":"Back","required":true,"ordinal":1}
+                ],
+                "templates": [{
+                    "id":"forward",
+                    "name":"Forward",
+                    "frontTemplate":"{{Front}}{{type:nc:Back}}",
+                    "backTemplate":"{{FrontSide}}<hr>{{Back}}",
+                    "requiredFieldNames":["Front"],
+                    "ordinal":0
+                }],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "notes": [{
+                "id": "note",
+                "noteTypeId": "basic",
+                "deckId": "deck",
+                "fields": [
+                    {"fieldId":"front","value":"coffee"},
+                    {"fieldId":"back","value":"caf\u00e9"}
+                ],
+                "tags": ["spanish","latin"],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "cards": [{
+                "id":"note::forward",
+                "deckId":"deck",
+                "front":"coffee[type answer: Back]",
+                "back":"coffee[type answer: Back]<hr>caf\u00e9",
+                "createdAt":1700000000000,
+                "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"forward","ordinal":0}
+            }],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [{
+                    "id":"note::forward",
+                    "deckId":"deck",
+                    "front":"coffee[type answer: Back]",
+                    "back":"coffee[type answer: Back]<hr>caf\u00e9",
+                    "createdAt":1700000000000,
+                    "lineage":{"noteId":"note","noteTypeId":"basic","templateId":"forward","ordinal":0}
+                }],
+                "startedAt": 1700000000000
+            }"#,
+        );
+
+        let initial: Value = serde_json::from_str(&session.engram_app_props("deck", NOW)).unwrap();
+        assert_eq!(initial["props"]["type-answer-active"], true);
+        assert_eq!(initial["props"]["type-answer-field"], "Back");
+        assert_eq!(initial["props"]["type-answer-value"], "");
+        assert_eq!(initial["props"]["type-answer-expected"], "");
+        assert_eq!(initial["props"]["type-answer-ignore-combining"], true);
+        assert_eq!(initial["props"]["answer-visible"], false);
+        assert!(!initial["props"]["prompt"].as_str().unwrap().contains("caf"));
+
+        let changed: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onTypeAnswerChange","value":"cafe"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(changed["ok"], true);
+        assert_eq!(changed["event"], "onTypeAnswerChange");
+        assert_eq!(changed["props"]["type-answer-value"], "cafe");
+        assert_eq!(changed["props"]["type-answer-expected"], "");
+        assert_eq!(changed["props"]["type-answer-correct"], false);
+
+        let revealed: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onReveal", "deck", NOW + 1))
+                .unwrap();
+        assert_eq!(revealed["props"]["answer-visible"], true);
+        assert_eq!(revealed["props"]["type-answer-expected"], "caf\u{e9}");
+        assert_eq!(revealed["props"]["type-answer-correct"], true);
+        assert!(revealed["props"]["type-answer-comparison-value"]
+            .as_str()
+            .unwrap()
+            .contains("Correct"));
     }
 
     #[test]

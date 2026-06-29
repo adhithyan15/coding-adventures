@@ -52,7 +52,8 @@ pub use snapshot::{
     ENGRAM_SNAPSHOT_APP, ENGRAM_SNAPSHOT_VERSION,
 };
 pub use template::{
-    generate_cards_for_note, materialize_generated_card, rename_note_type_field,
-    render_cloze_template, render_cloze_template_with_front_side, render_template,
-    render_template_with_front_side, template_references_cloze, ClozeRenderSide,
+    generate_cards_for_note, materialize_generated_card, normalize_type_answer,
+    rename_note_type_field, render_cloze_template, render_cloze_template_with_front_side,
+    render_template, render_template_with_front_side, template_references_cloze,
+    type_answer_matches, typed_answer_for_template, ClozeRenderSide, TypeAnswerSpec,
 };

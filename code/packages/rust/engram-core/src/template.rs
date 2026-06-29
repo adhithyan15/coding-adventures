@@ -1,5 +1,7 @@
 use std::collections::{BTreeSet, HashMap};
 
+use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
+
 use crate::model::{
     Card, CardLineage, CardTemplate, GeneratedCard, Note, NoteType, TemplateRequirementMode,
 };
@@ -8,6 +10,14 @@ use crate::model::{
 pub enum ClozeRenderSide {
     Question,
     Answer,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TypeAnswerSpec {
+    pub field_name: String,
+    pub expected: String,
+    pub normalized_expected: String,
+    pub ignore_combining: bool,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -259,10 +269,28 @@ fn render_template_field_tag(
     cloze_context: Option<(u32, ClozeRenderSide)>,
 ) -> String {
     let (filters, field_name) = parse_template_field_filters(tag);
-    let mut value = field_values
-        .get(field_name.trim())
-        .cloned()
-        .unwrap_or_default();
+    let field_name = field_name.trim();
+    let Some(raw_value) = field_values.get(field_name) else {
+        return String::new();
+    };
+
+    if filters.contains(&TemplateFieldFilter::Hint) {
+        return if raw_value.trim().is_empty() {
+            String::new()
+        } else {
+            render_hint_placeholder(field_name)
+        };
+    }
+
+    if filters.contains(&TemplateFieldFilter::Type) {
+        return if raw_value.trim().is_empty() {
+            String::new()
+        } else {
+            render_type_answer_placeholder(field_name)
+        };
+    }
+
+    let mut value = raw_value.clone();
 
     for filter in filters.iter().rev() {
         match filter {
@@ -282,6 +310,172 @@ fn render_template_field_tag(
     }
 
     value
+}
+
+fn render_hint_placeholder(field_name: &str) -> String {
+    format!("[show hint: {field_name}]")
+}
+
+fn render_type_answer_placeholder(field_name: &str) -> String {
+    format!("[type answer: {field_name}]")
+}
+
+pub fn typed_answer_for_template(
+    template: &str,
+    field_values: &HashMap<String, String>,
+    cloze_context: Option<(u32, ClozeRenderSide)>,
+) -> Option<TypeAnswerSpec> {
+    find_type_answer_tag(template, field_values, cloze_context)
+}
+
+pub fn normalize_type_answer(value: &str, ignore_combining: bool) -> String {
+    let text = html_to_text(value);
+    let collapsed = text.split_whitespace().collect::<Vec<_>>().join(" ");
+    if ignore_combining {
+        normalize_without_combining_marks(&collapsed)
+    } else {
+        collapsed.to_lowercase()
+    }
+}
+
+pub fn type_answer_matches(input: &str, spec: &TypeAnswerSpec) -> bool {
+    normalize_type_answer(input, spec.ignore_combining) == spec.normalized_expected
+}
+
+fn find_type_answer_tag(
+    template: &str,
+    field_values: &HashMap<String, String>,
+    cloze_context: Option<(u32, ClozeRenderSide)>,
+) -> Option<TypeAnswerSpec> {
+    let mut rest = template;
+
+    while let Some(start) = rest.find("{{") {
+        let (_, after_start) = rest.split_at(start);
+        let after_start = &after_start[2..];
+
+        let Some(end) = after_start.find("}}") else {
+            break;
+        };
+        let (tag, after_end) = after_start.split_at(end);
+        let tag = tag.trim();
+        let after_tag = &after_end[2..];
+
+        if let Some(section) = parse_section_tag(tag) {
+            let close_tag = format!("{{{{/{}}}}}", section.field_name);
+            if let Some(close_start) = after_tag.find(&close_tag) {
+                let (body, after_body) = after_tag.split_at(close_start);
+                if section_should_render(section, field_values) {
+                    if let Some(spec) = find_type_answer_tag(body, field_values, cloze_context) {
+                        return Some(spec);
+                    }
+                }
+                rest = &after_body[close_tag.len()..];
+                continue;
+            }
+        }
+
+        if let Some(spec) = type_answer_spec_from_tag(tag, field_values, cloze_context) {
+            return Some(spec);
+        }
+        rest = after_tag;
+    }
+
+    None
+}
+
+fn type_answer_spec_from_tag(
+    tag: &str,
+    field_values: &HashMap<String, String>,
+    cloze_context: Option<(u32, ClozeRenderSide)>,
+) -> Option<TypeAnswerSpec> {
+    let (filters, field_name) = parse_template_field_filters(tag);
+    if !filters.contains(&TemplateFieldFilter::Type) {
+        return None;
+    }
+
+    let field_name = field_name.trim();
+    if field_name.is_empty() {
+        return None;
+    }
+
+    let raw_value = field_values.get(field_name)?;
+    let ignore_combining = filters.contains(&TemplateFieldFilter::NoCombining);
+    let mut expected = raw_value.clone();
+
+    for filter in filters.iter().rev() {
+        match filter {
+            TemplateFieldFilter::Cloze => {
+                expected = cloze_type_answer_text(&expected, cloze_context);
+            }
+            TemplateFieldFilter::Text => expected = html_to_text(&expected),
+            TemplateFieldFilter::Furigana => {
+                expected = render_ruby_text(&expected, RubyMode::Furigana);
+            }
+            TemplateFieldFilter::Kana => expected = render_ruby_text(&expected, RubyMode::Kana),
+            TemplateFieldFilter::Kanji => expected = render_ruby_text(&expected, RubyMode::Kanji),
+            TemplateFieldFilter::Hint
+            | TemplateFieldFilter::Type
+            | TemplateFieldFilter::NoCombining => {}
+        }
+    }
+
+    let normalized_expected = normalize_type_answer(&expected, ignore_combining);
+    Some(TypeAnswerSpec {
+        field_name: field_name.to_string(),
+        expected,
+        normalized_expected,
+        ignore_combining,
+    })
+}
+
+fn cloze_type_answer_text(value: &str, cloze_context: Option<(u32, ClozeRenderSide)>) -> String {
+    let Some((cloze_ordinal, _)) = cloze_context else {
+        return render_cloze_text(value, 0, ClozeRenderSide::Answer);
+    };
+
+    let mut answers = Vec::new();
+    collect_cloze_type_answers(value, cloze_ordinal, &mut answers);
+    if answers.is_empty() {
+        render_cloze_text(value, cloze_ordinal, ClozeRenderSide::Answer)
+    } else {
+        answers.join(", ")
+    }
+}
+
+fn collect_cloze_type_answers(value: &str, cloze_ordinal: u32, answers: &mut Vec<String>) {
+    let mut rest = value;
+
+    while let Some(start) = rest.find("{{c") {
+        let (_, candidate) = rest.split_at(start);
+        if let Some(marker) = parse_cloze_marker(candidate) {
+            if marker.ordinal == cloze_ordinal {
+                answers.push(render_cloze_text(
+                    marker.hidden,
+                    cloze_ordinal,
+                    ClozeRenderSide::Answer,
+                ));
+            } else {
+                collect_cloze_type_answers(marker.hidden, cloze_ordinal, answers);
+            }
+            rest = &candidate[marker.consumed..];
+        } else {
+            rest = &candidate[3..];
+        }
+    }
+}
+
+fn normalize_without_combining_marks(value: &str) -> String {
+    let mut normalized = String::new();
+    for ch in value.nfd() {
+        if is_combining_mark(ch) {
+            continue;
+        }
+        match ch {
+            'ß' | 'ẞ' => normalized.push_str("ss"),
+            _ => normalized.extend(ch.to_lowercase()),
+        }
+    }
+    normalized
 }
 
 fn parse_template_field_filters(tag: &str) -> (Vec<TemplateFieldFilter>, &str) {
@@ -1105,7 +1299,9 @@ mod tests {
             ),
             "hello no-extra"
         );
-        assert_eq!(render_template("{{hint:Back}}", &values), "hello");
+        let hint = render_template("{{hint:Back}}", &values);
+        assert_eq!(hint, "[show hint: Back]");
+        assert!(!hint.contains("hello"));
         assert_eq!(
             render_template_with_front_side("{{FrontSide}}<hr>{{Back}}", &values, "hola"),
             "hola<hr>hello"
@@ -1140,10 +1336,18 @@ mod tests {
             render_template("{{kanji:Reading}}", &values),
             "root stemling"
         );
-        assert_eq!(
-            render_template("{{type:nc:Expression}}", &values),
-            "<b>amiga</b> &amp; amigo<br/>root&nbsp;word"
-        );
+        let type_placeholder = render_template("{{type:nc:Expression}}", &values);
+        assert_eq!(type_placeholder, "[type answer: Expression]");
+        assert!(!type_placeholder.contains("amiga"));
+
+        let spec = typed_answer_for_template("{{type:nc:Expression}}", &values, None).unwrap();
+        assert_eq!(spec.expected, "<b>amiga</b> &amp; amigo<br/>root&nbsp;word");
+        assert_eq!(spec.normalized_expected, "amiga & amigo root word");
+        assert!(type_answer_matches("amiga & amigo root word", &spec));
+
+        values.insert("Accent".to_string(), "caf\u{e9}".to_string());
+        let accent_spec = typed_answer_for_template("{{type:nc:Accent}}", &values, None).unwrap();
+        assert!(type_answer_matches("cafe", &accent_spec));
     }
 
     #[test]
@@ -1254,11 +1458,24 @@ mod tests {
             &note_type.templates[0].back_template
         ));
         assert_eq!(cards.len(), 1);
-        assert_eq!(cards[0].front, "A <b>[base]</b> carries meaning.");
+        assert_eq!(cards[0].front, "[type answer: Text]");
         assert_eq!(
             cards[0].back,
-            "A <b>[base]</b> carries meaning.<hr>A root carries meaning.<br>etymology"
+            "[type answer: Text]<hr>A root carries meaning.<br>etymology"
         );
+        let mut field_values = HashMap::new();
+        field_values.insert(
+            "Text".to_string(),
+            "A <b>{{c1::root::base}}</b> carries meaning.".to_string(),
+        );
+        field_values.insert("Extra".to_string(), "etymology".to_string());
+        let spec = typed_answer_for_template(
+            &note_type.templates[0].front_template,
+            &field_values,
+            Some((1, ClozeRenderSide::Question)),
+        )
+        .unwrap();
+        assert_eq!(spec.expected, "root");
     }
 
     #[test]

@@ -36,6 +36,45 @@ style ReviewCard {
     font-weight : 600 ;
   }
 
+  part type-answer-panel {
+    background    : "#111827" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    border-radius : 8 ;
+    padding       : 14 ;
+  }
+
+  part type-answer-label {
+    color          : "#93c5fd" ;
+    font-size      : 11 ;
+    font-weight    : 700 ;
+    padding-bottom : 8 ;
+  }
+
+  part type-answer-input {
+    background    : "#020617" ;
+    border-width  : 1 ;
+    border-color  : "#64748b" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-size     : 16 ;
+    padding       : 10 ;
+  }
+
+  part type-answer-comparison-label {
+    color          : "#bae6fd" ;
+    font-size      : 11 ;
+    font-weight    : 700 ;
+    padding-top    : 10 ;
+    padding-bottom : 4 ;
+  }
+
+  part type-answer-comparison-value {
+    color       : "#e2e8f0" ;
+    font-size   : 14 ;
+    font-weight : 500 ;
+  }
+
   part answer-panel {
     background    : "#0f3460" ;
     border-width  : 1 ;

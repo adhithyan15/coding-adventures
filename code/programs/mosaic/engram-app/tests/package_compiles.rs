@@ -503,6 +503,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&html_main, "const componentName = \"EngramApp\";");
     assert_contains(&html_main, "\"browserResults\": []");
     assert_contains(&html_main, "\"answerVisible\": false");
+    assert_contains(&html_main, "\"typeAnswerActive\": false");
+    assert_contains(&html_main, "\"onTypeAnswerChange\"");
     assert_contains(&html_main, "\"onBrowserSelectResult\"");
     assert_contains(&html_main, "\"onBrowserTagEditChange\"");
     assert_contains(&html_main, "\"onBrowserAddTagSelected\"");
@@ -575,6 +577,11 @@ fn native_project_shells_expose_engram_host_contract() {
         "browserSelectedCardId: \"Sample BrowserSelectedCardId\",",
     );
     assert_contains(&react_app, "answerVisible: false,");
+    assert_contains(&react_app, "typeAnswerActive: false,");
+    assert_contains(
+        &react_app,
+        "typeAnswerValue: \"Sample TypeAnswerValue\",",
+    );
     assert_contains(&react_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
     assert_contains(&react_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
     assert_contains(
@@ -661,6 +668,11 @@ fn native_project_shells_expose_engram_host_contract() {
         "browserSelectedCardId: \"Sample BrowserSelectedCardId\",",
     );
     assert_contains(&electron_app, "answerVisible: false,");
+    assert_contains(&electron_app, "typeAnswerActive: false,");
+    assert_contains(
+        &electron_app,
+        "typeAnswerValue: \"Sample TypeAnswerValue\",",
+    );
     assert_contains(
         &electron_app,
         "actionUndoLabel: \"Sample ActionUndoLabel\",",
@@ -820,6 +832,14 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &flutter_app,
+        "typeAnswerActive: mosaicBoolean(_hostProps, \"type-answer-active\", false),",
+    );
+    assert_contains(
+        &flutter_app,
+        "typeAnswerValue: mosaicString(_hostProps, \"type-answer-value\", \"Sample TypeAnswerValue\"),",
+    );
+    assert_contains(
+        &flutter_app,
         "actionUndoLabel: mosaicString(_hostProps, \"action-undo-label\", \"Sample ActionUndoLabel\"),",
     );
     assert_contains(
@@ -897,6 +917,10 @@ fn native_project_shells_expose_engram_host_contract() {
         &compose_app,
         "data class BrowserSetFlagSelected(val value: String)",
     );
+    assert_contains(
+        &compose_app,
+        "data class TypeAnswerChange(val value: String)",
+    );
     assert_contains(&compose_app, "data object BrowserAddTagSelected");
     assert_contains(&compose_app, "data object BrowserRemoveTagSelected");
     assert_contains(&compose_app, "@Composable");
@@ -922,6 +946,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&compose_app, "browserResultCardIds: List<String>,");
     assert_contains(&compose_app, "browserSelectedCardId: String,");
     assert_contains(&compose_app, "answerVisible: Boolean,");
+    assert_contains(&compose_app, "typeAnswerActive: Boolean,");
+    assert_contains(&compose_app, "typeAnswerValue: String,");
     assert_contains(&compose_app, "actionUndoLabel: String,");
     assert_contains(&compose_app, "actionMarkLabel: String,");
     assert_contains(&compose_app, "dispatch: (EngramAppEvent) -> Unit,");
@@ -1020,6 +1046,14 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &compose_main,
+        "typeAnswerActive = mosaicBoolean(hostProps, \"type-answer-active\", false),",
+    );
+    assert_contains(
+        &compose_main,
+        "typeAnswerValue = mosaicString(hostProps, \"type-answer-value\", \"Sample TypeAnswerValue\"),",
+    );
+    assert_contains(
+        &compose_main,
         "actionUndoLabel = mosaicString(hostProps, \"action-undo-label\", \"Sample ActionUndoLabel\"),",
     );
     assert_contains(
@@ -1079,7 +1113,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "property var browserResultCardIds");
     assert_contains(&qml, "property string browserSelectedCardId");
     assert_contains(&qml, "property bool answerVisible");
+    assert_contains(&qml, "property bool typeAnswerActive");
+    assert_contains(&qml, "property string typeAnswerValue");
     assert_contains(&qml, "signal reveal()");
+    assert_contains(&qml, "signal typeAnswerChange(string value)");
     assert_contains(&qml, "signal again()");
     assert_contains(&qml, "signal hard()");
     assert_contains(&qml, "signal good()");
@@ -1179,6 +1216,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case burySiblings");
     assert_contains(&swift, "case suspendCard");
     assert_contains(&swift, "case toggleMark");
+    assert_contains(&swift, "case typeAnswerChange");
     assert_contains(&swift, "case deckOptionsLearningStepsChange");
     assert_contains(&swift, "case deckOptionsRelearningStepsChange");
     assert_contains(&swift, "case deckOptionsNewCardsChange");
@@ -1235,6 +1273,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "let browserResultCardIds: [String]");
     assert_contains(&swift, "let browserSelectedCardId: String");
     assert_contains(&swift, "let answerVisible: Bool");
+    assert_contains(&swift, "let typeAnswerActive: Bool");
+    assert_contains(&swift, "let typeAnswerValue: String");
     assert_contains(&swift, "let actionUndoLabel: String");
     assert_contains(&swift, "let actionMarkLabel: String");
     let swift_app = fs::read_to_string(
@@ -1337,6 +1377,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &swift_app,
         "answerVisible: MosaicHostValue.bool(host.props, \"answer-visible\", fallback: false),",
+    );
+    assert_contains(
+        &swift_app,
+        "typeAnswerActive: MosaicHostValue.bool(host.props, \"type-answer-active\", fallback: false),",
+    );
+    assert_contains(
+        &swift_app,
+        "typeAnswerValue: MosaicHostValue.string(host.props, \"type-answer-value\", fallback: \"Sample TypeAnswerValue\"),",
     );
     assert_contains(
         &swift_app,
@@ -1500,6 +1548,14 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &xaml_code_behind,
+        "public static readonly DependencyProperty TypeAnswerActiveProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty TypeAnswerValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
         "public static readonly DependencyProperty ActionUndoLabelProperty",
     );
     assert_contains(
@@ -1545,6 +1601,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record ToggleMark() : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record TypeAnswerChange(string Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,

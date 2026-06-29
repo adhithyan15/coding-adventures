@@ -4856,7 +4856,8 @@ CREATE TABLE graves (
             vec!["Front"]
         );
         assert_eq!(state.cards[0].front, "hola");
-        assert_eq!(state.cards[0].back, "hola<hr>hello");
+        assert_eq!(state.cards[0].back, "hola<hr>[show hint: Back]");
+        assert!(!state.cards[0].back.contains(">hello"));
     }
 
     #[test]
@@ -5335,10 +5336,10 @@ CREATE TABLE graves (
             state.note_types[0].templates[0].required_field_names,
             vec!["Text"]
         );
-        assert_eq!(state.cards[0].front, "The word [old root] travels.");
+        assert_eq!(state.cards[0].front, "[type answer: Text]");
         assert_eq!(
             state.cards[0].back,
-            "The word [old root] travels.<hr>The word night travels.<br>Proto-Indo-European stories go here."
+            "[type answer: Text]<hr>The word night travels.<br>Proto-Indo-European stories go here."
         );
         let lineage = state.cards[0].lineage.as_ref().unwrap();
         assert_eq!(lineage.cloze_ordinal, Some(1));

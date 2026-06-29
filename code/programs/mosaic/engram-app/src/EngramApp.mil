@@ -141,6 +141,16 @@ component EngramApp {
   slot answer-label : text ;
   slot answer : text ;
   slot answer-visible : bool ;
+  slot type-answer-active : bool ;
+  slot type-answer-label : text ;
+  slot type-answer-value : text ;
+  slot type-answer-placeholder : text ;
+  slot type-answer-field : text ;
+  slot type-answer-expected : text ;
+  slot type-answer-comparison-label : text ;
+  slot type-answer-comparison-value : text ;
+  slot type-answer-correct : bool ;
+  slot type-answer-ignore-combining : bool ;
   slot progress-label : text ;
   slot current-label : text ;
   slot current-value : text ;
@@ -161,6 +171,7 @@ component EngramApp {
   emit onHard ;
   emit onGood ;
   emit onEasy ;
+  emit onTypeAnswerChange ( value : text ) ;
   emit onUndo ;
   emit onBuryCard ;
   emit onBurySiblings ;
